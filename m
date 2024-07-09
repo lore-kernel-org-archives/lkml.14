@@ -1,130 +1,141 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7569738DF2;
-	Tue,  9 Jul 2024 02:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BF34084D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 02:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720491045; cv=none; b=ZoOowlUd+qnwzNiLzUeLa3EK6X/9Cm3kg7Fvz0BnbjECuuOHrGHR0mm+t3XQlu1dLThYJQrkp81/1k2H4B8g2ZSW2zxLJkkaWBh//ZoHKfQ6mAJAxIWyA9c+yITed+kOzlMYOKpM6fDh7pUJlIpyCIEIMkQkdoz1jVGmLWJM6mE=
+	t=1720491103; cv=none; b=FHX1CsBeNjkcZrJStn2JMzQ03BP8xpeb+nUYXBEGFV+q57W9WLEEn1tKq0ZDjus9ANYp0AZ3JIvCXmk+fMT7yD0QgE1RkrobyS5KqitK1fq6q2pVq8AM0QhwbmRgmMlK+wZ0v460PFdJxahcelXQgVNJJLcLub/KA/5yoY1WaBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720491045; c=relaxed/simple;
-	bh=hOVZibqrFcfdl+i0HpDeBdhCF+yLKx8BFsrHlp13YmY=;
+	s=arc-20240116; t=1720491103; c=relaxed/simple;
+	bh=lOI/ee5qe03AFUKQUpqLcXd/DvpW5d4Oz7RRoR9bTKw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ri9MT1E77EM9ilDtnzjcxVDawjlN5ojjDJuXK/FcuH+CNDiaYdPgiZS8MfRrvEKv/jSZl4yesXmhaa9PIxduidSg6OnFccv3h9OE1o0qdzrmrYInAWaqcQjHwzoVShW0KDVFdTmKh3YpC7JSegPQEZXQmzMGRCSc1unccdmnJp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TzX1LsO1; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=U/P+YF07feEMHded9NFCVawp+iE0tIT5uq133CZVxJiZtBEkSpAR8wTce+kKwoBrs+C9rjLCA49cGsyI3IqK+i5zjGUP3miGQntgAygcE5P5i0UW6NX1343+aICI7xX884m7RX1gT+h0oEbgtVt7cUilU2ocvpkAGB9WHSpQGpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=App89Qju; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzX1LsO1"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3d9318a005eso723140b6e.1;
-        Mon, 08 Jul 2024 19:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720491043; x=1721095843; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jtH7OPMrirvI7ENGdelUQ1QKZy+EaAME7OT8wpfozBA=;
-        b=TzX1LsO1973epEKAeeNjO0lZSA5OiLWTl315QuUgd0IwIFgTrRp75p3p92kF2cTP31
-         7wZBEw/nenEnHryqnxT0GrqhzOSWSaoaij5cIgeLq0W2h3+F1Sgn0V8KmL2Xa9RKaF1t
-         nnQ4PVuUuz0S1aBv1aFNDxv/S1rzwMMjk8Ae3828pRn3lYVOIu3qpzYUoEXBnv4FlDpm
-         24Klqsdmf0HUQpLKf/yrtuxb53YCS8ceWzeDzM3DPZEvW3cO06OKKJxObwJOQKmpnVN0
-         0rFmHm5VhZaD0S5sMDJFPCJ2DXc+dbrvaYiKAkRjePORIBSWnjbn1+OMsGENQVxHsZg/
-         oo9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720491043; x=1721095843;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jtH7OPMrirvI7ENGdelUQ1QKZy+EaAME7OT8wpfozBA=;
-        b=Rlz7KQc3ivGEYBzmdOOfwZ5+2hJgxnE1JnESV+vqDFYsx7g+3RDDUitYh17UWeNaKc
-         h+zdZE3F71cDdYaE6/T3fipL1eMJrXyTG1tgI5PppMSEhg21m16QbH2LraXLIuIGo3on
-         cw6XW18nrgykEkSs8ZMrqfFTVTnzXpHZZI9Aw7eAZmPUIyrvU6c7+MvZAqpBIDC4wRy+
-         6NnNBKOKr8VhHH+7SLgiLB4Urr6yuUUKEBrnwhad7FL/RObevsKWd9nZQ4G2lFA7hUKD
-         X/4/i7B4jTT6j5IRHx2OoaxMsCbQeS5We99bPSLkJOgsZu5fQVXzEHqUMow94Yy7X7aQ
-         R8zA==
-X-Forwarded-Encrypted: i=1; AJvYcCVv4Mt7SKXvORa1caUFzkZlP3aHRrPuPZ9P0WKobqIW93GaTNQbcu4jAjpVE3qc/dGLjQJi9GaDzpA6t4T/3e9ltwnfhTM60k6WQsJnrLUlItfRxHLQSk5Mn5ZF1NE4HxHJLAaeNCRxlzuSVaOQddbWszDmr01mvZRg5UwkQy0bnHRxgQ==
-X-Gm-Message-State: AOJu0Yx1h1lBBIlvJsVybLZE5RuDIvS+nxqGuyt2qa1+udjIfsjF2Di2
-	lUheHONcEmb+ckPpI2P5cCiIvC1zMZz/nPH5eaDfFzLYLOiNw66U
-X-Google-Smtp-Source: AGHT+IFge5Or486qU3fsqK7rfLez5SQ73WcKfauMIlXxu9FtbdydQ4vUXacBQgadwkO4rfqutytpBQ==
-X-Received: by 2002:a05:6808:2126:b0:3d9:33c1:29cd with SMTP id 5614622812f47-3d93c07b12emr1018035b6e.45.1720491043284;
-        Mon, 08 Jul 2024 19:10:43 -0700 (PDT)
-Received: from [172.19.1.51] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d61df022esm497370a12.48.2024.07.08.19.10.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 19:10:42 -0700 (PDT)
-Message-ID: <f1053686-1eaf-4a84-af57-4d25dc5896f2@gmail.com>
-Date: Tue, 9 Jul 2024 10:10:36 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="App89Qju"
+X-Envelope-To: lihongbo22@huawei.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1720491099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4HjyNf7GxbR4lp5E+Hv52DxdeqK/OeMCXoQUH5A/KOQ=;
+	b=App89Qju1287CgL+h0UMyqsy3BmS2uD36v0zqfcUmo/dJiUslc1GQF3P3yWkqOl9WMICL8
+	Sf74ktxHMyL1vnNmfbNfe37NsoFseLSzNxs9zIloCvsBuPZA0ky3/Ccm7EPjLgIOaA6V5p
+	mGzaQV3MNpZtLS0ZGPP5nEcTjSKqDTA=
+X-Envelope-To: linux-bcachefs@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: kent.overstreet@linux.dev
+Message-ID: <c3471af6-0df7-44a9-8272-ab211f0f1b1b@linux.dev>
+Date: Tue, 9 Jul 2024 10:11:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: mmc: nuvoton,ma35d1-sdhci: Document
- MA35D1 SDHCI controller
-To: Krzysztof Kozlowski <krzk@kernel.org>, ulf.hansson@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- adrian.hunter@intel.com, p.zabel@pengutronix.de, pbrobinson@gmail.com,
- serghox@gmail.com, mcgrof@kernel.org,
- prabhakar.mahadev-lad.rj@bp.renesas.com, forbidden405@outlook.com,
- tmaimon77@gmail.com, andy.shevchenko@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20240704062623.1480062-1-shanchun1218@gmail.com>
- <20240704062623.1480062-2-shanchun1218@gmail.com>
- <d1422b93-b111-41f6-8537-a837a48e5743@kernel.org>
-Content-Language: en-US
-From: Shan-Chun Hung <shanchun1218@gmail.com>
-In-Reply-To: <d1422b93-b111-41f6-8537-a837a48e5743@kernel.org>
+Subject: Re: [PATCH 2/2] bcachefs: Add support for FS_IOC_GETFSSYSFSPATH
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kent Overstreet <kent.overstreet@linux.dev>
+References: <20240709011134.79954-1-youling.tang@linux.dev>
+ <20240709011134.79954-2-youling.tang@linux.dev>
+ <8a1b37b5-450c-4f12-978e-25d691fbf21b@huawei.com>
+Content-Language: en-US, en-AU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <8a1b37b5-450c-4f12-978e-25d691fbf21b@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Dear Krzysztof,
-
-Thank you for your review.
-
-I will make sure to keep the same order as in the list of properties.
-
-I'm sorry if I missed your comments before.
-
-I will do my best to address them in the future.
-
-Thanks for your understanding.
-
-
-Best Regards
-
-Shan-Chun
-
-
-On 2024/7/8 下午 10:19, Krzysztof Kozlowski wrote:
-> On 04/07/2024 08:26, Shan-Chun Hung wrote:
->> Add binding for Nuvoton MA35D1 SDHCI controller.
+On 09/07/2024 10:04, Hongbo Li wrote:
+>
+>
+> On 2024/7/9 9:11, Youling Tang wrote:
+>> From: Kent Overstreet <kent.overstreet@linux.dev>
 >>
->> Signed-off-by: Shan-Chun Hung <shanchun1218@gmail.com>
+>> [TEST]:
+>> ```
+>> $ cat ioctl_getsysfspath.c
+>>   #include <stdio.h>
+>>   #include <stdlib.h>
+>>   #include <fcntl.h>
+>>   #include <sys/ioctl.h>
+>>   #include <linux/fs.h>
+>>   #include <unistd.h>
+>>
+>>   int main(int argc, char *argv[]) {
+>>       int fd;
+>>       struct fs_sysfs_path sysfs_path = {};
+>>
+>>       if (argc != 2) {
+>>           fprintf(stderr, "Usage: %s <path_to_file_or_directory>\n", 
+>> argv[0]);
+>>           exit(EXIT_FAILURE);
+>>       }
+>>
+>>       fd = open(argv[1], O_RDONLY);
+>>       if (fd == -1) {
+>>           perror("open");
+>>           exit(EXIT_FAILURE);
+>>       }
+>>
+>>       if (ioctl(fd, FS_IOC_GETFSSYSFSPATH, &sysfs_path) == -1) {
+>>           perror("ioctl FS_IOC_GETFSSYSFSPATH");
+>>           close(fd);
+>>           exit(EXIT_FAILURE);
+>>       }
+>>
+>>       printf("FS_IOC_GETFSSYSFSPATH: %s\n", sysfs_path.name);
+>>       close(fd);
+>>       return 0;
+>>   }
+>>
+>> $ gcc ioctl_getsysfspath.c
+>> $ sudo bcachefs format /dev/sda
+>> $ sudo mount.bcachefs /dev/sda /mnt
+>> $ sudo ./a.out /mnt
+>>    FS_IOC_GETFSSYSFSPATH: bcachefs/c380b4ab-fbb6-41d2-b805-7a89cae9cadb
+>> ```
+>>
+>> Original patch link:
+>> [1]: 
+>> https://lore.kernel.org/all/20240207025624.1019754-8-kent.overstreet@linux.dev/
+>>
+>> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+>> Signed-off-by: Youling Tang <youling.tang@linux.dev>
 >> ---
+>>   fs/bcachefs/fs.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
+>> index 011ee5075a52..8699770398d1 100644
+>> --- a/fs/bcachefs/fs.c
+>> +++ b/fs/bcachefs/fs.c
+>> @@ -1978,6 +1978,7 @@ static int bch2_fs_get_tree(struct fs_context *fc)
+>>       sb->s_time_min        = div_s64(S64_MIN, 
+>> c->sb.time_units_per_sec) + 1;
+>>       sb->s_time_max        = div_s64(S64_MAX, 
+>> c->sb.time_units_per_sec);
+>>       super_set_uuid(sb, c->sb.user_uuid.b, sizeof(c->sb.user_uuid));
+>> +    super_set_sysfs_name_uuid(sb);
 >
->> +
->> +  nuvoton,sys:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description: phandle to access GCR (Global Control Register) registers.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - pinctrl-names
->> +  - pinctrl-0
->> +  - resets
->> +  - nuvoton,sys
-> Keep the same order as in list of properties.
+> Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
 >
-> Normally I would give conditional review tag, but not that case because
-> in the past you kept ignoring review comments.
->
-> Best regards,
-> Krzysztof
->
+> It's quite strange that other commits have been merged, but the ones 
+> for bcachefs have not been merged.
+Because bcachefs was not upstream at the time, [1] described the following:
+   Note, I dropped the bcachefs changes because they're not upstream yet.
+   But once this is a stable branch you can just pull in vfs.uuid and rely
+   on that.
+
+[1]: 
+https://lore.kernel.org/all/20240208-wecken-nutzen-3df1102a39b2@brauner/
+
+Thanks,
+Youling.
