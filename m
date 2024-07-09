@@ -1,120 +1,93 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6AF185637
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 21:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6809D18004E;
+	Tue,  9 Jul 2024 21:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720559412; cv=none; b=oM3AJS5GU45wXEBYSj+qRmSvHMqro5bsh6ho/tSgzIUwbB4Vy8xQHvyhHFWanFfSSlcBhN3fxNsA25E2i7i/93m9dMbm//ft7VgSbXe6pcD5aXG0Vcsh0qVzO0k1eS2eOFtgnvpR9QUL2+GiqghT6mB3wZf1/8ehANHAd5OeGxs=
+	t=1720559579; cv=none; b=d6jb8bFceT+h1W1Gg/RZU6KA/hwGcYDUibkRPAqf1ii7I8SQONvgRImXMgcB1bNkLf7XGqb0y5WpXvIDGpfMdHiKoE+KBrx77ML/dTpMcevi8oZ3ZkylocClmS/YY672XCZ71t8ALRxO9fbY796G5+7m91ytazDgl4HCSfP9hcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720559412; c=relaxed/simple;
-	bh=9bENMZby6l85ThHwdXqT4/M6rVTNwOP2nEEwRxQl2Bw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UAbhgNqu7xB17H21x7eD5xHZCM6Ok7B5U3DK/GZMPw6e4ky2aOkcwor0O4BGXkPsEZzOegEYAsgg4h6tnwZP2fb9xGE//GSuO/GBzHCB0GLariKRsnyDzVzd/8Uip/cCwPfzeXdZs7Ty2vZYHBqywb5Qi2awR6VT7zARfAi9b3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxztfWph; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720559579; c=relaxed/simple;
+	bh=ZQLcCo+JCusuv6Y+S21jZr/MkdBipRmNT9NNGQFy3qc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MZFCT90t4i2Fs9cOEUNYwm3tikiB1C5eZrrFuLLKh1atglb1pZCt2WRHOEMD/6WEWcturpFr8gYVVJ/BhxoS5Wlboa7h2sSe0V3ctcTnaVYdZiQFaikcimkM9wCCip9rSs7V9iyKQy6lqAkR4yu5Qm+74x7f5Oe7RcIrv8wgOm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=E6m/rBvf; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxztfWph"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-70b3c0a00f2so1460443b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 14:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720559410; x=1721164210; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oninqgQHKQLJeVm7TYTo0kPRWYyybK0zDurELufxBMQ=;
-        b=dxztfWphd6djsIePtqjhyLixE9dHhrc3xe8VZLaTew8UNq0plttrh2ZXp1NxHoqhUk
-         /wvmUChDuNsIBcYiBkG5ycq5I/xeqSv7kUtBq5Dkonmm0Y080BStX4R1Y4V1fC6/AsnX
-         iTQT6rE06P9VLQtLRp5J6C5IhuDWdHug/2wv11ud747qgeSRzwQ0vQ8PWjE3jV2tzKwN
-         bEuKZqX6LrfXFCTFNBiqsMYamAYF+vUiZ9gzRaJpU6q04ZCsuLE5YS2Uu/JZnfIpfMr3
-         tQ/8wIXD5EhMFlfxevVDhLPvAe/QgcpeKPnyA8yR5kCMvHfmfxg6/iwqEhgawUQingz9
-         gqfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720559410; x=1721164210;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oninqgQHKQLJeVm7TYTo0kPRWYyybK0zDurELufxBMQ=;
-        b=NuqI2c+ajZQz10Od3hQ6v38gl8wp75ljoOTchPbr2CWbvwN085tK0nOlPyaW4U9AT/
-         b2ARemgoM6neAIQ6LmL16Butt8IUc40/ztlQvIrm+kE9Xf/5iGZ+jTnh4WPrnCT39N0h
-         FvWRCVr8PRraKqdcaXHsw17+ZqxlKgKQDQfRVUvQKm4QORuDrbiukndNHA4uCZKa+Odk
-         xKbStp2wdKvMKGpgHsOqD2FBBVyRx5jKGIdc2skg3x9TJrqPmApSJCwJIxVuzLWxFTaG
-         KH7KI0bREKJqYA9/1dxWT+JZsQfES6Kj07s+sSHHIUj+GX7G8MVyOhOX8tt1iRxeGdoX
-         7giQ==
-X-Gm-Message-State: AOJu0YyaHwJaPlWNjY5+p05s3pR0HQVEFDCAPkyL4gn0MlV/Qk3Mk26v
-	yJem+nvzsJ4dU9SpoPCxRA63/L4MeVEhz5tX+Eu5LmlXqlGdezGE
-X-Google-Smtp-Source: AGHT+IGjFoRBq5moqF1/dsC/oVUvka7eJRNg155DQbX147mGI2kz5HdrusrWG024xFvos3/1o43Nqw==
-X-Received: by 2002:a05:6a00:887:b0:706:b10c:548a with SMTP id d2e1a72fcca58-70b43626517mr4616038b3a.22.1720559410210;
-        Tue, 09 Jul 2024 14:10:10 -0700 (PDT)
-Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b438e538fsm2293218b3a.87.2024.07.09.14.10.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 14:10:09 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-From: Tejun Heo <tj@kernel.org>
-To: void@manifault.com
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	schatzberg.dan@gmail.com,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 2/2] sched_ext: Make scx_bpf_reenqueue_local() skip tasks that are being migrated
-Date: Tue,  9 Jul 2024 11:09:43 -1000
-Message-ID: <20240709211001.1198145-3-tj@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709211001.1198145-1-tj@kernel.org>
-References: <20240709211001.1198145-1-tj@kernel.org>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="E6m/rBvf"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id A81EA87919;
+	Tue,  9 Jul 2024 23:12:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1720559575;
+	bh=1noTMqY/rG3qSD8Wta99giMVhqcbXHJ0pLLor4uc6z0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E6m/rBvfqIXAVMElepNFtOiMpn9+X3EsvyHC6aK3G5jL0yMQGgoCrxXl8fDkbc4mX
+	 aHf54Bv/xpF/b3/ak6COaOHwf6kNOfnVXcuvLMhp9vg+F2722O0bzc2wqAjejP9luw
+	 39ssu2GPwh5aHTbCoozbXGFSsE9CIMnW8QsUWsRy0pKc9xNkD2tdMmB/KYwnpJSgB8
+	 CnePzCGe2P7VL58OK0BLIgn6zAUVdKsirgJ9KxwrE4W5MHmnuzLxx/a13R4ICOF0Oi
+	 pPZQByDve4Hv9DGImZwx0OK1HmcmvbAe15hkjk0ygJkB43p3OgrGuYn7sGoWzxzyUa
+	 brXcXUkcESYSA==
+Message-ID: <8ae33208-3273-4bca-8371-6fc1ef50061f@denx.de>
+Date: Tue, 9 Jul 2024 22:25:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: display: bridge: ti,sn65dsi83: add
+ burst-mode-disabled
+To: Stefano Radaelli <stefano.radaelli21@gmail.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+ "Noah J . Rosa" <noahj.rosa@gmail.com>, linux-kernel@vger.kernel.org
+References: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
+ <172045725750.3389992.15451403448241421795.robh@kernel.org>
+ <CAK+owohBrewYFpDKjsE5iWC5OQ3p6S_9fwj7DWa1Ux2h8CXcAw@mail.gmail.com>
+ <944ecc41-9ef7-4d9e-9d96-3c5c0cdb71b5@denx.de>
+ <CAK+owoiQY8OYiZofyq4jj2S3Mg6ub88DF5V52JcppxhWbUsWgg@mail.gmail.com>
+ <223b287f-4da6-4ec1-be7c-6135215c5551@denx.de>
+ <CAK+owogLctqu17cFEQH+258wrpfMJ4iE6iJABRu5dwxDtR21EA@mail.gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <CAK+owogLctqu17cFEQH+258wrpfMJ4iE6iJABRu5dwxDtR21EA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-When a running task is migrated to another CPU, the stop_task is used to
-preempt the running task and migrate it. This, expectedly, invokes
-ops.cpu_release(). If the BPF scheduler then calls
-scx_bpf_reenqueue_local(), it re-enqueues all tasks on the local DSQ
-including the task which is being migrated.
+On 7/9/24 7:30 PM, Stefano Radaelli wrote:
+> Okay, I get it.
+> 
+> So if you think this mode shouldn't be implemented within this driver, we
+> can close the thread.
+> Just for information, this driver has been implemented from the work done
+> by Compulab (as it says in the driver's initial comments), and they do not
+> put the burst mode by default, not even giving the possibility to activate
+> it by dts:
+> https://github.com/compulab-yokneam/imx8-android/blob/master/o8/vendor/nxp-opensource/kernel_imx/0055-sn65dsi83-Add-ti-sn65dsi83-dsi-to-lvds-bridge-driver.patch
 
-This creates an unnecessary re-enqueue of a task which is about to be
-deactivated and re-activated for migration anyway. It can also cause
-confusion for the BPF scheduler as scx_bpf_task_cpu() of the task and its
-allowed CPUs may not agree while migration is pending.
+This is not the mainline Linux driver.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 245254f7081d ("sched_ext: Implement sched_ext_ops.cpu_acquire/release()")
-Cc: David Vernet <void@manifault.com>
----
- kernel/sched/ext.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> The panels that I've had these problems with are some of JuTouch's
+> 1920x1200, for example JT101TM015 , and I solved it by giving the option to
+> remove this mode.
+> I have also heard from other colleagues who have had the same problem on
+> some dual-channel displays.
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 0fabfe19327c..f4a7abcec793 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -5646,6 +5646,20 @@ __bpf_kfunc u32 scx_bpf_reenqueue_local(void)
- 	 */
- 	list_for_each_entry_safe(p, n, &rq->scx.local_dsq.list,
- 				 scx.dsq_list.node) {
-+		/*
-+		 * If @p is being migrated, @p's current CPU may not agree with
-+		 * its allowed CPUs and the migration_cpu_stop is about to
-+		 * deactivate and re-activate @p anyway. Skip re-enqueueing.
-+		 *
-+		 * While racing sched property changes may also dequeue and
-+		 * re-enqueue a migrating task while its current CPU and allowed
-+		 * CPUs disagree, they use %ENQUEUE_RESTORE which is bypassed to
-+		 * the current local DSQ for running tasks and thus are not
-+		 * visible to the BPF scheduler.
-+		 */
-+		if (p->migration_pending)
-+			continue;
-+
- 		dispatch_dequeue(rq, p);
- 		list_add_tail(&p->scx.dsq_list.node, &tasks);
- 	}
--- 
-2.45.2
-
+Does that problem happen with the aforementioned driver or the mainline 
+Linux driver ?
