@@ -1,201 +1,263 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9951615218F;
-	Tue,  9 Jul 2024 08:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA73712E1C4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720512887; cv=none; b=tZIxIZLNpnG48NmjR7UgGCFS8tk8mm23vsXuROfZtTr0XecxLxmY7VcqHYUJjDrC8Xmlta2gwAFsKvjqh5D8HG8SS7kT9RZBfPwZYdS80Hi4BJjG70XS/CYk02uyG0/VnXvi/az01Z5rZM+nVFU1oXDfWmnKTqY2UCHpFlhheAs=
+	t=1720513040; cv=none; b=uJBYK2Fgm7VJ411bVRqFxHMST0RqvpOpsfZSrBP3vXBqN2Z+Q1Tyb7a9qSlkZxWjW75VhBpfp0igExguJNBP1TYOkLWqkoJb8h0jKpSC/Lsg0OYP4ZnJSmbMZC7LST/RclxQAYSPX5fIHzme2iRgbfR2f+WWHCuZDuwBqYJsRe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720512887; c=relaxed/simple;
-	bh=AZugvt/CV1mGMz/1Cwy0FeNpwjzJM1Le5fb7OlI0U+4=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=dd3pDET6q+BDISxfUzAmuo/SpvXGWexVzJDx6L3PTVkODY9/JCCCIoyQNUhcb57B7lWPBOcspE591dkQobTIjmSltLwH8HVw7y4XvZDUZGy3MlqaMtiuJv9QoumErMe9kd7z0n76Wb2zBjy5YqUoR/PgNp2TlIO1IebWB+CDplI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=p/xjTwNw; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1720513040; c=relaxed/simple;
+	bh=CFl4FEO6onPfRjNmf17lDUrD96DZaB8ZQ4TmUyyNP5s=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=swcu7Uwu+x7tslETNvTfLqFdX/IrVl2AHEoLQu1bFpFrRRqjOAdwtv2zdL+vM6Mu8GP9mxRu6rCljkr0+cv3D2e4j5QCxFNfVTiGh96om7IUEu3ZKns6heL3vBTgkwTe2RAp6ZWIa2ri5mBh12SwV7thIvkdVZ37Jd1x5Iaxh64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=BX4of96H; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="p/xjTwNw"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720512883; h=Message-ID:Subject:Date:From:To;
-	bh=gEc0rnc+xdlfvbkmIvh5AehIyDe+JQmaAWvXgvewDuk=;
-	b=p/xjTwNw0xYYhKj5/NE5RLUZqDMGZDPaEyzJ88biBa/JNG60fQX28KpYG7QbZXhQbC9+ppnxPsapP5qX4bxK+eYOgdH00p7wLo4cgMAq2e0d+yUSCnj1CFsu2olDgIcz9ZVjnn5AVxXSBwkkVqHGxea78qzp4fanS1YY/kAWkeA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0WABApq9_1720512882;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WABApq9_1720512882)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Jul 2024 16:14:42 +0800
-Message-ID: <1720512872.4839034-5-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH net-next v3 3/3] virtio-net: synchronize operstate with admin state on up/down
-Date: Tue, 9 Jul 2024 16:14:32 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- davem@davemloft.net,
- edumazet@google.com,
- kuba@kernel.org,
- pabeni@redhat.com,
- netdev@vger.kernel.org,
- Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
- "Gia-Khanh Nguyen" <gia-khanh.nguyen@oracle.com>,
- mst@redhat.com,
- jasowang@redhat.com,
- eperezma@redhat.com
-References: <20240709080214.9790-1-jasowang@redhat.com>
- <20240709080214.9790-4-jasowang@redhat.com>
-In-Reply-To: <20240709080214.9790-4-jasowang@redhat.com>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="BX4of96H"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1720513027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YAACi2NX/mGR0ktakok0JBId6ENllzY1DnYcf6uHrnY=;
+	b=BX4of96H0VvqDZS5x3Ajo3tTb3+fujHh5IDTmu0Z0FDYGHe4oO7JweaFpedsFxRfc7PHKi
+	VqgGCnhLZAQqryXWtuS3ubMSeba/xlwO0aTEQ0wcqKwYAUcsnepcfqW2q2IgrOS1k8/rNt
+	l9PpwLMDzFmOBlEoIV5S9Z3lAHgrPrzyQwe0oMHShqORIewlRrLtXWisjmW9RKS/n7z78o
+	lYqb+TJcLbXPvreBNOim5fjrGejliqZfrFotVXkWATrjHw2awW7FkfJB/moquFaMWUl0Ii
+	MJUE9KNXzVhfF82RpCHfyXgS9WsM2HyeunlNParYkiJz8231IyJCURkPGMl16g==
+Date: Tue, 09 Jul 2024 10:17:06 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Andy Yan <andyshrk@163.com>
+Cc: linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org,
+ heiko@sntech.de, hjc@rock-chips.com, andy.yan@rock-chips.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, daniel@ffwll.ch, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, javierm@redhat.com
+Subject: Re: [PATCH] drm/rockchip: cdn-dp: Remove redundant workarounds for
+ firmware loading
+In-Reply-To: <2fd3aabd.785b.190914ec1a6.Coremail.andyshrk@163.com>
+References: <9b7a9e9b88ad8c7489ee1b4c70b8751eeb5cf6f9.1720049413.git.dsimic@manjaro.org>
+ <109c6f19.2559.1907b817a99.Coremail.andyshrk@163.com>
+ <0bf4701d98833609b917983718c610aa@manjaro.org>
+ <2fd3aabd.785b.190914ec1a6.Coremail.andyshrk@163.com>
+Message-ID: <f0fb9feed2d9262bb4d7c8ade836af62@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Tue,  9 Jul 2024 16:02:14 +0800, Jason Wang <jasowang@redhat.com> wrote:
-> This patch synchronize operstate with admin state per RFC2863.
->
-> This is done by trying to toggle the carrier upon open/close and
-> synchronize with the config change work. This allows propagate status
-> correctly to stacked devices like:
->
-> ip link add link enp0s3 macvlan0 type macvlan
-> ip link set link enp0s3 down
-> ip link show
->
-> Before this patch:
->
-> 3: enp0s3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
->     link/ether 00:00:05:00:00:09 brd ff:ff:ff:ff:ff:ff
-> ......
-> 5: macvlan0@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
->     link/ether b2:a9:c5:04:da:53 brd ff:ff:ff:ff:ff:ff
->
-> After this patch:
->
-> 3: enp0s3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
->     link/ether 00:00:05:00:00:09 brd ff:ff:ff:ff:ff:ff
-> ...
-> 5: macvlan0@enp0s3: <NO-CARRIER,BROADCAST,MULTICAST,UP,M-DOWN> mtu 1500 qdisc noqueue state LOWERLAYERDOWN mode DEFAULT group default qlen 1000
->     link/ether b2:a9:c5:04:da:53 brd ff:ff:ff:ff:ff:ff
->
-> Cc: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
-> Cc: Gia-Khanh Nguyen <gia-khanh.nguyen@oracle.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
+Hello Andy,
 
-Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+On 2024-07-08 09:46, Andy Yan wrote:
+> At 2024-07-04 18:35:42, "Dragan Simic" <dsimic@manjaro.org> wrote:
+>> On 2024-07-04 04:10, Andy Yan wrote:
+>>> At 2024-07-04 07:32:02, "Dragan Simic" <dsimic@manjaro.org> wrote:
+>>>> After the additional firmware-related module information was
+>>>> introduced by
+>>>> the commit c0677e41a47f ("drm/rockchip: cdn-dp-core: add
+>>>> MODULE_FIRMWARE
+>>>> macro"), there's no longer need for the firmware-loading workarounds
+>>>> whose
+>>>> sole purpose was to prevent the missing firmware blob in an initial
+>>>> ramdisk
+>>>> from causing driver initialization to fail.  Thus, delete the
+>>>> workarounds,
+>>>> which removes a sizable chunk of redundant code.
+>>> 
+>>> What would happen if there was no ramdisk? And the firmware is in
+>>> rootfs ？
+>>> 
+>>> For example： A buildroot based tiny embedded system。
+>> 
+>> Good point, let me explain, please.
+>> 
+>> In general, if a driver is built into the kernel, there should also be
+>> an initial ramdisk that contains the related firmware blobs, because
+>> it's
+>> unknown is the root filesystem available when the driver is probed.  
+>> If
+>> a driver is built as a module and there's no initial ramdisk, having
+>> the related firmware blobs on the root filesystem should be fine,
+>> because
+>> the firmware blobs and the kernel module become available at the same
+>> time, through the root filesystem. [1]
+>> 
+>> Another option for a driver built statically into the kernel, when
+>> there's
+>> no initial ramdisk, is to build the required firmware blobs into the
+>> kernel
+>> image. [2]  Of course, that's feasible only when a kernel image is 
+>> built
+>> specificially for some device, because otherwise it would become too
+>> large
+>> because of too many drivers and their firmware blobs becoming 
+>> included,
+>> but that seems to fit the Buildroot-based example.
+>> 
+>> To sum it up, mechanisms already exist in the kernel for various
+>> scenarios
+>> when it comes to loading firmware blobs.  Even if the deleted 
+>> workaround
+>> attempts to solve some issue specific to some environment, that isn't
+>> the
+>> right place or the right way for solving any issues of that kind.
+>> 
+>> While preparing this patch, I even tried to find another kernel driver
+>> that
+>> also implements some similar workarounds for firmware loading, to
+>> justify
+>> the existence of such workarounds and to possibly move them into the
+>> kernel's
+>> firmware-loading interface.  Alas, I was unable to find such 
+>> workarounds
+>> in
+>> other drivers, which solidified my reasoning behind classifying the
+>> removed
+>> code as out-of-place and redundant.
+> 
+> For some tiny embedded system，there is no such ramdisk，for example：
+> a buildroot based rootfs，the buildroot only generate rootfs。
+> 
+> And FYI， there are mainline drivers try to fix such issue by
+> defer_probe，for example：
+> smc_abc[0]
+> There are also some other similar scenario in gpu driver{1}[2]
+> 
+> [0]https://elixir.bootlin.com/linux/latest/source/drivers/tee/optee/smc_abi.c#L1518
+> [1]https://patchwork.kernel.org/project/dri-devel/patch/20240109120604.603700-1-javierm@redhat.com/
+> [2]https://lore.kernel.org/dri-devel/87y1918psd.fsf@minerva.mail-host-address-is-not-set/T/
 
-> ---
->  drivers/net/virtio_net.c | 64 ++++++++++++++++++++++++----------------
->  1 file changed, 38 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 0b4747e81464..e6626ba25b29 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2476,6 +2476,25 @@ static void virtnet_cancel_dim(struct virtnet_info *vi, struct dim *dim)
->  	net_dim_work_cancel(dim);
->  }
->
-> +static void virtnet_update_settings(struct virtnet_info *vi)
-> +{
-> +	u32 speed;
-> +	u8 duplex;
-> +
-> +	if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_SPEED_DUPLEX))
-> +		return;
-> +
-> +	virtio_cread_le(vi->vdev, struct virtio_net_config, speed, &speed);
-> +
-> +	if (ethtool_validate_speed(speed))
-> +		vi->speed = speed;
-> +
-> +	virtio_cread_le(vi->vdev, struct virtio_net_config, duplex, &duplex);
-> +
-> +	if (ethtool_validate_duplex(duplex))
-> +		vi->duplex = duplex;
-> +}
-> +
->  static int virtnet_open(struct net_device *dev)
->  {
->  	struct virtnet_info *vi = netdev_priv(dev);
-> @@ -2494,6 +2513,18 @@ static int virtnet_open(struct net_device *dev)
->  			goto err_enable_qp;
->  	}
->
-> +	if (virtio_has_feature(vi->vdev, VIRTIO_NET_F_STATUS)) {
-> +		virtio_config_driver_enable(vi->vdev);
-> +		/* Do not schedule the config change work as the
-> +		 * config change notification might have been disabled
-> +		 * by the virtio core. */
-> +		virtio_config_changed(vi->vdev);
-> +	} else {
-> +		vi->status = VIRTIO_NET_S_LINK_UP;
-> +		virtnet_update_settings(vi);
-> +		netif_carrier_on(dev);
-> +	}
-> +
->  	return 0;
->
->  err_enable_qp:
-> @@ -2936,12 +2967,19 @@ static int virtnet_close(struct net_device *dev)
->  	disable_delayed_refill(vi);
->  	/* Make sure refill_work doesn't re-enable napi! */
->  	cancel_delayed_work_sync(&vi->refill);
-> +	/* Make sure config notification doesn't schedule config work */
-> +	virtio_config_driver_disable(vi->vdev);
-> +	/* Make sure status updating is cancelled */
-> +	cancel_work_sync(&vi->config_work);
->
->  	for (i = 0; i < vi->max_queue_pairs; i++) {
->  		virtnet_disable_queue_pair(vi, i);
->  		virtnet_cancel_dim(vi, &vi->rq[i].dim);
->  	}
->
-> +	vi->status &= ~VIRTIO_NET_S_LINK_UP;
-> +	netif_carrier_off(dev);
-> +
->  	return 0;
->  }
->
-> @@ -4640,25 +4678,6 @@ static void virtnet_init_settings(struct net_device *dev)
->  	vi->duplex = DUPLEX_UNKNOWN;
->  }
->
-> -static void virtnet_update_settings(struct virtnet_info *vi)
-> -{
-> -	u32 speed;
-> -	u8 duplex;
-> -
-> -	if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_SPEED_DUPLEX))
-> -		return;
-> -
-> -	virtio_cread_le(vi->vdev, struct virtio_net_config, speed, &speed);
-> -
-> -	if (ethtool_validate_speed(speed))
-> -		vi->speed = speed;
-> -
-> -	virtio_cread_le(vi->vdev, struct virtio_net_config, duplex, &duplex);
-> -
-> -	if (ethtool_validate_duplex(duplex))
-> -		vi->duplex = duplex;
-> -}
-> -
->  static u32 virtnet_get_rxfh_key_size(struct net_device *dev)
->  {
->  	return ((struct virtnet_info *)netdev_priv(dev))->rss_key_size;
-> @@ -6000,13 +6019,6 @@ static int virtnet_probe(struct virtio_device *vdev)
->  	/* Assume link up if device can't report link status,
->  	   otherwise get link status from config. */
->  	netif_carrier_off(dev);
-> -	if (virtio_has_feature(vi->vdev, VIRTIO_NET_F_STATUS)) {
-> -		schedule_work(&vi->config_work);
-> -	} else {
-> -		vi->status = VIRTIO_NET_S_LINK_UP;
-> -		virtnet_update_settings(vi);
-> -		netif_carrier_on(dev);
-> -	}
->
->  	for (i = 0; i < ARRAY_SIZE(guest_offloads); i++)
->  		if (virtio_has_feature(vi->vdev, guest_offloads[i]))
-> --
-> 2.31.1
->
+Thanks for providing these examples.
+
+Before I continue thinking about the possible systemic solution,
+could you please clarify the way Buildroot builds the kernel and
+prepares the root filesystem?  I'm not familiar with Buildroot,
+but it seems to me that it builds the drivers statically into the
+produced kernel image, while it places the related firmware blobs
+into the produced root filesystem.  Am I right there?
+
+As I already wrote earlier, and as the above-linked discussions
+conclude, solving these issues doesn't belong to any specific driver.
+It should be resolved within the kernel's firmware loading mechanism
+instead, and no driver should be specific in that regard.
+
+>> [1] 
+>> https://www.kernel.org/doc/Documentation/driver-api/firmware/direct-fs-lookup.rst
+>> [2] 
+>> https://www.kernel.org/doc/Documentation/driver-api/firmware/built-in-fw.rst
+>> 
+>>>> Various utilities used by Linux distributions to generate initial
+>>>> ramdisks
+>>>> need to obey the firmware-related module information, so we can rely
+>>>> on the
+>>>> firmware blob being present in the generated initial ramdisks.
+>>>> 
+>>>> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+>>>> ---
+>>>> drivers/gpu/drm/rockchip/cdn-dp-core.c | 53 
+>>>> +++++---------------------
+>>>> 1 file changed, 10 insertions(+), 43 deletions(-)
+>>>> 
+>>>> diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.c
+>>>> b/drivers/gpu/drm/rockchip/cdn-dp-core.c
+>>>> index bd7aa891b839..e1a7c6a1172b 100644
+>>>> --- a/drivers/gpu/drm/rockchip/cdn-dp-core.c
+>>>> +++ b/drivers/gpu/drm/rockchip/cdn-dp-core.c
+>>>> @@ -44,9 +44,9 @@ static inline struct cdn_dp_device
+>>>> *encoder_to_dp(struct drm_encoder *encoder)
+>>>> #define DPTX_HPD_DEL		(2 << 12)
+>>>> #define DPTX_HPD_SEL_MASK	(3 << 28)
+>>>> 
+>>>> -#define CDN_FW_TIMEOUT_MS	(64 * 1000)
+>>>> #define CDN_DPCD_TIMEOUT_MS	5000
+>>>> #define CDN_DP_FIRMWARE		"rockchip/dptx.bin"
+>>>> +
+>>>> MODULE_FIRMWARE(CDN_DP_FIRMWARE);
+>>>> 
+>>>> struct cdn_dp_data {
+>>>> @@ -909,61 +909,28 @@ static int cdn_dp_audio_codec_init(struct
+>>>> cdn_dp_device *dp,
+>>>> 	return PTR_ERR_OR_ZERO(dp->audio_pdev);
+>>>> }
+>>>> 
+>>>> -static int cdn_dp_request_firmware(struct cdn_dp_device *dp)
+>>>> -{
+>>>> -	int ret;
+>>>> -	unsigned long timeout = jiffies +
+>>>> msecs_to_jiffies(CDN_FW_TIMEOUT_MS);
+>>>> -	unsigned long sleep = 1000;
+>>>> -
+>>>> -	WARN_ON(!mutex_is_locked(&dp->lock));
+>>>> -
+>>>> -	if (dp->fw_loaded)
+>>>> -		return 0;
+>>>> -
+>>>> -	/* Drop the lock before getting the firmware to avoid blocking 
+>>>> boot
+>>>> */
+>>>> -	mutex_unlock(&dp->lock);
+>>>> -
+>>>> -	while (time_before(jiffies, timeout)) {
+>>>> -		ret = request_firmware(&dp->fw, CDN_DP_FIRMWARE, dp->dev);
+>>>> -		if (ret == -ENOENT) {
+>>>> -			msleep(sleep);
+>>>> -			sleep *= 2;
+>>>> -			continue;
+>>>> -		} else if (ret) {
+>>>> -			DRM_DEV_ERROR(dp->dev,
+>>>> -				      "failed to request firmware: %d\n", ret);
+>>>> -			goto out;
+>>>> -		}
+>>>> -
+>>>> -		dp->fw_loaded = true;
+>>>> -		ret = 0;
+>>>> -		goto out;
+>>>> -	}
+>>>> -
+>>>> -	DRM_DEV_ERROR(dp->dev, "Timed out trying to load firmware\n");
+>>>> -	ret = -ETIMEDOUT;
+>>>> -out:
+>>>> -	mutex_lock(&dp->lock);
+>>>> -	return ret;
+>>>> -}
+>>>> -
+>>>> static void cdn_dp_pd_event_work(struct work_struct *work)
+>>>> {
+>>>> 	struct cdn_dp_device *dp = container_of(work, struct cdn_dp_device,
+>>>> 						event_work);
+>>>> 	struct drm_connector *connector = &dp->connector;
+>>>> 	enum drm_connector_status old_status;
+>>>> -
+>>>> 	int ret;
+>>>> 
+>>>> 	mutex_lock(&dp->lock);
+>>>> 
+>>>> 	if (dp->suspended)
+>>>> 		goto out;
+>>>> 
+>>>> -	ret = cdn_dp_request_firmware(dp);
+>>>> -	if (ret)
+>>>> -		goto out;
+>>>> +	if (!dp->fw_loaded) {
+>>>> +		ret = request_firmware(&dp->fw, CDN_DP_FIRMWARE, dp->dev);
+>>>> +		if (ret) {
+>>>> +			DRM_DEV_ERROR(dp->dev, "Loading firmware failed: %d\n", ret);
+>>>> +			goto out;
+>>>> +		}
+>>>> +
+>>>> +		dp->fw_loaded = true;
+>>>> +	}
+>>>> 
+>>>> 	dp->connected = true;
+>>>> 
