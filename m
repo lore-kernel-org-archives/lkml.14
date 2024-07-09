@@ -1,116 +1,116 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C392527713
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 07:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223FB143752;
+	Tue,  9 Jul 2024 07:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720510996; cv=none; b=dOh/aLS3DgSQbTiJ2t99g5JA+vdmvC82xgeUv3lJradhaiAJnwF051evDzQ7NqPju0yp3Md4hC1fm16XX6kUtn6YaOeFX0EuUfi4InLan2YK/ZFcN/YlvBOmuEGWlWBhoGCqCOTSNzBVL9x++eHlPSd0SSYffaFEgU0onA3T068=
+	t=1720511025; cv=none; b=p7hI4nnQJAOjKbdjKYt8fTPe4TfxHqSwaeBMu4spn3Bw/VdQY/nNp0zAms3J/UEkegPxjld/ZLKS4+vfdNY4QZ70Ke2TOVxe7c9teipT/c8V7sm9yl+6Dw09N0VKEdsr+SO1K7B2w8I9THq/z8lAHRYBtBRvd/sUfEIAvKoWv9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720510996; c=relaxed/simple;
-	bh=jAG3/aKaD/kqbIcJypKqQbgWvBndMAYJGXwk/ugv40Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=siEzsT6Vb9vsTHp2Bc8DijuYfr4wLVa+5RIT3Ks2LP4FJvEdA+x040YX+bxrx61sj70oGBHELz5ka8vXlVkW8RS2XwkuAJbItc2X/I7Ti+uVzr9odY/aReramcyXNEPI0v081t6Ndt0r4aOSWL3p25SXQc5V267mPfoZNxDpPa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lBZ5A5ed; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720511025; c=relaxed/simple;
+	bh=dr7l3t+GjKMDnDuiYasmDuc9Qrrjr+5nnYrK+/4137Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qhs0RuOMu1sVtDofVClrkrqcTkI2LpAe0GjzGzLHvjVoU8jZ1ftRxt0dLiLNTXm3gpPyy4BfkZjKmuEfkqyhu1gZZzU0ILeJ1OCuld04H6fiPf/m5KmXWFGy3mci9EygvBfzZA98XBHcGoJjf5cBV1GG3e5Yi8iD4FSQQX62CSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=s42YhSu2; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lBZ5A5ed"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-36796d2e5a9so3262061f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 00:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720510993; x=1721115793; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=h1CLW71m5KlFIfS4WtV1HBML6Ik9miyTvvoVtrTfgdI=;
-        b=lBZ5A5ed3jLJAWQDSBmi68plpWpHA+F4E8qQYgOtu46nHdf5NTFGetJK8IfEdMijzJ
-         Iu5o227LaIzKXnLgFFLA/67Psjwt8XdbAKrFlq53I29f/mgUsWPtKvfIuaXhLTTdwQWB
-         IobTTLpchBtFcQLB2uismdWU0vC4FrGdjnqhjaRap1unKlz2LoR/3VA47acWSEl5cSZq
-         PPUIPPmrOTemFKrwcjF8XMcccyzEj3TzBXKD+XeTBsgthA8KRlE8a1sZDI5rbrwXSDgz
-         CqO/kHqvOvynfJvpJD5QzEpvinpgCndptbxaPIvZVwEmNyg5R67oeb3LPIH8dJNq/zov
-         phDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720510993; x=1721115793;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h1CLW71m5KlFIfS4WtV1HBML6Ik9miyTvvoVtrTfgdI=;
-        b=h58oUJJG5Caigh+NQu1UauEFc2XAQCGxo0ePt4GigJFAylMxJvFvX+oFNWwxwGHgtz
-         KOWX+QrSamICjLvjk4d0JF4B3vhwVH+TJ0TLatCza8kLILorMzR3+929SY3OOjbsZ4nR
-         CXFn9V21cYN0NRIoP6Cz9WuU7WZvQVkf7+uVUUWCdHNwCLRSbBF/Sg4lGYEf5RNdGlAt
-         2LgKVmt0rSWMGmCRy3HDpR3GOxfZp5Y0OC5TaEJmt8Xh/aR7Lnu3UJ71dkRHdfmc6QIr
-         E7cnF3zKubVYVeLThJdVQ4zZxJ5HoyF4Hu2pM2xbWs5TwS8OzSVU8b242+OGwXK8YOgy
-         15Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvcJG8yhpkRv0cWbhOnsiezJQm3MAJU/a/z9cYNJmb5XlEGGDNcU4TTb4Lcg5bGuItKNRNe/SAhbsoYq4eXr+YWWk2dMpf+iwHx/7d
-X-Gm-Message-State: AOJu0YyM3mFaYItIcsqaKfja5dbIJm/hmXsMtgEKp0fWjAH365R7RE19
-	jlZTVEgGwjaEGxe1QqizxZDN1XBiTz+reCdLYBRZRu9YuKD6HvfyoNqzosXt4jk=
-X-Google-Smtp-Source: AGHT+IFW+YP/WjH3mfocei0KWEyOnvOvhNRqjin5G0HJ1iruDzyBQrHEp0XoWZjyCQ5cCU6oLsl5Mw==
-X-Received: by 2002:a05:6000:18aa:b0:367:9073:3491 with SMTP id ffacd0b85a97d-367cea46301mr1400995f8f.5.1720510993204;
-        Tue, 09 Jul 2024 00:43:13 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:cf24:cce:17df:12ab? ([2a05:6e02:1041:c10:cf24:cce:17df:12ab])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-367cde7df48sm1746617f8f.1.2024.07.09.00.43.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 00:43:12 -0700 (PDT)
-Message-ID: <0fdbddfb-f25b-4d39-a80c-770fb8ed40f4@linaro.org>
-Date: Tue, 9 Jul 2024 09:43:12 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s42YhSu2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720511021;
+	bh=o9VUrZTwSxcIukPrWAGUJ9E0ASY1OK2NhB+cQqKDHHM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=s42YhSu2BtzzHurrB0fD3leQYO5KzNFamh/v7Tnpe3T0wppC2gLPV9+wkM7NQyMGz
+	 KvbJhqrZb1o9OCURLKSzKEFBlUOJgsJpfqi6Fuwy1yPM+isz2a1OlBgiMev/hne1H1
+	 87j4YsPGok0YeOQIu4noQeTl/1vm/HhVYvrCy5PvgG/iBV9OYfzuJe1nt1wGyqV2b9
+	 1G9lg5CdAPqiX39YwGmgSi0iPpnBqWwoj48Mrs7gWpinq8sZdbGJLZtAw4I//xsfbS
+	 P0HYoPUAEl+UYwqcCeKEn4gAx5tXBjcuCjikxGVW/1BXPLDkb8U6y3I+Dfl66vyEu+
+	 kPYZ+b9Df4xxQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJCfP39Q7z4w2R;
+	Tue,  9 Jul 2024 17:43:41 +1000 (AEST)
+Date: Tue, 9 Jul 2024 17:43:40 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Donet Tom <donettom@linux.ibm.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, "Ritesh Harjani (IBM)"
+ <ritesh.list@gmail.com>
+Subject: linux-next: manual merge of the random tree with the mm-stable tree
+Message-ID: <20240709174340.5c03c2b9@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] dt-bindings: timer: renesas,tmu: Add more SoC
- families
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
-References: <cover.1716985096.git.geert+renesas@glider.be>
- <CAMuHMdWP7y=8rA5jszCbzh_RnXnv4tFUpHv0qtbucHEYRFE9qw@mail.gmail.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <CAMuHMdWP7y=8rA5jszCbzh_RnXnv4tFUpHv0qtbucHEYRFE9qw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/MmvR/cmc7U=7=PRedTMJjZb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 09/07/2024 09:39, Geert Uytterhoeven wrote:
-> On Wed, May 29, 2024 at 2:22 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->> This patch series documents support for the Timer Unit (TMU) on the
->> R-Mobile APE6 SoC, and on various SoCs from the RZ/G1 and R-Car Gen2
->> families.
->>
->> Changes compared to v1:
->>    - Add Acked-by, Reviewed-by.
->>
->> Thanks for your comments!
->>
->> Geert Uytterhoeven (3):
->>    dt-bindings: timer: renesas,tmu: Add R-Mobile APE6 support
->>    dt-bindings: timer: renesas,tmu: Add RZ/G1 support
->>    dt-bindings: timer: renesas,tmu: Add R-Car Gen2 support
->>
->>   .../devicetree/bindings/timer/renesas,tmu.yaml       | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
-> 
-> Gentle ping, as these are already in use in DTS since v6.10-rc1.
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
+--Sig_/MmvR/cmc7U=7=PRedTMJjZb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks
+Hi all,
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Today's linux-next merge of the random tree got a conflict in:
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+  tools/testing/selftests/mm/Makefile
 
+between commit:
+
+  3a103b5315b7 ("selftest: mm: Test if hugepage does not get leaked during =
+__bio_release_pages()")
+
+from the mm-stable tree and commit:
+
+  94beef29e110 ("mm: add MAP_DROPPABLE for designating always lazily freeab=
+le mappings")
+
+from the random tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/testing/selftests/mm/Makefile
+index e1aa09ddaa3d,e3e5740e13e1..000000000000
+--- a/tools/testing/selftests/mm/Makefile
++++ b/tools/testing/selftests/mm/Makefile
+@@@ -75,7 -73,7 +75,8 @@@ TEST_GEN_FILES +=3D ksm_functional_test
+  TEST_GEN_FILES +=3D mdwe_test
+  TEST_GEN_FILES +=3D hugetlb_fault_after_madv
+  TEST_GEN_FILES +=3D hugetlb_madv_vs_map
+ +TEST_GEN_FILES +=3D hugetlb_dio
++ TEST_GEN_FILES +=3D droppable
+ =20
+  ifneq ($(ARCH),arm64)
+  TEST_GEN_FILES +=3D soft-dirty
+
+--Sig_/MmvR/cmc7U=7=PRedTMJjZb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaM6iwACgkQAVBC80lX
+0GzQ0Qf8D5iZvMUXOim4h+wk5dm9lHbdnosCIMex9sPYFogb+B8L5JFi8rNQ3R+N
+RJrVWK8G/gcEh3dtx7/VV1FpURnjs0AKDvJbYHVTSRbrfbKhAcoeZEvzf3eXNv6i
+9Gf/hrOznL+Fs0ZIkt1UwgIgCHHctZNura+Tt80LlSa3fRe1ybGeQ5eMP68AsMnV
+siS9me/dpizAbMnJluRxwWLbhT86tXBehR6UNI2F+5x4Q/AUSclEuh/aSQGtDSzp
+19v7cJXh50Ggx8ANyDtdJWlxktpQ7B4wrZOoMT3Sya8+9yhSOcvdxGCiuhiKBQ6W
+1mR1+GF/nNUtOxwe72xMb5OFvNWC9w==
+=Ea6t
+-----END PGP SIGNATURE-----
+
+--Sig_/MmvR/cmc7U=7=PRedTMJjZb--
