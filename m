@@ -1,93 +1,179 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6809D18004E;
-	Tue,  9 Jul 2024 21:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C2418560A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 21:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720559579; cv=none; b=d6jb8bFceT+h1W1Gg/RZU6KA/hwGcYDUibkRPAqf1ii7I8SQONvgRImXMgcB1bNkLf7XGqb0y5WpXvIDGpfMdHiKoE+KBrx77ML/dTpMcevi8oZ3ZkylocClmS/YY672XCZ71t8ALRxO9fbY796G5+7m91ytazDgl4HCSfP9hcU=
+	t=1720559610; cv=none; b=VCBuJkSAw8nskNXvAmwrPB0a+UWXOT5tFGnocAtm9BMzxOXLuJAfMLIFQdn+fUJ9lVeJ3q57uHCGQCIQzvKAASYlEvAaC4KpwHrpQlMcaBVEj+D7O3ahE/NE17ly5UvSodRbs5h4x13vViC6gq5vtOJXunB3lOGGbLbHfDgQS60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720559579; c=relaxed/simple;
-	bh=ZQLcCo+JCusuv6Y+S21jZr/MkdBipRmNT9NNGQFy3qc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MZFCT90t4i2Fs9cOEUNYwm3tikiB1C5eZrrFuLLKh1atglb1pZCt2WRHOEMD/6WEWcturpFr8gYVVJ/BhxoS5Wlboa7h2sSe0V3ctcTnaVYdZiQFaikcimkM9wCCip9rSs7V9iyKQy6lqAkR4yu5Qm+74x7f5Oe7RcIrv8wgOm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=E6m/rBvf; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1720559610; c=relaxed/simple;
+	bh=98IxAdYgPX6Jr7PqsYEbwqKCv63rJ4BlitWPOe1SC+I=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gr1a1Gfj/j+Y1i8YvncfA1YPES6O7yynsDU4pTITwrj/q34HuTwp8fPWYx8rDjoZyfyyP+typ+dozDOsdsAGzL2vfm4sfOFHMW8oBDdVmwm9rizSJnWdZ8etOd8ogunMcfe1t3o5XHVleLSsZI1EV7tyzbxOvPYxHydMxrz6tuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uyn00xCn; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="E6m/rBvf"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id A81EA87919;
-	Tue,  9 Jul 2024 23:12:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1720559575;
-	bh=1noTMqY/rG3qSD8Wta99giMVhqcbXHJ0pLLor4uc6z0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E6m/rBvfqIXAVMElepNFtOiMpn9+X3EsvyHC6aK3G5jL0yMQGgoCrxXl8fDkbc4mX
-	 aHf54Bv/xpF/b3/ak6COaOHwf6kNOfnVXcuvLMhp9vg+F2722O0bzc2wqAjejP9luw
-	 39ssu2GPwh5aHTbCoozbXGFSsE9CIMnW8QsUWsRy0pKc9xNkD2tdMmB/KYwnpJSgB8
-	 CnePzCGe2P7VL58OK0BLIgn6zAUVdKsirgJ9KxwrE4W5MHmnuzLxx/a13R4ICOF0Oi
-	 pPZQByDve4Hv9DGImZwx0OK1HmcmvbAe15hkjk0ygJkB43p3OgrGuYn7sGoWzxzyUa
-	 brXcXUkcESYSA==
-Message-ID: <8ae33208-3273-4bca-8371-6fc1ef50061f@denx.de>
-Date: Tue, 9 Jul 2024 22:25:42 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uyn00xCn"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1fb3b398923so27168265ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 14:13:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720559607; x=1721164407; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OCxN1kpEpfZBxXrWADMXs6tBNh2vmqe3cjWxxQw4q0s=;
+        b=Uyn00xCnBc5tFPYF4Eq/dhRasknkx+J+ZesjrqVSj3x2SamgDLTpqYYKUR4+NjEWU6
+         9pJIuhowhPF2CenRuZgPlJ4qhQB8YSrlmPIW3nBjk96QVydeyXw4wg+fnBHIgqk5pdAx
+         HkMVTChDYfDfMFSyzYO4Y0ZMJx5u7LQ7kQKcjz2tHsRE/UCzuuEmIzj+q68fEoUD2kAr
+         QbXpL+O/KoopoBuTj493V6Yhejj2BksQ8dvq/VO3FIQLmu8VB7vO5HOVAwsjZWgdWoEO
+         z0CS7gRw8UtCc1pMCAFex1uU9sywuIboLGd5IBXWrOYMaGdPllzxPPeHSheinXpO43kN
+         kjGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720559607; x=1721164407;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OCxN1kpEpfZBxXrWADMXs6tBNh2vmqe3cjWxxQw4q0s=;
+        b=AphfOGt/sMYqh1iFGTpUCmaxnHCmObx0TnPIAct1KX65F+CM+x1XPIJeZJSKlhnMly
+         7IGpVkJUzUJPXgfuoHYN3zxeJHW1IOT+Ckhq0ayE7orxB67g6CIeQPxTVvS38kr7tw9R
+         pVoyfO2jR1A+vvHmjc1J/NArP07t3CfJgbQU+lQFprAlVTZwUPjadgPNvWMGvQbEdbZB
+         UMXiQwA+X4oWGRqr5yS+Y9c91b+3xiKIlmB9DR4d/CMoGT5RiE5nOuxqqTFBGBgUlQNW
+         gyqPu8BmwWertDYjcP3aORURUW7jfsdC5Pq1XEwgc1dDKjR2DGRg7+KfZtuZ3Lye1QEg
+         WB5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWOhowFEHq1Ao4vBqDVzr7HhRjTfbJCDlTJHPhqDXv9Vpsd7V2RSG6L3H6ZfBmhWJHsopKzKlVJX3g5WgdgXY/X5o9kHLZqXUJvz3VY
+X-Gm-Message-State: AOJu0YxfGugqBCz8xqJegshb6HZqNtOPUhIMvGUgaV4+6qek8laNfSft
+	rD82zovBJTLqT4rfUr/YhyOE0vlZzPrKG1HQmZ7S/ozkv+TIa4zHEcpl7mMo0X7zWY8PseDzDAx
+	rFg==
+X-Google-Smtp-Source: AGHT+IFdpjpN1wc3n2M16K74/2OQji70yWBUTcMFGct039d5tw8NoKCuSyI82ExR1eT0aXZIgG4bWhKW/n0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:ec8b:b0:1f9:8f8d:cc58 with SMTP id
+ d9443c01a7336-1fbb6d8a001mr1469105ad.12.1720559606905; Tue, 09 Jul 2024
+ 14:13:26 -0700 (PDT)
+Date: Tue, 9 Jul 2024 14:13:25 -0700
+In-Reply-To: <16658367af25852e4bb6abb0caf7c3bc58538db0.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: display: bridge: ti,sn65dsi83: add
- burst-mode-disabled
-To: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
- "Noah J . Rosa" <noahj.rosa@gmail.com>, linux-kernel@vger.kernel.org
-References: <20240708151857.40538-1-stefano.radaelli21@gmail.com>
- <172045725750.3389992.15451403448241421795.robh@kernel.org>
- <CAK+owohBrewYFpDKjsE5iWC5OQ3p6S_9fwj7DWa1Ux2h8CXcAw@mail.gmail.com>
- <944ecc41-9ef7-4d9e-9d96-3c5c0cdb71b5@denx.de>
- <CAK+owoiQY8OYiZofyq4jj2S3Mg6ub88DF5V52JcppxhWbUsWgg@mail.gmail.com>
- <223b287f-4da6-4ec1-be7c-6135215c5551@denx.de>
- <CAK+owogLctqu17cFEQH+258wrpfMJ4iE6iJABRu5dwxDtR21EA@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <CAK+owogLctqu17cFEQH+258wrpfMJ4iE6iJABRu5dwxDtR21EA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Mime-Version: 1.0
+References: <20240517173926.965351-1-seanjc@google.com> <20240517173926.965351-49-seanjc@google.com>
+ <16658367af25852e4bb6abb0caf7c3bc58538db0.camel@redhat.com>
+Message-ID: <Zo2n9VQ3nBuf1d3F@google.com>
+Subject: Re: [PATCH v2 48/49] KVM: x86: Add a macro for features that are
+ synthesized into boot_cpu_data
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
+	Kechen Lu <kechenl@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Robert Hoo <robert.hoo.linux@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 7/9/24 7:30 PM, Stefano Radaelli wrote:
-> Okay, I get it.
+On Thu, Jul 04, 2024, Maxim Levitsky wrote:
+> On Fri, 2024-05-17 at 10:39 -0700, Sean Christopherson wrote:
+> > Add yet another CPUID macro, this time for features that the host kernel
+> > synthesizes into boot_cpu_data, i.e. that the kernel force sets even in
+> > situations where the feature isn't reported by CPUID.  Thanks to the
+> > macro shenanigans of kvm_cpu_cap_init(), such features can now be handled
+> > in the core CPUID framework, i.e. don't need to be handled out-of-band and
+> > thus without as many guardrails.
+> > 
+> > Adding a dedicated macro also helps document what's going on, e.g. the
+> > calls to kvm_cpu_cap_check_and_set() are very confusing unless the reader
+> > knows exactly how kvm_cpu_cap_init() generates kvm_cpu_caps (and even
+> > then, it's far from obvious).
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+
+...
+
+> Now that you added the final F_* macro, let's list all of them:
 > 
-> So if you think this mode shouldn't be implemented within this driver, we
-> can close the thread.
-> Just for information, this driver has been implemented from the work done
-> by Compulab (as it says in the driver's initial comments), and they do not
-> put the burst mode by default, not even giving the possibility to activate
-> it by dts:
-> https://github.com/compulab-yokneam/imx8-android/blob/master/o8/vendor/nxp-opensource/kernel_imx/0055-sn65dsi83-Add-ti-sn65dsi83-dsi-to-lvds-bridge-driver.patch
+> #define F(name)							\
+> 
+> /* Scattered Flag - For features that are scattered by cpufeatures.h. */
+> #define SF(name)						\
+> 
+> /* Features that KVM supports only on 64-bit kernels. */
+> #define X86_64_F(name)						\
+> 
+> /*
+>  * Raw Feature - For features that KVM supports based purely on raw host CPUID,
+>  * i.e. that KVM virtualizes even if the host kernel doesn't use the feature.
+>  * Simply force set the feature in KVM's capabilities, raw CPUID support will
+>  * be factored in by __kvm_cpu_cap_mask().
+>  */
+> #define RAW_F(name)						\
+> 
+> /*
+>  * Emulated Feature - For features that KVM emulates in software irrespective
+>  * of host CPU/kernel support.
+>  */
+> #define EMUL_F(name)						\
+> 
+> /*
+>  * Synthesized Feature - For features that are synthesized into boot_cpu_data,
+>  * i.e. may not be present in the raw CPUID, but can still be advertised to
+>  * userspace.  Primarily used for mitigation related feature flags.
+>  */
+> #define SYN_F(name)						\
+> 
+> /*
+>  * Aliased Features - For features in 0x8000_0001.EDX that are duplicates of
+>  * identical 0x1.EDX features, and thus are aliased from 0x1 to 0x8000_0001.
+>  */
+> #define AF(name)								\
+> 
+> /*
+>  * VMM Features - For features that KVM "supports" in some capacity, i.e. that
+>  * KVM may query, but that are never advertised to userspace.  E.g. KVM allows
+>  * userspace to enumerate MONITOR+MWAIT support to the guest, but the MWAIT
+>  * feature flag is never advertised to userspace because MONITOR+MWAIT aren't
+>  * virtualized by hardware, can't be faithfully emulated in software (KVM
+>  * emulates them as NOPs), and allowing the guest to execute them natively
+>  * requires enabling a per-VM capability.
+>  */
+> #define VMM_F(name)								\
+> 
+> 
+> Honestly, I already somewhat lost in what each of those macros means even
+> when reading the comments, which might indicate that a future reader might
+> also have a hard time understanding those.
+> 
+> I now support even more the case of setting each feature bit in a separate
+> statement as I explained in an earlier patch.
+> 
+> What do you think?
 
-This is not the mainline Linux driver.
+I completely agree that there are an absurd number of flavors of features, but
+I don't see how using separate statement eliminates any of that complexity.  The
+complexity comes from the fact that KVM actually has that many different ways and
+combinations for advertising and enumerating CPUID-based features.
 
-> The panels that I've had these problems with are some of JuTouch's
-> 1920x1200, for example JT101TM015 , and I solved it by giving the option to
-> remove this mode.
-> I have also heard from other colleagues who have had the same problem on
-> some dual-channel displays.
+Ignoring for the moment that "vmm" and "aliased" could be avoided for any approach,
+if we go with statements, we'll still have
 
-Does that problem happen with the aforementioned driver or the mainline 
-Linux driver ?
+  kvm_cpu_cap_init{,passthrough,emulated,synthesized,aliased,vmm,only64}()
+
+or if the flavor is an input/enum,
+
+  enum kvm_cpuid_feature_type {
+  	NORMAL,
+	PASSTHROUGH,
+	EMULATED,
+	SYNTHESIZED,
+	ALIASED,
+	VMM,
+	ONLY_64,
+  }
+
+I.e. we'll still need the same functionality and comments, it would simply be
+dressed up differently.
+
+If the underlying concern is that the macro names are too terse, and/or getting
+one feature per line is desirable, then I'm definitely open to exploring alternative
+formatting options.  But that's largely orthogonal to using macros instead of
+individual function calls.
