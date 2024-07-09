@@ -1,129 +1,92 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88EC13D89D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E045214EC61
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720520264; cv=none; b=fZ3szI1nwXhEm2uxoY3b01duf02f9p7xBW/Hg0awpZPgpaHyxTyN8pNFHxIe9Q6tfoxD0ki1i2A9V7IkqMgYKb+wmLiKZb5I/io9OSNmgmUDzmD/in61BjV2ew/mbJr5LnOsx9iu1a/qWllgHTw/jKZDFB7+GnjH4+x5DhsE/L8=
+	t=1720520397; cv=none; b=ncGXm4H/3kw6vbnXicXhYWe6sLary/PabIhTmIrRTIJ0+7Brz77N5fNsgAVuicM+LfCvR6o3sG7G+rrRaA2Hc684E1ECu1l0tYisp9WGu19SCARiMw2tDso4c9m0IjJGtklrziZpzzbHxDytE7ra9qykCdJ/dOjXqd87kzvZZb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720520264; c=relaxed/simple;
-	bh=IESGm/8thX+g40USuX1uHIqqT896ZfnF8Gz3/dMx7xA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Clcrf8u/3Q+a0yFY6FiqAzORa2dJrQ23HUXf0vk2z1ZYgUPs1XJaZeHDCJxVz1k44vAOpOk/4kuhOLtYieU/CRUBIpZZbeLSioDAaxiwZ2Yq5BzR96R4kbOVRV9PYUxFgauQu3XLsdNrWZqet4mcBZAqSfCxbs/FhNlglZ7Y2wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=Ar12+GLc; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1720520397; c=relaxed/simple;
+	bh=7l7Gnx36n7yyUlfPBXRvLQSU/1+kcr0OdNm2VCuznG8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=kR5JyILqmtzXkev59fdTu3vU7Zm0L/95SMUKCx/S8zbwpyrECgARdEuXPL8hrimEeTGv2mzKo6Clf9NRSjGoowfkNyAYQC+bKDAY9JADPO+mqdtNLzXhAG62f0zTWERuSKVfb8vLPOJYWXrWQl61d3WZ0JKiOp7DxVmhyReL4IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NHR8jP9k; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Ar12+GLc"
-Received: from mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:2799:0:640:ddd6:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 6988960C7A;
-	Tue,  9 Jul 2024 13:16:12 +0300 (MSK)
-Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:6501::1:b])
-	by mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4GafBH0xDGk0-UVUGoUQh;
-	Tue, 09 Jul 2024 13:16:09 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1720520169;
-	bh=QMrzmVk4WO8uE3VndqvZoeEHIjcKsa+fOG95bYQveH4=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=Ar12+GLcLDVam8vydIELaDLPt55u79aSvOq5sE9cLemLR1M0ZCqi+XmiGe3B4yHzt
-	 NrxKgnrCy+lhoC8Hn5CLsmzxj1SNI6pLXH9BDiujbQHuaVvyCKhu8XnjchG8E+V/87
-	 CDGmzwbCqwlCus8rv8No4zqwC49gjQBOi5hsyzs0=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-62.myt.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Nikolay Kuratov <kniv@yandex-team.ru>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NHR8jP9k"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70b04cb28acso3320664b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 03:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1720520395; x=1721125195; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=11ioL6MkBuE1i6Mzb5KKuPr/JiRiwhzn3IC3btu4k64=;
+        b=NHR8jP9klbFKVbHfTCILManHrRVxQ9VKS6YbARdF743JVNLbGP85UF4njgVQN5QyoT
+         +RfAt4YD0G4QlDA1cKaOaEohPAZhCRXF8BAuLfGoU8/tUAAAy9/PTLhgR9NoKu0zsHMZ
+         nk1uKh4a21rZHUfatUb0Fjdu6nvfGIBlD4VQI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720520395; x=1721125195;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=11ioL6MkBuE1i6Mzb5KKuPr/JiRiwhzn3IC3btu4k64=;
+        b=DrDWBrS4Ejuqj5LgfxTyEDLDrN1LN7/K9CvSUuYl0NhE4deLxZlCHm93tpEeQx9wo0
+         Q5ggE28hZC5Rvzi3JezlWQTbNf6sLnl1ofywpYBIbs4z/mg8p/Ws9GRyi8CZcsIZmahr
+         ot4W+FAe5cnLYP83p7l0TBStbr+T4tZvqcZzRGRcZUrxVuxdb61SkBMVfcAILpZaRn5y
+         Zks/v1EHqXaqXwIrdV165oYSTxf+PwV0XHYAZcVAtOCbU8SJUNf3NCqcqmDzJ5GHN/ZZ
+         CT/5aM4sFYm3nDdia66mI9F2n5rKTjOpWZFbwFZYiBTeAfV6i8sGpvzyq4zj77f5ok+Z
+         I9zA==
+X-Gm-Message-State: AOJu0YxNAnhkF8tRwKiFHFn0c5xhZEMpYCwOwlKNo/62GYkAweGpbbyU
+	U4+A8aQ1e/VWKMRVfMQkfLNLO8jf0GzDGeAKWmZldqQKHjl49SulY4tEE0t8aNe4FzNX9omxXGf
+	ju1K0+o9zP3cfIcG23heMu2JaTCNFVFAcytGmoiZckMdcjgQOSngjEtHgdId8EVDGgnGiGqVDht
+	Y6qs7I3u6TSZLUbg8x0+em5RuXsT8LD7dyd6ddYFY7jn1TMpS2islr3g5s
+X-Google-Smtp-Source: AGHT+IGgmqH7UQ62MCOmx/bF5fNPuls7Idvh3gTEMJN+4xl6ri7+bXz1HtPde01qGp0e8dNnIi9M+Q==
+X-Received: by 2002:a05:6a00:18a3:b0:70a:f001:d22c with SMTP id d2e1a72fcca58-70b44d4474dmr2944949b3a.4.1720520394971;
+        Tue, 09 Jul 2024 03:19:54 -0700 (PDT)
+Received: from kashwindayan-virtual-machine.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967345sm1426016b3a.112.2024.07.09.03.19.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2024 03:19:54 -0700 (PDT)
+From: Ashwin Kamat <ashwin.kamat@broadcom.com>
 To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Baoquan He <bhe@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Nikolay Kuratov <kniv@yandex-team.ru>
-Subject: [PATCH RESEND] x86/numa: Bump NR_NODE_MEMBLKS to MAX_NUMNODES * 4
-Date: Tue,  9 Jul 2024 13:15:51 +0300
-Message-Id: <20240709101551.1374100-1-kniv@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+Cc: gregkh@linuxfoundation.org,
+	davem@davemloft.net,
+	yoshfuji@linux-ipv6.org,
+	dsahern@kernel.org,
+	kuba@kernel.org,
+	netdev@vger.kernel.org,
+	florian.fainelli@broadcom.com,
+	ajay.kaher@broadcom.com,
+	vasavi.sirnapalli@broadcom.com,
+	tapas.kundu@broadcom.com,
+	ashwin.kamat@broadcom.com
+Subject: [PATCH v5.15 0/2] Fix for CVE-2024-36901
+Date: Tue,  9 Jul 2024 15:49:42 +0530
+Message-Id: <1720520384-9690-1-git-send-email-ashwin.kamat@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-With modern AMD EPYC platform we're able to spot 3
-memblocks per NUMA, so bump MAX_NUMNODES multiplier
-from 2 to 4. Problem becomes apparent if MAX_NUMNODES
-close enough to real amount of nodes and leaves us with
-`too many memblk ranges` NUMA init error.
+From: Ashwin Dayanand Kamat <ashwin.kamat@broadcom.com>
 
-Bump also maximal count of immovable regions accordingly.
+net/ipv6: annotate data-races around cnf.disable_ipv6 
+       disable_ipv6 is read locklessly, add appropriate READ_ONCE() and WRITE_ONCE() annotations.
 
-Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
----
- If overhead related to doubled arrays is too undesirable
- maybe we should consider config option for this? It appears that
- NR_NODE_MEMBLKS used only on LoongArch and x86 (macro in asm-generic
- is orphane).
----
- arch/x86/boot/compressed/acpi.c | 6 +++---
- arch/x86/boot/compressed/misc.h | 2 +-
- arch/x86/include/asm/numa.h     | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+net/ipv6: prevent NULL dereference in ip6_output()
+       Fix for CVE-2024-36901
 
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index f196b1d1ddf8..74575a900924 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -17,9 +17,9 @@
- 
- /*
-  * Immovable memory regions representation. Max amount of memory regions is
-- * MAX_NUMNODES*2.
-+ * MAX_NUMNODES*4.
-  */
--struct mem_vector immovable_mem[MAX_NUMNODES*2];
-+struct mem_vector immovable_mem[MAX_NUMNODES*4];
- 
- static acpi_physical_address
- __efi_get_rsdp_addr(unsigned long cfg_tbl_pa, unsigned int cfg_tbl_len)
-@@ -305,7 +305,7 @@ int count_immovable_mem_regions(void)
- 				num++;
- 			}
- 
--			if (num >= MAX_NUMNODES*2) {
-+			if (num >= ARRAY_SIZE(immovable_mem)) {
- 				debug_putstr("Too many immovable memory regions, aborting.\n");
- 				return 0;
- 			}
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index b353a7be380c..a756569852e5 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -174,7 +174,7 @@ static inline acpi_physical_address get_rsdp_addr(void) { return 0; }
- #endif
- 
- #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
--extern struct mem_vector immovable_mem[MAX_NUMNODES*2];
-+extern struct mem_vector immovable_mem[MAX_NUMNODES*4];
- int count_immovable_mem_regions(void);
- #else
- static inline int count_immovable_mem_regions(void) { return 0; }
-diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
-index ef2844d69173..057eafe6fed5 100644
---- a/arch/x86/include/asm/numa.h
-+++ b/arch/x86/include/asm/numa.h
-@@ -10,7 +10,7 @@
- 
- #ifdef CONFIG_NUMA
- 
--#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
-+#define NR_NODE_MEMBLKS		(MAX_NUMNODES*4)
- 
- extern int numa_off;
- 
+Ashwin Dayanand Kamat (2):
+       net/ipv6: annotate data-races around cnf.disable_ipv6
+       net/ipv6: prevent NULL dereference in ip6_output()
+
+ net/ipv6/addrconf.c   | 9 +++++----
+ net/ipv6/ip6_input.c  | 2 +-
+ net/ipv6/ip6_output.c | 2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
+
 -- 
-2.34.1
+2.7.4
 
