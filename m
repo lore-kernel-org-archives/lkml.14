@@ -1,161 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63A319CCE1
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C89C364AB;
+	Tue,  9 Jul 2024 15:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720537614; cv=none; b=XsG4BJsrAqwgTfHnPRNVoFqxzKik0JpUafV98OjtkvSW3ak9sPJXeRzi+GzoqGBr+Vw60pAjQGGz6iLwzZdAC1xVbNoJ5+eLROylOorTWdqzqwN93R0GLm6aXj12cfgLGVTop+gjQmpi8QoAzCDKs1CPzt10T7EDbsFcO5yiQZ4=
+	t=1720537702; cv=none; b=EY0VCzV/Iu0xFge2fC2AfPBKcJEFXN5I7i9WH9yk+hfTt7HG4POQR+jrfrG97wmizyhYZb1hgdaf1qZVYKagsYmIbncK4CfNDLFkac6Crf3+UXacS0dwN3msRYfnsbbIEfTEdidIySf+E5c/UY+vlkU6Mr9AASpmBYgJllbS6xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720537614; c=relaxed/simple;
-	bh=51kUKee66GC78kVNFb48z+4FmZxQlPv3lIlopAqxUSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XAaPveCLPz1sO+/vUx+cTYIutnKMfL0FfSMUxyZtYRyb09bvmSk//yDDErFXe19jUwl/Q5KPYQXAsqtQML5EwB3ANd4GCjgeo3EHTS5o7CyhreZ/+NEhAC5l8pwukldsFNpHmG96T4knsgrIc0x1WXQ6XxZWtzXpnRIkVGYWyjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qr1CqDCp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720537702; c=relaxed/simple;
+	bh=fXbDru/y5W+0JkwcQ1yBuNSWXsbd+IcKjgtGIm71ni4=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=f4uIEzoK4OvKw9l1thDnl0Bv/GlOOMNgRHU/tx0BZD1gvWp/rmdWd+dSj9L7K675SEznKZcKaxPv7TS/2UqDsixdJUcXhjWy3CvxIIdJnR4XH6nbr8i2O5mGplqwMDoNTri1PQcTjosJZISRPsoJ6dTEHBBSayEyzmSyv9iIah4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=iLpfnOag; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oFnAoLNN; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qr1CqDCp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720537611;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9g5A7SXqltxpQ8rMmUVgyuk85viXZ5bqucOss47RPM4=;
-	b=Qr1CqDCpRuxnb+RxljFI+DXszMvjpZaBMYDBnP0+zTP4BbgKmDFX0HaWv6dQ3+zuTW/YxP
-	BqvP9bwRpj9qbtZ/NmKavLshwqHZNdIHCh6o7pc5LvEZbDJbJD4bx4noGURWPZZbVnjcme
-	A+NCA5u8eFEMKwUGIVQ4/1ou1atpD8Y=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-cOYatm8PN1Sd9vhHauD-7g-1; Tue,
- 09 Jul 2024 11:06:48 -0400
-X-MC-Unique: cOYatm8PN1Sd9vhHauD-7g-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 060C21955F3D;
-	Tue,  9 Jul 2024 15:06:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.34])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 983BE3000183;
-	Tue,  9 Jul 2024 15:06:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  9 Jul 2024 17:05:08 +0200 (CEST)
-Date: Tue, 9 Jul 2024 17:05:04 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
-	clm@meta.com, paulmck@kernel.org
-Subject: Re: [PATCH 05/10] perf/uprobe: SRCU-ify uprobe->consumer list
-Message-ID: <20240709150504.GF28495@redhat.com>
-References: <20240708091241.544262971@infradead.org>
- <20240708092415.695619684@infradead.org>
- <20240709120551.GK27299@noisy.programming.kicks-ass.net>
- <20240709133349.GC28495@redhat.com>
- <20240709143218.GM27299@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="iLpfnOag";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oFnAoLNN"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 253841380AB9;
+	Tue,  9 Jul 2024 11:08:20 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 09 Jul 2024 11:08:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1720537700; x=1720624100; bh=YjpIAB6VJt
+	vWW8uBMTlGJyRpx0vtfYCfo/jXt2pillU=; b=iLpfnOagzPr2Dua+U0ooLlHBdS
+	th5AtQBXJzgZDRZBLaWiH/P4KxKJRI2z57hknrK0idjAzvxn9nXsjInQmaphiG7F
+	foZF/TF3SNUiX2fpxNu29iNKnzi35Pz+keTR6cl/qW06M8h6ZCJSAcZMTiXV7rpD
+	CkJ05DRdx/yeKr+eRUWD9ccr0LJzaF6YDhYbH84C7Kln8BaQFB6dI3xDeJMWM3Z0
+	4EWhheJJ0REKc6nKkSM+T9DpcCU7BgPX1EhjatN7WkhzOFNrM/Xsif7sHN28a5GE
+	YsxPIp+58bWi3tMIMTyDEvPZNkgfXzztdwOyJMXqMZ5TNkXRVk88262/TcGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720537700; x=1720624100; bh=YjpIAB6VJtvWW8uBMTlGJyRpx0vt
+	fYCfo/jXt2pillU=; b=oFnAoLNN4oY1qxSbUi3JC4rnLtSi1UhjU9sjzZN52jah
+	7gs+/cqZhrupcoS9UA5AzssN2Rt7O+cjoMfkAmBnFjsvR5HyIlh15albjuqjrFlh
+	YuwZ7ZR7ZYxEI9SwaYteuci10eKxK/lmlOnSsULzvn9HPGqhomrjO53Dwa+dN8Ad
+	B5Zu2LuSSa10k8exLcaInN8/Ie9w1TH+FV6uyf+aJ0jsKMr31Dy6deph0t0G5aC5
+	8FfbIFpUweIVd7Y3FEdvnx7jDVbyHKvXIPNmD8tdXtpQ/WG3nNrETvoVhl+E7s1y
+	Z2F3ko9ajJz/hzXThm3ttO798L3u1h4rV3/9Y8jHhA==
+X-ME-Sender: <xms:YlKNZpUkzhbTFq9YFbXbA5Hax3ZdK7swz798ECa_uTJzX2DrnGaSjg>
+    <xme:YlKNZpmN9SHFiyrOIhx7cNHEX7dCZKF6SbgC5R9SH__LiCDdbJE_MD4IvTaF7HIe0
+    cdivCbuDoaoqM2yo0k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdelgdekgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:YlKNZlYYMUFRcHB-45hUdzEqPn8ha4yHDNf2u4JQfuhjopsqYvi5WQ>
+    <xmx:YlKNZsUM8CV98fuioFIhb-xOBSf5JmGWSttzJ302oc8e92-BOkrF0Q>
+    <xmx:YlKNZjkyjqp5shhdF_-KYL9a2r_U2QHUlaPTdhaIz1nTwbtCOZMcjg>
+    <xmx:YlKNZpc0HZssxCYMTZSHCMQ6AF6ejTYkIhUEiiSm1gMRoCg7aRNhUQ>
+    <xmx:ZFKNZsD3_VjqDy_CMPnB88AtMDTG5Escgl8QuUyvfaBzWhdMPyjhyJI5>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id BDFF1B6008D; Tue,  9 Jul 2024 11:08:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709143218.GM27299@noisy.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Message-Id: <92726965-19a0-433b-9b49-69af84b25081@app.fastmail.com>
+In-Reply-To: <6ab599393503a50b4b708767f320a46388aa95f2.camel@kernel.org>
+References: <202407091931.mztaeJHw-lkp@intel.com>
+ <c1d4fcee3098a58625bb03c8461b92af02d93d15.camel@kernel.org>
+ <CAMuHMdVsDSBdz2axqTqrV4XP8UVTsN5pPS4ny9QXMUoxrTOU3w@mail.gmail.com>
+ <c4df5f73-2687-4160-801c-5011193c9046@app.fastmail.com>
+ <6ab599393503a50b4b708767f320a46388aa95f2.camel@kernel.org>
+Date: Tue, 09 Jul 2024 17:07:58 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jeff Layton" <jlayton@kernel.org>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+Subject: Re: [jlayton:mgtime 5/13] inode.c:undefined reference to
+ `__invalid_cmpxchg_size'
+Content-Type: text/plain
 
-On 07/09, Peter Zijlstra wrote:
+On Tue, Jul 9, 2024, at 16:23, Jeff Layton wrote:
+> On Tue, 2024-07-09 at 16:16 +0200, Arnd Bergmann wrote:
+>> On Tue, Jul 9, 2024, at 15:45, Geert Uytterhoeven wrote:
 >
-> On Tue, Jul 09, 2024 at 03:33:49PM +0200, Oleg Nesterov wrote:
-> > On 07/09, Peter Zijlstra wrote:
-> > >
-> > > > +	guard(srcu)(&uprobes_srcu);
-> > > > +
-> > > > +	for_each_consumer_rcu(uc, uprobe->consumers) {
-> > > >  		int rc = 0;
-> > > >
-> > > >  		if (uc->handler) {
-> > > > @@ -2116,7 +2126,6 @@ static void handler_chain(struct uprobe
-> > > >  		WARN_ON(!uprobe_is_active(uprobe));
-> > > >  		unapply_uprobe(uprobe, current->mm);
-> > >
-> > >    ^^^ this remove case needs more thought.
-> >
-> > Yeah... that is why the current code doesn't use ->consumer_rwsem, iirc.
->
-> AFAICT something like the below should work. Concurrent
-> remove_breakpoint() should already be possible today and doesn't appear
-> to be a problem.
+> I think the simplest solution is to make the floor value I'm tracking
+> be an atomic64_t. That looks like it should smooth over the differences
+> between arches. I'm testing a patch to do that now.
 
-Sorry, I don't understand how can this patch help. Yes, it removes the
-uprobe->consumers != NULL check, but this is minor.
+Yes, atomic64_t should work, but be careful about using this
+in a fast path since it can turn into a global spinlock
+in lib/atomic64.c on architectures that don't support it
+natively.
 
-To simplify, suppose we have a single consumer which is not interested
-in this task/mm, it returns UPROBE_HANDLER_REMOVE.
+I'm still reading through the rest of your series, but
+it appears that you pass the time value into 
+ktime_to_timespec64() directly afterwards, so I guess
+that is already a fairly large overhead on 32-bit
+architectures and an extra spinlock doesn't hurt too
+much.
 
-For example, event->hw.target != NULL and the current task is the forked
-child which hits the breakpoint copied by dup_mmap().
+Two more things I noticed in your patch:
 
-Now. We need to ensure that another (say system-wide) consumer can't come
-and call register_for_each_vma() before unapply_uprobe().
+- smp_load_acquire() on a 64-bit variable seems problematic
+  as well, maybe this needs a spinlock on 32-bit
+  architectures?
 
-But perhaps I missed your point...
+- for the coarse_ctime function, I think you should be
+  able to avoid the conversion to timespec by just calling
+  ktime_get_coarse_real_ts64() again instead of converting
+  monotonic to real and then to timespec.
 
-Oleg.
+- inode_set_ctime_current() seems to now store a fine-grained
+  timespec in the inode even for the !is_mgtime case, skipping
+  the timestamp_truncate() step. This appears to potentially
+  leak a non-truncated value to userspace, which would be
+  inconsistent with the value read back from disk.
 
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1260,6 +1260,10 @@ int uprobe_apply(struct inode *inode, lo
->  	return ret;
->  }
->
-> +/*
-> + * Can race against uprobe_unregister() / register_for_each_vma(), and relies
-> + * on duplicate remove_breakpoint() being a no-op.
-> + */
->  static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
->  {
->  	VMA_ITERATOR(vmi, mm, 0);
-> @@ -2101,6 +2105,7 @@ static void handler_chain(struct uprobe
->  	struct uprobe_consumer *uc;
->  	int remove = UPROBE_HANDLER_REMOVE;
->  	bool need_prep = false; /* prepare return uprobe, when needed */
-> +	bool had_handler = false;
->
->  	down_read(&uprobe->register_rwsem);
->  	for (uc = uprobe->consumers; uc; uc = uc->next) {
-> @@ -2115,16 +2120,26 @@ static void handler_chain(struct uprobe
->  		if (uc->ret_handler)
->  			need_prep = true;
->
-> +		/*
-> +		 * A single handler that does not mask out REMOVE, means the
-> +		 * probe stays.
-> +		 */
-> +		had_handler = true;
->  		remove &= rc;
->  	}
->
-> +	/*
-> +	 * If there were no handlers called, nobody asked for it to be removed
-> +	 * but also nobody got to mask the value. Fix it up.
-> +	 */
-> +	if (!had_handler)
-> +		remove = 0;
-> +
->  	if (need_prep && !remove)
->  		prepare_uretprobe(uprobe, regs); /* put bp at return */
->
-> -	if (remove && uprobe->consumers) {
-> -		WARN_ON(!uprobe_is_active(uprobe));
-> +	if (remove)
->  		unapply_uprobe(uprobe, current->mm);
-> -	}
->  	up_read(&uprobe->register_rwsem);
->  }
->
->
-
+      Arnd
