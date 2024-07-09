@@ -1,152 +1,92 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCF713E02E;
-	Tue,  9 Jul 2024 06:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61D813CAAD;
+	Tue,  9 Jul 2024 06:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720506744; cv=none; b=iO267MwpmfTmcHDMaXarLzjOS5womYzd3YgJHDf18qy6/EpRyVt0TKcwzW+VlBcSIkFlcueBdA6NDDia6xEMNRr+e1Scw8RLUU2AndWRRZX76GNjvZwd0/tH4qkgc/FWVCeYKfuPty5jeyusLHoslfOlWy6Czx6NGoeGce4jEys=
+	t=1720506765; cv=none; b=VnituDqzT3v6HQfHi/Xt2eigv1k+SDQJdKTsxdC7e1qFREWBI1j+sCugeDEIx6pZZsMmnq33UlknWVVI3PX3UILvUzHs+zKbgz/9NoCpJNUGvrCzGZ7ce4mTJaSfJvupblLWKIAxgElb2Ej6jsjsRi3GESGdfR+lwy36knOp4Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720506744; c=relaxed/simple;
-	bh=q9gFy/XwEKiI9CjlaUGuum1Ne2kcm65R/YqRco6dkY4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cBLePhY6DBhYmSFLLxA0jRKHTYuOopox+ELEsrU8yzeSVxHsrEm01l+MPxjNgUA8eyqKnqEwDvMggjkMwbGAxOASTZNa0mwwV9OsC7lvegk2LFnLRimjP8tGoLUO6OypPXvagTcU5uuJIhT6DTHRXoPuaWpji4tagaUtBr5cA1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1720506765; c=relaxed/simple;
+	bh=tZRcUZ+95IAQt8CTUWBeI5BuFARsGGVBApsv+FuXZIA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jJecO+/hg6O+Ui3seoozJ9dYIqbCu/HKNk32mO+LhyU1MWqvdnWwpqP4DltSJaY9Po/viudYWx3WQfmI7KZty+8lD116xdt2Nx4IbNdrAOOMXoMqI59S0iclZ1HTmSt9LNlzlO7byT6OETLpGKV/fMiaiM2xawYZ+KlpTuBC590=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jg0LDzEN; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-36798779d75so4160493f8f.3;
-        Mon, 08 Jul 2024 23:32:22 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jg0LDzEN"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a77d85f7fa3so531945966b.0;
+        Mon, 08 Jul 2024 23:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720506762; x=1721111562; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tZRcUZ+95IAQt8CTUWBeI5BuFARsGGVBApsv+FuXZIA=;
+        b=jg0LDzENzJ+CRgg6VtV5YBEWIBQVMJHygAIXI7odD0RgxR/qIN0ro/Ix671Yi4pz4b
+         0nC051tryBucrQntJZ778jQvI+MCcLUc5cyu1KVCtRFbrsMyPM23ArNO2XQ0eGEcA9gL
+         q4Hn+R0zLkJapDaoi30ivpMnlTIFPfKnESGlHlIc5MUI1WcakTMUiAswqkXJWpieGzjN
+         01y/PZ/oitzoQM5cMhoMFpPXAuxi2enirmAvRdMuTYuiBuhAswAzgXoy9mYW0rJVR8fi
+         0/eFSCuPNrDQGVyToUb1qpi6d0CWnw+jWH/keO+OxWmQYoPNrM8OT0n1vr0A1nj9/xul
+         bsnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720506741; x=1721111541;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E2X7qWagYo2b5UXuhyFICzIjSWa2F0fefrD2a+vdHpI=;
-        b=dRBwxWuQeT8HkWRl78NkxE9FtGZ7HAuirD2hcjNGmvm9eAFOpPppx/30vaNRbK32oS
-         gAIM7B8eGF8gNYRw342uVFSdpXpjn4qnHXMtuuCsMDIvRWUhY6STg2PluZLB4rg7ex5Q
-         m2zkBmOa5y+tfmc9aRoeKnF3k2+V4mFXHDgForGtcXfkTSnsXgMIlRUidc2vGImUmxP4
-         xSKlho8ZLc3dzGnLSOy4ocoWyvZ1BEqHPPMpjL+xVy0FaQ/CDZUd1NyHrEyW8SaBr29C
-         izU2DrG5DXpnzp3VAROls52CxoqdEZl1KnSSiIu38eDsDJqdhLiqVt75BapFmwKxKKoR
-         nE9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWvsxw4FJRj4FVvE+HzOkerMDbEEgkkrmgFz1yLAKjbUreLZrrv5a124/NfLWofDcC7cdezgozsY0hj3yHy0sMdLb3Z/Wq+J58A8xIB
-X-Gm-Message-State: AOJu0YwcOXY98sCGBwW3M7AOGiXlUJSV0/QLcDDLPxqmYpsKrpwju0J0
-	uOEh7wsUUhe6qGIk8t3m9QJfMvu+b6RPdKuXXvOfyHI1PIIAxeYegxV/dLvP
-X-Google-Smtp-Source: AGHT+IEY+aKZvLdXvDRAvZXq8Vz2VLMJ0vCPYoa0f629ac+wJiniJWbPFnvS4zbEWWn7B1ePNOw0tQ==
-X-Received: by 2002:a5d:6981:0:b0:367:9903:a91 with SMTP id ffacd0b85a97d-367cea45c68mr1414724f8f.11.1720506741224;
-        Mon, 08 Jul 2024 23:32:21 -0700 (PDT)
-Received: from [127.0.0.1] (p200300f6f72f3200fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f72f:3200:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde89164sm1569239f8f.63.2024.07.08.23.32.20
+        d=1e100.net; s=20230601; t=1720506762; x=1721111562;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tZRcUZ+95IAQt8CTUWBeI5BuFARsGGVBApsv+FuXZIA=;
+        b=ME1Vdqnm3POVGIoNFa7s7KFlhf6n0eI5XL+9lZIAlCwfUy6tAnmMgRNI3PN7Nqcfpu
+         7YoHCiuuRmF5vDL1NRReVOZG2hF6q9m6Y6jr2XC4U/sdcGz6x1vkTst9h+3TH5is2KvW
+         606t8IsWvcrmbgajMgdNlcc6af6iDzyMWeYfSo58bADDtUHgApVFL6R43cOw1SlOmR/U
+         pCSC3gzzE3QfTLmL3Gnf2fMu03ucGS6UvkCI7K4SIlp5PnvnQZ77/EP34JX7mxPAbqAD
+         0liMs+Vb8PG6fWPijohe6aU/hAP44JCbvsTEtsEghgoPSIpwbBZ7uQV4ekrqFedfOEbw
+         oO4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX9OCBssRHqF48SxjrLOEwjNDyePMEh2HvDj0t7vQSxN8Mr0kSCMhmMWYT1OOmxon7WnXCH3aWtQLSq6pd4n/iMqQS7wJ/6/+VdSEy4wc1vRLCN6ToJYsb3jqdHNpKZ4fYcsopUWxQDeQ==
+X-Gm-Message-State: AOJu0Yy4Q+U/x9TdavOOUOAp4W1B1LL7pP24pVSOm33/LAzF4ds9TIq4
+	jiCR/wRhY9ISYDHYNSMOAXaM8zQiLYhKYzTZDba6rG5dnVQSGniI
+X-Google-Smtp-Source: AGHT+IFYWv1no8Ke6U6rKRrYT/DMqxmdb4f0/Poh8xIj3JXlzLBuWHNHfAYGbNOAQB65ZfZxwEsNfA==
+X-Received: by 2002:a17:906:24d9:b0:a72:9ebe:29da with SMTP id a640c23a62f3a-a780d30cc6dmr89115266b.35.1720506761706;
+        Mon, 08 Jul 2024 23:32:41 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a872e23sm50534066b.225.2024.07.08.23.32.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 23:32:20 -0700 (PDT)
-From: Johannes Thumshirn <jth@kernel.org>
-Date: Tue, 09 Jul 2024 08:32:13 +0200
-Subject: [PATCH 2/2] btrfs: replace stripe extents
+        Mon, 08 Jul 2024 23:32:41 -0700 (PDT)
+Message-ID: <9c64adf6a686b2845c15b368592115f3f9ab39e4.camel@gmail.com>
+Subject: Re: [PATCH v8 2/3] Input: adp5588-keys - add support for pure gpio
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: utsav.agarwal@analog.com, Michael Hennerich
+ <michael.hennerich@analog.com>,  Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Arturs Artamonovs
+ <arturs.artamonovs@analog.com>,  Vasileios Bimpikas
+ <vasileios.bimpikas@analog.com>, Oliver Gaskell <oliver.gaskell@analog.com>
+Date: Tue, 09 Jul 2024 08:36:35 +0200
+In-Reply-To: <20240704-adp5588_gpio_support-v8-2-208cf5d4c2d6@analog.com>
+References: <20240704-adp5588_gpio_support-v8-0-208cf5d4c2d6@analog.com>
+	 <20240704-adp5588_gpio_support-v8-2-208cf5d4c2d6@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240709-b4-rst-updates-v1-2-200800dfe0fd@kernel.org>
-References: <20240709-b4-rst-updates-v1-0-200800dfe0fd@kernel.org>
-In-Reply-To: <20240709-b4-rst-updates-v1-0-200800dfe0fd@kernel.org>
-To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
- David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Qu Wenru <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>, 
- Johannes Thumshirn <johannes.thumshirn@wdc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2363; i=jth@kernel.org;
- h=from:subject:message-id; bh=iXS0EqJj2fo7X0N8Hop1tMZDVNOW43TMkN/0GZKub28=;
- b=owGbwMvMwCV2ad4npfVdsu8YT6slMaT13CwsZk7/q5y3VSrrV8daQ5m3CzZN9fS1+WBuuSZPX
- TPojUZLRykLgxgXg6yYIsvxUNv9EqZH2Kccem0GM4eVCWQIAxenAEzE153hr8jGx2adVyJXTDNP
- 7bQVrIp7trL7K7OxjW1M7/H/TOUM3xkZGoS0lHoubA7jkY/gPjTH+eJ6Voue1R8smWrmX9yk9MC
- SBwA=
-X-Developer-Key: i=jth@kernel.org; a=openpgp;
- fpr=EC389CABC2C4F25D8600D0D00393969D2D760850
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+On Thu, 2024-07-04 at 15:26 +0100, Utsav Agarwal via B4 Relay wrote:
+> From: Utsav Agarwal <utsav.agarwal@analog.com>
+>=20
+> Keypad specific setup is relaxed if no keypad rows/columns are specified,
+> enabling a purely gpio operation.
+>=20
+> Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
+> ---
 
-Update stripe extents in case a write to an already existing address
-incoming.
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- fs/btrfs/raid-stripe-tree.c | 51 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
-index e6f7a234b8f6..fd56535b2289 100644
---- a/fs/btrfs/raid-stripe-tree.c
-+++ b/fs/btrfs/raid-stripe-tree.c
-@@ -73,6 +73,55 @@ int btrfs_delete_raid_extent(struct btrfs_trans_handle *trans, u64 start, u64 le
- 	return ret;
- }
- 
-+static int update_raid_extent_item(struct btrfs_trans_handle *trans,
-+				   struct btrfs_key *key,
-+				   struct btrfs_io_context *bioc)
-+{
-+	struct btrfs_path *path;
-+	struct extent_buffer *leaf;
-+	struct btrfs_stripe_extent *stripe_extent;
-+	int num_stripes;
-+	int ret;
-+	int slot;
-+
-+	path = btrfs_alloc_path();
-+	if (!path)
-+		return -ENOMEM;
-+
-+	ret = btrfs_search_slot(trans, trans->fs_info->stripe_root, key, path,
-+				0, 1);
-+	if (ret)
-+		return ret == 1 ? ret : -EINVAL;
-+
-+	leaf = path->nodes[0];
-+	slot = path->slots[0];
-+
-+	btrfs_item_key_to_cpu(leaf, key, slot);
-+	num_stripes = btrfs_num_raid_stripes(btrfs_item_size(leaf, slot));
-+	stripe_extent = btrfs_item_ptr(leaf, slot, struct btrfs_stripe_extent);
-+
-+	ASSERT(key->offset == bioc->size);
-+
-+	for (int i = 0; i < num_stripes; i++) {
-+		u64 devid = bioc->stripes[i].dev->devid;
-+		u64 physical = bioc->stripes[i].physical;
-+		u64 length = bioc->stripes[i].length;
-+		struct btrfs_raid_stride *raid_stride =
-+			&stripe_extent->strides[i];
-+
-+		if (length == 0)
-+			length = bioc->size;
-+
-+		btrfs_set_raid_stride_devid(leaf, raid_stride, devid);
-+		btrfs_set_raid_stride_physical(leaf, raid_stride, physical);
-+	}
-+
-+	btrfs_mark_buffer_dirty(trans, leaf);
-+	btrfs_free_path(path);
-+
-+	return ret;
-+}
-+
- static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
- 					struct btrfs_io_context *bioc)
- {
-@@ -112,6 +161,8 @@ static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
- 
- 	ret = btrfs_insert_item(trans, stripe_root, &stripe_key, stripe_extent,
- 				item_size);
-+	if (ret == -EEXIST)
-+		ret = update_raid_extent_item(trans, &stripe_key, bioc);
- 	if (ret)
- 		btrfs_abort_transaction(trans, ret);
- 
-
--- 
-2.43.0
 
