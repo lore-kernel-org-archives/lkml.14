@@ -1,121 +1,116 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DF3156862;
-	Tue,  9 Jul 2024 10:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D862E62D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720521109; cv=none; b=AO4uG9jKZg/sjdpuhyAZdeQrpOBLUfJsKvXX61cofqNqg7Wo6QAy892+kMcgT8g1/jx9LySncFPQxxG2X3Hu3MCmgReoMJHY0TDlvKBW/yOgejW8PgecaToEunu6wlmrFO4hC5exUhzmdXs937Yv3xbphYWHInBwK79YU55nUcU=
+	t=1720521146; cv=none; b=P+drv7sYkK+Q2L6vSgCck+62GlNkcFiVCAf8Lgpotl1mUw86yyTPgXcw4VUKHuAez2KPUdqpnQYOSqwUQ51u+Ua19NcJ61Ve0Zf7hV65YMc2JLTRRoTLqVBPT3gMfYmk/rK5VPuW1ssfnPi19ttTm0Kxa3442B/SkoxaHUsfDyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720521109; c=relaxed/simple;
-	bh=M0cT28gjYHuIFgzG9/ClXs9YX1csSfujvjDFgwjE5rc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hTN/nqF6xboZpOm4ipQv1ejukDozjJsMR02oMbfe1uvomEXiISMaD95JQr9BGoOaqMZBF/iy3O6n3avWSf8DdIHih1beau4/wTPSD9j2Z7yw6xkMO4kbM8HcK8lT9f7mCCLmQJDFcVY4lmySalFtHRV+Ovwy6NYbB6FQFVPopG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EzqsyxRN; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720521146; c=relaxed/simple;
+	bh=32as1wxnPKqtDLG6btQhu/GLv/HerkEljIGguRqf/9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWr4tgSAYsg3Ij5RM/5obeC+s4RcgtYxdmB/GAHlKWCO3LRJZD8EQXU8Wmtcf8zBVdAwMUULCjMadwQosO1cAr4Vwf78d3bfCYOteevl2vFEBFWDQzomruSzKgINGZ5iZ85It84QhL17Ew8Ej0oH+0LqAkbm4HFVWZ1AL8yNtj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ca/tu21N; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzqsyxRN"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6fd513f18bso502350066b.3;
-        Tue, 09 Jul 2024 03:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720521106; x=1721125906; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dDbouyq7PTfUaRSnNtYQgcWs9NVpLUWQ/wAcLJNaYk8=;
-        b=EzqsyxRNbKxkj4ZDUYnrrH/vvJ5ToLZq7P3eN37bCos1Wt0qwnTPH2KKDOSJmxUnq4
-         cEqjIhDEgzv77xG5DkTbJVPYys/nhiveuTrFpSK0cKVKyzEizqrpnbrNts1Do2RZQ7Qp
-         qqwvJN58Uuba9jQky0mMCHQ/jx3QfmWQPB5DAS8V+Gcn7sAmAOnYOrksFZRxFz8rErl1
-         /tSZwvVlYw0fUBK5wumvZYNBufTxyDqojaVna4km5NAohJECJ/8+rte/dG+ACHG8QMa9
-         or8glI8mF5fuRaFWXhiGceNkQCIlFw7qSdDIIH3KVtz2Gw62skMOidvjiC+F67m/HaGp
-         t0RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720521106; x=1721125906;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dDbouyq7PTfUaRSnNtYQgcWs9NVpLUWQ/wAcLJNaYk8=;
-        b=QigbWZGUGZ2S7YoUmM8YaLtcNzpBODY7ny1uTor7waN6hlmCbYSuMhvuqyHTK+MtC9
-         r4XxDSN3nesRFKV5LB6IwIGIC3iZY1bQ3T96Y0tgPCekMbladJjlCBc0d9KEMnb6NVVN
-         bGGGyBGEb/dKdxkXcqOKjWMZdag0RcQfX1s0g0x9llm4FoRs0sAOAaWov7uUelVhYP3y
-         HrX6rKSkIUVv3gfuE2j6bXErIKV+zZBOb7UahMZ8VNLsafZWMHmt/oo+NklFrOFPs5O1
-         VrwkiFLAxEJ1bplYfVJ8Ao6+RbcHAF1i45rRrAnz2+dVjMFqOuXN4a866R9vXzEmZQgQ
-         KAHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXt8kFr/OwzS0Ha+GPnbEpJ2IPrWRaz1uqqabY6wsSTH4r1D4CFarw2lEVEzz1NItga2slB1LorSEE8rv+YXJYn+lYj5hw1Tao3OfdYn//TmkxZCVzqLgesrsiRz2Nq3QWacBzbRA/yY4XRCYr31htgHfK1rH6zNohKHWZc4za7FtRUQkxBTJulGGk2ee7gU3JntW87VCD5gnc4zeuUDzRVpg==
-X-Gm-Message-State: AOJu0YzvWvk+ukq/ign+H/AYwlBL962QPs1fdd06ROA741ucuZLEiBmQ
-	j8oHnSgtGKQVJKbb5cQyvXknEhAb85JbgxB3OwWJJ5DDa5oQSNjFGXWSVA==
-X-Google-Smtp-Source: AGHT+IEsA/zPMeXS/Kjwa7RgTlDMmN4h02MAxM+4067UQXiCOMEkSVIS0G0E6drBIQ736RcgORKrDw==
-X-Received: by 2002:a17:906:3590:b0:a77:c8f8:f9d0 with SMTP id a640c23a62f3a-a780b705305mr135816666b.44.1720521106064;
-        Tue, 09 Jul 2024 03:31:46 -0700 (PDT)
-Received: from localhost.localdomain (bza125.neoplus.adsl.tpnet.pl. [83.30.46.125])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bcc21sm66528166b.16.2024.07.09.03.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 03:31:45 -0700 (PDT)
-From: Adam Skladowski <a39.skl@gmail.com>
-To: 
-Cc: phone-devel@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Adam Skladowski <a39.skl@gmail.com>,
-	Georgi Djakov <djakov@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Vladimir Lypak <vladimir.lypak@gmail.com>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Rohit Agarwal <quic_rohiagar@quicinc.com>,
-	Danila Tikhonov <danila@jiaxyga.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Stephan Gerhold <stephan.gerhold@kernkonzept.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Barnabas Czeman <barnabas.czeman@mainlining.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Sibi Sankar <quic_sibis@quicinc.com>
-Subject: [PATCH v3 9/9] dt-bindings: interconnect: qcom: msm8953: Fix 'See also' in description
-Date: Tue,  9 Jul 2024 12:22:54 +0200
-Message-ID: <20240709102728.15349-10-a39.skl@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709102728.15349-1-a39.skl@gmail.com>
-References: <20240709102728.15349-1-a39.skl@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ca/tu21N"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B69D740E019C;
+	Tue,  9 Jul 2024 10:32:14 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id FSXQK_jsn302; Tue,  9 Jul 2024 10:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720521131; bh=pSHoX8iq7VWbszyXHyhjpFmtiT+fACuINVm+0rQvwbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ca/tu21N5oS37qecJvWm+w5U8GhBVaTU4x9bTZKmpnI+wcRvVUrMVTvg1z7dZbaQP
+	 mpqBHmjSPzODofJ2N/2625XV43Vmk5Z0KdrbD4UCu08TcXNyXYNyjUiVRhLi3iFwhG
+	 IsNAQNpYkjR4QITrJREHxUCc21lcfIZVGKoZwGyt6roBrRmt9bYlEVJNts8Qso4PFo
+	 ZTBPS9CnQKv74eI0uOTUN5i69pGZdLkYxsCUn8hi2Yh8hJf2+Qx9ALPDkv4YHofuKX
+	 DtXe+7TdbOvfvo67oMF3Ka2OaflTE+x6XzW6o/umg6pTBDBy95ytcHhlv20bFo8Tb+
+	 1lrcdTMvyerQiz1wTcv1mUqOW3+JYaRbCLW5uvRRNvJTvMxxn1XBNVazQ7oimLUX0b
+	 DWYosfBDiQd1CM/gTTUzS4u39CIl8oPrAoJzC0rMi0h/h/PKXdpu3QGYtuHKwi71c9
+	 0yE5Xp1SWhv2zfOUAmRYAHBCI0Z3TO5fon1SgXQoVFO51qz/Yq015ar3hyzBywbGEQ
+	 W78BV5JgQ7CSnoyz1BH8tmmsXHyhvL82UPT2MmO26BmXcs0bnMi6y2lTMLWpkf+IoK
+	 xqLkOBh4rElmG1fLAzOs18EUyVnjAb9DyemQf4HrnadmX553uFa/Wd0zLoC75lGJye
+	 DaiWXPQSpcA3kE5GUtKwr4/s=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C306440E0192;
+	Tue,  9 Jul 2024 10:31:44 +0000 (UTC)
+Date: Tue, 9 Jul 2024 12:31:39 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Ashish Kalra <ashish.kalra@amd.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	Pavin Joseph <me@pavinjoseph.com>,
+	Eric Hagberg <ehagberg@gmail.com>,
+	Simon Horman <horms@verge.net.au>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+	Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Yuntao Wang <ytcoode@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <jroedel@suse.de>,
+	Michael Roth <michael.roth@amd.com>
+Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
+Message-ID: <20240709103139.GBZo0Ri_ppOUNnKd_2@fat_crate.local>
+References: <CAMj1kXGsjU5CpF655me1XNA8-5nbk3020vT2Bu5ZoFY25igovg@mail.gmail.com>
+ <20240703154301.GEZoVxhREtHjk0vtaL@fat_crate.local>
+ <ZowI9w7huVfcKJ7I@swahl-home.5wahls.com>
+ <20240708181133.GHZowr1eznPqgvdtRw@fat_crate.local>
+ <CAMj1kXG8hZ86BFbar9S5mmvKMH4a0XF0oCm36WwZxYNqc0+pjQ@mail.gmail.com>
+ <20240708190724.GIZow47G0J8vO6J3ee@fat_crate.local>
+ <Zow-AXsLHjU6gfET@swahl-home.5wahls.com>
+ <20240708195810.GKZoxE0pRWHEUljjnQ@fat_crate.local>
+ <ZoxOt1_w7nblRQCv@swahl-home.5wahls.com>
+ <CAMj1kXGA8zG95WutMgVgeb-M7oQKJrVO6QWNzLi1GMuj1wq=bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGA8zG95WutMgVgeb-M7oQKJrVO6QWNzLi1GMuj1wq=bg@mail.gmail.com>
 
-"See also" in description seems to be wrongly defined,
-make it inline with other yamls.
+On Mon, Jul 08, 2024 at 11:05:29PM +0200, Ard Biesheuvel wrote:
+> The EFI config table array can grow and shrink at boot time, which is
+> why it is a separate allocation, as this allows it to be realloc()'ed.
+> This means any bootloader that intends to map the primary EFI table
+> should also map the EFI config table array, which may be elsewhere
+> entirely.
 
-Fixes: 791ed23f735b ("dt-bindings: interconnect: qcom: Add Qualcomm MSM8953 NoC")
-Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
----
- .../devicetree/bindings/interconnect/qcom,msm8953.yaml         | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Yap, that rings a bell from a past thread.
 
-diff --git a/Documentation/devicetree/bindings/interconnect/qcom,msm8953.yaml b/Documentation/devicetree/bindings/interconnect/qcom,msm8953.yaml
-index 732e9fa001a4..1397ad6ba37d 100644
---- a/Documentation/devicetree/bindings/interconnect/qcom,msm8953.yaml
-+++ b/Documentation/devicetree/bindings/interconnect/qcom,msm8953.yaml
-@@ -13,8 +13,7 @@ description: |
-   The Qualcomm MSM8953 interconnect providers support adjusting the
-   bandwidth requirements between the various NoC fabrics.
- 
--  See also:
--  - dt-bindings/interconnect/qcom,msm8953.h
-+  See also: include/dt-bindings/interconnect/qcom,msm8953.h
- 
- properties:
-   compatible:
+> So regardless of how we fix any SEV-guest specific issues, we should
+> ensure that kexec infrastructure creates the mappings of the EFI
+> system table and the EFI config table array upfront.
+
+Because code in the kernel relies on the presence of those so those should be
+mapped automatically and unconditionally?
+
+Or?
+
+As long as we put that somewhere as the thing we do by default, sure, I'm
+game.
+
 -- 
-2.45.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
