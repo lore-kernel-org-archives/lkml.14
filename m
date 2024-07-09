@@ -1,115 +1,182 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566A719D8AC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0409C19DF52
 	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720538929; cv=none; b=qDiEc+urPSRK8pHeelKXnvyYvjGV5ku5MS21zqtR05PD39hIHdP8bTYxprA/+DdR7lz5Q1PM8M8FTszGcpp5eiPPgBicIAYCDHCBzHOsvYqsFNQ01Fyggvn8vy9NYoG+AGanrPAFPWUOAr7JFZCYRLqpBcUpsBamPJ9LL80FbFI=
+	t=1720538930; cv=none; b=ao4yHcZ6w67yybB+dXqegh31wmQsyA+GDQ5oDRZSy2ZGp02D9/YmzwW4YF3I4sNWOvWAWUu2iytpyi33UfRtYFkgdBCvYZA+siAIjq0gnBasnN2Y/TaFSjwuJsG0YEwl0vv3ZNab23lz5saNS6x/yVEDkfUNdi09Bmo99p/HpA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720538929; c=relaxed/simple;
-	bh=PmtUUH5+SRaJORBxLu1SBDDmzPciiIl86iKpCyiu9SI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=XRXbaJ9aMpZB1tFEonMYQ13VBGQPQa3/8L7sOo6WwOa9w59MWJgYcZS2Jf+JsTIcn0nMXGaYYGgg4kTXaChG/E7P+sNFyS50tnnnkuWviaKu3hs9rYX1pNnoDbXGCiXyNt4zd+qy3OtOiJullCs6ELzyhU6TtNprJDhsGCCgq/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OQWNW96i; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1720538930; c=relaxed/simple;
+	bh=Xq8uJAy88lv1uxCiheZGM9OSarqyJTMwcEDG1B96A2Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gWU+0Ea/j5pbpeoW+LhKJx4Ebrpy4VDhQzfx+agDCjoAVD/Rl3hYgBEFAPbHTCVl2kv/iLCNw/8q/y5P/n+yausOs93etxeXx23zde1NfHpQV9pOQq0LHLkC9MGrQt43zhyFxiVsFpJyqwc6HDCPAZpw+UWYshQIMSxhLUE5xcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=USC/nyOG; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OQWNW96i"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52e99060b41so5704712e87.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="USC/nyOG"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4267345e746so6168665e9.0
         for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:28:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720538926; x=1721143726; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1720538927; x=1721143727; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4NePdy+sqgvYcgq7vKT1dOt3fvbuIs0FsUv1Bhxyjpo=;
-        b=OQWNW96ilkySUbMUCMEDluJhCsYeTMX44fzoH9QSC+Pnwsxg+M2T+/EJ5UGnjvveos
-         H7SjOzuE75l/4fwsNqBGS/uOLw/smZ7ig2h+voa6ZCxHKoSAeB/cBCKzuACqoKkFzusw
-         0JbOcIUasp3iT2oUlnz0qiyWukVveraIYFnLhLWL4MtvE10naQ6MY9QDdZ9dAQgoIdG3
-         URAlsNUexw9sgtvzeMTO1qVFN14Rce+BXIQyQdgkCJ1FtWlAvn1Vt9Uhzjda6X1MbX66
-         /XtKVibIW1Iq1UIdZ9wb6H9z91bBebtrXwiaTjDRUbm4DEg9z7zft5+AF1qCmCgGX2mn
-         HLsQ==
+        bh=DNtSueuDtXsARVEbcRgGrAWRHcIqldsm424wzohUyiY=;
+        b=USC/nyOGym9uD8D9PN4NldFBkE0D/SuRbr/fdEdx0zKNph4f0yOz/Imit4zsHVeLv8
+         yII0uFILGQTf9xj4x4mS3v8VC2l5xY1WEI44oC7tXfhSXodz0gTfUIvVKEXLel5T2pC/
+         ZsEiij8+/xe2CabCfPzLzEzyk0Rr9qPd+BZJT6222wAWV8oqCG6FSA6tlfSwuWwEvwjN
+         4lzyvW/3qC4Q+CyPlMi+xBvr5+mPP1GFMrn0cQrR1haAi+060eqvi2rFRrc0Iuj+4/Li
+         QXT1Tj9oLg+QfCpmlPkE0ukI8J8EyhOCFAdPxu8boqfJkFU/ArvXq76MragiV+rIKD3F
+         RteA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720538926; x=1721143726;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720538927; x=1721143727;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4NePdy+sqgvYcgq7vKT1dOt3fvbuIs0FsUv1Bhxyjpo=;
-        b=VWxClshuNk59NvCGFyD1Z3BzfgrElfQZnVEuQ9unUueY/UaOw7WwDGWh2brbu6et3n
-         qN1iJ7755VIyRu0MHbpAvxZu6xUlSODRweqrmGmSp/30lzH8RS+7Lxe+XSufIUe796pW
-         NbhFBuuh7XFg/DcF2yCrxtoIAsR7bnHUIxbGAVic61dvyw0Tl2yHn0Cad1F2N+xfRNGH
-         DcMj+Oxdcgg6l/EtjuqFKLDUuy4vSAJz9DwsDD8CVdCmPxnEz2PozrZZNh/lCW85JfjA
-         ZZRLScuo1pMdgOV46J4E+/aHhpJywNok43OTdN0Fd9a5+a+0g80cVhTMXhokRReZn0IH
-         R+0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWPj0BUxOOmrmUNIIC7ifiRKCYnjomwLQ33ohAAKlLH0s4yMv7d/B3gLpR15LH/ma6dpcN7IRDN+fZ57DQ1+X/e6Zn9OJZEASqe/4U3
-X-Gm-Message-State: AOJu0YxUEF3s6uNPbEg0bni/bSXWHoaggwwx75R18ei1nH5AS1To7rIh
-	dLsJ01iv3/fR62et6GOAWelsip+ALjbUwDLfsB63E0UfDpq+vmG1F7GhtbwVRNs=
-X-Google-Smtp-Source: AGHT+IFP2dwZSg+oxisyaGCs/E6PHJKfQeB46et4kmXu8bV/igVFqGZpfvG8esLFZnNZsAe6qemJxA==
-X-Received: by 2002:a05:6512:3e0c:b0:52e:9c0a:3522 with SMTP id 2adb3069b0e04-52eb99d1694mr2058719e87.44.1720538926338;
-        Tue, 09 Jul 2024 08:28:46 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfab748sm2849119f8f.111.2024.07.09.08.28.45
+        bh=DNtSueuDtXsARVEbcRgGrAWRHcIqldsm424wzohUyiY=;
+        b=bn9iHZp1wTlQslxn74B/+0fL7TMuihKgs67eT0CA/rsjkcegkakN89pWoU94ftzaIB
+         IKBCATqRr9hwNvYA8bSCKpQ7Nus//79qcd/ik37VoQnQyEygkczTNBfHDEjXFDEWPS3E
+         vfEhztdYpwsYPQ5VmRmTCgdbEZid/yu/Brnz+ZpJXumaOUrlnr/6f0r5tgNG+1iigWVy
+         h19y21v7x9PMMABKF+Uio+qJIKxBXB8nXohMyZSeH6WUWTY9EE1KnPbJuuZBHrpZsdfg
+         XWOAYvaKn58jSJawfYr3UrnR302mOgGqgejo+KIfmJrzlQbzIqvzecSI/itKVMHYKIsE
+         aDnw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5vdyb1kH22ETYCAd2ocZVwxhtuoqut+DgisHgjDlHJ5PW5GvM+WKGaTHuTuEHCESOi6Lk7h6H92WWQBqR0nq3Zxz3ti+p+w0Di/Lo
+X-Gm-Message-State: AOJu0YxCXQya3pn10715vouT36uQRD7pjgbwHBimHb1s/gXYfZOD7yPd
+	9qacru4ReUq+OoOb9OVsL+ac4/V0BWhV1bjL81p+U1cgGJt8BrOH3Vl9LrkU+IY=
+X-Google-Smtp-Source: AGHT+IEiiEdiOEJvS824Y/O3HEpYDyOdjBG53LXdLiwlz6IeDKbNx00nUjCQ8cB6GpjwQh1jLEsC5w==
+X-Received: by 2002:a05:600c:4a05:b0:426:6618:146a with SMTP id 5b1f17b1804b1-426707cf1c8mr19505775e9.2.1720538927353;
+        Tue, 09 Jul 2024 08:28:47 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5a32sm45883775e9.24.2024.07.09.08.28.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 08:28:45 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240709-s4_node-v2-1-b9a218603c31@amlogic.com>
-References: <20240709-s4_node-v2-1-b9a218603c31@amlogic.com>
-Subject: Re: [PATCH v2] arm64: dts: amlogic: enable some device nodes for
- S4
-Message-Id: <172053892547.1166789.11882834446987648780.b4-ty@linaro.org>
-Date: Tue, 09 Jul 2024 17:28:45 +0200
+        Tue, 09 Jul 2024 08:28:47 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: devicetree@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	alsa-devel@alsa-project.org,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 1/2] ASoC: dt-bindings: qcom,msm8916-wcd-digital-codec: convert to dtschema
+Date: Tue,  9 Jul 2024 16:24:42 +0100
+Message-ID: <20240709152808.155405-2-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240709152808.155405-1-rayyan.ansari@linaro.org>
+References: <20240709152808.155405-1-rayyan.ansari@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Convert the Qualcomm MSM8916 WCD Digital Audio Codec bindings from text
+to yaml dt schema format.
+Make bindings complete by adding #sound-dai-cells.
 
-On Tue, 09 Jul 2024 17:32:03 +0800, Xianwei Zhao wrote:
-> Enable more device nodes for AQ222 base S4, including
-> SD, regulator and ethnernet node.
-> 
-> 
+Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+---
+ .../sound/qcom,msm8916-wcd-digital-codec.yaml | 53 +++++++++++++++++++
+ .../sound/qcom,msm8916-wcd-digital.txt        | 20 -------
+ 2 files changed, 53 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital-codec.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital.txt
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
-
-[1/1] arm64: dts: amlogic: enable some device nodes for S4
-      https://git.kernel.org/amlogic/c/d3cc1daf38aaa0dd6546dd915ce5d536c250f3eb
-
-These changes has been applied on the intermediate git tree [1].
-
-The v6.11/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
-
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
-
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
-
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
+diff --git a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital-codec.yaml b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital-codec.yaml
+new file mode 100644
+index 000000000000..5e7d15b61ad6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital-codec.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/qcom,msm8916-wcd-digital-codec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm MSM8916 WCD Digital Audio Codec
++
++maintainers:
++  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
++
++description:
++  The digital WCD audio codec found on Qualcomm MSM8916 LPASS.
++
++properties:
++  compatible:
++    const: qcom,msm8916-wcd-digital-codec
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 2
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: ahbix-clk
++      - const: mclk
++
++  '#sound-dai-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#sound-dai-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-msm8916.h>
++    audio-codec@771c000 {
++        compatible = "qcom,msm8916-wcd-digital-codec";
++        reg = <0x0771c000 0x400>;
++        clocks = <&gcc GCC_ULTAUDIO_AHBFABRIC_IXFABRIC_CLK>,
++                 <&gcc GCC_CODEC_DIGCODEC_CLK>;
++        clock-names = "ahbix-clk", "mclk";
++        #sound-dai-cells = <1>;
++    };
+diff --git a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital.txt b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital.txt
+deleted file mode 100644
+index 1c8e4cb25176..000000000000
+--- a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-digital.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-msm8916 digital audio CODEC
+-
+-## Bindings for codec core in lpass:
+-
+-Required properties
+- - compatible = "qcom,msm8916-wcd-digital-codec";
+- - reg: address space for lpass codec.
+- - clocks: Handle to mclk and ahbclk
+- - clock-names: should be "mclk", "ahbix-clk".
+-
+-Example:
+-
+-audio-codec@771c000{
+-	compatible = "qcom,msm8916-wcd-digital-codec";
+-	reg = <0x0771c000 0x400>;
+-	clocks = <&gcc GCC_ULTAUDIO_AHBFABRIC_IXFABRIC_CLK>,
+-		 <&gcc GCC_CODEC_DIGCODEC_CLK>;
+-	clock-names = "ahbix-clk", "mclk";
+-	#sound-dai-cells = <1>;
+-};
 -- 
-Neil
+2.45.2
 
