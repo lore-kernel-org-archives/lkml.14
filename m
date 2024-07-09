@@ -1,84 +1,118 @@
-Received: from dysnomia.uberspace.de (dysnomia.uberspace.de [185.26.156.223])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BEC18A92B
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09091607B7;
+	Tue,  9 Jul 2024 13:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533141; cv=none; b=ahoCtzwtVfne+1qoMa6EfuU+pOKgShfd7dLHMLE0rr/vNW1CWP5bwiy4TyBFwUaF0EXBHk8h1O3Igb0PNzDuYdhuIw/K1gXBBmc8GHPfuewoatokkWU2TsrPf0TcEtIfMuKh8NEWnpl+OE3ZOgGxqVO5mvD9FSHV8zxMFBzCPDs=
+	t=1720533242; cv=none; b=SmQibjDXkQqr52lDVlPVjXtx/fLQS9YERR0yhLL7nv28TIRshxm7DVo0yev02lHJCNLxzqxszsMEqGsX7ft3VE3U3B3xs2W4pbHd43slZM2pMOpvp6bbJC8FMZBf2H2Nnj+aXmyhvcj2hbT3zw1w8QW83YGQBTQ9DPpUxmsLgpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533141; c=relaxed/simple;
-	bh=qKJYEZA0smcFgq+FhK5l8Y1wMc+S0BF7hSq8um9dZro=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XUU1sV1Xl2o4hff8KbnRllM2ONagTOqbOKxcI+RO5jgcrVDjgOnCt+PTerZZyTfRHeMqRr1hL/ecxLmgiQtxuI5XXlTEJZELIjwHjJ75vsTRkG3OiEXMQCBnG7Gapqov+JupoB0Zh1hX9OGgTkAmUWNlTmviQp//WiXo4uiukmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lublin.se; spf=pass smtp.mailfrom=lublin.se; dkim=fail (0-bit key) header.d=lublin.se header.i=@lublin.se header.b=pRqhuJMD reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lublin.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lublin.se
+	s=arc-20240116; t=1720533242; c=relaxed/simple;
+	bh=fAoFXYYkIkdenvWHNgGiSslpve99mgAMustoo4fOjKM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fepDQ/eZGGDSz+3oBfSwhwAsZLaInAC8AZJHgfX5/71/lHKV2LLvIkxA0w0Qqp0BtsKtgVGHs6zg9SfN6krUIJd5c6CqDzCoWhLAyt5Y99Lzi8Y40kYsl9uO+Lxp75J3915corFd+LPxUfB+kKNnJcpquabAs+JvkNzt9u0PV0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Av2oEKOk; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lublin.se header.i=@lublin.se header.b="pRqhuJMD"
-Received: (qmail 1058 invoked by uid 989); 9 Jul 2024 13:52:15 -0000
-Authentication-Results: dysnomia.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by dysnomia.uberspace.de (Haraka/3.0.1) with ESMTPSA; id 8E7421C002A; Tue, 09 Jul 2024 15:52:14 +0200 (CEST)
-From: Daniel Lublin <daniel@lublin.se>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Daniel Lublin <daniel@lublin.se>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Documentation: add reference from dynamic debug to loglevel kernel params
-Date: Tue,  9 Jul 2024 15:51:57 +0200
-Message-ID: <4633bdb82c1c7c014d79840887878624a55c59f8.1720533043.git.daniel@lublin.se>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Av2oEKOk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A79F81BF206;
+	Tue,  9 Jul 2024 13:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720533238;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fA411foyqLMzZ1hKOUW4fEs/FNUN6uX3elekeFZ7ooQ=;
+	b=Av2oEKOkONDqBokaf0Vsdht9Qk0AV2g1SRBKOKI99jZXnTJxD3VgeSw+Wc0X4pbnl58WeS
+	S4Yyi/dti/iItG93+hkrZ2CdZt123CYQ2rd4Ga+gyqx9FrlvvrxTeaItwnY+8CGu0d2gGm
+	s0DajoI1npYBBdGOQt/FzpcjGy5+NgOCM8B/hCzDklbD6at2aRJE8r96YU8RiKALd5dtSl
+	TyFlXLP9HgBwAxBkqsZ9+lRrPL5piO1gSV3A1rfu9VqqP3JV26qexY4h8m2GZxr/RADUDW
+	P5HuxPbKq4POPaIh+W92eU6MfdVMof4vjfbcK7iEmHX4hGjmlRq8EmYnHWppmg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 09 Jul 2024 15:53:33 +0200
+Subject: [PATCH net-next v17 01/14] net_tstamp: Add TIMESTAMPING SOFTWARE
+ and HARDWARE mask
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: /
-X-Rspamd-Report: BAYES_HAM(-1.146869) MIME_GOOD(-0.1) MID_CONTAINS_FROM(1) FORGED_SENDER(0.3) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: 0.55313
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=lublin.se; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=qKJYEZA0smcFgq+FhK5l8Y1wMc+S0BF7hSq8um9dZro=;
-	b=pRqhuJMDNktpa9RcjYugQHzAGjLblsecUTBYWZx/4DvzEVBB3dyvFYhbr+98tAWbdafy2gtxu/
-	sepKGIMSWSq56+a5xCOG1bNI0mExpZqAdhT6Uu49Pd9DrHuwrpI+dr2ixoLHbYOkLcCmd0OKhn+R
-	QGRP+jS8svYsW2fttNh8xSX2HQxZLtZ2LRs4HIqpInQL87kdeAXO92nJ7IbV1T1lk68I2w9nIOCe
-	e8hGwl9V7te8pDZWk7+DM25Unhbok7yr/h7DBkyF4dDmJqB06+Sljb2T2rjSySVWDSAxc8mGJirP
-	7KDlOzG2QYSxrD3rGc33BKF7eTFWdF6fQiAxsYMjdF5D5OctaOoHv4lA0MDxx3kOAL1CLdgwpP/D
-	3P+GRvZ13hEYi2bXc5lTLlAM90phhBFAGSBofnPlfmZUccLyd41p29A2kdhBUMma4gwsWt0AZEKc
-	0LkHo1bOib2cG0wrw5VUO90ejZvKlFLZQPwhCVCW54mYTgU0iwjNNmkdHUEG0+PbE7sswB1Q0X5N
-	9Tjd3Jz0gLfA0w/upVdHzISxRU+vm1Bm3r2weqJwjFQZu3dgU5mCBRhHE/2YcwjdKE79u+RJCdM7
-	WnidAdkdujjp7DUI7EAhOygYx6FBV3lqh+3+8Fjknv+mWfN1daVRAX+A6IhrOaYQeIAvL3pk9ok8
-	g=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240709-feature_ptp_netnext-v17-1-b5317f50df2a@bootlin.com>
+References: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
+In-Reply-To: <20240709-feature_ptp_netnext-v17-0-b5317f50df2a@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>, 
+ donald.hunter@gmail.com, danieller@nvidia.com, ecree.xilinx@gmail.com
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ Shannon Nelson <shannon.nelson@amd.com>, 
+ Alexandra Winter <wintera@linux.ibm.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-This is useful information for somebody who has managed to dig into
-enabling debug output, but is wondering why there is no such output
-appearing on the console.
+Timestamping software or hardware flags are often used as a group,
+therefore adding these masks will ease future use.
 
-Signed-off-by: Daniel Lublin <daniel@lublin.se>
+I did not use SOF_TIMESTAMPING_SYS_HARDWARE flag as it is deprecated and
+not used at all.
+
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
- Documentation/admin-guide/dynamic-debug-howto.rst | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-index 0e9b48daf690..7c036590cd07 100644
---- a/Documentation/admin-guide/dynamic-debug-howto.rst
-+++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-@@ -26,6 +26,11 @@ Dynamic debug provides:
-    - format string
-    - class name (as known/declared by each module)
+Changes in v7:
+- Move the masks out of uapi to include/linux/net_tstamp.h
+
+Changes in v9:
+- Fix commit message typos
+---
+ include/linux/net_tstamp.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
+index eb01c37e71e0..3799c79b6c83 100644
+--- a/include/linux/net_tstamp.h
++++ b/include/linux/net_tstamp.h
+@@ -5,6 +5,14 @@
  
-+NOTE: To actually get the debug-print output on the console, you may
-+need to adjust the kernel ``loglevel=``, or use ``ignore_loglevel``.
-+Read about these kernel parameters in
-+Documentation/admin-guide/kernel-parameters.rst.
+ #include <uapi/linux/net_tstamp.h>
+ 
++#define SOF_TIMESTAMPING_SOFTWARE_MASK	(SOF_TIMESTAMPING_RX_SOFTWARE | \
++					 SOF_TIMESTAMPING_TX_SOFTWARE | \
++					 SOF_TIMESTAMPING_SOFTWARE)
 +
- Viewing Dynamic Debug Behaviour
- ===============================
- 
++#define SOF_TIMESTAMPING_HARDWARE_MASK	(SOF_TIMESTAMPING_RX_HARDWARE | \
++					 SOF_TIMESTAMPING_TX_HARDWARE | \
++					 SOF_TIMESTAMPING_RAW_HARDWARE)
++
+ enum hwtstamp_source {
+ 	HWTSTAMP_SOURCE_NETDEV,
+ 	HWTSTAMP_SOURCE_PHYLIB,
+
 -- 
-2.45.2
+2.34.1
 
