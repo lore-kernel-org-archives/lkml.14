@@ -1,63 +1,66 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E784D8BB
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 05:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9429812F375
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 05:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720502689; cv=none; b=A0XPMUkvHgRmlehr8uiCoL6NLGqG+Xlm82Ud0GJKyhX5eU3WEkp3lOPHRFPXEEvxRLMt5sfg1BeiPTiCTBOu80iQJpDX9V6jt3RuByigCcq34j9xcpAfS4hwJFCNXX8O7HTt6pua4Cakw82/sgJNoD4HMnUdtB62/3+1ZcR/SYE=
+	t=1720502708; cv=none; b=l2vWLBF7IMKUdNOGxegUzwz3ZkrPslKUu1ersIKHyi8VbuC8BzIpIC8OQsO4/afw3cOl7sNoOPgBNYVZ9uS1ERuP4351oaT1kHK5XYLUC0LpVue42MxOJXXydD+nthf+Ktd6HoeuAVtLXkWJ6GZU64gmGJ7ou3UFYgup7scSoGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720502689; c=relaxed/simple;
-	bh=ShJ2SRcPXiThajj6mXrDhek7dNOvA0ou4pf8tpzkyLM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IymyjNJIUrM6OKXGpzxwx5eZmt9SluFbQSfPB/AunYHdMtAZbHoyn8IjnXGpI0NlZdNffFedWo0uUq2teSu/qnXKPiY+w+0PLBJQhff0GKU59JB8wwPPHIbrO0gC/CIcdAmL+tIm6gu0F1h0phW2f2Fnmm/uuVeBIiUdIRpDCZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DEdW7hmY; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1720502708; c=relaxed/simple;
+	bh=k8MRUbhHkjOhILYB9mNRHhZKXLPJOg91tgWozGH8p2w=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gTUC+eRZIGupMw2GxFW1jmRnI8/IGU2YlQ6qmYaC45NOHBlEX7SjxU36xfb8A2NQiDiFzvaK5zf9R8dY4dzNNyVoyKI24FJZxQ9sh34EaAnHC5Eg1/AO29hbezjQrLwT7N3JcCHI8nEUDRlmciJ5dOtVhnuYVWxYfw9gWC+Q8bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZF9/QzDs; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DEdW7hmY"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c96e73c886so3401358a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 22:24:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZF9/QzDs"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1fb7de2b22eso13816025ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 22:25:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720502687; x=1721107487; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ps3lG/PULQJDldl+4+0mWuZnq0P9RsTgm5luTvIchyg=;
-        b=DEdW7hmYh60jT0aD+2mGJPt00qm01jhydZVVKTpWcZDnTNrXqycdIbJECPDIGb6XVJ
-         CRYnaBv+VPWAy8W18zw2DuAJF0uuV9V2PXnH85cnRrXY/tnQ6SStO3tot0xuGCZQcRL+
-         3PTvIZMQ3EJeXdhno8b8IkmKI0KdQ55PWGfoa6R5/XMmnZ48RU9+B44XGHosWqiDmdCw
-         +yUKw/+vL1Qsr1voLF/wbfNZcO676s4vlt1HOiT2yotBWNgNtg9Aw856BLoWDR4EJPlE
-         1sxTZeLvo3tFkNN4/YUNvdszxrfZ8gVgumyAaf6KWt2d58K+9GLjb4M/ASTeRO1pKT2Y
-         eccg==
+        d=google.com; s=20230601; t=1720502707; x=1721107507; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AHTcN0faUMJUQ+dWhhUWTakw8XF64osRGcEYZrolzvg=;
+        b=ZF9/QzDsGRTvBgsvbFWW3ekyuGRQCHShUTH4i2aOzKMqGco2k8Ooq4lNDPLWl5EOS9
+         Hc4xYygaElEKe+Xn0Wa4U8bjrSuc9+PbEV+R34undvmBF/mIuZMSMAoZybD3f3Akb+84
+         GNMfK8dSSYJTN0rR9b4IWHhtZCiKQJHnJf6v7oDqhSaV8wG0NqI6dMlMWY4K3FQ/kwR4
+         34yebpiKFVXxlzk+yIozUpchOWAWJznVtflOdyybkcTCyG7hsdzieOro0KVb0sAQKPu1
+         FLjQ+ibf531zAu7o3cHrIfx9AjizHKwVTCdeG76yBrf1EhVyyzoCyzm5Pn6jshMr8T4t
+         NJPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720502687; x=1721107487;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ps3lG/PULQJDldl+4+0mWuZnq0P9RsTgm5luTvIchyg=;
-        b=lVj2OqbqWskogZW0DU5wkY5aYR4gA1o3Vzyqek6VNwe4tcI337mWiwjErTk9r/cgd/
-         epn9Rl7iIW6QokZHtj0rPp52CjnKkZjYIBZ7YrP0fR41RvgKfzaNHC6sdfLGLcWKgnUn
-         MzQIaX1VlL8qzBcjttE8HPNaVlj0w0JpQaEkZVvqM5ipdhczBhWkwJm/Bu3W9/z2bjv4
-         Brn19mt7ITzRxr1J4ZRxgK2Ytb3CNkmNZKJd+QFR5k2hIlACBF5fweWyqzAA8U5RtyC2
-         5kmsMPFWWZ0iI8VtMV/kRGhtvPmBxjEAjrPxPTDkuRtXS6I7jZUbiMDCjHXgCX05xvxG
-         6CZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZfZLIv0jWvyVClbl4PIpECEifF/QWctDh3eXfXukQNgqVwTQmLv+keYeAvR6yiblpPKWSZznN9DkLaU61sSXb2X0LEFXEF/KBzmIg
-X-Gm-Message-State: AOJu0Yw+q4dlxgLuZQijYn9h97vbI4NLCTK8vYTY+5QXhX4bSAc/cFT0
-	sv/nc0Iv8IkoAeU1WoJsByif45DDHCDAGP3RnCrf26VIaSXVFNz6nku68KklHHxHoVa68e8dgQF
-	VfwlYR3/646dgTigzPSouqg==
-X-Google-Smtp-Source: AGHT+IEnE18pVhj8KxuhMIrrakjlq5qVTSryJpNEnZOtvXnmApyS38wo0XKNdx/2PB7nIwLXgMrWNqpDerA6NWhmOg==
+        d=1e100.net; s=20230601; t=1720502707; x=1721107507;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AHTcN0faUMJUQ+dWhhUWTakw8XF64osRGcEYZrolzvg=;
+        b=f6B5vUR0JiT/XkQb9L3pT4X7IEMlo4HF7Uf2XQPAS8hlaRyET/YN380aPy4/DDJaAI
+         NibNc89iA49WhKr7lePfFHdzgbOYd1xGdUzXLnTkE1ZWjmUFArhTDN39xqGbh3792mdm
+         TLVWbJMkdCUHy7qr8KaRrAK49YnQB/pYtf2ATWzuO/hWmp6JzFd83ht1uIhIZyerJuyL
+         yaQyytcU32CHo2dj/mjdRBbX4ksfw6uYyUFFvA4fCuxrw+FVc0A8WFCZ+WKXtAlp0yuh
+         Z1dhxsL9wXsgm7BelyprgyDulWSt0mxAdstGRU8sSYWvFt5ZZt0UaKZO5cgbbOLEHoDO
+         aGAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfTMU+rShlMxQIPi+JMagP7DaxBym0b47YraTtPSSZYF7mn/uWjElxYSfnLx/iOfxzQ9rfoxkIHsGPWZSiSyUHZcjZrZ25IqMYnKJN
+X-Gm-Message-State: AOJu0YyzPVRfxT0T9ztGx1eRwxSx1nRUefPcAxCbVXVj/Zkbc4zojqVK
+	DZKtw9o/7nqRVjESxZNi3tkWmnjtTqFxCEoe4jmg7z/eLRNBJ5XuqaI6FVdvsdDkNFcshCbsPrw
+	m5a+6RIpKDd17QoRFx4zd1Q==
+X-Google-Smtp-Source: AGHT+IFqkigwNChn9ZO8dagAV/GIuoI2PUbi3WxOc4du1EalVFiLpGj82NqNA7X5LLKRQkgdamAIk+tn/NG2RxzfPw==
 X-Received: from yuting.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:317f])
- (user=yutingtseng job=sendgmr) by 2002:a17:90b:278c:b0:2c9:7e93:498b with
- SMTP id 98e67ed59e1d1-2ca35d8c003mr4534a91.9.1720502687049; Mon, 08 Jul 2024
- 22:24:47 -0700 (PDT)
-Date: Mon,  8 Jul 2024 22:24:06 -0700
+ (user=yutingtseng job=sendgmr) by 2002:a17:903:120b:b0:1fb:f03:893b with SMTP
+ id d9443c01a7336-1fbb6ecebc2mr1499475ad.11.1720502706764; Mon, 08 Jul 2024
+ 22:25:06 -0700 (PDT)
+Date: Mon,  8 Jul 2024 22:24:08 -0700
+In-Reply-To: <20240709052408.4032665-1-yutingtseng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240709052408.4032665-1-yutingtseng@google.com>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240709052408.4032665-1-yutingtseng@google.com>
-Subject: [PATCH v8 0/2] binder: frozen notification
+Message-ID: <20240709052408.4032665-3-yutingtseng@google.com>
+Subject: [PATCH v8 2/2] binder: frozen notification binder_features flag
 From: Yu-Ting Tseng <yutingtseng@google.com>
 To: cmllamas@google.com, tkjos@google.com, gregkh@linuxfoundation.org
 Cc: arve@android.com, maco@android.com, joel@joelfernandes.org, 
@@ -66,21 +69,61 @@ Cc: arve@android.com, maco@android.com, joel@joelfernandes.org,
 	Yu-Ting Tseng <yutingtseng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Separated the binder_features change into its own patch.
+Add a flag to binder_features to indicate that the freeze notification
+feature is available.
 
-Yu-Ting Tseng (2):
-  binder: frozen notification
-  binder: frozen notification binder_features flag
+Signed-off-by: Yu-Ting Tseng <yutingtseng@google.com>
+Acked-by: Carlos Llamas <cmllamas@google.com>
+---
+ drivers/android/binderfs.c                                | 8 ++++++++
+ .../selftests/filesystems/binderfs/binderfs_test.c        | 1 +
+ 2 files changed, 9 insertions(+)
 
- drivers/android/binder.c                      | 284 +++++++++++++++++-
- drivers/android/binder_internal.h             |  21 +-
- drivers/android/binderfs.c                    |   8 +
- include/uapi/linux/android/binder.h           |  36 +++
- .../filesystems/binderfs/binderfs_test.c      |   1 +
- 5 files changed, 346 insertions(+), 4 deletions(-)
-
-
-base-commit: 14d7c92f8df9c0964ae6f8b813c1b3ac38120825
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index 3001d754ac36..ad1fa7abc323 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -58,6 +58,7 @@ enum binderfs_stats_mode {
+ struct binder_features {
+ 	bool oneway_spam_detection;
+ 	bool extended_error;
++	bool freeze_notification;
+ };
+ 
+ static const struct constant_table binderfs_param_stats[] = {
+@@ -74,6 +75,7 @@ static const struct fs_parameter_spec binderfs_fs_parameters[] = {
+ static struct binder_features binder_features = {
+ 	.oneway_spam_detection = true,
+ 	.extended_error = true,
++	.freeze_notification = true,
+ };
+ 
+ static inline struct binderfs_info *BINDERFS_SB(const struct super_block *sb)
+@@ -608,6 +610,12 @@ static int init_binder_features(struct super_block *sb)
+ 	if (IS_ERR(dentry))
+ 		return PTR_ERR(dentry);
+ 
++	dentry = binderfs_create_file(dir, "freeze_notification",
++				      &binder_features_fops,
++				      &binder_features.freeze_notification);
++	if (IS_ERR(dentry))
++		return PTR_ERR(dentry);
++
+ 	return 0;
+ }
+ 
+diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+index 5f362c0fd890..319567f0fae1 100644
+--- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
++++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+@@ -65,6 +65,7 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
+ 	static const char * const binder_features[] = {
+ 		"oneway_spam_detection",
+ 		"extended_error",
++		"freeze_notification",
+ 	};
+ 
+ 	change_mountns(_metadata);
 -- 
 2.45.2.803.g4e1b14247a-goog
 
