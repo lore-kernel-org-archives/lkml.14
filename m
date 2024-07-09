@@ -1,91 +1,86 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027B7154BE4;
-	Tue,  9 Jul 2024 08:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0F415358A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720515276; cv=none; b=TQ6iCIMgvSc5K4iwmEYuRO2Ln2hCOK4EGyvaxaenYyTNeblXGQlYM54rPWizkN1AxFr+ZJnrLdCc5vlYeEsAWKlpeNJup9cojp8azVDzt4iIq45Ynz9iX8PXnnb3LXsbm5T2dQVIXp3U3YYl+advB7R6fddkTkJANUmBzb3McrQ=
+	t=1720515312; cv=none; b=JAQ948i0q0lEMQegDoSEuvWtQAKj5J5utDXQMA3E+gUjjVYhID6Lz1lZDOAkviyEGRTR3NNLO9MhnSfpjB+uNkgtzWhN10O0e8GOXMk5zUZlTwvVNgba8MFqRqEeshfyBxLYiAZQz8n86XrV40H6HttM4a0AOUCocaFRgLgvYX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720515276; c=relaxed/simple;
-	bh=cIiVSr1iYUHf8WjtaedoJtges/tulpFdO61UlfbtPr0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=btLxcKnW/MbM/Fu2WLBCmGNDwGWKieAQ5tUyo6LDyP7ajLqDOKc6WDIOigSoQZIDmndPDhSzRioTLer+ZuCbYdDXBDgj2+Jm5fq70dzrthXhJlyJXhzm8KO/5/LJ6Z8iik0/kXRn8+lcJMgEXo8sfi2VorY9Y6EUulDFYN8GZNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowADX3cmr+oxmTj1oAg--.4166S2;
-	Tue, 09 Jul 2024 16:54:03 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	amergnat@baylibre.com,
-	kuninori.morimoto.gx@renesas.com,
-	jernej.skrabec@gmail.com,
-	nfraprado@collabora.com,
-	robh@kernel.org
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] ASoC: mediatek: mt8192: remove redundant null pointer check before of_node_put
-Date: Tue,  9 Jul 2024 16:51:31 +0800
-Message-Id: <20240709085131.1436128-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720515312; c=relaxed/simple;
+	bh=2FYVMtmDzIZUKIJ+dabrFKImBJRSm71ljP7ZDyoecE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BGOx9e3AYyKHc65Oa8k6gVKcDql1tMXEIXG6uGrSzfol5zpFcy7dcTrm2y/7E3addwy+yDYZW1HGpZp7am7d5og6WrEFtmtx/abY+z2y2Bxf75y0OcDvVhGdiMgrdjPtjex6x4HqASdjyJWdL8xxCE7/X96pIqvt0Ls8ZkHGSck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1sR6cj-0001sa-Fu; Tue, 09 Jul 2024 10:54:57 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1sR6cg-008F2O-FK; Tue, 09 Jul 2024 10:54:54 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1sR6cg-006TZB-1F;
+	Tue, 09 Jul 2024 10:54:54 +0200
+Date: Tue, 9 Jul 2024 10:54:54 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Horia Geanta <horia.geanta@nxp.com>,
+	Pankaj Gupta <pankaj.gupta@nxp.com>,
+	Gaurav Jain <gaurav.jain@nxp.com>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] crypto: caam - enable hash api only on ARM platforms per
+ default
+Message-ID: <20240709085454.you3b3ueb3xbtrv6@pengutronix.de>
+References: <20240626155724.4045056-1-m.felsch@pengutronix.de>
+ <258feb43-382d-4ea0-9164-357924350dec@nxp.com>
+ <ZofSbH2Fu/xLnzif@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADX3cmr+oxmTj1oAg--.4166S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFW3Kr15GF17uFyDXFW8WFg_yoWfurg_J3
-	WkK3Z7ur1UGr48Crsrtr98CFs7ZayakF1xZF1YqwnxGry7Gr15A3Z8trnrur45ZrWvy3W5
-	ArsxZwn2yFZYvjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUbrcTPUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZofSbH2Fu/xLnzif@gondor.apana.org.au>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-of_node_put() has taken the null pointer check into account. So it is safe
-to remove the duplicated check before of_node_put().
+On 24-07-05, Herbert Xu wrote:
+> On Fri, Jul 05, 2024 at 09:39:19AM +0000, Horia Geanta wrote:
+> >
+> > I disagree with compiling out the hash support.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+We don't compile it out, we just don't set the default=y since on ARMv8
+it's not required.
 
-diff --git a/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c b/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c
-index 8b323fb19925..db00704e206d 100644
---- a/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c
-+++ b/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c
-@@ -1108,9 +1108,7 @@ static int mt8192_mt6359_legacy_probe(struct mtk_soc_card_data *soc_card_data)
- err_headset_codec:
- 	of_node_put(speaker_codec);
- err_speaker_codec:
--	if (hdmi_codec)
--		of_node_put(hdmi_codec);
--
-+	of_node_put(hdmi_codec);
- 	return ret;
- }
- 
--- 
-2.25.1
+> > If needed, algorithm priority could be changed - even at runtime,
+> > using NETLINK_CRYPTO messages (needs CONFIG_CRYPTO_USER=y/m).
+> 
+> We should change the default priority.
 
+We had an patch exactly doing this but depending on the SoC the default
+prio may valid since the CAAM is used on ARMv7 and ARMv8 NXP SoCs. To
+not cause any regression we went this way.
+
+Regards,
+  Marco
+
+> 
+> Thanks,
+> -- 
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> 
