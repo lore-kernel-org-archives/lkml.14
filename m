@@ -1,117 +1,89 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8952319DF52
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C767182494
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720541891; cv=none; b=RN8eRbXyyYr2iUAHBU7CIXbi/bW+lN79qDhV8c1HvRheM0UhptfOE2GMj/heuxGO8H8yNViSxqHBRZfI2vHwjQgvsHdCHcXG/rqqluUuDaSsOQhm8rsgjHn0vKw3HmEhuZ3KdEoXIbeA+1ZONdNqTY0QONI5FbxtQrNgbIff+wA=
+	t=1720541933; cv=none; b=hsa23jUkmQpbBmGWt6JU/U7YNyjMDl1My8hWthEUmgqNr3OJU1URPMtG4/i619Ggd7EwAm1SgC/sSt5NmTXhpnjDMghYYMUfPCeckW/AWaciWOPF4Ov8m0auXZZeCc/OpFnsPcGYLh8JFr+iPqDIePIjIcG+T2n+FdjWZztHNY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720541891; c=relaxed/simple;
-	bh=KRYihZR7H2DlQzSpWhmUqRWHFjakI5MdooYGS+5oC4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lBMQC7NoObkWsCs/rgnxwnQVj8/zq+I1S42ihcYBkj7+4fycfnm+3q+xuwEVotNuJTHmGobHjoiid+NIvx/QyivagyaoYwm1vdnOXfMmFpROlyuFSUg2y8Z+VFjQ1EgltTMGzVZqBFxDzGICsQpoGFuzmFxePRgjHQTcs8ofEjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=RcWFOJgf; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1720541933; c=relaxed/simple;
+	bh=6CxWOEITHjIhWLXILz9JbgNImfhmSiAYeuju8IvNgdY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=fGKf6I7wWcDlhrJv5mtmQlAuS9bLPeUmj0pJ7YJpxBR6A/6TzdPL7WxwnxdUCuWDqr6baxfG18KUPpdtdqZ+keAVNTlYRllbXaUHi68sdXgOwp/T7++5WUih2Ff2/+xXxCaPeFnUsw7IU8z7rNSTnS0MOkON5hlr3JjoXrUMMv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhXmN2A3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="RcWFOJgf"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id B3B0E120007;
-	Tue,  9 Jul 2024 19:18:02 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B3B0E120007
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1720541882;
-	bh=S9FkQhTEebRMp+SNphzeGH/wOFsrs5/J2sxtT3f3Sgg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=RcWFOJgfxhwatsKX20my7xQ/BIyHtk2AbI1B9zErONAMxWytIhX7TLltD9DO4Cuda
-	 UT9rNc2M+4jEEX+98Bj6zyhUJ0AHMI8lWCu3sx5v5EZv1ljXgjmjGqz9NtBqN01/Yb
-	 Au4lnWLHxC+s7qO6jxSLLAlMK8aKBMGSOF/izNIPs0TrPR9eN0KOW925WOyX0NxO33
-	 YLqOdQipLp7fqxQaWh0cxk67AQdh1Sgamj+DUBvSpsLnSTzF3gTDsoEifqch91w08r
-	 r3wgIYp525j8Dm2QqpFWz4EhN4adDu1V9SJmBs4M4ONA5LIX2waUPKfJsPUcDv2dFk
-	 lWya/1ZnZXKVw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue,  9 Jul 2024 19:18:02 +0300 (MSK)
-Received: from [192.168.1.143] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Jul 2024 19:18:01 +0300
-Message-ID: <94ee7fda-68d8-4720-b95c-10783f2e51a5@salutedevices.com>
-Date: Tue, 9 Jul 2024 19:18:01 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhXmN2A3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BC9C3277B;
+	Tue,  9 Jul 2024 16:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720541933;
+	bh=6CxWOEITHjIhWLXILz9JbgNImfhmSiAYeuju8IvNgdY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=dhXmN2A3Wvh0y2X9vbMZiyQeSdcg1nqJe6GWH3VlzbevWZqh6yyqznzdwXptak8W2
+	 OKOhijmjiyHw+BKcffio4QTHn1aZx+UuKa0TIxoRP8EAu/L+yZLSug+XAXHss+RA4B
+	 b9IHLQYSUv8uTf8eTX0Jx4qd0chTbdp7iefVrtnXNmsbBaXcHyYqow5cOLUKeeRwZx
+	 RdRVWDGHfBrGUio9Q8fZwbN/sFNADfrJtGNXn662ovDKDCHwE/7hCqJEqLn4OnSs3U
+	 b1XeExMVPSdRSoZDZbGMU4Q8GomsQG32dwQK5LVr3HJlq7h+15UEucAcWzjG1kSkBH
+	 tZ97xTsfv0zqQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,  <linux-kernel@vger.kernel.org>,
+  <ath12k@lists.infradead.org>
+Subject: Re: crosstool: x86 kernel compiled with GCC 14.1 fails to boot
+References: <87y16bbvgb.fsf@kernel.org>
+	<917565ee-732a-4df0-a717-a71fbb34fd79@quicinc.com>
+	<837cd2e4-d231-411a-8af4-64b950c4066a@quicinc.com>
+	<c9b23ee3-6790-404d-80a3-4ca196327546@app.fastmail.com>
+	<0e0150ca-fdfa-40cb-ad7f-6ac695b702e4@quicinc.com>
+Date: Tue, 09 Jul 2024 19:18:50 +0300
+In-Reply-To: <0e0150ca-fdfa-40cb-ad7f-6ac695b702e4@quicinc.com> (Jeff
+	Johnson's message of "Tue, 9 Jul 2024 08:29:25 -0700")
+Message-ID: <87le2abkt1.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] initrd: use O_SYNC flag while opening /dev/ram for
- write
-To: Christoph Hellwig <hch@infradead.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>
-References: <20240708200923.1824270-1-gnstark@salutedevices.com>
- <ZozSlCGyKCkj3uUl@infradead.org>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <ZozSlCGyKCkj3uUl@infradead.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186396 [Jul 09 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/09 15:25:00 #25923573
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain
 
-Hello Christoph
+Jeff Johnson <quic_jjohnson@quicinc.com> writes:
 
-Thanks for the review
+> On 7/8/2024 10:44 PM, Arnd Bergmann wrote:
+>> On Tue, Jul 9, 2024, at 05:55, Jeff Johnson wrote:
+>>> On 7/8/2024 6:57 PM, Jeff Johnson wrote:
+>>>> We tend to enable a lot of debug config options, so I'm wondering if one of
+>>>> them is contributing to the issue? Guess I'll turn off a bunch of those
+>>>> options and try again.
+>>>
+>>> OK, with a bunch of debug turned off my image boots.
+>>>
+>>> Now to find the culprit.
+>>>
+>>> Current diff between original config and working config:
+>> 
+>> Nice! I've tried the reverse now, turning on the options
+>> you have turned off on top of my defconfig. This version
+>> still works for me, booting with a plain
+>> 'qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage'
+>> and building with my arm64-to-x86 cross compiler.
+>
+> I picked my favorite to begin with, enabling KASAN (which in turn enabled a
+> few others). The resulting kernel did not boot for me (just saw a black screen
+> after the GRUB menu). Diff between working and non-working config is below.
+>
+> I then downloaded and built the config you supplied. With that I have the same
+> behavior as my original config, the display is frozen with:
+> Loading initial ramdisk ...
+>
+>
+> [jjohnson:laptop 1966] diff .config.old .config
 
-On 7/9/24 09:03, Christoph Hellwig wrote:
-> On Mon, Jul 08, 2024 at 11:09:23PM +0300, George Stark wrote:
->> initrd image is written to the /dev/ram block device using filp_open(),
->> kernel_write()
-> 
-> First question: why are you using the legacy initrd and not initramfs?
-
-I was playing around with initrd to have ability to mount initrd fs from 
-disk after switching to main root and use files from it. We can't mount 
-initramfs image. In embedded system mounting vs extracting makes a 
-difference due to resource limitations. In the end we dropped that idea
-partly because of initrd is marked as deprecated.
-But since it has been deprecated since 2020 and it's still there I 
-thought may be it was used by someone so this patch was worth publishing.
-
-If initrd really counts its last days then this patch can be thrown away.
-
-> 
->> . After fput() /dev/ram is mounted and may fail due to not
->> all data is actually written to the device yet. The mount error remains
->> hidden due to MS_SILENT flag usage and mount_root_generic has retries.
->> So use O_SYNC flag to have all data written to /dev/ram before mounting.
-> 
-> O_SYNC is highly inefficient.  If you have a valid reason to care about
-> a corner case in the hopefully soon to be remvoved legacy initrd code,
-> the right way to do this is a single fdatasync after the writes have
-> finished.
-
-Ok.
+BTW there's also scripts/diffconfig which provides a prettier diff.
 
 -- 
-Best regards
-George
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
