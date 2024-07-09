@@ -1,135 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E2C158A36;
-	Tue,  9 Jul 2024 16:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8952319DF52
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720541873; cv=none; b=cDYfY+pY6zwNZDDUWRJCS9HfWrP3Eg77tugm/by2tv1VeoFrA2S5nILTAgF1Z8xBrj7X68+hQ51+a7kEAMrszMaq+vCtY3GYrkAmPN985BvTcOe9Cpv60MgG/2EQzI5ARIPi0FBJPs90DanGWcRqRZ9r50JR69upKT8XK6NINco=
+	t=1720541891; cv=none; b=RN8eRbXyyYr2iUAHBU7CIXbi/bW+lN79qDhV8c1HvRheM0UhptfOE2GMj/heuxGO8H8yNViSxqHBRZfI2vHwjQgvsHdCHcXG/rqqluUuDaSsOQhm8rsgjHn0vKw3HmEhuZ3KdEoXIbeA+1ZONdNqTY0QONI5FbxtQrNgbIff+wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720541873; c=relaxed/simple;
-	bh=TamJKovQUEkt3niIxAxyUtA7ak5N59S2pM5XNNELtW8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tHqRsN0cskmWwd/Lu2jbciK8WwDZuJ85DXVUouWiJO3G/1yT39z0GJ2pjvDm1JmrcjwenBco7HbtOEaI0/TMhJhhWHjdCCnwHpR2bjiLwA3tC2umlUsAS8pU8P5+7qfz0jy64IttDyRWDgWZNRoDjZgx0uWCuUSMCkOFmtvoeDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPjq8vya; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720541891; c=relaxed/simple;
+	bh=KRYihZR7H2DlQzSpWhmUqRWHFjakI5MdooYGS+5oC4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lBMQC7NoObkWsCs/rgnxwnQVj8/zq+I1S42ihcYBkj7+4fycfnm+3q+xuwEVotNuJTHmGobHjoiid+NIvx/QyivagyaoYwm1vdnOXfMmFpROlyuFSUg2y8Z+VFjQ1EgltTMGzVZqBFxDzGICsQpoGFuzmFxePRgjHQTcs8ofEjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=RcWFOJgf; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPjq8vya"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720541872; x=1752077872;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TamJKovQUEkt3niIxAxyUtA7ak5N59S2pM5XNNELtW8=;
-  b=KPjq8vyaTKXoIS7MrmvYA9UikQxWxSq+DVsB1SWkNnVjYZK/prthVYCp
-   zYkvOaQw8Q1Kuck5Zjp9rTz48FM9f6yEO99NG4c3USwb1o1cqtZOIE0xf
-   hmMwsvrK7u20AMR0EVDNcRYOmItW6KbAl8hmOrXc2FyILEI3GTd3pMfPo
-   Tx54mS1U2CI/5Q5eOnauztnERWOWNArfSoQa3gspiHLxdRl4+5nr+LA8h
-   BZRaA5SVH6yyyC7RVn6MKfabeUWTdYGnX9b9NlpnS7lbNSD5tB7mdoaBp
-   j9V/ofoidRKioQCQ9/QG6Wh2TdOG/tXJFSW236aLJS3QABMqetFdFO3jp
-   Q==;
-X-CSE-ConnectionGUID: sJ6lhNzcTbOZuT1BurEX3g==
-X-CSE-MsgGUID: DKdo2jo7Stat8JOLIN9NtA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="28971255"
-X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="28971255"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 09:17:51 -0700
-X-CSE-ConnectionGUID: 4BkvPTidQY6Z03JB80wrOQ==
-X-CSE-MsgGUID: X5teJpiRSRKh9Pg/QDXp0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="47989294"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 09:17:49 -0700
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 2293711F811;
-	Tue,  9 Jul 2024 19:17:45 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.96)
-	(envelope-from <sakari.ailus@linux.intel.com>)
-	id 1sRDXF-00Fd1R-0A;
-	Tue, 09 Jul 2024 19:17:45 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-media@vger.kernel.org
-Cc: Greg KH <greg@kroah.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	David Plowman <david.plowman@raspberrypi.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Naushir Patuck <naush@raspberrypi.com>,
-	Nick Hollinghurst <nick.hollinghurst@raspberrypi.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: [PATCH 1/1] media: raspberrypi: Switch to remove_new
-Date: Tue,  9 Jul 2024 19:17:35 +0300
-Message-Id: <20240709161735.3724913-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240709163715.3bcd6ab3@canb.auug.org.au>
-References: <20240709163715.3bcd6ab3@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="RcWFOJgf"
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id B3B0E120007;
+	Tue,  9 Jul 2024 19:18:02 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B3B0E120007
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1720541882;
+	bh=S9FkQhTEebRMp+SNphzeGH/wOFsrs5/J2sxtT3f3Sgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=RcWFOJgfxhwatsKX20my7xQ/BIyHtk2AbI1B9zErONAMxWytIhX7TLltD9DO4Cuda
+	 UT9rNc2M+4jEEX+98Bj6zyhUJ0AHMI8lWCu3sx5v5EZv1ljXgjmjGqz9NtBqN01/Yb
+	 Au4lnWLHxC+s7qO6jxSLLAlMK8aKBMGSOF/izNIPs0TrPR9eN0KOW925WOyX0NxO33
+	 YLqOdQipLp7fqxQaWh0cxk67AQdh1Sgamj+DUBvSpsLnSTzF3gTDsoEifqch91w08r
+	 r3wgIYp525j8Dm2QqpFWz4EhN4adDu1V9SJmBs4M4ONA5LIX2waUPKfJsPUcDv2dFk
+	 lWya/1ZnZXKVw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue,  9 Jul 2024 19:18:02 +0300 (MSK)
+Received: from [192.168.1.143] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 9 Jul 2024 19:18:01 +0300
+Message-ID: <94ee7fda-68d8-4720-b95c-10783f2e51a5@salutedevices.com>
+Date: Tue, 9 Jul 2024 19:18:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] initrd: use O_SYNC flag while opening /dev/ram for
+ write
+To: Christoph Hellwig <hch@infradead.org>
+CC: <linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>
+References: <20240708200923.1824270-1-gnstark@salutedevices.com>
+ <ZozSlCGyKCkj3uUl@infradead.org>
+Content-Language: en-US
+From: George Stark <gnstark@salutedevices.com>
+In-Reply-To: <ZozSlCGyKCkj3uUl@infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186396 [Jul 09 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/09 15:25:00 #25923573
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
+Hello Christoph
 
-The remove callback's return value is about to change from int to void,
-this is done by commit 0edb555a65d1 ("platform: Make
-platform_driver::remove() return void"). Prepare for merging the patch by
-switching the PiSP driver from remove to remove_new callback.
+Thanks for the review
 
-Fixes: 12187bd5d4f8 ("media: raspberrypi: Add support for PiSP BE")
-Co-developed-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Acked-by: Naushir Patuck <naush@raspberrypi.com>
-Acked-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-Hi folks,
+On 7/9/24 09:03, Christoph Hellwig wrote:
+> On Mon, Jul 08, 2024 at 11:09:23PM +0300, George Stark wrote:
+>> initrd image is written to the /dev/ram block device using filp_open(),
+>> kernel_write()
+> 
+> First question: why are you using the legacy initrd and not initramfs?
 
-This patch improves the original 'linux-next: build failure after merge of
-the driver-core tree' patch. I kept the acks, hopefully that's fine.
+I was playing around with initrd to have ability to mount initrd fs from 
+disk after switching to main root and use files from it. We can't mount 
+initramfs image. In embedded system mounting vs extracting makes a 
+difference due to resource limitations. In the end we dropped that idea
+partly because of initrd is marked as deprecated.
+But since it has been deprecated since 2020 and it's still there I 
+thought may be it was used by someone so this patch was worth publishing.
 
- drivers/media/platform/raspberrypi/pisp_be/pisp_be.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+If initrd really counts its last days then this patch can be thrown away.
 
-diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-index e74df5b116dc..65ff2382cffe 100644
---- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-+++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-@@ -1756,7 +1756,7 @@ static int pispbe_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int pispbe_remove(struct platform_device *pdev)
-+static void pispbe_remove(struct platform_device *pdev)
- {
- 	struct pispbe_dev *pispbe = platform_get_drvdata(pdev);
- 
-@@ -1765,8 +1765,6 @@ static int pispbe_remove(struct platform_device *pdev)
- 	pispbe_runtime_suspend(pispbe->dev);
- 	pm_runtime_dont_use_autosuspend(pispbe->dev);
- 	pm_runtime_disable(pispbe->dev);
--
--	return 0;
- }
- 
- static const struct dev_pm_ops pispbe_pm_ops = {
-@@ -1783,7 +1781,7 @@ MODULE_DEVICE_TABLE(of, pispbe_of_match);
- 
- static struct platform_driver pispbe_pdrv = {
- 	.probe		= pispbe_probe,
--	.remove		= pispbe_remove,
-+	.remove_new	= pispbe_remove,
- 	.driver		= {
- 		.name	= PISPBE_NAME,
- 		.of_match_table = pispbe_of_match,
+> 
+>> . After fput() /dev/ram is mounted and may fail due to not
+>> all data is actually written to the device yet. The mount error remains
+>> hidden due to MS_SILENT flag usage and mount_root_generic has retries.
+>> So use O_SYNC flag to have all data written to /dev/ram before mounting.
+> 
+> O_SYNC is highly inefficient.  If you have a valid reason to care about
+> a corner case in the hopefully soon to be remvoved legacy initrd code,
+> the right way to do this is a single fdatasync after the writes have
+> finished.
+
+Ok.
+
 -- 
-2.39.2
-
+Best regards
+George
