@@ -1,104 +1,155 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C9F15697A;
-	Tue,  9 Jul 2024 12:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CF6158211
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 12:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720527368; cv=none; b=DfYnQ3NlFUY2lmQaDDXWa9FyTDyvhoMdevnb80gUUbMVlppdpNt/EhrNY4NICAk58zgSO7bsUcRr8HBoAm64fx6+yKJwjNNZ/VcaMDyKWtdOzB0ZpHONL+BToit13nb2KATmr/ZnEPJt78z+2r9ShEzZxpvDA6d/qkqGvsf5ut4=
+	t=1720527534; cv=none; b=gFFUGKGMHsBE+D6GAVau5U3FT+NWvIDf4jAC9+fVk+QiT73KMm5aHz+DMe01i+W2nQ2Sbss1G2t/QHY+mQYADo14hC2nnsPVCG8cYPBLqZ7mbCkh+qVvN8dJKqx3wowYoKalJta6TKnF3g5Wy4ATf+4zYu2jLCanPgibeKMWm30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720527368; c=relaxed/simple;
-	bh=oRrs0MuZIvq2Y1akVTR1AuDyqGUT2GrHBAa2rkP0SkQ=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Cc:From:To:
-	 Subject:Message-ID:Date; b=R3MQ+5jl1GgMeybRfxizL4HbcmpCBIb0yWVYevl1jyKKWuBq11odzL9mf6AQVxBCpt8iB0Ihz6jkNLYifiZR7A+5kZslACrA4s5yXGGoq3xRSAlVe2hVqEvNzZrV6K7sydUGyPU2ZV1sZ9T9ClOUg7vR926SbU8KUv3KmHSuNXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e84Y4NVc; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1720527534; c=relaxed/simple;
+	bh=Pe0nuXqG3qP9nLPELvk5z3cBGnZDCYSeoDY6GZpeOIU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IlF3LyUfXTbFL0Ae1w2nztNwTTFA0U34ybWV7jDreHK6hFSfg3NRQlSiVQ2t1hqePgFdQaqjuJQoxewWfp+XIHpayNgAxPK8qrHQj0M+Ijnu3IEVNNsTH8izRFkDuecRCs+tzLyxbJshKyI7SYwsRUlpN0HLhVgzjAx1AbnMDq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lTyz7OSJ; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e84Y4NVc"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469Bw4Tl004352;
-	Tue, 9 Jul 2024 12:16:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:content-transfer-encoding:in-reply-to
-	:references:cc:from:to:subject:message-id:date; s=pp1; bh=oRrs0M
-	uZIvq2Y1akVTR1AuDyqGUT2GrHBAa2rkP0SkQ=; b=e84Y4NVcnBM3bAJVe85OML
-	zS0bFECwSJkAUB+H2f/eLNLxBYv1HMWEyjzRWuNV7Q2Iwxs/3XSoxOzA8UOgPuq7
-	E4VVS1Qjq/xUcobqmYveUb+s2580tMCTOipye+HNc9g7jRCUsbuGh5PfhHnZPRlR
-	qvv9DmJHo+BbsrFbn+mYBSNqisWJqsBv6VtPWmNGzsKx6vaqd8nNDcjWsb5DUBC1
-	LbmPE/LKy1Yf2EWNjTEnAu82Ivi4MxzHhI3WNaFsZ4YL30GEziutVM63wU2ZqzTT
-	nuOdJ1aDid/Dv0zYrTg9IxxXFf7lY8tIBtROtMFjgOj2KJdKHN67vvyb8OaFV0dg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4090ug0q0x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 12:16:04 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 469CG362032134;
-	Tue, 9 Jul 2024 12:16:03 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4090ug0q0u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 12:16:03 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4699q5vw006916;
-	Tue, 9 Jul 2024 12:16:02 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 407jfmc3ch-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 12:16:02 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 469CFvnb44827082
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jul 2024 12:15:59 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D7232005A;
-	Tue,  9 Jul 2024 12:15:57 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BFEA720040;
-	Tue,  9 Jul 2024 12:15:56 +0000 (GMT)
-Received: from t14-nrb (unknown [9.171.72.32])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Jul 2024 12:15:56 +0000 (GMT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lTyz7OSJ"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3678aa359b7so3815016f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 05:18:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720527531; x=1721132331; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ysEM+hrdKThykp695zr35/1x4O4LVJPY/Rqf0Bmph5g=;
+        b=lTyz7OSJyg8ev2XYo9RRC+daZOa96XSQg8GdTdVqzGLfm4T95YEM62wu28NkJS4ZAB
+         UJeUc1HQpdW84UhFY9JR2NWozVmizZZ5NET4Gzj+BnUTcypbFhEKMbPr4/svnUJ0LrTH
+         /bHKyi16pfknTefc2mKlCtkk5o59v2t4VsZny79tqnYUFzeYkPH8XesPt1j2XQSONuvr
+         uMNR4C31VOUfSG6Ldd1ExCoI5SJfdtjyoKoJGKb9ITJ6a2OkcqtAw0l82DC0BQCzUIqS
+         Cyt90lVIMEYsfA8A8VyDHH7MtC4WISFppIvylWzVzLpCpJdOBfTESBuB0+weJov/lnv2
+         OS6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720527531; x=1721132331;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ysEM+hrdKThykp695zr35/1x4O4LVJPY/Rqf0Bmph5g=;
+        b=dyfokmXSBTbEB99BuuD3NZ7tpMU8AMI1f3++A4eI+MzP/OVl67/bNIdISmCIyfST0z
+         ahiEWODLQ0Utg/1fHqXDh+6AVXbX5E06WF3uflNSAlmvape7avhAzeKx88OwthmpbYHu
+         w8FVku+dGfYjHhUJJPwrIbssRLu9c3mb8lQWb0MO77apyNO+l4eIMz1+Re69lRXaqY08
+         YT4szim8anwC6T40X14w4hXI3QgQBcs0daxDCGSTkBdXuxoQRAkX3H3LEPRFwH009zXO
+         ayvPdvubxzYFYc/k0CaY0c4kScWNJfdEZH/toG/z+WFUxRfB0wazYW53GKDZu7t0nxKL
+         qd5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUQPSp+GqYh8HYdT1wuQSdS4SpDu51kmHvsmy/6zBtzDe/bmyfCvXp6TuodCYHt9bKd8QtMQ3wQUQipEfwF2xqaUDgr4QujSc8+SesD
+X-Gm-Message-State: AOJu0Yyf0Cx5LSPv9peXpS83T0+1r82THgpL5QPvt6Eu3apbAy0DxSlw
+	YoP2f/vajajrYRmWTyU6SAWm1if0DqO+rGVRszguC6ukGNI9E/vuc0cR0Cftd1o=
+X-Google-Smtp-Source: AGHT+IHZqA6anEaUxvluLqhHtquDSAPfFVSC6AkG3YhqfqCYXbLaosYjdF2vSTNVQn0Mv12gBK+1iA==
+X-Received: by 2002:adf:fc90:0:b0:367:89b0:f584 with SMTP id ffacd0b85a97d-367d2b3bfc9mr1848241f8f.11.1720527531141;
+        Tue, 09 Jul 2024 05:18:51 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c270:70c:8581:7be])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa06d3sm2390574f8f.75.2024.07.09.05.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 05:18:50 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v3 0/6] Bluetooth: hci_qca: use the power sequencer for
+ wcn7850
+Date: Tue, 09 Jul 2024 14:18:31 +0200
+Message-Id: <20240709-hci_qca_refactor-v3-0-5f48ca001fed@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240703155900.103783-2-imbrenda@linux.ibm.com>
-References: <20240703155900.103783-1-imbrenda@linux.ibm.com> <20240703155900.103783-2-imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, hca@linux.ibm.com,
-        svens@linux.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
-        nsg@linux.ibm.com, seiden@linux.ibm.com, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, gerald.schaefer@linux.ibm.com,
-        david@redhat.com
-From: Nico Boehr <nrb@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] s390/entry: Pass the asce as parameter to sie64a()
-Message-ID: <172052735546.243722.14703760107770073376@t14-nrb>
-User-Agent: alot/0.8.1
-Date: Tue, 09 Jul 2024 14:15:55 +0200
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -PUDb3xl9FQ2r-YqMZSqz31ufm39yA-P
-X-Proofpoint-ORIG-GUID: lRDjo753b571yoNq9vIutmHK9tsVFOy4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_02,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=822
- malwarescore=0 phishscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090079
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJcqjWYC/23N3QqCQBAF4FeRvW5j/0ztqveIkHUddSBc242lE
+ N+9UQiKujwzZ76ZWYSAENkxm1mAhBH9SEHvMuYGO/bAsaXMlFBGFMLwwWF9c7YO0Fl394GLohB
+ QVVp2jWF0NtEGHxt5vlAeMFLtuX1Icp2+sfwXS5ILDsoYJZV0UsPpiqMNfu9Dz1YtqU+h/CMoE
+ poDlLrRrXQ2/xKWZXkBGCbsA/MAAAA=
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
+ Rocky Liao <quic_rjliao@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2400;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=Pe0nuXqG3qP9nLPELvk5z3cBGnZDCYSeoDY6GZpeOIU=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmjSqgThn1FoQ2q1tql7cHOyBujUj6JtZWCp+i6
+ xYbJR5eBPWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZo0qoAAKCRARpy6gFHHX
+ chhAD/9xRk3Cmaivt1EJtu/W+mojaURn8DrdNpKpDqfOH2VUr2ykQ19WjySd1r/gC1NHxr6Nj2Y
+ EnvUG3oP8bZ1yycrJ9XAZAM6dZO8L6+W16idVDVNPczf3s97yjEyylp4WTDwy0RuqfQKxD08xDH
+ RKxrmzvOWd3pGWHbMmkrA+mvYQgxMoBXxTevQifWaP/MMyR2BcOGHO26msrbF4CO7i9N/EfDONH
+ VM16aIhq0G2SpAXAdmJRTAlKGognvkSesaOHoEhgQhvAs45J/hYPjoryW8K9B7MBQwH9+xCBMwy
+ IL9jIe7Rx2OILaGi0xsIqE6xFVM8RBwOtybIww1irIVDG9nMlEKCpie06L46gJsT65YOCzkOV1x
+ ldVbjPIkU/DMOgsHdhbvezXoQIbDUeQH1gIQKJ2Ph3BTm/lGp7jQpKdBln8wMs9HgmV3cy8JAAe
+ DNTeS4WLxHHKB0HSKwuXCiW0NuzJ+RnVei5IjhEe/52pJyrivJOfpRAwTq6sc4jxhPXAbWzJAiE
+ shZSmhcblYNYG/gkRCp+/NVLrIQrGaJe96YZFGE2ivqU7S6haSrhNtpW2LlAx8JpNrH0W9J3IBD
+ kYhXURpuImkJVbRRCq5czJPrhst3nDOWP2Dvvrpg/hDEbETINOK49IonQTK0ndBu81Fo/MTNXFK
+ 70VS4vDxmhe1zbQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Quoting Claudio Imbrenda (2024-07-03 17:58:59)
-> Pass the guest ASCE explicitly as parameter, instead of having sie64a()
-> take it from lowcore.
->=20
-> This removes hidden state from lowcore, and makes things look cleaner.
->=20
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+The following series extend the usage of the power sequencing subsystem
+in the hci_qca driver.
 
-Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
+The end goal is to convert the entire driver to be exclusively pwrseq-based
+and simplify it in the process. However due to a large number of users we
+need to be careful and consider every case separately.
+
+Right now the only model that fully uses the power sequencer is QCA6390 on
+the RB5 board. The next steps are enabling pwrseq for Bluetooth on sm8650
+and the X13s laptop. To that end we need to make wcn7850 and wcn6855 aware
+of the power sequencing but also keep backward compatibility with older
+device trees.
+
+This series contains changes to mainline DT bindings for wcn7850, some
+refactoring of the hci_qca driver, making pwrseq the default for the two
+models mentioned above and finally modifies the device-tree for sm8650-qrd
+to correctly represent the way the Bluetooth module is powered.
+
+I made the last patch part of this series as it has a run-time dependency
+on previous changes in it and bluetooth support on the board will break
+without them.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v3:
+- Add a missing break in a switch case
+- Link to v2: https://lore.kernel.org/r/20240708-hci_qca_refactor-v2-0-b6e83b3d1ca5@linaro.org
+
+Changes in v2:
+- Fix a switch issue reported by the test bot
+- Link to v1: https://lore.kernel.org/r/20240705-hci_qca_refactor-v1-0-e2442121c13e@linaro.org
+
+---
+Bartosz Golaszewski (6):
+      dt-bindings: bluetooth: qualcomm: describe the inputs from PMU for wcn7850
+      Bluetooth: hci_qca: schedule a devm action for disabling the clock
+      Bluetooth: hci_qca: unduplicate calls to hci_uart_register_device()
+      Bluetooth: hci_qca: make pwrseq calls the default if available
+      Bluetooth: hci_qca: use the power sequencer for wcn7850 and wcn6855
+      arm64: dts: qcom: sm8650-qrd: use the PMU to power up bluetooth
+
+ .../bindings/net/bluetooth/qualcomm-bluetooth.yaml | 18 +++--
+ arch/arm64/boot/dts/qcom/sm8650-qrd.dts            | 28 +++----
+ drivers/bluetooth/hci_qca.c                        | 87 +++++++++++++---------
+ 3 files changed, 72 insertions(+), 61 deletions(-)
+---
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+change-id: 20240704-hci_qca_refactor-0770e9931fb4
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
