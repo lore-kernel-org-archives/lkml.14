@@ -1,141 +1,251 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010017.outbound.protection.outlook.com [52.101.69.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFCD1527B1;
-	Tue,  9 Jul 2024 06:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720507834; cv=none; b=lK9NYaAhC84mjx7dcdyJxitft2Za/mcsN3Oy9DN9DwlIu5VZO2YFENH6F4I0/B6gIyG4vVicDXUKAxkInAwdbr4AZOodiwA7Q3QRoiqI42QBN7y+iI5Jf8KTSs7/pOQtdgHMgO/g8HKYjtW3qSqJdGgFiML5srr007x+nbxjg24=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720507834; c=relaxed/simple;
-	bh=vyiCg4OA5vtk16XHfxPS06sYmXJr8alKtPnAxMdY8lI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cMDTMB6RMxAcytWTBTWxaqNNl6m+a6eN4+WfUwp8/6negvFC21qYaVmfXJerp2p/NaBe8bnhw/oGQhOMnqosa8B11TD1nHKaCJKvttrwvHU8X7f37CZu5FrDHudz8BaeU9CusAi2kdq4F5yR+74Hc1yxxCClcP4oDzUw4a+vV4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XEgDIUuA; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7D115278A;
+	Tue,  9 Jul 2024 06:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720507833; cv=fail; b=fcH55ttCpHk5FTvLOENczzsz9BaL7HPrZeayXKR7oGVXn4Q8tcMSUloK0BWuhi8w+QDVa8b8Qw61kkl8o9Tyh0VUEhrglAkllnL6La8Yoxem1X6QoiRESII+8/GmyhbxR3IBouUFFqAbkVxd1cPNBUEkj0/og06Rz5lasT6R1A0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720507833; c=relaxed/simple;
+	bh=5eWJeQyzCdZqqFKloVpBdtdrL2kb2Yf/Yo15KA59zKU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=KueqFf7QVg8bs/nx5mHod1s+Frn3GEFRi2G/IKWcGuOsdH2ujn+7gvZgCW19O3CRkHjXAZPx7EVXvifIzGPQfu9f2WvhS9IcKWLPtDYv0wR8LVdK5x5YO+W4NGkz6XQ4BxZD0F0SmVstvKIDerXCGAsZBxxA6IYqLfVm1yR28yc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=FUSun+1/; arc=fail smtp.client-ip=52.101.69.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XEgDIUuA"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468M84uE016975;
-	Tue, 9 Jul 2024 06:50:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YK1kPZKLRTwNe3RX5PiAf0/CTmCjBNPlc81MjsGd+1c=; b=XEgDIUuADiNT1qms
-	aaDU5LufvxoYNcQJVPQSJ02Bl99MpkEKSnEDrrTqYumpE+X8WC5CtqUd0GMP1bD/
-	cxqSgDM8V+IYMZAFJg76QpKftf2VujTdpPUXbobudXWWYd+ttfHJLFu2dAWUaHIv
-	qSWIsMF7O4LU2aLDPX+A7cl/LJtl+plDUnHd8j2M5UwhQOsWbA+dfpE1s+70uJIt
-	Gj4Ncv3k4bzT21Po0xMj4BHnM/pHfkMkMs41Yjx4ztAXw0p0oTLx+Oa+iKenvnUO
-	dJ3CFGk5F2JVgy+i5KWdys4M6zPqz8VIVZp7uqye92eK4OE61onzvPThixYvZgB9
-	uRsMVQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406x0t5ryu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 06:50:28 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4696oFNJ006801
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 06:50:15 GMT
-Received: from hu-nainmeht-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 8 Jul 2024 23:50:11 -0700
-From: Naina Mehta <quic_nainmeht@quicinc.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_nainmeht@quicinc.com>
-Subject: [PATCH v4 3/5] arm64: dts: qcom: sdx75: update reserved memory regions for mpss
-Date: Tue, 9 Jul 2024 12:19:22 +0530
-Message-ID: <20240709064924.325478-4-quic_nainmeht@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240709064924.325478-1-quic_nainmeht@quicinc.com>
-References: <20240709064924.325478-1-quic_nainmeht@quicinc.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FUSun+1/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C/uT6kSE39MXXbY71FfDInRNm2xB11gIM4xkcCSE/GtBirW0MWj9m+HBThl1iWJ9PH6jTt7Q0O2I5Mphw6LXXi5z3j6ZSy/DnUQ3ZM1A9YVNtGaGT44Ro83Mx1ZCrxcFsre6bhw0QfL/oCnX9zhSSlFP2ac9A8zgt9jaUIRgt1GyDh2b4nU1sMT4L+3OXDyyfR7x9oIMSpFf5tt7p/J3kflP1CynAj/eQLlOcEtJLqzMEjVT+M+PT6Qm9ey1naaeTiHibygoWHH28SlztQWg/3nAsJ0oywL+YZ6FpGk9GuJPXUIjQCPPvIESr1Skjkgku7V2cswzgjuyeTgn5iWcAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+57WkL9Dvy+uSzM8g0/XrUpb2J9nbQYCxrYe0y8R7y0=;
+ b=Lsmf6292t0xIAjAInlPQf7UkVswI/UnRqQ/bytSIG8g4WVzNuew4kVbAi3BYRqupQ+lqhlgFmeS7xpisaiCbX3/5Ug/lF2ETqvC0RCOuKoZhfGmdx2ngCfObQBQOykJmzUBytDAmQiyZwT3kLJwled1N+8wS+Hf9j9PyA+LdL8mQ/0AZSaBpOTsw61NgQMm8P0EH9lN8BA/oxEa3+5V5fr1I1zA44ExfVr3cd9c1PYdFSq8B2ciwo2oHuXgFtHrzrTn7QtGh3iz1QMj1HHmU+t7IRQJNfZzrUH2Urf8eDlzQx2J1htFDpz4dFTPXtBeQl/GR6gt2ppSlP7CifNe5zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+57WkL9Dvy+uSzM8g0/XrUpb2J9nbQYCxrYe0y8R7y0=;
+ b=FUSun+1/waGfX6aJtpBLk0W7X7lMrRtl+G+HfphwLDp5URDUGqOwSdV661AdyLRausQIxQhmPC2QBKpBui2Jw51mXvSFDm5+owXiRf/E87DSd8GBsfCQETYppxgUGIWVVtE+BR68SYp/ea2PIlbLblxmeP69fGpMppz4PChlZy0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AS8PR04MB8545.eurprd04.prod.outlook.com (2603:10a6:20b:420::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Tue, 9 Jul
+ 2024 06:50:21 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%2]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
+ 06:50:20 +0000
+Message-ID: <35239800-3d99-46f2-8f9a-8e569128bdb8@nxp.com>
+Date: Tue, 9 Jul 2024 14:50:46 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/10] dt-bindings: display: imx: Add i.MX8qxp Display
+ Controller pixel engine
+To: Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, tglx@linutronix.de
+References: <20240705090932.1880496-1-victor.liu@nxp.com>
+ <20240705090932.1880496-4-victor.liu@nxp.com>
+ <35c70e6c-d4e1-45a0-8c8e-db530fd84aab@kernel.org>
+ <ea8a5f78-65a5-4be8-9e15-57351a839f52@nxp.com>
+ <d4ad0701-231a-474f-927c-d21d6785f9ff@kernel.org>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <d4ad0701-231a-474f-927c-d21d6785f9ff@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0126.apcprd02.prod.outlook.com
+ (2603:1096:4:188::11) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: B21I3WKOdgBR3f7N5EhBRJDj6NGp5B8c
-X-Proofpoint-ORIG-GUID: B21I3WKOdgBR3f7N5EhBRJDj6NGp5B8c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 suspectscore=0
- phishscore=0 mlxlogscore=885 priorityscore=1501 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090045
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS8PR04MB8545:EE_
+X-MS-Office365-Filtering-Correlation-Id: 436adb6f-af20-496d-c5a7-08dc9fe3667d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZzJpdjBPd3Vla1o2TFJnazAvQVFqcCs4Sm95bUtaL1d3TkdjU3VqeGhKbWFT?=
+ =?utf-8?B?L0wrL3puSHFObE9XcWo3bzBYWUl2Sy9aU3JyUU8yR2Q2RlVzWUpwZi96UzBi?=
+ =?utf-8?B?S3c3MHJCUTd3WHgxZGFuV3lNS2Z6N1NOK09JNkZRK1duRHZQalgvMHhqTFA0?=
+ =?utf-8?B?SHlZS2Vrbm82RWNGVVVTL280M0dLVzRGOUpkTTUyVXN5YUpGQk4vMDJGbVdC?=
+ =?utf-8?B?ci95VUdHeUcxTFI3dk5qeWNQbVZUYXRNMUZPVjBna2lveS9TZnkvVTM5RE1O?=
+ =?utf-8?B?QjExZ3lwQThjd3hJdnFaNGpPSkp1UTFYYUlTRWdDdGNrVmtodnNHdU9vNVhl?=
+ =?utf-8?B?ZHJqc2picTUrSFhRQ0xQM21UR0wxMjRZV2JtY0ZKZ2V3SnBqTHRiZFZLYnFw?=
+ =?utf-8?B?ZVNJUjBrblBYZmhsUWJIVTFQRXdoVDdobFkwcEJZdVBFaXEyazdKM0RGWXRL?=
+ =?utf-8?B?QWhLaTd2UDBEL3JuRWhKQ25keWZydTd4UjIxUERyM2NRMk9kZ1BZVWh6bVZk?=
+ =?utf-8?B?dGMxdkcyNXI3Q1VPRWRKcDA4RUlrWGd6MXU0dUlPa3hOTlAxVE1IK0V5cU5p?=
+ =?utf-8?B?SGdXMldwUjlaMGZvSkxadkZZVGs3R2JyVmpZQ3ViT2tkWHRuMG1oWXdUWG9E?=
+ =?utf-8?B?STlVdUwzZk05bFJZUktwYnYyOFVxbzJ4VjNmbllZUDRpem1OVURiNXU3R2ZE?=
+ =?utf-8?B?bm45RXpOT2RZK2JoWHJ3dHlVTTBONzFUdG4yUXQwc2JFc0o2MGE0WFZOd2xv?=
+ =?utf-8?B?NWk5N3l1QVN3QVdIMWk5M2h6TnFNdkJ6SFY5RFFReHZqNjZjbUFtRUNrK0tj?=
+ =?utf-8?B?Z1FMeitlM2pUR1BWOFpibUlqUXZYT25hL3NCbVphVUtVQzBnSGhuTitnOXoz?=
+ =?utf-8?B?czlrSTBBZFlicTZmRTdpV1pkUzFySjBjbFc2YWYzdnQ0ak1INzdSY2VzamRE?=
+ =?utf-8?B?UWE5VU9TVHZ5WkRSYU1lMkgweFRuVTJ4QkFLeE5scWsyS0NHbnVxUm9DY2tu?=
+ =?utf-8?B?aHhpY3M0NU5vaHc4K2hnbGVIdjJwY29DK3MwOU5kR2dwblhOQ2pMWUN1MTJF?=
+ =?utf-8?B?OFRWN1ZJekNrTHBScEp4cUliaVV4empNTWx1UEtHaHRuWm5FWWtlaU1WRnZS?=
+ =?utf-8?B?M1pwS0JCdXJKZ0NaTFpOYnlWanRMWU1BY0twSWJtaDZObXJaSGJJZTJUVHBq?=
+ =?utf-8?B?S0pIdGlpTzRwQWhudldhRS92eVI2V0FiU1g3N1o5S1Q1TGUzMXRuSGk0ZVlj?=
+ =?utf-8?B?eXdTV20ySzNtaUVqWWVyQVEzYVFZbjZNSHVJVmkwSGZPRUZidXRLeHZxSis4?=
+ =?utf-8?B?Qi9wbHNzSEVSZFJMcWhZOFJwME5rSjVsSTdPeDJOWmdKbTlxK1ZSZ09ITElx?=
+ =?utf-8?B?cjMrZUQxT1lIU3E3OTdvUXN0ZENtbXV6czlPRTh5VGNZYjVDdW9tTHptd25J?=
+ =?utf-8?B?RVBrSm5pOG9wb3h2N0FLaFJRalBQTFFOUVIxQzhxSWJQWngvcG14VlBMcU5Y?=
+ =?utf-8?B?Q2JSM2liL3p5cFlEQ01ad0FoZ3lCU2k1WExjY2lSMkhFNHczWi9FMDNBWksw?=
+ =?utf-8?B?dXNFQzRJWDVKUk1NYURBSW5VZHRnVFZUVEJEUnpCeTFyZStXODNlQjY3MXZJ?=
+ =?utf-8?B?V2pONWZ0SmdkWHJUblJxSXViRllBNXNWQWpPKzU3V3B3bVk1VC8yYzlUT21S?=
+ =?utf-8?B?ODZqc215a3JmcGJCNVpzRkc0TVk2bDd0eFJiSXVzVXVDR0o2QitJY2NWd0gw?=
+ =?utf-8?B?dnFBR29sRFg1aGRWaTNjanRnbUh0S1MraGhqVVBCTmU3bnNWa2N4L1NjbDdn?=
+ =?utf-8?B?eDBHTkwwZldUN0lsK2RJQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RDB2QUgyR0hmSkREM1A3Qkh2Nm4xRHJBNjZkSUwvREovRE1OMVJxMmlkTi9p?=
+ =?utf-8?B?UVhmQlF5WEFDVWcyQzdqcEsxSERWeUszeFczakRkWndRT256VGFlQ0pMQzF1?=
+ =?utf-8?B?bnpvUldML2ZTeDJ1YWFTRmFkbkc5RUREcmhISUFLS21kc2RHd2lXa3pBOTZK?=
+ =?utf-8?B?ZTZVZkpzVVRZWExxUWdOdVFTOGdhMVEwRU1BdjlBSUx1bnRvdnlZZjh1d2dX?=
+ =?utf-8?B?dXllNExaZE5qTENtZjR2aWVjN3V3bjZuYjBKZzd3aEpaZ0J6bDVZcE5oMkkv?=
+ =?utf-8?B?SjV5aHBGQzZaZkZXajVEK1FCckV1WFV2c3VsNmQva01PeGt5enkyR3JZdE5n?=
+ =?utf-8?B?Y2tUVDA5NkJNcWRKTkpRU0tLbXN0SjRodFcyLzU1MEh4WHI0aXhtSFgzd0Vt?=
+ =?utf-8?B?VTVGdzJ4VVBlazJrOEVmU0hoVmJCcUJFdklpM2kyd3psWWMzcERLelEzOUsx?=
+ =?utf-8?B?Vkw1Yk8zL0NCNXRnTXptVVFlRExTdlg5RmhqRFBPb1pWaWxibVVna1BZQ1A1?=
+ =?utf-8?B?VU1tTGVUdXRVYWY0cFEza2M4ZTlJRFk3ejFzaHJvUkNKMnEzYmhMVHBreUlr?=
+ =?utf-8?B?ZXVyNkV2dUhIWDNOS1U3RWxONkJkc21PcFNMZUdPYUsxTWI0b0d4T1J6dDFK?=
+ =?utf-8?B?cjVpMWxzaFJ4eTc1cG05S1RoRDRiRzZxSGJjU2FuWjZwQW9lcUZ2d0k5a2dS?=
+ =?utf-8?B?VWlJWGhDai9uS01HRXE5Rlc2TzRYSzJ4cEtVNEZyUTUyZ1MvUmVvVUt2RDBF?=
+ =?utf-8?B?NzBEY1BzRnJHMWlqNkkzbGIxTmtDd281WmR3aGFrNHY5bWZBdUVudVFJYnZQ?=
+ =?utf-8?B?ZXhRYk5EUDEyUWNwUFIyaDRKYXFuMW5GTVhMVWFvdUhnNVVIcGExQTRjbW82?=
+ =?utf-8?B?OVJNMGVPMUo3ZFZReGtqSTYvV01INzVrektodG91SU54R1lWdkhkZmkwRWpa?=
+ =?utf-8?B?RnV4dFYwc0F0VE5zdytnVSthUWwwU2VzR1NLaDZqK1FTODBqdzlZK3ZJY2kx?=
+ =?utf-8?B?RW1MS1J4ZG14MTdURVBnWUdBelNPajdNSy9pMm5URmZGMWtBR2lRRUpBcjBM?=
+ =?utf-8?B?Y1RiWUhHOFlwb210RXZvNndSdC9LVWZSNU9SME5TM3dIZ01jVWFBaGQraXAv?=
+ =?utf-8?B?eDdlVFBlVXE2VWJjMHdnNjlDRnd2YTVwV3ZrSk5wWGo2UDFDR3Vra0Rrd1Fx?=
+ =?utf-8?B?SnZSaENSbnFEUWY1QkJuSXdmRTk3SXdnZG5yVW1MSmNUb0laYWV3UzhnVHVN?=
+ =?utf-8?B?Mk5xQ2kyNU51UkgwN01HRithcGtWY1VBV0ZkRXRtc2FEazdPSkVVVUUvK3pS?=
+ =?utf-8?B?SU9sZW5wc3NPUEZUSWk5TTJMOW1uNjlUekhGdGZvSktJMFRVZzFydGc0M2xa?=
+ =?utf-8?B?cjJFYk91bXE5Ylo2alZxQ05RWC9OSTdTN1B2cU55RjZiYXZIcDB4YWtVQ01K?=
+ =?utf-8?B?ODAvSVIyUm4zdEdhZTJlcVVsSVdpb2E2bWpLQlZmTmNCWDJ3UXA4WElDd0Ri?=
+ =?utf-8?B?RUNZaHdrZ095THJLemc4andES0hhVm11N2MzVDdtNmovRlVvM0syL1FGSEVq?=
+ =?utf-8?B?YWV6K0VjMndYYTc5OEhOc3BPRTNmVTNUZXppUlN5bFdBazZLKzd3cDRQa3pa?=
+ =?utf-8?B?SWhTVVRzYmhNbVFGVXdQUHNsTWQ0VHBteStLc2gwQ3RMbHRTaHVsZUQzb0Ny?=
+ =?utf-8?B?eFkyTmt2N25zdGVqdUQrYVBmV0RwNUJrYmE2WmZNQ1BWbEQ2cmxZa0IzSEVP?=
+ =?utf-8?B?TG5objl6QVY2OTFQeU1PSjVWVnNrdkxYcmJFdnd4MS9BdCsxeDl6OS9TMHIz?=
+ =?utf-8?B?M2tCTXZrV3R5OWpRSDVBWlE2dHBkUFBubmJWYzJUczM4N2wwaFFjbTl0NTJ5?=
+ =?utf-8?B?SlNqWDJLR1R6N2Z4MEFZOExZMldPdU5jT0dQQm1IR3VYL2JwRGp3bHk4cld6?=
+ =?utf-8?B?bFQ4ekRnUFJCd1ZFUGJ5MW50blJoWUVxbVA1NVZKYTBVMTJYQ1d0a2hmVlcy?=
+ =?utf-8?B?OXQzUU1YWEJYbDUwVXNSdDhheHRQdlB4WU9iWEsxRVZLQ1gxVnVYVm42b0NH?=
+ =?utf-8?B?TVNkY01IemZmN0NmV1UrbjdnMTVldDZjSnNTd0g5c1pmN1o5VlpLVytlcHhp?=
+ =?utf-8?Q?oHevGLEGLRXax3VvH802yoxzW?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 436adb6f-af20-496d-c5a7-08dc9fe3667d
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 06:50:20.8397
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jOebVPdD1svNK5Hgh6OofxBYAccyGcVXZwNwTBRXDIBJZ+m/xwJs9Aou/0hWJRII9+lklsW0NxMY3qtoMEaloQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8545
 
-Rename qdss@88800000 memory region as qlink_logging memory region
-and add qdss_mem memory region at address of 0x88500000,
-qlink_logging is being added at the memory region at the address
-of 0x88800000 as the region is being used by modem firmware.
-Since different DSM region size is required for different modem
-firmware, split mpss_dsmharq_mem region into 2 separate regions.
-This would provide the flexibility to remove the region which is
-not required for a particular platform. Based on the modem firmware
-either both the regions have to be used or only mpss_dsm_mem has
-to be used. Also, reduce the size of mpssadsp_mem region.
+On 07/08/2024, Krzysztof Kozlowski wrote:
+> On 08/07/2024 08:47, Liu Ying wrote:
+>> On 07/07/2024, Krzysztof Kozlowski wrote:
+>>> On 05/07/2024 11:09, Liu Ying wrote:
+>>>> i.MX8qxp Display Controller pixel engine consists of all processing units
+>>>> that operate in the AXI bus clock domain.  Command sequencer and interrupt
+>>>> controller of the Display Controller work with AXI bus clock, but they are
+>>>> not in pixel engine.
+>>>>
+>>>> Signed-off-by: Liu Ying <victor.liu@nxp.com>
+>>>> ---
+>>>
+>>>
+>>>> +
+>>>> +        extdst@56180a40 {
+>>>> +            compatible = "fsl,imx8qxp-dc-extdst";
+>>>> +            reg = <0x56180a40 0x7>, <0x56186000 0x400>;
+>>>> +            reg-names = "pec", "cfg";
+>>>> +            interrupt-parent = <&dc0_intc>;
+>>>> +            interrupts = <12>, <13>, <14>;
+>>>> +            interrupt-names = "shdload", "framecomplete", "seqcomplete";
+>>>> +            fsl,dc-ed-id = <5>;
+>>>> +        };
+>>>> +
+>>>> +        fetchwarp@56180a60 {
+>>>> +            compatible = "fsl,imx8qxp-dc-fetchwarp";
+>>>> +            reg = <0x56180a60 0x4>, <0x56186400 0x400>;
+>>>
+>>> Aha, one word for address range.
+>>
+>> Sorry, I don't get your idea here.
+> 
+> How many words are in the first IO address range?
+> 
+> One.
 
-Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sdx75.dtsi | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+My bad, the address range should be corrected to
+reg = <0x56180a60 0x10>, <0x56186400 0x190>;
 
-diff --git a/arch/arm64/boot/dts/qcom/sdx75.dtsi b/arch/arm64/boot/dts/qcom/sdx75.dtsi
-index 9b93f6501d55..6f0abcc87a3b 100644
---- a/arch/arm64/boot/dts/qcom/sdx75.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdx75.dtsi
-@@ -366,7 +366,12 @@ uefi_log_mem: uefi-log@87f75000 {
- 			no-map;
- 		};
- 
--		qdss_mem: qdss@88800000 {
-+		qdss_mem: qdss@88500000 {
-+			reg = <0x0 0x88500000 0x0 0x300000>;
-+			no-map;
-+		};
-+
-+		qlink_logging_mem: qlink-logging@88800000 {
- 			reg = <0x0 0x88800000 0x0 0x300000>;
- 			no-map;
- 		};
-@@ -377,8 +382,13 @@ audio_heap_mem: audio-heap@88b00000 {
- 			no-map;
- 		};
- 
--		mpss_dsmharq_mem: mpss-dsmharq@88f00000 {
--			reg = <0x0 0x88f00000 0x0 0x5080000>;
-+		mpss_dsm_mem_2: mpss-dsm-2@88f00000 {
-+			reg = <0x0 0x88f00000 0x0 0x2500000>;
-+			no-map;
-+		};
-+
-+		mpss_dsm_mem: mpss-dsm@8b400000 {
-+			reg = <0x0 0x8b400000 0x0 0x2b80000>;
- 			no-map;
- 		};
- 
-@@ -388,7 +398,7 @@ q6_mpss_dtb_mem: q6-mpss-dtb@8df80000 {
- 		};
- 
- 		mpssadsp_mem: mpssadsp@8e000000 {
--			reg = <0x0 0x8e000000 0x0 0xf400000>;
-+			reg = <0x0 0x8e000000 0x0 0xf100000>;
- 			no-map;
- 		};
- 
+Though only 4 words in the first IO address range.
+
+> 
+> That is not a separate device.
+
+Each processing unit in pixel engine has two IO address
+ranges - "pec" and "cfg".
+
+"pec" stands for Pixel Engine Configuration where pixel
+engine related stuff is controlled by 4 registers(4 words
+in all) - LockUnlock, LockStatus, Dynamic and Status registers.
+The first two provide lock and/or privilege protection to this
+address block.  The last two control/report connection from/to
+other processing units. 
+
+"cfg" IO address range controls processing unit specific
+functions.
+
+As each processing unit has specific functions, it's not
+unacceptable to take it as a separate device with it's own
+IO address ranges.  However, frankly speaking, I'm ok with
+the idea of not splitting the main display controller into
+multiple devices, but taking it as one single device.
+
+> 
+>>
+>>>
+>>> Sorry, these are not separate devices.
+>>
+>> Hmm, again, Maxime suggested to use separate devices.
+> 
+> To some level you can create separate devices, but for one register?
+
+There are two IO address ranges, so at least a few registers.
+Especially, the "cfg" range kind of hints that they could be
+taken as separate devices, as it controls specific functions. 
+
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+
 -- 
-2.34.1
+Regards,
+Liu Ying
 
