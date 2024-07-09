@@ -1,121 +1,227 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8003155303
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D808156F45
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720523257; cv=none; b=orihpBFJrCuCjr/PTesXlBf5q+lIYInsqsqFUJ2ScCNz5Jf7aLBzNfVJyu8A2Ft/WTgZZz485M2D3YJv51YUdP2ff+aQMx25r/SlnIpXHjbzFajvsMVCRE1IxsH3sprPncIh3sQGRKRFVq3p/yE0RpqUcgFlLSvECDcwN9nXvUY=
+	t=1720523373; cv=none; b=ca+7KNvD7XSQcyButQXQzPvA/VBgTHeFRfuujUy255q4vaItCgTeVAyw0tztYox0oKcgMyC35CXTXXQySUwSj5Rf6UcNFxY8PFCCSql/ure73G92Qx5daGp983vJ/MY7Ln5J0y7AUNzmwxuJp/8PEG4AH8QinTNVWvxoqZSQ5PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720523257; c=relaxed/simple;
-	bh=/F2IkqN6onhi8bqBg+Ffra8tWyO9XNvT/nQhWcfnN24=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lxSr7ysCFYW+VGFz+hzfGxRKvPuke+05+WjrFk+x0JM8YDkN/sLwwVBK+od8FRQ21uNA+MFXgckz1jpEbjasF8GFODHmdG4BjwR5ptAyEcVAqWMbbSGs9mc87SC5W8k0GE2Ssal0kZOSVbPbXZyazR7aWXS7yPYsxqgz346WLGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=CTeB0jzn; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1720523373; c=relaxed/simple;
+	bh=FXUkXbQUEspDSkw/HVpFFZAVrtoTx09LZKNLAG6JZuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RpJVUDdjRY9fEC0VfZ3XJ7tI2/l4STXUbEuJuauQRrwuQ0IewAEXmGy7/OJ20HFGZWUnKJfhLq6/SRdS7MeImdc/IKGevSkMjIEDNsD7WOKp2o2S37x9skNFvGn+28v8XFAvXHx3pghV0CzWp210vyX1FlsA53LmudT3gRQt6UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzsbke4/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="CTeB0jzn"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-58b966b4166so5967840a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 04:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1720523254; x=1721128054; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1I1Xf39ndiqFsWjFiF87exVBTjo0QTgARXHDppQr8z0=;
-        b=CTeB0jznI61lD1iyxEC5WLV+gzPSLPaRtMUoBS5xu1szVuzM5d0lT0LVBZxR28d1/K
-         Y2MJ38IuI9pKiTyDb4IS7TLJIdequJsk/IqRHhEYwmw3PXmnNPPYEaOajYABKTczZDuM
-         m93FupyXA+7jyUcT/fjjGaM1T5jIkBVnMu3nGIS0D2qM1eRVE7n53L/PEAddYN838B8I
-         lNn6w+8oY9VFh6PJ9+LNio11ohGJBD/RR4FjUQII9e8t18+kKfQ0QUTBdlM7SGsF4csk
-         Gig4UEAw9s3JygWXE30VjfhTtJ3cMKYfx4thHyzchfydY4gfm2wmhnXCuBxsheJ8SrAZ
-         elVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720523254; x=1721128054;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1I1Xf39ndiqFsWjFiF87exVBTjo0QTgARXHDppQr8z0=;
-        b=ScW0Jl0go4hcA4bt+jyJuO5uKNtBnYKt8yCfbk7gETRu218Lbs47TEEK2q436l2q+X
-         WZHGuB6WZnsWiJ9kcRBI2PCVpSKOiWc5erv5nenN4bn/lcAkNSk07VBbMHXvWbtf5ddS
-         bbWnKQVbxHya7XawZO1iNKVuyZgVqRkvPLItI5b+JtzCF9qhF+Oy/dNfhfxx5zcwsDBD
-         1PD4FTdJbxRU4sMtusK168lYPY/JzSblY8D1UrIFJoubkRog6pJRhAzAVBeo7jFF29E/
-         PsqoZ+EYC8f6PlqqwYa/YktyOeXH6wnMBe7l07iCScfF14r2WbSYzAj+C9jz1zZDYuWW
-         4RYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnJFkx4556AS4G2+A4mmA4PJc9OGKTI/tHZXYhD9KiFmhLZ+N3l5ZdH6ZQZf4dj/wjlgQSSPdF+celSPtwB3BBUEmJOpaFH7rrx1HF
-X-Gm-Message-State: AOJu0YxkEZY2hEQZYw0tyVjjKTdz/yOalhdgbddbUQdE6VrlzH1sG2r3
-	PfgNRCJD2m15uz+maG2eVY/john1Bt9vPgOrjC16qbqaTxGBoa3NabZH6CXCMAw=
-X-Google-Smtp-Source: AGHT+IEkC6Gi8bnVVlEoW+KjySdnk0g6ZRKfC91eeq9IoFsCYK+Vmj3FZQuIZi13296mSsrR6orb0w==
-X-Received: by 2002:a17:906:46c9:b0:a77:e2b2:8ec with SMTP id a640c23a62f3a-a780b68899dmr145995466b.3.1720523253801;
-        Tue, 09 Jul 2024 04:07:33 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-224.dynamic.mnet-online.de. [82.135.80.224])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bc8b8sm69164366b.30.2024.07.09.04.07.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 04:07:33 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: geert@linux-m68k.org
-Cc: linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] m68k: cmpxchg: Use swap() to improve code
-Date: Tue,  9 Jul 2024 13:07:04 +0200
-Message-ID: <20240709110703.66166-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzsbke4/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF727C3277B;
+	Tue,  9 Jul 2024 11:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720523373;
+	bh=FXUkXbQUEspDSkw/HVpFFZAVrtoTx09LZKNLAG6JZuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lzsbke4/exLO4Xl4SqTLG6hiifRc34fVQtWOddtnZ+EUJgKmI7p9pwohDxy+ni4FZ
+	 R9sOC46KJBzU1KRFruWYGkpDgVBs8BqW2FuKFwR4pnF8HQzDCVZnkDzD3y0pJKZ00p
+	 qq0SxVQp+NXk7QeR6KToscr5lFlpkfDHcAbU2YvE4B9vE9n73gDov2XKtHYoaeb04+
+	 J9URmF7sjiuuvE3+JgSLdzPaBb/9CuUMu1V4wmjH4Rr2BVROuE6A4X2Oquo5bAb5Jj
+	 PHiDdCO7T5r4MSWjOVIaiQY+6jbh563cQW8dJu/2DGuMUfSHLdPetKCXA2GoKIvwMQ
+	 ElEkddqarH3aQ==
+Date: Tue, 9 Jul 2024 13:09:30 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Andy Yan <andyshrk@163.com>, linux-rockchip@lists.infradead.org, 
+	dri-devel@lists.freedesktop.org, heiko@sntech.de, hjc@rock-chips.com, andy.yan@rock-chips.com, 
+	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, javierm@redhat.com
+Subject: Re: [PATCH] drm/rockchip: cdn-dp: Remove redundant workarounds for
+ firmware loading
+Message-ID: <20240709-exuberant-tentacled-oxpecker-bd1ea0@houat>
+References: <9b7a9e9b88ad8c7489ee1b4c70b8751eeb5cf6f9.1720049413.git.dsimic@manjaro.org>
+ <109c6f19.2559.1907b817a99.Coremail.andyshrk@163.com>
+ <0bf4701d98833609b917983718c610aa@manjaro.org>
+ <2fd3aabd.785b.190914ec1a6.Coremail.andyshrk@163.com>
+ <f0fb9feed2d9262bb4d7c8ade836af62@manjaro.org>
+ <909d072.9028.19096c2429a.Coremail.andyshrk@163.com>
+ <31062b80d3f9e11c339c400a70464f43@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="mrun7l74cyv4hvms"
+Content-Disposition: inline
+In-Reply-To: <31062b80d3f9e11c339c400a70464f43@manjaro.org>
 
-Remove the local variable tmp and use the swap() macro instead.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- arch/m68k/include/asm/cmpxchg.h | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+--mrun7l74cyv4hvms
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/m68k/include/asm/cmpxchg.h b/arch/m68k/include/asm/cmpxchg.h
-index 4ba14f3535fc..71fbe5c5c564 100644
---- a/arch/m68k/include/asm/cmpxchg.h
-+++ b/arch/m68k/include/asm/cmpxchg.h
-@@ -3,6 +3,7 @@
- #define __ARCH_M68K_CMPXCHG__
- 
- #include <linux/irqflags.h>
-+#include <linux/minmax.h>
- 
- #define __xg(type, x) ((volatile type *)(x))
- 
-@@ -11,25 +12,19 @@ extern unsigned long __invalid_xchg_size(unsigned long, volatile void *, int);
- #ifndef CONFIG_RMW_INSNS
- static inline unsigned long __arch_xchg(unsigned long x, volatile void * ptr, int size)
- {
--	unsigned long flags, tmp;
-+	unsigned long flags;
- 
- 	local_irq_save(flags);
- 
- 	switch (size) {
- 	case 1:
--		tmp = *(u8 *)ptr;
--		*(u8 *)ptr = x;
--		x = tmp;
-+		swap(*(u8 *)ptr, x);
- 		break;
- 	case 2:
--		tmp = *(u16 *)ptr;
--		*(u16 *)ptr = x;
--		x = tmp;
-+		swap(*(u16 *)ptr, x);
- 		break;
- 	case 4:
--		tmp = *(u32 *)ptr;
--		*(u32 *)ptr = x;
--		x = tmp;
-+		swap(*(u32 *)ptr, x);
- 		break;
- 	default:
- 		x = __invalid_xchg_size(x, ptr, size);
--- 
-2.45.2
+On Tue, Jul 09, 2024 at 12:10:51PM GMT, Dragan Simic wrote:
+> On 2024-07-09 11:10, Andy Yan wrote:
+> > At 2024-07-09 16:17:06, "Dragan Simic" <dsimic@manjaro.org> wrote:
+> > > On 2024-07-08 09:46, Andy Yan wrote:
+> > > > At 2024-07-04 18:35:42, "Dragan Simic" <dsimic@manjaro.org> wrote:
+> > > > > On 2024-07-04 04:10, Andy Yan wrote:
+> > > > > > At 2024-07-04 07:32:02, "Dragan Simic" <dsimic@manjaro.org> wro=
+te:
+> > > > > > > After the additional firmware-related module information was
+> > > > > > > introduced by
+> > > > > > > the commit c0677e41a47f ("drm/rockchip: cdn-dp-core: add
+> > > > > > > MODULE_FIRMWARE
+> > > > > > > macro"), there's no longer need for the
+> > > > > > > firmware-loading workarounds
+> > > > > > > whose
+> > > > > > > sole purpose was to prevent the missing firmware
+> > > > > > > blob in an initial
+> > > > > > > ramdisk
+> > > > > > > from causing driver initialization to fail.  Thus, delete the
+> > > > > > > workarounds,
+> > > > > > > which removes a sizable chunk of redundant code.
+> > > > > >=20
+> > > > > > What would happen if there was no ramdisk? And the firmware is =
+in
+> > > > > > rootfs =EF=BC=9F
+> > > > > >=20
+> > > > > > For example=EF=BC=9A A buildroot based tiny embedded system=E3=
+=80=82
+> > > > >=20
+> > > > > Good point, let me explain, please.
+> > > > >=20
+> > > > > In general, if a driver is built into the kernel, there
+> > > > > should also be
+> > > > > an initial ramdisk that contains the related firmware blobs, beca=
+use
+> > > > > it's
+> > > > > unknown is the root filesystem available when the driver is probe=
+d.
+> > > > > If
+> > > > > a driver is built as a module and there's no initial ramdisk, hav=
+ing
+> > > > > the related firmware blobs on the root filesystem should be fine,
+> > > > > because
+> > > > > the firmware blobs and the kernel module become available at
+> > > > > the same
+> > > > > time, through the root filesystem. [1]
+> > > > >=20
+> > > > > Another option for a driver built statically into the kernel, when
+> > > > > there's
+> > > > > no initial ramdisk, is to build the required firmware blobs into =
+the
+> > > > > kernel
+> > > > > image. [2]  Of course, that's feasible only when a kernel image is
+> > > > > built
+> > > > > specificially for some device, because otherwise it would become =
+too
+> > > > > large
+> > > > > because of too many drivers and their firmware blobs becoming
+> > > > > included,
+> > > > > but that seems to fit the Buildroot-based example.
+> > > > >=20
+> > > > > To sum it up, mechanisms already exist in the kernel for various
+> > > > > scenarios
+> > > > > when it comes to loading firmware blobs.  Even if the deleted
+> > > > > workaround
+> > > > > attempts to solve some issue specific to some environment,
+> > > > > that isn't
+> > > > > the
+> > > > > right place or the right way for solving any issues of that kind.
+> > > > >=20
+> > > > > While preparing this patch, I even tried to find another
+> > > > > kernel driver
+> > > > > that
+> > > > > also implements some similar workarounds for firmware loading, to
+> > > > > justify
+> > > > > the existence of such workarounds and to possibly move them into =
+the
+> > > > > kernel's
+> > > > > firmware-loading interface.  Alas, I was unable to find such
+> > > > > workarounds
+> > > > > in
+> > > > > other drivers, which solidified my reasoning behind classifying t=
+he
+> > > > > removed
+> > > > > code as out-of-place and redundant.
+> > > >=20
+> > > > For some tiny embedded system=EF=BC=8Cthere is no such ramdisk=EF=
+=BC=8Cfor example=EF=BC=9A
+> > > > a buildroot based rootfs=EF=BC=8Cthe buildroot only generate rootfs=
+=E3=80=82
+> > > >=20
+> > > > And FYI=EF=BC=8C there are mainline drivers try to fix such issue by
+> > > > defer_probe=EF=BC=8Cfor example=EF=BC=9A
+> > > > smc_abc[0]
+> > > > There are also some other similar scenario in gpu driver{1}[2]
+> > > >=20
+> > > > [0]https://elixir.bootlin.com/linux/latest/source/drivers/tee/optee=
+/smc_abi.c#L1518
+> > > > [1]https://patchwork.kernel.org/project/dri-devel/patch/20240109120=
+604.603700-1-javierm@redhat.com/
+> > > > [2]https://lore.kernel.org/dri-devel/87y1918psd.fsf@minerva.mail-ho=
+st-address-is-not-set/T/
+> > >=20
+> > > Thanks for providing these examples.
+> > >=20
+> > > Before I continue thinking about the possible systemic solution,
+> > > could you please clarify the way Buildroot builds the kernel and
+> > > prepares the root filesystem?  I'm not familiar with Buildroot,
+> > > but it seems to me that it builds the drivers statically into the
+> > > produced kernel image, while it places the related firmware blobs
+> > > into the produced root filesystem.  Am I right there?
+> >=20
+> > in practice we can chose build the drivers statically into the kernel=
+=EF=BC=8C
+> > we can also build it as a module=E3=80=82
+> > And in both case=EF=BC=8C the firmware blobs are put in rootfs=E3=80=82
+> > If the drivers is built as a module=EF=BC=8C the module will also put in
+> > rootfs=EF=BC=8C
+> > so its fine=E3=80=82
+> > But if a drivers is built into the kernel =EF=BC=8Cit maybe can't acces=
+s the
+> > firmware blob
+> > before the rootfs is mounted.
+> > So we can see some drivers try to use  DEFER_PROBE to fix this issue.
+>=20
+> When Buildroot builds the drivers statically into the kernel image,
+> can it also be told to build the required firmware blobs into the
+> kernel image, for which there's already support in the kernel?
+>=20
+> Of course, that would be feasible if only a small number of firmware
+> blobs would end up built into the kernel image, i.e. if the Buildroot
+> build would be tailored for a specific board.
 
+IIRC, it can, but it's not really convenient from a legal point of view.
+
+> Otherwise...
+>=20
+> > > As I already wrote earlier, and as the above-linked discussions
+> > > conclude, solving these issues doesn't belong to any specific driver.
+> > > It should be resolved within the kernel's firmware loading mechanism
+> > > instead, and no driver should be specific in that regard.
+> >=20
+> > IT would be good if it can be resolved within the kernel's  firmware
+> > loading mechanism.
+>=20
+> ... we'll need this as a systemic solution.
+
+The general policy has been to put drivers that need a firmware as a
+module, and just never build them statically.
+
+Maxime
+
+--mrun7l74cyv4hvms
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZo0aZQAKCRAnX84Zoj2+
+duQXAX9Ms7O+/0tW/78X0hREfX//aho/GXBlOL08FaPaawYipsYuGwkuSK4xC+TQ
+3SVdsKIBgMufiC9PXKOysm7HIFZiDuMPBNPHv80tBJqv56TzkdtGbOh1EsHigFIM
+nMK0oN9Ezw==
+=Grb7
+-----END PGP SIGNATURE-----
+
+--mrun7l74cyv4hvms--
