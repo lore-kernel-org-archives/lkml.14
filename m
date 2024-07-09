@@ -1,110 +1,103 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6765D1DFCF
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10FE1DFCF;
+	Tue,  9 Jul 2024 15:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720539950; cv=none; b=If151fheL0vpTrSRH+BIUtIXSp2jU8TAR6NgHxjJazp9nGHt/F7M2BQAbj1BLu3H4DcKoxNsiMfRigq5D1ebGsckPS5FCzrNlUO1kP1AMm1IvB4sLxq2czfBH4Iiwg9RQyWcuzB/VyBwi8Bw0NtaWYybSDU8oagWn7qpieEGVK0=
+	t=1720540020; cv=none; b=p7WeIL/kw8p6HzwCEKcXKWFtXW0pW8bqsMAb4ivU8B9xCYfKgzs6NTVy6WWZFIbdiA8rMwba8n4zmaLZr/NjxhCTcAK5q3oU3lBfqHizBxmSDDYHT18XtxTEIUKAT8223WaI8Wk2ZAZZj+eDmpPevTJujV6yHHcVEjbWF9B1Q+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720539950; c=relaxed/simple;
-	bh=Kow0Kh24AuKtPvlxmcW7w5kWbM0ZjwJheuA5qfIhBGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b6GuLceoTB6Y+p5purLefmbx2NID3yjO3DDfbp5KNJwqy0RGLHLywI0pqyoZen8YXQEZTR7jvjVZDoD1+B70eG0gjAYWr04GwSX/tFnRaZjMiZyd+9xKtIFmMB6mo+V7FI6Y1do1wqXIkcIwpwYQRdDD6jHvBgknFixQPaIWJ1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dIejPo47; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dIejPo47"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4266fd395eeso8296695e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720539948; x=1721144748; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=clrWidEGWWb7l5qAYeI3OPed/nSTgBQ7vf4x2SNX1dg=;
-        b=dIejPo47zvyMKRvFOa6K9tLPkzr0pZF2jPqABGPM2hxAEmY/xEDCN982g83/Qapcz2
-         NIjTlAWv9Ju44grvWwA/DUVi5FEdQ/Z8pzXkc0l7bHgUGDYXbMi358abXRrhJAOPmBfg
-         cG05Nxmkj5jft4Oc6lAdKyeoG/utMNzJF7/+QverOuUl2KtylXMnpk7Gml9matnmlerE
-         wqI12lBZBWrHlGnE3X3HRczbf/XukBeCd6NLco9B1rNDi+opLsVb+tj7/BHYt+uBJqyG
-         aASODmQLhfYaaJBJXNDya4RfBz39ljap78s3wwMvY3GR+WSbrGLEGklgBRSlJhOurCu2
-         OQ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720539948; x=1721144748;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=clrWidEGWWb7l5qAYeI3OPed/nSTgBQ7vf4x2SNX1dg=;
-        b=NyGhAsypldyfMriKmIKHP3M/hYupUNFMW2iElggfgiRIQBevnB1y42UNsSCbPxYz9F
-         Oapwuz9H2unCpYnzlgXJQQTCVH8ITITv1jejHLct/43SDoBnVvcV+G+b3dny4nptV3Nd
-         cB/cxlecSzsAD/rjBOHO/Gs4JibpdycHlETo7Kq0sT4uLTqCNkP1pXXjfcvlPMF7Ep7Z
-         moQV8xaNuLjdd2S8UranvfQqqI314aRXOPY7wJC8n1SbXO0dKyder823vAG+DaYKnGWf
-         V2CQubWDCXtmooB97BLO0DNv9wiS8lmWEeR5H1If0khNJw5xQJ8hj4g+LVX0iwLEOJOl
-         iMOQ==
-X-Gm-Message-State: AOJu0YyvodVYpIl00KQDzydD1tUvmbz8nXPeFf57nM6zFqU+fAHVXMmL
-	NRW8Gfo8RSDLejAliNjZxwe6hAVIDsSW16MuWo6A2M6YLQpJ40z7GLK9nJ/T0W0=
-X-Google-Smtp-Source: AGHT+IFLpPh9rDHh+Cj/f7TeYnsUSsIQHZnBJ26pWs4umPfFjYOH+my5M+Njgcp2s1ifcefyktakbA==
-X-Received: by 2002:a5d:6288:0:b0:367:9ab5:2c80 with SMTP id ffacd0b85a97d-367cead86f8mr1762676f8f.57.1720539947806;
-        Tue, 09 Jul 2024 08:45:47 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:cf24:cce:17df:12ab? ([2a05:6e02:1041:c10:cf24:cce:17df:12ab])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-367cdfb2281sm2889772f8f.115.2024.07.09.08.45.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 08:45:47 -0700 (PDT)
-Message-ID: <2101ef47-0000-4f88-9b57-8ebd5de32791@linaro.org>
-Date: Tue, 9 Jul 2024 17:45:46 +0200
+	s=arc-20240116; t=1720540020; c=relaxed/simple;
+	bh=ioyj1azS+m2JjFteISlU9nXpPYH9cFxRj4zDAHSRCwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mgyzvKohA6ApTMCGxiehjkVL4cBo1bhTmnm9XugoscMWDC3d533x9uUU3S/jFxPD+tNmZ35je+eB3HyvO9Xh/301dk/qqepAplZQb508eBo4IVTNZZo6SIauBhvbXh+1GGk+NEKDulvd2h39RD8VqUIV/k3kQqkiN5rHMiSwST8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sRD2h-0004Dh-00; Tue, 09 Jul 2024 17:46:11 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 42C22C031A; Tue,  9 Jul 2024 16:56:50 +0200 (CEST)
+Date: Tue, 9 Jul 2024 16:56:50 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>,
+	Aleksandar Rikalo <arikalo@gmail.com>,
+	Chao-ying Fu <cfu@wavecomp.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Greg Ungerer <gerg@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>,
+	Ilya Lipnitskiy <ilya.lipnitskiy@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	"paulburton@kernel.org" <paulburton@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 07/14] clocksource: mips-gic-timer: Always use cluster
+ 0 counter as clocksource
+Message-ID: <Zo1Psqq9VUvW3D96@alpha.franken.de>
+References: <20240511104341.151550-1-aleksandar.rikalo@syrmia.com>
+ <20240511104341.151550-8-aleksandar.rikalo@syrmia.com>
+ <bf4a45e9-4ed3-4d3b-bb96-add20a71b04c@linaro.org>
+ <8b133053-247f-414b-9c01-e0e5291e347d@app.fastmail.com>
+ <Zoz6kvcio/wl/015@alpha.franken.de>
+ <4729a8ba-655d-4127-9f14-33b4521b4442@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/9] clocksource: realtek: Add timer driver for
- rtl-otto platforms
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>, tglx@linutronix.de,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- tsbogend@alpha.franken.de, paulburton@kernel.org, peterz@infradead.org,
- mail@birger-koblitz.de, bert@biot.com, john@phrozen.org, sander@svanheule.net
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-mips@vger.kernel.org, kabel@kernel.org, ericwouds@gmail.com,
- Markus Stockhausen <markus.stockhausen@gmx.de>
-References: <20240705021520.2737568-1-chris.packham@alliedtelesis.co.nz>
- <20240705021520.2737568-8-chris.packham@alliedtelesis.co.nz>
- <1bd8c455-567c-4523-8d8e-0e7cbc8210fd@linaro.org>
- <6b4d33cd-35b5-4f34-8ef5-14fb34b2ceaf@alliedtelesis.co.nz>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <6b4d33cd-35b5-4f34-8ef5-14fb34b2ceaf@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4729a8ba-655d-4127-9f14-33b4521b4442@linaro.org>
 
-On 08/07/2024 23:30, Chris Packham wrote:
-> Hi Daniel,
+On Tue, Jul 09, 2024 at 04:44:30PM +0200, Daniel Lezcano wrote:
+> On 09/07/2024 10:53, Thomas Bogendoerfer wrote:
+> > On Tue, Jul 09, 2024 at 09:47:52AM +0800, Jiaxun Yang wrote:
+> > > 
+> > > 
+> > > 在2024年7月9日七月 上午12:36，Daniel Lezcano写道：
+> > > > On 11/05/2024 12:43, Aleksandar Rikalo wrote:
+> > > > > From: Paul Burton <paulburton@kernel.org>
+> > > > > 
+> > > > > In a multi-cluster MIPS system we have multiple GICs - one in each
+> > > > > cluster - each of which has its own independent counter. The counters in
+> > > > > each GIC are not synchronised in any way, so they can drift relative to
+> > > > > one another through the lifetime of the system. This is problematic for
+> > > > > a clocksource which ought to be global.
+> > > > > 
+> > > > > Avoid problems by always accessing cluster 0's counter, using
+> > > > > cross-cluster register access. This adds overhead so we only do so on
+> > > > > systems where we actually have CPUs present in multiple clusters.
+> > > > > For now, be extra conservative and don't use gic counter for vdso or
+> > > > > sched_clock in this case.
+> > > > > 
+> > > > > Signed-off-by: Paul Burton <paulburton@kernel.org>
+> > > > > Signed-off-by: Chao-ying Fu <cfu@wavecomp.com>
+> > > > > Signed-off-by: Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>
+> > > > > Signed-off-by: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>
+> > > > > ---
+> > > > 
+> > > > Applied patch 7 and 8
+> > > 
+> > > I think it won't compile without patch 1 being applid.
+> > > 
+> > > Thomas, do you mind to apply patch 1 for now? Given that it's just some extra
+> > > function definitions.
+> > 
+> > no problem, I've applied patch 1 und 2 to mips-next.
 > 
-> On 8/07/24 21:53, Daniel Lezcano wrote:
->> On 05/07/2024 04:15, Chris Packham wrote:
->>> The timer/counter block on the Realtek SoCs provides up to 5 timers. It
->>> also includes a watchdog timer which is handled by the
->>> realtek_otto_wdt.c driver.
->>>
->>> One timer will be used per CPU as a local clock event generator. An
->>> additional timer will be used as an overal stable clocksource.
->>
->> Does the mips arch have a local timer per cpu timer and a broadcast 
->> timer already integrated in the GIC ?
-> 
-> I'm far from an expert but as best I can tell no. This SoC doesn't use 
-> the mti,gic it uses realtek,rtl-intc instead.
+> Usually we create a shared immutable branch, but as we are close to the PR,
+> I propose I ack these two patches and let them go through the mips tree this
+> time
 
+works for me, as well.
 
-Ok, thanks for clarifying
-
+Thomas.
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
