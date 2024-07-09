@@ -1,110 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from a3.inai.de (a3.inai.de [88.198.85.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756201B86CC;
-	Tue,  9 Jul 2024 17:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6793D157470;
+	Tue,  9 Jul 2024 17:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.198.85.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720546939; cv=none; b=ZJl2yu6/6WKyl+X/rG7pXJsTv/GjCO0Dc6f1YAuhzTOFj75zO6bRb0xyqW2bIIyPQ+AtrTSaYpTrHfOVt18lRqqGNIL/Yr+zqLhgPzSRQQIpunjIvN0qFPgJBu4PBYaSbEpq+FtMdb+nnblFgmjuQUzSvnMJr22yCAi5Gm4on9w=
+	t=1720546994; cv=none; b=ByW6gQ9BmEndxl1tGKOORT07gKx22r19mTypyFwAo6a90gx00CWRMvDdbLUWzVDNhVP/Q9h9osagOVrYJApltNa8VXQICiev7+AnLM6p8NIjQHC/Kkl4OQgUuMtR1wEqMc4fgkp0G/zbfKhcgrsg8iUyRd7VMCBUmDRiC7deFG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720546939; c=relaxed/simple;
-	bh=ebW9j0Or29bAV/OIYS8+7Sgp+Pfi23j95sT/HNjJOEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QyDaNiOxyv04uSc0CGcnCIIUVgUt8iU3JXT8sNqUBqZJhHJOa878O8xsqN0OwBCj2wR3+fVe7bx2SZh1NyBAOFth6VOoNHTWdDL6zoiImWdOAZSckWQnKusuim0KjsBR8vnk5g5JdvRFLLINFGPNl7qY5T+CgfyXz99OxpmCPX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfYEGBbA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfYEGBbA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E133C3277B;
-	Tue,  9 Jul 2024 17:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720546939;
-	bh=ebW9j0Or29bAV/OIYS8+7Sgp+Pfi23j95sT/HNjJOEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rfYEGBbAmynhpSyZHeUQnL2N2IIoI1WBzjnjOUrC8QYYNbT1aAtAjGkmcif4ylXoH
-	 J4ZKX8RcICZpHp/t8deTJ6FeE+2LXMK9qqSpF3r//6DgLQu/iWGc+KDLdSS/lY0xi7
-	 a05sEC041+4R21N+LMTJ4NgQGHpQp6kB4VoXLWrVuO86CmjQJ/XqMUsEyDfuJnfsXn
-	 Zx9MA7VQQlb0UwbiJMh3qaMU+6B9DJN0oxOLNNGa9t4X92OUm3UCr6vQJRDT9S95Vp
-	 exiu0JgErVkBja86lV9E7w7eGAe/tQhDpwWJxmXuARBfHyNepEApKZYNsn6ZJrN/Bd
-	 lwmLIzbMVIi3A==
-Date: Tue, 9 Jul 2024 18:42:12 +0100
-From: Simon Horman <horms@kernel.org>
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, kernel@quicinc.com,
-	netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/2] net: stmmac: dwmac-qcom-ethqos: Add QCS9100
- ethqos compatible
-Message-ID: <20240709174212.GM346094@kernel.org>
-References: <20240709-add_qcs9100_ethqos_compatible-v2-0-ba22d1a970ff@quicinc.com>
+	s=arc-20240116; t=1720546994; c=relaxed/simple;
+	bh=sXS06RG7mRvH47DVMkm9hcVYched9n2sZ2yUgDnfv2M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=aUgFNuSOJ7S9jckgFRO+qJgucuSKmjCey62/6cCc3HceYIKb85r4+Ka2SoeLOPsDDfjx+j/pIs4PcrNPIeKlND7lMwbsX77Yaz086CGvKFVxYgnCsybu7WiRnmZ8pK6pJdjwNbLzSrVHEB3m7CTzm4BWXfeBdoTn/RwQ8fLi8N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inai.de; spf=pass smtp.mailfrom=inai.de; arc=none smtp.client-ip=88.198.85.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inai.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inai.de
+Received: by a3.inai.de (Postfix, from userid 25121)
+	id D9BE658725FF2; Tue,  9 Jul 2024 19:33:13 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by a3.inai.de (Postfix) with ESMTP id D72B760C6495C;
+	Tue,  9 Jul 2024 19:33:13 +0200 (CEST)
+Date: Tue, 9 Jul 2024 19:33:13 +0200 (CEST)
+From: Jan Engelhardt <jengelh@inai.de>
+To: Sasha Levin <sashal@kernel.org>
+cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+    Tejun Heo <tj@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH AUTOSEL 6.9 01/40] workqueue: Refactor worker ID formatting
+ and make wq_worker_comm() use full ID string
+In-Reply-To: <20240709162007.30160-1-sashal@kernel.org>
+Message-ID: <pp021o2p-2025-7nor-7257-sons6q59rorp@vanv.qr>
+References: <20240709162007.30160-1-sashal@kernel.org>
+User-Agent: Alpine 2.26 (LSU 649 2022-06-02)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709-add_qcs9100_ethqos_compatible-v2-0-ba22d1a970ff@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Tue, Jul 09, 2024 at 10:13:16PM +0800, Tengfei Fan wrote:
-> Introduce support for the QCS9100 SoC device tree (DTSI) and the
-> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-> While the QCS9100 platform is still in the early design stage, the
-> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-> mounts the QCS9100 SoC instead of the SA8775p SoC.
-> 
-> The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
-> all the compatible strings will be updated from "SA8775p" to "QCS9100".
-> The QCS9100 device tree patches will be pushed after all the device tree
-> bindings and device driver patches are reviewed.
-> 
-> The final dtsi will like:
-> https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-3-quic_tengfan@quicinc.com/
-> 
-> The detailed cover letter reference:
-> https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
-> 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
-> Changes in v2:
->   - Split huge patch series into different patch series according to
->     subsytems
->   - Update patch commit message
-> 
-> prevous disscussion here:
-> [1] v1: https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
-> 
-> ---
-> Tengfei Fan (2):
->       dt-bindings: net: qcom,ethqos: add description for qcs9100
->       net: stmmac: dwmac-qcom-ethqos: add support for emac4 on qcs9100 platforms
-> 
->  Documentation/devicetree/bindings/net/qcom,ethqos.yaml  | 1 +
->  Documentation/devicetree/bindings/net/snps,dwmac.yaml   | 2 ++
->  drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 1 +
->  3 files changed, 4 insertions(+)
-> ---
-> base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
 
-I'm assuming that this is a patch for net-next.
-But the commit above is not present in net-next,
-and this series doesn't apply to net-next.
+On Tuesday 2024-07-09 18:18, Sasha Levin wrote:
 
-Please rebase when preparing v3.
-And please designate the target tree in the subject.
+>From: Tejun Heo <tj@kernel.org>
+>
+>[ Upstream commit 2a1b02bcba78f8498ab00d6142e1238d85b01591 ]
+>
+>TASK_COMM_LEN is only 16 leading to badly truncated names for
+>rescuers. For example, the rescuer for the inet_frag_wq workqueue becomes:
+>
+>  $ ps -ef | grep '[k]worker/R-inet'
+>  root         483       2  0 Apr26 ?        00:00:00 [kworker/R-inet_]
 
-	Subject: [PATCH net-next v3] ...
+* very old Linux: process names are fixed to 16 bytes
+* Linux 6.something: we relaxed it for kthreads in principle, but
+  oopsie-daisie forgot one case so it's still 16 bytes for that one case
+* 2a1b02: now that one case also has length limit lifted
 
-Thanks!
+which for me makes this count as a feature rather than a bugfix,
+and I would not add it to -stable.
+There might even be a poor soul who tests for exact process names in one
+obscure shell script of his… would not want to break his setup when going
+6.9.8->6.9.9, only with 6.9.8->6.10.
