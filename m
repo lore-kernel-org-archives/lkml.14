@@ -1,68 +1,45 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB4C80BEC;
-	Tue,  9 Jul 2024 18:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD3C80BEC;
+	Tue,  9 Jul 2024 18:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720551149; cv=none; b=u5ZCvTNiYqNdjM5jycEOEsNxdVNkQwMhBu83BWg5eZ/i8cVk0rNF8hkOjl6ebP5Hq/MZJxfJShkhIeNzX23mtIHVEE6dexvW3RKMMvlltGUe4kYxNHGbGybfofgK/QuA595iwtTXzTdc7rIIk0wESPcKEZ81Vn/I2oxxrrY8djg=
+	t=1720551254; cv=none; b=u6Bapj+yQADreTs13JpzY0L21I5TIMx/Y5EWbC4NpzC7z08EGzAKyBDh6O86NBXtsPJGU36UYVYcYcWNalR+Oe4MVOPhlG7aXZ/HjYoskzPMHEf+etVeYtjlernfFMRKj7CEi4wBYbUfzOAs8T40/3oTSd47Vn5xrVpzsBiA9qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720551149; c=relaxed/simple;
-	bh=8ieHrXVeYYJBD+wAMu25xGbS8xjwW/N04pPu6ObI7mc=;
+	s=arc-20240116; t=1720551254; c=relaxed/simple;
+	bh=zU+xsUl1UVFtkSW2uled6b4uFbPZZ9vJ+DA0uP6xOCE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s30ZeHkiZvmxjbZqP/oLhoUsj7Tp2miGf8eZ7iyRT9gY4AfYtyTpMGXpm9IiwQit3gdaOua0uf73c66ypHwVe4SRUJAmQDUFDLAsBg3bTs0vjkCYwSEv1Gkwe2YhC79QkW17kBQhiP586x/m9Z3CuQyOUwh8V1Jhi4Uc71Xekic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TLO852cq; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=l4VLn7zFLtTdXCvgn6v68DqkuvkIcJUbKZdhBfDA8IY12PaOm/sQHXNl6iLlaPNRtxuRoZxGnXdpuGBTj3/kl0NwqEmWsOyZvzJla4mqkAbCPIxH2SeJvWMyfEqmL+TMDf/kFDFtjdzq4d03YWnQYW3aqAVWYU8a2GLtLb66/iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwM9AEfp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLO852cq"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-656d8b346d2so3093884a12.2;
-        Tue, 09 Jul 2024 11:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720551148; x=1721155948; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9XkRhpaVRdgchhtWjJLj6BGbUn4he7TT4pklzFSgHlQ=;
-        b=TLO852cqbaNRqHI//u2aICPGV6EGOQWA+ZeDnqVRWKIOmJ39wk1ImvU/PZYTHuSd5K
-         IYOPWdnIxiSSAADe2cGCS/e9qs0mjinXlrSgy/yG8TEj3dL7BVWjLDvjJp0nx2qEURoK
-         EjPDSzhnmzbFkP4hLcKbAy6DACB6f9EFXJxmmWn45QM6fRapMIsxr5KSQeXZ1nC8d+cT
-         rKciCD+SAaYkY9lXPkG5MKy3oS7Up802xDSTTL9LUNomDE47PcHyaggzJc5RmRuCjF0n
-         dgSiGLpuMWZuXv4TUTqNwOnMTTZ3baZ/6UwAxei+RWQtRFrgTtjePEGqN8g7j5WyXRRW
-         ROEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720551148; x=1721155948;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9XkRhpaVRdgchhtWjJLj6BGbUn4he7TT4pklzFSgHlQ=;
-        b=a6F6+1IjcA8zeOFswBJih6OKcZwGo4zuEbZaewzM7UipYVgrgJavrL4xqw83kmkMNw
-         DtvCUb0lGuvFzr+8CnIUOHZarTq8dE2++qYisd45a045InSFohpQv5FIlj3nfWlqbeOj
-         HCW/Y/Pl9DFPNs78At7xAbUd81vnzXtLXpO4c93E89vSFwRDhG3LDDj8MpbBXpNu3EfZ
-         Ew0gUxuG/0ZlBfZfR6eewOTpYM8dAsKFcc1524+66VDRpr7UbMtJBRPATiN3bLb0o5xF
-         3shlK3Angzf+YTjmyaRukjcGqLFB4M6P0p91lx/sZ01XcxMkiF430irZyc1yXVavOSh9
-         C0cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLyg3lS62whnhlSZt/sKcRRkRy0hVXG7GAij6KqfSCyKMsSh9hgbPOxhX5hkRdQYJ7DyE4RL4bG01Pcb9ezIcc7PRTvCqzoizMq4Z3
-X-Gm-Message-State: AOJu0YzICL5aHG8AwMMjTmhEBdTf4yGzQ9zHm1j3m0v84hWFT/6dBJ78
-	4iAdjRVPffMtwJr8GP9t9sPZdT4H/z40N4yJn0Wfmb8DWpsJwNZt
-X-Google-Smtp-Source: AGHT+IEHNE+fsRFsGTVFWTYrX6xSNJ38pTMIyukS0nKbIttJkZLibhW6cPZ72l6OsP0ZhoRsRPDy+A==
-X-Received: by 2002:a05:6a20:244e:b0:1c0:bf35:ef42 with SMTP id adf61e73a8af0-1c2981fbfdemr3890267637.3.1720551147703;
-        Tue, 09 Jul 2024 11:52:27 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:922a:af36:b3d9:2eac])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b439b54fesm2237478b3a.173.2024.07.09.11.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 11:52:27 -0700 (PDT)
-Date: Tue, 9 Jul 2024 11:52:24 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mirsad Todorovac <mtodorovac69@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Felipe Balbi <me@felipebalbi.com>,
-	Peter De Schrijver <peter.de-schrijver@nokia.com>
-Subject: Re: [PROBLEM linux-next] drivers/input/misc/twl4030-pwrbutton.c:33:
- warning: expecting prototype for twl4030().
-Message-ID: <Zo2G6P-hFER6EqgQ@google.com>
-References: <51a4022c-e5a7-48c2-8c87-0e26a1b7b406@gmail.com>
- <ZowbMn8BNJm_oufN@google.com>
- <2594cc44-5fd7-4aeb-9f35-da3d8b8210a3@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwM9AEfp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FA10C3277B;
+	Tue,  9 Jul 2024 18:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720551253;
+	bh=zU+xsUl1UVFtkSW2uled6b4uFbPZZ9vJ+DA0uP6xOCE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nwM9AEfpO5XEeQhOCklbMmT6XTFAnaKLSY09IA9ClKZKULDLYX8FN1e3yiaFTGM8v
+	 rP6jg4cl4GIIaqjUdgjpHFMqtLZcEA0d1HhWa37RmzyUjehM8U+qxzag/NECxat39a
+	 hgqsyXQBkEYX8oSe/Lt4lL8DDrZ0zSgx6ng2+W5YFl0e2/2+LtDss5zpqvyhZLutpL
+	 JUXT8NvXU18lifBkmZ0/J3uMI8GIvlNWqwIsidQsK2EMyERtPC3/jKYaBkIicEd96G
+	 O5PBuIfi2V32zu1+F63tWXlq1Y9seml27I5he2c/ygFRl19LWxhrwn/aFcfQQ3dSt3
+	 RSiVUEco2qXsg==
+Date: Tue, 9 Jul 2024 13:54:02 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Prakash Gupta <quic_guptap@quicinc.com>
+Cc: Mukesh Ojha <quic_mojha@quicinc.com>, konrad.dybcio@linaro.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] firmware: qcom_scm: Add a padded page to ensure DMA
+ memory from lower 4GB
+Message-ID: <qputoki6kfvowm35ops5wytiezdixsgel3klaq2vj4ylpv44qy@r2khmqemg6jo>
+References: <1716564705-9929-1-git-send-email-quic_mojha@quicinc.com>
+ <h6omxqre7pod3ztn7x3sckjbgcg32u4btfmtxwn2rkjw7uwsgd@ncdmu5ed4gm3>
+ <d85bf913-b6dc-e9fd-7c54-fe52b79c2593@quicinc.com>
+ <jcvu2irnung4u6v6ticafrqze73kqenpqpy6le6du2q6ag734u@jeqxv5y7pumm>
+ <ZnmK7Nc50gM3HbVI@hu-mojha-hyd.qualcomm.com>
+ <b645a400-a932-f7e0-de03-e88833541538@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,42 +48,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2594cc44-5fd7-4aeb-9f35-da3d8b8210a3@gmail.com>
+In-Reply-To: <b645a400-a932-f7e0-de03-e88833541538@quicinc.com>
 
-On Mon, Jul 08, 2024 at 08:04:37PM +0200, Mirsad Todorovac wrote:
-> On 7/8/24 19:00, Dmitry Torokhov wrote:
-> > Hi Mirsad,
-> > 
-> > On Sun, Jul 07, 2024 at 01:54:12AM +0200, Mirsad Todorovac wrote:
-> >> Hi,
+On Mon, Jul 08, 2024 at 03:33:57PM GMT, Prakash Gupta wrote:
+> 
+> 
+> On 6/24/2024 8:34 PM, Mukesh Ojha wrote:
+> > On Sun, Jun 23, 2024 at 07:25:23PM -0500, Bjorn Andersson wrote:
+> >> On Wed, May 29, 2024 at 05:24:29PM GMT, Mukesh Ojha wrote:
+> >>>
+> >>>
+> >>> On 5/27/2024 2:16 AM, Bjorn Andersson wrote:
+> >>>> On Fri, May 24, 2024 at 09:01:45PM GMT, Mukesh Ojha wrote:
+> >>>>> For SCM protection, memory allocation should be physically contiguous,
+> >>>>> 4K aligned, and non-cacheable to avoid XPU violations. This granularity
+> >>>>> of protection applies from the secure world. Additionally, it's possible
+> >>>>> that a 32-bit secure peripheral will access memory in SoCs like
+> >>>>> sm8{4|5|6}50 for some remote processors. Therefore, memory allocation
+> >>>>> needs to be done in the lower 4 GB range. To achieve this, Linux's CMA
+> >>>>> pool can be used with dma_alloc APIs.
+> >>>>>
+> >>>>> However, dma_alloc APIs will fall back to the buddy pool if the requested
+> >>>>> size is less than or equal to PAGE_SIZE. It's also possible that the remote
+> >>>>> processor's metadata blob size is less than a PAGE_SIZE. Even though the
+> >>>>> DMA APIs align the requested memory size to PAGE_SIZE, they can still fall
+> >>>>> back to the buddy allocator, which may fail if `CONFIG_ZONE_{DMA|DMA32}`
+> >>>>> is disabled.
+> >>>>
+> >>>> Does "fail" here mean that the buddy heap returns a failure - in some
+> >>>> case where dma_alloc would have succeeded, or that it does give you
+> >>>> a PAGE_SIZE allocation which doesn't meeting your requirements?
+> >>>
+> >>> Yes, buddy will also try to allocate memory and may not get PAGE_SIZE memory
+> >>> in lower 4GB(for 32bit capable device) if CONFIG_ZONE_{DMA|DMA32} is
+> >>> disabled.
 > >>
-> >> This is the result of testing randconfig with KCONFIG_SEED=0xEE7AB52F in next-20240703 vanilla tree on
-> >> Ubuntu 22.04 LTS. GCC used is gcc (Ubuntu 12.3.0-1ubuntu1~22.04) 12.3.0.
+> >> Is that -ENOMEM or does "not get" mean that the buddy fallback will
+> >> provide an allocation above 4GB?
 > > 
-> > Have you saved the .config for the failed run by any chance?
+> > dma_alloc_coherent() returns NULL in that situation.
 > > 
-> > Thanks.
+> > https://elixir.bootlin.com/linux/v6.10-rc5/source/kernel/dma/direct.c#L142
+> > 
+> > -Mukesh
 > > 
 > 
-> Hi Dmitry,
+> scm device is using DMA mask as 32b. With size <= PAGE_SIZE, call to 
+> dma_alloc_contiguous() at [1] will return NULL.
 > 
-> Please find it attached to this message.
+> With DMA mask as 32b and CONFIG_ZONE_{DMA|DMA32} disabled, the allocation 
+> can't be guaranteed within 32b with buddy. Hence will return page as NULL.
+> 
+> Adding a padded page should allow allocation from CMA region.
+> 
 
-Thanks. LOL, here's the fix:
+Thanks for the explanation, Prakash and Mukesh. It sounds wrong to me
+that one has to trick the DMA API this way.
 
-diff --git a/drivers/input/misc/twl4030-pwrbutton.c b/drivers/input/misc/twl4030-pwrbutton.c
-index e3ee0638ffba..ade6685e5ce9 100644
---- a/drivers/input/misc/twl4030-pwrbutton.c
-+++ b/drivers/input/misc/twl4030-pwrbutton.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * twl4030-pwrbutton.c - TWL4030 Power Button Input Driver
-  *
-  * Copyright (C) 2008-2009 Nokia Corporation
+I assume this comes from the check [a], could we perhaps propose
+modifying this? If nothing else it will give us the DMA maintainers'
+input regarding this being the appropriate workaround.
 
+[a] https://elixir.bootlin.com/linux/v6.10-rc5/source/kernel/dma/contiguous.c#L362
 
-Thanks.
+Regards,
+Bjorn
 
--- 
-Dmitry
+> Thanks,
+> Prakash
+> 
+> [1] https://elixir.bootlin.com/linux/v6.10-rc5/source/kernel/dma/direct.c#L131
+> >>
+> >> Regards,
+> >> Bjorn
+> >>
+> >>> However, DMA memory would have successful such case if
+> >>> padding is added to size to cross > PAGE_SIZE.
+> >>>
+> >>>>
+> >>>>  From this I do find the behavior of dma_alloc unintuitive, do we know if
+> >>>> there's a reason for the "equal to PAGE_SIZE" case you describe here?
+> >>>
+> >>> I am not a memory expert but the reason i can think of could be, <=
+> >>> PAGE_SIZE can anyway possible to be requested outside DMA coherent api's
+> >>> with kmalloc and friends api and that could be the reason it is falling
+> >>> back to buddy pool in DMA api.
+> >>>
+> >>> -Mukesh
+> > 
+> 
+> > 
