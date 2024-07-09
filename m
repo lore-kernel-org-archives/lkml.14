@@ -1,50 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0AA63A;
-	Tue,  9 Jul 2024 05:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B113B3EA66;
+	Tue,  9 Jul 2024 05:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720503347; cv=none; b=teVmiOAJAwkUjAOnsPfbS9QwFdSUpvxfeWTTfUvKc2a313iFA/3bLAUCuO9/5vKXaMo+8VdRMxHf+8aWqyUD4Jq9ew+3WZEWkpNSBZW44awDzCeJRTsEOM42JEWlZH1sAfwxGRsAgqegehj+xHzuWylJENqfIxQZbRgG6faDQ7k=
+	t=1720503406; cv=none; b=nckrG+wozp/6tJzrA5VA7Z5sswl9oL5fMwQKGAIgjTxu/IeAGnPKnllIx0rW9bH/GcZgrR9Tyk5ujDpQyRN1Do5ToU86xxbU5LxUevx3xmzRAiqN5WQglGFiRwBbEuRrLC/DdI2MZF/ROgeZG2iX1VymZApKe9zPCN2IbWNTBp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720503347; c=relaxed/simple;
-	bh=q5yBRvkwXHYxk8Z1t1bBGwl3WROs3itRozEJnRkItMM=;
+	s=arc-20240116; t=1720503406; c=relaxed/simple;
+	bh=p0NBgWk01RpCw5kLuuOOKMNWUAnifz8EKAs5N210Qa0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AcYZR3SM0v66zmAqccRPQLX2K/IH/QtYzIXH7UpF1FO8L3lqLLNtoBtNuXqBC42LpBfftDyq4uOWFT96cxnoy1d9F/wr/7bP7oT+GR/OcUSF+nfVCuWVw4nGwIWaVwluZlEnrR0H2qzzom6g6hJAwgFDjhQlKtGH09qWRVrCTK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c9getVFx; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=NRZQyqLv2p+bLAU+KNHtRse5UuxX2gAnhHeeEFLXzauy2XEqyIRe9inHQQ5UYzMlJCBs5IRr/wimqhIiXJ1/LrOQgKKHcoL24nS9SS8qXdzS77f6f3YrkZGYQkPwAhOt/uvNTqTVY5hQVetpayXwWmCdKqz0WbK8Bmqn15yaYYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=dFR4kZS9; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c9getVFx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720503346; x=1752039346;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=q5yBRvkwXHYxk8Z1t1bBGwl3WROs3itRozEJnRkItMM=;
-  b=c9getVFxyfaIXgr1QLoyiUe0dNXy5MDDagDFLh+YRHZWPaLQF4yOoShP
-   Rv6SHuIomqTC4DooSj3GNmE+/g7quzenSxIolJIqf8sLuNynRs9iafX0U
-   aIgJd4QnS0LYc04x/EawqFQi/4zuCwoA0YavxK0AuBntVEd701MnSJH/v
-   B1tq3wCgYFtuXLg4zeuRonKBwyrwCuWWtpqTWdrb8pbh8xRScqcpph146
-   7T+8dh4ZlqKdOo7mO2J1Ns6mbfOuHwqrB2cX0XKzQMkneZ5YbuUiF5qpq
-   MoH0mAjQHzvacAj4zzrvCEKpvJfwzZmF/p8z9qRzDcaVwmDz6pf2CHhoq
-   Q==;
-X-CSE-ConnectionGUID: oFrGAgOFSvapZ2FLDSGOig==
-X-CSE-MsgGUID: UZ2ndyANQC6wEpLD0/bzLg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="29128648"
-X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="29128648"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 22:27:57 -0700
-X-CSE-ConnectionGUID: eHjFZtt7QSCn4GC8NDYZLw==
-X-CSE-MsgGUID: 9cF7aMRpR8CzeDjWlxZuPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
-   d="scan'208";a="47831369"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 22:27:54 -0700
-Message-ID: <0df5a4c7-65c3-45ea-b245-3ab872db8d96@linux.intel.com>
-Date: Tue, 9 Jul 2024 13:27:51 +0800
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="dFR4kZS9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1720503377; x=1721108177; i=quwenruo.btrfs@gmx.com;
+	bh=yDjRGjMl0S9FFORjiGz8nO18RDyMk1eu2LiTsRsBUNA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=dFR4kZS9CthtTTHz3WG6hRQT53r48T2XUDAgRR7uPK605uVstv6nFuDPSrtbBTIa
+	 ojC6tkcsMen9tKayy/5XQd+SRQcnLOkOlCcA34I/8pWuzVy4pCEUQ74VokrOrJA6u
+	 WNJ1QM9CWOiVvt50+QMJfqyaI5z7Tq4R82jJwL8GBUpsrNUPAYdUFi8uyyDdSb2ci
+	 q/qUXiM05OkeijNTtIrrnv91SNiYKTkZ3N+jnup+PfNodwhW+moO3UhZDbkhjDh/7
+	 PyKhqErgrIqmhK+AVMQNj2r6y7XnjrJcnvQKcOWFqaMHCvAqmcxKwey+L5FOsOZ3l
+	 yhTSHWofJWJNgqR5eg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MF3DW-1sc69I2Qiu-00HIPF; Tue, 09
+ Jul 2024 07:36:17 +0200
+Message-ID: <4a8f5863-6270-4f87-b65d-7bed6bf43c43@gmx.com>
+Date: Tue, 9 Jul 2024 15:06:12 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,88 +43,197 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 5/5] perf tests: Add topdown events counting and
- sampling tests
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
- <20240708144204.839486-6-dapeng1.mi@linux.intel.com>
- <c9e09449-f8ff-471f-adf3-1a5e8f97a102@linux.intel.com>
+Subject: Re: [PATCH v4 1/7] btrfs: replace stripe extents
+To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+ Johannes Thumshirn <jth@kernel.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
+Cc: "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240705-b4-rst-updates-v4-0-f3eed3f2cfad@kernel.org>
+ <20240705-b4-rst-updates-v4-1-f3eed3f2cfad@kernel.org>
+ <e51d0042-ec10-4a50-bd76-3d3d3cbc9bfc@gmx.com>
+ <9d7f7acf-8077-481c-926e-d29b4b90d46f@wdc.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <c9e09449-f8ff-471f-adf3-1a5e8f97a102@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
+ pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
+ BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
+ XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
+ jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
+ LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
+ mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
+ CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
+ tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
+ INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
+ DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
+ iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
+In-Reply-To: <9d7f7acf-8077-481c-926e-d29b4b90d46f@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:b26YNB3cKk5UyxM2iFfIDjOwAciVyCgCEVhgLd8P7wmSoQnx11I
+ BaPfpb0YbozdSnNBW8wb3HB/BG1sGSY+74xJeCzSkXfp3XkNUPYiyeCO4tAjr5oCita0pKw
+ Dd1c7CXnVW4GA+uizuZm26oXqUC1M0qzwrEvM4wGp9mKlQ2/q0R/UxDac0vmJC9EN0ISv/a
+ OZRyq43K79LxhyVUL7XjA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:eZpMuLDevQE=;IP7apwzOrHE+UlgYgcYKhTpv0ZS
+ NMlOf0n6mcFCCQ6F2ws5Ptg9lQ63s91oE6OpfAe4t0wgZ5ccaze5e497jb1Vh/BKcG/pZyQRa
+ eR0nUMhnMRCOXvvZ4OEejDaqvZ4rtrisOKcieawbpTmafH/7WqqVYXPojs/NKfK9Qk2cVKI4c
+ LfDbMWniI94Rive+TqQRCiwI6kz1cicY3JxBMamz19Auva5yNu8oWEue7pd80Jt+QMowCKHYj
+ Ef5GRQqVRHJ1pB9D5zPRS79ENUFEM99MV29UmkycW7WRgL+SLJZ/kSEJ+UpgvdHbS109Wc0aS
+ LjP2z7NSukfOaSdbreL45QEMKbo9WzZx2xYLxx+bqPgnchTIak9MPrAzhSsXqye0bOWeses3U
+ OMLhGbjo8sUJqhL/r0PY4Pyn23sbCG23qZ6a35PS4Zd4qS8pP14ocMRhWM3ldcvEpdAufWgw7
+ zypR+BPERsqC2CnNxg4ZcvvdCjQdo0awuuTxFeQ125OgwxIhHg6OusI1Wcwh52C122W5HPll2
+ ycSymGLcv5Bxlh9SZgzSjA2LU4YNnVuQX9tZ9Qlur+P83eCM32OOYqHNI3zDRy4Sot3sotpRs
+ wn0neV89EBFzsxQ68zA1FU8ZiH+3ozcEI2R5OtmYOdUyekRdqG1FZ2YPjWPlaksTpASSpbPHj
+ tsfOnehdsOW/svZxlGpog2F/+hfnGHn9V0sEg0f8cw9pLjF9hQMPhThJq95iayo92wVD7BY+m
+ 6AxjICt8oWunOa7E+wy598nih7t6ex22YlqZSpqcwrr5O7dgKq3jYx1CMhSLLVyZRO7CDgiY0
+ gz/blQ3Bk5VBg5+RslrGXeatt3ZGAUPurRnHWZEcWnuq0=
 
 
-On 7/8/2024 9:40 PM, Liang, Kan wrote:
->
-> On 2024-07-08 10:42 a.m., Dapeng Mi wrote:
->> Add counting and leader sampling tests to verify topdown events including
->> raw format can be reordered correctly.
+
+=E5=9C=A8 2024/7/8 21:13, Johannes Thumshirn =E5=86=99=E9=81=93:
+> On 06.07.24 01:19, Qu Wenruo wrote:
 >>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/perf/tests/shell/record.sh | 6 ++++++
->>  tools/perf/tests/shell/stat.sh   | 6 ++++++
->>  2 files changed, 12 insertions(+)
 >>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index 8e3e66780fed..164f0cf9648e 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -214,6 +214,12 @@ test_leader_sampling() {
->>      index=$(($index+1))
->>      prev_branches=$branches
->>    done < $script_output
-> The topdown is a model specific feature and only be available for the
-> big core.
+>> =E5=9C=A8 2024/7/6 00:43, Johannes Thumshirn =E5=86=99=E9=81=93:
+>>> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+>>>
+>>> If we can't insert a stripe extent in the RAID stripe tree, because
+>>> the key that points to the specific position in the stripe tree is
+>>> already existing, we have to remove the item and then replace it by a
+>>> new item.
+>>>
+>>> This can happen for example on device replace operations.
+>>
+>> In that case, can we just modify the targeted dev stripe?
+>>
+>> Or do we have other call sites that can lead to such conflicts?
+>>
+>> As I'm not that confident if such replace behavior would mask some real
+>> problems.
 >
-> We need to check if topdown is supported before doing the test.
->
-> The same check in the test_topdown_groups() may be used here as well.
->
->   if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
->   then
->     echo "Topdown sampling read test [Skipped event parsing failed]"
->     return
->   fi
+> I've just tested the following patch and it looks like it's working:
 
-Sure. Thanks.
+After some more thinking, I'm wondering why dev-replace would even
+trigger an RST entry update?
+
+Normally for non-rst replace, we just reuse the scrub routine to read
+out all the extents, then only write the content to the replace target,
+thus there should be no update to anything (no chunk nor extent level
+update).
+
+I understand that for RST we can not directly go that routine, because
+the extents' bytenr is no longer directly mapped into a chunk, thus the
+data on-disk can be out-of-order and can not be directly used for
+dev-replace.
+
+
+But on the other hand, the extent based iteration is just to avoid
+wasting IO, in theory we can just copy the dev extent from one device to
+the target device, then everything should work as expected.
+(The bg is marked RO, thus no new write should happen there)
+
+
+Thus I'm wondering, can we just do a device extent level copying for RST
+replace.
+By that, we can avoid any update to RST entries at all, mirroring the
+behavior of non-RST code.
+
+Although the cost is, we have to implement a dedicated RST routine for
+device-replace.
+As in that case, dev-replace for RST would be something like:
+
+- Scrub the source device dev-extent
+- Copy the dev extent for that chunk directly to the target device
+   That can only happen if the source dev extent is all correct.
+
+Thanks,
+Qu
 
 >
-> Thanks,
-> Kan
 >
->> +  if ! perf record -o "${perfdata}" -e "{instructions,slots,topdown-retiring}:S" true 2> /dev/null
->> +  then
->> +    echo "Leader sampling [Failed topdown events not reordered correctly]"
->> +    err=1
->> +    return
->> +  fi
->>    echo "Basic leader sampling test [Success]"
->>  }
->>  
->> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
->> index 3f1e67795490..092a7a2abcf8 100755
->> --- a/tools/perf/tests/shell/stat.sh
->> +++ b/tools/perf/tests/shell/stat.sh
->> @@ -79,6 +79,12 @@ test_topdown_groups() {
->>      err=1
->>      return
->>    fi
->> +  if perf stat -e '{instructions,r400,r8000}' true 2>&1 | grep -E -q "<not supported>"
->> +  then
->> +    echo "Topdown event group test [Failed raw format slots not reordered first]"
->> +    err=1
->> +    return
->> +  fi
->>    echo "Topdown event group test [Success]"
->>  }
->>  
+> diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
+> index e6f7a234b8f6..7bfd8654c110 100644
+> --- a/fs/btrfs/raid-stripe-tree.c
+> +++ b/fs/btrfs/raid-stripe-tree.c
+> @@ -73,6 +73,53 @@ int btrfs_delete_raid_extent(struct
+> btrfs_trans_handle *trans, u64 start, u64 le
+>           return ret;
+>    }
+>
+> +static int update_raid_extent_item(struct btrfs_trans_handle *trans,
+> +				   struct btrfs_key *key,
+> +				   struct btrfs_io_context *bioc)
+> +{
+> +	struct btrfs_path *path;
+> +	struct extent_buffer *leaf;
+> +	struct btrfs_stripe_extent *stripe_extent;
+> +	int num_stripes;
+> +	int ret;
+> +	int slot;
+> +
+> +	path =3D btrfs_alloc_path();
+> +	if (!path)
+> +		return -ENOMEM;
+> +
+> +	ret =3D btrfs_search_slot(trans, trans->fs_info->stripe_root, key, pat=
+h,
+> +				0, 1);
+> +	if (ret)
+> +		return ret =3D=3D 1 ? ret : -EINVAL;
+> +
+> +	leaf =3D path->nodes[0];
+> +	slot =3D path->slots[0];
+> +
+> +	btrfs_item_key_to_cpu(leaf, key, slot);
+> +	num_stripes =3D btrfs_num_raid_stripes(btrfs_item_size(leaf, slot));
+> +	stripe_extent =3D btrfs_item_ptr(leaf, slot, struct btrfs_stripe_exten=
+t);
+> +
+> +	for (int i =3D 0; i < num_stripes; i++) {
+> +		u64 devid =3D bioc->stripes[i].dev->devid;
+> +		u64 physical =3D bioc->stripes[i].physical;
+> +		u64 length =3D bioc->stripes[i].length;
+> +		struct btrfs_raid_stride *raid_stride =3D
+> +			&stripe_extent->strides[i];
+> +
+> +		if (length =3D=3D 0)
+> +			length =3D bioc->size;
+> +
+> +		btrfs_set_raid_stride_devid(leaf, raid_stride, devid);
+> +		btrfs_set_raid_stride_physical(leaf, raid_stride, physical);
+> +	}
+> +
+> +	btrfs_mark_buffer_dirty(trans, leaf);
+> +	btrfs_free_path(path);
+> +
+> +	return ret;
+> +}
+> +
+>    static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *tr=
+ans,
+> 					struct btrfs_io_context *bioc)
+>    {
+> @@ -112,6 +159,8 @@ static int btrfs_insert_one_raid_extent(struct
+> btrfs_trans_handle *trans,
+>
+> 	ret =3D btrfs_insert_item(trans, stripe_root, &stripe_key, stripe_exten=
+t,
+> 				item_size);
+> +	if (ret =3D=3D -EEXIST)
+> +		ret =3D update_raid_extent_item(trans, &stripe_key, bioc);
+> 	if (ret)
+> 		btrfs_abort_transaction(trans, ret);
+>
