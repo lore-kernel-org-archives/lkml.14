@@ -1,120 +1,188 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011024.outbound.protection.outlook.com [52.101.70.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D8E156238
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533566; cv=none; b=AAU/LSmkcyUske8cyBVLX2FsjlzbH2P7z7EOUnSfyjFh+36+NQGbVSiMX9CqlUAV3G+V7lyoEZZV45Xvnt2e6RNeSJs9pKE/5YbwmDidWQo2w/N+kOZnU/C5ZvrpDtfZTcXg1HjWo8jqq+jMJ/4oV9G4fo3iKQYXAybhh8kj0jY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533566; c=relaxed/simple;
-	bh=4ZY3sgg/UcXc1lHmildNgyCCyNnIQNIHYrRURZgokIA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GlRS7z1ltHH4wRRHedbrjtjhhmyVAn3Q+4xp7cUqS0ps3RF1kFOos6nWPfY0zLXOMJ0vw+afpYXCJiQnjp/JPs4hTtQ+WTmSU9l5Nv9lMEijKXtEyQ+QdCWfoqUmpmCHpOlIdv0slb1BJOvLbjjEF/FykrZxiDaaopO5052FKas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=fail (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HimCvSTo reason="signature verification failed"; arc=none smtp.client-ip=209.85.167.177; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1CB1946AE;
+	Tue,  9 Jul 2024 14:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720533674; cv=fail; b=rvNhhFZ1wqb3uelWvfJo23BTS9Sc/pyWEcJ1GSHsvPo+KW7evCrlBdzjpfGmwx4NecBvEXd9JfYwRDZI1hP+EzvghQhnwE90ra+B+spJZo9gernF7Iga3McW/5hLkxxWCOkyyO170V2KSO3CwbEl3Rzq/IKzyhANrzMADuOOJqg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720533674; c=relaxed/simple;
+	bh=HxotWPlTV+jWU71TsiM5UmwxPXkzxMRSUZF1j7n7kcc=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=b7v6WDUUZutysgpbUaaIANrLanfcoxzGp81y9Tl1qNMBCb6SfYQwRQYNckAm6EHXGXvBQmV03m4odrlCN7NOkJInA+Nc2oeIR+m9Bel62yqnshpqRsypHn0VnIzkRmNnkMUhhlFDJFoq6bXAxEbdvfFoDQonWFFyq24GK/xW41g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=WYp6xbcE; arc=fail smtp.client-ip=52.101.70.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HimCvSTo"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e9fe05354so7600428e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:59:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720533562; x=1721138362;
-        h=content-transfer-encoding:mime-version:list-unsubscribe
-         :list-subscribe:list-id:precedence:dkim-signature:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oBVMyiTluWvB+cspxCg8zTmg6u43rmW8xruXcjUcEz0=;
-        b=pei0YhBP0XEvvH3Gef/BvCtTnrMZtV5oS82nO77U2ySy+4hkrKwFyvpfBc2zs5iAuv
-         4rd3EnSdX5Dj4I1oov4q/y/ozE9RGuzPLU2vZp04TEM6aSiBsl8bkTsCuRdAcep0kD7J
-         JThHx33x3S1p1tS0wM50E+cdBUSOHACRTAnL5ff6h201Yg4iB3lPTA3O+qnrNhKXzvfz
-         8iG0azvntIRnDvbbQSpa+/t13iFZkBx8BQxMsMI045jxn2dZb7bK5F+crZ5L9lkvTVE2
-         wiB4SXJ5TxfBNp7mbE1JD9WYMqI78gmrGhcHsamlKe43NcZ6xWpB2rmkecPg4Umxfi+C
-         U6Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCV4o02gYvvyqkfVVQUiy1Z6rv/ZP/iVMlge01kT2EPuwE8rd6JLoWdWErKQqERuJJicuPHd5BGUG64BuzMzjV9jkBiwin9HVxqZlzn8
-X-Gm-Message-State: AOJu0YxGpXOPIiEVAPAR51RUcI0kUgaHywo6RWoJtx8FCr7IJN3vwJdM
-	MAp10RBvl0xjQVBgH9PVqAS8Xi4bAjreq8VCIqpW+rathTNrU6YQlfoBvg1QMJg=
-X-Google-Smtp-Source: AGHT+IG/rFtXKbzfzIclsUAgMeGPHLkGwdyOR4dLpOuhjgwOVsd7Rde9H5nBfdSfvRYOMEmvNTFStA==
-X-Received: by 2002:a19:5f03:0:b0:52e:934c:8e76 with SMTP id 2adb3069b0e04-52eb99a324amr1552711e87.41.1720533561657;
-        Tue, 09 Jul 2024 06:59:21 -0700 (PDT)
-Received: from localhost (c-9b0ee555.07-21-73746f28.bbcust.telenor.se. [85.229.14.155])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52eb8e3473asm252107e87.36.2024.07.09.06.59.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 06:59:21 -0700 (PDT)
-From: Anders Roxell <anders.roxell@linaro.org>
-To: dan.carpenter@linaro.org,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: bhelgaas@google.com,
-	kw@linux.com,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WYp6xbcE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mowuotEKKfsyrh7f+yMwcks2H/DnqXVVS8o8sshE8SED5KMwJhFwyJqR8Vf0c7bj7vdn5ziIrleb0uDXTper8iyw6ShnUmZHJebqSn2HGzU0TLNwgFnkpBIEsWuGAdl03WmfnEnHDX7B9Wf16Ji91jy6HoTsktwUiZGytNgJzNvWCU4jQkn/hDfGXHc3SaDp7Eu3DUZT4oz+uIdwhJZHQSiIdHiyI2iBHqGczvyGq/jACdRZ5/0JNN4CrWT3ooY8Dg4zFXZpNSIDo+gjip8enkPPMVtgQI5c3IM3Dzh+IzRm9M68QJrrBzSEjydZZ+p2ggSg+9pmVN/aiOutBFzyhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZPvKVu9CNdr+J0KVWFipequxEETydACxuUvVRU1Xtpg=;
+ b=Wmemqgu4LQgGQ+XnlMKOdJZ3Ge6G7Uu3lGhI/HJ797ZJNjh83uS3cCDQol8W1KgYxP6PqSrl02xkRE7VKUWmRwPwtKfbJn7EJfdp830TjrorsofNS7q+pmtbSWCSt3Ob0lrUEQYz+03bR+EgZpElxJZcpjAvr5i+lZhvIFK1CcvZfyRX8qxsC+i16y66V3KEgU3utqA9jMEdcEp3vxD4Am7euvS4XtUNYT/KAj8R5gQVN4F8g85oi1Il1tAWG2KRyatpRnIKLKzbm5OF9vjg0CVl9G9TrI0guJVvNnWNPrsJKL2jEJ4khLEcpeZA2eqtezO1RDxM3DDS3AdzMw8oCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZPvKVu9CNdr+J0KVWFipequxEETydACxuUvVRU1Xtpg=;
+ b=WYp6xbcEpLvQyq1kMGmpRts7jmItWPT6mNNRSrIfg+qQFa6YZHk7TU44jHnvZuDAvJxfzvToP5GD3SNiIkqE0SjzzPlHJ1y/Pnk9WzMuSJwnnDlK+l5kx2ScbQrEhxUnOud2R11DjHOY7AZcOjXzzABvozPEJOFFfaMJzqxJRys=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PAXPR04MB8622.eurprd04.prod.outlook.com (2603:10a6:102:219::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Tue, 9 Jul
+ 2024 14:01:08 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
+ 14:01:07 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: sudeep.holla@arm.com,
+	cristian.marussi@arm.com,
 	robh@kernel.org,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH 2/3] PCI: qcom: Prevent potential error pointer dereference
-Date: Tue,  9 Jul 2024 15:59:18 +0200
-Message-ID: <20240708180539.1447307-3-dan.carpenter@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240708180539.1447307-1-dan.carpenter@linaro.org>
-References: <20240708180539.1447307-1-dan.carpenter@linaro.org>
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177]) (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48AB148FED for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 18:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3d92aa6b62bso1204955b6e.2 for <linux-pci@vger.kernel.org>; Mon, 08 Jul 2024 11:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linaro.org; s=google; t=1720461948; x=1721066748; darn=vger.kernel.org; h=content-transfer-encoding:mime-version:references:in-reply-to :message-id:date:subject:cc:to:from:from:to:cc:subject:date :message-id:reply-to; bh=hxcirFeeuu0bt0rjz0tmui1G8RYDC+/JunVt8zPPRlg=; b=HimCvSToBRd0wyTWybX3iK/ljx9N7x5Kf6z/EztaEn00F9+Rc/ww6NWSERNxX9I4Dq u+UtQxi3iXxQNkDgvdHx1UcsqntPliN62vvsQ/GpcQJ4E0ypmkDJXAOVxHxd6mlNy6dc MOICnrtX6KhNXfaca8UTv6HI554B4n+jJx1IDSv4xX9gJeaJZsWWfunwwb1hcmouE2YD iqs1oXW97dkfpIPtsOx6NQSWjGMcvUbOxSUqfi+dLduw0+Nc6ghLHJvkcSnMMnX55gsI aQsIJitQOMgWfJpL9DFN3ZhRmfzZGNEIPU3akNE9B06+1casa95QtMuz3eJfAtGvIH6X Y7rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwkqYAK6ZlIVETdJ8PeCCcKNQFBLOYM+DRSFLgaiM1ECxyPZiHVwhel4bQLtJujradn601FDr1Yh33VRIJ/DMVc9/kp/BwodUj
-X-Received: by 2002:a05:6808:10d5:b0:3d9:3802:3855 with SMTP id 5614622812f47-3d93c02038bmr176901b6e.23.1720461947976; Mon, 08 Jul 2024 11:05:47 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:cdd0:d497:b7b2:fe]) by smtp.gmail.com with ESMTPSA id 5614622812f47-3d93acff184sm76287b6e.10.2024.07.08.11.05.47 (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256); Mon, 08 Jul 2024 11:05:47 -0700 (PDT)
-X-Mailer: git-send-email 2.43.0
-Precedence: bulk
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	arm-scmi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 1/2] dt-bindings: firmware: arm,scmi: introduce property mbox-rx-timeout-ms
+Date: Tue,  9 Jul 2024 22:09:56 +0800
+Message-Id: <20240709140957.3171255-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0035.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::14) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240709135918.wJIWda-Q3IPM-O0wfA6TPmZ3swyfkKgztooCAJf4nRg@z>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PAXPR04MB8622:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb448b10-d5ba-4f11-32ae-08dca01f9493
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ffTR/pBqucByyO6bGtQ0mRVJJywhNfwNitlt64PnwFMZR9CTB2bOJA//08RK?=
+ =?us-ascii?Q?Fneaeae0N/ix64d88SQRmOgzRQwkvSDUO1e6JlyQ5zGkqRitB2EEuwWjcb+L?=
+ =?us-ascii?Q?w7Ems5C7CdkaAJIaNNaurMq/jPmLgvT8O7mKHTc8FpDtgv+kYkmw2kVMMWQo?=
+ =?us-ascii?Q?PvnxZpxKY/j8A20AOE+i7wJ4CVDjPagCtA4GqqGTJ8E/GIRreTRhNWBtGPpR?=
+ =?us-ascii?Q?RvgBlGyYP9z0N+ezQK2Lo1WqprzbfL06bQB5mVX1AaiHzEp/mfpXisPS43/p?=
+ =?us-ascii?Q?BMx3iJgDHI9urzipBCfqlL7H7JGC9sz/SDuQ597lnoNzfYjOK8q2g18hlyn4?=
+ =?us-ascii?Q?S2t+y24s99Si/8uLKnfNEbDr5P8uDLkNtYbnr07RouOh+FGY6fv3+zNAxepD?=
+ =?us-ascii?Q?ZXWtpSpXzOvLVQXXiEt6LGUpkFtCjfjvrPz+xqFHndtb/YEVWuef/vwQMRLt?=
+ =?us-ascii?Q?+2PeuuQnfB1yFAkLQGo1i69t59fwo0YlmZ0XZv/D91FA9+Pu3u1Es6Eh7et5?=
+ =?us-ascii?Q?PPSqqWWiUaMnx8uRUxWlSUjXt7ZouUEz38/X1jpevL/Qx3KBju/pcThPtx0a?=
+ =?us-ascii?Q?rM77R5d0a9z7iDW0lAfkIXEoYGCQBpg9fVKpu/ejNjS6Fpx3AyOsb03WtmpU?=
+ =?us-ascii?Q?YMHvQ4WP39Py7wyjknerj56JS5/qVDneC1L+XEOeOXpxN+ofJvL6PPtCFRh/?=
+ =?us-ascii?Q?Q+yx2YqWkNECTxtrkY/A9TNHobXszMYnMYlPWXwS3ORACio/MNynsDIsLiQ/?=
+ =?us-ascii?Q?blWFyulRb5X7LbPTHGyaYd88w15PnAxTemBLgVzAzBV8UbwRD+XNbTmI7REt?=
+ =?us-ascii?Q?GxFSW31+2mSf98eNzc8CNOlllkXlUgh4kgi4yWT+kpo3On0Kq6iveu4lKp73?=
+ =?us-ascii?Q?oSfocXnRIQG4e8XZALgUAFujh8vHTV9iLLwrKcVz3GzmqScTlVkNxjOcVe81?=
+ =?us-ascii?Q?VyklR76An4ZHkwwn4XRJfLrGYPhNxZxLdmt5tb9/ReHiqwjazbvmOFbRG6pL?=
+ =?us-ascii?Q?vT0PyhgL26FFDsRiXMfRM26mfxKM3ZaJCZwn4NEkq0QbtVbG0Mq3OEYo+f3M?=
+ =?us-ascii?Q?3JVhALWmI8KvvoQ3VZbh0npK0Pjl95vRIeGgScfKQWLrixN/8QX0SD3DtPEn?=
+ =?us-ascii?Q?/dExcUJRcr/9VGpMUMykE3S0jxzMFBq94IGDEg8D/hrUOgXkPC0bPzvUOQM+?=
+ =?us-ascii?Q?05xYEwasr8FWJ3GOPlpqwX/eX9bK7MFhWYy05XWXKiIyFyEYT6OVj3yWiXaA?=
+ =?us-ascii?Q?etXwlp9vrdWbrfcXSFm6VagGKPiFF4Ud1a+cqrtw6UI9lJc9swFJCLSVmeC3?=
+ =?us-ascii?Q?o8ETy7HWELExiKd2CaEtj3VWF6JGi/xn9SwXj/VqCVCqoBmbVZ7Hd44JF+cF?=
+ =?us-ascii?Q?RopKiCvTokK4eq2eSTOfqQtsei8RvvcIih7zrggZryWfdeerRQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?rC5BmI6C9FYcjaQPB+d1kHazjwgFZnHkT9EtF+Ytju5T64vzATxP+2M7Aot4?=
+ =?us-ascii?Q?0k+gLOG+WkDluMFKukEuiJ5WnqjM3EGW0gtfwXXYR4y0PHXMbJW89s7t7ViN?=
+ =?us-ascii?Q?E9dC3ODn4kdtosz6JJ9eTTlaCDPayf07+fwF+nN7qp4GgPbTFh6E8p6VLifU?=
+ =?us-ascii?Q?k1MFzO+diUl3pr+itAFQdyOx8ZiqsmvdYkJM2F6YlihlGel+tcW1QuDA+99r?=
+ =?us-ascii?Q?k6fw56e69uPKJn8y47LBLIbQcZ2K/SXG1dr6oATQQDpVqqd3A9QrntjZoN+p?=
+ =?us-ascii?Q?sS+OibcOnhYae474RvVMjpOIRDdK7Txw/q2R2oksnfgsJYZ0c5jJsHF82kTC?=
+ =?us-ascii?Q?zLEfuWlRSdY1xzkACKDmnnV2ZcYCbsfuJnhAbCwxvAokefjcgd6C2YgS59HS?=
+ =?us-ascii?Q?2K7tR/gUP0+PX4K/as6f5MxiP1/QnyKTs2SDTCw5pw7KQUOhziYC/+wVaQrj?=
+ =?us-ascii?Q?i+OX6ZMFsO1GpMOhit3GAIPqUrqui4sebNHoQP6iDv81/gXXMXCv2OXtVte2?=
+ =?us-ascii?Q?uA6IpfegLovrkVsrsCuDq01ZEUUIU2UVDUOcdiMOWDV5cZP7OKWyWPaSUjl8?=
+ =?us-ascii?Q?jhKbY8QTrNDPKB4gYPnaTbR9zlJCfrQWQnoh1gjwiTyBS/Y4MOMoKeD1/YUh?=
+ =?us-ascii?Q?YmG1iOyWus7akrW/w6f4c6FIyaT9o1z7XeFVVfRQrwOgp7v8tMTJLeO8FeW4?=
+ =?us-ascii?Q?84JXAXl9MEjUMBNyldum1KyzICLAnLm8+KKvBBBuKgmb4qpPSAt1MqvVmqOV?=
+ =?us-ascii?Q?1M4vEy/Tip0fWDNyW/n2v07I8E4Of2SfQAb05bCylDMVkD32wUc4gsX0kM8k?=
+ =?us-ascii?Q?CDZCYzvymO0tpYRatGSIoPsW8thm+1ZmnR1zdwisNj767oKQXotUC/oYeYvz?=
+ =?us-ascii?Q?qZ7X6N+efQ5ot7wqnkdCG7E5YFurmJM0orZEpNkNKo8ECG1MYakurwHELh56?=
+ =?us-ascii?Q?ZOQiWgNO0j1s9NFysAS+KViQ1Wu5/CJ/bPwOX5w4Y1oYK9yVbQcoJAJbwNyh?=
+ =?us-ascii?Q?VH1A4ucmmXZjDfsMD074jIdIoKI4oD5WRr+PCPhxCc3ZpZJtv9HI8IsNkEmG?=
+ =?us-ascii?Q?qFDYGvxLwgo8FMGQRZnThplPp6jlv1K2/LydEOQb/nS9095v4p8kyXCi6PnP?=
+ =?us-ascii?Q?7FEaqwQvzbke07YQNY+Wulva0+Zt2ru1WQSJGE+5lPu5uA/qwFwMhmu0R0gZ?=
+ =?us-ascii?Q?mJpuKyu3TzotieAM7Y9J7r6T1/W/0B7R94wuMMpz2PZNPlozChMTriLO5k2k?=
+ =?us-ascii?Q?YEuKVlCfL3eMay8axTL4TRrG3rBq0ODsHgX5luEdgnTlUwA8KJJnyV18Ai+6?=
+ =?us-ascii?Q?yMd7fxCha9oBP1bHbY55I+2j86uOf1HIUmE8CI+6yr0+vH4XT5fJqNhEjkNE?=
+ =?us-ascii?Q?SZp4N5fK2g+HMIH45UjgpOhU/zTJ7n7jLgtU9xnCKa7Gy8vi3rK8iwvDKHlM?=
+ =?us-ascii?Q?FaJGwcUwGJCCzIgBdKnnvC8sWH5BfQXmVNatWSwf9ejHJGj9hHeCOVSxAP17?=
+ =?us-ascii?Q?96XggRRd2sOqrQoPrF17N/Q9IBi1CF8UIQAoqPefBn8FgtaxbSA2k5tbri1A?=
+ =?us-ascii?Q?EVXUcVxlu6SunKY2Na9FjtU4qdrLX7A/JReqTmiA?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb448b10-d5ba-4f11-32ae-08dca01f9493
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 14:01:07.9453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2l72GiM+IZhFYvdIzMwX97ovC7lvI9bWOy6EJyxJ7YgBBoHHCZ1YPbqV5NYHABc8UuX2at/r9hyO60Y8PqB0Ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8622
 
-From: Dan Carpenter <dan.carpenter@linaro.org>
+From: Peng Fan <peng.fan@nxp.com>
 
-> Only call dev_pm_opp_put() if dev_pm_opp_find_freq_exact() succeeds.
-> Otherwise it leads to an error pointer dereference.
-> 
-> Fixes: 78b5f6f8855e ("PCI: qcom: Add OPP support to scale performance")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+System Controller Management Interface(SCMI) firmwares might have
+different designs by SCMI firmware developers. So the maximum receive
+channel timeout value might also varies in the various designs.
 
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
+So introduce property mbox-rx-timeout-ms to let each platform could
+set its own timeout value in device tree.
 
-Applied this patch ontop of linux-next tag, next-20240709.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-Booted fine on dragonboard-845c HW.
+V3:
+ Add minimum: 1, because 0 is invalid. maximum is not set,
+ because it is platform specific and unknown.
+V2:
+ Drop defaults, update description.
 
-Cheers,
-Anders
+ Documentation/devicetree/bindings/firmware/arm,scmi.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 1d36311f9adb..e06c4ad3a72a 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1443,8 +1443,8 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  			if (ret)
->  				dev_err(pci->dev, "Failed to set OPP for freq (%lu): %d\n",
->  					freq_kbps * width, ret);
-> +			dev_pm_opp_put(opp);
->  		}
-> -		dev_pm_opp_put(opp);
->  	}
->  }
->  
-> -- 
-> 2.43.0
-
+diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+index ebf384e76df1..f84a978a36b2 100644
+--- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
++++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+@@ -121,6 +121,13 @@ properties:
+       atomic mode of operation, even if requested.
+     default: 0
+ 
++  max-rx-timeout-ms:
++    description:
++      An optional time value, expressed in milliseconds, representing the
++      mailbox maximum timeout value for receive channel. The value should
++      be a non-zero value if set.
++    minimum: 1
++
+   arm,smc-id:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     description:
+-- 
+2.37.1
 
