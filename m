@@ -1,87 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CF57F487
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A6517B425;
+	Tue,  9 Jul 2024 15:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720539394; cv=none; b=OQoR22q89gUTDXl7f3rCDm5txi4ePagb2ktBp9s6h0KKnTxw3i5877XkEsKTOD/oXoYG+rVRC/LMfMTMx6FBaIvwSvXn6g73KO9Go5sjWlE5yba47mHcod0ASTfon799WYPdysCGvIv8bY0Llgr5a0/RTmCEJZmkbCFgaADy2j8=
+	t=1720539448; cv=none; b=QnuYR1rRYNXk+IuOVou6k4Jn/cGP/l/4XIX54mRJ21RHGGZbSPkPGaSAWP2+p0rtPeM0tt8JPx5hhDP5iTiBLj+2SnIDIMqEG9ezshQI4FHkWwUkFqPW4o6cY9qFEgAMXwqACWRl5Q6pofNJu4zJWTioA20gyKQcGIXZMXf53nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720539394; c=relaxed/simple;
-	bh=QoXH9WXn9OqrNxC/5axg7uSehbufDXSMvxyVSPrSAu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nAvBO0mwRECnB0dPwY4qm7YD298yrCfSbNjErTF+NsGzkr+lx/s5LGGTcao4fG8gtjZSo2/sJoihQNHv3fp9sAHwgBW82x2drYcmR8EuhDAtDhkhVV7qWtW3vFwA5f4wCaBXUvSuN6PDL+bGZ3YQy3fJLV7ZYG+vQJNaymAUNmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AjG/Xr0l; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720539448; c=relaxed/simple;
+	bh=Xk2dWsAOYkiRMa800QNsMJz1vPrBP/xB8HCyGAHzAO4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GKQ1D+H6cOK5aCtkruqFD7zKdi0XIWM35P9Z5A3Sk9rlq0HAbovuEvV0QNE8Pl057friFKjMRAmyw99ysmtY46BVmlWSHIQAxcl8wna5ch5YcLAebkpJznFNePjlsI+REFO5fANPbMTz/gPv+GQ3uW5Oa/VwIZmP7R1WGGWtwso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=qcKflvWK; arc=none smtp.client-ip=178.154.239.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AjG/Xr0l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720539392;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QoXH9WXn9OqrNxC/5axg7uSehbufDXSMvxyVSPrSAu4=;
-	b=AjG/Xr0lUj9VjI6/+kAqUq8dLM1n8OuvPG90KvUcKREDqxwYfrMPoJhDuDtMOih+jQ+2Aw
-	1ioUI3LF4nr00AOj7/FlvuUCs7HXF1ZiPaMuUjbkW3G3sy4qb3g0ACpxkaxkW60moaQsV6
-	OGp3vUh1yKQCeuSZTkuw8yQsmo70iaI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-567-WV5DF-83NxGDU3uajjyf9w-1; Tue,
- 09 Jul 2024 11:36:27 -0400
-X-MC-Unique: WV5DF-83NxGDU3uajjyf9w-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5791F1944D30;
-	Tue,  9 Jul 2024 15:36:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.34])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DC5501955F3B;
-	Tue,  9 Jul 2024 15:36:21 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  9 Jul 2024 17:34:49 +0200 (CEST)
-Date: Tue, 9 Jul 2024 17:34:45 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
-	clm@meta.com, paulmck@kernel.org
-Subject: Re: [PATCH 05/10] perf/uprobe: SRCU-ify uprobe->consumer list
-Message-ID: <20240709153444.GH28495@redhat.com>
-References: <20240708091241.544262971@infradead.org>
- <20240708092415.695619684@infradead.org>
- <20240709120551.GK27299@noisy.programming.kicks-ass.net>
- <20240709133349.GC28495@redhat.com>
- <20240709143218.GM27299@noisy.programming.kicks-ass.net>
- <20240709150504.GF28495@redhat.com>
- <20240709151930.GP27299@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="qcKflvWK"
+Received: from mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:2146:0:640:e7:0])
+	by forward502b.mail.yandex.net (Yandex) with ESMTPS id BAD485F040;
+	Tue,  9 Jul 2024 18:30:45 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id iUf9TIBfvKo0-lQjVki5X;
+	Tue, 09 Jul 2024 18:30:45 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1720539045; bh=Eu+Rbc6iPL4yDSVzK47roezPd1zllNytDY/2RCNIz64=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=qcKflvWKybTRl0Qt8dh+yLjzCPlXn9BxpnA/EE2mYP8thaE2ufVjvdX5+4UQm0aIh
+	 n28zE/ShiZIrUY0Ljuv44eWR9BJ0UlVs2pTqoelvwT6ck8t0kK7pJBPrJi1T8qIyp7
+	 nBoPMs3TYDYN+NmHNS1c13M3131VRemfop2zq2Rc=
+Authentication-Results: mail-nwsmtp-smtp-production-main-45.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <e935d937241f9bcbaeaad5100114b50dc0f97fbd.camel@maquefel.me>
+Subject: Re: [PATCH v10 03/38] clk: ep93xx: add DT support for Cirrus EP93xx
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>,  Nikita Shubin via B4 Relay
+ <devnull+nikita.shubin.maquefel.me@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Arnd Bergmann
+	 <arnd@arndb.de>
+Date: Tue, 09 Jul 2024 18:30:44 +0300
+In-Reply-To: <6c5d6c0730698969ef613ec9ec4aa14a.sboyd@kernel.org>
+References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
+	 <20240617-ep93xx-v10-3-662e640ed811@maquefel.me>
+	 <6c5d6c0730698969ef613ec9ec4aa14a.sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709151930.GP27299@noisy.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 07/09, Peter Zijlstra wrote:
->
-> Hmm, easiest would be to add a seqcount to register_mutex and simply
-> skip the remove case when odd.
+Hi Stephen,=20
 
-probably yes,
+Thank you for looking into this.
 
-> Then the handler might get a few extra (unwanted) calls, but it should
-> be able to handle them, they're fundamentally not different from the
-> first one where it says REMOVE. Right?
+On Mon, 2024-07-08 at 15:18 -0700, Stephen Boyd wrote:
+> Quoting Nikita Shubin via B4 Relay (2024-06-17 02:36:37)
+> > diff --git a/drivers/clk/clk-ep93xx.c b/drivers/clk/clk-ep93xx.c
+> > new file mode 100644
+> > index 000000000000..a0430a5ae4da
+> > --- /dev/null
+> > +++ b/drivers/clk/clk-ep93xx.c
+> > @@ -0,0 +1,834 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> [...]
+>=20
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_spi_div =3D id->driver_data;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hw =3D devm_clk_hw_register_fixed=
+_factor(dev, "ep93xx-spi.0",
+> > "xtali",
+>=20
+> Are these clk names trying to match device names?
 
-plus the handler can never assume that UPROBE_HANDLER_REMOVE won't be
-ignored, another consumer can want to trace this task.
+Yes, ep93xx is still a pure platform SoC, so spi for example still uses
+devm_clk_get:
 
-Oleg.
+	espi->clk =3D devm_clk_get(&pdev->dev, NULL);
+	[...]
+	.driver		=3D {
+		.name	=3D "ep93xx-spi",
+	},
+
+This, of course, is no longer necessary in these series (since we
+convert to DT).
+
+The clock names are from CLK conversion of arch/arm/mach-ep93xx/clock.c
+i made earlier:
+
+9645ccc7bd7a16cd73c3be9dee70cd702b03be37 ep93xx: clock: convert in-
+place to COMMON_CLK
+
+Where i kept the original names which were used before conversion.
 
