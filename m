@@ -1,123 +1,93 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D051DA303;
-	Tue,  9 Jul 2024 07:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D9E13A27D;
+	Tue,  9 Jul 2024 07:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720510057; cv=none; b=BtDLx5/dMiXstK0VmC94lAOGMuEE1I4U8lwvMBrsa4JWnfmOUQrSyxURmCqfbzNDNgILpBUTV+33DhRp/7dHbUsT/MhBCJC/W/GE/UvgYALNuIU6lCr9GBF4nEZYNJtJeD3b39R6iLY7Av8W+G+tX2TgWyHTcPYOmWe47iyok8s=
+	t=1720510202; cv=none; b=gNFhbEx/8PNAokhaFtI7aEwJ4GfDSsNQKFhSQCI+Q2JvhOHaFXA1ohxKW6Z2nK94peTKXcMhD++TEz9+sL6CwoCNLXg59xok8A0wot4EfG8IJ+f0GCQoWH7mufzNZTpg05IehmZI4eZVanu5jZuQvROKwCk8uuMk8QJeDCk4FJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720510057; c=relaxed/simple;
-	bh=XSbWc+QmMsURRHs5VQZCMpBJk/ZJQzofXzukTl77Teg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ttnNosACUTP7LvbqOiZSYfyZ5vJJRFfXBbOBffFJmcl4FA49shf9v6h1jeRa/ErkdjxVymj7H81YnFuuIQLk3wOpDUC2nzsQyzo5lh7SzGrYQCA/tneVjZTssqheEkHTyPQxt1iNFVmUmNkscaXqSgcLRjCNg58jgEf2cXWrRjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ceyuq7Ny; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ceyuq7Ny"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 22E2D24000B;
-	Tue,  9 Jul 2024 07:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720510046;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HibcTUfYnEmcYJNR1chZFfn71QJWTGsOoH5RNfwQefg=;
-	b=Ceyuq7NyzSiJ0uMtuQPS2sSe0gfh1H5majfQZpQXoUjWx3QxtXz9+4GoC721Xm7Lb07AOj
-	72FNsBvyOpq9AlTa3A7OakQk8ZGSJ81B5t9w+LvVjQYYV8jluE0b3svt+hH6YgYF1Ecf/C
-	KE2ukLJ8yebR/x0u28u7StSBV/Odz+R8a0z5n3pGrkAtslcJxyw6VlM12zIw+jcIsT+/7Y
-	xSJKjKN6A8OaZYGr3syfyCBDgz1EyOp6cgB7caZOJMX0VxbP1MmJAXA4d6capMNp98tueB
-	8GNQGPFeTGs62oKyfIIj2XJsxc3Z1GApmK0C/ZuI8nAUZ/N457aBibvSVJpzcA==
-Date: Tue, 9 Jul 2024 09:27:22 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor@kernel.org>,
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Jonathan Cameron
- <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto
- <inochiama@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Palmer
- Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adc:
- sophgo,cv18xx-saradc.yaml: Add Sophgo SARADC binding documentation
-Message-ID: <20240709092722.1a3a2482@xps-13>
-In-Reply-To: <20240708165719.000021b9@Huawei.com>
-References: <20240705-sg2002-adc-v2-0-83428c20a9b2@bootlin.com>
-	<20240705-sg2002-adc-v2-1-83428c20a9b2@bootlin.com>
-	<20240705-unaired-pesticide-4135eaa04212@spud>
-	<6b5459fd-2873-4c26-b986-882413b8d95b@bootlin.com>
-	<20240706-remote-undergo-3b9dfe44d16f@spud>
-	<20240708083011.058d0c57@xps-13>
-	<304b7bb1-d315-4147-820b-1ec0aa63e759@kernel.org>
-	<20240708142344.47da466e@xps-13>
-	<20240708165719.000021b9@Huawei.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720510202; c=relaxed/simple;
+	bh=gzc0c54BDDk/Q+GMrR87SF/g6DuMufpih9B/SrhZzxc=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZxWKJoWN9Umr+GuzJKuB0kGDT8ILQpeb8fZjwYzpYPtzU7uCNq/cmuc9jg9emhi+iezBM4nRgQFvRPsDG/LV1hjjXKjH+0Vo8qYWVeeYBvx45pKtBN5C4PWS8V0x2zbn2uy7poKQobSBhNN8ZvXyl1nkEPBvGGmk06mdmSdLmJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WJCF73k6HzwWd4;
+	Tue,  9 Jul 2024 15:25:15 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id B1012180AE5;
+	Tue,  9 Jul 2024 15:29:56 +0800 (CST)
+Received: from [10.174.185.179] (10.174.185.179) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 9 Jul 2024 15:29:54 +0800
+Subject: Re: [PATCH 6/9] accel/rocket: Add a new driver for Rockchip's NPU
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+CC: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin
+ Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Oded Gabbay <ogabbay@kernel.org>, Tomeu Vizoso
+	<tomeu.vizoso@tomeuvizoso.net>, David Airlie <airlied@gmail.com>, Daniel
+ Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+	<iommu@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-media@vger.kernel.org>, <linaro-mm-sig@lists.linaro.org>
+References: <20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net>
+ <20240612-6-10-rocket-v1-6-060e48eea250@tomeuvizoso.net>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <ad2628b2-aab2-2c7a-d4df-5356c55fae39@huawei.com>
+Date: Tue, 9 Jul 2024 15:29:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+In-Reply-To: <20240612-6-10-rocket-v1-6-060e48eea250@tomeuvizoso.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-Hi Jonathan,
+On 2024/6/12 21:52, Tomeu Vizoso wrote:
+> This initial version supports the NPU as shipped in the RK3588 SoC and
+> described in the first part of its TRM, in Chapter 36.
+> 
+> This NPU contains 3 independent cores that the driver can submit jobs
+> to.
+> 
+> This commit adds just hardware initialization and power management.
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
 
-> > > > * DO use fallback compatibles when devices are the same as or a sub=
-set
-> > > >   of prior implementations.
-> > > >=20
-> > > > I believe we fall in the "devices are the same" category, so I would
-> > > > have myself wrote a similar binding here with a compatible matching
-> > > > them all, plus a hardware-implementation-specific compatible as wel=
-l;
-> > > > just in case.   =20
-> > >=20
-> > > Fallback from one model to another. There is no "another" model here,
-> > > but wildcard. There is no such device as cv18xx, right? =20
-> >=20
-> > No there is not. But I don't think there is a "base" model either.
-> > Just multiple SoCs named cv18<something> with apparently the same ADC.
-> >=20
-> > So actually I guess the discussion here is about the wildcard
-> > compatible. It feels strange to me to have no generic compatible either
-> > with a wildcard or with a "base" implementation (because there is
-> > probably none). So I guess the solution here is to just list a single
-> > specific compatible in the end.
->=20
-> It comes from long experience of silicon vendors not being consistent
-> with part naming.
+[...]
 
-Oh, agreed :-)
+> +void rocket_core_reset(struct rocket_core *core)
+> +{
+> +	reset_control_assert(core->a_reset);
+> +	reset_control_assert(core->h_reset);
+> +
+> +	udelay(10);
+> +
+> +	reset_control_deassert(core->a_reset);
+> +	reset_control_deassert(core->h_reset);
+> +}
 
->  Far too often we've had a nice generic wild card
-> entry and along comes the vendor with a new part in the middle
-> of that range that is completely incompatible.  Then we end up with
-> people assuming the wildcard means it will work and a bunch of bug
-> reports.  Hence no wild cards, just define first supported part as your
-> 'base' and go from there.
+Seems unused.
 
-I see what you mean. I must admit I'm not a big fan of naming
-compatibles (and drivers) after a working base rather than a good
-enough wildcard, but I do understand your point and kind of agree with
-it actually.
+> +void rocket_core_reset(struct rocket_core *core);
 
-> It's even more fun when a vendor driver papers over the differences
-> and so it 'works', but the upstream one doesn't.  In extreme case
-> because a different driver entirely is required.
->=20
-> So basically we don't trust silicon vendors :)
-> Speaking as someone who works for one - I think that's entirely
-> reasonable!!
+> +void rocket_device_reset(struct rocket_device *rdev);
 
-Haha <3
-
-Thanks (once again) for your valuable inputs!
-Miqu=C3=A8l
+Ditto.
