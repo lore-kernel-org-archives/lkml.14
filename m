@@ -1,141 +1,630 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9946CC148;
-	Tue,  9 Jul 2024 07:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B869BC148
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 07:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720508505; cv=none; b=QlEpyGBoPWMol0Vn9pNhng5QwCEOSReTbqdX9cPaXp2Bm7xdkIuFdzJylc0ZNdsv5NY8t2iNq0/z+O82lflVuNXpdawcNo+6K10thavcVtTqiSWvTKxO7A7E1o8Mi1RbX/a2agjGNeJtEMFnjTE0jUfLQ/x15CaVDco8hftS39I=
+	t=1720508515; cv=none; b=fJTnx8FgtRJSZPqyWadAkzKgewI1tnpUXl61EPZ43uGYi1wms60VgYe3HO0TY6I4SHeVnYXSVKq97regDXNJAdAee6jqIO0FNDdmbFHpkL5rfh5I6wx87hYxtcj61UTFPP2R80rJzH/EYMZKHK8L+VTbSQBkULMPjLrP9L9icIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720508505; c=relaxed/simple;
-	bh=tkxHSt+B95UwmZobLotNEd2km4xRfzDRpmtKe5OC7N4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FTbalzGQESx7F1UrUQ9vmtqhTzT25ACioYgtGF1cYfzz77Vb7+pRi/qThnPJvs5fB4UZaxNhybx+vB2iBbniBPsD7n2F6fZ5PM5trpBCmoXg6bciz6cOYBjnbEeShJwJo3+5l9O9oYrAl0u8ugEMSAMp4SO+p8MAmCM+Sv/1ZyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xg0BRq4p; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720508515; c=relaxed/simple;
+	bh=7faT/rj6vIoygZuPxl0gVNi/4pE24HnWRgO4b3sJuxI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GzLXV+mHU7V5LcQgeuDKT3WvKMWhKwZlbQQcFNhGYhg0Ojm7+6iPeS/79ETbYU9tm48O/0rMnlChdpaIHhG5fOT2VlbzIDpLyCGGpbl9YpZh4KucJg4DU+LkX11yaJnyAciuAYeMCVEeJCBue9l8x4rKtjIYYkz2yFZ/Kom6jG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gRVNhK2F; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xg0BRq4p"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468LeTLr003367;
-	Tue, 9 Jul 2024 07:01:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=xr+9HQV02Fcj9GHm1nozqD3P
-	M0XQKi6JALqEWo018nU=; b=Xg0BRq4ptQzGsR92sTgnq6qpKyHDN1ZMT1bqi85i
-	4cuXKoaCrcnXFxntJ1CFZD6TgMuIBHOg4x1R1uxfny7dS3QhC9PVSqrph299yKaJ
-	gOacg4cthVLy28yJrMjA/Ps6x2L4V00sqme0FT9A7whEdOj7zVArfsywCLxiA5bz
-	d3cdBOhY8lvYL/qfylPsxdk9ChtquY0LrZCiv3kjZ4lyNep8JbC/106MFaWoXrjU
-	SqT4yn9iSHaWzBuEIk3NEYZRhOjzGDEUJ4c8wKMl4eJ6px3feMC725WIM3yojk9I
-	kfDqRJvKto/RLgXg/joOrykyL4HmGTeXoENvEWiT44HNqQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wjn5tj5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 07:01:21 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46971KaQ025688
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 07:01:20 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 9 Jul 2024 00:01:11 -0700
-Date: Tue, 9 Jul 2024 12:31:08 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <konrad.dybcio@linaro.org>
-CC: <vireshk@kernel.org>, <nm@ti.com>, <sboyd@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
-        <ilia.lin@kernel.org>, <rafael@kernel.org>, <ulf.hansson@linaro.org>,
-        <quic_sibis@quicinc.com>, <quic_rjendra@quicinc.com>,
-        <quic_rohiagar@quicinc.com>, <abel.vesa@linaro.org>,
-        <otto.pflueger@abscue.de>, <danila@jiaxyga.com>,
-        <quic_ipkumar@quicinc.com>, <luca@z3ntu.xyz>,
-        <stephan.gerhold@kernkonzept.com>, <nks@flawful.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v4 09/10] dt-bindings: opp: v2-qcom-level: Update
- minItems for oloop-vadj & cloop-vadj
-Message-ID: <ZozgNAYKAvhPr0qk@hu-varada-blr.qualcomm.com>
-References: <20240703091651.2820236-1-quic_varada@quicinc.com>
- <20240703091651.2820236-10-quic_varada@quicinc.com>
- <20240708155529.GA3244015-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRVNhK2F"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-76dcb7bb5efso2565805a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 00:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720508513; x=1721113313; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DZ0psJeUa0ESWIwqmGUJUtJWFiMfAL7UAQL92Iqpt0A=;
+        b=gRVNhK2FsoSbR8FzSQ6ab0+3vy4/QRESQdD36pq1Kwail9Lvsf27QLltGn6vXVwC7h
+         MHDGzTZHrcJb6DALZdebUAMx/nzdPpn8IMaidPvKl8zR+9tRpD52SIpYkSjs2xpCjSKK
+         P00cw0yWMbPDFQ+MGA2OqY31dP/H0lguD/fhMQQ4147YDt2Xe3mSlAwZXEVyMv2lPYIn
+         ZKU7H5LqtEfzaIiWYuh7ckWykB2QJ4FiOPBh0qGtsWNVjQda4O6/PU6gS8LNi/ObVk2d
+         MIYUIcIAtSFnifotO40joJSuetnBIDoKfczuUx328cz6575mwouVtWZqr9fjg6Imbea0
+         3mVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720508513; x=1721113313;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DZ0psJeUa0ESWIwqmGUJUtJWFiMfAL7UAQL92Iqpt0A=;
+        b=Uq1YQs6j/BH32xuJySd5okukrHmDTzy/Hv7srFh5Z8/DbXdqcGeOSEmPLhEA8GafyY
+         ZazgzOSdKbz9N4ZCjEha2gUIDMlMDHmwcY/+s8XufETmZsBNKV5zrgb2+JR2E8nGP91v
+         tROpDsIjPc0MGBmx8g/X9fFi175bTBol8pN/ka9v++E3hQlQswt7z3T9Iy+v1HHsxILs
+         a84Lpjl0MD44upsuNHuwo8RQGd+HHaDSHFWWY/v1M2LzLBeU/qSBsxbCNXW3zOIV96lX
+         dtv5589+UpABzGI6cpk8T/gO3RWxwtAppQZlT4sY4+Etz/ByXCfrbbhmWb66tousJ98z
+         d0yw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAiHYoaww/x2yu5tQWVvz+Iwe45P+I3Q2L+Ngh1kzqmIOIhRvtKl3t8BfdDAujD9qmL3oH9saF2AYCpqwAYSWEnGABYy43bey7WvVD
+X-Gm-Message-State: AOJu0Ywc35cGran/3JNSzsAed9dJ4if+41hyV6QbTMOY51HXyFMaWGQa
+	3MIPqzqTTw/QN/S8gFBPGDSWpwX1l2ghIFP3Rdhmz05O9R0MZJ5sXbZw3vBuay4+fw9QUAcvYGi
+	7qMhvI8fVO0rDAXP8bhAfrA==
+X-Google-Smtp-Source: AGHT+IHzPFeVBpwRTnkBkYz7VZGnUncG+Aaa3jegmBcieuvmHu/JW5ukkkhzlgPgwwKMqDaYEFVbHHy21I8qZ9jlNg==
+X-Received: from yuting.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:317f])
+ (user=yutingtseng job=sendgmr) by 2002:a05:6a02:495:b0:5dc:2d1c:43c6 with
+ SMTP id 41be03b00d2f7-77dbd49a35fmr3699a12.9.1720508512728; Tue, 09 Jul 2024
+ 00:01:52 -0700 (PDT)
+Date: Tue,  9 Jul 2024 00:00:47 -0700
+In-Reply-To: <20240709070047.4055369-2-yutingtseng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240708155529.GA3244015-robh@kernel.org>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ykjOmWRJUdJvIsIxFljEaW9CMVfJaX3Q
-X-Proofpoint-GUID: ykjOmWRJUdJvIsIxFljEaW9CMVfJaX3Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090046
+Mime-Version: 1.0
+References: <20240709070047.4055369-2-yutingtseng@google.com>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240709070047.4055369-4-yutingtseng@google.com>
+Subject: [PATCH v9 1/2] binder: frozen notification
+From: Yu-Ting Tseng <yutingtseng@google.com>
+To: cmllamas@google.com, tkjos@google.com, gregkh@linuxfoundation.org
+Cc: arve@android.com, maco@android.com, joel@joelfernandes.org, 
+	brauner@kernel.org, surenb@google.com, aliceryhl@google.com, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	Yu-Ting Tseng <yutingtseng@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 08, 2024 at 09:55:29AM -0600, Rob Herring wrote:
-> On Wed, Jul 03, 2024 at 02:46:50PM +0530, Varadarajan Narayanan wrote:
-> > Since IPQ9574 has only one CPR thread it will specify
-> > only one voltage adjustment value. Hence update min items
-> > accordingly for oloop-vadj and cloop-vadj. Without
-> > constraining min items, dt_binding_check gives errors
-> >
-> > 	opp-table-cpr4:opp-0:qcom,opp-cloop-vadj:0: [0] is too short
-> > 	opp-table-cpr4:opp-0:qcom,opp-oloop-vadj:0: [0] is too short
-> >
-> > 	Failed validating 'minItems' in schema . . .
-> > 		{'maxItems': 2, 'minItems': 2}
-> >
-> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > ---
-> > v4: Fix dt_bindings_check error
-> > ---
-> >  Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
->
-> This is going to need to be rolled into your dependency because it needs
-> the same fix.
+Frozen processes present a significant challenge in binder transactions.
+When a process is frozen, it cannot, by design, accept and/or respond to
+binder transactions. As a result, the sender needs to adjust its
+behavior, such as postponing transactions until the peer process
+unfreezes. However, there is currently no way to subscribe to these
+state change events, making it impossible to implement frozen-aware
+behaviors efficiently.
 
-Konrad,
+Introduce a binder API for subscribing to frozen state change events.
+This allows programs to react to changes in peer process state,
+mitigating issues related to binder transactions sent to frozen
+processes.
 
-Can you please squash this into https://lore.kernel.org/lkml/20230217-topic-cpr3h-v14-2-9fd23241493d@linaro.org/
+Implementation details:
+For a given binder_ref, the state of frozen notification can be one of
+the followings:
+1. Userspace doesn't want a notification. binder_ref->freeze is null.
+2. Userspace wants a notification but none is in flight.
+   list_empty(&binder_ref->freeze->work.entry) = true
+3. A notification is in flight and waiting to be read by userspace.
+   binder_ref_freeze.sent is false.
+4. A notification was read by userspace and kernel is waiting for an ack.
+   binder_ref_freeze.sent is true.
 
-Thanks
-Varada
+When a notification is in flight, new state change events are coalesced into
+the existing binder_ref_freeze struct. If userspace hasn't picked up the
+notification yet, the driver simply rewrites the state. Otherwise, the
+notification is flagged as requiring a resend, which will be performed
+once userspace acks the original notification that's inflight.
 
-> > diff --git a/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml b/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
-> > index b203ea01b17a..1c1a9e12d57a 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
-> > +++ b/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
-> > @@ -39,6 +39,7 @@ patternProperties:
-> >            An array of per-thread values representing the closed-loop
-> >            voltage adjustment value associated with this OPP node.
-> >          $ref: /schemas/types.yaml#/definitions/int32-array
-> > +        minItems: 1
-> >          maxItems: 2
-> >
-> >        qcom,opp-oloop-vadj:
-> > @@ -46,6 +47,7 @@ patternProperties:
-> >            An array of per-thread values representing the open-loop
-> >            voltage adjustment value associated with this OPP node.
-> >          $ref: /schemas/types.yaml#/definitions/int32-array
-> > +        minItems: 1
-> >          maxItems: 2
-> >
-> >      required:
-> > --
-> > 2.34.1
-> >
+See https://r.android.com/3070045 for how userspace is going to use this
+feature.
+
+Signed-off-by: Yu-Ting Tseng <yutingtseng@google.com>
+---
+V8 -> V9: Add patchset summary and changelogs.
+V7 -> V8: Resending patchset to the correct list of recipients.
+V6 -> V7: Resending patchset without --in-reply-to.
+V5 -> V6: Separated the binder_features change into its own patch in the
+          same patchset.
+V4 -> V5: Addressed review comments about printk and other issues.
+          Merged the binder_features change into the same patch.
+V3 -> V4: Dropped BR_ERROR and addressed other review comments.
+V2 -> V3: Fixed an erroneous use of BINDER_WORK_CLEAR_DEATH_NOTIFICATION
+          and addressed other review comments.
+V1 -> V2: Addressed review comments.
+
+ drivers/android/binder.c            | 284 +++++++++++++++++++++++++++-
+ drivers/android/binder_internal.h   |  21 +-
+ include/uapi/linux/android/binder.h |  36 ++++
+ 3 files changed, 337 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index b21a7b246a0d..77f318127a6e 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -1295,6 +1295,7 @@ static void binder_free_ref(struct binder_ref *ref)
+ 	if (ref->node)
+ 		binder_free_node(ref->node);
+ 	kfree(ref->death);
++	kfree(ref->freeze);
+ 	kfree(ref);
+ }
+ 
+@@ -3763,6 +3764,155 @@ static void binder_transaction(struct binder_proc *proc,
+ 	}
+ }
+ 
++static int
++binder_request_freeze_notification(struct binder_proc *proc,
++				   struct binder_thread *thread,
++				   struct binder_handle_cookie *handle_cookie)
++{
++	struct binder_ref_freeze *freeze;
++	struct binder_ref *ref;
++	bool is_frozen;
++
++	freeze = kzalloc(sizeof(*freeze), GFP_KERNEL);
++	if (!freeze)
++		return -ENOMEM;
++	binder_proc_lock(proc);
++	ref = binder_get_ref_olocked(proc, handle_cookie->handle, false);
++	if (!ref) {
++		binder_user_error("%d:%d BC_REQUEST_FREEZE_NOTIFICATION invalid ref %d\n",
++				  proc->pid, thread->pid, handle_cookie->handle);
++		binder_proc_unlock(proc);
++		kfree(freeze);
++		return -EINVAL;
++	}
++
++	binder_node_lock(ref->node);
++
++	if (ref->freeze || !ref->node->proc) {
++		binder_user_error("%d:%d invalid BC_REQUEST_FREEZE_NOTIFICATION %s\n",
++				  proc->pid, thread->pid,
++				  ref->freeze ? "already set" : "dead node");
++		binder_node_unlock(ref->node);
++		binder_proc_unlock(proc);
++		kfree(freeze);
++		return -EINVAL;
++	}
++	binder_inner_proc_lock(ref->node->proc);
++	is_frozen = ref->node->proc->is_frozen;
++	binder_inner_proc_unlock(ref->node->proc);
++
++	binder_stats_created(BINDER_STAT_FREEZE);
++	INIT_LIST_HEAD(&freeze->work.entry);
++	freeze->cookie = handle_cookie->cookie;
++	freeze->work.type = BINDER_WORK_FROZEN_BINDER;
++	freeze->is_frozen = is_frozen;
++
++	ref->freeze = freeze;
++
++	binder_inner_proc_lock(proc);
++	binder_enqueue_work_ilocked(&ref->freeze->work, &proc->todo);
++	binder_wakeup_proc_ilocked(proc);
++	binder_inner_proc_unlock(proc);
++
++	binder_node_unlock(ref->node);
++	binder_proc_unlock(proc);
++	return 0;
++}
++
++static int
++binder_clear_freeze_notification(struct binder_proc *proc,
++				 struct binder_thread *thread,
++				 struct binder_handle_cookie *handle_cookie)
++{
++	struct binder_ref_freeze *freeze;
++	struct binder_ref *ref;
++
++	binder_proc_lock(proc);
++	ref = binder_get_ref_olocked(proc, handle_cookie->handle, false);
++	if (!ref) {
++		binder_user_error("%d:%d BC_CLEAR_FREEZE_NOTIFICATION invalid ref %d\n",
++				  proc->pid, thread->pid, handle_cookie->handle);
++		binder_proc_unlock(proc);
++		return -EINVAL;
++	}
++
++	binder_node_lock(ref->node);
++
++	if (!ref->freeze) {
++		binder_user_error("%d:%d BC_CLEAR_FREEZE_NOTIFICATION freeze notification not active\n",
++				  proc->pid, thread->pid);
++		binder_node_unlock(ref->node);
++		binder_proc_unlock(proc);
++		return -EINVAL;
++	}
++	freeze = ref->freeze;
++	binder_inner_proc_lock(proc);
++	if (freeze->cookie != handle_cookie->cookie) {
++		binder_user_error("%d:%d BC_CLEAR_FREEZE_NOTIFICATION freeze notification cookie mismatch %016llx != %016llx\n",
++				  proc->pid, thread->pid, (u64)freeze->cookie,
++				  (u64)handle_cookie->cookie);
++		binder_inner_proc_unlock(proc);
++		binder_node_unlock(ref->node);
++		binder_proc_unlock(proc);
++		return -EINVAL;
++	}
++	ref->freeze = NULL;
++	/*
++	 * Take the existing freeze object and overwrite its work type. There are three cases here:
++	 * 1. No pending notification. In this case just add the work to the queue.
++	 * 2. A notification was sent and is pending an ack from userspace. Once an ack arrives, we
++	 *    should resend with the new work type.
++	 * 3. A notification is pending to be sent. Since the work is already in the queue, nothing
++	 *    needs to be done here.
++	 */
++	freeze->work.type = BINDER_WORK_CLEAR_FREEZE_NOTIFICATION;
++	if (list_empty(&freeze->work.entry)) {
++		binder_enqueue_work_ilocked(&freeze->work, &proc->todo);
++		binder_wakeup_proc_ilocked(proc);
++	} else if (freeze->sent) {
++		freeze->resend = true;
++	}
++	binder_inner_proc_unlock(proc);
++	binder_node_unlock(ref->node);
++	binder_proc_unlock(proc);
++	return 0;
++}
++
++static int
++binder_freeze_notification_done(struct binder_proc *proc,
++				struct binder_thread *thread,
++				binder_uintptr_t cookie)
++{
++	struct binder_ref_freeze *freeze = NULL;
++	struct binder_work *w;
++
++	binder_inner_proc_lock(proc);
++	list_for_each_entry(w, &proc->delivered_freeze, entry) {
++		struct binder_ref_freeze *tmp_freeze =
++			container_of(w, struct binder_ref_freeze, work);
++
++		if (tmp_freeze->cookie == cookie) {
++			freeze = tmp_freeze;
++			break;
++		}
++	}
++	if (!freeze) {
++		binder_user_error("%d:%d BC_FREEZE_NOTIFICATION_DONE %016llx not found\n",
++				  proc->pid, thread->pid, (u64)cookie);
++		binder_inner_proc_unlock(proc);
++		return -EINVAL;
++	}
++	binder_dequeue_work_ilocked(&freeze->work);
++	freeze->sent = false;
++	if (freeze->resend) {
++		freeze->resend = false;
++		binder_enqueue_work_ilocked(&freeze->work, &proc->todo);
++		binder_wakeup_proc_ilocked(proc);
++	}
++	binder_inner_proc_unlock(proc);
++	return 0;
++}
++
+ /**
+  * binder_free_buf() - free the specified buffer
+  * @proc:	binder proc that owns buffer
+@@ -4246,6 +4396,44 @@ static int binder_thread_write(struct binder_proc *proc,
+ 			binder_inner_proc_unlock(proc);
+ 		} break;
+ 
++		case BC_REQUEST_FREEZE_NOTIFICATION: {
++			struct binder_handle_cookie handle_cookie;
++			int error;
++
++			if (copy_from_user(&handle_cookie, ptr, sizeof(handle_cookie)))
++				return -EFAULT;
++			ptr += sizeof(handle_cookie);
++			error = binder_request_freeze_notification(proc, thread,
++								   &handle_cookie);
++			if (error)
++				return error;
++		} break;
++
++		case BC_CLEAR_FREEZE_NOTIFICATION: {
++			struct binder_handle_cookie handle_cookie;
++			int error;
++
++			if (copy_from_user(&handle_cookie, ptr, sizeof(handle_cookie)))
++				return -EFAULT;
++			ptr += sizeof(handle_cookie);
++			error = binder_clear_freeze_notification(proc, thread, &handle_cookie);
++			if (error)
++				return error;
++		} break;
++
++		case BC_FREEZE_NOTIFICATION_DONE: {
++			binder_uintptr_t cookie;
++			int error;
++
++			if (get_user(cookie, (binder_uintptr_t __user *)ptr))
++				return -EFAULT;
++
++			ptr += sizeof(cookie);
++			error = binder_freeze_notification_done(proc, thread, cookie);
++			if (error)
++				return error;
++		} break;
++
+ 		default:
+ 			pr_err("%d:%d unknown command %u\n",
+ 			       proc->pid, thread->pid, cmd);
+@@ -4635,6 +4823,46 @@ static int binder_thread_read(struct binder_proc *proc,
+ 			if (cmd == BR_DEAD_BINDER)
+ 				goto done; /* DEAD_BINDER notifications can cause transactions */
+ 		} break;
++
++		case BINDER_WORK_FROZEN_BINDER: {
++			struct binder_ref_freeze *freeze;
++			struct binder_frozen_state_info info;
++
++			memset(&info, 0, sizeof(info));
++			freeze = container_of(w, struct binder_ref_freeze, work);
++			info.is_frozen = freeze->is_frozen;
++			info.cookie = freeze->cookie;
++			freeze->sent = true;
++			binder_enqueue_work_ilocked(w, &proc->delivered_freeze);
++			binder_inner_proc_unlock(proc);
++
++			if (put_user(BR_FROZEN_BINDER, (uint32_t __user *)ptr))
++				return -EFAULT;
++			ptr += sizeof(uint32_t);
++			if (copy_to_user(ptr, &info, sizeof(info)))
++				return -EFAULT;
++			ptr += sizeof(info);
++			binder_stat_br(proc, thread, BR_FROZEN_BINDER);
++			goto done; /* BR_FROZEN_BINDER notifications can cause transactions */
++		} break;
++
++		case BINDER_WORK_CLEAR_FREEZE_NOTIFICATION: {
++			struct binder_ref_freeze *freeze =
++			    container_of(w, struct binder_ref_freeze, work);
++			binder_uintptr_t cookie = freeze->cookie;
++
++			binder_inner_proc_unlock(proc);
++			kfree(freeze);
++			binder_stats_deleted(BINDER_STAT_FREEZE);
++			if (put_user(BR_CLEAR_FREEZE_NOTIFICATION_DONE, (uint32_t __user *)ptr))
++				return -EFAULT;
++			ptr += sizeof(uint32_t);
++			if (put_user(cookie, (binder_uintptr_t __user *)ptr))
++				return -EFAULT;
++			ptr += sizeof(binder_uintptr_t);
++			binder_stat_br(proc, thread, BR_CLEAR_FREEZE_NOTIFICATION_DONE);
++		} break;
++
+ 		default:
+ 			binder_inner_proc_unlock(proc);
+ 			pr_err("%d:%d: bad work type %d\n",
+@@ -5242,6 +5470,48 @@ static bool binder_txns_pending_ilocked(struct binder_proc *proc)
+ 	return false;
+ }
+ 
++static void binder_add_freeze_work(struct binder_proc *proc, bool is_frozen)
++{
++	struct rb_node *n;
++	struct binder_ref *ref;
++
++	binder_inner_proc_lock(proc);
++	for (n = rb_first(&proc->nodes); n; n = rb_next(n)) {
++		struct binder_node *node;
++
++		node = rb_entry(n, struct binder_node, rb_node);
++		binder_inner_proc_unlock(proc);
++		binder_node_lock(node);
++		hlist_for_each_entry(ref, &node->refs, node_entry) {
++			/*
++			 * Need the node lock to synchronize
++			 * with new notification requests and the
++			 * inner lock to synchronize with queued
++			 * freeze notifications.
++			 */
++			binder_inner_proc_lock(ref->proc);
++			if (!ref->freeze) {
++				binder_inner_proc_unlock(ref->proc);
++				continue;
++			}
++			ref->freeze->work.type = BINDER_WORK_FROZEN_BINDER;
++			if (list_empty(&ref->freeze->work.entry)) {
++				ref->freeze->is_frozen = is_frozen;
++				binder_enqueue_work_ilocked(&ref->freeze->work, &ref->proc->todo);
++				binder_wakeup_proc_ilocked(ref->proc);
++			} else {
++				if (ref->freeze->sent && ref->freeze->is_frozen != is_frozen)
++					ref->freeze->resend = true;
++				ref->freeze->is_frozen = is_frozen;
++			}
++			binder_inner_proc_unlock(ref->proc);
++		}
++		binder_node_unlock(node);
++		binder_inner_proc_lock(proc);
++	}
++	binder_inner_proc_unlock(proc);
++}
++
+ static int binder_ioctl_freeze(struct binder_freeze_info *info,
+ 			       struct binder_proc *target_proc)
+ {
+@@ -5253,6 +5523,7 @@ static int binder_ioctl_freeze(struct binder_freeze_info *info,
+ 		target_proc->async_recv = false;
+ 		target_proc->is_frozen = false;
+ 		binder_inner_proc_unlock(target_proc);
++		binder_add_freeze_work(target_proc, false);
+ 		return 0;
+ 	}
+ 
+@@ -5285,6 +5556,8 @@ static int binder_ioctl_freeze(struct binder_freeze_info *info,
+ 		binder_inner_proc_lock(target_proc);
+ 		target_proc->is_frozen = false;
+ 		binder_inner_proc_unlock(target_proc);
++	} else {
++		binder_add_freeze_work(target_proc, true);
+ 	}
+ 
+ 	return ret;
+@@ -5658,6 +5931,7 @@ static int binder_open(struct inode *nodp, struct file *filp)
+ 	binder_stats_created(BINDER_STAT_PROC);
+ 	proc->pid = current->group_leader->pid;
+ 	INIT_LIST_HEAD(&proc->delivered_death);
++	INIT_LIST_HEAD(&proc->delivered_freeze);
+ 	INIT_LIST_HEAD(&proc->waiting_threads);
+ 	filp->private_data = proc;
+ 
+@@ -6209,7 +6483,9 @@ static const char * const binder_return_strings[] = {
+ 	"BR_FAILED_REPLY",
+ 	"BR_FROZEN_REPLY",
+ 	"BR_ONEWAY_SPAM_SUSPECT",
+-	"BR_TRANSACTION_PENDING_FROZEN"
++	"BR_TRANSACTION_PENDING_FROZEN",
++	"BR_FROZEN_BINDER",
++	"BR_CLEAR_FREEZE_NOTIFICATION_DONE",
+ };
+ 
+ static const char * const binder_command_strings[] = {
+@@ -6232,6 +6508,9 @@ static const char * const binder_command_strings[] = {
+ 	"BC_DEAD_BINDER_DONE",
+ 	"BC_TRANSACTION_SG",
+ 	"BC_REPLY_SG",
++	"BC_REQUEST_FREEZE_NOTIFICATION",
++	"BC_CLEAR_FREEZE_NOTIFICATION",
++	"BC_FREEZE_NOTIFICATION_DONE",
+ };
+ 
+ static const char * const binder_objstat_strings[] = {
+@@ -6241,7 +6520,8 @@ static const char * const binder_objstat_strings[] = {
+ 	"ref",
+ 	"death",
+ 	"transaction",
+-	"transaction_complete"
++	"transaction_complete",
++	"freeze",
+ };
+ 
+ static void print_binder_stats(struct seq_file *m, const char *prefix,
+diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
+index 5b7c80b99ae8..3e4b35873c64 100644
+--- a/drivers/android/binder_internal.h
++++ b/drivers/android/binder_internal.h
+@@ -129,12 +129,13 @@ enum binder_stat_types {
+ 	BINDER_STAT_DEATH,
+ 	BINDER_STAT_TRANSACTION,
+ 	BINDER_STAT_TRANSACTION_COMPLETE,
++	BINDER_STAT_FREEZE,
+ 	BINDER_STAT_COUNT
+ };
+ 
+ struct binder_stats {
+-	atomic_t br[_IOC_NR(BR_TRANSACTION_PENDING_FROZEN) + 1];
+-	atomic_t bc[_IOC_NR(BC_REPLY_SG) + 1];
++	atomic_t br[_IOC_NR(BR_CLEAR_FREEZE_NOTIFICATION_DONE) + 1];
++	atomic_t bc[_IOC_NR(BC_FREEZE_NOTIFICATION_DONE) + 1];
+ 	atomic_t obj_created[BINDER_STAT_COUNT];
+ 	atomic_t obj_deleted[BINDER_STAT_COUNT];
+ };
+@@ -159,6 +160,8 @@ struct binder_work {
+ 		BINDER_WORK_DEAD_BINDER,
+ 		BINDER_WORK_DEAD_BINDER_AND_CLEAR,
+ 		BINDER_WORK_CLEAR_DEATH_NOTIFICATION,
++		BINDER_WORK_FROZEN_BINDER,
++		BINDER_WORK_CLEAR_FREEZE_NOTIFICATION,
+ 	} type;
+ };
+ 
+@@ -275,6 +278,14 @@ struct binder_ref_death {
+ 	binder_uintptr_t cookie;
+ };
+ 
++struct binder_ref_freeze {
++	struct binder_work work;
++	binder_uintptr_t cookie;
++	bool is_frozen:1;
++	bool sent:1;
++	bool resend:1;
++};
++
+ /**
+  * struct binder_ref_data - binder_ref counts and id
+  * @debug_id:        unique ID for the ref
+@@ -307,6 +318,8 @@ struct binder_ref_data {
+  *               @node indicates the node must be freed
+  * @death:       pointer to death notification (ref_death) if requested
+  *               (protected by @node->lock)
++ * @freeze:      pointer to freeze notification (ref_freeze) if requested
++ *               (protected by @node->lock)
+  *
+  * Structure to track references from procA to target node (on procB). This
+  * structure is unsafe to access without holding @proc->outer_lock.
+@@ -323,6 +336,7 @@ struct binder_ref {
+ 	struct binder_proc *proc;
+ 	struct binder_node *node;
+ 	struct binder_ref_death *death;
++	struct binder_ref_freeze *freeze;
+ };
+ 
+ /**
+@@ -374,6 +388,8 @@ struct binder_ref {
+  *                        (atomics, no lock needed)
+  * @delivered_death:      list of delivered death notification
+  *                        (protected by @inner_lock)
++ * @delivered_freeze:     list of delivered freeze notification
++ *                        (protected by @inner_lock)
+  * @max_threads:          cap on number of binder threads
+  *                        (protected by @inner_lock)
+  * @requested_threads:    number of binder threads requested but not
+@@ -421,6 +437,7 @@ struct binder_proc {
+ 	struct list_head todo;
+ 	struct binder_stats stats;
+ 	struct list_head delivered_death;
++	struct list_head delivered_freeze;
+ 	u32 max_threads;
+ 	int requested_threads;
+ 	int requested_threads_started;
+diff --git a/include/uapi/linux/android/binder.h b/include/uapi/linux/android/binder.h
+index d44a8118b2ed..1fd92021a573 100644
+--- a/include/uapi/linux/android/binder.h
++++ b/include/uapi/linux/android/binder.h
+@@ -236,6 +236,12 @@ struct binder_frozen_status_info {
+ 	__u32            async_recv;
+ };
+ 
++struct binder_frozen_state_info {
++	binder_uintptr_t cookie;
++	__u32            is_frozen;
++	__u32            reserved;
++};
++
+ /* struct binder_extened_error - extended error information
+  * @id:		identifier for the failed operation
+  * @command:	command as defined by binder_driver_return_protocol
+@@ -467,6 +473,17 @@ enum binder_driver_return_protocol {
+ 	/*
+ 	 * The target of the last async transaction is frozen.  No parameters.
+ 	 */
++
++	BR_FROZEN_BINDER = _IOR('r', 21, struct binder_frozen_state_info),
++	/*
++	 * The cookie and a boolean (is_frozen) that indicates whether the process
++	 * transitioned into a frozen or an unfrozen state.
++	 */
++
++	BR_CLEAR_FREEZE_NOTIFICATION_DONE = _IOR('r', 22, binder_uintptr_t),
++	/*
++	 * void *: cookie
++	 */
+ };
+ 
+ enum binder_driver_command_protocol {
+@@ -550,6 +567,25 @@ enum binder_driver_command_protocol {
+ 	/*
+ 	 * binder_transaction_data_sg: the sent command.
+ 	 */
++
++	BC_REQUEST_FREEZE_NOTIFICATION =
++			_IOW('c', 19, struct binder_handle_cookie),
++	/*
++	 * int: handle
++	 * void *: cookie
++	 */
++
++	BC_CLEAR_FREEZE_NOTIFICATION = _IOW('c', 20,
++					    struct binder_handle_cookie),
++	/*
++	 * int: handle
++	 * void *: cookie
++	 */
++
++	BC_FREEZE_NOTIFICATION_DONE = _IOW('c', 21, binder_uintptr_t),
++	/*
++	 * void *: cookie
++	 */
+ };
+ 
+ #endif /* _UAPI_LINUX_BINDER_H */
+-- 
+2.45.2.803.g4e1b14247a-goog
+
