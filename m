@@ -1,80 +1,100 @@
-Received: from resdmta-c2p-566137.sys.comcast.net (resdmta-c2p-566137.sys.comcast.net [96.102.19.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57894A15
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 03:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.102.19.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC9379DC5
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 03:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720494804; cv=none; b=EZFC7Om3RgbzEHkSe0XLHShNrvAke4m56mE4ago/C/H8oYJxQ1MBfbw75yoQLnyDR1jnEt+52dnFoM6s7V1VOaaFz0c5ai0queMCsM8k34cAwWrWMBHUYvuer6pVT0puJwgVQlNrL586u3DMLFNSLL9U++agq9QSsAuX04LzTrI=
+	t=1720494887; cv=none; b=DTUA9vK+FR22EUj/r8BS0uZYsiqXRB6NPZiI9nFaE742KuXe9jOwx2oUhUoKmwCG9Up5Pl0FhmBjFAbpKa7ZT3kd72OfhIM3Mxx5uGlkDiJj2fWNL0+2WfU6vtjFOHBFtLWP5gWqLxWVtNqobxNXjmuv6oh806DaWQez/FDSgDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720494804; c=relaxed/simple;
-	bh=Rrb8+ibnnMm/HC1Dj1A7wiyNXZZbkqhbN0VkLhkbv4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hNGU5QeTuDNcoO9hO/vmW2HLjrykOq2j9daolFSJfJIiRjCgPcwGo1YGKeHjKFElt0xCVZ9UqNzRbag+PahK7CywPF+FffwMNPDWkAaADiFKsZLv8pVPfIXqie9yqjrUUXziRkcyHHGjsPu+W9x+qNbwQynKWvCIAaNJvhcNW1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=spacefreak18.xyz; spf=fail smtp.mailfrom=spacefreak18.xyz; dkim=pass (2048-bit key) header.d=comcastmailservice.net header.i=@comcastmailservice.net header.b=M3I33o1D; arc=none smtp.client-ip=96.102.19.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=spacefreak18.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=spacefreak18.xyz
+	s=arc-20240116; t=1720494887; c=relaxed/simple;
+	bh=dzRlwYxsrGJ4KIqc7+Icq4MRTAAHtMVVE8IegY0vCAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WGgXxz+TqS/TuieqHg8MKz4TbjHdKM+k8Yl74CqME5V6FjGYl3zauLqxWLQS7NDZAv1JORQhF3TB5hTph0wmNMkp+HXCe/bGFhw5Iee1p/rxjNvbTJcwzRluMsFmVPpJUeTBGZfa+jJfrLMoBR+8iBAPzShRMyO6Q5P7syb8JjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SKHrPRnj; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=comcastmailservice.net header.i=@comcastmailservice.net header.b="M3I33o1D"
-Received: from resomta-c2p-555955.sys.comcast.net ([96.102.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 256/256 bits)
-	(Client did not present a certificate)
-	by resdmta-c2p-566137.sys.comcast.net with ESMTPS
-	id R1E7suPrmAKPiR1FesJOFj; Tue, 09 Jul 2024 03:10:46 +0000
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SKHrPRnj"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c1a4192d55so2659682a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 20:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=comcastmailservice.net; s=20211018a; t=1720494646;
-	bh=Rrb8+ibnnMm/HC1Dj1A7wiyNXZZbkqhbN0VkLhkbv4w=;
-	h=Received:Received:Received:Date:From:To:Subject:Message-ID:
-	 MIME-Version:Content-Type:Xfinity-Spam-Result;
-	b=M3I33o1D4MKqrgrY+/DajoOmOSBcLYVmw7THJtiFx5qK3S17QJzfFL1GnLCvpLUIE
-	 bd4c9KwZ9aLqM5bVA5oeI9QcxmPAkqYzoUbUG93rcd9Pqo3QiwuKxXSvSQwjAMlHHU
-	 EznV61wLErqub5AjGOThvoFyTM+UmmWrKbCz/fvA0neAN+5gcfJUPdKfV3PnMo2N0G
-	 C5NPFV9LSViR1xRLDE+Fdfjt1fwvYeC8wLOOW7ozATfYqcmEAEZTMxj6u3OgHbddt0
-	 osRe/sryQ5mNfLpJB/CzP8fIJzWt3nzTSM9sMjZ1fuS/Mt2NVoxwlj2pDH6IdS7Gsu
-	 E9HYJdLsVg3ZQ==
-Received: from Outgoing.brak ([73.233.191.37])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 256/256 bits)
-	(Client did not present a certificate)
-	by resomta-c2p-555955.sys.comcast.net with ESMTPSA
-	id R1FHs8JKbHWxuR1FIszQaj; Tue, 09 Jul 2024 03:10:25 +0000
-Received: from ZitZ.localdomain (Linksys01880.brak [172.18.18.227])
-	by Outgoing.brak (Postfix) with ESMTPSA id 54EBD9885;
-	Tue,  9 Jul 2024 03:04:23 +0000 (UTC)
-Date: Mon, 8 Jul 2024 23:10:18 -0400
-From: Paul Dino Jones <paul@spacefreak18.xyz>
-To: jikos@kernel.org
-Cc: anssi.hannula@gmail.com, linux-kernel@vger.kernel.org, 
-	paul@spacefreak18.xyz
-Subject: Re: [PATCH RESEND] Interpret 0 length ff effects as infinite
- (0xffff) length effects
-Message-ID: <tuzl6nthh6ieab3wiwgn4qli4pxd4qycxliy2bnrjewevm6umx@xtdxo5wvpq64>
+        d=linaro.org; s=google; t=1720494885; x=1721099685; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pvPxOKXTY/4mtLUCkxWUWZxN49J8zpBnSU1X8IK8Sug=;
+        b=SKHrPRnjc8m/Vtd9qbTbw1DgzYVKsxjHRY7FwlfEYPR8QMh2YFcggmsdx5aFkIRRCA
+         IlLYAaSHEiUYm1vubQaslDgG338fk0y4X30k7A6+GyveBF+SuUis5lP+09AdMNNKnDYh
+         z2seNXIHMKhrbnDDhUqgYPPpSLyBvfupzQu/q0ryr7XR43DD2MmswE7gK8ZmDhhusUJz
+         TRZCjdPAjAwzTI8mTuhpGTNvK/hHylsGqeX+qxglUYbDf3v/QgDztM0G7As5UH/D29ux
+         Frtq+heSH5c4dmLRVhCDP3mTV6nZQqOo5t5cZ9LB4yhd7BFe0z0tlPXVVVoIqvrszg7k
+         mLZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720494885; x=1721099685;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pvPxOKXTY/4mtLUCkxWUWZxN49J8zpBnSU1X8IK8Sug=;
+        b=ZB5HR42zzt/At8w9hEHjDCqUeaCLOb2etcH9g9j/b8s8vU3GO2e8VzN4I+2shDNN0G
+         4FslGpAXGClFoKxq13ht3vYM0jQgeeYky3MnSx6f7YMXsq5gnGBPTLL8HKuFYBBpDlLX
+         9KQ/XT6HPSbPUg4pfETSSmOZ1l7blRHSAf582I2TTOmqiHMlX8RnOyyOkdtTzjT8bLqK
+         skaFy39mdF8eirz/HYfPo4sfHQWlN7QwbsJvgLqkGYVHDDQJOp20/lQkgtrwZUxIlwda
+         i/56qQOx5KRdZ2n2tHoN7bqc7kijyT1OT549Q02Ur3GZkzySUktuH1uMhsm0+Yy3iPxU
+         Ct3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUdCGEPlgVCzxnfv0nFLAjN/+ANdUldtk7l+rhvlSV9fNQ928QKrFAkF3V8Fn2KdHtnjnRKS0SlFdg8/5AHjKHOI3l9bLHukBC/5bq7
+X-Gm-Message-State: AOJu0YxhZEkb7oMHtsXGpGGGyw4ZJkSyhjTexVGqsjOrQZrPFdN8h2el
+	2CT6l8lfWb1tC6EbPO6Y/Gru1e+S8UCYWKFFVKqn3+1cedesnGTdLt6Ei/gX069Q0q7qViyp11A
+	0
+X-Google-Smtp-Source: AGHT+IEOBq8PuD4oFMJkLh1pFoBgqljC1pxKAEneoVV1FfRnIFMZiqDzLh38CGn0thkn3m/UL8JA9Q==
+X-Received: by 2002:a17:90a:6509:b0:2c9:8020:1b51 with SMTP id 98e67ed59e1d1-2ca35be21d9mr1196347a91.3.1720494885035;
+        Mon, 08 Jul 2024 20:14:45 -0700 (PDT)
+Received: from localhost ([122.172.84.129])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aa66582sm8899587a91.37.2024.07.08.20.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 20:14:44 -0700 (PDT)
+Date: Tue, 9 Jul 2024 08:44:39 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Raphael Gallais-Pou <rgallaispou@gmail.com>
+Cc: Patrice Chotard <patrice.chotard@foss.st.com>,
+	"'Rafael J . Wysocki'" <rafael@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: sti: fix build warning
+Message-ID: <20240709031439.llqdyaoxldsevuhc@vireshk-i7>
+References: <20240708171434.111623-1-rgallaispou@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.2406040954160.16865@cbobk.fhfr.pm>
-X-CMAE-Envelope: MS4xfLwWkqFRKmk+JResms8wJntCdLma2aFuC0i3k7ww93eRxFy9xczYGqFDpGG5OWZOJ4ChRUJ521GAnpsgPGGOVoCvkOl577F/N/uYUFZDqRKi/AqwHoeT
- h5xWmkdVOXUe41hJrh2QcClzKAVlocwlm3tRKRelrtvpTDgBZOBwc1K2J7/LUET8gFeJQqGKd16DdHdax2r4srfinnwwhZf3UMrn/WvckJMGXe5VA66iYY3v
- Bscf9BvIZzUGNPP5Er5Of2XlwcxrtZvBgidB+C1SgfRa7A2U5DcJ62TxiDTJEHqX
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240708171434.111623-1-rgallaispou@gmail.com>
 
-Hello, and thank you for getting back to me.
+On 08-07-24, 19:14, Raphael Gallais-Pou wrote:
+> Building this driver yields the following:
+> 
+> .../drivers/cpufreq/sti-cpufreq.c:215:50: warning: ‘%d’ directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
+>   215 |         snprintf(name, MAX_PCODE_NAME_LEN, pcode%d, pcode);
+>       |                                                  ^~
+> .../drivers/cpufreq/sti-cpufreq.c:215:44: note: directive argument in the range [0, 2147483647]
+>   215 |         snprintf(name, MAX_PCODE_NAME_LEN, pcode%d, pcode);
+>       |                                            ^~~~~~~~~
+> .../drivers/cpufreq/sti-cpufreq.c:215:9: note: ‘snprintf’ output between 7 and 16 bytes into a destination of size 7
+>   215 |         snprintf(name, MAX_PCODE_NAME_LEN, pcode%d, pcode);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Fix the buffer size to avoid the warning at build time.
+> 
+> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+> ---
+>  drivers/cpufreq/sti-cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Without this, a lot of wheels do not work with proton and wine and other
-software.
+Applied. Thanks.
 
-A lot of the community is already using this patch or other similar
-workarounds.
-
-I can't think of a situation where sending an effect of length zero
-would ever make sense.
-
-If you read through the first time I sent this patch you will see a lot
-of the research that went into this.
-
-https://lkml.indiana.edu/hypermail/linux/kernel/2210.0/04133.html
-
-- Paul
+-- 
+viresh
