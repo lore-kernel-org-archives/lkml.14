@@ -1,89 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C767182494
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF1FA34;
+	Tue,  9 Jul 2024 16:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720541933; cv=none; b=hsa23jUkmQpbBmGWt6JU/U7YNyjMDl1My8hWthEUmgqNr3OJU1URPMtG4/i619Ggd7EwAm1SgC/sSt5NmTXhpnjDMghYYMUfPCeckW/AWaciWOPF4Ov8m0auXZZeCc/OpFnsPcGYLh8JFr+iPqDIePIjIcG+T2n+FdjWZztHNY8=
+	t=1720541979; cv=none; b=ZipbGClmb+zJHCxq9qzr5EmRCa9xoQwYA5fncmNV6AIULepnzdVi1QZrYLkzasWODKD9wwiSITUCQlxc34tCa9V8mgH33k3JaBAiTKt1kcmI5uEadhOUIOr80pSWPU5FneLmWq3pEXhCjeEO/8lJumDfH7ndpnLFoW6ot8oc2eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720541933; c=relaxed/simple;
-	bh=6CxWOEITHjIhWLXILz9JbgNImfhmSiAYeuju8IvNgdY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=fGKf6I7wWcDlhrJv5mtmQlAuS9bLPeUmj0pJ7YJpxBR6A/6TzdPL7WxwnxdUCuWDqr6baxfG18KUPpdtdqZ+keAVNTlYRllbXaUHi68sdXgOwp/T7++5WUih2Ff2/+xXxCaPeFnUsw7IU8z7rNSTnS0MOkON5hlr3JjoXrUMMv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhXmN2A3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720541979; c=relaxed/simple;
+	bh=E2gODmvDj/noFSq0Ij194HBL9MaQfm0x0CDWqpYQLc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=diW8NDylNHYCiv7Pip/oLWxVtQ0sc+Hv7uO/+BMluGZTIxBhXzmkiMciDrZ0hvERgDX/36kUWp/RedllISFwPk79op+hTPrq/p8DiyNG4QkwrU3+vsfW2Fh6qog9s9KSOK/xPJ2Aj0XDJeo+PFtl3J7v/lgXpcUDL9zn+T05Y24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmtYy8OS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhXmN2A3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BC9C3277B;
-	Tue,  9 Jul 2024 16:18:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmtYy8OS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0887C3277B;
+	Tue,  9 Jul 2024 16:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720541933;
-	bh=6CxWOEITHjIhWLXILz9JbgNImfhmSiAYeuju8IvNgdY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=dhXmN2A3Wvh0y2X9vbMZiyQeSdcg1nqJe6GWH3VlzbevWZqh6yyqznzdwXptak8W2
-	 OKOhijmjiyHw+BKcffio4QTHn1aZx+UuKa0TIxoRP8EAu/L+yZLSug+XAXHss+RA4B
-	 b9IHLQYSUv8uTf8eTX0Jx4qd0chTbdp7iefVrtnXNmsbBaXcHyYqow5cOLUKeeRwZx
-	 RdRVWDGHfBrGUio9Q8fZwbN/sFNADfrJtGNXn662ovDKDCHwE/7hCqJEqLn4OnSs3U
-	 b1XeExMVPSdRSoZDZbGMU4Q8GomsQG32dwQK5LVr3HJlq7h+15UEucAcWzjG1kSkBH
-	 tZ97xTsfv0zqQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,  <linux-kernel@vger.kernel.org>,
-  <ath12k@lists.infradead.org>
-Subject: Re: crosstool: x86 kernel compiled with GCC 14.1 fails to boot
-References: <87y16bbvgb.fsf@kernel.org>
-	<917565ee-732a-4df0-a717-a71fbb34fd79@quicinc.com>
-	<837cd2e4-d231-411a-8af4-64b950c4066a@quicinc.com>
-	<c9b23ee3-6790-404d-80a3-4ca196327546@app.fastmail.com>
-	<0e0150ca-fdfa-40cb-ad7f-6ac695b702e4@quicinc.com>
-Date: Tue, 09 Jul 2024 19:18:50 +0300
-In-Reply-To: <0e0150ca-fdfa-40cb-ad7f-6ac695b702e4@quicinc.com> (Jeff
-	Johnson's message of "Tue, 9 Jul 2024 08:29:25 -0700")
-Message-ID: <87le2abkt1.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1720541978;
+	bh=E2gODmvDj/noFSq0Ij194HBL9MaQfm0x0CDWqpYQLc4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GmtYy8OS3GPfUH6SjjcYrrTd2lYraSUOEC7ox0EuX2EP4K7JwXSsxdronJnaX8Tht
+	 ugziB5fDn6HtjuY45znqV2M7Dv0eYPxpMQyZWA3+rfMirdneeXumH7Wlm4MC/S9iYL
+	 g8zbpROvK++FSib7NbhgHaiUT1e5kPdxFBoE92Vr/VN6i/HBXTacC8cI5IcxpR50gE
+	 nw31O8ilLdHwT1Oe3K+Qhp+zVTnDncjJvOtxHGwtNH4HUky/uUhwCEkcXouimwmCJ9
+	 M56Zzmt5vA+7I0oPsRbINIhAdcMsoUGX2U3FIfKp6Y7H+6e/+YqAMlVM7UJUaJjNOB
+	 nBB36TIA0qscw==
+Date: Tue, 9 Jul 2024 11:19:36 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Stewart Hildebrand <stewart.hildebrand@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 4/6] x86: PCI: preserve IORESOURCE_STARTALIGN
+ alignment
+Message-ID: <20240709161936.GA175713@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709133610.1089420-5-stewart.hildebrand@amd.com>
 
-Jeff Johnson <quic_jjohnson@quicinc.com> writes:
+On Tue, Jul 09, 2024 at 09:36:01AM -0400, Stewart Hildebrand wrote:
+> Currently, it's not possible to use the IORESOURCE_STARTALIGN flag on
+> x86 due to the alignment being overwritten in
+> pcibios_allocate_dev_resources(). Make one small change in arch/x86 to
+> make it work on x86.
 
-> On 7/8/2024 10:44 PM, Arnd Bergmann wrote:
->> On Tue, Jul 9, 2024, at 05:55, Jeff Johnson wrote:
->>> On 7/8/2024 6:57 PM, Jeff Johnson wrote:
->>>> We tend to enable a lot of debug config options, so I'm wondering if one of
->>>> them is contributing to the issue? Guess I'll turn off a bunch of those
->>>> options and try again.
->>>
->>> OK, with a bunch of debug turned off my image boots.
->>>
->>> Now to find the culprit.
->>>
->>> Current diff between original config and working config:
->> 
->> Nice! I've tried the reverse now, turning on the options
->> you have turned off on top of my defconfig. This version
->> still works for me, booting with a plain
->> 'qemu-system-x86_64 -kernel arch/x86_64/boot/bzImage'
->> and building with my arm64-to-x86 cross compiler.
->
-> I picked my favorite to begin with, enabling KASAN (which in turn enabled a
-> few others). The resulting kernel did not boot for me (just saw a black screen
-> after the GRUB menu). Diff between working and non-working config is below.
->
-> I then downloaded and built the config you supplied. With that I have the same
-> behavior as my original config, the display is frozen with:
-> Loading initial ramdisk ...
->
->
-> [jjohnson:laptop 1966] diff .config.old .config
+Is this a regression?  I didn't look up when IORESOURCE_STARTALIGN was
+added, but likely it was for some situation on x86, so presumably it
+worked at one time.  If something broke it in the meantime, it would
+be nice to identify the commit that broke it.
 
-BTW there's also scripts/diffconfig which provides a prettier diff.
+Nit: follow the subject line conventions for this and the other
+patches.  Learn them with "git log --oneline".  For this patch,
+"x86/PCI: <Capitalized text>" is appropriate.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
+> ---
+> RFC: We don't have enough info in this function to re-calculate the
+>      alignment value in case of IORESOURCE_STARTALIGN. Luckily our
+>      alignment value seems to be intact, so just don't touch it...
+>      Alternatively, we could call pci_reassigndev_resource_alignment()
+>      after the loop. Would that be preferable?
+> ---
+>  arch/x86/pci/i386.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/pci/i386.c b/arch/x86/pci/i386.c
+> index f2f4a5d50b27..ff6e61389ec7 100644
+> --- a/arch/x86/pci/i386.c
+> +++ b/arch/x86/pci/i386.c
+> @@ -283,8 +283,11 @@ static void pcibios_allocate_dev_resources(struct pci_dev *dev, int pass)
+>  						/* We'll assign a new address later */
+>  						pcibios_save_fw_addr(dev,
+>  								idx, r->start);
+> -						r->end -= r->start;
+> -						r->start = 0;
+> +						if (!(r->flags &
+> +						      IORESOURCE_STARTALIGN)) {
+> +							r->end -= r->start;
+> +							r->start = 0;
+> +						}
+>  					}
+>  				}
+>  			}
+> -- 
+> 2.45.2
+> 
