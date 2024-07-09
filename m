@@ -1,131 +1,314 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9234E19D8B2;
-	Tue,  9 Jul 2024 16:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B420F1A2FCD
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542049; cv=none; b=tCGaIq8/YeP64ThBjuixpmj/gp0T4aPBcxSuBl71tlJF1SSAScjhLkbEzbGBFtKiD+EEIhDqdH6Lpap89OBlM2UivjroG+Zyooz2vXWbvjILzFMQaUjafqToL0H/6ntd4INvI1N6ZbO99gLkhK4yVyVMEngqSE2KvxB0h2vhbL8=
+	t=1720542048; cv=none; b=gFvgUceD9jWaOyMpIiJvK+/YHNwqkLjg4p6ZllaA5gVHBYoZNqrOZrCtRhRXL5qMbkghzxePxp25hAaOsAxux3PH8RnIwgoI2GAJ2QmMj6n5tCf0ww2l4obr/KqPIoVo2mcXBe3NQyRH1cCQ9F0QRTBf2v3hbVd5FCQoa8NkjUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542049; c=relaxed/simple;
-	bh=Xq+0vUYsrT6HOH4JXBAguaoIJtc1QaSdaisDPx+OCuo=;
+	s=arc-20240116; t=1720542048; c=relaxed/simple;
+	bh=I+e/Ru/F7i8s3g90eMaGWGwVgP3LUnUVxX5/u8fkRVE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YXeeODjGqYGnrkciY3UhUkhkLltsXSqvjfITNeuGQK72sZAL05NIhFAlCUFHrzBem2x/WxtdmqrNdNp+IYhhZx5xh2+v/AAxX2LuXQjIZRQTsh29HsN+1eDzwRsWaIqwIEKCSKiDFkyDjEJSPEvfKNMCOVHw6lENBC+z/WqMiNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qr/LVt3w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Y4JrNov3aQdxGt72r7i7f1dFbeI0cFvJpt1s49INyL3oUrPbIXFHGdNYNwUrzGz8hH91snN2StjMLJUMicMWEZNVly/L2z94Q6DEW+DK3lSyAkW+t4VBqMKr6QnRpj6PeRHmxe/Q5Qt0X1OwT8b0XJtlICdsC6hqNNBg/ASm47U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fWjla2uf; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qr/LVt3w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9937C4AF0E;
-	Tue,  9 Jul 2024 16:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542049;
-	bh=Xq+0vUYsrT6HOH4JXBAguaoIJtc1QaSdaisDPx+OCuo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qr/LVt3wX/oG1qyzBVS/QcZ5FlChjPVO86t9CV08vlKEIrMZ4qVhrlhCBtIBWfscT
-	 yMNqByk1SM4PKvnP90cYm11XagoWBkT3MZY65k3rlp6zcvwOApHLm4sSP7g8ZxSug/
-	 cc0TnSwVRc5DIN8KM8M6X8dzWVmbHLVFHxCvv0j0D3URBTsMAMnLLqGYouOGSDIwHk
-	 ltgfPsRzTg9LMm1oPDfpC14/vu6LHL32qXb/b6Rw0aGHVdZou86g5RbV5xJTRXubDE
-	 fsU8FvtOPCxvpP/8wjYpMtfRPSEHlEQW0aXjeWHkJX5tUStYmHHfONcJm41z4nKz4b
-	 +nPhGej69fSmQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	david.rhodes@cirrus.com,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	patches@opensource.cirrus.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 18/40] ASoC: cs35l56: Disconnect ASP1 TX sources when ASP1 DAI is hooked up
-Date: Tue,  9 Jul 2024 12:18:58 -0400
-Message-ID: <20240709162007.30160-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162007.30160-1-sashal@kernel.org>
-References: <20240709162007.30160-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fWjla2uf"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52e98087e32so5922670e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 09:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720542045; x=1721146845; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N0znxVwwjji/DUtWTLARmbZTFvr2yZL9kSRXuxBRwMw=;
+        b=fWjla2ufZu3a5Gm6xIE89vs0qzrwL2iAGtlnsYfc2JGZRg739GK7YWdVpwFi6NWinz
+         5X/GRwkEalkzqw26LaFNTp2BWfnJcR6BRJSMG7g7H5USMIjTdY0hpoU0/Q1+0ifv237/
+         LZYHDCvB0J/iqZMHSXnTNDCARBrqzv1qa4Bk8nRSnoqI3/qzuKKaiHKTgCYj1wurXKbf
+         xnrP8AOZdkKTckwZmnde8yIDxw/DdLyvYZEoko994o+2hXgpxEQFQDxEehk0xLNaWMP6
+         zAP/7A62QwuBcpbMhvvAXKti3CpKBjBzKdk9kUDZXZTdHaQAh9wbH6AU9H+QaMaLp5ng
+         qj/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720542045; x=1721146845;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N0znxVwwjji/DUtWTLARmbZTFvr2yZL9kSRXuxBRwMw=;
+        b=HsSplxsCEkxyM02uF8tsOIWPqznyz/4ISDBknkAFedI3jID9tsDEIY8y/tBa+IOZrm
+         hHE0UYR+4b3OsCcf138a7n++QunjbjfZpp3jzKR6/MMLWR/w3Jppmbxb0otpd0ol9mqL
+         Xm9L5HDqYZfy8lH1DW0y++tZUbfQ7g3b012j5r4JzB8/AicdbMsYsb3Eib99iJLWb7ha
+         wQVT7QLIU2odNoLxXbwutjhm3NK+MVMUdwMaTFUxTmIdBtqkFCq8oMvLXW4T1AyqHOw4
+         5SfxYy13p+wDRIDARUu1JIiDZLrlMViduKrJz+lHeCoe6a72EkU/Mvwc9OePJ0SfY0xG
+         nlHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzVLY6MN/QBqAjwAtRKCsru/uvl/neowWKaJXf0Paxx2bunsFSo5K7GC95o/x0IF+4yoKbooaXuWLv1GNT0x31AhJCHo9SkVnez+qx
+X-Gm-Message-State: AOJu0YxscI5BSmKN+gwMVcVO5fMepPW8wEJTe7n8q9lUjLPbn4dM5FQk
+	57tqJdmzX+6sk+F2x6gxcw90+lSHH1dSlbstdgpqe6P4vpAlCZ6vSgEiplRkFSU=
+X-Google-Smtp-Source: AGHT+IGEHZyHATXkbM3yaENJpeHbND/G7r/St/XcvgZYZHmV6fJy0I7tDkNlNpGUDeCi6fZCEeDukA==
+X-Received: by 2002:a05:6512:78c:b0:52c:c5c4:43d4 with SMTP id 2adb3069b0e04-52eb99caf68mr1644174e87.53.1720542044950;
+        Tue, 09 Jul 2024 09:20:44 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e07fsm2966955f8f.17.2024.07.09.09.20.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 09:20:44 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: devicetree@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH 2/4] dt-bindings: pinctrl: qcom,ipq8064-pinctrl: convert to dtschema
+Date: Tue,  9 Jul 2024 17:17:54 +0100
+Message-ID: <20240709162009.5166-3-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240709162009.5166-1-rayyan.ansari@linaro.org>
+References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.8
 Content-Transfer-Encoding: 8bit
 
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
+Convert the Qualcomm IPQ8064 TLMM block bindings from text to yaml dt
+schema format.
 
-[ Upstream commit 8af49868e51ed1ba117b74728af12abe1eda82e5 ]
-
-If the ASP1 DAI is hooked up by the machine driver the ASP TX mixer
-sources should be initialized to disconnected. There aren't currently
-any available products using the ASP so this doesn't affect any
-existing systems.
-
-The cs35l56 does not have any fixed default for the mixer source
-registers. When the cs35l56 boots, its firmware patches these registers
-to setup a system-specific routing; this is so that Windows can use
-generic SDCA drivers instead of needing knowledge of chip-specific
-registers. The setup varies between end-products, which each have
-customized firmware, and so the default register state varies between
-end-products. It can also change if the firmware on an end-product is
-upgraded - for example if a change was needed to the routing for Windows
-use-cases. It must be emphasized that the settings applied by the
-firmware are not internal magic tuning; they are statically implementing
-use-case setup that on Linux would be done via ALSA controls.
-
-The driver is currently syncing the mixer controls with whatever
-initial state the firmware wrote to the registers, so that they report
-the actual audio routing. But if the ASP DAI is hooked up this can create
-a powered-up DAPM graph without anything intentionally setting up a path.
-This can lead to parts of the audio system powering up unexpectedly.
-
-For example when cs35l56 is connected to cs42l43 using a codec-codec link,
-this can create a complete DAPM graph which then powers-up cs42l43. But
-the cs42l43 can only be clocked from its SoundWire bus so this causes a
-bunch of errors in the kernel log where cs42l43 is unexpectedly powered-up
-without a clock.
-
-If the host is taking ownership of the ASP (either directly or as a
-codec-to-codec link) there is no need to keep the mixer settings that the
-firmware wrote. The driver has ALSA controls for setting these using
-standard Linux mechanisms. So if the machine driver hooks up the ASP the
-ASP mixers are initialized to "None" (no input). This prevents unintended
-DAPM-graph power-ups, and means the initial state of the mixers is
-always going to be None.
-
-Since the initial state of the mixers can vary from system to system and
-potentially between firmware upgrades, no use-case manager can currently
-assume that cs35l56 has a known initial state. The firmware could just as
-easily default them to "None" as to any input source. So defaulting them
-to "None" in the driver is not increasing the entropy of the system.
-
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20240613132527.46537-1-rf@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
 ---
- sound/soc/codecs/cs35l56-shared.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt | 101 ----------------
+ .../pinctrl/qcom,ipq8064-pinctrl.yaml         | 108 ++++++++++++++++++
+ 2 files changed, 108 insertions(+), 101 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
 
-diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
-index fd02b621da52c..d29878af2a80d 100644
---- a/sound/soc/codecs/cs35l56-shared.c
-+++ b/sound/soc/codecs/cs35l56-shared.c
-@@ -214,6 +214,10 @@ static const struct reg_sequence cs35l56_asp1_defaults[] = {
- 	REG_SEQ0(CS35L56_ASP1_FRAME_CONTROL5,	0x00020100),
- 	REG_SEQ0(CS35L56_ASP1_DATA_CONTROL1,	0x00000018),
- 	REG_SEQ0(CS35L56_ASP1_DATA_CONTROL5,	0x00000018),
-+	REG_SEQ0(CS35L56_ASP1TX1_INPUT,		0x00000000),
-+	REG_SEQ0(CS35L56_ASP1TX2_INPUT,		0x00000000),
-+	REG_SEQ0(CS35L56_ASP1TX3_INPUT,		0x00000000),
-+	REG_SEQ0(CS35L56_ASP1TX4_INPUT,		0x00000000),
- };
- 
- /*
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+deleted file mode 100644
+index a7aaaa7db83b..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
++++ /dev/null
+@@ -1,101 +0,0 @@
+-Qualcomm IPQ8064 TLMM block
+-
+-Required properties:
+-- compatible: "qcom,ipq8064-pinctrl"
+-- reg: Should be the base address and length of the TLMM block.
+-- interrupts: Should be the parent IRQ of the TLMM block.
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells: Should be two.
+-- gpio-controller: Marks the device node as a GPIO controller.
+-- #gpio-cells : Should be two.
+-                The first cell is the gpio pin number and the
+-                second cell is used for optional parameters.
+-- gpio-ranges: see ../gpio/gpio.txt
+-
+-Optional properties:
+-
+-- gpio-reserved-ranges: see ../gpio/gpio.txt
+-
+-Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+-a general description of GPIO and interrupt bindings.
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices, including the meaning of the
+-phrase "pin configuration node".
+-
+-Qualcomm's pin configuration nodes act as a container for an arbitrary number of
+-subnodes. Each of these subnodes represents some desired configuration for a
+-pin, a group, or a list of pins or groups. This configuration can include the
+-mux function to select on those pin(s)/group(s), and various pin configuration
+-parameters, such as pull-up, drive strength, etc.
+-
+-The name of each subnode is not important; all subnodes should be enumerated
+-and processed purely based on their content.
+-
+-Each subnode only affects those parameters that are explicitly listed. In
+-other words, a subnode that lists a mux function but no pin configuration
+-parameters implies no information about any pin configuration parameters.
+-Similarly, a pin subnode that describes a pullup parameter implies no
+-information about e.g. the mux function.
+-
+-
+-The following generic properties as defined in pinctrl-bindings.txt are valid
+-to specify in a pin configuration subnode:
+-
+- pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-strength,
+- output-low, output-high.
+-
+-Non-empty subnodes must specify the 'pins' property.
+-
+-Valid values for qcom,pins are:
+-  gpio0-gpio68
+-   Supports mux, bias, and drive-strength
+-
+-  sdc3_clk, sdc3_cmd, sdc3_data
+-   Supports bias and drive-strength
+-
+-
+-Valid values for function are:
+-  mdio, mi2s, pdm, ssbi, spmi, audio_pcm, gpio, gsbi1, gsbi2, gsbi4, gsbi5,
+-  gsbi5_spi_cs1, gsbi5_spi_cs2, gsbi5_spi_cs3, gsbi6, gsbi7, nss_spi, sdc1,
+-  spdif, nand, tsif1, tsif2, usb_fs_n, usb_fs, usb2_hsic, rgmii2, sata,
+-  pcie1_rst, pcie1_prsnt, pcie1_pwren_n, pcie1_pwren, pcie1_pwrflt,
+-  pcie1_clk_req, pcie2_rst, pcie2_prsnt, pcie2_pwren_n, pcie2_pwren,
+-  pcie2_pwrflt, pcie2_clk_req, pcie3_rst, pcie3_prsnt, pcie3_pwren_n,
+-  pcie3_pwren, pcie3_pwrflt, pcie3_clk_req, ps_hold
+-
+-Example:
+-
+-	pinmux: pinctrl@800000 {
+-		compatible = "qcom,ipq8064-pinctrl";
+-		reg = <0x800000 0x4000>;
+-
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		gpio-ranges = <&pinmux 0 0 69>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		interrupts = <0 32 0x4>;
+-
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&gsbi5_uart_default>;
+-
+-		gsbi5_uart_default: gsbi5_uart_default {
+-			mux {
+-				pins = "gpio18", "gpio19";
+-				function = "gsbi5";
+-			};
+-
+-			tx {
+-				pins = "gpio18";
+-				drive-strength = <4>;
+-				bias-disable;
+-			};
+-
+-			rx {
+-				pins = "gpio19";
+-				drive-strength = <2>;
+-				bias-pull-up;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
+new file mode 100644
+index 000000000000..58f11e1bdd4f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,ipq8064-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. IPQ8064 TLMM block
++
++maintainers:
++  - Bjorn Andersson <bjorn.andersson@linaro.org>
++
++description: |
++  Top Level Mode Multiplexer pin controller in Qualcomm IPQ8064 SoC.
++
++allOf:
++  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
++
++properties:
++  compatible:
++    const: qcom,ipq8064-pinctrl
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  gpio-reserved-ranges: true
++
++patternProperties:
++  "-state$":
++    oneOf:
++      - $ref: "#/$defs/qcom-ipq8064-tlmm-state"
++      - patternProperties:
++          "-pins$":
++            $ref: "#/$defs/qcom-ipq8064-tlmm-state"
++        additionalProperties: false
++
++$defs:
++  qcom-ipq8064-tlmm-state:
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
++    unevaluatedProperties: false
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        items:
++          oneOf:
++            - pattern: "^gpio([0-9]|[1-5][0-9]|6[0-8])$"
++            - enum: [ sdc3_clk, sdc3_cmd, sdc3_data ]
++        minItems: 1
++        maxItems: 36
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++        enum: [ mdio, mi2s, pdm, ssbi, spmi, audio_pcm, gpio, gsbi1, gsbi2, gsbi4, gsbi5,
++                gsbi5_spi_cs1, gsbi5_spi_cs2, gsbi5_spi_cs3, gsbi6, gsbi7, nss_spi, sdc1,
++                spdif, nand, tsif1, tsif2, usb_fs_n, usb_fs, usb2_hsic, rgmii2, sata,
++                pcie1_rst, pcie1_prsnt, pcie1_pwren_n, pcie1_pwren, pcie1_pwrflt,
++                pcie1_clk_req, pcie2_rst, pcie2_prsnt, pcie2_pwren_n, pcie2_pwren,
++                pcie2_pwrflt, pcie2_clk_req, pcie3_rst, pcie3_prsnt, pcie3_pwren_n,
++                pcie3_pwren, pcie3_pwrflt, pcie3_clk_req, ps_hold ]
++
++    required:
++      - pins
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    tlmm: pinctrl@800000 {
++        compatible = "qcom,ipq8064-pinctrl";
++        reg = <0x00800000 0x4000>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&tlmm 0 0 69>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++
++        uart-state {
++            rx-pins {
++                pins = "gpio19";
++                function = "gsbi5";
++                bias-pull-up;
++            };
++
++            tx-pins {
++                pins = "gpio18";
++                function = "gsbi5";
++                bias-disable;
++            };
++        };
++    };
 -- 
-2.43.0
+2.45.2
 
