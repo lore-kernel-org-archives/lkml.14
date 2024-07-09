@@ -1,91 +1,141 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC84FC148
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 07:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9946CC148;
+	Tue,  9 Jul 2024 07:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720508499; cv=none; b=C/tenN//NVa9uIS0Hz8yVyc4MBJpM7hgHpP8rMRcwuzLaLGppusg8ysqwnPwENe2PG6jRyYDOV+r5RhV8ETokBA75ogoGc3vLlSxx0Pio6aVQ65wEIqIN76Cgwdw6LLDVoN48dhN0/JIrLMfkMAqfws0fVJKGRCh3I2ITdCED6o=
+	t=1720508505; cv=none; b=QlEpyGBoPWMol0Vn9pNhng5QwCEOSReTbqdX9cPaXp2Bm7xdkIuFdzJylc0ZNdsv5NY8t2iNq0/z+O82lflVuNXpdawcNo+6K10thavcVtTqiSWvTKxO7A7E1o8Mi1RbX/a2agjGNeJtEMFnjTE0jUfLQ/x15CaVDco8hftS39I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720508499; c=relaxed/simple;
-	bh=aYzGimuCT0+JpdanNSa9nCbhOPV5oJ7+e1r30gwBU/8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SboevXxj/JvqNzxiHLaofVMAymIFsNKYywVf+p2aG46m2hqNpxCgMuFuUtmGhVMsHLXMfUxbjSy6kvwhmWxlMz1/GBUEQaAot2FufJhT8B4aAhgDEn6KWo/r0WfDpLAXyF4VcPvGcip0J1w43A0qQQLiCoUffH3Ql5lNyBvbPYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hxuev6H8; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yutingtseng.bounces.google.com
+	s=arc-20240116; t=1720508505; c=relaxed/simple;
+	bh=tkxHSt+B95UwmZobLotNEd2km4xRfzDRpmtKe5OC7N4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FTbalzGQESx7F1UrUQ9vmtqhTzT25ACioYgtGF1cYfzz77Vb7+pRi/qThnPJvs5fB4UZaxNhybx+vB2iBbniBPsD7n2F6fZ5PM5trpBCmoXg6bciz6cOYBjnbEeShJwJo3+5l9O9oYrAl0u8ugEMSAMp4SO+p8MAmCM+Sv/1ZyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xg0BRq4p; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hxuev6H8"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70af58f79d1so3321332b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 00:01:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720508497; x=1721113297; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yO2fWwWyK7GSaYxijZp1nvn1T39EutIfIJQqsiub/M0=;
-        b=hxuev6H8iVSpxvTM39dg12rMIjodFmM/sM+W9uTQTNAUTgjyWKoV3GMsMZ0QNY/JIC
-         kKnuAjpBf/ceyD2dDqjd+46uHk/PRrwg421qxr1Xe4x/jicaUiEpqpjIkhd6GG0Svizi
-         /IGj+rwmZUtsOJHHAG6KlfTghHo1pzfCsOxNJWNtFBVsfigeeprmRR33f21v3sPavr3+
-         r5ImT6e8jQiMNgQxdPeHeqKO7Y/eoLTiUsFyvI6/mhlqNYG8kuIDhw69n6JHm9ciKY73
-         aztBNy/kgaB08iivADwYQxbSS4l83235RIxQu366Z9hsacNuGwbijnRT8VwtiJzt43uE
-         uxVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720508497; x=1721113297;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yO2fWwWyK7GSaYxijZp1nvn1T39EutIfIJQqsiub/M0=;
-        b=rCp/STYqacRT0qh7phgXHD5ThyuWg1384wc8t4M/HrrcEF84GIL1KRQO/i3WkiugS5
-         yyhiP4hrJUn+TevdicYserMs25KdRcK/dAmHbP6FMmscH2va13Q+SE6Li4Za5LLB1ZGg
-         xKP9rqUvA49w8pgHuQaL7Od0J7Z50MEGKvFKba2eAlefAmLu1NDgu0L04LZIFieQjZ8p
-         rfD9Yx8er2YhrWaCcChXsdIRhOQbvN+fz9mtHhrLbxwXGjCMqdxdPBTOQuKA3enqQxj5
-         LTrZnzx6MoYzetxFuHcY/pKTn95X0CHpc8cSWLD6g6jW7AZNjhSbNajPMcdoc4NJa7a8
-         8OEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwCJdyXeuDxKQTI84e6cyq4KuTZNjIegWypexyLWdq9zf/ZhAxQh5eFcOKJChKqMA1HM/OE2f+U8pOiyRc+XGD4V2W8w245olULZm6
-X-Gm-Message-State: AOJu0Yz5FOfx/Yu+yWusaJjbQMQPekkXfN5NmpTyx/wWygaF/tnCYPh2
-	+DO0r2m4HRlRMDri+UJEAKNKmidjt2tXTFC3tmbJb+omPl5DFM4wxCHW30JTTjOk8Opyu/VskKc
-	IeQEEx9osvAsImcHtxN44jA==
-X-Google-Smtp-Source: AGHT+IFlZ9YoYQMAk69OYELMVcilvRL5ZzGzsXw6tNxDvr38eDDrWoge7rnJTyFJ2r5Wcx3MYn0PLKAmWwLN+YWjrw==
-X-Received: from yuting.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:317f])
- (user=yutingtseng job=sendgmr) by 2002:a05:6a00:b45:b0:70b:1086:cf8c with
- SMTP id d2e1a72fcca58-70b436df1a3mr168808b3a.6.1720508497214; Tue, 09 Jul
- 2024 00:01:37 -0700 (PDT)
-Date: Tue,  9 Jul 2024 00:00:45 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xg0BRq4p"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468LeTLr003367;
+	Tue, 9 Jul 2024 07:01:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=xr+9HQV02Fcj9GHm1nozqD3P
+	M0XQKi6JALqEWo018nU=; b=Xg0BRq4ptQzGsR92sTgnq6qpKyHDN1ZMT1bqi85i
+	4cuXKoaCrcnXFxntJ1CFZD6TgMuIBHOg4x1R1uxfny7dS3QhC9PVSqrph299yKaJ
+	gOacg4cthVLy28yJrMjA/Ps6x2L4V00sqme0FT9A7whEdOj7zVArfsywCLxiA5bz
+	d3cdBOhY8lvYL/qfylPsxdk9ChtquY0LrZCiv3kjZ4lyNep8JbC/106MFaWoXrjU
+	SqT4yn9iSHaWzBuEIk3NEYZRhOjzGDEUJ4c8wKMl4eJ6px3feMC725WIM3yojk9I
+	kfDqRJvKto/RLgXg/joOrykyL4HmGTeXoENvEWiT44HNqQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wjn5tj5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 07:01:21 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46971KaQ025688
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 07:01:20 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 9 Jul 2024 00:01:11 -0700
+Date: Tue, 9 Jul 2024 12:31:08 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <konrad.dybcio@linaro.org>
+CC: <vireshk@kernel.org>, <nm@ti.com>, <sboyd@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
+        <ilia.lin@kernel.org>, <rafael@kernel.org>, <ulf.hansson@linaro.org>,
+        <quic_sibis@quicinc.com>, <quic_rjendra@quicinc.com>,
+        <quic_rohiagar@quicinc.com>, <abel.vesa@linaro.org>,
+        <otto.pflueger@abscue.de>, <danila@jiaxyga.com>,
+        <quic_ipkumar@quicinc.com>, <luca@z3ntu.xyz>,
+        <stephan.gerhold@kernkonzept.com>, <nks@flawful.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v4 09/10] dt-bindings: opp: v2-qcom-level: Update
+ minItems for oloop-vadj & cloop-vadj
+Message-ID: <ZozgNAYKAvhPr0qk@hu-varada-blr.qualcomm.com>
+References: <20240703091651.2820236-1-quic_varada@quicinc.com>
+ <20240703091651.2820236-10-quic_varada@quicinc.com>
+ <20240708155529.GA3244015-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240709070047.4055369-2-yutingtseng@google.com>
-Subject: [PATCH v9 0/2] binder: frozen notification
-From: Yu-Ting Tseng <yutingtseng@google.com>
-To: cmllamas@google.com, tkjos@google.com, gregkh@linuxfoundation.org
-Cc: arve@android.com, maco@android.com, joel@joelfernandes.org, 
-	brauner@kernel.org, surenb@google.com, aliceryhl@google.com, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	Yu-Ting Tseng <yutingtseng@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240708155529.GA3244015-robh@kernel.org>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ykjOmWRJUdJvIsIxFljEaW9CMVfJaX3Q
+X-Proofpoint-GUID: ykjOmWRJUdJvIsIxFljEaW9CMVfJaX3Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407090046
 
-This patchset adds a binder feature that allows userspace to subscribe
-to frozen state changes. See patch 1/2 for more details on why this is
-needed. Patch 1/2 contains the core implementation. Patch 2/2 contains
-a binderfs change so userspace can query whether this feature is
-supported.
+On Mon, Jul 08, 2024 at 09:55:29AM -0600, Rob Herring wrote:
+> On Wed, Jul 03, 2024 at 02:46:50PM +0530, Varadarajan Narayanan wrote:
+> > Since IPQ9574 has only one CPR thread it will specify
+> > only one voltage adjustment value. Hence update min items
+> > accordingly for oloop-vadj and cloop-vadj. Without
+> > constraining min items, dt_binding_check gives errors
+> >
+> > 	opp-table-cpr4:opp-0:qcom,opp-cloop-vadj:0: [0] is too short
+> > 	opp-table-cpr4:opp-0:qcom,opp-oloop-vadj:0: [0] is too short
+> >
+> > 	Failed validating 'minItems' in schema . . .
+> > 		{'maxItems': 2, 'minItems': 2}
+> >
+> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > ---
+> > v4: Fix dt_bindings_check error
+> > ---
+> >  Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+>
+> This is going to need to be rolled into your dependency because it needs
+> the same fix.
 
+Konrad,
 
-Yu-Ting Tseng (2):
-  binder: frozen notification
-  binder: frozen notification binder_features flag
+Can you please squash this into https://lore.kernel.org/lkml/20230217-topic-cpr3h-v14-2-9fd23241493d@linaro.org/
 
- drivers/android/binder.c                      | 284 +++++++++++++++++-
- drivers/android/binder_internal.h             |  21 +-
- drivers/android/binderfs.c                    |   8 +
- include/uapi/linux/android/binder.h           |  36 +++
- .../filesystems/binderfs/binderfs_test.c      |   1 +
- 5 files changed, 346 insertions(+), 4 deletions(-)
+Thanks
+Varada
 
-
-base-commit: 14d7c92f8df9c0964ae6f8b813c1b3ac38120825
--- 
-2.45.2.803.g4e1b14247a-goog
-
+> > diff --git a/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml b/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
+> > index b203ea01b17a..1c1a9e12d57a 100644
+> > --- a/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
+> > +++ b/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
+> > @@ -39,6 +39,7 @@ patternProperties:
+> >            An array of per-thread values representing the closed-loop
+> >            voltage adjustment value associated with this OPP node.
+> >          $ref: /schemas/types.yaml#/definitions/int32-array
+> > +        minItems: 1
+> >          maxItems: 2
+> >
+> >        qcom,opp-oloop-vadj:
+> > @@ -46,6 +47,7 @@ patternProperties:
+> >            An array of per-thread values representing the open-loop
+> >            voltage adjustment value associated with this OPP node.
+> >          $ref: /schemas/types.yaml#/definitions/int32-array
+> > +        minItems: 1
+> >          maxItems: 2
+> >
+> >      required:
+> > --
+> > 2.34.1
+> >
