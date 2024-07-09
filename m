@@ -1,52 +1,76 @@
-Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A21412CD96;
-	Tue,  9 Jul 2024 08:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97CE152790;
+	Tue,  9 Jul 2024 08:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513347; cv=none; b=LTFT4sW1bl184HcKFhPjjfd1l3jO1kAXsQmN8cEpWYZZsZfA3w+/55g/GHDz945Ir1qz+Tefg2cJpeAS2xYbeMRXUI4PcPaFau3IugAf3Bg/XkBP6PrMVX9KnE/qoMcCliXO3plE5CfTJDUnkVaWuHpb6A0Z4I/C2frBQy9M9BI=
+	t=1720513350; cv=none; b=aEzbZep6AI3og2ZaFt/8pomxu0IJiTCKFgeFiQBZ+77VNtR2JlZ08QCRxYxih/0RA/DBob4R5m8KhmJ/92Is3A0Q3vT+fqHppoPTjEp1IBE8WMFkwR7YRjgv0SnBibYc26bSH2OGUvAVH7XTbKVIZLAwdmk0EUTNAYtbydgkU5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513347; c=relaxed/simple;
-	bh=/gYVJD15xFaui6T9JocnKA1r2ooEEcIgwDZnejMpIlc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DOMl9yIgwtYFLRjLNmsJ6FIjMQNkX8TFS18EhE4X/tP3wFonyUJe0KFS931dLSZecXbTqiTJ9kDhSPM+cyx89G8NUEbkMv8m+mzlBHLEJP9IxS6e4o2HaWSV0Sh5HsATXJHaOPP1r//JILRys2bq48ZvefZhpHQjni7atBS4Ams=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=aU7JabxT; arc=none smtp.client-ip=134.0.28.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1720513350; c=relaxed/simple;
+	bh=Wzu/DaEWdpVdgeT+yN7K17zx9JZwRH+Ao0L+fCXoQrQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hlcGmsnBFtoYA1WtHXAs2TA68LOoHivAfbvAQQAc0TBs8oucIO16kT/kYY8oKh8nXCcJcQxeMyZgkweTUin4U9Qcvr/9ZysBQQT7Vj3zTXiav0pgt/fr7HiGpDKsIJadobsJDRxerZOaw2pLftIY5OJwoV7UaZ6OCrA1s3TY4H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gi44dWiQ; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="aU7JabxT"
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout2.routing.net (Postfix) with ESMTP id 0C6E55FD4B;
-	Tue,  9 Jul 2024 08:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1720512985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MDMf7DvFYCdwJ6yYWc6ATDV2rtt8qlGbjIkB3P1prUA=;
-	b=aU7JabxTsf1aK/77OmIldWo1GPgTLA5vNZ2v32VbWnnegBjJxybkGe9FceGO9HlAj28g4w
-	Eb7b0Y8qwAYrzEfsX7GRXJyIQ+7C6CBG62hDSFd2fWvGkcl6v+8eJM2OHAoi8dOT3cgKov
-	mTn9L82xGi7m+N7npAFIKYaHOnhQNl8=
-Received: from frank-u24.. (fttx-pool-217.61.149.221.bambit.de [217.61.149.221])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 082581006CA;
-	Tue,  9 Jul 2024 08:16:23 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gi44dWiQ"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5c1d2f7ab69so2512831eaf.3;
+        Tue, 09 Jul 2024 01:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720513348; x=1721118148; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7XDcGnxl+L+Up+OM7xPAJaHLrc0hSR9f/AUvnRoMTks=;
+        b=Gi44dWiQl41S1NwNnIilOSN4iTWZr2LDIajYoJSOGwoavBp02VTrIk2AFF7Z4cFuQq
+         oxhjitll4yAkswF8qPHdoGZz5wktDu+F8jVUR5blzUIHOEYW3OvK5MSRnI0dAZrXfohj
+         6v0WMu+TSnsG8XFXdImbfuT1zhnRNQHePFIexnTnP6QfNqUJ0/EZy5GrDCzGdm45fDmw
+         xBIiO7BeY+Ow5Ucmndap7VxwKmaX8x4bR3BtvfV9C6FofYL0ZQQLhGwJJy3iEIjqjNVn
+         MJMdbCYS4+2jqlwy5Jzw8bmjEMmOD6qEmpppqt2+KP7rAT5baeVjaf8sfbtEVrjIeTMC
+         2mYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720513348; x=1721118148;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7XDcGnxl+L+Up+OM7xPAJaHLrc0hSR9f/AUvnRoMTks=;
+        b=mUPnT4Qp5ZtgyAFMYwKisHJptCveBoBkc0Whjq1mMmvIH7Xkvr9sxrAUvsTuXhapfp
+         IKnaPChYntQ9dDJKC0zoyf89BA3MffJhSgA9BSn+6811FkW8GYK6dTT7/UjYy/z/jp89
+         4Gt3Zcc30oTPd7teA7s2PxSjDzFbHjSw3LORfiKGRD1ATcqwCDjF73XQ45qlKPlZwlyw
+         B96XzId3s6pQzw/Lj6Z4Fo94KFpgdUuhk41n4khrC+Yp5k9ij1/MsgVVHOLYbh5cZRpP
+         AO1eFhftTHKRDiqXbBhm3f6u/B344aiKzPWApO+HtJTMhOeIaqJH8qWCpL7ZZ14BsC4x
+         V1Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWNRnGd+qezcxcrgLz4iFCgUyx5legTlHy7uWLYEgVtPAGqsQt7KWCYYjDH6aKt2SgUwfTBSpnJ0Tq77v3drRSTMMGeyef6psDD+g7i
+X-Gm-Message-State: AOJu0YzGKNYBQTQO3b03GdhqdnO1iWJfKic/10izOi5ID5DHKr5OxhcO
+	B7gC18waBHEhg2Yz4jTyq4OaTh8LLhMaEvuYisCT4hQzgzRmy5si
+X-Google-Smtp-Source: AGHT+IFPsJC/yKbPpj0KK2U8xPVQYC1rgQUbrnuG7dcUGRNNy6Kjbw0VGZ2c7DelhGUEXHPww0fMHA==
+X-Received: by 2002:a05:6358:c3a2:b0:1aa:a177:359b with SMTP id e5c5f4694b2df-1aade0810ddmr150867855d.15.1720513347606;
+        Tue, 09 Jul 2024 01:22:27 -0700 (PDT)
+Received: from localhost.localdomain ([129.146.253.192])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2c99a92a430sm9588929a91.4.2024.07.09.01.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 01:22:27 -0700 (PDT)
+From: Furong Xu <0x1207@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Joao Pinto <jpinto@synopsys.com>
+Cc: netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v1] arm64: dts: mediatek: mt7988: add labels for different nodes
-Date: Tue,  9 Jul 2024 10:16:13 +0200
-Message-ID: <20240709081614.19993-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
+	linux-kernel@vger.kernel.org,
+	xfr@outlook.com,
+	rock.xu@nio.com,
+	Furong Xu <0x1207@gmail.com>
+Subject: [PATCH net-next v1 0/7] net: stmmac: refactor FPE for gmac4 and xgmac
+Date: Tue,  9 Jul 2024 16:21:18 +0800
+Message-Id: <cover.1720512888.git.0x1207@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,164 +78,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 86a6b8d6-7d26-42ab-aaf3-d045996a5733
 
-From: Frank Wunderlich <frank-w@public-files.de>
+Refactor FPE implementation by moving common code for DWMAC4 and
+DWXGMAC into a separate FPE module.
 
-Current devicetree-nodes missing a label which allows to add aproperties
-or phandles to them, so add them.
+FPE implementation for DWMAC4 and DWXGMAC differs only for:
+1) Offset address of MAC_FPE_CTRL_STS
+2) FPRQ(Frame Preemption Residue Queue) field in MAC_RxQ_Ctrl1
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Fixes: 660c230bf302 ("arm64: dts: mediatek: mt7988: add I2C controllers")
-Fixes: 09ff2216a035 ("arm64: dts: mediatek: mt7988: add PWM controller")
-Fixes: 09346afaba0a ("arm64: dts: mediatek: mt7988: add XHCI controllers")
-Fixes: b616b403cbff ("arm64: dts: mediatek: mt7988: add clock controllers")
-Fixes: 6c1d134a103f ("arm64: dts: mediatek: Add initial MT7988A and BPI-R4")
----
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 32 +++++++++++------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+Tested on DWMAC CORE 5.20a and DWXGMAC CORE 3.20a
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-index aa728331e876..9ced005b1595 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-@@ -14,28 +14,28 @@ cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		cpu@0 {
-+		cpu0: cpu@0 {
- 			compatible = "arm,cortex-a73";
- 			reg = <0x0>;
- 			device_type = "cpu";
- 			enable-method = "psci";
- 		};
- 
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a73";
- 			reg = <0x1>;
- 			device_type = "cpu";
- 			enable-method = "psci";
- 		};
- 
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a73";
- 			reg = <0x2>;
- 			device_type = "cpu";
- 			enable-method = "psci";
- 		};
- 
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a73";
- 			reg = <0x3>;
- 			device_type = "cpu";
-@@ -43,7 +43,7 @@ cpu@3 {
- 		};
- 	};
- 
--	oscillator-40m {
-+	system_clk: oscillator-40m {
- 		compatible = "fixed-clock";
- 		clock-frequency = <40000000>;
- 		#clock-cells = <0>;
-@@ -86,7 +86,7 @@ infracfg: clock-controller@10001000 {
- 			#clock-cells = <1>;
- 		};
- 
--		clock-controller@1001b000 {
-+		topckgen: clock-controller@1001b000 {
- 			compatible = "mediatek,mt7988-topckgen", "syscon";
- 			reg = <0 0x1001b000 0 0x1000>;
- 			#clock-cells = <1>;
-@@ -99,13 +99,13 @@ watchdog: watchdog@1001c000 {
- 			#reset-cells = <1>;
- 		};
- 
--		clock-controller@1001e000 {
-+		apmixedsys: clock-controller@1001e000 {
- 			compatible = "mediatek,mt7988-apmixedsys";
- 			reg = <0 0x1001e000 0 0x1000>;
- 			#clock-cells = <1>;
- 		};
- 
--		pwm@10048000 {
-+		pwm: pwm@10048000 {
- 			compatible = "mediatek,mt7988-pwm";
- 			reg = <0 0x10048000 0 0x1000>;
- 			clocks = <&infracfg CLK_INFRA_66M_PWM_BCK>,
-@@ -124,7 +124,7 @@ pwm@10048000 {
- 			status = "disabled";
- 		};
- 
--		i2c@11003000 {
-+		i2c0: i2c@11003000 {
- 			compatible = "mediatek,mt7981-i2c";
- 			reg = <0 0x11003000 0 0x1000>,
- 			      <0 0x10217080 0 0x80>;
-@@ -137,7 +137,7 @@ i2c@11003000 {
- 			status = "disabled";
- 		};
- 
--		i2c@11004000 {
-+		i2c1: i2c@11004000 {
- 			compatible = "mediatek,mt7981-i2c";
- 			reg = <0 0x11004000 0 0x1000>,
- 			      <0 0x10217100 0 0x80>;
-@@ -150,7 +150,7 @@ i2c@11004000 {
- 			status = "disabled";
- 		};
- 
--		i2c@11005000 {
-+		i2c2: i2c@11005000 {
- 			compatible = "mediatek,mt7981-i2c";
- 			reg = <0 0x11005000 0 0x1000>,
- 			      <0 0x10217180 0 0x80>;
-@@ -163,7 +163,7 @@ i2c@11005000 {
- 			status = "disabled";
- 		};
- 
--		usb@11190000 {
-+		ssusb0: usb@11190000 {
- 			compatible = "mediatek,mt7988-xhci", "mediatek,mtk-xhci";
- 			reg = <0 0x11190000 0 0x2e00>,
- 			      <0 0x11193e00 0 0x0100>;
-@@ -177,7 +177,7 @@ usb@11190000 {
- 			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
- 		};
- 
--		usb@11200000 {
-+		ssusb1: usb@11200000 {
- 			compatible = "mediatek,mt7988-xhci", "mediatek,mtk-xhci";
- 			reg = <0 0x11200000 0 0x2e00>,
- 			      <0 0x11203e00 0 0x0100>;
-@@ -191,21 +191,21 @@ usb@11200000 {
- 			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
- 		};
- 
--		clock-controller@11f40000 {
-+		xfi_pll: clock-controller@11f40000 {
- 			compatible = "mediatek,mt7988-xfi-pll";
- 			reg = <0 0x11f40000 0 0x1000>;
- 			resets = <&watchdog 16>;
- 			#clock-cells = <1>;
- 		};
- 
--		clock-controller@15000000 {
-+		ethsys: clock-controller@15000000 {
- 			compatible = "mediatek,mt7988-ethsys", "syscon";
- 			reg = <0 0x15000000 0 0x1000>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 		};
- 
--		clock-controller@15031000 {
-+		ethwarp: clock-controller@15031000 {
- 			compatible = "mediatek,mt7988-ethwarp";
- 			reg = <0 0x15031000 0 0x1000>;
- 			#clock-cells = <1>;
+Furong Xu (7):
+  net: stmmac: xgmac: drop incomplete FPE implementation
+  net: stmmac: gmac4: drop FPE implementation for refactoring
+  net: stmmac: refactor Frame Preemption(FPE) implementation
+  net: stmmac: gmac4: complete FPE support
+  net: stmmac: xgmac: rename XGMAC_RQ to XGMAC_FPRQ
+  net: stmmac: xgmac: complete FPE support
+  net: stmmac: xgmac: enable Frame Preemption Interrupt by default
+
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac4_core.c |   6 -
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.c  |  66 ---------
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.h  |  16 ---
+ .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |   9 +-
+ .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |  27 ----
+ drivers/net/ethernet/stmicro/stmmac/hwif.c    |   7 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |  30 ++--
+ .../net/ethernet/stmicro/stmmac/stmmac_fpe.c  | 131 ++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_fpe.h  |  16 +++
+ 11 files changed, 177 insertions(+), 134 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.c
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_fpe.h
+
 -- 
-2.43.0
+2.34.1
 
