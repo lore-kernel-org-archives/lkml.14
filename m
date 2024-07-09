@@ -1,135 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D127D1A00F1;
-	Tue,  9 Jul 2024 16:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE671A01A5
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542032; cv=none; b=oYIuy4Zo2lw3HHRf7otc3pISNdx4z7sS928uuQ20AHDijU2d5G83dfMIjOgZMxWQqsekItygWh0j8bYTGW151+w/0HKW0Tefp0Jh+elEOaPGYmYA3VW6aCICVsDgd7xxoGgdxe0LydyTI403ODLx3QKCxMC+2XAIr3kY21P3Gzw=
+	t=1720542035; cv=none; b=TdFEl8kUeYk53orS4T/yvAMu12Eadd8o2fgm3uAefP8DKlBJo86A/gJ69LFAgPW8lhawn5K4Cwl6aYZ3ALiCyx7FyQEXKXu9lnoZvdSV8N1HHT00oNO3Qqd7wguAttPPpEyQJCmqluzfUPJ1VeDYb4vmhFlWMTMPLFRdxvPatD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542032; c=relaxed/simple;
-	bh=V/ZRa9J/p3rqcdBHU99j6hDHjwssxO4dUcWX/EGiXLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mPJtUgJuW82QhMUiiE0QnlxggC4YT3+5INsXBZy4I+/PkRrwL9TXGqNXuDrsy0bAJ2tKw0rjYBRzjLAzKtxE+3Ns6g9oVRdscX041g5ArUWae65TMPMU8/+fGddKo1f7QG8clWvwJmHqD9VC0loNaPOSjzeeJ+x6QqWgjrBmp4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgJx7xQ+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720542035; c=relaxed/simple;
+	bh=5st73kOX6niI7dZR/91fmwwqnxTqrZu6i3fehCAZ5zc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OUL2fhrZg9lWzNZFoP/ii3tN9UDmV5GEFFskzcA4LwM5MwfidLqN3n9gTEkYoH5AlKMMYpr/9Lr80c4k6iUOWgpC+2dDss+j27heSk3U4bOWQ6PMhBdkOKzehtkfassq1JqariMmWoWYloL4LKn/wsVTyeKNBhTlv5mLbYcJCV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PRIbztU0; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgJx7xQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957E7C32782;
-	Tue,  9 Jul 2024 16:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542032;
-	bh=V/ZRa9J/p3rqcdBHU99j6hDHjwssxO4dUcWX/EGiXLY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rgJx7xQ+Gobhu9hTby8xjSv4mJa2DndVSbgSMvl2SJZsH1R5ja+O+WGOlFQ6cEU7k
-	 VLCgeOEJOGP+tnfh4kMnJZ/OwL6tUa7qkVoVreXQZDD1aH5hNqJcVFJN82QnY5Z0n/
-	 WIb0msyaa83yaCm7MLgn2SUuBGUoteh60JCdY7uEHOTRnvs+5P8J5eBZTay1k9lw1j
-	 QIzKPeDCzcY4bj/u5HHo3WBZWgsc4uFsJa6d12ET+n+TatdZYwWMS7XQkXsA/8n/QG
-	 7BApnhC1V6bN+NBtsl1DL+pwQyPqlN1MTAykNE3CcfHXLP3QQ3wjV6vEm2yuEgQOKp
-	 CFnVYUtW0LPhA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 10/40] ASoC: topology: Clean up route loading
-Date: Tue,  9 Jul 2024 12:18:50 -0400
-Message-ID: <20240709162007.30160-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162007.30160-1-sashal@kernel.org>
-References: <20240709162007.30160-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PRIbztU0"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-426526d30aaso29715875e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 09:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720542031; x=1721146831; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z9DRYaK086JGmwgg9/og5NAl7NqfChxitmX14BDZNew=;
+        b=PRIbztU0tbMxRl0zaoaTw4hCPAio8NOqfA4bAJSk+TyP85VQ8AO2syit4mQ+qQ5O/C
+         Ddq1NPYlvt83LODkPD5PpJB1+w1477Ql9nwQIV28Dj+DHvDi3yMA3BuJ6Tnj1rgXRVWx
+         gTNKSaF/seXjYPNrQrBcFqL8it8TPMoMEK/EPzBSfHmU3tS6SbBVHg1DB+Ez+EQioKXC
+         Sb13pzknsUGJMqGYH4p8Neo1PzNYU8QcxbKFZR0qYYKHvKxYgUYiB72PsuqezrbYyTnd
+         3DXThzKXRjo0sNWM7JLfN3sk+RiNjRfrQRXyloK8paif8fEI7lhNndHIG6GOp7/XO8+x
+         YKzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720542031; x=1721146831;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z9DRYaK086JGmwgg9/og5NAl7NqfChxitmX14BDZNew=;
+        b=fYfeb4BOAApgPhphZ6SZBHxZRwnVMQ6Fhh4umeWoNeF2hRiIKXGkeYdPKPkm5xzrQY
+         RDL7UHnFbpGxiXjDsFyyCFC9GO0Ak6sJx92MBHPtwkFdTTCKzbRw/NBRr41sVoKVA0SA
+         CrG1SwT6SbAeMWSAhw8mhm0YY3HaNuJ3c0NKr7B/1RRXFu5xOPHd5dIs8B8tIQJZneyu
+         3GLegEj+8/IYnPb/L3qiD/D81H5sQQk0wLRFR545uPi2tIXdi9Pmhb08Rj18D4Xgzu0p
+         BM8BzHIaK3FmaTGfsuUjhD7uOBLbQ8UiBI+nl7XVptZAhtt2DpvGjpz2WBnjhYf6RG0r
+         ju6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVUSwPiI+3n6CH2Dq6IVCIcHL71lJgRskdshvSEoG3rS50QCSHkzoAIJSaUtzpaJsys9XRitG9u8eMV1RbbFLr9iqzS+fnb1Y5aZf7E
+X-Gm-Message-State: AOJu0YxL0GTBDb8+V3ZWjFgvYEShM3PcHzLM9UUVqzx1ge/5lGUz9U1T
+	WjPefg4fFa9KZgF3FvJmGq2eRqEmRIheETX8meBz7yQyjkWJj0KX6U8oj1/6aqw=
+X-Google-Smtp-Source: AGHT+IH20yAq+roBl8gRs1fFr53+7Ufp7oIBFU8tJB9uf/asNe3YYKfGca9kCcuwlS3kQ8aidhWhUg==
+X-Received: by 2002:a5d:51d2:0:b0:367:8f29:f7ae with SMTP id ffacd0b85a97d-367ceacb46amr1892463f8f.49.1720542031527;
+        Tue, 09 Jul 2024 09:20:31 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e07fsm2966955f8f.17.2024.07.09.09.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 09:20:31 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: devicetree@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH 0/4] dt-bindings: pinctrl: convert remaining qcom bindings to yaml
+Date: Tue,  9 Jul 2024 17:17:52 +0100
+Message-ID: <20240709162009.5166-1-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.8
 Content-Transfer-Encoding: 8bit
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Hi,
+The following patches convert all remaining old text bindings for
+Qualcomm pinctrl to yaml, so device trees can be validated against the
+schema.
 
-[ Upstream commit e0e7bc2cbee93778c4ad7d9a792d425ffb5af6f7 ]
+Thanks,
+Rayyan
 
-Instead of using very long macro name, assign it to shorter variable
-and use it instead. While doing that, we can reduce multiple if checks
-using this define to one.
+Rayyan Ansari (4):
+  dt-bindings: pinctrl: qcom,apq8064-pinctrl: convert to dtschema
+  dt-bindings: pinctrl: qcom,ipq8064-pinctrl: convert to dtschema
+  dt-bindings: pinctrl: qcom,ipq4019-pinctrl: convert to dtschema
+  dt-bindings: pinctrl: qcom,apq8084-pinctrl: convert to dtschema
 
-Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20240603102818.36165-5-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/soc-topology.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ .../bindings/pinctrl/qcom,apq8064-pinctrl.txt |  95 ---------
+ .../pinctrl/qcom,apq8064-pinctrl.yaml         | 110 ++++++++++
+ .../bindings/pinctrl/qcom,apq8084-pinctrl.txt | 188 ------------------
+ .../pinctrl/qcom,apq8084-pinctrl.yaml         | 129 ++++++++++++
+ .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt |  85 --------
+ .../pinctrl/qcom,ipq4019-pinctrl.yaml         | 102 ++++++++++
+ .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt | 101 ----------
+ .../pinctrl/qcom,ipq8064-pinctrl.yaml         | 108 ++++++++++
+ 8 files changed, 449 insertions(+), 469 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index ce22613bf9690..52752e0a5dc27 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1021,6 +1021,7 @@ static int soc_tplg_dapm_graph_elems_load(struct soc_tplg *tplg,
- 	struct snd_soc_tplg_hdr *hdr)
- {
- 	struct snd_soc_dapm_context *dapm = &tplg->comp->dapm;
-+	const size_t maxlen = SNDRV_CTL_ELEM_ID_NAME_MAXLEN;
- 	struct snd_soc_tplg_dapm_graph_elem *elem;
- 	struct snd_soc_dapm_route *route;
- 	int count, i;
-@@ -1044,38 +1045,27 @@ static int soc_tplg_dapm_graph_elems_load(struct soc_tplg *tplg,
- 		tplg->pos += sizeof(struct snd_soc_tplg_dapm_graph_elem);
- 
- 		/* validate routes */
--		if (strnlen(elem->source, SNDRV_CTL_ELEM_ID_NAME_MAXLEN) ==
--			    SNDRV_CTL_ELEM_ID_NAME_MAXLEN) {
--			ret = -EINVAL;
--			break;
--		}
--		if (strnlen(elem->sink, SNDRV_CTL_ELEM_ID_NAME_MAXLEN) ==
--			    SNDRV_CTL_ELEM_ID_NAME_MAXLEN) {
--			ret = -EINVAL;
--			break;
--		}
--		if (strnlen(elem->control, SNDRV_CTL_ELEM_ID_NAME_MAXLEN) ==
--			    SNDRV_CTL_ELEM_ID_NAME_MAXLEN) {
-+		if ((strnlen(elem->source, maxlen) == maxlen) ||
-+		    (strnlen(elem->sink, maxlen) == maxlen) ||
-+		    (strnlen(elem->control, maxlen) == maxlen)) {
- 			ret = -EINVAL;
- 			break;
- 		}
- 
- 		route->source = devm_kmemdup(tplg->dev, elem->source,
--					     min(strlen(elem->source),
--						 SNDRV_CTL_ELEM_ID_NAME_MAXLEN),
-+					     min(strlen(elem->source), maxlen),
- 					     GFP_KERNEL);
- 		route->sink = devm_kmemdup(tplg->dev, elem->sink,
--					   min(strlen(elem->sink), SNDRV_CTL_ELEM_ID_NAME_MAXLEN),
-+					   min(strlen(elem->sink), maxlen),
- 					   GFP_KERNEL);
- 		if (!route->source || !route->sink) {
- 			ret = -ENOMEM;
- 			break;
- 		}
- 
--		if (strnlen(elem->control, SNDRV_CTL_ELEM_ID_NAME_MAXLEN) != 0) {
-+		if (strnlen(elem->control, maxlen) != 0) {
- 			route->control = devm_kmemdup(tplg->dev, elem->control,
--						      min(strlen(elem->control),
--							  SNDRV_CTL_ELEM_ID_NAME_MAXLEN),
-+						      min(strlen(elem->control), maxlen),
- 						      GFP_KERNEL);
- 			if (!route->control) {
- 				ret = -ENOMEM;
 -- 
-2.43.0
+2.45.2
 
