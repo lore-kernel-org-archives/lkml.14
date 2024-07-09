@@ -1,73 +1,180 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F289119FA9C;
-	Tue,  9 Jul 2024 16:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7991D1BF320;
+	Tue,  9 Jul 2024 16:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720543103; cv=none; b=XBEh8ExeCFgC3Et3/9kiJGh2DBc1vSIo9tl60qISrSsx4icrwCYHsgd0MtNKPOOrfG77c+z3QHrXxj52ZysZhSa0lD8B3qordk1xEyOb1KCw6v0SxqeCuWM5DDSaxttp53kx5bqTsKfsXNToYU+ssmUfJFk+CQ79NIKMNkWVBPo=
+	t=1720543122; cv=none; b=iL0+K/dO8MugqPPFlHnlMyv8DHG+kqr6HCPLtg/tRhInlBM49WihiLy4hpl3yM2v0Cdtb3ZXhiPagvgTXtz+hQYkDTEOUUG4KyQUctYfUY2wxe34mwYrs6RJAGOoly9EeCyc0YnGCLI9EsoW6XMVINN+JkPvKl2BvMEafHyF4fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720543103; c=relaxed/simple;
-	bh=akLVWA7pf4SRs2gLWJwI/mYO+UhiI591Xoaqs/UbXro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gaoxd27SlDsKAce9ou2bgxhSIyRILnTDB59tWSrI0GZVVwRU0ELDSILrwrKh/EAjK524pf+zQfQXWH8BuPrMyboUZFdHfjeFLnGY3yVYMtuI1PQ4qZcb7JkvWQnu/EwbuE+hIZ6qa2XD7vJKivEbUzjTnF0ulwvi2GJS6KAHwPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WpytXus4; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720543122; c=relaxed/simple;
+	bh=hc4cV+xJKLe9gUryam5x32eujRILky1DfHOfzcfSoco=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nK2X2YsdEPM8hbIjcUCDdOQ4ZUvPhyi1dPsFUhWVDIUhu4j6JeF/c/SGtJVKeAG8NEevExjgteJxccutS1dyBNeKqotGPwnql+56QJ6RFS0wqChkcj8k1kKE50hh43PZUqikoekBEdtebfOH3J89B22Q16q/a5nTwJGTAseYCME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=XjcMPV4o; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WpytXus4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=u4kPF+jVZYaqYv+3DJpB7H4K1qcZD5HFQiZJHlOGeGY=; b=WpytXus4/67LYHQxKyVq8IgmMj
-	vwWPyhQhfVWQl5R2oXGMEWzXoGz7UdJZIxulJAGqCcXKPw1r/YJCy+y36vi8dKPYs7oDljCZ3ZfSc
-	UvWnO8qpOKMhEO3WAlesMn1ai2HgM8hQCQ+zBGjIAwPm08pwsXsP8HI4vcDylx3MFCwsmBMVFA0b0
-	q9el4xa9mBvtiTt0+g9qUPaNyP66OD09LVC+5bSOVufROy/PCMVzRNHYH4CpYWY+uXLxKc3yfQmFb
-	uKJAIJ1NMAxISmUhq1IbkZMfagOzmD7KFAH7Og7GP1fnizOKJilzcIQA4J+D/qF7M2r0izlNS2UzP
-	hBKtDr+A==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRDr6-000000084d9-3wYB;
-	Tue, 09 Jul 2024 16:38:16 +0000
-Date: Tue, 9 Jul 2024 17:38:16 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: david@fromorbit.com, ryan.roberts@arm.com, djwong@kernel.org,
-	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
-	linux-mm@kvack.org, john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
-	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <zi.yan@sent.com>,
-	akpm@linux-foundation.org, chandan.babu@oracle.com
-Subject: Re: [PATCH v8 01/10] fs: Allow fine-grained control of folio sizes
-Message-ID: <Zo1neJYABzuMEvTO@casper.infradead.org>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
- <20240625114420.719014-2-kernel@pankajraghav.com>
- <20240709162907.gsd5nf33teoss5ir@quentin>
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="XjcMPV4o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1720543112;
+	bh=hc4cV+xJKLe9gUryam5x32eujRILky1DfHOfzcfSoco=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XjcMPV4o5f9d/wISII727ZNIXMgdOg8uJjj3PUTzaZOLH7irXgpD3S/Uh6Kr4bSfH
+	 Ox8IBVBcn0BAO8zQXALU0A0COQzIy+TmIx0CnJ1+6FKSXQskR3Mpvdl+6E1Wh/YAaf
+	 eZFmWCm+FbPt4TTXKbnmPOqqVYShMOgw5dVD49Mb0VwhUP4dvDz9QDiarcN7V3kkDA
+	 R+OIio7nyGsoBvvmyxWOjFn+8OsnVyz3NXMbtHE2BDGSGIjY+xs3e1JPZ/p+axgVX2
+	 yd3jGm4XBiZlW/pdg85hlD0wn3wiLWYph+vGI7w0orjgbMMKHRCqXNku0zYe7J+2zj
+	 zPcUs0dMyU1Gw==
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 0476260085;
+	Tue,  9 Jul 2024 16:38:32 +0000 (UTC)
+Received: by x201s (Postfix, from userid 1000)
+	id 7CAE220484E; Tue, 09 Jul 2024 16:38:26 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	Davide Caratti <dcaratti@redhat.com>,
+	Ilya Maximets <i.maximets@ovn.org>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Ratheesh Kannoth <rkannoth@marvell.com>,
+	Florian Westphal <fw@strlen.de>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v3 03/10] net/sched: cls_flower: prepare fl_{set,dump}_key_flags() for ENC_FLAGS
+Date: Tue,  9 Jul 2024 16:38:17 +0000
+Message-ID: <20240709163825.1210046-4-ast@fiberby.net>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240709163825.1210046-1-ast@fiberby.net>
+References: <20240709163825.1210046-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709162907.gsd5nf33teoss5ir@quentin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 09, 2024 at 04:29:07PM +0000, Pankaj Raghav (Samsung) wrote:
-> +++ b/include/linux/pagemap.h
-> @@ -394,13 +394,24 @@ static inline void mapping_set_folio_order_range(struct address_space *mapping,
->                                                  unsigned int min,
->                                                  unsigned int max)
->  {
-> -       if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-> +       if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
-> +               VM_WARN_ONCE(1, 
-> +       "THP needs to be enabled to support mapping folio order range");
->                 return;
-> +       }
+Prepare fl_set_key_flags/fl_dump_key_flags() for use with
+TCA_FLOWER_KEY_ENC_FLAGS{,_MASK}.
 
-No.  Filesystems call mapping_set_folio_order_range() without it being
-conditional on CONFIG_TRANSPARENT_HUGEPAGE.  Usually that takes the
-form of an unconditional call to mapping_set_large_folios().
+This patch adds an encap argument, similar to fl_set_key_ip/
+fl_dump_key_ip(), and determine the flower keys based on the
+encap argument, and use them in the rest of the two functions.
+
+Since these functions are so far, only called with encap set false,
+then there is no functional change.
+
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+Tested-by: Davide Caratti <dcaratti@redhat.com>
+---
+ net/sched/cls_flower.c | 40 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 30 insertions(+), 10 deletions(-)
+
+diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
+index eef570c577ac7..6a5cecfd95619 100644
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -1166,19 +1166,28 @@ static void fl_set_key_flag(u32 flower_key, u32 flower_mask,
+ 	}
+ }
+ 
+-static int fl_set_key_flags(struct nlattr **tb, u32 *flags_key,
++static int fl_set_key_flags(struct nlattr **tb, bool encap, u32 *flags_key,
+ 			    u32 *flags_mask, struct netlink_ext_ack *extack)
+ {
++	int fl_key, fl_mask;
+ 	u32 key, mask;
+ 
++	if (encap) {
++		fl_key = TCA_FLOWER_KEY_ENC_FLAGS;
++		fl_mask = TCA_FLOWER_KEY_ENC_FLAGS_MASK;
++	} else {
++		fl_key = TCA_FLOWER_KEY_FLAGS;
++		fl_mask = TCA_FLOWER_KEY_FLAGS_MASK;
++	}
++
+ 	/* mask is mandatory for flags */
+-	if (!tb[TCA_FLOWER_KEY_FLAGS_MASK]) {
++	if (NL_REQ_ATTR_CHECK(extack, NULL, tb, fl_mask)) {
+ 		NL_SET_ERR_MSG(extack, "Missing flags mask");
+ 		return -EINVAL;
+ 	}
+ 
+-	key = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS]));
+-	mask = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS_MASK]));
++	key = be32_to_cpu(nla_get_be32(tb[fl_key]));
++	mask = be32_to_cpu(nla_get_be32(tb[fl_mask]));
+ 
+ 	*flags_key  = 0;
+ 	*flags_mask = 0;
+@@ -2086,7 +2095,7 @@ static int fl_set_key(struct net *net, struct nlattr **tb,
+ 		return ret;
+ 
+ 	if (tb[TCA_FLOWER_KEY_FLAGS]) {
+-		ret = fl_set_key_flags(tb, &key->control.flags,
++		ret = fl_set_key_flags(tb, false, &key->control.flags,
+ 				       &mask->control.flags, extack);
+ 		if (ret)
+ 			return ret;
+@@ -3084,12 +3093,22 @@ static void fl_get_key_flag(u32 dissector_key, u32 dissector_mask,
+ 	}
+ }
+ 
+-static int fl_dump_key_flags(struct sk_buff *skb, u32 flags_key, u32 flags_mask)
++static int fl_dump_key_flags(struct sk_buff *skb, bool encap,
++			     u32 flags_key, u32 flags_mask)
+ {
+-	u32 key, mask;
++	int fl_key, fl_mask;
+ 	__be32 _key, _mask;
++	u32 key, mask;
+ 	int err;
+ 
++	if (encap) {
++		fl_key = TCA_FLOWER_KEY_ENC_FLAGS;
++		fl_mask = TCA_FLOWER_KEY_ENC_FLAGS_MASK;
++	} else {
++		fl_key = TCA_FLOWER_KEY_FLAGS;
++		fl_mask = TCA_FLOWER_KEY_FLAGS_MASK;
++	}
++
+ 	if (!memchr_inv(&flags_mask, 0, sizeof(flags_mask)))
+ 		return 0;
+ 
+@@ -3105,11 +3124,11 @@ static int fl_dump_key_flags(struct sk_buff *skb, u32 flags_key, u32 flags_mask)
+ 	_key = cpu_to_be32(key);
+ 	_mask = cpu_to_be32(mask);
+ 
+-	err = nla_put(skb, TCA_FLOWER_KEY_FLAGS, 4, &_key);
++	err = nla_put(skb, fl_key, 4, &_key);
+ 	if (err)
+ 		return err;
+ 
+-	return nla_put(skb, TCA_FLOWER_KEY_FLAGS_MASK, 4, &_mask);
++	return nla_put(skb, fl_mask, 4, &_mask);
+ }
+ 
+ static int fl_dump_key_geneve_opt(struct sk_buff *skb,
+@@ -3632,7 +3651,8 @@ static int fl_dump_key(struct sk_buff *skb, struct net *net,
+ 	if (fl_dump_key_ct(skb, &key->ct, &mask->ct))
+ 		goto nla_put_failure;
+ 
+-	if (fl_dump_key_flags(skb, key->control.flags, mask->control.flags))
++	if (fl_dump_key_flags(skb, false, key->control.flags,
++			      mask->control.flags))
+ 		goto nla_put_failure;
+ 
+ 	if (fl_dump_key_val(skb, &key->hash.hash, TCA_FLOWER_KEY_HASH,
+-- 
+2.45.2
 
