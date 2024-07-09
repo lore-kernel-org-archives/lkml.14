@@ -1,182 +1,256 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572AF15358A;
-	Tue,  9 Jul 2024 10:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01ED6156C5E
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 10:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720521938; cv=none; b=MsInpCLoKWbqDSdtnOhgL0DOhkvEaYVX51I3/0E2T8LhUTm9IVts0cVv+0t0tmB+uG2bgMEZlLQdnU3R2+Hj3qArHotLrCYsdPa/k0bdKTF2+fgZNoWc1ezvaUCaO6YhD5RnLCLHZvephLNKI7hZzzpBhPYTTKvKmOefq+Mv9oo=
+	t=1720521937; cv=none; b=KZEspExt9UKnyEZJDtiHbRTQGAwdZUJvjRVBIcDZgFjTGumKbxBMlIuVTjLau2+RY6MRZ0/8yJpVDSxkchpnQdXC19xogVa2lyfZ3VVVAik8fH/15xw1TJ87xbm9RwqocXfCrNBKV8kAG3EayKs1+QHbgrQxlESFc/9XLeNGpTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720521938; c=relaxed/simple;
-	bh=lbYK0MiE560LGBufLBqP5YUxdEQkVutFpnS/myGau5w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lMVUCCc89DyjyBY65u888woOiaCCnwy6uKk4SnbtJxkKCYHpdLeDW1UJFrNLgWgO8syAQhAdzfk8CQTlivaKVr8nqBXC8B5K7VcVg7rHGqPsMb/pGQUe2jNTBOnRPSBAiR4KmHiyCLgQou461owR1KGhQ5nmyDsZc3ML571hC5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HWAADwqa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pspskSW5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HWAADwqa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pspskSW5; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1720521937; c=relaxed/simple;
+	bh=EZnPsbf895Nk5+GhF8GX16MJZewwBwjtmiFmsqKVj/E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HtXOl47c6CQb5uy4Olg3WkY5m9/qaWumfUlcpxPSs/ncOwScuZYMS8xHKy3tGS3UdWgq2YES4mqz0EmGmnJXz3vzjL8T9dt653oLTbM1BjENha82jidYkM+LTebJPkkpnv9KKwQLbnKqNQXeG6savna0GvP40AfdQkM7S3dyiY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cBCQ+FJr; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HWAADwqa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pspskSW5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HWAADwqa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pspskSW5"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 266771F7B0;
-	Tue,  9 Jul 2024 10:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720521928; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZjJuajj7VO2PpvVJIVHGYUaXsioFANqCo1Pv7OTfjsw=;
-	b=HWAADwqar4EbvWDFyA2vz82J/DlFAPiNdHTM6fwvY+HUhdM7XBHXrTlKsuKi8CusLw2SkB
-	e3/xKMEHKRttf4/UC08UW4kiyvKA4KNhha9Qj2oyxtjVGQcczC7ovB+ofjs7I3SZQNbai6
-	h/lM1CdygoARvopShXsyiR5Y37GzLs8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720521928;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZjJuajj7VO2PpvVJIVHGYUaXsioFANqCo1Pv7OTfjsw=;
-	b=pspskSW5318erHtZjn6tDuXeihuYYs7LHm4+E9pB/RKmmMPrBbcWpqFUKP0v3/aEm7TMk1
-	0NVyYUy/iz7oA7DQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=HWAADwqa;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=pspskSW5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720521928; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZjJuajj7VO2PpvVJIVHGYUaXsioFANqCo1Pv7OTfjsw=;
-	b=HWAADwqar4EbvWDFyA2vz82J/DlFAPiNdHTM6fwvY+HUhdM7XBHXrTlKsuKi8CusLw2SkB
-	e3/xKMEHKRttf4/UC08UW4kiyvKA4KNhha9Qj2oyxtjVGQcczC7ovB+ofjs7I3SZQNbai6
-	h/lM1CdygoARvopShXsyiR5Y37GzLs8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720521928;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZjJuajj7VO2PpvVJIVHGYUaXsioFANqCo1Pv7OTfjsw=;
-	b=pspskSW5318erHtZjn6tDuXeihuYYs7LHm4+E9pB/RKmmMPrBbcWpqFUKP0v3/aEm7TMk1
-	0NVyYUy/iz7oA7DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EF5C01369A;
-	Tue,  9 Jul 2024 10:45:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QRFwOccUjWZTVAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 09 Jul 2024 10:45:27 +0000
-Message-ID: <25a66a13-1817-437e-accc-fe033628f11b@suse.cz>
-Date: Tue, 9 Jul 2024 12:45:27 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cBCQ+FJr"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a77c4309fc8so533804166b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 03:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720521934; x=1721126734; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IGu0LuUjGKiWzipHAvenbBISpRzy/JWKn/Q0VCWcD/s=;
+        b=cBCQ+FJroi7uwFFrEt1ZHftg+FWQMxfhMlsgBHlNqcMYO6An9UF7Y0ly8aaq8/BJuH
+         7fOQgd1Lx1oR09Vh0+1+v2TyJcfBHxYcOceoUzcPoEQ2KUWm9XixFZos3dFa3zus9CVo
+         PaDXlhGx0KSE2QBmhH4AqADsdNycNbpwpDwLs1YIg5fezutwhvZCSU1gzeXnbakp0Rw6
+         ++t3uJln3XC7SvYASRUzlnUV+wDlY3u8fG4lmqcqfP2cznrzSnzvmpWtkoU6LhIHs6jF
+         qvCA6hIxE/lVLEZZ7xEp/5kWZiC2PsEsBFmHgNrirrC2Rc6JqElLuWxdpTh0RBMDDUsV
+         5nng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720521934; x=1721126734;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IGu0LuUjGKiWzipHAvenbBISpRzy/JWKn/Q0VCWcD/s=;
+        b=Mzfi+7LIQDg5NuxjwBSrOXy2h6mWoLIxbmRzOBb+pwpzgi7lqKVTeJTyT7fGCJCohl
+         iTE7qxEKOXrw8fY5IBYNioRWac4av8aPXJhOeDyfsFHU90gMst4YzGsAG7+KSIQO9fdD
+         ij8V4rA1xEmLKcSJ7dDOJ3iKynoH74M4WTqjZcWUrieoqrZaDTBQy0sY+J79AfMwATmD
+         z8Rws9QZnMQL0EjXg9JNN3/CFWxnwvhwYyiBT2iRsF4HYjiZHrp7W9gDGgp0UmDl5dF1
+         CsuuTMFlbNk1eV6MsOYHPVEamZ0CfvjiQBOlLzFDpUmaVnCX3ghDv6dNwdDDamw3tbRS
+         nKQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvXEJxpq+JNGOQ0IbI4+Z9yjZcbE+/WPKAmHzLC+N4bgCibF+Ro+GZO9unfPGvzZQT5l0HnvVgMIlXDWUrfG2yp2sZ2pfdQ2xTnsHy
+X-Gm-Message-State: AOJu0YzuaIDr//6BKT7ryzuc5ICuiBdOLWR7ldzYpM9Qfqyjj08/tyfg
+	Lr9srWhTNZDmgeJfnAkW2NtAqXfbd4p6Ka3aUmGGZPkRmdhzz39vwYwwvJUpO54=
+X-Google-Smtp-Source: AGHT+IFojiSJMtNFkbwjsZN8NaRCsi8T66KA4mNJvMJYW4MrWNwyi3ZVaOA3AheA7mNLL9bhT2f25w==
+X-Received: by 2002:a17:907:720c:b0:a77:c5a5:f662 with SMTP id a640c23a62f3a-a780b68a9camr184732266b.12.1720521934301;
+        Tue, 09 Jul 2024 03:45:34 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a7ff038sm66295466b.115.2024.07.09.03.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 03:45:33 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Tue, 09 Jul 2024 12:45:29 +0200
+Subject: [PATCH v5 1/5] drm/msm/adreno: Implement SMEM-based speed bin
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] mm: move vma_modify() and helpers to internal
- header
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Matthew Wilcox <willy@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, SeongJae Park <sj@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Brendan Higgins <brendanhiggins@google.com>,
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-References: <cover.1720121068.git.lorenzo.stoakes@oracle.com>
- <d247ba767e16973c27e84179a0a52f2597d72254.1720121068.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <d247ba767e16973c27e84179a0a52f2597d72254.1720121068.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 266771F7B0
-X-Spam-Flag: NO
-X-Spam-Score: -4.50
-X-Spam-Level: 
+Message-Id: <20240709-topic-smem_speedbin-v5-1-e2146be0c96f@linaro.org>
+References: <20240709-topic-smem_speedbin-v5-0-e2146be0c96f@linaro.org>
+In-Reply-To: <20240709-topic-smem_speedbin-v5-0-e2146be0c96f@linaro.org>
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720521930; l=6084;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=EZnPsbf895Nk5+GhF8GX16MJZewwBwjtmiFmsqKVj/E=;
+ b=ofzGt665lRV73DHN1FYY/bCFj4utkgtRqb78xzJO4AhiNNAaX88SPIUrJ7rZTp+qwl8D+dgx/
+ Qjtzuwfx42BCGsI3SBnFhMjoYrnCMLAynqXFghKGFuzriKzoFSYGeJk
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On 7/4/24 9:27 PM, Lorenzo Stoakes wrote:
-> These are core VMA manipulation functions which invoke VMA splitting and
-> merging and should not be directly accessed from outside of mm/.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On recent (SM8550+) Snapdragon platforms, the GPU speed bin data is
+abstracted through SMEM, instead of being directly available in a fuse.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Add support for SMEM-based speed binning, which includes getting
+"feature code" and "product code" from said source and parsing them
+to form something that lets us match OPPs against.
+
+Due to the product code being ignored in the context of Adreno on
+production parts (as of SM8650), hardcode it to SOCINFO_PC_UNKNOWN.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 14 +++++-----
+ drivers/gpu/drm/msm/adreno/adreno_device.c |  2 ++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c    | 42 +++++++++++++++++++++++++++---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  7 ++++-
+ 4 files changed, 54 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index bcaec86ac67a..0d8682c28ba4 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -2117,18 +2117,20 @@ static u32 fuse_to_supp_hw(const struct adreno_info *info, u32 fuse)
+ 	return UINT_MAX;
+ }
+ 
+-static int a6xx_set_supported_hw(struct device *dev, const struct adreno_info *info)
++static int a6xx_set_supported_hw(struct adreno_gpu *adreno_gpu,
++				 struct device *dev,
++				 const struct adreno_info *info)
+ {
+ 	u32 supp_hw;
+ 	u32 speedbin;
+ 	int ret;
+ 
+-	ret = adreno_read_speedbin(dev, &speedbin);
++	ret = adreno_read_speedbin(adreno_gpu, dev, &speedbin);
+ 	/*
+-	 * -ENOENT means that the platform doesn't support speedbin which is
+-	 * fine
++	 * -ENOENT/EOPNOTSUPP means that the platform doesn't support speedbin
++	 * which is fine
+ 	 */
+-	if (ret == -ENOENT) {
++	if (ret == -ENOENT || ret == -EOPNOTSUPP) {
+ 		return 0;
+ 	} else if (ret) {
+ 		dev_err_probe(dev, ret,
+@@ -2283,7 +2285,7 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+ 
+ 	a6xx_llc_slices_init(pdev, a6xx_gpu, is_a7xx);
+ 
+-	ret = a6xx_set_supported_hw(&pdev->dev, config->info);
++	ret = a6xx_set_supported_hw(adreno_gpu, &pdev->dev, config->info);
+ 	if (ret) {
+ 		a6xx_llc_slices_destroy(a6xx_gpu);
+ 		kfree(a6xx_gpu);
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+index cfc74a9e2646..0842ea76e616 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_device.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+@@ -6,6 +6,8 @@
+  * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
+  */
+ 
++#include <linux/soc/qcom/socinfo.h>
++
+ #include "adreno_gpu.h"
+ 
+ bool hang_debug = false;
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 1c6626747b98..cf6652c4439d 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -21,6 +21,9 @@
+ #include "msm_gem.h"
+ #include "msm_mmu.h"
+ 
++#include <linux/soc/qcom/smem.h>
++#include <linux/soc/qcom/socinfo.h>
++
+ static u64 address_space_size = 0;
+ MODULE_PARM_DESC(address_space_size, "Override for size of processes private GPU address space");
+ module_param(address_space_size, ullong, 0600);
+@@ -1061,9 +1064,40 @@ void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *adreno_ocmem)
+ 			   adreno_ocmem->hdl);
+ }
+ 
+-int adreno_read_speedbin(struct device *dev, u32 *speedbin)
++int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
++			 struct device *dev, u32 *fuse)
+ {
+-	return nvmem_cell_read_variable_le_u32(dev, "speed_bin", speedbin);
++	int ret;
++
++	/*
++	 * Try reading the speedbin via a nvmem cell first
++	 * -ENOENT means "no nvmem-cells" and essentially means "old DT" or
++	 * "nvmem fuse is irrelevant", simply assume it's fine.
++	 */
++	ret = nvmem_cell_read_variable_le_u32(dev, "speed_bin", fuse);
++	if (!ret)
++		return 0;
++	else if (ret != -ENOENT)
++		return dev_err_probe(dev, ret, "Couldn't read the speed bin fuse value\n");
++
++#ifdef CONFIG_QCOM_SMEM
++	u32 fcode;
++
++	/*
++	 * Only check the feature code - the product code only matters for
++	 * proto SoCs unavailable outside Qualcomm labs, as far as GPU bin
++	 * matching is concerned.
++	 *
++	 * Ignore EOPNOTSUPP, as not all SoCs expose this info through SMEM.
++	 */
++	ret = qcom_smem_get_feature_code(&fcode);
++	if (!ret)
++		*fuse = ADRENO_SKU_ID(fcode);
++	else if (ret != -EOPNOTSUPP)
++		return dev_err_probe(dev, ret, "Couldn't get feature code from SMEM\n");
++#endif
++
++	return ret;
+ }
+ 
+ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+@@ -1102,9 +1136,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 			devm_pm_opp_set_clkname(dev, "core");
+ 	}
+ 
+-	if (adreno_read_speedbin(dev, &speedbin) || !speedbin)
++	if (adreno_read_speedbin(adreno_gpu, dev, &speedbin) || !speedbin)
+ 		speedbin = 0xffff;
+-	adreno_gpu->speedbin = (uint16_t) (0xffff & speedbin);
++	adreno_gpu->speedbin = speedbin;
+ 
+ 	gpu_name = devm_kasprintf(dev, GFP_KERNEL, "%"ADRENO_CHIPID_FMT,
+ 			ADRENO_CHIPID_ARGS(config->chip_id));
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index 1ab523a163a0..0d629343ebb4 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -79,6 +79,10 @@ struct adreno_reglist {
+ 
+ struct adreno_speedbin {
+ 	uint16_t fuse;
++/* As of SM8650, PCODE on production SoCs is meaningless wrt the GPU bin */
++#define ADRENO_SKU_ID_FCODE		GENMASK(15, 0)
++#define ADRENO_SKU_ID(fcode)	(fcode)
++
+ 	uint16_t speedbin;
+ };
+ 
+@@ -555,7 +559,8 @@ int adreno_fault_handler(struct msm_gpu *gpu, unsigned long iova, int flags,
+ 			 struct adreno_smmu_fault_info *info, const char *block,
+ 			 u32 scratch[4]);
+ 
+-int adreno_read_speedbin(struct device *dev, u32 *speedbin);
++int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
++			 struct device *dev, u32 *speedbin);
+ 
+ /*
+  * For a5xx and a6xx targets load the zap shader that is used to pull the GPU
+
+-- 
+2.45.2
 
