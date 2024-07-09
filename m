@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8558114BFB0;
-	Tue,  9 Jul 2024 09:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFC7136657;
+	Tue,  9 Jul 2024 09:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517570; cv=none; b=PnL4Aoag7FWmU9emkczUhD6un5zGnYnpVK6nyN2CWAz0a7+hPAS8xtp5T7EjzOFas+v8NpolHQ66d/Gy4eM0pczRDZiN7OQlh3v9PTU0v+rgw98oi/KnMcqw7T8xeX+w7QlzkJQYToXTH+ZuU8LtNAMOj58DXeB1eLw6Rm/+Ucg=
+	t=1720517617; cv=none; b=Joj8vjtXj0UE0utQpqxDmxes1QYuJXpAf1ZPQ09yZUCp1WanOvt3DO+pCxnvD6WERdckNbPEE1x8DqnPQ5Q/tPjZEqvFToi3hH/Zpw2ZrRcr598trC3kz7eXI3qUGzEhzcD8S8qfCdymXPsss/her1zm0oZ741HliXXLl1YG0ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517570; c=relaxed/simple;
-	bh=hg2hGF7K4KQBhvolAaT0MrUalgjsW8G+lwl6c2ZWnek=;
+	s=arc-20240116; t=1720517617; c=relaxed/simple;
+	bh=OG0iT8EGH218BuMSqUrA0G08/WrtG0mn2OrXecjDaeo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DDFNhbgXfydo46FZcSS9r9VjkjCnOuJ2qsmmLZZ0qjkTLjfooNmBQ91v4S5Y78CKxk806fAwN547BRQdz3bvbJEaJQbWbQkMwXNUOFDBY+dg8rZTLOA+6/FHW0atTaLU0BLTwr5s9vK+5QfI/prkOfs8YttNkb7/MBwplnuiOTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJJgeAyK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RissicrEHmiMyPGFS8b3NIwdn+HUBH+glZxxA5EDt1n/uQGt3Wqmh82jmCIgJ2SzRK1QLJvaFjnloKHVEgGV5PlmWA9H+68hMygdlnkzbNwFdlAXFpwjxXtZyP7QFV948D+dJxdyNO9XCC5k9gMqI3o0n3OvHujXJS3EGtp/ttY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5HEUZ47; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJJgeAyK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2544FC3277B;
-	Tue,  9 Jul 2024 09:32:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5HEUZ47"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353DCC3277B;
+	Tue,  9 Jul 2024 09:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720517570;
-	bh=hg2hGF7K4KQBhvolAaT0MrUalgjsW8G+lwl6c2ZWnek=;
+	s=k20201202; t=1720517616;
+	bh=OG0iT8EGH218BuMSqUrA0G08/WrtG0mn2OrXecjDaeo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YJJgeAyKodBDS56LhLzxVYex44QWx+xcX8kFf1aRnTfsuzgmWJWp3V9eEXmLniWPC
-	 NYpfcCJg/pJch7EpS0bNwdfNSFAB3NQVMrINZTBsaT2bRMpEJcZYeot5dhkiYnE6cM
-	 YSq8OVrhe5a9cyfpTASGlDu/vog8W/M1BTQWLQCyX0oGeDdgnEm5OQWKHqwm0DRxGa
-	 E5V0Jl4OXIJHuLOsM4QL/hVFqg/omUMWJydnLNN6nPUVhjNxpDZSpTnWpnjdoWhiaH
-	 NXKptMNhH9CR3Tbwz31zP6+UxqxqJWcanilcXQzpdfICS7w7ksONJsmDw157kt0atr
-	 hm1AAhU1eZ1aA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sR7DT-000000005RF-2YpH;
-	Tue, 09 Jul 2024 11:32:56 +0200
-Date: Tue, 9 Jul 2024 11:32:55 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] serial: qcom-geni: fix lockups
-Message-ID: <Zo0Dx7-6mnIN4wMK@hovoldconsulting.com>
-References: <20240704101805.30612-1-johan+linaro@kernel.org>
- <2024070445-stunner-scrawny-1b03@gregkh>
- <CAD=FV=X0Sk0Xkz7Mcna6BNhGpxZQY5KArY=LqMPEwbocvmojQA@mail.gmail.com>
+	b=P5HEUZ47WK9+RACJAlO1OWT7ISoJlbNy252GiK2GUEP6dOlepkIPwbX+3JIc+hS4+
+	 OxRg1Qjid4tSWs4oR3SktBAYPvpCPiS6knMl3XXBiBMrcCQa8c3X+zGYfubdY2Krwk
+	 rseLLfmaVBu6s2lMZIjiVGjO7GlacPMrMn8wRzEhQHKeWhvok6EYnkUOaoNX5nPen5
+	 41aBoBnaax4uu/KlaonMIjuUw2GlkZgsTPCZKtvjfITyrmfXXIy7aAIZc4Rvuwu7vp
+	 8xe3FF0WctbzDHNxySE5E1t4uXDKRQEHecB/vU60O/BOxRPoHd64CIqen1JlZTJBBX
+	 5L3O8BED5x6iw==
+Date: Tue, 9 Jul 2024 10:33:32 +0100
+From: Lee Jones <lee@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] mfd: tmio: simplify header and move to
+ platform_data
+Message-ID: <20240709093332.GD501857@google.com>
+References: <20240213220221.2380-8-wsa+renesas@sang-engineering.com>
+ <170870160052.1698319.4712751560931025638.b4-ty@kernel.org>
+ <Zooqfe1sJQsvltwj@shikoro>
+ <CAMuHMdU6OquhF_WRxD+YxRfJwASepOb-pJp3wT7bvcpb1PHLDQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,50 +49,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=X0Sk0Xkz7Mcna6BNhGpxZQY5KArY=LqMPEwbocvmojQA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU6OquhF_WRxD+YxRfJwASepOb-pJp3wT7bvcpb1PHLDQ@mail.gmail.com>
 
-Hi Doug,
+On Sun, 07 Jul 2024, Geert Uytterhoeven wrote:
 
-Hope you had a good holiday.
-
-On Mon, Jul 08, 2024 at 04:57:55PM -0700, Doug Anderson wrote:
-> On Thu, Jul 4, 2024 at 3:31 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+> On Sun, Jul 7, 2024 at 7:41 AM Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+> > On Fri, Feb 23, 2024 at 03:20:00PM +0000, Lee Jones wrote:
+> > > On Tue, 13 Feb 2024 23:02:19 +0100, Wolfram Sang wrote:
+> > > > Changes since v1:
+> > > >
+> > > > * rebased to rc4
+> > > > * collected all needed acks (Thanks!)
+> > > > * capitalized first letter in commit subject
+> > > >
+> > > > The MFD parts of the TMIO have been removed by Arnd, so that only the
+> > > > SD/MMC related functionality is left. Remove the outdated remains in the
+> > > > public header file and then move it to platform_data as the data is now
+> > > > specific for the SD/MMC part.
+> > > >
+> > > > [...]
+> > >
+> > > Applied, thanks!
+> > >
+> > > [1/6] mfd: tmio: Remove obsolete platform_data
+> > >       commit: 58d6d15662e4039fab7d786f0426843befa77ad4
+> > > [2/6] mfd: tmio: Remove obsolete io accessors
+> > >       commit: e927d7bac109d8ca1729dda47a8dbc220efdb50e
+> > > [3/6] mmc: tmio/sdhi: Fix includes
+> > >       commit: bed05c68aa8f078206143700cd37e42a0084155f
+> > > [4/6] mfd: tmio: Update include files
+> > >       commit: 3ef94c41db82573dc1e1dd6c259aec8ef6caaaf3
+> > > [5/6] mfd: tmio: Sanitize comments
+> > >       commit: 2d417dda59123b9523a19ce75fea3fd1056c3b4c
+> > > [6/6] mfd: tmio: Move header to platform_data
+> > >       commit: 858b29729c9d319b9cd1441646cc3af246d3c3f9
 > >
-> > On Thu, Jul 04, 2024 at 12:18:02PM +0200, Johan Hovold wrote:
-> > > Since 6.10-rc1, Qualcomm machines with a serial port can easily lock up
-> > > hard, for example, when stopping a getty on reboot.
-> > >
-> > > This was triggered by the kfifo conversion, which turned an existing bug
-> > > that caused the driver to print discarded characters after a buffer
-> > > flush into a hard lockup.
-> > >
-> > > This series fixes the regression and a related soft lockup issue that
-> > > can be triggered on software flow control and on suspend.
-> > >
-> > > Doug has posted an alternative series of fixes here that depends on
-> > > reworking the driver a fair bit here:
-> > >
-> > >       https://lore.kernel.org/lkml/20240610222515.3023730-1-dianders@chromium.org/
-> > >
-> > > This rework has a significant impact on performance on some platforms,
-> > > but fortunately it seems such a rework can be avoided.
-> > >
-> > > There are further bugs in the console code (e.g. that can lead to lost
-> > > characters) that this series does not address, but those can be fixed
-> > > separately (and I've started working on that).
-> >
-> > I'll take these now, thanks!
+> > This series is not upstream yet?
 > 
-> Are you going to continue to work on the driver? There are still some
-> pretty bad bugs including ones that are affecting Collabora's test
-> labs. Unless you want to try to tackle it some other way, I'm going to
-> keep pushing for something like my original series to land. I can
-> re-post them atop your patches since they've landed. This will regress
-> your performance but correctness trumps performance.
+> FTR, it entered linux-next in next-20240402, but disappeared after
+> next-20240510.
 
-Yes, I have a working fix for the console issue that could lead to lost
-characters. I need to spend some time on other things this week, but I
-intend to follow with fixes for the remaining issues as well.
+That's very odd.  I cannot explain that.
 
-Johan
+I'll go apply it again.  Sorry for this.
+
+-- 
+Lee Jones [李琼斯]
