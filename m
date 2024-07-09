@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7561F1586C4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ECD1586C6;
 	Tue,  9 Jul 2024 11:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720525319; cv=none; b=h5b0lpcHFexUpjvObCu5Ve1VgEMBW6hcwoCHd03ETCh2FrXCmImfXC2srxaTTx6Q5kDdz0L69O4/TZZkyg3G7iNUa6NUJ9440u77VXsib00tQJ+6UT3uN4xMeC0qeexza3rme5jQPanInYJDZPZGjTWptLw5XdeWIbopwIMuoOM=
+	t=1720525320; cv=none; b=HhtfrBfKtOmNCsjwO6WkYwflAS/YCj5ipWfUCekkQjfr/WWUQnLqbry/crtIcX9e2MhYBZIaZlVRCVEsM7+eCqr8wjUFkkl0+V2ZJ6NNq9EvASTblWBKP56mYXSMvNkjht132K5kIfQ+ZUC5a1GMi7vLvPgH1XGJPUisfuBdukI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720525319; c=relaxed/simple;
-	bh=KI4RKTHYnAL+XQXSsiPbfpOIsEbcNLot8g8LFEMIlz0=;
+	s=arc-20240116; t=1720525320; c=relaxed/simple;
+	bh=yILCmpJXsGW6+r9ZCS+ViRoVPwrTPPyH+86Y9+vW5rA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jdBEd/3yrslghGkWSR4BYhLylb2NFmzoDLaMIr60ofIxQ+hzKv8IFGRUnZaq1uEo4eNca/a+dL6qYJSd9gaDv/uI+ZjulsA/Eb/QsZAXn+Xq7mdBRMfgQ8DyCRlDmXvrWfaGXY9Ub2aEMxjFtCLcJcSlIzGWhGcpJpOU+CVqHy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c2fPs86Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q9EeZfW8; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=SkdCmI3x5idaVN96ygc5D7/EJK3GEXD2SGlK8c+v7Dj5bEVcWU4ZXdazgOQkr1ouzgr+3XwVozLjrYe9U1lUKYMaYiQL4oCfwKOyM2t3H6WUVmt0P9SIP/CjElFj0kFQzcItNtcq5+03g4+dQZBGolKYjg6fbfNFiJk701tpPXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4VPMXvty; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oSo/Hdh0; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c2fPs86Z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q9EeZfW8"
-Date: Tue, 09 Jul 2024 11:41:56 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4VPMXvty";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oSo/Hdh0"
+Date: Tue, 09 Jul 2024 11:41:57 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1720525317;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2/SgvI1wwLrqcJJkWAUEyeidhdbxH9aKtUNOnS64wP8=;
-	b=c2fPs86ZxdvYhddwV87qAcajruHLU8hGgePr1Z/epChxqKPgWdn5+wI7vNVJ0ZCKGKbkH8
-	vmmAPEaY7UeAQSSfIgpteSjEhyvtJ7GtN0DFbrUrQg1O/JGklBpUhDeFo9ssN25Q54o9OF
-	zbfJ9zYevWZWrWBu+1OrPC/5q1jbs+ywYCnNtYZcLZf9+Kg2ueeS+ZZBMYkEoa4/ihTLVZ
-	6CtHj+IVG7cCFrW5QYVWCqPEdHN7Xf2BYc5r5LYM8B1VD539bifdKe+Z1kXBWavKuShhbb
-	iUqU4y7W3NO3DyZD+kVsMfXaG1ROgr/1Egv74Nx3AlrO8hlurJb4G4qI/5w/Og==
+	bh=L8vwutyRBqb0D9ckGJr7K7IT2W0U79UePFTqtTwo3Y4=;
+	b=4VPMXvty8q8HtzjRUTjtvoiwwWKit6ULqvJkkh/T7GgVsS3s9X4yNHgjNR/tqebXIPZ8qx
+	KSljENdqBrMVrhJ56BjhdXX8yg8zUgXqpa804OuOpIeMkLZ0OdHuUUGAvAvR2hrPofTDKe
+	qrte/gGMZwiK27PYqHEEOboO55FvZWdkWogy3YpD4MdtArJo2l5SFrP0KaGWr4ViVWh2Gd
+	pchBozEwr7OsveCHXiZkYWi8vDAmabkdM5iJFa6CpR2yVM5KSQ4PXOO+0DQneLpP8ng6th
+	qIxUava06dT8dsT7Pwaz028cWbEAzFc8p+UFBieeiu7W0LbeQXDqMi9LAiUk+g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1720525317;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,28 +38,28 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2/SgvI1wwLrqcJJkWAUEyeidhdbxH9aKtUNOnS64wP8=;
-	b=Q9EeZfW8CqBZylcLYVkjWqZAuLQUo7qd8QLFew3ojYRoBYwdRoWRVahG4jqgGxtCLx+8bn
-	ewiBc756kyfU0hAw==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+	bh=L8vwutyRBqb0D9ckGJr7K7IT2W0U79UePFTqtTwo3Y4=;
+	b=oSo/Hdh0o7/xZY2hjESfGh8AQ8HVETF2n1+y475KFYvvzr49arpZLE8G30CqXLjMUUa1C8
+	LT9jkCmIDBwmVuAw==
+From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel/uncore: Fix the bits of the CHA
- extended umask for SPR
-Cc: Kan Liang <kan.liang@linux.intel.com>,
+Subject:
+ [tip: perf/core] perf: Split __perf_pending_irq() out of perf_pending_irq()
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ian Rogers <irogers@google.com>, stable@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240708185524.1185505-1-kan.liang@linux.intel.com>
-References: <20240708185524.1185505-1-kan.liang@linux.intel.com>
+ Marco Elver <elver@google.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240704170424.1466941-8-bigeasy@linutronix.de>
+References: <20240704170424.1466941-8-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172052531679.2215.16140288595428337453.tip-bot2@tip-bot2>
+Message-ID: <172052531713.2215.12959971034104257463.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,74 +69,136 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     a5a6ff3d639d088d4af7e2935e1ee0d8b4e817d4
-Gitweb:        https://git.kernel.org/tip/a5a6ff3d639d088d4af7e2935e1ee0d8b4e817d4
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Mon, 08 Jul 2024 11:55:24 -07:00
+Commit-ID:     2b84def990d388bed4afe4f21ae383a01991046c
+Gitweb:        https://git.kernel.org/tip/2b84def990d388bed4afe4f21ae383a01991046c
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Thu, 04 Jul 2024 19:03:41 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 09 Jul 2024 13:26:38 +02:00
+CommitterDate: Tue, 09 Jul 2024 13:26:37 +02:00
 
-perf/x86/intel/uncore: Fix the bits of the CHA extended umask for SPR
+perf: Split __perf_pending_irq() out of perf_pending_irq()
 
-The perf stat errors out with UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL
-event.
+perf_pending_irq() invokes perf_event_wakeup() and __perf_pending_irq().
+The former is in charge of waking any tasks which waits to be woken up
+while the latter disables perf-events.
 
- $perf stat -e uncore_cha_55/event=0x35,umask=0x10c0008101/ -a -- ls
-    event syntax error: '..0x35,umask=0x10c0008101/'
-                                      \___ Bad event or PMU
+The irq_work perf_pending_irq(), while this an irq_work, the callback
+is invoked in thread context on PREEMPT_RT. This is needed because all
+the waking functions (wake_up_all(), kill_fasync()) acquire sleep locks
+which must not be used with disabled interrupts.
+Disabling events, as done by __perf_pending_irq(), expects a hardirq
+context and disabled interrupts. This requirement is not fulfilled on
+PREEMPT_RT.
 
-The definition of the CHA umask is config:8-15,32-55, which is 32bit.
-However, the umask of the event is bigger than 32bit.
-This is an error in the original uncore spec.
+Split functionality based on perf_event::pending_disable into irq_work
+named `pending_disable_irq' and invoke it in hardirq context on
+PREEMPT_RT. Rename the split out callback to perf_pending_disable().
 
-Add a new umask_ext5 for the new CHA umask range.
-
-Fixes: 949b11381f81 ("perf/x86/intel/uncore: Add Sapphire Rapids server CHA support")
-Closes: https://lore.kernel.org/linux-perf-users/alpine.LRH.2.20.2401300733310.11354@Diego/
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20240708185524.1185505-1-kan.liang@linux.intel.com
+Tested-by: Marco Elver <elver@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lore.kernel.org/r/20240704170424.1466941-8-bigeasy@linutronix.de
 ---
- arch/x86/events/intel/uncore_snbep.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 29 ++++++++++++++++++++++-------
+ 2 files changed, 23 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index a7ea221..ca98744 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -462,6 +462,7 @@
- #define SPR_UBOX_DID				0x3250
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 99a7ea1..65ece0d 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -783,6 +783,7 @@ struct perf_event {
+ 	unsigned int			pending_disable;
+ 	unsigned long			pending_addr;	/* SIGTRAP */
+ 	struct irq_work			pending_irq;
++	struct irq_work			pending_disable_irq;
+ 	struct callback_head		pending_task;
+ 	unsigned int			pending_work;
+ 	struct rcuwait			pending_work_wait;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 96e03d6..f64c30e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2451,7 +2451,7 @@ static void __perf_event_disable(struct perf_event *event,
+  * hold the top-level event's child_mutex, so any descendant that
+  * goes to exit will block in perf_event_exit_event().
+  *
+- * When called from perf_pending_irq it's OK because event->ctx
++ * When called from perf_pending_disable it's OK because event->ctx
+  * is the current context on this CPU and preemption is disabled,
+  * hence we can't get into perf_event_task_sched_out for this context.
+  */
+@@ -2491,7 +2491,7 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
+ void perf_event_disable_inatomic(struct perf_event *event)
+ {
+ 	event->pending_disable = 1;
+-	irq_work_queue(&event->pending_irq);
++	irq_work_queue(&event->pending_disable_irq);
+ }
  
- /* SPR CHA */
-+#define SPR_CHA_EVENT_MASK_EXT			0xffffffff
- #define SPR_CHA_PMON_CTL_TID_EN			(1 << 16)
- #define SPR_CHA_PMON_EVENT_MASK			(SNBEP_PMON_RAW_EVENT_MASK | \
- 						 SPR_CHA_PMON_CTL_TID_EN)
-@@ -478,6 +479,7 @@ DEFINE_UNCORE_FORMAT_ATTR(umask_ext, umask, "config:8-15,32-43,45-55");
- DEFINE_UNCORE_FORMAT_ATTR(umask_ext2, umask, "config:8-15,32-57");
- DEFINE_UNCORE_FORMAT_ATTR(umask_ext3, umask, "config:8-15,32-39");
- DEFINE_UNCORE_FORMAT_ATTR(umask_ext4, umask, "config:8-15,32-55");
-+DEFINE_UNCORE_FORMAT_ATTR(umask_ext5, umask, "config:8-15,32-63");
- DEFINE_UNCORE_FORMAT_ATTR(qor, qor, "config:16");
- DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
- DEFINE_UNCORE_FORMAT_ATTR(tid_en, tid_en, "config:19");
-@@ -5959,7 +5961,7 @@ static struct intel_uncore_ops spr_uncore_chabox_ops = {
+ #define MAX_INTERRUPTS (~0ULL)
+@@ -5218,6 +5218,7 @@ static void perf_pending_task_sync(struct perf_event *event)
+ static void _free_event(struct perf_event *event)
+ {
+ 	irq_work_sync(&event->pending_irq);
++	irq_work_sync(&event->pending_disable_irq);
+ 	perf_pending_task_sync(event);
  
- static struct attribute *spr_uncore_cha_formats_attr[] = {
- 	&format_attr_event.attr,
--	&format_attr_umask_ext4.attr,
-+	&format_attr_umask_ext5.attr,
- 	&format_attr_tid_en2.attr,
- 	&format_attr_edge.attr,
- 	&format_attr_inv.attr,
-@@ -5995,7 +5997,7 @@ ATTRIBUTE_GROUPS(uncore_alias);
- static struct intel_uncore_type spr_uncore_chabox = {
- 	.name			= "cha",
- 	.event_mask		= SPR_CHA_PMON_EVENT_MASK,
--	.event_mask_ext		= SPR_RAW_EVENT_MASK_EXT,
-+	.event_mask_ext		= SPR_CHA_EVENT_MASK_EXT,
- 	.num_shared_regs	= 1,
- 	.constraints		= skx_uncore_chabox_constraints,
- 	.ops			= &spr_uncore_chabox_ops,
+ 	unaccount_event(event);
+@@ -6749,7 +6750,7 @@ static void perf_sigtrap(struct perf_event *event)
+ /*
+  * Deliver the pending work in-event-context or follow the context.
+  */
+-static void __perf_pending_irq(struct perf_event *event)
++static void __perf_pending_disable(struct perf_event *event)
+ {
+ 	int cpu = READ_ONCE(event->oncpu);
+ 
+@@ -6787,11 +6788,26 @@ static void __perf_pending_irq(struct perf_event *event)
+ 	 *				  irq_work_queue(); // FAILS
+ 	 *
+ 	 *  irq_work_run()
+-	 *    perf_pending_irq()
++	 *    perf_pending_disable()
+ 	 *
+ 	 * But the event runs on CPU-B and wants disabling there.
+ 	 */
+-	irq_work_queue_on(&event->pending_irq, cpu);
++	irq_work_queue_on(&event->pending_disable_irq, cpu);
++}
++
++static void perf_pending_disable(struct irq_work *entry)
++{
++	struct perf_event *event = container_of(entry, struct perf_event, pending_disable_irq);
++	int rctx;
++
++	/*
++	 * If we 'fail' here, that's OK, it means recursion is already disabled
++	 * and we won't recurse 'further'.
++	 */
++	rctx = perf_swevent_get_recursion_context();
++	__perf_pending_disable(event);
++	if (rctx >= 0)
++		perf_swevent_put_recursion_context(rctx);
+ }
+ 
+ static void perf_pending_irq(struct irq_work *entry)
+@@ -6814,8 +6830,6 @@ static void perf_pending_irq(struct irq_work *entry)
+ 		perf_event_wakeup(event);
+ 	}
+ 
+-	__perf_pending_irq(event);
+-
+ 	if (rctx >= 0)
+ 		perf_swevent_put_recursion_context(rctx);
+ }
+@@ -11956,6 +11970,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 
+ 	init_waitqueue_head(&event->waitq);
+ 	init_irq_work(&event->pending_irq, perf_pending_irq);
++	event->pending_disable_irq = IRQ_WORK_INIT_HARD(perf_pending_disable);
+ 	init_task_work(&event->pending_task, perf_pending_task);
+ 	rcuwait_init(&event->pending_work_wait);
+ 
