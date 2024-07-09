@@ -1,99 +1,74 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2671019DF94
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484EB19B5BA;
+	Tue,  9 Jul 2024 16:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542593; cv=none; b=EnUFQXHWp+06VWjPkGDhRk8mN/naAN7dWbIsMMp8H4qGUE9GQbDg/I6mLSZ3hznCAgnee5+MxRMm7uF0mb6x+ldreAGpi6bcl0duXG8BlGgp4Wj2IlahRCJFExkYuc58kw9fBaU5FAbPQSgme8X62HE1Zne9gtJTzIKbKhVMnbc=
+	t=1720542641; cv=none; b=erpkQxiiMnqC665pXADrmppG+ctyRiFMec5cgoKQTD0BsT4QHeGDLm6zd28UTg07ManPZ34AFlVn44QuyExNzSHEOB+NmZc7ok1p1iXdXUDXhj7ketgZnXlkccjOq9DHZkSVJW+wut/3a4gnah2AaqAEeefCGhS0HYcmvFq+sBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542593; c=relaxed/simple;
-	bh=IM6QmybZepBTV4M87U3hzs2YeN+T6D14TFCsMzcbKQI=;
-	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=eCQO3it/lZzEW10uA7S1OdT0apKQLvZA/bNRr7qfAD2OBfWiSk1q8+lw/TZmEdhyXQFdJrF16hVzBrmcSJuEINTaRL+KeysEmtOb3jNxhNA3XzFmIP9Zy0mka+ZgAsnntvjPDTXIjGseRDcL/UnFsmPPTSJHVcOFBM1LuJ7CQcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=fmV5Xyag; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1720542641; c=relaxed/simple;
+	bh=UKvAsz1g4fnOhjjLhryynx4MnRPSHIJ84qICpjwLHE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IRgLxCJeLnVIW8QEKEOCM2gjjxCLAsInmGQutA8hdWIZC7f6P7de+h9+aY4HnFlm8DAQEqs6yMj6l2a88Pb2TRxMV+RgVxTp1TNdM2tbuW+Awcig6RmwC5/WjDo8iqLMiKN7LZOhAqP+7Rg3TzQqo5p6EYViEp9YQyoZXsJSKiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcDj//x7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fmV5Xyag"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1720542587; bh=IM6QmybZepBTV4M87U3hzs2YeN+T6D14TFCsMzcbKQI=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=fmV5Xyag0HrbfA2BECFD3tQs5acq/pf82D2PUYux4hl9R+oprcGGMsFN4UW41AbXC
-	 CbtUYQAeNphzz8y2xWGKiDdaEJp0f/mikvf2c0zZHFGIIY+8XcH14PBzNpP4tKGsFH
-	 TCU1dphi+SKyFZlN9GbMH+TV0fDOwAXQ3jXNwMgI=
-Received: from smtpclient.apple ([2408:8207:18a1:c8b0:118:fc2:1adb:e03d])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 76DA60CC; Wed, 10 Jul 2024 00:29:45 +0800
-X-QQ-mid: xmsmtpt1720542585t6qpb6cno
-Message-ID: <tencent_9CE4ABB18A4F4490459BC3111B5726262905@qq.com>
-X-QQ-XMAILINFO: NBOcPERDMH3AZhswaHj/Ct8I/ngCFLeZb6M2dR61l4SAnoiBcwyIru8lnhyAtu
-	 MpuJkMSfRgUD70tI33RtgrHtUZrdqrDnkJL20+m/c9+nphmn5YrYZFsnMbP1DJs193Zm6gjmXgRX
-	 4HDpVZXuchh8+oCcQhR2y6b4tOhMsi+qItAk+anUGptxsKmyRjRDD2M1Obospr3ZueRyZK+3RRHi
-	 SzKwaABCrUrNQEQBmCkDqvaf3FLEXDmQUTuUGHabtMvaY5KaH1s9mMowhjp524R9CEC0FKTGrpoZ
-	 kyCDNsLRxR+IbsqCoouPB+MavRXwXMaeqWP7HAQy06lqtM22b4UJY60eS2Sk62+LE4DL8Y5GJjNG
-	 5gAi+5BjiOh79UrV0dyJCWdtz5zgumPV/5GEvVVHIy5mrHCzey5+1CnGMTiHM8cc1E0PFn9+4Lep
-	 CF75gi8OiTWav/PMf6KrE4NxYTiPFyfoVKdzaKYBExgZ4gP+FjPTY1zQDfa6csa0vvyo9/sSd9je
-	 YNPcBQxTJsbRuan7+e/Gv+ZTGB611L1iJJeZxrslo0yKUCqwRoaofWWGp+x1+jtPtVgmcJzymm80
-	 htS+vIZAZVyl8APJpsmxuX83B2cdHpmFy5DRJH6kIZL2+jCGQnAalJqx56y+dniDTpC3VylSw4A/
-	 Cr3M9MOo5poR8HCsvsuycoLP/nJ597ZzfsJLhc/Kt7ohBqxE/DuWnuoXKjk2Udr+XcIw7mdjQlP3
-	 HWJ31cR6ebyINxqNcSRyom6vaO/dQjKynOOouZEDhmnK0+D4m3CjAm3JbjWWMBYnEqI0Iipb6NkL
-	 5SJfelX78FoBCgMDU2J17pkuPy/W/T4CEyiAZEu6jbmA6p2jLKNwR8nNLJRpW55ylGh+bUGCMhQS
-	 +eofu/xRbOWvPzlU5QzOXR8d4exCu6jfMUI0CNxfeppvGzRty9fsg9rMZFu182lA06hXnHMAOzE+
-	 dsbuY7SVrr7lsPaOg0nuOwGCEZildveVG9ryVKeEvqjShbhx8YEIpULbPr3wrP9WsxiENbCOE=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcDj//x7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A9B5C3277B;
+	Tue,  9 Jul 2024 16:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720542640;
+	bh=UKvAsz1g4fnOhjjLhryynx4MnRPSHIJ84qICpjwLHE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OcDj//x71lzAXPBTyD2LF+AFXbTXO0eT0YRpKj7V0MLPCfbQ5jVnxu1Ek9cOWy+Qf
+	 scFvukXODhmmZvouxZBh3vRGgHJZFG6ETDbCGpRJfyzeA/VretAxeLqqZqUndnnJnP
+	 NI6mfm+vRk8IOo1eMYd9bA+pxAirZBWjBZvsD3HsebwLXQzJwxxmThSqkwAckO7/aw
+	 ZO+ziOXinTvU9mmCIbgZSCGrHXIrTBYgWRvmlnaQ+ssu+OIFcxS3BvP5lEzkFrLA3Y
+	 u3Sx+1gdmw43NUajbpSF6Iho9R/KboZyP67DQvWKbGC5iJo/JbwI/Pxd1l83z6rBE8
+	 tL1xrH3JshPNA==
+Date: Tue, 9 Jul 2024 10:30:39 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Valentin Caron <valentin.caron@foss.st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: rtc: stm32: introduce new
+ st,stm32mp25-rtc compatible
+Message-ID: <172054263823.3749406.8767907445542011155.robh@kernel.org>
+References: <20240708153434.416287-1-valentin.caron@foss.st.com>
+ <20240708153434.416287-2-valentin.caron@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH -fixes] dma-mapping: add default implementation to
- arch_dma_{set|clear}_uncached
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <42552be3-df90-4f8f-a27b-abd08e350fc4@arm.com>
-Date: Wed, 10 Jul 2024 00:29:33 +0800
-Cc: Christoph Hellwig <hch@lst.de>,
- iommu@lists.linux.dev,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Transfer-Encoding: quoted-printable
-X-OQ-MSGID: <7FB35339-3F19-472A-8E66-31C608410600@cyyself.name>
-References: <tencent_A5ED71472ADCAF18F59085464CBE23C12A07@qq.com>
- <20240709111901.GC4421@lst.de>
- <tencent_651BC4D11C9730062064ACB186AF4A904005@qq.com>
- <20240709114629.GB6959@lst.de>
- <tencent_30E109FE684F391AE15AC6F4854034C2F00A@qq.com>
- <42552be3-df90-4f8f-a27b-abd08e350fc4@arm.com>
-To: Robin Murphy <robin.murphy@arm.com>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708153434.416287-2-valentin.caron@foss.st.com>
 
 
+On Mon, 08 Jul 2024 17:34:33 +0200, Valentin Caron wrote:
+> Introduce new st,stm32mp25-rtc compatible. It is based on st,stm32mp1-rtc.
+> 
+> Difference is that stm32mp25 soc implements a triple protection on RTC
+> registers:
+> - Secure bit based protection
+> - Privileged context based protection
+> - Compartment ID filtering based protection
+> This driver will now check theses configurations before probing to avoid
+> exceptions and fake reads on register.
+> 
+> Link: https://www.st.com/resource/en/reference_manual/rm0457-stm32mp25xx-advanced-armbased-3264bit-mpus-stmicroelectronics.pdf#page=4081
+> Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
 
-> On Jul 9, 2024, at 23:52, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 09/07/2024 1:22 pm, Yangyu Chen wrote:
->> The only failed symbol on the kernel with `ARCH=3Driscv defconfig`
->> is `arch_dma_set_uncached` since the compiler requires all possible
->> values to be known. I think a pattern like in kernel/dma/direct.c:349
->> for symbol `arch_dma_clear_uncached`, which uses `if
->> (IS_ENABLE(CONFIG_ARCH_HAS_xxx)) xxx` is acceptable. But for the
->> symbol `arch_dma_set_uncached`, a complex analysis is needed for a
->> value set in a block of branches. I think we should not rely on such
->> compiler optimization in such a complex pattern.
-> I'm not a compiler guy, but is it really that complex when the =
-variable is only ever written with the same compile-time-constant value =
-that it's already initialised with? If the optimisation pass is so =
-focused on being able to use a conditional store instruction that it =
-would rather emit one which has no effect either way than elide it =
-entirely, that doesn't strike me as a particularly good optimisation :/
-
-I confirm this is a regression for the compiler. However, I think
-both the compiler and the kernel should be fixed, as I mentioned
-the complexity of this pattern in the last email. Also, here is the
-only failed symbol in the kernel with RISC-V defconfig.
-
-Thanks,
-Yangyu Chen
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
