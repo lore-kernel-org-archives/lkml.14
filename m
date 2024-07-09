@@ -1,410 +1,161 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA3D39856;
-	Tue,  9 Jul 2024 01:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F47827269
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 01:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720486819; cv=none; b=VgOYvXv0nbAspZXakaPCVwCpHjlumruJpXkZKMpMX87GjPvFuhG0+hQBeVqqXa5R6nCxQsugf4yOIC/0+GGts8ecfcP5XKd93uUr/cWQdId2dK/R518z8trEdtE1/Vkfv+y0TsjCcGOHaCiafV9RiK07hSy78Hc0WoMI4R2x4Qc=
+	t=1720487095; cv=none; b=uncPRRZXFIctyaSHoI/Mb3D4SgFbZ1v6YHZCwAwVLXW4zPjevEFVuPQhkhe0M2NH+dpx2tdFgj+2Cn+ECfj4buJsl/YudWtKoKJ1JXKDinnArhsEDt6SWJvOAPiJQa+ImQcrGOnRQ3E6ihnUXDJCsazEC8rijVziKGK7m4VdDhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720486819; c=relaxed/simple;
-	bh=xLqdOSI1eEn13oz6ComTmDYh9EQN8Mh9yt72JKOjUs8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ErzsRSeDMwk2/N67v0LfFb4d5lkqT+7GI7PvvKjBx1RAqGLCz+K2V62jdgmvXqEFG9mXUvcyiZ21o1X0J+qcvrZ3eC7n3UcOUe3xLxVNwWuO0XfjVtEj6WWfjE9OUmJZ1UIYy1K8hYqL/WynFQYB6UeUAzeOqdTq8uKlsjpi8/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WJ2dz1gqSz1HF7Y;
-	Tue,  9 Jul 2024 08:57:43 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 71A72180028;
-	Tue,  9 Jul 2024 09:00:07 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 9 Jul
- 2024 09:00:06 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<martin.lau@linux.dev>, <eddyz87@gmail.com>, <song@kernel.org>,
-	<yonghong.song@linux.dev>, <john.fastabend@gmail.com>, <kpsingh@kernel.org>,
-	<sdf@fomichev.me>, <haoluo@google.com>, <mykolal@fb.com>, <shuah@kernel.org>,
-	<liaochang1@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: [PATCH 1/2] uprobes: Optimize the return_instance related routines
-Date: Tue, 9 Jul 2024 00:51:41 +0000
-Message-ID: <20240709005142.4044530-2-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240709005142.4044530-1-liaochang1@huawei.com>
-References: <20240709005142.4044530-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1720487095; c=relaxed/simple;
+	bh=GKrX/SAlf/AthAEOO9Vue4N/gi7OxPo3+l209YVXGbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YYQYLXQUQZFy+z5EVndcQp45AljH8Dq6JY4G7SdJIXIO8a6/t60iRpEDqm28UP1G9eyZYvve6MQrJcIGkPGHSAHOBrDlXnu4WNP5UlTZd1qZ18vFqCOo9cKW2hlTtXkUCWQwTVvi/j1ZdyznVUJUmBwXr3ndVA8O/nq5D2Q+Sas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gWnEutDF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gWnEutDF"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 468NorAi018665;
+	Tue, 9 Jul 2024 01:04:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BS5I75+H8x13f1B8KfKwBuZ0YFzz42LgQKig2a3ZeIU=; b=gWnEutDFsOtuOz06
+	ZJEvkXcuw4B4v9ehD7a5AKn8Xv6kR7V8PoGoJTIy+UrB6z5fuvHFrXA8G38w6AqO
+	s0c+B+sewD8LLvEHlA8w7aarMhCVyzpXWxvqyHwzwINbCXjNcVgD9uQo+2kYm7G8
+	ix2Heq8ohJ9WVMbTHLIk9WV/jF6xC4w98oP+b2Bv6eiPs0XYiZQlUqb0C7tAnJJf
+	7ccbyjZnjNdRWfbsx2xemyHPg4i3pVi7bP8Z1qG1ER5t+iQwfKYe6JBTtosgdp66
+	BVtfDe7LSfjlSNUS2BR9x1riaT41kEqEPXbDXspDPnYwg6uHkJjn1Dqx+duyNtLd
+	vYsvGg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406y77n0h2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 01:04:39 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46914d8s020522
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 01:04:39 GMT
+Received: from [10.253.14.85] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Jul 2024
+ 18:04:37 -0700
+Message-ID: <b8e704f9-7392-4925-9593-e4a9da045e86@quicinc.com>
+Date: Tue, 9 Jul 2024 09:04:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] driver core: Fix size calculation of symlink name for
+ devlink_(add|remove)_symlinks()
+To: Saravana Kannan <saravanak@google.com>, Zijun Hu <zijun_hu@icloud.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki"
+	<rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240707-devlink_fix-v1-1-623acb431cd8@quicinc.com>
+ <CAGETcx8YwD-cWYFJ72rfSfmrnoY=rv9oc_2KCK9_AF34Evw7wg@mail.gmail.com>
+Content-Language: en-US
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+In-Reply-To: <CAGETcx8YwD-cWYFJ72rfSfmrnoY=rv9oc_2KCK9_AF34Evw7wg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6-VJnI2IdQVP54T7cDJIXMeBVVAtDj13
+X-Proofpoint-ORIG-GUID: 6-VJnI2IdQVP54T7cDJIXMeBVVAtDj13
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_14,2024-07-08_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ mlxscore=0 clxscore=1011 priorityscore=1501 spamscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 mlxlogscore=999 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407090005
 
-Reduce the runtime overhead for struct return_instance data managed by
-uretprobe. This patch replaces the dynamic allocation with statically
-allocated array, leverage two facts that are limited nesting depth of
-uretprobe (max 64) and the function call style of return_instance usage
-(create at entry, free at exit).
+On 7/9/2024 6:43 AM, Saravana Kannan wrote:
+> On Sun, Jul 7, 2024 at 6:24 AM Zijun Hu <zijun_hu@icloud.com> wrote:
+>>
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> devlink_(add|remove)_symlinks() wants to kzalloc() memory to save symlink
+>> name for either supplier or consumer, but forget to consider consumer
+>> prefix when calclulate memory size, fixed by considering prefix for both
+>> supplier and consumer.
+> 
+> No, I didn't forget to take "consumer" into account :) Both supplier
+> and consumer are the same length. So I didn't bother doing both. I
+> don't see a point behind this patch.
+> 
+it is not obvious for code readers that "supplier:" and "consumer:" have
+the same string length.
 
-This patch has been tested on Kunpeng916 (Hi1616), 4 NUMA nodes, 64
-cores @ 2.4GHz. Redis benchmarks show a throughput gain by 2% for Redis
-GET and SET commands:
+code readers maybe need to count characters one by one for both strings
+to confirm both have the same length.
+>>
+>> Fixes: 287905e68dd2 ("driver core: Expose device link details in sysfs")
+> 
+> It's definitely not "Fixing" anything because nothing is broken.
+>this change maybe fix algorithm or procedures to calculate the size to
+kzalloc() even if it don't change the resulted size.
 
-------------------------------------------------------------------
-Test case       | No uretprobes | uretprobes     | uretprobes
-                |               | (current)      | (optimized)
-==================================================================
-Redis SET (RPS) | 47025         | 40619 (-13.6%) | 41529 (-11.6%)
-------------------------------------------------------------------
-Redis GET (RPS) | 46715         | 41426 (-11.3%) | 42306 (-9.4%)
-------------------------------------------------------------------
+> Nack.
+>> If you really want this in, remove this tag and send it again. I won't
+> ack or review it though as I don't think it adds much value. Greg can
+> take it if he thinks he likes it.
+> 
+okay, will send v2 which will remove the fix tag, i feels this change is
+worthy due to below reasons:
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- include/linux/uprobes.h |  10 ++-
- kernel/events/uprobes.c | 162 ++++++++++++++++++++++++----------------
- 2 files changed, 105 insertions(+), 67 deletions(-)
+1) readers is easier to understand the algorithm or procedures to
+calculate the resulted size.
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f46e0ca0169c..ec50ff010b1d 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -55,6 +55,12 @@ enum uprobe_task_state {
- 	UTASK_SSTEP_TRAPPED,
- };
- 
-+struct return_frame {
-+	/* the frames of return instances */
-+	struct return_instance	*return_instance;
-+	struct return_instance	*vaddr;
-+};
-+
- /*
-  * uprobe_task: Metadata of a task while it singlesteps.
-  */
-@@ -76,7 +82,7 @@ struct uprobe_task {
- 	struct uprobe			*active_uprobe;
- 	unsigned long			xol_vaddr;
- 
--	struct return_instance		*return_instances;
-+	struct return_frame		frame;
- 	unsigned int			depth;
- };
- 
-@@ -86,8 +92,6 @@ struct return_instance {
- 	unsigned long		stack;		/* stack pointer */
- 	unsigned long		orig_ret_vaddr; /* original return address */
- 	bool			chained;	/* true, if instance is nested */
--
--	struct return_instance	*next;		/* keep as stack */
- };
- 
- enum rp_check {
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 2c83ba776fc7..81c56fd2811c 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1697,12 +1697,89 @@ unsigned long uprobe_get_trap_addr(struct pt_regs *regs)
- 	return instruction_pointer(regs);
- }
- 
--static struct return_instance *free_ret_instance(struct return_instance *ri)
-+static inline
-+struct return_instance *next_ret_instance(struct return_frame *frame,
-+					  struct return_instance *ri)
-+{
-+	return ri == frame->vaddr ? NULL : ri - 1;
-+}
-+
-+static inline
-+struct return_instance *curr_ret_instance(struct uprobe_task *task)
-+{
-+	return task->frame.return_instance;
-+}
-+
-+static struct return_instance *find_next_ret_chain(struct uprobe_task *utask,
-+						   struct return_instance *ri)
-+{
-+	bool chained;
-+
-+	do {
-+		chained = ri->chained;
-+		ri = next_ret_instance(&utask->frame, ri);
-+	} while (chained);
-+
-+	return ri;
-+}
-+
-+static inline
-+struct return_instance *free_ret_instance(struct uprobe_task *utask,
-+					  struct return_instance *ri)
- {
--	struct return_instance *next = ri->next;
- 	put_uprobe(ri->uprobe);
--	kfree(ri);
--	return next;
-+	return next_ret_instance(&utask->frame, ri);
-+}
-+
-+static void free_return_instances(struct uprobe_task *task)
-+{
-+	struct return_frame *frame = &task->frame;
-+	struct return_instance *ri = frame->return_instance;
-+
-+	while (ri) {
-+		put_uprobe(ri->uprobe);
-+		ri = next_ret_instance(frame, ri);
-+	}
-+
-+	kfree(frame->vaddr);
-+}
-+
-+static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
-+				     struct pt_regs *regs)
-+{
-+	struct return_frame *frame = &utask->frame;
-+	struct return_instance *ri = frame->return_instance;
-+	enum rp_check ctx = chained ? RP_CHECK_CHAIN_CALL : RP_CHECK_CALL;
-+
-+	while (ri && !arch_uretprobe_is_alive(ri, ctx, regs)) {
-+		ri = next_ret_instance(frame, ri);
-+		utask->depth--;
-+	}
-+	frame->return_instance = ri;
-+}
-+
-+static struct return_instance *alloc_return_instance(struct uprobe_task *task)
-+{
-+	struct return_frame *frame = &task->frame;
-+
-+	if (!frame->vaddr) {
-+		frame->vaddr = kcalloc(MAX_URETPROBE_DEPTH,
-+				sizeof(struct return_instance), GFP_KERNEL);
-+		if (!frame->vaddr)
-+			return NULL;
-+	}
-+
-+	if (!frame->return_instance) {
-+		frame->return_instance = frame->vaddr;
-+		return frame->return_instance;
-+	}
-+
-+	return ++frame->return_instance;
-+}
-+
-+static inline bool return_frame_empty(struct uprobe_task *task)
-+{
-+	return !task->frame.return_instance;
- }
- 
- /*
-@@ -1712,7 +1789,6 @@ static struct return_instance *free_ret_instance(struct return_instance *ri)
- void uprobe_free_utask(struct task_struct *t)
- {
- 	struct uprobe_task *utask = t->utask;
--	struct return_instance *ri;
- 
- 	if (!utask)
- 		return;
-@@ -1720,10 +1796,7 @@ void uprobe_free_utask(struct task_struct *t)
- 	if (utask->active_uprobe)
- 		put_uprobe(utask->active_uprobe);
- 
--	ri = utask->return_instances;
--	while (ri)
--		ri = free_ret_instance(ri);
--
-+	free_return_instances(utask);
- 	xol_free_insn_slot(t);
- 	kfree(utask);
- 	t->utask = NULL;
-@@ -1747,26 +1820,20 @@ static struct uprobe_task *get_utask(void)
- static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
- {
- 	struct uprobe_task *n_utask;
--	struct return_instance **p, *o, *n;
-+	struct return_instance *o, *n;
- 
- 	n_utask = kzalloc(sizeof(struct uprobe_task), GFP_KERNEL);
- 	if (!n_utask)
- 		return -ENOMEM;
- 	t->utask = n_utask;
- 
--	p = &n_utask->return_instances;
--	for (o = o_utask->return_instances; o; o = o->next) {
--		n = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
--		if (!n)
--			return -ENOMEM;
--
-+	o = curr_ret_instance(o_utask);
-+	while (o) {
-+		n = alloc_return_instance(n_utask);
-+		n_utask->depth++;
- 		*n = *o;
- 		get_uprobe(n->uprobe);
--		n->next = NULL;
--
--		*p = n;
--		p = &n->next;
--		n_utask->depth++;
-+		o = next_ret_instance(&o_utask->frame, o);
- 	}
- 
- 	return 0;
-@@ -1799,7 +1866,7 @@ void uprobe_copy_process(struct task_struct *t, unsigned long flags)
- 
- 	t->utask = NULL;
- 
--	if (!utask || !utask->return_instances)
-+	if (!utask || return_frame_empty(utask))
- 		return;
- 
- 	if (mm == t->mm && !(flags & CLONE_VFORK))
-@@ -1840,19 +1907,6 @@ static unsigned long get_trampoline_vaddr(void)
- 	return trampoline_vaddr;
- }
- 
--static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
--					struct pt_regs *regs)
--{
--	struct return_instance *ri = utask->return_instances;
--	enum rp_check ctx = chained ? RP_CHECK_CHAIN_CALL : RP_CHECK_CALL;
--
--	while (ri && !arch_uretprobe_is_alive(ri, ctx, regs)) {
--		ri = free_ret_instance(ri);
--		utask->depth--;
--	}
--	utask->return_instances = ri;
--}
--
- static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
- {
- 	struct return_instance *ri;
-@@ -1874,10 +1928,6 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
- 		return;
- 	}
- 
--	ri = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
--	if (!ri)
--		return;
--
- 	trampoline_vaddr = get_trampoline_vaddr();
- 	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
- 	if (orig_ret_vaddr == -1)
-@@ -1893,7 +1943,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
- 	 * instances. This also makes breakpoint unwrapping easier.
- 	 */
- 	if (chained) {
--		if (!utask->return_instances) {
-+		if (return_frame_empty(utask)) {
- 			/*
- 			 * This situation is not possible. Likely we have an
- 			 * attack from user-space.
-@@ -1901,22 +1951,19 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
- 			uprobe_warn(current, "handle tail call");
- 			goto fail;
- 		}
--		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
-+		orig_ret_vaddr = curr_ret_instance(utask)->orig_ret_vaddr;
- 	}
- 
-+	ri = alloc_return_instance(utask);
- 	ri->uprobe = get_uprobe(uprobe);
- 	ri->func = instruction_pointer(regs);
- 	ri->stack = user_stack_pointer(regs);
- 	ri->orig_ret_vaddr = orig_ret_vaddr;
- 	ri->chained = chained;
--
- 	utask->depth++;
--	ri->next = utask->return_instances;
--	utask->return_instances = ri;
- 
--	return;
-  fail:
--	kfree(ri);
-+	return;
- }
- 
- /* Prepare to single-step probed instruction out of line. */
-@@ -2111,18 +2158,6 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
- 	up_read(&uprobe->register_rwsem);
- }
- 
--static struct return_instance *find_next_ret_chain(struct return_instance *ri)
--{
--	bool chained;
--
--	do {
--		chained = ri->chained;
--		ri = ri->next;	/* can't be NULL if chained */
--	} while (chained);
--
--	return ri;
--}
--
- static void handle_trampoline(struct pt_regs *regs)
- {
- 	struct uprobe_task *utask;
-@@ -2133,7 +2168,7 @@ static void handle_trampoline(struct pt_regs *regs)
- 	if (!utask)
- 		goto sigill;
- 
--	ri = utask->return_instances;
-+	ri = curr_ret_instance(utask);
- 	if (!ri)
- 		goto sigill;
- 
-@@ -2144,25 +2179,24 @@ static void handle_trampoline(struct pt_regs *regs)
- 		 * or NULL; the latter case means that nobody but ri->func
- 		 * could hit this trampoline on return. TODO: sigaltstack().
- 		 */
--		next = find_next_ret_chain(ri);
-+		next = find_next_ret_chain(utask, ri);
- 		valid = !next || arch_uretprobe_is_alive(next, RP_CHECK_RET, regs);
- 
- 		instruction_pointer_set(regs, ri->orig_ret_vaddr);
- 		do {
- 			if (valid)
- 				handle_uretprobe_chain(ri, regs);
--			ri = free_ret_instance(ri);
-+			ri = free_ret_instance(utask, ri);
- 			utask->depth--;
- 		} while (ri != next);
- 	} while (!valid);
- 
--	utask->return_instances = ri;
-+	utask->frame.return_instance = ri;
- 	return;
- 
-  sigill:
- 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
- 	force_sig(SIGILL);
--
- }
- 
- bool __weak arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs)
-@@ -2315,7 +2349,7 @@ int uprobe_pre_sstep_notifier(struct pt_regs *regs)
- 		return 0;
- 
- 	if (!test_bit(MMF_HAS_UPROBES, &current->mm->flags) &&
--	    (!current->utask || !current->utask->return_instances))
-+	    (!current->utask || return_frame_empty(current->utask)))
- 		return 0;
- 
- 	set_thread_flag(TIF_UPROBE);
--- 
-2.34.1
+2) readers don't need to take extra effort to confirm that fact that
+both string have the same length.
+
+let us wait for Greg's opinions.
+> -Saravana
+> 
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>> ---
+>>  drivers/base/core.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>> index 2b4c0624b704..f14cfe5c97b7 100644
+>> --- a/drivers/base/core.c
+>> +++ b/drivers/base/core.c
+>> @@ -572,7 +572,7 @@ static int devlink_add_symlinks(struct device *dev)
+>>         len = max(strlen(dev_bus_name(sup)) + strlen(dev_name(sup)),
+>>                   strlen(dev_bus_name(con)) + strlen(dev_name(con)));
+>>         len += strlen(":");
+>> -       len += strlen("supplier:") + 1;
+>> +       len += max(strlen("supplier:"), strlen("consumer:")) + 1;
+>>         buf = kzalloc(len, GFP_KERNEL);
+>>         if (!buf)
+>>                 return -ENOMEM;
+>> @@ -623,7 +623,7 @@ static void devlink_remove_symlinks(struct device *dev)
+>>         len = max(strlen(dev_bus_name(sup)) + strlen(dev_name(sup)),
+>>                   strlen(dev_bus_name(con)) + strlen(dev_name(con)));
+>>         len += strlen(":");
+>> -       len += strlen("supplier:") + 1;
+>> +       len += max(strlen("supplier:"), strlen("consumer:")) + 1;
+>>         buf = kzalloc(len, GFP_KERNEL);
+>>         if (!buf) {
+>>                 WARN(1, "Unable to properly free device link symlinks!\n");
+>>
+>> ---
+>> base-commit: c6653f49e4fd3b0d52c12a1fc814d6c5b234ea15
+>> change-id: 20240707-devlink_fix-0fa46dedfe95
+>>
+>> Best regards,
+>> --
+>> Zijun Hu <quic_zijuhu@quicinc.com>
+>>
 
