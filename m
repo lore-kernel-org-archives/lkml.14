@@ -1,93 +1,113 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC67149E13;
-	Tue,  9 Jul 2024 08:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25BF155739
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720514766; cv=none; b=HOeZfsBj2+Vuga7lesgEbn7Wn7OyjoTJ3WuSuOesya87owssvNetm01mGtunStbJdzZeVgkEh4Y71JpparkGnAaS2NwQdzOkIjd33xR2pm3vwHDIbuXSs09qE2OCdD8/ZQh6aSs0ArDF9UjJDd7pq5USgmX0OJXxwlcjKUzolQk=
+	t=1720514770; cv=none; b=oRCxC9qw2My/GiLwZlekFykMhsO1psot2tVZDDPZlf/w9kptfKvkbQN/6kwdo5XDyK8x4GZuS73exbfwKtqd7pmlqmcI6NXAKX20FrNSEwz19y8AeiitmdcLlCU3FxvXF1DvOKxND0MlrHuwzPtDwrljoDhVmeQxlZ9wwyJoxII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720514766; c=relaxed/simple;
-	bh=BbPJ2Oh11tQ8R7WVf487c9dpDGz3HqjqdVRQkky4hyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ivuwB/nKY7IpM+s2vcU3sYdKOIQVjm6Gf9X+rbYa6n/lyq8NjlhGDxqqfBvo426Gah7YpRlF3FJNkMtoyUV+74gUsTsHQN5Y780n7vumzXPeyL5WwzZoMLuPRGZJEKx9vnMB8L7+wVlbLH0IQkvGd9KlaG69OAoxAOq8Ti4DaZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Cr2rJv7O; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1720514770; c=relaxed/simple;
+	bh=Ba7A+qf3KVB7glN+7THcBtgbX6uG/c4nfawtYEGqGLc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UChpUBcsL0nA8uc1oMTupRTBXWDHLDGBWd6Vcm0Ax7wnQrsEn+i8rcLuGRPrlbfoAkeSCe8JqPjpk/VUTL0uZJIXd9j0Pv9T+tKf7AH003Fqnc5v0LCTnCzne0o5Cx3yZrA+rOMRlqeLI9tFjE+Pky+Eq2bG2kRuk+qV8YMxGgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eml6KNtJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cr2rJv7O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1720514761;
-	bh=m5As5ibD0IsWbHKVWPgbOjU9rstZ/h/jYvVPgQR28uc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Cr2rJv7O2WIhrY69e++LJuHjpUdbVIq5QuojWfxzakCpdEk421FYyPDKvzJRZltgI
-	 UYUWaipSNhNMELJRdXvdIMpJbwZqnbYIDiMKj3WEkU2u69Y9EdKmmQrXw+dAC+gblz
-	 ISIPn39Lh5U06YS2eiK7XiFk2hYNz3DBj0W9qYYYsFf9YYVD2EcROreUvTFyPCyRqE
-	 rcqEERwhTRH7e+2HHbBMMk4A/gjKz2oT3RByX996xzRGo5r9i+3QWb+sFXPsRLDT/A
-	 fpeiS1RtPiQG+oXKrNuMtPevB+13d5I99J1EzaXe2j3EimuTNL8nXS0+E1/4t99gSF
-	 BHZ6901dObhmw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eml6KNtJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720514767;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SUB0YpD6W/a3Rk4MCKqOREUcImdmQCAk36U0msNsfAI=;
+	b=eml6KNtJMUiA12gKECBOliG0/ffnwh1mZ/cHn2JaQ5cnZg5mmnaepHC4IFEzUIBHrRRHja
+	Skmz10fGIgPlVCWtFsYf063xn9iymz+wrsJvsLjtlxHj6oHMEPsjVrACZrqpw5XoCmt8zR
+	86/0Um5eA5IYVCiU/YnbAQ3MX/gwN6I=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-9nG2NOENPs65ZRhek9jviw-1; Tue,
+ 09 Jul 2024 04:45:24 -0400
+X-MC-Unique: 9nG2NOENPs65ZRhek9jviw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJF2K069Sz4w2M;
-	Tue,  9 Jul 2024 18:46:00 +1000 (AEST)
-Date: Tue, 9 Jul 2024 18:45:59 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the mm tree
-Message-ID: <20240709184559.676c476c@canb.auug.org.au>
-In-Reply-To: <20240709184004.60f94726@canb.auug.org.au>
-References: <20240709184004.60f94726@canb.auug.org.au>
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2276A19560BF;
+	Tue,  9 Jul 2024 08:45:22 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.39.193.246])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3CFE19560AA;
+	Tue,  9 Jul 2024 08:45:16 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	"Bjorn Roy Baron" <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v2 0/4] drm/panic: Add a qr_code panic screen
+Date: Tue,  9 Jul 2024 10:40:06 +0200
+Message-ID: <20240709084458.158659-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ez3TZETVsX7yJS9lVCymq3j";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
---Sig_/ez3TZETVsX7yJS9lVCymq3j
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This series adds a new panic screen, with the kmsg data embedded in a QR-code.
 
-Hi all,
+The main advantage of QR-code, is that you can copy/paste the debug data to a bug report.
 
-On Tue, 9 Jul 2024 18:40:04 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Caused by commit
->=20
->   7a3c42cc4fc3 ("mul_u64_u64_div_u64: make it precise always")
->=20
-> from the mm-nonmm-unstable branch of the mm tree.
->=20
-> I have reverted that commit for today.
+The QR-code encoder is written in rust, and is very specific to drm_panic.
+The reason is that it is called in a panic handler, and thus can't allocate memory, or use locking.
+The rust code uses a few rust core API, and provides only two C entry points.
+There is no particular reason to do it in rust, I just wanted to learn rust, and see if it can work in the kernel.
 
-I reverted the following commit as well.
+If you want to see what it looks like, I've put a few screenshots here:
+https://github.com/kdj0c/panic_report/issues/1
 
---=20
-Cheers,
-Stephen Rothwell
+v2:
+ * Rewrite the rust comments with Markdown (Alice Ryhl)
+ * Mark drm_panic_qr_generate() as unsafe (Alice Ryhl)
+ * Use CStr directly, and remove the call to as_str_unchecked()
+   (Alice Ryhl)
+ * Add a check for data_len <= data_size (Greg KH)
 
---Sig_/ez3TZETVsX7yJS9lVCymq3j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Jocelyn Falempe (4):
+  drm/panic: Add integer scaling to blit()
+  drm/rect: add drm_rect_overlap()
+  drm/panic: simplify logo handling
+  drm/panic: Add a qr_code panic screen
 
------BEGIN PGP SIGNATURE-----
+ drivers/gpu/drm/Kconfig         |   29 +
+ drivers/gpu/drm/Makefile        |    1 +
+ drivers/gpu/drm/drm_drv.c       |    3 +
+ drivers/gpu/drm/drm_panic.c     |  338 +++++++++--
+ drivers/gpu/drm/drm_panic_qr.rs | 1004 +++++++++++++++++++++++++++++++
+ include/drm/drm_panic.h         |    4 +
+ include/drm/drm_rect.h          |   15 +
+ 7 files changed, 1355 insertions(+), 39 deletions(-)
+ create mode 100644 drivers/gpu/drm/drm_panic_qr.rs
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaM+MgACgkQAVBC80lX
-0GwsZwf/UwlzuGwZNOMHlqxzu3UTbAXwBaRY5af9GGBeb2I78RAswjnt67uPPY4L
-oj0QUjNuD/DO18eiPNnG3JThTu8nGjk2wriqjNGwfX0JKYfhNbQa3jQSTP/g/8NU
-4bqwCR9JctTa8OXDRycE4dNI7Y2rhtu9yKj2JanUZ6Pe2KlFNRg8QxQniCVWRp+j
-tYF19WWxP7w+sgFfD79AdpXL/hcCBbu88x2qlo6vm/Ne7FRHL27+V+ruH0EseAbY
-ebm0aA5RmiANsffMa0kiepHVmZwLrMoQGXMGv82AoCiM2q2B50G3pCyso20Cnbcw
-jmT69fdA3DrTNiDPueN6YuUdHwoTyQ==
-=kQ42
------END PGP SIGNATURE-----
 
---Sig_/ez3TZETVsX7yJS9lVCymq3j--
+base-commit: 5a716b06b329bd2108c95a4f04c71bbe491729f2
+-- 
+2.45.2
+
