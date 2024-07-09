@@ -1,72 +1,102 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7353987D;
-	Tue,  9 Jul 2024 03:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B108A47;
+	Tue,  9 Jul 2024 03:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720494118; cv=none; b=cWaa4k7MFbiNniMvXeISUQJ+yDh804qWQ4bKZCoM0EGtJaO6JOUs5D2iRcwW/UgocLjeprhOdgfPzGSsgq7iC3IY19wk6K+X8WoQmV2KzsCx4pPzNsTvarvaNIpe2nlkjVpJMqDh0e6BfWSnvzMA/TiAhyu+N5EzYiM08QsafwY=
+	t=1720494383; cv=none; b=OS1NRkkJUb9JAEjGA2DMHUafLiRsJO0izD7paMT22sBRdaIGUvsc3tIS0RbL8fFtuyrAuQdpRwR66LfPRyQMbK9zVkJJhehvFiijwhBTcm1EqLXvivMO9fKFDhiypV6M9/c8aTESwO007o8D6wWFSCAl93Kc5FKnnEh8YMeYltM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720494118; c=relaxed/simple;
-	bh=BIu4ksIVe0DfTolYsbsEhIOOu8Kp7I9DOlYDtY6IkaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=lY2+Cdaln1xa4Hx6hyPLgpJgg89FqhReyl+YrchIIDjTMLLU2OwpCpPy3Ry4ygoUojzl/vwfMXkecjlFSkB7/jAKlYhE3gTjfSyLW/oWmtypvDQaja877+CV30CCBO63jwmKVwTHNaRu9WIG2EXUseTiun8IqJfzzLPMDfg2Hl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=ErKt8srj reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1720494383; c=relaxed/simple;
+	bh=d3srkMsg2KdxDzO3xlTrmynajVoZFXikx+M2zbMSD4o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CEc1OeGG6DfENhtHDdtbBjRuRHOVFrbDzdneJkS0PLteGcgQQeSCw4CS/x+c/khuRas7zNlZaLJoNky8fVDj15kxsVOS6BsGrwITR1SMtDS07L6fOCXHmApS96swol8gtwnjVBXyxQ02YhUXwaGSybaUeLmeKoMVWuFSRlOlCUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lEBslGGV; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="ErKt8srj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=Q9XiKPZ9Kok9iJw0OVvF+KMDYu4F6qex4TEFkUsl7ZU=; b=E
-	rKt8srjdwb2lWlcglEIwtEGOzgyM1YRGxQ1Q7B2URbfgEnqJghSNLYzDtX+dxGN/
-	T1jpfjJuXzU3LshfOF+4NsT/CsHjf2m0ppATFTPIfCwsh3i80PYAsGQR5XbYEzDY
-	9F02xknAzzyFwwIQjOM6oqHiqnTehHIKRy2oXaoiNE=
-Received: from xavier_qy$163.com ( [59.82.45.121] ) by
- ajax-webmail-wmsvr-40-144 (Coremail) ; Tue, 9 Jul 2024 10:45:42 +0800 (CST)
-Date: Tue, 9 Jul 2024 10:45:42 +0800 (CST)
-From: Xavier  <xavier_qy@163.com>
-To: "Tejun Heo" <tj@kernel.org>
-Cc: "Waiman Long" <longman@redhat.com>, mkoutny@suse.com, 
-	akpm@linux-foundation.org, lizefan.x@bytedance.com, 
-	hannes@cmpxchg.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-Subject: Re:Re: [PATCH-cpuset v11 0/2] Add Union-Find and use it to optimize
- cpuset
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <ZowyKf3RlMI0q1P-@slm.duckdns.org>
-References: <f9e55eb8-82a8-45f2-a949-1db182e95fc8@redhat.com>
- <20240704062444.262211-1-xavier_qy@163.com>
- <e20fe0dc-a3ef-4f55-a991-6efe1a9ddecd@redhat.com>
- <ZowyKf3RlMI0q1P-@slm.duckdns.org>
-X-NTES-SC: AL_Qu2ZAviSvEkv5CidYekfmk4aj+k+XsG0vfUj34FWOp9wjC3r+TkOYnhEMWbwweapLD6ltR+QdRx19dlLUbBSRoENMaN7/VsfBWJIH1q0q8nJtg==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEBslGGV"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5c670e5469aso1035592eaf.1;
+        Mon, 08 Jul 2024 20:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720494381; x=1721099181; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Iooajm32+cbim4jJ3gpk2rpzqQgy6Cf493SBECgZQk=;
+        b=lEBslGGVgaFXl7XA1sGVWdzo8zV/ttxTFcNhH9rB5BL0KLVB9VtDDHSIvy1R0W75lQ
+         ueCOZWc1Idld8JzLSIrK2KM/o+oS7iUNW65rthH59j9ZQxwCUhXvy5Ecvngf6JXn0dqc
+         BpQbLFycqXwddjWwrq7fZBs+cm5LVd9lIReLQLiZ0sAwDulwn3Gn7b36EpR4B/YDBfPK
+         De1XvTxrr1jgqEA6SywwhJuDbr1iNB6b+vz6HszuuUFdz74fSmd6HD4uedcdYo+JRoHD
+         TV+8ZmWiu7eV9drKwbKBoUTeS6JQUm7gm9Tt7tiPsGimjMHnvMmIqkzSZAsF3sW0aaZ+
+         ugdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720494381; x=1721099181;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3Iooajm32+cbim4jJ3gpk2rpzqQgy6Cf493SBECgZQk=;
+        b=ZRRmHrwsO0BTxwLBdt6KxiYhR2fcMAzDejrh9YPVH059qroDQl+DEmGK6wK8R4F0l7
+         agkLHjfxN60qzw3nxRoQ+rph3xqVaveeX9pW/sI8WrkO7WzTd5etrldSMVeBZFcvVz6H
+         LH0RDArCpPXhShyHRVzn6Gn9rQIuLz5Y9b6khuC+laj3UtHtoTYxS1ndgHd3qNf3QjAI
+         WG3nuTW60izbIMz9q5Uevl4lxtdC9ZpoYwCs1feMRf4GfU3YiEKVNWSG5puxW5/6C0ko
+         EbJKlj4cYXRgUoU7A0Cu7zXU5MnPmMfUTY1fueeeHjQN0vqVp+0xmaCe733IuoVlzCPz
+         iTgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzKD38dVQfbBJZRZGlcfIzQr1jHHs+KLR0Jfyv2A0q0bXtXn+N/BDmPz9mGjXwePIxX8ySgkwaGxHJio/kR8nRMYOl6dEI6rWb5jDBmy9rrEK7iPQbk3m4DKEF8QAkcrgdko7IOU9hpENdHGBtv0hIC2n51fkDDLQ40nKToWuseGwYW7g=
+X-Gm-Message-State: AOJu0YwjlOuLPd8e4xZb/olEpnNUlgkSn2RQCMDBmvHW1kTvzc/Bo/ST
+	2uuwZ1fTLW5rPpJCVDstqb4MtY9hYa62UPRa4n38mzIwrFXI2p77
+X-Google-Smtp-Source: AGHT+IEhHD+qwVHMhVIw9k8OzWe7UeTC/D40buUHZnfJUnXTtABu7BgCLngwzZXKIHWNK6QAsyWgyw==
+X-Received: by 2002:a4a:b0ce:0:b0:5c6:6f69:7e7b with SMTP id 006d021491bc7-5c68e13ddefmr1381600eaf.3.1720494381220;
+        Mon, 08 Jul 2024 20:06:21 -0700 (PDT)
+Received: from shiv-machina.. (c-73-169-52-138.hsd1.co.comcast.net. [73.169.52.138])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5c68cd9a919sm187717eaf.28.2024.07.08.20.06.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 20:06:20 -0700 (PDT)
+From: Shivani Gupta <shivani07g@gmail.com>
+To: laurent.pinchart@ideasonboard.com,
+	mchehab@kernel.org
+Cc: Shivani Gupta <shivani07g@gmail.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mathias.nyman@intel.com,
+	gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com
+Subject: [PATCH] usb: xhci: Fix compiler warning in xhci.c
+Date: Tue,  9 Jul 2024 03:06:04 +0000
+Message-Id: <20240709030604.1347546-1-shivani07g@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <aab2201.2d75.1909561f34c.Coremail.xavier_qy@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3H4ZZpIxmWBonAA--.63212W
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiZRMXEGXAm6VAtwADse
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-CkhpIHRlanVuLAoKClN1cmUsIHRoYXQgd29ya3MuIFdlIGNhbiB3YWl0IHRvIG1lcmdlIGl0IGlu
-dG8gdGhlIGNncm91cC9mb3ItNi4xMiBicmFuY2guIEkgd2lsbCBwaW5nIHlvdSBvbmNlIHY2LjEx
-LXJjMSBpcyBjdXQuClRoYW5rIHlvdS4KCgotLQpCZXN0IFJlZ2FyZHMsClhhdmllcgoKCgoKQXQg
-MjAyNC0wNy0wOSAwMjozODozMywgIlRlanVuIEhlbyIgPHRqQGtlcm5lbC5vcmc+IHdyb3RlOgo+
-T24gU3VuLCBKdWwgMDcsIDIwMjQgYXQgMDk6NTk6NTVQTSAtMDQwMCwgV2FpbWFuIExvbmcgd3Jv
-dGU6Cj4+IFRoZSBwYXRjaCBzZXJpZXMgbG9va3MgZ29vZCB0byBtZS4gSG93ZXZlciwgaXQgaXMg
-YSBzdGlsbCBtYWpvciBjaGFuZ2UgaW4KPj4gdGhlIGRvbWFpbiBnZW5lcmF0aW9uIGFsZ29yaXRo
-bSBhbmQgaXQgaXMgdG9vIGxhdGUgZm9yIHY2LjExLiBJIHdvdWxkIGFsc28KPj4gbGlrZSBpdCB0
-byBzcGVuZCBtb3JlIHRpbWUgaW4gbGludXgtbmV4dCBhcyBJIGRvbid0IGhhdmUgYSBnb29kIHNl
-dCBvZgo+PiBjZ3JvdXAgdjEgdGVzdC4gSSB3aWxsIHN1cHBvcnQgbWVyZ2luZyB0aGlzIGZvciB2
-Ni4xMi4KPj4gCj4+IEFja2VkLWJ5OiBXYWltYW4gTG9uZyA8bG9uZ21hbkByZWRoYXQuY29tPgo+
-Cj5YYXZpZXIsIGFzIHdlJ3JlIHByZXR0eSBjbG9zZSB0byB0aGUgbWVyZ2Ugd2luZG93LCBJIHRo
-aW5rIGl0J2QgYmUgYmVzdCB0bwo+ZG8gdGhpcyBpbiB0aGUgbmV4dCBtZXJnZSB3aW5kb3cgYXMg
-V2FpbWFuIHNhaWQuIENhbiB5b3UgcGxlYXNlIHBpbmcgbWUgb25jZQo+djYuMTEtcmMxIGlzIGN1
-dD8gSSdsbCBhcHBseSB0aGUgdHdvIHBhdGNoZXMgb24gY2dyb3VwL2Zvci02LjEyLgo+Cj5UaGFu
-a3MuCj4KPi0tIAo+dGVqdW4K
+Fixes the following compiler warnings by changing the comment syntax
+from "/**" to "/*" in the specified comments:
+
+drivers/usb/host/xhci.c:1369: warning: Function parameter or struct member
+'desc' not described in 'xhci_get_endpoint_index'
+
+Signed-off-by: Shivani Gupta <shivani07g@gmail.com>
+---
+ drivers/usb/host/xhci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 37eb37b0affa..67168661aa52 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1355,7 +1355,7 @@ static void xhci_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
+ 		usb_hcd_unmap_urb_for_dma(hcd, urb);
+ }
+ 
+-/**
++/*
+  * xhci_get_endpoint_index - Used for passing endpoint bitmasks between the core and
+  * HCDs.  Find the index for an endpoint given its descriptor.  Use the return
+  * value to right shift 1 for the bitmask.
+-- 
+2.34.1
+
