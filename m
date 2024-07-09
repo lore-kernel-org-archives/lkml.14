@@ -1,179 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B70B581745
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB5881745;
+	Tue,  9 Jul 2024 08:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513736; cv=none; b=EqoRyzkbUA/TlKH+irUkqYNU5AtM6m+yKuMr+GF+kevikhfefZ5bDC2cwxmThEURiOg+EudgchX8M8YP7GQeETJSiBCSX7yVXgcrDTKuyibfRLOYsBGhcBq/74y0Xj9LZbzww3gNo2EfHsoNnntnyrTTsEJqAC2saZJux8Yedas=
+	t=1720513786; cv=none; b=rLw65CM6aGDTa+YmQRiO/d79IpjcY5phvwoVFk9hMwn9MLIfP5U5RAfjnu5WJNUM5Bf1MVyUhlnzgKubDHWNrSJn9uAIuZi8tebMkK2BnRTxCKZPTCbNgsO3Qfb+N+GKnupi2o8Y7+oXhSxNsRvbQbwiTMbUjuUcm80VCdJCQ9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513736; c=relaxed/simple;
-	bh=mIfGA3E/9k3NFi1S87fJxL84SR6lyTPXWI++NBvOgyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aND/8KyDj2Dn/okUgGmsR4Iv+UMB0PGQUhhHGixRfLugjjP6d2ZgocoLUSiIUkUG7gz47Ib2130BxjvzC8pIuOuPdLOrRpaPHBhipxfR49IwdH9XDeKHkaLNNR4OidoEFDXh8dGMi7PA4XwbafioHjwgClsNlcKOnnev6HVIgJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 151381042;
-	Tue,  9 Jul 2024 01:29:18 -0700 (PDT)
-Received: from [10.57.76.194] (unknown [10.57.76.194])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F89C3F762;
-	Tue,  9 Jul 2024 01:28:50 -0700 (PDT)
-Message-ID: <e83e1687-3e3c-40d0-bf0e-225871647092@arm.com>
-Date: Tue, 9 Jul 2024 09:28:48 +0100
+	s=arc-20240116; t=1720513786; c=relaxed/simple;
+	bh=Hio/XpiGa0C1CbUC+8v7iXVUYWD+wgGkdq7CW/+unic=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=P7pnH9wP+u9Jzt+qi5PVnw5i98kK4gKUwtCb15slIsTtWsDzqkQW0xq8RUSCompGz8+sk7IPKACZ+LJHa4tO3dEiPobeJ0Jm8HZhd7RKW85qio9NBKT/cQ0GdPbQY/4JL7JI7XyD3nBSg5SzXbrd9soGgjw0fwp+P7tdyZvYDHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YMTcHgH+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=anj+SeJp; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YMTcHgH+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="anj+SeJp"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id E1AE51384DB8;
+	Tue,  9 Jul 2024 04:29:42 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 09 Jul 2024 04:29:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1720513782; x=1720600182; bh=KqOB6QWEXY
+	M/EwL2m6HVgq4cG3Z37oQQTgP99FSgDis=; b=YMTcHgH+zXLfN+Gi2xaAp3Blf1
+	IHujHrE8rMS2cuKNOPT66UiR9NDbTZqtC5toLUqtW7OM7f4qjS+SC12vV0RUaT4x
+	0Gg9TutuG67M/cU2+F6qvU/7igGGcB9JwBop4Gz+npREjWn2Cnay+iIFVRTI3ewY
+	spJ+dMK6dI3lkmsMu25jmVTTxQ9DDgPA23/AfVxj/oDjdBAp7G9WngKQh6/a9D4C
+	1IFFuf2omLSBMWImYU6tS7mSPD09JGsJGAfQfNLGJMOyhlkQWwYMx5Ji6vZiFMBl
+	CPgIjRtslPwxMYoVXCkHrrbsKsynxiuVPkyA7GupCcCSlnVhggWwZqVK4YIg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720513782; x=1720600182; bh=KqOB6QWEXYM/EwL2m6HVgq4cG3Z3
+	7oQQTgP99FSgDis=; b=anj+SeJpMsxhIynJ1XoJ60Bpe4t1bzEw6QEANmuFupD2
+	49MB9DxOtkJFw4LT44KFPxJm1lJ2w5z7w2xjqWmoxuhk4d27CkgfiwU1CuKE22BF
+	Odf4iL/sWSBqy4KNX+gRuYOQQmcib+DFgiS/w0NKFlvhl5VVqi9gLxmHFulLSrhw
+	7QOZrRyBOzWXwSe/KysWGjb2fB0G75quK7HQ5+T30GR+FLS5yK5OiM6zyLgxVelI
+	xJR4bU/5HjpvGhVLtCDgvahB8FRejfCIzjvnmupKpgDeqQ9tvlBlm+l2wYvs4KU/
+	EVRvoaf9hk+SieipO6NMsQgoGiPots8SQq2AyvPEoQ==
+X-ME-Sender: <xms:9PSMZmnwB2gI8KcC9epJH1QDwe44yl5oQYT6xnn9YwMilijEqeOS1g>
+    <xme:9PSMZt3OIWS-0SRCc572mUg3rBswKGEuQZOlZ3hVeuXzpPYxzej533edc77vx5cLm
+    WOBrYvyFTBAXgrigQE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdelgddthecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:9PSMZkr6W1PYSvwVDsUbBiS2cuM6mXagXXWRfDhhnJqL9ds6m9N7AQ>
+    <xmx:9PSMZql5I07hACZMUMwDI10hgzGLjsft5sN89sx4NZYNxfLcsi4akw>
+    <xmx:9PSMZk1neBbsH6s2JiMl4sn4EEwWQyjAjSY29I-2zw9vAy8ixaMkRg>
+    <xmx:9PSMZhvG9T_J4nOVgghkgFHNs3NuP7-49KhmZJ-aL5_JJmHYAgFtcg>
+    <xmx:9vSMZo8KM1bd0mBOb2qJF12KOTsxS2X1FV4RHyMOnO7dm068teyTMnPE>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 4ACD1B6008D; Tue,  9 Jul 2024 04:29:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/6] add mTHP support for anonymous shmem
-Content-Language: en-GB
-To: Daniel Gomez <da.gomez@samsung.com>, David Hildenbrand <david@redhat.com>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Matthew Wilcox <willy@infradead.org>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "hughd@google.com" <hughd@google.com>,
- "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
- "ying.huang@intel.com" <ying.huang@intel.com>,
- "21cnbao@gmail.com" <21cnbao@gmail.com>,
- "shy828301@gmail.com" <shy828301@gmail.com>, "ziy@nvidia.com"
- <ziy@nvidia.com>, "ioworker0@gmail.com" <ioworker0@gmail.com>,
- Pankaj Raghav <p.raghav@samsung.com>, "linux-mm@kvack.org"
- <linux-mm@kvack.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
- <ZobtTmzj0AmNXcav@casper.infradead.org>
- <27beaa0e-697e-4e30-9ac6-5de22228aec1@redhat.com>
- <6d4c0191-18a9-4c8f-8814-d4775557383e@redhat.com>
- <Zob8xI-LWe9H_iJs@casper.infradead.org>
- <e08b8245-bc8c-4a18-a1e0-53a139258826@linux.alibaba.com>
- <e826368d-499a-483b-8991-8c25aff88f00@arm.com>
- <CGME20240705085911eucas1p17f1e79c871c6290b426737ca1738e529@eucas1p1.samsung.com>
- <32f04739-0cd0-4a9e-9419-c5a13c333c28@redhat.com>
- <ihgsmfaqgpjcewxpjnpoo3ibdhm72s2balhpedkgr2aou5l355@ps7vb3l5j54n>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <ihgsmfaqgpjcewxpjnpoo3ibdhm72s2balhpedkgr2aou5l355@ps7vb3l5j54n>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <df14f286-a00c-493d-9abd-83d42dd6b6b2@app.fastmail.com>
+In-Reply-To: <20240709175803.36f8bca6@canb.auug.org.au>
+References: <20240709175803.36f8bca6@canb.auug.org.au>
+Date: Tue, 09 Jul 2024 10:29:19 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Stephen Rothwell" <sfr@canb.auug.org.au>, "Kees Cook" <kees@kernel.org>
+Cc: "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+ linux-next <linux-next@vger.kernel.org>, liujinlong <liujinlong@kylinos.cn>,
+ liujinlong <mingliu6104@gmail.com>
+Subject: Re: linux-next: manual merge of the kspp tree with Linus' tree
+Content-Type: text/plain
 
-On 07/07/2024 17:39, Daniel Gomez wrote:
-> On Fri, Jul 05, 2024 at 10:59:02AM GMT, David Hildenbrand wrote:
->> On 05.07.24 10:45, Ryan Roberts wrote:
->>> On 05/07/2024 06:47, Baolin Wang wrote:
->>>>
->>>>
->>>> On 2024/7/5 03:49, Matthew Wilcox wrote:
->>>>> On Thu, Jul 04, 2024 at 09:19:10PM +0200, David Hildenbrand wrote:
->>>>>> On 04.07.24 21:03, David Hildenbrand wrote:
->>>>>>>> shmem has two uses:
->>>>>>>>
->>>>>>>>      - MAP_ANONYMOUS | MAP_SHARED (this patch set)
->>>>>>>>      - tmpfs
->>>>>>>>
->>>>>>>> For the second use case we don't want controls *at all*, we want the
->>>>>>>> same heiristics used for all other filesystems to apply to tmpfs.
->>>>>>>
->>>>>>> As discussed in the MM meeting, Hugh had a different opinion on that.
->>>>>>
->>>>>> FWIW, I just recalled that I wrote a quick summary:
->>>>>>
->>>>>> https://lkml.kernel.org/r/f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com
->>>>>>
->>>>>> I believe the meetings are recorded as well, but never looked at recordings.
->>>>>
->>>>> That's not what I understood Hugh to mean.  To me, it seemed that Hugh
->>>>> was expressing an opinion on using shmem as shmem, not as using it as
->>>>> tmpfs.
->>>>>
->>>>> If I misunderstood Hugh, well, I still disagree.  We should not have
->>>>> separate controls for this.  tmpfs is just not that special.
->>>
->>> I wasn't at the meeting that's being referred to, but I thought we previously
->>> agreed that tmpfs *is* special because in some configurations its not backed by
->>> swap so is locked in ram?
->>
->> There are multiple things to that, like:
->>
->> * Machines only having limited/no swap configured
->> * tmpfs can be configured to never go to swap
->> * memfd/tmpfs files getting used purely for mmap(): there is no real
->>   difference to MAP_ANON|MAP_SHARE besides the processes we share that
->>   memory with.
->>
->> Especially when it comes to memory waste concerns and access behavior in
->> some cases, tmpfs behaved much more like anonymous memory. But there are for
->> sure other use cases where tmpfs is not that special.
-> 
-> Having controls to select the allowable folio order allocations for
-> tmpfs does not address any of these issues. The suggested filesystem
-> approach [1] involves allocating orders in larger chunks, but always
-> the same size you would allocate when using order-0 folios. 
+On Tue, Jul 9, 2024, at 09:58, Stephen Rothwell wrote:
+> Hi all,
+>
+> Today's linux-next merge of the kspp tree got a conflict in:
+>
+>   kernel/kallsyms.c
+>
+> between commit:
+>
+>   7e1f4eb9a60d ("kallsyms: rework symbol lookup return codes")
+>
+> from Linus' tree and commit:
+>
+>   21b4564fedad ("sprint_symbol: Replace strcpy with memmove to handle 
+> potential overlap")
+>
+> from the kspp tree.
+>
+> I fixed it up (the former removed the code modified by the latter, so I
+> did that) and can carry the fix as necessary. This is now fixed as far as
+> linux-next is concerned, but any non trivial conflicts should be mentioned
+> to your upstream maintainer when your tree is submitted for merging.
+> You may also want to consider cooperating with the maintainer of the
+> conflicting tree to minimise any particularly complex conflicts.
 
-Well you can't know that you will never allocate more. If you allocate a 2M
-block, you probably have some good readahead data that tells you you are likely
-to keep reading sequentially, but you don't know for sure that the application
-won't stop after just 4K.
+Hi Stephen,
 
-> So,
-> it's a conservative approach. Using mTHP knobs in tmpfs would cause:
-> * Over allocation when using mTHP and/ord THP under the 'always' flag.
-> * Allocate in bigger chunks in a non optimal way, when
-> not all mTHP and THP orders are enabled.
-> * Operate in a similar manner as in [1] when all mTHP and THP orders
-> are enabled and 'within_size' flag is used (assuming we use patch 11
-> from [1]).
+Thanks for pointing this out. It does look like the second
+patch also just tries to address the same warning that I
+fixed in my larger patch.
 
-Large folios may still be considered scarce resources even if the amount of
-memory allocated is still the same. And if shmem isn't backed by swap then once
-you have allocated a large folio for shmem, it is stuck in shmem, even if it
-would be better used somewhere else.
+Kees, do you want to just drop that patch from your tree?
 
-And it's possible (likely even, in my opinion) that allocating lots of different
-folio sizes will exacerbate memory fragmentation, leading to more order-0
-fallbacks, which would hurt the overall system performance in the long run, vs
-restricting to a couple of folio sizes.
-
-I'm starting some work to actually measure how limiting the folio sizes
-allocated for page cache memory can help reduce large folio allocation failure
-overall. My hypothesis is that the data will show us that in an environment like
-Android, where memory pressure is high, limiting everything to order-0 and
-order-4 will significantly improve the allocation success rate of order-4. Let's
-see.
-
-> 
-> [1] Last 3 patches of these series:
-> https://lore.kernel.org/all/20240515055719.32577-1-da.gomez@samsung.com/
-> 
-> My understanding of why mTHP was preferred is to raise awareness in
-> user space and allow tmpfs mounts used at boot time to operate in
-> 'safe' mode (no large folios). Does it make more sense to have a large
-> folios enable flag to control order allocation as in [1], instead of
-> every single order possible?
-
-My intuition is towards every order possible, as per above. Let's see what the
-data tells us.
-
-> 
->>
->> My opinion is that we need to let people configure orders (if you feel like
->> it, configure all), but *select* the order to allocate based on readahead
->> information -- in contrast to anonymous memory where we start at the highest
->> order and don't have readahead information available.
->>
->> Maybe we need different "order allcoation" logic for read/write vs. fault,
->> not sure.
-> 
-> I would suggest [1] the file size of the write for the write
-> and fallocate paths. But when does make sense to use readahead
-> information? Maybe when swap is involved?
-> 
->>
->> But I don't maintain that code, so I can only give stupid suggestions and
->> repeat what I understood from the meeting with Hugh and Kirill :)
->>
->> -- 
->> Cheers,
->>
->> David / dhildenb
-
+     Arnd
