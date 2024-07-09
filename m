@@ -1,99 +1,132 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760312C1AC
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 01:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E10273FD
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 01:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720487257; cv=none; b=OFLDX6nS0gCNZ6andUOeqaoQxq6ofzkd5/tJe6to8uq+UE/9NtXrE9Q12QEj1u7DH5jiGvh3VvxOYmeMFz+rIu1KGXctW28KtYOJQzyiEy+YlpsyBsnkfvGH6LSCnTSvj/4qcMzW70AIHxPyEYiuWntU6p9QY7u0pOq6DcRlx6I=
+	t=1720487522; cv=none; b=YE3xBsCdOEyPcodfxwqKmaIPhWE57C0xX2pQ1FDJx5JEo3NAJ7RjYSqbzRFAGpmRv/Hd5YYsVOdwEzjUxEZP+sQn/AKwqg/Zryp9nfzK9eqBfU4oz+ARiFvALPxP9IOhZ9yMKgqXQnEdANMXafAXPpgBNremuIcAmE3q1+aa8YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720487257; c=relaxed/simple;
-	bh=vJEZgvhJlVfzSmPe4+aP0V+d+0pf77ffDYj2CwhdXUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XAWspZSRbqyZXhgX9XDQVkvabY3u305Ea9TxCVATwv4BH1DUPlE48NIFPwUypRwtorGLXHu3x4+gf937KOPpGO6TMT1FESnLnVag8SoE1Zh7XGAAN9MADvKx1HVylDIvbAMyYnYshUm69QtxWz+TKmbCkyRAs7KXD00IsEnI4fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QsVWUxHq; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1720487522; c=relaxed/simple;
+	bh=segswjcoYurpFRT/s+7tNOMh4FxuciGMe9+Deb9pVuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MmCWyqBrKvBF0iz9CmCHcKhMYHO8y5CdFtrTHRmHvfJ77xwC6Q0QkXxDhZDkH2dmU3u58JyUBBsDfCVpDs989JFQCQXbLah/Wo3iE4vP6dhfwX+bjZnMLN+3UtS5D0oH3reFoQVrlN1oJ31VvyPlNLOU5OL+9pRu1eMW/Daeb90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sg9JdJ0d; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QsVWUxHq"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720487253; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=mECnJeehZNBoxiLQRn/E4jwV446jfFeTcaKLoHUc6Zg=;
-	b=QsVWUxHqzPrsSRZFtCmnsSIGID+B9p1t/K8/ngloj4fAbvzupibE/UJxPfikC0XGMrxNZuXeMk4WOPHeeM63DTxl99p42rIj3HDuTeAaF1i5cen7XesAo3WzffJlBnF0qKz+xWbj//qcu3u1WH81uqHLnIdEPshDCMJhj6Yk8Qc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R581e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045220184;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0WA9bRN5_1720487250;
-Received: from 30.97.56.68(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WA9bRN5_1720487250)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Jul 2024 09:07:31 +0800
-Message-ID: <2672552a-b252-42ba-964b-db25413a418c@linux.alibaba.com>
-Date: Tue, 9 Jul 2024 09:07:30 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sg9JdJ0d"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-651da7c1531so42116637b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 18:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720487519; x=1721092319; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c/Fb5WdZaI9jnQ9LZ7NxKgwHJ2tSaNsUuKqsQduTjY4=;
+        b=Sg9JdJ0doSee4sY53iYwWGdy+tbebXkdw8WyL+ychKkA5tn2hPtimleEHulNHXxv6Q
+         ly/M+xNlDn+XbM0ZYT1jLH4zDDJ6nU1oR56oPzoUGns2fOOq81Nx9BTkTxiLhN6Ajcy1
+         JOuhYI1IPfGrZ3bJGNfkYqPDCUg0VJkdz9jq7mez8NjA2cGpCFGOdtZwzhVxV5zZC0mJ
+         BcMLjhphaAyoKPRSR9u2kgebBlHMddKPJv6eD2e9umiu8NbImRsHh45bp9z4edToZcZk
+         MMIzULgmy/SyoPJNQltyA98Vr+vYKznr+E87pinY7tNwmyM3LXKqTS/dPc3Xjnsf4JxP
+         ihwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720487519; x=1721092319;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c/Fb5WdZaI9jnQ9LZ7NxKgwHJ2tSaNsUuKqsQduTjY4=;
+        b=GNgW1KqdUfNeEaZZR84kQupbxd59H0VihCy7+/EWEXN3VGvb0IEoalv9oB0dQTKht7
+         AxlaI6OadaVlKO8RH2ZYnjktS2ibv4RLallIiD0HWu5grQXE1W7dh3+Sf06f2xvLaTXH
+         KBh6HV7c1l4wrhBwLJDn1cXodZCbPjwypoor7/cyRg4ngHzpWM/CIIk4pBr47b/ohfi9
+         9vzCwxI1PnWOxi5/AYjoDqsGBrg9Zt9OKv1l1WdF52gVkQjrziGL1fMFuwGj5lURcSrT
+         n6tH86oM0MCW14huN8iIdi/rrpdVc0aRiQXRFm4rwJ8FtIls8AKoNMU6xUdEYLNLyVrL
+         QfEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVC5FDM8Ne8umwwWbyWTKlpBWe9myJmBUJsyVh+bx08YzJjAa84oq1yK2arImANpS/XUpA2vQNGQmpz50cDwLsDyCvafytnmKW3Sl4g
+X-Gm-Message-State: AOJu0YyporQtCnoz83a/BAYF3/26RPWB3VRysUf5Sxs9F/AZpmS5Fa7M
+	EniG3wBkFTWpPVhagCrfkfylaGfS3gILud6WQtKFaNBinWxbSdUanJAt3gB3zVV3sGBx5xWi/GY
+	UGRWkAJKP4MJhTmGXPZOmm+W3IVhXruPvOlSP
+X-Google-Smtp-Source: AGHT+IHENx7kQydr+wUv3AkNmXsWTBHZVEOCayL1qjN6tW39ihSmF+lN2t2SdV8b2OWRs9FgaivUY65wbnjFdgb1WkI=
+X-Received: by 2002:a81:430b:0:b0:63b:d0df:ffe5 with SMTP id
+ 00721157ae682-658f11a576emr15765267b3.45.1720487519080; Mon, 08 Jul 2024
+ 18:11:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm: shmem: Rename mTHP shmem counters
-To: Ryan Roberts <ryan.roberts@arm.com>, Barry Song <baohua@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>,
- David Hildenbrand <david@redhat.com>, Lance Yang <ioworker0@gmail.com>,
- Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
- Daniel Gomez <da.gomez@samsung.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-References: <20240708112445.2690631-1-ryan.roberts@arm.com>
- <CAGsJ_4zH72FyLq5gJm215oiWrtd6uf40L_F1UO6cFZ4sy7qt0A@mail.gmail.com>
- <744749c3-4506-40d9-ac48-0dbc59689f92@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <744749c3-4506-40d9-ac48-0dbc59689f92@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240708063236.1096395-1-alexs@kernel.org>
+In-Reply-To: <20240708063236.1096395-1-alexs@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 8 Jul 2024 18:11:46 -0700
+Message-ID: <CAJuCfpEjB8wvodBDB__yR8pF5F3uGMPxue-tap68RYCO0O-K1Q@mail.gmail.com>
+Subject: Re: [PATCH] mm/memcg: alignment memcg_data define condition
+To: alexs@kernel.org
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Jul 7, 2024 at 11:27=E2=80=AFPM <alexs@kernel.org> wrote:
+>
+> From: "Alex Shi (Tencent)" <alexs@kernel.org>
+>
+> commit 21c690a349ba ("mm: introduce slabobj_ext to support slab object
+> extensions") changed the folio/page->memcg_data define condition from
+> MEMCG to SLAB_OBJ_EXT. The code works well, since config SLAB_OBJ_EXT is
+> fold into MEMCG in init/Kconfig.
+>
+> But many related functions that deal with memcg_data still defined under
+> MEMCG instead of SLAB_OBJ_EXT, and FOLIO_MATCH with memcg_data are define=
+d
+> under MEMCG too. That looks weird and incorrect with memcg_data raw
+> meaning.
+>
+> So let's put memcg_data under MEMCG config to alignment the definition
+> with FOLIO_MATCH and its usage in functions.
+>
+> Signed-off-by: Alex Shi (Tencent) <alexs@kernel.org>
 
+Hi Alex,
+I believe your change breaks this condition:
 
-On 2024/7/8 20:29, Ryan Roberts wrote:
-> On 08/07/2024 12:36, Barry Song wrote:
->> On Mon, Jul 8, 2024 at 11:24 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>
->>> The legacy PMD-sized THP counters at /proc/vmstat include
->>> thp_file_alloc, thp_file_fallback and thp_file_fallback_charge, which
->>> rather confusingly refer to shmem THP and do not include any other types
->>> of file pages. This is inconsistent since in most other places in the
->>> kernel, THP counters are explicitly separated for anon, shmem and file
->>> flavours. However, we are stuck with it since it constitutes a user ABI.
->>>
->>> Recently, commit 66f44583f9b6 ("mm: shmem: add mTHP counters for
->>> anonymous shmem") added equivalent mTHP stats for shmem, keeping the
->>> same "file_" prefix in the names. But in future, we may want to add
->>> extra stats to cover actual file pages, at which point, it would all
->>> become very confusing.
->>>
->>> So let's take the opportunity to rename these new counters "shmem_"
->>> before the change makes it upstream and the ABI becomes immutable.
->>
->> Personally, I think this approach is much clearer. However, I recall
->> we discussed this
->> before [1], and it seems that inconsistency is a concern?
-> 
-> Embarrassingly, I don't recall that converstation at all :-| but at least what I
-> said then is consistent with what I've done in this patch.
-> 
-> I think David's conclusion from that thread was to call them FILE_, and add both
-> shmem and pagecache counts to those counters, meaning we can keep the same name
-> as legacy THP counters. But those legacy THP counters only count shmem, and I
-> don't think we would get away with adding pagecache counts to those at this
-> point? (argument: they have been around for long time and there is a risk that
-> user space relies on them and if they were to dramatically increase due to
-> pagecache addition now that could break things). In that case, there is still
-> inconsistency, but its worse; the names are consistent but the semantics are
-> inconsistent.
-> 
-> So my vote is to change to SHMEM_ as per this patch :)
-> 
->>
->> [1] https://lore.kernel.org/linux-mm/05d0096e4ec3e572d1d52d33a31a661321ac1551.1713755580.git.baolin.wang@linux.alibaba.com/
+https://elixir.bootlin.com/linux/v6.10-rc7/source/mm/slab.h#L101
 
-My original preference was also for SHMEM-specific counters :)
-So feel free to add:
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+for the cases when CONFIG_SLAB_OBJ_EXT=3Dy but CONFIG_MEMCG=3Dn.
+page.memcg_data will not be there to match slab.obj_exts.
+You can test that by setting CONFIG_MEM_ALLOC_PROFILING=3Dy and CONFIG_MEMC=
+G=3Dn.
+
+Therefore sorry but NAK.
+
+> ---
+>  include/linux/mm_types.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index ef09c4eef6d3..c067db6fa711 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -180,7 +180,7 @@ struct page {
+>         /* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+>         atomic_t _refcount;
+>
+> -#ifdef CONFIG_SLAB_OBJ_EXT
+> +#ifdef CONFIG_MEMCG
+>         unsigned long memcg_data;
+>  #endif
+>
+> @@ -343,7 +343,7 @@ struct folio {
+>                         };
+>                         atomic_t _mapcount;
+>                         atomic_t _refcount;
+> -#ifdef CONFIG_SLAB_OBJ_EXT
+> +#ifdef CONFIG_MEMCG
+>                         unsigned long memcg_data;
+>  #endif
+>  #if defined(WANT_PAGE_VIRTUAL)
+> --
+> 2.43.0
+>
+>
