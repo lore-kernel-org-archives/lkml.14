@@ -1,147 +1,242 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9570E1850A2;
-	Tue,  9 Jul 2024 13:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E4518E779;
+	Tue,  9 Jul 2024 13:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720533442; cv=none; b=qWHgOJ20lR+W/Nu4MQD8xeyTsRcMUwe6Pqcy8WlIFSXCTND830PJ7cAT9mSEFyZdRbi5S8Bn7LJVzPxzDmSdfQuwjXZyLEMh9PqehoJYW3OdWkkrGOl6Atb1iI0TmCshsaRh5VIzdxXjefZDEdx3XUpxwUu3LD4WK3mj71d/uwY=
+	t=1720533498; cv=none; b=HubpQ6kRSnzN3TxW/JLIFQ8Cxw9YOno89s0CjMfb36FtueXt1sdR3niJ0oXwHA7oZpAOlu7+vVLRk+SAv9Y5t3xG/1kGgUedJRzTf46ZrP+GQzn5a7sYaHpNzsypkTAu4ORpXzoKJ873xqSxbLPgh2fvZSRRQ7Q7q5Oi120yfLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720533442; c=relaxed/simple;
-	bh=HEr0HPxjelqJ3oX82GEVZTV5xdIMPqGPD+jcTVomdDY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=B9hGEmNGHzgqKigw6yBDudxH+dVxqlkN5H4ay8CfMSVYWeI5JE4QBrqlATwdeGQIYcAMezM9KKhdhs5NuNYaKYpig4dwrOcKWI0rt6sxgC/fZ0AAIXhvSvE7nMjXe0/MSXi6cRFv7mLXSkkfAWPDzGJkpg9Q8CfhQeft6jKgc6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MWJNPbo/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720533498; c=relaxed/simple;
+	bh=O5vT/WAVEi3I/1zZ1e6X9bF4G+TvWPZVtYQUS4pdoF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eJxpIAJsPhWW0yG3XVAb6iFAWcvIhiAF5LW62l65JUHPhu5/TVGRlpeSYKwZtJraS+hR9EJbVs8HuDgJ35FIAdbg7DTjFiMUjCRCEJf10YUSv6ltkIQ2qWO/5UFgfjSsPTVVTPyESfxJIH94CcXQlUwqqr4v+LNYDbVkE7XtVtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXZxmi7+; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MWJNPbo/"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469Bm52g015976;
-	Tue, 9 Jul 2024 13:57:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=pSoKKJd+KGOwGbP1EvBI7g
-	R5LzyKw21ySidDByFY1eI=; b=MWJNPbo/1M6ihvrCOQlFu7uT6uCL6joPdH8l1Y
-	/83W4SvabTPz+xMY8HinRdFawXEi3YAxdzg9hTJtGOliXfT3G2O7PGChTAUdqPwy
-	Q85lVfrs1g3smu7KQnf7q6nKyklXLQTiG72QzuhQiWQ/45+GhSF3WrtSa+UOfC5h
-	rFmPC6rbMEn95sPbVO4F/ii141pp70ZYHSBymw4VWA1a1h/Y3yuh7Xt4Y/iEJ9Oe
-	3MnrrgQ5bvgdJEVrctS416roBZxVdRY56L9H/3HlJwTKmkZ42mncWxE0l0LCqyzY
-	zmBvEuZp1KaIXONNPGyOvFgVl8qTtb6FwzSdg/fsCXAsrZGg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406y3hebn5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 13:57:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469Dv6eL008307
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jul 2024 13:57:06 GMT
-Received: from tengfan-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 9 Jul 2024 06:57:01 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-Date: Tue, 9 Jul 2024 21:56:45 +0800
-Subject: [PATCH v2] dt-bindings: interrupt-controller: qcom,pdc: document
- pdc on QCS9100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXZxmi7+"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-367940c57ddso3401641f8f.3;
+        Tue, 09 Jul 2024 06:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720533495; x=1721138295; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TbYmgVACDAtRDSTL3B4NejRqBxXknmHxVQadZf89uHw=;
+        b=KXZxmi7+OTJN285NjyW0YP02AFRw6CHjcruRjCM5T95WKBeENgBH6i6/5Qvtok1sj6
+         J7MtCvB5DYxDWcGfVOUIBqFFW34XhNXRUNh5EsESilpUbvbk8uyvke6PYUMTLulk9556
+         AMY6848AtvhghX74MXEIfPq1mqCRHBWlW8q/6k2cUBFlcGl2OUF7R4+aDy7ivzy+ZzJw
+         2FTUomNh5UCoO7j/0kB8cP26CBabUOIg+6KVj6KgTNEBqznuLdkNZSgKQ+cy5Uq6lXRR
+         +MNtXUYE1dOpSkx1dr5/Ap3n5Wc34nXEapLzLAWRiJW184Vj1GJEMQXKw246tDbwljZX
+         Bx6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720533495; x=1721138295;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TbYmgVACDAtRDSTL3B4NejRqBxXknmHxVQadZf89uHw=;
+        b=wXSShomtjY9auuI3E4QHRcJ1zEc7ivys/Q6fZZnysxVrjuPIl5ZKKqryrAhvoYNgSA
+         nQqkCMYU6iCTcQWZss31s1FZ3SWZg4koJVz/wZeShgXRMQeEYBEXSRPHZozyB6XZchPi
+         j1P2cq88WB3rt/o4367E/BiPBnvKh8BjSWGAIEqpQRyLV7Ju8amDtyObEBjIa8dvT1Ig
+         e1W4k71eUG+ru21eyH1+nBY7i8C5v1Tp2+CXenJJ2YcLtkfau/JPWcNu+usM6P+qsEFt
+         RPYKW+1FZPz5ihwvddHhPpsv2oFEKjfLys7614+1x020KGbgqJYFw8KvP48wpRB6GQWv
+         4oAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvqaKdXsh4wAG+JtNEzPK4OCt8MeIyyJOSxZ7qYk7KNDXQqWhq4RJMBydi1gjIz0Y4gHGwm/lrsnjyrI/WqAglshrh7+0LfEqdI2o0z4IO/qLgvxf0Ew5GK/GByo4Q26qbYJHq
+X-Gm-Message-State: AOJu0Yz7L0ZBjTrJ9fIbwjrqjxWM1sDUuKpNb7yLT/0ndnDS6GQUF6f0
+	l1osy4Pl0HRW/9RsUVX0s2KXxwpffZlIv0V01xFoRk7DTgTem68DA0XYx9do
+X-Google-Smtp-Source: AGHT+IFhR6wXKYVJPy9dz+zWqOXpE2lauzhnAJp1D41g6UvLG42BZPLhgq5ODjo9utaXK51miT15Dw==
+X-Received: by 2002:adf:ffcd:0:b0:367:9791:2939 with SMTP id ffacd0b85a97d-367cea6b804mr1603691f8f.21.1720533494785;
+        Tue, 09 Jul 2024 06:58:14 -0700 (PDT)
+Received: from skbuf ([188.25.110.57])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d16b0sm206311405e9.7.2024.07.09.06.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 06:58:14 -0700 (PDT)
+Date: Tue, 9 Jul 2024 16:58:11 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: kernel test robot <lkp@intel.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	kuba@kernel.org, horms@kernel.org, Roy.Pledge@nxp.com,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] soc: fsl: qbman: FSL_DPAA depends on COMPILE_TEST
+Message-ID: <20240709135811.c7tqh3ocfumg6ctt@skbuf>
+References: <20240624162128.1665620-1-leitao@debian.org>
+ <202406261920.l5pzM1rj-lkp@intel.com>
+ <20240626140623.7ebsspddqwc24ne4@skbuf>
+ <Zn2yGBuwiW/BYvQ7@gmail.com>
+ <20240708133746.ea62kkeq2inzcos5@skbuf>
+ <Zow5FUmOADrqUpM9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240709-document_qcs9100_pdc_compatible-v2-1-83619dcd2658@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJ1BjWYC/zWNWwqDMBQFtyL5buQm9dmv7qOIaLzqhZpoEqVF3
- Huj0M85cGZ25tASOvaIdmZxI0dGB5C3iKmx0QNy6gIzCTKBHEreGbVOqH29KFcKgHruVK3MNDe
- e2jfyLMUEsqwVuSxYsMwWe/pchVcVeCTnjf1ewU2c6999B5kWKcQyXAEKLviykqo96qFv9PME0
- ioOLVYdx/EDjQQdWbsAAAA=
-To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>
-X-Mailer: b4 0.15-dev-a66ce
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720533420; l=2372;
- i=quic_tengfan@quicinc.com; s=20240709; h=from:subject:message-id;
- bh=HEr0HPxjelqJ3oX82GEVZTV5xdIMPqGPD+jcTVomdDY=;
- b=sZX0BRLqszm6V6A4pIeEj+L+LBXW9bIwgkLDp81HJiUBSXTCSUAzV2tYVgVnZIegsz4ANovZc
- +DmrWB1Cj4GBolw6iPzR3Py0BTOPNkLCFpfAGdLeZBayyt6c+2J7pe9
-X-Developer-Key: i=quic_tengfan@quicinc.com; a=ed25519;
- pk=4VjoTogHXJhZUM9XlxbCAcZ4zmrLeuep4dfOeKqQD0c=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 9wpC2PsmCgA261EYisKVb3HL2jBcoBie
-X-Proofpoint-GUID: 9wpC2PsmCgA261EYisKVb3HL2jBcoBie
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- spamscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=835 impostorscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407090090
+Content-Type: multipart/mixed; boundary="hpogfizkbgtmf2d4"
+Content-Disposition: inline
+In-Reply-To: <Zow5FUmOADrqUpM9@gmail.com>
 
-The QCS9100 SoC includes a PDC, document it.
-QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
-platform use non-SCMI resource. In the future, the SA8775p platform will
-move to use SCMI resources and it will have new sa8775p-related device
-tree. Consequently, introduce "qcom,qcs9100-pdc" to describe non-SCMI
-based pdc.
 
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+--hpogfizkbgtmf2d4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Breno,
+
+On Mon, Jul 08, 2024 at 12:08:05PM -0700, Breno Leitao wrote:
+> I thought about a patch like the following (compile tested only). What
+> do you think?
+
+To be honest, there are several things I don't really like about this
+patch.
+
+- I really struggled with applying it in the current format. Could you
+  please post the output of git format-patch in the future?
+- You addressed dpaa_set_coalesce() but not also dpaa_fq_setup()
+- You misrepresented the patch content by saying you only allocate size
+  for online CPUs in the commit message. But you allocate for all
+  possible CPUs.
+- You only kfree(needs_revert) in the error (revert_values) case, but
+  not in the normal (return 0) case.
+- The netdev coding style is to sort the lines with variable
+  declarations in reverse order of line length (they call this "reverse
+  Christmas tree"). Your patch broke that order.
+- You should use kcalloc() instead of kmalloc_array() + memset()
+
+I have prepared and tested the attached alternative patch on a board and
+I am preparing to submit it myself, if you don't have any objection.
+
+Thanks,
+Vladimir
+
+--hpogfizkbgtmf2d4
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-net-dpaa-avoid-on-stack-arrays-of-NR_CPUS-elements.patch"
+
+From 00b942829ee283baa602011a05b02d18c6988171 Mon Sep 17 00:00:00 2001
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+Date: Mon, 8 Jul 2024 11:57:33 -0700
+Subject: [PATCH] net: dpaa: avoid on-stack arrays of NR_CPUS elements
+
+The dpaa-eth driver is written for PowerPC and Arm SoCs which have 1-24
+CPUs. It depends on CONFIG_NR_CPUS having a reasonably small value in
+Kconfig. Otherwise, there are 2 functions which allocate on-stack arrays
+of NR_CPUS elements, and these can quickly explode in size, leading to
+warnings such as:
+
+  drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:3280:12: warning:
+  stack frame size (16664) exceeds limit (2048) in 'dpaa_eth_probe' [-Wframe-larger-than]
+
+The problem is twofold:
+- Reducing the array size to the boot-time num_possible_cpus() (rather
+  than the compile-time NR_CPUS) creates a variable-length array,
+  avoidable in the Linux kernel.
+- Using NR_CPUS as an array size makes the driver blow up in stack
+  consumption with generic, as opposed to hand-crafted, .config files.
+
+A simple solution is to use dynamic allocation for num_possible_cpus()
+elements (aka a small number determined at runtime).
+
+Link: https://lore.kernel.org/all/202406261920.l5pzM1rj-lkp@intel.com/
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
-Introduce support for the QCS9100 SoC device tree (DTSI) and the
-QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-While the QCS9100 platform is still in the early design stage, the
-QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-mounts the QCS9100 SoC instead of the SA8775p SoC.
+ .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 20 ++++++++++++++-----
+ .../ethernet/freescale/dpaa/dpaa_ethtool.c    | 10 +++++++++-
+ 2 files changed, 24 insertions(+), 6 deletions(-)
 
-The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
-all the compatible strings will be updated from "SA8775p" to "QCS9100".
-The QCS9100 device tree patches will be pushed after all the device tree
-bindings and device driver patches are reviewed.
-
-The final dtsi will like:
-https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-3-quic_tengfan@quicinc.com/
-
-The detailed cover letter reference:
-https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
----
-Changes in v2:
-  - Split huge patch series into different patch series according to
-    subsytems
-  - Update patch commit message
-
-prevous disscussion here:
-[1] v1: https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
----
- Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
-index 985fa10abb99..41fbfce838fa 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
-@@ -26,6 +26,7 @@ properties:
-   compatible:
-     items:
-       - enum:
-+          - qcom,qcs9100-pdc
-           - qcom,qdu1000-pdc
-           - qcom,sa8775p-pdc
-           - qcom,sc7180-pdc
-
----
-base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
-change-id: 20240709-document_qcs9100_pdc_compatible-65e4066b1728
-
-Best regards,
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index ddeb0a5f2317..c856b556929d 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -931,14 +931,18 @@ static inline void dpaa_setup_egress(const struct dpaa_priv *priv,
+ 	}
+ }
+ 
+-static void dpaa_fq_setup(struct dpaa_priv *priv,
+-			  const struct dpaa_fq_cbs *fq_cbs,
+-			  struct fman_port *tx_port)
++static int dpaa_fq_setup(struct dpaa_priv *priv,
++			 const struct dpaa_fq_cbs *fq_cbs,
++			 struct fman_port *tx_port)
+ {
+ 	int egress_cnt = 0, conf_cnt = 0, num_portals = 0, portal_cnt = 0, cpu;
+ 	const cpumask_t *affine_cpus = qman_affine_cpus();
+-	u16 channels[NR_CPUS];
+ 	struct dpaa_fq *fq;
++	u16 *channels;
++
++	channels = kcalloc(num_possible_cpus(), sizeof(u16), GFP_KERNEL);
++	if (!channels)
++		return -ENOMEM;
+ 
+ 	for_each_cpu_and(cpu, affine_cpus, cpu_online_mask)
+ 		channels[num_portals++] = qman_affine_channel(cpu);
+@@ -997,6 +1001,10 @@ static void dpaa_fq_setup(struct dpaa_priv *priv,
+ 				break;
+ 		}
+ 	}
++
++	kfree(channels);
++
++	return 0;
+ }
+ 
+ static inline int dpaa_tx_fq_to_id(const struct dpaa_priv *priv,
+@@ -3416,7 +3424,9 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+ 	 */
+ 	dpaa_eth_add_channel(priv->channel, &pdev->dev);
+ 
+-	dpaa_fq_setup(priv, &dpaa_fq_cbs, priv->mac_dev->port[TX]);
++	err = dpaa_fq_setup(priv, &dpaa_fq_cbs, priv->mac_dev->port[TX]);
++	if (err)
++		goto free_dpaa_bps;
+ 
+ 	/* Create a congestion group for this netdev, with
+ 	 * dynamically-allocated CGR ID.
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+index 5bd0b36d1feb..3f8cd4a7d845 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+@@ -457,12 +457,16 @@ static int dpaa_set_coalesce(struct net_device *dev,
+ 			     struct netlink_ext_ack *extack)
+ {
+ 	const cpumask_t *cpus = qman_affine_cpus();
+-	bool needs_revert[NR_CPUS] = {false};
+ 	struct qman_portal *portal;
+ 	u32 period, prev_period;
+ 	u8 thresh, prev_thresh;
++	bool *needs_revert;
+ 	int cpu, res;
+ 
++	needs_revert = kcalloc(num_possible_cpus(), sizeof(bool), GFP_KERNEL);
++	if (!needs_revert)
++		return -ENOMEM;
++
+ 	period = c->rx_coalesce_usecs;
+ 	thresh = c->rx_max_coalesced_frames;
+ 
+@@ -485,6 +489,8 @@ static int dpaa_set_coalesce(struct net_device *dev,
+ 		needs_revert[cpu] = true;
+ 	}
+ 
++	kfree(needs_revert);
++
+ 	return 0;
+ 
+ revert_values:
+@@ -498,6 +504,8 @@ static int dpaa_set_coalesce(struct net_device *dev,
+ 		qman_dqrr_set_ithresh(portal, prev_thresh);
+ 	}
+ 
++	kfree(needs_revert);
++
+ 	return res;
+ }
+ 
 -- 
-Tengfei Fan <quic_tengfan@quicinc.com>
+2.34.1
 
+
+--hpogfizkbgtmf2d4--
