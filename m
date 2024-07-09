@@ -1,295 +1,92 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34F4185E48
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5033218E76F;
+	Tue,  9 Jul 2024 13:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720532942; cv=none; b=bXPgNyEt16K+xrcD1NCPptiRHRhFbslJtRw3oEzo6e3tp/RWFNwjK74lTD87hxwoHSJRVE4H6q10pxzONjzr8abegkT3QADgvXQZJjBM2SbD9vfr64et+ARi1yFM0WuqzRM3Psske1CCiFMJjxpIOEVfo+vJGlysM8brQAod2nI=
+	t=1720532977; cv=none; b=Tt04o8b7UWF0G3AXlU0AW2PJZZyR0S4itcOKgPzuN154iOvdI/ad5oGB5N7U7dHUVn7ERQswRqvkVVV9CJAa+teZWOE4lvhx4g3fcHwDGnclt+Dx4CpVetmov9z5gZuzkD2tG1XpduqA9eWc6GgbpaH4gVXcjJ7Sm93GAWG6Pus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720532942; c=relaxed/simple;
-	bh=+U1Cc+L8+24kC297OtXZuhjLZaBeGH3xqgFMNHm0MAI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=l5A72YdnVQP0gEqzoOSGpHDblhAkiGJ+1Fv+LNNdUgAMNabJ5lOzu2g9yAYsHADO7Dghzng4mxD7HHIG2sNTLe/01cGKwdCh97qoxtp6ai86WJ5f4PmTeASol9qP6CMArrXNj5K7uVhbpQTPLt+N+pYupg7EUxrQNFhqNaDr64I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=EnU8WpOn; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1720532977; c=relaxed/simple;
+	bh=a015ZC5r03ehNw73sIJe/WiI2A13WN9tv5vZoYkZ0RU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=rT+GtkKarEdc07u6yIeahtKKiIr1ktAhnAMoLqDRaMRKrfKVG9m3C/gjy+0ww/SaI39aTMUxb81eLXgNOPgJFfkl+iUCLkL758ZTddtMfZsp4G6wsG7QRVcei72o999FTqOPIegYypteT4478q9PfI8THu6UoWvd8TPKFJULki0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=WkltUh1i; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="EnU8WpOn"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fafb9a33b3so25285315ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1720532931; x=1721137731; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0LDer4lgG10CfZwv78g2/1O/QsyYKSsveDj/sHWq8Y0=;
-        b=EnU8WpOnUDF0/Dazo5gy1DT1zMkxf0/lYBVPuoiEeOO748YH1PK8KCXN7BAM5pLSK3
-         DOEKyJmujz4lTTaXCfCNesp2Rdo9hyTqt78yxlJQKWr06NcV6UY0DzxHBDxB9PVjanA7
-         x4n1oiSirWfMLY0wJe4wil2Nt7wCihFjIX/uPPVF+WPS1QaLb3GfzunznS+S6KwR/ROs
-         W2/YNgNKly5Axnm35G81Ygv2sef9dWGIgEyTDDQM1kzrUsewsBR5s8e69QRpXGAaASis
-         L7DNvj/zJi6c3cmzPhAAdgjbGmYC86XR7yZ5Ee8Yt81gtLHnmd3h6duQtvulOUJcVkQq
-         GhXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720532931; x=1721137731;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0LDer4lgG10CfZwv78g2/1O/QsyYKSsveDj/sHWq8Y0=;
-        b=lPJl2Og/mGBdlpyqKhrK66QaSvE47RWxvaciXBuvIoyuK+TvMlt0fDtvdKqGrtijvi
-         w5gGK2LdDLeYHc/yszhJTKa7bTkPEIkAxb+pysYa3QzBkF8cV7MLcX/Yp/RMaBQjZA4/
-         e7/UdUxBUkx078OS+nbCPQkXPSxYN1dbBQhrlrOZkziXVaLi+wUbzhHiCwRmw2/skEdk
-         nNvZ2OQvieIIL045fve5nMVSh6rf0K7Pcymv654QlF+22G5L9sstezrSllSH2IWgAjeo
-         XcMO5ORRBctdMNo5PL4wGzfMMentKlctFRElOigMpocr5jryQrHQVZDOxFKn0a6n5+kI
-         tIyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDP2mfh8wORrUb//tn6hL7AeAC2YG3c5aSmNL0nZEzfkTQ8K5JRQNHd4vN2lWoAgXwV295xPWGwiRJTsuxCkf29ow+0VKkZizSPX2C
-X-Gm-Message-State: AOJu0YxZY7HmKvcu2v9U28F9hEz1kDhxXe9U8I75j9vLhKf3ZedFi+4Q
-	MDEXgBq3Tpn1/LwJ1ZZG5v411PzP95dM8xn9V/OpkSNlXf1f5lxbfKOp99U0cRo=
-X-Google-Smtp-Source: AGHT+IEtRsRUTkkAu9rxsEOQiPZlA0Ipx5vAQh5WtecZ3b2Kq2sfW2mId2orsJOk1NcJPnyoJ7RbSQ==
-X-Received: by 2002:a17:902:ecce:b0:1fb:7e13:a7cd with SMTP id d9443c01a7336-1fbb6d34be6mr22069205ad.37.1720532931188;
-        Tue, 09 Jul 2024 06:48:51 -0700 (PDT)
-Received: from lvzhaoxiong-KLVC-WXX9.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab6b9fsm16211685ad.138.2024.07.09.06.48.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 06:48:50 -0700 (PDT)
-From: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-To: neil.armstrong@linaro.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	airlied@gmail.com,
-	mripard@kernel.org,
-	dianders@google.com,
-	hsinyi@google.com,
-	awarnecke002@hotmail.com,
-	quic_jesszhan@quicinc.com,
-	dmitry.baryshkov@linaro.org
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Subject: [PATCH v6 5/5] drm/panel: boe-th101mb31ig002: Support for starry-er88577 MIPI-DSI panel
-Date: Tue,  9 Jul 2024 21:47:54 +0800
-Message-Id: <20240709134754.28013-6-lvzhaoxiong@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240709134754.28013-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-References: <20240709134754.28013-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="WkltUh1i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720532947; x=1721137747; i=markus.elfring@web.de;
+	bh=a015ZC5r03ehNw73sIJe/WiI2A13WN9tv5vZoYkZ0RU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=WkltUh1iEhfoZNCT8KIZzUNg0zksVJFjJ//b7xvaMKPZYWZzqaql+V44Zp7pOk5I
+	 2QZqvsbiNHMN9zmFympsFgqukqxmprSUZk2LSLxIJNzsZU9jWLefhYUyn9ppEUNTM
+	 nvJmckHQmcuwW13RKU7MUWzx7rdnzu7pdcjOGKxFXtCkHC3Zl8geeA9jqnQjawtpZ
+	 i4iCh67n2gH7f8kPpMXd3vbELVHT5EHgYgmqSXdullP+YqkB2uopSLdPi7Ekkqa03
+	 cux55NxZK0qaSInTsYavVTpxt57EAFMFB9cVdI8l+DZ2sNmPLKtZhOlyAgvavZj4R
+	 ykjxJpkJIoVN0ZwzLQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MOm0r-1skBlk0bNv-00Lgme; Tue, 09
+ Jul 2024 15:49:07 +0200
+Message-ID: <a10b0d71-2e1c-47d6-9c7a-4086035fc6ec@web.de>
+Date: Tue, 9 Jul 2024 15:48:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: make24@iscas.ac.cn, linuxppc-dev@lists.ozlabs.org,
+ kernel-janitors@vger.kernel.org
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Andrew Donnellan <ajd@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+ Christophe Lombard <clombard@linux.vnet.ibm.com>,
+ Frederic Barrat <fbarrat@linux.ibm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ian Munsie <imunsie@au1.ibm.com>, "Manoj N. Kumar" <manoj@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Wei Liu <wei.liu@kernel.org>
+References: <20240709131754.855144-1-make24@iscas.ac.cn>
+Subject: Re: [PATCH] cxl: Fix possible null pointer dereference in
+ read_handle()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240709131754.855144-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wD8tpFNoCW581VFsOPGKJF66fFjx15l+bwepghLJM6uHTOaEEIV
+ S+CYjNw6rH2wZ4TwvNgnSQP8vBlD/7iuiRLjicS9hxBOLD8V1kU2vdnDrofiv4uP6k9Fh63
+ tqjoNqMkBduPCI8cZMTSYsHsjI2ttQfQTSuaquQ1HtekCs1jJFF+FNrDUy0EF/ZT3bBSY5l
+ XIyBXWpEoWS9T6Vfr42qw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:MqjwUJAwWmA=;d33iWjaAIjULA24pEscPLGP8YoJ
+ nnxs35QjcOFAwZUZOS/fchXGW2rVCJTqaBwzJC3otBl2Nku7qfiw0wV6Xvlf8W+rr2JpjG7oW
+ Ax0SjwWa5i85kIiemtwn+/qUrpNio9Wltl1QXbrFRSLOgFmTW+6m3RT25od+kA4JTuGJJrhE1
+ +V72jE+WfgmWe8buVOkeJQzlA6witivjXSsni+spk7rD9X2QkMB2uQe9oEyW4pT48zsAEkpLT
+ l+n7kL9Ju8MPN/aPKOaeD2naiXWuTVVbdJomjnS45Eyu+dT1hi1zyLwBO0+FeiP/uwGOe/v3W
+ WdnK72SAHW1OcK0pfs9EpWk/OBk6rUSXDzH9lG3ADFodCCmeRHNm6pxyAVdvtUz827ZOahdCd
+ T47sLWT3wNR19SCzdd6PrLkFWJQpmfgmBRkj16Zam7hl1JacP2KwMmFZKgz0FFvEVauFWB524
+ HMqyJobNi4lnigHkg7pJ+VZxtMpdAPI9i3gsivCR+VGYueYpbjQq2N1Gz3gWSkj6OUp+dkV9v
+ KOL6OHmzv2b/ntdMOaxRMo7DyqK+rvZku2hJgxYXpNlqsb86S3qfaeTpms4gnW7NpfFoFvEoB
+ pP1MAyVx1cegla6iWuJpFte1lg1SLidWLzXp8u7tfK1bpfk66Xohy9JZNjScdTsGERdqiG5KT
+ cbBUs/wiXNzkl9AbNVsJxDBF2sGWkEqxlstxPnpdxGZFKrZRE11RZ73T5vYSbzDFffSLHq5kQ
+ BZi2xY6kJksgnRBYPyzNtbDHWj6BdSWycz1xAFr6ShVATEdztfpHEhAkODEpsA+atYGhMG5Ol
+ ux7Myq0mUUuINiM7gvwKns6m8TXTYbqM4bfj1DdUbAxWY=
 
-The init_code of the starry-er88577 panel is very similar to the
-panel-boe-th101mb31ig002-28a.c driver, so we make it compatible with
-the panel-boe-th101mb31ig002-28a.c driver
+=E2=80=A6
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 
-Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
----
-Changes between V6 and V5:
--  1. Add two lines of init_code (D1 and D3) to modify the internal resistance of the mipi channel.
-v5: https://lore.kernel.org/all/20240704072958.27876-6-lvzhaoxiong@huaqin.corp-partner.google.com/
+Under which circumstances will this information be corrected anyhow?
 
-Changes between V5 and V4:
--  1. Compatible with starry-er88577 panel in panel-boe-th101mb31ig002-28a.c driver,.
-v4: https://lore.kernel.org/all/20240620115245.31540-3-lvzhaoxiong@huaqin.corp-partner.google.com/
+The usage of mailing list addresses is probably undesirable for
+the Developer's Certificate of Origin, isn't it?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.10-rc7#n398
 
-Changes between V4 and V3:
--  1. Adjust the ".clock" assignment format.
-v3: https://lore.kernel.org/all/20240614145609.25432-3-lvzhaoxiong@huaqin.corp-partner.google.com/
-
-Changes between V3 and V2:
--  Separate Starry-er88577 from the panel-kingdisplay-kd101ne3 driver.
--  Use mipi_dsi_dcs_set_display_on_multi().
--  Use mipi_dsi_dcs_exit_sleep_mode_multi() and mipi_dsi_msleep().
-v2: https://lore.kernel.org/all/20240601084528.22502-5-lvzhaoxiong@huaqin.corp-partner.google.com/
-
-Changes between V2 and V1:
--  Add compatible for Starry er88577 in panel-kingdisplay-kd101ne3 drivers.
----
- .../drm/panel/panel-boe-th101mb31ig002-28a.c  | 123 ++++++++++++++++++
- 1 file changed, 123 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-index 5993e6c0cc4a..b55cf80c5522 100644
---- a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-+++ b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-@@ -25,6 +25,12 @@ struct panel_desc {
- 	enum mipi_dsi_pixel_format format;
- 	int (*init)(struct boe_th101mb31ig002 *ctx);
- 	unsigned int lanes;
-+	bool lp11_before_reset;
-+	unsigned int vcioo_to_lp11_delay_ms;
-+	unsigned int lp11_to_reset_delay_ms;
-+	unsigned int backlight_off_to_display_off_delay_ms;
-+	unsigned int enter_sleep_to_reset_down_delay_ms;
-+	unsigned int power_off_delay_ms;
- };
- 
- struct boe_th101mb31ig002 {
-@@ -108,6 +114,68 @@ static int boe_th101mb31ig002_enable(struct boe_th101mb31ig002 *ctx)
- 	return dsi_ctx.accum_err;
- }
- 
-+static int starry_er88577_init_cmd(struct boe_th101mb31ig002 *ctx)
-+{
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
-+
-+	msleep(70);
-+
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe0, 0xab, 0xba);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe1, 0xba, 0xab);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb1, 0x10, 0x01, 0x47, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb2, 0x0c, 0x14, 0x04, 0x50, 0x50, 0x14);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb3, 0x56, 0x53, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb4, 0x33, 0x30, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb6, 0xb0, 0x00, 0x00, 0x10, 0x00, 0x10,
-+					       0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb8, 0x05, 0x12, 0x29, 0x49, 0x40);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb9, 0x7c, 0x61, 0x4f, 0x42, 0x3e, 0x2d,
-+					       0x31, 0x1a, 0x33, 0x33, 0x33, 0x52, 0x40,
-+					       0x47, 0x38, 0x34, 0x26, 0x0e, 0x06, 0x7c,
-+					       0x61, 0x4f, 0x42, 0x3e, 0x2d, 0x31, 0x1a,
-+					       0x33, 0x33, 0x33, 0x52, 0x40, 0x47, 0x38,
-+					       0x34, 0x26, 0x0e, 0x06);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc0, 0xcc, 0x76, 0x12, 0x34, 0x44, 0x44,
-+					       0x44, 0x44, 0x98, 0x04, 0x98, 0x04, 0x0f,
-+					       0x00, 0x00, 0xc1);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc1, 0x54, 0x94, 0x02, 0x85, 0x9f, 0x00,
-+					       0x6f, 0x00, 0x54, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc2, 0x17, 0x09, 0x08, 0x89, 0x08, 0x11,
-+					       0x22, 0x20, 0x44, 0xff, 0x18, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc3, 0x87, 0x47, 0x05, 0x05, 0x1c, 0x1c,
-+					       0x1d, 0x1d, 0x02, 0x1e, 0x1e, 0x1f, 0x1f,
-+					       0x0f, 0x0f, 0x0d, 0x0d, 0x13, 0x13, 0x11,
-+					       0x11, 0x24);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc4, 0x06, 0x06, 0x04, 0x04, 0x1c, 0x1c,
-+					       0x1d, 0x1d, 0x02, 0x1e, 0x1e, 0x1f, 0x1f,
-+					       0x0e, 0x0e, 0x0c, 0x0c, 0x12, 0x12, 0x10,
-+					       0x10, 0x24);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc8, 0x21, 0x00, 0x31, 0x42, 0x34, 0x16);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xca, 0xcb, 0x43);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xcd, 0x0e, 0x4b, 0x4b, 0x20, 0x19, 0x6b,
-+					       0x06, 0xb3);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd1, 0x40, 0x0d, 0xff, 0x0f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd2, 0xe3, 0x2b, 0x38, 0x08);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd3, 0x00, 0x00, 0x00, 0x00,
-+					       0x00, 0x33, 0x20, 0x3a, 0xd5, 0x86, 0xf3);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd4, 0x00, 0x01, 0x00, 0x0e, 0x04, 0x44,
-+					       0x08, 0x10, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe6, 0x80, 0x09, 0xff, 0xff, 0xff, 0xff,
-+					       0xff, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0, 0x12, 0x03, 0x20, 0x00, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf3, 0x00);
-+
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+
-+	mipi_dsi_msleep(&dsi_ctx, 120);
-+
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+
-+	mipi_dsi_msleep(&dsi_ctx, 20);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
- static int boe_th101mb31ig002_disable(struct drm_panel *panel)
- {
- 	struct boe_th101mb31ig002 *ctx = container_of(panel,
-@@ -115,12 +183,18 @@ static int boe_th101mb31ig002_disable(struct drm_panel *panel)
- 						      panel);
- 	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
- 
-+	if (ctx->desc->backlight_off_to_display_off_delay_ms)
-+		mipi_dsi_msleep(&dsi_ctx, ctx->desc->backlight_off_to_display_off_delay_ms);
-+
- 	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
- 
- 	mipi_dsi_msleep(&dsi_ctx, 120);
- 
- 	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
- 
-+	if (ctx->desc->enter_sleep_to_reset_down_delay_ms)
-+		mipi_dsi_msleep(&dsi_ctx, ctx->desc->enter_sleep_to_reset_down_delay_ms);
-+
- 	return dsi_ctx.accum_err;
- }
- 
-@@ -134,6 +208,9 @@ static int boe_th101mb31ig002_unprepare(struct drm_panel *panel)
- 	gpiod_set_value_cansleep(ctx->enable, 0);
- 	regulator_disable(ctx->power);
- 
-+	if (ctx->desc->power_off_delay_ms)
-+		msleep(ctx->desc->power_off_delay_ms);
-+
- 	return 0;
- }
- 
-@@ -151,6 +228,18 @@ static int boe_th101mb31ig002_prepare(struct drm_panel *panel)
- 		return ret;
- 	}
- 
-+	if (ctx->desc->vcioo_to_lp11_delay_ms)
-+		msleep(ctx->desc->vcioo_to_lp11_delay_ms);
-+
-+	if (ctx->desc->lp11_before_reset) {
-+		ret = mipi_dsi_dcs_nop(ctx->dsi);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (ctx->desc->lp11_to_reset_delay_ms)
-+		msleep(ctx->desc->lp11_to_reset_delay_ms);
-+
- 	gpiod_set_value_cansleep(ctx->enable, 1);
- 	msleep(50);
- 	boe_th101mb31ig002_reset(ctx);
-@@ -187,6 +276,36 @@ static const struct panel_desc boe_th101mb31ig002_desc = {
- 	.init = boe_th101mb31ig002_enable,
- };
- 
-+static const struct drm_display_mode starry_er88577_default_mode = {
-+	.clock	= (800 + 25 + 25 + 25) * (1280 + 20 + 4 + 12) * 60 / 1000,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 25,
-+	.hsync_end = 800 + 25 + 25,
-+	.htotal = 800 + 25 + 25 + 25,
-+	.vdisplay = 1280,
-+	.vsync_start = 1280 + 20,
-+	.vsync_end = 1280 + 20 + 4,
-+	.vtotal = 1280 + 20 + 4 + 12,
-+	.width_mm = 135,
-+	.height_mm = 216,
-+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-+};
-+
-+static const struct panel_desc starry_er88577_desc = {
-+	.modes = &starry_er88577_default_mode,
-+	.lanes = 4,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+		      MIPI_DSI_MODE_LPM,
-+	.init = starry_er88577_init_cmd,
-+	.lp11_before_reset = true,
-+	.vcioo_to_lp11_delay_ms = 5,
-+	.lp11_to_reset_delay_ms = 50,
-+	.backlight_off_to_display_off_delay_ms = 100,
-+	.enter_sleep_to_reset_down_delay_ms = 100,
-+	.power_off_delay_ms = 1000,
-+};
-+
- static int boe_th101mb31ig002_get_modes(struct drm_panel *panel,
- 					struct drm_connector *connector)
- {
-@@ -313,6 +432,10 @@ static const struct of_device_id boe_th101mb31ig002_of_match[] = {
- 		.compatible = "boe,th101mb31ig002-28a",
- 		.data = &boe_th101mb31ig002_desc
- 	},
-+	{
-+		.compatible = "starry,er88577",
-+		.data = &starry_er88577_desc
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, boe_th101mb31ig002_of_match);
--- 
-2.17.1
-
+Regards,
+Markus
