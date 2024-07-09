@@ -1,44 +1,44 @@
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1AD17B045;
-	Tue,  9 Jul 2024 17:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C0917B05E;
+	Tue,  9 Jul 2024 17:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720546137; cv=none; b=EEZPqqa6/DvbLaGWDHAf046doA2In+qzdWmeAYJ5A0Z7+mdEER6K4NRnGaitLBbfmGbHqeUCfuJW2V/2AraJO5qVcf1K+9xsStaezYUV4EIjQX2p8JTDyrsQF2XAj8hW/XmW+18qgYs3XMAmn8XmyJjLyRes619xR1hUOsMzvHM=
+	t=1720546138; cv=none; b=ApXyzIB9dU0QruLu5wP7pjH+oMKK9BqiL//ZoR47AHM9QMBfWuv5AkSKtwqTogrGqBL7g57cuUd5upPTRsW04eYMkcY/XZDEZYBMiSWXcBZ4876hFah2VRX/1ss7YxeqOAH46JWVzk8Uk6zVjdCaWS9uwtg9kd0YSBptmfk2zRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720546137; c=relaxed/simple;
-	bh=GqZmqBLONxKd8q6GzK3gmJtCbpC4wYdk7CfTKnHO7c0=;
+	s=arc-20240116; t=1720546138; c=relaxed/simple;
+	bh=xiHVcLWmlWCeXd/xOCMugnSGn8XEcFa6WmCYs7z1GZY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bmBKY9SuYbF7reGNNkrAcq8I1my/NkxVbpcAvWuWxtB1zto11f2oTk3bjP1z2WmwR1ZCg+DB0qZXkEEcminc9AX9PMzU2H4RN6JUeT+DAREDLfedsYuimMR6K+/qdJrxsDeeFjo2D/eGfslIEsSN78UJUeBZEz3a06oI5rz1O+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=rmVxMc8n; arc=none smtp.client-ip=37.18.73.165
+	 MIME-Version:Content-Type; b=tg8UghgYOyyRGPq/xEX9jkoMR74ZbTiHQ0y5GfNQqbAdxlEkqaBkqLY04oE9TOyvkuZYloNfy4b4LOqwpJ/NYb5RthhLjWEXpwwEXoSYsikmQpk84oWz3ppOrdZ1uOuVxFB5tPJk7IIAUGjKhI32CeBbrIuDmR74YeO7H0HOJ4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=bqjDSgTY; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="rmVxMc8n"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="bqjDSgTY"
 Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 8CFA0100027;
-	Tue,  9 Jul 2024 20:28:51 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8CFA0100027
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 249F6100028;
+	Tue,  9 Jul 2024 20:28:53 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 249F6100028
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1720546131;
-	bh=PyZxBMx6R0uymcM3TuF4TKEKQfa239EroB6vf32t1Nw=;
+	s=mail; t=1720546133;
+	bh=ow841DWBqkgErrVIEcSy9LNkBmP48KjNiO7CVdsKRRI=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=rmVxMc8nVF7uRhsiGLQDjsI0Wj8UcBdsUKhQumJmXziBNNjhyCdKubqb47Yhv6hLS
-	 WZ7kpvA/zCNgjAxT+gOxeHAU0mnb7RX7DDWhme/hkO5ioqwebemwumodsL9BXuM47N
-	 mjT3Xe4ujaHdFJzTi5h+i2dGS/vDlmdHyjjRn3do5j0Kp3JVjQO/1E/v4alyiHZB/1
-	 7MSOLdT7Hbrt3QcdrTI3oedE56nvU6rDctfB01+lapVaZpx+lR5tPBYXYcQ2R1srfa
-	 //PfkzuMHn3pgH836Pc5kbYN5ycAnw4kzh1hYiXIlB1pSPTtgvcJBMUKV9vh2iskSl
-	 gWQGHfKyLGzxg==
+	b=bqjDSgTYD6vqcl1G/siyo8e+0E9/wy0FCY+hDr4wSHekNMuJHFOApwZ53tr49zKUB
+	 p1CR2vyu6KVcrzJXpWAOpKtsUUllNWumCUXGJQ0zfM6vT/zj7xq3njogyxrYIybr18
+	 WpYah5zkJnSCbRbu7ZwJYT+sHMaU9szBCutIBCEKNe8V6eh+k0k1c+qqc2BozH+su8
+	 E5iaZOsr8SdDTcj9TUZWSz4k09ZbFaKV0fSKEgc5JEOW0qR9vu1KkWNokiEvfb+GY3
+	 SSk22dWaFaRnUJLclbGvWKl6dgJhm3J19dINhqJcCxID55PJ2pDpSbq68lhxlKFZZF
+	 SGRlXDnaoYFtg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue,  9 Jul 2024 20:28:51 +0300 (MSK)
+	Tue,  9 Jul 2024 20:28:52 +0300 (MSK)
 Received: from localhost.localdomain (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Jul 2024 20:28:51 +0300
+ 15.2.1118.40; Tue, 9 Jul 2024 20:28:52 +0300
 From: Igor Prusov <ivprusov@salutedevices.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
  Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
@@ -48,9 +48,9 @@ To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
 CC: <prusovigor@gmail.com>, <kernel@salutedevices.com>,
 	<linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/6] ASoC: codecs: Add NeoFidelity Firmware helpers
-Date: Tue, 9 Jul 2024 20:28:30 +0300
-Message-ID: <20240709172834.9785-3-ivprusov@salutedevices.com>
+Subject: [PATCH 4/6] ASoC: codecs: Add NeoFidelity NTP8918 codec
+Date: Tue, 9 Jul 2024 20:28:32 +0300
+Message-ID: <20240709172834.9785-5-ivprusov@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240709172834.9785-1-ivprusov@salutedevices.com>
 References: <20240709172834.9785-1-ivprusov@salutedevices.com>
@@ -73,232 +73,424 @@ X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;datasheetspdf.com:7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/09 14:24:00
+X-KSMG-LinksScanning: Clean, bases: 2024/07/09 15:33:00
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/09 15:25:00 #25923573
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-Add support for loading firmware for NeoFidelity amplifiers.
+The NeoFidelity NTP8918 is a two channel amplifier with mixer and
+biquad filters.
 
+Datasheet: https://datasheetspdf.com/pdf-down/N/T/P/NTP8918-NeoFidelity.pdf
 Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
 ---
- sound/soc/codecs/Kconfig  |   3 +
- sound/soc/codecs/Makefile |   2 +
- sound/soc/codecs/ntpfw.c  | 137 ++++++++++++++++++++++++++++++++++++++
- sound/soc/codecs/ntpfw.h  |  23 +++++++
- 4 files changed, 165 insertions(+)
- create mode 100644 sound/soc/codecs/ntpfw.c
- create mode 100644 sound/soc/codecs/ntpfw.h
+ sound/soc/codecs/Kconfig   |   5 +
+ sound/soc/codecs/Makefile  |   2 +
+ sound/soc/codecs/ntp8918.c | 356 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 363 insertions(+)
+ create mode 100644 sound/soc/codecs/ntp8918.c
 
 diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 4afc43d3f71f..9583243f1966 100644
+index 9583243f1966..d16c983fcb7a 100644
 --- a/sound/soc/codecs/Kconfig
 +++ b/sound/soc/codecs/Kconfig
-@@ -2492,6 +2492,9 @@ config SND_SOC_NAU8825
+@@ -2495,6 +2495,11 @@ config SND_SOC_NAU8825
+ config SND_SOC_NTPFW
  	tristate
- 	depends on I2C
  
-+config SND_SOC_NTPFW
-+	tristate
++config SND_SOC_NTP8918
++	select SND_SOC_NTPFW
++	tristate "NeoFidelity NTP8918 amplifier"
++	depends on I2C
 +
  config SND_SOC_TPA6130A2
  	tristate "Texas Instruments TPA6130A2 headphone amplifier"
  	depends on I2C
 diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index b4df22186e25..eae4ab047c72 100644
+index eae4ab047c72..a49ab11a98ec 100644
 --- a/sound/soc/codecs/Makefile
 +++ b/sound/soc/codecs/Makefile
 @@ -183,6 +183,7 @@ snd-soc-nau8821-y := nau8821.o
  snd-soc-nau8822-y := nau8822.o
  snd-soc-nau8824-y := nau8824.o
  snd-soc-nau8825-y := nau8825.o
-+snd-soc-ntpfw-y := ntpfw.o
++snd-soc-ntp8918-y := ntp8918.o
+ snd-soc-ntpfw-y := ntpfw.o
  snd-soc-hdmi-codec-y := hdmi-codec.o
  snd-soc-pcm1681-y := pcm1681.o
- snd-soc-pcm1789-codec-y := pcm1789.o
-@@ -575,6 +576,7 @@ obj-$(CONFIG_SND_SOC_NAU8821)   += snd-soc-nau8821.o
+@@ -576,6 +577,7 @@ obj-$(CONFIG_SND_SOC_NAU8821)   += snd-soc-nau8821.o
  obj-$(CONFIG_SND_SOC_NAU8822)   += snd-soc-nau8822.o
  obj-$(CONFIG_SND_SOC_NAU8824)   += snd-soc-nau8824.o
  obj-$(CONFIG_SND_SOC_NAU8825)   += snd-soc-nau8825.o
-+obj-$(CONFIG_SND_SOC_NTPFW)	+= snd-soc-ntpfw.o
++obj-$(CONFIG_SND_SOC_NTP8918)	+= snd-soc-ntp8918.o
+ obj-$(CONFIG_SND_SOC_NTPFW)	+= snd-soc-ntpfw.o
  obj-$(CONFIG_SND_SOC_HDMI_CODEC)	+= snd-soc-hdmi-codec.o
  obj-$(CONFIG_SND_SOC_PCM1681)	+= snd-soc-pcm1681.o
- obj-$(CONFIG_SND_SOC_PCM179X)	+= snd-soc-pcm179x-codec.o
-diff --git a/sound/soc/codecs/ntpfw.c b/sound/soc/codecs/ntpfw.c
+diff --git a/sound/soc/codecs/ntp8918.c b/sound/soc/codecs/ntp8918.c
 new file mode 100644
-index 000000000000..beaf300fe59c
+index 000000000000..185f8b235138
 --- /dev/null
-+++ b/sound/soc/codecs/ntpfw.c
-@@ -0,0 +1,137 @@
++++ b/sound/soc/codecs/ntp8918.c
+@@ -0,0 +1,356 @@
 +// SPDX-License-Identifier: GPL-2.0-only
-+/**
-+ * ntpfw.c - Firmware helper functions for Neofidelity codecs
++/*
++ * Driver for the NTP8918 Audio Amplifier
 + *
 + * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
++ *
++ * Author: Igor Prusov <ivprusov@salutedevices.com>
 + */
 +
-+#include <linux/i2c.h>
-+#include <linux/firmware.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/gpio.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/reset.h>
++#include <linux/init.h>
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++
++#include <sound/initval.h>
++#include <sound/core.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/soc-component.h>
++#include <sound/tlv.h>
 +
 +#include "ntpfw.h"
 +
-+struct ntpfw_chunk {
-+	__be16 length;
-+	u8 step;
-+	u8 data[];
-+} __packed;
++#define NTP8918_RATES   (SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 | \
++			 SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_96000)
 +
-+struct ntpfw_header {
-+	__be32 magic;
-+} __packed;
++#define NTP8918_FORMATS     (SNDRV_PCM_FMTBIT_S16_LE | \
++			     SNDRV_PCM_FMTBIT_S20_3LE | \
++			     SNDRV_PCM_FMTBIT_S24_LE | \
++			     SNDRV_PCM_FMTBIT_S32_LE)
 +
-+static bool ntpfw_verify(struct device *dev, const u8 *buf, size_t buf_size, u32 magic)
++#define NTP8918_INPUT_FMT			0x0
++#define  NTP8918_INPUT_FMT_MASTER_MODE		BIT(0)
++#define  NTP8918_INPUT_FMT_GSA_MODE		BIT(1)
++#define NTP8918_GSA_FMT				0x1
++#define  NTP8918_GSA_BS_MASK			GENMASK(3, 2)
++#define  NTP8918_GSA_BS(x)			((x) << 2)
++#define  NTP8918_GSA_RIGHT_J			BIT(0)
++#define  NTP8918_GSA_LSB			BIT(1)
++#define NTP8918_MASTER_VOL			0x0C
++#define NTP8918_CHNL_A_VOL			0x17
++#define NTP8918_CHNL_B_VOL			0x18
++#define NTP8918_SOFT_MUTE			0x33
++#define REG_MAX					NTP8918_SOFT_MUTE
++
++#define NTP8918_FW_NAME		"eq_8918.bin"
++#define NTP8918_FW_MAGIC	0x38393138	/* "8918" */
++
++struct ntp8918_priv {
++	struct i2c_client *i2c;
++	struct reset_control *reset;
++	unsigned int format;
++};
++
++static const DECLARE_TLV_DB_SCALE(ntp8918_master_vol_scale, -12550, 50, 0);
++
++static const struct snd_kcontrol_new ntp8918_vol_control[] = {
++	SOC_SINGLE_RANGE_TLV("Playback Volume", NTP8918_MASTER_VOL, 0,
++			     0x04, 0xff, 0, ntp8918_master_vol_scale),
++	SOC_DOUBLE("Playback Switch", NTP8918_SOFT_MUTE, 1, 0, 1, 1),
++};
++
++static void ntp8918_reset_gpio(struct ntp8918_priv *ntp8918, bool active)
 +{
-+	const struct ntpfw_header *header = (struct ntpfw_header *)buf;
-+	u32 buf_magic;
++	if (active) {
++		/*
++		 * According to NTP8918 datasheet, 6.2 Timing Sequence 1:
++		 * Deassert for T2 >= 1ms...
++		 */
++		reset_control_deassert(ntp8918->reset);
++		fsleep(1000);
 +
-+	if (buf_size <= sizeof(*header)) {
-+		dev_err(dev, "Failed to load firmware: image too small\n");
-+		return false;
++		/* ...Assert for T3 >= 0.1us... */
++		reset_control_assert(ntp8918->reset);
++		fsleep(1);
++
++		/* ...Deassert, and wait for T4 >= 0.5ms before sound on sequence. */
++		reset_control_deassert(ntp8918->reset);
++		fsleep(500);
++	} else {
++		reset_control_assert(ntp8918->reset);
 +	}
-+
-+	buf_magic = be32_to_cpu(header->magic);
-+	if (buf_magic != magic) {
-+		dev_err(dev, "Failed to load firmware: invalid magic 0x%x:\n", buf_magic);
-+		return false;
-+	}
-+
-+	return true;
 +}
 +
-+static bool ntpfw_verify_chunk(struct device *dev, const struct ntpfw_chunk *chunk, size_t buf_size)
-+{
-+	size_t chunk_size;
++static const struct reg_sequence ntp8918_sound_off[] = {
++	{ NTP8918_MASTER_VOL, 0 },
++};
 +
-+	if (buf_size <= sizeof(*chunk)) {
-+		dev_err(dev, "Failed to load firmware: chunk size too big\n");
-+		return false;
-+	}
++static const struct reg_sequence ntp8918_sound_on[] = {
++	{ NTP8918_MASTER_VOL, 0b11 },
++};
 +
-+	if (chunk->step != 2 && chunk->step != 5) {
-+		dev_err(dev, "Failed to load firmware: invalid chunk step: %d\n", chunk->step);
-+		return false;
-+	}
-+
-+	chunk_size = be16_to_cpu(chunk->length);
-+	if (chunk_size > buf_size) {
-+		dev_err(dev, "Failed to load firmware: invalid chunk length\n");
-+		return false;
-+	}
-+
-+	if (chunk_size % chunk->step) {
-+		dev_err(dev, "Failed to load firmware: chunk length and step mismatch\n");
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static int ntpfw_send_chunk(struct i2c_client *i2c, const struct ntpfw_chunk *chunk)
++static int ntp8918_load_firmware(struct ntp8918_priv *ntp8918)
 +{
 +	int ret;
-+	size_t i;
-+	size_t length = be16_to_cpu(chunk->length);
 +
-+	for (i = 0; i < length; i += chunk->step) {
-+		ret = i2c_master_send(i2c, &chunk->data[i], chunk->step);
-+		if (ret != chunk->step) {
-+			dev_err(&i2c->dev, "I2C send failed: %d\n", ret);
-+			return ret < 0 ? ret : -EIO;
-+		}
++	ret = ntpfw_load(ntp8918->i2c, NTP8918_FW_NAME, NTP8918_FW_MAGIC);
++	if (ret == -ENOENT) {
++		dev_warn_once(&ntp8918->i2c->dev, "Could not find firmware %s\n",
++			      NTP8918_FW_NAME);
++		return 0;
 +	}
++
++	return ret;
++}
++
++static int ntp8918_snd_suspend(struct snd_soc_component *component)
++{
++	struct ntp8918_priv *ntp8918 = snd_soc_component_get_drvdata(component);
++
++	regcache_cache_only(component->regmap, true);
++
++	regmap_multi_reg_write_bypassed(component->regmap,
++					ntp8918_sound_off,
++					ARRAY_SIZE(ntp8918_sound_off));
++
++	/*
++	 * According to NTP8918 datasheet, 6.2 Timing Sequence 1:
++	 * wait after sound off for T6 >= 0.5ms
++	 */
++	fsleep(500);
++	ntp8918_reset_gpio(ntp8918, false);
++
++	regcache_mark_dirty(component->regmap);
 +
 +	return 0;
 +}
 +
-+int ntpfw_load(struct i2c_client *i2c, const char *name, u32 magic)
++static int ntp8918_snd_resume(struct snd_soc_component *component)
 +{
-+	struct device *dev = &i2c->dev;
-+	const struct ntpfw_chunk *chunk;
-+	const struct firmware *fw;
-+	const u8 *data;
-+	size_t leftover;
++	struct ntp8918_priv *ntp8918 = snd_soc_component_get_drvdata(component);
 +	int ret;
 +
-+	ret = request_firmware(&fw, name, dev);
++	ntp8918_reset_gpio(ntp8918, true);
++
++	regmap_multi_reg_write_bypassed(component->regmap,
++					ntp8918_sound_on,
++					ARRAY_SIZE(ntp8918_sound_on));
++
++	ret = ntp8918_load_firmware(ntp8918);
 +	if (ret) {
-+		dev_warn(dev, "request_firmware '%s' failed with %d\n",
-+			 name, ret);
++		dev_err(&ntp8918->i2c->dev, "Failed to load firmware\n");
 +		return ret;
 +	}
 +
-+	if (!ntpfw_verify(dev, fw->data, fw->size, magic)) {
-+		ret = -EINVAL;
-+		goto done;
-+	}
++	regcache_cache_only(component->regmap, false);
++	snd_soc_component_cache_sync(component);
 +
-+	data = fw->data + sizeof(struct ntpfw_header);
-+	leftover = fw->size - sizeof(struct ntpfw_header);
-+
-+	while (leftover) {
-+		chunk = (struct ntpfw_chunk *)data;
-+
-+		if (!ntpfw_verify_chunk(dev, chunk, leftover)) {
-+			ret = -EINVAL;
-+			goto done;
-+		}
-+
-+		ret = ntpfw_send_chunk(i2c, chunk);
-+		if (ret)
-+			goto done;
-+
-+		data += be16_to_cpu(chunk->length) + sizeof(*chunk);
-+		leftover -= be16_to_cpu(chunk->length) + sizeof(*chunk);
-+	}
-+
-+done:
-+	release_firmware(fw);
-+
-+	return ret;
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(ntpfw_load);
++
++static int ntp8918_probe(struct snd_soc_component *component)
++{
++	int ret;
++	struct ntp8918_priv *ntp8918 = snd_soc_component_get_drvdata(component);
++	struct device *dev = component->dev;
++
++	ret = snd_soc_add_component_controls(component, ntp8918_vol_control,
++					     ARRAY_SIZE(ntp8918_vol_control));
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to add controls\n");
++
++	ret = ntp8918_load_firmware(ntp8918);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to load firmware\n");
++
++	return 0;
++}
++
++static const struct snd_soc_dapm_widget ntp8918_dapm_widgets[] = {
++	SND_SOC_DAPM_DAC("AIFIN", "Playback", SND_SOC_NOPM, 0, 0),
++
++	SND_SOC_DAPM_OUTPUT("OUT1"),
++	SND_SOC_DAPM_OUTPUT("OUT2"),
++};
++
++static const struct snd_soc_dapm_route ntp8918_dapm_routes[] = {
++	{ "OUT1", NULL, "AIFIN" },
++	{ "OUT2", NULL, "AIFIN" },
++};
++
++static const struct snd_soc_component_driver soc_component_ntp8918 = {
++	.probe = ntp8918_probe,
++	.suspend = ntp8918_snd_suspend,
++	.resume = ntp8918_snd_resume,
++	.dapm_widgets = ntp8918_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(ntp8918_dapm_widgets),
++	.dapm_routes = ntp8918_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(ntp8918_dapm_routes),
++};
++
++static int ntp8918_hw_params(struct snd_pcm_substream *substream,
++			     struct snd_pcm_hw_params *params,
++			     struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct ntp8918_priv *ntp8918 = snd_soc_component_get_drvdata(component);
++	unsigned int input_fmt = 0;
++	unsigned int gsa_fmt = 0;
++	unsigned int gsa_fmt_mask;
++	int ret;
++
++	switch (ntp8918->format) {
++	case SND_SOC_DAIFMT_I2S:
++		break;
++	case SND_SOC_DAIFMT_RIGHT_J:
++		input_fmt |= NTP8918_INPUT_FMT_GSA_MODE;
++		gsa_fmt |= NTP8918_GSA_RIGHT_J;
++		break;
++	case SND_SOC_DAIFMT_LEFT_J:
++		input_fmt |= NTP8918_INPUT_FMT_GSA_MODE;
++		break;
++	}
++
++	ret = snd_soc_component_update_bits(component, NTP8918_INPUT_FMT,
++					    NTP8918_INPUT_FMT_MASTER_MODE |
++					    NTP8918_INPUT_FMT_GSA_MODE,
++					    input_fmt);
++
++	if (!(input_fmt & NTP8918_INPUT_FMT_GSA_MODE) || ret < 0)
++		return ret;
++
++	switch (params_width(params)) {
++	case 24:
++		gsa_fmt |= NTP8918_GSA_BS(0);
++		break;
++	case 20:
++		gsa_fmt |= NTP8918_GSA_BS(1);
++		break;
++	case 18:
++		gsa_fmt |= NTP8918_GSA_BS(2);
++		break;
++	case 16:
++		gsa_fmt |= NTP8918_GSA_BS(3);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	gsa_fmt_mask = NTP8918_GSA_BS_MASK |
++		       NTP8918_GSA_RIGHT_J |
++		       NTP8918_GSA_LSB;
++	return snd_soc_component_update_bits(component, NTP8918_GSA_FMT,
++					     gsa_fmt_mask, gsa_fmt);
++}
++
++static int ntp8918_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
++{
++	struct snd_soc_component *component = dai->component;
++	struct ntp8918_priv *ntp8918 = snd_soc_component_get_drvdata(component);
++
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++	case SND_SOC_DAIFMT_RIGHT_J:
++	case SND_SOC_DAIFMT_LEFT_J:
++		ntp8918->format = fmt & SND_SOC_DAIFMT_FORMAT_MASK;
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++struct snd_soc_dai_ops ntp8918_dai_ops = {
++	.hw_params = ntp8918_hw_params,
++	.set_fmt = ntp8918_set_fmt,
++};
++
++static struct snd_soc_dai_driver ntp8918_dai = {
++	.name = "ntp8918-amplifier",
++	.playback = {
++		.stream_name = "Playback",
++		.channels_min = 1,
++		.channels_max = 2,
++		.rates = NTP8918_RATES,
++		.formats = NTP8918_FORMATS,
++	},
++	.ops = &ntp8918_dai_ops,
++};
++
++static struct regmap_config ntp8918_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = REG_MAX,
++	.cache_type = REGCACHE_MAPLE,
++};
++
++static int ntp8918_i2c_probe(struct i2c_client *i2c)
++{
++	struct ntp8918_priv *ntp8918;
++	int ret;
++	struct regmap *regmap;
++
++	ntp8918 = devm_kzalloc(&i2c->dev, sizeof(struct ntp8918_priv), GFP_KERNEL);
++	if (!ntp8918)
++		return -ENOMEM;
++
++	ntp8918->i2c = i2c;
++
++	ntp8918->reset = devm_reset_control_get_shared(&i2c->dev, NULL);
++	if (IS_ERR(ntp8918->reset))
++		return dev_err_probe(&i2c->dev, PTR_ERR(ntp8918->reset), "Failed to get reset\n");
++
++	dev_set_drvdata(&i2c->dev, ntp8918);
++
++	ntp8918_reset_gpio(ntp8918, true);
++
++	regmap = devm_regmap_init_i2c(i2c, &ntp8918_regmap);
++	if (IS_ERR(regmap))
++		return dev_err_probe(&i2c->dev, PTR_ERR(regmap),
++				     "Failed to allocate regmap\n");
++
++	ret = devm_snd_soc_register_component(&i2c->dev, &soc_component_ntp8918,
++					      &ntp8918_dai, 1);
++	if (ret)
++		return dev_err_probe(&i2c->dev, ret,
++				     "Failed to register component\n");
++
++	return 0;
++}
++
++static const struct i2c_device_id ntp8918_i2c_id[] = {
++	{ "ntp8918", 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, ntp8918_i2c_id);
++
++static const struct of_device_id ntp8918_of_match[] = {
++	{.compatible = "neofidelity,ntp8918"},
++	{}
++};
++MODULE_DEVICE_TABLE(of, ntp8918_of_match);
++
++static struct i2c_driver ntp8918_i2c_driver = {
++	.probe = ntp8918_i2c_probe,
++	.id_table = ntp8918_i2c_id,
++	.driver = {
++		.name = "NTP8918",
++		.of_match_table = ntp8918_of_match,
++	},
++};
++module_i2c_driver(ntp8918_i2c_driver);
 +
 +MODULE_AUTHOR("Igor Prusov <ivprusov@salutedevices.com>");
-+MODULE_DESCRIPTION("Helper for loading Neofidelity amplifiers firmware");
++MODULE_DESCRIPTION("NTP8918 Audio Amplifier Driver");
 +MODULE_LICENSE("GPL");
-diff --git a/sound/soc/codecs/ntpfw.h b/sound/soc/codecs/ntpfw.h
-new file mode 100644
-index 000000000000..1cf10d5480ee
---- /dev/null
-+++ b/sound/soc/codecs/ntpfw.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/**
-+ * ntpfw.h - Firmware helper functions for Neofidelity codecs
-+ *
-+ * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
-+ */
-+
-+#ifndef __NTPFW_H__
-+#define __NTPFW_H__
-+#include <linux/i2c.h>
-+#include <linux/firmware.h>
-+
-+/**
-+ * ntpfw_load - load firmware to amplifier over i2c interface.
-+ *
-+ * @i2c		Pointer to amplifier's I2C client.
-+ * @name	Firmware file name.
-+ * @magic	Magic number to validate firmware.
-+ * @return	0 or error code upon error.
-+ */
-+int ntpfw_load(struct i2c_client *i2c, const char *name, const u32 magic);
-+
-+#endif /* __NTPFW_H__ */
 -- 
 2.34.1
 
