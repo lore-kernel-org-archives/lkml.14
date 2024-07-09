@@ -1,134 +1,115 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB5147F6B;
-	Tue,  9 Jul 2024 03:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8738147F6B;
+	Tue,  9 Jul 2024 03:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720495262; cv=none; b=pPGaR9cxpwgBcBHwfRqtv1jueqW4PVwQi5sNDVx+y+RcOZ3FRXTeCzrfBHnKuaT/Jff5VMLYZfqr09IASXOWH8JUTXUr3dhVjKR8aZGPFp3L2YWurABmT7G7oP/aB87e1/f2rD50ZKxTqt8YWdQKR3zdwNOoT++P+P2tltofxXg=
+	t=1720495269; cv=none; b=k7u/LwFLrSgaVUnN6nwgr/lJQPdrZlgqHLEU7379A6LvAyq8dD6GNJX0FPJcrHVSUP5Z/sc0ilwoSpHG07f/UW0OQ5J9NFpXkBD5U/lDfayhH2Uvxr39j6m+q2DRGOYltXuwpB5jeBf0f3DJbqQJoAHI8Cd/Wl6LT3T/9ahG2B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720495262; c=relaxed/simple;
-	bh=OLDt7dRlbPKWhHGfKxLBHLD9o2bFrg9K7MPbZR7/DtI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lOtgOTKqVvVrOExbJbjaROOCEs297u4rce7ofbsdwuSOiDgqjQcBoqruf1+dW0tlMmNio3bCRwaiBQQWkAVzW+io6+ZvNekPK9SGI/oypEUCCxcJ+cPvBBPgOAInNcDQ7CVhpK9x/y1bMm+i2ZsBJp4xE8J3zPVm67i2nNwoq8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-From: Yixun Lan <dlan@gentoo.org>
-Date: Tue, 09 Jul 2024 03:18:52 +0000
-Subject: [PATCH v4 09/10] riscv: dts: spacemit: add Banana Pi BPI-F3 board
- device tree
+	s=arc-20240116; t=1720495269; c=relaxed/simple;
+	bh=ao0yuvoGESK5ztONeHNNgZ2DK/RhVIQhcs2Jo2M4dqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lMdpObxLiKPV+/VKVtLPVAYKfDOZlCM2SxgGFwmasjK7M+U84wp4YfBHyBFgz/1671PVYgXGQj9yWR00evHyg64tfRylHQnUbMm44lI43TG+tLZWPWipk18g4RZBnNpbgFOS79lj8EUPAoFjhofrKl2JkK+Hh+QU9ldxTQkjxdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=II3ze8gi; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="II3ze8gi"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-375e96f5fddso18049545ab.1;
+        Mon, 08 Jul 2024 20:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720495268; x=1721100068; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v5x3hUylQoog2uNJJGGlDPCeKvEn4xMplYTvm1tLAKE=;
+        b=II3ze8giERMQckTjlIkQCdUfxkFMxfXbvMU/hHhZYeZmL7LIxp7DumGvOyXtSR3YE4
+         /Yudnci5CVQeAoikHlfLluQmcom4KrydlgfVcfQNvN628e6/i6b0lYCNOdbwVjgxtsFj
+         QZ9y4kQ2ewI4wK1aafE+kIv357NQPwyuF9EXX0Gz0AEzb9TR0WqbypRNEIKxSWAnLeTh
+         DExCc9fUt3w/nYdP6F3rmRjl0s+3gW4xz27DFpUsdHJ6f5aWKE/7DcH50WEIlXFvb23X
+         v5K7kmqZz9oW6jz7i2LzngFe1Ej49kqaCKhbktU8PC/XeRWv4YsFt9KMrwQXrJFCikfW
+         z0kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720495268; x=1721100068;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v5x3hUylQoog2uNJJGGlDPCeKvEn4xMplYTvm1tLAKE=;
+        b=ZYjHxMM+HmF0ztCn7VT4bqq0+VN9zeEnMT+cb0YNSpnAlbC1+rLOblLyAYwVf6rsJi
+         3/nUO5xakB3dU++EX3VQl0sPAmZVwqhkGkOvAmmzXbC2cbJ/1smkGLrn3AjmBaRIw3hn
+         Tajqw3tEDx9HEiTcfgjA01A6+9XqdzTuJPIfY6UHVpSN9d7I/uOipYnTOrWKXjFV6qbC
+         +bH+aQApk4wPGsZcovPS5znZ2Jz3HNmGhR3cQIY2WG7CkYKLrZSy96fxFeZJfIhTTZCT
+         nCz3qKmtmQhNvOy1YhOTpjm+7+2k/yjI6OUDtez1NcfjmkGJcL0RF7dhyYZWQ4SpcFU6
+         irOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlYpyGY6SIbx3x23zyW21lB6sqEzqi0SIPHp6ryDgce8MEXsoF74iuVPcMNNFU1l2QJgcfuHpjGNbICxRSzm22XQfRPOozO1VJKQh/s+ffmuwwofeo/EYW2cck062Md6d4fCMOYjZo
+X-Gm-Message-State: AOJu0Yz4s4Swz3QOGNiB2KBYaLGog4z1ugZxcqJsi6kEUt4CuoW+d1ai
+	/4+TzwwcVug+UenSA5WRFMGSzfbvl3drEwo7pSbFPZBdcqnebIeWFK/FuTDpIwrgSkqXKMYpRn2
+	qiu0QFGkjCOQflQzqgTla4SRwWfU=
+X-Google-Smtp-Source: AGHT+IEDeHIw0M3dms9M1TQ7pOStsM6niLKah4sS4MXdNOsgiHYC/fBdJqkh52w8HlhM4gaopahy21Ep/QLxviGgtOo=
+X-Received: by 2002:a05:6e02:18cd:b0:379:4564:1228 with SMTP id
+ e9e14a558f8ab-38a598b3998mr15380945ab.30.1720495267594; Mon, 08 Jul 2024
+ 20:21:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240709-k1-01-basic-dt-v4-9-ae5bb5e56aaf@gentoo.org>
-References: <20240709-k1-01-basic-dt-v4-0-ae5bb5e56aaf@gentoo.org>
-In-Reply-To: <20240709-k1-01-basic-dt-v4-0-ae5bb5e56aaf@gentoo.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Anup Patel <anup@brainfault.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org, 
- Jesse Taube <jesse@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>, 
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
- Meng Zhang <zhangmeng.kevin@spacemit.com>, 
- Meng Zhang <kevin.z.m@hotmail.com>, Yangyu Chen <cyy@cyyself.name>, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1955; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=mJc6hZeXKZcPaMSmqXhuz5fuxopioAcnLOzTKcNsQPA=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBmjKw54FO/wGQQEetIDywkal1MPnSgjquHCTvUC
- 2baklrbcrKJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZoysOV8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277S9oD/0V6Q7ZRNo0qx87KI
- 3EXKU34sr343u/RmJm+xgwRZcRUqQDgg0lBxVUiY5uIamSaQdJSE1oZtCH5LADUaowY7Fr6eoXo
- AyUmam25notxo2jNxwVmT758NtSTEcWHS9M6rjh9f5m9fwZhUZaGSJv8vLznMvcLrWRm3tAhOgm
- MHnYhDcikZcpVmJYY1mTzbz+5ggQBD4k+EeAp5Y1kS/thqP60giX11zg/tawRaN+5bG0UcQ6sAO
- KIPsPfnCHR/EMI8hBwTQ1wCwzL8UVzWEmP61X1Ohwg/Sd5Qh8tTT8frRcHjDDOMOdVY/n+lJI8p
- WFvC7MhUiNP2rWJYtfLyVJW+Kl+ZXYxt4YZqWD9BXUUAoZ85LWHXDE1fYxEnA38s6d8eTd9p3dg
- WnZzaCAyufPyl3AuMj9Ju0Kk70LOL5Z0VePu3BwZmyxpInWytJcE6tWM7Bvrf+zmSt3CF2X/eCt
- aNqFMwgURR1cEXSdMwsiZm9QhcLef6f5TVrNVr4oq/potrcH+s3/G3S3vbWdDZxDnL2Lc+F8/2v
- 1na6H2dp/Nd2M6cS4bU3OPDFvFAFyQN8xfWJbV6/bu+xmiC1gJZW9JBgWaO8EVP33GV8x9OYM1p
- 6nmPq0ElndWRqaPTa+A95c/q4JXcH3lPd3pmhtDmEAUHAFPArjFQJRByibbj2YR7ux2w==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+References: <1719996771-11220-1-git-send-email-shengjiu.wang@nxp.com> <232c2342061b17b9f750c4ad52b0766e.sboyd@kernel.org>
+In-Reply-To: <232c2342061b17b9f750c4ad52b0766e.sboyd@kernel.org>
+From: Shengjiu Wang <shengjiu.wang@gmail.com>
+Date: Tue, 9 Jul 2024 11:20:56 +0800
+Message-ID: <CAA+D8APumdP97QQHObF6NEw6jwDJRb+0R=aAjqftrX1wR170Yw@mail.gmail.com>
+Subject: Re: [PATCH] clk: imx: imx8: Add .name for "acm_aud_clk0_sel" and "acm_aud_clk1_sel"
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, abelvesa@kernel.org, festevam@gmail.com, 
+	imx@lists.linux.dev, kernel@pengutronix.de, mturquette@baylibre.com, 
+	peng.fan@nxp.com, s.hauer@pengutronix.de, shawnguo@kernel.org, 
+	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yangyu Chen <cyy@cyyself.name>
+On Tue, Jul 9, 2024 at 6:45=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wrot=
+e:
+>
+> Quoting Shengjiu Wang (2024-07-03 01:52:51)
+> > "acm_aud_clk0_sel" and "acm_aud_clk1_sel" are registered by this ACM
+> > driver, but they are the parent clocks for other clocks, in order to
+> > use assigned-clock-parents in device tree, they need to have the
+> > global name.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  drivers/clk/imx/clk-imx8-acm.c | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/clk/imx/clk-imx8-acm.c b/drivers/clk/imx/clk-imx8-=
+acm.c
+> > index 1bdb480cc96c..a1affcf6daff 100644
+> > --- a/drivers/clk/imx/clk-imx8-acm.c
+> > +++ b/drivers/clk/imx/clk-imx8-acm.c
+> > @@ -114,8 +114,8 @@ static const struct clk_parent_data imx8qm_mclk_out=
+_sels[] =3D {
+> >  static const struct clk_parent_data imx8qm_mclk_sels[] =3D {
+> >         { .fw_name =3D "aud_pll_div_clk0_lpcg_clk" },
+> >         { .fw_name =3D "aud_pll_div_clk1_lpcg_clk" },
+> > -       { .fw_name =3D "acm_aud_clk0_sel" },
+> > -       { .fw_name =3D "acm_aud_clk1_sel" },
+> > +       { .fw_name =3D "acm_aud_clk0_sel", .name =3D "acm_aud_clk0_sel"=
+ },
+> > +       { .fw_name =3D "acm_aud_clk1_sel", .name =3D "acm_aud_clk1_sel"=
+ },
+>
+> This doesn't make any sense. Why are we adding fallback names?  Is
+> "acm_aud_clk0_sel" not part of the DT binding for this clk controller?
 
-Banana Pi BPI-F3 [1] is a industrial grade RISC-V development board, it
-design with SpacemiT K1 8 core RISC-V chip [2].
+It is not part of DT binding for this clk controller.  it is registered by =
+this
+clk controller itself.  As it is a parent clock, so my understanding
+is that we need to add a fallback name,  or change "fw_name" to "name",
+please correct me if I am wrong.
 
-Currently only support booting into console with only uart enabled,
-other features will be added soon later.
-
-Link: https://docs.banana-pi.org/en/BPI-F3/BananaPi_BPI-F3 [1]
-Link: https://www.spacemit.com/en/spacemit-key-stone-2/ [2]
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- arch/riscv/boot/dts/Makefile                    |  1 +
- arch/riscv/boot/dts/spacemit/Makefile           |  2 ++
- arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 19 +++++++++++++++++++
- 3 files changed, 22 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index fdae05bbf5563..bff887d38abe4 100644
---- a/arch/riscv/boot/dts/Makefile
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -5,6 +5,7 @@ subdir-y += microchip
- subdir-y += renesas
- subdir-y += sifive
- subdir-y += sophgo
-+subdir-y += spacemit
- subdir-y += starfive
- subdir-y += thead
- 
-diff --git a/arch/riscv/boot/dts/spacemit/Makefile b/arch/riscv/boot/dts/spacemit/Makefile
-new file mode 100644
-index 0000000000000..ac617319a5742
---- /dev/null
-+++ b/arch/riscv/boot/dts/spacemit/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_ARCH_SPACEMIT) += k1-bananapi-f3.dtb
-diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-new file mode 100644
-index 0000000000000..023274189b492
---- /dev/null
-+++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-+ */
-+
-+#include "k1.dtsi"
-+
-+/ {
-+	model = "Banana Pi BPI-F3";
-+	compatible = "bananapi,bpi-f3", "spacemit,k1";
-+
-+	chosen {
-+		stdout-path = "serial0";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-
--- 
-2.45.2
-
+Best regards
+Shengjiu Wang
