@@ -1,75 +1,128 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 519C814EC71
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from pb-smtp1.pobox.com (pb-smtp1.pobox.com [64.147.108.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847167AE5D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.108.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720526035; cv=none; b=bbg3GxSGjJgzD59Q7Yiu8Zn+8NoaGtfPyN3L0a+PnRdbxByW9GZsdZk/SmY+jqy5HlWz/sV7IVBcGMdKY8wDrbFcVt86wc2K7/syA0IBUXG2nyXP2FH9syzBrjDyWIumcFtto5P2lNKu2/9XkFcGsRYl4GCcw6j0W+v79LP8CyA=
+	t=1720526123; cv=none; b=dUc2kBOt0Omh/w324YXWwkcvle2PgJXWPkjPbSs0TjJglm5P4E2tfRH0UTmnqbOmdtaXBqIeSPWmtt5iVXTnqmn/T6kiumV+oEkX1xrUvoAmDoByCaNICbcXyB69nawCICb0Rv5h3ltAiPU2RODUdZm40cD9p60G8x+oTpbBank=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720526035; c=relaxed/simple;
-	bh=P1PAnlgaEusVCR67f/r6Ul7rj+Tvw+6FgY27sUFbFqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AL/vJItgWdbaePi7N92A/EBgLyOvvI0IZXjsej8n0PfLsisM2LBEKXGbZjj1KDzXIHK0D+DqO0Ba6aXRJpqZmVnW+DlnrjOCu5nKGzIrSxh4XrL9lMa5xw8ImqEDhEXcgfXfpz8plfHvLUJ4Q/QXOgQiVGW3xLffbAYk8yTMx38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDCA9153B;
-	Tue,  9 Jul 2024 04:54:17 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9C843F762;
-	Tue,  9 Jul 2024 04:53:51 -0700 (PDT)
-Message-ID: <55b3b816-23f5-40ae-a1fb-5820cb8de0de@arm.com>
-Date: Tue, 9 Jul 2024 12:53:41 +0100
+	s=arc-20240116; t=1720526123; c=relaxed/simple;
+	bh=gddqCnx9SNES8455IEK6DYHaEE1wzJ8bS16ePXesBxo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eaFXS7TwZhlCaaUX4clD0+HNI8pWYxD/0W6ZTVNOrQOmAHIZ7eAuWlko7IB2kt0wulwQ4ymhB59e4BAy+F2rE0YsgHE/0/SVObr5oaevwC8bP2/ZSJpSD7EeQgKZ0VXw0QkcGKepwUvPWh+3FYFph8CGJqduJ5lQfRKkJXuAE8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xanderlent.com; spf=pass smtp.mailfrom=xanderlent.com; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=m337Rqwm; dkim=pass (1024-bit key) header.d=xanderlent.com header.i=@xanderlent.com header.b=YghXHNlU; arc=none smtp.client-ip=64.147.108.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xanderlent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xanderlent.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="m337Rqwm";
+	dkim=pass (1024-bit key) header.d=xanderlent.com header.i=@xanderlent.com header.b="YghXHNlU"
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+	by pb-smtp1.pobox.com (Postfix) with ESMTP id 3AD1B328E1;
+	Tue,  9 Jul 2024 07:55:20 -0400 (EDT)
+	(envelope-from lx@xanderlent.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=from:date
+	:subject:mime-version:content-type:content-transfer-encoding
+	:message-id:to:cc; s=sasl; bh=gddqCnx9SNES8455IEK6DYHaEE1wzJ8bS1
+	6ePXesBxo=; b=m337Rqwmyk/oWWKDxTJZCQ1IxfVooi3611FNMRTXMAJrx2h9RD
+	3xsHhsOnZRxFCr/DPdoDE2rdwLtHMKA75BGQW4kskQGENt6pxtAF6zSPZzJ5oLsD
+	6G5qW2PZtQc0u/FSiiB6zYjET2Ad05Qpwm+3QZt531zoBHXpt+Yiz+R24=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+	by pb-smtp1.pobox.com (Postfix) with ESMTP id 31D66328E0;
+	Tue,  9 Jul 2024 07:55:20 -0400 (EDT)
+	(envelope-from lx@xanderlent.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=xanderlent.com;
+ h=from:date:subject:mime-version:content-type:content-transfer-encoding:message-id:to:cc; s=2021-09.pbsmtp; bh=gddqCnx9SNES8455IEK6DYHaEE1wzJ8bS16ePXesBxo=; b=YghXHNlUnioPbgapGFLjZgZUNlClRkGuUJRkiO4Zyy+Gfp421Z3LFndItt8ubNdWybjo2AFJkJdc4CzBRnoJec1LBxsTeviDkU13GVUYvrRY1udmT3xd8TeZx7t+A/Vd05eLuWxoeoHYvqGN3ekjGIWxPdWqJL9t1wu/SUyUHII=
+Received: from ultralight.local (unknown [172.56.166.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by pb-smtp1.pobox.com (Postfix) with ESMTPSA id BB045328DF;
+	Tue,  9 Jul 2024 07:55:18 -0400 (EDT)
+	(envelope-from lx@xanderlent.com)
+From: "Alexander F. Lent" <lx@xanderlent.com>
+Date: Tue, 09 Jul 2024 07:54:14 -0400
+Subject: [PATCH v3] accel/ivpu: Add missing MODULE_FIRMWARE metadata
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -fixes] dma-mapping: add default implementation to
- arch_dma_{set|clear}_uncached
-To: Yangyu Chen <cyy@cyyself.name>
-Cc: iommu@lists.linux.dev,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Christoph Hellwig <hch@lst.de>
-References: <tencent_A5ED71472ADCAF18F59085464CBE23C12A07@qq.com>
- <20240709111901.GC4421@lst.de>
- <tencent_651BC4D11C9730062064ACB186AF4A904005@qq.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <tencent_651BC4D11C9730062064ACB186AF4A904005@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240709-fix-ivpu-firmware-metadata-v3-1-55f70bba055b@xanderlent.com>
+X-B4-Tracking: v=1; b=H4sIAOUkjWYC/33O0QrCIBiG4VsJjzOcbtN11H1EBzr/mtDcULPF2
+ L2ngyCIduYH/g/vjDw4Ax4ddzNyEI03g02D7Xeo7aS9ATY6bUQJLQknJb6aCZs4PtLD9U/pAPc
+ QpJZBYqYJVbomvBYaJWB0kH6v+PmStpIesHLStl0m/0v5uDM+DO61hsUiE5+GaqshFrjAqVNxJ
+ iqqG3qapNXg7mDDoR16lEMi/fbEpkezJ1RTsYKng/rHW5blDeMRWH5GAQAA
+To: "Alexander F. Lent" <lx@xanderlent.com>, 
+ Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>, 
+ Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>, 
+ Oded Gabbay <ogabbay@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>, 
+ Daniel Vetter <daniel.vetter@ffwll.ch>, 
+ Andrzej Kacprowski <andrzej.kacprowski@linux.intel.com>, 
+ Krystian Pradzynski <krystian.pradzynski@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720526118; l=1929;
+ i=lx@xanderlent.com; s=20240705; h=from:subject:message-id;
+ bh=gddqCnx9SNES8455IEK6DYHaEE1wzJ8bS16ePXesBxo=;
+ b=X1dbuarre7MVqlySIV9Dfl+4D9ojeKDqNmzZbaf7B2ikyO/hvj2j210u8YObmFp6Xck3eHrfS
+ 09l2j24SW0JA4BRMs3oLGgGiBn7cMu5bqZxNCsYyTz8dX+0xmfu83RO
+X-Developer-Key: i=lx@xanderlent.com; a=ed25519;
+ pk=T7WKAI9F1J7lcthsLG4aBF+wzehTsa3GPyzJkh5is3k=
+X-Pobox-Relay-ID:
+ 1D3FA9D6-3DEA-11EF-9712-5B6DE52EC81B-45904678!pb-smtp1.pobox.com
 
-On 09/07/2024 12:39 pm, Yangyu Chen wrote:
-> 
-> 
->> On Jul 9, 2024, at 19:19, Christoph Hellwig <hch@lst.de> wrote:
->>
->> On Tue, Jul 09, 2024 at 05:25:29PM +0800, Yangyu Chen wrote:
->>> Currently, we have some code in kernel/dma/direct.c which references
->>> arch_dma_set_uncached and arch_dma_clear_uncached. However, many
->>> architectures do not provide these symbols, and the code currently
->>> relies on compiler optimization to cut the unnecessary code. When the
->>> compiler fails to optimize it, the code will reference the symbol and
->>> cause a link error. I found this bug when developing some new extensions
->>> for RISC-V on LLVM. The error message is shown below:
->>
->> Same comment as for the last one.  I think your compiler misbehaves,
->> and the typical reason for that would be if you disable all
->> optimizations.
->>
-> 
-> The reason is that some optimizations failed to apply after adding
-> some passes. I will fix the compiler later. Whatever, we should not
-> rely on this optimization to get the code being successfully compiled.
+Modules that load firmware from various paths at runtime must declare
+those paths at compile time, via the MODULE_FIRMWARE macro, so that the
+firmware paths are included in the module's metadata.
 
-We rely on unreachable code being optimised out *all over* the place - 
-it's kind of the main point of constructs like IS_ENABLED(), and why the 
-kernel as a whole does not and will not support being compiled with -O0. 
-Frankly I'm quite surprised that this one would be the only case you hit 
-if your compiler is not doing that properly.
+The accel/ivpu driver loads firmware but lacks this metadata,
+preventing dracut from correctly locating firmware files. Fix it.
 
-Thanks,
-Robin.
+Fixes: 9ab43e95f922 ("accel/ivpu: Switch to generation based FW names")
+Fixes: 02d5b0aacd05 ("accel/ivpu: Implement firmware parsing and booting")
+Signed-off-by: Alexander F. Lent <lx@xanderlent.com>
+---
+Hi Jacek,
+
+Thanks for catching the error, and for the more succinct comment.
+Please find v3 attached.
+---
+Changes in v3:
+- Simplify comment, per review.
+- Fix typo in 40xx firmware path, per review.
+- Link to v2: https://lore.kernel.org/r/20240708-fix-ivpu-firmware-metadata-v2-1-78b953172026@xanderlent.com
+
+Changes in v2:
+- Only annotate the module with the production firmware paths, per review.
+- Drop macros for de-duping firmware fileames, just use string literals, per review.
+- Link to v1: https://lore.kernel.org/r/20240705-fix-ivpu-firmware-metadata-v1-1-704b73852d92@xanderlent.com
+---
+ drivers/accel/ivpu/ivpu_fw.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/accel/ivpu/ivpu_fw.c b/drivers/accel/ivpu/ivpu_fw.c
+index 1457300828bf..ef717802a3c8 100644
+--- a/drivers/accel/ivpu/ivpu_fw.c
++++ b/drivers/accel/ivpu/ivpu_fw.c
+@@ -58,6 +58,10 @@ static struct {
+ 	{ IVPU_HW_40XX, "intel/vpu/vpu_40xx_v0.0.bin" },
+ };
+ 
++/* Production fw_names from the table above */
++MODULE_FIRMWARE("intel/vpu/vpu_37xx_v0.0.bin");
++MODULE_FIRMWARE("intel/vpu/vpu_40xx_v0.0.bin");
++
+ static int ivpu_fw_request(struct ivpu_device *vdev)
+ {
+ 	int ret = -ENOENT;
+
+---
+base-commit: 22a40d14b572deb80c0648557f4bd502d7e83826
+change-id: 20240704-fix-ivpu-firmware-metadata-3d02bd60768d
+
+Best regards,
+-- 
+Alexander F. Lent <lx@xanderlent.com>
+
