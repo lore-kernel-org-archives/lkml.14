@@ -1,112 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00300601.pphosted.com (mx0a-00300601.pphosted.com [148.163.146.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006783C2F;
-	Tue,  9 Jul 2024 06:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D96813213A;
+	Tue,  9 Jul 2024 06:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.146.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720507598; cv=none; b=W4OP9npYw+86JGNbbvxsaAVO+yYii8/eOSCXTZT7bC901dyAgouB5h7lHj2mMqW9QwRqUmfyz4G3oyKm2lPHxHgBdzm645MgWqMIRxI71W5CKNPWgTW8b1qKghTrKtmZ1SsBW6qFEOiP9hKY0q1b1oa/ksFCATZeMPtih0JRxnA=
+	t=1720507690; cv=none; b=O7ZLy86QikSLjdU/ldkyoCkX0hP2X21ijg2BmO0518IurL3FP30attz/JHltfCRbW8J35XFIhAieIJnL26ys5/QI1En+rPxl7rJWXw0MfmurQkEgGbxz7aj67/PxwmvZbgEBYVXLYE2HLp8AsIsYRuzX+2FExCAv5xJ6Xd+ovHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720507598; c=relaxed/simple;
-	bh=wsfMSrSQrSr567igYDw1GuClDLSfoUhl3BuojJ3rR+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=q2xd13rWhZU5ebK4nIjWaCtyDjnNv+yR0PJnz/2JzKszIU3Q9ZmUN3LFkYTR3vrdfCqG/4MfdCF/4AVZatBsE+54LTGvUYUL6Nyn1juIhOPxQClTBIgQYlnqFLls21ohyEVDUBajIYPaMedEfTh2dMsOIFFzp5rUG5EhDCBtXn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fC7yV61i; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fC7yV61i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E83C3277B;
-	Tue,  9 Jul 2024 06:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720507597;
-	bh=wsfMSrSQrSr567igYDw1GuClDLSfoUhl3BuojJ3rR+g=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=fC7yV61id7UPgKJTWGHxYHuQ8AozVU4lSZwL81MPBe+mtQvKPkDltmCUVZU/20mJG
-	 7GWYRpuVXL380A3VrTPSRXIs7XMHEHbauG9CUQcRuAP9gxevo6ReHcGpksZ5qIJ0cZ
-	 hMxZwY+4d3X5ufaVMHd9N2Uzv/6YPNaKlqxQ8MeXn3ojcGyhByRgRr1zDBGT49K5t/
-	 me51gUTKh4hl3dxnAr7JvvKkIppR4ChQNePxpc0QuOSTtjeP0EoedPsXZG5bqvjqRu
-	 8OjrBBK6G5f2m+KjMPEdptTQGXc7lpjfFZmTltG7iZKt+31Kx/ZpgEhbGszlaP2Gyp
-	 XtDfYGq3FnwHw==
-Message-ID: <3807c716-90d1-41c9-aa5b-102ac5797f2f@kernel.org>
-Date: Tue, 9 Jul 2024 08:46:31 +0200
+	s=arc-20240116; t=1720507690; c=relaxed/simple;
+	bh=OQvb9CZbdmX9E0d9iBJGKerkjF+Vly6dcszw03VebUo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PQaKAuzbAeX0VMCOkeb0hXEM+yD+6sTpaGqWcov2Ed4qayNqkFlPEzVvYcRXfdT8Oh8Ep6lS5yHGZBlCvcgvU4NlEqV1DIROG6fv/JLvlX43hSBusKi6fuyu5Aa4Z1ps0NFuFBfhdUSfRRmiAzjrh3HleM6Va4ED651PtkEBDUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=emerson.com; spf=pass smtp.mailfrom=emerson.com; arc=none smtp.client-ip=148.163.146.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=emerson.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emerson.com
+Received: from pps.filterd (m0359308.ppops.net [127.0.0.1])
+	by mx0b-00300601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4692tkD2022971;
+	Tue, 9 Jul 2024 06:28:37 GMT
+Received: from usgdcecpmsgae02.extemr.org ([144.191.128.198])
+	by mx0b-00300601.pphosted.com (PPS) with ESMTPS id 408s364ewq-15
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 06:28:37 +0000 (GMT)
+Received: from usgdcecpmsgap04.emrsn.org (10.16.75.145) by mail.emerson.com
+ (10.16.11.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 9 Jul
+ 2024 06:28:49 +0000
+Received: from usgdcecpmsgap05.emrsn.org (10.16.75.137) by
+ usgdcecpmsgap04.emrsn.org (10.16.75.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 9 Jul 2024 06:27:41 +0000
+Received: from aug-swlinux1c.aug (10.19.249.15) by Inetmail.emrsn.net
+ (10.16.75.137) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11 via Frontend
+ Transport; Tue, 9 Jul 2024 06:27:41 +0000
+Received: from Inetmail.emrsn.net (unknown [10.70.41.16])
+	by aug-swlinux1c.aug (Postfix) with ESMTP id 426EDB0B0017;
+	Tue,  9 Jul 2024 08:27:40 +0200 (CEST)
+From: Philipp Hortmann <philipp.hortmann@emerson.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-staging@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+CC: Philipp Hortmann <philipp.hortmann@emerson.com>
+Subject: [PATCH] staging: rtl8723bs: Remove constant result function CheckNegative()
+Date: Tue, 9 Jul 2024 08:26:34 +0200
+Message-ID: <20240709062634.9454-1-philipp.hortmann@emerson.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] dt-bindings: interconnect: Add Qualcomm IPQ5332
- support
-To: Varadarajan Narayanan <quic_varada@quicinc.com>, andersson@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, konrad.dybcio@linaro.org,
- djakov@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20240709063949.4127310-1-quic_varada@quicinc.com>
- <20240709063949.4127310-2-quic_varada@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240709063949.4127310-2-quic_varada@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: cFmUnU8ehzE1BMmzNw-kVnDvI_HUDQao
+X-Proofpoint-GUID: cFmUnU8ehzE1BMmzNw-kVnDvI_HUDQao
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ bulkscore=0 clxscore=1011 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407090041
 
-On 09/07/2024 08:39, Varadarajan Narayanan wrote:
-> Add interconnect-cells to clock provider so that it can be
-> used as icc provider.
-> 
-> Add master/slave ids for Qualcomm IPQ5332 Network-On-Chip
-> interfaces. This will be used by the gcc-ipq5332 driver
-> for providing interconnect services using the icc-clk
-> framework.
-> 
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+Remove function CheckNegative() that returns always true to shorten code.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Philipp Hortmann <philipp.hortmann@emerson.com>
+---
+Tested with rtl8723bs in ODYS Trendbook Next 14
+---
+ .../staging/rtl8723bs/hal/HalHWImg8723B_BB.c    | 17 ++---------------
+ .../staging/rtl8723bs/hal/HalHWImg8723B_MAC.c   | 12 +-----------
+ .../staging/rtl8723bs/hal/HalHWImg8723B_RF.c    | 12 +-----------
+ 3 files changed, 4 insertions(+), 37 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c
+index dd0f74b0cf0d..4da2487f6750 100644
+--- a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c
++++ b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_BB.c
+@@ -70,13 +70,6 @@ static bool CheckPositive(
+ 	return false;
+ }
+ 
+-static bool CheckNegative(
+-	struct dm_odm_t *pDM_Odm, const u32  Condition1, const u32 Condition2
+-)
+-{
+-	return true;
+-}
+-
+ /******************************************************************************
+ *                           AGC_TAB.TXT
+ ******************************************************************************/
+@@ -244,10 +237,7 @@ void ODM_ReadAndConfig_MP_8723B_AGC_TAB(struct dm_odm_t *pDM_Odm)
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			} else {
+ 				READ_NEXT_PAIR(v1, v2, i);
+-				if (!CheckNegative(pDM_Odm, v1, v2))
+-					bMatched = false;
+-				else
+-					bMatched = true;
++				bMatched = true;
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			}
+ 
+@@ -506,10 +496,7 @@ void ODM_ReadAndConfig_MP_8723B_PHY_REG(struct dm_odm_t *pDM_Odm)
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			} else {
+ 				READ_NEXT_PAIR(v1, v2, i);
+-				if (!CheckNegative(pDM_Odm, v1, v2))
+-					bMatched = false;
+-				else
+-					bMatched = true;
++				bMatched = true;
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			}
+ 
+diff --git a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c
+index 47e66f4ad9d1..1f0cc8d58df3 100644
+--- a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c
++++ b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_MAC.c
+@@ -68,13 +68,6 @@ static bool CheckPositive(
+ 	return false;
+ }
+ 
+-static bool CheckNegative(
+-	struct dm_odm_t *pDM_Odm, const u32 Condition1, const u32 Condition2
+-)
+-{
+-	return true;
+-}
+-
+ /******************************************************************************
+ *                           MAC_REG.TXT
+ ******************************************************************************/
+@@ -214,10 +207,7 @@ void ODM_ReadAndConfig_MP_8723B_MAC_REG(struct dm_odm_t *pDM_Odm)
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			} else {
+ 				READ_NEXT_PAIR(v1, v2, i);
+-				if (!CheckNegative(pDM_Odm, v1, v2))
+-					bMatched = false;
+-				else
+-					bMatched = true;
++				bMatched = true;
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			}
+ 
+diff --git a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c
+index efc68c17b126..155ec311a52e 100644
+--- a/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c
++++ b/drivers/staging/rtl8723bs/hal/HalHWImg8723B_RF.c
+@@ -78,13 +78,6 @@ static bool CheckPositive(
+ 	return false;
+ }
+ 
+-static bool CheckNegative(
+-	struct dm_odm_t *pDM_Odm, const u32  Condition1, const u32 Condition2
+-)
+-{
+-	return true;
+-}
+-
+ /******************************************************************************
+ *                           RadioA.TXT
+ ******************************************************************************/
+@@ -245,10 +238,7 @@ void ODM_ReadAndConfig_MP_8723B_RadioA(struct dm_odm_t *pDM_Odm)
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			} else {
+ 				READ_NEXT_PAIR(v1, v2, i);
+-				if (!CheckNegative(pDM_Odm, v1, v2))
+-					bMatched = false;
+-				else
+-					bMatched = true;
++				bMatched = true;
+ 				READ_NEXT_PAIR(v1, v2, i);
+ 			}
+ 
+-- 
+2.45.2
 
