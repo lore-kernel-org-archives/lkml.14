@@ -1,110 +1,107 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FE52D057;
-	Tue,  9 Jul 2024 13:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4FD15FA93
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720531265; cv=none; b=kH7p9wLePVE23Nm44VPoMBanTeyLM3e8VSaE+wGuCQeJjW9iU/KKyIuaPavsqJlyNwCngcfK09Dr9fQpEgUfi1uz390euNFNIq7fyKh4iPWjn0NboSWtDwv64lXYTJBJqnjrHkq9GZH+qHim8TP9jwnW04xoi8HW3HYnxOvSHJk=
+	t=1720531269; cv=none; b=qnKasc0DpEw0ztiN45Iu3O1vwgNZC7DsPyjJqoXvXNA/XUFFXVMdWo716lQzV/fpmGWbapG9qrVAzc7yVG8QQzXf0WXdPTMPElGA4bXrcHRr45uD9INupSxPsWUITGn4QUVvdTpL28e85H4fR9WouBE0EJclS4oijw8AyQjv1n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720531265; c=relaxed/simple;
-	bh=ofrjlTwjZutvnSbSpWjUvPgpAsV5ivDbnT/GrlE1wMY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tkmqlE8QpfHF4pEb3+CGAiyVYYbRcHrlmcr8uefNzVetnfDx7cSeFjNECeE7mzYh41fAEYG5cUdxMPkFvc1OLUrQ6iPyBymLxXn/UbCR39J3fD2MxQf0oeRj2rO11dB8rN1gIjTm5+ocR6zOH8ow8pHvvEHm0B+h8997wvGR25o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=TZ2rp0jy; arc=none smtp.client-ip=52.119.213.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1720531269; c=relaxed/simple;
+	bh=t3Nh4K0EgSspKbGVqz0X1bAV7PZaIwIZ1XOCKhOkTBI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JaA2EiViqm47yUZng/1nllMl0kap9ckprtC9vaigpM9vDB3uwth4jd3XIsSyngFsC+EYtJJ8nfF0yBLjg4J0DlEhY/XI2vs9NwE9d6QDLhG5uRv3iPlBPHce8wa/E1jMu+ohTzfVhK4xzc1x+MsVVdwjUu2F1wFPY7HC/JPC1ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m1mcMZ8k; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="TZ2rp0jy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m1mcMZ8k"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70af548db1eso3879898b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:21:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1720531263; x=1752067263;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/DNQp/z0GUBgLTV7ZRmRKhZQi2WgjcFO0AlHckf358s=;
-  b=TZ2rp0jyaEv7Fhw6699bQXwux3wtJpG9Ssn2sELoX9EhPTOGaUA/JUD3
-   caz1/WE64tFFZNYZe8FbYXcGHpdTvzTaIoQsJmsFRTsG9MWaEMZqzfGIN
-   GSY83QZ0NuFXcSLBCSbLQFeLTknfc0eNObqnoVf7eINj3RR0XPFTTL6/6
-   8=;
-X-IronPort-AV: E=Sophos;i="6.09,195,1716249600"; 
-   d="scan'208";a="644664049"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 13:21:01 +0000
-Received: from EX19MTAUEA002.ant.amazon.com [10.0.0.204:55215]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.17.85:2525] with esmtp (Farcaster)
- id cb50a819-87b3-4fab-a17a-29e4e0b8d5a4; Tue, 9 Jul 2024 13:21:00 +0000 (UTC)
-X-Farcaster-Flow-ID: cb50a819-87b3-4fab-a17a-29e4e0b8d5a4
-Received: from EX19D008UEC001.ant.amazon.com (10.252.135.232) by
- EX19MTAUEA002.ant.amazon.com (10.252.134.9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 9 Jul 2024 13:21:00 +0000
-Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
- EX19D008UEC001.ant.amazon.com (10.252.135.232) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 9 Jul 2024 13:21:00 +0000
-Received: from ua2d7e1a6107c5b.ant.amazon.com (172.19.88.180) by
- mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34
- via Frontend Transport; Tue, 9 Jul 2024 13:20:57 +0000
-From: Patrick Roy <roypat@amazon.co.uk>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <akpm@linux-foundation.org>,
-	<dwmw@amazon.co.uk>, <rppt@kernel.org>, <david@redhat.com>
-CC: Patrick Roy <roypat@amazon.co.uk>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <willy@infradead.org>, <graf@amazon.com>,
-	<derekmn@amazon.com>, <kalyazin@amazon.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <dmatlack@google.com>,
-	<tabba@google.com>, <chao.p.peng@linux.intel.com>, <xmarcalx@amazon.co.uk>
-Subject: [RFC PATCH 2/8] kvm: use slowpath in gfn_to_hva_cache if memory is private
-Date: Tue, 9 Jul 2024 14:20:30 +0100
-Message-ID: <20240709132041.3625501-3-roypat@amazon.co.uk>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240709132041.3625501-1-roypat@amazon.co.uk>
-References: <20240709132041.3625501-1-roypat@amazon.co.uk>
+        d=google.com; s=20230601; t=1720531267; x=1721136067; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=91y1ViYzzS22frzUrEAAYagk7sEQX2NaM9leAuKuoiU=;
+        b=m1mcMZ8kl9L2eJ7+cmAkTvrTQHGReya4X2ZwEhfpOPmkImkqhlPqXpHb+Yf/MrwWs0
+         dpxgebFhn7FdajE4I+PZowh/5zVL/l7vkx0TZeAOvisFFOk/LVfpdPlyYZB5SKac3HCv
+         oNXDvNHvUKX7WOhd7Y9nT1uqi0kQ/RnDQ4Y6t3KWAAzl2RAHDpcZhdcV+gP5gqkafcyG
+         4u8nl/ExJnf5ZbjpvHyBehXR90qeGaQbSvADM7snxahnC1YYJbwhzOW8vN4noxun/IT1
+         to3KgoZpr2qDrmGbyo2WxQD1nk6+lzZFsW77Jencwum3CgcGbACjgERQKweAtei/zQxZ
+         FKBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720531267; x=1721136067;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=91y1ViYzzS22frzUrEAAYagk7sEQX2NaM9leAuKuoiU=;
+        b=noAwDX2+zn0nIlTWcF040eoY/Ij/DLtA3Vttxk+nJQraZ9fbn0lqUp+VfCITkKmgVc
+         8u3fNmJZQ9YeOYxeSgJ40TN1BSO+/4l3d6HA6SAWxlEM2y4pUepdRL9oO+xwS6k+7lS0
+         I+0jc7NS9byoZHC5AxxHGC7p3BFYDHd9BenRTmpvnDhSaCaal3DUpksrLepUixS+bfGM
+         R2pnYGwZl4dsg5YFYfN16O2FeX8oxfHUZQemlxuXgs5LNo36Ae5N8lkeAIHl8vmonepA
+         BHDHMT0Aee3fhO0wf5i6TeApMtde8hurvXjKb9HAkX2eYsXPkckr1FtXnfyistJQtcUw
+         8Cog==
+X-Forwarded-Encrypted: i=1; AJvYcCWGiQCc4ePcDijEpNtDVaBQrxgH0oDQRzqfknNhVDuK+VcxdyWVu+YMCWXl4dEfxi72mxGcv92iAAgyMuQ6F52wQst/5IsQQrVGN6kW
+X-Gm-Message-State: AOJu0YxEAqrVnfK3v9oTcSv9ta9Sx3oyGP5PQRWyLdg8FSpQFESJG+me
+	FC1LQWezjcygnF/5VwMnzOQ3t0gFbO0V7cYb3Ub5Cq0oa3QZgIVjyM4xcWL1Wl+CqAFmBIpevHf
+	kb4MPAf8/9w==
+X-Google-Smtp-Source: AGHT+IHnhhEo/FT7unUXOiYtEv21JGTtRWBB+eYjZZipziKWNkzvFRhxgaWH5sWuaB2RfGlZ23uG42E7bXzm8w==
+X-Received: from loggerhead.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:29a])
+ (user=jmattson job=sendgmr) by 2002:a05:6a00:2d2a:b0:705:d750:83dd with SMTP
+ id d2e1a72fcca58-70b44b5ee14mr89189b3a.0.1720531267259; Tue, 09 Jul 2024
+ 06:21:07 -0700 (PDT)
+Date: Tue,  9 Jul 2024 06:20:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240709132058.227930-1-jmattson@google.com>
+Subject: [PATCH 5.10 RESEND] x86/retpoline: Move a NOENDBR annotation to the
+ SRSO dummy return thunk
+From: Jim Mattson <jmattson@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+	Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: Jim Mattson <jmattson@google.com>, Greg Thelen <gthelen@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Currently, KVM uses gfn_to_hva_caches to cache gfn->memslot->userspace
-host virtual address (uhva) translations. If a gfn is backed by
-guest_memfd however, there is no uhva-equivalent item we could possible
-cache, since accesses go through a file descriptor instead of a VMA.
-Thus, we effectively disable gfn_to_hva_caches in the case where gfns
-are gmem-backed, and instead do a gfn->pfn translation on the fly by
-calling `kvm_{read,write}_guest` inside `kvm_{read,write}_guest_cached`.
+The linux-5.10-y backport of commit b377c66ae350 ("x86/retpoline: Add
+NOENDBR annotation to the SRSO dummy return thunk") misplaced the new
+NOENDBR annotation, repeating the annotation on __x86_return_thunk,
+rather than adding the annotation to the !CONFIG_CPU_SRSO version of
+srso_alias_untrain_ret, as intended.
 
-Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
+Move the annotation to the right place.
+
+Fixes: 0bdc64e9e716 ("x86/retpoline: Add NOENDBR annotation to the SRSO dummy return thunk")
+Reported-by: Greg Thelen <gthelen@google.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: stable@vger.kernel.org
 ---
- virt/kvm/kvm_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/lib/retpoline.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index b3b3de70a4df..4357f7cdf040 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3603,7 +3603,7 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
- 
--	if (unlikely(!ghc->memslot))
-+	if (unlikely(!ghc->memslot || kvm_mem_is_private(kvm, gpa_to_gfn(gpa))))
- 		return kvm_write_guest(kvm, gpa, data, len);
- 
- 	r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
-@@ -3641,7 +3641,7 @@ int kvm_read_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
- 
--	if (unlikely(!ghc->memslot))
-+	if (unlikely(!ghc->memslot || kvm_mem_is_private(kvm, gpa_to_gfn(gpa))))
- 		return kvm_read_guest(kvm, gpa, data, len);
- 
- 	r = __copy_from_user(data, (void __user *)ghc->hva + offset, len);
+diff --git a/arch/x86/lib/retpoline.S b/arch/x86/lib/retpoline.S
+index ab9b047790dd..d1902213a0d6 100644
+--- a/arch/x86/lib/retpoline.S
++++ b/arch/x86/lib/retpoline.S
+@@ -105,6 +105,7 @@ __EXPORT_THUNK(srso_alias_untrain_ret)
+ /* dummy definition for alternatives */
+ SYM_START(srso_alias_untrain_ret, SYM_L_GLOBAL, SYM_A_NONE)
+ 	ANNOTATE_UNRET_SAFE
++	ANNOTATE_NOENDBR
+ 	ret
+ 	int3
+ SYM_FUNC_END(srso_alias_untrain_ret)
+@@ -258,7 +259,6 @@ SYM_CODE_START(__x86_return_thunk)
+ 	UNWIND_HINT_FUNC
+ 	ANNOTATE_NOENDBR
+ 	ANNOTATE_UNRET_SAFE
+-	ANNOTATE_NOENDBR
+ 	ret
+ 	int3
+ SYM_CODE_END(__x86_return_thunk)
 -- 
-2.45.2
+2.45.2.803.g4e1b14247a-goog
 
