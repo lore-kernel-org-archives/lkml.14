@@ -1,157 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751ED13C3CC;
-	Tue,  9 Jul 2024 06:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D89913C699
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 06:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720507844; cv=none; b=NbozgeJ/eipFcK/8bKBcTqbZxDGNRIleuykfYgzwmDJ9FeohMw1tDI5gyKO3O1egFFiFqN+Zs6irYDkD94VTIv0pFmP3vyNthdU3pBN2haDtwWGqk8HTnfH/CnMqbKz/JlibDWQodML+pp0aXaBShn6AHxKu41YjJif17D1cJ6M=
+	t=1720507930; cv=none; b=pEvP93/3FMnfZn7ThGWV1YQrynQZUXioaEZQkxL/xIUB0aKEBNmRvAJrce7FvjDRc633DCTRqxJkDMtKFDl7YgS7ZQKS66h5r7Kb9TxcdHRGGFooaOV3uuvez+hYvVpimHPvy4vBcQKHbbd4C6J4do0IyYDcgA+62SrtA5cNHuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720507844; c=relaxed/simple;
-	bh=3giE4+saP+d7eJZS8OHs0mrpLvS9f7Y4bLyfdFvArS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WPjGnbv8CbMpzwXW9LZSjrqbfAjDLlG6GhFCAGbY4/PoocoO2n0BtLtJEbLawbX1+Jx2DSc6tS8Q101kIPVefAuENphGOOaoZLKzo+GFqNo1edsQItsHgGadgX1M0IGl4h1rAOaHzlh3/6E4TDEAL6Ks7nwCQ0jYEwIl6FRmiQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijTIYMUE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijTIYMUE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C759EC4AF0A;
-	Tue,  9 Jul 2024 06:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720507844;
-	bh=3giE4+saP+d7eJZS8OHs0mrpLvS9f7Y4bLyfdFvArS0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ijTIYMUE7thcEpcNpzkNMd0UQosPV/hE9Tu9hAa/uQl3BOTfAVAbEREoC98CWZPf5
-	 OOXjwA75BCEzqpqvz0TvdArzEpGOARvf+uZhvbiLvDs41xeR8O6jYethTf0jOxWzH1
-	 aH3nx8P5bYwxSTLtsFMZNDBD+zvW4ZCkNnfdKpY4uM/+62OTzhqS/N0LlDt+f//Nls
-	 15UcGWNCBhn5AsaoOpzOQdQIvIj4XfZ1TUbiQq1Shs5df2gCBXB0WaN/ert/tpxLcr
-	 jRqAcCCKz2R/tRPdlVlehQyscxQ8MLgGhWFeN9ngQO+kJsS6j1KN3oX9PpYu6DVHvV
-	 Hbm/nE2SIuwJg==
-Message-ID: <35667bd4-bfb4-4939-9fd7-328e2e8c228f@kernel.org>
-Date: Tue, 9 Jul 2024 08:50:35 +0200
+	s=arc-20240116; t=1720507930; c=relaxed/simple;
+	bh=NlhbpVlzBisRb3uUIcsg28/MryMoNaL1+d5GF/ddONg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N30w/kId0CqmsvBrx84BSQsYBY8on8tbtww3YkD6fRDA2hCagdJbgP5iifqmqeGqaSWOzrGu/58mFwOL75fpjSOM3PyqxQGpl0f+wWB70Jj4XX8LFsMrttOTmFzEDfH0wJ9Cx9m453rhi0Zirz3cMO0ZnSMlacMMfEvmfoA7Crw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowABHTpIQ3oxm2DrLFA--.39884S2;
+	Tue, 09 Jul 2024 14:52:00 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: me@bobcopeland.com
+Cc: linux-karma-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] fs: omfs: Convert comma to semicolon
+Date: Tue,  9 Jul 2024 14:51:51 +0800
+Message-Id: <20240709065151.869737-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] dt-bindings: display: imx: Add i.MX8qxp Display
- Controller display engine
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
- maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- tglx@linutronix.de
-References: <20240705090932.1880496-1-victor.liu@nxp.com>
- <20240705090932.1880496-3-victor.liu@nxp.com>
- <cd558335-6e72-46d1-911b-68ccbb211136@kernel.org>
- <b9583c86-b5ed-4642-9baf-2ac850656ee3@nxp.com>
- <eda90514-e40c-4edd-8c15-18717a5e9784@kernel.org>
- <20240708-mega-nautilus-of-champagne-cd4be6@houat>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240708-mega-nautilus-of-champagne-cd4be6@houat>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowABHTpIQ3oxm2DrLFA--.39884S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZF15Zr47Jw4UGr4fGrg_yoW3Zrc_A3
+	sFqry8JFs8JFnakr1xJ34Yv3s5X39YvF1S9rySqFWv9a4qqa95J34Dur18GwnxXrZ8Xr13
+	GrykurnIyFyjvjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
+	GF1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0T5lUUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On 08/07/2024 16:52, Maxime Ripard wrote:
-> On Mon, Jul 08, 2024 at 04:04:21PM GMT, Krzysztof Kozlowski wrote:
->> On 08/07/2024 08:40, Liu Ying wrote:
->>>>> +
->>>>> +  "^framegen@[0-9a-f]+$":
->>>>> +    type: object
->>>>> +    additionalProperties: true
->>>>> +
->>>>> +    properties:
->>>>> +      compatible:
->>>>> +        const: fsl,imx8qxp-dc-framegen
->>>>> +
->>>>> +  "^gammacor@[0-9a-f]+$":
->>>>
->>>> This looks like you are organizing bindings per your driver architecture.
->>>
->>> As I mentioned in cover letter, this series addresses Maxime's
->>> comment for the previous series - split the display controller
->>> into multiple internal devices.  Maxime insisted on doing this.
->>
->> But these are not separate devices. Look:
->> 1. parent DC:
->> reg = <0x56180000 0x40000>;
->>
->> 2. child interrupt controller:
->> reg = <0x56180040 0x60>;
->>
->> That address is within parent.
->>
->> 3. Then we go to things like:
->> reg = <0x5618b400 0x14>, <0x5618b800 0x1c00>;
->>
->> Still within parent's range and just few words in address range. That's
->> a clear indication that you choose few registers and call it a "device".
-> 
-> That's never really been a metric though?
-> 
-> If not, one could just create a "soc" device node covering the entire
-> register map, and since it would overlap despite clearly defined
-> features, you would claim it's a single device?
+Replace a comma between expression statements by a semicolon.
 
-Since I do not create such one-address-soc devices, I claim I have
-separate devices in the SoC. Here is not the case: there is a device
-covering entire address space.
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ fs/omfs/file.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Soc is a good example, because components/blocks of the SoC are being
-re-used among different SoCs. Is the case here?
-
-BTW, it could be that some of the sub-devices here are worth to be
-devices, I agree.
-
-Best regards,
-Krzysztof
+diff --git a/fs/omfs/file.c b/fs/omfs/file.c
+index 6b580b9da8e3..94cb3b454c6f 100644
+--- a/fs/omfs/file.c
++++ b/fs/omfs/file.c
+@@ -22,8 +22,8 @@ void omfs_make_empty_table(struct buffer_head *bh, int offset)
+ 	struct omfs_extent *oe = (struct omfs_extent *) &bh->b_data[offset];
+ 
+ 	oe->e_next = ~cpu_to_be64(0ULL);
+-	oe->e_extent_count = cpu_to_be32(1),
+-	oe->e_fill = cpu_to_be32(0x22),
++	oe->e_extent_count = cpu_to_be32(1);
++	oe->e_fill = cpu_to_be32(0x22);
+ 	oe->e_entry[0].e_cluster = ~cpu_to_be64(0ULL);
+ 	oe->e_entry[0].e_blocks = ~cpu_to_be64(0ULL);
+ }
+-- 
+2.25.1
 
