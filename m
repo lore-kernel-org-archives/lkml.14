@@ -1,95 +1,119 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F2C12D1FD;
-	Tue,  9 Jul 2024 03:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4092381BE
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 03:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720495271; cv=none; b=QrjfkValdDlNuauilb1bdreRJletsH6PI0fFKstgg2J4Q8nPvObiQIqkGSFBklySy9wJQtHPQdmnyj3MHEQhktMH0Sz7a2gVfpYEXdXv++QwYc+EJj1dGktnVCRV++Py0iY5iAs/bCG++7JNgc7NZZYpeFGhYaw44YGhZdDlZA0=
+	t=1720495637; cv=none; b=I7HMzVMKkCuxtrsMOd3ieRTejak7O0HdC7Gw5h2f6mSuEdvEENwBAyNXRcPl+8uursGI9JQfBt3Xle3HX59hZBXKuHxfAz8PCSd8hyzUTsuUzdiSGIPuIAUg6cIVNqrZusACDsQ9gX74I3cFv57daSYcd5Pf9OVmG3sPKljv/oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720495271; c=relaxed/simple;
-	bh=2BAwp0OEFbYn/qc8L0S8pskWpGRbFBkbPzjK5+UTi/I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LdbaQB5w9/YALI/B34ZUmW44xdGKAVsNGdbQvhdNzfmquVNx+z3SJX6jVuGAI6X5MpI2xtcZz2EOJvoUclhqmJX4ZmfLFjlJDXpn/eEaYCWeQLprllMngX4mTOaug8AMQmR6yOknSOQUomdgrpbXqa/NKvEqoFTDniGHMuiVxn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-From: Yixun Lan <dlan@gentoo.org>
-Date: Tue, 09 Jul 2024 03:18:53 +0000
-Subject: [PATCH v4 10/10] riscv: defconfig: enable SpacemiT SoC
+	s=arc-20240116; t=1720495637; c=relaxed/simple;
+	bh=XoniMY9gyeIAU1UmiYfaXz6w6RRa8ECXmSmBQOuYxLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u3A2y1kVxGRXAeiiHNMxSI3gUdO6YDJIThyNgTBFL1G9zUWgKhnc3aROevM4CQU01AAWdsh7nSAEatOqLSpj85uuEcZN9mxh9iBWLcklyIuUvpKmlbzQiVvWEEd4c5aGNWB8fEidnJqZgoyP51uyzbEqbTp580sQl0cUROw/OnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvzzrPfG; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvzzrPfG"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4266fd395eeso3783695e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2024 20:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720495634; x=1721100434; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ujWVI1w98XuvHWuXqXhCuvgWjqW2EVQMcC2qmsk5Z9Y=;
+        b=GvzzrPfGXQ5TZ7AcGgD7xcsnMeNGJXbgOXgfMaSpwappFc4cM6l6ESXBqz60VtQzno
+         2R6EEwXHuDnDCKwc1sWzhcQuMbe4sSphOhIBxPO8mIY1yZq+rhTuUsU+C1Azur/occeR
+         4lDN9MYyh3OdHPb7nKabhKTi8UiwPG7Npgqgrlehlt3c+X+N4el8UCvqBtynkwIDX+cU
+         zSDH0c0jtzxnQ2x+HmPh9ccOhPgtDu0RH370Iwv5FsuYDoc/F7wsH+eGWb+ZExT4w2dn
+         kFrlUO4P4YUJ/3df8CK5DarHWQaw3YzcY80JlrsJdLbVRn5PgLL758DbVgXo5/myb3jp
+         RfJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720495634; x=1721100434;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ujWVI1w98XuvHWuXqXhCuvgWjqW2EVQMcC2qmsk5Z9Y=;
+        b=gl6ZWNjX8zUC9ZgOhb1OPqbRSLCXvQ9cLZ9/hKzTalBCeKWOETLa8LbmcMEXbPCAJy
+         MB9K1gavUJbiHVhwOPXhcp3d0MXAqpzzeJAWXAzXi+CVAJ/P9aA8oQvTWbCHEjxcRg9q
+         9YqYXEHvo5XawBJkRGMfB3BxOwPRXrmkYODFN2gwnBs0j00t3edc39TY+YdISnJ/OcHs
+         PNefIHpU9+BwDl1YxVE0FVmHv5g16NB2DxHFStcyBlDIlH7AgvOtrAgicHzs8aTzmRO7
+         0a5oql2hDTgfFYacycmZtRwQGUnXcVJywBKdsBA1Pm5e0FS7XjaWVgGUrSRiBay01dQc
+         +FMw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/7JhGsZ0tXvcwSGcMZjx8Pt1WNF3hMcVS+aAJJlKxxxaeYQYgLm86gprRyvc/82BQoD9HFwQCf9YdI5/l0sZtZrc06EbgZoEsxzm2
+X-Gm-Message-State: AOJu0YxDbi7mHby7V3tovT0zc1iaq6vTUCgSiyG1glbPGHzjBntSAIzo
+	Rk5F7hnrIJp6IGEcLU7k6pcpMghjLpbxd28SNqs6D/QSqhnxWCsLpFh1lsI737nEtpVv/ORIhuW
+	Z12rGLVCNUivzocGjYID6sbrd8Bo=
+X-Google-Smtp-Source: AGHT+IEbnndXVikg5q+Ou7RW/6MzUwK63agDbEJsilPeBqTBf95hARUl1QO03UyOQkjfsmWsTPOXfQa3hGOnjBggzRo=
+X-Received: by 2002:a5d:4807:0:b0:367:987a:2d3c with SMTP id
+ ffacd0b85a97d-367cea95afamr784153f8f.29.1720495634060; Mon, 08 Jul 2024
+ 20:27:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240709-k1-01-basic-dt-v4-10-ae5bb5e56aaf@gentoo.org>
-References: <20240709-k1-01-basic-dt-v4-0-ae5bb5e56aaf@gentoo.org>
-In-Reply-To: <20240709-k1-01-basic-dt-v4-0-ae5bb5e56aaf@gentoo.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Anup Patel <anup@brainfault.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org, 
- Jesse Taube <jesse@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>, 
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
- Meng Zhang <zhangmeng.kevin@spacemit.com>, 
- Meng Zhang <kevin.z.m@hotmail.com>, Yangyu Chen <cyy@cyyself.name>, 
- Yixun Lan <dlan@gentoo.org>, Conor Dooley <conor.dooley@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=795; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=nL3b7ahT6PV/xD2KFpmUqqi2YSsxtqrz+nMpwZze7nk=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBmjKw8UJeiNWb9cOf0HFjpYkqCDrFZNYSjTbzd+
- tu3iV1QfX+JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZoysPF8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277UG9EACH6x0kZ5oN0KPPGc
- JZC0huaCNkqUkLvkzX3zhXIkvTyZX/wLcOxTJleNI0GTR+wAII/BfL04DOkhN95b+6jI/5OtsF9
- k1bG5cUaj37XpAxGwJ/r/ryD+sq2xzzX2m9FLfSLBu7jjtt5Jn5xjDxGQH+iWFQu6JtVk9ff01A
- L952+9XIP2idSo8j8BhPYksc68FqGEvRDnQfwzCqWEb6ByetyGgyeOcBpwz9UQyalfkzHihe4am
- 1y/Noo39uDoVcV1pdjCrbG3arTtYnKn6efO390QbP3s2DHJWTqeclgwns+nMKQR2MLSkVWLsG7e
- LAMDYtfEQra74OiE464xz7M89R2gzLyoWbeVV25iYvoEEq3F1YP9Y37o6jNG6lOBqbe2XC6KAI6
- /EY7XtghXBkBCzTd6uDbVinMKRZfc3QaMa05j7THgNBehSvDbpQsckI6lKveEanl2CFeECLshIq
- 8mktzRHbRlApRodX5PMEkZ1hMWrRCWxsz36M5UX2wFGM/OUDZwApdu+wXcDOICXViZEkIjB3lVi
- XFgFjgiIZ/nvqtE7VWkrgZDBQSQFL2dGeLS0hGErXSuDZosPzEEdpF+1f7NG4RqtIoF3cUsEzXm
- njmGDohjJYR7vgsIEJtkTrCeRVzi/YcGVPoty1rDoGd04XM1Yy+5DGTBxbLo41xqeNJg==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+References: <1717155071-20409-1-git-send-email-zhiguo.niu@unisoc.com> <e1719623-a42e-4394-b840-2741975ead37@acm.org>
+In-Reply-To: <e1719623-a42e-4394-b840-2741975ead37@acm.org>
+From: Zhiguo Niu <niuzhiguo84@gmail.com>
+Date: Tue, 9 Jul 2024 11:27:03 +0800
+Message-ID: <CAHJ8P3KaWbKrGnmqmb_W9xw0k_F7i8oRK+MYscP02-k1XPyWfw@mail.gmail.com>
+Subject: Re: [PATCH] block: uapi: Fix compliation warning of using IOPRIO_PRIO_DATA
+To: axboe@kernel.dk, dlemoal@kernel.org, Christoph Hellwig <hch@lst.de>
+Cc: Bart Van Assche <bvanassche@acm.org>, linux-kernel@vger.kernel.org, 
+	Zhiguo Niu <zhiguo.niu@unisoc.com>, ke.wang@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yangyu Chen <cyy@cyyself.name>
+kindly ping...
 
-Enable SpacemiT SoC config in defconfig to allow the default upstream
-kernel to boot on Banana Pi BPI-F3 board.
+Bart Van Assche <bvanassche@acm.org> =E4=BA=8E2024=E5=B9=B46=E6=9C=881=E6=
+=97=A5=E5=91=A8=E5=85=AD 04:13=E5=86=99=E9=81=93=EF=BC=9A
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Tested-by: Jesse Taube <jesse@rivosinc.com>
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- arch/riscv/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 12dc8c73a8acf..5287ae81bbb78 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -29,6 +29,7 @@ CONFIG_ARCH_MICROCHIP=y
- CONFIG_ARCH_RENESAS=y
- CONFIG_ARCH_SIFIVE=y
- CONFIG_ARCH_SOPHGO=y
-+CONFIG_ARCH_SPACEMIT=y
- CONFIG_SOC_STARFIVE=y
- CONFIG_ARCH_SUNXI=y
- CONFIG_ARCH_THEAD=y
-
--- 
-2.45.2
-
+>
+> On 5/31/24 04:31, Zhiguo Niu wrote:
+> > Generally, the input of IOPRIO_PRIO_DATA has 16 bits. If use format "%d=
+"
+> > to printk IOPRIO_PRIO_DATA, there will be the following warning or erro=
+r.
+> >
+> > fs/f2fs/sysfs.c:348:31: warning: format =E2=80=98%d=E2=80=99 expects ar=
+gument of type =E2=80=98int=E2=80=99, but argument 4 has type =E2=80=98long=
+ unsigned int=E2=80=99 [-Wformat=3D]
+> >     return sysfs_emit(buf, "%s,%d\n",
+> >                                ~^
+> >                                %ld
+> >
+> > This is because the output of IOPRIO_PRIO_DATA is converted to "UL" fro=
+m
+> > IOPRIO_PRIO_MASK, which is not reasonable. unsigned int is more suitabl=
+e.
+> >
+> > Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> > ---
+> >   include/uapi/linux/ioprio.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/ioprio.h b/include/uapi/linux/ioprio.h
+> > index bee2bdb0..9ead07f 100644
+> > --- a/include/uapi/linux/ioprio.h
+> > +++ b/include/uapi/linux/ioprio.h
+> > @@ -11,7 +11,7 @@
+> >   #define IOPRIO_CLASS_SHIFT  13
+> >   #define IOPRIO_NR_CLASSES   8
+> >   #define IOPRIO_CLASS_MASK   (IOPRIO_NR_CLASSES - 1)
+> > -#define IOPRIO_PRIO_MASK     ((1UL << IOPRIO_CLASS_SHIFT) - 1)
+> > +#define IOPRIO_PRIO_MASK     ((1U << IOPRIO_CLASS_SHIFT) - 1)
+> >
+> >   #define IOPRIO_PRIO_CLASS(ioprio)   \
+> >       (((ioprio) >> IOPRIO_CLASS_SHIFT) & IOPRIO_CLASS_MASK)
+>
+> This change is safe even if the mask is applied to an expression with mor=
+e bits
+> than an int because of the integer promotion rules. Hence:
+>
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
