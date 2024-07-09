@@ -1,50 +1,50 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D240412D75A;
-	Tue,  9 Jul 2024 08:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5B914290;
+	Tue,  9 Jul 2024 08:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720513851; cv=none; b=cSz8qfo7rUiF3IijXgJZ4H6f7VW/3eNSVZa9JtQan+TVpsbDBB7dfGaKGZKjXuk/jNLxWYusQ0XjuH7RMgjOroPKVHE4MRUI2eaPeBpXqerTAwRXS1A3q3qTfTFelHlszNnpbaxqVBYURcTCKdBgIKBimL3/XGftMFLVtJv/p9E=
+	t=1720513930; cv=none; b=L7IsHOKSZIsJdRU5jd/Md5k4pmo+8EiOTFRGFobBjmp5VF1nS0pcuDJiMOquK5qpWISM0Yiy+Fl7ERfauoRoYzzFHsTsb0wNSm/6ggN8bOslqCYYaTdQ8RgbafNt7dfdSRM8+gUpsjL68oYeeSNBu8H2Kd79qfnRVvaG2OT/yhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720513851; c=relaxed/simple;
-	bh=4ddWApf5yRC6Suz8B9WVJ/vHSrjM8rDrQEFG9pPzp1s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=la8AYASPKPpwbZN8e7fuyB+i/bHASmmgYF++qWKFevzsWL0AddLdsuaKujV9rz0RT7jxnafvfFrVBkzYKPKpoi8bIrjQCp0yYxwi/bBRYYeKcOpP1cf6GxxgE3et11YCFO+nDYx5/PVX8aF8uQ/nJblN52WdKv4cTkeVKUvWqV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wsEFis3C; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1720513930; c=relaxed/simple;
+	bh=EJdp+wJBv45BvCTyu+j+WgqZztpkq0r6Q35LEWnQ+/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vEdZ2nQGWXP+8U178HcXSPa7vQ63NX10zTiPP9GhOySHuvS5PlB3MxWts3m8mfTacgASaHnXBdHI3dE7m3DDwcczTq9++3xwi1brTY/rKVCeDLEWEoFsTFAIXE2WM4MBVNPPRxz01pcIF2mai1H5KWdoTOC2w2VauusJnFcEf3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lXDguvEA; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wsEFis3C"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46970J4r031206;
-	Tue, 9 Jul 2024 10:30:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	4ddWApf5yRC6Suz8B9WVJ/vHSrjM8rDrQEFG9pPzp1s=; b=wsEFis3CIz+Vjztg
-	XX4X+LydYiLGCdtCM6SabJwpr3ie+6IWfe5khJcstAyiK9MvQwDF62bwvkt+yG5m
-	WDGDPT+PiVLG5MPbHD2Q2e2FY6eIYnYZhCjGYuOyEeo3T5qWd42xn8v+kCq8Kvgy
-	e589FH4mwHKGI+kOz6DHR0tWMTBeTwQY1auHQeTPmnp1B1rdgdQDAXzgKskL8EMU
-	+wQu9wpBqV2WDdxYpOfPfrGHSfmb2vWyXqx4lO6L9/KD1Nw+OacTQ0gnZd4aBXYe
-	V4SCC36O5e0JsvY66L55pTxUy6+WgmoQZ6i8euGr9g02YRXW+Jlej17VdIaj7tHA
-	N6dp+Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 406whft9m4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jul 2024 10:30:14 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id ADADB40044;
-	Tue,  9 Jul 2024 10:29:52 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 09C5F216821;
-	Tue,  9 Jul 2024 10:28:55 +0200 (CEST)
-Received: from [10.129.178.17] (10.129.178.17) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 9 Jul
- 2024 10:28:53 +0200
-Message-ID: <f8295b75-1c98-44d3-9da3-92cc192297e2@foss.st.com>
-Date: Tue, 9 Jul 2024 10:28:53 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lXDguvEA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720513928; x=1752049928;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EJdp+wJBv45BvCTyu+j+WgqZztpkq0r6Q35LEWnQ+/Y=;
+  b=lXDguvEAYrugz1Xq18QRiCJURws3WjIKUgZM9++LKflBHAEB1au1KxAi
+   N+I7jdC1a91VAXgsg+zwXWK2BGeDr5LlnMyqAZrkBDEi1qpvqOCqDGte7
+   QevVv/WXTRM/IWo8dyDxVdKZ4lG5HlB7xj3QPzg2oCYyc7tqQG8CqAvgu
+   IVAXuyXslDyOfNx4CYzhAwC6A5WPm7iiR6qRC6I9zHsgGOk9ZMI7fN8gq
+   LVToRH0j6rRtdwSUpddvDPKX04+Px4J9RkCqxayEsjgj/wN0oZjWOy451
+   HKdqKXqsE/4vXlpTn8LVhVi4+EXLS5brg6/ilYeP73yyhPAEwdVG5SvXs
+   w==;
+X-CSE-ConnectionGUID: sGdDw2jQR4KBoCLRFr6orA==
+X-CSE-MsgGUID: TrcWsZM6Ttmsa2uKLAwtEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17885174"
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="17885174"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 01:32:08 -0700
+X-CSE-ConnectionGUID: BY32i6+ySUWWKjgq2aq9/g==
+X-CSE-MsgGUID: eYpp1U4HSWCON/8IkLQWvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="47760888"
+Received: from yma27-mobl.ccr.corp.intel.com (HELO [10.124.248.81]) ([10.124.248.81])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 01:32:03 -0700
+Message-ID: <1296ef8d-dade-46e5-8571-e7dba158f405@intel.com>
+Date: Tue, 9 Jul 2024 16:32:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,53 +52,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/stm: Fix an error handling path in
- stm_drm_platform_probe()
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Yannick Fertre
-	<yannick.fertre@foss.st.com>,
-        Philippe Cornu <philippe.cornu@foss.st.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Eric Anholt <eric@anholt.net>,
-        Neil Armstrong <neil.armstrong@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Yannick Fertre" <yannick.fertre@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20fff7f853f20a48a96db8ff186124470ec4d976.1704560028.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
+To: Jan Kara <jack@suse.cz>, Mateusz Guzik <mjguzik@gmail.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, edumazet@google.com,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ pan.deng@intel.com, tianyou.li@intel.com, tim.c.chen@intel.com,
+ tim.c.chen@linux.intel.com, yu.ma@intel.com
+References: <20240614163416.728752-1-yu.ma@intel.com>
+ <20240703143311.2184454-1-yu.ma@intel.com>
+ <20240703143311.2184454-4-yu.ma@intel.com>
+ <CAGudoHH_P4LGaVN1N4j8FNTH_eDm3SDL7azMc25+HY2_XgjvJQ@mail.gmail.com>
+ <20240704215507.mr6st2d423lvkepu@quack3>
+ <3c7a0cd7-1dd2-4762-a2dd-67e6b6a82df7@intel.com>
+From: "Ma, Yu" <yu.ma@intel.com>
 Content-Language: en-US
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-In-Reply-To: <20fff7f853f20a48a96db8ff186124470ec4d976.1704560028.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3c7a0cd7-1dd2-4762-a2dd-67e6b6a82df7@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_15,2024-07-08_01,2024-05-17_01
 
 
-On 1/6/24 17:54, Christophe JAILLET wrote:
-> If drm_dev_register() fails, a call to drv_load() must be undone, as
-> already done in the remove function.
+On 7/5/2024 3:56 PM, Ma, Yu wrote:
+> I had something like this in mind:
+>>> diff --git a/fs/file.c b/fs/file.c
+>>> index a3b72aa64f11..4d3307e39db7 100644
+>>> --- a/fs/file.c
+>>> +++ b/fs/file.c
+>>> @@ -489,6 +489,16 @@ static unsigned int find_next_fd(struct fdtable
+>>> *fdt, unsigned int start)
+>>>          unsigned int maxfd = fdt->max_fds; /* always multiple of
+>>> BITS_PER_LONG */
+>>>          unsigned int maxbit = maxfd / BITS_PER_LONG;
+>>>          unsigned int bitbit = start / BITS_PER_LONG;
+>>> +       unsigned int bit;
+>>> +
+>>> +       /*
+>>> +        * Try to avoid looking at the second level map.
+>>> +        */
+>>> +       bit = find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_LONG,
+>>> +                               start & (BITS_PER_LONG - 1));
+>>> +       if (bit < BITS_PER_LONG) {
+>>> +               return bit + bitbit * BITS_PER_LONG;
+>>> +       }
+>> Drat, you're right. I missed that Ma did not add the proper offset to
+>> open_fds. *This* is what I meant :)
+>>
+>>                                 Honza
 >
-> Fixes: b759012c5fa7 ("drm/stm: Add STM32 LTDC driver")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Just tried this on v6.10-rc6, the improvement on top of patch 1 and 
+> patch 2 is 7% for read and 3% for write, less than just check first word.
+>
+> Per my understanding, its performance would be better if we can find 
+> free bit in the same word of next_fd with high possibility, but 
+> next_fd just represents the lowest possible free bit. If fds are 
+> open/close frequently and randomly, that might not always be the case, 
+> next_fd may be distributed randomly, for example, 0-65 are occupied, 
+> fd=3 is returned, next_fd will be set to 3, next time when 3 is 
+> allocated, next_fd will be set to 4, while the actual first free bit 
+> is 66 , when 66 is allocated, and fd=5 is returned, then the above 
+> process would be went through again.
+>
+> Yu
+>
+Hi Guzik, Honza,
+
+Do we have any more comment or idea regarding to the fast path? Thanks 
+for your time and any feedback :)
 
 
-Hi Christophe,
+Regards
 
-After some delay: applied on drm-misc-next.
-
-Thanks,
-Raphaël
+Yu
 
