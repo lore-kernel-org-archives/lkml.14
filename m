@@ -1,28 +1,60 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488BE155A26;
-	Tue,  9 Jul 2024 09:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADEB15664C
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 09:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720518743; cv=none; b=dR5N2Oi/XrBHCLaRp260RWIv7TCBiVa3e1W0uguIBoMcUQCd2igf5EBYF1P7nzs6n52OWMnQfg7vFALsGeZCLuU3hEaLutmTEIoLgPk4N5xW6HcrJ3vLamtjycJDzLTsSO6YBT6faAx7fm/i7lowVAFHRqz9tSTwm+cDbpf+KGY=
+	t=1720518746; cv=none; b=BXjJI/vi+Sq9IawsPDHLzyl1TbGr1GLI5JAUC+3jPGJqpPJdvx6CnDMbHV3jQVTBxgXZgZtfv8BjT2gSnfr2sRLxAVOKvIB8PN7didWlpYhfcwIBtaCe/8IrYuJAWMG+WG1BYf6f09l7kCSEaU8ZnBI/MsEKCceaNp3M8qBFZss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720518743; c=relaxed/simple;
-	bh=PqQ4ueVIFosN7qzIDNxoq5cnPev0B8p3RjSPH63gS64=;
+	s=arc-20240116; t=1720518746; c=relaxed/simple;
+	bh=n5AvZ1ZDFjGi/4dq6GjWJJme1GYCQMnLOvMIhq0HJ4U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EpwbQwL2+LIkTGzjd7Cicj/7NNM/m9z8Ncgt5+PkH4EAVxq1X+N9sitHEaK3PlXLaFvsk+nZcZ8rosCCEdFXU+Gxro2PonYMb10rJ1fuF8vp4ym9Jlu/NTMweTyAmOa6OwcLgL7gs6FK+zQL2I043v1uOTWaOwKmGTd86LjaHkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3CE0261E40617;
-	Tue,  9 Jul 2024 11:51:00 +0200 (CEST)
-Message-ID: <56160e13-662d-4f7e-86d3-1a88716f01d9@molgen.mpg.de>
-Date: Tue, 9 Jul 2024 11:50:59 +0200
+	 In-Reply-To:Content-Type; b=DZvtMCaEL5lP+KM8BMyKocZugud1SawB4GnUIPg67gQc3GCIRnqRvXkYFG9B1KBhje2R6GvbNg5BM9n65rkXNM8f8Q4rsD+vyMO0rXdNrF9TnL90o66jLjQCvZkORFW3DdFS8toWMtj7J62lp72S4SUh2uqYLo0iicWq8m1TWKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z7BaNsTN; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z7BaNsTN"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a7523f0870cso598726866b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 02:52:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720518744; x=1721123544; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm1fRwVMxfaZmMNjZt3K//vjMYOKWNcEdkADWSvwrZs=;
+        b=Z7BaNsTNfJXAllGr8ZAiG1BoDwUx1yCnl2yaq5Wip8kWlzWPhRnVinZuvUXnPTpdmx
+         7+yUj6Lo88mJk16a6Lu0a33iOBeUDLKwLTABoui+LqNPirIIS6UWmtE03TJGuj0dREtf
+         6T/2sHOmYKxUoESUqzz31d5T+jOmsYAzC0Inul1nDEB3UXDkqF0LpjpJzl1L9B8pZgaU
+         kp8EJqjdQOl4q2iEnFA9Z6MdIpHYMmW2+99LQT1MWYAxyGmg8sdFuhsLFlKEImC+5HY9
+         /6GY4QaIZ+4VZp8WsRfcOXWvNcVN8e7VCmwoOKAW19iMxbjA9pBmhK06Y1KIiQA8j/3A
+         dwQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720518744; x=1721123544;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qm1fRwVMxfaZmMNjZt3K//vjMYOKWNcEdkADWSvwrZs=;
+        b=g4jkMV0MnwxMOolAVwNNWuveas9uEtSXv6dToWk7hDAVSKeJe9VcCsziTzXOgxnFr1
+         bEcNO8qAcbiZDHQh1BK/CGOqAgGjLwTaKQQ5FLgT0tOx6c+RIQBVEf1Xp0lC9V5pA3TI
+         m2q7Dk6p3JWwj0i/NLG/TVqKeJq7zHouuHp4uWf5/ux8UqGIdYLgeSD8m6INY3XxEQE1
+         jP52KHUps9huiKYL87LhcAfq7bAMaUQ9DMU+E2b5uuoboVIJWd3ym54mpKkRk12flZRZ
+         q8s2tcC+cYLBgJn0Z6aLDkIxeac/p0S38FMyHqnl7sXC4/zuqXNopWoM4FDH0wPQfo3t
+         EqiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUi1xV2lMOfBqoDuK9hQkAh3wzmzp7kI/t2PmLoAJPfBGaCPpciXPL3lG9RdtbrDTy9Wh/2vL2ByJdXT+XKnzSeUsXMPUwUuaPHqQeS
+X-Gm-Message-State: AOJu0YxGfL/GpE6qqthuljd03GzIaxP63c28b2t6mQDpPzsvi7vrCqye
+	HqiFhsSDbfu6nDA2GKWib4t5Hcj3mDeG+vp/Rlhe9Nzw49lolEYkanqTbgT4k/0=
+X-Google-Smtp-Source: AGHT+IHAklP0DIIRUgPGcAs7MD7V/1OUzHE3dRGjz84TSjvi++Vip0G/F0oWzUHqJqhEqljGGmQSXA==
+X-Received: by 2002:a17:906:390e:b0:a77:ddce:e9b1 with SMTP id a640c23a62f3a-a780b89d430mr122703366b.75.1720518743625;
+        Tue, 09 Jul 2024 02:52:23 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6e58e0sm63125666b.85.2024.07.09.02.52.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jul 2024 02:52:23 -0700 (PDT)
+Message-ID: <57dadb35-5dde-4127-87aa-962613730336@linaro.org>
+Date: Tue, 9 Jul 2024 11:52:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,79 +62,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH net-next v3] ice: Adjust over allocation
- of memory in ice_sched_add_root_node() and ice_sched_add_node()
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Aleksandr Mishin <amishin@t-argos.ru>
-Cc: lvc-project@linuxtesting.org, Tony Nguyen <anthony.l.nguyen@intel.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Eric Dumazet <edumazet@google.com>, intel-wired-lan@lists.osuosl.org,
- Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
-References: <20240708182736.8514-1-amishin@t-argos.ru>
- <033111e2-e743-4523-8c4f-7d5f1c801e65@molgen.mpg.de>
- <23d2e91c-4215-4ea5-8b3c-4dd58a1062af@molgen.mpg.de>
- <190d0cdc-d6de-4526-b235-91b25b50c905@intel.com>
+Subject: Re: [PATCH v4 05/10] pmdomain: qcom: rpmpd: Add IPQ9574 power domains
+To: Varadarajan Narayanan <quic_varada@quicinc.com>, vireshk@kernel.org,
+ nm@ti.com, sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, angelogioacchino.delregno@collabora.com,
+ andersson@kernel.org, mturquette@baylibre.com, ilia.lin@kernel.org,
+ rafael@kernel.org, ulf.hansson@linaro.org, quic_sibis@quicinc.com,
+ quic_rjendra@quicinc.com, quic_rohiagar@quicinc.com, abel.vesa@linaro.org,
+ otto.pflueger@abscue.de, danila@jiaxyga.com, quic_ipkumar@quicinc.com,
+ luca@z3ntu.xyz, stephan.gerhold@kernkonzept.com, nks@flawful.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20240703091651.2820236-1-quic_varada@quicinc.com>
+ <20240703091651.2820236-6-quic_varada@quicinc.com>
 Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <190d0cdc-d6de-4526-b235-91b25b50c905@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240703091651.2820236-6-quic_varada@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Dear Przemek,
-
-
-Thank you for your quick reply.
-
-
-Am 09.07.24 um 11:11 schrieb Przemek Kitszel:
-> On 7/9/24 10:54, Paul Menzel wrote:
->> [Cc: -anirudh.venkataramanan@intel.com (Address rejected)]
->>
->> Am 09.07.24 um 10:49 schrieb Paul Menzel:
-
->>> Am 08.07.24 um 20:27 schrieb Aleksandr Mishin:
->>>> In ice_sched_add_root_node() and ice_sched_add_node() there are calls to
->>>> devm_kcalloc() in order to allocate memory for array of pointers to
->>>> 'ice_sched_node' structure. But incorrect types are used as sizeof()
->>>> arguments in these calls (structures instead of pointers) which leads to
->>>> over allocation of memory.
->>>
->>> If you have the explicit size at hand, it’d be great if you added 
->>> those to the commit message.
->>>
->>>> Adjust over allocation of memory by correcting types in devm_kcalloc()
->>>> sizeof() arguments.
->>>>
->>>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>>
->>> Maybe mention, that Coverity found that too, and the warning was 
->>> disabled, and use that commit in Fixes: tag? That’d be commit 
->>> b36c598c999c (ice: Updates to Tx scheduler code), different from the 
->>> one you used.
+On 3.07.2024 11:16 AM, Varadarajan Narayanan wrote:
+> From: Praveenkumar I <quic_ipkumar@quicinc.com>
 > 
-> this version does not have any SHA mentioned :)
-
-Sorry, I don’t understand your answer. What SHA do you mean?
-
->>> `Documentation/process/submitting-patches.rst` says:
->>>
->>>> A Fixes: tag indicates that the patch fixes an issue in a previous
->>>> commit. It is used to make it easy to determine where a bug
->>>> originated, which can help review a bug fix. This tag also assists
->>>> the stable kernel team in determining which stable kernel versions
->>>> should receive your fix. This is the preferred method for indicating
->>>> a bug fixed by the patch.
+> Add the APC power domain definitions used in IPQ9574.
 > 
-> so, this is not a "fix" per definition of a fix: "your patch changes
-> observable misbehavior"
-> If the over-allocation would be counted in megabytes, then it will
-> be a different case.
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> ---
+> v4: Add Reviewed-by: Dmitry Baryshkov
+> v3: Fix patch author
+> v2: Fix Signed-off-by order
+> ---
+>  drivers/pmdomain/qcom/rpmpd.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pmdomain/qcom/rpmpd.c b/drivers/pmdomain/qcom/rpmpd.c
+> index 5e6280b4cf70..947d6a9c3897 100644
+> --- a/drivers/pmdomain/qcom/rpmpd.c
+> +++ b/drivers/pmdomain/qcom/rpmpd.c
+> @@ -38,6 +38,7 @@ static struct qcom_smd_rpm *rpmpd_smd_rpm;
+>  #define KEY_FLOOR_CORNER	0x636676   /* vfc */
+>  #define KEY_FLOOR_LEVEL		0x6c6676   /* vfl */
+>  #define KEY_LEVEL		0x6c766c76 /* vlvl */
+> +#define RPM_KEY_UV		0x00007675 /* "uv" */
 
-The quoted text just talks about “an issue”. What definition do you 
-refer to?
+The "uv" key is handled in qcom_smd-regulator.c.. I'm assuming on this
+platform, it accepts level idx instead of the regulator properties
+and this is intentional?
 
-
-Kind regards,
-
-Paul
+Konrad
