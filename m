@@ -1,37 +1,36 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF76915FA6B;
-	Tue,  9 Jul 2024 13:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1B317C203;
+	Tue,  9 Jul 2024 13:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720531886; cv=none; b=KN4SwvlFayzoY3RfkjBeoQgzpiUqCyQRQdziOJoHUFBsopMnk0HsHlOPYY4nkiLSJ5kbdJs0dhUn9E8HoX273F7pWy6W2PjINXV//TTQWH3WHB+DMAFyi/1LlDNXQ6WhBdSLxSVvxTnlZ+5L8Zl+3yYLkn9sMpV4/uKwYpd/9I4=
+	t=1720531896; cv=none; b=pyKpH2G+i2gQTgVbmPfQM/9O+heHnxYwIW1B9uRM3ZGsir2LrcopQkT/YMLRttf2eR77YUU9NMUEuVgKAXL1/klil8gOszj2cy8HD9Ca9pdort0AHImrlKyedxgSujCzDcT0fCgAPsYFsMc4oo19kwlKwbKa21s3L9bBnVjJdvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720531886; c=relaxed/simple;
-	bh=82GcXnB6OrYb4wq6kIAa/gTCyD78yeIWncGeRScn2Fg=;
+	s=arc-20240116; t=1720531896; c=relaxed/simple;
+	bh=nURqjr0y22PZq9mDv1AIDyr6uBDPyReNc1hDax4d9UQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gu8PDsTPHeV+DeX8meL/g6fqOxpvLovko+dGe5rtOg+d8iDGH6oMWbx9Ze59UBAgUchbrjaI/1S6SGKdLCc7qfKPJ3X53qIUQdq3BdiVe4bjFb6+oV3WFA4SN+qtF3sKZiG7fn3FISkFS48D1StC3IKPe3Ryf+twJKbI9BKE3dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=ZR1zbd/eK3F4q8EmAvp2mMG6tUPnd/18Yjo4gziR9R96O8jvrK2CoOAjhZvuXWAjHgjn+Kn54JB4UeEc3IeOub7WsEw2sgAPrBgP5Afh2ZcUh8JF+6Ps3HOm4n6TZ3+AVgKDm4dKg+gEproLoygpl/cIxl6NndLvgTWBYueB6Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WJMG85xBmzwWGp;
-	Tue,  9 Jul 2024 21:26:40 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WJMJz2MMZz1HF78;
+	Tue,  9 Jul 2024 21:29:07 +0800 (CST)
 Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 61D89180AE5;
-	Tue,  9 Jul 2024 21:31:22 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 28A251A0188;
+	Tue,  9 Jul 2024 21:31:32 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 9 Jul 2024 21:31:22 +0800
+ 15.2.1544.11; Tue, 9 Jul 2024 21:31:31 +0800
 From: Yunsheng Lin <linyunsheng@huawei.com>
 To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>, Andrew
- Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
-Subject: [PATCH net-next v10 12/15] mm: page_frag: move 'struct page_frag_cache' to sched.h
-Date: Tue, 9 Jul 2024 21:27:37 +0800
-Message-ID: <20240709132741.47751-13-linyunsheng@huawei.com>
+	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>
+Subject: [PATCH net-next v10 15/15] mm: page_frag: add a entry in MAINTAINERS for page_frag
+Date: Tue, 9 Jul 2024 21:27:40 +0800
+Message-ID: <20240709132741.47751-16-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240709132741.47751-1-linyunsheng@huawei.com>
 References: <20240709132741.47751-1-linyunsheng@huawei.com>
@@ -46,106 +45,42 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  dggpemf200006.china.huawei.com (7.185.36.61)
 
-As the 'struct page_frag_cache' is going to replace the
-'struct page_frag' in sched.h, including page_frag_cache.h
-in sched.h has a compiler error caused by interdependence
-between mm_types.h and mm.h for asm-offsets.c, see [1].
+After this patchset, page_frag is a small subsystem/library
+on its own, so add a entry in MAINTAINERS for to indicate
+the new subsystem/library's maintainer, maillist, status and
+file lists of page_frag.
 
-Avoid the above compiler error by moving the 'struct
-page_frag_cache' to sched.h as suggested by Alexander, see
-[2].
+Alexander is the orginal author of page_frag, add him in the
+MAINTAINERS too.
 
-1. https://lore.kernel.org/all/15623dac-9358-4597-b3ee-3694a5956920@gmail.com/
-2. https://lore.kernel.org/all/CAKgT0UdH1yD=LSCXFJ=YM_aiA4OomD-2wXykO42bizaWMt_HOA@mail.gmail.com/
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+CC: Alexander Duyck <alexander.duyck@gmail.com>
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- include/linux/mm_types_task.h   | 18 ++++++++++++++++++
- include/linux/page_frag_cache.h | 20 +-------------------
- 2 files changed, 19 insertions(+), 19 deletions(-)
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
-index a2f6179b672b..f2610112a642 100644
---- a/include/linux/mm_types_task.h
-+++ b/include/linux/mm_types_task.h
-@@ -8,6 +8,7 @@
-  * (These are defined separately to decouple sched.h from mm_types.h as much as possible.)
-  */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e0f28278e504..693361aaf155 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16951,6 +16951,17 @@ F:	mm/page-writeback.c
+ F:	mm/readahead.c
+ F:	mm/truncate.c
  
-+#include <linux/align.h>
- #include <linux/types.h>
- 
- #include <asm/page.h>
-@@ -46,6 +47,23 @@ struct page_frag {
- #endif
- };
- 
-+#define PAGE_FRAG_CACHE_MAX_SIZE	__ALIGN_MASK(32768, ~PAGE_MASK)
-+#define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
-+struct page_frag_cache {
-+	/* encoded_va consists of the virtual address, pfmemalloc bit and order
-+	 * of a page.
-+	 */
-+	unsigned long encoded_va;
++PAGE FRAG
++M:	Alexander Duyck <alexander.duyck@gmail.com>
++M:	Yunsheng Lin <linyunsheng@huawei.com>
++L:	linux-mm@kvack.org
++L:	netdev@vger.kernel.org
++S:	Supported
++F:	Documentation/mm/page_frags.rst
++F:	include/linux/page_frag_cache.h
++F:	mm/page_frag_cache.c
++F:	mm/page_frag_test.c
 +
-+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE) && (BITS_PER_LONG <= 32)
-+	__u16 remaining;
-+	__u16 pagecnt_bias;
-+#else
-+	__u32 remaining;
-+	__u32 pagecnt_bias;
-+#endif
-+};
-+
- /* Track pages that require TLB flushes */
- struct tlbflush_unmap_batch {
- #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index cd60e08f6d44..e0d65b57ac80 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -3,18 +3,15 @@
- #ifndef _LINUX_PAGE_FRAG_CACHE_H
- #define _LINUX_PAGE_FRAG_CACHE_H
- 
--#include <linux/align.h>
- #include <linux/bits.h>
- #include <linux/build_bug.h>
- #include <linux/log2.h>
- #include <linux/types.h>
- #include <linux/mm.h>
-+#include <linux/mm_types_task.h>
- #include <linux/mmdebug.h>
- #include <asm/page.h>
- 
--#define PAGE_FRAG_CACHE_MAX_SIZE	__ALIGN_MASK(32768, ~PAGE_MASK)
--#define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
--
- #define PAGE_FRAG_CACHE_ORDER_MASK		GENMASK(7, 0)
- #define PAGE_FRAG_CACHE_PFMEMALLOC_BIT		BIT(8)
- #define PAGE_FRAG_CACHE_PFMEMALLOC_SHIFT	8
-@@ -53,21 +50,6 @@ static inline void *encoded_page_address(unsigned long encoded_va)
- 	return (void *)(encoded_va & PAGE_MASK);
- }
- 
--struct page_frag_cache {
--	/* encoded_va consists of the virtual address, pfmemalloc bit and order
--	 * of a page.
--	 */
--	unsigned long encoded_va;
--
--#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE) && (BITS_PER_LONG <= 32)
--	__u16 remaining;
--	__u16 pagecnt_bias;
--#else
--	__u32 remaining;
--	__u32 pagecnt_bias;
--#endif
--};
--
- static inline void page_frag_cache_init(struct page_frag_cache *nc)
- {
- 	memset(nc, 0, sizeof(*nc));
+ PAGE POOL
+ M:	Jesper Dangaard Brouer <hawk@kernel.org>
+ M:	Ilias Apalodimas <ilias.apalodimas@linaro.org>
 -- 
 2.33.0
 
