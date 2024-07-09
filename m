@@ -1,112 +1,91 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A009038DD8;
-	Tue,  9 Jul 2024 13:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E0F158D92
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720532769; cv=none; b=gGmewFnDO53eevDhl09x3uIgcIkf/t5HCDq6Yv7yP0/8m7qV1/2OL4CuYyyohHIky+d5Txq1uSmqVYFh+sV/wg2ATLJzwKGE/PRKIREVL3GE9QOWTKvDVlbNsaqpiy+fJ2WsO/sWsQ09xx6JvwXbG1HA0cAbYPH33I1+E9Olv44=
+	t=1720532835; cv=none; b=k+X8SC7RguGBpctvVjE08oJ6X+hdWsgMPgnWHOsy8vFDfGLBpHUCfN5ihIPKGPRgC2aE4bnd8rhC+eoz7aj9SXv6F2kgEhyvl5aTbFzWVBs0vb5FKnXuiC58xVxTkZPavVL43wA9ronaoiQPNoZ3i8sFFNxCvp6ztO9ipzosfyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720532769; c=relaxed/simple;
-	bh=9ZAwhP7S1P1iG0E4F25DC+zNoC01hdAIA+xBbmnD+QQ=;
+	s=arc-20240116; t=1720532835; c=relaxed/simple;
+	bh=nSFfZbFd2BGFpO2PCYukKqAyfoTHr45MAIbU0YjCNiQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bcEeFf/0CjjYISq4rP8sYW56RfJMnpUmWYF6t2+Ng3FXu/OXIK6Jo/NTuQ9qnMnAcNYNCZUXahdkgEFydpzp54G9Gsr2+4zkN856pJJQaouPG/U4yvtyQfx0klGu0v9S8N80HxqQvx/cziPmJZiWM+a4D4nQilhZSwvxw5S7vZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-64f2fe21015so49052277b3.3;
-        Tue, 09 Jul 2024 06:46:07 -0700 (PDT)
+	 To:Cc:Content-Type; b=sFe8NkWi8B2oDN7QaTd0l+4NDY+Cj6fM+PkV1xPRibeZJ6kNIr7fbi0BB7rAC/yOmqGYb1ZJQV9NpMDj0lDKDTXUHVlmbXtxRvxtzAiBx7EhXOObjy4NTtkQ27G65pmS4z7clDRID2JzhGLFG2ibqyy6ou2Or3n2eXXsY6yidiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O0q3uGbD; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O0q3uGbD"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-447eefeeb92so11465531cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720532833; x=1721137633; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TGIkGdkV4++eu2vnY9yilT0/UE+0DjFMMuz2Pn4/rzA=;
+        b=O0q3uGbDVO/POATFHqKFOnBYipnWi3xrBFYdQpooKxBfMWl9NZxFQE2unsFMqpIjA8
+         eEmZ1pn+XwSR6ugfMkkFRet6SKIQ0zbm+v8/HvQH0MMtycoA/suD5zX8DE49bypPqlr+
+         YAZ87XEnWXRo2hYVor7qg0qKXISr6hC00m1+4oHSTjCyl/bOmEuMaR4FvR8USp1EWYMp
+         jnewCngi5sQyPeYC7oZyLudZ5bdzP63JrPsAkCOuAql68doSnBN6dS//PKT+V8nXwzZD
+         w2h8a7mpP1Rjy9gr5fLDdgOE2wisvun8O+N6xleSQXhicBBZb0aDQZI7Oi7Ar+cmcLY0
+         ftFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720532765; x=1721137565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6Gr8V5Z/ZDduxgzrEpspzwkUwhp8x2tSzBoVCNs7Fd8=;
-        b=YuPq1lamxV6EauQJz8/x/0gwZbjMDC21+JvlgN0UXGSe1vj62Eccmiy+R8B6En0apb
-         Av7n1NjFO0DKGoFZsZA+jE/guxFGolrzaUK1FveuMppjjfiWDaSwt4TrS13JAETdtt+X
-         SIdD6ZNiuHfy3CSSboKKoppbEU9KhhoFp488xsFmbCjf+ejMU8QnnaBjV6YVClK+gMPc
-         s3KLhGI6ydNu/t1IVrDXIdlVYyolGhvpWEB7t3CqWr35/SAztvPbgq3+qwT6JwjIEwWz
-         mWBuigGEaqhusV3QfDsICNpBY/4r8jLoP4ytaGm8NelgU7D4P9DCVWlpyNkDJ9WDzcIE
-         Pe0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV5XCIL7fwuPLIhQmEWC4XYgj0EDV9LfUqT6X32eYmbEWGGNZVZ4H3QgpAkVlI46EVd1xf7KB2aCRpmWtcvYRQtyNET1wJ1buh7kQd+gmlbQjiUQ9zxh/RZclX+SkI5FjqDdtHL7Z6g6mpo2A==
-X-Gm-Message-State: AOJu0Yz54bnoM+UcpvQRQy5khe9W+K10k4AI2+9xAUchu36FPCyDT4pS
-	Pl++2F2DCH25IbePJ/ShneXzll5ZXkd2QBUouwLT8mWawLtnOlkD8084UOmU
-X-Google-Smtp-Source: AGHT+IE8PC3rfTXNW3+XP2VJL/h6D/4l3p7cbDnZNo/JE2TX6s+ksWoBxDbuaKoKnXgoBpRpLsrmCw==
-X-Received: by 2002:a05:690c:4b12:b0:64b:69f0:f8ed with SMTP id 00721157ae682-658f0fb40b9mr30226207b3.51.1720532765053;
-        Tue, 09 Jul 2024 06:46:05 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e64eb61bsm3446607b3.76.2024.07.09.06.46.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 06:46:04 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dff17fd97b3so5750567276.2;
-        Tue, 09 Jul 2024 06:46:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUG65DumPdexDH8HR/REa4KFe3ZqmLRjpjpPlBqi/B5jLai8cmfCeABN9bQvrEcF1PrrW+nGIHu0+bSiR2uQjBAy+gwnFNwn0/9g+tg2Ltbc19b3E6bfb7u1am+oCdKrgXfxoGSeaKBIJjSmw==
-X-Received: by 2002:a05:690c:dd3:b0:61b:e645:3e94 with SMTP id
- 00721157ae682-658ee79111dmr39513077b3.5.1720532764216; Tue, 09 Jul 2024
- 06:46:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720532833; x=1721137633;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TGIkGdkV4++eu2vnY9yilT0/UE+0DjFMMuz2Pn4/rzA=;
+        b=e375TMguPN1u4be3ZTdtcE1unGa7e44DLWSivg7Sn2psU/Lw/xkLYW/BYydfEQqNV3
+         BpuraF5ZXpcB0EjJEKSFjNT2N2xFt5yzxw6qPddH8q7tmPFugL9hrPyDQYkLdJssOFNN
+         dZDPRon9wr+B0pPC2w8xF1w+SHfFSvL6v3Oj1FSk2kvKAGSQeIcypNIrlszZVzAS+UMu
+         qR6CR8BOBlomf3EHPBCLZxs+8jeje+ReIZegy/j5vAgcjh7V9peneIC+UQTlM6XTX/Dy
+         i1MTfwS2WK2+/+AsGPbYcxs7Ue1Wh0h3kU+B0tlABsB3NSqQE6DPXS66NY9nyjifayFd
+         Y/pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqToeKZbGZgXz0Ni8aJwiDHLRT4HdZOQCJazTMkyk7RQSuWRyiowDEGRlEMhcRUeFvsY+AYSC8YKPcDHeutiGESPoqZWj380N7lc+5
+X-Gm-Message-State: AOJu0YzOPAItye8kA//2OjlJNwLIZTE4zfs9Ld6OWpbtm9nI3lnMZClF
+	dMsQQIxSFzhjdXgfu4M3ZD2AWlbBLDTF3uv+TqxNCA1plxeU/F9AY19qW5atDdcQ+/aqGMfAUej
+	HCAhUpHnVnu02HOthS0zm1YVnz5N/QLU73N0RuA==
+X-Google-Smtp-Source: AGHT+IGmoA0T88ljBnzqezS2HNtUpAzZ6Pl7miiM/qOWeZpUofmQ2dI94hIlzdSJknzxEm3/dd12u75cGCnd0agjHgU=
+X-Received: by 2002:ac8:7f07:0:b0:447:f4f6:7a1 with SMTP id
+ d75a77b69052e-447faaa57f2mr30672561cf.52.1720532833330; Tue, 09 Jul 2024
+ 06:47:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202407091931.mztaeJHw-lkp@intel.com> <c1d4fcee3098a58625bb03c8461b92af02d93d15.camel@kernel.org>
-In-Reply-To: <c1d4fcee3098a58625bb03c8461b92af02d93d15.camel@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 9 Jul 2024 15:45:52 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVsDSBdz2axqTqrV4XP8UVTsN5pPS4ny9QXMUoxrTOU3w@mail.gmail.com>
-Message-ID: <CAMuHMdVsDSBdz2axqTqrV4XP8UVTsN5pPS4ny9QXMUoxrTOU3w@mail.gmail.com>
-Subject: Re: [jlayton:mgtime 5/13] inode.c:undefined reference to `__invalid_cmpxchg_size'
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-m68k@lists.linux-m68k.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <CANtevs+a-ec45oz1tJd0m2Qc+dU4ASj9BcdUbyhsQ5Hm94dEKQ@mail.gmail.com>
+In-Reply-To: <CANtevs+a-ec45oz1tJd0m2Qc+dU4ASj9BcdUbyhsQ5Hm94dEKQ@mail.gmail.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 9 Jul 2024 15:47:00 +0200
+Message-ID: <CAKfTPtBhd9f5V7VCYtuYH5gBe7x01dZkTYCQtvTJDDPpmoZpAw@mail.gmail.com>
+Subject: Re: [PATCH] sched/autogroup: Improve readability and performance
+To: Parker Stafford <parkerstafforddev@gmail.com>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	dietmar.eggemann@arm.com, "rostedt@goodmis.org" <rostedt@goodmis.org>, bsegall@google.com, 
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jeff,
+Hi Parker,
 
-On Tue, Jul 9, 2024 at 1:58=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
-te:
-> I've been getting some of these warning emails from the KTR. I think
-> this is in reference to this patch, which adds a 64-bit try_cmpxchg in
-> the timestamp handling code:
+You should have a look at the process for submitting patches:
+ https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#no-mime-no-links-no-compression-no-attachments-just-plain-text
+
+Thanks,
+Vincent
+
+On Sun, 7 Jul 2024 at 00:21, Parker Stafford
+<parkerstafforddev@gmail.com> wrote:
 >
->     https://lore.kernel.org/linux-fsdevel/20240708-mgtime-v4-0-a0f3c6fb57=
-f3@kernel.org/
+>  Hello,
 >
-> On m68k, there is a prototype for __invalid_cmpxchg_size, but no actual
-> function, AFAICT. Should that be defined somewhere, or is this a
-> deliberate way to force a build break in this case?
-
-It's a deliberate way to break the build.
-
-> More to the point though: do I need to do anything special for m86k
-> here (or for other arches that can't do a native 64-bit cmpxchg)?
-
-64-bit cmpxchg() is only guaranteed to exist on 64-bit platforms.
-See also
-https://elixir.bootlin.com/linux/latest/source/include/asm-generic/cmpxchg.=
-h#L62
-
-I think you can use arch_cmpxchg64(), though.
-
-> ---------- Forwarded message ----------
-> From: kernel test robot <lkp@intel.com>
-
->    m68k-linux-ld: fs/inode.o: in function `inode_set_ctime_current':
-> >> inode.c:(.text+0x167a): undefined reference to `__invalid_cmpxchg_size=
-'
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+>  This patch improves the readability and performance of the autogroup scheduling code. The changes include:
+>
+>  - Added detailed comments for better understanding.
+>  - Optimized locking mechanisms to minimize contention.
+>  - Improved error handling and provided more informative error messages.
+>  - Avoided unnecessary memory allocations and deallocations.
+>
+>  The patch has been tested and shown to work as expected. Signed-off-by: Parker Stafford parkerstafforddev@gmail.com
