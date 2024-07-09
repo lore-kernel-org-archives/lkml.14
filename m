@@ -1,95 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23418561F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 16:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F57D17B056;
+	Tue,  9 Jul 2024 16:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720543986; cv=none; b=fHdtFAWA70K1FcckF2qD0evWP1AG4nr1blYl1DmuDIw0iJ5H350mkTT6ihWVlnUMGql7+ppFrz4kz1qjrxNV8sqqmCkJocQNv6hsX7oFcI8oBXpPkekP7WfVrwzT26HX8WkegWnbl69mMN89Co8oN3UbUdLEMIRf6oKWFAXZsFA=
+	t=1720544260; cv=none; b=QT+kfJAQX5DiETmnCm51JOZ5qG1Nnh2F7pgYssnx41MLEYJ+ZDi6modeK6iYbsNZkDcmj1UQaQT8ekuBirm76980n7RkAiwwu6y1qI4wgc3PlcQgEYAlWb/nzQCf5fp5ZoXMow+h/6AwooXR7qjhbVWa2ZAYMC3FSUll+2v9mnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720543986; c=relaxed/simple;
-	bh=asVho6LyvrHD7BTUGcDSPeAn6LcjJzG6EHzs9v+6tKA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ph0+oO2pHrzwnsw8hmaHfVstCZkrUFsGo0cYic7S0o/k+BM6UFv3F/6+z9m5cvfB5zts6HwKKI+us7D5mqBRxMP/mSgixgUBkr/q6LKD1vJ56c/Mw+YndhgwB6O81Vc1RYctxpmq1zOz3G8YkE77s9v84ObHEyflWCywk09+7hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LOcVpurC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720544260; c=relaxed/simple;
+	bh=qj+Iu/SvAEvk+IBCByZw2lxCopI8NWpoNUohCnMb9sQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dtTBBpDkArFQGxOb+hIl1crE7s0uElmicxP5/HHQ1BMbKBARCmIo/0OUoobbbjMRQ/B8IwQUN4HjlOyO2l2aOgzBtt331InvMi02r1xhrd+1JWv2LzXX1/bi8x46AIg6vsLQqBiK29QYTNOdVJ5xm/1+KZpVi3bSsRkiJAqfOmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZm42W9N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LOcVpurC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720543984;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=asVho6LyvrHD7BTUGcDSPeAn6LcjJzG6EHzs9v+6tKA=;
-	b=LOcVpurC1zrLanLTEHZK46AS1P3C8zPdH85I8CGFUBgBTh2RL5oBh88Chvf0fUoBGl1TeQ
-	d7WY1WLQx1S+uYqEWBlw/w8NJIF45I0I9A+yAKHi7UcgXrdAIe+AgkwG2NlIvOcembXk+8
-	7X3cQMKZVfaqedtZeoJ+MrEqEe4nsaE=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-xlEVB0OQM064LTgOD-NA7w-1; Tue, 09 Jul 2024 12:53:02 -0400
-X-MC-Unique: xlEVB0OQM064LTgOD-NA7w-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1faf91cbe19so31629885ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 09:53:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720543981; x=1721148781;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=asVho6LyvrHD7BTUGcDSPeAn6LcjJzG6EHzs9v+6tKA=;
-        b=RMKkkcnrNYFeRBb0e85qMdeh2nA2hymlcyL/SQ6o8tpblLkgmqZKhKqPiyNJBny9k1
-         BYkeWxZTIWudJuxjBwzhN8Wx36lNxMq6HsL/7C5F3XjQpOZ6xf/e05O0ftNEiK9tC29L
-         OQqJlKVXjCgGkaDpOEuLrhXzj7uViV/EojKvKBx8bwykEuweDgms0RCHwppfdV8g9LDr
-         vpgvxKbZpAZ7T+X7XaMfsl7hn5EJ17QWzO3SDLEa4hIvMlyjZDhXG2BZBCAYe7ntTqkR
-         Fp8gY6WmUJMEnRK7Xy21am8sctjgbU5ndjgAeRWESVEzhiinwlmCFQrxCvHnLwea/9eB
-         B7+w==
-X-Forwarded-Encrypted: i=1; AJvYcCW8iZQ/SZJAXKadCmO+5mA0sxGBKIO1zgA1e1yD1psf7KxyBVKjAduuT7vxJDFO9qH2QOvS1S9v8vlOU/R+TH4b4aGZK9TlaWX3G5Wu
-X-Gm-Message-State: AOJu0YzpIhx7rAPhvwXnXIikafwcuVsf8pJMBGtTO0wbhkrc/HHKxmVW
-	RIVfrCAdruhdkrXmEqFI9IPVEoqxACCDQ56IgD2Jacn7QdgoThvEaPThDN+kLm0D6QUxlO+OpTk
-	/BVRJ3KsECEuSmQhQ52fH50XVEOte15zeWdPSpuRK3O58smbiEN9U24nY9wKJdSGBnSwertSNv3
-	glnh4i1RFdGyu+iY4QM7O0tslKmI5iF+107tAu
-X-Received: by 2002:a17:903:186:b0:1fb:58e3:7195 with SMTP id d9443c01a7336-1fbb6cd186bmr25609485ad.11.1720543981614;
-        Tue, 09 Jul 2024 09:53:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHjlrmhgUpUlN7BW+PcaWbKq+/s4BVAK6LBnpJZZch5y3gF9SSouA8oyK/R0rkaxMPreuHVQIjkrp2zUEC5VX4=
-X-Received: by 2002:a17:903:186:b0:1fb:58e3:7195 with SMTP id
- d9443c01a7336-1fbb6cd186bmr25609195ad.11.1720543981178; Tue, 09 Jul 2024
- 09:53:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZm42W9N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D6CC3277B;
+	Tue,  9 Jul 2024 16:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720544260;
+	bh=qj+Iu/SvAEvk+IBCByZw2lxCopI8NWpoNUohCnMb9sQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=cZm42W9NZsXilNjZOcSQ0Ci9KD/cY2kSyXXTb+WCxgbiOgq0X2mqHg/2P36AoLZYX
+	 No2mGb3ze5gHGLNGjUuj2HRHMq0fXUTLE/o9QGwPFdaan+Wi5ouPtmj/TCI22Tod7q
+	 tDRc/eolJX07Rg3Svf70bx4k9KOGNJ9Vmi+HHO7UHB96shldUeR8uARtKEYLWEoOW2
+	 beFssf6r1qtCvaJNw3bYMCm5DluHsuIz2ntvH+CNunt2CcTvoiVa11AaZ3XUo5YQWe
+	 ZefYIgnRmSLzrpdmYwrI6qS5FunYOR+RX4F3WNr+upQx9VtbZkA/nJwE3/WsETJqTx
+	 vOeaKIYV47FyA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A25FBCE0A45; Tue,  9 Jul 2024 09:57:39 -0700 (PDT)
+Date: Tue, 9 Jul 2024 09:57:39 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>, mingo@kernel.org,
+	andrii@kernel.org, linux-kernel@vger.kernel.org,
+	rostedt@goodmis.org, oleg@redhat.com, jolsa@kernel.org,
+	clm@meta.com, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH 00/10] perf/uprobe: Optimize uprobes
+Message-ID: <f4e0675e-caad-4a1f-85b4-6b651d8565cd@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240708091241.544262971@infradead.org>
+ <20240709075651.122204f1358f9f78d1e64b62@kernel.org>
+ <CAEf4BzY6tXrDGkW6mkxCY551pZa1G+Sgxeuex==nvHUEp9ynpg@mail.gmail.com>
+ <20240709090153.GF27299@noisy.programming.kicks-ass.net>
+ <91d37ad3-137b-4feb-8154-4deaa4b11dc3@paulmck-laptop>
+ <20240709142943.GL27299@noisy.programming.kicks-ass.net>
+ <Zo1hBFS7c_J-Yx-7@casper.infradead.org>
+ <Zo1lrpO3suceheVj@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709163825.1210046-1-ast@fiberby.net>
-In-Reply-To: <20240709163825.1210046-1-ast@fiberby.net>
-From: Davide Caratti <dcaratti@redhat.com>
-Date: Tue, 9 Jul 2024 18:52:50 +0200
-Message-ID: <CAKa-r6uyEz650x+TVZEsj3WiZ-OnMYycexEuiYf=HmgtiDx7iA@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 00/10] flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
-To: =?UTF-8?B?QXNiasO4cm4gU2xvdGggVMO4bm5lc2Vu?= <ast@fiberby.net>
-Cc: netdev@vger.kernel.org, Ilya Maximets <i.maximets@ovn.org>, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-	Jiri Pirko <jiri@resnulli.us>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Ratheesh Kannoth <rkannoth@marvell.com>, Florian Westphal <fw@strlen.de>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zo1lrpO3suceheVj@casper.infradead.org>
 
-hello,
+On Tue, Jul 09, 2024 at 05:30:38PM +0100, Matthew Wilcox wrote:
+> On Tue, Jul 09, 2024 at 05:10:45PM +0100, Matthew Wilcox wrote:
+> > > So I fundamentally do not believe in per-VMA locking. Specifically for
+> > > this case that would be trading one hot line for another. I tried
+> > > telling people that, but it doesn't seem to stick :/
+> > 
+> > SRCU also had its own performance problems, so we've got problems one
+> > way or the other.  The per-VMA lock probably doesn't work quite the way
+> > you think it does, but it absoutely can be a hot cacheline.
+> > 
+> > I did propose a store-free variant at LSFMM 2022 and again at 2023,
+> > but was voted down.  https://lwn.net/Articles/932298/
+> 
+> Actually, the 2022 version has a bit more of the flavour of the
+> argument: https://lwn.net/Articles/893906/
 
-On Tue, Jul 9, 2024 at 6:38=E2=80=AFPM Asbj=C3=B8rn Sloth T=C3=B8nnesen <as=
-t@fiberby.net> wrote:
->
-> This series reworks the recently added TCA_FLOWER_KEY_ENC_FLAGS
-> attribute, to be more like TCA_FLOWER_KEY_FLAGS, and use the unused
-> u32 flags field in FLOW_DISSECTOR_KEY_ENC_CONTROL, instead of adding
-> a new flags field as FLOW_DISSECTOR_KEY_ENC_FLAGS.
+Thank you for the citations!
 
-for the series:
+From what I can see, part of the problem is that applications commonly
+running on Linux have worked around many of these limitations one way or
+another, which makes it harder to find a real-world use case for which
+the store-free lookup gives substantial benefits.  Perhaps this uprobes
+case will be helpful in that regard.  (Hey, I can dream, can't I?)
 
-Reviewed-by: Davide Caratti <dcaratti@redhat.com>
-
+							Thanx, Paul
