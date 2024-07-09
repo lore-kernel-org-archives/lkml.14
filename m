@@ -1,134 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7112E14884D;
-	Tue,  9 Jul 2024 12:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F3E14884D;
+	Tue,  9 Jul 2024 12:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720529662; cv=none; b=uMIl8+bXz4/JQp56xPvi2beb9Z8RBXbnm01q/7w0cGSKEX9xDVQw+Go4Q99t0t5RMamT0+djKnF/OUwh1oPqYpO71zeFzY8TISsfE5Le+i1TaOpKWiWuwI2n0p/juSLEi62jodXKDTh0szN88feUPOv7ps/KoddZ9OwE6vFY9Ys=
+	t=1720529698; cv=none; b=JxIsLWMT1xHk3KmlT6y/ATBE0vipzmdFaa3ErS0JVsChE0/2ftyFz554blqzo850bDziuUbLgk/d9XU1i7sD8LgJ5a+b1c2rnDz3xnW3XVTRSNyEHEMtq9cg84SjG85cvDKD42IND92rAwpPt/tNZO8y3BN57AxAa2uNm2lGYEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720529662; c=relaxed/simple;
-	bh=p7zs1IS07rD+Ld+gadpw7nC9GeBWJcNEHZrW9TdYU6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PZh0NYnKUvy0DlFHLh06yApt8HDFM0WuzkcPzwE/GIaXxHPExcazXk7efqctdqFnyuiDcdJPsmAvFxVSPndT4wL9Oe9nzxNU9x8I2esNRlOL4VUE9JXt0dibwCYNR93muDYSWvwEQ09KusSkL3dr4X6VAXqLWMC8+cfVzmSXVwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC626153B;
-	Tue,  9 Jul 2024 05:54:44 -0700 (PDT)
-Received: from [10.57.74.191] (unknown [10.57.74.191])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 817EB3F766;
-	Tue,  9 Jul 2024 05:54:16 -0700 (PDT)
-Message-ID: <f8dca28c-e5d6-4a1b-8bd3-6a711dae7078@arm.com>
-Date: Tue, 9 Jul 2024 13:54:14 +0100
+	s=arc-20240116; t=1720529698; c=relaxed/simple;
+	bh=ojwoScKbA6jM3k3wAvAPA697WZdlKuoGgCa0YUZCL/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kdl2iua8b7SIRuWVsqEiSU6R4id23y3A5D7px+Uqj+kLz2M8M/8nOb4BqOkBeZs7kfSW4GnV4oG/g2qfD1QTH+pqfBZ6FKOMAp4s8I8ELa39HP83vAs/SN+gCBhksyO+Q3lOTXA6pW29tcCtymz0rNXKSD2wOtHdjeUdfXI9Ypk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kl4XmHic; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kl4XmHic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A042CC3277B;
+	Tue,  9 Jul 2024 12:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720529698;
+	bh=ojwoScKbA6jM3k3wAvAPA697WZdlKuoGgCa0YUZCL/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kl4XmHic631h2HbHMXgXeiuoY0DoGPozip1bX9XU+luvZi6lLea0RIcaLuptuj1+u
+	 AIRbeGJTCId+l+I4M4AghWCktwBA45QaBXBuKWpE/BimZ9FCdU6efh45kd/hu5St+C
+	 X5yJC7N4gPqYUm9Z1S11hyaOvMjdqrESXAu9uDSSwCv+trLIQb88Wl0IMRYmNblfhQ
+	 raCWA/5KStcU8zUERl0uRcCXcJmts7jYPMpyYFpLeFV0NTAKHlqC2FPehcqKlXsnbg
+	 U+rV2Rq3ISOoah5Oda9pW9XkiQL4w+L7WblCrClOCQh4nZUJXilvdkLwyZFtPlVoLC
+	 pCWxbMPH09dMA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sRAN5-000000003fh-12PE;
+	Tue, 09 Jul 2024 14:55:03 +0200
+Date: Tue, 9 Jul 2024 14:55:03 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] serial: qcom-geni: do not kill the machine on
+ fifo underrun
+Message-ID: <Zo0zJ8icZO9VFG8h@hovoldconsulting.com>
+References: <20240704101805.30612-1-johan+linaro@kernel.org>
+ <20240704101805.30612-4-johan+linaro@kernel.org>
+ <CAD=FV=VHOTQKNNbkWX17o57weP_wTm__MCSGPhFHQ+uG1CD+Bw@mail.gmail.com>
+ <Zo0Gco1igkL185US@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/15] arm64: Mark all I/O as non-secure shared
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>, Steven Price <steven.price@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Oliver Upton <oliver.upton@linux.dev>,
- Zenghui Yu <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240701095505.165383-1-steven.price@arm.com>
- <20240701095505.165383-6-steven.price@arm.com>
- <20240709113925.GA13242@willie-the-truck>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240709113925.GA13242@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zo0Gco1igkL185US@hovoldconsulting.com>
 
-Hi Will
+On Tue, Jul 09, 2024 at 11:44:18AM +0200, Johan Hovold wrote:
+> On Mon, Jul 08, 2024 at 04:59:59PM -0700, Doug Anderson wrote:
+> > On Thu, Jul 4, 2024 at 3:19 AM Johan Hovold <johan+linaro@kernel.org> wrote:
 
-On 09/07/2024 12:39, Will Deacon wrote:
-> On Mon, Jul 01, 2024 at 10:54:55AM +0100, Steven Price wrote:
->> All I/O is by default considered non-secure for realms. As such
->> mark them as shared with the host.
->>
->> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->> Changes since v3:
->>   * Add PROT_NS_SHARED to FIXMAP_PAGE_IO rather than overriding
->>     set_fixmap_io() with a custom function.
->>   * Modify ioreamp_cache() to specify PROT_NS_SHARED too.
->> ---
->>   arch/arm64/include/asm/fixmap.h | 2 +-
->>   arch/arm64/include/asm/io.h     | 8 ++++----
->>   2 files changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
->> index 87e307804b99..f2c5e653562e 100644
->> --- a/arch/arm64/include/asm/fixmap.h
->> +++ b/arch/arm64/include/asm/fixmap.h
->> @@ -98,7 +98,7 @@ enum fixed_addresses {
->>   #define FIXADDR_TOT_SIZE	(__end_of_fixed_addresses << PAGE_SHIFT)
->>   #define FIXADDR_TOT_START	(FIXADDR_TOP - FIXADDR_TOT_SIZE)
->>   
->> -#define FIXMAP_PAGE_IO     __pgprot(PROT_DEVICE_nGnRE)
->> +#define FIXMAP_PAGE_IO     __pgprot(PROT_DEVICE_nGnRE | PROT_NS_SHARED)
->>   
->>   void __init early_fixmap_init(void);
->>   
->> diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
->> index 4ff0ae3f6d66..07fc1801c6ad 100644
->> --- a/arch/arm64/include/asm/io.h
->> +++ b/arch/arm64/include/asm/io.h
->> @@ -277,12 +277,12 @@ static inline void __const_iowrite64_copy(void __iomem *to, const void *from,
->>   
->>   #define ioremap_prot ioremap_prot
->>   
->> -#define _PAGE_IOREMAP PROT_DEVICE_nGnRE
->> +#define _PAGE_IOREMAP (PROT_DEVICE_nGnRE | PROT_NS_SHARED)
->>   
->>   #define ioremap_wc(addr, size)	\
->> -	ioremap_prot((addr), (size), PROT_NORMAL_NC)
->> +	ioremap_prot((addr), (size), (PROT_NORMAL_NC | PROT_NS_SHARED))
->>   #define ioremap_np(addr, size)	\
->> -	ioremap_prot((addr), (size), PROT_DEVICE_nGnRnE)
->> +	ioremap_prot((addr), (size), (PROT_DEVICE_nGnRnE | PROT_NS_SHARED))
+> > > @@ -878,7 +878,7 @@ static void qcom_geni_serial_send_chunk_fifo(struct uart_port *uport,
+> > >                 memset(buf, 0, sizeof(buf));
+> > >                 tx_bytes = min(remaining, BYTES_PER_FIFO_WORD);
+> > >
+> > > -               tx_bytes = uart_fifo_out(uport, buf, tx_bytes);
+> > > +               uart_fifo_out(uport, buf, tx_bytes);
+> > 
+> > FWIW I would have rather we output something much more obviously wrong
+> > in this case instead of a NUL byte. Maybe we should fill it with "@"
+> > characters or something? As you said: the driver shouldn't get into
+> > this error condition so it shouldn't matter, but if we have a bug in
+> > the future I'd rather it be an obvious bug instead of a subtle bug.
 > 
-> Hmm. I do wonder whether you've pushed the PROT_NS_SHARED too far here.
+> Yeah, I've been running with a patch like that locally in my tests, and
+> went a bit back and forth whether I should post it. My reasoning for not
+> doing so was that the bugs have been fixed so we don't need to spend
+> cycles on memsetting the buffer to anything but NUL (I used 'X' in my
+> testing).
 > 
-> There's nothing _architecturally_ special about the top address bit.
-> Even if the RSI divides the IPA space in half, the CPU doesn't give two
-> hoots about it in the hardware. In which case, it feels wrong to bake
-> PROT_NS_SHARED into ioremap_prot -- it feels much better to me if the
-> ioremap() code OR'd that into the physical address when passing it down
-
-Actually we would like to push the decision of applying the 
-"pgprot_decrypted" vs pgprot_encrypted into ioremap_prot(), rather
-than sprinkling every user of ioremap_prot().
-
-This could be made depending on the address that is passed on to the
-ioremap_prot(). I guess we would need explicit requests from the callers
-to add "encrypted vs decrypted". Is that what you guys are looking at ?
-
+> I guess that can be avoided by only padding the buffer if we ever hit an
+> underrun, but I still thinks it's questionable to spend the effort as
+> this is not something that should be needed. In any case, I didn't want
+> to spend time on it to fix the 6.10 regressions.
 > 
-> There's a selfish side of that argument, in that we need to hook
-> ioremap() for pKVM protected guests, but I do genuinely feel that
-> treating address bits as protection bits is arbitrary and doesn't belong
-> in these low-level definitions. In a similar vein, AMD has its
-> sme_{set,clr}() macros that operate on the PA (e.g. via dma_to_phys()),
-> which feels like a more accurate abstraction to me.
-
-I believe that doesn't solve all the problems. They do have a hook in
-__ioremap_caller() that implicitly applies pgprot_{en,de}crypted
-depending on other info.
-
-Cheers
-Suzuki
-
+> Killing the machine is perhaps an effective way to get attention to an
+> issue, but I'd much rather have an occasional NUL character in the log
+> *if* this ever becomes an issue at all again.
 > 
-> Will
+> > I'm happy to post a patch or provide a Reviewed-by if you want to post
+> > a patch. Let me know.
+> 
+> If you feel strongly about this, I can either fill the buffer with
+> something else than NUL or add error handling for any such future
+> hypothetical bugs. What do you prefer?
 
+Actually we just need to clear the buffer on entry, which would do away
+with the unnecessary memset() that is there today. This should also give
+you a printable indication that something is wrong in case a similar bug
+is ever reintroduced (e.g. the last four characters would be repeated
+until the transfer is complete instead of a fixed char like '@').
+
+Perhaps that's good enough as a compromise?
+
+Johan
