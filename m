@@ -1,685 +1,511 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2112.outbound.protection.partner.outlook.cn [139.219.17.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8071581E3;
-	Tue,  9 Jul 2024 11:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720523520; cv=none; b=AAXOX0cvqtQzt/tu0gNIISjZuMVIqn9km/vBf+yv/hsYHBfuvMS7xTZIJAp4xp88mq/Gqlp0A7/c7ZG7efgWJkzMt9RZjUmvbO5O2qPDeDupBzxskiTZCDTB/eCVi5eN4ZNwOfFCOm5CGECdc+vl7HCvkHmFYdRJ5ZGtDg+MAa0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720523520; c=relaxed/simple;
-	bh=Ufk0w9DMvt6BUwJvcynYeVHl0iIQvmWEo+90hsxhP1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M1FWOcBePxunQ8qpuuGrXFn5ji4X/nOx6QqQthJVO1epaDHKY4xumxCv7jhG5AyhSRO7UxN7YaFTVZPSjOrlXFA9l4O/ADQUGv45N0bsypsLZ8QIoBN6dIeLt0Z5POvbyCLCioPGlgPHj+xnLx1aX3DXL2BBR6ERqsJuJG4nUvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cYKeaRhY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cYKeaRhY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B025C3277B;
-	Tue,  9 Jul 2024 11:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720523520;
-	bh=Ufk0w9DMvt6BUwJvcynYeVHl0iIQvmWEo+90hsxhP1E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cYKeaRhYHd6KfFn7mB1ZHQPfVI9viPvSG6YONOVVukKyT/OASGwgd69YFkYbmD99e
-	 Rj5cVPhhL6XLqWIj4b5f5e1dqAhUFdiRD0e+i0hGXcT6b4TOUSjIQXIr1fLn/id5ED
-	 UoNPDwQTtzPUd5Aa3VHkoEj/ETvNGLr9PHVDtF+w=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA659157E78;
+	Tue,  9 Jul 2024 11:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720523535; cv=fail; b=JrEVmiUiwrrDLFm2Hyq2PlRE8v8e4+ySZKXpYjfLGl9oZTmJKpcAEWNhUWcUc8sm5ltqzzA/2jnaaQnVykgk4MjIZhko6SIoFYA7knqk50mlP+SALklaqt3sOmMpq5xCn5arPBhHpAG8IxLJ5pzKS2ismoqHpfmUwulAijGAtr8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720523535; c=relaxed/simple;
+	bh=l2eQBzej24IjzdZ3yeayafRT5sLEKwPTMgtQXRN62s4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=OvV9QooRV6OowaZ2c1idtgpsbyMRmarHpcHGUE8IkWaDB34oJoJSyRrFkN8Jdu49TC+tRX5vhcvc8yfAW8bhYHsj7TyRSiMUdnSk7qDgWC+JY7wTHJlFEZesCh0gT0LeCHLxhKep+zL8PO4qz81EIdXv6uCp3oSXl0dIjpRZePI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TMfPCIJJfBXlaftFUfDoes0NvIwwl5uyAdACY9yQzcr046ScWzw0Uc5/hYj2ycSac1DRocKtHN/4WWSVeNxHsUh4r6N5YFZPmTZaH873ITtxIzYrH0Bw0/fSaI1Oybs5vKa3wFLlCRb9Vc2PvLCGsnv1TnXBids38C/XNLFSxVgCslioZxsdPLV9Tg/jQWGK/MH4u63hLwCVVvd6aYHegUzzv8d/tQ5rNmDL+htURmcRb8L9FqDqcnxPlIgkEa3rV7sZbORqqSWulgItDMtMKYXhZQSEVM17scsT5BUs1W3vzbDyQLSIRjB3vHRuXNp10VN2dxgpVWawxy0v36Vbdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6X3adM2k6EIyu9eez4lG13vTog4sjUA3WmIRtsko+vQ=;
+ b=NjmnBcUQYZcYe69FrGDAfv2gPIzsRjGIV7IAB55Z4laXZ+oq/z5SoxojpPlYgIk5z/T4v4/A0OoFJHob2Wx1MpUdwvml944IXR5i1Soghg5sFWQ5ezrWqOnJyCLeeOhQIZAL8T5tvvtpHXL/Ehg3oY3eJEg3iHpO4fp3nFtOxAwnVMEMhGSsDQFBixs9CpiBTPr6gR1P74k/bcaYQSl948EgFKJ3E9cdm4BgLEz+48x9gfUREnPgqn0IUHybY1/UbMZP7O9yeyBnDQdCK2PTcKiif5lKWWIW9Sqr52RCAPz77ku+3D+rC9KKehihuEIzr1NJI8sI64rWKUgtZzDe5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB1271.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:18::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.37; Tue, 9 Jul
+ 2024 08:38:32 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::64c5:50d8:4f2c:59aa]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%6])
+ with mapi id 15.20.7741.033; Tue, 9 Jul 2024 08:38:32 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mingjia Zhang <mingjia.zhang@mediatek.com>
+Cc: Jack Zhu <jack.zhu@starfivetech.com>,
+	Keith Zhao <keith.zhao@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 6.6 000/139] 6.6.39-rc1 review
-Date: Tue,  9 Jul 2024 13:08:20 +0200
-Message-ID: <20240709110658.146853929@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
+	linux-staging@lists.linux.dev
+Subject: [PATCH v5 00/14] Add ISP 3A for StarFive
+Date: Tue,  9 Jul 2024 01:38:10 -0700
+Message-Id: <20240709083824.430473-1-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0031.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:2::16) To ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.39-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.6.39-rc1
-X-KernelTest-Deadline: 2024-07-11T11:07+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 6.6.39 release.
-There are 139 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 11 Jul 2024 11:06:25 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.39-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.6.39-rc1
-
-Ryusuke Konishi <konishi.ryusuke@gmail.com>
-    nilfs2: fix incorrect inode allocation from reserved inodes
-
-Damien Le Moal <dlemoal@kernel.org>
-    null_blk: Do not allow runt zone with zone capacity smaller then zone size
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu: silence UBSAN warning
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: ump: Set default protocol when not given explicitly
-
-Witold Sadowski <wsadowski@marvell.com>
-    spi: cadence: Ensure data lines set to low during dummy-cycle period
-
-Edward Adam Davis <eadavis@qq.com>
-    nfc/nci: Add the inconsistency check between the input data length and count
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: fix short log for AS in link-vmlinux.sh
-
-Sagi Grimberg <sagi@grimberg.me>
-    nvmet: fix a possible leak when destroy a ctrl during qp establishment
-
-hmtheboy154 <buingoc67@gmail.com>
-    platform/x86: touchscreen_dmi: Add info for the EZpad 6s Pro
-
-hmtheboy154 <buingoc67@gmail.com>
-    platform/x86: touchscreen_dmi: Add info for GlobalSpace SolT IVW 11.6" tablet
-
-Jim Wylder <jwylder@google.com>
-    regmap-i2c: Subtract reg size from max_write
-
-Kundan Kumar <kundan.kumar@samsung.com>
-    nvme: adjust multiples of NVME_CTRL_PAGE_SIZE in offset
-
-Matt Jan <zoo868e@gmail.com>
-    connector: Fix invalid conversion in cn_proc.h
-
-Fedor Pchelkin <pchelkin@ispras.ru>
-    dma-mapping: benchmark: avoid needless copy_to_user if benchmark fails
-
-Nilay Shroff <nilay@linux.ibm.com>
-    nvme-multipath: find NUMA path only for online numa-node
-
-Mike Christie <michael.christie@oracle.com>
-    vhost-scsi: Handle vhost_vq_work_queue failures for events
-
-Jian-Hong Pan <jhp@endlessos.org>
-    ALSA: hda/realtek: Enable headset mic of JP-IK LEAP W502 with ALC897
-
-Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-    fs/ntfs3: Mark volume as dirty if xattr is broken
-
-Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-    i2c: pnx: Fix potential deadlock warning from del_timer_sync() call in isr
-
-Pin-yen Lin <treapking@chromium.org>
-    clk: mediatek: mt8183: Only enable runtime PM on mt8183-mfgcfg
-
-Gabor Juhos <j4g8y7@gmail.com>
-    clk: qcom: clk-alpha-pll: set ALPHA_EN bit for Stromer Plus PLLs
-
-Luca Weiss <luca.weiss@fairphone.com>
-    clk: qcom: gcc-sm6350: Fix gpll6* & gpll7 parents
-
-Mauro Carvalho Chehab <mchehab@kernel.org>
-    media: dw2102: fix a potential buffer overflow
-
-GUO Zihua <guozihua@huawei.com>
-    ima: Avoid blocking in RCU read-side critical section
-
-Dragan Simic <dsimic@manjaro.org>
-    arm64: dts: rockchip: Fix the DCDC_REG2 minimum voltage on Quartz64 Model B
-
-Ghadi Elie Rahme <ghadi.rahme@canonical.com>
-    bnx2x: Fix multiple UBSAN array-index-out-of-bounds
-
-Yijie Yang <quic_yijiyang@quicinc.com>
-    net: stmmac: dwmac-qcom-ethqos: fix error array size
-
-Val Packett <val@packett.cool>
-    mtd: rawnand: rockchip: ensure NVDDR timings are rejected
-
-Miquel Raynal <miquel.raynal@bootlin.com>
-    mtd: rawnand: Bypass a couple of sanity checks during NAND identification
-
-Miquel Raynal <miquel.raynal@bootlin.com>
-    mtd: rawnand: Fix the nand_read_data_op() early check
-
-Miquel Raynal <miquel.raynal@bootlin.com>
-    mtd: rawnand: Ensure ECC configuration is propagated to upper layers
-
-Jinglin Wen <jinglin.wen@shingroup.cn>
-    powerpc/64s: Fix unnecessary copy to 0 when kernel is booted at address 0
-
-Nicholas Piggin <npiggin@gmail.com>
-    powerpc/pseries: Fix scv instruction crash with kexec
-
-Frank Oltmanns <frank@oltmanns.dev>
-    clk: sunxi-ng: common: Don't call hw_to_ccu_common on hw without common
-
-Md Sadre Alam <quic_mdalam@quicinc.com>
-    clk: qcom: gcc-ipq9574: Add BRANCH_HALT_VOTED flag
-
-John Schoenick <johns@valvesoftware.com>
-    drm: panel-orientation-quirks: Add quirk for Valve Galileo
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu/atomfirmware: silence UBSAN warning
-
-Ma Ke <make24@iscas.ac.cn>
-    drm/nouveau: fix null pointer dereference in nouveau_connector_get_modes
-
-Jan Kara <jack@suse.cz>
-    Revert "mm/writeback: fix possible divide-by-zero in wb_dirty_limits(), again"
-
-Jan Kara <jack@suse.cz>
-    fsnotify: Do not generate events for O_PATH file descriptors
-
-Jimmy Assarsson <extja@kvaser.com>
-    can: kvaser_usb: Explicitly initialize family in leafimx driver_info struct
-
-Zijun Hu <quic_zijuhu@quicinc.com>
-    Bluetooth: qca: Fix BT enable failure again for QCA6390 after warm reboot
-
-Hector Martin <marcan@marcan.st>
-    Bluetooth: hci_bcm4377: Fix msgid release
-
-Nathan Chancellor <nathan@kernel.org>
-    scsi: mpi3mr: Use proper format specifier in mpi3mr_sas_port_add()
-
-Nathan Chancellor <nathan@kernel.org>
-    f2fs: Add inline to f2fs_build_fault_attr() stub
-
-Naohiro Aota <naohiro.aota@wdc.com>
-    btrfs: fix adding block group to a reclaim list and the unused list during reclaim
-
-Jan Kara <jack@suse.cz>
-    mm: avoid overflows in dirty throttling logic
-
-Jinliang Zheng <alexjlzheng@tencent.com>
-    mm: optimize the redundant loop of mm_update_owner_next()
-
-Ryusuke Konishi <konishi.ryusuke@gmail.com>
-    nilfs2: add missing check for inode numbers on directory entries
-
-Ryusuke Konishi <konishi.ryusuke@gmail.com>
-    nilfs2: fix inode number range checks
-
-Sasha Neftin <sasha.neftin@intel.com>
-    Revert "igc: fix a log entry using uninitialized netdev"
-
-Armin Wolf <W_Armin@gmx.de>
-    platform/x86: toshiba_acpi: Fix quickstart quirk handling
-
-Huacai Chen <chenhuacai@kernel.org>
-    cpu: Fix broken cmdline "nosmp" and "maxcpus=0"
-
-Dmitry Torokhov <dmitry.torokhov@gmail.com>
-    gpiolib: of: add polarity quirk for TSC2005
-
-Aleksandr Mishin <amishin@t-argos.ru>
-    mlxsw: core_linecards: Fix double memory deallocation in case of invalid INI file
-
-Shigeru Yoshida <syoshida@redhat.com>
-    inet_diag: Initialize pad field in struct inet_diag_req_v2
-
-Zijian Zhang <zijianzhang@bytedance.com>
-    selftests: make order checking verbose in msg_zerocopy selftest
-
-Zijian Zhang <zijianzhang@bytedance.com>
-    selftests: fix OOM in msg_zerocopy selftest
-
-Sam Sun <samsun1006219@gmail.com>
-    bonding: Fix out-of-bounds read in bond_option_arp_ip_targets_set()
-
-Florian Westphal <fw@strlen.de>
-    netfilter: nf_tables: unconditionally flush pending work before notifier
-
-Song Shuai <songshuaishuai@tinylab.org>
-    riscv: kexec: Avoid deadlock in kexec crash path
-
-Jozef Hopko <jozef.hopko@altana.com>
-    wifi: wilc1000: fix ies_len type in connect path
-
-Shiji Yang <yangshiji66@outlook.com>
-    gpio: mmio: do not calculate bgpio_bits via "ngpios"
-
-Dave Jiang <dave.jiang@intel.com>
-    net: ntb_netdev: Move ntb_netdev_rx_handler() to call netif_rx() from __netif_rx()
-
-Jiawen Wu <jiawenwu@trustnetic.com>
-    net: txgbe: initialize num_q_vectors for MSI/INTx interrupts
-
-Sagi Grimberg <sagi@grimberg.me>
-    net: allow skb_datagram_iter to be called from any context
-
-Dmitry Torokhov <dmitry.torokhov@gmail.com>
-    gpiolib: of: fix lookup quirk for MIPS Lantiq
-
-Dima Ruinskiy <dima.ruinskiy@intel.com>
-    e1000e: Fix S0ix residency on corporate systems
-
-Christian Borntraeger <borntraeger@linux.ibm.com>
-    KVM: s390: fix LPSWEY handling
-
-Jakub Kicinski <kuba@kernel.org>
-    tcp_metrics: validate source addr length
-
-Pavel Skripkin <paskripkin@gmail.com>
-    bluetooth/hci: disallow setting handle bigger than HCI_CONN_HANDLE_MAX
-
-Iulia Tanasescu <iulia.tanasescu@nxp.com>
-    Bluetooth: ISO: Check socket flag instead of hcon
-
-Edward Adam Davis <eadavis@qq.com>
-    Bluetooth: Ignore too large handle values in BIG
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: hci_event: Fix setting of unicast qos interval
-
-Jianbo Liu <jianbol@nvidia.com>
-    net/mlx5e: Add mqprio_rl cleanup and free in mlx5e_priv_cleanup()
-
-Chris Mi <cmi@nvidia.com>
-    net/mlx5: E-switch, Create ingress ACL when needed
-
-Neal Cardwell <ncardwell@google.com>
-    UPSTREAM: tcp: fix DSACK undo in fast recovery to call tcp_try_to_open()
-
-Marek Vasut <marex@denx.de>
-    net: phy: phy_device: Fix PHY LED blinking code comment
-
-Dmitry Antipov <dmantipov@yandex.ru>
-    mac802154: fix time calculation in ieee802154_configure_durations()
-
-Mike Christie <michael.christie@oracle.com>
-    vhost_task: Handle SIGKILL by flushing work and exiting
-
-Mike Christie <michael.christie@oracle.com>
-    vhost: Release worker mutex during flushes
-
-Mike Christie <michael.christie@oracle.com>
-    vhost: Use virtqueue mutex for swapping worker
-
-Len Brown <len.brown@intel.com>
-    tools/power turbostat: Remember global max_die_id
-
-Justin Stitt <justinstitt@google.com>
-    cdrom: rearrange last_media_change check to avoid unintentional overflow
-
-Lu Yao <yaolu@kylinos.cn>
-    btrfs: scrub: initialize ret in scrub_simple_mirror() to fix compilation warning
-
-Holger Dengler <dengler@linux.ibm.com>
-    s390/pkey: Wipe sensitive data on failure
-
-Sven Schnelle <svens@linux.ibm.com>
-    s390: Mark psw in __load_psw_mask() as __unitialized
-
-Wang Yong <wang.yong12@zte.com.cn>
-    jffs2: Fix potential illegal address access in jffs2_free_inode
-
-Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-    serial: imx: Raise TX trigger level to 8
-
-Tomas Henzl <thenzl@redhat.com>
-    scsi: mpi3mr: Sanitise num_phys
-
-Chao Yu <chao@kernel.org>
-    f2fs: check validation of fault attrs in f2fs_build_fault_attr()
-
-Jose E. Marchesi <jose.marchesi@oracle.com>
-    bpf: Avoid uninitialized value in BPF_CORE_READ_BITFIELD
-
-Corinna Vinschen <vinschen@redhat.com>
-    igc: fix a log entry using uninitialized netdev
-
-John Hubbard <jhubbard@nvidia.com>
-    selftests/net: fix uninitialized variables
-
-Greg Kurz <groug@kaod.org>
-    powerpc/xmon: Check cpu id in commands "c#", "dp#" and "dx#"
-
-Mickaël Salaün <mic@digikod.net>
-    kunit: Handle test faults
-
-Mickaël Salaün <mic@digikod.net>
-    kunit: Fix timeout message
-
-Mike Marshall <hubcap@omnibond.com>
-    orangefs: fix out-of-bounds fsid access
-
-Michael Ellerman <mpe@ellerman.id.au>
-    powerpc/64: Set _IO_BASE to POISON_POINTER_DELTA not 0 for CONFIG_PCI=n
-
-Heiner Kallweit <hkallweit1@gmail.com>
-    i2c: i801: Annotate apanel_addr as __ro_after_init
-
-Benjamin Gray <bgray@linux.ibm.com>
-    powerpc/dexcr: Track the DEXCR per-process
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb-frontends: tda10048: Fix integer overflow
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: s2255: Use refcount_t instead of atomic_t for num_channels
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb-frontends: tda18271c2dd: Remove casting during div
-
-Simon Horman <horms@kernel.org>
-    net: dsa: mv88e6xxx: Correct check for empty list
-
-Julien Panis <jpanis@baylibre.com>
-    thermal/drivers/mediatek/lvts_thermal: Check NULL ptr on lvts_data
-
-StanleyYP Wang <StanleyYP.Wang@mediatek.com>
-    wifi: mt76: mt7996: add sanity checks for background radar trigger
-
-Felix Fietkau <nbd@nbd.name>
-    wifi: mt76: replace skb_put with skb_put_zero
-
-Niklas Neronin <niklas.neronin@linux.intel.com>
-    usb: xhci: prevent potential failure in handle_tx_event() for Transfer events without TRB
-
-Erick Archer <erick.archer@outlook.com>
-    Input: ff-core - prefer struct_size over open coded arithmetic
-
-Jean Delvare <jdelvare@suse.de>
-    firmware: dmi: Stop decoding on broken entry
-
-Erick Archer <erick.archer@outlook.com>
-    sctp: prefer struct_size over open coded arithmetic
-
-Samuel Holland <samuel.holland@sifive.com>
-    riscv: Apply SiFive CIP-1200 workaround to single-ASID sfence.vma
-
-Michael Bunk <micha@freedict.org>
-    media: dw2102: Don't translate i2c read into write
-
-Jesse Zhang <jesse.zhang@amd.com>
-    drm/amdgpu: fix the warning about the expression (int)size - len
-
-Tim Huang <Tim.Huang@amd.com>
-    drm/amdgpu: fix uninitialized scalar variable warning
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Fix uninitialized variables in DM
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Skip finding free audio for unknown engine_id
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Check pipe offset before setting vblank
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Check index msg_id before read or write
-
-Ma Jun <Jun.Ma2@amd.com>
-    drm/amdgpu: Initialize timestamp for some legacy SOCs
-
-Jesse Zhang <jesse.zhang@amd.com>
-    drm/amdgpu: Using uninitialized value *size when calling amdgpu_vce_cs_reloc
-
-Ma Jun <Jun.Ma2@amd.com>
-    drm/amdgpu: Fix uninitialized variable warnings
-
-Fei Shao <fshao@chromium.org>
-    media: mediatek: vcodec: Only free buffer VA that is not NULL
-
-Hailey Mothershead <hailmo@amazon.com>
-    crypto: aead,cipher - zeroize key buffer after use
-
-Atish Patra <atishp@rivosinc.com>
-    RISC-V: KVM: Fix the initial sample period value
-
-Eduard Zingerman <eddyz87@gmail.com>
-    selftests/bpf: dummy_st_ops should reject 0 for non-nullable params
-
-Eduard Zingerman <eddyz87@gmail.com>
-    selftests/bpf: do not pass NULL for non-nullable params in dummy_st_ops
-
-Eduard Zingerman <eddyz87@gmail.com>
-    selftests/bpf: adjust dummy_st_ops_success to detect additional error
-
-Guanrui Huang <guanrui.huang@linux.alibaba.com>
-    irqchip/gic-v3-its: Remove BUG_ON in its_vpe_irq_domain_alloc
-
-John Meneghini <jmeneghi@redhat.com>
-    scsi: qedf: Make qedf_execute_tmf() non-preemptible
-
-Michael Guralnik <michaelgur@nvidia.com>
-    IB/core: Implement a limit on UMAD receive List
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb-usb: dib0700_devices: Add missing release_firmware()
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb: as102-fe: Fix as10x_register_addr packing
-
-Mahesh Salgaonkar <mahesh@linux.ibm.com>
-    powerpc: Avoid nmi_enter/nmi_exit in real mode interrupt.
-
-Erico Nunes <nunes.erico@gmail.com>
-    drm/lima: fix shared irq handling on driver remove
-
-Chenghai Huang <huangchenghai2@huawei.com>
-    crypto: hisilicon/debugfs - Fix debugfs uninit process issue
-
-George Stark <gnstark@salutedevices.com>
-    leds: an30259a: Use devm_mutex_init() for mutex initialization
-
-George Stark <gnstark@salutedevices.com>
-    locking/mutex: Introduce devm_mutex_init()
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts |   2 +-
- arch/powerpc/include/asm/interrupt.h               |  10 ++
- arch/powerpc/include/asm/io.h                      |   2 +-
- arch/powerpc/include/asm/percpu.h                  |  10 ++
- arch/powerpc/include/asm/processor.h               |   1 +
- arch/powerpc/kernel/head_64.S                      |   5 +-
- arch/powerpc/kernel/process.c                      |  10 ++
- arch/powerpc/kernel/ptrace/ptrace-view.c           |   7 +-
- arch/powerpc/kernel/setup_64.c                     |   2 +
- arch/powerpc/kexec/core_64.c                       |  11 ++
- arch/powerpc/platforms/pseries/kexec.c             |   8 --
- arch/powerpc/platforms/pseries/pseries.h           |   1 -
- arch/powerpc/platforms/pseries/setup.c             |   1 -
- arch/powerpc/xmon/xmon.c                           |   6 +-
- arch/riscv/include/asm/errata_list.h               |  12 +-
- arch/riscv/include/asm/tlbflush.h                  |  19 ++-
- arch/riscv/kernel/machine_kexec.c                  |  10 +-
- arch/riscv/kvm/vcpu_pmu.c                          |   2 +-
- arch/riscv/mm/tlbflush.c                           |  23 ----
- arch/s390/include/asm/kvm_host.h                   |   1 +
- arch/s390/include/asm/processor.h                  |   2 +-
- arch/s390/kvm/kvm-s390.c                           |   1 +
- arch/s390/kvm/kvm-s390.h                           |  15 +++
- arch/s390/kvm/priv.c                               |  32 +++++
- crypto/aead.c                                      |   3 +-
- crypto/cipher.c                                    |   3 +-
- drivers/base/regmap/regmap-i2c.c                   |   3 +-
- drivers/block/null_blk/zoned.c                     |  11 ++
- drivers/bluetooth/hci_bcm4377.c                    |   2 +-
- drivers/bluetooth/hci_qca.c                        |  18 ++-
- drivers/cdrom/cdrom.c                              |   2 +-
- drivers/clk/mediatek/clk-mt8183-mfgcfg.c           |   1 +
- drivers/clk/mediatek/clk-mtk.c                     |  24 ++--
- drivers/clk/mediatek/clk-mtk.h                     |   2 +
- drivers/clk/qcom/clk-alpha-pll.c                   |   3 +
- drivers/clk/qcom/gcc-ipq9574.c                     |  10 +-
- drivers/clk/qcom/gcc-sm6350.c                      |  10 +-
- drivers/clk/sunxi-ng/ccu_common.c                  |  18 ++-
- drivers/crypto/hisilicon/debugfs.c                 |  21 +++-
- drivers/firmware/dmi_scan.c                        |  11 ++
- drivers/gpio/gpio-mmio.c                           |   2 -
- drivers/gpio/gpiolib-of.c                          |  22 +++-
- drivers/gpu/drm/amd/amdgpu/aldebaran.c             |   2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c        |   5 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c            |   3 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c            |   8 ++
- drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c            |   3 +-
- drivers/gpu/drm/amd/amdgpu/sienna_cichlid.c        |   2 +-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   8 +-
- .../drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c  |   4 +-
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c  |   3 +
- .../amd/display/dc/irq/dce110/irq_service_dce110.c |   8 +-
- .../gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c    |   8 ++
- drivers/gpu/drm/amd/include/atomfirmware.h         |   4 +-
- drivers/gpu/drm/drm_panel_orientation_quirks.c     |   7 ++
- drivers/gpu/drm/lima/lima_gp.c                     |   2 +
- drivers/gpu/drm/lima/lima_mmu.c                    |   5 +
- drivers/gpu/drm/lima/lima_pp.c                     |   4 +
- drivers/gpu/drm/nouveau/nouveau_connector.c        |   3 +
- drivers/i2c/busses/i2c-i801.c                      |   2 +-
- drivers/i2c/busses/i2c-pnx.c                       |  48 ++------
- drivers/infiniband/core/user_mad.c                 |  21 +++-
- drivers/input/ff-core.c                            |   7 +-
- drivers/irqchip/irq-gic-v3-its.c                   |   2 -
- drivers/leds/leds-an30259a.c                       |  14 +--
- drivers/media/dvb-frontends/as102_fe_types.h       |   2 +-
- drivers/media/dvb-frontends/tda10048.c             |   9 +-
- drivers/media/dvb-frontends/tda18271c2dd.c         |   4 +-
- .../vcodec/decoder/vdec/vdec_av1_req_lat_if.c      |  22 ++--
- .../mediatek/vcodec/encoder/venc/venc_h264_if.c    |   5 +-
- drivers/media/usb/dvb-usb/dib0700_devices.c        |  18 ++-
- drivers/media/usb/dvb-usb/dw2102.c                 | 120 +++++++++++--------
- drivers/media/usb/s2255/s2255drv.c                 |  20 ++--
- drivers/mtd/nand/raw/nand_base.c                   |  68 ++++++-----
- drivers/mtd/nand/raw/rockchip-nand-controller.c    |   6 +-
- drivers/net/bonding/bond_options.c                 |   6 +-
- drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c   |   1 +
- drivers/net/dsa/mv88e6xxx/chip.c                   |   4 +-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x.h        |   2 +-
- drivers/net/ethernet/intel/e1000e/netdev.c         | 132 ++++++++++-----------
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   5 +
- .../mellanox/mlx5/core/esw/acl/ingress_ofld.c      |  37 ++++--
- .../net/ethernet/mellanox/mlxsw/core_linecards.c   |   1 +
- .../ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c    |   2 +-
- drivers/net/ethernet/wangxun/libwx/wx_lib.c        |   1 +
- drivers/net/ntb_netdev.c                           |   2 +-
- .../net/wireless/mediatek/mt76/mt76_connac_mcu.c   |  10 +-
- drivers/net/wireless/mediatek/mt76/mt7915/mcu.c    |   2 +-
- .../net/wireless/mediatek/mt76/mt7996/debugfs.c    |   5 +
- drivers/net/wireless/mediatek/mt76/mt7996/mcu.c    |   5 +-
- drivers/net/wireless/microchip/wilc1000/hif.c      |   3 +-
- drivers/nfc/virtual_ncidev.c                       |   4 +
- drivers/nvme/host/multipath.c                      |   2 +-
- drivers/nvme/host/pci.c                            |   3 +-
- drivers/nvme/target/core.c                         |   9 ++
- drivers/platform/x86/toshiba_acpi.c                |  31 +++--
- drivers/platform/x86/touchscreen_dmi.c             |  36 ++++++
- drivers/s390/crypto/pkey_api.c                     |   4 +-
- drivers/scsi/mpi3mr/mpi3mr_transport.c             |  10 ++
- drivers/scsi/qedf/qedf_io.c                        |   6 +-
- drivers/spi/spi-cadence-xspi.c                     |  20 +++-
- drivers/thermal/mediatek/lvts_thermal.c            |   2 +
- drivers/tty/serial/imx.c                           |   2 +-
- drivers/usb/host/xhci-ring.c                       |   5 +-
- drivers/vhost/scsi.c                               |  17 ++-
- drivers/vhost/vhost.c                              | 118 ++++++++++++++----
- drivers/vhost/vhost.h                              |   2 +
- fs/btrfs/block-group.c                             |  13 +-
- fs/btrfs/scrub.c                                   |   2 +-
- fs/f2fs/f2fs.h                                     |  12 +-
- fs/f2fs/super.c                                    |  27 +++--
- fs/f2fs/sysfs.c                                    |  14 ++-
- fs/jffs2/super.c                                   |   1 +
- fs/nilfs2/alloc.c                                  |  18 ++-
- fs/nilfs2/alloc.h                                  |   4 +-
- fs/nilfs2/dat.c                                    |   2 +-
- fs/nilfs2/dir.c                                    |   6 +
- fs/nilfs2/ifile.c                                  |   7 +-
- fs/nilfs2/nilfs.h                                  |  10 +-
- fs/nilfs2/the_nilfs.c                              |   6 +
- fs/nilfs2/the_nilfs.h                              |   2 +-
- fs/ntfs3/xattr.c                                   |   5 +-
- fs/orangefs/super.c                                |   3 +-
- include/kunit/try-catch.h                          |   3 -
- include/linux/fsnotify.h                           |   8 +-
- include/linux/lsm_hook_defs.h                      |   2 +-
- include/linux/mutex.h                              |  27 +++++
- include/linux/phy.h                                |   2 +-
- include/linux/sched/vhost_task.h                   |   3 +-
- include/linux/security.h                           |   5 +-
- include/uapi/linux/cn_proc.h                       |   3 +-
- kernel/auditfilter.c                               |   5 +-
- kernel/cpu.c                                       |   3 +
- kernel/dma/map_benchmark.c                         |   3 +
- kernel/exit.c                                      |   2 +
- kernel/kthread.c                                   |   1 +
- kernel/locking/mutex-debug.c                       |  12 ++
- kernel/vhost_task.c                                |  53 ++++++---
- lib/kunit/try-catch.c                              |  22 ++--
- mm/page-writeback.c                                |  32 ++++-
- net/bluetooth/hci_conn.c                           |  15 ++-
- net/bluetooth/hci_event.c                          |  26 +++-
- net/bluetooth/iso.c                                |   3 +-
- net/core/datagram.c                                |  19 ++-
- net/ipv4/inet_diag.c                               |   2 +
- net/ipv4/tcp_input.c                               |   2 +-
- net/ipv4/tcp_metrics.c                             |   1 +
- net/mac802154/main.c                               |  14 ++-
- net/netfilter/nf_tables_api.c                      |   3 +-
- net/sctp/socket.c                                  |   7 +-
- scripts/link-vmlinux.sh                            |   2 +-
- security/apparmor/audit.c                          |   6 +-
- security/apparmor/include/audit.h                  |   2 +-
- security/integrity/ima/ima.h                       |   2 +-
- security/integrity/ima/ima_policy.c                |  15 ++-
- security/security.c                                |   6 +-
- security/selinux/include/audit.h                   |   4 +-
- security/selinux/ss/services.c                     |   5 +-
- security/smack/smack_lsm.c                         |   4 +-
- sound/core/ump.c                                   |   8 ++
- sound/pci/hda/patch_realtek.c                      |   9 ++
- tools/lib/bpf/bpf_core_read.h                      |   1 +
- tools/power/x86/turbostat/turbostat.c              |  10 +-
- .../selftests/bpf/prog_tests/dummy_st_ops.c        |  34 +++++-
- .../selftests/bpf/progs/dummy_st_ops_success.c     |  15 ++-
- tools/testing/selftests/net/gro.c                  |   3 +
- tools/testing/selftests/net/ip_local_port_range.c  |   2 +-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c      |   2 +-
- tools/testing/selftests/net/msg_zerocopy.c         |  14 ++-
- 170 files changed, 1283 insertions(+), 570 deletions(-)
-
-
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1271:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8c66862-b23a-4de7-22de-08dc9ff283a9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|41320700013|366016|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	ZBIlS9qUDOVdpgqu4dSkGaj5WhDIkRUYEYf0QlSZrQG4utaXvMIxeuzljv86kWJC5xTfSYlaKOM3trYAU4JUXShnUEXCM4ZtkfAWrM1IAdopYdqkZGAgfxHEpZlyE88WP1gDhGPQn+V+gS1pwI5eZKrjGxDlA+sC8zTuiaZbV1Hj0iQqsUJQwJ0fty9fVULl3kPwQEqa5xpmIr4IwvrWBXmshUqs8+OapK+l8yRtuQMr5jRDfSqMtat1X4VRH6h67XjJEUs7VLEspz7o42wVBLLlDxzB6+SWz9+/DQmvjd51J7KYLKna3nOXRae4lzat7g6Jxj6B6+qQvniL9u+fE5C/8EKGCoED1KL8tHJ/2NdtuflPmUjGQxGgJkem9U1W48VYGmojaIm66Os5m1ciVtu5cmv9OkmOS4+Adv0g9f2zLDWgV4apprjHJcAy6T6zxlIFm612WdgUC7wGuJPjMvmRdzNjFt7659ugPglwKuPkmDzlvaRLiAyN+uP/676aT1AhqcLL/T1cJG29t/bNwRiSvhceJDgq34pmPlXTp9QMIH59tfyi3uxnJ/jqW/XFurZrLz8r86RplLpKAZh0YTHg9RlNcwnAIonbi0ijlLAhH6Cxk9sA/shz6jiIencN
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(41320700013)(366016)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?fFGEI6x9cxsrxXRo8mVD5rkGJzT7c1nfOMmKzrTzPliTlA5bKfu3mb3oaJUw?=
+ =?us-ascii?Q?C9wr+A6EfnqtolnmfRPNKIzcu2pde1twxUAaTgowYkpgTVcI4Z9C5dbbHAbh?=
+ =?us-ascii?Q?OFWaVQDSIIrTYc2Js0a18FWYDt8lcj0uz6aWG39F61KSgnTZtJ+Trpl2V9se?=
+ =?us-ascii?Q?n/d7VanMPfr7VRfZCuxKnyttiI4e/ERw6xUDpc7OsrUBMJ1n8/tF3LbAtSaX?=
+ =?us-ascii?Q?oW2RUHgXY1G+FmCUxaYXaFcuIbSK9363NgvoZn1DL0AwfJLNKRRSY+4N8UAR?=
+ =?us-ascii?Q?eoGW2z+wsvAiiggndz5jub8KyxuSUiNQvgzQuHmBo1bw8WRGMAa2feYva6aT?=
+ =?us-ascii?Q?BJbmJT13c0ouXIlkw1w4JzyViHxIkU25ZGaGkmClX+bo7qsqwR1UuWMmC/cO?=
+ =?us-ascii?Q?cdIoT5OcVKb0gjpZ2IlYY0m0Pop4c0Saagiv6v3jXaty1cLrFcxCRHKQeh9M?=
+ =?us-ascii?Q?d5d+biYShzUrRbquMwK3hxvGqVyL15+n4czpMLLrlBULRItwU2MEwLtXILuo?=
+ =?us-ascii?Q?zVcyIBj3KGW6TexOB+EXKokIXUSOVMkQ7wdHT1uMRWRjt22YTjcASaCurUxa?=
+ =?us-ascii?Q?X3NRFXvOshUo5rFGGGQvwqJ0LBXVy/BGwglL8xtvaYSZOJZiRVPvVdIVUOKL?=
+ =?us-ascii?Q?uMTNY20el+o7bX7LUqHiLWuS4zO8jDwazWj5q3c3oUYrDqPIMcrwi00m4ifc?=
+ =?us-ascii?Q?HpxOBfILA70/Yapu5bwhqXWwerGu+7CNn+qSFp9M73q+gjEIwiQuEd8nrrsy?=
+ =?us-ascii?Q?6+faH6PtyNHDQp/8R4dqk3zU8kFADQ8VBwZHCC1Jdgkub1p1nTIjxfm7/ci9?=
+ =?us-ascii?Q?1ntyi4rFiZ8G6YPRLvHnJViuH78/My58ZZXgjBLhs3vf4rhjZ/5NvwKnUluJ?=
+ =?us-ascii?Q?5vS2uJdLw9B3ZWYJu3JzbQ2eXrKEj4uA0Gnbl13cJLgliaowH3RmMctdrqev?=
+ =?us-ascii?Q?FU/9Glo2N0yz41F/y50rlKgdqE8IK9Dnr2r2U7pNhoTpgVLGYHT23Hoi3CkC?=
+ =?us-ascii?Q?OYXth4KKCYuj+WHEIEL7eqGtMFX1ELc68R0IO3e/I1qH+6inwTi7SwKjNYJt?=
+ =?us-ascii?Q?w41QJsOq9K9/YDGIJInmRIdppIOHRjNrBEJbMylFisZBZKdkW/UD5k/y4mn/?=
+ =?us-ascii?Q?0tSGjfacwe0OQRLGtUtnw0zarFy7hMtUDwprO+roW9ZtVkbMUFWai1524bGu?=
+ =?us-ascii?Q?yn4dDbIGv5ifYBEZwxit9bkw3FPoOJwIRmNM1Q9S7D+6HLqFjljfU8f9R3/F?=
+ =?us-ascii?Q?oDFRSKPVSrFKFPfinhuzwZQwI8IRxvKuiLznvBDu8Iwvh2v23dw9pwHpZvhd?=
+ =?us-ascii?Q?5G5LTnYaqwcZo1EKhUpHHg7WJguID1aLyw1lsr0SYBFXLYn79uKLTjpb2tRe?=
+ =?us-ascii?Q?TFCBcvhbq6zQ8s9h0YPE9B6XXbMXR4iQbCEW94Gk4pxA6f2bGVbFPDUL4y2e?=
+ =?us-ascii?Q?ibA4vyeif4Qu53gN/QEKmyL+9ifWU1W7gqkVFuCL/2bw6z/qj3mT+v5QEFQG?=
+ =?us-ascii?Q?Fyz6SwNyWQjh5Dj93wK67E+bdcyk4wjROjhW9ZcJxXNRBDI0qwOJofli/JMB?=
+ =?us-ascii?Q?ZcQcSw1ARzMSxIT7FgLIMKMb/7dWroUoKR0LBQcWvNZQUyCEsk9Pjs5OOlyT?=
+ =?us-ascii?Q?ECSC0KtMmM0yD7NWtDrLW1o=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8c66862-b23a-4de7-22de-08dc9ff283a9
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 08:38:32.0960
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pwm5wvq7SQHPECVIWQRb9bEOoPysJ8wFqO/cI8hRsIbt+ArN8OzSSlmNP/8AkZdQAbP0cmSwFr47agLXoJ5P1eN9iezXAb1TF4RppCle4yI0nZU1MPaJNv8MTWVoV9lv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1271
+
+This series implements the ISP 3A function to the Camera Subsystem on StarFive
+JH7110 SoC. The series has been tested on the VisionFive 2 board.
+
+This series is based on top of the master branch of media_stage repository,
+which is tested with a v4l2-compliance compiled from the git repo
+(git://linuxtv.org/v4l-utils.git).
+
+changes since v4:
+- Rebase on top of the master branch of media_stage repository.
+- Insert a new PATCH 13
+- PATCH 1:
+1. Fix spelling error:
+	- corsstakl -> crosstalk
+	- balck -> black
+	- magbitude -> magnitude
+	- FALG -> FLAG
+2. Exchange of the values of JH7110_ISP_SC_FLAG_AE_AF and JH7110_ISP_SC_FLAG_AWB
+
+- PATCH 8:
+1. Synchronous spelling error: FALG -> FLAG
+2. Add:
+
+if (*num_planes)
+	return sizes[0] < sizeof(struct jh7110_isp_sc_buffer) ? -EINVAL : 0;
+
+- PATCH 11:
+1. Drop read hook.
+2. Add:
+
+if (*num_planes)
+	return sizes[0] < sizeof(struct jh7110_isp_params_buffer) ? -EINVAL : 0;
+
+- PATCH 12:
+1. Add:
+
+ready_buf->vb.vb2_buf.timestamp = ktime_get_ns();
+ready_buf->vb.sequence = output->buffers.sequence++;
+
+to fix "v4l2-compliance -s" Failed.
+
+v4: https://lore.kernel.org/all/20240402100011.13480-1-changhuang.liang@starfivetech.com/
+
+changes since v3:
+- Rebased on top of the master branch of media_stage repository and patch [1][2].
+- Replaced "stf_get_isp_scd_type" with "stf_isp_get_scd_type" in PATCH 8.
+
+v3: https://lore.kernel.org/all/20240205090424.40302-1-changhuang.liang@starfivetech.com/
+
+changes since v2:
+- Rebased on top of the master branch of media_stage repository.
+- Added helper function "media_entity_remove_links" in PATCH 8 and PATCH 11 to cleanup links.
+
+v2: https://lore.kernel.org/all/20240111084120.16685-1-changhuang.liang@starfivetech.com/
+
+changes since v1:
+- Rebased on top of the master branch of media_stage repository.
+- Documentated ISP submodule.
+- Added new ISP parameters format and document it.
+- Added a meta output video device and link to ISP subdev.
+- Replaced control with meta output video buffer for write ISP parameters.
+- Separated buffer operation which can use for capture and output device.
+- Droped ISP frame sync event.
+
+v1: https://lore.kernel.org/all/20231214065027.28564-1-changhuang.liang@starfivetech.com/
+
+The following are the media graph for the device and the v4l2-compliance
+output.
+
+==========================================================================================
+
+[the media graph]:
+
+digraph board {
+	rankdir=TB
+	n00000001 [label="{{<port0> 0 | <port1> 1} | stf_isp\n/dev/v4l-subdev0 | {<port2> 2 | <port3> 3}}", shape=Mrecord, style=filled, fillcolor=green]
+	n00000001:port2 -> n0000000e
+	n00000001:port3 -> n00000012 [style=dashed]
+	n00000006 [label="output_params\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
+	n00000006 -> n00000001:port1 [style=dashed]
+	n0000000a [label="capture_raw\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+	n0000000e [label="capture_yuv\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+	n00000012 [label="capture_scd\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
+	n0000001c [label="{{<port0> 0} | cdns_csi2rx.19800000.csi-bridge\n/dev/v4l-subdev1 | {<port1> 1 | <port2> 2 | <port3> 3 | <port4> 4}}", shape=Mrecord, style=filled, fillcolor=green]
+	n0000001c:port1 -> n00000001:port0 [style=dashed]
+	n0000001c:port1 -> n0000000a [style=dashed]
+	n00000026 [label="{{} | imx219 6-0010\n/dev/v4l-subdev2 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+	n00000026:port0 -> n0000001c:port0 [style=bold]
+}
+
+[v4l2-compliance test]:
+
+# ./v4l2-compliance -s -d /dev/video0
+v4l2-compliance 1.27.0-5220, 64 bits, 64-bit time_t
+v4l2-compliance SHA: 8387e3673837 2024-07-01 11:09:32
+
+Compliance test for starfive-camss device /dev/video0:
+
+Driver Info:
+        Driver name      : starfive-camss
+        Card type        : Starfive Camera Subsystem
+        Bus info         : platform:19840000.isp
+        Driver version   : 6.10.0
+        Capabilities     : 0xac200000
+                Metadata Output
+                I/O MC
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps      : 0x2c200000
+                Metadata Output
+                I/O MC
+                Streaming
+                Extended Pix Format
+Media Driver Info:
+        Driver name      : starfive-camss
+        Model            : Starfive Camera Subsystem
+        Serial           :
+        Bus info         : platform:19840000.isp
+        Media version    : 6.10.0
+        Hardware revision: 0x00000000 (0)
+        Driver version   : 6.10.0
+Interface Info:
+        ID               : 0x03000008
+        Type             : V4L Video
+Entity Info:
+        ID               : 0x00000006 (6)
+        Name             : output_params
+        Function         : V4L2 I/O
+        Pad 0x01000007   : 0: Source
+          Link 0x0200001a: to remote pad 0x1000003 of entity 'stf_isp' (Image Signal Processor): Data
+
+Required ioctls:
+        test MC information (see 'Media Driver Info' above): OK
+        test VIDIOC_QUERYCAP: OK
+        test invalid ioctls: OK
+
+Allow for multiple opens:
+        test second /dev/video0 open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 1 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Output 0):
+        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+        test VIDIOC_QUERYCTRL: OK (Not Supported)
+        test VIDIOC_G/S_CTRL: OK (Not Supported)
+        test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+        Standard Controls: 0 Private Controls: 0
+
+Format ioctls (Output 0):
+        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+        test VIDIOC_G/S_PARM: OK (Not Supported)
+        test VIDIOC_G_FBUF: OK (Not Supported)
+        test VIDIOC_G_FMT: OK
+        test VIDIOC_TRY_FMT: OK
+        test VIDIOC_S_FMT: OK
+        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+        test Cropping: OK (Not Supported)
+        test Composing: OK (Not Supported)
+        test Scaling: OK (Not Supported)
+
+Codec ioctls (Output 0):
+        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Output 0):
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+        test CREATE_BUFS maximum buffers: OK
+        test VIDIOC_REMOVE_BUFS: OK
+        test VIDIOC_EXPBUF: OK
+        test Requests: OK (Not Supported)
+
+Test output 0:
+
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+        test blocking wait: OK
+        test MMAP (no poll): OK
+        test MMAP (select): OK
+        test MMAP (epoll): OK
+        test USERPTR (no poll): OK (Not Supported)
+        test USERPTR (select): OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Total for starfive-camss device /dev/video0: 55, Succeeded: 55, Failed: 0, Warnings: 0
+
+# ./v4l2-compliance -s -d /dev/video3
+v4l2-compliance 1.27.0-5220, 64 bits, 64-bit time_t
+v4l2-compliance SHA: 8387e3673837 2024-07-01 11:09:32
+
+Compliance test for starfive-camss device /dev/video3:
+
+Driver Info:
+        Driver name      : starfive-camss
+        Card type        : Starfive Camera Subsystem
+        Bus info         : platform:19840000.isp
+        Driver version   : 6.10.0
+        Capabilities     : 0xa4a00000
+                Metadata Capture
+                I/O MC
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps      : 0x24a00000
+                Metadata Capture
+                I/O MC
+                Streaming
+                Extended Pix Format
+Media Driver Info:
+        Driver name      : starfive-camss
+        Model            : Starfive Camera Subsystem
+        Serial           :
+        Bus info         : platform:19840000.isp
+        Media version    : 6.10.0
+        Hardware revision: 0x00000000 (0)
+        Driver version   : 6.10.0
+Interface Info:
+        ID               : 0x03000014
+        Type             : V4L Video
+Entity Info:
+        ID               : 0x00000012 (18)
+        Name             : capture_scd
+        Function         : V4L2 I/O
+        Pad 0x01000013   : 0: Sink
+          Link 0x02000018: from remote pad 0x1000005 of entity 'stf_isp' (Image Signal Processor): Data
+
+Required ioctls:
+        test MC information (see 'Media Driver Info' above): OK
+        test VIDIOC_QUERYCAP: OK
+        test invalid ioctls: OK
+
+Allow for multiple opens:
+        test second /dev/video3 open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+        test VIDIOC_QUERYCTRL: OK (Not Supported)
+        test VIDIOC_G/S_CTRL: OK (Not Supported)
+        test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+        Standard Controls: 0 Private Controls: 0
+
+Format ioctls (Input 0):
+        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+        test VIDIOC_G/S_PARM: OK (Not Supported)
+        test VIDIOC_G_FBUF: OK (Not Supported)
+        test VIDIOC_G_FMT: OK
+        test VIDIOC_TRY_FMT: OK
+        test VIDIOC_S_FMT: OK
+        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+        test Cropping: OK (Not Supported)
+        test Composing: OK (Not Supported)
+        test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+        test CREATE_BUFS maximum buffers: OK
+        test VIDIOC_REMOVE_BUFS: OK
+        test VIDIOC_EXPBUF: OK
+        test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+        test blocking wait: OK
+        test MMAP (no poll): OK
+        test MMAP (select): OK
+        test MMAP (epoll): OK
+        test USERPTR (no poll): OK (Not Supported)
+        test USERPTR (select): OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Total for starfive-camss device /dev/video3: 55, Succeeded: 55, Failed: 0, Warnings: 0
+
+Changhuang Liang (14):
+  media: starfive: Add JH7110 ISP module definitions
+  media: Documentation: Add description for StarFive ISP metadata
+    formats
+  media: videodev2.h, v4l2-ioctl: Add StarFive ISP meta buffer format
+  staging: media: starfive: Add a params sink pad and a scd source pad
+    for ISP
+  staging: media: starfive: Separate buffer from ISP hardware operation
+  staging: media: starfive: Separate buffer be a common file
+  staging: media: starfive: Separate ISP hardware from capture device
+  staging: media: starfive: Add for StarFive ISP 3A SC
+  staging: media: starfive: Update ISP initialise config for 3A
+  staging: media: starfive: Add V4L2_CAP_IO_MC capability
+  staging: media: starfive: Add ISP params video device
+  staging: media: starfive: Add ISP parameters hardware configure
+  staging: media: starfive: Drop read support for video capture devices
+  admin-guide: media: Update documents for StarFive Camera Subsystem
+
+ .../admin-guide/media/starfive_camss.rst      |  11 +-
+ .../media/starfive_camss_graph.dot            |  22 +-
+ .../media/v4l/metafmt-starfive-isp.rst        |  75 ++
+ MAINTAINERS                                   |   2 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
+ drivers/staging/media/starfive/camss/Makefile |   3 +
+ .../staging/media/starfive/camss/stf-buffer.c | 166 ++++
+ .../staging/media/starfive/camss/stf-buffer.h |  53 ++
+ .../staging/media/starfive/camss/stf-camss.c  |  38 +-
+ .../staging/media/starfive/camss/stf-camss.h  |  12 +
+ .../media/starfive/camss/stf-capture.c        | 248 +-----
+ .../media/starfive/camss/stf-capture.h        |  22 -
+ .../media/starfive/camss/stf-isp-hw-ops.c     | 722 +++++++++++++++++
+ .../media/starfive/camss/stf-isp-params.c     | 240 ++++++
+ .../staging/media/starfive/camss/stf-isp.c    |  77 +-
+ .../staging/media/starfive/camss/stf-isp.h    | 188 +++++
+ .../staging/media/starfive/camss/stf-output.c |  83 ++
+ .../staging/media/starfive/camss/stf-output.h |  22 +
+ .../staging/media/starfive/camss/stf-video.c  | 147 +++-
+ .../staging/media/starfive/camss/stf-video.h  |  11 +-
+ include/uapi/linux/jh7110-isp.h               | 739 ++++++++++++++++++
+ include/uapi/linux/videodev2.h                |   4 +
+ 22 files changed, 2608 insertions(+), 279 deletions(-)
+ create mode 100644 Documentation/userspace-api/media/v4l/metafmt-starfive-isp.rst
+ create mode 100644 drivers/staging/media/starfive/camss/stf-buffer.c
+ create mode 100644 drivers/staging/media/starfive/camss/stf-buffer.h
+ create mode 100644 drivers/staging/media/starfive/camss/stf-isp-params.c
+ create mode 100644 drivers/staging/media/starfive/camss/stf-output.c
+ create mode 100644 drivers/staging/media/starfive/camss/stf-output.h
+ create mode 100644 include/uapi/linux/jh7110-isp.h
+
+--
+2.25.1
