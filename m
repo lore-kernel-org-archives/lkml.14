@@ -1,154 +1,114 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A67615A842;
-	Tue,  9 Jul 2024 12:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBA915A843;
+	Tue,  9 Jul 2024 12:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720529152; cv=none; b=hc1V7wj7aoDtnm+yplgp3MoOWu+sBRsDDcuqKUOn31QBj5moQXosPUOt0mQTtDyxTC3Hkn4WDADH7vWDynK/ky44VJTUXKGM3zo2IGxO7LXy5ERY6WCabBposX1KX2MuJcZXjxMQ0gRz7P1lb/wN9tmmNmxNrzVhe1VWU5hbJ9s=
+	t=1720529162; cv=none; b=am3zEiuVRxIjGDhsGEtaPd2DLIBOEO99YkHZZ2kHDC5wCQF5KGwHopM1iXK+roOmluCCL/weyfi1dFxwtBAB+MreBW4MlgIFHDKfsbK0SJeDXO9zKPT7a+w/4e8SBsQHmv8qhdogvCpKR+TXFTYq7oygFvQR7Qt+ub1phrM8pXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720529152; c=relaxed/simple;
-	bh=O9QjD7xyf7LdxqfElfMDNMZgFewgPFqt+hOvv1SP8XI=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OtY/plGUApt6O/OeZFvTDUJHmHgx2Navn5u8nhPYzfYCoZaSOGfyPP/D4SQ3v8hYi//OZvdtMiU2PgYxVJQiSDEddfS7ltEWKVlLApEq+j3OyLMdpBptNDXThZComdjiFhBCa3l9j/ilOoKB1t53D66NH8O5f+yUzMR+Jjvs8FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIikM0H5; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720529162; c=relaxed/simple;
+	bh=KhGCpF9+4C9lhLpzovRkcOdOulVyY6j6TJFNBVO9Mgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RujjSvnyKMJMELRHf/5pR6sPWxOw6FSdyyXukj5AZVQ3HBmvn/V1aQj9URxHWG9QMdMJC5WEMtpax0rnpiqag5kw4M5N5f6PIQEXw75ABBCCmlOlT8HzdIHiZI1FO4SyVxz352wrv2mLgiK51G74n+Crc2BVE3ygzGIoEGqWQOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QiHsdkKk reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIikM0H5"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-1fbc3a9d23bso1289325ad.1;
-        Tue, 09 Jul 2024 05:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720529151; x=1721133951; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PTkMABYzGdhSQd9C4loTDYzycJLf8ODZaPM06fmE3pI=;
-        b=IIikM0H5UrtnuFPA57JXL9YMX2Bnr2fr/uNixCz7mgKWxo4c3iJagAhzt/gKN57Eqs
-         6haXH8/2RRmAUA9n8rMSBZO/c8rlXiW7vQOkfd3AwVGgf+xg04xRjfc5PFyj51GvefET
-         7bog2suMhMQdpkZzFW/fvsznuqSonGboPW6gRidgIHfbBQQ+ibfM/zZ+AIm5xNtaBIHG
-         sL+F1wIF7qVmLxKCAWYNfG8khXcYWdaEE2HCk/+OszhjJonOUJ+Cp2LWMYMv0ANgkRAY
-         Yh87bKeiawkMVnhAYaBOHgGbFMtj6Fj83OXeKkzeHYsN1NY/qJAl+q6byVKkQkUPjsaX
-         yAZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720529151; x=1721133951;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PTkMABYzGdhSQd9C4loTDYzycJLf8ODZaPM06fmE3pI=;
-        b=N9kFDzpzym0l9lrm1o33e/GJCxpTFlFk3RA0e6h85iik7C6wPJw4+ExvfbTiFQLZvC
-         JKiTZUYwxDMYrE6tWgKWmrDy8AjH36COoVw6EFwKD1d4ghnOHXnDrNItIzTEA7XyXId3
-         nX/GsiJFmXP9kdLij0/OZWzt8Zvo0c9Fa5wpDTmIw+0qxKkk4cWw56Xk4M9fxXvXXu+J
-         SzojyJRzrURqHrv7F/I4BI9y1ehe1G4Zba2zNWoJ1vErt4RKLZkINZkmlMW7E0VwSVR+
-         oQb4+FN/B2NWSS3pA1UIs8mBRPQ0Y31P5TpIGExFy4RVKyn7vDVa1Hfzoef2ERMnCLHb
-         Fcnw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2ip2Y0EKRmjMFirZE+AoAc17O6qOZYuqmLjctwPNhDYj0OswSwbAGkHRwQcEG2wOkoyKLTrKq9+yR62jMEjbQhKnxfUT/1So0ge77qnupeW1R8wfrBe56BgR4iiILOXjr8Y+PuHnHcZPasp9C1/4b/5Vz3J+tokG+h/GLJqvOrl4q3WVNnJDUhcBasfwft15XSMK0FZDwFD1ZCzlzkePpVin8mPL6YuV/ZHnq0neQRt30F/gXy2bM9vbku7k60dRHfBlMySA7zY489ghHP45u
-X-Gm-Message-State: AOJu0YzkXgpFE1ya4w+TRtgsyJtaDYqaKHq9sFmd3nY7CH9aYS4jlHpI
-	rQepCXr68VpiZkK8vHEjratWhBucyviYngOyphhEogdQ0DS1hhXh
-X-Google-Smtp-Source: AGHT+IFOaJNRaCw0x5duAR8ySF29N2zLhsw5jMvf8ySrYnWHRx3vmy5Ah54KY0oG4A60mrkmNodEQw==
-X-Received: by 2002:a05:6a20:734b:b0:1be:caf6:66e5 with SMTP id adf61e73a8af0-1c29820d407mr2618980637.6.1720529150564;
-        Tue, 09 Jul 2024 05:45:50 -0700 (PDT)
-Received: from [127.0.0.1] ([103.156.242.195])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6acf9a3sm15241475ad.255.2024.07.09.05.45.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jul 2024 05:45:49 -0700 (PDT)
-From: Celeste Liu <coelacanthushex@gmail.com>
-X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
-Message-ID: <44535d2d-c95d-4673-b845-032669cf7abf@gmail.com>
-Date: Tue, 9 Jul 2024 20:45:38 +0800
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QiHsdkKk"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A6E3240E0219;
+	Tue,  9 Jul 2024 12:45:57 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id VD-pFPC05sQC; Tue,  9 Jul 2024 12:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720529149; bh=JosnYsiQ8muEBwIj8n6+1SHLQMI42y2o+rvr74ZNtYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QiHsdkKkeNcF6pwOLTgSc1EoIuBcSImBBE22aZjEi/0q+d8KCAjohZkf3TwTLq92L
+	 ylwdAJMt/tTaKOo4YIWf+fQVIRFdgcPlAtBh8VwhNmz62dXB/tI4gKrX0u3xdgoKfz
+	 NDIgTtJOMV+LOm5ZruQpiZVgNhJmBAOfG5XnDqhePOAZOQzgAurjiUE8Kzc6P4cTsi
+	 7c3ELnuHtM6WHLVIPhGo+vJRXbozwF0oTxns2Qb0vo/nvPquvS+ATeJYooq4hPkT8F
+	 ZVjHxvsxvnnzwcAoIMjN51bUczQrmk2rN7A3ePj/tfPiQH3OC2ROeItmVg4KggZL2Y
+	 ZgC6PX8eB6L/UKnGSxuysyvPWtclmkLSSkQ33q7atlMKwHzpGrjJ8Qv8w0IGL7Ue4m
+	 3Hha935jgKcx7asKS4cS96uyO87pFfFgrI9gso5onQAPWI661Derebld1JI3tlXaoX
+	 QiTRiCjFAQxgRYt3lP67QeglCZTVKH6p17yoCVOPOCD26L0wMeE58ookakJJM2wems
+	 wkuUX5Bgpf4aNaPalYdfYJN7YRKiAy/F97cUVVmJJfppq3BVgEDC/epEroxfIHLyTH
+	 Jn5AdCQqMrFgsI9Getz9DK0w3laBQIN05JOHKqEo5f/Hz4eJGuSTgZE+L1PBbVcpOe
+	 vqtzbkO38YrFwL+e3MppSY6M=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4409C40E0206;
+	Tue,  9 Jul 2024 12:45:29 +0000 (UTC)
+Date: Tue, 9 Jul 2024 14:45:24 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v2 1/9] x86/cpu/topology: Add CPU type to struct
+ cpuinfo_topology
+Message-ID: <20240709124524.GGZo0w5G2XXya77Vbm@fat_crate.local>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
+ <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
+ <20240628173209.wzpc6pwnw4p6u57h@desk>
+ <20240703230724.GEZoXZrIavchI2Kj-P@fat_crate.local>
+ <20240709012418.jyzkxvp3h4p2oda4@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm: defconfig: drop RT_GROUP_SCHED=y from
- bcm2855/tegra/omap2plus
-To: Stefan Wahren <wahrenst@gmx.net>, Kevin Hilman <khilman@kernel.org>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lennart Poettering <lennart@poettering.net>,
- Icenowy Zheng <uwu@icenowy.me>, =?UTF-8?Q?Th=C3=A9o_Lebrun?=
- <theo.lebrun@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Sven Joachim
- <svenjoac@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
- Anup Patel <anup@brainfault.org>, Nicholas Piggin <npiggin@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Rich Felker <dalias@libc.org>,
- Russell King <linux@armlinux.org.uk>, Tony Lindgren <tony@atomide.com>,
- Guo Ren <guoren@kernel.org>, linux-tegra@vger.kernel.org,
- Thierry Reding <thierry.reding@gmail.com>, linux-riscv@lists.infradead.org,
- Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
- linux-omap@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
- linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-mips@vger.kernel.org, loongarch@lists.linux.dev,
- Mykola Lysenko <mykolal@fb.com>, Yoshinori Sato
- <ysato@users.sourceforge.jp>, Paul Walmsley <paul.walmsley@sifive.com>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- linux-rpi-kernel@lists.infradead.org, WANG Xuerui <kernel@xen0n.name>
-References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
- <20240530111947.549474-14-CoelacanthusHex@gmail.com>
- <7hv81f78cy.fsf@baylibre.com> <6b7cfe69-4f72-490f-8e86-5343bd244a2d@gmx.net>
-Content-Language: en-GB-large
-In-Reply-To: <6b7cfe69-4f72-490f-8e86-5343bd244a2d@gmx.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240709012418.jyzkxvp3h4p2oda4@desk>
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jul 08, 2024 at 06:24:18PM -0700, Pawan Gupta wrote:
+> The draft version had it in cpuinfo_x86, but it later got moved to
+> cpuinfo_topology as it appears to be topology related. Below is from AM=
+D
+> documentation:
+>=20
+>   E.4.24 Function 8000_0026=E2=80=94Extended CPU Topology
 
-On 2024-07-09 20:26, Stefan Wahren wrote:
-> Hi Celeste,
-> 
-> there is a typo in the subject line
-> 
-> s/bcm2855/bcm2835
+That's the name of the CPUID leaf.
 
-Will be included in next version.
+>   CPUID Fn8000_0026 reports extended topology information for logical
+>   processors, including asymmetric and heterogenous topology descriptio=
+ns.
+>   Individual logical processors may report different values in systems =
+with
+>   asynchronous and heterogeneous topologies.
+>   https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/=
+programmer-references/24594.pdf
+>=20
+> I can move it back to cpuinfo_x86 if you feel strongly about it.
 
-> 
-> Am 09.07.24 um 01:49 schrieb Kevin Hilman:
->> Celeste Liu <coelacanthushex@gmail.com> writes:
->>
->>> Commit 673ce00c5d6c ("ARM: omap2plus_defconfig: Add support for distros
->>> with systemd") said it's because of recommendation from systemd. But
->>> systemd changed their recommendation later.[1]
->>>
->>> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
->>> needs an RT budget assigned, otherwise the processes in it will not be able to
->>> get RT at all. The problem with RT group scheduling is that it requires the
->>> budget assigned but there's no way we could assign a default budget, since the
->>> values to assign are both upper and lower time limits, are absolute, and need to
->>> be sum up to < 1 for each individal cgroup. That means we cannot really come up
->>> with values that would work by default in the general case.[2]
->>>
->>> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
->>> can only be enabled when all RT processes are in the root cgroup. But it will
->>> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
->>>
->>> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
->>> support it.
->>>
->>> [1]: https://github.com/systemd/systemd/commit/f4e74be1856b3ac058acbf1be321c31d5299f69f
->>> [2]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
->>>
->>> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
->>> ---
->>>   arch/arm/configs/bcm2835_defconfig   | 1 -
->>>   arch/arm/configs/omap2plus_defconfig | 1 -
->>>   arch/arm/configs/tegra_defconfig     | 1 -
->> For omap2plus_defconfig:
->>
->> Acked-by: Kevin Hilman <khilman@baylibre.com>
->>
->>
-> For bcm2835_defconfig:
-> 
-> Tested-by: Stefan Wahren <wahrenst@gmx.net>
+Nah, it just felt weird. Not a biggie and we can always move it if we dee=
+m so.
 
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
