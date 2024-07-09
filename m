@@ -1,113 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25BF155739
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 08:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9736138;
+	Tue,  9 Jul 2024 08:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720514770; cv=none; b=oRCxC9qw2My/GiLwZlekFykMhsO1psot2tVZDDPZlf/w9kptfKvkbQN/6kwdo5XDyK8x4GZuS73exbfwKtqd7pmlqmcI6NXAKX20FrNSEwz19y8AeiitmdcLlCU3FxvXF1DvOKxND0MlrHuwzPtDwrljoDhVmeQxlZ9wwyJoxII=
+	t=1720514908; cv=none; b=alSbP6UTTwg/5sz1nM9DRYDoGLgGgej/tY9ukQ6ZBcUmIgxV4nIzkd8fmeEXFTf7cfMZ2tHQYDBf0+PuiRWbqPT0cbEJvs/dSonrJDXWA4Y4cGLtc3B6RV6gBaeIIJMZfC0KaQph3L4eyOOEH2z1ruaZq7UyHaqRlNxHGoNNk7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720514770; c=relaxed/simple;
-	bh=Ba7A+qf3KVB7glN+7THcBtgbX6uG/c4nfawtYEGqGLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UChpUBcsL0nA8uc1oMTupRTBXWDHLDGBWd6Vcm0Ax7wnQrsEn+i8rcLuGRPrlbfoAkeSCe8JqPjpk/VUTL0uZJIXd9j0Pv9T+tKf7AH003Fqnc5v0LCTnCzne0o5Cx3yZrA+rOMRlqeLI9tFjE+Pky+Eq2bG2kRuk+qV8YMxGgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eml6KNtJ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720514908; c=relaxed/simple;
+	bh=KvArodGPL+YHrSkE1lZP9hFA44qMNK93x2WhNXz/zLY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Iikh4BTFSzR50sSS4eRcYYApVdVXdXwYuO9CBJ4Gv7kfcjKgXzuGz/OTJ4BhlBqmnHhj4Z+NAk0sfxLR6owOjJisGadl3P/7+beYzMsxmjlUvPOxGf7mvfeFqNIdkA5MtriovEY+uC7CS7YstGhHRkHTt7QtMcB6irhdnMqG8WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5TRH+9P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eml6KNtJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720514767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SUB0YpD6W/a3Rk4MCKqOREUcImdmQCAk36U0msNsfAI=;
-	b=eml6KNtJMUiA12gKECBOliG0/ffnwh1mZ/cHn2JaQ5cnZg5mmnaepHC4IFEzUIBHrRRHja
-	Skmz10fGIgPlVCWtFsYf063xn9iymz+wrsJvsLjtlxHj6oHMEPsjVrACZrqpw5XoCmt8zR
-	86/0Um5eA5IYVCiU/YnbAQ3MX/gwN6I=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-9nG2NOENPs65ZRhek9jviw-1; Tue,
- 09 Jul 2024 04:45:24 -0400
-X-MC-Unique: 9nG2NOENPs65ZRhek9jviw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2276A19560BF;
-	Tue,  9 Jul 2024 08:45:22 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.39.193.246])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3CFE19560AA;
-	Tue,  9 Jul 2024 08:45:16 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	"Bjorn Roy Baron" <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v2 0/4] drm/panic: Add a qr_code panic screen
-Date: Tue,  9 Jul 2024 10:40:06 +0200
-Message-ID: <20240709084458.158659-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5TRH+9P"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 72A33C4AF0A;
+	Tue,  9 Jul 2024 08:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720514908;
+	bh=KvArodGPL+YHrSkE1lZP9hFA44qMNK93x2WhNXz/zLY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=K5TRH+9PBMepS+J+vzgaz4MzaGR3GmCixlliAwq/c/5gcS6zi6y1aqiUckixT+RX9
+	 6CY0slaihb7EVqZ2AijpH+w4+o4g2D9EJlUQmxP+JjtcO8wdj1s15/ThwWxVL1Os4o
+	 q028vOM8duPAHjy2mk5Ypq7HkrEIHx69C6OPJM/7zvRqzpNibhIALPsUrH7CGuUnSd
+	 Fa/AS2tC9UtkFYT04zJmLlVSRSC0JWgFWA/17wGJMbvlW7XVkmPL7oU94rbncOBjdk
+	 SUt33iKpu5lDMLKkAdTWRfZ4PqY5QrXD+quLAsswA2tVqWX3pQ7+Z+FoEPYafeBTSq
+	 ONC3AOJrQkVWA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63238C2BD09;
+	Tue,  9 Jul 2024 08:48:28 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Date: Tue, 09 Jul 2024 16:48:25 +0800
+Subject: [PATCH 1/2] dt-bindings: watchdog: add support for Amlogic A4 SoCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240709-a4-a5_watchdog-v1-1-2ae852e05ec2@amlogic.com>
+References: <20240709-a4-a5_watchdog-v1-0-2ae852e05ec2@amlogic.com>
+In-Reply-To: <20240709-a4-a5_watchdog-v1-0-2ae852e05ec2@amlogic.com>
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Huqiang Qin <huqiang.qin@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720514906; l=894;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=WSePT+XFO2cODMzffP2GQB75+cxcIunyp22iaEGOG9k=;
+ b=/GnnQaw8grZyQF6/wV6MN5no6SKlMc27aNZXcXDnmTwLzDJ7SnyUU0p+7MFhekaNcJ6jZ0tkn
+ +wRy6wjmoNDBQPJgq4mp00r+Ylgm11XR0Q+UudFI1wbZOVdHaLJmOnN
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-This series adds a new panic screen, with the kmsg data embedded in a QR-code.
+From: Huqiang Qin <huqiang.qin@amlogic.com>
 
-The main advantage of QR-code, is that you can copy/paste the debug data to a bug report.
+Update dt-binding document for watchdog of Amlogic A4 SoCs.
 
-The QR-code encoder is written in rust, and is very specific to drm_panic.
-The reason is that it is called in a panic handler, and thus can't allocate memory, or use locking.
-The rust code uses a few rust core API, and provides only two C entry points.
-There is no particular reason to do it in rust, I just wanted to learn rust, and see if it can work in the kernel.
+Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+ Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-If you want to see what it looks like, I've put a few screenshots here:
-https://github.com/kdj0c/panic_report/issues/1
+diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
+index 69845ec32e81..d0eff1ea52b4 100644
+--- a/Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
+@@ -21,6 +21,7 @@ properties:
+           - amlogic,t7-wdt
+       - items:
+           - enum:
++              - amlogic,a4-wdt
+               - amlogic,c3-wdt
+               - amlogic,s4-wdt
+           - const: amlogic,t7-wdt
 
-v2:
- * Rewrite the rust comments with Markdown (Alice Ryhl)
- * Mark drm_panic_qr_generate() as unsafe (Alice Ryhl)
- * Use CStr directly, and remove the call to as_str_unchecked()
-   (Alice Ryhl)
- * Add a check for data_len <= data_size (Greg KH)
-
-Jocelyn Falempe (4):
-  drm/panic: Add integer scaling to blit()
-  drm/rect: add drm_rect_overlap()
-  drm/panic: simplify logo handling
-  drm/panic: Add a qr_code panic screen
-
- drivers/gpu/drm/Kconfig         |   29 +
- drivers/gpu/drm/Makefile        |    1 +
- drivers/gpu/drm/drm_drv.c       |    3 +
- drivers/gpu/drm/drm_panic.c     |  338 +++++++++--
- drivers/gpu/drm/drm_panic_qr.rs | 1004 +++++++++++++++++++++++++++++++
- include/drm/drm_panic.h         |    4 +
- include/drm/drm_rect.h          |   15 +
- 7 files changed, 1355 insertions(+), 39 deletions(-)
- create mode 100644 drivers/gpu/drm/drm_panic_qr.rs
-
-
-base-commit: 5a716b06b329bd2108c95a4f04c71bbe491729f2
 -- 
-2.45.2
+2.37.1
+
 
