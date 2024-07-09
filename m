@@ -1,88 +1,150 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6D619CCE1;
-	Tue,  9 Jul 2024 14:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C8017B425;
+	Tue,  9 Jul 2024 14:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720535096; cv=none; b=FXS6oMdD/soAizBH+0TWZgOoZHVX61NHHiyEbbWVIm8GDg5RrKuHPkYKhA0T7Yi21+YGqUqfpPvUvTQjuOnQ+W3yniHpMvASpzxrCriYdwRu+Dn5cy/Io+DXArgyjnOZ7r7ScRyDQf+F16x/erfEjZ52rRU9EiDFp22u1OMjeMo=
+	t=1720535111; cv=none; b=RuS/9qix9s+2KxY3K5PJ1okZBZMfopIStW5Zh4kToPhJX21gdPJKCofUPrTh9RDg1T3GrlJ8n0eKy9JHCISk7ApEjz68XfkVoO7L76DQqRlu22W+Bc0d7bbRgVAzbWAs6Oc/y3XXbTOOUQCXPwz63zSHO//fB9NwwekepYWVJgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720535096; c=relaxed/simple;
-	bh=MTZEk95cVNmOlHjGboGqC2IjvsBNeV/FYtOh6Kkyrx4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=WOGT21xxPTJ2cNVn88DtZbeQlYZG/VLsXYOjUadhi5RId7xbT+uTdwReqB/KCx8LATgzmENXu0s0SHAXnLkrZx01jWbOf7uEwEG02OdjszEaV2CWGxQkAhSIsZdvqUMcwGF1PUrNIaafzn8NR5UGai2qjDx3MkfqGV9usnJ7lTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=cEaa5wx3; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720535111; c=relaxed/simple;
+	bh=rTVreeQeeUehrzS18D5D4yWwP0iHYjdMpTwvSeZlFSU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=keP4d5fCLII+7xJkxDcwezuxSGqrFNTsCxjuvAm1JtEgm3koP94z1Ul3xSsEEor4vxCedhuMcEm6lz/nNCM6zRTzrmR6QV+qsmCUfhIIPiQu5CP0XdWDyBvexRGBzj8McwDbT15q4+6d0ujHJ/aW6Rco9QuvkpZpR3RRIWUGU84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OAgDNPGh; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cEaa5wx3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720535051; x=1721139851; i=markus.elfring@web.de;
-	bh=MTZEk95cVNmOlHjGboGqC2IjvsBNeV/FYtOh6Kkyrx4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=cEaa5wx3voy8AQeo/RMUCaM0+M7rr44DeplLoH1LoL7zdkVRHn/MPpRnZEsT5M0e
-	 NifKpB+EimH08fovMMrkbFy8JiZY/ANi2DOTfW0OgRKddWiIyET63L7n25uillPvw
-	 2RiOQEMbe/QcARZxLV7qiEFJ1yPkHufrKUx3K/rKA2irvqh8X4xtNmC9J8ry/Hxx3
-	 qB3j46b+Gr8okC4cErk0bQc7FcRTV87CkkVTIEZwQz6JSAEAOqWpUBexfJe0zipSP
-	 zJf9NflpLF8U/DCaijwdW0SNpOnXsfS2cOZ5qMIVG3Gn3sC21MVRhr7paP04CFOzp
-	 wxGzGs20bb4wIN5n0Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1McZnj-1roYDu32yL-00gymh; Tue, 09
- Jul 2024 16:24:11 +0200
-Message-ID: <91a7a967-9aba-4e24-8e67-1b6d95f62d61@web.de>
-Date: Tue, 9 Jul 2024 16:24:07 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OAgDNPGh"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469BC6qa008024;
+	Tue, 9 Jul 2024 14:25:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=4B5NeufGiHXUSU6+BPK+St
+	lGv3+aN4n4S9qxonIxJvU=; b=OAgDNPGh+JwetCVpy+I8i/JcQBmM2SsHNWX3AA
+	7UDLrhD4RVHptSMqy5Pb+/Ep7r2edz9L1HIUFFmtIaF96t0UKHSchWbiZx1ADjDC
+	bvRmUC7zdDaCXJEMus5A5VuXDH2/m4fgIhpLcAmss1T1aWD8YUvMxGMgdSC2P9bY
+	kZN3cogffgXyFINAFJSFM7GsE27IJTVkdK7vKoXaf/sCN6T1upMQfQSWbbFcJwQb
+	Vd78FtYq6p6Ww8hp+Ku4VoV+hIvhQA2kJmXs+X4Zz9tFvrVJrTT5DPSPbr/+GFx2
+	yI9UfCyGdq4+53phsP2KdkPV0qGEEuzC0gobbx6IgygaauPg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406we8xk83-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 14:25:05 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469EP4va011882
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 14:25:04 GMT
+Received: from tengfan-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 9 Jul 2024 07:24:59 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+Date: Tue, 9 Jul 2024 22:24:49 +0800
+Subject: [PATCH v2] dt-bindings: soc: qcom,aoss-qmp: Document the QCS9100
+ AOSS channel
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: make24@iscas.ac.cn, linux-edac@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dinh Nguyen <dinguyen@kernel.org>,
- James Morse <james.morse@arm.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
- Robert Richter <rric@kernel.org>, Tony Luck <tony.luck@intel.com>,
- Wei Liu <wei.liu@kernel.org>
-References: <20240709133759.1012350-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] EDAC/altera: Fix possible null pointer dereference
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240709133759.1012350-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:bRLtD/pS+yG61EgWsjRd99XE9ffwfsmXNL2IOhIGJOG7z8bScNJ
- JWtlU5evQSUiUZIYQhjrNm7kQ2j4W673J0oMWeGFt1EDAYI5ea+wZKfqykFAx/1OJkkXji4
- 0IBJMRBP+2Yd/rayqT3VFjfiUrx/DYY6nyuBSQIdeoRZpxXn1S4vFEiRhzLA+0En71cmPYR
- i0C4Rd6j04i5yvfIGGEfw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:OUOKpLgiNhA=;iUBh/Goe++xlI5fnKz0aT+IvwF2
- dRzcAtz359CqFWr01azCrO4tHdx3x+7UbpNWJKrLjDDz07zUjDFURrHYDbd5D2DQn2fMV4XFJ
- dOGbwb/5dCDex+tdmwbzkVvaaCt/k2wBtr7Vy3aIALkSvLYqdRepJvv5S20tcyo/K5Px8zYUj
- ZHaUF1zI16PuU+7Ug25opRiOWZSkwtumaH2cZjmmKn0NpdfjwR3iP7yj4YUOU4sdzSVwMbvQY
- mqJi9h9M0qAzxjxlPBEC2ie9XfMgFsoRcxmAK5YdC2fTqNpfDk0OHz+r/8+jCvZw1HUmm9gY+
- tfB7R/FA8KmRmE9D6EA1+FJIdmafVTZgUP5E1bOjsDDxLcG3c2cEz4Yk5YInIOwfvtzxygrfv
- vx+SYzxbQ+YTButulnmddoLqeFh0+1OiVWTLnxl28PRgZ8KGI1bh5MhpVFz5kDINfolJE50tj
- QjmEgbUQCAzdrsaAXverXOFV7y5bPQ16eJRUQCApN+b/GPIsKZdMhyT5uYeRd2K8L2/llosVO
- QuuHGWHSlLYw5KL67WzQfeU2kGXxjibb65GwtPsAjeDG4bRiZBPnK4rif/yOTRlN3IuRkCNWa
- sRxeJmi5E9/IAZGhBVJ5tHzlOojk6u7TX98owU9nE1XwG2lOGeo3/TvvnuvavfUROnfiGw5eY
- q6dbatvxQBjsRg0b8beKiVf8ArCs9ydKlxu8AzaMjSgovdPNw7yk9BtCtxEg/NT1AN66vLy3s
- uEYC1GgwKUD/I+Itd3R6f3yx2owrt57L6e3Uq2YZ9T1/DmkMzM+ql5RZzRE4OH5mJBlwNJrcW
- cK0goW4T/n/aQGUGPMckuRm9qVn2vhbIQHOwfFQP2vAaw=
+Message-ID: <20240709-document_qcs9100_aoss_qmp_compatible-v2-1-6c7f35bc9ec3@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIADFIjWYC/zXNQQ6DIBCF4as0rIsZsIp21Xs0hlAcdZIKKmraG
+ O9eNOnyf4v3bSzgRBjY/bKxCVcK5F0Meb0w2xnXIqc6NpMgb6Cg5LW3S49u1qMNpQDQxoegx37
+ Q1veDmen1Rm5UqvJclmhyy+LVMGFDn5N5VrE7CrOfvqe6imP9AynIrMggkUJJgIILPi5k9Yyub
+ Yx7HEHOJtFi1b7vPwVBk6PAAAAA
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Tengfei Fan
+	<quic_tengfan@quicinc.com>
+X-Mailer: b4 0.15-dev-a66ce
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720535099; l=2402;
+ i=quic_tengfan@quicinc.com; s=20240709; h=from:subject:message-id;
+ bh=rTVreeQeeUehrzS18D5D4yWwP0iHYjdMpTwvSeZlFSU=;
+ b=0d1I8qXPr9zZfrPXTkSD1Gd7931U+HDJOlQa9tuDne465ZXXhbhU8sfJA9y0vBrb8Nmbtgj0u
+ 7wZyMbVwbs2DsqARgLA5Axe6SAjT7ZkKFtmyuWYutJIbrEna04264Ci
+X-Developer-Key: i=quic_tengfan@quicinc.com; a=ed25519;
+ pk=4VjoTogHXJhZUM9XlxbCAcZ4zmrLeuep4dfOeKqQD0c=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: zi7J8I_QDlNN7-oSQZHY8e8ts0apC4FJ
+X-Proofpoint-GUID: zi7J8I_QDlNN7-oSQZHY8e8ts0apC4FJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-09_04,2024-07-09_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 mlxscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407090093
 
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+Document the Always-On Subsystem side channel on the QCS9100 Platform.
+QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
+platform use non-SCMI resource. In the future, the SA8775p platform will
+move to use SCMI resources and it will have new sa8775p-related device
+tree. Consequently, introduce "qcom,qcs9100-aoss-qmp" to describe
+non-SCMI based AOSS channel.
 
-Under which circumstances will this information be corrected anyhow?
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
+Introduce support for the QCS9100 SoC device tree (DTSI) and the
+QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+While the QCS9100 platform is still in the early design stage, the
+QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+mounts the QCS9100 SoC instead of the SA8775p SoC.
 
-The usage of mailing list addresses is probably undesirable for
-the Developer's Certificate of Origin, isn't it?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.10-rc7#n398
+The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
+all the compatible strings will be updated from "SA8775p" to "QCS9100".
+The QCS9100 device tree patches will be pushed after all the device tree
+bindings and device driver patches are reviewed.
 
-Regards,
-Markus
+The final dtsi will like:
+https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-3-quic_tengfan@quicinc.com/
+
+The detailed cover letter reference:
+https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
+---
+Changes in v2:
+  - Split huge patch series into different patch series according to
+    subsytems
+  - Update patch commit message
+
+prevous disscussion here:
+[1] v1: https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
+---
+ Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml
+index 7afdb60edb22..80e1a8b43586 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml
+@@ -25,6 +25,7 @@ properties:
+   compatible:
+     items:
+       - enum:
++          - qcom,qcs9100-aoss-qmp
+           - qcom,qdu1000-aoss-qmp
+           - qcom,sa8775p-aoss-qmp
+           - qcom,sc7180-aoss-qmp
+
+---
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+change-id: 20240709-document_qcs9100_aoss_qmp_compatible-a7376629ea6c
+
+Best regards,
+-- 
+Tengfei Fan <quic_tengfan@quicinc.com>
+
