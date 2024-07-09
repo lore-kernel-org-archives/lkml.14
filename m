@@ -1,60 +1,50 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD151802A3
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 13:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E16180A8B;
+	Tue,  9 Jul 2024 13:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720532919; cv=none; b=AfAAgT1cZSSEh7ioPfao4yg+Y6VbOzXVwfFCSDc4UmIu68UoWLr3YdNEUVfiS0P+klqHNpga4c4Dujqs2rub5wiJzzRH5oalC3JnNGdvhVaDF+liNAbfQPf5O5HRwdqZ6CG2ERjbtJQ+UbS5jAWna/vpgIYMX0PW/uOf8RmZEUA=
+	t=1720532934; cv=none; b=U8RxSzRah2verpP0qZHkQPYEcYkspNTb/8s27TT2Z9RAj/o8nu/ZTIDsD5rOrNvbClM3kSchrfyUoKOElQX8Y+0YoHKifEGLxkmTsfGG/wdj7TeYRLd6XYb3IF/G4PX82XImpKQ2vvRIRALSbjrMSwTp8jqzqyJUwc+tngjmYhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720532919; c=relaxed/simple;
-	bh=5MmuIH9/ptcSX8goq+NiIFoXU3SW2qDd+IHPfO869oE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=phhJi4LFnlPcQ9BUdnZ2vbjPYt8NbPurosaxST0P7cazprQoF5nS+8cDVNhMuHbpLgUdKF9jkrPFX1ZtlCkMEeeovXrTl3/bvh7bc3m11kVZ1ArQYLuucu0AziS2bqPS2PS+DtRMKRe32+upIF5DBU3rNULvOCA4TmM2oFtEtjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tUJ3vxGF; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720532934; c=relaxed/simple;
+	bh=F1Y7BxXFMIKls+M7UZwELtYIuFm5DUTYJ/G6k7r+lV8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=hPpjWs4oxNSRh+FdRKHJhaMI+wOl0niHv7F7KjLrsUC5wboq/sdEj+j62bgEHw8pk3OyiGENXUKIYzvCuX3o3o3uRr7obVZff04Ec6jUfYg4ajS0sbbRlwscUFA8tJV2LNklSskc03bcBy8uduvexf3o1xbfDwqVUZc5oGvAdkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V8PrZNDx; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tUJ3vxGF"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ea34ffcdaso4924788e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 06:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720532909; x=1721137709; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IVsuhaP11rLzifuOYfoCT/JsmgFit3NDN+KhNk6m6Fg=;
-        b=tUJ3vxGF8nqPp/D6WnGgxgUEuPqBcGajpXV14TNFcT4Mh1+JZKEgTISIBeKGxY86Iv
-         pj2ns1uVG3xe/BKmQw0Njvt8+Qp/Nq+hcBY0xrTIxd0GqelgX3X/S7UMcBnWhyTk0nv0
-         vjNYxdmUgfc5LAz15N0qbxguMcQwIod8xNIKk+RIqefobvfTXPCO10rYtDaLPuZqNkhd
-         OvBk97ZW8VwGF6ivLIoIJ7fAR9uny5oqr1HS2yoaUXf7jldAXvNmpjAo7mrbfF/No1TV
-         e+9JeB1C1unMW5Uq1RMp4QmvG/pq8rD+QRSFPmVFxZokI2Atd1mU2B3ncQFunO4yGe4g
-         dcsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720532909; x=1721137709;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IVsuhaP11rLzifuOYfoCT/JsmgFit3NDN+KhNk6m6Fg=;
-        b=CPF5J1qtOW7E+PaSCPo/y04MFCNbTuCtZR6mmrJXbr9jfL/e5wqafqqg4R3fjvJwRw
-         gbSLOCj4SnMJdsGAtgR7iZIE3T0p+ONISwNndqnhdOwbzdASHVNlztvuLLnyHTfdggKq
-         q5b1gwzWvb3M6t2lg+6qcIy5HJ9gC0aQpqZwbUKdBePW26PaGLwII8k3O6p9cXMn8UvA
-         dkNht0fyaR8L62wLY81FurwEK4/RxSDaQ0DH2zgAU4dQ1nP66B548FI8USO9suJZ/SUk
-         E18zRwd+NV70zQm7Hrn98BEYbCcMZUMir6ipjcCN2aKOjkxGRL8uqdZxY+uO8MQNf9vL
-         JQ8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV5WXkG2Xp6SSrIB3l6p7sieNSO9kM8XvKUoaFtzIJW7wKAnrN3Lqvra0yUspqCfz0d1j6wx3oLd62E1QgZGHuOl2+8E4UY7NElnzsB
-X-Gm-Message-State: AOJu0YzzDmoJYOTWmCJCr1MH+p3TzRwHIKA/3UQF5NTzht5d/Mwadgjg
-	1IWAxg2KS35y7XSJtUfoC/QulaqtKynOH4fDDMVL4TH4C+8uwuXBsy5nLaw8Ng0=
-X-Google-Smtp-Source: AGHT+IEaDUQIyebHpQsxc8nw3fDHAFZgaEz1nXPH9SPNxdY+OR16Je0rKup8mDiVn9/F2IwT3VnrBg==
-X-Received: by 2002:a05:6512:752:b0:52e:95dd:a8ed with SMTP id 2adb3069b0e04-52eb99a199fmr1263558e87.35.1720532909315;
-        Tue, 09 Jul 2024 06:48:29 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52eb8e4959csm250297e87.82.2024.07.09.06.48.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 06:48:28 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 09 Jul 2024 16:48:23 +0300
-Subject: [PATCH 2/2] drm/msm/dpu: don't play tricks with debug macros
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V8PrZNDx"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469CQllD026786;
+	Tue, 9 Jul 2024 13:48:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	AXDyqH6Bo0b0djH6ah4qwD0y62XI3e35O06Nh/L4CvE=; b=V8PrZNDxzRjNgTms
+	m0J1XwBBinKddzbT5WsYToCdaxzPotE+vOibjVZL4NWw4HfycayNG9USaa7oUIAr
+	JDp26XuA2Tnp+4R5UNrGdXIhDNWvr039Ms67bkAP7i4KE+8CAieJNksHGzOD39As
+	ThssWuLSrjNAoRg3nrCH7VUW9x7Inz1oOUVtWbDQbaCRas6/kRsQEyl6CEZMYJWg
+	QTmOfZgbj48tpO+tNPaPwyqL/dB1g3UyyCCNyvO+1gE751uCKnrLPC8pZeILzc0J
+	UuVuApEHPzGHft40o5ZqZ9Gu+Jf9m/HlfF47A3RoXBtwOrm5JXJ597dILKgdrT0Y
+	vv8Byg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wg3xs2k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jul 2024 13:48:34 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 469DmXVH025658
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Jul 2024 13:48:33 GMT
+Received: from tengfan-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 9 Jul 2024 06:48:28 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+Date: Tue, 9 Jul 2024 21:48:13 +0800
+Subject: [PATCH v2 1/2] dt-bindings: phy: Add QMP UFS PHY comptible for
+ QCS9100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,79 +53,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240709-dpu-fix-wb-v1-2-448348bfd4cb@linaro.org>
-References: <20240709-dpu-fix-wb-v1-0-448348bfd4cb@linaro.org>
-In-Reply-To: <20240709-dpu-fix-wb-v1-0-448348bfd4cb@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Jordan Crouse <jordan@cosmicpenguin.net>, 
- Chandan Uddaraju <chandanu@codeaurora.org>, 
- Rajesh Yadav <ryadav@codeaurora.org>, 
- Sravanthi Kollukuduru <skolluku@codeaurora.org>, 
- Archit Taneja <architt@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jeykumar Sankaran <jsanka@codeaurora.org>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2037;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=5MmuIH9/ptcSX8goq+NiIFoXU3SW2qDd+IHPfO869oE=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ1qv/Qof//Jj7Pw+y0yYutVkmev9z8YY/z7xmP0Fk3LWV
- ffpgZ6djMYsDIxcDLJiiiw+BS1TYzYlh33YMbUeZhArE8gUBi5OAZjI+V3s/wzDDrWdCnywurzf
- +9I25rTUQxqHj591S21Ikv/lmOR4tLmB85VMXOFJHeea6mWCTKmbunc7rTqW6HTPcNcfqefx/1w
- sPsV0ZNm/ce7XP3MriNPsowT7rrr49z6Mkzp4Xmu84t04572XTU7tgdb3rxY2Hltx+66hzoxLzS
- 1PJpcci9xg0b7YN6MoZveaKX4eR3d+ddk8e7vG5ucL590X3HFkfXShVu5RSQ8P4SzzAJbg7T3sA
- ho8zOv5XpY9qwtaOddC8yBXaCh/Cscp3shKzbLAxc4zw+Rc1wgnca3mT2iIT1pdL6ni7nO7Zcv3
- F+qfI5lus5j7xG5a8PuYtMEZ7rO207veRnHd+Pth3SdNAA==
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Message-ID: <20240709-add_qcs9100_qmp_ufs_phy_compatible-v2-1-e7f8f71bc334@quicinc.com>
+References: <20240709-add_qcs9100_qmp_ufs_phy_compatible-v2-0-e7f8f71bc334@quicinc.com>
+In-Reply-To: <20240709-add_qcs9100_qmp_ufs_phy_compatible-v2-0-e7f8f71bc334@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Tengfei Fan <quic_tengfan@quicinc.com>
+X-Mailer: b4 0.15-dev-a66ce
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720532905; l=1438;
+ i=quic_tengfan@quicinc.com; s=20240709; h=from:subject:message-id;
+ bh=F1Y7BxXFMIKls+M7UZwELtYIuFm5DUTYJ/G6k7r+lV8=;
+ b=rKO+ilZhfFcK+IBhMJ6Vadjc5hxmZClCvZzqRvDgzZDdrfuenomqB8KTC4ylUcdyCiSbOTmee
+ 42bs1oq7kaKBeI0CFrFeG9bb52D0SDP+sCKrhzPPtAwGJtkBdGxC3lv
+X-Developer-Key: i=quic_tengfan@quicinc.com; a=ed25519;
+ pk=4VjoTogHXJhZUM9XlxbCAcZ4zmrLeuep4dfOeKqQD0c=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: NNDcVmjjVKpZiPCE6Ec8UI9V3BZ2haQv
+X-Proofpoint-GUID: NNDcVmjjVKpZiPCE6Ec8UI9V3BZ2haQv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-09_03,2024-07-09_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=747 clxscore=1015 impostorscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407090088
 
-DPU debugging macros need to be converted to a proper drm_debug_*
-macros, however this is a going an intrusive patch, not suitable for a
-fix. Wire DPU_DEBUG and DPU_DEBUG_DRIVER to always use DRM_DEBUG_DRIVER
-to make sure that DPU debugging messages always end up in the drm debug
-messages and are controlled via the usual drm.debug mask.
+Document the QMP UFS PHY compatible for QCS9100.
+QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
+platform use non-SCMI resource. In the future, the SA8775p platform will
+move to use SCMI resources and it will have new sa8775p-related device
+tree. Consequently, introduce "qcom,qcs9100-qmp-ufs-phy" to describe
+non-SCMI based UFS QMP phy.
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index e2adc937ea63..935ff6fd172c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -31,24 +31,14 @@
-  * @fmt: Pointer to format string
-  */
- #define DPU_DEBUG(fmt, ...)                                                \
--	do {                                                               \
--		if (drm_debug_enabled(DRM_UT_KMS))                         \
--			DRM_DEBUG(fmt, ##__VA_ARGS__); \
--		else                                                       \
--			pr_debug(fmt, ##__VA_ARGS__);                      \
--	} while (0)
-+	DRM_DEBUG_DRIVER(fmt, ##__VA_ARGS__)
- 
- /**
-  * DPU_DEBUG_DRIVER - macro for hardware driver logging
-  * @fmt: Pointer to format string
-  */
- #define DPU_DEBUG_DRIVER(fmt, ...)                                         \
--	do {                                                               \
--		if (drm_debug_enabled(DRM_UT_DRIVER))                      \
--			DRM_ERROR(fmt, ##__VA_ARGS__); \
--		else                                                       \
--			pr_debug(fmt, ##__VA_ARGS__);                      \
--	} while (0)
-+	DRM_DEBUG_DRIVER(fmt, ##__VA_ARGS__)
- 
- #define DPU_ERROR(fmt, ...) pr_err("[dpu error]" fmt, ##__VA_ARGS__)
- #define DPU_ERROR_RATELIMITED(fmt, ...) pr_err_ratelimited("[dpu error]" fmt, ##__VA_ARGS__)
+diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml
+index f9cfbd0b2de6..f5c321a4a2f9 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-ufs-phy.yaml
+@@ -18,6 +18,7 @@ properties:
+     enum:
+       - qcom,msm8996-qmp-ufs-phy
+       - qcom,msm8998-qmp-ufs-phy
++      - qcom,qcs9100-qmp-ufs-phy
+       - qcom,sa8775p-qmp-ufs-phy
+       - qcom,sc7180-qmp-ufs-phy
+       - qcom,sc7280-qmp-ufs-phy
+@@ -85,6 +86,7 @@ allOf:
+           contains:
+             enum:
+               - qcom,msm8998-qmp-ufs-phy
++              - qcom,qcs9100-qmp-ufs-phy
+               - qcom,sa8775p-qmp-ufs-phy
+               - qcom,sc7180-qmp-ufs-phy
+               - qcom,sc7280-qmp-ufs-phy
 
 -- 
-2.39.2
+2.25.1
 
