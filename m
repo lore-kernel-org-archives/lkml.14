@@ -1,42 +1,59 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07AF55E4C;
-	Tue,  9 Jul 2024 11:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A46E156F57
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 11:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720525001; cv=none; b=NK1iob4xMEvJRQOuzjm4S0l6b20e7m6611ZFQaej9GuEKbxRTpj+I/Vof4uCczp7C8VSHXh9CZO+sGn+muDH0mlpZwuZurZ844dj6Ac1VbYI1Bmsb7vx9LH8DZErAiCfE/lh/CRTrd0lurVdl++wAj5k5/Y17rylTQg1LUI8D7s=
+	t=1720525020; cv=none; b=dOvgFrUJEpMaU+aJXEbXUz8VsvM/r3E3V8YddHBMf7SEgqzRCKqkbMVYKSRQZbl4MyifRgV2uwXCZceQz2LdiSw6ACXGQsrsdAWdZa7+EpMiAHSz/fZez4KKOy3Q9i8qeC7WwEa1ek0ltkbAIO7wcZopsJKBmjTsSd21roXTm54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720525001; c=relaxed/simple;
-	bh=Pc/rqjlttqr+PCV9ImPrFTWhlgboE1tEVME5GA4Zrms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IJUrDQASAKsASHFKgzajX9Hb49ziRONjgdPLk+FmxmFO8xqjIoiDdLcM1kU2Z3uLNGVhOIvUuRDA7p2h7VvJ6nYo90psx1EFdCx0H7KApS/FsY6Btd0jUAD5Wi3x4EQvpzEmiKCdkcuY0xJYdmE+/pLUm4NimuEwwaHMrG+8iY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=d2loxx/h; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720525020; c=relaxed/simple;
+	bh=ZtNRV4Jm6sPuWpuKQi5CEZcuR4lAkjSRolFdjhONrG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SyxtiPo4MOfNr1NjSzx7TpLwiwT+OXFsB7AaBICUuLXZwssj0iXyC/pChFKKktWieNv30CNGPRa69Q2UBX6URWo+Z2blnFWKQK5+cjmKW/gII4HhOMoW3eAbcksDAj3DvVtQ8ctpocZCmz0PVnmGO5/eAPUUFcE1/sruG2T3Ll0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=czzGHMBw; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="d2loxx/h"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 8AC3D100003;
-	Tue,  9 Jul 2024 14:36:16 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720524976; bh=kEQAy2ywQE4RRBAZOINuz1m3hhrqeBwGx9IhcBaBH1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=d2loxx/hJi5yUfkmk1Um/3sj8IpRQ+3HhAv7SB8YGgqMNf52Au1Qq9mGfmGdaabM/
-	 wZhAuIc7qrTo2TTvWKsPTgWz1Fpiee8i+XhvALG1xlxXhH+IJY2QR5QyBNHKsShZH0
-	 OJV/1m3xmYd2qP3lHVm0AQ/jv/qH/MXZ5a3Ya/H3uzCBP9nwre40n6Msh5PLL69Djp
-	 AycK53QVAGvfsxpciH2IgqS+YSZnHaip+zcKB+Ci6gi1uDh/z/BsZoRz0PUB8Z7eVJ
-	 R/zCmEirCjS+OPNDykw9hFQAJq9yObd8lNTA0Hjm8rL33+PRYj3HkK12CVJigTxmAo
-	 6M07fM61tyLpQ==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Tue,  9 Jul 2024 14:35:00 +0300 (MSK)
-Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Jul 2024
- 14:34:40 +0300
-Message-ID: <99fcfba3-7cac-42c8-9113-2340d5a485f8@t-argos.ru>
-Date: Tue, 9 Jul 2024 14:35:29 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="czzGHMBw"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-58e76294858so8175696a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 04:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720525017; x=1721129817; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rgLuI4zwg8PxbQKXHmtny45se35KRkb0hnsunMD3BTs=;
+        b=czzGHMBwWjuaOF1ty8wTai1ph/sUDGef6bACSO3A/SfNG5pymKrwwKtZ49NsJ4HUQD
+         UG74jhSVMmyika83JTs/uSz3VIl2bZLRKDvflgruEVMyIegew7e6E+YZ3T+svGgGC3hQ
+         q67CluVdkcOzf6IncFJfK2kGUWxAwhRG+pVgmBz8ULS6vuzzq5evUsOuMP5LsziYNi5q
+         o5WKUrJPSMkRfeuig4D8/c3O7yFAth8lLtcbnun4lcKNnta4IJiawKCL4hdK79mMjB+T
+         PcIIIC92p6WSgCjI5YAYxp84GhG5LL6Qr4z38QDX+aKqil534VEAlp471KXYGOfW//SM
+         nj/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720525017; x=1721129817;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rgLuI4zwg8PxbQKXHmtny45se35KRkb0hnsunMD3BTs=;
+        b=qJVazlqCD7SpNPQeueSZ5NOXCTih/5A1ONrfsxzfgfs5vWl5LRDIcM5UMYCfh2O8lu
+         xljU7yqv3FUxOJIqg8id7+Ev8p6bU1UEP6IY/gdASr53B/Jp0V5605vPvdOw6hAUpfwy
+         R1K/iwba/cQ9nrIN5tVsbjAQGExhcIL8Dd4/NXQ0//LRqAVEuvCrUxeCXx1DP2wI7oeY
+         Doc2qN+wJSmLaYfUJaemOk7sr5JIICJXSq1LJ6OBGi7vx6sI/NSBtbSZ3J158Q1EIZYf
+         JZX2gnCA0Xpch7Ip0nYR9CieO8OThw/qrKDT7NBMYEfBgUylGdPEXiRAJ5eih9JNWBba
+         MtLA==
+X-Gm-Message-State: AOJu0Yx7tI12DE68fQ0dvhC78/JdpiC0xDIJvL+YfQrHrdih6Rfj4hSJ
+	nYDsM0mVgz4ljLSq+A8FL4W4UtDz5P9rBXBxzT3RYd84zlPkAy1SZ4gY4qFJbb4=
+X-Google-Smtp-Source: AGHT+IE6gJHtpA9KuKJI2l0zj/TFNL7ZuQMOTPOeH2TreABUUNa4U1aLool/MPDIRPHLPPPCuG3FgA==
+X-Received: by 2002:a05:6402:5157:b0:57d:6bb:d264 with SMTP id 4fb4d7f45d1cf-594dc4ae2bamr1597947a12.1.1720525017302;
+        Tue, 09 Jul 2024 04:36:57 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bb96062bsm970232a12.12.2024.07.09.04.36.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jul 2024 04:36:56 -0700 (PDT)
+Message-ID: <0a1a7b1e-1088-483d-894c-19ab4dbb9ce1@linaro.org>
+Date: Tue, 9 Jul 2024 13:36:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,144 +61,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH net-next v3] ice: Adjust over allocation
- of memory in ice_sched_add_root_node() and ice_sched_add_node()
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>, Paul Menzel
-	<pmenzel@molgen.mpg.de>
-CC: <lvc-project@linuxtesting.org>, Tony Nguyen <anthony.l.nguyen@intel.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Eric Dumazet
-	<edumazet@google.com>, <intel-wired-lan@lists.osuosl.org>, Simon Horman
-	<horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
-References: <20240708182736.8514-1-amishin@t-argos.ru>
- <033111e2-e743-4523-8c4f-7d5f1c801e65@molgen.mpg.de>
- <23d2e91c-4215-4ea5-8b3c-4dd58a1062af@molgen.mpg.de>
- <190d0cdc-d6de-4526-b235-91b25b50c905@intel.com>
- <56160e13-662d-4f7e-86d3-1a88716f01d9@molgen.mpg.de>
- <14683709-212b-43cb-a110-bb184fcff775@intel.com>
-Content-Language: ru
-From: Aleksandr Mishin <amishin@t-argos.ru>
-In-Reply-To: <14683709-212b-43cb-a110-bb184fcff775@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186390 [Jul 09 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 23 0.3.23 8881c50ebb08f9085352475be251cf18bb0fcfdd, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;docs.kernel.org:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/09 09:10:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/09 07:08:00 #25923556
-X-KSMG-AntiVirus-Status: Clean, skipped
+Subject: Re: [PATCH v17] arm64: dts: qcom: sa8295p-adp: Enable the four USB
+ Type-A ports
+To: Krishna Kurapati <quic_kriskura@quicinc.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Johan Hovold <johan@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, quic_ppratap@quicinc.com, quic_jackp@quicinc.com
+References: <20240707085624.3411961-1-quic_kriskura@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240707085624.3411961-1-quic_kriskura@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 09.07.2024 13:25, Przemek Kitszel wrote:
-> On 7/9/24 11:50, Paul Menzel wrote:
->> Dear Przemek,
->>
->>
->> Thank you for your quick reply.
->>
->>
->> Am 09.07.24 um 11:11 schrieb Przemek Kitszel:
->>> On 7/9/24 10:54, Paul Menzel wrote:
->>>> [Cc: -anirudh.venkataramanan@intel.com (Address rejected)]
->>>>
->>>> Am 09.07.24 um 10:49 schrieb Paul Menzel:
->>
->>>>> Am 08.07.24 um 20:27 schrieb Aleksandr Mishin:
->>>>>> In ice_sched_add_root_node() and ice_sched_add_node() there are 
->>>>>> calls to
->>>>>> devm_kcalloc() in order to allocate memory for array of pointers to
->>>>>> 'ice_sched_node' structure. But incorrect types are used as sizeof()
->>>>>> arguments in these calls (structures instead of pointers) which 
->>>>>> leads to
->>>>>> over allocation of memory.
->>>>>
->>>>> If you have the explicit size at hand, it’d be great if you added 
->>>>> those to the commit message.
-
-One pointer instance size is 8 bytes.
-One structure instance size is (approximately) 104 bytes. I'm not quite 
-sure for that number, because structure is complex and includes another 
-structure, which includes another etc. So I could make a mistake in 
-calculation.
-Memory allocation is performed for multiple instances, so this ~96 bytes 
-should be multiplied by a number of instances to get final memory 
-overhead size.
-
->>>>>
->>>>>> Adjust over allocation of memory by correcting types in 
->>>>>> devm_kcalloc()
->>>>>> sizeof() arguments.
->>>>>>
->>>>>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>>>>
->>>>> Maybe mention, that Coverity found that too, and the warning was 
->>>>> disabled, and use that commit in Fixes: tag? That’d be commit 
->>>>> b36c598c999c (ice: Updates to Tx scheduler code), different from 
->>>>> the one you used.
->>>
->>> this version does not have any SHA mentioned :)
->>
->> Sorry, I don’t understand your answer. What SHA do you mean?
+On 7.07.2024 10:56 AM, Krishna Kurapati wrote:
+> The multiport USB controller in the SA8295P ADP is connected to four USB
+> Type-A ports. VBUS for each of these ports are provided by a
+> TPS2559QWDRCTQ1 regulator, controlled from PMIC GPIOs.
 > 
-> there is no commit cited by Aleksandr in v3, IIRC there was one in v1
+> Add the necessary regulators and GPIO configuration to power these.
 > 
-> I agree that mention would be valuable, and we still want v4 with my
-> Suggested-by dropped anyway :)
-
-I'm working on v4, but I must wait 24 hours from v3 according to netdev 
-rules: https://docs.kernel.org/process/maintainer-netdev.html.
-
-In v4 I'll drop "Suggested-by" :)
-
-But I'm a little confused whether to include "Fixes" tag into v4, 
-because this is not an issue for the users as Simon and Przemek wrote?
-
-I would be grateful if you could tell me what else to change to avoid 
-later v5 release :)
-
+> It seems reasonable that these regulators should be referenced as vbus
+> supply of usb-a-connector nodes and controlled by e.g. dwc3, but as this
+> is not supported in Linux today the regulators are left always-on for
+> now.
 > 
->>
->>>>> `Documentation/process/submitting-patches.rst` says:
->>>>>
->>>>>> A Fixes: tag indicates that the patch fixes an issue in a previous
->>>>>> commit. It is used to make it easy to determine where a bug
->>>>>> originated, which can help review a bug fix. This tag also assists
->>>>>> the stable kernel team in determining which stable kernel versions
->>>>>> should receive your fix. This is the preferred method for indicating
->>>>>> a bug fixed by the patch.
->>>
->>> so, this is not a "fix" per definition of a fix: "your patch changes
->>> observable misbehavior"
->>> If the over-allocation would be counted in megabytes, then it will
->>> be a different case.
->>
->> The quoted text just talks about “an issue”. What definition do you 
->> refer to?
-> 
-> I mean that there is no issue (for the users), thus no fix.
-> Example of recently merged "not fix", with more links to other "non-
-> fixes":
-> https://lore.kernel.org/all/b836eb8ca8abf2f64478da48d250405bb1d90ad5.camel@sipsolutions.net/T/
-> 
->>
->>
->> Kind regards,
->>
->> Paul
-> 
+> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+> ---
 
--- 
-Kind regards
-Aleksandr
+Looks reasonable, thanks for taking this all the way through the review
+process!
+
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
