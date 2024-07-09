@@ -1,108 +1,117 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F230433BB
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F2F19D8A4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2024 15:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720539110; cv=none; b=ByDy+eznfGV7bbsdho4qkfeH82Yd0PR0YP6pXggQtg7EjO+9FvSAvY/au6dT++vMiH/xb6YicCgpJyXbm3cULbrDxVvjRXfxyPnijetmNonIr0lBRucb5vZ5xdfewm4vD+ki2ybLyr8SH3ZAipEBkZDqpnlRnB2Mj3k97j3JgS0=
+	t=1720539114; cv=none; b=VgswljDbdBLZiIxlO/vqZ4Aw6msKAooL9ulO6uUQ6/B/qnzZ3WfC0YNKORHgjD+lbk3gt5PW+EYuIpiQunzghAbVGBR3vrXhjkMUi+YBZ6Yjfs0Eopxwy6RcdYqfst3wTvQ8NNSOQ1TCqcDJm7SU8fBEUJACEzp85HBXujT8xXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720539110; c=relaxed/simple;
-	bh=voZI5s8NJ7G6cqBvxozBaN0IUoJi+5Na3Tpon9hVe7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ougdxK4p3zIVX/9+U6jzH2scr622CElUCPY+6MExrGHBnYmTyNmTnVQfOIzFqHfHz8oRGkQBPiT7uh9x57EjUINMzgl4Dq3BUU6T7MJdLhAjGYXegQ67ZBhQvZlyCxqypiaoRNafn3PpmtYjSpb2USSnd/83qLJXcTHHRg1sQ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OJwghMV7; arc=none smtp.client-ip=209.85.219.179
+	s=arc-20240116; t=1720539114; c=relaxed/simple;
+	bh=rBFFYJWprlboz0nJvWGx9LMFY6mldxF8e2qpxgT8MAw=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ixBkT+Z1XsDVCYATgdlCy+L2F1gUjZEi1b6ZXHtflbm2VbBFY8YAM1TFodM0n98hkqECXs9U0bfed7k1uA8MrIqvlfXk1VMOW5siIfdblsZSwFtyGJWj8MSVmcOBKrixtzdg4U3mGP7jbLoovL64VbKdWA1JH26nyhR1FM3KkG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GWw9hR3n; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OJwghMV7"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfef5980a69so5496625276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:31:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GWw9hR3n"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52e976208f8so5840408e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 08:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720539108; x=1721143908; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQoKhA+ICd3MJpIZmDmZs/xX1LjfxyqH2Gz0ml2Sepk=;
-        b=OJwghMV7yN0k9UHa0lk7VpVtaqxiR88169IcFVg+WZKL283wZmhN50dP74AK6bhtwg
-         YcJ9Md4gfmOMWI/X5Qjm+E2Lkb+IqKVez21rsM5Tl9dH6xfGjcrGaSafe1VyBeklnwZR
-         ISOCw0kZzkBR4Izwavd4OeRzsK4PD2Uk4gx/1f3fV4Jy2+KeCVaqTOFu+o6y+W0FvKIG
-         eUIhWOxhPo/FJTSw9ZMDCkXBFVCcupxRy4tcwx/laFXLx5vfQXmencSmieAPWk+wTFZZ
-         UEiSW+LpntVFNjdmxGp8pxEu+lR35QMxUFTdBviMrJdGBjR+G7FGn9cQ8hmqCkVEzNek
-         Nn5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720539108; x=1721143908;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1720539111; x=1721143911; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qQoKhA+ICd3MJpIZmDmZs/xX1LjfxyqH2Gz0ml2Sepk=;
-        b=c4mTrZJRD0wiuGNooqNNFI1CGOcI3Jt0oD4wcx6c5e/yDPeSKQXwqUZ4FkLJY4hKVX
-         hexhRH5WbxLKfjLRdEos1nOUFul2IP0ryFHUXJ3Tu3fCaADXAdPxQKDbb7xPLP0eNErJ
-         0HScBJd9viEP2tYjKToxCPwcccL86J7G3W7IxG4366SBh+NKKbqLji/PTHQUE9PTLVRf
-         jRkzssTDUkEx3ufEl6S5FhsdJ1eUEdULS3mUDvAKgZ46EP0UGfLZK4vhZ7GSp5HYSm2I
-         mrT8OZ644zIaBxAoh7Krg8X3A9s7TwNiwOAhg25w6NaMlNyejjMLTjJuzdzEW4dRFB4h
-         QMFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZipjnjnWQnzRiOiKqn2HlmQmyYpdMv3830wRjsf7eMXa0DnxlEWibKwfjmRpB8KeF5f//71efpBG/gNCKQYhRR87Z9XQOsNAB8qli
-X-Gm-Message-State: AOJu0YwU2WbKYdDiEPBFw5W1s6w3sFCKMeVy4iB3fgJFGgpM8IuawaGG
-	ATngNYf3mn3H1KZKxHpOnG/sLbnICxhJ2YAWsgmu0YqjMRKfwqrlB8Z486M2ctAz1AozLHH+l8y
-	bAGdz8BdA/BbMJXYUXO+yBXCYu+I2KSjEhPijZw==
-X-Google-Smtp-Source: AGHT+IGAIeptn+tE7RkQYiH+yO0nFWuIoGL2cBnHEGQOA05tCKNOiKuaJATENwPLzVHZt9hSxTz4NtjwLh9UJcOo5kk=
-X-Received: by 2002:a25:d30b:0:b0:e03:6241:b8f9 with SMTP id
- 3f1490d57ef6-e041b070896mr3436258276.1.1720539108320; Tue, 09 Jul 2024
- 08:31:48 -0700 (PDT)
+        bh=xHpq5wMNrD2/hubIXHOBObHVSlKgS/wJVizku6aE47M=;
+        b=GWw9hR3nzm2cwpv4Hv9FKYaxBajE+r81HjJdnlxYb9TwFlhqaZ6v+X337uwX5/rFwB
+         rx0HmwNpnnEQOIQko/g0VS7okp8yfUiM9Wa1dCxBoQCWcsSPQ8d2pZZ14MupSWnECv3a
+         JhKNqiZmQtaPIEciHT7xefo3bJFEfjIl+g0CAK6nh7YpMT+xtDfvRJd1dn+th2JBkT5S
+         /LuFURVZIhbKK9Pg5st3OAlP2d96qkwQPf5a9u7DPbjbQeJLiesG06Bmag1IHrCiGPet
+         XXy7XXGD3rV2axvh7iZJxpONG2xTOvL8Wi6EyciQjCGkoy95w/1W/ofja54y/oNIYOCH
+         HoTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720539111; x=1721143911;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xHpq5wMNrD2/hubIXHOBObHVSlKgS/wJVizku6aE47M=;
+        b=N0lZ7fe20wgA289U7XbodPuCy7gfoCULY6Ul31UFExm5qZIwxBGAma+b74acPHVw5P
+         17P2zY3adgzRSOyQbJhTm7Wcb92yCouwqhAL0esz9U5qEfj6/lDQEQTsTOb7QIVq1FiU
+         uv15e+ZYnPF6hEAnpU5bUHqz6ouSacrDFyGaQxusX+gaQ6y2d1wWzAuD8LGne/Dr3wbx
+         LEYUYjh9pjbBBDGzv3FQWZx/3aoXggDVdygt1dbm8DLcjAK97SuJV7zgh22da1WoHqfc
+         eLexG3N5vb2wp/oS4ydp1VLNN1I+LrtImvU2CJa1tvHRwspy/pSB4v/R3a1SEQ4sj3Fy
+         RjoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFIHFpRV0wvkcHA0ja81/EZINiBrePDa3c8gta7WoEoQBVOtsQsh6eMz/cHE6YB1+z9N/H1uOeuHvQ+zxSm/xt9WQaJwnj+zQK/42f
+X-Gm-Message-State: AOJu0YzXjSxVb8hvRnGeva80/bx+OPn6nYTiLi0nczbJy+3dnhsmd9mI
+	8pzyX8ZIxpZbM5iooSFARjXRIB+LdHWgmpTSN7ER/4ND+nERmXa0khpnhncC5iU=
+X-Google-Smtp-Source: AGHT+IHewN66x2HRe8W5Nt8NVnXoo8G3n2GpDN/d4haqMEb11yeCmND6FM7mgc4d6Mu6XfbF2ACV5g==
+X-Received: by 2002:a2e:7c04:0:b0:2ee:4af7:d78e with SMTP id 38308e7fff4ca-2eeb3181914mr24259971fa.34.1720539110506;
+        Tue, 09 Jul 2024 08:31:50 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1d16b0sm209556185e9.7.2024.07.09.08.31.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 08:31:50 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240701165210.578817-1-krzysztof.kozlowski@linaro.org>
+References: <20240701165210.578817-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] ARM: dts: amlogic: meson8b-ec100: align GPIO keys node
+ name with bindings
+Message-Id: <172053910960.1180991.4934338719791810029.b4-ty@linaro.org>
+Date: Tue, 09 Jul 2024 17:31:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527142557.321610-1-ulf.hansson@linaro.org> <20240708135310.3VRFnmk1@linutronix.de>
-In-Reply-To: <20240708135310.3VRFnmk1@linutronix.de>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 9 Jul 2024 17:31:12 +0200
-Message-ID: <CAPDyKFo6hE9BPgS7Bhe259Mxki-KBZDYyMkaBPFuznETbZhGkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] pmdomain/cpuidle-psci: Support s2idle/s2ram on PREEMPT_RT
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, 
-	Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Nikunj Kela <nkela@quicinc.com>, 
-	Prasad Sodagudi <psodagud@quicinc.com>, Maulik Shah <quic_mkshah@quicinc.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-rt-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Mon, 8 Jul 2024 at 15:53, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2024-05-27 16:25:50 [+0200], Ulf Hansson wrote:
-> > Updates in v2:
-> >       - Rebased and fixed a small issue in genpd, see patch3.
-> >       - Re-tested on v6.9-rt5 (PREEMPT_RT enabled)
-> >       - Re-tested on v6.10-rc1 (for regressions, PREEMPT_RT disabled)
-> >
-> > The hierarchical PM domain topology and the corresponding domain-idle-states
-> > are currently disabled on a PREEMPT_RT based configuration. The main reason is
-> > because spinlocks are turned into sleepable locks on PREEMPT_RT, which means
-> > genpd and runtime PM can't be use in the atomic idle-path when
-> > selecting/entering an idle-state.
-> >
-> > For s2idle/s2ram this is an unnecessary limitation that this series intends to
-> > address. Note that, the support for cpuhotplug is left to future improvements.
-> > More information about this are available in the commit messages.
->
-> I looked at it and it seems limited to pmdomain/core.c, also I don't
-> know if there is a ->set_performance_state callback set since the one I
-> checked have mutex_t locking ;)
-> So if this is needed, then be it. s2ram wouldn't be used in "production"
-> but in "safe state" so I wouldn't worry too much about latency spikes.
-> Not sure what it means for the other modes.
-> I am not to worried for now, please don't let spread more than needed ;)
+Hi,
 
-Thanks for taking a look and for providing your thoughts. Can I
-consider that as an "ack" for the whole series?
+On Mon, 01 Jul 2024 18:52:10 +0200, Krzysztof Kozlowski wrote:
+> Bindings expect the GPIO keys node names to follow certain pattern, see
+> dtbs_check warnings:
+> 
+>   meson8b-ec100.dtb: gpio-keys: '#address-cells', '#size-cells' do not match any of the regexes: '^(button|event|key|switch|(button|event|key|switch)...
+> 
+> 
 
-Before I decide to apply this I am awaiting some additional
-confirmation from Qcom guys. It's getting late for v6.11, so I may
-need to make another re-spin, but let's see.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm-dt)
 
-Kind regards
-Uffe
+[1/1] ARM: dts: amlogic: meson8b-ec100: align GPIO keys node name with bindings
+      https://git.kernel.org/amlogic/c/488386d7ec680c8900f81b3fd7570797935bf1ff
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.11/arm-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
+
