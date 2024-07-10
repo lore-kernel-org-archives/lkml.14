@@ -1,89 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930ED12BF23;
-	Wed, 10 Jul 2024 23:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E4112BF23;
+	Wed, 10 Jul 2024 23:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720653357; cv=none; b=nfoI2fpWESnQ5Fc/PfqV8hPiBILnHlQqAgLAE//qFKmojKS0xZlVNk9BJdU7XWPNQMcOUzczDCxL+74YrK5F9uZW4BGYKD3+qJqqBLCRCyesZArelnuhZYLUZLrxHZLAPjUKjuvuvlq0d4Lt4bqODo0uAESVz3jEEZU+EBJr2Ns=
+	t=1720653383; cv=none; b=RXhMUhM2K/6Nc+/5dVeK1kq3L+HHAxukY8WKl4s+W77QUpIYEG26wzPypfjl7enihej4Gq7GvOvV4bnS5T3lS+JBA1/1+r/Wanl+Kc72ABV0YQrdV99RET1TIrVLy2CgQkvwkldmWx+zdplhmzyb4OP77uvgEh3bJ6XhE5ymX+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720653357; c=relaxed/simple;
-	bh=12K8PkjgAlf4Yy3Ph2YxFc15bLk8RLBUzI3Tg0Ee4Y8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XSUcmWOqY54u6VaciDrw1Wh5eOuqklcPOgHb5p+8uqYw8uEVefKzu0DEtEF+LyPvLy7dciNdvJ6u9zcSSLQtWoy1wzB4e7hhNK56gUVU7zgZsK2Wdih/JmLdyt2Nky15UTGKseqPV4nIf7i3lB0Z6x9KSeYfA/FBoEhNDigB6LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPw1nJ9F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720653383; c=relaxed/simple;
+	bh=fer+00iaGcBfnRBG7yRtqmNuSbkPeeQfXN4EbD/eWvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o57gnDesIqmELJQZnN79m8lVlE4mbqLmjzrJeHZRiXuPpwfJr2kV2xd19gf2EW6rXLxl8HlYwux4Oily3KRVO2eIfWbWYZDvpmbZfKoKJ0PYolx1fhZEEW3j7+hOmdxGComMKhNdXdbGEgcD42BBs3lpp0ut41dC/HQikpJOT2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lW1IzOpI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPw1nJ9F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32AB6C32781;
-	Wed, 10 Jul 2024 23:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720653357;
-	bh=12K8PkjgAlf4Yy3Ph2YxFc15bLk8RLBUzI3Tg0Ee4Y8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IPw1nJ9FWyMJ6rTcVV6mwP+n/EHVO/hu/nsrqzc5cpIKH1VmmBUEnw8iFlpOkTzUR
-	 UktTExsVFBCeg/uyY6vOrV2NGrq2d8X/85c72WrOTEqSPDgnnrWemCyh4ccEtYXZO2
-	 vOqUcimb9vciIKCk2SD+sFO2+Ovcp80ogM6I+Hub7W3LBI1kExXbGNztdepzhSod0o
-	 oPUdgbonjSRFK1D/alPJDZpWDDy+Zxbj/LP/67xrdFINUBS7AIU1Xyct4+vajBk8EK
-	 pWSnYVdDq/gdOa+8GQuXw2heWfUnuOaBirvuJArr318gd7rej2RuKK+00eYeNRklLB
-	 jW4zR0VCvjEWA==
-From: Kees Cook <kees@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] virt: vbox: struct vmmdev_hgcm_pagelist: Replace 1-element array with flexible array
-Date: Wed, 10 Jul 2024 16:15:55 -0700
-Message-Id: <20240710231555.work.406-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lW1IzOpI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720653382; x=1752189382;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fer+00iaGcBfnRBG7yRtqmNuSbkPeeQfXN4EbD/eWvk=;
+  b=lW1IzOpIZO7/7LhjXdqwHc6qayrLYFEfCI8Tp4h+ohM059bccsOvzdBM
+   aMGpOHGNinI6gHITM6mcZg2NshhibwcZ8iOkZQ/SsuDclhr3p4AZe+nXl
+   FM2RjtRy0wvC1C08gZoZZAx8z/Bz4deTTuZl3OYHkNatmL5spWfY0pykl
+   vb0CKmQH8q/ppERaPdLUrjwleVUXpu+cBNx5nnyLwSjO27bpQbeYwuF4Y
+   ZlXLzcySuhvuLn7Nyr3kxLGAYoTikwTnpxnVUOOblhdytK4SlGPnaSK6/
+   NLaiv15wGGsVzrILA4K9TTw7VWv6n70Mh/l2ppyuYnSHvBkQ0I2zAkWZM
+   Q==;
+X-CSE-ConnectionGUID: NM0g50VXSmyQs2FcCEhJiA==
+X-CSE-MsgGUID: UatasSfmQfaR3UH663DxRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18141153"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="18141153"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 16:16:21 -0700
+X-CSE-ConnectionGUID: ZJi+3G5qT+S7/VBH0Q/g5A==
+X-CSE-MsgGUID: rHmOepUKSWGsFSH4Lkd/hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="48336145"
+Received: from kwangwoo-mobl1.gar.corp.intel.com (HELO desk) ([10.209.72.253])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 16:16:22 -0700
+Date: Wed, 10 Jul 2024 16:16:09 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Robert Gill <rtgill82@gmail.com>,
+	Jari Ruusu <jariruusu@protonmail.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	antonio.gomez.iglesias@linux.intel.com,
+	daniel.sneddon@linux.intel.com, stable@vger.kernel.org
+Subject: Re: [PATCH v4] x86/entry_32: Use stack segment selector for VERW
+ operand
+Message-ID: <20240710231609.rbxd7m5mjk53rthl@desk>
+References: <20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com>
+ <8551ef61-71fb-18f3-a8a8-6c7c3ed731e6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1505; i=kees@kernel.org; h=from:subject:message-id; bh=12K8PkjgAlf4Yy3Ph2YxFc15bLk8RLBUzI3Tg0Ee4Y8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmjxYrQFvg6Myp/dqaxd9c1I9SQeTAOBna3TgY/ 4ZwxFwY9FKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZo8WKwAKCRCJcvTf3G3A JhwQD/9gHHrHq9XVc3JrCq1py5D/rZjBDuIAIorvUWWAftf+AI6Ksg43Ttb42ARYdOkuP9uwy8Y QNleZEenyiyFmgrad+UruCXN6KM7esTqmYRaXkxKgP9Garf/rusUyNAJdT2MCqr7w37GECSjBLZ 5a7EC/HBYrT2NWFY8VExq3HDwrNFouM+/MI3tvt72oWzP/3EHb49JQ3mENBeVhtC+83TzgziGHr xFuiBc3TPskKcJFF9a8iXQIT7c+kzJvGR/KZglwyu7sKK9Hpw2kYzA8YmNWVSwNH0ScrLWJgrzg S43C4Sq4Dxc9jJUYatAhzCNckZiduDETM0QVbvxKaZI4T9Cn05sbSoXCqJl0GICFPHC4Dwucqr7 0/yxlNdrlRL+ftuNizQkh3okzMG36oQDg7+t4oAR6tCFkQYlNtF9k3opPhbFd3GmF7IoWzUGFne arkW1v8LpAWfg32vYIYF0svYCISOJQwG89/QWeWCQ/EeFrrE/eQSYOWIOXEtfSQWV2aWeV4Dy02 YT6pRATV4x6CmM30+ut72yKua7sknXZ/sdAADpDWpXecIwIKz7q9ijWzErGllaB/lrJL9pG1A5x Sj2k8Bi9taR6NsEDPOdNr6xIYwfCiQa/WKEnI/B/ryeTXEogvONqN7xJiT0Hh4TAKuFn8eUaKQI fseDqnnoOUllh
- lg==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8551ef61-71fb-18f3-a8a8-6c7c3ed731e6@gmail.com>
 
-Replace the deprecated[1] use of a 1-element array in
-struct vmmdev_hgcm_pagelist with a modern flexible array. As this is
-UAPI, we cannot trivially change the size of the struct, so use a union
-to retain the old first element's size, but switch "pages" to a flexible
-array.
+On Wed, Jul 10, 2024 at 11:50:50PM +0200, Uros Bizjak wrote:
+> 
+> 
+> On 10. 07. 24 21:06, Pawan Gupta wrote:
+> > Robert Gill reported below #GP when dosemu software was executing vm86()
+> > system call:
+> > 
+> >    general protection fault: 0000 [#1] PREEMPT SMP
+> >    CPU: 4 PID: 4610 Comm: dosemu.bin Not tainted 6.6.21-gentoo-x86 #1
+> >    Hardware name: Dell Inc. PowerEdge 1950/0H723K, BIOS 2.7.0 10/30/2010
+> >    EIP: restore_all_switch_stack+0xbe/0xcf
+> >    EAX: 00000000 EBX: 00000000 ECX: 00000000 EDX: 00000000
+> >    ESI: 00000000 EDI: 00000000 EBP: 00000000 ESP: ff8affdc
+> >    DS: 0000 ES: 0000 FS: 0000 GS: 0033 SS: 0068 EFLAGS: 00010046
+> >    CR0: 80050033 CR2: 00c2101c CR3: 04b6d000 CR4: 000406d0
+> >    Call Trace:
+> >     show_regs+0x70/0x78
+> >     die_addr+0x29/0x70
+> >     exc_general_protection+0x13c/0x348
+> >     exc_bounds+0x98/0x98
+> >     handle_exception+0x14d/0x14d
+> >     exc_bounds+0x98/0x98
+> >     restore_all_switch_stack+0xbe/0xcf
+> >     exc_bounds+0x98/0x98
+> >     restore_all_switch_stack+0xbe/0xcf
+> > 
+> > This only happens when VERW based mitigations like MDS/RFDS are enabled.
+> > This is because segment registers with an arbitrary user value can result
+> > in #GP when executing VERW. Intel SDM vol. 2C documents the following
+> > behavior for VERW instruction:
+> > 
+> >    #GP(0) - If a memory operand effective address is outside the CS, DS, ES,
+> > 	   FS, or GS segment limit.
+> > 
+> > CLEAR_CPU_BUFFERS macro executes VERW instruction before returning to user
+> > space. Replace CLEAR_CPU_BUFFERS with a safer version that uses %ss to
+> > refer VERW operand mds_verw_sel. This ensures VERW will not #GP for an
+> > arbitrary user %ds. Also, in NMI return path, move VERW to after
+> > RESTORE_ALL_NMI that touches GPRs.
+> > 
+> > For clarity, below are the locations where the new CLEAR_CPU_BUFFERS_SAFE
+> > version is being used:
+> > 
+> > * entry_INT80_32(), entry_SYSENTER_32() and interrupts (via
+> >    handle_exception_return) do:
+> > 
+> > restore_all_switch_stack:
+> >    [...]
+> >     mov    %esi,%esi
+> >     verw   %ss:0xc0fc92c0  <-------------
+> >     iret
+> > 
+> > * Opportunistic SYSEXIT:
+> > 
+> >     [...]
+> >     verw   %ss:0xc0fc92c0  <-------------
+> >     btrl   $0x9,(%esp)
+> >     popf
+> >     pop    %eax
+> >     sti
+> >     sysexit
+> > 
+> > *  nmi_return and nmi_from_espfix:
+> >     mov    %esi,%esi
+> >     verw   %ss:0xc0fc92c0  <-------------
+> >     jmp     .Lirq_return
+> > 
+> > Fixes: a0e2dab44d22 ("x86/entry_32: Add VERW just before userspace transition")
+> > Cc: stable@vger.kernel.org # 5.10+
+> > Reported-by: Robert Gill <rtgill82@gmail.com>
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218707
+> > Closes: https://lore.kernel.org/all/8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info/
+> > Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Suggested-by: Brian Gerst <brgerst@gmail.com> # Use %ss
+> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > ---
+> > v4:
+> > - Further simplify the patch by using %ss for all VERW calls in 32-bit mode (Brian).
+> > - In NMI exit path move VERW after RESTORE_ALL_NMI that touches GPRs (Dave).
+> > 
+> > v3: https://lore.kernel.org/r/20240701-fix-dosemu-vm86-v3-1-b1969532c75a@linux.intel.com
+> > - Simplify CLEAR_CPU_BUFFERS_SAFE by using %ss instead of %ds (Brian).
+> > - Do verw before popf in SYSEXIT path (Jari).
+> > 
+> > v2: https://lore.kernel.org/r/20240627-fix-dosemu-vm86-v2-1-d5579f698e77@linux.intel.com
+> > - Safe guard against any other system calls like vm86() that might change %ds (Dave).
+> > 
+> > v1: https://lore.kernel.org/r/20240426-fix-dosemu-vm86-v1-1-88c826a3f378@linux.intel.com
+> > ---
+> > 
+> > ---
+> >   arch/x86/entry/entry_32.S | 18 +++++++++++++++---
+> >   1 file changed, 15 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+> > index d3a814efbff6..d54f6002e5a0 100644
+> > --- a/arch/x86/entry/entry_32.S
+> > +++ b/arch/x86/entry/entry_32.S
+> > @@ -253,6 +253,16 @@
+> >   .Lend_\@:
+> >   .endm
+> > +/*
+> > + * Safer version of CLEAR_CPU_BUFFERS that uses %ss to reference VERW operand
+> > + * mds_verw_sel. This ensures VERW will not #GP for an arbitrary user %ds.
+> > + */
+> > +.macro CLEAR_CPU_BUFFERS_SAFE
+> > +	ALTERNATIVE "jmp .Lskip_verw\@", "", X86_FEATURE_CLEAR_CPU_BUF
+> > +	verw	%ss:_ASM_RIP(mds_verw_sel)
+> > +.Lskip_verw\@:
+> > +.endm
+> 
+> Why not simply:
+> 
+> .macro CLEAR_CPU_BUFFERS_SAFE
+> 	ALTERNATIVE "", __stringify(verw %ss:_ASM_RIP(mds_verw_sel)),
+> X86_FEATURE_CLEAR_CPU_BUF
+> .endm
 
-No binary differences are present after this conversion.
-
-Link: https://github.com/KSPP/linux/issues/79 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org
----
- include/uapi/linux/vbox_vmmdev_types.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/vbox_vmmdev_types.h b/include/uapi/linux/vbox_vmmdev_types.h
-index f8a8d6b3c521..6073858d52a2 100644
---- a/include/uapi/linux/vbox_vmmdev_types.h
-+++ b/include/uapi/linux/vbox_vmmdev_types.h
-@@ -282,7 +282,10 @@ struct vmmdev_hgcm_pagelist {
- 	__u32 flags;             /** VMMDEV_HGCM_F_PARM_*. */
- 	__u16 offset_first_page; /** Data offset in the first page. */
- 	__u16 page_count;        /** Number of pages. */
--	__u64 pages[1];          /** Page addresses. */
-+	union {
-+		__u64 unused;	/** Deprecated place-holder for first "pages" entry. */
-+		__DECLARE_FLEX_ARRAY(__u64, pages); /** Page addresses. */
-+	};
- };
- VMMDEV_ASSERT_SIZE(vmmdev_hgcm_pagelist, 4 + 2 + 2 + 8);
- 
--- 
-2.34.1
-
+We can do it this way as well. But, there are stable kernels that don't
+support relocations in ALTERNATIVEs. The way it is done in current patch
+can be backported without worrying about which kernels support relocations.
