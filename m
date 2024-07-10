@@ -1,111 +1,116 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90E8195FE6
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD2519596F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720638088; cv=none; b=cgKUJmtkNNUca4l77DhyOw5EqOW4kmXGmwM/ScaaPGFmqPdfdRZl2vwJKuearrfHTrANyzmQXg3nhSWsKZsmD/iTT99uNxIPowBMxlY/VIqykl+9y8jktexFWzes4lOE4pFmWTghEdJ4HS0mCjIpfMmP5FScKMv/4kB2hxZCR58=
+	t=1720638160; cv=none; b=jRH25GadGjEbJ8BBuOeY059wZbiHHQJq+RUGj0LHC6jYDIEvkJp8Do9oe35+lNooCPwzEsRr7UlcjFGZ7efMfC0CePu74SQ8JVyzdG9DMqqpy3j3KiZ2wFratT16SfFDCPIIk/cuL+iKAkfhGkBpjFpUxWHOVYx1OVcmQuTkvcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720638088; c=relaxed/simple;
-	bh=cxsYq/naaH5Uont4n4ooMO30CRSHMlCtlh3VbMmYBXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c5pRbL0eY6/H1X45ipozXb4//CtE2AsItAAFsdKoZoHg2pr/tI/tM+2JSwyuLguuOGWJWsgh7wrbKdjRY/OzFXXvaAPl5LW73Z4zpwnxz3DeelDyYB1mIlLo8dcOKKIa+Vv3+xGpNnDtZXdX15uFudfnYagSmXWM6riTWVIuZGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Cw2QNhKs; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1720638160; c=relaxed/simple;
+	bh=PswQct0HzHiKHP29eqvg8c9/qemV3myFQvNJF13f+H0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c+4EvSKmGPs2vqk/9awPXi/hP2YVSQJZftYg93NDGWjGHrZkV/1pMkkhYOgytNckoBFfa+wqAgAYBHu4l9iE1He/KkkXm7iFSy2UO0UQmUcg6kOcR492SYFI4zn+AnljhvBwyn1HJ69BMvMZaR6bxOrk49vX6DeYTpa/IlnQyG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lAy4C7Fw; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Cw2QNhKs"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-367b0cc6c65so1907f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:01:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAy4C7Fw"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ee920b0781so786961fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:02:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1720638084; x=1721242884; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=COX3XkGudVuZTn/eMUc5+kdCw7hyca+yvKvwyEtbd4A=;
-        b=Cw2QNhKs1IHFq6wbRKcCIONkViCvs0skYp2MTULMxB/Ok3pgFiu9vTKF8VvxhetmjP
-         Fy06cjAfPG6gm3lfH5PljQE1PMzckt+uJrnTW+qJ90WjWt+A2MnljG+5slvFRGxSjdh0
-         QGirAvx6RbZuXUTBVyA00tPAPM6naJxjgmPxR7pYXLCjeYLvCsT1IoxOGNP0Hz37Ce83
-         pypSZ7qGtP/rG80zaFqrRd3PTyfz5enIAWza89Yh4rMNNHIWtH3/49NOZyJKgesgIGa8
-         MsYKAi2cmJ1wDtg7feZtc8MZV51sKokKkf+2wg/s0ij8Ti65NgJrkB/WLohQ29ue38Bw
-         L98g==
+        d=gmail.com; s=20230601; t=1720638157; x=1721242957; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mPZ60RuL6ih0QLl/o8/14hY+krd4EK1oz7htgw57d1A=;
+        b=lAy4C7Fw2cwqL/V/QCRVp+eszZzgwF7wxCuSO1yLQGVrwESMeVkSB4Y3F/aDCimWNM
+         pUypWkAk1Ofgk5hLeQgREdzxBGN30iTJIffsAhn8Ti2HGpDOr5ApFKkUcjAzbl2YAMxf
+         2FKuq+eS/wzysXbC3F8VHAYNMhAnNUXec54ubYiJQOpGmJXcxkifPcAIcvqIJv6/5ou+
+         AqVh6/5CIRemfLX7U4BnTOtbsZ7gu+j+7kDfEaheIgRDvbin2A2P+GixAhTkLNwab8lg
+         nk2BT3hXcY24PBt0Bjdd8dsChL1qGaIV29826M5i9l4YxJSS5IiHvVjIw8EdHlJncJEU
+         FjQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720638084; x=1721242884;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=COX3XkGudVuZTn/eMUc5+kdCw7hyca+yvKvwyEtbd4A=;
-        b=DE0sUwMIn4ZE6i+wYp4zxDYqDbelXaJap5g2gm+n/cnjNFGpSnMqu6UvYvOD/UQJtf
-         flo86geURRX8/5l++CCgKIqOBENVSmKyI1ZuUkJEaILCHGZnIsE3gQTxNC3N0wdUJ9Me
-         p6vjL3gK2AdJrzRKEJ7Hf+IbZoaNVp1EFX1sV+aXObCX0vkcMwERmor2SowbluaSe7LG
-         wNL2IPLTiUEw8NwnTWCuN3LrB5e92wdghICw0HWACl3STQ8IX82dvjrkuOnMJbrabo6a
-         INpiiwgi/hShMsm1eU6YN6cLwq9sN1ky6VmhXgZRyzBYxdQccDBG4vX5TWknorophCAM
-         L8+g==
-X-Forwarded-Encrypted: i=1; AJvYcCW+xkPKYWkbI3NZYAC4WfJcAIoRbea4lV8GFVkR2eyyOpD6u4ZRZN0fM587wJDifbxsDgzIYukwJsRkrchl0gWtUrvtr+zncuHCtcmr
-X-Gm-Message-State: AOJu0Yx0hRGoqkN98oWWShtdkqhiLzQDBWVuzEzL+YYqjd8CtOqkrXMP
-	fJ+EdA37Q2kiZIoJ69f82CUiHRsjFzGbTCNqVcDAlWUd5MJPgi9rMdTYYT1C0Ws=
-X-Google-Smtp-Source: AGHT+IHinMImnGMgYVPwjbcMEexhVVdiGpPM1w0iQzMat4MsloCwZfdxt46dPYoseAM1KbR9jAHOog==
-X-Received: by 2002:a5d:4947:0:b0:362:2111:4816 with SMTP id ffacd0b85a97d-367ceacaa13mr4166962f8f.55.1720638083863;
-        Wed, 10 Jul 2024 12:01:23 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-26.dynamic.mnet-online.de. [82.135.80.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e187sm6006328f8f.21.2024.07.10.12.01.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 12:01:23 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Jes.Sorensen@gmail.com,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] wifi: rtl8xxxu: Use swap() to improve rtl8xxxu_switch_ports()
-Date: Wed, 10 Jul 2024 21:00:48 +0200
-Message-ID: <20240710190047.709843-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1720638157; x=1721242957;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mPZ60RuL6ih0QLl/o8/14hY+krd4EK1oz7htgw57d1A=;
+        b=mARizZh2RlBappASe9izXB6HqA9/lJ1qynuhf/4oAkHGXvSmitgFoL1iQ5jjjbI58k
+         m2AW9C73KeTBHXmN1X+jQKbXtZYod9byFNNLsSW6/3P4o/57mG3vHzPRzZ2EvYODkkuW
+         5z/KjnoxhLdJ5167FuK7uJX5zTwJTzrzsrlZZgmn2fKrUH24XhcrLkuliPzYbBmZJ4Kc
+         7CsvW3U99PdTPY06dDfHPJu+YEyeAGzdn2KpMMg64jZ7nFy4Bbuo2u9tb/4cB0rBpV/4
+         uYKCwHkx8jyc+6Ln0y4JcrEs2jU2xBjLRLrzBwILQONkPETzxJI9wGvD1DKk/knpLKjP
+         0dUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjbMDbfxDuUS8O+tj+neUEEw4wqLQFR6fvZtnJ04vW8DMhKNtFpDqyebBC4QmMBzzDp/4o7HwbSTHpPb1wSxEsJvGzdfbA6aRQFFnC
+X-Gm-Message-State: AOJu0Yyo3GQOMq1OuuzanUyBIfzjd4Lsp8079Pexf7bUwICpogqPbIMx
+	O3eHkmW8bPAlKPODz1227hOMo54inOETZrohZ5gP+kid4hjq2syS
+X-Google-Smtp-Source: AGHT+IG1L8BlhXFrRo5w/hZ2v8OTkzJw0dc162nd8YCUmtKMgy4icMkIxWKQCufiuhXBIwUNvFBW+Q==
+X-Received: by 2002:a2e:80cd:0:b0:2ee:974c:596f with SMTP id 38308e7fff4ca-2eeb30feba0mr38435041fa.28.1720638156546;
+        Wed, 10 Jul 2024 12:02:36 -0700 (PDT)
+Received: from ?IPV6:2a01:4b00:b211:ad00:1490:6cc2:4d06:940f? ([2a01:4b00:b211:ad00:1490:6cc2:4d06:940f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-426615876bbsm178014455e9.6.2024.07.10.12.02.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 12:02:36 -0700 (PDT)
+Message-ID: <2fe63ea9-613a-4904-8b68-134442c43261@gmail.com>
+Date: Wed, 10 Jul 2024 20:02:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linux-next:master] [mm] 47325a5c88:
+ WARNING:at_mm/slub.c:#free_large_kmalloc
+To: Hugh Dickins <hughd@google.com>
+Cc: kernel test robot <oliver.sang@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, oe-lkp@lists.linux.dev, lkp@intel.com,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Chengming Zhou <chengming.zhou@linux.dev>,
+ Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>,
+ David Hildenbrand <david@redhat.com>, "Huang, Ying" <ying.huang@intel.com>,
+ Matthew Wilcox <willy@infradead.org>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+ ltp@lists.linux.it
+References: <202407101031.c6c3c651-lkp@intel.com>
+ <dd08adbb-6df5-4556-9fc4-cf37b6234aa1@gmail.com>
+ <053bd429-ae19-4beb-a733-a7a838b1e010@gmail.com>
+ <4bc6400e-6199-4147-9399-4a54c94613fd@gmail.com>
+ <612af749-0a59-f91d-693a-43d6217ffebb@google.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <612af749-0a59-f91d-693a-43d6217ffebb@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use the swap() macro to simplify the rtl8xxxu_switch_ports() function
-and improve its readability. Remove the local variable vif.
 
-Fixes the following Coccinelle/coccicheck warning reported by
-swap.cocci:
 
-  WARNING opportunity for swap()
+On 10/07/2024 21:49, Hugh Dickins wrote:
+> It's a long time since I was active hereabouts, but the bot report
+> and your flurry of updates make me think that you should step back,
+> slow down, and look more carefully at the precedents here.
+> 
+> IIRC, the main problem is that parts of the swap_info_struct can
+> still be in use from before while you're wanting to set up new values.
+> Observe how alloc_swap_info() may return a fresh or an old allocation.
+> Observe how enable_swap_info() is called after getting swapon_mutex
+> late in swapon(), once past all possiblities of error.
+> 
+> I expect that your new zeromap needs to be taking the same care as is
+> taken with swap_map and cluster_info: to be safe, follow their example
+> in both swapon() and swapoff().
+> 
+> Hugh
 
-Compile-tested only.
+Thanks, yeah sent too many in quick succession :). Will be more careful next time.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- drivers/net/wireless/realtek/rtl8xxxu/core.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Both the 2nd and 3rd version are careful to solve the problem of using old allocation
+which you described.
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/core.c b/drivers/net/wireless/realtek/rtl8xxxu/core.c
-index 89a841b4e8d5..489574668772 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/core.c
-@@ -6679,7 +6679,6 @@ static void rtl8xxxu_switch_ports(struct rtl8xxxu_priv *priv)
- 	u8 macid[ETH_ALEN], bssid[ETH_ALEN], macid_1[ETH_ALEN], bssid_1[ETH_ALEN];
- 	u8 msr, bcn_ctrl, bcn_ctrl_1, atimwnd[2], atimwnd_1[2];
- 	struct rtl8xxxu_vif *rtlvif;
--	struct ieee80211_vif *vif;
- 	u8 tsftr[8], tsftr_1[8];
- 	int i;
- 
-@@ -6745,9 +6744,7 @@ static void rtl8xxxu_switch_ports(struct rtl8xxxu_priv *priv)
- 	rtl8xxxu_write8(priv, REG_BEACON_CTRL, bcn_ctrl_1);
- 	rtl8xxxu_write8(priv, REG_BEACON_CTRL_1, bcn_ctrl);
- 
--	vif = priv->vifs[0];
--	priv->vifs[0] = priv->vifs[1];
--	priv->vifs[1] = vif;
-+	swap(priv->vifs[0], priv->vifs[1]);
- 
- 	/* priv->vifs[0] is NULL here, based on how this function is currently
- 	 * called from rtl8xxxu_add_interface().
--- 
-2.45.2
+The 2nd one takes care of it in the same way as swap_map.
 
+But I believe its unnecessary to do all that change in the 2nd version, when you can just
+set it to NULL after kvfree, which is a much smaller change and takes care of reusing old
+allocation equally well.
