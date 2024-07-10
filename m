@@ -1,57 +1,57 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1EB83A19
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A3813DDC0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720601069; cv=none; b=pGJN9jpfvU7C0K4hggZAXijUD498BJSLJpKV/LRTxoTgTCtr4GNFBa7U5mEMb40nIWlc5ImyY07NgiyswDBI+T9acWl18j1QM0Hw1yyz1rkUC0k4oY2YS4hlRNh3aXJspKFpvtEUds0p3Q473yHUYLYq3Zwm1uy0aJeT0uzj3iQ=
+	t=1720601075; cv=none; b=DTQROokfT6v1n/n3OKuppTTFDCPd4DlrLGsiFJP0TtpkypxMAgmYPxEDrsU8/OjH9V5nNgohEaI099yURPwazWDBmlarb1xA4CW2yrUpgLTmPBPYdqSru7xaUsOQevYUrSGKzsox8tYjoN4ZNCYh+7B1Qofh5xLgrfZc5R6muDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720601069; c=relaxed/simple;
-	bh=x2UkOgegtEfmbJjp9bRljMEce5cYVaxmnpVSZOsF9+E=;
+	s=arc-20240116; t=1720601075; c=relaxed/simple;
+	bh=3PIe7piaWVFGpw8MubkhAAz6xi+0WnfUt+cBmrfaOkc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wx7Kv/bT5JLOlEsqx0mNI19eSz7WMrnjAG2p+m0zU46U0q7fJT53w6e5yjMtisZnSsJi8c191Ay7KvBLjpZtdUSgGO5YM162IZRxvhNs1o/bsLMnmeVP2jK9FMbH+h4GSpruXQn/jAdoGt+859NJyGarLb2XXb+ez4gX6ovvbNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FiJ0aASt; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=jJavjaJZ0JmUzsoXAzpoFFAN6BrIWcNzQvMoir7WsqgCa3/hoFhO5Jh59s4MckHnxro71qhx/oUCQqIjyPx5ZLKMIgeQza3laFh5w3Z80uBgNB8RbdXW6NQMkaS/ogGcr3aj+ran/ZkISMdZ5HTjVeKr7DehxmXJXUTUarfpw90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ypoI9GOS; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FiJ0aASt"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4266dc7591fso17882265e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:44:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ypoI9GOS"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52caebc6137so4398157e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720601066; x=1721205866; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1720601070; x=1721205870; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KETsiWGQ9OITSeoUhHMx/ssmIjXEcoY8PpZoiQmHqZo=;
-        b=FiJ0aASt3qadJr93txFkHsammBis8qIaN+yGIVScnhUNSZkskjuuQD2f1RpzESwwnD
-         gfMcrsL6dF/Ybw4ObjsnY06+sqCdmQWXezKks+j2PkjQoBI57Ys+xoy+p1PeNPjflnYO
-         9VsoLaX6C3Bk+fxhlvytj/JiqSjYSK7tBSlNzsCaJR3bVQ09E3JUPr9Ul5P6EO+z6fHS
-         NEkwa6P8mUhTr4+agg48JsCa7jkpSI3Nuu3GwEr2Ch2zy1+NyiLc3wEGkVKG45wztWQL
-         PZIO7QxnciiWj51QB4IPq0V1tgBLuYRERchEnHkahnttOFDhxLwYoEeMKgiK7X3n4VIB
-         jbPg==
+        bh=47Gk9uLeoKD+iHQflXhvTs6O72DyKgkXk5UBuYrhpP4=;
+        b=ypoI9GOSikdvijyrTWPNuwc7xK3stFudFHMVqtMcwHUNtfmr94SAHrzCW1KKMOS2KD
+         IqlZPeB1DQ4hBQYNZ57nnkZ4JYTOVuNS5BXzvqZivvh9ro/aa6kyanJAHws9jPbYDWum
+         DvqyC82zJuPBtMdhmK0lXrDevAN9n1wTzqRQVEGfoX7bfapULH90utXZEmijeBTyCbDs
+         WQ7S3KdoVOlUcGb35Cd6LCixXlXI7hPQ+TT5sFn4H6eBXNAJvjlhCoeWbWHaascOQLKg
+         nHzwpWPwtlvlxyPYott7u5eIEjPqo7QDyZSmNZmcrxbSbla841n5VR2DdV8THW/F3FST
+         kGig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720601066; x=1721205866;
+        d=1e100.net; s=20230601; t=1720601070; x=1721205870;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KETsiWGQ9OITSeoUhHMx/ssmIjXEcoY8PpZoiQmHqZo=;
-        b=YgtNXnqrSRwa6VeIrOMP2PVJuQWBOWCPfYtOB97aoeIWO5C0dvDTrU6B6yxM4lb/AE
-         7pg7utv2uK/UG7GSNuJa6xiCZEgarfCHnSVzwJu2WWXbiJ8TOXkij/mKGtyRHfqTLFgJ
-         GI/qmG2R/EDONg1cewZVvZd+Oo1i+PEvaFiLquiKn5bE9vrrrBLneTsiBt/+nOpNyp4H
-         Z5BF1b51cGr23+xQj82DRl5bRCZnR7vvCT1I+nmQVpHcBQIltrqxymFxm8zKlkufLy2h
-         6sBMCr+JmQ7n2pwNGjMJnNVA4x92KqlLOp/rCPwdrVnWX6i9topuKHauCr0Il3zbrh9V
-         K3dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPNHuHTAARmgMNCediBuFR6sZyxHnpCZLjYNR+/qOQx9v6Bq/85fnp86hgBy3/g6XB+q6iwoiWvenl1zIIWBtvgDQ0JbNfsw4yCaIz
-X-Gm-Message-State: AOJu0YwcRGAujdQVDld8BEvfN/c86GhmV4COwfuzdGneNkM2SBplHyvo
-	Ba46AH0bOU9hUasoHGr3ev6qb+kyxW8Y6DNv8trjakUGT0c0kl8viNnV20PsuTU=
-X-Google-Smtp-Source: AGHT+IEjdqaUX+IEQ+vTTwBCS1+WCkzimzi80EtE0e1AP0q9m+AVIIzHtlWvKh8UxlwB7Omhr8Dy5g==
-X-Received: by 2002:a5d:5901:0:b0:35f:b03:bf45 with SMTP id ffacd0b85a97d-367cea73861mr2965384f8f.24.1720601065658;
-        Wed, 10 Jul 2024 01:44:25 -0700 (PDT)
+        bh=47Gk9uLeoKD+iHQflXhvTs6O72DyKgkXk5UBuYrhpP4=;
+        b=hq4bjHMlHF2wQrhaBxYfGiztC+vE7S6nho5Jc5YmP+BJ7PrWIL5yLWOSUUU5qcoDtM
+         VYHHZY8D0KVgh4m4EKbXHc/kTOQ5Z0g9NGFNr7Sbga31MYlDj/Ty08T8AaUNsEPtoDVb
+         juRxj5RLA7VnYtpxAaW4YLZGMJ0uzruho19/V+rApfnPvWm/RZQdYLcjBmOUMlOqCLml
+         RTNI36yMmL0H0HDF8qZf1XyzXiVVfni9ehZxbA8eLz/ZN2qX+/Tb59XGTZmPBY1eje8m
+         wOJ7iLe0vBFd7awT0FjeTrZDpxRlL3rNMVnukjEWNCWO4HHD9hksS+ZjifarVzb/yx1q
+         EbCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnw/5LlAHltyyZNDHCmCg1F39Ct7anSdWefsGcipp0lcPRRJf1lrSYaMSbhFo5WIYKB4KVTuSsQ8Ai767paaQDouiGAhTRU3/U27jz
+X-Gm-Message-State: AOJu0Yyc9kY1fgu6tIIP9+bLh9D1s9yWZjxhRtipefD0v5rcuvb8PqaQ
+	XT/SizGSjsCDES0YqTaNkhqoSa4x+6GzV+tu00TfTp61+5TLRj0V4Xpj8UeFV5o=
+X-Google-Smtp-Source: AGHT+IFOVpXXsCfwrwmObjem3DaqnWGhUl8p+VXfPqdcHT1FuMo/8WZ/pkPJhrg21nrbgAJMh2dJfw==
+X-Received: by 2002:a19:644b:0:b0:52c:e0ce:2d32 with SMTP id 2adb3069b0e04-52eb99a0790mr2219255e87.36.1720601070408;
+        Wed, 10 Jul 2024 01:44:30 -0700 (PDT)
 Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa06ffsm4700403f8f.77.2024.07.10.01.44.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa06ffsm4700403f8f.77.2024.07.10.01.44.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 01:44:25 -0700 (PDT)
+        Wed, 10 Jul 2024 01:44:30 -0700 (PDT)
 From: Rayyan Ansari <rayyan.ansari@linaro.org>
 To: linux-arm-msm@vger.kernel.org
 Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
@@ -62,9 +62,9 @@ Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/3] ARM: dts: qcom: apq8064: adhere to pinctrl dtschema
-Date: Wed, 10 Jul 2024 09:41:09 +0100
-Message-ID: <20240710084250.11342-2-rayyan.ansari@linaro.org>
+Subject: [PATCH 3/3] ARM: dts: qcom: ipq4019: adhere to pinctrl dtschema
+Date: Wed, 10 Jul 2024 09:41:11 +0100
+Message-ID: <20240710084250.11342-4-rayyan.ansari@linaro.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240710084250.11342-1-rayyan.ansari@linaro.org>
 References: <20240710084250.11342-1-rayyan.ansari@linaro.org>
@@ -76,742 +76,306 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pass dt_binding_check for qcom,apq8064-pinctrl.yaml.
-Also correct spelling error ("drive-strengh" -> "drive-strength").
+Pass dt_binding_check for qcom,ipq4019-pinctrl.yaml.
 
 Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
 ---
- .../dts/qcom/qcom-apq8064-asus-nexus7-flo.dts |   4 -
- .../boot/dts/qcom/qcom-apq8064-cm-qs600.dts   |  25 +-
- .../boot/dts/qcom/qcom-apq8064-ifc6410.dts    |  25 +-
- arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi | 362 +++++++-----------
- .../qcom-apq8064-sony-xperia-lagan-yuga.dts   |  10 +-
- arch/arm/boot/dts/qcom/qcom-apq8064.dtsi      |  34 +-
- 6 files changed, 172 insertions(+), 288 deletions(-)
+ .../boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi | 34 ++++++++-----------
+ .../boot/dts/qcom/qcom-ipq4018-jalapeno.dts   | 27 ++++++---------
+ .../boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi | 26 +++++---------
+ .../boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi | 14 ++++----
+ .../dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts    |  8 ++---
+ .../dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts    |  2 +-
+ .../boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi |  6 ++--
+ 7 files changed, 50 insertions(+), 67 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts
-index d460743fbb94..947183992850 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts
-@@ -125,8 +125,6 @@ &gsbi1 {
- &gsbi1_i2c {
- 	status = "okay";
- 	clock-frequency = <200000>;
--	pinctrl-0 = <&i2c1_pins>;
--	pinctrl-names = "default";
- 
- 	eeprom@52 {
- 		compatible = "atmel,24c128";
-@@ -148,8 +146,6 @@ &gsbi3 {
- 
- &gsbi3_i2c {
- 	clock-frequency = <200000>;
--	pinctrl-0 = <&i2c3_pins>;
--	pinctrl-names = "default";
- 	status = "okay";
- 
- 	trackpad@10 {
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts
-index 671d58cc2741..178c55c1efeb 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts
-@@ -188,24 +188,17 @@ &sdcc4 {
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi
+index da67d55fa557..0d23c03fae33 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi
+@@ -28,46 +28,42 @@ key-reset {
  };
  
- &tlmm_pinmux {
--	card_detect: card_detect {
--		mux {
--			pins = "gpio26";
--			function = "gpio";
--			bias-disable;
--		};
-+	card_detect: card-detect-state {
-+		pins = "gpio26";
-+		function = "gpio";
-+		bias-disable;
- 	};
- 
--	pcie_pins: pcie_pinmux {
--		mux {
--			pins = "gpio27";
--			function = "gpio";
--		};
--		conf {
--			pins = "gpio27";
--			drive-strength = <12>;
--			bias-disable;
--		};
-+	pcie_pins: pcie-state {
-+		pins = "gpio27";
-+		function = "gpio";
-+		drive-strength = <12>;
-+		bias-disable;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts
-index ed86b24119c9..b3ff8010b149 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts
-@@ -321,24 +321,17 @@ &sdcc4 {
- };
- 
- &tlmm_pinmux {
--	card_detect: card_detect {
--		mux {
--			pins = "gpio26";
--			function = "gpio";
--			bias-disable;
--		};
-+	card_detect: card-detect-state {
-+		pins = "gpio26";
-+		function = "gpio";
-+		bias-disable;
- 	};
- 
--	pcie_pins: pcie_pinmux {
--		mux {
--			pins = "gpio27";
--			function = "gpio";
--		};
--		conf {
--			pins = "gpio27";
--			drive-strength = <12>;
--			bias-disable;
--		};
-+	pcie_pins: pcie-state {
-+		pins = "gpio27";
-+		function = "gpio";
-+		drive-strength = <12>;
-+		bias-disable;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi
-index 7c545c50847b..e53de709e9d1 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi
-@@ -1,318 +1,218 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- &tlmm_pinmux {
--	sdc4_gpios: sdc4-gpios {
--		pios {
--			pins = "gpio63", "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
--			function = "sdc4";
--		};
--	};
--
--	sdcc1_pins: sdcc1-pin-active {
--		clk {
-+	sdcc1_default_state: sdcc1-default-state {
-+		clk-pins {
- 			pins = "sdc1_clk";
--			drive-strengh = <16>;
-+			drive-strength = <16>;
- 			bias-disable;
- 		};
- 
--		cmd {
-+		cmd-pins {
- 			pins = "sdc1_cmd";
--			drive-strengh = <10>;
-+			drive-strength = <10>;
- 			bias-pull-up;
- 		};
- 
--		data {
-+		data-pins {
- 			pins = "sdc1_data";
--			drive-strengh = <10>;
-+			drive-strength = <10>;
- 			bias-pull-up;
- 		};
- 	};
- 
--	sdcc3_pins: sdcc3-pin-active {
--		clk {
-+	sdcc3_default_state: sdcc3-default-state {
-+		clk-pins {
- 			pins = "sdc3_clk";
--			drive-strengh = <8>;
-+			drive-strength = <8>;
- 			bias-disable;
- 		};
- 
--		cmd {
-+		cmd-pins {
- 			pins = "sdc3_cmd";
--			drive-strengh = <8>;
-+			drive-strength = <8>;
- 			bias-pull-up;
- 		};
- 
--		data {
-+		data-pins {
- 			pins = "sdc3_data";
--			drive-strengh = <8>;
-+			drive-strength = <8>;
- 			bias-pull-up;
- 		};
- 	};
- 
--	ps_hold: ps_hold {
--		mux {
--			pins = "gpio78";
--			function = "ps_hold";
--		};
-+	sdc4_default_state: sdc4-default-state {
-+		pins = "gpio63", "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
-+		function = "sdc4";
- 	};
- 
--	i2c1_pins: i2c1 {
--		mux {
--			pins = "gpio20", "gpio21";
--			function = "gsbi1";
--		};
-+	gsbi1_uart_2pins: gsbi1-uart-2pins-state {
-+		pins = "gpio18", "gpio19";
-+		function = "gsbi1";
-+	};
- 
--		pinconf {
--			pins = "gpio20", "gpio21";
+ &tlmm {
+-	i2c0_pins: i2c0_pinmux {
+-		mux_i2c {
+-			function = "blsp_i2c0";
+-			pins = "gpio58", "gpio59";
 -			drive-strength = <16>;
 -			bias-disable;
 -		};
-+	gsbi1_uart_4pins: gsbi1-uart-4pins-state {
-+		pins = "gpio18", "gpio19", "gpio20", "gpio21";
-+		function = "gsbi1";
++	i2c0_pins: i2c0-state {
++		function = "blsp_i2c0";
++		pins = "gpio58", "gpio59";
++		drive-strength = <16>;
++		bias-disable;
  	};
  
--	i2c1_pins_sleep: i2c1_pins_sleep {
--		mux {
--			pins = "gpio20", "gpio21";
--			function = "gpio";
+-	mdio_pins: mdio_pinmux {
+-		mux_mdio {
++	mdio_pins: mdio-state {
++		mdio-pins {
+ 			pins = "gpio53";
+ 			function = "mdio";
+ 			bias-pull-up;
+ 		};
+ 
+-		mux_mdc {
++		mdc-pins {
+ 			pins = "gpio52";
+ 			function = "mdc";
+ 			bias-pull-up;
+ 		};
+ 	};
+ 
+-	serial0_pins: serial0_pinmux {
+-		mux_uart {
+-			pins = "gpio60", "gpio61";
+-			function = "blsp_uart0";
+-			bias-disable;
 -		};
++	serial0_pins: serial0-state {
++		pins = "gpio60", "gpio61";
++		function = "blsp_uart0";
++		bias-disable;
+ 	};
+ 
+-	spi0_pins: spi0_pinmux {
+-		mux_spi {
++	spi0_pins: spi0-state {
++		spi0-pins {
+ 			function = "blsp_spi0";
+ 			pins = "gpio55", "gpio56", "gpio57";
+ 			drive-strength = <12>;
+ 			bias-disable;
+ 		};
+ 
+-		mux_cs {
++		spi0-cs-pins {
+ 			function = "gpio";
+ 			pins = "gpio54", "gpio4";
+ 			drive-strength = <2>;
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts b/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts
+index 365fbac417fd..ac3b30072a22 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts
+@@ -11,40 +11,35 @@ / {
+ };
+ 
+ &tlmm {
+-	mdio_pins: mdio_pinmux {
+-		pinmux_1 {
++	mdio_pins: mdio-state {
++		mdio-pins {
+ 			pins = "gpio53";
+ 			function = "mdio";
++			bias-pull-up;
+ 		};
+ 
+-		pinmux_2 {
++		mdc-pins {
+ 			pins = "gpio52";
+ 			function = "mdc";
+-		};
+-
 -		pinconf {
--			pins = "gpio20", "gpio21";
-+	gsbi4_uart_pin_a: gsbi4-uart-pin-active-state {
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "gsbi4";
+-			pins = "gpio52", "gpio53";
+ 			bias-pull-up;
+ 		};
+ 	};
+ 
+-	serial_pins: serial_pinmux {
+-		mux {
+-			pins = "gpio60", "gpio61";
+-			function = "blsp_uart0";
+-			bias-disable;
+-		};
++	serial_pins: serial-state{
++		pins = "gpio60", "gpio61";
++		function = "blsp_uart0";
++		bias-disable;
+ 	};
+ 
+-	spi_0_pins: spi_0_pinmux {
+-		pin {
++	spi_0_pins: spi-0-state {
++		spi0-pins {
+ 			function = "blsp_spi0";
+ 			pins = "gpio55", "gpio56", "gpio57";
  			drive-strength = <2>;
  			bias-disable;
  		};
--	};
  
--	gsbi1_uart_2pins: gsbi1_uart_2pins {
--		mux {
--			pins = "gpio18", "gpio19";
--			function = "gsbi1";
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "gsbi4";
-+			drive-strength = <4>;
-+			bias-disable;
- 		};
- 	};
+-		pin_cs {
++		spi0-cs-pins {
+ 			function = "gpio";
+ 			pins = "gpio54", "gpio59";
+ 			drive-strength = <2>;
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi
+index f7ac8f9d0b6f..efbe89dd4793 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi
+@@ -34,30 +34,22 @@ &prng {
+ };
  
--	gsbi1_uart_4pins: gsbi1_uart_4pins {
+ &tlmm {
+-	serial_pins: serial_pinmux {
 -		mux {
--			pins = "gpio18", "gpio19", "gpio20", "gpio21";
--			function = "gsbi1";
--		};
-+	gsbi6_uart_2pins: gsbi6-uart-2pins-state {
-+		pins = "gpio14", "gpio15";
-+		function = "gsbi6";
- 	};
- 
--	i2c2_pins: i2c2 {
--		mux {
--			pins = "gpio24", "gpio25";
--			function = "gsbi2";
--		};
--
--		pinconf {
--			pins = "gpio24", "gpio25";
--			drive-strength = <16>;
+-			pins = "gpio60", "gpio61";
+-			function = "blsp_uart0";
 -			bias-disable;
 -		};
-+	gsbi6_uart_4pins: gsbi6-uart-4pins-state {
-+		pins = "gpio14", "gpio15", "gpio16", "gpio17";
-+		function = "gsbi6";
- 	};
- 
--	i2c2_pins_sleep: i2c2_pins_sleep {
--		mux {
--			pins = "gpio24", "gpio25";
--			function = "gpio";
--		};
--
--		pinconf {
--			pins = "gpio24", "gpio25";
--			drive-strength = <2>;
--			bias-disable;
--		};
-+	gsbi7_uart_2pins: gsbi7-uart-2pins-state {
-+		pins = "gpio82", "gpio83";
-+		function = "gsbi7";
- 	};
- 
--	i2c3_pins: i2c3 {
--		mux {
--			pins = "gpio8", "gpio9";
--			function = "gsbi3";
--		};
--
--		pinconf {
--			pins = "gpio8", "gpio9";
--			drive-strength = <16>;
--			bias-disable;
--		};
-+	gsbi7_uart_4pins: gsbi7_uart_4pins-state {
-+		pins = "gpio82", "gpio83", "gpio84", "gpio85";
-+		function = "gsbi7";
- 	};
- 
--	i2c3_pins_sleep: i2c3_pins_sleep {
--		mux {
--			pins = "gpio8", "gpio9";
--			function = "gpio";
--		};
--		pinconf {
--			pins = "gpio8", "gpio9";
--			drive-strength = <2>;
--			bias-disable;
--		};
-+	i2c1_default_state: i2c1-default-state {
-+		pins = "gpio20", "gpio21";
-+		function = "gsbi1";
-+		drive-strength = <16>;
++	serial_pins: serial-state {
++		pins = "gpio60", "gpio61";
++		function = "blsp_uart0";
 +		bias-disable;
  	};
  
--	i2c4_pins: i2c4 {
--		mux {
--			pins = "gpio12", "gpio13";
--			function = "gsbi4";
--		};
--
--		pinconf {
--			pins = "gpio12", "gpio13";
--			drive-strength = <16>;
--			bias-disable;
--		};
-+	i2c1_sleep_state: i2c1-sleep-state {
-+		pins = "gpio20", "gpio21";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
- 	};
- 
--	i2c4_pins_sleep: i2c4_pins_sleep {
--		mux {
--			pins = "gpio12", "gpio13";
--			function = "gpio";
--		};
--		pinconf {
--			pins = "gpio12", "gpio13";
--			drive-strength = <2>;
--			bias-disable;
--		};
-+	i2c2_default_state: i2c2-default-state {
-+		pins = "gpio24", "gpio25";
-+		function = "gsbi2";
-+		drive-strength = <16>;
-+		bias-disable;
- 	};
- 
--	spi5_default: spi5_default {
+-	spi_0_pins: spi_0_pinmux {
 -		pinmux {
--			pins = "gpio51", "gpio52", "gpio54";
--			function = "gsbi5";
+-			function = "blsp_spi0";
+-			pins = "gpio55", "gpio56", "gpio57";
 -		};
--
 -		pinmux_cs {
 -			function = "gpio";
--			pins = "gpio53";
--		};
--
--		pinconf {
--			pins = "gpio51", "gpio52", "gpio54";
--			drive-strength = <16>;
--			bias-disable;
--		};
--
--		pinconf_cs {
--			pins = "gpio53";
--			drive-strength = <16>;
--			bias-disable;
--			output-high;
--		};
-+	i2c2_sleep_state: i2c2-sleep-state {
-+		pins = "gpio24", "gpio25";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
- 	};
- 
--	spi5_sleep: spi5_sleep {
--		pinmux {
--			function = "gpio";
--			pins = "gpio51", "gpio52", "gpio53", "gpio54";
--		};
--
--		pinconf {
--			pins = "gpio51", "gpio52", "gpio53", "gpio54";
--			drive-strength = <2>;
--			bias-pull-down;
--		};
-+	i2c3_default_state: i2c3-default-state {
-+		pins = "gpio8", "gpio9";
-+		function = "gsbi3";
-+		drive-strength = <16>;
-+		bias-disable;
- 	};
- 
--	i2c6_pins: i2c6 {
--		mux {
--			pins = "gpio16", "gpio17";
--			function = "gsbi6";
--		};
--
--		pinconf {
--			pins = "gpio16", "gpio17";
--			drive-strength = <16>;
--			bias-disable;
--		};
-+	i2c3_sleep_state: i2c3-sleep-state {
-+		pins = "gpio8", "gpio9";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
- 	};
- 
--	i2c6_pins_sleep: i2c6_pins_sleep {
--		mux {
--			pins = "gpio16", "gpio17";
--			function = "gpio";
+-			pins = "gpio54";
 -		};
 -		pinconf {
--			pins = "gpio16", "gpio17";
--			drive-strength = <2>;
--			bias-disable;
--		};
-+	i2c4_default_state: i2c4-default-state {
-+		pins = "gpio12", "gpio13";
-+		function = "gsbi4";
-+		drive-strength = <16>;
-+		bias-disable;
- 	};
- 
--	gsbi4_uart_pin_a: gsbi4-uart-pin-active-state {
--		rx-pins {
--			pins = "gpio11";
--			function = "gsbi4";
--			drive-strength = <2>;
--			bias-disable;
--		};
--
--		tx-pins {
--			pins = "gpio10";
--			function = "gsbi4";
--			drive-strength = <4>;
--			bias-disable;
--		};
-+	i2c4_sleep_state: i2c4-sleep-state {
-+		pins = "gpio12", "gpio13";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
- 	};
- 
--	gsbi6_uart_2pins: gsbi6_uart_2pins {
--		mux {
--			pins = "gpio14", "gpio15";
--			function = "gsbi6";
--		};
-+	i2c6_default_state: i2c6-default-state {
-+		pins = "gpio16", "gpio17";
-+		function = "gsbi6";
-+		drive-strength = <16>;
-+		bias-disable;
- 	};
- 
--	gsbi6_uart_4pins: gsbi6_uart_4pins {
--		mux {
--			pins = "gpio14", "gpio15", "gpio16", "gpio17";
--			function = "gsbi6";
--		};
-+	i2c6_sleep_state: i2c6-sleep-state {
-+		pins = "gpio16", "gpio17";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
- 	};
- 
--	gsbi7_uart_2pins: gsbi7_uart_2pins {
--		mux {
--			pins = "gpio82", "gpio83";
--			function = "gsbi7";
--		};
-+	i2c7_default_state: i2c7-default-state {
-+		pins = "gpio84", "gpio85";
-+		function = "gsbi7";
-+		drive-strength = <16>;
-+		bias-disable;
- 	};
- 
--	gsbi7_uart_4pins: gsbi7_uart_4pins {
--		mux {
--			pins = "gpio82", "gpio83", "gpio84", "gpio85";
--			function = "gsbi7";
--		};
-+	i2c7_sleep_state: i2c7-sleep-state {
-+		pins = "gpio84", "gpio85";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
- 	};
- 
--	i2c7_pins: i2c7 {
--		mux {
--			pins = "gpio84", "gpio85";
--			function = "gsbi7";
-+	spi5_default_state: spi5-default-state {
-+		spi5-pins {
-+			pins = "gpio51", "gpio52", "gpio54";
-+			function = "gsbi5";
-+			drive-strength = <16>;
-+			bias-disable;
- 		};
- 
--		pinconf {
--			pins = "gpio84", "gpio85";
-+		spi5-cs-pins {
-+			pins = "gpio53";
-+			function = "gpio";
- 			drive-strength = <16>;
++	spi_0_pins: spi-0-state {
++		spi0-pins {
+ 			pins = "gpio55", "gpio56", "gpio57";
++			function = "blsp_spi0";
+ 			drive-strength = <12>;
  			bias-disable;
-+			output-high;
  		};
- 	};
- 
--	i2c7_pins_sleep: i2c7_pins_sleep {
--		mux {
--			pins = "gpio84", "gpio85";
-+	spi5_sleep_state: spi5-sleep-state {
-+		spi5-pins {
-+			pins = "gpio51", "gpio52", "gpio53", "gpio54";
- 			function = "gpio";
--		};
--		pinconf {
--			pins = "gpio84", "gpio85";
+-		pinconf_cs {
++		spi0-cs-pins {
+ 			pins = "gpio54";
++			function = "gpio";
  			drive-strength = <2>;
--			bias-disable;
-+			bias-pull-down;
- 		};
- 	};
+ 			bias-disable;
+ 			output-high;
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi
+index 374af6dd360a..91e296d2ea82 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi
+@@ -24,26 +24,26 @@ memory {
  
--	riva_fm_pin_a: riva-fm-active {
-+	riva_fm_pin_a: riva-fm-active-state {
- 		pins = "gpio14", "gpio15";
- 		function = "riva_fm";
- 	};
+ 	soc {
+ 		pinctrl@1000000 {
+-			serial_0_pins: serial0-pinmux {
++			serial_0_pins: serial0-state {
+ 				pins = "gpio16", "gpio17";
+ 				function = "blsp_uart0";
+ 				bias-disable;
+ 			};
  
--	riva_bt_pin_a: riva-bt-active {
-+	riva_bt_pin_a: riva-bt-active-state {
- 		pins = "gpio16", "gpio17";
- 		function = "riva_bt";
- 	};
+-			serial_1_pins: serial1-pinmux {
++			serial_1_pins: serial1-state {
+ 				pins = "gpio8", "gpio9",
+ 					"gpio10", "gpio11";
+ 				function = "blsp_uart1";
+ 				bias-disable;
+ 			};
  
--	riva_wlan_pin_a: riva-wlan-active {
-+	riva_wlan_pin_a: riva-wlan-active-state {
- 		pins = "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
- 		function = "riva_wlan";
+-			spi_0_pins: spi-0-pinmux {
+-				pinmux {
++			spi_0_pins: spi-0-state {
++				spi0-pins {
+ 					function = "blsp_spi0";
+ 					pins = "gpio13", "gpio14", "gpio15";
+ 					bias-disable;
+ 				};
+-				pinmux_cs {
++				spi0-cs-pins {
+ 					function = "gpio";
+ 					pins = "gpio12";
+ 					bias-disable;
+@@ -51,13 +51,13 @@ pinmux_cs {
+ 				};
+ 			};
  
-@@ -320,22 +220,24 @@ riva_wlan_pin_a: riva-wlan-active {
- 		bias-pull-down;
- 	};
+-			i2c_0_pins: i2c-0-pinmux {
++			i2c_0_pins: i2c-0-state {
+ 				pins = "gpio20", "gpio21";
+ 				function = "blsp_i2c0";
+ 				bias-disable;
+ 			};
  
--	hdmi_pinctrl: hdmi-pinctrl {
--		mux {
--			pins = "gpio70", "gpio71", "gpio72";
--			function = "hdmi";
--		};
--
--		pinconf_ddc {
-+	hdmi_pinctrl: hdmi-pinctrl-state {
-+		ddc-pins {
- 			pins = "gpio70", "gpio71";
-+			function = "hdmi";
- 			bias-pull-up;
- 			drive-strength = <2>;
- 		};
- 
--		pinconf_hpd {
-+		hpd-pins {
- 			pins = "gpio72";
-+			function = "hdmi";
- 			bias-pull-down;
- 			drive-strength = <16>;
- 		};
- 	};
-+
-+	ps_hold_default_state: ps-hold-default-state {
-+		pins = "gpio78";
-+		function = "ps_hold";
-+	};
- };
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts
-index 2412aa3e3e8d..7752f07973f9 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts
-@@ -373,21 +373,21 @@ &sdcc3 {
- 	cd-gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
- 
- 	pinctrl-names = "default";
--	pinctrl-0 = <&sdcc3_pins>, <&sdcc3_cd_pin_a>;
-+	pinctrl-0 = <&sdcc3_default_state>, <&sdcc3_cd_pin_a>;
- 
- 	status = "okay";
- };
- 
- &tlmm_pinmux {
--	gsbi5_uart_pin_a: gsbi5-uart-pin-active {
--		rx {
-+	gsbi5_uart_pin_a: gsbi5-uart-pin-active-state {
-+		rx-pins {
- 			pins = "gpio52";
- 			function = "gsbi5";
- 			drive-strength = <2>;
- 			bias-pull-up;
+-			nand_pins: nand-pins {
++			nand_pins: nand-state {
+ 				pins = "gpio53", "gpio55", "gpio56",
+ 					"gpio57", "gpio58", "gpio59",
+ 					"gpio60", "gpio62", "gpio63",
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts
+index ea2987fcbff8..41c5874f6f97 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts
+@@ -19,20 +19,20 @@ spi@78b6000 {
  		};
  
--		tx {
-+		tx-pins {
- 			pins = "gpio51";
- 			function = "gsbi5";
- 			drive-strength = <4>;
-@@ -396,7 +396,7 @@ tx {
- 	};
+ 		pinctrl@1000000 {
+-			serial_1_pins: serial1-pinmux {
++			serial_1_pins: serial1-state {
+ 				pins = "gpio8", "gpio9",
+ 					"gpio10", "gpio11";
+ 				function = "blsp_uart1";
+ 				bias-disable;
+ 			};
  
+-			spi_0_pins: spi-0-pinmux {
+-				pinmux {
++			spi_0_pins: spi-0-state {
++				spi0-pins {
+ 					function = "blsp_spi0";
+ 					pins = "gpio13", "gpio14", "gpio15";
+ 					bias-disable;
+ 				};
+-				pinmux_cs {
++				spio-cs-pins {
+ 					function = "gpio";
+ 					pins = "gpio12";
+ 					bias-disable;
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts
+index bd3553dd2070..67ee99d69757 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts
+@@ -9,7 +9,7 @@ / {
  
--	sdcc3_cd_pin_a: sdcc3-cd-pin-active {
-+	sdcc3_cd_pin_a: sdcc3-cd-pin-active-state {
- 		pins = "gpio26";
- 		function = "gpio";
+ 	soc {
+ 		pinctrl@1000000 {
+-			serial_1_pins: serial1-pinmux {
++			serial_1_pins: serial1-state {
+ 				pins = "gpio8", "gpio9";
+ 				function = "blsp_uart1";
+ 				bias-disable;
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
+index 7ef635997efa..cc88cf5f0d9b 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
+@@ -24,19 +24,19 @@ chosen {
  
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
-index 769e151747c3..00f273ffea9c 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
-@@ -302,7 +302,7 @@ tlmm_pinmux: pinctrl@800000 {
- 			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 	soc {
+ 		pinctrl@1000000 {
+-			serial_0_pins: serial0-pinmux {
++			serial_0_pins: serial0-state {
+ 				pins = "gpio16", "gpio17";
+ 				function = "blsp_uart0";
+ 				bias-disable;
+ 			};
  
- 			pinctrl-names = "default";
--			pinctrl-0 = <&ps_hold>;
-+			pinctrl-0 = <&ps_hold_default_state>;
- 		};
+-			i2c_0_pins: i2c-0-pinmux {
++			i2c_0_pins: i2c-0-state {
+ 				pins = "gpio20", "gpio21";
+ 				function = "blsp_i2c0";
+ 				bias-disable;
+ 			};
  
- 		sfpb_wrapper_mutex: syscon@1200000 {
-@@ -435,8 +435,8 @@ gsbi1_serial: serial@12450000 {
- 
- 			gsbi1_i2c: i2c@12460000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c1_pins>;
--				pinctrl-1 = <&i2c1_pins_sleep>;
-+				pinctrl-0 = <&i2c1_default_state>;
-+				pinctrl-1 = <&i2c1_sleep_state>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x12460000 0x1000>;
- 				interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-@@ -465,8 +465,8 @@ gsbi2: gsbi@12480000 {
- 			gsbi2_i2c: i2c@124a0000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x124a0000 0x1000>;
--				pinctrl-0 = <&i2c2_pins>;
--				pinctrl-1 = <&i2c2_pins_sleep>;
-+				pinctrl-0 = <&i2c2_default_state>;
-+				pinctrl-1 = <&i2c2_sleep_state>;
- 				pinctrl-names = "default", "sleep";
- 				interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
-@@ -489,8 +489,8 @@ gsbi3: gsbi@16200000 {
- 			ranges;
- 			gsbi3_i2c: i2c@16280000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c3_pins>;
--				pinctrl-1 = <&i2c3_pins_sleep>;
-+				pinctrl-0 = <&i2c3_default_state>;
-+				pinctrl-1 = <&i2c3_sleep_state>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x16280000 0x1000>;
- 				interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-@@ -528,8 +528,8 @@ gsbi4_serial: serial@16340000 {
- 
- 			gsbi4_i2c: i2c@16380000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c4_pins>;
--				pinctrl-1 = <&i2c4_pins_sleep>;
-+				pinctrl-0 = <&i2c4_default_state>;
-+				pinctrl-1 = <&i2c4_sleep_state>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x16380000 0x1000>;
- 				interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-@@ -565,8 +565,8 @@ gsbi5_spi: spi@1a280000 {
- 				compatible = "qcom,spi-qup-v1.1.1";
- 				reg = <0x1a280000 0x1000>;
- 				interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
--				pinctrl-0 = <&spi5_default>;
--				pinctrl-1 = <&spi5_sleep>;
-+				pinctrl-0 = <&spi5_default_state>;
-+				pinctrl-1 = <&spi5_sleep_state>;
- 				pinctrl-names = "default", "sleep";
- 				clocks = <&gcc GSBI5_QUP_CLK>, <&gcc GSBI5_H_CLK>;
- 				clock-names = "core", "iface";
-@@ -599,8 +599,8 @@ gsbi6_serial: serial@16540000 {
- 
- 			gsbi6_i2c: i2c@16580000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c6_pins>;
--				pinctrl-1 = <&i2c6_pins_sleep>;
-+				pinctrl-0 = <&i2c6_default_state>;
-+				pinctrl-1 = <&i2c6_sleep_state>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x16580000 0x1000>;
- 				interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-@@ -635,8 +635,8 @@ gsbi7_serial: serial@16640000 {
- 
- 			gsbi7_i2c: i2c@16680000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c7_pins>;
--				pinctrl-1 = <&i2c7_pins_sleep>;
-+				pinctrl-0 = <&i2c7_default_state>;
-+				pinctrl-1 = <&i2c7_sleep_state>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x16680000 0x1000>;
- 				interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
-@@ -945,7 +945,7 @@ sdcc4: mmc@121c0000 {
- 			dmas = <&sdcc4bam 2>, <&sdcc4bam 1>;
- 			dma-names = "tx", "rx";
- 			pinctrl-names = "default";
--			pinctrl-0 = <&sdc4_gpios>;
-+			pinctrl-0 = <&sdc4_default_state>;
- 		};
- 
- 		sdcc4bam: dma-controller@121c2000 {
-@@ -962,7 +962,7 @@ sdcc1: mmc@12400000 {
- 			status = "disabled";
- 			compatible = "arm,pl18x", "arm,primecell";
- 			pinctrl-names = "default";
--			pinctrl-0 = <&sdcc1_pins>;
-+			pinctrl-0 = <&sdcc1_default_state>;
- 			arm,primecell-periphid = <0x00051180>;
- 			reg = <0x12400000 0x2000>;
- 			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+-			nand_pins: nand-pins {
++			nand_pins: nand-state {
+ 				pins = "gpio53", "gpio55", "gpio56",
+ 				       "gpio57", "gpio58", "gpio59",
+ 				       "gpio60", "gpio62", "gpio63",
 -- 
 2.45.2
 
