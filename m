@@ -1,85 +1,79 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704D0128369;
-	Wed, 10 Jul 2024 12:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3AD191496;
+	Wed, 10 Jul 2024 12:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720614998; cv=none; b=etRW88U6x65/U4UKTNUk/94h1lBlP+UYm47j4eNq4JNvbDVoBeWj2oDVNAArJIy5qCv3IMU5V0Ml3sUWMSoIPqaRDiKGCLDkCfpZJjW+FU6FM5AL1fIeyzZYECGoR09ZMaNcXuJsaS1xe/noRCnMcqrjICB1mTpyiAbW5Uh0gXA=
+	t=1720615151; cv=none; b=OlM3VpC9uq4mIiyqE/ZoFdndxwzEpE4IKL0/uMNQn9D84EusjLqIhltXZ85FLZzvIl5jojkiK/M6vj2rotRrwnVrPZcLfDvl/PcOQozZXUqxPHzGgoccGsfNlBrdudzBie1Weqq6ZO6Iy1JnrIZ0wgyA7dEh+K3l5fb8Z9kaStc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720614998; c=relaxed/simple;
-	bh=It3imBc3BM6SehI+VEHWR2OIlg/DcDnLWTXrkGkSGLQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FUCJv8QwOCX2J9Fdidg/xbsZG5uvNrn9fKmqNCL4VeUIpFUul5CjSZMyJFMivXenmwRmnCoDcqTYtenVyoDZdYNqQsk0y2Hh0WnLiC/MEtZZ5WDk/Hi9bLYOAZysth5Y4kx7gFJpY84hOHuobIxYbcaW/yI6EAVbbUWv9kVqLXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B4392006AD;
-	Wed, 10 Jul 2024 14:36:29 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 12D04200E34;
-	Wed, 10 Jul 2024 14:36:29 +0200 (CEST)
-Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9D1C1183487B;
-	Wed, 10 Jul 2024 20:36:27 +0800 (+08)
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	rohit.fule@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com,
-	haibo.chen@nxp.com,
-	LnxRevLi@nxp.com
-Subject: [PATCH v2] Bluetooth: btnxpuart: Fix warnings for suspend and resume functions
-Date: Wed, 10 Jul 2024 18:04:26 +0530
-Message-Id: <20240710123426.935122-1-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720615151; c=relaxed/simple;
+	bh=Pkl0N61cIs16sTy1Os3VUMkDmIplUrRbwQp3A+pBqhE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I8sppV8gfIeWKtm4S5FU440NnNVwloxw/iIZXVwo/ECcsS3ch+v5+8Fco3eP+gBj5WMEvn4tnobeCXx2F61+pKqqvjJPfKPEasrwxBeSjvimolHFPmgjVtyQXaiDcVlHBQu4t8RhhoN6qI7zJ1SV7h+Q2PeXEQ7yQrGCG3dMCVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kF0X6NM5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kF0X6NM5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5897C32786;
+	Wed, 10 Jul 2024 12:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720615150;
+	bh=Pkl0N61cIs16sTy1Os3VUMkDmIplUrRbwQp3A+pBqhE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kF0X6NM5ZQ6RVrRPG917AZ8uI6AafaDCw3KdxlvPfNpNvKLlldS1zjMwHH702yM2g
+	 Tb8Df5XunssFakljELmc/lNx0NNP95YO2XXJONWcPsJ21WGww+UWjatLAEy/iWPrIl
+	 AIJy8x9ZQ4gBb57r0G1NQKUOCcX2LPlNWyY8eRX0Sihz5K68hYpdjv5shzK670Niif
+	 UU8L68Nug/l4hn6Fzgt372IRMtrgAtJ+NOZMFPuAJIRqprwERICtOiuV3BwsVTyrzv
+	 z44X1Vk7rjrirBw23CQ9nmW80ZBbzo1ZObOKx8SqD9MM2ftz+4CNHZRavkRyBgaq+0
+	 Ic+b9wDlLGHqQ==
+From: Will Deacon <will@kernel.org>
+To: Joerg Roedel <joro@8bytes.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Louis Maliyam <louispm@google.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] iommu/vt-d: Fix aligned pages for cache invalidation
+Date: Wed, 10 Jul 2024 13:39:03 +0100
+Message-Id: <172061321610.624103.9680592794561118105.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240709152643.28109-1-baolu.lu@linux.intel.com>
+References: <20240709152643.28109-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 
-This fixes the warnings 'nxp_serdev_resume' and 'nxp_serdev_suspend'
-defined but not used.
+On Tue, 09 Jul 2024 23:26:41 +0800, Lu Baolu wrote:
+> The aligned pages for cache invalidation returned by
+> calculate_psi_aligned_address() are incorrect if the start pfn is not
+> aligned, which can lead to cache inconsistencies when qi_flush_piotlb()
+> uses the number of pages to flush caches for the first-stage
+> translation.
+> 
+> Fix this by updating the aligned pages once the address mask is adjusted.
+> 
+> [...]
 
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407100518.06Xxq5PK-lkp@intel.com/
----
-v2: Rebase master, fix conflict due to copy-paste error from previous
-patch (bluez.test.bot)
----
- drivers/bluetooth/btnxpuart.c | 2 ++
- 1 file changed, 2 insertions(+)
+Applied to iommu (intel/vt-d), thanks!
 
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index f75b24bd3045..31d3dd90b672 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -1522,6 +1522,7 @@ static void nxp_serdev_remove(struct serdev_device *serdev)
- 	hci_free_dev(hdev);
- }
- 
-+#ifdef CONFIG_PM_SLEEP
- static int nxp_serdev_suspend(struct device *dev)
- {
- 	struct btnxpuart_dev *nxpdev = dev_get_drvdata(dev);
-@@ -1539,6 +1540,7 @@ static int nxp_serdev_resume(struct device *dev)
- 	ps_control(psdata->hdev, PS_STATE_AWAKE);
- 	return 0;
- }
-+#endif
- 
- static struct btnxpuart_data w8987_data __maybe_unused = {
- 	.helper_fw_name = NULL,
+[1/2] iommu/vt-d: Limit max address mask to MAX_AGAW_PFN_WIDTH
+      https://git.kernel.org/iommu/c/c420a2b4e8be
+[2/2] iommu/vt-d: Fix aligned pages in calculate_psi_aligned_address()
+      https://git.kernel.org/iommu/c/0a3f6b346301
+
+Cheers,
 -- 
-2.34.1
+Will
 
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
