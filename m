@@ -1,54 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B380D1940B5
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473C8194120;
+	Wed, 10 Jul 2024 14:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720620128; cv=none; b=inMA6FxKb9W4+cPBrC0fKP9tSqZz0dGLk9zsgHnosEiaj6KLOSDRJDH4VhxPgVTXoKH7T5/rf6/f4iNmoa/QEyjnM8yH/rj+65frWW3oRgOpjeUX1/Mas5fHCRiZmiHAcIudrWMufJnQSXLMirsTm30XHPkQwEK8bBRWcdhRbcY=
+	t=1720620128; cv=none; b=hmNyqM+DqmyI9X6E4hUpK+VNKZM7uLnMcHo49AXvaxf6ryeMrWNmIVHXGVpBjnctjojwqtMve2rki3pkqCjsFKAL9QhxlfOoqnF0ovwj3B4S2ypCCid76wdu3w8TeSRpzH4rPiD+tFhNzzbZ7z1pdZZPEeE4eoiI6U2ts8/cJQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720620128; c=relaxed/simple;
-	bh=1Q/IkzIbtH2po0tnCn/AxRGOQ8Kj9G4Vm7KOGzvRH8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fSGKVhU22ccA+ILV97HiTj2KEiQIBGb4A6JjMLAMCny8+d3mCvS44sfpR4qY5/p1992dZCE9q5cpCZH48mk7x94QQ4VvT8qIVePeRgTZ1BfMl2ebYIpyoCXQWPDsUl1WY1UVbim/UIh5i5nH1ZxJgGqAhjCdL+ead1600m+FFWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YiOWbcpb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=Vk9b2kG3gcfI2no+6grdIB3azydt/9VYwwKWqhPtfGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=unpKF8bXwCknLvCwQu0nkOpKa0ZBxEH12ffxLFSm/rqIvjLWye351JTbo4/3IcDwRvmZN2IgP2HfNxCw2QN0fNCdnW4eaBZ8LkHch23ktFbPX7oEOo4i2mYg/fcEiOyTlTJU68kKmUYQQIKfTMoX78y6KtUBiabNXi9qbPcbk6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tSmIFejt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YiOWbcpb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720620125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=1Q/IkzIbtH2po0tnCn/AxRGOQ8Kj9G4Vm7KOGzvRH8c=;
-	b=YiOWbcpbGKNynTjbitl+O4/dJ9dCtbeKosrwxYd3tLmT371tnZDbYp2Ks6FzSY+ZHJn/og
-	0p/RiVR90M4hDVre6wKf6jJ3d/0kiyKDkChfo3Z37Bij2EzqREotqub18B0G0fqAG+TdMv
-	sb5FYuSTA6Y2hIi9Aq6AotHrretybq8=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-9-nfif026rPRuTTcISBDyRew-1; Wed,
- 10 Jul 2024 10:02:00 -0400
-X-MC-Unique: nfif026rPRuTTcISBDyRew-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B7FEE19772CF;
-	Wed, 10 Jul 2024 14:01:58 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 822F61955F6E;
-	Wed, 10 Jul 2024 14:01:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 10 Jul 2024 16:00:22 +0200 (CEST)
-Date: Wed, 10 Jul 2024 16:00:17 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org
-Cc: clm@meta.com, jolsa@kernel.org, mingo@kernel.org, paulmck@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] uprobes: document mmap_lock, don't abuse
- get_user_pages_remote()
-Message-ID: <20240710140017.GA1074@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tSmIFejt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6DBC32786;
+	Wed, 10 Jul 2024 14:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720620127;
+	bh=Vk9b2kG3gcfI2no+6grdIB3azydt/9VYwwKWqhPtfGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tSmIFejtjeH7oRSYasreIrxIjw2X/f/EHS/XZJXRDf5pUqsHthV11iFlFF1M1LOOV
+	 BZT31Oj+VKGAFqv5C9cXpv0fcwPTegjQzOiXP7zVfkF6S7ch12o4IKrNxU5aVGEw+C
+	 yLF+OPKy+BXJz9YnRfU/NbZZdxfON8BFWLfwyssQ=
+Date: Wed, 10 Jul 2024 16:02:04 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 01/10] rust: pass module name to `Module::init`
+Message-ID: <2024071046-gaining-gave-b38f@gregkh>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-2-dakr@redhat.com>
+ <2024062038-backroom-crunchy-d4c9@gregkh>
+ <ZnRUXdMaFJydAn__@cassiopeiae>
+ <2024062010-change-clubhouse-b16c@gregkh>
+ <ZnSeAZu3IMA4fR8P@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,11 +50,276 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <ZnSeAZu3IMA4fR8P@cassiopeiae>
 
-Peter, these simple cleanups should not conflict with your changes,
-but I can resend them later if it causes any inconvenience.
+On Thu, Jun 20, 2024 at 11:24:17PM +0200, Danilo Krummrich wrote:
+> On Thu, Jun 20, 2024 at 06:36:08PM +0200, Greg KH wrote:
+> > On Thu, Jun 20, 2024 at 06:10:05PM +0200, Danilo Krummrich wrote:
+> > > On Thu, Jun 20, 2024 at 04:19:48PM +0200, Greg KH wrote:
+> > > > On Wed, Jun 19, 2024 at 01:39:47AM +0200, Danilo Krummrich wrote:
+> > > > > In a subsequent patch we introduce the `Registration` abstraction used
+> > > > > to register driver structures. Some subsystems require the module name on
+> > > > > driver registration (e.g. PCI in __pci_register_driver()), hence pass
+> > > > > the module name to `Module::init`.
+> > > > 
+> > > > I understand the need/want here, but it feels odd that you have to
+> > > > change anything to do it.
+> > > > 
+> > > > > 
+> > > > > Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> > > > > ---
+> > > > >  rust/kernel/lib.rs           | 14 ++++++++++----
+> > > > >  rust/kernel/net/phy.rs       |  2 +-
+> > > > >  rust/macros/module.rs        |  3 ++-
+> > > > >  samples/rust/rust_minimal.rs |  2 +-
+> > > > >  samples/rust/rust_print.rs   |  2 +-
+> > > > >  5 files changed, 15 insertions(+), 8 deletions(-)
+> > > > > 
+> > > > > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > > > > index a791702b4fee..5af00e072a58 100644
+> > > > > --- a/rust/kernel/lib.rs
+> > > > > +++ b/rust/kernel/lib.rs
+> > > > > @@ -71,7 +71,7 @@ pub trait Module: Sized + Sync + Send {
+> > > > >      /// should do.
+> > > > >      ///
+> > > > >      /// Equivalent to the `module_init` macro in the C API.
+> > > > > -    fn init(module: &'static ThisModule) -> error::Result<Self>;
+> > > > > +    fn init(name: &'static str::CStr, module: &'static ThisModule) -> error::Result<Self>;
+> > > > 
+> > > > Why can't the name come directly from the build system?  Why must it be
+> > > > passed into the init function of the module "class"?  What is it going
+> > > > to do with it?
+> > > 
+> > > The name does come from the build system, that's where `Module::init` gets it
+> > > from.
+> > > 
+> > > > 
+> > > > A PCI, or other bus, driver "knows" it's name already by virtue of the
+> > > > build system, so it can pass that string into whatever function needs
+> > > 
+> > > Let's take pci_register_driver() as example.
+> > > 
+> > > ```
+> > > #define pci_register_driver(driver)		\
+> > > 	__pci_register_driver(driver, THIS_MODULE, KBUILD_MODNAME)
+> > > ```
+> > > 
+> > > In C drivers this works because (1) it's a macro and (2) it's called directly
+> > > from the driver code.
+> > > 
+> > > In Rust, for very good reasons, we have abstractions for C APIs, hence the
+> > > actual call to __pci_register_driver() does not come from code within the
+> > > module, but from the PCI Rust abstraction `Module::init` calls into instead.
+> > 
+> > I don't understand those reasons, sorry.
+> 
+> Ok, good you point this out. We should definitely discuss this point then and
+> build some consensus around it.
+> 
+> I propose to focus on this point first and follow up with the discussion of the
+> rest of the series afterwards.
+> 
+> Let me explain why I am convinced that it's very important to have abstractions
+> in place in general and from the get-go.
+> 
+> In general, having abstractions for C APIs is the foundation of being able to
+> make use of a lot of advantages Rust has to offer.
+> 
+> The most obvious one are all the safety aspects. For instance, with an
+> abstraction we have to get exactly one piece of code right in terms of pointer
+> validity, lifetimes, type safety, API semantics, etc. and in all other places
+> (e.g. drivers) we get the compiler to check those things for us through the
+> abstraction.
+> 
+> Now, the abstraction can be buggy or insufficient and hence there is no absolute
+> safety guarantee. *But*, if we get this one thing right, there is nothing a
+> driver can mess up by itself trying to do stupid things anymore.
+> 
+> If we just call the C code instead we have to get it right everywhere instead.
 
-Oleg.
+I too want a pony.  But unfortunatly you are shaving a yak here instead :)
 
+I'm not saying to call C code from rust, I'm saying call rust code from
+C.
+
+Have a "normal" pci_driver structure with C functions that THEN call
+into the rust code that you want to implement them, with a pointer to
+the proper structure.  That gives you everything that you really want
+here, EXCEPT you don't have to build the whole tower of drivers and
+busses and the like.
+
+> Now, you could approach this top-down instead and argue that we could at least
+> benefit from Rust for the driver specific parts.
+> 
+> Unfortunately, this doesn't really work out either. Also driver specific code is
+> typically (very) closely connected to kernel APIs. If you want to use the safety
+> aspects of Rust for the driver specific parts you inevitably end up writing
+> abstractions for the C APIs in your driver.
+> 
+> There are basically three options you can end up with:
+> 
+> (1) An abstraction for the C API within your driver that is actually generic
+>     for every driver, and hence shouldn't be there.
+> (2) Your driver specific code is full of raw pointers and `unsafe {}` calls,
+>     which in the end just means that you ended up baking the abstraction into
+>     your driver specific code.
+> (3) You ignore everything, put everything in a huge `unsafe {}` block and
+>     compile C code with the Rust compiler. (Admittedly, maybe slightly
+>     overstated, but not that far off either.)
+> 
+> The latter is also the reason why it doesn't make sense to only have
+> abstractions for some things, but not for other.
+> 
+> If an abstraction for B is based on A, but we don't start with A, then B ends up
+> implementing (at least partially) the abstraction for A as well. For instance,
+> if we don't implement `driver::Registration` then the PCI abstractions (and
+> platform, usb, etc.) have to implement it.
+> 
+> It really comes down to the point that it just bubbles up. We really have to do
+> this bottom-up, otherwise we just end up moving those abstractions up, layer by
+> layer, where they don't belong to and we re-implement them over and over again.
+
+I think we are talking past each other.
+
+Here is an example .c file that you can use today for your "implement a
+PCI driver in rust" wish in a mere 34 lines of .c code:
+
+------------------------------------------------------------------------
+// SPDX-License-Identifier: GPL-2.0-only
+#include <linux/module.h>
+#include <linux/pci.h>
+#include "my_pci_rust_bindings.h"
+
+#define PCI_DEVICE_ID_FOO		0x0f00
+#define PCI_VENDOR_ID_FOO		0x0f00
+
+static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+{
+	return my_rust_probe(pdev);
+}
+
+static void remove(struct pci_dev *pdev)
+{
+	my_rust_remove(pdev);
+}
+
+static const struct pci_device_id pci_ids[] = {
+	{PCI_DEVICE(PCI_VENDOR_ID_FOO, PCI_DEVICE_ID_FOO)},
+	{}
+};
+MODULE_DEVICE_TABLE(pci, pci_ids);
+
+static struct pci_driver my_rust_pci_driver = {
+	.name = "my_pci_rust_driver",
+	.id_table = pci_ids,
+	.probe = probe,
+	.remove = remove,
+};
+module_pci_driver(my_rust_pci_driver);
+
+MODULE_DESCRIPTION("Driver for my fancy PCI device");
+MODULE_LICENSE("GPL v2");
+------------------------------------------------------------------------
+
+Now, all you have to do is provide a my_rust_probe() and
+my_rust_remove() call in your rust code, and handle the conversion of a
+struct pci_dev to whatever you want to use (which you had to do anyway),
+and you are set!
+
+That .c code above is "obviously" correct, and much simpler and worlds
+easier for all of us to understand instead of the huge .rs files that
+this patch series was attempting to implement.
+
+You have to draw the c/rust line somewhere, you all seem to be wanting
+to draw that line at "no .c in my module at all!" and I'm saying "put 34
+lines of .c in your module and you will save a LOT of headache now."
+
+All of the "real" work you want to do for your driver is behind the
+probe/remove callbacks (ok, add a suspend/resume as well, forgot that),
+and stop worrying about all of the bindings and other mess to tie into
+the driver model for a specific bus type and the lunacy that the device
+id mess was.
+
+In short, KEEP IT SIMPLE!
+
+Then, after we are comfortable with stuff like the above, slowly think
+about moving the line back a bit more, if you really even need to.  But
+why would you need to?  Only reason I can think of is if you wanted to
+write an entire bus in rust, and for right now, I would strongly suggest
+anyone not attempt that.
+
+The "joy" of writing a driver in rust is that a driver consumes from
+EVERYWHERE in the kernel (as you well know.)  Having to write bindings
+and mappings for EVERYTHING all at once, when all you really want to do
+is implement the logic between probe/remove is rough, I'm sorry.  I'm
+suggesting that you stop at the above line for now, which should make
+your life easier as the .c code is obviously correct, and anything you
+do in the rust side is your problem, not mine as a bus maintainer :)
+
+> > Changing drivers later, to take advantage of code savings like this
+> > macro can be done then, not just yet.  Let's get this understood and
+> > right first, no need to be tricky or complex.
+> > 
+> > And, as I hinted at before, I don't think we should be doing this at all
+> > just yet either.  I still think a small "C shim" layer to wrap the
+> > struct pci driver up and pass the calls to the rust portion of the
+> > module is better to start with, it both saves you time and energy so
+> > that you can work on what you really want to do (i.e. a driver in rust)
+> > and not have to worry about the c bindings as that's the "tricky" part
+> > that is stopping you from getting your driver work done.
+> 
+> I strongly disagree here. As explained above, it just bubbles up, this approach
+> would just make me end up having to write a lot of the code from the
+> abstractions in the driver.
+
+See above, you cut out all of the .rs files you submitted in this series
+and can probably just add one to map a pci_device and away you go.
+
+> What I actually want is to get to a solid foundation for Rust drivers in
+> general, since I'm convinced that this provides a lot of value beyond the scope
+> of a single driver.
+
+I don't see what not needing the above 35+ lines of .c code provides a
+value for at all, EXCEPT we now need to maintain a lot more code
+overall.
+
+> What do we pass to Rust probe() function? A raw struct pci_dev pointer or the
+> proper PCI device abstraction?
+
+See above.
+
+> How do we implement I/O memory mappings for PCI bars without PCI / I/O
+> abstraction?
+
+Call the .c functions you have today.
+
+> How do we perform (boundary checked) I/O memory reads / writes without `Io`
+> abstraction?
+
+Do you really need/want that?  If so, ok, but I think you are going to
+run into big issues with dynamic ranges that I didn't see answered on
+those patches, but I could be totally wrong.
+
+Again, one step at a time please, not the whole yak.
+
+> How do we handle the lifetime of resources without `Devres` abstraction?
+
+We have this question on the .c side as well.  Please work with the
+people who are working to solve that there as it hits everyone.
+
+> How do we (properly) implement a DRM device registration abstraction without
+> `Devres`?
+
+No idea, drm is huge :)
+
+That being said, I think you can implement it above as the lifetime of
+your device lives between probe and remove.  After remove is gone, all
+of your resources HAVE to be freed, so do that in your driver.
+
+> Luckily we already got the `Firmware` and `Device` abstraction in place. :)
+
+Baby steps :)
+
+thanks,
+
+greg k-h
