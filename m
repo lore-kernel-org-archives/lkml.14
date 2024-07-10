@@ -1,146 +1,157 @@
-Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF86191494;
-	Wed, 10 Jul 2024 15:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.239.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98091EB2A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720626059; cv=none; b=EW7LFSXV/saO/XhaDwxR4GtMgBBwJEv8khpwA4rMyEanVM+5HtqBmq01rAOrjqdaHvoCu5orVOQvDiqc6CjvdPK8oQIVPCVqhyDweaUSJla7C+a68WHZXVQGIOwtL41mm60nrucOxeYNtqJVG42BMK/4DqrwWcOUxFcsuu/zB0o=
+	t=1720626112; cv=none; b=vFESWookMOZC9tFOyAVKUCh0kEcposOFTeSTpZ+Nuu8sveQOnSxr0u4Yz236Utgo/r5aecMic/1WdNv/3FRCYd5P6HNbxbRBV8GwOvZvzEsTrsheq6z7O0hc3htPKOLDxetNixtv1WqDlwfALA9SS10tB47SF+9Y6LTw5YYNO7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720626059; c=relaxed/simple;
-	bh=CrL/Jn/Ty/fnR5ezAckIV+af6We6y4cUsMgzE8M/R7o=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uCCfNzvj6D7MYgtbMrW5EklZQtHgUj0zmFy51vcqNn+21ROgi1iDyIUoBJhj/yaq1hRKxgnwyhvgjCUTd5MoPDtWjfCQowtw3VcQvsZ0mQmobkAZA21Wxmpv9DdHHb4QuPfu0+nEAbHJcHfxfxSVQomBUrRjZ0PZTM4sTgvNKdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org; spf=pass smtp.mailfrom=enpas.org; arc=none smtp.client-ip=46.38.239.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mail.enpas.org (Postfix) with ESMTPSA id 1A3FF1000C8;
-	Wed, 10 Jul 2024 15:35:21 +0000 (UTC)
-Message-ID: <afda41dc-7b36-4ddd-abfc-c9430d8c9503@enpas.org>
-Date: Thu, 11 Jul 2024 00:35:16 +0900
+	s=arc-20240116; t=1720626112; c=relaxed/simple;
+	bh=kjSkQRtJBB57kXqddkxjG3h6NHhl8b8AwIuhcgW6jvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJNAaKz1tVn+Kdr/CmgbBm1uaFfYACh1R1fdvt7rhPqkojdeH1iwT1O38Dz4Cp/75PgqZROCM0Wzdf3gzofYcMB8GQat5bdWrelTYtFQ6CorfGZ71cXAQ2KjQ2gi0Q+xYUeX7uyTiavjoNjObgW3U3jT4j0zxxGg74EJUEi5Sy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BpkxVglJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BpkxVglJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720626109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RFy0Pt4ubesULzO+oQaiRFBM5Ze1aZnn+Qz6jyyaJAc=;
+	b=BpkxVglJmEDOvITQxlBN7RUpPcLsMAoBt+3XF7gbU8thCFy2sZZl9GuwNuEHK+MD3ZYYOb
+	N6lopLSx1m5fk1Q5NagU66uX4RC7wBkHSPQl/8rJ+egdC6ia8i2//Na7lQuYeHLkr1Tt3H
+	h9UV6egzvXXWHXf5z7qZ6IavgjlSGss=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-503-dIh-x8UiP_iCt5h6YmjwEQ-1; Wed, 10 Jul 2024 11:41:48 -0400
+X-MC-Unique: dIh-x8UiP_iCt5h6YmjwEQ-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6b5dacdc192so17472076d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:41:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720626108; x=1721230908;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RFy0Pt4ubesULzO+oQaiRFBM5Ze1aZnn+Qz6jyyaJAc=;
+        b=HjU4slmg/PBv4PA0zV41AUINkBu9l98Xoo+aZDwLiOQz8OK1d+s/qNNRHXQTAeMYId
+         xELGV93SaFXWmgszLM2U8xiGWfiZ0C3gYY/dxShvGATn7ryO+KdlLYjuK3Ug8oGzH98u
+         uvI7EZ0bLbcES/QFr02rgG/g6EtPo1dganDM0noIfuhb5kalmWZaNKQPSIrTQXi/UshN
+         gBT08/DEJlKh2xhwqyDBpuhv3/pxT/uFPbOodsyKxABeQvcClP7iT5crZ5Wkvh0T0ZNi
+         eGh4S3FkeCI5xxEKdd+iUov0Y6Wrj9bQyI1ytYjeawhC11LBENaDS7i9obJhrhgszBWB
+         FqYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCWQqqv4Oq1NC/zGIAmYWgMRI3xgQMjVpujSHwrIqhvSXSQ1JEH0UbyoxR4ye0KfVdDSTbs3A2gip5snFFJVPTDq6BxnpG1NRO8Tyq
+X-Gm-Message-State: AOJu0YwctNWBXscULekesOm6CFw9urCCZopvF/W7BBuTM6ex1qyNsrvJ
+	AqnZBUwPJHffEb8E/i+iVXdlxvomNX69kzDiNDEGqetgSNDn71H3pGDkr4UnfhTpWQGX3txXS4I
+	JAyc5TzLcZcSGbna6wnAD7DSt8Sdlmqq3AEAfGRP69XwoFEQOLLmDbCVQnEqRUQ==
+X-Received: by 2002:ad4:5e8b:0:b0:6b5:d95c:692d with SMTP id 6a1803df08f44-6b74af531a6mr711936d6.13.1720626107772;
+        Wed, 10 Jul 2024 08:41:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFm/74UP4TLT1vGs8DLjUNFGeFxt2DXzfyoISdrNcO4smbnFu4jefOYDtfhRDnu4G/xSbFhqw==
+X-Received: by 2002:ad4:5e8b:0:b0:6b5:d95c:692d with SMTP id 6a1803df08f44-6b74af531a6mr711666d6.13.1720626107436;
+        Wed, 10 Jul 2024 08:41:47 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::40])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b61b9c47d4sm18003426d6.23.2024.07.10.08.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 08:41:47 -0700 (PDT)
+Date: Wed, 10 Jul 2024 10:41:44 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: nm@ti.com, vigneshr@ti.com, kristo@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, 
+	kishon@kernel.org, sjakhade@cadence.com, rogerq@kernel.org, 
+	thomas.richard@bootlin.com, theo.lebrun@bootlin.com, make24@iscas.ac.cn, 
+	linux-phy@lists.infradead.org, mranostay@ti.com
+Subject: Re: [BUG] k3-j784s4-evm/phy-cadence-torrent: Shared reset using
+ exclusive API
+Message-ID: <qgqpibrr6hcicpofi64fxenenq7xdffnddbapefjgzsw6q7j2s@cl3gkkytj2w4>
+References: <yhtb4clns57t7qo5yxil3oofisdlzfubyiwrvjo2ufw2ngv67m@g6p7ktxfgfv3>
+ <46e635e6-b6bf-404c-87a2-57fe25b4855a@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Max Staudt <max@enpas.org>
-Subject: Re: [PATCH v1] hid-playstation: DS4: Update rumble and lightbar
- together
-To: Roderick Colenbrander <thunderbird2k@gmail.com>
-Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
- Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240616163055.75174-1-max@enpas.org>
- <CAEc3jaCkH5JwNTpHRZYsekbwX+G6T5tMTLD0+O6E7Q2hqcAFHw@mail.gmail.com>
- <dedb2c39-fc28-4cba-802f-5d56f23db722@enpas.org>
- <CAEc3jaC-Tmd2XtK9H2sipBJAhCf16dMWx46r8Hs4p9At3LC_Jg@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAEc3jaC-Tmd2XtK9H2sipBJAhCf16dMWx46r8Hs4p9At3LC_Jg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46e635e6-b6bf-404c-87a2-57fe25b4855a@ti.com>
 
-Hi Roderick,
+On Wed, Jul 10, 2024 at 10:29:46AM GMT, Siddharth Vadapalli wrote:
 
+<snip>
 
-On 7/9/24 01:07, Roderick Colenbrander wrote:
-> The console behavior (I checked the code) does use the flags as well 
-> like I do. The architecture there between usermode/kernel is a bit 
-> different, so in some cases flags do get set when not needed.
+> 
+> No, the resets are correct. Both PCIe1 and USB0 use the same instances
+> of SERDES which is SERDES0. I had posted the series for PCIe at:
+> https://lore.kernel.org/r/20240529082259.1619695-1-s-vadapalli@ti.com/
+> with all 4 Lanes of SERDES0 given to PCIe1. Similarly, Ravi had posted
+> the series for USB at:
+> https://lore.kernel.org/r/20240507095545.8210-1-r-gunasekaran@ti.com/
+> with lane 3 of SERDES0 given to USB0.
+> 
+> Since both of the series got merged on the same day (14 Jun 2024):
+> PCIe series:
+> https://lore.kernel.org/r/171826022277.240984.16790260886500529482.b4-ty@ti.com/
+> USB series:
+> https://lore.kernel.org/r/171826022274.240984.5150753966671933401.b4-ty@ti.com/
+> the dependency was unknown when the individual series were posted as
+> neither of them was a part of linux-next/ti-k3-dts-next when the other
+> one was posted.
+> 
+> > 
+> > Total aside, I think we should put the above dts snippet into one &serdes0 reference
+> > for readability sake. I'd post the patch but I'm hoping to get the above answered
+> > first in order to clean that up before shuffling things around for readability sake.
+> 
+> Yes, I agree that both sub-nodes should go into the same referenced
+> serdes0 node in k3-j784s4-evm.dts. The reason it didn't happen that way
+> to begin with is due to the fact that both series got merged on the same
+> day as I pointed out above.
+> 
+> The fix in this case will be to assign lanes 0 and 1 of SERDES0 to PCIe1
+> and lane 3 to USB0 with lane 2 left unused since PCIe doesn't have the
+> concept of a x3 link. In such a configuration, the device-tree nodes
+> will look like:
 
-Thank you so, so much for double checking this. It's always great to 
-have someone who can speak authoritatively on such matters and eliminate 
-the guesswork.
+Thanks alot for the quick explanation and suggestion!
 
+> 
+> &serdes0 {
+> 	status = "okay";
+> 
+> 	serdes0_pcie1_link: phy@0 {
+> 		reg = <0>;
+> 		cdns,num-lanes = <2>;
+> 		#phy-cells = <0>;
+> 		cdns,phy-type = <PHY_TYPE_PCIE>;
+> 		resets = <&serdes_wiz0 1>, <&serdes_wiz0 2>;
+> 	};
+> 
+> 	serdes0_usb_link: phy@3 {
+> 		reg = <3>;
+> 		cdns,num-lanes = <1>;
+> 		#phy-cells = <0>;
+> 		cdns,phy-type = <PHY_TYPE_USB3>;
+> 		resets = <&serdes_wiz0 4>;
+> 	};
+> };
+> 
+> Thank you for pointing out this issue. Please let me know if you plan to
+> post the patch with the above fix or you want me to post the patch for it.
+> 
 
-> Various devices tried to capture bit patterns and see what kind of 
-> worked even though not really right. (Officially licensed
-> controllers are a different story they use different hid reports.) We
-> didn't know other devices did this wrong.
+I've posted a series (with you CC'ed, just realized I CC'ed Matt instead
+of Ravi -- whoops): https://lore.kernel.org/all/20240710-k3-j784s4-evm-serdes0-cleanup-v1-0-03850fe33922@redhat.com/
 
-Licensed controllers... That will be my next patch set, apologies in 
-advance :)
+I'll be on PTO the next few days, so if any changes are required there
+do feel free to do them on my behalf if I don't respin by end of today
+US-time, otherwise I'll make the changes when I return next week.
 
-They need quite a few quirks, too... And as it turns out, my previous 
-patches have laid a lot of ground work for them :)
-
-
-> Correct the validation tests are all uhid based, which is the best 
-> which can be done.
-
-Please correct me if I'm getting the wrong idea here, but what I read 
-between the lines and from your email address is that this is something 
-in Sony's interest.
-
-So an idea comes to mind: Maybe somewhere inside Sony, there exists 
-something like a DS4 simulator at the HID level, which could serve as a 
-foundation for improving the tests? That would get the tests much closer 
-to the gold standard, which is using a real controller.
-
-If not, then maybe there is protocol documentation that could help test 
-writers in creating more precise tests?
-
-
-> There is the hid-tools one, but the one which we help out with, but
-> the key one is the Android ones. We have so many problems with these.
-> Mostly because of vendors not enabling e.g. FF support or LED support
-> other things.
-
-Hm, but downstream users misconfiguring kernels is not our fault, is it? 
-In that case, the tests actually do their work correctly if they show 
-that something is amiss.
-
-
-> The main new Android kernel (public knowledge) is now 6.6 and many
-> new devices due later this year/early next year will use it.  The
-> eco system is a lot wider now and the drivers are used a lot on
-> non-mobile devices (cars, televisions, chromecast,..). Occassionally
-> driver patches are also backported from upstream to older Android
-> kernels (patches have to be merged upstream first).
-
-I see. But still, that is just typical downstream risk of building on 
-behaviour that the kernel does not provide guarantees for. I know 
-first-hand that backporting is a lot of work and easy to get wrong, but 
-this is the first time that I hear that as a reason to stop improving 
-the mainline kernel. Hence my confusion here.
-
-
-> Not that I wouldn't want these kind of patches, but I have to weigh 
-> both sides.
-
-Thanks for your understanding, and hence my offer to help if I somehow 
-can...
-
-
-> The pain on addressing things downstream and in Android conformance
-> tests is quite painful.
-
-Hm, I can somewhat imagine this. I've heard that Android conformance is 
-quite strict.
-
-Given Sony's supposed interest (see above), I guess it would be a 
-worthwhile investment to make the tests more robust? We could just hold 
-off on this patch for a while until downstream has better tests... What 
-would be a timeline for this to trickle downstream?
-
-
-> We would also have both code paths used in the wild forever, because
-> existing 6.6 devices wouldn't change behavior.
-
-Well, that's kind of the point of LTS releases, if I'm not mistaken...
-
-
-> (The official Android tests are kind of kernel version agnostic as
-> they work across multiple kernel and Android versions.
-
-Hm, sounds to me like the Android test framework is broken if it cannot 
-be kernel-specific in such cases. What's required in order to improve this?
-
-
-
-Max
-
+Thanks again,
+Andrew!
 
