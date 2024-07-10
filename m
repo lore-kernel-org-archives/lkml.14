@@ -1,44 +1,44 @@
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029D47A4C
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 04:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DB65914C
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 04:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720586143; cv=none; b=GfKs8jJJ6hutwbE2vd0klzHCtgsTAToGS1GIpw4BNlwsg+78/y92HxR5vWzjUYEzNxlJDdH8sFdgdIL4i+CvIvOHbRItwQeGN5hVM23SKMO0qnnXaboX9Uq8WSGcnJz1BmKGqcR1a6ep7VSIwiVNqBja9K/AkZOVQPZIeoaDNvU=
+	t=1720586144; cv=none; b=Pr67fQ0N29TkULL7oyz9IG3OH4CzME2Ygkh7K6Pwq3j14r22ncZ3lLaV+bLxJ5Vb8Zx9D57XjYFyiy7EdYuk5wzUT/wrwYCe22yjKkcjzhiDh2fMi7L7QxFnYd+6louFKfnBP4SLMaSh/t5lu21zNQNzb0s1Ap2dkEgwyIN6ovw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720586143; c=relaxed/simple;
-	bh=8iUshweou2+JPAzV7dML+X+xGFNFc5W/FkwnZPDJzjk=;
+	s=arc-20240116; t=1720586144; c=relaxed/simple;
+	bh=/QscuPu7+Ecjty+6eNRa0yLXTwTF9fu5uMF9Y+sBNm4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iRyoUPhbiNLsCf4nL81NG1pDWSe9XxG/6dsCBUFrlRtVAWkLH/cg7ij/pFmuzJwR+TS2YIja91fYsHYgkzSzt4nNN2lCASAdd7Bu1qpYfUmZOleM0yrP2L8+guF8jJRhRu8TSHU2bTGiOfdj8tfyA9lKYNq0D5sT00rZQYZZwTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=UyMvdLxo; arc=none smtp.client-ip=202.36.163.20
+	 MIME-Version; b=axid6+QbzuomG9XG1XPWPa3vxxdwIHZE9gdO+QJ++mebQFfDIJhjN2XrcGCGkeKPNOs6PXNK5Raq5JANvF6tYpFUHvnl989uXiorbCPPcljyizdIA0/GksC89XDaY4fe0Bwr0uWw6X+cCX0a9SoU4ttzJAhT+lI8Erc5GSfd6Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=NwTBQZou; arc=none smtp.client-ip=202.36.163.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="UyMvdLxo"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="NwTBQZou"
 Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C6A262C0ADD;
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EF3522C0C2E;
 	Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
 	s=mail181024; t=1720586130;
-	bh=0D0OJOD/c5JSxNJ0xWZ0yNlHTKLPrrkMHOBvpZf3s6c=;
+	bh=oMCL0+2Zo5SbiAWoeP73zxYN9D8jHqDiGNWNoW3oKI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UyMvdLxoD0P79xECPs8HL1v16xzPH4iLKSHZMfeQ8njtRXZN9vFknP1sN6mTkN13w
-	 6s/s80krNOsqTMRFURKyMbimrkzXLSsaRylAlkkby1qJtR6X95DkmZXUJidFFtlDtq
-	 WT5o9PgYoC48v78o8305/EO5qTwQCzBQhqf/jYP4EZq8Ge0kspHjMZutWFge6vKIVw
-	 KRNYNTTQv43pn40hCbGd+z1lTKYcFA2FQm5ZpkKW02wo4LdUU7GSCZTnYgvc1SYXr0
-	 VrVi8XdMT+9Ha4hx5Mgw8RF1doO6lNc/vgJLmATlrhl57sO8ppuHXa8YltcEgX0EYU
-	 8FFBIgKvKff7g==
+	b=NwTBQZoulL+LKFP4iqztXwEN1vrls29n+AWC6GLq7TmrtKAluq9un1Uj6KaZqVorT
+	 3F8Q5miRv/Z/6gtqrSoGgp3BcAWQxpykqDuztjRtdXf8oOZ4goG/MsuM13yenLPm7j
+	 RdO3/cg6N/+fGQ/2GmnTEh+Ywj0qdbv0YXegeVNrZ/F5g9xhNV1sY8BHUWFNCXRyvE
+	 LHiIAN1cBGYbhWxs3Df4IZ2QvjgRkDa84kNvGhojuBuoSj0ycVPQ8M3X613B5ptXxF
+	 am0Uqt0zRSJY9K2zQFFMJZYX92Wgl9P7FXiyQKICyEsPjK+xNugvkB+XGse8xj1PgF
+	 HJuXp5JU9Y58g==
 Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B668e0f920003>; Wed, 10 Jul 2024 16:35:30 +1200
+	id <B668e0f920006>; Wed, 10 Jul 2024 16:35:30 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 0BB9213EE87;
+	by pat.atlnz.lc (Postfix) with ESMTP id 1A1DA13EE8E;
 	Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 0976928206C; Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
+	id 174CF28206C; Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 To: tglx@linutronix.de,
 	robh@kernel.org,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kabel@kernel.org,
 	ericwouds@gmail.com,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v5 03/10] dt-bindings: vendor-prefixes: Add Cameo Communications
-Date: Wed, 10 Jul 2024 16:35:17 +1200
-Message-ID: <20240710043524.1535151-4-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v5 06/10] dt-bindings: interrupt-controller: realtek,rtl-intc: Add rtl9300-intc
+Date: Wed, 10 Jul 2024 16:35:20 +1200
+Message-ID: <20240710043524.1535151-7-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
 References: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
@@ -71,41 +71,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=668e0f92 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=9AoCKF9XAAAA:8 a=KKAkSRfTAAAA:8 a=L4MHaItcyTsGJ2lxC4sA:9 a=3ZKOabzyN94A:10 a=zuUzDCw_FVeVL6jMbh0G:22 a=cvBusfyB2V15izCimMoJ:22
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=668e0f92 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=lV5s-A3J1nGhCCvx9HwA:9 a=3ZKOabzyN94A:10
 X-SEG-SpamProfiler-Score: 0
 x-atlnz-ls: pat
 
-Add entry for Cameo Communications (https://www.cameo.com.tw/)
+Add a compatible string for the interrupt controller found on the
+rtl930x SoCs. The interrupt controller has registers for VPE1 so these
+are added as a second reg cell.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
 
 Notes:
     Changes in v5:
-    - None
+    - set reg::minItems =3D 2 when compatible =3D=3D "rtl9300-intc"
     Changes in v4:
-    - Add ack from Krzysztof
+    - None
     Changes in v3:
-    - new
+    - Add reg::minItems where required
+    Changes in v3:
+    - Use items to describe the regs property
+    Changes in v2:
+    - Set reg:maxItems to 2 to allow for VPE1 registers on the rtl9300. A=
+dd
+      a condition to enforce the old limit on other SoCs.
+    - Connor and Krzysztof offered acks on v1 but I think the changes her=
+e
+      are big enough to void those.
 
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../realtek,rtl-intc.yaml                     | 20 ++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
-umentation/devicetree/bindings/vendor-prefixes.yaml
-index fbf47f0bacf1..67550f0dd189 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -246,6 +246,8 @@ patternProperties:
-     description: CALAO Systems SAS
-   "^calxeda,.*":
-     description: Calxeda
-+  "^cameo,.*":
-+    description: Cameo Communications, Inc
-   "^canaan,.*":
-     description: Canaan, Inc.
-   "^caninos,.*":
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/realt=
+ek,rtl-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller=
+/realtek,rtl-intc.yaml
+index fb5593724059..833a01cdd1b1 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtl-=
+intc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtl-=
+intc.yaml
+@@ -25,6 +25,7 @@ properties:
+       - items:
+           - enum:
+               - realtek,rtl8380-intc
++              - realtek,rtl9300-intc
+           - const: realtek,rtl-intc
+       - const: realtek,rtl-intc
+         deprecated: true
+@@ -35,7 +36,10 @@ properties:
+     const: 1
+=20
+   reg:
+-    maxItems: 1
++    minItems: 1
++    items:
++      - description: vpe0 registers
++      - description: vpe1 registers
+=20
+   interrupts:
+     minItems: 1
+@@ -71,6 +75,20 @@ allOf:
+     else:
+       required:
+         - interrupts
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: realtek,rtl9300-intc
++    then:
++      properties:
++        reg:
++          minItems: 2
++          maxItems: 2
++    else:
++      properties:
++        reg:
++          maxItems: 1
+=20
+ additionalProperties: false
+=20
 --=20
 2.45.2
 
