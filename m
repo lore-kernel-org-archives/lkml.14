@@ -1,172 +1,107 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B69317B516;
-	Wed, 10 Jul 2024 08:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9231C17D341
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720601968; cv=none; b=Kr69YyIokQOMQl3kDyHbwtnt3bCk3rJvt4DtkFlHjNEYXPbQr1Uk+ddztPOtf0MlepThSeHsVfPFz0YTZhEMNzNtCsuhD/tHPWstviV1bynWhwh47Z84qX2EntbOBB9TerlVxXyMpuTX0hwxA8UnV57YLI2cxvlQpk9ZSimA9oM=
+	t=1720601975; cv=none; b=ZnIWHfeJVy3CyMXoQpJ2zuXBi7g4LaG5iJVmp0itzjUQH3WdQNvIZT5XiFCkCA37m7U5MxqQzBiZZSKRZ0EFlMDRV26VrOsHo0Iqx105nhNVhzKlV6pRWHEK1y73Hp5vgRRvmrUXaxa2rOI4G+0QhJ2Evet/fEebWrx0H8+VXlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720601968; c=relaxed/simple;
-	bh=QR3vrdm6Tw0jXM4c95/q8aSOd5Fb+85TowCeTOlRDVQ=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=htBofsbi4pth4gTipxF/Abw5hopyXbTMYedPfcDe3uws3fUm5mPUVpmdbYhNpxtQ4y+oxBqvBo7Zh9r2Xhp7D84l1WnCqfKlW1ftGUq6mN53zxrly9YtLB19lUFYCnsQxPiSJzYqP3QEEH7Lb3b5BF25DB2qcEdCiVCRwD7MWZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C52001A054C;
-	Wed, 10 Jul 2024 10:59:18 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 625971A0543;
-	Wed, 10 Jul 2024 10:59:18 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id AF2A6183487B;
-	Wed, 10 Jul 2024 16:59:16 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	imx@lists.linux.dev,
-	shengjiu.wang@gmail.com
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] clk: imx: imx8: Use clk_hw pointer for self registered clock in clk_parent_data
-Date: Wed, 10 Jul 2024 16:41:00 +0800
-Message-Id: <1720600860-18866-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1720601975; c=relaxed/simple;
+	bh=wsu5tc6BdVJCdLiq4ZS+eTjcl5TUiujEyzCku6yizhQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6+Bvswp/UImZ+mX3jd7QTnl6D+AJ+/yFTB/IiUSlK/TrNPAB/1YWz2vnyygcE1wcuRQql17al9ktL620osMbJOunoPfvt6jrpdDKCIHjG/2RgdRQ2Kng5xJCmF4acBS+qgYwedG7zOmylQ6YS+hXVuCZ+u59x/0mzqSPwDPwyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7NGWvao; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7NGWvao"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5854ac817afso7348977a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720601972; x=1721206772; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1AFgkrTsAbch65s0iFzsbxEhv7dvuaqj7iB6yNyk3Ig=;
+        b=O7NGWvaoSRt6TItsvoOr/M7i8VSDxrAvlJwn/ozcMRJe74Pg4uQo/23yTsS93d6fwO
+         R25YYoEhNGbx9b0rPAp1HGP/YWVEWowsCvOe9F8g/7CCdUHLwFP0WwAD4q2XjCzH9Hbl
+         pAaVhdS+SriwLFBhRfIVMcSQPp1byeW8Y5po98sL1sUIWbbgaETPmUmekc0+5dFkrGtB
+         P0EsxSYnxcoJOsJfrLZ7Xt2Zfku3bW1h+RgxnRvBXmGkE5A2s4sYpaWuxmwWD9WKQgea
+         VHV3SoUwqaU3AOycqi3PBalnZvhVuzCD2Qf2z67Pcy1R1uc+BMVDx99bunj1qAmQ8i3B
+         1cFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720601972; x=1721206772;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1AFgkrTsAbch65s0iFzsbxEhv7dvuaqj7iB6yNyk3Ig=;
+        b=nrG5v7dNCBAWMaL7pk24Wl96MIgouAttEowY8HTZ6hHUEQjsvagjdi4Tx3nnK2oQ/R
+         KCg+KiBlYeob/DWx7FOqKpO22Osgb8EsOHH8unmXTV6Z1JUbGgPKC3qWp450uFUY6GyQ
+         uXsuVW6qcpvGDakXtQnQGzU8qtLjX9DjqTZbsuIGk5l0M5fr5EmTpNOmPug4SqfI3BtQ
+         S6J8VU0QOWG5JM6AnQKzF0M1Bz8Yu2QJ+6fWEKR0l+yrjbjrHERrB3SEd9ukm4aQ0XcQ
+         tZPePX537ksMzRpSHoqktX2VeE+lhJEATeb+ovoVxers0QqMkZRdUovCZog69Xc/8L2q
+         +opg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvZTpK1oL1OdB5h+Ondxhem/Z0am0+sAX3aegZJCdEbNDpEwAFwBOR0fN4hQdzaTUcOJFLSYYm+ciJKWSTNnvWMqasId8JG4AEsV2i
+X-Gm-Message-State: AOJu0YwfNaGYTVHB9zRYqC7qG0SLlfzWbtXL5p+jOsyRDV5SVKu8moA1
+	rpqDdxT7176qMgvDAPZS813YZD/uXER7yfscDo951EY4kuo6fAs=
+X-Google-Smtp-Source: AGHT+IHCzjHr6Syhg0aC064+TZHFvRek9NsnVb6QHpIQDonygpLufrewp4hvcMMBSM1RPvW2GL3vAw==
+X-Received: by 2002:a17:907:720c:b0:a77:c5a5:f662 with SMTP id a640c23a62f3a-a780b68a9camr406398866b.12.1720601971601;
+        Wed, 10 Jul 2024 01:59:31 -0700 (PDT)
+Received: from localhost ([151.47.106.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a797ddb28ccsm27298466b.147.2024.07.10.01.59.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 01:59:31 -0700 (PDT)
+Date: Wed, 10 Jul 2024 10:59:29 +0200
+From: Andrea Righi <righi.andrea@gmail.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	schatzberg.dan@gmail.com, mingo@redhat.com, peterz@infradead.org,
+	changwoo@igalia.com
+Subject: Re: [PATCH 3/6] sched_ext: Make @rf optional for
+ dispatch_to_local_dsq()
+Message-ID: <Zo5Ncd8DxGSVztoH@gpd>
+References: <20240709212137.1199269-1-tj@kernel.org>
+ <20240709212137.1199269-4-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709212137.1199269-4-tj@kernel.org>
 
-"acm_aud_clk0_sel" and "acm_aud_clk1_sel" are registered by this ACM
-driver, but they are the parent clocks for other clocks, in order to
-use assigned-clock-parents in device tree, the ".fw_name" can't be used,
-need to assign the clk_hw pointer for the imx8qm_mclk_sels[],
-imx8qxp_mclk_sels[], imx8dxl_mclk_sels[].
+On Tue, Jul 09, 2024 at 11:21:09AM -1000, Tejun Heo wrote:
+...
+> @@ -2052,17 +2052,20 @@ static bool move_task_to_local_dsq(struct rq *rq, struct task_struct *p,
+>  static void dispatch_to_local_dsq_lock(struct rq *rq, struct rq_flags *rf,
+>  				       struct rq *src_rq, struct rq *dst_rq)
+>  {
+> -	rq_unpin_lock(rq, rf);
+> +	if (rf)
+> +		rq_unpin_lock(rq, rf);
+>  
+>  	if (src_rq == dst_rq) {
+>  		raw_spin_rq_unlock(rq);
+>  		raw_spin_rq_lock(dst_rq);
+>  	} else if (rq == src_rq) {
+>  		double_lock_balance(rq, dst_rq);
+> -		rq_repin_lock(rq, rf);
+> +		if (rf)
+> +			rq_repin_lock(rq, rf);
+>  	} else if (rq == dst_rq) {
+>  		double_lock_balance(rq, src_rq);
+> -		rq_repin_lock(rq, rf);
+> +		if (rf)
+> +			rq_repin_lock(rq, rf);
+>  	} else {
+>  		raw_spin_rq_unlock(rq);
+>  		double_rq_lock(src_rq, dst_rq);
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
+Not a blocker, but would it make sense to provide some wrappers for
+rq_unpin_lock() / rq_repin_lock() to simply return if rf == NULL?
 
-changes in v2:
-- don't use string name, but use the clk_hw pointer for "acm_aud_clk0_sel"
-  and "acm_aud_clk1_sel"
+Maybe it can help to make the code a bit more readable.
 
- drivers/clk/imx/clk-imx8-acm.c | 38 ++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/clk/imx/clk-imx8-acm.c b/drivers/clk/imx/clk-imx8-acm.c
-index 1bdb480cc96c..61d8c7e9ae0b 100644
---- a/drivers/clk/imx/clk-imx8-acm.c
-+++ b/drivers/clk/imx/clk-imx8-acm.c
-@@ -54,10 +54,12 @@ struct clk_imx8_acm_sel {
-  * struct imx8_acm_soc_data - soc specific data
-  * @sels: pointer to struct clk_imx8_acm_sel
-  * @num_sels: numbers of items
-+ * @mclk_sels: pointer to imx8qm/qxp/dxl_mclk_sels
-  */
- struct imx8_acm_soc_data {
- 	struct clk_imx8_acm_sel *sels;
- 	unsigned int num_sels;
-+	struct clk_parent_data *mclk_sels;
- };
- 
- /**
-@@ -111,11 +113,14 @@ static const struct clk_parent_data imx8qm_mclk_out_sels[] = {
- 	{ .fw_name = "sai6_rx_bclk" },
- };
- 
--static const struct clk_parent_data imx8qm_mclk_sels[] = {
-+#define ACM_AUD_CLK0_SEL_INDEX  2
-+#define ACM_AUD_CLK1_SEL_INDEX  3
-+
-+static struct clk_parent_data imx8qm_mclk_sels[] = {
- 	{ .fw_name = "aud_pll_div_clk0_lpcg_clk" },
- 	{ .fw_name = "aud_pll_div_clk1_lpcg_clk" },
--	{ .fw_name = "acm_aud_clk0_sel" },
--	{ .fw_name = "acm_aud_clk1_sel" },
-+	{  }, /* clk_hw pointer of "acm_aud_clk0_sel" */
-+	{  }, /* clk_hw pointer of "acm_aud_clk1_sel" */
- };
- 
- static const struct clk_parent_data imx8qm_asrc_mux_clk_sels[] = {
-@@ -176,11 +181,11 @@ static const struct clk_parent_data imx8qxp_mclk_out_sels[] = {
- 	{ .fw_name = "sai4_rx_bclk" },
- };
- 
--static const struct clk_parent_data imx8qxp_mclk_sels[] = {
-+static struct clk_parent_data imx8qxp_mclk_sels[] = {
- 	{ .fw_name = "aud_pll_div_clk0_lpcg_clk" },
- 	{ .fw_name = "aud_pll_div_clk1_lpcg_clk" },
--	{ .fw_name = "acm_aud_clk0_sel" },
--	{ .fw_name = "acm_aud_clk1_sel" },
-+	{  }, /* clk_hw pointer of "acm_aud_clk0_sel" */
-+	{  }, /* clk_hw pointer of "acm_aud_clk1_sel" */
- };
- 
- static struct clk_imx8_acm_sel imx8qxp_sels[] = {
-@@ -228,11 +233,11 @@ static const struct clk_parent_data imx8dxl_mclk_out_sels[] = {
- 	{ .index = -1 },
- };
- 
--static const struct clk_parent_data imx8dxl_mclk_sels[] = {
-+static struct clk_parent_data imx8dxl_mclk_sels[] = {
- 	{ .fw_name = "aud_pll_div_clk0_lpcg_clk" },
- 	{ .fw_name = "aud_pll_div_clk1_lpcg_clk" },
--	{ .fw_name = "acm_aud_clk0_sel" },
--	{ .fw_name = "acm_aud_clk1_sel" },
-+	{  }, /* clk_hw pointer of "acm_aud_clk0_sel" */
-+	{  }, /* clk_hw pointer of "acm_aud_clk1_sel" */
- };
- 
- static struct clk_imx8_acm_sel imx8dxl_sels[] = {
-@@ -375,6 +380,18 @@ static int imx8_acm_clk_probe(struct platform_device *pdev)
- 			imx_check_clk_hws(hws, IMX_ADMA_ACM_CLK_END);
- 			goto err_clk_register;
- 		}
-+
-+		/*
-+		 * The IMX_ADMA_ACM_AUD_CLK0_SEL and IMX_ADMA_ACM_AUD_CLK1_SEL are
-+		 * registered first. After registration, update the clk_hw pointer
-+		 * to imx8qm/qxp/dxl_mclk_sels structures.
-+		 */
-+		if (sels[i].clkid == IMX_ADMA_ACM_AUD_CLK0_SEL)
-+			priv->soc_data->mclk_sels[ACM_AUD_CLK0_SEL_INDEX].hw =
-+								hws[IMX_ADMA_ACM_AUD_CLK0_SEL];
-+		if (sels[i].clkid == IMX_ADMA_ACM_AUD_CLK1_SEL)
-+			priv->soc_data->mclk_sels[ACM_AUD_CLK1_SEL_INDEX].hw =
-+								hws[IMX_ADMA_ACM_AUD_CLK1_SEL];
- 	}
- 
- 	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_hw_data);
-@@ -406,16 +423,19 @@ static void imx8_acm_clk_remove(struct platform_device *pdev)
- static const struct imx8_acm_soc_data imx8qm_acm_data = {
- 	.sels = imx8qm_sels,
- 	.num_sels = ARRAY_SIZE(imx8qm_sels),
-+	.mclk_sels = imx8qm_mclk_sels,
- };
- 
- static const struct imx8_acm_soc_data imx8qxp_acm_data = {
- 	.sels = imx8qxp_sels,
- 	.num_sels = ARRAY_SIZE(imx8qxp_sels),
-+	.mclk_sels = imx8qxp_mclk_sels,
- };
- 
- static const struct imx8_acm_soc_data imx8dxl_acm_data = {
- 	.sels = imx8dxl_sels,
- 	.num_sels = ARRAY_SIZE(imx8dxl_sels),
-+	.mclk_sels = imx8dxl_mclk_sels,
- };
- 
- static const struct of_device_id imx8_acm_match[] = {
--- 
-2.34.1
-
+-Andrea
