@@ -1,62 +1,60 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F263213A868;
-	Wed, 10 Jul 2024 21:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2113C13B59E;
+	Wed, 10 Jul 2024 21:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720647749; cv=none; b=nI/OuE4HwCDPDjL5jtXKiRkk6czq8RgHeDTdPIJ/Zi0+O7Gw5q8biuxBU8sE0QcVZJCJUg04eiX+Kh178EQJ+KvkzJlHA5zCack/D1zWCt6id6KTyH1WNT/GAz/Wz307TGV0C6gzrZZtC/D58U7OfLVjqvSECjbRNneO7yaOoSQ=
+	t=1720647810; cv=none; b=k8DTnJMuENM/IaX/beIFB4j2uiw9wZPYb9l2iXSOjD5IJYa1kOQ8DaX0EJzM8E7/qRK808WNdRQVNGkVKLebCMkQbq2W+aNILl7M8balBC093tA+kqdc7u4IlpZy1T6Ue3VFfEjW97UBWG3L1yCCuqa4F3FZSDZDZjdGhQToYnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720647749; c=relaxed/simple;
-	bh=biBKAa4cbhRKMUtwt4EhA8ucoPVc1aFoBFsOxZt2pZg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=I/iRl5Kg7aZTITsEdmHiDIwbho0OsiolSBDf3HZjRLNyy7PMUOPegtTpyiyaTaVOA9p3l8GrjdhlkbxeqjEjcxvUiUtEMBQ0LVx8Y5kWTGTijwceU+OBf+RNnuHs8ofAAvmV6areBHTul0bI/I0ZpbpqvRqjKzbfcCll3rA3kgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=v+/yzzXT; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
+	s=arc-20240116; t=1720647810; c=relaxed/simple;
+	bh=KAGhnFA4T3yXcCVxWsnY2T1LnYc2xHUfaowuR51ARg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LiuEnJCwnI0P4OhVernzWG6LQS315vys7+go0KSe2Jr6nV8JoOC89gcTqFWwUZq6QDX7Xp7nD1C8Wgq6dpAOtmRt7kjXk6mIK0WdRs5+9LNMzEbaD5RRHCUYsZAvVYKkWnkQmPm2I6A0s36ocWA8F0z5PzeIui6o5aoLeni2AGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkfD7rJP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="v+/yzzXT"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1720647216; bh=biBKAa4cbhRKMUtwt4EhA8ucoPVc1aFoBFsOxZt2pZg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=v+/yzzXTnlkAaY9Fma842bsUwHQAWG2VPWdBxROV9QhM/qi1x4+J4/pDgLCfYitHG
-	 sMn9V0esqVixHgVQsDrpFurzIRD5Nm4EnK8v/yWdPzjr5sC3fbCJraaHTzStrSnIwr
-	 j+aoSxQ6J/2xWh+hfzaKZ5sbtVTxuyLTFfcsTit/l99qx004jSIEoEF7IqfTbviiDN
-	 FfelbYmvQaMJwIkXEWlhakyKn6EsdjU6H118ghNp+Pgmoacf/GfaHdpbndICyht65v
-	 JxlqujhglDj0yNb/u8zGRJmXkwr8bkr5+naDUN3x+O+LFXZxKC8UlKxr6zBuhGUbD+
-	 fJFDvB3rPFWYw==
-To: Thorsten Blum <thorsten.blum@toblux.com>, kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Thorsten
- Blum <thorsten.blum@toblux.com>
-Subject: Re: [PATCH] wifi: ath9k: Use swap() to improve
- ath9k_hw_get_nf_hist_mid()
-In-Reply-To: <20240710185743.709742-2-thorsten.blum@toblux.com>
-References: <20240710185743.709742-2-thorsten.blum@toblux.com>
-Date: Wed, 10 Jul 2024 23:33:36 +0200
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87msmpylsf.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkfD7rJP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB29C32781;
+	Wed, 10 Jul 2024 21:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720647809;
+	bh=KAGhnFA4T3yXcCVxWsnY2T1LnYc2xHUfaowuR51ARg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TkfD7rJP8N+LRNA2umEfDdStpVnlyoEwcHsgay3JVOPOAKfE6cJHQJ24GCF9jrhEm
+	 voEvbAcPnVLV1yOTJ8oexbnacqO9WZyE+vHGnpCrEGPRt/UkaHL21qUrSu4tEmRYdo
+	 dC1NvF3iR+d/yYynvXaeKTVXg7WtGm5Mn2SJj3DJ7+O/w7UJqKk7yeo2bgtw0Co5mm
+	 8pVToahozsBe0aiOx6WNAPQxluKpSjD5jxwKQzdCXd994ET9k3ye+NjJoloSovPsxv
+	 iaaUK+Oc8VxLVrrIR2bgDWveS8riDW0FBMNhaA/NBttJP/hQ6NhUtbZKKXixTfgGXE
+	 r/iivR5ymaB6w==
+Date: Wed, 10 Jul 2024 23:43:26 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 21/60] i2c: ibm_iic: reword according to newest
+ specification
+Message-ID: <mttj35w7mezhxvyooyuaa6stu72dylfppw7sumnxulgpu3p6r5@cz3bvdoe4ijk>
+References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
+ <20240706112116.24543-22-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240706112116.24543-22-wsa+renesas@sang-engineering.com>
 
-Thorsten Blum <thorsten.blum@toblux.com> writes:
+Hi Wolfram,
 
-> Use the swap() macro to simplify the ath9k_hw_get_nf_hist_mid() function
-> and improve its readability.
->
-> Fixes the following Coccinelle/coccicheck warning reported by
-> swap.cocci:
->
->   WARNING opportunity for swap()
->
-> Compile-tested only.
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+On Sat, Jul 06, 2024 at 01:20:21PM GMT, Wolfram Sang wrote:
+> Change the wording of this driver wrt. the newest I2C v7 and SMBus 3.2
+> specifications and replace "master/slave" with more appropriate terms.
+> Remove a useless comment while here.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Acked-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+
+Thanks,
+Andi
