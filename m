@@ -1,133 +1,193 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EBB19309E
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B00B193462
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720623161; cv=none; b=cebceyb8qMNG6LDbh4+Pli88OuW+Vsy49aJGDm6/NqfyOrK4Dhib7EVsH7sANdJs95TIWNJhcJ9TOZO1597R8f3btnn5cCNU8QEMP/PBm5WWd376I+2x/PGnWr/b+ZVrZAg809R6whzw3uEOoqVNkdenLBNejZ8WjP1ouoJ0WuY=
+	t=1720623224; cv=none; b=VnoEhjOcV8uYxg5PnEBZBsRc6sOSfVcmH0g9yE3im5VdbPLjiIxk8PTSEesmNNy24OIYla+/DcTjYJaNidj1AltKJ88+Kk1q9wtYhGh5zS80aviI6zcdH+K6ehYRL2u752Q5SqvCOYfKl0iIST32xu3mD9NMB6CcshcIT7FOuUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720623161; c=relaxed/simple;
-	bh=QCXEave5NU6o2HSHySwi+llu0gALOnXIFYCrr4kwS9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kAzwjBiNSw6amV0Qd+8P6Tk5FJR5kcJjUmba4NQTQH4Fkwg5dCFF6V/pTOL2dlsQhae/0HqniN41VhYIcOQigxIQzmNHrjFosmF+uiY/Kcp5qoVGfc/+clomWqcVWpTKXDHHzt+nQgzJdYTEoECpfUN5KSbiu2BPo2GUFdyk4eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=ijfqrO40; arc=none smtp.client-ip=167.172.40.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1720623224; c=relaxed/simple;
+	bh=pMOw2aqKt8wZam3p3vPJat/5dAgBLwNw61xOamvNdqk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RoneEBzDo2nWBhPsupPWqZTCAo0pogjwP4xkX+8Tu7/8Qfasdo2MQw3pnu1bPhfYncOhurcD2FNlfo+7GFGjTuSybEmPlBzICnfRT7+KqN/Y7K8dXelPp2hV8mZze0652Cml5pxg/LUAZo7lzHpELDTWpxneb8IVDz8xUmkrPPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Hh6Pa1ad; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="ijfqrO40"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1720623139;
- bh=NXPTGPBY0179P6BWZHx7/WS3Plscrxo5swZEML9bMlE=;
- b=ijfqrO40nuxnI/qbViZ+LHX0tLwo6k/Xp4ZB7fY8G+jJDLf/4CTFZVkM1mW0YaWzM+Glf6Ch4
- pkQsO6kaxUNNX0D1Ew6VMM1XYinMv2fcilMyKcE3i3bzsSnbfa+Cx3RUr3O08oQdLa3zG0P1lE7
- NKM30lsN7b1WELE7kMtsb1KRiaKJC/iG5/dMaUU6PHJOHOGnF+yU5HFqAkcW6PV5wWpEX7pU0tf
- QVXMD8Je6eLFzOtLvhRR1LsgIdp9E+pj6ZLNLwaWtSD9uPD6Ba72asqUbEap5DjR1tnKarNE/hN
- 1zYGpasGHy5R8mV9cbUovv89wvvCQNhEeytEnn56IIIA==
-Message-ID: <84dc40f4-1948-4eb7-b16e-8a79357c2622@kwiboo.se>
-Date: Wed, 10 Jul 2024 16:41:23 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hh6Pa1ad"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0FRJV/HCKqdLSxbeB6npqIsxmIRGJPJkosWmQJ7bPUo=; b=Hh6Pa1adhPABWirmZPVN7wW7Nd
+	Z6O3ETccArGJ0OElj0M97TNE93BxzBQcr2rYxf8lBAsyzeL3goRdBeE+ao7UvOBLCUfBPWX8LSE3O
+	PXwq2akPdmVPSzJHaXmQKMUwt06wpSt5ppiaI8Cb9M3KK5LnhG5Ipf7m04f2oGOS0Sk24irauJv9N
+	gsuUaqdxyzrfRupLrIHEiNDXTUphrZ4eLMdWDUUvTHRfBVmOz3CuCRTq/jHKmpZGw9G4re2qAGtsX
+	u/9zHzdgo8zJffum0wKFWPmHKJTnZaX/7SnSWV5eYQ6OxfhofmaYyFutPPx8ExdmULJ+QmUJAwOsf
+	F7ea9FuQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRYh7-00000000uob-2WNY;
+	Wed, 10 Jul 2024 14:53:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F343D300694; Wed, 10 Jul 2024 16:53:20 +0200 (CEST)
+Date: Wed, 10 Jul 2024 16:53:20 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Imran Khan <imran.f.khan@oracle.com>,
+	Leonardo Bras <leobras@redhat.com>, Guo Ren <guoren@kernel.org>,
+	Rik van Riel <riel@surriel.com>, Tejun Heo <tj@kernel.org>,
+	Cruz Zhao <CruzZhao@linux.alibaba.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>
+Subject: Re: [PATCH 1/3] sched/core: Remove the unnecessary need_resched()
+ check in nohz_csd_func()
+Message-ID: <20240710145320.GA27299@noisy.programming.kicks-ass.net>
+References: <20240710090210.41856-1-kprateek.nayak@amd.com>
+ <20240710090210.41856-2-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] arm64: dts: rockchip: Add missing pinctrl for PCIe30x4
- node
-To: Anand Moon <linux.amoon@gmail.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240710142001.7234-1-linux.amoon@gmail.com>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20240710142001.7234-1-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 167.172.40.54
-X-ForwardEmail-ID: 668e9d98fc7608dd27c22368
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240710090210.41856-2-kprateek.nayak@amd.com>
 
-Hi Anand,
-
-On 2024-07-10 16:19, Anand Moon wrote:
-> Add missing pinctrl settings for PCIe 3.0 x4 clock request and wake
-> signals. Rename node from 'pcie3' to 'pcie30x4' to align with schematic
-> nomenclature.
+On Wed, Jul 10, 2024 at 09:02:08AM +0000, K Prateek Nayak wrote:
+> The need_resched() check currently in nohz_csd_func() can be tracked
+> to have been added in scheduler_ipi() back in 2011 via commit
+> ca38062e57e9 ("sched: Use resched IPI to kick off the nohz idle balance")
 > 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> Since then, it has travelled quite a bit but it seems like an idle_cpu()
+> check currently is sufficient to detect the need to bail out from an
+> idle load balancing. To justify this removal, consider all the following
+> case where an idle load balancing could race with a task wakeup:
+> 
+> o Since commit f3dd3f674555b ("sched: Remove the limitation of WF_ON_CPU
+>   on wakelist if wakee cpu is idle") a target perceived to be idle
+>   (target_rq->nr_running == 0) will return true for
+>   ttwu_queue_cond(target) which will offload the task wakeup to the idle
+>   target via an IPI.
+> 
+>   In all such cases target_rq->ttwu_pending will be set to 1 before
+>   queuing the wake function.
+> 
+>   If an idle load balance races here, following scenarios are possible:
+> 
+>   - The CPU is not in TIF_POLLING_NRFLAG mode in which case an actual
+>     IPI is sent to the CPU to wake it out of idle. If the
+>     nohz_csd_func() queues before sched_ttwu_pending(), the idle load
+>     balance will bail out since idle_cpu(target) returns 0 since
+>     target_rq->ttwu_pending is 1. If the nohz_csd_func() is queued after
+>     sched_ttwu_pending() it should see rq->nr_running to be non-zero and
+>     bail out of idle load balancing.
+> 
+>   - The CPU is in TIF_POLLING_NRFLAG mode and instead of an actual IPI,
+>     the sender will simply set TIF_NEED_RESCHED for the target to put it
+>     out of idle and flush_smp_call_function_queue() in do_idle() will
+>     execute the call function. Depending on the ordering of the queuing
+>     of nohz_csd_func() and sched_ttwu_pending(), the idle_cpu() check in
+>     nohz_csd_func() should either see target_rq->ttwu_pending = 1 or
+>     target_rq->nr_running to be non-zero if there is a genuine task
+>     wakeup racing with the idle load balance kick.
+
+For completion sake, we should also consider the !TTWU_QUEUE case, this
+configuration is default for PREEMPT_RT, where the wake_list is a source
+of non-determinism.
+
+In quick reading I think that case should be fine, since we directly
+enqueue remotely and ->nr_running adjusts accordingly, but it is late in
+the day and I'm easily mistaken.
+
+> o The waker CPU perceives the target CPU to be busy
+>   (targer_rq->nr_running != 0) but the CPU is in fact going idle and due
+>   to a series of unfortunate events, the system reaches a case where the
+>   waker CPU decides to perform the wakeup by itself in ttwu_queue() on
+>   the target CPU but target is concurrently selected for idle load
+>   balance (Can this happen? I'm not sure, but we'll consider its
+>   possibility to estimate the worst case scenario).
+> 
+>   ttwu_do_activate() calls enqueue_task() which would increment
+>   "rq->nr_running" post which it calls wakeup_preempt() which is
+>   responsible for setting TIF_NEED_RESCHED (via a resched IPI or by
+>   setting TIF_NEED_RESCHED on a TIF_POLLING_NRFLAG idle CPU) The key
+>   thing to note in this case is that rq->nr_running is already non-zero
+>   in case of a wakeup before TIF_NEED_RESCHED is set which would
+>   lead to idle_cpu() check returning false.
+> 
+> In all cases, it seems that need_resched() check is unnecessary when
+> checking for idle_cpu() first since an impending wakeup racing with idle
+> load balancer will either set the "rq->ttwu_pending" or indicate a newly
+> woken task via "rq->nr_running".
+
+Right.
+
+> Chasing the reason why this check might have existed in the first place,
+> I came across  Peter's suggestion on the fist iteration of Suresh's
+> patch from 2011 [1] where the condition to raise the SCHED_SOFTIRQ was:
+> 
+> 	sched_ttwu_do_pending(list);
+> 
+> 	if (unlikely((rq->idle == current) &&
+> 	    rq->nohz_balance_kick &&
+> 	    !need_resched()))
+> 		raise_softirq_irqoff(SCHED_SOFTIRQ);
+> 
+> However, since this was preceded by sched_ttwu_do_pending() which is
+> equivalent of sched_ttwu_pending() in the current upstream kernel, the
+> need_resched() check was necessary to catch a newly queued task. Peter
+> suggested modifying it to:
+> 
+> 	if (idle_cpu() && rq->nohz_balance_kick && !need_resched())
+> 		raise_softirq_irqoff(SCHED_SOFTIRQ);
+> 
+> where idle_cpu() seems to have replaced "rq->idle == current" check.
+> However, even back then, the idle_cpu() check would have been sufficient
+> to have caught the enqueue of a new task and since commit b2a02fc43a1f
+> ("smp: Optimize send_call_function_single_ipi()") overloads the
+> interpretation of TIF_NEED_RESCHED for TIF_POLLING_NRFLAG idling, remove
+> the need_resched() check in nohz_csd_func() to raise SCHED_SOFTIRQ based
+> on Peter's suggestion.
+
+... sooo many years ago :-)
+
+> Link: https://lore.kernel.org/all/1317670590.20367.38.camel@twins/ [1]
+> Link: https://lore.kernel.org/lkml/20240615014521.GR8774@noisy.programming.kicks-ass.net/
+> Fixes: b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 > ---
->  .../boot/dts/rockchip/rk3588-rock-5b.dts      | 20 +++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
+>  kernel/sched/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> index 2e7512676b7e..a9b55b7996cf 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> @@ -301,7 +301,7 @@ &pcie30phy {
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 0935f9d4bb7b..1e0c77eac65a 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1205,7 +1205,7 @@ static void nohz_csd_func(void *info)
+>  	WARN_ON(!(flags & NOHZ_KICK_MASK));
 >  
->  &pcie3x4 {
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pcie3_rst>;
-> +	pinctrl-0 = <&pcie30x4_perstn_m1 &pcie30x4_clkreqn_m1 &pcie30x4_waken_m1>;
->  	reset-gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
->  	vpcie3v3-supply = <&vcc3v3_pcie30>;
->  	status = "okay";
-> @@ -340,14 +340,22 @@ pcie2_2_rst: pcie2-2-rst {
->  		};
->  	};
->  
-> -	pcie3 {
-> -		pcie3_rst: pcie3-rst {
-> -			rockchip,pins = <4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
-> -		};
-> -
-> +	pcie30x4 {
->  		pcie3_vcc3v3_en: pcie3-vcc3v3-en {
->  			rockchip,pins = <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
-> +
-> +		pcie30x4_clkreqn_m1: pcie30x4-clkreqn-m1 {
-> +			rockchip,pins = <4 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +
-> +		pcie30x4_waken_m1: pcie30x4-waken-m1 {
-> +			rockchip,pins = <4 RK_PB5 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-
-Should these not be routed to the clkreqn_m1 and waken_m1 function
-instead of gpio function?
-
-E.g. something like:
-
-		pcie30x4m1_pins: pcie30x4m1-pins {
-			rockchip,pins =
-				<4 RK_PB4 4 &pcfg_pull_none>,
-				<4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>,
-				<4 RK_PB5 4 &pcfg_pull_none>;
-		};
-
-There are other rk35xx boards where only the perstn pin is configured
-and could use a similar fix.
-
-Regards,
-Jonas
-
-> +
-> +		pcie30x4_perstn_m1: pcie30x4-perstn-m1 {
-> +			rockchip,pins = <4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
->  	};
->  
->  	usb {
+>  	rq->idle_balance = idle_cpu(cpu);
+> -	if (rq->idle_balance && !need_resched()) {
+> +	if (rq->idle_balance) {
+>  		rq->nohz_idle_balance = flags;
+>  		raise_softirq_irqoff(SCHED_SOFTIRQ);
+>  	}
+> -- 
+> 2.34.1
 > 
-> base-commit: 34afb82a3c67f869267a26f593b6f8fc6bf35905
-
