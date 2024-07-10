@@ -1,60 +1,60 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A27F8BE7
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5119C4A0F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720574224; cv=none; b=OGGYHSfXkv+2FkXfP/p9GMY64eLHvsueKZc3DG48KgODM0ZmlPML9gNcj3c9DVJa2DBs6XwSMMF8u1TxXozkjtjOVanssj6qXeo/zH2Vut/zWVYQtgneUK6vxZc6TsNvlzRA2DhLfn5cFz6LbDvhCLMcADVl4B91j1fZP7ovD/U=
+	t=1720574226; cv=none; b=L5lsy1Y20MYiCThP3E1M3Id1deVHeM9rTl+8ZEy3bUYmFAVcG37b8+MTP27k+jhirS+8SH6f3xKo343cHHGDqtrmtqu+HQbCbZN9g0uIK6hxofaSDAubb7YxODvwgqsOnraZLkNzOAMnimFy7P3QaX/JbYHBYCbxOIEtOuLrQgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720574224; c=relaxed/simple;
-	bh=4m0kxCVKUAnDd/Uoez1WAkvoNV+NXC8WY09fkTZTebs=;
+	s=arc-20240116; t=1720574226; c=relaxed/simple;
+	bh=Oc1eD38l/cLvI8egL9nQZebSf+gkc/Z7A4dohoKdyQQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iU0iQC7VbyrSGxmbsqJoRgO4SWDJja6xlDg5ZeJPVMZP1PT5CBtSTyvoHhMDqH+OlKpEd4se8BvsSXmOuuSPUXvAuC6SL38lFSVjWMgOLEDkNiP1dV8RRd9CIC9fRVN4V6gpAkEqxhmWUUKTvX7jD2H5hgS/qXBuQxO8ECrxNIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LInam0wu; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=m5cJMzudJWOHcCBi2kleoyd7fueKCYAIG+TVBaoIYOkWC6zY3IwcdS9dHd6SLfgCV47vmOO4yVZ/UwLa2QhW/jVIeFEYFKElB1mwi3rKvEyDDPrMdXkcXirf1eHKxSseSyMk4oJR7F5tYjkJaW/v0gW7g6WWh8G19a4oPNB5Rv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6lucaWl; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LInam0wu"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fa55dbf2e7so29605995ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 18:17:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6lucaWl"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-75a6c290528so3149169a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 18:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720574223; x=1721179023; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720574224; x=1721179024; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lf0ReuyQOi5SXQsUOQzTmoOvTe5c8o2DFeqT2/r8W4I=;
-        b=LInam0wu9PQA1+yfPhdCYg5s0U8rFqSHLRB/3smlg3rfv0UNQhT1nYcP2UYUUV2LeX
-         erVhxtJILqd6MJI5V4REgzGWL3Rm0vKLReC6XDCoaAXoo29EYHmtH13eoLzbNtehdn7T
-         hFIrREFsIUoR4fs+mlW+HuPhbf/b+5ySkZ00ci4Xfp5aaO2fw8FHl/frTkZlFU8xMOkH
-         x2JGt0FuxGLQxMpNTUjVx4UnauiWh2CC0VeMkNuBiWKEtaPae6FePiDjKKKjjIxKejR1
-         8Psuzis2BS3WOx4dIqktV8IX8wws6kF4O2h/pTx7avETKiWX6w1HmRcefnJoAv+6Wnl9
-         o7oA==
+        bh=L2dsJ2aWzWwaeeiB+7cgn67HIrpaGRIuOZ04+FOm5ts=;
+        b=l6lucaWluIvt6O7DO0q2FSV2wB9Qm+NfVU5HYa75VK8OCsf25nAujLEQj26qOgYkVW
+         Im/Lfnq4vBqUitbQR9dBPnRy/FYkchvS2nemSNRP4lzbRFvnJNiIxb0wXmHmfSwdOqVR
+         d44iMfw2KQifAFXmAxO/8FdqSpgAE8Tx9KSvVMfnB39m+nt/hnSm4oX03phLg5EXUZSM
+         UHzeBJalyLuuU7v5c691xtLXbWh6zY2ktdM8CmikNKXowEek0g7tFQBV4Q8mURQlbpjx
+         6NZfVXG1OUT6zHxjJ5K0WoQobN7cwH7+BLyDnIqeeJUUU8qZ6Gg+AfNFJzpuAWO1cL/X
+         6E3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720574223; x=1721179023;
+        d=1e100.net; s=20230601; t=1720574224; x=1721179024;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Lf0ReuyQOi5SXQsUOQzTmoOvTe5c8o2DFeqT2/r8W4I=;
-        b=rmdehWWnIpgJvwujWfOiOLppfnZarl68hAo7Vs3CS2J/UKVi3J5fN1HYhZD1IxOYcY
-         LpzLiXNX75iXOh53L0GOI3HTuz2ap6TmI5WIohz1+itWn2e+rObHHA4T3vJ+Q95CyJ4k
-         F82Bto3wiYoBrPLrbP+FTOzoT8upMBK/C4nJ+KO3mV5mSRyQBSyat//jFeBCthRVHU28
-         WQAwMgoqoSjb4DH3tCdjegjMnvQXO6vbxv+Y1jhw+rhzAeFB5ocluknMqZdlLw3Kcuc1
-         YiKxU3VgyS63osMy3ps8rJnxosDWSZ2HFkHYGq1WL6susOWZLFwFqJs+x87cFYgLKp8q
-         34GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGruhNk7u9WwjAOngG3jI0kh2ofsm7ITzXY9TyBLORfMC1edA9C2rVDSoo56VEs43faJHCJ3u69M+ooe/UCw4yR9Xo5UXn6jrvaaKb
-X-Gm-Message-State: AOJu0YxkIDwHvmGTOcNeZ/l4cO9yCYQNaMubTBJRWZTh4Qico2VNR40r
-	I4QF4ynHtlbXUYbeqeBO1mLeaVREuSB2Zb0NieDnu/l22HOCpbMy
-X-Google-Smtp-Source: AGHT+IEgKzUS2C58JGutlZ0YXRBY+FjMO0+UJyNyABmzG1f2vpoCM4JuCsrJpw5PgmaB9SqS74yOZQ==
-X-Received: by 2002:a17:902:e54c:b0:1fb:5c3d:b8c3 with SMTP id d9443c01a7336-1fbb6cdab3amr35816045ad.4.1720574222520;
-        Tue, 09 Jul 2024 18:17:02 -0700 (PDT)
+        bh=L2dsJ2aWzWwaeeiB+7cgn67HIrpaGRIuOZ04+FOm5ts=;
+        b=wms7SdEEwo/cnV/7Ovbcat2Ct6YL4+nAfNzZ5cI61u6wZHD0Kzi4Vl4PHOjD0oXwxI
+         4jhlANjw2pMPFnWaOgZ6PL5LedbATjvO1oMfRpPEmZ+VzInJ8nB9Iv/pncsiyGWPXaru
+         zYPAF0XIjwfa90vAQ7kI49PEhBljiX8l+Kqw+LR3Q6pZRcT8hqkEcRHpzjf3PemEFDcs
+         LPTSx0qzjYvhSi/n2m/Lg/rz/khRoxPd1z+RHnAPJylcJ4WplJJvLes9EXPpk434fW/V
+         IdaVusFoj8IpAWr0xBjf4NjQJKT+ymHxttqbzkdNyXnZIOpIdrr7jDJnE70tdiw+z/M3
+         NmPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/bpqpxIQS1zwg7sH+aQt4icGxhQR1JSOQr4i/XSHHTrQhw9IEGbfJB+HREb21pHPdI8e0wrLibBd2JpLkiVILZPUfs8iltKyBA1rb
+X-Gm-Message-State: AOJu0YwfU5O2v9XTVd05Q0IQWvjxgJ/ZLMecb8DsTJC5hxcLsVuQt5oa
+	0Ytm9Bjd4PTni0Wwrn4GHLAsUElGmPxraZejgAP1672zGmVpzty0
+X-Google-Smtp-Source: AGHT+IHm6oTa46wAfHgqvgABJgg5St2rt8NOqt0qemFHgyPVBzhcmvIccECM4VmefXK8hvUPLjeUqw==
+X-Received: by 2002:a05:6a20:7288:b0:1c1:f6f1:de05 with SMTP id adf61e73a8af0-1c298206687mr5241342637.6.1720574223818;
+        Tue, 09 Jul 2024 18:17:03 -0700 (PDT)
 Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ad4bc9sm22010445ad.286.2024.07.09.18.17.02
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ad4b60sm21960575ad.296.2024.07.09.18.17.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 18:17:02 -0700 (PDT)
+        Tue, 09 Jul 2024 18:17:03 -0700 (PDT)
 Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id 9157880B36;
-	Wed, 10 Jul 2024 09:26:27 +0800 (CST)
+	by twhmp6px (Postfix) with ESMTPS id 5D9C480DF0;
+	Wed, 10 Jul 2024 09:26:29 +0800 (CST)
 From: Cheng Ming Lin <linchengming884@gmail.com>
 To: miquel.raynal@bootlin.com,
 	vigneshr@ti.com,
@@ -64,9 +64,9 @@ Cc: richard@nod.at,
 	alvinzhou@mxic.com.tw,
 	leoyu@mxic.com.tw,
 	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Subject: [PATCH 1/3] include/linux/mtd/spinand.h: Add fixups for spinand
-Date: Wed, 10 Jul 2024 09:15:39 +0800
-Message-Id: <20240710011541.342682-2-linchengming884@gmail.com>
+Subject: [PATCH 3/3] mtd: spinand: Insert Plane Select bit for the column address
+Date: Wed, 10 Jul 2024 09:15:41 +0800
+Message-Id: <20240710011541.342682-4-linchengming884@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240710011541.342682-1-linchengming884@gmail.com>
 References: <20240710011541.342682-1-linchengming884@gmail.com>
@@ -80,67 +80,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Cheng Ming Lin <chengminglin@mxic.com.tw>
 
-Add struct spi_nand_fixups as SPI NAND fixup hooks.
+In the function spinand_read_from_cache_op and
+spinand_write_to_cache_op, add an if statement
+to determine whether the device has fixups and
+their corresponding functions. If so, give the
+Plane Select bit to the column address.
 
-To determine whether the Plane Select bit should be
-inserted into the column address in core.c, add the
-member struct spinand_info to struct spinand_device
-to ascertain whether the device has fixups.
+In the function spinand_match_and_init, add
+spinand_info in spinand_device for determining
+whether Plane Select bit should be inserted.
 
 Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
 ---
- include/linux/mtd/spinand.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/mtd/nand/spi/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 5c19ead60499..c079c6ac1541 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -354,6 +354,7 @@ struct spinand_info {
- 	} op_variants;
- 	int (*select_target)(struct spinand_device *spinand,
- 			     unsigned int target);
-+	const struct spi_nand_fixups *fixups;
- };
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index e0b6715e5dfe..d6d6f3832f9d 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -386,6 +386,9 @@ static int spinand_read_from_cache_op(struct spinand_device *spinand,
+ 	else
+ 		rdesc = spinand->dirmaps[req->pos.plane].rdesc_ecc;
  
- #define SPINAND_ID(__method, ...)					\
-@@ -379,6 +380,9 @@ struct spinand_info {
- #define SPINAND_SELECT_TARGET(__func)					\
- 	.select_target = __func,
- 
-+#define SPINAND_PLANE_SELECT_BIT(__func)					\
-+	.fixups = __func,
++	if (spinand->info->fixups && spinand->info->fixups->read_from_cache)
++		column = spinand->info->fixups->read_from_cache(spinand, req, column);
 +
- #define SPINAND_INFO(__model, __id, __memorg, __eccreq, __op_variants,	\
- 		     __flags, ...)					\
- 	{								\
-@@ -398,6 +402,18 @@ struct spinand_dirmap {
- 	struct spi_mem_dirmap_desc *rdesc_ecc;
- };
+ 	while (nbytes) {
+ 		ret = spi_mem_dirmap_read(rdesc, column, nbytes, buf);
+ 		if (ret < 0)
+@@ -460,6 +463,9 @@ static int spinand_write_to_cache_op(struct spinand_device *spinand,
+ 	else
+ 		wdesc = spinand->dirmaps[req->pos.plane].wdesc_ecc;
  
-+/**
-+ * struct spi_nand_fixups - SPI NAND fixup hooks
-+ * @write_to_cache: program load requires Plane Select bit in CADD.
-+ * @read_from_cache: read from cache requires Plane Select bit in CADD.
-+ */
-+struct spi_nand_fixups {
-+	unsigned int (*write_to_cache)(struct spinand_device *spinand,
-+				const struct nand_page_io_req *req, unsigned int column);
-+	u16 (*read_from_cache)(struct spinand_device *spinand,
-+				const struct nand_page_io_req *req, u16 column);
-+};
++	if (spinand->info->fixups && spinand->info->fixups->write_to_cache)
++		column = spinand->info->fixups->write_to_cache(spinand, req, column);
 +
- /**
-  * struct spinand_device - SPI NAND device instance
-  * @base: NAND device instance
-@@ -449,6 +465,7 @@ struct spinand_device {
- 	u8 *databuf;
- 	u8 *oobbuf;
- 	u8 *scratchbuf;
-+	const struct spinand_info *info;
- 	const struct spinand_manufacturer *manufacturer;
- 	void *priv;
- };
+ 	while (nbytes) {
+ 		ret = spi_mem_dirmap_write(wdesc, column, nbytes, buf);
+ 		if (ret < 0)
+@@ -1095,6 +1101,7 @@ int spinand_match_and_init(struct spinand_device *spinand,
+ 		spinand->flags = table[i].flags;
+ 		spinand->id.len = 1 + table[i].devid.len;
+ 		spinand->select_target = table[i].select_target;
++		spinand->info = info;
+ 
+ 		op = spinand_select_op_variant(spinand,
+ 					       info->op_variants.read_cache);
 -- 
 2.25.1
 
