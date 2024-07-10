@@ -1,40 +1,50 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6369A83CBA;
-	Wed, 10 Jul 2024 08:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EA4128812
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720600555; cv=none; b=tI7yIkCa4r01tktrJbrMmYqV/eIdfQFybPaLTnd2UvjxxTevFOZ1qeeEGBoSCvEPDkPlHTWta0sS5nqWy5kHnWZnBOpmgmlaUOFB8IDm15i9slYD2aRqhVxR8pjN+rCtov0fTEHCZBsCg6ulcBtrYzKdg4KWWBC2VwdC9EmP0x4=
+	t=1720600573; cv=none; b=mJqm0QFN0R1niz9s3MQq4cpJFj1aSLGNv0DJ51e6BjfM4TtPYQrbkbZFb2PLSuQt410JZAqfnQBDKEeoGpfn+IwR1MCUPkJy1MUztxnT/LHX59CNHebA3ryoj/MHVxg2+tkcnguzdsaK6G/CcS5iYzMDcavA5Iu3s/oDAbmOzkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720600555; c=relaxed/simple;
-	bh=YLjYF/eFVWGg/xIW1xPAMIzk49GaK0gZOh85xXj6gpM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=YoAADHBvMkz+aaKUaZpDxVBYbGJgOOrTm1E6QJ2okr8wTIXs/mDsV+EK3UXMm2C8hEtc0D5L3whMJ2pFAu8R7sop8dMzV5+JUYTiIQ0sZ26B2GcyneO6X2mEX0zfns3ebQStsH4nHPIioUldfcjOxipJogPc3eY3s6F6mKBLbcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BX2XRfzT; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720600573; c=relaxed/simple;
+	bh=b/dygOvp0wyogHXGzt0P/JA3Psilj/juRjotDTNSf2M=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iSuwYMlBE4PNxQhR8LbzLP4Hvu+gHuWjVokpb0OXBCEITm4TkOrg7NHHd5QO5/CIrekNaA3SlWuoJjPDPgoQxnu2VeLCmKcuq+Q+VDo4pCbch+yrdbZmDN440NHaUlob62z7tBXMjlEwk6APQCtLQSus+JVm+UG2T+X1jCqdMYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5VzJF2d; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BX2XRfzT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720600511; x=1721205311; i=markus.elfring@web.de;
-	bh=YLjYF/eFVWGg/xIW1xPAMIzk49GaK0gZOh85xXj6gpM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=BX2XRfzT8priNv5di15/HMx5X9rHSfQ/Iw1YFnUWIsojTQLYhzeiHnnD4ijQSQIk
-	 P2gsH3xMRJ5DgqAIPcMv3fba2FQftOCoCZGX2EPhUdvLPxWBGzb8toK8pSBeefuBP
-	 WkCdtuKAKNtax3FYT8vq1iIk60HVQGaXRvfMPxHozukakoSD5qOZvSKkAvuDVo0CK
-	 naB+HARwqS8+4evcJJ6q9Cz81+XcBTm/VtbUmY1OxLYb/pPfUaQ/RQld2C/tnkmzf
-	 dwHCK1d5gpbEcAkgOq8M309TpQrArbeauwyfBwD+j/snHjtcbzVSPrhJ5T/52/2SA
-	 W3NCEWbZ/omseIiRoA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N3Xjb-1sIULU0c9T-00tC6R; Wed, 10
- Jul 2024 10:35:11 +0200
-Message-ID: <7eabf6b3-e9fd-4c59-8c2d-8dfdf05ddb55@web.de>
-Date: Wed, 10 Jul 2024 10:34:57 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5VzJF2d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720600572; x=1752136572;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=b/dygOvp0wyogHXGzt0P/JA3Psilj/juRjotDTNSf2M=;
+  b=l5VzJF2dJ+CHM1wAZn0ojwqSHghkno5irGaclh2RFnksiZNsQ2KKR6si
+   M6mNra+ovRTzE5N7Tl14G3z+x94n26Pb0+XPheg15pUOfI3VuaO86gNPL
+   GchSZqaBZmBSHxWNkGRuhqmeSc1TRHA+vChf5qcHWISY2pZnH+UP38ySn
+   p1KWsroieVpq9WjYob93C+qxbeUW7rhFxmbyhA3H1BgAR6bGmFgJfCWuB
+   6x0w2Ntv5jNm42wUVsyUCJXDT3iPtT4mpcbDXj5JjLaDX5Z5UdBa+bQ7f
+   cwGT+Di3aXv9azgP45Y9NED5DIcBE0GkvyjbWgrHlgePfAY5gExAZOiF9
+   w==;
+X-CSE-ConnectionGUID: SRL/e+66TuStoMPtT0uu6Q==
+X-CSE-MsgGUID: Iiw3Uf3lTGCWAHAbYfxUhQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="20810279"
+X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
+   d="scan'208";a="20810279"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 01:36:12 -0700
+X-CSE-ConnectionGUID: ddX+wz/jQZ6WOJZ31OzKTQ==
+X-CSE-MsgGUID: TeiuBPilT4OqbcfhE8PxBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
+   d="scan'208";a="79298015"
+Received: from jiaoxu-mobl.ccr.corp.intel.com (HELO [10.124.241.177]) ([10.124.241.177])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 01:36:09 -0700
+Message-ID: <16e5d5df-3a4d-4bf3-adf6-8edb08df985c@linux.intel.com>
+Date: Wed, 10 Jul 2024 16:36:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,51 +52,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, make24@iscas.ac.cn,
- dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Wei Liu <wei.liu@kernel.org>
-References: <CAMeQTsZojC24Hs_zy0UX0Zjq42zLH21yn_hZhkcSKbL5X1jiSA@mail.gmail.com>
-Subject: Re: [v4] drm/gma500: fix null pointer dereference in
- cdv_intel_lvds_get_modes
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CAMeQTsZojC24Hs_zy0UX0Zjq42zLH21yn_hZhkcSKbL5X1jiSA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ztBwSIUruFgutnrDH/yIK49xLeUe4QbnRCIEIQKFqESog/Ybbyt
- iw7A5NjiZgHUCNbH0waliVLhepQbQ4dD900Mi/RFDDDxEaCww5oxcL1wJ9OwtVCkc+PaD7w
- B5lphAlk1pv+FfY3Fuc/uSIyTLEuboJhpI+H985+C9i9YsqMT84lkGohqdf0Yt/KBbYcmOq
- EvFcHOgFrkRHlJxw5c8Tw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lEmTYdWidZc=;iMWpbu+WPrflaguxPa0NHvvIT2w
- p0veKle+VCyYtnui1D8IV36ib/RDceUBy+wJbhJWLGi20/1SiQGwJvNpMV6NgwN484aelKpFT
- V0fT/6hCpqBHSspX8C7IsvXn+OPWol367rK/Q9TmqHm5uF0er4+RrUJAKEmxc+l4nYfBN4rBp
- nfikqoshmdJttbXIoi1yIUPwZnyrpZU+Rw5gOPuy1mmgAmjTfEooKC/9/wUou48p6v1DWzPTi
- uaYfup75enS3jcRUm84EEv+ahJ4kQOLHZW2KgV1K6inEsiG0cLN0pWt+QAI7EiSkb1Kh9Vi+a
- umyGRLjvTmJkr9cVruS8aKQlHFgV7cOlxICHTVmWfZ1v9PU5YICZ458O/p8JA0ssMyvVWWwP3
- L2s5AT0bS93hNR/0vf6pe5E8ah2VybxmBR3SO12NtqF6EqdYxV/OYy/FZzYYOsav0XDXRBeAl
- OwhO/tBxpK2pjnBCfUz1p+58hcMsb2apdNfOcJCfXhHeFQCNNNfgZ2RYoICo24dN9A0fGHgsi
- 5I6a90C+1L90JcgfOYzVukMVnZnuf9JT9eSlVbYxZmazo/WIooOs/aT8fFL/K2a7UDPvf9pOF
- OZakTDID+MMXX6QXr5Za4h0ugBM/ijoUpB6K7H2zJ7kAZ9ybK8WIVfXGBzGiOP6677ZqKUmC5
- vxduJZtOWG5gVDFNBRuz6kGJEhLmp+Yk/bQ58PostAQOX347oRVISe8FBEmPBkIuVQdRCajHX
- XgpH3SEIiuFjmzIk5/eXQV250ap5In9zGIUuMv/FqM4LwjQBkp/rRsuj/Rs0hQ/u4VtVnCEDt
- ljxzWab3eu+sFBDzirapH0zTsMM01q4GUz6SG8vdzlB/0=
+Cc: baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
+ virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 07/10] iommufd: Fault-capable hwpt
+ attach/detach/replace
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240616061155.169343-1-baolu.lu@linux.intel.com>
+ <20240616061155.169343-8-baolu.lu@linux.intel.com>
+ <Zn8oZ80p0p1bHgBC@ziepe.ca>
+ <7421b923-0bd6-4c9d-81e6-07d954085171@linux.intel.com>
+ <20240709173643.GI14050@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240709173643.GI14050@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> > Signed-off-by: Ma Ke <make24@iscas.ac.cn>
->
-> Thanks for the patch!
-> Pushed to drm-misc-fixes
+On 2024/7/10 1:36, Jason Gunthorpe wrote:
+> On Mon, Jul 01, 2024 at 01:55:12PM +0800, Baolu Lu wrote:
+>> On 2024/6/29 5:17, Jason Gunthorpe wrote:
+>>> On Sun, Jun 16, 2024 at 02:11:52PM +0800, Lu Baolu wrote:
+>>>> +static int iommufd_fault_iopf_enable(struct iommufd_device *idev)
+>>>> +{
+>>>> +	struct device *dev = idev->dev;
+>>>> +	int ret;
+>>>> +
+>>>> +	/*
+>>>> +	 * Once we turn on PCI/PRI support for VF, the response failure code
+>>>> +	 * should not be forwarded to the hardware due to PRI being a shared
+>>>> +	 * resource between PF and VFs. There is no coordination for this
+>>>> +	 * shared capability. This waits for a vPRI reset to recover.
+>>>> +	 */
+>>>> +	if (dev_is_pci(dev) && to_pci_dev(dev)->is_virtfn)
+>>>> +		return -EINVAL;
+>>> I don't quite get this remark, isn't not supporting PRI on VFs kind of
+>>> useless? What is the story here?
+>> This remark is trying to explain why attaching an iopf-capable hwpt to a
+>> VF is not supported for now. The PCI sepc (section 10.4.2.1) states that
+>> a response failure will disable the PRI on the function. But for PF/VF
+>> case, the PRI is a shared resource, therefore a response failure on a VF
+>> might cause iopf on other VFs to malfunction. So, we start from simple
+>> by not allowing it.
+> You are talking about IOMMU_PAGE_RESP_FAILURE ?
+> 
+> But this is bad already, something like SVA could trigger
+> IOMMU_PAGE_RESP_FAILURE on a VF without iommufd today. Due to memory
+> allocation failure in iommu_report_device_fault()
+> 
+> And then we pass in code from userspace and blindly cast it to
+> enum iommu_page_response_code ?
+> 
+> Probably we should just only support IOMMU_PAGE_RESP_SUCCESS/INVALID
+> from userspace and block FAILURE entirely. Probably the VMM should
+> emulate FAILURE by disabling PRI on by changing to a non PRI domain.
+> 
+> And this subtle uABI leak needs a fix:
+> 
+> 		iopf_group_response(group, response.code);
+> 
+> response.code and enum iommu_page_response_code are different
+> enums, and there is no range check. Need a static assert at least and
+> a range check. Send a followup patch please
 
-Do you care for the applicability of the available information
-according to this tag?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc7#n398
+Yes, sure.
 
-Regards,
-Markus
+Thanks,
+baolu
