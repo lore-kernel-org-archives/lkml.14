@@ -1,118 +1,78 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984B51922FE
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EA612C530
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618586; cv=none; b=CKnPldVlBV+SKlFMJl92odWTRtCB1elAu9K0K0QNFO6pv2wgtAGf67fTt4s+ThkCIIXkwPxuiTwIVlD7Bfb+qNfV0mP6TLM+V08YQNxLB9zrcrZmFYWR8uwJKhbqTMLIMJEIK4Xl/EGBa+w0d4tT2MkF2yYQaqJemdYtSpnkjvs=
+	t=1720618672; cv=none; b=oLSwUfq/IMzA89M7Wc/sl/7AyAJ/LgK9VjayJ+MY02BwDVZlPXGcFIETy9TX5tHg7Y3CAPkdxBuvueg8GRprUn4R2fOLQp8wajw0d27EdyfoIuDngOwhUPKEx/DL5+nuM2kibzCvgsYd92EQWgoev7SyfQScoYMrNxJszeKvh6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618586; c=relaxed/simple;
-	bh=WcNEWQKtSC+Dj0jBIox3Xr3GfAY2vvuavazXjG/PjMk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YLCisMUQu6sYz4QQvNtiQ+T2ykNGkzGM7l1q/B8vcwZ9ncjhAZQAw58TFAFawe4YE5QXlWJBTi8zVWDKFcMPm32nETEXYjnCT+Zs9XLL2FLpPE7Rno7ro4UK6KbjuDbV/WbKbNf6jfLaidapPeW7UfMWNR54CcHdtEjS1Otcbn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b=DkKwCr5/; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	s=arc-20240116; t=1720618672; c=relaxed/simple;
+	bh=++gOqx0AOCHPw/QIqgTzJc//pa7fEsdTH3n+2JOdDTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YZ1elUUE9y4ms4ydnraSwSesicbsWeAy+O5aCLDMuY59/5/N8yiNqXNvhv0Ks+hgYV3bB/Z0sEYMzyia8goNut+g/CzWoUpYnzmk+jc8FJxwhFzBVNvKA8S7WKGlz1SKuApQUps8gyBzq3I/oSNRs3QeEMAjygRUCKi2186D9ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=y7X8EMUg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b="DkKwCr5/"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2c95ca60719so3961494a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 06:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl-com.20230601.gappssmtp.com; s=20230601; t=1720618584; x=1721223384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H+5I4HocYoLlRWtU9xSNyyq0WSjcKj0wutOR3acSvmA=;
-        b=DkKwCr5/HhDZszQ8jD1Q8lP+Glcopv0cWkqQNGOth8+HssWb/d5eH9IXeXTKXmwxaT
-         eTAxEfn94l/8M6KSVdf7ENpxYsb6SzKahAf7LfBC9rNIilrB4mpooCowDRl3dN0oBP8r
-         scXWLG1Ugco/enDpeQyaVI3CWZFePWn0ptHjPuL8Tiz4Z33I0EOKsVblwOESLd5VMN6L
-         fiir6ybTtwpPfehKo2D0mwNDrm+uP6RNKtaohFS4LsY6tILHfHJ8AveLJP/vBBj0O+P6
-         xIzMK0RKMs+1LGWo5RPfBNt5gZMtQ/72JvBpG7b1MA7Lx5n5fS58d6eNEEwmr5ZK2QtZ
-         lsrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720618584; x=1721223384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H+5I4HocYoLlRWtU9xSNyyq0WSjcKj0wutOR3acSvmA=;
-        b=ZmLdJRn7iOG6NlD9tYmyYa5AyG2+UbfLvAXKDWB/IVlM8vbrpKwFz5I0mQ69ZkrDc6
-         FpZUcUKfNpAacDtyKFUPoq5THPKVDS4jSJ7gC8RntSMpAbx5+CHsoGt/Mb3/5ncq4ugA
-         Pn8lBwzc5DgB4/iAv5dnnYYCqNNBr2TrIA09gjMGvGkrXBJ4mBQ4EPXXp54BFHq9gHbs
-         Gk6cdBUoid/DHH3WbuKdLUPlmm46Ae/EJbvaxTaafZQO4rHfQ9RnUbex+nGD26FApvbn
-         Stn2Uc+c+uBid5W++SYLPjBpwCPb2ivO0JvB7osUyrAZvTCNqCKeY8aU4RhgbFm7K9EA
-         cccA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsbmE3GiiRYF2H0HTme7FqZjV50OQjoHKJyZLiUxz00bxY7PR4ql2l3b+XYnVTEQLv5mr13gAOKQP8UU/wfSLmGxmqKj2d3cTKEI8n
-X-Gm-Message-State: AOJu0YywATMDV9vzfocCGnFTrWpGZBeChB9hv0ObrWGmEqueeJovX+ZE
-	tj8LDCf6DDpO3aqbAiFsOPOZSmLxW/WhtIBZnWvrgTeG6dZxpNSa78gsRZ8U0yq2rL9vSuH2E7h
-	jH01BXwlUUAUw2C05gZ3HDo16engsbG9wZSiwqQ==
-X-Google-Smtp-Source: AGHT+IGVWjcx2CIKKhJpC93dsIDJRQ59BMorlnyl7TRS9pMm/YWO3qF6CzwWosQ+pKzgyemjtuMmhhNtcB7dLeMy0JM=
-X-Received: by 2002:a17:90a:4b46:b0:2c9:65f5:5f61 with SMTP id
- 98e67ed59e1d1-2ca35be8f0emr4813325a91.9.1720618583619; Wed, 10 Jul 2024
- 06:36:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="y7X8EMUg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC22DC32781;
+	Wed, 10 Jul 2024 13:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720618672;
+	bh=++gOqx0AOCHPw/QIqgTzJc//pa7fEsdTH3n+2JOdDTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=y7X8EMUg/89nhrALzuUAgFd7mCazxXozUFEDUeXZwhWMDezVTbSga7NJZp8Sd8z3C
+	 PvIZj/hLB0YVvsGYp9SVloyqXCudJUEU507c5XD1oh7CZNI5XIWjfJX5WXI48tkwNv
+	 WMji1IYTM+D/CCP5J6I3M/nx3SPCciWeFfNkwL3s=
+Date: Wed, 10 Jul 2024 15:37:49 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dio: Have dio_bus_match() callback take a const *
+Message-ID: <2024071034-dealer-uncover-0794@gregkh>
+References: <20240710074452.2841173-1-geert@linux-m68k.org>
+ <2024071031-afterglow-porridge-de26@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709110658.146853929@linuxfoundation.org>
-In-Reply-To: <20240709110658.146853929@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Wed, 10 Jul 2024 22:36:12 +0900
-Message-ID: <CAKL4bV4bzzKhUv7u3SUUDD=dp_KZ35K43faoZp9aQp5GmUfTCA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/139] 6.6.39-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2024071031-afterglow-porridge-de26@gregkh>
 
-Hi Greg
+On Wed, Jul 10, 2024 at 09:47:47AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jul 10, 2024 at 09:44:52AM +0200, Geert Uytterhoeven wrote:
+> > drivers/dio/dio-driver.c:128:11: error: initialization of ‘int (*)(struct device *, const struct device_driver *)’ from incompatible pointer type ‘int (*)(struct device *, struct device_driver *)’ [-Werror=incompatible-pointer-types]
+> >   128 |  .match = dio_bus_match,
+> >       |           ^~~~~~~~~~~~~
+> > drivers/dio/dio-driver.c:128:11: note: (near initialization for ‘dio_bus_type.match’)
+> > 
+> > Reported-by: noreply@ellerman.id.au
+> > Fixes: d69d804845985c29 ("driver core: have match() callback in struct bus_type take a const *")
+> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > ---
+> >  drivers/dio/dio-driver.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/dio/dio-driver.c b/drivers/dio/dio-driver.c
+> > index 2d9fa6011945d88b..12fa2d209dab9d3c 100644
+> > --- a/drivers/dio/dio-driver.c
+> > +++ b/drivers/dio/dio-driver.c
+> > @@ -110,10 +110,10 @@ void dio_unregister_driver(struct dio_driver *drv)
+> >   *  and 0 if there is no match.
+> >   */
+> >  
+> > -static int dio_bus_match(struct device *dev, struct device_driver *drv)
+> > +static int dio_bus_match(struct device *dev, const struct device_driver *drv)
+> >  {
+> >  	struct dio_dev *d = to_dio_dev(dev);
+> > -	struct dio_driver *dio_drv = to_dio_driver(drv);
+> > +	const struct dio_driver *dio_drv = to_dio_driver(drv);
+> 
+> Same here, to_dio_driver() should be changed to use container_of_const()
 
-On Tue, Jul 9, 2024 at 8:12=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.39 release.
-> There are 139 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 11 Jul 2024 11:06:25 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.39-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+I've added that to the change when I've merged this to my tree, thanks!
 
-6.6.39-rc1 tested.
-
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
-
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
-
-[    0.000000] Linux version 6.6.39-rc1rv
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.1.1 20240522, GNU ld (GNU
-Binutils) 2.42.0) #1 SMP PREEMPT_DYNAMIC Wed Jul 10 21:13:34 JST 2024
-
-Thanks
-
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+greg k-h
