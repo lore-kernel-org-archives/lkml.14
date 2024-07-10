@@ -1,137 +1,144 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364D514D457
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4731A12C489
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720653523; cv=none; b=PIQMKz3ylqdeWyLYdl+IniNSPkcZUQtC3/YSbalFVfWZiZksnNdudfSeCgVOrL0wpux4fEcppl+fEwjd5LBzqLIPRjBM3o99UwdhjMUk3OOAdr/7Ftd49vFosMrHI8dxzTsfAiFF3rBVT2NevDJBE4p/yWo1936+U0styvXDzFM=
+	t=1720653635; cv=none; b=MUBUfyXGcm4ULgASgd94U0zP/lcf7iQFzArHN0VEw05EibgQKri7evclngJpmFbpSvpmDsXhKtE39LqOYx5fV4Y3KdVgGMlUfriMS9mJqyl2pWHtqMcYMpo/PgIQFERsoZZw2vqFfZnGoEhFf0DXJU9vFs3OusovID8GRpxLJ+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720653523; c=relaxed/simple;
-	bh=/Z3LhZV9FBdTa0nv078PPSOZZz1Eynyr/1qLnzPpDH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dj9dQf7n9vNVUiiQogpE9MSsp/DbkmMnYBcb7tYSMRurZfDcYZRk9p4LZi0jSmtKvxy3DVtVTo5wlnYWX0nCiixyISoPdyvy4QD5EONnj/k+Boimr5nUYPHMLb9H0Qv1r4ULSAy7K9VPL54Qtcxgf6Dj8DyTBB/b7t42aoBacCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Yey7/kAu; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1720653635; c=relaxed/simple;
+	bh=mTIEDdU6SbNAcW1BkWd2VaA6n34Y1oK9yy9f00SXVnQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Piy4oh9iILCvBwqvKwU1MXcSkHchNfWM5UUqahsqP8sBXeUmw6yHiAlSyoqvgI12GGQ2bpjDAQ7iZtbPzoZ1gdTTBDXTAWwBsPeot+so6WA1Lv5sjUhr/h9JLw6TxRdsKhvjysZrwH1Su0IezOLtDDgdSsuY60ZKuK64/inyQgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iY5wCLlb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Yey7/kAu"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id RcXKsciH0vH7lRgYcsFoNJ; Wed, 10 Jul 2024 23:17:06 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id RgYbscxTW0vWTRgYbsV0xj; Wed, 10 Jul 2024 23:17:05 +0000
-X-Authority-Analysis: v=2.4 cv=ffZmyFQF c=1 sm=1 tr=0 ts=668f1671
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=twV4k4tpM6jbvoAuFuAA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=TjNXssC_j7lpFel5tvFf:22
- a=cvBusfyB2V15izCimMoJ:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kMfEEDYKHMIokzjHcMS3uX5TREDWKTeMbnyO8Tlp8ZQ=; b=Yey7/kAuGkQWaUkXdzhvE7MtbZ
-	Fka+U097WBwjTUiHBRvkS59k3pur9fzY9FFUlCRPABTGH+bzL+WvfkesEIPKKG9qW2Mrcrt/3UKym
-	lLz7nONovpggW4DRyTPjijfclbmwWoHFwgfPbCZsQ2COIDoF3jePJKC766jLAtGVsILezxjq3/XCV
-	xI25a0KqoFVGfL2NFar7pbc/Xk0VTG77NNJg1h1hWJqYvpLUbL7r8qSiT+l+qUfmje4n5MWMi4CcQ
-	wZ5tICMMdXUSIBGOFyfy3mtjBK5q7WvbkMgmmFO+Sg6Udb24FLQgwhV0H6A72zfOnReKdHtlsfOY0
-	m5d9xXNA==;
-Received: from [201.172.173.139] (port=39968 helo=[192.168.15.4])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sRgYa-004DUh-1x;
-	Wed, 10 Jul 2024 18:17:04 -0500
-Message-ID: <21e3d039-a447-4779-b751-4cbf9a4e7584@embeddedor.com>
-Date: Wed, 10 Jul 2024 17:17:03 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iY5wCLlb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B12E8C32781;
+	Wed, 10 Jul 2024 23:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720653634;
+	bh=mTIEDdU6SbNAcW1BkWd2VaA6n34Y1oK9yy9f00SXVnQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iY5wCLlbOENi6J6y4MEK/XrrY2d7L9WF7bpMK0tMFisNVrlwK0OppQ9DwrEcX/Q13
+	 OpVSFLGZbBnC140EJhvgU1rl2H2YAQQEG/PMXcWjbV3cnr5wwnfICL2w4eumMqH9Dz
+	 HMybcdfj/xMFk+WAioy+Wv6NxWcsZYHF99WSfQfm7/N215wTFr7FQtJZeI10FoMm8U
+	 qj9fft6Wcla49zDXjt2V/eZRce5wL5nZhEI+TjhIGZ+6f4xD9FgbTSRHG47q5CIdil
+	 nVfA4cwLSzYqY2FWxZ3QCtMs4xsJnCS9qJangnGBMDXQWntr+5BaKyocZ1YEs40U/V
+	 vM77v/4SwtanA==
+Date: Wed, 10 Jul 2024 23:20:32 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] f2fs: clean up data_blkaddr() and get_dnode_addr()
+Message-ID: <Zo8XQAACHaGrwYVN@google.com>
+References: <20240625031604.3587691-1-chao@kernel.org>
+ <20240625031604.3587691-3-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] media: venus: hfi_cmds: struct
- hfi_session_release_buffer_pkt: Add __counted_by annotation
-To: Kees Cook <kees@kernel.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240710230728.work.977-kees@kernel.org>
- <20240710230914.3156277-2-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240710230914.3156277-2-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sRgYa-004DUh-1x
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.4]) [201.172.173.139]:39968
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfL7qjLcppnBU/xo0Iyjq4HQSLqkTLQzBqrWEtz0qoNqr6OTcy/lNwsLtNrCOqO2IcxkymGs9/huLG8MyZTOFbh7wDcPe9lRIRIH55vzqqQB35BEZ8IXN
- 1Glu8LMQGfG39GWqzI5ibavS+88KsNs+yNVkdz+hJeP9f+A1p+zhaK8XnW1pm6PhSmm2szpX+tH13pbQiVbjrlkxCdItkh62ETEBWqE2L5YlKOyY0tTu/c3B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625031604.3587691-3-chao@kernel.org>
 
-
-
-On 10/07/24 17:09, Kees Cook wrote:
-> The only direct user of struct hfi_session_release_buffer_pkt is
-> pkt_session_unset_buffers() which sets "num_buffers" before using it
-> as a loop counter for accessing "buffer_info". Add the __counted_by
-> annotation to reflect the relationship.
+On 06/25, Chao Yu wrote:
+> Introudce a new help get_dnode_base() to wrap common code from
+> get_dnode_addr() and data_blkaddr() for cleanup.
 > 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Signed-off-by: Chao Yu <chao@kernel.org>
 > ---
-> Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-> Cc: Vikash Garodia <quic_vgarodia@quicinc.com>
-> Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
-> ---
->   drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/f2fs/f2fs.h | 46 +++++++++++++++++++---------------------------
+>  1 file changed, 19 insertions(+), 27 deletions(-)
 > 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> index 42825f07939d..1adf2d2ae5f2 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> @@ -227,7 +227,7 @@ struct hfi_session_release_buffer_pkt {
->   	u32 extradata_size;
->   	u32 response_req;
->   	u32 num_buffers;
-> -	u32 buffer_info[];
-> +	u32 buffer_info[] __counted_by(num_buffers);
->   };
->   
->   struct hfi_session_release_resources_pkt {
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 1f78a39fe7f4..eacf0b0e6b2e 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -2905,26 +2905,31 @@ static inline __le32 *blkaddr_in_node(struct f2fs_node *node)
+>  }
+>  
+>  static inline int f2fs_has_extra_attr(struct inode *inode);
+> -static inline block_t data_blkaddr(struct inode *inode,
+> -			struct page *node_page, unsigned int offset)
+> +static inline int get_extra_isize(struct inode *inode);
+
+It seems get_extra_isize was already declared above?
+
+> +static inline unsigned int get_dnode_base(struct inode *inode,
+> +					struct page *node_page)
+>  {
+> -	struct f2fs_node *raw_node;
+> -	__le32 *addr_array;
+> -	int base = 0;
+> -	bool is_inode = IS_INODE(node_page);
+> -
+> -	raw_node = F2FS_NODE(node_page);
+> -
+> -	if (is_inode) {
+> +	if (IS_INODE(node_page)) {
+>  		if (!inode)
+>  			/* from GC path only */
+> -			base = offset_in_addr(&raw_node->i);
+> +			return offset_in_addr(&F2FS_NODE(node_page)->i);
+>  		else if (f2fs_has_extra_attr(inode))
+> -			base = get_extra_isize(inode);
+> +			return get_extra_isize(inode);
+
+	if (!IS_INODE(node_page))
+		return 0;
+
+	return inode ? get_extra_isize(inode) :
+		offset_in_addr();
+
+>  	}
+> +	return 0;
+> +}
+>  
+> -	addr_array = blkaddr_in_node(raw_node);
+> -	return le32_to_cpu(addr_array[base + offset]);
+> +static inline __le32 *get_dnode_addr(struct inode *inode,
+> +					struct page *node_page)
+> +{
+> +	return blkaddr_in_node(F2FS_NODE(node_page)) +
+> +			get_dnode_base(inode, node_page);
+> +}
+> +
+> +static inline block_t data_blkaddr(struct inode *inode,
+> +			struct page *node_page, unsigned int offset)
+> +{
+> +	return le32_to_cpu(*(get_dnode_addr(inode, node_page) + offset));
+>  }
+>  
+>  static inline block_t f2fs_data_blkaddr(struct dnode_of_data *dn)
+> @@ -3297,8 +3302,6 @@ static inline bool f2fs_is_cow_file(struct inode *inode)
+>  	return is_inode_flag_set(inode, FI_COW_FILE);
+>  }
+>  
+> -static inline __le32 *get_dnode_addr(struct inode *inode,
+> -					struct page *node_page);
+>  static inline void *inline_data_addr(struct inode *inode, struct page *page)
+>  {
+>  	__le32 *addr = get_dnode_addr(inode, page);
+> @@ -3437,17 +3440,6 @@ static inline int get_inline_xattr_addrs(struct inode *inode)
+>  	return F2FS_I(inode)->i_inline_xattr_size;
+>  }
+>  
+> -static inline __le32 *get_dnode_addr(struct inode *inode,
+> -					struct page *node_page)
+> -{
+> -	int base = 0;
+> -
+> -	if (IS_INODE(node_page) && f2fs_has_extra_attr(inode))
+> -		base = get_extra_isize(inode);
+> -
+> -	return blkaddr_in_node(F2FS_NODE(node_page)) + base;
+> -}
+> -
+>  #define f2fs_get_inode_mode(i) \
+>  	((is_inode_flag_set(i, FI_ACL_MODE)) ? \
+>  	 (F2FS_I(i)->i_acl_mode) : ((i)->i_mode))
+> -- 
+> 2.40.1
