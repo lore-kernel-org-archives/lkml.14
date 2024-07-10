@@ -1,188 +1,110 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA3114AD3D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 22:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4ED848E;
+	Wed, 10 Jul 2024 22:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720650583; cv=none; b=Ws1TpHYTs+fMHLaKJzEWlefayiGzg9yzkzxJto51SeyCXCo6gMErU/qnqGy+laDpDh/SVz7hAcTR/KTbBUdZy3ZPyT7rYrMG32Hfd/5QsgOMdMqkE1I663lpaF/6b6Cx0i7N+NI1YuQ8PV8TvVt6tb3C0dawekeEdnnDnm+bC5E=
+	t=1720650748; cv=none; b=dAy8r59uyPrF/WWtNuRMleoTqmjRsTJVP/u7LvNFG3IRrXNsAS3YQ/tGo+lF8KdAgYzNPCt25py+RMJsyFq9mW4Phyn8p1t+QS0ZUuNjnpNNbPcP+6G47TxYoZ9j3tQxXEXPkQUyNQ0oMCkC+AdriROygQrUs9G/Vr7gi2QZeqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720650583; c=relaxed/simple;
-	bh=rsM6wOIIuPtiTXHYi0ZYdEkTXszm2PRQO/8IL35wGpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rwxr9na9Xl0bWAOIPCSxO2XnGm0ZllFaiiZkTTnX2YTjzZCrufonaarirPcGadzst6OdzLt85hrCC4R2i3am11TzHy2zMcmhQAUqRDb+Rw++Yw0ICOV2qgPncKlF/NdFy16wza+h79mkG5uoRW0Bj/1VdH4WfnwCreDsPAR7OmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=T6z+AU0s; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1720650748; c=relaxed/simple;
+	bh=cZUl+GtvEWTuWqjppQU7RkrzP/oZOCjWu25mrDrFpvg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HNXs3lJ4yx8UZ4RIb0kOhXot5mEN2IirZwuwEJeVeCAxRDfQ26tJlLKJuhp+B8OMlL7WTexOn+1cBuRF+cmbjfHWOni1LNPF7g0t5MN1zgUcbB3Zz78zGGzIjPFeRBfXxztJxvtXmkSJAVheQXUjGCrl0e2k+8cDlNTpnpYzrLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=UyHX3DyA; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="T6z+AU0s"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2c2c6b27428so229452a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1720650579; x=1721255379; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4NTgih/I/qtspn9wPSsT5PQdbbKiYuSLrBWTOJWi/Yo=;
-        b=T6z+AU0s8w6gBLmADCXNMWbBsHGbY+tyinUxuEH/OO0q6Wg9FiImX3vui2ZkY52XYR
-         wWiDFDtWYaCfgTLpPuoTndyQ1H3OQ6FJq3XrLMTPwRdVoqhb3VUvEM+74iSgFLMA9J+1
-         SK9SJFvC22mefOQz4eKZTJxqesD3Ej5lDMMmwARPCJgeOne4FP7n8vXLcZ36XmwAAwNS
-         unRhQqWMH2LSDrhlNlVR5B/scKOSiQr5zz5h4zxMcZhkgK9WJ1vGhnfNmQZLd9/nTMZ6
-         dD1DZaZYuPij2sCklOStYQz5FRDCMZU5LS3zf1sqpycORsqKxsvt1s698FlcY5eTZoAx
-         /J2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720650579; x=1721255379;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4NTgih/I/qtspn9wPSsT5PQdbbKiYuSLrBWTOJWi/Yo=;
-        b=nRc2VGVVivhfDoj74HfHDqXQTPzpfFuGrB33qFq42VyBKa9VCpzaAPxDtu546HBQNq
-         IFStaTT+qNlf1HWzmUdGRx4VjrX2XKVvCU8YTw0NCKrcq3UgUevgR3bdGQhP/vmRGxJ5
-         LS0UIwZisdMI328wQmCn0o+NaPb1RknBUTELs2tLygj5MarOzN4r9+BGAMfKgrPSDv0N
-         74Cv5wsCkX8bo6pGi+MRkZzCfRXPtiR7/epoFHtWyz2yewrCtk0uouwN1D9tjm1T0Qm5
-         CMW0yMr6EfbhRw284tkgwf50s/MYhnNFjAwlZikxsxMHogtw1Um2Y6A49l7vpG/cfyaB
-         4HWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWfqd3G6E7bA/ylCft49+a6xX7P94O+UOZCkObDpo3ecVDmRMNh7yG+IzNmVQt4R1+FLECkGgkB5IWkqs4iXHcJblqngVzPLDuj40v
-X-Gm-Message-State: AOJu0YxivOYxvhIe0WfcEYgEeTWbP2uA4n0pFIbP8ulkcNj1IpleQZFN
-	9TmeBDvh9Z8cvVU4iaRY6LmU7BN6Svon3OZCQg6KnjhdW0M/tnqFO48+LFmbXkclf2Z/O0ib4GY
-	NBF+V9e4Z5s0Kz7lfoYPRzcfc2RJ15i6SnrEXRg==
-X-Google-Smtp-Source: AGHT+IEG0fJWzbKu94wc/lGrrWrq4ZTcQCHpdjfNmMcuIOCOrmIosFxlMKcxuEkUwIgTY3hOtUi5EqpS3gyOLgsysHw=
-X-Received: by 2002:a17:90a:9a81:b0:2c9:60ea:2f11 with SMTP id
- 98e67ed59e1d1-2ca35bd24a5mr5291639a91.1.1720650579090; Wed, 10 Jul 2024
- 15:29:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="UyHX3DyA"
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 918F912000C;
+	Thu, 11 Jul 2024 01:32:22 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 918F912000C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1720650742;
+	bh=EZPnynPyf1zfhY1MLF9NL+wcInfJ/C1ansM7QDzzuyI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=UyHX3DyAswn2Mqcywl07RPt684WapKbCtU9oTs7mGkRKMcDBmAbsz/J3JrYsIb57x
+	 eu9OSJAZhdQBnL2IyVGSP31Jt3AbAj3hoU/jsbnGSeTjb+rqnZGxPo/yvUatr0Mj0n
+	 RLR+Cx+2sJ1sqjsZ6D5ftvug4yJvkD6mt/+3V6O4Aq+oPfaa139cnXQ/DfvqgpGT77
+	 wG+k5SAJpBdfXA1RIcrNR/42TTyr+W0s8Hs+mrrxPQzdcT0knChxrirmLRsZhM3Vru
+	 auu9a/fN1QTBaJKi5FeaEnF9shHguViu5rGwiO/znZzv2x3TZkFkK9ZdqTfGlozbJC
+	 5tC9QoIOLN5og==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu, 11 Jul 2024 01:32:22 +0300 (MSK)
+Received: from work.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 11 Jul 2024 01:32:22 +0300
+From: George Stark <gnstark@salutedevices.com>
+To: <andi.shyti@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
+	<jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
+	<glaroque@baylibre.com>, <rafael@kernel.org>, <daniel.lezcano@linaro.org>,
+	<rui.zhang@intel.com>, <lukasz.luba@arm.com>, <b.galvani@gmail.com>,
+	<mmkurbanov@sberdevices.ru>
+CC: <linux-i2c@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>
+Subject: [PATCH v2 2/3] dt-bindings: thermal: amlogic,thermal: add optional power-domains
+Date: Thu, 11 Jul 2024 01:32:13 +0300
+Message-ID: <20240710223214.2348418-3-gnstark@salutedevices.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240710223214.2348418-1-gnstark@salutedevices.com>
+References: <20240710223214.2348418-1-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708232302.15267-1-cachen@purestorage.com>
- <20240708232302.15267-2-cachen@purestorage.com> <CAM9d7cisBvfLTzNp8=0SG6g3CA9zJFNayjopSEDX0fxRyG05UA@mail.gmail.com>
-In-Reply-To: <CAM9d7cisBvfLTzNp8=0SG6g3CA9zJFNayjopSEDX0fxRyG05UA@mail.gmail.com>
-From: Casey Chen <cachen@purestorage.com>
-Date: Wed, 10 Jul 2024 15:29:27 -0700
-Message-ID: <CALCePG0_PpwKK_=YrpCGr-j51dG8xtDP-yzBYGeLwphscFobRg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf tool: fix handling NULL al->maps returned from thread__find_map
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yzhong@purestorage.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186446 [Jul 10 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/10 21:42:00 #25942395
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Mon, Jul 8, 2024 at 10:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> On Mon, Jul 8, 2024 at 4:23=E2=80=AFPM Casey Chen <cachen@purestorage.com=
-> wrote:
-> >
-> > With 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"),
-> > thread__find_map() would return with al->maps or al->map being NULL
-> > when cpumode is 3 (macro PERF_RECORD_MISC_HYPERVISOR),
-> > later deferencing on it would crash.
-> >
-> > Fix callers of thread__find_map() or thread__find_symbol() to handle
-> > this.
->
-> It looks like you drop the callchain if it doesn't find a map/symbol.
-> Can we keep the entries with raw hex numbers instead?
->
-In add_callchain_ip(), my change let it return if either al.maps is
-NULL or al.map is NULL after thread__find_symbol(), I'm not sure what
-else can add_callchain_ip() could do to keep raw hex numbers. If it
-proceeds, al.sym is NULL, the code inside 'if (al.sym !=3D NULL)' would
-skip. callchain_srcline() would return NULL. chain_cursor_append()
-would append a node whose ms.maps/ ms.map are NULL. Later
-dereferencing them would cause trouble. But we could add other
-information to the node, like ip, branch, nr_loop_iter, iter_cycles,
-branch_from, are these information good to have ? but how to avoid
-dereferencing NULL maps/map later.
+On newer SoCs, the thermal hardware can require a power domain to
+operate so add corresponding optional property.
 
-Thanks
-Casey
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+---
+ Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Thanks,
-> Namhyung
->
-> > ---
-> >  tools/perf/arch/powerpc/util/skip-callchain-idx.c | 10 ++++++----
-> >  tools/perf/util/machine.c                         |  5 +++++
-> >  tools/perf/util/unwind-libdw.c                    |  6 ++++--
-> >  3 files changed, 15 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/=
-perf/arch/powerpc/util/skip-callchain-idx.c
-> > index 5f3edb3004d8..25b0804df4c4 100644
-> > --- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-> > +++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-> > @@ -255,13 +255,14 @@ int arch_skip_callchain_idx(struct thread *thread=
-, struct ip_callchain *chain)
-> >
-> >         thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
-> >
-> > -       if (al.map)
-> > -               dso =3D map__dso(al.map);
-> > +       if (!al.map)
-> > +               goto out;
-> > +
-> > +       dso =3D map__dso(al.map);
-> >
-> >         if (!dso) {
-> >                 pr_debug("%" PRIx64 " dso is NULL\n", ip);
-> > -               addr_location__exit(&al);
-> > -               return skip_slot;
-> > +               goto out;
-> >         }
-> >
-> >         rc =3D check_return_addr(dso, map__start(al.map), ip);
-> > @@ -282,6 +283,7 @@ int arch_skip_callchain_idx(struct thread *thread, =
-struct ip_callchain *chain)
-> >                 skip_slot =3D 3;
-> >         }
-> >
-> > +out:
-> >         addr_location__exit(&al);
-> >         return skip_slot;
-> >  }
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 8477edefc299..fa4037d7f3d4 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -2098,7 +2098,12 @@ static int add_callchain_ip(struct thread *threa=
-d,
-> >                         }
-> >                         goto out;
-> >                 }
-> > +
-> >                 thread__find_symbol(thread, *cpumode, ip, &al);
-> > +               if (!al.maps || !al.map) {
-> > +                       err =3D 1;
-> > +                       goto out;
-> > +               }
-> >         }
-> >
-> >         if (al.sym !=3D NULL) {
-> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-li=
-bdw.c
-> > index b38d322734b4..fb038ef55be2 100644
-> > --- a/tools/perf/util/unwind-libdw.c
-> > +++ b/tools/perf/util/unwind-libdw.c
-> > @@ -53,8 +53,10 @@ static int __report_module(struct addr_location *al,=
- u64 ip,
-> >          */
-> >         thread__find_symbol(ui->thread, PERF_RECORD_MISC_USER, ip, al);
-> >
-> > -       if (al->map)
-> > -               dso =3D map__dso(al->map);
-> > +       if (!al->map)
-> > +               return -1;
-> > +
-> > +       dso =3D map__dso(al->map);
-> >
-> >         if (!dso)
-> >                 return 0;
-> > --
-> > 2.45.2
-> >
-> >
+diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+index 01fccdfc4178..462bd7237bb7 100644
+--- a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+@@ -30,6 +30,9 @@ properties:
+   clocks:
+     maxItems: 1
+ 
++  power-domains:
++    maxItems: 1
++
+   amlogic,ao-secure:
+     description: phandle to the ao-secure syscon
+     $ref: /schemas/types.yaml#/definitions/phandle
+-- 
+2.25.1
+
