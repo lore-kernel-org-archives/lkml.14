@@ -1,175 +1,210 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8999519539F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 20:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E701974EA
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 20:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720643663; cv=none; b=q+4HtIqs9rlopfuyrV2Ll6xkR/g5j8R7NV89lyzjJntbn89P76tlSGnocKeEa4KkTFj/AJFlhxXaTEufSOTKrkAQltHN1Fb/jr7rs2MvEgOZTsEgSVnsWCe0vCUB08KCDHBsFLL5dlaedhGtn6/pG7rsTkLGdPmPrHg/t215tx0=
+	t=1720643978; cv=none; b=dj3n5W2/MM8LcFlDAUyw1kYKWruUZWrnSqkSaZwyJhjYlRPGw3joPZnuci9TAPFauW+ShRMJflQDCIOKQGSL9CeWgWhXcnGLMxdsmT0C5Pe0aO5zp1FpS4PJnk+y8sqKRFI+u48CYfm5846reCqlB4xnG/dmQyGsoUx0x5x4zZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720643663; c=relaxed/simple;
-	bh=g8LjupbUKU8NHTH5Uuvp0PGEuzjenQ658hvrRkjCm9o=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=n8dC4hly2XNcgwRGUBI8sUS43iCPxeMrcf9Cf0rKjGKVmIo+2oDF/A9iGWijrp1BVWDmdDCZkYg1B80GBz+RrQMDFA2j8XE4j5GBwqjVTHF17fg1syVh62kW6jG8koExYIDAYEVSvYx1zhIxPGH8E7GCb4nlKqdS07lpJAVUKUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7ec0802fd0dso18893239f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:34:21 -0700 (PDT)
+	s=arc-20240116; t=1720643978; c=relaxed/simple;
+	bh=FkBwZIwX/vwv/flv1JLtkKzJfwEAAipbXsO2aRGsSSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mIdNOl8NCUxZjbEyWMml3TBFs/IfA7CgWYW5xVdMubE9KTJ8Fsx3WnZmRrvJefE0c6K2t9UxWq/eMng6s/bxO8HuuQSxiJBDYqoJdc04AosjUzoKgiBLkVWBOS+OIz9SbIbAQGPymLlAt3vTz1vcGL6q/vFBox5wSP5gxAMC2oE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z2QCAeOF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2QCAeOF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720643976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F+f+kV8PGs9cvgE7zeVigaMsenY/36PRSuVdnQGbWD0=;
+	b=Z2QCAeOFLkXf8HD0Peyl0H2jOvym1qUDEamcq146JulAx1xaK1jQQVvKCahQ07UcNylA9g
+	WpnR0Nor1jDaUYx2akV7aC0JnuGdDSSSvUn6C6nrcI6cMmPxGhvi1lX6Txnr5zewRprPyT
+	NofkfHfMuZz2ekx8CXiFrpWo8QESppU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-386-XJViQEcPNT-7Wj1okEHLTw-1; Wed, 10 Jul 2024 16:39:34 -0400
+X-MC-Unique: XJViQEcPNT-7Wj1okEHLTw-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4256667ebf9so1201235e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:39:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720643661; x=1721248461;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F/FsAanCn6HRVuUfzPd0zjjxYUK3mPPHg7WjHz5sd5E=;
-        b=VlCxiPlRVM4ckevDs0PiT6yg/NkR8jtQkHIf8rcJgfBGK4kGegJUoAHYAOpgI6Z1T5
-         YDDBuo/Up7wvG8Sy5TUjbSzdSOjnJwLqUqvL/B2kDvgZjNhozuZ0pw6t1cGJLtSUa7AL
-         BbtsGFIa5flU1+Bzf5pQGDKtDbgZw29NsjdNQ+jO5TdK+YGI7x6z5S0uWjbmi9l+vyAH
-         MadpHWg6wcN8vAumzn67aGZxi3XBu7TOGOH1UnbcOxYz/ZMfE/2w//B4tt0Z5J0T/LEn
-         ueFxefswUMGASzz4JCNvu3ZTgKxRLV67cfNdpYU8aQAi/YtK6GEGxGOuH/dwyI3hr403
-         iiig==
-X-Forwarded-Encrypted: i=1; AJvYcCWU/j4CWqTzNfRYWKrqJq7F5IVCyWQNgHpdZbIICd3UVvQ/mwuR21YocuIHGSGszGfV2kghLI5N4NJzsUyvhwd9Gt+GYSeyZIVWsGIG
-X-Gm-Message-State: AOJu0YyiddbhFe+MF+iJXi233NFIJDS+MZqSIsHyxkjzVEuwHgz4ZJWi
-	K5jbp/j203FM4uSQTcyNkCiWYIoypeqYoNCUTAYwMKXh4vhkHBPuqnz/DUtWb621AvTj+X+zKTR
-	ePLdyZzTdVQ5ipF78X/+hiYbmoaL8yR5ELXX9m+eOmMBIt6pnYWj7mbc=
-X-Google-Smtp-Source: AGHT+IHWZ/UCpGMXR2VJ8jYnEPWu3BNfGHy6LS/46oHOpxdNia3MPIkNld54bakFF3OU0vBnEh4yxrJcA2eaZan8YPD4ItO61Mrx
+        d=1e100.net; s=20230601; t=1720643973; x=1721248773;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F+f+kV8PGs9cvgE7zeVigaMsenY/36PRSuVdnQGbWD0=;
+        b=qiuwlh1njmVWDkJgDygFoYQV5MUyy4vdkzG6lVeFKqRUFcieRqog8NifTqdvVTL4hI
+         knY8QB5oFdWnGm0ki88dSyJ2sZcc9PsE+wUmjQHdaNZkRg4XEeZSmMe5H7tiHleZq0U8
+         C0l9Bk3N8cXsF1YTHypuSB0B8a3ATAHfSgWLirxp8xNlwchssoGY1DKFqmWLh1laoSXD
+         j72czHwDtH1jYGgofDC9Akx/iFbFAmlEUTN3XUfew5kAv79weyD/WxmU7yFHZ80rXDXC
+         zFQkjhoymvsM3xkodHk6Hykqwz0kud2BrT+0Ql+RNtqWpXfMrflvSyN9VqSahDer31PT
+         BRLQ==
+X-Gm-Message-State: AOJu0YxwZLRJCZYJCVFc0TncxxyaliqDOFa15xpqeB15lB0BIdxB0oPU
+	xvbjytHcYDj6MSTJUILAXBtKlCVnY2XOlMyBd+n4oj8RCEEez9SDEjreOkDdUvCSLjRZMGl5zUP
+	/JQH7a5p09Qh1GWvvHgNg2V0Ed6Gp4EJkHG2Xey2DyQmDuYfW1zPdJweXGilo+w==
+X-Received: by 2002:a05:600c:229a:b0:426:5f75:1c2c with SMTP id 5b1f17b1804b1-426707cbc97mr44811735e9.11.1720643973114;
+        Wed, 10 Jul 2024 13:39:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEtCfrEexr56Rkv7hJ8Mgk/LJU1kKofEwb65pnZ1cmAQDQy0+5tLig+uLI502/i8+1HPIzcTQ==
+X-Received: by 2002:a05:600c:229a:b0:426:5f75:1c2c with SMTP id 5b1f17b1804b1-426707cbc97mr44811475e9.11.1720643972423;
+        Wed, 10 Jul 2024 13:39:32 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc7:341:761e:f82:fc9a:623b:3fd1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e9666sm92264125e9.9.2024.07.10.13.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 13:39:32 -0700 (PDT)
+Date: Wed, 10 Jul 2024 16:38:59 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Daniel Verkamp <dverkamp@chromium.org>
+Cc: linux-kernel@vger.kernel.org,
+	Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	linux-um@lists.infradead.org, linux-remoteproc@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] virtio: fix vq # for balloon
+Message-ID: <20240710162640-mutt-send-email-mst@kernel.org>
+References: <cover.1720611677.git.mst@redhat.com>
+ <3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst@redhat.com>
+ <CABVzXAnjAdQqVNtir_8SYc+2dPC-weFRxXNMBLRcmFsY8NxBhQ@mail.gmail.com>
+ <20240710142239-mutt-send-email-mst@kernel.org>
+ <CABVzXAmp_exefHygEGvznGS4gcPg47awyOpOchLPBsZgkAUznw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6d0c:b0:7f6:1a62:58bb with SMTP id
- ca18e2360f4ac-80004173ff5mr50758939f.3.1720643660723; Wed, 10 Jul 2024
- 13:34:20 -0700 (PDT)
-Date: Wed, 10 Jul 2024 13:34:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002ec51a061cea9292@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in bch2_bio_compress
-From: syzbot <syzbot+cf190b6276e5bd33a108@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABVzXAmp_exefHygEGvznGS4gcPg47awyOpOchLPBsZgkAUznw@mail.gmail.com>
 
-Hello,
+On Wed, Jul 10, 2024 at 12:58:11PM -0700, Daniel Verkamp wrote:
+> On Wed, Jul 10, 2024 at 11:39 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Wed, Jul 10, 2024 at 11:12:34AM -0700, Daniel Verkamp wrote:
+> > > On Wed, Jul 10, 2024 at 4:43 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > virtio balloon communicates to the core that in some
+> > > > configurations vq #s are non-contiguous by setting name
+> > > > pointer to NULL.
+> > > >
+> > > > Unfortunately, core then turned around and just made them
+> > > > contiguous again. Result is that driver is out of spec.
+> > >
+> > > Thanks for fixing this - I think the overall approach of the patch looks good.
+> > >
+> > > > Implement what the API was supposed to do
+> > > > in the 1st place. Compatibility with buggy hypervisors
+> > > > is handled inside virtio-balloon, which is the only driver
+> > > > making use of this facility, so far.
+> > >
+> > > In addition to virtio-balloon, I believe the same problem also affects
+> > > the virtio-fs device, since queue 1 is only supposed to be present if
+> > > VIRTIO_FS_F_NOTIFICATION is negotiated, and the request queues are
+> > > meant to be queue indexes 2 and up. From a look at the Linux driver
+> > > (virtio_fs.c), it appears like it never acks VIRTIO_FS_F_NOTIFICATION
+> > > and assumes that request queues start at index 1 rather than 2, which
+> > > looks out of spec to me, but the current device implementations (that
+> > > I am aware of, anyway) are also broken in the same way, so it ends up
+> > > working today. Queue numbering in a spec-compliant device and the
+> > > current Linux driver would mismatch; what the driver considers to be
+> > > the first request queue (index 1) would be ignored by the device since
+> > > queue index 1 has no function if F_NOTIFICATION isn't negotiated.
+> >
+> >
+> > Oh, thanks a lot for pointing this out!
+> >
+> > I see so this patch is no good as is, we need to add a workaround for
+> > virtio-fs first.
+> >
+> > QEMU workaround is simple - just add an extra queue. But I did not
+> > reasearch how this would interact with vhost-user.
+> >
+> > From driver POV, I guess we could just ignore queue # 1 - would that be
+> > ok or does it have performance implications?
+> 
+> As a driver workaround for non-compliant devices, I think ignoring the
+> first request queue would be a reasonable approach if the device's
+> config advertises num_request_queues > 1. Unfortunately, both
+> virtiofsd and crosvm's virtio-fs device have hard-coded
+> num_request_queues =1, so this won't help with those existing devices.
 
-syzbot found the following issue on:
-
-HEAD commit:    34afb82a3c67 Merge tag '6.10-rc6-smb3-server-fixes' of git..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=11932b76980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=42a432cfd0e579e0
-dashboard link: https://syzkaller.appspot.com/bug?extid=cf190b6276e5bd33a108
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14109821980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1235f47e980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5e93dc1544ee/disk-34afb82a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/005e374613f0/vmlinux-34afb82a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b6931db81a1a/bzImage-34afb82a.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/d469706bc1c9/mount_0.gz
-
-The issue was bisected to:
-
-commit 03ef80b469d5d83530ce1ce15be78a40e5300f9b
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Sat Sep 23 22:41:51 2023 +0000
-
-    bcachefs: Ignore unknown mount options
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1475d6e1980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1675d6e1980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1275d6e1980000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cf190b6276e5bd33a108@syzkaller.appspotmail.com
-Fixes: 03ef80b469d5 ("bcachefs: Ignore unknown mount options")
-
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/compress.c:398!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 PID: 1036 Comm: kworker/u8:5 Not tainted 6.10.0-rc7-syzkaller-00012-g34afb82a3c67 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Workqueue: writeback wb_workfn (flush-bcachefs-1)
-RIP: 0010:__bio_compress fs/bcachefs/compress.c:398 [inline]
-RIP: 0010:bch2_bio_compress+0x13a1/0x13e0 fs/bcachefs/compress.c:498
-Code: e1 07 38 c1 0f 8c 77 fb ff ff be 14 00 00 00 4c 89 ef e8 52 6d dc fd e9 65 fb ff ff e8 48 00 7a fd 90 0f 0b e8 40 00 7a fd 90 <0f> 0b e8 38 00 7a fd 90 0f 0b e8 00 0f 61 07 e8 2b 00 7a fd 90 0f
-RSP: 0018:ffffc9000403e660 EFLAGS: 00010293
-RAX: ffffffff841c2680 RBX: ffff8880769c7e78 RCX: ffff888021ddda00
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000004
-RBP: ffffc9000403e8f0 R08: ffffffff841c14df R09: 0000000000000003
-R10: ffffc9000403ed00 R11: fffff52000807da5 R12: 00000000000002e0
-R13: ffff888076845688 R14: dffffc0000000000 R15: 0000000000000004
-FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f1b70de0db8 CR3: 0000000079450000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_write_extent fs/bcachefs/io_write.c:963 [inline]
- __bch2_write+0x1537/0x5c40 fs/bcachefs/io_write.c:1461
- bch2_write+0x947/0x1670 fs/bcachefs/io_write.c:1634
- closure_queue include/linux/closure.h:269 [inline]
- closure_call include/linux/closure.h:425 [inline]
- bch2_writepage_do_io fs/bcachefs/fs-io-buffered.c:460 [inline]
- bch2_writepages+0x27d/0x380 fs/bcachefs/fs-io-buffered.c:652
- do_writepages+0x359/0x870 mm/page-writeback.c:2656
- __writeback_single_inode+0x165/0x10b0 fs/fs-writeback.c:1651
- writeback_sb_inodes+0x99c/0x1380 fs/fs-writeback.c:1947
- __writeback_inodes_wb+0x11b/0x260 fs/fs-writeback.c:2018
- wb_writeback+0x495/0xd40 fs/fs-writeback.c:2129
- wb_check_background_flush fs/fs-writeback.c:2199 [inline]
- wb_do_writeback fs/fs-writeback.c:2287 [inline]
- wb_workfn+0xc58/0x1090 fs/fs-writeback.c:2314
- process_one_work kernel/workqueue.c:3248 [inline]
- process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3329
- worker_thread+0x86d/0xd50 kernel/workqueue.c:3409
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__bio_compress fs/bcachefs/compress.c:398 [inline]
-RIP: 0010:bch2_bio_compress+0x13a1/0x13e0 fs/bcachefs/compress.c:498
-Code: e1 07 38 c1 0f 8c 77 fb ff ff be 14 00 00 00 4c 89 ef e8 52 6d dc fd e9 65 fb ff ff e8 48 00 7a fd 90 0f 0b e8 40 00 7a fd 90 <0f> 0b e8 38 00 7a fd 90 0f 0b e8 00 0f 61 07 e8 2b 00 7a fd 90 0f
-RSP: 0018:ffffc9000403e660 EFLAGS: 00010293
-RAX: ffffffff841c2680 RBX: ffff8880769c7e78 RCX: ffff888021ddda00
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000004
-RBP: ffffc9000403e8f0 R08: ffffffff841c14df R09: 0000000000000003
-R10: ffffc9000403ed00 R11: fffff52000807da5 R12: 00000000000002e0
-R13: ffff888076845688 R14: dffffc0000000000 R15: 0000000000000004
-FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f1b70de0db8 CR3: 000000007d568000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Do they care what the vq # is though?
+We could do some magic to translate VQ #s in qemu.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> Maybe there are other devices that we would need to consider as well;
+> commit 529395d2ae64 ("virtio-fs: add multi-queue support") quotes
+> benchmarks that seem to be from a different virtio-fs implementation
+> that does support multiple request queues, so the workaround could
+> possibly be used there.
+> 
+> > Or do what I did for balloon here: try with spec compliant #s first,
+> > if that fails then assume it's the spec issue and shift by 1.
+> 
+> If there is a way to "guess and check" without breaking spec-compliant
+> devices, that sounds reasonable too; however, I'm not sure how this
+> would work out in practice: an existing non-compliant device may fail
+> to start if the driver tries to enable queue index 2 when it only
+> supports one request queue,
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+You don't try to enable queue - driver starts by checking queue size.
+The way my patch works is that it assumes a non existing queue has
+size 0 if not available.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+This was actually a documented way to check for PCI and MMIO:
+	Read the virtqueue size from queue_size. This controls how big the virtqueue is (see 2.6 Virtqueues).
+	If this field is 0, the virtqueue does not exist.
+MMIO:
+	If the returned value is zero (0x0) the queue is not available.
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+unfortunately not for CCW, but I guess CCW implementations outside
+of QEMU are uncommon enough that we can assume it's the same?
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+To me the above is also a big hint that drivers are allowed to
+query size for queues that do not exist.
 
-If you want to undo deduplication, reply with:
-#syz undup
+
+
+> and a spec-compliant device would probably
+> balk if the driver tries to enable queue 1 but does not negotiate
+> VIRTIO_FS_F_NOTIFICATION. If there's a way to reset and retry the
+> whole virtio device initialization process if a device fails like
+> this, then maybe it's feasible. (Or can the driver tweak the virtqueue
+> configuration and try to set DRIVER_OK repeatedly until it works? It's
+> not clear to me if this is allowed by the spec, or what device
+> implementations actually do in practice in this scenario.)
+> 
+> Thanks,
+> -- Daniel
+
+My patch starts with a spec compliant behaviour. If that fails,
+try non-compliant one as a fallback.
+
+-- 
+MST
+
