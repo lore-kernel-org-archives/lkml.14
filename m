@@ -1,170 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD08A848E;
-	Wed, 10 Jul 2024 23:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45008156238;
+	Wed, 10 Jul 2024 23:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720654806; cv=none; b=nCEQwnTvoAbaxOeKbyrMi/nj6KW396zC0jkFsPxB1MU2+1Fd28vct2q9AFdOVKQ6T066/v/9cFfynJzmerE9xO08h8uTgdcO0VAhi48dc2IoU0ZRjfgMVJvSwDJ4xvSWJuHrnzzHyZpN2hVFQoMuiDNdbcOjw82f/p/1zjyceBs=
+	t=1720654889; cv=none; b=S3/9XOVoWXoFtKOjbKmY+qryRuct939TvOVXUE3U3fFgZHk7XkKTZDoLBoo0zCpkNAHHhgQVdb3GxhVR8jtbwNUZn1oqzzlz5AMFsG/U70ddUhXClRTZ6n+IOULp43ABtnShAnnZHwlYw/o0i6g82AmDm/PgmyDDUKMHkAzJI2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720654806; c=relaxed/simple;
-	bh=TMcVvqG6rqVWGaTOFcCtZt0wtwQV7k2OgSE8df3s+dw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s3HyC6NHqYkc0tIwwBSQEJKRLkGFQOkvjiWo/TTF4HgRm1zdmiMLoUEi4tYAV5DLbcN0zaZFRueePD/pQ7Fo9FvPQYRUbCbj3+xZweCtG4+IE2/V92qyRUgh8D6C9QMsuzrJz2nwVqT6YGwbGujfgGIguJw4jopjLAmwT03HMAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=alQFnqww; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720654889; c=relaxed/simple;
+	bh=nyiCDAkt4vnvyPK3nh6U/LCBqMxlzyxk03EN4t5sYnc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ot+IjC5dNBLaoAX3VMtkLlV1l2DqZNKHWRicG0i/T1DdL/vICZK3tEvbpalb/cEkd+I0XBfwlVuw1lcS9vtJCuThi9YAM+AXBWo2gFLmQR5XuNQZ0UjX6VkJfWElY2rOye2raIZd/ZHHhd9RQUAFwId6Nuj9CCbotLHnErKOdrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=uUu0mtRl; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="alQFnqww"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720654805; x=1752190805;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=TMcVvqG6rqVWGaTOFcCtZt0wtwQV7k2OgSE8df3s+dw=;
-  b=alQFnqwwxSfCLxfqReb/VHbjGJGaaPw5rdCra9g0yhvzW+hls7DNabb9
-   9eK1CeF4EJfTstvvArIlXvRhkfyGmZHenqPhcGPpZUtpfj0RUZFH1Iq61
-   l5tQ/TnMl/42SYv+k2cZJmNF9BZw3AeUC61S1+OcxcTgMM33vu5fF/lwv
-   a4cHfs1W/Fky1tQnTIFHZSPDW1lZFmOJKpXO/Ebn36bSylE081EnbCnHi
-   5cVVnQv6Cjz7HrJmWDboiaulJt5uuQCnx7uxzqIRsj4gG3BSO3UCcIGkB
-   7tO/Um95E1dA8aE244WHE/GmRXGFvNcJnjzQib4H9R+VZznB+39KmsepO
-   A==;
-X-CSE-ConnectionGUID: +SYmIUZsRqOHKLbLr2iWFQ==
-X-CSE-MsgGUID: xSv7L7X1SKCfKa1VYJGiZg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="17629061"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="17629061"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 16:40:04 -0700
-X-CSE-ConnectionGUID: FB96FvRfR8eHP9iQ8Umqtg==
-X-CSE-MsgGUID: 0DhXPLq3TLOQkmbqVF/05Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="48432626"
-Received: from sbalki-mobl.amr.corp.intel.com (HELO [10.209.73.56]) ([10.209.73.56])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 16:40:04 -0700
-Message-ID: <0b928778df827f7ea948931c3358616c8e7f26f7.camel@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] fs/file.c: add fast path in find_next_fd()
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Mateusz Guzik <mjguzik@gmail.com>, "Ma, Yu" <yu.ma@intel.com>
-Cc: Jan Kara <jack@suse.cz>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
- edumazet@google.com, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,  pan.deng@intel.com, tianyou.li@intel.com,
- tim.c.chen@intel.com
-Date: Wed, 10 Jul 2024 16:40:03 -0700
-In-Reply-To: <CAGudoHGJrRi_UZ2wv2dG9U9VGasHW203O4nQHkE9KkaWJJ61WQ@mail.gmail.com>
-References: <20240614163416.728752-1-yu.ma@intel.com>
-	 <20240703143311.2184454-1-yu.ma@intel.com>
-	 <20240703143311.2184454-4-yu.ma@intel.com>
-	 <CAGudoHH_P4LGaVN1N4j8FNTH_eDm3SDL7azMc25+HY2_XgjvJQ@mail.gmail.com>
-	 <20240704215507.mr6st2d423lvkepu@quack3>
-	 <3c7a0cd7-1dd2-4762-a2dd-67e6b6a82df7@intel.com>
-	 <1296ef8d-dade-46e5-8571-e7dba158f405@intel.com>
-	 <CAGudoHGJrRi_UZ2wv2dG9U9VGasHW203O4nQHkE9KkaWJJ61WQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-3.fc36) 
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="uUu0mtRl"
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 5695B12000E;
+	Thu, 11 Jul 2024 02:41:23 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 5695B12000E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1720654883;
+	bh=v21+oIWLDUQpFIGBBXvU1A/wFvhlPfOS7Hgk5fPTako=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=uUu0mtRl9TJgOS8R0knHdWukpS6JXqjuJwUCdAfeAhnclIiirFhH2b3mbt1+0q2ZV
+	 XlGegg2pqkymC4HPgjAtGSDQRD4ID7XlPFcWal/5U2pTFm5sDueXZs8/ahrkIhvy8U
+	 QdvUJje5reJ6mBLkHaJ2mD5/JIygM1YNg9WSN0H9aukWqqJ1v24MBvwMRUWzYryZ6t
+	 SPfBydDyZppRZoxYTR0zamH6UBAIcyUJJRznHfT80Dj/9Dn6DMFONpDWM8p4jya3sE
+	 fZyglTccy5viiB3DY2xcenDwJAmWO5qvuPxU7E3RCTyDeeSTn4FalB5Uai9MP91V5C
+	 LjqfHOmtfy/2w==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu, 11 Jul 2024 02:41:23 +0300 (MSK)
+Received: from work.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 11 Jul 2024 02:41:22 +0300
+From: George Stark <gnstark@salutedevices.com>
+To: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
+	<jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
+	<hkallweit1@gmail.com>
+CC: <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
+	<gnstark@salutedevices.com>
+Subject: [PATCH v4 1/3] dt-bindings: pwm: amlogic: Add optional power-domains
+Date: Thu, 11 Jul 2024 02:41:14 +0300
+Message-ID: <20240710234116.2370655-2-gnstark@salutedevices.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240710234116.2370655-1-gnstark@salutedevices.com>
+References: <20240710234116.2370655-1-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186446 [Jul 10 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;100.64.160.123:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/10 21:42:00 #25942395
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Tue, 2024-07-09 at 12:17 +0200, Mateusz Guzik wrote:
-> Right, forgot to respond.
->=20
-> I suspect the different result is either because of mere variance
-> between reboots or blogbench using significantly less than 100 fds at
-> any given time -- I don't have an easy way to test at your scale at
-> the moment. You could probably test that by benching both approaches
-> while switching them at runtime with a static_branch. However, I don't
-> know if that effort is warranted atm.
->=20
-> So happens I'm busy with other stuff and it is not my call to either
-> block or let this in, so I'm buggering off.
->=20
-> On Tue, Jul 9, 2024 at 10:32=E2=80=AFAM Ma, Yu <yu.ma@intel.com> wrote:
-> >=20
-> >=20
-> > On 7/5/2024 3:56 PM, Ma, Yu wrote:
-> > > I had something like this in mind:
-> > > > > diff --git a/fs/file.c b/fs/file.c
-> > > > > index a3b72aa64f11..4d3307e39db7 100644
-> > > > > --- a/fs/file.c
-> > > > > +++ b/fs/file.c
-> > > > > @@ -489,6 +489,16 @@ static unsigned int find_next_fd(struct fdta=
-ble
-> > > > > *fdt, unsigned int start)
-> > > > >          unsigned int maxfd =3D fdt->max_fds; /* always multiple =
-of
-> > > > > BITS_PER_LONG */
-> > > > >          unsigned int maxbit =3D maxfd / BITS_PER_LONG;
-> > > > >          unsigned int bitbit =3D start / BITS_PER_LONG;
-> > > > > +       unsigned int bit;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * Try to avoid looking at the second level map.
-> > > > > +        */
-> > > > > +       bit =3D find_next_zero_bit(&fdt->open_fds[bitbit], BITS_P=
-ER_LONG,
-> > > > > +                               start & (BITS_PER_LONG - 1));
-> > > > > +       if (bit < BITS_PER_LONG) {
-> > > > > +               return bit + bitbit * BITS_PER_LONG;
-> > > > > +       }
+On newer SoCs, the PWM hardware can require a power domain to operate
+so add corresponding optional property.
 
-I think this approach based on next_fd quick check is more generic and scal=
-able.
+Signed-off-by: George Stark <gnstark@salutedevices.com>
+---
+ Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It just happen for blogbench, just checking the first 64 bit allow a quicke=
-r
-skip to the two level search where this approach, next_fd may be left
-in a 64 word that actually has no open bits and we are doing useless search
-in find_next_zero_bit(). Perhaps we should check full_fds_bits to make sure
-there are empty slots before we do
-find_next_zero_bit() fast path.  Something like
-
-	if (!test_bit(bitbit, fdt->full_fds_bits)) {
-		bit =3D find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_LONG,
-					start & (BITS_PER_LONG - 1));
-		if (bit < BITS_PER_LONG)
-			return bit + bitbit * BITS_PER_LONG;
-	}
-Tim
-
-> > > > Drat, you're right. I missed that Ma did not add the proper offset =
-to
-> > > > open_fds. *This* is what I meant :)
-> > > >=20
-> > > >                                 Honza
-> > >=20
-> > > Just tried this on v6.10-rc6, the improvement on top of patch 1 and
-> > > patch 2 is 7% for read and 3% for write, less than just check first w=
-ord.
-> > >=20
-> > > Per my understanding, its performance would be better if we can find
-> > > free bit in the same word of next_fd with high possibility, but
-> > > next_fd just represents the lowest possible free bit. If fds are
-> > > open/close frequently and randomly, that might not always be the case=
-,
-> > > next_fd may be distributed randomly, for example, 0-65 are occupied,
-> > > fd=3D3 is returned, next_fd will be set to 3, next time when 3 is
-> > > allocated, next_fd will be set to 4, while the actual first free bit
-> > > is 66 , when 66 is allocated, and fd=3D5 is returned, then the above
-> > > process would be went through again.
-> > >=20
-> > > Yu
-> > >=20
-> > Hi Guzik, Honza,
-> >=20
-> > Do we have any more comment or idea regarding to the fast path? Thanks
-> > for your time and any feedback :)
-> >=20
-> >=20
-> > Regards
-> >=20
-> > Yu
-> >=20
->=20
->=20
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+index 1d71d4f8f328..267908c2bf7b 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+@@ -56,6 +56,9 @@ properties:
+     minItems: 1
+     maxItems: 2
+ 
++  power-domains:
++    maxItems: 1
++
+   "#pwm-cells":
+     const: 3
+ 
+-- 
+2.25.1
 
