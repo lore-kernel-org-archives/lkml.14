@@ -1,152 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E6516938C;
-	Wed, 10 Jul 2024 09:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A58A3C39;
+	Wed, 10 Jul 2024 09:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720602342; cv=none; b=Y/83+4ndmJJbps5nTpLV3KpTqZDxbttte68pik++DTMsdBf6TurvsBy0gmDELCkQD4+i5xo34ruv3vAYW+owDNsx9sF5kjcNwoJupCOVX4RhFt8TWZHOwiG10n9Iw8X9ZFycGVlJmNOSEK4ViuOhF5kLksfu9CKE4CKgdouHCOg=
+	t=1720602472; cv=none; b=Qfve/u+BXQZMfp7LPku5KiVDi4+5rYStep5kOdXVyJNWhKtsCX+fV+JxN4jxKdgNNye0HdfLacwNmRwb3xIOb2FmqlJon2kqUCNsN74bsyTKeRfJ6GWlVci5fSRlq1z2Uu2ibXns3EJLemOracwg4t2zL97/lwUgh3EiVS0K5nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720602342; c=relaxed/simple;
-	bh=oV4+5bN3h0YlN7HPv4WOQIlgS47Ixt5yvCvPSzurRN0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CkwXk99PLQR9FL7OJysNnvCG+HaTHL1uk+WL4CIm+XVqFzoiMEYzxkbzS6+5TDwsQBNW+1Yu+Na+yGWaFE+0LRwTQZzDuAw3XUOulFmAt8vpVKx/OIr98mcTN5cXALbyjQwWIggkV+zCqYZYsNQfxrxcR90LaLvO9EIvw2gwabg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOOdkfKj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOOdkfKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C587C32781;
-	Wed, 10 Jul 2024 09:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720602341;
-	bh=oV4+5bN3h0YlN7HPv4WOQIlgS47Ixt5yvCvPSzurRN0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nOOdkfKjPBYe5QietuCg0nb8HQcizq7Glr3tdoW7spRIEGHsWILsm9CLcyQpx8Iqe
-	 /6SiHWUryFpLgMQAG8jp/vSRpmAYFmhHKZnyt/uICGV2gLbGOwC+R8/VnijSt0ucSR
-	 RydMN0yCPJMhRNheF/UvkJUDHEybBdYBRiO6SbWfu0of98HjklgBfqRkKQfILPFV3S
-	 ht1Diu5N+QaqkMMeR7x3r2nLC91ne3vaqLKeiBP9a/fgIPCh9PfCcxmS18UppKoQmB
-	 hRXjxHPpse6HLsqMvrjCk9l+1+SQihe+6zaiyiFav9m3BVIl/XSm9t4btRgiHdumEB
-	 nnFz4P8YqwqsA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sRTGd-00BAW4-24;
-	Wed, 10 Jul 2024 10:05:39 +0100
-Date: Wed, 10 Jul 2024 10:05:37 +0100
-Message-ID: <86wmlt39cu.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: David Dai <davidai@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Quentin Perret <qperret@google.com>,
-	Masami Hiramatsu <mhiramat@google.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Pavan Kondeti <quic_pkondeti@quicinc.com>,
-	Gupta Pankaj <pankaj.gupta@amd.com>,
-	Mel Gorman <mgorman@suse.de>,
-	kernel-team@android.com,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] cpufreq: add virtual-cpufreq driver
-In-Reply-To: <20240628125106.i4hhyzdgt3uoskat@bogus>
-References: <20240521043102.2786284-1-davidai@google.com>
-	<20240521043102.2786284-3-davidai@google.com>
-	<20240628125106.i4hhyzdgt3uoskat@bogus>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1720602472; c=relaxed/simple;
+	bh=tGSaydQsMD0Fpgs2z9WG6kisUFtxpKrjPWBY0PrIjPk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=VvuhpwmLduN0audok/5Ej3S1R5/2dGA+O1BAhxyuLsPbKb2ugjOna52X1a3qjapke5Cf66apg0VghNRX8orAMEL46y4Dfaqb+91F84tgD0W4wpIYRi6HaqZNs/NtunnidmdX3/cYLAi53PmQxvOsrcYJ9jCukZSvg3Nkmlr8rZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=walle.cc; arc=none smtp.client-ip=159.69.201.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+Received: from localhost (unknown [IPv6:2a02:810b:4340:4ee9:4685:ff:fe12:5967])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3ffe.de (Postfix) with ESMTPSA id 54D733BC4;
+	Wed, 10 Jul 2024 11:02:04 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: sudeep.holla@arm.com, davidai@google.com, rafael@kernel.org, viresh.kumar@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, saravanak@google.com, qperret@google.com, mhiramat@google.com, will@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, oliver.upton@linux.dev, dietmar.eggemann@arm.com, quic_pkondeti@quicinc.com, pankaj.gupta@amd.com, mgorman@suse.de, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 10 Jul 2024 11:02:03 +0200
+Message-Id: <D2LQJROQYIY3.2Q88EXS8HUDLQ@kernel.org>
+Subject: Re: [PATCH v1 4/4] drm/panel: ili9806e: Break some CMDS into helper
+ functions
+Cc: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Cong Yang" <yangcong5@huaqin.corp-partner.google.com>,
+ <quic_jesszhan@quicinc.com>, <neil.armstrong@linaro.org>,
+ <dianders@chromium.org>, <linus.walleij@linaro.org>, <airlied@gmail.com>,
+ <dmitry.baryshkov@linaro.org>
+X-Mailer: aerc 0.16.0
+References: <20240710084715.1119935-1-yangcong5@huaqin.corp-partner.google.com> <20240710084715.1119935-5-yangcong5@huaqin.corp-partner.google.com>
+In-Reply-To: <20240710084715.1119935-5-yangcong5@huaqin.corp-partner.google.com>
 
-On Fri, 28 Jun 2024 13:51:06 +0100,
-Sudeep Holla <sudeep.holla@arm.com> wrote:
-> 
-> On Mon, May 20, 2024 at 09:30:52PM -0700, David Dai wrote:
-> > Introduce a virtualized cpufreq driver for guest kernels to improve
-> > performance and power of workloads within VMs.
-> >
-> > This driver does two main things:
-> >
-> > 1. Sends the frequency of vCPUs as a hint to the host. The host uses the
-> > hint to schedule the vCPU threads and decide physical CPU frequency.
-> >
-> > 2. If a VM does not support a virtualized FIE(like AMUs), it queries the
-> > host CPU frequency by reading a MMIO region of a virtual cpufreq device
-> > to update the guest's frequency scaling factor periodically. This enables
-> > accurate Per-Entity Load Tracking for tasks running in the guest.
-> >
-> > +
-> > +/*
-> > + * CPU0..CPUn
-> > + * +-------------+-------------------------------+--------+-------+
-> > + * | Register    | Description                   | Offset |   Len |
-> > + * +-------------+-------------------------------+--------+-------+
-> > + * | cur_perf    | read this register to get     |    0x0 |   0x4 |
-> > + * |             | the current perf (integer val |        |       |
-> > + * |             | representing perf relative to |        |       |
-> > + * |             | max performance)              |        |       |
-> > + * |             | that vCPU is running at       |        |       |
-> > + * +-------------+-------------------------------+--------+-------+
-> > + * | set_perf    | write to this register to set |    0x4 |   0x4 |
-> > + * |             | perf value of the vCPU        |        |       |
-> > + * +-------------+-------------------------------+--------+-------+
-> > + * | perftbl_len | number of entries in perf     |    0x8 |   0x4 |
-> > + * |             | table. A single entry in the  |        |       |
-> > + * |             | perf table denotes no table   |        |       |
-> > + * |             | and the entry contains        |        |       |
-> > + * |             | the maximum perf value        |        |       |
-> > + * |             | that this vCPU supports.      |        |       |
-> > + * |             | The guest can request any     |        |       |
-> > + * |             | value between 1 and max perf  |        |       |
-> > + * |             | when perftbls are not used.   |        |       |
-> > + * +---------------------------------------------+--------+-------+
-> > + * | perftbl_sel | write to this register to     |    0xc |   0x4 |
-> > + * |             | select perf table entry to    |        |       |
-> > + * |             | read from                     |        |       |
-> > + * +---------------------------------------------+--------+-------+
-> > + * | perftbl_rd  | read this register to get     |   0x10 |   0x4 |
-> > + * |             | perf value of the selected    |        |       |
-> > + * |             | entry based on perftbl_sel    |        |       |
-> > + * +---------------------------------------------+--------+-------+
-> > + * | perf_domain | performance domain number     |   0x14 |   0x4 |
-> > + * |             | that this vCPU belongs to.    |        |       |
-> > + * |             | vCPUs sharing the same perf   |        |       |
-> > + * |             | domain number are part of the |        |       |
-> > + * |             | same performance domain.      |        |       |
-> > + * +-------------+-------------------------------+--------+-------+
-> > + */
-> 
-> I think it is good idea to version this table, so that it gives flexibility
-> to update the entries. It is a must if we are getting away with DT. I didn't
-> give complete information in my previous response where I agreed with Rafael.
-> 
-> I am not sure how much feasible it is, but can it be queried via KVM IOCTLs
-> to VMM. Just a thought, I am exploring how to make this work even on ACPI
-> systems. It is simpler if we neednot rely on DT or ACPI.
+On Wed Jul 10, 2024 at 10:47 AM CEST, Cong Yang wrote:
+> Break select page cmds into helper function.
 
-KVM should not have to know any of this. This is purely between a
-contract (and a pretty weak one) between userspace and the guest.
+Why though? I don't find that anything easier to read. In fact, I
+deliberately chose not to factor that out into a function. It's just
+a sequence of magic commands, taken straight from the datasheet. So,
+I'd like to keep it that way.
 
-	M.
+-michael
 
--- 
-Without deviation from the norm, progress is not possible.
+> Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+> ---
+>  drivers/gpu/drm/panel/panel-ilitek-ili9806e.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9806e.c b/drivers/gpu/=
+drm/panel/panel-ilitek-ili9806e.c
+> index e4a44cd26c4d..68fb9a1a4d80 100644
+> --- a/drivers/gpu/drm/panel/panel-ilitek-ili9806e.c
+> +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9806e.c
+> @@ -35,6 +35,12 @@ struct ili9806e_panel {
+>  	enum drm_panel_orientation orientation;
+>  };
+> =20
+> +#define ILI9806E_DCS_SWITCH_PAGE	0xff
+> +
+> +#define ili9806e_switch_page(ctx, page) \
+> +	mipi_dsi_dcs_write_seq_multi(ctx, ILI9806E_DCS_SWITCH_PAGE, \
+> +				     0xff, 0x98, 0x06, 0x04, (page))
+> +
+>  static const char * const regulator_names[] =3D {
+>  	"vdd",
+>  	"vccio",
+> @@ -227,7 +233,7 @@ static void ili9806e_dsi_remove(struct mipi_dsi_devic=
+e *dsi)
+>  static void com35h3p70ulc_init(struct mipi_dsi_multi_context *ctx)
+>  {
+>  	/* Switch to page 1 */
+> -	mipi_dsi_dcs_write_seq_multi(ctx, 0xff, 0xff, 0x98, 0x06, 0x04, 0x01);
+> +	ili9806e_switch_page(ctx, 0x01);
+>  	/* Interface Settings */
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x08, 0x18);
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x21, 0x01);
+> @@ -285,14 +291,14 @@ static void com35h3p70ulc_init(struct mipi_dsi_mult=
+i_context *ctx)
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0xcf, 0x0a);
+> =20
+>  	/* Switch to page 7 */
+> -	mipi_dsi_dcs_write_seq_multi(ctx, 0xff, 0xff, 0x98, 0x06, 0x04, 0x07);
+> +	ili9806e_switch_page(ctx, 0x07);
+>  	/* Power Control */
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x06, 0x00);
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x18, 0x1d);
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x17, 0x32);
+> =20
+>  	/* Switch to page 6 */
+> -	mipi_dsi_dcs_write_seq_multi(ctx, 0xff, 0xff, 0x98, 0x06, 0x04, 0x06);
+> +	ili9806e_switch_page(ctx, 0x06);
+>  	/* GIP settings */
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x00, 0x20);
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x01, 0x02);
+> @@ -352,7 +358,7 @@ static void com35h3p70ulc_init(struct mipi_dsi_multi_=
+context *ctx)
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x53, 0x12);
+> =20
+>  	/* Switch to page 0 */
+> -	mipi_dsi_dcs_write_seq_multi(ctx, 0xff, 0xff, 0x98, 0x06, 0x04, 0x00);
+> +	ili9806e_switch_page(ctx, 0x00);
+>  	/* Interface Pixel format */
+>  	mipi_dsi_dcs_write_seq_multi(ctx, 0x3a, 0x60);
+>  };
+
