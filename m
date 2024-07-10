@@ -1,115 +1,91 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B93191497
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8101922C1;
+	Wed, 10 Jul 2024 13:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720616786; cv=none; b=Qr+xfmwQW2tWVloE2hon3WuPNPSGAEhXOgNSKJ9feyYqkiQu4Y2zxTVhyNlE29D5s5DGuiHRyMqunzhjUkSV5TotsozUFSo5a+GFhovXD5hzzruYlc12fKyKIj/UYRZN5Ult5UCO4bgY094v1288qm1coOBZXWmtqxdgtlXrIlA=
+	t=1720616788; cv=none; b=YkI2zVPkXVriyqo/id4gp0uL8JJf1DUNVRgZKZ12dRrZh6HH9jwXmSA21JBHw/1y+EcfyoWabSmoYxRPKkDSWvrdL/QBR/nMwWtmOxHl+l6QZf842WVt8RcTFGF1DwZSbAsqHz+Yx0pZpPEVh6PWEH/yLFPT11i0W5gRgSKIM2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720616786; c=relaxed/simple;
-	bh=cnr4r9LciJZYdRBWiSWNwRQcV8Njo3jA3n7WtVMyLro=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=Hel7f5mrrQq/foyWJRc8pWTrvyIblnH+5mdL0JwaCOENygMlNnO8AdUrPtSe00fmklBgUrxwLJA+RqkqkqaRW44B1muYxLFOCe4bEPMNZ/NH3KHLzJl02huSUw6Vzq8NsHPPx59V0AXY6QcSVAGFqITqRJvi8uebhfDuDQhadXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=jI+Bwb6E; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1720616788; c=relaxed/simple;
+	bh=c35CfLJcGNAisGpu6esFSKnBAYC3NzNx56l4H9qM9zE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sOCgPjHk/mbMCd/+ypr2RnAAOYsHWkxBa/FB5Q/7QE1Iq8arJYliaSRC4yJORNiSwdpgbD9X5YuPlQqu02pN9uRJI9GOsMOy17e3GKbS/7u5n1Gu+Zco9zcQ0Y07PwVZIyWvItQ/N4DD+mAveb05aMlG9oj3T0B23BkS9vJ0xLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REHhfGcu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="jI+Bwb6E"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id RUTRsd1YiSLKxRX1csUMTp; Wed, 10 Jul 2024 13:06:24 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id RX1bsQweWiKqRRX1bs5zMq; Wed, 10 Jul 2024 13:06:23 +0000
-X-Authority-Analysis: v=2.4 cv=I9quR8gg c=1 sm=1 tr=0 ts=668e8750
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=pdZDpnt4p51YYHdFvqRoQXdleqkuAHHgphSpMovPt7I=; b=jI+Bwb6EVnK5iF8/VTDVCdXjsH
-	j3udSui/CTnsfaaXdGCdLXkHGOG1lx0dH/vdbp9e5ojAVxml6Wxof5840X/gV6Uhx5XaFmoE2PeI3
-	6pnBmcUUu11S48zCJ4n6qmQtBoFnzo300heigsb4AgimVyybwsh2RGg1E5RwCy5y78M3A1t7LeOJh
-	RrxrlyKKDAKoiZpYwUS1vxAI30jSGLpeofDD6KwbEgJzu7XA9YhGrivQn/lZMAvTMdcf4CuwH7K/W
-	zS/pOkpQdvGiEqEIkdWDilGArly7q+R0hin9VjG3eKe5/pNTQodbugfMJo7Z7n9HnhJVRhdbNPe3t
-	VXmeFZRA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:47994 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1sRX1Z-001goi-1v;
-	Wed, 10 Jul 2024 07:06:21 -0600
-Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240709110651.353707001@linuxfoundation.org>
-In-Reply-To: <20240709110651.353707001@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <f9d3a91a-114e-0a1f-8b03-e36c6e037e30@w6rz.net>
-Date: Wed, 10 Jul 2024 06:06:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REHhfGcu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8BFC32781;
+	Wed, 10 Jul 2024 13:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720616787;
+	bh=c35CfLJcGNAisGpu6esFSKnBAYC3NzNx56l4H9qM9zE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=REHhfGcu/+DoyR76imt2kpoZLBOszANA/mxc4PM2PtlvuTjZdvtkmCHcmBPuf30gw
+	 zZXCVUzTgzno5RJErOJLBBUlMT1D198j8huHohbswGoj3My2E2hdSIg0PPgEwGB1FY
+	 ufb5BoKefVQO4fxxl1toCVGxnUB4C6YmFPwS2WidWuHIzLOerCo+3QUifXoApMkjlZ
+	 DK5im56fw4TKTfyMLQGzHawo9Uw6NZUkdjNz2ZZPje+L4cwnUcp8DI0GBGDhsxVrCT
+	 GK35VsIW1LWeCxILlSSxDqmnddLcel5kgbUeUTJ/BVzXhTBait3Y+w1lvhUcH0XsnU
+	 bchsEQjQ78C2A==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/3] nfsd: plug some filecache refcount leaks
+Date: Wed, 10 Jul 2024 09:05:30 -0400
+Message-Id: <20240710-nfsd-next-v1-0-21fca616ac53@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1sRX1Z-001goi-1v
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.47]) [73.223.253.157]:47994
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 23
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHfyQ5j8/1BtuSbY5sf4MRYOcoCZ/z8IXrmEFs670faUEX0+u63Q5vcBu5ejZ+qY6ifyXkaJpeuf5hGYcM+s6SqeC9J05m5IQhj1mmjKvhjasnW3C5gp
- MoHHCbj5+TlnrYfxX2O2rCc7xuHYGqIPN5huCjtXlIxHb7SgexvaDcC4ZOHCPTxhNyzoSyz0PPmn4YPbs+mgWTRbYwnlrsOiNpY=
+X-B4-Tracking: v=1; b=H4sIABqHjmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDc0MD3by04hTdvNSKEl0Dw1SjxLSU1KQkY0MloPqCotS0zAqwWdGxtbU
+ AUuiZAFsAAAA=
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Youzhong Yang <youzhong@gmail.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=914; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=c35CfLJcGNAisGpu6esFSKnBAYC3NzNx56l4H9qM9zE=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmjodOl3Ot7CcRVujpSIdO3UjhLcDr6cWqob2Gj
+ eNeE7bqJ6GJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZo6HTgAKCRAADmhBGVaC
+ FYFdD/4q/ePN5uO59LK63rmrEpLTVl3BwoVZOwQg2yMmKAseh76R0Gmu+c5gLliLL8lBpgbrz5Z
+ 3cPnf5Bw9C6rtCD79jN7WOrH7s2L3zA8lv+dW6bYKaeqnVU3qCboD6DKjHaPSFjzaxBl4yBufl+
+ fgwU8oNM4bGR4taph8K3R6dZj3n+NdRkjvkbzLcvpIOdZ4cHiYfeqjbwo0kyOs9frP/mVlzuS0P
+ 5e4duwKIoPeLKIwVsPSuvA82aJsTVBko+CCVbfF/z4DSQ16KPpQvaWW3Y90RvlraPl2E1zIk112
+ Br9SlSBOA3C2aNNb68xZ1tD+7///ELJzyImkjHBZO+pqLsz4K8EhrXVfCpiO7+/AWpB3f935QVk
+ CqbBBo7CP0idj7n2mBX2e7pl+pxNXaqd9tY1SFoNbknjYZzOTs+IBEUa+stSiHEGk1ZEZz8wnUu
+ saiGGzjdZuVih+Zg17YQCppqziRBwx+8xlTnQ2zrQ6Ekm74ELFEr4oEeZkqyKZJFEUMM2yM99ti
+ i7X/9OyENnfPMQVrRURAy+bTMo6WA3FrHpSmKwKhUUvZGPL1FAe8X1Qj6/AXL8Uje+pEziaX97N
+ uJ+gwRVd17nATksYi7i1vyD7paL6eEWx+ZNNQEj1ODKtEMG9GLjtA4zMs5lH2gmgCkvRqJXUAgw
+ LytHDHFAx+j0YJg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On 7/9/24 4:09 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.98 release.
-> There are 102 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 11 Jul 2024 11:06:25 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.98-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Youzhong Yang sent an email to the list (along with some draft patches)
+that indicated some nfsd_file refcount leaks. I went crawling over the
+filecache code (again) and found a couple of places where we didn't put
+references when we should. I'm not sure if it'll fix the problem they
+reported, but they are bugs.
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Plus, let's start counting nfsd_file allocations. The last patch adds
+support for this.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (3):
+      nfsd: fix refcount leak when failing to hash nfsd_file
+      nfsd: fix refcount leak when file is unhashed after being found
+      nfsd: count nfsd_file allocations
+
+ fs/nfsd/filecache.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+---
+base-commit: 24decb225ed20a5ba46a79f4609e109cb0e4a359
+change-id: 20240710-nfsd-next-01e2afdebb31
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
