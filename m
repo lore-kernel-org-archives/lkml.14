@@ -1,192 +1,295 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318DD282F7
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 03:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A7B28683;
+	Wed, 10 Jul 2024 03:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720581960; cv=none; b=MvNQmBSNjevpaP0Sr2CgWo3BfHE7ZseGjRzKe93SKNcWHvC6rFrN/Ipl5hyQ7KlZm5hrES6ysOTs59rFaFye9vcAeHWTbCJVWeqrOphfM5dEeGwyJLFxLW+kq2QR95McNASIr1ufRsu/440jzs9Bvi4p/jnr1P4WrPYEWyUrjDI=
+	t=1720581975; cv=none; b=FKeVFbPgjrEJ+569fAwssmDo+kD/KwQ6ifwrWTOvTebwqdCr7NGuthrvA1C4bAaPRqem90PIxK7FQ6UljdEwn3ING0vM2lmlsjSrFBhK2Af8Uhw19t+txE1WnrYKnuZMaHWewXdx2oEqHBSgxPwPS0PYqEb2egHR56ufITfUVFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720581960; c=relaxed/simple;
-	bh=VE6atJTl8AJuOMhGNOUbAMjs+mCPoGHq0O278org0aY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=kr8b55ioehS4qMm5/DtH0I9HTM7Mq06WrdCxyfLQ4LUT7y3sRIdw9GhgmJTgKzWBQLCSGMBVQBt24o5DBAB6v/8gsXKLyIxab+B5oD+gGIwYXqDJcWi5r5ypmD2C2yHIIoH4bM/c/lsH798pBlAzGWEXRVYICIT7qS4R6CEZQz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WJjrY6Rj1zdgvg;
-	Wed, 10 Jul 2024 11:24:13 +0800 (CST)
-Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2FE6514041B;
-	Wed, 10 Jul 2024 11:25:54 +0800 (CST)
-Received: from [10.173.127.72] (10.173.127.72) by
- kwepemd200019.china.huawei.com (7.221.188.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 10 Jul 2024 11:25:53 +0800
-Subject: Re: [PATCH RESEND] mm/hugetlb: fix kernel NULL pointer dereference
- when migrating hugetlb folio
-To: Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>
-CC: <muchun.song@linux.dev>, <willy@infradead.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240709120433.4136700-1-linmiaohe@huawei.com>
- <f40218df-40bf-c0e4-5463-c07023c10b4a@google.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <070b6acd-e60f-b2c8-18c7-9a9d3806f273@huawei.com>
-Date: Wed, 10 Jul 2024 11:25:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1720581975; c=relaxed/simple;
+	bh=66/xON+hb2Qf5vVQk4X/r72CH1q0IpJHIkAkAdmH1Ug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZXbwvfI+h4Q86WzFP6b8WtGxeY91Q7D/3vuOC7wmv4OilsL3wfBWilGnEbTuTKpFBQBcq8lhGnRXd3HFR5czX68lmyGBIlwfxtayEpSXMFrIZ4mtFQNCKMHGyKJg1h6824xMV/4NIEhhty3saxLOZVsDtbzwGeUsxMbtu4trRZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KO4IEtsW; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KO4IEtsW"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-447d5376923so21886861cf.2;
+        Tue, 09 Jul 2024 20:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720581972; x=1721186772; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=sfUqp+KEKp+iEpCVS+30hZiv3NZrSiROYXcYZoJxi08=;
+        b=KO4IEtsWLXY7NSaffjmyELcyJQwojvG57dBvWn16hIpQcJ2JrEpqLGmSATfNgM6nJ7
+         YPz/kGgdQvhpG7SstzmVIFURSm1hsTHQLsxjSmmvfqlF42KATLuIGvWQgcYN9vmz+j0B
+         yUICvOPwzaTXR3iPH5gTq5D2LqN1aNJX1lzZTY0MmcxtrpH6LZF6Ri3sBJzkPSW20TP0
+         SE1mtdLuUzZcHZPD0XwXkNZzRPbrvA+YbcPtId1cRvd7Pkasl30hFhHaVJd/BNzUBJE9
+         k14PSr9jcZu769EH0XKQLCQecZRO+4MP4MJ2knWh3RJHaCiRcc5xd1LY+YM4dyxxLbeZ
+         zn2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720581972; x=1721186772;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sfUqp+KEKp+iEpCVS+30hZiv3NZrSiROYXcYZoJxi08=;
+        b=KCAF+k8RUFka9R0+DGypWB/QJmNKQXIi9coyWxe5cQPL43Es/4rO4LT0a4hb6LOU4T
+         /NanghYI1jwvC/U9yjzZGQ/cCfYq1j7rn5FM6M7B292srjidUaOOW+JVUMZ8EB3B0utH
+         pIxGSU0uFshAS0JBEVxpHjHyNYdcFsZQaqbenVfTB/mcTyWuc2Gi37fusW50vqbjNo/z
+         4heh6Y5wQ/zEi5Z7jb5XDOMxJDP0RToulc51iu5XItl9ToExdoXlDgu4dyP48U/LJeCE
+         ncPBmj3FehtqMXkoZ3T2NecUFxl2VyLHCu6AtGfnZ35SE5d1XXaUuKu8n5Yrx3gP/h8x
+         8wVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmgNseOUeXwOWgIrPGNSPWumy6cxXS6qHKRjfcOoC48M91/FaBt3WBYoLt6n/l4mA2t2prPVW6Ihu+lnSccYsNkZSK71NWAZeGfBvBzJ5O5RT+LY2oFO6aImdL9vgiBzOXWJGKlA86
+X-Gm-Message-State: AOJu0YyXKcDaxx2y6qxpjfCQtDs4Vip85bJJ+5HyFpPaKSIAbiAvQjoC
+	c+a1qOQQsu+Jtf4hn21CROUMImd4a9nosNqafoHvL65YIQhb8zWq
+X-Google-Smtp-Source: AGHT+IHt+gtkNMoenXtzeqHEHKoTMcGMdaiq6T3o6v3P4TP5Q3MvauRfLjBJbP9wznjIu4GO08B9qg==
+X-Received: by 2002:ac8:5784:0:b0:447:e48d:f067 with SMTP id d75a77b69052e-447fa85373bmr50692531cf.14.1720581972335;
+        Tue, 09 Jul 2024 20:26:12 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9bd224esm16403731cf.62.2024.07.09.20.26.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 20:26:11 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 1B28F1200043;
+	Tue,  9 Jul 2024 23:26:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Tue, 09 Jul 2024 23:26:11 -0400
+X-ME-Sender: <xms:Uf-NZkQSO9KFc8b2bEQ6A7gAhIO026ouNKcLsHpSuZgabVXgWHTmMg>
+    <xme:Uf-NZhz7NazEJMkc50obAW5kCPBHYWS24LELP8fOQOTo7ABrZ7MA4m_UAWn8JY055
+    FSSuTU8gLQUyWCCUw>
+X-ME-Received: <xmr:Uf-NZh1rx49BBKq2otOmZFV7NogHbiRGuhEGzZ5vcF15l6hSA8QG7hw2ZEo6xg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedtgdejudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhepkeejueelvedujeefveegvdeukeetkeeileehhefghfeuhfetudeufffhudejgfdu
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnshhtrghntggvrdhinhdprghspg
+    hpthhrrdgsrghrpdhgvghtrdgsrghrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrg
+    hlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeep
+    ghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:Uv-NZoAVxIuoON6D9NdO9MsvD5QLNylEXtRA1CATJloZxKgQjEjEGg>
+    <xmx:Uv-NZtjrEbzHV-F9PZ612RmsTrvENcJ0Vt26HxF_eFUbub-L13mMPA>
+    <xmx:Uv-NZkoXjGltpn4N1jo0zKcttdikO3bqE31ZplzSe_2g2rAre8b6BQ>
+    <xmx:Uv-NZgj4Z-RMSJox_7OVUjdeuyuzVOdtYh5WjWvQqXGyHmBCKbBlBw>
+    <xmx:U_-NZkSYLElYzcP_j9L-b__9SZK8rD-cc0ydSAOHsMEQ_Q_pUrSGOWE6>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Jul 2024 23:26:09 -0400 (EDT)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	gregkh@linuxfoundation.org
+Subject: [RFC PATCH] rust: types: Add explanation for ARef pattern
+Date: Tue,  9 Jul 2024 20:24:47 -0700
+Message-ID: <20240710032447.2161189-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f40218df-40bf-c0e4-5463-c07023c10b4a@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd200019.china.huawei.com (7.221.188.193)
+Content-Transfer-Encoding: 8bit
 
-On 2024/7/10 8:14, Hugh Dickins wrote:
-> On Tue, 9 Jul 2024, Miaohe Lin wrote:
-> 
->> A kernel crash was observed when migrating hugetlb folio:
->>
->> BUG: kernel NULL pointer dereference, address: 0000000000000008
->> PGD 0 P4D 0
->> Oops: Oops: 0002 [#1] PREEMPT SMP NOPTI
->> CPU: 0 PID: 3435 Comm: bash Not tainted 6.10.0-rc6-00450-g8578ca01f21f #66
->> RIP: 0010:__folio_undo_large_rmappable+0x70/0xb0
->> RSP: 0018:ffffb165c98a7b38 EFLAGS: 00000097
->> RAX: fffffbbc44528090 RBX: 0000000000000000 RCX: 0000000000000000
->> RDX: ffffa30e000a2800 RSI: 0000000000000246 RDI: ffffa3153ffffcc0
->> RBP: fffffbbc44528000 R08: 0000000000002371 R09: ffffffffbe4e5868
->> R10: 0000000000000001 R11: 0000000000000001 R12: ffffa3153ffffcc0
->> R13: fffffbbc44468000 R14: 0000000000000001 R15: 0000000000000001
->> FS:  00007f5b3a716740(0000) GS:ffffa3151fc00000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 0000000000000008 CR3: 000000010959a000 CR4: 00000000000006f0
->> Call Trace:
->>  <TASK>
->>  __folio_migrate_mapping+0x59e/0x950
->>  __migrate_folio.constprop.0+0x5f/0x120
->>  move_to_new_folio+0xfd/0x250
->>  migrate_pages+0x383/0xd70
->>  soft_offline_page+0x2ab/0x7f0
->>  soft_offline_page_store+0x52/0x90
->>  kernfs_fop_write_iter+0x12c/0x1d0
->>  vfs_write+0x380/0x540
->>  ksys_write+0x64/0xe0
->>  do_syscall_64+0xb9/0x1d0
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> RIP: 0033:0x7f5b3a514887
->> RSP: 002b:00007ffe138fce68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
->> RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00007f5b3a514887
->> RDX: 000000000000000c RSI: 0000556ab809ee10 RDI: 0000000000000001
->> RBP: 0000556ab809ee10 R08: 00007f5b3a5d1460 R09: 000000007fffffff
->> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
->> R13: 00007f5b3a61b780 R14: 00007f5b3a617600 R15: 00007f5b3a616a00
->>
->> It's because hugetlb folio is passed to __folio_undo_large_rmappable()
->> unexpectedly. large_rmappable flag is imperceptibly set to hugetlb folio
->> since commit f6a8dd98a2ce ("hugetlb: convert alloc_buddy_hugetlb_folio to
->> use a folio"). Then commit be9581ea8c05 ("mm: fix crashes from deferred
->> split racing folio migration") makes folio_migrate_mapping() call
->> folio_undo_large_rmappable() triggering the bug. Fix this issue by
->> clearing large_rmappable flag for hugetlb folios. They don't need that
->> flag set anyway.
-> 
-> Gosh, thanks a lot for catching this: it had not crossed my mind that
-> a folio which passes (folio_test_large and) folio_test_large_rmappable
-> might not be suitable for folio_undo_large_rmappable.
-> 
->>
->> Fixes: f6a8dd98a2ce ("hugetlb: convert alloc_buddy_hugetlb_folio to use a folio")
-> 
-> That's in 6.10-rc, isn't it?
-> 
->> Fixes: be9581ea8c05 ("mm: fix crashes from deferred split racing folio migration")
-> 
-> And that's in mm-hotfixes-stable intended for 6.10 final.
-> 
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
->> Cc: <stable@vger.kernel.org>
-> 
-> So if all goes to plan, this shouldn't need the Cc stable.
+As the usage of `ARef` and `AlwaysRefCounted` is growing, it makes sense
+to add explanation of the "ARef pattern" to cover the most "DO" and "DO
+NOT" cases when wrapping a self-refcounted C type.
 
-I think you are right. Cc stable should be removed. But this patch has been merged into
-mm-hotfixes-stable branch, so might Andrew can kindly help modify this?
+Hence an "ARef pattern" section is added in the documentation of `ARef`.
 
-> 
-> I certainly deserve blame for not thinking of this possibility: but how
-> was it working before my commit, when the folio_undo_large_rmappable()
-> was being called from mem_cgroup_migrate()?  I think that was just as
-> liable to crash too.
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+This is motivated by:
 
-I reproduced the crash today with commit be9581ea8c05 ("mm: fix crashes from deferred split racing folio migration") reverted:
+	https://lore.kernel.org/rust-for-linux/20240705110228.qqhhynbwwuwpcdeo@vireshk-i7/
 
-BUG: kernel NULL pointer dereference, address: 0000000000000008
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 0 P4D 0
-Oops: 0002 [#1] PREEMPT SMP NOPTI
-CPU: 11 PID: 1481 Comm: bash Not tainted 6.9.0-rc4-00265-gf6a8dd98a2ce-dirty #76
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-RIP: 0010:folio_undo_large_rmappable+0xa0/0xe0
-RSP: 0018:ffffa4104950fbd0 EFLAGS: 00000097
-RAX: ffff9e06001c8800 RBX: ffffc8f6614f0090 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: 0000000000000286 RDI: ffff9e060b23db98
-RBP: ffffc8f6614f0000 R08: 0000000000002453 R09: ffffffffaead2a48
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff9e060b23db98
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffa4104950fcc8
-FS:  00007f6821eb0740(0000) GS:ffff9e0ddfcc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000008 CR3: 0000000884502000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- mem_cgroup_migrate+0x186/0x1d0
- migrate_folio_extra+0x5c/0x90
- move_to_new_folio+0xff/0x250
- migrate_pages+0x702/0xd20
- soft_offline_page+0x29b/0x7a0
- soft_offline_page_store+0x52/0x90
- kernfs_fop_write_iter+0x12c/0x1d0
- vfs_write+0x387/0x550
- ksys_write+0x64/0xe0
- do_syscall_64+0xc2/0x1d0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6821d14887
-RSP: 002b:00007ffeecdb19a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00007f6821d14887
-RDX: 000000000000000c RSI: 0000563cfd799e10 RDI: 0000000000000001
-RBP: 0000563cfd799e10 R08: 00007f6821dd1460 R09: 000000007fffffff
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
-R13: 00007f6821e1b780 R14: 00007f6821e17600 R15: 00007f6821e16a00
+ rust/kernel/types.rs | 156 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 156 insertions(+)
 
-This requires memory_hugetlb_accounting is enabled on cgroup2. Or folio_memcg of hugetlb folio will be NULL
-and thus simply return before calling folio_undo_large_rmappable() in mem_cgroup_migrate().
-memory_hugetlb_accounting isnot enable in my test env, so I didn't trigger this bug earlier.
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index bd189d646adb..70fdc780882e 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -329,6 +329,162 @@ pub unsafe trait AlwaysRefCounted {
+ ///
+ /// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`ARef`] instance. In
+ /// particular, the [`ARef`] instance owns an increment on the underlying object's reference count.
++///
++/// # [`ARef`] pattern
++///
++/// "[`ARef`] pattern" is preferred when wrapping a C struct which has its own refcounting
++/// mechanism, because it decouples the operations on the object itself (usually via a `&Foo`) vs the
++/// operations on a pointer to the object (usually via an `ARef<Foo>`). For example, given a `struct
++/// foo` defined in C, which has its own refcounting operations `get_foo()` and `put_foo()`. Without
++/// "[`ARef`] pattern", i.e. **bad case**:
++///
++/// ```ignore
++/// pub struct Foo(NonNull<foo>);
++///
++/// impl Foo {
++///     // An operation on the pointer.
++///     pub unsafe fn from_ptr(ptr: *mut foo) -> Self {
++///         // Note that whether `get_foo()` is needed here depends on the exact semantics of
++///         // `from_ptr()`: is it creating a new reference, or it continues using the caller's
++///         // reference?
++///         unsafe { get_foo(ptr); }
++///
++///         unsafe { Foo(NonNull::new_unchecked(foo)) }
++///     }
++///
++///     // An operation on the object.
++///     pub fn get_bar(&self) -> Bar {
++///         unsafe { (*foo.0.as_ptr()).bar }
++///     }
++/// }
++///
++/// // Plus `impl Clone` and `impl Drop` are also needed to implement manually.
++/// impl Clone for Foo {
++///     fn clone(&self) -> Self {
++///         unsafe { get_foo(self.0.as_ptr()); }
++///
++///         Foo(self.0)
++///     }
++/// }
++///
++/// impl Drop for Foo {
++///     fn drop(&mut self) {
++///         unsafe { put_foo(self.0.as_ptr()); }
++///     }
++/// }
++/// ```
++///
++/// In this case, it's hard to tell whether `Foo` represent an object of `foo` or a pointer to
++/// `foo`.
++///
++/// However, if using [`ARef`] pattern, `foo` can be wrapped as follow:
++///
++/// ```ignore
++/// /// Note: `Opaque` is needed in most cases since there usually exist C operations on
++/// /// `struct foo *`, and `#[repr(transparent)]` is needed for the safety of converting a `*mut
++/// /// foo` to a `*mut Foo`
++/// #[repr(transparent)]
++/// pub struct Foo(Opaque<foo>);
++///
++/// impl Foo {
++///     pub fn get_bar(&self) -> Bar {
++///         // SAFETY: `self.0.get()` is a valid pointer.
++///         //
++///         // Note: Usually extra safety comments are needed here to explain why accessing `.bar`
++///         // doesn't race with C side. Most cases are either calling a C function, which has its
++///         // own concurrent access protection, or holding a lock.
++///         unsafe { (*self.0.get()).bar }
++///     }
++/// }
++/// ```
++///
++/// ## Avoid `impl AlwaysRefCounted` if unnecesarry
++///
++/// If Rust code doesn't touch the part where the object lifetimes of `foo` are maintained, `impl
++/// AlwaysRefCounted` can be temporarily avoided: it can always be added later as an extension of
++/// the functionality of the Rust code. This is usually the case for callbacks where the object
++/// lifetimes are already maintained by a framework. In such a case, an `unsafe` `fn(*mut foo) ->
++/// &Foo` function usually suffices:
++///
++/// ```ignore
++/// impl Foo {
++///     /// # Safety
++///     ///
++///     /// `ptr` has to be a valid pointer to `foo` for the entire lifetime `'a'.
++///     pub unsafe fn as_ref<'a>(ptr: *mut foo) -> &'a Self {
++///         // SAFETY: Per function safety requirement, reborrow is valid.
++///         unsafe { &*ptr.cast() }
++///     }
++/// }
++/// ```
++///
++/// ## Type invariants of `impl AlwaysRefCounted`
++///
++/// Types that `impl AlwaysRefCounted` usually needs an invariant to describe why the type can meet
++/// the safety requirement of `AlwaysRefCounted`, e.g.
++///
++/// ```ignore
++/// /// # Invariants:
++/// ///
++/// /// Instances of this type are always refcounted, that is, a call to `get_foo` ensures that the
++/// /// allocation remains valid at least until the matching call to `put_foo`.
++/// #[repr(transparent)]
++/// pub struct Foo(Opaque<foo>);
++///
++/// // SAFETY: `Foo` is always ref-counted per type invariants.
++/// unsafe impl AlwaysRefCounted for Foo {
++///     fn inc_ref(&self) {
++///         // SAFETY: `self.0.get()` is a valid pointer and per type invariants, the existence of
++///         // `&self` means it has a non-zero reference count.
++///         unsafe { get_foo(self.0.get()); }
++///     }
++///
++///     unsafe dec_ref(obj: NonNull<Self>) {
++///         // SAFETY: The refcount of `obj` is non-zero per function safety requirement, and the
++///         // cast is OK since `foo` is transparent to `Foo`.
++///         unsafe { put_foo(obj.cast()); }
++///     }
++/// }
++/// ```
++///
++/// After `impl AlwaysRefCounted for foo`, `clone()` (`get_foo()`) and `drop()` (`put_foo()`)  are
++/// available to `ARef<Foo>` thanks to the generic implementation.
++///
++/// ## `ARef<Self>` vs `&Self`
++///
++/// For an `impl AlwaysRefCounted` type, `ARef<Self>` represents an owner of one reference count,
++/// e.g.
++///
++/// ```ignore
++/// impl Foo {
++///     /// Gets a ref-counted reference of [`Self`].
++///     ///
++///     /// # Safety
++///     ///
++///     /// - `ptr` must be a valid pointer to `foo` with at least one reference count.
++///     pub unsafe fn from_ptr(ptr: *mut foo) -> ARef<Self> {
++///         // SAFETY: `ptr` is a valid pointer per function safety requirement. The cast is OK
++///         // since `foo` is transparent to `Foo`.
++///         //
++///         // Note: `.into()` here increases the reference count, so the returned value has its own
++///         // reference count.
++///         unsafe { &*(ptr.cast::<Foo>()) }.into()
++///     }
++/// }
++/// ```
++///
++/// Another function that returns an `ARef<Self>` but with a different semantics is
++/// [`ARef::from_raw`]: it takes away the refcount of the input pointer, i.e. no refcount
++/// incrementation inside the function.
++///
++/// However `&Self` represents a reference to the object, and the lifetime of the **reference** is
++/// known at compile-time. E.g. the `Foo::as_ref()` above.
++///
++/// ## `impl Drop` of an `impl AlwaysRefCounted` should not touch the refcount
++///
++/// [`ARef`] descreases the refcount automatically (in [`ARef::drop`]) when it goes out of the
++/// scope, therefore there's no need to `impl Drop` for the type of objects (e.g. `Foo`) to decrease
++/// the refcount.
+ pub struct ARef<T: AlwaysRefCounted> {
+     ptr: NonNull<T>,
+     _p: PhantomData<T>,
+-- 
+2.45.2
 
-So Fixes: be9581ea8c05 ("mm: fix crashes from deferred split racing folio migration") tag might also be removed?
-
-> 
-> I would like to hear definitively from Matthew, whether a hugetlb page
-> should or should not be reported as large_rmappable - is your patch here
-> just fixing a surprise, or in danger of adding another surprise somewhere?
-
-IIUC, large_rmappable is only used for thp. See below code:
-
-static inline bool is_transparent_hugepage(const struct folio *folio)
-{
-	if (!folio_test_large(folio))
-		return false;
-
-	return is_huge_zero_folio(folio) ||
-		folio_test_large_rmappable(folio);
-}
-
-But I might be miss something.
-Thanks.
-.
