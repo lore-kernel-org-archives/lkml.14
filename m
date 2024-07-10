@@ -1,117 +1,47 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712EEA47
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040D015CB;
+	Wed, 10 Jul 2024 05:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720590692; cv=none; b=FhE/teBx6C3Wts8JznQiaWXBjujmS+aqowwjR+OCRCduzZyq5Ma+xTQC2+d4xCX4OZpnI9GvnbKZk5br4zM4APprgYWJW+EGPS0RD+48sc9Ocxp8qt/VO+Zs+HBoWN7ZQ1mblvBGTrc5i/PEKOdA9EBTUQPMuUs5/LXIyumUqFA=
+	t=1720590730; cv=none; b=SWrWOgK4R5F85dw3PCgjsghHkKFq8UBhn1IdfpjqKBmXW5gokagkEacDLbUy7hYL4DEmAX8HruRj3xVepGB4aGlFUn4TAr+DAVTo4bVDD3bUC63Yc0IEcXCURhNByMgse8QnUy5/gAyQXy/7jmVxvBrWDkhwk97nk/wC8DtIk2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720590692; c=relaxed/simple;
-	bh=qJAAyECMg5CnLOBtWJVgn/vwuKboRSLGFE96LMa/3sU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jvta+o9QxdcrIRD9Qh3ZwYA1x7Vk+WrDZ84y7PJnsval5wvWfpTZ8mB+rDziRXvKU/hSIJ4QVDBOwDBFhGGMUGT2Awz7PVpJ32wlMxl/uuVHLoSsilhuM1iJzYsEX0ZOaxi2ZA9F+nHadcB2/Ghudt4A/QJjZ0OE0XEiVvkc+jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b0c1c9063e7f11ef93f4611109254879-20240710
-X-CID-CACHE: Type:Local,Time:202407101339+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:f2f0c3ad-8855-4a6d-a8e9-82744da539f0,IP:0,U
-	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:25
-X-CID-META: VersionHash:82c5f88,CLOUDID:b8788c9dc47839bc094a2b215019a1db,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:5,IP:nil,URL:0,
-	File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:N
-	O,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b0c1c9063e7f11ef93f4611109254879-20240710
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <jianghaoran@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 594430874; Wed, 10 Jul 2024 13:46:01 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id A97891600208E;
-	Wed, 10 Jul 2024 13:46:01 +0800 (CST)
-X-ns-mid: postfix-668E2019-6054441873
-Received: from jhr-TianYi510S-07IMB.. (unknown [172.30.60.215])
-	by node4.com.cn (NSMail) with ESMTPA id BD4EB1600208E;
-	Wed, 10 Jul 2024 05:45:59 +0000 (UTC)
-From: Haoran Jang <jianghaoran@kylinos.cn>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	lstoakes@gmail.com,
-	vbabka@suse.cz,
-	Liam.Howlett@oracle.com,
-	akpm@linux-foundation.org,
-	Haoran Jiang <jianghaoran@kylinos.cn>
-Subject: [PATCH] mm/mmap: Align the length parameter of munmap with hugepage size
-Date: Wed, 10 Jul 2024 13:45:58 +0800
-Message-ID: <20240710054558.1959243-1-jianghaoran@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1720590730; c=relaxed/simple;
+	bh=CwzolPh5wXutE+8LiEJsz2B7+6zSTi1yf7RqHufm/WE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QRBXFHNrVlNpSINTwBCb7nT/rmZmFCNgHHXZohetnpTiUCxwDlPGUYpK+ZQva++J7UOpVAFP+SYvNBuYqb7iFAtYLJYNgUF2j4pLKIUBndxGh6FV2wSsHVPAicF/0uU6FZqkPj/MILRCca5gcBI1Zn1U+/UZqPCLtHRUAbhaCt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 3C088227A87; Wed, 10 Jul 2024 07:52:04 +0200 (CEST)
+Date: Wed, 10 Jul 2024 07:52:03 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] block: pass a phys_addr_t to get_max_segment_size
+Message-ID: <20240710055203.GA25248@lst.de>
+References: <20240706075228.2350978-1-hch@lst.de> <20240706075228.2350978-3-hch@lst.de> <CAMuHMdV95g78=2GmLP95Kn3_0DL5zVuv2KCDYVsk8D2gNnu7SQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV95g78=2GmLP95Kn3_0DL5zVuv2KCDYVsk8D2gNnu7SQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-From: Haoran Jiang <jianghaoran@kylinos.cn>
+Hi Geert,
 
-munmap hugepge mappings, if the length of the range to munmap
-is not aligned with hugepage size,munmap will fail.
-In the hugetlb_vm_op_split function, an error will be returned
-if startaddr+len is not hugepage size aligned.
+the fix is queued up here:
 
-before this patch:
-in "tools/testing/selftests/mm/hugepage-mremap.c"
-modify DEFAULT_LENGTH_MB to 3M,compile and run,
-the following error message is displayed
+https://git.kernel.dk/cgit/linux-block/commit/?h=for-6.11/block&id=61353a63a22890f2c642232ae1ab4a2e02e6a27c
 
--------------------------
-running ./hugepage-mremap
--------------------------
-TAP version 13
-1..1
-Map haddr: Returned address is 0x7eaa40000000
-Map daddr: Returned address is 0x7daa40000000
-Map vaddr: Returned address is 0x7faa40000000
-Address returned by mmap() =3D 0x7cb34b000000
-Mremap: Returned address is 0x7faa40000000
-First hex is 0
-First hex is 3020100
-Bail out! mremap: Expected failure, but call succeeded
-
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
----
- mm/mmap.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 83b4682ec85c..0b3a60bf9b6f 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -2733,7 +2733,15 @@ int do_vmi_munmap(struct vma_iterator *vmi, struct=
- mm_struct *mm,
- 	if ((offset_in_page(start)) || start > TASK_SIZE || len > TASK_SIZE-sta=
-rt)
- 		return -EINVAL;
-=20
--	end =3D start + PAGE_ALIGN(len);
-+	vma =3D find_vma(mm, start);
-+	if (!vma) {
-+		if (unlock)
-+			mmap_write_unlock(mm);
-+		return 0;
-+	}
-+
-+	end =3D start + ALIGN(len, vma_kernel_pagesize(vma));
-+
- 	if (end =3D=3D start)
- 		return -EINVAL;
-=20
---=20
-2.43.0
+and should be in linux-next.  And next time I need to do a full
+retest after doing your suggested patch order change :)
 
