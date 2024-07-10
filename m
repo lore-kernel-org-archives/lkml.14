@@ -1,108 +1,59 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26F512C491
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6BF13C80C
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720601066; cv=none; b=eC3YP51Be0LrnbtbsPd/uM8FZ+Xpw2miUqKrh40RFEQeAbNtaw48rIUGk27pIgX+sjywAkiRNiu44kN3Q8G5vFyshrg3dLCvAqi6BygaV30pweAkA8X075Ihcj2NPVsjdYM/GS97wAjw2ZG3gM7EzdcK/RMDr+UiwoRtzH2awPc=
+	t=1720601072; cv=none; b=u4tHy/QRz9zrnTHnKdTwZhU7JUQP6dEr0T9msYrcMtW+RTCSrH7BEQbwt6Ehyx3GPgd/nef+uaqZ7o3ZAK4f0qtMkW3dqZywmwY0wnjyPjtY/YlV8dFdafs7vsNY/Q2CocHD1E5USxg5ma1n6zzUPjKjTrVvlRIdQ4tTBNyIXTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720601066; c=relaxed/simple;
-	bh=8ivO6POCAIo3G3CYfy3m9OdFWnmlORGF6h0AojDDhAY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cq150NLpJPMX1DPPdooQWSAQ0kI4urBz4VtU85hcu3fmlSIQNqTz9+AfgLwBWpZMrWiPdHXujZzMpQn42+yIWvAsLIbNLOHkInGwtAisMv9mhd38qVVvgjEWKBDDq0NDs7rN6sELBWahp7sIO9diQHKxNfUKEPVsd82yLJbR4N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i3lrIdmP; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i3lrIdmP"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42726d6eca5so7324165e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720601063; x=1721205863; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BonLjpSet1ctnfC03bK8l/0hpA9XluDOFZV6vKsFj/k=;
-        b=i3lrIdmPI7UpuG4Otqxi74Uc0qTO5YTYqYgFT+sFXEjJWdRdCBJy/w4O+J8RzeSvoc
-         ATKFJZ2N7KgmUTaJANpR+4hmCUU0cEKJrhRWJkTK1njiArjZY2TgNI+Fx7taBezMPdHw
-         y7TY6iX9r596Ul4IHnvgLbb5HXyBT2ET/NmivYh2g+8pCcTzY/sH89V0PeaoAnrzygc0
-         DAf6USTZjryYwoi/9A98sS9cfJM3zype6/x9xXLEtbgzXsGohvfTXes867USk/14BZ66
-         nnQoRQCDPPEWLLoimcO0bBqIphIhzYzdV2vMf6AXJj7r6JvBfucgU+p5RarFNbRn9q8N
-         8gBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720601063; x=1721205863;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BonLjpSet1ctnfC03bK8l/0hpA9XluDOFZV6vKsFj/k=;
-        b=vRpOJBUXXavOD3ETkWOZRzrY5fTXevtkH8eisZjkNL9cafJ4f4tt3R7wZbsSqJV1xO
-         cr2/DKaaU5SUvBrZJoaCpZg23Va8/0N9B9/pyafR+qK0w1wY2fDFwGNY3b8rCJCTFXHJ
-         60tB3GNgMnaZoMM2k+3flBdb9ePYSl+WBncEKOyxGAXWfHbBAKYrZ9ELsZgy6EpgGzzY
-         x9Q+oiPONUMvusrSrsSQeOcBGKQYgfBD0pdNT9xYWOMpN0jacVYPjhgFi7PP2MiY6RCo
-         AGoGIFikj+WAIVrM1Pj+1dah90FgqU24RNk6wIetlsLKu/CPz7VpgkZj/nXAJ1PEsBVC
-         JdCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoj0hQz7eIAsfFZkNU4vlniPbFYrtucSS3tV2sGw/80P8KjgAyl7GCImjSC3LXEa7E+ysYTqp05Jzp+yw030bS7LfWIynXs3m3y2qm
-X-Gm-Message-State: AOJu0YzQ+fts6M4hbI7OjAfJx7p7TaqP0mDN6P/ZBlBpkddghkjUJn3Y
-	7VcnJN9ISffpgh0DdrAog2IH4T97keIWOBpYHY6z/yFtYYox3P22ru3AJJOtGk0=
-X-Google-Smtp-Source: AGHT+IHJw2e3QTVBDhstDlKVjyu4nCN3502ntTVILiGZA1l68yg2qaBJmWreQgXWrZkmJl5tO5vlgQ==
-X-Received: by 2002:a05:6000:2ab:b0:367:844a:1ca3 with SMTP id ffacd0b85a97d-367cea46c64mr4085862f8f.10.1720601063248;
-        Wed, 10 Jul 2024 01:44:23 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa06ffsm4700403f8f.77.2024.07.10.01.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 01:44:22 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: linux-arm-msm@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH 0/3] ARM: dts: qcom: adhere to pinctrl dt schema
-Date: Wed, 10 Jul 2024 09:41:08 +0100
-Message-ID: <20240710084250.11342-1-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1720601072; c=relaxed/simple;
+	bh=N901BoelxregF+OOcY274ORtjPEZKvp9ZxjkExOYyNM=;
+	h=Date:From:To:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BR2wXFqqP5CdQVM4+q2+/65q7m+30nVAQFCVN/x4PY93UtLMGStLrusjHcLetvG3ak5x0umkS+hQ63AHS/fXyRi1UvD81ksEJDohLFKwDpEJYrKGqHQHdTArZsLUgjDl/ZwMvXi3hbpjWUNXGYVsKItpGHcziKPN2I0pREgfacM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:2340:18a1:4138:37d2])
+	by albert.telenet-ops.be with bizsmtp
+	id lkkU2C0054znMfS06kkUzh; Wed, 10 Jul 2024 10:44:28 +0200
+Received: from geert (helo=localhost)
+	by ramsan.of.borg with local-esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sRSw8-001bTx-4N
+	for linux-kernel@vger.kernel.org;
+	Wed, 10 Jul 2024 10:44:28 +0200
+Date: Wed, 10 Jul 2024 10:44:28 +0200 (CEST)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: linux-kernel@vger.kernel.org
+Subject: Re: Build regressions/improvements in v6.10-rc7
+In-Reply-To: <20240710083744.2885335-1-geert@linux-m68k.org>
+Message-ID: <a3af912f-4271-7eb2-e111-b6339f51d067@linux-m68k.org>
+References: <CAHk-=wjv_HoF-5Y5QuNqMfiumwMyNZt63ajO44uKce4dWOeU8Q@mail.gmail.com> <20240710083744.2885335-1-geert@linux-m68k.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi,
-The following patches make the device trees compliant with the pinctrl
-text to dt schema conversion here:
-https://lore.kernel.org/all/20240709162009.5166-1-rayyan.ansari@linaro.org/
+On Wed, 10 Jul 2024, Geert Uytterhoeven wrote:
+> JFYI, when comparing v6.10-rc7[1] to v6.10-rc6[3], the summaries are:
+>  - build errors: +2/-1
 
-Thanks,
-Rayyan
+SH gcc ICE crickets.
 
-Rayyan Ansari (3):
-  ARM: dts: qcom: apq8064: adhere to pinctrl dtschema
-  ARM: dts: qcom: ipq8064: adhere to pinctrl dtschema
-  ARM: dts: qcom: ipq4019: adhere to pinctrl dtschema
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/256abd8e550ce977b728be79a74e1729438b4948/ (132 out of 138 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/22a40d14b572deb80c0648557f4bd502d7e83826/ (132 out of 138 configs)
 
- .../dts/qcom/qcom-apq8064-asus-nexus7-flo.dts |   4 -
- .../boot/dts/qcom/qcom-apq8064-cm-qs600.dts   |  25 +-
- .../boot/dts/qcom/qcom-apq8064-ifc6410.dts    |  25 +-
- arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi | 362 +++++++-----------
- .../qcom-apq8064-sony-xperia-lagan-yuga.dts   |  10 +-
- arch/arm/boot/dts/qcom/qcom-apq8064.dtsi      |  34 +-
- .../boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi |  34 +-
- .../boot/dts/qcom/qcom-ipq4018-jalapeno.dts   |  27 +-
- .../boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi |  26 +-
- .../boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi |  14 +-
- .../dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts    |   8 +-
- .../dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts    |   2 +-
- .../boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi |   6 +-
- arch/arm/boot/dts/qcom/qcom-ipq8064-ap148.dts |  11 +-
- .../arm/boot/dts/qcom/qcom-ipq8064-rb3011.dts |  76 ++--
- arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi      | 114 +++---
- 16 files changed, 309 insertions(+), 469 deletions(-)
+Gr{oetje,eeting}s,
 
--- 
-2.45.2
+ 						Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
