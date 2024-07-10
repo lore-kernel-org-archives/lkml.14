@@ -1,159 +1,130 @@
-Received: from e2i411.smtp2go.com (e2i411.smtp2go.com [103.2.141.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D20193455
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66409193479
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720622453; cv=none; b=JdvmQz0WDjaYQg4RWvOL0noKzQ6mJFFQniio2tkZ9Phd7cf6xyCN2zpVZ4p7hjHnw1Pjh0782ma+d8iA/aVu2sEbFJ1dwB9z+dJWm4uawLXBdc2xYJrT/W9mDy6rAZNDL9Qmyc+WZLTDEgMoDVQ8jXTS+AEEH/TCtWh3Gz+DrGw=
+	t=1720622593; cv=none; b=ltP1P3M1kqUbVfzBld20/Xdqji1UqShDp671058pMCJQYwXDA1qe3d/ffFO2IxPJI82GZEiqBdFmCaTEZ6Y9NyjIvzwVBhq6Deq7jLjQ/yywF6IIwLCtlqSn+yLOx4d5lcy7YIgK2OZOiEKy1nVVND4pImkqjKeRTNgv8/fFB6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720622453; c=relaxed/simple;
-	bh=cj4lxGGMEAnw4XEUD3CY1TRsj+/DeeAZQQsYN+clMFY=;
+	s=arc-20240116; t=1720622593; c=relaxed/simple;
+	bh=KpsIZ6jzaxZLqZC+0GjwVgDUh89rNXpUnOtFQAHPfIo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dR9jIk5PaOXsvAVavjRn0R+C49Rz/5bH1a/HFGGzWfxv20kENFZcXGPdf6js5Z2qgF9hs5kA1Yps5exNO6bGUavp1KCY3t+9tNjNd6EwQHPhnTKELbT+RTlYalH4D3Kbfz02bWUm79Hph+ECfCmOWjUY+/FaOUbSGVZL5gQ+f7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=Rd+fKm6U reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=jNpoVCfx; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=L/N4FYyz; arc=none smtp.client-ip=103.2.141.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=EThvx8PBuEsPnPl0MKl5NfN385Crn0lNRWIS2jpECX6BQhfUVEK56MYlbTZk8bom3XHqIT4j44NZmCkb5YBaV0hVBPFSNizUo8fVp2gPGr/zhp3c0IG6n7dCcuzYcYCtkIHhHyxre/S7Wfq6fnOnTkKUSq++Kp3aga59JwbkjqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yVsDsvp6; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="Rd+fKm6U";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="jNpoVCfx";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="L/N4FYyz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1720623346; h=Feedback-ID:
-	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
-	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=ymPENd0Hkx89Fqve76Y+gFUwa1asNPWiYfEhrftdTnY=; b=Rd+fKm6UtHXbgg/FQ8B6/wiE+n
-	pNwKQWN7EB/jusQJUXlYpnjwvjrstMfcskKboLifCsoDKFkyrjJjb3Zxyvs2zABbFhi/aoMcHeFkc
-	ekLN+GpYarjGOKS62MRjTTA0+N3QhwdB4TZyUleA6c7Fo1mviVakt5AIqh/txmWYugSOmjoVf8YQq
-	dtANeFmC7Ntc8nBtoiGMBaWbll/oyjRAUyLErnaIHGWlAUpkZbSoRxYTZAHhLA6KzmpUiie96AHte
-	pCGmSqsrDM8D13wWPfvcFjHIEIMR+h0FDi4Y8+/iWl8oQmz00R4PQQnmg8SLEEgMKgn+4nP9PgQdC
-	TracvgzA==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1720622446; h=from : subject :
- to : message-id : date;
- bh=ymPENd0Hkx89Fqve76Y+gFUwa1asNPWiYfEhrftdTnY=;
- b=jNpoVCfx2uhnsdk4vzZkrTHqgDhX7PSdxFuP01fRFYuCtTO7EIrQjwMvOjIDM5CVozJNv
- OAaoAxQy9NWmfTay9aVCpsxBEGY3m7rGz8RQ9zbM2abAMVM4hMtRa3bagSpk0H+prYku+8C
- cHXHvT5YHGSftjjVVgjle+F1T51rzxy9dyu8Tuu9OC1rpp/NtfqgqA4KOeDP//jXV6qgMeW
- jwIM4ZgonCUQEgrCeOoe4fo4K17SlzHbp5qLtG+OmufNkuYcCH1CNIuCEiZvrptPBvV1whg
- ufk1a3h2sX9pFGXbdYsM++0saOUA2GVUoaBVd95Ky/bBqKaQM95HsjNX2kKA==
-Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sRYUG-TRjwo6-8I; Wed, 10 Jul 2024 14:40:05 +0000
-Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
- by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sRYUE-4o5NDgrg3Tu-o6qn; Wed, 10 Jul 2024 14:40:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1720622401; bh=cj4lxGGMEAnw4XEUD3CY1TRsj+/DeeAZQQsYN+clMFY=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=L/N4FYyzCJnJi8w0aXxS+6lz68yGte6dm4b5VRdK6JJ5vDmA860LWK1WPm2qfs4hb
- UJK4Bq2TJFRNbLwdzNtzlLnGv2qKyfAKf4KjPbviquzcQxJftkwtu2KijcyAdViA1r
- IxNRABPh1XMoGrM+1jKufvD5qTTlbA13sdGYaSU8=
-Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id 394163E8DB; Wed, 10 Jul 2024 16:40:01 +0200 (CEST)
-Date: Wed, 10 Jul 2024 16:40:01 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>,
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v3] kbuild: add script and target to generate pacman
- package
-Message-ID: <Zo6dQQIJmkauRmFM@fjasle.eu>
-References: <20240708-kbuild-pacman-pkg-v3-1-885df3cbc740@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yVsDsvp6"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42662d80138so25431895e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720622590; x=1721227390; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QOsOdIxYv2ExEMFqfT+PN67MY38Sp+oZzT0Ko1qTmks=;
+        b=yVsDsvp6KjjX9KCLs5jt8OP5Lcb/GInB6Lo9r1vMlhKQgW6c8lGaCo4tC5h2RezO5x
+         DU7rcWMyB3CUVXJscUgLpunZLr3WxcwFDXSGGQs5mSkYMrt3C5zcqRr/vKB+gP21TU5u
+         RcVQqrAsntFy6ufBQRq/1tB6VD4hGN49QPHL7xNi9vhYROn6VEpWTULdY6NU+XVxeaqD
+         wf3irod1d/vrZfk80MzwSPwJSx73qdYnDB0+Oyak2fIr3BhRgBIvo7+v9EI49t8q/B61
+         Uq5QVkl2g9QeyYt2Jf9BG2Jvn8oBA6quq8yckQZH99EKfzeqRGsH5/y/zM8V09tW58gv
+         i/kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720622590; x=1721227390;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QOsOdIxYv2ExEMFqfT+PN67MY38Sp+oZzT0Ko1qTmks=;
+        b=I5eTOtQy8tIko5w0ZlXDp9PJA/hR/Fep8DP/3nTZZYo0hVtQTMxIzMR7iwtC325kkO
+         ysY/7pSnEsJ3D7qCQ45gSAP3mCCvc4ASJntaObg6WwwM37UhfjiHaNs5ir18vMp7C/+N
+         FF061JUDFQ2D9a8F6YrJJ1Yc/UTCaKmRhDKtnkrh7pSmgBbm56nuq+0aZMK1bx/sjvlc
+         DxNN0oHkxH2MiXrOYuCVckmbLOMC2IVxDo7RxT5QGbAtWSvLgpqOSmuTozzaCkvHpYfl
+         mLf7+e7qiVKNKtk5iBD8hNbYsQb9yrNdVwM3Gj9dDOWk1x6zvYubAWJW4RHXFA5DDqJ9
+         rHuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjxwY9z1qe9w9C8r4aYCy+abq47cUgh1dy/cE9BFRYgFziN7VePT4CTI45NYI49n/RpCe0i6jfJFse+Ab8niU3t8c008+/KZTejgwy
+X-Gm-Message-State: AOJu0Yzw3jBVHtNSgRK3LK9KY5UJINg3FJncHCWFhemmRZaUKFXy6wig
+	asptpONVeugkSzCs1IOiwwgZYIOqwSiyN++idIyFTfOAn3C+N5tjaXyYyeIXQeo=
+X-Google-Smtp-Source: AGHT+IGVb8T0zmjUppXKMiGZvXO5lSsizz8CluNzkaf++om0s6TaTa5apn/9eqEINpHhSmfa5Hi0zQ==
+X-Received: by 2002:a05:600c:5584:b0:426:6087:198f with SMTP id 5b1f17b1804b1-426708fa98emr36208235e9.39.1720622589688;
+        Wed, 10 Jul 2024 07:43:09 -0700 (PDT)
+Received: from linaro.org ([82.79.124.209])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde89108sm5480933f8f.55.2024.07.10.07.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 07:43:09 -0700 (PDT)
+Date: Wed, 10 Jul 2024 17:43:07 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100: Fix up BAR spaces
+Message-ID: <Zo6d+3T/wcVHiWi1@linaro.org>
+References: <20240710-topic-barman-v1-1-5f63fca8d0fc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240708-kbuild-pacman-pkg-v3-1-885df3cbc740@weissschuh.net>
-X-Smtpcorp-Track: 4hPYo7uFKfj4.CjypGBhIfCeI.BBU1FwULfYk
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286saasBVQzwC
-X-Report-Abuse: Please forward a copy of this message, including all headers,
- to <abuse-report@smtp2go.com>
+In-Reply-To: <20240710-topic-barman-v1-1-5f63fca8d0fc@linaro.org>
 
-On Mon, Jul 08, 2024 at 10:11:51PM +0200 Thomas Weiﬂschuh wrote:
-> pacman is the package manager used by Arch Linux and its derivates.
-> Creating native packages from the kernel tree has multiple advantages:
+On 24-07-10 16:07:23, Konrad Dybcio wrote:
+> The 32-bit BAR spaces are reaching outside their assigned register
+> regions. Shrink them to match their actual sizes.
+> While at it, unify the style.
 > 
-> * The package triggers the correct hooks for initramfs generation and
->   bootloader configuration
-> * Uninstallation is complete and also invokes the relevant hooks
-> * New UAPI headers can be installed without any manual bookkeeping
-> 
-> The PKGBUILD file is a simplified version of the one used for the
-> downstream Arch Linux "linux" package.
-> Extra steps that should not be necessary for a development kernel have
-> been removed and an UAPI header package has been added.
-> 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Fixes: 5eb83fc10289 ("arm64: dts: qcom: x1e80100: Add PCIe nodes")
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Also tested on CRD, so:
+
+Tested-by: Abel Vesa <abel.vesa@linaro.org>
+
 > ---
-> Changes in v3:
-> - Enforce matching architectures for installation
-> - Add Reviewed-by and Tested-by from Nathan
-> - Link to v2: https://lore.kernel.org/r/20240706-kbuild-pacman-pkg-v2-1-613422a03a7a@weissschuh.net
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> Changes in v2:
-> - Replace ${MAKE} with $MAKE for consistency with other variables
-> - Use $MAKE for "-s image_name"
-> - Avoid permission warnings from build directory
-> - Clarify reason for /build symlink removal
-> - Install System.map and config
-> - Install dtbs where available
-> - Allow cross-build through arch=any
-> - Sort Contributor/Maintainer chronologically
-> - Disable some unneeded makepkg options
-> - Use DEPMOD=true for consistency with rpm-package
-> - Link to v1: https://lore.kernel.org/r/20240704-kbuild-pacman-pkg-v1-1-ac2f63f5fa7b@weissschuh.net
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> index 7bca5fcd7d52..bc5b4f5ea127 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> @@ -2895,9 +2895,9 @@ pcie6a: pci@1bf8000 {
+>  				    "mhi";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+> -			ranges = <0x01000000 0 0x00000000 0 0x70200000 0 0x100000>,
+> -				 <0x02000000 0 0x70300000 0 0x70300000 0 0x3d00000>;
+> -			bus-range = <0 0xff>;
+> +			ranges = <0x01000000 0x0 0x00000000 0x0 0x70200000 0x0 0x100000>,
+> +				 <0x02000000 0x0 0x70300000 0x0 0x70300000 0x0 0x1d00000>;
+> +			bus-range = <0x00 0xff>;
+>  
+>  			dma-coherent;
+>  
+> @@ -3016,8 +3016,8 @@ pcie4: pci@1c08000 {
+>  				    "mhi";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+> -			ranges = <0x01000000 0 0x00000000 0 0x7c200000 0 0x100000>,
+> -				 <0x02000000 0 0x7c300000 0 0x7c300000 0 0x3d00000>;
+> +			ranges = <0x01000000 0x0 0x00000000 0x0 0x7c200000 0x0 0x100000>,
+> +				 <0x02000000 0x0 0x7c300000 0x0 0x7c300000 0x0 0x1d00000>;
+>  			bus-range = <0x00 0xff>;
+>  
+>  			dma-coherent;
+> 
 > ---
->  .gitignore               |  6 ++++
->  scripts/Makefile.package | 16 ++++++++++
->  scripts/package/PKGBUILD | 83 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+)
+> base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+> change-id: 20240710-topic-barman-57a52f7de103
 > 
-> diff --git a/.gitignore b/.gitignore
-> index c59dc60ba62e..7902adf4f7f1 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -92,6 +92,12 @@ modules.order
->  #
->  /tar-install/
->  
-> +#
-> +# pacman files (make pacman-pkg)
-> +#
-> +/PKGBUILD
-> +/pacman/
-> +
->  #
->  # We don't want to ignore the following even if they are dot-files
->  #
-> diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-> index bf016af8bf8a..a5b5b899d90c 100644
-> --- a/scripts/Makefile.package
-> +++ b/scripts/Makefile.package
-> @@ -141,6 +141,21 @@ snap-pkg:
->  	cd $(objtree)/snap && \
->  	snapcraft --target-arch=$(UTS_MACHINE)
->  
-> +# pacman-pkg
-> +# ---------------------------------------------------------------------------
-> +
-> +PHONY += pacman-pkg
-> +pacman-pkg:
-> +	@ln -srf $(srctree)/scripts/package/PKGBUILD $(objtree)/PKGBUILD
-
-Can you please also add PKGBUILD to MRPROPER_FILES in top-level Makefile?
-
-Kind regards,
-Nicolas
+> Best regards,
+> -- 
+> Konrad Dybcio <konrad.dybcio@linaro.org>
+> 
