@@ -1,111 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D7517BB31
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DED984A5B;
+	Wed, 10 Jul 2024 09:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720603352; cv=none; b=aMWu0D9dkXP8W5NUuMQ1TGd/WKD3v0q/eknP6By5d8SDMElnjBIRl9ZTXzyexVSphxpSko4yHqhG2wjorEdquLgsNR10Qdh+NZk8PjZFqNxssc98izA84rGuUEHs+tFB0G2BUhP487jFM4YMBF7otxWYi+Ig8szg7mXrNKbYTgY=
+	t=1720603480; cv=none; b=OcpOhUC7O0nt9g+TtIWYKc6y5m3Vos5TLcmOqCgYrfb3Ih1vufhrkr8XHEHXqdesZpevSjn1TumaqvkbN4ce0dHv5SmUs1zhllTXJRDqWF3REMtLzHa062aSo6G+5DN5CNF8Fo3o1B/N9DeTmfK8frFXYz3VjhNgiQHGGYXHW9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720603352; c=relaxed/simple;
-	bh=lm/8qfiBjHen1y6BT5w44kd55lk39t21Zsly8ioYfZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Po0iArV/ITwpl7woQj3Eu/FA5GEAnHZ9rqYrpQxcjadJN1mB+gh/DeOFj8cCKRQD7X1jbI50/QL1U3tQGZcjQP4WbNWleDFBqPjBsXj9+l7nQsrC2nyqHGrKZm1VFAryHk/WSO1PaDv5TRKrTLcIH76Ozr9DrfvS1zd7qnu2vyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB44C32781;
-	Wed, 10 Jul 2024 09:22:30 +0000 (UTC)
-Date: Wed, 10 Jul 2024 10:22:28 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Yang Shi <yang@os.amperecomputing.com>
-Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, will@kernel.org,
-	anshuman.khandual@arm.com, david@redhat.com,
-	scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [v5 PATCH] arm64: mm: force write fault for atomic RMW
- instructions
-Message-ID: <Zo5S1JE8B912SHya@arm.com>
-References: <Zn7q3oL1AE8jdM-g@arm.com>
- <773c8be7-eb73-010c-acea-1c2fefd65b84@gentwo.org>
- <Zn7xs6OYZz4dyA8a@arm.com>
- <200c5d06-c551-4847-adaf-287750e6aac4@os.amperecomputing.com>
- <ZoMG6n4hQp5XMhUN@arm.com>
- <1689cd26-514a-4d72-a1bd-b67357aab3e0@os.amperecomputing.com>
- <ZoZzhf9gGQxADLFM@arm.com>
- <35f70ba6-5305-4268-b7ba-81545cacd83f@os.amperecomputing.com>
- <Zo2C4eXr5_9kifyO@arm.com>
- <cb0bd817-6948-4944-ab09-4ec2aba41cfa@os.amperecomputing.com>
+	s=arc-20240116; t=1720603480; c=relaxed/simple;
+	bh=mt5D8AY+7EO0szlXthTVjPtn1EMLtk1kIsZWF6D2fXY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P1F001cHHgfuRatSkpuJSuRX1xHejVflbgZiEmMBAoVILnmfAA81ubpzlzg96dGNbuBVdfy+7MWeQD734c0vAoJE9I1EwTiOOMdk66AK3TO6vymO2a3QCIKQ2puY9u/eq8ONH5kh1INHIj5HIU+Znk2x0F0gX29UkZS9WtuN87M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=beaT11/B; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beaT11/B"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6b605c48717so4225096d6.3;
+        Wed, 10 Jul 2024 02:24:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720603477; x=1721208277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eWMHgpbIy0GnN29ystn44vJIYgOS+Ps6swBxJ3oTQT8=;
+        b=beaT11/BYLTJq2mxkUTyU7p0ENHx/y+SIcuQWvMnMuRHoDPkya9eNtpqFQtYL5acJN
+         VbVgJjjHcbMQ4Y+2xum9+/ng3dYPQB1WoGnYhW3sFKnKK4p/I6rP6pkdWyVlr43Ib/dV
+         iD0lPlrT0NSQ6p1Gsz/knBVnDwMVKVnXugaNuz++wF5f4piOlcFA03tJ0+lwnh8o1V2w
+         A3PhiEtskOwTVi5130AGeF7eJjUV+WzidB0dpqQR8LRenG5pkd3rdSERQS7N4Up3SCvL
+         4pzJBLkIEua+rZ/09fxXDKvf/vZKnoDx2DQhP6qNqwvtpOFR2ygyYuNL8ZHeYz3YtJhD
+         mp5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720603477; x=1721208277;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eWMHgpbIy0GnN29ystn44vJIYgOS+Ps6swBxJ3oTQT8=;
+        b=BxF6U0Pqcsv9LAQmiDA1J9w93DoDiU6EdM8IkjE08KD0yjGWG7TB3VtIQirCKLp2Er
+         mDyEevgkaruYUZ0zAwUBQK64cE6ujz711j8VTKxkT5kbqIn5Bm4CoKwwBHDELQ+K44Cq
+         6dH2YM4+446ra/vzSs8vuHpsm7SRP0yU9fOnQdCM6vI5OyZvpHDbGVbcTVzpM+IgHtM4
+         XwtckbwmR03l8E6NIT1EykV6y0MCeZAKN2/5hG5M0yBUkCbg4zBrSczPPz5B4EjppQJk
+         lCBFozIg74CF6XNYiDVmh0lDv/bGjz/NS3BKbVFN7zY8EXjaC6ngP4MVVc6EF3/AD6VK
+         pLdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtAAqKqU1x1W5HSNTMNsRwhMofiyv3WzVWPvJnlJOJ6BGShbkoX+AZyj/WUmI35zfWK5wCdwvlu7ywwkkY88P3UujPVaJDgeax2H/GkNMXjVwqgMeKV/NHwxmDr/8GWSu9vOdtuYJa5p0=
+X-Gm-Message-State: AOJu0YyYrQ6/YYvC1TF2bONOAbMmTFe3pRk7PeT36e020PqBz6U5TewV
+	RMb6uffQwKuKOyVEUSiHqwcJ6aMy2LhPq5WcATGcs3iKnaQ+Zf/wxlL6sYeEGdz/gZFWFt12wfK
+	JFSIxad1aR92QhYzwsnjBVjnZ6co=
+X-Google-Smtp-Source: AGHT+IF7E8zn61udfFE2MLrr5RfDLaBzXvM82WJiBjIRP1r9i+9UFnsbu3O6AeiGCBZSYyYR7HPPSUE7OQ7NYaQcYK8=
+X-Received: by 2002:ad4:5b8f:0:b0:6b5:ec9a:41ef with SMTP id
+ 6a1803df08f44-6b61bca42a1mr53442686d6.2.1720603477379; Wed, 10 Jul 2024
+ 02:24:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cb0bd817-6948-4944-ab09-4ec2aba41cfa@os.amperecomputing.com>
+References: <CABXGCsMmmb36ym8hVNGTiU8yfUS_cGvoUmGCcBrGWq9OxTrs+A@mail.gmail.com>
+ <CAL3q7H4yBx7EAwTWWRboK78nhCbzy1YnXGYVsazWs+VxNYDBmA@mail.gmail.com>
+ <CABXGCsMWYaxZry+VDCgP=UM7c9do+JYSKdHAbCcx5=xEwXjE6Q@mail.gmail.com>
+ <CAL3q7H7Xb9FQx-5PMQtK_-reMq-cbfysCx6s-ZOWL1FUPSm8sA@mail.gmail.com>
+ <CABXGCsP9tSwgR4dN-k97maqHB1KOtykakmHNz78SYbAuHydUTQ@mail.gmail.com>
+ <CAL3q7H6vG6PEKjcsXtSuq=yks_g-MczAz_-V96QSZCs9ezRZpg@mail.gmail.com>
+ <CAL3q7H5RC6dinsA2KLtus07jxDuY1PecPXbhYOWtW+nVyzXwuA@mail.gmail.com>
+ <CAL3q7H4MiarsqxSMc0OzY2TNRk8J7Lg+89MaPHY2+NPO-EcDgQ@mail.gmail.com>
+ <CAK-xaQYYx6SPQaOVwL+ardB0y5LzYJw9a_hfWWtVEZ=y1rXq5w@mail.gmail.com>
+ <CAL3q7H74jpSoMvvkSvmrtB_VGiscz8zN5aHnApWuYU+hpKe+rA@mail.gmail.com>
+ <CAL3q7H6V9M0B4jmW79keUtTdjWsabyWZeU5g4KEN5_-a+wEHVQ@mail.gmail.com>
+ <CAK-xaQZ=c7aociwZ5YQreTmT+sBLGdH0rkTKmFzt4i_mrXBmgg@mail.gmail.com>
+ <CAK-xaQb2OrgNOKKXp8d_43kqMNyuHxS1V8jSDL6PdNZPTv79+g@mail.gmail.com>
+ <CAK-xaQZ25nyCeOvMs0G31sL7R71dxQqZhx61cYzTK7rZD-JxeQ@mail.gmail.com>
+ <CAL3q7H4D8Sq1-pbgZb8J_0VeNO=MZqDYPM7aauXqLHDM70UmAg@mail.gmail.com>
+ <CAK-xaQaesuU-TjDQcXgbjoNbZa0Y2qLHtSu5efy99EUDVnuhUg@mail.gmail.com>
+ <CAK-xaQbcpzvH1uGiDa04g1NrQsBMnyH2z-FPC4CdS=GDfRCsLg@mail.gmail.com>
+ <CAL3q7H63GexJexkDxSz9Av_s=XyYotJqLqjUubZmuU7vynaQNQ@mail.gmail.com>
+ <CABXGCsO_6cJruBxKdqXzEze_hDGVsPtN8DBCob=OWF5OpT4s7Q@mail.gmail.com>
+ <CAL3q7H46BxXUnrZ8Q3WxYf=2Tx0taMt9-2wf0TCrwj_kOiC=Dg@mail.gmail.com>
+ <CABXGCsOcpzy7QvRUuSDT-Ouvp_jJHDvuziPQbej4rHLh9te58g@mail.gmail.com> <CAL3q7H6FwUFKb5oODK8jcAbRbjTjsZ2=4usW1_4A6b-t5nF7ng@mail.gmail.com>
+In-Reply-To: <CAL3q7H6FwUFKb5oODK8jcAbRbjTjsZ2=4usW1_4A6b-t5nF7ng@mail.gmail.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Wed, 10 Jul 2024 14:24:25 +0500
+Message-ID: <CABXGCsP_V-Dh97SkLbYZvHSUdfhgXY_-RSqdRwv16hz+r3B3FQ@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - after f1d97e769152 I spotted increased
+ execution time of the kswapd0 process and symptoms as if there is not enough memory
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Andrea Gelmini <andrea.gelmini@gmail.com>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, 
+	dsterba@suse.com, josef@toxicpanda.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 09, 2024 at 03:29:58PM -0700, Yang Shi wrote:
-> On 7/9/24 11:35 AM, Catalin Marinas wrote:
-> > On Tue, Jul 09, 2024 at 10:56:55AM -0700, Yang Shi wrote:
-> > > On 7/4/24 3:03 AM, Catalin Marinas wrote:
-> > > I tested exec-only on QEMU tcg, but I don't have a hardware supported EPAN.
-> > > I don't think performance benchmark on QEMU tcg makes sense since it is
-> > > quite slow, such small overhead is unlikely measurable on it.
-> > 
-> > Yeah, benchmarking under qemu is pointless. I think you can remove some
-> > of the ARM64_HAS_EPAN checks (or replaced them with ARM64_HAS_PAN) just
-> > for testing. For security reason, we removed this behaviour in commit
-> > 24cecc377463 ("arm64: Revert support for execute-only user mappings")
-> > but it's good enough for testing. This should give you PROT_EXEC-only
-> > mappings on your hardware.
-> 
-> Thanks for the suggestion. IIUC, I still can emulate exec-only even though
-> hardware doesn't support EPAN? So it means reading exec-only area in kernel
-> still can trigger fault, right?
+On Mon, Jul 8, 2024 at 7:16=E2=80=AFPM Filipe Manana <fdmanana@kernel.org> =
+wrote:
+>
+> That's weird, I think you might be observing some variance.
+> I noticed that too for your reports of the test2 branch and the old
+> test3 branch, which were very identical, yet you got a very
+> significant difference between them.
+>
+> Thanks.
+>
 
-Yes, it's been supported since ARMv8.0. We limited it to EPAN only since
-setting a PROT_EXEC mapping still allowed the kernel to access the
-memory even if PSTATE.PAN was set.
+up  1:00
+root         269 10.2  0.0      0     0 ?        S    10:06   6:13 [kswapd0=
+]
+up  2:01
+root         269  9.1  0.0      0     0 ?        S    10:06  11:07 [kswapd0=
+]
+up  3:00
+root         269  8.4  0.0      0     0 ?        R    10:06  15:18 [kswapd0=
+]
+up  4:21
+root         269 11.7  0.0      0     0 ?        S    10:06  30:33 [kswapd0=
+]
+up  5:01
+root         269 11.7  0.0      0     0 ?        S    10:06  35:19 [kswapd0=
+]
+up  6:27
+root         269 11.5  0.0      0     0 ?        S    10:06  44:39 [kswapd0=
+]
+up  7:00
+root         269 11.2  0.0      0     0 ?        R    10:06  47:18 [kswapd0=
+]
 
-> And 24cecc377463 ("arm64: Revert support for execute-only user mappings")
-> can't be reverted cleanly by git revert, so I did it manually as below.
+The measurement error can reach =C2=B110 min.
+Did you plan to merge the fix before the 6.10 release?
 
-Yeah, I wasn't expecting that to work.
-
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index 6a8b71917e3b..0bdedd415e56 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -573,8 +573,8 @@ static int __kprobes do_page_fault(unsigned long far,
-> unsigned long esr,
->                 /* Write implies read */
->                 vm_flags |= VM_WRITE;
->                 /* If EPAN is absent then exec implies read */
-> -               if (!alternative_has_cap_unlikely(ARM64_HAS_EPAN))
-> -                       vm_flags |= VM_EXEC;
-> +               //if (!alternative_has_cap_unlikely(ARM64_HAS_EPAN))
-> +               //      vm_flags |= VM_EXEC;
->         }
-> 
->         if (is_ttbr0_addr(addr) && is_el1_permission_fault(addr, esr, regs))
-> {
-> diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
-> index 642bdf908b22..d30265d424e4 100644
-> --- a/arch/arm64/mm/mmap.c
-> +++ b/arch/arm64/mm/mmap.c
-> @@ -19,7 +19,7 @@ static pgprot_t protection_map[16] __ro_after_init = {
->         [VM_WRITE]                                      = PAGE_READONLY,
->         [VM_WRITE | VM_READ]                            = PAGE_READONLY,
->         /* PAGE_EXECONLY if Enhanced PAN */
-> -       [VM_EXEC]                                       = PAGE_READONLY_EXEC,
-> +       [VM_EXEC]                                       = PAGE_EXECONLY,
->         [VM_EXEC | VM_READ]                             = PAGE_READONLY_EXEC,
->         [VM_EXEC | VM_WRITE]                            = PAGE_READONLY_EXEC,
->         [VM_EXEC | VM_WRITE | VM_READ]                  = PAGE_READONLY_EXEC,
-
-In theory you'd need to change the VM_SHARED | VM_EXEC entry as well.
-Otherwise it looks fine.
-
--- 
-Catalin
+--=20
+Best Regards,
+Mike Gavrilov.
