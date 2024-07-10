@@ -1,107 +1,32 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9A194AE2;
-	Wed, 10 Jul 2024 16:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8371194A7C
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627771; cv=none; b=VzyS8JHy7/lZYOIgwRsTOesNHoI0Z3Zljf91DUNeK85qhQ3Ee4xEl0BZSZnnsHFPYaK1Q4fnOOVVgUi6j+r/fQUaaRrtaKcDUNiN3+2WgDu79DjcdX5mYG1gi0O+LTXFIEn4kxc9wSLFFDkGcX+ylEtc5Vroz9EBdLgchKefq+8=
+	t=1720627783; cv=none; b=TeKS+YqMigSC9fQTpp9FqfTY/fPo4al/y8Ml4TepnndIYgbD/VhBbvErC25CYCyWlNOoM9oMggsJmIoVppicwd0IE0eoHn6ELh9t6chOOOmdy9/ZnVMnMGfJYZ1KHzLGM6vGEVF8CuX4O+ggYXMtqlaSkhF+mImyRvBd3sD1yjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720627771; c=relaxed/simple;
-	bh=nz8XjyzhYNMxDlabKb77u9LlLIFM1GNNSB/NinucYEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sCnqDiMlIA3e74VOEOBDlW+bI7O7+Nt52/v62mNWi+44r+bu+8jt9bQgWk8IBTRX2Gh0YaD91poDf+vRO4MIXLAOZ/trHAp7AO54vXZlDICzzWj4vSQDy9kQgMcjwOOB9LBt4OEBukksSmqg3gC1LIVtBnYXNoR3fXBjgBRLrsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfCBrATz; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfCBrATz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720627769; x=1752163769;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nz8XjyzhYNMxDlabKb77u9LlLIFM1GNNSB/NinucYEA=;
-  b=bfCBrATz9/Dnq4w53WW5CC+aIsDgfgLhFYSauX+J4jCEv4hVJxyVcgs0
-   99yEyn56/gqZjeJnEpJpKETs76OnfZmFAXa1DlqjgCQVqYAAPO83A9N5P
-   h0ll3PBXf9Y77l74GNtueBrwrfKKb/QhciregN/qJD5LVl6QQ7d/0vLzj
-   5/orkDuduaoNIY9VC08WybBUu9K9v3ToBwQhP1xx/B6n7qAe9xIiiLT9N
-   uxCtbMFE6HKJnY+IGpkieBZRRyaj/lzu0j+q8nAapwgpKUYo78YzpvRZD
-   EgCsKalztBex45KJnpnjeuCJg3jDP5mq87xTKFFszdCvrRUMB/+9ud7/x
-   A==;
-X-CSE-ConnectionGUID: +xnDjeX8QCOMwC9FOpULcQ==
-X-CSE-MsgGUID: 20i98NlJRb6/MxfMrFGLGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18103053"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="18103053"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 09:09:28 -0700
-X-CSE-ConnectionGUID: r+GX81G/RPiw+uA49QrD5w==
-X-CSE-MsgGUID: 9Y6XVd4QR/iIhKJ39KXJbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="53084748"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 10 Jul 2024 09:09:15 -0700
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Yian Chen <yian.chen@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org,
+	s=arc-20240116; t=1720627783; c=relaxed/simple;
+	bh=MvpioBu39LF4CF8113GyzVamKrXmLsoml9nDIT15N5Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WwHnSbo4PT0h1wX0r8YszfpmaOKcDW9/FRxeUE1j02Qb+u60BMvvUN4ZuNRs0gafll2AAifX6GJV7LYE9kjnhz4bZoo9lFSTSzPtUJWiqmkVKD7zEBzbB5doJWJhFyyXSN6SdQjKdniQg084cZwmtmEMYSZLdfWFsAwR4eO2Px0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D590367;
+	Wed, 10 Jul 2024 09:10:06 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 656B43F762;
+	Wed, 10 Jul 2024 09:09:40 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: [PATCH v4 05/16] x86/cpu: Remove redundant comment during feature setup
-Date: Wed, 10 Jul 2024 19:06:41 +0300
-Message-ID: <20240710160655.3402786-6-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
-References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
+	jialong.yang@shingroup.cn
+Subject: [PATCH v2 0/3] perf: Add Arm Network-on-Chip PMU driver
+Date: Wed, 10 Jul 2024 17:09:32 +0100
+Message-Id: <cover.1720625639.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -110,30 +35,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sohil Mehta <sohil.mehta@intel.com>
+v1: https://lore.kernel.org/linux-arm-kernel/cover.1713972897.git.robin.murphy@arm.com/
 
-The code below the comment is self explanatory. Instead of updating the
-comment with the newly added LASS feature, it is better to just remove
-it.
+Hi all,
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
----
- arch/x86/kernel/cpu/common.c | 1 -
- 1 file changed, 1 deletion(-)
+Probably a bit late now, but here's a v2 addressing Will's review
+comments, and hoping to attract the DT maintainers' attention properly
+this time...
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index dcf61a66e462..33a76256a6f5 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1841,7 +1841,6 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	/* Disable the PN if appropriate */
- 	squash_the_stupid_serial_number(c);
- 
--	/* Set up SMEP/SMAP/UMIP */
- 	setup_smep(c);
- 	setup_smap(c);
- 	setup_umip(c);
+Thanks,
+Robin.
+
+
+Robin Murphy (3):
+  dt-bindings/perf: Add Arm NI-700 PMU
+  perf: Add driver for Arm NI-700 interconnect PMU
+  MAINTAINERS: List Arm interconnect PMUs as supported
+
+ Documentation/admin-guide/perf/arm-ni.rst     |  17 +
+ Documentation/admin-guide/perf/index.rst      |   1 +
+ .../devicetree/bindings/perf/arm,ni.yaml      |  30 +
+ MAINTAINERS                                   |  11 +
+ drivers/perf/Kconfig                          |   7 +
+ drivers/perf/Makefile                         |   1 +
+ drivers/perf/arm-ni.c                         | 778 ++++++++++++++++++
+ 7 files changed, 845 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/arm-ni.rst
+ create mode 100644 Documentation/devicetree/bindings/perf/arm,ni.yaml
+ create mode 100644 drivers/perf/arm-ni.c
+
 -- 
-2.43.0
+2.39.2.101.g768bb238c484.dirty
 
