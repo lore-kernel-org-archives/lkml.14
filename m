@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795E8195980;
-	Wed, 10 Jul 2024 16:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EBA19885F;
+	Wed, 10 Jul 2024 16:25:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720628753; cv=none; b=DZ2uqdVjBwcjRmM/4dWNEw0O0ZnwY44PlrvOnLdDvUxBO4KSeRcM+xzKkTheL7Hun5B5UX5gXAEYFWmw3LbHgX/Z468lBFg8sxy9/iC8CXL9FwaNQ73kTnhPqy7fwNWMYCmLV5N7i17vOPz8AqCUT5SoxKeyPLZ1xgz72J/HdK0=
+	t=1720628754; cv=none; b=jpamBc+5wXyuN+W5HF3ppuKUc9anqPJ9+tulD0mhZqdW5WR7P4lC9fY44ChaMMi5ZVUOM6GYTIu3TAJQGocK6CBF4pTlyk2BMSvsaNoJdc+LQFkjIgNXmMO6DGIu2GDOPpp4vSG5VuS6rFQbkqqME+IRDNo5oDcqjYe/rPRjxO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720628753; c=relaxed/simple;
-	bh=p6wrbNjT7tEhbjS3F5Es1kH6NYDyr2AWZ24Saa2c2h0=;
+	s=arc-20240116; t=1720628754; c=relaxed/simple;
+	bh=AKwHPRo5ZrNoi152PQFJh80X77mlvpPYCY1sxXRKLAA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=cXQI7lVi5yD81pzSKtm3NLOE9oBEndG4tgQiq001lSv+icUq9TLawtZWae92dZ1NP6p9r1oT1Q+TW/fhgSoIDf3Skt5uY4DnE0VkaFHWvB5F88KXekZtxsJTCMiXtH7KA3iiTO3khdUhXyhBknN7G5aUDaME2pwxoAnNAT0cykc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dT4TtR/K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5FoBC026; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=WUOu0X1yrvtJ52+srI0Jq+1FKRAVhKdq0aCMdkZVFWj4tOHlmtq3yUMD5FFsobDizjm42Gdmusd4OgSN9kEMCMihFhrYoZTczx51XcyDzIJy7UNGcBJYrtMF5XMLfSE48al51s9/i00C2FgOfjEFPE1bxCS3m2689Zy7CKhbPA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4BIHzmsC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VKSz1eb6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dT4TtR/K";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5FoBC026"
-Date: Wed, 10 Jul 2024 16:25:48 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4BIHzmsC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VKSz1eb6"
+Date: Wed, 10 Jul 2024 16:25:49 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1720628749;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7cpzrfBwkFEOHpwPgmSsrYcsiQZbSOGQpsChVnYkKPw=;
-	b=dT4TtR/KToIgWV0qNP+CW8He0NQtcLF6Cd83FrmSDehXgxuIzZ4SqTZ8LW7Us3zEjBa18x
-	Wlc0sUNAM9vBhgnZvdpQYSS1wfCYqPXWHfNY/bhnOtdUpimyMEZ4nb1YzYVBKG5vVzW0Ee
-	l0Iyj3epDCl/NkzYXJQmjijn1xgB0kJj12zSqHzg+x56GnlIAeJ7wyoERkvViYmtp5a71V
-	3BZcSQzwqQNiqGE4nlAfV16iytS5piwc+dh1AgRESbHzv2nbt8G71r/+UDKZY4r1hOIxZM
-	/LkcXjdgqrm5kQNWfkNd6gmyEg0jLsEz0ajEBYpuW+JuVKpFdPiZR5U7an5anw==
+	bh=855roucfBrGAK8TYHDkLXxjZI2wdLIKg5xtitodhEQQ=;
+	b=4BIHzmsCIxWEa96p7r6UCRlojA6h0PlyMXGn3Y5aN9KveMrnKOx4XqHj6L8J8+svP7L1Jc
+	ToH6bR7+SeJCKNEx4D/6U12ndAIebbfhVh/rCyd4OScU2RkgOutceau3JkJyFZjVxbWwR6
+	vNuWlFI002sWqVVWBRpSZpjk5ZbVny/nt7SObTAtvC9IKxFSZyJJWPdJbrBBB5wQCvl+jO
+	ApFY/mCcpHHH4et1P/nmly0irUyCAE9iEpQZ1lfgGU40skWlEeY3FLwzauFUbMO/YGX+1i
+	mezm9BdWoTS2gXBQI2kaDMESWoMorGWw9bDHQ8cXLUgaV+POqX4RI++N28oy4Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1720628749;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7cpzrfBwkFEOHpwPgmSsrYcsiQZbSOGQpsChVnYkKPw=;
-	b=5FoBC02608JZhFg210MU5nsXFCz4d2JKYzAPm7zQmDsYVXdBkBDTXvRYk/N2qwBBuHmqLz
-	WkqFwjHocwxZNICg==
+	bh=855roucfBrGAK8TYHDkLXxjZI2wdLIKg5xtitodhEQQ=;
+	b=VKSz1eb63EzRuhp1ybmGo0nv+eNlM0VboiD8Bdin3QIUfapJ/81VBFeRzinucOI1Y+fXwA
+	4m10wUp+4OKdQIBg==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/mvebu-odmi: Switch to parent MSI
+Subject: [tip: irq/core] irqchip/mvebu-gicp: Switch to MSI parent
 Cc: Thomas Gleixner <tglx@linutronix.de>,
  "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
  Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240623142235.759892514@linutronix.de>
-References: <20240623142235.759892514@linutronix.de>
+In-Reply-To: <20240623142235.699780279@linutronix.de>
+References: <20240623142235.699780279@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172062874900.2215.7827042175347690927.tip-bot2@tip-bot2>
+Message-ID: <172062874941.2215.17003882059491435714.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,14 +68,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     e7fa0449a49f4589ee5cb2183492865c18aef6c0
-Gitweb:        https://git.kernel.org/tip/e7fa0449a49f4589ee5cb2183492865c18aef6c0
+Commit-ID:     cf8793968627f2699be2fd3de2d217e7de0fabae
+Gitweb:        https://git.kernel.org/tip/cf8793968627f2699be2fd3de2d217e7de0fabae
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sun, 23 Jun 2024 17:19:00 +02:00
+AuthorDate:    Sun, 23 Jun 2024 17:18:58 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 10 Jul 2024 18:19:25 +02:00
 
-irqchip/mvebu-odmi: Switch to parent MSI
+irqchip/mvebu-gicp: Switch to MSI parent
 
 All platform MSI users and the PCI/MSI code handle per device MSI domains
 when the irqdomain associated to the device provides MSI parent
@@ -88,100 +88,105 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240623142235.759892514@linutronix.de
+Link: https://lore.kernel.org/r/20240623142235.699780279@linutronix.de
 
 
 
 ---
  drivers/irqchip/Kconfig          |  1 +-
- drivers/irqchip/irq-mvebu-odmi.c | 37 +++++++++++++++----------------
- 2 files changed, 19 insertions(+), 19 deletions(-)
+ drivers/irqchip/irq-mvebu-gicp.c | 44 +++++++++++++------------------
+ 2 files changed, 20 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 85df667..d078bdc 100644
+index 5b93a56..85df667 100644
 --- a/drivers/irqchip/Kconfig
 +++ b/drivers/irqchip/Kconfig
-@@ -391,6 +391,7 @@ config MVEBU_ICU
+@@ -383,6 +383,7 @@ config MSCC_OCELOT_IRQ
+ 	select GENERIC_IRQ_CHIP
  
- config MVEBU_ODMI
- 	bool
+ config MVEBU_GICP
 +	select IRQ_MSI_LIB
- 	select GENERIC_MSI_IRQ
+ 	bool
  
- config MVEBU_PIC
-diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
-index 1080915..ff19bfd 100644
---- a/drivers/irqchip/irq-mvebu-odmi.c
-+++ b/drivers/irqchip/irq-mvebu-odmi.c
-@@ -17,6 +17,9 @@
- #include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/slab.h>
-+
+ config MVEBU_ICU
+diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+index c43a345..2b61839 100644
+--- a/drivers/irqchip/irq-mvebu-gicp.c
++++ b/drivers/irqchip/irq-mvebu-gicp.c
+@@ -17,6 +17,8 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
 +#include "irq-msi-lib.h"
 +
  #include <dt-bindings/interrupt-controller/arm-gic.h>
  
- #define GICP_ODMIN_SET			0x40
-@@ -141,27 +144,29 @@ static void odmi_irq_domain_free(struct irq_domain *domain,
+ #define GICP_SETSPI_NSR_OFFSET	0x0
+@@ -145,32 +147,32 @@ static void gicp_irq_domain_free(struct irq_domain *domain,
  }
  
- static const struct irq_domain_ops odmi_domain_ops = {
+ static const struct irq_domain_ops gicp_domain_ops = {
 +	.select	= msi_lib_irq_domain_select,
- 	.alloc	= odmi_irq_domain_alloc,
- 	.free	= odmi_irq_domain_free,
+ 	.alloc	= gicp_irq_domain_alloc,
+ 	.free	= gicp_irq_domain_free,
  };
  
--static struct irq_chip odmi_msi_irq_chip = {
--	.name	= "ODMI",
+-static struct irq_chip gicp_msi_irq_chip = {
+-	.name		= "GICP",
+-	.irq_set_type	= irq_chip_set_type_parent,
+-	.flags		= IRQCHIP_SUPPORTS_LEVEL_MSI,
 -};
-+#define ODMI_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
++#define GICP_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
 +				  MSI_FLAG_USE_DEF_CHIP_OPS)
  
--static struct msi_domain_ops odmi_msi_ops = {
+-static struct msi_domain_ops gicp_msi_ops = {
 -};
-+#define ODMI_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK)
++#define GICP_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
++				  MSI_FLAG_LEVEL_CAPABLE)
  
--static struct msi_domain_info odmi_msi_domain_info = {
--	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
--	.ops	= &odmi_msi_ops,
--	.chip	= &odmi_msi_irq_chip,
-+static const struct msi_parent_ops odmi_msi_parent_ops = {
-+	.supported_flags	= ODMI_MSI_FLAGS_SUPPORTED,
-+	.required_flags		= ODMI_MSI_FLAGS_REQUIRED,
-+	.bus_select_token	= DOMAIN_BUS_GENERIC_MSI,
+-static struct msi_domain_info gicp_msi_domain_info = {
+-	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		   MSI_FLAG_LEVEL_CAPABLE),
+-	.ops	= &gicp_msi_ops,
+-	.chip	= &gicp_msi_irq_chip,
++static const struct msi_parent_ops gicp_msi_parent_ops = {
++	.supported_flags	= GICP_MSI_FLAGS_SUPPORTED,
++	.required_flags		= GICP_MSI_FLAGS_REQUIRED,
++	.bus_select_token       = DOMAIN_BUS_GENERIC_MSI,
 +	.bus_select_mask	= MATCH_PLATFORM_MSI,
-+	.prefix			= "ODMI-",
++	.prefix			= "GICP-",
 +	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
  };
  
- static int __init mvebu_odmi_init(struct device_node *node,
- 				  struct device_node *parent)
+ static int mvebu_gicp_probe(struct platform_device *pdev)
  {
--	struct irq_domain *parent_domain, *inner_domain, *plat_domain;
-+	struct irq_domain *parent_domain, *inner_domain;
+-	struct mvebu_gicp *gicp;
+-	struct irq_domain *inner_domain, *plat_domain, *parent_domain;
++	struct irq_domain *inner_domain, *parent_domain;
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct device_node *irq_parent_dn;
++	struct mvebu_gicp *gicp;
  	int ret, i;
  
- 	if (of_property_read_u32(node, "marvell,odmi-frames", &odmis_count))
-@@ -208,18 +213,12 @@ static int __init mvebu_odmi_init(struct device_node *node,
- 		goto err_unmap;
- 	}
+ 	gicp = devm_kzalloc(&pdev->dev, sizeof(*gicp), GFP_KERNEL);
+@@ -234,17 +236,9 @@ static int mvebu_gicp_probe(struct platform_device *pdev)
+ 	if (!inner_domain)
+ 		return -ENOMEM;
  
+-
 -	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(node),
--						     &odmi_msi_domain_info,
+-						     &gicp_msi_domain_info,
 -						     inner_domain);
 -	if (!plat_domain) {
--		ret = -ENOMEM;
--		goto err_remove_inner;
+-		irq_domain_remove(inner_domain);
+-		return -ENOMEM;
 -	}
+-
+-	platform_set_drvdata(pdev, gicp);
+-
 +	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_GENERIC_MSI);
 +	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
-+	inner_domain->msi_parent_ops = &odmi_msi_parent_ops;
- 
++	inner_domain->msi_parent_ops = &gicp_msi_parent_ops;
  	return 0;
+ }
  
--err_remove_inner:
--	irq_domain_remove(inner_domain);
- err_unmap:
- 	for (i = 0; i < odmis_count; i++) {
- 		struct odmi_data *odmi = &odmis[i];
