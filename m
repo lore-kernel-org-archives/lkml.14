@@ -1,88 +1,147 @@
-Received: from smtp88.iad3b.emailsrvr.com (smtp88.iad3b.emailsrvr.com [146.20.161.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE961922DC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CD4194099
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720634522; cv=none; b=nVGyRy+p/pqIHrHA2ejQIWiTHHNqg457VV3ZVT9EkME5CIrAFMybJTQXZnMqmH89edtqNkscBXYSJS4JFTMLey6VyFfEoWro2xfGwQV8qIhhtsfkelwIqMqEFtzi9jZIzXu0vpaN5zLty3rbCWwhwf6dx6eoRRn8ZdlAhVbgmuA=
+	t=1720634543; cv=none; b=S/W6teo9gd5tjEoSfehMDN+ZRJM5z8Kvpqp3t3WvLx0diI/hRiXDqEGTrW1Nq9tdd4xLJWZ+5xzySw7PRmD0CeeOJs9ovOdhJQdWroDRef92rR3vvcM9BUtYKm+KeZ8QdBYPkzEeCG1BWj7zgAuMJLkrh4t55bQ/jE9qXvgd9wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720634522; c=relaxed/simple;
-	bh=HoXdi8YDPzKPfOk1K5QZ/YKUnApGodxvc1GCh+obPAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UgrsSujmXrnkv9EYkVNCWResoVgbWR3YDqSzkbkE1psl1OTV5PvTriwwydPGC59+7PK+aWeShkP1ctcvMZwvZvSGV9XJaD2Rwj9S9vCVBk9VlX/4x5xqjFY/1bwohly//0J8tHvKNGrVEumPyoN6xXmvSDVaDbQOxq4U2oyR6DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=A7ZmCc8l; arc=none smtp.client-ip=146.20.161.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1720634543; c=relaxed/simple;
+	bh=PdHPvlbEI3WkdsdnZkmhStlR+34lGMLayWBOq8cq+fs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HaiOiSs5o1sR5iJ/uUXiWrAQi0GS6Cs4ZQFGWhGuQ8CASRykf/9o/va3cI2St/fR+VJ8wb8hLI/SbZ7Jyh6erEpwYY/eNmqI3zISGgLt9mcYorZEuUjERq6JOvJI06dpZzpZE4JKqVayIz0ThMf3GTxbwjnqc1IESM5xkXl3vnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VK8yHcxG; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="A7ZmCc8l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1720633977;
-	bh=HoXdi8YDPzKPfOk1K5QZ/YKUnApGodxvc1GCh+obPAw=;
-	h=From:To:Subject:Date:From;
-	b=A7ZmCc8li9EupPTQhsSsAfWXZ10ZKV0ajZ3P6AGlhKtifUZavAL1wXVjDUbILoOxL
-	 14xV39isjJN5WoT7gzx06zxypGTHvsSzmBHj7waYdV34bw6g2XOTQbhUt2gLlX2qIw
-	 REz+SVd+4g2KMx85vYfdYHYZnaySs09S63BQfBZ8=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp20.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id D7C82A019C;
-	Wed, 10 Jul 2024 13:52:56 -0400 (EDT)
-From: Ian Abbott <abbotti@mev.co.uk>
-To: linux-rtc@vger.kernel.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-kernel@vger.kernel.org,
-	Ian Abbott <abbotti@mev.co.uk>,
-	stable@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Brown <broonie@kernel.org>
-Subject: [RESEND PATCH] rtc: ds1343: Force SPI chip select to be active high
-Date: Wed, 10 Jul 2024 18:52:07 +0100
-Message-ID: <20240710175246.3560207-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VK8yHcxG"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-375fc24a746so9895ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 11:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720634541; x=1721239341; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OOsNmbPrF2STZyyL5Kpp+cQCII13OaquvqokEKK2An0=;
+        b=VK8yHcxGEJJbA76IrPr9yeXh2M0GFSTS+TyGoaukf0XbZ15Tv41fFw0SG3pHWzIQir
+         fVgyXbjiD42NbUJHqsQVYqxjADVpCqstyRgKUQLJ23JBLeD0WVNzQTTNHKPPPUJZtrum
+         TbBG9+jOG/7u0oVq2PqrVEzcKQWGGs952/+kXlJ63khJ/RRu9fIHDQLeXsfpxT5iuAw9
+         VTEGzypFWLJAIt6DxbH8bRUFnGQIe30xnhTSfqs03XXd4lhpu/1YX7OrauueeSoNyFuc
+         S9DBNHI7R76ZEeeYqSVROSV919/K120cbTgCfT2VgtDNAGJucLl/BmhGkD1J+9mE2bLn
+         +A8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720634541; x=1721239341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OOsNmbPrF2STZyyL5Kpp+cQCII13OaquvqokEKK2An0=;
+        b=aTmGJxA9FoMPFoTjmp0EBSyo0mEhDq9RE6ANjAfV7Wr6EZ/r2kXEy1CoVX9Q3mBSR0
+         7HB04rpTaVCbvyQbZm1bIZJZ3ErTQyQD7bommQbTRb5gXw2B0ynklWObRSVCumwvqm3x
+         ZQGB6fkKoBm1sguAV2Vm2NCNdepKBZl9Oy4H4JSKp47RpUcFOiUNhlrcNtq146r4RuFm
+         G6qqrdtMWHJvixytRLX82jgNG0mZ4jJaoyWqDnHhiJte6NU8/U3d+NQagRxgzxhD1gwI
+         NKXIsir5VpORQflrkEAaReBDeeE9LZBAMgkXJEB+nyoScO0eczQ/ecwIip4RjyiRKka4
+         EbHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPnRIzobUH0LMVeu29y6MSFBmVJ7jRdiJgST8n41dHHAh7dFJK6jCic/3VDVR7wUk/rieesx+HaSPeoMA/b1GyNP+22qK5GEn9Nw6d
+X-Gm-Message-State: AOJu0Yztzp7s65hMuOlkVAND7dWBPW17KI4Jhprn+Pl0hrqWir8OJBAW
+	XWFz+ZOy9D/rXH6pzgJ+kmhgfgbT5XU9kLYbqUTI9a4RJoje641Yz+DhCcbsMRRB2UBKKU1qyDr
+	WjqMFCLTIJt72UrKbKq/ua17e4vP4vPOWSIlf
+X-Google-Smtp-Source: AGHT+IEHo7LR6ArOXTJkal+hND0YIB8MGeuzD4QP2Kr9qu/4LstjGlefnnRc8EIaqJgafRoLSx1q0y46haL1FbJ5qSM=
+X-Received: by 2002:a05:6e02:184f:b0:375:edce:baf1 with SMTP id
+ e9e14a558f8ab-38d2c77159bmr34315ab.13.1720634540903; Wed, 10 Jul 2024
+ 11:02:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Classification-ID: cd498383-a11f-45b4-a4c9-74a0458dea8a-1-1
+References: <20240705132059.853205-1-howardchu95@gmail.com>
+In-Reply-To: <20240705132059.853205-1-howardchu95@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 10 Jul 2024 11:02:09 -0700
+Message-ID: <CAP-5=fVoXg4sPnyEJ095YkXmYDtW35d7mRjoWfO8=KEr7Oc-Mg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] perf trace: Augment enum arguments with BTF
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, namhyung@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
-bit-flips (^=) the existing SPI_CS_HIGH setting in the SPI mode during
-device probe.  This will set it to the wrong value if the spi-cs-high
-property has been set in the devicetree node.  Just force it to be set
-active high and get rid of some commentary that attempted to explain why
-flipping the bit was the correct choice.
+On Fri, Jul 5, 2024 at 6:20=E2=80=AFAM Howard Chu <howardchu95@gmail.com> w=
+rote:
+>
+> Changes in v5:
+>
+> - Use hardcoded landlock structs and macros for landlock.c workload to
+> make this build in older systems.
 
-Fixes: 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
-Cc: <stable@vger.kernel.org> # 5.6+
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
- drivers/rtc/rtc-ds1343.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+A few nits but otherwise:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
-index ed5a6ba89a3e..484b5756b55c 100644
---- a/drivers/rtc/rtc-ds1343.c
-+++ b/drivers/rtc/rtc-ds1343.c
-@@ -361,13 +361,10 @@ static int ds1343_probe(struct spi_device *spi)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	/* RTC DS1347 works in spi mode 3 and
--	 * its chip select is active high. Active high should be defined as
--	 * "inverse polarity" as GPIO-based chip selects can be logically
--	 * active high but inverted by the GPIO library.
-+	/*
-+	 * RTC DS1347 works in spi mode 3 and its chip select is active high.
- 	 */
--	spi->mode |= SPI_MODE_3;
--	spi->mode ^= SPI_CS_HIGH;
-+	spi->mode |= SPI_MODE_3 | SPI_CS_HIGH;
- 	spi->bits_per_word = 8;
- 	res = spi_setup(spi);
- 	if (res)
--- 
-2.43.0
+Thanks,
+Ian
 
+> Changes in v4:
+>
+> - Fix landlock workload's build error.
+>
+> Changes in v3:
+>
+> - Add trace__btf_scnprintf() helper function
+> - Remove is_enum memeber in struct syscall_arg_fmt, replace it with
+> btf_is_enum()
+> - Add syscall_arg_fmt__cache_btf_enum() to cache btf_type only
+> - Resolve NO_LIBBPF=3D1 build error
+> - Skip BTF augmentation test if landlock_add_rule syscall and LIBBPF are =
+not
+> available
+> - Rename landlock.c workload, add a comment to landlock.c workload
+> - Change the way of skipping 'enum ' prefix
+> - Add type_name member to struct syscall_arg
+>
+> Changes in v2:
+>
+> - Add trace_btf_enum regression test, and landlock workload
+>
+> v1:
+>
+> In this patch, BTF is used to turn enum value to the corresponding
+> enum variable name. There is only one system call that uses enum value
+> as its argument, that is `landlock_add_rule()`.
+>
+> Enum arguments of non-syscall tracepoints can also be augmented, for
+> instance timer:hrtimer_start and timer:hrtimer_init's 'mode' argument.
+>
+>
+> Arnaldo Carvalho de Melo (2):
+>   perf trace: Introduce trace__btf_scnprintf()
+>   perf trace: Remove arg_fmt->is_enum, we can get that from the BTF type
+>
+> Howard Chu (6):
+>   perf trace: Fix iteration of syscall ids in syscalltbl->entries
+>   perf trace: BTF-based enum pretty printing for syscall args
+>   perf trace: Augment non-syscall tracepoints with enum arguments with
+>     BTF
+>   perf trace: Filter enum arguments with enum names
+>   perf test: Add landlock workload
+>   perf test trace_btf_enum: Add regression test for the BTF augmentation
+>     of enums in 'perf trace'
+>
+>  tools/perf/builtin-trace.c               | 229 ++++++++++++++++++++---
+>  tools/perf/tests/builtin-test.c          |   1 +
+>  tools/perf/tests/shell/trace_btf_enum.sh |  61 ++++++
+>  tools/perf/tests/tests.h                 |   1 +
+>  tools/perf/tests/workloads/Build         |   2 +
+>  tools/perf/tests/workloads/landlock.c    |  66 +++++++
+>  tools/perf/trace/beauty/beauty.h         |   1 +
+>  tools/perf/util/syscalltbl.c             |   7 +
+>  tools/perf/util/syscalltbl.h             |   1 +
+>  9 files changed, 345 insertions(+), 24 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
+>  create mode 100644 tools/perf/tests/workloads/landlock.c
+>
+> --
+> 2.45.2
+>
