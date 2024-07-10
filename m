@@ -1,183 +1,90 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5C6193475;
-	Wed, 10 Jul 2024 15:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6C95F876;
+	Wed, 10 Jul 2024 15:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720624331; cv=none; b=lBlTJGXobaJP35NBrcAwMbKF6wxbm4TBq2/hJlNbrIaPOn1jJ/mcwqnjspzc2cFXFxDEom9vwbht55hXbARvAL7NjChK/fymVI6k9Kb1vfbHdjmBnTqjxcRU0z4rsKMsJzIfsLa81VgIBml31T1VBTBvauPztum5lmmVLfntcJ4=
+	t=1720624509; cv=none; b=F8dmVVAHyXOQBFuu8Nj3aMDZ912GMAvAGnTfO4bC9hH7yUZFvXgDQKTmYlu1xv+xBYUKSbnfrKv5/aWTzvk1kX/QJ5IQXn/QSFWnZr6d5pJtz++CCW+CZ74Ls/m97Er1cqJAUei0ElyP/jSy42VL7g96QQql55Jwg45yO3pNJsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720624331; c=relaxed/simple;
-	bh=IRkwYGIebrL4uCE9WUVlg+KCCAuQscyRz2wbHAaJwXE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LStCBvM9vD3B8CneotUEzGBnrsLeGb9ZoEYr1r8tQ2xyawgyd0Y9wq7i3O7Aat4Q1ABG1jxNTGMnzEMVwbmHwgfri7Yy1p/8Pa/tEoGZMn4SmWq7EOtw9ApLiYNKaIXq+6X+CikFMVqLdfBA8eTcaU2Hj7shvQqg9OENZXhtCgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ljyurjyK; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720624509; c=relaxed/simple;
+	bh=XNvLVakjrsrGH7feZEiDVixq9xnBJRkQVc8Z6YE/axE=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=cQqEjYcW2t2WpjTCr67YvR9MNwwTBHE4c5XU85FdUu8K7yydjmVo+I9628W9HJ8VEfyQIM27QC2Pw/NL5i4W24yeqySJU6Ddtrfe8bdUMjz9UuyvNfqlaurtK0TyODTtIla+4LDcPuUStjrOiUAAYUqdr/H8HRE9MOFW3TzYmBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RSV/sQab; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljyurjyK"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2c927152b4bso4424183a91.2;
-        Wed, 10 Jul 2024 08:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720624329; x=1721229129; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1mdPAB+F0GTilFHNlRTGVUQWD6MC9KZDahVW6PLkB98=;
-        b=ljyurjyKoM05qd/KwgKLs4lbBDpBPNa98RCgW0gV4SgbnqMZOJZgNZujEer+SiOEMx
-         +1nBuL1BUBB458h6pt/Dd3IXklz5SKQf4zYvE4XlDhNbAwsaD/n3/m/jw87WkLvZT0He
-         +7jZWBMYMEhzvA1WrmCeVclqyRdof2UIcYEDNUEopBCAsvOorsXXroPgSwVIG5pRFrBE
-         2ReBel5xj2UsOYn0De4KkKvT/5nr/DvyCzchl3aZQFF8JaOxaw4qajBKcZRuO1vjnRON
-         aI+h09QS5i5vrxPHH9zoOWitsACSipafevv6QXIZEVUqej9pEIrnocVqdura7Jvjit23
-         oKVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720624329; x=1721229129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1mdPAB+F0GTilFHNlRTGVUQWD6MC9KZDahVW6PLkB98=;
-        b=lkZOoZFylKO3lh0FLp34Idn75BGS3dvwS/f+ZZa0yS2/N/Cse/pKR6M28zJ/HP+2N9
-         MJ+UTleJUvRORaAarheIbpRb/YUVdZTFv8hQ0fW7GVzx/K4a71ca98SEs7kLxLoR4K2x
-         eBMuQF/f5QoLIJv2S1stLQGiCBtU8Wq/ZFlmaLjZPVN+Zn/SXzYivDG9TQI11DIyW+Dp
-         7m7RyH6s8LVJwe/1SbZlxZJnlT+tJe4SVb/4z5r8Ltw7XuRDbNRcV5lFEI6ov2zNOy+1
-         CrLhAyVWafXV+nsHsdYr/cun25gHNnoobqtFFv6D8+vnY+/2XcnNgjTPXRrM1jSpwEqw
-         3j3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWRaUQNxFiRSRMQgs2hLbSKmApBGRGeHy57ROm7qT9Y38wTJaSvcrZF1GMuRfcw9ylh6LFBJZFwawlq95aAOIzmgLZm5x5PjGO577B0mAmzbuFHFWcyMldNru1cuZG/NsutX46jA04jQNexaWooYIhKWKnYRGLYO7Wnmb0tJVAG/QgTH7SmsBTO5e+O1w3zN707+06on6XAD+Wa/U+ehijRuDMF0hPIRA==
-X-Gm-Message-State: AOJu0YwFV/enXWGSWquyv88H+vkdT1ooO7yISGGCfaRJ0Sz51MPkZ13z
-	JMUqSzUd2t/Lk+Hxle3liGOcAY8paLNIiBOxX06vrJ27oPWtejwMFXmaz4vX9RAuH1UMJqisICL
-	veP7Rte/f2LTW4fus3L1jS0AE0uk=
-X-Google-Smtp-Source: AGHT+IEIKUVqZhStIhTidJELWOWiWfUpUOuUgGVr2vW/o8hcsf03CSaDSQyPKPZxlmCYPK2L7PU3oE2dXHWeEjxpKtE=
-X-Received: by 2002:a17:90a:bd82:b0:2c4:aa78:b48b with SMTP id
- 98e67ed59e1d1-2ca35d486cbmr4892000a91.38.1720624329066; Wed, 10 Jul 2024
- 08:12:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RSV/sQab"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720624508; x=1752160508;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=XNvLVakjrsrGH7feZEiDVixq9xnBJRkQVc8Z6YE/axE=;
+  b=RSV/sQabnBS/UQ6/kJA3iLkeH2vt5mJ67Zdy4h+FRU92kJzcsx81lIbm
+   aSD7tDjgSHqvi611qhUwt52mCNAR5L94QblwLN1R0BwLWWYpLFSgtAkzL
+   3d4OvyIf4ejCWh6WQmbDPZXNW+w1SlyGMkNWrQs7q0Vjn8YfpYeonGESG
+   VCNWQqwtB5z7d04QrUmb0cUPAJeH1CoznbVA7X4bRXFV5VOreQm/MoAkO
+   HOxEkDLU7xUAWhqj3T0f8/L69H2I8SRtMGpG7zEKbRutYIK4T2/so0rPm
+   cfGls8hHmoNJwQBz1uqE5ECBaBWq9jxaYoxE+OOjz9oD1WJshgIankkeM
+   A==;
+X-CSE-ConnectionGUID: C7VfLItPRrC0f8M0ZsUS/A==
+X-CSE-MsgGUID: L827ZDRZR72HpvH6+JMCdg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="29348876"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="29348876"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 08:15:07 -0700
+X-CSE-ConnectionGUID: vvt6Lvg3SHK+0sdEAduMcw==
+X-CSE-MsgGUID: pfDhorXdRZGpSKlrlepxEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="53195241"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.246.119.97])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 10 Jul 2024 08:15:06 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: dave.hansen@linux.intel.com, jarkko@kernel.org, kai.huang@intel.com,
+ reinette.chatre@intel.com, linux-sgx@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Dmitrii Kuvaiskii"
+ <dmitrii.kuvaiskii@intel.com>
+Cc: mona.vij@intel.com, kailun.qin@intel.com, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] x86/sgx: Split SGX_ENCL_PAGE_BEING_RECLAIMED into
+ two flags
+References: <20240705074524.443713-1-dmitrii.kuvaiskii@intel.com>
+ <20240705074524.443713-2-dmitrii.kuvaiskii@intel.com>
+Date: Wed, 10 Jul 2024 10:15:02 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708231127.1055083-1-andrii@kernel.org> <20240709101133.GI27299@noisy.programming.kicks-ass.net>
- <CAEf4Bza22X+vmirG=Xf4zPV0DTn9jVXi1SRTn9ff=LG=z2srNQ@mail.gmail.com> <20240710113855.GX27299@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240710113855.GX27299@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Jul 2024 08:11:57 -0700
-Message-ID: <CAEf4BzZFU6CEK-=eTo_LTScYCVoBCYXeH_O_AoZd8rBYiwWzdg@mail.gmail.com>
-Subject: Re: [PATCH v4] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com, 
-	tglx@linutronix.de, jpoimboe@redhat.com, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org, 
-	rick.p.edgecombe@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2qo8ncfwwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <20240705074524.443713-2-dmitrii.kuvaiskii@intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 
-On Wed, Jul 10, 2024 at 4:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Fri, 05 Jul 2024 02:45:22 -0500, Dmitrii Kuvaiskii  
+<dmitrii.kuvaiskii@intel.com> wrote:
+
+> SGX_ENCL_PAGE_BEING_RECLAIMED flag is set when the enclave page is being
+> reclaimed (moved to the backing store). This flag however has two
+> logical meanings:
 >
-> On Tue, Jul 09, 2024 at 10:50:00AM -0700, Andrii Nakryiko wrote:
-> > On Tue, Jul 9, 2024 at 3:11=E2=80=AFAM Peter Zijlstra <peterz@infradead=
-.org> wrote:
-> > >
-> > > On Mon, Jul 08, 2024 at 04:11:27PM -0700, Andrii Nakryiko wrote:
-> > > > +#ifdef CONFIG_UPROBES
-> > > > +/*
-> > > > + * Heuristic-based check if uprobe is installed at the function en=
-try.
-> > > > + *
-> > > > + * Under assumption of user code being compiled with frame pointer=
-s,
-> > > > + * `push %rbp/%ebp` is a good indicator that we indeed are.
-> > > > + *
-> > > > + * Similarly, `endbr64` (assuming 64-bit mode) is also a common pa=
-ttern.
-> > > > + * If we get this wrong, captured stack trace might have one extra=
- bogus
-> > > > + * entry, but the rest of stack trace will still be meaningful.
-> > > > + */
-> > > > +static bool is_uprobe_at_func_entry(struct pt_regs *regs)
-> > > > +{
-> > > > +     struct arch_uprobe *auprobe;
-> > > > +
-> > > > +     if (!current->utask)
-> > > > +             return false;
-> > > > +
-> > > > +     auprobe =3D current->utask->auprobe;
-> > > > +     if (!auprobe)
-> > > > +             return false;
-> > > > +
-> > > > +     /* push %rbp/%ebp */
-> > > > +     if (auprobe->insn[0] =3D=3D 0x55)
-> > > > +             return true;
-> > > > +
-> > > > +     /* endbr64 (64-bit only) */
-> > > > +     if (user_64bit_mode(regs) && *(u32 *)auprobe->insn =3D=3D 0xf=
-a1e0ff3)
-> > > > +             return true;
-> > >
-> > > I meant to reply to Josh suggesting this, but... how can this be? If =
-you
-> > > scribble the ENDBR with an INT3 things will #CP and we'll never get t=
-o
-> > > the #BP.
-> >
-> > Well, it seems like it works in practice, I just tried. Here's the
-> > disassembly of the function:
-> >
-> > 00000000000019d0 <urandlib_api_v1>:
-> >     19d0: f3 0f 1e fa                   endbr64
-> >     19d4: 55                            pushq   %rbp
-> >     19d5: 48 89 e5                      movq    %rsp, %rbp
-> >     19d8: 48 83 ec 10                   subq    $0x10, %rsp
-> >     19dc: 48 8d 3d fe ed ff ff          leaq    -0x1202(%rip), %rdi
-> >  # 0x7e1 <__isoc99_scanf+0x7e1>
-> >     19e3: 48 8d 75 fc                   leaq    -0x4(%rbp), %rsi
-> >     19e7: b0 00                         movb    $0x0, %al
-> >     19e9: e8 f2 00 00 00                callq   0x1ae0 <__isoc99_scanf+=
-0x1ae0>
-> >     19ee: b8 01 00 00 00                movl    $0x1, %eax
-> >     19f3: 48 83 c4 10                   addq    $0x10, %rsp
-> >     19f7: 5d                            popq    %rbp
-> >     19f8: c3                            retq
-> >     19f9: 0f 1f 80 00 00 00 00          nopl    (%rax)
-> >
-> > And here's the state when uprobe is attached:
-> >
-> > (gdb) disass/r urandlib_api_v1
-> > Dump of assembler code for function urandlib_api_v1:
-> >    0x00007ffb734e39d0 <+0>:     cc                      int3
-> >    0x00007ffb734e39d1 <+1>:     0f 1e fa                nop    %edx
-> >    0x00007ffb734e39d4 <+4>:     55                      push   %rbp
-> >    0x00007ffb734e39d5 <+5>:     48 89 e5                mov    %rsp,%rb=
-p
-> >    0x00007ffb734e39d8 <+8>:     48 83 ec 10             sub    $0x10,%r=
-sp
-> >    0x00007ffb734e39dc <+12>:    48 8d 3d fe ed ff ff    lea
-> > -0x1202(%rip),%rdi        # 0x7ffb734e27e1
-> >    0x00007ffb734e39e3 <+19>:    48 8d 75 fc             lea    -0x4(%rb=
-p),%rsi
-> > =3D> 0x00007ffb734e39e7 <+23>:    b0 00                   mov    $0x0,%=
-al
-> >    0x00007ffb734e39e9 <+25>:    e8 f2 00 00 00          call
-> > 0x7ffb734e3ae0 <__isoc99_scanf@plt>
-> >    0x00007ffb734e39ee <+30>:    b8 01 00 00 00          mov    $0x1,%ea=
-x
-> >    0x00007ffb734e39f3 <+35>:    48 83 c4 10             add    $0x10,%r=
-sp
-> >    0x00007ffb734e39f7 <+39>:    5d                      pop    %rbp
-> >    0x00007ffb734e39f8 <+40>:    c3                      ret
-> >
-> >
-> > You can see it replaced the first byte, the following 3 bytes are
-> > remnants of endb64 (gdb says it's a nop? :)), and then we proceeded,
-> > you can see I stepped through a few more instructions.
-> >
-> > Works by accident?
+> 1. Don't attempt to load the enclave page (the page is busy).
+> 2. Don't attempt to remove the PCMD page corresponding to this enclave
+>    page (the PCMD page is busy).
 >
-> Yeah, we don't actually have Userspace IBT enabled yet, even on hardware
-> that supports it.
-
-OK, I don't know what the implications are, but it's a good accident :)
-
-Anyways, what should I do for v4? Drop is_endbr6() check or keep it?
+> To reflect these two meanings, split SGX_ENCL_PAGE_BEING_RECLAIMED into
+> two flags: SGX_ENCL_PAGE_BUSY and SGX_ENCL_PAGE_PCMD_BUSY. Currently,
+> both flags are set only when the enclave page is being reclaimed. A
+> future commit will introduce a new case when the enclave page is being
+> removed; this new case will set only the SGX_ENCL_PAGE_BUSY flag.
+>
+LGTM.
+Reviewed-by: Haitao Huang <haitao.huang@linux.intel.com>
+Thanks
+Haitao
