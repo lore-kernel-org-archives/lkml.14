@@ -1,106 +1,94 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBEF10A09
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518581946DF;
+	Wed, 10 Jul 2024 15:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720626146; cv=none; b=HR3/y+z2zDAT7kBSk0SthO3mwwglP43dSWk0H8K7SvTwt2sGs24IEaQ+FQ5GtW6HIrQ7vsg+ra7w3c7m3ri68U7NEKOHc4XGJE83VQ+/S0dDkvQEU6fQJq2Njg0OBLDCA4viXW3kYjFeWMg29hDDGtRUhZHcIOC+iq7qcfPCp4k=
+	t=1720626149; cv=none; b=sMOhWiPvHFyiS3I+DsWSQfweRN7S/O0BilkG/ZCQxuF1IHXoT5jMht6aHv4Lb89KkBh/XrZrRHXiLH1k/OByclce83b1Md5NQJNED4z336aHW4cxlIZDTPR5kGH6EhzXvxFtzlWIU9JIwoQbXJY21gyVP+OTXbFWrj2YPU59OeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720626146; c=relaxed/simple;
-	bh=C5gY+uljMJ/TRBVbOsR/U+KA7yyl6SUm21CDlJJs9PA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WlZQdsEU2SPgYIWeaqZ+0CU+uF4pFX8b0dwWlIl3MxQJmgPdbjWgIdFoQ/T8W9WaBh989/Z8nijYBO5l6FooOUGOH03bSuPrO0nlt1mjWfkb48g8sNRkE2Epqg9LPJknW//Emx34sLQuvaF43c/spi/Eu6kIfn4HnqZSIFkqZHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=etqYWTrI; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1720626149; c=relaxed/simple;
+	bh=aFOr/mQFZylxPSulJht9IZixww6VB8Mp4pnEZJILIWY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qel36GAcbav8qWmp2xsxMGCg+3mH7XqD0sojMSi1fsgSD5ClVDYb5mke9yT+8NJHYDuFQs9fj+gfAaI+MLm5NuaNRdNPAl1X/ksFeJU1bYcwp7uCB1p1sLdPhk3VtV2Mgyop72YcBRkbIpkmm+pOp85SWr2JuNaGokj6l7r0Y/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f2aOJovl; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="etqYWTrI"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c8402d08b4so4419108a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:42:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720626144; x=1721230944; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vr1BiQBEp9CDY456xclZlBCD5OqWtOAN5xfFP72uoHk=;
-        b=etqYWTrIVfLDQODIy3T1a3X0m1dxtnn2r3ccGn92e2eIwab5Hite794/6HLJt+4Ieq
-         +e5h2VRDMhBRQbJnAH3hZcj82JalX8xFB63c0rKdKbvJHyHaIlGuxc0F8dwF7OJ4GAB5
-         HAYXnkj6JVES2ogGf4rK/6QjeprpDJcj6wQ/OhN8V/bPlSS46PRuhPZM+FgvlWhx/k+b
-         Xxxy8TbRNl9ITs1NdqiJiDha4NtzcgQLXEa69kcWSBjfyMw1eNUU3PodFSwcnchIaxxO
-         BJwMyLcXgCNrxGtT/Zbq7QDjmcw/Lk72k1KHRbI/M/CgLNbLCm4zQOZn5tL+GlvqOzMJ
-         Nguw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720626144; x=1721230944;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vr1BiQBEp9CDY456xclZlBCD5OqWtOAN5xfFP72uoHk=;
-        b=YZxR05J7CUdXSHvbpckauRzUws/+dhK/PasFQeje7r5QKMKhwxLlo2XmGoZWXjYP0V
-         ON3TMIGBkS/m1NY6v+92/h1CCs4N/8eaIkMp7pQ6sIvz5/+NFZoEjfH1kybdg7C7VlFW
-         uuPMBZYvVUbISUAcRfvWIXIHhRmOHbDsEY/CesjTA0VwGykd9wdnpTz3svC5f6VkrqVi
-         xx2Q1Rdjs3a8jqcEVyqdf7y+vW+aGfQFX1b6fU7MZ4ltTQYW41TXTR+kcUDK7hkFb2C7
-         qQgd7U2mAsp6ybxqgqHws91I0hXTKkX11Rb8dD/ROqOZf+ADyzA+S3nPivj4arrYtB5I
-         3KQg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8xFKBJ9RTHCnntudM5Y2WAZqWR/GuAFe8cTfH0dMHyw/zEaLWojeJyBNeRJ/QLqv+mGBctmG1caSu/rPMmRlLxL9FyuNogM8Ausrh
-X-Gm-Message-State: AOJu0YytLggEi9C55yTnHl5B6r7jvxKxEb2d0PRhOGPwohfj+6BqZZ9j
-	myx3t5fKyUABKwzdznqgA8w4XGnwSMfQaP5ZrgkKb42KY7E2A2u7oD0b6vqIe/dwmvgcGc25HRt
-	QsA==
-X-Google-Smtp-Source: AGHT+IHIj7Frqqn9vAIzHqtf502PiSXlpH0diSrPuQbhr/RJ6vdXrfi41gkE/7i/gmNkhPd0gOtvr19TZbE=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:a412:b0:2c9:6abb:ee40 with SMTP id
- 98e67ed59e1d1-2ca35d524b8mr13373a91.6.1720626144135; Wed, 10 Jul 2024
- 08:42:24 -0700 (PDT)
-Date: Wed, 10 Jul 2024 08:42:22 -0700
-In-Reply-To: <5354a7ae-ca32-42fe-9231-a0d955bc8675@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f2aOJovl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720626147; x=1752162147;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=aFOr/mQFZylxPSulJht9IZixww6VB8Mp4pnEZJILIWY=;
+  b=f2aOJovlIBNAaygpdOmlOjUpVAhq34LEPycTom4IE1hJwYmkHygrbuY5
+   46OqvRdhUvILzkCis4loRrCDMFkHZsBA9QONfAGE9bCsfvU5w8woSZ8Xz
+   M07YVgbva+yg6klADFMBXagQ5VrNf7esmkKpF1Ru1K5iiL0Mut05Rvu7x
+   fzLD0zkQHjp5mBkgmUA4joeXF87uOyhUnmBaMDvKgpF5CaJ0ObjuP86zq
+   Nvde4UNJWBcEcOMdjy6h8vc3iQMeuPQTLmW3AcWRrNcFmyIiJ0IZQWBjl
+   cxI5Y2WH2BNisyyLnGJLBllER4wIikslKNXgzmiWE2+q/KuoAgSQOE1N7
+   g==;
+X-CSE-ConnectionGUID: Gf+lGHDKQuGwug6qcfbYiw==
+X-CSE-MsgGUID: TcNXAjX8TrmWcGeiLaxFgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="40476765"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="40476765"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 08:38:58 -0700
+X-CSE-ConnectionGUID: /Kymr7ecRPOhpbJmzv8+KA==
+X-CSE-MsgGUID: 2ILA41B7TPu4Wb3xK+Bjjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="85754058"
+Received: from eamartin-mobl1.amr.corp.intel.com (HELO [10.125.109.181]) ([10.125.109.181])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 08:38:58 -0700
+Message-ID: <126da0b9-e7c3-42c8-881a-cf7f3d396397@intel.com>
+Date: Wed, 10 Jul 2024 08:38:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1718214999.git.reinette.chatre@intel.com>
- <171961507216.241377.3829798983563243860.b4-ty@google.com> <5354a7ae-ca32-42fe-9231-a0d955bc8675@intel.com>
-Message-ID: <Zo6r3if6rTERxnwl@google.com>
-Subject: Re: [PATCH V9 0/2] KVM: x86: Make bus clock frequency for vAPIC timer configurable
-From: Sean Christopherson <seanjc@google.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: isaku.yamahata@intel.com, pbonzini@redhat.com, erdemaktas@google.com, 
-	vkuznets@redhat.com, vannapurve@google.com, jmattson@google.com, 
-	mlevitsk@redhat.com, xiaoyao.li@intel.com, chao.gao@intel.com, 
-	rick.p.edgecombe@intel.com, yuan.yao@intel.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: idxd: Convert comma to semicolon
+To: Chen Ni <nichen@iscas.ac.cn>, fenghua.yu@intel.com, vkoul@kernel.org,
+ "Zanussi, Tom" <tom.zanussi@linux.intel.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240710030725.1960882-1-nichen@iscas.ac.cn>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240710030725.1960882-1-nichen@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 28, 2024, Reinette Chatre wrote:
-> Hi Sean,
-> 
-> On 6/28/24 3:55 PM, Sean Christopherson wrote:
-> > On Wed, 12 Jun 2024 11:16:10 -0700, Reinette Chatre wrote:
-> > > Changes from v8:
-> > > - v8: https://lore.kernel.org/lkml/cover.1718043121.git.reinette.chatre@intel.com/
-> > > - Many changes to new udelay() utility patch as well as the APIC bus
-> > >    frequency test aimed to make it more robust (additional ASSERTs,
-> > >    consistent types, eliminate duplicate code, etc.) and useful with
-> > >    support for more user configuration. Please refer to individual patches for
-> > >    detailed changes.
-> > > - Series applies cleanly to next branch of kvm-x86 with HEAD
-> > >    e4e9e1067138e5620cf0500c3e5f6ebfb9d322c8.
-> > > 
-> > > [...]
-> > 
-> > Applied to kvm-x86 misc, with all the changes mentioned in my earlier replies.
-> > I'm out next week, and don't want to merge the KVM changes without these tests,
-> > hence the rushed application.
-> > 
-> > Please holler if you disagree with anything (or if I broke something).  I won't
-> > respond until July 8th at the earliest, but worst case scenario we can do fixup
-> > patches after 6.11-rc1.
-> 
-> Thank you very much for taking the time to make the changes and apply the patches.
-> All the changes look good to me and passes my testing.
-> 
-> Now that the x86 udelay() utility no longer use cpu_relax(), should ARM
-> and RISC-V's udelay() be modified to match in this regard? I can prepare
-> (unable to test) changes for you to consider on your return.
 
-I don't think so?  IIUC, arm64's "yield", used by cpu_relax() doesn't trigger the
-"on spin" exists.  Such exist are only triggered by "wfet" and friends.
+
+On 7/9/24 8:07 PM, Chen Ni wrote:
+> Replace a comma between expression statements by a semicolon.
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+
+Odd that it used to compile.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/dma/idxd/perfmon.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
+> index 5e94247e1ea7..e596ea60ed3c 100644
+> --- a/drivers/dma/idxd/perfmon.c
+> +++ b/drivers/dma/idxd/perfmon.c
+> @@ -480,8 +480,8 @@ static void idxd_pmu_init(struct idxd_pmu *idxd_pmu)
+>  	idxd_pmu->pmu.attr_groups	= perfmon_attr_groups;
+>  	idxd_pmu->pmu.task_ctx_nr	= perf_invalid_context;
+>  	idxd_pmu->pmu.event_init	= perfmon_pmu_event_init;
+> -	idxd_pmu->pmu.pmu_enable	= perfmon_pmu_enable,
+> -	idxd_pmu->pmu.pmu_disable	= perfmon_pmu_disable,
+> +	idxd_pmu->pmu.pmu_enable	= perfmon_pmu_enable;
+> +	idxd_pmu->pmu.pmu_disable	= perfmon_pmu_disable;
+>  	idxd_pmu->pmu.add		= perfmon_pmu_event_add;
+>  	idxd_pmu->pmu.del		= perfmon_pmu_event_del;
+>  	idxd_pmu->pmu.start		= perfmon_pmu_event_start;
