@@ -1,248 +1,257 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn19011022.outbound.protection.outlook.com [52.103.32.22])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022084.outbound.protection.outlook.com [52.101.43.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E5619924E;
-	Wed, 10 Jul 2024 18:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB1119924F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720637015; cv=fail; b=W0E8+rasyEumMeZG5T4dKQCIS3Gr7LdugHvtW/ySgjQCJcC2qfA+LJJ9SRyWch5c5HxmFAE3rIAyxbAkOqQEKhQlNhU/0touNKKCD1kuD2vTvGBfuJ2xjaSdlPDgFLsJgZ0GzD+DfL5r0KxTYUzfbKvDG9R8LiDuhZ/OLxRcSac=
+	t=1720637015; cv=fail; b=T4CrZWm8Q8SfsDHlzfwuKP0PgpTA+Xby90gwHDTvxaVqjdv8MjCtpSIY2VM/JLTCkUyuUqgR7EssNmQ6TnZokVKPVXGNO219PgnHpQsdLBxgJOMC7XAxL9elGTl/vb3t8uJV06PbWMh27JP5Am0x21yzDnSS5wNYpeW8vqu9mJc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720637015; c=relaxed/simple;
-	bh=HQFydNqnDpEVEqqyYpysIENwzRq083Ki37ql3puGGEU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Lax40pIK0fqC0FsSzO4/HVt1287vn9LsNUVqWCTNSEw3vaLTYfiwtb3X4jaYoxOoRa2hE+bHwA0mC0sqNUARnUDGFwozapbdYdBanGX+BvaFsW2buU4MEa4nOCQQ+EE3JnljsqIo7oqY6kf+ZAUqi9EQZgUBF+To9a0ArNJir3M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ruyxM49b; arc=fail smtp.client-ip=52.103.32.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	bh=laVfgRPqEmm5p9QZNCnZywozzXqIpejZ6TfkkjhPqmo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Pic8vpwi1IKJY454ddvIKBizjLYeKv0D1AHKzP2esTvEcUe1lT8CzJB6Hidsom5YpeLY+DV8jAI8AO4gcJmvV6ZwKUuAmvJek/6BnWjfP/VTmYar3FPaN2a58RghXb9/+tCP8Op9itiAFSZlNzbJp6/yUlnDLBtuQGBoOk5Rkns=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=G5CEbez7; arc=fail smtp.client-ip=52.101.43.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ruyxM49b"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="G5CEbez7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fTxKjLlX+aImEvcYu45ks+wSdeNmvLI5HHU3zcnPdyyEKMsYXx1RJriPzYjkQuPN0JuIITRUkWBvXIdTfQnqeyZISKYRGg63yQPuUPs5L9+HS/0mAYG0Vy6BbynpigjcBWLo7iALkxLD5f5AOgnrH+AxMXl8dzB/ebQRhjWeIBYsWZfEAohGrT2Nk97qZlNSevsTUXnBLUPZKEc32Dnd4V6FGmfbcplZcn8AYivN2w/sw9T+nEbhJqwrfwZtwMWB4oHWwU02a1Id/bf67Tw3ln8ZJx0WZBz6BjfvWF9O3g0eZJd1N2L1ylSlOTeqggPEdFwLLpVzlWbmi+IngLo4PQ==
+ b=YrgZ6AIrqsf5PYFtNJJ3qAmNh0q6ZXyiv2JGQpmJQ1Whk5HPnlBnOqr7+RHOYV+WMlPCLMR9X6cE4UjPQSOenKtJL5W4QWAsMiy3oeFvCsVKFGlrTWaJD/H/qcJl3DJJp5VQLE2Rg5jl6pMf/vbXjFR+zwv24TH9DVQEcXhBiP28nwHHHI4ugS0hXiI8eBvyvRZkT/3KGjpuBrnxGz7+/RfYmwb6V5KERSyHUvfukixqw37UUC2CbcHvmL68X/UB0m7Rj4CNMSw/oDl0YQiJYl2qua9t9Lcpl+i17APnBnQmkvBGt+Ns5GMFEMbsHawKLLKy1r5NwgjtmD+hrRp7dA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T5nHZceVkH3kpV0UIy7v/XCBmKwfmdeJyMCpuufML9E=;
- b=MWLdg9Xbm1brCdDrabsRfxEeDxBZsvwSE8Lhx0+xrri6+niGwe2wKybkT2EKkyv9KRZED4hx9HBEeSqniYvScGgGcmKqWa6T2Xsb+C4HLSISVi25QX0womvsGrjwOqnYf6KoGcIMhe1URmYM6tkkC4HEP42w0uifDnGtUch6nAaqjI2vMiSetbYlSqUqlzLfqFNyISomrQFILarBEOy880JY1EK3HvSctoBNG5crnp4WpygLiq4YNaWnT6/LS0DMpqIFZpOEOY9gjna+bZeRxqwK4BXTnW5h3RsGNbG3MiwoLFQTitwLQ9X7FcaSoXGJxRrH3Y7p582xvC6fYDTn5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=QeiX5/SeTwQCcDsi1vM+HcY79gVcUSyjeT2SyjKBCNg=;
+ b=oGyUW8/jvt4+ItCnNLkiaXGyf5XXbnHoQzQtjORc3yL23fB8n7Bcm14Ztrj2+wBN8c1agskD6vFiqvlo+W7fCE4Yvf8pD7PZMf+nZzikpweAyk/ido2oH3Bx+n/Hf8707rWrEaWIcmTy4CAQwlNfHhqBFA84TWtfbzqQSayJte/DNMjvf0Y55WYLBHyatlYKyqBpf5kNmRvtgJkiiv0aJhaGqwl/rf6CJSQmYDTxvI2r3d6/K5RfMqz3UVGM3xzS0yH4C000qzqsvMtUtpH3ticMmz1jnRIhpeDNI3kUgbSKyFzv64v9DmaepKg5JTXTpHZZBtadx6GokC4YPViH+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5nHZceVkH3kpV0UIy7v/XCBmKwfmdeJyMCpuufML9E=;
- b=ruyxM49bUBBVe1ohWdMMG7Ojmr7JQMdGCVnG0B1QGZEG9/Yu3ze3W0XYiqsuEw+Bq8d6VXs7wdHvfMQUB12comIa1uHomB5XAKYGEtSaflY5fjwUPQfoHYX1BXB2OjK0STNsfXm8uOtslWLzmvjYfqz9GZ9G4R+QyUtxG3ppVDfqi/yudqXzlAdk0YJenPdo9Q9kp1+wMm9cipA5uyfkYQlNXDt2M7xmMcPw0NAdzafDxgJBu5mVXcTmOm468T4S4zF6eyT70IXbnX+exAfYpheAyKqWGEuhXGEnf+/4U6W6xe4CIsMqVEp5ML4Wqd/YX381VVyGzaL/Ps96bsyniQ==
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
- by AS8PR03MB9935.eurprd03.prod.outlook.com (2603:10a6:20b:628::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Wed, 10 Jul
- 2024 18:43:31 +0000
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7]) by AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7%6]) with mapi id 15.20.7741.033; Wed, 10 Jul 2024
- 18:43:31 +0000
-From: Juntong Deng <juntong.deng@outlook.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	andrii@kernel.org,
-	avagin@gmail.com,
-	snorcht@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 10/16] bpf/crib: Add struct sk_buff related CRIB kfuncs
-Date: Wed, 10 Jul 2024 19:40:54 +0100
-Message-ID:
- <AM6PR03MB58481BA6D59599AD7438B4EA99A42@AM6PR03MB5848.eurprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240710184100.297261-1-juntong.deng@outlook.com>
-References: <20240710184100.297261-1-juntong.deng@outlook.com>
+ bh=QeiX5/SeTwQCcDsi1vM+HcY79gVcUSyjeT2SyjKBCNg=;
+ b=G5CEbez7/l98PWoi8nUW3czLdYiXE18bxuKjEc80A9Q52ic0+IH1cuyeliFLUuMlFAtGz/F/FdhDtekv2EG7ebwQpGWWJQscFdCnL0aogMHAdGJ02bSRmXlfq1xWFsmm82rePXSMcJRleWcxphfXdw+Pk6xUZaGUjN7hPXBOdfw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MN2PR01MB5471.prod.exchangelabs.com (2603:10b6:208:11b::13) by
+ PH0PR01MB7351.prod.exchangelabs.com (2603:10b6:510:10d::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7762.20; Wed, 10 Jul 2024 18:43:28 +0000
+Received: from MN2PR01MB5471.prod.exchangelabs.com
+ ([fe80::dba1:7502:f7ff:3f80]) by MN2PR01MB5471.prod.exchangelabs.com
+ ([fe80::dba1:7502:f7ff:3f80%7]) with mapi id 15.20.7762.016; Wed, 10 Jul 2024
+ 18:43:26 +0000
+Message-ID: <6167c4ce-fef0-4af4-a6a1-9fe7b2eb023d@os.amperecomputing.com>
+Date: Wed, 10 Jul 2024 11:43:18 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v5 PATCH] arm64: mm: force write fault for atomic RMW
+ instructions
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, will@kernel.org,
+ anshuman.khandual@arm.com, david@redhat.com, scott@os.amperecomputing.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <Zn7q3oL1AE8jdM-g@arm.com>
+ <773c8be7-eb73-010c-acea-1c2fefd65b84@gentwo.org> <Zn7xs6OYZz4dyA8a@arm.com>
+ <200c5d06-c551-4847-adaf-287750e6aac4@os.amperecomputing.com>
+ <ZoMG6n4hQp5XMhUN@arm.com>
+ <1689cd26-514a-4d72-a1bd-b67357aab3e0@os.amperecomputing.com>
+ <ZoZzhf9gGQxADLFM@arm.com>
+ <35f70ba6-5305-4268-b7ba-81545cacd83f@os.amperecomputing.com>
+ <Zo2C4eXr5_9kifyO@arm.com>
+ <cb0bd817-6948-4944-ab09-4ec2aba41cfa@os.amperecomputing.com>
+ <Zo5S1JE8B912SHya@arm.com>
+Content-Language: en-US
+From: Yang Shi <yang@os.amperecomputing.com>
+In-Reply-To: <Zo5S1JE8B912SHya@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [5RMbQ5sfUP8c0lp1GsFryvoPtvWlVvsg]
-X-ClientProxiedBy: SI2PR02CA0027.apcprd02.prod.outlook.com
- (2603:1096:4:195::14) To AM6PR03MB5848.eurprd03.prod.outlook.com
- (2603:10a6:20b:e4::10)
-X-Microsoft-Original-Message-ID:
- <20240710184100.297261-11-juntong.deng@outlook.com>
+X-ClientProxiedBy: SJ0PR05CA0136.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::21) To MN2PR01MB5471.prod.exchangelabs.com
+ (2603:10b6:208:11b::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|AS8PR03MB9935:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2e4a7e0-7088-4ea3-80d4-08dca11031ea
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|19110799003|461199028|3412199025|440099028;
+X-MS-TrafficTypeDiagnostic: MN2PR01MB5471:EE_|PH0PR01MB7351:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5cc15161-6276-4b56-5d6d-08dca1102d89
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	q1XQ8E+V/T9uX7cBeSdsClKnh4on20C9y0Qzcxinp3kasoEhJolgJL+5PVSdv15/hHE/850KFcw34TIeupPa7yjM391ltVxTJfKnHQL7AejLxN/QggMz9Zf1pzO40TPC33HjW6iPK3vvc1PESoiW6gc9iXF853JRmnLcYtAz/B7ltb2B39xoagMxRRPUeAiceB39pHoxDpu6s4aCk9sRTSfSobOJ1rK8NqObYH9j+OeZJLA6M0i4w6Or/yh7li0BSNliaZS+BBDJsBuRj2ujihIhNPZd53YDNhC4zWZXM7b7S20V4oQ6EDwlKbO4ehzY6QkfWLpERbY4FKOJATFRfrGaXdCrT6R7BK8ycub8RMxIhkn9DUFrHflUfp0SOZkj7hjkn0+idyjnWzKiscS1JDA0MdX/hRBUYb4zGkZfcMJwnxwQIFruULi9Vrifg0Va7AvBIbG+aBXoU8LZxQR3fLgzcFT6a6dUUOZEaBDgmDJUrfk+vJGw+pNujln9mdIwJ/znKzkB5iYEYQOnYwSzEK5pOR667aqVs9Zif7txNnKGID1jBUJkBrtq9hOJYkrRGaCk/sV0bIZr2zF6dnws6oNulrKcsJ6581dO1aJ8gX+5yiMr5oA/XhQw8TxUlBaS14Fs5ochy7loVQ14q982bg==
+	=?utf-8?B?QnNZYnNvOXh3eEthTXJOczdRcHNRT0tmTkpRT0VqcVQxTzlrVWEwdms0b1JC?=
+ =?utf-8?B?MHEza1I0K25kVHZBY2RDd1NJMlNyNmU0K21EYUdUY0FCeEMxZFdXOHFXdGpp?=
+ =?utf-8?B?N2JvM216RVMxRkxxejRzYnA0OVRsajdiTUIwQzZsVWF0Z0I4RkRkMFM1ZDBO?=
+ =?utf-8?B?czAyQnJ2eHkvTnVobDlYdEZ5NWdneWpwTEdTQWZzN3lldUZrTzhhYXNtb3VM?=
+ =?utf-8?B?SE1HUjhQS3BZSXRpTjRJZS9VRUp5VVhBeTJGaTV0eU8wbWNyS1FxL3IxM3pN?=
+ =?utf-8?B?b2pLZlhaS3o2am9tbkNrbXdVS256MlYvZEh6alRYZW41YkhqMjloY2gzajNv?=
+ =?utf-8?B?RHVlanFUSmtFMkE4L0tpMTB3czRNVWVCRDFUZWlkaGExMVByMFNmZEo5NVFQ?=
+ =?utf-8?B?cFBsNjFhclVtM3kwb2pTSGNTWlYyL1ZOT2hoeFlwZkszTW9XV2xLdWNuOURE?=
+ =?utf-8?B?R1hvMXBlWUQwU24xTHNQTlhoQTlZWjVXWmc3clZBSTBCdHZXR1dJQmh0aXYw?=
+ =?utf-8?B?eTVmdFNrY2E5UzI5dS9pbC9IcEhSSUFFQ2VMT3VMdzZaQmUvc3RWVys4UGRX?=
+ =?utf-8?B?LzQzTFZHcXZTTnZPcE12MldXM1lpd2VGNStJMkE1UDAzS2lBa0k5SmFzMHdW?=
+ =?utf-8?B?b2VFZFE1bzBiZU1lQ0xjSk93aTVCRWRpSzV3TUdGNkNUNXErbFRFYU52SUk1?=
+ =?utf-8?B?ZmNVc2xMalF0SWVibzI1Y3Vpb3dmN0tjODJUc25MbjZrdzdNdk9VWSswWUxO?=
+ =?utf-8?B?aEY3RVE5YnNBZC9tTWk5T29KaXJ6a0hiSWlKUitpR1pLY29uRlBvOUFUOUdT?=
+ =?utf-8?B?K3pDbEdBVDZ0b2lhYzVndmpTTjdjcnJ5RnFYU2cvNjZ2cDFjWm1wUDBTZjc1?=
+ =?utf-8?B?SXdZUTB5V3IzamE4OFpjRGtLUS9FUXhZTFhQQ1pveVB6c0ZNYWFQNDBaVXRF?=
+ =?utf-8?B?aFpqWTFPaFQ4amk0aEtXakJDSVQ2dVNUSEFCdWx4U0F4V1ZjZ2QzVzAwRVEv?=
+ =?utf-8?B?S3A4aDRBbm5CRm4zY3RYYTYwMlByTENHZFRkVkJGNHBnMWNyUGp1UW1aUmRB?=
+ =?utf-8?B?Wi9QRXY5M2ZIRDJHZDc0RW5VZGswa01NMkNpUytDaGpQcWlHbFJSRkovbFZY?=
+ =?utf-8?B?bW93SnlhZ0ZyTXNXazRzN0xKN3N5NHp1Ym1yQkxMcFN3c3dCT1RiWVRhUFVz?=
+ =?utf-8?B?MnB2RHkrd1J4NC82a2MrWUgya2JiRWthdm0xakVERzlwWTd1TVl5b0NrYTRv?=
+ =?utf-8?B?eXZTSXk5MzNkQmxxUzROWHpwRGR3Zi9UZFdkY2Q1SUQ5cngwanBpRHY0dWZu?=
+ =?utf-8?B?SmFydkpwUXZKSHVtRDE4d09uaXFZV28rRml2akR3MkhWSitVcllzUllYVEE5?=
+ =?utf-8?B?TG5QSkFEU0grWmdjb0pVRUhqY3BkRlozUktyT1d2d0JHb3BQNVdpbmlYYjlS?=
+ =?utf-8?B?b21ZcFFxSTM2bkdTRWhyKytoaEYxSVdRdXJIQ1RLdFI5NmRaUE9hSHUzampV?=
+ =?utf-8?B?V0xHVVBYZE83eHpaQklUbTY3aGJibllURmhWNVZnc1UzSldkMmg3SW05bkRQ?=
+ =?utf-8?B?TVFJSkpqMFZDd3BHRWlUTHhYbFJpSjY5TzZ5UGJyS2p4blUra2dlZzloSFRk?=
+ =?utf-8?B?Ymp3M0FiYUVKY0RZbGdyMnNnWXBhREhTdnRwU3VTaFdUV0pzUDZqWlVPMWQ1?=
+ =?utf-8?B?Ny9mMGNQdUJIbldsN3J3ZlpHeXZ2VW9sLzkvaFJmQkR1d0ltbnVUbE16amYr?=
+ =?utf-8?B?ZnlYcERnZDNwb0E3NzI1QjBWdHNmN1B4UFMwUnl0R1VGbngrTzRLU0EvUDhO?=
+ =?utf-8?B?T2toWlRUQTZua0x0U3o5dz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR01MB5471.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7PM5Dt4Cy+NIGng6n9SZwvFj6I5spQR0tDh9Vfjc3ki5rmPrsECV1/8qT9Ai?=
- =?us-ascii?Q?VKVGVLVDv188pVpdjF+QHYjBGdAQgR5EIXCOOOjrWXQWJ0E5r0hjlDm58x40?=
- =?us-ascii?Q?Nv8KnkR7GHBnp1RCrAZMcQmkRNWBvWPDA3NwNGAEETvyhPFJg1EtasLgeNTa?=
- =?us-ascii?Q?eKchs5uhvUxFG+Pag0xZBFtfbfuGG4lv/HyKmCbNLUy/vtQHMkLWvpJmYdg2?=
- =?us-ascii?Q?jxwcrTuKWHgJiSuvd/u90rANqgfa9AXzZ+2mNuazi+Ab6qPo0o7ertMk8329?=
- =?us-ascii?Q?AC0UUpapDK9pG6LM7zv4pF0eLK7bcBvkz/TOXd8Qj807p12oj46Sg0uLPoG3?=
- =?us-ascii?Q?0kLqtTZSIp0q/pLlVLg7y2W9tztPnLVFPMK7MD6OxlVoDDWMpbfoXktMCtfa?=
- =?us-ascii?Q?dUJpxCyPST0rIDHmLMDCVPNQZD8tpHHReV7IUy1aNtWNlOIEzEjvyTXkXzzs?=
- =?us-ascii?Q?LOyx3XnH2sBhew4YJ8mFm4jNTFqNIIIW82yU/+naz9Izt5pS4fYcfNdbUagP?=
- =?us-ascii?Q?hOhoV4Tre0OiTbhittwBEVDJy6DRVIfldqmsbckcjbSziMtZN22laF0m4Ske?=
- =?us-ascii?Q?pwRkUVsykq7YfpC4lh1FIXDCiVQx81C/sdN3G3wG1iC8oOeHKnyOG78N68xX?=
- =?us-ascii?Q?9EVC0/DMlixXbYy5BTStuE2ckBEOgwgqJu9KK9MZlHeQCH6XZTuOohZrV9hI?=
- =?us-ascii?Q?4N49JVRpRXu016Ub0d4GFqfNjsCKppMlhgSQ/zlU++fJXFrAioOF4zqZhk4k?=
- =?us-ascii?Q?e4dShWuV/VFpZSi4SmjxJaRw1G/OFweqIe73aiffY7dZvjytdGBYbyK8JUua?=
- =?us-ascii?Q?URhsmDLgIIwGKXLby9/b4sNN+BWMFf9UqHMY4PlAeoD+izk+NH3hF/LNMlsw?=
- =?us-ascii?Q?ZCEy16kSr2KSZqfnQFWvuuTnvaL+IqLkx+PfhsvFQ1TK5dXnjaK8ukfAIUOr?=
- =?us-ascii?Q?ALSl6zKChgxW80HNhtiw/wK1t6gPvnFx+Q1M8GvelPKt0u0ykHD6XvaFlxos?=
- =?us-ascii?Q?Vg968YMYGwx7/onB8sT5pUMMzUEgrkHVtqh65YI6a9BV+zZ9vkzL6kKLZ+Ks?=
- =?us-ascii?Q?GUHE2qy8JdyqMB0NF3/tpo/fgpZi666HuU5nIGJdLW/E8drNdJtpG+aEFWdt?=
- =?us-ascii?Q?0hAz/fomkCh8nZNFHPTU9sXXvzgkyUZHSPbiFIcUMap/FayQPsB8/RdU4sTm?=
- =?us-ascii?Q?WrM6NDmYUadTOZ538+mk8/x2Ti79vZTW08rZbXEnmotSXiv44w3jvlYIRVc?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2e4a7e0-7088-4ea3-80d4-08dca11031ea
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
+	=?utf-8?B?MFJod0ZtekRta2dERXdWRjRqSnhwbmsyZ3YvNTRXaWxFRXRtazZ3THZwL3Nr?=
+ =?utf-8?B?NFd6VXJ6YkEyUk9LSHlUdkxGbzcvSXJkeHdmQUlIeU5hZlRUQ0ZUQTc3YXNF?=
+ =?utf-8?B?S0RXR1ltYVVNY2NqTllmbDJKL3M1dTBUSko0NElFNzJVVjBCM1BkUzNZME1V?=
+ =?utf-8?B?SEZKZkEyemZkSit2bk9CMFhjN2hMNUxySTgzN2NaRmRUcXc5bCtEZ09yejBj?=
+ =?utf-8?B?cnYvNS90VmhlRUgwUkVrWG9tQi9BU3NoaTN5YzNFS1U2Q0JCb29sWG0wWGZa?=
+ =?utf-8?B?Q0d6VkJUQnpjUVZtcXhldkpSSWZORVh2YUYySjhnVnB3N3NOR1d5QWJLMDUy?=
+ =?utf-8?B?RjN5MWlDTDhPSS9UdUtRZHFud0d4R0NjYUlhY2dQbUtoRDhHdkFCdXBxRjZE?=
+ =?utf-8?B?cFJWbWZGVWJpY2loYUFOMHFYWUptMkNYUTkwS1BabHplL0JldlNLUko0Rmk5?=
+ =?utf-8?B?czNyamdkY2tqR2NlRG9jekxNTHliWUlJTjE2bWhNQ2lZdnpFdXgwQUJIOFow?=
+ =?utf-8?B?UWZ6RDZjVlhPUWp5S1R6TlpmOWdxYzJCdmJNeUNxL0FRNnkvaHFLVTRmWFM1?=
+ =?utf-8?B?Yy8zemZHQ3lvamtJb0c4cEFuc1plUzdYQSt3ZlpNNlZvRzkvQVpMbGcrUEtC?=
+ =?utf-8?B?NGNNYzFwb1Y3Q1BhK0ltUUtoSSs5VVpWMG5sWEFoY2VCdERKWGhQU0NvK2FY?=
+ =?utf-8?B?WHczV0d1QmdzcXJ3WjJzTU83dTdtWHVOV3F3Z2J4NkMrYVVjVDdSd1VCTjBH?=
+ =?utf-8?B?aTR5eFdKRnRoRVVNcis2Rkhackl0bTNVMVpKU2xJeU9tbmMybW1zY2E5ZHhI?=
+ =?utf-8?B?WlNyN0pHSC9JN04zRm9qTDFvZVIvaU1YVFhrWjk4Mk4vajJxZklGOVRJMitI?=
+ =?utf-8?B?eXdkSnNxelNPWXFqbDk4MFc1dUFHZjlza3creDlPUW9OekJmMk85V1Zna3Vz?=
+ =?utf-8?B?NjgvSGw5d3NISnQzUHZYbHU1MXFFS3kxTERFTFlwUlBteVBGZ1NrR0tuWllM?=
+ =?utf-8?B?ZXhqOEhlQzJNdUd6ajFCYWRrSy9pMEp3eFRXbEZiV2hWT3krVk9IUmp2ME5k?=
+ =?utf-8?B?aWlrcDB5a2ZQRG5wL2E5L2FDcG5JZFVob1I5NVhFc1JOaDBYRk01QXQxUEla?=
+ =?utf-8?B?dnMwWGVwblFTdS9kRHRtNUJ5UXZlSmowekorVFBUTHFXemc4VXdQOG56eUE2?=
+ =?utf-8?B?V3QyYWhHbVVweG5DVWN4dlkvMXZiOHpvZmcwYWNiSzg4VFFDVURyaHRqakZs?=
+ =?utf-8?B?ZEtWMVJacXdiVnJXZkxOWVRURXZpTGFLY1dKTk1jNmZzMld3U3NnMkZzWTR3?=
+ =?utf-8?B?aTE0RHpCYjJGb3g4SEFnRjI5d2dBZ3JOOWhvRjRsV0htVThSSk04c2laSkw0?=
+ =?utf-8?B?ZkE0dUxjUEY3MS9JWTY5Uk5MVWtieSthS0xSblBHdTZwRW9ra3FGa3Brbmlt?=
+ =?utf-8?B?TDRLbWxYbXMvbWg5YjNmYlppOFZBdTVBdTU5WHNLQ0ZXWjV0azVrYllHTlZG?=
+ =?utf-8?B?L2MxRVJsalFQYm9tOUN6VjNRbXFpalJ5VGM4ZGVsaS9WMGpoQXNXMktoM0VE?=
+ =?utf-8?B?aVNWNGRiamZnNHNseGRXT0lRbGpOaTZ4aEs1NTRiYlk3VXNsYlhlZ2g5ZmdN?=
+ =?utf-8?B?WFYrQkkzRlV5ZGQ1RDlKYk5qTTZYSGUxWW5jeHVPRUdjUkNOcmJlREg5SVND?=
+ =?utf-8?B?S3NHWEJmekMyNnprekpxNmtnbDdnWUhMcm90QnJwOVZLamxvck13OGpFWlNx?=
+ =?utf-8?B?dnZ4bG9DcHdpZTdUcVBuWVl3OUtUNUFYVTZza2wrWndGUklEUVY1eFg2MVpD?=
+ =?utf-8?B?QklLY28ya1VTQXpkZDRmNjgrRWwxS0xseGFCT3JPZXBQUmJ4ckljZGp5ZXI5?=
+ =?utf-8?B?d2VVaWlhTERHUFFPMytCaFJuQW1MYVFBMXY3YjRScWQwSXdFSHJ4cHRSTkY5?=
+ =?utf-8?B?N2E4VWtWMFBDMDFiNmJXMFhmTlN2ajVLNEFPeTNnOFNJai9zRFBQeXlsbzFk?=
+ =?utf-8?B?R1psK3g3RWNoTjBFRC9PR1FVRzJaUHZvbHc5aTFXU1VMN2FGSzIxTXpsckxi?=
+ =?utf-8?B?dEVwRWNFNndkUUEzZU9pMmM2eEpWalNjaTl6Ty9EQmV1SFJVOUpFNVNIOENs?=
+ =?utf-8?B?SWk4UlpBaFdNYlFGMlZNcFl2dlAvR0NPSkovOWFyQlJ6QXVkd3owMUdMUFdY?=
+ =?utf-8?Q?IvVyK8aJC8N3ZrNiKW0KEmg=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cc15161-6276-4b56-5d6d-08dca1102d89
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR01MB5471.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 18:43:31.1665
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 18:43:26.8228
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB9935
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pP0iwaG87vUgpkB1mu4zm0hnCGFPskr8MTPzDXUneAK+K2VXs7DuCRdxD/VIN8Gffend9Hj5v4qNCT8LEHRgXVfI2PifEYvbw8KPlNqyI0Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB7351
 
-This patch adds struct sk_buff related CRIB kfuncs.
 
-bpf_skb_peek_tail() is used to get a pointer to the skb at the tail of
-the socket queue.
 
-bpf_cal_skb_size() is used to calculate the overall size of the skb data
-(starting from the head).
+On 7/10/24 2:22 AM, Catalin Marinas wrote:
+> On Tue, Jul 09, 2024 at 03:29:58PM -0700, Yang Shi wrote:
+>> On 7/9/24 11:35 AM, Catalin Marinas wrote:
+>>> On Tue, Jul 09, 2024 at 10:56:55AM -0700, Yang Shi wrote:
+>>>> On 7/4/24 3:03 AM, Catalin Marinas wrote:
+>>>> I tested exec-only on QEMU tcg, but I don't have a hardware supported EPAN.
+>>>> I don't think performance benchmark on QEMU tcg makes sense since it is
+>>>> quite slow, such small overhead is unlikely measurable on it.
+>>> Yeah, benchmarking under qemu is pointless. I think you can remove some
+>>> of the ARM64_HAS_EPAN checks (or replaced them with ARM64_HAS_PAN) just
+>>> for testing. For security reason, we removed this behaviour in commit
+>>> 24cecc377463 ("arm64: Revert support for execute-only user mappings")
+>>> but it's good enough for testing. This should give you PROT_EXEC-only
+>>> mappings on your hardware.
+>> Thanks for the suggestion. IIUC, I still can emulate exec-only even though
+>> hardware doesn't support EPAN? So it means reading exec-only area in kernel
+>> still can trigger fault, right?
+> Yes, it's been supported since ARMv8.0. We limited it to EPAN only since
+> setting a PROT_EXEC mapping still allowed the kernel to access the
+> memory even if PSTATE.PAN was set.
+>
+>> And 24cecc377463 ("arm64: Revert support for execute-only user mappings")
+>> can't be reverted cleanly by git revert, so I did it manually as below.
+> Yeah, I wasn't expecting that to work.
+>
+>> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+>> index 6a8b71917e3b..0bdedd415e56 100644
+>> --- a/arch/arm64/mm/fault.c
+>> +++ b/arch/arm64/mm/fault.c
+>> @@ -573,8 +573,8 @@ static int __kprobes do_page_fault(unsigned long far,
+>> unsigned long esr,
+>>                  /* Write implies read */
+>>                  vm_flags |= VM_WRITE;
+>>                  /* If EPAN is absent then exec implies read */
+>> -               if (!alternative_has_cap_unlikely(ARM64_HAS_EPAN))
+>> -                       vm_flags |= VM_EXEC;
+>> +               //if (!alternative_has_cap_unlikely(ARM64_HAS_EPAN))
+>> +               //      vm_flags |= VM_EXEC;
+>>          }
+>>
+>>          if (is_ttbr0_addr(addr) && is_el1_permission_fault(addr, esr, regs))
+>> {
+>> diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
+>> index 642bdf908b22..d30265d424e4 100644
+>> --- a/arch/arm64/mm/mmap.c
+>> +++ b/arch/arm64/mm/mmap.c
+>> @@ -19,7 +19,7 @@ static pgprot_t protection_map[16] __ro_after_init = {
+>>          [VM_WRITE]                                      = PAGE_READONLY,
+>>          [VM_WRITE | VM_READ]                            = PAGE_READONLY,
+>>          /* PAGE_EXECONLY if Enhanced PAN */
+>> -       [VM_EXEC]                                       = PAGE_READONLY_EXEC,
+>> +       [VM_EXEC]                                       = PAGE_EXECONLY,
+>>          [VM_EXEC | VM_READ]                             = PAGE_READONLY_EXEC,
+>>          [VM_EXEC | VM_WRITE]                            = PAGE_READONLY_EXEC,
+>>          [VM_EXEC | VM_WRITE | VM_READ]                  = PAGE_READONLY_EXEC,
+> In theory you'd need to change the VM_SHARED | VM_EXEC entry as well.
+> Otherwise it looks fine.
 
-bpf_skb_acquire()/bpf_skb_release() are used to acquire/release
-references on struct sk_buff.
+Thanks. I just ran the same benchmark. Ran the modified 
+page_fault1_thread (trigger read fault) in 100 iterations with 160 
+threads on 160 cores. This should be the worst contention case and 
+collected the max data (worst latency). It shows the patch may incur 
+~30% overhead for exec-only case. The overhead should just come from the 
+permission fault.
 
-Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
----
- kernel/bpf/crib/bpf_checkpoint.c | 14 +++++++++
- kernel/bpf/crib/bpf_crib.c       | 50 ++++++++++++++++++++++++++++++++
- 2 files changed, 64 insertions(+)
+     N           Min           Max        Median           Avg Stddev
+x 100        163840        219083        184471        183262 12593.229
++ 100        211198        285947        233608     238819.98 15253.967
+Difference at 95.0% confidence
+     55558 +/- 3877
+     30.3161% +/- 2.11555%
 
-diff --git a/kernel/bpf/crib/bpf_checkpoint.c b/kernel/bpf/crib/bpf_checkpoint.c
-index 4d48f08324ef..d8cd4a1b73dc 100644
---- a/kernel/bpf/crib/bpf_checkpoint.c
-+++ b/kernel/bpf/crib/bpf_checkpoint.c
-@@ -10,6 +10,7 @@
- #include <linux/fdtable.h>
- #include <net/inet_common.h>
- #include <net/ipv6.h>
-+#include <linux/skbuff.h>
- 
- extern void bpf_file_release(struct file *file);
- 
-@@ -148,4 +149,17 @@ __bpf_kfunc int bpf_inet6_dst_addr_from_socket(struct socket *sock, struct socka
- 	return inet6_getname(sock, (struct sockaddr *)addr, 1);
- }
- 
-+/**
-+ * bpf_cal_skb_size() - Calculate the overall size of the data of specified skb
-+ * (starting from the head)
-+ *
-+ * @skb: specified skb
-+ *
-+ * @returns the overall size of the data
-+ */
-+__bpf_kfunc int bpf_cal_skb_size(struct sk_buff *skb)
-+{
-+	return skb_end_offset(skb) + skb->data_len;
-+}
-+
- __bpf_kfunc_end_defs();
-diff --git a/kernel/bpf/crib/bpf_crib.c b/kernel/bpf/crib/bpf_crib.c
-index e33fa37f8f72..21889efa620c 100644
---- a/kernel/bpf/crib/bpf_crib.c
-+++ b/kernel/bpf/crib/bpf_crib.c
-@@ -13,6 +13,8 @@
- #include <linux/net.h>
- #include <linux/udp.h>
- #include <linux/tcp.h>
-+#include <linux/skbuff.h>
-+#include <linux/spinlock.h>
- 
- __bpf_kfunc_start_defs();
- 
-@@ -209,6 +211,49 @@ __bpf_kfunc struct sk_buff_head *bpf_reader_queue_from_udp_sock(struct udp_sock
- 	return &up->reader_queue;
- }
- 
-+/**
-+ * bpf_skb_acquire() - Acquire a reference to struct sk_buff
-+ *
-+ * @skb: struct sk_buff that needs to acquire a reference
-+ *
-+ * @returns struct sk_buff that has acquired the reference
-+ */
-+__bpf_kfunc struct sk_buff *bpf_skb_acquire(struct sk_buff *skb)
-+{
-+	return skb_get(skb);
-+}
-+
-+/**
-+ * bpf_skb_release() - Release the reference acquired on struct sk_buff
-+ *
-+ * @skb: struct sk_buff that has acquired the reference
-+ */
-+__bpf_kfunc void bpf_skb_release(struct sk_buff *skb)
-+{
-+	consume_skb(skb);
-+}
-+
-+/**
-+ * bpf_skb_peek_tail() - peek at the tail of socket queue (sk_buff_head)
-+ *
-+ * Note that this function acquires a reference to struct sk_buff.
-+ *
-+ * @head: socket queue
-+ *
-+ * @returns pointer to the tail skb (sk_buff)
-+ */
-+__bpf_kfunc struct sk_buff *bpf_skb_peek_tail(struct sk_buff_head *head)
-+{
-+	struct sk_buff *skb;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&head->lock, flags);
-+	skb = skb_peek_tail(head);
-+	spin_unlock_irqrestore(&head->lock, flags);
-+
-+	return bpf_skb_acquire(skb);
-+}
-+
- __bpf_kfunc_end_defs();
- 
- BTF_KFUNCS_START(bpf_crib_kfuncs)
-@@ -239,6 +284,11 @@ BTF_ID_FLAGS(func, bpf_inet_dst_addr_from_socket, KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_inet6_src_addr_from_socket, KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_inet6_dst_addr_from_socket, KF_TRUSTED_ARGS)
- 
-+BTF_ID_FLAGS(func, bpf_skb_acquire, KF_ACQUIRE | KF_TRUSTED_ARGS)
-+BTF_ID_FLAGS(func, bpf_skb_release, KF_RELEASE)
-+BTF_ID_FLAGS(func, bpf_cal_skb_size, KF_TRUSTED_ARGS)
-+BTF_ID_FLAGS(func, bpf_skb_peek_tail, KF_ACQUIRE | KF_TRUSTED_ARGS | KF_RET_NULL)
-+
- BTF_KFUNCS_END(bpf_crib_kfuncs)
- 
- static int bpf_prog_run_crib(struct bpf_prog *prog,
--- 
-2.39.2
+This is a very extreme benchmark, I don't think any real life workload 
+will spend that much time (sys vs user) in page fault, particularly read 
+fault.
+
+With my atomic fault benchmark (populate 1G memory with atomic 
+instruction then manipulate the value stored in the memory in 100 
+iterations so the user time is much longer than sys time), I saw around 
+13% overhead on sys time due to the permission fault, but no noticeable 
+change for user and real time.
+
+So the permission fault does incur noticeable overhead for read fault on 
+exec-only, but it may be not that bad for real life workloads.
+
+>
 
