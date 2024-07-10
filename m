@@ -1,193 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045EF194C6F;
-	Wed, 10 Jul 2024 17:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697EB192483;
+	Wed, 10 Jul 2024 17:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720632064; cv=none; b=OFhPJaZ59ibZAibf8z1ZVpbj1qzMnj5Qc+0eZfiUnUjmwSPJKhXHY52+IROVlx4/PYiUb3I0Hj+1yCvJikl+4gUu+qxeZ22tsHB0d8pV7Y1DB+g37oBm3+okZJpcP7IplV3aZwt9IK/AZDUOXHlfhLi8HNUNdo0rMrl44yHo0QI=
+	t=1720632128; cv=none; b=HJNR9Hq//Gaq4z2pR3C6/gd87u13bye9oUuzNcmKOpKauv7Ugr+5e7Be73AzJCt+bI1CkOz0beTC5ZdmHM/5QCmryEL2+UNKSmvPb0CEexWJimF54gzeHi9IP7+YOkBPJMe3Vk4cP8HNXHu6MVLewly1FSV0zk37D0ccU6g1oiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720632064; c=relaxed/simple;
-	bh=FF0aSktouEQaGWd9Hm0QcgvEejLKXDoWmf2IlT0telM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dKvYb/uN603+bDe8aYDxrGn0S4zqpN6hT8r2mFaYue3wgVaFVhdrZE4kavKBEPwY2qVai5h9Fs+0Xn7ywXFf+1taz6jDkt0L6H1Y7es5VibXFWZBVtSVbcFJzrYxd6Veis2Iecw4et3P+wt1W3KGtDzrFLWXh8hulOJlV320Jmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOU0ty+q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720632128; c=relaxed/simple;
+	bh=GKBilYZzZSvzFe9eBoJB8C4sbemHoQd1ohpfDLjVs4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cUsDgp09x66AQgNXWUEhg2mpbjL+v3tgMbvNrKyU7k6cxhLbSN9o2V2Sd82KTvsd49RNF2o9AN7htY/HhlV0jH3ME6Wqzw4mBJnh1iUHEKGWh2OeM7DQ79ytsd+8eKAq90Y+9SroDkRnIFQZJ8pfHK+PIWNpeoITtV2FsDUJWio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UNR7ijrZ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOU0ty+q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9034EC32781;
-	Wed, 10 Jul 2024 17:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720632063;
-	bh=FF0aSktouEQaGWd9Hm0QcgvEejLKXDoWmf2IlT0telM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hOU0ty+q8xrVwNpiFshOm/bFyN+vdegtm/F5NX43mkp8WEcX9fQ71ISqToQTtF0e6
-	 0j0Y+uRgyOV7jDEBUCGpYbyn/nTLTh2j7uVEKTre8k4g5UevahiEpgcKo8MdAVM1er
-	 aMRkDdJovuhi95ObaONk7IXJvyXvYNej0Jagkc90tUIxew+OOhhgPX5qTpw5cJ6kn4
-	 ioeptSRxPhsX+7Js4/4Dcy3wkC/mpdF1ZxWk0EWbbIJcSRWP2z+zbl2At9Tg2WLS8x
-	 Pv3dgAxCCAI+P+D0naIbSWOr3C5I6Ls+3ffbDaIdUnZtgae5xsJqzuju+pR4QeF/DJ
-	 fOgFWDEyauo/A==
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44930ea05b8so13415021cf.1;
-        Wed, 10 Jul 2024 10:21:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXEGWtvwlctR/pa1S1Ny731QbDx4QLzMs0ke+my67VpLwPBuhnm3yTXgj01LCrPKO5sjkshmUJM59bJB8+uVcmgKiwgAGxwxut1lo+RnJ6b2o/jMBUshuESfy8jiweNaA7/AOs0cdl/WQHF4kidQttjHxovt3s5lhYrTsyK1g2YL1S/XH62E4pl
-X-Gm-Message-State: AOJu0YyBI3SuZ6Ds2qFA5bbhLVIyyCyHXV3SnxnMxZwIEwsUyzeE/W6+
-	j7/g+N303eNXY0sxRSZIY4bTsaLo1urFsawIRQkrPVJa+v+x/NvqpSvjg2pSQeEaNIS5vzm2Ofl
-	nMa5F9cbdQGCK8jmWtQ7y+sVr1fU=
-X-Google-Smtp-Source: AGHT+IE93hixvKRPtGdm2fytIjue/h7k9Qm8hBlA2dg0b0ijKs92ZN9gaaVKBlhiHqiRp+nik0lHjYL9wLIXDLbVNkc=
-X-Received: by 2002:ac8:5ace:0:b0:447:efb8:97f4 with SMTP id
- d75a77b69052e-447fa825df1mr69787041cf.2.1720632062902; Wed, 10 Jul 2024
- 10:21:02 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UNR7ijrZ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C165940E019C;
+	Wed, 10 Jul 2024 17:22:03 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 7OnBJBiEPE2j; Wed, 10 Jul 2024 17:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720632120; bh=A47f9h7AWiBXL3tI1gj46//myn+haFpb6GR9nxNA+H4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UNR7ijrZGmPUBwT5PPtNVjeDFrDBY3dtwNkHSGB5Eq3igELvuNSYjZ3fqCAOCUOXp
+	 SEwZvHwD8zudUj8ZCzXUor9FSkKT7jvtFANhcory0A6HYJqt7yFWwnozNXkTqiigMj
+	 OWEVveZn7dV0DR9C4zqENdC3GzOpdFmM+93n9Q+SIbc7vNZ3DZcIu9Hvf1xxGRuZIT
+	 d/Q8cKEn/nxBKUY/vBLK47O50Ei+HXzhl2EB7dc1RPRc94oeJ9d0TEf9VsKfF2e89p
+	 j2R+YrX6bk94cPrCjTZPsVUrGQyleAxh/CqUHXxLnIitp1UDR5Sjbs43dvdIsdxZRY
+	 0APwEgSdIHcXg0p0pB+jra/4vSZNfWLGI5Bz5+ZRXTS20rAtQTil146NOdZPbLaRTE
+	 jb1XYrmgrFbnOuTU2y8KrEOO67dE4lVCEYersZOm5VV923UdUq95epZBwnXqVfiYMj
+	 ctSWKh+V4eaW0UQST7NYmlkAZ8E6mTrflawIK3kEw9hihr+W3p0BsWqlKyN5kL7PG+
+	 1szhiojgCZiNmtXA1KPqp3JeXk780H6ChzsVi9C8b5nEBMfQPw/gbK2E4Hh2M+gWI+
+	 aITqkbqFeEGJoJaCGJ45TJVEtFEdbAiaE5s/asUtV2XmYOSOr1jY78pHPag9A0fm4Z
+	 oizOcgxSMHzz5aAGztCobSP8=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7AC6240E019D;
+	Wed, 10 Jul 2024 17:21:08 +0000 (UTC)
+Date: Wed, 10 Jul 2024 19:21:07 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Yian Chen <yian.chen@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v4 05/16] x86/cpu: Remove redundant comment during
+ feature setup
+Message-ID: <20240710172107.GHZo7DA3pQ1Mkj8gy7@fat_crate.local>
+References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
+ <20240710160655.3402786-6-alexander.shishkin@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625-md-fs-nfs-v2-1-2316b64ffaa5@quicinc.com>
- <abe2e12fcd6a64b603179f234ca684a182657d6a.camel@kernel.org>
- <e0a9f5ab-92d4-4a41-8693-358e861f2ef6@quicinc.com> <ab51cd2e8fef48dac690ca4549b409269ff9beae.camel@kernel.org>
-In-Reply-To: <ab51cd2e8fef48dac690ca4549b409269ff9beae.camel@kernel.org>
-From: Anna Schumaker <anna@kernel.org>
-Date: Wed, 10 Jul 2024 13:20:46 -0400
-X-Gmail-Original-Message-ID: <CAFX2Jfm4OaVa0i5Za2YM9EBL4aCgP6+LZRijazthRY_88_vhig@mail.gmail.com>
-Message-ID: <CAFX2Jfm4OaVa0i5Za2YM9EBL4aCgP6+LZRijazthRY_88_vhig@mail.gmail.com>
-Subject: Re: [PATCH v2] fs: nfs: add missing MODULE_DESCRIPTION() macros
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, 
-	Trond Myklebust <trond.myklebust@hammerspace.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240710160655.3402786-6-alexander.shishkin@linux.intel.com>
 
-On Wed, Jul 10, 2024 at 8:27=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Tue, 2024-07-09 at 13:47 -0700, Jeff Johnson wrote:
-> > On 6/25/2024 9:44 AM, Jeff Layton wrote:
-> > > On Tue, 2024-06-25 at 09:42 -0700, Jeff Johnson wrote:
-> > > > Fix the 'make W=3D1' warnings:
-> > > > WARNING: modpost: missing MODULE_DESCRIPTION() in
-> > > > fs/nfs_common/nfs_acl.o
-> > > > WARNING: modpost: missing MODULE_DESCRIPTION() in
-> > > > fs/nfs_common/grace.o
-> > > > WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfs.o
-> > > > WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv2.o
-> > > > WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv3.o
-> > > > WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nfs/nfsv4.o
-> > > >
-> > > > Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> > > > ---
-> > > > Changes in v2:
-> > > > - Updated the description in grace.c per Jeff Layton
-> > > > - Link to v1:
-> > > > https://lore.kernel.org/r/20240527-md-fs-nfs-v1-1-64a15e9b53a6@quic=
-inc.com
-> > > > ---
-> > > >  fs/nfs/inode.c         | 1 +
-> > > >  fs/nfs/nfs2super.c     | 1 +
-> > > >  fs/nfs/nfs3super.c     | 1 +
-> > > >  fs/nfs/nfs4super.c     | 1 +
-> > > >  fs/nfs_common/grace.c  | 1 +
-> > > >  fs/nfs_common/nfsacl.c | 1 +
-> > > >  6 files changed, 6 insertions(+)
-> > > >
->
-> Given that this is mostly client-side changes, this should probably go
-> through the client tree. Anna, could you pick this one up?
+On Wed, Jul 10, 2024 at 07:06:41PM +0300, Alexander Shishkin wrote:
+> From: Sohil Mehta <sohil.mehta@intel.com>
+> 
+> The code below the comment is self explanatory. Instead of updating the
+> comment with the newly added LASS feature, it is better to just remove
+> it.
+> 
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/common.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index dcf61a66e462..33a76256a6f5 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -1841,7 +1841,6 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+>  	/* Disable the PN if appropriate */
+>  	squash_the_stupid_serial_number(c);
+>  
+> -	/* Set up SMEP/SMAP/UMIP */
+>  	setup_smep(c);
+>  	setup_smap(c);
+>  	setup_umip(c);
+> -- 
 
-Yep, It's been in my linux-next branch for a while now.
+A separate patch just for that?! You're kidding, right?
 
-Anna
+Just merge it with the previous one.
 
->
-> Thanks,
-> Jeff
->
-> > > > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> > > > index acef52ecb1bb..57c473e9d00f 100644
-> > > > --- a/fs/nfs/inode.c
-> > > > +++ b/fs/nfs/inode.c
-> > > > @@ -2538,6 +2538,7 @@ static void __exit exit_nfs_fs(void)
-> > > >
-> > > >  /* Not quite true; I just maintain it */
-> > > >  MODULE_AUTHOR("Olaf Kirch <okir@monad.swb.de>");
-> > > > +MODULE_DESCRIPTION("NFS client support");
-> > > >  MODULE_LICENSE("GPL");
-> > > >  module_param(enable_ino64, bool, 0644);
-> > > >
-> > > > diff --git a/fs/nfs/nfs2super.c b/fs/nfs/nfs2super.c
-> > > > index 467f21ee6a35..b1badc70bd71 100644
-> > > > --- a/fs/nfs/nfs2super.c
-> > > > +++ b/fs/nfs/nfs2super.c
-> > > > @@ -26,6 +26,7 @@ static void __exit exit_nfs_v2(void)
-> > > >   unregister_nfs_version(&nfs_v2);
-> > > >  }
-> > > >
-> > > > +MODULE_DESCRIPTION("NFSv2 client support");
-> > > >  MODULE_LICENSE("GPL");
-> > > >
-> > > >  module_init(init_nfs_v2);
-> > > > diff --git a/fs/nfs/nfs3super.c b/fs/nfs/nfs3super.c
-> > > > index 8a9be9e47f76..20a80478449e 100644
-> > > > --- a/fs/nfs/nfs3super.c
-> > > > +++ b/fs/nfs/nfs3super.c
-> > > > @@ -27,6 +27,7 @@ static void __exit exit_nfs_v3(void)
-> > > >   unregister_nfs_version(&nfs_v3);
-> > > >  }
-> > > >
-> > > > +MODULE_DESCRIPTION("NFSv3 client support");
-> > > >  MODULE_LICENSE("GPL");
-> > > >
-> > > >  module_init(init_nfs_v3);
-> > > > diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-> > > > index 8da5a9c000f4..b29a26923ce0 100644
-> > > > --- a/fs/nfs/nfs4super.c
-> > > > +++ b/fs/nfs/nfs4super.c
-> > > > @@ -332,6 +332,7 @@ static void __exit exit_nfs_v4(void)
-> > > >   nfs_dns_resolver_destroy();
-> > > >  }
-> > > >
-> > > > +MODULE_DESCRIPTION("NFSv4 client support");
-> > > >  MODULE_LICENSE("GPL");
-> > > >
-> > > >  module_init(init_nfs_v4);
-> > > > diff --git a/fs/nfs_common/grace.c b/fs/nfs_common/grace.c
-> > > > index 1479583fbb62..27cd0d13143b 100644
-> > > > --- a/fs/nfs_common/grace.c
-> > > > +++ b/fs/nfs_common/grace.c
-> > > > @@ -139,6 +139,7 @@ exit_grace(void)
-> > > >  }
-> > > >
-> > > >  MODULE_AUTHOR("Jeff Layton <jlayton@primarydata.com>");
-> > > > +MODULE_DESCRIPTION("NFS client and server infrastructure");
-> > > >  MODULE_LICENSE("GPL");
-> > > >  module_init(init_grace)
-> > > >  module_exit(exit_grace)
-> > > > diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
-> > > > index 5a5bd85d08f8..ea382b75b26c 100644
-> > > > --- a/fs/nfs_common/nfsacl.c
-> > > > +++ b/fs/nfs_common/nfsacl.c
-> > > > @@ -29,6 +29,7 @@
-> > > >  #include <linux/nfs3.h>
-> > > >  #include <linux/sort.h>
-> > > >
-> > > > +MODULE_DESCRIPTION("NFS ACL support");
-> > > >  MODULE_LICENSE("GPL");
-> > > >
-> > > >  struct nfsacl_encode_desc {
-> > > >
-> > > > ---
-> > > > base-commit: 50736169ecc8387247fe6a00932852ce7b057083
-> > > > change-id: 20240527-md-fs-nfs-42f19eb60b50
-> > > >
-> > >
-> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >
-> > I don't see this in linux-next yet so following up to see if anything e=
-lse is
-> > needed to get this merged.
-> >
->
-> --
-> Jeff Layton <jlayton@kernel.org>
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
