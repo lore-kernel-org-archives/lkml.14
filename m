@@ -1,130 +1,90 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66409193479
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D357C193477
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720622593; cv=none; b=ltP1P3M1kqUbVfzBld20/Xdqji1UqShDp671058pMCJQYwXDA1qe3d/ffFO2IxPJI82GZEiqBdFmCaTEZ6Y9NyjIvzwVBhq6Deq7jLjQ/yywF6IIwLCtlqSn+yLOx4d5lcy7YIgK2OZOiEKy1nVVND4pImkqjKeRTNgv8/fFB6k=
+	t=1720622609; cv=none; b=BbP21T5EZuJOi05zJg2UBPzkA+uE+LhzB9h/c2zswWRbKiXdxLrpeUM17zOVfEQlRaI/vS7NSp6h5uHvy7Q1BS1R0t4aUMs7Ag0h5WetAzemdAkuEOcEZX2vt3cCyABQcO4sjd/eVGDze6kJatuiypGODR2O7d8aSa8nraxBaAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720622593; c=relaxed/simple;
-	bh=KpsIZ6jzaxZLqZC+0GjwVgDUh89rNXpUnOtFQAHPfIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EThvx8PBuEsPnPl0MKl5NfN385Crn0lNRWIS2jpECX6BQhfUVEK56MYlbTZk8bom3XHqIT4j44NZmCkb5YBaV0hVBPFSNizUo8fVp2gPGr/zhp3c0IG6n7dCcuzYcYCtkIHhHyxre/S7Wfq6fnOnTkKUSq++Kp3aga59JwbkjqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yVsDsvp6; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720622609; c=relaxed/simple;
+	bh=gzD91Lc+TFKAzfZaYsU1hvL5P3UN/LvwShzPyx8Kj5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OVCECoJgs6CXSJojZJuynAr/0tmww/tHRAv8K4UbsOj6MjHDEeyAMJB5TXxvI55i1BvBkkJrRe6fz1n2KdQ4ZG8BcJO+e1cHb02ETxAV0KU3NFL+qDiRLkBUoAs368u84lDE9xRzASPPdlCmMezYR269azMqDglnUwQgmpJGeLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=dQRWMx0k; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yVsDsvp6"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42662d80138so25431895e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720622590; x=1721227390; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QOsOdIxYv2ExEMFqfT+PN67MY38Sp+oZzT0Ko1qTmks=;
-        b=yVsDsvp6KjjX9KCLs5jt8OP5Lcb/GInB6Lo9r1vMlhKQgW6c8lGaCo4tC5h2RezO5x
-         DU7rcWMyB3CUVXJscUgLpunZLr3WxcwFDXSGGQs5mSkYMrt3C5zcqRr/vKB+gP21TU5u
-         RcVQqrAsntFy6ufBQRq/1tB6VD4hGN49QPHL7xNi9vhYROn6VEpWTULdY6NU+XVxeaqD
-         wf3irod1d/vrZfk80MzwSPwJSx73qdYnDB0+Oyak2fIr3BhRgBIvo7+v9EI49t8q/B61
-         Uq5QVkl2g9QeyYt2Jf9BG2Jvn8oBA6quq8yckQZH99EKfzeqRGsH5/y/zM8V09tW58gv
-         i/kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720622590; x=1721227390;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QOsOdIxYv2ExEMFqfT+PN67MY38Sp+oZzT0Ko1qTmks=;
-        b=I5eTOtQy8tIko5w0ZlXDp9PJA/hR/Fep8DP/3nTZZYo0hVtQTMxIzMR7iwtC325kkO
-         ysY/7pSnEsJ3D7qCQ45gSAP3mCCvc4ASJntaObg6WwwM37UhfjiHaNs5ir18vMp7C/+N
-         FF061JUDFQ2D9a8F6YrJJ1Yc/UTCaKmRhDKtnkrh7pSmgBbm56nuq+0aZMK1bx/sjvlc
-         DxNN0oHkxH2MiXrOYuCVckmbLOMC2IVxDo7RxT5QGbAtWSvLgpqOSmuTozzaCkvHpYfl
-         mLf7+e7qiVKNKtk5iBD8hNbYsQb9yrNdVwM3Gj9dDOWk1x6zvYubAWJW4RHXFA5DDqJ9
-         rHuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjxwY9z1qe9w9C8r4aYCy+abq47cUgh1dy/cE9BFRYgFziN7VePT4CTI45NYI49n/RpCe0i6jfJFse+Ab8niU3t8c008+/KZTejgwy
-X-Gm-Message-State: AOJu0Yzw3jBVHtNSgRK3LK9KY5UJINg3FJncHCWFhemmRZaUKFXy6wig
-	asptpONVeugkSzCs1IOiwwgZYIOqwSiyN++idIyFTfOAn3C+N5tjaXyYyeIXQeo=
-X-Google-Smtp-Source: AGHT+IGVb8T0zmjUppXKMiGZvXO5lSsizz8CluNzkaf++om0s6TaTa5apn/9eqEINpHhSmfa5Hi0zQ==
-X-Received: by 2002:a05:600c:5584:b0:426:6087:198f with SMTP id 5b1f17b1804b1-426708fa98emr36208235e9.39.1720622589688;
-        Wed, 10 Jul 2024 07:43:09 -0700 (PDT)
-Received: from linaro.org ([82.79.124.209])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde89108sm5480933f8f.55.2024.07.10.07.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 07:43:09 -0700 (PDT)
-Date: Wed, 10 Jul 2024 17:43:07 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100: Fix up BAR spaces
-Message-ID: <Zo6d+3T/wcVHiWi1@linaro.org>
-References: <20240710-topic-barman-v1-1-5f63fca8d0fc@linaro.org>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="dQRWMx0k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1720622588;
+ bh=hZhXVKWV0BbCE5f7SbJ+Zt2x4Pus6WrIiDPVjBe5XNY=;
+ b=dQRWMx0kaHTYOwcrnUZOPAfX+6CxkUq6/RoeA4JpUOfPuoZSu0ebSQio5pw54QC82GeQw2TdN
+ OGGUZg06LljOaenmGqPqV4uQxM/DBRRy8UnU3rkY0x2A28xWfEJf2GWC+lbRMOLysPe/0IOUYRS
+ ch4cSt5ts106iBY4DmvRgYlNQ7CQDluNTrIPJAPKAOHMAwnMkB1iWSEqdf2V1wmn62hfjPE1b40
+ 5EAARTj0u6XsTJW543TX1Ue8blncl95VaDNdshko5B4OYCFAxBITKEdTOtskSPHr92gNw4/VwNx
+ VdS2qGVlZR6tJGODyPFChPEmGPEmBYZeUQxZKZp8YkSQ==
+Message-ID: <caf55fe6-4674-4c89-a94e-f4ad348e2ba0@kwiboo.se>
+Date: Wed, 10 Jul 2024 16:30:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240710-topic-barman-v1-1-5f63fca8d0fc@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/9] arm64: dts: rockchip: use generic Ethernet PHY
+ reset bindings for Lunzn Fastrhino R68S
+To: Chukun Pan <amadeus@jmu.edu.cn>, heiko@sntech.de
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, robh@kernel.org
+References: <2210411.C4sosBPzcN@diego>
+ <20240710133029.676677-1-amadeus@jmu.edu.cn>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20240710133029.676677-1-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 668e9b26a862f9d735124bc1
 
-On 24-07-10 16:07:23, Konrad Dybcio wrote:
-> The 32-bit BAR spaces are reaching outside their assigned register
-> regions. Shrink them to match their actual sizes.
-> While at it, unify the style.
-> 
-> Fixes: 5eb83fc10289 ("arm64: dts: qcom: x1e80100: Add PCIe nodes")
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Hi,
 
-Also tested on CRD, so:
+On 2024-07-10 15:30, Chukun Pan wrote:
+>> what's the reason behind the changed timings?
+>>
+>> The original comment stated,
+>> 	/* Reset time is 15ms, 50ms for rtl8211f */
+>> so that timing change needs an explanation please :-)
+> 
+> I don't know why this comment says that, but it's clearly wrong.
+> According to the PHY datasheet, the RTL8211F PHY needs a 10ms
+> assert delay and at least 72ms deassert delay. Considering the
+> possibility of mixed use of PHY chips, the reset time should be
+> further increased.
 
-Tested-by: Abel Vesa <abel.vesa@linaro.org>
+Where do you find the 72ms in the datasheet?
 
-> ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+In RTL8211F-CG v1.1 I see 10ms and minimum of 30ms, in v1.2 and v1.4
+I see 10ms and minimum of 50ms.
+
+I have used 50ms on a few recently added boards and they seem to all
+work fine with 50ms, wonder if the deassert delay should be changed for
+those boards.
+
+Regards,
+Jonas
+
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index 7bca5fcd7d52..bc5b4f5ea127 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -2895,9 +2895,9 @@ pcie6a: pci@1bf8000 {
->  				    "mhi";
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> -			ranges = <0x01000000 0 0x00000000 0 0x70200000 0 0x100000>,
-> -				 <0x02000000 0 0x70300000 0 0x70300000 0 0x3d00000>;
-> -			bus-range = <0 0xff>;
-> +			ranges = <0x01000000 0x0 0x00000000 0x0 0x70200000 0x0 0x100000>,
-> +				 <0x02000000 0x0 0x70300000 0x0 0x70300000 0x0 0x1d00000>;
-> +			bus-range = <0x00 0xff>;
->  
->  			dma-coherent;
->  
-> @@ -3016,8 +3016,8 @@ pcie4: pci@1c08000 {
->  				    "mhi";
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> -			ranges = <0x01000000 0 0x00000000 0 0x7c200000 0 0x100000>,
-> -				 <0x02000000 0 0x7c300000 0 0x7c300000 0 0x3d00000>;
-> +			ranges = <0x01000000 0x0 0x00000000 0x0 0x7c200000 0x0 0x100000>,
-> +				 <0x02000000 0x0 0x7c300000 0x0 0x7c300000 0x0 0x1d00000>;
->  			bus-range = <0x00 0xff>;
->  
->  			dma-coherent;
+> Thanks,
+> Chukun
 > 
-> ---
-> base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
-> change-id: 20240710-topic-barman-57a52f7de103
-> 
-> Best regards,
-> -- 
-> Konrad Dybcio <konrad.dybcio@linaro.org>
-> 
+
