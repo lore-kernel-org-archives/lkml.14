@@ -1,129 +1,309 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B765A192B91;
-	Wed, 10 Jul 2024 13:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288FE1CA9C;
+	Wed, 10 Jul 2024 13:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618218; cv=none; b=tpC29uQE805y50Wb8bWqEb90HEVCHeOZ7B1Z3Ez8atv2SKOVVcAddZlv/7n0BBpkAaFivi9dio6OpR9tHrvN1lkxlVChn2BC/wH0cWn4lpcKrfzB6RCmJDaEoYlytUrA9cgNOymZbga69QWJ2sdJ6IFeOWJZdlu9VYCDcpV8DiU=
+	t=1720618350; cv=none; b=WulDiyPPoYdJ73hQG/GiziKM4cyutH8uiWPEwqgeFu/LuhnDLVGxOBT1lc6fsIOdgBQ9IyYqOTnUKu9KIxD27Mxkcu+JvSwgOGDEvpPwnRCaBu0zNJ1oqAiFByP3cxXTNmZRkc429he9jns5t9qhCAYIL93NBSz9EUsAo5H8oEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618218; c=relaxed/simple;
-	bh=WnmHFbV9qGDjAcF91zk+1or9P4/JEgGUFqWbs8nvKw8=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=TASGdFg5uDOr3ev3R17w5tWZgr+2DQ4t66afYxv3lwpLyjwhc41/vXdqtK76pDfoB2uLxjUsGaiwNoPQs0jOQYEtd79ilMtSqC6v5IE1dk+AunbUj7KLZRnVgEzfbvs6wBJCp/GK8xrYfKGRTweYsHJzEqaalDtEzo7gSc+Mkt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l13m+4+5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720618350; c=relaxed/simple;
+	bh=1sQbIrS1JVYEEZ8wsStgULcn7YAsrepfKI36ed3D5FI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQup+a2bvTWsNRVU08PADFGjb03ist3utE1tuwdwiBhJG5CKZRcn+RWo1KPdaTgafhhxoloT+Ofy2QmR1w3Rb4sEwrkiM90WnG+vV1BZKOBI8FxplnZtaFHbrOXHdwcI+8zung+nswS+ItEJ0z4iLeWfDpJLAEAYArfNLRp4o/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SDAMP48G; arc=none smtp.client-ip=45.254.50.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l13m+4+5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D98C32781;
-	Wed, 10 Jul 2024 13:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720618218;
-	bh=WnmHFbV9qGDjAcF91zk+1or9P4/JEgGUFqWbs8nvKw8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=l13m+4+5zjvjn3m1cCI2exo5SU7UHQYQOvj1oeEADWbO04p+MN2XDFgvZ11xxGFtv
-	 8HRjuhCtNEQKHoqL26rC7hBK0DawUoXLFPnT52uACqfi6yIuVbmqmYj/fMcucBSvs8
-	 SRjMn5oEsIkhvKQGfYqEeLDJgFxl8IqDb1z+Y4CdEGMA23CWOHzvpvyqYmW2vxPqF5
-	 OLWk4A12HLbWvDlNKQjvODfh2WlWqP07oFvqc7ON9UoPCF8KUr3XHAj6X81ZioYMLz
-	 UWFhFUOlflbdkIOafZM9fK4xjAWfKSPoa5dzL4/YKCrYkwOTjNWU+WJWWGyVQ9PPdg
-	 /kljNrsYdcoSA==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SDAMP48G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=hcluSJjCmhnWXX8YTDLv8feP55y3/EV9PtZgqhLBZl8=;
+	b=SDAMP48GpwvMjb58QXp8GEGj44RTz7mlOO8xCFH7BY2iqW9p9OK/lcQMmDZyYE
+	V428UhzNIKOqn7e0q+nDWYXml9IweBrAB9MZUIgXES5dOjYkutIE55zQc/jpU+Sx
+	ZJqQl/8Bwq9b60PPfy5+2gMqb+zMuqJoXWAAtEXqtuUgM=
+Received: from [10.0.2.15] (unknown [111.205.43.230])
+	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wD3X5a2jI5mqCcSCg--.45966S2;
+	Wed, 10 Jul 2024 21:29:27 +0800 (CST)
+Message-ID: <b5d99ec8-9e4d-494a-bf62-02b992a042e8@163.com>
+Date: Wed, 10 Jul 2024 21:29:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240710090742.1657606-1-amorenoz@redhat.com>
-References: <20240710090742.1657606-1-amorenoz@redhat.com>
-Subject: Re: [PATCH net-next v2] net: psample: fix flag being set in wrong skb
-From: Antoine Tenart <atenart@kernel.org>
-Cc: Adrian Moreno <amorenoz@redhat.com>, Yotam Gigi <yotam.gi@gmail.com>, David S. Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Ido Schimmel <idosch@nvidia.com>, Eelco Chaudron <echaudro@redhat.com>, Aaron Conole <aconole@redhat.com>, linux-kernel@vger.kernel.org
-To: Adrian Moreno <amorenoz@redhat.com>, netdev@vger.kernel.org
-Date: Wed, 10 Jul 2024 15:30:14 +0200
-Message-ID: <172061821475.5582.9226948763101271068@kwain.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI: vmd: Create domain symlink before
+ pci_bus_add_devices()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+ paul.m.stillwell.jr@intel.com, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, sunjw10@lenovo.com, ahuang12@lenovo.com,
+ Pawel Baldysiak <pawel.baldysiak@intel.com>,
+ Alexey Obitotskiy <aleksey.obitotskiy@intel.com>,
+ Tomasz Majchrzak <tomasz.majchrzak@intel.com>
+References: <20240709205938.GA194355@bhelgaas>
+Content-Language: en-US
+From: Jiwei Sun <sjiwei@163.com>
+In-Reply-To: <20240709205938.GA194355@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3X5a2jI5mqCcSCg--.45966S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3XryfurWrAr4UKF17Aw48Crg_yoWftF48pF
+	ZxW3W5tFs7Gr43XayUu3y8WFyayw4vvry5try5Kw1jv3yDAFy09FW0kF45Cr42vF1DKasF
+	vw4qgrn09Fn0kaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UnmRUUUUUU=
+X-CM-SenderInfo: 5vml4vrl6rljoofrz/1tbiDxoYmWVOFIrZegAAsC
 
-Hi Adri=C3=A1n,
 
-Quoting Adrian Moreno (2024-07-10 11:07:42)
-> A typo makes PSAMPLE_ATTR_SAMPLE_RATE netlink flag be added to the wrong
-> sk_buff.
->=20
-> Fix the error and make the input sk_buff pointer "const" so that it
-> doesn't happen again.
->=20
-> Also modify OVS psample test to verify the flag is properly emitted.
+On 7/10/24 04:59, Bjorn Helgaas wrote:
+> [+cc Pawel, Alexey, Tomasz for mdadm history]
+> 
+> On Wed, Jun 05, 2024 at 08:48:44PM +0800, Jiwei Sun wrote:
+>> From: Jiwei Sun <sunjw10@lenovo.com>
+>>
+>> During booting into the kernel, the following error message appears:
+>>
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+>>   (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+>>
+>> This symptom prevents the OS from booting successfully.
+> 
+> I guess the root filesystem must be on a RAID device, and it's the
+> failure to assemble that RAID device that prevents OS boot?  The
+> messages are just details about why the assembly failed?
 
-I don't see that part; although it can be sent as a follow-up and not
-part of the fix.
+Yes, you are right, in our test environment, we installed the SLES15SP6
+on a VROC RAID 1 device which is set up by two NVME hard drivers. And
+there is also a hardware RAID kit on the motherboard with other two NVME 
+hard drivers.
+
+# lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+nvme0n1     259:1    0     7T  0 disk
+├─nvme0n1p1 259:2    0   512M  0 part
+├─nvme0n1p2 259:3    0    40G  0 part
+└─nvme0n1p3 259:4    0   6.9T  0 part
+nvme1n1     259:6    0   1.7T  0 disk
+├─md126       9:126  0   1.7T  0 raid1
+│ ├─md126p1 259:9    0   600M  0 part  /boot/efi
+│ ├─md126p2 259:10   0     1G  0 part
+│ ├─md126p3 259:11   0    40G  0 part  /usr/local
+│ │                                    /var
+│ │                                    /tmp
+│ │                                    /srv
+│ │                                    /root
+│ │                                    /opt
+│ │                                    /boot/grub2/x86_64-efi
+│ │                                    /boot/grub2/i386-pc
+│ │                                    /.snapshots
+│ │                                    /
+│ ├─md126p4 259:12   0   1.5T  0 part  /home
+│ └─md126p5 259:13   0 125.5G  0 part  [SWAP]
+└─md127       9:127  0     0B  0 md
+nvme2n1     259:8    0   1.7T  0 disk
+├─md126       9:126  0   1.7T  0 raid1
+│ ├─md126p1 259:9    0   600M  0 part  /boot/efi
+│ ├─md126p2 259:10   0     1G  0 part
+│ ├─md126p3 259:11   0    40G  0 part  /usr/local
+│ │                                    /var
+│ │                                    /tmp
+│ │                                    /srv
+│ │                                    /root
+│ │                                    /opt
+│ │                                    /boot/grub2/x86_64-efi
+│ │                                    /boot/grub2/i386-pc
+│ │                                    /.snapshots
+│ │                                    /
+│ ├─md126p4 259:12   0   1.5T  0 part  /home
+│ └─md126p5 259:13   0 125.5G  0 part  [SWAP]
+└─md127       9:127  0     0B  0 md
+
+And the nvme0n1 is hardware RAID kit,
+the nvme1n1 and nvme2n1 is VROC.
+
+The OS entered emergency mode after installation and restart. And we
+found that no RAID was detected on the first NVME hard driver according
+to the emergency mode log, but when we try to detect it manually by 
+using the following command
+
+#/sbin/mdadm -I /dev/nvme1n1
+
+It works, the RAID device was found, it tells us that the RAID is just
+not detected in the booting process. We added the "rd.udev.debug" to 
+kernel's cmdline, the error logs appears.
+
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+  (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+
+> 
+>> After a NVMe disk is probed/added by the nvme driver, the udevd executes
+>> some rule scripts by invoking mdadm command to detect if there is a
+>> mdraid associated with this NVMe disk. The mdadm determines if one
+>> NVMe devce is connected to a particular VMD domain by checking the
+>> domain symlink. Here is the root cause:
+> 
+> Can you tell us something about what makes this a vmd-specific issue?
+> 
+> I guess vmd is the only driver that creates a "domain" symlink, so
+> *that* part is vmd-specific.  But I guess there's something in mdadm
+> or its configuration that looks for that symlink?
+
+According to the following error log,
+
+  mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device
+
+We enable the dyndbg log of the drivers/base/*(add dyndbg="file drivers/base/* +p" to cmdline),
+and add some debug logs in the find_driver_devices() of the madam source code [1],
+We found that the "domain" has not been created when the error log appears.
+And as you stated, the "domain" symlink is created by vmd driver.
+
+> 
+> I suppose it has to do with the mdadm code at [1] and the commit at
+> [2]?
+
+Yes, you are right, mdadm determine which NVMe dev is connected to the VMD
+domain by checking "/sys/bus/%s/drivers/%s/%s/domain/device", according to the following mdadm code[1],
+              /*
+              * Each VMD device (domain) adds separate PCI bus, it is better
+              * to store path as a path to that bus (easier further
+              * determination which NVMe dev is connected to this particular
+              * VMD domain).
+              */
+              if (type == SYS_DEV_VMD) {
+                     sprintf(path, "/sys/bus/%s/drivers/%s/%s/domain/device",
+                            bus, driver, de->d_name);
+              }
+              p = realpath(path, NULL);
+              if (p == NULL) {
+                     pr_err("Unable to get real path for '%s'\n", path);
+                     continue;
+              }
+
+[1] https://github.com/md-raid-utilities/mdadm/blob/main/platform-intel.c#L208
+
+> 
+> [1] https://github.com/md-raid-utilities/mdadm/blob/96b8035a09b6449ea99f2eb91f9ba4f6912e5bd6/platform-intel.c#L199
+> [2] https://github.com/md-raid-utilities/mdadm/commit/60f0f54d6f5227f229e7131d34f93f76688b085f
+> 
+> I assume this is a race between vmd_enable_domain() and mdadm?  And
+> vmd_enable_domain() only loses the race sometimes?  Trying to figure
+
+Yes, you are right, what you said is the conclusion of our investigation.
+
+> out why this hasn't been reported before or on non-VMD configurations.
+> Now that I found [2], the non-VMD part is obvious, but I'm still
+> curious about why we haven't seen it before.
+
+According to our test, if we remove that hardware RAID kit, the issue
+can't be reproduced, the driver name on the hardware RAID kit is nvme0, 
+and the driver name on VROC is nvme1 and nvme2. It seems the special 
+configuration makes the problem more apparent.
+
+> 
+> The VMD device is sort of like another host bridge, and I wouldn't
+> think mdadm would normally care about a host bridge, but it looks like
+> mdadm does need to know about VMD for some reason.
+
+I think so, it is better if the application doesn't have to pay too 
+much attention to hardware details. Just we can see, the mdadm uses 
+the "domain" symlink.
 
 Thanks,
-Antoine
+Regards,
+Jiwei
 
-> Fixes: 7b1b2b60c63f ("net: psample: allow using rate as probability")
-> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-> ---
->  include/net/psample.h | 8 +++++---
->  net/psample/psample.c | 7 ++++---
->  2 files changed, 9 insertions(+), 6 deletions(-)
->=20
-> diff --git a/include/net/psample.h b/include/net/psample.h
-> index c52e9ebd88dd..5071b5fc2b59 100644
-> --- a/include/net/psample.h
-> +++ b/include/net/psample.h
-> @@ -38,13 +38,15 @@ struct sk_buff;
-> =20
->  #if IS_ENABLED(CONFIG_PSAMPLE)
-> =20
-> -void psample_sample_packet(struct psample_group *group, struct sk_buff *=
-skb,
-> -                          u32 sample_rate, const struct psample_metadata=
- *md);
-> +void psample_sample_packet(struct psample_group *group,
-> +                          const struct sk_buff *skb, u32 sample_rate,
-> +                          const struct psample_metadata *md);
-> =20
->  #else
-> =20
->  static inline void psample_sample_packet(struct psample_group *group,
-> -                                        struct sk_buff *skb, u32 sample_=
-rate,
-> +                                        const struct sk_buff *skb,
-> +                                        u32 sample_rate,
->                                          const struct psample_metadata *m=
-d)
->  {
->  }
-> diff --git a/net/psample/psample.c b/net/psample/psample.c
-> index f48b5b9cd409..a0ddae8a65f9 100644
-> --- a/net/psample/psample.c
-> +++ b/net/psample/psample.c
-> @@ -360,8 +360,9 @@ static int psample_tunnel_meta_len(struct ip_tunnel_i=
-nfo *tun_info)
->  }
->  #endif
-> =20
-> -void psample_sample_packet(struct psample_group *group, struct sk_buff *=
-skb,
-> -                          u32 sample_rate, const struct psample_metadata=
- *md)
-> +void psample_sample_packet(struct psample_group *group,
-> +                          const struct sk_buff *skb, u32 sample_rate,
-> +                          const struct psample_metadata *md)
->  {
->         ktime_t tstamp =3D ktime_get_real();
->         int out_ifindex =3D md->out_ifindex;
-> @@ -498,7 +499,7 @@ void psample_sample_packet(struct psample_group *grou=
-p, struct sk_buff *skb,
->                 goto error;
-> =20
->         if (md->rate_as_probability)
-> -               nla_put_flag(skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
-> +               nla_put_flag(nl_skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
-> =20
->         genlmsg_end(nl_skb, data);
->         genlmsg_multicast_netns(&psample_nl_family, group->net, nl_skb, 0,
-> --=20
-> 2.45.2
->=20
->
+> 
+>> Thread A                   Thread B             Thread mdadm
+>> vmd_enable_domain
+>>   pci_bus_add_devices
+>>     __driver_probe_device
+>>      ...
+>>      work_on_cpu
+>>        schedule_work_on
+>>        : wakeup Thread B
+>>                            nvme_probe
+>>                            : wakeup scan_work
+>>                              to scan nvme disk
+>>                              and add nvme disk
+>>                              then wakeup udevd
+>>                                                 : udevd executes
+>>                                                   mdadm command
+>>        flush_work                               main
+>>        : wait for nvme_probe done                ...
+>>     __driver_probe_device                        find_driver_devices
+>>     : probe next nvme device                     : 1) Detect the domain
+>>     ...                                            symlink; 2) Find the
+>>     ...                                            domain symlink from
+>>     ...                                            vmd sysfs; 3) The
+>>     ...                                            domain symlink is not
+>>     ...                                            created yet, failed
+>>   sysfs_create_link
+>>   : create domain symlink
+>>
+>> sysfs_create_link() is invoked at the end of vmd_enable_domain().
+>> However, this implementation introduces a timing issue, where mdadm
+>> might fail to retrieve the vmd symlink path because the symlink has not
+>> been created yet.
+>>
+>> Fix the issue by creating VMD domain symlinks before invoking
+>> pci_bus_add_devices().
+>>
+>> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+>> Suggested-by: Adrian Huang <ahuang12@lenovo.com>
+>> ---
+>> v3 changes:
+>>  - Per Paul's comment, move sysfs_remove_link() after
+>>    pci_stop_root_bus()
+>>
+>> v2 changes:
+>>  - Add "()" after function names in subject and commit log
+>>  - Move sysfs_create_link() after vmd_attach_resources()
+>>
+>>  drivers/pci/controller/vmd.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+>> index 87b7856f375a..4e7fe2e13cac 100644
+>> --- a/drivers/pci/controller/vmd.c
+>> +++ b/drivers/pci/controller/vmd.c
+>> @@ -925,6 +925,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>>  		dev_set_msi_domain(&vmd->bus->dev,
+>>  				   dev_get_msi_domain(&vmd->dev->dev));
+>>  
+>> +	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+>> +			       "domain"), "Can't create symlink to domain\n");
+>> +
+>>  	vmd_acpi_begin();
+>>  
+>>  	pci_scan_child_bus(vmd->bus);
+>> @@ -964,9 +967,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>>  	pci_bus_add_devices(vmd->bus);
+>>  
+>>  	vmd_acpi_end();
+>> -
+>> -	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+>> -			       "domain"), "Can't create symlink to domain\n");
+>>  	return 0;
+>>  }
+>>  
+>> @@ -1042,8 +1042,8 @@ static void vmd_remove(struct pci_dev *dev)
+>>  {
+>>  	struct vmd_dev *vmd = pci_get_drvdata(dev);
+>>  
+>> -	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>>  	pci_stop_root_bus(vmd->bus);
+>> +	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>>  	pci_remove_root_bus(vmd->bus);
+>>  	vmd_cleanup_srcu(vmd);
+>>  	vmd_detach_resources(vmd);
+>> -- 
+>> 2.27.0
+>>
+
