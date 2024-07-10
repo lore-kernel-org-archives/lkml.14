@@ -1,144 +1,57 @@
-Received: from flow1-smtp.messagingengine.com (flow1-smtp.messagingengine.com [103.168.172.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7306149C40;
-	Wed, 10 Jul 2024 12:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EAA17B05F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720615798; cv=none; b=ht6/dn0emvSe7mNovEi/4EMtKGdL2Ar8XNMd8ud7YiuWE9ZBWqODuhm74l9orIUzVq2+E8QGfcFBjpXiv85IMH6oLo8dPM/tOimjcmamnkdnnZlLa4OX1kl8uNTGLdXYxo2oZqz8xVMfBfmivxzZIMtiu0IGpHZ31MtyhPQfB+c=
+	t=1720615818; cv=none; b=EmnlPH5hS9SFYIG8dNA1mtKHbjPNjYfzqDXNLAJ+lVlJpB9CuuMUTMsDKLXlzqDBRLSUEQv8q3igPDJ3HLAJNztoSmvNa6HrsiewI4DqNTqFKzYwwZrzeyAsKbMBSneh38OMLwXJ+yuruHkui1Vl3uywEM/KZmSftnvjwwlYil8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720615798; c=relaxed/simple;
-	bh=bTMI9iBEyKiP0DGKQWj1I7Ep4eh++YGxzDQWSLGLdy8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=AXqh2btiRj5Gen0Qxzn5HgvOaWuwZDz4vUraMtiRV7EmEsw0KVx6RDUvVhRRB2Q4oO5sjDiM8+4XWaySgLwWM6++2yUGffsHFvZ2T3T8sP5A1rHJUBq8fdIyUChO5f/2nLYVP1SlixSaqzZUdvnJ3Yd2T/ke86fDjKmO6EbjjOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=teTIciYZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=azzoWZRU; arc=none smtp.client-ip=103.168.172.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720615818; c=relaxed/simple;
+	bh=RoLcVlH35IFxlylXg9qRj0Y7rugYee8KxiP01sNHbUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8olzAPUxtTGOFmOIqPxuIZNWooALjn6+iKAztswlUyE3F2CyspZ3Nd1agBha+5LF5U/GOFXPuEfR23ULl6fmU72d4SgdKpvRQFRQFvjIMIWKQdap7j5SbPb9AMV8SIBe9TkA7SNfHkcpoX4yy7aRggqTPL4VEl9OepvHPCDKHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CUWKPISU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="teTIciYZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="azzoWZRU"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailflow.nyi.internal (Postfix) with ESMTP id E33CC20042D;
-	Wed, 10 Jul 2024 08:49:54 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 10 Jul 2024 08:49:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1720615794; x=1720622994; bh=j8Mj9dw1Fm
-	/JtEgtuTD5TSV9xTAWODaAOo5fjhNJeMk=; b=teTIciYZjvnAmtCaBvfsvRNjup
-	wfCqM8oj1NVTM4jQ8jo5sskqJd9CXNwzX82No3oPh2ILjs4uutrlschv4dsLphU3
-	DoHiZabk+5RNoNoz0INCQm1A/q0azsdpIKZ40BSY9zzvhrlrJsyAZoIB+AdhjZSM
-	pglEr9LbbW0omvvUOv9xqemh9id/jhlr5i0OZnHACguZQxkJK5xIIlZPHl7qxIZi
-	W18h/fh2fJqcEc9Qy9KDPKHfa/hVK9NfMC964RoDdIGpXNYZKvQ3LTPV8BpbXyRq
-	/YSFUKn6ydo2t/RPLCAoY+yDhYs54/3qhWLzotGyYi2xcf1uXo+GhSqGYN6Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1720615794; x=1720622994; bh=j8Mj9dw1Fm/JtEgtuTD5TSV9xTAW
-	ODaAOo5fjhNJeMk=; b=azzoWZRU5IySoav5jThTxI4/AKjfG7wh/UAeG5Y0yp/7
-	pSjbpcVBoFNXfnK1AoPP/qA9CqwrRF8Dry0A37SxJCpk4Z5ullPkhy+gC2T5PlNW
-	qtHzAzk/b8G5f3Tag6CJRkj0grWKT3j9AAJUB+sBlye1xyej0B+45sVmj7pFPIT0
-	0C8phEMHJHLEtbkJkAqgb4SfK8Mg1xM0BHjBi1UepOwgPEnmdulrH+N+Got5FU1k
-	1RVQ/Fe3Nc6RoIgAiYJC5LjOoh+Fk0b7Imsv7vkFNEtN+B28lrOP2iHu73sBprCP
-	xkZ00fMz0ava03lyq9Jugs0eBmn8yWi7qreY8Gmasw==
-X-ME-Sender: <xms:b4OOZh0Add5PpRvK-JwSRnx3M8MLRjt6lQVSLPf8bA1FKB4pYvBGow>
-    <xme:b4OOZoE2nV6HZMpoyEVk3eDfC7dus2QqobaL3YCy7l8HFtBHVk97Nwkt_A9WozDEc
-    C4EVANiB042rUeaNJQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedugdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:b4OOZh5zNJxlOfPHh0-H8WYSyelbHHrXbP1YSq7BCS2SyJWdegrqqQ>
-    <xmx:b4OOZu1jTQpah1fyyddzLy-SSEDaDFK_TWeDgISB8kW5bliLViVMcg>
-    <xmx:b4OOZkE-est_ti1vs2CHielhfk6js_rK4NVMMPgNmJ_Fck8MCdzLbg>
-    <xmx:b4OOZv-Dzbnlfj9JbL0x2Cl3B8vEn5obOKRlDMYB5cv0l5MtlBW17Q>
-    <xmx:coOOZviKtDwt5hZt1uJ3U9a5Mli5qRUVB721KXhKKAyxK8Y3E3_QlGxR>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D5425B60089; Wed, 10 Jul 2024 08:49:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CUWKPISU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE706C32782;
+	Wed, 10 Jul 2024 12:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720615817;
+	bh=RoLcVlH35IFxlylXg9qRj0Y7rugYee8KxiP01sNHbUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CUWKPISUezYmz3PzA7+WyzDInqOsf8UVKz1oIRRlo98fNBphlUEZvrp0w1IsVd8k7
+	 kx53VNtw64rDAHNErFtS4jejenOX7B+XoQVym/Co27yY93rNoSjPg7NEO2VGmXIwVi
+	 8AnK8zG4yU/GRspw2DjYX76vziOLtlQ8Vc9Kz0Zs=
+Date: Wed, 10 Jul 2024 14:50:14 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Lizhe <sensor1010@163.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] driver:core: no need to invert the return value of
+ the call_driver_probe()
+Message-ID: <2024071007-dimly-jazz-5e1f@gregkh>
+References: <20240709141417.3349-1-sensor1010@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <27cf3056-5c7b-4759-b03a-1fa9b785611e@app.fastmail.com>
-In-Reply-To: 
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-5-3fd5f4a193cc@pengutronix.de>
-References: 
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
- <20240701-b4-v6-10-topic-usbc-tcpci-v1-5-3fd5f4a193cc@pengutronix.de>
-Date: Wed, 10 Jul 2024 14:48:20 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Marco Felsch" <m.felsch@pengutronix.de>,
- "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "Richard Weinberger" <richard@nod.at>,
- "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Russell King" <linux@armlinux.org.uk>, "Joel Stanley" <joel@jms.id.au>,
- "Andrew Jeffery" <andrew@codeconstruct.com.au>,
- "Nicolas Ferre" <nicolas.ferre@microchip.com>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
- "Shawn Guo" <shawnguo@kernel.org>,
- "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>,
- "Fabio Estevam" <festevam@gmail.com>,
- "Vladimir Zapolskiy" <vz@mleia.com>, "Andrew Lunn" <andrew@lunn.ch>,
- "Gregory Clement" <gregory.clement@bootlin.com>,
- "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
- "Tony Lindgren" <tony@atomide.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Magnus Damm" <magnus.damm@gmail.com>,
- "Dinh Nguyen" <dinguyen@kernel.org>,
- "Thierry Reding" <thierry.reding@gmail.com>,
- "Jon Hunter" <jonathanh@nvidia.com>,
- =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
- "Michael Ellerman" <mpe@ellerman.id.au>,
- "Nicholas Piggin" <npiggin@gmail.com>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org, imx@lists.linux.dev,
- Linux-OMAP <linux-omap@vger.kernel.org>,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
- linux-tegra@vger.kernel.org, openbmc@lists.ozlabs.org,
- linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev
-Subject: Re: [PATCH 5/9] ARM: defconfig: convert to MTD_EEPROM_AT24
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709141417.3349-1-sensor1010@163.com>
 
-On Mon, Jul 1, 2024, at 15:53, Marco Felsch wrote:
-> The EEPROM_AT24 Kconfig symbol is marked as deprecated. Make use of the
-> new Kconfig symbol to select the I2C EEPROM driver support.
->
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  arch/arm/configs/aspeed_g4_defconfig   | 2 +-
->  arch/arm/configs/aspeed_g5_defconfig   | 2 +-
->  arch/arm/configs/at91_dt_defconfig     | 2 +-
->  arch/arm/configs/axm55xx_defconfig     | 2 +-
->  arch/arm/configs/davinci_all_defconfig | 2 +-
->  arch/arm/configs/imx_v4_v5_defconfig   | 2 +-
->  arch/arm/configs/imx_v6_v7_defconfig   | 2 +-
->  arch/arm/configs/ixp4xx_defconfig      | 2 +-
->  arch/arm/configs/keystone_defconfig    | 2 +-
->  arch/arm/configs/lpc18xx_defconfig     | 2 +-
+On Tue, Jul 09, 2024 at 07:14:17AM -0700, Lizhe wrote:
+> In the probe function (either drv->bus->probe() or drv->probe()),
+> there is no return value of EPROBE_DEFER. the error return from probe
+> should be -EPROBE_DEFER, hence no negation of call_driver_probe()'s
+> return is needed, nor should there be an EPROBE_DEFER check in
+> driver_probe_device()
+> 
+> Signed-off-by: Lizhe <sensor1010@163.com>
+> 
+> v3:
+> 	Modify commit message and versions go below the ---
 
-Applied to soc/defconfig, thanks
+That didn't happen here :(
 
-   Arnd
