@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BD8194C76;
-	Wed, 10 Jul 2024 16:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4ED1991A9;
+	Wed, 10 Jul 2024 16:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720628759; cv=none; b=B69jJSeqb29NjYDMVN3AhcVshOedE28ZLbk2XwcKNzdTfaotp0AgJ68lWv0TwHp/fq2PX504LgTixq3U01AuPk9kvXkvgh8jkmFeZLEO6pVg+7RhNr10A9FgdnEyXEyDQh1PUT0QBUyrAep1SGAgSFolHP/J0IlxL4leYqUq/lY=
+	t=1720628759; cv=none; b=KyE/FU8JWaFkkUAbEay/Efiq9PZDHcFRHnFNY3UN7NphDtkxFtYetWLkxcIQOYLxiJploW4+kwfxmGgbfSBZW7z2U0ll8CJM0LYTINJdF8LBqJuHuEjLqDa5lqJIfZ0uI8m+M00BxaVb5PZJbtnQHWqLrH+ZYw519WLxnhaReR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720628759; c=relaxed/simple;
-	bh=mtd75yFZxtytaUaBHke0UfoZiAtqt2nehHx/5pBxF6Q=;
+	bh=APj0eepduwvvtwASW+SHCv0U/NBWDKOpbaZqy7AZB+k=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=hBHpvDW1h0KXw6rNZvszj5QA09mZyX5BhJWLaOD3H9quKcdPrjkmb1sUIZxdvLVo0nQ1uhqQ/TKOZRQykucZ3/vB2iPEu56jQ4chXUPuwkeDlP8he7tA7/dVbk8i/b7WVVxihNqY6npSSwfj5WA6H98GF57tpLNCJsVHIYy5+cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0bnDpGIu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MIDpl++q; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=kCG5eiUzjNzeRXGKrD3CmFfi75USl+ACvZ90BpUO0eeQSUd5HM1xgQJP4WwzTFltRjAIlPyLiBdkdiFxWUEZVlAgShJeMCGn/uLqAH8oOIv28HBWu/Jd5o+1afFXnw+uBlBntoqQzYck1nboA//00uKZ2kCKlTkCXWz849KZ0wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bcVbN5Rx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qa5KulEO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0bnDpGIu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MIDpl++q"
-Date: Wed, 10 Jul 2024 16:25:55 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bcVbN5Rx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qa5KulEO"
+Date: Wed, 10 Jul 2024 16:25:54 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1720628755;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IigpQ9uWNZ2SHk72Idjeq6bdQ/CTWQ7zgTSWQi4UtCM=;
-	b=0bnDpGIumWrf9hRshCpwhvJ0213TO3isV2TWW9Q+jgbt3Nu4KYvCbg6LtfrSkkUz43lrbF
-	bdTcrXETLvuNWk7ldX8uEOwHYcWExmiBk9bb0gQ1l+Ihimz00tykWBT/9jFbGgUhumUcX7
-	3QdOekDKsEiK9D7S0FofE4mGAtsCisi0FnCLsxZvB2zg/tLK6WCDpsIVeeu40zq0a4iZyn
-	NbFG/iQJZL8ZPWGhUc1cyZb86Tt5xzs2Ou0s3pO0QMNsvNDJSpnJ3dDIZd0gw/gVxTAlQN
-	LibTroapa8b0Z1NDVY6dPbaVlJoB475jn881mNj7w6lBXxEzyazvDHN4H7AziA==
+	bh=E84cVwbEDqsPv6tA5kpw6TQqpBXOKaFEtfY4fx8zrFE=;
+	b=bcVbN5Rxsk4Zo2vHTBZyTd2kk5Uw3Ze/Vdb+GOONZ9N/AHYKUGZUhCurM6onRUzflDUioZ
+	jlDV4TwLPkoHEhI/BMOU1y3Dm1WxiHwEiNl8E5c8TIO0R36KloMp1FxthJ8iuvGUEKbX/D
+	LNfGrhfh0VWAD8Gwr7hOiwGHiAJl/FHbp6NPpIyyVBQ3Xqt6iUeMqZcuH/+UQasRaPO3m6
+	dh1BJNr8E863+opD+gsDtjCJKLHraVzf8RjC91z4bGdXBK+5BWKbqBrjYgR16R2LN5XZ9P
+	mywBeektIiYAL12MmNcBuJqkHQMc9byDxj1lz3MoUtpyfGAi2GIkZsma2LzBjA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1720628755;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,26 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IigpQ9uWNZ2SHk72Idjeq6bdQ/CTWQ7zgTSWQi4UtCM=;
-	b=MIDpl++qHQb7fkeOhSUF8I3xCIMgfgJU2/zEm4DKJN5jUWL8KejZPucSd/lpffA9QhAN+4
-	/VlHbjERcbEWehCA==
-From: "tip-bot2 for Shivamurthy Shastri" <tip-bot2@linutronix.de>
+	bh=E84cVwbEDqsPv6tA5kpw6TQqpBXOKaFEtfY4fx8zrFE=;
+	b=qa5KulEOeq0sk1TqbXmykxliKNjzCeNfj+rHhglOjR6joYzNwjix58+j4nfEWyZARJYNdY
+	HkuJPWF/bGEZxdCA==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] PCI/MSI: Provide MSI_FLAG_PCI_MSI_MASK_PARENT
-Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <87ed8j34pj.ffs@tglx>
-References: <87ed8j34pj.ffs@tglx>
+Subject: [tip: irq/core] irqchip/gic-v3-its: Provide MSI parent infrastructure
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
+ Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240623142234.903076277@linutronix.de>
+References: <20240623142234.903076277@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172062875551.2215.8934562341098722721.tip-bot2@tip-bot2>
+Message-ID: <172062875472.2215.10832477259402758364.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,96 +68,155 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     698c86faa99ae60a19aacbb74ec1df243bc5eba6
-Gitweb:        https://git.kernel.org/tip/698c86faa99ae60a19aacbb74ec1df243bc5eba6
-Author:        Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
-AuthorDate:    Wed, 26 Jun 2024 21:05:12 +02:00
+Commit-ID:     e3baf5e45373c788bc7e0d899d1563f2acdb0fa8
+Gitweb:        https://git.kernel.org/tip/e3baf5e45373c788bc7e0d899d1563f2acdb0fa8
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Sun, 23 Jun 2024 17:18:36 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 10 Jul 2024 18:19:23 +02:00
 
-PCI/MSI: Provide MSI_FLAG_PCI_MSI_MASK_PARENT
+irqchip/gic-v3-its: Provide MSI parent infrastructure
 
-Most ARM(64) PCI/MSI domains mask and unmask in the parent domain after or
-before the PCI mask/unmask operation takes place. So there are more than a
-dozen of the same wrapper implementation all over the place.
+To support per device MSI domains the ITS must provide MSI parent domain
+functionality.
 
-Don't make the same mistake with the new per device PCI/MSI domains and
-provide a new MSI feature flag, which lets the domain implementation
-enable this sequence in the PCI/MSI code.
+Provide the basic skeleton for this:
 
+   - msi_parent_ops
+   - child domain init callback
+   - the MSI parent flag set in irqdomain::flags
+
+This does not make ITS a functional parent domain as there is no bit set in
+the bus_select_mask yet, but it provides the base to implement PCI and
+platform MSI support gradually on top.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lore.kernel.org/r/87ed8j34pj.ffs@tglx
+Link: https://lore.kernel.org/r/20240623142234.903076277@linutronix.de
+
+
 
 ---
- drivers/pci/msi/irqdomain.c | 20 ++++++++++++++++++++
- include/linux/msi.h         |  2 ++
- 2 files changed, 22 insertions(+)
+ drivers/irqchip/Kconfig                     |  1 +-
+ drivers/irqchip/Makefile                    |  2 +-
+ drivers/irqchip/irq-gic-common.h            |  3 ++-
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c | 31 ++++++++++++++++++++-
+ drivers/irqchip/irq-gic-v3-its.c            |  5 +++-
+ 5 files changed, 41 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/irqchip/irq-gic-v3-its-msi-parent.c
 
-diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-index 03d2dd2..5691257 100644
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -148,17 +148,35 @@ static void pci_device_domain_set_desc(msi_alloc_info_t *arg, struct msi_desc *d
- 	arg->hwirq = desc->msi_index;
- }
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 3e3cbe9..ee78716 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -41,6 +41,7 @@ config ARM_GIC_V3
+ config ARM_GIC_V3_ITS
+ 	bool
+ 	select GENERIC_MSI_IRQ
++	select IRQ_MSI_LIB
+ 	default ARM_GIC_V3
  
-+static __always_inline void cond_mask_parent(struct irq_data *data)
-+{
-+	struct msi_domain_info *info = data->domain->host_data;
+ config ARM_GIC_V3_ITS_PCI
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index f5e0fa9..def6fea 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -32,7 +32,7 @@ obj-$(CONFIG_ARCH_REALVIEW)		+= irq-gic-realview.o
+ obj-$(CONFIG_IRQ_MSI_LIB)		+= irq-msi-lib.o
+ obj-$(CONFIG_ARM_GIC_V2M)		+= irq-gic-v2m.o
+ obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-v3-mbi.o irq-gic-common.o
+-obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v3-its-platform-msi.o irq-gic-v4.o
++obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v3-its-platform-msi.o irq-gic-v4.o irq-gic-v3-its-msi-parent.o
+ obj-$(CONFIG_ARM_GIC_V3_ITS_PCI)	+= irq-gic-v3-its-pci-msi.o
+ obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
+ obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
+diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+index f407cce..eb4a220 100644
+--- a/drivers/irqchip/irq-gic-common.h
++++ b/drivers/irqchip/irq-gic-common.h
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/of.h>
+ #include <linux/irqdomain.h>
++#include <linux/msi.h>
+ #include <linux/irqchip/arm-gic-common.h>
+ 
+ struct gic_quirk {
+@@ -29,6 +30,8 @@ void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+ void gic_enable_of_quirks(const struct device_node *np,
+ 			  const struct gic_quirk *quirks, void *data);
+ 
++extern const struct msi_parent_ops gic_v3_its_msi_parent_ops;
 +
-+	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
-+		irq_chip_mask_parent(data);
+ #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING    (1 << 0)
+ #define RDIST_FLAGS_RD_TABLES_PREALLOCATED     (1 << 1)
+ #define RDIST_FLAGS_FORCE_NON_SHAREABLE        (1 << 2)
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+new file mode 100644
+index 0000000..cdc0844
+--- /dev/null
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (C) 2022 Linutronix GmbH
++// Copyright (C) 2022 Intel
++
++#include "irq-gic-common.h"
++#include "irq-msi-lib.h"
++
++#define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
++				 MSI_FLAG_USE_DEF_CHIP_OPS)
++
++#define ITS_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
++				 MSI_FLAG_PCI_MSIX      |	\
++				 MSI_FLAG_MULTI_PCI_MSI |	\
++				 MSI_FLAG_PCI_MSI_MASK_PARENT)
++
++static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
++				  struct irq_domain *real_parent, struct msi_domain_info *info)
++{
++	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
++		return false;
++
++	return true;
 +}
 +
-+static __always_inline void cond_unmask_parent(struct irq_data *data)
-+{
-+	struct msi_domain_info *info = data->domain->host_data;
++const struct msi_parent_ops gic_v3_its_msi_parent_ops = {
++	.supported_flags	= ITS_MSI_FLAGS_SUPPORTED,
++	.required_flags		= ITS_MSI_FLAGS_REQUIRED,
++	.bus_select_token	= DOMAIN_BUS_NEXUS,
++	.prefix			= "ITS-",
++	.init_dev_msi_info	= its_init_dev_msi_info,
++};
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index af5297e..047e566 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -38,6 +38,7 @@
+ #include <asm/exception.h>
+ 
+ #include "irq-gic-common.h"
++#include "irq-msi-lib.h"
+ 
+ #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+ #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+@@ -3708,6 +3709,7 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ }
+ 
+ static const struct irq_domain_ops its_domain_ops = {
++	.select			= msi_lib_irq_domain_select,
+ 	.alloc			= its_irq_domain_alloc,
+ 	.free			= its_irq_domain_free,
+ 	.activate		= its_irq_domain_activate,
+@@ -5013,6 +5015,9 @@ static int its_init_domain(struct its_node *its)
+ 
+ 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+ 
++	inner_domain->msi_parent_ops = &gic_v3_its_msi_parent_ops;
++	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
 +
-+	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
-+		irq_chip_unmask_parent(data);
-+}
-+
- static void pci_irq_mask_msi(struct irq_data *data)
- {
- 	struct msi_desc *desc = irq_data_get_msi_desc(data);
- 
- 	pci_msi_mask(desc, BIT(data->irq - desc->irq));
-+	cond_mask_parent(data);
+ 	return 0;
  }
  
- static void pci_irq_unmask_msi(struct irq_data *data)
- {
- 	struct msi_desc *desc = irq_data_get_msi_desc(data);
- 
-+	cond_unmask_parent(data);
- 	pci_msi_unmask(desc, BIT(data->irq - desc->irq));
- }
- 
-@@ -195,10 +213,12 @@ static const struct msi_domain_template pci_msi_template = {
- static void pci_irq_mask_msix(struct irq_data *data)
- {
- 	pci_msix_mask(irq_data_get_msi_desc(data));
-+	cond_mask_parent(data);
- }
- 
- static void pci_irq_unmask_msix(struct irq_data *data)
- {
-+	cond_unmask_parent(data);
- 	pci_msix_unmask(irq_data_get_msi_desc(data));
- }
- 
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index dc27cf3..04f33e7 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -556,6 +556,8 @@ enum {
- 	MSI_FLAG_USE_DEV_FWNODE		= (1 << 7),
- 	/* Set parent->dev into domain->pm_dev on device domain creation */
- 	MSI_FLAG_PARENT_PM_DEV		= (1 << 8),
-+	/* Support for parent mask/unmask */
-+	MSI_FLAG_PCI_MSI_MASK_PARENT	= (1 << 9),
- 
- 	/* Mask for the generic functionality */
- 	MSI_GENERIC_FLAGS_MASK		= GENMASK(15, 0),
