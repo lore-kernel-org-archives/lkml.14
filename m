@@ -1,119 +1,174 @@
-Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2050.outbound.protection.outlook.com [40.107.215.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25DC1E878;
-	Wed, 10 Jul 2024 13:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720619860; cv=none; b=sy98DrUBXGepTPdLMsrKoZJEeW/CSOKaGMiGzwCgk4yzfbUiSkMnHp6FDkdTdCpheyPoDEJ94yp53kjtQV1Uci6t21gftV3GCBA0MJa84hMe1K3ZFFliGB7QsYqY2OAjovsoVM20e2bbFbcb64aP3ljsohITNq+TiyAUI/QkclI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720619860; c=relaxed/simple;
-	bh=dvNWlpITxM+kcZ2muxDh7Vnog/B/XqfEmWB2Ko9b+L0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A9yABq3xNY3Qyc2Rlq7GMIWh7OHepCHoD51BHjJ0vqugDOZ2PsJJiolF17Uw/IyVqPeD8R7MWbh+A5HNFuNlfK6T5v1y6T3qOo5rZF7U1OV7GWlsWjiaMNEkjoZ74Bhs+dOvTWC+kdlv8kP1GGWvlfwkXMiOphVd+8kG/JpVz7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=Lz4kK/pL; arc=none smtp.client-ip=178.154.239.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D0A128369;
+	Wed, 10 Jul 2024 13:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720619902; cv=fail; b=VEQZKAwjveDH9wL5sYlEwcPtn7XowDLuw5w71Ja0cig+4oDochjGemBJiJRHl4rDbTR4SfidQFaXrhMYwrA9n08C8KA+8gfoyJVRTeBPhfgpOHneAlQAsmancO2l8PlvebUityNmkxEYIWahr9f9Qbr5oWpXXrZkoooYOex8LpA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720619902; c=relaxed/simple;
+	bh=7jQqwDm0MXfoSh6Wk/rFcNBHz1G4QRxsSCcSK5si6Ds=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=EGWlceDTKH6rkvDaTu7DeARGRWu7/PWpwSjuURYxg9dR1CNfwqZjivNtPGXFzXG+tkcDQwjUrLMLsKfn3Maok5rW+CKqT9ybxYP8V2jOb9p5BkM9OWdUAcOYD/saQIDokq2KqOVrZ1aFElgpnK6ovTTEWOZV/Vr2ThuA7z9N6bU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=OiTLtJUe; arc=fail smtp.client-ip=40.107.215.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="Lz4kK/pL"
-Received: from mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:38a3:0:640:a710:0])
-	by forward500a.mail.yandex.net (Yandex) with ESMTPS id 7E56061E0D;
-	Wed, 10 Jul 2024 16:48:42 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id Xmecr64OiuQ0-yRS0mYRs;
-	Wed, 10 Jul 2024 16:48:40 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1720619320; bh=dvNWlpITxM+kcZ2muxDh7Vnog/B/XqfEmWB2Ko9b+L0=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=Lz4kK/pLIiP7TRsvVcCsyN/ENXOi/cbuOigQPGq6WepeV2OMr/VX7mIKmanRWGhgr
-	 BHxt03weitFN0X52cEW+k6DsO/fFgVBLHT5tNa8+AeAum0LY8n5C2G7QIul1NoywuN
-	 cqt18iShdPqpcuaqZATlZBHaI3uCXuLlRUg1hK8k=
-Authentication-Results: mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <6a0b3b3b03706367e7bd2d3ed7132e9cc454af00.camel@maquefel.me>
-Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Arnd Bergmann <arnd@arndb.de>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
-	 <u.kleine-koenig@baylibre.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Stephen Boyd
- <sboyd@kernel.org>,  Hartley Sweeten <hsweeten@visionengravers.com>,
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
- Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
- Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter
- Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, Mark
- Brown <broonie@kernel.org>, "David S . Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,  Takashi Iwai
- <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, Aaron Wu
- <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
- <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
- linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org, "open
- list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-clk@vger.kernel.org,  linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-spi@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
- linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-sound@vger.kernel.org, Bartosz
- Golaszewski <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod
- Koul <vkoul@kernel.org>
-Date: Wed, 10 Jul 2024 16:48:34 +0300
-In-Reply-To: <8f45a3d9-429c-441e-a17c-33a163eb86c2@app.fastmail.com>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
-	 <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
-	 <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
-	 <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
-	 <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
-	 <663b1749afeb5cec281149fdb445ed36fdcbc68e.camel@maquefel.me>
-	 <8f45a3d9-429c-441e-a17c-33a163eb86c2@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="OiTLtJUe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iXohaOyD5v6GL0X0OPJKkNN48/SsCzeCuM4v1Apubm/WD3riWZo6KG8JnC4IN2hJ0mXFVlpSkTfzAxx0xtSwtqOHFj16xJEC3rKtxW7vu5gvkoWIbqx04SlBStRXuXpBJLKt+lNcFN+EmoZNgyN2M7PKNUFGGjVRuTVCaaZvNSQWtbufo0yL1EfQ902rJEMCAvBF+/WeJscNhhOTGK3vXjx+SOuUl+uxblWVPSpYiSbNbsvyF85TRBQOWELm/7nno5kwhf154W+U7c5S8mtyqqiCeXlIITAHs35JgO6rHprEq7WyWR+kgzA8icNIKGq/lWeLXwJm3GOsEkJraUNTew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eVfWZv1bxzI2AFs3g8Xez+PQlX+2bEmv+QBnAFOvTTs=;
+ b=mj5GTVmp+yqAeKZLoQnTeF+EtrfUDIAaqp3BI7Ti7tDC95sVmQuhzkOwe9/QwjYuShRh+ge1Nh0v9fcrvNseQvf5xUCX4u98IIeKeaim28oozT77JBtQQp4VFO3uoz+fsjob5NZmyzNwT8Xcimvh8R94EPKwRmWRl2S6i+B8f83UycU+xrTEQHbDLVAntwZot3TMA7uXJ3gbMWm8Ws6pAaKxHwOZFk8iAr2mVv5bV1yLMLcAOYIkRJcKjobSLhNBZGjaRPMvu1eV48fLdtaxBhz5yyc4G8PXin19p5RFfcW0OJsLwfE5w2yWConEonkdm2mRjG10xjNpvjEJH+kLsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eVfWZv1bxzI2AFs3g8Xez+PQlX+2bEmv+QBnAFOvTTs=;
+ b=OiTLtJUeF91hdaaG5twoAQg63D/Dr/S9XsvwbbFMP3oKY4lldDiZ/ThQBMuF+XQYx4QUEte35WjchC6KL7YXUp3a/JwagbtCaG/DmFIpRDjovtY4YHjOastvnxeLJS3W9xsNgvf9gZKH0tON+krd9sOoBlXRRTs5UtJ+ckQjgrj/QufEk9eNuY5XJq93Kuh1ew+YOMvhzZEVlW9AVbsTkQGsQhq+ocNfO+6q5hZLPmjne9YLN2B5lSLvEJVcSAUORpKDep6DJ/SAw1Nvx5P4uL+jAFB8QK7px4q3PNv0Dqcw940AyCKUGkSBSs6MlUjJHrnVcZ8Xjxv8lVYgpxuMMQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5624.apcprd06.prod.outlook.com (2603:1096:101:c8::14)
+ by SEZPR06MB6383.apcprd06.prod.outlook.com (2603:1096:101:12c::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Wed, 10 Jul
+ 2024 13:58:14 +0000
+Received: from SEZPR06MB5624.apcprd06.prod.outlook.com
+ ([fe80::e837:10e3:818e:bdfd]) by SEZPR06MB5624.apcprd06.prod.outlook.com
+ ([fe80::e837:10e3:818e:bdfd%5]) with mapi id 15.20.7741.033; Wed, 10 Jul 2024
+ 13:58:14 +0000
+From: Lei Liu <liulei.rjpt@vivo.com>
+To: Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Andrei Vagin <avagin@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: opensource.kernel@vivo.com,
+	Lei Liu <liulei.rjpt@vivo.com>
+Subject: [PATCH 0/2] Support direct I/O read and write for memory allocated by dmabuf
+Date: Wed, 10 Jul 2024 21:57:52 +0800
+Message-Id: <20240710135757.25786-1-liulei.rjpt@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0073.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:31a::18) To SEZPR06MB5624.apcprd06.prod.outlook.com
+ (2603:1096:101:c8::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5624:EE_|SEZPR06MB6383:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78d1f3d9-dc82-42b9-e7c7-08dca0e85737
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|52116014|366016|376014|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7Lq4GyPq4CpU2WpK5VvQnF0Gm+9EqPSZWlL50s2IBT9aBt2Px5HLy5AGRWDP?=
+ =?us-ascii?Q?xtLEZbsiTbHUdfgfFR7um/lT7q+EPfUnP5kIP9rn5FZGuhMeBVXxiZQL/CSA?=
+ =?us-ascii?Q?ZIW4cM6KDHK25O44DraJOlGvGb5oNSA5N6ABAzORD2kREEiLhloT3Id6ZI1f?=
+ =?us-ascii?Q?FPFhWJbSszEr6Rq2/2mMH1rx1SZHX+0zrT6Ea0VAPep8XWffJ2lxsRHL03eF?=
+ =?us-ascii?Q?UbeJA0Qo/huzxjt34a22x0IJ+cNf2FBMnebLKGiHRSEoDWZK4Lpv+OGIj3TL?=
+ =?us-ascii?Q?5r1Nt/HECKvWezjCShQaLK5YqXZMXD44vDs89ICmOH8JGDAegNgM45UW1Mtq?=
+ =?us-ascii?Q?+A8d0zpS1uMUZHN3w/PLMzhelcPmYQmz5cOjIANAbF90bvWV8yx8DYIYjLah?=
+ =?us-ascii?Q?0RrcPjgJxCs/BFZhLMpd3ngOQ+EGNjWWVvUvE1840x71Iv7Bm/jelCnL5qRa?=
+ =?us-ascii?Q?421E6LvJ+eMfiUM0S3SKq5cX+iqfZoGb2+wy4j+1Qxp6diqG/ZZy8ajKI5BW?=
+ =?us-ascii?Q?MsCInYC9vBXbARP9Zb4PuZKJwo6WHIem41UG7siTpeNt10VbsqFZnAAlvo2S?=
+ =?us-ascii?Q?9Y/lUdMM3BcWFanJFLNVy04DZMupGYnc2QcxM+QwiPGgDRF2ICqvQo4qbhrE?=
+ =?us-ascii?Q?IkC7VyCMlHXo9Z4Y8Ku5YqnCgQZXYE39LGU0X8/Rd/eBVxU53YBrLaWpk08X?=
+ =?us-ascii?Q?vRFK/E1V1U/TRW0e9ClswvvlQ7RqKPLdo1wL60lgY17lSd4Mh0XyMFRl+Yia?=
+ =?us-ascii?Q?ZJcL0e7l5CSPhoMAg+KQneVusaS2KQ9VMSgg/48bzb1xNOtfh8oOHy2T7woq?=
+ =?us-ascii?Q?PeOqk3sfRSEyighEVYyPpd98iS492nZfkoj+z+qpx+XSL4Ydo32k+Qxa2wre?=
+ =?us-ascii?Q?ksNKIgyM6c8TfDvbCOVsIkCKpq+HkVx9UGk2Wb2txii1jj6UCNkT9Jy5FutE?=
+ =?us-ascii?Q?Lxd3UJmRcILonmygKeRmmj0sS/t0T73Y8DqK31lSGYJ8Yvjb2twXKf8zFZy3?=
+ =?us-ascii?Q?K/sMw9eN7aSvaDy/CTnr7jGvdKiRmv0k4KrK5389QcmGm5QcGKD1E3THcZSr?=
+ =?us-ascii?Q?+Zyr+7+42010iBesZ8/40s9iMz9J6pfjBkmp1MWvyvfYuTzbFsMsevCMHwaD?=
+ =?us-ascii?Q?lmf/Lg/ltZ4wmPlLgI9jYVz8snldteYotLmj0QWEWrjgUENGSC86SyP+gUO+?=
+ =?us-ascii?Q?Y7iI5bc2V7C8PKQr9uTdUruV8gV1ayB/lIiBAD4Y8vtsF/vjz6OsWw8aX1Fw?=
+ =?us-ascii?Q?lyj2m/Hxi+vjuGI2pxMAJm0y5aaO1Mbi8yx29xMBP85Xdmk5eaykgGAlzxhV?=
+ =?us-ascii?Q?1G+b4FHqMm+eVh/4OEBtcsI1oJt1tSoVJZe8dsH9Nr5h89C8HesMt9wHR/s7?=
+ =?us-ascii?Q?gGkXInVeXV54a6w/q+yxJekL+0z8K9K8hejod040YfojhKEJw/4pRtcRt3dT?=
+ =?us-ascii?Q?9qCyrgcWww4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5624.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(366016)(376014)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+/oZD+FZ8889yxcdc+raAqIq+zMzHaiXDMnscRfKSMA+cz7yzQJJucOTHPz/?=
+ =?us-ascii?Q?N2kU51VEY1rzHPNk39sBd4/h9oNPPLcMcISEx0Bot+r1nm6E6apNh3WD6Eza?=
+ =?us-ascii?Q?s93lx/7ihQGyp55OEO0UcuNG8zQ7OHTOEXtUo31dHV2yBqBARwHUbISShcPl?=
+ =?us-ascii?Q?qY8tkmnPCPHpDUUpB1GqAlyjjqWn/i21FzyC2H+uid5jn4hQU9DuGs7yZPUL?=
+ =?us-ascii?Q?+rAceKwsHffz7GOo6eVXdnbeO73j/a7WPZolii310kNMr3CgS3Hhy6fXeAJL?=
+ =?us-ascii?Q?c01IS1s5nO1zOQ1k1RsriPEeur+6eDlOJBefil144F7UAvFWimlXwc4NLvCU?=
+ =?us-ascii?Q?8HWy7uTxoBnVW03VTNEDq9DfmUYLEfIKpO5ad3O4sPKu7l2suSH3759AAc6z?=
+ =?us-ascii?Q?Rf7/B1Ovyp8ICYRbAjraB788q7Sx2AQpf5+EEVQZc+LTZykBc1Q3SAekqtSC?=
+ =?us-ascii?Q?XQnIjKeRiFkWvD7xmi2Oy8aevQzTAs00eCZXZdo0rd6ffVKXKseTwRgvD97B?=
+ =?us-ascii?Q?U5ZmxHqCkILSi6HCHswY8l8iwGDLsxcrk8Ztu9R1b4uf5VTs4aFIywmsZl5y?=
+ =?us-ascii?Q?HlnwahJFhbFZ/8YsDrbrtxPbFpDWM+9tzSJVwgcyf9dF/wkXeYuDohY4joIe?=
+ =?us-ascii?Q?Tp4WbdJurCVVnPldrE+AFBoLGzNlYsaeLV66kASmjql0YOqiFy/iS/PPUiRL?=
+ =?us-ascii?Q?pJFUX/gEJQr15DjP1xt+wv0A0aWOC+va1lQ3tunq1ZfMDg1cWl10xSLVoiyN?=
+ =?us-ascii?Q?EcUnqhsVfV5VjJ17xD5IBzsMNeYgG4iFnY0wCfTP+46jWDHIP6WBdT5hIKrS?=
+ =?us-ascii?Q?+zZ3UhnJEVnhtsXQqvMQBWfOkinM+6OTMpkI/5ioCh+5Kzn5UdMXaVYGX0vN?=
+ =?us-ascii?Q?cJTLrPrC+spg3AGCpsv9K3ihJlYDcjxKdSDIHeyMQD+0M85MXcRScrmJnG2R?=
+ =?us-ascii?Q?VejcIAAKH3Dr6m/sUGu5VDG7KAFeVeh03w5glekg77Z/qwZI1rdVYbkSDiwT?=
+ =?us-ascii?Q?8fPKfdUrExP/49vaIHT0Van5zGpO26p2+eKiG2dlROwJqJEONiqp8U40leZF?=
+ =?us-ascii?Q?r2YusWhdbEwwNvzUrFKZLyg7AIB/qHsosHBs8/XPD/nlBNM3VBTimI1UwNLH?=
+ =?us-ascii?Q?c1aqBMsHGzzK1NS7NE2FecGtXpl+JvsQoGuJf8THPGElLuShQKLyBYnOKyCi?=
+ =?us-ascii?Q?aHXSPQKXk6vTkmBJbJxebjpaKOhsrd276pQHMdyExCc8k602MsphO/Tk9daG?=
+ =?us-ascii?Q?xETdW54MlDcjksNTxFRN9KR48Qs31TF0h+g3MV27STS3o82/DquuidsnDX+8?=
+ =?us-ascii?Q?0BSQx5jmQPqRDzN7gd8TrtrZ5hi8cp7NkHFttBKck8S9lK51dCJ+iYFU1ysR?=
+ =?us-ascii?Q?CsF5ccMICDcVJ9BxRz5MX/L3Eu3G7bqrDrdJXmThDRk1OFMyFhwP74q51FSi?=
+ =?us-ascii?Q?1Z/GnA+wSQwMvr5eyg6XX7wMgGxy0O+45ZDz1xkT8CWvivnkAywhRmEJ5hbp?=
+ =?us-ascii?Q?oOmxo3C+X9RcAzhXdiseL7Sm2dcRgT5nq3BBG/uL2grd/liHmn7arwqKsK9Z?=
+ =?us-ascii?Q?6MdHQuhNCfQBjW4LLlD2LKPD78xjsesG3DzndE/p?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78d1f3d9-dc82-42b9-e7c7-08dca0e85737
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5624.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 13:58:13.9903
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X3v8YVbJbbp+T5wvFwgq+NGy96poQFcPF9qNBjTLgJRLs836ahCjMTcPl1zQ/LNnmlxQNF8ed1W3QVHuT2zu+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6383
 
-Hello Arnd!
+Use vm_insert_page to establish a mapping for the memory allocated
+by dmabuf, thus supporting direct I/O read and write; and fix the
+issue of incorrect memory statistics after mapping dmabuf memory.
 
-On Wed, 2024-07-10 at 14:31 +0200, Arnd Bergmann wrote:
-> On Mon, Jul 8, 2024, at 09:34, Nikita Shubin wrote:
-> > Arnd,=20
-> >=20
-> > Are we continuing this patch series ?
-> >=20
-> > You are silent since last version submit, which makes me a bit
-> > worried.
-> >=20
-> > If you suddenly changed your mind please let us know, cause anyway
-> > we
-> > have no possibility to merge these series without you.
->=20
-> Hi Nikita,
->=20
-> I definitely still want to merge your work, I was just not paying
-> attention while there were others commenting on it, and I don't
-> know what the current state is. If you are ready to have some
-> or all of the patches included in the next merge window, can
-> you send either the set of patches that were reviewed to
-> soc@kernel.org=C2=A0for me to pick up, or prepare a pull request
-> to that address?
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Arnd
+Lei Liu (2):
+  mm: dmabuf_direct_io: Support direct_io for memory allocated by dmabuf
+  mm: dmabuf_direct_io: Fix memory statistics error for dmabuf allocated
+    memory with direct_io support
 
-Thanks for support!
+ drivers/dma-buf/heaps/system_heap.c |  5 +++--
+ fs/proc/task_mmu.c                  |  8 +++++++-
+ include/linux/mm.h                  |  1 +
+ mm/memory.c                         | 15 ++++++++++-----
+ mm/rmap.c                           |  9 +++++----
+ 5 files changed, 26 insertions(+), 12 deletions(-)
 
-We still have a minor issue but AFAIS only a single patch left, but
-hoping to settle this one with Stephen soon.
+-- 
+2.34.1
 
