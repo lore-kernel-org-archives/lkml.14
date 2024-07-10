@@ -1,285 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8D1193090;
-	Wed, 10 Jul 2024 13:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720619984; cv=fail; b=LyMQSQIO1SO1ScIRjDRPIopZAu6ZWaytAHgLFi0bD7tbeaK0hwYTQKBx+eWaRg5ZhBgnEOZTnj8lDUdKfY11W65igWHvOWlfykk6tC/KKrwHH6rjXtWjGj7NNjVVHDbwGd88CiZsODPxsTx32IewGML584HDFjJV64NCKY22c+E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720619984; c=relaxed/simple;
-	bh=c7kyQpRwr0MXGTf4AYPONdg9yfsDTUJRSClPp69unww=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZFDLDtZcoXdspwoAqfrIG2UkVEAAOXYF6sKz0pEKcLuhoIAJDlM5P4I5ZVO/xxWdgDsIk6aVLZ1iLmPNXxoTkr/A8WCv2AXWpXBD7Syd9WZV84i4uBRwZN5vIONFuDQ3EXWkUOZsGLbbhnR89yTlRceACdz1dw+sRlmwH6D+pok=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VbHSLT4o; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B56E18622;
+	Wed, 10 Jul 2024 14:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720620077; cv=none; b=QmhaqBF7WdzSUDHH/yHbXf18F2MnSrVAKr30zWlutfrrdmkFdAWxEYXRoeUw9/L7Sl7H3kpyPH91Zb43ZCFwy4o4L/59dZTrARDhL1Z2pOFEWbhUIKm0xQVsBzyNAZ/Q5G59Tq3b1DJa7OqrFPZ55rkj9qrNIWQnH+fLZUoVF3o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720620077; c=relaxed/simple;
+	bh=DqU9cIN76ke48HhYoQkN5R6zkS5nfvCzZJkiZIS32WY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u2qsYIRyGBdfuL75n3GBclI9F2kQOUuPUreEsyqHVlaNDHTFRRo78elbCyOcGkQb+MgKXgEpPRd6WQdqhZ4YSTx2QWqkUzlRqvlzVvserPWYmBKuD3rz6ZMLd1SNrDmD78T/t0bAtqLeMzgKcbj0HpN+H0cX6AkShqt8vqzv2lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlgOnuRb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VbHSLT4o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720619982; x=1752155982;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=c7kyQpRwr0MXGTf4AYPONdg9yfsDTUJRSClPp69unww=;
-  b=VbHSLT4oA/Ip02/qWDAqy4A1HkmGyaXnXnsruQpYA5Kp6YCM0SJNeHyE
-   0X+QGhr3RiSx6JS8mk6PNFy1vyfAbycgqr0agCajItyV/LQooVG/u5wIo
-   Wgf0gDEONMHucQTNcxqC+baCqgemTJfv4Kdd3CtX5HNTRSmdczyDfDKYY
-   ykPSOMkZZ1VrCsCxnizyImz6gmavs/Q56VFrKskbrj02PWYzeKxS0pOTj
-   p1C8HREf/vsGrX6tHmrmZo8ZokhxADS0x8S4SIituVWplWCOwGhYH58nP
-   iuVOBudCrjaWeIWf5GwJKqQEkNEqgNREKjIxIPG9qPHw5ZEdTQKZ68UAZ
-   w==;
-X-CSE-ConnectionGUID: rzVpKEZlSdmo+lWbysDTow==
-X-CSE-MsgGUID: EP2rupPaTr+p/lVqS0PAqQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="40458849"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="40458849"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 06:59:42 -0700
-X-CSE-ConnectionGUID: TrGq1pbkTP6fBOa2aSMnhA==
-X-CSE-MsgGUID: gjDfnBT9TpubQ15CEeuv/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="53172993"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Jul 2024 06:59:41 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 10 Jul 2024 06:59:41 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 10 Jul 2024 06:59:41 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 10 Jul 2024 06:59:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HfckRmxhoqD85oRD8FXO6EHLMe7BNmANT8DZkVDQq42IOhx2fepboST9vBe0Z4qq66KFv3gUk1eO+kBGAfb/KaN6qqOYf9h/OSaWcBd+F0lh0+R8l4SXBB+GnJA4GWFXkBc8Vr91wiFLavbjLqREq1AaresiXAECoKqiv957BuRIvqeEZn3BufLIhUsgi7CdCWPcUR66/X8PE0kAANGDIwMJtHyq/2Wqm9Xw4/iZlNRZMZ4L5VHxBlRV1+CNRYHUWNb4bgT6GQPlBV5iIn1EE5SCSBt04XtKYxvknoYO6YevlHMfuGeZRK/ye10Py6ft37JzyErZr9ubtP0UKxVz1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iiDaL9xQXeMrGiWGZ42MYmRbHIEZ7n9r6aAO89C1CDI=;
- b=E318FKimA8UltI+EiJeOnIZaRJYqnPlwLnq7B3SC3a01d4FximScd/0VMuCbigsVRQ7JG0EsymK3g4lwI9tQDI5yc+N3XFa3GGLxLSHmQC5/4CgrihOTGxiHPcsFXrjUAuCX2UWNlwwogBwJL6Ibyi5rhcJC21MEeIdZs4h6vIB+nh5fPcH2cQTtJNd5hhd3ITMLlZap3+GT+EoULfHeKwH70q8FHJtNL3avR1WRocbtjlFIjT5zlX264kXKjwuTDUmrEtxcyNCxfYuDkWi+i26g8y5PotL4linXuiYKcj2K3HJgD4lCph7yFt+X5rOw8DU56s1MOg9PPoD5dFwZRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
- by SA1PR11MB6757.namprd11.prod.outlook.com (2603:10b6:806:25c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.34; Wed, 10 Jul
- 2024 13:59:32 +0000
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::15b2:ee05:2ae7:cfd6]) by MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::15b2:ee05:2ae7:cfd6%7]) with mapi id 15.20.7741.033; Wed, 10 Jul 2024
- 13:59:30 +0000
-Message-ID: <b83d8d92-44c5-438f-acef-d5781ab44f0d@intel.com>
-Date: Wed, 10 Jul 2024 15:59:23 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next v1 3/6] ice: add Tx hang
- devlink health reporter
-To: Simon Horman <horms@kernel.org>, Mateusz Polchlopek
-	<mateusz.polchlopek@intel.com>
-CC: <intel-wired-lan@lists.osuosl.org>, <apw@canonical.com>,
-	<joe@perches.com>, <dwaipayanray1@gmail.com>, <lukas.bulwahn@gmail.com>,
-	<akpm@linux-foundation.org>, <willemb@google.com>, <edumazet@google.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, Igor Bagnucki
-	<igor.bagnucki@intel.com>, Wojciech Drewek <wojciech.drewek@intel.com>
-References: <20240703125922.5625-1-mateusz.polchlopek@intel.com>
- <20240703125922.5625-4-mateusz.polchlopek@intel.com>
- <20240708124055.GN1481495@kernel.org>
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Content-Language: en-US
-In-Reply-To: <20240708124055.GN1481495@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1P191CA0015.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:800:1ba::8) To MN6PR11MB8102.namprd11.prod.outlook.com
- (2603:10b6:208:46d::9)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlgOnuRb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC0FAC32781;
+	Wed, 10 Jul 2024 14:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720620077;
+	bh=DqU9cIN76ke48HhYoQkN5R6zkS5nfvCzZJkiZIS32WY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HlgOnuRbZ6Xx/tQ4gLcqAf1Gwh+iqXg4Mwrgmxhw0RxEamHK/vWBzh6aW6egfM4UU
+	 2VJMSyzxe9Gz34O1AHUYmkPLb+84UVZlTLaMm7RMIUwfTyrHjKU0TDn1fKlkTKCiE1
+	 CpS9AF1V2gFvOI/ys1c0rF0kXb2IRt2RDKUgW/Ek0YTL2qxeLPwZ1Ni4lJg9Z6LZ1y
+	 J+hXtqI2ygWYGSp8+GOSVeLVHALLni5Ji0i2R/6/UrdSdP9h4GS8fppawM8UfRBy4r
+	 8RE30X/M+dLvqXO/TZGsJrhsvXpmFSlyuYz8ElZxikpuTX88ZOoQoZRn9jnPgF1Nfp
+	 VIf1GNy49IdqA==
+Date: Wed, 10 Jul 2024 15:01:11 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Hironori KIKUCHI <kikuchan98@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] dt-bindings: display: st7701: Add Anbernic RG28XX
+ panel
+Message-ID: <20240710-showdown-antirust-a3eb8b65c57f@spud>
+References: <20240706102338.99231-1-kikuchan98@gmail.com>
+ <20240706102338.99231-4-kikuchan98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|SA1PR11MB6757:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f422b39-ff14-48e9-497a-08dca0e88526
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SEFqZHNIbm15cEpYeDhhMk5ha3pWRTZMZEZQMk9pQnpPWTI4dWNWNEN5YTMy?=
- =?utf-8?B?UlQ3bDhVUjUzTHhGQkZacXc2YSswUHZhV2JkSE5udFc2a1FZQjl6K0tORHhv?=
- =?utf-8?B?RkhMclBmSExVOTNWSjVXSjdJRkd2NW0rQVc1UUZMa0QwVk9vWncwZHZJMFJT?=
- =?utf-8?B?a1ljZWdIYmp6RURKQ3d3dXE4elQxNUxxVWhNZGRkVTY4QXNVeTZEU1F3cUl4?=
- =?utf-8?B?dFREb2E2SzMyMk9vOGQvdlNwdGladHVBNFpwVXNtRmxuaThpSWNFdUt5d0VR?=
- =?utf-8?B?NG5WNjA3aStXWHIxMUJERS9yNURMbEtoOVNmdWdIZkdzYmwvbkhVOWgrSDBM?=
- =?utf-8?B?RVNDWkxBa05HdWVZMHdmRzlWK1hqbU5yOVg0akZzalNxeHk1NkIxdjJzTlBi?=
- =?utf-8?B?ell0WUNuZnRvTklxUXZwQm9DSUI3MDFSSzZOU1dheVdLVjg5b2ZtQVY5UTJC?=
- =?utf-8?B?MmhLMzZwbUFDNUlTeFl0UGFMYmdaNGE5bEdyY29iZUVUQk1uK0w1SVdtSE9u?=
- =?utf-8?B?NHdWRmhvNm5mWkhpYjZqRFM4bzJ2SmpNSG9Gc2JiNGR3YS9admFaVEtySkl2?=
- =?utf-8?B?NzRqWitlVHVIbk9UZ1VvV3RKTEU4WWNaQmw1WFpWbzVuaXFrSGtUblR0cERS?=
- =?utf-8?B?bnhVemYwV3UveUl6cS9KaUlRb3RyYzRlaFVKYlN6UWFIRFh3bThnM1ZLYmZY?=
- =?utf-8?B?V0JQbVJHcUgzVVNYYlNzajVZQXA0Yk82NkdrNW9lQkJuYjhudTFwQjFENXRF?=
- =?utf-8?B?MkNoUExvMWhRWXRSUkNtSGdQZm1OUmQ1ZVRZa1NJUXFaeVVKUUF3QkR1TkFM?=
- =?utf-8?B?Z1VSa0hSb0VvT2o0dDNRUmlFQUhKSWM2SXEyZlFFeXczdDlSTWVPWkZUZFRL?=
- =?utf-8?B?QzNmMDNFaUVQaFlHWlF4ZW50bi96SVI3UG5tYWlhek1kTm1PVHM0R3dMOHVN?=
- =?utf-8?B?QWVtQ21md3U3cGtEbFZFb1ZRM05OdWlJdFNQQmRKU0l2RzlLc0F3TER3ZTV4?=
- =?utf-8?B?ejhHSTM4dWZWMG1iMUZ6U3VNSjQxbkV1WTJ6OWQyMXhNS1U2VWpuREE5QVF5?=
- =?utf-8?B?MW1tWEFkcXNFaGI4US8wUEJrVWYxZ0hNNHZYUjMrM3BEaDFLZUtTVk5SOWda?=
- =?utf-8?B?U1RvTHVtYi84SkJkNDJhUkpJWjNpdmJuOVc3QzR2UURCOUU5Q2p2R1pOYmpE?=
- =?utf-8?B?eERkdEFRTnQ5MXdDTnY2bC9BYk5FaWJncXpvRkdlcndFckN2ckZVT3NzTE1a?=
- =?utf-8?B?ZzAyWWpsR0h4eGxqcy9Lc01QVWdRNFl4Vjd0U0sweGFJbmJOWWZaMHlVbVl3?=
- =?utf-8?B?MEtIKzc5T2ExMjZDd0FUOEpXUUlEV0NoS1FQRjNCTkwweEtuY2Y3SUg0VDhl?=
- =?utf-8?B?eThVVTBGWUFEMjhoT0xvcU1yNW4wOGlQYTU2MXpua1hmSWxIUXpPQjF3RmJn?=
- =?utf-8?B?V2t3cjlONUlYWmwxbXBDY1hlSHVodDNvMTVoNzhJTmp3Sk01UDdzb3piR21p?=
- =?utf-8?B?TGUzcURRVkVpQXhxYTR4Zzl0UEtzQjVEVWwrNjhQTXB5d3MxYklWR2ZaZTh4?=
- =?utf-8?B?Tm1GZittbm9BejlTYWdyaG51dEo1WW02eWxHeVFZbnFwQmp4OU1hV0VOWXhC?=
- =?utf-8?B?eDY5S05tYTRWTzZhcVVueHpFMVlZbXNwdEc4VnFXTE1QTlpVWm0wZERuWTRD?=
- =?utf-8?B?YlQ0N01tYWVEaXppSll6VjZuRmNYMU9ySnVwRTlORVR3MXJYakRHWEozMG83?=
- =?utf-8?B?MzkvVXVQTVRLeElPMlk3NmRaRC9YK1Y3SDBKSG9Ba1o1L3ZZYjdNNUFERmN6?=
- =?utf-8?B?MW5IUFdieWpJenlBNzlYdz09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TzhPTDU2elpKVGtTTzErTmlrOWdsbis3S3czakFZOU83Q3Z2YkV3eWRlZ0dv?=
- =?utf-8?B?Y1lWcXdTcWJKV0RvQUMyRWZLMGJNWnR1SkFWVi9ray83TGVuUzlQbVRYdjBY?=
- =?utf-8?B?K0FKZ1FMaDB3eGVtNHRaNGw3WXdjUTN1R1huTm41Yi9GUS9HVTlUWGQvamNM?=
- =?utf-8?B?YXhvdlVzeDcvN0JRSTQ2bGNuY3YrUldpeS9ub294Z0pwaCtQUzRoL3BQZE5U?=
- =?utf-8?B?Rmh3YkxKR1Jvc1lYcUZlTEhjZDNKUExHK2VFUmVndVVPeU10dEhNU1BwZDQ3?=
- =?utf-8?B?L05jL0hCWmFVeHVodExadGhSL2RPVzZoQlNuZzZhR3hKcnNSWFU3SXBCTm5O?=
- =?utf-8?B?TXV3VnZzYXRrcjdGcEJuQ0p0L3hoUFBjdXhmT3JscHpWSGtjK2F3UUFFV3lF?=
- =?utf-8?B?c0Ixc1JISHd2MkFmTlJXOHIwTTArbzNCMGQ2Tjhnd0NtOTFLVUVHbXdmSnBN?=
- =?utf-8?B?V1ppcG41Uk9VS3FYZWtxMFNnMnAwY1RHL0ZoYnAwd1gwbDFreWJ6Y1FnSWFZ?=
- =?utf-8?B?QVg2enV3b0tDeUVGWHFxOG1pTlhjcHFZK0NQd21zZDdodG85aktoWTZuSUJy?=
- =?utf-8?B?bnlIMngvcTdmK2pwcEVPSkxqMVJ1Zmd5TkxjanQ3OVBQV1lrV2lhZE1iajdx?=
- =?utf-8?B?ZExuMDBwZmpmMGlwZXFoVDAzRDhFalcwSGFGS3BEQSt2SnRGMTkvRjBkNm9F?=
- =?utf-8?B?bVhSeXJvbGpCM2hVcGdDWXd6MVllZDNld25PSkM3dFlaUnFqZXFpSGJlYVhn?=
- =?utf-8?B?SWZxOHEwd0JjcEZmVzZpdXIwZHFkRUlBdnZ5akdjblNrdUVMWlFDVzBVYUE4?=
- =?utf-8?B?RFRBRHY0eTRQYWhoOFJHSmhwK2RsQVI1S1hIbXVrREJNV0JvbitwRmkwQ1pT?=
- =?utf-8?B?R2t2dld6WlVWUVpPdVB5cnVPSEd5bzU3UG9DYWJQdTlUcTlYc1M3Y28raFlW?=
- =?utf-8?B?eE5YSnVRc0lGc0Y5TkxqeVhsZzBGaEtGb0xka2ViSC8yc2szM0FmS29ZZzJU?=
- =?utf-8?B?NmphZThVR3lSUUtMSHIycjQwT2RMRnVzZGJqUnR2SzRLUVBZK0RFREhsYjJN?=
- =?utf-8?B?cHUvR1RmeVBKSDJqRmpRTFdpbDc0U21qZUxCaXk0dkw5ejZVWEdGK0R5SlVW?=
- =?utf-8?B?TEtsZytTRlJPZFNNNE1MZE9SUHZxT0JNSTNUZFpIZ3NtN2Zsd0Z0dEdrbHIr?=
- =?utf-8?B?WUtjMEdZa3NnckFZQ2pHaWRxTWZjMWh6WnpnckJWOHpDaFBvNndMMkRlOVBU?=
- =?utf-8?B?VDV5M1V6TzdMamxtR29Cc2UvY2FXQWJmNkRvWXIyZDgza0MvWXpQSklzV0FG?=
- =?utf-8?B?Q1ZoTzJLb0NLWWV5cUVuSzk4OFNlSHJSQ3pSbmM3clJXTmdsdW9sVXZvK2xz?=
- =?utf-8?B?TVdsYklnWkI0QXFseFRQbFovWDJmUHFIU2F3bTRNaFJDbkEzVVZyZHo3N0Ey?=
- =?utf-8?B?Si84Q3h4akgrWCtnRHc2cUhkVVdhcitYc2pobDNZWWVsQTI5VnRwUE96cjl4?=
- =?utf-8?B?dlJiRGFiSks4eTczSFBvRGpweHRzUktOVGdtYmp3dHZTaDJlclo1allGYVds?=
- =?utf-8?B?OWtiK29zTjNvK1JaNzZyTW1rVEZ6eUprT0Uramd4eGRmWEthWG5zN3FDK1NV?=
- =?utf-8?B?SWxCTlhSOG96SVc5SzhRcGxvT0hiaG5sZUs4cTVINFl6TjdwVkJrMk1URjZx?=
- =?utf-8?B?MEY0MS9NVW1NalVMUHFHOTBXSVZndjFpcHk5ZmFoeWdzbUhYbzE5cUE5NUc5?=
- =?utf-8?B?K1JPb3ptOXk0bnNyRVZCd3JzMmpxQkp6d2VsMmo5SWhhNlZxQ2FXZE5YTkRR?=
- =?utf-8?B?UnEzZklmQ09UTmtTYzJONDA3cEMzUzFXS1E3WXVlVjRjMHhGRi94aEI4QWtI?=
- =?utf-8?B?Z0hhdXp4dWdiWnBzcHRSalM0WW5oYnhzYldHNkEzckdaTEZvb2xEcExMMzRO?=
- =?utf-8?B?QTR2Z2FLSFVUOFBSVTBQbVJuL0lVMG1rWE1jNkk5aDUrK0NhZWlMeXlqMnNv?=
- =?utf-8?B?N3B3dU85dzFESG4vZTRKNmxicENHOU1vRjcyT1lYb1EzMEhCck84Zm9yWURH?=
- =?utf-8?B?Q1dXbWtOQUN0YlgxTC9yMFM2dnFscGw5S1ZZdG5WQXhWN2RBc1VUUTRrMVFp?=
- =?utf-8?B?WlZ3STc0SUMxcm15ZExXdkJQZkRpZHpMOXNHN0N0YXAyYTdyY3ZTZVZEYitO?=
- =?utf-8?B?cXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f422b39-ff14-48e9-497a-08dca0e88526
-X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 13:59:30.8044
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g+MQzjlm/Vsc14T/owgSW90TDRSPO3+jhmqFVeMW/OqwT1Cl0UCe4avTKIiE5Pr+CehqtYtZMmF5KEbUZA4bwuaQBpTnWsBLEpthwYuCPxs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6757
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HFMSCswt+gKrOFT8"
+Content-Disposition: inline
+In-Reply-To: <20240706102338.99231-4-kikuchan98@gmail.com>
 
-On 7/8/24 14:40, Simon Horman wrote:
-> On Wed, Jul 03, 2024 at 08:59:19AM -0400, Mateusz Polchlopek wrote:
->> From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
->>
->> Add Tx hang devlink health reporter, see struct ice_tx_hang_event to see
->> what is reported.
->>
->> Subsequent commits will extend it by more info, for now it dumps
->> descriptors with little metadata.
->>
->> Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
->> Reviewed-by: Igor Bagnucki <igor.bagnucki@intel.com>
->> Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
->> Signed-off-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-> 
-> ...
-> 
->> +/**
->> + * ice_fmsg_put_ptr - put hex value of pointer into fmsg
->> + *
->> + * @fmsg: devlink fmsg under construction
->> + * @name: name to pass
->> + * @ptr: 64 bit value to print as hex and put into fmsg
->> + */
->> +static void ice_fmsg_put_ptr(struct devlink_fmsg *fmsg, const char *name,
->> +                            void *ptr)
->> +{
->> +       char buf[sizeof(ptr) * 3];
->> +
->> +       sprintf(buf, "%p", ptr);
->> +       devlink_fmsg_put(fmsg, name, buf);
->> +}
-> 
-> ...
-> 
->> +static int ice_tx_hang_reporter_dump(struct devlink_health_reporter *reporter,
->> +				     struct devlink_fmsg *fmsg, void *priv_ctx,
->> +				     struct netlink_ext_ack *extack)
->> +{
->> +	struct ice_tx_hang_event *event = priv_ctx;
->> +
->> +	devlink_fmsg_obj_nest_start(fmsg);
->> +	ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, head);
->> +	ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, intr);
->> +	ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, vsi_num);
->> +	ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, queue);
->> +	ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, next_to_clean);
->> +	ICE_DEVLINK_FMSG_PUT_FIELD(fmsg, event, next_to_use);
->> +	devlink_fmsg_put(fmsg, "irq-mapping", event->tx_ring->q_vector->name);
->> +	ice_fmsg_put_ptr(fmsg, "desc-ptr", event->tx_ring->desc);
->> +	ice_fmsg_put_ptr(fmsg, "dma-ptr", (void *)event->tx_ring->dma);
-> 
-> As reported by the kernel test robot, GCC 13 complains about this cast:
-> 
->    .../devlink_health.c: In function 'ice_tx_hang_reporter_dump':
->    .../devlink_health.c:76:43: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->       76 |         ice_fmsg_put_ptr(fmsg, "dma-ptr", (void *)event->tx_ring->dma);
->          |
-> 
-> Perhaps a good solution is to add a helper similar to ice_fmsg_put_ptr,
-> but which takes a dma_buf_t rather than a void * as it's last argument.
 
-instead of duplicating the function for just one call, I will simply
-resolve the warning by yet another cast:
-ice_fmsg_put_ptr(fmsg, "dma-ptr", (void *)(long)event->tx_ring->dma);
-					  ^^^^^^   // cast to long added
-> 
->> +	devlink_fmsg_binary_pair_put(fmsg, "desc", event->tx_ring->desc,
->> +				     size_mul(event->tx_ring->count,
->> +					      sizeof(struct ice_tx_desc)));
+--HFMSCswt+gKrOFT8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here I would drop size_mul(), as any wrong ::count value could easily
-extent the dump past tx_ring memory, resulting in attempt at reading
-past their page
-And we are not really protecting against "too big" fmsg, as it is capped
-anyway to 4-8K.
+On Sat, Jul 06, 2024 at 07:23:34PM +0900, Hironori KIKUCHI wrote:
+> The RG28XX panel is a display panel of the Anbernic RG28XX, a handheld
+> gaming device from Anbernic. It is 2.8 inches in size (diagonally) with
+> a resolution of 480x640.
+>=20
+> This panel is driven by a variant of the ST7701 driver IC internally,
+> confirmed by dumping and analyzing its BSP initialization sequence
+> by using a logic analyzer. It is very similar to the existing
+> densitron,dmt028vghmcmi-1a panel, but differs in some unknown
+> register values, so add a new entry for the panel to distinguish them.
+>=20
+> Additionally, the panel only has an SPI instead of MIPI DSI.
+> So add and modify for SPI as well.
+>=20
+> Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
 
-Perhaps fmsg-put also ::count to aid spotting such cases, but only if it
-is not the default 256.
+With a mention in the commit message about why we are adding a property
+and then immediately forbidding its use:
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
---
-not a change request, just digression:
-it would be nice for devlink_fmsg_binary_pair_put() to compress
-"repeated same value", like hexdump(1) does.
+Thanks,
+Conor.
 
->> +	devlink_fmsg_obj_nest_end(fmsg);
->> +
->> +	return 0;
->> +}
+--HFMSCswt+gKrOFT8
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZo6UJwAKCRB4tDGHoIJi
+0rWJAP9IHO7fHqyM5a/UICny+oqraSfmKGBb4QQ3LA2EqBU78AD/a0EsmZU8OROj
+g207SYlLjekZTX5pN4bqKdUwpSj4AQE=
+=8tYI
+-----END PGP SIGNATURE-----
+
+--HFMSCswt+gKrOFT8--
