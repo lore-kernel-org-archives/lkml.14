@@ -1,134 +1,132 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3616D191F95
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E7B1E4AF;
+	Wed, 10 Jul 2024 12:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720614489; cv=none; b=Odo4upCgxJ4Ul6loWVtDb/qiKKrKUThjd2V/F+ewV4Ok4b5BsByW9xLEcvMoGkIuH5hez6VhNXrFlz9BWrHk+uL/THAqhFWxkmmm/4q4F86Cfx4NbU43e4pbM5gwCMSFWEtbR+wCIhRnWdUhFCwYSb/ugraeyg9PpHJk0nWVfao=
+	t=1720614611; cv=none; b=qmQtng371Fb8ch4sLuaAtm9nFYdBfW0nccVriVtT0pBPqj/JRxM7KOEk2Zr+p0Dscoo4ZUegMyLPWOsYSjTJe+NgqI2s3cOlojMHGsi8ny9pCp5jgqdieHcbUcEKzyIScS+wJ0qj3ozhM0C6i+snbixGnRZ7V1uJhvp+zida+7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720614489; c=relaxed/simple;
-	bh=KAI4aw2AK+vjSEfQFJSzgOvrFR40OhxPbRnfXKCKSoM=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=F1+oSIBgUljxjj9QYPm9OInfeW8uCgMBWfhgG2HTcso3lKUBJAWnpGITKJpO7d5VqwcJfVgUz/RtB9CPhGaCT1cVwvJuXES0mZ7iDc2S2DzuMpuXjdbCAK8fdupaNETD8x9+87MmEhzLutp07DyOC/LWrgLV5DIu8x/MO4KYocE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=qpIvD5RT; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1720614611; c=relaxed/simple;
+	bh=Q26aL892K0l+LyyYgM0jUhvcj2Dc0Hq5zyGMegKD5TM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c7zqdZuEMhu0eGw6h0VOtZcPyT6sz5TetvayBX546Bbkj62j6Fkg22gHtBUlKZOsC8VB353orv+bIW6Ms95LmnhPPbpA1XSYyRV1Z0ss2I4MxEI6eWdqs3aNQl4lMBmPg1XFGvA2uvXvbbre+s+wJ1z01m4c3bT3dt6mHDinpBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlWtW8hR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="qpIvD5RT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1720614483;
-	bh=Dk9oQcXatpAOcTNW8F66wOLoyQ5TH0P2B5WSusLytqQ=;
-	h=From:To:Subject:In-Reply-To:References:Date:From;
-	b=qpIvD5RTkuF9fGU3j3NgGN1Vt5MfoHL2HHmrNHOJyC91we37pZlyXosmrger+PW3P
-	 xYNcM4NoKB6F+zS3op6Adh4aUQ/GO5X3anLbHBKJBpZuEGM7OY4dWFcTZgPjeEY5f4
-	 JZSBu8EIjk95riKS/NmG964c07ZcIUEbYhx9tlr3KHNr2PWsQWKh82az1UaD9qeMmx
-	 V7mc2L8OrExqqsImzjcs0xgLrIvvbHjxEdjyOKOitHRQ0LXY9MtICWlf1hi71K6M4v
-	 6ajrqWSis8hBkINxnV3zI8uphyFN8xWUS0l9RxNYVASz8AwVdz74wXaxI2aPSx11Sq
-	 JQW2dbFkU6AuA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJxw23dKxz4w2M;
-	Wed, 10 Jul 2024 22:28:02 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, linux-mm@kvack.org, Andrew Morton
- <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- Matthew Wilcox <willy@infradead.org>, sidhartha.kumar@oracle.com, "Paul E
- . McKenney" <paulmck@kernel.org>, Bert Karwatzki <spasswolf@web.de>, Jiri
- Olsa <olsajiri@gmail.com>, linux-kernel@vger.kernel.org, Kees Cook
- <kees@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 16/16] mm/mmap: Move may_expand_vm() check in
- mmap_region()
-In-Reply-To: <0998f05b-9d5f-4b24-9030-22421e1dd859@lucifer.local>
-References: <20240704182718.2653918-1-Liam.Howlett@oracle.com>
- <20240704182718.2653918-17-Liam.Howlett@oracle.com>
- <8fbb424d-a781-4e61-af7a-904e281eba8c@lucifer.local>
- <e5ldsusdn3som7wn2rw76wtrhnlrxk3vkyk3iyimh6qv3ptvwu@24zfmamllev6>
- <0998f05b-9d5f-4b24-9030-22421e1dd859@lucifer.local>
-Date: Wed, 10 Jul 2024 22:28:01 +1000
-Message-ID: <874j8x5t4e.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlWtW8hR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA09C32782;
+	Wed, 10 Jul 2024 12:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720614611;
+	bh=Q26aL892K0l+LyyYgM0jUhvcj2Dc0Hq5zyGMegKD5TM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mlWtW8hRbQSvovcDiDXBskauLgXt0Y+GVyBEaV5okO9Dd5yTMYt1Ef8J7qSIt8EYZ
+	 Xfz3BWd67AO20WHpAHPO3T2DzYfnbiSMJvzxEkZ6Zk4yBlD/51h5wxSba3CU76fwt4
+	 TjvB+2IkLUzAdOisWKzGIW+e7BSxX1hZN1RGjxSoiXm70RbCJKNCLJOdnY0zUHfhHb
+	 epapw73s6Tv42UKocsLMhbfIOI9R5rT1z1+YmI1TEeG+Ih9ej9AasskIrFVXfOMW3W
+	 1AvQ6OqiU45L1hkyfDq7gnJIpXUi/JH7tr8mexnZbG+GbJYOOaItrzXtFpsJguVRKB
+	 DGNACBVMjjbRw==
+Message-ID: <d72ec08a-bd5c-482b-8af9-3fc923820d25@kernel.org>
+Date: Wed, 10 Jul 2024 14:30:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 00/13] media: qcom: camss: Add sm8550 support
+To: Depeng Shao <quic_depengs@quicinc.com>, rfoss@kernel.org,
+ todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: quic_eberman@quicinc.com, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20240709160656.31146-1-quic_depengs@quicinc.com>
+ <55e850dd-1b45-4bad-a11f-f645cca07f2a@kernel.org>
+ <d8d6574a-2823-4955-898d-d6637e40946e@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <d8d6574a-2823-4955-898d-d6637e40946e@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> writes:
-> On Mon, Jul 08, 2024 at 04:43:15PM GMT, Liam R. Howlett wrote:
+On 10/07/2024 13:27, Depeng Shao wrote:
+> 
+> 
+> On 7/10/2024 7:08 PM, Krzysztof Kozlowski wrote:
+>> On 09/07/2024 18:06, Depeng Shao wrote:
+>>> V3:
+>>> - Rebased the change based on below change which will be merged firstly.
+>>>    "Move camss version related defs in to resources"
+>>> Link: https://lore.kernel.org/all/20240522154659.510-1-quic_grosikop@quicinc.com/
+>>> - Rebased the change based on Bryan's csiphy optimization change and add
+>>> these changes into this series, so that the new csiphy-3ph driver don't
+>>> need to add duplicate code. This has got Bryan's permission to add his
+>>> patches into this series.
+>>> - Refactor some changes based on the comments to move the random code to
+>>> patches where they are used.
+>>> - Remove the vfe780 irq function since it isn't doing the actual work.
+>>> - Add dt-binding for sm8550 camss driver.
+>>> Link to V2: https://lore.kernel.org/all/20240320141136.26827-1-quic_depengs@quicinc.com/
 >>
-...
->> The functionality here has changed
->> --- from ---
->> may_expand_vm() check
->> can_modify_mm() check
->> arch_unmap()
->> vms_gather_munmap_vmas()
->> ...
+>> I asked for reference to upstream DTS - where can I find the DTS patches?
 >>
->> --- to ---
->> can_modify_mm() check
->> arch_unmap()
->> vms_gather_munmap_vmas()
->> may_expand_vm() check
->> ...
+>> Best regards,
+>> Krzysztof
 >>
->> vms_gather_munmap_vmas() does nothing but figures out what to do later,
->> but could use memory and can fail.
->>
->> The user implications are:
->>
->> 1. The return type on the error may change to -EPERM from -ENOMEM, if
->> you are not allowed to expand and are trying to overwrite mseal()'ed
->> VMAs. That seems so very rare that I'm not sure it's worth mentioning.
->>
->>
->> 2. arch_unmap() called prior to may_expand_vm().
->> powerpc uses this to set mm->context.vdso = NULL if mm->context.vdso is
->> within the unmap range.  User implication of this means that an
->> application my set the vdso to NULL prior to hitting the -ENOMEM case in
->> may_expand_vm() due to the address space limit.
->>
->> Assuming the removal of the vdso does not cause the application to seg
->> fault, then the user visible change is that any vdso call after a failed
->> mmap(MAP_FIXED) call would result in a seg fault.  The only reason it
->> would fail is if the mapping process was attempting to map a large
->> enough area over the vdso (which is accounted and in the vma tree,
->> afaict) and ran out of memory. Note that this situation could arise
->> already since we could run out of memory (not accounting) after the
->> arch_unmap() call within the kernel.
->>
->> The code today can suffer the same fate, but not by the accounting
->> failure.  It can happen due to failure to allocate a new vma,
->> do_vmi_munmap() failure after the arch_unmap() call, or any of the other
->> failure scenarios later in the mmap_region() function.
->>
->> At the very least, this requires an expanded change log.
->
-> Indeed, also (as mentioned on IRC) I feel like we need to look at whether
-> we _truly_ need this arch_unmap() call for a single, rather antiquated,
-> architecture.
+> 
+> Hi Krzysztof,
+> 
+> Sorry for that, I thought add the dt-binding is also fine, since I saw 
+> other patches also do like this. Will add add the DTS in next patch set.
 
-You can call it "niche" or "irrelevant" or "fringe", but "antiquated" is
-factually wrong :) Power10 came out of the fab just a few years ago at
-7nm.
+DTS should not be part of this patchset, but sent separately.  It's
+enough if you post a lore link to it.
 
-> I mean why are they unmapping the VDSO, why is that valid, why does it need
-> that field to be set to NULL, is it possible to signify that in some other
-> way etc.?
+Best regards,
+Krzysztof
 
-It was originally for CRIU. So a niche workload on a niche architecture.
-
-But from the commit that added it, it sounds like CRIU was using mremap,
-which should be handled these days by vdso_mremap(). So it could be that
-arch_unmap() is not actually needed for CRIU anymore.
-
-Then I guess we have to decide if removing our arch_unmap() would be an
-ABI break, regardless of whether CRIU needs it or not.
-
-cheers
