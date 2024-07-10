@@ -1,251 +1,110 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6EB18FA10;
-	Wed, 10 Jul 2024 09:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F2D18EFCC
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720605072; cv=none; b=jv3sjAWdzTNkegoGplvK6hgRUFl70pr2OQezpFTi1dC+ehfWs4LcopnELhwulEAnAiVNNAz36cPPoHZ4SUucwou0sTrvKrrCWF0uxDox76u2v/8iGvckMzWuvdtIgMrQUcgjpMrSjx6eFwuk9R9OYW+yztGxkyKMvRWsZukwZfI=
+	t=1720605090; cv=none; b=n3C9IcSbTB/70VG7RqCkTTFtdgNLsiiUkx8wAhd+lxOt5ZSPYH2T9tdsHs5LNXpQnkgN+1xaPZEe/Ux7/24/FRdJ3vGzaaEeAc3Jj1Ff370AXiYEDSiEM7EaeB+UGi1mEFe0f7fHadRy8ZaqPZYOU8osrSwlV5TqOGjeDd9JODE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720605072; c=relaxed/simple;
-	bh=/lz7TfdkZjmIY+30uFONHKA3AxyCFXG3tTDrvxeSxsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGZ6ReLQ1vEAe8AmTy+CvLlKKmA43vYWx9Gbj3bwV6kRkXOobT/KBkOXJlvld5aEj0p2lnwF+GmQpNXMW6+q/ljGnAGitVfAHhNpE8jIq+f32S9su+lii9QvfYHakDERRpvdljTuDe5acKiRZ0l+Pzi3KSc39FsDK77jzMiTeNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dIIPtUq6; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1720605090; c=relaxed/simple;
+	bh=5vy6X0O6qEnfmBFIMy66z8mbjzBObduDt7gIIzeMJf0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=llQkMpB29fe/ethfoGtoFzq3LWpT3CiThb9imAxRtcu8UPnTluYfAWQMn1PU2qY64pTsoG/ndezdPplQTiN5VqzH+qupHe4UjNU54MGcL+QExrC2Cg/EiX4kowN97SGyVnII1YrJN+NO021sRacNHawSXKuJy4xN1ENC/sxBUEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=m8EqlA+p; arc=none smtp.client-ip=91.26.50.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dIIPtUq6"
-Received: from ideasonboard.com (unknown [IPv6:2001:b07:5d2e:52c9:72c3:346:a663:c82d])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B36738D0;
-	Wed, 10 Jul 2024 11:50:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1720605035;
-	bh=/lz7TfdkZjmIY+30uFONHKA3AxyCFXG3tTDrvxeSxsU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dIIPtUq6FrtGCq89r6LWnBSv0seawEou4lV+48KU6s5/nUnzw5F4Mu4c5u+1ApEV+
-	 vVaC/VsUeOlpl/x3Zo8tBBi9hgaM2PQCU+lwSS8CE8BLGkhC7pN+Y5Hh9SEcUphEYJ
-	 PKan4p2/d+W3O/UqZiQbsa5MZ0Ssrog0by94nxUY=
-Date: Wed, 10 Jul 2024 11:51:05 +0200
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Mingjia Zhang <mingjia.zhang@mediatek.com>, 
-	Jack Zhu <jack.zhu@starfivetech.com>, Keith Zhao <keith.zhao@starfivetech.com>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH v5 04/14] staging: media: starfive: Add a params sink pad
- and a scd source pad for ISP
-Message-ID: <ku5lhlocshwrc6yxbofr7dtqgrpdijaop4c265njyjnu42rpi5@o36mnwborhjo>
-References: <20240709083824.430473-1-changhuang.liang@starfivetech.com>
- <20240709083824.430473-5-changhuang.liang@starfivetech.com>
+	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="m8EqlA+p"
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
+	q=dns/txt; i=@phytec.de; t=1720605086; x=1723197086;
+	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5vy6X0O6qEnfmBFIMy66z8mbjzBObduDt7gIIzeMJf0=;
+	b=m8EqlA+paYoBgUaLDhjoUNJTSZc9qT5Ei0rlLfOHx8Quwvf81nB/uYM9fRc5YUFm
+	XSM8dFP1BbRuzkQaNyCn3T3fhdaSV/GICatMauruOfVSeJaTis8A+bQyBOD9A8Eb
+	rb89pTvD/BnJaUK5OaA3wtmjv+FhtCP+EJMAab9NPGo=;
+X-AuditID: ac14000a-03e52700000021bc-46-668e599e3cbe
+Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
+	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id BD.7F.08636.E995E866; Wed, 10 Jul 2024 11:51:26 +0200 (CEST)
+Received: from Berlix.phytec.de (172.25.0.12) by Berlix.phytec.de
+ (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Wed, 10 Jul
+ 2024 11:51:25 +0200
+Received: from Berlix.phytec.de ([fe80::197e:d26b:2ca:c7b4]) by
+ berlix.phytec.de ([fe80::197e:d26b:2ca:c7b4%4]) with mapi id 15.01.2507.006;
+ Wed, 10 Jul 2024 11:51:25 +0200
+From: Benjamin Hahn <B.Hahn@phytec.de>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Shawn Guo
+	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"Rob Herring" <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
+CC: PHYTEC Upstream <upstream@lists.phytec.de>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: freescale: imx8mp-phycore: Add no-eth
+ overlay
+Thread-Topic: [PATCH v2] arm64: dts: freescale: imx8mp-phycore: Add no-eth
+ overlay
+Thread-Index: AQHaztTwwwIaBQqxY0i9PdyfIGTAlrHsiQGAgAMVQoA=
+Date: Wed, 10 Jul 2024 09:51:25 +0000
+Message-ID: <829ab483-fb96-4fd2-be7c-03548ba22ce5@phytec.de>
+References: <20240705-bspimx8m-3180-v2-1-dc1a7e1689be@phytec.de>
+ <1764670d-0248-46fd-b0ce-03bcbcd6977b@linaro.org>
+In-Reply-To: <1764670d-0248-46fd-b0ce-03bcbcd6977b@linaro.org>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7CD51A38C1FC3D4991D2BFE0AD5067E4@phytec.de>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240709083824.430473-5-changhuang.liang@starfivetech.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRmVeSWpSXmKPExsWyRpKBR3deZF+awYV/fBZr9p5jsph/5Byr
+	xcOr/hYz77WyWayaupPFou/FQ2aLva+3sltsenyN1eLyrjlsFq17j7Bb/N2+icXixRZxi+53
+	6g68Hjtn3WX32LSqk83jzrU9bB6bl9R7vNg8k9Gjv7uF1aP/r4HH501yARxRXDYpqTmZZalF
+	+nYJXBnbJy9iLmjhrWi+/4+1gfEGTxcjJ4eEgInEjM9HGbsYuTiEBJYwSTw8MY0VwrnPKNH1
+	+AQ7hLOBUWL3jQUsIC1sAmoSu968BqsSEXjAJNH0+CxYP7PAGiaJk1dWMHcxcnAICwRLbDzD
+	CtIgIhAisfrILRYI20pix/WzbCA2i4CqxJ79G8DivAI2Ev8OL2EEsYUESiQ+zloMNoZTwE5i
+	0lNFkDCjgKzEhg3nmUFsZgFxiU3PvrNCvCAgsWQPRFxCQFTi5eN/UHF5iRO3pjGBjGEW0JRY
+	v0sfotVC4klHJ9QYRYkp3Q/ZIS4QlDg58wnLBEbxWUg2zELonoWkexaS7llIuhcwsq5iFMrN
+	TM5OLcrM1ivIqCxJTdZLSd3ECEoDIgxcOxj75ngcYmTiYDzEKMHBrCTCO/9Gd5oQb0piZVVq
+	UX58UWlOavEhRmkOFiVx3tUdwalCAumJJanZqakFqUUwWSYOTqkGxsRXeR0n+XKXPbpScX9R
+	xMZcLYtVvvmmJ1YnsSxpk39YV7ZQh/O6bPEdo937Hlgte8/SdeztN59ndQ69st/n2hvu2eDW
+	/fTrvL6QB5+dfSo+3DY0eZlw6/XpRapMc09zNz2rzPP7sW+ryL+vztMyvWbLfHN8vEigLeJE
+	uaDN8zOlDlGON9uPVSqxFGckGmoxFxUnAgBYqL1j8QIAAA==
 
-Hello Changhuang
-
-On Tue, Jul 09, 2024 at 01:38:14AM GMT, Changhuang Liang wrote:
-> StarFive ISP can use params sink pad to transmit ISP parameters and use
-> scd source pad to capture statistics collection data.
->
-> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
-> ---
->  .../staging/media/starfive/camss/stf-isp.c    | 77 +++++++++++++++++--
->  .../staging/media/starfive/camss/stf-isp.h    |  2 +
->  2 files changed, 71 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/staging/media/starfive/camss/stf-isp.c b/drivers/staging/media/starfive/camss/stf-isp.c
-> index 4e6e26736852..0ebffd09842a 100644
-> --- a/drivers/staging/media/starfive/camss/stf-isp.c
-> +++ b/drivers/staging/media/starfive/camss/stf-isp.c
-> @@ -21,13 +21,23 @@ static const struct stf_isp_format isp_formats_sink[] = {
->  	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10 },
->  };
->
-> +static const struct stf_isp_format isp_formats_sink_params[] = {
-> +	{ MEDIA_BUS_FMT_METADATA_FIXED },
-> +};
-> +
->  static const struct stf_isp_format isp_formats_source[] = {
->  	{ MEDIA_BUS_FMT_YUYV8_1_5X8, 8 },
->  };
->
-> +static const struct stf_isp_format isp_formats_source_scd[] = {
-> +	{ MEDIA_BUS_FMT_METADATA_FIXED },
-> +};
-> +
->  static const struct stf_isp_format_table isp_formats_st7110[] = {
->  	{ isp_formats_sink, ARRAY_SIZE(isp_formats_sink) },
-> +	{ isp_formats_sink_params, ARRAY_SIZE(isp_formats_sink_params) },
->  	{ isp_formats_source, ARRAY_SIZE(isp_formats_source) },
-> +	{ isp_formats_source_scd, ARRAY_SIZE(isp_formats_source_scd) },
->  };
->
->  static const struct stf_isp_format *
-> @@ -93,13 +103,19 @@ static void isp_try_format(struct stf_isp_dev *isp_dev,
->
->  	formats = &isp_dev->formats[pad];
->
-> -	fmt->width = clamp_t(u32, fmt->width, STFCAMSS_FRAME_MIN_WIDTH,
-> -			     STFCAMSS_FRAME_MAX_WIDTH);
-> -	fmt->height = clamp_t(u32, fmt->height, STFCAMSS_FRAME_MIN_HEIGHT,
-> -			      STFCAMSS_FRAME_MAX_HEIGHT);
-> -	fmt->height &= ~0x1;
-> +	if (pad != STF_ISP_PAD_SRC_SCD && pad != STF_ISP_PAD_SINK_PARAMS) {
-> +		fmt->width = clamp_t(u32, fmt->width, STFCAMSS_FRAME_MIN_WIDTH,
-> +				     STFCAMSS_FRAME_MAX_WIDTH);
-> +		fmt->height = clamp_t(u32, fmt->height, STFCAMSS_FRAME_MIN_HEIGHT,
-> +				      STFCAMSS_FRAME_MAX_HEIGHT);
-> +		fmt->height &= ~0x1;
-> +		fmt->colorspace = V4L2_COLORSPACE_SRGB;
-> +	} else {
-> +		fmt->width = 1;
-> +		fmt->height = 1;
-> +	}
-> +
->  	fmt->field = V4L2_FIELD_NONE;
-> -	fmt->colorspace = V4L2_COLORSPACE_SRGB;
->  	fmt->flags = 0;
->
->  	if (!stf_g_fmt_by_mcode(formats, fmt->code))
-> @@ -119,7 +135,7 @@ static int isp_enum_mbus_code(struct v4l2_subdev *sd,
->
->  		formats = &isp_dev->formats[code->pad];
->  		code->code = formats->fmts[code->index].code;
-> -	} else {
-> +	} else if (code->pad == STF_ISP_PAD_SRC) {
->  		struct v4l2_mbus_framefmt *sink_fmt;
->
->  		if (code->index >= ARRAY_SIZE(isp_formats_source))
-> @@ -131,6 +147,10 @@ static int isp_enum_mbus_code(struct v4l2_subdev *sd,
->  		code->code = sink_fmt->code;
->  		if (!code->code)
->  			return -EINVAL;
-> +	} else {
-> +		if (code->index > 0)
-> +			return -EINVAL;
-> +		code->code = MEDIA_BUS_FMT_METADATA_FIXED;
->  	}
->  	code->flags = 0;
->
-> @@ -151,6 +171,9 @@ static int isp_set_format(struct v4l2_subdev *sd,
->  	isp_try_format(isp_dev, state, fmt->pad, &fmt->format);
->  	*format = fmt->format;
->
-> +	if (fmt->pad == STF_ISP_PAD_SRC_SCD || fmt->pad == STF_ISP_PAD_SINK_PARAMS)
-
-nit: can easily be made < 80 cols (again, not mandatory in Linux but
-enforced in v4l according to
-Documentation/driver-api/media/maintainer-entry-profile.rst)
-
-> +		return 0;
-> +
->  	isp_dev->current_fmt = stf_g_fmt_by_mcode(&isp_dev->formats[fmt->pad],
->  						  fmt->format.code);
->
-> @@ -202,6 +225,9 @@ static int isp_get_selection(struct v4l2_subdev *sd,
->  	struct v4l2_subdev_format fmt = { 0 };
->  	struct v4l2_rect *rect;
->
-> +	if (sel->pad == STF_ISP_PAD_SRC_SCD || sel->pad == STF_ISP_PAD_SINK_PARAMS)
-> +		return -EINVAL;
-> +
->  	switch (sel->target) {
->  	case V4L2_SEL_TGT_CROP_BOUNDS:
->  		if (sel->pad == STF_ISP_PAD_SINK) {
-> @@ -239,6 +265,9 @@ static int isp_set_selection(struct v4l2_subdev *sd,
->  	struct stf_isp_dev *isp_dev = v4l2_get_subdevdata(sd);
->  	struct v4l2_rect *rect;
->
-> +	if (sel->pad == STF_ISP_PAD_SRC_SCD || sel->pad == STF_ISP_PAD_SINK_PARAMS)
-> +		return -EINVAL;
-> +
->  	if (sel->target != V4L2_SEL_TGT_CROP)
->  		return -EINVAL;
->
-> @@ -296,8 +325,38 @@ static int isp_init_formats(struct v4l2_subdev *sd,
->  			.height = 1080
->  		}
->  	};
-> +	struct v4l2_subdev_format format_params = {
-> +		.pad = STF_ISP_PAD_SINK_PARAMS,
-> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-> +		.format = {
-> +			.code = MEDIA_BUS_FMT_METADATA_FIXED,
-> +			.width = 1,
-> +			.height = 1
-> +		}
-> +	};
-> +	struct v4l2_subdev_format format_scd = {
-> +		.pad = STF_ISP_PAD_SRC_SCD,
-> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-> +		.format = {
-> +			.code = MEDIA_BUS_FMT_METADATA_FIXED,
-> +			.width = 1,
-> +			.height = 1
-> +		}
-> +	};
-> +	int ret;
-> +
-> +	/* Init for STF_ISP_PAD_SINK and STF_ISP_PAD_SRC pad */
-
-Does this initialize the format on STF_ISP_PAD_SRC for real ?
-
-Anyway, was there already so
-Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-
-Thanks
-  j
-
-> +	ret = isp_set_format(sd, sd_state, &format);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Init for STF_ISP_PAD_SINK_PARAMS pad */
-> +	ret = isp_set_format(sd, sd_state, &format_params);
-> +	if (ret < 0)
-> +		return ret;
->
-> -	return isp_set_format(sd, sd_state, &format);
-> +	/* Init for STF_ISP_PAD_SRC_SCD pad */
-> +	return isp_set_format(sd, sd_state, &format_scd);
->  }
->
->  static const struct v4l2_subdev_video_ops isp_video_ops = {
-> @@ -338,7 +397,9 @@ int stf_isp_register(struct stf_isp_dev *isp_dev, struct v4l2_device *v4l2_dev)
->  	v4l2_set_subdevdata(sd, isp_dev);
->
->  	pads[STF_ISP_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
-> +	pads[STF_ISP_PAD_SINK_PARAMS].flags = MEDIA_PAD_FL_SINK;
->  	pads[STF_ISP_PAD_SRC].flags = MEDIA_PAD_FL_SOURCE;
-> +	pads[STF_ISP_PAD_SRC_SCD].flags = MEDIA_PAD_FL_SOURCE;
->
->  	sd->entity.function = MEDIA_ENT_F_PROC_VIDEO_ISP;
->  	sd->entity.ops = &isp_media_ops;
-> diff --git a/drivers/staging/media/starfive/camss/stf-isp.h b/drivers/staging/media/starfive/camss/stf-isp.h
-> index 955cbb048363..bc7e7b0736fa 100644
-> --- a/drivers/staging/media/starfive/camss/stf-isp.h
-> +++ b/drivers/staging/media/starfive/camss/stf-isp.h
-> @@ -392,7 +392,9 @@
->  /* pad id for media framework */
->  enum stf_isp_pad_id {
->  	STF_ISP_PAD_SINK = 0,
-> +	STF_ISP_PAD_SINK_PARAMS,
->  	STF_ISP_PAD_SRC,
-> +	STF_ISP_PAD_SRC_SCD,
->  	STF_ISP_PAD_MAX
->  };
->
-> --
-> 2.25.1
->
->
+T24gMDguMDcuMjQgMTI6NDYsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+IE9uIDA1LzA3
+LzIwMjQgMTQ6MTQsIEJlbmphbWluIEhhaG4gd3JvdGU6DQo+PiBBZGQgYSBkZXZpY2V0cmVlIG92
+ZXJsYXkgdG8gZGlzYWJsZSBldGhlcm5ldCBmb3IgYm9hcmRzIHdoZXJlIGl0IGlzIG5vdA0KPj4g
+cG9wdWxhdGVkLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEhhaG4gPEIuSGFobkBw
+aHl0ZWMuZGU+DQo+PiAtLS0NCj4+IENoYW5nZXMgaW4gdjI6DQo+IFRoYXQncyBzb21lIG9sZCBr
+ZXJuZWwgeW91IGFyZSBkZXZlbG9waW5nIG9uLCByaWdodD8NCg0KWW91IGFyZSBjb3JyZWN0LiBJ
+IHdhcyBzdGlsbCBvbiBLZXJuZWwgdmVyc2lvbiA2LjguDQoNCkkgcmViYXNlZCB0byBtYXN0ZXIg
+YW5kIHNlbnQgYSB2My4NCg0KUmVnYXJkcywNCg0KQmVuamFtaW4NCg0KPg0KPiA8Zm9ybSBsZXR0
+ZXI+DQo+IFBsZWFzZSB1c2Ugc2NyaXB0cy9nZXRfbWFpbnRhaW5lcnMucGwgdG8gZ2V0IGEgbGlz
+dCBvZiBuZWNlc3NhcnkgcGVvcGxlDQo+IGFuZCBsaXN0cyB0byBDQyAoYW5kIGNvbnNpZGVyIC0t
+bm8tZ2l0LWZhbGxiYWNrIGFyZ3VtZW50KS4gSXQgbWlnaHQNCj4gaGFwcGVuLCB0aGF0IGNvbW1h
+bmQgd2hlbiBydW4gb24gYW4gb2xkZXIga2VybmVsLCBnaXZlcyB5b3Ugb3V0ZGF0ZWQNCj4gZW50
+cmllcy4gVGhlcmVmb3JlIHBsZWFzZSBiZSBzdXJlIHlvdSBiYXNlIHlvdXIgcGF0Y2hlcyBvbiBy
+ZWNlbnQgTGludXgNCj4ga2VybmVsLg0KPg0KPiBUb29scyBsaWtlIGI0IG9yIHNjcmlwdHMvZ2V0
+X21haW50YWluZXIucGwgcHJvdmlkZSB5b3UgcHJvcGVyIGxpc3Qgb2YNCj4gcGVvcGxlLCBzbyBm
+aXggeW91ciB3b3JrZmxvdy4gVG9vbHMgbWlnaHQgYWxzbyBmYWlsIGlmIHlvdSB3b3JrIG9uIHNv
+bWUNCj4gYW5jaWVudCB0cmVlIChkb24ndCwgaW5zdGVhZCB1c2UgbWFpbmxpbmUpIG9yIHdvcmsg
+b24gZm9yayBvZiBrZXJuZWwNCj4gKGRvbid0LCBpbnN0ZWFkIHVzZSBtYWlubGluZSkuIEp1c3Qg
+dXNlIGI0IGFuZCBldmVyeXRoaW5nIHNob3VsZCBiZQ0KPiBmaW5lLCBhbHRob3VnaCByZW1lbWJl
+ciBhYm91dCBgYjQgcHJlcCAtLWF1dG8tdG8tY2NgIGlmIHlvdSBhZGRlZCBuZXcNCj4gcGF0Y2hl
+cyB0byB0aGUgcGF0Y2hzZXQuDQo+IDwvZm9ybSBsZXR0ZXI+DQo+DQo+IEJlc3QgcmVnYXJkcywN
+Cj4gS3J6eXN6dG9mDQo+DQoNCg==
