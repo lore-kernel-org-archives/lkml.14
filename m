@@ -1,44 +1,44 @@
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453D1482ED
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 04:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D556171C9
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 04:35:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720586141; cv=none; b=eIHvJshVntgOQ0/IinW6LXi8NzIZYZUZMaYl4Tzp4omafq9aaRCIPkqj/+2icv2VB0R//PeC5rzfpvuBmdK9PGLLt3ouqMFP4yJ6tMN79fRYPg1aFmD5V+bticefL6BJztSHznjYhKEfXlmloLQbEUVg6RvRByuaYPr/ClnXvig=
+	t=1720586142; cv=none; b=f+BtB2CAPIxd8PoQfSQ4iwswMiSjqiZDKkg1TFFXIwAfRj9FkOJ6//t7OZHWk4B0vu4EIH1UNKKqyWa/p+1MnLGj/5GkChcH+/wZ1P59D+bpri5oNiKeBpgEXfNueY+juKaeEkIXLtSQg9LZa7u/Hc/11vPngsbzCiifIVWqDys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720586141; c=relaxed/simple;
-	bh=bivDCxqnhGmdAOv0M7NTE3VhwmnpVCOIC7+U0rnBqrU=;
+	s=arc-20240116; t=1720586142; c=relaxed/simple;
+	bh=XataOz8SMaDWZvZhjJnu7pt7mmB+Z+duSwXQesjHEEM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HYJTR2y27u/uQAWhEIttluBteIbvpIIXo3WoChdYcJy16PaX+jpHvspcEL5fHQIhsOH6JbSe/rkrPQ4t5cNofuUMuXwZBqAZCio1ryB/W9AdGthxTawKoZhsH5DGfmovPSl2O4RqxUalfmlmr9su/vG98XKSzho3cE/Tii8FLTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=b3GbfSsR; arc=none smtp.client-ip=202.36.163.20
+	 MIME-Version:Content-Type; b=H7eicrMSD5LqMGBXoQ8z7k94FWXyDLfKDNEzCDdIAc2W+0GkwZjYWFGwtXsgZMKySyFRIIUemoYccPuqaIuxShExv38L+wapmOs1216XOfSrR2PSd3/NseE9a0El1itpYJiwSY+nZmR8VDJtJbrWPdnRuUzLXK9XR9YX4MuiEy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=zNqqze/9; arc=none smtp.client-ip=202.36.163.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="b3GbfSsR"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zNqqze/9"
 Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CE5EE2C0BA5;
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9229A2C0A3D;
 	Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
 	s=mail181024; t=1720586130;
-	bh=B+MHJ0FovgFTC5RrFAm+yxAZW0k7wMvGFaaUpE1DdBg=;
+	bh=eQ/sfS/QFXTLbgSsd0RsV04oDnb7vEiiYpN8xhUB+l0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b3GbfSsRo1V7XajPb0L6PWGfXxmByWRPXZBJoIlxyus0flXz5OSrF9S7uylDjKnlQ
-	 nOChbdLVX6weq//WGmJHtRJ+5opCzrWiRjJVvCRnoYNY51gA5IJTnW3yjTihRX2lgx
-	 ZW9BT+rHroVqrHAAggzl3vxf3vUP+5UjVxe+CJG3QvD3XszGbzhEgyJ+dKJ3/B+Yah
-	 78MO6To8P/3EinlAySOmgyHsPgHUzmKMT7bv6a3qBghDUw3yK3DHKGFXdjhso6f26q
-	 MIyTrWiqRWzs6to7suYoplBfHxb1Re2rx/EXvw3pI16+3QC2lTy3PYdNc6Q8CPGkHU
-	 ecIbXlWzW90Ag==
+	b=zNqqze/9hn3vBxmr45HXquWlU2Pq6FCRjHhejfRmY5l7VMZZCjVWrOuQsZTsyoOAP
+	 nzBJO9TfBa8FyBofzfV8gNFqXYvoCwNDCvAmbt01RROVVb6mGz/c3PVXXqAIWpHnY4
+	 dI2RwjDyApO6oeJzoPRQa3zD3Hot2F3cTSYqJWsQfUnrT1xAy3FkiD9yrjiXgtgt/X
+	 rOuiFRL5z70Tf0gBLa0455Q0cHyud76+mVwVYM8NefVi1RDUAJ7fj2TXFLRMm8mlHj
+	 8atqaJVw/p1VUYmb8jtkywqa2zPOa41cQyz8eYmK0pf1hYbhHj3OKZVYMfEvzkzIty
+	 TbvmpIoNha20w==
 Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B668e0f920004>; Wed, 10 Jul 2024 16:35:30 +1200
+	id <B668e0f920002>; Wed, 10 Jul 2024 16:35:30 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 10D7413EE2B;
+	by pat.atlnz.lc (Postfix) with ESMTP id 087A013EE85;
 	Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 0E05028206C; Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
+	id 04D6328207E; Wed, 10 Jul 2024 16:35:30 +1200 (NZST)
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 To: tglx@linutronix.de,
 	robh@kernel.org,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kabel@kernel.org,
 	ericwouds@gmail.com,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v5 04/10] dt-bindings: mips: realtek: Add rtl930x-soc compatible
-Date: Wed, 10 Jul 2024 16:35:18 +1200
-Message-ID: <20240710043524.1535151-5-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v5 02/10] mips: dts: realtek: add device_type property to cpu node
+Date: Wed, 10 Jul 2024 16:35:16 +1200
+Message-ID: <20240710043524.1535151-3-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
 References: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
@@ -70,52 +70,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=668e0f92 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=KKAkSRfTAAAA:8 a=NHmAL4TRMSeL2PaLwp8A:9 a=3ZKOabzyN94A:10 a=cvBusfyB2V15izCimMoJ:22
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=668e0f92 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=VwQbUJbxAAAA:8 a=WrkMwgpS-tb6rWOXYdcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
 X-SEG-SpamProfiler-Score: 0
 x-atlnz-ls: pat
 
-Add the rtl9302 SoC and the Cameo RTL9302C_2xRTL8224_2XGE reference
-board to the list of Realtek compatible strings.
+Add device_type =3D "cpu" to the cpu node for the rtl838x SoC. This
+resolves the following dtbs_check complaint:
+
+ cpus: cpu@0: 'cache-level' is a required property
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Marek Beh=C3=BAn <kabel@kernel.org>
 ---
 
 Notes:
     Changes in v5:
     - None
     Changes in v4:
-    - Add r-by from Krzysztof
+    - Add r-by from Marek
     Changes in v3:
-    - Use full board name
-    - I've decided to stick with rtl9302-soc to disambiguate it from what=
- I
-      eventually plan to add as rtl9302-switch which is in the same packa=
-ge
-      but are separate dies.
+    - None
     Changes in v2:
-    - Use specific compatible for rtl9302-soc
-    - Fix to allow correct board, soc compatible
+    - New
 
- Documentation/devicetree/bindings/mips/realtek-rtl.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/mips/boot/dts/realtek/rtl838x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mips/realtek-rtl.yaml b/Do=
-cumentation/devicetree/bindings/mips/realtek-rtl.yaml
-index f8ac309d2994..d337655bfbf8 100644
---- a/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
-+++ b/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
-@@ -20,5 +20,9 @@ properties:
-           - enum:
-               - cisco,sg220-26
-           - const: realtek,rtl8382-soc
-+      - items:
-+          - enum:
-+              - cameo,rtl9302c-2x-rtl8224-2xge
-+          - const: realtek,rtl9302-soc
+diff --git a/arch/mips/boot/dts/realtek/rtl838x.dtsi b/arch/mips/boot/dts=
+/realtek/rtl838x.dtsi
+index 6cc4ff5c0d19..722106e39194 100644
+--- a/arch/mips/boot/dts/realtek/rtl838x.dtsi
++++ b/arch/mips/boot/dts/realtek/rtl838x.dtsi
+@@ -6,6 +6,7 @@ cpus {
+ 		#size-cells =3D <0>;
 =20
- additionalProperties: true
+ 		cpu@0 {
++			device_type =3D "cpu";
+ 			compatible =3D "mips,mips4KEc";
+ 			reg =3D <0>;
+ 			clocks =3D <&baseclk 0>;
 --=20
 2.45.2
 
