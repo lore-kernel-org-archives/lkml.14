@@ -1,109 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22198193479
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BAE127B56
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720620177; cv=none; b=O6IKgEHdNP5rjqNaj4Fy+07E7Q1gDiC5ebXR0W4uQbLXJRubwD9d5WMLEiiJDYyqy2EdxByfOVaRR3vN11eZe7Ctqr/k8Uvhbx3ZKTIMzQK2lZdJh9pMxpnLrDLUT4e9tlasUGI/CGmwbUF2sasjx2EMho2N5zWMRc1ubCfPAWI=
+	t=1720620219; cv=none; b=ZabtVI43sUJiONw5+7yLzXoK0S4K/aOR32AscnY/BldTscLbWlzQGEKjVZDFUS299ECm9sezrflP+saLiKwUwb2/+4gWA9N0fa4TjzwOxdzEYafQgI7r38CEqqykaQF7KGFiIX9cRaILVn6lPy47npKAE+XtWMOzECdvULhe5es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720620177; c=relaxed/simple;
-	bh=qQ79RzLBTWxB6Auh/T2Kou6a+uEjkroibsTjepEuM1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Al9T2klgCt1stnwXIRn/g85z2QuvIXeab/6om4qVhY4QZ7qHpcURph6Y3DkrcNmeqcR+Za2R9nJKbuuy3oyvmEDVqMC0rFIZuJ0oafVcf8qkzcVlJhBXaqj7rPVyZxUZW+fcRqOS18Zl47NReePGvgeDYCBE5WQFLe5hTFp3M7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gzoODdDS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720620219; c=relaxed/simple;
+	bh=4F17oReFMOMx02qlh0eZiZ2Nm5fvG8lifyKxd6O0RUQ=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=pkGHnutQW4jZrkhEH/bHybMSQpkn3CneyTHbs/WSFHzWgkVZ/9EnLksB2Q1JwFAb0X3WG85bJ2wqEzmiziDQueqwZMiZ480u66iFB+QQfif980080m3XsosiehjOoj93VGXNuZZwHkvhYa9dQwVoKgkxXFVj57u4wXiA2p/vo8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=tjwh9dAB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HGw3su6b; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gzoODdDS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720620175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5yFh0y+ODzvRZigdpubheI7oPQ5BzZkZLBnUPJoaMxI=;
-	b=gzoODdDSc9742FV6I5XHe8AjCm3sO38Gw5MCD7E/n6cWuygGfojlRLynG0H9PjJF5eLU27
-	tzIMjJm27BI+vyUwVF/LvnjUVE7mjIPtqX70zU19Lfos6llkbncsRZXxrMMImbZ8AXl14u
-	R1jtiYQrGkLkWtz1X5dt+GU3X16DZ40=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-658-gYxavUMBMLOoLtjXA_AV_w-1; Wed,
- 10 Jul 2024 10:02:50 -0400
-X-MC-Unique: gYxavUMBMLOoLtjXA_AV_w-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E38B41956048;
-	Wed, 10 Jul 2024 14:02:48 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C28EA1955F6E;
-	Wed, 10 Jul 2024 14:02:45 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 10 Jul 2024 16:01:12 +0200 (CEST)
-Date: Wed, 10 Jul 2024 16:01:08 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org
-Cc: clm@meta.com, jolsa@kernel.org, mingo@kernel.org, paulmck@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] uprobes: is_trap_at_addr: don't use
- get_user_pages_remote()
-Message-ID: <20240710140108.GB1084@redhat.com>
-References: <20240710140017.GA1074@redhat.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="tjwh9dAB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HGw3su6b"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id D41F7138144E;
+	Wed, 10 Jul 2024 10:03:35 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 10 Jul 2024 10:03:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1720620215; x=1720706615; bh=YqdMcmkKXF
+	rzgQq7aBjRfp7vBb4LydO+KfF1Qn40cUM=; b=tjwh9dABUw6hUfO0QDoBVeXVJQ
+	ghmNBqfvF/lkxdjVOHnIh2gnFfRkIR+lVooB5/84kLYul520j/1rZgjVdGII4X4/
+	EZCGiDAC6s7PxynYbBS/A9RqGrggRR8rU8jlZc8a+t0+9J8QQmyWKp3CuWms5L3v
+	/TjU2ABzv6G3T5D8fpZ2bwdilQbQy7awgySLGZ3GTTQbhghT5qcKnqQ1uj+5RaJS
+	aSFmVQ5qwRJJNVvOyclR5K+ZxhYpevogj73SuG2r/I+Q/KJhO1dNdd4O/MI8UkLS
+	WfWDBG3fj3HpuNTXCddtMzcDifdNOYpf9E1tgIdTmNwMxHhNjlo7DkP1WRFg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720620215; x=1720706615; bh=YqdMcmkKXFrzgQq7aBjRfp7vBb4L
+	ydO+KfF1Qn40cUM=; b=HGw3su6bFtxpfqW7FUZEg26Y1SjSBwxVH3cTu6Nq4yHC
+	Y++tjEB35KmyrxXOAmueBclBseAKjwcG7F4k08qaqdbcd4PiiSPfjuSFCIZKvzCm
+	T9oYfndqwlgXfoMjzltfN/mbwip6TbZdpx0W7Nv/vC/tX4Zu3RJBQqkxunnxsxT7
+	5vUnoSYca9ekIXvViQ5gzhsyZqK3xIbroH2yQYrb9nsaV6P6+NQuyHDRLjPSssJR
+	eHCaqxJzrGawmTHtQeTyL/rum/S2+ss9df7BrE9Ifh7/+qfIM2L2bWTn6F+Nsro3
+	7pMMHVwd1Iq2AGwxAJLSyta2+80j06P4xzmQeaUHfg==
+X-ME-Sender: <xms:tpSOZttPlp067QWO7ozV9N5gs_Fayw0K5XoaVk4Xm-H8WHKdFFUHwg>
+    <xme:tpSOZmfemPTwnUQumCqwZ-UjQTMCVjfB9pLRhphtY0q9qXfmEEj0W8uRYdFYGoTZZ
+    H0OxgeoiQAjOdDrVSU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedvgdduudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:tpSOZgyUO82UY8r26SnfBeOucMp292hwwW5QshDI4g-e5yzWvbL_9w>
+    <xmx:tpSOZkM9VBG6Hk7sJlUpfxX0kOIu4TnRD3gxEZhdeyj2r-bWNEYOhA>
+    <xmx:tpSOZt8L8N-IN0SP2rCUX_cGvZgpIW3LMCf1HU4tpOKaLe382SR8lg>
+    <xmx:tpSOZkUEWthQx-4TPiMcbJdzyjUSTsgZiVzFSldecoQvUL_so28YHQ>
+    <xmx:t5SOZpaFU4sedTbaN2dSZvL7nFl7kPYNgk5Bc90K2jvg4jSaU5-uBf0R>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 25908B6008F; Wed, 10 Jul 2024 10:03:34 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240710140017.GA1074@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Message-Id: <f975aedd-adc2-4a12-bc9a-03b777c69aff@app.fastmail.com>
+In-Reply-To: <2024071053-mahogany-cavalier-6692@gregkh>
+References: <2024070333-matchless-batch-57ec@gregkh>
+ <20240706153009.3775333-1-vattunuru@marvell.com>
+ <2024071026-squirt-trustful-5845@gregkh>
+ <MW4PR18MB52442E363AE0BED30607F251A6A42@MW4PR18MB5244.namprd18.prod.outlook.com>
+ <2024071053-mahogany-cavalier-6692@gregkh>
+Date: Wed, 10 Jul 2024 16:03:11 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Vamsi Attunuru" <vattunuru@marvell.com>
+Cc: "Jerin Jacob" <jerinj@marvell.com>,
+ "Srujana Challa" <schalla@marvell.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v10 1/1] misc: mrvl-cn10k-dpi: add Octeon CN10K DPI
+ administrative driver
+Content-Type: text/plain
 
-get_user_pages_remote() and the comment above it make no sense.
+On Wed, Jul 10, 2024, at 15:27, Greg KH wrote:
+> On Wed, Jul 10, 2024 at 01:19:56PM +0000, Vamsi Krishna Attunuru wrote:
+>> >
+>> >Why does ARM64 matter here?  I don't see any dependency required of it.
+>> >
+>> Thanks, Greg, for your time. This DPI device is an on-chip PCIe device and only present on
+>> Marvell's CN10K platforms(which are 64-bit ARM SoC processors), so added those dependency.
+>
+> Then perhaps keep the ARM64 and add a COMPILE_TEST option as well so
+> that we can build this as part of normal testing?
+>
+> So that would be:
+> 	depends on PCI && (ARM64 || COMPILE_TEST)
+> right?
+>
 
-There is no task_struct passed into get_user_pages_remote() anymore, and
-nowadays mm_account_fault() increments the current->min/maj_flt counters
-regardless of FAULT_FLAG_REMOTE.
+That looks correct to me, though for specific ARM64 SoC we tend
+to also have a more specific option, which would make this
+something like
 
-Reported-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/events/uprobes.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+       depends on PCI
+       depends on ARCH_THUNDER|| COMPILE_TEST
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index d52b624a50fa..1bdf386485d4 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -453,7 +453,7 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
-  * @vaddr: the virtual address to store the opcode.
-  * @opcode: opcode to be written at @vaddr.
-  *
-- * Called with mm->mmap_lock held for read or write.
-+ * Called with mm->mmap_lock held.
-  * Return 0 (success) or a negative errno.
-  */
- int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
-@@ -2024,13 +2024,7 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
- 	if (likely(result == 0))
- 		goto out;
- 
--	/*
--	 * The NULL 'tsk' here ensures that any faults that occur here
--	 * will not be accounted to the task.  'mm' *is* current->mm,
--	 * but we treat this as a 'remote' access since it is
--	 * essentially a kernel access to the memory.
--	 */
--	result = get_user_pages_remote(mm, vaddr, 1, FOLL_FORCE, &page, NULL);
-+	result = get_user_pages(vaddr, 1, FOLL_FORCE, &page);
- 	if (result < 0)
- 		return result;
- 
--- 
-2.25.1.362.g51ebf55
+This is what we use e.g. for the PMU driver. I had at some
+point submitted a patch to rename ARCH_THUNDER to ARCH_OCTEON,
+since we seem to have some drivers that get this wrong, e.g.
+
+config CRYPTO_DEV_OCTEONTX2_CPT
+        tristate "Marvell OcteonTX2 CPT driver"
+        depends on ARCH_THUNDER2 || COMPILE_TEST
+
+which should also be ARCH_THUNDER instead of the discontinued
+ARCH_THUNDER2.
+
+For reference, we have five lineages of arm64 SoCs from Marvell:
+
+- ARCH_THUNDER: Cavium ThunderX CN88xx, Marvell OcteonTX
+     CN80xx/CN81xx/CN82xx/CN83xx, Marvell OcteonTX2
+     CN92xx/CN93xx/CN96xx, Marvell Octeon Fusion, Marvell
+     Octeon CN10xxx
+
+- ARCH_THUNDER2: Broadcom Vulcan, Marvell ThunderX2 CN99xx
+
+- ARCH_MVEBU: Marvell ThunderX2 CN91xx, Marvell Armada 7K,
+     Marvell Armada 8K, Marvell Armada 37xx, Marvell
+     Prestera 98DX25xx
+
+- ARCH_MMP: PXA19x8
+
+- ARCH_BERLIN: Armada 1500 Ultra, Synaptics BG4CT/BG5CT,
+     Synaptics VisionSmart VS6xx, Synaptics Astra
+     SL16xx, SenaryTech SN36xx.
 
 
+      Arnd
