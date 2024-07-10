@@ -1,138 +1,190 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400CC13C679
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2991527A7;
+	Wed, 10 Jul 2024 23:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720653420; cv=none; b=tRyj5N8sIJ5Yng4uPr9xXAEubugG3NEgUfjbD3z6SBvmkOTDOSGjUOx9ZMd4mdjqEdc0Uv/3OKuylQ2mdBNZtI11t+lJIG7bDDtHpY5izlhm/d/c5b6UL4He8vasBfkkq0L0aQvpQgnvTmVlPpDYX9Ppia4v03GvLeJwP5XLti4=
+	t=1720653435; cv=none; b=sY+kDCI8oYhjV0HqZvsLGd1Q1dtWqVg4sgmnGhJTZ7otYJHUW7Duaa/Qe7IWKW2FFw0dHpsk8Lz0WPzZPRP88xyOdCDsF3LqvMZnuGoMHLG7D2ZhVtPV/QA9zxR2s5+OkMHxIRd+wPTCMVKEEwAi3Xgw7HmuZVlIo94G6zn1YxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720653420; c=relaxed/simple;
-	bh=sC+v9/yANl9hLQYeBgjFHxA+lkxPKYW5RPrkbjfI/zE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L7/VlIT8CPlpVviMrrquEuhCwMIyBSkVLJCA+Nsh5rdDiUJRfoO2gnVektBudNmSv49NbSiB2RcED9ZludH3dx93D4BGcXT3Mdx1RXq0RQ0vZQy+v3eFDkfbKI9um2VPw5NIvx9XysLheJtYya3zX3jCatB6O92gfxaDLl2mXko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=uRUsS3Oc; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1720653435; c=relaxed/simple;
+	bh=Jd3wkWpGIxjVE8bZuw1tGBEUQpwx9hG4gsdHuzurtTM=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=INrFtldTCpPaz0e4n48DOVqUH2/M6A2NH3IcrZL+yU2X1Bd2BsnpLJVce+y2mcH69Dqf3sH0Blz71DbZtk8gmRabp5LsvLW07FsTUg7uDbcyzaxw8GgVjPamXXx5xD3skFl+wA9JJbqnF/SsZzTDm0cI9421s7AWDa+5Mu7cl78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2haqyCc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uRUsS3Oc"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id RcXJshZrsjnP5RgYOsPRu2; Wed, 10 Jul 2024 23:16:52 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id RgYOsGYWjX56wRgYOsKzH3; Wed, 10 Jul 2024 23:16:52 +0000
-X-Authority-Analysis: v=2.4 cv=MY6nuI/f c=1 sm=1 tr=0 ts=668f1664
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=mQTSY71ofxE6tXbfK60A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=AX4VtRHSQCF7dAnD2xsWmA+IklZiBVIQGTjA3CNugNA=; b=uRUsS3Oc2b9NPpqrHgj/SWUpdR
-	ViqpY9movygUdVcpKD/LNIdGBlz+1xNNThF6GfeBaXyDYpI2ono3NYcSAa8qI7oVrPUIulbE8fI45
-	kV2VpjraNnHZwV9/EeIC1Pz5Y5vWsdGcHGajcunj09RABZyYZ+OgY9FxNHmuF+f5wNjOHnchKjZS4
-	JvuUuA/KiX84KwxhAzy5tZxe7Bne7cCDgyKRNvmgPDbZIb3P6AHePemKNjrvbn2gZgNmYNvn9lYlT
-	tplq8f5JW+XgSlzC53qwXUP0Xf3dAnygPyl7iKdyvcAe/cnAgoGJPIQDKVS840kh4vw37kppo5V/S
-	tmodMN3A==;
-Received: from [201.172.173.139] (port=54868 helo=[192.168.15.4])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sRgYN-004Cic-22;
-	Wed, 10 Jul 2024 18:16:51 -0500
-Message-ID: <4193c6b4-164e-4c65-bd8b-cf392b1a865f@embeddedor.com>
-Date: Wed, 10 Jul 2024 17:16:49 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2haqyCc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECB6C4AF07;
+	Wed, 10 Jul 2024 23:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720653435;
+	bh=Jd3wkWpGIxjVE8bZuw1tGBEUQpwx9hG4gsdHuzurtTM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=t2haqyCcJw9sr2yZK5l1zj+YhLnEb/FRj6I69HzdAMOqFUg0ApMQesfJ95wG4i6N2
+	 pzDekhpOYN6r9sbty0qVx9g1Jvx+Y/8jCTEw/iL6sXgDvJn88FkIrR4croxZMHbl10
+	 /j4QO0CQWqxaSbmE2cZCtCT2nkwcuKFildztLjt3FSpqhyAEFVG+rFlsPpSlTGoPY2
+	 kKCZxDLLPKKkmaQ8mN4IgCNuSNq8d986tEHFVUvTszT9ipKROy0yGZbtXTe01fp0Ii
+	 jko+aFhjpzgeBBc3agNERAjpSmj6Qo7rP6ghntuTvWG1I59tup4bkc18Sq7acJ1ih3
+	 EqJtmZ46F9miw==
+Message-ID: <d36ff27b56b3e9c8ef490bfd9d24761d.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] media: venus: hfi_cmds: struct
- hfi_session_release_buffer_pkt: Replace 1-element array with flexible array
-To: Kees Cook <kees@kernel.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240710230728.work.977-kees@kernel.org>
- <20240710230914.3156277-1-kees@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240710230914.3156277-1-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sRgYN-004Cic-22
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.4]) [201.172.173.139]:54868
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPTNBp/2bTB0gLeB4lqzQ4N9ux0tUUIjbw8mT3dkpm//GMn5DcORlFDFEZSzn5lITblmlw9y08xoKrTJKc9vaWCL9sEWbiBNtl8VR9ajJ58yPC8UihIF
- 4OIIwDvygvaVfnNklkCFXRbJg/p/Qao+4DsGjcfNj3SJlj955BEryeiXfKYYzmaht99ydS3tQD2z2/TEsbBXv/+pcCGUwUaSrx25wu84dTtdIn52OXolO2Zo
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240623-th1520-clk-v2-2-ad8d6432d9fb@tenstorrent.com>
+References: <20240623-th1520-clk-v2-0-ad8d6432d9fb@tenstorrent.com> <20240623-th1520-clk-v2-2-ad8d6432d9fb@tenstorrent.com>
+Subject: Re: [PATCH v2 2/7] clk: thead: Add support for T-Head TH1520 AP_SUBSYS clocks
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Drew Fustini <dfustini@tenstorrent.com>
+To: Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor+dt@kernel.org>, Drew Fustini <dfustini@tenstorrent.com>, Emil Renner Berthing <emil.renner.berthing@canonical.com>, Fu Wei <wefu@redhat.com>, Guo Ren <guoren@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh@kernel.org>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Yangtao Li <frank.li@vivo.com>
+Date: Wed, 10 Jul 2024 16:17:12 -0700
+User-Agent: alot/0.10
 
+Quoting Drew Fustini (2024-06-23 19:12:32)
+> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th=
+1520-ap.c
+> new file mode 100644
+> index 000000000000..982d4d40f783
+> --- /dev/null
+> +++ b/drivers/clk/thead/clk-th1520-ap.c
+> @@ -0,0 +1,1086 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
+> + * Copyright (C) 2023 Vivo Communication Technology Co. Ltd.
+> + *  Authors: Yangtao Li <frank.li@vivo.com>
+> + */
+> +
+> +#include <dt-bindings/clock/thead,th1520-clk-ap.h>
 
+Preferably include dt-bindings after linux includes.
 
-On 10/07/24 17:09, Kees Cook wrote:
-> Replace the deprecated[1] use of a 1-element array in
-> struct hfi_session_release_buffer_pkt with a modern flexible array.
-> 
-> No binary differences are present after this conversion.
-> 
-> Link: https://github.com/KSPP/linux/issues/79 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>
-> Cc: Vikash Garodia <quic_vgarodia@quicinc.com>
-> Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
+> +#include <linux/bitfield.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define TH1520_PLL_POSTDIV2    GENMASK(26, 24)
+> +#define TH1520_PLL_POSTDIV1    GENMASK(22, 20)
+> +#define TH1520_PLL_FBDIV       GENMASK(19, 8)
+> +#define TH1520_PLL_REFDIV      GENMASK(5, 0)
+> +#define TH1520_PLL_BYPASS      BIT(30)
+> +#define TH1520_PLL_DSMPD       BIT(24)
+> +#define TH1520_PLL_FRAC                GENMASK(23, 0)
+> +#define TH1520_PLL_FRAC_BITS    24
+[...]
+> +
+> +static unsigned long th1520_pll_vco_recalc_rate(struct clk_hw *hw,
+> +                                               unsigned long parent_rate)
+> +{
+> +       struct ccu_pll *pll =3D hw_to_ccu_pll(hw);
+> +       unsigned long div, mul, frac, rate =3D parent_rate;
+> +       unsigned int cfg0, cfg1;
+> +
+> +       regmap_read(pll->common.map, pll->common.cfg0, &cfg0);
+> +       regmap_read(pll->common.map, pll->common.cfg1, &cfg1);
+> +
+> +       mul =3D FIELD_GET(TH1520_PLL_FBDIV, cfg0);
+> +       div =3D FIELD_GET(TH1520_PLL_REFDIV, cfg0);
+> +       if (!(cfg1 & TH1520_PLL_DSMPD)) {
+> +               mul <<=3D TH1520_PLL_FRAC_BITS;
+> +               frac =3D FIELD_GET(TH1520_PLL_FRAC, cfg1);
+> +               mul +=3D frac;
+> +               div <<=3D TH1520_PLL_FRAC_BITS;
+> +       }
+> +       rate =3D parent_rate * mul;
+> +       do_div(rate, div);
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+'rate' is only unsigned long, so do_div() isn't needed here. Perhaps if
+'parent_rate * mul' can overflow 32-bits then 'rate' should be
+u64.
 
-Thanks
---
-Gustavo
+> +       return rate;
+> +}
+> +
+> +static unsigned long th1520_pll_postdiv_recalc_rate(struct clk_hw *hw,
+> +                                                   unsigned long parent_=
+rate)
+> +{
+> +       struct ccu_pll *pll =3D hw_to_ccu_pll(hw);
+> +       unsigned long rate =3D parent_rate;
+> +       unsigned int cfg0, cfg1;
+> +
+> +       regmap_read(pll->common.map, pll->common.cfg0, &cfg0);
+> +       regmap_read(pll->common.map, pll->common.cfg1, &cfg1);
+> +
+> +       if (cfg1 & TH1520_PLL_BYPASS)
+> +               return rate;
+> +
+> +       do_div(rate, FIELD_GET(TH1520_PLL_POSTDIV1, cfg0) *
 
-> ---
->   drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> index 20acd412ee7b..42825f07939d 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> @@ -227,7 +227,7 @@ struct hfi_session_release_buffer_pkt {
->   	u32 extradata_size;
->   	u32 response_req;
->   	u32 num_buffers;
-> -	u32 buffer_info[1];
-> +	u32 buffer_info[];
->   };
->   
->   struct hfi_session_release_resources_pkt {
+Same, 'rate' is unsigned long. Did you get some compilation error
+without this? How big is the divisor going to be? The fields are only
+3-bits wide, so the multiplication would fit into a u32 just fine. Given
+that 'rate' is unsigned long though I think you can just put the
+multiplication result into a local variable that's also unsigned long
+and then just write the divide with unsigned longs
+
+	div =3D FIELD_GET(...) * FIELD_GET(...);
+
+	return rate / div;
+
+> +                    FIELD_GET(TH1520_PLL_POSTDIV2, cfg0));
+> +
+> +       return rate;
+> +}
+> +
+> +static unsigned long ccu_pll_recalc_rate(struct clk_hw *hw,
+> +                                        unsigned long parent_rate)
+> +{
+> +       unsigned long rate =3D parent_rate;
+> +
+> +       rate =3D th1520_pll_vco_recalc_rate(hw, rate);
+> +       rate =3D th1520_pll_postdiv_recalc_rate(hw, rate);
+> +
+> +       return rate;
+> +}
+
+Please fold this in
+
+----8<---
+diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th15=
+20-ap.c
+index 982d4d40f783..0c3821d50765 100644
+--- a/drivers/clk/thead/clk-th1520-ap.c
++++ b/drivers/clk/thead/clk-th1520-ap.c
+@@ -411,7 +411,7 @@ static const struct clk_parent_data c910_i0_parents[] =
+=3D {
+ 	{ .index =3D 0 }
+ };
+=20
+-struct ccu_mux c910_i0_clk =3D {
++static struct ccu_mux c910_i0_clk =3D {
+ 	.mux	=3D TH_CCU_ARG(1, 1),
+ 	.common	=3D {
+ 		.clkid		=3D CLK_C910_I0,
+@@ -428,7 +428,7 @@ static const struct clk_parent_data c910_parents[] =3D {
+ 	{ .hw =3D &cpu_pll1_clk.common.hw }
+ };
+=20
+-struct ccu_mux c910_clk =3D {
++static struct ccu_mux c910_clk =3D {
+ 	.mux	=3D TH_CCU_ARG(0, 1),
+ 	.common	=3D {
+ 		.clkid		=3D CLK_C910,
+@@ -845,7 +845,7 @@ static const struct clk_parent_data uart_sclk_parents[]=
+ =3D {
+ 	{ .index =3D 0 },
+ };
+=20
+-struct ccu_mux uart_sclk =3D {
++static struct ccu_mux uart_sclk =3D {
+ 	.mux	=3D TH_CCU_ARG(0, 1),
+ 	.common	=3D {
+ 		.clkid          =3D CLK_UART_SCLK,
