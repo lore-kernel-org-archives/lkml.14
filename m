@@ -1,113 +1,199 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ED725757
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D58984D0F;
+	Wed, 10 Jul 2024 08:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720599222; cv=none; b=Uv1iYDZDtHVGvZgq8hnSkWvYeR2jdX+d8g9SyfNnsqxYKlK0pCo0xNTpv25oIxvl3pecVidgGB+LX4GuVGhlH4koauiK8S2rp4IfTOXQjTaVPs39/NMg3JjR/ED1rZGESP6zX6kCaNRaTXnziDYRPot/+pjjOlOvDQ0Q4E093rU=
+	t=1720599339; cv=none; b=bVBoNcVIgfCJgE3cy3ng8lDPuPrGe5MO9AM3Q1dNmAzErRYNsE0v9qIaUQHzIczVSNuIXQaR/MUE5P67H1AEGdlOVO6jOAk/d5IhCPf7xitQs90HGuHeICoFZpNnFSx/F10tTa3vkX4CqbAMQBfBGp5XQMe6pYcDxrDgbBEMvt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720599222; c=relaxed/simple;
-	bh=i5TtDYHg3eKGtsjVT3dZaJXu5Tx7kxeCi9pGUsRuLcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HIBnOr24w+tm9EctPdfRYln1ltsT1XyAPAeVh0F0cVBJW2Vs8TXI/HdM6Di7/mFXt7PTWCvhjG+G3IkI/r5iaIldBtrVaqiE8nFBFgmcpRbgfFqoYgLcSjqWfsICaoJDIsHOlnPpOYzFZR4ZLGFzmXyMyiWAE4WV2FYnUEf4fkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=EobwZ/Q/; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1720599339; c=relaxed/simple;
+	bh=XdXyR5tQq+aY/9Zj3nszauOHOFqQAtnCKqcowQQulG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwLCj99KjBN5fGCky1B+8eojjrhqlSBMVOLaGM79bHENzayoukh41FWX/3j+ICAUoSP6ux0puXcHjJlCH+QfZvdXXoYxDrj1rBPC9gfvlN+WHuftJzTxFhUpmim5uJhjObHexBh+1cvojCNTyWavahOtV+KGJCxzIjpta44NkAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hcGI96pm; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="EobwZ/Q/"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42673554402so2114665e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1720599219; x=1721204019; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ljKsUTZvZVP6wXh4lGuG/G1a2SNPwlawfzj7RkjMJM0=;
-        b=EobwZ/Q/BRPD8HWJkvQ4IMX/oNYaXX+PcRZJkI4WMjlvd8Df0J/6flzQJKmP4gUtkZ
-         YJfje+/sr2KvSv4QL9La0lyAo+/wI6gODNJkjocdbi1k6i/VQczISFTAlK4tjWbd+Otx
-         1ejWgJKZHLwl94cpgn9Q1o9xRR3jAxW3QnWxwzw6mVkLjhfA59lpxuXJtrLMFFvQSGP8
-         ZA3+uKzEqnwdJWO/zHrBOVJMwKCZv2pvJfaqrw122QNcQs/f/4B68K34KiSra+yJMR/+
-         3hFTDCKffWHv8ZM/GSHCvsGFKtKDiNWK+dmBgjVvex0gCVivnE03W++oNDow0Qp/nsZm
-         uK8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720599219; x=1721204019;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ljKsUTZvZVP6wXh4lGuG/G1a2SNPwlawfzj7RkjMJM0=;
-        b=Ar6KNYE2h+VxXBWbsoJDVRTby+aKmCX5WV7o5NwYPAJV1QzuBlai2Cn3GtfJU+N6p1
-         f7sicvAfq5hcUx0KhTQiHqop3SqlIxL9I4MNAGcKeAwoSQuWI1AizHiw/9udV4xQX4zA
-         MhT08LOgMfzx8ssVoKqxnvdDKQfypGxDNrEX2GWuQXRUVBiGe5HxLffSCzObwR4BhpnH
-         lNtQyxiru5IXDp7m1xsEk/TwdkFkjhgg4Sio9pd3G3Ysm5Pki96RpNTjiPZeiFUdkDVv
-         AwRpyBxzRklAiPICURG14rPDwOXbFI1njyjSUHoEq/mgeeuBPLdtUEUjPhmvgRtknkXa
-         4Ltg==
-X-Forwarded-Encrypted: i=1; AJvYcCXd8o0E//7bjaSABdRBIkEL4n/GSZk485qzyH8a6N6laKtsUKMdGT5Fb9KBayiZeb0dqbRptB0SHgb7j4L0b6N6Njo16pcUoYFwbHRI
-X-Gm-Message-State: AOJu0Yzppm7PBYjWGsQUp9CdP6Gu/b2q3m+BazunBqtngJGt6GxOTMcA
-	kOzHaJq7+n6Ok2O+1Ha12wPb855T6tTzVnvjjpvRwJMMZ6NeEnkeNQet1F6IjsI=
-X-Google-Smtp-Source: AGHT+IHMHSxoqd+xgXgy0bOLqdNFMIpV82LR87YS4YDu/bmyWzgaPs82YtW9EUoqmZ7uEZvtEBsJIw==
-X-Received: by 2002:a05:600c:1d1a:b0:426:6a0d:1ae5 with SMTP id 5b1f17b1804b1-4266ff87d7cmr33227115e9.0.1720599219289;
-        Wed, 10 Jul 2024 01:13:39 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:9fb4:e15f:31d3:4404? ([2a01:e0a:e17:9700:9fb4:e15f:31d3:4404])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-426740d88bcsm39416755e9.1.2024.07.10.01.13.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 01:13:38 -0700 (PDT)
-Message-ID: <11053a90-08c5-426c-ae15-ed61e7286980@rivosinc.com>
-Date: Wed, 10 Jul 2024 10:13:38 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hcGI96pm"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2004940E0027;
+	Wed, 10 Jul 2024 08:15:34 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id OAQjWQu05pHz; Wed, 10 Jul 2024 08:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720599323; bh=wwqvraycBFldrBQLx5UORin5Ztg1YnULrcBZets4RVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hcGI96pmZtbjQLT6F7J1VsTnjsCRcVSX8+V0TrIbNi0OR/8PiHBQP5ctCzXLX7xre
+	 379nsZa4/5CDurxtwPMEwde3FU8tr3p9HRHTNDaEMaKaf8HKrQYUXCvi9sQaPynJbB
+	 8BM9zB1Q9ljtUPCPlFZgJfJZvO06jv3xq7COFWpYkDGfGwhBy/+xAJ5lVuo7bhExLG
+	 yWw0mfZDdfT2kzdB/e1rj4PnQnqSjr4MQfGFKKdBymdA8oRMMVuqUtqoWDfEUbDJrk
+	 I6hbY8flmrq/DACJDUuA7RW42cNoauTkYCAQULCVQWA6Me0quNGI9zAPT7P3g67AHE
+	 vWrqCBm9JCYl+0fEsT/GjcGAahkUIGOsB9ABBb6HBel9fDxcILdkGMqIzV6+iImjPa
+	 AuaPmh+1w4R5p7xf5mz/K6dgCpzKD/yEtNMYrFPMjwR0oZFtw6LpuLeIsl4xpCXT5r
+	 3GknMSxaYBpViRQTly+9Uk7zJ5vwc3tesEzP4dX4RNLZn6PUexqzh/IGtqK8Q+k45Z
+	 5tx0vwNOFjMYyNxfxrNO/dGDcPrxkWEbcihsRt5ej70kmHfLZXdsOoTcsV1N8Y12u7
+	 9IMDlqAJo510h/GvRxvJ4k9xqMTrNbdoylpq3nVqfX+hXgKPFcPrSD5Ti0c83ygvLW
+	 AhTKLmwxjE+mVooG35VjQex8=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D7A9840E019D;
+	Wed, 10 Jul 2024 08:15:08 +0000 (UTC)
+Date: Wed, 10 Jul 2024 10:15:01 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"open list:X86 TRUST DOMAIN EXTENSIONS (TDX)" <linux-coco@lists.linux.dev>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/tdx: Support vmalloc() for tdx_enc_status_changed()
+Message-ID: <20240710081501.GAZo5DBW3nvdzp34AI@fat_crate.local>
+References: <20240708183946.3991-1-decui@microsoft.com>
+ <20240708191703.GJZow7L9DBNZVBXE95@fat_crate.local>
+ <SA1PR21MB1317816DFCE6EF38A92CF254BFDA2@SA1PR21MB1317.namprd21.prod.outlook.com>
+ <20240709110656.GEZo0Z0EoI4xmHDx9b@fat_crate.local>
+ <SA1PR21MB13173395ACC3C0FD6D62E36EBFA42@SA1PR21MB1317.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] riscv: select ARCH_USE_SYM_ANNOTATIONS
-To: Jisheng Zhang <jszhang@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240709160536.3690-1-jszhang@kernel.org>
- <20240709160536.3690-3-jszhang@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20240709160536.3690-3-jszhang@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SA1PR21MB13173395ACC3C0FD6D62E36EBFA42@SA1PR21MB1317.namprd21.prod.outlook.com>
 
+On Wed, Jul 10, 2024 at 07:48:14AM +0000, Dexuan Cui wrote:
+> It's ok to me it will be after -rc1. I just thought the patch would get more
+> testing if it could be on some branch (e.g., x86/tdx ?) in the tip.git tree, e.g.,
+> if the patch is on some tip.git branch, I suppose the linux-next tree would
+> merge the patch so the patch will get more testing automatically. 
 
+Yes, it will get more testing automatically but the period is important: if
+I rush it now, it goes to Linus next week and then any fallout it causes needs
+to be dealt with in mainline.
 
-On 09/07/2024 18:05, Jisheng Zhang wrote:
-> Now, riscv has been converted to the new style SYM_ assembler
-> annotations. So select ARCH_USE_SYM_ANNOTATIONS to ensure the
-> deprecated macros such as ENTRY(), END(), WEAK() and so on are not
-> available and we don't regress.
-> 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->  arch/riscv/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 0525ee2d63c7..c51b32a8ddff 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -62,6 +62,7 @@ config RISCV
->  	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
->  	select ARCH_USE_MEMTEST
->  	select ARCH_USE_QUEUED_RWLOCKS
-> +	select ARCH_USE_SYM_ANNOTATIONS
->  	select ARCH_USES_CFI_TRAPS if CFI_CLANG
->  	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if MMU
->  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+If I queue it after -rc1, it'll be only in tip and linux-next for an
+additional 7 week cycle and I can always whack it if it breaks something. If
+it doesn't, I can send it mainline in the 6.12 merge window.
 
-Hi Jisheng,
+But we won't have to revert it mainline.
 
-It now compiles with the previous patch (using the defconfig).
+See the difference?
 
-Reviewed-By: Clément Léger <cleger@rivosinc.com>
+> I guess we have different options on whether "the patch has changed
+> substantially". My impression is that it hasn't.
 
-Thanks !
+If you're calling the difference between what I reverted and what you're
+sending now unsubstantial:
 
-Clément
+--- /tmp/old	2024-07-10 10:03:20.016629439 +0200
++++ /tmp/new	2024-07-10 10:02:23.696872729 +0200
+ diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+-index c1cb90369915..abf3cd591afd 100644
++index 078e2bac25531..8f471260924f7 100644
+ --- a/arch/x86/coco/tdx/tdx.c
+ +++ b/arch/x86/coco/tdx/tdx.c
+-@@ -7,6 +7,7 @@
+- #include <linux/cpufeature.h>
++@@ -8,6 +8,7 @@
+  #include <linux/export.h>
+  #include <linux/io.h>
++ #include <linux/kexec.h>
+ +#include <linux/mm.h>
+  #include <asm/coco.h>
+  #include <asm/tdx.h>
+  #include <asm/vmx.h>
+-@@ -778,6 +779,19 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
++@@ -782,6 +783,19 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
+  	return false;
+  }
+  
+@@ -53,7 +86,7 @@ index c1cb90369915..abf3cd591afd 100644
+  /*
+   * Inform the VMM of the guest's intent for this physical page: shared with
+   * the VMM or private to the guest.  The VMM is expected to change its mapping
+-@@ -785,15 +799,22 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
++@@ -789,15 +803,30 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
+   */
+  static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
+  {
+@@ -63,23 +96,34 @@ index c1cb90369915..abf3cd591afd 100644
+ +	unsigned long end = start + numpages * PAGE_SIZE;
+ +	unsigned long step = end - start;
+ +	unsigned long addr;
+- 
+--	if (!tdx_map_gpa(start, end, enc))
+--		return false;
+++
+ +	/* Step through page-by-page for vmalloc() mappings */
+ +	if (is_vmalloc_addr((void *)vaddr))
+ +		step = PAGE_SIZE;
+++
+++	for (addr = start; addr < end; addr += step) {
+++		phys_addr_t start_pa;
+++		phys_addr_t end_pa;
+++
+++		/* The check fails on vmalloc() mappings */
+++		if (virt_addr_valid(addr))
+++			start_pa = __pa(addr);
+++		else
+++			start_pa = slow_virt_to_phys((void *)addr);
++ 
++-	if (!tdx_map_gpa(start, end, enc))
++-		return false;
+++		end_pa = start_pa + step;
+  
+ -	/* shared->private conversion requires memory to be accepted before use */
+ -	if (enc)
+ -		return tdx_accept_memory(start, end);
+-+	for (addr = start; addr < end; addr += step) {
+-+		phys_addr_t start_pa = slow_virt_to_phys((void *)addr);
+-+		phys_addr_t end_pa   = start_pa + step;
+-+
+ +		if (!tdx_enc_status_changed_phys(start_pa, end_pa, enc))
+ +			return false;
+ +	}
+  
+  	return true;
+  }
 
+especially for a patch which is already known to break things and where we're
+especially careful, then yes, we strongly disagree here.
 
+So yes, it will definitely not go in now.
+
+> I started to add people's tags since v4 and my impression is that since then
+> it's rebasing and minor changes.
+
+When version N introduces changes like above in what is already non-trivial
+code, you drop all tags. And if people want to review it again, then they
+should give you those R-by tags.
+
+Also, think about it: your patch broke a use case. How much are those R-by
+tags worth if the patch is broken? And why do you want to hold on to them so
+badly?
+
+If a patch needs to be reverted because it breaks a use case, all reviewed and
+acked tags should simply be removed too. It is that simple.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
