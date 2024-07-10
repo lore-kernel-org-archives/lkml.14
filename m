@@ -1,127 +1,79 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9545194A68;
-	Wed, 10 Jul 2024 15:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A71910A09;
+	Wed, 10 Jul 2024 15:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720625686; cv=none; b=K0i6cIolaNFAddlcJs2zcx0aHqtVJ9ZoAwlNB7RHUC7Q2AUkzngiyzcOgjHVUII2N1NpH7hh+tSiCeklc6u8aXcCrq7BBWaWLU7HOZ8O9iw33YbMI0MYPSpDz1yJ4S5fEQJCcA/ghVDQ/1Lg0F18gSak8v+rRwfKRiQFTTd6nfY=
+	t=1720625751; cv=none; b=cpVDIJOw9hBt/cjHMCfFmB/28MlAZcsb9fMoZBIpyrZTgphtdNMX62DFhqzKCDhpU2lETKqMaP+4recl3LfsuHwC5NJfFUsdji6EloT6rCexuEox2gMA8EIiRteN0iF2ihBFX8VCmPEK9tppYzUbHG4FF2WGLZZiHyWOsNcUVTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720625686; c=relaxed/simple;
-	bh=kH/nBqBMRKMBsBOFarCSegF7AJyzJWPtEZxPewVSvjI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Boe9AQLI0/+NtbeV5YcAszER2SAcSWMFA6lBD3L8ekeP9wdsROojctpaGiyBw6hu0S5ZCotb4gUbqIDoQpsPeWJe0uePP+g9a1tyJ3eTcoCyLSHONek3UEXkTOf0/tKc7N+aHU1RBDHLsBtor36Obu689SiBLVRLWszJ7GYXigk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72A73113E;
-	Wed, 10 Jul 2024 08:35:09 -0700 (PDT)
-Received: from [10.57.8.115] (unknown [10.57.8.115])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9967D3F766;
-	Wed, 10 Jul 2024 08:34:36 -0700 (PDT)
-Message-ID: <40746334-7669-48f2-9aa7-a73da0b2a275@arm.com>
-Date: Wed, 10 Jul 2024 16:34:20 +0100
+	s=arc-20240116; t=1720625751; c=relaxed/simple;
+	bh=7nXaOQ2Y21REg/4hAQAvgB2v44nvBiwZIAy1N2EwgCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hjcEVsu79zWT/hf0wnL45AAPB4i2gj3zARouZJEg7JUFMi6FYvWODg2i2FX8FO9r7LUba59XqGt2EUi6LdUnWzSTLlVkkS36OYTeKVeT/aBZwnVVFvG8w+Bx+45lPWtaFPi0PzD1JxB0/UzUp+0YTKqQEUkQSlNYV+MIfFL8fXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kfbpzxdf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kfbpzxdf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10EF9C4AF0F;
+	Wed, 10 Jul 2024 15:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720625750;
+	bh=7nXaOQ2Y21REg/4hAQAvgB2v44nvBiwZIAy1N2EwgCI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kfbpzxdfM08YiMA9CnN1Ds8V/6cfkbBcUBSyJUyyszqmvYhChL4AE5DcSgHpHQIYk
+	 uK6ddvllWwmNjBDlk3YUhq9pHqSdF5gfYxmE2VWuRJ24IMML35Yn06oLI7IZlAIQyu
+	 e6KTtc0qNrFVdrEHQO4OpHLx928c8B5RM0yZfDSyHHGyN8gHHr0wE6R/0HM9//M+dF
+	 WOS/N61/Bw/aAKSPINmAQeel29qmosvlZBX5HDEDRV/WOCgFhRB43qP/dsRIiCfz9e
+	 iA0zOurNkwSguAGh8kpj73E0ZgtzvHfuDJS1HaVwMLIIvDDkUTbyuNZPVPHOiytyeH
+	 99nf/1JFxtdpw==
+Date: Wed, 10 Jul 2024 08:35:48 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
+ <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v16 01/13] netdev: add
+ netdev_rx_queue_restart()
+Message-ID: <20240710083548.351e51e5@kernel.org>
+In-Reply-To: <20240710001749.1388631-2-almasrymina@google.com>
+References: <20240710001749.1388631-1-almasrymina@google.com>
+	<20240710001749.1388631-2-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/15] arm64: Make the PHYS_MASK_SHIFT dynamic
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Oliver Upton <oliver.upton@linux.dev>,
- Zenghui Yu <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240701095505.165383-1-steven.price@arm.com>
- <20240701095505.165383-7-steven.price@arm.com>
- <20240709114337.GB13242@willie-the-truck>
- <1ce456b5-0652-4522-98ea-b32d96c1adf4@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <1ce456b5-0652-4522-98ea-b32d96c1adf4@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 09/07/2024 13:55, Suzuki K Poulose wrote:
-> On 09/07/2024 12:43, Will Deacon wrote:
->> On Mon, Jul 01, 2024 at 10:54:56AM +0100, Steven Price wrote:
->>> Make the PHYS_MASK_SHIFT dynamic for Realms. This is only is required
->>> for masking the PFN from a pte entry. For a realm phys_mask_shift is
->>> reduced if the RMM reports a smaller configured size for the guest.
->>>
->>> The realm configuration splits the address space into two with the top
->>> half being memory shared with the host, and the bottom half being
->>> protected memory. We treat the bit which controls this split as an
->>> attribute bit and hence exclude it (and any higher bits) from the mask.
->>>
->>> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>>
->>> ---
->>> v3: Drop the MAX_PHYS_MASK{,_SHIFT} definitions as they are no longer
->>> needed.
->>> ---
->>>   arch/arm64/include/asm/pgtable-hwdef.h | 6 ------
->>>   arch/arm64/include/asm/pgtable.h       | 5 +++++
->>>   arch/arm64/kernel/rsi.c                | 5 +++++
->>>   3 files changed, 10 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h
->>> b/arch/arm64/include/asm/pgtable-hwdef.h
->>> index 9943ff0af4c9..2e3af0693bd8 100644
->>> --- a/arch/arm64/include/asm/pgtable-hwdef.h
->>> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
->>> @@ -203,12 +203,6 @@
->>>    */
->>>   #define PTE_S2_MEMATTR(t)    (_AT(pteval_t, (t)) << 2)
->>>   -/*
->>> - * Highest possible physical address supported.
->>> - */
->>> -#define PHYS_MASK_SHIFT        (CONFIG_ARM64_PA_BITS)
->>> -#define PHYS_MASK        ((UL(1) << PHYS_MASK_SHIFT) - 1)
->>> -
->>>   #define TTBR_CNP_BIT        (UL(1) << 0)
->>>     /*
->>> diff --git a/arch/arm64/include/asm/pgtable.h
->>> b/arch/arm64/include/asm/pgtable.h
->>> index f8efbc128446..11d614d83317 100644
->>> --- a/arch/arm64/include/asm/pgtable.h
->>> +++ b/arch/arm64/include/asm/pgtable.h
->>> @@ -39,6 +39,11 @@
->>>   #include <linux/sched.h>
->>>   #include <linux/page_table_check.h>
->>>   +extern unsigned int phys_mask_shift;
->>> +
->>> +#define PHYS_MASK_SHIFT        (phys_mask_shift)
->>> +#define PHYS_MASK        ((1UL << PHYS_MASK_SHIFT) - 1)
->>
->> I tried to figure out where this is actually used so I could understand
->> your comment in the commit message:
->>
->>   > This is only is required for masking the PFN from a pte entry
->>
->> The closest thing I could find is in arch/arm64/mm/mmap.c, where the
->> mask is used as part of valid_mmap_phys_addr_range() which exists purely
->> to filter accesses to /dev/mem. That's pretty niche, so why not just
->> inline the RSI-specific stuff in there behind a static key instead of
->> changing these definitions?
->>
->> Or did I miss a subtle user somewhere else?
-> 
-> We need to prevent ioremap() of addresses beyond that limit too.
+On Wed, 10 Jul 2024 00:17:34 +0000 Mina Almasry wrote:
+> +	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
 
-Which is arguably not much better in terms of nicheness... But this
-seemed cleaner rather than trying to keep track of the niche areas of
-the kernel which require this and modifying them. We could use a static
-key here, but I don't think this is used for any hot-paths so it didn't
-seem worth the complexity.
-
-Steve
-
+ASSERT_RTNL() ?
