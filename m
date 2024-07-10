@@ -1,146 +1,137 @@
-Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BAE127B56
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4E4190075
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720620219; cv=none; b=ZabtVI43sUJiONw5+7yLzXoK0S4K/aOR32AscnY/BldTscLbWlzQGEKjVZDFUS299ECm9sezrflP+saLiKwUwb2/+4gWA9N0fa4TjzwOxdzEYafQgI7r38CEqqykaQF7KGFiIX9cRaILVn6lPy47npKAE+XtWMOzECdvULhe5es=
+	t=1720620327; cv=none; b=hR9Oe2O7vazQr4I6er/Yg6TZopO6UTX2U8n0Az5kHfVAdlWkAEuKSGOapYML/UVRtuNgqcg6/1CN62yn4s6o4TpIfS/X2eNEvDf+KT7e1M+1sZnSyiZj56D3bEMvS1iumvSC1XZEj/p537K3RAcYNqphAoIQvURTiv4366og7gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720620219; c=relaxed/simple;
-	bh=4F17oReFMOMx02qlh0eZiZ2Nm5fvG8lifyKxd6O0RUQ=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=pkGHnutQW4jZrkhEH/bHybMSQpkn3CneyTHbs/WSFHzWgkVZ/9EnLksB2Q1JwFAb0X3WG85bJ2wqEzmiziDQueqwZMiZ480u66iFB+QQfif980080m3XsosiehjOoj93VGXNuZZwHkvhYa9dQwVoKgkxXFVj57u4wXiA2p/vo8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=tjwh9dAB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HGw3su6b; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720620327; c=relaxed/simple;
+	bh=HtlymKn4vVZB7cE/VW/XbqpAg4LhAbY/Dpx6qL2BAbw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=sFQMfneVDBS4Ca2mrlee4FUpyMNES/XDh506yUkBUl5FbHBMVb0EE01H5adp1wcv8oYzWZwVI2+N2wYcmCCvMn++enXzIcIUSL/265/V0jQLJQSrKOmbB07V3Qat/lmHKS1fE5zeMGaqoc1YD5jSvw0zQ37lCTjb7qGUgKRyPaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZA/P6SR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="tjwh9dAB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HGw3su6b"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id D41F7138144E;
-	Wed, 10 Jul 2024 10:03:35 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 10 Jul 2024 10:03:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1720620215; x=1720706615; bh=YqdMcmkKXF
-	rzgQq7aBjRfp7vBb4LydO+KfF1Qn40cUM=; b=tjwh9dABUw6hUfO0QDoBVeXVJQ
-	ghmNBqfvF/lkxdjVOHnIh2gnFfRkIR+lVooB5/84kLYul520j/1rZgjVdGII4X4/
-	EZCGiDAC6s7PxynYbBS/A9RqGrggRR8rU8jlZc8a+t0+9J8QQmyWKp3CuWms5L3v
-	/TjU2ABzv6G3T5D8fpZ2bwdilQbQy7awgySLGZ3GTTQbhghT5qcKnqQ1uj+5RaJS
-	aSFmVQ5qwRJJNVvOyclR5K+ZxhYpevogj73SuG2r/I+Q/KJhO1dNdd4O/MI8UkLS
-	WfWDBG3fj3HpuNTXCddtMzcDifdNOYpf9E1tgIdTmNwMxHhNjlo7DkP1WRFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1720620215; x=1720706615; bh=YqdMcmkKXFrzgQq7aBjRfp7vBb4L
-	ydO+KfF1Qn40cUM=; b=HGw3su6bFtxpfqW7FUZEg26Y1SjSBwxVH3cTu6Nq4yHC
-	Y++tjEB35KmyrxXOAmueBclBseAKjwcG7F4k08qaqdbcd4PiiSPfjuSFCIZKvzCm
-	T9oYfndqwlgXfoMjzltfN/mbwip6TbZdpx0W7Nv/vC/tX4Zu3RJBQqkxunnxsxT7
-	5vUnoSYca9ekIXvViQ5gzhsyZqK3xIbroH2yQYrb9nsaV6P6+NQuyHDRLjPSssJR
-	eHCaqxJzrGawmTHtQeTyL/rum/S2+ss9df7BrE9Ifh7/+qfIM2L2bWTn6F+Nsro3
-	7pMMHVwd1Iq2AGwxAJLSyta2+80j06P4xzmQeaUHfg==
-X-ME-Sender: <xms:tpSOZttPlp067QWO7ozV9N5gs_Fayw0K5XoaVk4Xm-H8WHKdFFUHwg>
-    <xme:tpSOZmfemPTwnUQumCqwZ-UjQTMCVjfB9pLRhphtY0q9qXfmEEj0W8uRYdFYGoTZZ
-    H0OxgeoiQAjOdDrVSU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedvgdduudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:tpSOZgyUO82UY8r26SnfBeOucMp292hwwW5QshDI4g-e5yzWvbL_9w>
-    <xmx:tpSOZkM9VBG6Hk7sJlUpfxX0kOIu4TnRD3gxEZhdeyj2r-bWNEYOhA>
-    <xmx:tpSOZt8L8N-IN0SP2rCUX_cGvZgpIW3LMCf1HU4tpOKaLe382SR8lg>
-    <xmx:tpSOZkUEWthQx-4TPiMcbJdzyjUSTsgZiVzFSldecoQvUL_so28YHQ>
-    <xmx:t5SOZpaFU4sedTbaN2dSZvL7nFl7kPYNgk5Bc90K2jvg4jSaU5-uBf0R>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 25908B6008F; Wed, 10 Jul 2024 10:03:34 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZA/P6SR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D605FC32781;
+	Wed, 10 Jul 2024 14:05:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720620326;
+	bh=HtlymKn4vVZB7cE/VW/XbqpAg4LhAbY/Dpx6qL2BAbw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KZA/P6SRLVafNoU8yO8WykWyAR7MfA7uN6nn2fq185T5U1mV25oTYvQ/6K9S77SHn
+	 8qTtSCxMpC3X3a7dbfb3YKqZkI7qoTwo2Le1NddF7UigPv+EsRMYX3x+2XVexmCesp
+	 MAvOdbnXJAvSsOzzSBwRTA4RxmRceyiHO22XR8Hzhg7awa2b6zJ923jt1MzMJHQiLK
+	 JGjNRKU1rUswvwfVx4QyaCmRrdJNM2yL6Ui08yjlCJi1mcvVoCycliXCdST/FfCCya
+	 gdMo2h7MwU8pMUtDyEjbUcjtKxUM+K6XMAF+/vyb0ltMEduZ4PyT3mC03AacDwrV2Q
+	 SpasbGMyeI8+Q==
+Date: Wed, 10 Jul 2024 23:05:21 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+ rostedt@goodmis.org, oleg@redhat.com, jolsa@kernel.org, clm@meta.com,
+ paulmck@kernel.org
+Subject: Re: [PATCH 03/10] rbtree: Provide rb_find_rcu() / rb_find_add_rcu()
+Message-Id: <20240710230521.db73990a46ca2f927dd0e8a5@kernel.org>
+In-Reply-To: <20240710075557.GS27299@noisy.programming.kicks-ass.net>
+References: <20240708091241.544262971@infradead.org>
+	<20240708092415.464066230@infradead.org>
+	<20240710102959.291a71349ec71ef48919a9fe@kernel.org>
+	<20240710075557.GS27299@noisy.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <f975aedd-adc2-4a12-bc9a-03b777c69aff@app.fastmail.com>
-In-Reply-To: <2024071053-mahogany-cavalier-6692@gregkh>
-References: <2024070333-matchless-batch-57ec@gregkh>
- <20240706153009.3775333-1-vattunuru@marvell.com>
- <2024071026-squirt-trustful-5845@gregkh>
- <MW4PR18MB52442E363AE0BED30607F251A6A42@MW4PR18MB5244.namprd18.prod.outlook.com>
- <2024071053-mahogany-cavalier-6692@gregkh>
-Date: Wed, 10 Jul 2024 16:03:11 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Vamsi Attunuru" <vattunuru@marvell.com>
-Cc: "Jerin Jacob" <jerinj@marvell.com>,
- "Srujana Challa" <schalla@marvell.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v10 1/1] misc: mrvl-cn10k-dpi: add Octeon CN10K DPI
- administrative driver
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 10, 2024, at 15:27, Greg KH wrote:
-> On Wed, Jul 10, 2024 at 01:19:56PM +0000, Vamsi Krishna Attunuru wrote:
->> >
->> >Why does ARM64 matter here?  I don't see any dependency required of it.
->> >
->> Thanks, Greg, for your time. This DPI device is an on-chip PCIe device and only present on
->> Marvell's CN10K platforms(which are 64-bit ARM SoC processors), so added those dependency.
->
-> Then perhaps keep the ARM64 and add a COMPILE_TEST option as well so
-> that we can build this as part of normal testing?
->
-> So that would be:
-> 	depends on PCI && (ARM64 || COMPILE_TEST)
-> right?
->
+On Wed, 10 Jul 2024 09:55:57 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-That looks correct to me, though for specific ARM64 SoC we tend
-to also have a more specific option, which would make this
-something like
+> On Wed, Jul 10, 2024 at 10:29:59AM +0900, Masami Hiramatsu wrote:
+> > On Mon, 08 Jul 2024 11:12:44 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > Much like latch_tree, add two RCU methods for the regular RB-tree,
+> > > which can be used in conjunction with a seqcount to provide lockless
+> > > lookups.
+> > > 
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  include/linux/rbtree.h |   67 +++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 67 insertions(+)
+> > > 
+> > > --- a/include/linux/rbtree.h
+> > > +++ b/include/linux/rbtree.h
+> > > @@ -245,6 +245,42 @@ rb_find_add(struct rb_node *node, struct
+> > >  }
+> > >  
+> > >  /**
+> > > + * rb_find_add_rcu() - find equivalent @node in @tree, or add @node
+> > > + * @node: node to look-for / insert
+> > > + * @tree: tree to search / modify
+> > > + * @cmp: operator defining the node order
+> > > + *
+> > > + * Adds a Store-Release for link_node.
+> > > + *
+> > > + * Returns the rb_node matching @node, or NULL when no match is found and @node
+> > > + * is inserted.
+> > > + */
+> > > +static __always_inline struct rb_node *
+> > > +rb_find_add_rcu(struct rb_node *node, struct rb_root *tree,
+> > > +		int (*cmp)(struct rb_node *, const struct rb_node *))
+> > > +{
+> > > +	struct rb_node **link = &tree->rb_node;
+> > > +	struct rb_node *parent = NULL;
+> > > +	int c;
+> > > +
+> > > +	while (*link) {
+> > 
+> > 	Don't we need to use rcu_dereference_raw(*link) here?
+> 
+> This is a modifying operation and as such we can assume operation under
+> the exclusive lock. IOW the tree should be stable here.
 
-       depends on PCI
-       depends on ARCH_THUNDER|| COMPILE_TEST
+Ah, got it.
 
-This is what we use e.g. for the PMU driver. I had at some
-point submitted a patch to rename ARCH_THUNDER to ARCH_OCTEON,
-since we seem to have some drivers that get this wrong, e.g.
+> 
+> > > +		parent = *link;
+> > > +		c = cmp(node, parent);
+> > > +
+> > > +		if (c < 0)
+> > > +			link = &parent->rb_left;
+> > > +		else if (c > 0)
+> > > +			link = &parent->rb_right;
+> > > +		else
+> > > +			return parent;
+> > > +	}
+> > > +
+> > > +	rb_link_node_rcu(node, parent, link);
+> 
+> Only the link operation needs the rcu_assign_pointer() thing for
+> publishing our new node.
 
-config CRYPTO_DEV_OCTEONTX2_CPT
-        tristate "Marvell OcteonTX2 CPT driver"
-        depends on ARCH_THUNDER2 || COMPILE_TEST
+Yes.
 
-which should also be ARCH_THUNDER instead of the discontinued
-ARCH_THUNDER2.
+> 
+> > > +	rb_insert_color(node, tree);
+> 
+> The rotations use WRITE_ONCE() to avoid tearing.
 
-For reference, we have five lineages of arm64 SoCs from Marvell:
+OK, thanks for confirmation.
 
-- ARCH_THUNDER: Cavium ThunderX CN88xx, Marvell OcteonTX
-     CN80xx/CN81xx/CN82xx/CN83xx, Marvell OcteonTX2
-     CN92xx/CN93xx/CN96xx, Marvell Octeon Fusion, Marvell
-     Octeon CN10xxx
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-- ARCH_THUNDER2: Broadcom Vulcan, Marvell ThunderX2 CN99xx
+Thank you,
 
-- ARCH_MVEBU: Marvell ThunderX2 CN91xx, Marvell Armada 7K,
-     Marvell Armada 8K, Marvell Armada 37xx, Marvell
-     Prestera 98DX25xx
-
-- ARCH_MMP: PXA19x8
-
-- ARCH_BERLIN: Armada 1500 Ultra, Synaptics BG4CT/BG5CT,
-     Synaptics VisionSmart VS6xx, Synaptics Astra
-     SL16xx, SenaryTech SN36xx.
+> 
+> > > +	return NULL;
+> > > +}
 
 
-      Arnd
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
