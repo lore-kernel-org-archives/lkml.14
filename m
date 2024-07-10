@@ -1,222 +1,260 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7338E83CD9;
-	Wed, 10 Jul 2024 07:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F7982D66
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720596501; cv=none; b=WksqgclySs4Rk4AT0cxye1A5wE5N/HSC0fTzuyZnLObV+AT0thGNd3wnhJ4C3C/h5vr1F7mqyORaQHTTAcJBTefxl8pUF3nt5E5vtsVScZhY9nRMooNFet1+PGe61ZiUGb/4QVed6+cebft7oaEgRaD77bqw0yftuHsnbUgOJyU=
+	t=1720596537; cv=none; b=fDDZiX/Vn56yTxB7k2mJncnOiJ1AUBNSd3vXVFKjHjuXrkr+cuwPI2f0lVxAL2WpfoN5k+JKt+YHiIomHaQE0zDHGzjcg5jQepzGtn2c7DtEvkVNAW1H8DKG4KlsqwvMZSjDwj44TTogFOrGw23S/uRh8IM4FdAXiPAsRLLdJ4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720596501; c=relaxed/simple;
-	bh=xLrXFMCa+ZVf2BoMI1TvIQ2l4PsrXNPhP1XvRjPpC3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L5jv9j+uZy88SwZVUuMEFpxyxyvNRfX5ro8TpSpDr6Cb5Z50XwZCtQk/2e/m7/+z6n3NKHc01aBa1t2aF/WklKXfQQDLJ8gBfcaRRu9JO5ZRlHjx52dXwq8ig4bx+UJhgknjZdru40TuOJhb5+21WUXRqU9DszRsIexT+0AgWNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYEFHGoS; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720596537; c=relaxed/simple;
+	bh=xQh5HU5tluzMTaHOeOkGuFGYbA1Vq50E5qJn6PoW5Ek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GAeuqKcFVYgTCrmm32U7q1V/N52Sw1Fsd69aZZTxd/DmX6ntsQBXpvkK/+GDCAFJyWP82UlAYvvH+/KcuEM6CQjO8AxIwaRk/+0oT3S294QBcd1YXmMAiddj1XJxnHMYFTpR6USqgHoohlnAYb8r6oNG7uodZm90/xZoaxeTQNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SsOda2py; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYEFHGoS"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-6e7e23b42c3so3165576a12.1;
-        Wed, 10 Jul 2024 00:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720596500; x=1721201300; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/zjRVa3Uqe4dlMlnLz1HXHc8gPRm1KW7opYsvONaNGg=;
-        b=NYEFHGoSHQtu76hEVn4FJX3DOmil/yiPOcH6x+4Xd3EP4cWw03g42v3DbtQTLEoE9j
-         q8DnfCn5waZ1LpYOZOqF/L1WqPQdkwRgTC4k53DWqut8kN+Imfs1b+0KmK53QKLvlvet
-         qP8bph2C4l3PCLh16nmIsGR+kWj01/rtW8BnqQxMPc9nopxlX4JTBrJ2bHX6bbJvdZKA
-         uXcTQ4xM8pl2oRquPhGDUlvZa1sRmClYnrH9ARgAxnUfkg4KkJwXMbwAXQYTUsNPDFjp
-         F69/OXdNsKvhte9I9OattYjBCBEZbmdvx7FWZIYFNAcIPjHO6zNzsFuZZBalyBYAT3cR
-         3kuQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SsOda2py"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720596534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TxCFFb+O+FYVotTIPR8WWbYkloVGsx7sbWOFar1qXXo=;
+	b=SsOda2pyMjejK8OnWMr0iVLjxvbIrPL82u+YfLif7/ESI1TBD99DTUzn4DyD0m7+zg9H4P
+	MYjo0izuRknOAQPSQw9/oDFYR3KyNAeGclhPxUH0svLeBkME6J7Bwg1dR4qpzeq8mysw0Z
+	ZkG7t4EWuSPYbM7XAPcQC5fLb13gZHU=
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com
+ [209.85.160.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-427-WtUfGOnEPAecR85ZWSa3VQ-1; Wed, 10 Jul 2024 03:28:44 -0400
+X-MC-Unique: WtUfGOnEPAecR85ZWSa3VQ-1
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-25e919618c4so2797283fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 00:28:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720596500; x=1721201300;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/zjRVa3Uqe4dlMlnLz1HXHc8gPRm1KW7opYsvONaNGg=;
-        b=oZLVFvTprBEhmtBlVPF9Sytt9z5NM49i55AE93qJmkqdsK2F/89/EqcAwrkcNF2pD+
-         Ft567cHiI/69I7g/B1uhJvYQP/SU9HckVzU+LNJbCEovZzMUDecnMqY2hKQ/Vs+c7GiT
-         +XHO3PNJShqfVsWBnO//yl78bnMCoBZb6pf5Xcu/Kl4+BaSQ1cle0GN1DaME9+w+g7rE
-         QVteOYNL02os9XLZ+11T4ybG8zkdnF1iOn3tclqCFU6PwtD2kAg24GilBf9VPCvFfGNE
-         pVnHGfBNTYr8jdn+59d5okLMVsJyFyw8OTBIJ/pEuyrqB8UaXAD5aEmjanpMxfIK6b5M
-         lV9w==
-X-Forwarded-Encrypted: i=1; AJvYcCV/slI865McXxjy20ZoA1trS+SiMAxV4AELV6FSOXFTXlSksP6dO53Hy2cwQE0lQL/M7P1b9zcxaRbihBJF+/GKolbEEPIIdG7Hzj4DlwVkGczP8tMXL3zBM50e8Z1O8c96g45k403gA/MAvxbuSvmmO/qir4F/cI3eCVWerEllv9xN4zQM
-X-Gm-Message-State: AOJu0Yyjjh/0GCaYAc08qi6v7Km0sbGsEb2gMNUuba0rFFCVcexQ8pF1
-	AJNENdAc8PiG74C65T5+lChL0GwBBJq9hrYhXk1cBJ0ZkR+ZZdc1
-X-Google-Smtp-Source: AGHT+IFu0qG2le5/zbstuRM/nVLLnScMXOcToJf4iu1XEgBAZVxL4GTxdNfBD3Wm7sxWWCa+RNKpZg==
-X-Received: by 2002:a05:6a20:9e4a:b0:1be:c3dd:642a with SMTP id adf61e73a8af0-1c2982512f3mr5285279637.37.1720596499433;
-        Wed, 10 Jul 2024 00:28:19 -0700 (PDT)
-Received: from fedora.. ([45.118.158.79])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ca34e89d46sm3074678a91.27.2024.07.10.00.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 00:28:19 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	patches@opensource.cirrus.com,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: dt-bindings: cirrus,cs42xx8: Convert to dtschema
-Date: Wed, 10 Jul 2024 12:57:52 +0530
-Message-ID: <20240710072756.99765-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1720596524; x=1721201324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TxCFFb+O+FYVotTIPR8WWbYkloVGsx7sbWOFar1qXXo=;
+        b=GqdJJuq2V3a87OTOktOcyMIGdki9vqCGtWeJ9tXESfuA5ckXeCC14ZlKL1kCLuhIfo
+         9Eyio6iFfaDn3znzbWG0DbM7Y/i2ywcwGfACq5Sh/FPWYI7kEnDRmsDSAF9DMU6tb3kE
+         Gs+5j9U8MDcGu+g1vjQ9Xh3ASLgj6DX7eOAQjgFwbTSI1zbREAhvOnGDzyt6ZQodroae
+         jklY/V8i7qX408CtF5kJ1R80hplP86wnC7sCW1KJSJBkRRK6wvhOHXYj58oLefGR1lLe
+         dH0g6xJ9J9CMbsiTbcm3uvaKG0CboN3VF6qLoDrF8F7UE/G94IvyYnwRP/n5fTVyK5GT
+         5paw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2XGK7mhWHucOM+9GM+UZpjpwhcJ6IAIgB4511XZeyWnBv0z2ns/svNppQeZgGatbzJlbGqaEDcXAjcQHIHf4MjqXFjvj5BVCiaQ5p
+X-Gm-Message-State: AOJu0YwPZEl5BSGUZ6hOm0qFZoNHzRLzexss5RWCqifh2+Hq/WQkwJmM
+	X4FB5X5kEbzgfHKEbWhIhtfBS33kPx7pjCs8l/oeDBc2/9/rDvlMmN7mOY7wMaVzeNbtbsE77nS
+	+XaZxIIObMzz7bqH1FGrzIri0iSGZYpY8jCmR8VhWW/MgecIGvjFBuw+szfmRN6nY7z7oo6NZdn
+	6gxOknry87mG8Fr5Uf6otP769/qMZfhSNuUzP0
+X-Received: by 2002:a05:6870:71c9:b0:25e:ebb:b4f4 with SMTP id 586e51a60fabf-25eae75fa03mr3659220fac.2.1720596524025;
+        Wed, 10 Jul 2024 00:28:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOTIeMcESujn8AqeMOf7hlU3PPNIoV11WktqFb+Dz6M9e/IfuDLcZm0kQUi5duDpXKsbY8UOxkXk1JPmgkqvQ=
+X-Received: by 2002:a05:6870:71c9:b0:25e:ebb:b4f4 with SMTP id
+ 586e51a60fabf-25eae75fa03mr3659213fac.2.1720596523579; Wed, 10 Jul 2024
+ 00:28:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240705112821.144819-1-sgarzare@redhat.com> <20240705073017-mutt-send-email-mst@kernel.org>
+ <25fehn7xgvqyqgd6zcscsjazzfhktyjrazffyrtbp2oibnhkey@ggobdyv4zxkf>
+ <CACLfguWtcdTM-+GjiXWC-s=d-bvkUedHbCimzsfvYXWJ-=3iDQ@mail.gmail.com>
+ <CACGkMEurseUpMKaiLpJEkcT9U_tmqm4yqp3OgR--6XnAY=C9WQ@mail.gmail.com>
+ <3f5d33l4c73nudppajvhnjhpdpvft5yolm7vdraikany2tfdjz@i62d45j4ucs5>
+ <CACGkMEuqiAx-a0sPJf0Xpvmr=5wbzbuOr0-w+9ZcwQMTWFU1rw@mail.gmail.com>
+ <xuruyrbkago7w7tjbvqmfvjoqy665srurqozbenfayagfxl72y@wqy56jenfo2u>
+ <CACGkMEtB1maGywWRPNHgVGJog+rbowXvKG0nEDXPn_9-VB0Azw@mail.gmail.com> <emhlvvttkq5yqcbphdkyrcmcxpyk22uxe2eiohmrapmjrv4vsz@zbiixmblizcj>
+In-Reply-To: <emhlvvttkq5yqcbphdkyrcmcxpyk22uxe2eiohmrapmjrv4vsz@zbiixmblizcj>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 10 Jul 2024 15:28:31 +0800
+Message-ID: <CACGkMEtT-UeLk6Hv1AFXk_yhiVxx-5tWknqs=OYg8+cAGDmd9w@mail.gmail.com>
+Subject: Re: [PATCH] vdpa_sim_blk: add `capacity` module parameter
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Cindy Lu <lulu@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, virtualization@lists.linux.dev, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert the Cirrus Logic CS42448/CS42888 audio CODEC bindings to DT
-schema format. Set power supply properties to required only for CS42888.
+On Wed, Jul 10, 2024 at 3:19=E2=80=AFPM Stefano Garzarella <sgarzare@redhat=
+.com> wrote:
+>
+> On Wed, Jul 10, 2024 at 11:08:48AM GMT, Jason Wang wrote:
+> >On Tue, Jul 9, 2024 at 8:41=E2=80=AFPM Stefano Garzarella <sgarzare@redh=
+at.com> wrote:
+> >>
+> >> On Tue, Jul 09, 2024 at 10:56:16AM GMT, Jason Wang wrote:
+> >> >On Mon, Jul 8, 2024 at 4:15=E2=80=AFPM Stefano Garzarella <sgarzare@r=
+edhat.com> wrote:
+> >> >>
+> >> >> Hi Cindy, Jason,
+> >> >>
+> >> >> On Mon, Jul 08, 2024 at 03:59:34PM GMT, Jason Wang wrote:
+> >> >> >On Mon, Jul 8, 2024 at 3:06=E2=80=AFPM Cindy Lu <lulu@redhat.com> =
+wrote:
+> >> >> >>
+> >> >> >> On Fri, 5 Jul 2024 at 20:42, Stefano Garzarella <sgarzare@redhat=
+.com> wrote:
+> >> >> >> >
+> >> >> >> > On Fri, Jul 05, 2024 at 07:30:51AM GMT, Michael S. Tsirkin wro=
+te:
+> >> >> >> > >On Fri, Jul 05, 2024 at 01:28:21PM +0200, Stefano Garzarella =
+wrote:
+> >> >> >> > >> The vDPA block simulator always allocated a 128 MiB ram-dis=
+k, but some
+> >> >> >> > >> filesystems (e.g. XFS) may require larger minimum sizes (se=
+e
+> >> >> >> > >> https://issues.redhat.com/browse/RHEL-45951).
+> >> >> >> > >>
+> >> >> >> > >> So to allow us to test these filesystems, let's add a modul=
+e parameter
+> >> >> >> > >> to control the size of the simulated virtio-blk devices.
+> >> >> >> > >> The value is mapped directly to the `capacity` field of the=
+ virtio-blk
+> >> >> >> > >> configuration space, so it must be expressed in sector numb=
+ers of 512
+> >> >> >> > >> bytes.
+> >> >> >> > >>
+> >> >> >> > >> The default value (0x40000) is the same as the previous val=
+ue, so the
+> >> >> >> > >> behavior without setting `capacity` remains unchanged.
+> >> >> >> > >>
+> >> >> >> > >> Before this patch or with this patch without setting `capac=
+ity`:
+> >> >> >> > >>   $ modprobe vdpa-sim-blk
+> >> >> >> > >>   $ vdpa dev add mgmtdev vdpasim_blk name blk0
+> >> >> >> > >>   virtio_blk virtio6: 1/0/0 default/read/poll queues
+> >> >> >> > >>   virtio_blk virtio6: [vdb] 262144 512-byte logical blocks =
+(134 MB/128 MiB)
+> >> >> >> > >>
+> >> >> >> > >> After this patch:
+> >> >> >> > >>   $ modprobe vdpa-sim-blk capacity=3D614400
+> >> >> >> > >>   $ vdpa dev add mgmtdev vdpasim_blk name blk0
+> >> >> >> > >>   virtio_blk virtio6: 1/0/0 default/read/poll queues
+> >> >> >> > >>   virtio_blk virtio6: [vdb] 614400 512-byte logical blocks =
+(315 MB/300 MiB)
+> >> >> >> > >>
+> >> >> >> > >> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> >> >> >> > >
+> >> >> >> > >What a hack. Cindy was working on adding control over config
+> >> >> >> > >space, why can't that be used?
+> >> >> >> >
+> >> >> >> > If it can be used easily with virtio-blk device too, it will b=
+e great.
+> >> >> >> > @Cindy do you plan to support that changes for a virtio-blk de=
+vice too?
+> >> >> >> >
+> >> >> >> Hi Stefano
+> >> >> >> I plan to add support to change the vdpa device's configuration =
+after
+> >> >> >> it is created.
+> >> >> >
+> >> >> >I think for Stefano's case, we can just implement it via provision=
+ing
+> >> >> >parameters?
+> >> >>
+> >> >> Yep, I think we don't need to change it after creation, but specify=
+ing
+> >> >> while creating should be enough.
+> >> >>
+> >> >> So, IIUC we can already do it, implementing something similar to
+> >> >> vdpasim_net_setup_config() to call during vdpasim_blk_dev_add(), ri=
+ght?
+> >> >
+> >> >Right.
+> >> >
+> >> >>
+> >> >> What about when we have `shared_backend` set to true for the
+> >> >> vdpa_sim_blk.ko? In this case the backend is supposed to be shared
+> >> >> between all the devices to test live migration.
+> >> >
+> >> >This seems to be another topic.
+> >>
+> >> Yep, but really related. I think we need to handle that case when
+> >> supporting the `capacity` setting.
+> >
+> >Ok, so if I was not wrong, the goal is to test migration.
+>
+> Sorry, I was not clear, I try to rephrase:
+> vdpa_sim_blk already supports a module parameter called `shared_backend`
+> introduced mainly to test live migration on the same host. When that
+> parameter is on, all the created devices share the same backend and so
+> we can easily do migration from one to another.
+>
+> With that parameter on or off, the device is always 128 MB, but now
+> that's a problem for testing, because it looks like XFS requires at
+> least 300 MB: https://issues.redhat.com/browse/RHEL-45951
+>
+> That's why I sent this patch.
+>
+> When `shared_backend` is off (default), using the provisioning
+> parameters seems feasible to me, but when it's on, how do I deal with
+> it?
+>
+> Being a simulator, we can maybe make it so that only the first device
+> can change the size for example, or that all devices control the size,
+> but then we would have to handle the size change at runtime, which I
+> think is feasible, but it requires some work to send a notification of
+> configuration change, etc.
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
----
- .../bindings/sound/cirrus,cs42xx8.yaml        | 81 +++++++++++++++++++
- .../devicetree/bindings/sound/cs42xx8.txt     | 34 --------
- 2 files changed, 81 insertions(+), 34 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42xx8.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/cs42xx8.txt
+Can we mandate the size parameter to be exactly the same as the first
+vDPA block simulator?
 
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs42xx8.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs42xx8.yaml
-new file mode 100644
-index 000000000000..725b47e82062
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cirrus,cs42xx8.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/cirrus,cs42xx8.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cirrus Logic CS42448/CS42888 audio CODEC
-+
-+maintainers:
-+  - patches@opensource.cirrus.com
-+
-+properties:
-+  compatible:
-+    enum:
-+      - cirrus,cs42448
-+      - cirrus,cs42888
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    const: mclk
-+
-+  VA-supply:
-+    description: Analog power supply.
-+
-+  VD-supply:
-+    description: Digital power supply.
-+
-+  VLC-supply:
-+    description: Control port power supply
-+
-+  VLS-supply:
-+    description: Serial port interface power supply.
-+
-+  reset-gpios:
-+    description: This pin is connected to the chip's RESET pin.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: cirrus,cs42888
-+then:
-+  required:
-+    - VA-supply
-+    - VD-supply
-+    - VLC-supply
-+    - VLS-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      codec@48 {
-+          compatible = "cirrus,cs42888";
-+          reg = <0x48>;
-+          clocks = <&codec_mclk 0>;
-+          clock-names = "mclk";
-+          VA-supply = <&reg_audio>;
-+          VD-supply = <&reg_audio>;
-+          VLS-supply = <&reg_audio>;
-+          VLC-supply = <&reg_audio>;
-+          reset-gpios = <&gpio 1>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/cs42xx8.txt b/Documentation/devicetree/bindings/sound/cs42xx8.txt
-deleted file mode 100644
-index bbfe39347c20..000000000000
---- a/Documentation/devicetree/bindings/sound/cs42xx8.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--CS42448/CS42888 audio CODEC
--
--Required properties:
--
--  - compatible : must contain one of "cirrus,cs42448" and "cirrus,cs42888"
--
--  - reg : the I2C address of the device for I2C
--
--  - clocks : a list of phandles + clock-specifiers, one for each entry in
--    clock-names
--
--  - clock-names : must contain "mclk"
--
--  - VA-supply, VD-supply, VLS-supply, VLC-supply: power supplies for the device,
--    as covered in Documentation/devicetree/bindings/regulator/regulator.txt
--
--Optional properties:
--
--  - reset-gpios : a GPIO spec to define which pin is connected to the chip's
--    !RESET pin
--
--Example:
--
--cs42888: codec@48 {
--	compatible = "cirrus,cs42888";
--	reg = <0x48>;
--	clocks = <&codec_mclk 0>;
--	clock-names = "mclk";
--	VA-supply = <&reg_audio>;
--	VD-supply = <&reg_audio>;
--	VLS-supply = <&reg_audio>;
--	VLC-supply = <&reg_audio>;
--	reset-gpios = <&pca9557_b 1 GPIO_ACTIVE_LOW>;
--};
--- 
-2.45.2
+>
+> >
+> >>
+> >> >
+> >> >>
+> >> >> Maybe we can just change the size of the shared ramdisk to be refle=
+cted
+> >> >> to all devices.
+> >> >>
+> >> >> Suggestions?
+> >> >
+> >> >Could we specify the path to tmpfs or others during provisioning
+> >> >instead?  It seems more general (but more work).
+> >>
+> >> Then it would almost become a real device, no longer just a simulator.
+> >> It's enough work, though, as you said, but at that point we'd just hav=
+e
+> >> to specify the backend file to use for the device.
+> >>
+> >> In that case what API would we need to use to allow the user to set th=
+e
+> >> backend file?
+> >
+> >Yes, I think we can allow some vendor specific provisioning parameters.
+> >
+> >But not sure it's an overkill for the use case here. If others are
+> >happy with the shared_backed. I'm fine.
+>
+> Yeah, maybe it's overkill and I don't have much time these days :-(
+>
+> I think the easiest way is to merge this patch, but I understand that a
+> module parameter is not very beautiful
+>
+> I'll try to see if I can implement provisioning parameters for
+> vdpa_sim_blk. Allowing capacity to be set only to the first device if
+> `shared_backend` is on.
+>
+> WDYT?
+
+Something like this.
+
+When there's no block simulator, allow an arbitrary capacity. When
+there is one, fail the creation when the capacity doesn't match. (when
+'shared_backend' is on).
+
+Thanks
+
+>
+> Thanks,
+> Stefano
+>
 
