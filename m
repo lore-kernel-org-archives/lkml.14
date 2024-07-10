@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CA6143723
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6FA143736
 	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720600643; cv=none; b=AADEBWwtE3yaf9nmXXjjJiTk7LQELuJ4wqM/rrEYLk31H6yhKnZEukrxcK1Yd6zAcrI+rgV2y8JaKF2dnkEmnFlQis8PzHD89OtuLUmd66ljzX/1ErZS9ZWiktcNVH9A4h1e+OUL6LJ+XNa/DwFcfvBWEyTr2b31FXIuDN2dmM4=
+	t=1720600643; cv=none; b=U/0x1VeOkfGUIvr1l7T9SSzhcGb0lCRdrQEPh+v1aHu4YD2mpQgOQLC5TRCpihomgr7M2Hj3PCmQ2hBIBiGiGrkaWMJsvwOehC3fVQ+D/Rq2q3IXUUTyYQPckTxgVqrnPE7KwsSDzLXpffmllpfbXlU/yJVhGrlPb3m4TDabwzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720600643; c=relaxed/simple;
-	bh=fyYXOHu9fHp+yDLi4tjopWasn0OOj6F3xVVYEta73ZQ=;
+	bh=Z3rw5iK5CWgQLQ9VFjjvq460MP3tcbVilCNqTAWvdUE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ma8IKAS+s4Ubg9yc6Fz/aKIsa6UYapmFwL9UsR+J8eDCWRHULKN1GTgKfQ0CE/wxgN8v5OUFAkGL4/Z88W6GvbMVs+jQycvg2qXmHxvP0ZLjaH9xDfHiV5SRJHvzQ+7OWOltRV/HJVsZaXu6kNrYGxCGnHV0TFrBy1oeE+74Q8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8EHZlZa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=r3503ACDxqObJsLPEYSn+ywY3cHHTBls/OzEiy7h8wO0PFr3MR8GoIbtLaTiD6ooTY+rg+nHx+aYYw4GSklfg9y74JdD633Co2LRgLc9sZDvn/TxrktJd//fmBER1cMRgwtr5FZUjLKhyrLRXHFH7+ZEyHUv3JbvZpulCMq1e4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBg49rT9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8EHZlZa"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 36F5BC4AF15;
-	Wed, 10 Jul 2024 08:37:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBg49rT9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E33E2C4AF12;
+	Wed, 10 Jul 2024 08:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720600643;
-	bh=fyYXOHu9fHp+yDLi4tjopWasn0OOj6F3xVVYEta73ZQ=;
+	bh=Z3rw5iK5CWgQLQ9VFjjvq460MP3tcbVilCNqTAWvdUE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=c8EHZlZanlc3cvPzXcpF4HwvjzAXWW0RF0G25RSiG4cKF15J1+IWKFXWamIMW5GY2
-	 AcPfgpwBPGsVnE5gcs369fOxaxhv5DvpH47xFwRF3vOYsw2b0Lp9LlMz+FuE216Y9N
-	 gxgiBy+oz60WNRAvoRJtgzfp4q6+rSIQi1HN4uzCdS4s0wKZLVt/euAewoCWHCNesV
-	 zm0NuSqoxpcBfHKrxQXp6JjPiIXUR/mnZRqIbHUcouYTf01z09zlLY0CHrx0Xqmzgz
-	 KBnQVGPg2Vy78nHlW9vCdaumRgv0tyqilkCMb+CeQVIFaBJGS+KwPIhpqYi4+Uw2Jw
-	 aMx8IT5yCUEpw==
+	b=tBg49rT9wjyCQoDopjon0DoadTFiBbwVNyzByBtTHZ/4NP6C/IPDJTUakKWt2Cvdo
+	 RYWXncPCP6x7NxfLfsOV1Y1nw9toOu3eXSdd6e6Pw0iSetpqOixvtOyp81IjZwmKFW
+	 AWiorX5t3IEK8NrshManYH6MlxvTy1NwBCTce7LY8UKLtR+aY5XSHk7jcxjF2SJYsK
+	 hTTxGM24/xihsMo8HlwmHAUoj67Z1mrz8cMhYC78cFmS3VmchRHI7GS/QkiHMn8PcT
+	 n3YK1MQkHx5PlaKLlxwscWvl7WNh1d6uiBdkvtrcqaas6GAB8P6oIjEdyDsSq3pkUy
+	 3tp91SO2j/KvA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A1EC3DA42;
-	Wed, 10 Jul 2024 08:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB17C3DA49;
+	Wed, 10 Jul 2024 08:37:22 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Wed, 10 Jul 2024 16:37:23 +0800
-Subject: [PATCH v2 5/5] drm/mediatek: Support alpha blending in display
- driver
+Date: Wed, 10 Jul 2024 16:37:21 +0800
+Subject: [PATCH v2 3/5] drm/mediatek: Support "Pre-multiplied" blending in
+ OVL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240710-alpha-blending-v2-5-d4b505e6980a@mediatek.com>
+Message-Id: <20240710-alpha-blending-v2-3-d4b505e6980a@mediatek.com>
 References: <20240710-alpha-blending-v2-0-d4b505e6980a@mediatek.com>
 In-Reply-To: <20240710-alpha-blending-v2-0-d4b505e6980a@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
@@ -51,13 +51,13 @@ To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
 Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>, 
- CK Hu <ck.hu@mediatek.com>, Hsiao Chien Sung <shawn.sung@mediatek.com>
+ Hsiao Chien Sung <shawn.sung@mediatek.com>, CK Hu <ck.hu@mediatek.com>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720600641; l=2210;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720600641; l=3842;
  i=shawn.sung@mediatek.com; s=20240710; h=from:subject:message-id;
- bh=NXMVY+5up48Xsv5+9pKY3kYmUYHXnlx5rItB6cJy0f4=;
- b=luIxk/kE+qqI+aQA1FJilq+yDoY7Bb9PvQdmMn20B4ySUDMDIoplbBxsaHZKR5Pp2S05lfRwS
- qR0SBaZHIXdA/aRiAIs4izDZpsyLzLT19+0Ds/EmZSnDgciLB4LK1S3
+ bh=HXrXvrv6JMwYLM8mVe79fCqiqkK/QRt/Mduzl1YEBDY=;
+ b=T4pYx2Y8esdJdrrjwQ1NQGOSa8SutRFuD27HTQQvMXzU3wkKkH7UU8aZY8w7G75fai03eGFIm
+ LduvDnIGk29BnelnAM2vIspAkx8jznqcwf/W2BfAQX5iGAerr/+iEb2
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=VRlGZ3diQkQtpDd8fCL9/mx+TpZStm08pg8UPaG1NGc=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240710 with
@@ -67,60 +67,99 @@ Reply-To: shawn.sung@mediatek.com
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Support "Pre-multiplied" and "None" blend mode on MediaTek's chips by
-adding correct blend mode property when the planes init.
-Before this patch, only the "Coverage" mode (default) is supported.
+Support "Pre-multiplied" alpha blending mode on in OVL.
+Before this patch, only the "coverage" mode is supported.
 
-For more information, there are three pixel blend modes in DRM driver:
-"None", "Pre-multiplied", and "Coverage".
-
-To understand the difference between these modes, let's take a look at
-the following two approaches to do alpha blending:
-
-1. Straight:
-dst.RGB = src.RGB * src.A + dst.RGB * (1 - src.A)
-This is straightforward and easy to understand, when the source layer is
-compositing with the destination layer, it's alpha will affect the
-result. This is also known as "post-multiplied", or "Coverage" mode.
-
-2. Pre-multiplied:
-dst.RGB = src.RGB + dst.RGB * (1 - src.A)
-Since the source RGB have already multiplied its alpha, only destination
-RGB need to multiply it. This is the "Pre-multiplied" mode in DRM.
-
-For the "None" blend mode in DRM, it means the pixel alpha is ignored
-when compositing the layers, only the constant alpha for the composited
-layer will take effects.
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_plane.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
-index 1723d4333f37..5bf757a3ef20 100644
---- a/drivers/gpu/drm/mediatek/mtk_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_plane.c
-@@ -346,6 +346,17 @@ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
- 			DRM_INFO("Create rotation property failed\n");
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index add671c38613..89b439dcf3a6 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -56,8 +56,12 @@
+ #define GMC_THRESHOLD_HIGH	((1 << GMC_THRESHOLD_BITS) / 4)
+ #define GMC_THRESHOLD_LOW	((1 << GMC_THRESHOLD_BITS) / 8)
+ 
++#define OVL_CON_CLRFMT_MAN	BIT(23)
+ #define OVL_CON_BYTE_SWAP	BIT(24)
+-#define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
++
++/* OVL_CON_RGB_SWAP works only if OVL_CON_CLRFMT_MAN is enabled */
++#define OVL_CON_RGB_SWAP	BIT(25)
++
+ #define OVL_CON_CLRFMT_RGB	(1 << 12)
+ #define OVL_CON_CLRFMT_ARGB8888	(2 << 12)
+ #define OVL_CON_CLRFMT_RGBA8888	(3 << 12)
+@@ -65,6 +69,11 @@
+ #define OVL_CON_CLRFMT_BGRA8888	(OVL_CON_CLRFMT_ARGB8888 | OVL_CON_BYTE_SWAP)
+ #define OVL_CON_CLRFMT_UYVY	(4 << 12)
+ #define OVL_CON_CLRFMT_YUYV	(5 << 12)
++#define OVL_CON_MTX_YUV_TO_RGB	(6 << 16)
++#define OVL_CON_CLRFMT_PARGB8888 ((3 << 12) | OVL_CON_CLRFMT_MAN)
++#define OVL_CON_CLRFMT_PABGR8888 (OVL_CON_CLRFMT_PARGB8888 | OVL_CON_RGB_SWAP)
++#define OVL_CON_CLRFMT_PBGRA8888 (OVL_CON_CLRFMT_PARGB8888 | OVL_CON_BYTE_SWAP)
++#define OVL_CON_CLRFMT_PRGBA8888 (OVL_CON_CLRFMT_PABGR8888 | OVL_CON_BYTE_SWAP)
+ #define OVL_CON_CLRFMT_RGB565(ovl)	((ovl)->data->fmt_rgb565_is_0 ? \
+ 					0 : OVL_CON_CLRFMT_RGB)
+ #define OVL_CON_CLRFMT_RGB888(ovl)	((ovl)->data->fmt_rgb565_is_0 ? \
+@@ -377,7 +386,8 @@ void mtk_ovl_layer_off(struct device *dev, unsigned int idx,
+ 		      DISP_REG_OVL_RDMA_CTRL(idx));
+ }
+ 
+-static unsigned int ovl_fmt_convert(struct mtk_disp_ovl *ovl, unsigned int fmt)
++static unsigned int ovl_fmt_convert(struct mtk_disp_ovl *ovl, unsigned int fmt,
++				    unsigned int blend_mode)
+ {
+ 	/* The return value in switch "MEM_MODE_INPUT_FORMAT_XXX"
+ 	 * is defined in mediatek HW data sheet.
+@@ -398,22 +408,30 @@ static unsigned int ovl_fmt_convert(struct mtk_disp_ovl *ovl, unsigned int fmt)
+ 	case DRM_FORMAT_RGBA8888:
+ 	case DRM_FORMAT_RGBX1010102:
+ 	case DRM_FORMAT_RGBA1010102:
+-		return OVL_CON_CLRFMT_RGBA8888;
++		return blend_mode == DRM_MODE_BLEND_COVERAGE ?
++		       OVL_CON_CLRFMT_RGBA8888 :
++		       OVL_CON_CLRFMT_PRGBA8888;
+ 	case DRM_FORMAT_BGRX8888:
+ 	case DRM_FORMAT_BGRA8888:
+ 	case DRM_FORMAT_BGRX1010102:
+ 	case DRM_FORMAT_BGRA1010102:
+-		return OVL_CON_CLRFMT_BGRA8888;
++		return blend_mode == DRM_MODE_BLEND_COVERAGE ?
++		       OVL_CON_CLRFMT_BGRA8888 :
++		       OVL_CON_CLRFMT_PBGRA8888;
+ 	case DRM_FORMAT_XRGB8888:
+ 	case DRM_FORMAT_ARGB8888:
+ 	case DRM_FORMAT_XRGB2101010:
+ 	case DRM_FORMAT_ARGB2101010:
+-		return OVL_CON_CLRFMT_ARGB8888;
++		return blend_mode == DRM_MODE_BLEND_COVERAGE ?
++		       OVL_CON_CLRFMT_ARGB8888 :
++		       OVL_CON_CLRFMT_PARGB8888;
+ 	case DRM_FORMAT_XBGR8888:
+ 	case DRM_FORMAT_ABGR8888:
+ 	case DRM_FORMAT_XBGR2101010:
+ 	case DRM_FORMAT_ABGR2101010:
+-		return OVL_CON_CLRFMT_ABGR8888;
++		return blend_mode == DRM_MODE_BLEND_COVERAGE ?
++		       OVL_CON_CLRFMT_ABGR8888 :
++		       OVL_CON_CLRFMT_PABGR8888;
+ 	case DRM_FORMAT_UYVY:
+ 		return OVL_CON_CLRFMT_UYVY | OVL_CON_MTX_YUV_TO_RGB;
+ 	case DRM_FORMAT_YUYV:
+@@ -453,7 +471,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 		return;
  	}
  
-+	err = drm_plane_create_alpha_property(plane);
-+	if (err)
-+		DRM_ERROR("failed to create property: alpha\n");
-+
-+	err = drm_plane_create_blend_mode_property(plane,
-+						   BIT(DRM_MODE_BLEND_PREMULTI) |
-+						   BIT(DRM_MODE_BLEND_COVERAGE) |
-+						   BIT(DRM_MODE_BLEND_PIXEL_NONE));
-+	if (err)
-+		DRM_ERROR("failed to create property: blend_mode\n");
-+
- 	drm_plane_helper_add(plane, &mtk_plane_helper_funcs);
- 
- 	return 0;
+-	con = ovl_fmt_convert(ovl, fmt);
++	con = ovl_fmt_convert(ovl, fmt, blend_mode);
+ 	if (state->base.fb) {
+ 		con |= OVL_CON_AEN;
+ 		con |= state->base.alpha & OVL_CON_ALPHA;
 
 -- 
 2.43.0
