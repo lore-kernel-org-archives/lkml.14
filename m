@@ -1,295 +1,133 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A7B28683;
-	Wed, 10 Jul 2024 03:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3888034545;
+	Wed, 10 Jul 2024 03:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720581975; cv=none; b=FKeVFbPgjrEJ+569fAwssmDo+kD/KwQ6ifwrWTOvTebwqdCr7NGuthrvA1C4bAaPRqem90PIxK7FQ6UljdEwn3ING0vM2lmlsjSrFBhK2Af8Uhw19t+txE1WnrYKnuZMaHWewXdx2oEqHBSgxPwPS0PYqEb2egHR56ufITfUVFg=
+	t=1720582002; cv=none; b=IEYYwnG+7XiUQT4DImYxSBmMOU0BIQyzmgx61cTe6cZM15dIXhOUSywNeGR3HGYG575Bv6XCnzVdg/veRlMNdf4pQHqQmhnOW3e10XwYYRk4zPQiHfFSSTEOgn/8QMKLoHP9xk5qUxsbg448rrkUEZgRVeJkMJVUKvSyFIOfum8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720581975; c=relaxed/simple;
-	bh=66/xON+hb2Qf5vVQk4X/r72CH1q0IpJHIkAkAdmH1Ug=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZXbwvfI+h4Q86WzFP6b8WtGxeY91Q7D/3vuOC7wmv4OilsL3wfBWilGnEbTuTKpFBQBcq8lhGnRXd3HFR5czX68lmyGBIlwfxtayEpSXMFrIZ4mtFQNCKMHGyKJg1h6824xMV/4NIEhhty3saxLOZVsDtbzwGeUsxMbtu4trRZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KO4IEtsW; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720582002; c=relaxed/simple;
+	bh=aeqJOl5Yl0RUvum8cHOjzEIUVNycs/Tpazowq47HRV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JrG0vicSo7wKFk/IANukoDd0u2iMQTy+K8H1FdywpZs4bkUea9kuRACR3pTQcRkPpD19CinHVj6JGiB/fps5+Hkn+d8eKF8KfTbLAVBOLPtzj2eB/cMuE6cz/DemaTUYZ3R8hI/Sq4xCsO85ehD7uXhD9421+p26b2LWPnHRubY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=doDKRHqV; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KO4IEtsW"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-447d5376923so21886861cf.2;
-        Tue, 09 Jul 2024 20:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720581972; x=1721186772; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=sfUqp+KEKp+iEpCVS+30hZiv3NZrSiROYXcYZoJxi08=;
-        b=KO4IEtsWLXY7NSaffjmyELcyJQwojvG57dBvWn16hIpQcJ2JrEpqLGmSATfNgM6nJ7
-         YPz/kGgdQvhpG7SstzmVIFURSm1hsTHQLsxjSmmvfqlF42KATLuIGvWQgcYN9vmz+j0B
-         yUICvOPwzaTXR3iPH5gTq5D2LqN1aNJX1lzZTY0MmcxtrpH6LZF6Ri3sBJzkPSW20TP0
-         SE1mtdLuUzZcHZPD0XwXkNZzRPbrvA+YbcPtId1cRvd7Pkasl30hFhHaVJd/BNzUBJE9
-         k14PSr9jcZu769EH0XKQLCQecZRO+4MP4MJ2knWh3RJHaCiRcc5xd1LY+YM4dyxxLbeZ
-         zn2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720581972; x=1721186772;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sfUqp+KEKp+iEpCVS+30hZiv3NZrSiROYXcYZoJxi08=;
-        b=KCAF+k8RUFka9R0+DGypWB/QJmNKQXIi9coyWxe5cQPL43Es/4rO4LT0a4hb6LOU4T
-         /NanghYI1jwvC/U9yjzZGQ/cCfYq1j7rn5FM6M7B292srjidUaOOW+JVUMZ8EB3B0utH
-         pIxGSU0uFshAS0JBEVxpHjHyNYdcFsZQaqbenVfTB/mcTyWuc2Gi37fusW50vqbjNo/z
-         4heh6Y5wQ/zEi5Z7jb5XDOMxJDP0RToulc51iu5XItl9ToExdoXlDgu4dyP48U/LJeCE
-         ncPBmj3FehtqMXkoZ3T2NecUFxl2VyLHCu6AtGfnZ35SE5d1XXaUuKu8n5Yrx3gP/h8x
-         8wVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmgNseOUeXwOWgIrPGNSPWumy6cxXS6qHKRjfcOoC48M91/FaBt3WBYoLt6n/l4mA2t2prPVW6Ihu+lnSccYsNkZSK71NWAZeGfBvBzJ5O5RT+LY2oFO6aImdL9vgiBzOXWJGKlA86
-X-Gm-Message-State: AOJu0YyXKcDaxx2y6qxpjfCQtDs4Vip85bJJ+5HyFpPaKSIAbiAvQjoC
-	c+a1qOQQsu+Jtf4hn21CROUMImd4a9nosNqafoHvL65YIQhb8zWq
-X-Google-Smtp-Source: AGHT+IHt+gtkNMoenXtzeqHEHKoTMcGMdaiq6T3o6v3P4TP5Q3MvauRfLjBJbP9wznjIu4GO08B9qg==
-X-Received: by 2002:ac8:5784:0:b0:447:e48d:f067 with SMTP id d75a77b69052e-447fa85373bmr50692531cf.14.1720581972335;
-        Tue, 09 Jul 2024 20:26:12 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9bd224esm16403731cf.62.2024.07.09.20.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 20:26:11 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 1B28F1200043;
-	Tue,  9 Jul 2024 23:26:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 09 Jul 2024 23:26:11 -0400
-X-ME-Sender: <xms:Uf-NZkQSO9KFc8b2bEQ6A7gAhIO026ouNKcLsHpSuZgabVXgWHTmMg>
-    <xme:Uf-NZhz7NazEJMkc50obAW5kCPBHYWS24LELP8fOQOTo7ABrZ7MA4m_UAWn8JY055
-    FSSuTU8gLQUyWCCUw>
-X-ME-Received: <xmr:Uf-NZh1rx49BBKq2otOmZFV7NogHbiRGuhEGzZ5vcF15l6hSA8QG7hw2ZEo6xg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedtgdejudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhepkeejueelvedujeefveegvdeukeetkeeileehhefghfeuhfetudeufffhudejgfdu
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnshhtrghntggvrdhinhdprghspg
-    hpthhrrdgsrghrpdhgvghtrdgsrghrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrg
-    hlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeep
-    ghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:Uv-NZoAVxIuoON6D9NdO9MsvD5QLNylEXtRA1CATJloZxKgQjEjEGg>
-    <xmx:Uv-NZtjrEbzHV-F9PZ612RmsTrvENcJ0Vt26HxF_eFUbub-L13mMPA>
-    <xmx:Uv-NZkoXjGltpn4N1jo0zKcttdikO3bqE31ZplzSe_2g2rAre8b6BQ>
-    <xmx:Uv-NZgj4Z-RMSJox_7OVUjdeuyuzVOdtYh5WjWvQqXGyHmBCKbBlBw>
-    <xmx:U_-NZkSYLElYzcP_j9L-b__9SZK8rD-cc0ydSAOHsMEQ_Q_pUrSGOWE6>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Jul 2024 23:26:09 -0400 (EDT)
-From: Boqun Feng <boqun.feng@gmail.com>
-To: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	gregkh@linuxfoundation.org
-Subject: [RFC PATCH] rust: types: Add explanation for ARef pattern
-Date: Tue,  9 Jul 2024 20:24:47 -0700
-Message-ID: <20240710032447.2161189-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="doDKRHqV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720581995;
+	bh=bxCCY4MP0XLcRCW/XoCR+a4wcMvC/waROLeyouNvbag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=doDKRHqV/BAhZKcssS/Z2OGsWP+TiQ+YqiIHgIHqjuEYJojIvho3twX4b5FEFB3TJ
+	 t82Zw2T2P3Zcpg7DL3LtdQb+f1QqQLprmQ5jQyH1MyoensE5n07WEeWvFESOfvuL7c
+	 M1krt9nRib9YAV238uQchzUhx3ELGNtb+kX7fUci9MZ4hg1yIUNeWx7cxK8pcw61Ny
+	 x6j5kgXKIWNV6UdBpO/54SUWHW1631KzqvjBgZQqIl2P990Vqm3OOJfNDD/TeBKz5e
+	 WteL6ebh2cFUccdQgl/Afe72pe9/lgnlKeDhQtkXd6lb3ghRK4VnjWugYZlD41VmLD
+	 jOt6FLZeRjmYQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJjvC2p47z4w2M;
+	Wed, 10 Jul 2024 13:26:30 +1000 (AEST)
+Date: Wed, 10 Jul 2024 13:26:29 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul@pwsan.com>,
+ David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov
+ <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, bpf
+ <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>, Pu
+ Lehui <pulehui@huawei.com>, Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: linux-next: manual merge of the bpf-next tree with the risc-v
+ tree
+Message-ID: <20240710132629.781c55e4@canb.auug.org.au>
+In-Reply-To: <20240702113350.064e4cf2@canb.auug.org.au>
+References: <20240702113350.064e4cf2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/8KjxN1GIrCEjWs4920ztDGg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-As the usage of `ARef` and `AlwaysRefCounted` is growing, it makes sense
-to add explanation of the "ARef pattern" to cover the most "DO" and "DO
-NOT" cases when wrapping a self-refcounted C type.
+--Sig_/8KjxN1GIrCEjWs4920ztDGg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hence an "ARef pattern" section is added in the documentation of `ARef`.
+Hi all,
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
-This is motivated by:
+On Tue, 2 Jul 2024 11:33:50 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>=20
+> Today's linux-next merge of the bpf-next tree got a conflict in:
+>=20
+>   arch/riscv/net/bpf_jit_comp64.c
+>=20
+> between commit:
+>=20
+>   51781ce8f448 ("riscv: Pass patch_text() the length in bytes")
+>=20
+> from the risc-v tree and commit:
+>=20
+>   9f1e16fb1fc9 ("riscv, bpf: Fix out-of-bounds issue when preparing tramp=
+oline image")
+>=20
+> from the bpf-next tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc arch/riscv/net/bpf_jit_comp64.c
+> index 7a34e5b44fc4,351e1484205e..000000000000
+> --- a/arch/riscv/net/bpf_jit_comp64.c
+> +++ b/arch/riscv/net/bpf_jit_comp64.c
+> @@@ -16,7 -16,8 +16,9 @@@
+>   #include "bpf_jit.h"
+>  =20
+>   #define RV_FENTRY_NINSNS 2
+>  +#define RV_FENTRY_NBYTES (RV_FENTRY_NINSNS * 4)
+> + /* imm that allows emit_imm to emit max count insns */
+> + #define RV_MAX_COUNT_IMM 0x7FFF7FF7FF7FF7FF
+>  =20
+>   #define RV_REG_TCC RV_REG_A6
+>   #define RV_REG_TCC_SAVED RV_REG_S6 /* Store A6 in S6 if program do call=
+s */
 
-	https://lore.kernel.org/rust-for-linux/20240705110228.qqhhynbwwuwpcdeo@vireshk-i7/
+This is now a conflict between the risc-v tree and the net-next tree.
 
- rust/kernel/types.rs | 156 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 156 insertions(+)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index bd189d646adb..70fdc780882e 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -329,6 +329,162 @@ pub unsafe trait AlwaysRefCounted {
- ///
- /// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`ARef`] instance. In
- /// particular, the [`ARef`] instance owns an increment on the underlying object's reference count.
-+///
-+/// # [`ARef`] pattern
-+///
-+/// "[`ARef`] pattern" is preferred when wrapping a C struct which has its own refcounting
-+/// mechanism, because it decouples the operations on the object itself (usually via a `&Foo`) vs the
-+/// operations on a pointer to the object (usually via an `ARef<Foo>`). For example, given a `struct
-+/// foo` defined in C, which has its own refcounting operations `get_foo()` and `put_foo()`. Without
-+/// "[`ARef`] pattern", i.e. **bad case**:
-+///
-+/// ```ignore
-+/// pub struct Foo(NonNull<foo>);
-+///
-+/// impl Foo {
-+///     // An operation on the pointer.
-+///     pub unsafe fn from_ptr(ptr: *mut foo) -> Self {
-+///         // Note that whether `get_foo()` is needed here depends on the exact semantics of
-+///         // `from_ptr()`: is it creating a new reference, or it continues using the caller's
-+///         // reference?
-+///         unsafe { get_foo(ptr); }
-+///
-+///         unsafe { Foo(NonNull::new_unchecked(foo)) }
-+///     }
-+///
-+///     // An operation on the object.
-+///     pub fn get_bar(&self) -> Bar {
-+///         unsafe { (*foo.0.as_ptr()).bar }
-+///     }
-+/// }
-+///
-+/// // Plus `impl Clone` and `impl Drop` are also needed to implement manually.
-+/// impl Clone for Foo {
-+///     fn clone(&self) -> Self {
-+///         unsafe { get_foo(self.0.as_ptr()); }
-+///
-+///         Foo(self.0)
-+///     }
-+/// }
-+///
-+/// impl Drop for Foo {
-+///     fn drop(&mut self) {
-+///         unsafe { put_foo(self.0.as_ptr()); }
-+///     }
-+/// }
-+/// ```
-+///
-+/// In this case, it's hard to tell whether `Foo` represent an object of `foo` or a pointer to
-+/// `foo`.
-+///
-+/// However, if using [`ARef`] pattern, `foo` can be wrapped as follow:
-+///
-+/// ```ignore
-+/// /// Note: `Opaque` is needed in most cases since there usually exist C operations on
-+/// /// `struct foo *`, and `#[repr(transparent)]` is needed for the safety of converting a `*mut
-+/// /// foo` to a `*mut Foo`
-+/// #[repr(transparent)]
-+/// pub struct Foo(Opaque<foo>);
-+///
-+/// impl Foo {
-+///     pub fn get_bar(&self) -> Bar {
-+///         // SAFETY: `self.0.get()` is a valid pointer.
-+///         //
-+///         // Note: Usually extra safety comments are needed here to explain why accessing `.bar`
-+///         // doesn't race with C side. Most cases are either calling a C function, which has its
-+///         // own concurrent access protection, or holding a lock.
-+///         unsafe { (*self.0.get()).bar }
-+///     }
-+/// }
-+/// ```
-+///
-+/// ## Avoid `impl AlwaysRefCounted` if unnecesarry
-+///
-+/// If Rust code doesn't touch the part where the object lifetimes of `foo` are maintained, `impl
-+/// AlwaysRefCounted` can be temporarily avoided: it can always be added later as an extension of
-+/// the functionality of the Rust code. This is usually the case for callbacks where the object
-+/// lifetimes are already maintained by a framework. In such a case, an `unsafe` `fn(*mut foo) ->
-+/// &Foo` function usually suffices:
-+///
-+/// ```ignore
-+/// impl Foo {
-+///     /// # Safety
-+///     ///
-+///     /// `ptr` has to be a valid pointer to `foo` for the entire lifetime `'a'.
-+///     pub unsafe fn as_ref<'a>(ptr: *mut foo) -> &'a Self {
-+///         // SAFETY: Per function safety requirement, reborrow is valid.
-+///         unsafe { &*ptr.cast() }
-+///     }
-+/// }
-+/// ```
-+///
-+/// ## Type invariants of `impl AlwaysRefCounted`
-+///
-+/// Types that `impl AlwaysRefCounted` usually needs an invariant to describe why the type can meet
-+/// the safety requirement of `AlwaysRefCounted`, e.g.
-+///
-+/// ```ignore
-+/// /// # Invariants:
-+/// ///
-+/// /// Instances of this type are always refcounted, that is, a call to `get_foo` ensures that the
-+/// /// allocation remains valid at least until the matching call to `put_foo`.
-+/// #[repr(transparent)]
-+/// pub struct Foo(Opaque<foo>);
-+///
-+/// // SAFETY: `Foo` is always ref-counted per type invariants.
-+/// unsafe impl AlwaysRefCounted for Foo {
-+///     fn inc_ref(&self) {
-+///         // SAFETY: `self.0.get()` is a valid pointer and per type invariants, the existence of
-+///         // `&self` means it has a non-zero reference count.
-+///         unsafe { get_foo(self.0.get()); }
-+///     }
-+///
-+///     unsafe dec_ref(obj: NonNull<Self>) {
-+///         // SAFETY: The refcount of `obj` is non-zero per function safety requirement, and the
-+///         // cast is OK since `foo` is transparent to `Foo`.
-+///         unsafe { put_foo(obj.cast()); }
-+///     }
-+/// }
-+/// ```
-+///
-+/// After `impl AlwaysRefCounted for foo`, `clone()` (`get_foo()`) and `drop()` (`put_foo()`)  are
-+/// available to `ARef<Foo>` thanks to the generic implementation.
-+///
-+/// ## `ARef<Self>` vs `&Self`
-+///
-+/// For an `impl AlwaysRefCounted` type, `ARef<Self>` represents an owner of one reference count,
-+/// e.g.
-+///
-+/// ```ignore
-+/// impl Foo {
-+///     /// Gets a ref-counted reference of [`Self`].
-+///     ///
-+///     /// # Safety
-+///     ///
-+///     /// - `ptr` must be a valid pointer to `foo` with at least one reference count.
-+///     pub unsafe fn from_ptr(ptr: *mut foo) -> ARef<Self> {
-+///         // SAFETY: `ptr` is a valid pointer per function safety requirement. The cast is OK
-+///         // since `foo` is transparent to `Foo`.
-+///         //
-+///         // Note: `.into()` here increases the reference count, so the returned value has its own
-+///         // reference count.
-+///         unsafe { &*(ptr.cast::<Foo>()) }.into()
-+///     }
-+/// }
-+/// ```
-+///
-+/// Another function that returns an `ARef<Self>` but with a different semantics is
-+/// [`ARef::from_raw`]: it takes away the refcount of the input pointer, i.e. no refcount
-+/// incrementation inside the function.
-+///
-+/// However `&Self` represents a reference to the object, and the lifetime of the **reference** is
-+/// known at compile-time. E.g. the `Foo::as_ref()` above.
-+///
-+/// ## `impl Drop` of an `impl AlwaysRefCounted` should not touch the refcount
-+///
-+/// [`ARef`] descreases the refcount automatically (in [`ARef::drop`]) when it goes out of the
-+/// scope, therefore there's no need to `impl Drop` for the type of objects (e.g. `Foo`) to decrease
-+/// the refcount.
- pub struct ARef<T: AlwaysRefCounted> {
-     ptr: NonNull<T>,
-     _p: PhantomData<T>,
--- 
-2.45.2
+--Sig_/8KjxN1GIrCEjWs4920ztDGg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaN/2UACgkQAVBC80lX
+0GxP8gf+ObtQabtoR5ITWclxezEcTHCn5ST/fPMlmAlOvDok4XYq7HMa3aUNdC+T
+WpFlY7p1WBBVXmS/bUBkxXBALN0gC78BA8OsxtNN21fwAcZp1BnfJyF++Dnwjnh/
++9EzX6rdlei2O7ZkqLo6GsCDySiT7voha5Dja4OdRdjnZJzS1y6qotaFNQmh+5TS
+qkTIHaZEkKNjBj+L+rTtPRyQP4BaBpcEaFn/cWMXt2S0w3X8QstsxJ0MofcwfDOh
+2eER+DSyNSUKZ6aOIvdjTOJJxVVZ+Ys4ljdFgNu52sW6MHaR3KtWAT+8wnt3UQJp
+sDH5NKL4gsST4k58OkxzqQ3DlXI9+Q==
+=2Zgm
+-----END PGP SIGNATURE-----
+
+--Sig_/8KjxN1GIrCEjWs4920ztDGg--
