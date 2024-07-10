@@ -1,147 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F8979C0;
-	Wed, 10 Jul 2024 01:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C789A3D62
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:51:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720576183; cv=none; b=ltVb5zuKfjPaU/MgNm3BcyUYUqe8yyDA0njWQkex2KWymHcS/8gpprxaN0hONEGSa8b+LocUxbtrpjQoxz2VEgF6hMOqoixMiQaK76ABYywrowyg+00eHE54SNUdcFf/aiwc2vWJYf6qUzWXMSOPmBg9UKLvMjVWLZT60UYAvEQ=
+	t=1720576269; cv=none; b=moOKco18U1Sq655TCeQRC8KYaS2YMjZzo7/KbtLUrpffdZyEY9EXrdeixWzeN22j9Kl9AEx7AWkemA4gApuGpsY8OjWZ/XRbIE4OAb9M5OenoPYMWBi+zKeOd5gTZLOBsku5vOOPLG/ZrDyW/OoZhmyIUYQy27MJYSbsdq9U36Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720576183; c=relaxed/simple;
-	bh=hD4LrztM6N9+rwV/yVX+lKNIMz5a4kUkTDbd+sFYw3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qg6eNHbIbmfqufFPd/zV+SHq+M/NTrifkSnIBIhPMna0pA43VbKwnTr2bwkMLOcMNyfCyJsiCKcooNXt5eBMan1G/pX+yRN3f6fozfzdbOm8MiyBAv32/H0LQORh7XMFpnMDHF9AJgjX7VSQ6cVkxsk/L7FwMtMX1YdULa1ojOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NE207wwx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720576269; c=relaxed/simple;
+	bh=ZvLp7r5qYpXgQ8FeJYMYjuwJ6F6KhsV/1xQSB21NOzY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oYb0T0bbXo3iTcyTzwxVVHckVVM1MNYjSP8khoeQQIWwNjoxKGPsqUDTuPCLHpy09h5sk4yEpAcKNPz3CFtS+aclPx7Db+ZdgLaeAyqvv80D2vc239vru54Y3thuxbQrT69UZu6TBphEPeei97ejv276UD/IHJEMrTuAKvL+voo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpAHh+3s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NE207wwx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7534C3277B;
-	Wed, 10 Jul 2024 01:49:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EpAHh+3s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9E6C3277B;
+	Wed, 10 Jul 2024 01:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720576182;
-	bh=hD4LrztM6N9+rwV/yVX+lKNIMz5a4kUkTDbd+sFYw3g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NE207wwxzpMle/bQPfHJVKud6rOkVPB4B99dxMeAxuothw/TWo6bebO3D1fjk1NqE
-	 2FDmsUkmdrpVIVMIS7mpEf9JDfZ5fxGJjlxnumxWGD425CrZv4LBj/VNyebzaXWwZK
-	 3fq2SQuf5rGOJKW+JsOwWzEEYVVwAVNefl6ekA+YQ7qP27k16YUrGw3OkK790sKsQj
-	 vcv8Y3ASG7gR6+AmphqRUqQ8G1NRtEFk5V9y3FjOJBWRSWYxmXxeIQFvuz+CNj4SVh
-	 SiU7+/sIb0scil/g5UHME8ErzegKyJ3MpQ8VI2UhpGkx5SC5QE3oRnol91tkVzAJ1z
-	 I9odHWU8vzPpQ==
-Date: Wed, 10 Jul 2024 09:49:34 +0800
-From: Peter Chen <peter.chen@kernel.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Oliver Neukum <oneukum@suse.com>,
-	Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] usb: add missing MODULE_DESCRIPTION() macros
-Message-ID: <20240710014934.GA2914204@nchen-desktop>
-References: <20240618-md-drivers-usb-v2-1-e9b20a5eb7f9@quicinc.com>
+	s=k20201202; t=1720576269;
+	bh=ZvLp7r5qYpXgQ8FeJYMYjuwJ6F6KhsV/1xQSB21NOzY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EpAHh+3sKtz1m+bYgcFLVMI5KjLyu0QMXujNasDcqXOK+IGr7IQBtM+eHAk5nzRz+
+	 tMk6XRyqPl7l5A1BVK5AqaccCektN/8Dhy752zi3rsCDh6EqrASj9AfqE06oNPkb+u
+	 RlqtaGS7nBYx58z+sPhHOPJIIsH2Q17uZDG7LEp8cyWQVUNJ++Pv1ZrgEndq4VYyKr
+	 3nk94moYyIg8C5KVOH5nS5Y1KwoL2gN3Sp1BNDwqP0SduRUZAjhSYGlDgpfHDV4kC+
+	 uHBbVV2EPUclEOEMkuqShJFgIeiEdgIXV25oVk93Q+IEPLqZSzJDaMOVZtzkCOODSe
+	 6qDR8/rj6yEkQ==
+From: alexs@kernel.org
+To: Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Petr Mladek <pmladek@suse.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	"Alex Shi (Tencent)" <alexs@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>
+Subject: [PATCH v2] mm/memcg: alignment memcg_data define condition
+Date: Wed, 10 Jul 2024 09:56:08 +0800
+Message-ID: <20240710015608.100801-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618-md-drivers-usb-v2-1-e9b20a5eb7f9@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On 24-06-18 08:18:26, Jeff Johnson wrote:
-> With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/core/usbcore.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/mon/usbmon.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/class/usbtmc.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/storage/uas.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/chipidea/ci_hdrc_msm.o
-> 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-> This is the remaining one-off fixes in usb.
-> 
-> Corrections to these descriptions are welcomed. I'm not an expert in
-> this code so in most cases I've taken these descriptions directly from
-> code comments, Kconfig descriptions, or git logs.  History has shown
-> that in some cases these are originally wrong due to cut-n-paste
-> errors, and in other cases the drivers have evolved such that the
-> original information is no longer accurate.
-> 
-> Let me know if any of these changes need to be segregated into
-> separate patches to go through different maintainer trees.
-> ---
-> Changes in v2:
-> - Updated drivers/usb/core/usb.c description per Alan
-> - Link to v1: https://lore.kernel.org/r/20240611-md-drivers-usb-v1-1-8b8d669e8e73@quicinc.com
-> ---
->  drivers/usb/chipidea/ci_hdrc_msm.c | 1 +
->  drivers/usb/class/usbtmc.c         | 1 +
->  drivers/usb/core/usb.c             | 1 +
->  drivers/usb/mon/mon_main.c         | 1 +
->  drivers/usb/storage/uas.c          | 1 +
->  5 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipidea/ci_hdrc_msm.c
-> index 7b5b47ce8a02..1661639cd2eb 100644
-> --- a/drivers/usb/chipidea/ci_hdrc_msm.c
-> +++ b/drivers/usb/chipidea/ci_hdrc_msm.c
-> @@ -303,4 +303,5 @@ module_platform_driver(ci_hdrc_msm_driver);
->  
->  MODULE_ALIAS("platform:msm_hsusb");
->  MODULE_ALIAS("platform:ci13xxx_msm");
-> +MODULE_DESCRIPTION("ChipIdea Highspeed Dual Role Controller");
+From: "Alex Shi (Tencent)" <alexs@kernel.org>
 
-MODULE_DESCRIPTION("MSM ChipIdea Glue Layer Driver");
+commit 21c690a349ba ("mm: introduce slabobj_ext to support slab object
+extensions") changed the folio/page->memcg_data define condition from
+MEMCG to SLAB_OBJ_EXT. And selected SLAB_OBJ_EXT for MEMCG, just for
+SLAB_MATCH(memcg_data, obj_exts), even no other relationship between them.
 
-Peter
+Above action make memcg_data exposed and include SLAB_OBJ_EXT for
+!MEMCG. That's incorrect in logcial and pay on code size.
 
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/usb/class/usbtmc.c b/drivers/usb/class/usbtmc.c
-> index 311007b1d904..6bd9fe565385 100644
-> --- a/drivers/usb/class/usbtmc.c
-> +++ b/drivers/usb/class/usbtmc.c
-> @@ -2592,4 +2592,5 @@ static struct usb_driver usbtmc_driver = {
->  
->  module_usb_driver(usbtmc_driver);
->  
-> +MODULE_DESCRIPTION("USB Test & Measurement class driver");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index a0c432b14b20..0b4685aad2d5 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -1150,4 +1150,5 @@ static void __exit usb_exit(void)
->  
->  subsys_initcall(usb_init);
->  module_exit(usb_exit);
-> +MODULE_DESCRIPTION("USB core host-side support");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/usb/mon/mon_main.c b/drivers/usb/mon/mon_main.c
-> index 824904abe76f..af852d53aac6 100644
-> --- a/drivers/usb/mon/mon_main.c
-> +++ b/drivers/usb/mon/mon_main.c
-> @@ -419,4 +419,5 @@ static void __exit mon_exit(void)
->  module_init(mon_init);
->  module_exit(mon_exit);
->  
-> +MODULE_DESCRIPTION("USB Monitor");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/usb/storage/uas.c b/drivers/usb/storage/uas.c
-> index a48870a87a29..9b8f578eef53 100644
-> --- a/drivers/usb/storage/uas.c
-> +++ b/drivers/usb/storage/uas.c
-> @@ -1280,6 +1280,7 @@ static void __exit uas_exit(void)
->  module_init(uas_init);
->  module_exit(uas_exit);
->  
-> +MODULE_DESCRIPTION("USB Attached SCSI driver");
->  MODULE_LICENSE("GPL");
->  MODULE_IMPORT_NS(USB_STORAGE);
->  MODULE_AUTHOR(
-> 
-> ---
-> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-> change-id: 20240611-md-drivers-usb-86999d57ed16
-> 
+So let's remove SLAB_OBJ_EXT from MEMCG and as Vlastimil Babka suggested,
+add _unused_slab_obj_ext for SLAB_MATCH for slab.obj_exts while !MEMCG.
+That could resolve the match issue, clean up the feature logical and
+save the unnessary code adding.
+
+Signed-off-by: Alex Shi (Tencent) <alexs@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+---
+ include/linux/mm_types.h | 8 ++++++--
+ init/Kconfig             | 1 -
+ mm/slab.h                | 4 ++++
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index ef09c4eef6d3..4ac3abc673d3 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -180,8 +180,10 @@ struct page {
+ 	/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+ 	atomic_t _refcount;
+ 
+-#ifdef CONFIG_SLAB_OBJ_EXT
++#ifdef CONFIG_MEMCG
+ 	unsigned long memcg_data;
++#elif defined(CONFIG_SLAB_OBJ_EXT)
++	unsigned long _unused_slab_obj_ext;
+ #endif
+ 
+ 	/*
+@@ -343,8 +345,10 @@ struct folio {
+ 			};
+ 			atomic_t _mapcount;
+ 			atomic_t _refcount;
+-#ifdef CONFIG_SLAB_OBJ_EXT
++#ifdef CONFIG_MEMCG
+ 			unsigned long memcg_data;
++#elif defined(CONFIG_SLAB_OBJ_EXT)
++			unsigned long _unused_slab_obj_ext;
+ #endif
+ #if defined(WANT_PAGE_VIRTUAL)
+ 			void *virtual;
+diff --git a/init/Kconfig b/init/Kconfig
+index 26bf8bb0a7ce..61e43ac9fe75 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -965,7 +965,6 @@ config MEMCG
+ 	bool "Memory controller"
+ 	select PAGE_COUNTER
+ 	select EVENTFD
+-	select SLAB_OBJ_EXT
+ 	help
+ 	  Provides control over the memory footprint of tasks in a cgroup.
+ 
+diff --git a/mm/slab.h b/mm/slab.h
+index 3586e6183224..8ffdd4f315f8 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -98,7 +98,11 @@ SLAB_MATCH(flags, __page_flags);
+ SLAB_MATCH(compound_head, slab_cache);	/* Ensure bit 0 is clear */
+ SLAB_MATCH(_refcount, __page_refcount);
+ #ifdef CONFIG_SLAB_OBJ_EXT
++#ifdef CONFIG_MEMCG
+ SLAB_MATCH(memcg_data, obj_exts);
++#else
++SLAB_MATCH(_unused_slab_obj_ext, obj_exts);
++#endif
+ #endif
+ #undef SLAB_MATCH
+ static_assert(sizeof(struct slab) <= sizeof(struct page));
+-- 
+2.43.0
+
