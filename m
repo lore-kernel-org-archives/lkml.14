@@ -1,33 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0DD194C7E;
-	Wed, 10 Jul 2024 16:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890D4197A6A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627789; cv=none; b=KVYXGiKjt+sgUQsDx9OBF2CHDNzsLGvHDdKfGxvVOHe57IAo/wTsKKQPvLBsRsbSOSeRrYdEehp2zpOsiIJrdJUmS2GZ+V5E+Ezhl0ERK5JKt3njf6LOa6pmyPLOi8+RbR19Fu/IsqIDW3LoUE7HaTtx5cb7zEY5MhdOXmtR0fg=
+	t=1720627789; cv=none; b=pu5moKyaqovvuPtes3UhZopPbmSM3ThbYAUro99NlNmzxQCgnfE8rz1idxoDLgg2u/2onB6DN+dq3gkPPn/6bAw3MwkFjSmiih9XVJyV0qKBDEweOdXNUU+s25gpmUUjj2fg99qvcxiXQA65Vpd5FZOYAQ9dgLSOolry8w+mCkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720627789; c=relaxed/simple;
-	bh=/k3BZTILZPQfWSq8N8whojUGz/Qyk9P58hWymAT7c6M=;
+	bh=+pRCWtu1oW2Aq+fFY6HXVsvpcuDlSczUz3gkpKQ6SSw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ut9G0/gKNMUx9xxagnJ/5HIsz0FmlXaB8JxekAGptqFvHEC2nDvnwwQ/LkPm5GvRrAAcsRDJZz8rYqOUeXnXzD77oNfWHynYPO5/y5gTh0ApDFBRLQXyYTpxG2bKARBKJXNc7lWr9CCqHz1ZdBAXi73hEIq8A/jiwB/KF2JAoy8=
+	 MIME-Version; b=li4KphUP+iVtLUUFTN+cUrJb3VuILDTPEJ0Bl/SDxjBiyQlP60Z3bzoLPnWVTxVBqVa8OItbwkAvw/5vpUnGv5QSXMDLkiyxl+ihyn72h+0+IuzZNv4/kaKoObVnO0lrwwFREsGtEHxUTC283nelkVgtTTy6OzTg/EbJwlrKHkU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17EEB106F;
-	Wed, 10 Jul 2024 09:10:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22B2B367;
+	Wed, 10 Jul 2024 09:10:13 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 022563F762;
-	Wed, 10 Jul 2024 09:09:43 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EC92E3F762;
+	Wed, 10 Jul 2024 09:09:46 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: will@kernel.org
 Cc: mark.rutland@arm.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	jialong.yang@shingroup.cn,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings/perf: Add Arm NI-700 PMU
-Date: Wed, 10 Jul 2024 17:09:33 +0100
-Message-Id: <e60059b1f4683bd1863f08dd03482e5948c0afb1.1720625639.git.robin.murphy@arm.com>
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: [PATCH v2 3/3] MAINTAINERS: List Arm interconnect PMUs as supported
+Date: Wed, 10 Jul 2024 17:09:35 +0100
+Message-Id: <69e234440d40c236f80a60308fb4fa527cba93b3.1720625639.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1720625639.git.robin.murphy@arm.com>
 References: <cover.1720625639.git.robin.murphy@arm.com>
@@ -39,57 +40,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add an initial binding for the Arm NI-700 interconnect PMU. As with the
-Arm CMN family, there are already future NI products on the roadmap, so
-the overall binding is named generically just in case any
-non-discoverable incompatibility between generations crops up.
+Whatever I may or may not have hoped for, looking after these drivers
+seems to have firmly stuck as one of the responsibilities of the job Arm
+pays me for, and I would still like to be aware of any other patches, so
+make it official.
 
-Cc: <devicetree@vger.kernel.org>
+CC: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+CC: Jing Zhang <renyu.zj@linux.alibaba.com>
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
 
-v2: No change
+v2: Add new arm-ni.rst path
 
- .../devicetree/bindings/perf/arm,ni.yaml      | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/arm,ni.yaml
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/perf/arm,ni.yaml b/Documentation/devicetree/bindings/perf/arm,ni.yaml
-new file mode 100644
-index 000000000000..d66fffa256d5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/arm,ni.yaml
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/perf/arm,ni.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cf9c9221c388..60ce17fbed7f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1724,6 +1724,17 @@ F:	drivers/mtd/maps/physmap-versatile.*
+ F:	drivers/power/reset/arm-versatile-reboot.c
+ F:	drivers/soc/versatile/
+ 
++ARM INTERCONNECT PMU DRIVERS
++M:	Robin Murphy <robin.murphy@arm.com>
++S:	Supported
++F:	Documentation/admin-guide/perf/arm-cmn.rst
++F:	Documentation/admin-guide/perf/arm-ni.rst
++F:	Documentation/devicetree/bindings/perf/arm,cmn.yaml
++F:	Documentation/devicetree/bindings/perf/arm,ni.yaml
++F:	drivers/perf/arm-cmn.c
++F:	drivers/perf/arm-ni.c
++F:	tools/perf/pmu-events/arch/arm64/arm/cmn/
 +
-+title: Arm NI (Network-on-Chip Interconnect) Performance Monitors
-+
-+maintainers:
-+  - Robin Murphy <robin.murphy@arm.com>
-+
-+properties:
-+  compatible:
-+    const: arm,ni-700
-+
-+  reg:
-+    items:
-+      - description: Complete configuration register space
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 32
-+    description: Overflow interrupts, one per clock domain, in order of domain ID
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
+ ARM KOMEDA DRM-KMS DRIVER
+ M:	Liviu Dudau <liviu.dudau@arm.com>
+ S:	Supported
 -- 
 2.39.2.101.g768bb238c484.dirty
 
