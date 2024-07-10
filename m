@@ -1,97 +1,141 @@
-Received: from mail-il1-f196.google.com (mail-il1-f196.google.com [209.85.166.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72A717836C;
-	Wed, 10 Jul 2024 09:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22847185E79;
+	Wed, 10 Jul 2024 09:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720602004; cv=none; b=q+3YKx58EaW3sYs3eWzDXQsFgK/XmkIiPk57iYH5y5cDEq+PA+uza2qUvQ32orePPV1gv8PYuOdToNbN7o+GLCCc1Utw7h44laO7P9dp+HI6xvfBjG364U+KWTj2rkhXH6TD4SCtIOF6FRGlyK5+5uaGv8Y7X1l5zy8ZkTmemHA=
+	t=1720602102; cv=none; b=g7mNEm4C+O5o9WxFITaG70bxaxl3JdQuD7d1cmpYPE6Mjb3skj2R1IiXZWSrfHshwKtbsJtkQLoFfoKEzFtI/aI0Z94SANk01g38P0WxBu7jwTyIdRhoZhtD7nAihpoGbHYNGlFiHNdDxgb24pgZCVvopXArLTRJfUFE7eNs31E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720602004; c=relaxed/simple;
-	bh=rI4emRMTI36UV2uznkSdc4z/SSDEK/mpaZIb93O596o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u/ta49vVW341Lh8WhMF9HYaJxrg3kH1kUTf1+2uHYmpJZmzFjonBQ8/oc7DCJtrO5qM7perOpVlpmNwQidHDGBD3x4Fru2Bavh6QyWXlYAjWLAonxfLSxmgJtZdPDRtIsE30WWUMPFL2S5oBjJ7PJBvOM9iavPLaOXDERQrQiIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QhUdn1nd; arc=none smtp.client-ip=209.85.166.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720602102; c=relaxed/simple;
+	bh=B/XFMfWU5ZqXj0qnN6nB10B5m+mTj+wFKvLPsFSnbUs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JALddd9OOHebLScup/gQPFpLAvs/cBKOqyIgpPSDEtXahdIKxW9AjWXeNeinACpIMYt/Ke7KR8EvZOfoeqz9LXC2mMprmQhEokVrKPM9U7gTL8TLezpJlrzGxeuKUt/ftp8ryYdj5drS/UjVtLVPWQgZ9ejMnCcD8zIJEQRZKes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5KUlUsW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhUdn1nd"
-Received: by mail-il1-f196.google.com with SMTP id e9e14a558f8ab-38b1ce72526so5519455ab.0;
-        Wed, 10 Jul 2024 02:00:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720602001; x=1721206801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FxYvFXWDS6rYr4mBF26COM5Q4SvhFcKuutaGTTwwarA=;
-        b=QhUdn1nd9NTk3ssLQDBNz5jIkBIADfVNlovg/MCXIC9tPOcsZvZ0/vHssfgKYP4Whg
-         Wh4nrLOikiBtmkAYDgJTb9Pixr/i0r2D0+1IaECSUZHjy9n3n8ZfO744UB3Gr1DHqFZm
-         H29FHvB5wSPVRlzDomuen6pDyVeXoq3/kI/3MviBX1fnDsFawlAfcDfSBUaQjXjsdmsQ
-         EDE7Vd04pZOiMOJ8ln2FrFlm2BDWyYbukvlmLsvkSnMiH1N1mucqgRWNhBMz2Qanwypo
-         GwUa+G3uymhXQhX11sVpIkOId4HQdIzv313ObZ4PxYAhKMFXzJi+Vxvx0aB2+kvn1Th3
-         2kXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720602001; x=1721206801;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FxYvFXWDS6rYr4mBF26COM5Q4SvhFcKuutaGTTwwarA=;
-        b=XZqV9Vav6HAlGoBnCRVM5HkwIDT2rvIovlKM97RNBIE/izj0Q7/MXu+xk/8OcXK9wn
-         SX55MNgVz5FnMKYs4jwNYFH3i1naxny3UijLvdTlRo8UApnCrOoDEb0nlBkKDhl6m6Im
-         azB7zx78RLRYyEegY7pKLOnfnawD3/vKFrEnSC3uTG3/7rKk8f0SC7L5ES1Ri/lRQHpT
-         rp++/LHA0g4HsmNPtSSqZwJ9tZda4ZNKlOfUyVU0BHAdD9zQtiLlkKiVKXsHjnE5/jkO
-         1T7PtAQB9nTWyLgUO6o4pSkE4L5O3Sq5EZUc5kQuJ4/txmMA5rgdDL7Ho/e7vzaxTPOW
-         geuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ/FyV64fnwtebc8Yk9B8f+3FP72Q0XMrzlfu2s7cQXoWxcMQoxsnUbQGPtGzyDgIqhOZn1wB2R0M+6e/J5AE7utA3mSVpw0vCh4jRx3Q3lKQg0nnJVasDJ0PkXL0p/d6cceP0qzA5S1GF3mNe9Ivqe8Vcsa5ZutZIAz/s6s5i+3CsSE7B
-X-Gm-Message-State: AOJu0Yzu3XHuw4jP5AJBabnssuduqkpjwASOMqpZFpU474JEyDeFS2tk
-	jivU87z8jc/DFUA48oKBwX98gfJ/SEaxf4H2M48GKNCyTBSCeGvhXhEcrxUn
-X-Google-Smtp-Source: AGHT+IFyKkjEbWfPpt0EWoNM5+CbHhaTh+m9pQG9L5aZhJOLuywBhuPVhceQAqOKndZHHEJZ/FtPUw==
-X-Received: by 2002:a05:6e02:1a49:b0:375:ae17:a2cd with SMTP id e9e14a558f8ab-38a5a35bdcamr52822395ab.27.1720602000758;
-        Wed, 10 Jul 2024 02:00:00 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.25.208])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43969b41sm3235527b3a.138.2024.07.10.01.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 02:00:00 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>
-Subject: [PATCH bpf-next] bpf: kprobe: remove unused declaring of bpf_kprobe_override
-Date: Wed, 10 Jul 2024 16:59:39 +0800
-Message-Id: <20240710085939.11520-1-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5KUlUsW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C80DC32781;
+	Wed, 10 Jul 2024 09:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720602101;
+	bh=B/XFMfWU5ZqXj0qnN6nB10B5m+mTj+wFKvLPsFSnbUs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=V5KUlUsWia4ujO5KlNShozP/c4sSt7QYPzm6VZw9+thhlVm3JcN0YCzAwi29KvUGq
+	 58s0kauuUjYAVx7unbeUIg/8bOPbKUUUgkf26iux1CHEUL9I42eQGqi6YfHJPu6K60
+	 XRj1IYbBdXFqUMd7QbPM9R53sWADw0c52KtU5mb+xImQenML3KYHM2h2rTtubk+iyk
+	 awa7hxg4iUG9KK7Zy5L57RikY7esWe233SB1nZk1Xzy4wG7qhp+rz15IM7ZuKrIinH
+	 c766z5kFEYlZkQQyeshRWZVqKuimDBpFwKf8SDg5fo40do9sSCI8p/zyeDvMmahxdf
+	 XHcdJAbD0RvUg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sRTCV-00BAQB-8t;
+	Wed, 10 Jul 2024 10:01:39 +0100
+Date: Wed, 10 Jul 2024 10:01:22 +0100
+Message-ID: <86y16939jx.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: <Nicolas.Ferre@microchip.com>
+Cc: <Varshini.Rajendran@microchip.com>,
+	<conor@kernel.org>,
+	<tglx@linutronix.de>,
+	<robh@kernel.org>,
+	<krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>,
+	<alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>,
+	<Dharma.B@microchip.com>,
+	<linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5 15/27] dt-bindings: interrupt-controller: Document the property microchip,nr-irqs
+In-Reply-To: <82ca4f3d-fa78-4617-823e-69f16a2c3319@microchip.com>
+References: <20240703102011.193343-1-varshini.rajendran@microchip.com>
+	<20240703102814.196063-1-varshini.rajendran@microchip.com>
+	<20240703-dentist-wired-bdb063522ef7@spud>
+	<a41274c3-fd32-4eba-8240-bf95e41f63d9@microchip.com>
+	<82ca4f3d-fa78-4617-823e-69f16a2c3319@microchip.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: Nicolas.Ferre@microchip.com, Varshini.Rajendran@microchip.com, conor@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, Dharma.B@microchip.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-After the commit 66665ad2f102 ("tracing/kprobe: bpf: Compare instruction
-pointer with original one"), "bpf_kprobe_override" is not used anywhere
-anymore, and we can remove it now.
+On Tue, 09 Jul 2024 15:06:29 +0100,
+<Nicolas.Ferre@microchip.com> wrote:
+> 
+> On 09/07/2024 at 08:13, Varshini Rajendran - I67070 wrote:
+> > On 03/07/24 9:11 pm, Conor Dooley wrote:
+> >> On Wed, Jul 03, 2024 at 03:58:14PM +0530, Varshini Rajendran wrote:
+> >>> Add the description and conditions to the device tree documentation
+> >>> for the property microchip,nr-irqs.
+> >>>
+> >>> Signed-off-by: Varshini Rajendran<varshini.rajendran@microchip.com>
+> >> This needs to be part of patch 14.
+> >>
+> >>> ---
+> >>>    .../bindings/interrupt-controller/atmel,aic.yaml     | 12 ++++++++++++
+> >>>    1 file changed, 12 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml
+> >>> index 9c5af9dbcb6e..06e5f92e7d53 100644
+> >>> --- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml
+> >>> +++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.yaml
+> >>> @@ -54,6 +54,10 @@ properties:
+> >>>        $ref: /schemas/types.yaml#/definitions/uint32-array
+> >>>        description: u32 array of external irqs.
+> >>>    
+> >>> +  microchip,nr-irqs:
+> >>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> >>> +    description: u32 array of nr_irqs.
+> >> This makes no sense, did you just copy from above? Why would the number
+> >> of irqs be an array? Why can't you determine this from the compatble?
+> >>
+> > Sorry for the bad description. I will correct it in the next version.
+> > 
+> > For the second part of the question, this change was done as a step to
+> > resolve having a new compatible while having practically the same IP
+> > pointed out in the v3 of the series [1]. It is kind of looping back to
+> > the initial idea now. Even if this is added as a driver data, it
+> > overrides the expectation from the comment in [1]. Please suggest. I
+> 
+> In your v3 patch, indeed you were extracting the number of IRQs from the 
+> compatibility string (aka, from device tree...). It's my preferred 
+> solution as well.
+> 
+> So, come back to v3 [1] and address what Conor said in v4 "...having 
+> specific $soc_aic5_of_init() functions for each SoC seems silly when 
+> usually only the number of interrupts changes. The number of IRQs could 
+> be in the match data and you could use aic5_of_init in your 
+> IRQCHIP_DECLARE directly"
+> 
+> I think that we can convince Marc/Thomas that it's the best option as it 
+> prevents introducing another non-standard property to the DT, break the 
+> ABI (and was used happily for years).
 
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
- include/linux/trace_events.h | 1 -
- 1 file changed, 1 deletion(-)
+In general, the least cruft we add to the DT after the facts, the
+better. If the compatible string is good enough to identify the
+device, I don't think we need to overthink it, specially as there is
+no upside to non-standard properties here -- from what I understand,
+the number of available interrupts is a property of the HW, and not
+something that can be configured, making it part of the programming
+model, just like the layout of registers.
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 9df3e2973626..9435185c10ef 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -880,7 +880,6 @@ do {									\
- struct perf_event;
- 
- DECLARE_PER_CPU(struct pt_regs, perf_trace_regs);
--DECLARE_PER_CPU(int, bpf_kprobe_override);
- 
- extern int  perf_trace_init(struct perf_event *event);
- extern void perf_trace_destroy(struct perf_event *event);
+But I'm not in a deciding position anymore, and this is only my
+(educated) opinion.
+
+Thanks,
+
+	M.
+
 -- 
-2.39.2
-
+Without deviation from the norm, progress is not possible.
