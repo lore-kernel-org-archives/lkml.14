@@ -1,167 +1,232 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FA1A32
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 00:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A979B1FA5
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 00:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720570493; cv=none; b=fYUCzvI5oFhOqDgvhJW1f5LSEtTfQHthevTRSzb+wlfvTGK/PyHr1m8PM5/ULh1SCTqxl9bhVC2ZWMTlzlmWUaw2I7xjg6r1FSccPyY8Lk/IZMSSSDwg7sk6cSCUSY8i5lvIxEw4EjX83WNQytpmkBpqqh1KAwQ5pdMJEujfTnI=
+	t=1720570679; cv=none; b=YYXi4xP2MxCfrfa5JvwAvGEemdNhUmMngw3HaONpGvvv9o0GATpCiDQRI5axLkI7HrBpyGr/4/zfBk3PKAknHJ+10ompQZcc2fUzDKW1HUJzvUI/yGHQYKkjJ31xiT6ryRT+QCG1qTxNOESdRrqDhBGkCA9uMNaF0xyx0m8WJHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720570493; c=relaxed/simple;
-	bh=yio6J8mZFtI0CKcNb+diyJBsaGYSiTIVclXsOvtgp00=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QfwGaC6gFBKIDVVSpVAfR/OAwiafMCmf4YFweVYqX3VT9Rs/PCCOmfbZN9YYP4AM+4hdNw3hzodOtZV1xVWb/jmCcnZYuO+yhoRZc84QDVCvpxuitXX3yhFNXg2D5YkMN5dB5kFWCkgFZtZ8tUwo2oDYhMk7ozu5W5phpZd38ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wa38ZzeO; arc=none smtp.client-ip=209.85.128.169
+	s=arc-20240116; t=1720570679; c=relaxed/simple;
+	bh=lZmEXVndusUAwq3R5qlbnERAvoRm1nQps+GBkf6fXwI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BT0BIFS1J7ZqWQYnyCrS3frNu09p2uCe79jYmt7c/jjuYyaV+rLoGJozIEmsjSwB7066Ti4sg18Cx/HPu6AelqXbh5H+oFgfY0YVH7KO+km621Ab8Z+z0HGMsA1Kz1sz0Nwbv1zKvDerSvr/MwyFom4o39zy6xYICUN6M3x2w1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CmO/OnBx; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wa38ZzeO"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-655fa53c64cso35195207b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 17:14:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CmO/OnBx"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6513899bbdcso80004017b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 17:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720570491; x=1721175291; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+        d=google.com; s=20230601; t=1720570675; x=1721175475; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cYzCTDwEK2pMUJCfcFRfctFHDDdLzr2h8y801pHs+Og=;
-        b=Wa38ZzeOcC+QUBTawfrBsD3yW+ol1ix/Kzfv38Win8/9sVubDp65M1W8nLtcmtRTI6
-         vga7kT54ZnyPFPfGXteHbDPwLl+mhxpoxS54oJdwvWsTkTOnXB7P2wb/ljNNfnpCgaXE
-         ByoWs1211qvc7qw/Hk2Q071oa4mpS8ykx9V/ebdNIAPtlXk41wFBrv3tCuB4TtZRN3Bs
-         /JXmNs+Yr8b6eRbIP0lQrIlknktF5iMviN7RJp8aOMzlyBRBdXZJDIEOdw+UkmFPz0lT
-         Ox31SdPRrb37kLVQftZa5zqqX1AWw9uobdLH0cqPaOjAMXWPyxv3qGmgEXxJc019IPi1
-         BGWw==
+        bh=iqZWZrFgYVVMt23TodluzlS5W2MAjZLIphqNqurIxZ0=;
+        b=CmO/OnBxrYY9rSjye9Mhak2340Fjdm0Q8Czdn+vET2U49azG4H9TVjfyMePKMw605a
+         Z9Z8s2fNvjSlmUM6fey2qdLVXs+DbjrySBklwYOWVS9hKL3r03QJYZF4Z6TkjqQNTrFS
+         6ni7M+KtXcvDQRsKi1a0/eL+6TCMLK98VrEiiK2bURiRW9FyMtHKHYtrxLNncwo73Im2
+         8Top2JB/kFXaLdemlS/3LzJsKyMu9OO3K+YhvK6W/iWdA2IyfyH+pEq/nmaP5cUOuyzu
+         1klpNf8ZFMOEeOOL32ZALKP9xQRigaJADMDhmpeJx7lFPYiUlQBU3Gr+9NjrBDonrjFH
+         7ihw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720570491; x=1721175291;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+        d=1e100.net; s=20230601; t=1720570675; x=1721175475;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cYzCTDwEK2pMUJCfcFRfctFHDDdLzr2h8y801pHs+Og=;
-        b=LH3AqB974/X8Kdj4DwVB2JmecoyoM5xwBiYXMLqOJVMlQFgvqwqKEhMx2A0k9lzK7P
-         0kDJApKKR3yDv0n2fzAf+/J/BDxMlpsbfaDlFi6dNdzObzRAPXjOONNFgjpit5ePnXyr
-         wyQkpCX4CMljt9KxVM421A1l+e/O1VngDgMXdm7tB7brtZE9FuzIcmOUHXA6n+VLPAKM
-         blmltL4yrKOrw5QTOwECgVqj3sxQtwSfJfOI0HvfIX2hfAkAgM47nxdCRGPnUFljbh1K
-         Ki+CPoCH6UVzFNH3uPVkHt0sUupQdrOMfO87Ud6/CBV+eI1MSsIbrY0ngqskRmZnVwWl
-         z/Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcfDLLcvXcNcgk3Eu6S6ZgPdgxco1i+L7YOW8vyL9d6WqeSajNhMyHbHU9okOrMDnmhE+OYbQ26yw2eKYGH0fePKuEEM8brDgofY1b
-X-Gm-Message-State: AOJu0Yz2fpDktKVLMYkYpaL4XuWepaA0XTO9YSNtPuT048W3h/5VY7hX
-	ATUqViztRD/96BFKNgNDI7PQ14HWpp1lNeQvESXGJQ03g0v6r2WS3chN5D/bBA==
-X-Google-Smtp-Source: AGHT+IEJDg6S4NBLs9dJMYf+hcqE1vXc4OPxZz7GmEdH8VNMxw4eh6jmPRHrPp2NqBak+KIDmEPJ2g==
-X-Received: by 2002:a05:690c:ed4:b0:64a:7040:2d8e with SMTP id 00721157ae682-658f02f56c2mr51883617b3.33.1720570490925;
-        Tue, 09 Jul 2024 17:14:50 -0700 (PDT)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e69da2a7sm5413497b3.115.2024.07.09.17.14.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 17:14:49 -0700 (PDT)
-Date: Tue, 9 Jul 2024 17:14:01 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-To: Miaohe Lin <linmiaohe@huawei.com>
-cc: akpm@linux-foundation.org, muchun.song@linux.dev, hughd@google.com, 
-    willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] mm/hugetlb: fix kernel NULL pointer dereference
- when migrating hugetlb folio
-In-Reply-To: <20240709120433.4136700-1-linmiaohe@huawei.com>
-Message-ID: <f40218df-40bf-c0e4-5463-c07023c10b4a@google.com>
-References: <20240709120433.4136700-1-linmiaohe@huawei.com>
+        bh=iqZWZrFgYVVMt23TodluzlS5W2MAjZLIphqNqurIxZ0=;
+        b=Dq0GDPHI/+FTO5tAkWnXNSnTIcf8TYdBX0bDH/wQEUyPTTgymjh5OpDjPm5Q7Q56T+
+         TG0/ynjFIkSTmdDPIRYKOQLvUBrTXsONokXtpX8wfJaKDvC6wq0TG7Eo5zNwDJn9fdT9
+         s5D/cncmMRSkhLccKRuJlbNmBmosgPgZc5jSSKgzh1zLcMbrUgXNzRHX0YNqBhnOU4FA
+         p4+Q8FpFt+rQH6zWGvMI2t+QvYgdGC1YYMb9Poic8wti59jcQ12JldssvnY+N7Kd1dG2
+         89dP+puBNnU/UDpU1oZ3VIFCLyQ7JTpMQus0rnojhrZ7lwZFSPxz8aJOR2IBES3CGey7
+         BAvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOn3Gau90Oya//17wdpgdeaXy5gUQm0ltJm/RCZHCnoSl2oH1tyy56OfO6zxoB4ri7nzjgyDq9Vzm7BDG0yVRvfwmriKtJJcq3pWm6
+X-Gm-Message-State: AOJu0YyP9JmEMWzLfcdqRCJM6uQf8VouPeiKgt7HLDJrsq42t7HgiqsL
+	zyKItT+bDl9NxkewpuDpHSoMKNFR9qKHxHFS/EpwTJk1TBJRi+3fsyUsQGcniiCcZTZFMfSINGi
+	b10vuXYuRj/stH8FZrGexEA==
+X-Google-Smtp-Source: AGHT+IEO2W3n2qVOiW2MxAgkcOshUT5nJwKbdII6U+xHf0xxGXRneJZW9FVdT2wpAjy30/1oBimK9hZKKmemrMt2PQ==
+X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
+ (user=almasrymina job=sendgmr) by 2002:a05:690c:6806:b0:61b:1d66:61c4 with
+ SMTP id 00721157ae682-658f0cc85ddmr258747b3.10.1720570674564; Tue, 09 Jul
+ 2024 17:17:54 -0700 (PDT)
+Date: Wed, 10 Jul 2024 00:17:34 +0000
+In-Reply-To: <20240710001749.1388631-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+References: <20240710001749.1388631-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240710001749.1388631-2-almasrymina@google.com>
+Subject: [PATCH net-next v16 01/13] netdev: add netdev_rx_queue_restart()
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 9 Jul 2024, Miaohe Lin wrote:
+Add netdev_rx_queue_restart() function to netdev_rx_queue.h
 
-> A kernel crash was observed when migrating hugetlb folio:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000008
-> PGD 0 P4D 0
-> Oops: Oops: 0002 [#1] PREEMPT SMP NOPTI
-> CPU: 0 PID: 3435 Comm: bash Not tainted 6.10.0-rc6-00450-g8578ca01f21f #66
-> RIP: 0010:__folio_undo_large_rmappable+0x70/0xb0
-> RSP: 0018:ffffb165c98a7b38 EFLAGS: 00000097
-> RAX: fffffbbc44528090 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: ffffa30e000a2800 RSI: 0000000000000246 RDI: ffffa3153ffffcc0
-> RBP: fffffbbc44528000 R08: 0000000000002371 R09: ffffffffbe4e5868
-> R10: 0000000000000001 R11: 0000000000000001 R12: ffffa3153ffffcc0
-> R13: fffffbbc44468000 R14: 0000000000000001 R15: 0000000000000001
-> FS:  00007f5b3a716740(0000) GS:ffffa3151fc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000008 CR3: 000000010959a000 CR4: 00000000000006f0
-> Call Trace:
->  <TASK>
->  __folio_migrate_mapping+0x59e/0x950
->  __migrate_folio.constprop.0+0x5f/0x120
->  move_to_new_folio+0xfd/0x250
->  migrate_pages+0x383/0xd70
->  soft_offline_page+0x2ab/0x7f0
->  soft_offline_page_store+0x52/0x90
->  kernfs_fop_write_iter+0x12c/0x1d0
->  vfs_write+0x380/0x540
->  ksys_write+0x64/0xe0
->  do_syscall_64+0xb9/0x1d0
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f5b3a514887
-> RSP: 002b:00007ffe138fce68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00007f5b3a514887
-> RDX: 000000000000000c RSI: 0000556ab809ee10 RDI: 0000000000000001
-> RBP: 0000556ab809ee10 R08: 00007f5b3a5d1460 R09: 000000007fffffff
-> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
-> R13: 00007f5b3a61b780 R14: 00007f5b3a617600 R15: 00007f5b3a616a00
-> 
-> It's because hugetlb folio is passed to __folio_undo_large_rmappable()
-> unexpectedly. large_rmappable flag is imperceptibly set to hugetlb folio
-> since commit f6a8dd98a2ce ("hugetlb: convert alloc_buddy_hugetlb_folio to
-> use a folio"). Then commit be9581ea8c05 ("mm: fix crashes from deferred
-> split racing folio migration") makes folio_migrate_mapping() call
-> folio_undo_large_rmappable() triggering the bug. Fix this issue by
-> clearing large_rmappable flag for hugetlb folios. They don't need that
-> flag set anyway.
+Signed-off-by: David Wei <dw@davidwei.uk>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
 
-Gosh, thanks a lot for catching this: it had not crossed my mind that
-a folio which passes (folio_test_large and) folio_test_large_rmappable
-might not be suitable for folio_undo_large_rmappable.
+---
 
-> 
-> Fixes: f6a8dd98a2ce ("hugetlb: convert alloc_buddy_hugetlb_folio to use a folio")
+v13:
+- Add reviewed-by from Pavel (thanks!)
+- Fixed comment (Pavel)
 
-That's in 6.10-rc, isn't it?
+v11:
+- Fix not checking dev->queue_mgmt_ops (Pavel).
+- Fix ndo_queue_mem_free call that passed the wrong pointer (David).
 
-> Fixes: be9581ea8c05 ("mm: fix crashes from deferred split racing folio migration")
+v9: https://lore.kernel.org/all/20240502045410.3524155-4-dw@davidwei.uk/
+(submitted by David).
+- fixed SPDX license identifier (Simon).
+- Rebased on top of merged queue API definition, and changed
+  implementation to match that.
+- Replace rtnl_lock() with rtnl_is_locked() to make it useable from my
+  netlink code where rtnl is already locked.
 
-And that's in mm-hotfixes-stable intended for 6.10 final.
+---
+ include/net/netdev_rx_queue.h |  3 ++
+ net/core/Makefile             |  1 +
+ net/core/netdev_rx_queue.c    | 74 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100644 net/core/netdev_rx_queue.c
 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> Cc: <stable@vger.kernel.org>
+diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+index aa1716fb0e53c..e78ca52d67fbf 100644
+--- a/include/net/netdev_rx_queue.h
++++ b/include/net/netdev_rx_queue.h
+@@ -54,4 +54,7 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+ 	return index;
+ }
+ #endif
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq);
++
+ #endif
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 62be9aef25285..f82232b358a2c 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_NETDEV_ADDR_LIST_TEST) += dev_addr_lists_test.o
+ 
+ obj-y += net-sysfs.o
+ obj-y += hotdata.o
++obj-y += netdev_rx_queue.o
+ obj-$(CONFIG_PAGE_POOL) += page_pool.o page_pool_user.o
+ obj-$(CONFIG_PROC_FS) += net-procfs.o
+ obj-$(CONFIG_NET_PKTGEN) += pktgen.o
+diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
+new file mode 100644
+index 0000000000000..cf15ffecfa368
+--- /dev/null
++++ b/net/core/netdev_rx_queue.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/netdevice.h>
++#include <net/netdev_queues.h>
++#include <net/netdev_rx_queue.h>
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
++{
++	void *new_mem, *old_mem;
++	int err;
++
++	if (!dev->queue_mgmt_ops || !dev->queue_mgmt_ops->ndo_queue_stop ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
++	    !dev->queue_mgmt_ops->ndo_queue_start)
++		return -EOPNOTSUPP;
++
++	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
++
++	new_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!new_mem)
++		return -ENOMEM;
++
++	old_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!old_mem) {
++		err = -ENOMEM;
++		goto err_free_new_mem;
++	}
++
++	err = dev->queue_mgmt_ops->ndo_queue_mem_alloc(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_free_old_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_stop(dev, old_mem, rxq_idx);
++	if (err)
++		goto err_free_new_queue_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_start(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_start_queue;
++
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++
++	kvfree(old_mem);
++	kvfree(new_mem);
++
++	return 0;
++
++err_start_queue:
++	/* Restarting the queue with old_mem should be successful as we haven't
++	 * changed any of the queue configuration, and there is not much we can
++	 * do to recover from a failure here.
++	 *
++	 * WARN if we fail to recover the old rx queue, and at least free
++	 * old_mem so we don't also leak that.
++	 */
++	if (dev->queue_mgmt_ops->ndo_queue_start(dev, old_mem, rxq_idx)) {
++		WARN(1,
++		     "Failed to restart old queue in error path. RX queue %d may be unhealthy.",
++		     rxq_idx);
++		dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++	}
++
++err_free_new_queue_mem:
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, new_mem);
++
++err_free_old_mem:
++	kvfree(old_mem);
++
++err_free_new_mem:
++	kvfree(new_mem);
++
++	return err;
++}
+-- 
+2.45.2.803.g4e1b14247a-goog
 
-So if all goes to plan, this shouldn't need the Cc stable.
-
-I certainly deserve blame for not thinking of this possibility: but how
-was it working before my commit, when the folio_undo_large_rmappable()
-was being called from mem_cgroup_migrate()?  I think that was just as
-liable to crash too.
-
-I would like to hear definitively from Matthew, whether a hugetlb page
-should or should not be reported as large_rmappable - is your patch here
-just fixing a surprise, or in danger of adding another surprise somewhere?
-
-Hugh
-
-> ---
->  mm/hugetlb.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 6282dd9e37e3..45fd3bc75332 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -2173,6 +2173,9 @@ static struct folio *alloc_buddy_hugetlb_folio(struct hstate *h,
->  		nid = numa_mem_id();
->  retry:
->  	folio = __folio_alloc(gfp_mask, order, nid, nmask);
-> +	/* Ensure hugetlb folio won't have large_rmappable flag set. */
-> +	if (folio)
-> +		folio_clear_large_rmappable(folio);
->  
->  	if (folio && !folio_ref_freeze(folio, 1)) {
->  		folio_put(folio);
-> -- 
-> 2.33.0
