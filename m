@@ -1,134 +1,124 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F2A190485;
-	Wed, 10 Jul 2024 12:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BEA190485
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720615347; cv=none; b=ZP2tXPhJgQx+5BNZ6kNIwxOEKoWppolHTVKLrR6VoK5YenG8sqzYwD1Qmb2YGJdK6KFdhXfWJohaSicR33zQoUCC5o2tBvItV9VYPRVYev6sRq6zK1UP+4qIlFNtBQcdGjW8d2cio8yTBnTRCjzmDvWONBk0Qs4J5G8zjyEfvM8=
+	t=1720615438; cv=none; b=hxJoS+EY18fbZ9C/jIch3C7eOvP8dX6hlcoVSrx1okxH7rQongUSGRdHU50u2PQUagFdAABkBI6AV5Y3BHQy2lRz0lxYAWTrs/x9XFnRnnUUjE0oF80eqtTxOIqv1yttljMCNobKiNgK2BUpQGAW5sSphjHoUmLiUUjzsAUBNRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720615347; c=relaxed/simple;
-	bh=GQAIShZYr71kjsZCpzZl/eG1rV3WF2cCx2mE38nKZ4k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YB/czq2nXkTMBr2EC/bLyYP12VOY3amWFT4uMTGHtZWt5dr7eQ8dcWws9Jluvu9lHJqdwb4ZO8MS6K6dCsti9ee5F8e2qlCJIhUr/3DyLSwjJYjC27ckjN4x0DrK3GkDnSBlhy6GqHQC8UbEFp9e0TsO0vVtyLySEeDQV4dHqEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=tAZqzLe8; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1720615438; c=relaxed/simple;
+	bh=43DDJK4SeQY7M8v3PtNKvgwHxdoCohqLSGhU/xmdabo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dmvysWBMfbhBu3HV1ixQgwrM4NUyoUpTa/296T46kmhlbVoRp6QBCQDaBo4qJcs0MeL8f1noaoGydNDwTZnmR6qni8H3xbaNx0Ba4IXJCfvBzJ/yP1xvvyH2tcnc2AoOkZhjbrbJjjUIpj7uO5Q6nNtC7C7DeIQOtmGq6Fl/Km8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CMO6hb9A; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="tAZqzLe8"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id BE195100002;
-	Wed, 10 Jul 2024 15:41:42 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1720615302; bh=TMMii64hLBF2fPDulrY0mamojXuv/hUwycAgbvgPCVE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=tAZqzLe8/E1Qunux37pPDHSj9VIi+92RRuKI3olX8dDF4gl1qSY9P6ZmTU4k9VSbh
-	 MR47HzSNFig1fWyezAKHFBdaTtdQ4frKtnMsm9Vr/u7R7I63mLm1AZa+Kgj18YVt5c
-	 IRJ9TtVk3dza1UanVYuTWvED4/jsiP9DVPjHkPMgtwriCre3zfAO9aeVGNI9/ndgBb
-	 epld8A3XoznXHWlj3TSQ7pzmBRnpTio4d9dF8jCtJQM4TLK2jDF81iSya4NN9h0uom
-	 YhX/A9cByLxDvf7aczvobBUxKXo+QO4ISJt1yZrqPQC+sUaUFr53G9ChUumMgRCe5q
-	 fy2PmGBbKLJ/g==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Wed, 10 Jul 2024 15:40:19 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Jul
- 2024 15:39:59 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Jesse Brandeburg
-	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Przemek
- Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v4] ice: Adjust over allocation of memory in ice_sched_add_root_node() and ice_sched_add_node()
-Date: Wed, 10 Jul 2024 15:39:49 +0300
-Message-ID: <20240710123949.9265-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMO6hb9A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720615434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2/9lippDLEXmtWgWziQzdujSsOrakrUjnFWOu2HZ5zc=;
+	b=CMO6hb9AXYWKvSLxmwukDJk1pb9C3w68F9yKeh1cP1JavrS6OBiasI8RvWrjULrL4HPcig
+	Ft1pQepEFadxnizTbwrK+pnTZF99yQAS1Fsc+fcRounkMnnzmrpjP4zM/2B6Bbq45qpZDt
+	gOIGLWPH7hAzoC0YlUf/eEYdyTMPP3Y=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-315-25TrsA6tOZaGSRYJKjlwNQ-1; Wed, 10 Jul 2024 08:43:53 -0400
+X-MC-Unique: 25TrsA6tOZaGSRYJKjlwNQ-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-57c6979daf7so5291084a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:43:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720615432; x=1721220232;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2/9lippDLEXmtWgWziQzdujSsOrakrUjnFWOu2HZ5zc=;
+        b=AXdEjQ8GrJsTwN1mpE3Wc/MVIjcRUeS5gD3cM+qDyCyC67yOsW3QKbzO+JZ8oZQJtB
+         QozlA+BeYapiwto+yu2kU7ElJYMBCGbuHrMi6p8TxzQgMKuJXkdZ7x8z788Po1iwMMyO
+         Gk6SHmUcMlSb2UTyvlZmmmS2a7xWXmibjT0OL8FqGgdGaU+QLPS0lZsYD3HD1uMsICtX
+         5isDTcHD2TbvMJXbEHvJY4oZA+3DS4vcekM3/gH/Qb2LitUWuD7hBm7rKJX5InB0rogc
+         18a2NRfHb3GAEBnLLXgGIJbxKL51ZTpnlBqPBkVTit6TifMBLO5TDx9EDRRTsjrxo5XH
+         8xlA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzgzQ4eQuJph7XM50tnUNcPGExjbEt5CazoCTSH1rnWic12oftwAcquSP9FaPFqn5K68vsVFJjGKk/fgw2TbRN4Vqk0pI8cwCu13an
+X-Gm-Message-State: AOJu0Yx7YX3yxNUauDkPElcxgjoSSpRbmQl9vDIAB6e9RQUQR4QJZKFl
+	dlYRTftAKmxsx8cA+FUT6lNEUkapPHndNGa1C1EzO+xr8h3G7OycaD+pYA5AxEZD07JChaGQQAC
+	RtvnansUYyuEPsOT95+rUtHdcQaqfMn2j6JRq+UfPd8oh8eAOiaVvqsNa/X4INQ==
+X-Received: by 2002:a05:6402:270c:b0:58c:ccc1:17f7 with SMTP id 4fb4d7f45d1cf-594baf87f81mr3887204a12.15.1720615432396;
+        Wed, 10 Jul 2024 05:43:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGizrLSJI1qs8JqxXWm1KqqiwDtq78ZjQ4fIt6a38oE7t7gbjWggSz07taF+RS8p94KE7RgCw==
+X-Received: by 2002:a05:6402:270c:b0:58c:ccc1:17f7 with SMTP id 4fb4d7f45d1cf-594baf87f81mr3887184a12.15.1720615431778;
+        Wed, 10 Jul 2024 05:43:51 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-57-51-153.retail.telecomitalia.it. [82.57.51.153])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bbe2cc82sm2177127a12.23.2024.07.10.05.43.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 05:43:50 -0700 (PDT)
+Date: Wed, 10 Jul 2024 14:43:46 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH V2] test/vsock: add install target
+Message-ID: <e6oxt6gw36mhv54qbgc2bihcaym2xrquxtsjhyvm2u7wj76nu5@zneaxujp6oei>
+References: <20240710122728.45044-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186432 [Jul 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2;lore.kernel.org:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/10 11:05:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/10 05:16:00 #25942711
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240710122728.45044-1-peng.fan@oss.nxp.com>
 
-In ice_sched_add_root_node() and ice_sched_add_node() there are calls to
-devm_kcalloc() in order to allocate memory for array of pointers to
-'ice_sched_node' structure. But incorrect types are used as sizeof()
-arguments in these calls (structures instead of pointers) which leads to
-over allocation of memory.
+On Wed, Jul 10, 2024 at 08:27:28PM GMT, Peng Fan (OSS) wrote:
+>From: Peng Fan <peng.fan@nxp.com>
+>
+>Add install target for vsock to make Yocto easy to install the images.
+>
+>Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>---
 
-Adjust over allocation of memory by correcting types in devm_kcalloc()
-sizeof() arguments.
+LGTM! This is a net-next material, so next time better to specify it 
+(e.g. [PATCH net-next]).
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+If not queued within a week, please resend specifying net-next.
 
-Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
-v4:
-  - Remove Suggested-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-  - Add Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-    (https://lore.kernel.org/all/6d8ac0cf-b954-4c12-8b5b-e172c850e529@intel.com/)
-v3: https://lore.kernel.org/all/20240708182736.8514-1-amishin@t-argos.ru/
-  - Update comment and use the correct entities as suggested by Przemek
-v2: https://lore.kernel.org/all/20240706140518.9214-1-amishin@t-argos.ru/
-  - Update comment, remove 'Fixes' tag and change the tree from 'net' to
-    'net-next' as suggested by Simon
-    (https://lore.kernel.org/all/20240706095258.GB1481495@kernel.org/)
-v1: https://lore.kernel.org/all/20240705163620.12429-1-amishin@t-argos.ru/
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
- drivers/net/ethernet/intel/ice/ice_sched.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
-index ecf8f5d60292..6ca13c5dcb14 100644
---- a/drivers/net/ethernet/intel/ice/ice_sched.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sched.c
-@@ -28,9 +28,8 @@ ice_sched_add_root_node(struct ice_port_info *pi,
- 	if (!root)
- 		return -ENOMEM;
- 
--	/* coverity[suspicious_sizeof] */
- 	root->children = devm_kcalloc(ice_hw_to_dev(hw), hw->max_children[0],
--				      sizeof(*root), GFP_KERNEL);
-+				      sizeof(*root->children), GFP_KERNEL);
- 	if (!root->children) {
- 		devm_kfree(ice_hw_to_dev(hw), root);
- 		return -ENOMEM;
-@@ -186,10 +185,9 @@ ice_sched_add_node(struct ice_port_info *pi, u8 layer,
- 	if (!node)
- 		return -ENOMEM;
- 	if (hw->max_children[layer]) {
--		/* coverity[suspicious_sizeof] */
- 		node->children = devm_kcalloc(ice_hw_to_dev(hw),
- 					      hw->max_children[layer],
--					      sizeof(*node), GFP_KERNEL);
-+					      sizeof(*node->children), GFP_KERNEL);
- 		if (!node->children) {
- 			devm_kfree(ice_hw_to_dev(hw), node);
- 			return -ENOMEM;
--- 
-2.30.2
+>
+>V2:
+> Use VSOCK_INSTALL_PATH, drop INSTALL_PATH
+>
+> tools/testing/vsock/Makefile | 13 +++++++++++++
+> 1 file changed, 13 insertions(+)
+>
+>diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
+>index a7f56a09ca9f..6e0b4e95e230 100644
+>--- a/tools/testing/vsock/Makefile
+>+++ b/tools/testing/vsock/Makefile
+>@@ -13,3 +13,16 @@ CFLAGS += -g -O2 -Werror -Wall -I. -I../../include -I../../../usr/include -Wno-p
+> clean:
+> 	${RM} *.o *.d vsock_test vsock_diag_test vsock_perf vsock_uring_test
+> -include *.d
+>+
+>+VSOCK_INSTALL_PATH ?=
+>+
+>+install: all
+>+ifdef VSOCK_INSTALL_PATH
+>+	mkdir -p $(VSOCK_INSTALL_PATH)
+>+	install -m 744 vsock_test $(VSOCK_INSTALL_PATH)
+>+	install -m 744 vsock_perf $(VSOCK_INSTALL_PATH)
+>+	install -m 744 vsock_diag_test $(VSOCK_INSTALL_PATH)
+>+	install -m 744 vsock_uring_test $(VSOCK_INSTALL_PATH)
+>+else
+>+	$(error Error: set VSOCK_INSTALL_PATH to use install)
+>+endif
+>-- 
+>2.37.1
+>
 
