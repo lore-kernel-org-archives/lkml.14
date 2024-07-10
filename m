@@ -1,93 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324DC1957F2
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 17:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBED194C79
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 17:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720632973; cv=none; b=BmbVJ1KNADse97fiXYVuCyxcLZD71pkaKOeJV0VbcXE3RhB5kQxh7pUi0Ajy8Ch0AbDN27NrWZ1PaS/TEDxBbj4Vdph+K0TKDjlKrcUdo8PlcqZRFdJS3KBK7oIagb8RzMRzzZApcqTrFQgpXGEckKYEc8Giq/9tKiIZTi2fkGk=
+	t=1720633241; cv=none; b=TVFFTPJiGAJnOnj/QM5ghGLLdR7dfSEGhKbEDAo5yKi1FrYZVTvKHN/W2xcxb8XEddIvDoaTrhWeq6geebrq/gjieOxGQfzIlEhM9fm1ahXNPiwbInlzYL9Jsa+j3E808j9gcMz6TiQKivPjp5LUGsz9y6RFTHtecqmpPSq70yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720632973; c=relaxed/simple;
-	bh=qxj7/GfbAzJhv+yT4uusdh/k5PHvVnAEDliZ3yufpvQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=SoPptUBl1VcHeET5VRlidveovoc7abYrdNQVRP9bZA9e0+cPAoeDrahhOmfw++LidRuGIUaMUby+yh+b03KTGg/A19xWsty+PgeWGSzyJ2/t/fUyIJJNOwYF86kqbep2wnAcGlHLyKN8VONxRfPJ9Tue7S2DZiYOeCa3RVB10II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=qpZQ71Rc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720633241; c=relaxed/simple;
+	bh=Aw27xhy9iLsWfZ7gi/oOuQuOgONYg5oqs+o6yNMv1EQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jvMeOnPq1UVO6+Y8sLldKsIfIFRr57c5lM3gSH8I+yRRQBzbg+DK0b4nGH1tdJDryz/9pDcX/SSTgsMR6jxAtl+iQt3l7U1zv+znSUfXytBmphUDvWahrlOGUwJLnkS9EDwAYdTNaUPRfWtu3PH11uHOXUKVK/kBdCweIxAbpLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TILDyx8b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="qpZQ71Rc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A5C1C32781;
-	Wed, 10 Jul 2024 17:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1720632972;
-	bh=qxj7/GfbAzJhv+yT4uusdh/k5PHvVnAEDliZ3yufpvQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qpZQ71Rc19JiZFDIK4eX07L9kOWG8E7UYV9NpPhQ/gfpFcrhbhDEwjmKIrZHo37EP
-	 wDLFZfVc3hWOPavhTEPRKBn+zNspNaxcM9z8qISWLefw+Dbrvdh2QlGrGgjOH1h/gm
-	 SLRTlvEORAzzJwM2nGdI/AgXRfVz8C8bSsqgaRFg=
-Date: Wed, 10 Jul 2024 10:36:11 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: zhangchun <zhang.chuna@h3c.com>
-Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
- <jiaoxupo@h3c.com>, <zhang.zhengming@h3c.com>, <zhang.zhansheng@h3c.com>,
- <shaohaojize@126.com>
-Subject: Re: [PATCH v2] mm: Give kmap_lock before call =?UTF-8?B?Zmx1c2hf?=
- =?UTF-8?B?dGxiX2tlcm5lbF9yYW5n77yMYXZvaWQ=?= kmap_high deadlock.
-Message-Id: <20240710103611.809895ff809df9ed411bfaa8@linux-foundation.org>
-In-Reply-To: <1720614028-2260-1-git-send-email-zhang.chuna@h3c.com>
-References: <1720614028-2260-1-git-send-email-zhang.chuna@h3c.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TILDyx8b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720633238;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hQnh4CkYgF+Yl9rv3eKPxlWvS5dKXcJgjUkbAzfhZ9s=;
+	b=TILDyx8b9UomzxMzXmNbTXpmFwLOQrjs1nQgs7NaeNj+2jOYuQr2rRKOItUZ61cMtAjUgq
+	HEGvFdl//Oscdq06LjgGDYZfKZiXLTrwzVFJjnCqJg8jKbatG0pPopedY3C+FiiLjF1DA0
+	Xu19I4EUF/btFQD56SYsl9ykWX6ouDI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-RX1JCRKrOLi-Iy3-pRIpTA-1; Wed,
+ 10 Jul 2024 13:40:37 -0400
+X-MC-Unique: RX1JCRKrOLi-Iy3-pRIpTA-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E1A9319560B1;
+	Wed, 10 Jul 2024 17:40:35 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 022201955F3B;
+	Wed, 10 Jul 2024 17:40:34 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: isaku.yamahata@intel.com,
+	seanjc@google.com,
+	binbin.wu@linux.intel.com,
+	xiaoyao.li@intel.com
+Subject: [PATCH v5 3/7] KVM: x86/mmu: Bump pf_taken stat only in the "real" page fault handler
+Date: Wed, 10 Jul 2024 13:40:27 -0400
+Message-ID: <20240710174031.312055-4-pbonzini@redhat.com>
+In-Reply-To: <20240710174031.312055-1-pbonzini@redhat.com>
+References: <20240710174031.312055-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, 10 Jul 2024 20:20:28 +0800 zhangchun <zhang.chuna@h3c.com> wrote:
+From: Sean Christopherson <seanjc@google.com>
 
-> Use kmap_high and kmap_XXX or kumap_xxx among differt cores at the same
-> time may cause deadlock. The issue is like this：
+Account stat.pf_taken in kvm_mmu_page_fault(), i.e. the actual page fault
+handler, instead of conditionally bumping it in kvm_mmu_do_page_fault().
+The "real" page fault handler is the only path that should ever increment
+the number of taken page faults, as all other paths that "do page fault"
+are by definition not handling faults that occurred in the guest.
 
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c          | 2 ++
+ arch/x86/kvm/mmu/mmu_internal.h | 8 --------
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
-What is kmap_XXX?
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 8b64f31e13be..aa437aacf55f 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5925,6 +5925,8 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
+ 	}
+ 
+ 	if (r == RET_PF_INVALID) {
++		vcpu->stat.pf_taken++;
++
+ 		r = kvm_mmu_do_page_fault(vcpu, cr2_or_gpa, error_code, false,
+ 					  &emulation_type);
+ 		if (KVM_BUG_ON(r == RET_PF_INVALID, vcpu->kvm))
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index ce2fcd19ba6b..8efd31b3856b 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -318,14 +318,6 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 		fault.slot = kvm_vcpu_gfn_to_memslot(vcpu, fault.gfn);
+ 	}
+ 
+-	/*
+-	 * Async #PF "faults", a.k.a. prefetch faults, are not faults from the
+-	 * guest perspective and have already been counted at the time of the
+-	 * original fault.
+-	 */
+-	if (!prefetch)
+-		vcpu->stat.pf_taken++;
+-
+ 	if (IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) && fault.is_tdp)
+ 		r = kvm_tdp_page_fault(vcpu, &fault);
+ 	else
+-- 
+2.43.0
 
->  CPU 0:                                                 CPU 1:
->  kmap_high(){                                           kmap_xxx() {
->                ...                                        irq_disable();
->         spin_lock(&kmap_lock)
->                ...
->         map_new_virtual                                     ...
->            flush_all_zero_pkmaps
->               flush_tlb_kernel_range         /* CPU0 holds the kmap_lock */
->                       smp_call_function_many         spin_lock(&kmap_lock)
->                       ...                                   ....
->         spin_unlock(&kmap_lock)
->                ...
-> 
-> CPU 0 holds the kmap_lock, waiting for CPU 1 respond to IPI. But CPU 1
-> has disabled irqs, waiting for kmap_lock, cannot answer the IPI. Fix
-> this by releasing  kmap_lock before call flush_tlb_kernel_range,
-> avoid kmap_lock deadlock.
-> 
-> Fixes: 3297e760776a ("highmem: atomic highmem kmap page pinning")
-
-Wow, that's 15 years old.  Has the deadlock been observed?
-
-> --- a/mm/highmem.c
-> +++ b/mm/highmem.c
-> @@ -220,8 +220,11 @@ static void flush_all_zero_pkmaps(void)
->  		set_page_address(page, NULL);
->  		need_flush = 1;
->  	}
-> -	if (need_flush)
-> +	if (need_flush) {
-> +		unlock_kmap();
->  		flush_tlb_kernel_range(PKMAP_ADDR(0), PKMAP_ADDR(LAST_PKMAP));
-> +		lock_kmap();
-> +	}
->  }
-
-Why is dropping the lock like this safe?  What data is it protecting
-and why is it OK to leave that data unprotected here?
 
