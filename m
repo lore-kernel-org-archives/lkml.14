@@ -1,145 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD46482D8
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 03:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24B241C92;
+	Wed, 10 Jul 2024 03:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720582839; cv=none; b=tua8FvqYQiMm7GUQXJCkNk/9SfUWCin1bmAcRCF2D1yLXO1cE+M/X/jlzAfSYFOo/B0j6/D2XMdVKTFpwwOeCmijusCH2nBU0LbiARi78WrO7R2YunSibvQO/uvA8+qWvr0e2eaNPVk5Punbl8VAbxvmBXJdSEHLzWCZC64Mgsw=
+	t=1720582882; cv=none; b=Tp+GPPyE/65AZ+gqDTJRpAapeuFtYFGaSGKtgtmzKgcBCJT9VZ5rxfVPX5t22sP4ZqZnkXYUCyI1/LkU+OK6S0iyRBc5vEoNLt2y9JUB+2l0ckTkkAlfw9PKW5BK0Ua0u9glYWfdR5on1z81ZuEyBx2BjSHOYATxZTPDLlIF+XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720582839; c=relaxed/simple;
-	bh=599OQloIs27iSA5C5IQnRs9s17+cjBMwfJ++8cZE6ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJTp+t1seV1zgd/0HfNT46TKka3yPIAMbcVmVvjeaqkoI7fNx9tzpJ/K5ypzTpHOiG6ZbcLcvtekI+q4wTYI4DHHNYYC/PVSOb5a2txk+S7LfwN9enqtVbGtIb04cpF/s/kYg+RX9a+c8DCifdPaqtP4qJcAfooeVPYJv7Rv7SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QsorQ4sk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720582882; c=relaxed/simple;
+	bh=gg9quY78nmialQjcz3/JYfkyMKp1VuYLp3UKUmhRoK0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kcFY/fM9iM5f6TeAAEGmh2vYE8JzWv/tMZxQE/GIKclNE+DLj78cqrcAm1c5xGml3ZlFbqXo/0mTuBOn3xxG0RGtcVeEEIbJ0pyRqdamCIlD4DeatUnP5Ovqci2m9g57sNBawdWhqrgRNLddAZe6j93Q6hjY2K2G6/kiAgcSpvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=FrgcZHwo; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QsorQ4sk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720582835;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TDO9TiwXKhQArR/husLC6W35eQMaOfa6OJltOm3NtHE=;
-	b=QsorQ4skeG1LPvE1zZ1ZzueyiRgtKWaV5KrNYww48luf8KMjt3qZwH3rHbo807GuIJsRC3
-	fq2J+greB3+NJ+Cy9Ozv39vUZnDFl2GKyZp6+be3ltMNVtLwa+1yCuDMqLspmXhiXhynR8
-	JKpjZAE2nnATc8HQ2gK8atp6fnpby4o=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-288-evszWIkEP4igK3S0oBR-Zw-1; Tue,
- 09 Jul 2024 23:40:28 -0400
-X-MC-Unique: evszWIkEP4igK3S0oBR-Zw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 05811195609E;
-	Wed, 10 Jul 2024 03:40:25 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.15])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 36E751955F40;
-	Wed, 10 Jul 2024 03:40:21 +0000 (UTC)
-Date: Wed, 10 Jul 2024 11:40:15 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: linux@armlinux.org.uk, vgoyal@redhat.com, dyoung@redhat.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	arnd@arndb.de, afd@ti.com, akpm@linux-foundation.org,
-	rmk+kernel@armlinux.org.uk, linus.walleij@linaro.org,
-	eric.devolder@oracle.com, gregkh@linuxfoundation.org, deller@gmx.de,
-	javierm@redhat.com, robh@kernel.org, thunder.leizhen@huawei.com,
-	austindh.kim@gmail.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH 0/3] ARM: Use generic interface to simplify crashkernel
- reservation
-Message-ID: <Zo4CnwD28TbiknVy@MiWiFi-R3L-srv>
-References: <20240708133348.3592667-1-ruanjinjie@huawei.com>
- <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
- <3157befe-431f-69ac-b9d3-7a8685ba3a4d@huawei.com>
- <Zo0TbmSnHbiz5YQn@MiWiFi-R3L-srv>
- <01869981-b1de-32cb-bd25-d6ea09752b3d@huawei.com>
- <Zo1D9sB0UTOIrApP@MiWiFi-R3L-srv>
- <8aed5c59-090b-ea7e-020c-dd2785ee3d7e@huawei.com>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="FrgcZHwo"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 46A3esiP71591466, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1720582854; bh=gg9quY78nmialQjcz3/JYfkyMKp1VuYLp3UKUmhRoK0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type;
+	b=FrgcZHwoHjouYvEw757/CdfxBlwhCZ9rDxCaLciX0fjl/uwADC+BczFKhX1Av3EBK
+	 L19NI/uRflgSU/4HiFFdmxbJuIdS7V50BY0ZUfVWaSgxNnhEQjs/mrkR/3t0ju+bgp
+	 m+sPmf6hGzQWVFRJO/RhuAKmcGLeG7/Zt2zseA2mvGDIhJc/Jn4u18ir2mZou8RUwu
+	 vIMPesu9FT/qsaUAjXSoZYKSGFRKEQf6NUnZojSfMAIpbmn/AlO6L+S7cv1PB+Xd/I
+	 f4Yjfl1A3HClsA7VntszdPXrHlXQTaRVU3XVKIZ66SVVo6o5RhpvNBR2i35XeAG2qG
+	 rZB5nKkz6RbGQ==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 46A3esiP71591466
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Jul 2024 11:40:54 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 10 Jul 2024 11:40:55 +0800
+Received: from RTDOMAIN (172.21.210.68) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Jul
+ 2024 11:40:54 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, "Justin
+ Lai" <justinlai0215@realtek.com>
+Subject: [PATCH net-next v23 13/13] MAINTAINERS: Add the rtase ethernet driver entry
+Date: Wed, 10 Jul 2024 11:32:34 +0800
+Message-ID: <20240710033234.26868-14-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240710033234.26868-1-justinlai0215@realtek.com>
+References: <20240710033234.26868-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8aed5c59-090b-ea7e-020c-dd2785ee3d7e@huawei.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On 07/10/24 at 09:52am, Jinjie Ruan wrote:
-> 
-> 
-> On 2024/7/9 22:06, Baoquan He wrote:
-> > On 07/09/24 at 07:06pm, Jinjie Ruan wrote:
-> >>
-> >>
-> >> On 2024/7/9 18:39, Baoquan He wrote:
-> >>> On 07/09/24 at 05:50pm, Jinjie Ruan wrote:
-> >>>>
-> >>>>
-> >>>> On 2024/7/9 17:29, Baoquan He wrote:
-> >>>>> On 07/08/24 at 09:33pm, Jinjie Ruan wrote:
-> >>>>>> Currently, x86, arm64, riscv and loongarch has been switched to generic
-> >>>>>> crashkernel reservation. Also use generic interface to simplify crashkernel
-> >>>>>> reservation for arm32, and fix two bugs by the way.
-> >>>>>
-> >>>>> I am not sure if this is a good idea. I added the generic reservation
-> >>>>> itnerfaces for ARCH which support crashkernel=,high|low and normal
-> >>>>> crashkernel reservation, with this, the code can be simplified a lot.
-> >>>>> However, arm32 doesn't support crashkernel=,high, I am not sure if it's
-> >>>>> worth taking the change, most importantly, if it will cause
-> >>>>> misunderstanding or misoperation.
-> >>>>
-> >>>> Yes, arm32 doesn't support crashkernel=,high.
-> >>>>
-> >>>> However, a little enhancement to the generic code (please see the first
-> >>>> patch), the generic reservation interfaces can also be applicable to
-> >>>> architectures that do not support "high" such as arm32, and it can also
-> >>>> simplify the code (please see the third patch).
-> >>>
-> >>> Yeah, I can see the code is simplified. When you specified
-> >>> 'crashkernel=xM,high', do you think what should be warn out? Because
-> >>> it's an unsupported syntax on arm32, we should do something to print out
-> >>> appropriate message.
-> >>
-> >> Yes, you are right! In this patch it will print "crashkernel high memory
-> >> reservation failed." message and out for arm32 if you specify
-> > 
-> > That message may mislead people to believe crashkernel=,high is
-> > supported but reservation is failed, then a bug need be filed for this?
-> > We may expect a message telling this syntax is not supported on this
-> > ARCH.
-> 
-> "CRASH_ADDR_LOW_MAX >= CRASH_ADDR_HIGH_MAX" indicate that the arm32 does
-> not support "crashkernel=,high", I wonder if this is generic for similar
+Add myself and Larry Chiu as the maintainer for the rtase ethernet driver.
 
-Imagine you are a testing engineer or a distros user, how do you know
-if "CRASH_ADDR_LOW_MAX >= CRASH_ADDR_HIGH_MAX" when you test
-'crashkernel=,high' and see the failure message?
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> architecture. If so, the first patch can print such as
-> "crashkernel=,high is not supported on this ARCH" message.
-
-Please consider conprehensively if this is doable, you can paste
-draft code here to prove it.
-
-> 
-> > 
-> >> 'crashkernel=xM,high because "CRASH_ADDR_LOW_MAX" and
-> >> "CRASH_ADDR_HIGH_MAX" is identical for arm32. And it should also warn
-> >> out for other similar architecture.
-> >>
-> >>
-> >>>
-> >>>
-> >>
-> > 
-> > 
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e0f28278e504..bd49c895339e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19490,6 +19490,13 @@ L:	linux-remoteproc@vger.kernel.org
+ S:	Maintained
+ F:	drivers/tty/rpmsg_tty.c
+ 
++RTASE ETHERNET DRIVER
++M:	Justin Lai <justinlai0215@realtek.com>
++M:	Larry Chiu <larry.chiu@realtek.com>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	drivers/net/ethernet/realtek/rtase/
++
+ RTL2830 MEDIA DRIVER
+ L:	linux-media@vger.kernel.org
+ S:	Orphan
+-- 
+2.34.1
 
