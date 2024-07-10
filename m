@@ -1,135 +1,115 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B9917FD;
-	Wed, 10 Jul 2024 09:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E06484E0D
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720604004; cv=none; b=ZJFq14uu7tRcnULjM3BKw46ZyyeUtC0qNLTCkM9EW7BgA8VJVOsWXkuR5/XX1hOsQnDmQ/D909+c7CY1Bt03THfKKvxnKfA+9lljZ/3WcW/TdnBLYtPlBOIhQS9r3JqE7NLR20zeSeoCQylhO1qjZK8J5Th62ib9XSqPMqtXDxY=
+	t=1720604005; cv=none; b=FvrL9NojxE75h2UNxt9fJFBfpFvB/fNiYw2voST+WfIkDgo4W8LyggS0TRamW0h1L2qw6aIvX35ZT5ckWgxZhWRIoTHAw3jwwiActQ+7POnY+32RcwlwtL+pz1iMNw5vR7404eUZk1/OJDWK+KrKDkVMtqJLwOSSDBpk4QtlttQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720604004; c=relaxed/simple;
-	bh=nyA+aLyLy4sj1aJoJsMA+CGYqE6Xy/V4qF0PTdcoHL8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=W2xcWFkdAGdUTZ8TG++a4jYTGGBVJkPtIe00euLxe18QVcMiUgGTUwYzkjrSm/uUMs/5j64MHgsiWmTE5IsAO77EWm94gj38s2chrDM+ey0aJwy38W6qS2XA/qAWwGFO52krbLHnf0SQsxAi9bZvhTYXs4JN4o2wtrEuavr/bYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d+aJps+z; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1720604005; c=relaxed/simple;
+	bh=N+dZVEJ8nJMAFRXQCYmz3Dujgc4/GF2zc1NIyCFnmmw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y35i3skWkB1pyri1ULfgqf8521WSzJIi2gnE+AEglMJyeDW/a7mKAh+lwUwWxozWt9Hj30p8okVoeRWedRjzvvQssNrZdEzsbsHhmvoWsnqpr488e1mH8RBJ37GTgHje08IVy41BTUYY9KSU4N2+UCr4gnxf/ePahl4cXS0bX+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=RAaMU1DY; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d+aJps+z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1720604000;
-	bh=nyA+aLyLy4sj1aJoJsMA+CGYqE6Xy/V4qF0PTdcoHL8=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=d+aJps+zhYPUwSrloLSTontwTOF3pNIOG9i647w/uZHpb68CCwSbGM4yIfRW7LQ/S
-	 3pa7Hr5kB6404AAisO7dAExh/DLAzaKKa4y7KNALC7D0k3q5mPbuGWtrLnWgYOD0ik
-	 Zmg/HVVDA1+uMM/TFWe++jK6JfxUHBwB7ry9bo1DDlASVX8MhWzSHP/vAMPqYh+GQd
-	 yQD4ijsW6TkFN/xabxbs2oY3wQws9JDKBwtr+V4gsa9AkM4FvcfUaOVpDtTthlOCQn
-	 6thI0MPGM5tcbkAER2OkOiexL8i/TW15GRrRxw92FmroV+MA3b9okGepwm4YVf1bp/
-	 pgwPdDO050Gag==
-Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 759623782192;
-	Wed, 10 Jul 2024 09:33:14 +0000 (UTC)
-Message-ID: <c0007f80-d44b-42fa-afd4-fdaeb3b89f70@collabora.com>
-Date: Wed, 10 Jul 2024 14:33:08 +0500
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RAaMU1DY"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52e9ab8b7cdso784322e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 02:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1720604001; x=1721208801; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GTHGZWFFIG2y8znG1jvML///poV3IrhnVzz1kC5uonU=;
+        b=RAaMU1DYxFpW2zRlE5w7W+C+/UqEpGSH9cOtRdWVZgc6zye8fn/QrPGJpmL3HgEUKL
+         P2hcjvLMXAWmBEhrnWxB9IAvtSs6m/2fYc9cbRX+/AG9D0SAWkkbGZCd6VcC6wOQ5mWm
+         jfAULBDrQEQbxYuP1ROSZvHJL+QR2BJsxjDGI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720604001; x=1721208801;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GTHGZWFFIG2y8znG1jvML///poV3IrhnVzz1kC5uonU=;
+        b=uBZR8Pj+aSqTsWiuqARasrljI75hhwdYVgNIUEkRi9PF26XkfXQkXYPtw8jszEhQFk
+         ES4JZWMj/ArLs7cUcGA1uU7m/NH/t7JJNn9lYbx3U4xKIk7c5DXLu64/koGZDqThNe5k
+         yQCgfVeQFfLP7Cw6DCJj44YdlCRqUlcMzro1oAvzeYbOr/cunxXgzNiRV1f/ZMfOzP/n
+         Jk+cVL+sBxgeRw41PV4+eZv9tE5xBBv+Tf89TjoOsgMGrao8uey7aoYjUH+x7cuXbJJB
+         ZWij45TQC80FHHqIDCzjW2lLc+lm7kNxeNrEyv234InYjklv5ntuw1XzUhTUAtcR/Fpt
+         +1Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbAnGe0vl37Ty5QlUbjyVx6metXc6oTm74U4PROGwvZPDsgvzBfYWEW5iHOUGYs+dIvReYJln8QHTSVaPalwsP8wfwlbRXrfC9kmtP
+X-Gm-Message-State: AOJu0YzarLeuw0ZR7+BQdgBFQtE7XyzE2H007k52nqsk1aEcW5lLjx/a
+	Zr68SKJWA4emHzekXjb3YAeGwAFT8xRB0Lpfr8aAZ+sD8MMhvl0BcAwnsg6CAeU=
+X-Google-Smtp-Source: AGHT+IE53obXe9iAhMtu+VAErcsSEkowso2ZAWhhq6KbgW5hVFggamUEZCMm4iphO7D+n2JaklYQbA==
+X-Received: by 2002:a05:6512:10d2:b0:52e:9b18:9a7f with SMTP id 2adb3069b0e04-52eb9993c36mr3246261e87.2.1720604001546;
+        Wed, 10 Jul 2024 02:33:21 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5a27sm73448935e9.23.2024.07.10.02.33.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 02:33:20 -0700 (PDT)
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
+To: DRI Development <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Daniel Vetter <daniel.vetter@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org
+Subject: [PATCH 1/2] drm: Add might_fault to drm_modeset_lock priming
+Date: Wed, 10 Jul 2024 11:31:16 +0200
+Message-ID: <20240710093120.732208-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Al Viro <viro@zeniv.linux.org.uk>, kernel@collabora.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH] selftests: openat2: don't print total number of tests and
- then skip
-To: Shuah Khan <shuah@kernel.org>
-References: <20240522214647.3568788-1-usama.anjum@collabora.com>
- <1fc06a15-f06e-4db1-ace5-b9d52250d0df@collabora.com>
- <20240701.085146-junky.rubs.mossy.crews-uyuNIdHgWxb@cyphar.com>
- <148d4c61-b60a-401f-96ee-b0291bcf87b3@collabora.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <148d4c61-b60a-401f-96ee-b0291bcf87b3@collabora.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Shuah,
+We already teach lockdep that dma_resv nests within drm_modeset_lock,
+but there's a lot more: All drm kms ioctl rely on being able to
+put/get_user while holding modeset locks, so we really need a
+might_fault in there too to complete the picture. Add it.
 
-Can you take the patch as is or by removing following from this patch:
+Motivated by a syzbot report that blew up on bcachefs doing an
+unconditional console_lock way deep in the locking hierarchy, and
+lockdep only noticing the depency loop in a drm ioctl instead of much
+earlier. This annotation will make sure such issues have a much harder
+time escaping.
 
--	if (geteuid() != 0)
-+	if (geteuid())
+References: https://lore.kernel.org/dri-devel/00000000000073db8b061cd43496@google.com/
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: linux-media@vger.kernel.org
+Cc: linaro-mm-sig@lists.linaro.org
+---
+ drivers/gpu/drm/drm_mode_config.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-Usama
-
-On 7/2/24 12:02 PM, Muhammad Usama Anjum wrote:
-> On 7/1/24 2:14 PM, Aleksa Sarai wrote:
->> On 2024-07-01, Muhammad Usama Anjum <usama.anjum@collabora.com> wrote:
->>> Adding more people for review
->>>
->>> On 5/23/24 2:46 AM, Muhammad Usama Anjum wrote:
->>>> Don't print that 88 sub-tests are going to be executed. But then skip.
->>>> The error is printed that executed test was only 1 while 88 should have
->>>> run:
->>>>
->>>> Old output:
->>>>   TAP version 13
->>>>   1..88
->>>>   ok 2 # SKIP all tests require euid == 0
->>>>   # Planned tests != run tests (88 != 1)
->>>>   # Totals: pass:0 fail:0 xfail:0 xpass:0 skip:1 error:0
->>>>
->>>> New and correct output:
->>>>   TAP version 13
->>>>   1..0 # SKIP all tests require euid == 0
->>>>
->>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->>>> ---
->>>>  tools/testing/selftests/openat2/resolve_test.c | 5 +++--
->>>>  1 file changed, 3 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/testing/selftests/openat2/resolve_test.c b/tools/testing/selftests/openat2/resolve_test.c
->>>> index bbafad440893c..5472ec478d227 100644
->>>> --- a/tools/testing/selftests/openat2/resolve_test.c
->>>> +++ b/tools/testing/selftests/openat2/resolve_test.c
->>>> @@ -508,12 +508,13 @@ void test_openat2_opath_tests(void)
->>>>  int main(int argc, char **argv)
->>>>  {
->>>>  	ksft_print_header();
->>>> -	ksft_set_plan(NUM_TESTS);
->>>>  
->>>>  	/* NOTE: We should be checking for CAP_SYS_ADMIN here... */
->>>> -	if (geteuid() != 0)
->>>> +	if (geteuid())
->>
->> This change isn't necessary, != 0 makes what we're checking clearer.
-> It is wasteful to write != 0 when you can achieve the same without it.
-> 
-> I can update the patch by removing it. Please can you provide a reviewed-by
-> tag for remaining patch?
-> 
->>
->>>>  		ksft_exit_skip("all tests require euid == 0\n");
->>>>  
->>>> +	ksft_set_plan(NUM_TESTS);
->>>> +
->>>>  	test_openat2_opath_tests();
->>>>  
->>>>  	if (ksft_get_fail_cnt() + ksft_get_error_cnt() > 0)
->>>
->>> -- 
->>> BR,
->>> Muhammad Usama Anjum
->>
-> 
-
+diff --git a/drivers/gpu/drm/drm_mode_config.c b/drivers/gpu/drm/drm_mode_config.c
+index 568972258222..37d2e0a4ef4b 100644
+--- a/drivers/gpu/drm/drm_mode_config.c
++++ b/drivers/gpu/drm/drm_mode_config.c
+@@ -456,6 +456,8 @@ int drmm_mode_config_init(struct drm_device *dev)
+ 		if (ret == -EDEADLK)
+ 			ret = drm_modeset_backoff(&modeset_ctx);
+ 
++		might_fault();
++
+ 		ww_acquire_init(&resv_ctx, &reservation_ww_class);
+ 		ret = dma_resv_lock(&resv, &resv_ctx);
+ 		if (ret == -EDEADLK)
 -- 
-BR,
-Muhammad Usama Anjum
+2.45.2
+
