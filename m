@@ -1,190 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2991527A7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A6113C679;
 	Wed, 10 Jul 2024 23:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720653435; cv=none; b=sY+kDCI8oYhjV0HqZvsLGd1Q1dtWqVg4sgmnGhJTZ7otYJHUW7Duaa/Qe7IWKW2FFw0dHpsk8Lz0WPzZPRP88xyOdCDsF3LqvMZnuGoMHLG7D2ZhVtPV/QA9zxR2s5+OkMHxIRd+wPTCMVKEEwAi3Xgw7HmuZVlIo94G6zn1YxM=
+	t=1720653436; cv=none; b=OSQKzxGGRVlC2vbGm0qLxg2bW+Gr3FHKGSUMWx8w7JobKwH0wPLDQMOcfgJD8p0JTqhCAXF6tLCbhyaGNzNtKzjcC0fyluAazJH3h318UFFFCv2+lrqsjEmc1aR9+mUxSO3QH8pAfWnD+zaTSFd1WsjGYmnq0uIYqp/NSJAiG6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720653435; c=relaxed/simple;
-	bh=Jd3wkWpGIxjVE8bZuw1tGBEUQpwx9hG4gsdHuzurtTM=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=INrFtldTCpPaz0e4n48DOVqUH2/M6A2NH3IcrZL+yU2X1Bd2BsnpLJVce+y2mcH69Dqf3sH0Blz71DbZtk8gmRabp5LsvLW07FsTUg7uDbcyzaxw8GgVjPamXXx5xD3skFl+wA9JJbqnF/SsZzTDm0cI9421s7AWDa+5Mu7cl78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2haqyCc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720653436; c=relaxed/simple;
+	bh=UvnaxlqmvLPi8Lr06uQh+kZE7yBmnckwmYquWml+mFU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=rbBnwuPaM3gv/RfIIFqckzIhafEq7x/Zlyr/KDdUyyuMPkqlK9kSPunqdmCovtNiWd5bgn5TcyRBpFvU7cOV9mcYr7+yFYCTJTt6QKrufmR33nrzowwnoMJ1wrvB87h6S7bBDKR3neZXwLmTRZ4SaipqqzeDT6Fvft2IPoyAaAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3sYo3Ee; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2haqyCc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECB6C4AF07;
-	Wed, 10 Jul 2024 23:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720653435;
-	bh=Jd3wkWpGIxjVE8bZuw1tGBEUQpwx9hG4gsdHuzurtTM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=t2haqyCcJw9sr2yZK5l1zj+YhLnEb/FRj6I69HzdAMOqFUg0ApMQesfJ95wG4i6N2
-	 pzDekhpOYN6r9sbty0qVx9g1Jvx+Y/8jCTEw/iL6sXgDvJn88FkIrR4croxZMHbl10
-	 /j4QO0CQWqxaSbmE2cZCtCT2nkwcuKFildztLjt3FSpqhyAEFVG+rFlsPpSlTGoPY2
-	 kKCZxDLLPKKkmaQ8mN4IgCNuSNq8d986tEHFVUvTszT9ipKROy0yGZbtXTe01fp0Ii
-	 jko+aFhjpzgeBBc3agNERAjpSmj6Qo7rP6ghntuTvWG1I59tup4bkc18Sq7acJ1ih3
-	 EqJtmZ46F9miw==
-Message-ID: <d36ff27b56b3e9c8ef490bfd9d24761d.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3sYo3Ee"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fbc3a9d23bso1948245ad.1;
+        Wed, 10 Jul 2024 16:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720653434; x=1721258234; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PQWSgKIn8SEmuSNSdTgDWNDQAMDWOagG0JDZoov0LeU=;
+        b=h3sYo3EeMMxrd8tQNFdADJIl2MZL5g8XcibMpYdGUPCBYh/llbk8nxTdl9YdGPbrHj
+         xM8MgDduxBbX9UI4xMgpMPcBa4meBj8TIxzVIlHAW0XvxSAIpvJrxWHbW1KUUdm2usYg
+         7Kr1V+e1vJyYIIdPH2AqJg+J5dsHX230h1Ar0oi7geI3Q742VyhYmtdtRCVmSZ93svsm
+         Pvq+FXjpne1YntqFFVsnhSmKDPBekXzojTcIVI+A+HpjL/qdYAt0KrzDz/TK6TchwKmd
+         561mLaiyKX3O4nxuXYEHTwNkhubrW24EtA64VtxSe9e28IDm/ObsgrGMTRqNC/vLeTzx
+         uZpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720653434; x=1721258234;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PQWSgKIn8SEmuSNSdTgDWNDQAMDWOagG0JDZoov0LeU=;
+        b=u9c0JLZzqyKEQdFzKAMavS9nsaq9N1IPzYNVO/2vjVbxUw45Mxpq4KrrJvtidF1+3j
+         MKGlGboVJSgD2wAgESL0VK0taAU1gbgMeScjEnc/S8t9p4JDn0XNMHS8p4CTVbHEr6lU
+         pSzAedCQXV0q9uHvHG38SvwoDKAkQ8r50zx1qRDmIlEpcaVhcUd+p3pwnGm8jSAOWwQO
+         fPw2Qo+y/cT7JOFI8dU7VzArdL7H4KNjKwtvZMIGHTUKsITGoX3UpMeJyhxFPpWI5U2n
+         AueZzsUj7pZoAGVrLOWkGktY9Kzfk/Y3l0oocar5u3tcV8OLiTvH54sm2lnbvC4Iwonj
+         mYUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVU7DLw2Q0gKE4sSaq7V680IPq/NlVVoAzPopI67TWBDFbh2WcuAq8jXxgWprmBs1owDMA1BcERbJ5fruE3h/0AKMtP7AGNlYHCUsDNc/9VYJjETiv71Njj4C1A4+eeBUGCBz009Jb5
+X-Gm-Message-State: AOJu0YxqboRM/7ohnxxiM6Owdm1T7L06Qpnyp8byuuKAFUAPBBEbh//o
+	9cLTpFyJbCxIDOdNZOz/XZMLlXnQSAS7mGaGI2HpJI62FTRnNUvQ
+X-Google-Smtp-Source: AGHT+IF0369HLlf0s7HuwPmn5hGEIVx0M9loDIYoTAscU8I/4tLonBO2sWtXOaotBw0tCDfUpnNMbw==
+X-Received: by 2002:a17:902:ec8a:b0:1fb:35c7:8ea4 with SMTP id d9443c01a7336-1fbb6d25092mr56341335ad.2.1720653434291;
+        Wed, 10 Jul 2024 16:17:14 -0700 (PDT)
+Received: from localhost.localdomain ([46.232.120.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ad1e47sm38492715ad.282.2024.07.10.16.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 16:17:13 -0700 (PDT)
+From: ryan <ryanzhou54@gmail.com>
+To: jikos@kernel.org
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ryan <ryanzhou54@gmail.com>
+Subject: [PATCH] hid: usbhid: Enable remote wake-up based on device configuration
+Date: Thu, 11 Jul 2024 07:16:06 +0800
+Message-Id: <20240710231606.3029-1-ryanzhou54@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240623-th1520-clk-v2-2-ad8d6432d9fb@tenstorrent.com>
-References: <20240623-th1520-clk-v2-0-ad8d6432d9fb@tenstorrent.com> <20240623-th1520-clk-v2-2-ad8d6432d9fb@tenstorrent.com>
-Subject: Re: [PATCH v2 2/7] clk: thead: Add support for T-Head TH1520 AP_SUBSYS clocks
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Drew Fustini <dfustini@tenstorrent.com>
-To: Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor+dt@kernel.org>, Drew Fustini <dfustini@tenstorrent.com>, Emil Renner Berthing <emil.renner.berthing@canonical.com>, Fu Wei <wefu@redhat.com>, Guo Ren <guoren@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh@kernel.org>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Yangtao Li <frank.li@vivo.com>
-Date: Wed, 10 Jul 2024 16:17:12 -0700
-User-Agent: alot/0.10
 
-Quoting Drew Fustini (2024-06-23 19:12:32)
-> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th=
-1520-ap.c
-> new file mode 100644
-> index 000000000000..982d4d40f783
-> --- /dev/null
-> +++ b/drivers/clk/thead/clk-th1520-ap.c
-> @@ -0,0 +1,1086 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
-> + * Copyright (C) 2023 Vivo Communication Technology Co. Ltd.
-> + *  Authors: Yangtao Li <frank.li@vivo.com>
-> + */
-> +
-> +#include <dt-bindings/clock/thead,th1520-clk-ap.h>
+According to the USB protocol, the host should automatically
+adapt the remote wake-up function based on the configuration
+descriptor reported by the device, rather than only the default
+keyboard support. Therefore, it's necessary to support other hid
+devices, such as digital headsets,mice,etc.
 
-Preferably include dt-bindings after linux includes.
+Signed-off-by: ryan <ryanzhou54@gmail.com>
+---
+ drivers/hid/usbhid/hid-core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> +#include <linux/bitfield.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define TH1520_PLL_POSTDIV2    GENMASK(26, 24)
-> +#define TH1520_PLL_POSTDIV1    GENMASK(22, 20)
-> +#define TH1520_PLL_FBDIV       GENMASK(19, 8)
-> +#define TH1520_PLL_REFDIV      GENMASK(5, 0)
-> +#define TH1520_PLL_BYPASS      BIT(30)
-> +#define TH1520_PLL_DSMPD       BIT(24)
-> +#define TH1520_PLL_FRAC                GENMASK(23, 0)
-> +#define TH1520_PLL_FRAC_BITS    24
-[...]
-> +
-> +static unsigned long th1520_pll_vco_recalc_rate(struct clk_hw *hw,
-> +                                               unsigned long parent_rate)
-> +{
-> +       struct ccu_pll *pll =3D hw_to_ccu_pll(hw);
-> +       unsigned long div, mul, frac, rate =3D parent_rate;
-> +       unsigned int cfg0, cfg1;
-> +
-> +       regmap_read(pll->common.map, pll->common.cfg0, &cfg0);
-> +       regmap_read(pll->common.map, pll->common.cfg1, &cfg1);
-> +
-> +       mul =3D FIELD_GET(TH1520_PLL_FBDIV, cfg0);
-> +       div =3D FIELD_GET(TH1520_PLL_REFDIV, cfg0);
-> +       if (!(cfg1 & TH1520_PLL_DSMPD)) {
-> +               mul <<=3D TH1520_PLL_FRAC_BITS;
-> +               frac =3D FIELD_GET(TH1520_PLL_FRAC, cfg1);
-> +               mul +=3D frac;
-> +               div <<=3D TH1520_PLL_FRAC_BITS;
-> +       }
-> +       rate =3D parent_rate * mul;
-> +       do_div(rate, div);
+diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+index a90ed2ceae84..d2901ad9a871 100644
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -1179,16 +1179,16 @@ static int usbhid_start(struct hid_device *hid)
+ 	/* Some keyboards don't work until their LEDs have been set.
+ 	 * Since BIOSes do set the LEDs, it must be safe for any device
+ 	 * that supports the keyboard boot protocol.
+-	 * In addition, enable remote wakeup by default for all keyboard
+-	 * devices supporting the boot protocol.
+ 	 */
+ 	if (interface->desc.bInterfaceSubClass == USB_INTERFACE_SUBCLASS_BOOT &&
+ 			interface->desc.bInterfaceProtocol ==
+ 				USB_INTERFACE_PROTOCOL_KEYBOARD) {
+ 		usbhid_set_leds(hid);
+-		device_set_wakeup_enable(&dev->dev, 1);
+ 	}
+ 
++	if (dev->actconfig->desc.bmAttributes & USB_CONFIG_ATT_WAKEUP)
++		device_set_wakeup_enable(&dev->dev, 1);
++
+ 	mutex_unlock(&usbhid->mutex);
+ 	return 0;
+ 
+-- 
+2.17.1
 
-'rate' is only unsigned long, so do_div() isn't needed here. Perhaps if
-'parent_rate * mul' can overflow 32-bits then 'rate' should be
-u64.
-
-> +       return rate;
-> +}
-> +
-> +static unsigned long th1520_pll_postdiv_recalc_rate(struct clk_hw *hw,
-> +                                                   unsigned long parent_=
-rate)
-> +{
-> +       struct ccu_pll *pll =3D hw_to_ccu_pll(hw);
-> +       unsigned long rate =3D parent_rate;
-> +       unsigned int cfg0, cfg1;
-> +
-> +       regmap_read(pll->common.map, pll->common.cfg0, &cfg0);
-> +       regmap_read(pll->common.map, pll->common.cfg1, &cfg1);
-> +
-> +       if (cfg1 & TH1520_PLL_BYPASS)
-> +               return rate;
-> +
-> +       do_div(rate, FIELD_GET(TH1520_PLL_POSTDIV1, cfg0) *
-
-Same, 'rate' is unsigned long. Did you get some compilation error
-without this? How big is the divisor going to be? The fields are only
-3-bits wide, so the multiplication would fit into a u32 just fine. Given
-that 'rate' is unsigned long though I think you can just put the
-multiplication result into a local variable that's also unsigned long
-and then just write the divide with unsigned longs
-
-	div =3D FIELD_GET(...) * FIELD_GET(...);
-
-	return rate / div;
-
-> +                    FIELD_GET(TH1520_PLL_POSTDIV2, cfg0));
-> +
-> +       return rate;
-> +}
-> +
-> +static unsigned long ccu_pll_recalc_rate(struct clk_hw *hw,
-> +                                        unsigned long parent_rate)
-> +{
-> +       unsigned long rate =3D parent_rate;
-> +
-> +       rate =3D th1520_pll_vco_recalc_rate(hw, rate);
-> +       rate =3D th1520_pll_postdiv_recalc_rate(hw, rate);
-> +
-> +       return rate;
-> +}
-
-Please fold this in
-
-----8<---
-diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th15=
-20-ap.c
-index 982d4d40f783..0c3821d50765 100644
---- a/drivers/clk/thead/clk-th1520-ap.c
-+++ b/drivers/clk/thead/clk-th1520-ap.c
-@@ -411,7 +411,7 @@ static const struct clk_parent_data c910_i0_parents[] =
-=3D {
- 	{ .index =3D 0 }
- };
-=20
--struct ccu_mux c910_i0_clk =3D {
-+static struct ccu_mux c910_i0_clk =3D {
- 	.mux	=3D TH_CCU_ARG(1, 1),
- 	.common	=3D {
- 		.clkid		=3D CLK_C910_I0,
-@@ -428,7 +428,7 @@ static const struct clk_parent_data c910_parents[] =3D {
- 	{ .hw =3D &cpu_pll1_clk.common.hw }
- };
-=20
--struct ccu_mux c910_clk =3D {
-+static struct ccu_mux c910_clk =3D {
- 	.mux	=3D TH_CCU_ARG(0, 1),
- 	.common	=3D {
- 		.clkid		=3D CLK_C910,
-@@ -845,7 +845,7 @@ static const struct clk_parent_data uart_sclk_parents[]=
- =3D {
- 	{ .index =3D 0 },
- };
-=20
--struct ccu_mux uart_sclk =3D {
-+static struct ccu_mux uart_sclk =3D {
- 	.mux	=3D TH_CCU_ARG(0, 1),
- 	.common	=3D {
- 		.clkid          =3D CLK_UART_SCLK,
