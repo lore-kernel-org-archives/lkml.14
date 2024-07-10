@@ -1,101 +1,84 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FC685626
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDA7126F02
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720599681; cv=none; b=GiTwJ/Z87nlYx9awTIg3Hm9S393JevpAKt/Zpudcy0DI28NRsUZDfiIM0riq1Ia8EA22dk/+hPmJoE67DRXlQCtSt/h8cL7xEVJU/wCLfdnEWwTvKrigJlbMWk1WmkxC9ZS+/URkgrkmCGNLOL8CDXtI5j6QWnnPug15GLpfIa0=
+	t=1720599701; cv=none; b=Ue6TPExgg3jX9uNLPXG2e+E94zZrULMkUEIzbpwrQW+8cxcatAqRbsz4mixCC3xszCwhcqgXo+ybmNIBKN1MOj6eX6EaKERdrU0vD2nDP78GUD8jTLF3gMDS4Dp9/W2CsPZABvkEyFEcELFJ1A8uPVjPirKLICpmU8QI/OG5U3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720599681; c=relaxed/simple;
-	bh=DPUABfizu486Q5eVvbw6KkdOv+B8Z+bW41UY+AodGpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JEasnmuAkhA09IOtnUE6xuxCoVW5zfQz97450fk6mFjOGnIRLFbk43D8SvjZbWhAkXzG+aL03FKvHA7xFjwmdhm3Vmy/rioh8lC9fKDxZoOfR/n6K2yr+M9pvYaeMABJkGo/A4OxWGMXXMnGvsxLtN7KDSpRoVE7D0MQHns6UNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QTYl3Hc5; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QTYl3Hc5"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52e9c6b5a62so6576739e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720599678; x=1721204478; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ejCg0yAtNCGL4j9toWYxPv6vOenYQMFwdFWp7I8WoIw=;
-        b=QTYl3Hc5Nwhz7ODrp9bBZR+HIiqBI/TyonBIfOc8OIE9tug7EPvLZzbWyhyRR7Qtmq
-         sYGAoOAN3ifzprZOinuYmQgkp7+R3sbJ2o+1Yq7m9EcogNrN8/dwsdeDR37mykZWjnNM
-         qldoeBrmyruWE0AI9F7KFlk2n9Wv0hZWBQc4cSUzYJie0Lyipa+G6VaElh9HrkuoXCrI
-         moViggghdWAUwL0vllZ4FImRcHIOkxT3sHEDHyBV2MuVXfA3+ZB1TDOvX0qEpS259x6W
-         hOL8slgQx5tZa76IxTwYcHww11HrpJ/xraIN7Ps8vk4Wxu16I+5zIA75lUyh97u2d9ex
-         K0gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720599678; x=1721204478;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ejCg0yAtNCGL4j9toWYxPv6vOenYQMFwdFWp7I8WoIw=;
-        b=IfIZ2dNt7oH3CppBdhZYTH2DUm3UYsTYW5qKRrTdFbhsYxUW+57ta8q1sXTmWa/ja4
-         8uLG2CxfGphneLVjEf41hKDv8n7dsfpJn3enYACCfUVa7q/k1bSIxicB58BMWVW4qpBR
-         IFIZe2papg4b6EGHb0IcUC6BJ14eseQDffJKzGFpJcRulRDAeyKyLBRUgQ+fH5xgwy0k
-         wj6DW6v8p+5pH1zEBEOmfbyoz1GjeLHqdpLFaZM8K9PL2/2kTGUFETQ9LnynEz4S3suU
-         ZJjlr3a3vTOcKxiCxE2OFymSjMGaxZiLH0XVlRmTwaTORjgfTrSpsOsnb3SeBn7EvA/l
-         wXcA==
-X-Gm-Message-State: AOJu0Yz+e22xYxuL/xczRw+fppZpPfWp+W68w0XYTEAbpOYWzqg6Ob09
-	etYC9GjjTYXIhYGkWTTJ5dv3lVkr5v1kqP5ai0XSPK7pC+NWzC5SV3SXScHIyzs=
-X-Google-Smtp-Source: AGHT+IFR2VaiF8nRlz26qTf2UpRo4vfxDesGLvpWFLmdyH6ySWNa8QPtFyOYWwmZtI7XuRNLWt5ODw==
-X-Received: by 2002:a19:6411:0:b0:52e:7f18:1775 with SMTP id 2adb3069b0e04-52eb99919e9mr2388589e87.6.1720599677934;
-        Wed, 10 Jul 2024 01:21:17 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:6932:abde:fac8:217d? ([2a05:6e02:1041:c10:6932:abde:fac8:217d])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-42727805e4csm34747155e9.27.2024.07.10.01.21.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 01:21:17 -0700 (PDT)
-Message-ID: <f1bd41eb-eabe-43da-8e6c-c6320f05ea01@linaro.org>
-Date: Wed, 10 Jul 2024 10:21:16 +0200
+	s=arc-20240116; t=1720599701; c=relaxed/simple;
+	bh=fQn78b7Y5pXiJJo2nhJ0t+svcpU3GcY3feoe7WWM7/g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=N0OqWy1dC2pNO/EARDBJ2otgmMU3TO6vaLaiBvV5JyBQXWC/vifAaP1Vq1gprYGVIkNYbbg7E79Fnq1FjeIUH+n/mSM04p0luCc+J/00Ko/8JoLmu98Ra04nlnesnyh3+DuXvlkyhpGuLJErbnPcUIvB9fXVp0w/DsUcN9Wa2+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:2340:18a1:4138:37d2])
+	by andre.telenet-ops.be with bizsmtp
+	id lkMd2C0024znMfS01kMdmf; Wed, 10 Jul 2024 10:21:37 +0200
+Received: from geert (helo=localhost)
+	by ramsan.of.borg with local-esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sRSa1-001bN0-18;
+	Wed, 10 Jul 2024 10:21:37 +0200
+Date: Wed, 10 Jul 2024 10:21:37 +0200 (CEST)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Qu Wenruo <wqu@suse.com>
+cc: linux-btrfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] btrfs: introduce new "rescue=ignoresuperflags"
+ mount option
+In-Reply-To: <6e7b92ebb72f7e6e213f9cb601a3e5d246fdb594.1718338860.git.wqu@suse.com>
+Message-ID: <84418761-54c9-9c56-1b17-7beb24db9cc4@linux-m68k.org>
+References: <cover.1718338860.git.wqu@suse.com> <6e7b92ebb72f7e6e213f9cb601a3e5d246fdb594.1718338860.git.wqu@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/10] clocksource: realtek: Add timer driver for
- rtl-otto platforms
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>, tglx@linutronix.de,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- tsbogend@alpha.franken.de, paulburton@kernel.org, peterz@infradead.org,
- mail@birger-koblitz.de, bert@biot.com, john@phrozen.org, sander@svanheule.net
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-mips@vger.kernel.org, kabel@kernel.org, ericwouds@gmail.com,
- Markus Stockhausen <markus.stockhausen@gmx.de>
-References: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
- <20240710043524.1535151-8-chris.packham@alliedtelesis.co.nz>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20240710043524.1535151-8-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On 10/07/2024 06:35, Chris Packham wrote:
-> The timer/counter block on the Realtek SoCs provides up to 5 timers. It
-> also includes a watchdog timer which is handled by the
-> realtek_otto_wdt.c driver.
-> 
-> One timer will be used per CPU as a local clock event generator. An
-> additional timer will be used as an overal stable clocksource.
-> 
-> Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
-> Signed-off-by: Sander Vanheule <sander@svanheule.net>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+ 	Hi Qu,
 
-Applied, thanks
+On Fri, 14 Jun 2024, Qu Wenruo wrote:
+> This new mount option would allow the kernel to skip the super flags
+> check, it's mostly to allow the kernel to do a rescue mount of an
+> interrupted checksum conversion.
+>
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Qu Wenruo <wqu@suse.com>
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Thanks for your patch, which is now commit cbc2bc70b8c22974 ("btrfs:
+introduce new "rescue=ignoresuperflags" mount option") in next-20240709.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> --- a/fs/btrfs/fs.h
+> +++ b/fs/btrfs/fs.h
+> @@ -226,6 +226,7 @@ enum {
+> 	BTRFS_MOUNT_NODISCARD			= (1UL << 29),
+> 	BTRFS_MOUNT_NOSPACECACHE		= (1UL << 30),
+> 	BTRFS_MOUNT_IGNOREMETACSUMS		= (1UL << 31),
+> +	BTRFS_MOUNT_IGNORESUPERFLAGS		= (1UL << 32),
 
+"1UL" was changed to "1ULL" while applying, but that is not sufficient,
+as all other mount flags handling still operates on "unsigned long",
+which is 32-bit ont 32-bit platforms.
+
+Hence noreply@ellerman.id.au reported several build failures on 32-bit
+platforms (e.g. m68k[1]):
+
+     fs/btrfs/super.c:666:48: error: conversion from 'enum <anonymous>' to 'long unsigned int' changes value from '4294967296' to '0' [-Werror=overflow]
+
+[1] http://kisskb.ellerman.id.au/kisskb/buildresult/15197832/
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
