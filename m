@@ -1,113 +1,158 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2CC198E9C;
-	Wed, 10 Jul 2024 10:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A297D412
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720607841; cv=none; b=Hv0HxayG7aFN4ZTjhLyD65pBBQ2KCtiTRzi33FH2Z6UfPANrnNz8rXcHOSDX1tPraBAzq11oUOuyqWpl6Bn2ETUzYjYp5h17tbmskVH47H8skaW2xlfHNVApz+Dmt4wltV9G8PSRtDMO25kt+KxX65gBpPEFItn4i8XMo7yVvQ8=
+	t=1720607974; cv=none; b=VuReVJjeei6dg0P2G5edZGL8W6K/Tpw3CxSguccnQ/r1podpe6OMw6ClsaQpTdUrXD+FdcgDC2Vla7eSRm2VpLKUWczA9wgn07v394CexWGJTEmrBG1LgyO60qbstUfSy8KJXT2BGQTeF/qJhiB6XfwJcWC4CKIuNGjDaeUTQGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720607841; c=relaxed/simple;
-	bh=vldLU5ousstfmDh5bnJGfW4ITCUolQrrvfqTIfAcNhk=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=DguMVwVHLBvyAzKVzOgLvUPmkuu0NWP+GC4I4NNbUN/a1wDJnX13pZwNnMWr5Ia6CsXY5vLSTh2O3xn+sydmqxVMtL9jKd902xJvgFttwfBSP/AHnKY2QoEARi4M1xnFgkUox1VAJwa6yaOpoo0wYrp+eqyZ9jgoiU8EFWLC6oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KlBuPgO9; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720607974; c=relaxed/simple;
+	bh=gwXJSZMI76F6pJRYS+Sxo4wWhMxt/71rrq2SDfhGb0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZFkKr7HkzoTTJW2mz2NNVBRbDfIY7JqEiioDm9tTopEVHCAmGmn11a6hxZjpm51q5xwSLqdjsyIZsvxxbhuXSVlizFV3sirKzs7gBQIK348dor+i7syYJ7wuZ0b+OYORD5LUyRTR4ANEJoOtir1b7tfNn+8ey1eG4uDnh87buSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hB9nWKhR; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlBuPgO9"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-367a464e200so3285421f8f.2;
-        Wed, 10 Jul 2024 03:37:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hB9nWKhR"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6fd513f18bso644954066b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 03:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720607839; x=1721212639; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vldLU5ousstfmDh5bnJGfW4ITCUolQrrvfqTIfAcNhk=;
-        b=KlBuPgO9Ni7hnunhFgMgIA5zfzNEFeChtT6L92zZsk7NVi+a6DXH00NltdsV+1JGOF
-         +wAfiLNBKARiC0gp98zW5QQDz95rPNscpaAt3Ipiqmwbr2fkU81JfkQfGP2BkcNfnYeU
-         Nas2o6m4bm6zPKP6tN576VMfVIJuw6nm4wAx+jMsLlBnFiH5D/XaDIxA/MFZ/8n/4T2F
-         xpoen2BuFzDjXmPUoH1b+P80wDBbDmvacCfY/Hi7iKHAbQH5ihK+DnAVzePfymUVBIbc
-         ZMaijunVuxG5cdCeypcchBzA/FfNxJyygx9oVpy3YIsglSKNlkqaY/s9AWLvn8sYXElF
-         HN+Q==
+        d=linaro.org; s=google; t=1720607970; x=1721212770; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=tNjSkQwizLNbQa5se+hi01VHwZjYhY67+rGFTrRRUkQ=;
+        b=hB9nWKhR5pIC4pviR3D+U30FQYuRN1fdPoyp3cwiJHfAYPMwWSAC+ZamrXzFhM8nc1
+         vtrSoik10D42Mty2t3q9pEikNdZ5OmDBZMray8lQK5McPlm1ikR8XiKNjhmRDRh6BoiW
+         XdCp4z2/LDHxufb+gwhI/r+Gxf9nlbt5iGDbXnKiG2TApby3pfDod5dchQ/Olik4bPKF
+         JL3yLHmyWqB7lKYpshW84PA9RqVtHEVAwVCFJq0PbT8M33IBXdTwdWJxtAJRaL3D81Ds
+         xMwgBLB0HRrDqgoGRuA067EpjLh9tmUrL0tFo1ilmg41876t08FDuOOTh+fGk4pSbtR1
+         FZmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720607839; x=1721212639;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1720607970; x=1721212770;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vldLU5ousstfmDh5bnJGfW4ITCUolQrrvfqTIfAcNhk=;
-        b=GFWGgB5rUZhPpPqKNjcrShUl6dkusNTKfT4NxyeH1BaXyZ5KGfH/l3V6hWI3pW3xPL
-         uENsQQRkh4+D841Tq+0y8w4ovQZHfDWjD8KizgFtoInGrDN5mXTCZPidq9ZlmYdWhRZj
-         /8tM6mAu25g/qSFYSjuDFEWtjsn5Hs8AMNw4H8UitnqmdvOBqUdzYOsMtAaDLMYc5VqA
-         KuTQ551JTUaOX/21byPMWJUdNBrvtHLPiWlK/b4QZKJMxWXFqLKDZn4M13n6KnHFYm4J
-         Xu0o8PLprI/GjpN/FHFUTjv35ZuRS8rKQVcGh3/P9o7hZgxlQU8vIx+gOxDeW4HxfwXC
-         A7aA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9s9+3NHl1H6i6sTDQswpWtmEGhfyloLCMsEa3vcdubtI6OsuCRM+GXD1GGwqyRghYrpcfBwyDq157YoF3nvise9L1ULkQq5/vuy32Ne7lamUIk+vV7LESX7UFIKBSfeJJuErUWIWM7kukr8yCOAdmdTOJUQGkpZzfFC86sEQWsYhWZSA3k/0J7IK7/jIvMuB8GwlZT5BNVfEeydoUsFyITUVn34KbInZ7kKZxmJ9oeIVKT6B9V6PJvEBLwIuwWY3yxAkd1YIjeBUc7WaroSxDYgGXAaIJqcwboE5mW379ni0EOdvG1BiC+Wg5wZ291Z0tU7B55KLO5uSUc/LFjGEbWqjp7akx9Q0v4rbl1l9dqZAlrRf27U8cOKU/a4jC+5N4QQr6xqSPHV1tflYpCLPlbffSMyYIYxoze3wpmHMrskLB778fmQPefwJIGIxKpqkaCrVYE+vX5Opk4ByHne8rx1/FIcPi7em575stxA==
-X-Gm-Message-State: AOJu0YzMd7Gs6UtSeFhGnZjYj4qXsihrnPKo4fpw94lolZiRv9Anvbih
-	O8eMTpXtPqE5t7Hh03t6bwHzDmUINeLbZbIquG4NnbB2AM9/IEJw
-X-Google-Smtp-Source: AGHT+IHfVxi0Lmy20qi3zZkkAs93779qbLSUYFgab3guGNLSJuv1zXb2yWVvs5PzjNax6/VrOLGUkw==
-X-Received: by 2002:a05:6000:e90:b0:367:9748:ee7f with SMTP id ffacd0b85a97d-367cead931emr3298090f8f.65.1720607838413;
-        Wed, 10 Jul 2024 03:37:18 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:d1a7:2644:c75e:c5ee])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfab6d3sm4896005f8f.112.2024.07.10.03.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 03:37:17 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-doc@vger.kernel.org,  linux-alpha@vger.kernel.org,
-  linux-mips@vger.kernel.org,  linux-parisc@vger.kernel.org,
-  sparclinux@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
-  linux-arch@vger.kernel.org,  linux-kselftest@vger.kernel.org,
-  bpf@vger.kernel.org,  linux-media@vger.kernel.org,
-  dri-devel@lists.freedesktop.org,  Jakub Kicinski <kuba@kernel.org>,
-  "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>,  Paolo Abeni <pabeni@redhat.com>,  Jonathan Corbet
- <corbet@lwn.net>,  Richard Henderson <richard.henderson@linaro.org>,  Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>,  Matt Turner <mattst88@gmail.com>,
-  Thomas Bogendoerfer <tsbogend@alpha.franken.de>,  "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,  Helge Deller <deller@gmx.de>,
-  Andreas Larsson <andreas@gaisler.com>,  Jesper Dangaard Brouer
- <hawk@kernel.org>,  Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-  Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Arnd Bergmann <arnd@arndb.de>,  Steffen
- Klassert <steffen.klassert@secunet.com>,  Herbert Xu
- <herbert@gondor.apana.org.au>,  David Ahern <dsahern@kernel.org>,  Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>,  Shuah Khan
- <shuah@kernel.org>,  Sumit Semwal <sumit.semwal@linaro.org>,  =?utf-8?Q?C?=
- =?utf-8?Q?hristian_K=C3=B6nig?= <christian.koenig@amd.com>,  Bagas Sanjaya
- <bagasdotme@gmail.com>,
-  Christoph Hellwig <hch@infradead.org>,  Nikolay Aleksandrov
- <razor@blackwall.org>,  Taehee Yoo <ap420073@gmail.com>,  Pavel Begunkov
- <asml.silence@gmail.com>,  David Wei <dw@davidwei.uk>,  Jason Gunthorpe
- <jgg@ziepe.ca>,  Yunsheng Lin <linyunsheng@huawei.com>,  Shailend Chand
- <shailend@google.com>,  Harshitha Ramamurthy <hramamurthy@google.com>,
-  Shakeel Butt <shakeel.butt@linux.dev>,  Jeroen de Borst
- <jeroendb@google.com>,  Praveen Kaligineedi <pkaligineedi@google.com>,
-  Stanislav Fomichev <sdf@google.com>
-Subject: Re: [PATCH net-next v16 02/13] net: netdev netlink api to bind
- dma-buf to a net device
-In-Reply-To: <20240710001749.1388631-3-almasrymina@google.com> (Mina Almasry's
-	message of "Wed, 10 Jul 2024 00:17:35 +0000")
-Date: Wed, 10 Jul 2024 11:30:12 +0100
-Message-ID: <m25xtd1qvf.fsf@gmail.com>
-References: <20240710001749.1388631-1-almasrymina@google.com>
-	<20240710001749.1388631-3-almasrymina@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        bh=tNjSkQwizLNbQa5se+hi01VHwZjYhY67+rGFTrRRUkQ=;
+        b=FTDic1BQdZDZ6AYURCAc861PDcd0Vf9LpGdqwfJxD0tbEPM0lni1HGAjQzfdUNG43r
+         +ZkBEeGOAFu6+iabV65ZXmxNn/Mwgo3kWl7yuq5ptmbhyhn7i6eXe/cE0mN6IeYd4ht5
+         5z8hNhUwJjo/TG4DcJstow6RBcI02skYzqGp8q9u6Kt2v3wLxw5TqfaI9SLABgoqN/L5
+         9ZhKedsgZ2Nz7ESg2E3FpT9TILcqIAXFbxhKoVOIp+/mXtsZQDoifh/b8RfYjSz/tvTP
+         rmFiaWobgF3gxsrq6vFvGj+ZqU1gw7cMAZWGmM9vcQ5Y17POe9KOXCz/Xq10PNzN16eZ
+         tSKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtTCuJAeGDuXgVkxX8mEN8i/kpy6jCjtzSdw9a8DQ4c2mBPX1rpiKxZYfLA/2ccKk9EoUsq92GN2O7r3XrNvxMfX3wr3ITPSXFWtMm
+X-Gm-Message-State: AOJu0YyhoEmPPzQXVHOAF6BeUahh5tFWUxyBGSMbfH7mm2wyBAr/g97b
+	vV+9z6E+7Ya93l3FVXYLM7wCcXiZsdhLPgTxZZMzyEPM/Pb3zLi0jQSUt7XjvLE=
+X-Google-Smtp-Source: AGHT+IF1y9iDPWiYEM6tYZdmRHCVfRdbkv3CjvdtnEdn+QEvGUarG3cgVTM8QFUjJmxfLPir+zCYAg==
+X-Received: by 2002:a17:906:35d5:b0:a6f:52db:7e5e with SMTP id a640c23a62f3a-a780b6b1d06mr352407566b.19.1720607969687;
+        Wed, 10 Jul 2024 03:39:29 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a7fef9dsm149865966b.99.2024.07.10.03.39.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 03:39:29 -0700 (PDT)
+Message-ID: <f5ed3285-82da-4ba8-9b4d-a0cc7323fde4@linaro.org>
+Date: Wed, 10 Jul 2024 12:39:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64: dts: qcom: sa8775p: Add UART node
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Viken Dadhaniya <quic_vdadhani@quicinc.com>, andersson@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com
+References: <20240710094149.13299-1-quic_vdadhani@quicinc.com>
+ <2e309d52-8180-4922-9a5a-022fc8bf8ef5@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
+ BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
+ HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
+ TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
+ zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
+ MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
+ t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
+ UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
+ aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
+ kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
+ Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
+ R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
+ BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
+ yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
+ xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
+ 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
+ GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
+ mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
+ x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
+ BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
+ mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
+ Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
+ xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
+ AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
+ 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
+ jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
+ cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
+ jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
+ cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
+ bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
+ YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
+ bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
+ nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
+ izWDgYvmBE8=
+In-Reply-To: <2e309d52-8180-4922-9a5a-022fc8bf8ef5@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Mina Almasry <almasrymina@google.com> writes:
+On 10.07.2024 11:47 AM, Krzysztof Kozlowski wrote:
+> On 10/07/2024 11:41, Viken Dadhaniya wrote:
+>> Add missing UART configuration for sa8775.
+>>
+>> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 231 ++++++++++++++++++++++++++
+>>  1 file changed, 231 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+>> index 23f1b2e5e624..c107ee40341d 100644
+>> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+>> @@ -1,6 +1,7 @@
+>>  // SPDX-License-Identifier: BSD-3-Clause
+>>  /*
+>>   * Copyright (c) 2023, Linaro Limited
+>> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>>   */
+>>  
+>>  #include <dt-bindings/interconnect/qcom,icc.h>
+>> @@ -657,6 +658,21 @@
+>>  				status = "disabled";
+>>  			};
+>>  
+>> +			uart14: serial@880000 {
+>> +				compatible = "qcom,geni-uart";
+>> +				reg = <0x0 0x00880000 0x0 0x4000>;
+>> +				interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
+>> +				clocks = <&gcc GCC_QUPV3_WRAP2_S0_CLK>;
+>> +				clock-names = "se";
+>> +				interconnects = <&clk_virt MASTER_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS
+>> +						 &clk_virt SLAVE_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS>,
+>> +						<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
+>> +						 &config_noc SLAVE_QUP_2 QCOM_ICC_TAG_ALWAYS>;
+>> +				interconnect-names = "qup-core", "qup-config";
+>> +				power-domains = <&rpmhpd SA8775P_CX>;
+> 
+> All the clocks, interconenct and power domains look to me questionable.
+> AFAIK, most of it (if not all) is going to be removed.
 
-> API takes the dma-buf fd as input, and binds it to the netdevice. The
-> user can specify the rx queues to bind the dma-buf to.
->
-> Suggested-by: Stanislav Fomichev <sdf@google.com>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
+Yeah.. I'm lukewarm on accepting any sa8775p changes until that qcs9100(?)
+situation is squared out first
 
-Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
+Konrad
