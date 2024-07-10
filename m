@@ -1,149 +1,173 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39435192B8F;
-	Wed, 10 Jul 2024 13:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56ADF81723
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720619394; cv=none; b=T8QvDrNUha8Xijq5feZtDTmqrDnRdtfMWF9YYcLjcoVUW9SoRHBeHcRPlu7Fze4c7GlxHLyLPzqv24QwopspKvibIucaKsU6xEecd2KIgd+8DPa0TOR5YBdGYQDG8N+G5yf7Xew+hkfMO7VJTt0q63qZynKo3+Q0Dxk4Oj1Eewo=
+	t=1720619524; cv=none; b=GaB/5eOdZK8tkKw3hD5Mj1LYhDQWag+jRi1JqehDaa5ewotCW8IynjOV/0UuCtFzKdfTdsDQgoAoWsjGL5biqaV4TP4aVLD7WkC5KQshstfK76sdHuhQriVBTtZQ1mheMTxVGh/lIWSUdrXA4yxABAd5e4q54IYSGJOlr19HoMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720619394; c=relaxed/simple;
-	bh=r+F/2KIaBzLyVXXF7GrQxs/ElB49C6RcPCOl+HwspH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ht8gegY0PLyRwAoaH0h2taZWut8vV8f72VQy5qkRjU4g16QrMlNh6O1jDEkmGV93ehSwYTHuNVMKxMyMr9/ePwFRYX5NbwQYLy8jEVQYQX1WJSDM8MOYOyuSRG6cQH0dx1gMUvTaxM5c2+Dq4eI6qFrqlRZfp0Dq+Jusg4kZ5HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=s3pJ9YQz; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1720619524; c=relaxed/simple;
+	bh=j0eXykdnRIlbr1rB3yho86bg+xuhpJM7RF/337+HIGU=;
+	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YaeXJ2WHJbS1OvbS60CEAz8EmIIwKfwPloKrTh62mry4c+cMLaAgURY2MJXIu6Xx0k/Hw62KDFGU0szb6n6sepaS0Sgz3fz0UndHB4OsiseMEe2NnRLmqNzRDYU7FGhAhMdiFmVgcD1z8XtdlR2vnqc5NhnWR9+3VT2AG2bMRbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jLX3OLpI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="s3pJ9YQz"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 78CC088025;
-	Wed, 10 Jul 2024 15:49:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1720619390;
-	bh=rd4U7AAXKGsH3PODWZxvkjHuRjt4mypiIDTO9ncI2LM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s3pJ9YQz61kH/L5aa6Claj18i83b1CazGcaOz3W/Jm3ut3G550mhGFpLp1Ky8s4yG
-	 LVCcuQJan5dVHjZ0b5BS4xtGaP78vIamzk7k0NP+gbfvr/CSNDUz2nT9ILD6PuxnA1
-	 cIFlk60uAuSJ1RboocHz3pGHKSjZnG0i7JgDTyxxggrVYS/JiR78OZeIyOzbEsf30U
-	 bmLjpxlw+lR5FGjW6npJaE5zwQAmcjMMfryUZEhekOp7vvepsVJsMG6FIUxSbImUjM
-	 f3yKWvXOfYiOePhiqPCekrqoYvYY1ISNYJG+JDWpYt7HKTE7JZToD9RXpAOKKatXZR
-	 nX4NLlqxw6qWQ==
-Date: Wed, 10 Jul 2024 15:49:37 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, Heiner Kallweit
- <hkallweit1@gmail.com>, Christian Marangi <ansuelsmth@gmail.com>, Jakub
- Kicinski <kuba@kernel.org>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
- Daniel Golle <daniel@makrotopia.org>, Li Zetao <lizetao1@huawei.com>,
- linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 net-next] leds: trigger: netdev: Add support for
- tx_err and rx_err notification with LEDs
-Message-ID: <20240710154937.0dbcbd0c@wsk>
-In-Reply-To: <8c8ba30d-dbec-47db-ae8c-a734fb2468c0@lunn.ch>
-References: <20240710100651.4059887-1-lukma@denx.de>
-	<8c8ba30d-dbec-47db-ae8c-a734fb2468c0@lunn.ch>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jLX3OLpI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720619522;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ApMfsMbUlfLMAL+cNRnf74nXamuHyvNu+25SQh6Wu4w=;
+	b=jLX3OLpIzx0gynF/8GlAUfuS4dTJaZV5HuXjhrIHfHwa8eAhxXb2T53IPKQawV/QjJDpSt
+	qZ8vTvmV2hCkJzJHgu0nEDHP5j1h3iCtL0cBjItNpX88yUCUIRtwCNpO5Bk52etQOt8M+X
+	qn+mVlJpwzsrMTF3o/7LhAH9kTqPP8o=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-452-2O6WLcz5M36w2U_qX6MwEA-1; Wed, 10 Jul 2024 09:52:00 -0400
+X-MC-Unique: 2O6WLcz5M36w2U_qX6MwEA-1
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-447f9a3d7d1so30787411cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 06:52:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720619520; x=1721224320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:in-reply-to
+         :mime-version:references:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ApMfsMbUlfLMAL+cNRnf74nXamuHyvNu+25SQh6Wu4w=;
+        b=XfB8rPeJvfSPGuYQwK5xNMxgKkwNnD/9sfWHBGvqVldHQqFVP+dw03t3u45CQTdane
+         8wHOmrRI3XbWmS6Sc10oSb/r14V4bPyLa0JTmpCnTIf7aL+JvjsU3cQk6l7LIfhelkRT
+         yLOb3bE7GxxCs81f5KclBKlX5qTl4j92aAnABCdavaJaL9AF0vv2e/KqXNX/jJmDOEqC
+         Z/ymB2J57pT0LC1rXJLDog0d2qLVRt5Rl4u0uF/Q6Qa3mH+O0lOINjKMlx2+RKhoRZv9
+         a4FW8qcMH7SJllpTuET1qj7ecuiStjzuAz7+hzimNNCLeEsyGfJgVU0udRKRAJ8mpHd7
+         czNw==
+X-Forwarded-Encrypted: i=1; AJvYcCURBBhLyo50Djp/RuuUdylOG21lb32eQsaeID8OM28ZD4PsslrRfl03xB1ibrO9rH1Jeuzgy3WQlKyLkfLEw6kvia4wBZus3Jg0uEoJ
+X-Gm-Message-State: AOJu0YzbtuxMuuBkVCrlrXcUzFEOegVrGXh4e9CdZ/Hbz9aDzkoojmPi
+	GC051loCj8sudLXjOaL6KbmaTEA4Fzr27z13G8NH8xrcNje3yyDpHnXaJqfa1S9W9HesX8KfseF
+	qmFqybJdd8JTeUvr9rsmETTSejLNuIdIE9NGaiSKOeRMShLYME2NlnVtso7K0PXlY9twyHBWn6k
+	sp9a7+DyWCRb40guz4i+p9bZAaOsIJpGHzB2GS
+X-Received: by 2002:a05:6214:626:b0:6b5:e3fe:e734 with SMTP id 6a1803df08f44-6b61bc7ef71mr59088406d6.3.1720619520267;
+        Wed, 10 Jul 2024 06:52:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEa/uNBVy9JK1Eb3gOwOVU+yq2jPR+jnCOWvV4+ZWsu0Ac7Bh4ZQxgFgXkK6zrvJbrbrjP9wgEgnpY0qMqgDRY=
+X-Received: by 2002:a05:6214:626:b0:6b5:e3fe:e734 with SMTP id
+ 6a1803df08f44-6b61bc7ef71mr59088266d6.3.1720619520013; Wed, 10 Jul 2024
+ 06:52:00 -0700 (PDT)
+Received: from 311643009450 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 10 Jul 2024 13:51:59 +0000
+From: =?UTF-8?Q?Adri=C3=A1n_Moreno?= <amorenoz@redhat.com>
+References: <20240710090742.1657606-1-amorenoz@redhat.com> <172061821475.5582.9226948763101271068@kwain.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/70z+RmfJzPl5=n.1MdvKHZn";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-
---Sig_/70z+RmfJzPl5=n.1MdvKHZn
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <172061821475.5582.9226948763101271068@kwain.local>
+Date: Wed, 10 Jul 2024 13:51:59 +0000
+Message-ID: <CAG=2xmNR8Uw2Ecw=NS5BoRGoWWp7hJgd4zxKTRbSrq+VVKq5Uw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: psample: fix flag being set in wrong skb
+To: Antoine Tenart <atenart@kernel.org>
+Cc: netdev@vger.kernel.org, Yotam Gigi <yotam.gi@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Ido Schimmel <idosch@nvidia.com>, 
+	Eelco Chaudron <echaudro@redhat.com>, Aaron Conole <aconole@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Wed, Jul 10, 2024 at 03:30:14PM GMT, Antoine Tenart wrote:
+> Hi Adri=C3=A1n,
+>
+> Quoting Adrian Moreno (2024-07-10 11:07:42)
+> > A typo makes PSAMPLE_ATTR_SAMPLE_RATE netlink flag be added to the wron=
+g
+> > sk_buff.
+> >
+> > Fix the error and make the input sk_buff pointer "const" so that it
+> > doesn't happen again.
+> >
+> > Also modify OVS psample test to verify the flag is properly emitted.
+>
+> I don't see that part; although it can be sent as a follow-up and not
+> part of the fix.
 
-> On Wed, Jul 10, 2024 at 12:06:51PM +0200, Lukasz Majewski wrote:
-> > This patch provides support for enabling blinking of LEDs when RX
-> > or TX errors are detected.
-> >=20
-> > Approach taken in this patch is similar to one for TX or RX data
-> > transmission indication (i.e. TRIGGER_NETDEV_TX/RX attribute).
-> >=20
-> > One can inspect transmission errors with:
-> > ip -s link show eth0
-> >=20
-> > Example LED configuration:
-> > cd /sys/devices/platform/amba_pl@0/a001a000.leds/leds/
-> > echo netdev > mode:blue/trigger && \
-> > echo eth0 > mode:blue/device_name && \
-> > echo 1 > mode:blue/tx_err =20
->=20
-> When i look at the machines around me, they all have an error count of
-> 0.=20
+Yep. Sorry I was planning to add it to the fix but thought it was better
+off as a follow-up. I should have removed this comment.
 
-This is mostly true for ethernet. However, it happens on some low-level
-drivers that errors field is not zero when e.g. the received frame is
-malformed due to harsh work environment.
+>
+> Thanks,
+> Antoine
+>
+> > Fixes: 7b1b2b60c63f ("net: psample: allow using rate as probability")
+> > Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+> > ---
+> >  include/net/psample.h | 8 +++++---
+> >  net/psample/psample.c | 7 ++++---
+> >  2 files changed, 9 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/include/net/psample.h b/include/net/psample.h
+> > index c52e9ebd88dd..5071b5fc2b59 100644
+> > --- a/include/net/psample.h
+> > +++ b/include/net/psample.h
+> > @@ -38,13 +38,15 @@ struct sk_buff;
+> >
+> >  #if IS_ENABLED(CONFIG_PSAMPLE)
+> >
+> > -void psample_sample_packet(struct psample_group *group, struct sk_buff=
+ *skb,
+> > -                          u32 sample_rate, const struct psample_metada=
+ta *md);
+> > +void psample_sample_packet(struct psample_group *group,
+> > +                          const struct sk_buff *skb, u32 sample_rate,
+> > +                          const struct psample_metadata *md);
+> >
+> >  #else
+> >
+> >  static inline void psample_sample_packet(struct psample_group *group,
+> > -                                        struct sk_buff *skb, u32 sampl=
+e_rate,
+> > +                                        const struct sk_buff *skb,
+> > +                                        u32 sample_rate,
+> >                                          const struct psample_metadata =
+*md)
+> >  {
+> >  }
+> > diff --git a/net/psample/psample.c b/net/psample/psample.c
+> > index f48b5b9cd409..a0ddae8a65f9 100644
+> > --- a/net/psample/psample.c
+> > +++ b/net/psample/psample.c
+> > @@ -360,8 +360,9 @@ static int psample_tunnel_meta_len(struct ip_tunnel=
+_info *tun_info)
+> >  }
+> >  #endif
+> >
+> > -void psample_sample_packet(struct psample_group *group, struct sk_buff=
+ *skb,
+> > -                          u32 sample_rate, const struct psample_metada=
+ta *md)
+> > +void psample_sample_packet(struct psample_group *group,
+> > +                          const struct sk_buff *skb, u32 sample_rate,
+> > +                          const struct psample_metadata *md)
+> >  {
+> >         ktime_t tstamp =3D ktime_get_real();
+> >         int out_ifindex =3D md->out_ifindex;
+> > @@ -498,7 +499,7 @@ void psample_sample_packet(struct psample_group *gr=
+oup, struct sk_buff *skb,
+> >                 goto error;
+> >
+> >         if (md->rate_as_probability)
+> > -               nla_put_flag(skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
+> > +               nla_put_flag(nl_skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
+> >
+> >         genlmsg_end(nl_skb, data);
+> >         genlmsg_multicast_netns(&psample_nl_family, group->net, nl_skb,=
+ 0,
+> > --
+> > 2.45.2
+> >
+> >
+>
 
-> Do you have a real customer use case for this?=20
-
-Yes.
-
-The problem is apparent mostly with can interfaces and transmission for
-it.
-
-> What sort of systems
-> do you have which do have sufficient errors to justify an LED?
-
-In my case it is an embedded industrial/automotive controller with 10+
-RGB LEDs. It only has LEDs to communicate with user.
-
-The way how and when they blink shows the status of the device.
-
-With this patch one is able to spot if some transmission is failing
-(among other things).
-
->=20
-> There is no standardisation of LEDs. Every vendor implements something
-> different. What i don't want is lots of different blink patterns,
-> which nobody ever uses.
-
-As you can assess from the code - this patch extends neatly the current
-code, with use case valid for my customer.
-
->=20
-> 	Andrew
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/70z+RmfJzPl5=n.1MdvKHZn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmaOkXEACgkQAR8vZIA0
-zr0jLAf/XZ+qitmpuHL0G7qOdb9cqtFnbmKWcGmxPHRaoksiIj315x7N9uiINrEP
-wh2rbqSseQq2ZZEGP/JopmsCJVGrDEW6LpJM5AZOlRRYWhmwLPW/AHgyrSNx6p4h
-KBgZA4jjjOgdC6xztzNzTMbIDKXHOXDVTQHROHYr3XHivp07x+ZB682NY0Hu51aL
-0kZdP35GOfrGlo/Sylbx0kwlJ8KSbWQaKNtDSjRnInGno4vnFgMnrxPVrYs7QNhe
-BqXzt3/VoEQH7RRcfNEiTXgAvNnMgrUAqCIkUWsqsFMj9CQQWyeo7plyTdzPdh19
-624Ompi6jxeJTUjC6rCqHZu8EShGAg==
-=4gdM
------END PGP SIGNATURE-----
-
---Sig_/70z+RmfJzPl5=n.1MdvKHZn--
