@@ -1,65 +1,71 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201C0D535
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 21:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC0E12FB31
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 21:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720647368; cv=none; b=VzB5xcmsjFG+wa4Rbl17/fc8jnD4jx6VYbFodxPamNKXljeV4Ox2fXo9N4alMbHKuHJhdun4lSJEXFuRLYB0ArnveQtm3BepHGsksY50dAEvazgbCyZs4DJfEGnpOygq+xkjUvArjkLvBBYRfsMW0n6HFr77wQxvr66uW1Zezao=
+	t=1720647370; cv=none; b=PB1Z0dPV7dmepLE2CcaQTlAk6pedtsWYDo6XN5M7Y+VoOyMDrLvXJQLGXS+2pkpdLXIT0XBTD9Yr9gWkkCgWQPNtnb4r5sqIF8iND/nbwIfjQ1qRbbx1IZMMdHPblk629p7UX6soCqdOHs/Uvba/WSSB/3dj1IyQ4qafcwPRHRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720647368; c=relaxed/simple;
-	bh=n/m9HkSOMmRaMGMms2bR9C366NqARG97kbpDgVzcgfg=;
+	s=arc-20240116; t=1720647370; c=relaxed/simple;
+	bh=UwINd/1rcWL4hkNdPe+avjy4QtRQ3WHNZFHXTjmTdGY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXDww4eantbTyY7530WMnO4XBrGKUgNoJj0OJTFKGJjAG/VCQyNuUI5lhX4sFE8tEHVMyU5uUSZW5XIX6CfS8iHDliFW4mu++dXKJtGapw8USZeGkH8uOEbP1AMbsRC68nhcHfzNh2uvILvapSBcB4CJuPeBXnhlPXmdFCSndBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kzZV56Er; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kYdzlBBd9r5Uj+ldpM2oAmlo3ihCNS07aW6YDqBXST1eFSDgfG9pj29FMNUoFeIXc+/34EvIK2IL1G9Ni7CyY+ne9hYkSkvYyE13zqWUux6ePd+Esw4dWVWrr0XMSj7D71oZugXpMdlkjeHDthrlLLKqeqtXDmClOYYVzd48x/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YVeuBr8a; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzZV56Er"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb4a332622so992045ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720647366; x=1721252166; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=neoSmIQD9fiLUW0JU5eiOnLcyT1Su7MFLG8PD6ZE0Sg=;
-        b=kzZV56ErUXITElErwIfZL4SxK93rqGhtBEt+QC3WxSiPQqU0yBURDWKUv2i9JRnD1m
-         RFjdWPhhbZl5e7GfgMycVgFSz+yFLlE7mK/nj+cF5WqYkL900ErVEA8u4FP33jqQP3Dq
-         YoMOGCvnnenUUSd4B2/Uf4RuU7IlojQzwWhRSGC6Aeqk4SvYzFRsRO3Lc1WLRrJ2MXMs
-         kFkzqmxp7rS27bL+SBv0bcCU7j+KIhxmJUmzm3N65ppRfwJK+esTsXmIFLVZAL3AkQ5K
-         ZM3HKdO8Phcxd+fjlFc4cG1gpoAfOj6xuhyBL1dazDCczqktPaGCQv4AhQSMySDwrcBj
-         FczQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720647366; x=1721252166;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=neoSmIQD9fiLUW0JU5eiOnLcyT1Su7MFLG8PD6ZE0Sg=;
-        b=uVVd8vbyfx2Gp9Sxy2ZItl+phEW6PcWcT8B1lbZN4UN5bZQo/vCik3ho38GsBs43g4
-         m4LZ3WMVHHl9MJ1wR+kHEc1JIZbook/XzfxXH9JI8dGo7FtFuRdrZy0aH6bKTrOYfcAz
-         mGvKEIrk855RfwJSEPg2SrShXLzk0g3SDwD0sEBOVBCJumxOnvDk75mFwU+fF871R0gy
-         5k9SO5gyTau6DED4vMljx2ihtyHnD0n3fXAB+R3rBYQnv5OO7hy04vKwirjX0S2zlesJ
-         MCTdg80dUG+oRgkRccUfK6SH2zBs/ZunYxYRA1IHGavqAGZY/rasFk2C2pHcFEORUnrO
-         nE6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXF/GWQnZqF+ir7i17Y75hVhhgWyTBeo1LEiY18brbbWtLl5cDHd6mEDXLRFPG8Gee3oobnvEsFzAvbesUYsJLIT8r2fe1lpD2Rzd7t
-X-Gm-Message-State: AOJu0YzFKzD761O+AkQL4Bvb+wHJdcs+OrsKN/ZGL6DuWsPzbpQBIztz
-	JdRA9CC0Nc3eV/n5ifGxW+31Eb9AR5CcpOJ4X8Jd3tku3anPCQiS
-X-Google-Smtp-Source: AGHT+IE6MKZr+hsRKsCdU1IHNJ855fgshln8OWlyyfh4JG7Ez2Z5JXXJsHZr5fmgGpaCN6UcLT558w==
-X-Received: by 2002:a17:902:cec4:b0:1fb:58e3:7197 with SMTP id d9443c01a7336-1fbb6ee1dd5mr59821215ad.66.1720647366316;
-        Wed, 10 Jul 2024 14:36:06 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a0fb67sm38228865ad.4.2024.07.10.14.36.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 14:36:05 -0700 (PDT)
-Date: Wed, 10 Jul 2024 14:36:04 -0700
-From: Yury Norov <yury.norov@gmail.com>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: linux@rasmusvillemoes.dk, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Remove unnecessary int cast in variable_fls()
-Message-ID: <Zo7-xDMFXVpIqyuR@yury-ThinkPad>
-References: <20240710202416.710880-3-thorsten.blum@toblux.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YVeuBr8a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720647367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UwINd/1rcWL4hkNdPe+avjy4QtRQ3WHNZFHXTjmTdGY=;
+	b=YVeuBr8atoNUPbkZrWsZbs4PRf8bKW99GFYRRzuferPD6kLKNM8NSNr8qv2gbpgDN1UFNS
+	lAfeQXUeZVoW3Xjahjl54Y8Sf0PkJt7X64S82hFjk3rKrueG4Qp+1H8f3+CWxfB96bplvl
+	xm8pock5Pr7U491qs5sE+nMfpB2bOnk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-WyQ7EOp7OJq6o4au8hBwYA-1; Wed,
+ 10 Jul 2024 17:36:04 -0400
+X-MC-Unique: WyQ7EOp7OJq6o4au8hBwYA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2DFB1955F40;
+	Wed, 10 Jul 2024 21:36:01 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C1FEC3000181;
+	Wed, 10 Jul 2024 21:35:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 10 Jul 2024 23:34:25 +0200 (CEST)
+Date: Wed, 10 Jul 2024 23:34:19 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Julian Orth <ju.orth@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 2/2] kernel: rerun task_work while freezing in
+ get_signal()
+Message-ID: <20240710213418.GH9228@redhat.com>
+References: <658da3fe-fa02-423b-aff0-52f54e1332ee@gmail.com>
+ <Zo1ntduTPiF8Gmfl@slm.duckdns.org>
+ <20240709190743.GB3892@redhat.com>
+ <d2667002-1631-4f42-8aad-a9ea56c0762b@gmail.com>
+ <20240709193828.GC3892@redhat.com>
+ <d9c00f01-576c-46cd-a88c-76e244460dac@gmail.com>
+ <Zo3bt3AJHSG5rVnZ@slm.duckdns.org>
+ <933e7957-7a73-4c9a-87a7-c85b702a3a32@gmail.com>
+ <20240710191015.GC9228@redhat.com>
+ <Zo7e8RQQfG7U5fuT@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,35 +74,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240710202416.710880-3-thorsten.blum@toblux.com>
+In-Reply-To: <Zo7e8RQQfG7U5fuT@slm.duckdns.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, Jul 10, 2024 at 10:24:18PM +0200, Thorsten Blum wrote:
-> __builtin_clz() returns an int and casting the whole expression to int
-> is unnecessary. Remove it.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+On 07/10, Tejun Heo wrote:
+>
+> Hello,
+>
+> On Wed, Jul 10, 2024 at 09:10:16PM +0200, Oleg Nesterov wrote:
+> ...
+> > If nothing else. CRIU needs to attach and make this task TASK_TRACED, right?
+>
+> Yeah, AFAIK, that's the only way to implement check-pointing for now.
 
-Added in bitmap-for-next for testing.
+OK,
+
+> > And once the target task is traced, it won't react to task_work_add(TWA_SIGNAL).
+>
+> I don't know how task_work is being used but the requirement would be that
+> if a cgroup is frozen, task_works shouldn't be making state changes which
+> can't safely be replayed (e.g. by restarting the frozen syscalls).
+
+Well, in theory task_work can do "anything".
+
+Of course, it can't, say, restart a frozen syscall, task_work_run() just
+executes the callbacks in kernel mode and returns.
+
+> it'd be better to freeze them together.
+
+And I tend to agree. simply beacase do_freezer_trap() (and more users of
+clear_thread_flag(TIF_SIGPENDING) + schedule(TASK_INTERRUPTIBLE) pattern)
+do not take TIF_NOTIFY_SIGNAL into account.
+
+But how do you think this patch can make the things worse wrt CRIU ?
+
+And let's even forget this patch which fixes the real problem.
+How do you think the fact that the task sleeping in do_freezer_trap()
+can react to TIF_NOTIFY_SIGNAL, call task_work_run(), and then sleep
+in do_freezer_trap() again can make any difference in this sense?
+
+> As this thing is kinda difficult to reason about,
+
+Agreed,
+
+> it'd probably be easier to just freeze them together if we can.
+
+Agreed, but this needs some "generic" changes while Pavel needs a
+simple and backportable workaround to suppress a real problem.
+
+In short, I don't like this patch either, I just don't see a better
+solution for now ;)
 
 Thanks,
-Yury
 
-> ---
->  arch/riscv/include/asm/bitops.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
-> index 880606b0469a..71af9ecfcfcb 100644
-> --- a/arch/riscv/include/asm/bitops.h
-> +++ b/arch/riscv/include/asm/bitops.h
-> @@ -170,7 +170,7 @@ static __always_inline int variable_fls(unsigned int x)
->  ({								\
->  	typeof(x) x_ = (x);					\
->  	__builtin_constant_p(x_) ?				\
-> -	 (int)((x_ != 0) ? (32 - __builtin_clz(x_)) : 0)	\
-> +	 ((x_ != 0) ? (32 - __builtin_clz(x_)) : 0)		\
->  	 :							\
->  	 variable_fls(x_);					\
->  })
-> -- 
-> 2.45.2
+Oleg.
+
