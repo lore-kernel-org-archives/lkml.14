@@ -1,130 +1,88 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp88.iad3b.emailsrvr.com (smtp88.iad3b.emailsrvr.com [146.20.161.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70321848E
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 17:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE961922DC
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720634393; cv=none; b=YM2oZ0zvXx2HXfrbPNNOmdGPj/7BerMjpgOVCiLhpoT97DfAeTkH++vGq3/uiXZdBcwgmAbwp2jwi+LuPaWXQuAajG93/vEIWHiMua09sFxh68+2O+DGfu1tRjgzEKvaBlXvTJVoXKAca36g5J1iuHApKEDrfO1SYf682JYAvCI=
+	t=1720634522; cv=none; b=nVGyRy+p/pqIHrHA2ejQIWiTHHNqg457VV3ZVT9EkME5CIrAFMybJTQXZnMqmH89edtqNkscBXYSJS4JFTMLey6VyFfEoWro2xfGwQV8qIhhtsfkelwIqMqEFtzi9jZIzXu0vpaN5zLty3rbCWwhwf6dx6eoRRn8ZdlAhVbgmuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720634393; c=relaxed/simple;
-	bh=GAPNZcvser605hEu4iiSAliRidVEuPdS1XtY2MqVrAE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tKwCNjzyTUqzXVL9u8duCsrSrEILG6foXRfEJBuI4l9abCRLZMELZ3TtQdjZweAMKTFMUvorFysnCP9q2efRsV3ZUifKvjISWG74UUbpT5373WM1yx8YD4e8JKyyrjsLZCdWlNjFdxSwUj00cqE8sd1HsqWVcYw7QD8G3o+r/0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CbYZH1Gl; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720634522; c=relaxed/simple;
+	bh=HoXdi8YDPzKPfOk1K5QZ/YKUnApGodxvc1GCh+obPAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UgrsSujmXrnkv9EYkVNCWResoVgbWR3YDqSzkbkE1psl1OTV5PvTriwwydPGC59+7PK+aWeShkP1ctcvMZwvZvSGV9XJaD2Rwj9S9vCVBk9VlX/4x5xqjFY/1bwohly//0J8tHvKNGrVEumPyoN6xXmvSDVaDbQOxq4U2oyR6DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=A7ZmCc8l; arc=none smtp.client-ip=146.20.161.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CbYZH1Gl"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-447df43324fso25211cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720634391; x=1721239191; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aF3CnZV7DMRprpGI4b2ruu391JiaLKZraUtA5FT1zY0=;
-        b=CbYZH1GlTCNaWQB0ahc8iHfcCt+3P3MDXCRP82n14F5kkJJMReAdDHX4bdfP7QgmVS
-         UqeExnPbn2RgSoWqJL8OA/UnJDqC2RtMpcYtwVw1H6gYJrJknye6eMnkAHDuD7ZUWuKl
-         jscTZQHRKtPW1NNo035do4C5pxSfLr0nHofQnR42X7l275lTYyvQPvsId4Gdf7CzYYbV
-         RPYKn0Au8cg3WU6E0w1cuiBlFL+3WVVdB5A5f8bSfqpu+MnpnspiLEh2A+9cT5FLm0e4
-         QdFwUpSYsxOJ4DFaYaQ2/0h+Ly1wr5zIGiN/KRrSkzX+6W/JGtPIqssnH49SS1BkhA2/
-         Yh+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720634391; x=1721239191;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aF3CnZV7DMRprpGI4b2ruu391JiaLKZraUtA5FT1zY0=;
-        b=Xl3YQMMOnoO1+ykngmnpFNl6FWFWcWrZqWDPhzbC0xTuMp28U5OhoP1oh8KwMnBMFU
-         OSgTMIKtmuIh2K20p5CrnF6AgLYp+lf9P07AaAR3jgzNzymuSj5nnSC1eJ4twsGW28DS
-         VXotu4MVUxVwrEbPGnqyKy9P5EVFYxbCRKiPr5lPXM6H/AFE8iFcAoKCrvkSxbPsrS+K
-         /qFqbiOhZkRG3wc/t6QHfaOGvv+0O4ziImMAg7XONYlu11PjXfU9s9sbsiGPcPrtWrEM
-         wU4Pd+TIsltxruw5lhL+2uonRqROC1xDIB0jDusBrkLjmaCQByyCA/v5yckMMR8/MOlV
-         ImWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRfYTQuKCV+obaw1WHuVROJOlhsqmaC7NOwcZdvNQ0tVTkyH5nihsRtybCJIu6wROLbB0oIKKF+CcnupWlqbJHjeWK6C4+4XA2F958
-X-Gm-Message-State: AOJu0YxJnL9vuMpAy9CQIeQ+1I5Dfl2+FGA0EIE5K8lnPX3dzNQPYNeQ
-	8b9IrOimHM7O6r2CKJh6GtOKpMjgEIKFhgPvrJaxgcRPGZcFpPtUoxh+T6TnqoE/W8QSQfhnZ2D
-	IXRgsAu1ymSB7TQF9Lh1Ab9y77JBRtTbFf/+Q
-X-Google-Smtp-Source: AGHT+IFUgm6+kfvtUIojSaSP1JNb9q6BBsgws+EhCtSdyUEJErn22fh9KctlnFuqFkqK/lTFoiBrWOKvvJfQy5snASE=
-X-Received: by 2002:ac8:6887:0:b0:447:d7ff:961d with SMTP id
- d75a77b69052e-44d11893b0dmr61151cf.9.1720634391141; Wed, 10 Jul 2024 10:59:51
- -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="A7ZmCc8l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1720633977;
+	bh=HoXdi8YDPzKPfOk1K5QZ/YKUnApGodxvc1GCh+obPAw=;
+	h=From:To:Subject:Date:From;
+	b=A7ZmCc8li9EupPTQhsSsAfWXZ10ZKV0ajZ3P6AGlhKtifUZavAL1wXVjDUbILoOxL
+	 14xV39isjJN5WoT7gzx06zxypGTHvsSzmBHj7waYdV34bw6g2XOTQbhUt2gLlX2qIw
+	 REz+SVd+4g2KMx85vYfdYHYZnaySs09S63BQfBZ8=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp20.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id D7C82A019C;
+	Wed, 10 Jul 2024 13:52:56 -0400 (EDT)
+From: Ian Abbott <abbotti@mev.co.uk>
+To: linux-rtc@vger.kernel.org
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org,
+	Ian Abbott <abbotti@mev.co.uk>,
+	stable@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mark Brown <broonie@kernel.org>
+Subject: [RESEND PATCH] rtc: ds1343: Force SPI chip select to be active high
+Date: Wed, 10 Jul 2024 18:52:07 +0100
+Message-ID: <20240710175246.3560207-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240604020549.1017540-1-yuanchu@google.com> <20240604020549.1017540-2-yuanchu@google.com>
-In-Reply-To: <20240604020549.1017540-2-yuanchu@google.com>
-From: Yu Zhao <yuzhao@google.com>
-Date: Wed, 10 Jul 2024 11:59:13 -0600
-Message-ID: <CAOUHufb_2kRGV50FyV6Wf4eCdeOUaXvV2-hdznH1bFP4XzYp+g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] mm: multi-gen LRU: ignore non-leaf pmd_young for force_scan=true
-To: Yuanchu Xie <yuanchu@google.com>
-Cc: David Hildenbrand <david@redhat.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, 
-	Khalid Aziz <khalid.aziz@oracle.com>, Henry Huang <henry.hj@antgroup.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Gregory Price <gregory.price@memverge.com>, 
-	Huang Ying <ying.huang@intel.com>, Muhammad Usama Anjum <usama.anjum@collabora.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, Wei Xu <weixugc@google.com>, 
-	David Rientjes <rientjes@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Shuah Khan <shuah@kernel.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Matthew Wilcox <willy@infradead.org>, Sudarshan Rajagopalan <quic_sudaraja@quicinc.com>, 
-	Kairui Song <kasong@tencent.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Vasily Averin <vasily.averin@linux.dev>, Nhat Pham <nphamcs@gmail.com>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	Abel Wu <wuyun.abel@bytedance.com>, "Vishal Moola (Oracle)" <vishal.moola@gmail.com>, 
-	Kefeng Wang <wangkefeng.wang@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: cd498383-a11f-45b4-a4c9-74a0458dea8a-1-1
 
-On Mon, Jun 3, 2024 at 8:06=E2=80=AFPM Yuanchu Xie <yuanchu@google.com> wro=
-te:
->
-> When non-leaf pmd accessed bits are available, MGLRU page table walks
-> can clear the non-leaf pmd accessed bit and ignore the accessed bit on
-> the pte if it's on a different node, skipping a generation update as
-> well. If another scan occurrs on the same node as said skipped pte.
-> the non-leaf pmd accessed bit might remain cleared and the pte accessed
-> bits won't be checked. While this is sufficient for reclaim-driven
-> aging, where the goal is to select a reasonably cold page, the access
-> can be missed when aging proactively for workingset estimation of a of a
-> node/memcg.
->
-> In more detail, get_pfn_folio returns NULL if the folio's nid !=3D node
-> under scanning, so the page table walk skips processing of said pte. Now
-> the pmd_young flag on this pmd is cleared, and if none of the pte's are
-> accessed before another scan occurrs on the folio's node, the pmd_young
-> check fails and the pte accessed bit is skipped.
->
-> Since force_scan disables various other optimizations, we check
-> force_scan to ignore the non-leaf pmd accessed bit.
->
-> Signed-off-by: Yuanchu Xie <yuanchu@google.com>
-> ---
->  mm/vmscan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index d55e8d07ffc4..73f3718b33f7 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -3548,7 +3548,7 @@ static void walk_pmd_range(pud_t *pud, unsigned lon=
-g start, unsigned long end,
->
->                 walk->mm_stats[MM_NONLEAF_TOTAL]++;
->
-> -               if (should_clear_pmd_young()) {
-> +               if (!walk->force_scan && should_clear_pmd_young()) {
->                         if (!pmd_young(val))
->                                 continue;
+Commit 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
+bit-flips (^=) the existing SPI_CS_HIGH setting in the SPI mode during
+device probe.  This will set it to the wrong value if the spi-cs-high
+property has been set in the devicetree node.  Just force it to be set
+active high and get rid of some commentary that attempted to explain why
+flipping the bit was the correct choice.
 
-What about the other should_clear_pmd_young() in walk_pmd_range_locked()?
+Fixes: 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
+Cc: <stable@vger.kernel.org> # 5.6+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+---
+ drivers/rtc/rtc-ds1343.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-With that and the typos fixed, we should probably split this patch
-out, since it can get reviewed and merged independently.
+diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
+index ed5a6ba89a3e..484b5756b55c 100644
+--- a/drivers/rtc/rtc-ds1343.c
++++ b/drivers/rtc/rtc-ds1343.c
+@@ -361,13 +361,10 @@ static int ds1343_probe(struct spi_device *spi)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	/* RTC DS1347 works in spi mode 3 and
+-	 * its chip select is active high. Active high should be defined as
+-	 * "inverse polarity" as GPIO-based chip selects can be logically
+-	 * active high but inverted by the GPIO library.
++	/*
++	 * RTC DS1347 works in spi mode 3 and its chip select is active high.
+ 	 */
+-	spi->mode |= SPI_MODE_3;
+-	spi->mode ^= SPI_CS_HIGH;
++	spi->mode |= SPI_MODE_3 | SPI_CS_HIGH;
+ 	spi->bits_per_word = 8;
+ 	res = spi_setup(spi);
+ 	if (res)
+-- 
+2.43.0
+
