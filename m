@@ -1,86 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D4F13DBA7;
-	Wed, 10 Jul 2024 21:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8461D535
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 21:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720646819; cv=none; b=k+XU9bXWYVGEyigUo9S8/GFRd8hFlpPyvZqMo8Ok0b/svxOTSAFTgBu3C6QAeJRyepalpDcEIDSbBQOxFVgGPdikAOrqXsY48WvF6O3zqTHSeyUJRXUtYlG+joG/wWrCw+83kYv8Neb76O/56eE1RiQri4xyfU8bn7eY5w3Sdg4=
+	t=1720647334; cv=none; b=WZTdOT19H1r4QOLHemhRE0SfwK6v3oeU43J4yZe5/Im+p5785aPP/4KYbFgzDRv2MofmsXFoTyazPMoSseWgp+9sPaT6NR6tMxyUoGA31m5+vl1npP5R4aESFc42vF0FmH1MI3qJghV4/xN6RddApoqry1hJbZkYGSHcjunJ5GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720646819; c=relaxed/simple;
-	bh=UyV9QbskN7z87S59wOHZ2z6ufUHkf36Y+JyJjuFAzSU=;
+	s=arc-20240116; t=1720647334; c=relaxed/simple;
+	bh=Pi8WdlhTSSJvc9pv+3NmsA4JZvFP5qgK2wjgiLuWAsg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsGifh9f80+ssDYFgEXxou+TgF48pJPrassXa6lQq7/16ZlaSzRrVkFSPXiW7yM7I3xtHIZd/6cqQM8iVioVTyBV/YYBbP3INxEXk1W6hPL2+1E3s8k8zhJBhQ0hg35qvm+24IBDV3CXTa8FqUaQLUVEcScRcs3SaxsRufSdVbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pPZwmdAC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ergtk1jd9tx2GCKf8LlPmgUikSR3OpnqCEx5hojSJEPevhhSYsZlx4nsUjOPV7822hjVEzW5vmRW7LpF40WfLish6VoYTt7oecavWqt72T7mLkDWBzCnFWyab5B4noMzMLwerAQTIANsH1Vgz+IdAcF8g53XUHqI4w8sz5MXkaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VYWV0kp3; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pPZwmdAC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83EDCC32781;
-	Wed, 10 Jul 2024 21:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720646818;
-	bh=UyV9QbskN7z87S59wOHZ2z6ufUHkf36Y+JyJjuFAzSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pPZwmdACIM5CFKtV379ANRxnTOElJ/KOZO8aepw99FFFLmxpWtFWz1WrZ9AT64Oja
-	 07Wtlhw27CDzKBZMWvsaZNko9mwmH4NrjAdwxhc4OpAxPh5eMdr9Z4mrc5OgcMjhbP
-	 9fu/M+OZVbJ4x8b3bu2kbvmf/oqbJR4Tj9gxFDPomiN8EYJ2N4B9METkFfbbvcIWDe
-	 N9xoZRYzOxv1OHS7Xeb2kyo6x3OClcnBl+z2Wn37ZNKWk1PjpRgqGR9lMpArrcW2CD
-	 zeWKZPv+0ILdSC98Vpz7cNE0OEGJqDz+0/cbSuYKzKilHHT1gCt1pcBXwUDB1/f9ZG
-	 z8clcEP33kTyw==
-Date: Wed, 10 Jul 2024 15:26:57 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Michael Walle <michael@walle.cc>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mtd@lists.infradead.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Conor Dooley <conor+dt@kernel.org>, u-boot@lists.denx.de,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: nvmem: convert U-Boot env to a layout
-Message-ID: <172064681629.3804403.16986704276630415661.robh@kernel.org>
-References: <20240705225821.13196-1-zajec5@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYWV0kp3"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fb64d627b0so1265255ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720647332; x=1721252132; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+mh1YKAf63/S0XqtjUv8ftSMZW1U9zvPprxysY5clxE=;
+        b=VYWV0kp3iTIuIf4r3KVfFO6L6vcj/sAro/X7kKhoAjzSDEViEfxZDOQHyY+EAMQhuy
+         PGDpWGOsbAD0NNg88C7pTlYu4S8U7oQ1AwRTVxyawZg7tCAOmNvFaooP+1wYFYCYL3A7
+         cA199NCEWhXZFm1aiGrWNMHEVsN94GGq5cWbjE4Q3kTaGWHQdNzoLDaRj4NyVhBjx+9O
+         ackoXx+9hdmJcw4JA5Lfu32flF/WZ3F1aL/0G1HTMka2Pgd44FqI4nGpj3uHa95rFXg7
+         3QoWN1vv19wbkWQTgy8/4AEzwR2pJAmXlESKaNJRwxkw7KfhJBsXJ2wVj1W+gvDZhbwu
+         tVRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720647332; x=1721252132;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+mh1YKAf63/S0XqtjUv8ftSMZW1U9zvPprxysY5clxE=;
+        b=GKKmbJJH8JU9bUvIXgeqAU9djyQSCU1TVml2GUcH296BM3giVCuTT45dW2XabcoLLC
+         cyBBWtxFPKRYH3rax32rCL9aDbLea1m9/heG5LdchuJZrBwwxDQJkJIwLuYdDUoRaUsD
+         mfdgIAWqKY52TNrev7Pb9b2HI9J8JpBMa1zCeL6Lcse9+2+x0Cv4MwVfR7EjReYPvN3/
+         CKLhHonpYMurQ/4sLnrgrG+h9PLWsV/emcJwZ6YzeY8rFz4uzDdVX3RhML7ReRiBY3CM
+         F4PaIRBMzeyQt7ld3NkAfPV7XYiJrLMkv+tWQgCwum5YkBEltr1+UEyh0iNgzq3ZvEKz
+         iuVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXyQEOTxwWxVhpc7OkJapGvSoprTxsGzWWYcmuf0EAV29K/qyhSY39PPWE3xa25zMp+NDQrYDHL4/8xBbUsvqz0ehR7+uvfha5a0Y1
+X-Gm-Message-State: AOJu0YxZ3KdPSXSXqjpz056e0YpFsk0i4350BNuiSjT9vg8T/ZnvKR2L
+	SIgPPAdFQuWL0Wo8Zs2iz2kUINZZRt0iex/bEof9+mfETV+ZnTkp
+X-Google-Smtp-Source: AGHT+IHowEDtJHIVcOWj6cqfwZrZrnbWPf45TqOG8gduFJR1xDuf3YYCdYvQmPQZ1poRSpRSm8iDmA==
+X-Received: by 2002:a17:903:1205:b0:1fb:4c2e:9803 with SMTP id d9443c01a7336-1fbb6cda8a4mr64193975ad.10.1720647328154;
+        Wed, 10 Jul 2024 14:35:28 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab6d80sm38250885ad.170.2024.07.10.14.35.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 14:35:27 -0700 (PDT)
+Date: Wed, 10 Jul 2024 14:35:25 -0700
+From: Yury Norov <yury.norov@gmail.com>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux@rasmusvillemoes.dk, willy@infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] radix tree test suite: put definition of
+ bitmap_clear() into lib/bitmap.c
+Message-ID: <Zo7-ndzkju1QT0j-@yury-ThinkPad>
+References: <20240710172701.21339-1-richard.weiyang@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240705225821.13196-1-zajec5@gmail.com>
+In-Reply-To: <20240710172701.21339-1-richard.weiyang@gmail.com>
 
+On Wed, Jul 10, 2024 at 05:27:01PM +0000, Wei Yang wrote:
+> In tools/ directory, function bitmap_clear() is currently only used in
+> object file tools/testing/radix-tree/xarray.o.
+> 
+> But instead of keeping a bitmap.c with only bitmap_clear() definition in
+> radix-tree's own directory, it would be more proper to put it in common
+> directory lib/.
+> 
+> Sync the kernel definition and link some related libs, no functional
+> change is expected.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> CC: Matthew Wilcox <willy@infradead.org>
+> CC: Yury Norov <yury.norov@gmail.com>
 
-On Sat, 06 Jul 2024 00:58:21 +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> U-Boot environment variables can be stored in various data sources. MTD
-> is just one of available options. Refactor DT binding into a layout so
-> it can be used with UBI volumes and other NVMEM devices.
-> 
-> Link: https://lore.kernel.org/all/20231221173421.13737-1-zajec5@gmail.com/
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
-> I'm sending this PATCH without Linux changes to see if this is the
-> right approach - for developers and (DT) maintainers to review it first.
-> 
-> My previous attempt (see above Link) turned out in refusal so I'm just
-> trying to save some time in case this one goes wrong as well.
-> 
-> Hopefully the included example (which I really think we should add)
-> explains well how I think this binding should be used with layouts.
-> 
-> If I get some positive feedback I'll work on V2 with actual Linux
-> changes.
-> 
->  .../bindings/nvmem/layouts/nvmem-layout.yaml  |  1 +
->  .../nvmem/{ => layouts}/u-boot,env.yaml       | 39 ++++++++++++++++---
->  2 files changed, 35 insertions(+), 5 deletions(-)
->  rename Documentation/devicetree/bindings/nvmem/{ => layouts}/u-boot,env.yaml (75%)
-> 
+Added in bitmap-for-next for testing.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-
+Thanks,
+Yury
