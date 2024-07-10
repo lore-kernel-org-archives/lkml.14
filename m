@@ -1,151 +1,94 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79138190065;
-	Wed, 10 Jul 2024 10:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F600190067;
+	Wed, 10 Jul 2024 10:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720607570; cv=none; b=d9eCLe8JOURHjG3byiX7yzUrPlAoIpYZBPW62JrcCzyb+g7qPTO1Tj2Xk71cbfHoItPqs4EeiEzjd1mqHx7PDtQLg4f/30Y+okS3BO146QJ1voRk1ILUTTZimhAjEaikFsBbNBEyQawfJfrVNUeF5ZfXDA89mkdS5Iemt8vUcMg=
+	t=1720607677; cv=none; b=UtRMxsfija5MmxT5M2ThJsOKAgEjpMp4IXsEwHbaSwMPR5kEoESOK68Itf1MbGvkxGlfIv93S7YMpyanpnBHK9Zqx38LkscRbRoOMMXF2S+Sklx+R0Q1euAb3ctz+mnfpwJWj+I4jweKnd5XKejlmmsxf8JTTsfirG4x9uVBRqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720607570; c=relaxed/simple;
-	bh=GtPqLH122YgjqgF69TVvAppi2h6zg9IU9emM4Tzc250=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qwsV2dVFFM1h2z9kIePrCUwtLQg7VAtb1sSEOaa6KBOB5RIw2jYiMRZmlZrWzUU0oRs/lqZpNCgJ5qp6xULO6nd+mcrETmQ5oxk4nSW1AA6JkBv0sflKDrNWdicQYjdzIMqD7Bnc+W9dCNUJuaPLZcrl8ZLDZfGO1jM9B7ykYkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VPAsbDCS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VPAsbDCS"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46A3fjw3003747;
-	Wed, 10 Jul 2024 10:32:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XExWwft4m5iQfH/7ODHt9hnjXEKAS2TbNGnSurKGohs=; b=VPAsbDCS9EPO/xol
-	dWWx7Q1rIL6x+xk6lsNIV5g+5+7XOtMkTh+/actDBJIomoayN7gKsnvN/czht+03
-	3cAtqangqC/DAdS0pwzBQjxb9XDBfVfJJL8d2scBpP7O0WlxFOGDYULBrpAteTUw
-	bUr/oxzg+y/S9yGdChGiereKYNdzXai25oZB4nUYBDr+efnffRYbkfVaEDzZk4hu
-	B/g2HdiM5PXGr2bgBTm01y+SyCtc4d3n5N3NCyKC9zoPVlFRoqQ1lB+ZrSwmzRAC
-	PvhaBmZCcsA7Eci9I8oynQlwt+TI54yHCSGkZNR99e/6bA/UvkpfBfLykD9xsfKg
-	3vQr8A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 408w0rbvdd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 10:32:27 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46AAW7GV003609
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 10:32:07 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Jul
- 2024 03:32:01 -0700
-Message-ID: <8caad754-0fa2-4158-86cd-b04101618638@quicinc.com>
-Date: Wed, 10 Jul 2024 18:31:58 +0800
+	s=arc-20240116; t=1720607677; c=relaxed/simple;
+	bh=5iVCEpSHOTR5t3oDkyI7Mh4X2c3tYcpmu3Xe7ap1nCQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eZvU8Dmn5PnNXIYMx7io4ptzHV9a0mNt2MP0MsrJr4LMcHjL3xAeLbls05RHlmxThrLF7z+YBkjjPFfRWTDQj1e1FwaAKhUWTQ/RPyPUt/q7QQvMAAFVsjd34RGNvKGTZEmSnZm68aWu+IFGFzDctLERhZNSVFMfNHT8KBfai2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowAD3_7eRY45mBMyMAg--.50608S2;
+	Wed, 10 Jul 2024 18:34:03 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: fbarrat@linux.ibm.com,
+	ajd@linux.ibm.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	clombard@linux.vnet.ibm.com,
+	imunsie@au1.ibm.com,
+	mpe@ellerman.id.au,
+	manoj@linux.vnet.ibm.com
+Cc: linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] cxl: Fix possible null pointer dereference in read_handle()
+Date: Wed, 10 Jul 2024 18:33:52 +0800
+Message-Id: <20240710103352.1890726-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: qcom-ep: Add support for QCS9100
- SoC
-To: Bjorn Helgaas <helgaas@kernel.org>, Tengfei Fan <quic_tengfan@quicinc.com>
-CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Lorenzo
- Pieralisi" <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <kernel@quicinc.com>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240709162831.GA176079@bhelgaas>
-Content-Language: en-US
-From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-In-Reply-To: <20240709162831.GA176079@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: HNumWH53y7d5tM552AkK3NtSI1ADf3VW
-X-Proofpoint-GUID: HNumWH53y7d5tM552AkK3NtSI1ADf3VW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-10_06,2024-07-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407100072
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAD3_7eRY45mBMyMAg--.50608S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFWDGF18Kr1DAFy5Zw47Arb_yoWkurc_uF
+	47Xr1xW34jgr12kw1Y9r43Zrnav3ykuF95Zr4Sqay3K345AF1Yqr1SvrZYvwnrXr45ZFWD
+	Cw1qg3sa9w12gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+	YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7VUbHa0DUUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
+In read_handle(), of_get_address() may return NULL which is later
+dereferenced. Fix this by adding NULL check.
 
+Cc: stable@vger.kernel.org
+Fixes: 14baf4d9c739 ("cxl: Add guest-specific code")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+Changes in v2:
+- The potential vulnerability was discovered as follows: based on our 
+customized static analysis tool, extract vulnerability features[1], and 
+then match similar vulnerability features in this function.
+- Reference link:
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=2d9adecc88ab678785b581ab021f039372c324cb
+---
+ drivers/misc/cxl/of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 7/10/2024 12:28 AM, Bjorn Helgaas wrote:
-> On Tue, Jul 09, 2024 at 10:53:43PM +0800, Tengfei Fan wrote:
->> Add devicetree bindings support for QCS9100 SoC. It has DMA register
->> space and dma interrupt to support HDMA.
-> 
-> s/dma/DMA/ above for consistency.
-> 
-> Add blank line here if this is a paragraph break.
-> 
->> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
->> platform use non-SCMI resource. In the future, the SA8775p platform will
->> move to use SCMI resources and it will have new sa8775p-related device
->> tree. Consequently, introduce "qcom,qcs9100-pcie-ep" to describe non-SCMI
->> based PCIe.
-> 
-> s/drived/derived/
-> 
-> This patch doesn't add anything related to SCMI, so this paragraph
-> seems like a distraction.
-
-The paragraph can be removed from the commit message in next patchsets.
-Let me know if others looks good to you or not.
-> 
-> The first paragraph seems a bit of a distraction too, since the patch
-> doesn't say anything about DMA register space or interrupt.
-
-agree. Suggest to remove the first paragraph as well.
-> 
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->> index 46802f7d9482..8012663e7efc 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->> @@ -13,6 +13,7 @@ properties:
->>    compatible:
->>      oneOf:
->>        - enum:
->> +          - qcom,qcs9100-pcie-ep
->>            - qcom,sa8775p-pcie-ep
->>            - qcom,sdx55-pcie-ep
->>            - qcom,sm8450-pcie-ep
->> @@ -203,6 +204,7 @@ allOf:
->>          compatible:
->>            contains:
->>              enum:
->> +              - qcom,qcs9100-pcie-ep
->>                - qcom,sa8775p-pcie-ep
->>      then:
->>        properties:
->>
->> -- 
->> 2.25.1
->>
-
+diff --git a/drivers/misc/cxl/of.c b/drivers/misc/cxl/of.c
+index bcc005dff1c0..d8dbb3723951 100644
+--- a/drivers/misc/cxl/of.c
++++ b/drivers/misc/cxl/of.c
+@@ -58,7 +58,7 @@ static int read_handle(struct device_node *np, u64 *handle)
+ 
+ 	/* Get address and size of the node */
+ 	prop = of_get_address(np, 0, &size, NULL);
+-	if (size)
++	if (!prop || size)
+ 		return -EINVAL;
+ 
+ 	/* Helper to read a big number; size is in cells (not bytes) */
 -- 
-Thx and BRs,
-Aiqun(Maria) Yu
+2.25.1
+
