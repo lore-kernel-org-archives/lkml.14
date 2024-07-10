@@ -1,274 +1,444 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960731DDC5
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780281DDC5;
+	Wed, 10 Jul 2024 13:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618031; cv=none; b=EvI3sXbMdG4+qfCLLZFOJS1UIsOAHzjJBEENs1aInKDEXBGr/RJC730CgIQkxUPojxR3PNhBGbkb7L0U5NEu2jj9Hvi/OaXiE8iGxGy/5AW1VG3m4+Y9HNLsodw2T8qKHiiTXD0cyyqQT5JvCyWBb0zxlXmsZKoO93EwzfGUdn0=
+	t=1720618148; cv=none; b=n69A/zIrL2kSl2ZWfCiOpnd5G+ryGKyTJaOdCOO521MeH0ur7iAxa6gCABsqNqlv/Oilp0JD3kq+20oWe6x2IbmaebAsPfjBOWBYv6V6X1I4zRaYfomtVAlhxgJTo7IwVuJgVASMzVyz4XFYLzbk+q3PvDyiWvAoyU3QTnpO3rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618031; c=relaxed/simple;
-	bh=UNsXxnrRStkdEmctUxdgHywps83zZJ/TlY0S14ZRfQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXKZll1Nr+5zmHiBbT+6b4WSw3Db0DEjsOirmuyliY7eN9f2equvCEcd4XmBih+MEUyPPWwoM7RMnf9fjAFQOoptVOgEKoWArFrAUlj+wUKBoxnYP5k1Gh+8z038WU+oRcoo7fJdTAGHjbtBbFhC0SFeQIIxI1ExjsCNf9FYdqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i+I04Zyv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i+I04Zyv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6212C32781;
-	Wed, 10 Jul 2024 13:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720618031;
-	bh=UNsXxnrRStkdEmctUxdgHywps83zZJ/TlY0S14ZRfQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i+I04Zyv6/oseALRLTcXVX55eL5COjUGfws+ReRKLdg2y2CRfUmCajgPNRr1P3R2o
-	 ivOIFfzVi87DqucGFnoXqZ12cZjwfU8VSYU8kT4OEUz0X6s0zlS4JzUL0jEtRUAmkW
-	 nWqPKTRWszgnxa2Y35TJeSoi82KOAG7G0cxYLZA0=
-Date: Wed, 10 Jul 2024 15:27:08 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Vamsi Krishna Attunuru <vattunuru@marvell.com>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, Jerin Jacob <jerinj@marvell.com>,
-	Srujana Challa <schalla@marvell.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v10 1/1] misc: mrvl-cn10k-dpi: add Octeon
- CN10K DPI administrative driver
-Message-ID: <2024071053-mahogany-cavalier-6692@gregkh>
-References: <2024070333-matchless-batch-57ec@gregkh>
- <20240706153009.3775333-1-vattunuru@marvell.com>
- <2024071026-squirt-trustful-5845@gregkh>
- <MW4PR18MB52442E363AE0BED30607F251A6A42@MW4PR18MB5244.namprd18.prod.outlook.com>
+	s=arc-20240116; t=1720618148; c=relaxed/simple;
+	bh=kkkadeWsONCZ1GBao8ohHpL1p+uHMOC6ZOIwKVbElr8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qu9zJ4RLlSYkxD6M5p5saaeUuY8t1dMbBl9L8w+4+uQ8MOM8kg80LS/nSlKQz+s4oLG6N3n3kZ8uF1uhzrpfP96SbNh69tvBwj5ozLpRY6S6lCE4KN95UInpfmXFAE53l9Rx/O6x435+ZaBVIFGXH9xtWgeKB+t/myI1lVCFcnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WJzD35Ympz6K9J1;
+	Wed, 10 Jul 2024 21:26:59 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A43901404F5;
+	Wed, 10 Jul 2024 21:29:03 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 10 Jul
+ 2024 14:29:03 +0100
+Date: Wed, 10 Jul 2024 14:29:02 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Alistair Francis <alistair23@gmail.com>
+CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
+	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
+	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
+	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
+	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v14 3/4] PCI/DOE: Expose the DOE features via sysfs
+Message-ID: <20240710142902.00002e1f@Huawei.com>
+In-Reply-To: <20240710023310.480713-3-alistair.francis@wdc.com>
+References: <20240710023310.480713-1-alistair.francis@wdc.com>
+	<20240710023310.480713-3-alistair.francis@wdc.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <MW4PR18MB52442E363AE0BED30607F251A6A42@MW4PR18MB5244.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Jul 10, 2024 at 01:19:56PM +0000, Vamsi Krishna Attunuru wrote:
+On Wed, 10 Jul 2024 12:33:09 +1000
+Alistair Francis <alistair23@gmail.com> wrote:
+
+> The PCIe 6 specification added support for the Data Object
+> Exchange (DOE).
+> When DOE is supported the DOE Discovery Feature must be implemented per
+> PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
+> information about the other DOE features supported by the device.
+> 
+> The kernel is already querying the DOE features supported and cacheing
+> the values. Expose the values in sysfs to allow user space to
+> determine which DOE features are supported by the PCIe device.
+> 
+> By exposing the information to userspace tools like lspci can relay the
+> information to users. By listing all of the supported features we can
+> allow userspace to parse the list, which might include
+> vendor specific features as well as yet to be supported features.
+> 
+> As the DOE Discovery feature must always be supported we treat it as a
+> special named attribute case. This allows the usual PCI attribute_group
+> handling to correctly create the doe_features directory when registering
+> pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
+> will seg fault).
+> 
+> After this patch is supported you can see something like this when
+> attaching a DOE device
+> 
+> $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
+> 0001:01        0001:02        doe_discovery
+> 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v14:
+>  - Revert back to v12 with extra pci_remove_resource_files() call
+You should probably document why here given there isn't a cover letter
+to do so in.
+
+J
+
+> v13:
+>  - Drop pci_doe_sysfs_init() and use pci_doe_sysfs_group
+>      - As discussed in https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
+>        we can just modify pci_doe_sysfs_group at the DOE init and let
+>        device_add() handle the sysfs attributes.
+> v12:
+>  - Drop pci_doe_features_sysfs_attr_visible()
+> v11:
+>  - Gracefully handle multiple entried of same feature
+>  - Minor fixes and code cleanups
+> v10:
+>  - Rebase to use DEFINE_SYSFS_GROUP_VISIBLE and remove
+>    special setup function
+> v9:
+>  - Add a teardown function
+>  - Rename functions to be clearer
+>  - Tidy up the commit message
+>  - Remove #ifdef from header
+> v8:
+>  - Inlucde an example in the docs
+>  - Fixup removing a file that wasn't added
+>  - Remove a blank line
+> v7:
+>  - Fixup the #ifdefs to keep the test robot happy
+> v6:
+>  - Use "feature" instead of protocol
+>  - Don't use any devm_* functions
+>  - Add two more patches to the series
+> v5:
+>  - Return the file name as the file contents
+>  - Code cleanups and simplifications
+> v4:
+>  - Fixup typos in the documentation
+>  - Make it clear that the file names contain the information
+>  - Small code cleanups
+>  - Remove most #ifdefs
+>  - Remove extra NULL assignment
+> v3:
+>  - Expose each DOE feature as a separate file
+> v2:
+>  - Add documentation
+>  - Code cleanups
 > 
 > 
-> >-----Original Message-----
-> >From: Greg KH <gregkh@linuxfoundation.org>
-> >Sent: Wednesday, July 10, 2024 6:28 PM
-> >To: Vamsi Krishna Attunuru <vattunuru@marvell.com>
-> >Cc: arnd@arndb.de; Jerin Jacob <jerinj@marvell.com>; Srujana Challa
-> ><schalla@marvell.com>; linux-kernel@vger.kernel.org
-> >Subject: [EXTERNAL] Re: [PATCH v10 1/1] misc: mrvl-cn10k-dpi: add Octeon
-> >CN10K DPI administrative driver
-> >
-> >On Sat, Jul 06, 2024 at 08: 30: 09AM -0700, Vamsi Attunuru wrote: > Adds a
-> >misc driver for Marvell CN10K DPI(DMA Engine) device's physical > function
-> >which initializes DPI DMA hardware's global configuration and > enables
-> >hardware mailbox 
-> >On Sat, Jul 06, 2024 at 08:30:09AM -0700, Vamsi Attunuru wrote:
-> >> Adds a misc driver for Marvell CN10K DPI(DMA Engine) device's physical
-> >> function which initializes DPI DMA hardware's global configuration and
-> >> enables hardware mailbox channels between physical function (PF) and
-> >> it's virtual functions (VF). VF device drivers (User space drivers)
-> >> use this hw mailbox to communicate any required device configuration
-> >> on it's respective VF device. Accordingly, this DPI PF driver
-> >> provisions the VF device resources.
-> >>
-> >> At the hardware level, the DPI physical function (PF) acts as a
-> >> management interface to setup the VF device resources, VF devices are
-> >> only provisioned to handle or control the actual DMA Engine's data transfer
-> >capabilities.
-> >>
-> >> Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
-> >> Reviewed-by: Srujana Challa <schalla@marvell.com>
-> >> ---
-> >> Changes V9 -> V10
-> >> - Added checks to ensure reserved fields are set to 0
-> >>
-> >> Changes V8 -> V9:
-> >> - Addressed minor comments
-> >>
-> >> Changes V7 -> V8:
-> >> - Used bit shift operations to access mbox msg fields
-> >> - Removed bitfields in mailbox msg structure
-> >>
-> >> Changes V6 -> V7:
-> >> - Updated documentation with required references
-> >> - Addressed V6 review comments
-> >>
-> >> Changes V5 -> V6:
-> >> - Updated documentation
-> >> - Fixed data types in uapi file
-> >>
-> >> Changes V4 -> V5:
-> >> - Fixed license and data types in uapi file
-> >>
-> >> Changes V3 -> V4:
-> >> - Moved ioctl definations to .h file
-> >> - Fixed structure alignements which are passed in ioctl
-> >>
-> >> Changes V2 -> V3:
-> >> - Added ioctl operation to the fops
-> >> - Used managed version of kzalloc & request_irq
-> >> - Addressed miscellaneous comments
-> >>
-> >> Changes V1 -> V2:
-> >> - Fixed return values and busy-wait loops
-> >> - Merged .h file into .c file
-> >> - Fixed directory structure
-> >> - Removed module params
-> >> - Registered the device as misc device
-> >>
-> >>  Documentation/misc-devices/index.rst          |   1 +
-> >>  Documentation/misc-devices/mrvl_cn10k_dpi.rst |  52 ++
-> >>  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
-> >>  MAINTAINERS                                   |   5 +
-> >>  drivers/misc/Kconfig                          |  14 +
-> >>  drivers/misc/Makefile                         |   1 +
-> >>  drivers/misc/mrvl_cn10k_dpi.c                 | 676 ++++++++++++++++++
-> >>  include/uapi/misc/mrvl_cn10k_dpi.h            |  39 +
-> >>  8 files changed, 789 insertions(+)
-> >>
-> >> diff --git a/Documentation/misc-devices/index.rst
-> >> b/Documentation/misc-devices/index.rst
-> >> index 2d0ce9138588..8c5b226d8313 100644
-> >> --- a/Documentation/misc-devices/index.rst
-> >> +++ b/Documentation/misc-devices/index.rst
-> >> @@ -21,6 +21,7 @@ fit into other categories.
-> >>     isl29003
-> >>     lis3lv02d
-> >>     max6875
-> >> +   mrvl_cn10k_dpi
-> >>     oxsemi-tornado
-> >>     pci-endpoint-test
-> >>     spear-pcie-gadget
-> >> diff --git a/Documentation/misc-devices/mrvl_cn10k_dpi.rst
-> >> b/Documentation/misc-devices/mrvl_cn10k_dpi.rst
-> >> new file mode 100644
-> >> index 000000000000..a75e372723d8
-> >> --- /dev/null
-> >> +++ b/Documentation/misc-devices/mrvl_cn10k_dpi.rst
-> >> @@ -0,0 +1,52 @@
-> >> +.. SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +===============================================
-> >> +Marvell CN10K DMA packet interface (DPI) driver
-> >> +===============================================
-> >> +
-> >> +Overview
-> >> +========
-> >> +
-> >> +DPI is a DMA packet interface hardware block in Marvell's CN10K silicon.
-> >> +DPI hardware comprises a physical function (PF), its virtual
-> >> +functions, mailbox logic, and a set of DMA engines & DMA command
-> >queues.
-> >> +
-> >> +DPI PF function is an administrative function which services the
-> >> +mailbox requests from its VF functions and provisions DMA engine
-> >> +resources to it's VF functions.
-> >> +
-> >> +mrvl_cn10k_dpi.ko misc driver loads on DPI PF device and services the
-> >> +mailbox commands submitted by the VF devices and accordingly
-> >> +initializes the DMA engines and VF device's DMA command queues. Also,
-> >> +driver creates /dev/mrvl-cn10k-dpi node to set DMA engine and PEM
-> >> +(PCIe interface) port attributes like fifo length, molr, mps & mrrs.
-> >> +
-> >> +DPI PF driver is just an administrative driver to setup its VF
-> >> +device's queues and provisions the hardware resources, it cannot
-> >> +initiate any DMA operations. Only VF devices are provisioned with DMA
-> >capabilities.
-> >> +
-> >> +Driver location
-> >> +===============
-> >> +
-> >> +drivers/misc/mrvl_cn10k_dpi.c
-> >> +
-> >> +Driver IOCTLs
-> >> +=============
-> >> +
-> >> +:c:macro::`DPI_MPS_MRRS_CFG`
-> >> +ioctl that sets max payload size & max read request size parameters
-> >> +of a pem port to which DMA engines are wired.
-> >> +
-> >> +
-> >> +:c:macro::`DPI_ENGINE_CFG`
-> >> +ioctl that sets DMA engine's fifo sizes & max outstanding load
-> >> +request thresholds.
-> >> +
-> >> +User space code example
-> >> +=======================
-> >> +
-> >> +DPI VF devices are probed and accessed from user space applications
-> >> +using vfio-pci driver. Below is a sample dpi dma application to
-> >> +demonstrate on how applications use mailbox and ioctl services from DPI
-> >PF kernel driver.
-> >> +
-> >> +https://urldefense.proofpoint.com/v2/url?u=https-
-> >3A__github.com_Marve
-> >> +llEmbeddedProcessors_dpi-2Dsample-
-> >2Dapp&d=DwIBAg&c=nKjWec2b6R0mOyPaz7
-> >>
-> >+xtfQ&r=WllrYaumVkxaWjgKto6E_rtDQshhIhik2jkvzFyRhW8&m=bFx_7eltw7S
-> >6zzVu
-> >>
-> >+1LNEdtsbwwynJfAKTja649QUwGNU_y4uWqGoEZ4f7JluYLjX&s=wOMzADbq
-> >9f4xxz1Oug
-> >> +-slj_xy4ZcbrnWfQJWeO0_ugA&e=
-> >> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> >> b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> >> index a141e8e65c5d..def539770439 100644
-> >> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> >> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> >> @@ -362,6 +362,7 @@ Code  Seq#    Include File
-> >Comments
-> >>  0xB6  all    linux/fpga-dfl.h
-> >>  0xB7  all    uapi/linux/remoteproc_cdev.h                            <mailto:linux-
-> >remoteproc@vger.kernel.org>
-> >>  0xB7  all    uapi/linux/nsfs.h                                       <mailto:Andrei Vagin
-> ><avagin@openvz.org>>
-> >> +0xB8  01-02  uapi/misc/mrvl_cn10k_dpi.h                              Marvell CN10K DPI
-> >driver
-> >>  0xC0  00-0F  linux/usb/iowarrior.h
-> >>  0xCA  00-0F  uapi/misc/cxl.h
-> >>  0xCA  10-2F  uapi/misc/ocxl.h
-> >> diff --git a/MAINTAINERS b/MAINTAINERS index
-> >> aae88b7a6c32..2c17d651954a 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -13477,6 +13477,11 @@ S:	Supported
-> >>  F:	Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
-> >>  F:	drivers/mmc/host/sdhci-xenon*
-> >>
-> >> +MARVELL OCTEON CN10K DPI DRIVER
-> >> +M:	Vamsi Attunuru <vattunuru@marvell.com>
-> >> +S:	Supported
-> >> +F:	drivers/misc/mrvl_cn10k_dpi.c
-> >> +
-> >>  MATROX FRAMEBUFFER DRIVER
-> >>  L:	linux-fbdev@vger.kernel.org
-> >>  S:	Orphan
-> >> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig index
-> >> faf983680040..965641017a62 100644
-> >> --- a/drivers/misc/Kconfig
-> >> +++ b/drivers/misc/Kconfig
-> >> @@ -585,6 +585,20 @@ config NSM
-> >>  	  To compile this driver as a module, choose M here.
-> >>  	  The module will be called nsm.
-> >>
-> >> +config MARVELL_CN10K_DPI
-> >> +	tristate "Octeon CN10K DPI driver"
-> >> +	depends on ARM64 && PCI
-> >
-> >Why does ARM64 matter here?  I don't see any dependency required of it.
-> >
-> Thanks, Greg, for your time. This DPI device is an on-chip PCIe device and only present on
-> Marvell's CN10K platforms(which are 64-bit ARM SoC processors), so added those dependency.
+>  Documentation/ABI/testing/sysfs-bus-pci |  28 +++++
+>  drivers/pci/doe.c                       | 151 ++++++++++++++++++++++++
+>  drivers/pci/pci-sysfs.c                 |  15 +++
+>  drivers/pci/pci.h                       |  10 ++
+>  4 files changed, 204 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index ecf47559f495..65a3238ab701 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -500,3 +500,31 @@ Description:
+>  		console drivers from the device.  Raw users of pci-sysfs
+>  		resourceN attributes must be terminated prior to resizing.
+>  		Success of the resizing operation is not guaranteed.
+> +
+> +What:		/sys/bus/pci/devices/.../doe_features
+> +Date:		May 2024
+> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+> +Description:
+> +		This directory contains a list of the supported
+> +		Data Object Exchange (DOE) features. The features are
+> +		the file name. The contents of each file is the raw vendor id and
+> +		data object feature values.
+> +
+> +		The value comes from the device and specifies the vendor and
+> +		data object type supported. The lower (RHS of the colon) is
+> +		the data object type in hex. The upper (LHS of the colon)
+> +		is the vendor ID.
+> +
+> +		As all DOE devices must support the DOE discovery protocol, if
+> +		DOE is supported you will at least see the doe_discovery file, with
+> +		this contents
+> +
+> +		# cat doe_features/doe_discovery
+> +		0001:00
+> +
+> +		If the device supports other protocols you will see other files
+> +		as well. For example is CMA/SPDM and secure CMA/SPDM are supported
+> +		the doe_features directory will look like this
+> +
+> +		# ls doe_features
+> +		0001:01        0001:02        doe_discovery
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index defc4be81bd4..580370dc71ee 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -14,6 +14,7 @@
+>  
+>  #include <linux/bitfield.h>
+>  #include <linux/delay.h>
+> +#include <linux/device.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/mutex.h>
+>  #include <linux/pci.h>
+> @@ -47,6 +48,7 @@
+>   * @wq: Wait queue for work item
+>   * @work_queue: Queue of pci_doe_work items
+>   * @flags: Bit array of PCI_DOE_FLAG_* flags
+> + * @sysfs_attrs: Array of sysfs device attributes
+>   */
+>  struct pci_doe_mb {
+>  	struct pci_dev *pdev;
+> @@ -56,6 +58,10 @@ struct pci_doe_mb {
+>  	wait_queue_head_t wq;
+>  	struct workqueue_struct *work_queue;
+>  	unsigned long flags;
+> +
+> +#ifdef CONFIG_SYSFS
+> +	struct device_attribute *sysfs_attrs;
+> +#endif
+>  };
+>  
+>  struct pci_doe_feature {
+> @@ -92,6 +98,151 @@ struct pci_doe_task {
+>  	struct pci_doe_mb *doe_mb;
+>  };
+>  
+> +#ifdef CONFIG_SYSFS
+> +static ssize_t doe_discovery_show(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  char *buf)
+> +{
+> +	return sysfs_emit(buf, "0001:00\n");
+> +}
+> +DEVICE_ATTR_RO(doe_discovery);
+> +
+> +static struct attribute *pci_doe_sysfs_feature_attrs[] = {
+> +	&dev_attr_doe_discovery.attr,
+> +	NULL
+> +};
+> +
+> +static bool pci_doe_features_sysfs_group_visible(struct kobject *kobj)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
+> +		if (!xa_empty(&doe_mb->feats))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
+> +
+> +const struct attribute_group pci_doe_sysfs_group = {
+> +	.name	    = "doe_features",
+> +	.attrs	    = pci_doe_sysfs_feature_attrs,
+> +	.is_visible = SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs),
+> +};
+> +
+> +static ssize_t pci_doe_sysfs_feature_show(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  char *buf)
+> +{
+> +	return sysfs_emit(buf, "%s\n", attr->attr.name);
+> +}
+> +
+> +static void pci_doe_sysfs_feature_remove(struct pci_dev *pdev,
+> +					 struct pci_doe_mb *doe_mb)
+> +{
+> +	struct device_attribute *attrs = doe_mb->sysfs_attrs;
+> +	struct device *dev = &pdev->dev;
+> +	unsigned long i;
+> +	void *entry;
+> +
+> +	if (!attrs)
+> +		return;
+> +
+> +	doe_mb->sysfs_attrs = NULL;
+> +	xa_for_each(&doe_mb->feats, i, entry) {
+> +		if (attrs[i].show)
+> +			sysfs_remove_file_from_group(&dev->kobj, &attrs[i].attr,
+> +						     pci_doe_sysfs_group.name);
+> +		kfree(attrs[i].attr.name);
+> +	}
+> +	kfree(attrs);
+> +}
+> +
+> +static int pci_doe_sysfs_feature_populate(struct pci_dev *pdev,
+> +					  struct pci_doe_mb *doe_mb)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_attribute *attrs;
+> +	unsigned long num_features = 0;
+> +	unsigned long vid, type;
+> +	unsigned long i;
+> +	void *entry;
+> +	int ret;
+> +
+> +	xa_for_each(&doe_mb->feats, i, entry)
+> +		num_features++;
+> +
+> +	attrs = kcalloc(num_features, sizeof(*attrs), GFP_KERNEL);
+> +	if (!attrs)
+> +		return -ENOMEM;
+> +
+> +	doe_mb->sysfs_attrs = attrs;
+> +	xa_for_each(&doe_mb->feats, i, entry) {
+> +		sysfs_attr_init(&attrs[i].attr);
+> +		vid = xa_to_value(entry) >> 8;
+> +		type = xa_to_value(entry) & 0xFF;
+> +
+> +		if (vid == 0x01 && type == 0x00) {
+> +			/* DOE Discovery, manually displayed by `dev_attr_doe_discovery` */
+> +			continue;
+> +		}
+> +
+> +		attrs[i].attr.name = kasprintf(GFP_KERNEL,
+> +					       "%04lx:%02lx", vid, type);
+> +		if (!attrs[i].attr.name) {
+> +			ret = -ENOMEM;
+> +			goto fail;
+> +		}
+> +
+> +		attrs[i].attr.mode = 0444;
+> +		attrs[i].show = pci_doe_sysfs_feature_show;
+> +
+> +		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
+> +					      pci_doe_sysfs_group.name);
+> +		if (ret) {
+> +			attrs[i].show = NULL;
+> +			if (ret != -EEXIST)
+> +				goto fail;
+> +			else
+> +				kfree(attrs[i].attr.name);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +fail:
+> +	pci_doe_sysfs_feature_remove(pdev, doe_mb);
+> +	return ret;
+> +}
+> +
+> +void pci_doe_sysfs_teardown(struct pci_dev *pdev)
+> +{
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
+> +		pci_doe_sysfs_feature_remove(pdev, doe_mb);
+> +}
+> +
+> +int pci_doe_sysfs_init(struct pci_dev *pdev)
+> +{
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index;
+> +	int ret;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
+> +		ret = pci_doe_sysfs_feature_populate(pdev, doe_mb);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+>  {
+>  	if (wait_event_timeout(doe_mb->wq,
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 40cfa716392f..db795bfe3c56 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/stat.h>
+>  #include <linux/export.h>
+>  #include <linux/topology.h>
+> @@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
+>  {
+>  	int i;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOE))
+> +		pci_doe_sysfs_teardown(pdev);
+> +
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		struct bin_attribute *res_attr;
+>  
+> @@ -1227,6 +1231,14 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+>  	int i;
+>  	int retval;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
+> +		retval = pci_doe_sysfs_init(pdev);
+> +		if (retval) {
+> +			pci_remove_resource_files(pdev);
+> +			return retval;
+> +		}
+> +	}
+> +
+>  	/* Expose the PCI resources from this device as files */
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  
+> @@ -1661,6 +1673,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+>  #endif
+>  #ifdef CONFIG_PCIEASPM
+>  	&aspm_ctrl_attr_group,
+> +#endif
+> +#ifdef CONFIG_PCI_DOE
+> +	&pci_doe_sysfs_group,
+>  #endif
+>  	NULL,
+>  };
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index fd44565c4756..3aee231dcb0c 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -189,6 +189,7 @@ extern const struct attribute_group *pci_dev_groups[];
+>  extern const struct attribute_group *pci_dev_attr_groups[];
+>  extern const struct attribute_group *pcibus_groups[];
+>  extern const struct attribute_group *pci_bus_groups[];
+> +extern const struct attribute_group pci_doe_sysfs_group;
+>  #else
+>  static inline int pci_create_sysfs_dev_files(struct pci_dev *pdev) { return 0; }
+>  static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+> @@ -196,6 +197,7 @@ static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+>  #define pci_dev_attr_groups NULL
+>  #define pcibus_groups NULL
+>  #define pci_bus_groups NULL
+> +#define pci_doe_sysfs_group NULL
+>  #endif
+>  
+>  extern unsigned long pci_hotplug_io_size;
+> @@ -333,6 +335,14 @@ static inline void pci_doe_destroy(struct pci_dev *pdev) { }
+>  static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+>  #endif
+>  
+> +#if defined(CONFIG_PCI_DOE) && defined(CONFIG_SYSFS)
+> +int pci_doe_sysfs_init(struct pci_dev *pci_dev);
+> +void pci_doe_sysfs_teardown(struct pci_dev *pdev);
+> +#else
+> +static inline int pci_doe_sysfs_init(struct pci_dev *pdev) { return 0; }
+> +static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
+> +#endif
+> +
+>  /**
+>   * pci_dev_set_io_state - Set the new error state if possible.
+>   *
 
-Then perhaps keep the ARM64 and add a COMPILE_TEST option as well so
-that we can build this as part of normal testing?
-
-So that would be:
-	depends on PCI && (ARM64 || COMPILE_TEST)
-right?
-
-thanks,
-
-greg k-h
