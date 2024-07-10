@@ -1,110 +1,129 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B75193440
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B765A192B91;
+	Wed, 10 Jul 2024 13:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618214; cv=none; b=i20SAING5EOMDFCgy9hdqkpZG2R3xG25lkSf6MeSBPBKzXDnjt7Y8noFlnME7ZLePwyEshbSXaAPBNXxo5CONybk8Z7cm0YgdCCbOTI8Rc6frmUe4ECydOY3NPywsZOshWWWksdC2Hvsmxak8f8oHTCakYdGwC1cmqKY8pTVnRY=
+	t=1720618218; cv=none; b=tpC29uQE805y50Wb8bWqEb90HEVCHeOZ7B1Z3Ez8atv2SKOVVcAddZlv/7n0BBpkAaFivi9dio6OpR9tHrvN1lkxlVChn2BC/wH0cWn4lpcKrfzB6RCmJDaEoYlytUrA9cgNOymZbga69QWJ2sdJ6IFeOWJZdlu9VYCDcpV8DiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618214; c=relaxed/simple;
-	bh=IiBMrcVJhAC1z20knDHScRDU6FsVhK/WF6l8bU2C5sU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SbjPRy82iX0WODanxy4rykZQSlhl/wM3lJgUmIRlpldtBx+n15sUYqsOKeLPmHw7NxfzLcCewJHgMNelJOLp4P3RzEzUgM1cboSj46M8WSg8shglL//O13xLyIbBDPddq/mdtKoWF3QheLgv3oKmYif4/t1/Q1tcXyj4xDA7Jco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=w6whZI7u; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1720618218; c=relaxed/simple;
+	bh=WnmHFbV9qGDjAcF91zk+1or9P4/JEgGUFqWbs8nvKw8=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=TASGdFg5uDOr3ev3R17w5tWZgr+2DQ4t66afYxv3lwpLyjwhc41/vXdqtK76pDfoB2uLxjUsGaiwNoPQs0jOQYEtd79ilMtSqC6v5IE1dk+AunbUj7KLZRnVgEzfbvs6wBJCp/GK8xrYfKGRTweYsHJzEqaalDtEzo7gSc+Mkt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l13m+4+5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="w6whZI7u"
-X-Envelope-To: heiko@sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1720618211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W7GDLIJzDEbcqmiflPOe8bUQkY3bx/EAeBq+l7AHF5k=;
-	b=w6whZI7ugdXp4drL5ritcRCNJGJC1Jnp31cDfhWb8zEYFeLM+CjuexOh2y2WS/2ufzdy0j
-	8Gmc9w7txBkTMuCAZB9oNoYIAzAk+d1gi6DDJRLo8tCT9TXjX405fvxmOVxvfupgOX8aca
-	G6Ii6bpgeLoX+easuv4HVAmxOBj3rFNHK8C8kIXWDi5I6+eIbtISFcL6rZIkCIeLLGWMze
-	3O34zAonH2GRv2OSWcn/ypO6Snxc5v23JK6+ZrXLRaqbcR9h4mJUBbmfI8d+AnG89swE+c
-	evhX4AnlOaLPyE0Cpya9Csh7vkcZDgeMfSr/t56lG9OAH9RykaNnoNkQd63nzA==
-X-Envelope-To: knaerzche@gmail.com
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: jbx6244@gmail.com
-X-Envelope-To: wens@csie.org
-X-Envelope-To: didi.debian@cknow.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Alex Bee <knaerzche@gmail.com>,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Johan Jonker <jbx6244@gmail.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Diederik de Haas <didi.debian@cknow.org>
-Subject: [PATCH v3 2/2] arm64: dts: rockchip: Add sdmmc/sdio/emmc reset controls for RK3328
-Date: Wed, 10 Jul 2024 15:28:13 +0200
-Message-ID: <20240710132830.14710-4-didi.debian@cknow.org>
-In-Reply-To: <20240710132830.14710-1-didi.debian@cknow.org>
-References: <20240710132830.14710-1-didi.debian@cknow.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l13m+4+5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D98C32781;
+	Wed, 10 Jul 2024 13:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720618218;
+	bh=WnmHFbV9qGDjAcF91zk+1or9P4/JEgGUFqWbs8nvKw8=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=l13m+4+5zjvjn3m1cCI2exo5SU7UHQYQOvj1oeEADWbO04p+MN2XDFgvZ11xxGFtv
+	 8HRjuhCtNEQKHoqL26rC7hBK0DawUoXLFPnT52uACqfi6yIuVbmqmYj/fMcucBSvs8
+	 SRjMn5oEsIkhvKQGfYqEeLDJgFxl8IqDb1z+Y4CdEGMA23CWOHzvpvyqYmW2vxPqF5
+	 OLWk4A12HLbWvDlNKQjvODfh2WlWqP07oFvqc7ON9UoPCF8KUr3XHAj6X81ZioYMLz
+	 UWFhFUOlflbdkIOafZM9fK4xjAWfKSPoa5dzL4/YKCrYkwOTjNWU+WJWWGyVQ9PPdg
+	 /kljNrsYdcoSA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240710090742.1657606-1-amorenoz@redhat.com>
+References: <20240710090742.1657606-1-amorenoz@redhat.com>
+Subject: Re: [PATCH net-next v2] net: psample: fix flag being set in wrong skb
+From: Antoine Tenart <atenart@kernel.org>
+Cc: Adrian Moreno <amorenoz@redhat.com>, Yotam Gigi <yotam.gi@gmail.com>, David S. Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Ido Schimmel <idosch@nvidia.com>, Eelco Chaudron <echaudro@redhat.com>, Aaron Conole <aconole@redhat.com>, linux-kernel@vger.kernel.org
+To: Adrian Moreno <amorenoz@redhat.com>, netdev@vger.kernel.org
+Date: Wed, 10 Jul 2024 15:30:14 +0200
+Message-ID: <172061821475.5582.9226948763101271068@kwain.local>
 
-From: Alex Bee <knaerzche@gmail.com>
+Hi Adri=C3=A1n,
 
-The DW MCI controller driver will use them to reset the IP block before
-initialisation.
+Quoting Adrian Moreno (2024-07-10 11:07:42)
+> A typo makes PSAMPLE_ATTR_SAMPLE_RATE netlink flag be added to the wrong
+> sk_buff.
+>=20
+> Fix the error and make the input sk_buff pointer "const" so that it
+> doesn't happen again.
+>=20
+> Also modify OVS psample test to verify the flag is properly emitted.
 
-Fixes: d717f7352ec6 ("arm64: dts: rockchip: add sdmmc/sdio/emmc nodes for RK3328 SoCs")
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+I don't see that part; although it can be sent as a follow-up and not
+part of the fix.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 95c3f1303544..16b4faa22e4f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -910,6 +910,8 @@ sdmmc: mmc@ff500000 {
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
-+		resets = <&cru SRST_MMC0>;
-+		reset-names = "reset";
- 		status = "disabled";
- 	};
- 
-@@ -922,6 +924,8 @@ sdio: mmc@ff510000 {
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
-+		resets = <&cru SRST_SDIO>;
-+		reset-names = "reset";
- 		status = "disabled";
- 	};
- 
-@@ -934,6 +938,8 @@ emmc: mmc@ff520000 {
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
-+		resets = <&cru SRST_EMMC>;
-+		reset-names = "reset";
- 		status = "disabled";
- 	};
- 
--- 
-2.45.2
+Thanks,
+Antoine
 
+> Fixes: 7b1b2b60c63f ("net: psample: allow using rate as probability")
+> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+> ---
+>  include/net/psample.h | 8 +++++---
+>  net/psample/psample.c | 7 ++++---
+>  2 files changed, 9 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/include/net/psample.h b/include/net/psample.h
+> index c52e9ebd88dd..5071b5fc2b59 100644
+> --- a/include/net/psample.h
+> +++ b/include/net/psample.h
+> @@ -38,13 +38,15 @@ struct sk_buff;
+> =20
+>  #if IS_ENABLED(CONFIG_PSAMPLE)
+> =20
+> -void psample_sample_packet(struct psample_group *group, struct sk_buff *=
+skb,
+> -                          u32 sample_rate, const struct psample_metadata=
+ *md);
+> +void psample_sample_packet(struct psample_group *group,
+> +                          const struct sk_buff *skb, u32 sample_rate,
+> +                          const struct psample_metadata *md);
+> =20
+>  #else
+> =20
+>  static inline void psample_sample_packet(struct psample_group *group,
+> -                                        struct sk_buff *skb, u32 sample_=
+rate,
+> +                                        const struct sk_buff *skb,
+> +                                        u32 sample_rate,
+>                                          const struct psample_metadata *m=
+d)
+>  {
+>  }
+> diff --git a/net/psample/psample.c b/net/psample/psample.c
+> index f48b5b9cd409..a0ddae8a65f9 100644
+> --- a/net/psample/psample.c
+> +++ b/net/psample/psample.c
+> @@ -360,8 +360,9 @@ static int psample_tunnel_meta_len(struct ip_tunnel_i=
+nfo *tun_info)
+>  }
+>  #endif
+> =20
+> -void psample_sample_packet(struct psample_group *group, struct sk_buff *=
+skb,
+> -                          u32 sample_rate, const struct psample_metadata=
+ *md)
+> +void psample_sample_packet(struct psample_group *group,
+> +                          const struct sk_buff *skb, u32 sample_rate,
+> +                          const struct psample_metadata *md)
+>  {
+>         ktime_t tstamp =3D ktime_get_real();
+>         int out_ifindex =3D md->out_ifindex;
+> @@ -498,7 +499,7 @@ void psample_sample_packet(struct psample_group *grou=
+p, struct sk_buff *skb,
+>                 goto error;
+> =20
+>         if (md->rate_as_probability)
+> -               nla_put_flag(skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
+> +               nla_put_flag(nl_skb, PSAMPLE_ATTR_SAMPLE_PROBABILITY);
+> =20
+>         genlmsg_end(nl_skb, data);
+>         genlmsg_multicast_netns(&psample_nl_family, group->net, nl_skb, 0,
+> --=20
+> 2.45.2
+>=20
+>
