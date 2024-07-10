@@ -1,112 +1,105 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5373D192B8F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F485192477;
+	Wed, 10 Jul 2024 13:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618200; cv=none; b=V8H1iVpRaIYyOShpoCzJm65u/AYebD7Oa8njcGdpmshVvVvlwdv9tOroY3Epj6BMWAbOF7O+n0zeaJ7zzMLCdtpWnQEruiVtsSu3tNMYZf3Lz7meXRo4PS3/W1Xc55GtHOKB9rGfgageYoZ6lSNMz6mXans7hQmzZa92KVGDlJA=
+	t=1720618211; cv=none; b=ZGFs7YiqXCA1CZwTvkMUdnjlcJwJLDcCpFPnF8Z5+5+O+mi2981kiIzY8aTlp8xol0iOFpl1UMjnn0tsV1885ePSOzXySuGWai2909tTgFaCC/05Y+9zgs6x/SQrkDC6PGbhdGViGelxN2xReTW3CJva96HlW5tpyBotVvHKgkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618200; c=relaxed/simple;
-	bh=IGZDEaWyCwAa3u7RjvzRimnYIXIX4fHQIBThRXlSSLs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QqoFWjEzR9PZuDebifWZhUJGZQ8W+ZytSatVQgecpV0ahReWxD+zDmn5pNkBQao0G2pfUU165K+iBQ4YkKg0/APMqo5zHDebbkGMbJiqWw26JHsu/9bzyjwLNQVlYUvg4k3zhdVLhof1HYfNeE6omFAQffubtF7SQq02L5vuMkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d56iI1PX; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720618211; c=relaxed/simple;
+	bh=hcgup82zzw00CGhEoSiuAAF5Jid2Bf1HIkRT7iworNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mR/OJEKMgn9HUx6B2huYeHGX6cH2KDCkXu18inmGqpF3/RwyPp4idbbkr9GLJxPngWAAfzsgO/jKKRLhfeKxsw7D8G9ZY6mcJvpmYszsocfRUyXotFfop6SGx9AVcVQtIitlP+VQoOYwHZ/kx6qon+kAp6jal9ofcwPkTDHdW6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=mZcZPQYX; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d56iI1PX"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52caebc6137so4661107e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 06:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720618197; x=1721222997; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=60aav+xK4jpl7xG8YPKnbprg8tIY6Nqk/IZH7bl4w4w=;
-        b=d56iI1PXKTwQdF2N6PtnK5BnF9MX8HZgC0AGsfIAT6RSrsAnZGkYCHgZJ/JdMsOsOS
-         WvpHUb0UaLswWIy8MMOSKHDOsnl8aO0ahfpoOP0zqPmi4Ch2zadu1GDoL1hAIXLn9qbL
-         VqyZjsX71C2YdyfQ1MM3MoFlmBtckPT/9VUxxE8MIXS6aypqF4veQMuCDiKYzzBb7JwP
-         +9/fjBWOU4u9Bcqa4+/KL4qp4agHbtVa6glqLB0E8Bc1WV4GWGimHV2AF8y+A5F3Aekr
-         LL6fzCOekvS6ii87TKi4uV2XZIr8x81jvhBwjce5p+g0IiwkJZyAh7+7nz0GcZTOlD8Z
-         8UiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720618197; x=1721222997;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=60aav+xK4jpl7xG8YPKnbprg8tIY6Nqk/IZH7bl4w4w=;
-        b=i3pmzd2IZlvahvhQoNMPJ0oEKvhxHQn6iXkOBcfM8MMs31Cp0K6k/94SA8dAIjubEE
-         tYUrAFYjc3TnmSjzeJ93+eGQWPAsalQAj8IFq3lX6T3MqNfbQDoVMbzSw5+5Tb74ge3d
-         0iRPi3oTHOdhrykjmuf29HXpJdOHy4kMYCnx1mA4oK3cHq1anX+KSSwh0ZvW7Ycp1Acf
-         DHiLF+GRcmPS0Eksou7+weAJW0PW2kSYuBznHWUNTA0qwgwPBOrlfmZGc2fooLbiRdxZ
-         CdZ8tK56+ByOqwddgQT1j0mbb649zT9V8Zahcym4G7pV+bta9cINXGA42HweOQ35kKkW
-         2erQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8jzvyn4PxGyP9/C8Iuxz1mWH5thkERnbUgZgeDIEa+46li19DKhBHpZZFuybuGTcd7mX/FHvDjHUILivdX2vaVfnvdFv3+KUOc2Cm
-X-Gm-Message-State: AOJu0Yy5GK1K682lFbebx2o6KvuCNva36SS68vkY05UTja/4Om/maaTr
-	l3Npi1j1Cu6HkOqSC/sLrv8nxjq68+mIfaFhzZO4QQ1Gqc9vzuuDvsmvrH29hbE=
-X-Google-Smtp-Source: AGHT+IHBHuYCCPwlgq5edN/L9l0kJT3pRxlv0eRV0p1+UE+pPGfeFREyn6CNWYa3giyYGhc2Ub/T0Q==
-X-Received: by 2002:a05:6512:1285:b0:52c:818c:13b8 with SMTP id 2adb3069b0e04-52eb998fc87mr3918196e87.4.1720618196964;
-        Wed, 10 Jul 2024 06:29:56 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e07fsm5304369f8f.17.2024.07.10.06.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 06:29:56 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
- airlied@gmail.com, mripard@kernel.org, dianders@google.com, 
- hsinyi@google.com, awarnecke002@hotmail.com, quic_jesszhan@quicinc.com, 
- dmitry.baryshkov@linaro.org, 
- Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240709134754.28013-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-References: <20240709134754.28013-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-Subject: Re: [PATCH v6 0/5] Support Starry er88577 MIPI-DSI panel
-Message-Id: <172061819595.1968965.12553404194809762882.b4-ty@linaro.org>
-Date: Wed, 10 Jul 2024 15:29:55 +0200
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="mZcZPQYX"
+X-Envelope-To: heiko@sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1720618208;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KLBHZjexyXVN2+OSBryAFtyXrp6LCvLeuz6pNTh3Nso=;
+	b=mZcZPQYXx9l2k3OZVdPk/KGs0KYa7tQ/c8R/OJQJYGOtW6Kw+/GLh4VbYWz4eCe5o8UoLm
+	X0pap6fdnLc3uK53eGHnkfCK0FSo2WYZWTia6cKpy4Diu2hpTVmtD/y4NQRRzfn8neeOiP
+	dD3oMxfpTosZV83P7AxFXCRd3nlYBEDpzXsz5J7IUEQn67GKs14c0paAAt4CfClBCExNX/
+	HFR2a6gbxq8NdNavtR+uz2c317tRRKwBsLH0W9cgcPgzdKPdVZLrIVHaIFs0GWjvtJBkvk
+	ETLarDme6M/byrHWPiIeUYJoJMa5HkX2S6XsJCwVO1ENZ3+B1Z+vtTF5EQ3K8g==
+X-Envelope-To: knaerzche@gmail.com
+X-Envelope-To: linux-rockchip@lists.infradead.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: jbx6244@gmail.com
+X-Envelope-To: wens@csie.org
+X-Envelope-To: didi.debian@cknow.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Alex Bee <knaerzche@gmail.com>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Johan Jonker <jbx6244@gmail.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Diederik de Haas <didi.debian@cknow.org>
+Subject: [PATCH v3 1/2] arm64: dts: rockchip: Add sdmmc_ext for RK3328
+Date: Wed, 10 Jul 2024 15:28:12 +0200
+Message-ID: <20240710132830.14710-3-didi.debian@cknow.org>
+In-Reply-To: <20240710132830.14710-1-didi.debian@cknow.org>
+References: <20240710132830.14710-1-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+From: Alex Bee <knaerzche@gmail.com>
 
-On Tue, 09 Jul 2024 21:47:49 +0800, Zhaoxiong Lv wrote:
-> The Starry is a 10.1" WXGA TFT LCD panel. Because Starry-er88577
-> and boe-th101mb31ig002 have very similar inti_code, after
-> discussing with Dmitry Baryshkov, We will modify it based on the
-> panel-boe-th101mb31ig002-28a.c driver instead of using a separate
-> driver.
-> 
-> Changes between V6 and V5:
-> - PATCH 1/5: Corrected the use of "->init" in struct panel_desc, and modify indentation
-> - PATCH 2/5: No changes.
-> - PATCH 3/5: No changes.
-> - PATCH 4/5: Modify the commit information and "reset gpio" binding.
-> - PATCH 5/5: Add two lines of init_code (D1 and D3) to modify the internal resistance of the mipi channel.
-> - Link to v5: https://lore.kernel.org/all/20240704072958.27876-1-lvzhaoxiong@huaqin.corp-partner.google.com/
-> 
-> [...]
+RK3328 SoC has a fourth mmc controller called SDMMC_EXT. Some
+boards have sdio wifi connected to it. In order to use it
+one would have to add the pinctrls from sdmmc0ext group which
+is done on board level.
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-[1/5] drm/panel: boe-th101mb31ig002 : Make it compatible with other panel.
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/24179ff9a2e4524ce83014b8827a73ad03a25c13
-[2/5] drm/panel: boe-th101mb31ig002: switch to devm_gpiod_get_optional() for reset_gpio
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/7f58ebaccb67cb22b2936ba79c844f1e446dc73b
-[3/5] drm/panel: boe-th101mb31ig002: use wrapped MIPI DCS functions
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/a16b680a2140e6cbda41ac144564696c3ee2815f
-[4/5] dt-bindings: display: panel: Add compatible for starry-er88577
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/3808a15e3248820c0859d9b8a0f2c7e5c8259044
-[5/5] drm/panel: boe-th101mb31ig002: Support for starry-er88577 MIPI-DSI panel
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/e4bd1db1c1f771983393bf5574854dff26ca7532
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index b01efd6d042c..95c3f1303544 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -1036,6 +1036,20 @@ usb_host0_ohci: usb@ff5d0000 {
+ 		status = "disabled";
+ 	};
+ 
++	sdmmc_ext: mmc@ff5f0000 {
++		compatible = "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc";
++		reg = <0x0 0xff5f0000 0x0 0x4000>;
++		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_SDMMC_EXT>, <&cru SCLK_SDMMC_EXT>,
++			 <&cru SCLK_SDMMC_EXT_DRV>, <&cru SCLK_SDMMC_EXT_SAMPLE>;
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
++		fifo-depth = <0x100>;
++		max-frequency = <150000000>;
++		resets = <&cru SRST_SDMMCEXT>;
++		reset-names = "reset";
++		status = "disabled";
++	};
++
+ 	usbdrd3: usb@ff600000 {
+ 		compatible = "rockchip,rk3328-dwc3", "snps,dwc3";
+ 		reg = <0x0 0xff600000 0x0 0x100000>;
 -- 
-Neil
+2.45.2
 
