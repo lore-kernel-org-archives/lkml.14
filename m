@@ -1,83 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4955BAF0
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C910A47
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720590359; cv=none; b=EXcuyog05x4QvDjsKTzkRHf7je8f7xmOkpgJlNLd/5+gL9V/Ntt7SECSp9OhUV+ExKPnHLwVBCxYwSR0gseWjgQHCW/bLrc3Rt3PVwisw6cFLBve/bjvzUF3EdAeL1odRDWsmozpKZlGhBoxoKv+ZK1zachhiRbA/ckmkFu0ec4=
+	t=1720590525; cv=none; b=D/1uy3JrfaMJZmQWFcyT3egosKkgqYZTjaDaunpYb/O1cXCZSeQiRa/KIWod55hnSSEqCyMY0EGNt5XKfVLvI/XDPTWr6awaxLnKfJWogt5NOMhxcXi6fpJYukiANU1vjlQPSvdBipT0CW5GlnIGK9aFQwBe4HWPEZpcFheKRKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720590359; c=relaxed/simple;
-	bh=nxY3bmwxzmUjpGJqiGyt0zCho88LtDR8cLyci2z6gm0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DagkduLeTCQif5WjATMFXb+X9sWGToqDvSfbMmTVhvdVfNgWU5IbwnxaCnACxYYFhwmFSYdWWJxD9uOg80xHjI9uandj+SIrj0kyvSuYRWrAhnBzpvDA08QPehhC5cPI/SyEZBO9xeaEvraj2nqkuLdrwWl8FOW0DHqXGLdadNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+E90/GV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720590525; c=relaxed/simple;
+	bh=4iq9U6XdO+rE5jpmKClt97kM5/zeGb+1/z7RYegUV0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/uSIVTIIJMU5ROaIX/g2Pf6oq5O5Pg/V6G9ZQXo+WcwcgKRkC8Lmvwwptk5NLp2p+17ttXUX7f7un4lsM18Y6dnfB7PPS4gMa7IN21Z9lbonWFft93TUm0DIDGqV8b06L2Tyu4HX7JO24nAdoCFQkQO1EgVZ+owvCxyJBa6sTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VwFGIxlV; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+E90/GV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C3B4C32781;
-	Wed, 10 Jul 2024 05:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720590358;
-	bh=nxY3bmwxzmUjpGJqiGyt0zCho88LtDR8cLyci2z6gm0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=a+E90/GV6BqjiquWrReBLSRMqeR731DKWbhPn+cWvGXmWcAqyj9zlOONrDN1hmkIn
-	 b6trdmcAfa0rCAmhDH7YMHlK2lxX4C58Fwfsra4Ooq0rtLt2/zpcJdyUZCSa96Gkk2
-	 zWsUMOqOciFYxUepWp7z5bszRk0tXcuMgqAZGsA+y5J5j/wqqkkGRlby1cQ7qi4hOW
-	 Ie16VhGFHjGi7R9AyodWrdXutDmntSONywLHnvPIU5fwxOYyyuCqFGI101Vg7YP4T5
-	 KaE0HQ1NlrccDnwQpl1TVT6/B2VDntkqihWhjFtlEQWwa2wOsrpzC8qptEDqeB0Rzi
-	 vVWiI2PfHT3jQ==
-From: Vinod Koul <vkoul@kernel.org>
-To: Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
- Sanyog Kale <sanyog.r.kale@intel.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240703-soundwire-cleanup-h-v1-0-24fa0dbb948f@linaro.org>
-References: <20240703-soundwire-cleanup-h-v1-0-24fa0dbb948f@linaro.org>
-Subject: Re: [PATCH 0/9] soundwire: simplify code with cleanup.h
-Message-Id: <172059035617.363871.9938538584566291024.b4-ty@kernel.org>
-Date: Wed, 10 Jul 2024 11:15:56 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VwFGIxlV"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7a05c755477so66842685a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 22:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720590523; x=1721195323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z86NvuyzaJOPDfrjzycHXBN7UlfbAsixtiZJR+7NcKk=;
+        b=VwFGIxlVAv+5n8JJoSPZzw8rDHEOA2x4BH8NnrtuADpI8TpJtuoHjCCDxpfQthwAqe
+         3rQuHHlq5wrqTq+VEUTQWpV6XWWMhMXLsMVTraQe9QDlZJkkJloP1mVS4gqnZPZs/vG6
+         hG5sOCCdl/wen0gzC9NqsucGR+UJgKE71n5V07hHnNPhO4zsgUM1458NAKpoinTUkBLg
+         1amGoGt8/nu1+X5SqkUpPOGXcVRbPJP8mAjaWDIbqeLG2Vs/F4GS+L4jHwMtqOSEtaWT
+         bMwMZYiHZUKR/sre/z6R8JZLDPnZrQu1LZELfFesQUKkHrgBFwqULvnavlq3rTNljgi8
+         DHpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720590523; x=1721195323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z86NvuyzaJOPDfrjzycHXBN7UlfbAsixtiZJR+7NcKk=;
+        b=lRg0x1Xm9yRHt/iFTytUtaYJjrW5qsLUWj3YtsHpB9SOQPS+E2T8IZSdBR5RAPzSqw
+         yChD67XB8XwqRkny+wiZZgt8EYhG0uVLeLkgDUJraSUzD1X6rc9DAOEpE0LhNSTzkZBC
+         1QVJPMWvk7frpVTOn1/VqEcbx0kzJghcwBhECGHYm5HgGAtMXgA18FBY8Xyn4RF3BE2H
+         +vRrjlXDAXc1/6P7cD6mewWRhJM8aY+CzE0wNh0//JUFM7DHo5slMUhFrMKYHkR3iHGb
+         RHR8np6BZq+1NTUGTg7ufPSqL6eG8zFSpssMEAcm5rAqa+TKDU4LbJPtFtZ9G4QipaJW
+         wJEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqy6l9xYkvFnH47ou7bXtwqS/vUeyL/Tfztlupi0aplKzSsO2SdPcXgHf2hY1M024cwSrdWJOw3om30Ydtl+iCWyJK9ZLU+Iy50ayi
+X-Gm-Message-State: AOJu0YzFLfj4X5IkaXEEpZ9V3VjuWjWgrMvc0O9VhHpoZnoNClQdRXKs
+	6DEEH9LtlFtLhH4qShoFEnN/yHxc0QGQEndEqsUn4d/eRL5n8gwg
+X-Google-Smtp-Source: AGHT+IEPzqupu9wCQT5SlmX1xuSLqDOVaS4aS3BmlAgZVFVqtH93lQUJ8eZqieZsV111ahuSdaJ7dA==
+X-Received: by 2002:a05:620a:3bd3:b0:79f:121d:d808 with SMTP id af79cd13be357-79f19bf00a1mr426347485a.71.1720590522944;
+        Tue, 09 Jul 2024 22:48:42 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79f190b1dd1sm164467485a.117.2024.07.09.22.48.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 22:48:42 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 243691200043;
+	Wed, 10 Jul 2024 01:48:42 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 10 Jul 2024 01:48:42 -0400
+X-ME-Sender: <xms:uSCOZqx7sGF9T5nq37PK7B37X9aUft8o1gRQhU0xtmymd27j7Zi0Ag>
+    <xme:uSCOZmRMx5kk2cY0HjQQ0nhSofVMku3SvODPCyBnCEhMdivA1WU2e4ElQmJe47EB7
+    fLsnFeCa6-MsfWXjg>
+X-ME-Received: <xmr:uSCOZsW2DaQfubUTtJHywdx32icdaWKwFrDEHqdtdxuONMiJkSVMzo_uUA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedtgddutdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
+    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
+    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
+    igmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:uSCOZgg8i8TxDdaLq4HjdurRd8aBWxqZicAUwXJTflj_bdHH6d1NCQ>
+    <xmx:uSCOZsCD20rukaBluEVlfTrdO0OkIau5yPc5-T5-giAbaXUC-w8xjA>
+    <xmx:uSCOZhI1vI0KMLrjeWG54UYxeWpX0bK8mflAc3ZexbBFEmp6FsCzWg>
+    <xmx:uSCOZjBWBmyg2Jx-IDMVN6PIybKl9zfu1t-Hf4VYZ_WSBaNWerYiVA>
+    <xmx:uiCOZkyfEs0Whd3qYzaKfSjPlXf9eZWMLEPKaKXiWICJDnlojjlEIEXd>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 10 Jul 2024 01:48:40 -0400 (EDT)
+Date: Tue, 9 Jul 2024 22:48:39 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, oleg@redhat.com,
+	jolsa@kernel.org, clm@meta.com, paulmck@kernel.org
+Subject: Re: [PATCH 08/10] srcu: Add __srcu_clone_read_lock()
+Message-ID: <Zo4gtyzNvinXBOHU@Boquns-Mac-mini.home>
+References: <20240708091241.544262971@infradead.org>
+ <20240708092416.010695534@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708092416.010695534@infradead.org>
 
-
-On Wed, 03 Jul 2024 12:15:52 +0200, Krzysztof Kozlowski wrote:
-> Allocate the memory with scoped/cleanup.h to reduce error handling
-> (simpler error paths) and make the code a bit smaller.
-> 
-> Best regards,
-> Krzysztof
+On Mon, Jul 08, 2024 at 11:12:49AM +0200, Peter Zijlstra wrote:
+> In order to support carrying an srcu_read_lock() section across fork,
+> where both the parent and child process will do: srcu_read_unlock(),
+> it is needed to account for the extra decrement with an extra
+> increment at fork time.
 > 
 
-Applied, thanks!
+We also need to dup the per-task lock held stack in order to maintain
+consistent data for lockdep, right?
 
-[1/9] soundwire: amd: simplify return path in hw_params
-      commit: 89cc1354d388ba8c8f8b41095736202a83591497
-[2/9] soundwire: amd: simplify with cleanup.h
-      commit: 02611eeec5893c17ad85769007ecfb5cbe7a5987
-[3/9] soundwire: amd_init: simplify with cleanup.h
-      commit: 1f93cb229b0e2d78233690c9ca65715e1f798803
-[4/9] soundwire: intel: simplify return path in hw_params
-      commit: ba874a8c2f895d898bbaf67f9e952425aff1557d
-[5/9] soundwire: intel: simplify with cleanup.h
-      commit: e4fcf153d91809aefa6860d285e747fd7dd9e61c
-[6/9] soundwire: intel_ace2x: simplify return path in hw_params
-      commit: 13814ed162687be08e34762040cfc2e58831219d
-[7/9] soundwire: intel_ace2x: simplify with cleanup.h
-      commit: 3dce65898e0911aa76a0a321540b78e9218b9a6a
-[8/9] soundwire: cadence: simplify with cleanup.h
-      commit: b72d4af98cae2f74dc8061befcc3c0c2a174894f
-[9/9] soundwire: debugfs: simplify with cleanup.h
-      commit: fdd3d14ca3c8c5269174f10d33d6181173cbd0b4
+Regards,
+Boqun
 
-Best regards,
--- 
-Vinod Koul <vkoul@kernel.org>
-
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/srcu.h     |    1 +
+>  include/linux/srcutiny.h |   10 ++++++++++
+>  kernel/rcu/srcutree.c    |    5 +++++
+>  3 files changed, 16 insertions(+)
+> 
+> --- a/include/linux/srcu.h
+> +++ b/include/linux/srcu.h
+> @@ -55,6 +55,7 @@ void call_srcu(struct srcu_struct *ssp,
+>  		void (*func)(struct rcu_head *head));
+>  void cleanup_srcu_struct(struct srcu_struct *ssp);
+>  int __srcu_read_lock(struct srcu_struct *ssp) __acquires(ssp);
+> +void __srcu_clone_read_lock(struct srcu_struct *ssp, int idx);
+>  void __srcu_read_unlock(struct srcu_struct *ssp, int idx) __releases(ssp);
+>  void synchronize_srcu(struct srcu_struct *ssp);
+>  unsigned long get_state_synchronize_srcu(struct srcu_struct *ssp);
+> --- a/include/linux/srcutiny.h
+> +++ b/include/linux/srcutiny.h
+> @@ -71,6 +71,16 @@ static inline int __srcu_read_lock(struc
+>  	return idx;
+>  }
+>  
+> +static inline void __srcu_clone_read_lock(struct srcu_struct *ssp, int idx)
+> +{
+> +	int newval;
+> +
+> +	preempt_disable();  // Needed for PREEMPT_AUTO
+> +	newval = READ_ONCE(ssp->srcu_lock_nesting[idx]) + 1;
+> +	WRITE_ONCE(ssp->srcu_lock_nesting[idx], newval);
+> +	preempt_enable();
+> +}
+> +
+>  static inline void synchronize_srcu_expedited(struct srcu_struct *ssp)
+>  {
+>  	synchronize_srcu(ssp);
+> --- a/kernel/rcu/srcutree.c
+> +++ b/kernel/rcu/srcutree.c
+> @@ -720,6 +720,11 @@ int __srcu_read_lock(struct srcu_struct
+>  }
+>  EXPORT_SYMBOL_GPL(__srcu_read_lock);
+>  
+> +void __srcu_clone_read_lock(struct srcu_struct *ssp, int idx)
+> +{
+> +	this_cpu_inc(ssp->sda->srcu_lock_count[idx].counter);
+> +}
+> +
+>  /*
+>   * Removes the count for the old reader from the appropriate per-CPU
+>   * element of the srcu_struct.  Note that this may well be a different
+> 
+> 
