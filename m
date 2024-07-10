@@ -1,100 +1,134 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C28F1922C9
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F2A190485;
+	Wed, 10 Jul 2024 12:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720615268; cv=none; b=I4hhnvOZRjy7hlRJfXh2nsWlJU47Y6slE9m11tn2j/pzEwF+cDfONjqeA7ROmsuL7kq+OaeXb3vpxHDicApCeIW2vpxF2Ote+DwIjBPnIOL7HW8DR+uajnclIk+d5j0woC3901vtg0jFkl5C7fcOg5Mtnw+R/cX+8QKU7BIc/B4=
+	t=1720615347; cv=none; b=ZP2tXPhJgQx+5BNZ6kNIwxOEKoWppolHTVKLrR6VoK5YenG8sqzYwD1Qmb2YGJdK6KFdhXfWJohaSicR33zQoUCC5o2tBvItV9VYPRVYev6sRq6zK1UP+4qIlFNtBQcdGjW8d2cio8yTBnTRCjzmDvWONBk0Qs4J5G8zjyEfvM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720615268; c=relaxed/simple;
-	bh=Ool8JEcomupLYFCAVUceeyirLvgRl1G6dqSHkrYH0y8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YLnyrQ2bXHOkUoXWrVkr1xPfDPLoos1MH+rtNGBoSfpEQhQ3KdaLQhA7KRJIOTcSuKMgTndHR0H2E+moAUny5Qms5qWwaZ3TtsoJUwTG79bZr43ZNu7ORP8zti+IUXU6oYepE2GCa6sAByW+/L9Ex3ndbYvcuxg2IQbo4hnsv1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gBKxwxnF; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1720615347; c=relaxed/simple;
+	bh=GQAIShZYr71kjsZCpzZl/eG1rV3WF2cCx2mE38nKZ4k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YB/czq2nXkTMBr2EC/bLyYP12VOY3amWFT4uMTGHtZWt5dr7eQ8dcWws9Jluvu9lHJqdwb4ZO8MS6K6dCsti9ee5F8e2qlCJIhUr/3DyLSwjJYjC27ckjN4x0DrK3GkDnSBlhy6GqHQC8UbEFp9e0TsO0vVtyLySEeDQV4dHqEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=tAZqzLe8; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gBKxwxnF"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42797bcfc77so34395e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720615263; x=1721220063; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MQLVDFNoFuKRZg7eJdxMfqN4N8nKsyXTgSDfnf3uLGM=;
-        b=gBKxwxnFgp9AOzK/2lb/jr8A/NhFbZkPUvlg5TH0mYbtG80V2yXBxIIGQvh4g7ceFq
-         /p8TADEAgk5hHMbeU8Tukh32d9OIGqzZmfx95mc6DLzqR8snLBQlJQCAs/BkM6qpK4Hp
-         N6T2dw64rhaATV3XQn682pDmYgzZnjOyUe28zGdBZk9rtBdEKvAwBxUwtyxngbHCS4QR
-         zL2fucGqKtrty8SgITaWWyVyRhze8rY5iLuZ+Q4jsuVNssqLydBEXXYq86zPrfcvVZKI
-         3rTFR/GdzADTnvoVz8gMZo3ox3VRVv1SB7RBvQfcFu9D6CIOG9HqeYx5XbK+gFgGgdmn
-         u7QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720615263; x=1721220063;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MQLVDFNoFuKRZg7eJdxMfqN4N8nKsyXTgSDfnf3uLGM=;
-        b=UYd8aDJfvAw0UwXch3s/7tfgyPOGr0esux+1AF0FzM7AEwryUCYMNx1jO52br2up1U
-         QyTvx//iJUsEH/wuzdaWnQBnUEZjN7s7SC4ZUIv4/JfuakI7/mD047eC7Aettq/BFHpH
-         +zJEmWRfeOXVvtVTysvcMjbO8Vg6D6E1kXHEdLDUzEBuFeME1VtRMFhzZRAdVVyapBa/
-         UddlAkB263NTDTZS3jY3J2HudAinoRk8Bzy0pGzILScZpEN35GG3QcV7s7cZrwYt3mYv
-         IxD/dEIjTEAP/sKGPHQhTmsBQwwnOEABkH6FVn/CMa6HBzUxvCAMFTXH7Qo8skWmQEdC
-         qwOg==
-X-Forwarded-Encrypted: i=1; AJvYcCU94LI0pu7VinOuyeUSPLFwxJzOCPuqE02uomyqnyFCE8LhBYbWTEWBwy4DjxAxotQahqFzRNVLUDHXmhaHTCjA/jUszdFt4X36sEwj
-X-Gm-Message-State: AOJu0YxemIY64eaaoiFKMN34nYiWaEkp5Wk0r0KvJwytHTgj+m6KWKXs
-	0jOvw7S9FbiuvOAi0XsP1AupiOjIfHsdTlyvKp9Tsxy2wNp8jM+SOyfikuXgqu4=
-X-Google-Smtp-Source: AGHT+IGT5ilXJSn/KNzsrB9+RCqhsbkJiqU3dqpEBIzoFB+Fcmer/Kih8Fhroy2GBRX27ac1gAp6gw==
-X-Received: by 2002:a05:600c:6c51:b0:426:51e8:5192 with SMTP id 5b1f17b1804b1-426709fac0bmr30666695e9.41.1720615262749;
-        Wed, 10 Jul 2024 05:41:02 -0700 (PDT)
-Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:f3cc:df72:f495:3b49])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-367cde890f6sm5214025f8f.53.2024.07.10.05.41.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 05:41:02 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Vladimir Zapolskiy <vz@mleia.com>, Bjorn Andersson <andersson@kernel.org>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Michal Simek <michal.simek@amd.com>, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-sunxi@lists.linux.dev
-In-Reply-To: <20240703-clk-const-regmap-v1-0-7d15a0671d6f@gmail.com>
-References: <20240703-clk-const-regmap-v1-0-7d15a0671d6f@gmail.com>
-Subject: Re: (subset) [PATCH 00/10] clk: constify struct regmap_config
-Message-Id: <172061526145.2117005.2499091095196670705.b4-ty@baylibre.com>
-Date: Wed, 10 Jul 2024 14:41:01 +0200
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="tAZqzLe8"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id BE195100002;
+	Wed, 10 Jul 2024 15:41:42 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1720615302; bh=TMMii64hLBF2fPDulrY0mamojXuv/hUwycAgbvgPCVE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=tAZqzLe8/E1Qunux37pPDHSj9VIi+92RRuKI3olX8dDF4gl1qSY9P6ZmTU4k9VSbh
+	 MR47HzSNFig1fWyezAKHFBdaTtdQ4frKtnMsm9Vr/u7R7I63mLm1AZa+Kgj18YVt5c
+	 IRJ9TtVk3dza1UanVYuTWvED4/jsiP9DVPjHkPMgtwriCre3zfAO9aeVGNI9/ndgBb
+	 epld8A3XoznXHWlj3TSQ7pzmBRnpTio4d9dF8jCtJQM4TLK2jDF81iSya4NN9h0uom
+	 YhX/A9cByLxDvf7aczvobBUxKXo+QO4ISJt1yZrqPQC+sUaUFr53G9ChUumMgRCe5q
+	 fy2PmGBbKLJ/g==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Wed, 10 Jul 2024 15:40:19 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Jul
+ 2024 15:39:59 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Jesse Brandeburg
+	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Przemek
+ Kitszel <przemyslaw.kitszel@intel.com>
+Subject: [PATCH net-next v4] ice: Adjust over allocation of memory in ice_sched_add_root_node() and ice_sched_add_node()
+Date: Wed, 10 Jul 2024 15:39:49 +0300
+Message-ID: <20240710123949.9265-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186432 [Jul 10 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2;lore.kernel.org:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/10 11:05:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/10 05:16:00 #25942711
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Applied to clk-meson (clk-meson-next), thanks!
+In ice_sched_add_root_node() and ice_sched_add_node() there are calls to
+devm_kcalloc() in order to allocate memory for array of pointers to
+'ice_sched_node' structure. But incorrect types are used as sizeof()
+arguments in these calls (structures instead of pointers) which leads to
+over allocation of memory.
 
-[01/10] clk: meson: a1: peripherals: Constify struct regmap_config
-        https://github.com/BayLibre/clk-meson/commit/4a7665b885b6
-[02/10] clk: meson: a1: pll: Constify struct regmap_config
-        https://github.com/BayLibre/clk-meson/commit/5c6ffe3537d5
-[03/10] clk: meson: c3: peripherals: Constify struct regmap_config
-        https://github.com/BayLibre/clk-meson/commit/af3e4505e6bc
-[04/10] clk: meson: c3: pll: Constify struct regmap_config
-        https://github.com/BayLibre/clk-meson/commit/11c7c1b94059
-[05/10] clk: meson: s4: peripherals: Constify struct regmap_config
-        https://github.com/BayLibre/clk-meson/commit/02cc1df92d75
-[06/10] clk: meson: s4: pll: Constify struct regmap_config
-        https://github.com/BayLibre/clk-meson/commit/3d0e8b6edd6b
+Adjust over allocation of memory by correcting types in devm_kcalloc()
+sizeof() arguments.
 
-Best regards,
---
-Jerome
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+v4:
+  - Remove Suggested-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+  - Add Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+    (https://lore.kernel.org/all/6d8ac0cf-b954-4c12-8b5b-e172c850e529@intel.com/)
+v3: https://lore.kernel.org/all/20240708182736.8514-1-amishin@t-argos.ru/
+  - Update comment and use the correct entities as suggested by Przemek
+v2: https://lore.kernel.org/all/20240706140518.9214-1-amishin@t-argos.ru/
+  - Update comment, remove 'Fixes' tag and change the tree from 'net' to
+    'net-next' as suggested by Simon
+    (https://lore.kernel.org/all/20240706095258.GB1481495@kernel.org/)
+v1: https://lore.kernel.org/all/20240705163620.12429-1-amishin@t-argos.ru/
+
+ drivers/net/ethernet/intel/ice/ice_sched.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
+index ecf8f5d60292..6ca13c5dcb14 100644
+--- a/drivers/net/ethernet/intel/ice/ice_sched.c
++++ b/drivers/net/ethernet/intel/ice/ice_sched.c
+@@ -28,9 +28,8 @@ ice_sched_add_root_node(struct ice_port_info *pi,
+ 	if (!root)
+ 		return -ENOMEM;
+ 
+-	/* coverity[suspicious_sizeof] */
+ 	root->children = devm_kcalloc(ice_hw_to_dev(hw), hw->max_children[0],
+-				      sizeof(*root), GFP_KERNEL);
++				      sizeof(*root->children), GFP_KERNEL);
+ 	if (!root->children) {
+ 		devm_kfree(ice_hw_to_dev(hw), root);
+ 		return -ENOMEM;
+@@ -186,10 +185,9 @@ ice_sched_add_node(struct ice_port_info *pi, u8 layer,
+ 	if (!node)
+ 		return -ENOMEM;
+ 	if (hw->max_children[layer]) {
+-		/* coverity[suspicious_sizeof] */
+ 		node->children = devm_kcalloc(ice_hw_to_dev(hw),
+ 					      hw->max_children[layer],
+-					      sizeof(*node), GFP_KERNEL);
++					      sizeof(*node->children), GFP_KERNEL);
+ 		if (!node->children) {
+ 			devm_kfree(ice_hw_to_dev(hw), node);
+ 			return -ENOMEM;
+-- 
+2.30.2
 
