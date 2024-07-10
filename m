@@ -1,132 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC0E12FB31
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 21:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43E5D535;
+	Wed, 10 Jul 2024 21:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720647370; cv=none; b=PB1Z0dPV7dmepLE2CcaQTlAk6pedtsWYDo6XN5M7Y+VoOyMDrLvXJQLGXS+2pkpdLXIT0XBTD9Yr9gWkkCgWQPNtnb4r5sqIF8iND/nbwIfjQ1qRbbx1IZMMdHPblk629p7UX6soCqdOHs/Uvba/WSSB/3dj1IyQ4qafcwPRHRs=
+	t=1720647519; cv=none; b=hQJFJkkq2/UyjI1Dlr+vF3/6icsybfk65+b15iPkeEE52CTZiYBPwkUt6weFKWj/UhrTWJWZojSbFXiswmBnl5bIdatuLKTLmD378MzPJ30l7QqXz3XS85fRlvdx1irQ8H9RGmqrGvwqSu0Jihbi/rjFJC6ZzVQ/byuv7/AfeFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720647370; c=relaxed/simple;
-	bh=UwINd/1rcWL4hkNdPe+avjy4QtRQ3WHNZFHXTjmTdGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kYdzlBBd9r5Uj+ldpM2oAmlo3ihCNS07aW6YDqBXST1eFSDgfG9pj29FMNUoFeIXc+/34EvIK2IL1G9Ni7CyY+ne9hYkSkvYyE13zqWUux6ePd+Esw4dWVWrr0XMSj7D71oZugXpMdlkjeHDthrlLLKqeqtXDmClOYYVzd48x/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YVeuBr8a; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720647519; c=relaxed/simple;
+	bh=WLMHNlkbdy+hBuh8DELkEFwB4rHb8miMeNdbIm324AI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=r6YZXZOKn+ymlkvWjnJ3h0PtVq4YdTTvK9ZerAl1hKVvDLHqh0qY36A/A89hndPAxC/jvAx9um8didFtbukYEj44WXJZIKW/hP7HbRv+j/QYFndpgO4sq9Y2bZREE/8kV6SFP08ZluPMSHin1RGFRMnb0CoKkMkwqqZv2NOlczE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHen+WkZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YVeuBr8a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720647367;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UwINd/1rcWL4hkNdPe+avjy4QtRQ3WHNZFHXTjmTdGY=;
-	b=YVeuBr8atoNUPbkZrWsZbs4PRf8bKW99GFYRRzuferPD6kLKNM8NSNr8qv2gbpgDN1UFNS
-	lAfeQXUeZVoW3Xjahjl54Y8Sf0PkJt7X64S82hFjk3rKrueG4Qp+1H8f3+CWxfB96bplvl
-	xm8pock5Pr7U491qs5sE+nMfpB2bOnk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-WyQ7EOp7OJq6o4au8hBwYA-1; Wed,
- 10 Jul 2024 17:36:04 -0400
-X-MC-Unique: WyQ7EOp7OJq6o4au8hBwYA-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2DFB1955F40;
-	Wed, 10 Jul 2024 21:36:01 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C1FEC3000181;
-	Wed, 10 Jul 2024 21:35:56 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 10 Jul 2024 23:34:25 +0200 (CEST)
-Date: Wed, 10 Jul 2024 23:34:19 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Julian Orth <ju.orth@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] kernel: rerun task_work while freezing in
- get_signal()
-Message-ID: <20240710213418.GH9228@redhat.com>
-References: <658da3fe-fa02-423b-aff0-52f54e1332ee@gmail.com>
- <Zo1ntduTPiF8Gmfl@slm.duckdns.org>
- <20240709190743.GB3892@redhat.com>
- <d2667002-1631-4f42-8aad-a9ea56c0762b@gmail.com>
- <20240709193828.GC3892@redhat.com>
- <d9c00f01-576c-46cd-a88c-76e244460dac@gmail.com>
- <Zo3bt3AJHSG5rVnZ@slm.duckdns.org>
- <933e7957-7a73-4c9a-87a7-c85b702a3a32@gmail.com>
- <20240710191015.GC9228@redhat.com>
- <Zo7e8RQQfG7U5fuT@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHen+WkZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB6DC32781;
+	Wed, 10 Jul 2024 21:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720647519;
+	bh=WLMHNlkbdy+hBuh8DELkEFwB4rHb8miMeNdbIm324AI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kHen+WkZgQRTYZmykiydiAJ30UEEi3/hUDFTVE0KR6MeqOEr0ZZEeJkhSz8atu6qQ
+	 hdRpD2aqFq9qgczlY7O9wz0XzHDq7316TyRqIKqltJPOuWh8H0/mXMRxUwC03AZHbq
+	 3BAPIU9FLD/aOrKIh4sub+329Rc8qB2DlQehhgzpuy5VdvSzYWLEP1NOHd0fgbtj9z
+	 /H8OLyvo4NdGkuHL6Q7gAnAGVTQjFL9PF+Ogi19ITl3Z5bojhUNJjlbb0hLKhcSUkT
+	 hhh5pNlKNq3kH4JFrD9o2sHXQniUbPmolANxbAGPt/XjEb0eYHvfDLIfUjmHHuRgmv
+	 XWNrL6kMk+L+g==
+Date: Wed, 10 Jul 2024 16:38:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: George-Daniel Matei <danielgeorgem@chromium.org>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nic_swsd@realtek.com,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH] PCI: r8169: add suspend/resume aspm quirk
+Message-ID: <20240710213837.GA257340@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zo7e8RQQfG7U5fuT@slm.duckdns.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACfW=qpNmSeQVG_qSeYpEdk9pf_RTAEEKp+OiBYrRFd3d6HOXg@mail.gmail.com>
 
-On 07/10, Tejun Heo wrote:
+On Wed, Jul 10, 2024 at 05:09:08PM +0200, George-Daniel Matei wrote:
+> >> Added aspm suspend/resume hooks that run
+> >> before and after suspend and resume to change
+> >> the ASPM states of the PCI bus in order to allow
+> >> the system suspend while trying to prevent card hangs
+> >
+> > Why is this needed?  Is there a r8169 defect we're working around?
+> > A BIOS defect?  Is there a problem report you can reference here?
+> 
+> We encountered this issue while upgrading from kernel v6.1 to v6.6.
+> The system would not suspend with 6.6. We tracked down the problem to
+> the NIC of the device, mainly that the following code was removed in
+> 6.6:
 >
-> Hello,
+> > else if (tp->mac_version >= RTL_GIGA_MAC_VER_46)
+> >         rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1_2);
 >
-> On Wed, Jul 10, 2024 at 09:10:16PM +0200, Oleg Nesterov wrote:
+> For the listed devices, ASPM L1 is disabled entirely in 6.6. As for
+> the reason, L1 was observed to cause some problems
+> (https://bugzilla.kernel.org/show_bug.cgi?id=217814). We use a Raptor
+> Lake soc and it won't change residency if the NIC doesn't have L1
+> enabled. I saw in 6.1 the following comment:
+
+Can you verify that the problem still exists in a current kernel,
+e.g., v6.9?
+
+If this is a regression that's still present in v6.9, we need to
+identify the commit that broke it.  Maybe it's 90ca51e8c654 ("r8169:
+fix ASPM-related issues on a number of systems with NIC version from
+RTL8168h")?
+
+> > Chips from RTL8168h partially have issues with L1.2, but seem
+> > to work fine with L1 and L1.1.
+>
+> I was thinking that disabling/enabling L1.1 on the fly before/after
+> suspend could help mitigate the risk associated with L1/L1.1 . I know
+> that ASPM settings are exposed in sysfs and that this could be done
+> from outside the kernel, that was my first approach, but it was
+> suggested to me that this kind of workaround would be better suited
+> for quirks. I did around 1000 suspend/resume cycles of 16-30 seconds
+> each (correcting the resume dev->bus->self being configured twice
+> mistake) and did not notice any problems. What do you think, is this a
+> good approach ... ?
+
+Whatever the problem is, it definitely should be fixed in the kernel,
+and Ilpo is right that it *should* be done in the PCI core ASPM
+support (aspm.c) or at least with interfaces it supplies.
+
+Generally speaking, drivers should not need to touch ASPM at all
+except to work around hardware defects in their device, but r8169 has
+a long history of weird ASPM stuff.  I dunno if that stuff is related
+to hardware defects in the r8169 devices or if it is workarounds for
+past or current defects in aspm.c.
+
+> > This doesn't restore the state as it existed before suspend.  Does
+> > this rely on other parts of restore to do that?
+> 
+> It operates on the assumption that after driver initialization
+> PCI_EXP_LNKCTL_ASPMC is 0 and that there are no states enabled in
+> CTL1. I did a lspci -vvv dump on the affected devices before and after
+> the quirks ran and saw no difference. This could be improved.
+
+Yep, we can't assume any of that because the PCI core owns ASPM
+config, not the driver itself.
+
+> > What's the root cause of the issue?
+> > A silicon bug on the host side?
+> 
+> I think it's the ASPM implementation of the soc.
+
+As Heiner pointed out, if it's a SoC defect, it would potentially
+affect all devices and a workaround would have to cover them all.
+
+Side note: oops, quoting error below, see note about top-posting here:
+https://people.kernel.org/tglx/notes-about-netiquette
+
+> On Tue, Jul 9, 2024 at 12:15 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >
+> > On 08.07.2024 19:23, Bjorn Helgaas wrote:
+> > > [+cc r8169 folks]
+> > >
+> > > On Mon, Jul 08, 2024 at 03:38:15PM +0000, George-Daniel Matei wrote:
+> > >> Added aspm suspend/resume hooks that run
+> > >> before and after suspend and resume to change
+> > >> the ASPM states of the PCI bus in order to allow
+> > >> the system suspend while trying to prevent card hangs
+> > >
+> > > Why is this needed?  Is there a r8169 defect we're working around?
+> > > A BIOS defect?  Is there a problem report you can reference here?
 > ...
-> > If nothing else. CRIU needs to attach and make this task TASK_TRACED, right?
->
-> Yeah, AFAIK, that's the only way to implement check-pointing for now.
-
-OK,
-
-> > And once the target task is traced, it won't react to task_work_add(TWA_SIGNAL).
->
-> I don't know how task_work is being used but the requirement would be that
-> if a cgroup is frozen, task_works shouldn't be making state changes which
-> can't safely be replayed (e.g. by restarting the frozen syscalls).
-
-Well, in theory task_work can do "anything".
-
-Of course, it can't, say, restart a frozen syscall, task_work_run() just
-executes the callbacks in kernel mode and returns.
-
-> it'd be better to freeze them together.
-
-And I tend to agree. simply beacase do_freezer_trap() (and more users of
-clear_thread_flag(TIF_SIGPENDING) + schedule(TASK_INTERRUPTIBLE) pattern)
-do not take TIF_NOTIFY_SIGNAL into account.
-
-But how do you think this patch can make the things worse wrt CRIU ?
-
-And let's even forget this patch which fixes the real problem.
-How do you think the fact that the task sleeping in do_freezer_trap()
-can react to TIF_NOTIFY_SIGNAL, call task_work_run(), and then sleep
-in do_freezer_trap() again can make any difference in this sense?
-
-> As this thing is kinda difficult to reason about,
-
-Agreed,
-
-> it'd probably be easier to just freeze them together if we can.
-
-Agreed, but this needs some "generic" changes while Pavel needs a
-simple and backportable workaround to suppress a real problem.
-
-In short, I don't like this patch either, I just don't see a better
-solution for now ;)
-
-Thanks,
-
-Oleg.
-
