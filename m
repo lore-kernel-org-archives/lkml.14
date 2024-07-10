@@ -1,82 +1,50 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BB33C39
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B131CA87
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720589893; cv=none; b=LAAqIPK9Yv8Aam+W4fe6NvfD+WVz7wn8hS3v8VnI8IaxAAz/zxjfcyTnVpzm8+WNbxHBb/ZvpxtSD7cfwGkT/aXCnVpEpWvXEOpsKF1bKmU5t0/SZqKp8wcJkxJSkeyr6bsotMoShFr2V1k4oau8q2QjY77Y0zNyVfni1dOL3lY=
+	t=1720589916; cv=none; b=QTis7x2LvZChy2ZfW5e5oyRDiCU9JHKqErIOCLt7BOCGqHdtJG/LtAQB51q3N22w1M9CQ0wHUo33BagE1wDYKfoN9qHwQvPZ6YZQPvq6gO/IFavfSfrStt2vJ+CkkhmnEtVhEJOE9ezhAq5yQIQRKqUPtSGuzwzYRmXBYZnwlz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720589893; c=relaxed/simple;
-	bh=v5VCPr4Du+pG2S8CBTFMueLiD63oz+ch5gWQHFG3Dk8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QbHvraCDKTFYdAmRWJ7KpioMzP4IaRfrwqvmGzVX32kZe3quVyPzfdQRiyjTu+7QedzGCEHSX6XarvFVpSrE8y4/IiooZLFBqqyMEPO+0WK9JPePClc/VKvv2X/n5UXUqAavxZu06ZfL4qaO0XlG3DhwVuWKBptRwFMNGH4m3wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NqX8FMlv; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1720589916; c=relaxed/simple;
+	bh=it+lZnG8qkE+IDVtq8XvafLTCOle5Ypn5AUBVAIbtok=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ob268s3wzF672xg20YRMtfRHNe4jn2plpDRXTrvJ40RI3tFUFHV+p60eQSJgtFoFol5u6JEgIiIUoOdcn55vzBOL9DA/kk6iNikp9qKQnS9Sd4Y6gcXBQPzRtm2eRjdiqHHSYNPRSGVLSUiqZB5+nzfmLTQASbfd28Kalylk7cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwB9O0tj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NqX8FMlv"
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 02FAD40637
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1720589888;
-	bh=+BF9ZXP/6SofqOnqF6IHHCxggKe9TmXoQxOW1LVv8SE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=NqX8FMlvho7rxIn5xlF7HO2yJKAozIY/PZ4Ctw+VHNfAAkUANCuEp2R6AV4pqdp9S
-	 Or1Q2I97V9v+CQOUe2z+b3hxIgpU6OBEE/yqora9cUHZiwczZ7LqvYu2JRE+mdwzDC
-	 CTKXztLmBY2alP6nDN64wA4RROisgVBlJscEXORMJQ4FlzMAeVtbjb7OidGiYwE22+
-	 HtJdrvmR7Ipqp5/n5nWqSmif0WaeJWxhUfh3fbdWCFQhvN5zmoy3CxtCHwgJW6I7Fz
-	 3gGfGNEV2eTEQXWcixZsZ9zLHYRgKsr9XBQ6G8Qth18lfaxrO83sUy9W6r+CbN6kL/
-	 LEYTjfZCJASQA==
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-76e904e25a1so2227916a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 22:38:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720589886; x=1721194686;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+BF9ZXP/6SofqOnqF6IHHCxggKe9TmXoQxOW1LVv8SE=;
-        b=Xfa45MpmlEX8rVx/4tx54r6S3+UpPE/vioyCIvhQ4o4tFQU8qPQ5b1Jugzd8+6Pm82
-         JMgAL00tH8iimpsdl1J4fIVKbMYMOniF0mfXxO9zxk/zDuWKeNo0jQnoxtM3dCVfNh7X
-         8KOg9LSngQ7poqTaJNbAbqD2M3BIOcrc2scPJ9HdnIGqLCU+JIniU6ALR+EhSWXSZTWU
-         cbPgDRxRzAYW2/iMD375qmTuCFhNM7xqg535+fguVU2BAPcnGsEcW/A3PjtTWmmDein+
-         aNSciwGyHztKUhDc8xHI4eDXWLmoCm0E5MEj+V0tvrpBSoU0XJTIVP9ULsegtD8XEB93
-         1HNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXu8uVLdCvUracZvBpzWFLdzmEt72cMykXd4olnpGyJXT4SmTreFOsm2cfUJJsieJ2LTYA+p3d7IPl37B+3CXf7fguHXbWlTRKp3fTd
-X-Gm-Message-State: AOJu0YxzmzHdpBG3Kppy2bl4wMO0vHpILVlWowpuYBGu0VOcGuT9gK3a
-	WzdmrJ4C+fIXSR3ThUiaeeC9RkKbUUTEg6YXXzNyDDyuGNVNtQH1zB/gm5JLvXho+OPFsy9JU+4
-	EYli6CzDVhKAvUNDlQ7s/Gx6EqrSgCYu+zoXiu1+zJLHs44mbTKE+CHOooujqtmfkSKJ5sFZnwP
-	s5kA==
-X-Received: by 2002:a05:6a20:9183:b0:1c1:30fc:90d1 with SMTP id adf61e73a8af0-1c2981fc184mr5447952637.9.1720589886087;
-        Tue, 09 Jul 2024 22:38:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEJuCGK8/xtZc2b2Vy7+1+XxNriBbpYB2hIAm404IKG/1XEhZkvb91fSu75wDnS+j81WJEqeQ==
-X-Received: by 2002:a05:6a20:9183:b0:1c1:30fc:90d1 with SMTP id adf61e73a8af0-1c2981fc184mr5447933637.9.1720589885678;
-        Tue, 09 Jul 2024 22:38:05 -0700 (PDT)
-Received: from chengendu.. (2001-b011-381c-5abd-cde4-4d48-00d6-a4b4.dynamic-ip6.hinet.net. [2001:b011:381c:5abd:cde4:4d48:d6:a4b4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab7c66sm25018475ad.121.2024.07.09.22.37.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 22:38:05 -0700 (PDT)
-From: Chengen Du <chengen.du@canonical.com>
-To: jhs@mojatatu.com
-Cc: xiyou.wangcong@gmail.com,
-	jiri@resnulli.us,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	ozsh@nvidia.com,
-	paulb@nvidia.com,
-	marcelo.leitner@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chengen Du <chengen.du@canonical.com>,
-	Gerald Yang <gerald.yang@canonical.com>
-Subject: [PATCH net v3] net/sched: Fix UAF when resolving a clash
-Date: Wed, 10 Jul 2024 13:37:47 +0800
-Message-ID: <20240710053747.13223-1-chengen.du@canonical.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwB9O0tj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8921C32782;
+	Wed, 10 Jul 2024 05:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720589916;
+	bh=it+lZnG8qkE+IDVtq8XvafLTCOle5Ypn5AUBVAIbtok=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rwB9O0tjOmWTH7b+Jobb4sv4nhtpk7dp3Ax0d1ZIjx42t/HjR2M5GLNsv1fftL2kN
+	 zJTqVaglzg/nTjChdLWzpUlXfSeeqSubCbh2tZpesARXZXdva3ixJNd5g13MdWe5yi
+	 kl8QuazuQv8rdtaF17KI3BCz2fr/Uca838vx0D50bo+7A0H6vjqXMvFMIE11TfHW2Y
+	 OtgpGyZAaj5k1UnI7tFWflJ7e9dYziNREcKF8u70Zl5uCaPhHGTUkb41wPNsvimxgq
+	 2xclOoVNqblTybM5rA0p9SbxEdmhaSy2yxFh9ivXh1X1wi02q8QOMLfCJWkum9c3sD
+	 ghnib4x0WNQaQ==
+From: alexs@kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: "Alex Shi (Tencent)" <alexs@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Suren Baghdasaryan <surenb@google.com>
+Subject: [PATCH v3 1/2] mm/memcg: alignment memcg_data define condition
+Date: Wed, 10 Jul 2024 13:43:35 +0800
+Message-ID: <20240710054336.190410-1-alexs@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -86,122 +54,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-KASAN reports the following UAF:
+From: "Alex Shi (Tencent)" <alexs@kernel.org>
 
- BUG: KASAN: slab-use-after-free in tcf_ct_flow_table_process_conn+0x12b/0x380 [act_ct]
- Read of size 1 at addr ffff888c07603600 by task handler130/6469
+commit 21c690a349ba ("mm: introduce slabobj_ext to support slab object
+extensions") changed the folio/page->memcg_data define condition from
+MEMCG to SLAB_OBJ_EXT. And selected SLAB_OBJ_EXT for MEMCG, just for
+SLAB_MATCH(memcg_data, obj_exts), even no other relationship between them.
 
- Call Trace:
-  <IRQ>
-  dump_stack_lvl+0x48/0x70
-  print_address_description.constprop.0+0x33/0x3d0
-  print_report+0xc0/0x2b0
-  kasan_report+0xd0/0x120
-  __asan_load1+0x6c/0x80
-  tcf_ct_flow_table_process_conn+0x12b/0x380 [act_ct]
-  tcf_ct_act+0x886/0x1350 [act_ct]
-  tcf_action_exec+0xf8/0x1f0
-  fl_classify+0x355/0x360 [cls_flower]
-  __tcf_classify+0x1fd/0x330
-  tcf_classify+0x21c/0x3c0
-  sch_handle_ingress.constprop.0+0x2c5/0x500
-  __netif_receive_skb_core.constprop.0+0xb25/0x1510
-  __netif_receive_skb_list_core+0x220/0x4c0
-  netif_receive_skb_list_internal+0x446/0x620
-  napi_complete_done+0x157/0x3d0
-  gro_cell_poll+0xcf/0x100
-  __napi_poll+0x65/0x310
-  net_rx_action+0x30c/0x5c0
-  __do_softirq+0x14f/0x491
-  __irq_exit_rcu+0x82/0xc0
-  irq_exit_rcu+0xe/0x20
-  common_interrupt+0xa1/0xb0
-  </IRQ>
-  <TASK>
-  asm_common_interrupt+0x27/0x40
+Above action make memcg_data exposed and include SLAB_OBJ_EXT for
+!MEMCG. That's incorrect in logcial and pay on code size.
 
- Allocated by task 6469:
-  kasan_save_stack+0x38/0x70
-  kasan_set_track+0x25/0x40
-  kasan_save_alloc_info+0x1e/0x40
-  __kasan_krealloc+0x133/0x190
-  krealloc+0xaa/0x130
-  nf_ct_ext_add+0xed/0x230 [nf_conntrack]
-  tcf_ct_act+0x1095/0x1350 [act_ct]
-  tcf_action_exec+0xf8/0x1f0
-  fl_classify+0x355/0x360 [cls_flower]
-  __tcf_classify+0x1fd/0x330
-  tcf_classify+0x21c/0x3c0
-  sch_handle_ingress.constprop.0+0x2c5/0x500
-  __netif_receive_skb_core.constprop.0+0xb25/0x1510
-  __netif_receive_skb_list_core+0x220/0x4c0
-  netif_receive_skb_list_internal+0x446/0x620
-  napi_complete_done+0x157/0x3d0
-  gro_cell_poll+0xcf/0x100
-  __napi_poll+0x65/0x310
-  net_rx_action+0x30c/0x5c0
-  __do_softirq+0x14f/0x491
+As Vlastimil Babka suggested, let's add _unused_slab_obj_ext for
+SLAB_MATCH for slab.obj_exts while !MEMCG. That could resolve the match
+issue, clean up the feature logical. And decouple the SLAB_OBJ_EXT from
+MEMCG in next patch.
 
- Freed by task 6469:
-  kasan_save_stack+0x38/0x70
-  kasan_set_track+0x25/0x40
-  kasan_save_free_info+0x2b/0x60
-  ____kasan_slab_free+0x180/0x1f0
-  __kasan_slab_free+0x12/0x30
-  slab_free_freelist_hook+0xd2/0x1a0
-  __kmem_cache_free+0x1a2/0x2f0
-  kfree+0x78/0x120
-  nf_conntrack_free+0x74/0x130 [nf_conntrack]
-  nf_ct_destroy+0xb2/0x140 [nf_conntrack]
-  __nf_ct_resolve_clash+0x529/0x5d0 [nf_conntrack]
-  nf_ct_resolve_clash+0xf6/0x490 [nf_conntrack]
-  __nf_conntrack_confirm+0x2c6/0x770 [nf_conntrack]
-  tcf_ct_act+0x12ad/0x1350 [act_ct]
-  tcf_action_exec+0xf8/0x1f0
-  fl_classify+0x355/0x360 [cls_flower]
-  __tcf_classify+0x1fd/0x330
-  tcf_classify+0x21c/0x3c0
-  sch_handle_ingress.constprop.0+0x2c5/0x500
-  __netif_receive_skb_core.constprop.0+0xb25/0x1510
-  __netif_receive_skb_list_core+0x220/0x4c0
-  netif_receive_skb_list_internal+0x446/0x620
-  napi_complete_done+0x157/0x3d0
-  gro_cell_poll+0xcf/0x100
-  __napi_poll+0x65/0x310
-  net_rx_action+0x30c/0x5c0
-  __do_softirq+0x14f/0x491
-
-The ct may be dropped if a clash has been resolved but is still passed to
-the tcf_ct_flow_table_process_conn function for further usage. This issue
-can be fixed by retrieving ct from skb again after confirming conntrack.
-
-Fixes: 0cc254e5aa37 ("net/sched: act_ct: Offload connections with commit action")
-Co-developed-by: Gerald Yang <gerald.yang@canonical.com>
-Signed-off-by: Gerald Yang <gerald.yang@canonical.com>
-Signed-off-by: Chengen Du <chengen.du@canonical.com>
+Signed-off-by: Alex Shi (Tencent) <alexs@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Yoann Congal <yoann.congal@smile.fr>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
 ---
- net/sched/act_ct.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v1->v3: take Vlastimil's suggestion and move SLAB_OBJ_EXT/MEMCG decouple
+to 2nd patch.
+---
+ include/linux/mm_types.h | 8 ++++++--
+ mm/slab.h                | 4 ++++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-index 2a96d9c1db65..6fa3cca87d34 100644
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -1077,6 +1077,14 @@ TC_INDIRECT_SCOPE int tcf_ct_act(struct sk_buff *skb, const struct tc_action *a,
- 		 */
- 		if (nf_conntrack_confirm(skb) != NF_ACCEPT)
- 			goto drop;
-+
-+		/* The ct may be dropped if a clash has been resolved,
-+		 * so it's necessary to retrieve it from skb again to
-+		 * prevent UAF.
-+		 */
-+		ct = nf_ct_get(skb, &ctinfo);
-+		if (!ct)
-+			skip_add = true;
- 	}
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index ef09c4eef6d3..4ac3abc673d3 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -180,8 +180,10 @@ struct page {
+ 	/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+ 	atomic_t _refcount;
  
- 	if (!skip_add)
+-#ifdef CONFIG_SLAB_OBJ_EXT
++#ifdef CONFIG_MEMCG
+ 	unsigned long memcg_data;
++#elif defined(CONFIG_SLAB_OBJ_EXT)
++	unsigned long _unused_slab_obj_ext;
+ #endif
+ 
+ 	/*
+@@ -343,8 +345,10 @@ struct folio {
+ 			};
+ 			atomic_t _mapcount;
+ 			atomic_t _refcount;
+-#ifdef CONFIG_SLAB_OBJ_EXT
++#ifdef CONFIG_MEMCG
+ 			unsigned long memcg_data;
++#elif defined(CONFIG_SLAB_OBJ_EXT)
++			unsigned long _unused_slab_obj_ext;
+ #endif
+ #if defined(WANT_PAGE_VIRTUAL)
+ 			void *virtual;
+diff --git a/mm/slab.h b/mm/slab.h
+index 3586e6183224..8ffdd4f315f8 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -98,7 +98,11 @@ SLAB_MATCH(flags, __page_flags);
+ SLAB_MATCH(compound_head, slab_cache);	/* Ensure bit 0 is clear */
+ SLAB_MATCH(_refcount, __page_refcount);
+ #ifdef CONFIG_SLAB_OBJ_EXT
++#ifdef CONFIG_MEMCG
+ SLAB_MATCH(memcg_data, obj_exts);
++#else
++SLAB_MATCH(_unused_slab_obj_ext, obj_exts);
++#endif
+ #endif
+ #undef SLAB_MATCH
+ static_assert(sizeof(struct slab) <= sizeof(struct page));
 -- 
 2.43.0
 
