@@ -1,116 +1,134 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4FB18FC61;
-	Wed, 10 Jul 2024 10:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A2318FDB1
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720608650; cv=none; b=pMQIhI17+URqm+yezYmSlABeyNlvV8pBFJaal8xOk+YXdBB62mCeO950eQp1w4C7uGKU94Wg3amrkPXKTpDfhjq0hdU5DFVR5huk9qu3HYdVk1ZreyrIq8PVg3sw7XMm8baSX48LR/esU84ipqRiWosXQn9l2T3NY+FgVmuJDHM=
+	t=1720608687; cv=none; b=hdZQLPlEWRbDmfz/F+N32asHkDKCOcXE716gXZW5JJKRwT6GjR1vWsmBl6OPkEu7uTOiuUDXdkr7t6XXuDndYHIG95uNZD+0vktOnASuP/5BM6BCH3cTsEXwYpv4+eYEeTVfWNFHKRy5yD5TCMv70+qvgn5C+XfzIcJDbxmfbM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720608650; c=relaxed/simple;
-	bh=FlX1+w93lB8zvcMp18OB5EDWF9p6KvhUpbHoFQjJfG8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lyxvIs94wfrY76xxPQ8n86cZyX3QT11+2E3c+h3HHpuJK8KYxulLTFLE2Gb9gQg4b+u+BDhIK3fbweXdAFZ7QpQD6wW0GCV5aE7lxRAip814oon2ee7W6RutYfhlO4GdQvl0pP6/6L9NPFwpZNFwZ5hIwQtfICLbwJc1XNCJaCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=gNkQsN12; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="gNkQsN12"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1720608644;
-	bh=Sq7A/5BKly+8nmwJr6uA8HAvkZyan3OjiLaHZGsUBSs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gNkQsN1224trz3k4ZWtlSM1G2KLEdd/BtBlc5HWriCQ8icpbMXsA06qGyoYX4LDO2
-	 NM5UWiPY1/r02uvgFChIZnKZ2prBo6qFY9ruKG91mEbhpfuXQD3PlXTjZOI4XgJyEk
-	 ILwDsYRxvQDkAzvSTWdTntj6Tq1wTT5JdQzkOekLokSjdDUi9DaaMfQ/P/E0P7Xhcm
-	 eYChzWePjRQLpsfH51QBI6UjFNwfh5r/5Bpu6wwMI0m5rd2VkbGwthVyBlJImTVXq5
-	 gHDSg22GwdMTWhYmoyHbUFJXVapTWqKd6suvRvPKpyQ6seUhUf1s+tu2v4XaOQjA8g
-	 arChLBtLNmvaw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	s=arc-20240116; t=1720608687; c=relaxed/simple;
+	bh=Pt5S5a1N4lm9BD1+YJUC1nSGEeDhZMxvgo/OZAITNd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o5RIOHV3JhnIjpRS0wUI9kZFFqp79vsHcxNd8ZRfxQLyAuNiJV3KaXhGZSZyiHPuisD5aCu9bRME6d18j0yb9NrQ9qz2UTOPIDMK7eU8bQ+7RgzASccnJLcugvk65RrEeZ5RyuAmjBLfozZW91og206uS0I7xy3A2TnE+cXSofE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJvlk6F7Lz4wZx;
-	Wed, 10 Jul 2024 20:50:42 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, Nicholas Piggin
- <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Jonathan Corbet
- <corbet@lwn.net>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation/powerpc: Remove retired CPUs from list of
- supported CPUs
-In-Reply-To: <e33ba7b242a104259fbcf1a4d4bdb0f1d1db6882.1720539170.git.christophe.leroy@csgroup.eu>
-References: <e33ba7b242a104259fbcf1a4d4bdb0f1d1db6882.1720539170.git.christophe.leroy@csgroup.eu>
-Date: Wed, 10 Jul 2024 20:50:41 +1000
-Message-ID: <877cdt5xmm.fsf@mail.lhotse>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D223A21A3D;
+	Wed, 10 Jul 2024 10:51:23 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C8C571369A;
+	Wed, 10 Jul 2024 10:51:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gMnALKpnjmazcwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 10 Jul 2024 10:51:22 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Donet Tom <donettom@linux.ibm.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [RFC PATCH 1/8] mm/mmap: Teach generic_get_unmapped_area{_topdown} to handle hugetlb mappings
+Date: Wed, 10 Jul 2024 12:50:35 +0200
+Message-ID: <20240710105042.30165-2-osalvador@suse.de>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240710105042.30165-1-osalvador@suse.de>
+References: <20240710105042.30165-1-osalvador@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Queue-Id: D223A21A3D
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
 
-Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> 601, power4, 401, 403, 405, e200 and IBM-A2 support was removed by
-> by following commits:
-> - Commit 8b14e1dff067 ("powerpc: Remove support for PowerPC 601")
-> - Commit 471d7ff8b51b ("powerpc/64s: Remove POWER4 support")
-> - Commit 1b5c0967ab8a ("powerpc/40x: Remove support for IBM 403GCX")
-> - Commit 39c8bf2b3cc1 ("powerpc: Retire e200 core (mpc555x processor)")
-> - Commit fb5a515704d7 ("powerpc: Remove platforms/wsp and associated
-> pieces")
+We want to stop special casing hugetlb mappings and make them go
+through generic channels, so teach generic_get_unmapped_area{_topdown}
+to handle those.
+The main difference is that we set info.align_mask for huge mappings.
 
-There was also: 468a33028edd ("powerpc: Drop support for pre-POWER4 cpus")
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+---
+ include/linux/hugetlb.h | 10 ++++++++++
+ mm/mmap.c               |  4 ++++
+ 2 files changed, 14 insertions(+)
 
-> Remove them from the list of supported CPUs.
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 2b3c3a404769..1c7b0b32ff7e 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -1029,9 +1029,19 @@ void hugetlb_unregister_node(struct node *node);
+  */
+ bool is_raw_hwpoison_page_in_hugepage(struct page *page);
+ 
++static inline unsigned long huge_page_mask_align(struct file *file)
++{
++	return PAGE_MASK & ~huge_page_mask(hstate_file(file));
++}
++
+ #else	/* CONFIG_HUGETLB_PAGE */
+ struct hstate {};
+ 
++static inline unsigned long huge_page_mask_align(struct file *file)
++{
++	return 0;
++}
++
+ static inline struct hugepage_subpool *hugetlb_folio_subpool(struct folio *folio)
+ {
+ 	return NULL;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 83b4682ec85c..09131b705e7b 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1743,6 +1743,8 @@ generic_get_unmapped_area(struct file *filp, unsigned long addr,
+ 	info.length = len;
+ 	info.low_limit = mm->mmap_base;
+ 	info.high_limit = mmap_end;
++	if (filp && is_file_hugepages(filp))
++		info.align_mask = huge_page_mask_align(filp);
+ 	return vm_unmapped_area(&info);
+ }
+ 
+@@ -1791,6 +1793,8 @@ generic_get_unmapped_area_topdown(struct file *filp, unsigned long addr,
+ 	info.length = len;
+ 	info.low_limit = PAGE_SIZE;
+ 	info.high_limit = arch_get_mmap_base(addr, mm->mmap_base);
++	if (filp && is_file_hugepages(filp))
++		info.align_mask = huge_page_mask_align(filp);
+ 	addr = vm_unmapped_area(&info);
+ 
+ 	/*
+-- 
+2.45.2
 
-The CPU families doc is not intended to be a list of supported CPUs,
-it's more of a family tree which includes the currently supported CPUs.
-
-Even when I first added it there were CPUs mentioned that weren't
-supported. (I realise the paragraph at the top of the file doesn't make
-that clear)
-
-I don't mind removing cores that are unsupported and unconnected to
-other things, eg. A2, e200 and the 40x.
-
-But for 601 and the early POWER cores I'd rather we marked the
-unsupported ones with an asterisk or something. That way the family tree
-still connects and includes all the history, otherwise I think it risks
-being confusing.
-
-Or maybe we use a different box outline (~) for unsupported cores? eg:
-
-   +~~~~~~~~~~~~~~+                 +~~~~~~~~~~~~~~~~+
-   |  Old POWER   | --------------> | RS64 (threads) |
-   +~~~~~~~~~~~~~~+                 +~~~~~~~~~~~~~~~~+
-          |
-          |
-          v
-   +~~~~~~~~~~~~~~+                 +----------------+      +------+
-   |     601      | --------------> |      603       | ---> | e300 |
-   +~~~~~~~~~~~~~~+                 +----------------+      +------+
-          |                                 |
-          |                                 |
-          v                                 v
-   +--------------+    +-----+      +----------------+      +-------+
-   |     604      |    | 755 | <--- |    750 (G3)    | ---> | 750CX |
-   +--------------+    +-----+      +----------------+      +-------+
-          |                                 |                   |
-          |                                 |                   |
-          v                                 v                   v
-   +~~~~~~~~~~~~~~+                 +----------------+      +-------+
-   | 620 (64 bit) |                 |      7400      |      | 750CL |
-   +~~~~~~~~~~~~~~+                 +----------------+      +-------+
-          |                                 |                   |
-          |                                 |                   |
-          v                                 v                   v
-   +~~~~~~~~~~~~~~+                 +----------------+      +-------+
-   |  POWER3/630  |                 |      7410      |      | 750FX |
-   +~~~~~~~~~~~~~~+                 +----------------+      +-------+
-
-
-cheers
