@@ -1,235 +1,94 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE03EC2D6;
-	Wed, 10 Jul 2024 03:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0150200C1;
+	Wed, 10 Jul 2024 03:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720582408; cv=none; b=lJqpd8k+B6O/TfP+XHphN7eQjhlw65ToxlwfxlcIIErbVyYxi2jRWdrRthFv4f+Ti1gR35CBJYmDZZKj5Rtjnzgf8bapG+q/eRuekdIG2GQgztlySHGhoo1HAPQXaeupHrcPIHqwJiFmH4eK/goFuIdCQGYhg4wPOczJUF8V+9U=
+	t=1720582470; cv=none; b=q2+KJNVsxQLYT3sBRA3K60Cr+Gbo9kWh+LVAJ34+sO51GzQ6+gBpHQjWp0+y2f62JkMR9Ul7tlHC4xcodHRF6LMbbnnbs8NDnbVAPv6O5usZ/VMxUcnbP0IbQivimq/JVEHIK8ZDSdttaCWl7iKvbzDOAMTfSJ8qh5djBLMO6sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720582408; c=relaxed/simple;
-	bh=Lb1cngF15A+UjScDP8U6+9XAOxmhvHYZPfYZxnNez1U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q9C7nyVDKQbfKd7LD4T9EdfhVIbbijF1T8OQ+102o3UazuWw/N8PduLY8zPbjQ+e94qRlVOsNT+9S3HYm5zuDEm1AYXi4EMBvfnh5DGGsRoXkhRQ0d8eORgf0AqYFWqeR5xdAjGdEzEa34hJRJFRsTLF4ZtvHZgIOHFur3lNA+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=wUzN9R2V; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1720582470; c=relaxed/simple;
+	bh=Xr4Z6N+ZLNTCjn0mcOpsgrbnQi+pMrx8xtd5Xs8BJfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VfY7iuVji75YS0zB3ZEJXdcon2q/IvejdAo5yxqg7zsILs9xKQeph+GgObcyW1yGPPVwhtHO26KRlXIXljqBfSfEWcmLhGj9xO2FiHLLY9MXZBrGrPVq/bMAQJie8wiSLRg4JfIjzSBncs6p6fMT/SHNJzRIxi0f2s1dgPFzF+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=lKHfKX2H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="wUzN9R2V"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 46A3WgndE1585807, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1720582362; bh=Lb1cngF15A+UjScDP8U6+9XAOxmhvHYZPfYZxnNez1U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	b=wUzN9R2V0Q56TtfXxStDKKdCI47GaHLbGDX91YR3OOk9msJ8n/YgfYgV1r3hHujnk
-	 lyluz+C9Bo13rgc6ABoccXAqyOdf/1s/PcftcerBFnGswDtnzi2W/ghnU2UjJ2qkXj
-	 nT0ZjmkHhOfVe6ekhz9/Wtjt7ktgXCQmez/7nV5cUgySQ7MgeFDdL+FKVDq+PRZYiS
-	 wnEcEhJC8uYV5SAqnxInXZINtgk0ADpu2qezjFlxEUbGNMlKizLdrR66rNGNFXcCiV
-	 9oreB5uCQ/3wE1jkU7+Wmd6bBjkySNHnPYgvdGEB6IHkfFaNUKlHYB250KJ+ECmEoJ
-	 DfFg2eqqMgvtg==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 46A3WgndE1585807
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Jul 2024 11:32:42 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 10 Jul 2024 11:32:43 +0800
-Received: from RTDOMAIN (172.21.210.68) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Jul
- 2024 11:32:42 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, "Justin
- Lai" <justinlai0215@realtek.com>
-Subject: [PATCH net-next v23 00/13] Add Realtek automotive PCIe driver
-Date: Wed, 10 Jul 2024 11:32:21 +0800
-Message-ID: <20240710033234.26868-1-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="lKHfKX2H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C803C32781;
+	Wed, 10 Jul 2024 03:34:27 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="lKHfKX2H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1720582466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p5i/Lzo9gkW+zVOJlOn+7/krq7+rGz0YNs8CYQNCYFc=;
+	b=lKHfKX2Hd1YwMf/8JrhbMnEEbz50FIzoBGgq11j6QV8Foke+nnTWukxN3KSR+lQio1Ai/p
+	LK8VYTvBxZ13Oixal63xrLklzS70IEQThuvWfR9+tQQsmEjGLR1rhRxPlFoI43my/4rNMA
+	txvthB06F6B2HIIvNAPnw7t8o/S24SY=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 11d72e4e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Wed, 10 Jul 2024 03:34:24 +0000 (UTC)
+Date: Wed, 10 Jul 2024 05:34:22 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	tglx@linutronix.de, linux-crypto@vger.kernel.org,
+	linux-api@vger.kernel.org, x86@kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
+Subject: Re: [PATCH v21 1/4] mm: add VM_DROPPABLE for designating always
+ lazily freeable mappings
+Message-ID: <Zo4BPjTIitoYSBMP@zx2c4.com>
+References: <e2f104ac-b6d9-4583-b999-8f975c60d469@redhat.com>
+ <CAHk-=wibRRHVH5D4XvX1maQDCT-o4JLkANXHMoZoWdn=tN0TLA@mail.gmail.com>
+ <6705c6c8-8b6a-4d03-ae0f-aa83442ec0ab@redhat.com>
+ <CAHk-=wi=XvCZ9r897LjEb4ZarLzLtKN1p+Fyig+F2fmQDF8GSA@mail.gmail.com>
+ <7439da2e-4a60-4643-9804-17e99ce6e312@redhat.com>
+ <Zovv4lzM38EHtnms@zx2c4.com>
+ <Zov6SZZCKrqmigua@zx2c4.com>
+ <75d6c45d-deea-464d-b0fd-b36e5d73b898@redhat.com>
+ <Zoyd1DYuD7cmJbgx@zx2c4.com>
+ <b71d8619-1182-43b6-940b-d68f672aa379@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b71d8619-1182-43b6-940b-d68f672aa379@redhat.com>
 
-This series includes adding realtek automotive ethernet driver
-and adding rtase ethernet driver entry in MAINTAINERS file.
+On Wed, Jul 10, 2024 at 05:05:06AM +0200, David Hildenbrand wrote:
+> On 09.07.24 04:17, Jason A. Donenfeld wrote:
+> > Hi David,
+> > 
+> > On Mon, Jul 08, 2024 at 10:21:09PM +0200, David Hildenbrand wrote:
+> >> BTW, I was just trying to understand how MADV_FREE + MAP_DROPPABLE would
+> >> behave without any swap space around.
+> >>
+> >> Did you experiment with that?
+> > 
+> > You mean on a system without any swap configured? That's actually my
+> > primary test environment for this. It behaves as expected: when ram
+> > fills up and the scanner is trying to reclaim what it can,
+> > folio_test_swapbacked(folio) is false, and the memory gets freed. After,
+> > reads fault in a zero page. So it's working as expected.
+> 
+> Okay, just to be clear: no swap/zram/zswap. The reclaim code regarding 
+> not scanning anonymous memory without swap was a bit confusing.
 
-This ethernet device driver for the PCIe interface of
-Realtek Automotive Ethernet Switch,applicable to
-RTL9054, RTL9068, RTL9072, RTL9075, RTL9068, RTL9071.
+Right, no swap, as boring a system as can be. I've experimented with
+that behavior on my swap-less 64GB thinkpad, as well as on little
+special purpose VMs, where I hacked the VM_DROPPABLE test code into the
+wireguard test suite.
 
-v1 -> v2:
-- Remove redundent debug message.
-- Modify coding rule.
-- Remove other function codes not related to netdev.
-
-v2 -> v3:
-- Remove SR-IOV function - We will add the SR-IOV function together when
-uploading the vf driver in the future.
-- Remove other unnecessary code and macro.
-
-v3 -> v4:
-- Remove function prototype - Our driver does not use recursion, so we
-have reordered the code and removed the function prototypes.
-- Define macro precisely - Improve macro code readability to make the
-source code cleaner.
-
-v4 -> v5:
-- Modify ethtool function - Remove some unnecessary code.
-- Don't use inline function - Let the compiler decide.
-
-v5 -> v6:
-- Some old macro definitions have been removed and replaced with the
-lastest usage.
-- Replace s32 with int to ensure consistency.
-- Clearly point out the objects of the service and remove unnecessary
-struct.
-
-v6 -> v7:
-- Split this driver into multiple patches.
-- Reorganize this driver code and remove redundant code to make this
-driver more concise.
-
-v7 -> v8:
-- Add the function to calculate time mitigation and the function to
-calculate packet number mitigation. Users can use these two functions
-to calculate the reg value that needs to be set for the mitigation value
-they want to set.
-- This device is usually used in automotive embedded systems. The page
-pool api will use more memory in receiving packets and requires more
-verification, so we currently do not plan to use it in this patch.
-
-v8 -> v9:
-- Declare functions that are not extern as static functions and increase
-the size of the character array named name in the rtase_int_vector struct
-to correct the build warning noticed by the kernel test robot.
-
-v9 -> v10:
-- Currently we change to use the page pool api. However, when we allocate
-more than one page to an rx buffer, it will cause system errors
-in some cases. Therefore, we set the rx buffer to fixed size with 3776
-(PAGE_SIZE - SKB_DATA_ALIGN(sizeof(skb_shared_info) )), and the maximum
-value of mtu is set to 3754(rx buffer size - VLAN_ETH_HLEN - ETH_FCS_LEN).
-- When ndo_tx_timeout is called, it will dump some device information,
-which can be used for debugging.
-- When the mtu is greater than 1500, the device supports checksums
-but not TSO.
-- Fix compiler warnning.
-
-v10 -> v11:
-- Added error handling of rtase_init_ring().
-- Modify the error related to asymmetric pause in rtase_get_settings.
-- Fix compiler error.
-
-v11 -> v12:
-- Use pm_sleep_ptr and related macros.
-- Remove multicast filter limit.
-- Remove VLAN support and CBS offload functions.
-- Remove redundent code.
-- Fix compiler warnning.
-
-v12 -> v13:
-- Fixed the compiler warning of unuse rtase_suspend() and rtase_resume()
-when there is no define CONFIG_PM_SLEEP.
-
-v13 -> v14:
-- Remove unuse include.
-- call eth_hw_addr_random() to generate random MAC and set device flag
-- use pci_enable_msix_exact() instead of pci_enable_msix_range()
-- If dev->dma_mask is non-NULL, dma_set_mask_and_coherent with a 64-bit
-mask will never fail, so remove the part that determines the 32-bit mask.
-- set dev->pcpu_stat_type before register_netdev() and core will allocate
-stats.
-- call NAPI instance at the right location
-
-v14 -> v15:
-- In rtase_open, when the request interrupt fails, all request interrupts
-are freed.
-- When calling netif_device_detach, there is no need to call
-netif_stop_queue.
-- Call netif_tx_disable() instead of stop_queue(), it takes the tx lock so
-there is no need to worry about the packets being transmitted.
-- In rtase_tx_handler, napi budget is no longer used, but a customized
-tx budget is used.
-- Use the start / stop macros from include/net/netdev_queues.h.
-- Remove redundent code.
-
-v15 -> v16:
-- Re-upload v15 patch set
-
-v16 -> v17:
-- Prefix the names of some rtase-specific macros, structs, and enums.
-- Fix the abnormal problem when returning page_pool resources.
-
-v17 -> v18:
-- Limit the width of each line to 80 colums.
-- Use reverse xmas tree order.
-- Modify the error handling of rtase_alloc_msix and rtase_alloc_interrupt.
-
-v18 -> v19:
-- Use dma_wmb() instead of wmb() to ensure the order of access
-instructions for a memory shared by DMA and CPU.
-- Add error message when allocate dma memory fails.
-- Add .get_eth_mac_stats function to report hardware information.
-- Remove .get_ethtool_stats function.
-- In rtase_tx_csum, when the packet is not ipv6 or ipv4, a warning will
-no longer be issued.
-
-v19 -> v20:
-- Modify the description of switch architecture.
-
-v20 -> v21:
-- Remove the 16b packet statistics and 32b byte statistics report.
-- Remove all parts that use struct net_device_stats stats, and instead
-store the necessary counter fields in struct rtase_private.
-- Modify the handling method of allocation failure in rtase_alloc_desc().
-- Remove redundant conditionals and parentheses.
-- Keep the message in the single line.
-- Assign the required feature to dev->feature and dev->hw_feature at once.
-- Single statement does not need to use braces.
-
-v21 -> v22:
-- Fix the warning when building the driver.
-
-v22 -> v23:
-- Remove the execute bit setting.
-
-Justin Lai (13):
-  rtase: Add support for a pci table in this module
-  rtase: Implement the .ndo_open function
-  rtase: Implement the rtase_down function
-  rtase: Implement the interrupt routine and rtase_poll
-  rtase: Implement hardware configuration function
-  rtase: Implement .ndo_start_xmit function
-  rtase: Implement a function to receive packets
-  rtase: Implement net_device_ops
-  rtase: Implement pci_driver suspend and resume function
-  rtase: Implement ethtool function
-  rtase: Add a Makefile in the rtase folder
-  realtek: Update the Makefile and Kconfig in the realtek folder
-  MAINTAINERS: Add the rtase ethernet driver entry
-
- MAINTAINERS                                   |    7 +
- drivers/net/ethernet/realtek/Kconfig          |   19 +
- drivers/net/ethernet/realtek/Makefile         |    1 +
- drivers/net/ethernet/realtek/rtase/Makefile   |   10 +
- drivers/net/ethernet/realtek/rtase/rtase.h    |  338 +++
- .../net/ethernet/realtek/rtase/rtase_main.c   | 2340 +++++++++++++++++
- 6 files changed, 2715 insertions(+)
- create mode 100644 drivers/net/ethernet/realtek/rtase/Makefile
- create mode 100644 drivers/net/ethernet/realtek/rtase/rtase.h
- create mode 100644 drivers/net/ethernet/realtek/rtase/rtase_main.c
-
--- 
-2.34.1
-
+Jason
