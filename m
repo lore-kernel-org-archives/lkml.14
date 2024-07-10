@@ -1,159 +1,95 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B91042076;
-	Wed, 10 Jul 2024 08:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1B542076
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720599589; cv=none; b=pOdDvfIBOZtktMPKiS5cMUwDdK/58j2U9X5XqsB02idJjjNFeCWReoFbFsMYBotTrtEFHRcuXIhH6RWMM7GdPWn80Z2xhsKqGTJM2KvFBq/RHbQ4vc1rGxDtuQOGUlUAITJhCHK7AhvwrIZmLEhrpDmRZw2r4hMCXunMKOtEN6E=
+	t=1720599651; cv=none; b=XlhH7VsxdCy/Gn5M5UEJ5TrwihMP3hc4bxodImsOk9Zf7m0W6n0xGEkUydLz/BqAT+712BwsEx1XcVVqVhOT0UkoWnL25wrE13ZdZkGglzPoP2i0DtKJpMyJ/xf/CZzJpNLbL6oYqqEY7Uu6HTAu9ylpSGfZqaCfhKyWB9TKubs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720599589; c=relaxed/simple;
-	bh=7S+cpVKiFu9oUMBpcHU6sD8vxcZ1GPeBY2k3VRYEi/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iDbwjQNQphfHpGXNh+CTrN86IRj2cI4ljyDlJPFGffV9QXCORtStSYE3jGhH4B/XGLS5K5HM65+sA74s4mg14VCIgdXXogtAxImfNGgn8nb5IDqC0IvXdfW1BFsxkRGDpnOVSNYmWxkFSb0z9aUQNG4G76HKSP534YnWeC0hVu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WJrJz2SGxzQkjs;
-	Wed, 10 Jul 2024 16:15:47 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0AB59180088;
-	Wed, 10 Jul 2024 16:19:43 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 10 Jul 2024 16:19:41 +0800
-Message-ID: <2336576e-1ed4-cd5e-5535-2d9b88218dae@huawei.com>
-Date: Wed, 10 Jul 2024 16:19:41 +0800
+	s=arc-20240116; t=1720599651; c=relaxed/simple;
+	bh=Je+DDEL0VG5/HOJTUCWPS+iS7ACCfjrKKm0Py8oNDUU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vayi+rH1D43JoizDf4gRbIxR2eKlh67EJfhXDYqShTyo1dtmh3r9cWlzrHAjTx70rrH78PiNe1UWf6rPGNfZ39DWLvNgZnSG0enC7TSoe5PoujRHMHb9aVDLZvbrdpmPvVeA45DKor+d+LxyXfao7vZSWkgtDGqfBiy9A0f5Cnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cfw7Gvys; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cfw7Gvys"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4266fd395eeso13274975e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720599648; x=1721204448; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E/fps9xeeLcadyxt/ePU2yFN+BHi7qw/s7VlkwnIe8E=;
+        b=Cfw7GvysuHVPKtCCzATWNqNUHSerAMeJ6+mlJqe6Jz9z/mCDXnfyaPKrjVm7e3w9hh
+         eZ0uTWabfrLeLbBMmi4i27CGWYdmkIM2FlsSf/SeyqGCfBn0eyiafpM7xsFVRcyerVEh
+         EB7T4SzmJUoDLHYXsQJH9d4ezLRx5B3wnY0siGIwkitVSpq92y9qX7LBphdwObEWPotn
+         6280S6n2Wh9PY1JnEX+a1woQxTKrFflZ690xbXX0I7GtEPeeGY/A7fFt1oDpknviDiHH
+         j+BsuG1dFdcSq0926Gqr5Btc3Eg5WrKOIldNsx15mH3uzKbD2/gQxUBMCcAar6ZxUV2v
+         c1Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720599648; x=1721204448;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E/fps9xeeLcadyxt/ePU2yFN+BHi7qw/s7VlkwnIe8E=;
+        b=k57IiS2s5czG8Gi7dKv0ANK0uoJbUHUrs59X1C9iTpOWMDoGR+h/7pwUO8WTgfHgxV
+         sc7YgRyw2QvQ5C++RT5UYwSP0Hg83jKO1BBlZAJANbK14Nw9EciMMWre4Ya50RcFg3ZJ
+         fv9ARE0CWTkS+Ijd49Ey1JgNMqfunYwgJmw72qve2f4uSLedwQ+1txGYUVOBQ6GTxgZK
+         8PHdk+5P8s7tcVDFsjQpMOdDI3UE0GUW3O9EPjAmGw8hLJn53S4pWe6eb+49BDtgRFU6
+         fd4p9D8/jeoNlsl7rKdc5bozNxuXcxWHa14AwhNwjs7TiXbBwmWtMK8zSUKkH5juNAI3
+         JrEA==
+X-Gm-Message-State: AOJu0YzQaNJOo6hB7N5e32YM/uAPSglKVjyEnWQ4FQ2XNOfV01UDrweO
+	CVeItA5qJ8BEqLFyJeQ/fb4s3NMF003i1BEFYQA6/GUhpvLVrac8WeOktBFg4Ks=
+X-Google-Smtp-Source: AGHT+IGNEmgQqVrXMH6GciGHOfhLlylIQOsKl1v5RdniUOzNY9s/KvFekBc78QGlsR1LyqnjL5Ma0g==
+X-Received: by 2002:a05:600c:2e52:b0:426:6a84:208f with SMTP id 5b1f17b1804b1-426705cf5f9mr31980795e9.7.1720599648356;
+        Wed, 10 Jul 2024 01:20:48 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:6932:abde:fac8:217d? ([2a05:6e02:1041:c10:6932:abde:fac8:217d])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4266d0185d9sm95900845e9.3.2024.07.10.01.20.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 01:20:47 -0700 (PDT)
+Message-ID: <db16f1e1-f874-4630-b8c2-3778441fe569@linaro.org>
+Date: Wed, 10 Jul 2024 10:20:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH 1/2] uprobes: Optimize the return_instance related
- routines
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<martin.lau@linux.dev>, <eddyz87@gmail.com>, <song@kernel.org>,
-	<yonghong.song@linux.dev>, <john.fastabend@gmail.com>, <kpsingh@kernel.org>,
-	<sdf@fomichev.me>, <haoluo@google.com>, <mykolal@fb.com>, <shuah@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-References: <20240709005142.4044530-1-liaochang1@huawei.com>
- <20240709005142.4044530-2-liaochang1@huawei.com>
- <CAEf4BzYDrVJXnAruko-h5-oXCGuZ92x4KnY-2cD=XXBp1U_kBg@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzYDrVJXnAruko-h5-oXCGuZ92x4KnY-2cD=XXBp1U_kBg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 05/10] dt-bindings: timer: Add schema for
+ realtek,otto-timer
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, tglx@linutronix.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ tsbogend@alpha.franken.de, paulburton@kernel.org, peterz@infradead.org,
+ mail@birger-koblitz.de, bert@biot.com, john@phrozen.org, sander@svanheule.net
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-mips@vger.kernel.org, kabel@kernel.org, ericwouds@gmail.com
+References: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
+ <20240710043524.1535151-6-chris.packham@alliedtelesis.co.nz>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240710043524.1535151-6-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
-
-
-在 2024/7/10 7:55, Andrii Nakryiko 写道:
-> On Mon, Jul 8, 2024 at 6:00 PM Liao Chang <liaochang1@huawei.com> wrote:
->>
->> Reduce the runtime overhead for struct return_instance data managed by
->> uretprobe. This patch replaces the dynamic allocation with statically
->> allocated array, leverage two facts that are limited nesting depth of
->> uretprobe (max 64) and the function call style of return_instance usage
->> (create at entry, free at exit).
->>
->> This patch has been tested on Kunpeng916 (Hi1616), 4 NUMA nodes, 64
->> cores @ 2.4GHz. Redis benchmarks show a throughput gain by 2% for Redis
->> GET and SET commands:
->>
->> ------------------------------------------------------------------
->> Test case       | No uretprobes | uretprobes     | uretprobes
->>                 |               | (current)      | (optimized)
->> ==================================================================
->> Redis SET (RPS) | 47025         | 40619 (-13.6%) | 41529 (-11.6%)
->> ------------------------------------------------------------------
->> Redis GET (RPS) | 46715         | 41426 (-11.3%) | 42306 (-9.4%)
->> ------------------------------------------------------------------
->>
->> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->> ---
->>  include/linux/uprobes.h |  10 ++-
->>  kernel/events/uprobes.c | 162 ++++++++++++++++++++++++----------------
->>  2 files changed, 105 insertions(+), 67 deletions(-)
->>
+On 10/07/2024 06:35, Chris Packham wrote:
+> Add the devicetree schema for the realtek,otto-timer present on a number
+> of Realtek SoCs.
 > 
-> [...]
-> 
->> +static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
->> +                                    struct pt_regs *regs)
->> +{
->> +       struct return_frame *frame = &utask->frame;
->> +       struct return_instance *ri = frame->return_instance;
->> +       enum rp_check ctx = chained ? RP_CHECK_CHAIN_CALL : RP_CHECK_CALL;
->> +
->> +       while (ri && !arch_uretprobe_is_alive(ri, ctx, regs)) {
->> +               ri = next_ret_instance(frame, ri);
->> +               utask->depth--;
->> +       }
->> +       frame->return_instance = ri;
->> +}
->> +
->> +static struct return_instance *alloc_return_instance(struct uprobe_task *task)
->> +{
->> +       struct return_frame *frame = &task->frame;
->> +
->> +       if (!frame->vaddr) {
->> +               frame->vaddr = kcalloc(MAX_URETPROBE_DEPTH,
->> +                               sizeof(struct return_instance), GFP_KERNEL);
-> 
-> Are you just pre-allocating MAX_URETPROBE_DEPTH instances always?
-> I.e., even if we need just one (because there is no recursion), you'd
-> still waste memory for all 64 ones?
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
 
-This is the truth. On my testing machines, each struct return_instance data
-is 28 bytes, resulting in a total pre-allocated 1792 bytes when the first
-instrumented function is hit.
-
-> 
-> That seems rather wasteful.
-> 
-> Have you considered using objpool for fast reuse across multiple CPUs?
-> Check lib/objpool.c.
-
-After studying how kretprobe uses objpool, I'm convinced it is a right solution for
-managing return_instance in uretporbe. While I need some time to fully understand
-the objpool code itself and run some benchmark to verify its performance.
-
-Thanks for the suggestion.
-
-> 
->> +               if (!frame->vaddr)
->> +                       return NULL;
->> +       }
->> +
->> +       if (!frame->return_instance) {
->> +               frame->return_instance = frame->vaddr;
->> +               return frame->return_instance;
->> +       }
->> +
->> +       return ++frame->return_instance;
->> +}
->> +
->> +static inline bool return_frame_empty(struct uprobe_task *task)
->> +{
->> +       return !task->frame.return_instance;
->>  }
->>
->>  /*
-> 
-> [...]
+Applied, thanks
 
 -- 
-BR
-Liao, Chang
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
