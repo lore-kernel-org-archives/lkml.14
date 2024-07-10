@@ -1,78 +1,107 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F91381AA;
-	Wed, 10 Jul 2024 03:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36DA381AD
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 03:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720581901; cv=none; b=QmsSUVmTJkDhQaWgaVIYMfu2x/NeeGBHUfKmTNXRaX9Uo6kdQPf8kj2IwflxPxCVctR28kQduJ2S1hYtxCR+FXDXaUtQS8gzD3C9od2gtl9EkMPCfj7Or1M75uai3NcqnnCBVOX1R38xwLW7YevOv2AfC6hSZJEPDqcXIBWYtok=
+	t=1720581933; cv=none; b=ZNgBr3zxsi73uL2GQhlaI8vOisSkMNp5W/GJTNHv80DN7/+oeKpcBdLh5gIx1u9Sk8Fm0REI8eUGkjwUfFPSg+CcNK9tOrNFR/Zq5slNcYGq2pBgpchVhkyF10qw9jx9jxtpB2A6jfRtFr2XWJNmO7ZR8ERSDgMGVp9sJG1qZbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720581901; c=relaxed/simple;
-	bh=QHegp8DOcSh8eZnGx+hO408fB/5GYkziaSmH3ahHvh8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JaM8es26FChfjvdR5dqvKHMt7DX75bGIB3A8nzdErHk+AJVpbzeja1HB3PF8eYuBxbqh1svjjCtbluJNP3F8+2qTtwEYYXZ8RfZTjBdCwFLkjQhrsHR6zqI3yI/4/mZ/q2/AICABGJJIhZZwSdDpB6IS8rK7UEd52ZZN8ZUTJF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAAXHNQB_41mtPL3FA--.46778S2;
-	Wed, 10 Jul 2024 11:24:49 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: njavali@marvell.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] scsi: qla2xxx: Convert comma to semicolon
-Date: Wed, 10 Jul 2024 11:24:23 +0800
-Message-Id: <20240710032423.2003805-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720581933; c=relaxed/simple;
+	bh=9sbwGihOLkbKRAKocXOlId4hhNDwPbs0zE0X3aDWblY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gDxdVd+A44PqbUTFm5uXwId8MO+QGCYPOJOUvKp1SAqy4eUUWY+LuZ81ay3HcPA6q2wYLQL61Q194Vi+6GyYBxRFw/4kdyuSRnLYMS5407Joj81J1fxdw8zplIDQiMaJfU+gnkzsjXgLoTi5hKS/amwRZMHv2IFRyewDhK2oEOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J9+gW/ky; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J9+gW/ky"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720581929;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9sbwGihOLkbKRAKocXOlId4hhNDwPbs0zE0X3aDWblY=;
+	b=J9+gW/kyku5xY2J5dOvBApjGnq5sERW/z81ud9o6asJToE1L8TmPbeJ0ioCAj4/oEOdgQF
+	b8M6MKImF1v6S15mJ+SiP1tCeYxwRE9HAdOJsttPSRdCaqbFsQUpXjdTwHDt+vdBe+L4+d
+	/VIKsfoOgvCfTiHB5URXENTNWVaI8/8=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-28-zwgl49tLO2iq0zZstGrUAw-1; Tue, 09 Jul 2024 23:25:25 -0400
+X-MC-Unique: zwgl49tLO2iq0zZstGrUAw-1
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3835285561fso66184235ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 20:25:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720581924; x=1721186724;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9sbwGihOLkbKRAKocXOlId4hhNDwPbs0zE0X3aDWblY=;
+        b=BrAB+jOqWNgD8fJWmP1Bv6BkePqLkDhWJ9QLXvKO+vPgURWwgICawilqmuU/hKg4lG
+         cGHtHgCxz4COFyKHs/70pMf1F4fkPLI31ipmi2hmnelN+A0zysz9rBDca5l0dGqKGKx/
+         lmLZkAwFqnZw35BvJqyK+yWNPnNt/4gFrWZRKl3r57e6YprBTxxT0cBqpM2eOzXcwA3T
+         ZIhwY7od42aPlwlrRcAmLZGTyxgaGlZQzpbN3FS5VRzXyqKX32wzlJ1q6KYgf85e89Xz
+         OtGauhYzKghYh8R7veeMyuO1gMY9UUl8Gy1Svp+LDvzUrKJr7l+4Izi9BL16Gm0DNjIJ
+         dUhw==
+X-Gm-Message-State: AOJu0YxW7+yqmwJumZuqODc2pqrJ0hnqOCZhAlsPzFowN6TaD3LxEfve
+	izU3F2nYOS3cm1q0gS59ewr6sKyP/VHsMFzJ/IO7oRVd/M3ypqJwgm0+Bv+hffeKc2t9Jxmp4Xh
+	Ca6pkHxPmE9dnwynXVcIPXLZE+PGHtQmi3XEg7pR1eD2cgRhf9BveBFySXu/Qkyy+esdO3DoFP7
+	EPd5OK8wR/Mfhya2VoLFlEFDzmDtaUOMQCgJfY
+X-Received: by 2002:a05:6e02:170b:b0:382:b436:ecbb with SMTP id e9e14a558f8ab-38a57bcd755mr44254625ab.11.1720581923960;
+        Tue, 09 Jul 2024 20:25:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEW8tp760Eusr7cpOewOOzt8KywljVE5imblpi4EA9nOMhtnhRxpdbKT5KwR6ZV/XXWj53jrT/VMHmkMmslXtc=
+X-Received: by 2002:a05:6e02:170b:b0:382:b436:ecbb with SMTP id
+ e9e14a558f8ab-38a57bcd755mr44254435ab.11.1720581923592; Tue, 09 Jul 2024
+ 20:25:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAXHNQB_41mtPL3FA--.46778S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZF15Zr47GrWUXw4ruFg_yoWfJrc_uF
-	s0qrWIqrn0krnruw1xXrW3Zay2vFWvqr1ku3WYvry5uayUX347XF1YqFW3Xa13trWIyFW5
-	Cw4UXrWjyF1rujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
-	GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBMKZUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+References: <cover.1720173841.git.mst@redhat.com> <1a5d7456542bcd1df8e397c93c48deacd244add5.1720173841.git.mst@redhat.com>
+In-Reply-To: <1a5d7456542bcd1df8e397c93c48deacd244add5.1720173841.git.mst@redhat.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 10 Jul 2024 11:25:10 +0800
+Message-ID: <CACGkMEsg0+vpav1Fo8JF1isq4Ef8t4_CFN1scyztDO8bXzRLBQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] virtio: fix vq # when vq skipped
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Alexander Duyck <alexander.h.duyck@linux.intel.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Cornelia Huck <cohuck@redhat.com>, 
+	Halil Pasic <pasic@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	linux-um@lists.infradead.org, linux-remoteproc@vger.kernel.org, 
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace a comma between expression statements by a semicolon.
+On Fri, Jul 5, 2024 at 6:09=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com> =
+wrote:
+>
+> virtio balloon communicates to the core that in some
+> configurations vq #s are non-contiguous by setting name
+> pointer to NULL.
+>
+> Unfortunately, core then turned around and just made them
+> contiguous again. Result is that driver is out of spec.
+>
+> Implement what the API was supposed to do
+> in the 1st place. Compatibility with buggy hypervisors
+> is handled inside virtio-balloon, which is the only driver
+> making use of this facility, so far.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/scsi/qla2xxx/qla_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 8377624d76c9..e2ca9a14b643 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -423,7 +423,7 @@ qla2x00_async_logout(struct scsi_qla_host *vha, fc_port_t *fcport)
- 	sp->type = SRB_LOGOUT_CMD;
- 	sp->name = "logout";
- 	qla2x00_init_async_sp(sp, qla2x00_get_async_timeout(vha) + 2,
--			      qla2x00_async_logout_sp_done),
-+			      qla2x00_async_logout_sp_done);
- 
- 	ql_dbg(ql_dbg_disc, vha, 0x2070,
- 	    "Async-logout - hdl=%x loop-id=%x portid=%02x%02x%02x %8phC explicit %d.\n",
--- 
-2.25.1
+Thanks
 
