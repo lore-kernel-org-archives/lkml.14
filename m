@@ -1,140 +1,236 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7350618FA24;
-	Wed, 10 Jul 2024 09:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44858288F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720605103; cv=none; b=dDDOSeNoQDMd/1WxeHwKibtQMhdtxJurxa3vRHRFGH+AYmDhuCWTeGWQEj9Jfvc3xdZNTUNqTPa8419Zn7FTMX3o2r8AS3rgTcU3fWwtqzyw7gvGmAM9Ea3tGf2pkSiLM8nZDZSLLekmK3O2GaQARV3T/Vhc05awy5bHIQ3AHMc=
+	t=1720605324; cv=none; b=uvU2QXv5tGxYK37sz9hfqGVm5BFr7sLcEVj1HbUJfcky3ei4FsyuLx6fAVMnCiNO/SJoE7C5fDIV8RzmCyVSAFsQvwQTab1rPTOs+df0Q0sO0wDvMBJvznI9f3Fc//BD45PL5/ChOuwbmpBth9q6Dsj/R9Q05ipJgZ8ZLApdK2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720605103; c=relaxed/simple;
-	bh=LKUQ1g3huEdYZKIyc/kRdhR95IYzPsKqaNbyDCwocn4=;
-	h=Subject:Message-ID:Date:MIME-Version:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GQMnWwNkgrJ8xs2C3IGKAQfSrmlglvFnkkB7ynxvoCItk8tnYVUAl5+RixpwwQTKXqiVyhjlgwsnLEJIJcuaQQ6A2p2RnHdAq3Xa4CARhkeauTOtVad/wptAve7n/pIuedOG9LnCTOdg5PnkqWn/8H6QEaEaZl9ydK8s1R4Ghds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=kmbW9RFx; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="kmbW9RFx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1720605102; x=1752141102;
-  h=message-id:date:mime-version:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=nK6dem30/R4Q7t0pgui63Ry1Sj5Xd4Mv4l1MOOrjNtU=;
-  b=kmbW9RFxVl/nREu/4VWqAapAFgQVNXghfgkDx1KkFy/2Hz2C5gNOpWQf
-   6Gol2JrH0y/1AAl4+mgCgof4BtdUN7/pzKwogYvyZ+kCROSnGzKmo+L1e
-   K8QadeSVd0G7+vW0qvLqKk970SdBYx1BLwo/CpNlGdHGlGs6yOWYsxzjR
-   0=;
-X-IronPort-AV: E=Sophos;i="6.09,197,1716249600"; 
-   d="scan'208";a="739710169"
-Subject: Re: [RFC PATCH 8/8] kvm: gmem: Allow restricted userspace mappings
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 09:51:23 +0000
-Received: from EX19MTAUEA002.ant.amazon.com [10.0.44.209:62414]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.81.34:2525] with esmtp (Farcaster)
- id 35b3f801-8f14-44a3-a9e2-5ce76030037f; Wed, 10 Jul 2024 09:51:21 +0000 (UTC)
-X-Farcaster-Flow-ID: 35b3f801-8f14-44a3-a9e2-5ce76030037f
-Received: from EX19D008UEA003.ant.amazon.com (10.252.134.116) by
- EX19MTAUEA002.ant.amazon.com (10.252.134.9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Wed, 10 Jul 2024 09:51:21 +0000
-Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
- EX19D008UEA003.ant.amazon.com (10.252.134.116) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Wed, 10 Jul 2024 09:51:20 +0000
-Received: from [127.0.0.1] (172.19.88.180) by mail-relay.amazon.com
- (10.252.134.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34 via Frontend
- Transport; Wed, 10 Jul 2024 09:51:18 +0000
-Message-ID: <f7106744-2add-4346-b3b6-49239de34b7f@amazon.co.uk>
-Date: Wed, 10 Jul 2024 10:51:17 +0100
+	s=arc-20240116; t=1720605324; c=relaxed/simple;
+	bh=SyZ5lGyIh0HgdU2By0DQ8mW3X4tQoMZ5FH1A5u+11is=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=saTZZSqFxL+mcGDs+Or+/myjUChEaMokB2cB5jCUyGfVl1Q8DlTsKT7KGRBkCGHIbFS5n+UdOuI0kJECR5v1ckAp60TeTbJAlnKjdvX+8tJ9qRHvd8vJo/xrrHHQ7K5XnLa0WtjnKQ9JNcJz0NEte4ul5/OzA9M/AYM0z0ct0Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B185106F;
+	Wed, 10 Jul 2024 02:55:40 -0700 (PDT)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B3D03F762;
+	Wed, 10 Jul 2024 02:55:12 -0700 (PDT)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Barry Song <baohua@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Daniel Gomez <da.gomez@samsung.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH v2] mm: shmem: Rename mTHP shmem counters
+Date: Wed, 10 Jul 2024 10:55:01 +0100
+Message-ID: <20240710095503.3193901-1-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: David Hildenbrand <david@redhat.com>, Fuad Tabba <tabba@google.com>
-CC: <seanjc@google.com>, <pbonzini@redhat.com>, <akpm@linux-foundation.org>,
-	<dwmw@amazon.co.uk>, <rppt@kernel.org>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <willy@infradead.org>, <graf@amazon.com>,
-	<derekmn@amazon.com>, <kalyazin@amazon.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <dmatlack@google.com>,
-	<chao.p.peng@linux.intel.com>, <xmarcalx@amazon.co.uk>, James Gowans
-	<jgowans@amazon.com>
-References: <20240709132041.3625501-1-roypat@amazon.co.uk>
- <20240709132041.3625501-9-roypat@amazon.co.uk>
- <CA+EHjTynVpsqsudSVRgOBdNSP_XjdgKQkY_LwdqvPkpJAnAYKg@mail.gmail.com>
- <47ce1b10-e031-4ac1-b88f-9d4194533745@redhat.com>
-Content-Language: en-US
-From: Patrick Roy <roypat@amazon.co.uk>
-Autocrypt: addr=roypat@amazon.co.uk; keydata=
- xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
- NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
- wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
- CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
- AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
- AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
- IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
- 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
- 8hlxFQM=
-In-Reply-To: <47ce1b10-e031-4ac1-b88f-9d4194533745@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
+The legacy PMD-sized THP counters at /proc/vmstat include
+thp_file_alloc, thp_file_fallback and thp_file_fallback_charge, which
+rather confusingly refer to shmem THP and do not include any other types
+of file pages. This is inconsistent since in most other places in the
+kernel, THP counters are explicitly separated for anon, shmem and file
+flavours. However, we are stuck with it since it constitutes a user ABI.
 
+Recently, commit 66f44583f9b6 ("mm: shmem: add mTHP counters for
+anonymous shmem") added equivalent mTHP stats for shmem, keeping the
+same "file_" prefix in the names. But in future, we may want to add
+extra stats to cover actual file pages, at which point, it would all
+become very confusing.
 
-On 7/9/24 22:13, David Hildenbrand wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> 
-> 
-> 
-> On 09.07.24 16:48, Fuad Tabba wrote:
->> Hi Patrick,
->>
->> On Tue, Jul 9, 2024 at 2:21 PM Patrick Roy <roypat@amazon.co.uk> wrote:
->>>
->>> Allow mapping guest_memfd into userspace. Since AS_INACCESSIBLE is set
->>> on the underlying address_space struct, no GUP of guest_memfd will be
->>> possible.
->>
->> This patch allows mapping guest_memfd() unconditionally. Even if it's
->> not guppable, there are other reasons why you wouldn't want to allow
->> this. Maybe a config flag to gate it? e.g.,
-> 
-> 
-> As discussed with Jason, maybe not the direction we want to take with
-> guest_memfd.
-> If it's private memory, it shall not be mapped. Also not via magic
-> config options.
-> 
-> We'll likely discuss some of that in the meeting MM tomorrow I guess
-> (having both shared and private memory in guest_memfd).
+So let's take the opportunity to rename these new counters "shmem_"
+before the change makes it upstream and the ABI becomes immutable. While
+we are at it, let's improve the documentation for the legacy counters to
+make it clear that they count shmem pages only.
 
-Oh, nice. I'm assuming you mean this meeting:
-https://lore.kernel.org/linux-mm/197a2f19-c71c-fbde-a62a-213dede1f4fd@google.com/T/?
-Would it be okay if I also attend? I see it also mentions huge pages,
-which is another thing we are interested in, actually :)
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: Lance Yang <ioworker0@gmail.com>
+---
 
-> Note that just from staring at this commit, I don't understand the
-> motivation *why* we would want to do that.
+Hi All,
 
-Fair - I admittedly didn't get into that as much as I probably should
-have. In our usecase, we do not have anything that pKVM would (I think)
-call "guest-private" memory. I think our memory can be better described
-as guest-owned, but always shared with the VMM (e.g. userspace), but
-ideally never shared with the host kernel. This model lets us do a lot
-of simplifying assumptions: Things like I/O can be handled in userspace
-without the guest explicitly sharing I/O buffers (which is not exactly
-what we would want long-term anyway, as sharing in the guest_memfd
-context means sharing with the host kernel), we can easily do VM
-snapshotting without needing things like TDX's TDH.EXPORT.MEM APIs, etc.
+Applies on top of yesterday's mm-unstable (2073cda629a4) and tested with mm
+selftests; no regressions observed.
 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+The backstory here is that I'd like to introduce some counters for regular file
+folio allocations to observe how often large folio allocation succeeds, but
+these shmem counters are named "file" which is going to make things confusing.
+So hoping to solve that before commit 66f44583f9b6 ("mm: shmem: add mTHP
+counters for anonymous shmem") goes upstream (it is currently in mm-stable).
+
+Changes since v1 [1]
+====================
+  - Updated documentation for existing legacy "file_" counters to make it clear
+    they only count shmem pages.
+
+[1] https://lore.kernel.org/linux-mm/20240708112445.2690631-1-ryan.roberts@arm.com/
+
+Thanks,
+Ryan
+
+ Documentation/admin-guide/mm/transhuge.rst | 29 ++++++++++++----------
+ include/linux/huge_mm.h                    |  6 ++---
+ mm/huge_memory.c                           | 12 ++++-----
+ mm/shmem.c                                 |  8 +++---
+ 4 files changed, 29 insertions(+), 26 deletions(-)
+
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index 747c811ee8f1..3528daa1f239 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -412,20 +412,23 @@ thp_collapse_alloc_failed
+ 	the allocation.
+
+ thp_file_alloc
+-	is incremented every time a file huge page is successfully
+-	allocated.
++	is incremented every time a shmem huge page is successfully
++	allocated (Note that despite being named after "file", the counter
++	measures only shmem).
+
+ thp_file_fallback
+-	is incremented if a file huge page is attempted to be allocated
+-	but fails and instead falls back to using small pages.
++	is incremented if a shmem huge page is attempted to be allocated
++	but fails and instead falls back to using small pages. (Note that
++	despite being named after "file", the counter measures only shmem).
+
+ thp_file_fallback_charge
+-	is incremented if a file huge page cannot be charged and instead
++	is incremented if a shmem huge page cannot be charged and instead
+ 	falls back to using small pages even though the allocation was
+-	successful.
++	successful. (Note that despite being named after "file", the
++	counter measures only shmem).
+
+ thp_file_mapped
+-	is incremented every time a file huge page is mapped into
++	is incremented every time a file or shmem huge page is mapped into
+ 	user address space.
+
+ thp_split_page
+@@ -496,16 +499,16 @@ swpout_fallback
+ 	Usually because failed to allocate some continuous swap space
+ 	for the huge page.
+
+-file_alloc
+-	is incremented every time a file huge page is successfully
++shmem_alloc
++	is incremented every time a shmem huge page is successfully
+ 	allocated.
+
+-file_fallback
+-	is incremented if a file huge page is attempted to be allocated
++shmem_fallback
++	is incremented if a shmem huge page is attempted to be allocated
+ 	but fails and instead falls back to using small pages.
+
+-file_fallback_charge
+-	is incremented if a file huge page cannot be charged and instead
++shmem_fallback_charge
++	is incremented if a shmem huge page cannot be charged and instead
+ 	falls back to using small pages even though the allocation was
+ 	successful.
+
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index acb6ac24a07e..cff002be83eb 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -269,9 +269,9 @@ enum mthp_stat_item {
+ 	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+ 	MTHP_STAT_SWPOUT,
+ 	MTHP_STAT_SWPOUT_FALLBACK,
+-	MTHP_STAT_FILE_ALLOC,
+-	MTHP_STAT_FILE_FALLBACK,
+-	MTHP_STAT_FILE_FALLBACK_CHARGE,
++	MTHP_STAT_SHMEM_ALLOC,
++	MTHP_STAT_SHMEM_FALLBACK,
++	MTHP_STAT_SHMEM_FALLBACK_CHARGE,
+ 	MTHP_STAT_SPLIT,
+ 	MTHP_STAT_SPLIT_FAILED,
+ 	MTHP_STAT_SPLIT_DEFERRED,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 9ec64aa2be94..f9696c94e211 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -568,9 +568,9 @@ DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
+ DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
+ DEFINE_MTHP_STAT_ATTR(swpout, MTHP_STAT_SWPOUT);
+ DEFINE_MTHP_STAT_ATTR(swpout_fallback, MTHP_STAT_SWPOUT_FALLBACK);
+-DEFINE_MTHP_STAT_ATTR(file_alloc, MTHP_STAT_FILE_ALLOC);
+-DEFINE_MTHP_STAT_ATTR(file_fallback, MTHP_STAT_FILE_FALLBACK);
+-DEFINE_MTHP_STAT_ATTR(file_fallback_charge, MTHP_STAT_FILE_FALLBACK_CHARGE);
++DEFINE_MTHP_STAT_ATTR(shmem_alloc, MTHP_STAT_SHMEM_ALLOC);
++DEFINE_MTHP_STAT_ATTR(shmem_fallback, MTHP_STAT_SHMEM_FALLBACK);
++DEFINE_MTHP_STAT_ATTR(shmem_fallback_charge, MTHP_STAT_SHMEM_FALLBACK_CHARGE);
+ DEFINE_MTHP_STAT_ATTR(split, MTHP_STAT_SPLIT);
+ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
+ DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+@@ -581,9 +581,9 @@ static struct attribute *stats_attrs[] = {
+ 	&anon_fault_fallback_charge_attr.attr,
+ 	&swpout_attr.attr,
+ 	&swpout_fallback_attr.attr,
+-	&file_alloc_attr.attr,
+-	&file_fallback_attr.attr,
+-	&file_fallback_charge_attr.attr,
++	&shmem_alloc_attr.attr,
++	&shmem_fallback_attr.attr,
++	&shmem_fallback_charge_attr.attr,
+ 	&split_attr.attr,
+ 	&split_failed_attr.attr,
+ 	&split_deferred_attr.attr,
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 921d59c3d669..f24dfbd387ba 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1777,7 +1777,7 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+ 			if (pages == HPAGE_PMD_NR)
+ 				count_vm_event(THP_FILE_FALLBACK);
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-			count_mthp_stat(order, MTHP_STAT_FILE_FALLBACK);
++			count_mthp_stat(order, MTHP_STAT_SHMEM_FALLBACK);
+ #endif
+ 			order = next_order(&suitable_orders, order);
+ 		}
+@@ -1804,8 +1804,8 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+ 				count_vm_event(THP_FILE_FALLBACK_CHARGE);
+ 			}
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-			count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK);
+-			count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK_CHARGE);
++			count_mthp_stat(folio_order(folio), MTHP_STAT_SHMEM_FALLBACK);
++			count_mthp_stat(folio_order(folio), MTHP_STAT_SHMEM_FALLBACK_CHARGE);
+ #endif
+ 		}
+ 		goto unlock;
+@@ -2181,7 +2181,7 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+ 			if (folio_test_pmd_mappable(folio))
+ 				count_vm_event(THP_FILE_ALLOC);
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-			count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_ALLOC);
++			count_mthp_stat(folio_order(folio), MTHP_STAT_SHMEM_ALLOC);
+ #endif
+ 			goto alloced;
+ 		}
+--
+2.43.0
+
