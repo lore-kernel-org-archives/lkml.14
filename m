@@ -1,196 +1,214 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918C1198A21
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1972C198A30;
+	Wed, 10 Jul 2024 16:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627834; cv=none; b=Lhz+DB0OQ3cnWqM6ZbaSHp7UtbcBllxQHypbYKnYl7x29Vcjj+ggw98cDum/68y1MwFScVTfW+adJ/WtmViXn5rWhDw6HV3xS7q6lLtjujH5yiG2aTeEFG33DoLSq/40c1pObIA/wr91piMVn6FlriGL91VAID3x0LcsvA9UwhI=
+	t=1720627836; cv=none; b=lhbKuwEolkJSuE1x5XebpK/9cHHqQNbZfvmk827+hvP8Qp0jFRMMsM2T77pgn5CpA2ALgeOhmT+nDIvS0kC35xvlQakhU29Dix8kdlrxAS7VtSNIrrNVVAFxnmFMMphvExDWf+AQ8wSoDDIwYbiVVNVdeeBdLs1nGPxuCjbdYeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720627834; c=relaxed/simple;
-	bh=4d7flW0GBJxl2SzYgrUWz8HkaqydvWbMoTN0i4FaSdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q1NyoczpuSNQHu0Br97GljOGKdjbioX5Lp9yaIgh6W6r+ZJyAyqjbXg8cxNvuiV9GuJnozorVxLMXecPMphq05oPmwDLLdTG+ehT4837yH5eEzl/szxmuZZWt6Sv2wt0dRidEFughXJNw6bbSFlBMOfLboSPKjX+Y+/bSgc/ihI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-79f06c9c929so87664785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:10:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720627829; x=1721232629;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sYPWb1c0ECtn7Pt9XOC7cF4z8lBQ1ICO4FUl2Uo/A2c=;
-        b=l+hD/O/KlOdxqotZeOBLWFsAYdcJn/acaf9sy7FMEjyjovAnFS2V9unlN+9mmzupru
-         AHvVlG7PDHp0RDhiIRDsOyc1vAKhD2R7H5dx9M9CiJe4se8FBFS1zEiCzocDnv+kWNeJ
-         KuB6ENSbzMmzg/jsMRPRRKyZ/wiMM0z6Oy4KDTGAoqOSAAhljCcSg8o3qqEODwUw8PXO
-         0g2BFf2qSr1vXA12kKf4iOZ/wYvywhTiDyUg9mgcukhSFUPKsb8dBMhU7O4t2RjJnsW5
-         Jvd1+xQqEe0m13ThjJPL0vzMap/NgQ3wNNFwHXtosYie5HQP4CDIToDLLy6SUhnCi3ce
-         6l1Q==
-X-Gm-Message-State: AOJu0Yzfu5ppO/OL87vx7rNBupwKyrLzATdSINPOgWmn48telHzcFuru
-	JYZIQ87jVV1C2CP9CtMlRvksAiSpZGe1TXOKH0hQbdArgfrv9hk+
-X-Google-Smtp-Source: AGHT+IFA8oR1bzTAbO5KaNU5u/83jg/dGuz6nI1xxBBqrH/BqUPI8429cej+TbSOa05ovszQCSS1Cg==
-X-Received: by 2002:a05:620a:29d6:b0:79e:ffae:cdc6 with SMTP id af79cd13be357-7a1469fa075mr18559685a.32.1720627829118;
-        Wed, 10 Jul 2024 09:10:29 -0700 (PDT)
-Received: from maniforge (c-76-141-129-107.hsd1.il.comcast.net. [76.141.129.107])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79f18ff6a7esm208318685a.1.2024.07.10.09.10.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 09:10:28 -0700 (PDT)
-Date: Wed, 10 Jul 2024 11:10:25 -0500
-From: David Vernet <void@manifault.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	schatzberg.dan@gmail.com, mingo@redhat.com, peterz@infradead.org,
-	changwoo@igalia.com, righi.andrea@gmail.com
-Subject: Re: [PATCH 3/6] sched_ext: Make @rf optional for
- dispatch_to_local_dsq()
-Message-ID: <20240710161025.GA317151@maniforge>
-References: <20240709212137.1199269-1-tj@kernel.org>
- <20240709212137.1199269-4-tj@kernel.org>
+	s=arc-20240116; t=1720627836; c=relaxed/simple;
+	bh=gph/ljZ0prpurgzSmZ7d5c6Ku+SAKC4eKNi4YbQVLg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kQYuXk3H9Nwqan3ZiIPYbwZNtZDMofx5pxdPlIcsbTIMjJkmBlo3s3EWgua58MG+FRBq6VAz0D47Tiwa4Yumr9zj318Z/TDXMziTPAu6R8O23/wM/7NqCLvq2S1XiSzJTtUx+fM99smJvxq88XfWAH8erI93kf1GTPvLpf26GGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2rzLwGH; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2rzLwGH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720627835; x=1752163835;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gph/ljZ0prpurgzSmZ7d5c6Ku+SAKC4eKNi4YbQVLg8=;
+  b=h2rzLwGHQBpWMr5dZ1G2oQiNGqEpY+3Bg4p9DaJTZ/9drvdNNbJnl1Y3
+   WkNQw/Qi1/6NuZWdQQQ7Zq/pt2aJvuUr/IxtTjZDvtbJizfEvyEubN5zM
+   8bIqX1ue9y7jlH0XUZBOPZRg7y+h8fEFkal0ouZKOwv3kfUluc+JbAqmj
+   5eWr0iEPBsnSJ4lKklL48NU8cHBQTge9sVQkgQkvWwvU9cxibd/zexCpy
+   694H2+UI5vL7irXQbCCWrzXL45uRjXyhSTQF1d3gNMCa0w58HbrCOMlcL
+   aH9TNQ3lRFCxCg+QRXb2rhxwrP/YOnnPo/Y9QCGQB8sa5DPCJwAIBuC3H
+   w==;
+X-CSE-ConnectionGUID: 4d6i8inFTgyabNMgkKctNg==
+X-CSE-MsgGUID: /OA4Mcw1SNOKLiAd+xB2aA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18103291"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="18103291"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 09:10:33 -0700
+X-CSE-ConnectionGUID: MD3L6TcwRuKXb100C4OIhg==
+X-CSE-MsgGUID: O/j+Vu7GRAeJtwJyPtZD1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="53085359"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 10 Jul 2024 09:10:20 -0700
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Alexey Kardashevskiy <aik@amd.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Yian Chen <yian.chen@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: [PATCH v4 10/16] x86/vsyscall: Add vsyscall emulation for #GP
+Date: Wed, 10 Jul 2024 19:06:46 +0300
+Message-ID: <20240710160655.3402786-11-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
+References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eDsdreE1x3GNCjOf"
-Content-Disposition: inline
-In-Reply-To: <20240709212137.1199269-4-tj@kernel.org>
-User-Agent: Mutt/2.2.13 (00d56288) (2024-03-09)
+Content-Transfer-Encoding: 8bit
 
+From: Sohil Mehta <sohil.mehta@intel.com>
 
---eDsdreE1x3GNCjOf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The legacy vsyscall page is mapped at a fixed address in the kernel
+address range 0xffffffffff600000-0xffffffffff601000. Prior to LASS being
+introduced, a legacy vsyscall page access from userspace would always
+generate a page fault. The kernel emulates the execute (XONLY) accesses
+in the page fault handler and returns back to userspace with the
+appropriate register values.
 
-On Tue, Jul 09, 2024 at 11:21:09AM -1000, Tejun Heo wrote:
-> dispatch_to_local_dsq() may unlock the current rq when dispatching to a
-> local DSQ on a different CPU. This function is currently called from the
-> balance path where the rq lock is pinned and the associated rq_flags is
-> available to unpin it.
->=20
-> dispatch_to_local_dsq() will be used to implement direct dispatch to a lo=
-cal
-> DSQ on a remote CPU from the enqueue path where it will be called with rq
-> locked but not pinned. Make @rf optional so that the function can be used
-> from a context which doesn't pin the rq lock.
->=20
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: David Vernet <void@manifault.com>
-> ---
->  kernel/sched/ext.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
->=20
-> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> index 52340ac8038f..e96727460df2 100644
-> --- a/kernel/sched/ext.c
-> +++ b/kernel/sched/ext.c
-> @@ -2040,7 +2040,7 @@ static bool move_task_to_local_dsq(struct rq *rq, s=
-truct task_struct *p,
->  /**
->   * dispatch_to_local_dsq_lock - Ensure source and destination rq's are l=
-ocked
->   * @rq: current rq which is locked
-> - * @rf: rq_flags to use when unlocking @rq
-> + * @rf: optional rq_flags to use when unlocking @rq if its lock is pinned
->   * @src_rq: rq to move task from
->   * @dst_rq: rq to move task to
->   *
-> @@ -2052,17 +2052,20 @@ static bool move_task_to_local_dsq(struct rq *rq,=
- struct task_struct *p,
->  static void dispatch_to_local_dsq_lock(struct rq *rq, struct rq_flags *r=
-f,
->  				       struct rq *src_rq, struct rq *dst_rq)
->  {
-> -	rq_unpin_lock(rq, rf);
-> +	if (rf)
-> +		rq_unpin_lock(rq, rf);
-> =20
->  	if (src_rq =3D=3D dst_rq) {
->  		raw_spin_rq_unlock(rq);
->  		raw_spin_rq_lock(dst_rq);
->  	} else if (rq =3D=3D src_rq) {
->  		double_lock_balance(rq, dst_rq);
-> -		rq_repin_lock(rq, rf);
-> +		if (rf)
-> +			rq_repin_lock(rq, rf);
->  	} else if (rq =3D=3D dst_rq) {
->  		double_lock_balance(rq, src_rq);
-> -		rq_repin_lock(rq, rf);
-> +		if (rf)
-> +			rq_repin_lock(rq, rf);
+Since LASS intercepts these accesses before the paging structures are
+traversed it generates a general protection fault instead of a page
+fault. The #GP fault doesn't provide much information in terms of the
+error code. So, use the faulting RIP which is preserved in the user
+registers to emulate the vsyscall access without going through complex
+instruction decoding.
 
-It feels kind of weird to have the callee need to know about pinning
-requirements in the caller instead of vice versa. I mean, I guess it's inhe=
-rent
-to doing an unpin / repin inside of a locked region, but it'd be nice if we
-could minimize the amount of variance in that codepath regardless. I think =
-what
-you have is correct, but maybe it'd simpler if we just pinned in the caller=
- on
-the enqueue path? That way the semantics of when locks can be dropped is
-consistent in dispatch_to_local_dsq().
+Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ arch/x86/entry/vsyscall/vsyscall_64.c | 11 ++++++++++-
+ arch/x86/include/asm/vsyscall.h       |  6 ++++++
+ arch/x86/kernel/traps.c               |  4 ++++
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
->  	} else {
->  		raw_spin_rq_unlock(rq);
->  		double_rq_lock(src_rq, dst_rq);
-> @@ -2072,7 +2075,7 @@ static void dispatch_to_local_dsq_lock(struct rq *r=
-q, struct rq_flags *rf,
->  /**
->   * dispatch_to_local_dsq_unlock - Undo dispatch_to_local_dsq_lock()
->   * @rq: current rq which is locked
-> - * @rf: rq_flags to use when unlocking @rq
-> + * @rf: optional rq_flags to use when unlocking @rq if its lock is pinned
->   * @src_rq: rq to move task from
->   * @dst_rq: rq to move task to
->   *
-> @@ -2084,7 +2087,8 @@ static void dispatch_to_local_dsq_unlock(struct rq =
-*rq, struct rq_flags *rf,
->  	if (src_rq =3D=3D dst_rq) {
->  		raw_spin_rq_unlock(dst_rq);
->  		raw_spin_rq_lock(rq);
-> -		rq_repin_lock(rq, rf);
-> +		if (rf)
-> +			rq_repin_lock(rq, rf);
->  	} else if (rq =3D=3D src_rq) {
->  		double_unlock_balance(rq, dst_rq);
->  	} else if (rq =3D=3D dst_rq) {
-> @@ -2092,7 +2096,8 @@ static void dispatch_to_local_dsq_unlock(struct rq =
-*rq, struct rq_flags *rf,
->  	} else {
->  		double_rq_unlock(src_rq, dst_rq);
->  		raw_spin_rq_lock(rq);
-> -		rq_repin_lock(rq, rf);
-> +		if (rf)
-> +			rq_repin_lock(rq, rf);
->  	}
->  }
->  #endif	/* CONFIG_SMP */
-> @@ -2214,7 +2219,7 @@ enum dispatch_to_local_dsq_ret {
->  /**
->   * dispatch_to_local_dsq - Dispatch a task to a local dsq
->   * @rq: current rq which is locked
-> - * @rf: rq_flags to use when unlocking @rq
-> + * @rf: optional rq_flags to use when unlocking @rq if its lock is pinned
->   * @dsq_id: destination dsq ID
->   * @p: task to dispatch
->   * @enq_flags: %SCX_ENQ_*
-> --=20
-> 2.45.2
->=20
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index e89d7d83a594..97608883b4b4 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -23,7 +23,7 @@
+  * soon be no new userspace code that will ever use a vsyscall.
+  *
+  * The code in this file emulates vsyscalls when notified of a page
+- * fault to a vsyscall address.
++ * fault or a general protection fault to a vsyscall address.
+  */
+ 
+ #include <linux/kernel.h>
+@@ -276,6 +276,15 @@ bool emulate_vsyscall_pf(unsigned long error_code, struct pt_regs *regs,
+ 	return __emulate_vsyscall(regs, address);
+ }
+ 
++bool emulate_vsyscall_gp(struct pt_regs *regs)
++{
++	/* Emulate only if the RIP points to the vsyscall address */
++	if (!is_vsyscall_vaddr(regs->ip))
++		return false;
++
++	return __emulate_vsyscall(regs, regs->ip);
++}
++
+ /*
+  * A pseudo VMA to allow ptrace access for the vsyscall page.  This only
+  * covers the 64bit vsyscall page now. 32bit has a real VMA now and does
+diff --git a/arch/x86/include/asm/vsyscall.h b/arch/x86/include/asm/vsyscall.h
+index 214977f4fa11..4eb8d3673223 100644
+--- a/arch/x86/include/asm/vsyscall.h
++++ b/arch/x86/include/asm/vsyscall.h
+@@ -16,6 +16,7 @@ extern void set_vsyscall_pgtable_user_bits(pgd_t *root);
+  */
+ extern bool emulate_vsyscall_pf(unsigned long error_code,
+ 				struct pt_regs *regs, unsigned long address);
++extern bool emulate_vsyscall_gp(struct pt_regs *regs);
+ #else
+ static inline void map_vsyscall(void) {}
+ static inline bool emulate_vsyscall_pf(unsigned long error_code,
+@@ -23,6 +24,11 @@ static inline bool emulate_vsyscall_pf(unsigned long error_code,
+ {
+ 	return false;
+ }
++
++static inline bool emulate_vsyscall_gp(struct pt_regs *regs)
++{
++	return false;
++}
+ #endif
+ 
+ /*
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index ae34e03739cb..c70d75769b1a 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -67,6 +67,7 @@
+ #include <asm/vdso.h>
+ #include <asm/tdx.h>
+ #include <asm/cfi.h>
++#include <asm/vsyscall.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+@@ -669,6 +670,9 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+ 		if (cpu_feature_enabled(X86_FEATURE_UMIP) && fixup_umip_exception(regs))
+ 			goto exit;
+ 
++		if (cpu_feature_enabled(X86_FEATURE_LASS) && emulate_vsyscall_gp(regs))
++			goto exit;
++
+ 		gp_user_force_sig_segv(regs, X86_TRAP_GP, error_code, desc);
+ 		goto exit;
+ 	}
+-- 
+2.43.0
 
---eDsdreE1x3GNCjOf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQRBxU1So5MTLwphjdFZ5LhpZcTzZAUCZo6ycQAKCRBZ5LhpZcTz
-ZPYRAQC+o704AkKhUwkQYcK1eBYs/wT8w+JTjp5z9dLvV3t2ngD/QCW+WxqMLOD/
-uz7yMovSRGMsG4S8yU9FtQXoS48zYg0=
-=He7C
------END PGP SIGNATURE-----
-
---eDsdreE1x3GNCjOf--
