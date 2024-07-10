@@ -1,146 +1,97 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA555158861
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8EB158202
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720654939; cv=none; b=SHRrn3d9b2UTN5by6VT2na395rinox3zue1SK7+M0CXAcsqHJ1PPt+nwXE/R3ofNwxx+rzPAn7e0HJTU8OHo59pXqTtR3IpmN9uN+gD7Krtpp6GXopyJ3bXwblqenp8kP9Q8ZEgH2NTszRMD2MI068SpoVTq/LsSyWVE65PIxxA=
+	t=1720654961; cv=none; b=Ny4KD1iUNvEQX4GUtbU2lnJ4HFKlI8acS0T3SGj287ILZjkcgjb5EnGSm6VFImv3v5lL++CGXaJA2PSjnCOFec/baUJv1Es+sVgp3JZ/g88esENz+Fw4B2PaZ2JkzX+qLAluA9EVLbukMD9RZRsYop2sG+yYY8GFlKS2xgZ9iIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720654939; c=relaxed/simple;
-	bh=WmCXshM9BwamSUxd01N4bO9J01nXQuiD7Ah98aEMfxw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PC1SqTulYesxzwUZbEvZ16mfqQmnFDluSWFB6goJZ5KDKNhU6v3gXkIrv0F7s1kDn0v++LTXWiWP5tVvdj+JjP/Y1HDJIzHq1GSr0+AUGRZZYTbaRdjBqkQ1pSquIDf9nTuXE94ufDWCYuN/toczn8p+fAwNUWN96s1twjUM1F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWrM/6qT; arc=none smtp.client-ip=209.85.219.46
+	s=arc-20240116; t=1720654961; c=relaxed/simple;
+	bh=xxkhVIBeGXY8pX54WQHQVUoU/lEQy1GRiLeaV2vAb5k=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XeYlo7Tdfr88uYNlqz+1P5dsLhw8xBaNRh40tCMNolkvmakTV5Ye3tDxxT1JZwKenfmP7NpvWtRAQHksCzbKoX6HIysFZpq2HeSI/vpGQUvzaYoM603sf8PWlMbqhKO9o9E504e7jqT5JojoukCy2VIApb6Cagi3SaHHQc5IxEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lyh8M3Vd; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWrM/6qT"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6b613921035so2081456d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:42:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lyh8M3Vd"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-652c6e92147so5070187b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720654936; x=1721259736; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xw22ZH4c8gyTKnFajh7vcYEJsOdrHlsxvg9OLt0kZtA=;
-        b=dWrM/6qT8jNEjecjc9s08cKSX4h+fb6bTc35XK4KJuziyKO+fD/7CbRZJ4UwApGsfl
-         1W71iFYoXZAhm3NUXU7xD7Et5TuKbhgYB9RICTMsmQqsulI9HWNXvdCZHwLpiCf52//6
-         G0IPDLquKspE/p1oSvCYSjr7fUwxb4l6eRxqgiHh75JUIw5D2hPSiYm8K+UJe5eH7SRd
-         /dF+ZtLkEny2rN/U/siaCZX8u0XTToiPx05I65KGy53ugYyndbw8ILn+iDK4dSayMnmE
-         xi0fKa2ZiL0jp2pJtdOoi+Vg+Muzkoc1dZnbx7V4UDdtpTsUIEoFy1CaPVb9D9iyk86J
-         c36A==
+        d=google.com; s=20230601; t=1720654958; x=1721259758; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/kOa+bY4z73FQuKac3t3a5fniJTGUgyq//kzfHQQRXg=;
+        b=Lyh8M3VdZs3SrnF22+yc6jjwGOAByZI/gs4WKQyaPWDQ/dZGlw7hv3Qt+tt7a8n0Ck
+         FIsjNM39OA3GttUqKtaxtRf8ZHHimuA6Qe3rrPBKvjAk83Zyo3NTyfA+oB/941aPi1uS
+         ifwteOT577EadUZswco3QaM87ObQzX6tq/iyn+XjuuHpWoIrz+8IlJB+mlo2XXR58G+Q
+         4C8dDQAHHF3ek5t4JFIQ15ymqnBw9ErC+GfACcRKLqObBQiQ8iHvF5KRkp3wMBPW15fu
+         anfXxeZkwx56Nzjm5g2DFeQmPRY9g6J+2R9vIKDPNGu/x6BChGsjg0rZEI0EFTh9vbo0
+         O7Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720654936; x=1721259736;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xw22ZH4c8gyTKnFajh7vcYEJsOdrHlsxvg9OLt0kZtA=;
-        b=BYLhumh++ewZ2cuB+gw+uhvcLZHDhScbJl5kP20fXVxbte8W8aRMs5dbfkMwZEEQ2C
-         IZU5qHSSy4b9AiBxdfVob+JaSrqqFzpd6mBYcB0eEi0U8bE+NqbfhoyrwBzDuom3qVt0
-         mGw/MHp9YGDdwViB3YCyAzlNR7XIfmEnCXlcaD0M4XV2XU1Iw6AUba9UdVQ4loIQ73ud
-         LBhKeNg55DwR5NoffkagUMeCygTXV8a61t+9C9puwe0CPrHTFtWoefAW5K8x2cTQN0jN
-         oobFdaMAdoWEDW2BAsuQlCrAQGbuqaypWdQwSBwEuZT9HtHvDDeLS43htyz/9e61lQ1N
-         9cIA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmxnGSsuFM4900+TF4HH9cP/PUN3evAp92WB7aaVjMjgKmYLL9Iatc/nIrKzvx5l4+RUX+HbtsCzh1hW6GmfX7Y7o+YEwMSGEzv8rI
-X-Gm-Message-State: AOJu0YzzYvzWjCcXSrcmkrBQ4gfv4E8eeBwmsSaz9gm/O28iVxt3dRuD
-	58lua0XlbaosShxqBELVPaMo09o4QNsWadNYYHPayl3hhkVihwMMIn8hJeXplNaEhheQ1BSm/Jq
-	+Rbmg7CAD3unn26IATy8rSDSxgF01Y0ay6erPnLfczILJS1cujuvAfPw=
-X-Google-Smtp-Source: AGHT+IGOLOQ6K3/3da49V2eHyCz+KQjRCyIEiAYnB4b8F1iCu2D4bkJxhlzGFfxvSjmRGC6gzv7EI1OWCLflWXtCr4A=
-X-Received: by 2002:a05:6214:20e2:b0:6b5:9c9c:7baf with SMTP id
- 6a1803df08f44-6b61bca896amr97392016d6.23.1720654936406; Wed, 10 Jul 2024
- 16:42:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720654958; x=1721259758;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/kOa+bY4z73FQuKac3t3a5fniJTGUgyq//kzfHQQRXg=;
+        b=dQz09TdRvPNC0RRYazCOvF6vfXRaQOBXsVM9ZHCqF6AVx4RQxTtrW/ixjubnP7NQAl
+         zAY2Xj5473FQdUlFZPg+RYiMEhpY7hajO5/ZomTDLnQWxeiZJfFmJZMKXTzON3pR0WIU
+         GqfLn08QOi2jxFZZYg3lsTIy6npfQZqcYUSijkezenitS5FqyEqkBT63h992ROrte6TJ
+         n5xS6+gvJ9T+HHeP74JL9Zblk5lGhRlW7qpi6eUGcOQg6uTVp6UMO0v4Ml3Zgj2kRmOQ
+         7KB0D/FBRkDrgrUdBuLnZnzCy48G3QaAW82jSlovR3f9WqNPUI/UrB2XTybQ4RUnEITu
+         E1qw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1B4H2kq/vt0Q+WcYLdyxZv0TJ2CEyS/vXkY6htrikT/NHKh+T7KQHLeTB3iQKFZ5Y/tjkWT+n130vU1+1s13zqMexJ8vxSZbqf7Jw
+X-Gm-Message-State: AOJu0Yw9JK6+U1K00+L8Zqnbjb7EeHDFRrjwyjQbAp9xAS9SB80jC30Z
+	B62NQyg8hYzV0xqqGiJZa7rnDGa4GkpxQ41oQiF1oGGquZeVd1lJCB4DtbyWkYmURYcl7IFlYeU
+	k3935f8GUzBneeHjGHQ==
+X-Google-Smtp-Source: AGHT+IEQILe/Q46nVYjT6VvqMQTMH6KcT24WPu+37xvorf2J37tSktUkMizR+hLJi1VSG+Olb8BNJuoCHzqVyuyh
+X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
+ (user=jthoughton job=sendgmr) by 2002:a05:6902:161a:b0:e02:6dcf:e9ab with
+ SMTP id 3f1490d57ef6-e041b0688b2mr15353276.6.1720654958570; Wed, 10 Jul 2024
+ 16:42:38 -0700 (PDT)
+Date: Wed, 10 Jul 2024 23:42:05 +0000
+In-Reply-To: <20240710234222.2333120-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240710001749.1388631-1-almasrymina@google.com>
- <20240710001749.1388631-6-almasrymina@google.com> <20240710094900.0f808684@kernel.org>
-In-Reply-To: <20240710094900.0f808684@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 10 Jul 2024 16:42:04 -0700
-Message-ID: <CAHS8izPTqsNQnQWKpDPTxULTFL4vr4k6j9Zw8TQzJVDBMXWMaA@mail.gmail.com>
-Subject: Re: [PATCH net-next v16 05/13] page_pool: devmem support
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, linux-mm@kvack.org, 
-	Matthew Wilcox <willy@infradead.org>
+Mime-Version: 1.0
+References: <20240710234222.2333120-1-jthoughton@google.com>
+X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
+Message-ID: <20240710234222.2333120-2-jthoughton@google.com>
+Subject: [RFC PATCH 01/18] KVM: Add KVM_USERFAULT build option
+From: James Houghton <jthoughton@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Peter Xu <peterx@redhat.org>, Axel Rasmussen <axelrasmussen@google.com>, 
+	David Matlack <dmatlack@google.com>, James Houghton <jthoughton@google.com>, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 9:49=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Wed, 10 Jul 2024 00:17:38 +0000 Mina Almasry wrote:
-> > +static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-> > +{
-> > +     return (struct net_iov *)((__force unsigned long)netmem & ~NET_IO=
-V);
-> > +}
-> > +
-> > +static inline unsigned long netmem_get_pp_magic(netmem_ref netmem)
-> > +{
-> > +     return __netmem_clear_lsb(netmem)->pp_magic;
-> > +}
-> > +
-> > +static inline void netmem_or_pp_magic(netmem_ref netmem, unsigned long=
- pp_magic)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp_magic |=3D pp_magic;
-> > +}
-> > +
-> > +static inline void netmem_clear_pp_magic(netmem_ref netmem)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp_magic =3D 0;
-> > +}
-> > +
-> > +static inline struct page_pool *netmem_get_pp(netmem_ref netmem)
-> > +{
-> > +     return __netmem_clear_lsb(netmem)->pp;
-> > +}
-> > +
-> > +static inline void netmem_set_pp(netmem_ref netmem, struct page_pool *=
-pool)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp =3D pool;
-> > +}
->
-> Why is all this stuff in the main header? It's really low level.
-> Please put helpers which are only used by the core in a header
-> under net/core/, like net/core/dev.h
+Some architectures will not support KVM_USERFAULT, so we need to have a
+build option to avoid including it for those architectures.
 
-Sorry none of those are only used by net/core/*. Pretty much all of
-these are used by include/net/page_pool/helpers.h, and some have
-callers in net/core/devmem.c or net/core/skbuff.c
+Signed-off-by: James Houghton <jthoughton@google.com>
+---
+ virt/kvm/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Would you like me to move these pp specific looking ones to
-include/net/page_pool/netmem.h or something similar?
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index 754c6c923427..f1b660d593e4 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -117,3 +117,7 @@ config HAVE_KVM_GMEM_PREPARE
+ config HAVE_KVM_GMEM_INVALIDATE
+        bool
+        depends on KVM_PRIVATE_MEM
++
++config KVM_USERFAULT
++	select KVM_GENERIC_MEMORY_ATTRIBUTES
++	bool
+-- 
+2.45.2.993.g49e7a77208-goog
 
---=20
-Thanks,
-Mina
