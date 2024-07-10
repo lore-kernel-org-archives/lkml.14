@@ -1,77 +1,117 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C417A47
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712EEA47
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 05:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720590596; cv=none; b=QgD/MAgSO9vOgpf15x/0RAFdgblr0QiB1rsbqUw1Luex+rSeveXGAcBanBjjX0hcbA3VH5L5J47E/m7LJmZPo1DNZ4Zygs6+RfIyHQJ0e2F5uQ8Z1wtLxSOoABU50Ej4gC3U1eB5gGha55hp5Ex/qElsclGAGThKjj7fMFqjFXs=
+	t=1720590692; cv=none; b=FhE/teBx6C3Wts8JznQiaWXBjujmS+aqowwjR+OCRCduzZyq5Ma+xTQC2+d4xCX4OZpnI9GvnbKZk5br4zM4APprgYWJW+EGPS0RD+48sc9Ocxp8qt/VO+Zs+HBoWN7ZQ1mblvBGTrc5i/PEKOdA9EBTUQPMuUs5/LXIyumUqFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720590596; c=relaxed/simple;
-	bh=lDWtoHqNfBmD8p9yIRa0ylwcWIKNjdZxVerbAIOtOGU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G4Qxu0dq5/5Oi/ErcXr3Kr6atw/iQFrqWF/w477PqdSndwzfHpqGE3zzz75szYkTwW2lDYqJgkpbRaweHKE154wvRslGc67Wpv8NRSpi7DcEnvBsPkL4Qio7MB90hEkIf/28O91eR2YBGuq+WzQ1MqQ/HTrAQLPcAzoblUGZUe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hBxey19p; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hBxey19p"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720590591; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=KcWZ936mP77StWiaIt38K+2eLtyyTBUiBBVOItUQAZI=;
-	b=hBxey19pLaGZa/lBmLT2X73QDDutjesjqFhYMzWl0Q1OrqUgn2JnCtzNCmK1NG6L3joeo1KU+6BIxoDUMTGIO8WuYasD3GTLeDilf2UOjQkwNNLZYgAXOeddc6dSu5sILZflH56iFwN2v4NJ6WXkL7UaP2fROocB5K+G/tB9wiI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0WAE92uh_1720590582;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WAE92uh_1720590582)
-          by smtp.aliyun-inc.com;
-          Wed, 10 Jul 2024 13:49:50 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: lucas.demarchi@intel.com
-Cc: thomas.hellstrom@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] drm/xe: Remove duplicate generated/xe_wa_oob.h header
-Date: Wed, 10 Jul 2024 13:49:41 +0800
-Message-Id: <20240710054941.44013-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	s=arc-20240116; t=1720590692; c=relaxed/simple;
+	bh=qJAAyECMg5CnLOBtWJVgn/vwuKboRSLGFE96LMa/3sU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jvta+o9QxdcrIRD9Qh3ZwYA1x7Vk+WrDZ84y7PJnsval5wvWfpTZ8mB+rDziRXvKU/hSIJ4QVDBOwDBFhGGMUGT2Awz7PVpJ32wlMxl/uuVHLoSsilhuM1iJzYsEX0ZOaxi2ZA9F+nHadcB2/Ghudt4A/QJjZ0OE0XEiVvkc+jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b0c1c9063e7f11ef93f4611109254879-20240710
+X-CID-CACHE: Type:Local,Time:202407101339+08,HitQuantity:1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:f2f0c3ad-8855-4a6d-a8e9-82744da539f0,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:82c5f88,CLOUDID:b8788c9dc47839bc094a2b215019a1db,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:5,IP:nil,URL:0,
+	File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:N
+	O,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: b0c1c9063e7f11ef93f4611109254879-20240710
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 594430874; Wed, 10 Jul 2024 13:46:01 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id A97891600208E;
+	Wed, 10 Jul 2024 13:46:01 +0800 (CST)
+X-ns-mid: postfix-668E2019-6054441873
+Received: from jhr-TianYi510S-07IMB.. (unknown [172.30.60.215])
+	by node4.com.cn (NSMail) with ESMTPA id BD4EB1600208E;
+	Wed, 10 Jul 2024 05:45:59 +0000 (UTC)
+From: Haoran Jang <jianghaoran@kylinos.cn>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	lstoakes@gmail.com,
+	vbabka@suse.cz,
+	Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	Haoran Jiang <jianghaoran@kylinos.cn>
+Subject: [PATCH] mm/mmap: Align the length parameter of munmap with hugepage size
+Date: Wed, 10 Jul 2024 13:45:58 +0800
+Message-ID: <20240710054558.1959243-1-jianghaoran@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-./drivers/gpu/drm/xe/xe_gt.c: generated/xe_wa_oob.h is included more than once.
+From: Haoran Jiang <jianghaoran@kylinos.cn>
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9493
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+munmap hugepge mappings, if the length of the range to munmap
+is not aligned with hugepage size,munmap will fail.
+In the hugetlb_vm_op_split function, an error will be returned
+if startaddr+len is not hugepage size aligned.
+
+before this patch:
+in "tools/testing/selftests/mm/hugepage-mremap.c"
+modify DEFAULT_LENGTH_MB to 3M,compile and run,
+the following error message is displayed
+
+-------------------------
+running ./hugepage-mremap
+-------------------------
+TAP version 13
+1..1
+Map haddr: Returned address is 0x7eaa40000000
+Map daddr: Returned address is 0x7daa40000000
+Map vaddr: Returned address is 0x7faa40000000
+Address returned by mmap() =3D 0x7cb34b000000
+Mremap: Returned address is 0x7faa40000000
+First hex is 0
+First hex is 3020100
+Bail out! mremap: Expected failure, but call succeeded
+
+Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
 ---
- drivers/gpu/drm/xe/xe_gt.c | 2 --
- 1 file changed, 2 deletions(-)
+ mm/mmap.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_gt.c b/drivers/gpu/drm/xe/xe_gt.c
-index ce8994b808fe..5547191773fb 100644
---- a/drivers/gpu/drm/xe/xe_gt.c
-+++ b/drivers/gpu/drm/xe/xe_gt.c
-@@ -11,8 +11,6 @@
- #include <drm/xe_drm.h>
- #include <generated/xe_wa_oob.h>
- 
--#include <generated/xe_wa_oob.h>
--
- #include "instructions/xe_gfxpipe_commands.h"
- #include "instructions/xe_mi_commands.h"
- #include "regs/xe_gt_regs.h"
--- 
-2.20.1.7.g153144c
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 83b4682ec85c..0b3a60bf9b6f 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2733,7 +2733,15 @@ int do_vmi_munmap(struct vma_iterator *vmi, struct=
+ mm_struct *mm,
+ 	if ((offset_in_page(start)) || start > TASK_SIZE || len > TASK_SIZE-sta=
+rt)
+ 		return -EINVAL;
+=20
+-	end =3D start + PAGE_ALIGN(len);
++	vma =3D find_vma(mm, start);
++	if (!vma) {
++		if (unlock)
++			mmap_write_unlock(mm);
++		return 0;
++	}
++
++	end =3D start + ALIGN(len, vma_kernel_pagesize(vma));
++
+ 	if (end =3D=3D start)
+ 		return -EINVAL;
+=20
+--=20
+2.43.0
 
