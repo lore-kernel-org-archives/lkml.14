@@ -1,54 +1,65 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D11881AB6;
-	Wed, 10 Jul 2024 07:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6B129AB;
+	Wed, 10 Jul 2024 07:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720595682; cv=none; b=fwTsgjMhNo9wImCugDUw2gOaHc4pb5vyxfnn/rF/HMvzxwLhctQIi747/ivo2lUnL6tK/KdqLYOgOGx1hIVgclwX89hwbaDYQ/Li7uJQjPLDbz4RhoI98Je+UQURcZ3ENXuLKKWP5iTyP0ICZmJXhIiE6yyn1mWlRcCD8nKDfYQ=
+	t=1720595815; cv=none; b=FLO905kJPTdmCN1jUlDPfZCWKRFeXm1r0hX1UUeVrSou3UoVtkBKOWMXwSpyI5XcsHicJqWYY/6R0p0SPE0cFr7oUpkLHL+QVUJbonMQY3ad9UWIwoX+7TqOuvLvj2HCvxUwUiD587z9LmNncp2YKiGcWS8puFlgvwuAv8ixde0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720595682; c=relaxed/simple;
-	bh=ZIpn7wnJpGQcUsHVM4ecFAZEzbyjpH+DlQIGSO1YPig=;
+	s=arc-20240116; t=1720595815; c=relaxed/simple;
+	bh=PMn0NvNcLtSKKcj82FevK7aYqnhksdqSZwI7b+jpi+U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y0/od7WlZb4sqaFa4tL6yoXLJMdJK/vKMuJGcWhUWOa4cjITMreFaDPUZGnplxHRNY4oAbRZ8WPL/ceQZelxtsnkZHkVogOuqKUZPpGbe2LBnVSz71DBjvOZIZgEspfV2sfhUUR2EAl95PJrdJ95EeEFFylDOK1DNRrT66B0/hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 71165227A87; Wed, 10 Jul 2024 09:14:35 +0200 (CEST)
-Date: Wed, 10 Jul 2024 09:14:35 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-block <linux-block@vger.kernel.org>, linux-scsi@vger.kernel.org,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: next-20240709: kernel BUG at drivers/scsi/scsi_lib.c:1160! -
- WARNING: block/blk-merge.c:607 __blk_rq_map_sg
-Message-ID: <20240710071435.GA26861@lst.de>
-References: <CA+G9fYuSAE=WjPBDQ=rTLdVit2A6aay_cQHKreJ02FFGFU+vSQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFNyWoO/5xTfTiRxEBYtdhFM01Ep9kg2PzHURD3+FH7o99uC1x999z+EC9QNezS19RFEQiJ5xV8XlguyALMlvYQObxKri3NklP7AasuFQqyDkYp0qBOtW0GA/Z5EuOrNUUUdTqDLmiX49nwEa8KeNp0gpQb01DVSOVr9AXAFuws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cX09BQnx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cX09BQnx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99319C32781;
+	Wed, 10 Jul 2024 07:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720595814;
+	bh=PMn0NvNcLtSKKcj82FevK7aYqnhksdqSZwI7b+jpi+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cX09BQnxvaLRsPyH+nL6XNWd+Eg8QuhSPpCrqTDsQI58gEqGs/tS71vmFzS+XJcvF
+	 awsF08SkOQjATC3NeMofz9HgpxrlA/xcNE/GGn5UMxesJ/NbNSS47kbZtooG/RheFA
+	 ajjFAwqEQ0Hye10htQdtskXfuVgKXzZ6c7uhuxc73vjavx/1LbKcuDz6u/Szu11t34
+	 SluEC8G2OnIgqp91+7yj0yxPAIOwX64sbdIDsigUquIMiKp71ZfYjNN9Fru52qo1KL
+	 AAJgDlt7eh4WVWKKCitU8Q3/qpE/cflW5ONGgsi2tv2ZeTODFIsXrU60m0xDxz91np
+	 vWyQSMF8ES35g==
+Date: Wed, 10 Jul 2024 08:16:50 +0100
+From: Lee Jones <lee@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the leds-lj tree
+Message-ID: <20240710071650.GG501857@google.com>
+References: <20240710163407.6393021f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYuSAE=WjPBDQ=rTLdVit2A6aay_cQHKreJ02FFGFU+vSQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240710163407.6393021f@canb.auug.org.au>
 
-On Wed, Jul 10, 2024 at 12:36:42PM +0530, Naresh Kamboju wrote:
-> The arm64 Juno-r2 boot failed due to boot BUG and Warnings [1] while booting
-> Linux next-20240709 tag kernel.
+On Wed, 10 Jul 2024, Stephen Rothwell wrote:
 
-The fix is here:
+> Hi all,
+> 
+> After merging the leds-lj tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/leds/leds-lp5521.c: In function 'lp5521_selftest':
+> drivers/leds/leds-lp5521.c:189:33: error: macro "guard" passed 2 arguments, but takes just 1
+>   189 |         guard(mutex, &chip->lock);
 
-https://git.kernel.dk/cgit/linux-block/commit/?h=for-6.11/block&id=61353a63a22890f2c642232ae1ab4a2e02e6a27c
+On it.  Thanks for the heads-up.
 
+https://lore.kernel.org/all/20240710071050.GF501857@google.com/
+
+-- 
+Lee Jones [李琼斯]
