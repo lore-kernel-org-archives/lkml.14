@@ -1,55 +1,55 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07A215E5DC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BE115F33A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720654968; cv=none; b=mogf9og6BNJgo7uv7+R5M9raoE7Xw2hfttnedVf1+ZqcsIjV3T2NydU8RIgXdULGkITFryAvIvVHYuRSz+HoAlcaKsnrgACkuWjunHb2kB3R/JWBpdc7Zw+trb2p9vZ5E69plF035A7BTOwKV16vVwvBmL1z/e8F2jEQDY1/oRM=
+	t=1720654969; cv=none; b=s1wk3eeaY/CEX7ZtLgssSoCSOGt7BOhSyJnlnj7XvFbjko4KosX0MMs6sUlF3a0cpm11FGHXBGh4gXZ05Q0XYTUDQctpRvt/MFWQEYrPyFB1eDm2MTnAxd55+9eGyE/Fwtorui+mK6UhHPHRc4A5uouPAPM/0Vnc7AO4xUhN7Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720654968; c=relaxed/simple;
-	bh=oWnYdn0BgDHSxRNKslgfesdd9yEejwT/yhYAWEJx0EU=;
+	s=arc-20240116; t=1720654969; c=relaxed/simple;
+	bh=EiaFG/eYwx8Esdk1XHkxgkjzifP+kflmXrizk7/imlQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aOxHnKJYj2CqSaDa+ftb96nL0xXkCAUkRdHX5GT8U78esyT9Bj0W23A46+pL42mCKBXu4prZX7V92umn6z5i9+AtKpcbpaljL5DK8SOAIviaQ9xLbNsw6aZHoHyg/Qz3nsjLxEVokEiqKJSTsHKLC7q7Ex/xfz8nTDAaqKFEn3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cQ37ehsA; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=Eo8h467dMORI+tYCmveM2Ti2fTdORrr53nkpvQtqySJUHJwD0YTYW2lOAPxU+tJuO+Bw+E1aFVk66ZYOYQnLHnQkVU9YWwP7E4rF30ALovTIWgT8yRqSjTtWpwDVCb8WMjUx01AyyNPQJDH5aOfU8iIZBdIpMKXMAXijilgT8yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rMFUNTKL; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cQ37ehsA"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-64b5588bcafso5499577b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:42:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMFUNTKL"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e02b5792baaso527634276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720654964; x=1721259764; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720654967; x=1721259767; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W1e4HHE4z+5Knov3l2/RvFGqy44M6oXcmkh1U5rufQM=;
-        b=cQ37ehsAZHZ/fS5YDkSexvaRxXJno5PLOWbF8zdHMICrqwfOM6TRgcGsE89x2vuS72
-         qTVVdk4N0P//WDrPT0pDJTlOK+RrwdLAGNlO552d0ONRNWj/YLYAS18nI8inrML6kk1R
-         hgYgHZmesf7EtVfrnnZhNCURHJlggTCyyvHELrCfOKc8W7GX1ToTkM3HAoKtfcFQKtRe
-         uwoA01PReifS6nRjBcQqOLDYh81N1ussNCyn7BidgbzR3Pdg3TJ87VPyVb35DSw0E5Bp
-         uOmuVaKQayhqV+LX2NXp0cof9ZefM2SSQLQNeCQC9y/++tmRAcMQukN5VYYJkCXOcrzR
-         /AHg==
+        bh=45lnTGeGmxXRWR2sOGpDAv49wjAnxo1Jn2Fj4ejBtf8=;
+        b=rMFUNTKLofPpwYducIF7Cw1iPUXYaUMhIvA4pJK+FJsMhuBbEfYeGicZCi2TAepbxP
+         /gfUoP17B9rXWJ04a8cN6dpwPorrae1HDEr0DaMvofo0rxTKVYyJk9uUPiW5jtycP6sM
+         pZCFGBncyRsJ84unXBEqIZeqeIws7SW9Aowz3p9Z4Xi6IVfFcdNkG+NI1RgmFuLsV6lL
+         UmM+1Q0Svtf4n6oRyE3aVLRupiIw93GNtJDF0o8h9JlpvB5VAcPLnJj2TRcnb92fpZhf
+         4B7SwgKMUOCpAGuicSrQ9lZgLXgduUWTfR31z++P+QGZH+8fD6eMyxul0aWQ/fd1+Pht
+         1qfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720654964; x=1721259764;
+        d=1e100.net; s=20230601; t=1720654967; x=1721259767;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W1e4HHE4z+5Knov3l2/RvFGqy44M6oXcmkh1U5rufQM=;
-        b=aCxbr4+Pxgt0lsFQ+wjgrxLlVfE7PAL/kiEFsyu88KVKdtUmGozAOLuUvqar2XwED4
-         UjGFAmCk7UpGx64jC0DxT8ic3ZG6alzSh/MhKT6GVX+3z+JgMulw0r0v8syDMXck0YKH
-         DGef7UlLi1iUVf6AHjWHiE3xckoapp7vQJTcyqLYLA+/w6W+XNIv+I9E6u27Ku/kpPG7
-         BNqFZqy8Uj2i4Pf00bvSyzMAfHjlY+TBw6+tV3jhhMpUZ+Qied3ALvG0Cavg+b+xls2u
-         jhYAf2aKyiDO2b4wMwyEFpqkH2FMP+eaNF2MKHO965i0uBor8UKVNDgd6YBNSJ1wy+q4
-         0zzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUivEGCxohaleUwEuIFb4nyLG7OvcaO5uHYUsG5PkOkwm9KbkcSvdU+L3RI349KNpKircSkLykTQkiQXccLU/H/9kgT6raT2cBq1Vy6
-X-Gm-Message-State: AOJu0YztKBA3PGT4OLcnfUMnMoipo6eLIF3W2y1f4ICPJq+IRwdwrx9r
-	w3ie+A6viUwt5V/OcY3WpfejjqG5wHRSSSzlvu+nFznuGYPLk3L5hAqgLwUeNYOR/gZ3pedHvNk
-	TjTWTu6hYWtH1ynphcw==
-X-Google-Smtp-Source: AGHT+IH5NTISR7DBZbSKRJUHRXFWyLuVrVBePrqFfNwytKF1BLIU+MNslDD3lgHeZpjWWwkTnE/TGMGwZ5jaEHpH
+        bh=45lnTGeGmxXRWR2sOGpDAv49wjAnxo1Jn2Fj4ejBtf8=;
+        b=RNz1T3xW0IomVcMpYEzZ20dahWXDtzoQ1T53qf7w+3C1OhMIgc7vfDdeL9ZSu+78gy
+         aWFdCXDV5SnzHV50ocdOydBjlw3Iq/qpsh8pnzgt0dLi8Z0iDdccoAgYf47byYxTUTbu
+         1+/NeO5oOW7rbN4apScYtdycKFjrfw9bkeCSsSb6DO6l/W0C43OkkiBFM4bre+HDq4nD
+         z6K3PPHlHVwpu7f1F8SL91W2T3HN67vewC2RyTYeZlYgpkaXT566jdFvQ65RcB3+0luj
+         l1cbvrmxk2Yo2W1dRHOrK1tgMeq5TmVSQKp7mDl5ULl95ziE+qGHMaspF8IMmm4HBOAu
+         qP+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUm9GDdnEshJ0UCUpm6/RySGoRt+EPSPHgt42y2kafBIad4iQiF4EZPOL7xu2k4ZAYId8H9GzH1QIeChGftKhKtb5GQyRXT16C1IQMT
+X-Gm-Message-State: AOJu0YzCz+cALre9MbblKnSjebcSIa/ro34sb10xGLCvtSdVGaZ8LWVq
+	ixHekkgzMef9mXIcQA9Wc6qUri1Hf2bhbuibht7q2XaIZn2Qq83VMrjgwKgNoNK8jn4ao4sDtii
+	zlNVuQeX1KKtE8EQ6tA==
+X-Google-Smtp-Source: AGHT+IFCxPs0hzUflzzz70jRYwVRx4Gd4jDUqm7Yw06oBbmfCbRIBM9zwU8x8QPsTa/dYviA394CpxXkoxFldKzv
 X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
- (user=jthoughton job=sendgmr) by 2002:a05:690c:7244:b0:62f:22cd:7082 with
- SMTP id 00721157ae682-658f01f530bmr1591717b3.5.1720654963909; Wed, 10 Jul
- 2024 16:42:43 -0700 (PDT)
-Date: Wed, 10 Jul 2024 23:42:10 +0000
+ (user=jthoughton job=sendgmr) by 2002:a05:6902:2381:b0:e05:65b7:32d9 with
+ SMTP id 3f1490d57ef6-e0565b7352bmr91773276.6.1720654966908; Wed, 10 Jul 2024
+ 16:42:46 -0700 (PDT)
+Date: Wed, 10 Jul 2024 23:42:13 +0000
 In-Reply-To: <20240710234222.2333120-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240710234222.2333120-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Message-ID: <20240710234222.2333120-7-jthoughton@google.com>
-Subject: [RFC PATCH 06/18] KVM: Add KVM_MEMORY_EXIT_FLAG_USERFAULT
+Message-ID: <20240710234222.2333120-10-jthoughton@google.com>
+Subject: [RFC PATCH 09/18] KVM: x86: Add vCPU fault fast-path for Userfault
 From: James Houghton <jthoughton@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
@@ -72,26 +72,39 @@ Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
 	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-This is needed to support returning to userspace when a vCPU attempts to
-access a userfault gfn.
+Without this fast-path, we will take the asynchronous userfault path
+every time, which is inefficient.
+
+As implemented today, KVM Userfault isn't well optimized at all, but I'm
+providing this optimization because something like this will be required
+to significantly improve post-copy performance. Memory fault exits for
+userfaultfd were proposed for the same reason[1].
+
+[1]: https://lore.kernel.org/kvm/20240215235405.368539-7-amoorthy@google.com/
 
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- include/uapi/linux/kvm.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/mmu/mmu.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index c84c24a9678e..6aa99b4587c6 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -429,6 +429,7 @@ struct kvm_run {
- 		/* KVM_EXIT_MEMORY_FAULT */
- 		struct {
- #define KVM_MEMORY_EXIT_FLAG_PRIVATE	(1ULL << 3)
-+#define KVM_MEMORY_EXIT_FLAG_USERFAULT	(1ULL << 4)
- 			__u64 flags;
- 			__u64 gpa;
- 			__u64 size;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 6b6a053758ec..f0dbc3c68e5c 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4380,6 +4380,13 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 	if (fault->is_private)
+ 		return kvm_faultin_pfn_private(vcpu, fault);
+ 
++	/* Pre-check for userfault and bail out early. */
++	if (gfn_has_userfault(fault->slot->kvm, fault->gfn)) {
++		fault->pfn = KVM_PFN_ERR_USERFAULT;
++		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
++		return -EFAULT;
++	}
++
+ 	async = false;
+ 	fault->pfn = __gfn_to_pfn_memslot(fault->slot, fault->gfn, false, false,
+ 					  &async, fault->write,
 -- 
 2.45.2.993.g49e7a77208-goog
 
