@@ -1,249 +1,109 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17DA191497;
-	Wed, 10 Jul 2024 13:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5C983CD4;
+	Wed, 10 Jul 2024 13:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720616702; cv=none; b=CvIOaBo4jWyLxnMy3KFohcLn6ZmU7UbCO0TuF3rG/PuSB6MZsVYX4O7Ek7pnmanlMwXc41kJN02vBmFC5yPO6qDdVCviKjNIiZH1Mo+fG4LGYcdCFGZTA2p5jmFum0T2xbplqq62iUl4pRUlCAlXjNRbnQVppDUV5eW0GCM1X9E=
+	t=1720616770; cv=none; b=FEe4nOa68E8erV738hNJLxxUfOnEyMJBI86LAJqeCA5Wo++wQopyO3Yu4CdsCKo5xAX2O57nWcaR7CvRTvIzvS58JY8lSV+7hUsjRaZXPJJrFhwKyFvcHH3TvghOe8VepKvssqZsY233wKg4xqRECcPpYOHPgVvARU54KRz7o64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720616702; c=relaxed/simple;
-	bh=SyVxla2et2wQdF7Ur4jp45UAsd15s5o3dZy1WA18ZDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bHwa39V4U1v0xFEijaXP+FKPeGv2/Msa0VyLMTkXcRhqwYNqJ4/Ng6Hwy50MzHSwRef8QPGAvgAiELSzr+V+YPqHw5pWb8PmhNI65OXg7vWyNi5M0rmdNTj7UTewyv6EGdGqjNo8OFlsaKqASBYIZdKYp+fzUk2RPAXZt7Z3b5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffpC0Ptx; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720616770; c=relaxed/simple;
+	bh=mgA99OrDmthPsDPhXumxSed5OSOz0lcBLKjYOBeh/vM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=P9KM0hnaa4ztYJ49x2/hw+xJiEtKZr/xNbfe4t/jWHLgDdY1uhQAJwXUOEmCrOYf1Q8+j60/DEmjW2SwbVP2Dp/zg3d+7kWHUFiSZV7JR8Fku5tpp9ywNVvr7H52jshtxaSKt/lm84fIw2j9g85QiY5Gm8rrCmhq4nIzEnL++oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Wtv5WKeK; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffpC0Ptx"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6fd513f18bso667422166b.3;
-        Wed, 10 Jul 2024 06:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720616699; x=1721221499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wO7cOo1kh0P6Txqc4PJ38t7/AZC3sWDggaziBs/A6L4=;
-        b=ffpC0Ptx7Paa7NIuXWvTVGfCsTATf535PBhZQ4STb3ErLpW2TeqoMUQMCa+0FvlGyZ
-         WCPJVsHO4W82+VDo9CWOR0t2HzNt9ujnfnnWhteaTv5WgMQ3mwAtImCGnbjhaYvwOX5E
-         xuPj9BkKQaY0FZqJLiNvjRbJ098tCXUB+ZCGwEY617oS0xxCSHAr2T2yLmWQcmErAOby
-         HhOtZK6six7+D/Fq+XlzZBRRICXDhNYpfkiRqJa7+bEYpXSe0mBeGUqI3Z+o7ehu/27k
-         WLLDX48U2A7GquCPoZB/SA1QzQzfpRxMby9p4UX/x99hoYpQft1ubFSIKnB8wpm5RNH8
-         hC7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720616699; x=1721221499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wO7cOo1kh0P6Txqc4PJ38t7/AZC3sWDggaziBs/A6L4=;
-        b=gR4TMmde8rBqo/JTTJvafMweqnpiXcOmAFlIwomCbuQd1OFuLF7lDJxSC6Nkg1jf/O
-         dilGio5lEacvAa5Ou+gIpBCxjCGSJoh6/sTwllBLqJ8NCBBbOd339MZYa7URqFL+Psvh
-         zUpqrDqUf1liihdW7x51W9n3kjuZrJEOYYb2LBTKCYFAFF5vRZclo1crrEWKar1DUbUj
-         IBRfIEG6TNVooq+nJVzYHXI+0U4EYFwmzf4ro0I80Q6Cj9QPagbsUmJtBrbB88WJuBER
-         CfkLJugck7bUnzehu8NJ1V+FLzHfCD2AzL1opXTQbK6OOcZmVlxRrPBazjW7+jVChcdk
-         VhGA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1BmHTmyxDuj3DzAZp3Sobfjq/K7Ws91ErWp4qfeqpmEyCt8dzZ+dMIQgdMwYilxslrDw/N5Hm8RS6tpITPsrKZTXxw1Z19A65KcM+yjnRs9YcwLrxr8d0SsCLMK9Mig+n3E8pcNhUD1dS8g==
-X-Gm-Message-State: AOJu0Yyb6IkJyTaw3rOSsphJgv7oGSLAi7EqAQx2ohqq8wQEL2LbICP/
-	6exBWUu1m8Jl5gbXNxP1z/y1tlreMYqq8rC1V3i/Sd+l/K/T3wAdt6aK+2nLwT7it13ZigWKd3w
-	3OXivOS2Qo1HWU5MlWaOE83AMz/4=
-X-Google-Smtp-Source: AGHT+IGCFxVCXdmp75r1wbdIFzjDoi24n+M4oPOXt5hliNLw6PRGoAOxUk2qC0wxwjz9YrQ49yXsGWc7xU/JD1IB1Ig=
-X-Received: by 2002:a17:906:794a:b0:a77:abe5:5f47 with SMTP id
- a640c23a62f3a-a780b89e7c3mr512946366b.63.1720616698896; Wed, 10 Jul 2024
- 06:04:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Wtv5WKeK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720616734; x=1721221534; i=markus.elfring@web.de;
+	bh=hL1FGV0d+/uNuT5MwoYkBSDKdQE8pznXZfxl1D6esK4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Wtv5WKeKXhTZ4xKMJdhVn4hR0512X93slSKmuJcIJq3zP4UTGggQGgS/rwS7KW7A
+	 fWmPHQFZnmGKE5po8BZuXyWUjGeWcH7uKkXCcKLV0WrEuucuyxISWs55EOkfvLQbF
+	 xpkJZwjHYvT0YsnNwh+yXvk3+Db8gY3XxyKLz6+IkV51bT2ygM1+FbHEkuutUY1zl
+	 O/+b9NQHt8VooN5QiRor4c2mH6MG3Sxv52ajrp9ghTg9KVMWJ3JhbaME2nNb3CSsd
+	 VtQXtqPNUZS20uh8njvx3uEcnZA03SjN4ANAPI2RlDGiBkxQqU3cWH1eDYiVy//rw
+	 t3WkhWLnopmmo7M6IA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MD5jp-1sadhP2Yi1-00DHGg; Wed, 10
+ Jul 2024 15:05:34 +0200
+Message-ID: <17c94d87-e260-4155-90c1-b7e5013ac69e@web.de>
+Date: Wed, 10 Jul 2024 15:05:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d2841226-e27b-4d3d-a578-63587a3aa4f3@amd.com> <CAOUHufawNerxqLm7L9Yywp3HJFiYVrYO26ePUb1jH-qxNGWzyA@mail.gmail.com>
- <4307e984-a593-4495-b4cc-8ef509ddda03@amd.com> <CAGudoHH4N0eEQCpJqFioRCJx75WAO5n+kCA0XcRZ-914xFR0gw@mail.gmail.com>
-In-Reply-To: <CAGudoHH4N0eEQCpJqFioRCJx75WAO5n+kCA0XcRZ-914xFR0gw@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 10 Jul 2024 15:04:46 +0200
-Message-ID: <CAGudoHEsg95BHX+nmK-N7Ps5dsw4ffg6YPimXMFvS+AhGSJeGw@mail.gmail.com>
-Subject: Re: Hard and soft lockups with FIO and LTP runs on a large system
-To: Bharata B Rao <bharata@amd.com>
-Cc: Yu Zhao <yuzhao@google.com>, david@fromorbit.com, kent.overstreet@linux.dev, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, nikunj@amd.com, 
-	"Upadhyay, Neeraj" <Neeraj.Upadhyay@amd.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, willy@infradead.org, vbabka@suse.cz, kinseyho@google.com, 
-	Mel Gorman <mgorman@suse.de>, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: make24@iscas.ac.cn, linuxppc-dev@lists.ozlabs.org,
+ kernel-janitors@vger.kernel.org
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Aleksandr Mishin <amishin@t-argos.ru>, Andrew Donnellan <ajd@linux.ibm.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Christophe Lombard <clombard@linux.vnet.ibm.com>,
+ Frederic Barrat <fbarrat@linux.ibm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ian Munsie <imunsie@au1.ibm.com>, "Manoj N. Kumar" <manoj@linux.ibm.com>,
+ Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ Shuah Khan <shuah@kernel.org>, Wei Liu <wei.liu@kernel.org>
+References: <20240710103352.1890726-1-make24@iscas.ac.cn>
+Subject: Re: [v2] cxl: Fix possible null pointer dereference in read_handle()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240710103352.1890726-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ySccpis36z6zCEn3Lvza8Bcw69K9CLTO951Rfrr+vzx9/WjUznR
+ uBGLzfKx31PWoZiRB7dopUjsxoO0LOxfLLn4qYbLDy1tjwFRFR18KxbDMxFvi5MN48BHBPQ
+ miagwSx+EDmvQYcvoizxkyvQjC5+j5OC437GHMMocZo4AYMnYa8QXKcpxrrhdIXySYhjuF5
+ a0sHalsGI2NtM8CUfLAHA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:QlxgUnxO+Gg=;x1/tJ3UEsXUlj19rmtzQQ0Bu+/G
+ YIcvK+OTSSc01X209tkGyk5j8jwQlXZ32ANqTTIePu5iRihf4ut5PA3mR7P+FWxVwabR4HXzQ
+ 17Wscigeq99PSTCarfj4XqQ/Z8C4YRVLrBSDK5+9Fjd7HL8o9JSxFdluCYO0wT3lVPYH/BQca
+ uf0lZpBzQjqf5cybjn2CSqA8HZHEBxhOTAx+gNqI5PWoEjsrMdAp4voUezMcf23rHXn181CM3
+ Z1Emz5epnsZfAegPh3EQUeAS7Q0CkLrLfa2aADvyltNUTxIF4EArIC2ssrICGKEXBDCLBruPv
+ eQvNRztTrwHhiAmdJpA3fqnpshh2+yl9eqbM+UqUgy/vqKrGmI34iAhz7yTy0Mkew6JOqclvo
+ lMuHgPYa1nsnyuifDQr7bWVlAIHcWrgaaJzRdpfBpLmI/Nwqtoc68LHCAf75ozIpiIFauqz/6
+ VL2SewEm9CM7hgs0Hclh2ddtfgyBFbPRXf35itDLjcKS2qO90FuDCW6Oe3qm5T/fwd3Q6nUPd
+ n8smSTA6h59vpOccMJekDgxsO222HBG+DEF4h5m6d7RnpzqMUma5y+s7Vp5kQhqCN+lgjGjMg
+ vt4YTnfgcRcw1NgAp2t/1e6ydafGPLJFtOgBaGiL4ZsxT5uVLqZu6KiFdEqyGwPjYdtS+yHlF
+ uMmnbU+hIUH4YEpBswED5dCiHnRdhF4ojLT24KlMkbxnW4IhwneZ/FrRq4xN1sfeMJYhSraVe
+ 381f0ddaMdKzSNPHJuakGeAS+cKIOG4qq3W+LUulGRiCCfa8W+poZUgL3P/Cx+SXWb+ogIAa6
+ IPsjOQ09tJ/I3rEl8xtJsHkg==
 
-On Wed, Jul 10, 2024 at 2:24=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
-rote:
->
-> On Wed, Jul 10, 2024 at 2:04=E2=80=AFPM Bharata B Rao <bharata@amd.com> w=
-rote:
-> >
-> > On 07-Jul-24 4:12 AM, Yu Zhao wrote:
-> > >> Some experiments tried
-> > >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >> 1) When MGLRU was enabled many soft lockups were observed, no hard
-> > >> lockups were seen for 48 hours run. Below is once such soft lockup.
-> > <snip>
-> > >> Below preemptirqsoff trace points to preemption being disabled for m=
-ore
-> > >> than 10s and the lock in picture is lruvec spinlock.
-> > >
-> > > Also if you could try the other patch (mglru.patch) please. It should
-> > > help reduce unnecessary rotations from deactivate_file_folio(), which
-> > > in turn should reduce the contention on the LRU lock for MGLRU.
-> >
-> > Thanks. With mglru.patch on a MGLRU-enabled system, the below latency
-> > trace record is no longer seen for a 30hr workload run.
-> >
-> > >
-> > >>       # tracer: preemptirqsoff
-> > >>       #
-> > >>       # preemptirqsoff latency trace v1.1.5 on 6.10.0-rc3-mglru-irqs=
-trc
-> > >>       # ------------------------------------------------------------=
---------
-> > >>       # latency: 10382682 us, #4/4, CPU#128 | (M:desktop VP:0, KP:0,=
- SP:0
-> > >> HP:0 #P:512)
-> > >>       #    -----------------
-> > >>       #    | task: fio-2701523 (uid:0 nice:0 policy:0 rt_prio:0)
-> > >>       #    -----------------
-> > >>       #  =3D> started at: deactivate_file_folio
-> > >>       #  =3D> ended at:   deactivate_file_folio
-> > >>       #
-> > >>       #
-> > >>       #                    _------=3D> CPU#
-> > >>       #                   / _-----=3D> irqs-off/BH-disabled
-> > >>       #                  | / _----=3D> need-resched
-> > >>       #                  || / _---=3D> hardirq/softirq
-> > >>       #                  ||| / _--=3D> preempt-depth
-> > >>       #                  |||| / _-=3D> migrate-disable
-> > >>       #                  ||||| /     delay
-> > >>       #  cmd     pid     |||||| time  |   caller
-> > >>       #     \   /        ||||||  \    |    /
-> > >>            fio-2701523 128...1.    0us$: deactivate_file_folio
-> > >> <-deactivate_file_folio
-> > >>            fio-2701523 128.N.1. 10382681us : deactivate_file_folio
-> > >> <-deactivate_file_folio
-> > >>            fio-2701523 128.N.1. 10382683us : tracer_preempt_on
-> > >> <-deactivate_file_folio
-> > >>            fio-2701523 128.N.1. 10382691us : <stack trace>
-> > >>        =3D> deactivate_file_folio
-> > >>        =3D> mapping_try_invalidate
-> > >>        =3D> invalidate_mapping_pages
-> > >>        =3D> invalidate_bdev
-> > >>        =3D> blkdev_common_ioctl
-> > >>        =3D> blkdev_ioctl
-> > >>        =3D> __x64_sys_ioctl
-> > >>        =3D> x64_sys_call
-> > >>        =3D> do_syscall_64
-> > >>        =3D> entry_SYSCALL_64_after_hwframe
-> >
-> > However the contention now has shifted to inode_hash_lock. Around 55
-> > softlockups in ilookup() were observed:
-> >
-> > # tracer: preemptirqsoff
-> > #
-> > # preemptirqsoff latency trace v1.1.5 on 6.10.0-rc3-trnmglru
-> > # --------------------------------------------------------------------
-> > # latency: 10620430 us, #4/4, CPU#260 | (M:desktop VP:0, KP:0, SP:0 HP:=
-0
-> > #P:512)
-> > #    -----------------
-> > #    | task: fio-3244715 (uid:0 nice:0 policy:0 rt_prio:0)
-> > #    -----------------
-> > #  =3D> started at: ilookup
-> > #  =3D> ended at:   ilookup
-> > #
-> > #
-> > #                    _------=3D> CPU#
-> > #                   / _-----=3D> irqs-off/BH-disabled
-> > #                  | / _----=3D> need-resched
-> > #                  || / _---=3D> hardirq/softirq
-> > #                  ||| / _--=3D> preempt-depth
-> > #                  |||| / _-=3D> migrate-disable
-> > #                  ||||| /     delay
-> > #  cmd     pid     |||||| time  |   caller
-> > #     \   /        ||||||  \    |    /
-> >       fio-3244715 260...1.    0us$: _raw_spin_lock <-ilookup
-> >       fio-3244715 260.N.1. 10620429us : _raw_spin_unlock <-ilookup
-> >       fio-3244715 260.N.1. 10620430us : tracer_preempt_on <-ilookup
-> >       fio-3244715 260.N.1. 10620440us : <stack trace>
-> > =3D> _raw_spin_unlock
-> > =3D> ilookup
-> > =3D> blkdev_get_no_open
-> > =3D> blkdev_open
-> > =3D> do_dentry_open
-> > =3D> vfs_open
-> > =3D> path_openat
-> > =3D> do_filp_open
-> > =3D> do_sys_openat2
-> > =3D> __x64_sys_openat
-> > =3D> x64_sys_call
-> > =3D> do_syscall_64
-> > =3D> entry_SYSCALL_64_after_hwframe
-> >
-> > It appears that scalability issues with inode_hash_lock has been brough=
-t
-> > up multiple times in the past and there were patches to address the sam=
-e.
-> >
-> > https://lore.kernel.org/all/20231206060629.2827226-9-david@fromorbit.co=
-m/
-> > https://lore.kernel.org/lkml/20240611173824.535995-2-mjguzik@gmail.com/
-> >
-> > CC'ing FS folks/list for awareness/comments.
->
-> Note my patch does not enable RCU usage in ilookup, but this can be
-> trivially added.
->
-> I can't even compile-test at the moment, but the diff below should do
-> it. Also note the patches are present here
-> https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=3Dvfs.=
-inode.rcu
-> , not yet integrated anywhere.
->
-> That said, if fio you are operating on the same target inode every
-> time then this is merely going to shift contention to the inode
-> spinlock usage in find_inode_fast.
->
-> diff --git a/fs/inode.c b/fs/inode.c
-> index ad7844ca92f9..70b0e6383341 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -1524,10 +1524,14 @@ struct inode *ilookup(struct super_block *sb,
-> unsigned long ino)
->  {
->         struct hlist_head *head =3D inode_hashtable + hash(sb, ino);
->         struct inode *inode;
-> +
->  again:
-> -       spin_lock(&inode_hash_lock);
-> -       inode =3D find_inode_fast(sb, head, ino, true);
-> -       spin_unlock(&inode_hash_lock);
-> +       inode =3D find_inode_fast(sb, head, ino, false);
-> +       if (IS_ERR_OR_NULL_PTR(inode)) {
-> +               spin_lock(&inode_hash_lock);
-> +               inode =3D find_inode_fast(sb, head, ino, true);
-> +               spin_unlock(&inode_hash_lock);
-> +       }
->
->         if (inode) {
->                 if (IS_ERR(inode))
->
+=E2=80=A6
+> - The potential vulnerability was discovered as follows: based on our
+> customized static analysis tool,
 
-I think I expressed myself poorly, so here is take two:
-1. inode hash soft lookup should get resolved if you apply
-https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=3Dvfs=
-.inode.rcu&id=3D7180f8d91fcbf252de572d9ffacc945effed0060
-and the above pasted fix (not compile tested tho, but it should be
-obvious what the intended fix looks like)
-2. find_inode_hash spinlocks the target inode. if your bench only
-operates on one, then contention is going to shift there and you may
-still be getting soft lockups. not taking the spinlock in this
-codepath is hackable, but I don't want to do it without a good
-justification.
+I became curious in which time range further corresponding information wil=
+l be published.
 
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+>                                  extract vulnerability features[1],
+
+Various software corrections were published through the years.
+
+Several error (or weakness) categories are known already.
+https://cwe.mitre.org/
+https://wiki.sei.cmu.edu/confluence/display/c/
+
+
+> and then match similar vulnerability features in this function.
+> - Reference link:
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/com=
+mit/?id=3D2d9adecc88ab678785b581ab021f039372c324cb
+
+Another reference format can be helpful also for the commit c534b63bede6cb=
+987c2946ed4d0b0013a52c5ba7
+("drm: vc4: Fix possible null pointer dereference") from 2024-04-15.
+
+Regards,
+Markus
