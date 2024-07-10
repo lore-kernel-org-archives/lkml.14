@@ -1,95 +1,123 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D25185E6A;
-	Wed, 10 Jul 2024 09:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445311891B3
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720602103; cv=none; b=ZKf3c7Il+cdzMt5TOhd4v+sCkuDx/Fy9Szfyv0kaVdW3k6+VK3BtpDyCCMf8sJrqfY4dUvzjiagzK0sQg5ZJrYpQhH33rSfW+jwB4VMKHys0GNj4X8btLYOG5541CQLk4SBhE6vpmqR1QagU8fNXqoEdN6ORi0Vyh/8ndMHCzAc=
+	t=1720602120; cv=none; b=BrIELR5z+kyIfc6aRAxNhO/d4G/tWXATCMHxEyyevfNCPWceSgXUM57M/YmzwP4LdCb0eUtt7ETc5vO/97oSQa6K1h3Xj4O8fH4jEehHP2qrkAh4neetGdXDV7YeikCSHuR+ywZy+foda1EN0aoamn86B4349OnFX/WZxpJgKKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720602103; c=relaxed/simple;
-	bh=vmFXtyVCMNyYbHABAh9iS+RSpjavkSOYAah2Pgbu5sU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JgVrZIiAcHYKqhaVHZUu51lS5RQ1uwQNwFZPF6mj57TLQRHWPBtKMTsT73yNHXRYfibrU+PtuPmIxjveWEkRxplhmHUGoImKvaQ1ucr/MISZC5R61Am49YloBB1eVcLLFOtggqr9GZi1J1UAROLCGY3mmjIDZZmJrMIBnyKO7yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CePkZSpP; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1720602120; c=relaxed/simple;
+	bh=eGuIvECbSXn6359y/dCjg0H/80Fuz5QDMmImUI44+Ek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7RtVpwapU+IyV2wHfl9WU2E2gpfoYffL2qrVQRkL1JCaliaBPOFAv2sGsKmTP+hpHScSnu5NOoXbxg7qO9IyAzHYgM7vir3XAa9VLHuT4eMifhB8S19zp0UbnulSMIvduDuZFBtzmEMUwT/Z0Aj5HwtNUn9kvl8jMSmMkLzXnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bLtpTjlK; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CePkZSpP"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2c983d8bdc7so4481685a91.0;
-        Wed, 10 Jul 2024 02:01:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLtpTjlK"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111b0so4182492a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 02:01:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720602101; x=1721206901; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vmFXtyVCMNyYbHABAh9iS+RSpjavkSOYAah2Pgbu5sU=;
-        b=CePkZSpPDrkFPl3Gn6a8okuj1P+4dni4rgmqac8S064pzoP8qWrwT1PP9DuIJB3yTG
-         2kJ0rASc8JR5Hm4V/8yGvniflWUi9fnfmUSnUtee5ULAy35tYz8wNFaCTb6OWxMd4tPo
-         yA/am7lPfnWRJg+CTR+7Aj+Qsfs6s0ndjGOMngdhQ/UMo/hQDBsz+1eIFIxfBCOSYyBP
-         vHtGfRAmMhc5FVJfmOf8xxlV9RwiX0gWT2SxTgTJA0XE5nDRMXJ5+aKFuxyBHOK/DZIc
-         mLMPz0x7Ap7IZ8+H7wpl2h+SDibFCS2zhgeYu+q25y4rhcDi1CGYIn1gYBtoX/SGHaMy
-         rPsg==
+        d=gmail.com; s=20230601; t=1720602117; x=1721206917; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s7FmM2wXolbOPiJO9z3OXAJMWaN/JKVl+AasVIF0mwE=;
+        b=bLtpTjlKFBFCO9FDczH7XD2enERWAHSMSyRkKsLhtVVaXr3t+XHFG8dwYBamMUuMu5
+         syZ44JOryYg0tYIuXCYj34MdYWGjsKkBdHO14BSAg2MCdcpe6K+qo1AEMctVeO9PlDQo
+         cFBcUH9K7jxWKiI6SiBV6jd/2yoCxgvd/TLUq2jX0LzAA4pKjLODYNjpx6dGrvH3GLqA
+         QQx6oys2pbMbTz0bOki1NRzoj+Vk7GNzLJ6T9DSQjIRfnUhsF7HuntxdR+lAd7Dr57+p
+         UJsgy++VbipCqXrLnt32GikbwL/REVKKd9/V81gtrYVPA+bnreKL9FKOHNdJvr1jPdrm
+         WBAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720602101; x=1721206901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vmFXtyVCMNyYbHABAh9iS+RSpjavkSOYAah2Pgbu5sU=;
-        b=FUglQXFOYjAXQBk2W0plej80OO+EAP8aBrvi5jU+L0L6pPTPrkXIsdePDYqy7xbywn
-         K0MR2dtJ8d33qVY4n0KuliLRAOtfPRvQ0DPETw+DJG8mVrGiWRy8UjdbRi1eUEkSwteu
-         8d62hKagc4rsWNzMjbyisv3iD3qxqUnfMzVCPPu7jvb4ZVeOiTnmRGr90F2rlCXiNoc8
-         i8RP1rnLqfovdpypW37K70LLSiCgVT7V7zCRtO6rws80OxytpdrW67pjnkFKgQ8aas3n
-         sa5AK4mjxD0BgYBWrAfrFMuZGRKVXY9hhFxRlYTuSSRt51103GWhh8RcE58LOQSQW3Hj
-         sXLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIGXMBhfMzGoAx99y2F8GCXMHdCl3+d3WmKbP82OIfeooH5zw9YR8z7y0f/wpiZ6cFL/mhdAAIyBAM/RPtxp4ptkxhKvqgULVuNlUphtPFv/9N9VRKAt36nmZnjAdEZTDlxedfS5llE8sMrII=
-X-Gm-Message-State: AOJu0YzK5ToYSezLkvswZKXddksDxPiiywPyQ6jfQuT7P6CDj36NXhWZ
-	YFtXt1FdcsTA75JOFSsrMjKBp+R9qmjIyTLk8cN1+6J4mMXTnoTjasQBA9vCSfnq5CVA+dcyHOf
-	ibvuLUhPio1/YaAGUgBF8FaXdsIM=
-X-Google-Smtp-Source: AGHT+IEzaE9GFxB1MbaoIUhf8vmwgNC6NulwUarj52xV5HAtPJpAIzgEeJpgYD+koAiX9yk1ne21kbfzrbf8TOOCYEA=
-X-Received: by 2002:a17:90a:c385:b0:2c9:66d3:4663 with SMTP id
- 98e67ed59e1d1-2ca35d58971mr3979784a91.43.1720602071142; Wed, 10 Jul 2024
- 02:01:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720602117; x=1721206917;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s7FmM2wXolbOPiJO9z3OXAJMWaN/JKVl+AasVIF0mwE=;
+        b=pEKxiUFNO6HCk9TCz2hiFYMCsGNfN152je65CuW8RSMak0fb2YtG7Ccj0i1f7WTict
+         Ib9+pQ4HNpCRBcAyOYhiTfBMihsBGEmXDUEShIEMccMFjSVHFdmVHR85+Xru2a4qvXG7
+         tnUJgi6C71GpcLAHKl8mcCZiDlHVUBS8LhTG3RwxN0j3BicgODBxnppZrwMzf0PaFWF8
+         XONtb/mYnhqqeOciTBAfmG/GY6qCfm3ExVl4wAPpUp8T2FfQPtGyz7cpa3TYwj4Prcmh
+         mqiNNM9zEQpPveXsKHqrzs64yqTeHcoxLio+0r6dz9v7etKERgsbdgQawIuOXFLcgj28
+         ZyGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLpy/CSG5NtP5vT0ZF7ea7q0+QNW/EP8gOmtq6p/k9yBaxo+b9aPPCJjoGUM6v3rOHxHvT3TPJIYDRh5o2zWggezksm3G15zglxEBa
+X-Gm-Message-State: AOJu0YzZlMHpMqsk8Md0cuVdWyIt1aGQiNGMRM6ghVoZY3LgG7jThWji
+	6npJ9XXiZmkVuaRNn58jcJ564fUjw7U1uFeIfgon9xT78EG+bPw=
+X-Google-Smtp-Source: AGHT+IHyl1og7q+6Pg7/7cFbcSFX2PZGINov4dlX9TkLDPo06gjLN2ZRHIFLUAHTkN3JGsHK4SIELg==
+X-Received: by 2002:a05:6402:348c:b0:58f:2087:7983 with SMTP id 4fb4d7f45d1cf-594bcba842bmr4455758a12.40.1720602117351;
+        Wed, 10 Jul 2024 02:01:57 -0700 (PDT)
+Received: from localhost ([151.47.106.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bba548d2sm1989506a12.7.2024.07.10.02.01.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 02:01:57 -0700 (PDT)
+Date: Wed, 10 Jul 2024 11:01:53 +0200
+From: Andrea Righi <righi.andrea@gmail.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	schatzberg.dan@gmail.com, mingo@redhat.com, peterz@infradead.org,
+	changwoo@igalia.com
+Subject: Re: [PATCHSET sched_ext/for-6.11] sched_ext: Allow SCX_DSQ_LOCAL_ON
+ for direct dispatches
+Message-ID: <Zo5OATwDf5uGjO2w@gpd>
+References: <20240709212137.1199269-1-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709084458.158659-1-jfalempe@redhat.com> <20240709084458.158659-5-jfalempe@redhat.com>
- <CANiq72kS2fAgRnR8yNfpN69tMG+UPfgfytaA8sE=tYH+OQ_L6A@mail.gmail.com> <e19d875c-70b4-4e0d-a481-ab2a99a8ee42@redhat.com>
-In-Reply-To: <e19d875c-70b4-4e0d-a481-ab2a99a8ee42@redhat.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 10 Jul 2024 11:00:58 +0200
-Message-ID: <CANiq72n-OXYPywckp3M5T8vA3AcFt0kSUUVN60FLx+yY3pPpag@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] drm/panic: Add a qr_code panic screen
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	Bjorn Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	rust-for-linux@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709212137.1199269-1-tj@kernel.org>
 
-On Tue, Jul 9, 2024 at 5:10=E2=80=AFPM Jocelyn Falempe <jfalempe@redhat.com=
-> wrote:
->
-> I used to list all QR versions in an enum, but I find it a bit too much
-> boilerplate to ensure the version is between 1 and 40.
-> By transparent newtypes, you mean adding "#[repr(transparent)]" to a
-> struct ?
-> I don't plan to add more "version" usage, so probably not worth it.
+On Tue, Jul 09, 2024 at 11:21:06AM -1000, Tejun Heo wrote:
+> Hello,
+> 
+> In ops.dispatch(), SCX_DSQ_LOCAL_ON can be used to dispatch the task to the
+> local DSQ of any CPU. However, during direct dispatch from ops.select_cpu()
+> and ops.enqueue(), this isn't allowed. This is because dispatching to the
+> local DSQ of a remote CPU requires locking both the task's current and new
+> rq's and such double locking can't be done directly from ops.enqueue(). This
+> gap in API forces schedulers into work-arounds which are not straightforward
+> or optimal such as skipping direct dispatches in such cases.
+> 
+> This patchset implements SCX_DSQ_LOCAL_ON support for direct dispatches.
+> 
+> This patchset contains the following patches:
+> 
+>  0001-sched-Move-struct-balance_callback-definition-upward.patch
+>  0002-sched_ext-Open-code-task_linked_on_dsq.patch
+>  0003-sched_ext-Make-rf-optional-for-dispatch_to_local_dsq.patch
+>  0004-sched_ext-s-SCX_RQ_BALANCING-SCX_RQ_IN_BALANCE-and-a.patch
+>  0005-sched_ext-Allow-SCX_DSQ_LOCAL_ON-for-direct-dispatch.patch
+>  0006-sched_ext-scx_qmap-Pick-idle-CPU-for-direct-dispatch.patch
+> 
+> While 0001 is a scheduler core change, all it does is moving the definition
+> of struct balance_callback so that it's visible for struct scx_rq
+> definition. If there are no objections, it'd make sense to route it through
+> the sched_ext tree with the rest of the changes.
 
-Yeah, that is what I meant. It may not be worth it in that case -- it
-is just something we should generally consider when we see "raw" types
-appear in parameters that need extra documentation/preconditions, but
-sometimes it simply does not make sense.
+Apart for the minor nits, everything looks good to me. I did a quick
+test inside virtme-ng and I haven't found any regression. I'll do more
+tests with the new way of using SCX_DSQ_LOCAL_ON, but so far so good.
+FWIW:
 
-Thanks!
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
 
-Cheers,
-Miguel
+Thanks,
+-Andrea
+
+> 
+> and is also available in the following git branch:
+> 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git scx-ddsp-local-on
+> 
+>  kernel/sched/ext.c             |  207 +++++++++++++++++++++++++++++++++++++++++++++++++++------------
+>  kernel/sched/sched.h           |   19 +++--
+>  tools/sched_ext/scx_qmap.bpf.c |   39 +++++++++--
+>  tools/sched_ext/scx_qmap.c     |    5 -
+>  4 files changed, 215 insertions(+), 55 deletions(-)
+> 
+> --
+> tejun
