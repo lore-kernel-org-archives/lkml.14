@@ -1,138 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECC083CD4
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E9383A0D;
+	Wed, 10 Jul 2024 07:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720596890; cv=none; b=An3amUUVSswgnr2XlwaXWKXZWrcUfWIDQF4Cxzz3OiSB0P3EVP/qOQDS2N11ObB64cPy/ec4rogDoivwFxsCB08cRHchgTWpkMup4FzLPO6yrgwm0Hvyt8P8GX2/yfFeFer6sbMUcTAWhOLVpWGcdgDAhPdZy07Hskl3wj6GnuI=
+	t=1720596911; cv=none; b=TMs67JhWLWEczaTrn2ZaU6N0rXIDppc1sXx6hzET6zMk+3SGW/DahdBG7D+H2esDEO7RerkMfojAvKB8TH5qSIH5iEOS72suH5M/mYQK+1q6xjQ/sfw7fV097xiJ4tFpqxsynOOoWveCs0pzSwyCqzAFI3O/PNIbzkcmGWgHhvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720596890; c=relaxed/simple;
-	bh=NfrfV5Vy+VM7vSghradxFkPpeufS31T/y1I2gyDTmrs=;
+	s=arc-20240116; t=1720596911; c=relaxed/simple;
+	bh=6Bqq4Ewk7zpTLugZf5KjwcAghC3qqCdO74iRTV/2vys=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sApEma2OBht1otqJfav2Av9zUMkBkL34Nd11080GkzYMR4QqIXFWvvT9LvmfNlak5rbzc4/nOso1PfQuXF5kpqwubHXoANZTtH4+p5mAq8suzfOBMmsSJfHyyHck7wci5xduIsa+VAdiGIFt5BSo/AJmg5vQ89gss0LQ8jIMRrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=beDieEaB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=n+HPTDLi2khw72jqSRp6DoCy8fMwpZeHawZK5w/LBkSVENX700UudlpsT7rj8mBTjiesL1dwlaongaCm6RWI6bLh/COQzsl+sjOYVoIzV5O04YKETmq0gsOHF/UWkqtBI1Rn/lxDB4O3sdEYC12NQoGKyDY0W36Xz6jLQMmVdpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaDdLIb2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="beDieEaB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720596888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D2M3DvwDrSJcyOfWVtdeker8I2MWaBFXWRzk+di5ddk=;
-	b=beDieEaBv/YdrIB89j810lKKmwYRogEg1lI89E6pALUR9pSZol/hZgtnbR5kAE2Y5pKXpI
-	lNsMU7WaUuKMiHYeKr2J1aiOruGrHe6TIsPPSlPXPz7s64yNVKY47d/nAPWWp3LGB1Nn5K
-	9Ck5ns00cZnExT1X2LfpN0pEunDRSew=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-578-uspX4un9OHm5X3r5s-eZdA-1; Wed, 10 Jul 2024 03:34:46 -0400
-X-MC-Unique: uspX4un9OHm5X3r5s-eZdA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a6f571c3eefso359314166b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 00:34:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720596885; x=1721201685;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D2M3DvwDrSJcyOfWVtdeker8I2MWaBFXWRzk+di5ddk=;
-        b=Gft00fMjiz19dnhonoDjCvkv25zIhfvAvl20E83bNchB+OxBZ+gQJHzqZJ8WKRQclb
-         QfNIvsKxNR9YtrJFgWANupuz5bwLvjuNYmLbPT+iXoVLAvR5pIr0YHzX3FSSIl9Q79dk
-         LPqq6xPkYBJVaAgEao9yUzFw8gnD78bEuc12XM4V/NU70kZOcURxqNCNLmaEv9GHvD4Y
-         27U1dNFG4Jk7Uyw+Pqr9dDg3Ix9OTz3VpuSlxzzROlVJtqfZXdUnGGa13GVGPoo6Pl87
-         zGF61Utf+SPTd6E9bYcqxfJH+cp+UGTzYsRZ4AmlFhRe258rybwAGgjmyccldqqL8aea
-         mGQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYSIzzRi5Rg8i1/WT5iHn7rplxVMPKIK569jbPEGih9vetHoN+RZfYxOzswft3J/xfhO0KNqrC6DcEZpl7X1N5ZyMU7r5uGnxx2RnW
-X-Gm-Message-State: AOJu0YzahVDZ2R84ItPcc1B/Bgr9AM4AB464XEGaVPbuajyDGGexBspd
-	PtOG3/0hG6EPWU0dEIaXdB9OjitJp9tvdSwNQz28f0e11lAyVr0ywla8aqMytMKh5/Bqptz4cyk
-	8Q5/hfGcV3YQr2vE8vSxkRrmpYfKUUAHrTS70qDwtHomYXkg/rMTBXqQPcVC1Qw==
-X-Received: by 2002:a17:906:d925:b0:a77:c364:c4f2 with SMTP id a640c23a62f3a-a780b883457mr263385766b.52.1720596884835;
-        Wed, 10 Jul 2024 00:34:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFdCK3sPHoX5ymCLdtTzOFCG6cqJ6FCKNdOKjpgNsX4y+qO5d6Ij6ITF6psUTIa6WmxdNi7Pw==
-X-Received: by 2002:a17:906:d925:b0:a77:c364:c4f2 with SMTP id a640c23a62f3a-a780b883457mr263384166b.52.1720596884237;
-        Wed, 10 Jul 2024 00:34:44 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-57-51-153.retail.telecomitalia.it. [82.57.51.153])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6dc520sm136516266b.51.2024.07.10.00.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 00:34:43 -0700 (PDT)
-Date: Wed, 10 Jul 2024 09:34:40 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] test/vsock: add install target
-Message-ID: <twxr5pyfntg6igr4mznbljf6kmukxeqwsd222rhiisxonjst2p@suum7sgl5tss>
-References: <20240709135051.3152502-1-peng.fan@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaDdLIb2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53BF2C32781;
+	Wed, 10 Jul 2024 07:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720596911;
+	bh=6Bqq4Ewk7zpTLugZf5KjwcAghC3qqCdO74iRTV/2vys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gaDdLIb2asilEsYwMYfxjQiXe/jKOTfX6mA6XGwmSm/Trndrk8Y/Zr+WauUC+xHYl
+	 zlodR4URQHujRikilL9PJWpYh20D8Z5dtvNEtfyJCO+NGPA9SZoZjVt/ICFnY38znP
+	 7rGQVVjjx98NLb9jVEPakhrFX0pk/iYwnJm3opeXZ2MM2vbUCiFdZtpcNxgh5QKIs+
+	 EmRap+tWsjTRiV433a8Go5joeXBkKeDnUR3LtH1WQMHWf1TSemnF862L1poQ/dhE5K
+	 n7w4E4JgfP7Iqbcqb21fEaTSzp6M6XM7c19v8Q2qX4s5T2BRiewwq+zWTeHG3llGfR
+	 eq7jxdjWOwP4w==
+Date: Wed, 10 Jul 2024 10:32:25 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Patrick Roy <roypat@amazon.co.uk>, seanjc@google.com,
+	pbonzini@redhat.com, akpm@linux-foundation.org, dwmw@amazon.co.uk,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	willy@infradead.org, graf@amazon.com, derekmn@amazon.com,
+	kalyazin@amazon.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	dmatlack@google.com, tabba@google.com, chao.p.peng@linux.intel.com,
+	xmarcalx@amazon.co.uk
+Subject: Re: [RFC PATCH 7/8] mm: secretmem: use AS_INACCESSIBLE to prohibit
+ GUP
+Message-ID: <Zo45CQGe_UDUnXXu@kernel.org>
+References: <20240709132041.3625501-1-roypat@amazon.co.uk>
+ <20240709132041.3625501-8-roypat@amazon.co.uk>
+ <0dc45181-de7e-4d97-9178-573c6f683f55@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240709135051.3152502-1-peng.fan@oss.nxp.com>
+In-Reply-To: <0dc45181-de7e-4d97-9178-573c6f683f55@redhat.com>
 
-On Tue, Jul 09, 2024 at 09:50:51PM GMT, Peng Fan (OSS) wrote:
->From: Peng Fan <peng.fan@nxp.com>
->
->Add install target for vsock to make Yocto easy to install the images.
->
->Signed-off-by: Peng Fan <peng.fan@nxp.com>
->---
-> tools/testing/vsock/Makefile | 12 ++++++++++++
-> 1 file changed, 12 insertions(+)
->
->diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
->index a7f56a09ca9f..5c8442fa9460 100644
->--- a/tools/testing/vsock/Makefile
->+++ b/tools/testing/vsock/Makefile
->@@ -8,8 +8,20 @@ vsock_perf: vsock_perf.o msg_zerocopy_common.o
-> vsock_uring_test: LDLIBS = -luring
-> vsock_uring_test: control.o util.o vsock_uring_test.o timeout.o msg_zerocopy_common.o
->
->+VSOCK_INSTALL_PATH ?= $(abspath .)
->+# Avoid changing the rest of the logic here and lib.mk.
->+INSTALL_PATH := $(VSOCK_INSTALL_PATH)
->+
-> CFLAGS += -g -O2 -Werror -Wall -I. -I../../include -I../../../usr/include -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -D_GNU_SOURCE
-> .PHONY: all test clean
-> clean:
-> 	${RM} *.o *.d vsock_test vsock_diag_test vsock_perf vsock_uring_test
-> -include *.d
->+
->+install: all
->+	@# Ask all targets to install their files
->+	mkdir -p $(INSTALL_PATH)/vsock
+On Tue, Jul 09, 2024 at 11:09:29PM +0200, David Hildenbrand wrote:
+> On 09.07.24 15:20, Patrick Roy wrote:
+> > Inside of vma_is_secretmem and secretmem_mapping, instead of checking
+> > whether a vm_area_struct/address_space has the secretmem ops structure
+> > attached to it, check whether the address_space has the AS_INACCESSIBLE
+> > bit set. Then set the AS_INACCESSIBLE flag for secretmem's
+> > address_space.
+> > 
+> > This means that get_user_pages and friends are disables for all
+> > adress_spaces that set AS_INACCESIBLE. The AS_INACCESSIBLE flag was
+> > introduced in commit c72ceafbd12c ("mm: Introduce AS_INACCESSIBLE for
+> > encrypted/confidential memory") specifically for guest_memfd to indicate
+> > that no reads and writes should ever be done to guest_memfd
+> > address_spaces. Disallowing gup seems like a reasonable semantic
+> > extension, and means that potential future mmaps of guest_memfd cannot
+> > be GUP'd.
+> > 
+> > Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
+> > ---
+> >   include/linux/secretmem.h | 13 +++++++++++--
+> >   mm/secretmem.c            |  6 +-----
+> >   2 files changed, 12 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/include/linux/secretmem.h b/include/linux/secretmem.h
+> > index e918f96881f5..886c8f7eb63e 100644
+> > --- a/include/linux/secretmem.h
+> > +++ b/include/linux/secretmem.h
+> > @@ -8,10 +8,19 @@ extern const struct address_space_operations secretmem_aops;
+> >   static inline bool secretmem_mapping(struct address_space *mapping)
+> >   {
+> > -	return mapping->a_ops == &secretmem_aops;
+> > +	return mapping->flags & AS_INACCESSIBLE;
+> > +}
+> > +
+> > +static inline bool vma_is_secretmem(struct vm_area_struct *vma)
+> > +{
+> > +	struct file *file = vma->vm_file;
+> > +
+> > +	if (!file)
+> > +		return false;
+> > +
+> > +	return secretmem_mapping(file->f_inode->i_mapping);
+> >   }
+> 
+> That sounds wrong. You should leave *secretmem alone and instead have
+> something like inaccessible_mapping that is used where appropriate.
+> 
+> vma_is_secretmem() should not suddenly succeed on something that is not
+> mm/secretmem.c
 
-why using the "vsock" subdir?
+I'm with David here.
+ 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
 
-IIUC you were inspired by selftests/Makefile, but it installs under 
-$(INSTALL_PATH)/kselftest/ the scripts used by the main one 
-`run_kselftest.sh`, which is installed in $(INSTALL_PATH instead.
-So in this case I would install everything in $(INSTALL_PATH).
-
-WDYT?
-
->+	install -m 744 vsock_test $(INSTALL_PATH)/vsock/
->+	install -m 744 vsock_perf $(INSTALL_PATH)/vsock/
->+	install -m 744 vsock_diag_test $(INSTALL_PATH)/vsock/
->+	install -m 744 vsock_uring_test $(INSTALL_PATH)/vsock/
-
-Also from selftests/Makefile, what about using the ifdef instead of 
-using $(abspath .) as default place?
-
-I mean this:
-
-install: all
-ifdef INSTALL_PATH
-   ...
-else
-	$(error Error: set INSTALL_PATH to use install)
-endif
-
-Thanks,
-Stefano
-
+-- 
+Sincerely yours,
+Mike.
