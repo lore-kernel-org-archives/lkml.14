@@ -1,104 +1,103 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC035CB8
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBE784D12
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720597903; cv=none; b=j16nyMVACraC/BZsNAWHv3k85DriQykO53a4xCVDeB7Zo9WwykMD5PavEm+XPD6mLqn4zKfWobrmNZPCCrm+mB4l6U/VzQwbGv73/SJ5hrUToC7vat638dMCPUmm+55gvudrFyQbTZBNvy9hOvlwoTnD9fLbFMgX3/Q7WO6bF4k=
+	t=1720597906; cv=none; b=PVgxOza4luUhuttr/4idqOegH/ADA6wir9JpjowmFokTOaPO97EtF1NGvaX2vpdcFPcBA/kNcjxofqSEuHwYjTgPsB63dq80m9yJsjbcFUls07v/BVtfQOJvFFPCUSHolleXEdzgjKfo2aRgvCeg8UBPf6mbqLdCbdz8tNVa6V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720597903; c=relaxed/simple;
-	bh=Ndc+9Qc/wSd8cgS0VuGQFkVzbnR7y1hmuot87Sn0J4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NZDRDZOHNoJwMOaLd+8H5ITCZC2xMqOAmON/YACeek14LOembVEPB/60i649fH+wv4gCJ8q7H7dytAM140lwyY3C1WZfQfQU9IZy5Y2Hu9X4m43LwEjqJxOXg9PFgDcQaKYbZ41njawFf+miNpFDEohs4mfLW04hC4DhS9osopM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4WJqn62Pw2z9sSv;
-	Wed, 10 Jul 2024 09:51:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id EpgCmhGS0H2a; Wed, 10 Jul 2024 09:51:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4WJqmw2510z9sT8;
-	Wed, 10 Jul 2024 09:51:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 35A9E8B779;
-	Wed, 10 Jul 2024 09:51:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id Su09KU2IeCB5; Wed, 10 Jul 2024 09:51:28 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.26])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id E1D468B766;
-	Wed, 10 Jul 2024 09:51:27 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	x86@kernel.org,
-	linux-riscv@lists.infradead.org,
-	Oscar Salvador <osalvador@suse.de>,
-	Peter Xu <peterx@redhat.com>
-Subject: [PATCH v2 1/3] arch/x86: Drop own definition of pgd,p4d_leaf
-Date: Wed, 10 Jul 2024 09:51:20 +0200
-Message-ID: <bcd6ab8246348f18fdc77694e321ee6458f05781.1720597744.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1720597906; c=relaxed/simple;
+	bh=fROySEc7Nwi1oKO0n7ctYzkZdFjrsdxsGKuMuZVUoBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NwXftGQUE8FflhX8I54HHyB8EKRvImpUIq5FAOJ3mNa5GsZ3t/m2H5Cd9CggcITmnE5349/+PwuCcKG3Gt1doPeYacAqHAoAnLPSyUz2V1qbzTO1ZkqJVXd7jO5kKu4uLNql56m4RtuV48MoEML5wcj9AS2i+i0rSGAcrqb06uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-64b29539d86so54901207b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 00:51:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720597903; x=1721202703;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7xwUkC2957U6M9JtnEiR4qwk1hE+eeGWalXN7vG7quE=;
+        b=asAwjdXXkXtEcNs40P7LmxaqbEqIaeYFnMM05GUIBFRuOb7r6repKlB6SHJDB/iPKJ
+         WzWrldo2iXul4OLu+uJJ5OsyywhFFCh+IYK6PEOeG7MpJ1fJME6UvqSQoByizAbs3not
+         OH+pcdl+DIDEZCTFZuNV/UDJHRMlQLaYN5q8VV5ogCaHWj4kYjWYza84vfQ43gITq72X
+         lPAZmg+muSH3K4am2js8AB3BY0p2qqFU5mt6sUS4A6ZOkeabatpTMbn/XZE8f5Iza2HK
+         XioWD80E7+wqxrow314vwvcFXNK4JQ+5t4MyCfVgBE4xAIZb18sEQqtuocVtGk+Pjgau
+         iTdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWNOtc2vRbmsI1CaOq9RCO9aVdXueOm4z/w7E1knQp/rEQTwr0OU7U+xMem9wVx3QGvljK2o8fnWddXZidukOCbJdW/pxrecjS/tjp
+X-Gm-Message-State: AOJu0YyiWNGFw2UjpOJyYS1MkQrrKOmhyQbC6T1gTdtwT0is3JGaueFE
+	OlSecxubOaHBpHmvSn2xLoRzMLnC3IeLnGprZRl0026HVd8pJCDYvz6If3YF
+X-Google-Smtp-Source: AGHT+IHtxvWv9hh8rTaq8NV4nS78GHyh5yq12DEQ7tkFC7Kknra5+Aj4f0qFCJmG2HlUHMN53KGwrA==
+X-Received: by 2002:a0d:e6c3:0:b0:650:9e71:bde7 with SMTP id 00721157ae682-658ef24b7b8mr54470957b3.26.1720597903299;
+        Wed, 10 Jul 2024 00:51:43 -0700 (PDT)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e4d2b667sm6447847b3.51.2024.07.10.00.51.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 00:51:42 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dfab4779d95so6251897276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 00:51:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV0v7vnnWJqn1gGVAzDLxMT/R9A/4DHSp0c9IUe/9sM4dSsbbuT3e6ErQ8gfRjNbgBhwmmv/fi+XVn8RLQ7ACuFIqBlWddcDKdH6nx1
+X-Received: by 2002:a25:946:0:b0:e03:b319:e022 with SMTP id
+ 3f1490d57ef6-e041b122232mr5456419276.43.1720597902668; Wed, 10 Jul 2024
+ 00:51:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720597882; l=1393; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=y1Fku5Ig+SrLh/mlbGZSDg5khbyWLz2sNH+Fhxvf8CY=; b=ZZZbGXGTOnTKjAp08fuPZS4cmRBbyfRVezQt4Oz9YhJ7W4Res5iQwjOEEXfNvOQwA/ghhFQas Nvz5aEWhOUEA4kFg32/yccO89q7Vl3J1d9wEvAyscMk8Xay/WbsDPQO
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <20240710073413.495541-2-gregkh@linuxfoundation.org>
+In-Reply-To: <20240710073413.495541-2-gregkh@linuxfoundation.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 10 Jul 2024 09:51:30 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW2Y57bXMHjeGt+-vVQs-12DsoeXNYQ80NL+obbCrQiZw@mail.gmail.com>
+Message-ID: <CAMuHMdW2Y57bXMHjeGt+-vVQs-12DsoeXNYQ80NL+obbCrQiZw@mail.gmail.com>
+Subject: Re: [PATCH] zorro: make match function take a const pointer
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Oscar Salvador <osalvador@suse.de>
+On Wed, Jul 10, 2024 at 9:34=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> In commit d69d80484598 ("driver core: have match() callback in struct bus=
+_type
+> take a const *"), the match callback for busses was changed to take a con=
+st
+> pointer to struct device_driver.  Unfortunatly I missed fixing up the zor=
+ro
 
-We provide generic definitions of pXd_leaf in pgtable.h when the arch
-do not define their own, where the generic pXd_leaf always return false.
+Unfortunately
 
-Although x86 defines {pgd,p4d}_leaf, they end up being a no-op, so drop them
-and make them fallback to the generic one.
+> code, and was only noticed after-the-fact by the kernel test robot.  Reso=
+lve
+> this issue by properly changing the zorro_bus_match() function.
+>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: d69d80484598 ("driver core: have match() callback in struct bus_ty=
+pe take a const *")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/x86/include/asm/pgtable.h | 10 ----------
- 1 file changed, 10 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 65b8e5bb902c..772f778bac06 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -252,13 +252,6 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
- 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
- }
- 
--#define p4d_leaf p4d_leaf
--static inline bool p4d_leaf(p4d_t p4d)
--{
--	/* No 512 GiB pages yet */
--	return 0;
--}
--
- #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
- 
- #define pmd_leaf pmd_leaf
-@@ -1396,9 +1389,6 @@ static inline bool pgdp_maps_userspace(void *__ptr)
- 	return (((ptr & ~PAGE_MASK) / sizeof(pgd_t)) < PGD_KERNEL_START);
- }
- 
--#define pgd_leaf	pgd_leaf
--static inline bool pgd_leaf(pgd_t pgd) { return false; }
--
- #ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
- /*
-  * All top-level MITIGATION_PAGE_TABLE_ISOLATION page tables are order-1 pages
--- 
-2.44.0
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
