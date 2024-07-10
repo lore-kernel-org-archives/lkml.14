@@ -1,107 +1,123 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05164A07;
-	Wed, 10 Jul 2024 00:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672531388;
+	Wed, 10 Jul 2024 01:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720573049; cv=none; b=b87q6TiYAmwERkfFD9ZkGOR+qAIyTrkG//eXLzSpG8VfnYVV00tu1jATn9e/8MbcmAsBFSDEphU1toZF7UjULLAHHzNs70m6mMOeNycUlsqBPiJEkSGdKJnT1DHo/2fa8JVuHqAWs2glQgELkJa3NhNDwkB6HJS089yT4jwDnjk=
+	t=1720573554; cv=none; b=CoQXh2pqio+JZNlxFXSHJrPoe1tz0nKY6JF6/266cWYfxvTCPtn44C4q8NP4ZsnMw5iVEyMCGbMBG+ni2JCrHapnheEJDpVpRyf9l9gbfn+9MpYK/zSkaHIR91J7CHPNDxO8p/PnJBwZb/p5VszyDe8HF16QoJAF5Hus8w84Pxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720573049; c=relaxed/simple;
-	bh=B2IJUWG+gIY1F0/nl3PBsnRoD1Lqo2RSfjArrbG8HaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jC/ziSWjCQUjxs01FbjGrCWoS+UQGerTJ25t6OiLXpKzOJUiZlaGcw/HoLYnqti2mPrFw//ykdAN7NMz1yp2RHPe4gm6DbPlK9Zve/jJw2b1YBjjjJJrR6bhkecCkEdZthThnlKsWCRysYnSZNrU0a9kUW+9LHg6NsztnBTbv3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dtxNH/Ic; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720573554; c=relaxed/simple;
+	bh=g6d7VhbAqjM9GJxp46hZAw6jfGnxM3P3F17Ui593rq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FIuhx7QNRsR1O+/UzwrBfwAi0qkMtSsz1aGKCS3VzJH1dyzebluIHb/MqsQwBGgfIAe+q1f+kg0HhtSwOZg8wt3i9zHDuYylPi0g0iJKpITr6XWnicPUgYeuz0dOsOEylD4ss5TdGdR25SaXWMkh01jPTk5Eb/j1sgrZAL9WafA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=RFqMiO8s; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtxNH/Ic"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7036815bde7so1764372a34.3;
-        Tue, 09 Jul 2024 17:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720573045; x=1721177845; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2YqcG/O7UO17pKVeqS9vSTR5z7c3JMkKO7hnG3tldC4=;
-        b=dtxNH/IcflGUjibj8v5KNdAAa8moMxLqmGzniUtyEy+mc341k0Q4xZdRlrw9gommVe
-         H85eLboWFDkB4bxKvZ6VzMUMHJdibrQbcmJymDLBfTcAUl36ruILpnYRraBNgTI2OCxU
-         JrnsylFTP7wNaOVxC1fjXLwl/aSYkHMlxaBf8556sAuk+9ejtF35TvJ2lEDYiOo3PHVE
-         NIFe87cybBZIAyBZB5jF0F+6XfD90yR296Qoq1A3B3rQ6iK5OBHGsUbym0wJCBtL5Qik
-         5dCjPMtkZJ3k8wwHp/iatBCz9s0kiA2stk5n7c2GdtywVI9fkTskLUSsmfmd4JaMAItb
-         I+nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720573045; x=1721177845;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2YqcG/O7UO17pKVeqS9vSTR5z7c3JMkKO7hnG3tldC4=;
-        b=eysRH6HjzLzluBYmsF0hA0s2v6hbT9jVu7WndOqiaq3J+10ZhY+dJPGknt1/pObp49
-         V3I+2zqgIJoSMPOqz3cDfWdMqnC1svgA9S0wOJXzG7VHj8BKrMIASJIoJY9EPFnqgEkW
-         gODatId87czaL50qSgc/ZeplQsLlcT8uBWBgU6EDPM6JPafihZ9HPAwjh+M+1xF71ArT
-         dvmny2XDhZ6MVO6BQJx+hWiFaljtYp7aQQZr0EXMmMOZUwY68Wcv4oksIWRTnscFNe9H
-         GZEs9FZX+RrITuwdAONS7OLzSJ1lncgj09WtqNP8lxBu+i28+UMYPuPJb2WKZxjLUtAv
-         LYMw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9o9QQCClpcHwIKO6YdXLaO75o7B4ZIroQVjHtUIoPI810EWpmxTbqcZ22bCEihVoOxmIaK6pTq6ZyuWVD7lTw9+5tnV8AbYR4oYSq
-X-Gm-Message-State: AOJu0YydSTC5TC6XFo9yUz/bw9tQyAZ/wC29WHSIUgv2aAkgeEkIllDW
-	X8HGeQVs5DfRsA3Yb9ASzC1ZF0/TiMpr+lh5/NIBANyHg0n4477q
-X-Google-Smtp-Source: AGHT+IGCdW4ebx+zL0Pukp6i4b9YkL+Fx//qJ6Wqq2XyXbYfl7OoNWXIXyjdewNDL0PDLXDB5jkExw==
-X-Received: by 2002:a05:6830:1648:b0:704:4938:e4fb with SMTP id 46e09a7af769-7044938e726mr933070a34.24.1720573045525;
-        Tue, 09 Jul 2024 17:57:25 -0700 (PDT)
-Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b438c70a4sm2467638b3a.83.2024.07.09.17.57.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 17:57:25 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 9 Jul 2024 14:57:24 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Julian Orth <ju.orth@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 2/2] kernel: rerun task_work while freezing in
- get_signal()
-Message-ID: <Zo3cdEMZVOJcseWm@slm.duckdns.org>
-References: <cover.1720534425.git.asml.silence@gmail.com>
- <149ff5a762997c723880751e8a4019907a0b6457.1720534425.git.asml.silence@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RFqMiO8s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720573546;
+	bh=b2KDwUVEyWWRif6rhV5WfDhybBHE3TnImXtqL+BrTys=;
+	h=Date:From:To:Cc:Subject:From;
+	b=RFqMiO8s3N9Jf+MxXnHukkogBp6KXzx0nvS6Ji2J6QkZhE5QHbS8/PeYto2MXG/eB
+	 pKDBksxUkteVeuaZwHk6Vb9dhhSo5O9Chw6Kqx81uvE//4VuaG8vZDl0rWyGd2IEyq
+	 pO/yGbz0LXMNS4/LBkTim1DwbN2fCUI1IZB9JBjoHQVCVRZmZSkpyxwcqALynS+ezG
+	 d2DdMwhVE1+ydGBWrmi1pAd024TNjw2m0U3hvZNeZz1TjOB2ACBEK2GL8w/fwJ3ecb
+	 fMeiwWiYbjv831lV91bVsFYMxh2K67bTAA78Vst0d4ofi937PC0zUuaAP6fvMpt+UB
+	 HdMS/NhQ8jWmA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJfmp5F54z4wcl;
+	Wed, 10 Jul 2024 11:05:46 +1000 (AEST)
+Date: Wed, 10 Jul 2024 11:05:45 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Michael Kelley <mhklinux@outlook.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the dma-mapping tree
+Message-ID: <20240710110545.110366a4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <149ff5a762997c723880751e8a4019907a0b6457.1720534425.git.asml.silence@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/Zu6vUPG3LQ=OvX5OPgGAoki";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, Jul 09, 2024 at 03:27:19PM +0100, Pavel Begunkov wrote:
-> io_uring can asynchronously add a task_work while the task is getting
-> freezed. TIF_NOTIFY_SIGNAL will prevent the task from sleeping in
-> do_freezer_trap(), and since the get_signal()'s relock loop doesn't
-> retry task_work, the task will spin there not being able to sleep
-> until the freezing is cancelled / the task is killed / etc.
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://github.com/systemd/systemd/issues/33626
-> Fixes: 12db8b690010c ("entry: Add support for TIF_NOTIFY_SIGNAL")
-> Reported-by: Julian Orth <ju.orth@gmail.com>
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+--Sig_/Zu6vUPG3LQ=OvX5OPgGAoki
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I haven't looked at the signal code for too long to be all that useful but
-the problem described and the patch does make sense to me. FWIW,
+Hi all,
 
-Acked-by: Tejun Heo <tj@kernel.org>
+After merging the dma-mapping tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Maybe note that this is structured specifically to ease backport and we need
-further cleanups? It's not great that this is special cased in
-do_freezer_trap() instead of being integrated into the outer loop.
+kernel/dma/swiotlb.c: In function 'swiotlb_alloc':
+kernel/dma/swiotlb.c:1770:17: error: too few arguments to function 'swiotlb=
+_release_slots'
+ 1770 |                 swiotlb_release_slots(dev, tlb_addr);
+      |                 ^~~~~~~~~~~~~~~~~~~~~
+kernel/dma/swiotlb.c:1443:13: note: declared here
+ 1443 | static void swiotlb_release_slots(struct device *dev, phys_addr_t t=
+lb_addr,
+      |             ^~~~~~~~~~~~~~~~~~~~~
 
-Thanks.
+Caused by commit
 
--- 
-tejun
+  b21a42af002d ("swiotlb: reduce swiotlb pool lookups")
+
+I applied the following patch (which may or may not be correct):
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 10 Jul 2024 10:39:48 +1000
+Subject: [PATCH] fixup for "swiotlb: reduce swiotlb pool lookups"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ kernel/dma/swiotlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 618602fd10df..b4d8167b2f8d 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -1767,7 +1767,7 @@ struct page *swiotlb_alloc(struct device *dev, size_t=
+ size)
+ 	if (unlikely(!PAGE_ALIGNED(tlb_addr))) {
+ 		dev_WARN_ONCE(dev, 1, "Cannot allocate pages from non page-aligned swiot=
+lb addr 0x%pa.\n",
+ 			      &tlb_addr);
+-		swiotlb_release_slots(dev, tlb_addr);
++		swiotlb_release_slots(dev, tlb_addr, pool);
+ 		return NULL;
+ 	}
+=20
+--=20
+2.43.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Zu6vUPG3LQ=OvX5OPgGAoki
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaN3mkACgkQAVBC80lX
+0GwwgwgAo7mAv53pb6h2+kms90r3zIk99v1b4s+lGRTjDG30AZrIzWV/i2O84/+Q
+/VghfwttgkUvlicSP3vIVqwDm1uUcoqGtX2SoHmtlu80B/WfOPKQRNfiay7ghomE
+XkapNnqY8kFtPi4NMHtlWPdyKdbLPhIKe+qccVv7vifYQvk75leXSErUPzZVBm7x
+q4wT8PnpfcHkjGqKug4pISnXjMoMrv+BlHFSqsIDNGd/hWtlTc1wKxD6hEFiPfZu
+q9xr8Go9HYyFCzMXHcnnKCLZjmSYNJPFRX6/+yDXLoMhdaqd1fevPEHb+YD9RHf1
+R9GSKanvjG5NFd5XbQ3mHoH1TJoqlA==
+=FVrp
+-----END PGP SIGNATURE-----
+
+--Sig_/Zu6vUPG3LQ=OvX5OPgGAoki--
