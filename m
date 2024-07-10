@@ -1,155 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0ED01922E3
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0B31922E3;
+	Wed, 10 Jul 2024 18:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720635965; cv=none; b=IP/rZQq/uP7YV+EtGVTlp8wqv9U1b+LXMm3k9FAQgq4nmPemthCSQuA93HsU5Dv0kK5jBMPXtD5JbG39RtEoUGWN8jGZCrgFlRVHXpGIhpJcy9KfFvyUfgckFX21TUtTJZ633xXjue0FQnjnBfYZ1dnt2qNs/Hng9no9bflbdjU=
+	t=1720636024; cv=none; b=Ws2UaXNSHwuHpw55JdI6RSS7PQ8+MMaCALHCSqtq/K7SV5oVZ40wGwTg76NEBMmZF9kHkbZ+eMaNnfbPESo2B8hipw0k0W9dYiYCMklBCENCOvv6S0EL68o16TZX5ZtlRO4nnctwiTiEryJtWX1d5VjaHwXQDxGQL6N0eVbz8UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720635965; c=relaxed/simple;
-	bh=HbqBwpERhoys6IIGkMxxMqtV+w+jB3wNftYPPPFFN0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AATO2wdxXdx2noPlorXvBrtGSd83F8v7S+Ty8GGQaFSKwKwCo52Yx7VTnxEzPGWRsPLT+K6AvuNutK4JgRdYMPXqYT12HOTxO/nPrdpD/hRRr1izXv7bljokJB4jDKxt+XJLfJ8ue76DfcRnbmrd5rrSBMrVrYATsJNPKnD8iKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y6Vts6Yc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720636024; c=relaxed/simple;
+	bh=eRrtqZRqKI+Vs713ksZJJnhpC7362rwfU+pQUCdgXy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPeosFbvqjlyQYn1QY7GP5ha88SL7uqkhqj/oPwD8LsWatiSlC2EXsBnCkSq9yY9tpaRjrCuFH39gYyjskTz6WdSD1N+Os45fHKoGF/Y8Cdgmw6v0/yaK9kVBytpHWZDY5TX7Hm9eqCEeMEJH2YhttFQlFx9+k1gwwxxklLVaOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBignoqF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y6Vts6Yc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720635961;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=U2rEv51u4KMmIPEC5TxLnxrDMlUuZLWNG4UYs9k5I/4=;
-	b=Y6Vts6Yc/HwRzJFnAw6p4U7ioTFzNuobfEYcEeD2cWHcDYH1TLVLmyD1922z6WeAT8y7wC
-	tm/Ns3mWa8KMIARGA3Afqob0WRqG/7Ue8C/GbHlPCifmMX4Tj4Z6nGMbgLcoUdCbrmLqpd
-	DwLb4xuKPDlJGX/pCcRTzfps9Kf8ESM=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-569-SjvO92aeMaWRCZbRWNGX9w-1; Wed, 10 Jul 2024 14:25:59 -0400
-X-MC-Unique: SjvO92aeMaWRCZbRWNGX9w-1
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1fafb7eb163so169095ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 11:25:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720635958; x=1721240758;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=U2rEv51u4KMmIPEC5TxLnxrDMlUuZLWNG4UYs9k5I/4=;
-        b=jftMJUkKWxe3FvobEDqGqSpbbiqQLjjq5OliUTa3/KZjM/gxJUDbOPwVAjgR5MC035
-         Xl69AVvbqGOjSHxrinXyvvy40QRrz5J3X4HGLwmd7AV3fj1xdUYiBcmQ+TeTiEFs28HE
-         N4QKcTP73LEe6weJPjjfCo0ksbETH83EG0QmHV/3cVtYpVGw3kKG9s//iwl93UkcCqsj
-         +RHmXGOwvYfiaOf6MODpJ2ynkfU7fclnhMh74+ZPI10Bvg72bAE0jfwCEQQfTrKTbYIF
-         vt8m/rJ2R3Ey4u8J4KttedkozN8Ybquc1/gg49NpZykPej9xWDRG87O4eGi6TcDHgvu4
-         ZFwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLKG+bzFKi8e2mvXSa6BUT9fPVDhqIIlt5qwJ9DDCzpWCRwv6gvMY6HTZZTiEs1GJGKG8XBSB6zxF9ZHnW1yPEejKuo2zpkEfgGQ+G
-X-Gm-Message-State: AOJu0Yx+Oj+EgsoRXYVHqkSpSdxr35ZFnqK1kdtwCwEpNUpqMW625dMf
-	kdB6jicpU3Q88VAeBQ17bcUUBfZ37wiK4enYPrz9+UyNceZZXX0LfcHneOtb42dOdG5XgiKY9Fu
-	OzRKt1pHzC8yTSy2I7TSKg6N/snlV+ladLH3CcZmpMDVntNGEPV/6lux5XBzfnQ==
-X-Received: by 2002:a17:902:e84f:b0:1fb:3b30:8ce0 with SMTP id d9443c01a7336-1fbb6ed5798mr58215205ad.44.1720635958048;
-        Wed, 10 Jul 2024 11:25:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvpj3tgd4hi0jiKDDVqqCni4YVHK+oIJeh5jjCVBljWk6H2U0NmuoML9kUIYE9vLOVcbdsNA==
-X-Received: by 2002:a17:902:e84f:b0:1fb:3b30:8ce0 with SMTP id d9443c01a7336-1fbb6ed5798mr58215085ad.44.1720635957674;
-        Wed, 10 Jul 2024 11:25:57 -0700 (PDT)
-Received: from [10.35.209.243] ([208.115.86.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a424bcsm37779245ad.116.2024.07.10.11.25.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 11:25:57 -0700 (PDT)
-Message-ID: <e9405f5d-2b43-40bf-b496-9eaae7c873c5@redhat.com>
-Date: Wed, 10 Jul 2024 20:25:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBignoqF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5056C32781;
+	Wed, 10 Jul 2024 18:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720636023;
+	bh=eRrtqZRqKI+Vs713ksZJJnhpC7362rwfU+pQUCdgXy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kBignoqFgMiQnAofIwr6TpBgYH9jPjzRaSC842ug8+rx6x5ll0CjTdOuNwKz+XNaU
+	 NDvkrwV2QNWMtc2QwoU1ijOz5da9rUzzZ4Zm4X9y1ohMBoG7CVKn0v8dUDWTmbo5kp
+	 qCrq3abaj3XVJlXugg7JTU4S4r1FduVMcT4Z37pYvXrQ+HC5Pfyh6axADebI74bLMd
+	 mL+FCPzGJMJSDDh/UgJFPTRSJhQcGB2O3dEluBrE8THwZhBROKgdbzxw1XeKE8fCoR
+	 WqmFYL3/Bn0OvLOJQI+kNsc03yBZkhbSjm+4JlasoCc+ZLBwTbq5WG/vpdgUXOB+/4
+	 KqrO9fqPgf3Gw==
+Date: Wed, 10 Jul 2024 19:27:00 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Florian Weimer <fweimer@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Shuah Khan <shuah@kernel.org>,
+	"Rick P. Edgecombe" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>,
+	"H.J. Lu" <hjl.tools@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Christian Brauner <brauner@kernel.org>,
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
+	Ross Burton <ross.burton@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	"Schimpe, Christina" <christina.schimpe@intel.com>,
+	"Pandey, Sunil K" <sunil.k.pandey@intel.com>
+Subject: Re: [PATCH v9 05/39] arm64/gcs: Document the ABI for Guarded Control
+ Stacks
+Message-ID: <Zo7SdDT_cBp6uXgT@finisterre.sirena.org.uk>
+References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+ <20240625-arm64-gcs-v9-5-0f634469b8f0@kernel.org>
+ <87a5iph6u2.fsf@oldenburg.str.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] virtio-balloon: make it spec compliant
-To: "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <cover.1720611677.git.mst@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <cover.1720611677.git.mst@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="GNMZNZkOBV+voqRu"
+Content-Disposition: inline
+In-Reply-To: <87a5iph6u2.fsf@oldenburg.str.redhat.com>
+X-Cookie: Your love life will be... interesting.
 
-On 10.07.24 13:42, Michael S. Tsirkin wrote:
-> Currently, if VIRTIO_BALLOON_F_FREE_PAGE_HINT is off but
-> VIRTIO_BALLOON_F_REPORTING is on, then the reporting vq
-> gets number 3 while spec says it's number 4.
-> It happens to work because the qemu virtio pci driver
-> is *also* out of spec.
-> 
-> To fix:
-> 1. add vq4 as per spec
-> 2. to help out the buggy qemu driver, if finding vqs fail,
-> try with vq3 as reporting.
-> 
-> Fixes: b0c504f15471 ("virtio-balloon: add support for providing free page reports to host")
-> Cc: "Alexander Duyck" <alexander.h.duyck@linux.intel.com>
-> Reported-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> 
-> Changes from v1:
-> 	rebased on vhost tip
-> 
 
-Looks like you missed to include acks from me and Jason.
+--GNMZNZkOBV+voqRu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Cheers,
+On Wed, Jul 10, 2024 at 12:36:21PM +0200, Florian Weimer wrote:
+> * Mark Brown:
 
-David / dhildenb
+> > +* When GCS is enabled for the interrupted thread a signal handling specific
+> > +  GCS cap token will be written to the GCS, this is an architectural GCS cap
+> > +  token with bit 63 set and the token type (bits 0..11) all clear.  The
+> > +  GCSPR_EL0 reported in the signal frame will point to this cap token.
 
+> How does this marker interfere with Top Byte Ignore (TBI; I hope I got
+> the name right)?  The specification currently does not say that only
+> addresses pushed to the shadow stack with the top byte cleared, which
+> potentially makes the markup ambiguous.  On x86-64, the same issue may
+
+Indeed...  Given that we use the address on the GCS as part of the token
+on first pass I think we could get away with just using the address and
+not setting the top bit, we'd have an invalid cap pointing into a GCS
+page which shouldn't otherwise be on the GCS.  I'll give that some more
+thought.
+
+> exist with LAM.  I have not tested yet what happens there.  On AArch64
+> and RISC-V, it may be more natural to use the LSB instead of the LSB for
+> the mark bit because of its instruction alignment.
+
+The LSB is already taken by the architecture on aarch64, the bottom bits
+of the value are used for the token type field with no values/bits
+reserved for software use.
+
+> We also have a gap on x86-64 for backtrace generation because the
+> interrupted instruction address does not end up on the shadow stack.
+> This address is potentially quite interesting for backtrace generation.
+> I assume it's currently missing because the kernel does not resume
+> execution using a regular return instruction.  It would be really useful
+> if it could be pushed to the shadow stack, or recoverable from the
+> shadow stack in some other way (e.g., the address of the signal context
+> could be pushed instead).  That would need some form of marker as well.
+
+Right, we'd have to manually consume any extra address we put on the
+GCS.  I'm not seeing any gagetisation issues with writing an extra value
+there that isn't a valid stack cap at the minute but I'll need to think
+it through properly - don't know if anyone else has thoughts here?
+
+--GNMZNZkOBV+voqRu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaO0nMACgkQJNaLcl1U
+h9CYNwf9FL92M924ZTMgdzdOGnvfj92Q8ImGFAmDoUP3IjVPivJTPYhDuY+GaQaY
+hojzU0+/ygci8GNBa3kaJGdT2kzo4J6aMfzV8Lw5OFhjfZvg98gQbw+HeRVou0BB
+trtAQLx/+CWEYHy1qXMPQ3jRHuINOT80L4T321NSPyd7rlSksPpZU/NqHmUI9iW9
+MpODGOLfCOg2W3CrQMA8AT1F09NeC4fBr+XRq1f3PwskzNRz/DR89M1amdCG7bky
+oOk/WAsSGY8RWuY7/GurREwf7vUc1akIFax3lqDscpCbSuZ89FcFfs6YEAUqgq86
+qV5kGewLUdqaGwutNJRSCAV+QkJXjw==
+=dJd9
+-----END PGP SIGNATURE-----
+
+--GNMZNZkOBV+voqRu--
