@@ -1,232 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C977443D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720604778; cv=fail; b=igxHTl2YrUuOot4dbunwMrSp6whJ/GCXctGTngeL7xlHKIt14Z9G/F1u24HGg5hiVBoA4IQ0EztSuHFjns3TCDByjya8Im5jlgWUPyIORGssfIi+ZCUpsOSu6IM9j9qcZ4SCC2EEhYnOxQSffvzC5pKIG8fIL2pllLpJJX1PpGI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720604778; c=relaxed/simple;
-	bh=8Gxk5u8v86xf6vWVmTNGN9aq150LDiu8AkVIST/9epk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kICydQgTaYD4154fL2RJT+nlG5SgJzgewrxgN3lVC6hGnTo9BnwfXE63/ZC83dT7pCuuttiOQhHtAbE6Kk2+1jYPqMJ7tvT12ioRj6cfHTjg/qXLwWnsjcd/l7jqqFzDmLIHUo0pejqg3OkWcy+MEQYTH8GrotEmg/0GAmkrtyc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kq0IfnvE; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBCC3BBF5
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720604807; cv=none; b=PuFj9HgAfyCheWsNGDvi+Y+3bMWItDD40/Ys/a+xWIfw7lKBNTu3J7pJH+uJQk1Kh2jCiU4iiYWSpQ9T2tr+nhQIbieWjZdYdbWecy+HBdSQXmt0gqcxekpbJF5Uzc3VTs6aTWh3Hz4NLKPwn5gP5DOL/UKdaSgZEIovHMs40yg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720604807; c=relaxed/simple;
+	bh=LZFnsJhlMMXmLcnLjHwif3Tko8RTPA1FKx72W7VDpJM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nhmf0dyLZtqdh+1mryI9tmyN7/p/Hz+rb4eSmgM/n+AzeIwFrCjMl/BTH+zVgrdV2KBp2LwAcv7qHe3agee87SH/YDMX3/FvWq8RmV7/wPQGPFFOe4Vo7R1+CzSgNNYZdIWNnqbI6sN+lQEmHnbm3KT0uIgeK9m4Huq1DTj4BVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YatCsrQp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kq0IfnvE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720604776; x=1752140776;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=8Gxk5u8v86xf6vWVmTNGN9aq150LDiu8AkVIST/9epk=;
-  b=Kq0IfnvEzetEoL38fW+mzxKl+huts5gg3uuOUIk5nADM5SFRcjnFiPkM
-   8Je0DiGTOg2kg5raEgFxfoXrb2ziiMZvgZEJgQjseL5OWD0Db25yBa+lR
-   H5QAwKr99RIjWk/ijqOlmsN/8VI5Z0xhyC/rw/fS5g8loGKGAALUS+5Uh
-   sce8q0uAOGee4CokQXRU4gDja6aekZSKhKJo4NBpxHcJou4rSCpn/ceqI
-   Kn0XRNAuGL8+xg+iVqBHUsBLDN1HNR16SNNCyFAWHj/u1fyptxwWHaGon
-   mJcEHKL1KXgqoZCUJ3KDyzfR24kEC4sy98KSDnfzcbwvs4Id5C8W0x0Th
-   A==;
-X-CSE-ConnectionGUID: 7yDnTGFKTxy+Bjy/7ITOIA==
-X-CSE-MsgGUID: /pjXfB1GSjmJWrAIpAATig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="21785297"
-X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
-   d="scan'208";a="21785297"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 02:45:44 -0700
-X-CSE-ConnectionGUID: KCLO/RZERPGhnJRDhCUBJw==
-X-CSE-MsgGUID: es7DqfeDTy2K4FxWw+fYHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
-   d="scan'208";a="53333276"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Jul 2024 02:45:43 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 10 Jul 2024 02:45:43 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 10 Jul 2024 02:45:42 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 10 Jul 2024 02:45:42 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 10 Jul 2024 02:45:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O7v9EG1o8Scu2br8JeDzvhTpHT7togv7TWYJFLq/IZgXi+os8x40fm7eLVpZdT4Odo3L8vV5w+c7d7nLy3toHK6TX/xFrNkKVozC8wNfF2NFC53cRl2QhPQQnx+pEwcWXg3weT7OWrc7LgzvlvQx/F7stAn4UTqOIU0nHOF52Abm7r0HNuDlBbxRfAcb2lfaJVq6OBKjR2MuoPVEn4ljE+NZvJdoeWwsfh52jt18eNcCXkDPIt30o/DaEPVQ0Dldc0C8lepuE2N0GoCXJz0P9iF/fkwNkRbxX+8J96vEmFEqiipXM9sAQqvGfmFiU195yUE1o+WPexs+uRAKtbq4lQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hJFGqhuBN9Sp5otApZKWf2e1AYtf5IrMwNsJ9vb5xLY=;
- b=CEwGm1jUWRnygVZBwXFPeuf2ResXfj1H1XFsS/jP+udhTzVprnXFecPlYpDOEJ8B/4bEUFS3clMmikyjpNuSf5kzHqtizReXzSU1ZsbopcuNAHQkJB6QJYNh3L0jAc3t9apWlxRMHjCxEu+O8z4xvRsG9uecBWe2RNJJdGEQ8T1WIpZFZpRbcrKOf8WL3LojK3tKkYOOnSGGKahTDPc1EgDsee1aT1V8MAPG1lYx2qPaWX4CuTElr3TpWrgUReYjQGYjS2rO5o5VpC7WYvF+xRqA82PHAVQdcaBzB9RPhx5gRhzZUyGd9TXBPGxuvGuFSM0gs5OoCvPn3X/aLbPM4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by MN2PR11MB4566.namprd11.prod.outlook.com (2603:10b6:208:24e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Wed, 10 Jul
- 2024 09:45:35 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%3]) with mapi id 15.20.7762.016; Wed, 10 Jul 2024
- 09:45:35 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	"Joerg Roedel" <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
-	<robin.murphy@arm.com>, Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L"
-	<yi.l.liu@intel.com>
-CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] iommufd: Remove IOMMUFD_PAGE_RESP_FAILURE
-Thread-Topic: [PATCH 1/3] iommufd: Remove IOMMUFD_PAGE_RESP_FAILURE
-Thread-Index: AQHa0qRS7kBbdeC9/ESgbe0iJcEnvbHvtjbg
-Date: Wed, 10 Jul 2024 09:45:35 +0000
-Message-ID: <BN9PR11MB5276DF9FD2A752CBDAE522938CA42@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240710083341.44617-1-baolu.lu@linux.intel.com>
- <20240710083341.44617-2-baolu.lu@linux.intel.com>
-In-Reply-To: <20240710083341.44617-2-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|MN2PR11MB4566:EE_
-x-ms-office365-filtering-correlation-id: 8266a832-e459-47ad-8d82-08dca0c50c49
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?Il3aUPfB2kEZoGr3ZjsSk8dYkZoUoiEf39LQisIP5v41/IDJuhsPmuyzW2se?=
- =?us-ascii?Q?ti6PDYuOdCgg6gWDUgdHqMU1HdRFt1bD3YYw6AEjke4LhEEPikne0iqwcA84?=
- =?us-ascii?Q?Z26mhHy+RF4Yn51ELp24xJVtMpw6+itSjVmXW1pOe/NK9oOrGPdJhbVDK0iJ?=
- =?us-ascii?Q?Vms+zDCYpVE7eMGNvQh9gxqE1fM+lypYL9WwvuqcBJtYg2tU7ypm9+eaThlE?=
- =?us-ascii?Q?MRD8D6VeQDpb3f1MFF6/WZK+jpNyESTOxTCtKAqdkgHfRaz451VIVQ749jCX?=
- =?us-ascii?Q?uuonVJUTQr1BzBIfNHvC7K28BRNy3sg2bRRcfa534z6kfV05qQ5OTzH1CdLy?=
- =?us-ascii?Q?aEqmInaBry5DYhgiQX8ybp1acZq8LyepxkL0RvXRRtZmCv2JLSo4NIXBhPea?=
- =?us-ascii?Q?kmz54al767c79t/wDNxON19Bl7mH5MYO9y9RfhBnMPIRAoVHbIChkCBMPPxr?=
- =?us-ascii?Q?UzO7n2fIQL47L/N7MlmCLicycRQTRdo9+vn9OaJ2hnM8M7tSwI8zyI+TTdpQ?=
- =?us-ascii?Q?QTfTJyXTh5TEVQHfeJ3MUWwtFjGf6YNZAPP4LWLjADlK+8BPL/7kM3aZ7Ret?=
- =?us-ascii?Q?D/c8q61Wk1+vB2oPVtLI1o5qemoefdQJEU+R6wvU+w8xmXLa0VHJItSJbjcR?=
- =?us-ascii?Q?OaQlqhpAh3ecyxYBXaWO5W/5eEJB6K+p1uBVRXzNJ/UsjEexVYe5QvjgqlxP?=
- =?us-ascii?Q?6n2tx82mMkx1mX+b7dBc7w1WF8x247Lzy01ORO6Sm3BQMIvUsBvJ+ezA+/9F?=
- =?us-ascii?Q?Vpkq/skyfHBdfW3HYDChhtkcu4aqwZHGahB69rO4R7b4ZzIUKYmjMzF7eCdt?=
- =?us-ascii?Q?XDvRB2/Cy9TcrWR413DAU2tZtHlPucEiRE0kGzqYgLhYnVHGwKGgVSlaIugk?=
- =?us-ascii?Q?zFNHA8basI5kTi2xxEJitgO4+DYejuXS+HvszE/DHn/hTK7tx80D8ZGUIQ9d?=
- =?us-ascii?Q?bOenCLTYzCGH7T4S0N1ARiwBSRUqZ37D5I5fWEnQ+uB4ZNzhKiWpgPItOuap?=
- =?us-ascii?Q?Dkwi7evpg/4esXjVapzmwxofb8GuQ1WGoF+bmZPUYShf5k4ZfekCEVn21gGt?=
- =?us-ascii?Q?Au7OLH7ShFWXtxlmsgULXMatyfyXtMeTzqTgiRwiw6Ar3j8arPDdRPDkBMwu?=
- =?us-ascii?Q?vrt1IirThjhvsFI1HzOIZX+gUHSqYiblKyAMM86knFHUiXMFpvWVPQ4e5pTz?=
- =?us-ascii?Q?dr9PRw4iYZN0DIXPDHHcS4DZbUh4ExwQ6HiuWxyFXcGY0of3SggAEIQ9v3WB?=
- =?us-ascii?Q?ZgPD2tWtoUf93Ao54b6MGTSaPWeR1JVWIdsqmhKKbYTqhrk0S6IvMmHdyn8u?=
- =?us-ascii?Q?bLbt4H5/T7djYNiE4z9c3BLa6ibSqat2HF0xCdQW8zoXmG6Bvlh9l9IPu85d?=
- =?us-ascii?Q?ZtX86hjFblH+xyVdzXx8hJGWa85a3UGGzQQsXFJ9P8PlCrfh2Q=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?earIBDK+G9MDcgNMEsmkW13g411RQN4doQcUrK6GkfkLTvCrDUmsrbB3pqgt?=
- =?us-ascii?Q?HFDUooYCj4tPgUj5difsGy9otZW7+bdhPeTb60AQUv6I3CNLbgmKIn38AdHS?=
- =?us-ascii?Q?AMpLnCHDxA4rrZs8ACpnF51oOrMq2GFkFn1XjBMZulBNtcbMWvXt55s46yTH?=
- =?us-ascii?Q?kyjouDI6p/Ushwy36ZXErS4xQIV5frz4W1CGN/vmL2SClKODFCkMiazhemSD?=
- =?us-ascii?Q?X0M+Pvq8OVpA6sj3/6RHdg5pbTXPMFDvRIZ/uHRLgrP+1vvHuq0ODIppLkEy?=
- =?us-ascii?Q?aY6zy/mQdtzjumgzugvshYEFC7tIvtqCfps88vqFN3evWl03VQXWmSVz2bQ7?=
- =?us-ascii?Q?uk538Cnl540ie1VooKxjycT4YEz7TLTJVB4fBYLe84j8nG63/zmEo8Q45/kw?=
- =?us-ascii?Q?icJTwzD0+Wkf0lGjd0XFgOS3dktJGaxIXCBZL6baaNPUnsnYzJ3xn98hIfhf?=
- =?us-ascii?Q?wM+Ne7/uqO5R2MwduV54iky4bgXjCyjTItGNmF+hoiKnchWYOs5xZlQLeerR?=
- =?us-ascii?Q?s9ADg+2osH+2yLw+StESOcHlTD6R2C1+5G6jK2IVrS1hRc2cr5twp+eCYMQ8?=
- =?us-ascii?Q?mSTJf4H/c0kKHgZ0M/tlcTlX/a46WTT+GeduMFaY+0BNCbzAMe/9olMufhTQ?=
- =?us-ascii?Q?SpbZJC7KEfdZICm/ZuW+EcdQyfHPuacPS86/H9qF5on/Pn5b1sjHY+GIaMfe?=
- =?us-ascii?Q?6i0S9mPjKBL5WfGYBo9ekeaQv1RpDNZBrkg4d3qsGB6oZn7Moq9KP5uX5MYQ?=
- =?us-ascii?Q?PtSSWVEHv2UM71yZmxvgQsTOL0LCZ88zPHdYu56aK/leMtF15tZMy09/BMTM?=
- =?us-ascii?Q?+rIGT+S7twU92rSfY4xMDtCuTrJLb2iO1DYnH0R6MagtsbxKQm+Lrc+Vm0NV?=
- =?us-ascii?Q?N8ESvCs53Kg3WDT285RwaLFGojYvySu3MARdYxZRq0fHOJef4hTibT1ADOGj?=
- =?us-ascii?Q?nwN0Duxg9EYuStid9tJxvLWHFkqGSBcRrfSPwAuAGjafmFgrAuX7JwdeLvlL?=
- =?us-ascii?Q?Col0wqABLPlrpU1fgKK+MIyDjMeQ0lP2iKL56LvLi5174auXwVmHj59QZUC/?=
- =?us-ascii?Q?3gCZFhpPKIuWKa4GxxY2GlRdFE9Nw492bnWdscMXkY1TcTeppLcH1NZUf6Or?=
- =?us-ascii?Q?2DJ6uVFJp32BmlhE+ClXg2rcNuhXec451I3dfKF41kk04KedJ0xrRBjfgcMd?=
- =?us-ascii?Q?0FoByeMEYeKO8+LszvZbAFyIgXp4JbjA/MbezKJ9Hx/kqRvk9XsIugIrdnF1?=
- =?us-ascii?Q?LeTNd+/Y9sAijrgRhdbHBzaKVIW6PJI6cxfm1OmZTfCeA1jlgcYOu8HV4lLJ?=
- =?us-ascii?Q?bcLPMl9+Fpvmaz0XBWJOsKwZRkNejsIgW1+I7dpm6pFlkkhHIicuSBB0QK1b?=
- =?us-ascii?Q?9GBTuhD6evTwOCB1oa46233+zQmldjBe9Pixe5VpQwuZuqvLrp50UsgDhn2p?=
- =?us-ascii?Q?NVG6hzLwE7pQOxzdgfUBPr4dS5hYYoYJtK94hROs5MLY3x1aqjs6RTKOOYsq?=
- =?us-ascii?Q?SkNnCzhsI3+JPH183dWhU/gKzCWFeGFi/WWZzoGGP0+LiV4/7rF04nizEouf?=
- =?us-ascii?Q?VgbXxlEV5clEo1ksQe0WyoPUIXqtLdgrKlg/b7ta?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YatCsrQp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720604803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wr3Fzy04+IjAcueeHCouhzEQFA2vb2X2x/Lajkzkytk=;
+	b=YatCsrQpJ/OO0CxDVg2fqzIj8akACHno4x0xxpaagEwisLr/+FQ+51BbnL5/6uNPkVtVI4
+	PH1xwL70j94+hs503mPBKFJSKk5Yhg+1piLEA28LlIH5kZ/oE1RKUKGr3rEXJiOklf1CDe
+	BJumird57RJt5nbMQl9xklVeOVTuZRQ=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-190-e2UFyAbXMsOHu3LL4QZ6aQ-1; Wed, 10 Jul 2024 05:46:42 -0400
+X-MC-Unique: e2UFyAbXMsOHu3LL4QZ6aQ-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ee9308bc8cso51308071fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 02:46:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720604800; x=1721209600;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wr3Fzy04+IjAcueeHCouhzEQFA2vb2X2x/Lajkzkytk=;
+        b=ZrXoVmDyxS/0xfsXSEyhoIpEOmNtT/hqoq05mYX+cEA7EbeRq+AvTGR0XjLsbmFEqa
+         0ycCvzH7Sws9EHbsY80wishGFPuruJo8FmaBQ2+IGtUr3H2pIMzA1AySPpmMreKd/VvW
+         li1BTM8/vo35xtpwX6HT0+8S7xswWQ9XV+Mj14tG3eEU3Bo5qtxlb7ii35JULDraFA4s
+         mar17hhBrCBAXHShKVB85hwch65oJQluaIwryuro8XMfdSJ54GB5yoloxYUzIlB82AuC
+         12Fzr4cUPBt7aIRsWNtHD4qb6b1sJL2f/amn0hX5tp7Yo1ANYqcCqB/a6ZzLuVgbJMdo
+         bfQA==
+X-Forwarded-Encrypted: i=1; AJvYcCV972hQ03R/OFWlvq4viQOrBOQX2Zeo7bcnxLGjEqXGsqulZsQOXQsCJK5VwIuR+Tkm5O57gTUgmJayZhgX6A8+ewOigWJ1UTiSAtKy
+X-Gm-Message-State: AOJu0YyOr6ezSU9WTqRde+V6Fk4iZ5pMngDGHwM+YIM0jvbykRuoXSXx
+	EKFgUk9neNRw9FlnhowJKtrJ8F69X+zVfyH8YxN02UpVp6ypGulLdkbEUyp3TVMhNaL90OG0wc+
+	H8pUf77K1RCDljL1yyoEdR0r5nlAbjockc7Galwuitg+cyXW8dc59BsjacyRj421nhZUsilg+qH
+	0o3poDVp6BLsZqigdlueTP9XnlCPNfVx+qP0I7
+X-Received: by 2002:a05:651c:97:b0:2ee:8aed:ddcd with SMTP id 38308e7fff4ca-2eeb30ba01bmr30673201fa.2.1720604800506;
+        Wed, 10 Jul 2024 02:46:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0ffFCw3VbNM6Vw/r2MqpTFMKw6bcckSDGxnXr5Oj3vP+HBV03PNXiHpFH5GB2HlKHopl3lyeXuVt4nS1YdPI=
+X-Received: by 2002:a05:651c:97:b0:2ee:8aed:ddcd with SMTP id
+ 38308e7fff4ca-2eeb30ba01bmr30673101fa.2.1720604800176; Wed, 10 Jul 2024
+ 02:46:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8266a832-e459-47ad-8d82-08dca0c50c49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2024 09:45:35.4409
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XPSTyIf8KeaAvrri+D9AmxqpPO54GhUG6EomIywnHfMe8FkNWOkguK6f6IGqE5afmhwbhQEz3SbgnL6MYbjbwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4566
-X-OriginatorOrg: intel.com
+References: <20240708064820.88955-1-lulu@redhat.com> <PH0PR12MB5481AE2FD52AEE1C10411F3DDCDB2@PH0PR12MB5481.namprd12.prod.outlook.com>
+ <CACLfguXk4qiw4efRGK4Gw8OZQ_PKw6j+GVQJCVtbyJ+hxOoE0Q@mail.gmail.com>
+ <20240709084109-mutt-send-email-mst@kernel.org> <CACGkMEtdFgbgrjNDoYfW1B+4BwG8=i9CP5ePiULm2n3837n29w@mail.gmail.com>
+ <20240710020852-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240710020852-mutt-send-email-mst@kernel.org>
+From: Cindy Lu <lulu@redhat.com>
+Date: Wed, 10 Jul 2024 17:46:02 +0800
+Message-ID: <CACLfguW0HxPy7ZF7gg7hNzMqFcf5x87asQKBUqZMOJC_S8kSbw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] vdpa: support set mac address from vdpa tool
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>, Parav Pandit <parav@nvidia.com>, 
+	Dragos Tatulea <dtatulea@nvidia.com>, "sgarzare@redhat.com" <sgarzare@redhat.com>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	Leonardo Milleri <lmilleri@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Wednesday, July 10, 2024 4:34 PM
->=20
-> The response code of IOMMUFD_PAGE_RESP_FAILURE was defined to be
-> equivalent to the "Response Failure" in PCI spec, section 10.4.2.1.
-> This response code indicates that one or more pages within the
-> associated request group have encountered or caused an unrecoverable
-> error. Therefore, this response disables the PRI at the function.
->=20
-> Modern I/O virtualization technologies, like SR-IOV, share PRI among
-> the assignable device units. Therefore, a response failure on one unit
-> might cause I/O failure on other units.
->=20
-> Remove this response code so that user space can only respond with
-> SUCCESS or INVALID. The VMM is recommended to emulate a failure
-> response
-> as a PRI reset, or PRI disable and changing to a non-PRI domain.
->=20
-> Fixes: c714f15860fc ("iommufd: Add fault and response message definitions=
-")
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  include/uapi/linux/iommufd.h | 4 ----
->  1 file changed, 4 deletions(-)
->=20
-> diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
-> index ede2b464a761..e31385b75d0b 100644
-> --- a/include/uapi/linux/iommufd.h
-> +++ b/include/uapi/linux/iommufd.h
-> @@ -765,14 +765,10 @@ struct iommu_hwpt_pgfault {
->   * @IOMMUFD_PAGE_RESP_INVALID: Could not handle this fault, don't retry
-> the
->   *                             access. This is the "Invalid Request" in =
-PCI
->   *                             10.4.2.1.
-> - * @IOMMUFD_PAGE_RESP_FAILURE: General error. Drop all subsequent
-> faults from
-> - *                             this device if possible. This is the "Res=
-ponse
-> - *                             Failure" in PCI 10.4.2.1.
->   */
->  enum iommufd_page_response_code {
->  	IOMMUFD_PAGE_RESP_SUCCESS =3D 0,
->  	IOMMUFD_PAGE_RESP_INVALID,
-> -	IOMMUFD_PAGE_RESP_FAILURE,
->  };
->=20
+On Wed, 10 Jul 2024 at 14:10, Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Wed, Jul 10, 2024 at 11:05:48AM +0800, Jason Wang wrote:
+> > On Tue, Jul 9, 2024 at 8:42=E2=80=AFPM Michael S. Tsirkin <mst@redhat.c=
+om> wrote:
+> > >
+> > > On Tue, Jul 09, 2024 at 02:19:19PM +0800, Cindy Lu wrote:
+> > > > On Tue, 9 Jul 2024 at 11:59, Parav Pandit <parav@nvidia.com> wrote:
+> > > > >
+> > > > > Hi Cindy,
+> > > > >
+> > > > > > From: Cindy Lu <lulu@redhat.com>
+> > > > > > Sent: Monday, July 8, 2024 12:17 PM
+> > > > > >
+> > > > > > Add support for setting the MAC address using the VDPA tool.
+> > > > > > This feature will allow setting the MAC address using the VDPA =
+tool.
+> > > > > > For example, in vdpa_sim_net, the implementation sets the MAC a=
+ddress to
+> > > > > > the config space. However, for other drivers, they can implemen=
+t their own
+> > > > > > function, not limited to the config space.
+> > > > > >
+> > > > > > Changelog v2
+> > > > > >  - Changed the function name to prevent misunderstanding
+> > > > > >  - Added check for blk device
+> > > > > >  - Addressed the comments
+> > > > > > Changelog v3
+> > > > > >  - Split the function of the net device from vdpa_nl_cmd_dev_at=
+tr_set_doit
+> > > > > >  - Add a lock for the network device's dev_set_attr operation
+> > > > > >  - Address the comments
+> > > > > >
+> > > > > > Cindy Lu (2):
+> > > > > >   vdpa: support set mac address from vdpa tool
+> > > > > >   vdpa_sim_net: Add the support of set mac address
+> > > > > >
+> > > > > >  drivers/vdpa/vdpa.c                  | 81 ++++++++++++++++++++=
+++++++++
+> > > > > >  drivers/vdpa/vdpa_sim/vdpa_sim_net.c | 19 ++++++-
+> > > > > >  include/linux/vdpa.h                 |  9 ++++
+> > > > > >  include/uapi/linux/vdpa.h            |  1 +
+> > > > > >  4 files changed, 109 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > --
+> > > > > > 2.45.0
+> > > > >
+> > > > > Mlx5 device already allows setting the mac and mtu during the vdp=
+a device creation time.
+> > > > > Once the vdpa device is created, it binds to vdpa bus and other d=
+river vhost_vdpa etc bind to it.
+> > > > > So there was no good reason in the past to support explicit confi=
+g after device add complicate the flow for synchronizing this.
+> > > > >
+> > > > > The user who wants a device with new attributes, as well destroy =
+and recreate the vdpa device with new desired attributes.
+> > > > >
+> > > > > vdpa_sim_net can also be extended for similar way when adding the=
+ vdpa device.
+> > > > >
+> > > > > Have you considered using the existing tool and kernel in place s=
+ince 2021?
+> > > > > Such as commit d8ca2fa5be1.
+> > > > >
+> > > > > An example of it is,
+> > > > > $ vdpa dev add name bar mgmtdev vdpasim_net mac 00:11:22:33:44:55=
+ mtu 9000
+> > > > >
+> > > > Hi Parav
+> > > > Really thanks for your comments. The reason for adding this functio=
+n
+> > > > is to support Kubevirt.
+> > > > the problem we meet is that kubevirt chooses one random vdpa device
+> > > > from the pool and we don't know which one it going to pick. That me=
+ans
+> > > > we can't get to know the Mac address before it is created. So we pl=
+an
+> > > > to have this function to change the mac address after it is created
+> > > > Thanks
+> > > > cindy
+> > >
+> > > Well you will need to change kubevirt to teach it to set
+> > > mac address, right?
+> >
+> > That's the plan. Adding Leonardo.
+> >
+> > Thanks
+>
+> So given you are going to change kubevirt, can we
+> change it to create devices as needed with the
+> existing API?
+>
+Hi Micheal and Parav,
+I'm really not familiar with kubevirt, hope Leonardo can help answer
+these questions
+Hi @Leonardo Milleri
+would you help answer these questions?
 
-It's probably good to add some words here for why FAILURE is
-not allowed.
+Thanks
+Cindy
+> > >
+> > > --
+> > > MST
+> > >
+>
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
