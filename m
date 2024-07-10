@@ -1,94 +1,279 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F600190067;
-	Wed, 10 Jul 2024 10:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D49318FC89;
+	Wed, 10 Jul 2024 10:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720607677; cv=none; b=UtRMxsfija5MmxT5M2ThJsOKAgEjpMp4IXsEwHbaSwMPR5kEoESOK68Itf1MbGvkxGlfIv93S7YMpyanpnBHK9Zqx38LkscRbRoOMMXF2S+Sklx+R0Q1euAb3ctz+mnfpwJWj+I4jweKnd5XKejlmmsxf8JTTsfirG4x9uVBRqU=
+	t=1720607693; cv=none; b=asY3j2GZCMc0bjpSlBm2PlZXrLuSAGKdlOudpc9bcmZUCP87z/kNo+e8JQki2+m44qg+hf8l8yuWpOcicmOaEvA8/6p6uNLFEyR85WrCVVSE0h1UbMG5ez4te8BUX94WjQB1q/V5ryGILn36qYWtjjbMTjHI55Ey9fccJg+qVZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720607677; c=relaxed/simple;
-	bh=5iVCEpSHOTR5t3oDkyI7Mh4X2c3tYcpmu3Xe7ap1nCQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eZvU8Dmn5PnNXIYMx7io4ptzHV9a0mNt2MP0MsrJr4LMcHjL3xAeLbls05RHlmxThrLF7z+YBkjjPFfRWTDQj1e1FwaAKhUWTQ/RPyPUt/q7QQvMAAFVsjd34RGNvKGTZEmSnZm68aWu+IFGFzDctLERhZNSVFMfNHT8KBfai2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-05 (Coremail) with SMTP id zQCowAD3_7eRY45mBMyMAg--.50608S2;
-	Wed, 10 Jul 2024 18:34:03 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: fbarrat@linux.ibm.com,
-	ajd@linux.ibm.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	clombard@linux.vnet.ibm.com,
-	imunsie@au1.ibm.com,
-	mpe@ellerman.id.au,
-	manoj@linux.vnet.ibm.com
-Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] cxl: Fix possible null pointer dereference in read_handle()
-Date: Wed, 10 Jul 2024 18:33:52 +0800
-Message-Id: <20240710103352.1890726-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720607693; c=relaxed/simple;
+	bh=8WdRmuyLpXfw6l4a1GwdoX0mS8F1vUEiws7qIN6fA1s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hXs/TAL+yJ1bDVqiqBb3SP/wBn7MieZ9PNYvsG2ShGwbkQERGO/d0KrtW2oklzxDiimD7Nn7oqPhl0+wuwWImXtb1k67jVBwoff3xu1QoepVQzO6gTUpeJQU+qdNgFAhakLvdngNy3ssBeV4B8IViZSy1sF/ZiwnyTDf5FgAmd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CU4+DIki; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CU4+DIki"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B4BBC32781;
+	Wed, 10 Jul 2024 10:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720607692;
+	bh=8WdRmuyLpXfw6l4a1GwdoX0mS8F1vUEiws7qIN6fA1s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CU4+DIki6TGMsLcTq0tv7w4+ItVU85rVMGBmVkAgIkj3ruLsFylO/OVerYIq5DTWj
+	 ZK1K3e+mYmmwUKUo2ZhqkTHSRGGdo8VfcE1DVizTDJ3nPf8Ijp0ONkDASlyzn+wlRj
+	 a8xZaiOfjlJZFBxXmljcAJUo2l5aa38k+BzJi79WkmlW8AouRP8G7q3MqK34/q6TC0
+	 RucCN+5PiL3oWus78Cp5iuHHJ+GfdpX+ZgY+STTK/yWgN8jYuLxfrhhEuabRi7ioar
+	 cVJnt06p4Ea3SxKcMg4LZ9+JyDghkCgp58eRWwU/Q3D9qlRFQ51zPYIEztIj9BVU+H
+	 PicTuLmZvsg3Q==
+Message-ID: <05ed39c6-3c0b-4a43-b655-d26c69f686fa@kernel.org>
+Date: Wed, 10 Jul 2024 12:34:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAD3_7eRY45mBMyMAg--.50608S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKFWDGF18Kr1DAFy5Zw47Arb_yoWkurc_uF
-	47Xr1xW34jgr12kw1Y9r43Zrnav3ykuF95Zr4Sqay3K345AF1Yqr1SvrZYvwnrXr45ZFWD
-	Cw1qg3sa9w12gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-	YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbHa0DUUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ASoC: codecs: add ES7243E ADC driver
+To: Igor Prusov <ivprusov@salutedevices.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: prusovigor@gmail.com, kernel@salutedevices.com,
+ David Yang <yangxiaohua@everest-semi.com>,
+ Viktor Prutyanov <vvprutyanov@sberdevices.ru>, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240709104117.33431-1-ivprusov@salutedevices.com>
+ <20240709104117.33431-3-ivprusov@salutedevices.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240709104117.33431-3-ivprusov@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In read_handle(), of_get_address() may return NULL which is later
-dereferenced. Fix this by adding NULL check.
+On 09/07/2024 12:41, Igor Prusov wrote:
+> Add support for Everest Semi es7243e, which is a 24 bit, 8 to 48 kHz
+> stereo audio ADC with I2C control and I2S output.
+> 
+> Datasheet: https://www.pawpaw.cn/media/documents/2022-04/ES7243E_DS_pawpaw%E6%9C%A8%E7%93%9C%E7%A7%91%E6%8A%80.pdf
+> 
+> Signed-off-by: David Yang <yangxiaohua@everest-semi.com>
+> Signed-off-by: Igor Prusov <ivprusov@salutedevices.com>
+> Signed-off-by: Viktor Prutyanov <vvprutyanov@sberdevices.ru>
+> ---
+>  sound/soc/codecs/Kconfig   |   3 +
+>  sound/soc/codecs/Makefile  |   2 +
+>  sound/soc/codecs/es7243e.c | 676 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 681 insertions(+)
+>  create mode 100644 sound/soc/codecs/es7243e.c
+> 
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index 4afc43d3f71f..bfc21073ea24 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -1097,6 +1097,9 @@ config SND_SOC_ES7134
+>  config SND_SOC_ES7241
+>  	tristate "Everest Semi ES7241 CODEC"
+>  
+> +config SND_SOC_ES7243E
+> +	tristate "Everest Semi ES7243E CODEC"
+> +
+>  config SND_SOC_ES83XX_DSM_COMMON
+>  	depends on ACPI
+>  	tristate
+> diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+> index b4df22186e25..9469903662f8 100644
+> --- a/sound/soc/codecs/Makefile
+> +++ b/sound/soc/codecs/Makefile
+> @@ -118,6 +118,7 @@ snd-soc-da9055-y := da9055.o
+>  snd-soc-dmic-y := dmic.o
+>  snd-soc-es7134-y := es7134.o
+>  snd-soc-es7241-y := es7241.o
+> +snd-soc-es7243-y := es7243.o
+>  snd-soc-es83xx-dsm-common-y := es83xx-dsm-common.o
+>  snd-soc-es8316-y := es8316.o
+>  snd-soc-es8326-y := es8326.o
+> @@ -515,6 +516,7 @@ obj-$(CONFIG_SND_SOC_DA9055)	+= snd-soc-da9055.o
+>  obj-$(CONFIG_SND_SOC_DMIC)	+= snd-soc-dmic.o
+>  obj-$(CONFIG_SND_SOC_ES7134)	+= snd-soc-es7134.o
+>  obj-$(CONFIG_SND_SOC_ES7241)	+= snd-soc-es7241.o
+> +obj-$(CONFIG_SND_SOC_ES7243E)	+= snd-soc-es7243e.o
+>  obj-$(CONFIG_SND_SOC_ES83XX_DSM_COMMON)    += snd-soc-es83xx-dsm-common.o
+>  obj-$(CONFIG_SND_SOC_ES8316)    += snd-soc-es8316.o
+>  obj-$(CONFIG_SND_SOC_ES8326)    += snd-soc-es8326.o
+> diff --git a/sound/soc/codecs/es7243e.c b/sound/soc/codecs/es7243e.c
+> new file mode 100644
+> index 000000000000..be877d980cec
+> --- /dev/null
+> +++ b/sound/soc/codecs/es7243e.c
+> @@ -0,0 +1,676 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/**
+> + * es7243e.c - ASoC Everest Semiconductor ES7243E audio ADC driver
+> + *
+> + * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
+> + *
+> + * Authors: Viktor Prutyanov <vvprutyanov@sberdevices.ru>
+> + *	    Igor Prusov <ivprusov@salutedevices.com>
+> + *
+> + * Based on ES7243E driver by David Yang <yangxiaohua@everest-semi.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
 
-Cc: stable@vger.kernel.org
-Fixes: 14baf4d9c739 ("cxl: Add guest-specific code")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
-Changes in v2:
-- The potential vulnerability was discovered as follows: based on our 
-customized static analysis tool, extract vulnerability features[1], and 
-then match similar vulnerability features in this function.
-- Reference link:
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=2d9adecc88ab678785b581ab021f039372c324cb
----
- drivers/misc/cxl/of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Same issues.
 
-diff --git a/drivers/misc/cxl/of.c b/drivers/misc/cxl/of.c
-index bcc005dff1c0..d8dbb3723951 100644
---- a/drivers/misc/cxl/of.c
-+++ b/drivers/misc/cxl/of.c
-@@ -58,7 +58,7 @@ static int read_handle(struct device_node *np, u64 *handle)
- 
- 	/* Get address and size of the node */
- 	prop = of_get_address(np, 0, &size, NULL);
--	if (size)
-+	if (!prop || size)
- 		return -EINVAL;
- 
- 	/* Helper to read a big number; size is in cells (not bytes) */
--- 
-2.25.1
+
+> +
+> +static const struct regmap_config es7243e_regmap_config = {
+
+But this one is correct...
+
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = ES7243E_CHIP_VER,
+> +	.cache_type = REGCACHE_MAPLE,
+> +};
+> +
+> +struct coeff_div {
+
+declarations go before definitions.
+
+> +	u32 mclk;		/* mclk frequency */
+> +	u32 sr_rate;		/* sample rate */
+> +	u8 osr;			/* ADC over sample rate */
+> +	u8 mclk_pre;		/* mclk prediv/premult */
+> +	u8 cf_dsp_div;		/* adclrck divider and daclrck divider */
+> +	u8 scale;		/* ADC gain scale up */
+> +	u8 lrckdiv;		/* lrck divider */
+> +	u8 bclkdiv;		/* sclk divider */
+> +};
+> +
+> +static const struct coeff_div coeff_div[] = {
+> +	/* mclk     lrck   osr   pre   div   scale lrdiv bclkdiv */
+> +	{ 24576000, 8000,  0x20, 0x50, 0x00, 0x00, 0x0b, 0x2f },
+> +	{ 24576000, 12000, 0x20, 0x30, 0x00, 0x00, 0x07, 0x1f },
+> +	{ 24576000, 16000, 0x20, 0x20, 0x00, 0x00, 0x05, 0x17 },
+> +	{ 24576000, 24000, 0x20, 0x10, 0x00, 0x00, 0x03, 0x0f },
+> +	{ 24576000, 32000, 0x20, 0x21, 0x00, 0x00, 0x02, 0x0b },
+> +	{ 24576000, 48000, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 12288000, 8000,  0x20, 0x20, 0x00, 0x00, 0x05, 0x17 },
+> +	{ 12288000, 12000, 0x20, 0x10, 0x00, 0x00, 0x03, 0x0f },
+> +	{ 12288000, 16000, 0x20, 0x21, 0x00, 0x00, 0x02, 0x0b },
+> +	{ 12288000, 24000, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 12288000, 32000, 0x20, 0x22, 0x00, 0x00, 0x01, 0x05 },
+> +	{ 12288000, 48000, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 6144000,  8000,  0x20, 0x21, 0x00, 0x00, 0x02, 0x0b },
+> +	{ 6144000,  12000, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 6144000,  16000, 0x20, 0x22, 0x00, 0x00, 0x01, 0x05 },
+> +	{ 6144000,  24000, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 6144000,  32000, 0x20, 0x23, 0x00, 0x00, 0x00, 0x02 },
+> +	{ 6144000,  48000, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 3072000,  8000,  0x20, 0x22, 0x00, 0x00, 0x01, 0x05 },
+> +	{ 3072000,  12000, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 3072000,  16000, 0x20, 0x23, 0x00, 0x00, 0x00, 0x02 },
+> +	{ 3072000,  24000, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 3072000,  32000, 0x10, 0x03, 0x20, 0x04, 0x00, 0x02 },
+> +	{ 3072000,  48000, 0x20, 0x03, 0x00, 0x00, 0x00, 0x00 },
+> +	{ 1536000,  8000,  0x20, 0x23, 0x00, 0x00, 0x00, 0x02 },
+> +	{ 1536000,  12000, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 1536000,  16000, 0x10, 0x03, 0x20, 0x04, 0x00, 0x00 },
+> +	{ 1536000,  24000, 0x20, 0x03, 0x00, 0x00, 0x00, 0x00 },
+> +	{ 32768000, 8000,  0x20, 0x70, 0x00, 0x00, 0x0f, 0x3f },
+> +	{ 32768000, 16000, 0x20, 0x30, 0x00, 0x00, 0x07, 0x1f },
+> +	{ 32768000, 32000, 0x20, 0x10, 0x00, 0x00, 0x03, 0x0f },
+> +	{ 16384000, 8000,  0x20, 0x30, 0x00, 0x00, 0x07, 0x1f },
+> +	{ 16384000, 16000, 0x20, 0x10, 0x00, 0x00, 0x03, 0x0f },
+> +	{ 16384000, 32000, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 8192000,  8000,  0x20, 0x10, 0x00, 0x00, 0x03, 0x0f },
+> +	{ 8192000,  16000, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 8192000,  32000, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 4096000,  8000,  0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 4096000,  16000, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 4096000,  32000, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 2048000,  8000,  0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 2048000,  16000, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 2048000,  32000, 0x20, 0x03, 0x00, 0x00, 0x00, 0x00 },
+> +	{ 1024000,  8000,  0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 1024000,  16000, 0x20, 0x03, 0x00, 0x00, 0x00, 0x00 },
+> +	{ 22579200, 11025, 0x20, 0x30, 0x00, 0x00, 0x07, 0x1f },
+> +	{ 22579200, 22050, 0x20, 0x10, 0x00, 0x00, 0x03, 0x0f },
+> +	{ 22579200, 44100, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 11289600, 11025, 0x20, 0x10, 0x00, 0x00, 0x03, 0x0f },
+> +	{ 11289600, 22050, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 11289600, 44100, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 56448000, 11025, 0x20, 0x00, 0x00, 0x00, 0x01, 0x07 },
+> +	{ 56448000, 22050, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 56448000, 44100, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 28224000, 11025, 0x20, 0x01, 0x00, 0x00, 0x00, 0x03 },
+> +	{ 28224000, 22050, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 28224000, 44100, 0x20, 0x03, 0x00, 0x00, 0x00, 0x00 },
+> +	{ 14112000, 11025, 0x20, 0x02, 0x00, 0x00, 0x00, 0x01 },
+> +	{ 14112000, 22050, 0x20, 0x03, 0x00, 0x00, 0x00, 0x00 },
+> +};
+> +
+> +static const struct coeff_div *get_coeff(int mclk, int rate)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(coeff_div); i++)
+> +		if (coeff_div[i].sr_rate == rate && coeff_div[i].mclk == mclk)
+> +			return &coeff_div[i];
+> +
+> +	return NULL;
+> +}
+> +
+> +static unsigned int rates_12288[] = {
+
+Not a const?
+
+Best regards,
+Krzysztof
 
