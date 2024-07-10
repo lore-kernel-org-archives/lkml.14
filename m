@@ -1,85 +1,64 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3065D3C39;
-	Wed, 10 Jul 2024 05:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1B6A47;
+	Wed, 10 Jul 2024 05:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720590207; cv=none; b=kneGuPqUnGueSBp+Cfl8N6dpP+sI3aFNzEXV0XWJHz/ssVG4ShHMKp+x3Q45umj/vk3oTnL72jy5oWd3MoQqQB29Xlbe+vz3Hbg9j/p8qi8FK0o836YP1EEyePrcXcv4hfWJnM8MnFnRDUdB1c/J2PNXLxGVS8FUJ7bjJYjtIEE=
+	t=1720590353; cv=none; b=g8yrazufrysOvzVe6zxlwNt83u+F7aoiS1/jvZbwEmjFyUCM+S0XHDRCkijCk0hrZ34NAKu+8cwRnjdnFS22vnWmLIWCJrTj/GFr8D2YvQ+kNeethr+naP2etrQdHg+O7gaLXg3SyOSNT47OwrT+KMFPWXBu3Gvg4jOtWmbApOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720590207; c=relaxed/simple;
-	bh=5dh2BM5kmusIF/emCATu6OKJF3a52TlVjNE7020QT0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rI2l0ihBTf5B95rR9fnG4+T6mqBJJMk0vRNZd46BM5WjvxgnYGwRSSgTV3J8Ca65XoPz1tDJaVq+cwxxcd+XhsfXjicwJcKvdr2hlS8cjOyiQx3uM3RIltLuG+NLmuZsFAYMXAjBAnqxJGOmIH9hWDfLqIYjCsJAUvlYYHmNGK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb0d88fd25so3025965ad.0;
-        Tue, 09 Jul 2024 22:43:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720590205; x=1721195005;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CG2UsJ19/k/VCkkO2JedqMRmNYp6nm/WZ7sVX+CbtOw=;
-        b=aoj+fDfIkMsn7e0BvNTzcSgzG3HCS2++9PeDGgzuaqruqoNF1rPk4ltfOzx3AWOB7C
-         tMWhPQYF+kHMps6uXWupLGcUldU/YgdCkqhWlBNBq2sjjEV0gp61bnMp84aGKBjIvvSi
-         7Ml3Mv1rdg+1fydafBKTp85jkGClc8y77JMHRqdiOS6oosJBfrneEvizhWnHG0MdWQSV
-         TPOaZhIm1iF/9dZFo1j0rRAkC3/kuXXRe4rHB1kYzEmIqjgcNmO9jZsINe+wQty/Yk0m
-         iRL2B5wjX06ls+n33l2xksKTmfL4l1Agcyc/MrLWJVy4f98ZWC6Oc2AGHxtfn62AqJjJ
-         izPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXjYkVdqdqcYffaOi63xf94RujYObB3D0u1ZjcA36k/u4DOl6F3KsA7YW5cWNZm8GSin6frHqviEs44lTi0Pw2HeY9O6gvvxO/8iYrGcpjjFarKhoBaOZpACgbF7i8VET3DW/tsBwgFtPPacMh9wYxsklDg4oIjgohnlx2ya/RUHJhv0/0Tw==
-X-Gm-Message-State: AOJu0YyZDDswbbzb/hVyJTsc7AAqb8J6EDxyelvwT0X2rZNYfTXC/0Z+
-	/mMoaJ4jCzC3DRRHpsLu8bR8g4UpEQkdMQ0d0FlCXz+gdwCbn0OnwczrEnURrCw=
-X-Google-Smtp-Source: AGHT+IFe/bQ14uIzohPNP8ZGjEv1nOW827IvMmY9fB+n2PcsmRtGUNgfl4Zi3BEYozS4OnDo5N563w==
-X-Received: by 2002:a17:902:ec87:b0:1fa:2b11:657d with SMTP id d9443c01a7336-1fbb7fbe431mr66342375ad.10.1720590205188;
-        Tue, 09 Jul 2024 22:43:25 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab6c48sm25166755ad.152.2024.07.09.22.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 22:43:24 -0700 (PDT)
-Date: Wed, 10 Jul 2024 14:43:22 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Anders Roxell <anders.roxell@linaro.org>
-Cc: dan.carpenter@linaro.org,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org
-Subject: Re: [PATCH 2/3] PCI: qcom: Prevent potential error pointer
- dereference
-Message-ID: <20240710054322.GA3763187@rocinante>
-References: <20240708180539.1447307-1-dan.carpenter@linaro.org>
- <20240708180539.1447307-3-dan.carpenter@linaro.org>
+	s=arc-20240116; t=1720590353; c=relaxed/simple;
+	bh=hPoh2+HxqEXbXh3r8/b+Nfp0by+Py1ra0m+GU2C40mA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=VMKzjuS3MO1lPafB07mSmeiWSM1lprm6y6RehaJGJbxjSHxI63qQLkYrNI9r17ZF5O3+e/VkGHKHkol2p+9j3iK5omMhjUe0Fi0SCQGtyjbThhOcR0s1HKsE7Hx2IE+3kmOxW+wfCBIMQngBvLkOuL3PuORYmLkPGS9GkrsVlaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkKeU+PI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkKeU+PI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C882C32781;
+	Wed, 10 Jul 2024 05:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720590352;
+	bh=hPoh2+HxqEXbXh3r8/b+Nfp0by+Py1ra0m+GU2C40mA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=LkKeU+PIvCn2sVlR6DlUBVMp/RWHFBc09BdmlTNnQzbXS4364X4ynPawB13cxriLV
+	 WrmHbUtB7x5Rjj5U+zDdNu/8JoePOvATAuxmB7r2YiGu2VlBkIOVSPxhROq9I3DFCp
+	 7y+x2A4psyLFqALAp/X4l4SjDrTnJsYnISMtCI5cKc58cime+wFRx736Q1cOGjQD7S
+	 vA173YsCBoy//mLFEU0KOzsCmm4AX3Qll8BX7n0X1Z7kidUfi3AysQv2pJro9A2lOE
+	 P+dpyNlxrxHs5vczSEU14yR+7uGJasnMW5tepTNbtiaPn2BpmSSdAQ+rT+CpkBpLFZ
+	 reqCDdaPlJB8g==
+From: Vinod Koul <vkoul@kernel.org>
+To: linux-sound@vger.kernel.org, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc: vinod.koul@linaro.org, linux-kernel@vger.kernel.org, 
+ pierre-louis.bossart@linux.intel.com, bard.liao@intel.com
+In-Reply-To: <20240705114305.160233-1-yung-chuan.liao@linux.intel.com>
+References: <20240705114305.160233-1-yung-chuan.liao@linux.intel.com>
+Subject: Re: [PATCH] soundwire: intel_auxdevice: add cs42l43 codec to
+ wake_capable_list
+Message-Id: <172059034962.363871.1480846430371524933.b4-ty@kernel.org>
+Date: Wed, 10 Jul 2024 11:15:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708180539.1447307-3-dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Hello,
 
-[...]
-> > Only call dev_pm_opp_put() if dev_pm_opp_find_freq_exact() succeeds.
-> > Otherwise it leads to an error pointer dereference.
-> > 
-> > Fixes: 78b5f6f8855e ("PCI: qcom: Add OPP support to scale performance")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+On Fri, 05 Jul 2024 11:43:05 +0000, Bard Liao wrote:
+> cs42l43 has wake capability. Add it to the wake_capable_list.
 > 
-> Tested-by: Anders Roxell <anders.roxell@linaro.org>
 > 
-> Applied this patch ontop of linux-next tag, next-20240709.
-> 
-> Booted fine on dragonboard-845c HW.
 
-Thank you for testing!
+Applied, thanks!
 
-I took the liberty and added your Tested-by: tag to the relevant commits
-on our controller/qcom branch.
+[1/1] soundwire: intel_auxdevice: add cs42l43 codec to wake_capable_list
+      commit: fe600c8e2dc5dde62aefc73cb1cdcc5bff3dfed7
 
-	Krzysztof
+Best regards,
+-- 
+Vinod Koul <vkoul@kernel.org>
+
