@@ -1,194 +1,159 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C827219F9;
-	Wed, 10 Jul 2024 22:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948E01EB40
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 22:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720650428; cv=none; b=uHw/UV5aLzwSfnkRFUdk1yf9017t9c1oEiEicAKWyUY4zJd7MKBuJl5VgiqHjG9pJqDRBY8exkY/otCJB7trB3sjyUbU2Qlh4qhZn4jCKwQLMrvudRMdZIWoXzb57pY/Xp3d4GX30NKgquA+v76zS0ohEvYRbyUiQkD4JPceuLc=
+	t=1720650578; cv=none; b=M4veKgca0j+5egXFTGyJMPWrK9/MPYTpmuD1xXA5n9ccfGv950Y9Thlh1hGjvflrA3NSb5szC/bHGp68/A23fh5cUnx1S0awpAEO5VrFVp5kG0EEQEuphpWv3efwzRn1dfRpzQdye3Bye3sfuAKuX12rt6NnoZa1gH+zJ6Q32qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720650428; c=relaxed/simple;
-	bh=G1+nNhIsGUQHbss19tlUCSGwPVzvI+a7IrCT1i0Lyqo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cdx1Uz43u5NLdXVHVCaOwhgSbRlSY/mBL7Y7LSnGQEVAuzs1HwgDCt+Mr8Bn2aFhmMOvzsLd0u2aiw6mDoKTPK9pmfrkdCVWdsfLWXLYk9qnVlYK8LLBhfK5F9WdsRauFU5hlkGZJ9rJpk5iVaYfub3xzxYN7DdMrCDMgMmcF2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNtUg6xm; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNtUg6xm"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e03a9f7c6a6so228046276.3;
-        Wed, 10 Jul 2024 15:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720650426; x=1721255226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I/Cc2aQVQ5C4YUCt2A1KuP8JFLG/zHl92A4qTb1v1cg=;
-        b=kNtUg6xmzEvX9mqenkyG0qUg1YYcIJtJmm/lVuoqvZLJurbQylljZeqC0xOZhKeBKB
-         DL2CUvAN3VfeZFLBDngmC4xYTiII1a2uD60Yrxows4LkfrvGrcofWVg0XK/ZaO8JJZLB
-         /ds/adsLkMLpZX3FC6Xr0Ok3qdfhZEjdt0S7WqdqoNrorVJgg7GXg0tSFsN4qsA7Iapc
-         Gu59/9gNSQlyFoNyJoHuKt/gsiigwD5xolxDEWM4uZsLh3v6KZt6HJ0Im/EvIjFp2kzT
-         S7BtmhCAJyfK3PTAZN7RHMjnpOSV9tcCP+s0rTTU3oiVqPgqFxBZVlR5EmxZCG74KrQ7
-         WJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720650426; x=1721255226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I/Cc2aQVQ5C4YUCt2A1KuP8JFLG/zHl92A4qTb1v1cg=;
-        b=XclFOzzOZASXhaToJPVDH29jYQN86LWi/x6CU5qhnUqZxHB/g+z79wJuQafl84UVyj
-         N/NT9U3ase/hRo66W4WTWcwrt1CHfaJUEcjhqSww8DoEp/AHaae+a0e/DwHSBAtjGadM
-         pt6Nf8BlkE4zpoHEprDY/s+9ObDSbeKArhIB9jKNjbKSb8EVarQPL3ne54Y22oaQse5u
-         xNYNXJxumcxPvrfD/CJtHCDeF/gVJEzBz7mcpBbHt6Ilbms8Ps0WQMraTyK7fe1mnzJ3
-         zWc50phUaGEbJFf/Wj7Cs+MnSRT9DeGRf9VMqqVUh6TRep1iIcHaG9rhC2TK4RU5d553
-         kKyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUY/hk/KnkndEfcGflZI3bvgs0thn5PjkIGNnkN3eovjLtRK2Ylyyp6oYKqjtNdF4uZ2F6LuT7ocPvcv09KSbsCmgHm1RABEdVvglTID+Nr0iFm0e/q2o4Yiw2MlibLL+ZsUhBmG68
-X-Gm-Message-State: AOJu0YwvableGWw8JAXi8fJnEqJE6DAHudQkj8ASgP9FU1rIvuns1r8n
-	GLF036PDyWXYfomKeah1LR9BtpKNbfvG/oILQpwtu27YN0CzpKrg+aMCFfCvuUsIGJOO3tbEFyT
-	5QGkrEiPYOsWSPV5BXNs7TG8m6/E=
-X-Google-Smtp-Source: AGHT+IE3MSNblNyjPTWlXtNx8ItMNm10tT48kqwkStoBU3USdjc5JBVU9DQ4bDKUP4uy6AFDnPXlKLFcfHrwVbPwkz4=
-X-Received: by 2002:a25:8387:0:b0:dfb:bf0:59db with SMTP id
- 3f1490d57ef6-e041b120cdamr7581879276.41.1720650426328; Wed, 10 Jul 2024
- 15:27:06 -0700 (PDT)
+	s=arc-20240116; t=1720650578; c=relaxed/simple;
+	bh=sX8Ya7ibeN3Sp19U8X4Q/bM2HG3cFHIHzW1iLlQnFII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tOd+kKUufw680ooM23kiQNmBomnA3SxKZIh2ohY8PpJ2UoX4ou2YeCeAipL9kW/8D4cN2svRlToX4f4Xxj/Q81ydUnepRtoKOqC5v7MF4BJG6bol2dK/GSeBv68eLEFH20OUE+JKIuHSy9o1YGlpWceyc+pf8h0BmcWOgWar/sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E622FC32781;
+	Wed, 10 Jul 2024 22:29:35 +0000 (UTC)
+Date: Wed, 10 Jul 2024 23:29:33 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Yu Zhao <yuzhao@google.com>
+Cc: Nanyong Sun <sunnanyong@huawei.com>, will@kernel.org,
+	mike.kravetz@oracle.com, muchun.song@linux.dev,
+	akpm@linux-foundation.org, anshuman.khandual@arm.com,
+	willy@infradead.org, wangkefeng.wang@huawei.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v3 0/3] A Solution to Re-enable hugetlb vmemmap optimize
+Message-ID: <Zo8LTaP-6-zIcc9v@arm.com>
+References: <20240113094436.2506396-1-sunnanyong@huawei.com>
+ <ZbKjHHeEdFYY1xR5@arm.com>
+ <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
+ <ZcN7P0CGUOOgki71@arm.com>
+ <CAOUHufYo=SQmpaYA3ThrdHcY9fQfFmycriSvOX1iuC4Y=Gj7Xg@mail.gmail.com>
+ <ZogV9Iag4mxe6enx@arm.com>
+ <CAOUHufYwoTTsRBF_wWZU_jWzb8e6FF=vN8UKtVHBeXLBkwHWzA@mail.gmail.com>
+ <Zo68DP6siXfb6ZBR@arm.com>
+ <CAOUHufZC0Jn=bTpc0JhqONXbYXgyBOVZ4j8bbKSJWv1dOSmQEA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240706022523.1104080-1-flintglass@gmail.com> <CAKEwX=NL1gOe9k5+JB8Q-UAoZ4ie8SBGg7XTjaqM7j4-hiHv=A@mail.gmail.com>
-In-Reply-To: <CAKEwX=NL1gOe9k5+JB8Q-UAoZ4ie8SBGg7XTjaqM7j4-hiHv=A@mail.gmail.com>
-From: Takero Funaki <flintglass@gmail.com>
-Date: Thu, 11 Jul 2024 07:26:55 +0900
-Message-ID: <CAPpoddefXD1RAjyW2+X_ankGYNpQgY0Y0+xd1yOFgCc_egaX8A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] mm: zswap: global shrinker fix and proactive shrink
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Domenico Cerasuolo <cerasuolodomenico@gmail.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOUHufZC0Jn=bTpc0JhqONXbYXgyBOVZ4j8bbKSJWv1dOSmQEA@mail.gmail.com>
 
-2024=E5=B9=B47=E6=9C=889=E6=97=A5(=E7=81=AB) 9:53 Nhat Pham <nphamcs@gmail.=
-com>:
-
-> > post-patch, 6.10-rc4 with patch 1 to 5
->
-> You mean 1 to 6? There are 6 patches, no?
-
-oops. with patches 1 to 6.
-
->
-> Just out of pure curiosity, could you include the stats from patch 1-3 on=
-ly?
->
-
-I will rerun the bench in v3. I assume this bench does not reflect
-patches 4 to 6, as delta pool_limit_hit=3D0 means no rejection from
-zswap.
-
-> Ah this is interesting. Did you actually see improvement in your real
-> deployment (i.e not the benchmark) with patch 4-6 in?
->
-
-As replied in patch 6, memory consuming tasks like `apt upgrade` for instan=
-ce.
-
+On Wed, Jul 10, 2024 at 11:12:01AM -0600, Yu Zhao wrote:
+> On Wed, Jul 10, 2024 at 10:51 AM Catalin Marinas
+> <catalin.marinas@arm.com> wrote:
+> > On Fri, Jul 05, 2024 at 11:41:34AM -0600, Yu Zhao wrote:
+> > > On Fri, Jul 5, 2024 at 9:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > If I did the maths right, for a 2MB hugetlb page, we have about 8
+> > > > vmemmap pages (32K). Once we split a 2MB vmemap range,
+> > >
+> > > Correct.
+> > >
+> > > > whatever else
+> > > > needs to be touched in this range won't require a stop_machine().
+> > >
+> > > There might be some misunderstandings here.
+> > >
+> > > To do HVO:
+> > > 1. we split a PMD into 512 PTEs;
+> > > 2. for every 8 PTEs:
+> > >   2a. we allocate an order-0 page for PTE #0;
+> > >   2b. we remap PTE #0 *RW* to this page;
+> > >   2c. we remap PTEs #1-7 *RO* to this page;
+> > >   2d. we free the original order-3 page.
 > >
-> > Intended scenario for memory reclaim:
-> > 1. zswap pool < accept_threshold as the initial state. This is achieved
-> >    by patch 3, proactive shrinking.
-> > 2. Active processes start allocating pages. Pageout is buffered by zswa=
-p
-> >    without IO.
-> > 3. zswap reaches shrink_start_threshold. zswap continues to buffer
-> >    incoming pages and starts writeback immediately in the background.
-> > 4. zswap reaches max pool size. zswap interrupts the global shrinker an=
-d
-> >    starts rejecting pages. Write IO for the rejected page will consume
-> >    all IO resources.
->
-> This sounds like the proactive shrinker is still not aggressive
-> enough, and/or there are some sort of misspecifications of the zswap
-> setting... Correct me if I'm wrong, but the new proactive global
-> shrinker begins 1% after the acceptance threshold, and shrinks down to
-> acceptance threshold, right? How are we still hitting the pool
-> limit...
->
+> > Thanks. I now remember why we reverted such support in 060a2c92d1b6
+> > ("arm64: mm: hugetlb: Disable HUGETLB_PAGE_OPTIMIZE_VMEMMAP"). The main
+> > problem is that point 2c also changes the output address of the PTE
+> > (and the content of the page slightly). The architecture requires a
+> > break-before-make in such scenario, though it would have been nice if it
+> > was more specific on what could go wrong.
+> >
+> > We can do point 1 safely if we have FEAT_BBM level 2. For point 2, I
+> > assume these 8 vmemmap pages may be accessed and that's why we can't do
+> > a break-before-make safely.
+> 
+> Correct
+> 
+> > I was wondering whether we could make the
+> > PTEs RO first and then change the output address but we have another
+> > rule that the content of the page should be the same. I don't think
+> > entries 1-7 are identical to entry 0 (though we could ask the architects
+> > for clarification here). Also, can we guarantee that nothing writes to
+> > entry 0 while we would do such remapping?
+> 
+> Yes, it's already guaranteed.
+> 
+> > We know entries 1-7 won't be
+> > written as we mapped them as RO but entry 0 contains the head page.
+> > Maybe it's ok to map it RO temporarily until the newly allocated hugetlb
+> > page is returned.
+> 
+> We can do that. I don't understand how this could elide BBM. After the
+> above, we would still need to do:
+> 3. remap entry 0 from RO to RW, mapping the `struct page` page that
+> will be shared with entry 1-7.
+> 4. remap entry 1-7 from their respective `struct page` pages to that
+> of entry 0, while they remain RO.
 
-Proactive shrinking should not be aggressive. With patches 4 and 6, I
-modified the global shrinker to be less aggressive against pagein/out.
-Shrinking proactively cannot avoid hitting the pool limit when memory
-pressure grows faster.
+The Arm ARM states that we need a BBM if we change the output address
+and: the old or new mappings are RW *or* the content of the page
+changes. Ignoring the latter (page content), we can turn the PTEs RO
+first without changing the pfn followed by changing the pfn while they
+are RO. Once that's done, we make entry 0 RW and, of course, with
+additional TLBIs between all these steps. Can we leave entry 0 RO? This
+would save an additional TLBI.
 
-> My concern is that we are knowingly (and perhaps unnecessarily)
-> creating an LRU inversion here - preferring swapping out the rejected
-> pages over the colder pages in the zswap pool. Shouldn't it be the
-> other way around? For instance, can we spiral into the following
-> scenario:
->
-> 1. zswap pool becomes full.
-> 2. Memory is still tight, so anonymous memory will be reclaimed. zswap
-> keeps rejecting incoming pages, and putting a hold on the global
-> shrinker.
-> 3. The pages that are swapped out are warmer than the ones stored in
-> the zswap pool, so they will be more likely to be swapped in (which,
-> IIUC, will also further delay the global shrinker).
->
-> and the cycle keeps going on and on?
+Now, I wonder if all this is worth it. What are the scenarios where the
+8 PTEs will be accessed? The vmemmap range corresponding to a 2MB
+hugetlb page for example is pretty well defined - 8 x 4K pages, aligned.
 
-I agree this does not follow LRU, but I think the LRU priority
-inversion is unavoidable once the pool limit is hit.
-The accept_thr_percent should be lowered to reduce the probability of
-LRU inversion if it matters. (it is why I implemented proactive
-shrinker.)
+> > If we could get the above work, it would be a lot simpler than thinking
+> > of stop_machine() or other locks to wait for such remapping.
+> 
+> Steps 3/4 would not require BBM somehow?
 
-When the writeback throughput is slower than memory usage grows,
-zswap_store() will have to reject pages sooner or later.
-If we evict the oldest stored pages synchronously before rejecting a
-new page (rotating pool to keep LRU), it will affect latency depending
-how much writeback is required to store the new page. If the oldest
-pages were compressed well, we would have to evict too many pages to
-store a warmer page, which blocks the reclaim progress. Fragmentation
-in the zspool may also increase the required writeback amount.
-We cannot accomplish both maintaining LRU priority and maintaining
-pageout latency.
+If we ignore the 'content' requirement, I think we could skip the BBM
+but we need to make sure we don't change the permission and pfn at the
+same time.
 
-Additionally, zswap_writeback_entry() is slower than direct pageout. I
-assume this is because shrinker performs 4KB IO synchronously. I am
-seeing shrinking throughput is limited by disk IOPS * 4KB while much
-higher throughput can be achieved by disabling zswap. direct pageout
-can be faster than zswap writeback, possibly because of bio
-optimization or sequential allocation of swap.
+> > > To do de-HVO:
+> > > 1. for every 8 PTEs:
+> > >   1a. we allocate 7 order-0 pages.
+> > >   1b. we remap PTEs #1-7 *RW* to those pages, respectively.
+> >
+> > Similar problem in 1.b, changing the output address. Here we could force
+> > the content to be the same
+> 
+> I don't follow the "the content to be the same" part. After HVO, we have:
+> 
+> Entry 0 -> `struct page` page A, RW
+> Entry 1 -> `struct page` page A, RO
+> ...
+> Entry 7 -> `struct page` page A, RO
+> 
+> To de-HVO, we need to make them:
+> 
+> Entry 0 -> `struct page` page A, RW
+> Entry 1 -> `struct page` page B, RW
+> ...
+> Entry 7 -> `struct page` page H, RW
+> 
+> I assume the same content means PTE_0 == PTE_1/.../7?
 
+That's the content of the page at the corresponding pfn before and after
+the pte change. I'm pretty sure the Arm ARM states this in case the
+hardware starts a load (e.g. unaligned) from one page and completes it
+from another, the software should not see any difference. But for the
+fields we care about in struct page, I assume they'd be the same (or
+that we just don't care about inconsistencies during this transient
+period).
 
-> Have you experimented with synchronous reclaim in the case the pool is
-> full? All the way to the acceptance threshold is too aggressive of
-> course - you might need to find something in between :)
->
-
-I don't get what the expected situation is.
-The benchmark of patch 6 is performing synchronous reclaim in the case
-the pool is full, since bulk memory allocation (write to mmapped
-space) is much faster than writeback throughput. The zswap pool is
-filled instantly at the beginning of benchmark runs. The
-accept_thr_percent is not significant for the benchmark, I think.
-
-
->
-> I wonder if this contention would show up in PSI metrics
-> (/proc/pressure/io, or the cgroup variants if you use them ). Maybe
-> correlate reclaim counters (pgscan, zswpout, pswpout, zswpwb etc.)
-> with IO pressure to show the pattern, i.e the contention problem was
-> there before, and is now resolved? :)
-
-Unfortunately, I could not find a reliable metric other than elapsed
-time. It seems PSI does not distinguish stalls for rejected pageout
-from stalls for shrinker writeback.
-For counters, this issue affects latency but does not increase the
-number of pagein/out. Is there any better way to observe the origin of
-contention?
-
-Thanks.
+-- 
+Catalin
