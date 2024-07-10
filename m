@@ -1,87 +1,69 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD44D15E88;
-	Wed, 10 Jul 2024 02:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED35110F1;
+	Wed, 10 Jul 2024 02:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720579372; cv=none; b=OvBO+HaSXDwQo3re82yBlnr4WOxKs9twDadcMeV2MS+UTfpsIk6J/iio2BuD94GXI4fFpB84KDyvaFcPAz055jLtZIQi6uPJkhbuxZfwcG0sPjqcZ7t8hvPQ8vbsUqqQDcylkYcWXhI/NoVubv96jlFDLFJlL9NQPmMsHiSKv1c=
+	t=1720579541; cv=none; b=uBglMVPZZC8VzmT098M7AaXRn4OrJw0H5s5R7Q8y3Vz6Z/l/tjfiyenzTxjEzJHxLM45FPxTsNIc29a72IbdDf1zhawE5CGhYHZ7dYCrKXcPAlYpdut+GFueT4POVS4W/Bxk8zts0FoSuXbp1dHKeFe/iPIAjgJ5+zAAChqde9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720579372; c=relaxed/simple;
-	bh=1h3QyzQU561HbOt/U8WA2ONjhAe+eN3J1JsOTMPxifU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SDAURtbQAinBISUqTx10lMCfF5MUCusPVlmHvZBqBCdiWa0SUvD5ux1fjF1mOVPqlevvIn2AW2KyTGR2X4F9yvksiH0u1+Q1sHXhSPvbnVoq1FrEm/UEFrzG0+Eme0Re211l8PAFz5QUBaP9olUpR+fVnizVcs7Yz5bgcpbo7mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fA2mxAxF; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1720579541; c=relaxed/simple;
+	bh=ksdQjq+1KUig1fjJdA1BXJDDhIyqzuZEd/8ozbkGAJ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i8A6g1RqyREgGqBRrTPK/IV9Sm4caxi77oLQAq7+28ez4Xm9bN6sMDzZOQz4Mtf1IxGDgY55c3xVryjNwTAh/84aHsOMxYmD+GUs9iY4ENFqodRqmoWvR4jRc4YwU8GFNdkbCrGj+TRTun6W5ZgzPU0bUzGU4WRYgdgiIXFZXMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NN+StjTj; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fA2mxAxF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1720579369;
-	bh=7aSGrHd5dL68BStdePJKytEf34AsakPky4yk+YY9lGU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=fA2mxAxF4yyS2Rfgo5zFvtIpTwMqJ7RWKZabLb1+JIdoxgWL99KZMYFVoE9CS8Upr
-	 VMgJ1PaANQHjiSTlwIxKJNLBvvyC5VOLV7s52fHZyuhFhtwEApU789XC9ygDVvClMn
-	 O45lRfyhkd9Btehm9LQTt0zdg1ug9Sv0/bHsSoAdOfRZFR7iEX16q3JPmN7ioLpzQj
-	 vO1La4SD4tOcEqqkcTFMZVDtDrkcWZBfId37zH1ORp2dEkWlY9egSWyT3a724XdV9l
-	 hMLcv585nIYteWeDffefXzlQH7RVIcFT1elsG/p9SxcTJfztIL/g4KdZHvqgaOaGEx
-	 6GCKR5swJe6NA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJhwm0G7Cz4wcl;
-	Wed, 10 Jul 2024 12:42:47 +1000 (AEST)
-Date: Wed, 10 Jul 2024 12:42:47 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the ext4 tree
-Message-ID: <20240710124247.1180c19b@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NN+StjTj"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1720579531; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=1jVY+iHmbpWBDePtYh7pU1F1dZO6NtiTS/7Fv1KbDfc=;
+	b=NN+StjTjpfQ4UNrKZYmrEOoLOjIFDos4J1YiczVok0Vk7V3EHvnhG6tnsHuvN/BvQmP4YFyZ3ZsC12he2KUbYf+taWLmJdW81cQfWVZ3ro+hQMMKJqsBmisn62gwEvnmZ6Ts0zhhbjHZYL8eESlgBYJ7YZeT/IrKEWZp8Dckcyg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045220184;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0WADVMcw_1720579519;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WADVMcw_1720579519)
+          by smtp.aliyun-inc.com;
+          Wed, 10 Jul 2024 10:45:31 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: chandan.babu@oracle.com
+Cc: djwong@kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] xfs: Remove duplicate xfs_trans_priv.h header
+Date: Wed, 10 Jul 2024 10:45:14 +0800
+Message-Id: <20240710024514.49176-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yZNse3IwUdAju_q5TTHk3Y7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/yZNse3IwUdAju_q5TTHk3Y7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+./fs/xfs/libxfs/xfs_defer.c: xfs_trans_priv.h is included more than once.
 
-Hi all,
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9491
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ fs/xfs/libxfs/xfs_defer.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The following commit is also in the ext3 tree as a different commit
-(but the same patch):
+diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
+index 40021849b42f..2cd212ad2c1d 100644
+--- a/fs/xfs/libxfs/xfs_defer.c
++++ b/fs/xfs/libxfs/xfs_defer.c
+@@ -28,7 +28,6 @@
+ #include "xfs_da_format.h"
+ #include "xfs_da_btree.h"
+ #include "xfs_attr.h"
+-#include "xfs_trans_priv.h"
+ #include "xfs_exchmaps.h"
+ 
+ static struct kmem_cache	*xfs_defer_pending_cache;
+-- 
+2.20.1.7.g153144c
 
-  89a8718cef85 ("jbd2: add missing MODULE_DESCRIPTION()")
-
-This is commit
-
-  96544a93eda4 ("jbd2: add missing MODULE_DESCRIPTION()")
-
-in the ext3 tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/yZNse3IwUdAju_q5TTHk3Y7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaN9ScACgkQAVBC80lX
-0GwzLgf/RTfl2mHWaPXSWgYAYF3PCq+PcNQ6RBW7ljk9MCsWZpzQODAO3T64TpbY
-1b3DbDP01g9ZM0JPvnrG1jB2gZytYhwnhgCHKI/AMU80FV6ZJsLfMdLA5zKHoIGQ
-bHgc+BpAFX6UI4K50UooCNH8M1moAAF3OZ3wkkD6vvvU5B7NZRQSWrbetmMiAm0E
-spEbPX7/3EW4o+L7IpQX6GreC08EcB3W4H40Yekm+UCPTkcb4gmmlUx0x4SYm6HJ
-Xxh4lF9gUIhOC1MkLX9uuLZCDAIRT1foNXnbBDd9ch224tsMSIeWeucKHJe0ZPYZ
-f5l6rXtWp0vf4MfrGa55QNOYvPxk5w==
-=bTGL
------END PGP SIGNATURE-----
-
---Sig_/yZNse3IwUdAju_q5TTHk3Y7--
