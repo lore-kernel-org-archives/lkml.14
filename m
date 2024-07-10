@@ -1,63 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D19819580C;
-	Wed, 10 Jul 2024 16:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E1D1803D;
+	Wed, 10 Jul 2024 16:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720628054; cv=none; b=NhFGfo5UISMBoMQedLtHVduMPGZZ5uh5OqySv97iMe7X50yJTnLOsjIZfB6ei4YZrRFn8ucsUlhMu3LMawlcCXFcsonn0rRrOqhhJJMkiOIHYKulrON61bP8LXfJoDdHDeqZ8U9PdPtC4ze9IrIYHmmWG6XIuBqyVBJXth3UFk8=
+	t=1720628152; cv=none; b=al7sCuZiKOLWYEfTy08mNC1aSnGtKJwG2QHwoic/VOKAOo9SKF3+aAVMOtJxa4M2QKICNMFvqg1upT4RIc7sqrLHRpKz/U8J49F5+0GSOvLAlK4x+w2eah3bemTIbvxYJDUULGjCDilB+S9zd09mCouiq6yu7EzVZ2JQYlAKKLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720628054; c=relaxed/simple;
-	bh=4fmGngg0GKfeUi4ExPfNLoC2zBK00yaL2AMpUlQFxVg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=B/neihPOTPQkkGyJXZSsOFK1gl0ClvHYMf35KUiBFEWGu9JO1vLHECmTqHHhLybl69qoBsIvOczCuTHr7GEalNPejMyS6ukLYO5cpqSBD4dRmW9TSCMhdTOSbifzQa/IUyJRd7JWcNQOk4RlcqXxexGrzMqmjEesIHId//xMzz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHDxAuxI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720628152; c=relaxed/simple;
+	bh=Y89/WY8lavOdGYJXlEhyTDXv6Bi38yp2eX7+OnkOJHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/oFSU6AdKy1qr/pDkG/rBaVON9Yw5h/YYFn0abYTNVbQFH9ifulBYJYN2Z31l236WC8HBiPCsvhl62CFlxw8wdrjrjrKcQhHjZo1eDmUbQVT96F7VQUbjyYFQrpqk8Rm4WNSAnlbuSUYiHbxxL+tWSD0cFiSuW0Wi9i2Fq9Z/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMaxg75q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHDxAuxI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 56FF7C4AF17;
-	Wed, 10 Jul 2024 16:14:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMaxg75q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFEEBC32781;
+	Wed, 10 Jul 2024 16:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720628054;
-	bh=4fmGngg0GKfeUi4ExPfNLoC2zBK00yaL2AMpUlQFxVg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=RHDxAuxIlcFYvhizctsEJM9sQTXli50hUgRNeed8dWa6mI5/Ll+TT/CU/wSeBYCZh
-	 4luP5JNJIIMr8VTEwYwh2NXwyloddggIyjU8MIEfANFLtvoWz2/T6IwSstvqS3ctHX
-	 TAH+Z0SBwzoLhaderL0q2vfz4BA0ePXi28HrM3R1fCl1dUwjNLBtMWt2v7Mmz9VsB9
-	 Zh8V+fC/dZ2/Ysr7PXSqm05d5POeUpaeCRptGAdZrREvZnXY7zo/lbzuU8nXFD5vPX
-	 O+d1SLnTAZkk5zRJHq/bgVR5A8QVa/zLU7O/XV4kL5TVTREVO/Ka52t3DV6qBkWd0S
-	 UfdW2VaLChGew==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4CE49C433E9;
-	Wed, 10 Jul 2024 16:14:14 +0000 (UTC)
-Subject: Re: [GIT PULL] Devicetree fixes for v6.10, part 2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240709223653.GA1276694-robh@kernel.org>
-References: <20240709223653.GA1276694-robh@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240709223653.GA1276694-robh@kernel.org>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-6.10-2
-X-PR-Tracked-Commit-Id: 2cf6b7d15a28640117bf9f75dc050892cf78a6e8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 367cbaad8887c59e5d017d90d50d16cdd3d76ee2
-Message-Id: <172062805431.17113.2114139134723852915.pr-tracker-bot@kernel.org>
-Date: Wed, 10 Jul 2024 16:14:14 +0000
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+	s=k20201202; t=1720628152;
+	bh=Y89/WY8lavOdGYJXlEhyTDXv6Bi38yp2eX7+OnkOJHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fMaxg75qmt4ABmx/LmDAVm3Jm2sVASR3uIDZ7aVJ/JRwI+pP23r/b63F0sdF8491T
+	 OuxNvH/zWEP4YKOEy0jWZJ7gaPQAr/mi199XzR75XUlXXWfj0QsmDiaFrReRZYe4eh
+	 GIYv7AepbGkNGv3qahvXXLdq4N6dWUfF2wYpcSKqWifQRYQe2l9/zELes2qduSAuZg
+	 OOTnwUnpp9LASZ/nSmMLeLUPSyisiRQwgtmlxRQdEXBhARiANlKzpxQ5v1i0pmUH6j
+	 zihlKmhJwSBPKqb25wK6h9GAGjfzG9fGv96eo8fjlutbzykV8g+RCK7FuGuUqNYo0A
+	 x+ZcVbCfBq+yQ==
+Date: Wed, 10 Jul 2024 10:15:50 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Jakub Kicinski <kuba@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-bluetooth@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Rocky Liao <quic_rjliao@quicinc.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>, netdev@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/6] dt-bindings: bluetooth: qualcomm: describe the
+ inputs from PMU for wcn7850
+Message-ID: <172062814990.3211927.13043381327085522946.robh@kernel.org>
+References: <20240709-hci_qca_refactor-v3-0-5f48ca001fed@linaro.org>
+ <20240709-hci_qca_refactor-v3-1-5f48ca001fed@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709-hci_qca_refactor-v3-1-5f48ca001fed@linaro.org>
 
-The pull request you sent on Tue, 9 Jul 2024 16:36:53 -0600:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-6.10-2
+On Tue, 09 Jul 2024 14:18:32 +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Drop the inputs from the host and instead expect the Bluetooth node to
+> consume the outputs of the internal PMU. This model is closer to reality
+> than how we represent it now.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  .../bindings/net/bluetooth/qualcomm-bluetooth.yaml     | 18 +++++++++++++-----
+>  1 file changed, 13 insertions(+), 5 deletions(-)
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/367cbaad8887c59e5d017d90d50d16cdd3d76ee2
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
