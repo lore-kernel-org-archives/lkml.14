@@ -1,25 +1,56 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D612C189F26;
-	Wed, 10 Jul 2024 15:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EF4194A45
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720626239; cv=none; b=Ts+UBnwZxpNqjbCtVltSP3IzMBEizwBDl7PtrCyvckv9aaCF0LUkUwGqBXjS+cdaE2RSujizk+6y17Z5MZ6niXbJ19q5GHM0AkbkwdV1X+Qgw8TJJQXe8o50zAVIQBG6yfq3ELiwQRkV2+nfvKJVc+I9wJRdYti/2RwOXKdr23k=
+	t=1720626454; cv=none; b=tv8KZ9tZPBS3mwicYL2pPr7AdE1ptKnfsLbHxrjXiR+GB7f73IddgMep58WbrvdPfQuPIG/yrWzJIXJutFzszIAsaYK1M7s1SBZiMFwCDvdBPhsWAVys0VIPs3QfuLLyu2j0EgNs0f3WbTDs4AvyQWar6Y1X1UwZzAq/P1VKqrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720626239; c=relaxed/simple;
-	bh=X1cJ+eZmDv+Rl3CvevwZlNKQLOFIR9YDfRr56MK5cfU=;
+	s=arc-20240116; t=1720626454; c=relaxed/simple;
+	bh=kG9dLLSFH8CXDk+Ls/0m9m2fd+gLAdP+lh1KYL8btS0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wv/fo+r0V2idSE5uxbxaF8w1ztyoDkqC6yG4BdsZXseM21VUXPO/JOgKZ7/Q+40Yu/xxSRRmwi0XZpU2dhOE1rE6Hghw4R6BXA55m+Yrk4rTZD9ZvNCGGBHR6gafaiS/0OKZfF+uUoJKe8iG8a3DW3Rz13yCO4FOaZXz5fWxYC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EDAD106F;
-	Wed, 10 Jul 2024 08:44:22 -0700 (PDT)
-Received: from [10.57.8.115] (unknown [10.57.8.115])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DECA63F766;
-	Wed, 10 Jul 2024 08:43:53 -0700 (PDT)
-Message-ID: <46d29283-af38-4eed-a69f-f7e4555f1a39@arm.com>
-Date: Wed, 10 Jul 2024 16:43:52 +0100
+	 In-Reply-To:Content-Type; b=G4uwgmaazhdU8xVz2vKCP3DXLFIoaNmrtUiFgV3rZkg33AvbZcFR4RHKIrVKnmr/VqzZ9b5frjAVKdzJ1qrSqCR1jA/ZBlcRQcFqtoLfCMWxvVyAEPFU/nw8Ij9vcY35XLTeyi+p3Kojw8BvR5p5lGEAwZQ1F/4/Fpv79HLcewc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DaI26Pqp; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DaI26Pqp"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-38c64d2b3d8so374565ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:47:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1720626452; x=1721231252; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UixdOlCZpFc/O/lvDyEP3bThmhSxi0Uf3gr538tQvp4=;
+        b=DaI26PqpeEah229RUBaSAL3tt20B4rF0ZHT3kA0+jjsnoeLyYjvEDAPS39nqvzPOT7
+         jpX9lJ8GdDo38umSFEiHyzJmeDl4ZgOCz7JadN/GbmPYu2CZyIoYIGjpu16NtyKKW0U7
+         9wKEaMJlcEC+vDP1r3xyMIQOSMSZPjOowOx4E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720626452; x=1721231252;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UixdOlCZpFc/O/lvDyEP3bThmhSxi0Uf3gr538tQvp4=;
+        b=RvJa2ASupTbdjaRkQ5RsTEPyIxVcPcsuXLBFuGUiUv7y3ddOxGWxHtE0b9Jj4exOmA
+         +o9wRg3wwJGL9OX+Knp5Txl7efcIKc/XsfYa4QdgVOKQFjaxWpH123SFtKRUWpR1Kgxf
+         no3YVeXzzd+ULevx39anG0a1zpiMsCDOebDYII2uLvlIthLbwf9CLw3cww/dMj/ne+/M
+         B1hK3znOgFsxoFXei+DuCUm76bansmqvhtPSCGEZCeVMkbzzi1zaAf00Bm92IAAUG/GT
+         EnChABMj2162rUzvDcPm3/EO2H+ckRnywcNIUisjt2v4C+gLskqQcX2st21d9mxBYS7X
+         IdYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8vDiMwujvMekljRDS16W3o3jo/ovsd8Jr3M/fb2vz/mrxLKYni7t74wjP2n4BCIcxyR2O/M6jBhZs4de2L+fo8IDrbqPLdcxF0C3/
+X-Gm-Message-State: AOJu0YyZ0QhJJYc9Ur/LAtj9Z6RWCYGD9ZAjP8VA27I9UavqSU6YE6cU
+	HVovixdq1089qCk+vcFNhnCTgb2+5P1uHfrHOTuEJIzmSoFPLNV3KugOUz94ijg=
+X-Google-Smtp-Source: AGHT+IHb8ETZgIZxVXQW2biS/YZKyo9pPMakuJfqHoicz5z8oRteqsbLGXlD3Ujwx0e3VAWfuXzn8A==
+X-Received: by 2002:a05:6e02:f90:b0:382:56bd:dfb8 with SMTP id e9e14a558f8ab-38a56e1130amr58069495ab.1.1720626452024;
+        Wed, 10 Jul 2024 08:47:32 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-38a49c1e578sm10175225ab.44.2024.07.10.08.47.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 08:47:31 -0700 (PDT)
+Message-ID: <10a36c82-3c74-4fc3-abce-b2fe81956d37@linuxfoundation.org>
+Date: Wed, 10 Jul 2024 09:47:31 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,123 +58,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/15] arm64: Enforce bounce buffers for realm DMA
-To: Will Deacon <will@kernel.org>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240701095505.165383-1-steven.price@arm.com>
- <20240701095505.165383-8-steven.price@arm.com>
- <20240709115649.GC13242@willie-the-truck>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240709115649.GC13242@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2] selftests/breakpoints:Add return value in main
+ function
+To: Zhu Jun <zhujun2@cmss.chinamobile.com>, shuah@kernel.org
+Cc: angquan21@gmail.com, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240710021605.2900-1-zhujun2@cmss.chinamobile.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240710021605.2900-1-zhujun2@cmss.chinamobile.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 09/07/2024 12:56, Will Deacon wrote:
-> On Mon, Jul 01, 2024 at 10:54:57AM +0100, Steven Price wrote:
->> Within a realm guest it's not possible for a device emulated by the VMM
->> to access arbitrary guest memory. So force the use of bounce buffers to
->> ensure that the memory the emulated devices are accessing is in memory
->> which is explicitly shared with the host.
->>
->> This adds a call to swiotlb_update_mem_attributes() which calls
->> set_memory_decrypted() to ensure the bounce buffer memory is shared with
->> the host. For non-realm guests or hosts this is a no-op.
->>
->> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->> v3: Simplify mem_init() by using a 'flags' variable.
->> ---
->>  arch/arm64/kernel/rsi.c |  2 ++
->>  arch/arm64/mm/init.c    | 10 +++++++++-
->>  2 files changed, 11 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
->> index 7ac5fc4a27d0..918db258cd4a 100644
->> --- a/arch/arm64/kernel/rsi.c
->> +++ b/arch/arm64/kernel/rsi.c
->> @@ -6,6 +6,8 @@
->>  #include <linux/jump_label.h>
->>  #include <linux/memblock.h>
->>  #include <linux/psci.h>
->> +#include <linux/swiotlb.h>
->> +
->>  #include <asm/rsi.h>
->>  
->>  struct realm_config config;
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 9b5ab6818f7f..1d595b63da71 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -41,6 +41,7 @@
->>  #include <asm/kvm_host.h>
->>  #include <asm/memory.h>
->>  #include <asm/numa.h>
->> +#include <asm/rsi.h>
->>  #include <asm/sections.h>
->>  #include <asm/setup.h>
->>  #include <linux/sizes.h>
->> @@ -369,8 +370,14 @@ void __init bootmem_init(void)
->>   */
->>  void __init mem_init(void)
->>  {
->> +	unsigned int flags = SWIOTLB_VERBOSE;
->>  	bool swiotlb = max_pfn > PFN_DOWN(arm64_dma_phys_limit);
->>  
->> +	if (is_realm_world()) {
->> +		swiotlb = true;
->> +		flags |= SWIOTLB_FORCE;
->> +	}
->> +
->>  	if (IS_ENABLED(CONFIG_DMA_BOUNCE_UNALIGNED_KMALLOC) && !swiotlb) {
->>  		/*
->>  		 * If no bouncing needed for ZONE_DMA, reduce the swiotlb
->> @@ -382,7 +389,8 @@ void __init mem_init(void)
->>  		swiotlb = true;
->>  	}
->>  
->> -	swiotlb_init(swiotlb, SWIOTLB_VERBOSE);
->> +	swiotlb_init(swiotlb, flags);
->> +	swiotlb_update_mem_attributes();
+On 7/9/24 20:16, Zhu Jun wrote:
+> Main function return value is int type, so add return
+> value in the end that this problem was discovered by reading the code
 > 
-> Why do we have to call this so early? Certainly, we won't have probed
-> the hypercalls under pKVM yet and I think it would be a lot cleaner if
-> you could defer your RSI discovery too.
+> Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
+> ---
+> Changes in v2:
+>   - modify commit info
+> 
+>   tools/testing/selftests/breakpoints/step_after_suspend_test.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/breakpoints/step_after_suspend_test.c b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
+> index dfec31fb9b30..b473131fce3e 100644
+> --- a/tools/testing/selftests/breakpoints/step_after_suspend_test.c
+> +++ b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
+> @@ -166,7 +166,7 @@ int main(int argc, char **argv)
+>   	bool succeeded = true;
+>   	unsigned int tests = 0;
+>   	cpu_set_t available_cpus;
+> -	int err;
+> +	int err = 0;
+>   	int cpu;
+>   
+>   	ksft_print_header();
+> @@ -222,4 +222,6 @@ int main(int argc, char **argv)
+>   		ksft_exit_pass();
+>   	else
+>   		ksft_exit_fail();
+> +
+> +	return err;
+>   }
 
-I don't think we *need* the swiotlb up so early, it was more of a case
-of this seemed a convenient place. We can probably move this later if
-pKVM has a requirement for this.
+Unless this is causing a compile error or warning - there is
+no need to make this change.
 
-In terms of RSI discovery then see my reply on patch 2.
-
-> Looking forward to the possibility of device assignment in future, how
-> do you see DMA_BOUNCE_UNALIGNED_KMALLOC interacting with a decrypted
-> SWIOTLB buffer? I'm struggling to wrap my head around how to fix that
-> properly.
-
-Device assignment generally causes problems with bounce buffers. The
-assumption has mostly been that any device which is clever enough to
-deal with device assignment (which in our case means enlightened enough
-to understand the extra bit on the bus) wouldn't need bounce buffers.
-
-Suzuki: Do you know if DMA_BOUNCE_UNALIGNED_KMALLOC has been thought
-about? Can we make the assumption that an assigned device will be coherent?
-
-I have to admit to being a bit worried about current assumption that we
-don't need two sets of bounce buffers - one decrypted for talking to the
-host, and one encrypted for "old fashioned" talking to hardware which
-has hardware limitations.
-
-Steve
-
+thanks,
+-- Shuah
