@@ -1,165 +1,92 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C43479B7E
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32842824BC;
+	Wed, 10 Jul 2024 07:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720597237; cv=none; b=a4NwuCHgMjDW4t+LpkX7yBaSEFmzzgPY3HsLUrO/fBYYqIKfeRXV6NLM8+BuCXB0tLmoSgES4t9tuTqDjR9P9ldHs9GVQAaZRqvXBo7upSIVdBA19ZMdd8EzLAxEwjwqF8oAtNaOuZbb60/VtHDoY1JRci8pDtcjYUtbp4QXDso=
+	t=1720597261; cv=none; b=jT/H8Iy8FKQ5s22o0uJ2th6qZPolcPugt+oLqebWItl0duaGphEjD+j/eJL/OUjXlVtKDsDMFWEP8y05VhEorK6ohmpTNO/dYoR1+FLA2jEQvrjLekbXNBIJtCiW2O+61OfRtazZZCgdOl+tFCTxWVmkbLMHTW/Ic8jdXuFVf8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720597237; c=relaxed/simple;
-	bh=p0pIjWdjYBoLNLQTXm33zgWRnyRngTjMHsxKZmFA36A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FEnatGxa3BLeLcz4KAlzl9MoK2gj9cMeaV4X3t6Z0OY/a97C57QB8PNIEYVGnCNQhzoqtAgYA+Ad/q8C+yv6MaDBU81LtLZqVWpYjVUYitopTAavE/8cO3vj1oOOp+vUGjR62b9L5aaM5Bo7DVoBeMf+P3xy+X6TdYiQcahakIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nlHuowNS; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nlHuowNS"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e04f1bcbf84so1057242276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 00:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720597235; x=1721202035; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OjKb2nGH0uufgiLhroJNuFFSjoPflP4yKTqfadCBBO0=;
-        b=nlHuowNSGaeoa+hlJDvfz1S/7o2HTBs/Ky1gWQzRcn/Sq4z51fYQuB0OMNYFclAM4l
-         IHZd6VrxLfdTPYhDC0uwQssp/UAvNAchIXxcMc/dZ+AnBi14Kp02N3pZYs/IAiRu0+V7
-         NucCSECxKmBw6XNSp+YoclZuj6Bwsfm+B1C2nz5PRbxwD+TUIqavn8BH7DVPj3QN0Cq4
-         iTv2qUMIrjN4WQKigL8gmzhegyH138GLhM/bH4qYntrcadkxdP7IdwvSpo9Pq/QfSeEf
-         Q/X9HnswRFZ5kENZi8vccxzmywhNz/k8df20PR009N/dO7Q/kw7z2TZNe1i5t0UJtcFd
-         Q/VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720597235; x=1721202035;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OjKb2nGH0uufgiLhroJNuFFSjoPflP4yKTqfadCBBO0=;
-        b=pPkL+d4CzjAIY6noAa2o+FcJcXvGK5geKghjfkoH3Y3KuScjmE+2PEkuFcGdmHAFen
-         3FVVdMDvMJoBphKEJbKOPRPNfpyvKK9VoCNtYYjPJ8JtgZDKuaQalX0sitTOVC55fV0a
-         CeG7o4rYs+dQd6XTQmmZ/CaNJypi9nSa0detdaVOpkAZfCPnCcBuu63+Y0vR8M4dVs7g
-         FWW6Zv+2pjz+NPMA2F6R52RXenWS4280oyiBFOVJyi8s7TFfBAMurinekdjt9GBD846e
-         vYAImfZQkdeGQHxTby0NHVIy1+EGsy+iXpBD19WzitT6yy7ka+0xSmG0nBiOWgvAkqcS
-         EgEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiPuAEy/h+Bcb4ebaLXaU/vpPhr6l00vtwwlm4ye39Fa/uXn7UinNIwKbwY0NU9MF/MqQJyRfuILYenU9ZfVSAoRttWPGl5uqnDv7k
-X-Gm-Message-State: AOJu0Ywk9K9Wi+dOn9MSWOIK24IGcbK67tSLqwTm2VQYVBDua01wTAjI
-	dUUgSKMQoA/60S2D6uvHmxi4OAYdsXXf7Kic361ocsKUMTrv4JKEVSl7eCAFfQ0VE6vWZeHLBpe
-	RiqtHSsKlglPHNV0XGZoYcPkLr1lqhwoIrreR2Q==
-X-Google-Smtp-Source: AGHT+IH/sNttlz7iEcuuUfbPUqCuI5UQBYVSoBT/R+GVBSmPgZ4m9GAISSCZwv88ItHVb+x6KfGQ+5FMLUM7PbL3uKE=
-X-Received: by 2002:a25:800c:0:b0:e03:6533:136d with SMTP id
- 3f1490d57ef6-e041b12408amr5399518276.40.1720597234909; Wed, 10 Jul 2024
- 00:40:34 -0700 (PDT)
+	s=arc-20240116; t=1720597261; c=relaxed/simple;
+	bh=ic/doOQaVCqp0tFw78Ip2mj0kPGzk2er21GSUClPl3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r2hKFGQNAYY69XvDIYK/hjNO0CgwL5haLJX8fCeffuOiAsOjTTH0r2pm+l/dTepE1c2XsdV9zXKLbfrviX4c29NzA01vtm3W0wMyw2DF1cWSXPvFdfUaet7C4KONvorQgZNenbe0Vz+yp/CxCjhrr9PSN2Cy0ONegNSfMsbfdRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sRRwG-0003DV-00; Wed, 10 Jul 2024 09:40:32 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 6ED58C0120; Wed, 10 Jul 2024 09:36:13 +0200 (CEST)
+Date: Wed, 10 Jul 2024 09:36:13 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
+Message-ID: <Zo457UgAkhbAgm2R@alpha.franken.de>
+References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com>
+ <Zn1FuxNw2CUttzdg@alpha.franken.de>
+ <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com>
+ <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk>
+ <fbd421a6-cf37-49ab-bdbe-6128a7cae8be@app.fastmail.com>
+ <Zoz6+YmUk7CBsNFw@alpha.franken.de>
+ <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709-dpu-fix-wb-v1-0-448348bfd4cb@linaro.org>
- <20240709-dpu-fix-wb-v1-2-448348bfd4cb@linaro.org> <46487222-6818-b0bf-e5cc-2310d62b5fe6@quicinc.com>
-In-Reply-To: <46487222-6818-b0bf-e5cc-2310d62b5fe6@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 10 Jul 2024 10:40:23 +0300
-Message-ID: <CAA8EJpq7Lp-3V_AsLxO9ZOt8ZW1ZZ=FjhXV6R9jvH=sQ8XQE9w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/msm/dpu: don't play tricks with debug macros
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Jordan Crouse <jordan@cosmicpenguin.net>, 
-	Chandan Uddaraju <chandanu@codeaurora.org>, Rajesh Yadav <ryadav@codeaurora.org>, 
-	Sravanthi Kollukuduru <skolluku@codeaurora.org>, Archit Taneja <architt@codeaurora.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Jeykumar Sankaran <jsanka@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com>
 
-On Tue, 9 Jul 2024 at 22:39, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
->
->
->
-> On 7/9/2024 6:48 AM, Dmitry Baryshkov wrote:
-> > DPU debugging macros need to be converted to a proper drm_debug_*
-> > macros, however this is a going an intrusive patch, not suitable for a
-> > fix. Wire DPU_DEBUG and DPU_DEBUG_DRIVER to always use DRM_DEBUG_DRIVER
-> > to make sure that DPU debugging messages always end up in the drm debug
-> > messages and are controlled via the usual drm.debug mask.
+On Wed, Jul 10, 2024 at 01:34:41PM +0800, Jiaxun Yang wrote:
+> 
+> 
+> 在2024年7月9日七月 下午4:55，Thomas Bogendoerfer写道：
+> > On Fri, Jun 28, 2024 at 01:33:06AM +0100, Jiaxun Yang wrote:
+> >> 
+> >> 
+> >> 在2024年6月27日六月 下午8:54，Maciej W. Rozycki写道：
+> >> > On Thu, 27 Jun 2024, Jiaxun Yang wrote:
+> >> >
+> >> >> >> @@ -318,6 +318,10 @@ void mips_set_personality_nan(struct arch_elf_state *state)
+> >> >> >>  	t->thread.fpu.fcr31 = c->fpu_csr31;
+> >> >> >>  	switch (state->nan_2008) {
+> >> >> >>  	case 0:
+> >> >> >> +		if (!(c->fpu_msk31 & FPU_CSR_NAN2008))
+> >> >> >> +			t->thread.fpu.fcr31 &= ~FPU_CSR_NAN2008;
+> >> >> >> +		if (!(c->fpu_msk31 & FPU_CSR_ABS2008))
+> >> >> >> +			t->thread.fpu.fcr31 &= ~FPU_CSR_ABS2008;
+> >> >> >
+> >> >> > why is this needed?
+> >> >> 
+> >> >> Because t->thread.fpu.fcr31 comes from c->fpu_csr31, in this case we the default
+> >> >> value of c->fpu_csr31 is read from hardware and we don't know what would that be.
+> >> >
+> >> >  But it has always been like this.  What has changed with your patch that 
+> >> > you need to mask the bit out now?
+> >> 
+> >> After this patch kernel's copy of t->thread.fpu.fcr31 can disagree with hardware.
+> >> When disagree happens, we trigger emulation.
+> >> 
+> >> Before that patch for nan legacy binary running on nan2008 CPU t->thread.fpu.fcr31
+> >> will still be nan2008 (for ieee754=relaxed) so that's not relevant.
 > >
->
-> These macros have been deprecated, is this waht you meant by the
-> conversion to proper drm_debug_*?
+> > I'm considering to apply your patch, how much testing/verification did
+> > this patch see ? Do have some test binaries ?
+> 
+> It has been tested against Debian rootfs. There is no need to test againt special binary,
+> but you need NaN2008 hardware such as Loongson 3A4000.
 
-Yes. Drop the driver-specific wrappers where they don't make sense.
-Use sensible format strings in the cases where it actually does (like
-VIDENC or _PLANE)
+that's just one case, what about NaN2008 binaries on a legacy MIPS CPU ?
 
->
-> /* NOTE: this is deprecated in favor of drm_dbg(NULL, ...). */
-> #define DRM_DEBUG_DRIVER(fmt, ...)                                      \
->          __drm_dbg(DRM_UT_DRIVER, fmt, ##__VA_ARGS__)
->
-> I think all that this macro was doing was to have appropriate DRM_UT_*
-> macros enabled before calling the corresponding DRM_DEBUG_* macros. But
-> I think what was incorrect here is for DPU_DEBUG, we could have used
-> DRM_UT_CORE instead of DRM_UT_KMS.
-
-It pretty much tries to overplay the existing drm debugging mechanism
-by either sending the messages to the DRM channel or just using
-pr_debug. With DYNAMIC_DEBUG being disabled pr_debug is just an empty
-macro, so all the messages can end up in /dev/null. We should not be
-trying to be too smart, using standard DRM_DEBUG_DRIVER should be
-enough. This way all driver-related messages are controlled by
-drm.debug including or excluding the 0x02 bit.
-
-
->
-> And DRM_DEBUG_DRIVER should have been used instead of DRM_ERROR.
->
-> Was this causing the issue of the prints not getting enabled?
-
-I pretty much think so.
-
->
-> > Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h | 14 ++------------
-> >   1 file changed, 2 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-> > index e2adc937ea63..935ff6fd172c 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-> > @@ -31,24 +31,14 @@
-> >    * @fmt: Pointer to format string
-> >    */
-> >   #define DPU_DEBUG(fmt, ...)                                                \
-> > -     do {                                                               \
-> > -             if (drm_debug_enabled(DRM_UT_KMS))                         \
-> > -                     DRM_DEBUG(fmt, ##__VA_ARGS__); \
-> > -             else                                                       \
-> > -                     pr_debug(fmt, ##__VA_ARGS__);                      \
-> > -     } while (0)
-> > +     DRM_DEBUG_DRIVER(fmt, ##__VA_ARGS__)
-> >
-> >   /**
-> >    * DPU_DEBUG_DRIVER - macro for hardware driver logging
-> >    * @fmt: Pointer to format string
-> >    */
-> >   #define DPU_DEBUG_DRIVER(fmt, ...)                                         \
-> > -     do {                                                               \
-> > -             if (drm_debug_enabled(DRM_UT_DRIVER))                      \
-> > -                     DRM_ERROR(fmt, ##__VA_ARGS__); \
-> > -             else                                                       \
-> > -                     pr_debug(fmt, ##__VA_ARGS__);                      \
-> > -     } while (0)
-> > +     DRM_DEBUG_DRIVER(fmt, ##__VA_ARGS__)
-> >
-> >   #define DPU_ERROR(fmt, ...) pr_err("[dpu error]" fmt, ##__VA_ARGS__)
-> >   #define DPU_ERROR_RATELIMITED(fmt, ...) pr_err_ratelimited("[dpu error]" fmt, ##__VA_ARGS__)
-> >
-
-
+Thomas.
 
 -- 
-With best wishes
-Dmitry
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
