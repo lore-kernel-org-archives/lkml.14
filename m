@@ -1,55 +1,55 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28311195FE8
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22EB1946AD
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627657; cv=none; b=idKltsk8aUKciCBr2sc6kt2ahxEoGQ92yb2LaJHy6m+onEa1YT2V3AQwaUedsC//Ksr/SCvMp6oLmkbIJjtfYppTFZbZIKL/1yAveNOZhKL98YdiGqkpOJbKpveaQMjdTATDSj1W5Kq9N9B4axWwb3AKp6w1cc11jbbr46FUFh8=
+	t=1720627666; cv=none; b=lBhY70tUkIaa+tFdU84DcbB5GEmN6/AkTUcNjNC0jhM1PyVPjA+vaWIJwHQrCaKCyAQhPuLltWEtuRgx6mTizT6DYhFCdm+syD1+Jeh5ilz4QDGnae1cVX2pk3BuaER8aZ3r9gVIC2Ke4Tb96vMR3BZK7X/oyc/aJ8dsYYWgTyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720627657; c=relaxed/simple;
-	bh=6UgaRsBKuBqnUMotrXmGfoJp7a55bSAyLHCf5fFjFTs=;
+	s=arc-20240116; t=1720627666; c=relaxed/simple;
+	bh=VGQr1x48FZtyRgV4QcACu+Gv3I85uYcfHn8pJAiuUgM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=K3eHH5U6oe0VtCWLrUz3jWpOndfD3vzuSR7lPIL9RfKBQr266qbcW11Zl1pLPsRRGjZpEmmiAUPX7hUChxGj2z8QiQj+Sp1StoxwbEk8m/tqCkQL4NDTB90BhcjxQyt+iAO0nTe8OogwNQRaef+b1woSpLNSFRU+LncaSzMThmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JSFMftbV; arc=none smtp.client-ip=209.85.219.174
+	 To:Content-Type; b=R+3EZkpqmAYswN7Utgq8ZQaP2ZqafyAsLHt8iUw2pqxqYG7dGgL2Oc6Zwi1SmlUkijPm9opwKJaNz4pOIGRToSeJ3/YMqLmNnKvmRl1BQYpfYyK/ZsCl1LXmz3wb1AdBKWQTLrpsot9U5TAuE5LZqPEL8W785DYOsUGWiM4By1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ROHHWhpW; arc=none smtp.client-ip=209.85.128.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JSFMftbV"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfe43dca3bfso6575089276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:07:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ROHHWhpW"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-64d408a5d01so60391297b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720627655; x=1721232455; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720627664; x=1721232464; darn=vger.kernel.org;
         h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5hOi+CbH+LQ53IgFxOEWuC6/Y+tbAitu1myzto5D+qI=;
-        b=JSFMftbV1tFSQiqRtfGON7SDVIyPAxJ5eCfCBvGJty2O/CTfTu3VbeN+PocW704b3J
-         N7HIXjqhTHDkhM9L8SYGlNJaVVKaQMkxxg1eXOvtwBh7dXQTqAvQ7KyEjEvWPAjXcB1d
-         8rbqL3nzOcCpELYNcdXNRtH796UpvhD0GPuwicFBPbvy2+SQh8Iw1mKCKPxXlUzIEqXA
-         4StguKylV3nP+2+k3wyaS+tjy/gBh/VRjTm83ESkHhax4QqyX/Gqk6SeMleaV5/uz/fv
-         Wklofj7ktCRZkjKHtTTcf5If3dO5fxnMWyTJMeKLwgCNBzfrYfY+WVZSo+wDhJPxRi1R
-         dpNg==
+        bh=6IPWMNSHPG0jt5D2DB0oJLSOfyEu5ju1yz0tYHzAJRc=;
+        b=ROHHWhpWmqTWJVviT2AsB3IO92CibcA4D3zXpwScTcTlbAxeAWsB1Wm0tSkZmpnLwK
+         Iok+mcsZccVvvo3TfCZ2h3PAjkCVNLzoX4a2te0HYsnLhR8e/XtTWsoCiVEb84jBf0J0
+         2u4eS7ibRtbq+Z891BjxTJvrqIEy2sUMu5GXTLh7mjfpcTCI1rHWAPaOpurDxBhXji93
+         yQhkG8oXFR5AHfayoRwV2qxsaOem2QdGltvwttsiw9xxr8gLH2sYsfzFYU85fljOv+Ki
+         3EIhHpaI/XzMsHn6vLNNGl7rWL6mD6qojSTcgG6ZaervuE/k3/urrgPiBpuTqFmIfoA3
+         f/GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720627655; x=1721232455;
+        d=1e100.net; s=20230601; t=1720627664; x=1721232464;
         h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5hOi+CbH+LQ53IgFxOEWuC6/Y+tbAitu1myzto5D+qI=;
-        b=KPCtmVudGbGhO/VcefN0pK2rFRSahZYy6HB/2deG702vhirNjBLBBGh1h72XX3WLiu
-         GVjno6ozemhsGt7CwxjxTycwmDEBqMElrlXnIcHm4M88a50b1CIX8Z/oC44soD/St/Ai
-         jgln7o3+iV3tDvTCUKbdVZxZ9U1WbmvaErE7kq3A10hy4sHMEThMr10W3odF+aRKIa4G
-         Glse+IsSRGqbfGhpOXJtezOJnK+BrKtWnhESzvfgMLsZ1YMyNVfYaHn4AasiM5W9zKkK
-         sVY+CVMpr0Txo0n+ayU9HzM3kHKNxvzJDPljQeP6lnQiukx8nZ2/mI4Sx2V8w16Ez4rR
-         DYwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUITGvPeshdJe/b0aWCF1JTEfX9ZZbJpwk2DmMWauuSrGfe0/s9BNpzTrXRHB4TmrSQssi9ZFkpJrg0/4fWe/hVL3/Q8F1iz1K4K33y
-X-Gm-Message-State: AOJu0Yx4I1R05WhBrFASX4IwLptLQ1MzdChOaYyZI2ejbkV5mqvt3aig
-	7eh3x967o1QxNFWcJFj6eT69M6UCWUWIjiKKI1Jn3/qKtL9bY3h7X8ZfspDNTQnLF2HaRxFyngn
-	gYUFYn1D1g/pKxMIwZ3/mRuPRguBN1zXEcjlg
-X-Google-Smtp-Source: AGHT+IFM/MM4d9wyqLSExKu598+a2Z0e1WDGShpZknWBuRov1q90hJ4xSnWPGct7PhaG0u0h7tLK8i94ggVSXRilV0U=
-X-Received: by 2002:a05:690c:f09:b0:63b:ca6d:7bb8 with SMTP id
- 00721157ae682-658ee7911c8mr78026367b3.11.1720627654703; Wed, 10 Jul 2024
- 09:07:34 -0700 (PDT)
+        bh=6IPWMNSHPG0jt5D2DB0oJLSOfyEu5ju1yz0tYHzAJRc=;
+        b=MAjxW/4o1t1TZ2x23DDuUQ3F0JJ9/JgnAvYYscC4HeLTyRB4rsaVE9weCxnZM/NwRG
+         HN/AohHm6J4FuqM6B8esHnE+PvSVL08xF3idh/Gz+RGWeuVlWv4sfctlWm06/hlR6OUh
+         YYvoc9ZPRYvQewYPuOlqHgb/i8Fu/JA6P5rY/b8UffLdL11IbTLMVyT1zN/Ex1E3ED00
+         w9yIVVa8u8k+TjYfy7wDpvtQdPNY5j9chhCCXsQW2aOXfK0mIJLMABR288LKUFGjshrC
+         sTtBmqhpdhK+Asom4NfKPladOIAQ8GFv7k5SUdJerA13N7YDwDmlOrE2C9ZHdbQecl3Z
+         2ARQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVs0L1bhz4Aef5lVan+WDESDq3uAicSwNfjL7ZOSZIY5MrmTNoy/LdYzznjwrCr/30OViEjy7ERaKtsUTUCysAR2892t3s0fH5cBujH
+X-Gm-Message-State: AOJu0YyE8ILAqsOJh+TWvb7RsPVrbvlJesokdFD/67wAkYbntYhKIM3V
+	l4+qihqTkmfAuCtvsOkAb0O3YJ4+omZZDMaw3I2uHTOKcp7eRu2H1zqjsbZqjaYy+zny+D05oyc
+	qjCcInxgAxM1y2Cw0PXcr+J1kLwlx4er8zEuZ
+X-Google-Smtp-Source: AGHT+IG95Ds1vL1Lxc6rxvpgc0LZ9RAvUdPaRPYzzaTXRLygP88EEhWnO7DJ1al0B8Jjc4ePUl7qyTWTQArnO/49JyM=
+X-Received: by 2002:a05:690c:3688:b0:650:82d0:c12c with SMTP id
+ 00721157ae682-658eed5ea72mr67690917b3.19.1720627663451; Wed, 10 Jul 2024
+ 09:07:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,14 +57,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240704182718.2653918-1-Liam.Howlett@oracle.com>
- <20240704182718.2653918-6-Liam.Howlett@oracle.com> <a1f1e48c-5aed-4c03-b4d1-b4d4ac85a6de@lucifer.local>
- <jcdeostzaoalxqbtlz4x6egjay2agiox6mg5o744ovfznbxh3i@pdqvicfbbblb>
-In-Reply-To: <jcdeostzaoalxqbtlz4x6egjay2agiox6mg5o744ovfznbxh3i@pdqvicfbbblb>
+ <20240704182718.2653918-7-Liam.Howlett@oracle.com> <f12e65e3-adfb-4140-9aaa-e7b11cab972d@lucifer.local>
+ <l6j7mytvepxnpxzq6i4kru4datfxhijf44lzugltbxs5f23f6i@lsfcft2tkg7j>
+In-Reply-To: <l6j7mytvepxnpxzq6i4kru4datfxhijf44lzugltbxs5f23f6i@lsfcft2tkg7j>
 From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 10 Jul 2024 09:07:23 -0700
-Message-ID: <CAJuCfpG+Jok-ySXzRkokU-hrvnLxxMkeufXRMk1tmPLQcgnzNw@mail.gmail.com>
-Subject: Re: [PATCH v3 05/16] mm/mmap: Introduce vma_munmap_struct for use in
- munmap operations
+Date: Wed, 10 Jul 2024 09:07:32 -0700
+Message-ID: <CAJuCfpG0UQwuuw=u+J8E3=CLKBzFuE=YLh=Hi9eebD9yZHcntg@mail.gmail.com>
+Subject: Re: [PATCH v3 06/16] mm/mmap: Change munmap to use
+ vma_munmap_struct() for accounting and surrounding vmas
 To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
 	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
 	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>, 
@@ -74,101 +74,52 @@ To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoake
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 5, 2024 at 12:09=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
+On Fri, Jul 5, 2024 at 12:59=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
 e.com> wrote:
 >
-> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [240705 14:39]:
-> > On Thu, Jul 04, 2024 at 02:27:07PM GMT, Liam R. Howlett wrote:
-> > > Use a structure to pass along all the necessary information and count=
-ers
-> > > involved in removing vmas from the mm_struct.
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [240705 15:27]:
+> > On Thu, Jul 04, 2024 at 02:27:08PM GMT, Liam R. Howlett wrote:
+> > > Clean up the code by changing the munmap operation to use a structure
+> > > for the accounting and munmap variables.
 > > >
-> > > Update vmi_ function names to vms_ to indicate the first argument
-> > > type change.
+> > > Since remove_mt() is only called in one location and the contents wil=
+l
+> > > be reduce to almost nothing.  The remains of the function can be adde=
+d
+> > > to vms_complete_munmap_vmas().
 > > >
 > > > Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-> > > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 > > > ---
-> > >  mm/internal.h |  16 ++++++
-> > >  mm/mmap.c     | 137 ++++++++++++++++++++++++++----------------------=
+> > >  mm/internal.h |  6 ++++
+> > >  mm/mmap.c     | 81 ++++++++++++++++++++++++++-----------------------=
 --
-> > >  2 files changed, 88 insertions(+), 65 deletions(-)
+> > >  2 files changed, 47 insertions(+), 40 deletions(-)
 > > >
 > > > diff --git a/mm/internal.h b/mm/internal.h
-> > > index 2ea9a88dcb95..f1e6dea2efcf 100644
+> > > index f1e6dea2efcf..8cbbbe7d40f3 100644
 > > > --- a/mm/internal.h
 > > > +++ b/mm/internal.h
-> > > @@ -1481,6 +1481,22 @@ struct vma_prepare {
-> > >     struct vm_area_struct *remove2;
-> > >  };
-> > >
-> > > +/*
-> > > + * vma munmap operation
-> > > + */
-> > > +struct vma_munmap_struct {
-> > > +   struct vma_iterator *vmi;
-> > > +   struct mm_struct *mm;
-> > > +   struct vm_area_struct *vma;     /* The first vma to munmap */
-> > > +   struct list_head *uf;           /* Userfaultfd list_head */
-> > > +   unsigned long start;            /* Aligned start addr */
-> > > +   unsigned long end;              /* Aligned end addr */
-> > > +   int vma_count;                  /* Number of vmas that will be re=
-moved */
-> > > +   unsigned long nr_pages;         /* Number of pages being removed =
-*/
-> > > +   unsigned long locked_vm;        /* Number of locked pages */
-> > > +   bool unlock;                    /* Unlock after the munmap */
-> > > +};
+> > > @@ -1488,12 +1488,18 @@ struct vma_munmap_struct {
+> > >     struct vma_iterator *vmi;
+> > >     struct mm_struct *mm;
+> > >     struct vm_area_struct *vma;     /* The first vma to munmap */
+> > > +   struct vm_area_struct *next;    /* vma after the munmap area */
+> > > +   struct vm_area_struct *prev;    /* vma before the munmap area */
 > >
-> >
-> > I'm a big fan of breaking out and threading state like this through som=
-e of
-> > these more... verbose VMA functions.
-> >
-> > I have a similar idea as part of my long dreamed of 'delete vma_merge()=
-'
-> > patch set. Coming soon :)
-> >
-> > > +
-> > >  void __meminit __init_single_page(struct page *page, unsigned long p=
-fn,
-> > >                             unsigned long zone, int nid);
-> > >
-> > > diff --git a/mm/mmap.c b/mm/mmap.c
-> > > index 8dc8ffbf9d8d..76e93146ee9d 100644
-> > > --- a/mm/mmap.c
-> > > +++ b/mm/mmap.c
-> > > @@ -500,6 +500,31 @@ static inline void init_vma_prep(struct vma_prep=
-are *vp,
-> > >     init_multi_vma_prep(vp, vma, NULL, NULL, NULL);
-> > >  }
-> > >
-> > > +/*
-> > > + * init_vma_munmap() - Initializer wrapper for vma_munmap_struct
-> > > + * @vms: The vma munmap struct
-> > > + * @vmi: The vma iterator
-> > > + * @vma: The first vm_area_struct to munmap
-> > > + * @start: The aligned start address to munmap
-> > > + * @end: The aligned end address to munmap
-> >
-> > Maybe worth mentioning if inclusive/exclusive.
+> > I mean this is about as pedantic as it gets, and, admittedly an annoyin=
+g
+> > comment to make, but the ordering... can't we at least put prev before
+> > next? ;)
 >
-> The "address to munmap" isn't specific enough that we are using the same
-> logic as the munmap call?  That is, the vma inclusive and exclusive for
-> start and end, respectively.
->
-> Not a big change, either way.
-
-+1. Every time I look into these functions with start/end I have to go
-back and check these inclusive/exclusive rules, so mentioning it would
-be helpful.
-
-
->
+> I can do that, no problem.
 > ...
 >
 > >
+> > This is a big improvement overall, very fiddly code.
+> >
 > > Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+
 >
-> Thanks
->
+> Thanks!
