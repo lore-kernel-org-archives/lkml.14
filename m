@@ -1,69 +1,101 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AEF1B86F3
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8276B1B86F3;
+	Wed, 10 Jul 2024 10:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720605732; cv=none; b=AGUEI7TWkMeITvIhGkGVoUFHvv1KxqhcbqSKgWQbUesgXlUiNSgQbVeivlEjL9Xhn4WK0mOs7idO+uJE//HSynmQ7fqgYvFvi4Ekqzf3IPKf6TCjUdk99HHDS7M31DWUwuxWmMob3WDHbSGR0iR38WT0iDVP/zCZyRSCFxFR7d0=
+	t=1720605859; cv=none; b=g0wljpS7wDu+px9rDRpd7ajZ4zGat+tQaZuAH6rfvvVHfAKG6uY8jq3cotzfM6PvgBDFKsK0ELavHOub54eHYj8JSHTJgODXNTnkDPhSLgY+VggvAF/+QNKVxDZ71644//Hu6CVUnXfZ2rU9gYvHPSjEvdU4AhZrVwbR1Dq+gEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720605732; c=relaxed/simple;
-	bh=axahieEUpkDStuK5uw04/HqMX3E/NwACJQpjZwXlf+c=;
+	s=arc-20240116; t=1720605859; c=relaxed/simple;
+	bh=LC9cKEaoasbcHZ5Zm1sctd8Ajuk0xRF4jmcsHg+/i2Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bts+a2UR8AYjf69H9AXIDeGwqus9cLXFstm2fgMoZ3K18yiKevDfpll4wmiUs1+xjirtDvmbKy/2BrnkwAUhpRZgg2B6NQlPPTRfaJ8R1vI8BGXUqH15eHEYkhaQr3q3fKetnDPuYmlkGRpy3uqBhOlGfI35qtq1bvfSpHZr+0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wMZc9+h9; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wMZc9+h9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hCh7GQePJWsAfJ/69/17N9txU+qsCnjpL3nb1rtezh4=; b=wMZc9+h9iDCgRRQOUzJtyc/y/i
-	+uedWOWK1b5bA4G901kzIriLQ3bSE8fQqLsIZ5jlmsFQa4oo791hErP8OOa0geDfv1RJbzZCTzKcp
-	J5EJHQwddE7KteGJDzo3tfhwAsmbtTEB5nGZ9LWMW45QAxEpDWJwSyEWTnFjRuxf4zWtlUPVdP9Ar
-	GnGZlT8r/ObQ+OoEZi4xsXy1IFhqU4SDmro9xfgkq7SUmiEDx/3wO/3KC3408DjFE4vMK08robU11
-	Li9NEKce5fL4POKPI+vtf0gtPDp8EVKN+A8/3kwwHL/MW1WPYXCcq1XJDiNHzDbYfmfSJEPQI7okD
-	lezta0Pw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRU9C-000000095Hl-3U0F;
-	Wed, 10 Jul 2024 10:02:02 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4E0E3300694; Wed, 10 Jul 2024 12:02:02 +0200 (CEST)
-Date: Wed, 10 Jul 2024 12:02:02 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, oleg@redhat.com,
-	jolsa@kernel.org, clm@meta.com, paulmck@kernel.org
-Subject: Re: [PATCH 08/10] srcu: Add __srcu_clone_read_lock()
-Message-ID: <20240710100202.GU27299@noisy.programming.kicks-ass.net>
-References: <20240708091241.544262971@infradead.org>
- <20240708092416.010695534@infradead.org>
- <Zo4gtyzNvinXBOHU@Boquns-Mac-mini.home>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDXaQyYRRKpbM7gdQiuJ4HNZMF4kXIwg39G32f6SFz6JDXerzU9ZqfqvQ3xgtTvyCyccw8k9Q1e3JmYoUdUaRLjxD8ArBvTJOanwBgHoC9yARlvLehWnH/zYKVtjvhNVdrNlNLSwEPqLuom2/QaxME5l7Z7er9bkhFai4Q0FBfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 824711C009E; Wed, 10 Jul 2024 12:04:15 +0200 (CEST)
+Date: Wed, 10 Jul 2024 12:04:15 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	syzbot+253cd2d2491df77c93ac@syzkaller.appspotmail.com,
+	Johannes Berg <johannes.berg@intel.com>, johannes@sipsolutions.net,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19] wifi: cfg80211: wext: add extra SIOCSIWSCAN
+ data check
+Message-ID: <Zo5cn37w8NjVyZdj@duo.ucw.cz>
+References: <20240701001526.2921645-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="APtJU7AeUS/BDcBA"
+Content-Disposition: inline
+In-Reply-To: <20240701001526.2921645-1-sashal@kernel.org>
+
+
+--APtJU7AeUS/BDcBA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zo4gtyzNvinXBOHU@Boquns-Mac-mini.home>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 09, 2024 at 10:48:39PM -0700, Boqun Feng wrote:
-> On Mon, Jul 08, 2024 at 11:12:49AM +0200, Peter Zijlstra wrote:
-> > In order to support carrying an srcu_read_lock() section across fork,
-> > where both the parent and child process will do: srcu_read_unlock(),
-> > it is needed to account for the extra decrement with an extra
-> > increment at fork time.
-> > 
-> 
-> We also need to dup the per-task lock held stack in order to maintain
-> consistent data for lockdep, right?
+Hi!
 
-Urgh, not the whole stack, but yeah, we need to stick an entry on there.
+> [ Upstream commit 6ef09cdc5ba0f93826c09d810c141a8d103a80fc ]
+>=20
+> In 'cfg80211_wext_siwscan()', add extra check whether number of
+> channels passed via 'ioctl(sock, SIOCSIWSCAN, ...)' doesn't exceed
+> IW_MAX_FREQUENCIES and reject invalid request with -EINVAL otherwise.
 
-Let me see if I can frob that somehow.
+This results in very confusing code in 4.19 at least. It should goto
+out for consistency, exploting kfree(NULL) to be nop. Ok, not sure we
+care...
+
+Best regards,
+								Pavel
+							=09
+> diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+> index dacb9ceee3efd..0dc27703443c8 100644
+> --- a/net/wireless/scan.c
+> +++ b/net/wireless/scan.c
+> @@ -1405,10 +1405,14 @@ int cfg80211_wext_siwscan(struct net_device *dev,
+>  	wiphy =3D &rdev->wiphy;
+> =20
+>  	/* Determine number of channels, needed to allocate creq */
+> -	if (wreq && wreq->num_channels)
+> +	if (wreq && wreq->num_channels) {
+> +		/* Passed from userspace so should be checked */
+> +		if (unlikely(wreq->num_channels > IW_MAX_FREQUENCIES))
+> +			return -EINVAL;
+>  		n_channels =3D wreq->num_channels;
+> -	else
+> +	} else {
+>  		n_channels =3D ieee80211_get_num_supported_channels(wiphy);
+> +	}
+> =20
+>  	creq =3D kzalloc(sizeof(*creq) + sizeof(struct cfg80211_ssid) +
+>  		       n_channels * sizeof(void *),
+
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--APtJU7AeUS/BDcBA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZo5cnwAKCRAw5/Bqldv6
+8oUrAJ9jTuyEhJu2i4VvC4LtpiREZ1G5SgCgwRT67JjrBQ576cUBOiBoBryoMOY=
+=e6To
+-----END PGP SIGNATURE-----
+
+--APtJU7AeUS/BDcBA--
