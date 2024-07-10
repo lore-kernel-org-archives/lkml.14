@@ -1,123 +1,124 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AC6194140
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0A5194ACC
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720607800; cv=none; b=UYONaqef+NowZJHz35z+v/cG9heMyGi3EidCFv4I+CSFF4cI+/LRfGg5+4vbl/ZNT5pJXgIN/gItcKxrKF5fjPjJoEW8Ad+6XQyDKyQ6aa0SdI2qGnZO+1d5xijmRyfvofaMJ9OP5O1wx8PMgWbGqjbfq1mheIEpxcSBk0Sy76Y=
+	t=1720607808; cv=none; b=GAlEM9VhKuQqWQxrY7x9BvHAdLQtQZydUplTdCyMFzonXJQLleQDPAMXxhHA8inQKtj5WvxZHkvZrf1Lsqfk3ftTweelwbIXbhwcNZKcgvKahwiGtqScCQQkOTGUSP+EEhpLxhiU267U46c8nZ0Z/gyhNyp2hBWUcUrs9DpbT9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720607800; c=relaxed/simple;
-	bh=etA9ynmuuhP2Cxh7NuFkHx0OD2pU8r2OMJpBINpzlRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lbHeUa8+ldf0oFGO0LOLc5818c3zaXR0EA0KSRfrT6ZrMUqC6J/hvvGSszrPZwid0ztMJpByhFP9cJt1joAoZh1MvsOKt3woqpAWJAGc82I+uSZuo+5y3d8Hq8U2sj1tfRxE3T+58cw12zo55ihUhNSiuxAkr3KxLlKlakVlp4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zTw0zjaN; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720607808; c=relaxed/simple;
+	bh=kqLm5P45NxwgK+tmNpa+OcNHo84diEsXJjayzggqo7c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aVfE2Ye71ZESvmYbgQsJzRnILxrIr2d0Cn6XQXsyzBLuhJEszZB6zXFhK7LTwtgzJNhpYwEA8s7EcWJBWWizXFhfVXpz8L+9ltWx5Fcj4xcmbTTjgwZiy/TgBa22W8RrIDtuq/AHsWcK8uOV0bEbSHMpUSxwNNe/5NFf5oG9Hf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e+BAytUE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zTw0zjaN"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5956fbe6d0dso2005904a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 03:36:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720607797; x=1721212597; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WR7mw7gKYjGzb9zvVhn0agY8T1HfSSj8ItVRnrEskco=;
-        b=zTw0zjaNW0Fp8HjQ3mrz2qXul6xDHM4mm2i96U23lEVgp87j+OrxivvfbwZsDC5881
-         7TNufgkWYsK+MBDq3aJpB3P74SNulMDV0n2uhVlJIzmJJuJGtCA9DGnjRdze6y85KrEs
-         DywI142Jaq0EvqgWPrHEBdmOHimdyDPymaSySWzOOHa94Dene92O22RYXIDbvbjDgbD/
-         m8kM3XjcvSg4wQ8jAaZZCUjGPr1y1uwjh7P4J5rWMcZXAXRD4f35ilgK7IPj8krbHF3g
-         +NwnAO0z3foTTOHdem6ogIo+3R1+11VWCTk+26F4+CUGU/pxdQd4Wibv2/EO3wyLgzRA
-         gYBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720607797; x=1721212597;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WR7mw7gKYjGzb9zvVhn0agY8T1HfSSj8ItVRnrEskco=;
-        b=c+MRaCFpcAmQz2AW1OfFLMk/I/YH6Q6LQRiBBfEX+MGpAr77dCkz1jlBTn+nnRWVd/
-         +VhyztdIbETjsd5IdnqX8N3hNZwTW4DgbaUWTUd1rYiwB4p+iu3w1R5YU2ldHgmtzzKJ
-         Tz7aNNlwVbnwry16nhT6O3GXjPvKPgL50w9SLT+fTB5hlDtMKB6Bz8L/pYkmUBRZwqZP
-         XzUpi2J0Zy0rEowChaSXoBzABfX7NgYSRUyNasqftKs35SByxjxmSXtChw8DhL+C0aEW
-         U/NWoxrB0mPI5nGkFpujmRRJYXsKlFuQ/5kVrc/naUBKLoO0SxsO0A0ypYWjllLBnhE7
-         vL1w==
-X-Forwarded-Encrypted: i=1; AJvYcCU70sKyq6gnIgQakGE5fsbjqg4TjH3CTrGf3/D5IaTZGTduaS8j6dUDVJDQHGrhaDYRu3/pGJo3SfFVkxvTW52tnI12QSseJPVpP7a4
-X-Gm-Message-State: AOJu0YwHCYsMvouWbuBs+g+v9zwI+rWHHV68wXqLSKJC+LRiuuVoZMFl
-	GyuF9q6zws/rIHKYWQtrJgkuJpNaLg1rxoYcd5kc2WQxQ/FHT2Cax8vA3VAwk6U=
-X-Google-Smtp-Source: AGHT+IF2+1yAmmAjs9k5rECEvrjhfdA3+rgkMM/MFm3e+0gJD1Om+NiViIU4ipJrVm142j3aHY8aPw==
-X-Received: by 2002:a05:6402:5187:b0:57d:4ca2:fdab with SMTP id 4fb4d7f45d1cf-594ba98f563mr3546243a12.3.1720607797327;
-        Wed, 10 Jul 2024 03:36:37 -0700 (PDT)
-Received: from [192.168.105.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bda30a46sm2050740a12.89.2024.07.10.03.36.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 03:36:36 -0700 (PDT)
-Message-ID: <9c1cd4b3-22a8-4c5c-ad16-a7ef6d44e44d@linaro.org>
-Date: Wed, 10 Jul 2024 12:36:34 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e+BAytUE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720607806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TbJg6z7j+ZQBtm21UhpDM4r/48rTnLX4yDmOeuhoEeA=;
+	b=e+BAytUEUePovg/uo48HWDv8cwIBr34355jzalrP+4UHFE3qDQcsbxbVMrAX840DDO1S6V
+	H+JbYaTmfzfZd9H/aXoKFR/IhLH1djsixXwQBPhisg7QD5SF1PPVBo/C3wOn5gENg/ngd/
+	FFZuel0R/Jo/yWst4t8xzBd2tR3e90g=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-186-a07wZjSjMfOCkc_bgrfTiQ-1; Wed,
+ 10 Jul 2024 06:36:41 -0400
+X-MC-Unique: a07wZjSjMfOCkc_bgrfTiQ-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07722196CE01;
+	Wed, 10 Jul 2024 10:36:36 +0000 (UTC)
+Received: from oldenburg.str.redhat.com (unknown [10.45.224.154])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A378D19560AE;
+	Wed, 10 Jul 2024 10:36:24 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,  Will Deacon
+ <will@kernel.org>,  Jonathan Corbet <corbet@lwn.net>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Marc Zyngier <maz@kernel.org>,  Oliver Upton
+ <oliver.upton@linux.dev>,  James Morse <james.morse@arm.com>,  Suzuki K
+ Poulose <suzuki.poulose@arm.com>,  Arnd Bergmann <arnd@arndb.de>,  Oleg
+ Nesterov <oleg@redhat.com>,  Eric Biederman <ebiederm@xmission.com>,
+  Shuah Khan <shuah@kernel.org>,  "Rick P. Edgecombe"
+ <rick.p.edgecombe@intel.com>,  Deepak Gupta <debug@rivosinc.com>,  Ard
+ Biesheuvel <ardb@kernel.org>,  Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+  Kees Cook <kees@kernel.org>,  "H.J. Lu" <hjl.tools@gmail.com>,  Paul
+ Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,
+  Albert Ou <aou@eecs.berkeley.edu>,  Christian Brauner
+ <brauner@kernel.org>,  Thiago Jung Bauermann
+ <thiago.bauermann@linaro.org>,  Ross Burton <ross.burton@arm.com>,
+  linux-arm-kernel@lists.infradead.org,  linux-doc@vger.kernel.org,
+  kvmarm@lists.linux.dev,  linux-fsdevel@vger.kernel.org,
+  linux-arch@vger.kernel.org,  linux-mm@kvack.org,
+  linux-kselftest@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-riscv@lists.infradead.org, "Schimpe, Christina"
+ <christina.schimpe@intel.com>, "Pandey, Sunil K"
+ <sunil.k.pandey@intel.com>
+Subject: Re: [PATCH v9 05/39] arm64/gcs: Document the ABI for Guarded
+ Control Stacks
+In-Reply-To: <20240625-arm64-gcs-v9-5-0f634469b8f0@kernel.org> (Mark Brown's
+	message of "Tue, 25 Jun 2024 15:57:33 +0100")
+References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+	<20240625-arm64-gcs-v9-5-0f634469b8f0@kernel.org>
+Date: Wed, 10 Jul 2024 12:36:21 +0200
+Message-ID: <87a5iph6u2.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-crd: Add LID switch
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>
-References: <20240710-x1e80100-crd-lid-v1-1-0156e8a62af6@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <20240710-x1e80100-crd-lid-v1-1-0156e8a62af6@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 10.07.2024 10:18 AM, Stephan Gerhold wrote:
-> Add gpio-keys for exposing the LID switch state, similar to
-> sc8280xp-lenovo-thinkpad-x13s.dts. Only the GPIO number is different.
-> 
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> ---
+* Mark Brown:
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Konrad
+> +4.  Signal handling
+> +--------------------
+> +
+> +* A new signal frame record gcs_context encodes the current GCS mode and
+> +  pointer for the interrupted context on signal delivery.  This will always
+> +  be present on systems that support GCS.
+> +
+> +* The record contains a flag field which reports the current GCS configuration
+> +  for the interrupted context as PR_GET_SHADOW_STACK_STATUS would.
+> +
+> +* The signal handler is run with the same GCS configuration as the interrupted
+> +  context.
+> +
+> +* When GCS is enabled for the interrupted thread a signal handling specific
+> +  GCS cap token will be written to the GCS, this is an architectural GCS cap
+> +  token with bit 63 set and the token type (bits 0..11) all clear.  The
+> +  GCSPR_EL0 reported in the signal frame will point to this cap token.
+
+How does this marker interfere with Top Byte Ignore (TBI; I hope I got
+the name right)?  The specification currently does not say that only
+addresses pushed to the shadow stack with the top byte cleared, which
+potentially makes the markup ambiguous.  On x86-64, the same issue may
+exist with LAM.  I have not tested yet what happens there.  On AArch64
+and RISC-V, it may be more natural to use the LSB instead of the LSB for
+the mark bit because of its instruction alignment.
+
+We also have a gap on x86-64 for backtrace generation because the
+interrupted instruction address does not end up on the shadow stack.
+This address is potentially quite interesting for backtrace generation.
+I assume it's currently missing because the kernel does not resume
+execution using a regular return instruction.  It would be really useful
+if it could be pushed to the shadow stack, or recoverable from the
+shadow stack in some other way (e.g., the address of the signal context
+could be pushed instead).  That would need some form of marker as well.
+
+Thanks,
+Florian
+
