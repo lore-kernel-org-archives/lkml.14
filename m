@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FBF1991A0;
-	Wed, 10 Jul 2024 20:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8913F199235;
+	Wed, 10 Jul 2024 20:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720642373; cv=none; b=SYrzRLQq5yzN9bbmts2V3p2jOKlcntBOsqc93UnX+vofuWWJEquBlGrmOdIkbgPVu+5f7mc1a8Dub81/hmHjovpHkLZV45bz/ZEtPfJYpB+hK7JFGTOQ3Kv347uQI5cHLKCcclifUKQdMaItnUMPfDYuOR59r/e8uN4pTyZc95I=
+	t=1720642375; cv=none; b=UDUz5/twRhkY5tCIgE85DTZc7Xlwfai+WB3tyHwuOFP9Xooar5vB/uhBr3f9QJDmOdRKq4XaqwxRYZZIJyCF4+4s1Jf28zKqtSnYB8+dRivkzuIqewTVK9OI+8wUixAzCKyc9EUjPNN3qJq5vn8PegxMWNusMJ7BN+hhgRyUQPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720642373; c=relaxed/simple;
-	bh=n1S/kZHXlE8AgYjLTZvPqoFMaf/kirIHM9CTO0L4VoE=;
+	s=arc-20240116; t=1720642375; c=relaxed/simple;
+	bh=QcFQUAnJ4SY3czCb8lIIdlGgAX/hRuLCWNSj6np8mr8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y/nhPDVsbNfohObUNxI4DAPcJCIVB2ivKCCj4vIbreSXF1+WFfi1PoygxANW5kTehAf/8wV77SFERFtpWJfzQMwXERm21XFcqC+nf7VKvHIUo3ox2ZU6r/RUoPoU0C3ejDdCoFl7zbCgIEWiOqvWEPzVEcyHD2IWIOs2LwG6Q/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGpZAZCb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=h/qahfnVWlSg5+stD7zKJeRn3GvcLZUsmMIuIcLloNrgmPyJoM0bmGqEuHzoJf/43Ys+q+pm5d7HYYqQzQNK903OzrEdfqn98sTFAEo+5gMYr/yP91uOof7k/5kL9I+jqPAhuAfZDjIwsNFH3eSLL5VqZ5fadxdXh7MNM8Hg63U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tK7Mgskl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGpZAZCb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28AB3C32782;
-	Wed, 10 Jul 2024 20:12:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tK7Mgskl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD3AC32781;
+	Wed, 10 Jul 2024 20:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720642373;
-	bh=n1S/kZHXlE8AgYjLTZvPqoFMaf/kirIHM9CTO0L4VoE=;
+	s=k20201202; t=1720642375;
+	bh=QcFQUAnJ4SY3czCb8lIIdlGgAX/hRuLCWNSj6np8mr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UGpZAZCbHGJsPG0VzxC11QTkb6laX2XXkwTcQpnU86mHppXnw8qOjW631TcffrzYl
-	 CXOuVf8qp3gAM2vVz6LWx89tUfEFK3wngcDDD4c3rAxc2PAi3GTKKbXvBCPZWsawJh
-	 HKIpe5S4cGOBzKou7uB0UMgFWJJBV0/vySCQJgBShHeDLaDJ8zlsSsQNMs0GmRXKLx
-	 XQkiyt+0rYcsegtjBpua3WajQmbSuld/KsCS1zkBTkbrC06MrzdDcTmuBVdZL09fOk
-	 p/xa3HaBOfNjoRJUwEOaDhI8OYWgmOFhjNICiiY3ba18tEfHB8ZU6d6naSPn92Ay5z
-	 VR48MmfUTh1xQ==
+	b=tK7MgsklbSD2UctwNVyydxKNySuge/SDsXBp//1HSzb2mafkS5DP+8qPHEbrVvqUO
+	 3ZEDq1/E49VNmUvhuXdn9dgEzSFf+qT1wdtsN6halehGGEpOt0o3yNQ56ptWsxCXOY
+	 qcn2SqgJzdrdIqQwBMwsGQoiJskgcSfkONO3tH9gkKAkYKnL/L5CR8/KNe5wx2Sucp
+	 wRbiPhHicw/tJSDpgvnXpn3L67Cfu2ziiiLKtz/JFsvpMcHSt42Vz2pOYnYVNmxT53
+	 NSUTRWTeZmihrIk4OJYZOUTcd/rkZjXGfylBppHXGwtWMcsXtb4CJCyPDelV3B7DTX
+	 GvB0hsr6yjPUQ==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v7 5/8] platform: Add test managed platform_device/driver APIs
-Date: Wed, 10 Jul 2024 13:12:41 -0700
-Message-ID: <20240710201246.1802189-6-sboyd@kernel.org>
+Subject: [PATCH v7 7/8] clk: Add KUnit tests for clk fixed rate basic type
+Date: Wed, 10 Jul 2024 13:12:43 -0700
+Message-ID: <20240710201246.1802189-8-sboyd@kernel.org>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 In-Reply-To: <20240710201246.1802189-1-sboyd@kernel.org>
 References: <20240710201246.1802189-1-sboyd@kernel.org>
@@ -61,656 +61,494 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce KUnit resource wrappers around platform_driver_register(),
-platform_device_alloc(), and platform_device_add() so that test authors
-can register platform drivers/devices from their tests and have the
-drivers/devices automatically be unregistered when the test is done.
-
-This makes test setup code simpler when a platform driver or platform
-device is needed. Add a few test cases at the same time to make sure the
-APIs work as intended.
+Test that the fixed rate basic type clk works as intended.
 
 Cc: Brendan Higgins <brendan.higgins@linux.dev>
-Reviewed-by: David Gow <davidgow@google.com>
+Cc: David Gow <davidgow@google.com>
 Cc: Rae Moar <rmoar@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- Documentation/dev-tools/kunit/api/index.rst   |   5 +
- .../dev-tools/kunit/api/platformdevice.rst    |  10 +
- include/kunit/platform_device.h               |  20 ++
- lib/kunit/Makefile                            |   4 +-
- lib/kunit/platform-test.c                     | 224 +++++++++++++
- lib/kunit/platform.c                          | 302 ++++++++++++++++++
- 6 files changed, 564 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/dev-tools/kunit/api/platformdevice.rst
- create mode 100644 include/kunit/platform_device.h
- create mode 100644 lib/kunit/platform-test.c
- create mode 100644 lib/kunit/platform.c
+ drivers/clk/.kunitconfig                   |   2 +
+ drivers/clk/Kconfig                        |   9 +
+ drivers/clk/Makefile                       |   1 +
+ drivers/clk/clk-fixed-rate_test.c          | 380 +++++++++++++++++++++
+ drivers/clk/clk-fixed-rate_test.h          |   8 +
+ drivers/clk/kunit_clk_fixed_rate_test.dtso |  19 ++
+ 6 files changed, 419 insertions(+)
+ create mode 100644 drivers/clk/clk-fixed-rate_test.c
+ create mode 100644 drivers/clk/clk-fixed-rate_test.h
+ create mode 100644 drivers/clk/kunit_clk_fixed_rate_test.dtso
 
-diff --git a/Documentation/dev-tools/kunit/api/index.rst b/Documentation/dev-tools/kunit/api/index.rst
-index 282befa17edf..02b26f5e8750 100644
---- a/Documentation/dev-tools/kunit/api/index.rst
-+++ b/Documentation/dev-tools/kunit/api/index.rst
-@@ -10,6 +10,7 @@ API Reference
- 	resource
- 	functionredirection
- 	of
-+	platformdevice
+diff --git a/drivers/clk/.kunitconfig b/drivers/clk/.kunitconfig
+index efa12ac2b3f2..54ece9207055 100644
+--- a/drivers/clk/.kunitconfig
++++ b/drivers/clk/.kunitconfig
+@@ -1,6 +1,8 @@
+ CONFIG_KUNIT=y
++CONFIG_OF=y
+ CONFIG_COMMON_CLK=y
+ CONFIG_CLK_KUNIT_TEST=y
++CONFIG_CLK_FIXED_RATE_KUNIT_TEST=y
+ CONFIG_CLK_GATE_KUNIT_TEST=y
+ CONFIG_CLK_FD_KUNIT_TEST=y
+ CONFIG_UML_PCI_OVER_VIRTIO=n
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 3e9099504fad..d8482e015c49 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -511,6 +511,15 @@ config CLK_KUNIT_TEST
+ 	help
+ 	  Kunit tests for the common clock framework.
  
- 
- This page documents the KUnit kernel testing API. It is divided into the
-@@ -36,3 +37,7 @@ Driver KUnit API
- Documentation/dev-tools/kunit/api/of.rst
- 
-  - Documents the KUnit device tree (OF) API
++config CLK_FIXED_RATE_KUNIT_TEST
++	tristate "Basic fixed rate clk type KUnit test" if !KUNIT_ALL_TESTS
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
++	select OF_OVERLAY if OF
++	select DTC
++	help
++	  KUnit tests for the basic fixed rate clk type.
 +
-+Documentation/dev-tools/kunit/api/platformdevice.rst
-+
-+ - Documents the KUnit platform device API
-diff --git a/Documentation/dev-tools/kunit/api/platformdevice.rst b/Documentation/dev-tools/kunit/api/platformdevice.rst
+ config CLK_GATE_KUNIT_TEST
+ 	tristate "Basic gate type Kunit test" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 8bb63f1ddd98..7b57e3d22cee 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_KUNIT_TEST)	+= clk_test.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-divider.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-fixed-factor.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-fixed-rate.o
++obj-$(CONFIG_CLK_FIXED_RATE_KUNIT_TEST)	+= clk-fixed-rate_test.o kunit_clk_fixed_rate_test.dtbo.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-gate.o
+ obj-$(CONFIG_CLK_GATE_KUNIT_TEST) += clk-gate_test.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-multiplier.o
+diff --git a/drivers/clk/clk-fixed-rate_test.c b/drivers/clk/clk-fixed-rate_test.c
 new file mode 100644
-index 000000000000..49ddd5729003
+index 000000000000..0e04c10a21aa
 --- /dev/null
-+++ b/Documentation/dev-tools/kunit/api/platformdevice.rst
-@@ -0,0 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================
-+Platform Device API
-+===================
-+
-+The KUnit platform device API is used to test platform devices.
-+
-+.. kernel-doc:: lib/kunit/platform.c
-+   :export:
-diff --git a/include/kunit/platform_device.h b/include/kunit/platform_device.h
-new file mode 100644
-index 000000000000..0fc0999d2420
---- /dev/null
-+++ b/include/kunit/platform_device.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _KUNIT_PLATFORM_DRIVER_H
-+#define _KUNIT_PLATFORM_DRIVER_H
-+
-+struct kunit;
-+struct platform_device;
-+struct platform_driver;
-+
-+struct platform_device *
-+kunit_platform_device_alloc(struct kunit *test, const char *name, int id);
-+int kunit_platform_device_add(struct kunit *test, struct platform_device *pdev);
-+
-+int kunit_platform_device_prepare_wait_for_probe(struct kunit *test,
-+						 struct platform_device *pdev,
-+						 struct completion *x);
-+
-+int kunit_platform_driver_register(struct kunit *test,
-+				   struct platform_driver *drv);
-+
-+#endif
-diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-index 309659a32a78..a980ae62eff6 100644
---- a/lib/kunit/Makefile
-+++ b/lib/kunit/Makefile
-@@ -8,7 +8,8 @@ kunit-objs +=				test.o \
- 					try-catch.o \
- 					executor.o \
- 					attributes.o \
--					device.o
-+					device.o \
-+					platform.o
- 
- ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
- kunit-objs +=				debugfs.o
-@@ -18,6 +19,7 @@ endif
- obj-y +=				hooks.o
- 
- obj-$(CONFIG_KUNIT_TEST) +=		kunit-test.o
-+obj-$(CONFIG_KUNIT_TEST) +=		platform-test.o
- 
- # string-stream-test compiles built-in only.
- ifeq ($(CONFIG_KUNIT_TEST),y)
-diff --git a/lib/kunit/platform-test.c b/lib/kunit/platform-test.c
-new file mode 100644
-index 000000000000..e3debb8fbcef
---- /dev/null
-+++ b/lib/kunit/platform-test.c
-@@ -0,0 +1,224 @@
++++ b/drivers/clk/clk-fixed-rate_test.c
+@@ -0,0 +1,380 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * KUnit test for KUnit platform driver infrastructure.
++ * KUnit test for clk fixed rate basic type
 + */
-+
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/completion.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
 +
++#include <kunit/clk.h>
++#include <kunit/of.h>
 +#include <kunit/platform_device.h>
++#include <kunit/resource.h>
 +#include <kunit/test.h>
 +
-+/*
-+ * Test that kunit_platform_device_alloc() creates a platform device.
++#include "clk-fixed-rate_test.h"
++
++/**
++ * struct clk_hw_fixed_rate_kunit_params - Parameters to pass to __clk_hw_register_fixed_rate()
++ * @dev: device registering clk
++ * @np: device_node of device registering clk
++ * @name: name of clk
++ * @parent_name: parent name of clk
++ * @parent_hw: clk_hw pointer to parent of clk
++ * @parent_data: parent_data describing parent of clk
++ * @flags: clk framework flags
++ * @fixed_rate: frequency of clk
++ * @fixed_accuracy: accuracy of clk
++ * @clk_fixed_flags: fixed rate specific clk flags
 + */
-+static void kunit_platform_device_alloc_test(struct kunit *test)
-+{
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+			kunit_platform_device_alloc(test, "kunit-platform", 1));
-+}
-+
-+/*
-+ * Test that kunit_platform_device_add() registers a platform device on the
-+ * platform bus with the proper name and id.
-+ */
-+static void kunit_platform_device_add_test(struct kunit *test)
-+{
-+	struct platform_device *pdev;
-+	const char *name = "kunit-platform-add";
-+	const int id = -1;
-+
-+	pdev = kunit_platform_device_alloc(test, name, id);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+
-+	KUNIT_EXPECT_EQ(test, 0, kunit_platform_device_add(test, pdev));
-+	KUNIT_EXPECT_TRUE(test, dev_is_platform(&pdev->dev));
-+	KUNIT_EXPECT_STREQ(test, pdev->name, name);
-+	KUNIT_EXPECT_EQ(test, pdev->id, id);
-+}
-+
-+/*
-+ * Test that kunit_platform_device_add() called twice with the same device name
-+ * and id fails the second time and properly cleans up.
-+ */
-+static void kunit_platform_device_add_twice_fails_test(struct kunit *test)
-+{
-+	struct platform_device *pdev;
-+	const char *name = "kunit-platform-add-2";
-+	const int id = -1;
-+
-+	pdev = kunit_platform_device_alloc(test, name, id);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_add(test, pdev));
-+
-+	pdev = kunit_platform_device_alloc(test, name, id);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+
-+	KUNIT_EXPECT_NE(test, 0, kunit_platform_device_add(test, pdev));
-+}
-+
-+static int kunit_platform_device_find_by_name(struct device *dev, const void *data)
-+{
-+	return strcmp(dev_name(dev), data) == 0;
-+}
-+
-+/*
-+ * Test that kunit_platform_device_add() cleans up by removing the platform
-+ * device when the test finishes. */
-+static void kunit_platform_device_add_cleans_up(struct kunit *test)
-+{
-+	struct platform_device *pdev;
-+	const char *name = "kunit-platform-clean";
-+	const int id = -1;
-+	struct kunit fake;
++struct clk_hw_fixed_rate_kunit_params {
 +	struct device *dev;
++	struct device_node *np;
++	const char *name;
++	const char *parent_name;
++	const struct clk_hw *parent_hw;
++	const struct clk_parent_data *parent_data;
++	unsigned long flags;
++	unsigned long fixed_rate;
++	unsigned long fixed_accuracy;
++	unsigned long clk_fixed_flags;
++};
 +
-+	kunit_init_test(&fake, "kunit_platform_device_add_fake_test", NULL);
-+	KUNIT_ASSERT_EQ(test, fake.status, KUNIT_SUCCESS);
++static int
++clk_hw_register_fixed_rate_kunit_init(struct kunit_resource *res, void *context)
++{
++	struct clk_hw_fixed_rate_kunit_params *params = context;
++	struct clk_hw *hw;
 +
-+	pdev = kunit_platform_device_alloc(&fake, name, id);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_add(&fake, pdev));
-+	dev = bus_find_device(&platform_bus_type, NULL, name,
-+			      kunit_platform_device_find_by_name);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dev);
-+	put_device(dev);
++	hw = __clk_hw_register_fixed_rate(params->dev, params->np,
++					  params->name,
++					  params->parent_name,
++					  params->parent_hw,
++					  params->parent_data,
++					  params->flags,
++					  params->fixed_rate,
++					  params->fixed_accuracy,
++					  params->clk_fixed_flags,
++					  false);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
 +
-+	/* Remove pdev */
-+	kunit_cleanup(&fake);
++	res->data = hw;
 +
-+	/*
-+	 * Failing to migrate the kunit_resource would lead to an extra
-+	 * put_device() call on the platform device. The best we can do here is
-+	 * make sure the device no longer exists on the bus, but if something
-+	 * is wrong we'll see a refcount underflow here. We can't test for a
-+	 * refcount underflow because the kref matches the lifetime of the
-+	 * device which should already be freed and could be used by something
-+	 * else.
-+	 */
-+	dev = bus_find_device(&platform_bus_type, NULL, name,
-+			      kunit_platform_device_find_by_name);
-+	KUNIT_EXPECT_PTR_EQ(test, NULL, dev);
-+	put_device(dev);
++	return 0;
++}
++
++static void clk_hw_register_fixed_rate_kunit_exit(struct kunit_resource *res)
++{
++	struct clk_hw *hw = res->data;
++
++	clk_hw_unregister_fixed_rate(hw);
++}
++
++/**
++ * clk_hw_register_fixed_rate_kunit() - Test managed __clk_hw_register_fixed_rate()
++ * @test: The test context
++ * @params: Arguments to __clk_hw_register_fixed_rate()
++ *
++ * Return: Registered fixed rate clk_hw or ERR_PTR on failure
++ */
++static struct clk_hw *
++clk_hw_register_fixed_rate_kunit(struct kunit *test,
++				 struct clk_hw_fixed_rate_kunit_params *params)
++{
++	struct clk_hw *hw;
++
++	hw = kunit_alloc_resource(test,
++				  clk_hw_register_fixed_rate_kunit_init,
++				  clk_hw_register_fixed_rate_kunit_exit,
++				  GFP_KERNEL, params);
++	if (!hw)
++		return ERR_PTR(-EINVAL);
++
++	return hw;
++}
++
++/**
++ * clk_hw_unregister_fixed_rate_kunit() - Test managed clk_hw_unregister_fixed_rate()
++ * @test: The test context
++ * @hw: fixed rate clk to unregister upon test completion
++ *
++ * Automatically unregister @hw when @test is complete via
++ * clk_hw_unregister_fixed_rate().
++ *
++ * Return: 0 on success or negative errno on failure
++ */
++static int clk_hw_unregister_fixed_rate_kunit(struct kunit *test, struct clk_hw *hw)
++{
++	if (!kunit_alloc_resource(test, NULL,
++				  clk_hw_register_fixed_rate_kunit_exit,
++				  GFP_KERNEL, hw))
++		return -ENOMEM;
++
++	return 0;
 +}
 +
 +/*
-+ * Test suite for struct platform_device kunit APIs
++ * Test that clk_get_rate() on a fixed rate clk registered with
++ * clk_hw_register_fixed_rate() gets the proper frequency.
 + */
-+static struct kunit_case kunit_platform_device_test_cases[] = {
-+	KUNIT_CASE(kunit_platform_device_alloc_test),
-+	KUNIT_CASE(kunit_platform_device_add_test),
-+	KUNIT_CASE(kunit_platform_device_add_twice_fails_test),
-+	KUNIT_CASE(kunit_platform_device_add_cleans_up),
++static void clk_fixed_rate_rate_test(struct kunit *test)
++{
++	struct clk_hw *hw;
++	struct clk *clk;
++	const unsigned long fixed_rate = 230000;
++
++	hw = clk_hw_register_fixed_rate(NULL, "test-fixed-rate", NULL, 0, fixed_rate);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, hw);
++	KUNIT_ASSERT_EQ(test, 0, clk_hw_unregister_fixed_rate_kunit(test, hw));
++
++	clk = clk_hw_get_clk_prepared_enabled_kunit(test, hw, __func__);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, clk);
++
++	KUNIT_EXPECT_EQ(test, fixed_rate, clk_get_rate(clk));
++}
++
++/*
++ * Test that clk_get_accuracy() on a fixed rate clk registered via
++ * clk_hw_register_fixed_rate_with_accuracy() gets the proper accuracy.
++ */
++static void clk_fixed_rate_accuracy_test(struct kunit *test)
++{
++	struct clk_hw *hw;
++	struct clk *clk;
++	const unsigned long fixed_accuracy = 5000;
++
++	hw = clk_hw_register_fixed_rate_with_accuracy(NULL, "test-fixed-rate",
++						      NULL, 0, 0,
++						      fixed_accuracy);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, hw);
++	KUNIT_ASSERT_EQ(test, 0, clk_hw_unregister_fixed_rate_kunit(test, hw));
++
++	clk = clk_hw_get_clk_kunit(test, hw, __func__);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, clk);
++
++	KUNIT_EXPECT_EQ(test, fixed_accuracy, clk_get_accuracy(clk));
++}
++
++/* Test suite for a fixed rate clk without any parent */
++static struct kunit_case clk_fixed_rate_test_cases[] = {
++	KUNIT_CASE(clk_fixed_rate_rate_test),
++	KUNIT_CASE(clk_fixed_rate_accuracy_test),
 +	{}
 +};
 +
-+static struct kunit_suite kunit_platform_device_suite = {
-+	.name = "kunit_platform_device",
-+	.test_cases = kunit_platform_device_test_cases,
++static struct kunit_suite clk_fixed_rate_suite = {
++	.name = "clk_fixed_rate",
++	.test_cases = clk_fixed_rate_test_cases,
 +};
 +
-+struct kunit_platform_driver_test_context {
++/*
++ * Test that clk_get_parent() on a fixed rate clk gets the proper parent.
++ */
++static void clk_fixed_rate_parent_test(struct kunit *test)
++{
++	struct clk_hw *hw, *parent_hw;
++	struct clk *expected_parent, *actual_parent;
++	struct clk *clk;
++	const char *parent_name = "test-fixed-rate-parent";
++	struct clk_hw_fixed_rate_kunit_params parent_params = {
++		.name = parent_name,
++	};
++
++	parent_hw = clk_hw_register_fixed_rate_kunit(test, &parent_params);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, parent_hw);
++	KUNIT_ASSERT_STREQ(test, parent_name, clk_hw_get_name(parent_hw));
++
++	expected_parent = clk_hw_get_clk_kunit(test, parent_hw, __func__);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, expected_parent);
++
++	hw = clk_hw_register_fixed_rate(NULL, "test-fixed-rate", parent_name, 0, 0);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, hw);
++	KUNIT_ASSERT_EQ(test, 0, clk_hw_unregister_fixed_rate_kunit(test, hw));
++
++	clk = clk_hw_get_clk_kunit(test, hw, __func__);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, clk);
++
++	actual_parent = clk_get_parent(clk);
++	KUNIT_EXPECT_TRUE(test, clk_is_match(expected_parent, actual_parent));
++}
++
++/*
++ * Test that clk_get_rate() on a fixed rate clk ignores the parent rate.
++ */
++static void clk_fixed_rate_parent_rate_test(struct kunit *test)
++{
++	struct clk_hw *hw, *parent_hw;
++	struct clk *clk;
++	const unsigned long expected_rate = 1405;
++	const unsigned long parent_rate = 90402;
++	const char *parent_name = "test-fixed-rate-parent";
++	struct clk_hw_fixed_rate_kunit_params parent_params = {
++		.name = parent_name,
++		.fixed_rate = parent_rate,
++	};
++
++	parent_hw = clk_hw_register_fixed_rate_kunit(test, &parent_params);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, parent_hw);
++	KUNIT_ASSERT_STREQ(test, parent_name, clk_hw_get_name(parent_hw));
++
++	hw = clk_hw_register_fixed_rate(NULL, "test-fixed-rate", parent_name, 0,
++					expected_rate);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, hw);
++	KUNIT_ASSERT_EQ(test, 0, clk_hw_unregister_fixed_rate_kunit(test, hw));
++
++	clk = clk_hw_get_clk_prepared_enabled_kunit(test, hw, __func__);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, clk);
++
++	KUNIT_EXPECT_EQ(test, expected_rate, clk_get_rate(clk));
++}
++
++/*
++ * Test that clk_get_accuracy() on a fixed rate clk ignores the parent accuracy.
++ */
++static void clk_fixed_rate_parent_accuracy_test(struct kunit *test)
++{
++	struct clk_hw *hw, *parent_hw;
++	struct clk *clk;
++	const unsigned long expected_accuracy = 900;
++	const unsigned long parent_accuracy = 24000;
++	const char *parent_name = "test-fixed-rate-parent";
++	struct clk_hw_fixed_rate_kunit_params parent_params = {
++		.name = parent_name,
++		.fixed_accuracy = parent_accuracy,
++	};
++
++	parent_hw = clk_hw_register_fixed_rate_kunit(test, &parent_params);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, parent_hw);
++	KUNIT_ASSERT_STREQ(test, parent_name, clk_hw_get_name(parent_hw));
++
++	hw = clk_hw_register_fixed_rate_with_accuracy(NULL, "test-fixed-rate",
++						      parent_name, 0, 0,
++						      expected_accuracy);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, hw);
++	KUNIT_ASSERT_EQ(test, 0, clk_hw_unregister_fixed_rate_kunit(test, hw));
++
++	clk = clk_hw_get_clk_kunit(test, hw, __func__);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, clk);
++
++	KUNIT_EXPECT_EQ(test, expected_accuracy, clk_get_accuracy(clk));
++}
++
++/* Test suite for a fixed rate clk with a parent */
++static struct kunit_case clk_fixed_rate_parent_test_cases[] = {
++	KUNIT_CASE(clk_fixed_rate_parent_test),
++	KUNIT_CASE(clk_fixed_rate_parent_rate_test),
++	KUNIT_CASE(clk_fixed_rate_parent_accuracy_test),
++	{}
++};
++
++static struct kunit_suite clk_fixed_rate_parent_suite = {
++	.name = "clk_fixed_rate_parent",
++	.test_cases = clk_fixed_rate_parent_test_cases,
++};
++
++struct clk_fixed_rate_of_test_context {
++	struct device *dev;
 +	struct platform_driver pdrv;
-+	const char *data;
++	struct completion probed;
 +};
 +
-+static const char * const test_data = "test data";
-+
-+static inline struct kunit_platform_driver_test_context *
-+to_test_context(struct platform_device *pdev)
++static inline struct clk_fixed_rate_of_test_context *
++pdev_to_clk_fixed_rate_of_test_context(struct platform_device *pdev)
 +{
 +	return container_of(to_platform_driver(pdev->dev.driver),
-+			    struct kunit_platform_driver_test_context,
++			    struct clk_fixed_rate_of_test_context,
 +			    pdrv);
 +}
 +
-+static int kunit_platform_driver_probe(struct platform_device *pdev)
++/*
++ * Test that of_fixed_clk_setup() registers a fixed rate clk with the proper
++ * rate.
++ */
++static void clk_fixed_rate_of_probe_test(struct kunit *test)
 +{
-+	struct kunit_platform_driver_test_context *ctx;
++	struct clk_fixed_rate_of_test_context *ctx = test->priv;
++	struct device *dev = ctx->dev;
++	struct clk *clk;
 +
-+	ctx = to_test_context(pdev);
-+	ctx->data = test_data;
++	clk = clk_get_kunit(test, dev, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, clk);
 +
-+	return 0;
-+}
-+
-+/* Test that kunit_platform_driver_register() registers a driver that probes. */
-+static void kunit_platform_driver_register_test(struct kunit *test)
-+{
-+	struct platform_device *pdev;
-+	struct kunit_platform_driver_test_context *ctx;
-+	DECLARE_COMPLETION_ONSTACK(comp);
-+	const char *name = "kunit-platform-register";
-+
-+	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-+
-+	pdev = kunit_platform_device_alloc(test, name, -1);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_add(test, pdev));
-+
-+	ctx->pdrv.probe = kunit_platform_driver_probe;
-+	ctx->pdrv.driver.name = name;
-+	ctx->pdrv.driver.owner = THIS_MODULE;
-+
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_prepare_wait_for_probe(test, pdev, &comp));
-+
-+	KUNIT_EXPECT_EQ(test, 0, kunit_platform_driver_register(test, &ctx->pdrv));
-+	KUNIT_EXPECT_NE(test, 0, wait_for_completion_timeout(&comp, 3 * HZ));
-+	KUNIT_EXPECT_STREQ(test, ctx->data, test_data);
++	KUNIT_ASSERT_EQ(test, 0, clk_prepare_enable_kunit(test, clk));
++	KUNIT_EXPECT_EQ(test, TEST_FIXED_FREQUENCY, clk_get_rate(clk));
 +}
 +
 +/*
-+ * Test that kunit_platform_device_prepare_wait_for_probe() completes the completion
-+ * when the device is already probed.
++ * Test that of_fixed_clk_setup() registers a fixed rate clk with the proper
++ * accuracy.
 + */
-+static void kunit_platform_device_prepare_wait_for_probe_completes_when_already_probed(struct kunit *test)
++static void clk_fixed_rate_of_accuracy_test(struct kunit *test)
 +{
-+	struct platform_device *pdev;
-+	struct kunit_platform_driver_test_context *ctx;
-+	DECLARE_COMPLETION_ONSTACK(comp);
-+	const char *name = "kunit-platform-wait";
++	struct clk_fixed_rate_of_test_context *ctx = test->priv;
++	struct device *dev = ctx->dev;
++	struct clk *clk;
 +
-+	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
++	clk = clk_get_kunit(test, dev, NULL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, clk);
 +
-+	pdev = kunit_platform_device_alloc(test, name, -1);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_add(test, pdev));
-+
-+	ctx->pdrv.probe = kunit_platform_driver_probe;
-+	ctx->pdrv.driver.name = name;
-+	ctx->pdrv.driver.owner = THIS_MODULE;
-+
-+	/* Make sure driver has actually probed */
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_prepare_wait_for_probe(test, pdev, &comp));
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_driver_register(test, &ctx->pdrv));
-+	KUNIT_ASSERT_NE(test, 0, wait_for_completion_timeout(&comp, 3 * HZ));
-+
-+	reinit_completion(&comp);
-+	KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_prepare_wait_for_probe(test, pdev, &comp));
-+
-+	KUNIT_EXPECT_NE(test, 0, wait_for_completion_timeout(&comp, HZ));
++	KUNIT_EXPECT_EQ(test, TEST_FIXED_ACCURACY, clk_get_accuracy(clk));
 +}
 +
-+static struct kunit_case kunit_platform_driver_test_cases[] = {
-+	KUNIT_CASE(kunit_platform_driver_register_test),
-+	KUNIT_CASE(kunit_platform_device_prepare_wait_for_probe_completes_when_already_probed),
++static struct kunit_case clk_fixed_rate_of_cases[] = {
++	KUNIT_CASE(clk_fixed_rate_of_probe_test),
++	KUNIT_CASE(clk_fixed_rate_of_accuracy_test),
 +	{}
 +};
 +
-+/*
-+ * Test suite for struct platform_driver kunit APIs
-+ */
-+static struct kunit_suite kunit_platform_driver_suite = {
-+	.name = "kunit_platform_driver",
-+	.test_cases = kunit_platform_driver_test_cases,
++static int clk_fixed_rate_of_test_probe(struct platform_device *pdev)
++{
++	struct clk_fixed_rate_of_test_context *ctx;
++
++	ctx = pdev_to_clk_fixed_rate_of_test_context(pdev);
++	ctx->dev = &pdev->dev;
++	complete(&ctx->probed);
++
++	return 0;
++}
++
++static int clk_fixed_rate_of_init(struct kunit *test)
++{
++	struct clk_fixed_rate_of_test_context *ctx;
++	static const struct of_device_id match_table[] = {
++		{ .compatible = "test,single-clk-consumer" },
++		{ }
++	};
++
++	KUNIT_ASSERT_EQ(test, 0, of_overlay_apply_kunit(test, kunit_clk_fixed_rate_test));
++
++	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
++	test->priv = ctx;
++
++	ctx->pdrv.probe = clk_fixed_rate_of_test_probe;
++	ctx->pdrv.driver.of_match_table = match_table;
++	ctx->pdrv.driver.name = __func__;
++	ctx->pdrv.driver.owner = THIS_MODULE;
++	init_completion(&ctx->probed);
++
++	KUNIT_ASSERT_EQ(test, 0, kunit_platform_driver_register(test, &ctx->pdrv));
++	KUNIT_ASSERT_NE(test, 0, wait_for_completion_timeout(&ctx->probed, HZ));
++
++	return 0;
++}
++
++static struct kunit_suite clk_fixed_rate_of_suite = {
++	.name = "clk_fixed_rate_of",
++	.init = clk_fixed_rate_of_init,
++	.test_cases = clk_fixed_rate_of_cases,
 +};
 +
 +kunit_test_suites(
-+	&kunit_platform_device_suite,
-+	&kunit_platform_driver_suite,
++	&clk_fixed_rate_suite,
++	&clk_fixed_rate_of_suite,
++	&clk_fixed_rate_parent_suite,
 +);
-+
 +MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("KUnit test for KUnit platform driver infrastructure");
-diff --git a/lib/kunit/platform.c b/lib/kunit/platform.c
++MODULE_DESCRIPTION("KUnit test for clk fixed rate basic type");
+diff --git a/drivers/clk/clk-fixed-rate_test.h b/drivers/clk/clk-fixed-rate_test.h
 new file mode 100644
-index 000000000000..0b518de26065
+index 000000000000..e0d28e5b6081
 --- /dev/null
-+++ b/lib/kunit/platform.c
-@@ -0,0 +1,302 @@
++++ b/drivers/clk/clk-fixed-rate_test.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _CLK_FIXED_RATE_TEST_H
++#define _CLK_FIXED_RATE_TEST_H
++
++#define TEST_FIXED_FREQUENCY	50000000
++#define TEST_FIXED_ACCURACY	300
++
++#endif
+diff --git a/drivers/clk/kunit_clk_fixed_rate_test.dtso b/drivers/clk/kunit_clk_fixed_rate_test.dtso
+new file mode 100644
+index 000000000000..d838ce766fa2
+--- /dev/null
++++ b/drivers/clk/kunit_clk_fixed_rate_test.dtso
+@@ -0,0 +1,19 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Test managed platform driver
-+ */
++/dts-v1/;
++/plugin/;
 +
-+#include <linux/completion.h>
-+#include <linux/device/bus.h>
-+#include <linux/device/driver.h>
-+#include <linux/platform_device.h>
++#include "clk-fixed-rate_test.h"
 +
-+#include <kunit/platform_device.h>
-+#include <kunit/resource.h>
-+
-+struct kunit_platform_device_alloc_params {
-+	const char *name;
-+	int id;
-+};
-+
-+static int kunit_platform_device_alloc_init(struct kunit_resource *res, void *context)
-+{
-+	struct kunit_platform_device_alloc_params *params = context;
-+	struct platform_device *pdev;
-+
-+	pdev = platform_device_alloc(params->name, params->id);
-+	if (!pdev)
-+		return -ENOMEM;
-+
-+	res->data = pdev;
-+
-+	return 0;
-+}
-+
-+static void kunit_platform_device_alloc_exit(struct kunit_resource *res)
-+{
-+	struct platform_device *pdev = res->data;
-+
-+	platform_device_put(pdev);
-+}
-+
-+/**
-+ * kunit_platform_device_alloc() - Allocate a KUnit test managed platform device
-+ * @test: test context
-+ * @name: device name of platform device to alloc
-+ * @id: identifier of platform device to alloc.
-+ *
-+ * Allocate a test managed platform device. The device is put when the test completes.
-+ *
-+ * Return: Allocated platform device on success, NULL on failure.
-+ */
-+struct platform_device *
-+kunit_platform_device_alloc(struct kunit *test, const char *name, int id)
-+{
-+	struct kunit_platform_device_alloc_params params = {
-+		.name = name,
-+		.id = id,
++&{/} {
++	fixed_50MHz: kunit-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <TEST_FIXED_FREQUENCY>;
++		clock-accuracy = <TEST_FIXED_ACCURACY>;
 +	};
 +
-+	return kunit_alloc_resource(test,
-+				    kunit_platform_device_alloc_init,
-+				    kunit_platform_device_alloc_exit,
-+				    GFP_KERNEL, &params);
-+}
-+EXPORT_SYMBOL_GPL(kunit_platform_device_alloc);
-+
-+static void kunit_platform_device_add_exit(struct kunit_resource *res)
-+{
-+	struct platform_device *pdev = res->data;
-+
-+	platform_device_unregister(pdev);
-+}
-+
-+static bool
-+kunit_platform_device_alloc_match(struct kunit *test,
-+				  struct kunit_resource *res, void *match_data)
-+{
-+	struct platform_device *pdev = match_data;
-+
-+	return res->data == pdev && res->free == kunit_platform_device_alloc_exit;
-+}
-+
-+KUNIT_DEFINE_ACTION_WRAPPER(platform_device_unregister_wrapper,
-+			    platform_device_unregister, struct platform_device *);
-+/**
-+ * kunit_platform_device_add() - Register a KUnit test managed platform device
-+ * @test: test context
-+ * @pdev: platform device to add
-+ *
-+ * Register a test managed platform device. The device is unregistered when the
-+ * test completes.
-+ *
-+ * Return: 0 on success, negative errno on failure.
-+ */
-+int kunit_platform_device_add(struct kunit *test, struct platform_device *pdev)
-+{
-+	struct kunit_resource *res;
-+	int ret;
-+
-+	ret = platform_device_add(pdev);
-+	if (ret)
-+		return ret;
-+
-+	res = kunit_find_resource(test, kunit_platform_device_alloc_match, pdev);
-+	if (res) {
-+		/*
-+		 * Transfer the reference count of the platform device if it
-+		 * was allocated with kunit_platform_device_alloc(). In this
-+		 * case, calling platform_device_put() when the test exits from
-+		 * kunit_platform_device_alloc_exit() would lead to reference
-+		 * count underflow because platform_device_unregister_wrapper()
-+		 * calls platform_device_unregister() which also calls
-+		 * platform_device_put().
-+		 *
-+		 * Usually callers transfer the refcount initialized in
-+		 * platform_device_alloc() to platform_device_add() by calling
-+		 * platform_device_unregister() when platform_device_add()
-+		 * succeeds or platform_device_put() when it fails. KUnit has to
-+		 * keep this straight by redirecting the free routine for the
-+		 * resource to the right function. Luckily this only has to
-+		 * account for the success scenario.
-+		 */
-+		res->free = kunit_platform_device_add_exit;
-+		kunit_put_resource(res);
-+	} else {
-+		ret = kunit_add_action_or_reset(test, platform_device_unregister_wrapper, pdev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kunit_platform_device_add);
-+
-+struct kunit_platform_device_probe_nb {
-+	struct completion *x;
-+	struct device *dev;
-+	struct notifier_block nb;
++	kunit-clock-consumer {
++		compatible = "test,single-clk-consumer";
++		clocks = <&fixed_50MHz>;
++	};
 +};
-+
-+static int kunit_platform_device_probe_notify(struct notifier_block *nb,
-+					      unsigned long event, void *data)
-+{
-+	struct kunit_platform_device_probe_nb *knb;
-+	struct device *dev = data;
-+
-+	knb = container_of(nb, struct kunit_platform_device_probe_nb, nb);
-+	if (event != BUS_NOTIFY_BOUND_DRIVER || knb->dev != dev)
-+		return NOTIFY_DONE;
-+
-+	complete(knb->x);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static void kunit_platform_device_probe_nb_remove(void *nb)
-+{
-+	bus_unregister_notifier(&platform_bus_type, nb);
-+}
-+
-+/**
-+ * kunit_platform_device_prepare_wait_for_probe() - Prepare a completion
-+ * variable to wait for a platform device to probe
-+ * @test: test context
-+ * @pdev: platform device to prepare to wait for probe of
-+ * @x: completion variable completed when @dev has probed
-+ *
-+ * Prepare a completion variable @x to wait for @pdev to probe. Waiting on the
-+ * completion forces a preemption, allowing the platform driver to probe.
-+ *
-+ * Example
-+ *
-+ * .. code-block:: c
-+ *
-+ *	static int kunit_platform_driver_probe(struct platform_device *pdev)
-+ *	{
-+ *		return 0;
-+ *	}
-+ *
-+ *	static void kunit_platform_driver_test(struct kunit *test)
-+ *	{
-+ *		struct platform_device *pdev;
-+ *		struct platform_driver *pdrv;
-+ *		DECLARE_COMPLETION_ONSTACK(comp);
-+ *
-+ *		pdev = kunit_platform_device_alloc(test, "kunit-platform", -1);
-+ *		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-+ *		KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_add(test, pdev));
-+ *
-+ *		pdrv = kunit_kzalloc(test, sizeof(*pdrv), GFP_KERNEL);
-+ *		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdrv);
-+ *
-+ *		pdrv->probe = kunit_platform_driver_probe;
-+ *		pdrv->driver.name = "kunit-platform";
-+ *		pdrv->driver.owner = THIS_MODULE;
-+ *
-+ *		KUNIT_ASSERT_EQ(test, 0, kunit_platform_device_prepare_wait_for_probe(test, pdev, &comp));
-+ *		KUNIT_ASSERT_EQ(test, 0, kunit_platform_driver_register(test, pdrv));
-+ *
-+ *		KUNIT_EXPECT_NE(test, 0, wait_for_completion_timeout(&comp, 3 * HZ));
-+ *	}
-+ *
-+ * Return: 0 on success, negative errno on failure.
-+ */
-+int kunit_platform_device_prepare_wait_for_probe(struct kunit *test,
-+						 struct platform_device *pdev,
-+						 struct completion *x)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct kunit_platform_device_probe_nb *knb;
-+	bool bound;
-+
-+	knb = kunit_kzalloc(test, sizeof(*knb), GFP_KERNEL);
-+	if (!knb)
-+		return -ENOMEM;
-+
-+	knb->nb.notifier_call = kunit_platform_device_probe_notify;
-+	knb->dev = dev;
-+	knb->x = x;
-+
-+	device_lock(dev);
-+	bound = device_is_bound(dev);
-+	if (bound) {
-+		device_unlock(dev);
-+		complete(x);
-+		kunit_kfree(test, knb);
-+		return 0;
-+	}
-+
-+	bus_register_notifier(&platform_bus_type, &knb->nb);
-+	device_unlock(&pdev->dev);
-+
-+	return kunit_add_action_or_reset(test, kunit_platform_device_probe_nb_remove, &knb->nb);
-+}
-+EXPORT_SYMBOL_GPL(kunit_platform_device_prepare_wait_for_probe);
-+
-+KUNIT_DEFINE_ACTION_WRAPPER(platform_driver_unregister_wrapper,
-+			    platform_driver_unregister, struct platform_driver *);
-+/**
-+ * kunit_platform_driver_register() - Register a KUnit test managed platform driver
-+ * @test: test context
-+ * @drv: platform driver to register
-+ *
-+ * Register a test managed platform driver. This allows callers to embed the
-+ * @drv in a container structure and use container_of() in the probe function
-+ * to pass information to KUnit tests.
-+ *
-+ * Example
-+ *
-+ * .. code-block:: c
-+ *
-+ *	struct kunit_test_context {
-+ *		struct platform_driver pdrv;
-+ *		const char *data;
-+ *	};
-+ *
-+ *	static inline struct kunit_test_context *
-+ *	to_test_context(struct platform_device *pdev)
-+ *	{
-+ *		return container_of(to_platform_driver(pdev->dev.driver),
-+ *				    struct kunit_test_context,
-+ *				    pdrv);
-+ *	}
-+ *
-+ *	static int kunit_platform_driver_probe(struct platform_device *pdev)
-+ *	{
-+ *		struct kunit_test_context *ctx;
-+ *
-+ *		ctx = to_test_context(pdev);
-+ *		ctx->data = "test data";
-+ *
-+ *		return 0;
-+ *	}
-+ *
-+ *	static void kunit_platform_driver_test(struct kunit *test)
-+ *	{
-+ *		struct kunit_test_context *ctx;
-+ *
-+ *		ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+ *		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-+ *
-+ *		ctx->pdrv.probe = kunit_platform_driver_probe;
-+ *		ctx->pdrv.driver.name = "kunit-platform";
-+ *		ctx->pdrv.driver.owner = THIS_MODULE;
-+ *
-+ *		KUNIT_EXPECT_EQ(test, 0, kunit_platform_driver_register(test, &ctx->pdrv));
-+ *		<... wait for driver to probe ...>
-+ *		KUNIT_EXPECT_STREQ(test, ctx->data, "test data");
-+ *	}
-+ *
-+ * Return: 0 on success, negative errno on failure.
-+ */
-+int kunit_platform_driver_register(struct kunit *test,
-+				   struct platform_driver *drv)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(drv);
-+	if (ret)
-+		return ret;
-+
-+	return kunit_add_action_or_reset(test, platform_driver_unregister_wrapper, drv);
-+}
-+EXPORT_SYMBOL_GPL(kunit_platform_driver_register);
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
