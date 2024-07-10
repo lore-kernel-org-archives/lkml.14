@@ -1,266 +1,148 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DEF1946D5
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8471946C2
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720625352; cv=none; b=lSo1GKc7FxtyykcUhQZsSyu7wc3RN02OanHsBkdJMuJPnACF9vcZFvgr85RHI2Em0Hlv0SbeYYDS1+Tg3IUgGpr2FI9Q3qi6unPsZGVlh7iRWXaNDmDIqoinq78aZRp37fBpqmGIe1l2FH+uLKgV1Eg5oZdhiOF5d3N7A4lMSh4=
+	t=1720625409; cv=none; b=tM5DqY0hXhy04di+vgf4h2kviTWj21iWaQzv9yf8MMBmDCu36x0YTV+gkZ18lT3hLdocqj5fGQgQQ0LwKre1BSoTWulSYRqQwHaw554G0HYXUMf9SvBWDapvUGenrZRRzJCh3SGwBC7l1bc5QU57VrpUAoZj/peN/JYdlckCMd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720625352; c=relaxed/simple;
-	bh=0lWURBss3nBOg5NlkB2tEwctfOSX76EvuB40iqcOCUM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a3SrBW2edwKjKUTapVedR5dvHhSu0SnRsv0ITgZsRfTrvR/iylZVaEmRvsesAizxZ0tH4ouSzuzCCNMzRBHy1Y8GxJHsc7nBhm2GMEoMmbvqZlLUkfP3qZ0NT4c0KxsRK347BT4iudiA56qPKbk7XGTFYmf2TLrm4jV44YRWUfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EAQcXKpJ; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720625409; c=relaxed/simple;
+	bh=8/gfPXWxxf7FOY8AgpmCewWXxXTZYt2IGleiv5CqE8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aohTL0akSTMncJoINJwI2LvhIxGEXL1HwQN8eyXgzL0ixvDBcFLz/t+CrSWjmHRfdzcatvjkxFudcEGNFah4WkqyqQaVY330GFlUmvfeuRvX49EFmOR1rQtNH8bd6iu1SQ4P/o8SFckSXR5raqpbclOiBZe/kveibmp4yypxhQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CkqcZUIA; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EAQcXKpJ"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-367940c57ddso4244393f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:29:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CkqcZUIA"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7fb3529622dso12823539f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720625349; x=1721230149; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BZ/UGiqczEfNWeKnxq+ScYWf6jHGQxfDprcFSlNwXPQ=;
-        b=EAQcXKpJcPDT/uXLJP6lphrRR/pDanRvAZD97HoMZmOfo58VMnFQB8O5oYj0JuyPGB
-         p/QCKsXAKjhe6uJuJwsHJ2zApYZLBNxbIRKTPx96mM3ideKB8jEatpwo3dEIyqnH1HIc
-         xszSN7w+IjjDoAAurf++X2cj9bTlhS3t85QJsRBMuf/XW/CDiSUAjDojGl9es4xDLveW
-         fXWhNrQcqcP2hRBPdknAH7LGHgvrrKPtDxbn3Hzy2i+BLSJzGBLUTneOKk9EtngG2pjW
-         /G5KyjBq6Xz90JGUgCBYbVG6YIcKM2GhZRh/K31H7FX0IfSN6IuFLGRc25SMjcpKdZx5
-         TpaA==
+        d=linuxfoundation.org; s=google; t=1720625406; x=1721230206; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Gh4KlpRRZVtRU7Y7a9D5NYIzadIHQ/XSQ7aTvmHJrcU=;
+        b=CkqcZUIAEsLP7D+L1o6ycdoU+bQ3sEcRS7O1q+3JvY8FIziIPHNrnUVtIBk+Pe2nRz
+         U1E0xNBjfw+iDCOhbSCSoA6FenmLSILVRTZ8wHm9ZyhTI/upboGAwoqN8JTK+hmXUBD5
+         8kv55PVsfz60McK9T6XfCzB4Rd4DlKkCKs7Tc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720625349; x=1721230149;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BZ/UGiqczEfNWeKnxq+ScYWf6jHGQxfDprcFSlNwXPQ=;
-        b=n+Bnf1OK19EMzUJRVOGqUGgnP1Qid9dsbkc6xA6ezmamo4UEA/LjUeIc9RbaN39oqm
-         z4+Ss+n6MZz0RZnXobJFjbMuRpA52Vj/0h6OEac6/ABeHIRz5JtaZp8dykUz+mJanKVx
-         im7AfBui38TKDsOpr5qdSXwK4/X0JB0P1NErvgFZsFRWbcDWcgkguC7yBZorurLI0rFw
-         6ragsMjlDABeXy4FWjE2GVCTrffVdstCeO7sIHuQ9VHfMZTUxvSw54N34nKXJCVCbUZL
-         VBK0d/ECvLjaoQ4xpogsxLcAJM7W7Aacq7oiEtPIkTCGSl8mxBXridlnD1xwvj3HunxT
-         RUSg==
-X-Gm-Message-State: AOJu0YxqewLiTAKrOOZUfwbdQoyCOMiQy7qoqwJyBvIPgUJ+Hj2wiwp6
-	p7Lxgm7rphlSboKOpeA66ItzN9Gc96J/dHDS1GPp7H/9sKvoSKGSB6Ipv4URYVVCFlCfMdM6Ssh
-	ecJGWjTZMBbHDCNGq+tRfzxnOODLpq9pg6v6Fck7UBWHQjsR4
-X-Google-Smtp-Source: AGHT+IFva/aOSUrC0d2gfrJaELKiBejlXq7juoOS4NWsej9fRXJn2qGo6TDgD4S8OrEaTK71/Fglkt59vHORRLv93uk=
-X-Received: by 2002:a05:6512:1189:b0:52c:d8e9:5d8b with SMTP id
- 2adb3069b0e04-52eb999446emr3966106e87.25.1720625328028; Wed, 10 Jul 2024
- 08:28:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720625406; x=1721230206;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gh4KlpRRZVtRU7Y7a9D5NYIzadIHQ/XSQ7aTvmHJrcU=;
+        b=qfeqlE8FqIiW3iLvq27EBQpnZ2ay35mAgLvGOSGeMOM+a6Hju77wRtZ4mbIOjaqxaM
+         d1a0TCLHy2H0sAfrNe9+qqZjD/O/D0omQIZNRe1Yq43P4puRJYXLlV4cTTevYGy92x5U
+         kWYsnTeDzEnki88k8mkk6l7wYx5sKs5z2e4ou+B8kCDwx1OZ1+YKRcdDz8NigkmNNUsg
+         +/oq+9t7BOLsZynqElDC6mT49XsqqNVCSD/gvJX4j+u3uoM67uzb5mnocO8ZpIM2QnDB
+         vhJeTUCFF80O+nQO8QTGa0UvbJ59LkSdLt+s+QTlUiDgpf2QludJMVAh8XxJpUW5dZHc
+         f3dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIkBStuxj0sDRM8/auy/eUPjzaFMuxna1sKspfbe1floZc2T3WO5YLZz8irnEIeu2u64PuZdCQALzX6SzwuWSjWUsxj2NOqN697np8
+X-Gm-Message-State: AOJu0YyvPAkMlWACrzN24oRpdQElBYeHqZQnMWmjqIhtTOlBxUCbo4DS
+	LF5h+VG/IExngE0D3Sa/a+U26Z+yjs54kA87qUdLzUwe3Fy3ge/ZmUNQpL4KgY49stGhwFU8CrC
+	j
+X-Google-Smtp-Source: AGHT+IEaNw0ouQ+VXx2iRgxdND1WLK34gMh/WUa7EyQuElws8C+1LmKST3HSfMbu0U5iEmjqwA1QWQ==
+X-Received: by 2002:a05:6602:3413:b0:7f8:bfcd:db53 with SMTP id ca18e2360f4ac-8000269672bmr658618839f.1.1720625405978;
+        Wed, 10 Jul 2024 08:30:05 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c0b1c13848sm1184863173.133.2024.07.10.08.30.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 08:30:05 -0700 (PDT)
+Message-ID: <273183c9-101c-422b-9fcd-a9921c127cb1@linuxfoundation.org>
+Date: Wed, 10 Jul 2024 09:30:04 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1720611677.git.mst@redhat.com> <3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst@redhat.com>
-In-Reply-To: <3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst@redhat.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Wed, 10 Jul 2024 09:28:36 -0600
-Message-ID: <CANLsYkyqhdmOWtHbNi5npOFXtMKrs7s21j+axW_4N=yQh=eHbw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] virtio: fix vq # for balloon
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, 
-	Alexander Duyck <alexander.h.duyck@linux.intel.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Bjorn Andersson <andersson@kernel.org>, 
-	Cornelia Huck <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>, 
-	Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Jason Wang <jasowang@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	linux-um@lists.infradead.org, linux-remoteproc@vger.kernel.org, 
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v2] selftests/bpf:fix a resource leak
+To: Zhu Jun <zhujun2@cmss.chinamobile.com>, jolsa@kernel.org,
+ shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, mykolal@fb.com, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240710015913.2554-1-zhujun2@cmss.chinamobile.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240710015913.2554-1-zhujun2@cmss.chinamobile.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Jul 2024 at 05:43, Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> virtio balloon communicates to the core that in some
-> configurations vq #s are non-contiguous by setting name
-> pointer to NULL.
->
-> Unfortunately, core then turned around and just made them
-> contiguous again. Result is that driver is out of spec.
->
-> Implement what the API was supposed to do
-> in the 1st place. Compatibility with buggy hypervisors
-> is handled inside virtio-balloon, which is the only driver
-> making use of this facility, so far.
->
-> Message-ID: <cover.1720173841.git.mst@redhat.com>
-> Fixes: b0c504f15471 ("virtio-balloon: add support for providing free page reports to host")
-> Cc: "Alexander Duyck" <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+On 7/9/24 19:59, Zhu Jun wrote:
+> The requested resources should be closed before return
+> in main(), otherwise resource leak will occur
+> 
+> Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
+
+How did you find this problem? Please give more details
+on the tool used including the output from the tool.
 > ---
->  arch/um/drivers/virtio_uml.c           |  4 ++--
->  drivers/remoteproc/remoteproc_virtio.c |  4 ++--
+> Changes in v2:
+>   - check for cg_fd >= 0 and have just one out label
+> 
+>   tools/testing/selftests/bpf/test_sockmap.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/test_sockmap.c b/tools/testing/selftests/bpf/test_sockmap.c
+> index a34e95040994..285a9a714666 100644
+> --- a/tools/testing/selftests/bpf/test_sockmap.c
+> +++ b/tools/testing/selftests/bpf/test_sockmap.c
+> @@ -2075,8 +2075,10 @@ int main(int argc, char **argv)
+>   
+>   	if (!cg_fd) {
+>   		cg_fd = cgroup_setup_and_join(CG_PATH);
+> -		if (cg_fd < 0)
+> -			return cg_fd;
+> +		if (cg_fd < 0) {
+> +			err = cg_fd;
+> +			goto out;
+> +		}
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+I don't this this improves the code - it makes it more complex.
+If you want to improve this - add the same error message that
+gets printed out for
 
->  drivers/s390/virtio/virtio_ccw.c       |  4 ++--
->  drivers/virtio/virtio_mmio.c           |  4 ++--
->  drivers/virtio/virtio_pci_common.c     | 11 ++++++++---
->  drivers/virtio/virtio_vdpa.c           |  4 ++--
->  6 files changed, 18 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
-> index 2b6e701776b6..c903e4959f51 100644
-> --- a/arch/um/drivers/virtio_uml.c
-> +++ b/arch/um/drivers/virtio_uml.c
-> @@ -1019,7 +1019,7 @@ static int vu_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->                        struct irq_affinity *desc)
->  {
->         struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
-> -       int i, queue_idx = 0, rc;
-> +       int i, rc;
->         struct virtqueue *vq;
->
->         /* not supported for now */
-> @@ -1038,7 +1038,7 @@ static int vu_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->                         continue;
->                 }
->
-> -               vqs[i] = vu_setup_vq(vdev, queue_idx++, vqi->callback,
-> +               vqs[i] = vu_setup_vq(vdev, i, vqi->callback,
->                                      vqi->name, vqi->ctx);
->                 if (IS_ERR(vqs[i])) {
->                         rc = PTR_ERR(vqs[i]);
-> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-> index d3f39009b28e..1019b2825c26 100644
-> --- a/drivers/remoteproc/remoteproc_virtio.c
-> +++ b/drivers/remoteproc/remoteproc_virtio.c
-> @@ -185,7 +185,7 @@ static int rproc_virtio_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
->                                  struct virtqueue_info vqs_info[],
->                                  struct irq_affinity *desc)
->  {
-> -       int i, ret, queue_idx = 0;
-> +       int i, ret;
->
->         for (i = 0; i < nvqs; ++i) {
->                 struct virtqueue_info *vqi = &vqs_info[i];
-> @@ -195,7 +195,7 @@ static int rproc_virtio_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
->                         continue;
->                 }
->
-> -               vqs[i] = rp_find_vq(vdev, queue_idx++, vqi->callback,
-> +               vqs[i] = rp_find_vq(vdev, i, vqi->callback,
->                                     vqi->name, vqi->ctx);
->                 if (IS_ERR(vqs[i])) {
->                         ret = PTR_ERR(vqs[i]);
-> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-> index 62eca9419ad7..82a3440bbabb 100644
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -694,7 +694,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  {
->         struct virtio_ccw_device *vcdev = to_vc_device(vdev);
->         dma64_t *indicatorp = NULL;
-> -       int ret, i, queue_idx = 0;
-> +       int ret, i;
->         struct ccw1 *ccw;
->         dma32_t indicatorp_dma = 0;
->
-> @@ -710,7 +710,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->                         continue;
->                 }
->
-> -               vqs[i] = virtio_ccw_setup_vq(vdev, queue_idx++, vqi->callback,
-> +               vqs[i] = virtio_ccw_setup_vq(vdev, i, vqi->callback,
->                                              vqi->name, vqi->ctx, ccw);
->                 if (IS_ERR(vqs[i])) {
->                         ret = PTR_ERR(vqs[i]);
-> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> index 90e784e7b721..db6a0366f082 100644
-> --- a/drivers/virtio/virtio_mmio.c
-> +++ b/drivers/virtio/virtio_mmio.c
-> @@ -494,7 +494,7 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
->  {
->         struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
->         int irq = platform_get_irq(vm_dev->pdev, 0);
-> -       int i, err, queue_idx = 0;
-> +       int i, err;
->
->         if (irq < 0)
->                 return irq;
-> @@ -515,7 +515,7 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
->                         continue;
->                 }
->
-> -               vqs[i] = vm_setup_vq(vdev, queue_idx++, vqi->callback,
-> +               vqs[i] = vm_setup_vq(vdev, i, vqi->callback,
->                                      vqi->name, vqi->ctx);
->                 if (IS_ERR(vqs[i])) {
->                         vm_del_vqs(vdev);
-> diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-> index 7d82facafd75..fa606e7321ad 100644
-> --- a/drivers/virtio/virtio_pci_common.c
-> +++ b/drivers/virtio/virtio_pci_common.c
-> @@ -293,7 +293,7 @@ static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
->         struct virtio_pci_device *vp_dev = to_vp_device(vdev);
->         struct virtqueue_info *vqi;
->         u16 msix_vec;
-> -       int i, err, nvectors, allocated_vectors, queue_idx = 0;
-> +       int i, err, nvectors, allocated_vectors;
->
->         vp_dev->vqs = kcalloc(nvqs, sizeof(*vp_dev->vqs), GFP_KERNEL);
->         if (!vp_dev->vqs)
-> @@ -332,7 +332,7 @@ static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
->                         msix_vec = allocated_vectors++;
->                 else
->                         msix_vec = VP_MSIX_VQ_VECTOR;
-> -               vqs[i] = vp_setup_vq(vdev, queue_idx++, vqi->callback,
-> +               vqs[i] = vp_setup_vq(vdev, i, vqi->callback,
->                                      vqi->name, vqi->ctx, msix_vec);
->                 if (IS_ERR(vqs[i])) {
->                         err = PTR_ERR(vqs[i]);
-> @@ -368,7 +368,7 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
->                             struct virtqueue_info vqs_info[])
->  {
->         struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-> -       int i, err, queue_idx = 0;
-> +       int i, err;
->
->         vp_dev->vqs = kcalloc(nvqs, sizeof(*vp_dev->vqs), GFP_KERNEL);
->         if (!vp_dev->vqs)
-> @@ -388,8 +388,13 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
->                         vqs[i] = NULL;
->                         continue;
->                 }
-> +<<<<<<< HEAD
->                 vqs[i] = vp_setup_vq(vdev, queue_idx++, vqi->callback,
->                                      vqi->name, vqi->ctx,
-> +=======
-> +               vqs[i] = vp_setup_vq(vdev, i, callbacks[i], names[i],
-> +                                    ctx ? ctx[i] : false,
-> +>>>>>>> f814759f80b7... virtio: fix vq # for balloon
->                                      VIRTIO_MSI_NO_VECTOR);
->                 if (IS_ERR(vqs[i])) {
->                         err = PTR_ERR(vqs[i]);
-> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-> index 7364bd53e38d..149e893583e9 100644
-> --- a/drivers/virtio/virtio_vdpa.c
-> +++ b/drivers/virtio/virtio_vdpa.c
-> @@ -368,7 +368,7 @@ static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
->         struct cpumask *masks;
->         struct vdpa_callback cb;
->         bool has_affinity = desc && ops->set_vq_affinity;
-> -       int i, err, queue_idx = 0;
-> +       int i, err;
->
->         if (has_affinity) {
->                 masks = create_affinity_masks(nvqs, desc ? desc : &default_affd);
-> @@ -384,7 +384,7 @@ static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
->                         continue;
->                 }
->
-> -               vqs[i] = virtio_vdpa_setup_vq(vdev, queue_idx++, vqi->callback,
-> +               vqs[i] = virtio_vdpa_setup_vq(vdev, i, vqi->callback,
->                                               vqi->name, vqi->ctx);
->                 if (IS_ERR(vqs[i])) {
->                         err = PTR_ERR(vqs[i]);
-> --
-> MST
->
+case 'c':
+
+in argument parsing.
+
+fprintf(stderr, "ERROR: (%i) open cg path failed: %s\n",
+                  cg_fd, optarg);
+>   		cg_created = 1;
+>   	}
+>   
+> @@ -2092,7 +2094,7 @@ int main(int argc, char **argv)
+>   	if (err) {
+>   		fprintf(stderr, "populate program: (%s) %s\n",
+>   			bpf_file, strerror(errno));
+> -		return 1;
+> +		goto out;
+
+This looks good to me.
+
+>   	}
+>   	running = 1;
+>   
+> @@ -2109,7 +2111,8 @@ int main(int argc, char **argv)
+>   		free(options.whitelist);
+>   	if (options.blacklist)
+>   		free(options.blacklist);
+> -	close(cg_fd);
+> +	if (cg_fd >= 0)
+
+Why is this check necessary?
+> +		close(cg_fd);
+
+
+>   	if (cg_created)
+>   		cleanup_cgroup_environment();
+>   	return err;
+
+thanks,
+-- Shuah
