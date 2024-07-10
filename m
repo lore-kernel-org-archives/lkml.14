@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DAD19538B;
-	Wed, 10 Jul 2024 20:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEBC198E7B;
+	Wed, 10 Jul 2024 20:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720642368; cv=none; b=BSppBAcDUdalnodmT+YkkFrNgT04Fjy1s5f5DIP2NOCjNdBiCcrShYGBcqiO9oHONPgizA+RnjRqnPhTu65iuNwXRmxEZ86yajQnK47Ea9k+cTi8WFcEFigE+q8iU9hMG299Z7e44DSe/lUJq64uRWOV1YnDx8oWgyJ8S8uKkB0=
+	t=1720642371; cv=none; b=fYGItqvYWzSRlyT080BMFKal5M6mih2TGSPULTsIDsqLPSx+MV6815OZEXvi1CAS+Dob0sjc9F7oSIfTxvVNbL8ROeUXwGBmycvMFPI8NLVJ1m4LxJLCXlJk9VUM8JVCzAOitx2u+wuIL9G3RuUnnxJFdNpC6KTw0eclsM5g2Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720642368; c=relaxed/simple;
-	bh=MaieDaoyrxvy7cXpRNH8iNTTBi8f16Pt3VoIMf3+AD8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=krMbi21fWGJEoATKRkmvH3XXc9I7EuAFfnJIl57VWIwbQX0tEd/9S5jjGJg0TZ3OEPkWNl3uB7SRwJq+w04sOsf3ROkrIsWRgz19ahl37G+h0i3AoEFAuc9x4SKe/iZBhtrUftjAPLBf15ynjUrVgpbQ6aLcXuCGWCx9714Gpas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhVt+GOZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720642371; c=relaxed/simple;
+	bh=wxvLpOW05IZBhoJ42Z143u9/Maq90L38LvE9Gw8PR+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HbmY126UvHOX4Ju0/0e8bKnfT8ETsuR+W33+W5ub0FX4KNew/6aTlm4qMTe5j//+Q73rGEAUjNbfxfA5SjdkFsWZdlYa6gNNbbkTXiwYjQdEYx2SjM49D+1I1oOry+t1FyyE1KjXMepTVh3cvpsULx6LaEtnR1W+Gq59IaQuTuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPY22oAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhVt+GOZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03960C32781;
-	Wed, 10 Jul 2024 20:12:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPY22oAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8B7C4AF0E;
+	Wed, 10 Jul 2024 20:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720642367;
-	bh=MaieDaoyrxvy7cXpRNH8iNTTBi8f16Pt3VoIMf3+AD8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bhVt+GOZRbYzhbNw12thhS2FGR4B1SIDcrdOVkDmTOfTr1IQ1VzT9/wrocq2FiPJt
-	 pNPlLCbL6sduys1sXSFRv30k+jPGqAARz+dGP7lHIGgBKl7LO7B1VOYTTPFg4I5uxw
-	 q0cofD9RlUIWgcnHrzGPx9NlFE87OAxV70Dc9F/36YIq6oB9fNYirWoXOoXCKaPmZ0
-	 gVB82T4U4ePEeraKprA+6uUn+hKDN+EQ7qJM3JFEtgJCAdt60YH79QLYzsJSLWRROK
-	 HSo5vTgupnW0J3Fk9fHhZwyFp1ZA5y2AYTiSkg0g0SG2ymQqgm/AHvfxE0kVrrdtfv
-	 Ncy+IhALmzq7Q==
+	s=k20201202; t=1720642371;
+	bh=wxvLpOW05IZBhoJ42Z143u9/Maq90L38LvE9Gw8PR+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WPY22oAVLHyP7dJze2QYznzojVtL3RMAt0lqyZOo0NZi3G0zialjy5JQ+M7sYg9ZE
+	 eZdEJ889Q8akljgev0+c6C5f7HS7dFCWosCyHrCbwpa1+kOIuOGHuH4MwnVwmxMp8j
+	 GPTozoHtX9kZbUHSrw3ULamaFhHzeR3tx/8QNPrMP/xkVCkiEuTSOvKoREOorCxnfl
+	 H02pNp7yMHc82FVfso+KVBJ4JfmXtC2wi/A0o558wcs3Dy3bBrrac7ddr7slSiSQKC
+	 QxGUpe8FyOZzDwOFCVg4/sOD7Oo/oe+3iu04BszuzQczLuCJnB2UrwlWur6W95VXTD
+	 TZREipYDuQAKw==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>
@@ -46,10 +47,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v7 0/8] clk: Add kunit tests for fixed rate and parent data
-Date: Wed, 10 Jul 2024 13:12:36 -0700
-Message-ID: <20240710201246.1802189-1-sboyd@kernel.org>
+Subject: [PATCH v7 3/8] dt-bindings: vendor-prefixes: Add "test" vendor for KUnit and friends
+Date: Wed, 10 Jul 2024 13:12:39 -0700
+Message-ID: <20240710201246.1802189-4-sboyd@kernel.org>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+In-Reply-To: <20240710201246.1802189-1-sboyd@kernel.org>
+References: <20240710201246.1802189-1-sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,129 +61,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series adds unit tests for the clk fixed rate basic type and
-the clk registration functions that use struct clk_parent_data. To get
-there, we add support for loading device tree overlays onto the live DTB
-along with probing platform drivers to bind to device nodes in the
-overlays. With this series, we're able to exercise some of the code in
-the common clk framework that uses devicetree lookups to find parents
-and the fixed rate clk code that scans device tree directly and creates
-clks. Please review.
+Add the vendor prefix "test" to reserve a vendor prefix for bindings
+that are purely for testing device tree code. This allows test code to
+write bindings that can be checked by the schema validator.
 
-I Cced everyone to all the patches so they get the full context. I'm
-hoping I can take the whole pile through the clk tree as they all build
-upon each other. Or the DT part can be merged through the DT tree to
-reduce the dependencies.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: David Gow <davidgow@google.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes from v6: https://lore.kernel.org/r/20240706045454.215701-1-sboyd@kernel.org
- * Fix kasan error in platform test by fixing the condition to check for
-   correct free callback
- * Add module descriptions to new modules
-
-Changes from v5: https://lore.kernel.org/r/20240603223811.3815762-1-sboyd@kernel.org
- * Pick up reviewed-by tags
- * Drop test vendor prefix bindings as dtschema allows anything now
- * Use of_node_put_kunit() more to plug some reference leaks
- * Select DTC config to avoid compile fails because of missing dtc
- * Don't skip for OF_OVERLAY in overlay tests because they depend on it
-
-Changes from v4: https://lore.kernel.org/r/20240422232404.213174-1-sboyd@kernel.org
- * Picked up reviewed-by tags
- * Check for non-NULL device pointers before calling put_device()
- * Fix CFI issues with kunit actions
- * Introduce platform_device_prepare_wait_for_probe() helper to wait for
-   a platform device to probe
- * Move platform code to lib/kunit and rename functions to have kunit
-   prefix
- * Fix issue with platform wrappers messing up reference counting
-   because they used kunit actions
- * New patch to populate overlay devices on root node for powerpc
- * Make fixed-rate binding generic single clk consumer binding
-
-Changes from v3: https://lore.kernel.org/r/20230327222159.3509818-1-sboyd@kernel.org
- * No longer depend on Frank's series[1] because it was merged upstream[2]
- * Use kunit_add_action_or_reset() to shorten code
- * Skip tests properly when CONFIG_OF_OVERLAY isn't set
-
-Changes from v2: https://lore.kernel.org/r/20230315183729.2376178-1-sboyd@kernel.org
- * Overlays don't depend on __symbols__ node
- * Depend on Frank's always create root node if CONFIG_OF series[1]
- * Added kernel-doc to KUnit API doc
- * Fixed some kernel-doc on functions
- * More test cases for fixed rate clk
-
-Changes from v1: https://lore.kernel.org/r/20230302013822.1808711-1-sboyd@kernel.org
- * Don't depend on UML, use unittest data approach to attach nodes
- * Introduce overlay loading API for KUnit
- * Move platform_device KUnit code to drivers/base/test
- * Use #define macros for constants shared between unit tests and
-   overlays
- * Settle on "test" as a vendor prefix
- * Make KUnit wrappers have "_kunit" postfix
-
-[1] https://lore.kernel.org/r/20230317053415.2254616-1-frowand.list@gmail.com
-[2] https://lore.kernel.org/r/20240308195737.GA1174908-robh@kernel.org
-
-Stephen Boyd (8):
-  of/platform: Allow overlays to create platform devices from the root
-    node
-  of: Add test managed wrappers for of_overlay_apply()/of_node_put()
-  dt-bindings: vendor-prefixes: Add "test" vendor for KUnit and friends
-  of: Add a KUnit test for overlays and test managed APIs
-  platform: Add test managed platform_device/driver APIs
-  clk: Add test managed clk provider/consumer APIs
-  clk: Add KUnit tests for clk fixed rate basic type
-  clk: Add KUnit tests for clks registered with struct clk_parent_data
-
- Documentation/dev-tools/kunit/api/clk.rst     |  10 +
- Documentation/dev-tools/kunit/api/index.rst   |  21 +
- Documentation/dev-tools/kunit/api/of.rst      |  13 +
- .../dev-tools/kunit/api/platformdevice.rst    |  10 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- drivers/clk/.kunitconfig                      |   2 +
- drivers/clk/Kconfig                           |  11 +
- drivers/clk/Makefile                          |   9 +-
- drivers/clk/clk-fixed-rate_test.c             | 380 +++++++++++++++
- drivers/clk/clk-fixed-rate_test.h             |   8 +
- drivers/clk/clk_kunit_helpers.c               | 204 ++++++++
- drivers/clk/clk_parent_data_test.h            |  10 +
- drivers/clk/clk_test.c                        | 453 +++++++++++++++++-
- drivers/clk/kunit_clk_fixed_rate_test.dtso    |  19 +
- drivers/clk/kunit_clk_parent_data_test.dtso   |  28 ++
- drivers/of/.kunitconfig                       |   1 +
- drivers/of/Kconfig                            |  10 +
- drivers/of/Makefile                           |   2 +
- drivers/of/kunit_overlay_test.dtso            |   9 +
- drivers/of/of_kunit_helpers.c                 |  74 +++
- drivers/of/overlay_test.c                     | 115 +++++
- drivers/of/platform.c                         |   9 +-
- include/kunit/clk.h                           |  28 ++
- include/kunit/of.h                            | 115 +++++
- include/kunit/platform_device.h               |  20 +
- lib/kunit/Makefile                            |   4 +-
- lib/kunit/platform-test.c                     | 224 +++++++++
- lib/kunit/platform.c                          | 302 ++++++++++++
- 28 files changed, 2087 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/dev-tools/kunit/api/clk.rst
- create mode 100644 Documentation/dev-tools/kunit/api/of.rst
- create mode 100644 Documentation/dev-tools/kunit/api/platformdevice.rst
- create mode 100644 drivers/clk/clk-fixed-rate_test.c
- create mode 100644 drivers/clk/clk-fixed-rate_test.h
- create mode 100644 drivers/clk/clk_kunit_helpers.c
- create mode 100644 drivers/clk/clk_parent_data_test.h
- create mode 100644 drivers/clk/kunit_clk_fixed_rate_test.dtso
- create mode 100644 drivers/clk/kunit_clk_parent_data_test.dtso
- create mode 100644 drivers/of/kunit_overlay_test.dtso
- create mode 100644 drivers/of/of_kunit_helpers.c
- create mode 100644 drivers/of/overlay_test.c
- create mode 100644 include/kunit/clk.h
- create mode 100644 include/kunit/of.h
- create mode 100644 include/kunit/platform_device.h
- create mode 100644 lib/kunit/platform-test.c
- create mode 100644 lib/kunit/platform.c
-
-
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index fbf47f0bacf1..02a22c2722ec 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1456,6 +1456,8 @@ patternProperties:
+     description: Terasic Inc.
+   "^tesla,.*":
+     description: Tesla, Inc.
++  "^test,.*":
++    description: Reserved for use by tests. For example, KUnit.
+   "^tfc,.*":
+     description: Three Five Corp
+   "^thead,.*":
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
