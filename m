@@ -1,131 +1,106 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C629D1953BA
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF14194A74;
+	Wed, 10 Jul 2024 16:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720628157; cv=none; b=n0xW4PZd0MsglsAnzH8q5kYu0p335XkjAHgBljGT189oghbdyerhKDoP66xOCSwL3p/Iy9LZffbqzU7d0mfasfBuUfK35IoHM5kovCR1w6ro2SK2Mx/zb/E95cEO4To+8XhxeHFmMfW7K8s0GIVysRtEu02GlZaEpk5TDha2yNQ=
+	t=1720628175; cv=none; b=cMyuyzDpb/77v5PYOY8cX9IFRF6LdfQL+VPl4OmA1AITmvtcv5AIYm1OERHgeQJyr4hWxgIcDSENPaxQcPqtYNbSeeV7BN7IBsjeGBaiBvn5H7tqwyadpKj56TQUK6e9wT7lUENqNfugbv5U0tx4U/0PZcpLx6bSTXBoaF73doQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720628157; c=relaxed/simple;
-	bh=TgOKlANK2h/PGDdeOGOPxmFLAyYqKVcQrEFN0PRUTFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TM3LMpy3lBKt4HWpzy1R1ExKu/82MCLQIpOBa2PYR3Qt1jLgi6fGYyyJGtppTxGEr0NoysocVRUU0X4X9VMUC24zGhNY8JIMi7Vg/eVWqVSUhXCcdE7IJIWYhSKOrPmv2EhEFeAoH+0DQL7gDTeXUJnM0A/iUI8H0glSf6kThmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I/Hg8bdc; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720628175; c=relaxed/simple;
+	bh=bsHpEn3krou53ldx7it8KNunZ7Zrt3zk5bS06koZGwo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uCKIlCSuGzMFuznNQ6df7KBlFGXhE92jlIvQwRN/mGDdM0jOFmn5/wLV2ncayShw4XhRaSN+fzM8gN0ocj2PBuaIW+Y8TJkIcinZVJWr8PLSotcSvCQfurziu5dA/S1DrguXO6c/ZvifCzXqwQJ47cuuh1EMmkq+bVDfpggUFUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CF15gAMF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I/Hg8bdc"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-64b29539d86so59364037b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:15:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720628154; x=1721232954; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h4xVThAQgk7n6R5xLRV2ywFddDRqebZaKIPSQDVaDtw=;
-        b=I/Hg8bdcxXSu1n2xs2lWKCmIQG3yjbEtM2Ir5dpFj30zMh0zobzDcNLUzdR4nL0TTL
-         WphqTlN0Q/FvYmsKQmPep1A7VzK40NqiQ5uu/s0tbRmCHQi7jJACvc5xFw9hzRwqGxlb
-         +HnW1hZC/tsveRzLRcBRiAOW03yKSvCWvv2PskQnmLL9ixKsHGHPyB7k2YnFZrtDS13+
-         Q2Ikf3p2w41sxmhgP20bMOBe0A0rS/0NCoceOHmLaO5scMllTt2VYQiwYsCyTzkeIbPv
-         lBywIUedsG+p2DemJaOpu5JQA0wkCvWcy72vMqJm6vd9Zam8x6AdYWl4hOkeVkjPnxw2
-         CByg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720628154; x=1721232954;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h4xVThAQgk7n6R5xLRV2ywFddDRqebZaKIPSQDVaDtw=;
-        b=cdSQHrNmlkmIgkK8Wco7LVfgbvu5jx/d4SHtSfMiiGv8W2LP8TshrZCGf9vVb0QtPe
-         THqdP90bMRMg5sQDlBL/FxFHTlnitqHqCRhFj+Stlw+w6KQytCBXe2bK+BpbsjCUJ1Fy
-         RRPGjd/PLessZyG9YNqrT+VAEQ6duu0ES+gHpVVWHs4l44a2Z5/e07UDn8/J0jq/QjUH
-         ptz2gDxY3rI5+0JsbD4cDLdU4dVqfhWS/73bDv7IWX+U66R4nzj2X+bz2wug2OwSsqDg
-         47BpB6IsXERmY/ZP0Hhrmey8N6BJ5AUT6v7leq2LM72AhQDTx+L+sZNfUji6ALz7l5SI
-         9FCA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNrcKIpcyFUWx5mKPtHVkoPSJx8dBgxr0di6OhVoNy33QmAH5mI0S2zV5M5Z9O1CS538DwF/jqAIqKxPOnTEkvl7Eq3K5R/z6inrTa
-X-Gm-Message-State: AOJu0YwGeGbntYjHaJk7ygYKXmZCxBWz36jozrPnwIEYCT9AoVAQ9vq8
-	n5gbRXlmbZmIMHMg3yZP8LWiSiaenmzuXTNPSJxalkDXayB4a0OzLDSyZhPSxiH9X9qkPhqKlgD
-	kEcN4gUpjXq7ulV0o6C0T6Sz7b8Eg8+yDe5TA
-X-Google-Smtp-Source: AGHT+IGCoqOolpEeqhQMOEIsEQnyWipG02ffK00hOOo8l2FHKvLvFsXzjXv1yEHKYMw/uXlDNKaotNWQ+7BvNWHYkRA=
-X-Received: by 2002:a81:69c3:0:b0:650:279f:8c67 with SMTP id
- 00721157ae682-658f0fb30f1mr69528697b3.46.1720628153459; Wed, 10 Jul 2024
- 09:15:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CF15gAMF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 979B4C4AF10;
+	Wed, 10 Jul 2024 16:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720628175;
+	bh=bsHpEn3krou53ldx7it8KNunZ7Zrt3zk5bS06koZGwo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CF15gAMFf7pOAInHCtZ64DFD/d3HzSVI1rqpPx59sVs2CzT07W4I5u/u1mWtu0FXB
+	 IeIPRqN22uealtOuePc/8iKoFQ618ExR8dxg0oAYwX7cdGp0g1mEPj5Hag+y1/wPUR
+	 yldDZTVcGd3DPfa0dErI7JptYqhibYl70ouOTvmhL1ABOmxgT+/V0YUrVt1tdEGY8N
+	 Nfzf+dpOPd5Cez/UfQepL9IzSQOfKd+gWJk/EKPqD/a/spQRdWQD3N59VA4/nL9V+w
+	 seoL/CNX7D6rVtf29Rj+9j+je/lxf+xCwKQsRWq0pbIBqXK0RBnCwrQMXv82E92XTZ
+	 hzg/TfZ2QCXCw==
+Message-ID: <36837adc-1528-408f-95be-4206cf1e219f@kernel.org>
+Date: Wed, 10 Jul 2024 18:16:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240704182718.2653918-1-Liam.Howlett@oracle.com> <20240704182718.2653918-9-Liam.Howlett@oracle.com>
-In-Reply-To: <20240704182718.2653918-9-Liam.Howlett@oracle.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 10 Jul 2024 09:15:42 -0700
-Message-ID: <CAJuCfpFNJ1j7Kcf3Z6efBB0xmvpRCWnfZhnNOuD_hBZmKc-bqA@mail.gmail.com>
-Subject: Re: [PATCH v3 08/16] mm/mmap: Inline munmap operation in mmap_region()
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, sidhartha.kumar@oracle.com, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Bert Karwatzki <spasswolf@web.de>, Jiri Olsa <olsajiri@gmail.com>, 
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: power: qcom,kpss-acc-v2: add
+ qcom,msm8916-acc compatible
+To: Rayyan Ansari <rayyan.ansari@linaro.org>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio
+ <konrad.dybcio@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
+ Christian Marangi <ansuelsmth@gmail.com>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240710155226.130086-1-rayyan.ansari@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240710155226.130086-1-rayyan.ansari@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 4, 2024 at 11:27=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
->
-> mmap_region is already passed sanitized addr and len, so change the
-> call to do_vmi_munmap() to do_vmi_align_munmap() and inline the other
-> checks.
+On 10/07/2024 17:52, Rayyan Ansari wrote:
+> Add compatible for "qcom,msm8916-acc", used in msm8916.dtsi, to the dt
+> schema.
+> 
+> Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
 
-Hmm. I think such refactoring when you want to skip some checks would
-be done a bit differently... You would introduce a __do_vmi_munmap()
-function which is called at the end of do_vmi_munmap() after the
-checks and then call __do_vmi_munmap() directly wherever you want to
-skip the checks. That would avoid code duplication. Any reason that
-can't be done here?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->
-> Signed-off-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
-> ---
->  mm/mmap.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 8d9be791997a..e9858ca8bbd4 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -2937,12 +2937,20 @@ unsigned long mmap_region(struct file *file, unsi=
-gned long addr,
->                         return -ENOMEM;
->         }
->
-> -       /* Unmap any existing mapping in the area */
-> -       error =3D do_vmi_munmap(&vmi, mm, addr, len, uf, false);
-> -       if (error =3D=3D -EPERM)
-> -               return error;
-> -       else if (error)
-> -               return -ENOMEM;
-> +
-> +       if (unlikely(!can_modify_mm(mm, addr, end)))
-> +               return -EPERM;
-> +
-> +        /* arch_unmap() might do unmaps itself.  */
-> +       arch_unmap(mm, addr, end);
-> +
-> +       /* Find the first overlapping VMA */
-> +       vma =3D vma_find(&vmi, end);
-> +       if (vma) {
-> +               if (do_vmi_align_munmap(&vmi, vma, mm, addr, end, uf, fal=
-se))
-> +                       return -ENOMEM;
-> +               vma =3D NULL;
-> +       }
->
->         /*
->          * Private writable mapping: check memory availability
-> --
-> 2.43.0
->
+Best regards,
+Krzysztof
+
