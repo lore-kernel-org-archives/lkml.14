@@ -1,90 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FDC194081;
-	Wed, 10 Jul 2024 14:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2311F1946C8
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720620105; cv=none; b=cYyibn0CJrdrFBEkJ25U/DtbK0LBB2daDELksLHNhHFpW1UN+KjugFn+Y9/o4CBRsDCfN31IP9KWZAXO2uAwux8zRqD0yW0bjw/Qqejz/2/zr0w54YP4GN2yjn8z8JEJdbp/RKlKr4PJP6MZlVg/rAEI5Nvy9pfWgPP0f2seFik=
+	t=1720620106; cv=none; b=dVoP84/9hjA6MThbg4flcmNgYNiEzA2Pwf2Ni/QT6rqUVMQGG/ugyYTxhw1Bw0q25RtE/IAVK8eOF0t6oh1r5HmN/T2NBO7RSVS4iyPmWiB/87WfRo1oxSMsSIKQET8EQE+7HWDzfS2vvb5x5QEuIN0mxNJn6hT0/ZMs3Ecifa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720620105; c=relaxed/simple;
-	bh=Et5l8wbkPTW0SmqvPS5ISuDSY1IwQ9qONGjNBZSNKw8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=StDK6p3gS8kQENoItWxU3hb2y88eFkhHzJKypNXoToOw6WibZIss8jKOpQKvMnBgotrSyeNmN7eeTZjFOs23S1EMMEb2Dj9N2u0AHg9ONIqNpeHs02XrZYxW8tLzy5vcoZszehmDPhJE2dr4xJrZwU6DAApZvvX4rPZ70tVzkzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vnFhuSC2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VKGXipAt; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1720620106; c=relaxed/simple;
+	bh=6YBxGUqzUkosXEuudIAjOYOpZ3JddHdhfEKCBfxlj18=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=K3M1Vz8NhNNHIx9fzQpYnqn/QnyHNsvM3EcV4VQiy8IBWjeBEVFmhyCtJXUnn3H91G3pV7sYe5a7A/Z/v/CLJ+ghZFZBOKwB3Go512TfQoG3roN6b1/1kEJQJ/4BLgK36YMtu0kA8Om65cJG9bFQHOC/lrtJEtBp37u89iP7vss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ohmtt9ks; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vnFhuSC2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VKGXipAt"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720620101;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Et5l8wbkPTW0SmqvPS5ISuDSY1IwQ9qONGjNBZSNKw8=;
-	b=vnFhuSC2VBqWV9SCWATEZgz7pyFBe16UTJe9kG87ame65DQs7Cpwzd+Ij9ZbnNVeaR/IiT
-	/Oq0DD9eDwsGSTTodj0iebvYq01hcrcMzS8nVuvXWa2Osu3HMINl0QTrsKPNGWxJPKSI5a
-	pH76lB8eyILBpE5x6JzJ0/BWYOVSDaQEx5M5bWVhUpa8Yq6nRfv2VzlShVVKdbAzXhmq9J
-	tLqBek4Bo2enxYjDG/Znjh2Ezj5psXeH4oHsXNRm6FHrWqTnPAUs8tNyX1EFsJbyLwn//6
-	itpGSqTcloqgNM4qAfZTdXuiQKNbjiXc7JZ29RQjAxySdPLvR1duPpzSQolyyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720620101;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Et5l8wbkPTW0SmqvPS5ISuDSY1IwQ9qONGjNBZSNKw8=;
-	b=VKGXipAtKYmyYCqcpqINqZlTwQXUNbLuV9OyyCIIf1AjQo0+T0C60xxIM+jLY6x5O1tO8z
-	bhiXrHPkG722RfDA==
-To: Daniel Vetter <daniel.vetter@ffwll.ch>, DRI Development
- <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>, Daniel
- Vetter <daniel.vetter@ffwll.ch>,
- syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com, Daniel Vetter
- <daniel.vetter@intel.com>, stable@vger.kernel.org, Kent Overstreet
- <kent.overstreet@linux.dev>, Brian Foster <bfoster@redhat.com>,
- linux-bcachefs@vger.kernel.org, Petr Mladek <pmladek@suse.com>, Steven
- Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky
- <senozhatsky@chromium.org>
-Subject: Re: [PATCH] bcachefs: no console_lock in bch2_print_string_as_lines
-In-Reply-To: <20240710130335.765885-1-daniel.vetter@ffwll.ch>
-References: <20240710093120.732208-2-daniel.vetter@ffwll.ch>
- <20240710130335.765885-1-daniel.vetter@ffwll.ch>
-Date: Wed, 10 Jul 2024 16:07:40 +0206
-Message-ID: <87o775cpmj.fsf@jogness.linutronix.de>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ohmtt9ks"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=7isddE9S7WZLEiUgbZ1fKxvJB1ZBtoJq/q76qOrytWc=;
+	b=Ohmtt9ksGPq8I0yEmf/4Ee9Al5Eu8O/7NvG/0Hl6QHICC129FNrTQWrmYUEclR
+	iQD09Z5T7OdvDf3/8vdzSEuaRhchN3hCx02JEZRwlpjqjyUZnpzwewsVP9cEmrl7
+	XatlH1cOqaLVixAPhMH34Ha02CWZ0Jve5fQ/OR6Koi/tY=
+Received: from localhost.localdomain (unknown [114.92.56.131])
+	by gzga-smtp-mta-g2-2 (Coremail) with SMTP id _____wDX3_EXlI5mEf7XAw--.49360S2;
+	Wed, 10 Jul 2024 22:01:06 +0800 (CST)
+From: =?UTF-8?q?=E6=9D=8E=E5=93=B2?= <sensor1010@163.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	=?UTF-8?q?=E6=9D=8E=E5=93=B2?= <sensor1010@163.com>
+Subject: [PATCH v4] driver:core: no need to invert the return value of the call_driver_probe()
+Date: Wed, 10 Jul 2024 07:00:41 -0700
+Message-Id: <20240710140041.4066-1-sensor1010@163.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDX3_EXlI5mEf7XAw--.49360S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uFWxtw18Kw1rGFy8CrWDCFg_yoW8XrykpF
+	s8AFWYvFn8u3yv9FWUGry0yFyFy3WxCrW09r18G34S9w17Ary5G3y7KrWYqr18ZrWv9Fyr
+	tF43ZrWrCFW7AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piaFAdUUUUU=
+X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/1tbiSAcYq2XAmMpaiAAAsZ
 
-On 2024-07-10, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> console_lock is the outermost subsystem lock for a lot of subsystems,
-> which means get/put_user must nest within. Which means it cannot be
-> acquired somewhere deeply nested in other locks, and most definitely
-> not while holding fs locks potentially needed to resolve faults.
->
-> console_trylock is the best we can do here. But John pointed out on a
-> previous version that this is futile:
->
-> "Using the console lock here at all is wrong. The console lock does not
-> prevent other CPUs from calling printk() and inserting lines in between.
->
-> "There is no way to guarantee a contiguous ringbuffer block using
-> multiple printk() calls.
->
-> "The console_lock usage should be removed."
->
-> https://lore.kernel.org/lkml/87frsh33xp.fsf@jogness.linutronix.de/
->
-> Do that.
->
-> Reported-by: syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com
-> References: https://lore.kernel.org/dri-devel/00000000000026c1ff061cd0de12@google.com/
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Fixes: a8f354284304 ("bcachefs: bch2_print_string_as_lines()")
+In the probe function (either drv->bus->probe() or drv->probe()),
+there is no return value of EPROBE_DEFER. the error return from probe
+should be -EPROBE_DEFER, hence no negation of call_driver_probe()'s
+return is needed, nor should there be an EPROBE_DEFER check in
+driver_probe_device()
 
-Reviewed-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: 李哲 <sensor1010@163.com>
+
+---
+v4:
+	Change the pinyin "Lizhe" to the Chinese name 李哲
+v3:
+	Modify commit message and versions go below the ---
+v2:
+	Delete the judgment with the return value of EPROBEDEFER
+	from the _driver_probe.device()
+v1:
+	Add the judgment with the return value of EPROBEDEFER
+	from the _driver_probe.device()
+---
+ drivers/base/dd.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 83d352394fdf..d047919d1f5e 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -664,11 +664,6 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 		if (link_ret == -EAGAIN)
+ 			ret = -EPROBE_DEFER;
+ 
+-		/*
+-		 * Return probe errors as positive values so that the callers
+-		 * can distinguish them from other errors.
+-		 */
+-		ret = -ret;
+ 		goto probe_failed;
+ 	}
+ 
+@@ -826,7 +821,7 @@ static int driver_probe_device(struct device_driver *drv, struct device *dev)
+ 
+ 	atomic_inc(&probe_count);
+ 	ret = __driver_probe_device(drv, dev);
+-	if (ret == -EPROBE_DEFER || ret == EPROBE_DEFER) {
++	if (ret == -EPROBE_DEFER) {
+ 		driver_deferred_probe_add(dev);
+ 
+ 		/*
+-- 
+2.17.1
+
