@@ -1,78 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8042E197A65;
-	Wed, 10 Jul 2024 16:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7998197A65;
+	Wed, 10 Jul 2024 16:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627893; cv=none; b=A8197uxwiwZNou8WLfShfiLw1k+qmPu0UJ4i3Qwemx15RIOw+wLaCW5K7C7d+zSYK8soJMkRdKNZS96ttzDjSQOkpZV9xas1z15PJTTl3vfkSjnhd6QP1SVRTb2fw331qG6tq6ebgFgqj0boRqLq/8CVG4Cziy+2EMB/2c+LmQo=
+	t=1720627900; cv=none; b=Od9ES/HzFkTRSARXzh+pD+y3jxEWP7Ba0JnvMOdAJlZnUqNuD1OuRtjIlkzialZGVEhS1UVyOeyzgcAzxUNE7IRTKFAfoFLYdnKCXR+5fid6/a7iu3H6QqcBL7oXM5zPc7rzTx2pQwaVhiz8IK3HzFWa2FQ8PDlsQrvUU/x7+eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720627893; c=relaxed/simple;
-	bh=a+7WKy915cYtcjH7UwZEbtB/L6kz1ndbvjx3AaxaK30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ViAxef5uePHabAmmPyA/TP8/NFKGR3+Dg0KSClOn5ak+23lV3PYYWrBc+OddYaGwIbwFekhHiVp9lnIGpzjnvH+ySshznyPDxRHqXw3Qu4a2fEdCWmNNW+aWlmQmbJdjdW9ifdcW050FNSBO4CDmer9CE/beJDMKHqjvwi7x3Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdwAh+dN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720627900; c=relaxed/simple;
+	bh=1qops/D1whUCaCuumg8tNYUF7OTw7VyV1BOkXLwJENI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uzJ0u3SUQQ8qLVGIYE90R3qQVKcaaRyxU2BoSRbRBxGj2Doj4KFdhAuh5mXLIe0g97VsMRCRVFW3uk00zOy8U5LR2app9yesRWnWic8+FknngIXyfiqLMYpR30VBGHo/naM3T6YRwzs3WI8SFL1KDPaebOlNqRsjp8Ly3aSN5jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wo8e8oz7; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdwAh+dN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A62B2C4AF0A;
-	Wed, 10 Jul 2024 16:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720627892;
-	bh=a+7WKy915cYtcjH7UwZEbtB/L6kz1ndbvjx3AaxaK30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BdwAh+dNSn6JErm1pydRtzjQ4/A74kobkcw3ruKNPrJTfnzZ7LFJgu25e8HIraQPv
-	 uvlS/RLvof+nQdHtMbpUAPrZ+xFLffJ39TwJNTWSk6ObSRxPu4da+/vMhWPdC2wo6w
-	 fmf2prSUTwNnWuWzsuJBTvE8LZOiFc1o0gY6gTzgy0VpVvlnawGfDHQG1TPnDqLH1c
-	 5WSy0EF8jjMEj0xL/4ltPqKOSytJF1E91s1muNNUWUBteUJTNua0+rpluB6PS5d0Gl
-	 ilK1vuPd+xx1nsKC83ptMtaKnn4kE4RQ40uxiHIDdOIW95o6jML386eya5qXMFoXKv
-	 MjPh0lw5Xsp7Q==
-Date: Wed, 10 Jul 2024 10:11:31 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: Sibi Sankar <quic_sibis@quicinc.com>, Georgi Djakov <djakov@kernel.org>,
-	Stephan Gerhold <stephan.gerhold@kernkonzept.com>,
-	devicetree@vger.kernel.org, phone-devel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Vladimir Lypak <vladimir.lypak@gmail.com>,
-	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rohit Agarwal <quic_rohiagar@quicinc.com>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Conor Dooley <conor+dt@kernel.org>,
-	Barnabas Czeman <barnabas.czeman@mainlining.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	linux-kernel@vger.kernel.org, Danila Tikhonov <danila@jiaxyga.com>,
-	linux-pm@vger.kernel.org, Andrew Halaney <ahalaney@redhat.com>
-Subject: Re: [PATCH v3 9/9] dt-bindings: interconnect: qcom: msm8953: Fix
- 'See also' in description
-Message-ID: <172062789070.3205605.3268441513464795042.robh@kernel.org>
-References: <20240709102728.15349-1-a39.skl@gmail.com>
- <20240709102728.15349-10-a39.skl@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wo8e8oz7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720627898; x=1752163898;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1qops/D1whUCaCuumg8tNYUF7OTw7VyV1BOkXLwJENI=;
+  b=Wo8e8oz7k9wgGu+w4eJndlIhBrJtDmU1JUukYMFUqyc5SVGSxDP5TLSt
+   zi6yeMjcSDzvh1fXK6JS069/UsUmtRfhCro8Am+OSDOb5NV/+fWo9vOgJ
+   AIAixal7nbyU194SuOaO9uXjoaa5vvwTt+iRcmcFbJyf6xWUjkGtQM04h
+   C8H/9wNrbFJJW+uTMYxkba24PWfyBWVXGQ/UBU72cRdvIVnV31weWOBwy
+   zCIZwRusO7MxKKILiP8Jo29UbxuzeqOQ+ZYd+4dwAR7f2AzKaEfDljge/
+   M6Ni+4Ctxs12hqVd9Mp0hVnGBuZGVZdvMytuehQG1/Wjm/sRqxxP96t7q
+   g==;
+X-CSE-ConnectionGUID: fPLia0WDR1+Xg/yUMv9i6Q==
+X-CSE-MsgGUID: HNa+h+lwQJuUuqyE8WWk/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18103545"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="18103545"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 09:11:38 -0700
+X-CSE-ConnectionGUID: IkWVpXxJSQmmH8rmIw53kA==
+X-CSE-MsgGUID: uMxjKUZ/Tmqh02uFLlNeVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="53085712"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 10 Jul 2024 09:11:26 -0700
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Alexey Kardashevskiy <aik@amd.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Yian Chen <yian.chen@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: [PATCH v4 15/16] efi: Disable LASS around set_virtual_address_map call
+Date: Wed, 10 Jul 2024 19:06:51 +0300
+Message-ID: <20240710160655.3402786-16-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
+References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709102728.15349-10-a39.skl@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+Of all the EFI runtime services, set_virtual_address_map is the only one
+that is called at its lower mapping, which LASS prohibits regardless of
+EFLAGS.AC setting. The only way to allow this to happen is to disable
+LASS in the CR4 register.
 
-On Tue, 09 Jul 2024 12:22:54 +0200, Adam Skladowski wrote:
-> "See also" in description seems to be wrongly defined,
-> make it inline with other yamls.
-> 
-> Fixes: 791ed23f735b ("dt-bindings: interconnect: qcom: Add Qualcomm MSM8953 NoC")
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-> ---
->  .../devicetree/bindings/interconnect/qcom,msm8953.yaml         | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
+Disable LASS around this low address EFI call.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ arch/x86/platform/efi/efi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index f090ec972d7b..6e5c2bb4f4df 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -848,11 +848,24 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	efi_sync_low_kernel_mappings();
+ 
++	/*
++	 * set_virtual_address_map is the only service located at lower
++	 * addresses, so we have to temporarily disable LASS around it.
++	 * Note that clearing EFLAGS.AC is not enough for this, the whole
++	 * LASS needs to be disabled.
++	 */
++	if (cpu_feature_enabled(X86_FEATURE_LASS))
++		cr4_clear_bits(X86_CR4_LASS);
++
+ 	status = efi_set_virtual_address_map(efi.memmap.desc_size * count,
+ 					     efi.memmap.desc_size,
+ 					     efi.memmap.desc_version,
+ 					     (efi_memory_desc_t *)pa,
+ 					     efi_systab_phys);
++
++	if (cpu_feature_enabled(X86_FEATURE_LASS))
++		cr4_set_bits(X86_CR4_LASS);
++
+ 	if (status != EFI_SUCCESS) {
+ 		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
+ 		       status);
+-- 
+2.43.0
 
