@@ -1,68 +1,56 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857F2198E80
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6489C1990BB
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720629099; cv=none; b=XXUIQK/4doSgAv86pmNt5cJR/ic79FLqP6l1BEIN3lwc6PM39Bv6pgbB2HWnw+ixBqmQLl3W6S9CoL2UiCwN2rIWsimNp/MDEKF9iyq4DGpjsNKGq5P4v5nhC+6gud0Wnf9+aRYbO8V2TC40npJ9cf9PqLAzfCNT8n0OpPypkhk=
+	t=1720629134; cv=none; b=nMydAqsqOG0qBF0hpQmGGAiDXMtiLIj/JCiApJb6esIXFqkL/kYhNv0xaOc19G5sznIDYde5BH6yFKfO/5OoYIH76AVy9jyaP+pFHlnkN7XMPwUGVkV7yql6qjo7O7WdjGgf5ehLKvHl68ujv1AiTlOfiohezGYXxuaK58JILQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720629099; c=relaxed/simple;
-	bh=wMB6ffOH4zzKa3yoQT+9WAqc8SQ6K+qCARxI6+FuQgU=;
+	s=arc-20240116; t=1720629134; c=relaxed/simple;
+	bh=fYMc6KLTY6LKXBmxGdlexV5LNTc9Pq7aLfamCDMNYqg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eXuuJ/RSkfpJOn4erFAWP6fJ6cVhMjhpcmzpxcPoJHmFSHcBjqCFKOmXy5/L1wPduL5zdsXGpRx9F2ozDeVgnULrfHeOJj8VdlLQCN0fW1/HPThyT0wDLxdvvrbeP8HJX0JbfSij56hgylbp6gH0koCxfWo3po4VLeb0/694n7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I+5zVTK2; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6SR5b+qTwzgZ5bUSKIWbVgF8hEchYsNIjyjy9Gll2M59DQaHcqypPpm1zevubfk1+F5UdtuV1Y0U5awIr1puZi9HV3etCAsqiUtDTowmBiOKZxr2b+QYvUAHRyYld/jUYT4yTor48iC3oKjKtw4kzpfwj2k30lGyumeu/xiKOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YKS/F+gj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+5zVTK2"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-58e76294858so1896694a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720629096; x=1721233896; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aFxlOsMqy2T1bTm6nymFbY6yBbL0VdpobMbhBdfw3jM=;
-        b=I+5zVTK2CbwN/kHIPsv+galqLLum0Y9F5JMdg7CX2/2e4txB7mS0CZxgJT/H/MsMLX
-         LGWy7R39eQKTjEcBsSnVDVvxn5SQgDhTwTs/77kAMWDGAvxKgCuRpDGlLh+19MU600c3
-         v4pCI1gEhjWldJpM3IMxnoommdzFOTKvLGEV8kFKzqwWbEunjYqGn6cxheGIFs8PJIDE
-         xHIOU7EL5KtuYiv72iO9KgzwL1eKbKPA1v1sWYXJfhzFukFFGmWQNws/QlxTQVbE1Ul2
-         6lAlNVZxvuuzls2qv11v5lw88iqyS8qfCstl7Hcv2hKsSUXhtqLeCvlgGbKIG37OtpBl
-         GufA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720629096; x=1721233896;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aFxlOsMqy2T1bTm6nymFbY6yBbL0VdpobMbhBdfw3jM=;
-        b=phWqYoEQag02MES5XGzTueyCgHfdSTT356LBT8/cHNJET+OUsqLIjE7Q95hCoH3IVI
-         PIrV0J6y9D5lFL8qJzWkh/5ZT2mpTxj+pkrXOgGvJarbYKxw+WDmhVXij0+GkArC/ydT
-         GPt7g2lVG8VKCM8qLizFx3N5dnn0KC3aWHRnN5eHaFca9Av9GYjZJcVccwX3cHSlBmBO
-         dLQs2IeVIj2WxX2fHtPCb4Slay54rKq0Z6gv+EBAkXkJYjo1PScwS7C+BYn1yekSMNy4
-         tmaECNw3LhyKfEpMXvNjbSKV1TkWKQAYYeN/IxnRth9Tln348oek1g+rIsPecc0JHuOU
-         6C5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUqmoFWDf4JidHj8npy0mVZZuym+cfeAOqOVosuTmDGKzK2GFr1nzB4Zr3yT8qoPWzUANvzfLuyuMWaGqQOFGQhGea3WbCEp4qTT08d
-X-Gm-Message-State: AOJu0YxJSNokG6HEsWhB6ajzbuAUfBvXqmc5jyNWiFRZ5MfR23ua2kXI
-	WuJKgu9X0HEmJVfNZMRzdnSH4qnFbglRneTmGjs++zEVD1xeqYgyI734FDJp
-X-Google-Smtp-Source: AGHT+IGjXS/unGM247VI8FFw2SSzudpUQO77MxfYWHl3GuzqaKaUlZLaTbpxCAZjTadQ5zUdP0EWBA==
-X-Received: by 2002:a17:906:c105:b0:a6f:20e0:1d1a with SMTP id a640c23a62f3a-a798a42f054mr15604866b.33.1720629095619;
-        Wed, 10 Jul 2024 09:31:35 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bcc97sm172538066b.35.2024.07.10.09.31.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jul 2024 09:31:34 -0700 (PDT)
-Date: Wed, 10 Jul 2024 16:31:34 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>, linux@rasmusvillemoes.dk,
-	willy@infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] radix tree test suite: put definition of bitmap_clear()
- into lib/bitmap.c
-Message-ID: <20240710163134.a36xircnefbz5m6n@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20240710095554.16725-1-richard.weiyang@gmail.com>
- <Zo6z_AuI6U8JBvfk@yury-ThinkPad>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YKS/F+gj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720629132;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fYMc6KLTY6LKXBmxGdlexV5LNTc9Pq7aLfamCDMNYqg=;
+	b=YKS/F+gjIXDN3Lo0G4QqY+ZFrsB6qt13rvyzPrN+ybV4y0YgUMoFvxjMd+VjFq+t0aGavj
+	9o6ZAtb4Wxahm/GiHiNUmmTnGdvwqY+5wrCgLoNTnaVfz+qIsxbVsb8yr6Fkb5s7kqjilF
+	ZdupaFjn46p9J9fpqKG6Z7w3cC9CE8w=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-NNjsDcgkP_65D1O_JDi5QQ-1; Wed,
+ 10 Jul 2024 12:32:05 -0400
+X-MC-Unique: NNjsDcgkP_65D1O_JDi5QQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15C1D19560B1;
+	Wed, 10 Jul 2024 16:32:04 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4A7C33000184;
+	Wed, 10 Jul 2024 16:32:00 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 10 Jul 2024 18:30:27 +0200 (CEST)
+Date: Wed, 10 Jul 2024 18:30:22 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org
+Cc: clm@meta.com, jolsa@kernel.org, mingo@kernel.org, paulmck@kernel.org,
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/3] uprobes: future cleanups for review
+Message-ID: <20240710163022.GA13298@redhat.com>
+References: <20240710140017.GA1074@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,120 +59,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zo6z_AuI6U8JBvfk@yury-ThinkPad>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20240710140017.GA1074@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, Jul 10, 2024 at 09:17:00AM -0700, Yury Norov wrote:
->On Wed, Jul 10, 2024 at 09:55:54AM +0000, Wei Yang wrote:
->> Instead of keeping a bitmap.c in radix-tree own directory, we can use
->> the common implementation in lib/ directory.
->> 
->> Just move the definition and link some related libs, no functional
->> change.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->> CC: Matthew Wilcox <willy@infradead.org>
+On 07/10, Oleg Nesterov wrote:
 >
->Hi Wei,
->
->bitmap_clear() is not used in radix tests, and in fact not used
->anywhere in tools at all. Unless you have plans on it, it's
->better to drop bitmap_clear() from tools, instead of bloating
->the library.
+> Peter, these simple cleanups should not conflict with your changes,
+> but I can resend them later if it causes any inconvenience.
 
-I guess you didn't try to compile the test. After remove the bitmap_clear(),
-we see this error.
+In fact I would like to push 2 more cleanups before the more significant
+changes, but they certainly conflict with your ongoing work, albeit only
+textually.
 
-cc -fsanitize=address -fsanitize=undefined  main.o xarray.o radix-tree.o idr.o linux.o test.o maple.o slab.o find_bit.o bitmap.o hweight.o vsprintf.o regression1.o regression2.o regression3.o regression4.o tag_check.o multiorder.o idr-test.o iteration_check.o iteration_check_2.o benchmark.o  -lpthread -lurcu -o main
-/usr/bin/ld: xarray.o: in function `xas_squash_marks':
-/home/richard/git/linux/tools/testing/radix-tree/../../../lib/xarray.c:139: undefined reference to `bitmap_clear'
+Let me send the patches for review anyway, perhaps you can take at least
+the 1st one.
 
->
->Thanks,
->Yury
->
->> ---
->>  tools/lib/bitmap.c                | 20 ++++++++++++++++++++
->>  tools/testing/radix-tree/Makefile |  4 ++--
->>  tools/testing/radix-tree/bitmap.c | 23 -----------------------
->>  3 files changed, 22 insertions(+), 25 deletions(-)
->>  delete mode 100644 tools/testing/radix-tree/bitmap.c
->> 
->> diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
->> index c3e4871967bc..a96dbf001244 100644
->> --- a/tools/lib/bitmap.c
->> +++ b/tools/lib/bitmap.c
->> @@ -100,3 +100,23 @@ bool __bitmap_intersects(const unsigned long *bitmap1,
->>  			return true;
->>  	return false;
->>  }
->> +
->> +void bitmap_clear(unsigned long *map, unsigned int start, int len)
->> +{
->> +	unsigned long *p = map + BIT_WORD(start);
->> +	const unsigned int size = start + len;
->> +	int bits_to_clear = BITS_PER_LONG - (start % BITS_PER_LONG);
->> +	unsigned long mask_to_clear = BITMAP_FIRST_WORD_MASK(start);
->> +
->> +	while (len - bits_to_clear >= 0) {
->> +		*p &= ~mask_to_clear;
->> +		len -= bits_to_clear;
->> +		bits_to_clear = BITS_PER_LONG;
->> +		mask_to_clear = ~0UL;
->> +		p++;
->> +	}
->> +	if (len) {
->> +		mask_to_clear &= BITMAP_LAST_WORD_MASK(size);
->> +		*p &= ~mask_to_clear;
->> +	}
->> +}
->> diff --git a/tools/testing/radix-tree/Makefile b/tools/testing/radix-tree/Makefile
->> index 7527f738b4a1..505cc24a8b9c 100644
->> --- a/tools/testing/radix-tree/Makefile
->> +++ b/tools/testing/radix-tree/Makefile
->> @@ -5,8 +5,8 @@ CFLAGS += -I. -I../../include -I../../../lib -g -Og -Wall \
->>  LDFLAGS += -fsanitize=address -fsanitize=undefined
->>  LDLIBS+= -lpthread -lurcu
->>  TARGETS = main idr-test multiorder xarray maple
->> -CORE_OFILES := xarray.o radix-tree.o idr.o linux.o test.o find_bit.o bitmap.o \
->> -			 slab.o maple.o
->> +LIBS := find_bit.o bitmap.o hweight.o vsprintf.o
->> +CORE_OFILES := xarray.o radix-tree.o idr.o linux.o test.o slab.o maple.o $(LIBS)
->>  OFILES = main.o $(CORE_OFILES) regression1.o regression2.o regression3.o \
->>  	 regression4.o tag_check.o multiorder.o idr-test.o iteration_check.o \
->>  	 iteration_check_2.o benchmark.o
->> diff --git a/tools/testing/radix-tree/bitmap.c b/tools/testing/radix-tree/bitmap.c
->> deleted file mode 100644
->> index 66ec4a24a203..000000000000
->> --- a/tools/testing/radix-tree/bitmap.c
->> +++ /dev/null
->> @@ -1,23 +0,0 @@
->> -/* lib/bitmap.c pulls in at least two other files. */
->> -
->> -#include <linux/bitmap.h>
->> -
->> -void bitmap_clear(unsigned long *map, unsigned int start, int len)
->> -{
->> -	unsigned long *p = map + BIT_WORD(start);
->> -	const unsigned int size = start + len;
->> -	int bits_to_clear = BITS_PER_LONG - (start % BITS_PER_LONG);
->> -	unsigned long mask_to_clear = BITMAP_FIRST_WORD_MASK(start);
->> -
->> -	while (len - bits_to_clear >= 0) {
->> -		*p &= ~mask_to_clear;
->> -		len -= bits_to_clear;
->> -		bits_to_clear = BITS_PER_LONG;
->> -		mask_to_clear = ~0UL;
->> -		p++;
->> -	}
->> -	if (len) {
->> -		mask_to_clear &= BITMAP_LAST_WORD_MASK(size);
->> -		*p &= ~mask_to_clear;
->> -	}
->> -}
->> -- 
->> 2.34.1
+3/3 is only compile tested so far. Andrii, can you take a look?
 
--- 
-Wei Yang
-Help you, Help me
+Oleg.
+
