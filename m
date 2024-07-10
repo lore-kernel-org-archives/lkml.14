@@ -1,95 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E231194A73
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE66219346A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 15:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720626529; cv=none; b=k04HPoYXSiDw+Cp4lFCMjwQi9BI8rFWhHlaWB4WXujr6hDG3zKu6DM7pb63uIKKdzjdsqONIjaO0x7A/C9BDVvYEUYjIGGlbIU60PhwUwHFUo8Nqr+RHr+cWoFi/AYY4AemqjgNL9vDnSbHgqS8hDa7g/OgLYEFrHKVDWJA7CtE=
+	t=1720626633; cv=none; b=bl9P91TAy+PVWu/7/ek2GDt84GpWFq6b/qprImakbd/N2pYmlcf0tr0ZIYiQeUdzfMSROMyD/udP8uPjv2is4vD7NaGVVSOs4KsAFA9YZpiqZZKN29vrkt19Qgh3Ngll4XpiM8onaV/LKf26kn34iIyoCEmBgJd6MhS96DqSyfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720626529; c=relaxed/simple;
-	bh=c2n4VVQzipIfpzPrWV9F7UOv/MDw3Ud7EfBOXdrzOXY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UADUVrCFGDeJG+UvCyokJW+tlC4GBoYN3MrT9h3tb8VHDNiZu+1oPGnxnYgrrvmuBLjhO68akvm5l3C6z7k0Ifc0f+Lm6DxKvuO7sxHiEL6oY4C/XzSJzPAimfDj9QIVbWmgH5vQgtqLG/CajMktI0HAZ+iRzUG6smNykWemnik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GUJd+jS3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720626633; c=relaxed/simple;
+	bh=yneKc7QmLHbr/S7vKpCuOc/Gw6qodem1chsdBrkwYIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PkhWVywXp2HsaFTL7ngjvPxmR8ggph8HRZtUI2FqDilbJW7Y6/L/djCf9jPjr0w0akF0BE7PhUoDJzZzaSyGefviepkRlpm4VZZWxORaCgJp81F/jdjwkMN0RxP5jWMRGxg1TCVbkOntAuA1tyvO62KyAk6cqQSTpV0UuuIj4qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MGIvVfLy; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GUJd+jS3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720626527;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wt5Vyb1ibASftYVrpnZoVWe5UGkYzs3XwGwbVoV/Z3k=;
-	b=GUJd+jS3x9UDTvI5opyLieEya+7dwBbNTAZXAM+StCCSvQQHreQmr8DYZ6Q+WzFWE/RMo2
-	1aHkcd31TgBzzIK7moCYmDSAEp3vqQGsIYcRO0WqTf7Xf1GlW9U5xT+4u5lP4YDckDtHfF
-	Yi5veXPYx6S5bwIKDPi+nbbSnTDkwOk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-580-j-EUm2aEPciHBObPAFXcIw-1; Wed,
- 10 Jul 2024 11:48:43 -0400
-X-MC-Unique: j-EUm2aEPciHBObPAFXcIw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 578A51954B0C;
-	Wed, 10 Jul 2024 15:48:41 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2DBE21955F40;
-	Wed, 10 Jul 2024 15:48:40 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id 7B8E530C1C1C; Wed, 10 Jul 2024 15:48:39 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 772C141970;
-	Wed, 10 Jul 2024 17:48:39 +0200 (CEST)
-Date: Wed, 10 Jul 2024 17:48:39 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-cc: Alasdair G Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the device-mapper
- tree
-In-Reply-To: <20240710082824.30c8161d@canb.auug.org.au>
-Message-ID: <622b892-d792-382c-46f8-fe5cfdba4df1@redhat.com>
-References: <20240709185733.4aac356a@canb.auug.org.au> <49ab648e-3c89-d4d-f2f7-3c1e2aa2cab@redhat.com> <20240710082824.30c8161d@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MGIvVfLy"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4266f796e67so57955e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720626630; x=1721231430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XWZUqKVzg7P6u5MGavsKXGRW26DyCY05W0UIIBlog9I=;
+        b=MGIvVfLymqxteai0GyZsVroo0RQNBjXnda3WRyQtuVSDZznNlcBFBYekilo0P91pAx
+         cnMcS38vNKLGdQ84Mb3ej6+zk8fvEl/VVp/ZZw4UMfaP2Arla0T0yBPeNz6MAbiC2pt6
+         xx/2Ny3aSG59qLqU6MNcOVOkQzbNagWmZlgR/gRsCTfAu6JEN0N0nJM4EvLtdI5/GIKH
+         NcC2+b1PF5VQuYohAVy5aMjScXM63ponFNre5UwZqcF8rKZE3K4Qgv93f4pvs1n3R/s+
+         qmIPto3HoXNv11m84l7OJlE51jkoxmyLnmZe+f/9fk6ctrs66IypvpVYye0GSPxC+Xkq
+         mt8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720626630; x=1721231430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XWZUqKVzg7P6u5MGavsKXGRW26DyCY05W0UIIBlog9I=;
+        b=bWOydZ6HMKuyPFqvkWOi+sFZqRHd1DKR/cpHm1dQ1CCO6u20gqWd5TRg23gKIriJqy
+         Wly8cgrn78Yn5eDflJJR3Z+FgiHu+8mYXeZxn4WDkPThl50iaArBkAIzHkDgHvSExbRq
+         jC/N4aZhqPLrkS4mi8EF0eSBPwN5vS5kJ5KESWodK7PuITIZj3zmHhGRaLnY+CCZnJ7s
+         F1zHC0bDmOIZyM6jOeSL1yWRE3v8zDHnolP5V+Kg1d2cNYLEEBl3LhxYFr2ADRaJaKoz
+         sQvSpIEoWlcNbSoIPceGCdv4pZmA2gWp8PRW6JBxg1RuPqPoYxfnbF629D4/JEWBo/JV
+         m+eg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5eHgE3Ur/aAZaOc+TtquzSwlkjqQL7kA370ilJBWPQbwv1yI/zT/FJBpE69OFsleShypPHgNCiqcv0+CVc2pbSRum5XHl82FUMk7f
+X-Gm-Message-State: AOJu0YxguMIH3LtCnraU5QKasPhBVfYXLwcARClQESMQdfjOuaMJDCK4
+	pbZzPZgUBrN0YrNb9kN/gEG66W1ccpQT40YyEHftIbIM2EDTnFRfjfO1yHdFrZ89gbXj6plEk6G
+	zHEy8PD27fCN7L8MjQFj1Zb6zTrR7qcbDFeLQ
+X-Google-Smtp-Source: AGHT+IFo76W0cPpP3VpSRtWR1YzUtFerX+Iej1bNsoOgXR2VdbT/Y86UlDjWq8i3WE9bDJY/MtS/YOS5s5OndIv9OFA=
+X-Received: by 2002:a05:600c:5718:b0:426:68ce:c97a with SMTP id
+ 5b1f17b1804b1-42794253b39mr1516875e9.7.1720626629870; Wed, 10 Jul 2024
+ 08:50:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20240704085555.11204-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240704085555.11204-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+In-Reply-To: <20240704085555.11204-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+From: Doug Anderson <dianders@google.com>
+Date: Wed, 10 Jul 2024 08:50:12 -0700
+Message-ID: <CAD=FV=XD=B5Mb36UxxaxCdhEhgXMFKmUjf_gnKda7hgq0-YYaA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] HID: i2c-hid: elan: Add elan-ekth6a12nay timing
+To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, jikos@kernel.org, bentiss@kernel.org, 
+	linus.walleij@linaro.org, hsinyi@google.com, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
+On Thu, Jul 4, 2024 at 1:56=E2=80=AFAM Zhaoxiong Lv
+<lvzhaoxiong@huaqin.corp-partner.google.com> wrote:
+>
+> Elan-ekth6a12nay requires reset to pull down time greater than 10ms,
+> so the configuration post_power_delay_ms is 10, and the chipset
+> initial time is required to be greater than 300ms,
+> so the post_gpio_reset_on_delay_ms is set to 300.
+>
+> Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+> ---
+>  drivers/hid/i2c-hid/i2c-hid-of-elan.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-On Wed, 10 Jul 2024, Stephen Rothwell wrote:
-
-> Hi Mikulas,
-> 
-> On Tue, 9 Jul 2024 11:56:27 +0200 (CEST) Mikulas Patocka <mpatocka@redhat.com> wrote:
-> >
-> > On Tue, 9 Jul 2024, Stephen Rothwell wrote:
-> > 
-> > > After merging the device-mapper tree, today's linux-next build (htmldocs)
-> > > produced this warning:
-> > > 
-> > > Documentation/admin-guide/device-mapper/dm-crypt.rst:168: ERROR: Unexpected indentation.
-> > > 
-> > > Introduced by commit
-> > > 
-> > >   04a1020ad350 ("dm-crypt: limit the size of encryption requests")
-> > 
-> > How should it be fixed? Delete the '-' character? Or some other change?
-> 
-> Looking a few lines above shows indented paragraphs without the '-'
-> which seems to work.
-
-I hopefully fixed that.
-
-Mikulas
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
