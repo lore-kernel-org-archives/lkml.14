@@ -1,128 +1,149 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C50F190068;
-	Wed, 10 Jul 2024 10:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3CC18FC7B;
+	Wed, 10 Jul 2024 10:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720607199; cv=none; b=J/FZBVnsbY3YOHRVqdunn2BkojHjefS7YZcOVMayD/CxmJ3wtfSk7eIkr8rU9cNKPI+pApZAkBsqxPkfoJQHldx8a5Ybd0ykOmVM4m0RihaCzpTfK6M4E32YcYjO7/jGKz6qXaXU8sT0wePG06R9VrT0OItNeyUZ1mfM9EDE+dw=
+	t=1720607261; cv=none; b=KAPCWEaXDK8iulnZrCKrIziNC9fadVcK29jRhZKzXJHlswvFv7v7zfZKWhw2hAKUrUbLJkJBkd+pFgsc49ZmvcSVAu4WiFVxCSJReKdzPvKBHMQWfOf4ixg+k/u4ITGX0Ua1b1qhGBHK+NSozjiBntJvSGcEBDQwBHQZR5MWQIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720607199; c=relaxed/simple;
-	bh=u97rYeUjchKaCKTVKQru5rzX9hbGOoIh61zXNDjCYIk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=py1TVXxPYmZML6o9tb6v8ScQQEEynxRTVkjmV0UvWxi7U2KroqG5KFchPuKEFDh0Oh3krmBsFHg9+8OH1Jp0nuzYbjFs7xlh37mYkBc821xSohgTdHWSCS67LHHL3E8mkmvPiAfyovQu6dbs4ysjxOV/d/BQJFKwNtvakVxMgrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nykAWGN5; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720607261; c=relaxed/simple;
+	bh=4Sico1dlLx2cucIw1hVJsr7ffu6bFhVb6M989R6P0Gw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=F5OVXG3f0NDSD3gCyOJqqCvtPRJmSZztxK/ioBOh/M653O2VPQdXpvm8kpRoSHGcqwNPj1u5GEWV07OVrU9LXKDtV4EVZsJ8OpPRo6AvRe2FRi2vG0UrCQbWZmK9eGRPQWCwb9zLx5PAjIU6WRZ/gc9DRbIdXH0aFpgjfnhGgaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LyoeV7gW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TQea+NHx; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nykAWGN5"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46A7E4LR026771;
-	Wed, 10 Jul 2024 10:26:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5FMNn2jFPQzv9jsNISMUwvcbpmzjCI0Ard70E7jNRoQ=; b=nykAWGN5/Z2QTG+X
-	t+j+K/eKe98mistcfBfIYH/pKFTTTyQdmXD+1qQEntLDApOzPK10VrsOhGDbzguv
-	Rj1uPvqk3cbY9/c7n+Dm39Db14WzTRZRN0nnPvdwgaECVNQ+He+EJivYAR8YkWOK
-	7947Z98KYeAem1dmimLUCnROseC68oneh0kacUs756aUD8RNC3PcZESMFKjuVKB2
-	hMFjwMB4ENpV7F0Vao2gBqkCE8BOwQZAveHEfeeuqsHJKOk88Sfb6BLS+qe/xJAb
-	mbvLGi3lckIMuzvjHyQJHxdc4NtcDuGz+L0fe8+iCOu6uMb19mADaPzKbFFR+plu
-	xUecKw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4091jdka4m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 10:26:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46AAQYuQ030367
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 10:26:34 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Jul
- 2024 03:26:28 -0700
-Message-ID: <03a18462-335f-43ec-81e3-4d08ba3b6434@quicinc.com>
-Date: Wed, 10 Jul 2024 18:26:25 +0800
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LyoeV7gW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TQea+NHx"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 7FA5213807ED;
+	Wed, 10 Jul 2024 06:27:37 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 10 Jul 2024 06:27:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1720607257; x=1720693657; bh=y7I9x5O068
+	rIa6OwNh1cKNoYpCATZicSDmRnAUguLsU=; b=LyoeV7gWDoZN30PXCwvf8Wxeg6
+	VhoBTVUhVW1s1omN6d8MKzk7jEzeXh8G5o3fMq2+GFZyBVg/9/7OEhye+/coWt2O
+	XfAhCV6pfHeQn17iPTTX2lKtnsu7/SS85QVlYeEFAIh8HBt+aTgpZe20ljb+djY9
+	KkAzG4mjhKV0qUKdG0gR+2CejXzNw/FxE5kv6+1kjsvhxagXsgNXyayRyPdaQbeQ
+	4TBQPDKF3YFf+VvY9c/rWAvGbZGkMYb+IU1xgJ04tc8Lwn7CByXKIAgP2f3v93aA
+	AoojIIDVoBGSZB+yjz8jXJf75ilDChNU4VltOrQAj2Dm90JSVQOz8ktykirw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720607257; x=1720693657; bh=y7I9x5O068rIa6OwNh1cKNoYpCAT
+	ZicSDmRnAUguLsU=; b=TQea+NHxpLxXt64jCbNK563C0E1TLCjGTuZN4XWClfBX
+	Q+hiwNI0APwrfFgBUmFeN+FlkT0ajXZjAbuIrQNBXBMSAspspDtA+vFl5wSJsH6E
+	cf197a4HNOG7bQXAR4Io3DEpsVFMTnNaNAdR20K7xWSpjgQ7DH48OO1jWq65WdVZ
+	KocA8mDU0G6OXbyBpcTXLQml76zE9t4F4YwV0CnWbjiN2MSuT46ZA1ZodsAUvB1Y
+	EMkXZXgPKUePYdiFfv6KLd+xOkVCBcPaKAeZ1lDw51o7t4aMsNfmIySSOVLdSNYT
+	RR8pYHgQg1azc7LSxH3IoyoJBkXtKrOxBa0ztmnx8Q==
+X-ME-Sender: <xms:FWKOZu7OEleYA2ZaQhHK0YTUnp8ZCDHU5Qv_qlmoFX318_1KRZ1MzQ>
+    <xme:FWKOZn4LSmiq1Nz2uEK5cmUYFupZB_cnhbb__NNmw8e_CrlbvFEeBRejSUSAy3RoL
+    fmzX2g8WT0vglJEYbo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedugddvkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:FWKOZtdwYsGl2L1-gJ_SxX2LvVQtIBz8P-0pqaYJsEiEIkuD8KivmA>
+    <xmx:FWKOZrKhYoVjzenA5bi3dxmDRoOXqMLEY13McAvD4kG-Wyq4f5hJDw>
+    <xmx:FWKOZiKJoBDOxda2I585qtzs7LQ5PYxoOCjycASUr7Si107QHnftyQ>
+    <xmx:FWKOZsyLzbfGhHPd5czHKWB7WVZYFT3G51G187eTM8ruvcR7PmmdPw>
+    <xmx:GWKOZurc55eLY785N_cbAB-SOzxSp53CmaIywxCCzaSOw7ZJQ6KRTTUf>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C869EB6008F; Wed, 10 Jul 2024 06:27:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: add qcs9100-tlmm compatible
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240709-add_qcs9100_tlmm_compatible-v2-0-d025b58ea196@quicinc.com>
- <20240709-add_qcs9100_tlmm_compatible-v2-1-d025b58ea196@quicinc.com>
- <1b6e63fe-cbd2-4d59-a863-c246267a0e89@kernel.org>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <1b6e63fe-cbd2-4d59-a863-c246267a0e89@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JxMX5qJ4_dfL_lp_0TwtG3ke2OuiCc1k
-X-Proofpoint-ORIG-GUID: JxMX5qJ4_dfL_lp_0TwtG3ke2OuiCc1k
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-10_06,2024-07-09_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 priorityscore=1501 phishscore=0 clxscore=1015 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407100071
+Message-Id: <9b269c2a-c6b5-4fa0-801b-e5e1c3ccb671@app.fastmail.com>
+In-Reply-To: <20240704143611.2979589-13-arnd@kernel.org>
+References: <20240704143611.2979589-1-arnd@kernel.org>
+ <20240704143611.2979589-13-arnd@kernel.org>
+Date: Wed, 10 Jul 2024 12:27:13 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Arnd Bergmann" <arnd@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>
+Cc: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>, "Vineet Gupta" <vgupta@kernel.org>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, guoren <guoren@kernel.org>,
+ "Brian Cain" <bcain@quicinc.com>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Dinh Nguyen" <dinguyen@kernel.org>,
+ "Jonas Bonn" <jonas@southpole.se>,
+ "Stefan Kristiansson" <stefan.kristiansson@saunalahti.fi>,
+ "Stafford Horne" <shorne@gmail.com>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 12/17] csky: convert to generic syscall table
+Content-Type: text/plain
 
+On Thu, Jul 4, 2024, at 16:36, Arnd Bergmann wrote:
+> -
+> -#define __NR_set_thread_area	(__NR_arch_specific_syscall + 0)
+> -__SYSCALL(__NR_set_thread_area, sys_set_thread_area)
+> -#define __NR_cacheflush		(__NR_arch_specific_syscall + 1)
+> -__SYSCALL(__NR_cacheflush, sys_cacheflush)
+> +#include <asm/unistd_32.h>
+> +#define __NR_sync_file_range2 __NR_sync_file_range
 
+A small update: I have folded this fixup into this patch
+and the hexagon one, to ensure we don't define both
+__NR_sync_file_range2 and __NR_sync_file_range. I already
+have patches to clean this up further to avoid both the
+#undef and #define, but that is part of a larger rework
+that is not ready before the merge window.
 
-On 7/10/2024 6:14 PM, Krzysztof Kozlowski wrote:
-> On 09/07/2024 15:04, Tengfei Fan wrote:
->> Add qcs9100-tlmm compatible for QCS9100 SoC.
->> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
->> platform use non-SCMI resource. In the future, the SA8775p platform will
->> move to use SCMI resources and it will have new sa8775p-related device
->> tree. Consequently, introduce "qcs9100-tlmm" to describe non-SCMI based
->> pinctrl.
->>
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>   Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
->> index e9abbf2c0689..1bdec08efc4a 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
->> @@ -17,7 +17,10 @@ allOf:
->>   
->>   properties:
->>     compatible:
->> -    const: qcom,sa8775p-tlmm
->> +    items:
-> 
-> Same comment as in other patchset, so apparently you made all of patches
-> in similar way. No need to add items.
-> 
-> Best regards,
-> Krzysztof
-> 
+     Arnd
 
-I will use an enum directly in all the patches with similar 
-modifications in the next patch series.
-
--- 
-Thx and BRs,
-Tengfei Fan
+diff --git a/arch/csky/include/uapi/asm/unistd.h b/arch/csky/include/uapi/asm/unistd.h
+index 794adbc04e48..44882179a6e1 100644
+--- a/arch/csky/include/uapi/asm/unistd.h
++++ b/arch/csky/include/uapi/asm/unistd.h
+@@ -1,4 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ 
+ #include <asm/unistd_32.h>
+-#define __NR_sync_file_range2 __NR_sync_file_range
++
++#define __NR_sync_file_range2 84
++#undef __NR_sync_file_range
+diff --git a/arch/hexagon/include/uapi/asm/unistd.h b/arch/hexagon/include/uapi/asm/unistd.h
+index 6f670347dd61..a3b0cac25580 100644
+--- a/arch/hexagon/include/uapi/asm/unistd.h
++++ b/arch/hexagon/include/uapi/asm/unistd.h
+@@ -29,4 +29,5 @@
+ 
+ #include <asm/unistd_32.h>
+ 
+-#define __NR_sync_file_range2 __NR_sync_file_range
++#define __NR_sync_file_range2 84
++#undef __NR_sync_file_range
