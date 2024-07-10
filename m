@@ -1,130 +1,106 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0253214535A;
-	Wed, 10 Jul 2024 08:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD684D535;
+	Wed, 10 Jul 2024 08:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720600730; cv=none; b=cHu5uDVTgVUmPeHV5hFBw1Nlqyt19OWdD7v/sadbNsu6F1h4nYxgDNjZFfBe3iVgjADlQjWxsozGJxwkV4hnSVIfSmaUqG6TK82jowflg1Z5kv1Crhf3Mv9Ye1MlWMYYKXICMmyRBfN1n+qYCbpHUNIVbAv5ZPahKgjFQZ+UUmw=
+	t=1720600961; cv=none; b=diGbVho7gWEOTmJyUWGft2YyJYzB/i21tHHJ4Waa0YIPOiFWYInsVlXBsqNud1+bVXqnAdMh9hq1wO0SoUGfSrXdXsoBxB9XXRlkgv6hdgwAD7oPPNJFQyUAg8zJ5+r6vQhkKY4s0nyfiGSxVXRrN1QWPzgtHFOCRg4khUsxSzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720600730; c=relaxed/simple;
-	bh=gfDtRWhYk0t5bsEEguIzwobh+2zPF5zVrRMyEEQvRfk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=BNuYc5u3z0bZXyWUTzxTuy2ouFd/cX+mnRGL4xi/vxdn4Nq2aaFxccUMz5HF4L8rIOWaBaFJzteUfyMwq39OFUGHqDXXrCabcOoCDkMpbPgdr1w3ro4UGkdnBfahuq188XpmdGiSt3m7PHbjlcymUIQ5FNMHacVvBTHm3KC6xLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Gxsmex4c; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PrJBeQ9L; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720600961; c=relaxed/simple;
+	bh=/cSixCFKERN/J7DRtssnHK2SWpy1fqsCyCoIL53VSHw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BWDpAHeruqOgKcKb6RwtHc+N3y6YJIx/CGuc3mzFLIR4mEVpsdJQ2+g5510PqTu4rr43/Oeucn8EHvqMAJRl0v4pN/w6qTLTnGdftnLCeir002F7T2dzLbalHxrXAGrYEQmFI3a/5SBmAemWP6Lb/Iap244d93BYyCZzmFNoJ68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=fctuXaPG; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Gxsmex4c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PrJBeQ9L"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 158011381E84;
-	Wed, 10 Jul 2024 04:38:48 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 10 Jul 2024 04:38:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1720600728; x=1720687128; bh=69hv1M1ROq
-	f8298u22/TUO59eY+uy73Z7ZOkyR9XYZs=; b=Gxsmex4cHupEXBzo0yMc/r3p8M
-	RpxeO3o0pGWvvKgWNbf68d/LlaWG0NNEnz+orWNnmV8V42gHnJz8aNjHfXxTKPaE
-	BhQOXgPTfWz1rzYB3PFRIntCuexmFKcyD3SgurfXOPOZ6srmkbfTeBHsru5eNA04
-	Kir1CRANgusVHiMDuArE7xBXat86KwE5uTFJWhtb67SLujU8MEUhXOFE/uFLgYk0
-	f8Bnui20z0efIAlmr6bmFqJCCHKeDAGfSRO+8Ted+Qza7NQAJp8/+XwSjRh3trGc
-	dHHRWrOEf8h76j5hMZMOCFypQsHiETgny6D8rkfjTJ6hmsgYA5EqnwAQZ1XA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1720600728; x=1720687128; bh=69hv1M1ROqf8298u22/TUO59eY+u
-	y73Z7ZOkyR9XYZs=; b=PrJBeQ9L3NL5R7DjqMDEU7TMVi4j/68Siigza5EIr7br
-	PunZZ0f7OcJ0MA4krzrGXiTSdfaTrgNyxnxbOCazsrxJTB/B7lotEGfB8189pjlv
-	oMK50VAxlEbYxoRM1Ic7NuL/D1ZeJCDunJ3ybK1nnKv7ZRINsA99C+DO2NdMMHE0
-	aIuoftQV+leRDY3GTu9JNysi5H8F7eQtbPFvcUJXS36vuu1Gn6WLN7pIBuVQ+T8Z
-	tOGwdw+zXwODQvSEqVT2VYEkwQ9/P0DdkTi8C8njYgqIC5ioMjLk6bTS6Dp+AL3P
-	RBgtv0Ee49PoZH7359iY75Utq+GWjpnOJvdlMnsj+Q==
-X-ME-Sender: <xms:lkiOZuzc64JkX3CQB896hVkeIvoiS527e0XAw-6XpBvgOdjvR54TZQ>
-    <xme:lkiOZqQ0b0CXBUYWWGs3IFq1ZuRVHtlgzMfoc0PHbHvKc-q5luUPbiA20rUqDAxUg
-    FuJA1W8zArQhbD4-G4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfedugddtiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:lkiOZgUaNQ9VZ2CJMHE528jiMsZ06Z-4v-u1y5K7vrmM_vPeYZBamQ>
-    <xmx:lkiOZkj-e8bYRxgVBUeUJ4NH5ncaRdaNJQc-dhPUGDNTSp-u9ptk_A>
-    <xmx:lkiOZgC54__9xRrTRd5MnvIialYoybn3RmCasyCIJoHd1gdqlUf1pQ>
-    <xmx:lkiOZlJhEplBz81lkbsoT7xjRG8FAXQJ9jQ3zs2_Ejr8yUlencuu9A>
-    <xmx:mEiOZj96aK8qeLOYs1KAJBCy1fvrJNCbwiIxyMttw5YmT3UPDi88IlPe>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AF5FEB6008F; Wed, 10 Jul 2024 04:38:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fctuXaPG"
+X-UUID: 54ca3f843e9811efb5b96b43b535fdb4-20240710
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=00qi1vCjVrBTnoMM1ymQIUcx+b2b5UPxjpcAqXcyXco=;
+	b=fctuXaPG4XNC8Fosfr6HyRUpTLneQC6ks+9KSIYTKQFaeHHUw2ZBUvuf1BIwkHcXh8mBdYzrs2yI4FeXbkn41uthyGpoV9+lpGC+Uw7hXCGEeMgMRyh2u8K5EVTGGBt6Lf7C4klTOQhGjHM/OW0I6phTVfl44eIAsm2UA5/xPHY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.40,REQID:1ec12272-4b5e-483a-b3fa-59c4e5725506,IP:0,U
+	RL:0,TC:0,Content:35,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:35
+X-CID-META: VersionHash:ba885a6,CLOUDID:5683490d-46b0-425a-97d3-4623fe284021,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:4,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 54ca3f843e9811efb5b96b43b535fdb4-20240710
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
+	(envelope-from <shun-yi.wang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1828831548; Wed, 10 Jul 2024 16:42:25 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 10 Jul 2024 01:42:24 -0700
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 10 Jul 2024 16:42:24 +0800
+From: Shun-yi Wang <shun-yi.wang@mediatek.com>
+To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
+	<mathieu.poirier@linaro.org>
+CC: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>,
+	<linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<jason-ch.chen@mediatek.com>, <yaya.chang@mediatek.com>,
+	<teddy.chen@mediatek.com>, shun-yi.wang <shun-yi.wang@mediatek.com>
+Subject: [PATCH RFC 0/1] Support CMA regions
+Date: Wed, 10 Jul 2024 16:41:59 +0800
+Message-ID: <20240710084200.6561-1-shun-yi.wang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a3e1ebe1-79fa-438b-a196-3a1bff947bcd@app.fastmail.com>
-In-Reply-To: <5c52194a8b449e695a1f22bf525b1fb1674cd2f8.camel@kernel.org>
-References: <202407091931.mztaeJHw-lkp@intel.com>
- <c1d4fcee3098a58625bb03c8461b92af02d93d15.camel@kernel.org>
- <CAMuHMdVsDSBdz2axqTqrV4XP8UVTsN5pPS4ny9QXMUoxrTOU3w@mail.gmail.com>
- <c4df5f73-2687-4160-801c-5011193c9046@app.fastmail.com>
- <6ab599393503a50b4b708767f320a46388aa95f2.camel@kernel.org>
- <92726965-19a0-433b-9b49-69af84b25081@app.fastmail.com>
- <edd2d831320fb14333e605e77d4b284b1123eb86.camel@kernel.org>
- <c8e44728-6c09-4fbe-9583-1f8298c3ea39@app.fastmail.com>
- <5c52194a8b449e695a1f22bf525b1fb1674cd2f8.camel@kernel.org>
-Date: Wed, 10 Jul 2024 10:38:25 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Subject: Re: [jlayton:mgtime 5/13] inode.c:undefined reference to
- `__invalid_cmpxchg_size'
 Content-Type: text/plain
+X-MTK: N
 
-On Tue, Jul 9, 2024, at 20:27, Jeff Layton wrote:
-> On Tue, 2024-07-09 at 19:06 +0200, Arnd Bergmann wrote:
->> On Tue, Jul 9, 2024, at 17:27, Jeff Layton wrote:
->> > On Tue, 2024-07-09 at 17:07 +0200, Arnd Bergmann wrote:
->
->
-> Yes, I had considered it on an earlier draft, but my attempt was pretty
-> laughable. You inspired me to take another look though...
->
-> If we go that route, what I think we'd want to do is add a new floor
-> value to the timekeeper and a couple of new functions:
->
-> ktime_get_coarse_floor - fetch the max of current coarse time and floor
-> ktime_get_fine_floor - fetch a fine-grained time and update the floor
+From: "shun-yi.wang" <shun-yi.wang@mediatek.com>
 
-I was thinking of keeping a name that is specific to the vfs
-usage instead of the ktime_get_* namespace. I'm sure the timekeeping
-maintainers will have an opinion on this though, one way or another.
+In order to reserve specific Contiguous Memory Allocator (CMA) regions 
+for hardware use. When the name of the reserved region contains "cma", 
+then a corresponding CMA heap is added.
 
-> The variety of different offsets inside the existing timekeeper code is
-> a bit bewildering, but I guess we'd want ktime_get_fine_floor to call
-> timekeeping_get_ns(&tk->tkr_mono) and keep the latest return cached.
-> When the coarse time is updated we'd zero out that cached floor value.
+In the DTS (Device Tree Source), we may have several memory regions 
+with different names, e.g.,
+&scp {
+	...
+	memory-region = <&mem_reserved_1>, <&mem_reserved_2>;
+};
 
-Why not update the cached value during the timekeeping update as well
-instead of setting it to zero? That way you can just always use the
-cached value for VFS and simplify the common code path for reading
-that value.
+mem_reserved_1: xxx-xxx-region {
+	...
+};
+mem_reserved_2: xxx-xxx-cma-region {
+	...
+};
 
-> Updating that value in ktime_get_fine_floor will require locking or
-> (more likely) some sort of atomic op. timekeeping_get_ns returns u64
-> though, so I think we're still stuck needing to do a cmpxchg64.
+When the name of the region contains "cma", a corresponding heap 
+allocator is added by cma_heap_add().
+However, we are unsure if using the name "cma" as an identifier
+is a good practice.
+I sincerely hope that you can provide me some suggestions, thanks.
+Especially within the segment of '#ifdef CONFIG_DMA_BUF_HEAPS_CMA'
 
-Right, or atomic64_cmpxchg() to make it work on 32-bit.
+Note: The cma_heap_add() is introduced from this patch:
+dma-buf: heaps: Introduce cma_heap_add() for non-default CMA heap
 
-     Arnd
+shun-yi.wang (1):
+  remoteproc: mediatek: Support reserved CMA regions
+
+ drivers/remoteproc/mtk_scp.c | 38 ++++++++++++++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
+
+-- 
+2.18.0
+
