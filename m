@@ -1,141 +1,111 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388A618F2FC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B65684E0D;
+	Wed, 10 Jul 2024 09:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720604005; cv=none; b=Easw4EsSlSsiFi0DFwYKbbuvcbn//r7+pbiWDyvQKnaaPkLju1fencASc5tn0qnuGddyj8saSx6MrDZ2jR6t0W17UDcAufFJu3rqr7Szg1EJtPW8aqpoVNQCzO8ttMU+vfB7lhDl5HOHoHv0thSNp3Xs9d2Qfn15F/IAfTU47m0=
+	t=1720604131; cv=none; b=SW/BkWvmcPfzpaFhlKGuXxSzPmY4msYKRmBm2O182XxOxD40SvgqxSSEMkHWIIUaUoBqmymubO1qEI8I8b+ifYGcHkwqCFaxZQyQxmuxrmpFLYCrr4ojRZ0sHumFS5Wt0eob0eQrfPFtB3wmfBKy0Ur6vejjQ/Aiz4VV/G6YkiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720604005; c=relaxed/simple;
-	bh=3+9DMfYTCxGjnK/e+W8XKa3FLEaY8rQkVl7tyylyIMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aV+mIt/904Bhb2xoheAz2XCleNOjTqK2S0fXALLM2lwoHli0SkuywxXvFA5GvWQOMTTW0FJCCSlrmv3COyzMKYlhin8sLTUkyf5XiTsW9d7qmGKKc9Hip5/up2LJ7KUEBXHpjmZuYzMJ4QPXHgDk/nI55wfgSAwEWKdIrDULeSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=ZWPiFYHM; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1720604131; c=relaxed/simple;
+	bh=xjDv/a9AfKrRSeQV89Csz9I6G8Pym2b21m4TyF8lKIU=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fN/nWNu5u3+xj1DJs8E3EgehLiPEpXaOB39f6XWyaw1ZT7m8p5ZBeIz2FanPQDZVYHge7Ps1JUoKBYeZ3awyYcU3mkkyUJp6/2BYtYvAa9LIwTIMo4wTI6ukk43o86uTPRD7+coA16cQQG08JSLp8llasNlo8KYVOkWzewKuwq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BPOuGWKp; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZWPiFYHM"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-426593b99daso4541445e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 02:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1720604002; x=1721208802; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TzeNSBzyh7QLIzCzfuneqEVx7/nkOlCs6tKZ3S/B85c=;
-        b=ZWPiFYHMgh1dXUqQbdlPbEZ+gN7mwJCmBCMEmHaErmXwDXIHA3TLHpX3jqsFuHw4a2
-         9qSQCHNZcPJKHxFf5GJMHVQyg9mdrK7kPJzyZm3J81dEThDk/Nk4hlWNno6gcLX6x3rA
-         tSBEow6qYe99JrCVrC1Nhi9ylDywJGcCu3+s0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720604002; x=1721208802;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TzeNSBzyh7QLIzCzfuneqEVx7/nkOlCs6tKZ3S/B85c=;
-        b=tRWYqM6f/Co2R46j38pgj4MDgYeuWVEsGe3F4hy+/hygfnBGXsc6nWj8ttFp+hVSsP
-         R7DGYV3X3jliY4CbQ0I7accMQoRogEC47RudresefVd84nH3Mw9CHijJIS+qT981blXR
-         GkUxv9ulH5aabAsQHesoQa0aUczdHQ8D0O5MKArs+mwb1JLIIObb6ikIuWBje1rgxxhS
-         jiYlxUWDLb/iK+zI9R4+aDYk5Lhye7o4WgtIUR386LvlRdmeAelC8kUrhzQTQ+a0xFr7
-         UzFHUbQga3u9JhFP142GMWr+kSYYt1OUkVspk7hstXV07sYfGtWnigI3Go5OeQYG+QAe
-         CXeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlKVT9i49CDRjrs2xOitG2WPYBDfiu14nUlUswvIu7L2SwByBbqFrClPyDuVO/DFiA8oWrngCBMdQs799YHyWomlAM0JWIUgLtlm7I
-X-Gm-Message-State: AOJu0YxQqIj0prAk6EjH1FuQfhs+qhYUru8YmIb3P9pmxKxIkeo+eWqK
-	vZ50/ErRtL6VKyMTqxFmi+U6XLcNwUzSShO3Scm0tFD4OtCiMZbNzHTHuO79Ky7vBhpPD+vGO0X
-	8tLw=
-X-Google-Smtp-Source: AGHT+IFAxrCbKthPgF5yUWY01P3adBGwJNfKLQpHeukxHdQeDqaphx4o5novPlwU23HfZb9BgXrQug==
-X-Received: by 2002:a05:600c:3b86:b0:426:5dd5:f245 with SMTP id 5b1f17b1804b1-426708f1979mr35047955e9.2.1720604002571;
-        Wed, 10 Jul 2024 02:33:22 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5a27sm73448935e9.23.2024.07.10.02.33.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 02:33:22 -0700 (PDT)
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-To: DRI Development <dri-devel@lists.freedesktop.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com,
-	Daniel Vetter <daniel.vetter@intel.com>,
-	stable@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Brian Foster <bfoster@redhat.com>,
-	linux-bcachefs@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH 2/2] bcachefs: only console_trylock in bch2_print_string_as_lines
-Date: Wed, 10 Jul 2024 11:31:17 +0200
-Message-ID: <20240710093120.732208-2-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240710093120.732208-1-daniel.vetter@ffwll.ch>
-References: <20240710093120.732208-1-daniel.vetter@ffwll.ch>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BPOuGWKp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720604128;
+	bh=xjDv/a9AfKrRSeQV89Csz9I6G8Pym2b21m4TyF8lKIU=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=BPOuGWKpLXOcYQYR95ixbG4bjZHSX5RfjC8mkxcTkODMzxgLC+5qXLreQbU2vROt2
+	 5COhggXbbdE1ClHe6rkx9WdXfJmlUS1cnMnjc2D4lc3Uf43sYQv4KcvYl9URm2SmLI
+	 W1GNve70XYOQ2+myKopYCJ/Pu8qwkiBB1DxR5tbSgz00MM9UNtq+b87ECaVcAzMywm
+	 csmci0VmOmgBgCpDh4wNojo8zH9wsaoSIa58nGfsCUZQaP1UcV4Brl8oaCgA4Sy500
+	 +yMRudV0Px2OFNz8z5ymrlXDGGkSWzJzmoK7LTXFiIS4ws5su8Qfdq+MgNlelcPhAW
+	 Ek61oRi7hRPSA==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DD0BD3782192;
+	Wed, 10 Jul 2024 09:35:18 +0000 (UTC)
+Message-ID: <0ce9ef47-a655-492d-b8ae-39341d2ef076@collabora.com>
+Date: Wed, 10 Jul 2024 14:35:04 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
+ linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 1/2] selftests: arm64: tags_test: conform test to TAP
+ output
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kunwu Chan <chentao@kylinos.cn>, Mark Brown <broonie@kernel.org>
+References: <20240602132502.4186771-1-usama.anjum@collabora.com>
+ <599d722c-6d34-42dd-bdfd-5cc862d1c8b4@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <599d722c-6d34-42dd-bdfd-5cc862d1c8b4@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-console_lock is the outermost subsystem lock for a lot of subsystems,
-which means get/put_user must nest within. Which means it cannot be
-acquired somewhere deeply nested in other locks, and most definitely
-not while holding fs locks potentially needed to resolve faults.
+Kind reminder.
 
-console_trylock is the best we can do here.
+This two patch series is removing a script which was marking test pass/fail
+by adding pass/fail logic inside the test itself.
 
-Including printk folks since even trylock feels realyl iffy here to
-me.
+On 7/1/24 1:40 PM, Muhammad Usama Anjum wrote:
+> Soft reminder
+> 
+> On 6/2/24 6:24 PM, Muhammad Usama Anjum wrote:
+>> Conform the layout, informational and status messages to TAP. No
+>> functional change is intended other than the layout of output messages.
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>>  tools/testing/selftests/arm64/tags/tags_test.c | 10 ++++++----
+>>  1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/arm64/tags/tags_test.c b/tools/testing/selftests/arm64/tags/tags_test.c
+>> index 955f87c1170d7..8ae26e496c89c 100644
+>> --- a/tools/testing/selftests/arm64/tags/tags_test.c
+>> +++ b/tools/testing/selftests/arm64/tags/tags_test.c
+>> @@ -17,19 +17,21 @@ int main(void)
+>>  	static int tbi_enabled = 0;
+>>  	unsigned long tag = 0;
+>>  	struct utsname *ptr;
+>> -	int err;
+>> +
+>> +	ksft_print_header();
+>> +	ksft_set_plan(1);
+>>  
+>>  	if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
+>>  		tbi_enabled = 1;
+>>  	ptr = (struct utsname *)malloc(sizeof(*ptr));
+>>  	if (!ptr)
+>> -		ksft_exit_fail_msg("Failed to allocate utsname buffer\n");
+>> +		ksft_exit_fail_perror("Failed to allocate utsname buffer");
+>>  
+>>  	if (tbi_enabled)
+>>  		tag = 0x42;
+>>  	ptr = (struct utsname *)SET_TAG(ptr, tag);
+>> -	err = uname(ptr);
+>> +	ksft_test_result(!uname(ptr), "Syscall successful with tagged address\n");
+>>  	free(ptr);
+>>  
+>> -	return err;
+>> +	ksft_finished();
+>>  }
+> 
 
-Reported-by: syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com
-References: https://lore.kernel.org/dri-devel/00000000000026c1ff061cd0de12@google.com/
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Fixes: a8f354284304 ("bcachefs: bch2_print_string_as_lines()")
-Cc: <stable@vger.kernel.org> # v6.7+
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Brian Foster <bfoster@redhat.com>
-Cc: linux-bcachefs@vger.kernel.org
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
----
- fs/bcachefs/util.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
-index de331dec2a99..02381c653603 100644
---- a/fs/bcachefs/util.c
-+++ b/fs/bcachefs/util.c
-@@ -255,13 +255,14 @@ void bch2_prt_u64_base2(struct printbuf *out, u64 v)
- void bch2_print_string_as_lines(const char *prefix, const char *lines)
- {
- 	const char *p;
-+	int locked;
- 
- 	if (!lines) {
- 		printk("%s (null)\n", prefix);
- 		return;
- 	}
- 
--	console_lock();
-+	locked = console_trylock();
- 	while (1) {
- 		p = strchrnul(lines, '\n');
- 		printk("%s%.*s\n", prefix, (int) (p - lines), lines);
-@@ -269,7 +270,8 @@ void bch2_print_string_as_lines(const char *prefix, const char *lines)
- 			break;
- 		lines = p + 1;
- 	}
--	console_unlock();
-+	if (locked)
-+		console_unlock();
- }
- 
- int bch2_save_backtrace(bch_stacktrace *stack, struct task_struct *task, unsigned skipnr,
 -- 
-2.45.2
-
+BR,
+Muhammad Usama Anjum
