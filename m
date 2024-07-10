@@ -1,90 +1,96 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D357C193477
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71EC193476
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720622609; cv=none; b=BbP21T5EZuJOi05zJg2UBPzkA+uE+LhzB9h/c2zswWRbKiXdxLrpeUM17zOVfEQlRaI/vS7NSp6h5uHvy7Q1BS1R0t4aUMs7Ag0h5WetAzemdAkuEOcEZX2vt3cCyABQcO4sjd/eVGDze6kJatuiypGODR2O7d8aSa8nraxBaAk=
+	t=1720622631; cv=none; b=GnwoYTJuR/7BVyWLT9lOnuMATVvg7GUb8ggIvTh/s0GpB4TxchZ3Ny5uAsbYBGtvddtUnEwVgVN/y/T58mW+Sgn+gBKJZ7/0vyyVdm8baBOY66kToCMIupCD3QcgWVlW3a/U72tfIGMB9q4u7eDTi6clNZgOy9SVrO2AX3ZrmP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720622609; c=relaxed/simple;
-	bh=gzD91Lc+TFKAzfZaYsU1hvL5P3UN/LvwShzPyx8Kj5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OVCECoJgs6CXSJojZJuynAr/0tmww/tHRAv8K4UbsOj6MjHDEeyAMJB5TXxvI55i1BvBkkJrRe6fz1n2KdQ4ZG8BcJO+e1cHb02ETxAV0KU3NFL+qDiRLkBUoAs368u84lDE9xRzASPPdlCmMezYR269azMqDglnUwQgmpJGeLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=dQRWMx0k; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1720622631; c=relaxed/simple;
+	bh=wxUf7+WncWeXLeiWfLfp5uqEz6LxO4feTNrN84VH3Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qPp3XVIGPquhtUTC7qEMYLT5QxbyLtkyBKjHSneAf2YzR2EZLquaJNmx6r4gdVJTwq4JscYvZLlrmp4mwgS2TRlDOgGj1OCwkOmp0VlfOxYomj6XslzMwY/r3Bhbfruz2dFSABFujUxoIVzdGE8prOsEhIsDcC3FrpmsVgSSuuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UsiJig+c; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="dQRWMx0k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1720622588;
- bh=hZhXVKWV0BbCE5f7SbJ+Zt2x4Pus6WrIiDPVjBe5XNY=;
- b=dQRWMx0kaHTYOwcrnUZOPAfX+6CxkUq6/RoeA4JpUOfPuoZSu0ebSQio5pw54QC82GeQw2TdN
- OGGUZg06LljOaenmGqPqV4uQxM/DBRRy8UnU3rkY0x2A28xWfEJf2GWC+lbRMOLysPe/0IOUYRS
- ch4cSt5ts106iBY4DmvRgYlNQ7CQDluNTrIPJAPKAOHMAwnMkB1iWSEqdf2V1wmn62hfjPE1b40
- 5EAARTj0u6XsTJW543TX1Ue8blncl95VaDNdshko5B4OYCFAxBITKEdTOtskSPHr92gNw4/VwNx
- VdS2qGVlZR6tJGODyPFChPEmGPEmBYZeUQxZKZp8YkSQ==
-Message-ID: <caf55fe6-4674-4c89-a94e-f4ad348e2ba0@kwiboo.se>
-Date: Wed, 10 Jul 2024 16:30:57 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UsiJig+c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720622628;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZvC/1briAqboclLx4gZNfSMQXCaqMLqhaARp61h92zQ=;
+	b=UsiJig+caOeVUj1lqS+X54m05X8Og+0zgxdXNANBLkfbFw0pjbuVUw4WG0xpO778JTRXAA
+	t8PW+7EBMUPU2gY0Ae2IpswvuAp0vMwn2JMs1RR+T7Ce1MT7doLEWcnb27kqTvOmW/QsFG
+	NEDpY3xGSGp3yNZfNmxOqggyC8pmITI=
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com
+ [209.85.160.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-58-mnHkatc_PHujBBOSE2qf8w-1; Wed, 10 Jul 2024 10:43:47 -0400
+X-MC-Unique: mnHkatc_PHujBBOSE2qf8w-1
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-25e8c18a7c8so750059fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 07:43:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720622625; x=1721227425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZvC/1briAqboclLx4gZNfSMQXCaqMLqhaARp61h92zQ=;
+        b=WZ9qH1siV+pR/92M7mLqjvtM465Ml0N2cwh8BH+nyB6OuABR1bE4TVWlqmKDV7AWBz
+         Zo0CifmxBmkUpMF1YGm1Gkgea+UVWLXWUdvaEUSFyNheqd6VAKSaWyp50iCxT5A6l/PV
+         9UkGJQSE3Ju5aAAUUGTYWOKj5ahT631DGA5EJkrscoFZfrgt95X8Ok0oBNXGNKdWQnaD
+         +FPrwUBG7jkfkkWjYM2RdQ+klyxw8+eO4uSq2zYshl6FVtV7kla7Q2K1HJhm3gdGx6ii
+         z68z4iZfLtE1dE+Oi52haudPBxXJZhjLQZL+LRBVz3JtxKy/JwtrzlNvW+2FPjFLkhyK
+         L49Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWIz0cVGLq2J+mifN6p1J77BMQstiV7q8Au5LEEsVHzWfAlPcZ2ntqUASvdhD3d3AJYsOsAKHiRiFitcHd7BWR0WHmzZa93+lgu0GL1
+X-Gm-Message-State: AOJu0YwmozlFWGdvJWE9Z7dTa9eyDWvov+W0+Bwy/cxPn7pe68SO2YUJ
+	LpIAKo/euENaPVeybJXt/30BTiHmG0rVw4xX+S7JBo/gR42mxb+3F9APlQvEAfZFJMfICHlgQ3a
+	HgaoydUdkaaPiAQz14PEMzyDoiBilJmTWDAQgmUkUO+toYTtYtgtrP2kBKF3MYg==
+X-Received: by 2002:a05:6870:610c:b0:25e:180:9183 with SMTP id 586e51a60fabf-25eaecbbec3mr5784206fac.4.1720622625421;
+        Wed, 10 Jul 2024 07:43:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGTD/gcLKLatwoODGC6PBmZLpDHOquqnlFmI5MDo6NjD0BVLxBJxqbPHflFRf/y2o8S5g+V2w==
+X-Received: by 2002:a05:6870:610c:b0:25e:180:9183 with SMTP id 586e51a60fabf-25eaecbbec3mr5784188fac.4.1720622625106;
+        Wed, 10 Jul 2024 07:43:45 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79f19022e5dsm199404585a.57.2024.07.10.07.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 07:43:44 -0700 (PDT)
+Date: Wed, 10 Jul 2024 10:43:41 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org, linux-riscv@lists.infradead.org,
+	Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v2 1/3] arch/x86: Drop own definition of pgd,p4d_leaf
+Message-ID: <Zo6eHVBcUyznRalN@x1n>
+References: <bcd6ab8246348f18fdc77694e321ee6458f05781.1720597744.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/9] arm64: dts: rockchip: use generic Ethernet PHY
- reset bindings for Lunzn Fastrhino R68S
-To: Chukun Pan <amadeus@jmu.edu.cn>, heiko@sntech.de
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, robh@kernel.org
-References: <2210411.C4sosBPzcN@diego>
- <20240710133029.676677-1-amadeus@jmu.edu.cn>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20240710133029.676677-1-amadeus@jmu.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 668e9b26a862f9d735124bc1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bcd6ab8246348f18fdc77694e321ee6458f05781.1720597744.git.christophe.leroy@csgroup.eu>
 
-Hi,
-
-On 2024-07-10 15:30, Chukun Pan wrote:
->> what's the reason behind the changed timings?
->>
->> The original comment stated,
->> 	/* Reset time is 15ms, 50ms for rtl8211f */
->> so that timing change needs an explanation please :-)
+On Wed, Jul 10, 2024 at 09:51:20AM +0200, Christophe Leroy wrote:
+> From: Oscar Salvador <osalvador@suse.de>
 > 
-> I don't know why this comment says that, but it's clearly wrong.
-> According to the PHY datasheet, the RTL8211F PHY needs a 10ms
-> assert delay and at least 72ms deassert delay. Considering the
-> possibility of mixed use of PHY chips, the reset time should be
-> further increased.
-
-Where do you find the 72ms in the datasheet?
-
-In RTL8211F-CG v1.1 I see 10ms and minimum of 30ms, in v1.2 and v1.4
-I see 10ms and minimum of 50ms.
-
-I have used 50ms on a few recently added boards and they seem to all
-work fine with 50ms, wonder if the deassert delay should be changed for
-those boards.
-
-Regards,
-Jonas
-
+> We provide generic definitions of pXd_leaf in pgtable.h when the arch
+> do not define their own, where the generic pXd_leaf always return false.
 > 
-> Thanks,
-> Chukun
+> Although x86 defines {pgd,p4d}_leaf, they end up being a no-op, so drop them
+> and make them fallback to the generic one.
 > 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+Reviewed-by: Peter Xu <peterx@redhat.com>
+
+-- 
+Peter Xu
 
