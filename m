@@ -1,264 +1,108 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2B03AC0C;
-	Wed, 10 Jul 2024 21:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD963AC0C
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 21:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720648256; cv=none; b=ZS8MEEVKe6ZzSKYA30iOUGgmn/7H+JL9orC+ZirDzca1UDupyrWi/J0e/OhC2/iHo6vIwi03W1pKGUvHQUT84U7/0aUCH79nj/BUcgNy0kyTiGnCTNhC1g+waANpK9/IvALcLLWA/QcXkeEeNahg+gR0Vnyyf31mGhL+ql3xDcE=
+	t=1720648409; cv=none; b=Wsv1Rc7j3mejS5T9tob4Fct55Rw6gnKO9T/Gy/Xr30+JzD90CXAVZQAV7axpg/ZGcJ2lU4cxIAUJX2oIwc5YLfW4tHl8VI3rsGm/ckzzv98DjaRqggMpUrxNXoNMb6Qi6ZRUDv95QcvxXHzyBsMqOGx5r4rBQmsGEhG4ZdHRPF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720648256; c=relaxed/simple;
-	bh=7AEMTmeXOOaIqvd4DiMGX4i5CTo3vLpW0bIbfdFRyK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OatuJ1ffPdapNIXxI59OjqbxWtU6ULxvfOsrWOzGV/BdzZOEubIsgOzrFFVB2wheo7LWzPhoBrBVT9r3+MQeKu71Fy0HoRrMCJFwFBJyisfHpXK9poijpmCiIi3Rs7LpZgFYej17NroRtG2MQwXJztIuG7opFDrtI0Vi4GXO1iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HyOXKoQO; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720648409; c=relaxed/simple;
+	bh=rn/TCVxs+XBAD6GLf+YCrx7sLDTQwt+2xP1Hu6hMNQc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cbkGkl7G5p2ZbFgzO05FBbzb99p2RJ+VpdYv7bRf26uTnWrnv10OJGyUfwJ7e0is/ZeFwCOELZ1NB5v3D4OR7182kXzypSVpUR+zT1ckC5ccbpHo+yf2VUYSTtSkivOVH6N5TT0MjOXBKNqDdcPUIZ8S2mrNO/rZvIjonWuu6AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2NolPDoS; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HyOXKoQO"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-36798e62aeeso82354f8f.1;
-        Wed, 10 Jul 2024 14:50:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2NolPDoS"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-778702b9f8fso97667a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 14:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720648253; x=1721253053; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JeLU84OFusCIZ6nm+2Cz7jRYkdRS1DgJBvgZZI1L2Mw=;
-        b=HyOXKoQOPS+GgE/c6AdlmE/AUC9fB1q0R1/SxEZilhNnJcPR1vCNdsdj7CpAiF9kiJ
-         e5LAbipBt7isjr9uE28xlwc4Dm11h6cRTjQvf1G9iI5wLzFpvv8kwkl9ZKko/JZz+AvI
-         zQp10I8IUd+0s2d1QlZuM5c5sXaQ76J4MS53VBqANxK1pOKhpZeNZl8z0GMoepR6qF5W
-         ZfB71nD1Nlp1iSxhlO/PCxD4vN2T9xEtAst9oQCOK+FRRJywpC4AZ6cfeMczVvuD2Cpe
-         JiMZdcKbcyE8cgxajls5W9QO5ZOOHcNmFw9cEpx+HircTpMoFOZ20TCLf/sz4CFHomNl
-         flBQ==
+        d=google.com; s=20230601; t=1720648407; x=1721253207; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=InpQCCUUg6h/c2Mju1pPG/Gh6Z0/TXgBiLbO46ZNx3Y=;
+        b=2NolPDoSdZUPj/LRtoHYmH4TzWqPbpAPH5tETyTNQ1Go1j0CjCKJXm3X9EEEMUBYOv
+         JXzXKzPKEqowQy26Cl1yjNJ6SObaB8x8x6MSDcurIpevo6qvLg2HnksKZ8HVx9WiCXKf
+         0FsadOXEH0OfDyKnbnb64i0yH2FT9Zqs508ds6Ddimbw2KnkbYs24BdtWgI+TmBfceXL
+         0OEDisYyKQumIAcPV9NAuWEkxzOFJ/DeHkCGx4RRlT5T9lFwcTQDd7jikHNaIsybTCXr
+         cPwnXI2iYvuLxPxUYqQ805fMtnDbTWTWr8oqJX55xvo7e3c6/IxCrrRnO18Ry+MyuKl7
+         RjNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720648253; x=1721253053;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JeLU84OFusCIZ6nm+2Cz7jRYkdRS1DgJBvgZZI1L2Mw=;
-        b=QwvEbQigUEkPYsAanHdXW/3k96VwOeqs/EDzecP7XBKiDl0kQ/s2cRUNMtkdebjaFi
-         lQmwcKGvFNuQnbvoOpCpiSXmWNT2FfPHjGSQlSEFna8gmD2kcJXTUHPGmgYYJoUA4oX7
-         +QMkChCPT4iNnYh03Br5UmBW4BcvRcNmB5JmZ6FfxluwQfkZrfL/Q/+GP5P8s2rRF3yM
-         gCdJWwDH3Vi0maUzLaJcgVeA7a6p0BJ02kO9GeUmyGZl4U8qc9ejyUA4tPBmDHWq91XS
-         1wQNAd7TW8o8IF+flatqZLzfzMf3V3Kim9Jd21lOykM/dg4xO01ltTE4NiGiok5gzq+D
-         PeIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVjAyKN1rqaIij6Fme/lmhXDSktZkMzwARXX1CKAqCcKiGNFKjfkPokW1dsYHM/0ksWxN7+i3GonfDTF2K8r1FCw0+1HQ6k
-X-Gm-Message-State: AOJu0YzZ+thWI1nVSLWJuTbBLrr4z0ojgr0iRTw0L3Xl+61noFbjCli3
-	MfxgwcVMRdvB3HCHm8y7Xn4a+Q0stbVOxUMREtRSHVENKK+17T8G
-X-Google-Smtp-Source: AGHT+IHs2K124hGmsNfrSgFSKepfKJjx6rwBz5PuQ4AO5O4uwv/m5OE/1tgbWlkvhpj+JI3EOqHMQA==
-X-Received: by 2002:a05:6000:c08:b0:367:4d9d:568b with SMTP id ffacd0b85a97d-367ceadc9eemr4069207f8f.68.1720648252855;
-        Wed, 10 Jul 2024 14:50:52 -0700 (PDT)
-Received: from [192.168.1.100] ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e095sm6180892f8f.23.2024.07.10.14.50.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 14:50:52 -0700 (PDT)
-Message-ID: <8551ef61-71fb-18f3-a8a8-6c7c3ed731e6@gmail.com>
-Date: Wed, 10 Jul 2024 23:50:50 +0200
+        d=1e100.net; s=20230601; t=1720648407; x=1721253207;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=InpQCCUUg6h/c2Mju1pPG/Gh6Z0/TXgBiLbO46ZNx3Y=;
+        b=xU+BvpJcclhGOM1/Nh+o2e/Vwbd50Xqe7LQsEWaYUqkO98i3LsukPDGQanlVadonxJ
+         UK89NAt2svFSGTJiRQqUAcb2cjkLnYDbvcFE4rTKq+sXKRJUKmmBocVGzWwrChYX3DWd
+         QOklMEHP23H4Ok7PGN5LfKaZ61aHO+CsKIjQFu9s5HtuBvF9q2/0PVqEiwmE8cbiVTXh
+         qtpndOgnC0SdK1ezlV+J/EAFjDatdOWnr6JUnd3nQiUfxKmqMXSZUXIT/1MnFuKMP3eF
+         XOXXAPA/F65SvDKzTG+4NKrNsbFVR7T8gUicI16l101ul8NVAYuN824d/3gpb9icNO4H
+         JfjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlFpMg2uXMfg6i6eCt93J0Wk0Yb5reBFpZKz+fHZXgMTGI3/foXz3Vohrv1rPZhLUxFC3pvnpMeRjJgxH/RiesKt09lr9bsUD7DODP
+X-Gm-Message-State: AOJu0Yy43fCM2qxQL7I7sJVJj1CchAY13giU3VJfrCSXek1ZMUKLt0+F
+	PTFYfl6dDJEeLAX6jp7wUpNKKfYUMgq0nx7rgdMKxf508Pzj50OUclKdkTwTOM3JFWYLFSBaY5L
+	aog==
+X-Google-Smtp-Source: AGHT+IEwT2V+os5fEtYUvDtdlJeCju0gv45EdxSCP2qzxKCXe+3yA10Yig7Ufm297VojhP8eft5okw/sizI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:3759:0:b0:718:84ed:abe7 with SMTP id
+ 41be03b00d2f7-78734697abcmr2123a12.4.1720648407063; Wed, 10 Jul 2024 14:53:27
+ -0700 (PDT)
+Date: Wed, 10 Jul 2024 14:53:25 -0700
+In-Reply-To: <f21d8157-a5e9-4acb-93fc-d040e9b585c8@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4] x86/entry_32: Use stack segment selector for VERW
- operand
-Content-Language: en-US
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- Robert Gill <rtgill82@gmail.com>, Jari Ruusu <jariruusu@protonmail.com>,
- Brian Gerst <brgerst@gmail.com>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
- antonio.gomez.iglesias@linux.intel.com, daniel.sneddon@linux.intel.com,
- stable@vger.kernel.org
-References: <20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-In-Reply-To: <20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240709132041.3625501-1-roypat@amazon.co.uk> <20240709132041.3625501-9-roypat@amazon.co.uk>
+ <CA+EHjTynVpsqsudSVRgOBdNSP_XjdgKQkY_LwdqvPkpJAnAYKg@mail.gmail.com>
+ <47ce1b10-e031-4ac1-b88f-9d4194533745@redhat.com> <f7106744-2add-4346-b3b6-49239de34b7f@amazon.co.uk>
+ <f21d8157-a5e9-4acb-93fc-d040e9b585c8@redhat.com>
+Message-ID: <Zo8C1Rz1eR96gQ1E@google.com>
+Subject: Re: [RFC PATCH 8/8] kvm: gmem: Allow restricted userspace mappings
+From: Sean Christopherson <seanjc@google.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Patrick Roy <roypat@amazon.co.uk>, Fuad Tabba <tabba@google.com>, pbonzini@redhat.com, 
+	akpm@linux-foundation.org, dwmw@amazon.co.uk, rppt@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	willy@infradead.org, graf@amazon.com, derekmn@amazon.com, kalyazin@amazon.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	dmatlack@google.com, chao.p.peng@linux.intel.com, xmarcalx@amazon.co.uk, 
+	James Gowans <jgowans@amazon.com>
+Content-Type: text/plain; charset="us-ascii"
 
+On Wed, Jul 10, 2024, David Hildenbrand wrote:
+> On 10.07.24 11:51, Patrick Roy wrote:
+> > On 7/9/24 22:13, David Hildenbrand wrote:
+> > > Note that just from staring at this commit, I don't understand the
+> > > motivation *why* we would want to do that.
+> > 
+> > Fair - I admittedly didn't get into that as much as I probably should
+> > have. In our usecase, we do not have anything that pKVM would (I think)
+> > call "guest-private" memory. I think our memory can be better described
+> > as guest-owned, but always shared with the VMM (e.g. userspace), but
+> > ideally never shared with the host kernel. This model lets us do a lot
+> > of simplifying assumptions: Things like I/O can be handled in userspace
+> > without the guest explicitly sharing I/O buffers (which is not exactly
+> > what we would want long-term anyway, as sharing in the guest_memfd
+> > context means sharing with the host kernel), we can easily do VM
+> > snapshotting without needing things like TDX's TDH.EXPORT.MEM APIs, etc.
+> 
+> Okay, so essentially you would want to use guest_memfd to only contain shard
+> memory and disallow any pinning like for secretmem.
+> 
+> If so, I wonder if it wouldn't be better to simply add KVM support to
+> consume *real* secretmem memory? IIRC so far there was only demand to
+> probably remove the directmap of private memory in guest_memfd, not of
+> shared memory.
 
+It's also desirable to remove shared memory from the directmap, e.g. to prevent
+using the directmap in a cross-VM attack.
 
-On 10. 07. 24 21:06, Pawan Gupta wrote:
-> Robert Gill reported below #GP when dosemu software was executing vm86()
-> system call:
-> 
->    general protection fault: 0000 [#1] PREEMPT SMP
->    CPU: 4 PID: 4610 Comm: dosemu.bin Not tainted 6.6.21-gentoo-x86 #1
->    Hardware name: Dell Inc. PowerEdge 1950/0H723K, BIOS 2.7.0 10/30/2010
->    EIP: restore_all_switch_stack+0xbe/0xcf
->    EAX: 00000000 EBX: 00000000 ECX: 00000000 EDX: 00000000
->    ESI: 00000000 EDI: 00000000 EBP: 00000000 ESP: ff8affdc
->    DS: 0000 ES: 0000 FS: 0000 GS: 0033 SS: 0068 EFLAGS: 00010046
->    CR0: 80050033 CR2: 00c2101c CR3: 04b6d000 CR4: 000406d0
->    Call Trace:
->     show_regs+0x70/0x78
->     die_addr+0x29/0x70
->     exc_general_protection+0x13c/0x348
->     exc_bounds+0x98/0x98
->     handle_exception+0x14d/0x14d
->     exc_bounds+0x98/0x98
->     restore_all_switch_stack+0xbe/0xcf
->     exc_bounds+0x98/0x98
->     restore_all_switch_stack+0xbe/0xcf
-> 
-> This only happens when VERW based mitigations like MDS/RFDS are enabled.
-> This is because segment registers with an arbitrary user value can result
-> in #GP when executing VERW. Intel SDM vol. 2C documents the following
-> behavior for VERW instruction:
-> 
->    #GP(0) - If a memory operand effective address is outside the CS, DS, ES,
-> 	   FS, or GS segment limit.
-> 
-> CLEAR_CPU_BUFFERS macro executes VERW instruction before returning to user
-> space. Replace CLEAR_CPU_BUFFERS with a safer version that uses %ss to
-> refer VERW operand mds_verw_sel. This ensures VERW will not #GP for an
-> arbitrary user %ds. Also, in NMI return path, move VERW to after
-> RESTORE_ALL_NMI that touches GPRs.
-> 
-> For clarity, below are the locations where the new CLEAR_CPU_BUFFERS_SAFE
-> version is being used:
-> 
-> * entry_INT80_32(), entry_SYSENTER_32() and interrupts (via
->    handle_exception_return) do:
-> 
-> restore_all_switch_stack:
->    [...]
->     mov    %esi,%esi
->     verw   %ss:0xc0fc92c0  <-------------
->     iret
-> 
-> * Opportunistic SYSEXIT:
-> 
->     [...]
->     verw   %ss:0xc0fc92c0  <-------------
->     btrl   $0x9,(%esp)
->     popf
->     pop    %eax
->     sti
->     sysexit
-> 
-> *  nmi_return and nmi_from_espfix:
->     mov    %esi,%esi
->     verw   %ss:0xc0fc92c0  <-------------
->     jmp     .Lirq_return
-> 
-> Fixes: a0e2dab44d22 ("x86/entry_32: Add VERW just before userspace transition")
-> Cc: stable@vger.kernel.org # 5.10+
-> Reported-by: Robert Gill <rtgill82@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218707
-> Closes: https://lore.kernel.org/all/8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info/
-> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Suggested-by: Brian Gerst <brgerst@gmail.com> # Use %ss
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> ---
-> v4:
-> - Further simplify the patch by using %ss for all VERW calls in 32-bit mode (Brian).
-> - In NMI exit path move VERW after RESTORE_ALL_NMI that touches GPRs (Dave).
-> 
-> v3: https://lore.kernel.org/r/20240701-fix-dosemu-vm86-v3-1-b1969532c75a@linux.intel.com
-> - Simplify CLEAR_CPU_BUFFERS_SAFE by using %ss instead of %ds (Brian).
-> - Do verw before popf in SYSEXIT path (Jari).
-> 
-> v2: https://lore.kernel.org/r/20240627-fix-dosemu-vm86-v2-1-d5579f698e77@linux.intel.com
-> - Safe guard against any other system calls like vm86() that might change %ds (Dave).
-> 
-> v1: https://lore.kernel.org/r/20240426-fix-dosemu-vm86-v1-1-88c826a3f378@linux.intel.com
-> ---
-> 
-> ---
->   arch/x86/entry/entry_32.S | 18 +++++++++++++++---
->   1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-> index d3a814efbff6..d54f6002e5a0 100644
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -253,6 +253,16 @@
->   .Lend_\@:
->   .endm
->   
-> +/*
-> + * Safer version of CLEAR_CPU_BUFFERS that uses %ss to reference VERW operand
-> + * mds_verw_sel. This ensures VERW will not #GP for an arbitrary user %ds.
-> + */
-> +.macro CLEAR_CPU_BUFFERS_SAFE
-> +	ALTERNATIVE "jmp .Lskip_verw\@", "", X86_FEATURE_CLEAR_CPU_BUF
-> +	verw	%ss:_ASM_RIP(mds_verw_sel)
-> +.Lskip_verw\@:
-> +.endm
-
-Why not simply:
-
-.macro CLEAR_CPU_BUFFERS_SAFE
-	ALTERNATIVE "", __stringify(verw %ss:_ASM_RIP(mds_verw_sel)), 
-X86_FEATURE_CLEAR_CPU_BUF
-.endm
-
-This is how CLEAR_CPU_BUFFERS .macro is defined in nospec-branch.h.
-
-Uros.
-
-> +
->   .macro RESTORE_INT_REGS
->   	popl	%ebx
->   	popl	%ecx
-> @@ -871,6 +881,8 @@ SYM_FUNC_START(entry_SYSENTER_32)
->   
->   	/* Now ready to switch the cr3 */
->   	SWITCH_TO_USER_CR3 scratch_reg=%eax
-> +	/* Clobbers ZF */
-> +	CLEAR_CPU_BUFFERS_SAFE
->   
->   	/*
->   	 * Restore all flags except IF. (We restore IF separately because
-> @@ -881,7 +893,6 @@ SYM_FUNC_START(entry_SYSENTER_32)
->   	BUG_IF_WRONG_CR3 no_user_check=1
->   	popfl
->   	popl	%eax
-> -	CLEAR_CPU_BUFFERS
->   
->   	/*
->   	 * Return back to the vDSO, which will pop ecx and edx.
-> @@ -951,7 +962,7 @@ restore_all_switch_stack:
->   
->   	/* Restore user state */
->   	RESTORE_REGS pop=4			# skip orig_eax/error_code
-> -	CLEAR_CPU_BUFFERS
-> +	CLEAR_CPU_BUFFERS_SAFE
->   .Lirq_return:
->   	/*
->   	 * ARCH_HAS_MEMBARRIER_SYNC_CORE rely on IRET core serialization
-> @@ -1144,7 +1155,6 @@ SYM_CODE_START(asm_exc_nmi)
->   
->   	/* Not on SYSENTER stack. */
->   	call	exc_nmi
-> -	CLEAR_CPU_BUFFERS
->   	jmp	.Lnmi_return
->   
->   .Lnmi_from_sysenter_stack:
-> @@ -1165,6 +1175,7 @@ SYM_CODE_START(asm_exc_nmi)
->   
->   	CHECK_AND_APPLY_ESPFIX
->   	RESTORE_ALL_NMI cr3_reg=%edi pop=4
-> +	CLEAR_CPU_BUFFERS_SAFE
->   	jmp	.Lirq_return
->   
->   #ifdef CONFIG_X86_ESPFIX32
-> @@ -1206,6 +1217,7 @@ SYM_CODE_START(asm_exc_nmi)
->   	 *  1 - orig_ax
->   	 */
->   	lss	(1+5+6)*4(%esp), %esp			# back to espfix stack
-> +	CLEAR_CPU_BUFFERS_SAFE
->   	jmp	.Lirq_return
->   #endif
->   SYM_CODE_END(asm_exc_nmi)
-> 
-> ---
-> base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-> change-id: 20240426-fix-dosemu-vm86-dd111a01737e
-> 
-> 
-> 
+I don't think we want to allow KVM to consume secretmem.  That would require
+letting KVM gup() secretmem, which AIUI defeats the entire purpose of secretmem,
+and I don't think KVM should be special.
