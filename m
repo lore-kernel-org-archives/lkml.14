@@ -1,138 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A0E195381;
-	Wed, 10 Jul 2024 16:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C925A1953AD;
+	Wed, 10 Jul 2024 16:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627913; cv=none; b=h66QqLSWsOQZnL3fwizuGAE9pyhJvfG6uTEwjtjuyMqMjle5xHmCWPHclcbLAkIn+nmnAgtSszNGDVBQi8X1Vrum6CxzjPwjWf50NZ5XXQtXBQlJ/EbFDZ2riIppMBLSk2I4CBKmP0XthcHgjTxDKuS8Pza8BTKrORHSI/3UT2M=
+	t=1720627928; cv=none; b=ZD7hygkk1Ufv/s6lMW1AbE3jci1Ivn8c07KWotCbfcMppeuQcpQgB+xL3/gas/H5HDe2rRUlqQkt82U3n6n7V8wo9hWgGNMB4GQ6E+YTWN4Z3YBDVrmgGNJ7P4mzwXpHsPDwsRvg5y6Na2FlApaUn61cpM2r+LawC2CMYNZKInU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720627913; c=relaxed/simple;
-	bh=iHli+zVp4z1gD0VVuhpl7g65NvHAppcAAPWbrqVKI+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q4CTIfmTdKUvY9oab3Yk+tp+o4qcVUbiD8l1bbflmwbnHghtMYd3srLGlhvkIbVJhEFz9zYpjowE9D4GH3KiB1m/nUI7UPYj6nxEi/MTGaAIk1RjCwhdRvaFXNIOYZ5+JrWJOwoc08WWzSKzm2WU//Znl4/ZhNAr74Bm04c8U4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJeYUvcH; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720627928; c=relaxed/simple;
+	bh=Bo6jSUGrFl7y8kG+fkYVw7mVgxl5zMIK0SOiQDtMkmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bQ/f/8ZSMEa+btAhfB/lhNKQLp/2RwM/DMWhTvoHHDj4XOVluZULeA1b4qEvDSnSH5MQW/PUU7d8HrjV19/adJ3udr9yIoddS7pUJaU4QavtsW9f7QQ6xgUC7fNa6Y2pfvRNDFgqqTmDMhPiLEAzUUnEH2C5mz1wSRJG2esKYFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXWM/zA2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJeYUvcH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720627911; x=1752163911;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iHli+zVp4z1gD0VVuhpl7g65NvHAppcAAPWbrqVKI+Q=;
-  b=AJeYUvcHPSKBf3dHXdv7UzTUDcnIxjCWnvMHJgPmwKPDjz7VWsrisnxR
-   OsqnTemnjaEkRfYyX+spPyBP7eBPt1vcCtahJraP1LGVed5dYxjNBf2Gr
-   rW1qGBz3qDfEn8v8lO7UU5wMxCOxBUFA+q0s7N78JEOT2gn9uuWpAJFf3
-   B3ljGvQoKThRUF7gbIM4SFnp5mGY7g6MkZKJyU29eI0BkuOwMr0j5Hb3x
-   szO0FXtVtQle7APW5+M74yvf7mdY2zPwliyQdHtusTYBWiPrsWc0Pcm8k
-   aNV+E5o2OmK0UiJX0w1Jy3lw8009TwSIlv2K4YPDoXNRop4UdXasYdSu0
-   Q==;
-X-CSE-ConnectionGUID: Grxx5/FfQ0yQJwE6iYBJHg==
-X-CSE-MsgGUID: igSXQCtkRZi+eJc8jMx5XQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18103566"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="18103566"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 09:11:51 -0700
-X-CSE-ConnectionGUID: 1tNSTHVFQC6ZT2aH1yMOoA==
-X-CSE-MsgGUID: 8ej7wP1lSfeb+YrFgUAZKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="53085808"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 10 Jul 2024 09:11:38 -0700
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Yian Chen <yian.chen@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: [PATCH v4 16/16] x86/cpu: Make LAM depend on LASS
-Date: Wed, 10 Jul 2024 19:06:52 +0300
-Message-ID: <20240710160655.3402786-17-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
-References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXWM/zA2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62708C32786;
+	Wed, 10 Jul 2024 16:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720627928;
+	bh=Bo6jSUGrFl7y8kG+fkYVw7mVgxl5zMIK0SOiQDtMkmQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=eXWM/zA28dbGK775L917k6Q4E9SLMndj3HgogXhPHPlc8mmJGEsUngLcvEbWsHnBe
+	 94EkXio1mj0acfXNBZ45uNOyI+EyL7MuRe0MFS++qJXGb1fQfkOAnubwxrKMyQPuEq
+	 2kZxUC5FzNw4s/y/fxCsn/eZmTeDzk83kYjGAVcQ7hYSVZnp+60dt/EsY5MHkXb9au
+	 jzbj9XZFkhkB/h/uVe0WpMko2qbwyXXtgXYQGRShwrU2ar+k7hUqMLZDtM/Qv4E2Qq
+	 YeAkSX1mjO50H95pNVjPfqjas0j4/fEoHdmoUm2yRvFHyZDUjAW2pGmzS/5TnEEs+t
+	 N656pxTENLuGA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sRZvJ-000000006o7-3RIh;
+	Wed, 10 Jul 2024 18:12:05 +0200
+Date: Wed, 10 Jul 2024 18:12:05 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] USB-serial fixes for 6.10-rc8
+Message-ID: <Zo6y1Y8IkNDlgqBf@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-To prevent exploits for Spectre based on LAM as demonstrated by the
-whitepaper [1], make LAM depend on LASS, which avoids this type of
-vulnerability.
+Hi Greg,
 
-[1] https://download.vusec.net/papers/slam_sp24.pdf
+I noticed that you still have some fixes queued for 6.10-rc8/final so figured
+I'd send this now even if this addresses a really old bug. I've verified that
+the issue is real and have tested the fix here myself. Feel free to queue it up
+for 6.11-rc1 if you prefer.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
----
- arch/x86/kernel/cpu/cpuid-deps.c | 1 +
- 1 file changed, 1 insertion(+)
+Johan
 
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 22612e01ec2e..8986e990beb0 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -85,6 +85,7 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_FRED,			X86_FEATURE_LKGS      },
- 	{ X86_FEATURE_FRED,			X86_FEATURE_WRMSRNS   },
- 	{ X86_FEATURE_LASS,			X86_FEATURE_SMAP      },
-+	{ X86_FEATURE_LAM,			X86_FEATURE_LASS      },
- 	{}
- };
- 
--- 
-2.43.0
 
+The following changes since commit 4298e400dbdbf259549d69c349e060652ad53611:
+
+  USB: serial: option: add Telit generic core-dump composition (2024-06-27 12:04:33 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git tags/usb-serial-6.10-rc8
+
+for you to fetch changes up to c15a688e49987385baa8804bf65d570e362f8576:
+
+  USB: serial: mos7840: fix crash on resume (2024-07-09 18:10:04 +0200)
+
+----------------------------------------------------------------
+USB-serial fixes for 6.10-rc8
+
+Here's a fix for a long-standing issue in the mos7840 driver that can trigger
+a crash when resuming from system suspend.
+
+Included are also some new modem device ids.
+
+All have been in linux-next with no reported issues.
+
+----------------------------------------------------------------
+Dmitry Smirnov (1):
+      USB: serial: mos7840: fix crash on resume
+
+Mank Wang (1):
+      USB: serial: option: add Netprisma LCUK54 series modules
+
+Slark Xiao (1):
+      USB: serial: option: add support for Foxconn T99W651
+
+Vanillan Wang (1):
+      USB: serial: option: add Rolling RW350-GL variants
+
+ drivers/usb/serial/mos7840.c | 45 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/serial/option.c  | 28 +++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
