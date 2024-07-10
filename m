@@ -1,202 +1,199 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2047.outbound.protection.outlook.com [40.107.117.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C0B1C32
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720574226; cv=none; b=pltklh+4NWdDGAt+Eu/gUn8KllOUkrdnmHdxF7TqPkrNSgd8aaqvfs8dQN7/dVcWwPeUh4lskWcV/HqczLZjpWOUjUaruTucGFcaHWf4YbrQ+gLncqP01PKAyo4v0hpWtaOalMbCh/twau0qmoQcEGCslzCwD6H1ksQpZZ87akk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720574226; c=relaxed/simple;
-	bh=4cZSetaS9hoUEfGLBiLSgIMKQxOmG/FQsVPFin+9B7U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SUegWZUcDFZNX76+EN8pkiKbVnt+3vTRiKTbMrG4RR7CZzNhkG/ZaIFH+CDPvyrlOqk0BVi/LjQbukhUW7wI6XRcYmyAA6RIkRteK/Sbsr5CQ6JWQlgff9IeYAF2plPvLAxSOR4Jz5vJLLGm9eG9zaf1PC3OHdJhITzNy91YND8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVQGpIzY; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0DE161
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 01:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720574350; cv=fail; b=tfjRtloYmV5tIGoT4BH7vTYzhixE4i3v5rl0MyH1jF0pcz/3vw3KqZ5aFh2hbMZhPGeYcdASUNv0zFKaYLdXkvERLAsyBnAYyLC6itucMO8FJvYCCqt+hVKqXIw8R/rRb6eWCDnOIpQOH5e2uFK++Xq6QeltSPqqZ69Vcb0YyTE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720574350; c=relaxed/simple;
+	bh=xGrDTKQgHFsMKAsCF9dk88T6oOGCK5mbPoNbSEFvHwE=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=nVRd2le92/qY2b7RKAKH2Og8Grb/5AhL8H2HU4MiqOICQSeQE12f7kHs68Ex/dQMmoFgFecs6xpIE9xGfUlzDdRoIpvjdaVKBQmO0XspMG4XL4amkJYbbuNbphMwz0fcFL95qriL03fWalUsNmR5nxlAE1PbviYTnzcnkAstDm8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=TH+JlTxj; arc=fail smtp.client-ip=40.107.117.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVQGpIzY"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-70df213542bso3115296a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2024 18:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720574224; x=1721179024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GEYUgRgAX3U4wZonxbVp1RvGhxBw1XYv1pj8Gg2uytQ=;
-        b=nVQGpIzY2EaCUHaxZkoiHHzJAczXC4dtrb6tKFaSBzT0BrL0WPqTaOog50yEIOan6n
-         emjDLSBwpjgL7CU9z5z34UTpCpLkhEMgIxV8ZE6prhaiCjetK8YZVQuKVKzK3G2t+diD
-         tVHfuaCVegPImfwBWOicAfLwoj6dMhHxNf7FSEvbwIcyp/aNT7WrRRn5dZNtCkReLe3I
-         t09oAHnMjG3xHw86sB6XQiOAqnTCK3y/0g/nGw8ejeT+VNJiwyD9XWWwG7xkf5GM7tef
-         +VwHNl+VBRdmOceV4InILFSXPI0ogr4/3FHd98JkXCprTbUXRo6di3XaZLVnOk19sYMA
-         wDBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720574224; x=1721179024;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GEYUgRgAX3U4wZonxbVp1RvGhxBw1XYv1pj8Gg2uytQ=;
-        b=CeAgjgMOp3FH4IYls9Y/3pLjKdxZu8pRR8pMDKmouu4nBIf8SZWdaJnMBB4Ak6vIsX
-         kimm03KbmOal/3DYGHsFAVE8BJnZrsf8uMVkg0/06Rffpmv/5kcwJqKNKr8dtWxc/FjP
-         +btizi7Km/jVD1D1Zwi+4GtPpVtSR5Y6Qasxp88FWq28D5cgAn+V+eKirKF2SzGk2do+
-         W4As46r8A7eeoKKQjIOlsdrYxVwWRKXaSYrBw9ab5qftaQXNcHSFMQFg31s51/Hqx/2z
-         kNg5l9KuSJFUfJq4T92c8rvD/PDlbsQfa71+9ns9qMIoSIwFl1z8JBIVBHsJMZhDctZl
-         jIBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCkW5EJF0WA9O2M7g5NiXjHjJ6zEWmXjG2mImre3QdQf5d1DW442VJLH0a+2EX9xEGYG4KYVH1Idg0uoz3gvRUgMJilu9ic62WT/8y
-X-Gm-Message-State: AOJu0Yw81Ww/el8idACOiuynji/n04QjrK8on6tPxft2bGv+ps36KtlT
-	NKEN14rA3VLoD4/7Kh3fGcN7vLp3HQZUyLH+3BiriyudD4YzXcANkjGsTQ==
-X-Google-Smtp-Source: AGHT+IHmS97jexThoPIwIyD6WHVucBTTOKtk03NW9U9PP/pL/Peaar9imzg5L17ydYUIhYovDsgw0A==
-X-Received: by 2002:a05:6a20:da8a:b0:1c2:8d3f:793 with SMTP id adf61e73a8af0-1c2984cda76mr4332546637.46.1720574224311;
-        Tue, 09 Jul 2024 18:17:04 -0700 (PDT)
-Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a95624dsm10689540a91.20.2024.07.09.18.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 18:17:03 -0700 (PDT)
-Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id 5526B80D2B;
-	Wed, 10 Jul 2024 09:26:28 +0800 (CST)
-From: Cheng Ming Lin <linchengming884@gmail.com>
-To: miquel.raynal@bootlin.com,
-	vigneshr@ti.com,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: richard@nod.at,
-	alvinzhou@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Subject: [PATCH 2/3] mtd: spinand: macronix: Fixups for PLANE_SELECT_BIT
-Date: Wed, 10 Jul 2024 09:15:40 +0800
-Message-Id: <20240710011541.342682-3-linchengming884@gmail.com>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="TH+JlTxj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cs0mQ0+9THylIQMXpaBkbnquKabGbqmdc7VHQRH/2wqeGzt75jGtEFjgNnm0EvlZKowjQAj+JJ3q6Dh36nIm8b4SFtS8uLYba2sq0r1effWSnN79lzqXcqTdvGzKuGULBkpg6jKiWI2TXgDOg0P1uNJJM1PyO5u53uUe5dhTgF7guqlY5hPAY4rdtLnK0EgMjh+DiYcnj45H1vexVjgt27P87MTwKD/3wsfcccBZu6D8eJRGyV8dZgbhhhYQyxuiK8WcIf/zjEhengO2lLJroh80JEJlP2y8BJcdHgmz4wJYIAjVMT1uUHxWm2l8PKo33wZ6X1GrwA4K/5P8p+yfiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g4QD2basy0BOPGPoM4t8O1QZNDxdgZ/jxcqW/JuibGs=;
+ b=m1jkwwUhCR4+84EsaB0mtXmpmyAVjd02qI+e+Zi8bQTfZ58NTQC3AICPIPdogCd3s+Y6NiPmJRqHGcOmlJEiimvwa8VvMAcYDQcIK34jT5zcuTeBoCSu5yUJM9k6J8iSWa5Y6YMiKOUhreMCN/5xHgfQ2gtqsvtnfHretufyE1r36gBnQjaec+BzC9UQ4Oe6peA9D0jdD+DsS8WDXP+y4aNPTNlnO84uGlS76BgE2MEm0rzO0Sgcsxef/vhOtLMJfmyeF5I/FrXUwqZsFfGWTNzk/FtDS46fmP5beEC1Ideu8nl1oLasU5fF0mzmPzBs2Roy3AIOciBMb2b700VXKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g4QD2basy0BOPGPoM4t8O1QZNDxdgZ/jxcqW/JuibGs=;
+ b=TH+JlTxjW7iGzLz+8HAYm0f+UUPKupCKZCKjELEt5TmORrUXW3IwosRAgsK0lX32oAHGDIxP5yWX/dQS2L5fNKQKhMEAA4e5utIjlwXo50B+IaPZz8AhJZBe+w/P2oWw7mRL1nsp8TQkKzLhs4b/YzT9FFRdLTlZ87aak3G4TAz9VgskunWuZcDbTj/rQ+ZuoRqqL6QlJDpvHnOefPSILTQuwQBbN4As8V9z+zZ82FDIiJo3PU3LTOtyZOgNNn9bi8751BcabkIAwyNHsrdWsN0DaMp6bdHMvZ0YgNQ5eIMHpLgwHNj3U5v66WvyJfvZhrEy5SDCloRqRUOzc7k7dQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com (2603:1096:301:89::11)
+ by JH0PR06MB6889.apcprd06.prod.outlook.com (2603:1096:990:46::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Wed, 10 Jul
+ 2024 01:19:02 +0000
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5]) by PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5%5]) with mapi id 15.20.7741.033; Wed, 10 Jul 2024
+ 01:19:02 +0000
+From: Wu Bo <bo.wu@vivo.com>
+To: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Wu Bo <wubo.oduw@gmail.com>,
+	Wu Bo <bo.wu@vivo.com>
+Subject: [RFC PATCH 0/5] Add inline tail support
+Date: Tue,  9 Jul 2024 19:33:02 -0600
+Message-Id: <cover.1720515215.git.bo.wu@vivo.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240710011541.342682-1-linchengming884@gmail.com>
-References: <20240710011541.342682-1-linchengming884@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0030.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::15) To PSAPR06MB4486.apcprd06.prod.outlook.com
+ (2603:1096:301:89::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PSAPR06MB4486:EE_|JH0PR06MB6889:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83a8a0f3-9e6b-405a-7c38-08dca07e4859
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HIL/2HSLyRZ1TMqDm0nAVtZ9jssSXIIBg87FCBwyn5Hsu7VBu4XBYoVvcli7?=
+ =?us-ascii?Q?vGgLWPqJOJ4QNgQ0EHbG+a73mZjSt7+NF2rL+nzqgScYnMtePqA5RIi4QNjg?=
+ =?us-ascii?Q?4PM3eXnUcSCSdNQ9VcQ1wyt7rdfRNOhv7mZnksZAOZDZ0PTkh6YVWFrq9NEZ?=
+ =?us-ascii?Q?bpRxyjzxWCi3ksKe1ZL94pJYCSd22doKsThTXPcsfeCOMILnuD5osnsyYaAE?=
+ =?us-ascii?Q?ANjUd7CpSAe6t7r9wW55EkKANUmBAcPoTolE6g3EXzINQw5mbJdDtOvlNecR?=
+ =?us-ascii?Q?2nOOkNekkHbLAvN7do75+eeUYBmFLjHvNv/gdfxeVHdvvJGNknFvdCpcvscW?=
+ =?us-ascii?Q?owbE4im3AU+LgfIieSwt94JyZoI4hAxGfgXA8XngIEnO+R6dQIIujqSVk3c5?=
+ =?us-ascii?Q?ZX3ae5imAcr6CVtIuhPcoMla8SjfHN5J0z5T1VFBgWfXUMpL2neq8N6IpTVO?=
+ =?us-ascii?Q?NTdpFJT3W3I7pb09EjEA68RxM7bc+Y+jTtxkBA5jAH9tPQ1D5MGEq7wnYC8X?=
+ =?us-ascii?Q?2QQb30VMNJ4kI5/UkdAhUQQwnMTMuzSeUsjTWL/ZLe9Ge9+x1YPSRf5ZIGrT?=
+ =?us-ascii?Q?AVY92/vkLNXGRNs2wgu/zH94e4SoeAFpxfKkZBCoDM33SnOrpix1gBhPIhsK?=
+ =?us-ascii?Q?FMSM0O7uHDyIlf7qqJiDIASqT7cu3uBpRYjiO2+QydJWV6I9qnUeSoLgtkvP?=
+ =?us-ascii?Q?7GtafQbR8+w4w26MThC9FOdjuD73gjn776W5hcShQebBOJpTxlk9yQ1SUOak?=
+ =?us-ascii?Q?RVq1ZzgnJrkn9CWb7cm0/+21ai3hQv/z7ivyjFWOY4B5jOreKqVWFffsR7jl?=
+ =?us-ascii?Q?ebiL80HmgFCiI2y9vNiYhN+3PL2MYwyHqks9GiB6BLNhKmQNvP4pU2f6Sp0q?=
+ =?us-ascii?Q?q7PP+CT0Nqif1B/ojjsJLED0X7C6q21imKzmuRbrbBRwFdOlhQtcdfTAs0u7?=
+ =?us-ascii?Q?odhxOIuHMSj6aLagTrlIzBI4vumljZeq92yTlIGzaxx/Okspz1oLN/71k2+N?=
+ =?us-ascii?Q?FbFWsbrzNomfP3uR7AwUVNqOypYOqgRZOM5uyFtasbMpVoeE4xJuJMGkTVaj?=
+ =?us-ascii?Q?wDc9ChEF1kpVugqMeLXbIXEErrLOc0wgMeIAOzS+OPraskVkXEreBz/bDLKM?=
+ =?us-ascii?Q?DV0kW/lyyReV6pBBx7YJ+Zl8zg4LMzd/XaR5oVsgXRcVmsEWBxJQPv86EKYh?=
+ =?us-ascii?Q?PbB00b8ene1BsDycgBe5oo3t1oE1afvNHABHl0rLHRLCJiZHq6Ep5T8rYVVa?=
+ =?us-ascii?Q?rP1e3drRCC7DMUl8Xrq4UoibBgUmuQFr7kt+/3O3plUKubtCbadW/3Rpu4Xh?=
+ =?us-ascii?Q?ls2xMGgMEJpLXoecb/LHlSbB5uZm7ro/E+0m8ugw0SbXNIwNxD5AEApPqilr?=
+ =?us-ascii?Q?pyAzIXdMRG3EB+6FVj2C/UhHySiNlL+MdzPOWM3al9+xyVN9dA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4486.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ndAaIKo2IM/1l9RIkDQvE951JqqeJCrdoKh81k5HvOWi+PaR7jUCU9rkZ7NL?=
+ =?us-ascii?Q?4KxdmNWGnSLGwtu3VTnSUkqL+dEs3RbavfHDJ4rXhBQXojydHgJJef2wU/OC?=
+ =?us-ascii?Q?3UsXRM7TvC1KPAHPyYIdJt9sLDuYW7m4+dUbR8qSv/ysYb69lEqHj/ZP4sDw?=
+ =?us-ascii?Q?Zfb/ddWDPKZ+8zN/VdqHot6bwqJHzwnl42cgjIinkvro4kABQ8UfPvX7Y1Mt?=
+ =?us-ascii?Q?uXyWCq3UP5QfiAqFnRB3S3MVG+iYRKEW1QGYmjmi61gi7PGVJm8pm+Ij5P/4?=
+ =?us-ascii?Q?1Cm47TOvj6conPnqPsoBG+jKYgJ8alfdrC6GaLl4UeimkUyn+VuXO2AfE8z8?=
+ =?us-ascii?Q?Q+YxGXt9dzZ4XEPzb/g4f1gaII/8M6/emIkYj0Q+l9oWPH/vjkMXC++qMbhY?=
+ =?us-ascii?Q?UrwlFbTRRdkisQ5P8qrLdWvhRGk43PYevffUGMOl8HTNtTqkZ7ErWCOqwzR8?=
+ =?us-ascii?Q?rmje4x9MqcrSQyLL6YcqxW5erm8X5crrgBpP3tnpkkGLyQs83ts/ylI8x1s0?=
+ =?us-ascii?Q?dbALUTU4brprkNiV065/kW+5kP+Bocf6cHOGRiUnAnFwdEVfapxF185oMT65?=
+ =?us-ascii?Q?RTD7M5idv2c+i/5ME5/JIT9NehBKohgAj8nLRp6k2/hHiCEFHEUCD2yHpTGy?=
+ =?us-ascii?Q?/cwGqVjJXMvpZ/zWktVPOoFI8stpbHNfxFOF9WrTiWaCkG2hc7cRCmQOTcYL?=
+ =?us-ascii?Q?xKmrkxz+KW13Nigc3tNo/4zq4enJxj24VQ3JuBaVzxP8sFqy/jCQ8DINIUtw?=
+ =?us-ascii?Q?rcKXesAl74rQSUKdaSPG0ANCeG/0udHqQd9vDl89Vd/VWKUPOkxBWQkNfox1?=
+ =?us-ascii?Q?7M0cJ/TwyUTvK95l8K+ighfOfmzc60n+OE/teFK0WOUQmVKGGQJevjvq+LZp?=
+ =?us-ascii?Q?MHoLfrAt6IFqbVPEL2cVQCw12YdItZpOa4gizPFHKfq0VkcW3+AdB1xvfNRz?=
+ =?us-ascii?Q?PR2dxJvGsDN8XxFiQaVRRuaDwiQtoqHZ2tgAj3Qo4X/O/oaP92UKxXN1yOU5?=
+ =?us-ascii?Q?PJ8YNHET+j0wcuOtHFkik+7P7FfsGkv/JEwhLXE4pF/I2oMkduF6hmZTjsKo?=
+ =?us-ascii?Q?cqZ2e8MhnVKXTX4Iv5tXZjFvRu5ZTk7xvbqDaoYhegvxZDOo07e0d5LPuJTT?=
+ =?us-ascii?Q?DiTXoGYCoI0R9/tVo0H5Y2MbrW90r+lPX1AXlon1PF7Y/gfYrm4DGKYShaU3?=
+ =?us-ascii?Q?4wGRHssDG3yTCQV6MUTZQ25+w4LuatIOZjMEJnrHIdpkoC94M+bd1oKgSC7U?=
+ =?us-ascii?Q?nt/bG8zHoi98bjc7eI+G4KYulrYX/awBrLLNMTZqvcfFHTqVPoV5B4Twg5HM?=
+ =?us-ascii?Q?WszJis807Pc16mAz93mKnCsvmNu9vnIawOHAQTDaPckPArZ4DgR/RqjhaEtJ?=
+ =?us-ascii?Q?WxeRwwpTgjGh/ZVYS7sI8Y1nCRLoDqTH4DaPE6aKInLb8zU+65YIOtz+Dmfl?=
+ =?us-ascii?Q?KR3VVrGYg+2GgsnelqLYkrLIhEs37FuJ/RXhcEFqCKMwP3BB08XspjQ1Cu6q?=
+ =?us-ascii?Q?8DZBWrCn1NLAvOmAKRqxtyGMHjYeylfYh80OnM+hoOPCpEVySwcIxFUKrJaC?=
+ =?us-ascii?Q?fiNGggLaYl2FXOWOVv4fOr8i1Xgu4nb4fOjE4Yeb?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83a8a0f3-9e6b-405a-7c38-08dca07e4859
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4486.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 01:19:02.2522
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1fiVaXRvCaSZoDq8T8ljENINnoUpJwAC8KoIm+ZVsWOzk039jN4ZrnQSolnT/MhtntA+7sCLU4ATbV+6oo8ttQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6889
 
-From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+The inode in F2FS occupies an entire 4k block. For many small files, this means
+they consume much more space than their actual size. Therefore, there is
+significant potential to better utilize the inode block space.
 
-Macronix serial NAND flash with a two-plane structure
-requires insertion of Plane Select bit into the column
-address during the write_to_cache operation.
+Currently, F2FS has two features to make use of the inode block space: inline
+data and inline xattr.
 
-Additionally, for MX35{U,F}2G14AC, insertion of Plane
-Select bit into the column address is required during
-the read_from_cache operation.
+Inline data stores file which size is smaller then 3.5k in inode block. However,
+for slightly larger small files, there still have much waste.
+For example, a 5k file requires 3 blocks, totaling 12k of space, which is
+more than twice the size of the file itself!
 
-Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
----
- drivers/mtd/nand/spi/macronix.c | 51 +++++++++++++++++++++++++++++----
- 1 file changed, 45 insertions(+), 6 deletions(-)
+Additionally, the end of a file often does not occupy an entire block. If we can
+store the end of the file data within the inode block, we can save an entire
+block for the file. This is particularly important for small files.
 
-diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
-index 3f9e9c572854..c61f1ba31f0c 100644
---- a/drivers/mtd/nand/spi/macronix.c
-+++ b/drivers/mtd/nand/spi/macronix.c
-@@ -100,6 +100,39 @@ static int mx35lf1ge4ab_ecc_get_status(struct spinand_device *spinand,
- 	return -EINVAL;
- }
- 
-+/**
-+ * Macronix serial NAND flash with a two-plane structure
-+ * should insert Plane Select bit into the column address
-+ * during the write_to_cache operation.
-+ * Additionally, MX35{U,F}2G14AC also need to insert Plane
-+ * Select bit into the column address during the read_from_cache
-+ * operation.
-+ */
-+static unsigned int write_Plane_Select_bit_in_cadd(struct spinand_device *spinand,
-+			const struct nand_page_io_req *req, unsigned int column)
-+{
-+	struct nand_device *nand = spinand_to_nand(spinand);
-+
-+	return column | (req->pos.plane << fls(nanddev_page_size(nand)));
-+}
-+
-+static u16 read_Plane_Select_bit_in_cadd(struct spinand_device *spinand,
-+			const struct nand_page_io_req *req, u16 column)
-+{
-+	struct nand_device *nand = spinand_to_nand(spinand);
-+
-+	return column | (req->pos.plane << fls(nanddev_page_size(nand)));
-+}
-+
-+static const struct spi_nand_fixups write_fixups = {
-+	.write_to_cache = write_Plane_Select_bit_in_cadd,
-+};
-+
-+static const struct spi_nand_fixups read_and_write_fixups = {
-+	.write_to_cache = write_Plane_Select_bit_in_cadd,
-+	.read_from_cache = read_Plane_Select_bit_in_cadd,
-+};
-+
- static const struct spinand_info macronix_spinand_table[] = {
- 	SPINAND_INFO("MX35LF1GE4AB",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x12),
-@@ -157,7 +190,8 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
--		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL),
-+			 SPINAND_PLANE_SELECT_BIT(&write_fixups)),
- 	SPINAND_INFO("MX35LF2G24AD-Z4I8",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x64, 0x03),
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-@@ -175,7 +209,8 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
--		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL),
-+			 SPINAND_PLANE_SELECT_BIT(&write_fixups)),
- 	SPINAND_INFO("MX35LF4G24AD-Z4I8",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x75, 0x03),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-@@ -215,7 +250,8 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
--				     mx35lf1ge4ab_ecc_get_status)),
-+				     mx35lf1ge4ab_ecc_get_status),
-+			 SPINAND_PLANE_SELECT_BIT(&read_and_write_fixups)),
- 	SPINAND_INFO("MX35UF4G24AD",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xb5, 0x03),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 2, 1, 1),
-@@ -225,7 +261,8 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
--				     mx35lf1ge4ab_ecc_get_status)),
-+				     mx35lf1ge4ab_ecc_get_status),
-+			 SPINAND_PLANE_SELECT_BIT(&write_fixups)),
- 	SPINAND_INFO("MX35UF4G24AD-Z4I8",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xf5, 0x03),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-@@ -255,7 +292,8 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
--				     mx35lf1ge4ab_ecc_get_status)),
-+				     mx35lf1ge4ab_ecc_get_status),
-+			 SPINAND_PLANE_SELECT_BIT(&read_and_write_fixups)),
- 	SPINAND_INFO("MX35UF2G24AD",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xa4, 0x03),
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 2, 1, 1),
-@@ -265,7 +303,8 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
--				     mx35lf1ge4ab_ecc_get_status)),
-+				     mx35lf1ge4ab_ecc_get_status),
-+			 SPINAND_PLANE_SELECT_BIT(&write_fixups)),
- 	SPINAND_INFO("MX35UF2G24AD-Z4I8",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xe4, 0x03),
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
+In fact, the current inline data is a special case of inline tail, and
+inline tail is an extension of inline data.
+
+To verify the benefits of inline tail, I have developed these preliminary codes.
+To make it simple, inline tail only on small files(<64k). And the layout of
+an inode block is following:
+
+| inode block     | 4096 |     inline tail enable    |
+| --------------- | ---- | --------------------------|
+| inode info      | 360  |                           |
+| --------------- | ---- | --------------------------|
+|                 |      | extra info         | 0~36 |
+|                 |      | **compact_addr[16] | 64   |
+| addr table[923] | 3692 | reserved           | 4    |
+|                 |      | **tail data        |      |
+|                 |      | inline_xattr       | 200  |
+| --------------- | ---- | --------------------------|
+| nid table[5]    | 20   |
+| node footer     | 24   |
+
+I tested inline tail by copying the source code of Linux 6.9.7. The storage
+space was reduced by approximately 8%. Additionally, due to the reduced IO, the
+copy time also reduced by around 10%.
+
+Wu Bo (5):
+  f2fs: add inline tail mount option
+  f2fs: add inline tail disk layout definition
+  f2fs: implement inline tail write & truncate
+  f2fs: implement inline tail read & fiemap
+  f2fs: set inline tail flag when create inode
+
+ fs/f2fs/data.c   | 61 ++++++++++++++++++++++++++++++++++++++++++++-
+ fs/f2fs/f2fs.h   | 44 ++++++++++++++++++++++++++++++++-
+ fs/f2fs/file.c   | 10 ++++++++
+ fs/f2fs/inline.c | 64 ++++++++++++++++++++++++++++++++----------------
+ fs/f2fs/inode.c  |  6 +++++
+ fs/f2fs/namei.c  |  3 +++
+ fs/f2fs/node.c   |  6 ++++-
+ fs/f2fs/super.c  | 15 ++++++++++++
+ 8 files changed, 185 insertions(+), 24 deletions(-)
+
 -- 
-2.25.1
+2.35.3
 
