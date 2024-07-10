@@ -1,124 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0A5194ACC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7940196D98;
+	Wed, 10 Jul 2024 10:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720607808; cv=none; b=GAlEM9VhKuQqWQxrY7x9BvHAdLQtQZydUplTdCyMFzonXJQLleQDPAMXxhHA8inQKtj5WvxZHkvZrf1Lsqfk3ftTweelwbIXbhwcNZKcgvKahwiGtqScCQQkOTGUSP+EEhpLxhiU267U46c8nZ0Z/gyhNyp2hBWUcUrs9DpbT9c=
+	t=1720607812; cv=none; b=Jrr1D51lWJ8Jud8C4KG5/qc4r2gb5Go4atH1YfItZCfYXH+WyzazSaeXH1awDmhRY+2Kr99jFjOsJ7UDUMSImWIyL/PU4Pa7YQh5Z04AY8Xj+aG4hK0XGN6hTcWCAjURQ6755NObDCk9VvGolj9vqkeeC5hyQgR5eEOK96aFcJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720607808; c=relaxed/simple;
-	bh=kqLm5P45NxwgK+tmNpa+OcNHo84diEsXJjayzggqo7c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=aVfE2Ye71ZESvmYbgQsJzRnILxrIr2d0Cn6XQXsyzBLuhJEszZB6zXFhK7LTwtgzJNhpYwEA8s7EcWJBWWizXFhfVXpz8L+9ltWx5Fcj4xcmbTTjgwZiy/TgBa22W8RrIDtuq/AHsWcK8uOV0bEbSHMpUSxwNNe/5NFf5oG9Hf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e+BAytUE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720607812; c=relaxed/simple;
+	bh=mHqoaOo6vsNTWza139+cMFxxRor+QUsYLvnzvaHB6dw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bw73ldisuY4sKPAxHHkX7e/YJyubRwaoX+wigyx6eF66IYptAQHJiqit6ThdTtOe/4SsY46uvxV2RDBJB99rKKSlMwcMOwlvfGYRPGGcoqIRtrLxyKwBwyQ0T2vcKpNtARLRLFTSY5HwPPIBcczd+jgD94AQShLf/6zPhWFhgRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Ig25FVnK; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e+BAytUE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720607806;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TbJg6z7j+ZQBtm21UhpDM4r/48rTnLX4yDmOeuhoEeA=;
-	b=e+BAytUEUePovg/uo48HWDv8cwIBr34355jzalrP+4UHFE3qDQcsbxbVMrAX840DDO1S6V
-	H+JbYaTmfzfZd9H/aXoKFR/IhLH1djsixXwQBPhisg7QD5SF1PPVBo/C3wOn5gENg/ngd/
-	FFZuel0R/Jo/yWst4t8xzBd2tR3e90g=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-186-a07wZjSjMfOCkc_bgrfTiQ-1; Wed,
- 10 Jul 2024 06:36:41 -0400
-X-MC-Unique: a07wZjSjMfOCkc_bgrfTiQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07722196CE01;
-	Wed, 10 Jul 2024 10:36:36 +0000 (UTC)
-Received: from oldenburg.str.redhat.com (unknown [10.45.224.154])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A378D19560AE;
-	Wed, 10 Jul 2024 10:36:24 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,  Will Deacon
- <will@kernel.org>,  Jonathan Corbet <corbet@lwn.net>,  Andrew Morton
- <akpm@linux-foundation.org>,  Marc Zyngier <maz@kernel.org>,  Oliver Upton
- <oliver.upton@linux.dev>,  James Morse <james.morse@arm.com>,  Suzuki K
- Poulose <suzuki.poulose@arm.com>,  Arnd Bergmann <arnd@arndb.de>,  Oleg
- Nesterov <oleg@redhat.com>,  Eric Biederman <ebiederm@xmission.com>,
-  Shuah Khan <shuah@kernel.org>,  "Rick P. Edgecombe"
- <rick.p.edgecombe@intel.com>,  Deepak Gupta <debug@rivosinc.com>,  Ard
- Biesheuvel <ardb@kernel.org>,  Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-  Kees Cook <kees@kernel.org>,  "H.J. Lu" <hjl.tools@gmail.com>,  Paul
- Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,
-  Albert Ou <aou@eecs.berkeley.edu>,  Christian Brauner
- <brauner@kernel.org>,  Thiago Jung Bauermann
- <thiago.bauermann@linaro.org>,  Ross Burton <ross.burton@arm.com>,
-  linux-arm-kernel@lists.infradead.org,  linux-doc@vger.kernel.org,
-  kvmarm@lists.linux.dev,  linux-fsdevel@vger.kernel.org,
-  linux-arch@vger.kernel.org,  linux-mm@kvack.org,
-  linux-kselftest@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-riscv@lists.infradead.org, "Schimpe, Christina"
- <christina.schimpe@intel.com>, "Pandey, Sunil K"
- <sunil.k.pandey@intel.com>
-Subject: Re: [PATCH v9 05/39] arm64/gcs: Document the ABI for Guarded
- Control Stacks
-In-Reply-To: <20240625-arm64-gcs-v9-5-0f634469b8f0@kernel.org> (Mark Brown's
-	message of "Tue, 25 Jun 2024 15:57:33 +0100")
-References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-	<20240625-arm64-gcs-v9-5-0f634469b8f0@kernel.org>
-Date: Wed, 10 Jul 2024 12:36:21 +0200
-Message-ID: <87a5iph6u2.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Ig25FVnK"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46A4s4Gm006601;
+	Wed, 10 Jul 2024 05:36:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=031IosrvEc4DNF6O
+	PahvA9Nf6RargcvRdAHSyE4m7aE=; b=Ig25FVnKbYjrpbif4gv0NYTbcg4+tbPC
+	U6YSBKYRcIyFK/BRu3Mb7Xf/tBPHyYF3D6uVF7LpDedy+p2xYFqy6gboaCwxqrn2
+	rArgdpRiIZf565aL8YRbkTcNZTbyjdsrSfZeBxSMMgkbEu5YVwQ0u6WP2pMa+Asw
+	WdN+dfsejKMtCh8yPVSR1zDMcyHswaTKUlIxdeO4QhD0a8yyW9mPYxg1oIGEMjJK
+	CL4Jf1vvr2en4L8y+6Ls81anTp7xjY8k0Pmkg6UHI30N3VzcjiidGfkvkD5OZTH8
+	9lRtnEh3iwQY0GP5ljHtWGI480UHBhv+Cr/ZS+buLvsgqbVZNc9C2g==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 409c9a8h0p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jul 2024 05:36:42 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Jul
+ 2024 11:36:40 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Wed, 10 Jul 2024 11:36:40 +0100
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 5C36A820244;
+	Wed, 10 Jul 2024 10:36:40 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
+Subject: [PATCH v2 0/4] firmware: cs_dsp: Some small coding improvements
+Date: Wed, 10 Jul 2024 11:36:36 +0100
+Message-ID: <20240710103640.78197-1-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Proofpoint-ORIG-GUID: 1I28NVJP8x8VC6P58Xs8YtvxDg7l40wl
+X-Proofpoint-GUID: 1I28NVJP8x8VC6P58Xs8YtvxDg7l40wl
+X-Proofpoint-Spam-Reason: safe
 
-* Mark Brown:
+Commit series that makes some small improvements to code and the
+kernel log messages.
 
+---
+Changes since V1:
+- Replaced commit #3 with one that keeps the wmfw format version
+  message on its own line instead of merging it into the INFO text
+  message.
+- Commit #4 rebased onto the new #3
 
-> +4.  Signal handling
-> +--------------------
-> +
-> +* A new signal frame record gcs_context encodes the current GCS mode and
-> +  pointer for the interrupted context on signal delivery.  This will always
-> +  be present on systems that support GCS.
-> +
-> +* The record contains a flag field which reports the current GCS configuration
-> +  for the interrupted context as PR_GET_SHADOW_STACK_STATUS would.
-> +
-> +* The signal handler is run with the same GCS configuration as the interrupted
-> +  context.
-> +
-> +* When GCS is enabled for the interrupted thread a signal handling specific
-> +  GCS cap token will be written to the GCS, this is an architectural GCS cap
-> +  token with bit 63 set and the token type (bits 0..11) all clear.  The
-> +  GCSPR_EL0 reported in the signal frame will point to this cap token.
+Richard Fitzgerald (4):
+  firmware: cs_dsp: Don't allocate temporary buffer for info text
+  firmware: cs_dsp: Make wmfw and bin filename arguments const char *
+  firmware: cs_dsp: Clarify wmfw format version log message
+  firmware: cs_dsp: Rename fw_ver to wmfw_ver
 
-How does this marker interfere with Top Byte Ignore (TBI; I hope I got
-the name right)?  The specification currently does not say that only
-addresses pushed to the shadow stack with the top byte cleared, which
-potentially makes the markup ambiguous.  On x86-64, the same issue may
-exist with LAM.  I have not tested yet what happens there.  On AArch64
-and RISC-V, it may be more natural to use the LSB instead of the LSB for
-the mark bit because of its instruction alignment.
+ drivers/firmware/cirrus/cs_dsp.c       | 68 +++++++++-----------------
+ include/linux/firmware/cirrus/cs_dsp.h | 10 ++--
+ sound/soc/codecs/wm_adsp.c             |  2 +-
+ 3 files changed, 29 insertions(+), 51 deletions(-)
 
-We also have a gap on x86-64 for backtrace generation because the
-interrupted instruction address does not end up on the shadow stack.
-This address is potentially quite interesting for backtrace generation.
-I assume it's currently missing because the kernel does not resume
-execution using a regular return instruction.  It would be really useful
-if it could be pushed to the shadow stack, or recoverable from the
-shadow stack in some other way (e.g., the address of the signal context
-could be pushed instead).  That would need some form of marker as well.
-
-Thanks,
-Florian
+-- 
+2.39.2
 
