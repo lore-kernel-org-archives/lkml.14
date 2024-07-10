@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B943E24A08;
-	Wed, 10 Jul 2024 06:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D209624A08;
+	Wed, 10 Jul 2024 06:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720594164; cv=none; b=aUFIL5qmRofQdex3cey6b3tQZkHx8Fmeceqpm6ytUpCKYEB26f4qnwaihg0WLmDffkUNTiWHSJxXY9guvd5yvhI4ptwmTlvu9A5Khs+oJ459bDYI2OuecHknOwJ5yHAuxNfshjQCsIBRLzrIcScJ//tPnrS0b9mV4aDZJXRtmZM=
+	t=1720594355; cv=none; b=V2N6CMLYMkRYKtuTY0LgZFXd87Kuq2nMWApNi0+J0Ns592bdPW+UimYOg5hOTnWKc8+h9yoxUV/ZgPuDFK+w8qsXzcTA+47CKiFyXWYfAV3aMc2oW4oIeAihCHbg3wiDLQgTU0Wib+qZsLVI+j7K/wnWiaPRp8WTWkFSu4aisdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720594164; c=relaxed/simple;
-	bh=UbnvCJzCBndq3QGFLOtJtVqvYzxgrfMBwhlR/fv0Vuo=;
+	s=arc-20240116; t=1720594355; c=relaxed/simple;
+	bh=iZxoqZimCKpehyFMmHWFzK08XaEwDFJ155aep/IdTMg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nm/C5rj1lpigq41cc0Fo51aGDftoOu0aVOat2qPwVVMXH7AdTYTk0zQctK/tbj+jEm7o2416Pc/Pylama7GiEldpUMAv2oI+3EB+uYOZn2LXuq6zWANkp/AAWkuKTcNQ4dGrT/mcnaijgFnwZkx8LgLTqRnetrwnnbKrom94Vek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOVtK0RS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=K+sbPG2KTksg1AKpIItIM4KjFSG76bb/Wjonv0CYFtt3g3lZBS0tMTgllZtphNoTWGzAUIkE4mYImso2PWUwreR8j2GCOwJsr2tqsBwD3Qhm86iwX4D7A/wZxm83hTKcW6S+yDd+XSEgytp4Hjt3Kh9yaIu7E/AfTPushTYTmgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQg6a3PK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOVtK0RS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E76A1C4AF0C;
-	Wed, 10 Jul 2024 06:49:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQg6a3PK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AC7C32781;
+	Wed, 10 Jul 2024 06:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720594164;
-	bh=UbnvCJzCBndq3QGFLOtJtVqvYzxgrfMBwhlR/fv0Vuo=;
+	s=k20201202; t=1720594355;
+	bh=iZxoqZimCKpehyFMmHWFzK08XaEwDFJ155aep/IdTMg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JOVtK0RS8m0S/JsFvsP0HOejVnNdo9YZz+3mwn39Kinppt1bsKJnFVFMCqYkI/c69
-	 dSxP9mp428E7A/KSbGd1ML0SD4FFMRmpRnTnZ0UTiRQ41n1Viszep2jWmvgAJ5kUoe
-	 1a4V2cKeAN6EKhqtWsH4YVIlYstTqMap8SP9f6T+Dd9AEsgRw/F/Ft7YHrJ41wLftm
-	 dW2OVmNcftgpDLU61ATNtz3mTm6unkITuS7avnaWL0qxQKd1WDjc7Fv4fVZj1oawQX
-	 n0C+Y9yFqgH9VchZ9khOpkkcy4iFeISvLJfaaA0m9toCV8pc/JWmg941UNJEDor/QM
-	 m/2de3qX1cpUg==
-Message-ID: <af257b02-5c94-4f3f-a399-40840b594264@kernel.org>
-Date: Wed, 10 Jul 2024 08:49:15 +0200
+	b=MQg6a3PKdVltcZFlYr/S/1wB9oDTpcn2qA0BfYKmEUgPFV8gnjyWqgbYfTcbn2X6v
+	 +Gk5rcqBBdQTJ2vSeBi7dk60uSdUDaTqR4MtrCzwqYr1D2CFD5b7GrNh9a0uSKfTRb
+	 cW9GtYuLq7tiOgqcdYrl3DUE3wMhblGPM4tE6gBBF4VGE4ham1z4pIeNAA1leaY88c
+	 TbXF1ze12POpRLOCknGq+acUH7bttnjl3ggEeyhrpyMx1eUCaCQX1IbMT0BhCzpo+u
+	 bAsPXSw/10HSz6qu68ieI/eQMpr9u4zG3IIP/+LQHscA0pkU+uBCXtnIOPLFq3SCtq
+	 5rn9nvL+Zc5cA==
+Message-ID: <e5ded1c1-be7e-4e16-b175-f4bd4a121d3a@kernel.org>
+Date: Wed, 10 Jul 2024 08:52:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,22 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] dt-bindings: memory: fsl: Add compatible string
- nxp,imx9-memory-controller
-To: Frank Li <Frank.Li@nxp.com>, York Sun <york.sun@nxp.com>,
- Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
- James Morse <james.morse@arm.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Robert Richter <rric@kernel.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
- Borislav Petkov <bp@suse.de>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20240709-imx95_edac-v1-0-3e9c146c1b01@nxp.com>
- <20240709-imx95_edac-v1-4-3e9c146c1b01@nxp.com>
+Subject: Re: [RFC] arm64: dts: ti: introduce a minimal am642 device tree
+To: Logan Bristol <l-bristol@ti.com>, Bryan Brattlof <bb@ti.com>,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220321155417.13267-1-bb@ti.com>
+ <55e161d1-face-6958-1d86-8a85b82e8485@kernel.org>
+ <766dceb1-222a-401b-95e3-69b7fb331411@ti.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,24 +90,49 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240709-imx95_edac-v1-4-3e9c146c1b01@nxp.com>
+In-Reply-To: <766dceb1-222a-401b-95e3-69b7fb331411@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 09/07/2024 22:23, Frank Li wrote:
-> iMX9 memory controller is similar with other layerscape chips. But some
-> register layout has a little bit difference, so add new compatible string
-> 'nxp,imx9-memory-controller' for it.
+On 09/07/2024 18:20, Logan Bristol wrote:
 > 
-> imx9 need two 'reg', one for DDR controller and the other is ECC inject
-> engine register space. Keep the same restriction for other compatible
-> string.
+> Hi all,
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> On 3/22/22 13:14, Krzysztof Kozlowski wrote:
+>> On 21/03/2022 16:54, Bryan Brattlof wrote:
+>>> Texas Instrument's am642 is one of many k3 based, low cost, low power,
+>>> chips designed to work in a wide range of applications spanning an even
+>>> wider range of industries that TI is actively developing
+>>>
+>>> With its pin-mux and peripheral rich designs, these chips will likely
+>>> have a multitude of custom device trees that range wildly from one
+>>> another and (hopefully) guarantee an influx of variants into the kernel
+>>> in the coming years
+>>>
+>>> With overlays no longer a thing, I wanted to ask for opinions on how
+>>> we can best help integrate these dt files as they begin to be developed
+>>>
+>>> I also wanted to introduce a skeletonized (nothing but uart) device tree
+>>> to give others a good starting point while developing their projects.
+>>
+>> Real hardware as DTS please. There is no need to add some skeleton for
+>> specific SoC. What if every SoC goes that way?
+>>
+>> Feel free to create re-usable components in DTSI ways, still reflecting
+>> some hardware parts.
+>>
+> 
+> I am working on a project for the AM62 and came across this email thread.
+> 
+> Following Krzysztof's direction, I am wanting to submit a DTSI to serve
+> as a minimal configuration for the existing boards based on the AM62
+> SoC, which are currently defined by bloated DTS files.
+> 
+> This DTSI file can be consumed by other board DTS files to reduce the
+> configuration. Krzysztof, could this be merged upstream?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-I assume this will go via EDAC tree (not memory-controllers tree).
+Aren't you writing something contradictory to what I wrote above? I do
+not see your description matching my earlier guideline.
 
 Best regards,
 Krzysztof
