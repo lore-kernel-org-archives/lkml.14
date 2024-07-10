@@ -1,254 +1,115 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD5F37169
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AF3193476
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720629302; cv=none; b=cFkBnLc1IQoYZClOHmhNfP7f2SyC0iaXaEyj+CMLY9apEL9eNYaZFOG8nTYNM/duUAppKrdMc6oVQ+IpAwCdt/hBygQZle/ozJ3HAr4mIxtRzvMS88ZzA4XjYgu2lGAeAIwSHTdNYf5CX4U+v7/9hrhn21i7qIjYcTD17KQj+To=
+	t=1720629368; cv=none; b=UxEUXof0dyQtdG2t+lmvktA81u1hLsdAgOqhzqbq3SqH94p+BgtlMQtje08CxgZZ3zeY/vLsloqyOXGt841MgeI6mbqDWVVcLFl+Qxv7tTY3tWp5PWrja5Qlq6MwRprXrvqmJDo/1lwaEbEIw20M0LXsnJ0W3PODYd5hJhN+s7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720629302; c=relaxed/simple;
-	bh=Bo1iq4RtdnqagKRhpGR0svouD/Lh8LfzKjfI2iX5ut8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hH91KW+JAk2cXla1c+gnAcHH3YAd/CojCbcOOQ9F8fxK6oFy3ijwhyaI7LATaMqaYE/m9zGW57yZ7FGmEXVUtDH8s38tjkv7bVDwQfEQ3bA8zlLFp/dIYcd+e2J/lavAWlltyIMZbc37PsON7aUg9SsK0DRTP6jYfTU3sAyHEnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XPPuiiuv; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720629368; c=relaxed/simple;
+	bh=AmY7/0Kx5MgGmOlXPK9ZhPz0KG3pwbKkQWq8KfClfAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=M+JS1GyBlyn3lyOv0ATrWAJNqcZdG3w4Bymhv9K8CpRwm37pDmfnYqrz11mAEobQQC28+jCCJT/pqdQOQNjFVWL12id579k50dfjeOEMNBXBy9XwPmyQh7oRcTJAfex/ZfEJjtkhVu0CrqN3Kbqs3pnR2sJ30Xyu0rNLplZ68NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=TXq782N4; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPPuiiuv"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e02b79c6f21so7395754276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:35:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="TXq782N4"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fb05b0be01so39673985ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:36:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720629300; x=1721234100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BF9ive2p9YXUMgbnwW6FuoRy0oF4ePAeLEyGAEOkhY0=;
-        b=XPPuiiuv5yy0LLZfelI0p0uV+pjKeDlfIv32MB30JwXWimGbcLwfZKG/BGWvlXIVta
-         2p62qzURjcIFKx3B4F2cTdXIIK+9rZKVSVXuX0sgtRQxPi4XxfWFxGM7SkokbsLlSVOt
-         faNPFZzcyOuklwhdXjyGUOi2/7e+lwZi+cpW6T3LM5LtrjlZVNJTekXFx5lDb3I1MYr3
-         XPX1rouzX9ULy17T2t2MZTQjzml8+R9DBoeqTMKt4AWQKFBxuY45ae+RnbGk9EufO2d9
-         DMUyQLyQIRBmxj4Yx1JA6dEwW6eaCxTvIElHFnX0uBiEWm1uNwIA81WY30xWgd7RTHqg
-         Nh4Q==
+        d=fastly.com; s=google; t=1720629366; x=1721234166; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GAyPmOUdsLd03mlAddpRof18UDE0qDKzzkyVj4fd57k=;
+        b=TXq782N4GvwyHd48ipHsDO3etE2d20/+V5M6qIka7kkntUCKxBAxsK+tdiolSMOVgA
+         glcFBqoe4UXxI1AFXNUK4fG5HSp4ggXEplqxx4qGbl8TUIbeXns67Y2JGInI1hKDh3Ul
+         Lqjf87pK4l4lP5/T3Zg6573aA5cqoydHj8GkM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720629300; x=1721234100;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BF9ive2p9YXUMgbnwW6FuoRy0oF4ePAeLEyGAEOkhY0=;
-        b=gPEsju0I8Be+Ji26Ofnn0p5EYaDgAkc6r9+ok7VsBiRhH/2XXpIpB6+wf1+q2X2li/
-         KqkCZnLhymeZTAVdtpNIHK7A/w+UVXTA9VBiScvp5aB9g8ktgT7vcNtxtsj2Lfi5iBE4
-         elsHJFamteV6uoCTmgEwXoXRqEJo63SzpH/JutpmqhNSEbzvLEf+JLadNPcfGudc+w5p
-         XRPrUr9dOzr0Zq4rG9aQUSw43NBs33F4wI6U8qYiURuu6tZlK7Qj3/Ny3HtPTZoRDfbF
-         4CFS9RiGr7SFqaqfJoHqO4Pm8C6yJuyNQkTyT490eFSrAxdT9E1iHse4jB1n1/rUuvp3
-         eJow==
-X-Forwarded-Encrypted: i=1; AJvYcCV3mlCqx9dG73IlF/Qt0EcM5Imao70BZpJrzBaM/TlyEfVQbd52RGwdq510RDX0LzjSCoW3la0z0jZAKMgJAxzXBHde9K9bODbHAF9p
-X-Gm-Message-State: AOJu0Yyz1nLBQVghJeOSmyAcTd5UVFad5IsxyIfmbj0Tp+Y73BQ4eDqt
-	fyhyklZ4/o0cEhPhIHG9ySJlBUZaUAZ6VZU+LveZzOVlPLLOp96A4z6iW4OsDiB12CRL7HqZnSe
-	TybS8V0jt6nmC/R+Yi84ixJTIgzORhUvHffLe
-X-Google-Smtp-Source: AGHT+IHZ5TRrLFlHZ0PUpr8ak7tkgpez+qbokWJEToBW1Plq4/Xn+bXBEL4Smbx2jz+0wQ10oMADhbvO2AMcGSXJNgc=
-X-Received: by 2002:a25:26c8:0:b0:e03:5d07:e17a with SMTP id
- 3f1490d57ef6-e041b17195bmr7050542276.56.1720629299714; Wed, 10 Jul 2024
- 09:34:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720629366; x=1721234166;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GAyPmOUdsLd03mlAddpRof18UDE0qDKzzkyVj4fd57k=;
+        b=cFoSW3Xdmi23sz+wNOqeUxaPADl51NW6N6c50IfVEr7byLG3XeWJE4Kwja1xYff5vR
+         88rF8ALcZoJwxE9wIL/tMJjUZcHIeAO2g5P45rAIlI9dMKbDzgJP+4GsxtUsp0HkmSSQ
+         zyW6IQX4r/sh9ddfugScKUtY3fjENrc8qvCh1oW+VJjtKuXVdlvQP2OPd4iR+M4PKZu1
+         otjupuevdsb2eWzwHSwpLym41jt0HWAXiwBnzF2BBRH7DNhdTBipQ4J5psWmvegAcdBz
+         QsOIA8VfyWbYFjUf9ZtEktIanv1IHoITkwnX4BpHnCSRts94qjhvzbUjmx8gwlv1M1T1
+         ftJA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0L4OV+oTfn2NqNRyZ+LGo4zkvCEcXhiyi4MMIAWzRSnVw+VgkbHAx0y7C12XqofmmJTzXozOlMbgN0PisMSWN4XtOgsvqqNc8Kqxt
+X-Gm-Message-State: AOJu0YwhXzaHRELjE/oNg6Tfkjyoda9Eqs8AkKsZgu+N7LTT3Ai6HNyZ
+	EaAqTbuDLn2OHFwC+TS5C9Gw8NfLyq+05HGVaLreZz/PABn4c6iIcciqD1ghyRo=
+X-Google-Smtp-Source: AGHT+IFSu03Qqw8EY48ag2gKY7v/+/XrSg8iNnofNUiIjWSb3EZMr23XoXHhqrVrkqdA19mx9qnCjQ==
+X-Received: by 2002:a17:903:2344:b0:1fb:9b91:d7c9 with SMTP id d9443c01a7336-1fbb6d34b18mr54539825ad.4.1720629366052;
+        Wed, 10 Jul 2024 09:36:06 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ac3111sm35614245ad.212.2024.07.10.09.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 09:36:05 -0700 (PDT)
+Date: Wed, 10 Jul 2024 09:36:02 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: me@kylehuey.com
+Cc: acme@kernel.org, andrii.nakryiko@gmail.com, bpf@vger.kernel.org,
+	elver@google.com, jolsa@kernel.org, khuey@kylehuey.com,
+	linux-kernel@vger.kernel.org, mingo@kernel.org, namhyung@kernel.org,
+	peterz@infradead.org, robert@ocallahan.org, yonghong.song@linux.dev,
+	mkarsten@uwaterloo.ca
+Subject: possible bpf overflow/output bug introduced in 6.10?
+Message-ID: <Zo64cpho2cFQiOeE@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710135757.25786-1-liulei.rjpt@vivo.com> <5e5ee5d3-8a57-478a-9ce7-b40cab60b67d@amd.com>
- <d70cf558-cf34-4909-a33e-58e3a10bbc0c@vivo.com> <0393cf47-3fa2-4e32-8b3d-d5d5bdece298@amd.com>
- <e8bfe5ed-130a-4f32-a95a-01477cdd98ca@vivo.com>
-In-Reply-To: <e8bfe5ed-130a-4f32-a95a-01477cdd98ca@vivo.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Wed, 10 Jul 2024 09:34:47 -0700
-Message-ID: <CABdmKX26f+6m9Gh34Lb+rb2yQB--wSKP3GXRRri6Nxp3Hwxavg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Support direct I/O read and write for memory
- allocated by dmabuf
-To: Lei Liu <liulei.rjpt@vivo.com>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, Andrei Vagin <avagin@google.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	Daniel Vetter <daniel@ffwll.ch>, "Vetter, Daniel" <daniel.vetter@intel.com>, opensource.kernel@vivo.com, 
-	quic_sukadev@quicinc.com, quic_cgoldswo@quicinc.com, 
-	Akilesh Kailash <akailash@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Jul 10, 2024 at 8:08=E2=80=AFAM Lei Liu <liulei.rjpt@vivo.com> wrot=
-e:
->
->
-> on 2024/7/10 22:48, Christian K=C3=B6nig wrote:
-> > Am 10.07.24 um 16:35 schrieb Lei Liu:
-> >>
-> >> on 2024/7/10 22:14, Christian K=C3=B6nig wrote:
-> >>> Am 10.07.24 um 15:57 schrieb Lei Liu:
-> >>>> Use vm_insert_page to establish a mapping for the memory allocated
-> >>>> by dmabuf, thus supporting direct I/O read and write; and fix the
-> >>>> issue of incorrect memory statistics after mapping dmabuf memory.
-> >>>
-> >>> Well big NAK to that! Direct I/O is intentionally disabled on DMA-buf=
-s.
-> >>
-> >> Hello! Could you explain why direct_io is disabled on DMABUF? Is
-> >> there any historical reason for this?
-> >
-> > It's basically one of the most fundamental design decision of DMA-Buf.
-> > The attachment/map/fence model DMA-buf uses is not really compatible
-> > with direct I/O on the underlying pages.
->
-> Thank you! Is there any related documentation on this? I would like to
-> understand and learn more about the fundamental reasons for the lack of
-> support.
+Greetings:
 
-Hi Lei and Christian,
+While testing some unrelated networking code with Martin Karsten (cc'd on
+this email) we discovered what appears to be some sort of overflow bug in
+bpf.
 
-This is now the third request I've seen from three different companies
-who are interested in this, but the others are not for reasons of read
-performance that you mention in the commit message on your first
-patch. Someone else at Google ran a comparison between a normal read()
-and a direct I/O read() into a preallocated user buffer and found that
-with large readahead (16 MB) the throughput can actually be slightly
-higher than direct I/O. If you have concerns about read performance,
-have you tried increasing the readahead size?
+git bisect suggests that commit f11f10bfa1ca ("perf/bpf: Call BPF handler
+directly, not through overflow machinery") is the first commit where the
+(I assume) buggy behavior appears.
 
-The other motivation is to load a gajillion byte file from disk into a
-dmabuf without evicting the entire contents of pagecache while doing
-so. Something like this (which does not currently work because read()
-tries to GUP on the dmabuf memory as you mention):
+Running the following on my machine as of the commit mentioned above:
 
-static int dmabuf_heap_alloc(int heap_fd, size_t len)
-{
-    struct dma_heap_allocation_data data =3D {
-        .len =3D len,
-        .fd =3D 0,
-        .fd_flags =3D O_RDWR | O_CLOEXEC,
-        .heap_flags =3D 0,
-    };
-    int ret =3D ioctl(heap_fd, DMA_HEAP_IOCTL_ALLOC, &data);
-    if (ret < 0)
-        return ret;
-    return data.fd;
-}
+  bpftrace -e 'tracepoint:napi:napi_poll { @[args->work] = count(); }'
 
-int main(int, char **argv)
-{
-        const char *file_path =3D argv[1];
-        printf("File: %s\n", file_path);
-        int file_fd =3D open(file_path, O_RDONLY | O_DIRECT);
+while simultaneously transferring data to the target machine (in my case, I
+scp'd a 100MiB file of zeros in a loop) results in very strange output
+(snipped):
 
-        struct stat st;
-        stat(file_path, &st);
-        ssize_t file_size =3D st.st_size;
-        ssize_t aligned_size =3D (file_size + 4095) & ~4095;
+  @[11]: 5
+  @[18]: 5
+  @[-30590]: 6
+  @[10]: 7
+  @[14]: 9
 
-        printf("File size: %zd Aligned size: %zd\n", file_size, aligned_siz=
-e);
-        int heap_fd =3D open("/dev/dma_heap/system", O_RDONLY);
-        int dmabuf_fd =3D dmabuf_heap_alloc(heap_fd, aligned_size);
+It does not seem that the driver I am using on my test system (mlx5) would
+ever return a negative value from its napi poll function and likewise for
+the driver Martin is using (mlx4).
 
-        void *vm =3D mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE,
-MAP_SHARED, dmabuf_fd, 0);
-        printf("VM at 0x%lx\n", (unsigned long)vm);
+As such, I don't think it is possible for args->work to ever be a large
+negative number, but perhaps I am misunderstanding something?
 
-        dma_buf_sync sync_flags { DMA_BUF_SYNC_START |
-DMA_BUF_SYNC_READ | DMA_BUF_SYNC_WRITE };
-        ioctl(dmabuf_fd, DMA_BUF_IOCTL_SYNC, &sync_flags);
+I would like to note that commit 14e40a9578b7 ("perf/bpf: Remove #ifdef
+CONFIG_BPF_SYSCALL from struct perf_event members") does not exhibit this
+behavior and the output seems reasonable on my test system. Martin confirms
+the same for both commits on his test system, which uses different hardware
+than mine.
 
-        ssize_t rc =3D read(file_fd, vm, file_size);
-        printf("Read: %zd %s\n", rc, rc < 0 ? strerror(errno) : "");
+Is this an expected side effect of this change? I would expect it is not
+and that the output is a bug of some sort. My apologies in that I am not
+particularly familiar with the bpf code and cannot suggest what the root
+cause might be.
 
-        sync_flags.flags =3D DMA_BUF_SYNC_END | DMA_BUF_SYNC_READ |
-DMA_BUF_SYNC_WRITE;
-        ioctl(dmabuf_fd, DMA_BUF_IOCTL_SYNC, &sync_flags);
-}
+If it is not a bug, can anyone suggest what this output might mean or
+how the script run above should be modified?
 
-Or replace the mmap() + read() with sendfile().
-
-So I would also like to see the above code (or something else similar)
-be able to work and I understand some of the reasons why it currently
-does not, but I don't understand why we should actively prevent this
-type of behavior entirely.
-
-Best,
-T.J.
-
-
-
-
-
-
-
-
-> >
-> >>>
-> >>> We already discussed enforcing that in the DMA-buf framework and
-> >>> this patch probably means that we should really do that.
-> >>>
-> >>> Regards,
-> >>> Christian.
-> >>
-> >> Thank you for your response. With the application of AI large model
-> >> edgeification, we urgently need support for direct_io on DMABUF to
-> >> read some very large files. Do you have any new solutions or plans
-> >> for this?
-> >
-> > We have seen similar projects over the years and all of those turned
-> > out to be complete shipwrecks.
-> >
-> > There is currently a patch set under discussion to give the network
-> > subsystem DMA-buf support. If you are interest in network direct I/O
-> > that could help.
->
-> Is there a related introduction link for this patch?
->
-> >
-> > Additional to that a lot of GPU drivers support userptr usages, e.g.
-> > to import malloced memory into the GPU driver. You can then also do
-> > direct I/O on that malloced memory and the kernel will enforce correct
-> > handling with the GPU driver through MMU notifiers.
-> >
-> > But as far as I know a general DMA-buf based solution isn't possible.
->
-> 1.The reason we need to use DMABUF memory here is that we need to share
-> memory between the CPU and APU. Currently, only DMABUF memory is
-> suitable for this purpose. Additionally, we need to read very large files=
-.
->
-> 2. Are there any other solutions for this? Also, do you have any plans
-> to support direct_io for DMABUF memory in the future?
->
-> >
-> > Regards,
-> > Christian.
-> >
-> >>
-> >> Regards,
-> >> Lei Liu.
-> >>
-> >>>
-> >>>>
-> >>>> Lei Liu (2):
-> >>>>    mm: dmabuf_direct_io: Support direct_io for memory allocated by
-> >>>> dmabuf
-> >>>>    mm: dmabuf_direct_io: Fix memory statistics error for dmabuf
-> >>>> allocated
-> >>>>      memory with direct_io support
-> >>>>
-> >>>>   drivers/dma-buf/heaps/system_heap.c |  5 +++--
-> >>>>   fs/proc/task_mmu.c                  |  8 +++++++-
-> >>>>   include/linux/mm.h                  |  1 +
-> >>>>   mm/memory.c                         | 15 ++++++++++-----
-> >>>>   mm/rmap.c                           |  9 +++++----
-> >>>>   5 files changed, 26 insertions(+), 12 deletions(-)
-> >>>>
-> >>>
-> >
+Thanks,
+Joe
