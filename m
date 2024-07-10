@@ -1,95 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1FF190044;
-	Wed, 10 Jul 2024 12:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B61D156C7B
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720613502; cv=none; b=fjKjtEWYDdJAwcjQlsn70ELXIVUMQK8Fq1TETXmt6DEBWLLcyibTwdxZqrb9ofxx4uvbZX4Oq2cpzcBZ9Wg83Xu2GWBHclbAwjAug5yx4+FH8TFOuRKFV4r0fdluWh/L25Sccnu916pQMA74g1gjWsrpJE8ABP4upkrsBwZeS/g=
+	t=1720613783; cv=none; b=PnoVpEnJaOU+rCD1DCpUdvSxXZyNQTPw5zKGfK8dmHFA2ddlgKLEm7UlhzqOTJO1EBo6TpVVL7o/wVcOpTQoP5jTJqS1xsJDLpWLN8udcpYT2pX+0XrIa1iyxDAHwvUh8sZzNyT2kuL2ZIFBZ/34L8RrK3EDErYAwtFilyJwju0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720613502; c=relaxed/simple;
-	bh=UurvNuYtwMtcWIKDARRq2Bnik8U4B3mY3wKPG7xV4pw=;
+	s=arc-20240116; t=1720613783; c=relaxed/simple;
+	bh=y0qjDnLJyo/X2DNmXM+T7MdDK6BJMvAV3BAux5grKmA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zd0U3KJLGukqAhvUXBq0x8kmwHKzVFRl3sQW4iQTmir3/s11SadaXIvYud9DA4vzfjzt7Yv3Ma2uG0Jj445QzBpSE0rWnPcdtfk/B/KvHkol1nUpZmGbyBJZmFOSRx4/+X4kfMBQPtqPQEryfXBFOrmP/DzmpnOI3XoF6yOfdvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6NZWUFu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mcDhT/lAg69H21WJaOEPcb2nX5RqY/3DE4YIdvK1PgfMk2Nfw9n60lBllUQwDPnrNZLAQ1sG7w5Zf21V6DMYbeNwpbyLsoQm3wzjmva6tIeq2OlLDWgIO7SAl28Fgg17t3UvGKLGMO9V5PRDaGKCHThY6fwJ1tVHXZRJvF5iMWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h36zUb7v; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6NZWUFu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28241C32781;
-	Wed, 10 Jul 2024 12:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720613502;
-	bh=UurvNuYtwMtcWIKDARRq2Bnik8U4B3mY3wKPG7xV4pw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F6NZWUFu/No8NTOvvKb9LYVm32TiEC6YfZzQ9rP66+C3t7gEebuNCb3g5czsNx0Ad
-	 d1O30QXUgaGuUYzLpkwAoDbQILVIBFAGKjEpFQpTXmnXd9cwkfqWO3ZNa/1dciMmaH
-	 8MbuG4EA+vrFHpnTouhbDTdYyzpk6si8juUcPqS/sVjIXdLVMz8ThDvevCcDlncBqR
-	 MuCTxJ9S0mZnJA9H7CPG/DYoy0Dh7FF0DPtJzf8mEHaRlMwA1B4oA8c1BnTXK6dwKD
-	 EjyDoFRhPdMLRczBYepjDVr0I2YSxxmNQmrZN+VcdXeaDcPCg8g5IUNOTm3PUi/ww7
-	 32Ku/8xQDr+lQ==
-Date: Wed, 10 Jul 2024 13:11:36 +0100
-From: Will Deacon <will@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] arm64: hw_breakpoint: Save privilege of access
- control via ptrace
-Message-ID: <20240710121136.GA14080@willie-the-truck>
-References: <20240709095506.9691-1-yangtiezhu@loongson.cn>
- <20240709095506.9691-4-yangtiezhu@loongson.cn>
- <20240709100515.GB12978@willie-the-truck>
- <d72a04f5-7894-af6c-dd4a-c6728e936f73@loongson.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h36zUb7v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720613781; x=1752149781;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=y0qjDnLJyo/X2DNmXM+T7MdDK6BJMvAV3BAux5grKmA=;
+  b=h36zUb7vuJ5mfaPjlA3zpB/HAZTzTHeO/cQT/GRLwU6YZVl0KNIJ9UWV
+   Gxm3O2mcwXBi7tKPG9b7vw9Rmtiru55cP6SKfNaXeOsMWejVmBPRnelH1
+   voMXuY9qIvGWpyVzNTWRnkH4yoKxmJ2nTzbMD9xDxERixf+WhL4KWiC6U
+   rpIc8r8b3gxzKUcPEbzm+fsTOe12vVaPKGCTGeihOqjXWNwMFJ1ZWMrYK
+   +Uai7tk4szWiyHnBcrfqJBvR8I8ACm04MDA5HeOMTz1b/tjLeJ5agXeO/
+   9I4AZFPxM87xYzHW7S7w8y5r8KBh93MVj7dbo+XIcL5VC1kbbe/RT7Ofr
+   g==;
+X-CSE-ConnectionGUID: sxKZlXk7Spi23yblNFcajQ==
+X-CSE-MsgGUID: yrxTEt7DTFe17CNn3KhMrA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="17627651"
+X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
+   d="scan'208";a="17627651"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 05:16:20 -0700
+X-CSE-ConnectionGUID: j0qe4MdASMWZ4BjJSkehMg==
+X-CSE-MsgGUID: hKD5bWzhTgqbJxpf2THtuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
+   d="scan'208";a="48177915"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by fmviesa008.fm.intel.com with SMTP; 10 Jul 2024 05:16:17 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 10 Jul 2024 15:16:15 +0300
+Date: Wed, 10 Jul 2024 15:16:15 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+	rodrigo.vivi@intel.com, tursulin@ursulin.net, airlied@gmail.com,
+	daniel@ffwll.ch, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i915: Explicitly cast divisor to fix Coccinelle
+ warning
+Message-ID: <Zo57j8G2AQbhpORB@intel.com>
+References: <20240710074650.419902-2-thorsten.blum@toblux.com>
+ <Zo5yvk69FB-jEgd8@intel.com>
+ <77194DC0-AA53-4CF9-8BDB-93E212B9FA72@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <d72a04f5-7894-af6c-dd4a-c6728e936f73@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <77194DC0-AA53-4CF9-8BDB-93E212B9FA72@toblux.com>
+X-Patchwork-Hint: comment
 
-On Tue, Jul 09, 2024 at 08:07:50PM +0800, Tiezhu Yang wrote:
-> On 07/09/2024 06:05 PM, Will Deacon wrote:
-> > On Tue, Jul 09, 2024 at 05:55:06PM +0800, Tiezhu Yang wrote:
-> > > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> > > index 0d022599eb61..3b37c4a2e0d4 100644
-> > > --- a/arch/arm64/kernel/ptrace.c
-> > > +++ b/arch/arm64/kernel/ptrace.c
-> > > @@ -309,6 +309,7 @@ static struct perf_event *ptrace_hbp_create(unsigned int note_type,
-> > >  	attr.bp_addr	= 0;
-> > >  	attr.bp_len	= HW_BREAKPOINT_LEN_4;
-> > >  	attr.bp_type	= type;
-> > > +	attr.bp_priv	= AARCH64_BREAKPOINT_EL0;
-> > >  	attr.disabled	= 1;
-> > > 
-> > >  	bp = register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-> > > @@ -352,6 +353,7 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned int note_type,
-> > >  	attr->bp_len	= len;
-> > >  	attr->bp_type	= type;
-> > >  	attr->bp_addr	+= offset;
-> > > +	attr->bp_priv	= ctrl.privilege;
+On Wed, Jul 10, 2024 at 01:55:32PM +0200, Thorsten Blum wrote:
+> On 10. Jul 2024, at 13:38, Ville Syrjälä <ville.syrjala@linux.intel.com> wrote:
+> > On Wed, Jul 10, 2024 at 09:46:51AM +0200, Thorsten Blum wrote:
+> >> As the comment explains, the if check ensures that the divisor oa_period
+> >> is a u32. Explicitly cast oa_period to u32 to remove the following
+> >> Coccinelle/coccicheck warning reported by do_div.cocci:
+> >> 
+> >>  WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead
+> >> 
+> >> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> >> ---
+> >> drivers/gpu/drm/i915/i915_perf.c | 2 +-
+> >> 1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+> >> index 0b1cd4c7a525..24722e758aaf 100644
+> >> --- a/drivers/gpu/drm/i915/i915_perf.c
+> >> +++ b/drivers/gpu/drm/i915/i915_perf.c
+> >> @@ -4103,7 +4103,7 @@ static int read_properties_unlocked(struct i915_perf *perf,
+> >>  */
+> >> if (oa_period <= NSEC_PER_SEC) {
+> >> u64 tmp = NSEC_PER_SEC;
+> >> - do_div(tmp, oa_period);
+> >> + do_div(tmp, (u32)oa_period);
 > > 
-> > Wait, so ptrace can now set breakpoints with arbitrary privileges?
+> > Why is this code even using do_div() when it doesn't need the
+> > remainder?
 > 
-> The ptrace user should make sure the privilege is correct.
-> For example, the privilege is set as el0
-> in aarch64_point_encode_ctrl_reg() of GDB:
-> 
->   /* enabled at el0 */
->   ctrl |= (2 << 1) | 1;
-> 
-> https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=gdb/nat/aarch64-hw-point.c#l135
+> do_div() is an optimized 64-by-32 division and the compiler should
+> automatically remove the remainder if it's not used.
 
-We shouldn't rely on userspace behaving correctly when dealing with
-privilege levels.
+The point is that do_div() is a bad API because it magically
+changes the divided in place. There are more sensible 64bit
+division helpers in math64.h that can be used instead.
 
-Will
+oa_exponent_to_ns() also hand rolls a DIV_ROUND_UP_ULL()
+for some reason...
+
+-- 
+Ville Syrjälä
+Intel
