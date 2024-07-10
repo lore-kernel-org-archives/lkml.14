@@ -1,94 +1,86 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97498195FE0
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CCA195FE0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720639167; cv=none; b=YuwxzJEiFt7ZRhjAeGa8MkSxVf8oPPZvTzkb7sKA2/MU+iXgymnOP74SXR5CgU1uRPyc3puk/FQYsWY2qayFYDjPxyyvwxKHK83lD+xc9qO9FJtOFLMcrGuPd1+p7v4ntcVhuTh2vsbi4rQxGtvQSD4BBIg1YIXSUJky2pdL//o=
+	t=1720639219; cv=none; b=n1aSLOipPDBp061cuO5nAKMyGtAF2HuMEoF/66jV7gDFiMCBuVuE3BwsUv911CKUsldsfsjTQqckmkJHijo8TSlIqoQiIaiP0+1yIUwwd9iewaksq8XJDNsmrIjYMbC+QVIdVUi4h2lufwt6I3gMBmyZuquxp0IDauJ8nplFb2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720639167; c=relaxed/simple;
-	bh=WZPvRRYPuG1k1apLr7+uc+ETUG4y6xHUPigbLwS2g1o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pYB8BQAurY3NaWgWgxxpgoDjnXivFCVPuVw4g6HdwZ8Bgy06rQozrQWjRN0SNsYWx5bmj64eZyhDgoy1X1UCezahrMhfgSU5IWDU+CI5e1EizaT5H4dKn5RBVIATWsb9HgOFOzNOAZuhVZBfHy+nYsNOkYZkGuURPx8jXvqmv6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gq1EGplQ; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1720639219; c=relaxed/simple;
+	bh=0fsclPJO+0S/lvzn0RI6aYyeLzEsX1Mg7kOsvhED/bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=slVbYG16Fb5nUjl917JwcbR/IQPk2sqiKmlR8EgR4tL3/hJFAE0QAwJdml6HRDRBYQEb1KdkLMZW2Gcl74VMB7SEZ7DO8EbFwd3pXe4Mqj+mMIfawEO0X4zbjQcf0iPG7LG5/J6mNJCDgk6r+MKk2sp51gD1XamqETc9PxfjKPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N+1kcPgd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gq1EGplQ"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-70df2135426so40080a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720639165; x=1721243965; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jfu6YHYXAYDu8BCDtd4YBroCALNFVkJ9E+bO6AtHH3w=;
-        b=gq1EGplQbq0Znsjp+TA1apJppxG0YSIfWhuCcrI2cukgOXJ9iJN8q+ExLrgMZX6xtq
-         mHWwMQ2a8pZcbqrOwTHjEfPDm18shkLUUxYDmEQ7ay+bZJ9tgcEjlWc7CMDs4FRalWVt
-         JFFk9/yHkEIupyxhd+3IFN3EITMes1bAu6rbM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720639165; x=1721243965;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jfu6YHYXAYDu8BCDtd4YBroCALNFVkJ9E+bO6AtHH3w=;
-        b=FDIsrEVTS1fzbryhI8obh1NNYoWazksv0K380b7JUvgAw10TIJW/gc0txR/xezqZx7
-         eFm8uMOCqPayFtDlPUDMoGze8iQRvEd42iiDRkBEkwYQS0Eo9u32DjXWIPpHF25mqKiz
-         KELoxOG9C9aPkNp7F/0MOofu8vM+n4vNqbx7sgal9USkcfffoeUdl3cahE9FqPbG0WEY
-         NpT2J5u1ocie49jAZuCzPridrLF8NuxlUcvuPqao7lpaP2ih0IpMrSl9x0NqLEHBWHoy
-         2wy5f1LluUwRCsx/np7SHX8XZY0MYDJkJ5VLOkiCmSF4fjR30AwyISQsJ6JRJo5Ax6JQ
-         CvxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWz2o7JuJpWU8z/sHKlxz44G9SppSO4A7zE1R8wGKdSE3T10uwwoxmSNKkXYkK0Qbinvtw0SzlrecCFMan7tEIXprm74iPPXW/OKBQ6
-X-Gm-Message-State: AOJu0YwKVZUKQaIMViFQd1Lcu+bBgOHTWmdxLI+rYzea4TMcwWRog6c7
-	NWO3SzP1Dijb9k1cGpu9jiik4c7aHtlj/In06GJdtUMEv3X5mSuuh6TBR7qe6QDJJ974P8aZBXg
-	Hzg==
-X-Google-Smtp-Source: AGHT+IHWcJG6FpmSV852lerObEkvcsTHEy44LA5E2DBEB18WK/km7nTik9CJZ0NbcR6VzCVjHn+6Ig==
-X-Received: by 2002:a05:6a20:7f99:b0:1c0:c95d:af4e with SMTP id adf61e73a8af0-1c2984e6277mr7103472637.57.1720639165309;
-        Wed, 10 Jul 2024 12:19:25 -0700 (PDT)
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com. [209.85.214.181])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6acf373sm37163205ad.261.2024.07.10.12.19.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 12:19:25 -0700 (PDT)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f70ec6ff8bso37735ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:19:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUv/6rAf4d2n3NQ5GVMfSv6gkl6kM7MATP0LvNwgy2YOb2j/X/ys5fX1/P6rQfOhdSsT00gLEGAGQaQjgc730zYjm+ynPe7Do2kmdAg
-X-Received: by 2002:ac8:51d1:0:b0:444:fd8a:f1a0 with SMTP id
- d75a77b69052e-44d1255ffaamr427131cf.25.1720638782549; Wed, 10 Jul 2024
- 12:13:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N+1kcPgd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720639217;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0fsclPJO+0S/lvzn0RI6aYyeLzEsX1Mg7kOsvhED/bc=;
+	b=N+1kcPgdpBWiG4TxvskWrmKp+TOhLeF8xAAV/YzBxSQg0YN37GWMCd/3CCr5GYzV6mpomD
+	79pLihsOUlZl/SfEPEqVMhO0inMXXIc3SuXtvU3n87QLmy0V3/8p4KJqsRJw+rRxsjiPOs
+	/oISBmTFh6/sOkAS9VTdHh093wI++yo=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-rqcydCwYOAGWRZkmxDNCLQ-1; Wed,
+ 10 Jul 2024 15:20:10 -0400
+X-MC-Unique: rqcydCwYOAGWRZkmxDNCLQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7B9F81955F42;
+	Wed, 10 Jul 2024 19:20:06 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E2AD81955F40;
+	Wed, 10 Jul 2024 19:20:01 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 10 Jul 2024 21:18:29 +0200 (CEST)
+Date: Wed, 10 Jul 2024 21:18:24 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Julian Orth <ju.orth@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 2/2] kernel: rerun task_work while freezing in
+ get_signal()
+Message-ID: <20240710191824.GD9228@redhat.com>
+References: <cover.1720634146.git.asml.silence@gmail.com>
+ <89ed3a52933370deaaf61a0a620a6ac91f1e754d.1720634146.git.asml.silence@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710084715.1119935-1-yangcong5@huaqin.corp-partner.google.com>
- <20240710084715.1119935-4-yangcong5@huaqin.corp-partner.google.com>
-In-Reply-To: <20240710084715.1119935-4-yangcong5@huaqin.corp-partner.google.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 10 Jul 2024 12:12:50 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vftx+AVUtpnYrSwW9725gwjH8BD_C6i+bd_m4nCx1vQg@mail.gmail.com>
-Message-ID: <CAD=FV=Vftx+AVUtpnYrSwW9725gwjH8BD_C6i+bd_m4nCx1vQg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] drm/panel: nt36672e: Break some CMDS into helper functions
-To: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-Cc: quic_jesszhan@quicinc.com, neil.armstrong@linaro.org, mwalle@kernel.org, 
-	linus.walleij@linaro.org, airlied@gmail.com, dmitry.baryshkov@linaro.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <89ed3a52933370deaaf61a0a620a6ac91f1e754d.1720634146.git.asml.silence@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hi,
+I have already acked this patch, so I am sorry for the noise, but
 
-On Wed, Jul 10, 2024 at 1:47=E2=80=AFAM Cong Yang
-<yangcong5@huaqin.corp-partner.google.com> wrote:
+On 07/10, Pavel Begunkov wrote:
 >
-> Break select page cmds and reload cmds into helper functions.
->
-> Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-> ---
->  .../gpu/drm/panel/panel-novatek-nt36672e.c    | 69 ++++++++++++-------
->  1 file changed, 44 insertions(+), 25 deletions(-)
+> Run task_works in the freezer path. Keep the patch small and simple
+> so it can be easily back ported,
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Agreed.
+
+I tried to argue with v1 which added the additional task_work_run()
+into get_signal(), but I failed to suggest a "better" change which
+doesn't uglify/complicate get_signal/backporting.
+
+Oleg.
+
