@@ -1,122 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EDF1922E3;
-	Wed, 10 Jul 2024 18:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC381922E3;
+	Wed, 10 Jul 2024 18:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720636030; cv=none; b=VU5Yw+bOzwbb1vIzCPT/HCidwrjorPDUc9Dfo7Sz+xJDeYN6UXBdO+vtLlAIp7srKcrSvmJ8dVPfbpeAqKHERvnqdWdlabvAByh7s2Z4SwRS0+64yEeP9d9tuciVVOtHMS6ql3V0y0ff9tT45Z3OxtmbDE0NyxK9n+ovBtJemb0=
+	t=1720636093; cv=none; b=t3dFtGuevibP4RKuLQDlwtjwGLABy/0ST+gUEdmG10RCm6glaTznrsJX1rthlFI+e4RlU9b0TGwlrZo62kShIrQl4JhzjhKAYWYtx06CW+QGLrHygP+/T4HSfC1xaZKPD6yxEUL3n3rw1yu/AqZbIpHi6DkAypBvG0+zkfpMBeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720636030; c=relaxed/simple;
-	bh=vE4YwZqVSyf+g3MpvOLWDYqAVnZMm6ZdBSNJBrlYexg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMScOCuBWKGFiI2l50YvOxi1NIR0HQx3fDVuScBFeUsbTBwGNMA251FKOAm7sO2/QSVEdQeafqJiXddHhRVmjMApzNeda2otdZabeZV3NBYZUlJqUDl6PN2T/rgDzDMUNmvulKcaDx7X9UN1s5CnX6UqYaE4YIpQq4d6/KPrgZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iqZbUlJy; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720636093; c=relaxed/simple;
+	bh=PbMaBEL1Vn3w0nHRy4gywthrdx0lWu7HFhqULAUjVEQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O9Pmxww/HeRA810yWljaQpVrhSzQIQU6nzEGEX6uQjMe6t9919sURYA6HY5cBIzj4sDbvnVHLWTjH5zzgpAlcgNRi0GQzgX0e4wGkYKS2Xcawnwx8fR1WPzo8pEz3uSyMEdQlbT0h3g4F4ZGSwa5Kh74jMuyCcxm+N7G6fG2A1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvU6NyC6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqZbUlJy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720636027; x=1752172027;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vE4YwZqVSyf+g3MpvOLWDYqAVnZMm6ZdBSNJBrlYexg=;
-  b=iqZbUlJyVHzBFubW/zfQ/WSVFu3q9GVWVg0lxtEKBw0bSLhs3lzO/1Hb
-   gKzAi5Txv87Rpn+kNGDncxDgyzEUQ2XF2lpfKEZKBDqEUNeCVpY6qmaRn
-   jmeadrW3YaP8f4ZzKk215oSaZBVVQYDUP0XqAAI56l4YG0gXuo8eUch43
-   sAP0nsVwZ0pP6mrCTBBdGFpBlUVUWHubx5z3qnlcy1k/EfwSOrGxGualx
-   NFH4iyIiiuTtobXdu2B2f7T3VZ/qHRV0tMXIjMdqyFLE84rb+ogoGApxP
-   JwVljxAwRRsnKV5hXBLF1i79ez8zpSHmialF2Wd1hfXqTk2e4lAE9fvY0
-   w==;
-X-CSE-ConnectionGUID: njQxMGGpQYiMbt+CARYQYA==
-X-CSE-MsgGUID: mRz4/FC1Q4yREdATvfgZ4Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18116550"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="18116550"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 11:26:58 -0700
-X-CSE-ConnectionGUID: 57EtbHqaTjieQffc5EaEOg==
-X-CSE-MsgGUID: c+uv0ukqQkmGTgV3zK17xQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="48313002"
-Received: from janchell-mobl1.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.72.164])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 11:26:58 -0700
-Date: Wed, 10 Jul 2024 11:26:56 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: peng guo <engguopeng@buaa.edu.cn>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, wyguopeng@163.com
-Subject: Re: [PATCH v3] cxl/core: Support mbox op clear log of vendor debug
- logs
-Message-ID: <Zo7ScFy2B4jFSGtb@aschofie-mobl2>
-References: <20240710023112.8063-1-engguopeng@buaa.edu.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvU6NyC6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D33C32781;
+	Wed, 10 Jul 2024 18:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720636093;
+	bh=PbMaBEL1Vn3w0nHRy4gywthrdx0lWu7HFhqULAUjVEQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UvU6NyC6n6BlKuA4+lMz9GvmSNdczbL4GlIU1Vlj32L2u2+fGLMjQrSxfNRxSnY0w
+	 u+QMzrP0KgOpVekTFJDTqLU8gpZW23h64170xdmE2sQdz/m7dwy52MdnKoey53dJLP
+	 R0YLR+tUbDS31gc4Max8kHksKS2N+ybbZqtvM6YsI+TgT0fcZPqhTAKNDuLGGU6b4w
+	 QGgcbCBVpzPT/2YJVNh3yJ9MT7u3furVwVKoPSpWQq7fU2V9BAwPyBS+1BYIOLBBjk
+	 efnAstd6iMz4rdXX6u0YoSny2uTLWV2AQgD9fxXNp1bkvmtYEI8prMzJpNaBsWYmBn
+	 blZJUA488qtFw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sRc30-00BJ5c-7F;
+	Wed, 10 Jul 2024 19:28:10 +0100
+Date: Wed, 10 Jul 2024 19:28:09 +0100
+Message-ID: <86ttgx2jba.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Shuah Khan <shuah@kernel.org>,
+	"Rick P. Edgecombe" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	"H.J. Lu" <hjl.tools@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Florian Weimer <fweimer@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
+	Ross Burton <ross.burton@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v9 13/39] KVM: arm64: Manage GCS registers for guests
+In-Reply-To: <Zo7B_sRyUyxv7xmO@finisterre.sirena.org.uk>
+References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+	<20240625-arm64-gcs-v9-13-0f634469b8f0@kernel.org>
+	<86v81d2s5t.wl-maz@kernel.org>
+	<Zo7B_sRyUyxv7xmO@finisterre.sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240710023112.8063-1-engguopeng@buaa.edu.cn>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, corbet@lwn.net, akpm@linux-foundation.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, arnd@arndb.de, oleg@redhat.com, ebiederm@xmission.com, shuah@kernel.org, rick.p.edgecombe@intel.com, debug@rivosinc.com, ardb@kernel.org, Szabolcs.Nagy@arm.com, kees@kernel.org, hjl.tools@gmail.com, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, fweimer@redhat.com, brauner@kernel.org, thiago.bauermann@linaro.org, ross.burton@arm.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jul 10, 2024 at 10:31:12AM +0800, peng guo wrote:
-> When user send a mbox cmd whose opcode is CXL_MBOX_OP_CLEAR_LOG and
-> the in_payload is normal vendor debug log UUID according to
-> the CXL specification
-> cxl_payload_from_user_allowed() will return false unexpectedly,
-> Sending mobox cmd operation failed and the kernel log will print:
-> Clear Log: input payload not allowed.
+On Wed, 10 Jul 2024 18:16:46 +0100,
+Mark Brown <broonie@kernel.org> wrote:
 > 
-> All CXL devices that support a debug log shall support the Vendor Debug
-> Log to allow the log to be accessed through a common host driver, for any
-> device, all versions of the CXL specification define the same value with
-> Log Identifier of: 5e1819d9-11a9-400c-811f-d60719403d86
+> [1  <text/plain; us-ascii (7bit)>]
+> On Wed, Jul 10, 2024 at 04:17:02PM +0100, Marc Zyngier wrote:
+> > Mark Brown <broonie@kernel.org> wrote:
 > 
-> refer to:
-> CXL spec r2.0 Table 169
-> CXL spec r3.0 Table 8-62
-> CXL spec r3.1 Table 8-71
+> > > +	if (ctxt_has_gcs(ctxt)) {
 > 
-> Fix the definition value of DEFINE_CXL_VENDOR_DEBUG_UUID to match the
-> CXL r3.1 specification.
+> > Since this is conditioned on S1PIE, it should be only be evaluated
+> > when PIE is enabled in the guest.
 > 
-> Fixes: 472b1ce6e9d6 ("cxl/mem: Enable commands via CEL")
-> Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
+> So make ctxt_has_gcs() embed a check of ctxt_has_s1pie()?
 
+No. I mean nest the whole thing *under* the check for S1PIE.
 
-Peng: Thanks for the patch!
-
-DaveJ: Please fixup paragraph one split and s/mobox/mbox when applying.
-
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
-
-> ---
-> v2 -> v3: Add a description of the impact of this issue on user usage
->           Modify the fixes tag
-> v1 -> v2: update commit message  and addressed review comments
 > 
->  drivers/cxl/cxlmem.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > +		ctxt_sys_reg(ctxt, GCSPR_EL1)	= read_sysreg_el1(SYS_GCSPR);
+> > > +		ctxt_sys_reg(ctxt, GCSCR_EL1)	= read_sysreg_el1(SYS_GCSCR);
+> > > +		ctxt_sys_reg(ctxt, GCSCRE0_EL1)	= read_sysreg_s(SYS_GCSCRE0_EL1);
 > 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index af8169ccdbc0..feb1106559d2 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -563,7 +563,7 @@ enum cxl_opcode {
->  		  0x3b, 0x3f, 0x17)
->  
->  #define DEFINE_CXL_VENDOR_DEBUG_UUID                                           \
-> -	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
-> +	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
->  		  0x40, 0x3d, 0x86)
->  
->  struct cxl_mbox_get_supported_logs {
-> -- 
-> 2.43.0
+> > Why is this part of the EL1 context? It clearly only matters to EL0
+> > execution, so it could be switched in load/put on nVHE as well. And
+> > actually, given that the whole thing is strictly for userspace, why do
+> > we switch *anything* eagerly at all?
 > 
+> GCS can also be used independently at EL1 (and EL2 for that matter),
+> it's not purely for userspace even though this series only implements
+> use in userspace.  GCSPR_EL1 and GCSCR_EL1 control the use of GCS at
+> EL1, not EL0, and the guest might be using GCS at EL1 even if the host
+> doesn't.
+>
+> GCSCRE0_EL1 is for EL0 though, it ended up here mainly because it's an
+> _EL1 register and we are already context switching PIRE0_EL1 in the EL1
+> functions so it seemed consistent to follow the same approach for GCS.
+> The _el1 and _user save/restore functions are called from the same place
+> for both VHE and nVHE so the practical impact of the placement should be
+> minimal AFAICT.  Unlike PIRE0_EL1 GCSCRE0_EL1 only has an impact for
+> code runnning at EL0 so I can move it to the _user functions.
+
+Exactly. That's where it belongs, because we never execute EL0 while a
+vcpu is loaded. On the contrary, we can make use of a uaccess helper
+while a vcpu is loaded, and that makes a hell of a difference.
+
+And it makes a difference because it would allow the loading of
+EL0-specific context differently. We had this at some point, and it
+was a reasonable optimisation that we lost. I'm keen on bringing it
+back.
+
+> 
+> TBH I'm not following your comments about switching eagerly too here at
+> all, where would you expect to see the switching done?  You've said
+> something along these lines before which prompted me to send a patch to
+> only save the S1PIE registers if they'd been written to which you were
+> quite reasonably not happy with given the extra traps it would cause:
+> 
+>    https://lore.kernel.org/r/20240301-kvm-arm64-defer-regs-v1-1-401e3de92e97@kernel.org
+> 
+> but I'm at a loss as to how to make things less eager otherwise.
+>
+> > > @@ -2306,7 +2323,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+> > >  		   ID_AA64PFR0_EL1_GIC |
+> > >  		   ID_AA64PFR0_EL1_AdvSIMD |
+> > >  		   ID_AA64PFR0_EL1_FP), },
+> > > -	ID_SANITISED(ID_AA64PFR1_EL1),
+> > > +	ID_WRITABLE(ID_AA64PFR1_EL1, ~(ID_AA64PFR1_EL1_RES0 |
+> > > +				       ID_AA64PFR1_EL1_BT)),
+> 
+> > I don't know what you're trying to do here, but that's not right. If
+> > you want to make this register writable, here's the shopping list:
+> 
+> > https://lore.kernel.org/all/87ikxsi0v9.wl-maz@kernel.org/
+> 
+> Yes, trying to make things writable.  I do see we need to exclude more
+> bits there and I'm not clear why I excluded BTI, looks like I forgot to
+> add a TODO comment at some point and finish that off.  Sorry about that.
+> 
+> In the linked mail you say you want to see all fields explicitly
+> handled, could you be more direct about what such explicit handling
+
+This emails enumerate, point after point, everything that needs to be
+done. I really cannot be clearer or more direct. This email is the
+clearer I can be, short of writing the code myself. And I have decided
+not to do it for once, unless I really need to. And as it turns out, I
+don't.
+
+> would look like?  I see a number of examples in the existing code like:
+> 
+> 	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
+
+This is clear: Everything is writable, and there are no bits here that
+are otherwise conditional or unsupported.
+
+> 
+> 	ID_WRITABLE(ID_AA64ISAR0_EL1, ~ID_AA64ISAR0_EL1_RES0),
+
+Same thing.
+
+> 	ID_WRITABLE(ID_AA64ISAR1_EL1, ~(ID_AA64ISAR1_EL1_GPI |
+> 					ID_AA64ISAR1_EL1_GPA |
+> 					ID_AA64ISAR1_EL1_API |
+> 					ID_AA64ISAR1_EL1_APA)),
+
+This one needs fixing because of LS64, and I have an in-progress
+series for it.
+
+> which look to my eye very similar to the above, they do not visibliy
+> explictly enumerate every field in the registers and given that there's
+> a single mask specified it's not clear how that would look.  If
+> ID_WRITABLE() took separate read/write masks and combined them it'd be
+> more obvious but it's just not written that way.
+
+I don't really see what it would buy us, but never mind.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
