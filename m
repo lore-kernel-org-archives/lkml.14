@@ -1,73 +1,98 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A45D15EFAF
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B202012B169;
+	Wed, 10 Jul 2024 23:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720655355; cv=none; b=t/qPlketQJZDyifsteVjJhbimBfR044cajb5wSK06tcxvzuaDUfi2t9Y6z5joXsW/+McTAiy+ATRs0oMb9ZgmS1Em7bHks8c31l30yO39V67RPk1Y+43hLmT0U3gzkwRpoPNhmjpvOqqDP50cP4/5uiwQwEsIwILb5NN8NJfKm8=
+	t=1720655467; cv=none; b=frfh7nDChYzj3+mTgXF92mMjNnB+EZbA2oHRbfQgFt1/YiY/k18BAzP9lTU3uUJcOrhdXPNIDzutZ0cKyLXojD30PHmWhun7Y+wC6+iottI+qQOR2vwGx8rM8U2zbEjjFDHiTijiX4IjOuK87F/ukp798Tn+9j+jI5i2A2gKLAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720655355; c=relaxed/simple;
-	bh=WpUWnTWcQ9yZbCFEuArGMs4Fxk919PYBB/xOGitk7xM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ll6rFYWqtLgkOkA7HSKR8WH5EanONWQ/R29YdTTt/OtRZt9fyGhys5gT2FZ6e+wIZwz0h/JiJFHWIZs1Pxqe3rebHbKrWs7rV6ayMOUUKsNbVE3bC5I0yKUE2coIGuluSXySgTfDQWZ6KeKmZVELmkX7mlHZse09CdnMLDPXhu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TxVFDFfZ; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720655467; c=relaxed/simple;
+	bh=mtsASaRHLqCYOck08Oznj4zFQ0NoMEVAeyzbF/s/GWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=B4D3yKLwnEzhIj8tkIsmh6mQ4RRTqBmhkH7Vr3R0QN7CPTygHYaWOoEypXJKGLRaXdUlpOA7zmgIzxmdIe+IZN3dOL3kgSuS38oMxSU2JBqtV8yRQZ+iGW/ZESfQXsZbglbqizCLwRw1n4mNrFbMWZV0RGFX3LCea2X9gKeIFSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=i3Np4jzr; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TxVFDFfZ"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-447df43324fso64781cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720655353; x=1721260153; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WpUWnTWcQ9yZbCFEuArGMs4Fxk919PYBB/xOGitk7xM=;
-        b=TxVFDFfZrvROa1IKZ3G5x2ZkEvq9G8gQk4z8oeAb/KpPpPvQOH/gIU0KLHUwUU6GFn
-         zHjX3/emlwa1Wq8KkRnLm/gAk7ZSpGZd+0D0hWyGHNdvypxPkVvYAwNkIG7hDC0jmwns
-         6BwPHSONhiwDP92nugSYgG/1eVSF9OzY4SWiAe45CXyIaey6oVcoW7jc7pvnOLXgCnNK
-         AR5QwzdR+o+LAOiRAiEgiegcIRa2yNMefFsu/Zjn+6Ok0C22D+4MxmqggJiAH2ljTTCy
-         rHuCbdu4xAxVsXkUPgUR1XYB3+y2/ecAqd96rNfabcyRGfdJAU47FpwBR8yJMOjCJI9u
-         H6Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720655353; x=1721260153;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WpUWnTWcQ9yZbCFEuArGMs4Fxk919PYBB/xOGitk7xM=;
-        b=umgsK7DndA9YqgSPfX4GsPXueoDEZEnlhMQAuZwwRd+1UKLdyMhpBAgbIqxNNO3O1I
-         +h/Bdqou6XwJYenDk6fpoC9A95NTAtxHfd+ozoz92vWO/MgX+mBCcvYpK0tN4FLHZsg0
-         WTGm7iF6W06aL9cLTrfyw62VU0sX/ha65bnyoqoVKThM0C0J+UdRCU2bOuDN4XRTFWDJ
-         DxsNbHntiNw977ipOsA6YctePgo/jV4F4uW5wKMdy7YKn9O9NbzRu3YzLS7AXsT/XfId
-         AvKeAfRH1ip24NbrOORyCyKlSNyN2D8HUk5w1NK4RGANXM+oRSkNw/zPu751Cx/9GLG3
-         JYOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbeD35hGwNxr2YkGhCwQOTtmzrJ+TwK7j34P8FpaWx8Bm8sEM20LdXbHd6E0h+n7eOXQr++gL7DtJjE+Uvl2HP58IcvCPAeOq82/nG
-X-Gm-Message-State: AOJu0Yzv8OLwRn8KP3C3ZQK/+VaxtA1o9MQ+FHGgY1+iLlTBdRZX/YsN
-	AzE0sEt+zAu7ptVeM87zK43uIRHj9cRLiCLsQrqMnUsK7NT3uTd0wY8JjeaIgH4jz2SRJD1BZmZ
-	RLho6JToava0SCXXyb2fsleAzp49U1esGiVLn
-X-Google-Smtp-Source: AGHT+IEuslvTU7O114maCMu6s7q1QatazKYK4Au3LHFSN1TQt2fd6q24xfMVdE/dWH6oyRO5MWqPuiKjKkMbsPD4dqw=
-X-Received: by 2002:ac8:7386:0:b0:447:ec33:f488 with SMTP id
- d75a77b69052e-44d0aa4788bmr1329661cf.4.1720655352838; Wed, 10 Jul 2024
- 16:49:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i3Np4jzr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720655458;
+	bh=gmaq3glubBaHvlPPSZbCguHSxQhUdcxR8i8ZKyuSizc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=i3Np4jzr3EC02FU/vme++F3LYHbzDZuxiVM32qgeu+wRvQfkHbK4AShO2ouPhwWG8
+	 qeIVZDriTdyzPOiGpSYmIVVGjIj11O9nljNMQLnQsjhnJk2J3UNuVWst45MdKfyISv
+	 j9LOtsN7qD6tYaaRm8ep99Cyx8yD2+bXwK/XHwqGSfdUHKPnVA3Y9Ief23IC78BD7L
+	 e+DGnNzrUDpcMNtL7pIHm8ONvWDf+Lk5xRIUeibgiB+HcuCdhOde56dRs+1gdgGFoK
+	 9NaG9GXwsUus9c4vL7FMKyMVS11GYKFxKc8oUTPKftidHELQTRAU9zUYOJJ6VLfjhh
+	 /XgJvvcnbAywg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WKF421Jd7z4w2D;
+	Thu, 11 Jul 2024 09:50:58 +1000 (AEST)
+Date: Thu, 11 Jul 2024 09:50:57 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the bcachefs tree with Linus' tree
+Message-ID: <20240711095057.469a268a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710234222.2333120-1-jthoughton@google.com>
-In-Reply-To: <20240710234222.2333120-1-jthoughton@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 10 Jul 2024 16:48:36 -0700
-Message-ID: <CADrL8HUHRMwUPhr7jLLBgD9YLFAnVHc=N-C=8er-x6GUtV97pQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/18] KVM: Post-copy live migration for guest_memfd
-To: Paolo Bonzini <pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, David Matlack <dmatlack@google.com>, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/nQyA8CJS2klhp_UN.TA7=.7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Ah, I put the wrong email for Peter! I'm so sorry!
+--Sig_/nQyA8CJS2klhp_UN.TA7=.7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the bcachefs tree got a conflict in:
+
+  fs/bcachefs/alloc_background.c
+
+between commit:
+
+  d39881d2da2a ("bcachefs: add check for missing fragmentation in check_all=
+oc_to_lru_ref()")
+
+from Linus' tree and commit:
+
+  f75ad706a1cf ("bcachefs: fsck_err() may now take a btree_trans")
+
+from the bcachefs tree.
+
+I fixed it up (I just used the former where they conflicted) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nQyA8CJS2klhp_UN.TA7=.7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaPHmEACgkQAVBC80lX
+0GxaKgf/edr1S35gOhQEjJXLBw3C5y1q4xyVmUoIcaRiGGDpUa7b8um2xNkKUYOR
+4q6YynRmRLABKVPSlxbjhWEMsNtp2oZqpucxVK7T2few1RUo9Xh+eQcj99jN4Qr1
+PJjwqzsi0IDISkVnIZQIfgBCS2lvveNQ6lNppHCRnwhukqATfMxiVehtG11bHtuI
+N5F9TuVUQZow1OxyQe5XVhNw/E8mkG8XRuw2hh6ndq5qBOaY3KNT1ST4B/vE/tVf
+ZtRBt955o9qjrNxZrb5FJc+DECLbQUfZqTfkNyTdj2CHGQYty3S2bFM6N2nzAxqd
+wW+dth/qKTB9KDW5+6WaGrTR3GFdhQ==
+=pRhl
+-----END PGP SIGNATURE-----
+
+--Sig_/nQyA8CJS2klhp_UN.TA7=.7--
