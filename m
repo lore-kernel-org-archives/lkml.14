@@ -1,85 +1,108 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0171F2B9DD
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 08:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014C284D3E;
+	Wed, 10 Jul 2024 08:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720599479; cv=none; b=lT861+6P9OJoi7L55jPyID83POC22vu4v8pUzX1X8mYXfNoYQ3HtztL3ZtMxxxV2S4BL62pbiP1G2pX1qN7ey60jTcRWUjBFL6v1h8kf3lIJZeZxqPtFq8XQBLO39/PjrP2wegHIFr6wSeF68nJvSULbPE3xU7bzaihSlUm/n2k=
+	t=1720599488; cv=none; b=ESrO1XyBQXDjoeVL7+PQlxFVrVs7saTB+g9bJmO3AwZ+1MNsw20cngqJDzvrHugHoOyjTMlS8V51Am3xMl6G3drsyQOQW9NL6hjdl2YLTY+mHsfGmyFDwVejuVHJc2oLhTajSMbCesXv2EAST6S/Bea2QHat2cckW/MLY4J2tZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720599479; c=relaxed/simple;
-	bh=vMTCO084NzNSlWMkSv2H0Px1AmWGV2K4ZrGqgram07o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O6ULTYMJ5S3oy+451zTV6UgiYDHuWHtiC1i7PXtKTbZL5BQcpNtOxzHmek8bfRNdeZiacL+wwM/3TWayOyMCeYsBzM7+k3dPDXSdRbHL59yddRRpk2PdMW9Osmut4/UJ06oM5AIS175sW1+eWhvzfFkcSB1+1Tl0cU2hjsddaVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowABXX1ugQ45mFtIBFQ--.48772S2;
-	Wed, 10 Jul 2024 16:17:36 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: brgl@bgdev.pl,
-	linux@armlinux.org.uk,
-	khilman@deeprootsystems.com,
-	nsekhar@ti.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH v2] ARM: davinci: Convert comma to semicolon
-Date: Wed, 10 Jul 2024 16:16:48 +0800
-Message-Id: <20240710081648.2286573-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720599488; c=relaxed/simple;
+	bh=jcdvUaJCjBFkcslD2R2EAmSimrylBNyq+N42vT+xBWE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rCMCj1+sgZHiJwN75zBgB6amn1ryPh1aSre81t/CIhlB0zMvm1ZqN1LwXOV1pavbdj9uWpyxS7h9Pp1oofG74CQdlwZdOQ0wCQSHpRRgSqEiLVPbsKU2IsjNaJ3FnegqPpiUU4BDhjqRLC1jugyR1TavVSHQ5F/pK9X3MiRUJ5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y11KsFd2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y11KsFd2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72317C32781;
+	Wed, 10 Jul 2024 08:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720599487;
+	bh=jcdvUaJCjBFkcslD2R2EAmSimrylBNyq+N42vT+xBWE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y11KsFd2alzVH0ZA400ZChXBJQ6tOKFZ+j0eGXVZrKt9sNE1VNtCfEvpzPmZ3CPX3
+	 82ENdJ3Al5LvqTUHhdmWfEJUKf9VI1XX9bnJKF0fIu7p/jrC0HThKcfLtS/2J0Nq4F
+	 PYjsv+PDlVoxw2A7zXZTDrSPONMjXHa4+8dAgiHPHPW+fn5Dqd48g4cNppifFiq7f3
+	 YnRVPGiDGtn8/Ty5DWSifyv0wos4a+1W648PgUfFpetcTa6yTJjsTMWWSGymuPlluj
+	 bfLo/evKwyq2pFKfJszm4yIfxY5yvbd8Zt8wvNWpq+ccBIVGxTPpChgv1pIVNzvyDE
+	 YUJ0dgg5zjl2A==
+Message-ID: <7de5717e-c233-4657-b7b8-6459c0e58681@kernel.org>
+Date: Wed, 10 Jul 2024 10:18:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXX1ugQ45mFtIBFQ--.48772S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZrWfXF1ftrW8Xr47Jwb_yoW3Krc_Kw
-	1ft3y7ArnakrWj9w1UX3yrGr40ywn8WFnrZryvvFnYyrW3Xr4a939YqF1IvrW5W3W5GrW3
-	KrWUGryrGwnakjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbcxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r43
-	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
-	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1oq2tUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: qcom,ipq8064-pinctrl: convert
+ to dtschema
+To: Rayyan Ansari <rayyan.ansari@linaro.org>, devicetree@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Rob Herring <robh@kernel.org>
+References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
+ <20240709162009.5166-3-rayyan.ansari@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240709162009.5166-3-rayyan.ansari@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Replace a comma between expression statements by a semicolon.
+On 09/07/2024 18:17, Rayyan Ansari wrote:
+> Convert the Qualcomm IPQ8064 TLMM block bindings from text to yaml dt
+> schema format.
+> 
+> Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+> ---
 
-Fixes: efc1bb8a6fd5 ("davinci: add power management support")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
-Changelog:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-v1 -> v2:
-
-1. Add Fixes tag.
----
- arch/arm/mach-davinci/pm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-davinci/pm.c b/arch/arm/mach-davinci/pm.c
-index 8aa39db095d7..2c5155bd376b 100644
---- a/arch/arm/mach-davinci/pm.c
-+++ b/arch/arm/mach-davinci/pm.c
-@@ -61,7 +61,7 @@ static void davinci_pm_suspend(void)
- 
- 	/* Configure sleep count in deep sleep register */
- 	val = __raw_readl(pm_config.deepsleep_reg);
--	val &= ~DEEPSLEEP_SLEEPCOUNT_MASK,
-+	val &= ~DEEPSLEEP_SLEEPCOUNT_MASK;
- 	val |= pm_config.sleepcount;
- 	__raw_writel(val, pm_config.deepsleep_reg);
- 
--- 
-2.25.1
+Best regards,
+Krzysztof
 
