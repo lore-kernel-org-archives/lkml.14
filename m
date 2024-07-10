@@ -1,145 +1,144 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0D018FA31
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 10:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DFB8288F;
+	Wed, 10 Jul 2024 10:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720605875; cv=none; b=B99EcUit5iaxgp140oAVeBdxzYZTLCIWPccACA2e++vX8S0wcSkj2SRLrPj50q1GpzzYFYHRxUE44Vy29JiNv7b7sqXDhwFVoEHzJ0lIlIXDRiXrt93cHxPq+7L5ywHpWUFFvmAtMldipOVlkYkkWOp04gmnI0BsLgW25905Trc=
+	t=1720605915; cv=none; b=QZb35relbCYmMAJo6P3PFbMzWhTWX3Ip3mdJWkyqzvLdD6AyhNgvQ0Ub3tPTX6JQqTFlo5uKpjBsdgrWjIye7kF5TVm86SdeqTImDlnde5qqfdhxiVllpNsStIc10mSpRoAa9cX5I/ZD+y4Jqzm/QsvlW/iPHfV297Yq8nKz1Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720605875; c=relaxed/simple;
-	bh=O/iKLOi01DL02R3LaUPQITYi6Ex6Mg2vmu5xThjEQd0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=hGu6QAbCATh/wHE4aYoYkl/yxK6bb5aS+/DKD/6ioejv5dxJ0zFoRyckFcFMAV3+LDABMsqXajhs9eL65tnuDupGasmrP4wtXWn60gPB1LjZnPpeXL62aRWmy+sIxKThXD1PHLoBQ8ohtteMYHQwTPgI25GdFzp3uQ9lUojx/y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=epXu2/ac; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	s=arc-20240116; t=1720605915; c=relaxed/simple;
+	bh=6XjeGM1uoLScdRWcAjqr9FYRJeKY3sUp1jjgMn0Q/rw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MUdStzwzI4H9K1OAnwHKylLzlTS8JFTqGNcgiYCKu/u3cQpVuuiOwlxlEo6Ebitc802mc8NbooWAqZr65oxny7NpWr6C5qJpOJWvWefkC0XzDHvRdBQrx1fsKdrcN9ixKXcJH+8WgvNP4kO8uXWq7X0VR/+jkH77EVDoacQmlds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=DNVbx2ud; arc=none smtp.client-ip=45.157.188.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="epXu2/ac"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1720604949; x=1723196949;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=O/iKLOi01DL02R3LaUPQITYi6Ex6Mg2vmu5xThjEQd0=;
-	b=epXu2/acK3RTjp1fN3JkHmFk4hIJnM9RGaPIVHWXB6qw2IedCbMT4xgdA8gattbS
-	p9NjLqmetlUD4A/e8unoHqIqt3i/BocgOBtAkh4KHZDtF1Cf1C5+XFfZNV02e9PJ
-	6L/S0k8GcB00Unr6eHbZde08gH5zKV4NnQRyiLhS1z8=;
-X-AuditID: ac14000a-03251700000021bc-0c-668e59142468
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id C6.7F.08636.4195E866; Wed, 10 Jul 2024 11:49:08 +0200 (CEST)
-Received: from llp-hahn.phytec.de (172.25.0.11) by Berlix.phytec.de
- (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Wed, 10 Jul
- 2024 11:49:08 +0200
-From: Benjamin Hahn <B.Hahn@phytec.de>
-Date: Wed, 10 Jul 2024 11:48:54 +0200
-Subject: [PATCH v3] arm64: dts: freescale: imx8mp-phycore: Add no-eth
- overlay
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="DNVbx2ud"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WJtlB1RbmzSKT;
+	Wed, 10 Jul 2024 12:05:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1720605910;
+	bh=58eL5zKFVrJFUT+TpbxjO2RgasvOa3v7FdFqIaHbAZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DNVbx2udibxVu+14OKvyFsM2tte1G7+GSl8Z+NOcHcVVvvBg1ydxpZsw6h/1RkTaN
+	 ejzvZofhsiG9dNul4ThaAxY28YALObLrSzblZ8Zjk8uwQdQKc/EuaduylSGnGw3pZ7
+	 LEta7bCt/CqWCCKmMGDr9F+uKDtZtEAT6JChcVeQ=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4WJtl848ghzL4p;
+	Wed, 10 Jul 2024 12:05:08 +0200 (CEST)
+Date: Wed, 10 Jul 2024 12:05:05 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Florian Weimer <fweimer@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Paul Moore <paul@paul-moore.com>, Theodore Ts'o <tytso@mit.edu>, 
+	Alejandro Colomar <alx@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Christian Heimes <christian@python.org>, 
+	Dmitry Vyukov <dvyukov@google.com>, Eric Biggers <ebiggers@kernel.org>, 
+	Eric Chiang <ericchiang@google.com>, Fan Wu <wufan@linux.microsoft.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, James Morris <jamorris@linux.microsoft.com>, 
+	Jan Kara <jack@suse.cz>, Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Jordan R Abrahams <ajordanr@google.com>, 
+	Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Luca Boccassi <bluca@debian.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Matthew Garrett <mjg59@srcf.ucam.org>, 
+	Matthew Wilcox <willy@infradead.org>, Miklos Szeredi <mszeredi@redhat.com>, 
+	Mimi Zohar <zohar@linux.ibm.com>, Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, 
+	Scott Shell <scottsh@microsoft.com>, Shuah Khan <shuah@kernel.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Steve Dower <steve.dower@python.org>, 
+	Steve Grubb <sgrubb@redhat.com>, Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, 
+	Vincent Strubel <vincent.strubel@ssi.gouv.fr>, Xiaoming Ni <nixiaoming@huawei.com>, 
+	Yin Fengwei <fengwei.yin@intel.com>, kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-mm@kvack.org
+Subject: Re: [PATCH] binfmt_elf: Fail execution of shared objects with
+ ELIBEXEC (was: Re: [RFC PATCH v19 1/5] exec: Add a new AT_CHECK flag to
+ execveat(2))
+Message-ID: <20240710.Lu2thiemeil2@digikod.net>
+References: <20240704190137.696169-1-mic@digikod.net>
+ <20240704190137.696169-2-mic@digikod.net>
+ <87bk3bvhr1.fsf@oldenburg.str.redhat.com>
+ <20240706.poo9ahd3La9b@digikod.net>
+ <871q46bkoz.fsf@oldenburg.str.redhat.com>
+ <20240708.zooj9Miaties@digikod.net>
+ <878qybet6t.fsf_-_@oldenburg.str.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240710-bspimx8m-3180-v3-1-8ef55381172c@phytec.de>
-X-B4-Tracking: v=1; b=H4sIAAVZjmYC/13MSw6DIBSF4a0YxqXhAgp21H00HYDcVgY+AoZoj
- Hsv2olxeE7yfyuJGDxG8ihWEjD56Ic+D3ErSNOa/ovUu7wJZ1yyChS1cfTdrDsqQDMqlUUHWhp
- dSpKbMeDHz4f3eufd+jgNYTn4BPv7lxQTFykBBYpSIBOlqS03z7FdJmzuDskuJX6uy2vNc+0aM
- Aqh0rXFc71t2w8ypN926AAAAA==
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
-	<festevam@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-CC: <imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<upstream@lists.phytec.de>, Benjamin Hahn <B.Hahn@phytec.de>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720604948; l=2166;
- i=B.Hahn@phytec.de; s=20240126; h=from:subject:message-id;
- bh=O/iKLOi01DL02R3LaUPQITYi6Ex6Mg2vmu5xThjEQd0=;
- b=54CcNOt2P672ZNgEbr8B9/EoettTLoQnRD4ejM/OwaOnkvJ5anrQiNuVgdnRHhpA6Z4IDbOhP
- 4g83FLbkEh0DZ+8JbcD43Qwq0nBZePzbC42VEZe0ah2nzLtvtb19U1q
-X-Developer-Key: i=B.Hahn@phytec.de; a=ed25519;
- pk=r04clMulHz6S6js6elPBA+U+zVdDAqJyEyoNd8I3pSw=
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42JZI8nAoysS2ZdmcP2DucWaveeYLOYfOcdq
-	8fCqv8XMe61sFqum7mSxeDnrHpvFpsfXWC0u75rDZvF/zw52i7/bN7FYvNgibtH9Tt2Bx2Pn
-	rLvsHptWdbJ5bF5S7/Fi80xGj/7uFlaP/r8GHp83yQWwR3HZpKTmZJalFunbJXBlPN66hK3g
-	h0DF/ImlDYwv+LoYOTkkBEwkGrsesHcxcnEICSxhknjQOpcRwnnIKHF43ycmkCo2ATWJXW9e
-	s4LYLAKqEgd+d7CB2MIC/hIX/8xhBrF5BQQlTs58wtLFyMHBLKApsX6XPkiYWUBeYvtbmBIH
-	iTM/ephB5ksINDNJND78xgbiiAhMYpL4tn0mmMMscJBRYtfHK0wgkyQEhCU27dSC6NjNJDG9
-	+QobRDxRYudrOZCpQgKyEjfPb2GDeEdeYtq518wQdqjEkU2rmSYwCs9Cct8shPtmIblvASPz
-	Kkah3Mzk7NSizGy9gozKktRkvZTUTYygGBNh4NrB2DfH4xAjEwfjIUYJDmYlEd75N7rThHhT
-	EiurUovy44tKc1KLDzFKc7AoifOu7ghOFRJITyxJzU5NLUgtgskycXBKNTByvum5NmPD6Ybe
-	R9abJkqYRnN1+EVvOiY/vcBkIsvOhOvBenf4rPZKRLy+dCOiZfmxd93O5/L9uDstcjRbvla/
-	KDidfuv5ad5EKUfuNfLfHs0MOdlaaZvfplN70k3/ypGI4IZ9OaaG3KmSSvv82ItqnTY5yxT1
-	3dZ9spd7n4L7ohCzPX+kTyuxFGckGmoxFxUnAgCAcR9bnwIAAA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <878qybet6t.fsf_-_@oldenburg.str.redhat.com>
+X-Infomaniak-Routing: alpha
 
-Add a devicetree overlay to disable ethernet for boards where it is not
-populated.
+On Mon, Jul 08, 2024 at 06:37:14PM +0200, Florian Weimer wrote:
+> * Mickaël Salaün:
+> 
+> > On Sat, Jul 06, 2024 at 05:32:12PM +0200, Florian Weimer wrote:
+> >> * Mickaël Salaün:
+> >> 
+> >> > On Fri, Jul 05, 2024 at 08:03:14PM +0200, Florian Weimer wrote:
+> >> >> * Mickaël Salaün:
+> >> >> 
+> >> >> > Add a new AT_CHECK flag to execveat(2) to check if a file would be
+> >> >> > allowed for execution.  The main use case is for script interpreters and
+> >> >> > dynamic linkers to check execution permission according to the kernel's
+> >> >> > security policy. Another use case is to add context to access logs e.g.,
+> >> >> > which script (instead of interpreter) accessed a file.  As any
+> >> >> > executable code, scripts could also use this check [1].
+> >> >> 
+> >> >> Some distributions no longer set executable bits on most shared objects,
+> >> >> which I assume would interfere with AT_CHECK probing for shared objects.
+> >> >
+> >> > A file without the execute permission is not considered as executable by
+> >> > the kernel.  The AT_CHECK flag doesn't change this semantic.  Please
+> >> > note that this is just a check, not a restriction.  See the next patch
+> >> > for the optional policy enforcement.
+> >> >
+> >> > Anyway, we need to define the policy, and for Linux this is done with
+> >> > the file permission bits.  So for systems willing to have a consistent
+> >> > execution policy, we need to rely on the same bits.
+> >> 
+> >> Yes, that makes complete sense.  I just wanted to point out the odd
+> >> interaction with the old binutils bug and the (sadly still current)
+> >> kernel bug.
+> >> 
+> >> >> Removing the executable bit is attractive because of a combination of
+> >> >> two bugs: a binutils wart which until recently always set the entry
+> >> >> point address in the ELF header to zero, and the kernel not checking for
+> >> >> a zero entry point (maybe in combination with an absent program
+> >> >> interpreter) and failing the execve with ELIBEXEC, instead of doing the
+> >> >> execve and then faulting at virtual address zero.  Removing the
+> >> >> executable bit is currently the only way to avoid these confusing
+> >> >> crashes, so I understand the temptation.
+> >> >
+> >> > Interesting.  Can you please point to the bug report and the fix?  I
+> >> > don't see any ELIBEXEC in the kernel.
+> >> 
+> >> The kernel hasn't been fixed yet.  I do think this should be fixed, so
+> >> that distributions can bring back the executable bit.
+> >
+> > Can you please point to the mailing list discussion or the bug report?
+> 
+> I'm not sure if this was ever reported upstream as an RFE to fail with
+> ELIBEXEC.  We have downstream bug report:
+> 
+>   Prevent executed .so files with e_entry == 0 from attempting to become
+>   a process.
+>   <https://bugzilla.redhat.com/show_bug.cgi?id=2004942>
 
-Signed-off-by: Benjamin Hahn <B.Hahn@phytec.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
-Changes in v3:
-- rebase to master
-- Link to v2: https://lore.kernel.org/r/20240705-bspimx8m-3180-v2-1-dc1a7e1689be@phytec.de
+Thanks for the info.
 
-Changes in v2:
-- Remove the compatible from the overlay
-- Link to v1: https://lore.kernel.org/r/20240703-bspimx8m-3180-v1-1-e43e035a9b2a@phytec.de
----
- arch/arm64/boot/dts/freescale/Makefile                   |  2 ++
- arch/arm64/boot/dts/freescale/imx8mp-phycore-no-eth.dtso | 16 ++++++++++++++++
- 2 files changed, 18 insertions(+)
+> 
+> I've put together a patch which seems to work, see below.
+> 
+> I don't think there's any impact on AT_CHECK with execveat because that
+> mode will never get to this point.
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index bd443c2bc5a4..647282cc861b 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -173,6 +173,8 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-icore-mx8mp-edimm2.2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-msc-sm2s-ep1.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-navqp.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-phyboard-pollux-rdk.dtb
-+imx8mp-phyboard-pollux-rdk-no-eth-dtbs += imx8mp-phyboard-pollux-rdk.dtb imx8mp-phycore-no-eth.dtbo
-+dtb-$(CONFIG_ARCH_MXC) += imx8mp-phyboard-pollux-rdk-no-eth.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revb-hdmi.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revb-lt6.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-skov-revb-mi1010ait-1cp1.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-phycore-no-eth.dtso b/arch/arm64/boot/dts/freescale/imx8mp-phycore-no-eth.dtso
-new file mode 100644
-index 000000000000..5f0278bf61ee
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-phycore-no-eth.dtso
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024 PHYTEC Messtechnik GmbH
-+ * Author: Cem Tenruh <c.tenruh@phytec.de>
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&ethphy1 {
-+	status = "disabled";
-+};
-+
-+&fec {
-+	status = "disabled";
-+};
-
----
-base-commit: 34afb82a3c67f869267a26f593b6f8fc6bf35905
-change-id: 20240617-bspimx8m-3180-47bed184a854
-
-Best regards,
--- 
-Benjamin Hahn <B.Hahn@phytec.de>
-
+Correct, that is not an issue for AT_CHECK use cases.
