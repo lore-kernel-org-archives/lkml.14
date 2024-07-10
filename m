@@ -1,252 +1,130 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn19011079.outbound.protection.outlook.com [52.103.32.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD83619754D;
-	Wed, 10 Jul 2024 18:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720636942; cv=fail; b=OciiEI2fHGaFveU548lq0Indys1awXnISu6v4kh0Xs31bmoRIypjtD4ooe6xXlIntXPQShtoVOZPFuOQpE9dxFD9JFe64w4+xsqRqjokxmhfi0Pg4a7JIB8M3m38pd6A3BoPT99TVDA9dB6KKuePAZ2XKqkGNMrKwMn10JIO1WY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720636942; c=relaxed/simple;
-	bh=2VzsNC8RjhBFsaoETzi1HALEC+WpHCOX/RqlEcxIgQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LwQGMnHMXX3Pfh+On8lTOOewza92SEjY9NTZ0+XKdDdfs7unHrfFjI8/iR93bowFtY3XNW12wNXIm7grZTVpv2RpIFQAyP/vDaXG7G6oGrbVSCKrhDfwu3Ut12+nBDnvUYcqtCvuYTgk8CgGTA+wZhwSq6VWDc27t901+lJcziM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ebCR2ZWr; arc=fail smtp.client-ip=52.103.32.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175CC198850
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720636947; cv=none; b=ajGTC5oVWTzAoofaRDEUsSTWX66m7dxd/0HzEtpLkB67AnF/0cb/lDvZdTcYAQWLRibcaGqXmGlAM3C+H7C3mobDZeO/C6stXTpRVO2XBOIaUCU5AsKGbBfX/P4DKAoliZZT9SuV2M6TWrj1Qxu7j57aigerwGg7sqMbLBVv3LY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720636947; c=relaxed/simple;
+	bh=z7s3LXExkLf7mTKfwyLpqVPSSjvCr1DLKubG8DRR2bk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gm1rOc6SAPO0I889iQBIT/trLjGdIKbI54s+Xi3DUjbnQ/Rq0TDRCpdrce2sUyy27qSWN4Yt8mmp0Fer9S+2hdBwCkH6w1XuBBNBPBNmoWwjh6seKtT/DtpWBM+LYN5bVafFwPCvAlTes7WJKoWeo5C4zzPx8EZhmRzNo2zkCHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=nndmm/cY; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ebCR2ZWr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nz/XN824Opt/fn2mr+NL6luxvRDrumLMP9YzyixRQr62st/OGvJlXXs5rmTCtFuOwHVppxvzkk0MA4w4Dgpryx8GAUyJS8DGDaC/KZ35DPgO1JRh5oJtbv/F2hvaQ4g269vmn4HmvvHt0SN6paeFhvPI8PqrUA2LUcHkRJao9xwBAwKVVKO9S0XLNcSpNew4yEFwbuOLAL601UeK1Uw7XhRfMgdscYRRCcpDGSRCzsBpGlr0kzmfh2xlpEzJq+eqTtsrcPZTEEs9Af3hKR89PIs6971Mh8Tyigy/D/+hcBJimOM8KFzGBa+C3f3HLU63DnDypjuTvU8pqwNuyAek1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QfFwhFFn2kM4OMK4kA50yiuRJuIhkfv0Ti3LY/dxRIk=;
- b=F7gfSzlXM5O06DDgOTThR8nMF/JdF/U89s+FVIrehBHhXorA9lkO4VG/sVekbBAaxB4bfXsFMohTYBROQBV/CajRNMQolkP62J44VvZN4WASPD2FZJ/cBtBqd3j3uMZy0/Huvz3KVSOMczX5w9TaCLq7gpLPPRAaU9OlRXWcxBCnp3G/AcIcuHZSQ8h1sGMlu1yYNqFA7P6s0h/pB3STyTciTNXqa4aig6QfoX8cWGbWP8hh/wAVdOtovPDEASDKngyP+2UtguauYVJH4uxOv/ugOmyLwxR8RNikUcxqr/UEG0gxrXsE4IbbmpxA8K1LTG6vs1+3JbtUze9wGIpiRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QfFwhFFn2kM4OMK4kA50yiuRJuIhkfv0Ti3LY/dxRIk=;
- b=ebCR2ZWrs/FI6gzOEOnkTLPBcdGRlCwcM1NFf1A5faZPYvMwBeWbP0xaviNaPdaFiOeN1qWO7IXuFwbaRs9o3eo7g9L5Vf+wgHZoXSJKcp2DnJl8lULbMe7n4AejY1qO0hN2RSQuNF558FN2/suxhmV0mM3qxTsjRlvOwFmAQ2rTiDqn3E/c1I1z6l5vqFH3oTXVjTVGi5sjWFwF6DpQNkH20bw9UCc+T2RETzleLlkw9z6trAQobUzqFJzQ1bWe9SzkAgsluOwG5/uCJOm5bxmvlAmebJItYP8hZSTQ6jO+RW/u7esIf94TZKRDZcnTzklLroHSt5zHByTuYc2CAQ==
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
- by AS8PR03MB9935.eurprd03.prod.outlook.com (2603:10a6:20b:628::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Wed, 10 Jul
- 2024 18:42:17 +0000
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7]) by AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7%6]) with mapi id 15.20.7741.033; Wed, 10 Jul 2024
- 18:42:17 +0000
-From: Juntong Deng <juntong.deng@outlook.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	andrii@kernel.org,
-	avagin@gmail.com,
-	snorcht@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 02/16] bpf: Add KF_ITER_GETTER and KF_ITER_SETTER flags
-Date: Wed, 10 Jul 2024 19:40:46 +0100
-Message-ID:
- <AM6PR03MB5848986AAEEE3264C6EB6D8C99A42@AM6PR03MB5848.eurprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240710184100.297261-1-juntong.deng@outlook.com>
-References: <20240710184100.297261-1-juntong.deng@outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [IP88/lLZhQyzCEjrgSlvpEcLTR2RiuZU]
-X-ClientProxiedBy: SI2PR02CA0027.apcprd02.prod.outlook.com
- (2603:1096:4:195::14) To AM6PR03MB5848.eurprd03.prod.outlook.com
- (2603:10a6:20b:e4::10)
-X-Microsoft-Original-Message-ID:
- <20240710184100.297261-3-juntong.deng@outlook.com>
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="nndmm/cY"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3d9272287easo59274b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 11:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1720636944; x=1721241744; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Z5nCBdFttIMTAt1PN1Clapc3bcXDSgRnWnxI2ibS+Wk=;
+        b=nndmm/cYNzLhcTyin5Z6zx4RY4lCzEtRGf5g8/wJf4jlaabv8Qe2E/f3bComW7ELT2
+         QAYVyzPVez/JL791Za8lek9PaAny5RXwaXbKItTiHVj2lfFimcce6T6rJQ6SKWsolMZa
+         jX0zG4wOxes4a9ioxsdAxh6rn6ab8cUSIZK+uw4goaW0o6LezMSGmg2oRXlJKuGTOSQP
+         oMdt0Oei2zFzYO5ZwFO5fJeD/htA2ht2vMJihox15kv8YnfB5IIPIp/gPQEmGs0E4oHm
+         n0QJ2UaS/3MzDJowdxDUm6UEr/Q6XpSRgOhB/nh1NwRhvdeqZzn8wKyGixZROjajGcqQ
+         0NcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720636944; x=1721241744;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z5nCBdFttIMTAt1PN1Clapc3bcXDSgRnWnxI2ibS+Wk=;
+        b=v2iMgEmQcjBCa5ygvChxowExzpykbfMLkc6FSaeO8f4iirLxpqz83CleTqY1cqJJqr
+         Uh5RxwqsiHHoAkmGnnb0sy1NIPPwFh094dcNaS7784a3mWvxuCtg1FaD7osxGgn4fqfm
+         Yy6m/UUkkwC27c6mZ+OnKPP4buLyBBMk3M0TX/WNdPUMs3NroHOPPtwWLOLo7+PsjA6N
+         2NRo57ldYSrM/THnqE6Q5EoAETzYG4SyG60wxYu7ahSxIslbk7DeEnJN5ylBbnwx/brD
+         xSNT6MKloPzTSnDoe8okjNEzLc/92Ao1sQmH/78TFdmbE/MnMT9DGfpl4RYe5W/OYgNa
+         flcg==
+X-Gm-Message-State: AOJu0Yzobydz1PBCVdkf1l+pZbcGB9wGGmHkrrwQO3xrIZ2LhlwibfIZ
+	pvFsPR6bhzMOKfjJAa46IBSnYtalfjzVZi3n8n2AKJ+XCjHW4h9fIbaewjpbINM=
+X-Google-Smtp-Source: AGHT+IH5L59JVMSIlqFO5Se0uoezNhLAnHyrij5dj6WxtIY70mJujX07Y62JOcO/CbsoL1OTg9rbqg==
+X-Received: by 2002:a05:6808:170a:b0:3d9:28cc:5329 with SMTP id 5614622812f47-3d93befe3edmr7119623b6e.17.1720636944155;
+        Wed, 10 Jul 2024 11:42:24 -0700 (PDT)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79f1902ac2esm217101685a.59.2024.07.10.11.42.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 11:42:23 -0700 (PDT)
+Date: Wed, 10 Jul 2024 14:42:22 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Hanna Czenczek <hreitz@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	German Maglione <gmaglione@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 0/2] virtio-fs: Add 'file' mount option
+Message-ID: <20240710184222.GA1167307@perftesting>
+References: <20240709111918.31233-1-hreitz@redhat.com>
+ <20240709175652.GB1040492@perftesting>
+ <8ebfc48f-9a93-45ed-ba88-a4e4447d997a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|AS8PR03MB9935:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9918cc04-1cdd-4f38-c494-08dca11005cd
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|19110799003|461199028|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	C0T+6Z35XRWRykX113fZtP2wqKY4DiIk/WKSvNzHFi7e2qckWGZ0oJH4poQ094SQWs4tOkrkvuTG9tleLTMBZ/g9LvBuW/2WU6xC2AA7MmQyVM6q+pXdbX+C52fzgrQsHTSC6C0EP+tDQ3o5PiXiqAWYovnKcXYC+px5O6TkJdoqNV9DZ3SrSDU1lQRdtdxJ5Ek1b+Io7usMlsbxbPE22EBYIjYqC9r2WmsWX3nk1Iu8Bi4Cnw3Pf5gSHqCSRUYY7zdv6U0/zIm4hNOXRFsvmXGz4aeEIUw+aTzUxct5Sq9IrTzswGs32s4QysITDyrBZZr4lXRLs5Nquq3jSSrtpXR94RCV/tzFZNq0wan+Kbn5zpi8v0Byg00zmAQQM2FONyS1chZIhMGBtKSFDHCD5/WZRb8iQB3ryHOeh3W+B96Obs3c0KSL5NrUYafRuBtczXORLmjerzxNj72Ewk2Hor9pOc0t/19eZ3gHwsK5vvylAYm4UgDyMD/6mL5xmCh0ZEgKrHRNl0eVvC3JgoHfeckHRMT5CVY1Ho4n8XFv3WTxbK+NK+nICpsk1c0THcDEZOJ59hEQB28jlsFZemwEQ9oRtU2UasOcBAa8tf6ehs7pGE40+/5uhdbSlwTOu3x2Drui6cQ/x17t0KvcY2Xo8g==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9kcTc7MgQCHhchPsPJEcfVhd47u+JjyNWJHiQGWIVXFjCACmudcb2toOEzC2?=
- =?us-ascii?Q?e85ENAgbUYFugFTUbxkJoSvdyAQXghkw29PwNgDzXK9YOKUBAB0jkPpcqTVs?=
- =?us-ascii?Q?CTpdimlQeD53z7adAMOZe+tPL684GIaVR4vOf2BmNvn3E5fnEpqtuRxv27yc?=
- =?us-ascii?Q?yJqxtM5XcV35IOZCOqdYNKQMnLzQOmoBxGwseAlwgYTADjMfDwLYuVMs8zgY?=
- =?us-ascii?Q?pWEMTp/wPtIY43SJSCBFKyCC4kivBFtlpOq3ayrzkpDCBQI/g6Q3vzQ/apz8?=
- =?us-ascii?Q?YdTK6uHqqrIgdGKFADnZpBGjCd2alVEI22OTd7cz/dfDtSgIFDN1Yd72kZbJ?=
- =?us-ascii?Q?eop8Sf5jxUngHGbmIEOtTucB026V5dI3xtWmnRsJS3GE6AGbsvwepqkT9yn5?=
- =?us-ascii?Q?nRXRjPsgGcz2KHc6QDQzQa99PtYCSbQdwSMm2STfSFSZKoWCzPfB/TLujIhw?=
- =?us-ascii?Q?gIZ30o2BeThPBTYCNDYIbjnqSW7VfOPZJebjhqtTCyxbwX87HvXE57Y+7JSV?=
- =?us-ascii?Q?mlHPm25eJ8HZPB+XMqNrW5+NRHeERaYuf/cYhseXwm+aWPYh3a00oemAe/UA?=
- =?us-ascii?Q?cOV5PYylcFFyHm/ynLojoBJYL9TJHwMxEi3m83mzg5HLVvbJLWqtr8FLu9Rw?=
- =?us-ascii?Q?4LNm9/HjynW6e0JSG2aS+gv8X3PfjljfOWIGmAEP9XusA7la4sSfqPdeb4uW?=
- =?us-ascii?Q?pLkLTiWK9fxo8C0/Z8P3DusI51hZuGXHui5/+Q87HEsZJTDLvZsqdo62bJsZ?=
- =?us-ascii?Q?n6cf285gK/qEsjDbR5wTALyaebUXCnEb8xUl2fnWsNpn8Kx2jKIVJtN8sBwc?=
- =?us-ascii?Q?+IBHYHpcezfDY9U+Hn8FnRy00CY/hLqTpw+Y0+Mh0smzqqy6Yfdpoig0jDeA?=
- =?us-ascii?Q?G/TUSuCuECsIak2mGAJL908OZ3onQPxovQPQOuE1wufCSYVOD76xt0ajtW5O?=
- =?us-ascii?Q?Vi51va/qWQGP5F+mjQhflIB1/3+f6Kv9O7FKuVAP/CX7fvM3XqwCqxJpSr/M?=
- =?us-ascii?Q?C+kb9cv3ZINof81SUszEl7xNpmsM4964vPNR5+wmomRT7jWkT7L7PeExDpgo?=
- =?us-ascii?Q?xh0h/Fdf46wU0eXQU64rAQgeoasbzEKwp1gGODlzjs0/00+V9aBOxOb5Qt+J?=
- =?us-ascii?Q?VXF2FlnuB4TK8CpmC+hfv3gEzailsdWu8B8flPppyrPSFY7OCh4we7u4R8/a?=
- =?us-ascii?Q?JEKBm1zJUMLmpYiKDqPAFOnw7xc/5hRBNX+M+mdYie7TfC4dyIL15w4TTOk?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9918cc04-1cdd-4f38-c494-08dca11005cd
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 18:42:17.1110
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB9935
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ebfc48f-9a93-45ed-ba88-a4e4447d997a@redhat.com>
 
-Currently the only iterator flags are KF_ITER_NEW, KF_ITER_NEXT,
-KF_ITER_DESTROY, but we cannot get the iterator status information or
-change the iterator status through constructor, next method, destructor.
+On Wed, Jul 10, 2024 at 09:28:08AM +0200, Hanna Czenczek wrote:
+> On 09.07.24 19:56, Josef Bacik wrote:
+> > On Tue, Jul 09, 2024 at 01:19:16PM +0200, Hanna Czenczek wrote:
+> > > Hi,
+> > > 
+> > > We want to be able to mount filesystems that just consist of one regular
+> > > file via virtio-fs, i.e. no root directory, just a file as the root
+> > > node.
+> > > 
+> > > While that is possible via FUSE itself (through the 'rootmode' mount
+> > > option, which is automatically set by the fusermount help program to
+> > > match the mount point's inode mode), there is no virtio-fs option yet
+> > > that would allow changing the rootmode from S_IFDIR to S_IFREG.
+> > > 
+> > > To do that, this series introduces a new 'file' mount option that does
+> > > precisely that.  Alternatively, we could provide the same 'rootmode'
+> > > option that FUSE has, but as laid out in patch 1's commit description,
+> > > that option is a bit cumbersome for virtio-fs (in a way that it is not
+> > > for FUSE), and its usefulness as a more general option is limited.
+> > > 
+> > All this does is make file an alias for something a little easier for users to
+> > read, which can easily be done in libfuse.  Add the code to lib/mount.c to alias
+> > 'file' to turn it into rootmode=S_IFREG when it sends it to the kernel, it's not
+> > necessary to do this in the kernel.  Thanks,
+> 
+> This series is not about normal FUSE filesystems (file_system_type
+> fuse_fs_type, “fuse”), but about virtio-fs (file_system_type virtio_fs_type,
+> “virtiofs”), i.e. a case where libfuse and fusermount are not involved at
+> all.  As far as I’m aware, mounting a virtio-fs filesystem with a
+> non-directory root inode is currently not possible at all.
 
-For example, when iterating over process files, in addition to getting
-a pointer to struct file, we may also want to get the file descriptor
-corresponding to struct file.
+Ok so I think I had it backwards in my head, my apologies.
 
-Another example is when iterating over packet data, in addition to
-getting the data, we may want to change the buffer we set.
+That being said I still don't understand why this requires a change to virtiofs
+at all.
 
-In this patch, add KF_ITER_GETTER for getting iterator status
-information and KF_ITER_SETTER for changing iterator status.
+I have a virtiofs thing attached to my VM.  Inside the vm I do
 
-Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
----
- include/linux/btf.h   |  4 +++-
- kernel/bpf/btf.c      | 30 +++++++++++++++++++++---------
- kernel/bpf/verifier.c |  3 ++-
- 3 files changed, 26 insertions(+), 11 deletions(-)
+mount -t virtiofs <name of thing I've attached to the vm> /directory
 
-diff --git a/include/linux/btf.h b/include/linux/btf.h
-index cffb43133c68..323a74489562 100644
---- a/include/linux/btf.h
-+++ b/include/linux/btf.h
-@@ -70,11 +70,13 @@
- #define KF_SLEEPABLE    (1 << 5) /* kfunc may sleep */
- #define KF_DESTRUCTIVE  (1 << 6) /* kfunc performs destructive actions */
- #define KF_RCU          (1 << 7) /* kfunc takes either rcu or trusted pointer arguments */
--/* only one of KF_ITER_{NEW,NEXT,DESTROY} could be specified per kfunc */
-+/* only one of KF_ITER_{NEW,NEXT,DESTROY,GETTER,SETTER} could be specified per kfunc */
- #define KF_ITER_NEW     (1 << 8) /* kfunc implements BPF iter constructor */
- #define KF_ITER_NEXT    (1 << 9) /* kfunc implements BPF iter next method */
- #define KF_ITER_DESTROY (1 << 10) /* kfunc implements BPF iter destructor */
- #define KF_RCU_PROTECTED (1 << 11) /* kfunc should be protected by rcu cs when they are invoked */
-+#define KF_ITER_GETTER   (1 << 12) /* kfunc implements BPF iter getter */
-+#define KF_ITER_SETTER   (1 << 13) /* kfunc implements BPF iter setter */
- 
- /*
-  * Tag marking a kernel function as a kfunc. This is meant to minimize the
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 306349ee3d6a..d053f058bd91 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -8054,14 +8054,15 @@ BTF_TRACING_TYPE_xxx
- static int btf_check_iter_kfuncs(struct btf *btf, const char *func_name,
- 				 const struct btf_type *func, u32 func_flags)
- {
--	u32 flags = func_flags & (KF_ITER_NEW | KF_ITER_NEXT | KF_ITER_DESTROY);
-+	u32 flags = func_flags & (KF_ITER_NEW | KF_ITER_NEXT | KF_ITER_DESTROY |
-+				  KF_ITER_GETTER | KF_ITER_SETTER);
- 	const char *name, *sfx, *iter_name;
- 	const struct btf_param *arg;
- 	const struct btf_type *t;
- 	char exp_name[128];
- 	u32 nr_args;
- 
--	/* exactly one of KF_ITER_{NEW,NEXT,DESTROY} can be set */
-+	/* exactly one of KF_ITER_{NEW,NEXT,DESTROY,GETTER,SETTER} can be set */
- 	if (!flags || (flags & (flags - 1)))
- 		return -EINVAL;
- 
-@@ -8088,7 +8089,7 @@ static int btf_check_iter_kfuncs(struct btf *btf, const char *func_name,
- 	if (t->size == 0 || (t->size % 8))
- 		return -EINVAL;
- 
--	/* validate bpf_iter_<type>_{new,next,destroy}(struct bpf_iter_<type> *)
-+	/* validate bpf_iter_<type>_{new,next,destroy,get,set}(struct bpf_iter_<type> *)
- 	 * naming pattern
- 	 */
- 	iter_name = name + sizeof(ITER_PREFIX) - 1;
-@@ -8096,15 +8097,25 @@ static int btf_check_iter_kfuncs(struct btf *btf, const char *func_name,
- 		sfx = "new";
- 	else if (flags & KF_ITER_NEXT)
- 		sfx = "next";
--	else /* (flags & KF_ITER_DESTROY) */
-+	else if (flags & KF_ITER_DESTROY)
- 		sfx = "destroy";
-+	else if (flags & KF_ITER_GETTER)
-+		sfx = "get";
-+	else /* (flags & KF_ITER_SETTER) */
-+		sfx = "set";
- 
- 	snprintf(exp_name, sizeof(exp_name), "bpf_iter_%s_%s", iter_name, sfx);
--	if (strcmp(func_name, exp_name))
--		return -EINVAL;
-+	if (flags & (KF_ITER_NEW | KF_ITER_NEXT | KF_ITER_DESTROY)) {
-+		if (strcmp(func_name, exp_name))
-+			return -EINVAL;
-+	} else { /* (flags & (KF_ITER_GETTER | KF_ITER_SETTER)) */
-+		/* only check prefix */
-+		if (strncmp(func_name, exp_name, strlen(exp_name)))
-+			return -EINVAL;
-+	}
- 
--	/* only iter constructor should have extra arguments */
--	if (!(flags & KF_ITER_NEW) && nr_args != 1)
-+	/* only iter constructor and setter should have extra arguments */
-+	if (!(flags & (KF_ITER_NEW | KF_ITER_SETTER)) && nr_args != 1)
- 		return -EINVAL;
- 
- 	if (flags & KF_ITER_NEXT) {
-@@ -8144,7 +8155,8 @@ static int btf_check_kfunc_protos(struct btf *btf, u32 func_id, u32 func_flags)
- 	if (!func || !btf_type_is_func_proto(func))
- 		return -EINVAL;
- 
--	if (func_flags & (KF_ITER_NEW | KF_ITER_NEXT | KF_ITER_DESTROY)) {
-+	if (func_flags & (KF_ITER_NEW | KF_ITER_NEXT | KF_ITER_DESTROY |
-+			  KF_ITER_GETTER | KF_ITER_SETTER)) {
- 		err = btf_check_iter_kfuncs(btf, func_name, func, func_flags);
- 		if (err)
- 			return err;
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 3d6306c363b7..51302a256c30 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7813,7 +7813,8 @@ static u32 iter_ref_obj_id(struct bpf_verifier_env *env, struct bpf_reg_state *r
- 
- static bool is_iter_kfunc(struct bpf_kfunc_call_arg_meta *meta)
- {
--	return meta->kfunc_flags & (KF_ITER_NEW | KF_ITER_NEXT | KF_ITER_DESTROY);
-+	return meta->kfunc_flags & (KF_ITER_NEW | KF_ITER_NEXT | KF_ITER_DESTROY |
-+				    KF_ITER_GETTER | KF_ITER_SETTER);
- }
- 
- static bool is_iter_new_kfunc(struct bpf_kfunc_call_arg_meta *meta)
--- 
-2.39.2
+and then on the host machine, virtiofsd is a "normal" FUSE driver, except it's
+talking over the socket you setup between the guest and the host.  I assume this
+is all correct?
 
+So then the question is, why does it matter what virtiofsd is exposing?  I guess
+that's the better question.  The guest shouldn't have to care if it's a
+directory or a file right?  The mountpoint is going to be a directory, whatever
+is backing it shouldn't matter.  Could you describe the exact thing you're
+trying to accomplish?  Thanks,
+
+Josef
