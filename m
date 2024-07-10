@@ -1,55 +1,55 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2741D1922C0
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A14F1922C0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627589; cv=none; b=VDlOfgSkJZYD2Ua3dzZQZr7eDZRHwmklGmnRz4NWS+k8sRbUHsoH231SgA4pABgtJwnljG57bi3izfNv1q47dW+vMKkkQdoibrnfq/XTdqVBccUZIQZlCIApTMbca+8jdNNij6sMp/teXvJ4fgH4pGnh+jaklfk+OTjqdFjbm1A=
+	t=1720627622; cv=none; b=WCpnZ+Wra0TWMQDIvwIiQxHA6SmyKBvMfGUAoQ7gGwCpJfZY1Tg/9Utyec3+OWpBCEBtvQoLrXxlYOd0dwZJN1BoxPPJB7dU/yp0vmqARsUaasuWtiqTjrB7CU7Pfrv/whggHDAetmG85sNTOp+UTNmseINKygrqF/T97eFH1qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720627589; c=relaxed/simple;
-	bh=6BKqweq9mcfgoolbjQ/B3nozBIjBZsz6QirlRGRgiIk=;
+	s=arc-20240116; t=1720627622; c=relaxed/simple;
+	bh=BnK96PQxtuG60DRvHzoqWDIQOXQm+SPpSv1Nr+RugEg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KD4pkExsC0wYzlu04RlasthewAYN2vj7MvgwLkaj1hnphGc5td1wsHW7e5Hkm9yFUXVQcFUNyVjLR2pxNWaOJpQz8MSggUOdmD25FK9Lw/e0qYOqmqv8EelZvXkRoY9G3Cm7CIqliJmu9D4y2C8EXfM2HOoqJVgQLYVALbVOML4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yP6a7e/3; arc=none smtp.client-ip=209.85.128.175
+	 To:Content-Type; b=CY9wUS9qbMBFbboB/ebBHQNr63ClsKa49yXGfXO0v8xBnRi7uuhl5VLppOMSb/xOq+FwnqQRIwDoBG+9QTBftPCUR71tKhg8Sy5Jo4A2m8AATDlhI3V/SV1wuVbuA1v6IFX2Ma0uNSC9FtY4yMDyUCDT/vWFvl5NxuT2EEPiB2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I/jh//GD; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yP6a7e/3"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6325b04c275so61545507b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:06:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I/jh//GD"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-704473c0698so708282a34.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 09:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720627587; x=1721232387; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1720627620; x=1721232420; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zlF5Rn3ADWw5/OD0itHw0bD7+qNVXupDZOEmt04jgJ8=;
-        b=yP6a7e/3f3q0CPpxD1xO7cmglqhzfwTTVAWwO9s0po416ouXVwVcwSpQTLO6T2GybO
-         dNjjlYJnv/vYyD3LVdkfYhT9yGiOPC9pPU1RiYl3oW33Ysaan1sxsZoKKYODX2LwHGci
-         fa8L0pCUfHk0Z90xOi7z/wPmqiDbwKnaV1HnM/b3QEw9X7QQ9fWSVFpj9YiUrARcoXxX
-         VyDnOZH0UsZtRJt/7/MxuZLMdnlFrC1k3iXHtp0SV42AqCmNXvYTLlOOQehMwAfEZ1es
-         BHOyQJ51ru0uwyDhZxS3wnoL/ikqFc5GtT9jAWGuA1k9LZGAnPDWl3onC+0YkRg9wCK8
-         HKcw==
+        bh=Yn9Zi1KqPp5aaxLNBj+DM807b8H8qBITowNXvBGV8jI=;
+        b=I/jh//GDiIVsC0Wm0qTgC0/hlNDLMLMshHaEu6ert/tDJU1FoYSaF+BhUcYYYGhAVf
+         J+8e5xBF6KkG6zw8VPbTC4IxiZFAfWJLjdkFwlz6gN/LA3JuIyyOVopsE92BYHdRglwE
+         SDN48lKU5j7PozGHaC8aW1Hsxch2lUZfMj2lDpMq5t3Q6JAPqI2HfLuNjgq3JsuMCOE7
+         tnzHMsWxt4/xQ8jra/9o4GN35AggT48uuwGEZqcwGJ+PLUsHW/Ihp7BUa4q2yqRAacad
+         0qLQgOnLaZIy+wByW0bgbsmdMti3MLJcj4WhR/WBVYTAPHKSjDiBQlQK/Vg+Yjw5n0Jt
+         HnhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720627587; x=1721232387;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1720627620; x=1721232420;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zlF5Rn3ADWw5/OD0itHw0bD7+qNVXupDZOEmt04jgJ8=;
-        b=KXcSQ3Pm/5KhgMilRLmKSoyVwgXsjEoS91Vt0G9zOiiIwJMadoP/1eiNkiIDXse3kX
-         w9lX3iVUJHEuWwUKhIjsqeMYEOaL3jXe5oxqxTWFiSwFt6+uPB1gZhGdMvbeZh5+f2tP
-         +qxxgZu+xy9NZYwZEfqCpJ3ogzwrZ6Kt7EU6zy1WOLTAxplgwjce4BZVGpFe5qnskYy3
-         9YUR0EQ3gevBqyXB7NGbjVAQq7oN5FW9McTx5xPEfk518sv4taLaPyQ2N0zxLViEZQm6
-         Z83py3UbbfvaUHAFRrIfplRjh4MnJDojtNeZqL6UxIViobrzM1WY9XItuGIfUsx+nouG
-         Bcnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUR1xlRqNy7NrbCTRTycltW9QbXHgP8AROoFntDOfM7Pixfg+eKg2glzdfXSs7Pl4nRS6eYsySnX28O8qp/PUpc/tWbepsXDU06pdRJ
-X-Gm-Message-State: AOJu0Yw8w6K67WKO9lH0B3TdZj2BSckwyz3j/e9w1SQgaeop6Q1RfhvK
-	1i2brS796Zrt1kC6p+qImWVuDAqk8GA7q8zYLKwO9L0czjCv+9pGcLo2biLE0qL7IEokLaa9dpx
-	8tIZ/j4lDvx2gCAULl8BCsr3EOJUdPJ1aN5je
-X-Google-Smtp-Source: AGHT+IH6BAu3tEa7bMrRM+yyA+9N9JUHSbvvBrnpdQl+cK4blUIFsPDTKGfLnvg/2h7lsnhKsZCrOpwdf76FpytT15A=
-X-Received: by 2002:a81:ae25:0:b0:64b:7bf3:cf93 with SMTP id
- 00721157ae682-658f0bc6224mr67409727b3.35.1720627586768; Wed, 10 Jul 2024
- 09:06:26 -0700 (PDT)
+        bh=Yn9Zi1KqPp5aaxLNBj+DM807b8H8qBITowNXvBGV8jI=;
+        b=luqOpSyAOGb4Kus3MgcMwRfpjM2dOApSL0ktYcZkOF3gObJY+6JAtZB47U6hMvk6f4
+         /FkiVVdBr/UmQWrt4G/FeepKr1H6H2MwIP57fDMtMuMecadMulZB1k0bKhy8h+5p9Evf
+         RYf1PIRb0JK8XQhpyMnktLTW5tiHVmrpOAagkS40qJAq8xdCfch4epbUnP0M2Q5TtshU
+         aGvqKavUCTAdKq/A//0O0gxsRwx81zMMdLyBwJJ7yDF8OAzLPQwEkN9Kc9S1NXS2t01E
+         /HL9UwArMKfT0EyGJTV5JdV5XN5bn7lz+7/6XVkA81l8QRRxcWjV435UlgnxbDGIxNaZ
+         nEFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNwUy09xNAMPAnjCVvUuA/At0IAE8i0Vqow/dvxgcpj8vmSX6TI9zwGcyP0HF3hkRilcXR58E5jH8cQCDr+6d66lGjdIf9CJJNpdDq
+X-Gm-Message-State: AOJu0YwVwzG7dEkbWi5jIxJi19PxMqa9LklSEzDsF9ALqMvWVI0UmmKU
+	x5383kFS77c5D8VnxOpk46QTxK0SpPJ2i6mBRwRJhQrX64UvoVojyhA3EQzipA5MvH6FBgzBKdV
+	eiZuAu0PzIAWOAti9NmxiQTvd/s3gIIBck/3r
+X-Google-Smtp-Source: AGHT+IFZMhd3IwcTT5MRRD5rKcqIqs3l1YV7f+9GXdgWrMHusgkuEPHllYjtToXd2RmT45movpPujJPp8yOAIEehbh8=
+X-Received: by 2002:a9d:6ac7:0:b0:701:ff2a:e50c with SMTP id
+ 46e09a7af769-70375a07e4dmr6764092a34.13.1720627619855; Wed, 10 Jul 2024
+ 09:06:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,98 +57,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240704182718.2653918-1-Liam.Howlett@oracle.com>
- <20240704182718.2653918-8-Liam.Howlett@oracle.com> <0699b053-607c-4230-8fbd-e7515fd8454d@lucifer.local>
-In-Reply-To: <0699b053-607c-4230-8fbd-e7515fd8454d@lucifer.local>
+ <20240704182718.2653918-3-Liam.Howlett@oracle.com> <f9b7c816-b0a4-4e9c-a5c6-0cc5990e56d2@lucifer.local>
+ <fftle4xpq4vqskgf4tdlczs3wnlzdoj4obhmmsj4wlc6sylo7i@xzeyqg5kvxsk>
+In-Reply-To: <fftle4xpq4vqskgf4tdlczs3wnlzdoj4obhmmsj4wlc6sylo7i@xzeyqg5kvxsk>
 From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 10 Jul 2024 09:06:13 -0700
-Message-ID: <CAJuCfpFRW10sVig0fWf2R8eqy3RiC9HPZXwLK-uA5GVjE-=Tfw@mail.gmail.com>
-Subject: Re: [PATCH v3 07/16] mm/mmap: Extract validate_mm() from vma_complete()
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	Matthew Wilcox <willy@infradead.org>, sidhartha.kumar@oracle.com, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Bert Karwatzki <spasswolf@web.de>, Jiri Olsa <olsajiri@gmail.com>, 
-	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
+Date: Wed, 10 Jul 2024 09:06:48 -0700
+Message-ID: <CAJuCfpEkpXp-TsU=we-nH=9+QzN8Cnu5Xev9we=ZQeKvLASd-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 02/16] mm/mmap: Introduce abort_munmap_vmas()
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
+	sidhartha.kumar@oracle.com, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Bert Karwatzki <spasswolf@web.de>, Jiri Olsa <olsajiri@gmail.com>, linux-kernel@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 5, 2024 at 12:35=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
+On Fri, Jul 5, 2024 at 11:12=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
 >
-> On Thu, Jul 04, 2024 at 02:27:09PM GMT, Liam R. Howlett wrote:
-> > vma_complete() will need to be called during an unsafe time to call
-> > validate_mm().  Extract the call in all places now so that only one
-> > location can be modified in the next change.
-> >
-> > Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-> > ---
-> >  mm/mmap.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 2a1a49f98fa3..8d9be791997a 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -646,7 +646,6 @@ static inline void vma_complete(struct vma_prepare =
-*vp,
-> >       }
-> >       if (vp->insert && vp->file)
-> >               uprobe_mmap(vp->insert);
-> > -     validate_mm(mm);
-> >  }
-> >
-> >  /*
-> > @@ -734,6 +733,7 @@ int vma_expand(struct vma_iterator *vmi, struct vm_=
-area_struct *vma,
-> >       vma_iter_store(vmi, vma);
-> >
-> >       vma_complete(&vp, vmi, vma->vm_mm);
-> > +     validate_mm(vma->vm_mm);
-> >       return 0;
-> >
-> >  nomem:
-> > @@ -775,6 +775,7 @@ int vma_shrink(struct vma_iterator *vmi, struct vm_=
-area_struct *vma,
-> >       vma_iter_clear(vmi);
-> >       vma_set_range(vma, start, end, pgoff);
-> >       vma_complete(&vp, vmi, vma->vm_mm);
-> > +     validate_mm(vma->vm_mm);
-> >       return 0;
-> >  }
-> >
-> > @@ -1103,6 +1104,7 @@ static struct vm_area_struct
-> >       }
-> >
-> >       vma_complete(&vp, vmi, mm);
-> > +     validate_mm(mm);
-> >       khugepaged_enter_vma(res, vm_flags);
-> >       return res;
-> >
-> > @@ -2481,6 +2483,7 @@ static int __split_vma(struct vma_iterator *vmi, =
-struct vm_area_struct *vma,
-> >
-> >       /* vma_complete stores the new vma */
-> >       vma_complete(&vp, vmi, vma->vm_mm);
-> > +     validate_mm(vma->vm_mm);
-> >
-> >       /* Success. */
-> >       if (new_below)
-> > @@ -3353,6 +3356,7 @@ static int do_brk_flags(struct vma_iterator *vmi,=
- struct vm_area_struct *vma,
-> >               vma_iter_store(vmi, vma);
-> >
-> >               vma_complete(&vp, vmi, mm);
-> > +             validate_mm(mm);
-> >               khugepaged_enter_vma(vma, flags);
-> >               goto out;
-> >       }
-> > --
-> > 2.43.0
-> >
-> >
->
-> LGTM
->
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [240705 13:02]:
+> > On Thu, Jul 04, 2024 at 02:27:04PM GMT, Liam R. Howlett wrote:
+> > > Extract clean up of failed munmap() operations from
+> > > do_vmi_align_munmap().  This simplifies later patches in the series.
+> > >
+> > > Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
 Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+
+
+> > > ---
+> > >  mm/mmap.c | 25 ++++++++++++++++++++-----
+> > >  1 file changed, 20 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/mm/mmap.c b/mm/mmap.c
+> > > index 28a46d9ddde0..d572e1ff8255 100644
+> > > --- a/mm/mmap.c
+> > > +++ b/mm/mmap.c
+> > > @@ -2586,6 +2586,25 @@ struct vm_area_struct *vma_merge_extend(struct=
+ vma_iterator *vmi,
+> > >                      vma->vm_userfaultfd_ctx, anon_vma_name(vma));
+> > >  }
+> > >
+> > > +/*
+> > > + * abort_munmap_vmas - Undo any munmap work and free resources
+> > > + *
+> > > + * Reattach detached vmas, free up maple tree used to track the vmas=
+.
+> > > + */
+> > > +static inline void abort_munmap_vmas(struct ma_state *mas_detach)
+> > > +{
+> > > +   struct vm_area_struct *vma;
+> > > +   int limit;
+> > > +
+> > > +   limit =3D mas_detach->index;
+> >
+> > This feels like a change to existing behaviour actually, I mean a sensi=
+ble
+> > one - as you are not just walking the tree start-to-end but rather only
+> > walking up to the point that it has been populated (assuming I'm not
+> > missing anything, looks to me like mas_for_each is _inclusive_ on max).
+>
+> This is not the main tree, but the detached tree.  It only contains the
+> vmas that are going to be freed (or, rather aborted from being freed).
+>
+> I see what you mean that the end in the abort code below would be one
+> beyond the tree walk.  The new abort code uses the index (from the
+> previous write) as the limit.
+>
+> All that really matters is that we go to a number high enough to cover
+> all vmas that were detached.  I used 'end' in the below code because I
+> knew it would cover all of the vmas added (we actually start at index
+> 0).
+>
+> The value of 'mas_detach->index' is used in the new code because I knew
+> that's as far as I had to go, and I could limit the arguments passed
+> to the function.
+>
+> I think that I'll actually change limit to ULONG_MAX in another revision
+> because I like that better than expecting the index to have not been
+> touched by others.
+>
+> >
+> > Maybe  worth mentioning in commit msg?
+>
+> Yes, good idea.  Thanks for catching this.
+>
+> >
+> > > +   mas_set(mas_detach, 0);
+> > > +   /* Re-attach any detached VMAs */
+> > > +   mas_for_each(mas_detach, vma, limit)
+> > > +           vma_mark_detached(vma, false);
+> > > +
+> > > +   __mt_destroy(mas_detach->tree);
+> > > +}
+> > > +
+> > >  /*
+> > >   * do_vmi_align_munmap() - munmap the aligned region from @start to =
+@end.
+> > >   * @vmi: The vma iterator
+> > > @@ -2740,11 +2759,7 @@ do_vmi_align_munmap(struct vma_iterator *vmi, =
+struct vm_area_struct *vma,
+> > >  userfaultfd_error:
+> > >  munmap_gather_failed:
+> > >  end_split_failed:
+> > > -   mas_set(&mas_detach, 0);
+> > > -   mas_for_each(&mas_detach, next, end)
+> > > -           vma_mark_detached(next, false);
+> > > -
+> > > -   __mt_destroy(&mt_detach);
+> > > +   abort_munmap_vmas(&mas_detach);
+> > >  start_split_failed:
+> > >  map_count_exceeded:
+> > >     validate_mm(mm);
+> > > --
+> > > 2.43.0
+> > >
+> >
+> > This looks fine though, feel free to add:
+> >
+> > Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>
+> Thanks.
+>
