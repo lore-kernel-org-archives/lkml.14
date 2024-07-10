@@ -1,132 +1,283 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn19011017.outbound.protection.outlook.com [52.103.32.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15707197A92
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720636986; cv=none; b=Q5HqvqS538f9rwPDudLTZE4kTGOZh0tbCqyg9Ru6AlMR6Y5jBXkXMsov4GkvlMBwbaCp8CzO++0J7IskN7t/NrEuAFUus0ufSFGv1l56VXzdacV7DLhV/T8Rt01kjGL79j8VGkAEmq9de+uJbHskl5rIuMQDPAuG0syYCjTiMQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720636986; c=relaxed/simple;
-	bh=88Lgzgpa5B7DbnACTJ4woAvKwm19JHnYdVe3dK9AO44=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XFxq+455s6KdoSOxfpig0QJiM+3ZwNHVoImGukm9IxLEwyDRQ+Mij7PJnM5Xzb//zmaKQkstbze1UWvhyBBIMgPXLyz9TD1maHvlJYBhayyvBRMdmfDKrCi2LQTD3DI10MQGqu+L38NaC22Q5Wq3gCpnNQW5RA6aO6EyWl2ZTT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=e+zqpSZ9; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D59197A9D;
+	Wed, 10 Jul 2024 18:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720636989; cv=fail; b=TELymdu/YiRh0cIEQWnHKhdCDsTEnox/Hbi1FtULrxlrJeEIg1/l212SLL3/ejXiiKm4ggFnhUdqYZGOBYtrDKzV2EHxEplPUoq8TTllc8jYF9DkAEHt/BIG4FECxzs77qPbdYRGYwaPQLok9sxrk416sr4w1M2lq6C9lWUQ9VY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720636989; c=relaxed/simple;
+	bh=CagETmbQzxQy7tHMFmKMp8hlYorlYA/ZSNKsjsKz7P4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DkY5FGM2q+8GJTvfhujYNOKdvzZaMOjZ8pJz0Y02yza5JhrCEBboQdA8wyn7F+nklSce0eVr0MLxvJVK3eI8wmpBaN7PphXLDELeefIrfLau0asWbw5cWoj59D1arpoPMHavUUoOQuBCi7H3xxEh3PjSw2jPwCD7SG7NXRNzuc8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=f/gwW6EB; arc=fail smtp.client-ip=52.103.32.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="e+zqpSZ9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=nyIgQtN8QYgk5tphg5sVnfnZLubXZbbI33/J8ejtOrA=; b=e+zqpSZ9Agv/VKDuPusPOVML4r
-	aaUZdNZJmsxdRTCRQe68LKoZeo1rmFZCgz+5n1bKVA3J7JYs8WDaK3D+LfjQ6QHGDmr101AgA2wfc
-	WU9InU9XKhddLVRHztOE6alfRQG0aQboM84FheDp2DtjoSQQWiVSWEpw+nEPg5wIJLtPJZYMTa4cw
-	q+jHTrmRqQRa0FJIxVt5ODoj0eyVrdDPBAEurIjmM2WGmFucNTpi9FWAb141KOoUSvseKf7Wt77Tf
-	jiidHspP/XgJmQbuy9/SsCUOtYcjvlKV4G+z/BeadLBWM98OxHyxA6Eqw3EKNHSn2b8A+aGLQvXAQ
-	srUJZ94A==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sRcHK-000C3l-Um; Wed, 10 Jul 2024 20:42:58 +0200
-Received: from [87.49.147.209] (helo=localhost)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sRcHJ-000G9H-1y;
-	Wed, 10 Jul 2024 20:42:58 +0200
-From: Esben Haabendal <esben@geanix.com>
-To: "Michael Walle" <mwalle@kernel.org>
-Cc: "Tudor Ambarus" <tudor.ambarus@linaro.org>,  "Pratyush Yadav"
- <pratyush@kernel.org>,  "Miquel Raynal" <miquel.raynal@bootlin.com>,
-  "Richard Weinberger" <richard@nod.at>,  "Vignesh Raghavendra"
- <vigneshr@ti.com>,  <linux-mtd@lists.infradead.org>,
-  <linux-kernel@vger.kernel.org>,  "Rasmus Villemoes"
- <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH v2 1/2] mtd: spi-nor: core: add flag for doing optional
- SFDP
-In-Reply-To: <D1SZKLZBDDBA.1Z7ZD4UEOX05F@kernel.org> (Michael Walle's message
-	of "Thu, 06 Jun 2024 15:59:01 +0200")
-References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com>
-	<20240603-macronix-mx25l3205d-fixups-v2-1-ff98da26835c@geanix.com>
-	<a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org>
-	<D1SZKLZBDDBA.1Z7ZD4UEOX05F@kernel.org>
-Date: Wed, 10 Jul 2024 20:42:57 +0200
-Message-ID: <871q413x72.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="f/gwW6EB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M56pI++t09lCeT61ytShZHoXX6Mc+nFSba3xKMfmGMagmeYcT1iH17b6nVrF1B6KRBwZJ7NRwuLCfgqDQa+tA6MfNGhhTAkkjfTs6T1Xod1LhFTi0TxfbT48dW5a3V+Ud6hOmkKbT5Udn73ibhoPlZ7R9Jc3yOLvp+1JsAS9TLNjY8XdeBFzUbPRw+i+ZFxHXXpCnLGqdt34VM3GQgij4q3gHjTn3yl+jQ23HlADp45LfMvySj5/l4abZQYUQKJcwT/SOMfp4fIwTcMQj5xCZ1KHiku7WzaivaZrWpM3IiXjlVp4LvUlhRNBzriXS8bu/s5sRHHwjarZbwDHKVFp/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uRPnIsO7k3xpL5wwp/N9T6QoD19hlcJIS2GQY7S4vmY=;
+ b=D0XTe+h8dXcMmpm/cROJTB5iEzMnlAQ8lx43BWLMn4CJTOqQiV+jTCHEUsL38rx7THXsDiFjXrEgZ6uMdq1h0reD9p7ffphSVYOVJ+vP2LkFl0r5NxhKD3AiR5/VrvcRM652S3zv6FihC/PGwQvdZiatYVaw7Q9QzWF5tnGLPQWGUYG3SAWy1jKZK8wzIE8VAuiCZpgo7jOPy6hp5FCiZXn3UZ5uDaBLi614OxlssMlyvCJnl+R/es27K7JkFyawq3uVIc5KQ5zUizPvHZqZGYFRGVpXLVwS4K90cAkOeD1cpH1mknVsTpItKmvC3/KT7AMlP6WCPhvUQjXnZlzRpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uRPnIsO7k3xpL5wwp/N9T6QoD19hlcJIS2GQY7S4vmY=;
+ b=f/gwW6EBXcdlcXaFTDQbpd2QTDj8shl+3KXLzWSjwKIIYzymTLTAAhP6uX26kHCYMv5GKBve+YEvX60SjGjUjcjZYuFH6cfJPnsdXI7kvCF3mpoywwD1QUtvurrsTkJZnRLWbur2f6XsgEMtgvfP37wTRuES1BAZVKV7O9gVADiiqazrpW94rY3D2ZWtndtGoJg+zFDddMMyXhBgFN0K1BgFpZEXH6F5qePxF4KbK3Kj77e3ItYJzBQpt5i1CoKCG3yLWO9lAxRWuMARvjabuzVUGlV/dUd/qwmicv3Vp6uqkLX6WWcfPQBSTaT6yUZMeVp5jufpSQnKJ5FGTsXk5A==
+Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
+ by AS8PR03MB9935.eurprd03.prod.outlook.com (2603:10a6:20b:628::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Wed, 10 Jul
+ 2024 18:43:05 +0000
+Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
+ ([fe80::4b97:bbdb:e0ac:6f7]) by AM6PR03MB5848.eurprd03.prod.outlook.com
+ ([fe80::4b97:bbdb:e0ac:6f7%6]) with mapi id 15.20.7741.033; Wed, 10 Jul 2024
+ 18:43:05 +0000
+From: Juntong Deng <juntong.deng@outlook.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	andrii@kernel.org,
+	avagin@gmail.com,
+	snorcht@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 06/16] bpf/crib: Introduce task_file open-coded iterator kfuncs
+Date: Wed, 10 Jul 2024 19:40:50 +0100
+Message-ID:
+ <AM6PR03MB584808A67608030DD38E3E6099A42@AM6PR03MB5848.eurprd03.prod.outlook.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240710184100.297261-1-juntong.deng@outlook.com>
+References: <20240710184100.297261-1-juntong.deng@outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [joxeLc0fB8DnMmeFv/4yBULradmxBYYn]
+X-ClientProxiedBy: SI2PR02CA0027.apcprd02.prod.outlook.com
+ (2603:1096:4:195::14) To AM6PR03MB5848.eurprd03.prod.outlook.com
+ (2603:10a6:20b:e4::10)
+X-Microsoft-Original-Message-ID:
+ <20240710184100.297261-7-juntong.deng@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27332/Wed Jul 10 10:36:46 2024)
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|AS8PR03MB9935:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ac533ba-6db6-4169-9303-08dca1102263
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8060799006|19110799003|461199028|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	/cdZY+31pM6pHxbeiz6Q7+872YMFfIJToyaT16r6tQRhoHWr8fhn+NwPkZUVqWz9kuWFWfFjLF3H73lne9HtZfG9a+N4I2EK42bBlI4P/di35eGb+ukLQNBM2LDJXyn3LEhIGPn7rW9z0pt8ODmLL0zMzt/UV+pCmQZKRrUz70ROBuE4bB7DhxQyhDSJW6q9ORPx2f9agoU/d1zeyIGizYehIKv9jRw4pjT9i32/2UisCCYnmLTml/I/YWLRezlqUpssZv6MPD53Vj2jNBa+x/nV4Xg53HqSGiTnAoEsmWd0Tzf4h3w6PDV2T1hBLKowVsaB1j8xRhbS3wQKWa+tFKUkHZHIQrgmz1NY4B/FSE6uRZ1OQTYGpx826g7tXmhCxYhydsdmmSMbWCGoz2FKxaAtDN5G/4froV0OFaRk/A/3ZBM1gMCWNFreptlrM15b7k6UGjTTp7G3LPVN28HvXx0X93s8Ra+/fvgeR5tryjsF9pFj8ASqpDN8Qm0Js3lEQJfZxpakvl9bwX5gwAYjsz3ZdP7B1wfr+95pj+DR2+CzQ8XiRjkiQsuReAunQ46DoUxMIgs+YnstYDBjxIjPlhJnzJsPosLjHgVt8tSVgm15Iaxvx//zddsSoeLD7YBlD7ffPbjvchQVts8YY+NHoA==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?WwltLrgQp/nyQwf695Le0SvxyQi282oS+uGepPVmLo1WR2uTJhos521P04qn?=
+ =?us-ascii?Q?Z+6yt8Tyn6CfOg6N6ZFfSlZdJ5N5TFIuwMeYNVJWvoZGEVK1Mted4YaVJ5v2?=
+ =?us-ascii?Q?tTNuL4//7x+bs3y/9aEycRWGuZDPLfqq3PP53tt5QhEk4D11Xk5TS2TkExy4?=
+ =?us-ascii?Q?jTXm2uafzMc4V0tQU0oxXWd8/EePN5dLNeF1zJKznLZuU1lmb+tOQ5fHAA8h?=
+ =?us-ascii?Q?4dSoqbwcUhZUoIf4d2SqrsnCeoI7vNGxMxs0IkLeLMyp9JRN2V4bH4RWkkZD?=
+ =?us-ascii?Q?8INwibLoR2HsBDKiq/+CWy/v2D5dbbzywqMM1P4H8+JHxwji+RokZbj2RGFT?=
+ =?us-ascii?Q?yQdvvRSfPHKdVqHAk+3+L8oQH2uB4+9w7RLY/sDT7MHRVue9nh28Gx2JMsOm?=
+ =?us-ascii?Q?5wUiK6Vodj9zWnrEHaexojAGG47ML3M0R/GpDW+eQPKt4QEQOQQ+VylCFAYZ?=
+ =?us-ascii?Q?Zc+X2Es70b/YwmIVHx5JvqTi1lFc6qhRbwv3D2z+aFLvYIuP7CzNT3b+0QWN?=
+ =?us-ascii?Q?7D/Ah91oTiMlqXoR/bQP/1cTZx0x0Adq6AnqW942yUNf3uYKt9LyTkcSJYRK?=
+ =?us-ascii?Q?CGs7fCGjzsT2CWrRfHGzSAuRdo+iFK8xynwMBqBOKPqY6OoymHaKbe0097gR?=
+ =?us-ascii?Q?SpXUUHqPnebPA5fMx8fDVbt91WdCozdT5VyLLVtHaJKk3mrrEwKRHe1N55XA?=
+ =?us-ascii?Q?eYyO4Cy94/wONOS0067Jw9QkTXPb2GFDQRfL95NTV1PCzV+hxBo1SGx2g2vG?=
+ =?us-ascii?Q?WNJeQPrifrYjRFY3/Sj+CkFIkNFaqsApruFDg9deKbK5ydMnGWaKHDoo+T3e?=
+ =?us-ascii?Q?y9qWdutYTciBXpTau7KBCax6UatK2lKMhoNuV0uuHci6GAZRKdk66GoIr38s?=
+ =?us-ascii?Q?XPdFzJx8gHaWYfVqOjb61FaCPJzVoy3gtwjWOuPKDa4Ak2S16WLwithDSCoW?=
+ =?us-ascii?Q?0x6RNlyv9IO4TOhE2dTfkprgjicMkm5s8QGgwy8B+HcfP4qNZmzIg6psJO+j?=
+ =?us-ascii?Q?JdlPsdPPjuQdSZ6QzyaxmcrNTXmhK5RwvJHV5oHi0mdjqxOB7sGnaNKmlUU3?=
+ =?us-ascii?Q?TCcX82SUCBkPl0NWHwHk72gGzK+2xxLl/aoW6wGrnmT5/iYnbIdkkIru2ADx?=
+ =?us-ascii?Q?4Uyg4thgnoxCSVrYg49mhVFskfHQ727TU+F1JC+7H99i4UEOwNtNtSqItXF3?=
+ =?us-ascii?Q?s2PHzm1WPVELo8q9irkjCsOo448qpX6+DszJt6Um605r+tc1Vtl/xRobBQA?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ac533ba-6db6-4169-9303-08dca1102263
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 18:43:05.0768
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB9935
 
-"Michael Walle" <mwalle@kernel.org> writes:
+This patch adds the open-coded iterator style process file iterator
+kfuncs bpf_iter_task_file_{new,next,destroy} that iterates over all
+files opened by the specified process.
 
-> On Thu Jun 6, 2024 at 3:31 PM CEST, Tudor Ambarus wrote:
->> On 6/3/24 14:09, Esben Haabendal wrote:
->> > A dedicated flag for triggering call to
->> > spi_nor_sfdp_init_params_deprecated() allows enabling optional SFDP read
->> > and parse, with fallback to legacy flash parameters, without having dual,
->> > quad or octal parameters set in the legacy flash parameters.
->> > 
->> > With this, spi-nor flash parts without SFDP that is replaced with a
->> > different flash NOR flash part that does have SFDP, but shares the same
->> > manufacturer and device ID is easily handled.
->> > 
->> > Signed-off-by: Esben Haabendal <esben@geanix.com>
->> > ---
->> >  drivers/mtd/spi-nor/core.c | 3 ++-
->> >  drivers/mtd/spi-nor/core.h | 1 +
->> >  2 files changed, 3 insertions(+), 1 deletion(-)
->> > 
->> > diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
->> > index 3e1f1913536b..1c4d66fc993b 100644
->> > --- a/drivers/mtd/spi-nor/core.c
->> > +++ b/drivers/mtd/spi-nor/core.c
->> > @@ -2933,7 +2933,8 @@ static void spi_nor_init_params_deprecated(struct spi_nor *nor)
->> >  
->> >  	spi_nor_manufacturer_init_params(nor);
->> >  
->> > -	if (nor->info->no_sfdp_flags & (SPI_NOR_DUAL_READ |
->> > +	if (nor->info->no_sfdp_flags & (SPI_NOR_TRY_SFDP |
->>
->> I don't like that we update deprecated methods. The solution though is
->> elegant.
->
-> I actually had the same concern. But currently there is no
-> non-deprecated way to handle this case, right?
->
-> Right now we have the following cases:
->  (1) pure SFDP parsing
->  (2) non-SFDP flashes with static configuration only
->  (3) legacy implementation, where the magic flags decide whether we
->      use SFDP
+In addition, this patch adds bpf_iter_task_file_get_fd() getter to get
+the file descriptor corresponding to the file in the current iteration.
 
-Actually, in the code we have two variants of 2.
+The reference to struct file acquired by the previous
+bpf_iter_task_file_next() is released in the next
+bpf_iter_task_file_next(), and the last reference is released in the
+last bpf_iter_task_file_next() that returns NULL.
 
-(2a) non-SFDP flashes with SPI_NOR_SKIP_SFDP set
-(2b) non-SFDP flashes without SPI_NOR_SKIP_SFDP and with none of the
-     DUAL/QUAD/OCTAL read bits set
+In the bpf_iter_task_file_destroy(), if the iterator does not iterate to
+the end, then the last struct file reference is released at this time.
 
-These almost handled the same way. But
-spi_nor_manufacturer_init_params() is only called for 2b, and not for
-2a.
+Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+---
+ include/linux/bpf_crib.h         | 10 ++++
+ kernel/bpf/crib/bpf_checkpoint.c | 88 ++++++++++++++++++++++++++++++++
+ kernel/bpf/crib/bpf_crib.c       |  5 ++
+ 3 files changed, 103 insertions(+)
 
-Is this desired behavior, or something that we want to align?
+diff --git a/include/linux/bpf_crib.h b/include/linux/bpf_crib.h
+index f667b740fcc2..468ae87fa1a5 100644
+--- a/include/linux/bpf_crib.h
++++ b/include/linux/bpf_crib.h
+@@ -13,4 +13,14 @@
+ #include <linux/btf_ids.h>
+ #include <linux/filter.h>
+ 
++struct bpf_iter_task_file {
++	__u64 __opaque[3];
++} __aligned(8);
++
++struct bpf_iter_task_file_kern {
++	struct task_struct *task;
++	struct file *file;
++	int fd;
++} __aligned(8);
++
+ #endif /* _BPF_CRIB_H */
+diff --git a/kernel/bpf/crib/bpf_checkpoint.c b/kernel/bpf/crib/bpf_checkpoint.c
+index efaca6bcdfe4..28ad26986053 100644
+--- a/kernel/bpf/crib/bpf_checkpoint.c
++++ b/kernel/bpf/crib/bpf_checkpoint.c
+@@ -7,7 +7,95 @@
+  */
+ 
+ #include <linux/bpf_crib.h>
++#include <linux/fdtable.h>
++
++extern void bpf_file_release(struct file *file);
+ 
+ __bpf_kfunc_start_defs();
+ 
++/**
++ * bpf_iter_task_file_new() - Initialize a new task file iterator for a task,
++ * used to iterate over all files opened by a specified task
++ *
++ * @it: The new bpf_iter_task_file to be created
++ * @task: A pointer pointing to a task to be iterated over
++ */
++__bpf_kfunc int bpf_iter_task_file_new(struct bpf_iter_task_file *it,
++		struct task_struct *task)
++{
++	struct bpf_iter_task_file_kern *kit = (void *)it;
++
++	BUILD_BUG_ON(sizeof(struct bpf_iter_task_file_kern) > sizeof(struct bpf_iter_task_file));
++	BUILD_BUG_ON(__alignof__(struct bpf_iter_task_file_kern) !=
++		     __alignof__(struct bpf_iter_task_file));
++
++	kit->task = task;
++	kit->fd = -1;
++	kit->file = NULL;
++
++	return 0;
++}
++
++/**
++ * bpf_iter_task_file_next() - Get the next file in bpf_iter_task_file
++ *
++ * bpf_iter_task_file_next() acquires a reference to the returned struct file.
++ *
++ * The reference to struct file acquired by the previous
++ * bpf_iter_task_file_next() is released in the next bpf_iter_task_file_next(),
++ * and the last reference is released in the last bpf_iter_task_file_next()
++ * that returns NULL.
++ *
++ * @it: The bpf_iter_task_file to be checked
++ *
++ * @returns a pointer to the struct file of the next file if further files
++ * are available, otherwise returns NULL.
++ */
++__bpf_kfunc struct file *bpf_iter_task_file_next(struct bpf_iter_task_file *it)
++{
++	struct bpf_iter_task_file_kern *kit = (void *)it;
++
++	if (kit->file)
++		bpf_file_release(kit->file);
++
++	kit->fd++;
++
++	rcu_read_lock();
++	kit->file = task_lookup_next_fdget_rcu(kit->task, &kit->fd);
++	rcu_read_unlock();
++
++	return kit->file;
++}
++
++/**
++ * bpf_iter_task_file_get_fd() - Get the file descriptor
++ * corresponding to the file in the current iteration
++ *
++ * @it: The bpf_iter_task_file to be checked
++ *
++ * @returns the file descriptor
++ */
++__bpf_kfunc int bpf_iter_task_file_get_fd(struct bpf_iter_task_file *it)
++{
++	struct bpf_iter_task_file_kern *kit = (void *)it;
++
++	return kit->fd;
++}
++
++/**
++ * bpf_iter_task_file_destroy() - Destroy a bpf_iter_task_file
++ *
++ * If the iterator does not iterate to the end, then the last
++ * struct file reference is released at this time.
++ *
++ * @it: The bpf_iter_task_file to be destroyed
++ */
++__bpf_kfunc void bpf_iter_task_file_destroy(struct bpf_iter_task_file *it)
++{
++	struct bpf_iter_task_file_kern *kit = (void *)it;
++
++	if (kit->file)
++		bpf_file_release(kit->file);
++}
++
+ __bpf_kfunc_end_defs();
+diff --git a/kernel/bpf/crib/bpf_crib.c b/kernel/bpf/crib/bpf_crib.c
+index 1c1729ddf233..b901d7d60290 100644
+--- a/kernel/bpf/crib/bpf_crib.c
++++ b/kernel/bpf/crib/bpf_crib.c
+@@ -52,6 +52,11 @@ BTF_KFUNCS_START(bpf_crib_kfuncs)
+ BTF_ID_FLAGS(func, bpf_file_from_task_fd, KF_ACQUIRE | KF_TRUSTED_ARGS | KF_RET_NULL)
+ BTF_ID_FLAGS(func, bpf_file_release, KF_RELEASE)
+ 
++BTF_ID_FLAGS(func, bpf_iter_task_file_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
++BTF_ID_FLAGS(func, bpf_iter_task_file_next, KF_ITER_NEXT | KF_RET_NULL)
++BTF_ID_FLAGS(func, bpf_iter_task_file_get_fd, KF_ITER_GETTER)
++BTF_ID_FLAGS(func, bpf_iter_task_file_destroy, KF_ITER_DESTROY)
++
+ BTF_KFUNCS_END(bpf_crib_kfuncs)
+ 
+ static int bpf_prog_run_crib(struct bpf_prog *prog,
+-- 
+2.39.2
 
-> Which case is eventually used depends on the ID of the flash -
-> assuming there will only be IDs which either fall into (1) *or* (2).
-> That assumption is clearly wrong :)
->
-> I'd propose a new case in spi_nor_init_params()
->  (4) try SFDP with a fallback to the static flags from the
->      flash_info db.
-
-/Esben
