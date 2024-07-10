@@ -1,57 +1,57 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504EA84A39;
-	Wed, 10 Jul 2024 06:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE0284E0A;
+	Wed, 10 Jul 2024 06:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720594487; cv=none; b=OnBny2lkH6cRZHQ2Msrn9ltzqZpG7hWfmUUwJjlob7c/5S8nQ342rUETazf1JyLLRodFl8YrhytQoICLHh6l0jhyeJi1uUh4vn5D1vDxUg0wxgdXfUrxQJI0SmqRhycIp01dLDfRHEZUDyXXOclxHgAEvGN+NsjZsR6cz3rTIHo=
+	t=1720594490; cv=none; b=WPA/PevUCUf4dCG9C54JsrQz/br3dM2svk3AmlNFy6vx15spEBI9ZVnWmU/hlTQcneZ/WmyKbU0w5YodDdnqOgs7J4/NfSFCZzvEPRN20OdQGLXgin3y/TACWH+ZPtwfLwa2w1i2PDGqLsHvA3mlzO8cRzu5u9639D3ZxLyqo1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720594487; c=relaxed/simple;
-	bh=VIAvE3fW4St6HOOYlyQut1giwJT1YvkJOj4uzD0buyw=;
+	s=arc-20240116; t=1720594490; c=relaxed/simple;
+	bh=XhD3n1oKeM/YS/k/7zTXEhb/l9FjVtgQrMSbjSE/4w0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WtNB1CyNpANm/QuMUtnd0FoASwGENGKjX1Tu47qYiFhW4Z5nE2Scd83TCQTFOPOrbCCtbOU+6NIWuQk0/Yqz+srN6t0Q4XmgduVYy2jAmjt+x1662lm/HJ7fZjj5Lfq+0nwcO4OEl2rVVLp1+dUkwIpsAVk14T1HwvL7NcihBEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XPxSpf1R; arc=none smtp.client-ip=209.85.208.46
+	 MIME-Version; b=AFRdpJMrF5VOHnoIbMgHCx+E5oLjp5wBYgAma5xNNCmgo7RNbxmmaBq6mISqoHviHn8O54JlO/t2ZmBeKXz4oAhuF7jGsfTkcpP5f4rRFWmzdLTv4Y/Zs/7dMCi7uCtlMqImUVkqvm00rMMFGP9jE+s4n6W46lhEa9VQ5Oqnthw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gk09tq4Q; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPxSpf1R"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-59559ea9cfdso1640897a12.0;
-        Tue, 09 Jul 2024 23:54:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gk09tq4Q"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-58d24201934so849673a12.0;
+        Tue, 09 Jul 2024 23:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720594484; x=1721199284; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720594486; x=1721199286; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1wQ7/egsf9ykdYqmaLwPSqiZJPY9FMphf9elhDIGU9o=;
-        b=XPxSpf1RAECVDuRd2FJdXc7Rr9UkD55oHQWoWq+1gaRySPe1Zj4dynEiu2xiGHZry5
-         YFqeCurn5wZ9QT1OL9HMWU9/W7I8fo1VK8XWm5X0cCEUBmxWylZc4hkGBrWRWkKeA050
-         k/Zs1BAOIem828D7ZsDO18Qs7lh1qZdLxRxcG+BkHh3c3+22gmK2EdWcKoPAJE+Vm5Rf
-         VNyu2En8ewtog3y59cyZ5rTRXB7kksZtRHI0wpBvYFnqQO3pc5cBijYzG/KXp1TLDND7
-         hCbYB+tFmsnZnpofyr85IU+5OtPUMuA9FqTueCON3Iq77HFw7EiWpnXGfsee6sycZWLT
-         AXUw==
+        bh=zYIGl18k/y2SUEw9ZkPuau+unS2SVmeP6xXXwBwy8Dg=;
+        b=gk09tq4QiylivHQgTXNadRa6xk1ym/UL7Edxe7kbzoaJSjX6Xmpi0z4Dy99NxQ0l/0
+         /8pIWluwJjU97C/2RZNAnU0feQBEWDmzGvspBA9JUvxjbsXilEqIbE+0mZrWOg3pHL/G
+         xK39+8tJXvUrhJduuVCygevl59osnefiw5PGMipKg1DzZYZcDU+tV/aTqDbJHufFrzNi
+         oKSHOS0N0okLHpTkOmFhbJ7KiJ/iTltBC2B3lt3EkOEJ/bCVoqcDA66TLTOs/DyuzH+7
+         QSOsOsiydRtRng1OJj3Ix5uNIyZ+TALtkZPtrIyqHoGEJnhfIcJqEybUafonoqOTggu/
+         AJYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720594484; x=1721199284;
+        d=1e100.net; s=20230601; t=1720594486; x=1721199286;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1wQ7/egsf9ykdYqmaLwPSqiZJPY9FMphf9elhDIGU9o=;
-        b=lzoJqIDk3ix7o8yJFiwRKUX6L+AWKQmurKj2WjlGE0piQyGvQ+JzpOSUHSS69HqoBn
-         N/aoC5TbkSABhi8X1DXMqJzhKuhwoDlCkLD6RxlmVpt+BXp7JQx48x2rjbOZPVi6JVvR
-         nP6x4Hlfb1w0sJlg4Rtc4TqfzahbsogbQW+pnMIss6phQHyCrlqXL3rVSyiH75eGv3i8
-         2BuQMT49OfVIf5S4yicpKWNldxn9glc09n2mLWnwqKoOck/fQ+hXK6ceaeUqnpU60jb5
-         JGOHfPQF3gw4dPosVtnHH+U+x3q6NxnNLwMVEebt/8dH5swPUCEZcdk6KXpTfmsB9WYB
-         gJ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXGInB/QSXvWq8CnB8JcLU2zdaWUxPm6wCZWpOujdCz2e2OGPRnkSsxI6GxLqkjeUXCyC+dsIwCPsrZmx+faGlZ/Cg2Emr7yhE6NNAb
-X-Gm-Message-State: AOJu0YxnlD9CZDp5HN7Pqpw5eBek8V3oCJNenFC+Q1EkKEcvW+oaHDLj
-	BN3tgcbPfa/iTFIL3jirhi63Jg0M2FPZM/191z2mwhkUYbkGOUJBnCdV2Q==
-X-Google-Smtp-Source: AGHT+IFjTKDYL/pzj2pscx5urb1m4WNjy+cM4WuhQbmmReRZjbSX8RZ6Q7OXQGN3dDGVtJ6EIGx/vA==
-X-Received: by 2002:a05:6402:35c3:b0:58c:34cb:16a9 with SMTP id 4fb4d7f45d1cf-594baf91219mr3625840a12.16.1720594483443;
-        Tue, 09 Jul 2024 23:54:43 -0700 (PDT)
+        bh=zYIGl18k/y2SUEw9ZkPuau+unS2SVmeP6xXXwBwy8Dg=;
+        b=kSmmqszMgXUaB6Hub0oyUdBrrChNdHRqGWfLKGTKt/4yk8w5jE7jSl3RIudl/B8fiR
+         FmeMwAuC4uoVrHnHedRUfzIau27q1YU0QFWpki2uEnWba/A/WV4kM3a0eQHH2flaLMSW
+         oltJDuElq8OwSAQAxOUKCbzk62/Lo8vYJp4O2L8IF1Jc9pixhwVUtuNur0aY+CRlIzGp
+         Ozh7qgLprFN16Dc3M7t9uga8zodJK/43i2SgQlRTR3Na7DFdzCQWIdg80/jpGtyo3MTE
+         7PMH1mHwJJ6biQEanIjyfSwTde+vLAK+NArKfYgZwAr+wacFKHocN2eZeUogYVPyWfBN
+         9zNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcmI+QsSqXaxK5zQ2EDvuNkr7C/PizwffdmNFcr9UVfOGJonH0ZaE3Sm5/AzEsJmdhgrFdJ8HnFhzcNc+Dw5aVStGPfhnTp3YIiDyb
+X-Gm-Message-State: AOJu0YwtnpVBj/XeChQ60QHqXIn18BzJvLy9C0MnMbCtFqphku05xh9m
+	AnIyyUSyyla43K67/7ek2uO/od2zf+y2ky9BIcVgdHBaDruzD9jxhdR7Tg==
+X-Google-Smtp-Source: AGHT+IHADHtERmwQctkFO6pCMEleszVe02a9IEsQ4zEQ15SuAWZrtkejSmI+QA/V7pJkmUj9cVXrbQ==
+X-Received: by 2002:a05:6402:5256:b0:57c:9eef:e54 with SMTP id 4fb4d7f45d1cf-594dc997facmr3287574a12.5.1720594486559;
+        Tue, 09 Jul 2024 23:54:46 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:908:e842:bf20::c7d2])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bc7c8a39sm1894590a12.55.2024.07.09.23.54.42
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bc7c8a39sm1894590a12.55.2024.07.09.23.54.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 23:54:43 -0700 (PDT)
+        Tue, 09 Jul 2024 23:54:46 -0700 (PDT)
 From: Ole Schuerks <ole0811sch@gmail.com>
 To: linux-kbuild@vger.kernel.org
 Cc: ole0811sch@gmail.com,
@@ -62,9 +62,9 @@ Cc: ole0811sch@gmail.com,
 	mcgrof@kernel.org,
 	masahiroy@kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/12] kconfig: Add tools
-Date: Wed, 10 Jul 2024 08:52:53 +0200
-Message-Id: <20240710065255.10338-11-ole0811sch@gmail.com>
+Subject: [PATCH v4 12/12] kconfig: Add loader.gif
+Date: Wed, 10 Jul 2024 08:52:55 +0200
+Message-Id: <20240710065255.10338-13-ole0811sch@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240710065255.10338-1-ole0811sch@gmail.com>
 References: <20240710065255.10338-1-ole0811sch@gmail.com>
@@ -76,575 +76,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit contains the actual API to be used from a configurator.
-Furthermore, it contains a tool to print all constraints into a file.
+Add the GIF used as the loading indicator.
 
-Co-developed-by: Patrick Franz <deltaone@debian.org>
-Signed-off-by: Patrick Franz <deltaone@debian.org>
-Co-developed-by: Ibrahim Fayaz <phayax@gmail.com>
-Signed-off-by: Ibrahim Fayaz <phayax@gmail.com>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Tested-by: Evgeny Groshev <eugene.groshev@gmail.com>
-Suggested-by: Sarah Nadi <nadi@ualberta.ca>
-Suggested-by: Thorsten Berger <thorsten.berger@rub.de>
-Signed-off-by: Thorsten Berger <thorsten.berger@rub.de>
+We created the file from scratch using GIMP. It's also available at
+https://github.com/delta-one/linux/blob/configfix_20240607-patches-5/scripts/kconfig/loader.gif
+
 Signed-off-by: Ole Schuerks <ole0811sch@gmail.com>
 ---
- scripts/kconfig/.gitignore    |   1 +
- scripts/kconfig/cfoutconfig.c | 142 ++++++++++++++
- scripts/kconfig/configfix.c   | 337 ++++++++++++++++++++++++++++++++++
- scripts/kconfig/configfix.h   |  40 ++++
- 4 files changed, 520 insertions(+)
- create mode 100644 scripts/kconfig/cfoutconfig.c
- create mode 100644 scripts/kconfig/configfix.c
- create mode 100644 scripts/kconfig/configfix.h
+ scripts/kconfig/loader.gif | Bin 0 -> 4177 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 scripts/kconfig/loader.gif
 
-diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
-index 0b2ff775b2e3..23446f70083e 100644
---- a/scripts/kconfig/.gitignore
-+++ b/scripts/kconfig/.gitignore
-@@ -5,3 +5,4 @@
- /[gmnq]conf-cflags
- /[gmnq]conf-libs
- /qconf-moc.cc
-+/cfoutconfig
-diff --git a/scripts/kconfig/cfoutconfig.c b/scripts/kconfig/cfoutconfig.c
+diff --git a/scripts/kconfig/loader.gif b/scripts/kconfig/loader.gif
 new file mode 100644
-index 000000000000..c0879e6ebaa1
---- /dev/null
-+++ b/scripts/kconfig/cfoutconfig.c
-@@ -0,0 +1,142 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
-+ */
-+
-+#define _GNU_SOURCE
-+#include <assert.h>
-+#include <locale.h>
-+#include <stdarg.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+#include <unistd.h>
-+
-+#include "configfix.h"
-+#include "internal.h"
-+
-+#define OUTFILE_CONSTRAINTS "./scripts/kconfig/cfout_constraints.txt"
-+#define OUTFILE_DIMACS "./scripts/kconfig/cfout_constraints.dimacs"
-+
-+static void write_constraints_to_file(struct cfdata *data);
-+static void write_dimacs_to_file(PicoSAT *pico, struct cfdata *data);
-+
-+/* -------------------------------------- */
-+
-+int main(int argc, char *argv[])
-+{
-+	clock_t start, end;
-+	double time;
-+	PicoSAT *pico;
-+
-+	static struct constants constants = {NULL, NULL, NULL, NULL, NULL};
-+	static struct cfdata data = {
-+		1,    // unsigned int sat_variable_nr
-+		1,    // unsigned int tmp_variable_nr
-+		NULL, // struct fexpr *satmap
-+		0,    // size_t satmap_size
-+		&constants // struct constants *constants
-+	};
-+
-+	printf("\nCreating constraints and CNF clauses...");
-+	/* measure time for constructing constraints and clauses */
-+	start = clock();
-+
-+	/* parse Kconfig-file and read .config */
-+	init_config(argv[1]);
-+
-+	/* initialize satmap and cnf_clauses */
-+	init_data(&data);
-+
-+	/* creating constants */
-+	create_constants(&data);
-+
-+	/* assign SAT variables & create sat_map */
-+	create_sat_variables(&data);
-+
-+	/* get the constraints */
-+	get_constraints(&data);
-+
-+	end = clock();
-+	time = ((double) (end - start)) / CLOCKS_PER_SEC;
-+
-+	printd("done. (%.6f secs.)\n", time);
-+
-+	/* start PicoSAT */
-+	pico = picosat_init();
-+	picosat_enable_trace_generation(pico);
-+	printd("Building CNF-clauses...");
-+	start = clock();
-+
-+	/* construct the CNF clauses */
-+	construct_cnf_clauses(pico, &data);
-+
-+	end = clock();
-+	time = ((double) (end - start)) / CLOCKS_PER_SEC;
-+	printf("done. (%.6f secs.)\n", time);
-+
-+	printf("\n");
-+
-+	/* write constraints into file */
-+	start = clock();
-+	printf("Writing constraints...");
-+	write_constraints_to_file(&data);
-+	end = clock();
-+	time = ((double) (end - start)) / CLOCKS_PER_SEC;
-+	printf("done. (%.6f secs.)\n", time);
-+
-+	/* write SAT problem in DIMACS into file */
-+	start = clock();
-+	printf("Writing SAT problem in DIMACS...");
-+	write_dimacs_to_file(pico, &data);
-+	end = clock();
-+	time = ((double) (end - start)) / CLOCKS_PER_SEC;
-+	printf("done. (%.6f secs.)\n", time);
-+
-+	printf("\nConstraints have been written into %s\n", OUTFILE_CONSTRAINTS);
-+	printf("DIMACS-output has been written into %s\n", OUTFILE_DIMACS);
-+
-+	return 0;
-+}
-+
-+static void write_constraints_to_file(struct cfdata *data)
-+{
-+	FILE *fd = fopen(OUTFILE_CONSTRAINTS, "w");
-+	struct symbol *sym;
-+
-+	for_all_symbols(sym) {
-+		struct pexpr_node *node;
-+
-+		if (sym->type == S_UNKNOWN)
-+			continue;
-+
-+		pexpr_list_for_each(node, sym->constraints) {
-+			struct gstr s = str_new();
-+
-+			pexpr_as_char(node->elem, &s, 0, data);
-+			fprintf(fd, "%s\n", str_get(&s));
-+			str_free(&s);
-+		}
-+	}
-+	fclose(fd);
-+}
-+
-+static void add_comment(FILE *fd, struct fexpr *e)
-+{
-+	fprintf(fd, "c %d %s\n", e->satval, str_get(&e->name));
-+}
-+
-+static void write_dimacs_to_file(PicoSAT *pico, struct cfdata *data)
-+{
-+	FILE *fd = fopen(OUTFILE_DIMACS, "w");
-+
-+	unsigned int i;
-+
-+	for (i = 1; i < data->sat_variable_nr; i++)
-+		add_comment(fd, data->satmap[i]);
-+
-+	picosat_print(pico, fd);
-+	fclose(fd);
-+}
-diff --git a/scripts/kconfig/configfix.c b/scripts/kconfig/configfix.c
-new file mode 100644
-index 000000000000..e161424149c4
---- /dev/null
-+++ b/scripts/kconfig/configfix.c
-@@ -0,0 +1,337 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
-+ */
-+
-+#define _GNU_SOURCE
-+#include <assert.h>
-+#include <locale.h>
-+#include <stdarg.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+#include <unistd.h>
-+
-+#include "configfix.h"
-+#include "internal.h"
-+#include "cf_expr.h"
-+
-+bool CFDEBUG;
-+bool stop_rangefix;
-+
-+static PicoSAT *pico;
-+static bool init_done;
-+static struct sym_list *conflict_syms;
-+
-+static bool sdv_within_range(struct sdv_list *symbols);
-+
-+/* -------------------------------------- */
-+
-+
-+struct sfl_list *run_satconf(struct sdv_list *symbols)
-+{
-+	clock_t start, end;
-+	double time;
-+	struct symbol *sym;
-+	struct sdv_node *node;
-+	int res;
-+	struct sfl_list *ret;
-+
-+	static struct constants constants = {NULL, NULL, NULL, NULL, NULL};
-+	static struct cfdata data = {
-+		1,    // unsigned int sat_variable_nr
-+		1,    // unsigned int tmp_variable_nr
-+		NULL, // struct fexpr *satmap
-+		0,    // size_t satmap_size
-+		&constants, // struct constants *constants
-+		NULL // array with conflict-symbols
-+	};
-+
-+
-+	/* check whether all values can be applied -> no need to run */
-+	if (sdv_within_range(symbols)) {
-+		printd("\nAll symbols are already within range.\n\n");
-+		return sfl_list_init();
-+	}
-+
-+	if (!init_done) {
-+		printd("\n");
-+		printd("Init...");
-+
-+		/* measure time for constructing constraints and clauses */
-+		start = clock();
-+
-+		/* initialize satmap and cnf_clauses */
-+		init_data(&data);
-+
-+		/* creating constants */
-+		create_constants(&data);
-+
-+		/* assign SAT variables & create sat_map */
-+		create_sat_variables(&data);
-+
-+		/* get the constraints */
-+		get_constraints(&data);
-+
-+		end = clock();
-+		time = ((double)(end - start)) / CLOCKS_PER_SEC;
-+
-+		printd("done. (%.6f secs.)\n", time);
-+
-+		/* start PicoSAT */
-+		pico = initialize_picosat();
-+		printd("Building CNF-clauses...");
-+		start = clock();
-+
-+		/* construct the CNF clauses */
-+		construct_cnf_clauses(pico, &data);
-+
-+		end = clock();
-+		time = ((double)(end - start)) / CLOCKS_PER_SEC;
-+
-+		printd("done. (%.6f secs.)\n", time);
-+
-+		printd("CNF-clauses added: %d\n",
-+		       picosat_added_original_clauses(pico));
-+
-+		init_done = true;
-+	}
-+
-+	/* copy array with symbols to change */
-+	data.sdv_symbols = sdv_list_copy(symbols);
-+
-+	/* add assumptions for conflict-symbols */
-+	sym_add_assumption_sdv(pico, data.sdv_symbols);
-+
-+	/* add assumptions for all other symbols */
-+	for_all_symbols(sym) {
-+		if (sym->type == S_UNKNOWN)
-+			continue;
-+
-+		if (!sym_is_sdv(data.sdv_symbols, sym))
-+			sym_add_assumption(pico, sym);
-+	}
-+
-+	/* store the conflict symbols */
-+	conflict_syms = sym_list_init();
-+	sdv_list_for_each(node, data.sdv_symbols)
-+		sym_list_add(conflict_syms, node->elem->sym);
-+
-+	printd("Solving SAT-problem...");
-+	start = clock();
-+
-+	res = picosat_sat(pico, -1);
-+
-+	end = clock();
-+	time = ((double)(end - start)) / CLOCKS_PER_SEC;
-+	printd("done. (%.6f secs.)\n\n", time);
-+
-+	if (res == PICOSAT_SATISFIABLE) {
-+		printd("===> PROBLEM IS SATISFIABLE <===\n");
-+
-+		ret = sfl_list_init();
-+
-+	} else if (res == PICOSAT_UNSATISFIABLE) {
-+		printd("===> PROBLEM IS UNSATISFIABLE <===\n");
-+		printd("\n");
-+
-+		ret = rangefix_run(pico, &data);
-+	} else {
-+		printd("Unknown if satisfiable.\n");
-+
-+		ret = sfl_list_init();
-+	}
-+
-+	sdv_list_free(data.sdv_symbols);
-+	return ret;
-+}
-+
-+/*
-+ * check whether a symbol is a conflict symbol
-+ */
-+static bool sym_is_conflict_sym(struct symbol *sym)
-+{
-+	struct sym_node *node;
-+
-+	sym_list_for_each(node, conflict_syms)
-+		if (sym == node->elem)
-+			return true;
-+
-+	return false;
-+}
-+
-+/*
-+ * check whether all conflict symbols are set to their target values
-+ */
-+static bool syms_have_target_value(struct sfix_list *list)
-+{
-+	struct symbol_fix *fix;
-+	struct sfix_node *node;
-+
-+	sfix_list_for_each(node, list) {
-+		fix = node->elem;
-+
-+		if (!sym_is_conflict_sym(fix->sym))
-+			continue;
-+
-+		sym_calc_value(fix->sym);
-+
-+		if (sym_is_boolean(fix->sym)) {
-+			if (fix->tri != sym_get_tristate_value(fix->sym))
-+				return false;
-+		} else {
-+			if (strcmp(str_get(&fix->nb_val),
-+				   sym_get_string_value(fix->sym)) != 0)
-+				return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ *
-+ * apply the fixes from a diagnosis
-+ */
-+int apply_fix(struct sfix_list *fix)
-+{
-+	struct symbol_fix *sfix;
-+	struct sfix_node *node, *next;
-+	unsigned int no_symbols_set = 0, iterations = 0, manually_changed = 0;
-+
-+	struct sfix_list *tmp = sfix_list_copy(fix);
-+
-+	printd("Trying to apply fixes now...\n");
-+
-+	while (no_symbols_set < fix->size && !syms_have_target_value(fix)) {
-+		if (iterations > fix->size * 2) {
-+			printd("\nCould not apply all values :-(.\n");
-+			return manually_changed;
-+		}
-+
-+		for (node = tmp->head; node != NULL;) {
-+			sfix = node->elem;
-+
-+			/* update symbol's current value */
-+			sym_calc_value(sfix->sym);
-+
-+			/* value already set? */
-+			if (sfix->type == SF_BOOLEAN) {
-+				if (sfix->tri == sym_get_tristate_value(sfix->sym)) {
-+					next = node->next;
-+					sfix_list_delete(tmp, node);
-+					node = next;
-+					no_symbols_set++;
-+					continue;
-+				}
-+			} else if (sfix->type == SF_NONBOOLEAN) {
-+				if (strcmp(str_get(&sfix->nb_val),
-+					   sym_get_string_value(sfix->sym)) == 0) {
-+					next = node->next;
-+					sfix_list_delete(tmp, node);
-+					node = next;
-+					no_symbols_set++;
-+					continue;
-+				}
-+			} else {
-+				perror("Error applying fix. Value set for disallowed.");
-+			}
-+
-+			/* could not set value, try next */
-+			if (sfix->type == SF_BOOLEAN) {
-+				if (!sym_set_tristate_value(sfix->sym,
-+							    sfix->tri)) {
-+					node = node->next;
-+					continue;
-+				}
-+			} else if (sfix->type == SF_NONBOOLEAN) {
-+				if (!sym_set_string_value(
-+					    sfix->sym,
-+					    str_get(&sfix->nb_val))) {
-+					node = node->next;
-+					continue;
-+				}
-+			} else {
-+				perror("Error applying fix. Value set for disallowed.");
-+			}
-+
-+			/* could set value, remove from tmp */
-+			manually_changed++;
-+			if (sfix->type == SF_BOOLEAN) {
-+				printd("%s set to %s.\n",
-+				       sym_get_name(sfix->sym),
-+				       tristate_get_char(sfix->tri));
-+			} else if (sfix->type == SF_NONBOOLEAN) {
-+				printd("%s set to %s.\n",
-+				       sym_get_name(sfix->sym),
-+				       str_get(&sfix->nb_val));
-+			}
-+
-+			next = node->next;
-+			sfix_list_delete(tmp, node);
-+			node = next;
-+			no_symbols_set++;
-+		}
-+
-+		iterations++;
-+	}
-+
-+	printd("Fixes successfully applied.\n");
-+
-+	return manually_changed;
-+}
-+
-+/*
-+ * stop RangeFix after the next iteration
-+ */
-+void interrupt_rangefix(void)
-+{
-+	stop_rangefix = true;
-+}
-+
-+/*
-+ * check whether all symbols are already within range
-+ */
-+static bool sdv_within_range(struct sdv_list *symbols)
-+{
-+	struct symbol_dvalue *sdv;
-+	struct sdv_node *node;
-+
-+	sdv_list_for_each(node, symbols) {
-+		sdv = node->elem;
-+
-+		assert(sym_is_boolean(sdv->sym));
-+
-+		if (sdv->tri == sym_get_tristate_value(sdv->sym))
-+			continue;
-+
-+		if (!sym_tristate_within_range(sdv->sym, sdv->tri))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+struct sfix_list *select_solution(struct sfl_list *solutions, int index)
-+{
-+	struct sfl_node *node = solutions->head;
-+	unsigned int counter;
-+
-+	for (counter = 0; counter < index; counter++)
-+		node = node->next;
-+
-+	return node->elem;
-+}
-+
-+struct symbol_fix *select_symbol(struct sfix_list *solution, int index)
-+{
-+	struct sfix_node *node = solution->head;
-+	unsigned int counter;
-+
-+	for (counter = 0; counter < index; counter++)
-+		node = node->next;
-+
-+	return node->elem;
-+}
-diff --git a/scripts/kconfig/configfix.h b/scripts/kconfig/configfix.h
-new file mode 100644
-index 000000000000..8ebcc807da9d
---- /dev/null
-+++ b/scripts/kconfig/configfix.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2023 Patrick Franz <deltaone@debian.org>
-+ */
-+
-+#ifndef CONFIGFIX_H
-+#define CONFIGFIX_H
-+
-+/* make functions accessible from xconfig */
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+/* include internal definitions */
-+#define LKC_DIRECT_LINK
-+#include "lkc.h"
-+
-+/* include own definitions */
-+#include "cf_defs.h"
-+
-+/* include other header files needed */
-+#include "picosat.h"
-+#include "cf_constraints.h"
-+#include "cf_expr.h"
-+#include "cf_rangefix.h"
-+#include "cf_utils.h"
-+
-+/* external functions */
-+struct sfl_list *run_satconf(struct sdv_list *symbols);
-+int apply_fix(struct sfix_list *fix);
-+int run_satconf_cli(const char *Kconfig_file);
-+void interrupt_rangefix(void);
-+struct sfix_list *select_solution(struct sfl_list *solutions, int index);
-+struct symbol_fix *select_symbol(struct sfix_list *solution, int index);
-+
-+/* make functions accessible from xconfig */
-+#ifdef __cplusplus
-+}
-+#endif
-+#endif
+index 0000000000000000000000000000000000000000..54c8bc76cc037ab04dc1d37ddc34384f9714284e
+GIT binary patch
+literal 4177
+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
+
+literal 0
+HcmV?d00001
+
 -- 
 2.39.2
 
