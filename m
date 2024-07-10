@@ -1,90 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF1A1DDC5;
-	Wed, 10 Jul 2024 13:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BEF1DDC5;
+	Wed, 10 Jul 2024 13:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618860; cv=none; b=Tq2Pftd2B8tEQaki7gv3IN89qekIr0tvVmliaj0V1pObLAYSrR+qjBjoqeRjh34hMoYWFYiiVUvcsWJJsrSeZPn8pTgYnMSQqz/pelG/+f1Tq5FQfMJRxR7rVuHdYBphigG0R5RSIPtGCgf+HdGp0/5X/XJ+bxXPrs105kOQmeg=
+	t=1720618948; cv=none; b=SDYlMHYemLqOHujlPQXkXmf3vLq8afBITOrsKXUhV+2yycdELVxbLEmLdHxIziNlJFv0KS8bcCnsOZ+GJhDE+5hXc4wQ49OYd/q74Y0GASEAB7b5NJwl76j5lybeM/pGMn7jfHpyJbDSOP4ijWnhY0Tss+IsntlP8acYMuAosk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618860; c=relaxed/simple;
-	bh=vTbKL04w3i37qu8dEFKYaIUhWj6ebXHTd3S1c+PVmOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmii5AAiXocgy/B6iZQqTXZF+E8RlL98lT1urq0AclmeScfSzSL6VmFhaGYF57CcSAcNPMPACT9XTEF4scDS63ZdJe6DORnXklZ8+xsBtDk/6odztVvytBzNWF5t/MPlB3JcYJNUCwjOF9iy+91tgG+X0nWgro/5GXcL+6o3YiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NRf+JlPe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NRf+JlPe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D8BC32782;
-	Wed, 10 Jul 2024 13:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720618860;
-	bh=vTbKL04w3i37qu8dEFKYaIUhWj6ebXHTd3S1c+PVmOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NRf+JlPeGW8kMoLvRrlVl03rodOdAfIyN8pD3UKnpiyM5vuvQmAqK/wkyzGDFI9BH
-	 gs97kSYY1gLnAi6CFHUOaRqZyn6TPTXyTdqh4uDa/DzdiWlifs7tyNH50iFR6vBYrg
-	 zCL/1u7Yr4OuKXJGF390XQ6hV9JNVOyxnCDCX+Ow=
-Date: Wed, 10 Jul 2024 15:40:57 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: John Keeping <jkeeping@inmusicbrands.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: f_uac2: fix non-newline-terminated function
- name
-Message-ID: <2024071048-science-footprint-ee8e@gregkh>
-References: <20240708142553.3995022-1-jkeeping@inmusicbrands.com>
- <2024071022-exemplary-zipping-1f34@gregkh>
- <Zo6M2RntMo6Qnx3B-jkeeping@inmusicbrands.com>
+	s=arc-20240116; t=1720618948; c=relaxed/simple;
+	bh=MvuMU8T0ANrufEoBpWpD+iDkftf/zrRX3wL5apOQBDU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WFVsB0YDEIzJvSIwLkNFECmnjzgcXjY/+3h4mxCNexBrsk16lzxgiEM7dSHH7MWnP+mKGfkTsGOZi0Woz4u2+lNEW9gaiAR3XYw/xAsR+6TSOz8r7V8WBHsKdQMs5zwl4MQZ0FIxgHhqxTzKx1W/4b1WfdpScexx4Z6EsHckPZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WJzSW56KTzxVxH;
+	Wed, 10 Jul 2024 21:37:47 +0800 (CST)
+Received: from kwepemf100018.china.huawei.com (unknown [7.202.181.17])
+	by mail.maildlp.com (Postfix) with ESMTPS id 05A8E140257;
+	Wed, 10 Jul 2024 21:42:23 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemf100018.china.huawei.com (7.202.181.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 10 Jul 2024 21:42:22 +0800
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+To: <jgg@ziepe.ca>, <leon@kernel.org>
+CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
+Subject: [PATCH v2 for-rc 0/8] RDMA/hns: Bugfixes
+Date: Wed, 10 Jul 2024 21:36:57 +0800
+Message-ID: <20240710133705.896445-1-huangjunxian6@hisilicon.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zo6M2RntMo6Qnx3B-jkeeping@inmusicbrands.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemf100018.china.huawei.com (7.202.181.17)
 
-On Wed, Jul 10, 2024 at 02:30:01PM +0100, John Keeping wrote:
-> On Wed, Jul 10, 2024 at 01:53:22PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Jul 08, 2024 at 03:25:53PM +0100, John Keeping wrote:
-> > > Most writes to configfs handle an optional newline, but do not require
-> > > it.  By using the number of bytes written as the limit for scnprintf()
-> > > it is guaranteed that the final character in the buffer will be
-> > > overwritten.
-> > > 
-> > > This is expected if it is a newline but is undesirable when a string is
-> > > written "as-is" (as libusbgx does, for example).
-> > 
-> > So we are changing kernel functionality because a userspace program does
-> > not work?  Why not fix the userspace program?
-> 
-> This file behaves differently from every other sysfs/debugfs/configfs
-> file AFAICT.  In most places the behaviour of the following two commands
-> is equivalent:
-> 
-> 	$ echo foo >file
-> 
-> 	$ printf foo >file
-> 
-> But for this function_name the result is that the final character is
-> dropped unconditionally, so the name reported in the USB descriptors
-> will be "fo" in the second case.
-> 
-> > > Update the store function to strip an optional newline, matching the
-> > > behaviour of usb_string_copy().
-> > 
-> > This changes the behaviour of a lot of configfs files right?  What will
-> > break if this happens?
-> 
-> No, this is just one file in f_uac2.
-> 
-> I can't see any scenario where a newline in a USB string descriptor
-> makes sense so it's unlikely to break any existing use cases.
-> 
-> This brings the audio function name more in line with other string
-> descriptors for the device manufacturer/product or configuration name
-> which use usb_string_copy() and strip a trailing newline if it's
-> present.
+Here are some bugfixes for hns driver.
 
-Ok, thanks for the added info, now applied.
+v1 -> v2:
+* Drop patch #2 in v1 because Leon pointed out a problem about mailbox
+  mode, and we plan to handle it in another patchset.
+* Patch #1: put the atomic length check in set_rc_wqe(), stop processing
+  WQEs and return immediately if there is an error.
+* Patch #2: use BH workqueue instead of tasklet.
 
-greg k-h
+Chengchang Tang (5):
+  RDMA/hns: Fix missing pagesize and alignment check in FRMR
+  RDMA/hns: Fix shift-out-bounds when max_inline_data is 0
+  RDMA/hns: Fix undifined behavior caused by invalid max_sge
+  RDMA/hns: Fix insufficient extend DB for VFs.
+  RDMA/hns: Fix mbx timing out before CMD execution is completed
+
+Junxian Huang (3):
+  RDMA/hns: Check atomic wr length
+  RDMA/hns: Fix soft lockup under heavy CEQE load
+  RDMA/hns: Fix unmatch exception handling when init eq table fails
+
+ drivers/infiniband/hw/hns/hns_roce_device.h |   7 +
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 164 +++++++++++++-------
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |   6 +
+ drivers/infiniband/hw/hns/hns_roce_mr.c     |   5 +
+ drivers/infiniband/hw/hns/hns_roce_qp.c     |   4 +-
+ drivers/infiniband/hw/hns/hns_roce_srq.c    |   2 +-
+ 6 files changed, 127 insertions(+), 61 deletions(-)
+
+--
+2.33.0
+
