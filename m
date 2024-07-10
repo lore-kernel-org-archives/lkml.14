@@ -1,44 +1,43 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE18156968;
-	Wed, 10 Jul 2024 23:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F83848E;
+	Wed, 10 Jul 2024 23:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720654889; cv=none; b=TqzGFj+cZuRQXnBwD37SMsbZakHM0sG9PcuHcQG1kSHfWmz/gfCCt7Fn3fdnsNzC6I3/rqDHoc4KqcsoIm16uTEdJKry2aFpyDsEkMG5upA2rta3UDXVGFXYXSjq1nhVgMMwuqqDk1BgKK8xper5UE9/yw6kzBoGVeTDcLBY4rI=
+	t=1720654890; cv=none; b=dg9BpVNEDLSAVLBguRf+vlgIJsL2D7wappIQ+P+WAExL6dzq4xBLTIJ4xsNNgWIXZu3NHTNGIha61vONAUahKZOXS2bsZthHz1kZJV/qMuAC51NPM2YbrXQx9rbzznN/ZPvltgtSIat7egilrA6lrSS8bxjYIAjdJT4GT1ULjYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720654889; c=relaxed/simple;
-	bh=A83va7Zu0yja/RqqSysCcwRY4phpIFNJth0ydPpaejs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZBWsV/A/NGcemK2gBjYVyIRa6Ce/PjNhf8khPQ6XcjQ6uJfMBIy0t1hLDQluusp4GxQYwDaXZ7Gd9AcHZi5DVbQyY0oORStWG3w4LdlSxophJuSv8+PSuCFP+j2k+7h0vD+kiIbtMt/N15DrQ6TlMCY6inrOgPlQ4WQEAccgqcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=bBX7uD8q; arc=none smtp.client-ip=37.18.73.165
+	s=arc-20240116; t=1720654890; c=relaxed/simple;
+	bh=fIXUY8ThIqyTyr6FnvZy1kNkyUcKEQDEhikWI2x7ewY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dDgWugaZteZT+ywZhPt27h+BICgLzOgE/H+xs9A1l46R7fQNgRcptb+49MdPwb4DdVg/7NoepYrosc/UxRouRdYHGjT+NbjKGMUZcVZkA+DUaSF3C7Q4m07pklmSrSH71kDTUjAm1ekgaUboTIKXQCLP3VDaob6qA0Ut4TgJ6FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=RjyXBTc3; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="bBX7uD8q"
-Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id A032B10000C;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="RjyXBTc3"
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 2E3CD120006;
 	Thu, 11 Jul 2024 02:41:23 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A032B10000C
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2E3CD120006
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
 	s=mail; t=1720654883;
-	bh=8i5Z3Q938Hng3eekptCv0bet0XPj9y0elsKI+ej4mzU=;
+	bh=qRhU2crivn/2xTODAHp+2oPbvB1yAPDlRcyKl3MlgSo=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=bBX7uD8qdTEF2iWaKaeHytZwQBvFHeqXWgg/bTP1ZG4Xw6h3HtZAWgNyw6T4TE2Ka
-	 JatG67Wwx5/4l34Q55PTLfboBoS306sl35TMIh37EksWXHn431wumwVVij+Ng0KRBr
-	 tJBcDBPNItokrOr1amFYGQMH4qdW66ohdM1y1K0bZSb/MaoCUpDYZhrmOw7EJrT5uy
-	 kAvhTq3/tD7VRlWszU3RdFGL/WORZYlQQex+zBQi6uZtPr0x+bxhXbO7v0HOit6RXS
-	 cEDvP25WG65bzKIiFuCmhyjCQ7q/n6B6SVNRgUERIBX3Qo8iKOewl/1MXXV7+9XONV
-	 Vc9LCI3/T3BZQ==
+	b=RjyXBTc3Gl147fEQhywvoAtRVsEkNsqXW67MIWT/VVc33gjZphsFQ4nJEBCWN1hmQ
+	 AGD3N1+sSZC5HT7kyFMHjlMN/LnLYBDEr1S7XjrVvJ8ucYPkM7k4yu2HylbvepStFw
+	 qMM+XyPQm0ANEZGve3Wo4BlMWfdtT38LH9A+dnPhUVZTsy4yBmRmdDvFMRpsGSuhWi
+	 dZoNU4eZEI5q4rM4Eq7IP+vEfuJl0W7+7CBw1Ye0yaBAF0JIAV+ef0+yEePmsWoQVv
+	 fV/0RGpYbG2EwOUOe514ufqjQD03nUN/oMP61mSpzUgr+C2e9fwr7pT7m0TDy17Y9w
+	 lGh3NZzyT8nLA==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu, 11 Jul 2024 02:41:23 +0300 (MSK)
+	Thu, 11 Jul 2024 02:41:22 +0300 (MSK)
 Received: from work.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 11 Jul 2024 02:41:23 +0300
+ 15.2.1118.40; Thu, 11 Jul 2024 02:41:22 +0300
 From: George Stark <gnstark@salutedevices.com>
 To: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 	<conor+dt@kernel.org>, <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
@@ -47,13 +46,11 @@ To: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 CC: <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
-	<gnstark@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH v4 2/3] dt-bindings: pwm: amlogic: Add new bindings for meson A1 PWM
-Date: Thu, 11 Jul 2024 02:41:15 +0300
-Message-ID: <20240710234116.2370655-3-gnstark@salutedevices.com>
+	<gnstark@salutedevices.com>
+Subject: [PATCH v4 0/3] pwm: meson: add pwm support for A1
+Date: Thu, 11 Jul 2024 02:41:13 +0300
+Message-ID: <20240710234116.2370655-1-gnstark@salutedevices.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240710234116.2370655-1-gnstark@salutedevices.com>
-References: <20240710234116.2370655-1-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,54 +70,47 @@ X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;100.64.160.123:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;lore.kernel.org:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/10 23:02:00
+X-KSMG-LinksScanning: Clean, bases: 2024/07/10 23:02:00
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/10 21:42:00 #25942395
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-The chip has 3 dual-channel PWM modules PWM_AB, PWM_CD, PWM_EF.
+Add support for Amlogic meson A1 SoC family PWM
 
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- .../devicetree/bindings/pwm/pwm-amlogic.yaml       | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes in v2:
+  add patch with optional power-domains to pwm bindings;
+  fix syntax in a1 bindigns patch:
+  - use enum over const for amlogic,meson-a1-pwm beacuse adding more devices here
+    are expected
+  - leave only base compatible amlogic,meson-s4-pwm in check section
+  dt_binding_check and dtbs_check run ok now;
+  previous version: [1]
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-index 267908c2bf7b..e021cf59421a 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-@@ -37,6 +37,10 @@ properties:
-       - enum:
-           - amlogic,meson8-pwm-v2
-           - amlogic,meson-s4-pwm
-+      - items:
-+          - enum:
-+              - amlogic,meson-a1-pwm
-+          - const: amlogic,meson-s4-pwm
-       - items:
-           - enum:
-               - amlogic,meson8b-pwm-v2
-@@ -139,6 +143,16 @@ allOf:
-       required:
-         - clocks
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - amlogic,meson-a1-pwm
-+    then:
-+      required:
-+        - power-domains
-+
- additionalProperties: false
- 
- examples:
--- 
+Changes in v3:
+  squash power-domains patch into main bindigns patch
+  add conditional to bindings that power-domains property is required only for a1
+  previous version: [2]
+
+Changes in v4:
+  split bindings patch into power-domains patch and new compatible patch
+  previous version: [3]
+
+[1] https://lore.kernel.org/lkml/20240701130113.433169-3-gnstark@salutedevices.com/T/
+[2] https://lore.kernel.org/lkml/20240701172016.523402-1-gnstark@salutedevices.com/T/
+[3] https://lore.kernel.org/lkml/20240702123425.584610-1-gnstark@salutedevices.com/T/
+
+George Stark (3):
+  dt-bindings: pwm: amlogic: Add optional power-domains
+  dt-bindings: pwm: amlogic: Add new bindings for meson A1 PWM
+  arm64: dts: meson: a1: add definitions for meson PWM
+
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  |  17 ++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 215 ++++++++++++++++++
+ 2 files changed, 232 insertions(+)
+
+--
 2.25.1
 
