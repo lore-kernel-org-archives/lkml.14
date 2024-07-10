@@ -1,553 +1,403 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092503BBED;
-	Wed, 10 Jul 2024 18:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE186F31C
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720637444; cv=none; b=oJN7CfZ94yMQFolO0bKLOVL5qSJ7XyWFguDshtL6KZiV2AbMqKvfem9kyUURLdCaFSGXpQwLjfKrWAQYt7jVSvhyuYhh27WJ5Wclp8NT4pFmIen6mfv5W1pMAEnherp8mnKpwre0x/CK9dHpSlh/efr2srtHHTGkbXd+j3sWQqo=
+	t=1720637501; cv=none; b=r6YU/ytHgSL285B+g90xf9jkEXzyvdTzIkY3Cn0qkHnkcTrhW/PIoqDzA007wZ8c7plR3VXxp88mAs9Pr3p+y69TpZhfsHKk0knNAu2xQfBanDf7ab5Dze22/B+wVpW9WLenqSkrkCgfQ7p0kW3EOKe8eongrUQrQ+iXZ3stTX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720637444; c=relaxed/simple;
-	bh=PVZoJi2gQUU+1ChxrT8xFfoip6UL9lSjaAnya/3pnYU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Is/IA6g6yO1wL7SxqDaVHtpW3zdq55rZ+8+oCIYW9tOBxHiVlhtlZZVJRGAGmsC5JRCLMjaFkLwUDNU43ugSF7/oqhAd60p0ABTKkYFKZosE2+pS08rP+c05yz6mNXARhe+LNiPA7jkSrye1qJsbuOTQYS6SVBUgUccu+x7KNiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=JrVGtwAJ; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=nw+wyTdp; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="JrVGtwAJ";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="nw+wyTdp"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4WK6PN53rsz9sps;
-	Wed, 10 Jul 2024 20:50:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1720637432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1AvIh7AE0A4Rq9ccxEnjN39G12lYOSuaa61FRPTWL/0=;
-	b=JrVGtwAJNkZcuxxEwgY+PQrIL6ruaLJitfcYF0Z5Fgsht80mcT4bp3y3/zeD4QGfDUTWzk
-	gwNUF7E/6JHb7bPaEJmJYHjNqtarNhnS3THGFS6dzZhNgJHoLcY52cH9vfCW5OTYIsKqGf
-	iWAXZQ4nqqmVLooU/91Wn3zvU4BLdfsV4Cd+RtJ72Z0BK7iQEn6Wun/rfUgPV35hdA+x2D
-	3c+poHHLPJ86ROs5xrwj+IAassau31TijocDhc2mhSquV7ulsdPp4WjtH/5dkVoH54xMHu
-	IQtBkl/AVqLauykc5Kg4RNHDxlQsa2yiCd6UDWg7w12m2iNnmOzE6ZwSyl4y2g==
-From: Joseph Strauss <jstrauss@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1720637430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1AvIh7AE0A4Rq9ccxEnjN39G12lYOSuaa61FRPTWL/0=;
-	b=nw+wyTdpdCicx5nEo7LVTdNvwYC8xzppSNHsypYwKQ/bFhLwiiNuUBufBhSxlusD8CEUNk
-	ZUUWc0FqcunM4wzGcL6J93Khc0cTFV015x2h/+oHeDYKvkMQ+Rx/qDEMPAT2y5lp+3TXA9
-	8MT08945Dx8j9Wm3VvCZ/wvSVd8ZUQFsrguGyAbzaG9oCq3rb1ygd56FbjZ4vAXHQwUpuZ
-	mtE3tG7Zv8naKfZH211V7G/n6fIrjUss80xAsDHod8LhSdqCtdV1EemJ029bFIwTbQ6Dob
-	V4SFwGaop288P7EMu3XTGGP761EGN3jW64DsOdkGANS95i0FyKeHu3A5jGYPFg==
-To: lee@kernel.org
-Cc: pavel@ucw.cz,
-	jansimon.moeller@gmx.de,
-	conor@kernel.org,
-	christophe.jaillet@wanadoo.fr,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Joseph Strauss <jstrauss@mailbox.org>
-Subject: [PATCH v8] Add multicolor support to BlinkM LED driver
-Date: Wed, 10 Jul 2024 13:48:44 -0500
-Message-Id: <20240710184844.108006-1-jstrauss@mailbox.org>
+	s=arc-20240116; t=1720637501; c=relaxed/simple;
+	bh=lyfrb2ktZgr7mTwi5/71xMip/g3FrYS3VMd4qK4xuXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uBp8kylleFqD+Yf/Cz0PbUDRfdOb4w8YPsS8jzF4brK2SXuKpjRLZ4Y9KGtNdkHh4g9c0f5zqI6w+95+XagXZxyTqSvi43Ozfa3NstHmQvsUphrv+oIsoAo8a926hbdEX9zVNa7NeOsQgcfdb5FwcHdXQvuGP4wpUhk1saZGETc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-447fd75f9aeso438501cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 11:51:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720637499; x=1721242299;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L6hb5jyVuB9iyljyxx1UxsUB/igp8zpzVIhx84F8ULg=;
+        b=he59bU5/kj4A+XITRSdTL7rxeMVR8vDfm9wKsqFABOCaNn76WLPG5hUzqG4vipuqxf
+         qtNPoG0C2Jb4AO3bSH1/8WDyrR+t3LGGZTZjJHHU1ZsWLSxUXSe1EcILMnopFyg7qwOP
+         xlvA6G4zJaYjHpIr/bKrymHUkQYtjoItCjFF91JZsffFJoWGNDeyr06tdALdSHQ+zflS
+         DdCTip9nZl4delT3oZCmdGAs6IZtb8XNV08IYaQ/kGDBeL16hY5krEK6OlWYuqa6WFDM
+         wV9mw7ZWFfRnFQfAWjp+Y7yddNgORlkvVV/rpB0ZAh75/OkFUsLwgrvtHgWJI9zJCZNA
+         qyWQ==
+X-Gm-Message-State: AOJu0Yze3Jv5/a9rCayiw75qnmd/rL9Sc9p5p6jzyEdlWHs/33yixIeT
+	6YrT87ZLPmIPnQvfPdGrTVXIYa4nymHiYjvwyYeMsyAqDstAECWt
+X-Google-Smtp-Source: AGHT+IGz2lwvYwPICLKE/6Zflee1M3q3uBb8ONGfb6kWaP+ILVMWSbrc1x1UjfpdIngGBGhnzprR8g==
+X-Received: by 2002:a05:622a:ce:b0:446:5f64:3fcf with SMTP id d75a77b69052e-447fa89e89dmr83070001cf.34.1720637498527;
+        Wed, 10 Jul 2024 11:51:38 -0700 (PDT)
+Received: from maniforge (c-76-141-129-107.hsd1.il.comcast.net. [76.141.129.107])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9bd2649sm22717451cf.68.2024.07.10.11.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 11:51:38 -0700 (PDT)
+Date: Wed, 10 Jul 2024 13:51:35 -0500
+From: David Vernet <void@manifault.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	schatzberg.dan@gmail.com, mingo@redhat.com, peterz@infradead.org,
+	changwoo@igalia.com, righi.andrea@gmail.com
+Subject: Re: [PATCH 5/6] sched_ext: Allow SCX_DSQ_LOCAL_ON for direct
+ dispatches
+Message-ID: <20240710185135.GB317151@maniforge>
+References: <20240709212137.1199269-1-tj@kernel.org>
+ <20240709212137.1199269-6-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: 7uk774tk9bduedmz7uz8wgqeo6tthr4y
-X-MBO-RS-ID: 51825e8eda8fc8a5208
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ppW3oYkCzO0B8ev8"
+Content-Disposition: inline
+In-Reply-To: <20240709212137.1199269-6-tj@kernel.org>
+User-Agent: Mutt/2.2.13 (00d56288) (2024-03-09)
 
-Add multicolor support to the BlinkM driver, making it easier to control
-from userspace. The BlinkM LED is a programmable RGB LED. The driver
-currently supports only the regular LED sysfs class, resulting in the
-creation of three distinct classes, one for red, green, and blue. The
-user then has to input three values into the three seperate brightness
-files within those classes. The multicolor LED framework makes the
-device easier to control with the multi_intensity file: the user can
-input three values at once to form a color, while still controlling the
-lightness with the brightness file.
 
-The main struct blinkm_led has changed slightly. The struct led_classdev
-for the regular sysfs classes remain. The blinkm_probe function checks
-CONFIG_LEDS_BLINKM_MULTICOLOR to decide whether to load the seperate
-sysfs classes or the single multicolor one, but never both. The
-blinkm_set_mc_brightness() function had to be added to calculate the
-three color components and then set the fields of the blinkm_data
-structure accordingly.
+--ppW3oYkCzO0B8ev8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Joseph Strauss <jstrauss@mailbox.org>
----
-Changes in v2:
-- Replaced instances of the constant 3 with NUM_LEDS, where applicable
-- Fixed formatting errors
-- Replaced loop inside of blinkm_set_mc_brightness() with equivalent
-  statements
-- Changed id of multicolor class from 4 to 3
-- Replaced call to devm_kmalloc_array() with devm_kcalloc()
-Changes in v3:
-- Add CONFIG_LEDS_BLINKM_MULTICOLOR to check whether to use multicolor
-  funcitonality
-- Extend well-known-leds.txt to include standard names for RGB and indicator
-  LEDS
-- Change name of Blinkm sysfs class according to well-known-leds.txt
-- Simplify struct blinkm_led and struct blinkm_data
-- Remove magic numbers
-- Fix formatting errors
-- Remove unrelated changes
-Changes in v4:
-- Fix indentation
-- Add default case to switch statement
-Changes in v5:
-- Fix warnings related to snprintf on s390 architecture, reported by
-  0-DAY CI Kernel Test Service
-Changes in v6:
-- Refactored struct blinkm_led to use a union
-- Refactored blinkm_probe()
-- Clarified documentation
-Changes in v7:
-- Fix formatting and spelling errors
-Changes in v8:
-- Make compatible with Linux -next
+On Tue, Jul 09, 2024 at 11:21:11AM -1000, Tejun Heo wrote:
+> In ops.dispatch(), SCX_DSQ_LOCAL_ON can be used to dispatch the task to t=
+he
+> local DSQ of any CPU. However, during direct dispatch from ops.select_cpu=
+()
+> and ops.enqueue(), this isn't allowed. This is because dispatching to the
+> local DSQ of a remote CPU requires locking both the task's current and new
+> rq's and such double locking can't be done directly from ops.enqueue().
+>=20
+> While waking up a task, as ops.select_cpu() can pick any CPU and both
+> ops.select_cpu() and ops.enqueue() can use SCX_DSQ_LOCAL as the dispatch
+> target to dispatch to the DSQ of the picked CPU, the BPF scheduler can st=
+ill
+> do whatever it wants to do. However, while a task is being enqueued for a
+> different reason, e.g. after its slice expiration, only ops.enqueue() is
+> called and there's no way for the BPF scheduler to directly dispatch to t=
+he
+> local DSQ of a remote CPU. This gap in API forces schedulers into
+> work-arounds which are not straightforward or optimal such as skipping
+> direct dispatches in such cases.
+>=20
+> Implement deferred enqueueing to allow directly dispatching to the local =
+DSQ
+> of a remote CPU from ops.select_cpu() and ops.enqueue(). Such tasks are
+> temporarily queued on rq->scx.ddsp_deferred_locals. When the rq lock can =
+be
+> safely released, the tasks are taken off the list and queued on the target
+> local DSQs using dispatch_to_local_dsq().
+>=20
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Cc: David Vernet <void@manifault.com>
+> Cc: Dan Schatzberg <schatzberg.dan@gmail.com>
+> Cc: Changwoo Min <changwoo@igalia.com>
+> Cc: Andrea Righi <righi.andrea@gmail.com>
 
- Documentation/leds/leds-blinkm.rst     |  29 +++-
- Documentation/leds/well-known-leds.txt |   8 +
- drivers/leds/Kconfig                   |   8 +
- drivers/leds/leds-blinkm.c             | 220 +++++++++++++++++--------
- 4 files changed, 196 insertions(+), 69 deletions(-)
+Hi Tejun,
 
-diff --git a/Documentation/leds/leds-blinkm.rst b/Documentation/leds/leds-blinkm.rst
-index 2d3c226a371a..647be1c6c552 100644
---- a/Documentation/leds/leds-blinkm.rst
-+++ b/Documentation/leds/leds-blinkm.rst
-@@ -13,9 +13,31 @@ The device accepts RGB and HSB color values through separate commands.
- Also you can store blinking sequences as "scripts" in
- the controller and run them. Also fading is an option.
- 
--The interface this driver provides is 2-fold:
-+The interface this driver provides is 3-fold:
- 
--a) LED class interface for use with triggers
-+a) LED multicolor class interface for use with triggers
-+#######################################################
-+
-+The registration follows the scheme::
-+
-+  blinkm-<i2c-bus-nr>-<i2c-device-nr>:rgb:indicator
-+
-+  $ ls -h /sys/class/leds/blinkm-1-9:rgb:indicator
-+  brightness  device  max_brightness  multi_index  multi_intensity  power  subsystem  trigger  uevent
-+
-+Hue is controlled by the multi_intensity file and lightness is controlled by
-+the brightness file.
-+
-+The order in which to write the intensity values can be found in multi_index.
-+Exactly three values between 0 and 255 must be written to multi_intensity to
-+change the color::
-+
-+  $ echo 255 100 50 > multi_intensity
-+
-+The overall lightness be changed by writing a value between 0 and 255 to the
-+brightness file.
-+
-+b) LED class interface for use with triggers
- ############################################
- 
- The registration follows the scheme::
-@@ -79,6 +101,7 @@ E.g.::
- 
- 
- 
--as of 6/2012
-+as of 07/2024
- 
- dl9pf <at> gmx <dot> de
-+jstrauss <at> mailbox <dot> org
-diff --git a/Documentation/leds/well-known-leds.txt b/Documentation/leds/well-known-leds.txt
-index 67b44704801f..17ef78faf1f3 100644
---- a/Documentation/leds/well-known-leds.txt
-+++ b/Documentation/leds/well-known-leds.txt
-@@ -72,6 +72,14 @@ Good: "platform:*:charging" (allwinner sun50i, leds-cht-wcove)
- 
- Good: ":backlight" (Motorola Droid 4)
- 
-+* Indicators
-+
-+Good: ":indicator" (Blinkm)
-+
-+* RGB
-+
-+Good: ":rgb" (Blinkm)
-+
- * Ethernet LEDs
- 
- Currently two types of Network LEDs are support, those controlled by
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 8d9d8da376e4..2e7831867315 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -825,6 +825,14 @@ config LEDS_BLINKM
- 	  This option enables support for the BlinkM RGB LED connected
- 	  through I2C. Say Y to enable support for the BlinkM LED.
- 
-+config LEDS_BLINKM_MULTICOLOR
-+	bool "Enable multicolor support for BlinkM I2C RGB LED"
-+	depends on LEDS_BLINKM
-+	depends on LEDS_CLASS_MULTICOLOR
-+	help
-+	  This option enables multicolor sysfs class support for BlinkM LED and
-+	  disables the older, separated sysfs interface
-+
- config LEDS_POWERNV
- 	tristate "LED support for PowerNV Platform"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/leds-blinkm.c b/drivers/leds/leds-blinkm.c
-index e40b87aead2d..577497b9d426 100644
---- a/drivers/leds/leds-blinkm.c
-+++ b/drivers/leds/leds-blinkm.c
-@@ -2,6 +2,7 @@
- /*
-  *  leds-blinkm.c
-  *  (c) Jan-Simon Möller (dl9pf@gmx.de)
-+ *  (c) Joseph Strauss (jstrauss@mailbox.org)
-  */
- 
- #include <linux/module.h>
-@@ -15,6 +16,10 @@
- #include <linux/pm_runtime.h>
- #include <linux/leds.h>
- #include <linux/delay.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/kconfig.h>
-+
-+#define NUM_LEDS 3
- 
- /* Addresses to scan - BlinkM is on 0x09 by default*/
- static const unsigned short normal_i2c[] = { 0x09, I2C_CLIENT_END };
-@@ -22,19 +27,25 @@ static const unsigned short normal_i2c[] = { 0x09, I2C_CLIENT_END };
- static int blinkm_transfer_hw(struct i2c_client *client, int cmd);
- static int blinkm_test_run(struct i2c_client *client);
- 
-+/* Contains structs for both the color-separated sysfs classes, and the new multicolor class */
- struct blinkm_led {
- 	struct i2c_client *i2c_client;
--	struct led_classdev led_cdev;
-+	union {
-+		/* used when multicolor support is disabled */
-+		struct led_classdev led_cdev;
-+		struct led_classdev_mc mcled_cdev;
-+	} cdev;
- 	int id;
- };
- 
--#define cdev_to_blmled(c)          container_of(c, struct blinkm_led, led_cdev)
-+#define led_cdev_to_blmled(c)			container_of(c, struct blinkm_led, cdev.led_cdev)
-+#define mcled_cdev_to_led(c)			container_of(c, struct blinkm_led, cdev.mcled_cdev)
- 
- struct blinkm_data {
- 	struct i2c_client *i2c_client;
- 	struct mutex update_lock;
- 	/* used for led class interface */
--	struct blinkm_led blinkm_leds[3];
-+	struct blinkm_led blinkm_leds[NUM_LEDS];
- 	/* used for "blinkm" sysfs interface */
- 	u8 red;			/* color red */
- 	u8 green;		/* color green */
-@@ -419,11 +430,29 @@ static int blinkm_transfer_hw(struct i2c_client *client, int cmd)
- 	return 0;
- }
- 
-+static int blinkm_set_mc_brightness(struct led_classdev *led_cdev,
-+				 enum led_brightness value)
-+{
-+	struct led_classdev_mc *mcled_cdev = lcdev_to_mccdev(led_cdev);
-+	struct blinkm_led *led = mcled_cdev_to_led(mcled_cdev);
-+	struct blinkm_data *data = i2c_get_clientdata(led->i2c_client);
-+
-+	led_mc_calc_color_components(mcled_cdev, value);
-+
-+	data->next_red = (u8) mcled_cdev->subled_info[RED].brightness;
-+	data->next_green = (u8) mcled_cdev->subled_info[GREEN].brightness;
-+	data->next_blue = (u8) mcled_cdev->subled_info[BLUE].brightness;
-+
-+	blinkm_transfer_hw(led->i2c_client, BLM_GO_RGB);
-+
-+	return 0;
-+}
-+
- static int blinkm_led_common_set(struct led_classdev *led_cdev,
- 				 enum led_brightness value, int color)
- {
- 	/* led_brightness is 0, 127 or 255 - we just use it here as-is */
--	struct blinkm_led *led = cdev_to_blmled(led_cdev);
-+	struct blinkm_led *led = led_cdev_to_blmled(led_cdev);
- 	struct blinkm_data *data = i2c_get_clientdata(led->i2c_client);
- 
- 	switch (color) {
-@@ -565,117 +594,175 @@ static int blinkm_detect(struct i2c_client *client, struct i2c_board_info *info)
- 	return 0;
- }
- 
--static int blinkm_probe(struct i2c_client *client)
-+static int register_separate_colors(struct i2c_client *client, struct blinkm_data *data)
- {
--	struct blinkm_data *data;
--	struct blinkm_led *led[3];
--	int err, i;
-+	/* 3 separate classes for red, green, and blue respectively */
-+	struct blinkm_led *leds[NUM_LEDS];
-+	int err;
- 	char blinkm_led_name[28];
--
--	data = devm_kzalloc(&client->dev,
--			sizeof(struct blinkm_data), GFP_KERNEL);
--	if (!data) {
--		err = -ENOMEM;
--		goto exit;
--	}
--
--	data->i2c_addr = 0x08;
--	/* i2c addr  - use fake addr of 0x08 initially (real is 0x09) */
--	data->fw_ver = 0xfe;
--	/* firmware version - use fake until we read real value
--	 * (currently broken - BlinkM confused!) */
--	data->script_id = 0x01;
--	data->i2c_client = client;
--
--	i2c_set_clientdata(client, data);
--	mutex_init(&data->update_lock);
--
--	/* Register sysfs hooks */
--	err = sysfs_create_group(&client->dev.kobj, &blinkm_group);
--	if (err < 0) {
--		dev_err(&client->dev, "couldn't register sysfs group\n");
--		goto exit;
--	}
--
--	for (i = 0; i < 3; i++) {
-+	/* Register red, green, and blue sysfs classes */
-+	for (int i = 0; i < NUM_LEDS; i++) {
- 		/* RED = 0, GREEN = 1, BLUE = 2 */
--		led[i] = &data->blinkm_leds[i];
--		led[i]->i2c_client = client;
--		led[i]->id = i;
--		led[i]->led_cdev.max_brightness = 255;
--		led[i]->led_cdev.flags = LED_CORE_SUSPENDRESUME;
-+		leds[i] = &data->blinkm_leds[i];
-+		leds[i]->i2c_client = client;
-+		leds[i]->id = i;
-+		leds[i]->cdev.led_cdev.max_brightness = 255;
-+		leds[i]->cdev.led_cdev.flags = LED_CORE_SUSPENDRESUME;
- 		switch (i) {
- 		case RED:
--			snprintf(blinkm_led_name, sizeof(blinkm_led_name),
-+			scnprintf(blinkm_led_name, sizeof(blinkm_led_name),
- 					 "blinkm-%d-%d-red",
- 					 client->adapter->nr,
- 					 client->addr);
--			led[i]->led_cdev.name = blinkm_led_name;
--			led[i]->led_cdev.brightness_set_blocking =
-+			leds[i]->cdev.led_cdev.name = blinkm_led_name;
-+			leds[i]->cdev.led_cdev.brightness_set_blocking =
- 							blinkm_led_red_set;
- 			err = led_classdev_register(&client->dev,
--						    &led[i]->led_cdev);
-+							&leds[i]->cdev.led_cdev);
- 			if (err < 0) {
- 				dev_err(&client->dev,
- 					"couldn't register LED %s\n",
--					led[i]->led_cdev.name);
-+					leds[i]->cdev.led_cdev.name);
- 				goto failred;
- 			}
- 			break;
- 		case GREEN:
--			snprintf(blinkm_led_name, sizeof(blinkm_led_name),
-+			scnprintf(blinkm_led_name, sizeof(blinkm_led_name),
- 					 "blinkm-%d-%d-green",
- 					 client->adapter->nr,
- 					 client->addr);
--			led[i]->led_cdev.name = blinkm_led_name;
--			led[i]->led_cdev.brightness_set_blocking =
-+			leds[i]->cdev.led_cdev.name = blinkm_led_name;
-+			leds[i]->cdev.led_cdev.brightness_set_blocking =
- 							blinkm_led_green_set;
- 			err = led_classdev_register(&client->dev,
--						    &led[i]->led_cdev);
-+						&leds[i]->cdev.led_cdev);
- 			if (err < 0) {
- 				dev_err(&client->dev,
- 					"couldn't register LED %s\n",
--					led[i]->led_cdev.name);
-+					leds[i]->cdev.led_cdev.name);
- 				goto failgreen;
- 			}
- 			break;
- 		case BLUE:
--			snprintf(blinkm_led_name, sizeof(blinkm_led_name),
-+			scnprintf(blinkm_led_name, sizeof(blinkm_led_name),
- 					 "blinkm-%d-%d-blue",
- 					 client->adapter->nr,
- 					 client->addr);
--			led[i]->led_cdev.name = blinkm_led_name;
--			led[i]->led_cdev.brightness_set_blocking =
-+			leds[i]->cdev.led_cdev.name = blinkm_led_name;
-+			leds[i]->cdev.led_cdev.brightness_set_blocking =
- 							blinkm_led_blue_set;
- 			err = led_classdev_register(&client->dev,
--						    &led[i]->led_cdev);
-+							&leds[i]->cdev.led_cdev);
- 			if (err < 0) {
- 				dev_err(&client->dev,
- 					"couldn't register LED %s\n",
--					led[i]->led_cdev.name);
-+					leds[i]->cdev.led_cdev.name);
- 				goto failblue;
- 			}
- 			break;
-+		default:
-+			break;
- 		}		/* end switch */
- 	}			/* end for */
--
--	/* Initialize the blinkm */
--	blinkm_init_hw(client);
--
- 	return 0;
- 
- failblue:
--	led_classdev_unregister(&led[GREEN]->led_cdev);
--
-+	led_classdev_unregister(&leds[GREEN]->cdev.led_cdev);
- failgreen:
--	led_classdev_unregister(&led[RED]->led_cdev);
--
-+	led_classdev_unregister(&leds[RED]->cdev.led_cdev);
- failred:
- 	sysfs_remove_group(&client->dev.kobj, &blinkm_group);
--exit:
-+
- 	return err;
- }
- 
-+static int register_multicolor(struct i2c_client *client, struct blinkm_data *data)
-+{
-+	struct blinkm_led *mc_led;
-+	struct mc_subled *mc_led_info;
-+	char blinkm_led_name[28];
-+	int err;
-+
-+	/* Register multicolor sysfs class */
-+	/* The first element of leds is used for multicolor facilities */
-+	mc_led = &data->blinkm_leds[RED];
-+	mc_led->i2c_client = client;
-+
-+	mc_led_info = devm_kcalloc(&client->dev, NUM_LEDS, sizeof(*mc_led_info),
-+					GFP_KERNEL);
-+	if (!mc_led_info)
-+		return -ENOMEM;
-+
-+	mc_led_info[RED].color_index = LED_COLOR_ID_RED;
-+	mc_led_info[GREEN].color_index = LED_COLOR_ID_GREEN;
-+	mc_led_info[BLUE].color_index = LED_COLOR_ID_BLUE;
-+
-+	mc_led->cdev.mcled_cdev.subled_info = mc_led_info;
-+	mc_led->cdev.mcled_cdev.num_colors = NUM_LEDS;
-+	mc_led->cdev.mcled_cdev.led_cdev.brightness = 255;
-+	mc_led->cdev.mcled_cdev.led_cdev.max_brightness = 255;
-+	mc_led->cdev.mcled_cdev.led_cdev.flags = LED_CORE_SUSPENDRESUME;
-+
-+	scnprintf(blinkm_led_name, sizeof(blinkm_led_name),
-+		 "blinkm-%d-%d:rgb:indicator",
-+		 client->adapter->nr,
-+		 client->addr);
-+	mc_led->cdev.mcled_cdev.led_cdev.name = blinkm_led_name;
-+	mc_led->cdev.mcled_cdev.led_cdev.brightness_set_blocking = blinkm_set_mc_brightness;
-+
-+	err = led_classdev_multicolor_register(&client->dev, &mc_led->cdev.mcled_cdev);
-+	if (err < 0) {
-+		dev_err(&client->dev, "couldn't register LED %s\n",
-+				mc_led->cdev.led_cdev.name);
-+		sysfs_remove_group(&client->dev.kobj, &blinkm_group);
-+	}
-+	return 0;
-+}
-+
-+static int blinkm_probe(struct i2c_client *client)
-+{
-+	struct blinkm_data *data;
-+	int err;
-+
-+	data = devm_kzalloc(&client->dev,
-+			sizeof(struct blinkm_data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->i2c_addr = 0x08;
-+	/* i2c addr  - use fake addr of 0x08 initially (real is 0x09) */
-+	data->fw_ver = 0xfe;
-+	/* firmware version - use fake until we read real value
-+	 * (currently broken - BlinkM confused!)
-+	 */
-+	data->script_id = 0x01;
-+	data->i2c_client = client;
-+
-+	i2c_set_clientdata(client, data);
-+	mutex_init(&data->update_lock);
-+
-+	/* Register sysfs hooks */
-+	err = sysfs_create_group(&client->dev.kobj, &blinkm_group);
-+	if (err < 0) {
-+		dev_err(&client->dev, "couldn't register sysfs group\n");
-+		return err;
-+	}
-+
-+	if (!IS_ENABLED(CONFIG_LEDS_BLINKM_MULTICOLOR)) {
-+		err = register_separate_colors(client, data);
-+		if (err < 0)
-+			return err;
-+	} else {
-+		err = register_multicolor(client, data);
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	blinkm_init_hw(client);
-+
-+	return 0;
-+}
-+
- static void blinkm_remove(struct i2c_client *client)
- {
- 	struct blinkm_data *data = i2c_get_clientdata(client);
-@@ -683,8 +770,8 @@ static void blinkm_remove(struct i2c_client *client)
- 	int i;
- 
- 	/* make sure no workqueue entries are pending */
--	for (i = 0; i < 3; i++)
--		led_classdev_unregister(&data->blinkm_leds[i].led_cdev);
-+	for (i = 0; i < NUM_LEDS; i++)
-+		led_classdev_unregister(&data->blinkm_leds[i].cdev.led_cdev);
- 
- 	/* reset rgb */
- 	data->next_red = 0x00;
-@@ -740,6 +827,7 @@ static struct i2c_driver blinkm_driver = {
- module_i2c_driver(blinkm_driver);
- 
- MODULE_AUTHOR("Jan-Simon Moeller <dl9pf@gmx.de>");
-+MODULE_AUTHOR("Joseph Strauss <jstrauss@mailbox.org>");
- MODULE_DESCRIPTION("BlinkM RGB LED driver");
- MODULE_LICENSE("GPL");
- 
--- 
-2.39.2
+Overall this looks great. It's really not very complicated at all which is
+great to see, but will be a big usability improvement for schedulers so it'=
+s a
+clear win. Just left a couple comments below.
 
+> ---
+>  kernel/sched/ext.c   | 164 ++++++++++++++++++++++++++++++++++++++-----
+>  kernel/sched/sched.h |   3 +
+>  2 files changed, 149 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index a88c51ce63a5..f4edc37bf89b 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -889,6 +889,7 @@ static struct kobject *scx_root_kobj;
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/sched_ext.h>
+> =20
+> +static void process_ddsp_deferred_locals(struct rq *rq);
+>  static void scx_bpf_kick_cpu(s32 cpu, u64 flags);
+>  static __printf(3, 4) void scx_ops_exit_kind(enum scx_exit_kind kind,
+>  					     s64 exit_code,
+> @@ -1363,6 +1364,63 @@ static int ops_sanitize_err(const char *ops_name, =
+s32 err)
+>  	return -EPROTO;
+>  }
+> =20
+> +static void run_deferred(struct rq *rq)
+> +{
+> +	process_ddsp_deferred_locals(rq);
+> +}
+> +
+> +static void deferred_bal_cb_workfn(struct rq *rq)
+> +{
+> +	run_deferred(rq);
+> +}
+> +
+> +static void deferred_irq_workfn(struct irq_work *irq_work)
+> +{
+> +	struct rq *rq =3D container_of(irq_work, struct rq, scx.deferred_irq_wo=
+rk);
+> +
+> +	raw_spin_rq_lock(rq);
+> +	run_deferred(rq);
+> +	raw_spin_rq_unlock(rq);
+> +}
+> +
+> +/**
+> + * schedule_deferred - Schedule execution of deferred actions on an rq
+> + * @rq: target rq
+> + *
+> + * Schedule execution of deferred actions on @rq. Must be called with @rq
+> + * locked. Deferred actions are executed with @rq locked but unpinned, a=
+nd thus
+> + * can unlock @rq to e.g. migrate tasks to other rqs.
+> + */
+> +static void schedule_deferred(struct rq *rq)
+> +{
+> +	lockdep_assert_rq_held(rq);
+> +
+> +#ifdef CONFIG_SMP
+> +	/*
+> +	 * If in the middle of waking up a task, task_woken_scx() will be called
+> +	 * afterwards which will then run the deferred actions, no need to
+> +	 * schedule anything.
+> +	 */
+> +	if (rq->scx.flags & SCX_RQ_IN_WAKEUP)
+> +		return;
+> +
+> +	/*
+> +	 * If in balance, the balance callbacks will be called before rq lock is
+> +	 * released. Schedule one.
+> +	 */
+> +	if (rq->scx.flags & SCX_RQ_IN_BALANCE)
+> +		queue_balance_callback(rq, &rq->scx.deferred_bal_cb,
+> +				       deferred_bal_cb_workfn);
+
+Should we be returning above if we're able to use a balance cb?
+
+Also, should we maybe add a WARN_ON_ONCE(rq->balance_callback =3D=3D
+&balance_push_callback)? I could see that being unnecessary given that we
+should never be hitting this path when the CPU is deactivated anyways, but =
+the
+push callback thing is a kindn extraneous implementation detail so might be
+worth guarding against it just in case.
+
+> +#endif
+> +	/*
+> +	 * No scheduler hooks available. Queue an irq work. They are executed on
+> +	 * IRQ re-enable which may take a bit longer than the scheduler hooks.
+> +	 * The above WAKEUP and BALANCE paths should cover most of the cases and
+> +	 * the time to IRQ re-enable shouldn't be long.
+> +	 */
+> +	irq_work_queue(&rq->scx.deferred_irq_work);
+> +}
+> +
+>  /**
+>   * touch_core_sched - Update timestamp used for core-sched task ordering
+>   * @rq: rq to read clock from, must be locked
+> @@ -1578,7 +1636,13 @@ static void dispatch_dequeue(struct rq *rq, struct=
+ task_struct *p)
+>  	bool is_local =3D dsq =3D=3D &rq->scx.local_dsq;
+> =20
+>  	if (!dsq) {
+> -		WARN_ON_ONCE(!list_empty(&p->scx.dsq_list.node));
+> +		/*
+> +		 * If !dsq && on-list, @p is on @rq's ddsp_deferred_locals.
+> +		 * Unlinking is all that's needed to cancel.
+> +		 */
+> +		if (unlikely(!list_empty(&p->scx.dsq_list.node)))
+> +			list_del_init(&p->scx.dsq_list.node);
+> +
+>  		/*
+>  		 * When dispatching directly from the BPF scheduler to a local
+>  		 * DSQ, the task isn't associated with any DSQ but
+> @@ -1587,6 +1651,7 @@ static void dispatch_dequeue(struct rq *rq, struct =
+task_struct *p)
+>  		 */
+>  		if (p->scx.holding_cpu >=3D 0)
+>  			p->scx.holding_cpu =3D -1;
+> +
+>  		return;
+>  	}
+> =20
+> @@ -1674,17 +1739,6 @@ static void mark_direct_dispatch(struct task_struc=
+t *ddsp_task,
+>  		return;
+>  	}
+> =20
+> -	/*
+> -	 * %SCX_DSQ_LOCAL_ON is not supported during direct dispatch because
+> -	 * dispatching to the local DSQ of a different CPU requires unlocking
+> -	 * the current rq which isn't allowed in the enqueue path. Use
+> -	 * ops.select_cpu() to be on the target CPU and then %SCX_DSQ_LOCAL.
+> -	 */
+> -	if (unlikely((dsq_id & SCX_DSQ_LOCAL_ON) =3D=3D SCX_DSQ_LOCAL_ON)) {
+> -		scx_ops_error("SCX_DSQ_LOCAL_ON can't be used for direct-dispatch");
+> -		return;
+> -	}
+> -
+>  	WARN_ON_ONCE(p->scx.ddsp_dsq_id !=3D SCX_DSQ_INVALID);
+>  	WARN_ON_ONCE(p->scx.ddsp_enq_flags);
+> =20
+> @@ -1694,13 +1748,58 @@ static void mark_direct_dispatch(struct task_stru=
+ct *ddsp_task,
+> =20
+>  static void direct_dispatch(struct task_struct *p, u64 enq_flags)
+>  {
+> +	struct rq *rq =3D task_rq(p);
+>  	struct scx_dispatch_q *dsq;
+> +	u64 dsq_id =3D p->scx.ddsp_dsq_id;
+> +
+> +	touch_core_sched_dispatch(rq, p);
+> +
+> +	p->scx.ddsp_enq_flags |=3D enq_flags;
+> +
+> +	/*
+> +	 * We are in the enqueue path with @rq locked and pinned, and thus can't
+> +	 * double lock a remote rq and enqueue to its local DSQ. For
+> +	 * DSQ_LOCAL_ON verdicts targeting the local DSQ of a remote CPU, defer
+> +	 * the enqueue so that it's executed when @rq can be unlocked.
+> +	 */
+> +	if ((dsq_id & SCX_DSQ_LOCAL_ON) =3D=3D SCX_DSQ_LOCAL_ON) {
+> +		s32 cpu =3D dsq_id & SCX_DSQ_LOCAL_CPU_MASK;
+> +		unsigned long opss;
+> +
+> +		if (cpu =3D=3D cpu_of(rq)) {
+> +			dsq_id =3D SCX_DSQ_LOCAL;
+> +			goto dispatch;
+> +		}
+> +
+> +		opss =3D atomic_long_read(&p->scx.ops_state) & SCX_OPSS_STATE_MASK;
+> +
+> +		switch (opss & SCX_OPSS_STATE_MASK) {
+> +		case SCX_OPSS_NONE:
+> +			break;
+> +		case SCX_OPSS_QUEUEING:
+> +			/*
+> +			 * As @p was never passed to the BPF side, _release is
+> +			 * not strictly necessary. Still do it for consistency.
+> +			 */
+> +			atomic_long_set_release(&p->scx.ops_state, SCX_OPSS_NONE);
+> +			break;
+> +		default:
+> +			WARN_ONCE(true, "sched_ext: %s[%d] has invalid ops state 0x%lx in dir=
+ect_dispatch()",
+> +				  p->comm, p->pid, opss);
+> +			atomic_long_set_release(&p->scx.ops_state, SCX_OPSS_NONE);
+> +			break;
+> +		}
+> =20
+> -	touch_core_sched_dispatch(task_rq(p), p);
+> +		WARN_ON_ONCE(p->scx.dsq || !list_empty(&p->scx.dsq_list.node));
+> +		list_add_tail(&p->scx.dsq_list.node,
+> +			      &rq->scx.ddsp_deferred_locals);
+> +		schedule_deferred(rq);
+> +		return;
+> +	}
+> =20
+> -	enq_flags |=3D (p->scx.ddsp_enq_flags | SCX_ENQ_CLEAR_OPSS);
+> -	dsq =3D find_dsq_for_dispatch(task_rq(p), p->scx.ddsp_dsq_id, p);
+> -	dispatch_enqueue(dsq, p, enq_flags);
+> +dispatch:
+> +	dsq =3D find_dsq_for_dispatch(rq, dsq_id, p);
+> +	dispatch_enqueue(dsq, p, p->scx.ddsp_enq_flags | SCX_ENQ_CLEAR_OPSS);
+>  }
+> =20
+>  static bool scx_rq_online(struct rq *rq)
+> @@ -2631,6 +2730,29 @@ static void set_next_task_scx(struct rq *rq, struc=
+t task_struct *p, bool first)
+>  	}
+>  }
+> =20
+> +static void process_ddsp_deferred_locals(struct rq *rq)
+> +{
+> +	struct task_struct *p, *tmp;
+> +
+> +	lockdep_assert_rq_held(rq);
+> +
+> +	/*
+> +	 * Now that @rq can be unlocked, execute the deferred enqueueing of
+> +	 * tasks directly dispatched to the local DSQs of other CPUs. See
+> +	 * direct_dispatch().
+> +	 */
+> +	list_for_each_entry_safe(p, tmp, &rq->scx.ddsp_deferred_locals,
+> +				 scx.dsq_list.node) {
+> +		s32 ret;
+> +
+> +		list_del_init(&p->scx.dsq_list.node);
+> +
+> +		ret =3D dispatch_to_local_dsq(rq, NULL, p->scx.ddsp_dsq_id, p,
+> +					    p->scx.ddsp_enq_flags);
+> +		WARN_ON_ONCE(ret =3D=3D DTL_NOT_LOCAL);
+> +	}
+
+As mentioned in the other thread, it might be simplest to just pin and unpin
+around this loop here to keep the logic simpler in the callee.
+
+> +}
+> +
+>  static void put_prev_task_scx(struct rq *rq, struct task_struct *p)
+>  {
+>  #ifndef CONFIG_SMP
+> @@ -3052,6 +3174,11 @@ static int select_task_rq_scx(struct task_struct *=
+p, int prev_cpu, int wake_flag
+>  	}
+>  }
+> =20
+> +static void task_woken_scx(struct rq *rq, struct task_struct *p)
+> +{
+> +	run_deferred(rq);
+> +}
+> +
+>  static void set_cpus_allowed_scx(struct task_struct *p,
+>  				 struct affinity_context *ac)
+>  {
+> @@ -3568,8 +3695,6 @@ bool scx_can_stop_tick(struct rq *rq)
+>   *
+>   * - task_fork/dead: We need fork/dead notifications for all tasks regar=
+dless of
+>   *   their current sched_class. Call them directly from sched core inste=
+ad.
+> - *
+> - * - task_woken: Unnecessary.
+>   */
+>  DEFINE_SCHED_CLASS(ext) =3D {
+>  	.enqueue_task		=3D enqueue_task_scx,
+> @@ -3589,6 +3714,7 @@ DEFINE_SCHED_CLASS(ext) =3D {
+>  #ifdef CONFIG_SMP
+>  	.balance		=3D balance_scx,
+>  	.select_task_rq		=3D select_task_rq_scx,
+> +	.task_woken		=3D task_woken_scx,
+
+Should we update the comment in the caller in core.c given that rq is no lo=
+nger
+only used for statistics tracking?
+
+>  	.set_cpus_allowed	=3D set_cpus_allowed_scx,
+> =20
+>  	.rq_online		=3D rq_online_scx,
+
+[...]
+
+Thanks,
+David
+
+--ppW3oYkCzO0B8ev8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQRBxU1So5MTLwphjdFZ5LhpZcTzZAUCZo7YNwAKCRBZ5LhpZcTz
+ZGa7AQD+9UBxvMvId8A/Rs6YHtNfKNm8PbvQr1UdVd96Ru0tYwD+PtExZ0ulU9Eb
+3W9mWhtfIQG3Z81A8+NHc13k4NSA9QU=
+=r8Ym
+-----END PGP SIGNATURE-----
+
+--ppW3oYkCzO0B8ev8--
