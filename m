@@ -1,423 +1,319 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from e2i411.smtp2go.com (e2i411.smtp2go.com [103.2.141.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB05149000
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AF3130A47
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720683212; cv=none; b=kUuP2/G5rnZ3iBB4mPVGMJv6GhXHWJIegDtXfK2g9G36yUXahsEJRRg4KGV1H6G+mVtXJeoVAicLtZ97LT3qXU46sVtBlQcLTt36D8PQeWHJ/WzSYYkIZ3eAmLQtjJyS+gAU/Mg263rwYGulgmxiQe74JKf1AucdAolrxxEG1zs=
+	t=1720683193; cv=none; b=Sw57AEEmKjit9KD6mQrVvdwgnAA1kDwfghQQ6OAnh1No/v/KvCg8nScryN8pHtCFCVxSQVxsE2291BCiDOUsCh09Syy6Csoho+AV/AX0ht/5o+ut6Zd7mKUL5qu0FsDsw+cEBk6pY2IMBSoLJo7/sYf3WYQkqSqBx08n9oTYR14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720683212; c=relaxed/simple;
-	bh=mJEGZKvQzSnCsDybrGb53jZ+QEisGhN9uu7YfaZZnDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gWus9G6jX25j7vj4GR51X7U8cEWNKmTIhIRzmAR/FBvojcg33Iq5AKS9UmKd85y4a1Eng+OrQ1QU9qY+1kxdXi2RQg1M1qTkT6f9CVZpju6QklgU4WzVaPTtMN+w7eWe1vExehDPMoUkDIvn8/HKXlxCKyFTiIOUJwlyj4WyqgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wsKvu1bG; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1720683193; c=relaxed/simple;
+	bh=tmLvCWTAKrNvC+hTqcmobUhdkjTB6x/wWsoTeFLiEa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dRctiac9JjSksjAyjL6ifC8f+xVX8+LdtzCqHNHMjO//M5Psx0s93pm8N0Zg0pQIL9Mj9ixVafGFtAl8fUzb+YjPYBVvDdoaHHqm1Oxqa7ZxHbYw+Uo9NSnFUd6JZDposuDZEC5tpGgvvYFVuPX5VQrdvQ6Nua/kYR0jdqEGWYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=OkQ/mKZK reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=ZDf29vfv; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=dTnD9rKT; arc=none smtp.client-ip=103.2.141.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wsKvu1bG"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46B7WkZq089292;
-	Thu, 11 Jul 2024 02:32:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1720683166;
-	bh=Ng8XKnovtXFklkr3TyyDo448pMN83xKpdeoGmUbuvEc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=wsKvu1bGbN3ctKYKBu+xy2UoxX4ZZ5R0nmrBM89zs6vP5SJXpTLb0s+vIHfKRGuHm
-	 hYAj5uNZYcWx4rMk5mQoYsEYO739euQnIGlQCsPnf7o/kJ0IWHchruhnOolIB1n5ic
-	 M5tCkjKFO/V0eiVG8ouhy0k4YWXESj376mebIBqM=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46B7WkiP075028
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 11 Jul 2024 02:32:46 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 11
- Jul 2024 02:32:46 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 11 Jul 2024 02:32:46 -0500
-Received: from [172.24.227.31] (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46B7WcFH018814;
-	Thu, 11 Jul 2024 02:32:39 -0500
-Message-ID: <e6a54c84-e9cb-4396-b873-8bbcc72ea8a2@ti.com>
-Date: Thu, 11 Jul 2024 13:02:38 +0530
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="OkQ/mKZK";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="ZDf29vfv";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="dTnD9rKT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1720684081; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=LhhC1XDkDuM3AReiatmP9njXLuykYg2VbD9+n1H5eAE=; b=OkQ/mKZKtz5iDpT3L7fRUg0V7j
+	pbLjB13QxOwlcXO+aljLNoNyHvAwZVoob6E0BMz4uDwUra80PFliDoqZsHvJP34DYO6hfa1gcT4nQ
+	pXzd7UJjlPQI4caDXg1FMhSqnp8F4Rqm0F3cL+ssYuJM1x+kY7aMXCj0HANcAQsJyOIX0/gOv7Gbq
+	u1bYtCHQjEwJsferq0FXM8Qexp3B21l8m173B00sab3uPtG2r9habMHhv5zy0eticeymBBocShQOp
+	83pCb/g6SrrRCpOI0kKTGjkJvQ9WD7GgOcCxiJwlQ8ZQoLqfO2iFvlJi5JmCFTy79Ra9sZOutK906
+	CC6m61rg==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1720683181; h=from : subject :
+ to : message-id : date;
+ bh=LhhC1XDkDuM3AReiatmP9njXLuykYg2VbD9+n1H5eAE=;
+ b=ZDf29vfvjWaHCqO8Ptk3Rer8O3fxFg0ZZ8xV5NCnChQ1Kc2kOn953BJqM6fWsxc4g60Gj
+ GOCdHPlo473VDufnYpi7PmRFqB50uBDUOU056gKlrtEW6M8Rx2DFBlizRlrJ+cF5gIzoa1G
+ WoDxrgw1TVf1WhVVNgrNvq65SmyhKvRPD+BMDQ8bZrZqxVhynQTsYqdogwi8LHJsamlgC9v
+ akx1o23W+42OkN/MapBeh6cV1+M+egIDf0Sre2KNTq3k4BjN3sBoMFuvxqTnDNXaH8VTC4b
+ 5OV6LSFSBAetjof2kuJE3pzQmR2sE+CIWQmAvlcU4R9jG/fbHthb+Ri4RRaA==
+Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1sRoHy-TRjx74-2c; Thu, 11 Jul 2024 07:32:26 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1sRoHx-4o5NDgrgPEw-mkkl; Thu, 11 Jul 2024 07:32:25 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1720683144; bh=tmLvCWTAKrNvC+hTqcmobUhdkjTB6x/wWsoTeFLiEa0=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=dTnD9rKTeX0q63zhPwi/SPZEvF3+zHJ7MUg0YD55cxD70lCgK+fVIGWbDVUm1XOP/
+ UmeOyJeCCNyGw6MUZfmbtkh1sQg5ksOBAB8i9dmdQnyDXIm2iZkSdCokeV0Y981TP/
+ 6MXmDa6pr1xybtzr7HwoqUGnA6YjYDm6ny1XpyPM=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id CEAD73E8F7; Thu, 11 Jul 2024 09:32:23 +0200 (CEST)
+Date: Thu, 11 Jul 2024 09:32:23 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>,
+ linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v4] kbuild: add script and target to generate pacman
+ package
+Message-ID: <Zo-Khw3jf-hSdD2S@fjasle.eu>
+References: <20240710-kbuild-pacman-pkg-v4-1-507bb5b79b2a@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/11] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-To: Maxime Ripard <mripard@kernel.org>,
-        Tomi Valkeinen
-	<tomi.valkeinen@ideasonboard.com>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Jyri Sarha <jyri.sarha@iki.fi>,
-        Thomas
- Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>,
-        DRI Development List
-	<dri-devel@lists.freedesktop.org>,
-        Linux Kernel List
-	<linux-kernel@vger.kernel.org>,
-        Dominik Haller <d.haller@phytec.de>, Sam
- Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Kieran
- Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri
-	<praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
-        Devarsh Thakkar
-	<devarsht@ti.com>,
-        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
-	<j-luthra@ti.com>
-References: <20240622110929.3115714-1-a-bhatia1@ti.com>
- <20240622110929.3115714-11-a-bhatia1@ti.com>
- <e7dde09d-ceb0-4fb0-a23e-6aaba8f1beb3@ideasonboard.com>
- <20240626-tremendous-fantastic-rhino-ab73fc@houat>
-Content-Language: en-US
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-In-Reply-To: <20240626-tremendous-fantastic-rhino-ab73fc@houat>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="lZCcCeLzBRWDqdbM"
+Content-Disposition: inline
+In-Reply-To: <20240710-kbuild-pacman-pkg-v4-1-507bb5b79b2a@weissschuh.net>
+X-Smtpcorp-Track: Gackt8EGT7Cw.5SnQHwss6gV6.n34Lsw7Wakr
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286soGnZe9LlT
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
 
+--lZCcCeLzBRWDqdbM
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 26/06/24 18:37, Maxime Ripard wrote:
-> On Wed, Jun 26, 2024 at 02:28:57PM GMT, Tomi Valkeinen wrote:
->> On 22/06/2024 14:09, Aradhya Bhatia wrote:
->>> Move the bridge pre_enable call before crtc enable, and the bridge
->>> post_disable call after the crtc disable.
->>>
->>> The sequence of enable after this patch will look like:
->>>
->>> 	bridge[n]_pre_enable
->>> 	...
->>> 	bridge[1]_pre_enable
->>>
->>> 	crtc_enable
->>> 	encoder_enable
->>>
->>> 	bridge[1]_enable
->>> 	...
->>> 	bridge[n]__enable
->>>
->>> and vice-versa for the bridge chain disable sequence.
->>>
->>> The definition of bridge pre_enable hook says that,
->>> "The display pipe (i.e. clocks and timing signals) feeding this bridge
->>> will not yet be running when this callback is called".
->>>
->>> Since CRTC is also a source feeding the bridge, it should not be enabled
->>> before the bridges in the pipeline are pre_enabled. Fix that by
->>> re-ordering the sequence of bridge pre_enable and bridge post_disable.
->>>
->>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
->>> ---
->>>   drivers/gpu/drm/drm_atomic_helper.c | 165 ++++++++++++++++++----------
->>>   include/drm/drm_atomic_helper.h     |   7 ++
->>>   2 files changed, 114 insertions(+), 58 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
->>> index fb97b51b38f1..e8ad08634f58 100644
->>> --- a/drivers/gpu/drm/drm_atomic_helper.c
->>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
->>> @@ -74,6 +74,7 @@
->>>    * also shares the &struct drm_plane_helper_funcs function table with the plane
->>>    * helpers.
->>>    */
->>> +
->>
->> Extra change.
->>
->>>   static void
->>>   drm_atomic_helper_plane_changed(struct drm_atomic_state *state,
->>>   				struct drm_plane_state *old_plane_state,
->>> @@ -1122,11 +1123,11 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
->>>   }
->>>   static void
->>> -disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
->>> +disable_encoder_brige_chain(struct drm_device *dev, struct drm_atomic_state *old_state,
->>> +			    enum bridge_chain_operation_type op_type)
->>>   {
->>>   	struct drm_connector *connector;
->>>   	struct drm_connector_state *old_conn_state, *new_conn_state;
->>> -	struct drm_crtc *crtc;
->>>   	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
->>>   	int i;
->>> @@ -1163,32 +1164,55 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
->>>   		if (WARN_ON(!encoder))
->>>   			continue;
->>> -		funcs = encoder->helper_private;
->>> -
->>> -		drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
->>> -			       encoder->base.id, encoder->name);
->>> -
->>>   		/*
->>>   		 * Each encoder has at most one connector (since we always steal
->>>   		 * it away), so we won't call disable hooks twice.
->>>   		 */
->>>   		bridge = drm_bridge_chain_get_first_bridge(encoder);
->>> -		drm_atomic_bridge_chain_disable(bridge, old_state);
->>> -		/* Right function depends upon target state. */
->>> -		if (funcs) {
->>> -			if (funcs->atomic_disable)
->>> -				funcs->atomic_disable(encoder, old_state);
->>> -			else if (new_conn_state->crtc && funcs->prepare)
->>> -				funcs->prepare(encoder);
->>> -			else if (funcs->disable)
->>> -				funcs->disable(encoder);
->>> -			else if (funcs->dpms)
->>> -				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
->>> -		}
->>> +		switch (op_type) {
->>> +		case DRM_ENCODER_BRIDGE_DISABLE:
->>> +			funcs = encoder->helper_private;
->>> +
->>> +			drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
->>> +				       encoder->base.id, encoder->name);
->>> +
->>> +			drm_atomic_bridge_chain_disable(bridge, old_state);
->>> +
->>> +			/* Right function depends upon target state. */
->>> +			if (funcs) {
->>> +				if (funcs->atomic_disable)
->>> +					funcs->atomic_disable(encoder, old_state);
->>> +				else if (new_conn_state->crtc && funcs->prepare)
->>> +					funcs->prepare(encoder);
->>> +				else if (funcs->disable)
->>> +					funcs->disable(encoder);
->>> +				else if (funcs->dpms)
->>> +					funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
->>> +			}
->>> +
->>> +			break;
->>> +
->>> +		case DRM_BRIDGE_POST_DISABLE:
->>> +			drm_atomic_bridge_chain_post_disable(bridge, old_state);
->>> -		drm_atomic_bridge_chain_post_disable(bridge, old_state);
->>> +			break;
->>> +
->>> +		default:
->>> +			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_type);
->>> +			break;
->>> +		}
->>>   	}
->>> +}
->>> +
->>> +static void
->>> +disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
->>> +{
->>> +	struct drm_crtc *crtc;
->>> +	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
->>> +	int i;
->>> +
->>> +	disable_encoder_brige_chain(dev, old_state, DRM_ENCODER_BRIDGE_DISABLE);
->>>   	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
->>>   		const struct drm_crtc_helper_funcs *funcs;
->>> @@ -1234,6 +1258,8 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
->>>   		if (ret == 0)
->>>   			drm_crtc_vblank_put(crtc);
->>>   	}
->>> +
->>> +	disable_encoder_brige_chain(dev, old_state, DRM_BRIDGE_POST_DISABLE);
->>>   }
->>>   /**
->>> @@ -1445,6 +1471,64 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
->>>   	}
->>>   }
->>> +static void
->>> +enable_encoder_brige_chain(struct drm_device *dev, struct drm_atomic_state *old_state,
->>> +			   enum bridge_chain_operation_type op_type)
->>> +{
->>> +	struct drm_connector *connector;
->>> +	struct drm_connector_state *new_conn_state;
->>> +	int i;
->>> +
->>> +	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
->>> +		const struct drm_encoder_helper_funcs *funcs;
->>> +		struct drm_encoder *encoder;
->>> +		struct drm_bridge *bridge;
->>> +
->>> +		if (!new_conn_state->best_encoder)
->>> +			continue;
->>> +
->>> +		if (!new_conn_state->crtc->state->active ||
->>> +		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
->>> +			continue;
->>> +
->>> +		encoder = new_conn_state->best_encoder;
->>> +
->>> +		/*
->>> +		 * Each encoder has at most one connector (since we always steal
->>> +		 * it away), so we won't call enable hooks twice.
->>> +		 */
->>> +		bridge = drm_bridge_chain_get_first_bridge(encoder);
->>> +
->>> +		switch (op_type) {
->>> +		case DRM_BRIDGE_PRE_ENABLE:
->>> +			drm_atomic_bridge_chain_pre_enable(bridge, old_state);
->>> +			break;
->>> +
->>> +		case DRM_ENCODER_BRIDGE_ENABLE:
->>> +			funcs = encoder->helper_private;
->>> +
->>> +			drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
->>> +				       encoder->base.id, encoder->name);
->>> +
->>> +			if (funcs) {
->>> +				if (funcs->atomic_enable)
->>> +					funcs->atomic_enable(encoder, old_state);
->>> +				else if (funcs->enable)
->>> +					funcs->enable(encoder);
->>> +				else if (funcs->commit)
->>> +					funcs->commit(encoder);
->>> +			}
->>> +
->>> +			drm_atomic_bridge_chain_enable(bridge, old_state);
->>> +			break;
->>> +
->>> +		default:
->>> +			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_type);
->>> +			break;
->>> +		}
->>> +	}
->>> +}
->>> +
->>>   /**
->>>    * drm_atomic_helper_commit_modeset_enables - modeset commit to enable outputs
->>>    * @dev: DRM device
->>> @@ -1465,10 +1549,10 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
->>>   	struct drm_crtc *crtc;
->>>   	struct drm_crtc_state *old_crtc_state;
->>>   	struct drm_crtc_state *new_crtc_state;
->>> -	struct drm_connector *connector;
->>> -	struct drm_connector_state *new_conn_state;
->>>   	int i;
->>> +	enable_encoder_brige_chain(dev, old_state, DRM_BRIDGE_PRE_ENABLE);
->>> +
->>>   	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
->>>   		const struct drm_crtc_helper_funcs *funcs;
->>> @@ -1491,42 +1575,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
->>>   		}
->>>   	}
->>> -	for_each_new_connector_in_state(old_state, connector, new_conn_state, i) {
->>> -		const struct drm_encoder_helper_funcs *funcs;
->>> -		struct drm_encoder *encoder;
->>> -		struct drm_bridge *bridge;
->>> -
->>> -		if (!new_conn_state->best_encoder)
->>> -			continue;
->>> -
->>> -		if (!new_conn_state->crtc->state->active ||
->>> -		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
->>> -			continue;
->>> -
->>> -		encoder = new_conn_state->best_encoder;
->>> -		funcs = encoder->helper_private;
->>> -
->>> -		drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
->>> -			       encoder->base.id, encoder->name);
->>> -
->>> -		/*
->>> -		 * Each encoder has at most one connector (since we always steal
->>> -		 * it away), so we won't call enable hooks twice.
->>> -		 */
->>> -		bridge = drm_bridge_chain_get_first_bridge(encoder);
->>> -		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
->>> -
->>> -		if (funcs) {
->>> -			if (funcs->atomic_enable)
->>> -				funcs->atomic_enable(encoder, old_state);
->>> -			else if (funcs->enable)
->>> -				funcs->enable(encoder);
->>> -			else if (funcs->commit)
->>> -				funcs->commit(encoder);
->>> -		}
->>> -
->>> -		drm_atomic_bridge_chain_enable(bridge, old_state);
->>> -	}
->>> +	enable_encoder_brige_chain(dev, old_state, DRM_ENCODER_BRIDGE_ENABLE);
->>>   	drm_atomic_helper_commit_writebacks(dev, old_state);
->>>   }
->>> diff --git a/include/drm/drm_atomic_helper.h b/include/drm/drm_atomic_helper.h
->>> index 9aa0a05aa072..b45a175a9f8a 100644
->>> --- a/include/drm/drm_atomic_helper.h
->>> +++ b/include/drm/drm_atomic_helper.h
->>> @@ -43,6 +43,13 @@
->>>    */
->>>   #define DRM_PLANE_NO_SCALING (1<<16)
->>> +enum bridge_chain_operation_type {
->>> +	DRM_BRIDGE_PRE_ENABLE,
->>> +	DRM_BRIDGE_POST_DISABLE,
->>> +	DRM_ENCODER_BRIDGE_ENABLE,
->>> +	DRM_ENCODER_BRIDGE_DISABLE,
->>> +};
->>
->> Why are the last two "DRM_ENCODER"?
+Sorry, I sent my last mail to quickly.  Three things below:
 
-I do agree that the naming is odd. It's supposed to mean both, encoder
-and bridge.
+On Wed, Jul 10, 2024 at 09:32:28PM +0200 Thomas Wei=DFschuh wrote:
+> pacman is the package manager used by Arch Linux and its derivates.
+> Creating native packages from the kernel tree has multiple advantages:
+>=20
+> * The package triggers the correct hooks for initramfs generation and
+>   bootloader configuration
+> * Uninstallation is complete and also invokes the relevant hooks
+> * New UAPI headers can be installed without any manual bookkeeping
+>=20
+> The PKGBUILD file is a simplified version of the one used for the
+> downstream Arch Linux "linux" package.
 
-When we are enabling/disabling bridges, the encoders are also getting
-enabled/disabled right before/after.
+The package is actually called "linux-upstream", right?
 
-But in case of pre_enable/post_disable its only the bridges that are
-being operated on.
+> Extra steps that should not be necessary for a development kernel have
+> been removed and an UAPI header package has been added.
+>=20
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
+> ---
+> Changes in v4:
+> - Update MRPROPER_FILES
+> - Unify shell variable syntax
+> - Link to v3: https://lore.kernel.org/r/20240708-kbuild-pacman-pkg-v3-1-8=
+85df3cbc740@weissschuh.net
+>=20
+> Changes in v3:
+> - Enforce matching architectures for installation
+> - Add Reviewed-by and Tested-by from Nathan
+> - Link to v2: https://lore.kernel.org/r/20240706-kbuild-pacman-pkg-v2-1-6=
+13422a03a7a@weissschuh.net
+>=20
+> Changes in v2:
+> - Replace ${MAKE} with $MAKE for consistency with other variables
+> - Use $MAKE for "-s image_name"
+> - Avoid permission warnings from build directory
+> - Clarify reason for /build symlink removal
+> - Install System.map and config
+> - Install dtbs where available
+> - Allow cross-build through arch=3Dany
+> - Sort Contributor/Maintainer chronologically
+> - Disable some unneeded makepkg options
+> - Use DEPMOD=3Dtrue for consistency with rpm-package
+> - Link to v1: https://lore.kernel.org/r/20240704-kbuild-pacman-pkg-v1-1-a=
+c2f63f5fa7b@weissschuh.net
+> ---
+>  .gitignore               |  6 ++++
+>  Makefile                 |  2 +-
+>  scripts/Makefile.package | 16 ++++++++++
+>  scripts/package/PKGBUILD | 83 ++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 106 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/.gitignore b/.gitignore
+> index c59dc60ba62e..7902adf4f7f1 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -92,6 +92,12 @@ modules.order
+>  #
+>  /tar-install/
+> =20
+> +#
+> +# pacman files (make pacman-pkg)
+> +#
+> +/PKGBUILD
+> +/pacman/
+> +
+>  #
+>  # We don't want to ignore the following even if they are dot-files
+>  #
+> diff --git a/Makefile b/Makefile
+> index b25b5b44af10..79e8dcec6be9 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1497,7 +1497,7 @@ CLEAN_FILES +=3D vmlinux.symvers modules-only.symve=
+rs \
+>  # Directories & files removed with 'make mrproper'
+>  MRPROPER_FILES +=3D include/config include/generated          \
+>  		  arch/$(SRCARCH)/include/generated .objdiff \
+> -		  debian snap tar-install \
+> +		  debian snap tar-install PKGBUILD pacman \
 
->>
->> I don't like the enum... Having "enum bridge_chain_operation_type" as a
->> parameter to a function looks like one can pass any of the enum's values,
->> which is not the case.
->>
->> How about an enum with just two values:
->>
->> DRM_BRIDGE_PRE_ENABLE_POST_DISABLE
->> DRM_BRIDGE_ENABLE_DISABLE
+(thanks!)
 
-Yes, I can combine them like this.
+>  		  .config .config.old .version \
+>  		  Module.symvers \
+>  		  certs/signing_key.pem \
+> diff --git a/scripts/Makefile.package b/scripts/Makefile.package
+> index bf016af8bf8a..a5b5b899d90c 100644
+> --- a/scripts/Makefile.package
+> +++ b/scripts/Makefile.package
+> @@ -141,6 +141,21 @@ snap-pkg:
+>  	cd $(objtree)/snap && \
+>  	snapcraft --target-arch=3D$(UTS_MACHINE)
+> =20
+> +# pacman-pkg
+> +# ----------------------------------------------------------------------=
+-----
+> +
+> +PHONY +=3D pacman-pkg
+> +pacman-pkg:
+> +	@ln -srf $(srctree)/scripts/package/PKGBUILD $(objtree)/PKGBUILD
+> +	cd $(objtree) && \
 
-> 
-> I think I'd go a step further and ask why do we need that rework in the
-> first place. We had a discussion about changing the time the CRTC is
-> enabled compared to bridges, but it's not clear, nor explained, why we
-> need to do that rework in the first place.
-> 
+Please prefix this line with a '+' to allow make job-server delegation to
+sub-make called via makepkg.  This will prevent the make warning
 
-We did discuss this, which resulted in a bunch of duplicated code in
-v2[0]. The same block of code was required before the CRTC enable, as
-well as after. Hence this patch.
-
-Maybe all of this should have been explained better. =)
-
-> It should even be two patches imo.
-> 
-
-Yeah, I can split this in 2 patches.
+    make[3]: warning: jobserver unavailable: using -j1.  Add '+' to parent =
+make rule.
 
 
-Regards
-Aradhya
+> +		srctree=3D"$(realpath $(srctree))" \
+> +		objtree=3D"$(realpath $(objtree))" \
+> +		BUILDDIR=3D"$(realpath $(objtree))/pacman" \
+> +		CARCH=3D"$(UTS_MACHINE)" \
+> +		KBUILD_MAKEFLAGS=3D"$(MAKEFLAGS)" \
+> +		KBUILD_REVISION=3D"$(shell $(srctree)/init/build-version)" \
 
-[0]:
-https://lore.kernel.org/all/20240530093621.1925863-9-a-bhatia1@ti.com/
+Just a note: In Masahiro's current kbuild tree 'build-version' has been mov=
+ed
+to scripts/build-version.  But I don't know on which base this patch will
+possibly be applied to.
+
+> +		makepkg
+> +
+>  # dir-pkg tar*-pkg - tarball targets
+>  # ----------------------------------------------------------------------=
+-----
+> =20
+> @@ -221,6 +236,7 @@ help:
+>  	@echo '  bindeb-pkg          - Build only the binary kernel deb package'
+>  	@echo '  snap-pkg            - Build only the binary kernel snap packag=
+e'
+>  	@echo '                        (will connect to external hosts)'
+> +	@echo '  pacman-pkg          - Build only the binary kernel pacman pack=
+age'
+>  	@echo '  dir-pkg             - Build the kernel as a plain directory st=
+ructure'
+>  	@echo '  tar-pkg             - Build the kernel as an uncompressed tarb=
+all'
+>  	@echo '  targz-pkg           - Build the kernel as a gzip compressed ta=
+rball'
+> diff --git a/scripts/package/PKGBUILD b/scripts/package/PKGBUILD
+> new file mode 100644
+> index 000000000000..b0b133ac28eb
+> --- /dev/null
+> +++ b/scripts/package/PKGBUILD
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Maintainer: Thomas Wei=DFschuh <linux@weissschuh.net>
+> +# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+
+I am not familiar enough with makepkg/PKGBUILD: Does it make sense to put
+'set -e' here, as we (will) do in other kbuild scripts?  ('set -u' breaks
+'makepkg'.)  Without 'set -e', shellcheck asks for error handling around 'c=
+d'
+commands.
+
+> +
+> +pkgbase=3Dlinux-upstream
+> +pkgname=3D("$pkgbase" "$pkgbase-headers" "$pkgbase-api-headers")
+> +pkgver=3D"${KERNELRELEASE//-/_}"
+> +pkgrel=3D"$KBUILD_REVISION"
+> +pkgdesc=3D'Linux'
+> +url=3D'https://www.kernel.org/'
+> +arch=3D($CARCH)
+> +options=3D(!debug !strip !buildflags !makeflags)
+> +license=3D(GPL-2.0-only)
+> +
+> +build() {
+> +  export MAKEFLAGS=3D"$KBUILD_MAKEFLAGS"
+> +  cd "$objtree"
+> +
+> +  # makepkg does a "chmod a-srw", triggering warnings during kbuild
+> +  chmod 0755 "$pkgdirbase" || true
+> +
+> +  $MAKE -f "$srctree/Makefile"
+> +}
+> +
+> +package_linux-upstream() {
+> +  pkgdesc=3D"The $pkgdesc kernel and modules"
+> +
+> +  export MAKEFLAGS=3D"$KBUILD_MAKEFLAGS"
+> +  cd "$objtree"
+> +  local modulesdir=3D"$pkgdir/usr/$MODLIB"
+> +
+> +  echo "Installing boot image..."
+> +  # systemd expects to find the kernel here to allow hibernation
+> +  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab812=
+8dcf99161d2344
+> +  install -Dm644 "$($MAKE -s image_name)" "$modulesdir/vmlinuz"
+> +
+> +  # Used by mkinitcpio to name the kernel
+> +  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+
+This looks funny, I think I'd just use echo "$pkgbase" >"$modulesdir/pkgbas=
+e",
+but this is probably just bike-shedding.
+
+So, all in all it looks good to me, thanks!
+
+With the jobserver-'+'-prefix added:
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+
+Kind regards,
+Nicolas
+
+--lZCcCeLzBRWDqdbM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmaPioAACgkQB1IKcBYm
+EmnGsRAAxhgsF3AzBnBDvQL2N6EJeUfKubcnL/F+b8btfLtJRLuGZJm/lLIf/tfK
+Hm+rFqRonyC2tNml0C8H1f8T6Aln6KbZtKGM4Z3PjCTux6PQyOfSbfABfbuwHy3M
+JUWFqz8Yd+dTJ3aDmh0RAgt5ugEj+FVgqnDuMeSJknn6jDuLsEeExwz99XbDuSN0
+93k74xVezM8oEJwyXIlcYGcy6foZPSWUcU91yym0g63a8z0RNGdI1E6yXQWZRsYb
+um1u0DSfErvVJ92gzBkBAuhXYswMoCFduvnZJ+ZxA9yGXrM8F8e5UYKzKHieadd0
+Dg38LwdbXQ1kpAYYd4GUMHDECEzcyNRpwpxpNYpa0s60Qe5NogeHwBcf2rP+c4tI
+oTVq4CHOBk4CpY92XCWlCKIH0wrkP5mYL6BxiPiFSwviQ9FYV+JAN5I9uAQZqWW0
+NYLelFNJPI2yXGVnAyCawYlErnfP5vpygNIKAePNF9qI/xvMoJEU2oT8Vn79NEwx
+9xSDHLzIFSRZvnX5xH2KTkLldiUv5KUZgyUTZDt4csSJM1wxwHOKw9V/TXXgWxdO
+OAqXI4weabHi2m63iqJirH4jrjnYXa0h7A652SXSrXsDnrqGIz6OLzKCuH2K/iwI
+Y7/50QpU/Q+jRRGYlT720aI0lo/705ddrlBqJx2E3trdE0Pzl9I=
+=fxKc
+-----END PGP SIGNATURE-----
+
+--lZCcCeLzBRWDqdbM--
