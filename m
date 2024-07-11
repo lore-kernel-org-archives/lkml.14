@@ -1,64 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABF31E531
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A070154BE8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720710270; cv=none; b=SrWLAMyJreZnNxzK9jFbo8EMzjiNLMifNN4o9AIwdiskmcPpvNE0YcImq2Xtd/t9rjRtnZLymBWAQU0h1cAlDUVN9v8WkO1gWSdIO0CUgEaER6cnzqdVXARsANMToE+fvPpqyhRP+6LphDOlgeB8REp7IlCMd80sWYe0Szs/VH4=
+	t=1720710373; cv=none; b=EH2BLoQqNal+SwjXL5XCCrca0aynNCzbdfarHppaNIRXrzbP+LHK+lrN6hIRXlt9wMarVz7HjkOzrmjhqzNAUT+Eujt0SpQ5QAmaQCveuAXHzSHBP6y/DwVqDmj+GKieZC7zutfAC58jlely1KL78Ppz6a+O36OzHzp+624RXBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720710270; c=relaxed/simple;
-	bh=RIhfOzVcXIy7+AwNsdNPGSuaq68Hqj9Gr8kJENzAlEs=;
+	s=arc-20240116; t=1720710373; c=relaxed/simple;
+	bh=xuSHiaH4k17V7ocXClO5+/mDrYAkB9E1+5U7c7Vffrk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GrZgdxdCmMU2dgYgBwkfM6dFtjI8ow1eFkYK+t8aCxynPzYdkcjRH7g10aan5WmexddzIs1mA75Lk/rJ5kzLGtFa0XQNSQmgQOYJjTAflSZa1zxIgIWt4gWjsBNRETu6TTqBA3c8m74EpTbG2pLtNUAv8Ci50MEBVkzR6SvPZp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FL6K2gR7; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=PJEfg7QamUQYKhlNyX8vt2F7qfB1Pxm5F9JqAKSVtQGGq04bOCxw+U2l5KC8OHo2BP+M9nYpvl91qrP+7WZvH0zBJLFLrg3+rCfRL60+MaAyZLvVqpIZzQK4IZu27yHsgh1p/dbbl1RWpGbZBMe+IuKk90ARP12+3Aja/3Zzfcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y7Z73Af1; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FL6K2gR7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y7Z73Af1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720710267;
+	s=mimecast20190719; t=1720710370;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rbObYPlRhGPWJEjqZQKRQutm+8Td90FVq4wxYtGGsgM=;
-	b=FL6K2gR7hCqqx6YFPGfH4B6wtsqOD0owQYaGN8hdWOb6VHRJsfN9BWe65QQc00IpcUK9G/
-	xqB+Gv/BscE0h9O+vGatv0X2AmDJG0SSjdSXRtyjFJ9Dbqleui4x8e0wqOBir1q9k2uWts
-	F1AgXF2Wnwudxf5AnH4YWv6/OWVlm2g=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=dMWX75v/Q0xYYwgu78z3z70LpPrh+hTEiyyb8o7LpEM=;
+	b=Y7Z73Af1OT9PnCf8lvCkXNq7OPBnpUMPx42MBf25rxlNqPijWYsaWkwyGb45itfcw2jRgE
+	xZIClEhHo1TCfnv+PvXU2AmWZ1u8fzYgKjT8hBquuSnsV3oisb1Aqya74cMA86MeVpwte5
+	7qyQuvVyKmDz31LPXRwPH2pY8EL2DLw=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-29-XMGgVrKZMS2rJfb8ZQ69gw-1; Thu, 11 Jul 2024 11:04:18 -0400
-X-MC-Unique: XMGgVrKZMS2rJfb8ZQ69gw-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52e994d8e26so1002327e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:04:18 -0700 (PDT)
+ us-mta-331-IufFyhjJP3iHaScG3ZZrmA-1; Thu, 11 Jul 2024 11:06:08 -0400
+X-MC-Unique: IufFyhjJP3iHaScG3ZZrmA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a77c589d819so101550866b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:06:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720710257; x=1721315057;
+        d=1e100.net; s=20230601; t=1720710367; x=1721315167;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rbObYPlRhGPWJEjqZQKRQutm+8Td90FVq4wxYtGGsgM=;
-        b=RE8XdZ2aMk3mKKtYdIKLKi++q1+j3o6Uyym99JgMprGf9R4Sh8gjru5NIgGTdNpvnj
-         kS/mN1K1ukSitauc8VkqpyvHb98Zcm+/2aCfYpfrZ0QUial6oewvSJF0Xyt2uSrEe77X
-         iDhu1DG/uw6ManFQ1xlYZMqLu/wLEBaUzAzP1Q1qLlALlQZ+ZqpdOeXgbWbfC6UZDfBx
-         189o2KOVmK8nZ+QuoTv5JCAMEnCbM+preup1PF0uhriyyebR/JylSmmlV5Eyxiffa+vj
-         O/PnV0J/xYhywVn5hZtAQw5dQ7hMUNXcT1MYUFgwl9kU1OHmgvg2Coh3qfrP9AFiUDhk
-         kBpQ==
-X-Gm-Message-State: AOJu0Yy8UGYxRK8ycyQVWUFm4BcClInoVd4u73ZH4ONNUJRqKl3931tp
-	gSbxoIJtc9MiXxADhDTD1lb6eNEf/Ys1QzSfBHpgacf/v01iOrdpqHqk7EDlGUcWgPne8NpD4Pk
-	09LbvPfW6CBHuYsde9i1YDWE+U3UviPm8zcPupPYXLRIp8PckD9aaYsjtzsp2Rw==
-X-Received: by 2002:a19:915e:0:b0:52e:7f16:96be with SMTP id 2adb3069b0e04-52eb99d4ec8mr4550989e87.65.1720710256760;
-        Thu, 11 Jul 2024 08:04:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZslfRADh61h2K4U2I0v8TWlsmuDejSX07DbIntDk5o01Hp5GIPBHFAcNOq0qN0Q3YbDMbqA==
-X-Received: by 2002:a19:915e:0:b0:52e:7f16:96be with SMTP id 2adb3069b0e04-52eb99d4ec8mr4550931e87.65.1720710255957;
-        Thu, 11 Jul 2024 08:04:15 -0700 (PDT)
-Received: from ?IPV6:2003:cf:d74b:1cd5:1c4c:c09:d73b:c07d? (p200300cfd74b1cd51c4c0c09d73bc07d.dip0.t-ipconnect.de. [2003:cf:d74b:1cd5:1c4c:c09:d73b:c07d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f74462esm118919565e9.48.2024.07.11.08.04.14
+        bh=dMWX75v/Q0xYYwgu78z3z70LpPrh+hTEiyyb8o7LpEM=;
+        b=VcXNQFaJujXHt9zxt2Ghs9PWU9EHsNTza5xP1gprGQcPc8F4PMeuqASCb1GsPLajhF
+         lTahzGkfRhrbt0eMu1mSVrUNAZoz3mOdJEt9V0ZdZ0g+KHNnnSMa9yEl40BZ/O5zaV6Y
+         B0yaYDzJWnfudQsS2LY61DMHw8LOgvMBLIbxgdiLdECmW5X9Lfh1/cgQJd+y+lZt0qJh
+         VSXE0s5t5odiT6TIfXfQnJnPjojxMiddtfdX0jzGjGmStT8jicV4hrEgzLdRssYV4H6w
+         8IQIyhsMggOjn6lZqXu5uIevnVfJiogbDNRIuEO1KKItFdnRExeCFmcMpCVOdXL0gqVt
+         ZXgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXeU0sKanvZyaX+JCeI8xdYRpCuaJYPDL4R7cOGni8Bmj2xu3gWQ+n/fCSEb/mxZOW3AFedQbQWQcqvRTFgFMRk+jbrcxkQrMMVOxAD
+X-Gm-Message-State: AOJu0YyF7a2ZxlCeGUUKiZuQU5tOuyZ4ojc+ZnClqTk+yyJ69LU+OYb/
+	b+77lUtacbgJ3l0Konv7N8pw50Q8cQ8b8QA1aUwhtPR5vdCYa72w2rL45YgoVqga+S+EybPdPqT
+	v7JNkfbpZgEUfkYABmTaTw4Q3EmzdFXlOHFWYQSenYR+Cf1afldh7y0aI2UyM2A==
+X-Received: by 2002:a17:906:dfc3:b0:a75:360a:6cb0 with SMTP id a640c23a62f3a-a780b6b3644mr548407566b.29.1720710366945;
+        Thu, 11 Jul 2024 08:06:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+K2BmfO1W0KIUpowuHPM/JP9GFkXo7DqGMyX4VEtKhWUnKogLVgLwi48nSPliOcnf8KOy1g==
+X-Received: by 2002:a17:906:dfc3:b0:a75:360a:6cb0 with SMTP id a640c23a62f3a-a780b6b3644mr548406066b.29.1720710366527;
+        Thu, 11 Jul 2024 08:06:06 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a72fce7sm262806266b.92.2024.07.11.08.06.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 08:04:15 -0700 (PDT)
-Message-ID: <90f0cdd6-379f-49a0-9bb2-ba86c3e8ccce@redhat.com>
-Date: Thu, 11 Jul 2024 17:04:13 +0200
+        Thu, 11 Jul 2024 08:06:05 -0700 (PDT)
+Message-ID: <76655490-84c5-42df-b473-9a9a80054500@redhat.com>
+Date: Thu, 11 Jul 2024 17:06:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,129 +67,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] virtio-fs: Add 'file' mount option
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
- Miklos Szeredi <mszeredi@redhat.com>, German Maglione
- <gmaglione@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>
-References: <20240709111918.31233-1-hreitz@redhat.com>
- <20240709175652.GB1040492@perftesting>
- <8ebfc48f-9a93-45ed-ba88-a4e4447d997a@redhat.com>
- <20240710184222.GA1167307@perftesting>
- <453a5eb6-204f-403a-b41d-faefdbcb8f50@redhat.com>
- <20240711143425.GA1235314@perftesting>
-Content-Language: en-US
-From: Hanna Czenczek <hreitz@redhat.com>
-In-Reply-To: <20240711143425.GA1235314@perftesting>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] platform: arm64: EC_ACER_ASPIRE1 should depend on
+ ARCH_QCOM
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Nikita Travkin <nikita@trvn.ru>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <80e17dffa8f4c1d3fdedd4d82df3a722aa4044ff.1720707932.git.geert+renesas@glider.be>
+ <f5f38709c01d369ed9e375ceb2a9a12986457a1a.1720707932.git.geert+renesas@glider.be>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <f5f38709c01d369ed9e375ceb2a9a12986457a1a.1720707932.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 11.07.24 16:34, Josef Bacik wrote:
-> On Thu, Jul 11, 2024 at 10:21:35AM +0200, Hanna Czenczek wrote:
->> On 10.07.24 20:42, Josef Bacik wrote:
->>> On Wed, Jul 10, 2024 at 09:28:08AM +0200, Hanna Czenczek wrote:
->>>> On 09.07.24 19:56, Josef Bacik wrote:
->>>>> On Tue, Jul 09, 2024 at 01:19:16PM +0200, Hanna Czenczek wrote:
->>>>>> Hi,
->>>>>>
->>>>>> We want to be able to mount filesystems that just consist of one regular
->>>>>> file via virtio-fs, i.e. no root directory, just a file as the root
->>>>>> node.
->>>>>>
->>>>>> While that is possible via FUSE itself (through the 'rootmode' mount
->>>>>> option, which is automatically set by the fusermount help program to
->>>>>> match the mount point's inode mode), there is no virtio-fs option yet
->>>>>> that would allow changing the rootmode from S_IFDIR to S_IFREG.
->>>>>>
->>>>>> To do that, this series introduces a new 'file' mount option that does
->>>>>> precisely that.  Alternatively, we could provide the same 'rootmode'
->>>>>> option that FUSE has, but as laid out in patch 1's commit description,
->>>>>> that option is a bit cumbersome for virtio-fs (in a way that it is not
->>>>>> for FUSE), and its usefulness as a more general option is limited.
->>>>>>
->>>>> All this does is make file an alias for something a little easier for users to
->>>>> read, which can easily be done in libfuse.  Add the code to lib/mount.c to alias
->>>>> 'file' to turn it into rootmode=S_IFREG when it sends it to the kernel, it's not
->>>>> necessary to do this in the kernel.  Thanks,
->>>> This series is not about normal FUSE filesystems (file_system_type
->>>> fuse_fs_type, “fuse”), but about virtio-fs (file_system_type virtio_fs_type,
->>>> “virtiofs”), i.e. a case where libfuse and fusermount are not involved at
->>>> all.  As far as I’m aware, mounting a virtio-fs filesystem with a
->>>> non-directory root inode is currently not possible at all.
->>> Ok so I think I had it backwards in my head, my apologies.
->>>
->>> That being said I still don't understand why this requires a change to virtiofs
->>> at all.
->>>
->>> I have a virtiofs thing attached to my VM.  Inside the vm I do
->>>
->>> mount -t virtiofs <name of thing I've attached to the vm> /directory
->>>
->>> and then on the host machine, virtiofsd is a "normal" FUSE driver, except it's
->>> talking over the socket you setup between the guest and the host.  I assume this
->>> is all correct?
->>>
->>> So then the question is, why does it matter what virtiofsd is exposing?  I guess
->>> that's the better question.  The guest shouldn't have to care if it's a
->>> directory or a file right?  The mountpoint is going to be a directory, whatever
->>> is backing it shouldn't matter.  Could you describe the exact thing you're
->>> trying to accomplish?  Thanks,
->> The mount point needs to be of the same mode as the root node of the mounted
->> filesystem, or it’ll be inaccessible after mounting[1].  In this case, I
->> want to export a regular file as the root node, so the root node must be a
->> regular file, too:
->>
->> host$ echo foo > /tmp/bar
->>
->> host$ virtiofsd --shared-dir /tmp/bar --socket-path /tmp/viofsd.sock
->> --sandbox none
->>
->>
->> guest# mkdir /tmp/mnt-dir
->>
->> guest# mount -t virtiofs virtiofs-tag /tmp/mnt-dir
->>
->> guest# stat /tmp/mnt-dir
->> stat: cannot statx '/tmp/mnt-dir': Input/output error
->>
->> guest# cat /tmp/mnt-dir
->> cat: /tmp/mnt-dir: Input/output error
->>
->> guest# ls /tmp/mnt-dir
->> ls: cannot access '/tmp/mnt-dir': Input/output error
->>
->> guest# umount /tmp/mnt-dir
->>
->> (following with this series applied)
->>
->> guest# touch /tmp/mnt-file
->>
->> guest# mount -t virtiofs virtiofs-tag /tmp/mnt-file -o file
->>
->> guest# stat /tmp/mnt-file
->>    File: /tmp/mnt-file
->>    Size: 4               Blocks: 8          IO Block: 4096   regular file
->> [...]
->>
->> guest# cat /tmp/mnt-file
->> foo
->>
->> guest# ls --file-type /tmp/mnt-file
->> /tmp/mnt-file
->>
->> guest# ls --file-type /tmp
->> mnt-dir/
->> mnt-file
->> [...]
->>
-> Got it, this makes sense, thanks for explaining it to me.  You can add
->
-> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Hi Geert,
 
-Thanks!
+On 7/11/24 4:30 PM, Geert Uytterhoeven wrote:
+> The Acer Aspire 1 Embedded Controller is only present on the Qualcomm
+> Snapdragon-based Acer Aspire 1 laptop.  Hence add a dependency on
+> ARCH_QCOM, to prevent asking the user about this driver when configuring
+> a kernel without Qualcomm SoC support.
+> 
+> Fixes: 2b3efb7c515111ea ("platform: arm64: Add Acer Aspire 1 embedded controller driver")
 
-Hanna
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Not sure if this warrants a fixes tag though, anyways I'll leave that up
+to Ilpo when he applies this.
+
+Regards,
+
+Hans
+
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/platform/arm64/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> index 8c103b3150d1d0a6..058a4baa216a83b8 100644
+> --- a/drivers/platform/arm64/Kconfig
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -18,6 +18,7 @@ if ARM64_PLATFORM_DEVICES
+>  
+>  config EC_ACER_ASPIRE1
+>  	tristate "Acer Aspire 1 Embedded Controller driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+>  	depends on I2C
+>  	depends on DRM
+>  	depends on POWER_SUPPLY
 
