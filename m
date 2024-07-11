@@ -1,103 +1,133 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8185C78283;
-	Thu, 11 Jul 2024 08:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363AB1514EF
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720687411; cv=none; b=oO23ncdJcgnxD5nlAnkmRb3aDYI15XcCh2yVSOGwuYYjlD2SDY2zm1J1kxu6woxg+W4lQfzXZxxurvg5pwp9aF0EvkU+I5TCnt1KEU9mFax3hKzW3vNrETb8u+L3Qw1KekB+htYwasL0kAB8cVjynq21wzHsDzihcER/lFJei2o=
+	t=1720687418; cv=none; b=Z3Xu7CZH4FFUGRYvpWhEcrW5kWA3WUJUfOpf4wUDVCi4I0CFT3jvSQJVkaADdSAlRnMxt2hGCgeLG5YbtXb1cj3B3EXtfjbj6G7IWg3yPb3BByBxMq6bqL4vZxQC4POhMF9k7gHZku+aeGIGCHVMKCXBKwhSKo8C4VJtbwz+SaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720687411; c=relaxed/simple;
-	bh=3Ih/lm7QXJqZDZmmBWIqjoo6KPLaLwCxI6zVQJrKHtw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JL+bkqT4CTn184rdKJkYpv/7mhs/cQorDXx/locTJW7BdL3NGjt8SVx0omTXJFsHax3xMTPOGzxdoU2XEN9s8fK0SPVsTK/I3aENMeYQlf75SiguZpxSwJaoRhn+3SCkLY3McnwTQ4nwq9DIWPgOd8FYHVSt+lSjShv1gO0+WTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70af2b1a35aso515925b3a.1;
-        Thu, 11 Jul 2024 01:43:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720687408; x=1721292208;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wcSuUAbudwUQC1/YmfPyNbFicLu/cAqT4mx6S8tQT58=;
-        b=J9fp9CpQdhQU7h7f5bby4Mn2ymXXKxjdIvOlna4McrGhTkkrXw9tlfUmntEgEQHNR3
-         VkKyWjB3sNcqGtN6csMkrfwtZ83eDBgD3CSuvJ939kMHnwROsrFky+tDNuFXn05Ju7h8
-         kvdd7UuUU6aOuIqVXKW5xIX8vrNk+RmZzlIoW5KO2MMLuKl+8Wtow9tzyrWI1o+yDNwN
-         w/8FT6cmLXeU/c8TTnRlp32Kn+ymlKqDRS9mgkSAdzz8gzzblKNvyCNxqiaBUOdNDSlB
-         r8H+Prja7TmWxm3Kk6AP9JMJ65weJU62+9GoymlmCr1oPQIJ77k+hM2NSaMVlyixvgmY
-         uziA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7UXkIZYRW8GXCjzw7XEqfWowfCNCm5Z3EUVY+jLtWar3Yqr3kjGVfV8uglkXfgJs9PlZIk76dK3ESWXgtnCxjLI2Zn51TS5ALxA0eV4Z20GhjkdkTusrY1h1ujIEw61w2waF613Tg
-X-Gm-Message-State: AOJu0Yzbexa+TKCQvhVGmgHb8B8yK5ncixAR5g42hEUPYvpILI0c66/t
-	WOnzLPd4WBOZz+oIB/b3gSAdrs7eAZ95OaTj+p2QHFwAMwc7LvnZGPbg2Mkqd0Cu2A==
-X-Google-Smtp-Source: AGHT+IFNTCeBwYnSATF4CAYjcNXdYzI8De3Rb96vSVzVauhm7s+zeJIwmav9SvADkWgl7Vhg2kgE1A==
-X-Received: by 2002:a05:6a00:4650:b0:706:6248:93e with SMTP id d2e1a72fcca58-70b43522345mr9062405b3a.1.1720687407610;
-        Thu, 11 Jul 2024 01:43:27 -0700 (PDT)
-Received: from js-pc.. ([2408:8453:10:1e58:b448:78db:2fd2:8dd3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43984adcsm5103591b3a.162.2024.07.11.01.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 01:43:27 -0700 (PDT)
-From: Hongyu Xie <xiehongyu1@kylinos.cn>
-To: gregkh@linuxfoundation.org
-Cc: brauner@kernel.org,
-	jlayton@kernel.org,
-	xiehongyu1@kylinos.cn,
-	jack@suse.cz,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH next] usb: usbfs: Add reset_resume for usbfs
-Date: Thu, 11 Jul 2024 16:43:21 +0800
-Message-Id: <20240711084321.44916-1-xiehongyu1@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720687418; c=relaxed/simple;
+	bh=Z09fS+At1jYk0KAjNpfgIJN3HcOBE2BJSY3HNrlDiN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PLHqEf7YfQQNoNC2F/NFqIH7h4amenK3kKtRoD/Kznkcj604MxPwFDh45bsWwTKPLTNJR60Yj/FmVkocbGX8uRIB1iYYvW9hLxq4g+k9Cr2mrVmIpmewW+CoErCUytohzCg8+/mvsCidlZPC0RwXCeF3CwzCIMCWtvVL/AEnITM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=yf6OX+Ww; arc=none smtp.client-ip=167.172.40.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="yf6OX+Ww"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1720687400;
+ bh=1Q85VnghNs5hkwDn1aNHDbw1L6VAgcZyl3McRTNEi7Q=;
+ b=yf6OX+Ww2wLBow47PAgktVj16q/QAQJEwX1+EQ4TiKsI3BKIDshfduZZ1aq5P97gris3Sc4zM
+ v7dA3WnCPvBeQLgovi6OT/VH+VTVpYR917h/dBpGaxVBOcEm+J9/0EoEo7J91XVs87P2K8AqV+O
+ SiUM0HxaVVrJ4Eg1mOzxAMJDnZOq+js8E2LktqXT8t/rzQSZpuVuBGkOk5B8JnKPQB1H2/sjLoI
+ GRzSise/HR22UUMcdTOGNo86y6GdW4MxR0rlb2V0fSZeD3BbM8sM6M7uyo2D6ONGn7+6Wc0ljO8
+ FZpfuyHXiiVrCJf87NRxr8nJH90l48x4mcP3zjsyJFng==
+Message-ID: <a8c1f49e-bf25-4fd3-a16f-13088f75767f@kwiboo.se>
+Date: Thu, 11 Jul 2024 10:43:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Add missing pinctrl for PCIe30x4
+ node
+To: Anand Moon <linux.amoon@gmail.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240711060939.1128-1-linux.amoon@gmail.com>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20240711060939.1128-1-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 167.172.40.54
+X-ForwardEmail-ID: 668f9b244502e8d75e871b7e
 
-During hibernation, usb_resume_interface will set needs_binding to 1 if
-the usb_driver has no reset_resume implimentation. The USB interface
-will be rebind after usb_resume_complete.
+Hi Anand,
 
-Normally, that's fine. But if a USB interface has a matched kernel
-driver, and a userspace driver or application is using this USB
-interface through usbfs during hibernation, usbfs will be
-detatched with the USB interface after resume. And this USB interface
-will be bind with a kernel driver instead of usbfs.
+On 2024-07-11 08:09, Anand Moon wrote:
+> Add missing pinctrl settings for PCIe 3.0 x4 clock request and wake
+> signals.Each component of PCIe communication have the following control
+> signals: PERST, WAKE, CLKREQ, and REFCLK. These signals work to generate
+> high-speed signals and communicate with other PCIe devices.
+> Used by root complex to endpoint depending on the power state.
+> 
+> PERST is referred to as a fundamental reset. PERST should be held low
+> until all the power rails in the system and the reference clock are stable.
+> A transition from low to high in this signal usually indicates the
+> beginning of link initialization.
+> 
+> WAKE signal is an active-low signal that is used to return the PCIe
+> interface to an active state when in a low-power state.
+> 
+> CLKREQ signal is also an active-low signal and is used to request the
+> reference clock.
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> V2: Update the commit messge to describe the changs.
+>     use pinctl group as its pre define in pinctl dtsi
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> index 2e7512676b7e..ab3a20986c6a 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> @@ -301,7 +301,7 @@ &pcie30phy {
+>  
+>  &pcie3x4 {
+>  	pinctrl-names = "default";
+> -	pinctrl-0 = <&pcie3_rst>;
+> +	pinctrl-0 = <&pcie30x4m1_pins>;
 
-So add reset_resume to fix this.
+Use of the existing pcie30x4m1_pins group may not be fully accurate for
+the PERST pin. The use of reset-gpios indicate that the PERST pin is
+used with GPIO function and the driver will implicitly change the
+function from perstn_m1 to GPIO. So this may not be best representation
+of the hw, hence my initial suggestion, something like:
 
-Signed-off-by: Hongyu Xie <xiehongyu1@kylinos.cn>
----
- drivers/usb/core/devio.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+	pcie30x4_pins: pcie30x4-pins {
+		rockchip,pins =
+			<4 RK_PB4 4 &pcfg_pull_none>,
+			<4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>,
+			<4 RK_PB5 4 &pcfg_pull_none>;
+	};
 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index 3beb6a862e80..8c07df104c9a 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -746,6 +746,11 @@ static int driver_resume(struct usb_interface *intf)
- 	return 0;
- }
- 
-+static int driver_reset_resume(struct usb_interface *intf)
-+{
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- /* The following routines apply to the entire device, not interfaces */
- void usbfs_notify_suspend(struct usb_device *udev)
-@@ -773,6 +778,7 @@ struct usb_driver usbfs_driver = {
- 	.disconnect =	driver_disconnect,
- 	.suspend =	driver_suspend,
- 	.resume =	driver_resume,
-+	.reset_resume =	driver_reset_resume,
- 	.supports_autosuspend = 1,
- };
- 
--- 
-2.34.1
+Similar change should probably also be done for pcie2x1l0 and pcie2x1l2,
+not just pcie3x4.
+
+Regards,
+Jonas
+
+>  	reset-gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
+>  	vpcie3v3-supply = <&vcc3v3_pcie30>;
+>  	status = "okay";
+> @@ -341,10 +341,6 @@ pcie2_2_rst: pcie2-2-rst {
+>  	};
+>  
+>  	pcie3 {
+> -		pcie3_rst: pcie3-rst {
+> -			rockchip,pins = <4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
+> -		};
+> -
+>  		pcie3_vcc3v3_en: pcie3-vcc3v3-en {
+>  			rockchip,pins = <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
+>  		};
+> 
+> base-commit: 34afb82a3c67f869267a26f593b6f8fc6bf35905
 
