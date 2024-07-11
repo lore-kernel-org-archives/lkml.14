@@ -1,72 +1,141 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE69815E5BA
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737C21EB2B;
+	Thu, 11 Jul 2024 15:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720710415; cv=none; b=hdCwV6vsLtSXBdeZc38dvHe5ClG0EDN/u4hEheSX0EDgzD9pmXGJ6F75/mWU8MQprV0pwFAiIeRsubfPdpq//U+KuJ//Hg7d0CpqsPKP42UAhhTpDxt9K/9pOzIydn2iLF5Lgc5gdbVoXduPLUGdV85sTA5cdxkYYuXE3HahZlo=
+	t=1720710488; cv=none; b=J4n2AQkS8IvFwq7R/mUsxj+ILfddv1ZuwA1tSMrfR9HqUcpxDqQWgLZIBYezl7898X1R+uwGFZxmv4h9okT762shpMhq+BRr40sMqEQye84aSrSIIJhXZTyefSb48EBQS/DZqp4lBtoM9Mzvg9HV/A8ve6VOR17BY8ZyIZ3MP4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720710415; c=relaxed/simple;
-	bh=wQlaVzi2oVlD/i9GpzFiamurty66UjO0u42LWzRZ8i0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=p1+ViL2Kv/x5ICXIBnz0XfsSd7k5wNhWZ/fHcxRLTb0DKDFCdHt4aKcYspms/gmqVabaSpepK30tAt6xgcAWvh5AcXZhJ6EtF/VYwZpMYN8KWYEFNFzjCgFqoaQlmqREBPVOzT2XQrcqEBvX6xeRFzXegwGz9IbSMD1olxvwGlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nBzRuKlY; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1720710488; c=relaxed/simple;
+	bh=gplzIMy6tDZKQyX7R/6cvDR7QUKJOY9aNfrBXHwSBUY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EaRulOxjCAHd9GEDyMQsHse39pF2oG50sA0ncTB10mAYiI0d9yk/gzgXB9jkVyCPiUz+DthjmO6X/cU7jxZY1RV7yNwdspHyUv3MzXkZw0y4GKwyV6czSITFM/Wg6QkeqiRxzQUKd+3IPeDlARK9tWSWXpcMpOaek65Bacp6glY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XP8sa9FD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nBzRuKlY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=uh35BdHSpG4IxRJoUWFD+ajB19wKXBRVGH2luxUgEVM=;
-	b=nBzRuKlYzSOWqoehi6fi/Qm8Eb5eZdTCdNZXPmb3RMcgiLrV3kLKRdULmbZLnd
-	maQlV/IU34+k08y+RN/ZqKBjmiwk62xUeBu+X/9A4bNBH5BpKFL3sQ310ghc7ihM
-	SK0fxFd3BkRKlNHGL9n8zCxgwll/mmiAlckm7YDvD7ImA=
-Received: from localhost.localdomain (unknown [114.93.107.99])
-	by gzga-smtp-mta-g3-2 (Coremail) with SMTP id _____wD33yjW9I9mwEzpBQ--.33715S2;
-	Thu, 11 Jul 2024 23:06:15 +0800 (CST)
-From: =?UTF-8?q?=E6=9D=8E=E5=93=B2?= <sensor1010@163.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	=?UTF-8?q?=E6=9D=8E=E5=93=B2?= <sensor1010@163.com>
-Subject: [PATCH] driver:core: no need to set a default value for want_async
-Date: Thu, 11 Jul 2024 08:05:45 -0700
-Message-Id: <20240711150545.3143-1-sensor1010@163.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XP8sa9FD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720710486; x=1752246486;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gplzIMy6tDZKQyX7R/6cvDR7QUKJOY9aNfrBXHwSBUY=;
+  b=XP8sa9FDaNcDeeQvYCvvhHAYUSGjAvybtH+KrVaejOEZF7S31u8ccoN8
+   IwGX2S3/39XhnkpiPmJG9nxgGAo+kUjonX6sYNOXIhOitEm2UFv48ylFm
+   UKPcvqoppKoJr/E/++WUx/ilsZXXtFkA91XYkfLpHDoeR4aXaSIJ3VUQJ
+   En7Wdv/LDCCd43s+fUlFrhi+JIjolwJbypmhWY2mayxPk0imKt5wdCcVB
+   i8N1vnqgJ+Lmi8288aKWM3kA5+LSs3eLdIP7bW9K0aFaEKmh9vTGHMy5p
+   G2gSJ1QAo9ElnzKImPZvL8fQHsw/IHNS99wwc8Mk6oV3T05kJxd5/YtI7
+   Q==;
+X-CSE-ConnectionGUID: uGqOYsNNQVm8iSEAJhmYUA==
+X-CSE-MsgGUID: rXIbJZOZT+WzH41ZCOKM+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="18241601"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="18241601"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:08:05 -0700
+X-CSE-ConnectionGUID: izqK40QBSoSzDCqbdqbSWw==
+X-CSE-MsgGUID: GYYjZhCXTFOea1TyBbSawA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="49022225"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:08:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Jul 2024 18:07:57 +0300 (EEST)
+To: superm1@kernel.org
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Mathias Nyman <mathias.nyman@intel.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>, 
+    Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 1/4] PCI: Check PCI_PM_CTRL in pci_dev_wait()
+In-Reply-To: <20240710205838.2413465-2-superm1@kernel.org>
+Message-ID: <15091369-fc5c-af2d-7591-e1732097e84c@linux.intel.com>
+References: <20240710205838.2413465-1-superm1@kernel.org> <20240710205838.2413465-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD33yjW9I9mwEzpBQ--.33715S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GFWrAry5KFW8tF45tFW3trb_yoWxAFb_u3
-	98CF97Wr1F9Fs5CF1293s8ZrWqyr4rZa10vayftrZ3Z34UX3W8Kas8WrWUtw4UWFyjvFsx
-	A3s8tw13Arn7KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRKcTm7UUUUU==
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/1tbiEAcZq2XAl4FfZQABst
+Content-Type: text/plain; charset=US-ASCII
 
-The default value of this member variable is false,
-which is only set to true when asynchronous loading is required,
-and does not need to be set to false during synchronization
+On Wed, 10 Jul 2024, superm1@kernel.org wrote:
 
-Signed-off-by: 李哲 <sensor1010@163.com>
----
- drivers/base/dd.c | 1 -
- 1 file changed, 1 deletion(-)
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> A device that has gone through a reset may return a value in PCI_COMMAND
+> but that doesn't mean it's finished transitioning to D0.  On devices that
+> support power management explicitly check PCI_PM_CTRL on everything but
+> system resume to ensure the transition happened.
+> 
+> Devices that don't support power management and system resume will
+> continue to use PCI_COMMAND.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci.c | 27 ++++++++++++++++++++-------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 35fb1f17a589c..4ad02ad640518 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1270,21 +1270,34 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>  	 * the read (except when CRS SV is enabled and the read was for the
+>  	 * Vendor ID; in that case it synthesizes 0x0001 data).
+>  	 *
+> -	 * Wait for the device to return a non-CRS completion.  Read the
+> -	 * Command register instead of Vendor ID so we don't have to
+> -	 * contend with the CRS SV value.
+> +	 * Wait for the device to return a non-CRS completion.  On devices
+> +	 * that support PM control and on waits that aren't part of system
+> +	 * resume read the PM control register to ensure the device has
+> +	 * transitioned to D0.  On devices that don't support PM control,
+> +	 * or during system resume read the command register to instead of
+> +	 * Vendor ID so we don't have to contend with the CRS SV value.
+>  	 */
+>  	for (;;) {
+> -		u32 id;
+>  
+>  		if (pci_dev_is_disconnected(dev)) {
+>  			pci_dbg(dev, "disconnected; not waiting\n");
+>  			return -ENOTTY;
+>  		}
+>  
+> -		pci_read_config_dword(dev, PCI_COMMAND, &id);
+> -		if (!PCI_POSSIBLE_ERROR(id))
+> -			break;
+> +		if (dev->pm_cap && strcmp(reset_type, "resume") != 0) {
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index d047919d1f5e..47351d98f6e1 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -1014,7 +1014,6 @@ static int __device_attach(struct device *dev, bool allow_async)
- 		struct device_attach_data data = {
- 			.dev = dev,
- 			.check_async = allow_async,
--			.want_async = false,
- 		};
- 
- 		if (dev->parent)
+Comparing to a string makes me feel reset_type should be changed to
+something that allows direct compare and those values only mapped into 
+string while printing it.
+
 -- 
-2.17.1
+ i.
 
+> +			u16 pmcsr;
+> +
+> +			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> +			if (!PCI_POSSIBLE_ERROR(pmcsr) &&
+> +			    (pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D0)
+> +				break;
+> +		} else {
+> +			u32 id;
+> +
+> +			pci_read_config_dword(dev, PCI_COMMAND, &id);
+> +			if (!PCI_POSSIBLE_ERROR(id))
+> +				break;
+> +		}
+>  
+>  		if (delay > timeout) {
+>  			pci_warn(dev, "not ready %dms after %s; giving up\n",
+> 
