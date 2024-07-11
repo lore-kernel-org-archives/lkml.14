@@ -1,152 +1,335 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2084.outbound.protection.outlook.com [40.107.244.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23483502A9;
-	Thu, 11 Jul 2024 14:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0753115AD99;
+	Thu, 11 Jul 2024 14:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720707863; cv=fail; b=a/DxiCpOoVxOsBTJ+Squ44p1OaLp4NVr1mqAhvX16M8RalWAVRAfSbGeLzUeVOAu0e6va0KzOJ+hx5KWD30PbLJUB5hiw6hW5In4eihOEnLHksW7Q/HVYziMyyy9sOMZW+nEP92uzpptTu3YFKTZM4lJEWha6hXTAEAiuKX77NY=
+	t=1720707974; cv=fail; b=Dd9XiQzVVR1s/3MwTbW2N6wDZ1GKnz9nMFeSznoY634MkOQJLoOu1QxwE3kEXmWMCRg1BE2F3fN4Fy6IanGddNLQYzqBR70MHTLeU4NXi/jE3RlDeXPnnNnCc8tKJn+a2waEVsyBYgPl/uhOqdImyKWmur7EYKzvkmOe4/k2d/U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720707863; c=relaxed/simple;
-	bh=mX13EynGUtD6nTXRkjibDs0/ovN750mmPMPg3al7i6g=;
-	h=References:From:To:CC:Subject:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=VF8tphj++0Ml/5YTNBWsKMIqgXxCzzzDbqGDaps6imJFKYx3wYrPpHTDbceabbHSG0Dje0J/LzARU9gK+tIXJfm9KSWM2p0yeVYlSqLGx31tArUOhOukhpchtFPO221Lk9+4gqbrxeOm1CdkcKM1E+ScZZrFcxm461yuzUC+HDg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=D+RJEFiD; arc=fail smtp.client-ip=40.107.94.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1720707974; c=relaxed/simple;
+	bh=dy6MeuoBnZlgWZz8fKiZq7J+Lr3vxbxFj46e4I3SQRI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IlLYcnuxiy5Fp1iRQQPhTchIvW+hohJilm/SlVPiDTFYpvXWVLYuIrXDEV+ZjFSQybRzbZuwRMOQbgoZmxZkRIEIG4achp5OqEU371cedA/bIF6dyN/p3kxFm14U58aJEIwHKcO6NPSQE3wJPPE/kecPtbMbvvvlWBdCWLGcfjU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sKjanpUR; arc=fail smtp.client-ip=40.107.244.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="D+RJEFiD"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sKjanpUR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jUJ4UehRDa3xqSwJWvq7pOw4G5RIKZzZn5au57RRCB41/dHnk/DJh9AvHr+MqS9uXvwqtFwxVZ1yxFfVIN4f+VZsRJ9Y1eiQvbpMyqEG0+uqPPcTtIEj9idPIG1vehbSw76GS34mvWhypxFl1smmRhD4rdc7WqVsLGOuUws3tux+QzPFd3J17ExgTxR+WTTx+439oQpaz0QJLWLQMOc1LKqhfTxGdDcm0avcCIG3GA+ChkOEMWbKd9WYgA+oSXZPoI2rhRYrZ9C22XbT0+XkbfRP48oWj92F2Zy2JGE3xYiGGMYQ17ukGYa7aMRKLViCH87s4pyWsZ/wob+OdUh/kA==
+ b=HYs/EY74wVmW8rgXwlaV8gN1dDs4USHriMKORHVebu346rulPKT7cBcs9K7VRUHrN0AcYDpCkdpcLZYO4MlGraW1+WfX4PaouwUDK9yzcdHA4rk6ofyj3MKfuZxH/wRI9FaNLffU/4R8UlCBsLxF4Zya965zfeVfCcKsY2NsC+kpS7AxieGTpKix4uow9ErQMgjpmNbElzO/N8BENgXchgM/Lob59hds+46pk5hofVqTAVJ3b3WaIeBXtBUDn0xfyh0WaSXdRDbuv4nyWGrj+w108aGkeO9rSGH2GhD2fRlYTqtfDdTsrLboFYs0ZVNlLkcceLq7/CGew8+scFdC9A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mX13EynGUtD6nTXRkjibDs0/ovN750mmPMPg3al7i6g=;
- b=UqFkyHX7wn7qXp5rD2Q08vld4ZfcDKxlMyca9gAqsWl/oqXRV1tAJmEgEwTQfOVuYWK9WVn2Kjjd0oFkGz9Cn+Q08a1OiwTSpHy07FNjvE4aqStT/oBZaxxxWVjvSfrp1/NymaH349vJYhvPgSL9jv8ms/08JgdJmV59Gl1+9J/Q1afAFYBKo0AJMnNjn4YfjK1Mua2L3KFVVJ0qPYw7f2TxgGsOuCCfO/K2P5ul2SX4vCgCk6XpBYEkFqalewqCajn2IZuYqthQsVXnbEOtNCrBNHf2wxxQArPKWHGvTn7tsaud9l9ve9WPkTWGzCIAw2yPLKQldL6m9cF8iZ56lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=wrVg6JN1rAI05l1tlksbH/6OV5Rn44XwFKcJMyLxl64=;
+ b=U+hVTt5xhHRwgWXqMtVtRGqoWxLPQSVFDOpBhi9lgxD6A7EwbFXm6TU+33SJJxoEL1X8YXzOzqn+Tvku2chp6bQ/E+gVCF70cAkbpX81pdBMUKgfcG+h9w8vAHYedB5przs4x2NVeDX1ewtWr4Flto6Lrq2uhkFL4AkgWEFDXHzekLWWwvtBTdWAZKXi6YLE3uh5ye2xirSLw8NjUk/5srCL2j0qUebPyMWzpEcSWQb/nnoLFAMFqrUHH+i+JDKrTjyDOj0+amnxKt9jSJz7+FlUXyAMxsw7ILUz//FVC/rXvXQdMQrxx49fq1a+gzhDfBXIlpUwZdA4jLPeUnl1ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mX13EynGUtD6nTXRkjibDs0/ovN750mmPMPg3al7i6g=;
- b=D+RJEFiDQNdbTgUaWnnG/vMetMKZeND6Vxlp0mStjL5A5+N949XzAT/kh0gp1wwaaelojJM+Iqqoq3wfIpFK55cH+Ove4zwdaV+0aD3kIyhuvd2rRjoVw7MaVnNC0Ed/QG1U18KGsjVaAjXSFTftAw6R9q7wNXT3usJw1vxuNYtHz2EKbdm4XkEfWmK3SwiPAsTLRqaTsnl4I6pw1a4hywKLxOFY3sVHzzlmT/V98AL4xUETanVBM6qVWTyFkU++sPsWnGEsruqdqXPrIXFXM7gIsynU+ZTw0FOkRBx7SOGb5afxpr0uL8xOhXUAi5yAdnapiB09BnyBRBjkm+8YBg==
-Received: from MW4PR04CA0156.namprd04.prod.outlook.com (2603:10b6:303:85::11)
- by CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7) with
+ bh=wrVg6JN1rAI05l1tlksbH/6OV5Rn44XwFKcJMyLxl64=;
+ b=sKjanpURwhteP5ZH4uY86CUI4repa1P8M/dR5bLjxKy36VHuFxJJPUnEPsTagwQGogwNJw2dEDeIaRi93KEWwB4eSi3v8BqjUpo8B7FDQmyU1kge3RSTn8pyDFusy3zRHw5ncb3Z+X9qcsXxL0soa5JKB2oKRLfRjcJjA65J1hc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by DS0PR12MB8525.namprd12.prod.outlook.com (2603:10b6:8:159::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.22; Thu, 11 Jul
- 2024 14:24:11 +0000
-Received: from SJ1PEPF00002312.namprd03.prod.outlook.com
- (2603:10b6:303:85:cafe::7e) by MW4PR04CA0156.outlook.office365.com
- (2603:10b6:303:85::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36 via Frontend
- Transport; Thu, 11 Jul 2024 14:24:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ1PEPF00002312.mail.protection.outlook.com (10.167.242.166) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 14:24:11 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 11 Jul
- 2024 07:23:57 -0700
-Received: from fedora (10.126.230.35) by rnnvmail201.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 11 Jul
- 2024 07:23:52 -0700
-References: <20240711080934.2071869-1-danieller@nvidia.com>
- <878qy8rpeq.fsf@nvidia.com>
-User-agent: mu4e 1.8.14; emacs 29.4
-From: Petr Machata <petrm@nvidia.com>
-To: Petr Machata <petrm@nvidia.com>
-CC: Danielle Ratson <danieller@nvidia.com>, <netdev@vger.kernel.org>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <idosch@nvidia.com>, <ecree.xilinx@gmail.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: ethtool: Monotonically increase the
- message sequence number
-Date: Thu, 11 Jul 2024 16:23:13 +0200
-In-Reply-To: <878qy8rpeq.fsf@nvidia.com>
-Message-ID: <874j8wror4.fsf@nvidia.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Thu, 11 Jul
+ 2024 14:26:09 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.7762.020; Thu, 11 Jul 2024
+ 14:26:09 +0000
+Message-ID: <63237086-223f-44fb-90a0-076a5f56dfdc@amd.com>
+Date: Thu, 11 Jul 2024 16:25:59 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Support direct I/O read and write for memory
+ allocated by dmabuf
+To: "T.J. Mercier" <tjmercier@google.com>, Lei Liu <liulei.rjpt@vivo.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Andrei Vagin <avagin@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, Daniel Vetter <daniel@ffwll.ch>,
+ "Vetter, Daniel" <daniel.vetter@intel.com>, opensource.kernel@vivo.com,
+ quic_sukadev@quicinc.com, quic_cgoldswo@quicinc.com,
+ Akilesh Kailash <akailash@google.com>
+References: <20240710135757.25786-1-liulei.rjpt@vivo.com>
+ <5e5ee5d3-8a57-478a-9ce7-b40cab60b67d@amd.com>
+ <d70cf558-cf34-4909-a33e-58e3a10bbc0c@vivo.com>
+ <0393cf47-3fa2-4e32-8b3d-d5d5bdece298@amd.com>
+ <e8bfe5ed-130a-4f32-a95a-01477cdd98ca@vivo.com>
+ <CABdmKX26f+6m9Gh34Lb+rb2yQB--wSKP3GXRRri6Nxp3Hwxavg@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <CABdmKX26f+6m9Gh34Lb+rb2yQB--wSKP3GXRRri6Nxp3Hwxavg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR4P281CA0324.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:eb::14) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002312:EE_|CH3PR12MB9194:EE_
-X-MS-Office365-Filtering-Correlation-Id: ddfee56b-2870-4ce0-bbc3-08dca1b5223a
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS0PR12MB8525:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6afa3e9f-9cab-4dce-1c21-08dca1b56833
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gtidSYi/qvihGuw3PiKBrYbGe8CuM1pJv6rSAmb9KDIQ+AVBq5K/3DEANIzO?=
- =?us-ascii?Q?2LpxbVpMWaOgIE0LTp9pz+bRQJ4Vp0onFZ7hsaq9CCMYPg2/GjrGOnFzhhmS?=
- =?us-ascii?Q?o/gtiH+D9tHtkWFLMkIbWwPEyZDSr29caGgbI9PMgp68bB8yXPX84lMxdNGd?=
- =?us-ascii?Q?OVzpIAtGCMMtLMvLplS+CvbrYcGWZnodolyibSlrmw2qloFoRwatkgsaNUmr?=
- =?us-ascii?Q?W2CWhHyRmNyZHlluKN7JNAQsvFYsAbpxk5IaA8lJagfQy9WWqauouKefJyZC?=
- =?us-ascii?Q?g+8XUCpU+Fg6YMzUE3pD7qD2UCnQshR6WZBneFDpwk7KCNqkQ3d/OkHE2vG3?=
- =?us-ascii?Q?qf2ekvw3A1Q3Nq0Z0t1zezCICokpqz97rpi9pQq7AaWNMsQaWv0qniIHtABc?=
- =?us-ascii?Q?S20N8uhO/JmBIhCaIuVVMbeAmCHPd6FVqOK83cVoUIecHts/Xa7RXQyGK1en?=
- =?us-ascii?Q?rr88l3u/TRTyKrsjP3Gbc6aZKBIrdz+T7m2jfejtSSH83AtNfYKXH+MKFJTE?=
- =?us-ascii?Q?+NnjTqv/wdbi/Ou1POdY0CDhUxbUolZMu81TkDxv4PfaPqfXC+LiAdNe9daj?=
- =?us-ascii?Q?Yuq52p2MhPjE8fj3AqGjLqhR/neCUPfMBuFM1F4ZitN8/t2Isjg5ECg0btCw?=
- =?us-ascii?Q?miHnENQQ+LzIfQAe5awE/YC+g3kTFHoleMuzWEIHsNrq8VD0JgVKV2n0zyH5?=
- =?us-ascii?Q?5aU3bNuzcYKNvS1Rd6jArRwToIghTgl2BEVQN3fnFuKiShpGgnhqcm8Ak4Gm?=
- =?us-ascii?Q?KGPmtYGVO/acwvMjNkZXV0CknK69L0q0PSKbRRJydD13uvpTNGy0quXbZRlU?=
- =?us-ascii?Q?S3QSbEn6fISODghbxdQyt/H1eZaE+OTpFmAGp4FKbDB7gWXZE4q6AvBrbQAC?=
- =?us-ascii?Q?TYH60VwgyxWrlIkGzU46ein+0giyFJYRGvD6VTDgrwBQtqf3dH9GvP88GXB4?=
- =?us-ascii?Q?uz5auxvRmRF5wwhkVSYS+rfU/qKNt4pvcMie0UEDrDLYnqMP07r786PERGOl?=
- =?us-ascii?Q?eGwDzgZx8VWQI9NUG6uYA21COEftGEK1UeSJoGPP+74m/VyheuEwSL6kDhLu?=
- =?us-ascii?Q?Z+CCrrEsUpHdVYOMuO/ZJssHsZeEzq5OZB+hIcOCFvn8f5TpscaNqKV/XXGX?=
- =?us-ascii?Q?XmTm5CB1/JjWgje6G3j30R4OSaG2++UTdifouFvCmcb4ogVd/rwU7E9th2PQ?=
- =?us-ascii?Q?zxac4O2ZkqoiqptSjt+UA7aYgqaGztS+ieE0KvtWtBl8WqHjFJkhRkI59LDF?=
- =?us-ascii?Q?H+Xv5Otxyr+h155xJUEv3UvVf/tnlScPRbfqa+5oZJnvvKwEQncWKVEW2O3E?=
- =?us-ascii?Q?fOcI6Qnc8ueVRujDbRzWBS3QT6x0maUcKu1f3tanRupTm+hTAG54Xy/PUrir?=
- =?us-ascii?Q?EE9Jp5rjdOPU/eZTWYwoqlz1x1NJGjIs1nE3EhbRc03Z0FhF891o4KqKekrR?=
- =?us-ascii?Q?bOB8DSGFA3vMvjcntfHEF28ignpwPWdj?=
+	=?utf-8?B?Qm1zVlErbitRa2NxZ05XbTF1T3Y3SFZaM0lZMHgvRVAvNDhYT0FDUm5yNWtH?=
+ =?utf-8?B?UmJ4TjZoYkw2YUo5cEdGZzM4Z00xTnpBSFJxMVhMSklDT3EwM1BxM1BLTThR?=
+ =?utf-8?B?S0l6T0JBV1NPTVBPRzQvWEJWTGRLYXRlM3FIRkRqRmJsdU9tdkUwZ1hTUm13?=
+ =?utf-8?B?VUdkOEJ0eE05cStCRWgwWjg2Q2FHZlF4OSt2THhBR0tIeEVXelp5bllma3Nr?=
+ =?utf-8?B?bUpnUXZVRFJoSEdBRjkzRWdpR0Z0QW41REx1SVVtTXorNDBXaE1hUERhQmhD?=
+ =?utf-8?B?djBXMnNtUXF3WGFySGVhYU4zRi9hdEEwL0tSZlB3U2l4TE9xeTlCMUcwT2Zu?=
+ =?utf-8?B?dStOK0s3US9zSUVHK3RGamQ0a3plc0owKzVFMjNKMmlLYUZSZXlaMjdlVE1p?=
+ =?utf-8?B?MUlVM002NDdkVFFkdnBKS1AzclM5YjZqcktnS0RDRy9CY29CRDI0WlJXQWt4?=
+ =?utf-8?B?bkR4OEdJQ0NTb3JXK2ZwTVhsUkhkcXlCQS8yMlNiZUtOMHRsOFJUUFF4aXZa?=
+ =?utf-8?B?czhPelUxdU8xdnpPVEVFaitVOE01TTlRVEJXNWYvK2xUalkvQmtRcHBEYlgx?=
+ =?utf-8?B?bWc2VFJ2OE12SDNWM0FrNHM1Vm1QRldVT3l4czQyaDFWL2JRNWxzTkFmOFJP?=
+ =?utf-8?B?SHZpMkx0Z2lIZWJYOHJaaHBPMmNIRWZCNGdzcnEvU3p1N01zdG9EcjlsOWNG?=
+ =?utf-8?B?Z2IxTUxDZldzeEZBT0JXa0ZBSWs3MkJvV2pvZTU0WmZrUlV6dUxSOHNOckFx?=
+ =?utf-8?B?dERvb2NPdmFPT29jNTZtWTdmNmZ0Q09sVjhNVGJ0a2N4VFBLM21HRkRwdnhu?=
+ =?utf-8?B?L0FrMGFGWnZWWFBBNFBFMnl2TkJZbmNHLy9SVVRrWkFZcS9pOFRQNjhQZ3Zq?=
+ =?utf-8?B?d0QzME4wNjg3TkRCZUkva3k2djVkZE82eDZyZk1LYUozTDNPM1NLcU5sVloz?=
+ =?utf-8?B?emMyMXJpSVdkL0JJS3FvaDNERjhoNXVXTGVldE5xM1N5MWpOTGt5RUd3YWlm?=
+ =?utf-8?B?OVNYS0NLMVNLaFl2OEFRNUJrWGJNZkhndHVIUTBrOVpNMGxnTWhxek9ubVFV?=
+ =?utf-8?B?NWpIYWw4YzhqU3lpSEMvWW5zVlk5K05uUzVra01aUFdPajZIVmlCaEh0dzBT?=
+ =?utf-8?B?eVZEMkhxYlBWZEk1RUpIMlEzczc4djI2Z1pzcVZ1cVFWWEc3LzlQNGp1SHdF?=
+ =?utf-8?B?ak9ubW1mVnF5TmR6cDNVTHJ6N0p6Z2p3MTVYb3FUYXZOMHZsYWpTM1I0OHJv?=
+ =?utf-8?B?SHRuUzZSbWZDRjVMRmFFYk1LM08yeTRRRkFTTmJ4ZDNBRHRiYUYzOXpXYld4?=
+ =?utf-8?B?dk9HMzlTYW1iS2tORjRqTkdscWN1cTBDNjRnVXc4WGc0bWgzbStPWTY3SkM3?=
+ =?utf-8?B?ZUlKZXMvNXFyZ3hhQU9BRURqUnQrRnZIMVZ3YzlIWWxlZXlGcUM1dEpBb255?=
+ =?utf-8?B?VHg3cXlOZjMreTQwMXgxNFE3azM4cUpSdlkrWmRvSDNHbG5NYSs1UG9PeDcw?=
+ =?utf-8?B?dXozYWdnWEhNbkVvdWNRazM3eTBzdVNnc0Q0L24zaVRLdXo1YVhzQW5EeG1V?=
+ =?utf-8?B?OVFkc01sYTBMRlZIQjRsek9xQjNjM1dMaENodFkyZFVKLzM3S3V2YnlGRGda?=
+ =?utf-8?B?N2d3VGZyTFF2Y1BqeFlkRUdEdjRUMHYzQmVYN08xTzByT0F3bXB1ZE0vUit1?=
+ =?utf-8?B?QmRURkxCSTc1U3BFUWdVT3U5RmZoSHlPNjhhaXVSZUloTHNPOEVWQzkvOUVx?=
+ =?utf-8?B?WG5SWUhCMmpMV3JnMUZtcGhubEJKMWY4cTBvTDIwdWd5NnVIQW01UmtFbDV4?=
+ =?utf-8?B?UTZEenVNSUc5Q1BWcXFXZz09?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 14:24:11.5038
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VmJwNFdnT0Mvam5RTE9NMkxWZkpBa2hkbVk5bjZOejNDa2NDazZHWUlUN1RM?=
+ =?utf-8?B?UXRxVlJ1Zll6VlhFVzNXTTNsL2NFQkdrcmJsZkZjbS95b2EyUERKQndpNW1S?=
+ =?utf-8?B?YUttWFFXSGlrT0tFVE5rSkI3d1FWZmwzQlE0eWQ5VWp6V0hMZVVMRWF6L1Bu?=
+ =?utf-8?B?cW8wT3k1UUIxS0Izc1VoWmRmcmtiVXV1Q3RuVFEzOVl4SHJFbHhLd2RtbUNX?=
+ =?utf-8?B?d2x0QTZIODlFbDVqYys2N2oyZysvQnUzditIM0lDS2NPUWVPVzhXUG12bXlo?=
+ =?utf-8?B?TGtKS0lwOThKc2lNSjJPOTVXMndnWG1PRlVSTVRwbVc3YXRFMDZDNkw4cmpv?=
+ =?utf-8?B?Zk91UTZsakZGcmhEbVVVWWNabmF6TktSSGxremlnbEoxM2N6UHhObVl4Rk81?=
+ =?utf-8?B?Ky9XZFBseEVaOHVVelVOQjlSUkszR1lFN1dwS2U1RVZ6MjlLSDZ5T1g4TUg3?=
+ =?utf-8?B?ZDJ3UnU1cFRoWXZkZmVldnF6dnFZcytBYlJsQnNyTEF4bXR3UHJFU2lOUlBI?=
+ =?utf-8?B?OFBtK2ZBMVcxUzJMTVlFRDBvL0gydTk2SFVjWXBpQXgzdkx4dTQzNzJrZDE1?=
+ =?utf-8?B?S1NhNndTRkxLamU2SEpvSytVRHFGQVZTb1ZPSXEwNllnZWZGMUloNHp5emcz?=
+ =?utf-8?B?eHdRWlJNU1Q3a3FPTEt3K1BQS2tPbis5WlpLNk9scWh1d3dyQWQzUEZiSUlC?=
+ =?utf-8?B?cStGekVsNXVEcThCNitTQVpyRzBNZ1dRd1JKeHdSOFZBRUF5Qzg2UzdHT0Q5?=
+ =?utf-8?B?RTVIM1I3cFhqU0lUNFJQRitmeEFnU0ZXa2hncVJDQkpVdm5nYkpoYXl2RlY4?=
+ =?utf-8?B?eXU0Sm43dC81ZFVSUmpaZ1hJN3dWZjA1WXl2eVN5WkhnNjRPOEsySnRaVER6?=
+ =?utf-8?B?REdVRlZWaGlVWXNaQ0Ywa1VYaXAzTlByVmxXamcyM01oVEgrcms1cmRlYTBy?=
+ =?utf-8?B?cGx3bWpuZVBHYUpHL2dEMjdqZ1k1T0FiVEhZZVp5U3RkckVpSDJCeEkxbnBl?=
+ =?utf-8?B?NmowRVRQbEZETkxIbHFVdFVhRGZrcjJqNmRTOGRSN2ZmczE5SHJXZmkyLzZo?=
+ =?utf-8?B?eTMvSWhxU2NNYitOeUpXeDFpOXhqamttKzBYbElaNTc5Y0w5QUxYL3kxanQ2?=
+ =?utf-8?B?aThtdW4veGVHa3RqZWI3MG9DYmxFU0JhM2JOb2hwblBQSHNiZlRIZVBYbE1Y?=
+ =?utf-8?B?Y2tmMU82MmsxT2IyTGgwN2JoMmQvNXJNVWhLWEVpMlFsb2hzdU1NK2ZtMlZH?=
+ =?utf-8?B?NDZIRE9NdmN3bVU5bk5OWFpnVmVramlkU1VWN1Mvd3d4RVFoMXVzdVUxS1pU?=
+ =?utf-8?B?MFpwRW42ZTZWMW56T05LNERXYnZ1RWdwQ1NNUVFMazR5QkF1MFBGZjQ4UXJD?=
+ =?utf-8?B?RlFtWEszSHFjcWMyVG9GZkhWSnNwSjFqRnZoR0w1Y2RBR3BHaXlKRTB1TlpP?=
+ =?utf-8?B?aFowTXZGMzlwMWMxNGZlVjZRNDlhS012Wnh2eEZMc2JFRXVla3lkZFRnUzJk?=
+ =?utf-8?B?YTV4ajkxdGNvUjcvUDhRS1JHNFRRdFkzZ0pSV2UzN2FSREdnMERZdXloajI2?=
+ =?utf-8?B?SkJ3YjM3Kzg4ZThPa3JhaXRGaGhQeGZtWkxDc3p0Ti8zaFhHb2o5T3ZRdEV3?=
+ =?utf-8?B?S1BOeU9TK29Ya1dhQU9iRWNyQ0FmRm9veHoyZ29rSFV3dzB5Vk9kcWlIVTFk?=
+ =?utf-8?B?Q0JicURDQzBDdFpvOEpHdHdhZEhITWJOcmozMjhkWHk1cmcwcGhQTXI5aS9r?=
+ =?utf-8?B?V2ZKb3N6MmhBUUQ0bVB0SWNwNXpSbi9GWnBwUUFVdFdHWjd4c21Yd25ieVNI?=
+ =?utf-8?B?Z0xieXNZV3pBV2svYnlmOGh1blVZSkRwR2poeVBTc1J3TWc2dEVGV0xnM1dy?=
+ =?utf-8?B?MllDUGcwUndoV1pmY3hKTTZTcHJHeTAzeW9mK3crcUhMclVPeEpHb1NJK3ZZ?=
+ =?utf-8?B?Nk02bjVMS25Dc1VGWWt3ZEg2Mkt6eFlBc1F6dmprV0l2MHRML3FQVlorRTVX?=
+ =?utf-8?B?SnBlenFaZ3lVQlNhVmpiZnBOYWY1dk82ZEp1QmUySWF2WXRoMHZMdDhxalZ1?=
+ =?utf-8?B?bVd0eTcrRjdBc2ttK1JTWlROaUJOcjVRU1hNWi9xUTE1U0tHQUhiZjZnNVV6?=
+ =?utf-8?Q?JzYVFHb6MVlalcsCdvxpsGZnU?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6afa3e9f-9cab-4dce-1c21-08dca1b56833
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 14:26:09.2434
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddfee56b-2870-4ce0-bbc3-08dca1b5223a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002312.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9194
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZGHH1HE1d8iFLz8xXvc97vEp9kKRXBe/F1DUZheoADpSnvGnBkoHn295h0sjN2pp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8525
 
-
-Petr Machata <petrm@nvidia.com> writes:
-
-> Danielle Ratson <danieller@nvidia.com> writes:
+Am 10.07.24 um 18:34 schrieb T.J. Mercier:
+> On Wed, Jul 10, 2024 at 8:08 AM Lei Liu <liulei.rjpt@vivo.com> wrote:
+>> on 2024/7/10 22:48, Christian König wrote:
+>>> Am 10.07.24 um 16:35 schrieb Lei Liu:
+>>>> on 2024/7/10 22:14, Christian König wrote:
+>>>>> Am 10.07.24 um 15:57 schrieb Lei Liu:
+>>>>>> Use vm_insert_page to establish a mapping for the memory allocated
+>>>>>> by dmabuf, thus supporting direct I/O read and write; and fix the
+>>>>>> issue of incorrect memory statistics after mapping dmabuf memory.
+>>>>> Well big NAK to that! Direct I/O is intentionally disabled on DMA-bufs.
+>>>> Hello! Could you explain why direct_io is disabled on DMABUF? Is
+>>>> there any historical reason for this?
+>>> It's basically one of the most fundamental design decision of DMA-Buf.
+>>> The attachment/map/fence model DMA-buf uses is not really compatible
+>>> with direct I/O on the underlying pages.
+>> Thank you! Is there any related documentation on this? I would like to
+>> understand and learn more about the fundamental reasons for the lack of
+>> support.
+> Hi Lei and Christian,
 >
->> Currently, during the module firmware flashing process, unicast
->> notifications are sent from the kernel using the same sequence number,
->> making it impossible for user space to track missed notifications.
->>
->> Monotonically increase the message sequence number, so the order of
->> notifications could be tracked effectively.
->>
->> Signed-off-by: Danielle Ratson <danieller@nvidia.com>
->> Reviewed-by: Ido Schimmel <idosch@nvidia.com>
->
-> Applied, thanks.
+> This is now the third request I've seen from three different companies
+> who are interested in this,
 
-Oops, never mind, I was talking about our internal queue and the reply
-shouldn't have gone public.
+Yeah, completely agree. This is a re-occurring pattern :)
+
+Maybe we should document the preferred solution for that.
+
+> but the others are not for reasons of read
+> performance that you mention in the commit message on your first
+> patch. Someone else at Google ran a comparison between a normal read()
+> and a direct I/O read() into a preallocated user buffer and found that
+> with large readahead (16 MB) the throughput can actually be slightly
+> higher than direct I/O. If you have concerns about read performance,
+> have you tried increasing the readahead size?
+>
+> The other motivation is to load a gajillion byte file from disk into a
+> dmabuf without evicting the entire contents of pagecache while doing
+> so. Something like this (which does not currently work because read()
+> tries to GUP on the dmabuf memory as you mention):
+>
+> static int dmabuf_heap_alloc(int heap_fd, size_t len)
+> {
+>      struct dma_heap_allocation_data data = {
+>          .len = len,
+>          .fd = 0,
+>          .fd_flags = O_RDWR | O_CLOEXEC,
+>          .heap_flags = 0,
+>      };
+>      int ret = ioctl(heap_fd, DMA_HEAP_IOCTL_ALLOC, &data);
+>      if (ret < 0)
+>          return ret;
+>      return data.fd;
+> }
+>
+> int main(int, char **argv)
+> {
+>          const char *file_path = argv[1];
+>          printf("File: %s\n", file_path);
+>          int file_fd = open(file_path, O_RDONLY | O_DIRECT);
+>
+>          struct stat st;
+>          stat(file_path, &st);
+>          ssize_t file_size = st.st_size;
+>          ssize_t aligned_size = (file_size + 4095) & ~4095;
+>
+>          printf("File size: %zd Aligned size: %zd\n", file_size, aligned_size);
+>          int heap_fd = open("/dev/dma_heap/system", O_RDONLY);
+>          int dmabuf_fd = dmabuf_heap_alloc(heap_fd, aligned_size);
+>
+>          void *vm = mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE,
+> MAP_SHARED, dmabuf_fd, 0);
+>          printf("VM at 0x%lx\n", (unsigned long)vm);
+>
+>          dma_buf_sync sync_flags { DMA_BUF_SYNC_START |
+> DMA_BUF_SYNC_READ | DMA_BUF_SYNC_WRITE };
+>          ioctl(dmabuf_fd, DMA_BUF_IOCTL_SYNC, &sync_flags);
+>
+>          ssize_t rc = read(file_fd, vm, file_size);
+>          printf("Read: %zd %s\n", rc, rc < 0 ? strerror(errno) : "");
+>
+>          sync_flags.flags = DMA_BUF_SYNC_END | DMA_BUF_SYNC_READ |
+> DMA_BUF_SYNC_WRITE;
+>          ioctl(dmabuf_fd, DMA_BUF_IOCTL_SYNC, &sync_flags);
+> }
+>
+> Or replace the mmap() + read() with sendfile().
+
+Or copy_file_range(). That's pretty much exactly what I suggested on the 
+other mail thread around that topic as well.
+
+> So I would also like to see the above code (or something else similar)
+> be able to work and I understand some of the reasons why it currently
+> does not, but I don't understand why we should actively prevent this
+> type of behavior entirely.
+
++1
+
+Regards,
+Christian.
+
+>
+> Best,
+> T.J.
+>
+>
+>
+>
+>
+>
+>
+>
+>>>>> We already discussed enforcing that in the DMA-buf framework and
+>>>>> this patch probably means that we should really do that.
+>>>>>
+>>>>> Regards,
+>>>>> Christian.
+>>>> Thank you for your response. With the application of AI large model
+>>>> edgeification, we urgently need support for direct_io on DMABUF to
+>>>> read some very large files. Do you have any new solutions or plans
+>>>> for this?
+>>> We have seen similar projects over the years and all of those turned
+>>> out to be complete shipwrecks.
+>>>
+>>> There is currently a patch set under discussion to give the network
+>>> subsystem DMA-buf support. If you are interest in network direct I/O
+>>> that could help.
+>> Is there a related introduction link for this patch?
+>>
+>>> Additional to that a lot of GPU drivers support userptr usages, e.g.
+>>> to import malloced memory into the GPU driver. You can then also do
+>>> direct I/O on that malloced memory and the kernel will enforce correct
+>>> handling with the GPU driver through MMU notifiers.
+>>>
+>>> But as far as I know a general DMA-buf based solution isn't possible.
+>> 1.The reason we need to use DMABUF memory here is that we need to share
+>> memory between the CPU and APU. Currently, only DMABUF memory is
+>> suitable for this purpose. Additionally, we need to read very large files.
+>>
+>> 2. Are there any other solutions for this? Also, do you have any plans
+>> to support direct_io for DMABUF memory in the future?
+>>
+>>> Regards,
+>>> Christian.
+>>>
+>>>> Regards,
+>>>> Lei Liu.
+>>>>
+>>>>>> Lei Liu (2):
+>>>>>>     mm: dmabuf_direct_io: Support direct_io for memory allocated by
+>>>>>> dmabuf
+>>>>>>     mm: dmabuf_direct_io: Fix memory statistics error for dmabuf
+>>>>>> allocated
+>>>>>>       memory with direct_io support
+>>>>>>
+>>>>>>    drivers/dma-buf/heaps/system_heap.c |  5 +++--
+>>>>>>    fs/proc/task_mmu.c                  |  8 +++++++-
+>>>>>>    include/linux/mm.h                  |  1 +
+>>>>>>    mm/memory.c                         | 15 ++++++++++-----
+>>>>>>    mm/rmap.c                           |  9 +++++----
+>>>>>>    5 files changed, 26 insertions(+), 12 deletions(-)
+>>>>>>
+
