@@ -1,94 +1,105 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA53515A87C;
-	Thu, 11 Jul 2024 10:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A251586D5;
+	Thu, 11 Jul 2024 10:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720693215; cv=none; b=ujvTVVb95uEIftOOgkDx+HjaIkFljkqPrTwf8C0yENCpODfDFwwESO3GCUpMrXmO+wGhnRUq5v3rEJfTi4941niBMj7s3UYXxhYOIWJww2tqkqCsU6+F02ML35eKie8AEhZjfxDNTiWXZ/yE+7hwXKbGiP3mi1J+t+K1HLcXyU0=
+	t=1720693230; cv=none; b=oFuluiGp6/zqihi4fNoHLuN4dVVpWnNqZcfYqJVuCyeCUc4IsbRh95CRf8a5N6NHep70pr3RjWToF4dBYkTn7q3FSPwlYONa90RA6CArcdbdApT5ZXZjoRkx7mV0DBLhz0NIbSWaZTgSs/GF38x/ZDLSUEYOVCswgo04cu+tKA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720693215; c=relaxed/simple;
-	bh=bXkbx4XI9S8xRoGMmjvhk/F6NhSDbNwIV9TJqHXo5uA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ry2zm9QOKddlQL1DQ2nSmRykQfMNQpmTeDyblndBsbxgdQQ2rqMsIxZRggt/gWA1B9mvrMbyYy6ANMwS4pnjS+RiQw26uQYIhUraTEnFhwXo9eC/hpUElgGNvqmSApc/QPDUbfGxR/aXU8LVGApSQGQouDo/jiMDYmXdYNo7fdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=UndiOja3; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1720693230; c=relaxed/simple;
+	bh=KuLkmPep0FgB/b9onjhI7XMc1imfQqx3j5EA9FWI9tY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=XrkKGi3TWwAde03xsCnXQ4GYP25PDZByLx9+8MHLef/Xe/+GR29LNltrPi0IIo4ip27gmls5b5iXJZGHtXIQ5eEv6eTW9CNT2kB8ybR+Hdce3GBHuXuHJp3f91oPWQ8XqOof38+n7TPEPDaDUw7ppuT982DopgQoyeeMUX7p1JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZ9Bmm+v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="UndiOja3"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
- id 952ffbbb51c44c8d; Thu, 11 Jul 2024 12:20:05 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 9C185A05B88;
-	Thu, 11 Jul 2024 12:20:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1720693205;
-	bh=bXkbx4XI9S8xRoGMmjvhk/F6NhSDbNwIV9TJqHXo5uA=;
-	h=From:To:Cc:Subject:Date;
-	b=UndiOja3SPB9b5Tn/U6FgzBq5jzVoLISHeHDa+v4TXNX/lJQFZqDNz61/EFcy7euU
-	 QWTq5RnaDd970QEn9NjBAMb4eZ/4QwYXOptIOn7SJMWadxiO7/SELsyLhWDLfTUxuN
-	 uoOecNFLxAonU1iSSyIVoPyhTLwf2e858tQAHXfwLIlIinKjvGFCkeEB+zFA5dZW4h
-	 mGfMPw6axU69raDv4ICEi5dydH1Ae4iK8vOgvX7yXUFE6bdS2+jrEdTha14JivxWFP
-	 gqXnkjR4e+pXfxFsOI2KE3CH5837cKYF1W9tEtMuL/2YJAQmtdrWj+/iLf3DMgq0Ae
-	 t5pPNrySDfN1g==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>,
- Stefan Seyfried <stefan.seyfried@googlemail.com>
-Subject: [PATCH v1] irq: Set IRQF_COND_ONESHOT in request_irq()
-Date: Thu, 11 Jul 2024 12:20:04 +0200
-Message-ID: <5800834.DvuYhMxLoT@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZ9Bmm+v"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A3F1AC32786;
+	Thu, 11 Jul 2024 10:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720693229;
+	bh=KuLkmPep0FgB/b9onjhI7XMc1imfQqx3j5EA9FWI9tY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=WZ9Bmm+vb36W/NTCnTCuq/j+PDx9P1TZ969KcaxpR/PkSO0pu+nnLnXpBnXSC3FU4
+	 em6I1UMOSt9RhLmaWnrCf76FvfMuO1LKJDqHNF1yjOcWHp3mWNO5IvkzeZRmoI/OT5
+	 AaxV4cdzJlI4cPbuCXX4ngZ4PDCOPr21mdcyM8i94rYCN5MmZD53AL7f5JtVbJp88U
+	 QI6qd00Ob7F9IHNK9p0X41750xmXWyySnUIP2QVKXg4pChcW9+j/3EUBkZzkM9PmaF
+	 sIdRCHm4g+zSKRKEUu1sfvlOndXPCKr6vBq/TA81jetYwILl87p+1KcfVKTo9iNIWb
+	 gNQtiyvdK9r2w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9340CC433E9;
+	Thu, 11 Jul 2024 10:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrfeeggddvjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeegfffhudejlefhtdegffekteduhfethffhieettefhkeevgfdvgfefieekiefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepgedprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgvfhgrnhdrshgvhihfrhhivggusehgohhoghhlvghmrghilhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v3] net/sched: Fix UAF when resolving a clash
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172069322959.11889.7076340448823741973.git-patchwork-notify@kernel.org>
+Date: Thu, 11 Jul 2024 10:20:29 +0000
+References: <20240710053747.13223-1-chengen.du@canonical.com>
+In-Reply-To: <20240710053747.13223-1-chengen.du@canonical.com>
+To: Chengen Du <chengen.du@canonical.com>
+Cc: jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ ozsh@nvidia.com, paulb@nvidia.com, marcelo.leitner@gmail.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gerald.yang@canonical.com
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hello:
 
-The callers of request_irq() don't care about IRQF_ONESHOT because they
-don't provide threaded handlers, but if they happen to share the IRQ
-with the ACPI SCI, which has a threaded handler and sets IRQF_ONESHOT,
-request_irq() will fail for them due to a flags mismatch.
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Address this by making request_irq() add IRQF_COND_ONESHOT to the flags
-passed to request_threaded_irq() for all of its callers.
+On Wed, 10 Jul 2024 13:37:47 +0800 you wrote:
+> KASAN reports the following UAF:
+> 
+>  BUG: KASAN: slab-use-after-free in tcf_ct_flow_table_process_conn+0x12b/0x380 [act_ct]
+>  Read of size 1 at addr ffff888c07603600 by task handler130/6469
+> 
+>  Call Trace:
+>   <IRQ>
+>   dump_stack_lvl+0x48/0x70
+>   print_address_description.constprop.0+0x33/0x3d0
+>   print_report+0xc0/0x2b0
+>   kasan_report+0xd0/0x120
+>   __asan_load1+0x6c/0x80
+>   tcf_ct_flow_table_process_conn+0x12b/0x380 [act_ct]
+>   tcf_ct_act+0x886/0x1350 [act_ct]
+>   tcf_action_exec+0xf8/0x1f0
+>   fl_classify+0x355/0x360 [cls_flower]
+>   __tcf_classify+0x1fd/0x330
+>   tcf_classify+0x21c/0x3c0
+>   sch_handle_ingress.constprop.0+0x2c5/0x500
+>   __netif_receive_skb_core.constprop.0+0xb25/0x1510
+>   __netif_receive_skb_list_core+0x220/0x4c0
+>   netif_receive_skb_list_internal+0x446/0x620
+>   napi_complete_done+0x157/0x3d0
+>   gro_cell_poll+0xcf/0x100
+>   __napi_poll+0x65/0x310
+>   net_rx_action+0x30c/0x5c0
+>   __do_softirq+0x14f/0x491
+>   __irq_exit_rcu+0x82/0xc0
+>   irq_exit_rcu+0xe/0x20
+>   common_interrupt+0xa1/0xb0
+>   </IRQ>
+>   <TASK>
+>   asm_common_interrupt+0x27/0x40
+> 
+> [...]
 
-Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
-Closes: https://lore.kernel.org/lkml/205bd84a-fe8e-4963-968e-0763285f35ba@message-id.googlemail.com
-Reported-by: Stefan Seyfried <stefan.seyfried@googlemail.com>
-Tested-by: Stefan Seyfried <stefan.seyfried@googlemail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- include/linux/interrupt.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Here is the summary with links:
+  - [net,v3] net/sched: Fix UAF when resolving a clash
+    https://git.kernel.org/netdev/net/c/26488172b029
 
-Index: linux-pm/include/linux/interrupt.h
-===================================================================
---- linux-pm.orig/include/linux/interrupt.h
-+++ linux-pm/include/linux/interrupt.h
-@@ -168,7 +168,8 @@ static inline int __must_check
- request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags,
- 	    const char *name, void *dev)
- {
--	return request_threaded_irq(irq, handler, NULL, flags, name, dev);
-+	return request_threaded_irq(irq, handler, NULL,
-+				    flags | IRQF_COND_ONESHOT, name, dev);
- }
- 
- extern int __must_check
-
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
