@@ -1,100 +1,88 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F95157492;
-	Thu, 11 Jul 2024 10:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801681586CF
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 10:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720692151; cv=none; b=r6pDeJR9CV0xCtSQYFYmVFDsoYJKCCu7+ZH1JV4oLQ0VlCkrsI29sxjW1klHQjKNuz9SJ4v1Hl/6Wyz8T1Cd+1zKD/RLLID6zJNLnuB9xTayIWR3F2LRPZhfCcDArFAsH9UiSuS72sSLNBr7VFX+2YDVMZhp9EBAYRGIO9vr3KA=
+	t=1720692164; cv=none; b=luHx7qYq76nv2PzxFVMgzl7/6ym5rcCXdFErWt1FBUN0kGSk4o1Kt/GxuqVXYgKsz3qZWFqrmzSyO3Cw6iLtFDnkZ0owG6t00vcQUV5JGiRmCqb8b7jRsixpOHIR5FG6Xz2rT32dB7380Y1c8kI7V0hm34GTx7lLL29sk5rU4wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720692151; c=relaxed/simple;
-	bh=kmgWtyOZTKJM+sAzcAkBvL0QpNbdfAmZ7s3njzEU70M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a8tnD9/pqvtn2YQlHPWivUGJn8hp8VKPKBm86Kjz7/k83FvFGI9JqcTmJRMH21YVbblKe8oMUL0EbpNtFA+nkxlVOsY9jdZlDmn5MJSSEoaTXUCe+F8BJBVgab9kLQKE7FFp05sTnvmjDrdQErjxVZnn66SuB05bppat+s9xlxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NfXB027K; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720692164; c=relaxed/simple;
+	bh=bsU2iijmIfzXcAb0UJH5CmmLWoJM0VulJ8bNfPuKdGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ArO+j+3LJD4xkf/JqeQmXKWzhfg+v1V7Yon1I4You5P7xx3R44QypIsToCkouV7g2c0CAPkgTAcyUpwB6x5ODGfO/CidJiBMxNtuwhA+WnSfM0Qh/bWTvAxEd9y5QG0e0CvgBKSzRmxzOXnW4pgaCK3FD6i7X1F6Ph+oQYW0mOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FEw1yYPo; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NfXB027K"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-58bac81f419so820503a12.0;
-        Thu, 11 Jul 2024 03:02:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720692149; x=1721296949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W7LlhYWp7nTMZ7K5CSP3BcZJAn5u5YMEvoL0KoMR+4c=;
-        b=NfXB027Kz7BwV7gH5O20EQcayiXelJ8NOdw6gh2RAj10vGp1+0AJxTYf575BhzMZmz
-         IoOUm++IBQHHGrco9ptq2fOnZVbm2zixByQwbToYZvf+JLSIBbbBqiqumXbeH+KGGsIT
-         wskYhw3TZ7LrprmI/qE09zvufwRkMdkVEVfJ87voRc76K6xVoEhnCpNYtal1wdZzQkHB
-         7EKo9gqtMLMh2tOBXy+cCvWfW4tpRdIjVe3r8EyDF4662N1KMgltcB5hhoExatLiWrm1
-         mrVZV0KvfKwimH/Ur0U21AfD/KTvfSKOjHTOusJyw9aKFklkAUxWOAPIxkCPCreKxcjZ
-         82kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720692149; x=1721296949;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W7LlhYWp7nTMZ7K5CSP3BcZJAn5u5YMEvoL0KoMR+4c=;
-        b=GOBYMbKxcACLCVKZxJ+a2tC1T2z5uDfXYuQJO03qYKCv0lGNN6mquBk3+sixp0oV9M
-         0cvIHeTmZv/E0jV6NEeEIKxOl3L352eYOp8q9xR4+hSWtacvQdX83KNtI/OJ1nnD0Zqi
-         9MyXFfJ5MlavKss0vZWtbq01GZKt7ML26vSGzSPwaPJnbfJP6rDbMDrgKm8wBHQKez+R
-         UlXzPOOgdiEjl3vLS1BEaCoC3A5jdDOu24Sa9yHqZ8gmQsnyBFU0Sh/yVGaarBHfWaCC
-         O3CETVfUC/xC8qftXYlTOtR6+KpE36vQUBEotuTeMvGWt41IYnfTG4lUWey5BRC5bdvN
-         smGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXclwg10vgGxB3qr0QX0JKm7gW8aCjw8OrMGj2R8a3ljYU0Y50i7GrNgIhdGCtTFlCtmEOpc52MgtFPWi+1jf+GBYv9OTaadXjceQIafkEG3EJ8z/BCWrx0yz7N/OZ5Pxxc7CXx8n33cVRGFA==
-X-Gm-Message-State: AOJu0Yyf0IDYPl3pV0ZPeGrJ9sTr9gRSEf92HFXMiBoyBh7ua2386aHf
-	VdGTmQSRfhr7s0W2Rqr68/0DHDOh6Ckv761A5cH2wLUV3q7A8of+
-X-Google-Smtp-Source: AGHT+IGYQg8AZUImmAxC1jDm80glcTQzVnRnDnAM3C088/0+jlZf/fyKMvJlBHWFkzqB9e2hoZAe8Q==
-X-Received: by 2002:a17:906:378b:b0:a77:dd1c:6270 with SMTP id a640c23a62f3a-a780b688911mr513379166b.5.1720692148336;
-        Thu, 11 Jul 2024 03:02:28 -0700 (PDT)
-Received: from localhost.localdomain (public-nat-01.vpngate.v4.open.ad.jp. [219.100.37.233])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bc876sm239207666b.5.2024.07.11.03.02.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 03:02:27 -0700 (PDT)
-From: Vladimir Lypak <vladimir.lypak@gmail.com>
-To: Vladimir Lypak <vladimir.lypak@gmail.com>
-Cc: Rob Clark <robdclark@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Jordan Crouse <jordan@cosmicpenguin.net>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] fixes for Adreno A5Xx preemption
-Date: Thu, 11 Jul 2024 10:00:17 +0000
-Message-ID: <20240711100038.268803-1-vladimir.lypak@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FEw1yYPo"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1BF1D40E0194;
+	Thu, 11 Jul 2024 10:02:38 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id vhNxtV-ygpR2; Thu, 11 Jul 2024 10:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720692154; bh=X4HB46gsk46DsKrN4a1OWEk8Pw5ecckFzaAmidSdxAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FEw1yYPo4MvzT9A9JkNvPpMNxvBuryqDsCGQ2mlHOg8C7RswRi1UgPEe4Q/BDKUNn
+	 haK5Vk+I+hxXkiW3ISXl5+9XEGyxoELcY/UKlXb/ZYbry/pNDQkVlfPcEJL8zCgD+s
+	 sfcr8YeUh0a4sjxnFTR8Q+nI0Rriq3jnIND1OKuDV/Riybnj7h4hGaSTPbU2XcJEOt
+	 g2uyhUg54nmZIROJR169p/tb/3elAgyOqCsQ0JSSYhByMAneHBJ9PXP0T0TdEj+EtQ
+	 t4ViP52H/Qw5G6+ozVbkmbHNJDFEBVeh52Yz10y8JQR2uP1qCCj2jqLvGxVK/ecPO/
+	 o/Kd9aLnq6RAt0eyQss2hBamjTQvCOMxlP4WYXeXDfqLiwosOJWqJ/vlJ+qBWgKiAd
+	 ET2VVoUhxerXFvnrApH9Ctnzh8NbsuUdZyrQQrnZPG0Aiy/Nq6ta3SVetMw/fzr2GU
+	 wQHhnbBRGf1TNt0QzNfsdhwazxQrMwjVPLDhkluwBT0bJSAA3fG/AxjUHtHHDN9h62
+	 vVt8pxuoYJgCaRwTAKK6x4AKdf9uDDNSXZTy12KYedY2VEZnsiM1cfGVBlRABVAmBC
+	 El4R6H+886zqxZpAdhzGD69Y0WWpAbxOXCCHvo7h6Qc4QzcATygkzx13E/I9HsMQNG
+	 JWT5FfJRHQ312T2fur5VBl7M=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 444A740E019D;
+	Thu, 11 Jul 2024 10:02:27 +0000 (UTC)
+Date: Thu, 11 Jul 2024 12:02:20 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Nikunj A Dadhania <nikunj@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>
+Subject: Re: [tip:x86/sev] [x86/sev]  06685975c2:
+ BUG:kernel_failed_in_early-boot_stage,last_printk:Booting_the_kernel(entry_offset:#)
+Message-ID: <20240711100220.GBZo-trBnuLqMIWlD_@fat_crate.local>
+References: <202407091342.46d7dbb-oliver.sang@intel.com>
+ <20240709090323.GAZoz822G64Mr9M9lV@fat_crate.local>
+ <Zo3oOK6RH2OJO3rC@xsang-OptiPlex-9020>
+ <20240710082838.GBZo5GNvuxJbTjG1TZ@fat_crate.local>
+ <Zo83r9vQYpthWd4n@xsang-OptiPlex-9020>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Zo83r9vQYpthWd4n@xsang-OptiPlex-9020>
 
-There are several issues with preemption on Adreno A5XX GPUs which
-render system unusable if more than one priority level is used. Those
-issues include persistent GPU faults and hangs, full UI lockups with
-idling GPU.
+On Thu, Jul 11, 2024 at 09:38:55AM +0800, Oliver Sang wrote:
+> yes, your patch fixed the issue.
+> 
+> Tested-by: kernel test robot <oliver.sang@intel.com>
 
----
-Vladimir Lypak (4):
-  drm/msm/a5xx: disable preemption in submits by default
-  drm/msm/a5xx: properly clear preemption records on resume
-  drm/msm/a5xx: fix races in preemption evaluation stage
-  drm/msm/a5xx: workaround early ring-buffer emptiness check
+Thanks, I went and merged the other build issue reported by 0day into the
+original patch so that there's no build failures during bisection.
 
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c     | 18 ++++++++++----
- drivers/gpu/drm/msm/adreno/a5xx_gpu.h     | 12 ++++++---
- drivers/gpu/drm/msm/adreno/a5xx_preempt.c | 30 ++++++++++++++++++++---
- 3 files changed, 47 insertions(+), 13 deletions(-)
----
-base-commit: 523b23f0bee3014a7a752c9bb9f5c54f0eddae88
+We should be good to go now, knock on wood.
+
+Thx.
+
 -- 
-2.45.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
