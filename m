@@ -1,109 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A46515ECEC;
-	Thu, 11 Jul 2024 11:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168D915AD9C;
+	Thu, 11 Jul 2024 11:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696679; cv=none; b=LC9shvf/nOuCfblYO53LsMJkgwEJEr5pHv6csskOZ/EBVZkKaeUEYZ4uwC2S2QgwxtW8DkdE3aCiOypYukwV0y8nm738k6+ameowFFwjSX0flJfucQYikgZeGpggKphQsiVRo3gyFvuRujJ+cGTdSphb+xbXKNFIVmr3XQnbrJ0=
+	t=1720696735; cv=none; b=L6OctZojb7LPF+vo1BsQQrwALyUuBV8MtzfeZLKqRhEJLIRtkRYQjZniT3Ccp9tTXfCpYCN6F96MivEGxtW3rCyLdhyZlMACGFgOS5a44wEyJmS6YA08wI2zzLkSjctg6QxLZQPKDyU21EYZUcWXJhSfdk0i0OLgzMaAGBhn9PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696679; c=relaxed/simple;
-	bh=aZBVXAg8anRcEIzZm6xXyUWqgXMWj/GRavVJABJDHto=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=g3eEH2kAgEuR6xdXTezO6cUZvqY+cNKkvjP0Zu6WCG5NH18f4Idfi9debYieBMIVN/AsSjFrFUNyGwp/6IcXLtvgw6NA1WBAAdfpfNb3VjoUNVe/tga6b11i2vrv9uIjQdbmPtUJl7lDBfP/6l3CLNCnAgRksysQ8geTx2EL3/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vrv80PXq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3NgbOLud; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vrv80PXq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3NgbOLud"
-Date: Thu, 11 Jul 2024 11:17:54 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720696674;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eUJHl7BR5fdzNBcmpZXGgh++Dnacsp56fe4YretyUps=;
-	b=Vrv80PXq4JVrN2g9N2mZOGNJqYR6jbQBleB1WSg8WzHB1XLx0cpoXPGZC/d0rZ0AoSaBA3
-	Dqx6tnG9g1JehDK2NjFvKcWAIc5SzsjOhO4zYtEk8FJn6vTQSuFnS334Vh8kXaWepAOk8U
-	c9YLFY9mmUDLOQ+LhQahWtVUhI1y7xgeLlXdzqHWu0cfT8mHgH5POyB7zQK/cuNrmehrIC
-	blOSi7cVWTZAgEiW+YoQdxE1gwVwBE47ZRU62sUAeHgcQ4GkKirGxcLcC+Fnxfv5RQFGNT
-	Jcnv3uFGZHxu5gquyHRwmXiearlUNmDLSh5GoZ+kEakTjAvvL5ay0jArEizAWQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720696674;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eUJHl7BR5fdzNBcmpZXGgh++Dnacsp56fe4YretyUps=;
-	b=3NgbOLud1Ga8doaAfuY2a9hywwtY8zKsyW8yoCw7bAr/nTk9KOVW7IuKv3IWptq08OJjL5
-	CSrgEIWznVJgNODw==
-From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] Documentation/ABI/configfs-tsm: Fix an unexpected
- indentation silly
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240701184557.4735ca3d@canb.auug.org.au>
-References: <20240701184557.4735ca3d@canb.auug.org.au>
+	s=arc-20240116; t=1720696735; c=relaxed/simple;
+	bh=41sa6d87PHCO6NdQU/rVMgd/9/pRq60wBMDdkt5UOPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qfbRV7OtHB4UylaMhwshzJepKFYlX/Se3XcBVn4wMH5KvJfgo8farpMjdn1z3D7V2L9MExXiquJAg95DHCuVd5pdIuozD70Y9jFFE/oSb9Ha1GqQ8JOVNzpF7v9eBNTPDk1C14QDwGPmajP0NznDW1EQhcc0Oo9U7RdKM7Dl8g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 903221C009E; Thu, 11 Jul 2024 13:18:44 +0200 (CEST)
+Date: Thu, 11 Jul 2024 13:18:44 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	erick.archer@outlook.com, hkallweit1@gmail.com,
+	masahiroy@kernel.org, jmeneghi@redhat.com
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
+Message-ID: <Zo+/lEpl7mr+K4Ki@duo.ucw.cz>
+References: <20240709110651.353707001@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172069667423.2215.9614106495566490760.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fI793X9dww+ix4O8"
+Content-Disposition: inline
+In-Reply-To: <20240709110651.353707001@linuxfoundation.org>
 
-The following commit has been merged into the x86/sev branch of tip:
 
-Commit-ID:     5fa96c7ab3dc666c2904a35895635156c17a8f05
-Gitweb:        https://git.kernel.org/tip/5fa96c7ab3dc666c2904a35895635156c17a8f05
-Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Mon, 01 Jul 2024 12:34:51 +02:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 11 Jul 2024 12:03:23 +02:00
+--fI793X9dww+ix4O8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Documentation/ABI/configfs-tsm: Fix an unexpected indentation silly
+Hi!
 
-Fix:
+> This is the start of the stable review cycle for the 6.1.98 release.
+> There are 102 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Thu, 11 Jul 2024 11:06:25 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.98-=
+rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-6.1.y
+> and the diffstat can be found below.
 
-  Documentation/ABI/testing/configfs-tsm:97: ERROR: Unexpected indentation
+> Erick Archer <erick.archer@outlook.com>
+>     sctp: prefer struct_size over open coded arithmetic
+> Erick Archer <erick.archer@outlook.com>
+>     Input: ff-core - prefer struct_size over open coded arithmetic
+> Heiner Kallweit <hkallweit1@gmail.com>
+>     i2c: i801: Annotate apanel_addr as __ro_after_init
+> Masahiro Yamada <masahiroy@kernel.org>
+>     kbuild: fix short log for AS in link-vmlinux.sh
 
-when building htmldocs with sphinx. I can't say I'm loving those rigid
-sphinx rules but whatever, make it shut up.
+I don't believe these meet stable criteria.
 
-Fixes: 627dc671518b ("x86/sev: Extend the config-fs attestation support for an SVSM")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Link: https://lore.kernel.org/r/20240701184557.4735ca3d@canb.auug.org.au
----
- Documentation/ABI/testing/configfs-tsm | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> John Meneghini <jmeneghi@redhat.com>
+>     scsi: qedf: Make qedf_execute_tmf() non-preemptible
 
-diff --git a/Documentation/ABI/testing/configfs-tsm b/Documentation/ABI/testing/configfs-tsm
-index 1db2008..534408b 100644
---- a/Documentation/ABI/testing/configfs-tsm
-+++ b/Documentation/ABI/testing/configfs-tsm
-@@ -103,8 +103,7 @@ Description:
- 		provider for TVMs, like SEV-SNP running under an SVSM.
- 		Specifying the service provider via this attribute will create
- 		an attestation report as specified by the service provider.
--		Currently supported service-providers are:
--			svsm
-+		The only currently supported service provider is "svsm".
- 
- 		For the "svsm" service provider, see the Secure VM Service Module
- 		for SEV-SNP Guests v1.00 Section 7. For the doc, search for
+We don't have realtime in 6.1, so we don't need this.
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--fI793X9dww+ix4O8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZo+/lAAKCRAw5/Bqldv6
+8pqFAJ9xsR9PP4JkHK53mmd3/di/Wk4bYQCdG8FqyLpzvtSnU8NNFsl1Kmttr10=
+=NdXU
+-----END PGP SIGNATURE-----
+
+--fI793X9dww+ix4O8--
