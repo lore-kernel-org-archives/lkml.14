@@ -1,54 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546C01A254C
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12ED1A2C13
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720736888; cv=none; b=ayeOofsfsb1RhowaAz5W21t+3pUn3X0hwWK9/OMftREemTzjt0575YGaNNkmtrXjLjRlVbnx1pmD9qVDh2d4edE9iQMnwIQhptcm/lCGELkAQ3qOVskzIQ6IY7KIDN3IJJNi4J21oOP6qgTgazEIBWLdnsi6NEIxvHRlHivZyZY=
+	t=1720736889; cv=none; b=cT96pLKBS8IaS4qcBgdEvAxdacI3hT1CwRYRU/mniJvkak3Yiw03xs1opJLOEcDBVOnkOTYxtFRjug2soMCVPYbMidj9p2MjGxm6fENzbrjrm/hUuWpVyNhXi/W2K6sIcP6Qa2GCYLZIzkScwgVzwX5WgAvrpRbtpHKQwBYBamA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720736888; c=relaxed/simple;
-	bh=HOliJ1ZdMoSd2fBSfY+0O1TjzrvD5+PcUaWx6R23OaY=;
+	s=arc-20240116; t=1720736889; c=relaxed/simple;
+	bh=+4BkaniAqpfzC0qGYjpuSJW8g5yc40Mynb16Kpmc+2A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CMrfEkvhizboegE0OeicoQ6EHe+aIiV85witViTkr6KIDSUgfGxWrV220EIdZUSLVI267nqOnZS5c/rhymTZ8zZnqLi5NMCevmS90olD5UyEGAq7Kxq0V4vn6cIQmhOmKKofQo5T2DC/yyXYBTDBa1Xo9aGxyjeAZgM0R7511xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iGxBsriV; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=bl1QCvh4mNND+31odc8iS8P0VhHbCHhEgvQU0QWNfw8sXjn18v2SwG8BfVGAcq60oyG0lH2YM6DkAoLL6ObD01HCJ67upp0hBzHx7dypofT1xjE2tOXmFVgb2PxgnSkz2ou+BTgOuACKtFfASioX0KWFHfvQhypBDURZfZKAXT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Njy6i+2J; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGxBsriV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Njy6i+2J"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720736885;
+	s=mimecast20190719; t=1720736887;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kWZmH65L03pPl+Vpnns8b+A9Wf2H9U43K+mM8fVZcRw=;
-	b=iGxBsriVBvQ0hSv7AX3hRiUetIzJeVDxCa2b5ujS0UCQBfJxG33MJNe99XmnEP/129IATa
-	NdLqcBhIMV6A+hUOxM5lr9wdPSmbSOALbPlHyRPlB46lppNJu2g54jnB8vF2V0aO0lqQ/l
-	4eT0czzC0sJ+Jo8DJviW+SF+e86hUQA=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=nZ8PFk8IkSEb2wUJxnz3ahSOOTMj/+fWZ6HPcwrgFLQ=;
+	b=Njy6i+2JoBeP+9SjbKbaISD7x9Fy3SpUCOU4KgPxN42iBNPsVKL+8mmVdb7+VpFAkV8VMf
+	/34+3GZu283X84TLBaxu3wMLJh6D3utAwT0TFwDeOr73sPDkRMMp15wO3LfypzvAPqfSEe
+	ofSN4lJ0SroTLGnIJlI3UKV/6zjRdBY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-612-FNhOjotyPGGQuKnH_ikckQ-1; Thu,
- 11 Jul 2024 18:28:01 -0400
-X-MC-Unique: FNhOjotyPGGQuKnH_ikckQ-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-108-Uf8_FIPxNs-tNonAAHTBGQ-1; Thu,
+ 11 Jul 2024 18:28:04 -0400
+X-MC-Unique: Uf8_FIPxNs-tNonAAHTBGQ-1
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F04911955F30;
-	Thu, 11 Jul 2024 22:27:59 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 193631956095;
+	Thu, 11 Jul 2024 22:28:03 +0000 (UTC)
 Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2D5731955F68;
-	Thu, 11 Jul 2024 22:27:59 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 325111956046;
+	Thu, 11 Jul 2024 22:28:02 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: seanjc@google.com,
 	michael.roth@amd.com
-Subject: [PATCH 04/12] KVM: rename CONFIG_HAVE_KVM_GMEM_* to CONFIG_HAVE_KVM_ARCH_GMEM_*
-Date: Thu, 11 Jul 2024 18:27:47 -0400
-Message-ID: <20240711222755.57476-5-pbonzini@redhat.com>
+Subject: [PATCH 08/12] KVM: remove kvm_arch_gmem_prepare_needed()
+Date: Thu, 11 Jul 2024 18:27:51 -0400
+Message-ID: <20240711222755.57476-9-pbonzini@redhat.com>
 In-Reply-To: <20240711222755.57476-1-pbonzini@redhat.com>
 References: <20240711222755.57476-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -61,127 +61,70 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Add "ARCH" to the symbols; shortly, the "prepare" phase will include both
-the arch-independent step to clear out contents left in the page by the
-host, and the arch-dependent step enabled by CONFIG_HAVE_KVM_GMEM_PREPARE.
-For consistency do the same for CONFIG_HAVE_KVM_GMEM_INVALIDATE as well.
+It is enough to return 0 if a guest need not do any preparation.
+This is in fact how sev_gmem_prepare() works for non-SNP guests,
+and it extends naturally to Intel hosts: the x86 callback for
+gmem_prepare is optional and returns 0 if not defined.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/Kconfig     | 4 ++--
- arch/x86/kvm/x86.c       | 4 ++--
- include/linux/kvm_host.h | 4 ++--
- virt/kvm/Kconfig         | 4 ++--
- virt/kvm/guest_memfd.c   | 6 +++---
- 5 files changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/kvm/x86.c       |  5 -----
+ include/linux/kvm_host.h |  1 -
+ virt/kvm/guest_memfd.c   | 13 +++----------
+ 3 files changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 4287a8071a3a..472a1537b7a9 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -141,8 +141,8 @@ config KVM_AMD_SEV
- 	depends on CRYPTO_DEV_SP_PSP && !(KVM_AMD=y && CRYPTO_DEV_CCP_DD=m)
- 	select ARCH_HAS_CC_PLATFORM
- 	select KVM_GENERIC_PRIVATE_MEM
--	select HAVE_KVM_GMEM_PREPARE
--	select HAVE_KVM_GMEM_INVALIDATE
-+	select HAVE_KVM_ARCH_GMEM_PREPARE
-+	select HAVE_KVM_ARCH_GMEM_INVALIDATE
- 	help
- 	  Provides support for launching Encrypted VMs (SEV) and Encrypted VMs
- 	  with Encrypted State (SEV-ES) on AMD processors.
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a6968eadd418..a1c85591f92c 100644
+index a1c85591f92c..4f58423c6148 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -13603,7 +13603,7 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
- }
+@@ -13604,11 +13604,6 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
  EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
  
--#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
- bool kvm_arch_gmem_prepare_needed(struct kvm *kvm)
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
+-bool kvm_arch_gmem_prepare_needed(struct kvm *kvm)
+-{
+-	return kvm->arch.vm_type == KVM_X86_SNP_VM;
+-}
+-
+ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order)
  {
- 	return kvm->arch.vm_type == KVM_X86_SNP_VM;
-@@ -13615,7 +13615,7 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
- }
- #endif
- 
--#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_INVALIDATE
- void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end)
- {
- 	static_call_cond(kvm_x86_gmem_invalidate)(start, end);
+ 	return static_call(kvm_x86_gmem_prepare)(kvm, pfn, gfn, max_order);
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index c3c922bf077f..eb8404e9aa03 100644
+index eb8404e9aa03..f6e11991442d 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -2441,7 +2441,7 @@ static inline int kvm_gmem_get_pfn(struct kvm *kvm,
- }
- #endif /* CONFIG_KVM_PRIVATE_MEM */
+@@ -2443,7 +2443,6 @@ static inline int kvm_gmem_get_pfn(struct kvm *kvm,
  
--#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
  int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order);
- bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
- #endif
-@@ -2473,7 +2473,7 @@ typedef int (*kvm_gmem_populate_cb)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
- long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
- 		       kvm_gmem_populate_cb post_populate, void *opaque);
- 
--#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_INVALIDATE
- void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
+-bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
  #endif
  
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index b14e14cdbfb9..fd6a3010afa8 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -113,10 +113,10 @@ config KVM_GENERIC_PRIVATE_MEM
-        select KVM_PRIVATE_MEM
-        bool
- 
--config HAVE_KVM_GMEM_PREPARE
-+config HAVE_KVM_ARCH_GMEM_PREPARE
-        bool
-        depends on KVM_PRIVATE_MEM
- 
--config HAVE_KVM_GMEM_INVALIDATE
-+config HAVE_KVM_ARCH_GMEM_INVALIDATE
-        bool
-        depends on KVM_PRIVATE_MEM
+ /**
 diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 5221b584288f..76139332f2f3 100644
+index f4d82719ec19..509360eefea5 100644
 --- a/virt/kvm/guest_memfd.c
 +++ b/virt/kvm/guest_memfd.c
-@@ -27,7 +27,7 @@ static inline kvm_pfn_t folio_file_pfn(struct folio *folio, pgoff_t index)
- 
- static int kvm_gmem_prepare_folio(struct inode *inode, pgoff_t index, struct folio *folio)
+@@ -29,16 +29,9 @@ static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slo
+ 				    pgoff_t index, struct folio *folio)
  {
--#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
- 	struct list_head *gmem_list = &inode->i_mapping->i_private_list;
- 	struct kvm_gmem *gmem;
- 
-@@ -353,7 +353,7 @@ static int kvm_gmem_error_folio(struct address_space *mapping, struct folio *fol
- 	return MF_DELAYED;
- }
- 
--#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_INVALIDATE
- static void kvm_gmem_free_folio(struct folio *folio)
- {
- 	struct page *page = folio_page(folio, 0);
-@@ -368,7 +368,7 @@ static const struct address_space_operations kvm_gmem_aops = {
- 	.dirty_folio = noop_dirty_folio,
- 	.migrate_folio	= kvm_gmem_migrate_folio,
- 	.error_remove_folio = kvm_gmem_error_folio,
--#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_INVALIDATE
- 	.free_folio = kvm_gmem_free_folio,
- #endif
- };
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_PREPARE
+-	kvm_pfn_t pfn;
+-	gfn_t gfn;
+-	int rc;
+-
+-	if (!kvm_arch_gmem_prepare_needed(kvm))
+-		return 0;
+-
+-	pfn = folio_file_pfn(folio, index);
+-	gfn = slot->base_gfn + index - slot->gmem.pgoff;
+-	rc = kvm_arch_gmem_prepare(kvm, gfn, pfn, folio_order(folio));
++	kvm_pfn_t pfn = folio_file_pfn(folio, index);
++	gfn_t gfn = slot->base_gfn + index - slot->gmem.pgoff;
++	int rc = kvm_arch_gmem_prepare(kvm, gfn, pfn, folio_order(folio));
+ 	if (rc) {
+ 		pr_warn_ratelimited("gmem: Failed to prepare folio for index %lx GFN %llx PFN %llx error %d.\n",
+ 				    index, gfn, pfn, rc);
 -- 
 2.43.0
 
