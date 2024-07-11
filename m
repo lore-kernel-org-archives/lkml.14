@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B88551004;
-	Thu, 11 Jul 2024 21:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12FBDF43;
+	Thu, 11 Jul 2024 21:16:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720732501; cv=none; b=FRKS6lVXdiY9sBsrSqpBJ0lI9qBWvJ1WOCPzGfeUBg5qcspqg4HSxo1jWEnKfLOSIWpTCXTk9yHW0beWw5W9WdNpKTeRIG0WZ+pa0B77MWr6xgJNuFgtiWmCZi9bG4w4xEMMuEdzpepcM3++bLvbACb4f5Plbre8SmgGIIOHQ2M=
+	t=1720732562; cv=none; b=Z3+7r4yVMbUrll/H/UTYwAjpVUcIbSxmmdHTQqpVmE4djlVci4D3LAL0UA2qJjbp80761fdvyPT1KDHF/rjOZC7z3o6L4HbkudSAOr3K592U94Itsxlio5sPPoaPXzFvT0wg6miftd0HlZkVzeOvtQiBxPInbFwVmhVDcP+3n5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720732501; c=relaxed/simple;
-	bh=z8jx8XLitvFIbm91GAY+1qBbqQDN79ywbMy4k/ZvO8I=;
+	s=arc-20240116; t=1720732562; c=relaxed/simple;
+	bh=dudi4sdtVeovT/K8wDx3sBrqYXG8ImoAnYu5rdEU5aE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aI6TF2IklvZctHi53A6qnty+8vELlzwFHhN8MnTycQ/iScU4/bkHPPiyUEWxLRm36SpXKeXvo+14pr38R6n2NTHP945HR1cCbkQiOjZfDWh9Ihpd0KzTuq9K8om3PtQVFtWiQXctbPS1KC4GjI3/rEZH4qd/I0/NZRqE3pPMv3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIf9qktS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGgl9Lolal1EDewtBJ+swmBWWuiYuzQlx4FWZI2r+kYWgW69jSRgzjekaXqFu9VEShoSBojZ7feBFJMbuNHouBcSjalGLzAibN+FDtFmXm59BcgjDolYShgzHqHn8KNLGRop1NxwSiCV7AqVUHA8/YhM+E2p5QFl4r5vdXhgswI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/5R5FjF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIf9qktS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA1BC116B1;
-	Thu, 11 Jul 2024 21:15:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/5R5FjF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEA3C116B1;
+	Thu, 11 Jul 2024 21:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720732501;
-	bh=z8jx8XLitvFIbm91GAY+1qBbqQDN79ywbMy4k/ZvO8I=;
+	s=k20201202; t=1720732561;
+	bh=dudi4sdtVeovT/K8wDx3sBrqYXG8ImoAnYu5rdEU5aE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FIf9qktSiy54+akkP8iHXDMFFVJievO+tOgP80GeZmvhYnwzMvIUd12zGT643MiGq
-	 DbKwfQnZ57LSekr6LWR4F+xIFPfaabI+TnF21rXOu1j5f14nskEsW1glQx6OL7Dz0H
-	 JemseofGjJ1tLkapw35eXNDlNoFrJqsmCdAxGQq3Q1TWSWs1SwCPuLaGe89t4kTS11
-	 vx4YJGiFwS5Q7iNEJMYoc0TCwqfVIgEmmK6j9f4nJjNTkDz11duORyRXiJ16lmvhyF
-	 hj+Ogecqq3L8IIxUIOaWc4BibZhEiy2jj9Je/+df87lHt+GeSq6EZ2vjuXaWnTL91P
-	 Dc8MBj2b/kXGw==
-Date: Thu, 11 Jul 2024 15:14:59 -0600
+	b=K/5R5FjFU5bNGAXmSMR6Cgc9CUG6P93dVt1nsNU+RAvPdPhGZtN+JJPsl9TdWv6hQ
+	 9ZDqRufcnwroc2w1uT3NrkG+ETdMfHwtPTesbG4ppM1u/nP05BA9XOO+O9sdDNX+/N
+	 7SskSd7RpKTnizdMPDC5/kovJq/jwI1KYkPQldUDcAMpxawy7bNir6hu0TtQ6O3RWV
+	 ftXHB1s9FQL6i9Q6wdgX3AKUkK1yskGlu9yT2qDNkal2mP0eIEDw3noY5tsABKObej
+	 /d4pVmxU3dqar2sL9Fl6WKWaiJOuIQmnlDlR1LP/QHiWB0jsdBHY7+jtXxBRX/9ykP
+	 Cp2iMA7O0vBMw==
+Date: Thu, 11 Jul 2024 15:16:00 -0600
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: peng.fan@nxp.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	sboyd@kernel.org, abelvesa@kernel.org, imx@lists.linux.dev,
-	s.hauer@pengutronix.de, linux-kernel@vger.kernel.org,
-	shawnguo@kernel.org, festevam@gmail.com, conor+dt@kernel.org,
-	mturquette@baylibre.com
-Subject: Re: [PATCH v2 2/4] dt-bindings: clock: add RMII clock selection
-Message-ID: <172073249908.3021877.9435881584996282557.robh@kernel.org>
-References: <20240710084345.2016687-1-wei.fang@nxp.com>
- <20240710084345.2016687-3-wei.fang@nxp.com>
+To: Joshua Felmeden <jfelmeden@thegoodpenguin.co.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: humidity: add ENS21x sensor
+ family
+Message-ID: <172073255962.3023307.17444377298694934166.robh@kernel.org>
+References: <20240710-ens21x-v3-0-4e3fbcf2a7fb@thegoodpenguin.co.uk>
+ <20240710-ens21x-v3-1-4e3fbcf2a7fb@thegoodpenguin.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,20 +47,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240710084345.2016687-3-wei.fang@nxp.com>
+In-Reply-To: <20240710-ens21x-v3-1-4e3fbcf2a7fb@thegoodpenguin.co.uk>
 
 
-On Wed, 10 Jul 2024 16:43:43 +0800, Wei Fang wrote:
-> Add RMII clock selection for ENETC0 and ENETC1.
+On Wed, 10 Jul 2024 14:24:04 +0100, Joshua Felmeden wrote:
+> Add device tree documentation for ENS21x family of temperature and
+> humidity sensors
 > 
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> Signed-off-by: Joshua Felmeden <jfelmeden@thegoodpenguin.co.uk>
 > ---
-> V2:
-> new patch.
-> ---
->  include/dt-bindings/clock/nxp,imx95-clock.h | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/iio/humidity/sciosense,ens21x.yaml    | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
