@@ -1,141 +1,223 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D49F16D4CC
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862FF16D4E6
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720702851; cv=none; b=kZ/2UPImIEfGPYGXXbrT4I5kEfUaSoWy1Qd4gtv3RIifzWNm+78SpITWaZs1eBQbLPtedPMwLLtia3Xb/9+c4LhDQ/7MW+NMRcogDBx0H0B4aDAv0LYwiyOEcB0RViQrl186lQh8yxC8klLfa45Fv87B+Aqhomole8/txoNEzRQ=
+	t=1720702855; cv=none; b=PPhe1IIM75hm7ndhq2J7MdLIW1CyajviqXqhMQRYw2G61NakOHJYioBtXlpeHpyWMblGZ/eKtERyX4xZ6BSYfrcNZ+cTFuUYCpP3G7cFpnENOIiOVZepy+LFe9/+jF9BjvEW/YYZh8Tghkr/ofyCJ4LtUBrwp/LF+DjE3/de3q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720702851; c=relaxed/simple;
-	bh=32WUeUrKPTK1On8oYr52pGY8kKKsIcbyD/ktcMgTl0I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iCPlRkzFK4HFPpAZnNgPuOiacCH4ghjgPKHTgAVsbQNQdnDH58SGDs5a/umkaqzKYGWZGSlFCiJK0GTXSi/ByWX8txq7hFT+mps2yaD3nQ6Twsz7gpuH2wCGm8Xon04INBNpZcQyXL+/q76GpVVCXLTvDRquhbee1LaMvmdsfgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=0R5/4YvH; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1720702855; c=relaxed/simple;
+	bh=Hm0+dnUQgdDJ2/S65Ewj7D0wEhScphLNn2S7aBT0XyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dm8b2tlQg9O9fqfIJBxFogi2ZUdE8/Y+M8l/vxcLoZLyoz2c9bVBMMAbbChU36kWzvOD61jOIj5rP5G/dMMr4XqUFcCNNvmv3x76gyf3Q9VJelyU9iGv9/3DvkG/34Qdb+NnVcJ5ydMk6XjUmvBry6OQM0bhVRKmykxORIUZyeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TpnNyoA4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="0R5/4YvH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=/x3Xwhy/zD+b8/iFmghy0uZLwRTAG0iaB95lyFsIrSY=; b=0R5/4YvH1GzTT+eLqA1zYwGrfo
-	DHt9Ex2kTaC1MkaMxG62DZghwUbzo3kanJQeIIxBrzxb2L5+dHn0jZJit/QJnWqAjHJ0kYF+5V3cE
-	x2SumkbwFgM33pGdjIqHg7INNR206RI9h8tPryTgQUQWbMUiHtZrlIyAHf39asq2x/InRnBucqs57
-	RlvZb5thdESwRGcEal4g5o3oHIHpdpO0doNPulnfdfd9dQ8HU3mRgeX5vj386JwFAWITYpKBCSlsh
-	ZniLxpsvHXN8UgxBwSPbMEnx4ezxzw5goP6nGI5HrxLCR1y/5O2h8Yi0Vboj2v0dyOxn2Xri5IrNP
-	4b345A3Q==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sRtPd-000BXZ-EN; Thu, 11 Jul 2024 15:00:41 +0200
-Received: from [87.49.147.209] (helo=localhost)
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sRtPY-0005XX-0j;
-	Thu, 11 Jul 2024 15:00:35 +0200
-From: Esben Haabendal <esben@geanix.com>
-Date: Thu, 11 Jul 2024 15:00:15 +0200
-Subject: [PATCH v3 15/15] mtd: spi-nor: spansion: Drop redundant
- SPI_NOR_SKIP_SFDP flag
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpnNyoA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720702852;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nRgFpOHXJvT1VsZdQomT7n0zMUPrGpb3Ck/7bQmJ6Jw=;
+	b=TpnNyoA471CbAq7mcVl1vYrKA0dx3ComgDNIjo+TgLJkoGmKreUJnUN3tYJZolDsD4uw0h
+	5wsbiJf8XaPAul1qaCFlbiDPHsN1z2dnAW8xjb19Z2lpOa/7wIFIdVLlf8WRyhX1y5a8eA
+	lwB/YUwSI6ZyKdGH4Ymy8N3YWC5sXqE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-517-Jyvz4PdnPuuvvJoEd6C6YA-1; Thu,
+ 11 Jul 2024 09:00:46 -0400
+X-MC-Unique: Jyvz4PdnPuuvvJoEd6C6YA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B036419772E0;
+	Thu, 11 Jul 2024 13:00:36 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.192.211])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 640B11955EAF;
+	Thu, 11 Jul 2024 13:00:27 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Phil Auld <pauld@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Guo Ren <guoren@kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: [RFC PATCH v3 00/10] sched/fair: Defer CFS throttle to user entry
+Date: Thu, 11 Jul 2024 14:59:54 +0200
+Message-ID: <20240711130004.2157737-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240711-macronix-mx25l3205d-fixups-v3-15-99353461dd2d@geanix.com>
-References: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
-In-Reply-To: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
- linux-arm-kernel@lists.infradead.org, Esben Haabendal <esben@geanix.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720702815; l=2782;
- i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=32WUeUrKPTK1On8oYr52pGY8kKKsIcbyD/ktcMgTl0I=;
- b=kv2cu/A4E4HA+a4EuZNTqqPIMM+PoYEAWa3H1GKwKtiJ/oVRh7A0CWiRoFQt8GBkr8psS8Pbl
- WfhMZzwLWsNAHxwdFNHKEg4bHEN1i00QOJnEkQduDBUG3+bN44oIiZC
-X-Developer-Key: i=esben@geanix.com; a=ed25519;
- pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27333/Thu Jul 11 10:35:59 2024)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-With the implementation of SPI_NOR_TRY_SFDP flag, the removal of the
-deprecated mechanism for trying SFDP parsing, and the alignment of
-->default_init() hooks handling, the SPI_NOR_SKIP_SFDP flag has become a
-no-op, so it can safely be removed.
+Hi folks,
 
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/mtd/spi-nor/core.c     | 2 +-
- drivers/mtd/spi-nor/core.h     | 5 +----
- drivers/mtd/spi-nor/spansion.c | 2 +-
- 3 files changed, 3 insertions(+), 6 deletions(-)
+The patches are based on top of tip/sched/core at:
+  db43a609d01e ("sched: Update MAINTAINERS and CREDITS")
+They are also available at:
+  https://gitlab.com/vschneid/linux.git -b mainline/sched/fair/throttle-on-exit-all-v2
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index d58f107f62ec..518b2707ce80 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -3024,7 +3024,7 @@ static int spi_nor_init_params(struct spi_nor *nor)
- 	if (spi_nor_needs_sfdp(nor)) {
- 		ret = spi_nor_parse_sfdp(nor);
- 		if (ret) {
--			dev_err(nor->dev, "BFPT parsing failed. Please consider using SPI_NOR_SKIP_SFDP or SPI_NOR_TRY_SFDP when declaring the flash\n");
-+			dev_err(nor->dev, "BFPT parsing failed. Please consider using SPI_NOR_TRY_SFDP when declaring the flash\n");
- 			return ret;
- 		}
- 	} else {
-diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index f4a76f42051a..ae10e12e9078 100644
---- a/drivers/mtd/spi-nor/core.h
-+++ b/drivers/mtd/spi-nor/core.h
-@@ -485,9 +485,7 @@ struct spi_nor_id {
-  *
-  * @no_sfdp_flags:  flags that indicate support that can be discovered via SFDP.
-  *                  Used when SFDP tables are not defined in the flash. These
-- *                  flags are used together with the SPI_NOR_SKIP_SFDP or
-- *                  SPI_NOR_TRY_SFDP flag.
-- *   SPI_NOR_SKIP_SFDP:       skip parsing of SFDP tables.
-+ *                  flags are used together with the SPI_NOR_TRY_SFDP flag.
-  *   SECT_4K:                 SPINOR_OP_BE_4K works uniformly.
-  *   SPI_NOR_TRY_SFDP:        try parsing SFDP tables before using the
-  *                            parameters specified in this struct.
-@@ -536,7 +534,6 @@ struct flash_info {
- #define SPI_NOR_RWW			BIT(9)
- 
- 	u8 no_sfdp_flags;
--#define SPI_NOR_SKIP_SFDP		BIT(0)
- #define SECT_4K				BIT(1)
- #define SPI_NOR_TRY_SFDP		BIT(2)
- #define SPI_NOR_DUAL_READ		BIT(3)
-diff --git a/drivers/mtd/spi-nor/spansion.c b/drivers/mtd/spi-nor/spansion.c
-index a58c0229003d..afcb684ffe4d 100644
---- a/drivers/mtd/spi-nor/spansion.c
-+++ b/drivers/mtd/spi-nor/spansion.c
-@@ -793,7 +793,7 @@ static const struct flash_info spansion_nor_parts[] = {
- 		.name = "s25fl256s0",
- 		.size = SZ_32M,
- 		.sector_size = SZ_256K,
--		.no_sfdp_flags = SPI_NOR_SKIP_SFDP | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
- 		.mfr_flags = USE_CLSR,
- 	}, {
- 		.id = SNOR_ID(0x01, 0x02, 0x19, 0x4d, 0x00, 0x81),
+Problem statement
+=================
 
--- 
-2.45.2
+CFS tasks can end up throttled while holding locks that other, non-throttled
+tasks are blocking on.
+
+For !PREEMPT_RT, this can be a source of latency due to the throttling causing a
+resource acquisition denial.
+
+For PREEMPT_RT, this is worse and can lead to a deadlock:
+o A CFS task p0 gets throttled while holding read_lock(&lock)
+o A task p1 blocks on write_lock(&lock), making further readers enter the
+  slowpath
+o A ktimers or ksoftirqd task blocks on read_lock(&lock)
+
+If the cfs_bandwidth.period_timer to replenish p0's runtime is enqueued on
+the same CPU as one where ktimers/ksoftirqd is blocked on read_lock(&lock),
+this creates a circular dependency.
+
+This has been observed to happen with:
+o fs/eventpoll.c::ep->lock
+o net/netlink/af_netlink.c::nl_table_lock (after hand-fixing the above)
+but can trigger with any rwlock that can be acquired in both process and
+softirq contexts.
+
+The linux-rt tree has had
+  1ea50f9636f0 ("softirq: Use a dedicated thread for timer wakeups.")
+which helped this scenario for non-rwlock locks by ensuring the throttled
+task would get PI'd to FIFO1 (ktimers' default priority). Unfortunately,
+rwlocks cannot sanely do PI as they allow multiple readers.
+
+Proposed approach
+=================
+
+Peter mentioned [1] that there have been discussions on changing /when/ the
+throttling happens: rather than have it be done immediately upon updating
+the runtime statistics and realizing the cfs_rq has depleted its quota, we wait
+for the task to be about to return to userspace: if it's in userspace, it can't
+hold any in-kernel lock.
+
+Ben Segall proposed a different approach [2] which I worked on at [3], but I
+eventually lost faith in all the .*nr_running hackery that it required.
+Furthermore, talking about this at OSPM24, I felt like the first approach had
+more appeal, so guess who's back (back again).
+
+See the last patch for implementation considerations.
+
+I've tried splitting this into as many bite-size patches as possible, but it's
+tricky to further split that one last patch switching from cfs_rq-wide throttling
+to per-task throttling, apologies for the big diff.
+
+Testing
+=======
+
+Tested on QEMU via the below with the usual DEBUG options enabled.
+
+  mount -t cgroup -o cpu none /root/cpu
+
+  mkdir /root/cpu/cg0
+  echo 10000 >  /root/cpu/cg0/cpu.cfs_period_us
+  echo 1000 > /root/cpu/cg0/cpu.cfs_quota_us
+
+  mkdir /root/cpu/cg0/cg00
+  mkdir /root/cpu/cg0/cg01
+
+  mkdir /root/cpu/cg0/cg00/cg000
+  mkdir /root/cpu/cg0/cg00/cg001
+
+  spawn() {
+      while true; do cat /sys/devices/system/cpu/smt/active &>/dev/null; done &
+      PID=$!
+      echo "Starting PID${PID}"
+      echo $PID > $1
+  }
+
+  spawn cpu/cg0/tasks
+  spawn cpu/cg0/tasks
+  spawn cpu/cg0/tasks
+  spawn cpu/cg0/tasks
+
+  spawn cpu/cg0/cg01/tasks
+
+  spawn cpu/cg0/cg00/cg000/tasks
+  spawn cpu/cg0/cg00/cg001/tasks
+
+  sleep 120
+
+  kill $(jobs -p)  
+
+I've also looked at the PELT side of things using rt-app + LISA. The PELT behaviour
+itself looks mostly the same, but the execution patterns change, again see last
+patch for details.
+  
+Links
+=====
+  
+[1]: https://lore.kernel.org/lkml/20231031160120.GE15024@noisy.programming.kicks-ass.net/
+[2]: http://lore.kernel.org/r/xm26edfxpock.fsf@bsegall-linux.svl.corp.google.com
+[3]: https://lore.kernel.org/lkml/20240202080920.3337862-1-vschneid@redhat.com/
+
+Valentin Schneider (10):
+  rcuwait: Split type definition to its own header
+  irq_work: Split type definition to its own header
+  task_work, sched: Add a _locked variant to task_work_cancel()
+  sched/fair: Introduce sched_throttle_work
+  sched/fair: Introduce an irq_work for cancelling throttle task_work
+  sched/fair: Prepare switched_from & switched_to for per-task
+    throttling
+  sched/fair: Prepare task_change_group_fair() for per-task throttling
+  sched/fair: Prepare migrate_task_rq_fair() for per-task throttling
+  sched/fair: Add a class->task_woken callback in preparation for
+    per-task throttling
+  sched/fair: Throttle CFS tasks on return to userspace
+
+ include/linux/irq_work.h       |   8 +-
+ include/linux/irq_work_types.h |  14 +
+ include/linux/rcuwait.h        |   9 +-
+ include/linux/rcuwait_types.h  |  16 ++
+ include/linux/sched.h          |   6 +
+ kernel/sched/core.c            |   4 +
+ kernel/sched/fair.c            | 497 +++++++++++++++++++++++++--------
+ kernel/sched/sched.h           |   6 +
+ kernel/sched/task_work_sched.h |  14 +
+ kernel/task_work.c             |  67 ++++-
+ 10 files changed, 499 insertions(+), 142 deletions(-)
+ create mode 100644 include/linux/irq_work_types.h
+ create mode 100644 include/linux/rcuwait_types.h
+ create mode 100644 kernel/sched/task_work_sched.h
+
+--
+2.43.0
 
