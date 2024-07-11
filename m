@@ -1,103 +1,183 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63B21684A7;
-	Thu, 11 Jul 2024 13:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0159116B3BF;
+	Thu, 11 Jul 2024 13:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720703230; cv=none; b=tuijSfZvS9WsM620oEPEK/TeVmJ+5NpHxNQwhR+jlvvW9j59lV5IiqIRpilbDM4FuzybJEAPkKDC6eVOdMG9tlyqKYRgSEjeaUQ14kL3F51ym2iaH3HRfGnhJsApCslitIHDV/J0SyoduOqRzs4pEemusE8ZejapqfnvBvP0Llc=
+	t=1720703240; cv=none; b=JbHiJAqvju6B9qMiAsILZlwzlMvnqQw0ZxWkZkBaCPISvBJbSFnF2E9yetNPoorzCryzAiRnNbwCL0QIq6yadtOo2IliAHnpVeoSHoWrT6WY7KKRnGsYM4hcPdwyeIJFd64g6hmx9OGw46ct2n35JHgbJiFOiZkxInl401ucwYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720703230; c=relaxed/simple;
-	bh=f+jxSNyhE10kPaWRusCsXbEE1RXBwIFmEXq7EkDieyo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LRQpq/eOtUg+0HbMo2UgeBJpVGq32VyouFumMV3OAoTxPtUGDzR+A4ZtiIWlb47/5+7u9Z51lDqCSeFi1h5HXL2upi8apXrdekRs0eZ3NgNFKEOXErexjF5nMGVpmk26q8y9OHR1cwVmIM6OctgSOE0himTwNPA9cu9OadiR4Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZHnaBxNe; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720703240; c=relaxed/simple;
+	bh=Bw1CDs/sg/K1NvNb66K5hwELjtRSAbZQj0qWX4uUW7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E1JW4oBVXFqTBtPDiYA2t2c62++8V34VWK/E0/N0gUccuGsRf899tzNvvB1BD4zjjDrf+zZMx6WEPBCAIB1yEwDXtGdIz/ShzAPsrZZK8E7BMbKTHTvl5PgprXzW8yGB5bb+CcifC6XbSgQzSN9Q8TnYbzRI79xVSdygJfVvCJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAJZDMTo; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHnaBxNe"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fbc0a1494dso5422325ad.3;
-        Thu, 11 Jul 2024 06:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720703228; x=1721308028; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0jnve3iMfQ3N9VA7fI/ITJkN0F4YPFwznhKUmalCiOE=;
-        b=ZHnaBxNed5jPpIuLihMtrQLgmSObQoGCePgOsaSGrJTadxaspnEOwS7I1mMrDR9ruF
-         38AC/6N82VTNG3ufcnw0eUBIUJeMNyq0pj9eomL8CmFAlz0BpM+7b4uXI5seHpbHtjzo
-         ncxK4KZJlmAm2YwFTSQipo0zXQ/46+/6tQtX0yWvnZZTCReGtkWfzKRnSstjj2DJKRnU
-         fGa2KDWeGR+LOkD34UxDkJ9EOAPgxWeF8sJN1SkT/KrOfwPS+fzBEqnuOemoMX8VrFk9
-         oHCDmCCP+SgOZoKkR7d62+rv5or03+xh0ByT1lVviMeOY20cl2MuZ0Xz89w2gtbvIcPW
-         2UJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720703228; x=1721308028;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0jnve3iMfQ3N9VA7fI/ITJkN0F4YPFwznhKUmalCiOE=;
-        b=UGEVauCZ3uNO9+AErzaVvRrnaAxLVN+nPLx1Ufm8/M+YUX5n67To6SPVxJgSWYBj6o
-         wT1civyF51f/KDz3ldeKzzkA/zgmWmBB89rzNOcU0ytZnH91XNVVgMLgcLyIKW3whfvh
-         Un0x2ckRrmq2DkdRwzcMihzvWubeMkyr1A4s0BVYv22U5NMkENtsGoTjuMWtZGFf0bGK
-         CrQsojOSph8DO/wdsPgyklaAS/cIpbE2bqROaBfpZcqIJ/kz7PhZv9giG+p3tKqmwraX
-         /hCpBMcr/iRN1LbpkHDV/PlZx1XsQ82Z7m630Gr6pu+7nK+mIjXE9GJBICgfsy5eO6VB
-         cd9w==
-X-Forwarded-Encrypted: i=1; AJvYcCX2UKej8aZoJ4PRgNxSBoF4fKS2PmVjOo6gOMqrFPTSWbCmIT8DYwzUmGT9ZNxQ/2m5QhJ3DYAoYN8ver8WuCIJgqrm1uQVJ53Wk0DyCGShckfRSIU/7u1NRZYK+mXzSMCvXHO0cy9QxA==
-X-Gm-Message-State: AOJu0YxVpSnnSuIpJKw38VblR0EPEO0Zc7GHL7RHnTmA+undUlOYU+M3
-	U5wEx1HiafGY7crc6ovVBMDteMMMlEIxytnvlJuuiR3o9Ihxrb67
-X-Google-Smtp-Source: AGHT+IEmrIGHOBFSqXd81RIMGrfzoPUeUGC1m4BCECre0JDGSNlum8QRpsMZAkW8rPcHp3wUnUdxkw==
-X-Received: by 2002:a17:903:2352:b0:1fa:47b7:2e41 with SMTP id d9443c01a7336-1fbb6ce5288mr74016295ad.1.1720703227962;
-        Thu, 11 Jul 2024 06:07:07 -0700 (PDT)
-Received: from obliging-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a10868sm50188305ad.9.2024.07.11.06.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 06:07:07 -0700 (PDT)
-From: Yang Chen <yangchen.openbmc@gmail.com>
-To: joel@jms.id.au,
-	andrew@codeconstruct.com.au,
-	patrick@stwcx.xyz,
-	amithash@meta.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: Jerry.Lin@quantatw.com,
-	yangchen.openbmc@gmail.com,
-	yang.chen@quantatw.com
-Subject: [PATCH v1 1/1] ARM: dts: aspeed: minerva: add host0-ready pin
-Date: Thu, 11 Jul 2024 21:05:01 +0800
-Message-Id: <20240711130501.2900301-2-yangchen.openbmc@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240711130501.2900301-1-yangchen.openbmc@gmail.com>
-References: <20240711130501.2900301-1-yangchen.openbmc@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAJZDMTo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720703239; x=1752239239;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Bw1CDs/sg/K1NvNb66K5hwELjtRSAbZQj0qWX4uUW7M=;
+  b=lAJZDMTokRYcD5KbUIikutl8cONwllnF0K7jZ24RQAydSjWuAf0kqd74
+   qAzh69svcX5KMS4E0jgTT60rwxWQmPPdHiPi0mL2FB2iq/ZuUqgkU4tAk
+   5mjgAuDvwDLEPS8TuBd4g0ua9XulZ3M6iZ3bjXSD98y2Lif4H22PFm7qj
+   p4kI4TDpP3OUqKcBhfe5S1ZNX3XjA02tfmlAlGzverAYfO2pHilV2gLu6
+   4m/2ZKRAjTpNPx4gGCvwQP2dkeblJot9452CfWZ5VTH1GOpWwO/cjMT4H
+   xou9fK6xSIypZpQD45nY6WyGoc9IMKcFH+SKqGqj8A1dh17AIoFS8829T
+   A==;
+X-CSE-ConnectionGUID: NHTUzXLxSbi4MYtNx8WTDA==
+X-CSE-MsgGUID: EbMoiSYcTp2NuPmQ9AMTZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="17695198"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="17695198"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:07:06 -0700
+X-CSE-ConnectionGUID: CwCrJuGJTc2wbQHB7kUnAQ==
+X-CSE-MsgGUID: hbSYrspaSY2+5GgI4VzO1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="53727131"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:07:05 -0700
+Received: from [10.212.47.156] (kliang2-mobl1.ccr.corp.intel.com [10.212.47.156])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7561820738F3;
+	Thu, 11 Jul 2024 06:07:03 -0700 (PDT)
+Message-ID: <98c73f1a-e5e3-4eba-ac52-ccf21e3a063c@linux.intel.com>
+Date: Thu, 11 Jul 2024 09:07:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linux-next:master] [perf vendor events] e2641db83f:
+ perf-sanity-tests.perf_all_PMU_test.fail
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, oe-lkp@lists.linux.dev, lkp@intel.com,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Namhyung Kim <namhyung@kernel.org>, Weilin Wang <weilin.wang@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <202407101021.2c8baddb-oliver.sang@intel.com>
+ <a0ac56fc-eedc-492b-884c-d68e0460f178@linux.intel.com>
+ <Zo+SC/OORdGWXQ84@xsang-OptiPlex-9020>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <Zo+SC/OORdGWXQ84@xsang-OptiPlex-9020>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add host0-ready pin for phosphor-state-manager.
 
-Signed-off-by: Yang Chen <yangchen.openbmc@gmail.com>
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-index f5ac248097b4..41e2246cfbd1 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-@@ -613,7 +613,7 @@ &gpio0 {
- 	/*P0-P7*/	"","","","","","","","",
- 	/*Q0-Q7*/	"","","","","","power-chassis-control","","",
- 	/*R0-R7*/	"","","","","","","","",
--	/*S0-S7*/	"","","","","","","","",
-+	/*S0-S7*/	"","","","","","","","host0-ready",
- 	/*T0-T7*/	"","","","","","","","",
- 	/*U0-U7*/	"","","","","","","","",
- 	/*V0-V7*/	"","","","","BAT_DETECT","","power-chassis-good","",
--- 
-2.34.1
+On 2024-07-11 4:04 a.m., Oliver Sang wrote:
+> hi, Kan,
+> 
+> On Wed, Jul 10, 2024 at 09:15:05AM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 2024-07-10 12:59 a.m., kernel test robot wrote:
+>>>
+>>>
+>>> Hello,
+>>>
+>>> kernel test robot noticed "perf-sanity-tests.perf_all_PMU_test.fail" on:
+>>>
+>>> commit: e2641db83f18782f57a0e107c50d2d1731960fb8 ("perf vendor events: Add/update skylake events/metrics")
+>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>>
+>>> [test failed on linux-next/master 82d01fe6ee52086035b201cfa1410a3b04384257]
+>>>
+>>> in testcase: perf-sanity-tests
+>>> version: 
+>>> with following parameters:
+>>>
+>>> 	perf_compiler: gcc
+>>>
+>>>
+>>>
+>>> compiler: gcc-13
+>>> test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake) with 32G memory
+>>>
+>>> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>>>
+>>>
+>>> we also observed two cases which also failed on parent can pass on this commit.
+>>> FYI.
+>>>
+>>>
+>>> caccae3ce7b988b6 e2641db83f18782f57a0e107c50
+>>> ---------------- ---------------------------
+>>>        fail:runs  %reproduction    fail:runs
+>>>            |             |             |
+>>>            :6          100%           6:6     perf-sanity-tests.perf_all_PMU_test.fail
+>>>            :6          100%           6:6     perf-sanity-tests.perf_all_metricgroups_test.pass
+>>>            :6          100%           6:6     perf-sanity-tests.perf_all_metrics_test.pass
+>>>
+>>>
+>>>
+>>>
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <oliver.sang@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-lkp/202407101021.2c8baddb-oliver.sang@intel.com
+>>>
+>>>
+>>>
+>>> 2024-07-09 07:09:53 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 105
+>>> 105: perf all metricgroups test                                      : Ok
+>>> 2024-07-09 07:10:11 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 106
+>>> 106: perf all metrics test                                           : Ok
+>>> 2024-07-09 07:10:23 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 107
+>>> 107: perf all libpfm4 events test                                    : Ok
+>>> 2024-07-09 07:10:47 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 108
+>>> 108: perf all PMU test                                               : FAILED!
+>>
+>> Can you please try the -vvv option, which should tell the failed event?
+>> perf test -vvv "perf all PMU test"
+> 
+> after add -vvv:
+> 
+> 2024-07-11 07:45:20 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test -v 108
+> 108: perf all PMU test:
+> --- start ---
+> test child forked, pid 18989
+> Testing (null)
 
+The test cases use the "perf list --raw-dump pmu" to get a complete
+event list. It seems the perf list command got nothing. That's weird.
+
+The main change of e2641db83f18 is to add the "Counter" field and a few
+events. It should not impact the perf list command.
+
+What's the output of "perf list --raw-dump pmu" on your machine?
+
+Thanks,
+Kan
+> ---- end(-1) ----
+> 108: perf all PMU test                                               : FAILED!
+> 
+> 
+>>
+>> Thanks,
+>> Kan
+>>>
+>>>
+>>>
+>>> The kernel config and materials to reproduce are available at:
+>>> https://download.01.org/0day-ci/archive/20240710/202407101021.2c8baddb-oliver.sang@intel.com
+>>>
+>>>
+>>>
+>>
+> 
