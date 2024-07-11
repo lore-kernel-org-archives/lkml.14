@@ -1,94 +1,184 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3BB13B597;
-	Thu, 11 Jul 2024 07:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1E814A4ED
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720682960; cv=none; b=S8W4ZN+msdnftYNMvmdXpWM6nrFpjtAmbx7RL+PyDOa4LN63lXuPz+6YwO5IL2FlxcCIzBhdAPaoeNnOJCeCFqxkhfoLHp/TJn2hjcLdm6/8fI6mstY0YEwmPpeQb38a/xyBdI4GR2+WMWo76kFjLSt/sk0lmmv9tkPKveEjfP8=
+	t=1720682961; cv=none; b=YCO63RaEoqJdSpvj9ronUXI9wAkAqYUbQ6sapa2uBLWPAFIeaoOe0OyXY8zAdbPM2pD0SLhQATbM8up7woEt7w6y2L8/fsD9Z3spgOAHQd6BYrJ2xDI1JLyR0I2fPFb5wizMW1Lmq8hMfT5wCr5FrZft64R4wwqTkvBJ6VvZHBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720682960; c=relaxed/simple;
-	bh=g3VjYZgrv2jlGGRW7hqDYzUkSBeWW+tEsX5oVhdojtY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=APv4SLSkID0NkAiQ2JZe63nGOMGqOBOfkT30FAvZbZvrNkBIrMwD6de1j3UeGL4lLt0vleIfJsACmveC0jyNC+eOWkJK8ZopETWN0vN8nqenHtwqDfNhhfKviVdV/D8zOcfRQ6pU7lA6col9qWG5b5qe0GZfeESKIHNx49pxq0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-05 (Coremail) with SMTP id zQCowAC3v7eviY9m9sK0Ag--.57010S2;
-	Thu, 11 Jul 2024 15:28:54 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: andrii@kernel.org,
-	eddyz87@gmail.com,
-	mykolal@fb.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	shuah@kernel.org,
-	rdna@fb.com
-Cc: bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>
-Subject: [PATCH] selftests/bpf:fix a resource leak in run_tests()
-Date: Thu, 11 Jul 2024 15:28:45 +0800
-Message-Id: <20240711072845.2243176-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720682961; c=relaxed/simple;
+	bh=GQQhDBkbVm07F633nVzv9d4hoKaeH6pAoRTRgLjaQmQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=atpt6dXSVQ5WCSk1xqTayyJqXkP5i0e900N7jwPKJOSbCbrCJkox8cJjjOgFGYELArtn6hfunJq3Xk9cK6hIKWnZajQY3Pgh2OKv/PxxLdcWEhmykHp/1gSpg56PDFdm94l7gxC5qlrR+ipZQSsvIYdYJS4wzozEhQx7UExIxlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aeMOCOvu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aeMOCOvu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03A02C4AF0C;
+	Thu, 11 Jul 2024 07:29:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720682961;
+	bh=GQQhDBkbVm07F633nVzv9d4hoKaeH6pAoRTRgLjaQmQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=aeMOCOvupqqC2Ej3StRoP1k7OPZxF8jo4beiiML+npBz7HZKH4qN/FxHXemgCWKl4
+	 kP1rBI3p8z1t3UlHkyhh8gD1rACHQNRI19Z0KACtlrkrp7ShnMo/TtkNlUt9rZOtX1
+	 EVkf9DPfQZIKVM6HBSxl+nULAKk1BtmI3EHx+a6kr56VVk6/wq5DMiFLlJTCIdXUfz
+	 XiFaRpxW/32iuxeNLx1GQQr0f/OwPBDnODLaCCGuUo0p8rFa0CcWVn3l9g+4V0f3tX
+	 QSWFyjLyxTlUZbH+EXqHPR2f7tFDCsrEkKB0mXK1S5jARo6rTfTHrT3GZPzpfY/gVv
+	 vecUSKI2Bfmtw==
+From: Chris Li <chrisl@kernel.org>
+Date: Thu, 11 Jul 2024 00:29:06 -0700
+Subject: [PATCH v4 2/3] mm: swap: mTHP allocate swap entries from nonfull
+ list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAC3v7eviY9m9sK0Ag--.57010S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrur1DtryUtr1xJr45Ww4xCrg_yoW3urXE9a
-	1jvr97GrZFy3Z8Aw1j93WFkFWkCws3urW7JrZxJay3AayUXrs8GFs7urs8J3WY9rZ8WFy2
-	vFs5CrWftw4akjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUba8FF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-	x4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_
-	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VU1YiiDUUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Message-Id: <20240711-swap-allocator-v4-2-0295a4d4c7aa@kernel.org>
+References: <20240711-swap-allocator-v4-0-0295a4d4c7aa@kernel.org>
+In-Reply-To: <20240711-swap-allocator-v4-0-0295a4d4c7aa@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kairui Song <kasong@tencent.com>, Hugh Dickins <hughd@google.com>, 
+ Ryan Roberts <ryan.roberts@arm.com>, "Huang, Ying" <ying.huang@intel.com>, 
+ Kalesh Singh <kaleshsingh@google.com>, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, Chris Li <chrisl@kernel.org>, 
+ Barry Song <baohua@kernel.org>
+X-Mailer: b4 0.13.0
 
-The requested resources should be closed before return in run_tests(),
-otherwise resource leak will occur. Add a check of cg_fd before close().
+Track the nonfull cluster as well as the empty cluster
+on lists. Each order has one nonfull cluster list.
 
-Fixes: 1d436885b23b ("selftests/bpf: Selftest for sys_bind post-hooks.")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+The cluster will remember which order it was used during
+new cluster allocation.
+
+When the cluster has free entry, add to the nonfull[order]
+list.  When the free cluster list is empty, also allocate
+from the nonempty list of that order.
+
+This improves the mTHP swap allocation success rate.
+
+There are limitations if the distribution of numbers of
+different orders of mTHP changes a lot. e.g. there are a lot
+of nonfull cluster assign to order A while later time there
+are a lot of order B allocation while very little allocation
+in order A. Currently the cluster used by order A will not
+reused by order B unless the cluster is 100% empty.
+
+Signed-off-by: Chris Li <chrisl@kernel.org>
 ---
- tools/testing/selftests/bpf/test_sock.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/swap.h |  4 ++++
+ mm/swapfile.c        | 34 +++++++++++++++++++++++++++++++---
+ 2 files changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_sock.c b/tools/testing/selftests/bpf/test_sock.c
-index 810c3740b2cc..bb5038fc15ac 100644
---- a/tools/testing/selftests/bpf/test_sock.c
-+++ b/tools/testing/selftests/bpf/test_sock.c
-@@ -550,7 +550,8 @@ int main(int argc, char **argv)
- err:
- 	err = -1;
- out:
--	close(cgfd);
-+	if (cgfd >= 0)
-+		close(cgfd);
- 	cleanup_cgroup_environment();
- 	return err;
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index e9be95468fc7..db8d6000c116 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -254,9 +254,11 @@ struct swap_cluster_info {
+ 				 */
+ 	u16 count;
+ 	u8 flags;
++	u8 order;
+ 	struct list_head list;
+ };
+ #define CLUSTER_FLAG_FREE 1 /* This cluster is free */
++#define CLUSTER_FLAG_NONFULL 2 /* This cluster is on nonfull list */
+ 
+ 
+ /*
+@@ -296,6 +298,8 @@ struct swap_info_struct {
+ 	unsigned long *zeromap;		/* vmalloc'ed bitmap to track zero pages */
+ 	struct swap_cluster_info *cluster_info; /* cluster info. Only for SSD */
+ 	struct list_head free_clusters; /* free clusters list */
++	struct list_head nonfull_clusters[SWAP_NR_ORDERS];
++					/* list of cluster that contains at least one free slot */
+ 	unsigned int lowest_bit;	/* index of first free in swap_map */
+ 	unsigned int highest_bit;	/* index of last free in swap_map */
+ 	unsigned int pages;		/* total of usable pages of swap */
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index f70d25005d2c..e13a33664cfa 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -361,14 +361,21 @@ static void swap_cluster_schedule_discard(struct swap_info_struct *si,
+ 	memset(si->swap_map + idx * SWAPFILE_CLUSTER,
+ 			SWAP_MAP_BAD, SWAPFILE_CLUSTER);
+ 
+-	list_add_tail(&ci->list, &si->discard_clusters);
++	if (ci->flags)
++		list_move_tail(&ci->list, &si->discard_clusters);
++	else
++		list_add_tail(&ci->list, &si->discard_clusters);
++	ci->flags = 0;
+ 	schedule_work(&si->discard_work);
  }
+ 
+ static void __free_cluster(struct swap_info_struct *si, struct swap_cluster_info *ci)
+ {
++	if (ci->flags & CLUSTER_FLAG_NONFULL)
++		list_move_tail(&ci->list, &si->free_clusters);
++	else
++		list_add_tail(&ci->list, &si->free_clusters);
+ 	ci->flags = CLUSTER_FLAG_FREE;
+-	list_add_tail(&ci->list, &si->free_clusters);
+ }
+ 
+ /*
+@@ -491,7 +498,12 @@ static void dec_cluster_info_page(struct swap_info_struct *p, struct swap_cluste
+ 	ci->count--;
+ 
+ 	if (!ci->count)
+-		free_cluster(p, ci);
++		return free_cluster(p, ci);
++
++	if (!(ci->flags & CLUSTER_FLAG_NONFULL)) {
++		list_add_tail(&ci->list, &p->nonfull_clusters[ci->order]);
++		ci->flags |= CLUSTER_FLAG_NONFULL;
++	}
+ }
+ 
+ /*
+@@ -550,6 +562,18 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 	if (tmp == SWAP_NEXT_INVALID) {
+ 		if (!list_empty(&si->free_clusters)) {
+ 			ci = list_first_entry(&si->free_clusters, struct swap_cluster_info, list);
++			list_del(&ci->list);
++			spin_lock(&ci->lock);
++			ci->order = order;
++			ci->flags = 0;
++			spin_unlock(&ci->lock);
++			tmp = cluster_index(si, ci) * SWAPFILE_CLUSTER;
++		} else if (!list_empty(&si->nonfull_clusters[order])) {
++			ci = list_first_entry(&si->nonfull_clusters[order], struct swap_cluster_info, list);
++			list_del(&ci->list);
++			spin_lock(&ci->lock);
++			ci->flags = 0;
++			spin_unlock(&ci->lock);
+ 			tmp = cluster_index(si, ci) * SWAPFILE_CLUSTER;
+ 		} else if (!list_empty(&si->discard_clusters)) {
+ 			/*
+@@ -964,6 +988,7 @@ static void swap_free_cluster(struct swap_info_struct *si, unsigned long idx)
+ 	ci = lock_cluster(si, offset);
+ 	memset(si->swap_map + offset, 0, SWAPFILE_CLUSTER);
+ 	ci->count = 0;
++	ci->order = 0;
+ 	ci->flags = 0;
+ 	free_cluster(si, ci);
+ 	unlock_cluster(ci);
+@@ -2919,6 +2944,9 @@ static int setup_swap_map_and_extents(struct swap_info_struct *p,
+ 	INIT_LIST_HEAD(&p->free_clusters);
+ 	INIT_LIST_HEAD(&p->discard_clusters);
+ 
++	for (i = 0; i < SWAP_NR_ORDERS; i++)
++		INIT_LIST_HEAD(&p->nonfull_clusters[i]);
++
+ 	for (i = 0; i < swap_header->info.nr_badpages; i++) {
+ 		unsigned int page_nr = swap_header->info.badpages[i];
+ 		if (page_nr == 0 || page_nr > swap_header->info.last_page)
+
 -- 
-2.25.1
+2.45.2.803.g4e1b14247a-goog
 
