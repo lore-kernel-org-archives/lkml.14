@@ -1,169 +1,160 @@
-Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
+Received: from SINPR02CU002.outbound.protection.outlook.com (mail-southeastasiaazrln10222016.outbound.protection.outlook.com [52.103.193.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB184A28;
-	Fri, 12 Jul 2024 00:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720744629; cv=none; b=kdV1wrxH4L2yxv4eQJH8h0OlJ7MfKupZxJ/3u590SpNoauaE2/3x8NOorAJArGUcFZITA8mgvTD9xzVauX6c/weg0hD6LFk3of3AHiVe71BQ8bHWMjNPoXRme7THXBsne1yY9aE3jJ34ip9aJGWu2T1Xbsv5NeTy4aM/ZYVir+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720744629; c=relaxed/simple;
-	bh=/ebUXyV+RPOCirS3YaDlQ6O5GI5gRfLlgbsh5ADbg8s=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=CNg+lhRPq0zhhmtYN3cLbQGvoBQF+7OR3MDBCxaSeuM70yIb9H6AeyKwhFSY5IA81rGksmbemma4oXA2PDIUkKiyEnoxGbNwTiePWpUwxE8akj/fk+krRan8krJqqyjQCCkMGnue3TUgOpD6Je9FBY1W9uzMccFZx1K3bR8mjBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=FsosVVXB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vpP7hlSv; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D3C20E6;
+	Fri, 12 Jul 2024 00:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.193.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720744885; cv=fail; b=Tee5cWIlFukWkEAOoFgqPHr+gCoB5XF5585R6udxeW4wzX1loSujEpsGHElRW5APMa0H3rupd2a4u26c8cZrJjsdEh550NywZYwFxMTxvXyVuBwuxDwQKRXccGaz7rNARZFTkTimkbRUSsLj+Jc3OVUSGSXooiughHShzhTdw0E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720744885; c=relaxed/simple;
+	bh=HXTaTnO7Cz/NhxsO2sOdQ3oZvjIRhhtLV97PvT8kfg0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Hk6ySVzuP0L8+B3GuGQJKDDidyjis75cy/3rq4VQGPSpsux16EiVRD2/MwdLgxOq6PJtHxabLvyyeqyT+QQFmPlLFq9S4w5CP6Ys+DFbXPtNaQHdSc0KrqfOfTGcv+E+d3oOtmyaIcWRRgQUMaoV3vkYfmy/aDZbRnc2ywbrC3M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=YCqdmDHK; arc=fail smtp.client-ip=52.103.193.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="FsosVVXB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vpP7hlSv"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 5EF3C1386B6D;
-	Thu, 11 Jul 2024 20:37:06 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 11 Jul 2024 20:37:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1720744626;
-	 x=1720831026; bh=QRDiPsb95Cfr0uPU9/xmF1u6tyqUMbrTsI9uk4kLr6c=; b=
-	FsosVVXBC8/gnSHWueJDtAuOJTlSrG+Wt0Zp52SEU7dQhA3vtZkgBpiaEnsaFmsi
-	VWxjuOc2slOjvCS1DHos0aN7wr61d85aWMuq/7s+plYTsnV9ZDX50EUQnQ4ilg/2
-	ZeelDwgq3kj+GbIOcxLfdZB73Xc8+EkYvig6jzVoHZFmb8blMG0JmtPjtIbaBF9G
-	nHc2kn6T2LDPX+0f6lJdfv5EMYrXV/QMQYgwJ+wSASRvVlZ1N6gp+yelk12/OPnW
-	TJIJslMaqw96r2GyQky+75CflWewXwtqZ31Wx/Arn+d5xWASQECWS4ixgIz/zA79
-	opVNP/Kn9xybFshaFulEnQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720744626; x=
-	1720831026; bh=QRDiPsb95Cfr0uPU9/xmF1u6tyqUMbrTsI9uk4kLr6c=; b=v
-	pP7hlSv76DDjl6ougIdqfgK0ifgQFZ/QQGmQUT72Dy2l1s9SCQ0r439J6eDBF9Oz
-	fTE2zQM1ucCxNh3P8CRRhPaxB9EvazO2j4T2ZZhv0cfP+J9IpIhD26hzpskwGl2v
-	SDYuW8riZvcyjACup1W0icO6vFl8GQu3D6IRpPTcbU+eK8dMy9TQ5wfBxhCymrLl
-	j+70bEQrpiWr+29AM91KHZkL2axwVsU9z9jYeFmA9Ciu1oLjIszUQ3qGvFN+oiGP
-	uV6fpU4Ep6+H9qL1dpgp4v7LN5KMbRQjHBdNZKCMYkPHdQ8L+SnMfyZv3Vt1PBij
-	Sgzf42l5eVpdNsumfyldg==
-X-ME-Sender: <xms:sXqQZjnAy_7JwwRmtVoA50MlDdFGbwiZbmYdys0Sb6XsMVtrwsz_Tg>
-    <xme:sXqQZm0q9nWcspWJSVHf1o0WGutAHmY967PniPqL4y47iFf1LkumQm0f1tH5mSw-G
-    IavEo2MyTRqwdN5e1w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeehgdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
-    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
-    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:sXqQZppWyv0hLAO4bSYbyojH9AobwSzorc5H7FLZi_n1sDnGJ4vbJQ>
-    <xmx:sXqQZrmn0H8_bae7tViNKN1xkEw3M_H_80hCsrELgvsZxK4ZsgWwIw>
-    <xmx:sXqQZh1kVyslV27StSt5hd4hLnFAwm3CbKLzHeIZEhYAe3r6YNsMvQ>
-    <xmx:sXqQZqtKyultxy5QixScOtMoqSb8hD7KQ753ZINBJa3yofPtUvSR3A>
-    <xmx:snqQZrqlfW61wsHrLedah0LNMis8bcX2fJg5CZDvZL0vwxJvHhuabXhX>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B5FF036A0074; Thu, 11 Jul 2024 20:37:05 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="YCqdmDHK"
+Received: from SEYPR03MB8127.apcprd03.prod.outlook.com (2603:1096:101:165::14)
+ by SEZPR03MB7374.apcprd03.prod.outlook.com (2603:1096:101:12d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.22; Fri, 12 Jul
+ 2024 00:41:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lZ+pkc2FVWXfe9h9OwjdaKdyM8BGv+NNAw7DPAjG0dtsP0XkEzstXVkeqLmWH/a8a80ecCHTJUVThvv4tq7ynov/UCXkBcFHmpgvZcZonP2mWuzl+0G5t9/EMxgW13NjvKgcBtvHR7M3ag+MQ0WYk/p9nTI8veCADRv9Tn5Y7XubIlbIJ9bAMBDSyBKXqzM3WCrT/a5cEp2FxoGnxPt82VmQu+JcxboG7r/xXQ+AbvDjASgN3FlSQMH+OQaoW649Yl3NM41i3xDwwz6FgTiFOh/BS/QgyonUqwAIGHHJi3rttfZHK6Y6UzAHqEe80zGeHGsSzGSS3akG87d4DOad+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VN0rAmqtSR+5kos7IlkgtstO7mq9ZJ1jiyJqKqvXeS4=;
+ b=aM/qRFNcURXZWO3yZiqD7gtEWVbpoUOqX1KIoSB+2rw3QQgL1hxPdKOt8ufS/B3RWvvJKjG2hbdPp3c4ruWz6V94UojaX5HSiKhxVQZ7ngLjIJ9nuoDItnOmdrUtYwnkVIItwTsbtlllMrCpS9cRc4xiEd+rlMVB2CZ28vCZlzzYjNQKO5I1eYMBkh28BwGFhNI++gqzgn9oiwTLOnbxn2cykoNYuo+labSi+hVDJ/9VlRo1GYVrBMlYntCYlqWAoKP8J+bixVTpQTVDQVRF3J4SUv2HcCANZkRDJk4RGS1P3DShQ3vQeX6DCZPGAEwIx+b0drzOZduvNo7ImSErzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 175.98.123.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
+ dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VN0rAmqtSR+5kos7IlkgtstO7mq9ZJ1jiyJqKqvXeS4=;
+ b=YCqdmDHK5FRPG37m0QssNwMjlK2ONg3lyZLrSETxczKpdiny0Q4Pkn/inaBLF65RGcsOwpa59VitzAOS+vxIVSEUAe73uI8iFeR40mLF2fDSa1dq0MeGdDt7G3QlGK9NX3wa3Dxa5o/CehoZWuKxkFTXz194ivvkK2P3gsMWzTA=
+Received: from SI2PR02CA0003.apcprd02.prod.outlook.com (2603:1096:4:194::13)
+ by SEYPR03MB8127.apcprd03.prod.outlook.com (2603:1096:101:165::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Thu, 11 Jul
+ 2024 19:37:58 +0000
+Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
+ (2603:1096:4:194:cafe::76) by SI2PR02CA0003.outlook.office365.com
+ (2603:1096:4:194::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.22 via Frontend
+ Transport; Thu, 11 Jul 2024 19:37:57 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
+ SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 19:37:56 +0000
+Received: from NTHCML01A.nuvoton.com (10.1.8.177) by NTHCCAS02.nuvoton.com
+ (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 03:37:55 +0800
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCML01A.nuvoton.com
+ (10.1.8.177) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 03:37:55 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 12 Jul 2024 03:37:55 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 4743E5F66E;
+	Thu, 11 Jul 2024 22:37:54 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 372A7DC0F7F; Thu, 11 Jul 2024 22:37:54 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <linus.walleij@linaro.org>, <avifishman70@gmail.com>,
+	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
+	<yuenn@google.com>, <benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/7] pinctrl: npcm8xx: pin configuration changes 
+Date: Thu, 11 Jul 2024 22:37:42 +0300
+Message-ID: <20240711193749.2397471-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <de07ff44-41ee-4158-b629-90a1835bd9cb@app.fastmail.com>
-In-Reply-To: <alpine.DEB.2.21.2407110315170.38148@angie.orcam.me.uk>
-References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com>
- <Zn1FuxNw2CUttzdg@alpha.franken.de>
- <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com>
- <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk>
- <fbd421a6-cf37-49ab-bdbe-6128a7cae8be@app.fastmail.com>
- <Zoz6+YmUk7CBsNFw@alpha.franken.de>
- <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com>
- <Zo457UgAkhbAgm2R@alpha.franken.de>
- <alpine.DEB.2.21.2407101015120.38148@angie.orcam.me.uk>
- <a8741e38-837b-4fbb-8656-1e6d50bdfcc0@app.fastmail.com>
- <alpine.DEB.2.21.2407110315170.38148@angie.orcam.me.uk>
-Date: Fri, 12 Jul 2024 08:36:45 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Jonathan Corbet" <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic:
+	SG1PEPF000082E6:EE_|SEYPR03MB8127:EE_|SEZPR03MB7374:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b58f4bf-1c8c-4291-e02f-08dca1e0f6de
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|376014|7093399012|61400799027|7416014|48200799018|82310400026|35950700016|35450700002;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?RjGciAUdtxNB/bwoifRm5nh9eRAKyDmTPaSRBHki//Rej1vWcBWJ0sFrSAAk?=
+ =?us-ascii?Q?c7aa2E+9ONROofC+QW0b6tBtLQNdXsT5IVdRxZ/eu25qunMj0BwRQzP28OGa?=
+ =?us-ascii?Q?Cp9SJTIDt+FC1UByQRAJRSWKnsfrkx/YQrkrdmq9GpdHPq0l8gQKAdgXWxua?=
+ =?us-ascii?Q?T68L4CM+IClRNp12gEccyBPh/4i+liHiV4NWQTwUyWLx+usHBUr02kecP+my?=
+ =?us-ascii?Q?VIdjS0UdfQJD+vCiCxhImWFkUCzI1fbqoU+8K16fHUmSPoipk7gK6hNT8Tt6?=
+ =?us-ascii?Q?OtJYjilMMpkOjC5RuvWgc6bsIJTN21KDq9W90bnxONUMhpKBFCKZExIP9wf8?=
+ =?us-ascii?Q?GPCKuM8Ovmtz7x0zGSQ+YrlKEHddqKbuyYgzHX7/6ZyTuYee+LvTJTfMsLxt?=
+ =?us-ascii?Q?brmG9ErfWxpxrzFEhxcMtRze2DpmFcqfZZQyxfzOK3sfsTC55tuSWRMdZvqO?=
+ =?us-ascii?Q?JernhY38GjiVhKwUdUhtRlvyTkDn4Lkp99XT+XTlRZ5FkoKkP30bMzuV/yzi?=
+ =?us-ascii?Q?gSvTQEqp5AkPhvTNsrWmLeIxDvgpabPJ/lVI+mZMLHoKV9p6Jcidqjz+Cfrz?=
+ =?us-ascii?Q?5vWg9OJ1NSDNGAhDWM2/jGkG/H8f9y/jkAvg7uGb5CFjjbgqQy9b4zlBOB97?=
+ =?us-ascii?Q?SVUAl9ihqnM/1dZW4ItZ5MqRBMMq+g+pFgFFn01Kq9OInBrSuLa76azEAN1J?=
+ =?us-ascii?Q?vRWO4NWjpfM/6TGRsIO+WUVXgPXBVCundzpdA/OgHfaEEmv4MBhV1X+B5cim?=
+ =?us-ascii?Q?ziPz8QIvj0UNlvNHPDcP8a3ebuZcSqESYq1EkSUBp+GfswcntfaznLwDg5Xd?=
+ =?us-ascii?Q?HbgQzw4iDZrnZfnIdkg83063adi82aPhfqhVNQboT37qgJpZua2laqrywiGD?=
+ =?us-ascii?Q?I63QYreY25N5vWnYLBB005wIYTq1NBjEcsDe1THYKQp4PCREor+VKMmtXtUW?=
+ =?us-ascii?Q?cqzQYU3D42I27rehO+ZQKxBWUtBC4wh5ZQ9SZk1HKl47h21mrvTA8RUerIL7?=
+ =?us-ascii?Q?CeAcYR3a6vqy/pBNUAr94XHN+eEojys3jnqxN4sq8Ci7xtj5x41EIzMxUAO9?=
+ =?us-ascii?Q?yURFMn7T/8BUrEs1jJvetxVZK1KDq+mTie6gJjRfIf727iOs6K9/hRbuhbGj?=
+ =?us-ascii?Q?EHg0SIMKNwhulKFEp6Yly9icmIU9FdeuMNQnHKRDXggXib2cdbIdZJ5UsjMA?=
+ =?us-ascii?Q?UbxWIIV0fWqJpyRf+cB5JJiSdDpZh0iWN+r/hFozKKIXErjs2zh0wIhDz63C?=
+ =?us-ascii?Q?SKyfDkGi+oSQva80YD4O0BiBQB1xJLL/kPMTq5NMad+Zin3DD2zoUC1XVOR4?=
+ =?us-ascii?Q?vVxRGDfNSDFmYy3r1D6uDigkq36tZwpysha49oBaeNxQuBgRrO/HDAPbngA3?=
+ =?us-ascii?Q?IZBUoxLCyWmI7JRJIZ9msBJ8PRIRV1QgJ3xAb+48xVQwS59svZMPxmQjKGVV?=
+ =?us-ascii?Q?hvkB1V5JHkN2lVs5ZUzNIeDkM384+uBDUwPS3UtQN8ngKVffw2T+Lg=3D=3D?=
+X-Forefront-Antispam-Report:
+ CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230040)(376014)(7093399012)(61400799027)(7416014)(48200799018)(82310400026)(35950700016)(35450700002);DIR:OUT;SFP:1022;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 19:37:56.5378
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b58f4bf-1c8c-4291-e02f-08dca1e0f6de
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+ SG1PEPF000082E6.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB8127
+X-OriginatorOrg: nuvoton.com
 
+This patch set addresses various pin configuration changes for the 
+Nuvoton NPCM8XX BMC SoC. The patches aim to enhance functionality, 
+remove unused pins, and improve overall pin management. 
 
+Tomer Maimon (7):
+  pinctrl: nuvoton: npcm8xx: clear polarity before set both edge
+  pinctrl: nuvoton: npcm8xx: add gpi35 and gpi36
+  pinctrl: nuvoton: npcm8xx: add pin 250 to DDR pins group
+  pinctrl: nuvoton: npcm8xx: remove unused smb4den pin, group, function
+  pinctrl: nuvoton: npcm8xx: remove unused lpcclk pin, group, function
+  pinctrl: nuvoton: npcm8xx: modify clkrun and serirq pin configuration
+  pinctrl: nuvoton: npcm8xx: modify pins flags
 
-=E5=9C=A82024=E5=B9=B47=E6=9C=8811=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
-=8D=886:20=EF=BC=8CMaciej W. Rozycki=E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, 11 Jul 2024, Jiaxun Yang wrote:
->
->> >> that's just one case, what about NaN2008 binaries on a legacy MIPS=
- CPU ?
->> >
->> >  It would be good to check with hard-float QEMU configured for writ=
-able=20
->> > FCSR.NAN2008 (which is one way original code was verified) that thi=
-ngs=20
->> > have not regressed.  And also what happens if once our emulation ha=
-s=20
->> > triggered for the unsupported FCSR.NAN2008 mode, an attempt is made=
- to=20
->> > flip the mode bit via ptrace(2), e.g. under GDB, which I reckon our=20
->> > emulation permits for non-legacy CPUs (and which I think should not=
- be=20
->> > allowed under the new setting).
->>=20
->> PTrace is working as expected (reflects emulated value).
->
->  Yes, sure for reads, but how about *writing* to the bit?
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 64 +++++++++++------------
+ 1 file changed, 31 insertions(+), 33 deletions(-)
 
-Tested flipping nan2008 bits with ieee754=3Demulated with ptrace, it wor=
-ks on some extent.
-(flipping the bit to unsupported value immediately triggered emulation).
+-- 
+2.34.1
 
->
->> The actual switchable NaN hardware (M5150, P5600) uses a dedicated Co=
-nfig7
->> bit rather than writable FCSR.NAN2008 to control NaN2008 mode. This i=
-s undocumented
->> and not present on some RTL releases. FCSR.NAN2008 is R/O as per The =
-MIPS32 Instruction
->> Set Manual. This renders the purposed test pointless.
->
->  Yes, for R6 and arguably R5, but not for R3.  Architecture specificat=
-ion=20
-> revisions 3.50 through 5.02 define FCSR.NAN2008 (and also FCSR.ABS2008=
-) as=20
-> either R/O or R/W, at the implementer's discretion, so it is a conform=
-ing=20
-> implementation to have these bits writable and our FPU emulator reflec=
-ts=20
-> it.  I won't go into the details here as to why the later revisions of=
- the=20
-> specification have been restricted to the R/O implementation only.
->
->  NB architecture specification revisions 3.50 through 5.01 also have t=
-he=20
-> FCSR.MAC2008 bit defined, removed altogether later on.
-
-Thanks for the information, I don't have access to those manuals so I wa=
-s unaware
-of that. R/W NAN2008 is prohibited by AVP as well.
-
-I briefly tested NaN2008 distro on QEMU modified with r/w NaN2008 bits i=
-n ieee754=3D
-strict mode, it seems working fine.
-
-Thanks
->
->   Maciej
-
---=20
-- Jiaxun
