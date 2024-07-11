@@ -1,127 +1,169 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2049.outbound.protection.outlook.com [40.95.110.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA23376
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 00:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720743222; cv=none; b=f/yDcEx+pPAaos5C4QHCTS3jXTcc80f/1s1ncqfrHcFHYrtxBCzBY+bEW9sg3Fe2LxEVPxpKwocguB4Q8fY0bE5IVMTs1IYJ5HAiSANG6lUCr0Pk07Zt6fWLy3E4rA5a19EeaqvlXOrdCPSNXQXYmW6paz1+Y7LxHr9Y+9+T3ds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720743222; c=relaxed/simple;
-	bh=5a8vBn/YHW4mLzVnW5So/Jm3wAhZJ78cpeMq82a27lA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gJy35Q/dXhIh4J/GZjx+42wCZ/eIn0gyWWHnlUhrDNWyrU3+/aa2ntFbfWWHyZy0HBJ6TxF0Uv+CWMjxRub3KPgSJe72xUfq85upzrbobS7H3CW1GfTiiKQJgEQBm0sa+Riz2aVc+Nnt1fTPMNLhdQx1kgEA+isSx3vn4HxeQYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dTpZ/ADO; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A748F621;
+	Fri, 12 Jul 2024 00:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.110.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720743415; cv=fail; b=jNf227pxkULvYHyWkWCZa+L4a1Yk3znJJn2wIMtQLDejXLF9eoGTKbzywN42sUP79rgDSgB91s4SwnCVEYjPrOhxnO+YgnZHPefdzWszWAZs7zAig6g8p7WStTe9GJncn+Eia6teI69ufIl8F2bwQGaP656DPC4L4orhbeWiE8E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720743415; c=relaxed/simple;
+	bh=yGEAZzWqh0SCy1gsGW/uTNTThBEleHH/YDCTg4Pq8bI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SC3TWWTRbXbjDjMpTm9BX5wP2kdoQPhuyqnOgNik6vVMa+Su0u0H/zm84Xh/PpBU6lG3eH/WVK316rg05/7DESS0ztnogJbJF6JPb8bcKrh+5IB3DRrVN6jd+/LXFuKHonhnr+DLqnaNNkX+luh4gS1PktUKS37gMhQxGKHixFs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=CwjWssd7; arc=fail smtp.client-ip=40.95.110.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dTpZ/ADO"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-447df43324fso69141cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 17:13:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="CwjWssd7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qxHamRcbq9MgZLrCHQ51yRirMNUkCPFO5KaZTDtYUpEnzJnG4CVNKlzpMommxVEVJcO2FsKYzFs0eRBD04baIHkxOr5ve/9DLetEy6f/fljF13uM8CzZFyM8DOv5buhhDkOY6Kk2veJou/5IcVpf1UOIB2hTrAN92poJ2g1GOoMNb8ltA0G95qEtCQxGs8QIVsDyl5KeXVF4hUnq7BJf62eo/3PZ4/t3rVldh5/dHQH52vmmaKewrbDqNGWYP6CuYabn2s6ht3W/bndowCM1wjH8jiU1x+kCTjyLvODfEzvYGPv3YXGLsRfFwyUrz1Wj042vlS7kpB4hco3/i9ccig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DUYdpjAWagJtDyEJecc9DX4KvWoDMI4RSSkzdf5MXqQ=;
+ b=mzkwrxXkCkHVy9VQyrA7lHrkI33xqWHqHULnIhKjRDRY6UW6az1cB95b1ci0HQStX8liimg6lmBwuQKEP34CwF0qo7iXQA0dqWsPrvVacYJ9FNnqeZDWHPZqcqbc20laCiYADUl3XqHwriukGw6RFoVdpDHPeXdXlCHYrjr/QD27HbUoL2bTCPZ0GGFgQL4fYGCi8a7O6Ksh7SEIjfzEwpf5N6cMerzesTT64o0AxW/yKpZfpis3o5ClAq+dqgtD5RdXgotAjhuR12typLYlOyaIMUbv1OjpADCewkwwjxPblHjZ26QB4azu92kIhJvwtRMQg8WZaomcnOheRMTZWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 211.75.126.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
+ dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
+ dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720743220; x=1721348020; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FvmJJCnLXZLr1KbbD5fKBqYw5WHyRFvoxJIcU+eMWec=;
-        b=dTpZ/ADOQmm+mqKXztmACMd/f82S9JeRII1UdB+3DW0Sp8YvI4fWR++ciqXi8KSxfs
-         XBDgjz5B/1bCcOLIZMaWaGVsHwZKEDTd66+5RSZMQE2rsEQ1IF49Xd/rqVws8Qn6hJ0n
-         JlSFx+OxPN29j+iSt7WrI3wN2OOR1xbZ75HwFRE2Va4TD0utLqgKwuHg4sRE6f2UQtwC
-         EKbD/1JlaUBOL2xZNQ84zZU3qZAVRyCrN1pW0WKtFBK081ok3d0W3A1iYUaPDcQAw8TE
-         KStNRPCOM4iCyUhy6ViHI9CCC61hS293/ZTOiM+GyptFygyphwp2Lo3sCaG4fDG30l+i
-         0afA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720743220; x=1721348020;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FvmJJCnLXZLr1KbbD5fKBqYw5WHyRFvoxJIcU+eMWec=;
-        b=V41rneISWADCiKFQicBivtgUjs6PQ0aEM2LhnIPEqyoF6A/zdWzzE0IkiKKb6hUatR
-         UuLw9TtezsT5zbMwNK4ySnXGcFZsOHCe1n1q12HqASrWJeSn6JAJMnB2Yaw3zPtD9WXm
-         ExEF8NOoA20zPDqxMx1Rtscgz34PmJ59h+6M1xNYfj65xGgAgSUBEraHeAQueOrKsbqt
-         sEs+FAQrv/PVYBMTcLZF8Acy88S8/4N+rXr4m6QrHQ8tCUSoGfzV2vlXfX/7fttf42Ng
-         2syQivgvHL9gnHnHyBjdAFRsx9rDO8P03nvUMHPX7V0raF+xhiVx4hOKffVZi0K9++/A
-         +7yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDa52SpK4Hw4G93B9sWFEKJvaXs+dQz+MR4LfGNtqMiUpEprefVVbe8csXjAb0z/nv3U+X5I1leszJSpTu5mUH6jkmFG+gOMg4HGwP
-X-Gm-Message-State: AOJu0YzgTcWCKq7X6488/bkt67TECWTIW7srXmXCYxBG0QWYdQXQFlRJ
-	3B3K2qSKC/vnSQlkDQPL7UnwmwMnDovTGqlpb3k2TRAqqn5OyhIBL/8jLc9wDz7MGti7wemx37d
-	UYw3fZe+iVgGKga1omzwGSm6Ust4wCXDoSON7c3nOUq2YqOwezp+n
-X-Google-Smtp-Source: AGHT+IFAD8sqxPusycnznfFlRILtgKPfwSQZVQ/Kk7PE0REcOpbukysMQqB4REQvgqThSoihTZy/us5ruUkCyrSKJFk=
-X-Received: by 2002:ac8:5994:0:b0:446:64ad:ee91 with SMTP id
- d75a77b69052e-44e75322eefmr1457141cf.20.1720743219959; Thu, 11 Jul 2024
- 17:13:39 -0700 (PDT)
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DUYdpjAWagJtDyEJecc9DX4KvWoDMI4RSSkzdf5MXqQ=;
+ b=CwjWssd7P91h3b0f6kQghvTUBED4VYlzY5dya20X0DMuVlnpMv+M6lvhgY4IpBwEcaVIleXeOh5OVfE1TyqlkmacTlk9oZIM7cRtIy5Bu8qJ/+IoQUV8JqYrXZz44m7EK062N4l6ThgQaQMWrRkb5AtbT/8zbQytnl86pQTiGoM=
+Received: from SI2PR01CA0005.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::23) by SEZPR03MB8568.apcprd03.prod.outlook.com
+ (2603:1096:101:21a::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Thu, 11 Jul
+ 2024 19:38:00 +0000
+Received: from HK3PEPF0000021E.apcprd03.prod.outlook.com
+ (2603:1096:4:191:cafe::e6) by SI2PR01CA0005.outlook.office365.com
+ (2603:1096:4:191::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23 via Frontend
+ Transport; Thu, 11 Jul 2024 19:38:00 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 211.75.126.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ HK3PEPF0000021E.mail.protection.outlook.com (10.167.8.40) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 19:37:59 +0000
+Received: from NTHCML01A.nuvoton.com (10.1.8.177) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 03:37:57 +0800
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCML01A.nuvoton.com
+ (10.1.8.177) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 03:37:57 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 12 Jul 2024 03:37:57 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 08FC65F676;
+	Thu, 11 Jul 2024 22:37:56 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 090DFDC0F7F; Thu, 11 Jul 2024 22:37:56 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <linus.walleij@linaro.org>, <avifishman70@gmail.com>,
+	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
+	<yuenn@google.com>, <benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 3/7] pinctrl: nuvoton: npcm8xx: add pin 250 to DDR pins group
+Date: Thu, 11 Jul 2024 22:37:45 +0300
+Message-ID: <20240711193749.2397471-4-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240711193749.2397471-1-tmaimon77@gmail.com>
+References: <20240711193749.2397471-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711212514.2372780-1-yoann.congal@smile.fr>
- <CAGETcx--FNpz3o5TiZ3T6UkMHKBUjD8cwHR6eQAjM-U86=p_Eg@mail.gmail.com> <f2044667-e235-4abc-924e-3615c60681f1@smile.fr>
-In-Reply-To: <f2044667-e235-4abc-924e-3615c60681f1@smile.fr>
-From: Saravana Kannan <saravanak@google.com>
-Date: Thu, 11 Jul 2024 17:13:01 -0700
-Message-ID: <CAGETcx-ioF=jTbyQMeD2fsYKz8q5vw_TWYWS9m8H5=pCo5KFYA@mail.gmail.com>
-Subject: Re: [PATCH] regulator: core: Set the fwnode for regulator_dev
-To: Yoann Congal <yoann.congal@smile.fr>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK3PEPF0000021E:EE_|SEZPR03MB8568:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7dfc9074-4db9-4001-7546-08dca1e0f88d
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|7416014|82310400026|376014|7093399012|35950700016|48200799018|61400799027|35450700002;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?UW4spy9S1i4Hr33qSV2sncfMORNZCsml8Os+Xgod3QHNtN/Z8H6ZiYsuOJa6?=
+ =?us-ascii?Q?c1JuJ+WSa7/Y3bsqMhtv9wXkphq0mfMP2uxvk9DGNDyIPP5VweQqvSd0dwJL?=
+ =?us-ascii?Q?3bpPUJT5iLXuQQgsz2r9ORtRJoAFeMFxFauoiYNuUkoD+pAB5kirmZa6GXiw?=
+ =?us-ascii?Q?RlTU5pKYRABHXYb8EaPUtqBwYLKEfkVx5A4B8uoWuDmvIjb3QVEBy/paNIzO?=
+ =?us-ascii?Q?TYep2/9g5GXaPIvK8qFGXjioFADq5LtxAY4XnoNJN4zlFMbn3DSbCNT+PN0x?=
+ =?us-ascii?Q?XNAH+8NFbQxEA+3uYkQCWc+a43CPXO9rXwvnh93TKrRi+o1UJeFjYoov6bXq?=
+ =?us-ascii?Q?8Qa/XfoTDyqiFxwqvEHBHY6yCrPDH3E+jD+97CRgd81xTYFI7aSgbEIvBwFe?=
+ =?us-ascii?Q?1IllBTZH+zYFshndxLMfOlz06vYgBiN13YNg36tjt6mlHf2GWmGa2oU/nzw/?=
+ =?us-ascii?Q?S7Pbd3V6CCyAzOSIDCJocsBp6TVHV6StiZ4q6EpcprHWXWXvFAkij2jmPzFw?=
+ =?us-ascii?Q?Mt+ZCrbkxQiyvhqxH0+U8rhIFJCwrM0WahyVHHmeFtcVD8KrMbyqcZBaf1wv?=
+ =?us-ascii?Q?UdvVeDBlhZ3VHkO9Myp4YnBD0ZOXeM3VQGTLhzeEfGOqFvX33XSSNQig8/kI?=
+ =?us-ascii?Q?snluiycluQB2l4wejUaI1xubXskYvMoNE9REtzj9L1YG5Z95sW6ZDgCmbJeT?=
+ =?us-ascii?Q?dvSecVSHFr1Y42XI4E7RAYhmn6fSIOnqNOHwhkWSzRVN4p9g5qFWRL3u1VTa?=
+ =?us-ascii?Q?Q0bxMcqD3VRy8zlzHzGWZgTKbG0/803mDCXJLR9ozZ+k6PAEhS0ZEZc2GWe7?=
+ =?us-ascii?Q?l8rE5huwmwi3hKHhvOhC0a+1Mng5ayHDsp0ENZF1otYzT7ZSXejhBDfGwIce?=
+ =?us-ascii?Q?V36nz+tTLoLtYNzwlhKzR43yvFKLXuSs8SM4+dv9nXcAxaPfuYvVOvXM9g14?=
+ =?us-ascii?Q?cBUbRR5abw6YYRYVM7RQtLr322cjjjJbxMTX3tM3DQkLWgoXGYmVw/AEYbWO?=
+ =?us-ascii?Q?tja58eb4dJsnAHxb7LaCnm/+LoinS5BIgJI7ExdRpuRDMCgK6SFKFjs02tU6?=
+ =?us-ascii?Q?Ry5q1/1PoJVENC05zUp0BFYSbR37QS8HzruMeHfhnUYUmR+nnDLOsJ5iUZG8?=
+ =?us-ascii?Q?ELuJSLxQLdhn5juRey5EREMP2Cb0N4afb223PnvcNxr3Cq1LtLAt4f/XccJN?=
+ =?us-ascii?Q?V20R/pKi6ZDMwy5vlu1sHxVGxF3zA5SeN1AXLLqwpnO5vgTejx7ivlAw/uvF?=
+ =?us-ascii?Q?b8vMbAxx8sqDnHPJdOn2BQJhsnKhUC6qOhfh7eRA2xgqjCgEQkHsr6F2+oEm?=
+ =?us-ascii?Q?v7lNqcZVVLshgrYnpmP6kGiCs1ESyLAesXweLgg7e0RNsc4zbmfhiwy2dmFX?=
+ =?us-ascii?Q?OgGw6vn7mgZ2bh8VQ/oOVXFrtay4GOY1cmJT3sgcvkQZX22N7j8MSoeWbHFl?=
+ =?us-ascii?Q?YmWbgMfKVBbFyYvM9/XwCWRQanPAyzZ076/5adzvN4RLD8iSZrE4/Q=3D=3D?=
+X-Forefront-Antispam-Report:
+ CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(7093399012)(35950700016)(48200799018)(61400799027)(35450700002);DIR:OUT;SFP:1022;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 19:37:59.4065
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7dfc9074-4db9-4001-7546-08dca1e0f88d
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+ HK3PEPF0000021E.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB8568
+X-OriginatorOrg: nuvoton.com
 
-On Thu, Jul 11, 2024 at 3:19=E2=80=AFPM Yoann Congal <yoann.congal@smile.fr=
-> wrote:
->
-> Le 11/07/2024 =C3=A0 23:29, Saravana Kannan a =C3=A9crit :
-> > On Thu, Jul 11, 2024 at 2:25=E2=80=AFPM Yoann Congal <yoann.congal@smil=
-e.fr> wrote:
-> >>
-> >> From: Yoann Congal <yoann.congal@smile.fr>
-> >>
-> >> After commit 3fb16866b51d ("driver core: fw_devlink: Make cycle
-> >> detection more robust"), fw_devlink prints an error when consumer
-> >> devices don't have their fwnode set. This used to be ignored silently.
-> >>
-> >> Set the fwnode in regulator_dev so fw_devlink can find them and proper=
-ly
-> >> track their dependencies.
-> >>
-> >> This fixes errors like this:
-> >>   stpmic1-regulator 5c002000.i2c:stpmic@33:regulators: Failed to creat=
-e device link (0x180) with 2-0033
-> >>
-> >> NB: This is similar to the commit a26cc2934331 ("drm/mipi-dsi: Set the
-> >> fwnode for mipi_dsi_device") applied to the regulator framework.
-> >>
-> >> Cc: Saravana Kannan <saravanak@google.com>
-> >> Cc: stable@vger.kernel.org # 5.13.x
-> >> Fixes: 63c7c9e16c8e ("regulator: core: Get and put regulator of_node")
-> >> Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
-> >
-> > The change is valid but the problem is that managed device links don't
-> > work correctly for "class" type devices. So, we can't merge this
-> > change yet.
->
-> I was totally unaware of that.
+Add pin 250 to DDR pins group on the Nuvoton NPCM8xx BMC SoC.
 
-Yeah, it's not obvious. The TL;DR of the problem is that your consumer
-will end up waiting for ever for the supplier to probe but a "class"
-device never probes.
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-And the fix is non-trivial. So, it's been on my todo list for a bit.
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index cf021d0e8099..f342aec3f6ca 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -516,7 +516,7 @@ static const int rg2_pins[] = { 110, 111, 112, 113, 208, 209, 210, 211, 212,
+ static const int rg2mdio_pins[] = { 216, 217 };
+ 
+ static const int ddr_pins[] = { 110, 111, 112, 113, 208, 209, 210, 211, 212,
+-	213, 214, 215, 216, 217 };
++	213, 214, 215, 216, 217, 250 };
+ 
+ static const int iox1_pins[] = { 0, 1, 2, 3 };
+ static const int iox2_pins[] = { 4, 5, 6, 7 };
+@@ -1570,6 +1570,7 @@ static const struct npcm8xx_pincfg pincfg[] = {
+ 	NPCM8XX_PINCFG(245,	i3c2, MFSEL5, 21,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(246,	i3c3, MFSEL5, 23,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(247,	i3c3, MFSEL5, 23,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
++	NPCM8XX_PINCFG(250,	ddr, MFSEL3, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		DSTR(8, 12) | SLEW),
+ 	NPCM8XX_PINCFG(251,	jm2, MFSEL5, 1,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(253,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		GPI), /* SDHC1 power */
+ 	NPCM8XX_PINCFG(254,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		GPI), /* SDHC2 power */
+-- 
+2.34.1
 
-> > So, for now, we shouldn't land this. Are you not seeing probing issues
-> > when you do this? Or significant changes/delays in probing?
->
-> I just checked my logs : No probing issue nor noticeable delay.
-
-With your change, I'm guessing you see more links under /sys/class/devlink
-
-Are all the consumers in these new links "class" type consumers too
-(like other regulator devices, etc)?
-
-> Thanks for your answer, I'll drop this for now.
-
-Thanks.
-
--Saravana
