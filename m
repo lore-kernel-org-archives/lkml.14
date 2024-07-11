@@ -1,234 +1,248 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazolkn19010008.outbound.protection.outlook.com [52.103.33.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A431915ECCF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696956; cv=none; b=QhAdXak+Gq6XoYBC2dseaRkrgdgedcJPwkrnqLi5+XdH4NrJtIBSHVWAP1eATNCbTm2hEus5cXvjTvxe5ztqDV8eKYQQ4gnFe0wLDBtVjQs9seo2xXkzWfb4mnMdORPvcaRD3s68h4Ius6Vocu/Rkz5dn04+Sq8s2Er0zRQyUe0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696956; c=relaxed/simple;
-	bh=oBDnAag5gQlhrAcOgNYYluUSpvZY5u+u2lJdb7p7nfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G9tJFS+vHdVOX37wWQFKqO6hJULLorPPFzy0KzUAokm3SCP8Emmsvd1XWbvTFks2naEfRUeq7+dgXioL3hdhEoMPm6OpubJUj1ItibsBUagAIurFDCLtkIu2cJZuc33WMtR9pRZbnArSdBaeqmnwEtsE/OOqR4/2LskIZ4mSPXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IrkFdZvI; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1145815ECCF;
+	Thu, 11 Jul 2024 11:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.33.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720696981; cv=fail; b=TZfdVkSzZs77zW5JENt3mDkENG/xA3iH+cZnFbE+Wy3hQV6WfQAUUipieydXDMBusdBLUx9D6qD8SZUTOp+I/1FtKu3VmXLh78z8lNd4W5qMed+J+HaaM+q4Q3YPdlyswsDfnNCAjRbcQUcGMHDjnsU87It3Nbj//blbDW/UEz8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720696981; c=relaxed/simple;
+	bh=cDuPnEMg04Uv1rTocjZFvg8Dxz5QqjYI4XdbER057dQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bvHkP4hC9GcZpYL45voy77mVdbUsXsEfvGER8yZYTjpZmjR+FWBv/ROzJtA46mYYKMJY3BC/50R08QwrzG8o99YhYmvRmOSGGwIJkZJpWlc8D2uhqhDL48hrY/he6LT+NAamRX4kfE/aRLqRp/kjKx/lQ41aEeL/pJgctLPTVCg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EuizLnNk; arc=fail smtp.client-ip=52.103.33.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IrkFdZvI"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ec61eeed8eso9050211fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720696952; x=1721301752; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRrUzB1pBpPbCjosy572/8SxcZFgnM7FQHnyffhGyG0=;
-        b=IrkFdZvIxHP0OyROexXgabKbNlMDKnnMwb0JQRfhAFCBOmPdZ2AILejoMasGBVzwiW
-         JCTlYW6uoZZ8jPFbi5V2WpWxBPEk/HfvgcR0kEoLavWDgPCaQXhWSo9X+6rXjjmtws+x
-         Ce2d3DXV29gaHnASpfjDrVZagHwHSqcX9sIDfmAo4j5u2DBlDIvWSkrvhfBSRZQyU3KU
-         5RUyZI4K3YVLS70VThxB12AYTxgblH5VFi1fsNINOadttD0XLLCcdnLCLDFhNRus1oAZ
-         lAPWOZ7h+AvlTtXuRiU1XIyc/8gzZpvryqH+eykeLjQvB3d27P7iGrTyw4Xkcbmlqm+t
-         qanA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720696952; x=1721301752;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRrUzB1pBpPbCjosy572/8SxcZFgnM7FQHnyffhGyG0=;
-        b=Z4WP451gQW5unDxEPrH/pBmtIrDO8X/cU0Tvav85Kaw89w2gOk+JzHJwlXJAJ+7YBq
-         ZiXqKa9kFqMP3+VhGN1T878HGUruRK3eCoGlgiIEew6+DbHFJAta28wX+qqEyOxgnPxK
-         D34Ildtqb5VZXCayNu4v0R9c88j4sD6u3GcegcLYr+oq58/OFVK8nxCXxbjFFyW9AgPY
-         jYqYPxvERGtWb3AOnw2p5G14BFA2k1Ls6RsSIjsl6kkcQelh3dHONrWEaAxJKAMPTBEL
-         GzDI4hh1iEgtgZT8Ner479NdYgy4pWL+5K9lHFnQKvHLCgLYZDNt68fMz7XFFspQjWbv
-         6DSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWstV4i1a+MZZLpsDUQm4rH7O1gIjFDTUU+XhYMfTs7NtebCg/sOAHrzKXqyIcDfAc1MOU8nOBTYpefKnNWgkiWzEyD7SrCm1o0f1eo
-X-Gm-Message-State: AOJu0YxR/rEFvHZj3DTW0PagN1Pvf4wrn4b0OVIsuyS1pYwLN0Wf0JtQ
-	3eUehReh6tdgtE++wMTf95aBjA5Hz2xPK07a19PemTNNmbqpy8r6rGyqaGmUdZA=
-X-Google-Smtp-Source: AGHT+IHe5/f+cNlVXJfd3IJFg2qfPezKjG2oDodKbnqowuFTS/9Cv35Wjs9n9ATrOYrBf/wOUzZj5Q==
-X-Received: by 2002:a2e:7307:0:b0:2ee:6cda:637b with SMTP id 38308e7fff4ca-2eeb318aaa8mr51695021fa.35.1720696951745;
-        Thu, 11 Jul 2024 04:22:31 -0700 (PDT)
-Received: from [192.168.0.3] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279bc37c05sm11595235e9.35.2024.07.11.04.22.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 04:22:31 -0700 (PDT)
-Message-ID: <aa20591f-3939-4776-9025-b8d7159f4c63@linaro.org>
-Date: Thu, 11 Jul 2024 12:22:30 +0100
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EuizLnNk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EPw5wpxjY2DhI3qNK+vgbTiv/kXEtNNajAUG1uG6sIBcTcdN2Nb24BqdWt8qc9e3nQW9fHA3Y7SbpV1nFp0xls4+POingmkpMVabbctZPXfmD/myogoK+Ic5hlWJTmn9Kr6yLndWfwS4h/XlYr/SwSwYkIg49ceLyrvxhMKALRqnlMfpVWtLBQpBzr0qwjXS4MXRQEo2DH38io7wjuiaHp4gTuKQfScS9/7N7RscbxjU4X69kkD70ncvfoFN9Z7JIUz7KzinjePUd3xpDei24TAMvgIjOeRanQuy4USVlz17a5ittVs9nmJnwi2l+ZDTGjayA/FrWjA1M/zFiFjD9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=epPvZUVJLFCfITLfmee8fBtxZMqqIsLm5Kg+Eba8emw=;
+ b=akMGZ+F++xqxXysJbZX0vQXOAnUBXULMgxoQMJ2McD4GSRdQ2S/bVdChZLggJZPsPR9b1peBAc2SIaO0DY28mOIhlowTnA3KZ3+gBUbkSKGvHppBNqLK5RdEYVUxoRf6fLCqfTOC2tLd7HQgWbas63IoQkRLPR+SXEqa6xMU1zUA1A02bnE6nhta690Ltn6Y8Rc08Ow0yRZ1tBQ3T5sxMg8zmtUhljDalVyPHUz/hbqDMYFlXVdWV4T7sK0AdfH+Tt9a9A5G86YLPKmPJkv25glO2vuzv6ARnCE/XPNZC+ODdDipTsHCSbcVXzIl4xy3JJawUeZZzy5SPJui/Nyj4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=epPvZUVJLFCfITLfmee8fBtxZMqqIsLm5Kg+Eba8emw=;
+ b=EuizLnNk29XP0hZXRCmcDCCKKPr6d6OTDfp9hXMbnNOCsJaJioN0cmVooorX4ZY7Iq1W1p+dTLjehkIIb6KfoL8E4JGbFKMo7TXW1rVeU2jcuw+PFXIMO1niyemm7XB9PaL6KznvMalKRyYDeQqVZwn6BjDYsIK1GhtHBs8Ov2NzI6ic0U2lGlbHj/6U+BxSzOJO2g9a0ypAULbrNzuGe9NGTLKhVdCb81D5e0l7U+yQSQVnY676P2ibyrPpCzXGJ+dgICsEmEfwiosWGjNHGKwH+kI/dgSVqFUU8NBIurAB1L4VmrfQE0ec5h8y4UxLwCKXFAaSdBqJ7weyIhM3Qg==
+Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
+ by GV1PR03MB10233.eurprd03.prod.outlook.com (2603:10a6:150:166::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Thu, 11 Jul
+ 2024 11:22:56 +0000
+Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
+ ([fe80::4b97:bbdb:e0ac:6f7]) by AM6PR03MB5848.eurprd03.prod.outlook.com
+ ([fe80::4b97:bbdb:e0ac:6f7%6]) with mapi id 15.20.7762.020; Thu, 11 Jul 2024
+ 11:22:56 +0000
+From: Juntong Deng <juntong.deng@outlook.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	andrii@kernel.org,
+	avagin@gmail.com,
+	snorcht@gmail.com
+Cc: bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH bpf-next RESEND 07/16] bpf/crib: Add struct sock related CRIB kfuncs
+Date: Thu, 11 Jul 2024 12:19:29 +0100
+Message-ID:
+ <AM6PR03MB5848D2C74800C9FA88AB62AF99A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <AM6PR03MB58488045E4D0FA6AEDC8BDE099A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
+References: <AM6PR03MB58488045E4D0FA6AEDC8BDE099A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [bapnTE9qtzAYbkzdVd24f8rZrgrxo/fY]
+X-ClientProxiedBy: SI2P153CA0031.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::7)
+ To AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
+X-Microsoft-Original-Message-ID:
+ <20240711111938.11722-7-juntong.deng@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] media: ov5675: Elongate reset to first transaction
- minimum gap
-To: Quentin Schulz <quentin.schulz@cherry.de>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Quentin Schulz <quentin.schulz@theobroma-systems.com>,
- Jacopo Mondi <jacopo@jmondi.org>
-Cc: Johan Hovold <johan@kernel.org>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20240711-linux-next-ov5675-v1-0-69e9b6c62c16@linaro.org>
- <20240711-linux-next-ov5675-v1-2-69e9b6c62c16@linaro.org>
- <fcd0db64-6104-47a6-a482-6aa3eec702bc@cherry.de>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <fcd0db64-6104-47a6-a482-6aa3eec702bc@cherry.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|GV1PR03MB10233:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66ed3f69-6d3b-414b-577a-08dca19bd029
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|19110799003|8060799006|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	8+E1uuubuON4CR3BsKwi410zpxefQL/j4B83dBofgxmBxqcE/W7PNLVPAJMUvyBbAemoaTDahD/rLzSMAnIocZ5ijn2FQmq3fe+u+84Rj9YRfXV7BhHwwFEsvTWrvs05hIHTyc/oTpqaCI2CLXQLc0miVS2ewYnQB8MTa6Qj1VOu/YocdUatQciNLGtvmodn6B4HLbouRpQMwEbvGKlIGnyYUNViXCwKeL2bHMLYO5terFGgu06rgOtgnAXU+xw1wlhY6j08h4K5jzzk27L09eYaKdZ0uty6exqk30YwLDpMnv2SRa8mloy2i+jd/ejPw0keotOBKlNg9XP7FG763wYfPjyEKb1qlxpUngQxpRfxCELgNAUNEEbtqiC4obljLGNKcyT34UvXMpYdUrbdNSCeVLW+kkAVlzMvCSIiqKNnoKdLgHkvflLWgwMAuoc4fol7ErVGjduwDnsMTJqKsthxp+wU/Mi/0aD7B3ahkTq5GFJkdA/at4mi/9vSheIud3Kq3PcU7MJ2Ry+HzjAUH37I8iD4VxBiyt7Bwf0ucpRUg/BmGDN9sDRvwi+eJKxX9NsgYUqQX/fv9btcIvH17sg9TYv83WNorIGshhr0YyyrfogMuDcG9blzwFJCO50BrIc7owVrqErzykllYmisBQ==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?U3CLBYUYau637LklFEJrDeSqzcJhqt9ySwipSrdWrm5xAdJotlMDoNKYBFoc?=
+ =?us-ascii?Q?Azfl0o7z91CGLDu5BIsGcXfLT3Yp5BkohHqr5+gTabC8fcpxQYsIMTMWjAq9?=
+ =?us-ascii?Q?HVMaEisr4ujNyz1KVI2N6xSJDGM7a4zrANJ+Hd5H+lPuobfrA03BEUx2ETHI?=
+ =?us-ascii?Q?Vn9AOeUhDnHH5PCAQpBq1m/1Sj81T/4V20S1squZ/IM/Ne/OlSPKvHDzGl5V?=
+ =?us-ascii?Q?iB86VdgH18TfZyW4R30lz6hmUspWBj6PrVxOqVr7oQMj4tl+mmqJCMw8fBFw?=
+ =?us-ascii?Q?ZNZdCLUQcuEY1aOQOZCkvcBOhfB4KP0xdt8YuXZSjNfX6Cne96VDEiRJay9T?=
+ =?us-ascii?Q?ggpZ/BXGv86YYAFFHkLbiyUwHqvknYw86rPoEGTr0vLiuNhh5ZkX5BzqtN66?=
+ =?us-ascii?Q?8dDlOc9K52ezQrpj1cGq5Sp83saMTjAF1ySw9/wwRlcm0CIwhg1tEpuktvE/?=
+ =?us-ascii?Q?i6r3HyjmiQmxj59FMWudGGocRdtUWdRpPO7einOrTZyJVzi4MNERf3B46dNA?=
+ =?us-ascii?Q?QHd9YKARZ7wuVO3Ttpb7z75XpPcffdlbpkE76KBcXeTHzV9MVyecsK2Y/MvB?=
+ =?us-ascii?Q?taa+vdZ0RXpJmzEV9IK2qWyZIWq/L8Gxr+lhHHf5MH1AhyHLcYG1HltD7ZdK?=
+ =?us-ascii?Q?rgoZYKOF1943T8Uhd/WBN0f+XC8IbNUJuz7HyrJXKEpPSyrshkqiKFLFN+qW?=
+ =?us-ascii?Q?w6CwnXW3XXYUKuqyApkqdiXTnaLjTe1rbpTjKx3FbwVPBOuW/pPvRrlQTeme?=
+ =?us-ascii?Q?B35gr9X1p9szH0cDhq/eU6ENQDOFil66F7GENGS1ZpwA2Lx6CNZuiKyK32TA?=
+ =?us-ascii?Q?PNg09/8UdDASK50So2R3kZaDnXvdfXUBX0KjW+wjmZoHfeK0W0pGlDcRHCwA?=
+ =?us-ascii?Q?hXcBgGSKzMqzH9Wt+jZW4+8ETojYYalLF3csDXiytARXGLQ5NLXgI2qfrnxT?=
+ =?us-ascii?Q?Y6xTaxmfonkUdG1oXIIipURr/pCiylWKxAqMpVEyX31pVl6vmdE5eUBAWwzC?=
+ =?us-ascii?Q?bfjhtuWajt+zJBX9iHI7EsYVILQA2VFOxnAi763P/t0CfP5kpPfFKGM8FUQK?=
+ =?us-ascii?Q?DprXHwd/iQrBInM1kGJbHA2P2XFEAGMZlAHu5br6jtINsgfIH/jCu/JrJwo2?=
+ =?us-ascii?Q?46pEsoyX218mTLbZRc3WVNUkiRDROl2oxOX/Z218sWkCeRltAIEbVazlZE1Y?=
+ =?us-ascii?Q?Pgpzrh+nb3AITQV8BGEviGJO/kpDKJPDTa+8JZJf79h6zF5iA0UaY4hvrsU?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66ed3f69-6d3b-414b-577a-08dca19bd029
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 11:22:56.7131
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB10233
 
-On 11/07/2024 11:40, Quentin Schulz wrote:
-> Hi Bryan,
-> 
-> On 7/11/24 12:20 PM, Bryan O'Donoghue wrote:
->> The ov5675 specification says that the gap between XSHUTDN deassert 
->> and the
->> first I2C transaction should be a minimum of 8192 XVCLK cycles.
->>
->> Right now we use a usleep_rage() that gives a sleep time of between about
->> 430 and 860 microseconds.
->>
->> On the Lenovo X13s we have observed that in about 1/20 cases the current
->> timing is too tight and we start transacting before the ov5675's reset
->> cycle completes, leading to I2C bus transaction failures.
->>
->> The reset racing is sometimes triggered at initial chip probe but, more
->> usually on a subsequent power-off/power-on cycle e.g.
->>
->> [   71.451662] ov5675 24-0010: failed to write reg 0x0103. error = -5
->> [   71.451686] ov5675 24-0010: failed to set plls
->>
->> The current quiescence period we have is too tight, doubling the minimum
->> appears to fix the issue observed on X13s.
->>
->> Fixes: 49d9ad719e89 ("media: ov5675: add device-tree support and 
->> support runtime PM")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> ---
->>   drivers/media/i2c/ov5675.c | 9 +++++++--
->>   1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/media/i2c/ov5675.c b/drivers/media/i2c/ov5675.c
->> index 92bd35133a5d..0498f8f3064d 100644
->> --- a/drivers/media/i2c/ov5675.c
->> +++ b/drivers/media/i2c/ov5675.c
->> @@ -1018,8 +1018,13 @@ static int ov5675_power_on(struct device *dev)
->>       gpiod_set_value_cansleep(ov5675->reset_gpio, 0);
->> -    /* 8192 xvclk cycles prior to the first SCCB transation */
->> -    usleep_range(delay_us, delay_us * 2);
->> +    /* The spec calls for a minimum delay of 8192 XVCLK cycles prior to
->> +     * transacting on the I2C bus, which translates to about 430
->> +     * microseconds at 19.2 MHz.
->> +     * Testing shows the range 8192 - 16384 cycles to be unreliable.
->> +     * Grant a more liberal 2x -3x clock cycle grace time.
->> +     */
->> +    usleep_range(delay_us * 2, delay_us * 3);
-> 
-> Would it make sense to have power_off have the same logic? We do a 
-> usleep_range of those same values currently, so keeping them in sync 
-> seems to make sense to me.
+This patch adds struct sock related CRIB kfuncs.
 
-I have no evidence to suggest there's a problem on the shutdown path, 
-that's why I left the quiescence period as-is there.
+bpf_sock_from_socket() is used to get struct sock from struct socket
+and bpf_sock_from_task_fd() is used to get the struct sock corresponding
+to the task file descriptor. Both kfuncs will acquires a reference to
+struct sock.
 
-> Also, I'm wondering if it isn't an issue with the gpio not being high 
-> right after gpoiod_set_value_cansleep() returns, i.e. the time it 
-> actually takes for the HW to reach the IO level that means "high" for 
-> the camera. And that this increased sleep is just a way to mitigate that?
+bpf_sock_acquire()/bpf_sock_release() are used to acquire/release
+reference on struct sock.
 
-No, that's not what I found.
-
-I tried changing
-
-         usleep_range(2000, 2200);
-
-to
-         usleep_range(200000, 220000);
-
-but could still elicit the I2C transaction failure. If the time it took 
-for the GPIO to hit logical 1 were the issue then multiplying the reset 
-time by 100 would certainly account for that.
-
-// BOD set the chip into reset
-         gpiod_set_value_cansleep(ov5675->reset_gpio, 1);
-
-// BOD apply power
-         ret = regulator_bulk_enable(OV5675_NUM_SUPPLIES, ov5675->supplies);
-         if (ret) {
-                 clk_disable_unprepare(ov5675->xvclk);
-                 return ret;
-         }
-
-         /* Reset pulse should be at least 2ms and reset gpio released 
-only once
-          * regulators are stable.
-          */
-
-// BOD spec specifies 2 milliseconds here not a count of XVCLKs
-         usleep_range(2000, 2200);
-
-         gpiod_set_value_cansleep(ov5675->reset_gpio, 0);
-
-// BOD spec calls for a _minimum_ of 8192 XVCLK cycles before I2C
-         /* 8192 xvclk cycles prior to the first SCCB transation */
-         usleep_range(delay_us, delay_us * 2);
-
-The issue is initiating an I2C transaction too early _after_ reset 
-completion not the duration of that reset.
-
-As I stated in the cover letter, I tried a longer reset duration, a 
-higher drive-strength on the GPIO as well as I didn't put in my cover 
-letter, inverting the logic of the GPIO reset, which unsurprisingly 
-didn't work.
-
-No matter how long we hold the chip in reset, unless we give more grace 
-time _subsequent_ to the reset before initiating an I2C transaction, we 
-will encounter transaction failures.
-
-This is a fairly common and logical fault if you think about it.
-
-XVCLK is providing a clock to the ov5675 core to "do stuff" whatever 
-that stuff is. Bring up an internal firmware, lock a fundamental PLL - 
-whatever.
-
-If we start an I2C transaction before the hypothetical internal core has 
-booted up then - meh no bueno we'll get no transaction response.
-
-That's the error - speaking too soon.
-
-A little like myself in the mornings, cranky before I've had my coffee 
-and unresponsive.
-
-;)
-
-> With this patch we essentially postpone the power_on by another 430ms 
-> making it almost a full second before we can start using the camera. 
-> That's quite a lot I think? We don't have a usecase right now that 
-> requires this to be blazing fast (and we anyway would need at the very 
-> least 430ms), so take this remark as what it is, a remark.
-
-Not a full second, a millisecond.
-
-8/10ths of 1 millisecond instead of 4/10ths of one millisecond.
-
-19.2MHz is 52.083333333333 nanoseconds per clock
-
-52.083333333333 * 8192 => 426666 nanoseconds => 0.426666 milliseconds or 
-426.6 microseconds
-
-So our post reset quiesence minimum @ 19.2MHz moves from 426.6 
-microseconds to 853.
-
-> The change looks fine to me even though it feels like a band-aid patch.
-
-I mean it's not a second - if you feel very strongly that 426 
-milliseconds * 2 is wrong, I guess I could add some more complex logic 
-however I like this simple fix for backporting.
-
+Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
 ---
-bod
+ kernel/bpf/crib/bpf_crib.c | 82 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+
+diff --git a/kernel/bpf/crib/bpf_crib.c b/kernel/bpf/crib/bpf_crib.c
+index b901d7d60290..d83e5f0e8bfc 100644
+--- a/kernel/bpf/crib/bpf_crib.c
++++ b/kernel/bpf/crib/bpf_crib.c
+@@ -9,6 +9,7 @@
+ #include <linux/bpf_crib.h>
+ #include <linux/init.h>
+ #include <linux/fdtable.h>
++#include <net/sock.h>
+ 
+ __bpf_kfunc_start_defs();
+ 
+@@ -45,6 +46,82 @@ __bpf_kfunc void bpf_file_release(struct file *file)
+ 	fput(file);
+ }
+ 
++/**
++ * bpf_sock_acquire() - Acquire a reference to struct sock
++ *
++ * @sk: struct sock that needs to acquire a reference
++ *
++ * @returns struct sock that has acquired the reference
++ */
++__bpf_kfunc struct sock *bpf_sock_acquire(struct sock *sk)
++{
++	sock_hold(sk);
++	return sk;
++}
++
++/**
++ * bpf_sock_release() - Release the reference acquired on struct sock.
++ *
++ * @sk: struct sock that has acquired the reference
++ */
++__bpf_kfunc void bpf_sock_release(struct sock *sk)
++{
++	sock_put(sk);
++}
++
++/**
++ * bpf_sock_from_socket() - Get struct sock from struct socket, and acquire
++ * a reference to struct sock.
++ *
++ * Note that this function acquires a reference to struct sock.
++ *
++ * @sock: specified struct socket
++ *
++ * @returns a pointer to the struct sock
++ */
++__bpf_kfunc struct sock *bpf_sock_from_socket(struct socket *sock)
++{
++	struct sock *sk = sock->sk;
++
++	bpf_sock_acquire(sk);
++	return sk;
++}
++
++/**
++ * bpf_sock_from_task_fd() - Get a pointer to the struct sock
++ * corresponding to the task file descriptor.
++ *
++ * Note that this function acquires a reference to struct sock.
++ *
++ * @task: specified struct task_struct
++ * @fd: file descriptor
++ *
++ * @returns the corresponding struct sock pointer if found,
++ * otherwise returns NULL.
++ */
++__bpf_kfunc struct sock *bpf_sock_from_task_fd(struct task_struct *task, int fd)
++{
++	struct file *file;
++	struct socket *sock;
++	struct sock *sk;
++
++	file = bpf_file_from_task_fd(task, fd);
++	if (!file)
++		return NULL;
++
++	sock = sock_from_file(file);
++	if (!sock) {
++		bpf_file_release(file);
++		return NULL;
++	}
++
++	sk = sock->sk;
++
++	bpf_sock_acquire(sk);
++	bpf_file_release(file);
++	return sk;
++}
++
+ __bpf_kfunc_end_defs();
+ 
+ BTF_KFUNCS_START(bpf_crib_kfuncs)
+@@ -57,6 +134,11 @@ BTF_ID_FLAGS(func, bpf_iter_task_file_next, KF_ITER_NEXT | KF_RET_NULL)
+ BTF_ID_FLAGS(func, bpf_iter_task_file_get_fd, KF_ITER_GETTER)
+ BTF_ID_FLAGS(func, bpf_iter_task_file_destroy, KF_ITER_DESTROY)
+ 
++BTF_ID_FLAGS(func, bpf_sock_acquire, KF_ACQUIRE | KF_TRUSTED_ARGS)
++BTF_ID_FLAGS(func, bpf_sock_release, KF_RELEASE)
++BTF_ID_FLAGS(func, bpf_sock_from_socket, KF_ACQUIRE | KF_TRUSTED_ARGS)
++BTF_ID_FLAGS(func, bpf_sock_from_task_fd, KF_ACQUIRE | KF_TRUSTED_ARGS | KF_RET_NULL)
++
+ BTF_KFUNCS_END(bpf_crib_kfuncs)
+ 
+ static int bpf_prog_run_crib(struct bpf_prog *prog,
+-- 
+2.39.2
+
