@@ -1,51 +1,50 @@
 Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F395422F17
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 02:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A27A28385
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 02:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720665364; cv=none; b=qnqNFkPeAAEDvuehw88s2BUdFuBbZnF5uEWIVldFMpzUED9U7TdgUr2QXXfB7WMJSii4fNdix6VI8teTwQImVfof/WvmthHI9cI7t0OBTcuG4a8fJM8ZnXlUhp0L889LCN+RMEmcW0vg3rq6lFMrg9JffCUju9NR4v7PqRV5ntA=
+	t=1720665381; cv=none; b=kHe9hvVGiMGix9JpJX/vRygXMxDQiE2BMKlnnohe6WTMscEwnxsmDpZ0oRg/me7YfKsz1vuFhuKgccMkl0GIc1W4bkgML7i//iftBdyCeamL0E6Uz9U0sLlFJCgJXbnJx1QNezMLNqcNq+3wElG0tb6jRiSofzxlDaCfDhClTsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720665364; c=relaxed/simple;
-	bh=YGLvWQJeQjTOKJ3gXmJbqqG2PVZ59UeXzZJl4sYUhTE=;
+	s=arc-20240116; t=1720665381; c=relaxed/simple;
+	bh=d38yRHq18ji//IUN5ts6WA+Ph2munXiLPomY5msniS4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aAN6osl8fAySMw5dzjOTix286Tc7dSaU6pdYOvqvh3CLaLK4gccarlPG7BSK2lXadPVk8H6wsd5lBv90DRCM04tqw2rhiIQT+Ri9K0vKYNDuNl4CQ4XIxvf/62aImlakOLHVGuAUn6791dv9uUCwKGWIt/Yulk0oiUsaX3p1mkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=Lw8/OaHK; arc=none smtp.client-ip=18.9.28.11
+	 MIME-Version:Content-Type; b=nnKtckn9lgNcQJRZrAkuUIy+slnC0RHlfYl9UTMa9Te++jBDlQTcDf5X6JXkWUGdfmHarAe2RRXyKQiSsx5hLTu0GSoV76ibtfGl+PgZ/JtLJFoQg50ULIzAMLTN/4YpTIHFWDsNGNBQLdNZQ8eR2OsAVn0gbaCSvqEOziGAPYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=h7Sgu9ix; arc=none smtp.client-ip=18.9.28.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="Lw8/OaHK"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="h7Sgu9ix"
 Received: from cwcc.thunk.org (pool-173-48-116-79.bstnma.fios.verizon.net [173.48.116.79])
 	(authenticated bits=0)
         (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 46B2ZfY6025368
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 46B2ZiN9025481
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 22:35:43 -0400
+	Wed, 10 Jul 2024 22:35:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1720665344; bh=nFoKNnZUpTVqvgOZgriC7SwE48n2Vz4fjiGPip26FTI=;
+	t=1720665346; bh=g1tPbHJdmZnX2AtjWrEW5R3PQWck10IwSxqZ7K4T6t0=;
 	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=Lw8/OaHKF/JQB5mnd5lcyg3CP+YavC3/2erCuwSxAfi1YmRrxQctZHOCC9oor7LkD
-	 ZCZlNbnE2GGkbXM3UIPG0YwY/REhYbg8phq0I1ccCDLy6ou1mcnm0+Eg0A6a+NWPqc
-	 uqvgHhIAg/ZA62oKrzCYCSw88WuD6THVMAP4MBLV0F9NLvzVjTCm/OGP2GNpHA9Z1P
-	 Mv6JWSaDB1lAxs/jEiLvY56rdR2oFY47W6O7m6N78zE6FyNZ12EDysjoRcS2QdSiBd
-	 p+4rEE40xYu7e6K5L9EwkAqk0UAH62MCTbXHNUhX9myqAJg1o2XmZsu5d8mB229mQD
-	 V4A2sBx9Glx6g==
+	b=h7Sgu9ixPhRXjD7X0B43X6VbvrEE3ZuJbHcqJCIVVVmAKUAji2iL8oSTscEj8Xyw2
+	 SdA516HsA/KHmBZvaxBu8W6GiD82dLEnqCi0ayjmQTIClD8Bx4el6cuZhtyWG2f0V5
+	 n67EABZ0Ad7eH1KQky/1jqdFSK+gEaemFPCz6SxIA79a6MuPM8g5DRMDW92lEdmATB
+	 G6coKcFwa5pMypHAWdzMnbQc4YuKIb16T4mzyRGjVCf7MUEYzKYuOS2WaqJFUMHH/o
+	 Tt/kDOuzgQ/KmvfsYWu/xcdEFGuRF+S1LdcYT/0qo8b7jEFbSOgrwUVQYaiLqyI//T
+	 EgRXk7Y1kAjcw==
 Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id CC32115C18CB; Wed, 10 Jul 2024 22:35:41 -0400 (EDT)
+	id DBE3115C193B; Wed, 10 Jul 2024 22:35:41 -0400 (EDT)
 From: "Theodore Ts'o" <tytso@mit.edu>
-To: Kees Cook <kees@kernel.org>
-Cc: "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com,
-        Justin Stitt <justinstitt@google.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ext4: Use memtostr_pad() for s_volume_name
-Date: Wed, 10 Jul 2024 22:35:30 -0400
-Message-ID: <172066485809.400039.2045305282487026392.b4-ty@mit.edu>
+To: linux-ext4@vger.kernel.org, Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, adilger.kernel@dilger.ca, jack@suse.cz,
+        ritesh.list@gmail.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+        yukuai3@huawei.com
+Subject: Re: [PATCH v2] jbd2: speed up jbd2_transaction_committed()
+Date: Wed, 10 Jul 2024 22:35:38 -0400
+Message-ID: <172066485807.400039.1155297721228619828.b4-ty@mit.edu>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240523225408.work.904-kees@kernel.org>
-References: <20240523225408.work.904-kees@kernel.org>
+In-Reply-To: <20240520131831.2910790-1-yi.zhang@huaweicloud.com>
+References: <20240520131831.2910790-1-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,20 +55,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Thu, 23 May 2024 15:54:12 -0700, Kees Cook wrote:
-> As with the other strings in struct ext4_super_block, s_volume_name is
-> not NUL terminated. The other strings were marked in commit 072ebb3bffe6
-> ("ext4: add nonstring annotations to ext4.h"). Using strscpy() isn't
-> the right replacement for strncpy(); it should use memtostr_pad()
-> instead.
+On Mon, 20 May 2024 21:18:31 +0800, Zhang Yi wrote:
+> jbd2_transaction_committed() is used to check whether a transaction with
+> the given tid has already committed, it holds j_state_lock in read mode
+> and check the tid of current running transaction and committing
+> transaction, but holding the j_state_lock is expensive.
 > 
+> We have already stored the sequence number of the most recently
+> committed transaction in journal t->j_commit_sequence, we could do this
+> check by comparing it with the given tid instead. If the given tid isn't
+> smaller than j_commit_sequence, we can ensure that the given transaction
+> has been committed. That way we could drop the expensive lock and
+> achieve about 10% ~ 20% performance gains in concurrent DIOs on may
+> virtual machine with 100G ramdisk.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] ext4: Use memtostr_pad() for s_volume_name
-      commit: be27cd64461c45a6088a91a04eba5cd44e1767ef
+[1/1] jbd2: speed up jbd2_transaction_committed()
+      commit: 7c73ddb7589fb8ddb1136b6306dfb72089c81511
 
 Best regards,
 -- 
