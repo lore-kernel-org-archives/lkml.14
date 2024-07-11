@@ -1,48 +1,31 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D1B83CD6;
-	Thu, 11 Jul 2024 06:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF1079CC
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720679286; cv=none; b=I1eRbtSHG3AvbgWxGuV9REI4qjRBGdPU3VVRfWymedJ49gxknoRL6KJpBpg+cDNcaMuGaxVoXe3fWptykMHdptDM8yqQ9lmqHQFNUMG5kOJNK3VAzXxLNU6ADiI91loRxYgifjMxasGd5u4fe5HiUdt4GVYzWlp2EZAop60XNVk=
+	t=1720679420; cv=none; b=GDv+RHSVTyJRcMeHj18O3rNKNRy5FKVAiSh9OXurON/CuY1rNTYo0FO0hjcNleSPDh2QExmPJhcqIi/C3zl4cEZNggDyxnaBMs1G0J2kqdOZ6pTyV9TrBqa2lwXivoUKtom3hST2BCBv2d6rl/orAs9aKtWbC+z2l3kgWtyw/ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720679286; c=relaxed/simple;
-	bh=2uxmTCZV6wdZ4BdAvADYGh/dTaVrMo39/6i3EygQAOM=;
+	s=arc-20240116; t=1720679420; c=relaxed/simple;
+	bh=KAT9RnmPL0U58mleJPhdAUKbDaq4Gt6Eq4Q3xQ2t9KE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aIDAog4JivppiOrtklD3NxUgn00oGgA9fx5cVQi0lfZYqmIaUMElrB0C32OopGBoaJPokpCUteTNklNptI91FvB2fLA+kolCccfzMeZp/8LgHGTOxa4pDNsDctOLQUviR/QXZjqSldumzjY9lMt+U4QrzvXh1tv7YPUlFOgF9GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dt6ZFSZZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dt6ZFSZZ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B4mj1P014569;
-	Thu, 11 Jul 2024 06:27:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rBpuZLrNCGsTn/D1eggkjYSZqxJ/1YdlhMGfNazg0sQ=; b=dt6ZFSZZUaT6STyB
-	iO6+vM3PnuEqICxk3rKDRwRjMGhoxLP/V5bL1La6Q7l7ldkBKyzqi28izNb8Ivfx
-	zt/zw1M8WEm5tETsasJ6z4LTn7lPSNPe7s2LlS0pWfFFIFAf1wKNbnwcGv2XvMD+
-	9R1srS1SkbrZKcfB/RVvu89/uzRFoth1khidkr+6fEtDTS6GRjcef7nEL4LLCM95
-	k2tm/jZV2uL1N4V7XJtibPvf3v6HiWiPkcbAaqZkAjkAwTwAdm3jae7fY7Emq3uz
-	UH6ZHVeGZdjkAyQYhx/JPVrNfdQbaIOUOOiTfFf12cB066nB251R6v3eHHcNZ5NX
-	AsXbIw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 409kdtk89k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 06:27:45 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46B6RijT020417
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 06:27:44 GMT
-Received: from [10.216.38.48] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Jul
- 2024 23:27:38 -0700
-Message-ID: <a56de2dc-30a0-a292-c03c-16ec5393eea8@quicinc.com>
-Date: Thu, 11 Jul 2024 11:57:35 +0530
+	 In-Reply-To:Content-Type; b=Cnjc5Q/1YweydEM1FsIixr+J/wE37s8GL4VIVMGVhY2onMbvNcFw/NfLn0OUWO2b84mA2DvB1FEAZNIjXrDEVA+ERqKzoyT2yXPBWDeY+QMGgcgkVBwI8O/jflNvJ+ymdLTu8gpQPcFtb77drzeL/K0U9h9XQ369AI66t20GHB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WKPr91XfwzQl1c;
+	Thu, 11 Jul 2024 14:26:17 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id E3EE8140416;
+	Thu, 11 Jul 2024 14:30:13 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 11 Jul 2024 14:30:12 +0800
+Message-ID: <eb647b6d-55cb-4fa2-6e2f-642d10afa719@huawei.com>
+Date: Thu, 11 Jul 2024 14:30:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,115 +33,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v7 2/4] PCI: qcom-ep: Add support for D-state change
- notification
+ Thunderbird/102.2.0
+Subject: Re: [PATCH 0/3] ARM: Use generic interface to simplify crashkernel
+ reservation
 Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet
-	<corbet@lwn.net>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_parass@quicinc.com>, Manivannan Sadhasivam
-	<mani@kernel.org>
-References: <20240710121118.GA240905@bhelgaas>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240710121118.GA240905@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: mXHbW_6Y4FDFYiXrAqEIVIrBokao0TBO
-X-Proofpoint-GUID: mXHbW_6Y4FDFYiXrAqEIVIrBokao0TBO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-11_03,2024-07-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- adultscore=0 suspectscore=0 phishscore=0 bulkscore=0 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407110043
+To: Baoquan He <bhe@redhat.com>
+CC: <linux@armlinux.org.uk>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<arnd@arndb.de>, <afd@ti.com>, <akpm@linux-foundation.org>,
+	<rmk+kernel@armlinux.org.uk>, <linus.walleij@linaro.org>,
+	<eric.devolder@oracle.com>, <gregkh@linuxfoundation.org>, <deller@gmx.de>,
+	<javierm@redhat.com>, <robh@kernel.org>, <thunder.leizhen@huawei.com>,
+	<austindh.kim@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>
+References: <20240708133348.3592667-1-ruanjinjie@huawei.com>
+ <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <Zo0DCVXvCryDr7WN@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
 
 
-On 7/10/2024 5:41 PM, Bjorn Helgaas wrote:
-> On Wed, Jul 10, 2024 at 04:38:15PM +0530, Krishna chaitanya chundru wrote:
->> Add support to pass D-state change notification to Endpoint
->> function driver.
+On 2024/7/9 17:29, Baoquan He wrote:
+> On 07/08/24 at 09:33pm, Jinjie Ruan wrote:
+>> Currently, x86, arm64, riscv and loongarch has been switched to generic
+>> crashkernel reservation. Also use generic interface to simplify crashkernel
+>> reservation for arm32, and fix two bugs by the way.
 > 
-> Blank line between paragraphs.
-> 
-Ack.
->> Read perst value to determine if the link is in D3Cold/D3hot.
-> 
-> I assume this reads the state of the PERST# signal driven by the host.
-> Style it to match the spec usage ("PERST#") to make that connection
-> clearer.
-> 
-Ack.
-> D3cold/D3hot is a device state and doesn't apply to a link.  Link
-> states are L0, L1, L2, L3,etc.  Also in cover letter.
-> 
-Ack.
-> I don't understand the connection between PERST# state and the device
-> D state.  D3cold is defined to mean main power is absent.  Is the
-> endpoint firmware still running when main power is absent?
-> 
-Host as part of its d3cold sequence will assert the perst. so we are
-reading perst to know the link the state.
+> I am not sure if this is a good idea. I added the generic reservation
+> itnerfaces for ARCH which support crashkernel=,high|low and normal
+> crashkernel reservation, with this, the code can be simplified a lot.
+> However, arm32 doesn't support crashkernel=,high, I am not sure if it's
+> worth taking the change, most importantly, if it will cause
+> misunderstanding or misoperation.
 
-Qcom devices are drawing power from the PCIe, so even when PCIe is in
-D3cold endpoint firmware can still run.
+It seems that x86_32 doesn't support crashkernel=,high and use the
+generic interface，and also have the first patch bug. I’ll resend the
+first patch and explain it.
 
-- Krishna Chaitanya.
->> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom-ep.c | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> index 236229f66c80..817fad805c51 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> @@ -648,6 +648,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
->>   	struct device *dev = pci->dev;
->>   	u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
->>   	u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
->> +	pci_power_t state;
->>   	u32 dstate, val;
->>   
->>   	writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
->> @@ -671,11 +672,16 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
->>   		dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
->>   					   DBI_CON_STATUS_POWER_STATE_MASK;
->>   		dev_dbg(dev, "Received D%d state event\n", dstate);
->> -		if (dstate == 3) {
->> +		state = dstate;
->> +		if (dstate == PCI_D3hot) {
->>   			val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
->>   			val |= PARF_PM_CTRL_REQ_EXIT_L1;
->>   			writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
->> +
->> +			if (gpiod_get_value(pcie_ep->reset))
->> +				state = PCI_D3cold;
->>   		}
->> +		pci_epc_dstate_notify(pci->ep.epc, state);
->>   	} else if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
->>   		dev_dbg(dev, "Received Linkup event. Enumeration complete!\n");
->>   		dw_pcie_ep_linkup(&pci->ep);
->>
->> -- 
->> 2.42.0
->>
+> 
+> Thanks
+> Baoquan
+> 
+> 
