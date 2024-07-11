@@ -1,79 +1,124 @@
-Received: from smtp82.iad3a.emailsrvr.com (smtp82.iad3a.emailsrvr.com [173.203.187.82])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6AB15957E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 16:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C8B15957E;
+	Thu, 11 Jul 2024 16:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720714011; cv=none; b=Nh0gdXuXqaOCXgI8yGXFJl4QOEmmniql9Fp0zvy2XM/ww+Iq25wF4zzcJAEyyFRBxXD/uK+lO0JGRAZXuzf2rxpusRRYQz6Vp6wLZ1pd4n6BOp9rMA3t55GW/aDtk+lna6ilZwPRPNuC34+4qpsqZJ2d7w4fr6UQBr4dW/JDcwI=
+	t=1720714017; cv=none; b=bhpdJmvxRM9i7AoASXuyaJ6MyXGIoXNUILQDkbY/JET6/RO4qPs7h2ktPyyIvKOijvWl4f8KJOY2PvIX6zPi9I/D9EhPpGJEoBDR5WrcdKIIuMmOU+U9UIdDB7bQBmfFwt5PSgUHhW4L27R/Oir/9zaHv8O5LxYMPJ9DS4ICVz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720714011; c=relaxed/simple;
-	bh=0uwD1M9nJAbWVzYpgSCZB5Zm24KRaWsiQ4PiDZVyuS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rdhnMFWklxTg1ZVxswNZ2LInP3dIOuILMgJ/31/bpYiV7hAgXwau5GKrJ6oPJGk47D2cVQWlPSibwm1E/MskZRmX7kzDnxrSKJIHDGi29En5h0wyO1d0YCAqt4OFW2BMBD1Tc5GDdST+URxM3bJnNNbPdpoQ8F6alCD1LcQg+JQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=M0D1OhMD; arc=none smtp.client-ip=173.203.187.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1720714017; c=relaxed/simple;
+	bh=EYH+M99SRudXDUFJIpNYR6cWEdr01nHFRFQWzFsF4SQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KyopiyKIpoSz0Dfza5OMUJb7gTvx6xWUVH+RYX02nPEatmitjE4hRJ1YP7gEZvLBlSGGGTzN/NzhCnFZKvHZoWd8ZbJDvqmFhDkafQHvGyQrb0YKQANDM3wo0oWfd8IRZIrs5ICnoOuzQZXw1zSrJQwUaXVZDdx/qOZUtKyxgb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l91vLQFX; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="M0D1OhMD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1720711749;
-	bh=0uwD1M9nJAbWVzYpgSCZB5Zm24KRaWsiQ4PiDZVyuS0=;
-	h=Date:Subject:To:From:From;
-	b=M0D1OhMDuM2DuydxSuNKRB+6Q24adcgvzEH3brk9cnPXCOVG/2nEKpqwDe/STM8gk
-	 tkvwA7BA/20IiQUMrrfNvv5HKB9jukCxCwVLoOitaFY9OHLFfkEELnIs1RE3hHRSmi
-	 bFcucWYRX5AYntFPCaikvfPhxqoQHwE/4+CcYVWM=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp19.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 887565150;
-	Thu, 11 Jul 2024 11:29:08 -0400 (EDT)
-Message-ID: <6f122282-1675-497f-bc2f-0bbfba6640aa@mev.co.uk>
-Date: Thu, 11 Jul 2024 16:29:07 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l91vLQFX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4N7UMnqLPZtaeDiATujThtv1TVkAjKCUtfVGJAv//C0=; b=l91vLQFX1yoJ0q3HXPakSxROn/
+	9o/m04A3YGlgpW59SKbKI88gN29sSm8aywhv63zVPCRt0QDHs+8lYQKtTPlYfv5z+Mx/htzZww4g9
+	peSZoUpvKuvkFmkoO+5NB57rk5GSOycW5uScOMGQQ4wMyfn/yVIkABZKWIdRceoJ/xkOBjI0kW9OQ
+	qdQBd+FjQzI+4eO4Scp9mYeYENs/6vImAIsM5T6botPXz+jbEW7eKOaHLaq8Pw2faHvqUdV80/Y/x
+	7uR70ZgF5azsSqClNZn9GaHxETll5fce5pFeEhSTUFJL8ZxRd106UiPcgEv0JX76iZz6WVwxYI5vr
+	j0GrZYrg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRwJl-0000000180t-3gaO;
+	Thu, 11 Jul 2024 16:06:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4D57F30050D; Thu, 11 Jul 2024 18:06:49 +0200 (CEST)
+Date: Thu, 11 Jul 2024 18:06:49 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
+Message-ID: <20240711160649.GA38270@noisy.programming.kicks-ass.net>
+References: <20240711110235.098009979@infradead.org>
+ <20240711110401.412779774@infradead.org>
+ <20240711131918.GC16902@redhat.com>
+ <20240711150054.GA3285@noisy.programming.kicks-ass.net>
+ <20240711155542.GA34311@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] rtc: ds1343: Force SPI chip select to be active
- high
-To: Mark Brown <broonie@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
- linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-References: <20240710175246.3560207-1-abbotti@mev.co.uk>
- <20240710184053c34201f0@mail.local>
- <2b0e8a6c-f89e-4d71-a816-9da46ea695eb@mev.co.uk>
- <bd7c0eb9-bcb6-42e3-8be6-3d07452e3fd5@sirena.org.uk>
-Content-Language: en-GB
-From: Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-In-Reply-To: <bd7c0eb9-bcb6-42e3-8be6-3d07452e3fd5@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: 43f7e90d-b81b-44ea-bc3d-341a7d3df9f3-1-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711155542.GA34311@noisy.programming.kicks-ass.net>
 
-On 11/07/2024 15:21, Mark Brown wrote:
-> On Thu, Jul 11, 2024 at 03:05:01PM +0100, Ian Abbott wrote:
+On Thu, Jul 11, 2024 at 05:55:42PM +0200, Peter Zijlstra wrote:
+> On Thu, Jul 11, 2024 at 05:00:54PM +0200, Peter Zijlstra wrote:
 > 
->> I think the devicetree node for the RTC device ought to be setting
->> `spi-cs-high` but cannot do so at the moment because the driver clobbers it.
+> > Let me ponder that a little, I *can* make it work, but all 'solutions'
+> > I've come up with so far are really rather vile.
 > 
-> Specifying spi-cs-high in the device tree should almost always be
-> redundant or a mistake, if the device needs a high chip select then we
-> already know that from the compatible.  The property is adding nothing
-> but potential confusion, in the normal course of affairs the driver
-> should just specify the configuration it needs for the bus.
+> This is the least horrible solution I could come up with...
+> 
+> ---
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -83,6 +83,7 @@ struct uprobe_task {
+>  
+>  	struct timer_list		ri_timer;
+>  	struct callback_head		ri_task_work;
+> +	bool				ri_work_pending;
+>  	struct task_struct		*task;
+>  };
+>  
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1797,9 +1797,8 @@ void uprobe_free_utask(struct task_struc
+>  	t->utask = NULL;
+>  }
+>  
+> -static void return_instance_task_work(struct callback_head *head)
+> +static void __return_instance_put(struct uprobe_task *utask)
+>  {
+> -	struct uprobe_task *utask = container_of(head, struct uprobe_task, ri_task_work);
+>  	struct return_instance *ri;
+>  
+>  	for (ri = utask->return_instances; ri; ri = ri->next) {
+> @@ -1815,9 +1814,43 @@ static void return_instance_task_work(st
+>  	}
+>  }
+>  
+> +static void return_instance_task_work(struct callback_head *head)
+> +{
+> +	struct uprobe_task *utask = container_of(head, struct uprobe_task, ri_task_work);
+> +	utask->ri_work_pending = false;
+> +	__return_instance_put(utask);
+> +}
+> +
+> +static int return_instance_blocked(struct task_struct *p, void *arg)
+> +{
+> +	unsigned int state = READ_ONCE(p->__state);
+> +
+> +	if (state == TASK_RUNNING || state == TASK_WAKING)
+> +		return 0;
+> +
+> +	smp_rmb();
+> +	if (p->on_rq)
+> +		return 0;
+> +
+> +	/*
+> +	 * Per __task_needs_rq_locked() we now have: !p->on_cpu and only hold
+> +	 * p->pi_lock, and can consiter the task fully blocked.
+> +	 */
+> +
+> +	__return_instance_put(p->utask);
 
-So `spi->mode |= SPI_CS_HIGH;` is safer than `spi->mode ^= SPI_CS_HIGH;`?
+PREEMPT_RT might not like this though, doing the full RI iteration under
+a raw_spinlock_t...
 
-Regarding `spi-cs-high` in the device tree, what about the compatibility 
-table for `spi-cs-high` and `cs-gpio` active level in 
-"Documentation/devicetree/bindings/spi/spi-controller.yaml"?
-
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
--=( registered in England & Wales.  Regd. number: 02862268.  )=-
--=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
--=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
-
+I just can't think of anything saner just now. Oh well, let me go make
+dinner, perhaps something will come to me.
