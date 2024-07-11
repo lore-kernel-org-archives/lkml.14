@@ -1,60 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBC514C587;
-	Thu, 11 Jul 2024 13:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9D015AAD3;
+	Thu, 11 Jul 2024 13:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720703182; cv=none; b=jUpH5U7+3r/lDim7xy5KCG4XbA5OaAJRkiSHVcAgzPFCy+IU83HQYJ8YnPNSXe9NEzBzfeemiyBabMp0U5uT1LIKijzaitTtmAvxOgdZ7NbgSpWBl5NxZYaiWlFW1F7sv3HN7gdaKBVvdkMgrj/K6CeXaEtOVV7tfsG0JxhsUTA=
+	t=1720703227; cv=none; b=f5kYiXS1bB9cZ/yvlhk0UKDUcIysKh906cDNnrFTuH7+G37XP2mWuntQ1+1AegycrMO7GgMl3V/IENMe76wsC9wm10UhwczcfCendG2PfFzbqhGGfVZ7KwxRTCykF2eb1NUEv1mbec0rAnPwruA3o7z94nXQ+htmVPTb3KyNsTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720703182; c=relaxed/simple;
-	bh=V/vIE0fO90P6Ms9zn71oTABvAUwmybnB9qMJuHtoMkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bbpFPzWZa9Mh2Lhw1zNIzDIBHr1iwPtGwdAIQqa/cpK/O/szITRAnFp8c6FMQOGf0M3Fr1FeWMETZ/BvVgxXWM98xjxUgnsMenQjxgOU8FP6XKcC+Il5ldpYACOdyuUTMetN17q279Iz6ysgN/6HcJXhggdQOxBB/jdLvbqnjF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePKL7esM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720703227; c=relaxed/simple;
+	bh=L//aq6g2sCb7brUZIQ6mvahCmEij6tQ2f9SWRglAYto=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IN/VGh9mMLMp5hg22cr9BRKDdvb6Eh9dkp5kcWEqRWFg8Jt2VL2uoXVpRjOe0u2HJlF+XvXqbFUbYbHNJEQ090tt8RP5bPq9EGMkL7Ky5EF+LN2hNuRR6tATk0/4PcrBrRQksIPhx+hXHcs/nDmFBM6C7nlW+h8zuTtqmNAJjSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mofgraXs; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePKL7esM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D021AC4AF07;
-	Thu, 11 Jul 2024 13:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720703181;
-	bh=V/vIE0fO90P6Ms9zn71oTABvAUwmybnB9qMJuHtoMkY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ePKL7esMbt6y6ZCx6dGyfJnrFOq98+c7q9GF/1lU15RKxz9aCKr4zePTOV60gIQsd
-	 N7eh22sdX85Mv/xYEDzJ9uvlDKTMfW9zd1OPtbZ9shlVomi/eAVr87NtlhbkYKxIP5
-	 1bFjZ0Vt50zrZBfldpl89WtM5z4gQxBF9ufF40SmBs0g2PJK5O2yXDt1ceEiog/WYq
-	 kT93zQMsgLen3Lu0QdyyyaRx72GYdO3GOxyyU3BfVGmrX3eDa+fkHKctozT1U4uRM/
-	 u55e8moZ5V1cwU1lyFy7NHO2edZHJ8Nt/kC73afencERtwYmLtptHY7gvEAltjm6kG
-	 P4hVV40qF6nqw==
-Date: Thu, 11 Jul 2024 15:06:17 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, Conghui Chen <conghui.chen@intel.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 58/60] i2c: virtio: reword according to newest
- specification
-Message-ID: <dpqvmzqi6qzffjt25os3ji3bifdzm6y4aan3jiosmfkn53gvt3@xikl27f6kjyv>
-References: <20240706112116.24543-1-wsa+renesas@sang-engineering.com>
- <20240706112116.24543-59-wsa+renesas@sang-engineering.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mofgraXs"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-75c3acf90f0so590474a12.2;
+        Thu, 11 Jul 2024 06:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720703226; x=1721308026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rfcikbn6aIkgCMZzgFg/rRrOdrcIMJdb5nB1Tqsn+HQ=;
+        b=mofgraXsu+ZlX93qNVNYA9t91w0JnUJ15y83ke4wVknjCvNVBwkO3Mz0XxoZQditVQ
+         wK/zFdl3HLPGIv1y70z31sy50iOar5locaAjdf9GsyuIr4pW6h9JoMYmXokhNr84F8Jh
+         EBhR3fb986n2hVacId5AKybvqHm79Pn9IQyuSwLZ1/JOs0GNLbwxh0qVuVIdIBrq0vkd
+         54aU7P7nrhLy95vr3PpkjArUpa1vk+vOxJnzDbpUHXaEkBaxikcym7dfCKuH0oJ/HTaV
+         qz8srgXfh+Q0fwLh0EqvZQmGI114/RO8lYLb8MBdoEUZFzY9p9IqMuk4T6I+eeu+NsjR
+         jnvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720703226; x=1721308026;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rfcikbn6aIkgCMZzgFg/rRrOdrcIMJdb5nB1Tqsn+HQ=;
+        b=PYJ+BPdMlmvpDfAUtkVN71LT81y3Sq8nbVVdw9UXPK9dJl2tcHdCPMyp8A9t+zy+MF
+         PUlAaA/qHnhl8AbxyHVzD/Wqw+ijAXzsKRPdr/4jGvKvGSoldthZwKxk9tOcmkPlSuA2
+         j5167Ccl4iWOCHB9zFzwTD7Zsun3xsP4QRBqG0QafFNcIWA4q9plukcYiDBlwW2QPpry
+         LvdPMlXnRK0k0Cl6E/ZmdJ225+rvN8W9t//x90o3KOcvpwClNsmR6Ow7cVqhSFl1G0zj
+         ATj0WqdruyfMx/wxyLtko8FOewp4ekS8TOrTy7Fl6ORTF3WogoTHNv0Iws+j2eEMfbfU
+         41Og==
+X-Forwarded-Encrypted: i=1; AJvYcCVc5ZmFPAkfvXzjxwxanRCgL+XXSUINy7YgLJlgLaI/lHHbP7GUbOfdHNupkmZ5BJjJYgePOH9bX3X4gcVw8vpPM6a8HMKU/gsSUFjs29kItaurQYrq5z7Waa0OB2x5jjuML1w769z0qg==
+X-Gm-Message-State: AOJu0YyNBbzOEHziPQC5gFNniBDD0UhcpvKYpVRbYNyQEHI+s6XyPbo+
+	aI0/VsOOCpIJvjbURxFa36d90zm3glP90lRM95l1s8WzWMujHQEu
+X-Google-Smtp-Source: AGHT+IFKPXUr1OLuiftkz50lboHtjDhk7taX+ATRjV0+GBPX70PqRG6CCAlN4MArjw88NEwHKiUM+A==
+X-Received: by 2002:a17:902:fc88:b0:1f9:9221:6c2d with SMTP id d9443c01a7336-1fbb6ec1c52mr55718315ad.53.1720703225500;
+        Thu, 11 Jul 2024 06:07:05 -0700 (PDT)
+Received: from obliging-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a10868sm50188305ad.9.2024.07.11.06.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 06:07:05 -0700 (PDT)
+From: Yang Chen <yangchen.openbmc@gmail.com>
+To: joel@jms.id.au,
+	andrew@codeconstruct.com.au,
+	patrick@stwcx.xyz,
+	amithash@meta.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: Jerry.Lin@quantatw.com,
+	yangchen.openbmc@gmail.com,
+	yang.chen@quantatw.com
+Subject: [PATCH v1 0/1] Add gpio line name in Meta Minerva BMC(AST2600)
+Date: Thu, 11 Jul 2024 21:05:00 +0800
+Message-Id: <20240711130501.2900301-1-yangchen.openbmc@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240706112116.24543-59-wsa+renesas@sang-engineering.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Wolfram,
+Based on: https://lore.kernel.org/all/f7412b65e1844ea9f3ad9fe5825e5d1da422ad69.camel@codeconstruct.com.au/
 
-On Sat, Jul 06, 2024 at 01:20:58PM GMT, Wolfram Sang wrote:
-> Change the wording of this driver wrt. the newest I2C v7 and SMBus 3.2
-> specifications and replace "master/slave" with more appropriate terms.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Change log:
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+v1
+  Patch 0001 - Add host0-ready pin.
 
-Thanks,
-Andi
+Yang Chen (1):
+  ARM: dts: aspeed: minerva: add host0-ready pin
+
+ arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+-- 
+2.34.1
+
