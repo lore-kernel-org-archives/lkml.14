@@ -1,135 +1,192 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CDCE572
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD2610A36;
+	Thu, 11 Jul 2024 01:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720660482; cv=none; b=Eh386K25PAFAPUp+Q/o2OxS0P93R/JqJTMue4nyFG7QV2slYvM1chRqXC4HqI0kXMs/3bc015KFz4xdF3He9Xs4hvOAxNKunsBr76H0iHVeccSTKQfTqQ0We3/9IldMkYOpLjHWxlin4Rh/H4zsRjksNGXTdH3rTR1PyPUMGIgQ=
+	t=1720660483; cv=none; b=Ai9ryazEBVve/EMowsjAvjOby7YUAa0IAUrfLUdfDCvjfoXTtoTR41IK3ejbZaT88vHRUIWj7aG1piNMr0VYHXg9nToRFQwvaqPmUep1UdbjVvVz1bHwcM3cE76CIM3psSSmNYzwt3TU5VYjCu1Wn7ReLd//y4wrNbCE8EXK/xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720660482; c=relaxed/simple;
-	bh=1aXNXvJjMQiXhUkZjaUr11rPZrOQpf8tLMrqL1f89SE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ra4WFfCZKf0Tg9oBetfLtsHhVObqK7Yw4WHGgMvNc9ozH6sMKUANDaHfDqPOX+jjnxvKY+ISe7wRwlXyE8Qiis1MqqiecypQvyNKGmP+vKU1xM3qWADeWhJ+xaTSnCJX4piiTupenrFmBy5Hp6JnD4h6tT0KCcNoKyKuHyvr+fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QYoqHWyJ; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1720660483; c=relaxed/simple;
+	bh=6/zkEDXjZjxv6dDfH3KWAd0N7AnaFH1Zmp5aws/7dQk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sI7rDliEmEIRyR5Yy1kW8j+Pgu2K/HF+Wom7MBVSQf2QcKt7XEg/UZYiWLzz4Kwzk5JYWxgKh9ITZ4lsml1FaCkTe/QuhCIOP9urhUrVzqYZEHM/QqYdUiQi21cdHzyVOFzueYI9LfHi6Wd2k5KEc7Wf+nIJQXZSSKHy3RpatuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jAUiNpn4; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYoqHWyJ"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-70b12572bd8so351980b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:14:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAUiNpn4"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fafc9e07f8so2504905ad.0;
+        Wed, 10 Jul 2024 18:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720660480; x=1721265280; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cn/fXyFQV3mV8M7gdgHKa+/HuqVak7NY1Nqfj+w7qOc=;
-        b=QYoqHWyJaF6D4hqj/dF3GIzmTZuRL2+6naCpfqNC7to7RXYgP//pOEzcWn6DclpULS
-         FNc2ZN5lMNLSBLV+qHwIEE3JtV0cnxrjIZ5yOzTq7kcJa/QYQNMk1LyUFWsKkceW4rJZ
-         sG8lUWQ0xSDDJzlO8v4/Mj3u1scrMLoZDXLCpICSQ1x16MD0P3qPFma5WiNcVe/REoBi
-         ACth7hF54n1ymqJZ8hjLCdSwABSciqZV3PVFOP3fyWxqHWdSKKEDx7hc9r6G1JyolFph
-         D1SKSipDGhOgCKPtrc10MYMGMk0lJlPNPlxfpKjjo82GOZLR+Ymc8EB+br4Cy/QMQez8
-         h4sQ==
+        d=gmail.com; s=20230601; t=1720660481; x=1721265281; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rr7Q65/uUNMtJMngxD5LyYKesf+tbYcSf5IHS4oP4n8=;
+        b=jAUiNpn4e5i8hbgW/V9nHh1y59tzaQH2MI3E39ZRSwTckpsbUPo6zdDi0M7Qj1H1Ew
+         sHrPSR4u8vPArEXfIe4QSskottINLFSo3J1CCphBTdUoRgiOeg9oAPxEk76DJcVY1x2I
+         YcI6sfZRVVs09dEVw8O9gdFaoVO0OGQRCGjXMyrC7VVf1/8g/Lwc4lLNr/6LrLHHoJvB
+         +z2FuTKpxJ4D2kMufB/PS0heZs6wMCE/bZIlAhMNBBDHzNmdq6QgZHBr0ZzxKVmOjQXS
+         4vZOTwCQYbQA9jDkLG3+erjcGabcObbLsJATKHnQHHX14MLW+SuTCbHQG/mkzPsLX7fd
+         Pq0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720660480; x=1721265280;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Cn/fXyFQV3mV8M7gdgHKa+/HuqVak7NY1Nqfj+w7qOc=;
-        b=vqW/JfmxtQCuB86Uk1R/gb4AiP35JaCXCsxeH81Z2OZr9HRahmCwWHiwshZFwLwq3X
-         hnatH6MkkigkiIQysmxmdcq4KBLy+/9OSVyhD573iHHMg7mq3QG6XTSgUF9LHs21/ss5
-         JCYXNTAzoGFXIqAm97JZ8QzXGUYoKRLdw45gSt1VClC4tbvPLF/pmLMiWsnZ/Vsb2rnX
-         ym/8Yfjtbmn2x/0hqg0EjnbWYemidFbBqzVVRSxeqmEQGJV2dRrByIOTj+Xk87Kuqsxg
-         O/CXSDCCqs06mfi1PlZtCarhIQfCLW++Wm+foZXso41q78On2VoB8o3fBBbrgQtHZTyJ
-         ToZg==
-X-Gm-Message-State: AOJu0YxKRHVXsiwfglyNZGEHIaj5QY7H0i/p74IYSJhzqgVEAy+aATDw
-	b596Tbc71zOxj0i82XQByqGavvMTQ9EIF+551a2Fen37K6rqsuOL4OmsOQ==
-X-Google-Smtp-Source: AGHT+IFoAxs5GxfEMP0/fn8hbAqvmVIBNb3Gg/Cfg0bJm16yH6ff0183cH+WfObetMDj6PdveWknxA==
-X-Received: by 2002:a05:6a20:258d:b0:1c0:f2a5:c8f1 with SMTP id adf61e73a8af0-1c2982163b2mr8655363637.11.1720660479979;
-        Wed, 10 Jul 2024 18:14:39 -0700 (PDT)
-Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aa621e7sm12551827a91.41.2024.07.10.18.14.39
+        d=1e100.net; s=20230601; t=1720660481; x=1721265281;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rr7Q65/uUNMtJMngxD5LyYKesf+tbYcSf5IHS4oP4n8=;
+        b=oXBvrlDHANZWtoLM326Sf/ZiLS7s7E65/KZSacRuwDgT4rBhCXbi96P79mmLuqVSuf
+         lFwcsmsOqKnw7JUuj12wAXZ/QLWCB0HaO3sxpwJUibaH5RrNRxcNPFU3G3x/InTXdPvD
+         4yfihOVH4EkKWDQaO7S5LKpQwULORcfA9qDwXXskLKli06RPWFjgtUqBt7ed8TMd3B6x
+         XgrDZHhXca3/7F9wmtDdPdS95pgt//bk1CwneDENy71NXcXS3rhH+e0mZ0BerMDNgrsu
+         sqXM/NSWPtH+DdUE+zLyk8Kt+2GzzrCRqBylGWrqhkM9CxsOWLEgLNpdMF4lIq/Va1p9
+         8OBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPzrKGNiHpTDhGHvBmm0J+KZgcnYo4JbEabFLCgv8aZdPYF4pxt7eW+zEYyXFXyr3V52NIFlzhckrRVFLkNsar0U4seuGxv+QvK+gX7t9xoovjgkz1YsA/QV0533QVOk8Hh6vH5sNnqsG9qi/l/G2auppb6UOv5KPE9Y1MUxaJsYUZ
+X-Gm-Message-State: AOJu0YxAfNFHfRgMIXFrZyleiHeykJdquZ7fuCEdxD7nbJmM1A3HCPdP
+	jrNrIv7zvjVgClvTPxB1//KMRL/ZF2H2Xc2+s+vHmv2rrzuIrkxU
+X-Google-Smtp-Source: AGHT+IFJUeFA3eAzgk0yLfvuWC7HhHDzJ0TYJRTj/e7EpBNO4Fa5aqAl/Zb3JcJpxWMpURw+W2y5RA==
+X-Received: by 2002:a17:903:2bcb:b0:1f8:5a64:b468 with SMTP id d9443c01a7336-1fbb6ed9d22mr62847735ad.47.1720660480788;
+        Wed, 10 Jul 2024 18:14:40 -0700 (PDT)
+Received: from debian ([2601:646:8f03:9fee:398f:325f:a0e2:200f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab7c66sm39383215ad.121.2024.07.10.18.14.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 18:14:39 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-From: Tejun Heo <tj@kernel.org>
-To: void@manifault.com
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	schatzberg.dan@gmail.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	changwoo@igalia.com,
-	righi.andrea@gmail.com,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 2/6] sched_ext: Open-code task_linked_on_dsq()
-Date: Wed, 10 Jul 2024 15:13:59 -1000
-Message-ID: <20240711011434.1421572-3-tj@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240711011434.1421572-1-tj@kernel.org>
-References: <20240711011434.1421572-1-tj@kernel.org>
+        Wed, 10 Jul 2024 18:14:40 -0700 (PDT)
+From: fan <nifan.cxl@gmail.com>
+X-Google-Original-From: fan <fan@debian>
+Date: Wed, 10 Jul 2024 18:14:25 -0700
+To: Terry Bowman <Terry.Bowman@amd.com>
+Cc: nifan.cxl@gmail.com, Dan Williams <dan.j.williams@intel.com>,
+	ira.weiny@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, ming4.li@intel.com,
+	vishal.l.verma@intel.com, jim.harris@samsung.com,
+	ilpo.jarvinen@linux.intel.com, ardb@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Yazen.Ghannam@amd.com, Robert.Richter@amd.com,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH 1/9] PCI/AER: Update AER driver to call root port and
+ downstream port UCE handlers
+Message-ID: <Zo8x8YvdHSgcjGcR@debian>
+References: <20240617200411.1426554-1-terry.bowman@amd.com>
+ <20240617200411.1426554-2-terry.bowman@amd.com>
+ <6675d1cc5d08_57ac294d5@dwillia2-xfh.jf.intel.com.notmuch>
+ <ecc5fbd0-52e1-443f-8e5a-2546328319b2@amd.com>
+ <668ef3a2.050a0220.96a0c.4f5c@mx.google.com>
+ <8bf0d1c9-632e-458b-9b78-0faeea0472f8@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8bf0d1c9-632e-458b-9b78-0faeea0472f8@amd.com>
 
-task_linked_on_dsq() exists as a helper because it used to test both the
-rbtree and list nodes. It now only tests the list node and the list node
-will soon be used for something else too. The helper doesn't improve
-anything materially and the naming will become confusing. Open-code the list
-node testing and remove task_linked_on_dsq()
+On Wed, Jul 10, 2024 at 04:48:09PM -0500, Terry Bowman wrote:
+> Hi Fan,
+> 
+> On 7/10/24 15:48, nifan.cxl@gmail.com wrote:
+> > On Mon, Jun 24, 2024 at 12:56:29PM -0500, Terry Bowman wrote:
+> >> Hi Dan,
+> >>
+> >> I added a response below.
+> >>
+> >> On 6/21/24 14:17, Dan Williams wrote:
+> >>> Terry Bowman wrote:
+> >>>> The AER service driver does not currently call a handler for AER
+> >>>> uncorrectable errors (UCE) detected in root ports or downstream
+> >>>> ports. This is not needed in most cases because common PCIe port
+> >>>> functionality is handled by portdrv service drivers.
+> >>>>
+> >>>> CXL root ports include CXL specific RAS registers that need logging
+> >>>> before starting do_recovery() in the UCE case.
+> >>>>
+> >>>> Update the AER service driver to call the UCE handler for root ports
+> >>>> and downstream ports. These PCIe port devices are bound to the portdrv
+> >>>> driver that includes a CE and UCE handler to be called.
+> >>>>
+> >>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>>> Cc: linux-pci@vger.kernel.org
+> >>>> ---
+> >>>>  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
+> >>>>  1 file changed, 20 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> >>>> index 705893b5f7b0..a4db474b2be5 100644
+> >>>> --- a/drivers/pci/pcie/err.c
+> >>>> +++ b/drivers/pci/pcie/err.c
+> >>>> @@ -203,6 +203,26 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >>>>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> >>>>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> >>>>  
+> >>>> +	/*
+> >>>> +	 * PCIe ports may include functionality beyond the standard
+> >>>> +	 * extended port capabilities. This may present a need to log and
+> >>>> +	 * handle errors not addressed in this driver. Examples are CXL
+> >>>> +	 * root ports and CXL downstream switch ports using AER UIE to
+> >>>> +	 * indicate CXL UCE RAS protocol errors.
+> >>>> +	 */
+> >>>> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> >>>> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+> >>>> +		struct pci_driver *pdrv = dev->driver;
+> >>>> +
+> >>>> +		if (pdrv && pdrv->err_handler &&
+> >>>> +		    pdrv->err_handler->error_detected) {
+> >>>> +			const struct pci_error_handlers *err_handler;
+> >>>> +
+> >>>> +			err_handler = pdrv->err_handler;
+> >>>> +			status = err_handler->error_detected(dev, state);
+> >>>> +		}
+> >>>> +	}
+> >>>> +
+> >>>
+> >>> Would not a more appropriate place for this be pci_walk_bridge() where
+> >>> the ->subordinate == NULL and these type-check cases are unified?
+> >>
+> >> It does. I can take a look at moving that.
+> > 
+> > Has that already been handled in pci_walk_bridge?
+> > 
+> > The function pci_walk_bridge() will call report_error_detected, where
+> > the err handler will be called. 
+> > https://elixir.bootlin.com/linux/v6.10-rc6/source/drivers/pci/pcie/err.c#L80
+> > 
+> > Fan
+> > 
+> 
+> You would think so but the UCE handler was not called in my testing for the PCIe 
+> ports (RP,USP,DSP). The pci_walk_bridge() function has 2 cases:
+> - If there is a subordinate/secondary bus then the callback is called for
+> those downstream devices but not the port itself.
+> - If there is no subordinate/secondary bus then the callback is invoked for the 
+> port itself.
+> 
+> The function header comment may explain it better:
+> /**                                                                                                                                                                                                                
+>  * pci_walk_bridge - walk bridges potentially AER affected                                                                                                                                                         
+>  * @bridge:     bridge which may be a Port, an RCEC, or an RCiEP                                                                                                                                                   
+>  * @cb:         callback to be called for each device found                                                                                                                                                        
+>  * @userdata:   arbitrary pointer to be passed to callback                                                                                                                                                         
+>  *                                                             
+>  * If the device provided is a bridge, walk the subordinate bus, including                                                                                                                                         
+>  * any bridged devices on buses under this bus.  Call the provided callback                                                                                                                                        
+>  * on each device found.                                                                                                                                                                                           
+>  *                                                                                                                                                                                                                 
+>  * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,                                                                                                                                          
+>  * call the callback on the device itself. 
+>  */
+> 
+> Regards,
+> Terry
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Acked-by: David Vernet <void@manifault.com>
----
- kernel/sched/ext.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+OK, interesting.
+Btw, what is the "state" passed to pcie_do_recovery(...state...)?
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index f4a7abcec793..62574d980409 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -1572,18 +1572,13 @@ static void task_unlink_from_dsq(struct task_struct *p,
- 	list_del_init(&p->scx.dsq_list.node);
- }
- 
--static bool task_linked_on_dsq(struct task_struct *p)
--{
--	return !list_empty(&p->scx.dsq_list.node);
--}
--
- static void dispatch_dequeue(struct rq *rq, struct task_struct *p)
- {
- 	struct scx_dispatch_q *dsq = p->scx.dsq;
- 	bool is_local = dsq == &rq->scx.local_dsq;
- 
- 	if (!dsq) {
--		WARN_ON_ONCE(task_linked_on_dsq(p));
-+		WARN_ON_ONCE(!list_empty(&p->scx.dsq_list.node));
- 		/*
- 		 * When dispatching directly from the BPF scheduler to a local
- 		 * DSQ, the task isn't associated with any DSQ but
-@@ -1604,7 +1599,7 @@ static void dispatch_dequeue(struct rq *rq, struct task_struct *p)
- 	*/
- 	if (p->scx.holding_cpu < 0) {
- 		/* @p must still be on @dsq, dequeue */
--		WARN_ON_ONCE(!task_linked_on_dsq(p));
-+		WARN_ON_ONCE(list_empty(&p->scx.dsq_list.node));
- 		task_unlink_from_dsq(p, dsq);
- 		dsq_mod_nr(dsq, -1);
- 	} else {
-@@ -1614,7 +1609,7 @@ static void dispatch_dequeue(struct rq *rq, struct task_struct *p)
- 		 * holding_cpu which tells dispatch_to_local_dsq() that it lost
- 		 * the race.
- 		 */
--		WARN_ON_ONCE(task_linked_on_dsq(p));
-+		WARN_ON_ONCE(!list_empty(&p->scx.dsq_list.node));
- 		p->scx.holding_cpu = -1;
- 	}
- 	p->scx.dsq = NULL;
--- 
-2.45.2
+Fan
 
+> 
+> >>
+> >> Regards,
+> >> Terry
