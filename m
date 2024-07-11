@@ -1,1327 +1,223 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E882ED266
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720660415; cv=none; b=ZRKx1Ac4bNGQzVbmiCRb0giX/5G5w2209bEqY07SBBQjR+5Fv88NghBSIf5VWHtK1DYxkU3eZCq/j0em0IcPdb0LjzQ0cx+W01Ei9z6mmGWomGTJ8CnkWoowfkGqg0i5/tNzhE5VOBHKWAeOvg3OFOYOMxdpIEFs5N9n0GpScEc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720660415; c=relaxed/simple;
-	bh=1qw/Y/pJGdYJoP89EMr+s+Nx81kw46PPYysCfN3TZ6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=qAGjJg3Tcj1X8pnSd5sAz29FdHJdlMZcBT0AUPxx3xhTQejZNXFR1s1x+ZnJVZXi6q7zCWX7VIxd2qFDmnydO4K7HZsWgI9rES/CicvmRQuoE41b7oT50iHG0y72GouuTKSgScxE+lwUIIXUa5YrCkFMPf8oYMv4Fg9jx5VI6lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tfs/rV8q; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B38DB661;
+	Thu, 11 Jul 2024 01:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720660463; cv=fail; b=XvtG/4G3eE9o9ZdyI8wWU04etBv8qq0zFAx+p+B7qDSy4uMmdKhqrCP50xFmy/uVmome/8WR/1yKXY3jEv9+n34+P9L6cF4L2Bup5jaTMwI2ZVP44MSxD10Q6kU7BZl/2NjoFss1tZZQeyxBeik7d6Vpqut6cRmWk+wE9zAENVQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720660463; c=relaxed/simple;
+	bh=W282FoKDcUyGBgo7JlLHFT59OnFM4sf2NLojC3MqrwA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LFpC75/CBzOnjBacoc7vT8vzO5msS6hO9aR7X5GarI08bK4we4fDy/AyTcMrWCxyTXI3s8uJzueMKBwMeP9hKHH1uAv1PM89FbJpGH1rxJ1Ra0sSrtwIaBRrRbJ/QUVuhE9SOPbaYc2YGpWhmL1EqENsBgDo//HLBqN1PZApUSs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=LCAQDysE; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=rnaGffTG; arc=fail smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tfs/rV8q"
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240711011326epoutp038abc283426f13044fbc93900ce162f61~hA4X_RT_A1018010180epoutp03S
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:13:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240711011326epoutp038abc283426f13044fbc93900ce162f61~hA4X_RT_A1018010180epoutp03S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1720660406;
-	bh=c2cdGWtvoVG6tluq6LVhS7EhYRtZCWoSzpLlaZux+ec=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tfs/rV8qR2Xg5RW0s3RyKmxwEFn1L2BXoTuz+5rHKsMCW9lTHMOdMaEc0rndtI+TC
-	 ZFknqqAhXvM5lONqib8F1j5Ax1eT1LZNtA2jKaYpVG0HU0uK814H/rXcGZlJ5FYDbp
-	 kT4tByJbUi6EuBt+THL+NN1JqyDTJ9SYvJxxwYwQ=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20240711011326epcas2p3cb10e1f3ff05e34accf85be28ab49621~hA4XfBqBc1703217032epcas2p3F;
-	Thu, 11 Jul 2024 01:13:26 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.90]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4WKGv938vSz4x9Px; Thu, 11 Jul
-	2024 01:13:25 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	7B.55.09848.5B13F866; Thu, 11 Jul 2024 10:13:25 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240711011324epcas2p4a10c163690a65c45cc5a4ef0965d989b~hA4WIkych1390513905epcas2p4b;
-	Thu, 11 Jul 2024 01:13:24 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240711011324epsmtrp12d841e9444f518ff6c4a49f14e63d66b~hA4WHk9vo0413104131epsmtrp1d;
-	Thu, 11 Jul 2024 01:13:24 +0000 (GMT)
-X-AuditID: b6c32a45-447fe70000002678-65-668f31b5d2aa
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	07.F5.18846.4B13F866; Thu, 11 Jul 2024 10:13:24 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.60]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240711011324epsmtip23f2a86789f03fcf0e5a7e3024de9d7f0~hA4V4km4t0294702947epsmtip2K;
-	Thu, 11 Jul 2024 01:13:24 +0000 (GMT)
-From: Sunyeal Hong <sunyeal.hong@samsung.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
-	<s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Sunyeal Hong <sunyeal.hong@samsung.com>
-Subject: [PATCH v3 4/4] clk: samsung: add top clock support for ExynosAuto
- v920 SoC
-Date: Thu, 11 Jul 2024 10:13:16 +0900
-Message-ID: <20240711011316.2713270-5-sunyeal.hong@samsung.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240711011316.2713270-1-sunyeal.hong@samsung.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LCAQDysE";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="rnaGffTG"
+X-UUID: e40365383f2211efb5b96b43b535fdb4-20240711
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=W282FoKDcUyGBgo7JlLHFT59OnFM4sf2NLojC3MqrwA=;
+	b=LCAQDysE2jEEhkZbX9rjTMU3uUA+sAZ7DA/lhnE2pWJqrgvUU5wXuSeXpU35dNuBEItSTpJKVBT3hkH3c6Q0oL8+ZTOTP6wD0jDNPMVHmzExynkErVtBm9PSGSegASpT+FTS/FYEcL0YHjdErVwIM9dcQmaMwXzH583Tn+rqEkw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.40,REQID:38d11a23-5114-47ff-8992-c551b6e38091,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:ba885a6,CLOUDID:00e94f0d-46b0-425a-97d3-4623fe284021,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: e40365383f2211efb5b96b43b535fdb4-20240711
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 506541755; Thu, 11 Jul 2024 09:14:15 +0800
+Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 11 Jul 2024 09:14:15 +0800
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 11 Jul 2024 09:14:15 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JL+GzJzTBTHvpWCZYmPao0CjAK5UwfCrQ8HPfWi+AM9iYpnbUSwsg1PAFstzDu/AmSYpzOCycaKpfzWOCpMX/7Ucmi4ozVl0RZWDLXp10JKzIjVM0sX5Qvvw8UnFaZe3wLv5nk0QeRGh7m72Y7i5gFaK+s60aPANvT+Km6Vm1loIym/GzaxrfnuM7BmjKyoeYdBGd+uRIoEqnvEuJ/+7xjiquHlSnvBaIx9pNpf+ZYcN/RX4ZngpO+j439W+yOdo8dp3c3aHqI+LSTc8z5kXiDA+Ott8eQdnEjR8LXg0mPrIHvcO9aM9JBDrO51gG6hF4r8ztwYJ8qTIN/fSX6yZTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W282FoKDcUyGBgo7JlLHFT59OnFM4sf2NLojC3MqrwA=;
+ b=apYvVKpfH6EW9+g2H8H1sGbmPaddL6Jg6Wj3rV0I3T+vGJcBkd9/pQwEXquXUc+vQyjRrzvoX55newRa9Q/bj/IsmEvaMVIVv95pFtXUeEFsi4APVH5ZEJbA4T3OI11L7071El+s+cAwwq8RUbVztFVhsdeKdMao4rtZpNE+9mW60VBKn26WOCZzW7WfjlSux/A0jPVpD2Q7CcWMtW+wsGyDjWL9LKmcQR/Jzc3kMQNPCLgXLJoBouYJour1urTr6ixry58pIDDg7WxVvLXUhTTcfu2hLYmqEBziOtXVFa88FIM2mY3KMXEuGObo0FucbAa9pxpS/MCds7Q4++c55g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W282FoKDcUyGBgo7JlLHFT59OnFM4sf2NLojC3MqrwA=;
+ b=rnaGffTG5s1gJiQq7h4kyoJu3VT9/86RvLHOV/UrJVfmQzz78egYiKR7t4KbaUUr1FjvmC0dta29rJ1N/kCDwKUXtj/V14IISRB2psND7Xry7EeGO0W9dP79AfcwQjZ5ER3DfW/rpuc9NaKLEoH0NX10/UgYMl6dL1Hfbt59Ylk=
+Received: from SEYPR03MB7682.apcprd03.prod.outlook.com (2603:1096:101:149::11)
+ by SEYPR03MB8079.apcprd03.prod.outlook.com (2603:1096:101:16b::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Thu, 11 Jul
+ 2024 01:14:12 +0000
+Received: from SEYPR03MB7682.apcprd03.prod.outlook.com
+ ([fe80::c6cc:cbf7:59cf:62b6]) by SEYPR03MB7682.apcprd03.prod.outlook.com
+ ([fe80::c6cc:cbf7:59cf:62b6%5]) with mapi id 15.20.7741.033; Thu, 11 Jul 2024
+ 01:14:12 +0000
+From: =?utf-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>
+To: "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
+CC: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	=?utf-8?B?Sm9obnNvbiBXYW5nICjnjovogZbpkasp?= <Johnson.Wang@mediatek.com>,
+	=?utf-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>,
+	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	=?utf-8?B?SmFzb24tY2ggQ2hlbiAo6Zmz5bu66LGqKQ==?=
+	<Jason-ch.Chen@mediatek.com>, =?utf-8?B?U2hhd24gU3VuZyAo5a6L5a2d6KyZKQ==?=
+	<Shawn.Sung@mediatek.com>, =?utf-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?=
+	<Nancy.Lin@mediatek.com>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	Project_Global_Chrome_Upstream_Group
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "krzysztof.kozlowski+dt@linaro.org"
+	<krzysztof.kozlowski+dt@linaro.org>, "matthias.bgg@gmail.com"
+	<matthias.bgg@gmail.com>, "fshao@chromium.org" <fshao@chromium.org>,
+	"angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: mailbox: Add mediatek,gce-props.yaml
+Thread-Topic: [PATCH v4 1/3] dt-bindings: mailbox: Add mediatek,gce-props.yaml
+Thread-Index: AQHaTmLiMoH4NLRf/EqMjmvpP6g6fLDoqeqAgMG1PoCARq8SAIAAH6SAgACUoAA=
+Date: Thu, 11 Jul 2024 01:14:12 +0000
+Message-ID: <5336f2a151463314dc3ab9ec8b7aa7dac9853667.camel@mediatek.com>
+References: <20240124011459.12204-1-jason-jh.lin@mediatek.com>
+	 <20240124011459.12204-2-jason-jh.lin@mediatek.com>
+	 <f91d3ac1-0a7d-4ca2-bf0f-c5e471c2f6bb@collabora.com>
+	 <2a2a939c9cb56de0383ec3e42db9bcf8e8518775.camel@mediatek.com>
+	 <CABb+yY2_oJ_AC2w5AgHMBvqFDeyaUq9BLczqY8JhLFPDnfzY_Q@mail.gmail.com>
+	 <CABb+yY3ddp6Ex50yh3hZn2aQcEULvmFfd99xb7ZNVnTPn7=mUg@mail.gmail.com>
+In-Reply-To: <CABb+yY3ddp6Ex50yh3hZn2aQcEULvmFfd99xb7ZNVnTPn7=mUg@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR03MB7682:EE_|SEYPR03MB8079:EE_
+x-ms-office365-filtering-correlation-id: 33f836a1-2142-479a-8de6-08dca146c5f9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?Qm4wR2xpYk9zQWd0YTVxWmI1bndhVFBIZ3lRZjkwZ3ZZdlZDWjh6bHo3VTAr?=
+ =?utf-8?B?UzJHanl6bTJ2K0IvWjBWVnBBQ2NkbGsvb0h3eGpENmx2amxlaWhzUnFIVXFn?=
+ =?utf-8?B?dTBxUmI5UGljalI4YmZ6dCtwZktVQjU2NnVIWWpBWVQ5VGE0d09mci96SXhr?=
+ =?utf-8?B?bzA0ai96S2xUZ0dtc2lQZFVZQmMxalcvNzFBQlZiVjNzbi9XMEVUMUN2a25G?=
+ =?utf-8?B?VUZNODRYakpzNGFvV0xpQ3MzaXgxbmxrTmFWWHVzT3dOUjk1dHEyK0VBYVQv?=
+ =?utf-8?B?a2xlTFJwQi9EMzY4WVA3RFM5TFYveE9LUC9kSHl2Vkc4Qkh6a25WL25JOFgw?=
+ =?utf-8?B?UWlSaUNCU1YvMVBVdFd6ZUIvUHB5MGQ2akxpVUJsaU4zbVloMlIzbjhaSXdp?=
+ =?utf-8?B?NmczQ3B4WDNBTm42bTVhTTcvMnJwZVpWaEZLS3lkR2EvUWt6RFpBMEhVYjdU?=
+ =?utf-8?B?TzEvaTcydStPOW5UMk1PRTJKNWovWS96aE1TNXpjdlZwd1NPQjV5K0V6TElZ?=
+ =?utf-8?B?U1JsZUZoZjR3MTVYaEc3dUxIcGFTVmJDWVh0SnI5SW9DVDZlcEo0YW9ueEVp?=
+ =?utf-8?B?T2ptYXkzNkY5UUpZNSs1TGRPQVlqRWdJYTlRUzg3ZzdHV2FxblB5QlYyaXJa?=
+ =?utf-8?B?K2k4TmZWcDZIL3IzWElLb2lBVVdPU3lPdzRUNGtGYnd2UktuVi9jR2xkZ01z?=
+ =?utf-8?B?anI4dS9mZldnN3VneTFtWXVaTnArVWJnS1ZxaWtZTnFpWTljT290RVBZNG44?=
+ =?utf-8?B?WUhrckpkRFJOQ2ViQ1A2SXVtVUdHSm1lc24xNmV4R2dydFh0aE9xTy8vaEls?=
+ =?utf-8?B?N2pyU2tsQUxQdFdMWUM1TUVsMTJya2Q4NVNPZE10dXRRd1UwR3VJTXNxdHNX?=
+ =?utf-8?B?ZWxtWis3MUhBRXkyN3l2c0o5QXhESnVwejRtaHlOL2dqS1IvZkJ0UlQyWGVW?=
+ =?utf-8?B?cE9URUc4ZDZvblR5Z2M1S2x2SEhqTTJ5dUFHVHllS3dYNTdvV2tidTByUVBK?=
+ =?utf-8?B?T1d5cFE2VUl2Uzc1MW1HWVZwanJzZWlvdGNBZG5obnZOTHlCdW9qWlN2TkNw?=
+ =?utf-8?B?d0tHbE5jZEFLUzFOSXdnTDA3aUp1d3NVZC9WWU9BNUlOMktQOW03RHhCUHNC?=
+ =?utf-8?B?Y1lMQ2dxbDBIbDUwSDNueE5HKzNWUncxbDFuVEpRcVVxRmR6Wnhsa2J1LzVi?=
+ =?utf-8?B?cnkwM05XTC80UWs0NUZySExINU1BRTZ3MENjZmExclBRd1FUZktEcFEvSmpF?=
+ =?utf-8?B?aFd5MElNNUttM1VsTGZxVmxURVJhRTQ5OHl5c29GQ2FSZnJUd2FkNUI4anEv?=
+ =?utf-8?B?azFoK2NJTHo0U2RMbmlDMVFnbUNMYzRwa3NQMnVFTUIwNWVzUUtidklBY2NX?=
+ =?utf-8?B?RXBzeUVvVnNSOGJhbjBrQmZxcXZ2SzNtVm8vbkloNDhHVk9uaGZ5VUV2dEJn?=
+ =?utf-8?B?Mzc5K3M3YjVMUnBPVDVUSCs4TVlkNms3Ym5LMTh1QXBnMnB2ckN3VElnNWw0?=
+ =?utf-8?B?eHd0VUo0TnBUKzB2cjhrcG1uYzdIRkpzaDdESVZ6STFmK0xhbGxaT2hnZ0sx?=
+ =?utf-8?B?VDQyZnUrQ1BmZGdWeS9rZCtYdEE0dkxDQzZkRVFiSGpqMEcxc2xtUERRMVlY?=
+ =?utf-8?B?dGxrelZJVkdCRjlVdkZsc2FiTmN0Slp5OFBDRk5nQUVocVdUbDB2STAwZ2FO?=
+ =?utf-8?B?R2NrWGdFaEZkT2tIVDhXRDhxeVc1cENQY3NtU3ZOaVVVNzdSVmNuNnRoTnNN?=
+ =?utf-8?B?TDJUcW1GY3NFRzYyWFhFdzk5MnhDdTRYVTZJUHFhVm9iV2lYeVlXZUFLWXUy?=
+ =?utf-8?B?cENtMml5QVI5bFd5MGRyYmpRV3M5NnBCbE84cnBRSEladE5wMkoydUJWWnhV?=
+ =?utf-8?B?eWQwd28zdktVS0FZbi96TWFtWjF3QmNxcTN4dnpBUERGQkE9PQ==?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR03MB7682.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YTJuaWtJRGxndkhDc0pWdWFkTmIrYStqNUdSYkFoblJ3VTNsSk95YTNhcnBH?=
+ =?utf-8?B?RFhaVzdNTmgxS3BGSm83UWhIWGcvUUlEVG11cklaTkZZZDJ3MWhibDJKclNX?=
+ =?utf-8?B?T2tEVGc2MGxRbnpSUVVYYUFaaUlIWHdWODNjc0p3SXhIVXhRVFdFVVlKdk5u?=
+ =?utf-8?B?bWVSclRPNXFzUFF4aS9iOE5paEYrV2RqYW02T1JtMU9TaXp2RzV3MWQzSnlQ?=
+ =?utf-8?B?THNTMUoyNjhuTnJmdlBqVDZza0ErMTV4amJ1a1ZsTGZtMlpydXZXc3UxV2lD?=
+ =?utf-8?B?elBzR1pZT1Nqa2hMMXd1N0toazNIYU16T3Q3YlVDRmRuOVBqSzJ1ZWFpOVps?=
+ =?utf-8?B?dFY4aUtKNWk5YklzbVdrR0w0MG1uMVJRY1RCRG8yWnI2eG9XMlY3a1BMbG5X?=
+ =?utf-8?B?dllWL0hJTXN2ZlR5d3pJVU4zaE5temlwK1VrcS9TK1hNK0N3UjJxMzVWbVNx?=
+ =?utf-8?B?dU1oaXRoYW9VUFkvVHZhQnJUSndseE9VKzN4Y1A2eVhWdFgrSWF6OXVnZmxI?=
+ =?utf-8?B?b0pBa01kZFpDV2RsMzFBMU8xWlJJVUg3MEo2Q1Q5V1V2dEs1N1RobE13VWFE?=
+ =?utf-8?B?S0pIUVVMZE1kbm5Mbm1MTnVnMVl2VjQyMmsxVThLK2xIL0VFNUVCSU9ZRWta?=
+ =?utf-8?B?d2J6bkZYcE4xMXpWRlFSVXAwMTgyUTFwREZHODRVeFcvNk1CMVh5ZGRVTW05?=
+ =?utf-8?B?dTRoT3prSTA2bmNrNmVXQUJqNG45K1lRdDAxSG1SRUVscTVCN0s1bEVvNEsw?=
+ =?utf-8?B?NUkzY2hqbXcwejgzZyt4V1FxSTg4Si9CbVJTeGY5ZTN5UStqZm10bEpqb25j?=
+ =?utf-8?B?U3hFSjA1SFVEWkc5c1ROcW8xNTRIaTM4dlhRTHBHQ1EzS3U0TkNvWnoxVEV0?=
+ =?utf-8?B?UGU1R0xVbkEwY3YyaWJTc3NNdi9TYnpwRURqR3RiTVNPTUZlNXVuTjhuaDI2?=
+ =?utf-8?B?SUNJbHpxcUhaWjBCeXhtdC9oeUtpcUdkK0UzZXRkTmMzMFBMYng3TTR2Rm90?=
+ =?utf-8?B?amhBU0NDUGRtTDBsT0doTTNqcWVVYldFZThqOVBYaWdzbDRRd1Y0YlR5WFA3?=
+ =?utf-8?B?eXZkS3Q2NnJuNGRWRUdLNWd6ZFZPZjJqZ25BeHozZDdLK0pyUFBsWkNNdmZK?=
+ =?utf-8?B?VU1zTGJuVEtLd0phZTRqRXRsTk1PR0xwQm5kZ0lJRkc4UkZMU1hSSWFtaXF1?=
+ =?utf-8?B?cXR5VnNVYzVRUE8wYnFFckxiVHQ1SGJxUjQ0YkViUmFWS2htMFNHN1I2U3V0?=
+ =?utf-8?B?Wjdha0hSYy9xQThDdHFxT09kbDNkM2w4NGM0SExiSlh5RHlFa1NncHJvaTgw?=
+ =?utf-8?B?eVBKUWoycjZUbWl4NU9taVM5NFhPV21tWkdkaVBtaDBzclEyM1JaeWU1SjFz?=
+ =?utf-8?B?QUo3MUM4blRHdXpWbDAyUSs5MC9KVkRSejluNjJyTURjR2RKV1E3U1VvNGU2?=
+ =?utf-8?B?NW9BbXVlQ2hxd2ZaZUEwbnlGc0d6cXQrYkNnQlowWEFNVmM4cm5vL2FkODhU?=
+ =?utf-8?B?eHY2SzhEd2xJVmZrZGF4dlZZckZLSTgrbHVqazcxNVlmdGlCcS9IZ0JhTmRI?=
+ =?utf-8?B?VGpmTi9DKzhWUjcxbWN4R25BSDNjdnY2NHVUM05RRDdLNk83Wm1ObHpIN3Z3?=
+ =?utf-8?B?VjBlNTVnQnJIRUZKZURlenJTQ2svZ1Z5U3VvT1A4eVFXZ1pwV2tud3pxTVl4?=
+ =?utf-8?B?ekh1NTBWS281Z2dNVURwSk1TL1NvQ1R2OFpkeWFiOC8wVVBvQlByNWxyT3Nj?=
+ =?utf-8?B?d0JMckpKZ0o3STY2amZXM2JHa3dNMzF5R1ZqY0p0aXpheWREejdhdGVqcnds?=
+ =?utf-8?B?cXR4NmhsbXJwbHNuZTZyM2Y3N0taYmFYTDJiTlphNW1nME1DNFJCRmpHVmpi?=
+ =?utf-8?B?dENWUVJFWlROanRuOHRibC9NZ0k0RWw4L1grQ1l5cU5EYTFhREUwU2RNS2NU?=
+ =?utf-8?B?ZEJIMjZPQmJaWGVtRERwaC9seHRIcCtxRlhkNGxrZnVUbXJIVHFBWDJGR3c5?=
+ =?utf-8?B?VVVIL1IyRHRzNkUxVkhqMEtxZmlKS3N5ZlYwUHFmSmRrUkd0a3QzZjlJOWM1?=
+ =?utf-8?B?NHZxUWl0dVlwcSt6TGllb2gySDVSQkNOc2lLL25UblVJTmswTjA2NFRBYWJ6?=
+ =?utf-8?B?UlRTNmdoMHdEcit2VWJ6c3pVZS95L0VsOUdLWm14Y1dBVTRDZFdUZTBpTmdT?=
+ =?utf-8?B?TUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D2DF3A9566787A4BBCE66E4FB13A7B62@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0xTZxjed04vh25lh+r0C2Gjq9FEspYWWnogIiSoNFET5ra4jR94oAdK
-	6C09ZZHd7GYqCIuwdNNRYTB1c0Fcu1KgXJwFdKjBdgxWiIqWqbAaDeMisATKWlo3/z3v5fme
-	93m/F0N5dlY8Vqo1UgYtqRawOIyOge1yYbuktljsD2KE/9sOFtF6yYMQYwvTTKLpiodJeL12
-	NuG472MSs1/cZRIj3Q0s4hvvLwgxfGM3sdbrYhMDjyuZRND3M4P4/Acbkh2rmBk3sxWOluMs
-	Rdu5I4oTzhagmHe8lsd8v2yHiiKVlIFPaYt0ylJtSaZg71sFOQWyNLFEKEkn5AK+ltRQmYJd
-	+/KEe0rVoTkF/A9IdXkolUfStCB55w6DrtxI8VU62pgpoPRKtV6uF9Gkhi7Xloi0lDFDIhan
-	yEKNh8pUrr+WGHr7cfRwpfM2MIHWMaQaxGAQl0L37c/Y1YCD8XAXgKteMxou8PA5AJevxUUK
-	Ibzw1Sr6jGH/0xlldAF4s60pGswC6Hl4lVkNMIyFC+FKMDuc34j3ItDpPYeEAxS/CeBEQzM7
-	/NQG/B3YuPRwfRAGvhVe7gqywpiLZ8HpexPMiFwiHG6dXs/H4NnQMdqKRnri4PX6B4wwRkM9
-	R9tPo2EBiDdicGjSHiXvgl+7fYwI3gAfDTrZERwPA7XHolgHLWNPkAjZBKAvWBM1mgXPDP3D
-	DttB8e3Q1p0chhDfAq/ciurGwqqBVXYkzYVVx3gR4jY4NzoSfSQB/nptKooVsKalD0SWZQFw
-	vHkCrQN863N2rM/Zsf4v3AzQFrCJ0tOaEopO0Uv+++QincYB1k83abcLWJ78LeoHCAb6AcRQ
-	wUZu03hNMY+rJCs+pAy6AkO5mqL7gSy07C/R+FeKdKHb1xoLJNJ0sTQtTSJPkYnlgs3cu+ZG
-	JQ8vIY1UGUXpKcMzHoLFxJuQraDqR3Ni4eRSd0Vqvjy1z+5cfFfzwiFj550/Lgazljmes4+P
-	Jksp65j3pMq39nbGXmlDzja63t7T4VUjwYqX1e22Gl4tnj1oc5/IT000nHpV/JOf+fvIinVo
-	OaM+buEe5+D3/dcBW9Q8dTA3P+HOZe2mwQNvxPivnv/ofu+L1X5iLa9y5oxNWDw9VffSqb6k
-	hAtTLtERelwia9vnrNfMIKcDHuPhp7mpPeLcR5tN+K3zez52nzxr8fByRs0rpbM3Fhf7Ekxz
-	/NeJp5zE94b3M4pjL7k/1TU8WBq92NPVOFDY6ev8LndypUe4s+6T+UB64ELh/P4my5sB5W9C
-	oW+QIWDQKlKShBpo8l8EPnHpQwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsWy7bCSvO4Ww/40g4lNKhYP5m1js1iz9xyT
-	xfUvz1kt5h85x2px/vwGdotNj6+xWnzsucdqcXnXHDaLGef3MVlcPOVq8X/PDnaLw2/aWS3+
-	XdvIYtG0bD2TA5/H+xut7B6bVnWyeWxeUu/Rt2UVo8fnTXIBrFFcNimpOZllqUX6dglcGTte
-	fGcp2NDJXNG+5TZjA+Oa60xdjJwcEgImEhsebWHvYuTiEBLYzijRtPYiC0RCRmJjw392CFtY
-	4n7LEVaIoveMEn+eN7N1MXJwsAnoSvz55wASFxE4xCQx8fNTFhCHWeAyo8Sxu5OZQbqFBYIl
-	tp67wApiswioSuzf+Y8NxOYVsJd4fv8uK8QGeYmLa56DxTkFHCQ2XVkD1isEVLNp5XtWiHpB
-	iZMzn4BdxwxU37x1NvMERoFZSFKzkKQWMDKtYhRNLSjOTc9NLjDUK07MLS7NS9dLzs/dxAiO
-	C62gHYzL1v/VO8TIxMF4iFGCg1lJhHf+je40Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzKOZ0p
-	QgLpiSWp2ampBalFMFkmDk6pBqbYTg+/c9cEEph/ip2/tSKiPuTtIenFGX/zPz2cyvs55hlf
-	/+uXPUHTfv3cKP7Jap64/oUpk7d9rHeX/X5wke1m52c39pdPXi97eNkdCdktvAL/bF1crwV0
-	8F7jnmh3pXkpxxLxaRd3Ws+qWB8po3150UUeYcvNn3Unmd30rMxqWb3T3+jXygfhMUrvzhtf
-	lGF49OeDvvKye67/y1ncj84+LzE5Q+FJsNvvHw5ZJju4RUX04vIsVCPEVIJytp/5J/v+Wfi+
-	Vcny6zbPtf6Xvjl43f09almVu54t7Hudu+huyjrz6uyzHaXBE3evXTXjf7UWG7fui+kbVJer
-	7umN9VoemrFqyxbm//tsc2ZUVYvxKLEUZyQaajEXFScCACPfu9v6AgAA
-X-CMS-MailID: 20240711011324epcas2p4a10c163690a65c45cc5a4ef0965d989b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240711011324epcas2p4a10c163690a65c45cc5a4ef0965d989b
-References: <20240711011316.2713270-1-sunyeal.hong@samsung.com>
-	<CGME20240711011324epcas2p4a10c163690a65c45cc5a4ef0965d989b@epcas2p4.samsung.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR03MB7682.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33f836a1-2142-479a-8de6-08dca146c5f9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2024 01:14:12.0800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vHfoqNDTwLNT1pN7Y+3aGEfwfqPz6SbAMZ1gR5veFzwlVrTdAYtn8/HDWhLosE8xQX3LUSGPgyZ/LRKQCt4B7N6SRybdFXLxI5ShF85+Wb0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB8079
 
-This adds support for CMU_TOP which generates clocks for all the
-function blocks such as CORE, HSI0/1/2, PERIC0/1 and so on. For
-CMU_TOP, PLL_SHARED0,1,2,3,4 and 5 will be the sources of this block
-and they will generate bus clocks.
-
-Signed-off-by: Sunyeal Hong <sunyeal.hong@samsung.com>
----
- drivers/clk/samsung/Makefile             |    1 +
- drivers/clk/samsung/clk-exynosautov920.c | 1173 ++++++++++++++++++++++
- 2 files changed, 1174 insertions(+)
- create mode 100644 drivers/clk/samsung/clk-exynosautov920.c
-
-diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
-index 3056944a5a54..f1ba48758c78 100644
---- a/drivers/clk/samsung/Makefile
-+++ b/drivers/clk/samsung/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos7.o
- obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos7885.o
- obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynos850.o
- obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynosautov9.o
-+obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-exynosautov920.o
- obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+= clk-gs101.o
- obj-$(CONFIG_S3C64XX_COMMON_CLK)	+= clk-s3c64xx.o
- obj-$(CONFIG_S5PV210_COMMON_CLK)	+= clk-s5pv210.o clk-s5pv210-audss.o
-diff --git a/drivers/clk/samsung/clk-exynosautov920.c b/drivers/clk/samsung/clk-exynosautov920.c
-new file mode 100644
-index 000000000000..c17d25e3c9a0
---- /dev/null
-+++ b/drivers/clk/samsung/clk-exynosautov920.c
-@@ -0,0 +1,1173 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024 Samsung Electronics Co., Ltd.
-+ * Author: Sunyeal Hong <sunyeal.hong@samsung.com>
-+ *
-+ * Common Clock Framework support for ExynosAuto v920 SoC.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include <dt-bindings/clock/samsung,exynosautov920.h>
-+
-+#include "clk.h"
-+#include "clk-exynos-arm64.h"
-+
-+/* NOTE: Must be equal to the last clock ID increased by one */
-+#define CLKS_NR_TOP			(DOUT_CLKCMU_TAA_NOC + 1)
-+#define CLKS_NR_PERIC0			(CLK_DOUT_PERIC0_I3C + 1)
-+
-+/* ---- CMU_TOP ------------------------------------------------------------ */
-+
-+/* Register Offset definitions for CMU_TOP (0x11000000) */
-+#define PLL_LOCKTIME_PLL_MMC			0x0004
-+#define PLL_LOCKTIME_PLL_SHARED0		0x0008
-+#define PLL_LOCKTIME_PLL_SHARED1		0x000c
-+#define PLL_LOCKTIME_PLL_SHARED2		0x0010
-+#define PLL_LOCKTIME_PLL_SHARED3		0x0014
-+#define PLL_LOCKTIME_PLL_SHARED4		0x0018
-+#define PLL_LOCKTIME_PLL_SHARED5		0x0018
-+#define PLL_CON0_PLL_MMC			0x0140
-+#define PLL_CON3_PLL_MMC			0x014c
-+#define PLL_CON0_PLL_SHARED0			0x0180
-+#define PLL_CON3_PLL_SHARED0			0x018c
-+#define PLL_CON0_PLL_SHARED1			0x01c0
-+#define PLL_CON3_PLL_SHARED1			0x01cc
-+#define PLL_CON0_PLL_SHARED2			0x0200
-+#define PLL_CON3_PLL_SHARED2			0x020c
-+#define PLL_CON0_PLL_SHARED3			0x0240
-+#define PLL_CON3_PLL_SHARED3			0x024c
-+#define PLL_CON0_PLL_SHARED4			0x0280
-+#define PLL_CON3_PLL_SHARED4			0x028c
-+#define PLL_CON0_PLL_SHARED5			0x02c0
-+#define PLL_CON3_PLL_SHARED5			0x02cc
-+
-+/* MUX */
-+#define CLK_CON_MUX_MUX_CLKCMU_ACC_NOC		0x1000
-+#define CLK_CON_MUX_MUX_CLKCMU_APM_NOC		0x1004
-+#define CLK_CON_MUX_MUX_CLKCMU_AUD_CPU		0x1008
-+#define CLK_CON_MUX_MUX_CLKCMU_AUD_NOC		0x100c
-+#define CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK0	0x1010
-+#define CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK1	0x1014
-+#define CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK2	0x1018
-+#define CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK3	0x101c
-+#define CLK_CON_MUX_MUX_CLKCMU_CMU_BOOST	0x1020
-+#define CLK_CON_MUX_MUX_CLKCMU_CPUCL0_CLUSTER	0x1024
-+#define CLK_CON_MUX_MUX_CLKCMU_CPUCL0_DBG	0x1028
-+#define CLK_CON_MUX_MUX_CLKCMU_CPUCL0_SWITCH	0x102c
-+#define CLK_CON_MUX_MUX_CLKCMU_CPUCL1_CLUSTER	0x1030
-+#define CLK_CON_MUX_MUX_CLKCMU_CPUCL1_SWITCH	0x1034
-+#define CLK_CON_MUX_MUX_CLKCMU_CPUCL2_CLUSTER	0x1038
-+#define CLK_CON_MUX_MUX_CLKCMU_CPUCL2_SWITCH	0x103c
-+#define CLK_CON_MUX_MUX_CLKCMU_DNC_NOC		0x1040
-+#define CLK_CON_MUX_MUX_CLKCMU_DPTX_DPGTC	0x1044
-+#define CLK_CON_MUX_MUX_CLKCMU_DPTX_DPOSC	0x1048
-+#define CLK_CON_MUX_MUX_CLKCMU_DPTX_NOC		0x104c
-+#define CLK_CON_MUX_MUX_CLKCMU_DPUB_DSIM	0x1050
-+#define CLK_CON_MUX_MUX_CLKCMU_DPUB_NOC		0x1054
-+#define CLK_CON_MUX_MUX_CLKCMU_DPUF0_NOC	0x1058
-+#define CLK_CON_MUX_MUX_CLKCMU_DPUF1_NOC	0x105c
-+#define CLK_CON_MUX_MUX_CLKCMU_DPUF2_NOC	0x1060
-+#define CLK_CON_MUX_MUX_CLKCMU_DSP_NOC		0x1064
-+#define CLK_CON_MUX_MUX_CLKCMU_G3D_NOCP		0x1068
-+#define CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH	0x106c
-+#define CLK_CON_MUX_MUX_CLKCMU_GNPU_NOC		0x1070
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI0_NOC		0x1074
-+#define CLK_CON_MUX_MUX_CLKCMU_ACC_ORB		0x1078
-+#define CLK_CON_MUX_MUX_CLKCMU_GNPU_XMAA	0x107c
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI1_MMC_CARD	0x1080
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI1_NOC		0x1084
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI1_USBDRD	0x1088
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI2_ETHERNET	0x108c
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI2_NOC		0x1090
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI2_NOC_UFS	0x1094
-+#define CLK_CON_MUX_MUX_CLKCMU_HSI2_UFS_EMBD	0x1098
-+#define CLK_CON_MUX_MUX_CLKCMU_ISP_NOC		0x109c
-+#define CLK_CON_MUX_MUX_CLKCMU_M2M_JPEG		0x10a0
-+#define CLK_CON_MUX_MUX_CLKCMU_M2M_NOC		0x10a4
-+#define CLK_CON_MUX_MUX_CLKCMU_MFC_MFC		0x10a8
-+#define CLK_CON_MUX_MUX_CLKCMU_MFC_WFD		0x10ac
-+#define CLK_CON_MUX_MUX_CLKCMU_MFD_NOC		0x10b0
-+#define CLK_CON_MUX_MUX_CLKCMU_MIF_NOCP		0x10b4
-+#define CLK_CON_MUX_MUX_CLKCMU_MIF_SWITCH	0x10b8
-+#define CLK_CON_MUX_MUX_CLKCMU_MISC_NOC		0x10bc
-+#define CLK_CON_MUX_MUX_CLKCMU_NOCL0_NOC	0x10c0
-+#define CLK_CON_MUX_MUX_CLKCMU_NOCL1_NOC	0x10c4
-+#define CLK_CON_MUX_MUX_CLKCMU_NOCL2_NOC	0x10c8
-+#define CLK_CON_MUX_MUX_CLKCMU_PERIC0_IP	0x10cc
-+#define CLK_CON_MUX_MUX_CLKCMU_PERIC0_NOC	0x10d0
-+#define CLK_CON_MUX_MUX_CLKCMU_PERIC1_IP	0x10d4
-+#define CLK_CON_MUX_MUX_CLKCMU_PERIC1_NOC	0x10d8
-+#define CLK_CON_MUX_MUX_CLKCMU_SDMA_NOC		0x10dc
-+#define CLK_CON_MUX_MUX_CLKCMU_SNW_NOC		0x10e0
-+#define CLK_CON_MUX_MUX_CLKCMU_SSP_NOC		0x10e4
-+#define CLK_CON_MUX_MUX_CLKCMU_TAA_NOC		0x10e8
-+#define CLK_CON_MUX_MUX_CLK_CMU_NOCP		0x10ec
-+#define CLK_CON_MUX_MUX_CLK_CMU_PLLCLKOUT	0x10f0
-+#define CLK_CON_MUX_MUX_CMU_CMUREF		0x10f4
-+
-+/* DIV */
-+#define CLK_CON_DIV_CLKCMU_ACC_NOC		0x1800
-+#define CLK_CON_DIV_CLKCMU_APM_NOC		0x1804
-+#define CLK_CON_DIV_CLKCMU_AUD_CPU		0x1808
-+#define CLK_CON_DIV_CLKCMU_AUD_NOC		0x180c
-+#define CLK_CON_DIV_CLKCMU_CIS_MCLK0		0x1810
-+#define CLK_CON_DIV_CLKCMU_CIS_MCLK1		0x1814
-+#define CLK_CON_DIV_CLKCMU_CIS_MCLK2		0x1818
-+#define CLK_CON_DIV_CLKCMU_CIS_MCLK3		0x181c
-+#define CLK_CON_DIV_CLKCMU_CPUCL0_CLUSTER	0x1820
-+#define CLK_CON_DIV_CLKCMU_CPUCL0_DBG		0x1824
-+#define CLK_CON_DIV_CLKCMU_CPUCL0_SWITCH	0x1828
-+#define CLK_CON_DIV_CLKCMU_CPUCL1_CLUSTER	0x182c
-+#define CLK_CON_DIV_CLKCMU_CPUCL1_SWITCH	0x1830
-+#define CLK_CON_DIV_CLKCMU_CPUCL2_CLUSTER	0x1834
-+#define CLK_CON_DIV_CLKCMU_CPUCL2_SWITCH	0x1838
-+#define CLK_CON_DIV_CLKCMU_DNC_NOC		0x183c
-+#define CLK_CON_DIV_CLKCMU_DPTX_DPGTC		0x1840
-+#define CLK_CON_DIV_CLKCMU_DPTX_DPOSC		0x1844
-+#define CLK_CON_DIV_CLKCMU_DPTX_NOC		0x1848
-+#define CLK_CON_DIV_CLKCMU_DPUB_DSIM		0x184c
-+#define CLK_CON_DIV_CLKCMU_DPUB_NOC		0x1850
-+#define CLK_CON_DIV_CLKCMU_DPUF0_NOC		0x1854
-+#define CLK_CON_DIV_CLKCMU_DPUF1_NOC		0x1858
-+#define CLK_CON_DIV_CLKCMU_DPUF2_NOC		0x185c
-+#define CLK_CON_DIV_CLKCMU_DSP_NOC		0x1860
-+#define CLK_CON_DIV_CLKCMU_G3D_NOCP		0x1864
-+#define CLK_CON_DIV_CLKCMU_G3D_SWITCH		0x1868
-+#define CLK_CON_DIV_CLKCMU_GNPU_NOC		0x186c
-+#define CLK_CON_DIV_CLKCMU_HSI0_NOC		0x1870
-+#define CLK_CON_DIV_CLKCMU_ACC_ORB		0x1874
-+#define CLK_CON_DIV_CLKCMU_GNPU_XMAA		0x1878
-+#define CLK_CON_DIV_CLKCMU_HSI1_MMC_CARD	0x187c
-+#define CLK_CON_DIV_CLKCMU_HSI1_NOC		0x1880
-+#define CLK_CON_DIV_CLKCMU_HSI1_USBDRD		0x1884
-+#define CLK_CON_DIV_CLKCMU_HSI2_ETHERNET	0x1888
-+#define CLK_CON_DIV_CLKCMU_HSI2_NOC		0x188c
-+#define CLK_CON_DIV_CLKCMU_HSI2_NOC_UFS		0x1890
-+#define CLK_CON_DIV_CLKCMU_HSI2_UFS_EMBD	0x1894
-+#define CLK_CON_DIV_CLKCMU_ISP_NOC		0x1898
-+#define CLK_CON_DIV_CLKCMU_M2M_JPEG		0x189c
-+#define CLK_CON_DIV_CLKCMU_M2M_NOC		0x18a0
-+#define CLK_CON_DIV_CLKCMU_MFC_MFC		0x18a4
-+#define CLK_CON_DIV_CLKCMU_MFC_WFD		0x18a8
-+#define CLK_CON_DIV_CLKCMU_MFD_NOC		0x18ac
-+#define CLK_CON_DIV_CLKCMU_MIF_NOCP		0x18b0
-+#define CLK_CON_DIV_CLKCMU_MISC_NOC		0x18b4
-+#define CLK_CON_DIV_CLKCMU_NOCL0_NOC		0x18b8
-+#define CLK_CON_DIV_CLKCMU_NOCL1_NOC		0x18bc
-+#define CLK_CON_DIV_CLKCMU_NOCL2_NOC		0x18c0
-+#define CLK_CON_DIV_CLKCMU_PERIC0_IP		0x18c4
-+#define CLK_CON_DIV_CLKCMU_PERIC0_NOC		0x18c8
-+#define CLK_CON_DIV_CLKCMU_PERIC1_IP		0x18cc
-+#define CLK_CON_DIV_CLKCMU_PERIC1_NOC		0x18d0
-+#define CLK_CON_DIV_CLKCMU_SDMA_NOC		0x18d4
-+#define CLK_CON_DIV_CLKCMU_SNW_NOC		0x18d8
-+#define CLK_CON_DIV_CLKCMU_SSP_NOC		0x18dc
-+#define CLK_CON_DIV_CLKCMU_TAA_NOC		0x18e0
-+#define CLK_CON_DIV_CLK_ADD_CH_CLK		0x18e4
-+#define CLK_CON_DIV_CLK_CMU_PLLCLKOUT		0x18e8
-+#define CLK_CON_DIV_DIV_CLKCMU_CMU_BOOST	0x18ec
-+#define CLK_CON_DIV_DIV_CLK_CMU_NOCP		0x18f0
-+
-+static const unsigned long top_clk_regs[] __initconst = {
-+	PLL_LOCKTIME_PLL_MMC,
-+	PLL_LOCKTIME_PLL_SHARED0,
-+	PLL_LOCKTIME_PLL_SHARED1,
-+	PLL_LOCKTIME_PLL_SHARED2,
-+	PLL_LOCKTIME_PLL_SHARED3,
-+	PLL_LOCKTIME_PLL_SHARED4,
-+	PLL_LOCKTIME_PLL_SHARED5,
-+	PLL_CON0_PLL_MMC,
-+	PLL_CON3_PLL_MMC,
-+	PLL_CON0_PLL_SHARED0,
-+	PLL_CON3_PLL_SHARED0,
-+	PLL_CON0_PLL_SHARED1,
-+	PLL_CON3_PLL_SHARED1,
-+	PLL_CON0_PLL_SHARED2,
-+	PLL_CON3_PLL_SHARED2,
-+	PLL_CON0_PLL_SHARED3,
-+	PLL_CON3_PLL_SHARED3,
-+	PLL_CON0_PLL_SHARED4,
-+	PLL_CON3_PLL_SHARED4,
-+	PLL_CON0_PLL_SHARED5,
-+	PLL_CON3_PLL_SHARED5,
-+	CLK_CON_MUX_MUX_CLKCMU_ACC_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_APM_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_AUD_CPU,
-+	CLK_CON_MUX_MUX_CLKCMU_AUD_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK0,
-+	CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK1,
-+	CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK2,
-+	CLK_CON_MUX_MUX_CLKCMU_CIS_MCLK3,
-+	CLK_CON_MUX_MUX_CLKCMU_CMU_BOOST,
-+	CLK_CON_MUX_MUX_CLKCMU_CPUCL0_CLUSTER,
-+	CLK_CON_MUX_MUX_CLKCMU_CPUCL0_DBG,
-+	CLK_CON_MUX_MUX_CLKCMU_CPUCL0_SWITCH,
-+	CLK_CON_MUX_MUX_CLKCMU_CPUCL1_CLUSTER,
-+	CLK_CON_MUX_MUX_CLKCMU_CPUCL1_SWITCH,
-+	CLK_CON_MUX_MUX_CLKCMU_CPUCL2_CLUSTER,
-+	CLK_CON_MUX_MUX_CLKCMU_CPUCL2_SWITCH,
-+	CLK_CON_MUX_MUX_CLKCMU_DNC_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_DPTX_DPGTC,
-+	CLK_CON_MUX_MUX_CLKCMU_DPTX_DPOSC,
-+	CLK_CON_MUX_MUX_CLKCMU_DPTX_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_DPUB_DSIM,
-+	CLK_CON_MUX_MUX_CLKCMU_DPUB_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_DPUF0_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_DPUF1_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_DPUF2_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_DSP_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_G3D_NOCP,
-+	CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH,
-+	CLK_CON_MUX_MUX_CLKCMU_GNPU_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI0_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_ACC_ORB,
-+	CLK_CON_MUX_MUX_CLKCMU_GNPU_XMAA,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI1_MMC_CARD,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI1_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI1_USBDRD,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI2_ETHERNET,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI2_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI2_NOC_UFS,
-+	CLK_CON_MUX_MUX_CLKCMU_HSI2_UFS_EMBD,
-+	CLK_CON_MUX_MUX_CLKCMU_ISP_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_M2M_JPEG,
-+	CLK_CON_MUX_MUX_CLKCMU_M2M_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_MFC_MFC,
-+	CLK_CON_MUX_MUX_CLKCMU_MFC_WFD,
-+	CLK_CON_MUX_MUX_CLKCMU_MFD_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_MIF_NOCP,
-+	CLK_CON_MUX_MUX_CLKCMU_MIF_SWITCH,
-+	CLK_CON_MUX_MUX_CLKCMU_MISC_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_NOCL0_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_NOCL1_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_NOCL2_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_PERIC0_IP,
-+	CLK_CON_MUX_MUX_CLKCMU_PERIC0_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_PERIC1_IP,
-+	CLK_CON_MUX_MUX_CLKCMU_PERIC1_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_SDMA_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_SNW_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_SSP_NOC,
-+	CLK_CON_MUX_MUX_CLKCMU_TAA_NOC,
-+	CLK_CON_MUX_MUX_CLK_CMU_NOCP,
-+	CLK_CON_MUX_MUX_CLK_CMU_PLLCLKOUT,
-+	CLK_CON_MUX_MUX_CMU_CMUREF,
-+	CLK_CON_DIV_CLKCMU_ACC_NOC,
-+	CLK_CON_DIV_CLKCMU_APM_NOC,
-+	CLK_CON_DIV_CLKCMU_AUD_CPU,
-+	CLK_CON_DIV_CLKCMU_AUD_NOC,
-+	CLK_CON_DIV_CLKCMU_CIS_MCLK0,
-+	CLK_CON_DIV_CLKCMU_CIS_MCLK1,
-+	CLK_CON_DIV_CLKCMU_CIS_MCLK2,
-+	CLK_CON_DIV_CLKCMU_CIS_MCLK3,
-+	CLK_CON_DIV_CLKCMU_CPUCL0_CLUSTER,
-+	CLK_CON_DIV_CLKCMU_CPUCL0_DBG,
-+	CLK_CON_DIV_CLKCMU_CPUCL0_SWITCH,
-+	CLK_CON_DIV_CLKCMU_CPUCL1_CLUSTER,
-+	CLK_CON_DIV_CLKCMU_CPUCL1_SWITCH,
-+	CLK_CON_DIV_CLKCMU_CPUCL2_CLUSTER,
-+	CLK_CON_DIV_CLKCMU_CPUCL2_SWITCH,
-+	CLK_CON_DIV_CLKCMU_DNC_NOC,
-+	CLK_CON_DIV_CLKCMU_DPTX_DPGTC,
-+	CLK_CON_DIV_CLKCMU_DPTX_DPOSC,
-+	CLK_CON_DIV_CLKCMU_DPTX_NOC,
-+	CLK_CON_DIV_CLKCMU_DPUB_DSIM,
-+	CLK_CON_DIV_CLKCMU_DPUB_NOC,
-+	CLK_CON_DIV_CLKCMU_DPUF0_NOC,
-+	CLK_CON_DIV_CLKCMU_DPUF1_NOC,
-+	CLK_CON_DIV_CLKCMU_DPUF2_NOC,
-+	CLK_CON_DIV_CLKCMU_DSP_NOC,
-+	CLK_CON_DIV_CLKCMU_G3D_NOCP,
-+	CLK_CON_DIV_CLKCMU_G3D_SWITCH,
-+	CLK_CON_DIV_CLKCMU_GNPU_NOC,
-+	CLK_CON_DIV_CLKCMU_HSI0_NOC,
-+	CLK_CON_DIV_CLKCMU_ACC_ORB,
-+	CLK_CON_DIV_CLKCMU_GNPU_XMAA,
-+	CLK_CON_DIV_CLKCMU_HSI1_MMC_CARD,
-+	CLK_CON_DIV_CLKCMU_HSI1_NOC,
-+	CLK_CON_DIV_CLKCMU_HSI1_USBDRD,
-+	CLK_CON_DIV_CLKCMU_HSI2_ETHERNET,
-+	CLK_CON_DIV_CLKCMU_HSI2_NOC,
-+	CLK_CON_DIV_CLKCMU_HSI2_NOC_UFS,
-+	CLK_CON_DIV_CLKCMU_HSI2_UFS_EMBD,
-+	CLK_CON_DIV_CLKCMU_ISP_NOC,
-+	CLK_CON_DIV_CLKCMU_M2M_JPEG,
-+	CLK_CON_DIV_CLKCMU_M2M_NOC,
-+	CLK_CON_DIV_CLKCMU_MFC_MFC,
-+	CLK_CON_DIV_CLKCMU_MFC_WFD,
-+	CLK_CON_DIV_CLKCMU_MFD_NOC,
-+	CLK_CON_DIV_CLKCMU_MIF_NOCP,
-+	CLK_CON_DIV_CLKCMU_MISC_NOC,
-+	CLK_CON_DIV_CLKCMU_NOCL0_NOC,
-+	CLK_CON_DIV_CLKCMU_NOCL1_NOC,
-+	CLK_CON_DIV_CLKCMU_NOCL2_NOC,
-+	CLK_CON_DIV_CLKCMU_PERIC0_IP,
-+	CLK_CON_DIV_CLKCMU_PERIC0_NOC,
-+	CLK_CON_DIV_CLKCMU_PERIC1_IP,
-+	CLK_CON_DIV_CLKCMU_PERIC1_NOC,
-+	CLK_CON_DIV_CLKCMU_SDMA_NOC,
-+	CLK_CON_DIV_CLKCMU_SNW_NOC,
-+	CLK_CON_DIV_CLKCMU_SSP_NOC,
-+	CLK_CON_DIV_CLKCMU_TAA_NOC,
-+	CLK_CON_DIV_CLK_ADD_CH_CLK,
-+	CLK_CON_DIV_CLK_CMU_PLLCLKOUT,
-+	CLK_CON_DIV_DIV_CLKCMU_CMU_BOOST,
-+	CLK_CON_DIV_DIV_CLK_CMU_NOCP,
-+};
-+
-+static const struct samsung_pll_clock top_pll_clks[] __initconst = {
-+	/* CMU_TOP_PURECLKCOMP */
-+	PLL(pll_531x, FOUT_SHARED0_PLL, "fout_shared0_pll", "oscclk",
-+	    PLL_LOCKTIME_PLL_SHARED0, PLL_CON3_PLL_SHARED0, NULL),
-+	PLL(pll_531x, FOUT_SHARED1_PLL, "fout_shared1_pll", "oscclk",
-+	    PLL_LOCKTIME_PLL_SHARED1, PLL_CON3_PLL_SHARED1, NULL),
-+	PLL(pll_531x, FOUT_SHARED2_PLL, "fout_shared2_pll", "oscclk",
-+	    PLL_LOCKTIME_PLL_SHARED2, PLL_CON3_PLL_SHARED2, NULL),
-+	PLL(pll_531x, FOUT_SHARED3_PLL, "fout_shared3_pll", "oscclk",
-+	    PLL_LOCKTIME_PLL_SHARED3, PLL_CON3_PLL_SHARED3, NULL),
-+	PLL(pll_531x, FOUT_SHARED4_PLL, "fout_shared4_pll", "oscclk",
-+	    PLL_LOCKTIME_PLL_SHARED4, PLL_CON3_PLL_SHARED4, NULL),
-+	PLL(pll_531x, FOUT_SHARED5_PLL, "fout_shared5_pll", "oscclk",
-+	    PLL_LOCKTIME_PLL_SHARED5, PLL_CON3_PLL_SHARED5, NULL),
-+	PLL(pll_531x, FOUT_MMC_PLL, "fout_mmc_pll", "oscclk",
-+	    PLL_LOCKTIME_PLL_MMC, PLL_CON3_PLL_MMC, NULL),
-+};
-+
-+/* List of parent clocks for Muxes in CMU_TOP */
-+PNAME(mout_shared0_pll_p) = { "oscclk", "fout_shared0_pll" };
-+PNAME(mout_shared1_pll_p) = { "oscclk", "fout_shared1_pll" };
-+PNAME(mout_shared2_pll_p) = { "oscclk", "fout_shared2_pll" };
-+PNAME(mout_shared3_pll_p) = { "oscclk", "fout_shared3_pll" };
-+PNAME(mout_shared4_pll_p) = { "oscclk", "fout_shared4_pll" };
-+PNAME(mout_shared5_pll_p) = { "oscclk", "fout_shared5_pll" };
-+PNAME(mout_mmc_pll_p) = { "oscclk", "fout_mmc_pll" };
-+
-+PNAME(mout_clkcmu_cmu_boost_p) = { "dout_shared2_div3", "dout_shared1_div4",
-+				   "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_cmu_cmuref_p) = { "oscclk", "dout_cmu_boost" };
-+
-+PNAME(mout_clkcmu_acc_noc_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared4_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "dout_shared5_div1",
-+				 "dout_shared3_div1", "oscclk" };
-+
-+PNAME(mout_clkcmu_acc_orb_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared1_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "fout_shared5_pll",
-+				 "fout_shared3_pll", "oscclk" };
-+
-+PNAME(mout_clkcmu_apm_noc_p) = { "dout_shared2_div2", "dout_shared1_div4",
-+				 "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_aud_cpu_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				 "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared4_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "dout_shared4_div3" };
-+
-+PNAME(mout_clkcmu_aud_noc_p) = { "dout_shared2_div2", "dout_shared4_div2",
-+				 "dout_shared1_div2", "dout_shared2_div3" };
-+
-+PNAME(mout_clkcmu_cpucl0_switch_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				       "dout_shared2_div2", "dout_shared4_div2" };
-+
-+PNAME(mout_clkcmu_cpucl0_cluster_p) = { "fout_shared2_pll", "fout_shared4_pll",
-+					"dout_shared0_div2", "dout_shared1_div2",
-+					"dout_shared2_div2", "dout_shared4_div2",
-+					"dout_shared2_div3", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_cpucl0_dbg_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				    "dout_shared4_div2", "dout_shared0_div4" };
-+
-+PNAME(mout_clkcmu_cpucl1_switch_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				       "dout_shared2_div2", "dout_shared4_div2" };
-+
-+PNAME(mout_clkcmu_cpucl1_cluster_p) = { "fout_shared2_pll", "fout_shared4_pll",
-+					"dout_shared0_div2", "dout_shared1_div2",
-+					"dout_shared2_div2", "dout_shared4_div2",
-+					"dout_shared2_div3", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_cpucl2_switch_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				       "dout_shared2_div2", "dout_shared4_div2" };
-+
-+PNAME(mout_clkcmu_cpucl2_cluster_p) = { "fout_shared2_pll", "fout_shared4_pll",
-+					"dout_shared0_div2", "dout_shared1_div2",
-+					"dout_shared2_div2", "dout_shared4_div2",
-+					"dout_shared2_div3", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_dnc_noc_p) = { "dout_shared1_div2", "dout_shared2_div2",
-+				 "dout_shared0_div3", "dout_shared4_div2",
-+				 "dout_shared1_div3", "dout_shared2_div3",
-+				 "dout_shared1_div4", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_dptx_noc_p) = { "dout_shared4_div2", "dout_shared2_div3",
-+				  "dout_shared1_div4", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_dptx_dpgtc_p) = { "oscclk", "dout_shared2_div3",
-+				    "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_dptx_dposc_p) = { "oscclk", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_dpub_noc_p) = { "dout_shared4_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "dout_shared1_div4",
-+				 "dout_shared2_div4", "dout_shared4_div4",
-+				 "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_dpub_dsim_p) = { "dout_shared2_div3", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_dpuf_noc_p) = { "dout_shared4_div2", "dout_shared1_div3",
-+				   "dout_shared2_div3", "dout_shared1_div4",
-+				   "dout_shared2_div4", "dout_shared4_div4",
-+				   "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_dsp_noc_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				 "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared4_div2", "dout_shared1_div3",
-+				 "fout_shared5_pll", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_g3d_switch_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				    "dout_shared2_div2", "dout_shared4_div2" };
-+
-+PNAME(mout_clkcmu_g3d_nocp_p) = { "dout_shared2_div3", "dout_shared1_div4",
-+				  "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_gnpu_noc_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				  "dout_shared2_div2", "dout_shared0_div3",
-+				  "dout_shared4_div2", "dout_shared2_div3",
-+				  "fout_shared5_pll", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_hsi0_noc_p) = { "dout_shared4_div2", "dout_shared2_div3",
-+				  "dout_shared1_div4", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_hsi1_noc_p) = { "dout_shared2_div3", "dout_shared1_div4",
-+				  "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_hsi1_usbdrd_p) = { "oscclk", "dout_shared2_div3",
-+				     "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_hsi1_mmc_card_p) = { "oscclk", "dout_shared2_div2",
-+				       "dout_shared4_div2", "fout_mmc_pll" };
-+
-+PNAME(mout_clkcmu_hsi2_noc_p) = { "dout_shared4_div2", "dout_shared2_div3",
-+				  "dout_shared1_div4", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_hsi2_noc_ufs_p) = { "dout_shared4_div2", "dout_shared2_div3",
-+				      "dout_shared1_div4", "dout_shared2_div2" };
-+
-+PNAME(mout_clkcmu_hsi2_ufs_embd_p) = { "oscclk", "dout_shared2_div3",
-+				       "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_hsi2_ethernet_p) = { "oscclk", "dout_shared2_div2",
-+				       "dout_shared0_div3", "dout_shared1_div3" };
-+
-+PNAME(mout_clkcmu_isp_noc_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared4_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "fout_shared5_pll",
-+				 "fout_shared3_pll", "oscclk" };
-+
-+PNAME(mout_clkcmu_m2m_noc_p) = { "dout_shared0_div3", "dout_shared4_div2",
-+				 "dout_shared2_div3", "dout_shared1_div4" };
-+
-+PNAME(mout_clkcmu_m2m_jpeg_p) = { "dout_shared0_div3", "dout_shared4_div2",
-+				  "dout_shared2_div3", "dout_shared1_div4" };
-+
-+PNAME(mout_clkcmu_mfc_mfc_p) = { "dout_shared0_div3", "dout_shared4_div2",
-+				 "dout_shared2_div3", "dout_shared1_div4" };
-+
-+PNAME(mout_clkcmu_mfc_wfd_p) = { "dout_shared0_div3", "dout_shared4_div2",
-+				 "dout_shared2_div3", "dout_shared1_div4" };
-+
-+PNAME(mout_clkcmu_mfd_noc_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared4_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "fout_shared5_pll",
-+				 "fout_shared3_pll", "oscclk" };
-+
-+PNAME(mout_clkcmu_mif_switch_p) = { "fout_shared0_pll", "fout_shared1_pll",
-+				    "fout_shared2_pll", "fout_shared4_pll",
-+				    "dout_shared0_div2", "dout_shared1_div2",
-+				    "dout_shared2_div2", "fout_shared5_pll" };
-+
-+PNAME(mout_clkcmu_mif_nocp_p) = { "dout_shared2_div3", "dout_shared1_div4",
-+				  "dout_shared2_div4", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_misc_noc_p) = { "dout_shared4_div2", "dout_shared2_div3",
-+				  "dout_shared1_div4", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_nocl0_noc_p) = { "dout_shared0_div2", "dout_shared1_div2",
-+				   "dout_shared2_div2", "dout_shared0_div3",
-+				   "dout_shared4_div2", "dout_shared1_div3",
-+				   "dout_shared2_div3", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_nocl1_noc_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				   "dout_shared4_div2", "dout_shared1_div3",
-+				   "dout_shared2_div3", "fout_shared5_pll",
-+				   "fout_shared3_pll", "oscclk" };
-+
-+PNAME(mout_clkcmu_nocl2_noc_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				   "dout_shared4_div2", "dout_shared1_div3",
-+				   "dout_shared2_div3", "fout_shared5_pll",
-+				   "fout_shared3_pll", "oscclk" };
-+
-+PNAME(mout_clkcmu_peric0_noc_p) = { "dout_shared2_div3", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_peric0_ip_p) = { "dout_shared2_div3", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_peric1_noc_p) = { "dout_shared2_div3", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_peric1_ip_p) = { "dout_shared2_div3", "dout_shared2_div4" };
-+
-+PNAME(mout_clkcmu_sdma_noc_p) = { "dout_shared1_div2", "dout_shared2_div2",
-+				  "dout_shared0_div3", "dout_shared4_div2",
-+				  "dout_shared1_div3", "dout_shared2_div3",
-+				  "dout_shared1_div4", "fout_shared3_pll" };
-+
-+PNAME(mout_clkcmu_snw_noc_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared4_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "fout_shared5_pll",
-+				 "fout_shared3_pll", "oscclk" };
-+
-+PNAME(mout_clkcmu_ssp_noc_p) = { "dout_shared2_div3", "dout_shared1_div4",
-+				  "dout_shared2_div2", "dout_shared4_div4" };
-+
-+PNAME(mout_clkcmu_taa_noc_p) = { "dout_shared2_div2", "dout_shared0_div3",
-+				 "dout_shared4_div2", "dout_shared1_div3",
-+				 "dout_shared2_div3", "fout_shared5_pll",
-+				 "fout_shared3_pll", "oscclk" };
-+
-+static const struct samsung_mux_clock top_mux_clks[] __initconst = {
-+	/* CMU_TOP_PURECLKCOMP */
-+	MUX(MOUT_SHARED0_PLL, "mout_shared0_pll", mout_shared0_pll_p,
-+	    PLL_CON0_PLL_SHARED0, 4, 1),
-+	MUX(MOUT_SHARED1_PLL, "mout_shared1_pll", mout_shared1_pll_p,
-+	    PLL_CON0_PLL_SHARED1, 4, 1),
-+	MUX(MOUT_SHARED2_PLL, "mout_shared2_pll", mout_shared2_pll_p,
-+	    PLL_CON0_PLL_SHARED2, 4, 1),
-+	MUX(MOUT_SHARED3_PLL, "mout_shared3_pll", mout_shared3_pll_p,
-+	    PLL_CON0_PLL_SHARED3, 4, 1),
-+	MUX(MOUT_SHARED4_PLL, "mout_shared4_pll", mout_shared4_pll_p,
-+	    PLL_CON0_PLL_SHARED4, 4, 1),
-+	MUX(MOUT_SHARED5_PLL, "mout_shared5_pll", mout_shared5_pll_p,
-+	    PLL_CON0_PLL_SHARED5, 4, 1),
-+	MUX(MOUT_MMC_PLL, "mout_mmc_pll", mout_mmc_pll_p,
-+	    PLL_CON0_PLL_MMC, 4, 1),
-+
-+	/* BOOST */
-+	MUX(MOUT_CLKCMU_CMU_BOOST, "mout_clkcmu_cmu_boost",
-+	    mout_clkcmu_cmu_boost_p, CLK_CON_MUX_MUX_CLKCMU_CMU_BOOST, 0, 2),
-+	MUX(MOUT_CLKCMU_CMU_CMUREF, "mout_clkcmu_cmu_cmuref",
-+	    mout_clkcmu_cmu_cmuref_p, CLK_CON_MUX_MUX_CMU_CMUREF, 0, 1),
-+
-+	/* ACC */
-+	MUX(MOUT_CLKCMU_ACC_NOC, "mout_clkcmu_acc_noc",
-+	    mout_clkcmu_acc_noc_p, CLK_CON_MUX_MUX_CLKCMU_ACC_NOC, 0, 3),
-+	MUX(MOUT_CLKCMU_ACC_ORB, "mout_clkcmu_acc_orb",
-+	    mout_clkcmu_acc_orb_p, CLK_CON_MUX_MUX_CLKCMU_ACC_ORB, 0, 3),
-+
-+	/* APM */
-+	MUX(MOUT_CLKCMU_APM_NOC, "mout_clkcmu_apm_noc",
-+	    mout_clkcmu_apm_noc_p, CLK_CON_MUX_MUX_CLKCMU_APM_NOC, 0, 2),
-+
-+	/* AUD */
-+	MUX(MOUT_CLKCMU_AUD_CPU, "mout_clkcmu_aud_cpu",
-+	    mout_clkcmu_aud_cpu_p, CLK_CON_MUX_MUX_CLKCMU_AUD_CPU, 0, 3),
-+	MUX(MOUT_CLKCMU_AUD_NOC, "mout_clkcmu_aud_noc",
-+	    mout_clkcmu_aud_noc_p, CLK_CON_MUX_MUX_CLKCMU_AUD_NOC, 0, 2),
-+
-+	/* CPUCL0 */
-+	MUX(MOUT_CLKCMU_CPUCL0_SWITCH, "mout_clkcmu_cpucl0_switch",
-+	    mout_clkcmu_cpucl0_switch_p, CLK_CON_MUX_MUX_CLKCMU_CPUCL0_SWITCH,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_CPUCL0_CLUSTER, "mout_clkcmu_cpucl0_cluster",
-+	    mout_clkcmu_cpucl0_cluster_p, CLK_CON_MUX_MUX_CLKCMU_CPUCL0_CLUSTER,
-+	    0, 3),
-+	MUX(MOUT_CLKCMU_CPUCL0_DBG, "mout_clkcmu_cpucl0_dbg",
-+	    mout_clkcmu_cpucl0_dbg_p, CLK_CON_MUX_MUX_CLKCMU_CPUCL0_DBG,
-+	    0, 2),
-+
-+	/* CPUCL1 */
-+	MUX(MOUT_CLKCMU_CPUCL1_SWITCH, "mout_clkcmu_cpucl1_switch",
-+	    mout_clkcmu_cpucl1_switch_p, CLK_CON_MUX_MUX_CLKCMU_CPUCL1_SWITCH,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_CPUCL1_CLUSTER, "mout_clkcmu_cpucl1_cluster",
-+	    mout_clkcmu_cpucl1_cluster_p, CLK_CON_MUX_MUX_CLKCMU_CPUCL1_CLUSTER,
-+	    0, 3),
-+
-+	/* CPUCL2 */
-+	MUX(MOUT_CLKCMU_CPUCL2_SWITCH, "mout_clkcmu_cpucl2_switch",
-+	    mout_clkcmu_cpucl2_switch_p, CLK_CON_MUX_MUX_CLKCMU_CPUCL2_SWITCH,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_CPUCL2_CLUSTER, "mout_clkcmu_cpucl2_cluster",
-+	    mout_clkcmu_cpucl2_cluster_p, CLK_CON_MUX_MUX_CLKCMU_CPUCL2_CLUSTER,
-+	    0, 3),
-+
-+	/* DNC */
-+	MUX(MOUT_CLKCMU_DNC_NOC, "mout_clkcmu_dnc_noc",
-+	    mout_clkcmu_dnc_noc_p, CLK_CON_MUX_MUX_CLKCMU_DNC_NOC, 0, 3),
-+
-+	/* DPTX */
-+	MUX(MOUT_CLKCMU_DPTX_NOC, "mout_clkcmu_dptx_noc",
-+	    mout_clkcmu_dptx_noc_p, CLK_CON_MUX_MUX_CLKCMU_DPTX_NOC, 0, 2),
-+	MUX(MOUT_CLKCMU_DPTX_DPGTC, "mout_clkcmu_dptx_dpgtc",
-+	    mout_clkcmu_dptx_dpgtc_p, CLK_CON_MUX_MUX_CLKCMU_DPTX_DPGTC, 0, 2),
-+	MUX(MOUT_CLKCMU_DPTX_DPOSC, "mout_clkcmu_dptx_dposc",
-+	    mout_clkcmu_dptx_dposc_p, CLK_CON_MUX_MUX_CLKCMU_DPTX_DPOSC, 0, 1),
-+
-+	/* DPUB */
-+	MUX(MOUT_CLKCMU_DPUB_NOC, "mout_clkcmu_dpub_noc",
-+	    mout_clkcmu_dpub_noc_p, CLK_CON_MUX_MUX_CLKCMU_DPUB_NOC, 0, 3),
-+	MUX(MOUT_CLKCMU_DPUB_DSIM, "mout_clkcmu_dpub_dsim",
-+	    mout_clkcmu_dpub_dsim_p, CLK_CON_MUX_MUX_CLKCMU_DPUB_DSIM, 0, 1),
-+
-+	/* DPUF */
-+	MUX(MOUT_CLKCMU_DPUF0_NOC, "mout_clkcmu_dpuf0_noc",
-+	    mout_clkcmu_dpuf_noc_p, CLK_CON_MUX_MUX_CLKCMU_DPUF0_NOC, 0, 3),
-+	MUX(MOUT_CLKCMU_DPUF1_NOC, "mout_clkcmu_dpuf1_noc",
-+	    mout_clkcmu_dpuf_noc_p, CLK_CON_MUX_MUX_CLKCMU_DPUF1_NOC, 0, 3),
-+	MUX(MOUT_CLKCMU_DPUF2_NOC, "mout_clkcmu_dpuf2_noc",
-+	    mout_clkcmu_dpuf_noc_p, CLK_CON_MUX_MUX_CLKCMU_DPUF2_NOC, 0, 3),
-+
-+	/* DSP */
-+	MUX(MOUT_CLKCMU_DSP_NOC, "mout_clkcmu_dsp_noc",
-+	    mout_clkcmu_dsp_noc_p, CLK_CON_MUX_MUX_CLKCMU_DSP_NOC, 0, 3),
-+
-+	/* G3D */
-+	MUX(MOUT_CLKCMU_G3D_SWITCH, "mout_clkcmu_g3d_switch",
-+	    mout_clkcmu_g3d_switch_p, CLK_CON_MUX_MUX_CLKCMU_G3D_SWITCH, 0, 2),
-+	MUX(MOUT_CLKCMU_G3D_NOCP, "mout_clkcmu_g3d_nocp",
-+	    mout_clkcmu_g3d_nocp_p, CLK_CON_MUX_MUX_CLKCMU_G3D_NOCP, 0, 2),
-+
-+	/* GNPU */
-+	MUX(MOUT_CLKCMU_GNPU_NOC, "mout_clkcmu_gnpu_noc",
-+	    mout_clkcmu_gnpu_noc_p, CLK_CON_MUX_MUX_CLKCMU_GNPU_NOC, 0, 3),
-+
-+	/* HSI0 */
-+	MUX(MOUT_CLKCMU_HSI0_NOC, "mout_clkcmu_hsi0_noc",
-+	    mout_clkcmu_hsi0_noc_p, CLK_CON_MUX_MUX_CLKCMU_HSI0_NOC, 0, 2),
-+
-+	/* HSI1 */
-+	MUX(MOUT_CLKCMU_HSI1_NOC, "mout_clkcmu_hsi1_noc",
-+	    mout_clkcmu_hsi1_noc_p, CLK_CON_MUX_MUX_CLKCMU_HSI1_NOC,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_HSI1_USBDRD, "mout_clkcmu_hsi1_usbdrd",
-+	    mout_clkcmu_hsi1_usbdrd_p, CLK_CON_MUX_MUX_CLKCMU_HSI1_USBDRD,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_HSI1_MMC_CARD, "mout_clkcmu_hsi1_mmc_card",
-+	    mout_clkcmu_hsi1_mmc_card_p, CLK_CON_MUX_MUX_CLKCMU_HSI1_MMC_CARD,
-+	    0, 2),
-+
-+	/* HSI2 */
-+	MUX(MOUT_CLKCMU_HSI2_NOC, "mout_clkcmu_hsi2_noc",
-+	    mout_clkcmu_hsi2_noc_p, CLK_CON_MUX_MUX_CLKCMU_HSI2_NOC,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_HSI2_NOC_UFS, "mout_clkcmu_hsi2_noc_ufs",
-+	    mout_clkcmu_hsi2_noc_ufs_p, CLK_CON_MUX_MUX_CLKCMU_HSI2_NOC_UFS,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_HSI2_UFS_EMBD, "mout_clkcmu_hsi2_ufs_embd",
-+	    mout_clkcmu_hsi2_ufs_embd_p, CLK_CON_MUX_MUX_CLKCMU_HSI2_UFS_EMBD,
-+	    0, 2),
-+	MUX(MOUT_CLKCMU_HSI2_ETHERNET, "mout_clkcmu_hsi2_ethernet",
-+	    mout_clkcmu_hsi2_ethernet_p, CLK_CON_MUX_MUX_CLKCMU_HSI2_ETHERNET,
-+	    0, 2),
-+
-+	/* ISP */
-+	MUX(MOUT_CLKCMU_ISP_NOC, "mout_clkcmu_isp_noc",
-+	    mout_clkcmu_isp_noc_p, CLK_CON_MUX_MUX_CLKCMU_ISP_NOC, 0, 3),
-+
-+	/* M2M */
-+	MUX(MOUT_CLKCMU_M2M_NOC, "mout_clkcmu_m2m_noc",
-+	    mout_clkcmu_m2m_noc_p, CLK_CON_MUX_MUX_CLKCMU_M2M_NOC, 0, 2),
-+	MUX(MOUT_CLKCMU_M2M_JPEG, "mout_clkcmu_m2m_jpeg",
-+	    mout_clkcmu_m2m_jpeg_p, CLK_CON_MUX_MUX_CLKCMU_M2M_JPEG, 0, 2),
-+
-+	/* MFC */
-+	MUX(MOUT_CLKCMU_MFC_MFC, "mout_clkcmu_mfc_mfc",
-+	    mout_clkcmu_mfc_mfc_p, CLK_CON_MUX_MUX_CLKCMU_MFC_MFC, 0, 2),
-+	MUX(MOUT_CLKCMU_MFC_WFD, "mout_clkcmu_mfc_wfd",
-+	    mout_clkcmu_mfc_wfd_p, CLK_CON_MUX_MUX_CLKCMU_MFC_WFD, 0, 2),
-+
-+	/* MFD */
-+	MUX(MOUT_CLKCMU_MFD_NOC, "mout_clkcmu_mfd_noc",
-+	    mout_clkcmu_mfd_noc_p, CLK_CON_MUX_MUX_CLKCMU_MFD_NOC, 0, 3),
-+
-+	/* MIF */
-+	MUX(MOUT_CLKCMU_MIF_SWITCH, "mout_clkcmu_mif_switch",
-+	    mout_clkcmu_mif_switch_p, CLK_CON_MUX_MUX_CLKCMU_MIF_SWITCH, 0, 3),
-+	MUX(MOUT_CLKCMU_MIF_NOCP, "mout_clkcmu_mif_nocp",
-+	    mout_clkcmu_mif_nocp_p, CLK_CON_MUX_MUX_CLKCMU_MIF_NOCP, 0, 2),
-+
-+	/* MISC */
-+	MUX(MOUT_CLKCMU_MISC_NOC, "mout_clkcmu_misc_noc",
-+	    mout_clkcmu_misc_noc_p, CLK_CON_MUX_MUX_CLKCMU_MISC_NOC, 0, 2),
-+
-+	/* NOCL0 */
-+	MUX(MOUT_CLKCMU_NOCL0_NOC, "mout_clkcmu_nocl0_noc",
-+	    mout_clkcmu_nocl0_noc_p, CLK_CON_MUX_MUX_CLKCMU_NOCL0_NOC, 0, 3),
-+
-+	/* NOCL1 */
-+	MUX(MOUT_CLKCMU_NOCL1_NOC, "mout_clkcmu_nocl1_noc",
-+	    mout_clkcmu_nocl1_noc_p, CLK_CON_MUX_MUX_CLKCMU_NOCL1_NOC, 0, 3),
-+
-+	/* NOCL2 */
-+	MUX(MOUT_CLKCMU_NOCL2_NOC, "mout_clkcmu_nocl2_noc",
-+	    mout_clkcmu_nocl2_noc_p, CLK_CON_MUX_MUX_CLKCMU_NOCL2_NOC, 0, 3),
-+
-+	/* PERIC0 */
-+	MUX(MOUT_CLKCMU_PERIC0_NOC, "mout_clkcmu_peric0_noc",
-+	    mout_clkcmu_peric0_noc_p, CLK_CON_MUX_MUX_CLKCMU_PERIC0_NOC, 0, 1),
-+	MUX(MOUT_CLKCMU_PERIC0_IP, "mout_clkcmu_peric0_ip",
-+	    mout_clkcmu_peric0_ip_p, CLK_CON_MUX_MUX_CLKCMU_PERIC0_IP, 0, 1),
-+
-+	/* PERIC1 */
-+	MUX(MOUT_CLKCMU_PERIC1_NOC, "mout_clkcmu_peric1_noc",
-+	    mout_clkcmu_peric1_noc_p, CLK_CON_MUX_MUX_CLKCMU_PERIC1_NOC, 0, 1),
-+	MUX(MOUT_CLKCMU_PERIC1_IP, "mout_clkcmu_peric1_ip",
-+	    mout_clkcmu_peric1_ip_p, CLK_CON_MUX_MUX_CLKCMU_PERIC1_IP, 0, 1),
-+
-+	/* SDMA */
-+	MUX(MOUT_CLKCMU_SDMA_NOC, "mout_clkcmu_sdma_noc",
-+	    mout_clkcmu_sdma_noc_p, CLK_CON_MUX_MUX_CLKCMU_SDMA_NOC, 0, 3),
-+
-+	/* SNW */
-+	MUX(MOUT_CLKCMU_SNW_NOC, "mout_clkcmu_snw_noc",
-+	    mout_clkcmu_snw_noc_p, CLK_CON_MUX_MUX_CLKCMU_SNW_NOC, 0, 3),
-+
-+	/* SSP */
-+	MUX(MOUT_CLKCMU_SSP_NOC, "mout_clkcmu_ssp_noc",
-+	    mout_clkcmu_ssp_noc_p, CLK_CON_MUX_MUX_CLKCMU_SSP_NOC, 0, 2),
-+
-+	/* TAA */
-+	MUX(MOUT_CLKCMU_TAA_NOC, "mout_clkcmu_taa_noc",
-+	    mout_clkcmu_taa_noc_p, CLK_CON_MUX_MUX_CLKCMU_TAA_NOC, 0, 3),
-+};
-+
-+static const struct samsung_div_clock top_div_clks[] __initconst = {
-+	/* CMU_TOP_PURECLKCOMP */
-+
-+	/* BOOST */
-+	DIV(DOUT_CLKCMU_CMU_BOOST, "dout_clkcmu_cmu_boost",
-+	    "mout_clkcmu_cmu_boost", CLK_CON_DIV_DIV_CLKCMU_CMU_BOOST, 0, 2),
-+
-+	/* ACC */
-+	DIV(DOUT_CLKCMU_ACC_NOC, "dout_clkcmu_acc_noc",
-+	    "mout_clkcmu_acc_noc", CLK_CON_DIV_CLKCMU_ACC_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_ACC_ORB, "dout_clkcmu_acc_orb",
-+	    "mout_clkcmu_acc_orb", CLK_CON_DIV_CLKCMU_ACC_ORB, 0, 4),
-+
-+	/* APM */
-+	DIV(DOUT_CLKCMU_APM_NOC, "dout_clkcmu_apm_noc",
-+	    "mout_clkcmu_apm_noc", CLK_CON_DIV_CLKCMU_APM_NOC, 0, 3),
-+
-+	/* AUD */
-+	DIV(DOUT_CLKCMU_AUD_CPU, "dout_clkcmu_aud_cpu",
-+	    "mout_clkcmu_aud_cpu", CLK_CON_DIV_CLKCMU_AUD_CPU, 0, 3),
-+	DIV(DOUT_CLKCMU_AUD_NOC, "dout_clkcmu_aud_noc",
-+	    "mout_clkcmu_aud_noc", CLK_CON_DIV_CLKCMU_AUD_NOC, 0, 4),
-+
-+	/* CPUCL0 */
-+	DIV(DOUT_CLKCMU_CPUCL0_SWITCH, "dout_clkcmu_cpucl0_switch",
-+	    "mout_clkcmu_cpucl0_switch",
-+	    CLK_CON_DIV_CLKCMU_CPUCL0_SWITCH, 0, 3),
-+	DIV(DOUT_CLKCMU_CPUCL0_CLUSTER, "dout_clkcmu_cpucl0_cluster",
-+	    "mout_clkcmu_cpucl0_cluster",
-+	    CLK_CON_DIV_CLKCMU_CPUCL0_CLUSTER, 0, 3),
-+	DIV(DOUT_CLKCMU_CPUCL0_DBG, "dout_clkcmu_cpucl0_dbg",
-+	    "mout_clkcmu_cpucl0_dbg",
-+	    CLK_CON_DIV_CLKCMU_CPUCL0_DBG, 0, 4),
-+
-+	/* CPUCL1 */
-+	DIV(DOUT_CLKCMU_CPUCL1_SWITCH, "dout_clkcmu_cpucl1_switch",
-+	    "mout_clkcmu_cpucl1_switch",
-+	    CLK_CON_DIV_CLKCMU_CPUCL1_SWITCH, 0, 3),
-+	DIV(DOUT_CLKCMU_CPUCL1_CLUSTER, "dout_clkcmu_cpucl1_cluster",
-+	    "mout_clkcmu_cpucl1_cluster",
-+	    CLK_CON_DIV_CLKCMU_CPUCL1_CLUSTER, 0, 3),
-+
-+	/* CPUCL2 */
-+	DIV(DOUT_CLKCMU_CPUCL2_SWITCH, "dout_clkcmu_cpucl2_switch",
-+	    "mout_clkcmu_cpucl2_switch",
-+	    CLK_CON_DIV_CLKCMU_CPUCL2_SWITCH, 0, 3),
-+	DIV(DOUT_CLKCMU_CPUCL2_CLUSTER, "dout_clkcmu_cpucl2_cluster",
-+	    "mout_clkcmu_cpucl2_cluster",
-+	    CLK_CON_DIV_CLKCMU_CPUCL2_CLUSTER, 0, 3),
-+
-+	/* DNC */
-+	DIV(DOUT_CLKCMU_DNC_NOC, "dout_clkcmu_dnc_noc",
-+	    "mout_clkcmu_dnc_noc", CLK_CON_DIV_CLKCMU_DNC_NOC, 0, 4),
-+
-+	/* DPTX */
-+	DIV(DOUT_CLKCMU_DPTX_NOC, "dout_clkcmu_dptx_noc",
-+	    "mout_clkcmu_dptx_noc", CLK_CON_DIV_CLKCMU_DPTX_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_DPTX_DPGTC, "dout_clkcmu_dptx_dpgtc",
-+	    "mout_clkcmu_dptx_dpgtc", CLK_CON_DIV_CLKCMU_DPTX_DPGTC, 0, 3),
-+	DIV(DOUT_CLKCMU_DPTX_DPOSC, "dout_clkcmu_dptx_dposc",
-+	    "mout_clkcmu_dptx_dposc", CLK_CON_DIV_CLKCMU_DPTX_DPOSC, 0, 5),
-+
-+	/* DPUB */
-+	DIV(DOUT_CLKCMU_DPUB_NOC, "dout_clkcmu_dpub_noc",
-+	    "mout_clkcmu_dpub_noc", CLK_CON_DIV_CLKCMU_DPUB_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_DPUB_DSIM, "dout_clkcmu_dpub_dsim",
-+	    "mout_clkcmu_dpub_dsim", CLK_CON_DIV_CLKCMU_DPUB_DSIM, 0, 4),
-+
-+	/* DPUF */
-+	DIV(DOUT_CLKCMU_DPUF0_NOC, "dout_clkcmu_dpuf0_noc",
-+	    "mout_clkcmu_dpuf0_noc", CLK_CON_DIV_CLKCMU_DPUF0_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_DPUF1_NOC, "dout_clkcmu_dpuf1_noc",
-+	    "mout_clkcmu_dpuf1_noc", CLK_CON_DIV_CLKCMU_DPUF1_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_DPUF2_NOC, "dout_clkcmu_dpuf2_noc",
-+	    "mout_clkcmu_dpuf2_noc", CLK_CON_DIV_CLKCMU_DPUF2_NOC, 0, 4),
-+
-+	/* DSP */
-+	DIV(DOUT_CLKCMU_DSP_NOC, "dout_clkcmu_dsp_noc",
-+	    "mout_clkcmu_dsp_noc", CLK_CON_DIV_CLKCMU_DSP_NOC, 0, 4),
-+
-+	/* G3D */
-+	DIV(DOUT_CLKCMU_G3D_SWITCH, "dout_clkcmu_g3d_switch",
-+	    "mout_clkcmu_g3d_switch", CLK_CON_DIV_CLKCMU_G3D_SWITCH, 0, 3),
-+	DIV(DOUT_CLKCMU_G3D_NOCP, "dout_clkcmu_g3d_nocp",
-+	    "mout_clkcmu_g3d_nocp", CLK_CON_DIV_CLKCMU_G3D_NOCP, 0, 3),
-+
-+	/* GNPU */
-+	DIV(DOUT_CLKCMU_GNPU_NOC, "dout_clkcmu_gnpu_noc",
-+	    "mout_clkcmu_gnpu_noc", CLK_CON_DIV_CLKCMU_GNPU_NOC, 0, 4),
-+
-+	/* HSI0 */
-+	DIV(DOUT_CLKCMU_HSI0_NOC, "dout_clkcmu_hsi0_noc",
-+	    "mout_clkcmu_hsi0_noc", CLK_CON_DIV_CLKCMU_HSI0_NOC, 0, 4),
-+
-+	/* HSI1 */
-+	DIV(DOUT_CLKCMU_HSI1_NOC, "dout_clkcmu_hsi1_noc",
-+	    "mout_clkcmu_hsi1_noc", CLK_CON_DIV_CLKCMU_HSI1_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_HSI1_USBDRD, "dout_clkcmu_hsi1_usbdrd",
-+	    "mout_clkcmu_hsi1_usbdrd", CLK_CON_DIV_CLKCMU_HSI1_USBDRD, 0, 4),
-+	DIV(DOUT_CLKCMU_HSI1_MMC_CARD, "dout_clkcmu_hsi1_mmc_card",
-+	    "mout_clkcmu_hsi1_mmc_card", CLK_CON_DIV_CLKCMU_HSI1_MMC_CARD, 0, 9),
-+
-+	/* HSI2 */
-+	DIV(DOUT_CLKCMU_HSI2_NOC, "dout_clkcmu_hsi2_noc",
-+	    "mout_clkcmu_hsi2_noc", CLK_CON_DIV_CLKCMU_HSI2_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_HSI2_NOC_UFS, "dout_clkcmu_hsi2_noc_ufs",
-+	    "mout_clkcmu_hsi2_noc_ufs", CLK_CON_DIV_CLKCMU_HSI2_NOC_UFS, 0, 4),
-+	DIV(DOUT_CLKCMU_HSI2_UFS_EMBD, "dout_clkcmu_hsi2_ufs_embd",
-+	    "mout_clkcmu_hsi2_ufs_embd", CLK_CON_DIV_CLKCMU_HSI2_UFS_EMBD, 0, 3),
-+	DIV(DOUT_CLKCMU_HSI2_ETHERNET, "dout_clkcmu_hsi2_ethernet",
-+	    "mout_clkcmu_hsi2_ethernet", CLK_CON_DIV_CLKCMU_HSI2_ETHERNET, 0, 3),
-+
-+	/* ISP */
-+	DIV(DOUT_CLKCMU_ISP_NOC, "dout_clkcmu_isp_noc",
-+	    "mout_clkcmu_isp_noc", CLK_CON_DIV_CLKCMU_ISP_NOC, 0, 4),
-+
-+	/* M2M */
-+	DIV(DOUT_CLKCMU_M2M_NOC, "dout_clkcmu_m2m_noc",
-+	    "mout_clkcmu_m2m_noc", CLK_CON_DIV_CLKCMU_M2M_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_M2M_JPEG, "dout_clkcmu_m2m_jpeg",
-+	    "mout_clkcmu_m2m_jpeg", CLK_CON_DIV_CLKCMU_M2M_JPEG, 0, 4),
-+
-+	/* MFC */
-+	DIV(DOUT_CLKCMU_MFC_MFC, "dout_clkcmu_mfc_mfc",
-+	    "mout_clkcmu_mfc_mfc", CLK_CON_DIV_CLKCMU_MFC_MFC, 0, 4),
-+	DIV(DOUT_CLKCMU_MFC_WFD, "dout_clkcmu_mfc_wfd",
-+	    "mout_clkcmu_mfc_wfd", CLK_CON_DIV_CLKCMU_MFC_WFD, 0, 4),
-+
-+	/* MFD */
-+	DIV(DOUT_CLKCMU_MFD_NOC, "dout_clkcmu_mfd_noc",
-+	    "mout_clkcmu_mfd_noc", CLK_CON_DIV_CLKCMU_MFD_NOC, 0, 4),
-+
-+	/* MIF */
-+	DIV(DOUT_CLKCMU_MIF_NOCP, "dout_clkcmu_mif_nocp",
-+	    "mout_clkcmu_mif_nocp", CLK_CON_DIV_CLKCMU_MIF_NOCP, 0, 4),
-+
-+	/* MISC */
-+	DIV(DOUT_CLKCMU_MISC_NOC, "dout_clkcmu_misc_noc",
-+	    "mout_clkcmu_misc_noc", CLK_CON_DIV_CLKCMU_MISC_NOC, 0, 4),
-+
-+	/* NOCL0 */
-+	DIV(DOUT_CLKCMU_NOCL0_NOC, "dout_clkcmu_nocl0_noc",
-+	    "mout_clkcmu_nocl0_noc", CLK_CON_DIV_CLKCMU_NOCL0_NOC, 0, 4),
-+
-+	/* NOCL1 */
-+	DIV(DOUT_CLKCMU_NOCL1_NOC, "dout_clkcmu_nocl1_noc",
-+	    "mout_clkcmu_nocl1_noc", CLK_CON_DIV_CLKCMU_NOCL1_NOC, 0, 4),
-+
-+	/* NOCL2 */
-+	DIV(DOUT_CLKCMU_NOCL2_NOC, "dout_clkcmu_nocl2_noc",
-+	    "mout_clkcmu_nocl2_noc", CLK_CON_DIV_CLKCMU_NOCL2_NOC, 0, 4),
-+
-+	/* PERIC0 */
-+	DIV(DOUT_CLKCMU_PERIC0_NOC, "dout_clkcmu_peric0_noc",
-+	    "mout_clkcmu_peric0_noc", CLK_CON_DIV_CLKCMU_PERIC0_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_PERIC0_IP, "dout_clkcmu_peric0_ip",
-+	    "mout_clkcmu_peric0_ip", CLK_CON_DIV_CLKCMU_PERIC0_IP, 0, 4),
-+
-+	/* PERIC1 */
-+	DIV(DOUT_CLKCMU_PERIC1_NOC, "dout_clkcmu_peric1_noc",
-+	    "mout_clkcmu_peric1_noc", CLK_CON_DIV_CLKCMU_PERIC1_NOC, 0, 4),
-+	DIV(DOUT_CLKCMU_PERIC1_IP, "dout_clkcmu_peric1_ip",
-+	    "mout_clkcmu_peric1_ip", CLK_CON_DIV_CLKCMU_PERIC1_IP, 0, 4),
-+
-+	/* SDMA */
-+	DIV(DOUT_CLKCMU_SDMA_NOC, "dout_clkcmu_sdma_noc",
-+	    "mout_clkcmu_sdma_noc", CLK_CON_DIV_CLKCMU_SDMA_NOC, 0, 4),
-+
-+	/* SNW */
-+	DIV(DOUT_CLKCMU_SNW_NOC, "dout_clkcmu_snw_noc",
-+	    "mout_clkcmu_snw_noc", CLK_CON_DIV_CLKCMU_SNW_NOC, 0, 4),
-+
-+	/* SSP */
-+	DIV(DOUT_CLKCMU_SSP_NOC, "dout_clkcmu_ssp_noc",
-+	    "mout_clkcmu_ssp_noc", CLK_CON_DIV_CLKCMU_SSP_NOC, 0, 4),
-+
-+	/* TAA */
-+	DIV(DOUT_CLKCMU_TAA_NOC, "dout_clkcmu_taa_noc",
-+	    "mout_clkcmu_taa_noc", CLK_CON_DIV_CLKCMU_TAA_NOC, 0, 4),
-+};
-+
-+static const struct samsung_fixed_factor_clock top_fixed_factor_clks[] __initconst = {
-+	FFACTOR(DOUT_SHARED0_DIV1, "dout_shared0_div1",
-+		"mout_shared0_pll", 1, 1, 0),
-+	FFACTOR(DOUT_SHARED0_DIV2, "dout_shared0_div2",
-+		"mout_shared0_pll", 1, 2, 0),
-+	FFACTOR(DOUT_SHARED0_DIV3, "dout_shared0_div3",
-+		"mout_shared0_pll", 1, 3, 0),
-+	FFACTOR(DOUT_SHARED0_DIV4, "dout_shared0_div4",
-+		"mout_shared0_pll", 1, 4, 0),
-+	FFACTOR(DOUT_SHARED1_DIV1, "dout_shared1_div1",
-+		"mout_shared1_pll", 1, 1, 0),
-+	FFACTOR(DOUT_SHARED1_DIV2, "dout_shared1_div2",
-+		"mout_shared1_pll", 1, 2, 0),
-+	FFACTOR(DOUT_SHARED1_DIV3, "dout_shared1_div3",
-+		"mout_shared1_pll", 1, 3, 0),
-+	FFACTOR(DOUT_SHARED1_DIV4, "dout_shared1_div4",
-+		"mout_shared1_pll", 1, 4, 0),
-+	FFACTOR(DOUT_SHARED2_DIV1, "dout_shared2_div1",
-+		"mout_shared2_pll", 1, 1, 0),
-+	FFACTOR(DOUT_SHARED2_DIV2, "dout_shared2_div2",
-+		"mout_shared2_pll", 1, 2, 0),
-+	FFACTOR(DOUT_SHARED2_DIV3, "dout_shared2_div3",
-+		"mout_shared2_pll", 1, 3, 0),
-+	FFACTOR(DOUT_SHARED2_DIV4, "dout_shared2_div4",
-+		"mout_shared2_pll", 1, 4, 0),
-+	FFACTOR(DOUT_SHARED3_DIV1, "dout_shared3_div1",
-+		"mout_shared3_pll", 1, 1, 0),
-+	FFACTOR(DOUT_SHARED3_DIV2, "dout_shared3_div2",
-+		"mout_shared3_pll", 1, 2, 0),
-+	FFACTOR(DOUT_SHARED3_DIV3, "dout_shared3_div3",
-+		"mout_shared3_pll", 1, 3, 0),
-+	FFACTOR(DOUT_SHARED3_DIV4, "dout_shared3_div4",
-+		"mout_shared3_pll", 1, 4, 0),
-+	FFACTOR(DOUT_SHARED4_DIV1, "dout_shared4_div1",
-+		"mout_shared4_pll", 1, 1, 0),
-+	FFACTOR(DOUT_SHARED4_DIV2, "dout_shared4_div2",
-+		"mout_shared4_pll", 1, 2, 0),
-+	FFACTOR(DOUT_SHARED4_DIV3, "dout_shared4_div3",
-+		"mout_shared4_pll", 1, 3, 0),
-+	FFACTOR(DOUT_SHARED4_DIV4, "dout_shared4_div4",
-+		"mout_shared4_pll", 1, 4, 0),
-+	FFACTOR(DOUT_SHARED5_DIV1, "dout_shared5_div1",
-+		"mout_shared5_pll", 1, 1, 0),
-+	FFACTOR(DOUT_SHARED5_DIV2, "dout_shared5_div2",
-+		"mout_shared5_pll", 1, 2, 0),
-+	FFACTOR(DOUT_SHARED5_DIV3, "dout_shared5_div3",
-+		"mout_shared5_pll", 1, 3, 0),
-+	FFACTOR(DOUT_SHARED5_DIV4, "dout_shared5_div4",
-+		"mout_shared5_pll", 1, 4, 0),
-+};
-+
-+static const struct samsung_cmu_info top_cmu_info __initconst = {
-+	.pll_clks		= top_pll_clks,
-+	.nr_pll_clks		= ARRAY_SIZE(top_pll_clks),
-+	.mux_clks		= top_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(top_mux_clks),
-+	.div_clks		= top_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(top_div_clks),
-+	.fixed_factor_clks	= top_fixed_factor_clks,
-+	.nr_fixed_factor_clks	= ARRAY_SIZE(top_fixed_factor_clks),
-+	.nr_clk_ids		= CLKS_NR_TOP,
-+	.clk_regs		= top_clk_regs,
-+	.nr_clk_regs		= ARRAY_SIZE(top_clk_regs),
-+};
-+
-+static void __init exynosautov920_cmu_top_init(struct device_node *np)
-+{
-+	exynos_arm64_register_cmu(NULL, np, &top_cmu_info);
-+}
-+
-+/* Register CMU_TOP early, as it's a dependency for other early domains */
-+CLK_OF_DECLARE(exynosautov920_cmu_top, "samsung,exynosautov920-cmu-top",
-+	       exynosautov920_cmu_top_init);
-+
-+/* ---- CMU_PERIC0 --------------------------------------------------------- */
-+
-+/* Register Offset definitions for CMU_PERIC0 (0x10800000) */
-+#define PLL_CON0_MUX_CLKCMU_PERIC0_IP_USER	0x0600
-+#define PLL_CON0_MUX_CLKCMU_PERIC0_NOC_USER	0x0610
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_I3C		0x1000
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI00_USI	0x1004
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI01_USI	0x1008
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI02_USI	0x100c
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI03_USI	0x1010
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI04_USI	0x1014
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI05_USI	0x1018
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI06_USI	0x101c
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI07_USI	0x1020
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI08_USI	0x1024
-+#define CLK_CON_MUX_MUX_CLK_PERIC0_USI_I2C	0x1028
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_I3C		0x1800
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI00_USI	0x1804
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI01_USI	0x1808
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI02_USI	0x180c
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI03_USI	0x1810
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI04_USI	0x1814
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI05_USI	0x1818
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI06_USI	0x181c
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI07_USI	0x1820
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI08_USI	0x1824
-+#define CLK_CON_DIV_DIV_CLK_PERIC0_USI_I2C	0x1828
-+
-+static const unsigned long peric0_clk_regs[] __initconst = {
-+	PLL_CON0_MUX_CLKCMU_PERIC0_IP_USER,
-+	PLL_CON0_MUX_CLKCMU_PERIC0_NOC_USER,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_I3C,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI00_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI01_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI02_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI03_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI04_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI05_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI06_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI07_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI08_USI,
-+	CLK_CON_MUX_MUX_CLK_PERIC0_USI_I2C,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_I3C,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI00_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI01_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI02_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI03_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI04_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI05_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI06_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI07_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI08_USI,
-+	CLK_CON_DIV_DIV_CLK_PERIC0_USI_I2C,
-+};
-+
-+/* List of parent clocks for Muxes in CMU_PERIC0 */
-+PNAME(mout_peric0_ip_user_p) = { "oscclk", "dout_clkcmu_peric0_ip" };
-+PNAME(mout_peric0_noc_user_p) = { "oscclk", "dout_clkcmu_peric0_noc" };
-+PNAME(mout_peric0_usi_p) = { "oscclk", "mout_peric0_ip_user" };
-+
-+static const struct samsung_mux_clock peric0_mux_clks[] __initconst = {
-+	MUX(CLK_MOUT_PERIC0_IP_USER, "mout_peric0_ip_user",
-+	    mout_peric0_ip_user_p, PLL_CON0_MUX_CLKCMU_PERIC0_IP_USER, 4, 1),
-+	MUX(CLK_MOUT_PERIC0_NOC_USER, "mout_peric0_noc_user",
-+	    mout_peric0_noc_user_p, PLL_CON0_MUX_CLKCMU_PERIC0_NOC_USER, 4, 1),
-+	/* USI00 ~ USI08 */
-+	MUX(CLK_MOUT_PERIC0_USI00_USI, "mout_peric0_usi00_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI00_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI01_USI, "mout_peric0_usi01_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI01_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI02_USI, "mout_peric0_usi02_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI02_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI03_USI, "mout_peric0_usi03_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI03_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI04_USI, "mout_peric0_usi04_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI04_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI05_USI, "mout_peric0_usi05_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI05_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI06_USI, "mout_peric0_usi06_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI06_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI07_USI, "mout_peric0_usi07_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI07_USI, 0, 1),
-+	MUX(CLK_MOUT_PERIC0_USI08_USI, "mout_peric0_usi08_usi",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI08_USI, 0, 1),
-+	/* USI_I2C */
-+	MUX(CLK_MOUT_PERIC0_USI_I2C, "mout_peric0_usi_i2c",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_USI_I2C, 0, 1),
-+	/* USI_I3C */
-+	MUX(CLK_MOUT_PERIC0_I3C, "mout_peric0_i3c",
-+	    mout_peric0_usi_p, CLK_CON_MUX_MUX_CLK_PERIC0_I3C, 0, 1),
-+};
-+
-+static const struct samsung_div_clock peric0_div_clks[] __initconst = {
-+	/* USI00 ~ USI08 */
-+	DIV(CLK_DOUT_PERIC0_USI00_USI, "dout_peric0_usi00_usi",
-+	    "mout_peric0_usi00_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI00_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI01_USI, "dout_peric0_usi01_usi",
-+	    "mout_peric0_usi01_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI01_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI02_USI, "dout_peric0_usi02_usi",
-+	    "mout_peric0_usi02_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI02_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI03_USI, "dout_peric0_usi03_usi",
-+	    "mout_peric0_usi03_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI03_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI04_USI, "dout_peric0_usi04_usi",
-+	    "mout_peric0_usi04_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI04_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI05_USI, "dout_peric0_usi05_usi",
-+	    "mout_peric0_usi05_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI05_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI06_USI, "dout_peric0_usi06_usi",
-+	    "mout_peric0_usi06_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI06_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI07_USI, "dout_peric0_usi07_usi",
-+	    "mout_peric0_usi07_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI07_USI,
-+	    0, 4),
-+	DIV(CLK_DOUT_PERIC0_USI08_USI, "dout_peric0_usi08_usi",
-+	    "mout_peric0_usi08_usi", CLK_CON_DIV_DIV_CLK_PERIC0_USI08_USI,
-+	    0, 4),
-+	/* USI_I2C */
-+	DIV(CLK_DOUT_PERIC0_USI_I2C, "dout_peric0_usi_i2c",
-+	    "mout_peric0_usi_i2c", CLK_CON_DIV_DIV_CLK_PERIC0_USI_I2C, 0, 4),
-+	/* USI_I3C */
-+	DIV(CLK_DOUT_PERIC0_I3C, "dout_peric0_i3c",
-+	    "mout_peric0_i3c", CLK_CON_DIV_DIV_CLK_PERIC0_I3C, 0, 4),
-+};
-+
-+static const struct samsung_cmu_info peric0_cmu_info __initconst = {
-+	.mux_clks		= peric0_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(peric0_mux_clks),
-+	.div_clks		= peric0_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(peric0_div_clks),
-+	.nr_clk_ids		= CLKS_NR_PERIC0,
-+	.clk_regs		= peric0_clk_regs,
-+	.nr_clk_regs		= ARRAY_SIZE(peric0_clk_regs),
-+	.clk_name		= "dout_clkcmu_peric0_noc",
-+};
-+
-+static int __init exynosautov920_cmu_probe(struct platform_device *pdev)
-+{
-+	const struct samsung_cmu_info *info;
-+	struct device *dev = &pdev->dev;
-+
-+	info = of_device_get_match_data(dev);
-+	exynos_arm64_register_cmu(dev, dev->of_node, info);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id exynosautov920_cmu_of_match[] = {
-+	{
-+		.compatible = "samsung,exynosautov920-cmu-peric0",
-+		.data = &peric0_cmu_info,
-+	},
-+};
-+
-+static struct platform_driver exynosautov920_cmu_driver __refdata = {
-+	.driver = {
-+		.name = "exynosautov920-cmu",
-+		.of_match_table = exynosautov920_cmu_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = exynosautov920_cmu_probe,
-+};
-+
-+static int __init exynosautov920_cmu_init(void)
-+{
-+	return platform_driver_register(&exynosautov920_cmu_driver);
-+}
-+core_initcall(exynosautov920_cmu_init);
--- 
-2.45.2
-
+T24gV2VkLCAyMDI0LTA3LTEwIGF0IDExOjIyIC0wNTAwLCBKYXNzaSBCcmFyIHdyb3RlOg0KPiAg
+CSANCj4gRXh0ZXJuYWwgZW1haWwgOiBQbGVhc2UgZG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4g
+YXR0YWNobWVudHMgdW50aWwNCj4geW91IGhhdmUgdmVyaWZpZWQgdGhlIHNlbmRlciBvciB0aGUg
+Y29udGVudC4NCj4gIE9uIFdlZCwgSnVsIDEwLCAyMDI0IGF0IDk6MjjigK9BTSBKYXNzaSBCcmFy
+IDxqYXNzaXNpbmdoYnJhckBnbWFpbC5jb20NCj4gPiB3cm90ZToNCj4gPg0KPiA+IE9uIFN1biwg
+TWF5IDI2LCAyMDI0IGF0IDEwOjA04oCvQU0gSmFzb24tSkggTGluICjmnpfnnb/npaUpDQo+ID4g
+PEphc29uLUpILkxpbkBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+ID4NCj4gPiA+IEhpIEFuZ2Vs
+bywgSmFzc2ksDQo+ID4gPg0KPiA+ID4gQ291bGQgeW91IGhlbHAgbWUgYXBwbHkgdGhpcyBzZXJp
+ZXM/DQo+ID4gPiBUaGFua3MhDQo+ID4gPg0KPiA+IFBsZWFzZSBnZXQgaXQgcmV2aWV3ZWQgYnkg
+RFQgbWFpbnRhaW5lcnMgLi4uLiBSb2Igb3IgS3J6eXN6dG9mLg0KPiA+DQo+IEkgc2VlIENvbm9y
+IERvb2xleSBsaXN0ZWQgYXMgYW5vdGhlciBtYWludGFpbmVyLCBzbyBJIGFtIHBpY2tpbmcgaXQN
+Cj4gdXAuDQo+IEJUVywgSSB3YXMgbm90IENDJ2VkIG9uIHRoZSBvcmlnaW5hbCBwYXRjaC4NCg0K
+T2gsIEkgc2VlLi4NCkknbGwgY2hlY2sgaXQgbmV4dCB0aW1lLg0KVGhhbmtzIGZvciBub3RpY2lu
+ZyB0aGlzIHBhdGNoLg0KDQpSZWdhcmRzLA0KSmFzb24tSkguTGluDQoNCj4gDQo+IC1KYXNzaQ0K
