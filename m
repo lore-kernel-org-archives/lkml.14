@@ -1,52 +1,53 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C57EDDA5
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 02:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B64383
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 02:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720663509; cv=none; b=sSsQv5lmf3ayZpmZ0MSAWqBy12ScHMVBWoTS4ayDOOqQF75KJwiyvQ/VcVi5UxKCZfQ7ZhO4ASP98GkY5Ahsxuz7wTBMYKuBGzebk0i0Ru0QIokPqsBlymRlio+2kUHOFp87KmZdTZvetcPdn02EwJhlLoU3yB1GJPeCcLH8H/c=
+	t=1720663548; cv=none; b=mBYUbgFWpIRvxYmRHIfRIbFRIK11pe1oGNuIbgJCx12l73ijKOZQ0KG/k1GIQiRC8HfvfybG0fVFzg8unqC2de0UqvxSB4+wSvb3xL0yS8h8mVgCsHAnNiDW46cBFQcxosKG2O+pUCZQ20FMChF8pji+lejLfv2s1qL4R2Hc9xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720663509; c=relaxed/simple;
-	bh=dyxHA8vIQqwpmjbALUcOSCNOpXbpNBbQMPz9vki7kl0=;
+	s=arc-20240116; t=1720663548; c=relaxed/simple;
+	bh=KpAYL1kpJuq0ScK3XFCGLLIfymGyqOJh5MB8UxUXp0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M2ps1KvZ7Z8cRJ9Zh4Oi+ZR3nW/MC2XzND2pFGdcf6mHGYK9c4le7bnQuKWji1N3IPE04YE5HXLKXaf+Z3difs/GCc4SrYutQIcoT5Mfl8oTv6CGOR/YD4IG26IGSTU8aDDgTROfcgrqFNZfgDbSIdo6/nuJeO4O/TXL4S5StgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=MvRGRB8fAuMad/dF8Ry4b2rbNYBtt3UX+RSYUEjUt2wwHPnn31QlOrtOPel6B0QMUOpTTmL0wwzZbx+BU9WCHFdURjCweBhZ/HAdGktyv5ptdgBtpvBYL0gkW4Pyg6awvHCrPVqZ38nvMtF/VzRC4DYULQ24Fsl1Ymd1xL3LkWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6b5d3113168so2612676d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:05:08 -0700 (PDT)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7a05b4fa525so33191685a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:05:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720663507; x=1721268307;
+        d=1e100.net; s=20230601; t=1720663545; x=1721268345;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dyxHA8vIQqwpmjbALUcOSCNOpXbpNBbQMPz9vki7kl0=;
-        b=Fyf/hME5zLFvDYVU/sasqVcvC14naP8Dlr9lu5in6fNRM3Q2vMvG75nkqMVLItWyVa
-         6a2EkBnNinJiUNr0DxDEgzP54cxZE9lJvW6ju1cg5i8kpnkX6pyl3YEu3/v8dsjmtLvd
-         onHv8v7Hof8y5KP0BJ7D0cO4wCPG2bgdxi55vVW3vbTTBoLINKIFi/7BjqI8FbyKs1RJ
-         ajN3WpfKDQWgPzU6mVE4NLZOyPGgXPXWozqcR+BimmAuYU+wIKwrXRqQ5V4pWcLCwC1D
-         iG52tfIfsEekM3W6yhEWVXDlZZVABp8tUgXvSZwjUjJ115CM21CoSp8Q4xOBVJ5jFe5A
-         ZAcw==
-X-Gm-Message-State: AOJu0YyVR/PmiadVtag0xtverL4SbubxOoBlh9I6ss60t00MnATGp7hw
-	zGwCZ4gY7l0PuvQ8YSBT7XI14KubCQCFy4Wz8yK8KSNMlz1OeAzh
-X-Google-Smtp-Source: AGHT+IFpeI9qCw31sP5J4g7ls/0xULlv+ebaBsjGIU8AUL5uMwEML2kHlV0/OX/A4WSmspM1er/xFA==
-X-Received: by 2002:a05:6214:2a46:b0:6b5:12c:b345 with SMTP id 6a1803df08f44-6b61bca6ac2mr81934516d6.16.1720663507077;
-        Wed, 10 Jul 2024 19:05:07 -0700 (PDT)
+        bh=f1c5A+f4tj6JTOu3bNDV68QMq8cDZl2dtORQp78q944=;
+        b=tomV3ktkiRDha+f1y7L4tNMHcPeuTTk8vK80AxR6nbkzuZOgcNo2bPE0z3IRixaJpr
+         8ge1jE1EVqVLaL0fb4aGJIJjtQASShfj4NnHSJwoBM5z0fZm5kx7TR72RfIgtage1mG2
+         JREHfya5b19Yy5kOtuYjhWu+GwiOWKYrbSR1GtB0ut1SzRNRJ6bMuYNbkgTC2gal86/H
+         7K8Zi4Bb6k38v4ViSjeMoN/+YqS619euLSamuh+RXs9pAMNFv/NQnB3mzyhr4v79zaQM
+         SyeoNsPOVQ55Zr9WMRM3mZtY3GYbkiISR4gseUO5OSWJMyw2eqcf6Y1WT+MuoftCM7Bb
+         a09w==
+X-Gm-Message-State: AOJu0YwqRs1eiohiNSfoETIB7a4w57nGsJNK7rcw4nHJxSt8xwGNq+i1
+	Yifen0O5OuixRD72YFBjoTr0wfDM+4+xUbdsqSM7E6KQv+o3seG+
+X-Google-Smtp-Source: AGHT+IHRmTbiqHl4qo9+I5lnfvRIbWDq7m9qU6EWWFyJefvWKZPpwEzC22jkATcsaWI5DmUeUh8DVg==
+X-Received: by 2002:a05:620a:28d6:b0:79f:503:368d with SMTP id af79cd13be357-7a1469eb0cdmr320491185a.27.1720663545297;
+        Wed, 10 Jul 2024 19:05:45 -0700 (PDT)
 Received: from maniforge (c-76-141-129-107.hsd1.il.comcast.net. [76.141.129.107])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b61ba8f11csm21241886d6.104.2024.07.10.19.05.05
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79f19016cc3sm245039185a.50.2024.07.10.19.05.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 19:05:06 -0700 (PDT)
-Date: Wed, 10 Jul 2024 21:05:04 -0500
+        Wed, 10 Jul 2024 19:05:44 -0700 (PDT)
+Date: Wed, 10 Jul 2024 21:05:41 -0500
 From: David Vernet <void@manifault.com>
 To: Tejun Heo <tj@kernel.org>
 Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
 	schatzberg.dan@gmail.com, mingo@redhat.com, peterz@infradead.org,
 	changwoo@igalia.com, righi.andrea@gmail.com
-Subject: Re: [PATCH 3/6] sched_ext: Unpin and repin rq lock from balance_scx()
-Message-ID: <20240711020504.GG317151@maniforge>
+Subject: Re: [PATCH 5/6] sched_ext: Allow SCX_DSQ_LOCAL_ON for direct
+ dispatches
+Message-ID: <20240711020541.GH317151@maniforge>
 References: <20240711011434.1421572-1-tj@kernel.org>
- <20240711011434.1421572-4-tj@kernel.org>
+ <20240711011434.1421572-6-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +55,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3n6EcIUdnPjoyyJv"
+	protocol="application/pgp-signature"; boundary="+VnUwdwnmLzxiACx"
 Content-Disposition: inline
-In-Reply-To: <20240711011434.1421572-4-tj@kernel.org>
+In-Reply-To: <20240711011434.1421572-6-tj@kernel.org>
 User-Agent: Mutt/2.2.13 (00d56288) (2024-03-09)
 
 
---3n6EcIUdnPjoyyJv
+--+VnUwdwnmLzxiACx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 03:14:00PM -1000, Tejun Heo wrote:
-> sched_ext often needs to migrate tasks across CPUs right before execution
-> and thus uses the balance path to dispatch tasks from the BPF scheduler.
-> balance_scx() is called with rq locked and pinned but is passed @rf and t=
-hus
-> allowed to unpin and unlock. Currently, @rf is passed down the call stack=
- so
-> the rq lock is unpinned just when double locking is needed.
+On Wed, Jul 10, 2024 at 03:14:02PM -1000, Tejun Heo wrote:
+> In ops.dispatch(), SCX_DSQ_LOCAL_ON can be used to dispatch the task to t=
+he
+> local DSQ of any CPU. However, during direct dispatch from ops.select_cpu=
+()
+> and ops.enqueue(), this isn't allowed. This is because dispatching to the
+> local DSQ of a remote CPU requires locking both the task's current and new
+> rq's and such double locking can't be done directly from ops.enqueue().
 >=20
-> This creates unnecessary complications such as having to explicitly
-> manipulate lock pinning for core scheduling. We also want to use
-> dispatch_to_local_dsq_lock() from other paths which are called with rq
-> locked but unpinned.
+> While waking up a task, as ops.select_cpu() can pick any CPU and both
+> ops.select_cpu() and ops.enqueue() can use SCX_DSQ_LOCAL as the dispatch
+> target to dispatch to the DSQ of the picked CPU, the BPF scheduler can st=
+ill
+> do whatever it wants to do. However, while a task is being enqueued for a
+> different reason, e.g. after its slice expiration, only ops.enqueue() is
+> called and there's no way for the BPF scheduler to directly dispatch to t=
+he
+> local DSQ of a remote CPU. This gap in API forces schedulers into
+> work-arounds which are not straightforward or optimal such as skipping
+> direct dispatches in such cases.
 >=20
-> rq lock handling in the dispatch path is straightforward outside the
-> migration implementation and extending the pinning protection down the
-> callstack doesn't add enough meaningful extra protection to justify the
-> extra complexity.
+> Implement deferred enqueueing to allow directly dispatching to the local =
+DSQ
+> of a remote CPU from ops.select_cpu() and ops.enqueue(). Such tasks are
+> temporarily queued on rq->scx.ddsp_deferred_locals. When the rq lock can =
+be
+> safely released, the tasks are taken off the list and queued on the target
+> local DSQs using dispatch_to_local_dsq().
 >=20
-> Unpin and repin rq lock from the outer balance_scx() and drop @rf passing
-> and lock pinning handling from the inner functions. UP is updated to call
-> balance_one() instead of balance_scx() to avoid adding NULL @rf handling =
-to
-> balance_scx(). AS this makes balance_scx() unused in UP, it's put inside a
-> CONFIG_SMP block.
+> v2: - Add missing return after queue_balance_callback() in
+>       schedule_deferred(). (David).
 >=20
-> No functional changes intended outside of lock annotation updates.
+>     - dispatch_to_local_dsq() now assumes that @rq is locked but unpinned
+>       and thus no longer takes @rf. Updated accordingly.
+>=20
+>     - UP build warning fix.
 >=20
 > Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andrea Righi <righi.andrea@gmail.com>
+> Tested-by: Andrea Righi <righi.andrea@gmail.com>
 > Cc: David Vernet <void@manifault.com>
+> Cc: Dan Schatzberg <schatzberg.dan@gmail.com>
+> Cc: Changwoo Min <changwoo@igalia.com>
 
 Acked-by: David Vernet <void@manifault.com>
 
---3n6EcIUdnPjoyyJv
+--+VnUwdwnmLzxiACx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQRBxU1So5MTLwphjdFZ5LhpZcTzZAUCZo890AAKCRBZ5LhpZcTz
-ZG8sAPwM5ciMfOrwRrbOsgDRSwkmQOZIrlG0XzlF3g0l7DqB9QD+MnVZ/R4t3ise
-kQm5kj4GUAoGwALhffmSbwkIMcmI9QQ=
-=MBxA
+iHUEARYKAB0WIQRBxU1So5MTLwphjdFZ5LhpZcTzZAUCZo899QAKCRBZ5LhpZcTz
+ZBp+APsF9QKeO00qhIjYKWgeyk3zG6nW05SFX2smzA/DnhK9VAEAkTuPIQhDs8DT
+FkBBflykDCLm75QSEowcW5za+RSEIQc=
+=zhBt
 -----END PGP SIGNATURE-----
 
---3n6EcIUdnPjoyyJv--
+--+VnUwdwnmLzxiACx--
