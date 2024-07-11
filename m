@@ -1,113 +1,99 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CA5175A1
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 03:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CF710A36;
+	Thu, 11 Jul 2024 03:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720667196; cv=none; b=bklUy5K49DoWu5ke04drR3Pl8qhNAksQPKK9xeztkl+arxMzG3R1i/upcwPrMykqTkWUvZnLjd3DWla1Wrt0BHwGhCljO3xq0/p2kRRD67cd3IL+URMr/R4q+Xxpx2MXuzxXXLga3s1KcbyQ4Q6RUEh/QglQY9g6HQohdW8ugm0=
+	t=1720667367; cv=none; b=ezqywsGjF1Wygzp1XTxte41Dl22ZnWuCa39BzJhz+jCNPo1BG8cJN6vSohazO4bxQwrbmH4MCd3LagU9rTsjf1bZVAnVtDrJ5cf1okIaitNyJ+A6ua3C6KFI0mEi8PO/0WYsZTQylycWXlF+zmgIrdJEevRzR2P+rCAYF9MAoyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720667196; c=relaxed/simple;
-	bh=zJUK6J/NYVhEQe7c74t0ge1PW15evCmnHL4WppNcYI0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dgWRYm4gF1CdqghuPrkXPbgyxoI+e3H3tVANv2SYiBTNAYXz0HlrXHiQDjtxdDTtA6kPRjDoksguabdzUEFMasgwMnQzkEPBaVdPr6drZkfhWqv4nBrTtZRNPPAdhVzIWHxIId8b2Azd6lJId9xF2eFxEa2BPNa2l7jiIJM/UkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WKKJh2Ns8z2Cl7k;
-	Thu, 11 Jul 2024 11:02:12 +0800 (CST)
-Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6053B1A0188;
-	Thu, 11 Jul 2024 11:06:25 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggpemd200001.china.huawei.com
- (7.185.36.224) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Thu, 11 Jul
- 2024 11:06:24 +0800
-From: Wang Zhaolong <wangzhaolong1@huawei.com>
-To: <richard@nod.at>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>, <chengzhihao1@huawei.com>
-Subject: [RFC 0/1] ubifs: inode deletion deadlock 
-Date: Thu, 11 Jul 2024 11:06:23 +0800
-Message-ID: <20240711030624.266440-1-wangzhaolong1@huawei.com>
-X-Mailer: git-send-email 2.34.3
+	s=arc-20240116; t=1720667367; c=relaxed/simple;
+	bh=XUstL11BeDWvPWznWt06Pq5fKndnRoflKrUeNNgbCnQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XDiXXEc0jCQdm1X2hXSOSgo5gnSXPnoRjM1U9gxoO94EB9lUYVeRqvZBchpxP9te0qTfOultjvOaYbEvnmTcOCp3bi0LN04uMTq3TqztTUkKYFM7OJLUtgmTUoqllUrKhm+byjh2zYgt3r8y2IHCcwpWWh8BuJilCTWEyABGNTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RfdlBg9u; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RfdlBg9u"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B0W2N6029600;
+	Thu, 11 Jul 2024 03:09:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type:content-transfer-encoding; s=
+	corp-2023-11-20; bh=QZt32ryLc+2mLGCiP6px8XlN2AI/SprGl4vbMVzIvzo=; b=
+	RfdlBg9udxMW2W3CN9Te8lB86fEcErkxuvfX8sqqOzY//HCiDT9QK3j5Qx+g8thc
+	cmzHQSjbzDWdZutBrNjs52BYjkXHTtUsQqkbSMRwDnPTmes4Mg4wayjBGnLS0JdR
+	1yf+aTBTvsVzIBKLLAOUGJcDksD3vJYl2H7Fs/cXz54rCHYvDfsov3ZWKcNDKfFw
+	sbjO21xDiu4WZB5Qz6HiUagtqGOMUK3NFKiR16pG0p6lLrrPr9wvtA4rvuLA8cFc
+	e9uyRf0yGHwIv3My4Bz+4Qkpcl7IdPlrecBqJeR9RmNJXzAWgxEGlRzC1BE/hJNI
+	YBelx6WcG+TaLsGU6TU2fg==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wgq0p89-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jul 2024 03:09:19 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46B1MjXO008691;
+	Thu, 11 Jul 2024 03:09:18 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 409vv3x4dd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jul 2024 03:09:18 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46B39D9n006490;
+	Thu, 11 Jul 2024 03:09:18 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 409vv3x4ar-4;
+	Thu, 11 Jul 2024 03:09:18 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        TJ Adams <tadamsjr@google.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Igor Pylypiv <ipylypiv@google.com>
+Subject: Re: [PATCH v2 0/2] small pm80xx driver fixes
+Date: Wed, 10 Jul 2024 23:08:35 -0400
+Message-ID: <172066369904.698281.13143387624330894977.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240627155924.2361370-1-tadamsjr@google.com>
+References: <20240627155924.2361370-1-tadamsjr@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemd200001.china.huawei.com (7.185.36.224)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-10_20,2024-07-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=748 bulkscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2407110020
+X-Proofpoint-ORIG-GUID: pPaP-5VGD87VHVjliNFyiv4pr4cPxjfl
+X-Proofpoint-GUID: pPaP-5VGD87VHVjliNFyiv4pr4cPxjfl
 
-Hi.
+On Thu, 27 Jun 2024 15:59:22 +0000, TJ Adams wrote:
 
-While the previous patch set [1] aimed to address the ABBA deadlock between
-inode reclaiming and deleted inode writing, I discovered that the problem
-still persists in the form of an AA deadlock after applying those changes.
+> These are 2 small patches to prevent a kernel crash and change some
+> logs' levels. V1 consisted of 3 patches. One patch is being dropped so
+> it can be reworked and sent separately.
+> 
+> Igor Pylypiv (1):
+>   scsi: pm80xx: Set phy->enable_completion only when we wait for it
+> 
+> [...]
 
-The core issue is that although [1] avoids the ABBA deadlock by getting the
-xattr inodes before locking BASEHD's wbuf->io_mutex. But the inode reclaiming
-process can still get stuck waiting for the xattr inodes that have already
-been marked as I_FREEING.
+Applied to 6.11/scsi-queue, thanks!
 
-root@debian:~# cat /proc/537/stack
-[<0>] __wait_on_freeing_inode+0xb2/0xf0
-[<0>] find_inode_fast.isra.0+0x63/0xb0
-[<0>] iget_locked+0x72/0x1c0
-[<0>] ubifs_iget+0x3e/0x5c0 [ubifs]
-[<0>] ubifs_jnl_write_inode+0x11f/0x6c0 [ubifs]
-[<0>] ubifs_evict_inode.cold+0x39/0x6a [ubifs]
-[<0>] evict+0xd1/0x1a0
-[<0>] inode_lru_isolate+0x238/0x2b0
-[<0>] __list_lru_walk_one+0x77/0x150
-[<0>] list_lru_walk_one+0x4a/0x70
-[<0>] prune_icache_sb+0x49/0x80
-[<0>] super_cache_scan+0x124/0x1b0
-[<0>] do_shrink_slab+0x13e/0x2c0
-[<0>] shrink_slab+0xac/0x2b0
-[<0>] drop_slab_node+0x45/0x90
-[<0>] drop_slab+0x38/0x70
-[<0>] drop_caches_sysctl_handler+0x74/0x90
-[<0>] proc_sys_call_handler+0x143/0x260
-[<0>] new_sync_write+0x116/0x1c0
-[<0>] vfs_write+0x1b7/0x250
-[<0>] ksys_write+0x5f/0xe0
-[<0>] do_syscall_64+0x33/0x40
-[<0>] entry_SYSCALL_64_after_hwframe+0x67/0xd1
-root@debian:~# cat /proc/541/stack
-[<0>] __wait_on_freeing_inode+0xb2/0xf0
-[<0>] find_inode_fast.isra.0+0x63/0xb0
-[<0>] iget_locked+0x72/0x1c0
-[<0>] ubifs_iget+0x3e/0x5c0 [ubifs]
-[<0>] ubifs_jnl_write_inode+0x11f/0x6c0 [ubifs]
-[<0>] ubifs_evict_inode.cold+0x39/0x6a [ubifs]
-[<0>] evict+0xd1/0x1a0
-[<0>] do_unlinkat+0x1df/0x2f0
-[<0>] do_syscall_64+0x33/0x40
-[<0>] entry_SYSCALL_64_after_hwframe+0x67/0xd1
-
-The root cause of the problem lies in two aspects:
-
-1. UBIFS uses inodes to represent xattrs.
-2. During the eviction process, iget_locked(), which waits for I_FREEING,
-   is called again.
-
-Therefore, in this patch, I aim to provide a solution that avoids
-waiting within the eviction process. However, I must admit that my
-current code implementation is not very elegant and could be improved.
-
-Wang Zhaolong (1):
-  ubifs: avoid deadlock when deleting an inode with xattr
-
- fs/ubifs/journal.c | 42 ++++++++++++++++++++++++++++++++++--------
- fs/ubifs/super.c   | 15 +++++++++++++++
- fs/ubifs/ubifs.h   |  1 +
- fs/ubifs/xattr.c   | 12 +++++++-----
- 4 files changed, 57 insertions(+), 13 deletions(-)
+[1/2] scsi: pm80xx: Set phy->enable_completion only when we wait for it
+      https://git.kernel.org/mkp/scsi/c/e4f949ef1516
+[2/2] scsi: pm8001: Update log level when reading config table
+      https://git.kernel.org/mkp/scsi/c/76a20140ef76
 
 -- 
-2.34.3
-
+Martin K. Petersen	Oracle Linux Engineering
