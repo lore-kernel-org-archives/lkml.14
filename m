@@ -1,95 +1,250 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B752B155A24
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3341448DD;
+	Thu, 11 Jul 2024 08:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720686948; cv=none; b=ImVvG0xfRL6y+UcksVkwCdIwBY2ahQWFZbM52M6WQiGk+mTA1opS4DOEwodkEqa2kVRHWdo2E6+rQ+4aAjmIqUWu06hqL8YPGKV9uczQC571D+P5mcDuLgav9gNgShZwuzBJEfSKlzyvmPNoWaa2VcLpQbp+ml5MDhu9ZAqzQvM=
+	t=1720686991; cv=none; b=e/U2BgIFWtn/etLnnW8CCErotbZIpi8IhtOJpy+ICPaj96RX5aaA2XO/poC6cs6OqpUjknEcbWDZLxGGO822xLMYcTabi7f2OPFnzwxS2jcQIQmy145muDcTIgh1s/pK01XHP4QVifGPYT033w79kJMcc8pZsPSXpB8JsnLDvvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720686948; c=relaxed/simple;
-	bh=eVrzFQh2gzasohNtJrVRYNU4IlzKN8XLynoUq7Ij4uI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HVU6gsniQUZkb8fip1sQhBa2UKzPR132oYKYMU203+h5mTkULhPhsxqW2SU2bzO8UJI1lmqTf5fS3d4ormbPmcnnmNQZQvDb0Vq+l/TqdQYEdcn4Hv89Mp3JLzF3wzN7pByz7bWW2Hwa7iGCI8W5HrJuDfkWfrM2peQHUdn6k4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmnNML4I; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720686991; c=relaxed/simple;
+	bh=mB/WJoLmsl0hlxMdUMMUitcXLbBmC2f+e1e17lLZS7Q=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HV88ssTiGkM9gJHBjpPj5KMzb+otQdzA6XqH2y/j0Q5zUU2EgT3e5WQ/PmQjKCt/QVAB+bLJ5YRipfdpryxEhXbvGxA7UDrk8nooHmAnL0bpOlm/rX32chpgxNEJxxiBRr97If7cJW8alHO2iw+qqQjBXKyl8GfmRx8sQIrof1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=poOm60Fb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmnNML4I"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c96170d23eso525440a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720686946; x=1721291746; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qq8kwvZKqPvz6y5zTKRIEuAEAuvxbyjF4fZE1ScwzjY=;
-        b=CmnNML4I6CseQlSQb9FM07nl1yw6xpCUJW/4U6VlpnU0Ty0QmPdLtha02WNLguz/WM
-         4YdGBt0lM3UA30ajHuiFqiTC16xdHYIgm28SyWaVeNrqnqZqy2yiiBGAZw6TxPT47fEn
-         lIQgqJFGJCu5QS0KLDVryzYMhS8WLR+AfcCMLMv1jR1GJNi7HXfAFyOPXA/zLzkR6TWE
-         JrEWYeyVol9ZIwaKsmd+l/rebdcGIeD6ABX/Sx5V01sDOTyorRJ4k9ffJAf/rJkQCdaO
-         x5cNefCrji30OE2BTtORTYqUWxJliU1h3ucDU/t18IorNPwyomjhN6vqEKBl8yaOyfw0
-         i0MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720686946; x=1721291746;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qq8kwvZKqPvz6y5zTKRIEuAEAuvxbyjF4fZE1ScwzjY=;
-        b=m/KHnOWFLH8U56Q/5xjjoECbSLpwOMwNHQkOjE4xfBP7qAXlH/Hl9R5kfASHgz0CE+
-         e4LqZxZZibo/ti2JFGw3Lh7E5kf3RLLAC5heZomfyr+cI6tYOZA97woxDo2/yayhO67v
-         q4MP4Q1MB8hBfmoiCFZeO1zIxVjHDqyHOtYno35QsJhSerDtg+GmBhbUvFGK+gxNzpaV
-         fNnMbxzsraKOHHVAx1qlcOdM5NMtTLBaIYhnu2GNP6fci8czvByRS3kC0PUFmSW1pBRP
-         ecGxE3inEwIkrayfrG4GybUgR4oUnHnyI5iogxZauGFaorHRbPqgU4V8bMG6OZJqD6gf
-         tRXw==
-X-Gm-Message-State: AOJu0YwLZvEsqJVp5hzvzMcieYkAo7uxEDFoT4q+4xuRCRTeCaLZU4Bt
-	GD9LLIY2XnvWpZvppOPJ6cOOOSqD5nFetCmQ5OtvsftqSnZ2r2+rC/FmmA==
-X-Google-Smtp-Source: AGHT+IGUt6WETC4rSEgAs5YuoG2vVIdNcXGM8Z3YHTLFZ7MSQqVNZVFNLu7K3+WPmzye3AnrP6ybKg==
-X-Received: by 2002:a17:90b:120c:b0:2c9:64fb:1c7e with SMTP id 98e67ed59e1d1-2ca35c32e30mr6510506a91.14.1720686945637;
-        Thu, 11 Jul 2024 01:35:45 -0700 (PDT)
-Received: from localhost ([47.89.225.180])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ca34e6a252sm5084517a91.14.2024.07.11.01.35.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2024 01:35:45 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH] workqueue: Simplify pool_allowed_cpus()
-Date: Thu, 11 Jul 2024 16:38:31 +0800
-Message-Id: <20240711083831.4273-1-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="poOm60Fb"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B4miqI007121;
+	Thu, 11 Jul 2024 08:36:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Zi58ZuXxigeTAt/0Sr2nceZ0ysJWA8AUBGlnLIUl7x8=; b=poOm60FbAWUv+lRo
+	XuVgtfAhh5X/QS1/1E1ZrpYhwDj18QDHoitomLq6KFkfYahUnMEI3LjI78MC/XFe
+	bfxORIB+j/jFHpt8qP7hAPG8/6TgBR9BGbkEY7lpOwJ61zlnxbhGELqaOB0y1+M7
+	RY6UK+b6YN7i3xh4ULKHS3s03+UktTRpUSJezOKQNrxIBbNNDoln95YKzdyYcXkA
+	qysdtkfQvPAlCPRbso8rlI+iv7WscaYwRfIW9A4ljxR3u2sc6zuTGFRZrheYI9Xf
+	wLp0qhu/fHeWb+CN27Xa9A43UpgG0kyCwrmeZMUao2G+RY3a1Tm3RE1hiGIPlcbZ
+	1DaZBg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4091jdp1sx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 08:36:18 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46B8aHQg023320
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 08:36:17 GMT
+Received: from jiegan-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 11 Jul 2024 01:36:12 -0700
+Date: Thu, 11 Jul 2024 16:36:07 +0800
+From: JieGan <quic_jiegan@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+CC: Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>, "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        James Clark <james.clark@arm.com>,
+        Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Tingwei Zhang
+	<quic_tingweiz@quicinc.com>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        "Tao
+ Zhang" <quic_taozha@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        "Song
+ Chai" <quic_songchai@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: arm: Add binding document for
+ Coresight Control Unit device.
+Message-ID: <Zo+Zd96GHcQc5AnT@jiegan-gv.ap.qualcomm.com>
+References: <20240705090049.1656986-1-quic_jiegan@quicinc.com>
+ <20240705090049.1656986-3-quic_jiegan@quicinc.com>
+ <208b3861-6898-4506-9152-c9d770ef1555@arm.com>
+ <Zou7FA2Av7CJO+ds@jiegan-gv.ap.qualcomm.com>
+ <Zou+fmUJoyzamWcw@jiegan-gv.ap.qualcomm.com>
+ <6a23eb7f-2fad-4a44-bf7c-ab7f01c342f3@arm.com>
+ <ZozR+c7ggXWFwyOG@jiegan-gv.ap.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZozR+c7ggXWFwyOG@jiegan-gv.ap.qualcomm.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: SB04mKUxTJ5WK78mDOif25VS_4qVmwjQ
+X-Proofpoint-ORIG-GUID: SB04mKUxTJ5WK78mDOif25VS_4qVmwjQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_05,2024-07-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 adultscore=2 spamscore=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 priorityscore=1501 phishscore=0 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407110059
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On Tue, Jul 09, 2024 at 02:00:25PM +0800, JieGan wrote:
+> On Mon, Jul 08, 2024 at 01:50:11PM +0100, Suzuki K Poulose wrote:
+> > On 08/07/2024 11:25, JieGan wrote:
+> > > On Mon, Jul 08, 2024 at 06:10:28PM +0800, JieGan wrote:
+> > > > On Mon, Jul 08, 2024 at 10:41:55AM +0100, Suzuki K Poulose wrote:
+> > > > > On 05/07/2024 10:00, Jie Gan wrote:
+> > > > > > Add binding document for Coresight Control Unit device.
+> > > > > 
+> > > > > nit: This is again too generic ? corsight-tmc-control-unit ? After all
+> > > > > thats what it is and not a *generic* coresight control unit ?
+> > > > > 
+> > > > coresight-tmc-control-unit is much better. We will check it.
+> > > > > > 
+> > > > > > Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+> > > > > > ---
+> > > > > >    .../bindings/arm/qcom,coresight-ccu.yaml      | 87 +++++++++++++++++++
+> > > > > >    1 file changed, 87 insertions(+)
+> > > > > >    create mode 100644 Documentation/devicetree/bindings/arm/qcom,coresight-ccu.yaml
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-ccu.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-ccu.yaml
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..9bb8ced393a7
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-ccu.yaml
+> > > > > > @@ -0,0 +1,87 @@
+> > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > +%YAML 1.2
+> > > > > > +---
+> > > > > > +$id: http://devicetree.org/schemas/arm/qcom,coresight-ccu.yaml#
+> > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > +
+> > > > > > +title: CoreSight Control Unit
+> > > > > > +
+> > > > > > +maintainers:
+> > > > > > +  - Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> > > > > > +  - Mao Jinlong <quic_jinlmao@quicinc.com>
+> > > > > > +  - Jie Gan <quic_jiegan@quicinc.com>
+> > > > > > +
+> > > > > > +description:
+> > > > > > +  The Coresight Control unit controls various Coresight behaviors.
+> > > > > > +  Used to enable/disable ETR’s data filter function based on trace ID.
+> > > > > > +
+> > > > > > +properties:
+> > > > > > +  compatible:
+> > > > > > +    const: qcom,coresight-ccu
+> > > > > > +
+> > > > > > +  reg:
+> > > > > > +    maxItems: 1
+> > > > > > +
+> > > > > > +  clocks:
+> > > > > > +    maxItems: 1
+> > > > > > +
+> > > > > > +  clock-names:
+> > > > > > +    items:
+> > > > > > +      - const: apb_pclk
+> > > > > > +
+> > > > > > +  reg-names:
+> > > > > > +    items:
+> > > > > > +      - const: ccu-base
+> > > > > > +
+> > > > > > +  in-ports:
+> > > > > > +    $ref: /schemas/graph.yaml#/properties/ports
+> > > > > > +
+> > > > > > +    unevaluatedProperties:
+> > > > > > +      patternProperties:
+> > > > > > +        '^port(@[0-7])?$':
+> > > > > > +          description: Input connections from CoreSight Trace bus
+> > > > > > +          $ref: /schemas/graph.yaml#/properties/port
+> > > > > > +
+> > > > > > +          properties:
+> > > > > > +            qcom,ccu-atid-offset:
+> > > > > 
+> > > > > Why do we need this atid offset ? Couldn't this be mapped to the "port"
+> > > > > number ?
+> > > > > 
+> > > > > e.g, input-port 0 on CCU => Offset x
+> > > > >       input-port 1 on CCU => (Offset x + Size of 1 region)
+> > > > If the first ATID offset remains constant, it appears to be feasible.
+> > > > We will consider the possibility of this solution.
+> > > We just checked the ATID offset varies across different hardware platforms.
+> > > It defined as 0xf4 on some platforms, and some others defined as 0xf8.
+> > 
+> > What do you mean ? The offset where you apply the filter changes across
+> > different platforms ? or different "tmc-control-unit" implementations ?
+> > Is this discoverable from the device ? We could use different
+> > compatibles for different "types" of the "devices". Simply adding
+> > something in the DT is not the right way.
+> 
+> I got your point here. I believe we should consult our hardware engineers first to check it.
+> We need to figure out the design of ATID offset from hardware perspective. Then we can
+> propose an alternative approach, such as associating the offset with a compitable value,
+> to resolve this issue.
+> 
+> > 
+> > > 
+> > > So I think it should be better to define it in device tree node.
+> > 
+> > No. See above.
 
-For cpu worker pools, attrs->affn_strict is true; attrs->__pod_cpumask
-and attrs->cpumask are the same.  Skip the pool->cpu test
-in pool_allowed_cpus() and use pool->attrs->__pod_cpumask.
 
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
----
- kernel/workqueue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Suzuki
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 8b2a0fe4a85e..5d362290c2e8 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2646,7 +2646,7 @@ static struct worker *alloc_worker(int node)
- 
- static cpumask_t *pool_allowed_cpus(struct worker_pool *pool)
- {
--	if (pool->cpu < 0 && pool->attrs->affn_strict)
-+	if (pool->attrs->affn_strict)
- 		return pool->attrs->__pod_cpumask;
- 	else
- 		return pool->attrs->cpumask;
--- 
-2.19.1.6.gb485710b
+There is a new solution for CCU device. We would like to separate one CCU device into several helper
+devices, each responsible for one feature of the CCU device.
 
+For the data filter feature, we will define the address of the AITD Register that included by CCU in DT
+as base address of the helper node. So the driver code can easily program the register field with the base address.
+With this solution, we may need define several helper nodes in DT file to support different features for CCU and each
+helper device needs a driver to support its behavior.
+
+for example, ATID register for ETR0 with base address 0x10000f8: (tmp name used, TDFU for tmc data filter unit)
+
+TDFU@10000f8 {
+...
+}
+
+ATID register for ETR1 with base address 0x1000108:
+TDFU@1000108 {
+...
+}
+
+The CCU device supports various features and the data filter feature for ETR is one of those features. How to support
+those features with one helper_enable function is a serious challenge. That's why we would like to separate it.
+Meanwhile, This solution can also resolve the offset issue.
+
+We are looking forward your opinions with this proposal.
+
+Thanks!
+
+> > 
+> > Suzuki
+> > 
+> > > 
+> > > > 
+> > > > > 
+> > > > > I believe I mentioned this in the previous posting too ?
+> > > > Yes, you mentioned before. I moved it from TMC filed to CCU filed.
+> > > > 
+> > > > > 
+> > > > > Suzuki
+> > > > > 
+> > > > 
+> > 
+> 
+> Thanks,
+> Jie
+> 
+
+Thanks,
+Jie
