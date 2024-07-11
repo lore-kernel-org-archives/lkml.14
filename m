@@ -1,76 +1,64 @@
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865081667FA
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC190158DA8;
+	Thu, 11 Jul 2024 14:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720708360; cv=none; b=sMxBJcmPpfVspbOhTMv3NRNup/2WOXkUyxkvxL7aNJwzBJQsn3PS5U6tdHet7q4dwKbxu2S/TW8OmaPL+GRgBumoJJqRZ5bj4d1VRMOOj+w+Zw47ad8TdCWz5BlOimAf4g5kIMB44GXGsGNyYLk+CgWc5hbDgnxCxf5dyyUEDus=
+	t=1720708435; cv=none; b=PRB1+WifjEnV/H5sTH5D7MDlpNNGdHjzpauw1aJCQOwuFMdxUVK8SO22EUMmMVqLbEq/+j8wu6tMkDKzn19AkYX64XrMsDaUS0X4H+y8cQw8rpWmR/On4ziuwcyzqUFkl2jCgugxcpvBBACxvG7Vt7/m4u3PrO07aUOtVBJe/RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720708360; c=relaxed/simple;
-	bh=UXwrQTAUAqLJNVMjPrxyKJf2HTgbrYTXgRHz8Yv0GKU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Joj+wlxpPj4SwdB8z1gSy1aOlAG2aE9vRD/4tS5oqY+wzU7yCMk/jzqdtfzEVMrqIpitrLs9JCiLvKAc780bTZwFggsahCHqWhLtIgXj5Jt8ubWXApsfOmSC5Q6AbJ6oBnLDJyK0uhkvBCTMxXMrOq+TvLO9EaQx/WiD/D89lY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:9b6b:6da0:997b:7165])
-	by laurent.telenet-ops.be with bizsmtp
-	id mEYc2C00H46XLxg01EYc1k; Thu, 11 Jul 2024 16:32:37 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sRuqN-001kRe-3i;
-	Thu, 11 Jul 2024 16:32:36 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sRuqa-0009yc-LQ;
-	Thu, 11 Jul 2024 16:32:36 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] platform: arm64: EC_LENOVO_YOGA_C630 should depend on ARCH_QCOM
-Date: Thu, 11 Jul 2024 16:32:35 +0200
-Message-Id: <0e4c9ffdc8a5caffcda2afb8d5480900f7adebf6.1720707932.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <80e17dffa8f4c1d3fdedd4d82df3a722aa4044ff.1720707932.git.geert+renesas@glider.be>
-References: <80e17dffa8f4c1d3fdedd4d82df3a722aa4044ff.1720707932.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1720708435; c=relaxed/simple;
+	bh=8Ra/Y5v1rARhsoO0bv3pLK/R77pCMZPwXiKQi7lwrjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gL3pA6NJ93IBPBIaf7Ky3Uqi8y3OvMFtsCExQ9P62cpVY2e3bwPUY5ATqLo0oLQVur9lO34POSbTh1cNUSZy0MEmm4KxBA81C/Vn/dgaqizJydpoMryFYlghVU9EtWigi4FhCzw0FgEZIOYKfuIvj+Rvf2QQyNC03ufKKIyWCAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxZ3BMHM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxZ3BMHM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4905DC116B1;
+	Thu, 11 Jul 2024 14:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720708434;
+	bh=8Ra/Y5v1rARhsoO0bv3pLK/R77pCMZPwXiKQi7lwrjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UxZ3BMHMyepZ+ddcEaKgcLqR1EZmLwyWSCqPB5hqtTpUc3461IMdtlKSTgu2+k2uz
+	 /Na3s8WmdfKEJWLyBa1arhyxo0VLwPI057Xlp/L/9jM+yLSjWExI6WlXdYIqfspgQ3
+	 M68mAsYjmgl7KmVpwDohQz3om/46KeHqeMb5olh2yKNutnMZg7bUYGjmp0e9wtYUpO
+	 k4v34sOkKaY+TrZIGFd6b8cHevmfR/QkOYnAb7SUMGnNThsDvupZpbrS+LH/BMA1Ue
+	 Ep57zigKRYcMhtnE/yNCrGHc6pBhpQYyWKk4MLt0Hsa9G0JGSnlymYdjFkzN4FFz9t
+	 tT7nMcVPYSsrA==
+Date: Thu, 11 Jul 2024 08:33:53 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: trivial-devices: document the Sierra
+ Wireless mangOH Green SPI IoT interface
+Message-ID: <172070843090.2279442.10031624513067815201.robh@kernel.org>
+References: <20240710-topic-mdm9615-mangoh-iotport-spi-bindings-v1-1-3efe20cfea8a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240710-topic-mdm9615-mangoh-iotport-spi-bindings-v1-1-3efe20cfea8a@linaro.org>
 
-The Lenovo Yoga C630 Embedded Controller is only present on the Qualcomm
-Snapdragon-based Lenovo Yoga C630 laptop.  Hence add a dependency on
-ARCH_QCOM, to prevent asking the user about this driver when configuring
-a kernel without Qualcomm SoC support.
 
-Fixes: 5e5f2f92cccc29f3 ("platform: arm64: add Lenovo Yoga C630 WOS EC driver")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/platform/arm64/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, 10 Jul 2024 19:02:52 +0200, Neil Armstrong wrote:
+> Document the Sierra Wireless mangOH Green SPI IoT interface as a trivial
+> device.
+> 
+> This fixes the following check:
+> qcom-mdm9615-wp8548-mangoh-green.dtb: /soc/gsbi@16200000/spi@16280000/spi@0: failed to match any schema with compatible: ['swir,mangoh-iotport-spi']
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-index 058a4baa216a83b8..f7539e5419cf1616 100644
---- a/drivers/platform/arm64/Kconfig
-+++ b/drivers/platform/arm64/Kconfig
-@@ -35,6 +35,7 @@ config EC_ACER_ASPIRE1
- 
- config EC_LENOVO_YOGA_C630
- 	tristate "Lenovo Yoga C630 Embedded Controller driver"
-+	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on I2C
- 	select AUXILIARY_BUS
- 	help
--- 
-2.34.1
+Applied, thanks!
 
