@@ -1,397 +1,187 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267F3158DA8;
-	Thu, 11 Jul 2024 14:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A184B1662FE
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720708443; cv=none; b=Km9XDe+1W77AVhqNk5QN+2GkR+oF5qArmF2YiZ7oUm3CrHhGRyqJAcBqJRtZaDkL61BZc2trCXac2c0pClhPWXupks1QCahUFypKhuUFM8WR5R1+2LCCV3TtA3TfATS1LBsu4Pxcy/XNoVBVPTr1PH6yNd22VzU/Ppf87LW8KUY=
+	t=1720708469; cv=none; b=pIxVmlVXn0CrR0CSf8dxulUFbwclXW1T3yI5B6V9IVt9zc9P3M+A6plYeLC8seMf/xlAIAJL5KjOFhVGjo8eKVP51cAAgfyI5XTCvbK61mVEegACuTAoSg3nkKAQ8JwNGbEmnQFwN306bVKI+REI4NDS8Uqw/Q/Oeg5RMGIf9AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720708443; c=relaxed/simple;
-	bh=0cOmxcRk0+/3AKFnowBw/+Y1brcE83Kk9E2BC4J0KHE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eBMV1xlcQPttlK+VRW0r4BYg8727fJk9JdB5n7ovH8Gv3u3ofTbd0OO0FeWIjSOmDzaaLz2dorXklqxW6PjnjwcOC3Nx7fJfpVcixL51nPQDpOpQmEEFKUnXLW3J9fAAcmVkXmHq8YWaJEC8KZrrFDvWoL3aAsZ0VNKPzXitoOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BuW7zRsI; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720708469; c=relaxed/simple;
+	bh=+uj/tTAq4TA7NjaayLC8BtNVkrmTjLc5am/0QT0gO4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uFpXnoH++Xz5qW61BXsZiw1PEdUid5kg72Hvarx2H4kIyoz6EPSID0D1PRTSxFiujpTt9b4OX5sShmcELA+znXtIByeG3HQz1VxuUSLLZRj7QvPnvG3MowwpjHH8aGrW/iB1Yfm42Nl+rOqNJ+hUk0i8VqN4W01nUxucrSFUOr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=khnrtDm6; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuW7zRsI"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-810197638fcso313622241.1;
-        Thu, 11 Jul 2024 07:34:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="khnrtDm6"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e0365588ab8so911049276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720708440; x=1721313240; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BM09hnKVB1kESbZILffmOawcWcc5pMVTZevNuy1bqkk=;
-        b=BuW7zRsIkKzAvyb/JPNVcPGYjVA4iOo/+dLkH1OXEsSk/KyxSKWRgTRmd14tnl0139
-         vjnt65xrFV/L463hGrdHH2XLR8PEca0MbZU95ZCpzGfMYg5CAaTuZUYLAedx5QPnU7Lj
-         cOUtiy4c56EFmUDSVTMIJIf0Fo6xHc39lMMojKSKtluL1XqB/YZ+BLdoGLHQRAPpqoqf
-         z4WQftKoKvl7vMOL3sJD6xSsorNvDcvk0mR35ul0i2/0b8SQykqr8mqbC75h/rJ6SzwJ
-         EQVzLKVg9Rg6Mst5E71r+6R3gpZx7drND1AUP6YrKj8SLRa8hZBI3W27t15SrT+c7Q8X
-         ilTw==
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1720708466; x=1721313266; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7Isnu2P2XZ4vyjhu09NFK9mxLGYDcc9SLvRNtCtPllw=;
+        b=khnrtDm6SH9jdckQiHu9LdoMGHhECCvNTilNNh4CsbN0tym7xZnHnBJYYFUwqFzsX/
+         hR3rWem4gG6a7KhVcGtSm7/F9+MkV+sROOgCL/5vqgGXs1RVGdkUnhlzkO6CwlNd7IU7
+         OIgYA51vq/XfS+sp3EDwWvm4b6PHbkVDzbyJbyQkYL2L4vNw/weNBfGlLDs10z9AGvn6
+         pnnph/h8a7+5AxGJVe3HxoeclB6R8u/NXrWT3GdefH3g9/cwowwT4JZ52zOjlJ5hYf94
+         AJGQku4fzrU46WZXYMT9e1CODTz84hYrSvHkZq1poSVjkIXbdNV/sUqY5E4Ao6AopZXn
+         6HlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720708440; x=1721313240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BM09hnKVB1kESbZILffmOawcWcc5pMVTZevNuy1bqkk=;
-        b=Dru+3g7oxjUqg4XFe2mvul3L0jkUMSsu7Csrmmz5AE3X6Zo+Mn2wQaBFAEdwSwyklb
-         LojOj3za+h6VC6Oc/5F896Xh7ovRq4WLLR5iZ0euFAIlerKOofAIOUVF2o7kaEmcXKnB
-         dnXo6IsYa6w3XvkGkuWYfarnqYiTXlt4OQ0CrX6V0Ni7d8yL5k9Ua9fHpUB7scCSmdMj
-         c3Lwd3Erz1LHrA6HAlaQSXZ85XiRZq1xWY39KVYwvxCHKavsE0QZ99Xc0aKRKPZk9T7c
-         3vVUnxvSqoxWA5Og+F/cfvirK0SEfejvpGo6iyNyONgNUBL6ODKUhHS4fsW7tjllwC1b
-         8a0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVyK6XssFd+MohnM13hXWfr5LbJU9M3/bZb1kcvuahBK3xIBR+pJ7frZwQwoFMKOq3+8QjDXJI5jxJUs9nRkkkpms85XoAJGLGSBOwwMWzI06tUQqJIKc9fa5CiUOBaA2Oj1excLKabagCPqncpHwqzyT+r3pPKGFce2Lov
-X-Gm-Message-State: AOJu0YwyVJPwczpwVmBpQKdP0TeakwIhai+F8zvF9KkVb4SSPictm/Y2
-	OnTW/Ji/Luqnu8WeNGZZZuhYAnBmoSt1ey+NnOAu67MUCTH9xhgbdqmYdo/FldQhC2VT0OYx+IT
-	3gGkJT8aDtfJkIKvNbDaG3vPO5e4=
-X-Google-Smtp-Source: AGHT+IG+32pOzsD1Wpd/m/yDdX5729UAhjArzwR66VTPZ3h+eIPc2EMF9lsGy46gmKbhU4yaab9TtAr8Zg0w00fRAds=
-X-Received: by 2002:a05:6122:21ac:b0:4ef:52e2:6763 with SMTP id
- 71dfb90a1353d-4f33f318833mr9932911e0c.13.1720708439701; Thu, 11 Jul 2024
- 07:33:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720708466; x=1721313266;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Isnu2P2XZ4vyjhu09NFK9mxLGYDcc9SLvRNtCtPllw=;
+        b=i60bYGb+LnFPowoiMm3vn8hzI4bvUxgi8BJZGnHG8j00BT0uUxmy6aaRJJkfxvv64x
+         reNZTOewv49nVBeEJxyggqvPxn06dbxSlUVnnd2gf6jdbq6neDOmuQYqTO7S4Asc8RvA
+         3pvnRjaL/Vp5X5JEFgtF/CNBCJJ1QK00DO5SFlupdohvMmXyLwtJ6yokdShXmzEBJ4Zg
+         dLczUFwz/cs3+CSWNHEijx50ArjHwvouTVE9ZoFvExnzlOhQhOxjSIfxz33r7eWmuKfj
+         XHerOysJ6mu60czfuIDQ+rf1BTnZzmppdOKi2aoJIqPnYM2PwvaOGdhxVy6Cl02o4VJ4
+         XzSQ==
+X-Gm-Message-State: AOJu0YyZ4KM6GrtzWml5wjFrayPQFblLtGDokjvriKlnUBdXbJaRVBdT
+	lsw31Q2vzOwrGi9M4CXg67aQqam5Cp3ZYXg6U6Jpthje5WjDzuEc+XtvKe8/3+0=
+X-Google-Smtp-Source: AGHT+IHoDuERbfhsAd+ku6w/nNTteOIDJ8Hw6KBq9ZuJ4kA+BHwmpNrzHWd6szaaePbvGqJyOdH8hQ==
+X-Received: by 2002:a5b:605:0:b0:e03:645f:2099 with SMTP id 3f1490d57ef6-e041b043182mr9883441276.8.1720708466582;
+        Thu, 11 Jul 2024 07:34:26 -0700 (PDT)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e041a8aca8csm979701276.10.2024.07.11.07.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 07:34:26 -0700 (PDT)
+Date: Thu, 11 Jul 2024 10:34:25 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Hanna Czenczek <hreitz@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	German Maglione <gmaglione@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 0/2] virtio-fs: Add 'file' mount option
+Message-ID: <20240711143425.GA1235314@perftesting>
+References: <20240709111918.31233-1-hreitz@redhat.com>
+ <20240709175652.GB1040492@perftesting>
+ <8ebfc48f-9a93-45ed-ba88-a4e4447d997a@redhat.com>
+ <20240710184222.GA1167307@perftesting>
+ <453a5eb6-204f-403a-b41d-faefdbcb8f50@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617054514.127961-1-chengen.du@canonical.com>
- <ZnAdiDjI_unrELB8@nanopsycho.orion> <6670898e1ca78_21d16f2946f@willemb.c.googlers.com.notmuch>
- <ZnEmiIhs5K4ehcYH@nanopsycho.orion> <66715247c147c_23a4e7294a7@willemb.c.googlers.com.notmuch>
- <CAPza5qfQtPZ-UPF97CG+zEwoQunbzg8F8kX0Q1y5Fzt4Zoc=4w@mail.gmail.com>
- <6673dc0ee45dd_2a03042941e@willemb.c.googlers.com.notmuch>
- <CAPza5qfqoJeSe3=nEuMAhWygiu0+N3v2Qe1TPB1eywMEyfGLrw@mail.gmail.com>
- <66794d8c1d425_3637da294d8@willemb.c.googlers.com.notmuch> <CAPza5qeh+vDAv_Xe5Duz53GFDef2UNxSdPAbgivk=XmdVkJbMQ@mail.gmail.com>
-In-Reply-To: <CAPza5qeh+vDAv_Xe5Duz53GFDef2UNxSdPAbgivk=XmdVkJbMQ@mail.gmail.com>
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date: Thu, 11 Jul 2024 10:33:23 -0400
-Message-ID: <CAF=yD-+9m9MVTsmidD3wheBCWu6EZGmYEqB6a=jpY0GT74r6fA@mail.gmail.com>
-Subject: Re: [PATCH v8] af_packet: Handle outgoing VLAN packets without
- hardware offloading
-To: Chengen Du <chengen.du@canonical.com>
-Cc: Jiri Pirko <jiri@resnulli.us>, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, kaber@trash.net, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <453a5eb6-204f-403a-b41d-faefdbcb8f50@redhat.com>
 
-On Wed, Jul 10, 2024 at 10:34=E2=80=AFPM Chengen Du <chengen.du@canonical.c=
-om> wrote:
->
-> On Mon, Jun 24, 2024 at 6:42=E2=80=AFPM Willem de Bruijn
-> <willemdebruijn.kernel@gmail.com> wrote:
-> >
-> > Chengen Du wrote:
-> > > On Thu, Jun 20, 2024 at 3:36=E2=80=AFPM Willem de Bruijn
-> > > <willemdebruijn.kernel@gmail.com> wrote:
-> > > >
-> > > > Chengen Du wrote:
-> > > > > On Tue, Jun 18, 2024 at 5:24=E2=80=AFPM Willem de Bruijn
-> > > > > <willemdebruijn.kernel@gmail.com> wrote:
-> > > > > >
-> > > > > > Jiri Pirko wrote:
-> > > > > > > Mon, Jun 17, 2024 at 09:07:58PM CEST, willemdebruijn.kernel@g=
-mail.com wrote:
-> > > > > > > >Jiri Pirko wrote:
-> > > > > > > >> Mon, Jun 17, 2024 at 07:45:14AM CEST, chengen.du@canonical=
-.com wrote:
-> > > > > > > >> >The issue initially stems from libpcap. The ethertype wil=
-l be overwritten
-> > > > > > > >> >as the VLAN TPID if the network interface lacks hardware =
-VLAN offloading.
-> > > > > > > >> >In the outbound packet path, if hardware VLAN offloading =
-is unavailable,
-> > > > > > > >> >the VLAN tag is inserted into the payload but then cleare=
-d from the sk_buff
-> > > > > > > >> >struct. Consequently, this can lead to a false negative w=
-hen checking for
-> > > > > > > >> >the presence of a VLAN tag, causing the packet sniffing o=
-utcome to lack
-> > > > > > > >> >VLAN tag information (i.e., TCI-TPID). As a result, the p=
-acket capturing
-> > > > > > > >> >tool may be unable to parse packets as expected.
-> > > > > > > >> >
-> > > > > > > >> >The TCI-TPID is missing because the prb_fill_vlan_info() =
-function does not
-> > > > > > > >> >modify the tp_vlan_tci/tp_vlan_tpid values, as the inform=
-ation is in the
-> > > > > > > >> >payload and not in the sk_buff struct. The skb_vlan_tag_p=
-resent() function
-> > > > > > > >> >only checks vlan_all in the sk_buff struct. In cooked mod=
-e, the L2 header
-> > > > > > > >> >is stripped, preventing the packet capturing tool from de=
-termining the
-> > > > > > > >> >correct TCI-TPID value. Additionally, the protocol in SLL=
- is incorrect,
-> > > > > > > >> >which means the packet capturing tool cannot parse the L3=
- header correctly.
-> > > > > > > >> >
-> > > > > > > >> >Link: https://github.com/the-tcpdump-group/libpcap/issues=
-/1105
-> > > > > > > >> >Link: https://lore.kernel.org/netdev/20240520070348.26725=
--1-chengen.du@canonical.com/T/#u
-> > > > > > > >> >Fixes: 393e52e33c6c ("packet: deliver VLAN TCI to userspa=
-ce")
-> > > > > > > >> >Cc: stable@vger.kernel.org
-> > > > > > > >> >Signed-off-by: Chengen Du <chengen.du@canonical.com>
-> > > > > > > >> >---
-> > > > > > > >> > net/packet/af_packet.c | 86 ++++++++++++++++++++++++++++=
-+++++++++++++-
-> > > > > > > >> > 1 file changed, 84 insertions(+), 2 deletions(-)
-> > > > > > > >> >
-> > > > > > > >> >diff --git a/net/packet/af_packet.c b/net/packet/af_packe=
-t.c
-> > > > > > > >> >index ea3ebc160e25..84e8884a77e3 100644
-> > > > > > > >> >--- a/net/packet/af_packet.c
-> > > > > > > >> >+++ b/net/packet/af_packet.c
-> > > > > > > >> >@@ -538,6 +538,61 @@ static void *packet_current_frame(st=
-ruct packet_sock *po,
-> > > > > > > >> >  return packet_lookup_frame(po, rb, rb->head, status);
-> > > > > > > >> > }
-> > > > > > > >> >
-> > > > > > > >> >+static u16 vlan_get_tci(struct sk_buff *skb, struct net_=
-device *dev)
-> > > > > > > >> >+{
-> > > > > > > >> >+ struct vlan_hdr vhdr, *vh;
-> > > > > > > >> >+ u8 *skb_orig_data =3D skb->data;
-> > > > > > > >> >+ int skb_orig_len =3D skb->len;
-> > > > > > > >> >+ unsigned int header_len;
-> > > > > > > >> >+
-> > > > > > > >> >+ if (!dev)
-> > > > > > > >> >+         return 0;
-> > > > > > > >> >+
-> > > > > > > >> >+ /* In the SOCK_DGRAM scenario, skb data starts at the n=
-etwork
-> > > > > > > >> >+  * protocol, which is after the VLAN headers. The outer=
- VLAN
-> > > > > > > >> >+  * header is at the hard_header_len offset in non-varia=
-ble
-> > > > > > > >> >+  * length link layer headers. If it's a VLAN device, th=
-e
-> > > > > > > >> >+  * min_header_len should be used to exclude the VLAN he=
-ader
-> > > > > > > >> >+  * size.
-> > > > > > > >> >+  */
-> > > > > > > >> >+ if (dev->min_header_len =3D=3D dev->hard_header_len)
-> > > > > > > >> >+         header_len =3D dev->hard_header_len;
-> > > > > > > >> >+ else if (is_vlan_dev(dev))
-> > > > > > > >> >+         header_len =3D dev->min_header_len;
-> > > > > > > >> >+ else
-> > > > > > > >> >+         return 0;
-> > > > > > > >> >+
-> > > > > > > >> >+ skb_push(skb, skb->data - skb_mac_header(skb));
-> > > > > > > >> >+ vh =3D skb_header_pointer(skb, header_len, sizeof(vhdr)=
-, &vhdr);
-> > > > > > > >> >+ if (skb_orig_data !=3D skb->data) {
-> > > > > > > >> >+         skb->data =3D skb_orig_data;
-> > > > > > > >> >+         skb->len =3D skb_orig_len;
-> > > > > > > >> >+ }
-> > > > > > > >> >+ if (unlikely(!vh))
-> > > > > > > >> >+         return 0;
-> > > > > > > >> >+
-> > > > > > > >> >+ return ntohs(vh->h_vlan_TCI);
-> > > > > > > >> >+}
-> > > > > > > >> >+
-> > > > > > > >> >+static __be16 vlan_get_protocol_dgram(struct sk_buff *sk=
-b)
-> > > > > > > >> >+{
-> > > > > > > >> >+ __be16 proto =3D skb->protocol;
-> > > > > > > >> >+
-> > > > > > > >> >+ if (unlikely(eth_type_vlan(proto))) {
-> > > > > > > >> >+         u8 *skb_orig_data =3D skb->data;
-> > > > > > > >> >+         int skb_orig_len =3D skb->len;
-> > > > > > > >> >+
-> > > > > > > >> >+         skb_push(skb, skb->data - skb_mac_header(skb));
-> > > > > > > >> >+         proto =3D __vlan_get_protocol(skb, proto, NULL)=
-;
-> > > > > > > >> >+         if (skb_orig_data !=3D skb->data) {
-> > > > > > > >> >+                 skb->data =3D skb_orig_data;
-> > > > > > > >> >+                 skb->len =3D skb_orig_len;
-> > > > > > > >> >+         }
-> > > > > > > >> >+ }
-> > > > > > > >> >+
-> > > > > > > >> >+ return proto;
-> > > > > > > >> >+}
-> > > > > > > >> >+
-> > > > > > > >> > static void prb_del_retire_blk_timer(struct tpacket_kbdq=
-_core *pkc)
-> > > > > > > >> > {
-> > > > > > > >> >  del_timer_sync(&pkc->retire_blk_timer);
-> > > > > > > >> >@@ -1007,10 +1062,16 @@ static void prb_clear_rxhash(stru=
-ct tpacket_kbdq_core *pkc,
-> > > > > > > >> > static void prb_fill_vlan_info(struct tpacket_kbdq_core =
-*pkc,
-> > > > > > > >> >                  struct tpacket3_hdr *ppd)
-> > > > > > > >> > {
-> > > > > > > >> >+ struct packet_sock *po =3D container_of(pkc, struct pac=
-ket_sock, rx_ring.prb_bdqc);
-> > > > > > > >> >+
-> > > > > > > >> >  if (skb_vlan_tag_present(pkc->skb)) {
-> > > > > > > >> >          ppd->hv1.tp_vlan_tci =3D skb_vlan_tag_get(pkc->=
-skb);
-> > > > > > > >> >          ppd->hv1.tp_vlan_tpid =3D ntohs(pkc->skb->vlan_=
-proto);
-> > > > > > > >> >          ppd->tp_status =3D TP_STATUS_VLAN_VALID | TP_ST=
-ATUS_VLAN_TPID_VALID;
-> > > > > > > >> >+ } else if (unlikely(po->sk.sk_type =3D=3D SOCK_DGRAM &&=
- eth_type_vlan(pkc->skb->protocol))) {
-> > > > > > > >> >+         ppd->hv1.tp_vlan_tci =3D vlan_get_tci(pkc->skb,=
- pkc->skb->dev);
-> > > > > > > >> >+         ppd->hv1.tp_vlan_tpid =3D ntohs(pkc->skb->proto=
-col);
-> > > > > > > >> >+         ppd->tp_status =3D TP_STATUS_VLAN_VALID | TP_ST=
-ATUS_VLAN_TPID_VALID;
-> > > > > > > >> >  } else {
-> > > > > > > >> >          ppd->hv1.tp_vlan_tci =3D 0;
-> > > > > > > >> >          ppd->hv1.tp_vlan_tpid =3D 0;
-> > > > > > > >> >@@ -2428,6 +2489,10 @@ static int tpacket_rcv(struct sk_b=
-uff *skb, struct net_device *dev,
-> > > > > > > >> >                  h.h2->tp_vlan_tci =3D skb_vlan_tag_get(=
-skb);
-> > > > > > > >> >                  h.h2->tp_vlan_tpid =3D ntohs(skb->vlan_=
-proto);
-> > > > > > > >> >                  status |=3D TP_STATUS_VLAN_VALID | TP_S=
-TATUS_VLAN_TPID_VALID;
-> > > > > > > >> >+         } else if (unlikely(sk->sk_type =3D=3D SOCK_DGR=
-AM && eth_type_vlan(skb->protocol))) {
-> > > > > > > >> >+                 h.h2->tp_vlan_tci =3D vlan_get_tci(skb,=
- skb->dev);
-> > > > > > > >> >+                 h.h2->tp_vlan_tpid =3D ntohs(skb->proto=
-col);
-> > > > > > > >> >+                 status |=3D TP_STATUS_VLAN_VALID | TP_S=
-TATUS_VLAN_TPID_VALID;
-> > > > > > > >> >          } else {
-> > > > > > > >> >                  h.h2->tp_vlan_tci =3D 0;
-> > > > > > > >> >                  h.h2->tp_vlan_tpid =3D 0;
-> > > > > > > >> >@@ -2457,7 +2522,8 @@ static int tpacket_rcv(struct sk_bu=
-ff *skb, struct net_device *dev,
-> > > > > > > >> >  sll->sll_halen =3D dev_parse_header(skb, sll->sll_addr)=
-;
-> > > > > > > >> >  sll->sll_family =3D AF_PACKET;
-> > > > > > > >> >  sll->sll_hatype =3D dev->type;
-> > > > > > > >> >- sll->sll_protocol =3D skb->protocol;
-> > > > > > > >> >+ sll->sll_protocol =3D (sk->sk_type =3D=3D SOCK_DGRAM) ?
-> > > > > > > >> >+         vlan_get_protocol_dgram(skb) : skb->protocol;
-> > > > > > > >> >  sll->sll_pkttype =3D skb->pkt_type;
-> > > > > > > >> >  if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV))=
-)
-> > > > > > > >> >          sll->sll_ifindex =3D orig_dev->ifindex;
-> > > > > > > >> >@@ -3482,7 +3548,8 @@ static int packet_recvmsg(struct so=
-cket *sock, struct msghdr *msg, size_t len,
-> > > > > > > >> >          /* Original length was stored in sockaddr_ll fi=
-elds */
-> > > > > > > >> >          origlen =3D PACKET_SKB_CB(skb)->sa.origlen;
-> > > > > > > >> >          sll->sll_family =3D AF_PACKET;
-> > > > > > > >> >-         sll->sll_protocol =3D skb->protocol;
-> > > > > > > >> >+         sll->sll_protocol =3D (sock->type =3D=3D SOCK_D=
-GRAM) ?
-> > > > > > > >> >+                 vlan_get_protocol_dgram(skb) : skb->pro=
-tocol;
-> > > > > > > >> >  }
-> > > > > > > >> >
-> > > > > > > >> >  sock_recv_cmsgs(msg, sk, skb);
-> > > > > > > >> >@@ -3539,6 +3606,21 @@ static int packet_recvmsg(struct s=
-ocket *sock, struct msghdr *msg, size_t len,
-> > > > > > > >> >                  aux.tp_vlan_tci =3D skb_vlan_tag_get(sk=
-b);
-> > > > > > > >> >                  aux.tp_vlan_tpid =3D ntohs(skb->vlan_pr=
-oto);
-> > > > > > > >> >                  aux.tp_status |=3D TP_STATUS_VLAN_VALID=
- | TP_STATUS_VLAN_TPID_VALID;
-> > > > > > > >> >+         } else if (unlikely(sock->type =3D=3D SOCK_DGRA=
-M && eth_type_vlan(skb->protocol))) {
-> > > > > > > >>
-> > > > > > > >> I don't understand why this would be needed here. We spent=
- quite a bit
-> > > > > > > >> of efford in the past to make sure vlan header is always s=
-tripped.
-> > > > > > > >> Could you fix that in tx path to fulfill the expectation?
-> > > > > > > >
-> > > > > > > >Doesn't that require NETIF_F_HW_VLAN_CTAG_TX?
-> > > > > > > >
-> > > > > > > >I also wondered whether we should just convert the skb for t=
-his case
-> > > > > > > >with skb_vlan_untag, to avoid needing new PF_PACKET logic to=
- handle
-> > > > > > > >unstripped tags in the packet socket code. But it seems equa=
-lly
-> > > > > > > >complex.
-> > > > > > >
-> > > > > > > Correct. skb_vlan_untag() as a preparation of skb before this=
- function
-> > > > > > > is called is exactly what I was suggesting.
-> > > > > >
-> > > > > > It's not necessarily simpler, as that function expects skb->dat=
-a to
-> > > > > > point to the (outer) VLAN header.
-> > > > > >
-> > > > > > It will pull that one, but not any subsequent ones.
-> > > > > >
-> > > > > > SOCK_DGRAM expects skb->data to point to the network layer head=
-er.
-> > > > > > And we only want to make this change for SOCK_DGRAM and if auxd=
-ata is
-> > > > > > requested.
-> > > > > >
-> > > > > > Not sure that it will be simpler. But worth a look at least.
-> > > > >
-> > > > > Thank you for your suggestion.
-> > > > >
-> > > > > I have analyzed the code and considered a feasible approach. We c=
-ould
-> > > > > call skb_vlan_untag() in packet_rcv before pushing skb into
-> > > > > sk->sk_receive_queue.
-> > > >
-> > > > Only for SOCK_DGRAM.
-> > > >
-> > > > And there is some user risk, as they will see different packets on
-> > > > the same devices as before. A robust program should work for both
-> > > > vlan stripped and unstripped, and the unstripped case is already
-> > > > broken wrt sll_protocol returned, so I suppose this is acceptable.
-> > > >
-> > > > > We would also need to determine if auxdata is
-> > > > > required to maintain performance, which might cause the logic of
-> > > > > judging PACKET_SOCK_AUXDATA to be spread across both the packet_r=
-cv()
-> > > > > and packet_recvmsg() functions.
-> > > >
-> > > > You mean to only make the above change if SOCK_DGRAM and auxdata is
-> > > > requested?
-> > >
-> > > Yes, we can constrain the performance overhead to specific scenarios =
-this way.
-> > >
-> > > >
-> > > > Btw, also tpacket_rcv, where auxdata is always returned.
-> > > >
-> > > > > The skb_vlan_untag() function handles VLANs in a more comprehensi=
-ve
-> > > > > way, but it seems to have a greater performance impact compared t=
-o our
-> > > > > current approach.
-> > > >
-> > > > I was afraid of that too. The skb_share_check is fine, as this also
-> > > > exists in packet_rcv, before we would call skb_vlan_untag.
-> > > >
-> > > > A bigger issue: this only pulls the outer tag. So we still need to
-> > > > handle the vlan stacking case correctly manually.
-> > >
-> > > It seems we are on the same page. The need to manually handle VLAN
-> > > stacking is a significant concern. Since the code is in the critical
-> > > path, we must carefully manage the performance overhead. Given that
-> > > the current method is more efficient than calling skb_vlan_untag(), I
-> > > propose retaining the patch as is. Please let me know if there are an=
-y
-> > > other concerns.
-> >
-> > I agree.
->
-> I apologize for any inconvenience. May I ask when this patch will be
-> merged? Or is there anything I need to do to help the patch proceed?
+On Thu, Jul 11, 2024 at 10:21:35AM +0200, Hanna Czenczek wrote:
+> On 10.07.24 20:42, Josef Bacik wrote:
+> > On Wed, Jul 10, 2024 at 09:28:08AM +0200, Hanna Czenczek wrote:
+> > > On 09.07.24 19:56, Josef Bacik wrote:
+> > > > On Tue, Jul 09, 2024 at 01:19:16PM +0200, Hanna Czenczek wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > We want to be able to mount filesystems that just consist of one regular
+> > > > > file via virtio-fs, i.e. no root directory, just a file as the root
+> > > > > node.
+> > > > > 
+> > > > > While that is possible via FUSE itself (through the 'rootmode' mount
+> > > > > option, which is automatically set by the fusermount help program to
+> > > > > match the mount point's inode mode), there is no virtio-fs option yet
+> > > > > that would allow changing the rootmode from S_IFDIR to S_IFREG.
+> > > > > 
+> > > > > To do that, this series introduces a new 'file' mount option that does
+> > > > > precisely that.  Alternatively, we could provide the same 'rootmode'
+> > > > > option that FUSE has, but as laid out in patch 1's commit description,
+> > > > > that option is a bit cumbersome for virtio-fs (in a way that it is not
+> > > > > for FUSE), and its usefulness as a more general option is limited.
+> > > > > 
+> > > > All this does is make file an alias for something a little easier for users to
+> > > > read, which can easily be done in libfuse.  Add the code to lib/mount.c to alias
+> > > > 'file' to turn it into rootmode=S_IFREG when it sends it to the kernel, it's not
+> > > > necessary to do this in the kernel.  Thanks,
+> > > This series is not about normal FUSE filesystems (file_system_type
+> > > fuse_fs_type, “fuse”), but about virtio-fs (file_system_type virtio_fs_type,
+> > > “virtiofs”), i.e. a case where libfuse and fusermount are not involved at
+> > > all.  As far as I’m aware, mounting a virtio-fs filesystem with a
+> > > non-directory root inode is currently not possible at all.
+> > Ok so I think I had it backwards in my head, my apologies.
+> > 
+> > That being said I still don't understand why this requires a change to virtiofs
+> > at all.
+> > 
+> > I have a virtiofs thing attached to my VM.  Inside the vm I do
+> > 
+> > mount -t virtiofs <name of thing I've attached to the vm> /directory
+> > 
+> > and then on the host machine, virtiofsd is a "normal" FUSE driver, except it's
+> > talking over the socket you setup between the guest and the host.  I assume this
+> > is all correct?
+> > 
+> > So then the question is, why does it matter what virtiofsd is exposing?  I guess
+> > that's the better question.  The guest shouldn't have to care if it's a
+> > directory or a file right?  The mountpoint is going to be a directory, whatever
+> > is backing it shouldn't matter.  Could you describe the exact thing you're
+> > trying to accomplish?  Thanks,
+> 
+> The mount point needs to be of the same mode as the root node of the mounted
+> filesystem, or it’ll be inaccessible after mounting[1].  In this case, I
+> want to export a regular file as the root node, so the root node must be a
+> regular file, too:
+> 
+> host$ echo foo > /tmp/bar
+> 
+> host$ virtiofsd --shared-dir /tmp/bar --socket-path /tmp/viofsd.sock
+> --sandbox none
+> 
+> 
+> guest# mkdir /tmp/mnt-dir
+> 
+> guest# mount -t virtiofs virtiofs-tag /tmp/mnt-dir
+> 
+> guest# stat /tmp/mnt-dir
+> stat: cannot statx '/tmp/mnt-dir': Input/output error
+> 
+> guest# cat /tmp/mnt-dir
+> cat: /tmp/mnt-dir: Input/output error
+> 
+> guest# ls /tmp/mnt-dir
+> ls: cannot access '/tmp/mnt-dir': Input/output error
+> 
+> guest# umount /tmp/mnt-dir
+> 
+> (following with this series applied)
+> 
+> guest# touch /tmp/mnt-file
+> 
+> guest# mount -t virtiofs virtiofs-tag /tmp/mnt-file -o file
+> 
+> guest# stat /tmp/mnt-file
+>   File: /tmp/mnt-file
+>   Size: 4               Blocks: 8          IO Block: 4096   regular file
+> [...]
+> 
+> guest# cat /tmp/mnt-file
+> foo
+> 
+> guest# ls --file-type /tmp/mnt-file
+> /tmp/mnt-file
+> 
+> guest# ls --file-type /tmp
+> mnt-dir/
+> mnt-file
+> [...]
+> 
 
-Please rebase and resubmit.
+Got it, this makes sense, thanks for explaining it to me.  You can add
 
-For details, see also
-https://kernel.org/doc/html/latest/process/maintainer-netdev.html#patch-sta=
-tus
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+
+Thanks,
+
+Josef
