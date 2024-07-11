@@ -1,129 +1,114 @@
-Received: from smtp84.ord1d.emailsrvr.com (smtp84.ord1d.emailsrvr.com [184.106.54.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D6716133E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=184.106.54.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475F416130C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720707107; cv=none; b=qfa4sfJeHG1dfu8+cFR+Ai26VjiGg2v/N05I53e+TDHFrnS0nEYkHHRypnp9gP5CIBoJvKM2Oh/hUUsY6vqLSZp5QHhwGAIE8wE1bozqoJdFCqym+3uaD8IrjH8c/KooKXTpKMep9fKszT780+4R2ESzqKGH4AywK/u4TAg4wOM=
+	t=1720707271; cv=none; b=VhYLhwprIms1Lkywn5DLIXt2BHGMxczWSh+BSKYRathAXhjdWqdoxgjTnFV7uM9JKA8Zs0C32e3dkoyBIFOpZ1C7ycqkVJOObpX4eQDcdCElYy2TCc+HvY/VCVyTWXERMjSiGcdkWqCKRU+tjT8EYMY2+9qR+xyCGj45pu8UTaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720707107; c=relaxed/simple;
-	bh=OeRk1i3qXAV0YYxYZJgE3KI4JCMawZqmzQ8mGpGAIpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lht9ucsz/wfgdRoqvaW08BfjcQH2wiXQJ1RhtR05em82HxmaXShslD5kUYZwaRIfUkDke5V4FJe8o3mJo3ohueOE946fdg7yxez43Gg3FXMtyTP/0+8YefhnWnbi4/bon+hCRjI8unt+oABE3sLycA6C/papO/MtNQw0x1DMezU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=VHAOMFo+; arc=none smtp.client-ip=184.106.54.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1720707271; c=relaxed/simple;
+	bh=k6gEHt+xvUkeIRyoiWjWbAiSg5WbedFbm/FHPHtlVRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aU44W9+MUmYxBJBXHdjGjKlpkkLO18BuqvggLnjexUHXIpzwONFwitSt/tBkmfKtEqBzILKQb6QzQP+Pd4D46zkLCQWvtrEqHl6lylcc+5RFSvmUh2voN9r0Mz+kwEsiT9YJFZhx9Fk0wrRbhbsbXCh3PznSqR5PDnezsYcdqPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Tu7Hs5cM; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="VHAOMFo+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1720706703;
-	bh=OeRk1i3qXAV0YYxYZJgE3KI4JCMawZqmzQ8mGpGAIpM=;
-	h=Date:Subject:To:From:From;
-	b=VHAOMFo+dHgN6BbZY1sDnkVD+85dRNaqQ+aKOxMAw3kI2HS4hXYvumPf5gAw3u72Y
-	 Z6KpJGvU2rVBa7yhiSSBj5VKean9IhYrDM+kr/0ZTFfccgb7aUQvCWESutT763ClbF
-	 Q/dZt7vOjAlfLp28gW20f5chwz2UHB3q92EKoKzQ=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp11.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 83E6760182;
-	Thu, 11 Jul 2024 10:05:02 -0400 (EDT)
-Message-ID: <2b0e8a6c-f89e-4d71-a816-9da46ea695eb@mev.co.uk>
-Date: Thu, 11 Jul 2024 15:05:01 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Tu7Hs5cM"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52e99060b0dso1002882e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1720707265; x=1721312065; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ETcGYWGq4nimdvPCfHodnKlCUrAHYcZUT9Kd0lfRhLg=;
+        b=Tu7Hs5cM/U/Iw/ASeGNjbQp517UHoNZcVR756O0iesE63YWkkrQU/fV/DvOXSx5f8x
+         77oEdCzBZXmMdwIt048/owv6pyW9gn0a1wn/O98g7P5OxtOhFA4n3oMIxPtxOATV4IVI
+         hPGOgtt9SF2s27jXNA9RtIwbigfVUKmNBOlOKcRyCxm/umJXHckCFWj521L+kNfwnTNN
+         gzmE2eSQan/Hx/MLx1BQm/hpojUb3zldbVv5eTLu7iywY7p9VNCx9nwLfg80uh3U9gVw
+         nJDTxj5vz4rPXjNxDcH7nGbv4OJdPHxyhiauKu6hrrpZQ3F1F0Y9RF1lQUZeHEtJ6T/e
+         ip0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720707265; x=1721312065;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ETcGYWGq4nimdvPCfHodnKlCUrAHYcZUT9Kd0lfRhLg=;
+        b=GbH08JrueQvMdZM9UYQ6jJHJNQNEMs6HrqtEprWgzBtQdEf0OXvUs0UUn2tp2OPcTV
+         hF5E/vuYtgZH/EcAiFybAQMgmIhWdnx8yZnRRCFb7Hbjl9C5sLnsnLBf4Ypa42tiR4EE
+         Ww2ncEUXzTUlB4TOY56rXH/BetL/hMGxbYG4Qu4AwoZ224KYQN9ZcRySZl0TvjnAuezP
+         6Bd5+OlPpdfAQW4EY1ZbXl694RRB5uGQKV0DVUdYNz8M2OTm9OOi2i8ycqdXq5rBuPv1
+         0br8UgIVh4MWyJEieye8yLjotWweHtPWBcHyQ17ayS5vr9iP9kIBO8PbuJ9o5D9rbzLZ
+         EjZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcQWPo2VjG4S96L4sBhVkbEek6rIMBu8213zrGC1yKqlaG974tHFidF0s/nMfwZZknc67Mp6QWvAu+whBWXDVU0XP4oVt9kxprl62t
+X-Gm-Message-State: AOJu0YySOkAMkxKoWJNJyKrK/heGRoN8ok/p2q3LH7+aQvNLvP/Nv4GS
+	IR8dV2zBciQDaZvsHalAdciMJGxoRkC2yyYPapSK7tCfg7gl0nu35xr460Pf3h0=
+X-Google-Smtp-Source: AGHT+IEzPG+qu6OL9MzbpwkC6XP8o+jkAEZwKCZapFXu49qLNouCsz3lCZ+8q2VzbI+KQgfySGooLg==
+X-Received: by 2002:a19:e05e:0:b0:52e:9765:84e8 with SMTP id 2adb3069b0e04-52eb99da425mr4901525e87.66.1720707265401;
+        Thu, 11 Jul 2024 07:14:25 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a7ff045sm257878966b.126.2024.07.11.07.14.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 07:14:24 -0700 (PDT)
+Date: Thu, 11 Jul 2024 16:14:23 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, 
+	Zefan Li <lizefan.x@bytedance.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH cgroup/for-6.11] cgroup: Add Michal Koutny as a maintainer
+Message-ID: <5yfatxvtkpti2mrym2kd7j4qcdu7rxkyp5xvvwcefzvpdc2mkp@q5f7ug5tij6o>
+References: <Zo8OzWUzDv3rQIiw@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] rtc: ds1343: Force SPI chip select to be active
- high
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
- Mark Brown <broonie@kernel.org>
-References: <20240710175246.3560207-1-abbotti@mev.co.uk>
- <20240710184053c34201f0@mail.local>
-Content-Language: en-GB
-From: Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-In-Reply-To: <20240710184053c34201f0@mail.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: daa3b8eb-56e6-455d-9215-420ec447232e-1-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5uhdydamedm7ydyu"
+Content-Disposition: inline
+In-Reply-To: <Zo8OzWUzDv3rQIiw@slm.duckdns.org>
 
-Greetings,
 
-On 10/07/2024 19:40, Alexandre Belloni wrote:
-> Hello,
-> 
-> On 10/07/2024 18:52:07+0100, Ian Abbott wrote:
->> Commit 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
->> bit-flips (^=) the existing SPI_CS_HIGH setting in the SPI mode during
->> device probe.  This will set it to the wrong value if the spi-cs-high
->> property has been set in the devicetree node.  Just force it to be set
->> active high and get rid of some commentary that attempted to explain why
->> flipping the bit was the correct choice.
->>
->> Fixes: 3b52093dc917 ("rtc: ds1343: Do not hardcode SPI mode flags")
->> Cc: <stable@vger.kernel.org> # 5.6+
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Mark Brown <broonie@kernel.org>
->> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
->> ---
->>   drivers/rtc/rtc-ds1343.c | 9 +++------
->>   1 file changed, 3 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/rtc/rtc-ds1343.c b/drivers/rtc/rtc-ds1343.c
->> index ed5a6ba89a3e..484b5756b55c 100644
->> --- a/drivers/rtc/rtc-ds1343.c
->> +++ b/drivers/rtc/rtc-ds1343.c
->> @@ -361,13 +361,10 @@ static int ds1343_probe(struct spi_device *spi)
->>   	if (!priv)
->>   		return -ENOMEM;
->>   
->> -	/* RTC DS1347 works in spi mode 3 and
->> -	 * its chip select is active high. Active high should be defined as
->> -	 * "inverse polarity" as GPIO-based chip selects can be logically
->> -	 * active high but inverted by the GPIO library.
->> +	/*
->> +	 * RTC DS1347 works in spi mode 3 and its chip select is active high.
->>   	 */
->> -	spi->mode |= SPI_MODE_3;
->> -	spi->mode ^= SPI_CS_HIGH;
->> +	spi->mode |= SPI_MODE_3 | SPI_CS_HIGH;
-> 
-> Linus being the gpio maintainer and Mark being the SPI maintainer, I'm
-> pretty sure this was correct at the time.
+--5uhdydamedm7ydyu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm not convinced.  What value of `spi->mode & SPI_CS_HIGH` do you think 
-the device should end up using?  (I think it should end up using 
-`SPI_CS_HIGH`, which was the case before commit 3b52093dc917, because 
-the RTC chip requires active high CS.)  What do you think the value of 
-`spi->mode & SPI_CS_HIGH` will be *before* the `^=` operation? (For 
-devicetree, that depends on the `spi-cs-high` property.)
+Hello.
 
-I think the devicetree node for the RTC device ought to be setting 
-`spi-cs-high` but cannot do so at the moment because the driver clobbers it.
+On Wed, Jul 10, 2024 at 12:44:29PM GMT, Tejun Heo <tj@kernel.org> wrote:
+> Michal has been contributing and reviewing patches across cgroup for a wh=
+ile
+> now. Add him as a maintainer.
 
-> Are you sure you are not missing an active high/low flag on a gpio
-> definition?
+I hope this to be helpful to you and the community.
 
-The CS might be internal to the SPI controller, not using a GPIO line 
-(`cs-gpios` property).  SPI peripheral device drivers shouldn't care if 
-CS is using GPIO or not.
+=2E..
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5536,6 +5536,7 @@ CONTROL GROUP (CGROUP)
+>  M:	Tejun Heo <tj@kernel.org>
+>  M:	Zefan Li <lizefan.x@bytedance.com>
+>  M:	Johannes Weiner <hannes@cmpxchg.org>
+> +M:	Michal Koutn=FD <mkoutny@suse.com>
+>  L:	cgroups@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git
+=20
+Acked-by: Michal Koutn=FD <mkoutny@suse.com>
 
-> 
->>   	spi->bits_per_word = 8;
->>   	res = spi_setup(spi);
->>   	if (res)
->> -- 
->> 2.43.0
->>
-> 
+--5uhdydamedm7ydyu
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
--=( registered in England & Wales.  Regd. number: 02862268.  )=-
--=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
--=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZo/ovQAKCRAt3Wney77B
+SVSaAQDl/jTgKWUbqGX7f4PGpzw+02qS3ODuDV7XRrjJHXM2bwD7Bs0rBaW5Zo3t
+4Ww0qfl2Qg0TLkMplYXm2qlvmy9fdQ4=
+=LWj3
+-----END PGP SIGNATURE-----
+
+--5uhdydamedm7ydyu--
