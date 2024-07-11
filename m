@@ -1,86 +1,118 @@
-Received: from 6.mo576.mail-out.ovh.net (6.mo576.mail-out.ovh.net [46.105.50.107])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C751D4F1E2
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 23:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB49815AAD9;
+	Thu, 11 Jul 2024 23:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720742215; cv=none; b=WAxXlN9OaIiU7K7fw8yTzlQjLrPv0MdJJfBOFNVVaR3NB9tv72RCXkdJb0DHhe2CiL7OkBNizy1emn2QlhbkyRAGhwapZVzcNx3UgdIeGeBZHMc7ZaAiFYDa6HMreNVOyCFTVzWdYgWxOcrsuj2vsWkmFREJH+1WeN4CGeiNeLE=
+	t=1720742314; cv=none; b=Bu8Ozu6ySnwLoImz80YJMn/AFKjH9LemVGp/zQdJmc+AiMQP1yyfR1GKxhBEEWMRjU0g36LdD8xhg23MSVAoJKVrA4lZmVXxPev1xWqIz6Bqcdh6Bpoqhx6FBV2oUTAJkkEOrW091oDSR//P3fXkp7HwVRiO6ib4Vc6M+u+O7e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720742215; c=relaxed/simple;
-	bh=GK3R50NkNch+lbRG9vDNLoiia9t8YCkGRD93QMmXbH0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e4EzbBJp/2q15Afn46Mwl6zjBwEa+QMLhj7s6lhJROh7E9LDjuG5RO1qsBcY3/oJFgSDKpBM9CfUn5mSBvxrA63GCsW1moLu4qTOVVdgs25sIv9HTMNgUgc0PPV0HcEISXs0GZTpVlbRnuYBGabEOmMoiTwTz3PU+M2c0XtpPaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director7.ghost.mail-out.ovh.net (unknown [10.108.25.4])
-	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4WKrL53l0vz1knb
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 23:20:13 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-276s8 (unknown [10.110.96.35])
-	by director7.ghost.mail-out.ovh.net (Postfix) with ESMTPS id B92B51FDE0;
-	Thu, 11 Jul 2024 23:20:11 +0000 (UTC)
-Received: from etezian.org ([37.59.142.102])
-	by ghost-submission-6684bf9d7b-276s8 with ESMTPSA
-	id d61dKKtokGYCRycAIhEDZw
-	(envelope-from <andi@etezian.org>); Thu, 11 Jul 2024 23:20:11 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-102R004025ef779-b8ef-47a1-8f81-7534dfa48c8c,
-                    47FBFB77BDCA57EA66E7955FCDEBFA84A3B4AB1A) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:194.230.248.195
-From: Andi Shyti <andi.shyti@kernel.org>
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: Andi Shyti <andi.shyti@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: [PATCH 1/2] MAINTAINERS: i2c-virtio: Drop Conghui Chen from Maintainers
-Date: Fri, 12 Jul 2024 01:19:25 +0200
-Message-ID: <20240711231927.3103820-2-andi.shyti@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240711231927.3103820-1-andi.shyti@kernel.org>
-References: <20240711231927.3103820-1-andi.shyti@kernel.org>
+	s=arc-20240116; t=1720742314; c=relaxed/simple;
+	bh=2vBC+KzcKTxk5k7WHAz1mB5gMwlYbubQ12KRQ2/rDrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bmnYLtX3qV8niDsAXb4UbAkBtamtkQVk+rIJ6C21pQ73qozvGO4AkuKAHOPKPnhf5rshSURIs75noKT7GQSKnjgB7qmxLyg+xf8FXCLtLCNCvVuf2h80zp4t8jJXF2DtPVFPQGHrbW27+8yGe0wMWoNJOYzaP+EXFmu4zmMGzmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CnqvycZH; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CnqvycZH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720742308;
+	bh=zZ8/h8JZ7AJhCHt1R2GbbeguaQJrJzLHHkBrjjtpecM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=CnqvycZHlJGkCivGN/mIlvxtw+96I1ott32433moDF+sYHUUVUGfhO7fVs+N0KsTX
+	 BSoZUgXHQ6LaknIBJRlD3+lflUxlclf2GApHhwvh5m4B0EqHWMyyO7qeWwl6SDm/M4
+	 NoDzejE8wR11Q5/8nRkPPJMmQX/J7JgbQk14JuQQmck/AjF2Rq9EHRc4YrdDz0bBTO
+	 YFDAG/kWHAUlvWdB/qfq8wS+/snaFgnMkBk0Xc2h3LSv8UZ6FtK+hdA6G/DnXzJlv3
+	 2gIGJSl1ZpO/KOQIOV7W0XAuNidh9eVDXR7ssVo2Lt49w5g74GRC08L/oWGfGLDFRm
+	 qvNHIH5grgZQg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WKsBB2KTBz4w2F;
+	Fri, 12 Jul 2024 09:58:26 +1000 (AEST)
+Date: Fri, 12 Jul 2024 09:58:25 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann
+ <arnd@arndb.de>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>, Drew Fustini
+ <dfustini@tenstorrent.com>, Drew Fustini <drew@pdp7.com>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Yangtao Li <frank.li@vivo.com>
+Subject: linux-next: manual merge of the clk tree with the arm-soc tree
+Message-ID: <20240712095825.6e1224d9@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 7542684953390811759
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrfeehgddvudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeefvddvgefhhfdtffefleehheevfeffhfefudehudejhefhjedtgfffhfekvedvtdenucffohhmrghinhepihhnthgvlhdrtghomhenucfkphepuddvjedrtddrtddruddpudelgedrvdeftddrvdegkedrudelhedpfeejrdehledrudegvddruddtvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehjeeipdhmohguvgepshhmthhpohhuth
+Content-Type: multipart/signed; boundary="Sig_/qD7mgudfTiVy6t9Hm6zpsBV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-E-mails to Conghui Chen have bounced back:
+--Sig_/qD7mgudfTiVy6t9Hm6zpsBV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-  <conghui.chen@intel.com>: host mgamail.eglb.intel.com[198.175.65.14] said: 550
-      #5.1.0 Address rejected. (in reply to RCPT TO command)
+Hi all,
 
-Remove him as maintainer of the i2c Virtio driver in the
-MAINTAINERS file.
+Today's linux-next merge of the clk tree got a conflict in:
 
-Signed-off-by: Andi Shyti <andi.shyti@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org
-Cc: virtualization@lists.linux.dev
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+  MAINTAINERS
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e26555e52bfd..96745f7971100 100644
+between commit:
+
+  480d9a6083f4 ("MAINTAINERS: thead: add git tree")
+
+from the arm-soc tree and commit:
+
+  1037885b309c ("dt-bindings: clock: Document T-Head TH1520 AP_SUBSYS contr=
+oller")
+
+from the clk tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index 44cff47c2594,04eb5587ffa7..000000000000
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -23859,7 +23859,6 @@ S:	Maintained
- F:	drivers/vhost/scsi.c
- 
- VIRTIO I2C DRIVER
--M:	Conghui Chen <conghui.chen@intel.com>
- M:	Viresh Kumar <viresh.kumar@linaro.org>
- L:	linux-i2c@vger.kernel.org
- L:	virtualization@lists.linux.dev
--- 
-2.45.2
+@@@ -19382,8 -19322,9 +19382,10 @@@ M:	Guo Ren <guoren@kernel.org
+  M:	Fu Wei <wefu@redhat.com>
+  L:	linux-riscv@lists.infradead.org
+  S:	Maintained
+ +T:	git https://github.com/pdp7/linux.git
++ F:	Documentation/devicetree/bindings/clock/thead,th1520-clk-ap.yaml
+  F:	arch/riscv/boot/dts/thead/
++ F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
+ =20
+  RNBD BLOCK DRIVERS
+  M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
 
+--Sig_/qD7mgudfTiVy6t9Hm6zpsBV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaQcaEACgkQAVBC80lX
+0GweAAf+NvWgW6ckvbjJTDY/DDeKsGHmyNw9ApUImUJOIpMjGsgxmZbU6CrA0CFZ
+iSBMVdpZsZC1gbd2BVuXOmrta9m/M+CxnpmjKAIG4cGQNIbob9f6uo4vlGudCCCi
+Qygww/jMCKE9HM6HocaIFY/n0cdNsY5kAjEyycgDiIkc/LxalUKqC8LsLBLC+90t
+XOdeG8Db1yGgsnb84/X1kQqvHoejExDTAFYVeuExoh5ADePkriG6+4CFTiBTKk/2
+0Hmq7u5fSe+GjkllfAebC2gC8kocvaKSEEetlRxZ/hwvm4Ch0xCzd1LJFcL66kqC
+ADm8MebRMhNez8kHqBNrGP3FaBWyTw==
+=yBL5
+-----END PGP SIGNATURE-----
+
+--Sig_/qD7mgudfTiVy6t9Hm6zpsBV--
