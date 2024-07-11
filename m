@@ -1,157 +1,202 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2080.outbound.protection.outlook.com [40.107.95.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E27316C684
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720713370; cv=none; b=caiUj09IEGdrFg4ExYQt8ld/H9+I4nMhhm6x5GDVXOyvVszSY2EjmZhB+3k2aL6DKgPE9SnlSCarNhQ0Z1aNSQBih8OBmbFu7ZfSjxiWmtAPzVlIUSQtUFqMEt7dxfJL5N84gAgX+I+//FCz+J/mViOdpjOAUasMWs1tMBsr5vg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720713370; c=relaxed/simple;
-	bh=fK93rdN7UPAjzzNdY9a2W7zpHlmO1W+0cPnbEmcEXTU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DbdFaCr3CJZbTyJFSs+n8eLjzkaASSzwKviY9sgdQSDACWMA5DSHH9WM7YRpjPRJU2MoQuiyE8AKnIppLZyV9OB84PxQyKCr6AAQ3Gd9CZil5V3gK7FKDmYpct1/QPVyfxHIBY2OHiuq4f9IyDKY1PIcuO+PdpT86dv347Yyk+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XNWNLECw; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A786B16C684;
+	Thu, 11 Jul 2024 15:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720713380; cv=fail; b=GWaE96Zo8oPOx7YIqv41CLEwCEfgkqjaf5ddVlrazBwaxap62i6nIldkcVaPtAhC7In6dmvXWmf4f15f7R6JKO0m81V0Kb93O2Df+zf4xNWdC19M/wu5f1GH0aj4qoFbrDvfRSsS66zAluaUMO5olDNK6Z7a3ItFhaFwjCuHJyg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720713380; c=relaxed/simple;
+	bh=1Q9IaYm5hfNSKQYYXFd9rZZevS8wicKEeZWy49aUKNk=;
+	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
+	 Content-Type:MIME-Version; b=WI5OheygsXYkwzzuZF8QrsD22gs2GLx54q6qtHmnkwtae1H8Qlv6Wfhco/MTYmnzlqtLVjv8EA9ntBBB+BkkwQjKnNteSFpEeDYh/XuuMzeyKx2rqh6jphNdxaxDaenguOlDTb2J8rwUeVwIgXe3BNhcVtN4SPRfr6hNYkPp+Fg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JFKqT0Y0; arc=fail smtp.client-ip=40.107.95.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNWNLECw"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e026a2238d8so1065746276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720713367; x=1721318167; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o9NK8vbwSl6fVYipiYD+K+b1VqL0LZzXwcN17mQG4N4=;
-        b=XNWNLECwCeqYN2s8mXpun7H5BoRAbK3P8xAtol1uqw1cP2DWYnc7Vg5cKAxEpyEbn3
-         ROwCxaMsYrwpAEO+WJel+fWtNWRlZ259Do37x7xNp+Ba3l4EYfJXlMeQIIzPzdK706kL
-         2aCadurOtzdadzyZnK/O74GN4K9zKX0DDX73QPVyJ2WdR9Sm/NyhqrrykeXuGmpIQAcT
-         2X1OLou1BCwgpiyGJKqVEAovIGDfJ0ROYOSRRzVMtiapETt0+uSMrHXZuIucDBQSUzuR
-         bv4wZJW0kaCfDO2qWGQM6wkrkLhtcbR9wfpGFVyIUDjmn9GSUg2K3UN3RcR9zwGU1Wx3
-         qmQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720713367; x=1721318167;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o9NK8vbwSl6fVYipiYD+K+b1VqL0LZzXwcN17mQG4N4=;
-        b=vjmXhPj2iAOgxUppEqywh47Q+kmQjBV7rs9mT1i8FUfNRbeOpfUrb1qKOzqb3xAluP
-         6SpZw3kRJvv0R1IKkV8PQz6NUyYjvJbGAVGhlRJFpCwwuFs0ndxioARo8C7afD+8D5uw
-         o99OExp6LRTP6mUo7L/FfC3wbZLZ/SJ3KyEBqTiK49qsPWb55z2EhMeRnVBxqEY2Afw+
-         P3xqthSVMDFc4EFJcqzn5PUFGQCf/9kWDgNptarCtDxkGDGiz+LOgK7upVzs4K9yPN9V
-         HUUIOJn5BumtGwBBTdzU+xZs6FyypqK96ekUbm3ollCpJTcTprFcOcD7Dwb/FiqdX6pp
-         s3qA==
-X-Forwarded-Encrypted: i=1; AJvYcCXc1bfOSn3m5hvlAMQEST+raXwOwj7iwDY2v6IYXx8TXPllEmQPcpnxXr5YX2H3bUq1XOdPsru8m9yc3aPsbdyQfhTqVdR+5P2hqvwu
-X-Gm-Message-State: AOJu0YwW3IM+WhGGtdAjZ43oj9KgbgJUSdv6ZhnKyTFOrqR4N4ulAhTf
-	stJBDCq8IUdIGEMbiEWogF1qedQNq8VSRbmdVawBQzXCbu5gPR1N20gDNiETq2Nxq4zHwATxHPS
-	XZRzwFJMuzBBNGRSzooc5/Tw/JNLqH3y+qE2pZQ==
-X-Google-Smtp-Source: AGHT+IFkr/j+VnCO+Vl5QVu0QsqTKrqy4owjYSW/qtao35IwLP4Q3jMZYHSbiM4nmMtUoEAIPyhT561j44bWpNjvOPg=
-X-Received: by 2002:a25:868b:0:b0:e03:5dd4:ec1a with SMTP id
- 3f1490d57ef6-e041b03c277mr10295295276.4.1720713367555; Thu, 11 Jul 2024
- 08:56:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JFKqT0Y0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wYgryylG7SBmXUtGG2PxUP1DoBpkBUaA5vUYCBh5iyzKsrJQ82Eo8/Toojrraq1RZgY0DqJM9xWjUvqylh45EWe+ybIwG4MJQv7yL/zRfisYbQ1wSuFcM1z8DuKWMVd6EOOWc8Jz9r6diPR638Iq7jg9J6Cn15bYchCtung5WOBy28hL+2mcqlU2VyQz8Xx4f9bFLdRh7ekIIOnfuCbg746pGDTaJgu9Qvtn7HtXPa7ECLM68BStGcZKWnH0Asn/PmOfzSld+xqNTT7WPd8aLsSDbuWds37TQ63ZFYGtu8uoP7Jwvk0ZgEYmrviPtQAKNdZgJjdwl9NegpkVqljkuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pGcPYQWIIzbnA0+CiiY9lrQfDt1+VilgCp4oHaOWQq4=;
+ b=LXALi5X6w2yr3z0ci6dSw3+R2vdRhHtd2mJBm9Z30BGBpZwI0SNMyfbyvBkKICgozyyCIaaSr4murxn5XPCTYzkI7MrNyQMHlBhNMeU+4JCkKEqK2fCj9cxkPTf6nbk4dEoCCSP6xaVMj7snf2jMi9T2Q3te0D0/imlygiTouCdIugbYK1HildczQTjhxacEwZHMQxTzRZ/VHuaCrBzBlQ4KaiBsW+VE2Vjs891/+G0unuQM42cV8tnsu7+5HUPDoA07kPo4ZyvKDhDrEOMDXuFHyPXO8Inqg/0SFMUvKgAVKkIDlEBgu0upJ0ded6zX/722TIqaOqAFiv1n/JwzLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pGcPYQWIIzbnA0+CiiY9lrQfDt1+VilgCp4oHaOWQq4=;
+ b=JFKqT0Y0JDJLkQ4rUemn4UtJR4qLqjG0QeYOEavbvC8KMOD/kFCM25JnbOj29hCD17KFnX9/Zhi8wAQXJpvTo9aup6dEJYvQCtTUmoFVC5orD5fWq+YDuOdRfpU1YZGa8Ud9zBhe6BeaBJODwvUQBEiohnztGD3flxKMY3d3WNg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
+ by SJ2PR12MB9240.namprd12.prod.outlook.com (2603:10b6:a03:563::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.20; Thu, 11 Jul
+ 2024 15:56:16 +0000
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52]) by BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52%7]) with mapi id 15.20.7762.020; Thu, 11 Jul 2024
+ 15:56:15 +0000
+Message-ID: <b7c4316a-1b00-521c-991a-57e1d105952f@amd.com>
+Date: Thu, 11 Jul 2024 10:56:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Content-Language: en-US
+To: "Pratik R. Sampat" <pratikrajesh.sampat@amd.com>, kvm@vger.kernel.org
+Cc: shuah@kernel.org, michael.roth@amd.com, seanjc@google.com,
+ pbonzini@redhat.com, pgonda@google.com, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240710220540.188239-1-pratikrajesh.sampat@amd.com>
+ <20240710220540.188239-2-pratikrajesh.sampat@amd.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFC 1/5] selftests: KVM: Add a basic SNP smoke test
+In-Reply-To: <20240710220540.188239-2-pratikrajesh.sampat@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR05CA0030.namprd05.prod.outlook.com
+ (2603:10b6:805:de::43) To BL1PR12MB5732.namprd12.prod.outlook.com
+ (2603:10b6:208:387::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708121018.246476-1-ciprianmarian.costea@oss.nxp.com>
- <20240708121018.246476-2-ciprianmarian.costea@oss.nxp.com>
- <6a577d6c-04ad-4c12-bfad-815e811deee3@intel.com> <123ce7e1-1981-4a41-a131-168f4f7b5417@oss.nxp.com>
-In-Reply-To: <123ce7e1-1981-4a41-a131-168f4f7b5417@oss.nxp.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 11 Jul 2024 17:55:31 +0200
-Message-ID: <CAPDyKFoHmvZLogUY=-WXM2G+g1h=fbaakySHCJh7MSaFMYuCXw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mmc: sdhci-esdhc-imx: disable card detect wake for
- S32G based platforms
-To: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Haibo Chen <haibo.chen@nxp.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, s32@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|SJ2PR12MB9240:EE_
+X-MS-Office365-Filtering-Correlation-Id: ec70eb10-d830-4cf6-26ff-08dca1c1feec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V1MveTBsQUh0ckpWdFpaVUVNOUYvUTk0Y3hpR2htTGZwbVpsa2JWdGc5dE5T?=
+ =?utf-8?B?K09pUU1CTHlhR0VUU3Rnb09mL3ZxUzQ1cC9kcTdnU3B5cFU0bUwvMXdJakFE?=
+ =?utf-8?B?UE1zNHAxYmVhbGhibVRXdno3OEl5YXE5eE1UZUNZRS9kTDA2MmYrNjlaQXV0?=
+ =?utf-8?B?Zm8vTDNJU1ZwM1Rlb0QvTk92b0tQZ0lzMU10Wlg0L1FiWmduTFExelA3OXdu?=
+ =?utf-8?B?MHptWjhyMHBBWGNpd0tGZ2JDbWhiQllna3QxSkNGclRtOTd4b05zWEFwZk95?=
+ =?utf-8?B?S2EwWWVXQS9TSllOcW9sVDRwcWJFZnRmR2lwV2FxRVRkMlZRQjUzNGFUMVYr?=
+ =?utf-8?B?WVNwYitKeTRSd1ZRVCtKMWNiTXROa1N1eUN0cDlVMnQ5OGhPUk03a1VYYVpJ?=
+ =?utf-8?B?V0IyNHFkWU5scGxNRElVVnBRaFFGdkRyVXdJRlRhR1Rpa1NmRW9lNHArakpn?=
+ =?utf-8?B?cGZIc252RzU0THNWT2t4SnNWdGNoa1J4Nk1KVm83OW1KWjFIM3hSdDhiakJW?=
+ =?utf-8?B?NE1FZ2JhTnRCc1lybEVQMUNIUnNobWFpZ3Z0S29WeC96cGJINGk4clovNlNv?=
+ =?utf-8?B?VzY4bWtDeGtUU0lxWi9uRHZpT2lSSmlLTW1YM09TdFNXTFIrM2JMTXdRTllt?=
+ =?utf-8?B?Mm5oZVJuN0UvNWhaZnN6R0ZycHZBRUFvN08wOGJVMVZyOUx3aTRsWlBUZkVR?=
+ =?utf-8?B?WGNmYUFuUGhvdEhvSDljOU5jNzRKeWY4S0JwZVZ2ZDFxSWJpWXNpT1ZCSFNv?=
+ =?utf-8?B?a3ZhNjBrM2R5ODNHaTlCRk1iWWprb1BQbzJrSkd2U1dwUkYzbGpOVnpyTEJL?=
+ =?utf-8?B?a1ZtVkFWM1JuM2krSlIzaXZONWxXRzJSaENCbGVsS05saDd4Nmd4dU9ja2x4?=
+ =?utf-8?B?T1NweWtmcDNuZ2phTkZPL3c2cVJ4UklscEo4dHpDNmVzVW84eTU4NkpCWjMz?=
+ =?utf-8?B?Q2JBRm1iaWwvNVZQQU5lTjFwRmNHaUlvdGc0OC84cHVIYldTcVFYWUtPbVBu?=
+ =?utf-8?B?VTd5Q2NuTG9zdlBBQjdVNFRQTFpnTzQ3MkdEbFpLTXZUSEw4V21yTGovMVRY?=
+ =?utf-8?B?MHN1czZ0c0MyMVFZT1FJaVg1SmVsS2ljWWZ6YjNZVUVBNzdaUXgyRE1EYk1G?=
+ =?utf-8?B?a04xYUFkbWZCeGcxMDRyaXgwREcwSU9qMi9rdFdjNEpabHpTNjFGMzRscS9P?=
+ =?utf-8?B?aEF0dTBKc1hTWE1QK2MxeU9UdzFkNjFMejZqdEVtWlVKanFkNFUvTE1oQ0w4?=
+ =?utf-8?B?cVlyaWpDOElzUG9FZytRSkhTeXdzTVpGc01OdkFhRTZwRS9XVyswci9DQnlT?=
+ =?utf-8?B?K1hBeWV4MkJ6eStIZFMyTTBMVWRjRFJnNnhvNFVXcjlRR0diWTM5N1l1VHRs?=
+ =?utf-8?B?TWdXbWVydzdremI4NWtJRGZTVlcxTmtaeUJYa1dzWVgzbGdJczJrZ01kNjY2?=
+ =?utf-8?B?emNWaTBjanlUdzlnTFM0V1pVSVdua2w1b0MwUUNWWHZvS1ZjS2xDN1ZydHRo?=
+ =?utf-8?B?dWY3YUduOUh3RFFTc1E3WXQvWFFYak1adjFWcHJPSnVhYklvZWExSlpuVWl4?=
+ =?utf-8?B?QjhhUExiUnU2VktQRzM3NmNWUHFpVFJFSnJpWVUzaWwxVGZHcUhzOXFXVFYv?=
+ =?utf-8?B?bGJudmxsbEc4dWJPbUFFOVkzbkNvQkJVWWpOU0krcnlwSXJ5Mm8rVW9FbXFX?=
+ =?utf-8?B?eExtOE9YZ0VHblp2b3dndng4ejJWZitaRldHekZuUDU2V2FuU3ZqMmQzZmZP?=
+ =?utf-8?B?d1hrcFFVMXdDcjZUSDVQZ3BxUm8wa3ZsMWxIN092enMxejlmUlJZVWVnVUx5?=
+ =?utf-8?B?a1U1bUpObmwrcnRuUXd6QT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TTk0OEJyeWhvSUxyUzBKZ2UrRkZOZ2ZsVmtwcjBlTU9BS3d6Q1AxanlHaEZL?=
+ =?utf-8?B?REFzV3BNcWM0MW5TRHgrN1A1YUI3K29kQUk5M3UyVkhHbDNwZjRkZ2JJZmdI?=
+ =?utf-8?B?Y3I1NnFDSGFIVmZON082bmRITXFJVFZ1a3Y4QTVtS3pLZ3NSTGhyRFU3THNh?=
+ =?utf-8?B?dmRHT1JXQ29Iays1a3lWQXFBRXppc0k3VlVJYmNWNllJd1NmbWVEU2IxNlpz?=
+ =?utf-8?B?dG5uMk5ZbzRsVlEyWTc0MDZkcUUxOFNSblNaUXNaQzRXMjFRRERjbFVwS25J?=
+ =?utf-8?B?b1FEOWtuSHIyTjNsdTgzTmNOb05PeHEzYTBaUjhLTmovOXJLOGsrTVh3dFhM?=
+ =?utf-8?B?RUVwVERyRzduYzh5QS91bXNWdDJXV3dFTzMxRFF0b21vcXhzMStKbndscFFw?=
+ =?utf-8?B?akxzVlEyQi8rOFpRRFpRM21oSnRtbWhWTjljREtDZkVlVitVdS9pMHd0S09r?=
+ =?utf-8?B?RG1jNlN2M3NWbGZtVjJWaXBnWm1mdys2bVBoSEZ0U04yZ1crVkdnOHB6YmNj?=
+ =?utf-8?B?ak9GV3RPWWF3ODdZSUVFMEN2UVdFdDlzRFpCZjhCODYrT1NWU1lQZ3JaQ1p4?=
+ =?utf-8?B?S2x2T3FSbFZ6dHB3TGhGNXNGTkV6bXBUek9Xa2hPdXY2L3lvMEFIOWplS081?=
+ =?utf-8?B?cENSQU1vR0FDUytGSlpEOVUxU0xkZGJuZFNxektLREYyOFJVd3Bod3pFbisy?=
+ =?utf-8?B?RUg3N25HRUM3S3IvOGRtdjZOczFzUERIK2VPK2N2cHR3VlZuaW9TcllrdmMr?=
+ =?utf-8?B?eThQeTF0TVpER09LVXZtUGs5VUlqRVBnOHB4emQxYWFobUJHaHprWGIybmt0?=
+ =?utf-8?B?NXc1Wk9uejB3YnR0c2h2YzhYY0FIQVhMbTJxZzZnWEExYzlRUjRjWHVkNUNT?=
+ =?utf-8?B?RDdJaHUwNElhUUNQSmxPeld0MndxbXZwUmZHZms5SG5peTV2SWcvU01Yd3Bu?=
+ =?utf-8?B?V1BmZXJJTlluSFNnWUdwWjBiTTQ0aTZiSU45MjRCeDZGMFI3dCtBWTk1OEg0?=
+ =?utf-8?B?T3Z3bEc0TEd5bTM4RXRxZ09BTkJNd0JhdTJwMU4rbFltZ0ovcS9GUmw0OUhI?=
+ =?utf-8?B?MEZMbTgzZ0pMaUZUWENzeStFdnRKM2VFSllwMVJXaDBTSUJWeTkzcWhzWThU?=
+ =?utf-8?B?UUFiVmRraWRnUnhqSFdQUEpWL1VTdExqdzBPME93M2xWekkvT3ltVW5QL0Jm?=
+ =?utf-8?B?c2lNbnRjMDdtTXBDV1crSlJxbUZ2S0gzTmNndjlmbGFQL3ZhSjJ6MUZlNG5u?=
+ =?utf-8?B?RWlieVI5Q1ZqTE5IeitJVU41NmlrUmVNdzJaYWdRU1NTY1U3WmpUREtvSkZZ?=
+ =?utf-8?B?MHI5bWdzc3VMRlhaWWFSbWRaRk9zRCtMQm9hZ0ZGYlF6SURUY2psZko3THI1?=
+ =?utf-8?B?bURlOWlzcnptNHR4WTlzR3NrYjJkM25mMHEwZlIrTTVubTZKL0FPVTRITWMx?=
+ =?utf-8?B?dDZFTzIzRklleXZoYzZqUm9nSTJkSXFob2xBVkRJWnJRWTBrNTRIRytncWRH?=
+ =?utf-8?B?QzIzVTIwbk1VR205TFhtbkI4V1hnbTBBS2paUis4N3ZYWEFjb1h6NVBGdUtz?=
+ =?utf-8?B?Rm5QMmh4TkRrU1FIM2xTZUJBNlp3cmdsNWJKYmRQVnNBY0drUkV6RUdwbno1?=
+ =?utf-8?B?cDkxL3JRak9zMS81dURleGF6aGVlWnNYZno1RFA4WG1qdDdtT1AyeVVtY0FF?=
+ =?utf-8?B?SlZsYXNNYUlEVDduYzlUWnZxOHVHeXZqd0MyemRwVDVyaTVlVnFDWDdPa1h0?=
+ =?utf-8?B?S3N3czVJSEZVdzdLQ2JacWNtRFNpMVlIemhUZXlXekpYZGl1enVsUWdEQ255?=
+ =?utf-8?B?U3BWRnkzbWhNL05DbFZ1T2M0ZHFRYjJjUUFyYkpLV0NjcUplYnhJWGhJbFFT?=
+ =?utf-8?B?UmhtdXJYaEtZaEtDRFNyekJpdC9xcXVvaDhyMng3aHVWRllKY29Cc2FxalBn?=
+ =?utf-8?B?QW9tdmFOaDZteHVqRlJhN3lPUXRWdmpITktjTXRwQjBNemxKd2V0cFBNSlVn?=
+ =?utf-8?B?WmhEQ1hSc2FuNEVhYjl1U3AyZVBBTXpnMm1IazZWTWRLc0RwdElKYVFNODlM?=
+ =?utf-8?B?ZmlvNnE3aGpFTUk4ekVQbVMwWGcwSFRSUnhSRXFTcDJWSlBXOXMzMTZtbHB6?=
+ =?utf-8?Q?NkCHP2dwq6p9+uKa9mAxv5IPO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec70eb10-d830-4cf6-26ff-08dca1c1feec
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 15:56:15.8891
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XRMkiGQRqZe5XH1+WXcb89Y3ZFCOuHXa5xf5SpEeY5drsuBB9psNxplifcVWh8VgZoHYgRiCpfikal6TKVKMBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9240
 
-On Thu, 11 Jul 2024 at 16:26, Ciprian Marian Costea
-<ciprianmarian.costea@oss.nxp.com> wrote:
->
-> On 7/10/2024 3:34 PM, Adrian Hunter wrote:
-> > On 8/07/24 15:10, Ciprian Costea wrote:
-> >> In case of S32G based platforms, GPIO CD used for card detect
-> >> wake mechanism is not available.
-> >>
-> >> For this scenario the newly introduced flag
-> >> 'ESDHC_FLAG_SKIP_CD_WAKE' is used.
-> >>
-> >> Signed-off-by: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
-> >
-> > Should have:
-> >
-> >   - put the patch set version number (v2) in the subject e.g.
-> >     [PATCH v2 1/3] mmc: sdhci-esdhc-imx: disable card detect wake for S32G based platforms
-> >
-> >   - added Haibo Chen's Reviewed-by tag
-> >
-> > Anyway:
-> >
-> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> >
->
-> Hello Adrian,
->
-> Sorry for bothering you with this question, but should I send a new
-> patchset adding the new version or what is the process after this step ?
-> For example, should I send this patchset again with V3 adding all the
-> ACKs & Reviewed-by tags to each commit from the patchset ?
+On 7/10/24 17:05, Pratik R. Sampat wrote:
+> Extend sev_smoke_test to also run a minimal SEV-SNP smoke test that
+> initializes and sets up private memory regions required to run a simple
+> SEV-SNP guest.
+> 
+> Similar to it's SEV-ES smoke test counterpart, this also does not support
+> GHCB and ucall yet and uses the GHCB MSR protocol to trigger an exit of
+> the type KVM_EXIT_SYSTEM_EVENT.
+> 
+> Also, decouple policy and type and require functions to provide both
+> such that there is no assumption regarding the type using policy.
+> 
+> Signed-off-by: Pratik R. Sampat <pratikrajesh.sampat@amd.com>
+> ---
+>  .../selftests/kvm/include/x86_64/processor.h  |  1 +
+>  .../selftests/kvm/include/x86_64/sev.h        | 29 ++++++++
+>  tools/testing/selftests/kvm/lib/kvm_util.c    |  7 +-
+>  .../selftests/kvm/lib/x86_64/processor.c      |  6 +-
+>  tools/testing/selftests/kvm/lib/x86_64/sev.c  | 70 ++++++++++++++++++-
+>  .../selftests/kvm/x86_64/sev_smoke_test.c     | 51 ++++++++++----
+>  6 files changed, 146 insertions(+), 18 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> index 8eb57de0b587..5683fc9794e4 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
 
-No need to send a new version this time, I can add Haibo's tag when
-applying. Although I prefer an ack from him for patch3 before I merge
-this.
+> +
+> +	if (kvm_cpu_has(X86_FEATURE_SNP) && is_kvm_snp_supported()) {
+> +		test_sev(guest_snp_code, KVM_X86_SNP_VM, SNP_POLICY_SMT | SNP_POLICY_RSVD_MBO);
+> +		/* Test minimum firmware level */
+> +		test_sev(guest_snp_code, KVM_X86_SNP_VM,
+> +			 SNP_POLICY_SMT | SNP_POLICY_RSVD_MBO |
+> +			 (SNP_FW_REQ_VER_MAJOR * SNP_POLICY_ABI_MAJOR) |
+> +			 (SNP_FW_REQ_VER_MINOR * SNP_POLICY_ABI_MINOR));
 
-Kind regards
-Uffe
+This seems an odd way of setting these fields. Maybe, instead, use a
+couple of macros that take the values and shift appropriately and ensure
+that they don't exceed the 8-bits each field occupies.
 
->
-> Best Regards,
-> Ciprian
->
-> >
-> >> ---
-> >>   drivers/mmc/host/sdhci-esdhc-imx.c | 8 ++++++--
-> >>   1 file changed, 6 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> >> index 40a6e2f8145a..21d984a77be8 100644
-> >> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> >> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> >> @@ -201,6 +201,9 @@
-> >>   /* ERR004536 is not applicable for the IP  */
-> >>   #define ESDHC_FLAG_SKIP_ERR004536  BIT(17)
-> >>
-> >> +/* The IP does not have GPIO CD wake capabilities */
-> >> +#define ESDHC_FLAG_SKIP_CD_WAKE             BIT(18)
-> >> +
-> >>   enum wp_types {
-> >>      ESDHC_WP_NONE,          /* no WP, neither controller nor gpio */
-> >>      ESDHC_WP_CONTROLLER,    /* mmc controller internal WP */
-> >> @@ -298,7 +301,7 @@ static struct esdhc_soc_data usdhc_s32g2_data = {
-> >>      .flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_MAN_TUNING
-> >>                      | ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
-> >>                      | ESDHC_FLAG_HS400 | ESDHC_FLAG_HS400_ES
-> >> -                    | ESDHC_FLAG_SKIP_ERR004536,
-> >> +                    | ESDHC_FLAG_SKIP_ERR004536 | ESDHC_FLAG_SKIP_CD_WAKE,
-> >>   };
-> >>
-> >>   static struct esdhc_soc_data usdhc_imx7ulp_data = {
-> >> @@ -1726,7 +1729,8 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
-> >>              host->mmc->caps |= MMC_CAP_1_8V_DDR | MMC_CAP_3_3V_DDR;
-> >>
-> >>              /* GPIO CD can be set as a wakeup source */
-> >> -            host->mmc->caps |= MMC_CAP_CD_WAKE;
-> >> +            if (!(imx_data->socdata->flags & ESDHC_FLAG_SKIP_CD_WAKE))
-> >> +                    host->mmc->caps |= MMC_CAP_CD_WAKE;
-> >>
-> >>              if (!(imx_data->socdata->flags & ESDHC_FLAG_HS200))
-> >>                      host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
-> >
->
+Thanks,
+Tom
+
+>  
