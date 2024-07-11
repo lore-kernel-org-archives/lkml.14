@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16131C14;
-	Thu, 11 Jul 2024 06:17:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9FB1C14;
+	Thu, 11 Jul 2024 06:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720678664; cv=none; b=Dta7ToKwqEcgOuJOAQsRGmdIv+ojxlFvg3G8DRPTY3g8V9E1oMGloJjzCHZ9u4TZcC71moeZjrJytat+iccWbDQjDPqYnfQzc6zC6pwmRY4WkP96xQGWBM0nWwBbkUIWbmwS0OhQNAj8r9ym5ZdxR7Xa10wJvDHd8Z7z67VkSEg=
+	t=1720678899; cv=none; b=GBoPiIhXjqa1EOWVMucRdIHnSI1THeRFJ5GabEvFpukN3W5wQHM3SsdLO3EUo+/ojf0fudVKyzOBdyEAOLTnZ/KRZqN5xUbDSbUCEeOX4UNnDS2xHVQDo5Xq9BkR4/Fp+OKA+Swr6XBbGE2wW+845OSD5silH6XsfNc7wG7jMwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720678664; c=relaxed/simple;
-	bh=jND/C+0AKRS7itmNbUxH+HyXD2yIDcCtXMYb66vyvT0=;
+	s=arc-20240116; t=1720678899; c=relaxed/simple;
+	bh=9Shl6MffKtYg+faCj77eGnW5QRGHcfbO3NAol1je+k4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=erTunuXsl/iaTe8fNzoNcPULyQAKhOCh20zEIKSvFHjJ4jAObJoKRNRes46MMjmNyrOG7FOXgSNcqJ7vXEAsFHpDOkBRzDIcAGV3xiYkmER8JAs382NkErzdwhgoDv+LSQ8P7RjeG/2FJKbOlfO8VratDr2yAnjqqNlcWe47awY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYpBM/+/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=pqsgrRU5Uf50VlX1Nxr2gHZD8vN+g4jQemY9IyBhwRWHdu+JmofrKmF0iv7HNmLkwgKfG53uyhimGEJjoDPov3a8/fY6I8SGlQxQT4C+xmGfYxPtpK0+0ECjdtRZYC04CoxPkpzfZrKmt0g5twJesqtxElfQLOOObWqPvdorucY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OT5DfYyE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYpBM/+/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D88B9C116B1;
-	Thu, 11 Jul 2024 06:17:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OT5DfYyE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C154DC116B1;
+	Thu, 11 Jul 2024 06:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720678664;
-	bh=jND/C+0AKRS7itmNbUxH+HyXD2yIDcCtXMYb66vyvT0=;
+	s=k20201202; t=1720678898;
+	bh=9Shl6MffKtYg+faCj77eGnW5QRGHcfbO3NAol1je+k4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NYpBM/+/xG8Lld8gtod/Nx/EtUXKTAjVzNsmPfQFu/lqW53i+AWbvOyC6oT8hcrZ3
-	 RJgma7qp0gBytx7mmrCgxKu8uL2cFejDhBJ1QO7cd6wdXmcvalYh9KMjPam+ZsIXSg
-	 INXtHsefRaz3mbHJLX+W2SN0oc67R9XtrFzt5imO2pPvRXrWIlLU2MBc66QEDxRveC
-	 bCsbA4HSgzhgnTc08eNXK5VPG5jzsUc5y7gVbriv5+zq68luM9IYS4uhhTgcxmglZ0
-	 Twk+9u/pgesSP+FoCdbOLNgsE/CymroXVsUT0uJTrGE6Q6zqM/dRh8936SlilZrEbY
-	 yrIh1uAq0obYg==
-Message-ID: <b2c88f85-eefb-411c-bfe0-6a476b449753@kernel.org>
-Date: Thu, 11 Jul 2024 08:17:39 +0200
+	b=OT5DfYyEj9bmQ7SolyhQqoA3iu1+c3PGwXFqPlHZs7GXqA7JoS0MKmL/qtzCrr78p
+	 3nND2Ng3seL/6PYVldLrOQKdKjUdad+RHYdoBM6Hpg+jFYie05s+0CPVmm+2mWkSIz
+	 HGVNphuu1XF+xCC/159+uZ6Sl1ZGIpG+b/n/FB/2m5+i6hjNqQIAOkSKoTGTNmdP9W
+	 6loK0dLa1JF/peWi1zBWT0ppTu2dubAWZc9Mz7IFxFwi+ab4aQR9c2Ok6hywa6SLWB
+	 YmbNBk5ExE5LzeRN3rBhrCtID21rtkc/TQJK6ii4SU/HSZ20i60iulqeIQmg3GNIxD
+	 KH/4BPFYYWgxQ==
+Message-ID: <3cc6db43-4c3c-441a-8e2b-7de58ad0cce4@kernel.org>
+Date: Thu, 11 Jul 2024 08:21:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] arm64: dts: qcom: sa8775p: Add UART node
-To: Viken Dadhaniya <quic_vdadhani@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, andersson@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com
-References: <20240710094149.13299-1-quic_vdadhani@quicinc.com>
- <2e309d52-8180-4922-9a5a-022fc8bf8ef5@kernel.org>
- <f5ed3285-82da-4ba8-9b4d-a0cc7323fde4@linaro.org>
- <fa189b4c-d407-4d48-9677-528f07f81efa@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 02/12] dt-bindings: PCI: Cleanup of brcmstb YAML and
+ add 7712 SoC
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20240710221630.29561-1-james.quinlan@broadcom.com>
+ <20240710221630.29561-3-james.quinlan@broadcom.com>
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -90,36 +101,82 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <fa189b4c-d407-4d48-9677-528f07f81efa@quicinc.com>
+In-Reply-To: <20240710221630.29561-3-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/07/2024 07:04, Viken Dadhaniya wrote:
->>>> +				clock-names = "se";
->>>> +				interconnects = <&clk_virt MASTER_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS
->>>> +						 &clk_virt SLAVE_QUP_CORE_2 QCOM_ICC_TAG_ALWAYS>,
->>>> +						<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
->>>> +						 &config_noc SLAVE_QUP_2 QCOM_ICC_TAG_ALWAYS>;
->>>> +				interconnect-names = "qup-core", "qup-config";
->>>> +				power-domains = <&rpmhpd SA8775P_CX>;
->>>
->>> All the clocks, interconenct and power domains look to me questionable.
->>> AFAIK, most of it (if not all) is going to be removed.
->>
->> Yeah.. I'm lukewarm on accepting any sa8775p changes until that qcs9100(?)
->> situation is squared out first
->>
->> Konrad
+On 11/07/2024 00:16, Jim Quinlan wrote:
+> o Change order of the compatible strings to be alphabetical
+
+That's a cleanup. You can squash it with previous patch.
+
+> o Describe resets/reset-names before using them in rules
+
+That's a new commit.
+
+> o Add in new resets for 7712 (swinit, bridge)
+> o Add in changes for 7712
 > 
-> Thanks for clarification. Please help to sign-off or let me know in case 
-> of any concern.
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 46 +++++++++++++++++--
+>  1 file changed, 41 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 558a18fd2e77..dd7c76ec9ceb 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -16,11 +16,12 @@ properties:
+>            - brcm,bcm2711-pcie # The Raspberry Pi 4
+>            - brcm,bcm4908-pcie
+>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
+>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
+>  
+>    reg:
+>      maxItems: 1
+> @@ -95,6 +96,20 @@ properties:
+>        minItems: 1
+>        maxItems: 3
+>  
+> +  resets:
 
-I think I was quite explicit, so I feel above suggestion as still
-pushing your choice even though to reviewers gave you their opinion.
+<form letter>
+This is a friendly reminder during the review process.
 
-In such case:
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
 
-No, NAK, for the reasons stated above.
+Thank you.
+</form letter>
+
+minItems
+
+> +    items:
+> +      - description: reset for phy reset calibration
+> +      - description: reset for PCIe/CPU bus bridge
+> +      - description: reset for soft PCIe core reset
+> +      - description: reset for external PCIe PERST# signal
+> +
+> +  reset-names:
+
+Same here
+
+> +    items:
+> +      - const: rescal
+> +      - const: bridge
+> +      - const: swinit
+> +      - const: perst
+
+
 
 Best regards,
 Krzysztof
