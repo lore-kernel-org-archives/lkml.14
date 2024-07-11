@@ -1,127 +1,221 @@
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690B912F385
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 21:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.217.213.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C5B19F461
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 21:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720733633; cv=none; b=XUQonBXilNTmOTfyTFToi5F/hRi09cssIAxlw3mgj8NLPpD6oFEhtrBXeaGQd0EXlBhsA75Z4OFvOAY2U7PK74+OfKiy2GH5aSAibsx+rVVFocWx4PuYgELG49voi4C0UANyRQQnSSJZM3hAkKbGai9bqa4R1RzqGBo9i3wGOTY=
+	t=1720733636; cv=none; b=tvoqDz2uqt+16WQDnx3Joi8XcrvvP3GmBm8mM47+AjrhqqP86eXhiDhvQy4+KMmulY1Qv7C0Z0dB6mLuxvX5LC9U0uJvuyKh0HIVQobHaS8yrAQNZkonMf7gucBT/PQUNDl1sPLXqqsr8wa8Zs6SnKJQpeqPWQr7Zd2o0l329Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720733633; c=relaxed/simple;
-	bh=+VyqhixQupt6RV+NXPTIysuCzzv6DCStY30cRBIhrBE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nVCbXKAYrrQei2B+43vAtv+XVemIMt6SsviyrztpkQ+8jVU5nxacPI4spPzp+cgBkiCEn2CDWh12VLEkTKOAzgMbB0di/EWF7c8WF/bKbrTYMuDZWMuzKS9EK7B5SwmbLHOpWB6Oeg8TSciqhA8s0FrJOCnCX2BDSCdSonaTWQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=95.217.213.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
-Received: from 213.219.156.63.adsl.dyn.edpnet.net ([213.219.156.63] helo=deadeye)
-	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1sS0mC-0008Gk-2I; Thu, 11 Jul 2024 22:52:28 +0200
-Received: from ben by deadeye with local (Exim 4.97)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1sS0mB-0000000BeGh-0UPS;
-	Thu, 11 Jul 2024 22:52:27 +0200
-Message-ID: <bd9d782cbe5b7a80c929ff35c8b49f0036dda439.camel@decadent.org.uk>
-Subject: Re: [PATCH] mm: huge_memory: don't force huge page alignment on 32
- bit
-From: Ben Hutchings <ben@decadent.org.uk>
-To: Yves-Alexis Perez <corsac@debian.org>, Yang Shi <shy828301@gmail.com>, 
- jirislaby@kernel.org, surenb@google.com, riel@surriel.com,
- willy@infradead.org,  cl@linux.com, akpm@linux-foundation.org
-Cc: yang@os.amperecomputing.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Salvatore Bonaccorso <carnil@debian.org>
-Date: Thu, 11 Jul 2024 22:52:13 +0200
-In-Reply-To: <2d7bd8b2b9736d4a7d0a26169978372b5e002a62.camel@debian.org>
-References: <20240118133504.2910955-1-shy828301@gmail.com>
-	 <2d7bd8b2b9736d4a7d0a26169978372b5e002a62.camel@debian.org>
-Autocrypt: addr=ben@decadent.org.uk; prefer-encrypt=mutual;
- keydata=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
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-nJaI7DtdZ7+6Z6IJb5Or"
-User-Agent: Evolution 3.50.3-1+b1 
+	s=arc-20240116; t=1720733636; c=relaxed/simple;
+	bh=TrvfVsxFxkfG3CbvoFQgedFk5JHpPhXLX37ab8sPnlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rVTBDEP2f03TPXs+0xgAnZ4Y8JPkPXosyGnk1g9oRRXYp15BAeLB+GTpHkV5vFd2faQvJM0XxX5lNDXhhcDS6y5Sa0BhXnxK29Dc4RGW3fQ8aU/CS1be35BhBTc59ngvJUE6AhNiln61JF4p4TksTNromBJIpj7LFxsOTUv6VEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RNzKOSyj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RNzKOSyj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720733633;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=219lIAcvA7w+sSpZLZf099JtfoSJ9jRz/h7DHoP3yqk=;
+	b=RNzKOSyjTriSz+2DIunQtMJRz2tbxU2BKPul0AnZVYPMpWRXv2a29vfaYs/lETGdGwIEmT
+	yyBJUhxskHHQql1zR4JCFXfyZWBTB/3Remegv/2hWn7HW8lfmfpUOkXXd2FbENgKfOtbmG
+	lk2OV+Uxjyr5ZlyZat6Ajqk46B9KjR0=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-TwYJffRyOcCLZyd27y6c_w-1; Thu, 11 Jul 2024 17:33:51 -0400
+X-MC-Unique: TwYJffRyOcCLZyd27y6c_w-1
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-70af524f6b9so1023423b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:33:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720733631; x=1721338431;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=219lIAcvA7w+sSpZLZf099JtfoSJ9jRz/h7DHoP3yqk=;
+        b=Eqii83qBEpzeNhWQ9NLLf+H32I/lWsuiorRGfalfaAGecU1N/vZ6axHxCoZu73/gZ5
+         RA3umQUquCEzhz/Ora+3BUO4wK80krgL26h+XFzrvzcgwyigKtVTYFQtY1ENzQOFTeV1
+         9Ukg9OiKq9JmNwpqhz4w4vGSm/nMTEMA5kxS6EZyRinop4efVHuK2XMJ2cbmtJfJO1dB
+         ups2gltLR0WD9eCXoJGXmW4LSn2ODAy3uy9XUCv0aJpqewoOpjZGX0uNvfBfVdb8UfBo
+         OUlWnuwtNiyNAY5JGQwObJewZuKt1agnkHlRpJB7bFmQ3He+jnaqzd6e+2KoICaE8zc/
+         Y3rg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9MAGIBk4bShKOTYYx20f8dwYXbpoSrIWjSxPRsEmZgOpnK60W7lnTH/g0cDtLg96Y70i4imfE5786499VvVZXf4y/786VTdNodx6i
+X-Gm-Message-State: AOJu0Yw91sEdwxR5GQZ093xjTmN8ztwKiBRDnhWwq4yxH4fy/CK0Gxyr
+	yeFv0OkNpJn2wNytvjtx64pwwQciZyKEHYTYFwpWKGZd30/9cLk1rHluDWnPocsnghaVQp5ypd6
+	cc373fER73Q/Sk1sM7P1FJdVgT/v0mG+mczVLu40G+pR1GodYDuiTpgl4xM9xu/sHsPqgu8mm
+X-Received: by 2002:a05:6a00:23d5:b0:706:6c38:31f3 with SMTP id d2e1a72fcca58-70b43538665mr10390210b3a.8.1720733630505;
+        Thu, 11 Jul 2024 14:33:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGtilW6Oy1FkkMUoO1+Zz+4/UURSKtlBsEUQhFqOcBShJGklujlaJCWSbde9Mrk6SD1Lebztw==
+X-Received: by 2002:a05:6a00:23d5:b0:706:6c38:31f3 with SMTP id d2e1a72fcca58-70b43538665mr10390186b3a.8.1720733630017;
+        Thu, 11 Jul 2024 14:33:50 -0700 (PDT)
+Received: from [172.20.2.228] ([4.28.11.157])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b54edbc49sm3641353b3a.22.2024.07.11.14.33.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 14:33:49 -0700 (PDT)
+Message-ID: <92a2dc30-6e48-44ea-9cde-693b911f200d@redhat.com>
+Date: Thu, 11 Jul 2024 23:33:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 213.219.156.63
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Fix mmap_assert_locked() in follow_pte()
+To: Pei Li <peili.dev@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, syzkaller-bugs@googlegroups.com,
+ linux-kernel-mentees@lists.linuxfoundation.org,
+ syzbot+35a4414f6e247f515443@syzkaller.appspotmail.com
+References: <20240710-bug12-v1-1-0e5440f9b8d3@gmail.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240710-bug12-v1-1-0e5440f9b8d3@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 11.07.24 07:13, Pei Li wrote:
+> This patch fixes this warning by acquiring read lock before entering
+> untrack_pfn() while write lock is not held.
+> 
+> syzbot has tested the proposed patch and the reproducer did not
+> trigger any issue.
+> 
+> Reported-by: syzbot+35a4414f6e247f515443@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=35a4414f6e247f515443
+> Tested-by: syzbot+35a4414f6e247f515443@syzkaller.appspotmail.com
+> Signed-off-by: Pei Li <peili.dev@gmail.com>
+> ---
+> Syzbot reported the following warning in follow_pte():
+> 
+> WARNING: CPU: 3 PID: 5192 at include/linux/rwsem.h:195 rwsem_assert_held include/linux/rwsem.h:195 [inline]
+> WARNING: CPU: 3 PID: 5192 at include/linux/rwsem.h:195 mmap_assert_locked include/linux/mmap_lock.h:65 [inline]
+> WARNING: CPU: 3 PID: 5192 at include/linux/rwsem.h:195 follow_pte+0x414/0x4c0 mm/memory.c:5980
+> 
+> This is because we are assuming that mm->mmap_lock should be held when
+> entering follow_pte(). This is added in commit c5541ba378e3 (mm:
+> follow_pte() improvements).
+> 
+> However, in the following call stack, we are not acquring the lock:
+>   follow_phys arch/x86/mm/pat/memtype.c:957 [inline]
+>   get_pat_info+0xf2/0x510 arch/x86/mm/pat/memtype.c:991
+>   untrack_pfn+0xf7/0x4d0 arch/x86/mm/pat/memtype.c:1104
+>   unmap_single_vma+0x1bd/0x2b0 mm/memory.c:1819
+>   zap_page_range_single+0x326/0x560 mm/memory.c:1920
 
---=-nJaI7DtdZ7+6Z6IJb5Or
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+That implies that unmap_vmas() is called without the mmap lock in read 
+mode, correct?
 
-On Thu, 2024-07-11 at 22:10 +0200, Yves-Alexis Perez wrote:
-> On Thu, 2024-01-18 at 05:35 -0800, Yang Shi wrote:
-> > The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
-> > boundaries") caused two issues [1] [2] reported on 32 bit system or com=
-pat
-> > userspace.
-> >=20
-> > It doesn't make too much sense to force huge page alignment on 32 bit
-> > system due to the constrained virtual address space.
->=20
-> Hi people,
->=20
-> sorry for beeing so late. I've looked at this following the OpenSSH issue
-> (CVE-2024-6387 [1]) and especially the impact on IA-32 installations wher=
-e
-> ASLR is apparently broken.
->=20
-> There was a recent thread [2] on oss-security discussing the issue.
->=20
-> Looking at the commit log I think the intention was to fix this both for:
-> - 32 bit process running on 64 bit kernels: in_compat_syscall()
-> - all processes running on 32 bit kernels: IS_ENABLED(CONFIG_32BIT)
->=20
-> Unfortunately, as far as I can tell, CONFIG_32BIT is not enabled on 32bit=
- x86
-> kernels. Maybe CONFIG_X86_32 would be the right one there?
+Do we know how this happens?
 
-CONFIG_64BIT appears to be defined and enabled in all 64-bit
-architectures, so I think !IS_ENABLED(CONFIG_64BIT) would work as a
-generic check.
+* exit_mmap() holds the mmap lock in read mode
+* unmap_region is documented to hold the mmap lock in read mode
 
-Ben.
+> 
+> In zap_page_range_single(), we passed mm_wr_locked as false, as we do
+> not expect write lock to be held.
+> In the special case where vma->vm_flags is set as VM_PFNMAP, we are
+> hitting untrack_pfn() which eventually calls into follow_phys.
+> 
+> This patch fixes this warning by acquiring read lock before entering
+> untrack_pfn() while write lock is not held.
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> 
+> Tested on:
+> 
+> commit:         9d9a2f29 Merge tag 'mm-hotfixes-stable-2024-07-10-13-1..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13be8021980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3456bae478301dc8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=35a4414f6e247f515443
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=145e3441980000
+> 
+> Note: testing is done by a robot and is best-effort only.
+> ---
+>   mm/memory.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index d10e616d7389..75d7959b835b 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1815,9 +1815,16 @@ static void unmap_single_vma(struct mmu_gather *tlb,
+>   	if (vma->vm_file)
+>   		uprobe_munmap(vma, start, end);
+>   
+> -	if (unlikely(vma->vm_flags & VM_PFNMAP))
+> +	if (unlikely(vma->vm_flags & VM_PFNMAP)) {
+> +		if (!mm_wr_locked)
+> +			mmap_read_lock(vma->vm_mm);
+> +
+>   		untrack_pfn(vma, 0, 0, mm_wr_locked);
+>   
+> +		if (!mm_wr_locked)
+> +			mmap_read_unlock(vma->vm_mm);
+> +	}
+> +
+>   	if (start != end) {
+>   		if (unlikely(is_vm_hugetlb_page(vma))) {
 
->=20
-> [1] https://www.openwall.com/lists/oss-security/2024/07/01/3
-> [2] https://www.openwall.com/lists/oss-security/2024/07/08/3
+I'm not sure if this is the right fix. I like to understand how we end 
+up without the mmap lock at least in read mode in that path?
 
---=20
-Ben Hutchings
-Computers are not intelligent.	They only think they are.
+-- 
+Cheers,
 
+David / dhildenb
 
---=-nJaI7DtdZ7+6Z6IJb5Or
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmaQRf0ACgkQ57/I7JWG
-EQlGUw//Yda8FGEbXZINUCA6xrPbBrfLrc6RnLpRvyzhLFz8OMTW04JWhxIibxNj
-hHgU0kAUXp+J9HufmcLkW1ihnshtDUMzHC/BY/jUmvk+fuojFJEoM1PGYHks8yUZ
-ubPVClaJfTe1XWreR9kKKD3+JDx31XtVN7WXa5O3FTAOMpq2hFjXVzAmjV3p75pR
-se+wuS4ggJlbGmoVUvets6CJoYhjW5GbX8MfmwzwUBvtCEbb86MKr7zY2LqTvQZC
-V5UV3PWClN0/lnAboyaSoui4SQmQCJIBkjsZqUSIgLmjm427HQMkwXDIcWgE0VOj
-0tzt7iZwMQKAkQvpO3FkFLNkRoM1zZ5Frukhq8M5/zb1SiEm4GHh7E3HHI6fFjbK
-3+06Yp5NfSdSQNgishxeuQCv947YSYSdZzILeRQo0XG6aq/dXQwKv3oC6zKlfiAl
-DY82pLe/RtaFh65pEzLNJiIP0uXsTfQimucTbqaHOZpd/MKfh68oYKUPg6NycivD
-8oAN/FIGMghgVxPc1pHsdWpaWPhx6Zk99kDeXnXlrkKQyZOIHK+xeHniTVp5loGH
-+LeUkLRPimcm4a8tNVcun+PLuG07HWRz6jx9NmlQFH+eg+gtQH/JZTHRwUCZzxJW
-7i/ES0ZOAuGbWhsfy9Co6Hyj8htUUJQsOAy2KcCXGt7KoxHx88c=
-=Om59
------END PGP SIGNATURE-----
-
---=-nJaI7DtdZ7+6Z6IJb5Or--
