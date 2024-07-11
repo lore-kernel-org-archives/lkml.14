@@ -1,124 +1,163 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CA814C5A4
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1BD34CE09;
+	Thu, 11 Jul 2024 13:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720704993; cv=none; b=cYss0y5na4sJ3b9NJi9WZ97yUViN3pOAA/Iig5ghGijRmLZwpzm38EfAXAhbwWE+jSHhLxXBrTIQO4QKkC/f4vWOZKHEAJcGhaMn3O0M6sqe5TWazGL9dX7f2Ce1kjs6P3AejvVBdecSTTsIgOhAvt+MWfyWMhUop17FsIz98u8=
+	t=1720705084; cv=none; b=lgBAkNToDJRW1th1dVlMBPWOWECUTyh5RtSQ+0z8OUqMdHCIIIvKrcNro2b1OSrjShdS4OkNd5FReHqiNrVCwTYs1RjVAjADEQuJKlBZ1MBZ5lAY024U2OIAtKWEtgiSYLV5oxYjZXb2wZZENFMs4UulwZgVyID5n/Ke4ohcXnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720704993; c=relaxed/simple;
-	bh=ZJBtzydDNvnzwNjEXYE/Z8NIvItAF0eOwb6jFiFqgd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RaHmmOBbR6RWZr2/GINob7xQ7px0xGahpfpAfNXcWsk+kPw0Gk5/chdjBY1o4RcJsaxImBeDSgFG0Z/brFmjZqbQkF6lEXbYzYVNSPppiSf+BgdeI3jEHXtuN0ORNq/coNTTdfuUhmqp0b0YaH6Yi1itFtLKI6iz6MfQZ8xZEqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ldMwUvr7; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720705084; c=relaxed/simple;
+	bh=+lpvg91EuVmo4l6WbNPi0rA3weAObdsfpM9GbOYSK4Y=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Vz9Eh7Rjb7QZoV0sge/VMMpglpp44FEE6vEl+Bs7wmWisS/aGsa6hklQcZX8YgRx6CX1fWF++ypu6P5nAbwqdTcKD8/BZDJAVY+KxbAbaOxV3ILXdyodzZB+1F3RTJqkaSb74ejIvj8l6Z8qvP2vEr/Kgzu2E9tC1b5yW1utphU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XC9fIpH/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldMwUvr7"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ec61eeed8eso10774871fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720704990; x=1721309790; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=DVLJo0/MBfbDMXoMGmbxkF4EVNMrx/VG4OOfR+Do5os=;
-        b=ldMwUvr7K0mLW7Pabrb54oRls71XDYGeMkO2WSdBQESubbUUoACQQB3LT3W87fDnAn
-         GX83XU84qg3YtFvo5a0xGtFpeHk8SpABlYqFXiqTHrh+WjfsToPQvp14mASu9RXkaVQl
-         jBBQAK8LYW12TswA2/oJryXMMaTX0SsT0naJqV0+Z5K4CqabrhIFWxHQGoQ2ymDPZ2ZT
-         EA48tEqIS2eBdH9Tta9JmFNIbR2V2ZVM03wELFrmSivDNGs2pEMlGNpo0CKenUsnv9dh
-         x3VEK+Am+VJHmaySn0lSQS2b7Qgu+RcTsXTc/HJvtKfxNY/3xETWb69jzIqDTyg2q4nd
-         qMGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720704990; x=1721309790;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DVLJo0/MBfbDMXoMGmbxkF4EVNMrx/VG4OOfR+Do5os=;
-        b=SUWrvMKnC9UaToU2EEn7jZCidd2C+psBhX5/hMwamgyn9eOj0Keg1nOUeiMohbWnnU
-         wIUq1VD/Q5l948kUn58UWh3JaQn/7M82e5ODgNL/fOEARdhpLWU/MEcKLosPT7wQTtim
-         TEZafPoK0NEwztt0kRUMVsn5SW/gclwkHwqK3qoChyw5BSCD6Dxf8hdp45KUbtLRqU/q
-         fVstX639mb99d9ItWWakHdnbuhYsbSjFbFaXuTj8gKov/XioYGcmSCLEi5vKdZYy0NZi
-         Z7YkbmDxbIaHiR/Kb5Jiyz5CSc+nMAAJxcgpVvMba5A/DoKQ5wSZNlirhwfUBPZG2N/F
-         6n1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVqP5+JE6yzsa2hcgNdrGm8F5fAj5IPHeNt78zISbu+sZnxddtPtn3CozqbwAzeGjILufjDTZVnTkeR8sZPZ/TZOsphXvGSgkZvyuSF
-X-Gm-Message-State: AOJu0YzsG3vgpOEjxcaN/vvAPHMExaHjykpYhLnccHVjdWo0KD3HZa0c
-	3UBXAZ9kBFF5g1U1Ss8zOg4HEQSAbFlhS6gTO4xtmSlCHVkGepwJkEZAuR8xDMM=
-X-Google-Smtp-Source: AGHT+IGW1LfxEoPM8hrXbZlHQULLyAdwEerywPN0lSOYfjGLLYcyS8HeP866p3l1Hln9aIe3MLhEGg==
-X-Received: by 2002:a2e:b0d8:0:b0:2ec:419b:429e with SMTP id 38308e7fff4ca-2eeb30bbb7bmr52639441fa.2.1720704989535;
-        Thu, 11 Jul 2024 06:36:29 -0700 (PDT)
-Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bbe2d006sm3433632a12.31.2024.07.11.06.36.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 06:36:28 -0700 (PDT)
-Message-ID: <b61f7707-8b9d-49b9-a5d8-62e0cca37dd8@linaro.org>
-Date: Thu, 11 Jul 2024 15:36:26 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XC9fIpH/"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 32BD020B7165;
+	Thu, 11 Jul 2024 06:38:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 32BD020B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1720705082;
+	bh=E8vCEReVfg+1Pp/llNttYBBSJa9eYonYgDLL3JxqQxg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XC9fIpH/5l/+ozrdPr6ij4Q4Nrb0fheFEQZzyAhw7Z+hF9as0VuUwics1dfwKw3Vh
+	 Rn92l6DuIwd+uayCTM1PYkG/CmLK+PVu1jrcLqg6uB+BbJkeP5fhxRbxe740tKBDBw
+	 e/FEL/a5LmJK2pSadPNb7AafjSSuFfBWLYcSaLqI=
+From: Konstantin Taranov <kotaranov@linux.microsoft.com>
+To: kotaranov@microsoft.com,
+	pabeni@redhat.com,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	edumazet@google.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	decui@microsoft.com,
+	wei.liu@kernel.org,
+	sharmaajay@microsoft.com,
+	longli@microsoft.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH rdma-next v3 1/1] RDMA/mana_ib: Set correct device into ib
+Date: Thu, 11 Jul 2024 06:37:57 -0700
+Message-Id: <1720705077-322-1-git-send-email-kotaranov@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] ARM: dts: qcom: apq8064-pins: correct error in
- drive-strength property
-To: Rayyan Ansari <rayyan.ansari@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: Bjorn Andersson <andersson@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org,
- Rob Herring <robh@kernel.org>
-References: <20240711110545.31641-2-rayyan.ansari@linaro.org>
- <20240711110545.31641-3-rayyan.ansari@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240711110545.31641-3-rayyan.ansari@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 11.07.2024 1:01 PM, Rayyan Ansari wrote:
-> The "drive-strength" property was incorrectly spelt as "drive-strengh".
-> Correct this.
-> 
-> Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
-> ---
+From: Konstantin Taranov <kotaranov@microsoft.com>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Add mana_get_primary_netdev_rcu helper to get a primary
+netdevice for a given port. When mana is used with
+netvsc, the VF netdev is controlled by an upper netvsc
+device. In a baremetal case, the VF netdev is the
+primary device.
 
-Konrad
+Use the mana_get_primary_netdev_rcu() helper in the mana_ib
+to get the correct device for querying network states.
+
+Fixes: 8b184e4f1c32 ("RDMA/mana_ib: Enable RoCE on port 1")
+Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+---
+I would appreciate if I could get Acks on it from:
+* netvsc maintainers (e.g., Haiyang)
+* net maintainers (e.g., Jakub, David, Eric, Paolo)
+
+v1->v2:
+Leon Romanovsky asked to make a helper in the net/mana and get
+acks from net maintainers.
+v2->v3:
+Added warn on rcu lock not held. 
+Use the word "primary" instead of "master"
+Merged two commits into one and submitted to rdma-next
+
+ drivers/infiniband/hw/mana/device.c           | 16 ++++++++--------
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 19 +++++++++++++++++++
+ include/net/mana/mana.h                       |  2 ++
+ 3 files changed, 29 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
+index b07a8e2e838f..7ac01918ef7c 100644
+--- a/drivers/infiniband/hw/mana/device.c
++++ b/drivers/infiniband/hw/mana/device.c
+@@ -56,7 +56,7 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ {
+ 	struct mana_adev *madev = container_of(adev, struct mana_adev, adev);
+ 	struct gdma_dev *mdev = madev->mdev;
+-	struct net_device *upper_ndev;
++	struct net_device *ndev;
+ 	struct mana_context *mc;
+ 	struct mana_ib_dev *dev;
+ 	u8 mac_addr[ETH_ALEN];
+@@ -84,17 +84,17 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ 	dev->ib_dev.num_comp_vectors = mdev->gdma_context->max_num_queues;
+ 	dev->ib_dev.dev.parent = mdev->gdma_context->dev;
+ 
+-	rcu_read_lock(); /* required to get upper dev */
+-	upper_ndev = netdev_master_upper_dev_get_rcu(mc->ports[0]);
+-	if (!upper_ndev) {
++	rcu_read_lock(); /* required to get primary netdev */
++	ndev = mana_get_primary_netdev_rcu(mc, 0);
++	if (!ndev) {
+ 		rcu_read_unlock();
+ 		ret = -ENODEV;
+-		ibdev_err(&dev->ib_dev, "Failed to get master netdev");
++		ibdev_err(&dev->ib_dev, "Failed to get netdev for IB port 1");
+ 		goto free_ib_device;
+ 	}
+-	ether_addr_copy(mac_addr, upper_ndev->dev_addr);
+-	addrconf_addr_eui48((u8 *)&dev->ib_dev.node_guid, upper_ndev->dev_addr);
+-	ret = ib_device_set_netdev(&dev->ib_dev, upper_ndev, 1);
++	ether_addr_copy(mac_addr, ndev->dev_addr);
++	addrconf_addr_eui48((u8 *)&dev->ib_dev.node_guid, ndev->dev_addr);
++	ret = ib_device_set_netdev(&dev->ib_dev, ndev, 1);
+ 	rcu_read_unlock();
+ 	if (ret) {
+ 		ibdev_err(&dev->ib_dev, "Failed to set ib netdev, ret %d", ret);
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index b89ad4afd66e..68c2bea2c022 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -3007,3 +3007,22 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 	gd->gdma_context = NULL;
+ 	kfree(ac);
+ }
++
++struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index)
++{
++	struct net_device *ndev;
++
++	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
++			 "Taking primary netdev without holding the RCU read lock");
++	if (port_index >= ac->num_ports)
++		return NULL;
++
++	/* When mana is used in netvsc, the upper netdevice should be returned. */
++	if (ac->ports[port_index]->flags & IFF_SLAVE)
++		ndev = netdev_master_upper_dev_get_rcu(ac->ports[port_index]);
++	else
++		ndev = ac->ports[port_index];
++
++	return ndev;
++}
++EXPORT_SYMBOL_NS(mana_get_primary_netdev_rcu, NET_MANA);
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 59823901b74f..f9b4b0dcb69f 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -797,4 +797,6 @@ void mana_destroy_wq_obj(struct mana_port_context *apc, u32 wq_type,
+ int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
+ 		   u32 doorbell_pg_id);
+ void mana_uncfg_vport(struct mana_port_context *apc);
++
++struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index);
+ #endif /* _MANA_H */
+-- 
+2.43.0
+
