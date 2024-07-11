@@ -1,79 +1,110 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D565815B153
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969401514ED
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720704058; cv=none; b=uNhpm3UY+bVnEP9cO4VfcTTUcwsbJTlwHjwkg86fcthWtj2TtGDZYWkppmAjG7j1v5gXoEVzWahPSzOGQMb5Quw3rxUM55mKfbvHK2RYtZ1Lr37lFMnS6m26r6S4IJjdWKHQZ1CgiQT6hNERxmhS03Jn2k2gqA31iApGFqol5QE=
+	t=1720704070; cv=none; b=WtBi5OLIlW3uw6PsYijvTgwrk2cZjSuWbgOyST6aEqLxE6YCTRcx5dzZ6VRCbnZ+ePT3vu7IJKamLroIteZt+pg4LmUWIqDQBm3F1MtxjS7WMV2xFgxQR4liY85Kn86z8L/WYIUKSBfC8ZReFKKgt3ELPaf9CftJ6Wf3rgHsIWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720704058; c=relaxed/simple;
-	bh=FbL0TgzT6ocnHHvUX1mSgg+zK778KWtAlQICC7LPCe4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=asRnngqzdA6CQN6aZkAIJNjOlk32d/vBFPi6YsxYMnMGJtwq4lha1QlqiMSlKM/neULsDxWRg6jBZOem7pgrpUu/aouomA20A+ipz/Vtr9fM/DOpVCVWvfpkob5E1beNB5HsNChPky4/5NA16t7gHlpgkxs4S0K3dyzoHmb5Cb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=b0LPS3md; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1720704070; c=relaxed/simple;
+	bh=Uy9I9T/tN9JJUlWQ/p6H0LUGVt6skO0x/JqhCMzMy7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WycMeCGVnyJbTplDHC4NXY7iQ+ExV/lEcU/O0D+gl051vQx+9S2ftwukJvbHtOsXimwx8y223+GRJ9Y/I4Nd2Hzh8M3Q/BF/aNjyAFLq7NCyEkfxR8/zrrqdewGgnULPxOYipq9lwQ51/iOjt6QBw09uYXu6W5SdTGgcl/2+HZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VICHXETS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="b0LPS3md"
-Received: from cwcc.thunk.org (pool-173-48-116-79.bstnma.fios.verizon.net [173.48.116.79])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 46BDKJeO018766
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 09:20:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1720704023; bh=BDoQVMXqCNbGq+2qbJID2rkFfVRvdDyFotXLO2VBLys=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=b0LPS3mdL+aX40Dsz/5cj/TeURbuUHsZzTgmNQvGqlWWE1LDkQLfve+ZP0iqgcnpe
-	 4a27H7YLYbMmkqnPMbXc1IAjzKNJXkm+1xpJKABpKa+QJTAs8His/16Wdn2quo64z1
-	 MI+MbWY0ga0JUGWy8ejhKjFA0W2EJoFEd81Sr+OrOUUGEXcpw8kUT5tiVXfz4BGdtu
-	 hXo89yPzNJ/FRoDsglKBoZdLKJHBO0/4oOzMfgl4K30gpaICPXMyP1RquswIgR51ck
-	 bSxd2HVOK2Q/ya01gz4agr5Ra0rozizkiZBZPvvABZLwMs0mJxuz4DisEEpn8LP75c
-	 JdHN+5FbGdj2Q==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 6E47315C0250; Thu, 11 Jul 2024 09:20:19 -0400 (EDT)
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: linux-ext4@vger.kernel.org, libaokun@huaweicloud.com
-Cc: "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca, jack@suse.cz,
-        ritesh.list@gmail.com, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com, yangerkun@huawei.com,
-        Baokun Li <libaokun1@huawei.com>
-Subject: Re: [PATCH 0/2] ext4: fix unable to handle kernel paging request in do_split()
-Date: Thu, 11 Jul 2024 09:20:16 -0400
-Message-ID: <172070399446.484586.7078607418621492382.b4-ty@mit.edu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240702132349.2600605-1-libaokun@huaweicloud.com>
-References: <20240702132349.2600605-1-libaokun@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VICHXETS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720704068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zCgO4S5Trmscfbn2cBjRYOQFsKPBWlxEUZ+TlU9yQ9Q=;
+	b=VICHXETSQvJvNbg7/+ebFO0wez0tlbYT7jaYmbvDGGMrAODUJIlw8fRL8K4VQKbmwJprYx
+	bVV6aH3e9tW4raV04p9zf2079QdncNKdf86d2oNSGlR51gCRJpY2WvgPCNq5DJNI6GTW0b
+	FZTjDYWCRUR+MsDfjoYJuMOnYmyPcIE=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-119-IDrcX-ZUOW-EIF2bPrWOaA-1; Thu,
+ 11 Jul 2024 09:21:03 -0400
+X-MC-Unique: IDrcX-ZUOW-EIF2bPrWOaA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 306381955BC7;
+	Thu, 11 Jul 2024 13:21:01 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.32])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 39A7019560AA;
+	Thu, 11 Jul 2024 13:20:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 11 Jul 2024 15:19:24 +0200 (CEST)
+Date: Thu, 11 Jul 2024 15:19:19 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
+Message-ID: <20240711131918.GC16902@redhat.com>
+References: <20240711110235.098009979@infradead.org>
+ <20240711110401.412779774@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711110401.412779774@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+Not sure I read this patch correctly, but at first glance it looks
+suspicious..
 
-On Tue, 02 Jul 2024 21:23:47 +0800, libaokun@huaweicloud.com wrote:
-> "kvm-xfstests -c ext4/all -g auto" has been executed with no new failures.
-> 
-> Baokun Li (2):
->   ext4: check dot and dotdot of dx_root before making dir indexed
->   ext4: make sure the first directory block is not a hole
-> 
-> fs/ext4/namei.c | 73 ++++++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 57 insertions(+), 16 deletions(-)
-> 
-> [...]
+On 07/11, Peter Zijlstra wrote:
+>
+> +static void return_instance_timer(struct timer_list *timer)
+> +{
+> +	struct uprobe_task *utask = container_of(timer, struct uprobe_task, ri_timer);
+> +	task_work_add(utask->task, &utask->ri_task_work, TWA_SIGNAL);
+> +}
 
-Applied, thanks!
+What if utask->task sleeps in TASK_STOPPED/TASK_TRACED state before
+return from the ret-probed function?
 
-[1/2] ext4: check dot and dotdot of dx_root before making dir indexed
-      commit: 50ea741def587a64e08879ce6c6a30131f7111e7
-[2/2] ext4: make sure the first directory block is not a hole
-      commit: f9ca51596bbfd0f9c386dd1c613c394c78d9e5e6
+In this case it won't react to TWA_SIGNAL until debugger or SIGCONT
+wakes it up.
 
-Best regards,
--- 
-Theodore Ts'o <tytso@mit.edu>
+---------------------------------------------------------------------------
+And it seems that even task_work_add() itself is not safe...
+
+Suppose we have 2 ret-probed functions
+
+	void f2() { ... }
+	void f1() { ...; f2(); }
+
+A task T calls f1(), hits the bp, and calls prepare_uretprobe() which does
+
+	mod_timer(&utask->ri_timer, jiffies + HZ);
+
+Then later it calls f2() and the pending timer expires after it enters the
+kernel, but before the next prepare_uretprobe() -> mod_timer().
+
+In this case ri_task_work is already queued and the timer is pending again.
+
+Now. Even if T goes to the exit_to_user_mode_loop() path immediately, in
+theory nothing can guarantee that it will call get_signal/task_work_run
+in less than 1 second, it can be preempted.
+
+But T can sleep in xol_take_insn_slot() before return from handle_swbp(),
+and this is not so theoretical.
+
+Oleg.
+
