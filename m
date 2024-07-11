@@ -1,91 +1,89 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156A64CB23;
-	Thu, 11 Jul 2024 07:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BC917BDA;
+	Thu, 11 Jul 2024 07:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720683916; cv=none; b=pcc/K++F0DqzVJAxhKYnc3c4lQ5AKdpUev/rNuEfFpJ1PRlhaRLUWnPNMVGo+pBMrRS0HJa/XTBQQm3IgmBHZEx9lWcPV0wdP3kM+gUu6L0ftaXIrGeajTn/SA/lTavE7xVfppSiQRaXzUw2TE3ZXs1rERxmWjDhD8uRWuFRGVU=
+	t=1720684034; cv=none; b=a22BbKL27VqqjGN4XoHWA5E3c2HZkw3F5jZwEpC8hJKuKj3tiS+IXHg+uK9f/ZWDpCAUVYHJekCf7ailHVH38MJ46KBCW3UXBtPt0HU/ge4SpJlsp/UlETLuH2FU3KtQykOw0X1yzinG46F7J9aLGjlzMna7XOp9cjNnQuoP0zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720683916; c=relaxed/simple;
-	bh=hg6C7/y6xeY/KG9VxOiwR6LQqD9TNNiWQgdicMRz6wQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TrYML5GIpIjCDpfd8NH8rNZEkrnAGIZawsPFt6yXTvu+9QnqnYO+5ryYJd1B2UJJayJFEeyt232egXYwQYHrAOKu4uwuz2VomjqSESRXsFI0A+T7nlouPFmaQ42lzuPuGQl5RNJlaDF+mP3ZRg2nF52WfhO82niqUHxb0BK8I08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-05 (Coremail) with SMTP id zQCowAAnUiJmjY9mCTu1Ag--.60827S2;
-	Thu, 11 Jul 2024 15:44:49 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mykolal@fb.com,
-	shuah@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>
-Subject: [PATCH] bpf, selftests: fix a resource leak in main()
-Date: Thu, 11 Jul 2024 15:44:37 +0800
-Message-Id: <20240711074437.2283810-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1720684034; c=relaxed/simple;
+	bh=XnzfW3DG9X0+QdL29CqM/11d0IXE6lzFBGaQGdpUkds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qxp+ZgQplVaMD3jw6HjeZRApLnPYj0+RdFjT3pUL4+viqqzQZQamSKShvQPelSCj1fP1Gzj7vyF4Bu9U/mhhXLN6HOb+8ne/PosXSCaHC0UbPsNGi/OGOtRUvCRo7arC8EyHNtwR2AySvQCQjjG3/lU2o6+NuyNQjwt1JBXvKwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=n/6oZnRx; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="n/6oZnRx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720684022; x=1721288822; i=markus.elfring@web.de;
+	bh=XnzfW3DG9X0+QdL29CqM/11d0IXE6lzFBGaQGdpUkds=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=n/6oZnRxuJpdMunuLCl5bxESJ6u1QLCAadI/dvmrZ9wKCx8tMNFyBYFOyIgCX6up
+	 13u/mZg/xCAYrXWIMHhTMc/v0nYcCe+qbcYz7r7+wsZjWXcTENgFqJxmjKFoQsls5
+	 RUvK5zcPgfXKpCCUxLmPr1EujJRdKf0aJPBRS/JGcy0y5HK9wZqYsU69g4oTPR51T
+	 Vlg4OV1EPxXF2KWjIhUx98H/vMa/117LIFij6UsGuJcqeW6zFkiWoykFIUsuGJSN9
+	 ZN82847CUsVHCr5CUWqoodzoJKz4iapvZCpOgxwbLdNOg+mNIN74VGeYvgl3ckBo9
+	 0FDj6a8dwhvLUaqNrA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MZSFY-1sv4zo2Qfm-00X1Pz; Thu, 11
+ Jul 2024 09:47:02 +0200
+Message-ID: <5c191e5d-b64c-4e3c-9f70-9cd3371a3142@web.de>
+Date: Thu, 11 Jul 2024 09:47:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAnUiJmjY9mCTu1Ag--.60827S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrur18Cw1Dury5Jry7uFyxAFb_yoW3twbEkw
-	4jvr97WrWUAF1qyr9Fq3Z5CFZYkw4YgrWDJrs8try3JF1UXFs8JFsrurs8X3W3uFZ8GFy2
-	ya93WrWfJrs8CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbaxFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-	x4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_
-	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x0JUX6pPUUUUU=
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 fs/bfs 0/2] bfs: fix null-ptr-deref and possible
+ warning in bfs_move_block() func
+To: Vasiliy Kovalev <kovalev@altlinux.org>, linux-fsdevel@vger.kernel.org
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ lvc-patches@linuxtesting.org, "Tigran A. Aivazian"
+ <aivazian.tigran@gmail.com>, dutyrok@altlinux.org
+References: <20240711073238.44399-1-kovalev@altlinux.org>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240711073238.44399-1-kovalev@altlinux.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:j1JiinJ3+yc+LmeMIId0sYC4JYeGKm2xPQk5bWf/CF+whoVJXXD
+ t9votmnCuvSxqD83n7ztYsfHSgZN43AbGeJ/M4k8lVuDJHWiUGenqsRCwkJPGRBu6mk2SeX
+ D+jAatzFsKW+hV4BhYqX2oRfToRZJau5kp7V3f7ePt47TURtFI1+jyNT06LCkiu/+2olj4q
+ b4UiFnprEj55xqJNSrlBQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:CTO1ztm/gPg=;gGeVZZwNzH4SOqdjktemmEnHUXE
+ BHaEhVS1plRVFHcHV/ud0lBUaWeTmZKjihuEPpd1ZAQdMyllIX2Q42RwlmwSUqvwKceLQ6a5D
+ JM+ZavHWVvQN6z4f36DBHkfXzarBkFPAoPc0ObfiI9CqzZZ2TbC2kro6AYuWTZe/T0gQwited
+ mvLUy8Rb0SFfogP3BikpEI8DpPw5aoPwjT7ciipAtMbf1TyZNmp9grzjM2UinL0jjIz80iBBF
+ Tz+qm8f/L0X3xf+jXyLqguaGuHi4LH+AUEsGux/sqPdeAHIOFjx3f8rTrPr46fqTaqY8bW561
+ ddvNVezX6JKzA5rUSj0O0haTV5L9kdrnm9Q8t3RJNHqV+CcQZ+7QRtg7u7qqcSzsNTwliVqJp
+ rB707EkyGbBTSBqBw0iT8LiivuRUCE+eYugTiI4KJD1XiZoempPyR7bUmfOA177rBABF/9O4d
+ KkuuJR0KB0CDbqcoUtD3hlH0Nuf9nUFr6vAiZLCTm41PNqFzlSM1zsxktV0ZdkFhXhvn1Kkry
+ cmeShP5Cz5AQQ3xqMxPLtxp8VGSqMHtBM4KSEx+iQbNKr+VUxwAYnyoeoz8yzTkT67I+VxMmI
+ Hz38nd9iCo29zAZEePb7hptl3njYjlxdE4u3zDPaaZ72lMSRZYl1JDocl9Iz9LzlAZ2SwHNFK
+ PkJUI1hhGyT4PSLjmDjOmHca/Z3Mmj3NKpdDX13dYPgQN3VzzEmo/rWyyfFOrQunXZpiSnZTN
+ 16G9pYOq8fmzmlfmDOAhp4stk8wFg0dwD8eRagRYQipBbcy+rupViMdB9J9VEp+kPbegXfPer
+ 1rKKDFYzbBtCi+ZmmfKeUeeQ==
 
-The requested resources should be closed before return in main(), otherwise
-resource leak will occur. Add a check of cgroup_fd and close().
+=E2=80=A6
+> [PATCHv2 fs/bfs 1/2] bfs: prevent null pointer dereference in bfs_move_b=
+lock()
+=E2=80=A6
 
-Fixes: 4939b2847d26 ("bpf, selftests: Use single cgroup helpers for both test_sockmap/progs")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
- tools/testing/selftests/bpf/test_dev_cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
+I find it usually helpful to separate the version identifier from the prev=
+ious key word.
 
-diff --git a/tools/testing/selftests/bpf/test_dev_cgroup.c b/tools/testing/selftests/bpf/test_dev_cgroup.c
-index adeaf63cb6fa..e97fc061fab2 100644
---- a/tools/testing/selftests/bpf/test_dev_cgroup.c
-+++ b/tools/testing/selftests/bpf/test_dev_cgroup.c
-@@ -81,5 +81,7 @@ int main(int argc, char **argv)
- 	cleanup_cgroup_environment();
- 
- out:
-+	if (cgroup_fd >= 0)
-+		close(cgroup_fd);
- 	return error;
- }
--- 
-2.25.1
+How do you think about to improve the outline another bit (also for the co=
+ver letter)?
 
+Regards,
+Markus
