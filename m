@@ -1,146 +1,134 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35BB42042;
-	Thu, 11 Jul 2024 21:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A7519FA9A;
+	Thu, 11 Jul 2024 21:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720734266; cv=none; b=ViOysgV7PCZmc5e80XPhcwEhYcuexLATb5HiFjhYyy/Ej4NcQ+QM53CJCiJSNZ4n/lpdJdyQ/OOgHkw+wAtYsfGVoH1GRWhfs+naQIgIEmueKl3Ghz1DLH5sImU0NiG1EmwxKNIRZSvgZ3vPy/ZrwkDdnjC4fqDA/nVshlgTbeo=
+	t=1720734304; cv=none; b=HopyppNB4Pegm/FJB+X19smGqKDQa7gymwpjJwLzXs9HKqoF0f+62hi/FWcIsyLhJ2zIkGuIYtUuozyVP4uRLUpcgtd7drLmZkW/h4zs/xgD+nWf/ZBIVY/1xLSq2Yca+z5GpdSKQkLX2Ipwsw61fBsztdrg/wH9Na5Tmvx7ZRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720734266; c=relaxed/simple;
-	bh=der/eetOhoSXCm/h5jMDIUGHsFbHn807aMRuYndxSG0=;
+	s=arc-20240116; t=1720734304; c=relaxed/simple;
+	bh=y4QCjrZp9udTHrKwao6/0x3F9ZJopGjZZ/0G6cebUoc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YaNBVV4QpPLX1Du+OEDc76ZucIS1lXImub+G5A/syW3Eb0jjGsZFQThEemjou8x1Hz6i32uh2fGFKqDgRROTpbfC1L9xXIrSu3xUvwr51Z3dErF0K8+SXd57pcuQxFT4NeFPXIjiS0hVsOzra/bhBeyIMPnfAMU/SNbwSKEXw2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YBsNl+zK; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FBafdQhwmY3O9X0S4poyWArAQ60EiShGHXyHV4sDAa5Vc1mxgELAmQ9j9jdWwhzJaiXZo5Nd5+am0PfR8WZd56MRsKCgvvs6I+yd1FsV4w/yo1uEDmR0T4xPtLJhfETZdDDYrPX5ewk15p3ez1geR64fvRNlUUunXKPWX3mU/mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qYulYDrM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YBsNl+zK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1720734255;
-	bh=der/eetOhoSXCm/h5jMDIUGHsFbHn807aMRuYndxSG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YBsNl+zK4JS6w+FbgkNHx1hD3GS1wTaTl/CKMUvqTcGPPBksjqGAe2nu1lNCL7XAR
-	 pvBzMKmRNgjGLr7oGcylW0NDMuz3sZG7zVQ+qM9x3X1Jd3P/UeI1p9PRQhVVKnkHW9
-	 d0aHDyJ36lW9BC5IHChnUTDo9MelK3tnxp326VgnDzcunl0nE6XncTHmZfTBpf9Qv4
-	 sONVSLXPPmItpalyWqqrCPyvGvEEztVbIdxh/GPRm4jkFwf0GzK1lrdCXN7d8Cyw8k
-	 iSio2Pj/ZjtY9Tmke+s7NxA7V9SwD3ir92YQQ3Y+wBCqAF52y1KvDUlKtF6cKBPOBv
-	 z9GXauStGrSHQ==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7B92E3782209;
-	Thu, 11 Jul 2024 21:44:14 +0000 (UTC)
-Date: Thu, 11 Jul 2024 17:44:12 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shuah Khan <shuah@kernel.org>, kernel@collabora.com,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernelci@lists.linux.dev
-Subject: Re: [PATCH v2 0/3] kselftest: Add test to report device log errors
-Message-ID: <1417b57a-ac0b-4e8c-b157-bbe9ebb14e57@notapiano>
-References: <20240705-dev-err-log-selftest-v2-0-163b9cd7b3c1@collabora.com>
- <2024071003-islamist-expediter-a22c@gregkh>
- <71c479fb-cd25-45ec-8dd3-0521ef951f58@linuxfoundation.org>
- <e1e32c72-6bd3-4c15-b301-c5670690ba99@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qYulYDrM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Q7XTOdv/1NFK+VQFz08tWfPZaB/5T1Gst3uridfDy8E=; b=qYulYDrM5a+mSSnWjHLULZz/hV
+	oUxfKtOT1hcAbmxkqvrP10YQFASm2zRWpnNxxYNJtvZWOPlRGbtW+eOOcZ2dBESs1J4ZUyQs15b8a
+	GJAclUyRyEEiWwUp50qeWHmd7p6mk4FWPWI/JEFQejdTtvlzIsE48U9gbX/LJa8CyuxEskKygJcKI
+	aSwRuOnXrtmuRlbsy9eE1sTdvqgLUq0VfyE+wYVFal4lUfsD5uspAtEXIDRNhMbppxBr42qYjtKGx
+	ctYGGDemDT4SUngr/kkHGoFn5rWcCzTMnEDBYfDOFwgi1Y+ooK95kWDkTq02SqdVquNUXd8/pI5an
+	Egb4H2FA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sS1at-0000000Bgtl-13Yx;
+	Thu, 11 Jul 2024 21:44:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9B44230050D; Thu, 11 Jul 2024 23:44:50 +0200 (CEST)
+Date: Thu, 11 Jul 2024 23:44:50 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Mirsad Todorovac <mtodorovac69@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
+ syscall_get_arguments()
+Message-ID: <20240711214450.GG27299@noisy.programming.kicks-ass.net>
+References: <20240708202202.work.477-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e1e32c72-6bd3-4c15-b301-c5670690ba99@linuxfoundation.org>
+In-Reply-To: <20240708202202.work.477-kees@kernel.org>
 
-On Thu, Jul 11, 2024 at 01:53:37PM -0600, Shuah Khan wrote:
-> On 7/10/24 15:49, Shuah Khan wrote:
-> > On 7/10/24 07:11, Greg Kroah-Hartman wrote:
-> > > On Fri, Jul 05, 2024 at 07:29:53PM -0400, Nícolas F. R. A. Prado wrote:
-> > > > Log errors are the most widely used mechanism for reporting issues in
-> > > > the kernel. When an error is logged using the device helpers, eg
-> > > > dev_err(), it gets metadata attached that identifies the subsystem and
-> > > > device where the message is coming from. This series makes use of that
-> > > > metadata in a new test to report which devices logged errors.
-> > > > 
-> > > > The first two patches move a test and a helper script to keep things
-> > > > organized before this new test is added in the third patch.
-> > > > 
-> > > > It is expected that there might be many false-positive error messages
-> > > > throughout the drivers code which will be reported by this test. By
-> > > > having this test in the first place and working through the results we
-> > > > can address those occurrences by adjusting the loglevel of the messages
-> > > > that turn out to not be real errors that require the user's attention.
-> > > > It will also motivate additional error messages to be introduced in the
-> > > > code to detect real errors where they turn out to be missing, since
-> > > > it will be possible to detect said issues automatically.
-> > > > 
-> > > > As an example, below you can see the test result for
-> > > > mt8192-asurada-spherion. The single standing issue has been investigated
-> > > > and will be addressed in an EC firmware update [1]:
-> > > > 
-> > > > TAP version 13
-> > > > 1..1
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `model_name' property: -6
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `energy_full_design' property: -6
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > >   power_supply sbs-8-000b: driver failed to report `time_to_empty_now' property: -5
-> > > > not ok 1 +power_supply:sbs-8-000b
-> > > >   Totals: pass:0 fail:1 xfail:0 xpass:0 skip:0 error:0
-> > > > 
-> > > > [1] https://lore.kernel.org/all/cf4d8131-4b63-4c7a-9f27-5a0847c656c4@notapiano
-> > > > 
-> > > > Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> > > 
-> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > Is this dependent on a linux-next?
-> > 
-> > Didn't apply to linux-kselftest next.
-> > 
+On Mon, Jul 08, 2024 at 01:22:06PM -0700, Kees Cook wrote:
+> Modern (fortified) memcpy() prefers to avoid writing (or reading) beyond
+> the end of the addressed destination (or source) struct member:
 > 
-> I tried applying these on top of linux-kselftest next which is at
-> Linux 6.10-rc7 + other patches.
+> In function â€˜fortify_memcpy_chkâ€™,
+>     inlined from â€˜syscall_get_argumentsâ€™ at ./arch/x86/include/asm/syscall.h:85:2,
+>     inlined from â€˜populate_seccomp_dataâ€™ at kernel/seccomp.c:258:2,
+>     inlined from â€˜__seccomp_filterâ€™ at kernel/seccomp.c:1231:3:
+> ./include/linux/fortify-string.h:580:25: error: call to â€˜__read_overflow2_fieldâ€™ declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>   580 |                         __read_overflow2_field(q_size_field, size);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> I am not sure what is wrong - first patch applies and the second
-> and third don't.
+> As already done for x86_64 and compat mode, do not use memcpy() to
+> extract syscall arguments from struct pt_regs but rather just perform
+> direct assignments. Binary output differences are negligible, and actually
+> ends up using less stack space:
 > 
-> git am fails and manual patch application worked for 2/3, same thing
-> with 3.3 - these should apply cleanly since they don't have obvious
-> conflicts.
+> -       sub    $0x84,%esp
+> +       sub    $0x6c,%esp
 > 
-> Please clean this up and send me updated series adding Greg's ack.
+> and less text size:
+> 
+>    text    data     bss     dec     hex filename
+>   10794     252       0   11046    2b26 gcc-32b/kernel/seccomp.o.stock
+>   10714     252       0   10966    2ad6 gcc-32b/kernel/seccomp.o.after
+> 
+> Reported-by: Mirsad Todorovac <mtodorovac69@gmail.com>
+> Closes: https://lore.kernel.org/lkml/9b69fb14-df89-4677-9c82-056ea9e706f5@gmail.com/
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Brian Gerst <brgerst@gmail.com>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Cc: Peter Collingbourne <pcc@google.com>
+> ---
+>  arch/x86/include/asm/syscall.h | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
+> index 2fc7bc3863ff..7c488ff0c764 100644
+> --- a/arch/x86/include/asm/syscall.h
+> +++ b/arch/x86/include/asm/syscall.h
+> @@ -82,7 +82,12 @@ static inline void syscall_get_arguments(struct task_struct *task,
+>  					 struct pt_regs *regs,
+>  					 unsigned long *args)
+>  {
+> -	memcpy(args, &regs->bx, 6 * sizeof(args[0]));
+> +	args[0] = regs->bx;
+> +	args[1] = regs->cx;
+> +	args[2] = regs->dx;
+> +	args[3] = regs->si;
+> +	args[4] = regs->di;
+> +	args[5] = regs->bp;
+>  }
 
-Oh, now I see what happened. I recently sent another series that touches the
-same file (tools/testing/selftests/devices/test_discoverable_devices.py):
-"kselftest: devices: Allow running test on more platforms"
-https://lore.kernel.org/all/20240613-kselftest-discoverable-probe-mt8195-kci-v1-1-7b396a9b032d@collabora.com/
+Just for my education on things foritfy; would something like:
 
-That was already merged through the usb tree, and is present on next (on which I
-based this series).
+void syscall_get_arguments(struct pt_regs *regs, unsigned long args[6])
+{
+        memcpy(args, (typeof(args))&regs->bx, 6*sizeof(args[0]));
+}
 
-In this case I imagine it's best if this series gets picked through the usb
-tree, right? Even if I rebase on kselftest's next, there will be conflicts.
-
-Thanks,
-Nícolas
+work?
