@@ -1,35 +1,36 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAB313B597
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33061148318
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720682825; cv=none; b=pPF+YmIQVoXFt3sjwuIi0k1ty+ItYdZRDxaJzNhUjsXYfjZbfTzlyg4XyrESwuDH+FFWc5uRKPoY4VzMFfB+5vUE3XkCCNsUzyWWr9s5WgAWADN8GuS5AW/XP9Vb2OvLTI3ONgqYz/rJ6bfGGJUSBTjrpV5tZBh6rJHC3Ql6fHg=
+	t=1720682899; cv=none; b=Z6vtQZgvnsiw9GfZQVwIs/ZNH9P8x1jr8shPjaETJ21WupzgksiSgTrhAcWXTg1KdmUyMFjeGap897KuAengHdw0I4kSDg9HgXDXRSvZfedOyW7fyT3qsAYbFZhJWTjd3ZarPzYzp4sMQxD1yGmc/LiDGBekuAwWkZ0HoDW6LDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720682825; c=relaxed/simple;
+	s=arc-20240116; t=1720682899; c=relaxed/simple;
 	bh=LooyK1nesgxXPrZ4cwneopS5lVW518hX1UEmAKtwnlU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dk/vfx31/uSAtyuxFW1FjkK5T4B4CX/9teV0wM6Y98QCby/Qg3R5StTzSya9pZDPbJdiz0Q/Av0e/S3sfzCJ6NdHLwmMPoKeH+Xo8u6Y+jHZ5JY3FCVmnfjqfPTsv/51OiSwWc/h2FQAwX7SQfJWkNQy0p6sfqYsmv1LzmdNuM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WWubUbaJZ9LC9pHl3/f97GP0mDgt/M2TXGi2PIPmoVNHrFqGahuqVL8qsPfQKtG2Z0Qabcogpq3YrbCDNZeoFT1CcNUYhYt+jSF3e8XSiW7GUhHJl96s+PxxhOqbxYDrZqt5lrBq7G1GZnzpS5TpD216yIbsyeDmYVzRsENtIBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WKR4v3nspzxW4p;
-	Thu, 11 Jul 2024 15:22:23 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WKR6n1FQrz2Cl8D;
+	Thu, 11 Jul 2024 15:24:01 +0800 (CST)
 Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id A2067180087;
-	Thu, 11 Jul 2024 15:26:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C297180018;
+	Thu, 11 Jul 2024 15:28:14 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
  (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
- 2024 15:26:59 +0800
+ 2024 15:28:13 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
 	<akpm@linux-foundation.org>, <kexec@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] crash: Fix x86_32 memory reserve dead loop retry bug
-Date: Thu, 11 Jul 2024 15:31:18 +0800
-Message-ID: <20240711073118.1289866-1-ruanjinjie@huawei.com>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v2 RESEND] crash: Fix x86_32 memory reserve dead loop retry bug
+Date: Thu, 11 Jul 2024 15:32:31 +0800
+Message-ID: <20240711073231.1289883-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
