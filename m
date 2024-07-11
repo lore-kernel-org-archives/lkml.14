@@ -1,132 +1,61 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACBD12FF71
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A9883CC8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720682078; cv=none; b=IzxTOMlxgyMv/n9hCUf4dlNDnbrOcBxO0cE88y97Jfa6OCt4ACyXABTNxtAwbIk0+5kw/uV1ILFjrfEiaMhIX67xta1PRCDbGeCe2c7oUg57/NCh6sE2XKhHmIQMbPcN93s1ENozxKQm8a3t1I74MczlspRFxKSczLiI522VGj4=
+	t=1720682180; cv=none; b=pTnMH0lljW6Ei/ulu2PNAlXGs+cpAmQoThnRHp/Gg6FG9OLYsiUe5QQfm+qtu/w+Mom5Uv+sNo2krEoih/QvQcMEzemEvTsL3o4zbRzqIl0xyoM5M3K9Zntgz6jMeXQXQQ/CWf8DpE8sZT5e4OTCduPfmQ3Oe6azA38xTtktdRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720682078; c=relaxed/simple;
-	bh=umgp6A9ocfsCRENUP33QgEjljReB72E+CZe+xkKrGfY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TsI/bkmQOsC/gjwqZxb8zZpsZ5l2IVZre0YBb43UdLOzdij5ieT2lhXsz8NNNOqJ/JCb2tKwDdWlsnVTzxPcbJFz3GIVqn/VVrIBGNToGx3sbRSnIhN8wEVD57IAVcWzBZ2y52bZPeW2dd8HC6rMlbCo7gqj3LY6BAhkJA6M5HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4WKQss6qrbz1xtVx;
-	Thu, 11 Jul 2024 15:12:49 +0800 (CST)
-Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1D5E014010C;
-	Thu, 11 Jul 2024 15:14:26 +0800 (CST)
-Received: from huawei.com (10.173.127.72) by kwepemd200019.china.huawei.com
- (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 11 Jul
- 2024 15:14:25 +0800
-From: Miaohe Lin <linmiaohe@huawei.com>
-To: <akpm@linux-foundation.org>, <muchun.song@linux.dev>
-CC: <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm/hugetlb: fix possible recursive locking detected warning
-Date: Thu, 11 Jul 2024 15:10:01 +0800
-Message-ID: <20240711071001.3475337-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1720682180; c=relaxed/simple;
+	bh=e4CUmfHkyHFShreHo7XGOS6MwgJhiOHLwRVd6LZDkEk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=jylZLC8OlsYc6stwQTK7rMm7wruawJM+7kqy0kJwXdCB4a0s7r5ltYKLH6ZdTfuBlsPdMgsUh4TzHQ8JBVwckAbVLnWsCTHKMcnaHxamHdiaM4BBSAKiTYYsGomjF6MrQSyhxBDUTB78J3kRwc+fKr3gNCgs7EQw2IREMUcKb5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f6530b381bso68312039f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 00:16:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720682178; x=1721286978;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e4CUmfHkyHFShreHo7XGOS6MwgJhiOHLwRVd6LZDkEk=;
+        b=fsPNWy7zV5vGAXEH8N2ogq+NzOGQ1yhZjlBN+P8jY8DRz9vgYO7gRGwf5+s1Q4BlZW
+         KQ140VOz8b2XTprdu2aRQk72mzzhaySqB1ttsbPlQHLrlSaxqvpOkh8l7bnxvNu8mduW
+         KvpcbEay0vf+HUk/JT4Jc+3BSiNeIyZ/Mg6KNIIYbxxd90Tob2Ddfaa1a9+L/ZHn7sRa
+         2pR2CkRnbOaHF2s6xUe/TMjxghqioXTj8k+t3fFwn+s0wJe0hZXLAx8Uf1Ly7DbLaVpK
+         tuezIEX7+NQeXBShXnw7kHdHrkkz6B1HZa3PYljlG2qbkr9eWfVOSS2w1w0VaGQUN/lR
+         8Vvw==
+X-Gm-Message-State: AOJu0YxwFNw0LCz/R8cs3fgfxjR3ykQ8tQuqzjBXVp4TGvcLND6CJ6tQ
+	zaRqA8qcpXRVKtOBWk232fHugyayJBZpUbY7tem/Ww7Nf1qj0MzV98jzpWPu8UUzGlR84vj3Tgx
+	XRfNlqMzsE3sCBC92KfS+qJzxxDSmgtruIAKuWCzw1gzBMSgHMFtE4Rg=
+X-Google-Smtp-Source: AGHT+IGGvEszqloyp4QSeAcHt3/2Rp+ilrx6bU3i4vwKeaMLM1gZWOvnWy6gb/cC7Opj3sspGP6uBzd1bGB6zM1ZxP6b9wnxSCnB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd200019.china.huawei.com (7.221.188.193)
+X-Received: by 2002:a05:6638:840f:b0:4c0:9a05:44d0 with SMTP id
+ 8926c6da1cb9f-4c0b2869dd6mr563732173.1.1720682178115; Thu, 11 Jul 2024
+ 00:16:18 -0700 (PDT)
+Date: Thu, 11 Jul 2024 00:16:18 -0700
+In-Reply-To: <00000000000012d4ed0610537e34@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ff8f50061cf3892e@google.com>
+Subject: Re: [syzbot] slab-out-of-bounds Read in mi_enum_attr
+From: syzbot <syzbot+a426cde6dee8c2884b0b@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-When tries to demote 1G hugetlb folios, a lockdep warning is observed:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-============================================
-WARNING: possible recursive locking detected
-6.10.0-rc6-00452-ga4d0275fa660-dirty #79 Not tainted
---------------------------------------------
-bash/710 is trying to acquire lock:
-ffffffff8f0a7850 (&h->resize_lock){+.+.}-{3:3}, at: demote_store+0x244/0x460
+***
 
-but task is already holding lock:
-ffffffff8f0a6f48 (&h->resize_lock){+.+.}-{3:3}, at: demote_store+0xae/0x460
+Subject: slab-out-of-bounds Read in mi_enum_attr
+Author: almaz.alexandrovich@paragon-software.com
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&h->resize_lock);
-  lock(&h->resize_lock);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-4 locks held by bash/710:
- #0: ffff8f118439c3f0 (sb_writers#5){.+.+}-{0:0}, at: ksys_write+0x64/0xe0
- #1: ffff8f11893b9e88 (&of->mutex#2){+.+.}-{3:3}, at: kernfs_fop_write_iter+0xf8/0x1d0
- #2: ffff8f1183dc4428 (kn->active#98){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x100/0x1d0
- #3: ffffffff8f0a6f48 (&h->resize_lock){+.+.}-{3:3}, at: demote_store+0xae/0x460
-
-stack backtrace:
-CPU: 3 PID: 710 Comm: bash Not tainted 6.10.0-rc6-00452-ga4d0275fa660-dirty #79
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x68/0xa0
- __lock_acquire+0x10f2/0x1ca0
- lock_acquire+0xbe/0x2d0
- __mutex_lock+0x6d/0x400
- demote_store+0x244/0x460
- kernfs_fop_write_iter+0x12c/0x1d0
- vfs_write+0x380/0x540
- ksys_write+0x64/0xe0
- do_syscall_64+0xb9/0x1d0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa61db14887
-RSP: 002b:00007ffc56c48358 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fa61db14887
-RDX: 0000000000000002 RSI: 000055a030050220 RDI: 0000000000000001
-RBP: 000055a030050220 R08: 00007fa61dbd1460 R09: 000000007fffffff
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-R13: 00007fa61dc1b780 R14: 00007fa61dc17600 R15: 00007fa61dc16a00
- </TASK>
-
-Lockdep considers this an AA deadlock because the different resize_lock
-mutexes reside in the same lockdep class, but this is a false positive.
-Place them in distinct classes to avoid these warnings.
-
-Fixes: 8531fc6f52f5 ("hugetlb: add hugetlb demote page support")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- mm/hugetlb.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 45fd3bc75332..2004e6d3f7ca 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4659,6 +4659,8 @@ bool __init __attribute((weak)) arch_hugetlb_valid_size(unsigned long size)
- 	return size == HPAGE_SIZE;
- }
- 
-+static struct lock_class_key hugetlb_resize_keys[HUGE_MAX_HSTATE];
-+
- void __init hugetlb_add_hstate(unsigned int order)
- {
- 	struct hstate *h;
-@@ -4671,6 +4673,7 @@ void __init hugetlb_add_hstate(unsigned int order)
- 	BUG_ON(order < order_base_2(__NR_USED_SUBPAGE));
- 	h = &hstates[hugetlb_max_hstate++];
- 	mutex_init(&h->resize_lock);
-+	lockdep_set_class(&h->resize_lock, &hugetlb_resize_keys[hstate_index(h)]);
- 	h->order = order;
- 	h->mask = ~(huge_page_size(h) - 1);
- 	for (i = 0; i < MAX_NUMNODES; ++i)
--- 
-2.33.0
-
+#syz test
