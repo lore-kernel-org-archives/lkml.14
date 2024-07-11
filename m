@@ -1,153 +1,121 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47AE12DD9B
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B29712C54A;
+	Thu, 11 Jul 2024 06:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720680965; cv=none; b=Ie2H7FnfOTjjqZy35/NlaEZbLmfI72phUbvg4T68ZWmU6/xxmd4ph06eG2KdXhtjp1DL9NcuGxyvgBe0xqeOa3bn3SbYMZT1QoJjJQXpKQJVTUNx28gKlXHTeP1OZIH/CRqIiLW4WMTEZcwmUazB180Mbr8+lg/3B6LvHj7T6NI=
+	t=1720680997; cv=none; b=Lkm0qJ8QGaweLx+2YOxsnUKUF61sR02miQEEOmzhBnkPaItjBu6mJ4mcPzuJJbGAMldIv8zUwGj3K6ms3Yy031lejf8fu347Uj/cyQ8nwpOQ24JaXfCLPr+s5F2guGF05asUMXczr9f32zXYt5GtgTFXpmfMn+lvEPNJiep+FD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720680965; c=relaxed/simple;
-	bh=l7t0W6Gf7X/3+4B2lO9M0f58BALdgTQmAAgT8+KIukA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VWeWDdvbFnhLgKUMpYbhUGl1Ij6cKpH4Q2zsxhsyTZ4naPaHnbYnJth+UDxQ8Pr9d6VUrC4sfMKV9QsezkEz6mdJZKMTTXuduhwBCqCDrucgD1fvWMKrPGyHuvsoFI8mlzSvg8/JDMSY90heRD0DhGWL0FxEg+s11YxjA79YNEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=T9/h42/x; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1720680997; c=relaxed/simple;
+	bh=7PdI6dGb0scfg3lG1tvlmkvFOJyPIaXxnPjFo6A1gQA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mc416RFKabQKQUwFkZt1h9bzU8Y5C41fpWq/dKhqqiu+0Td4fjRFjP7vs45fiRRPXVNHz/A5EtnuV94myGe68bScIl0sPXBfERLNl3kvDXuSEt+r76gyDDNzI6EHRE18sQAKwYw+NLOiZNUkFSEVNBxknrI2D2rzLYeCd2jbPRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HXx3rhj9; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="T9/h42/x"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ee7a1ad286so6127361fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1720680961; x=1721285761; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=VcDtK91AtodOXx3CdgZhhFnwL7KOfmzTDYSuzH820VM=;
-        b=T9/h42/xG7UzFEtZBi3ouXCrN4X6xMfYOubxO7uF7IjI2isdiItDr7xecNP/lRj8MR
-         T/BTWhT/oeBJWyJvm7xwLxH74Ohhv6uRWK8X7SH6ZXPLCKHASPA1lyRh8DkMJelWzCBQ
-         AdY/jc/NIZI0zcGJcm8upZwGQFlGxHyWxYMH073PFRP/qS+AjbujVD/jfUTVcSg8KUAQ
-         hEovrQ6gAMOX1T4ePh0CaMHDkrzwDViULyGeyJQ2XtsDL7Bewd78P/3xTx5zDMx0BST6
-         C6jYKgDTZoGnzMfyYuPhMscdWgEh8YMuGQM0kIheAFywN9EhZYM9/d0w0ovstKRB1EYZ
-         DoeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720680961; x=1721285761;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VcDtK91AtodOXx3CdgZhhFnwL7KOfmzTDYSuzH820VM=;
-        b=UVKlje2VNzZ9l7tObEc3n7HRbHVT75YkBHob7MguWfQq9fR1iXD5qTfABsVH0LhoY4
-         29EB3MrtxgfGywx5IDTHu85jwAQS68Q9UxuQcxmIMTl7UwlLESb0A+pSVWeBriK+GgrL
-         ZVcDkTdvn2O8GKYjAfu7HNCYbaY1WtFLesVIT/8FC2y83mq2JbhIJLo82+Hlsqenyujo
-         0stxmfuNhuL4WtiZvek2hlKnviNMfPWzA9iiC2hU0OVSgMQkDcyx9Cgk5w0C857f9vGk
-         3cQeykkLRUMqsCow0snY9hCed5hyYxM3STM4Z14obchVtCnxpBoIRQ+QqrPldorPyJmB
-         UiNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVjfr6Y4esKc8Vb/5nm2ciTAmZzEsFz2W/fMKBPPCtqr4pVFZUPIqBn8Qt66oLUILye28wBBTIykdsHjQ8pP++9wtY1bQqRu1ASlyH
-X-Gm-Message-State: AOJu0YwuCYf0gFhmpiRYRlECvBe7P4O4qb9IwNS7YvJ5PCj4ipBEYwUp
-	nQ7JVOZxLnZ9fjI1OtM0hrtx4zTVj0cs9x3vtBV5ijPaKo8xY8H3fGojL+5Cozc=
-X-Google-Smtp-Source: AGHT+IGjg3Hfplh2y60uDrHiR9PtMYcLRiysODxELTVZWuhJtL7Ztc7GOYonZgINfsvmwjdIHZ2T4A==
-X-Received: by 2002:a2e:9201:0:b0:2ec:52da:6070 with SMTP id 38308e7fff4ca-2eeb3182404mr55914021fa.42.1720680960474;
-        Wed, 10 Jul 2024 23:56:00 -0700 (PDT)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a122a1sm44803145ad.45.2024.07.10.23.55.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 23:55:59 -0700 (PDT)
-Message-ID: <08b5cf14-8b00-4a19-ae98-e83e83357688@suse.com>
-Date: Thu, 11 Jul 2024 16:25:54 +0930
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HXx3rhj9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720680997; x=1752216997;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=7PdI6dGb0scfg3lG1tvlmkvFOJyPIaXxnPjFo6A1gQA=;
+  b=HXx3rhj9g2+ke0pA1yW1kOJb/2ePkn/M/qEPc0/ru3GLBV0nYEiXajA0
+   LNWksR6M97pIsDW0Hp4S65QTgvjNAl6esQcuo6hFOX3XZ0DmqAASe6Icl
+   rACU8nSKbSPmV/eMr9T8xJWG1WFtGmml1G/M+tw9m6dh+RbwR9NF79ktp
+   3GL3kanvbbgxzaXq6RLllvX0KU70lbRwkW9rjWvXSvf/tv9xFGKEbfsSE
+   bsW/0AjSX9y4qS3JHmXZt6XY3Hi4tLIYV6puXsosGxv6K/RDmVeKGqGhC
+   lPyzEEHZugD1LZK8NtnC+6Vxmajkl84XawbjWGcHR7AVADecdntHxkfgM
+   w==;
+X-CSE-ConnectionGUID: tfuBTGTVS0Wcnbh7uMO1gw==
+X-CSE-MsgGUID: X5tIQrPsQl+6YiQm7IddTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18177119"
+X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
+   d="scan'208";a="18177119"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 23:56:36 -0700
+X-CSE-ConnectionGUID: zc9BorrXTNSYgESHKXov3Q==
+X-CSE-MsgGUID: 7poP+vrFS9i8o6vwFQ1pRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
+   d="scan'208";a="53401877"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 23:56:33 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  "Rafael J. Wysocki"
+ <rafael@kernel.org>,  Len Brown <lenb@kernel.org>,  Ho-Ren Chuang
+ <horen.chuang@linux.dev>,  Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+  linux-acpi@vger.kernel.org,  linux-kernel@vger.kernel.org,  kernel test
+ robot <lkp@intel.com>
+Subject: Re: [PATCH] ACPI: HMAT: Mark hmat_set_default_dram_perf() as __init
+In-Reply-To: <20240710-fix-modpost-warning-default_dram_nodes-v1-1-8961453cc82d@kernel.org>
+	(Nathan Chancellor's message of "Wed, 10 Jul 2024 09:29:57 -0700")
+References: <20240710-fix-modpost-warning-default_dram_nodes-v1-1-8961453cc82d@kernel.org>
+Date: Thu, 11 Jul 2024 14:54:42 +0800
+Message-ID: <87jzhsa05p.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] btrfs: update stripe_extent delete loop
- assumptions
-To: Johannes Thumshirn <jth@kernel.org>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- Filipe Manana <fdmanana@suse.com>,
- Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20240711-b4-rst-updates-v2-0-d7b8113d88b7@kernel.org>
- <20240711-b4-rst-updates-v2-3-d7b8113d88b7@kernel.org>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJjTSJVBQkNOgemAAoJEMI9kfOh
- Jf6oapEH/3r/xcalNXMvyRODoprkDraOPbCnULLPNwwp4wLP0/nKXvAlhvRbDpyx1+Ht/3gW
- p+Klw+S9zBQemxu+6v5nX8zny8l7Q6nAM5InkLaD7U5OLRgJ0O1MNr/UTODIEVx3uzD2X6MR
- ECMigQxu9c3XKSELXVjTJYgRrEo8o2qb7xoInk4mlleji2rRrqBh1rS0pEexImWphJi+Xgp3
- dxRGHsNGEbJ5+9yK9Nc5r67EYG4bwm+06yVT8aQS58ZI22C/UeJpPwcsYrdABcisd7dddj4Q
- RhWiO4Iy5MTGUD7PdfIkQ40iRcQzVEL1BeidP8v8C4LVGmk4vD1wF6xTjQRKfXHOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJjTSJuBQkNOge/AAoJEMI9kfOhJf6o
- rq8H/3LJmWxL6KO2y/BgOMYDZaFWE3TtdrlIEG8YIDJzIYbNIyQ4lw61RR+0P4APKstsu5VJ
- 9E3WR7vfxSiOmHCRIWPi32xwbkD5TwaA5m2uVg6xjb5wbdHm+OhdSBcw/fsg19aHQpsmh1/Q
- bjzGi56yfTxxt9R2WmFIxe6MIDzLlNw3JG42/ark2LOXywqFRnOHgFqxygoMKEG7OcGy5wJM
- AavA+Abj+6XoedYTwOKkwq+RX2hvXElLZbhYlE+npB1WsFYn1wJ22lHoZsuJCLba5lehI+//
- ShSsZT5Tlfgi92e9P7y+I/OzMvnBezAll+p/Ly2YczznKM5tV0gboCWeusM=
-In-Reply-To: <20240711-b4-rst-updates-v2-3-d7b8113d88b7@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
+Nathan Chancellor <nathan@kernel.org> writes:
 
+> After commit 4dc70b711dbc ("memory tier: consolidate the initialization
+> of memory tiers"), there is a modpost warning when
+> hmat_set_default_dram_perf() is not inlined into its callsite, as it
+> appears that default_dram_nodes may be accessed after its memory has
+> been freed.
+>
+>   WARNING: modpost: vmlinux: section mismatch in reference: hmat_set_default_dram_perf+0x18 (section: .text) -> default_dram_nodes (section: .init.data)
+>
+> The single callsite, hmat_init(), is __init, so this warning is not a
+> problem in reality but it is easily solvable by marking
+> hmat_set_default_dram_perf() as __init, which should have been done when
+> this function was added in commit 3718c02dbd4c ("acpi, hmat: calculate
+> abstract distance with HMAT").
 
-在 2024/7/11 15:51, Johannes Thumshirn 写道:
-> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> 
-> btrfs_delete_raid_extent() was written under the assumption, that it's
-> call-chain always passes a start, length tuple that matches a single
-> extent. But btrfs_delete_raid_extent() is called by
-> do_free_extent_acounting() which in term is called by > __btrfs_free_extent().
+Good catch!  Thanks for your fix!  If it's necessary, feel free to add
 
-But from the call site __btrfs_free_extent(), it is still called for a 
-single extent.
+Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
 
-Or we will get an error and abort the current transaction.
-
-> 
-> But this call-chain passes in a start address and a length that can
-> possibly match multiple on-disk extents.
-
-Mind to give a more detailed example on this?
-
-Thanks,
-Qu
-
-> 
-> To make this possible, we have to adjust the start and length of each
-> btree node lookup, to not delete beyond the requested range.
-> 
-> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202406292310.hlRATeZJ-lkp@intel.com/
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 > ---
->   fs/btrfs/raid-stripe-tree.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
-> index fd56535b2289..6f65be334637 100644
-> --- a/fs/btrfs/raid-stripe-tree.c
-> +++ b/fs/btrfs/raid-stripe-tree.c
-> @@ -66,6 +66,11 @@ int btrfs_delete_raid_extent(struct btrfs_trans_handle *trans, u64 start, u64 le
->   		if (ret)
->   			break;
->   
-> +		start += key.offset;
-> +		length -= key.offset;
-> +		if (length == 0)
-> +			break;
-> +
->   		btrfs_release_path(path);
->   	}
->   
-> 
+> I left off a fixes tag as I assume this is going to be squashed into the
+> former change mentioned above, as it is still in mm-unstable, but feel
+> free to add one if the patch is going to be standalone.
+> ---
+>  drivers/acpi/numa/hmat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index a2f9e7a4b479..ca0c0ea3e1ef 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -933,7 +933,7 @@ static int hmat_callback(struct notifier_block *self,
+>  	return NOTIFY_OK;
+>  }
+>  
+> -static int hmat_set_default_dram_perf(void)
+> +static __init int hmat_set_default_dram_perf(void)
+>  {
+>  	int rc;
+>  	int nid, pxm;
+>
+> ---
+> base-commit: 17bcc624e67da6383060ee24483db77aa17276aa
+> change-id: 20240710-fix-modpost-warning-default_dram_nodes-38b6faffe3da
+>
+> Best regards,
+
+--
+Best Regards,
+Huang, Ying
