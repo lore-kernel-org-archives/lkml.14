@@ -1,319 +1,99 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn19011023.outbound.protection.outlook.com [52.103.32.23])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CFE16DC09;
-	Thu, 11 Jul 2024 11:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.23
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720697051; cv=fail; b=S39ZKKiA2vALNVK8uABLp+1PEWUKg9/6dXeTSiNiHesmryjRVkBqmOhLl6dWoPcXWTQ2hgVvzD+xGXvIrxrjczLM7nxGKtObLU2yoyxa8/ODGQ88TsVC7I5PCQSvjmap3Y+Q1E6vGoK5bVhlDfzcZm7NigR/UtmP5fEVSBpJS3o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720697051; c=relaxed/simple;
-	bh=b4E7pEvHSlooW5kM/GHXqHjYvTC2iOpkyNSk6ILcu44=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lIR3Mr74FdWwU6bUsy68oHH4+0t0KK0BPEv1dyuWOYsBz7ipZ1JFGiAQzmLITgV73HMK53lIvUNgLYi4OH9c84MQ3d58OrwHd0ZlEabkQ+A5np44nvOp3sZY1D1ytslkQuG/O9G2XweVcsmpsZfTkKQLuGGaXf0tv+ujEgPv8Rc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=H/5TQ/Jd; arc=fail smtp.client-ip=52.103.32.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A55215B10A;
+	Thu, 11 Jul 2024 11:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720697061; cv=none; b=fl8DVLZUH8nx5ZOzyMRCEVP98N+jltAK7HkmZn51sZKwg2D/o1AYVB/3FdnOK12g7LaY++6mE2beZfuuZfCcu8pRUJ8KI3dXTgg87cUgY5yFUCo7Gn9XiQJ/ul+noBnkoGATMSyimUv7W50KyHtYdClgPLOl6J3cgJjutyP/da4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720697061; c=relaxed/simple;
+	bh=o/2EvU8Ne6JzHNgJUsH762dUzuzFgrow+gSs4PLwHAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dVCG390ZOtH78aqh67JdihcxlsWW8VgyXt8RUMv4bYP22X0RA591+VksCD/PKEFEmNTrAxZIi394DMtqWJQs+NkN1a5hkVtpoUyYTjWytssBR0EKiQ/rE8VQWkRZlqKeyb44JGJd/tlZBB5TsLW62N2VDXoQyRVcM04CRrrVDy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RhXgsXmc; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="H/5TQ/Jd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Eu5FlWyI6aNducMcHDgcFqSIwCMMSoK34Ee9jgzujCouJhdJY6fTdqp36JsxOV0e0ThqVt8Z1TPKOOGHh54XZGwbsyFq032gfhm06h8hyY/42tfBZvFUz7POEDe8FpQQIiQEdO5q2WymkNMTMqWiW80BquYxsVlvraR4ihLN7MujL5vHzp8UheAo6MobBTDNmxOUUgV8q0e5IghWe8ySVwFhqlizHjCNiZyf9sN+9YDKbeerUXcBqJgf6iZosMDu3mi5GCbSG+4bqHb10i6hAB7OAsiHkMuCgLU8tdUXU6/kc1AQwvgX15ntJXDnumdeAcwlUNZlV0VJcAzbqCxp3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j6i4MicK2b/3Q7z+U/fTVZjgwdZKerVi+nFpvOSivug=;
- b=vnNN3dFx10axH3O9vsERrzDlTWpt+veC3RHSCLE2zDCeV2EFpsM6BRios+bhD0CsiHeWjpteNcP3Fp4ruajvBJLEjYZ0v2bjz3RH/w9D2s9QY0tHRQ+rycVLCxST08PhyMgQqXCPXtRGAWFX94dnzecGVXCjHErSZYo4Mrv5vZHBJO++RE0X1gFww13iXuY/ydVOio/RVTl8VDFrmzAJki/0P2TU8KwPKYPn7wmg2PJnrVsGK1cBoPbpD78xi+LpHt2x6aq4qBeGlYyHFz17op+xUeJJvWCFcfiQz2vrO5ypVpDd6jHMZlfVaH9oErqh1ovMxnGxXjKwsZ8Ccd7vHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j6i4MicK2b/3Q7z+U/fTVZjgwdZKerVi+nFpvOSivug=;
- b=H/5TQ/JdYQqvJOme/xD1hpuQnL2LThurjwTKyC8R6OhqgdpbQQfS1j+Xrjc+TjchwkC7fn/q4apcBwrEAxD+vBsUTt1EKLdvNizmUej/mZbTdlzpTDtxgTYro2cHIGjmtnzCsgAQmw0EiCQxvFCyzxoThS4N2zjrXp8p1Rj9dEXEFYkwgrSwGWgTzYC+/L90bfFD+L4hzlO69HTs4nADFvBxJWopvtFxumyqXuzxgyCJUgOCf0K1eAojsRvrHHei5zXZ+irdnTxQt7zHlz7M79FpiIRJQJtCJjltuiq33xZJEnAz4/BVlbbRIF2RiaUKhicxEGgbCqdJIfIIM5URVw==
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
- by GV1PR03MB10233.eurprd03.prod.outlook.com (2603:10a6:150:166::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Thu, 11 Jul
- 2024 11:24:06 +0000
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7]) by AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7%6]) with mapi id 15.20.7762.020; Thu, 11 Jul 2024
- 11:24:06 +0000
-From: Juntong Deng <juntong.deng@outlook.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	andrii@kernel.org,
-	avagin@gmail.com,
-	snorcht@gmail.com
-Cc: bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH bpf-next RESEND 12/16] bpf/crib: Introduce skb_data open-coded iterator kfuncs
-Date: Thu, 11 Jul 2024 12:19:34 +0100
-Message-ID:
- <AM6PR03MB5848DE102F47F592D8B479E999A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <AM6PR03MB58488045E4D0FA6AEDC8BDE099A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
-References: <AM6PR03MB58488045E4D0FA6AEDC8BDE099A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [kpVB+rpQiObCfYHj3B1EGxfjQH2TzM0w]
-X-ClientProxiedBy: SI2P153CA0031.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::7)
- To AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
-X-Microsoft-Original-Message-ID:
- <20240711111938.11722-12-juntong.deng@outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RhXgsXmc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720697061; x=1752233061;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o/2EvU8Ne6JzHNgJUsH762dUzuzFgrow+gSs4PLwHAA=;
+  b=RhXgsXmcnjKzr6B4rYihs3tmDxiz6p9GyMYYOEhCW4+RZ2y/k+t2FmrO
+   mde0V+TzEc6RdR8uD0UbUnwVcDhpzI1G70rSv+kk4wdw4mi+WkYNt6S+G
+   j1XJVwC46t2C32+OyX4FITIKoiPAyPImD2HkLDNwG8IL5u8YXJN4wh/GH
+   /z5eOs4n1VfxI3BAWj5hO98qfvyMeSgQgultvGfvIlGD1VlCbv5nsMv84
+   xJVJahtl6gkt6dls86A6johukKB4Fw2N5AzS6y56lqz2RfJjIxRArqS0z
+   2ITiQyA3gtJk9J7vfw8ojTkYdO7HKP7dOChBHvMQWpl9wrRRDigt4Hdx4
+   w==;
+X-CSE-ConnectionGUID: sEzytX45QsSQMMOCGfcjsQ==
+X-CSE-MsgGUID: mq5Q3y7SS0aOhso5V7gbjQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="40582706"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="40582706"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 04:24:20 -0700
+X-CSE-ConnectionGUID: VsJm3oa9S3yZ6uUi3Zm8Fw==
+X-CSE-MsgGUID: VrbT04LEQ3+kl1RHWDS/FA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="49178595"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO intel.com) ([10.245.246.252])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 04:24:12 -0700
+Date: Thu, 11 Jul 2024 13:24:09 +0200
+From: Andi Shyti <andi.shyti@linux.intel.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Zhi Wang <zhi.wang.linux@gmail.com>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-gfx@lists.freedesktop.org>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-xe@lists.freedesktop.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL GVT-g DRIVERS (Intel GPU Virtualization)" <intel-gvt-dev@lists.freedesktop.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+	"open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+	Zhi Wang <zhiwang@kernel.org>
+Subject: Re: [PATCH v4 3/6] drm/i915: Make I2C terminology more inclusive
+Message-ID: <Zo_A2Ykh3-YI7Nff@ashyti-mobl2.lan>
+References: <20240711052734.1273652-1-eahariha@linux.microsoft.com>
+ <20240711052734.1273652-4-eahariha@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|GV1PR03MB10233:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b337eac-ff48-4019-977f-08dca19bfa03
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|19110799003|8060799006|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	4cUlS8i4ltiDBk1uHBVMkGbdoxuMq9jpNLQZ6Ku3MOSWnyZJEY5GUXgOjagKLY9UKVjUbX9cwDE4W5CYY95fL+mb/ggC6xSR6/VKPxyr4Djt/pma/ZraKvDuWtHV02dQSA4HBcwAlhb/xxHDFa+SwKLn+q9/MQACeiLJyq0DwzUdAwqsSPGPOzXjC7/64h6CpcGoUt4GlG2cE1FXW2jjdFsyLaKc3K+MvdZmpeWs6cZvbltjXTDT7cLb3d1/N/1XjVoOt8TQxUkFQUonw+j1kbK2tMq3oxs4Pk6jwPksKcEjT4P/JoLh9Chh0rbJpBLDAQlLCX9jjO215ujYFDOwAPM1y0g7RwFjt8uGzGE1XKCB2BfFlvvfgxFV+HP5jwXBjorh0pD3JR35iFRat859S5UFd13O1SAB10fcO/VnM81yuDxNz6twu03vsC1bEU08Y2y24higx85O4N55bpsTz0nZ+zTKPZEZMGFqPX+FWeNa7bh35870cg1g2xTFNhA3oBQK48UE5+uY9RDTeHNmjd+sab5AV8hdP2yQZAUtHqkY9cwAInIpm5p/m03ZDmrSX5CUkJku8BTNW7nhOpB+rI2bdMAU61mDiuumNDind5eZHB7TeRFuUqrJgvT2Wk7XuMNZyZTcMSU9b9z2mK5OIQ==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?F7LM5oCYxGMHhT2CscgwZxu1bmBZXPdRkdgbyHHSs9+Guf7G1tiqKX4Mccx4?=
- =?us-ascii?Q?tUndXcgKkuEuIT8NzYVHm9C8oNdIIUfUKWV5U+zSvyoLGhnDAzCRZHHHMLd8?=
- =?us-ascii?Q?gVJEAj9bIUkkWL7qJlmnzcfa5QTD6teJ6ex1I0vCVZgYwBo4jF+z+dJ9ylaB?=
- =?us-ascii?Q?Turks42xXm4Z/+nFuUax7J52O0AJyMi5PZACZFyEQmqwFSyHsPaFd/xoIxF8?=
- =?us-ascii?Q?YuLNkTuZtip+0EiFTamhB2HV4e97adbQVwzxzYeF/DNIKt0aHaUIxKABhoVe?=
- =?us-ascii?Q?i5kmttcH865l8FBsQQWC10oZ4swiKyZHYoSRSzDGfMuUqh13Ik6GC1oXwfIa?=
- =?us-ascii?Q?QlouGTQhtc+eNzUxiwmYe3+AUNwxg291MQmzk1yuYT7i3pBZMZ37ZoDC8YI7?=
- =?us-ascii?Q?4B1woQUwE6eRwgdVrHBq4g4g+hEFwiQxxWJ6+aevyqevyP1e3ZeYa8wDc5v4?=
- =?us-ascii?Q?xrDuQDWSHdPBGPA+TM6gfDLCfqrr3YLWoUQvSl5+2h5DDVjYIFmcFSFyZSjJ?=
- =?us-ascii?Q?qB2rLf3erOXtDr0AX5Lj2qdsbYAB3smdk0Z82W6n1hFGyGYImA4scjjoFc/v?=
- =?us-ascii?Q?yvxJHd7U8zOBOVVYf/mtQ/+mrSrh7+AxduS4LEwUS8zgL6UfxWdX8L0QY/w1?=
- =?us-ascii?Q?CMmy+zQKGo2DDB8S8128QxysI8H8F1SRWU0Bk7OThPbfwCFF1Luq7TSJ/WuY?=
- =?us-ascii?Q?ZGLejO1rh0zuZNg1nk/weZeq4borSiQYZCNorjmE0w5NL3gktuzxoxNax/JO?=
- =?us-ascii?Q?hNdZAm2niTvZtqCLHiEC67lwkk0fz3hxPdD+b+5xk2jWiTmzWWUykLW0Qgn/?=
- =?us-ascii?Q?SRrn3Nb8Ak4chU1Z73AMDV/HJAAkOSf7wLcK/xczidzzGug33BYs8SSUT85d?=
- =?us-ascii?Q?sysQabXwPSwQ/Wt5Rc8oDKmT+e2B8WOM7qz1tU0xTADYYpuZeQh6/mu66zLL?=
- =?us-ascii?Q?9V/GOT6j425EDO7Sm6+KZv2y2f+rVVTiWvj8k0PZwwSyOUd/Z+I6ffzWiQFc?=
- =?us-ascii?Q?5bT3xPISWkUuixnACv2fsLZiCryeWvjWRZpLY+ih+2IU+/JQZu1MVWgHZS+a?=
- =?us-ascii?Q?WJ/vgvxzgoHBFHCfKq9E9jB7RgsCjVt+NbqTYKg+OMqJ3LXXrvgS72NFu2q1?=
- =?us-ascii?Q?ACEYrtGQssJtLf+xo1muyk4Uqi1TSWC4UF0Ox8SItk8gg7/uQ7AaNtvE28OX?=
- =?us-ascii?Q?RnFbL1BMvPQ0HNkWziuyi8fjiysvaFcik5KQdE7GquMcgRoHKowKRxmvuWo?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b337eac-ff48-4019-977f-08dca19bfa03
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 11:24:06.8556
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB10233
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711052734.1273652-4-eahariha@linux.microsoft.com>
 
-This patch adds open-coded iterator style skb data iterator kfuncs
-bpf_iter_skb_data_{new,next,destroy} that iterates over all data in
-the specified skb (struct sk_buff).
+Hi Easwar,
 
-This iterator is designed for checkpointing, and thus iterates over
-all data in the skb (starting with head), not just application-level
-data (starting with data).
+On Thu, Jul 11, 2024 at 05:27:31AM +0000, Easwar Hariharan wrote:
+> I2C v7, SMBus 3.2, and I3C 1.1.1 specifications have replaced "master/slave"
+> with more appropriate terms. Inspired by Wolfram's series to fix drivers/i2c/,
+> fix the terminology for users of I2C_ALGOBIT bitbanging interface, now that
+> the approved verbiage exists in the specification.
+> 
+> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Acked-by: Zhi Wang <zhiwang@kernel.org>
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
-Each iteration (next) copies the data to the specified buffer and
-updates the offset.
+good job! Thanks for taking care of this!
 
-The skb_data iterator has two getters
-bpf_iter_skb_data_get_offset()/bpf_iter_skb_data_get_chunk_len(),
-which are used to get the offset/the size of the chunk read in the
-current iteration.
+Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
 
-The skb_data iterator has a setter bpf_iter_skb_data_set_buf(),
-which is used to set the buffer and the size of the buffer for
-dumping the skb data during iteration.
-
-Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
----
- include/linux/bpf_crib.h         |  14 ++++
- kernel/bpf/crib/bpf_checkpoint.c | 116 +++++++++++++++++++++++++++++++
- kernel/bpf/crib/bpf_crib.c       |   7 ++
- 3 files changed, 137 insertions(+)
-
-diff --git a/include/linux/bpf_crib.h b/include/linux/bpf_crib.h
-index e7cfa9c1ae6b..c073166e60a0 100644
---- a/include/linux/bpf_crib.h
-+++ b/include/linux/bpf_crib.h
-@@ -32,4 +32,18 @@ struct bpf_iter_skb_kern {
- 	struct sk_buff *skb;
- } __aligned(8);
- 
-+struct bpf_iter_skb_data {
-+	__u64 __opaque[5];
-+} __aligned(8);
-+
-+struct bpf_iter_skb_data_kern {
-+	struct sk_buff *skb;
-+	char *buf;
-+	unsigned int buflen;
-+	int offset;
-+	unsigned int headerlen;
-+	unsigned int size;
-+	unsigned int chunklen;
-+} __aligned(8);
-+
- #endif /* _BPF_CRIB_H */
-diff --git a/kernel/bpf/crib/bpf_checkpoint.c b/kernel/bpf/crib/bpf_checkpoint.c
-index c95844faecbc..5c56f1cbf3c8 100644
---- a/kernel/bpf/crib/bpf_checkpoint.c
-+++ b/kernel/bpf/crib/bpf_checkpoint.c
-@@ -241,4 +241,120 @@ __bpf_kfunc void bpf_iter_skb_destroy(struct bpf_iter_skb *it)
- 		bpf_skb_release(kit->skb);
- }
- 
-+/**
-+ * bpf_iter_skb_data_new() - Initialize a new skb data iterator for a skb
-+ * (sk_buff), used to iterates over all skb data in the specified skb
-+ *
-+ * @it: new bpf_iter_skb_data to be created
-+ * @skb: a pointer to a sk_buff to be iterated over
-+ * @buf: buffer for dumping skb data
-+ * @buflen: buffer length
-+ */
-+__bpf_kfunc int bpf_iter_skb_data_new(struct bpf_iter_skb_data *it,
-+		struct sk_buff *skb, char *buf, int buflen)
-+{
-+	struct bpf_iter_skb_data_kern *kit = (void *)it;
-+
-+	BUILD_BUG_ON(sizeof(struct bpf_iter_skb_data_kern) > sizeof(struct bpf_iter_skb_data));
-+	BUILD_BUG_ON(__alignof__(struct bpf_iter_skb_data_kern) !=
-+		     __alignof__(struct bpf_iter_skb_data));
-+
-+	int headerlen = skb_headroom(skb);
-+
-+	kit->skb = skb;
-+	kit->headerlen = headerlen;
-+	kit->offset = 0;
-+	kit->chunklen = 0;
-+	kit->size = headerlen + skb->len;
-+	kit->buf = buf;
-+	kit->buflen = buflen;
-+
-+	return 0;
-+}
-+
-+/**
-+ * bpf_iter_skb_data_next() - Dumps the corresponding data in skb to
-+ * the buffer based on the current offset and buffer size, and updates
-+ * the offset after copying the data
-+ *
-+ * @it: bpf_iter_skb_data to be checked
-+ *
-+ * @returns a pointer to the buffer if further data is available,
-+ * otherwise returns NULL
-+ */
-+__bpf_kfunc char *bpf_iter_skb_data_next(struct bpf_iter_skb_data *it)
-+{
-+	struct bpf_iter_skb_data_kern *kit = (void *)it;
-+
-+	if (!kit->buf || kit->buflen <= 0)
-+		return NULL;
-+
-+	if (kit->offset >= kit->size)
-+		return NULL;
-+
-+	kit->chunklen = (kit->offset + kit->buflen > kit->size) ?
-+			kit->size - kit->offset : kit->buflen;
-+
-+	skb_copy_bits(kit->skb, kit->offset - kit->headerlen, kit->buf, kit->chunklen);
-+
-+	kit->offset += kit->chunklen;
-+
-+	return kit->buf;
-+}
-+
-+/**
-+ * bpf_iter_skb_data_set_buf() - Set the buffer for dumping the skb data
-+ * during iteration
-+ *
-+ * @it: bpf_iter_skb_data to be set
-+ * @buf: buffer
-+ * @buflen: buffer length
-+ */
-+__bpf_kfunc void bpf_iter_skb_data_set_buf(struct bpf_iter_skb_data *it, char *buf, int buflen)
-+{
-+	struct bpf_iter_skb_data_kern *kit = (void *)it;
-+
-+	kit->buf = buf;
-+	kit->buflen = buflen;
-+}
-+
-+/**
-+ * bpf_iter_skb_data_get_chunk_len() - get the size of the chunk read
-+ * in the current iteration
-+ *
-+ * @it: bpf_iter_skb_data to be checked
-+ *
-+ * @returns read size in the current iteration
-+ */
-+__bpf_kfunc int bpf_iter_skb_data_get_chunk_len(struct bpf_iter_skb_data *it)
-+{
-+	struct bpf_iter_skb_data_kern *kit = (void *)it;
-+
-+	return kit->chunklen;
-+}
-+
-+/**
-+ * bpf_iter_skb_data_get_offset() - get the offset of the chunk read
-+ * in the current iteration
-+ *
-+ * @it: bpf_iter_skb_data to be checked
-+ *
-+ * @returns offset in the current iteration
-+ */
-+__bpf_kfunc int bpf_iter_skb_data_get_offset(struct bpf_iter_skb_data *it)
-+{
-+	struct bpf_iter_skb_data_kern *kit = (void *)it;
-+
-+	return kit->offset - kit->chunklen;
-+}
-+
-+/**
-+ * bpf_iter_skb_destroy() - Destroy a bpf_iter_skb_data
-+ *
-+ * @it: bpf_iter_skb_data to be destroyed
-+ */
-+__bpf_kfunc void bpf_iter_skb_data_destroy(struct bpf_iter_skb_data *it)
-+{
-+}
-+
- __bpf_kfunc_end_defs();
-diff --git a/kernel/bpf/crib/bpf_crib.c b/kernel/bpf/crib/bpf_crib.c
-index fda34d8143f1..462ae1ab50e5 100644
---- a/kernel/bpf/crib/bpf_crib.c
-+++ b/kernel/bpf/crib/bpf_crib.c
-@@ -293,6 +293,13 @@ BTF_ID_FLAGS(func, bpf_iter_skb_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_iter_skb_next, KF_ITER_NEXT | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_skb_destroy, KF_ITER_DESTROY)
- 
-+BTF_ID_FLAGS(func, bpf_iter_skb_data_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
-+BTF_ID_FLAGS(func, bpf_iter_skb_data_next, KF_ITER_NEXT | KF_RET_NULL)
-+BTF_ID_FLAGS(func, bpf_iter_skb_data_set_buf, KF_ITER_SETTER | KF_TRUSTED_ARGS)
-+BTF_ID_FLAGS(func, bpf_iter_skb_data_get_chunk_len, KF_ITER_GETTER)
-+BTF_ID_FLAGS(func, bpf_iter_skb_data_get_offset, KF_ITER_GETTER)
-+BTF_ID_FLAGS(func, bpf_iter_skb_data_destroy, KF_ITER_DESTROY)
-+
- BTF_KFUNCS_END(bpf_crib_kfuncs)
- 
- static int bpf_prog_run_crib(struct bpf_prog *prog,
--- 
-2.39.2
-
+Thanks,
+Andi
