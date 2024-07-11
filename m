@@ -1,97 +1,92 @@
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAD812C559;
-	Thu, 11 Jul 2024 09:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D191BE6F
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720689859; cv=none; b=r7Uz+rEpHfsHTX1wjbqe9cKky2t8DeGErbq5VSjlO/xGbC97FhO1/lqxpbmRiWzAUQN7Mh72hfGnFe2tZOppRNy0a6mTbWKFKYvJ/k5uV0NOWfKa8WixUlLRzJvfadINklcvoDTcT0osNx7dNiD/f+38Cp+nGNx4jedIRNMckFs=
+	t=1720690014; cv=none; b=RTxlotg8tX3J53gYGe5aH4T8vBBLEkogaKB/cKqzXfnREObNs+mSDY22C9TY/ZQdsCtkjkzLDi1UiMdkqyOxYhF++vvZuMy179Z2P80zkynw7PckN8mpvLI5oxX0vLwcgH2bCISehDIgQH/VNs8JFuKSyO9pcrVS0szKPv2olJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720689859; c=relaxed/simple;
-	bh=9NjQY4CFdRSSUMACoTljrQZ0Eu6KQjt/PB+PShVspRE=;
-	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
-	 In-Reply-To; b=e+arHWYKnZzQcRUW8lbVMj3XDF8iduVuRIRrk88Ollp+92RfC2IbLAFUBdSBUuZBfi46V8bXEivMyz54ey8EZI9n0rei6dsbxW+cFZi7d2hOi8HbOcJLLcCvjJ0WlPncD45xAH572FCFKQIzqOyJX0MtXz5494C/MfmY23RnWcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc; spf=pass smtp.mailfrom=walle.cc; dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b=ylW4lySg; arc=none smtp.client-ip=159.69.201.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+	s=arc-20240116; t=1720690014; c=relaxed/simple;
+	bh=2tFtKgxNYDhaOhDDfnqF4Tr26RPT96HhtvIaZw5Jfrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RMixYGCjhf3a3+gvu6f9DMA3AOiw7LUIYmNqBc/WctkAR9+BJKtSQYfpZZ7RGpPsz3zlCaaIcCoGbOWqlDD11hAV3FwAnp5HS7TQqm3Jy0GypG83zSF7A1kBABQoeLdY/LUYMQRHJRW1nwCQ+YeO4K2RRO91CzbonLC396RlzWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=dC4WnT3x; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="ylW4lySg"
-Received: from localhost (unknown [213.135.10.150])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id EBB993B6D;
-	Thu, 11 Jul 2024 11:24:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-	t=1720689849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
-	 references:references; bh=9NjQY4CFdRSSUMACoTljrQZ0Eu6KQjt/PB+PShVspRE=;
-	b=ylW4lySgGjMOXcWA3D57Rlg3dbXLsLi6lD8Ujp4QTPKR3fGsa7gtjsmw8eqrWbYAJ48HgC
-	+GbmuDCeNgyCqRkhsRYQ8litN8fDDEM/99hNMyzOA3TNVMp/ppxC6XcOMDXJivVBYuLrOQ
-	E7N8boUaduoWml1xbC3bK2bPL0qZogEV2AfD5xg05036jXZ7ASzfsshNXTWAmg3W1anF/w
-	mF2eigXeK3ys5PkY/YoOIsCWoKvZ8FqFeY+jFWU6M9lgeedMWSxCh+lEzri4FF2kV0YFY2
-	bZ7Zj8nF/1j0J3vm+TP1jlg0TE8wKRxmP+/0S8f8MoS2g7KdZab2gOLsWYeMPw==
-Content-Type: multipart/signed;
- boundary=bd03c224a37c17e60929764b4547fa19bcf92c44aa38a8278f30359b2966;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Thu, 11 Jul 2024 11:24:06 +0200
-Message-Id: <D2MLN7389BYY.1HZAQPLQNKU5T@walle.cc>
-To: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- <chunkuang.hu@kernel.org>, <ck.hu@mediatek.com>
-Subject: Re: [PATCH v8 0/3] drm/mediatek: Add support for OF graphs
-Cc: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
- <conor+dt@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
- <daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>,
- <mripard@kernel.org>, <tzimmermann@suse.de>, <matthias.bgg@gmail.com>,
- <shawn.sung@mediatek.com>, <yu-chang.lee@mediatek.com>,
- <jitao.shi@mediatek.com>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
- <linux-mediatek@lists.infradead.org>,
- <linux-arm-kernel@lists.infradead.org>, <wenst@chromium.org>,
- <kernel@collabora.com>, <sui.jingfeng@linux.dev>
-From: "Michael Walle" <michael@walle.cc>
-X-Mailer: aerc 0.16.0
-References: <20240618101726.110416-1-angelogioacchino.delregno@collabora.com> <d84f1469-e82a-42de-94a0-8ee0da0cba02@collabora.com> <eef10e9f-dac5-4a05-a79c-f8026f27f051@collabora.com>
-In-Reply-To: <eef10e9f-dac5-4a05-a79c-f8026f27f051@collabora.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="dC4WnT3x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=z++z
+	4PsmWomeVqtniGIkn0Y3nNRWhrQ+aa2t3xfmEjE=; b=dC4WnT3xETrUxe4YSQvV
+	yzuEM6+/vVIic2Vf7vI1X6W9et7uxOF4ApYwLqR7QDHTbIC/Ad1ezPRiel6gNa0e
+	IAxxS19zhUul/NGEbWHmi4smOSXX76ogZ3KkgdS8vTt7dKwKbshVE1iYKDare0ao
+	5WpXNn8n98ES3LtX2pfPtIiBBV+hidfN0agQx9Rhbvi0blxWb2fn6I6OqD1RlG3y
+	vl6Cyyo9cO1kouICtjngiO6S7Iys3ftpAJoTMC/bBl+PwmYuZQFYYGqXQrvmYUKb
+	o24d3MEaMWxALFu3wPR+I5hzxLeHFTpv7ekOPyvFWtFWENzUIWkqBNHir/JR5h4q
+	nA==
+Received: (qmail 793755 invoked from network); 11 Jul 2024 11:26:50 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Jul 2024 11:26:50 +0200
+X-UD-Smtp-Session: l3s3148p1@hEPTXPUcgK8gAwDPXwmZAIsFIv4n+Dpm
+Date: Thu, 11 Jul 2024 11:26:50 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+	Alain Volmat <alain.volmat@st.com>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: mark HostNotify target address as used
+Message-ID: <Zo-lWi3EtRoJa6kk@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+	linux-renesas-soc@vger.kernel.org,
+	Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+	Alain Volmat <alain.volmat@st.com>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20240710085506.31267-2-wsa+renesas@sang-engineering.com>
+ <c8f837f5-16b1-a5da-c687-a95d2ec42fa0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ghnN+7tU7NIdeHXq"
+Content-Disposition: inline
+In-Reply-To: <c8f837f5-16b1-a5da-c687-a95d2ec42fa0@gmail.com>
 
---bd03c224a37c17e60929764b4547fa19bcf92c44aa38a8278f30359b2966
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-Hi,
+--ghnN+7tU7NIdeHXq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > We've got a bunch of series that are waiting for this to get upstreamed=
-, including
-> > the addition of support for MT8365-EVK (already on mailing lists), MT83=
-95 Radxa
-> > NIO 12L, MT8395 Kontron SBC i1200 (not on mailing lists yet, waiting fo=
-r this to
-> > get merged), other than some other conversion commits for other MediaTe=
-k DTs from
-> > myself.
 
-Yes this is the missing piece to finally get DisplayPort output
-working on our board.
+> > to the dummy driver so it will marked as "handled by the kernel" if the
+>                                 ^ be? :-)
 
--michael
+Yes, thanks!
 
---bd03c224a37c17e60929764b4547fa19bcf92c44aa38a8278f30359b2966
+
+--ghnN+7tU7NIdeHXq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iKcEABMJAC8WIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZo+ktxEcbWljaGFlbEB3
-YWxsZS5jYwAKCRASJzzuPgIf+IKuAX91bBhsZ9n70IFStgrv2BIU/wzvYey5zSMd
-wdN4kUkgilUQZFMEdQBBI9Rre4soOOABgKV3nro9rwqC5Qu3/YjtsfR4y9YZMmWS
-dVPja70ZNJ1cDuh4I+gD19+V0Q4xPsz6ZQ==
-=B681
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaPpVkACgkQFA3kzBSg
+KbbR+BAAgn9mPsdzPbBoJIYSuxAskuiXX+VC3m3aVXtcCy7BhOSgUg/dUkug9Ze6
+wXBehGmaeANq9SN3GjyW4AEozsOHW/DTqpnT6M9x0h7vl1UWGZsJKvlPKwub5YR1
+mLkzsTOnH120WIe2iCE+S1//Ljk90HNrODB9WwRLryQ0+48ZAzC4tnRHCVcJHH/V
+Np8dCfD7+Ac8FxpYdymgOqx2nXWpI9KGgOKvWROnreOE2zr5ShMC+/3pC1OjBWMk
+UZK205a8UoF8oQjavTqnG+k92kwydjYMiFy5SoXK47ODoU+LDoc30ZfWSOxMhEkk
+bIbO0qil9VjYYuOBqI3TA4KjKQ8okoAQFdF+gmCnJ0yK4xaSktrQO+IJY1LDEJMs
+scfiohh4IdJBKD7ZxNuS6s5BGtLN7yE/RdNq5CAXAFQ+Afssk2jWlFt1yr6oVMk3
+VPzkkt8JXIbAVoVeunBIbR/AE6jgpLi1FY2dFK+DJAdf+ex/xl3oHdn/p6DbTv9M
+HvuAOIUK7b0QkfHqcR9ZA8ceCQKkHhv+PIReXXei64DRrQWbosU+PLBJuVAbekvQ
+Y+TdN2ju+se4yvXm9K0MsMVDJrzpwX9fQB2YAT5hnJQX0Y6MKCUOd6ZaWL4sxYWR
+p8rkakj8FSYCn62Lf1ATEkc2+6ef1hMbDtvWwCPDEUnrgEkM9YA=
+=Z9sf
 -----END PGP SIGNATURE-----
 
---bd03c224a37c17e60929764b4547fa19bcf92c44aa38a8278f30359b2966--
+--ghnN+7tU7NIdeHXq--
