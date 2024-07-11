@@ -1,221 +1,127 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977B812F385
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 21:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690B912F385
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 21:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.217.213.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720733485; cv=none; b=HbsYp5ZNfyJL5osRuC5ClhCmJT6AmjYZ9s+b/pQKQAXV63Z4Wjmgw68VHlM4Wrj/3Z2gh8yHd+ZaeMHDk3pgdA2IBt6RYMhNcI3Q5z8zg7uk+26rlVzvQDLuWkEHsMIDGb4xU/9K4K4uQRkXE6mShmmzBvgPS7yfXNSEy64Higc=
+	t=1720733633; cv=none; b=XUQonBXilNTmOTfyTFToi5F/hRi09cssIAxlw3mgj8NLPpD6oFEhtrBXeaGQd0EXlBhsA75Z4OFvOAY2U7PK74+OfKiy2GH5aSAibsx+rVVFocWx4PuYgELG49voi4C0UANyRQQnSSJZM3hAkKbGai9bqa4R1RzqGBo9i3wGOTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720733485; c=relaxed/simple;
-	bh=jFC/ch/i8/z5xVvWKDKmHwOHmrjhAbhPZHERWwIZfQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XR0F3xlV334EHNFELdd8lQc6XHPGrTuq0lrRE1EDAbP31btBMA5fEWuM15/bQbjF63CWugGEahjUncRdtHcV4mwOOhK5x9hBVHxXUPxmu10wWYqUxRhic4OQY1ox8SUfVi/sAfbk0dbxNU3tZWPR1FJ2SDTQOalZZlxshueOrOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YK/tsZmO; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YK/tsZmO"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3d853e31de8so727238b6e.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:31:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720733483; x=1721338283; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SfeKN2QfdZHciO4OVOVkpdd43CD7Qm2bGhXeNljngUw=;
-        b=YK/tsZmO76iCrXYiHHrA+y32F7ZmMZuF8/UZuTosVFxz8STblfzPAh4imVFyrVFO4f
-         fDRHIncSoh9OLUXnvgWPm6MH6RZz8pwXTiWEToNqjIKlSB4CytM3CWlHOVgKVdQXVIp7
-         B/0X5QMNNWfERunu6Dg0kWQ+PxJPhVMegQOjT2ONyY3dqIWsbDH55blM32qaMlU1Pal5
-         wwhypADmV86JRrS+u9q+oBHrhXSjIy/lEo7n7z6mUZOgNdfV+bXT39k16a1FrlrYM2kG
-         /2OT2+5hVQEvl9RL1Y1JNmULaNnQ1mmUDMGt4KWhw57oVGTVoPObjG2Ngja21hreL2ER
-         C7Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720733483; x=1721338283;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SfeKN2QfdZHciO4OVOVkpdd43CD7Qm2bGhXeNljngUw=;
-        b=icGnpMCdPYN/E6uJMqrOI7LZfebZHbV8GemZkxZioFS5HvtByb1hULtkGjhq5j721V
-         sJfYVjgzajLLy6betMDXiSr6omw1D5UXtn3RqaG6P36EwlmuBPC8PTJWAP9huzrTPXA8
-         kGU0Qf++efLzvTjK6K7MWyy2VkVHPTivnREyv9+CjNvdTI6cpY89CCdpLusHmkVAtR2N
-         mM8FBTH4T7PMi+fWYihKyKI5lPaI9RiDUkuknK4MOmxyz1IA+4yH2znuXlHNAbXX9efs
-         yIjP/17kjaknvRQeyQZ+e2X/OxF/M54AQhpmGtpQ+AbhJcRBueXW9hVShxjUzB9gffqo
-         hvyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlTh4m5DMAumkCoxfjGWxGbhYyi7oQgofOlU+fToTXBhqjwZ2lrXjJSHgaPoGKawjribn6cqkqyGAzhS17ZYslmg1a+H2Idt+SH3V/
-X-Gm-Message-State: AOJu0YymOVN87ZNYQmtXBm/KdVDVtsoLfufw1HrWdpJRz9P7eg6dYfFc
-	yLRCVi/VDNRX2ZeKIdGAzYjVUG7BAnBs/9cU5CChjrA8BduFBHIO4uch8m2qd34=
-X-Google-Smtp-Source: AGHT+IFf4egknI9k9MvbDQeAJxrUvsMSH7+SArDvalruHrHw+3gkn8noL4LvJ2u6fMwbjYLblTnOIA==
-X-Received: by 2002:a05:6808:3d2:b0:3d9:3e48:8b13 with SMTP id 5614622812f47-3d93e48a58emr8438609b6e.10.1720733482672;
-        Thu, 11 Jul 2024 14:31:22 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d93ad2447dsm1180928b6e.25.2024.07.11.14.31.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 14:31:22 -0700 (PDT)
-Message-ID: <733f4f7b-53b2-46c1-8bf8-5ed357adab30@baylibre.com>
-Date: Thu, 11 Jul 2024 16:31:21 -0500
+	s=arc-20240116; t=1720733633; c=relaxed/simple;
+	bh=+VyqhixQupt6RV+NXPTIysuCzzv6DCStY30cRBIhrBE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nVCbXKAYrrQei2B+43vAtv+XVemIMt6SsviyrztpkQ+8jVU5nxacPI4spPzp+cgBkiCEn2CDWh12VLEkTKOAzgMbB0di/EWF7c8WF/bKbrTYMuDZWMuzKS9EK7B5SwmbLHOpWB6Oeg8TSciqhA8s0FrJOCnCX2BDSCdSonaTWQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=95.217.213.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
+Received: from 213.219.156.63.adsl.dyn.edpnet.net ([213.219.156.63] helo=deadeye)
+	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1sS0mC-0008Gk-2I; Thu, 11 Jul 2024 22:52:28 +0200
+Received: from ben by deadeye with local (Exim 4.97)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1sS0mB-0000000BeGh-0UPS;
+	Thu, 11 Jul 2024 22:52:27 +0200
+Message-ID: <bd9d782cbe5b7a80c929ff35c8b49f0036dda439.camel@decadent.org.uk>
+Subject: Re: [PATCH] mm: huge_memory: don't force huge page alignment on 32
+ bit
+From: Ben Hutchings <ben@decadent.org.uk>
+To: Yves-Alexis Perez <corsac@debian.org>, Yang Shi <shy828301@gmail.com>, 
+ jirislaby@kernel.org, surenb@google.com, riel@surriel.com,
+ willy@infradead.org,  cl@linux.com, akpm@linux-foundation.org
+Cc: yang@os.amperecomputing.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Salvatore Bonaccorso <carnil@debian.org>
+Date: Thu, 11 Jul 2024 22:52:13 +0200
+In-Reply-To: <2d7bd8b2b9736d4a7d0a26169978372b5e002a62.camel@debian.org>
+References: <20240118133504.2910955-1-shy828301@gmail.com>
+	 <2d7bd8b2b9736d4a7d0a26169978372b5e002a62.camel@debian.org>
+Autocrypt: addr=ben@decadent.org.uk; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-nJaI7DtdZ7+6Z6IJb5Or"
+User-Agent: Evolution 3.50.3-1+b1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iio: dac: support the ad8460 Waveform DAC
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- "Tinaco, Mariel" <Mariel.Tinaco@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- "Hennerich, Michael" <Michael.Hennerich@analog.com>,
- Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
- Dimitri Fedrau <dima.fedrau@gmail.com>, Guenter Roeck <linux@roeck-us.net>,
- Nuno Sa <nuno.sa@analog.com>
-References: <20240510064053.278257-1-Mariel.Tinaco@analog.com>
- <20240510064053.278257-3-Mariel.Tinaco@analog.com>
- <20240511174405.10d7fce8@jic23-huawei>
- <SJ0PR03MB62241801F72B21EEC9CDCCBD91D42@SJ0PR03MB6224.namprd03.prod.outlook.com>
- <20240628194546.2f608365@jic23-huawei>
- <SJ0PR03MB62246270CC24E70732D0288F91DA2@SJ0PR03MB6224.namprd03.prod.outlook.com>
- <20240708170504.00006c9d@Huawei.com>
- <ccce603d36fa2fd590b563955bcd2cda085773e5.camel@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <ccce603d36fa2fd590b563955bcd2cda085773e5.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 213.219.156.63
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
 
-On 7/11/24 4:20 AM, Nuno Sá wrote:
-> On Mon, 2024-07-08 at 17:05 +0100, Jonathan Cameron wrote:
->> On Mon, 8 Jul 2024 05:17:55 +0000
->> "Tinaco, Mariel" <Mariel.Tinaco@analog.com> wrote:
->>
->>>> -----Original Message-----
->>>> From: Jonathan Cameron <jic23@kernel.org>
->>>> Sent: Saturday, June 29, 2024 2:46 AM
->>>> To: Tinaco, Mariel <Mariel.Tinaco@analog.com>
->>>> Cc: linux-iio@vger.kernel.org; devicetree@vger.kernel.org; linux-
->>>> kernel@vger.kernel.org; Lars-Peter Clausen <lars@metafoo.de>; Rob Herring
->>>> <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
->>>> <conor+dt@kernel.org>; Liam Girdwood <lgirdwood@gmail.com>; Mark Brown
->>>> <broonie@kernel.org>; Hennerich, Michael <Michael.Hennerich@analog.com>;
->>>> Marcelo Schmitt <marcelo.schmitt1@gmail.com>; Dimitri Fedrau
->>>> <dima.fedrau@gmail.com>; Guenter Roeck <linux@roeck-us.net>
->>>> Subject: Re: [PATCH 2/2] iio: dac: support the ad8460 Waveform DAC
->>>>
->>>> [External]
->>>>   
->>>>>>> +};
->>>>>>> +
->>>>>>> +static int ad8460_get_powerdown_mode(struct iio_dev *indio_dev,
->>>>>>> +				     const struct iio_chan_spec *chan) {
->>>>>>> +	return 0;  
->>>>>>
->>>>>> Why have the stubs in here?  
->>>>>
->>>>> Should I move the stubs to a different place in the code or remove
->>>>> them altogether since there is only a single powerdown mode available  
->>>> Ah. I'd not really understood what was going on here.  This is fine as is.
->>>>   
->>>>>> AD8460_HVDAC_DATA_WORD_HIGH(index),  
->>>>>>> +			    ((val >> 8) & 0xFF));  
->>>>>>
->>>>>> bulk write? or do these need to be ordered?  
->>>>>
->>>>> For this I used bulk read/write this way.
->>>>>
->>>>> static int ad8460_set_hvdac_word(struct ad8460_state *state,
->>>>> 				 int index,
->>>>> 				 int val)
->>>>> {
->>>>> 	u8 regvals[AD8460_DATA_BYTE_WORD_LENGTH];  
->>>> regmap bulk accesses (when spi anyway) should be provided with DMA safe
->>>> buffers.
->>>> Easiest way to do that is add one with __aligned(IIO_DMA_MINALIGN) to the
->>>> end of the ad8460_state structure.  Possibly you'll need a lock to protect it -
->>>> I
->>>> haven't checked.  
->>>>>
->>>>> 	regvals[0] = val & 0xFF;
->>>>> 	regvals[1] = (val >> 8) & 0xFF;  
->>>>
->>>> That is an endian conversion so use appropriate endian function to fill it
->>>> efficiently and document clearly what is going on.
->>>>
->>>>
->>>> 	put_unaligned_le16()
->>>>   
->>>>>
->>>>> 	return regmap_bulk_write(state->regmap,  
->>>> AD8460_HVDAC_DATA_WORD_LOW(index),  
->>>>> 				 regvals,  
->>>> AD8460_DATA_BYTE_WORD_LENGTH); }  
->>>>>
->>>>>  
->>>>>>> +}  
->>>>   
->>>>>>> +	state->regmap = devm_regmap_init_spi(spi,
->>>>>>> &ad8460_regmap_config);
->>>>>>> +	if (IS_ERR(state->regmap))
->>>>>>> +		return dev_err_probe(&spi->dev, PTR_ERR(state->regmap),
->>>>>>> +				     "Failed to initialize regmap");
->>>>>>> +
->>>>>>> +	ret = devm_iio_dmaengine_buffer_setup_ext(&spi->dev, indio_dev,
->>>>>>> +"tx",
->>>>>>> +  
->>>>>> IIO_BUFFER_DIRECTION_OUT);
->>>>>>
->>>>>> Ah. I take back my binding comment. I assume this is mapping some
->>>>>> non standard interface for the parallel data flow?  
->>>>>
->>>>> Yes, the HDL side doesn't follow yet the standard IIO backend from
->>>>> which this driver was tested  
->>>>
->>>> Hmm. I'd like to see this brought inline with the other iio backend drivers if
->>>> possible.  
->>>
->>> Does this mean that we would need to implement an AXI IP core on the
->>> FPGA side to be able to test this?
->>
->> Don't think so.  That framework is meant to support any equivalent IP.
->> So whatever you have should be supportable. Maybe it's somewhat of a stub
->> driver though if there isn't anything controllable.
->>
->> It's Nuno's area of expertise though +CC.
->>
-> 
-> Hi Jonathan,
-> 
-> Yeah, I did reply David (IIRC) about the very same question. In the design/HW Mariel
-> is working on the DAC is directly connected to the DMA core which is handled already
-> by a proper dma controller driver. So in this case I'm really not seeing the backend
-> need right now (maybe in the future we may have another design for this device that
-> could justify for a backend device but no idea on that).
-> 
-> As you mention, we could very well do a stub platform driver so we can use the
-> backend framework (like dma-backend or something) that could pretty much be a stub
-> for the DMA controller. But is it worth it though? We'd actually be "lying" in terms
-> of HW description as the DMA is a property of the actual converter.
-> 
-> - Nuno Sá
-> 
-> 
 
-I'm a bit inclined to agree with Jonathan here. I could see someone in the future,
-wanting to, e.g., use DMA + a GPIO controller for the parallel interface if they
-didn't have an FPGA. So it seems a bit more future-proof to just always use the
-IIO backend framework for the parallel interface.
+--=-nJaI7DtdZ7+6Z6IJb5Or
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-FWIW, I don't think it would be "lying" since the io-backend DT node would be
-representing physical parallel bus between the DMA controller and the ADC
-chip.
+On Thu, 2024-07-11 at 22:10 +0200, Yves-Alexis Perez wrote:
+> On Thu, 2024-01-18 at 05:35 -0800, Yang Shi wrote:
+> > The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
+> > boundaries") caused two issues [1] [2] reported on 32 bit system or com=
+pat
+> > userspace.
+> >=20
+> > It doesn't make too much sense to force huge page alignment on 32 bit
+> > system due to the constrained virtual address space.
+>=20
+> Hi people,
+>=20
+> sorry for beeing so late. I've looked at this following the OpenSSH issue
+> (CVE-2024-6387 [1]) and especially the impact on IA-32 installations wher=
+e
+> ASLR is apparently broken.
+>=20
+> There was a recent thread [2] on oss-security discussing the issue.
+>=20
+> Looking at the commit log I think the intention was to fix this both for:
+> - 32 bit process running on 64 bit kernels: in_compat_syscall()
+> - all processes running on 32 bit kernels: IS_ENABLED(CONFIG_32BIT)
+>=20
+> Unfortunately, as far as I can tell, CONFIG_32BIT is not enabled on 32bit=
+ x86
+> kernels. Maybe CONFIG_X86_32 would be the right one there?
 
-But if DT maintainers are OK with the idea that a DMA channel can be directly
-wired to an external chip, I guess I won't complain. :-)
+CONFIG_64BIT appears to be defined and enabled in all 64-bit
+architectures, so I think !IS_ENABLED(CONFIG_64BIT) would work as a
+generic check.
 
+Ben.
+
+>=20
+> [1] https://www.openwall.com/lists/oss-security/2024/07/01/3
+> [2] https://www.openwall.com/lists/oss-security/2024/07/08/3
+
+--=20
+Ben Hutchings
+Computers are not intelligent.	They only think they are.
+
+
+--=-nJaI7DtdZ7+6Z6IJb5Or
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmaQRf0ACgkQ57/I7JWG
+EQlGUw//Yda8FGEbXZINUCA6xrPbBrfLrc6RnLpRvyzhLFz8OMTW04JWhxIibxNj
+hHgU0kAUXp+J9HufmcLkW1ihnshtDUMzHC/BY/jUmvk+fuojFJEoM1PGYHks8yUZ
+ubPVClaJfTe1XWreR9kKKD3+JDx31XtVN7WXa5O3FTAOMpq2hFjXVzAmjV3p75pR
+se+wuS4ggJlbGmoVUvets6CJoYhjW5GbX8MfmwzwUBvtCEbb86MKr7zY2LqTvQZC
+V5UV3PWClN0/lnAboyaSoui4SQmQCJIBkjsZqUSIgLmjm427HQMkwXDIcWgE0VOj
+0tzt7iZwMQKAkQvpO3FkFLNkRoM1zZ5Frukhq8M5/zb1SiEm4GHh7E3HHI6fFjbK
+3+06Yp5NfSdSQNgishxeuQCv947YSYSdZzILeRQo0XG6aq/dXQwKv3oC6zKlfiAl
+DY82pLe/RtaFh65pEzLNJiIP0uXsTfQimucTbqaHOZpd/MKfh68oYKUPg6NycivD
+8oAN/FIGMghgVxPc1pHsdWpaWPhx6Zk99kDeXnXlrkKQyZOIHK+xeHniTVp5loGH
++LeUkLRPimcm4a8tNVcun+PLuG07HWRz6jx9NmlQFH+eg+gtQH/JZTHRwUCZzxJW
+7i/ES0ZOAuGbWhsfy9Co6Hyj8htUUJQsOAy2KcCXGt7KoxHx88c=
+=Om59
+-----END PGP SIGNATURE-----
+
+--=-nJaI7DtdZ7+6Z6IJb5Or--
