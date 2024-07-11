@@ -1,190 +1,175 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012070.outbound.protection.outlook.com [52.101.66.70])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8339F16E873;
-	Thu, 11 Jul 2024 18:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720722212; cv=fail; b=Sqi+clS411tlHvlHRAvwDWeHGBJtnMJK99h7csks+aKehQJv9VSuW6hYm8XU719NXBG7yOLsC+l3sD08s9TIXQ1521W5PAx5CJwMCy2sQ7OTsC7W+hNP8hOpYyQoIArN2Votb3xHYWVEpSFk/FJ51/TZxX3UtyQzPFV7T60Q85I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720722212; c=relaxed/simple;
-	bh=njFj/Lt+7JoMrNVZPHbsuqPQDfqzLOXzFzu1QBPFn5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fhPAH6fTrEyDLFyUSepruMuCr4nbApsX+3xQ+uMHGHu5d8ExoOpJhA9+psp1V3acsxEKTez4Lh2JJ9BAixn8YqWU8M/9C4o8YgcTHKacm5jnRKJ6Oat3+VrSoDMFGD2eyzAAcG1w89FLMtBLgT38JHDwyTxVx0SvMcbLYgyss94=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=oy4AgKC2; arc=fail smtp.client-ip=52.101.66.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868EE16DEAE
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 18:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720722257; cv=none; b=cuhxtAWB8BR71h9fkuSMsxMzzYFGGBthN3ADxuUTdcaPpVK2KLVsI9WBRBcdniu/OxD5lKW6AsmocPF07DK44bH+PhDRVvpBFYckkLjMl8JzTD44YERongrVsV89f+T8o6NOjdZO24+o0FGzYuIYwP1DqnfuCrT2ZYXC+tBfsY8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720722257; c=relaxed/simple;
+	bh=4yc6TTybyvbq7r+wQzEg9hfuNL618Dtw76lL5URUVIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uCv5Hs1DCVrBcwI+T2YT2+r55k8FZ9GrnTRLwca5NYYcvnoYDx/sqidwNeJ8KgSrm+4FYWgSwdI1yfADhZTuP0TUqCt913xA3CY8vPCgcubOITz/yYuj7j2Wts47lon7XBkDIxEGvm4D6qN3nYa7sCqdVFOF/iaYpyzhdcFO5fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GK1hsOHE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oy4AgKC2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D76RaA/SmPsg5qcF0KTe4HEn3ZaCo3cueo5Kl8SuKP6L09+bq4AO2btuIES63keJlYVGHPaopul0fz1VtjitEIZXiqF/Vt5igirb9qWoqbedamfhbIMvFSNnmQHEFZyCI26X2lBXUvcPc/ag26wHMe711UDPJAxiMYAn+/JR1uxjn1q6s1eCa8r5NP4mCkLq9g30YJNCz9edgJuKbaUvCiZcRTB3gU+qCdJc78rLI93ksfRDPgdwwx1xCLvMyW1igTt3PYSHtdsTy62sU2KQf1qEPNWho3wSpKI6m52NRF8LG5UQf5kvUfPbD0d9t/k5SIZ37yc/JDcWwJEEVFYoJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9UaekAOZ93Ecn0tdL5zanKt3sp8FnK2YqOCD7hmNFCM=;
- b=ZF42kL7Cv0AGLNpEsBTiNHOUaxnlqGxAzzAqTdJ8U+c4lqaCeRvAuE6L3KcDpzP+ioWKWb/Ui0AZBVMPq54RxO8g4CuzB4AEgesSLZY1YGKjYopo3grhG/UAQXTIUlYhCXLC1xrVOEzEHduLTAGGM+9WhP2e64m0pUKTvEJRJCdXmJlgHhXY7Mxm1WqcjxgJu+vRhGOH0EzY59LMs7BAm6XnLjbCYZkxQDXY0XG35U/cOsB2hmMWNVz4ZBvLcmlAlxQOfOQHnmNc6lnj3qfZM8uJJQCgpLqZKG7dRLGP0D/+V1/vhEcNFRz/gymbaZy1y7rXxf4cU3db4tj8TBiFkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9UaekAOZ93Ecn0tdL5zanKt3sp8FnK2YqOCD7hmNFCM=;
- b=oy4AgKC2kugo08mHM0xOtvhvqgaBKBsg2/zs7BfQiOAiyYq40l/L5AYNGdHJC0BHBU5tvDF8aJWBd7IksN4BfTlND5ohCoIpUhh9K8UBaBUoOmmmXBgxp1Ot8wiE2rogIBR/WryIqrvc5DZKOqUyUMQzyQd2jlLFC7G91NCoEzc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBBPR04MB7514.eurprd04.prod.outlook.com (2603:10a6:10:1f7::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23; Thu, 11 Jul
- 2024 18:23:28 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7741.033; Thu, 11 Jul 2024
- 18:23:28 +0000
-Date: Thu, 11 Jul 2024 14:23:17 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Marc Kleine-Budde <mkl@pengutronix.de>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	haibo.chen@nxp.com, imx@lists.linux.dev, han.xu@nxp.com
-Subject: Re: [PATCH 3/4] bingdings: can: flexcan: move fsl,imx95-flexcan
- standalone
-Message-ID: <ZpAjFc9OwxkgbTmJ@lizhi-Precision-Tower-5810>
-References: <20240711-flexcan-v1-0-d5210ec0a34b@nxp.com>
- <20240711-flexcan-v1-3-d5210ec0a34b@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711-flexcan-v1-3-d5210ec0a34b@nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0278.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::13) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GK1hsOHE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720722254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Cm66rg1XZxCCsZjKT6Mp2kABO5AQZLpHZVrfTgemS9w=;
+	b=GK1hsOHEGbRL2l0VWNNkiYWIVEYrB2FMDE4UQ5aK5J+oNLllvZytnzLrlmZfXgtegjfvze
+	c+dT+yMDjPpCqsjV+HL4+F8EFSq9Z9jWvlfNUJ0xpX4jhSNnwJsGR8+WxlbnJPqPE9DjHd
+	USeAj2jzkJF4dbGThmOdxIjlM0eLDaw=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-12-kG2VqM04NZ-LWeRSHQ9hGg-1; Thu, 11 Jul 2024 14:24:12 -0400
+X-MC-Unique: kG2VqM04NZ-LWeRSHQ9hGg-1
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-70b1e0a2c59so1796251b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:24:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720722250; x=1721327050;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Cm66rg1XZxCCsZjKT6Mp2kABO5AQZLpHZVrfTgemS9w=;
+        b=LiTt4UTVZ8m/ei4V5vxFOJgMoqyD7/hNeZ6muIFhp3frvP7NuSJz8ifzDcL4Tjl7J0
+         HKc+TPOPvGvcQEDM1VcslRmaYqeC6PXrtUsMux89w/wimF2yzUeLa7dgBNIgyW6zjK1k
+         ZYpE+6C82BAU5+Ra8gARCZ6HcKPrxRpFz2rYX76/nZFpQ6lay8VyRHOpn+Bo07Yvjz18
+         5H65KhTkPZlS8CTWk2Yo4AYQg5fqno3EcYEPFySh0VEIIlZxI684iAt3LNE5/tCTA9RO
+         Z2dtcHcVyp6mKIgn3FXZqHTZs/Zr+bATuHbMOCpcg0TS1nsT9DK3f2d14yRDW5v3mOgt
+         2jDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXt5xDOiCVnZcNoHf4H7aoH1roobxUSYkYnIZfvii7gOPCm214viXoAxTgzWTjJXJ87TH/81eO9Yfn4YBztnEk2Sr7EmI1zrk0zK8T+
+X-Gm-Message-State: AOJu0Yy9OLkWVSWV3oFHEvLtowucDTYqjhPI9lol4QetrkjKi5IbHI5c
+	c31rqn0lzuDaIW72lRLlTDG1HZuru58klycjqyceou4wOUQ9LrDYefQfXF2/wGb3rE20sQtEaf4
+	OsH1flaAtEOX1NRObRPdM59qi+AehTicbO3dYSV7Kgs7AJbz+l1TAdvKL1k4Uvw==
+X-Received: by 2002:a05:6a20:4328:b0:1c0:ebca:963d with SMTP id adf61e73a8af0-1c3becb2121mr586159637.4.1720722250572;
+        Thu, 11 Jul 2024 11:24:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG4jCYKJblZyB+FBweYmfvmonb9H5CH5xNShBFvfLtVj6t3jF8KoVnfT8+Sq9FycQr3reRt/w==
+X-Received: by 2002:a05:6a20:4328:b0:1c0:ebca:963d with SMTP id adf61e73a8af0-1c3becb2121mr586130637.4.1720722250166;
+        Thu, 11 Jul 2024 11:24:10 -0700 (PDT)
+Received: from [10.35.209.243] ([208.115.86.68])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b439b70b4sm6003781b3a.185.2024.07.11.11.24.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 11:24:09 -0700 (PDT)
+Message-ID: <8586b19c-2e14-4164-888f-8c3b86f3f963@redhat.com>
+Date: Thu, 11 Jul 2024 20:24:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7514:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0993ce01-d058-4f8e-fd91-08dca1d68f45
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BA2azEiKUL2qikhHnLl0pcH37TxHBw0HwlOqZC4kxsMBSsZicehx5v8NmT1Z?=
- =?us-ascii?Q?NOCHTUUk5J6oQkLBhOimDaygs3DGtoMRbfcB96NPcP/Nh5C5ic8wZXOby2GY?=
- =?us-ascii?Q?LGCt8d+8JSggcmYcvFOjM9jEJNXkoTREXfhVCMqIKUKbaJ6QxADuGI+hxxIa?=
- =?us-ascii?Q?9gyJi8mgZ+KNFxhjzbNA1+085K5wC3W3Ezh+c9ypv1o2ElHHpbN9EezplRFh?=
- =?us-ascii?Q?PNg3c4Ute72fCpubDGuKHzssfcxtkZYktoP0RUb7/g5gMJw03srbckHeZRYb?=
- =?us-ascii?Q?57/Zr09eVcpWZ3mMM45dhgGYLDqOFrvtAbJzrexmKHFbyNc39gyX219kAIe8?=
- =?us-ascii?Q?3hnHQVMFkvfJ9NakH/BM0lTis2Nxc/jm8xHdYzo+v2mlKnkOcDzY2b8OAB17?=
- =?us-ascii?Q?d+eZsWrBMwq1e7wQSVkwWHek6kTENQswRWtW5jh+MGkppUel5o2+6a0ak+Fh?=
- =?us-ascii?Q?mESOXBhf8hUwQIqJ636o058WtattTsNx6EQ0TUNCFYXr9PdEcEbI232RTYMh?=
- =?us-ascii?Q?VU1FNoeboGeB41R9WLGckq3xRwHLkjrAsDdGkHN/2KgaanJQas5obtbFiSLd?=
- =?us-ascii?Q?VTE7/fhR3g033RWGjJiWXcwsI+n995tM3NSg86MGH+5j/v++teEXfclfpVfz?=
- =?us-ascii?Q?IoS2WGMCGQoVjRjuFrViJNBls+zTx36TZZq2ViTN65uwE87iD7IMJWuYGHAd?=
- =?us-ascii?Q?ckSROpxz9Il1UJCJcCq2o6QhUmro6OkxF9W+k1QrLnTAp2s0hdVzJ2jH/f8y?=
- =?us-ascii?Q?jrUKjWDo6+kXWJVplNy9DSq3JDEkGQAKPjJ+IHfUQ9DouKW2bO1VBR9nROzm?=
- =?us-ascii?Q?rawxTBKLu7rbgkBMYRXZUFRCQhEvC7QD4lDCXiEk4q+nsyE1ycQTU5rBt49I?=
- =?us-ascii?Q?3JMujAltHqTB9rRHBXi98F2X/MwYoSLF3BXofnRN7PadWNDUauoOzQP0If4Q?=
- =?us-ascii?Q?pACAATR2WASHZA9OheuUuoGr2Kh9GCRpYunsS8aQVur/qPcw0XcRAmA5Xhej?=
- =?us-ascii?Q?s57tpfnUAGbZ73qf7DxSlw0Hww4JrDfO8UhEtrekNCA2B9Pj6R3h+KlPcYI3?=
- =?us-ascii?Q?79DGtVahOiEd/9QExDKkuRj4KkmfNsMwyDkevWhQ1tCZE2ZC0vQJh4GVlKPc?=
- =?us-ascii?Q?Irz0/v56B+LIQfyE8VXVhPn6wgMpte6KeBPn02s4EdsSPQ9987FYPJ58OwCb?=
- =?us-ascii?Q?VqrpvqAAox9QYDQuD4yCKbDcBWwvbZmyf3AjGGwfph8tSQEdPpoStOtyUGRZ?=
- =?us-ascii?Q?Hco86Z+HmyIgwHvbG7NiZVhC0yZ8DjkIKKLynBEHCpdsHf6//NmIHCkNKBQX?=
- =?us-ascii?Q?K1YyMYAg139EruaspT7KIBKwXEd/AxNu6KzB+aEB+SYxEeWL2w3lcPzPoipo?=
- =?us-ascii?Q?82QvE4EQUJ+gEnwpM1Ei9f+B2XoeF9PuO6yr3psvu74md31ORw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eu7FgSK7JPWsK7IyLlo/1FAwaLBMWbEP9D6lcnpm6oDtXBzE2X08P0ep3eeN?=
- =?us-ascii?Q?KqYKGxcP1321Pw9MdIbTcm2ufn758TSx1rxcMycxUW5lpbR7NwVmntfgZ1T2?=
- =?us-ascii?Q?J4cTXtCsl3cEaYM6SL2OYlQpCXChEsedZlubUMusyZA/cGFqY+hBuxivPi3w?=
- =?us-ascii?Q?WYmXFvxk3g/S76DL6Nr5F9Ww54YOsyka8GcGkBDmo8TrCnjgl/nYRHBh/1Hy?=
- =?us-ascii?Q?ZjKax46Kp+qZDLoi9gsjwadgbEmtcuc4xWTr50CqSUIiHOJGNEVhh68a/JK7?=
- =?us-ascii?Q?IGFORog2ar5xcmdjE9jZpCDW1WRjsaSjWhfz1swgts4WjmWthoituhXKKwp0?=
- =?us-ascii?Q?b554DqK8RWagrFgW4vQYWn4QdYXQdjeBtQzscNoTi3yQH285724hJ7dl9nch?=
- =?us-ascii?Q?nbodjG0XnAqVYloSrqTjl083PmHY4SPFh04G6/XHKAOTI9CMP/h8twjNIlbV?=
- =?us-ascii?Q?4d2gK4c+y9GJkukSj+YX0Mesx4riDS0sF8IjHyHLzls9hyFdetDlpuau4d9s?=
- =?us-ascii?Q?G8pBTDb/sexy76Lchrxvz9HMza4KbpC/wx3MOj8+WqlWMtZ2vPfbIGU02H/Q?=
- =?us-ascii?Q?I13UYsBq5V2S99fEvB2fFN1Gt/0nspfYccBYnj/e3iTVkF4tw9eO/IP+BJS5?=
- =?us-ascii?Q?53VsLsEhe5L8Xmex1zfuvVRnSyNwIQZ+lvefMT0QYgUpcFyi/sag44PBQGoD?=
- =?us-ascii?Q?cfXlVGuCbDoZMhs9cDjLIzDYRNKvBHHok074tJQCinC+twgZ1qVSW0My/cst?=
- =?us-ascii?Q?1iM0Lb/ZZUbCITHVRH5C5mVfz1GH7+MIu96WjRBP01JOCMwKt5ALwh1NpGjM?=
- =?us-ascii?Q?yvDygZyjAQrut4EphwFEi6iuU395lHVaIiHgB13c5ePEB8NJobzSHEvMPGlg?=
- =?us-ascii?Q?2+WULeiOGnH5+gUWkmdT/lCx86Je1D4J3wMj0giBDpCgkvj2NQA66M2amh2O?=
- =?us-ascii?Q?Z1F2CYTXT5d0PYX2qlu88pNDsheuEK0gdYN7omM4DCvRMg7pKx39XinpX4ah?=
- =?us-ascii?Q?8+E1NWiHOHqh0/tx9xHWBTgUHf/oG9CVBebWxrAbuYbf8umeVhALqEhdRmvx?=
- =?us-ascii?Q?YHZbM0PdDrN9qcP90tRIZHzlkSKCL617XgorYhZwWDeUiNjwUK8POxn8Poe3?=
- =?us-ascii?Q?1RBpwxS+8MMub4ih+Nbgim8uCEbJC/V3200jQK+GQnvphLl1qQqXARUOny+o?=
- =?us-ascii?Q?oqZuVF/CjT4JvT2B6W8ICnBNUf6r68WrP47yCAmug3BwXULiFaCXagrzJzI4?=
- =?us-ascii?Q?FkDeTaCaTOkyvkqcuGXVI1njILlWSd0F2n0GWcCoIXQrE5TXBf05N/EzmZwq?=
- =?us-ascii?Q?5X3D8+vQinRfdLyiiyyMATCD7ONfhbI3SHZScQRKzxPxJh0iBr1YWDRRZ4rF?=
- =?us-ascii?Q?WZGwnyUdzviZByGgGH+Jgqitz2mGnWfS9RcF5iNZCJKE+EFgC2NBTFTX1MPc?=
- =?us-ascii?Q?RcQI8H7CsvXzKj6aFXbD3C0N/rjU+A2IhgWzKKOM42CowzIl4GkLPJevcbeN?=
- =?us-ascii?Q?m6zNO+ZbmyxPehmnKCk7ppN0S3llJozfcK+Ag3ZGr//rTEA1es0bUd865jDS?=
- =?us-ascii?Q?TTByBFERkBp7aBn9o9mrIa5/b3Xjxb8/MQEw/CJ8?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0993ce01-d058-4f8e-fd91-08dca1d68f45
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 18:23:27.9403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EVYb+X08IU2LhyaYciEfqcKJKojbyi0TPm7++ZBCN2pt1YA9diaiM1MtB6x7cfnLgHiUOfS15ouf1Zwu3E4kkg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7514
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v22 1/4] mm: add MAP_DROPPABLE for designating always
+ lazily freeable mappings
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, patches@lists.linux.dev, tglx@linutronix.de,
+ linux-crypto@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+ Carlos O'Donell <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
+ Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+ Christian Brauner <brauner@kernel.org>,
+ David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
+References: <Zo8q7ePlOearG481@zx2c4.com> <Zo9gXAlF-82_EYX1@zx2c4.com>
+ <bf51a483-8725-4222-937f-3d6c66876d34@redhat.com>
+ <CAHk-=wh=vzhiDSNaLJdmjkhLqevB8+rhE49pqh0uBwhsV=1ccQ@mail.gmail.com>
+ <ZpAR0CgLc28gEkV3@zx2c4.com> <ZpATx21F_01SBRnO@zx2c4.com>
+ <98798483-dfcd-451e-94bb-57d830bf68d8@redhat.com>
+ <54b6de32-f127-4928-9f4a-acb8653e5c81@redhat.com>
+ <ZpAcWvij59AzUD9u@zx2c4.com> <ZpAc118_U7p3u2gZ@zx2c4.com>
+ <ZpAfigBHfHdVeyNO@zx2c4.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZpAfigBHfHdVeyNO@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Sorry accidently delete 'dt-' in subject. Will fix in next version.
-Frank
+On 11.07.24 20:08, Jason A. Donenfeld wrote:
+> On Thu, Jul 11, 2024 at 07:56:39PM +0200, Jason A. Donenfeld wrote:
+>> On Thu, Jul 11, 2024 at 07:54:34PM +0200, Jason A. Donenfeld wrote:
+>>> On Thu, Jul 11, 2024 at 07:27:27PM +0200, David Hildenbrand wrote:
+>>>>> PG_owner_priv_1 maps to PG_swapcache? :)
+>>>>
+>>>> Maybe the combination !swapbacked && swapcache could be used to indicate
+>>>> such folios. (we will never set swapbacked)
+>>>>
+>>>> But likely we have to be a bit careful here. We don't want
+>>>> folio_test_swapcache() to return for folios that ... are not in the
+>>>> swapcache.
+>>>
+>>> I was thinking that too, but I'm afraid it's going to be another
+>>> whack-a-mole nightmare. Even for things like task_mmu in procfs that
+>>> show stats, that's going to be wonky.
+>>>
+>>> Any other flags we can overload that aren't going to be already used in
+>>> our case?
+>>
+>> PG_error / folio_set_error seems unused in the non-IO case.
+> 
 
-On Thu, Jul 11, 2024 at 02:20:02PM -0400, Frank Li wrote:
-> From: Haibo Chen <haibo.chen@nxp.com>
-> 
-> The flexcan in iMX95 is not compatible with imx93 because wakeup method is
-> difference. Make fsl,imx95-flexcan not fallback to fsl,imx93-flexcan.
-> 
-> Reviewed-by: Han Xu <han.xu@nxp.com>
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml b/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml
-> index b6c92684c5e29..c08bd78e3367e 100644
-> --- a/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml
-> +++ b/Documentation/devicetree/bindings/net/can/fsl,flexcan.yaml
-> @@ -17,6 +17,7 @@ properties:
->    compatible:
->      oneOf:
->        - enum:
-> +          - fsl,imx95-flexcan
->            - fsl,imx93-flexcan
->            - fsl,imx8qm-flexcan
->            - fsl,imx8mp-flexcan
-> @@ -39,9 +40,6 @@ properties:
->                - fsl,imx6ul-flexcan
->                - fsl,imx6sx-flexcan
->            - const: fsl,imx6q-flexcan
-> -      - items:
-> -          - const: fsl,imx95-flexcan
-> -          - const: fsl,imx93-flexcan
->        - items:
->            - enum:
->                - fsl,ls1028ar1-flexcan
-> 
-> -- 
-> 2.34.1
-> 
+Note that Willy is about to remove PG_error IIRC.
+
+> And PG_large_rmappable seems to only be used for hugetlb branches.
+
+It should be set for THP/large folios.
+
+-- 
+Cheers,
+
+David / dhildenb
+
