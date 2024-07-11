@@ -1,173 +1,91 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C1929CF0;
-	Thu, 11 Jul 2024 10:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612E329CF0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 10:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720694830; cv=none; b=cTdQ12qK2sttIrM3QJlKDHwZmkRcyx7iUh6tWm5E845VEx5Kh5kl+y4s+PnSJkJI+NCKVD3ldHYNSccVSUM8aVH88zyovDWkHWmQfzirddRDmxdeUL8sTnkqDPeYT19gFzOgPDctJHKUtB0LWhC0/EwFGvedkgkbuIHg0tUUhxs=
+	t=1720694958; cv=none; b=jAWkSsDpVH+InDWgJYUP0Eyj14Jwh50fFaLm64Yi+qFsAUnba3p7eDrYnfhRFa2E8m8Xj9fCtyLYZFAdkfQpTYn9I2XXE6YDrRfHAYJ6JsaB3p+aLQHMPWjy3Pv5b+j36WOEYsnrH4LfUibaP0qNpwimBIkCH6f6vni6MOj91Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720694830; c=relaxed/simple;
-	bh=f1ovXvPk52+ctLuYR1CD6jYCIGjkmFOkye8IjwVvGxQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bo0KdGfRi+/V7EaSMg8n0o4TM0ShC8sOIQERtgSTdafHW63m8cHeLdtagq7a5wgpG/Hw5JAaiYOm8Dn57C8H+hrvDIMQYNCew7WbGnC6Jp3xpFro7gdd1dGmSrQzKevsFfzp755O5lsCroTflP7jWYKHUmT4h/9co36VnYRpnuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j+CuF7av; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j+CuF7av"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B4mu5g008802;
-	Thu, 11 Jul 2024 10:47:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	HMgmTT5lVtF+KlTpkcTEciTG+//l2SalS78yhnkfc6E=; b=j+CuF7avC2dM5Ous
-	ngjYfGiD2Z1RlS1UEPXvntSmWWKPyj4SdAGJBGfPyvnI+erFytvYUfFg1OtA6/cD
-	FgUUUEebmM0bPQ/LEXROnvq9mYsnTU7TeyQtVANqZCBJCOKGq1VlIusdnLVLGUDu
-	pkFW7oGYuxCzqXepSsrpvT18VEL3FPy6gQqkfU5p3SzM6yV49qkhWXZu3WvubA/Q
-	sCPtkoK4AuMERhbpdP1rI6qPfQqlkY0ZuPn9ZaclDRMdux3qQLitwYPbvv326tAO
-	Y5Nzy1zgsYYS+wocs8jY67cNe8zn7LKLZxE7WOiTQ5m0+p4Ok55HZAGjZv43oAT5
-	z8qwgg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406x51c8x5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 10:47:01 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46BAl1O3019021
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 10:47:01 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
- 2024 03:46:55 -0700
-Message-ID: <fad016b1-4079-468f-a2a6-a482c3aab66f@quicinc.com>
-Date: Thu, 11 Jul 2024 18:46:52 +0800
+	s=arc-20240116; t=1720694958; c=relaxed/simple;
+	bh=34zE3+s18qxDmJ/g6Sn4JXCB/W17u3pBk+nhOORmuxw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UjbX8WXEvHX9rY1MvIpfSgoPht7Hkt62aNasur7SEHSXZpaC2tXh5QT72rWeireTmFh3W8AUPtUl0KloPxQHJuYIwsOB/BpROq29Qv9Av/g4B3C9FRotGwGMqSyWdsOipAGeLyY5MVSSSsYgAjOy361SyNeUxxF/VYD9YVn5/AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4WKWgR6DKKz9sSd;
+	Thu, 11 Jul 2024 12:49:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 2RqFO7Mhyqy7; Thu, 11 Jul 2024 12:49:07 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4WKWgR5VXDz9sSV;
+	Thu, 11 Jul 2024 12:49:07 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id AEB5C8B778;
+	Thu, 11 Jul 2024 12:49:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id fChFF1nWQOWT; Thu, 11 Jul 2024 12:49:07 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.107])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 480138B764;
+	Thu, 11 Jul 2024 12:49:07 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc: Remove 40x leftovers
+Date: Thu, 11 Jul 2024 12:49:01 +0200
+Message-ID: <ab30ae302783d8617d407864b92db1b926ab5ab9.1720694914.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: soc: qcom,aoss-qmp: Document the QCS9100
- AOSS channel
-To: Chris Lew <quic_clew@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240709-document_qcs9100_aoss_qmp_compatible-v2-1-6c7f35bc9ec3@quicinc.com>
- <24302005-d9a5-400e-a28c-40276a3f7250@quicinc.com>
-Content-Language: en-US
-From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-In-Reply-To: <24302005-d9a5-400e-a28c-40276a3f7250@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720694942; l=1243; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=34zE3+s18qxDmJ/g6Sn4JXCB/W17u3pBk+nhOORmuxw=; b=Qf3m+E0r0EGY3uzEtzcwi8SiBmKgleoMjAp6HDSuD2TpYSHYw25CR2atNoFUOFg4lT+JtRkrM s698EtKtPb/B34tw5FD0kXoR3v7c4E7tSTLHYLeZCcq5ezBxDL19Yg5
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: qZhCkWpSRu7vt9ewYO5Fr8X0oYyaqyRR
-X-Proofpoint-ORIG-GUID: qZhCkWpSRu7vt9ewYO5Fr8X0oYyaqyRR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-11_06,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- suspectscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407110076
 
+Fixes: e939da89d024 ("powerpc: Remove 40x from Kconfig and defconfig")
+Fixes: 548f5244f106 ("powerpc/40x: Remove EP405")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/boot/wrapper              | 2 +-
+ arch/powerpc/platforms/Kconfig.cputype | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-
-On 7/11/2024 3:58 AM, Chris Lew wrote:
-> Hi Tengfei,
-> 
-> On 7/9/2024 7:24 AM, Tengfei Fan wrote:
->> Document the Always-On Subsystem side channel on the QCS9100 Platform.
->> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
-> 
-> /s/drived/derived/
-> 
->> platform use non-SCMI resource. In the future, the SA8775p platform will
->> move to use SCMI resources and it will have new sa8775p-related device
->> tree. Consequently, introduce "qcom,qcs9100-aoss-qmp" to describe
->> non-SCMI based AOSS channel.
->>
-> 
-> Were there any differences between non-SCMI and SCMI based platforms
-> specifically for the qcom_aoss.com driver?
-
-Hi Chris, the non-SCMI solution and SCMI solution is different from the
-clk resource etc. So for current qcom_aoss.com driver, I am expecting
-the qdss clk resource feature inside this driver may have some different
-design. More details is discussed via other internal emails as well.
-
-Currently, we want to have qcs9100(non-scmi) compatible added to
-differentiate sa8775p(scmi) compatible firstly to not blocking IOT and
-AUTO separately. Currently it is a looping dependency for moving forward.
-
-Feel free to let us know if you have other opinions.
-> 
-> 
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->> Introduce support for the QCS9100 SoC device tree (DTSI) and the
->> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
->> While the QCS9100 platform is still in the early design stage, the
->> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
->> mounts the QCS9100 SoC instead of the SA8775p SoC.
->>
->> The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
->> all the compatible strings will be updated from "SA8775p" to "QCS9100".
->> The QCS9100 device tree patches will be pushed after all the device tree
->> bindings and device driver patches are reviewed.
->>
->> The final dtsi will like:
->> https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-3-quic_tengfan@quicinc.com/
->>
->> The detailed cover letter reference:
->> https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
->> ---
->> Changes in v2:
->>    - Split huge patch series into different patch series according to
->>      subsytems
->>    - Update patch commit message
->>
->> prevous disscussion here:
->> [1] v1:
->> https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
->> ---
->>   Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git
->> a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml
->> b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml
->> index 7afdb60edb22..80e1a8b43586 100644
->> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.yaml
->> @@ -25,6 +25,7 @@ properties:
->>     compatible:
->>       items:
->>         - enum:
->> +          - qcom,qcs9100-aoss-qmp
->>             - qcom,qdu1000-aoss-qmp
->>             - qcom,sa8775p-aoss-qmp
->>             - qcom,sc7180-aoss-qmp
->>
->> ---
->> base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
->> change-id: 20240709-document_qcs9100_aoss_qmp_compatible-a7376629ea6c
->>
->> Best regards,
-
+diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
+index 585c4ea27ab9..b1f5549a3c9c 100755
+--- a/arch/powerpc/boot/wrapper
++++ b/arch/powerpc/boot/wrapper
+@@ -337,7 +337,7 @@ ps3)
+     make_space=n
+     pie=
+     ;;
+-ep88xc|ep405|ep8248e)
++ep88xc|ep8248e)
+     platformo="$object/fixed-head.o $object/$platform.o"
+     binary=y
+     ;;
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 1ec98688c915..4b0d7d4f88f6 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -250,7 +250,6 @@ config TARGET_CPU
+ 	default "e6500" if E6500_CPU
+ 	default "power4" if POWERPC64_CPU && !CPU_LITTLE_ENDIAN
+ 	default "power8" if POWERPC64_CPU && CPU_LITTLE_ENDIAN
+-	default "405" if 405_CPU
+ 	default "440" if 440_CPU
+ 	default "464" if 464_CPU
+ 	default "476" if 476_CPU
 -- 
-Thx and BRs,
-Aiqun(Maria) Yu
+2.44.0
+
