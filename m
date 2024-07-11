@@ -1,319 +1,94 @@
-Received: from e2i411.smtp2go.com (e2i411.smtp2go.com [103.2.141.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AF3130A47
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168E584DFF;
+	Thu, 11 Jul 2024 07:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720683193; cv=none; b=Sw57AEEmKjit9KD6mQrVvdwgnAA1kDwfghQQ6OAnh1No/v/KvCg8nScryN8pHtCFCVxSQVxsE2291BCiDOUsCh09Syy6Csoho+AV/AX0ht/5o+ut6Zd7mKUL5qu0FsDsw+cEBk6pY2IMBSoLJo7/sYf3WYQkqSqBx08n9oTYR14=
+	t=1720683311; cv=none; b=Q4q8vecwUrnrT4iRaPpxIlECrk8ZowQGUTstl3ibS99oXo2hzKgpUe7XdvsANPLkKl82V7wrpD7Gtvnbg/bBFotqvnSldSFp8fgAtelN/kFwrme9CfVyqR+Kw5kJg0iH3tb2ZxXwgb07KJ0AscozodUHVKgqmIJznpaDv1FdrGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720683193; c=relaxed/simple;
-	bh=tmLvCWTAKrNvC+hTqcmobUhdkjTB6x/wWsoTeFLiEa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dRctiac9JjSksjAyjL6ifC8f+xVX8+LdtzCqHNHMjO//M5Psx0s93pm8N0Zg0pQIL9Mj9ixVafGFtAl8fUzb+YjPYBVvDdoaHHqm1Oxqa7ZxHbYw+Uo9NSnFUd6JZDposuDZEC5tpGgvvYFVuPX5VQrdvQ6Nua/kYR0jdqEGWYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=OkQ/mKZK reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=ZDf29vfv; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=dTnD9rKT; arc=none smtp.client-ip=103.2.141.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="OkQ/mKZK";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="ZDf29vfv";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="dTnD9rKT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1720684081; h=Feedback-ID:
-	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
-	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=LhhC1XDkDuM3AReiatmP9njXLuykYg2VbD9+n1H5eAE=; b=OkQ/mKZKtz5iDpT3L7fRUg0V7j
-	pbLjB13QxOwlcXO+aljLNoNyHvAwZVoob6E0BMz4uDwUra80PFliDoqZsHvJP34DYO6hfa1gcT4nQ
-	pXzd7UJjlPQI4caDXg1FMhSqnp8F4Rqm0F3cL+ssYuJM1x+kY7aMXCj0HANcAQsJyOIX0/gOv7Gbq
-	u1bYtCHQjEwJsferq0FXM8Qexp3B21l8m173B00sab3uPtG2r9habMHhv5zy0eticeymBBocShQOp
-	83pCb/g6SrrRCpOI0kKTGjkJvQ9WD7GgOcCxiJwlQ8ZQoLqfO2iFvlJi5JmCFTy79Ra9sZOutK906
-	CC6m61rg==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1720683181; h=from : subject :
- to : message-id : date;
- bh=LhhC1XDkDuM3AReiatmP9njXLuykYg2VbD9+n1H5eAE=;
- b=ZDf29vfvjWaHCqO8Ptk3Rer8O3fxFg0ZZ8xV5NCnChQ1Kc2kOn953BJqM6fWsxc4g60Gj
- GOCdHPlo473VDufnYpi7PmRFqB50uBDUOU056gKlrtEW6M8Rx2DFBlizRlrJ+cF5gIzoa1G
- WoDxrgw1TVf1WhVVNgrNvq65SmyhKvRPD+BMDQ8bZrZqxVhynQTsYqdogwi8LHJsamlgC9v
- akx1o23W+42OkN/MapBeh6cV1+M+egIDf0Sre2KNTq3k4BjN3sBoMFuvxqTnDNXaH8VTC4b
- 5OV6LSFSBAetjof2kuJE3pzQmR2sE+CIWQmAvlcU4R9jG/fbHthb+Ri4RRaA==
-Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sRoHy-TRjx74-2c; Thu, 11 Jul 2024 07:32:26 +0000
-Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
- by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sRoHx-4o5NDgrgPEw-mkkl; Thu, 11 Jul 2024 07:32:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1720683144; bh=tmLvCWTAKrNvC+hTqcmobUhdkjTB6x/wWsoTeFLiEa0=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=dTnD9rKTeX0q63zhPwi/SPZEvF3+zHJ7MUg0YD55cxD70lCgK+fVIGWbDVUm1XOP/
- UmeOyJeCCNyGw6MUZfmbtkh1sQg5ksOBAB8i9dmdQnyDXIm2iZkSdCokeV0Y981TP/
- 6MXmDa6pr1xybtzr7HwoqUGnA6YjYDm6ny1XpyPM=
-Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id CEAD73E8F7; Thu, 11 Jul 2024 09:32:23 +0200 (CEST)
-Date: Thu, 11 Jul 2024 09:32:23 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>,
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v4] kbuild: add script and target to generate pacman
- package
-Message-ID: <Zo-Khw3jf-hSdD2S@fjasle.eu>
-References: <20240710-kbuild-pacman-pkg-v4-1-507bb5b79b2a@weissschuh.net>
+	s=arc-20240116; t=1720683311; c=relaxed/simple;
+	bh=A32NKfZuOtU4yS4/ogbhcy9GY77BvCCMpJQQ6CdWgQQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nDE2vSIUZOQbmN9gE3pyBKqSETQQ7MsGTCui79iER7/1W4Sp4nXTJI3PPjMRaLV56DSGmoJLvT5sKpqJFEnLwmc0tyPYXYZZuebEdC9291cPF2o3CfNs7wrlXIp8Wag8+3cXhBX6olEA5vMSf0PfQZAYbdH8LjUWx5B59z4yzgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowACHjeUOi49mMu60Ag--.57582S2;
+	Thu, 11 Jul 2024 15:34:45 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: andrii@kernel.org,
+	eddyz87@gmail.com,
+	mykolal@fb.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	martin.lau@linux.dev,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	shuah@kernel.org,
+	rdna@fb.com
+Cc: bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>
+Subject: [PATCH] selftests/bpf:fix a resource leak in main()
+Date: Thu, 11 Jul 2024 15:34:36 +0800
+Message-Id: <20240711073436.2258240-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature"; boundary="lZCcCeLzBRWDqdbM"
-Content-Disposition: inline
-In-Reply-To: <20240710-kbuild-pacman-pkg-v4-1-507bb5b79b2a@weissschuh.net>
-X-Smtpcorp-Track: Gackt8EGT7Cw.5SnQHwss6gV6.n34Lsw7Wakr
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286soGnZe9LlT
-X-Report-Abuse: Please forward a copy of this message, including all headers,
- to <abuse-report@smtp2go.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACHjeUOi49mMu60Ag--.57582S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFW7Xr1DCw1rKF1UGFWfKrg_yoWfuwbEkw
+	47Jrn7JFZ8ZF18Jr42gw1FkrWrCa1YgryxJFWDJa43JrWUXrWDJF4qkFZ8Ja4rWa98Xasr
+	tFyDurySyw47CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbSkFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
+	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
+	Cjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1YiiDUUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
+The requested resources should be closed before return in main(), otherwise
+resource leak will occur. Add a check of cgfd before close().
 
---lZCcCeLzBRWDqdbM
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 5ecd8c22739b ("selftests/bpf: Selftest for bpf_skb_ancestor_cgroup_id")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ tools/testing/selftests/bpf/test_skb_cgroup_id_user.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Sorry, I sent my last mail to quickly.  Three things below:
+diff --git a/tools/testing/selftests/bpf/test_skb_cgroup_id_user.c b/tools/testing/selftests/bpf/test_skb_cgroup_id_user.c
+index ed518d075d1d..f84faddd72e6 100644
+--- a/tools/testing/selftests/bpf/test_skb_cgroup_id_user.c
++++ b/tools/testing/selftests/bpf/test_skb_cgroup_id_user.c
+@@ -176,7 +176,8 @@ int main(int argc, char **argv)
+ err:
+ 	err = -1;
+ out:
+-	close(cgfd);
++	if (cgfd >= 0)
++		close(cgfd);
+ 	cleanup_cgroup_environment();
+ 	printf("[%s]\n", err ? "FAIL" : "PASS");
+ 	return err;
+-- 
+2.25.1
 
-On Wed, Jul 10, 2024 at 09:32:28PM +0200 Thomas Wei=DFschuh wrote:
-> pacman is the package manager used by Arch Linux and its derivates.
-> Creating native packages from the kernel tree has multiple advantages:
->=20
-> * The package triggers the correct hooks for initramfs generation and
->   bootloader configuration
-> * Uninstallation is complete and also invokes the relevant hooks
-> * New UAPI headers can be installed without any manual bookkeeping
->=20
-> The PKGBUILD file is a simplified version of the one used for the
-> downstream Arch Linux "linux" package.
-
-The package is actually called "linux-upstream", right?
-
-> Extra steps that should not be necessary for a development kernel have
-> been removed and an UAPI header package has been added.
->=20
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
-> ---
-> Changes in v4:
-> - Update MRPROPER_FILES
-> - Unify shell variable syntax
-> - Link to v3: https://lore.kernel.org/r/20240708-kbuild-pacman-pkg-v3-1-8=
-85df3cbc740@weissschuh.net
->=20
-> Changes in v3:
-> - Enforce matching architectures for installation
-> - Add Reviewed-by and Tested-by from Nathan
-> - Link to v2: https://lore.kernel.org/r/20240706-kbuild-pacman-pkg-v2-1-6=
-13422a03a7a@weissschuh.net
->=20
-> Changes in v2:
-> - Replace ${MAKE} with $MAKE for consistency with other variables
-> - Use $MAKE for "-s image_name"
-> - Avoid permission warnings from build directory
-> - Clarify reason for /build symlink removal
-> - Install System.map and config
-> - Install dtbs where available
-> - Allow cross-build through arch=3Dany
-> - Sort Contributor/Maintainer chronologically
-> - Disable some unneeded makepkg options
-> - Use DEPMOD=3Dtrue for consistency with rpm-package
-> - Link to v1: https://lore.kernel.org/r/20240704-kbuild-pacman-pkg-v1-1-a=
-c2f63f5fa7b@weissschuh.net
-> ---
->  .gitignore               |  6 ++++
->  Makefile                 |  2 +-
->  scripts/Makefile.package | 16 ++++++++++
->  scripts/package/PKGBUILD | 83 ++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  4 files changed, 106 insertions(+), 1 deletion(-)
->=20
-> diff --git a/.gitignore b/.gitignore
-> index c59dc60ba62e..7902adf4f7f1 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -92,6 +92,12 @@ modules.order
->  #
->  /tar-install/
-> =20
-> +#
-> +# pacman files (make pacman-pkg)
-> +#
-> +/PKGBUILD
-> +/pacman/
-> +
->  #
->  # We don't want to ignore the following even if they are dot-files
->  #
-> diff --git a/Makefile b/Makefile
-> index b25b5b44af10..79e8dcec6be9 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1497,7 +1497,7 @@ CLEAN_FILES +=3D vmlinux.symvers modules-only.symve=
-rs \
->  # Directories & files removed with 'make mrproper'
->  MRPROPER_FILES +=3D include/config include/generated          \
->  		  arch/$(SRCARCH)/include/generated .objdiff \
-> -		  debian snap tar-install \
-> +		  debian snap tar-install PKGBUILD pacman \
-
-(thanks!)
-
->  		  .config .config.old .version \
->  		  Module.symvers \
->  		  certs/signing_key.pem \
-> diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-> index bf016af8bf8a..a5b5b899d90c 100644
-> --- a/scripts/Makefile.package
-> +++ b/scripts/Makefile.package
-> @@ -141,6 +141,21 @@ snap-pkg:
->  	cd $(objtree)/snap && \
->  	snapcraft --target-arch=3D$(UTS_MACHINE)
-> =20
-> +# pacman-pkg
-> +# ----------------------------------------------------------------------=
------
-> +
-> +PHONY +=3D pacman-pkg
-> +pacman-pkg:
-> +	@ln -srf $(srctree)/scripts/package/PKGBUILD $(objtree)/PKGBUILD
-> +	cd $(objtree) && \
-
-Please prefix this line with a '+' to allow make job-server delegation to
-sub-make called via makepkg.  This will prevent the make warning
-
-    make[3]: warning: jobserver unavailable: using -j1.  Add '+' to parent =
-make rule.
-
-
-> +		srctree=3D"$(realpath $(srctree))" \
-> +		objtree=3D"$(realpath $(objtree))" \
-> +		BUILDDIR=3D"$(realpath $(objtree))/pacman" \
-> +		CARCH=3D"$(UTS_MACHINE)" \
-> +		KBUILD_MAKEFLAGS=3D"$(MAKEFLAGS)" \
-> +		KBUILD_REVISION=3D"$(shell $(srctree)/init/build-version)" \
-
-Just a note: In Masahiro's current kbuild tree 'build-version' has been mov=
-ed
-to scripts/build-version.  But I don't know on which base this patch will
-possibly be applied to.
-
-> +		makepkg
-> +
->  # dir-pkg tar*-pkg - tarball targets
->  # ----------------------------------------------------------------------=
------
-> =20
-> @@ -221,6 +236,7 @@ help:
->  	@echo '  bindeb-pkg          - Build only the binary kernel deb package'
->  	@echo '  snap-pkg            - Build only the binary kernel snap packag=
-e'
->  	@echo '                        (will connect to external hosts)'
-> +	@echo '  pacman-pkg          - Build only the binary kernel pacman pack=
-age'
->  	@echo '  dir-pkg             - Build the kernel as a plain directory st=
-ructure'
->  	@echo '  tar-pkg             - Build the kernel as an uncompressed tarb=
-all'
->  	@echo '  targz-pkg           - Build the kernel as a gzip compressed ta=
-rball'
-> diff --git a/scripts/package/PKGBUILD b/scripts/package/PKGBUILD
-> new file mode 100644
-> index 000000000000..b0b133ac28eb
-> --- /dev/null
-> +++ b/scripts/package/PKGBUILD
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +# Maintainer: Thomas Wei=DFschuh <linux@weissschuh.net>
-> +# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
-
-I am not familiar enough with makepkg/PKGBUILD: Does it make sense to put
-'set -e' here, as we (will) do in other kbuild scripts?  ('set -u' breaks
-'makepkg'.)  Without 'set -e', shellcheck asks for error handling around 'c=
-d'
-commands.
-
-> +
-> +pkgbase=3Dlinux-upstream
-> +pkgname=3D("$pkgbase" "$pkgbase-headers" "$pkgbase-api-headers")
-> +pkgver=3D"${KERNELRELEASE//-/_}"
-> +pkgrel=3D"$KBUILD_REVISION"
-> +pkgdesc=3D'Linux'
-> +url=3D'https://www.kernel.org/'
-> +arch=3D($CARCH)
-> +options=3D(!debug !strip !buildflags !makeflags)
-> +license=3D(GPL-2.0-only)
-> +
-> +build() {
-> +  export MAKEFLAGS=3D"$KBUILD_MAKEFLAGS"
-> +  cd "$objtree"
-> +
-> +  # makepkg does a "chmod a-srw", triggering warnings during kbuild
-> +  chmod 0755 "$pkgdirbase" || true
-> +
-> +  $MAKE -f "$srctree/Makefile"
-> +}
-> +
-> +package_linux-upstream() {
-> +  pkgdesc=3D"The $pkgdesc kernel and modules"
-> +
-> +  export MAKEFLAGS=3D"$KBUILD_MAKEFLAGS"
-> +  cd "$objtree"
-> +  local modulesdir=3D"$pkgdir/usr/$MODLIB"
-> +
-> +  echo "Installing boot image..."
-> +  # systemd expects to find the kernel here to allow hibernation
-> +  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab812=
-8dcf99161d2344
-> +  install -Dm644 "$($MAKE -s image_name)" "$modulesdir/vmlinuz"
-> +
-> +  # Used by mkinitcpio to name the kernel
-> +  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
-
-This looks funny, I think I'd just use echo "$pkgbase" >"$modulesdir/pkgbas=
-e",
-but this is probably just bike-shedding.
-
-So, all in all it looks good to me, thanks!
-
-With the jobserver-'+'-prefix added:
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
-
-Kind regards,
-Nicolas
-
---lZCcCeLzBRWDqdbM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmaPioAACgkQB1IKcBYm
-EmnGsRAAxhgsF3AzBnBDvQL2N6EJeUfKubcnL/F+b8btfLtJRLuGZJm/lLIf/tfK
-Hm+rFqRonyC2tNml0C8H1f8T6Aln6KbZtKGM4Z3PjCTux6PQyOfSbfABfbuwHy3M
-JUWFqz8Yd+dTJ3aDmh0RAgt5ugEj+FVgqnDuMeSJknn6jDuLsEeExwz99XbDuSN0
-93k74xVezM8oEJwyXIlcYGcy6foZPSWUcU91yym0g63a8z0RNGdI1E6yXQWZRsYb
-um1u0DSfErvVJ92gzBkBAuhXYswMoCFduvnZJ+ZxA9yGXrM8F8e5UYKzKHieadd0
-Dg38LwdbXQ1kpAYYd4GUMHDECEzcyNRpwpxpNYpa0s60Qe5NogeHwBcf2rP+c4tI
-oTVq4CHOBk4CpY92XCWlCKIH0wrkP5mYL6BxiPiFSwviQ9FYV+JAN5I9uAQZqWW0
-NYLelFNJPI2yXGVnAyCawYlErnfP5vpygNIKAePNF9qI/xvMoJEU2oT8Vn79NEwx
-9xSDHLzIFSRZvnX5xH2KTkLldiUv5KUZgyUTZDt4csSJM1wxwHOKw9V/TXXgWxdO
-OAqXI4weabHi2m63iqJirH4jrjnYXa0h7A652SXSrXsDnrqGIz6OLzKCuH2K/iwI
-Y7/50QpU/Q+jRRGYlT720aI0lo/705ddrlBqJx2E3trdE0Pzl9I=
-=fxKc
------END PGP SIGNATURE-----
-
---lZCcCeLzBRWDqdbM--
