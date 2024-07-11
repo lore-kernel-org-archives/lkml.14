@@ -1,283 +1,234 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn19011020.outbound.protection.outlook.com [52.103.32.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E11515B147;
-	Thu, 11 Jul 2024 11:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696947; cv=fail; b=ljaf06VqKVBzTXF4DcpNva+waFSco73ca1DewWM3aQfwaNehdpL4iMCOrt/8HzXRCPYPqPL+JWYOrAlyhOlXnmf4FlM9ulXpwuMpS7zWpr+6oZbS+kbL/J+2XPdH8e4BVOdJyz01Ihh6hVcjkgjHvt9fAAptebV1nlUzuxjyoWs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696947; c=relaxed/simple;
-	bh=CagETmbQzxQy7tHMFmKMp8hlYorlYA/ZSNKsjsKz7P4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ODKrNytl+Q15qK6hK3OnOeKIXAIh2I3rHhCBvIIWLjRYuX+7kpAjbz/t1OGhpGURtZQnEy0LxQ20ISBhNyrICdxB0rKnCxDYm4syjWaoCqKF9dAfcxhxOLE+GW2rjzExx7uAkNXJKEAojDj2jKcbfT2QT3rdv0EcyqcKtueWNIw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EqaUA2fX; arc=fail smtp.client-ip=52.103.32.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A431915ECCF
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720696956; cv=none; b=QhAdXak+Gq6XoYBC2dseaRkrgdgedcJPwkrnqLi5+XdH4NrJtIBSHVWAP1eATNCbTm2hEus5cXvjTvxe5ztqDV8eKYQQ4gnFe0wLDBtVjQs9seo2xXkzWfb4mnMdORPvcaRD3s68h4Ius6Vocu/Rkz5dn04+Sq8s2Er0zRQyUe0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720696956; c=relaxed/simple;
+	bh=oBDnAag5gQlhrAcOgNYYluUSpvZY5u+u2lJdb7p7nfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G9tJFS+vHdVOX37wWQFKqO6hJULLorPPFzy0KzUAokm3SCP8Emmsvd1XWbvTFks2naEfRUeq7+dgXioL3hdhEoMPm6OpubJUj1ItibsBUagAIurFDCLtkIu2cJZuc33WMtR9pRZbnArSdBaeqmnwEtsE/OOqR4/2LskIZ4mSPXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IrkFdZvI; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EqaUA2fX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k/5+NGQ6AJ5V1QOaRrm2I/DUQ03t6qJq7NvLzCON8ae4sJyAP1NpX0hSveXy4D3XPUrt3VBr5fTueVRePglsQZOQuUL0kV1OXSFm69Qqv568FP15J7SMvcbHBckKoEsMaZCYiarKORSJ9gilaloomU9zgh/7VyF7yD38y1JJSErIekYiRQ/En8xo9q/W7okx8ayA7HLh+67oW25d/3uk9P67cTT7Exx6WLaFy1VsRS59Oq4LGzVKJI+iQoOeHHHeXDN3mYULiMFcDkTtnWhuJT8xvEkWImSJfR1q0XO288Jd93fYAmX2gZzkwznH8fnzxQP/DMNgEtxl/vboc1KrrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uRPnIsO7k3xpL5wwp/N9T6QoD19hlcJIS2GQY7S4vmY=;
- b=T8doDR9/7ZvuGESgdci7EC/Xbhmu+tj2Pn8NeF2ZEBn/IbC4mxEPkXqC4SIrdYgzoOK4GtdU9Etv1l9/+2zDxFY29+eYuYjERaP7ssIvsCAuW6llxhfK6EMB+7LDs2Q9IVk4Wr1gTbhvtZMg3YniX9LPgfOvJcI/Vx1vO8YSCNLaQnuQGFeai8kXkzJeAIfzx57Iasg0zMrif8Q/sh6AjNK+FP2y1jEisBWMXRFNbvCKN1/be7zf/+qFtHuXytYpIxhchmWJGD4+/U1XlddbxWE0gXHSTUDDlUkSKShOu3nlhebZmuuPIQnGJBx2QEuVZ2s4xTD49APvYPXVSa0hyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uRPnIsO7k3xpL5wwp/N9T6QoD19hlcJIS2GQY7S4vmY=;
- b=EqaUA2fXiNRUlFTGs5isiYrtNkIRATglEeI14oej9FLUoiluZ9XFarEwKt7Th1F08CvbNCmB+AIm1gJUSyttmicWbmGkO+MdlizShn4FKecZrM3GYmjDi68qqdhJbxCPb3L0f3zmXs5jp51VVCX+Y1/YyR8cxONTeYljaYaZElIt3qCriVIYjwtBl6PvDd+8tDMZjV0IqFb0nnBFs7T1Hkp/aRJQX+oLpuj7voo7wuNfj1HNnBn3GPBMpwNLXcb9mYSUdTCP0Aj37l29Dgp+kn09pMeC+lZ9P/sj0AFYtca8xpdB8gypKp5sDSFdOuL5+tNrKpTH0mpGJcREFbJUYg==
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
- by GV1PR03MB10233.eurprd03.prod.outlook.com (2603:10a6:150:166::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Thu, 11 Jul
- 2024 11:22:19 +0000
-Received: from AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7]) by AM6PR03MB5848.eurprd03.prod.outlook.com
- ([fe80::4b97:bbdb:e0ac:6f7%6]) with mapi id 15.20.7762.020; Thu, 11 Jul 2024
- 11:22:19 +0000
-From: Juntong Deng <juntong.deng@outlook.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	andrii@kernel.org,
-	avagin@gmail.com,
-	snorcht@gmail.com
-Cc: bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH bpf-next RESEND 06/16] bpf/crib: Introduce task_file open-coded iterator kfuncs
-Date: Thu, 11 Jul 2024 12:19:28 +0100
-Message-ID:
- <AM6PR03MB58488CDDADBC9049B186F4FB99A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <AM6PR03MB58488045E4D0FA6AEDC8BDE099A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
-References: <AM6PR03MB58488045E4D0FA6AEDC8BDE099A52@AM6PR03MB5848.eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [gBOAKcYG9dXbNv2GXEhduZy9wJe9BsZ2]
-X-ClientProxiedBy: SI2P153CA0031.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::7)
- To AM6PR03MB5848.eurprd03.prod.outlook.com (2603:10a6:20b:e4::10)
-X-Microsoft-Original-Message-ID:
- <20240711111938.11722-6-juntong.deng@outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IrkFdZvI"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ec61eeed8eso9050211fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:22:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720696952; x=1721301752; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZRrUzB1pBpPbCjosy572/8SxcZFgnM7FQHnyffhGyG0=;
+        b=IrkFdZvIxHP0OyROexXgabKbNlMDKnnMwb0JQRfhAFCBOmPdZ2AILejoMasGBVzwiW
+         JCTlYW6uoZZ8jPFbi5V2WpWxBPEk/HfvgcR0kEoLavWDgPCaQXhWSo9X+6rXjjmtws+x
+         Ce2d3DXV29gaHnASpfjDrVZagHwHSqcX9sIDfmAo4j5u2DBlDIvWSkrvhfBSRZQyU3KU
+         5RUyZI4K3YVLS70VThxB12AYTxgblH5VFi1fsNINOadttD0XLLCcdnLCLDFhNRus1oAZ
+         lAPWOZ7h+AvlTtXuRiU1XIyc/8gzZpvryqH+eykeLjQvB3d27P7iGrTyw4Xkcbmlqm+t
+         qanA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720696952; x=1721301752;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZRrUzB1pBpPbCjosy572/8SxcZFgnM7FQHnyffhGyG0=;
+        b=Z4WP451gQW5unDxEPrH/pBmtIrDO8X/cU0Tvav85Kaw89w2gOk+JzHJwlXJAJ+7YBq
+         ZiXqKa9kFqMP3+VhGN1T878HGUruRK3eCoGlgiIEew6+DbHFJAta28wX+qqEyOxgnPxK
+         D34Ildtqb5VZXCayNu4v0R9c88j4sD6u3GcegcLYr+oq58/OFVK8nxCXxbjFFyW9AgPY
+         jYqYPxvERGtWb3AOnw2p5G14BFA2k1Ls6RsSIjsl6kkcQelh3dHONrWEaAxJKAMPTBEL
+         GzDI4hh1iEgtgZT8Ner479NdYgy4pWL+5K9lHFnQKvHLCgLYZDNt68fMz7XFFspQjWbv
+         6DSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWstV4i1a+MZZLpsDUQm4rH7O1gIjFDTUU+XhYMfTs7NtebCg/sOAHrzKXqyIcDfAc1MOU8nOBTYpefKnNWgkiWzEyD7SrCm1o0f1eo
+X-Gm-Message-State: AOJu0YxR/rEFvHZj3DTW0PagN1Pvf4wrn4b0OVIsuyS1pYwLN0Wf0JtQ
+	3eUehReh6tdgtE++wMTf95aBjA5Hz2xPK07a19PemTNNmbqpy8r6rGyqaGmUdZA=
+X-Google-Smtp-Source: AGHT+IHe5/f+cNlVXJfd3IJFg2qfPezKjG2oDodKbnqowuFTS/9Cv35Wjs9n9ATrOYrBf/wOUzZj5Q==
+X-Received: by 2002:a2e:7307:0:b0:2ee:6cda:637b with SMTP id 38308e7fff4ca-2eeb318aaa8mr51695021fa.35.1720696951745;
+        Thu, 11 Jul 2024 04:22:31 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279bc37c05sm11595235e9.35.2024.07.11.04.22.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 04:22:31 -0700 (PDT)
+Message-ID: <aa20591f-3939-4776-9025-b8d7159f4c63@linaro.org>
+Date: Thu, 11 Jul 2024 12:22:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5848:EE_|GV1PR03MB10233:EE_
-X-MS-Office365-Filtering-Correlation-Id: 412acac6-e7c7-41a5-3e53-08dca19bba24
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|19110799003|8060799006|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	wFD86fpyoqFVl5oH/kTUHykxa03gaauAXSfFb6MeEPQzebj0+b49Pefmd1oCGNTiH2wzptTFPjEazfigrukrmn1fLV0fBlSLGlHy+cE8MfVCQ9a2XNVmtOUtVeiImrR+cKEEIW2GOFJEyAeL03Ik9LBGY+H/Qx24mVm5C6RxQtygFwYTAnwQZhLKP+ck5RRRLhxBc02e7I0fTm1u48qrJyKrHtqNPPA/pJzqSYiDkZtsY91hgzyQd4mUw4DXHUrur6KxeNYZrIRB2hevMIbDHwUmVa0g0g+1Oj0Kv5UWT2Zf+jIyshbEon5iEiG91DX6yMefXyiusO7nqsqw16wq7HOARBflKeQpS4mT9YqT7WfHRP1lrs9Y8Vd3aUQpCga+73NESVcqVmAJJslHHn7wGRVyp5WgcpH97pIUu4uFLxde6X2C+xSbw0Nv/Q9HJ+StFePpmYnN4b/E5iipwdfu+929uEweJTCxyX0Rh8Fkt8j0Bd012mQnCYHEWkbQX237kmK191z7Yc9+L8XmMtQapXNYc/h/fYEfO5JOxcQF1PpOVXfG5+LD+0uTHSXPd6U6KcTe5gcJhpiBSWlS9jY/4tmCEBzVPI1TtYnSFRI8nZ+u8+xgap4+jlV8TiZwNuAtvQSYspo9gvrI7nkugO9qqw==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Z3f1Br7YFZaULz/Fvd4peYJMazDv4efUT6VoiMMQOXsOp3QNH1FQ+o0WVLDG?=
- =?us-ascii?Q?pFaitQE3Yzf5RED+zDFoKLoCdjVkysS/tIvoDs20HeETjVGr1E6FwG2RDSBR?=
- =?us-ascii?Q?YaTP7rTnDK/lTzj/LwxyE3EHVDx8nuh/cvemvikslvOggbyadwzEu7YCbpQW?=
- =?us-ascii?Q?vOWyiBLolX9UY9RlhIBIV4bAqZLHJrkmfQKc1MxicB3c5Iew3mOCbw51oyzn?=
- =?us-ascii?Q?PyCR+NlgrWN1C6qxmVRQTEZJWc1YvgpuiJDysqYYPxlgT4+T3I8rD6SHTXHc?=
- =?us-ascii?Q?4viI/aKpOghCKPXbp6+dvvGkGFnDYTVG7JDuawUz2a+1rijZQliIs5s228yH?=
- =?us-ascii?Q?nKFRhjYPSDDIHHZTkwxf5ARizoNTgXe5ZpCngrd20wTbFHribU/qah63Qh9R?=
- =?us-ascii?Q?niNsUnwcAnmMd8HY6Zu9D287ZrNsBDdVN2LeCrQ9b4oxsnhoTxYvRCrQ4biC?=
- =?us-ascii?Q?yOLAsoeISrWK9ABI+c2VOBXpIGO4I1KBA/4KFP3Af+m7xN8rkQ1s4DDopD1q?=
- =?us-ascii?Q?wXo8knzZoOPmU2+kg1ZPRND49XEzYgCE3BLJ5uYRFv6cuGzKSwoen1fl/fuo?=
- =?us-ascii?Q?/GvBSVNPbKs9s7h4yejnPosNi40Ssw348/FRvG8ea84H4aClmAXoheyt4JS7?=
- =?us-ascii?Q?hrnnD92i+83S6mnWEp8tLzmprGVYs5/rJikOHd2owFWQKzYc4xrzr3q3ef4y?=
- =?us-ascii?Q?F7RVR99vOHIxhkx2utxeU4ZrHNYk3+OW7ysEEZqaF2x0PUxsib4lpi0eXn4k?=
- =?us-ascii?Q?xaM8/UW6YhgsTR3YWGXOC6Rz0SDRffsslSyUKTZBADDMe9BvQP7/2PW8n9jc?=
- =?us-ascii?Q?b0gAshNkk92/HMp/jrIXsDNH3Tz/GscVyOzm+jDlls0Aj1UID9e19UTpw3Ww?=
- =?us-ascii?Q?+px1EMnR0VDpiJ/MxeWzZCBpu+BITpG22l/wB7tLv/WR6hQwbiG0g/f4rUA+?=
- =?us-ascii?Q?i4FcDMHnIZKQWgGaNDmooopXh5FqxoFB4RLVChv35hmnYaKNgBkBMyklf64r?=
- =?us-ascii?Q?AdmaE1E2Yzpfcc3OZ3ldRUKmiIqFbTh8kAJ+OetOnfrZAT/bHJHC83Dr2f9W?=
- =?us-ascii?Q?mUfXdrW6yDxYGDpI7rWQs5NflWVoLgwF3B40AKeWA3E0c2+YNEc6GkLEuNL2?=
- =?us-ascii?Q?J/uSRDX84xZc6uTApek9tT73E0OJtCK50a28gT+rXI8RiGo4Aldfu0aSg1YA?=
- =?us-ascii?Q?kBi8NfqaHDD5MmLcQwleXFFVJc3FrCdK3FC0guH06xyRg+0dP8qSsGQkyw4?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 412acac6-e7c7-41a5-3e53-08dca19bba24
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5848.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 11:22:19.6973
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB10233
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] media: ov5675: Elongate reset to first transaction
+ minimum gap
+To: Quentin Schulz <quentin.schulz@cherry.de>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+ Jacopo Mondi <jacopo@jmondi.org>
+Cc: Johan Hovold <johan@kernel.org>,
+ Kieran Bingham <kieran.bingham@ideasonboard.com>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240711-linux-next-ov5675-v1-0-69e9b6c62c16@linaro.org>
+ <20240711-linux-next-ov5675-v1-2-69e9b6c62c16@linaro.org>
+ <fcd0db64-6104-47a6-a482-6aa3eec702bc@cherry.de>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <fcd0db64-6104-47a6-a482-6aa3eec702bc@cherry.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This patch adds the open-coded iterator style process file iterator
-kfuncs bpf_iter_task_file_{new,next,destroy} that iterates over all
-files opened by the specified process.
+On 11/07/2024 11:40, Quentin Schulz wrote:
+> Hi Bryan,
+> 
+> On 7/11/24 12:20 PM, Bryan O'Donoghue wrote:
+>> The ov5675 specification says that the gap between XSHUTDN deassert 
+>> and the
+>> first I2C transaction should be a minimum of 8192 XVCLK cycles.
+>>
+>> Right now we use a usleep_rage() that gives a sleep time of between about
+>> 430 and 860 microseconds.
+>>
+>> On the Lenovo X13s we have observed that in about 1/20 cases the current
+>> timing is too tight and we start transacting before the ov5675's reset
+>> cycle completes, leading to I2C bus transaction failures.
+>>
+>> The reset racing is sometimes triggered at initial chip probe but, more
+>> usually on a subsequent power-off/power-on cycle e.g.
+>>
+>> [   71.451662] ov5675 24-0010: failed to write reg 0x0103. error = -5
+>> [   71.451686] ov5675 24-0010: failed to set plls
+>>
+>> The current quiescence period we have is too tight, doubling the minimum
+>> appears to fix the issue observed on X13s.
+>>
+>> Fixes: 49d9ad719e89 ("media: ov5675: add device-tree support and 
+>> support runtime PM")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>> ---
+>>   drivers/media/i2c/ov5675.c | 9 +++++++--
+>>   1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/ov5675.c b/drivers/media/i2c/ov5675.c
+>> index 92bd35133a5d..0498f8f3064d 100644
+>> --- a/drivers/media/i2c/ov5675.c
+>> +++ b/drivers/media/i2c/ov5675.c
+>> @@ -1018,8 +1018,13 @@ static int ov5675_power_on(struct device *dev)
+>>       gpiod_set_value_cansleep(ov5675->reset_gpio, 0);
+>> -    /* 8192 xvclk cycles prior to the first SCCB transation */
+>> -    usleep_range(delay_us, delay_us * 2);
+>> +    /* The spec calls for a minimum delay of 8192 XVCLK cycles prior to
+>> +     * transacting on the I2C bus, which translates to about 430
+>> +     * microseconds at 19.2 MHz.
+>> +     * Testing shows the range 8192 - 16384 cycles to be unreliable.
+>> +     * Grant a more liberal 2x -3x clock cycle grace time.
+>> +     */
+>> +    usleep_range(delay_us * 2, delay_us * 3);
+> 
+> Would it make sense to have power_off have the same logic? We do a 
+> usleep_range of those same values currently, so keeping them in sync 
+> seems to make sense to me.
 
-In addition, this patch adds bpf_iter_task_file_get_fd() getter to get
-the file descriptor corresponding to the file in the current iteration.
+I have no evidence to suggest there's a problem on the shutdown path, 
+that's why I left the quiescence period as-is there.
 
-The reference to struct file acquired by the previous
-bpf_iter_task_file_next() is released in the next
-bpf_iter_task_file_next(), and the last reference is released in the
-last bpf_iter_task_file_next() that returns NULL.
+> Also, I'm wondering if it isn't an issue with the gpio not being high 
+> right after gpoiod_set_value_cansleep() returns, i.e. the time it 
+> actually takes for the HW to reach the IO level that means "high" for 
+> the camera. And that this increased sleep is just a way to mitigate that?
 
-In the bpf_iter_task_file_destroy(), if the iterator does not iterate to
-the end, then the last struct file reference is released at this time.
+No, that's not what I found.
 
-Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+I tried changing
+
+         usleep_range(2000, 2200);
+
+to
+         usleep_range(200000, 220000);
+
+but could still elicit the I2C transaction failure. If the time it took 
+for the GPIO to hit logical 1 were the issue then multiplying the reset 
+time by 100 would certainly account for that.
+
+// BOD set the chip into reset
+         gpiod_set_value_cansleep(ov5675->reset_gpio, 1);
+
+// BOD apply power
+         ret = regulator_bulk_enable(OV5675_NUM_SUPPLIES, ov5675->supplies);
+         if (ret) {
+                 clk_disable_unprepare(ov5675->xvclk);
+                 return ret;
+         }
+
+         /* Reset pulse should be at least 2ms and reset gpio released 
+only once
+          * regulators are stable.
+          */
+
+// BOD spec specifies 2 milliseconds here not a count of XVCLKs
+         usleep_range(2000, 2200);
+
+         gpiod_set_value_cansleep(ov5675->reset_gpio, 0);
+
+// BOD spec calls for a _minimum_ of 8192 XVCLK cycles before I2C
+         /* 8192 xvclk cycles prior to the first SCCB transation */
+         usleep_range(delay_us, delay_us * 2);
+
+The issue is initiating an I2C transaction too early _after_ reset 
+completion not the duration of that reset.
+
+As I stated in the cover letter, I tried a longer reset duration, a 
+higher drive-strength on the GPIO as well as I didn't put in my cover 
+letter, inverting the logic of the GPIO reset, which unsurprisingly 
+didn't work.
+
+No matter how long we hold the chip in reset, unless we give more grace 
+time _subsequent_ to the reset before initiating an I2C transaction, we 
+will encounter transaction failures.
+
+This is a fairly common and logical fault if you think about it.
+
+XVCLK is providing a clock to the ov5675 core to "do stuff" whatever 
+that stuff is. Bring up an internal firmware, lock a fundamental PLL - 
+whatever.
+
+If we start an I2C transaction before the hypothetical internal core has 
+booted up then - meh no bueno we'll get no transaction response.
+
+That's the error - speaking too soon.
+
+A little like myself in the mornings, cranky before I've had my coffee 
+and unresponsive.
+
+;)
+
+> With this patch we essentially postpone the power_on by another 430ms 
+> making it almost a full second before we can start using the camera. 
+> That's quite a lot I think? We don't have a usecase right now that 
+> requires this to be blazing fast (and we anyway would need at the very 
+> least 430ms), so take this remark as what it is, a remark.
+
+Not a full second, a millisecond.
+
+8/10ths of 1 millisecond instead of 4/10ths of one millisecond.
+
+19.2MHz is 52.083333333333 nanoseconds per clock
+
+52.083333333333 * 8192 => 426666 nanoseconds => 0.426666 milliseconds or 
+426.6 microseconds
+
+So our post reset quiesence minimum @ 19.2MHz moves from 426.6 
+microseconds to 853.
+
+> The change looks fine to me even though it feels like a band-aid patch.
+
+I mean it's not a second - if you feel very strongly that 426 
+milliseconds * 2 is wrong, I guess I could add some more complex logic 
+however I like this simple fix for backporting.
+
 ---
- include/linux/bpf_crib.h         | 10 ++++
- kernel/bpf/crib/bpf_checkpoint.c | 88 ++++++++++++++++++++++++++++++++
- kernel/bpf/crib/bpf_crib.c       |  5 ++
- 3 files changed, 103 insertions(+)
-
-diff --git a/include/linux/bpf_crib.h b/include/linux/bpf_crib.h
-index f667b740fcc2..468ae87fa1a5 100644
---- a/include/linux/bpf_crib.h
-+++ b/include/linux/bpf_crib.h
-@@ -13,4 +13,14 @@
- #include <linux/btf_ids.h>
- #include <linux/filter.h>
- 
-+struct bpf_iter_task_file {
-+	__u64 __opaque[3];
-+} __aligned(8);
-+
-+struct bpf_iter_task_file_kern {
-+	struct task_struct *task;
-+	struct file *file;
-+	int fd;
-+} __aligned(8);
-+
- #endif /* _BPF_CRIB_H */
-diff --git a/kernel/bpf/crib/bpf_checkpoint.c b/kernel/bpf/crib/bpf_checkpoint.c
-index efaca6bcdfe4..28ad26986053 100644
---- a/kernel/bpf/crib/bpf_checkpoint.c
-+++ b/kernel/bpf/crib/bpf_checkpoint.c
-@@ -7,7 +7,95 @@
-  */
- 
- #include <linux/bpf_crib.h>
-+#include <linux/fdtable.h>
-+
-+extern void bpf_file_release(struct file *file);
- 
- __bpf_kfunc_start_defs();
- 
-+/**
-+ * bpf_iter_task_file_new() - Initialize a new task file iterator for a task,
-+ * used to iterate over all files opened by a specified task
-+ *
-+ * @it: The new bpf_iter_task_file to be created
-+ * @task: A pointer pointing to a task to be iterated over
-+ */
-+__bpf_kfunc int bpf_iter_task_file_new(struct bpf_iter_task_file *it,
-+		struct task_struct *task)
-+{
-+	struct bpf_iter_task_file_kern *kit = (void *)it;
-+
-+	BUILD_BUG_ON(sizeof(struct bpf_iter_task_file_kern) > sizeof(struct bpf_iter_task_file));
-+	BUILD_BUG_ON(__alignof__(struct bpf_iter_task_file_kern) !=
-+		     __alignof__(struct bpf_iter_task_file));
-+
-+	kit->task = task;
-+	kit->fd = -1;
-+	kit->file = NULL;
-+
-+	return 0;
-+}
-+
-+/**
-+ * bpf_iter_task_file_next() - Get the next file in bpf_iter_task_file
-+ *
-+ * bpf_iter_task_file_next() acquires a reference to the returned struct file.
-+ *
-+ * The reference to struct file acquired by the previous
-+ * bpf_iter_task_file_next() is released in the next bpf_iter_task_file_next(),
-+ * and the last reference is released in the last bpf_iter_task_file_next()
-+ * that returns NULL.
-+ *
-+ * @it: The bpf_iter_task_file to be checked
-+ *
-+ * @returns a pointer to the struct file of the next file if further files
-+ * are available, otherwise returns NULL.
-+ */
-+__bpf_kfunc struct file *bpf_iter_task_file_next(struct bpf_iter_task_file *it)
-+{
-+	struct bpf_iter_task_file_kern *kit = (void *)it;
-+
-+	if (kit->file)
-+		bpf_file_release(kit->file);
-+
-+	kit->fd++;
-+
-+	rcu_read_lock();
-+	kit->file = task_lookup_next_fdget_rcu(kit->task, &kit->fd);
-+	rcu_read_unlock();
-+
-+	return kit->file;
-+}
-+
-+/**
-+ * bpf_iter_task_file_get_fd() - Get the file descriptor
-+ * corresponding to the file in the current iteration
-+ *
-+ * @it: The bpf_iter_task_file to be checked
-+ *
-+ * @returns the file descriptor
-+ */
-+__bpf_kfunc int bpf_iter_task_file_get_fd(struct bpf_iter_task_file *it)
-+{
-+	struct bpf_iter_task_file_kern *kit = (void *)it;
-+
-+	return kit->fd;
-+}
-+
-+/**
-+ * bpf_iter_task_file_destroy() - Destroy a bpf_iter_task_file
-+ *
-+ * If the iterator does not iterate to the end, then the last
-+ * struct file reference is released at this time.
-+ *
-+ * @it: The bpf_iter_task_file to be destroyed
-+ */
-+__bpf_kfunc void bpf_iter_task_file_destroy(struct bpf_iter_task_file *it)
-+{
-+	struct bpf_iter_task_file_kern *kit = (void *)it;
-+
-+	if (kit->file)
-+		bpf_file_release(kit->file);
-+}
-+
- __bpf_kfunc_end_defs();
-diff --git a/kernel/bpf/crib/bpf_crib.c b/kernel/bpf/crib/bpf_crib.c
-index 1c1729ddf233..b901d7d60290 100644
---- a/kernel/bpf/crib/bpf_crib.c
-+++ b/kernel/bpf/crib/bpf_crib.c
-@@ -52,6 +52,11 @@ BTF_KFUNCS_START(bpf_crib_kfuncs)
- BTF_ID_FLAGS(func, bpf_file_from_task_fd, KF_ACQUIRE | KF_TRUSTED_ARGS | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_file_release, KF_RELEASE)
- 
-+BTF_ID_FLAGS(func, bpf_iter_task_file_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
-+BTF_ID_FLAGS(func, bpf_iter_task_file_next, KF_ITER_NEXT | KF_RET_NULL)
-+BTF_ID_FLAGS(func, bpf_iter_task_file_get_fd, KF_ITER_GETTER)
-+BTF_ID_FLAGS(func, bpf_iter_task_file_destroy, KF_ITER_DESTROY)
-+
- BTF_KFUNCS_END(bpf_crib_kfuncs)
- 
- static int bpf_prog_run_crib(struct bpf_prog *prog,
--- 
-2.39.2
-
+bod
