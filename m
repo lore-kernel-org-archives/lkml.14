@@ -1,163 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7508C12C549
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF26E12C549
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720709687; cv=none; b=q34AON4EuRgwnLPcOiDNdYSyfP1t1OhxkV2I/GAstSfBYY8dQeHg+8H+c8f34R+j+GB6fpJQxbbWnDfZMQykiaxiPIoPpyIuEurvrkUvEgVSr5cwOG6Oupi0Q8ovv6b7XSjT4FmVtk00m8uy2LzC90Rvj5ZVOaNjr+/39OLLzvU=
+	t=1720709720; cv=none; b=SBWFcgRAm7QqRUlPz98jpnsll/Q2M9g4aE7GepFJrDmUsjVGdbq1hG9OG+CEAPJvp6aTbkaKBqCz9uTnb0v8XKZpwrID6c7Q1W3Xs0v/AEF+pK44lMMK0Zvprn30/g7YkaHq9qYx7S482zU+wM0vte+1p8OZCOqoyCo4xIT3fjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720709687; c=relaxed/simple;
-	bh=0/mI3AauqSo/TufjQdQjUo6dCLrU1WeCSj/5ySxVsSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tW5FdruwG4mqgUmY3VJKYOtT9M1Y4T9o58PG4jcO61TMR0zs5fxJv/661FXYRAbGN1Ao9lH1hb6qw1HqrVnLE1p4+2lnoh1L+zfxe+wboCzkbz658r9WzzxAsGz1D42HlZ1K69C1/ijp6lqkfU35qqJSyTuHlmJQh/4KrGPi0rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbPE43Bm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720709720; c=relaxed/simple;
+	bh=z9uROl4HbHhQfuzBg0QIhgc5JJTYcWlU4daXCmPoMzI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ubIwZju1WLLYKzC+7seBOHjfHG9cM7AJpcBWPFPG4y+Hfno/Vl3jEr0+1jW0kmyEUlnPonrJ6P1VGwKQgb2MU5KdFyHpVK0FCDjB211j5pdk88thnUwPI7k6xXQCTrR8Jev5tFPq3BFxRdTOXK8E+BqI4tkbm9zzznontVDzpAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vRbd7uAY; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbPE43Bm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AFC1C116B1;
-	Thu, 11 Jul 2024 14:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720709687;
-	bh=0/mI3AauqSo/TufjQdQjUo6dCLrU1WeCSj/5ySxVsSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mbPE43BmBoIbVEv+lnM0MBlVgA3oBAnb0wNCbr4rUrmOEPabS436DWqehGD5N6GJY
-	 WhG6r8w+PWZitMYZrchmb+3TPUvfEOjuoV1NKJm+rENCe9rDHVthD+hAopZaZwmP3Z
-	 f7PuWnhLyt7WVx4NBV55us5oX8Le3TwHtahk1cJchCMtEq9Xql5IpPR1OGKKEsl6ek
-	 R9LrGPr6i4zDJLbDUpxPrFRfIQo27nXLhJHOZJXlgIWXYrV8QDPTvu6lducX1fjpar
-	 QKlSlHLZxEDUQv8ioLR5Ks2e2TiX6SGGfwDT1rdQ7j+xr10TFccRxdiYQyMNkjfkDG
-	 +tiKS77A4EHWw==
-Date: Thu, 11 Jul 2024 22:40:33 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Cyril Bur <cyrilbur@tenstorrent.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	antonb@tenstorrent.com
-Subject: Re: [PATCH v2] riscv: Improve exception and system call latency
-Message-ID: <Zo_u4eoq3-m9e3X7@xhacker>
-References: <20231225040018.1660554-1-antonb@tenstorrent.com>
- <20240607061335.2197383-1-cyrilbur@tenstorrent.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vRbd7uAY"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-64b417e1511so9614947b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720709718; x=1721314518; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+4UBc7cQrKGMEZ5EX9PJdheM7gdFy4rwh8ao143uo3I=;
+        b=vRbd7uAYivEDv/smbT7gxqBgnCDsq/5tWmHKGsNYfA3lNPnrQrf2jQU/ZgMwLlXQNC
+         PngRPmpMBdaMFdq/DT0AmkMoq7vBD6wxZDQ/SRmVoDKkFwz1P5iXiw8IUXTbldz+KZKF
+         z6NOPBMQR6Z3Zg1tiQ5UHWCha2Ypw2uvgpDJLNAT6111Nxyau6mXnmnEAyYhZkEbKjav
+         28w2QBrtp9iVW2UO2v0L1sIucjAKDoevyx5iP6UN4cKdhN5xJgSWhdde4/ERmQB0bFVO
+         KuyJspZfGNiMX0HqDmRAAJifxQZgWiAuk/SJxqPauYR8kr4FUoiDLgQnEKziRb6+Mnnx
+         QLug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720709718; x=1721314518;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+4UBc7cQrKGMEZ5EX9PJdheM7gdFy4rwh8ao143uo3I=;
+        b=MFynT53BK/AMDHZFErmzpWj9IIUdPPmr1QKBuDU6cHK34ETt/IJxxHf/iZLJpnKMNy
+         hmfHJsvX5Wq+2fcfsvlw8jZQGsX5qWEoMrI17lvo2G9CRubT90lipryQG9awoPnxd6vg
+         zY/+lpQ5EiCErwrxnAOM/6O1Ci6licJbAV6sWxlT3YfqsezdFs30RcQQ+SZ5K6BxyEgo
+         UyoJREPERDbLDa8T3HkTFt9vk5F3uR0leG/MHzyiXTSy4WHYrwefxWy0xyW2KXPat9xG
+         kHwlsdGMKHR4QyQEH7xOFYbLoV0pg8hKXONF8nFTG9SN1mZ+EMS3MrHaKxuBA8/nIZby
+         ZJ5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWcdkvhU5PBOH0Crw+w/Go7aVOsiSwdBP1dbOWwtUau+nevDjSP/H9OvS+cgrqwdRUOgBu8Fb+yd2XJOWPS0s/V13tWh7K+cudU/sBM
+X-Gm-Message-State: AOJu0YzSIEI62zxg0yzq2Jb8AE8t3JkSaoy5GM6+HttwPnbBnx8Ahpwg
+	vWxpw03liDiSVW5CPvE470p7JRI1RQW53Sszbdtd7O/LWBtLFPCkxvtagClFde4w1OkHgc2trze
+	g7cOERiYCFjYGTkutkAx/BCrKPg2DulHthWFS
+X-Google-Smtp-Source: AGHT+IHOZ97p6Fxs/TNwZed9HbaLGEz1VBSjOeoNgLDM9j7jU98gIWaZoq4aET1Gv+kkFrFw7jxV99m3/gBZHoGvSUM=
+X-Received: by 2002:a25:d38e:0:b0:e02:4d55:1e6f with SMTP id
+ 3f1490d57ef6-e041b05c9c5mr9971274276.21.1720709717399; Thu, 11 Jul 2024
+ 07:55:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240607061335.2197383-1-cyrilbur@tenstorrent.com>
+References: <20240710054336.190410-1-alexs@kernel.org> <42afbce8-7746-438f-ba3a-c997a2c702e5@suse.cz>
+ <a0990d1f-ef25-4eae-98e5-6e65c8643313@gmail.com>
+In-Reply-To: <a0990d1f-ef25-4eae-98e5-6e65c8643313@gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 11 Jul 2024 07:55:04 -0700
+Message-ID: <CAJuCfpEwY=_+=YTHfS7TUib6XtVSWzf1PLZiPK_5MQyOK0m5+w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] mm/memcg: alignment memcg_data define condition
+To: Alex Shi <seakeel@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, alexs@kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>, 
+	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Randy Dunlap <rdunlap@infradead.org>, Yoann Congal <yoann.congal@smile.fr>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Petr Mladek <pmladek@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 06, 2024 at 11:13:35PM -0700, Cyril Bur wrote:
-> From: Anton Blanchard <antonb@tenstorrent.com>
-> 
-> Many CPUs implement return address branch prediction as a stack. The
-> RISCV architecture refers to this as a return address stack (RAS). If
-> this gets corrupted then the CPU will mispredict at least one but
-> potentally many function returns.
-> 
-> There are two issues with the current RISCV exception code:
-> 
-> - We are using the alternate link stack (x5/t0) for the indirect branch
->   which makes the hardware think this is a function return. This will
->   corrupt the RAS.
-> 
-> - We modify the return address of handle_exception to point to
->   ret_from_exception. This will also corrupt the RAS.
-> 
-> Testing the null system call latency before and after the patch:
-> 
-> Visionfive2 (StarFive JH7110 / U74)
-> baseline: 189.87 ns
-> patched:  176.76 ns
-> 
-> Lichee pi 4a (T-Head TH1520 / C910)
-> baseline: 666.58 ns
-> patched:  636.90 ns
-> 
-> Just over 7% on the U74 and just over 4% on the C910.
-> 
-> Signed-off-by: Anton Blanchard <antonb@tenstorrent.com>
-> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+On Thu, Jul 11, 2024 at 4:51=E2=80=AFAM Alex Shi <seakeel@gmail.com> wrote:
+>
+>
+>
+> On 7/11/24 4:13 PM, Vlastimil Babka wrote:
+> > On 7/10/24 7:43 AM, alexs@kernel.org wrote:
+> >> From: "Alex Shi (Tencent)" <alexs@kernel.org>
+> >>
+> >> commit 21c690a349ba ("mm: introduce slabobj_ext to support slab object
+> >> extensions") changed the folio/page->memcg_data define condition from
+> >> MEMCG to SLAB_OBJ_EXT. And selected SLAB_OBJ_EXT for MEMCG, just for
+> >> SLAB_MATCH(memcg_data, obj_exts), even no other relationship between t=
+hem.
+> >>
+> >> Above action make memcg_data exposed and include SLAB_OBJ_EXT for
+> >> !MEMCG. That's incorrect in logcial and pay on code size.
+> >>
+> >> As Vlastimil Babka suggested, let's add _unused_slab_obj_ext for
+> >> SLAB_MATCH for slab.obj_exts while !MEMCG. That could resolve the matc=
+h
+> >> issue, clean up the feature logical. And decouple the SLAB_OBJ_EXT fro=
+m
+> >> MEMCG in next patch.
+> >>
+> >> Signed-off-by: Alex Shi (Tencent) <alexs@kernel.org>
+> >> Cc: Randy Dunlap <rdunlap@infradead.org>
+> >> Cc: Yoann Congal <yoann.congal@smile.fr>
+> >> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> >> Cc: Petr Mladek <pmladek@suse.com>
+> >> Cc: Suren Baghdasaryan <surenb@google.com>
+> >> Cc: Vlastimil Babka <vbabka@suse.cz>
+> >> ---
+> >> v1->v3: take Vlastimil's suggestion and move SLAB_OBJ_EXT/MEMCG decoup=
+le
+> >> to 2nd patch.
+> >> ---
+> >>  include/linux/mm_types.h | 8 ++++++--
+> >>  mm/slab.h                | 4 ++++
+> >>  2 files changed, 10 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> >> index ef09c4eef6d3..4ac3abc673d3 100644
+> >> --- a/include/linux/mm_types.h
+> >> +++ b/include/linux/mm_types.h
+> >> @@ -180,8 +180,10 @@ struct page {
+> >>      /* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+> >>      atomic_t _refcount;
+> >>
+> >> -#ifdef CONFIG_SLAB_OBJ_EXT
+> >> +#ifdef CONFIG_MEMCG
+> >>      unsigned long memcg_data;
+> >> +#elif defined(CONFIG_SLAB_OBJ_EXT)
+> >> +    unsigned long _unused_slab_obj_ext;
+> >>  #endif
+> >>
+> >>      /*
+> >> @@ -343,8 +345,10 @@ struct folio {
+> >>                      };
+> >>                      atomic_t _mapcount;
+> >>                      atomic_t _refcount;
+> >> -#ifdef CONFIG_SLAB_OBJ_EXT
+> >> +#ifdef CONFIG_MEMCG
+> >>                      unsigned long memcg_data;
+> >> +#elif defined(CONFIG_SLAB_OBJ_EXT)
+> >> +                    unsigned long _unused_slab_obj_ext;
+> >>  #endif
+> >>  #if defined(WANT_PAGE_VIRTUAL)
+> >>                      void *virtual;
+> >> diff --git a/mm/slab.h b/mm/slab.h
+> >> index 3586e6183224..8ffdd4f315f8 100644
+> >> --- a/mm/slab.h
+> >> +++ b/mm/slab.h
+> >> @@ -98,7 +98,11 @@ SLAB_MATCH(flags, __page_flags);
+> >>  SLAB_MATCH(compound_head, slab_cache);      /* Ensure bit 0 is clear =
+*/
+> >>  SLAB_MATCH(_refcount, __page_refcount);
+> >>  #ifdef CONFIG_SLAB_OBJ_EXT
+> >> +#ifdef CONFIG_MEMCG
+> >>  SLAB_MATCH(memcg_data, obj_exts);
+> >> +#else
+> >> +SLAB_MATCH(_unused_slab_obj_ext, obj_exts);
+> >> +#endif
+> >>  #endif
+> >
+> > Why not also #ifdef / #elif like above, instead of this nesting?
+>
+> Uh, it works too if MEMCG/SLAB_OBJ_EXT decoupled.
+> but right, it could be written with #ifdef/#elif.
 
-Tested-by: Jisheng Zhang <jszhang@kernel.org>
-Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
-> v2:
->    Simplify jalr ra,t1 to jalr t1
->    Drop extra .globl from entry.S and use ra == handle_exception
-> ---
->  arch/riscv/kernel/entry.S      | 17 ++++++++++-------
->  arch/riscv/kernel/stacktrace.c |  4 ++--
->  2 files changed, 12 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index 68a24cf9481a..c933460ed3e9 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -88,7 +88,6 @@ SYM_CODE_START(handle_exception)
->  	call riscv_v_context_nesting_start
->  #endif
->  	move a0, sp /* pt_regs */
-> -	la ra, ret_from_exception
->  
->  	/*
->  	 * MSB of cause differentiates between
-> @@ -97,7 +96,8 @@ SYM_CODE_START(handle_exception)
->  	bge s4, zero, 1f
->  
->  	/* Handle interrupts */
-> -	tail do_irq
-> +	call do_irq
-> +	j ret_from_exception
->  1:
->  	/* Handle other exceptions */
->  	slli t0, s4, RISCV_LGPTR
-> @@ -105,11 +105,14 @@ SYM_CODE_START(handle_exception)
->  	la t2, excp_vect_table_end
->  	add t0, t1, t0
->  	/* Check if exception code lies within bounds */
-> -	bgeu t0, t2, 1f
-> -	REG_L t0, 0(t0)
-> -	jr t0
-> -1:
-> -	tail do_trap_unknown
-> +	bgeu t0, t2, 3f
-> +	REG_L t1, 0(t0)
-> +2:	jalr t1
-> +	j ret_from_exception
-> +3:
-> +
-> +	la t1, do_trap_unknown
-> +	j 2b
->  SYM_CODE_END(handle_exception)
->  ASM_NOKPROBE(handle_exception)
->  
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> index 528ec7cc9a62..5eb3d135b717 100644
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-> @@ -16,7 +16,7 @@
->  
->  #ifdef CONFIG_FRAME_POINTER
->  
-> -extern asmlinkage void ret_from_exception(void);
-> +extern asmlinkage void handle_exception(void);
->  
->  static inline int fp_is_valid(unsigned long fp, unsigned long sp)
->  {
-> @@ -70,7 +70,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
->  			fp = frame->fp;
->  			pc = ftrace_graph_ret_addr(current, NULL, frame->ra,
->  						   &frame->ra);
-> -			if (pc == (unsigned long)ret_from_exception) {
-> +			if (pc == (unsigned long)handle_exception) {
->  				if (unlikely(!__kernel_text_address(pc) || !fn(arg, pc)))
->  					break;
->  
-> -- 
-> 2.25.1
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Yes, please keep the same condition, otherwise it gets confusing.
+
+>
+> Thanks
+> Alex
+> >
+> >>  #undef SLAB_MATCH
+> >>  static_assert(sizeof(struct slab) <=3D sizeof(struct page));
+> >
