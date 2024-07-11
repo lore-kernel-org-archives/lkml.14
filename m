@@ -1,51 +1,53 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636CB15B132;
-	Thu, 11 Jul 2024 12:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E0A156C61
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 12:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720699306; cv=none; b=G+S54PiiZy358pSycT/ja2+bPSEBBM9SAvtOPJA2V+THjzu21pVs3U3JuCFNHVRKzHERMNA7Xwu6yTToZ8OzTZvd5TSCBZqJxzBQArayHRFy6JyAP1NCpc3yLrRm2ooo94LHCiX+3E7rLVun9ulvbEt+E+lvczQcN6lja6G02eA=
+	t=1720699309; cv=none; b=nk57hH74NJvUarW767iqVJU9d++TfsQzsvtRvrDgo+NKg8rHPpZCoG4K/mOtSSHf9n/1EdNMwSO1omZNwiRBkBPERP335QtnfiQWwTtwwivf6kUp8GgOBh+xVTJrhHbcEs1LaHpqTS1pH8Ubsiq+8GHwXlvtdEouOw6yLxdeuJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720699306; c=relaxed/simple;
-	bh=WTkg1mmgyGocCrar+ee2VYEL/M+E17Wy5b+DjTXF+58=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ocxqMxBNT7tiKxdWKPHyIFKqzdEZvwREUxJLDpG+E4yOapUjSTTw6ehlzn2P6ShhKzKujx5rs9AA26+SKCb2HfqGuDcP8cP7dzEVxF6BbgWUspbwYzoxxpb/4kPkW0NCDtwtn9rSovVhILSXmPTB2Emwk6+ML6HYJrb6FcdpvHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Gz+HaNbY; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720699309; c=relaxed/simple;
+	bh=YqvdRqli3JiPIPEXNQZ5ncC0zMSvrBCdwSmE95Mg5SI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rytb1C7hqGi0mqp9+nuIGYfJngU/DDVfj8nBie1F+h9lSbDVhOsOueVrWwIoQH2J8JxbVmSIRlnKOGWtItwhhJnTPlAeXWPfTl0wph85GbAWqAY3QVqt5ZHF1o4m1geTZ0zZ8wKn94CPPQcb7ekQNWp2LKkSj9gfEPg9vLushNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Cqy1HJFU; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Gz+HaNbY"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 31D451BF209;
-	Thu, 11 Jul 2024 12:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720699297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DJ4IeC2D0EH+zGYad7gYb+CYdBtZS62UIycZ5DawOR0=;
-	b=Gz+HaNbYo0ZIQZzoiz+O/Uio2B5dqHZPbrlYFGLXki0XtO1W3Z7gk+svTYExfH+D3y264X
-	20I7XTbVSG346NlQfFb/FHpsgIbvj1OqqHky/0NO12XIyf3VeeM/Jxu1YtQDuyWrWh4MRM
-	7MRlCOPGVwSGC6OdtJVlQQ+VJfUPc2adrD+UWQxEX5E4o5pTqamTIDTyyj82bReOUx4bUR
-	Pw/1CM2VPmjJ+lA47DvB2Z4kfUXdYNfP0NGIVqnKfnaQE8Imxb6OJva1SaFg4L7bXm+zs2
-	Xiyr3Ld84j5LRVKKHnWboz6q8NtmzWW49xeWIx0fMip8eUxBNBdoAQo9xsnwGQ==
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-To: Riku Voipio <riku.voipio@iki.fi>,
-	Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>
-Cc: linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Christopher Cordahi <christophercordahi@nanometrics.ca>,
-	Bastien Curutchet <bastien.curutchet@bootlin.com>
-Subject: [PATCH v3 4/4] leds: pca9532: Change default blinking frequency to 1Hz
-Date: Thu, 11 Jul 2024 14:01:29 +0200
-Message-ID: <20240711120129.100248-5-bastien.curutchet@bootlin.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240711120129.100248-1-bastien.curutchet@bootlin.com>
-References: <20240711120129.100248-1-bastien.curutchet@bootlin.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Cqy1HJFU"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BA6xNV013090;
+	Thu, 11 Jul 2024 05:01:38 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=1Qoy7KYEQ9s+6+w6zmzcugv
+	BQaIE9TKnoB8ckAHKCLc=; b=Cqy1HJFUGcI2XLfoBbsKNr2BzdbkajcDPznkWCA
+	KZjpELyxgv5489zP7z1FRD8NHxaLP6axrrQduoNn6Qv8al1Hm9BKwSfd3C79w2iM
+	hZXjl4J+4UkmaPicDc/dPIQx8kizhm1vx8aQoPFMmNQXhMJeti8G2NSCR0CvMvhx
+	xc0YWbe8b7Lr5EbfjOVFJT9ZGt6SXb6PljrUApuk/XGAbt3BflR5PgujQvnNPfOk
+	ZBZ6Gvtrh9s3rDy6QtW5V7zNWfbEuRIyy9qf8NznAa8qqrxwU/klkZCaBsLP5PK2
+	jsYOi4kpjRfKQMAl4yplDDafAxMhI5iJl3almyPrgn1hogw==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 40adbv09kn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 05:01:37 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 11 Jul 2024 05:01:36 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 11 Jul 2024 05:01:36 -0700
+Received: from localhost.localdomain (unknown [10.28.36.156])
+	by maili.marvell.com (Postfix) with ESMTP id A13F33F7040;
+	Thu, 11 Jul 2024 05:01:34 -0700 (PDT)
+From: Vamsi Attunuru <vattunuru@marvell.com>
+To: <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+CC: <linux-kernel@vger.kernel.org>, <vattunuru@marvell.com>
+Subject: [PATCH] misc: Kconfig: add a new dependency for MARVELL_CN10K_DPI
+Date: Thu, 11 Jul 2024 05:01:15 -0700
+Message-ID: <20240711120115.4069401-1-vattunuru@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,34 +55,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: bastien.curutchet@bootlin.com
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: u-3Jof4d0rkGRqf5M8aMMpZWDN-K1ON1
+X-Proofpoint-GUID: u-3Jof4d0rkGRqf5M8aMMpZWDN-K1ON1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_08,2024-07-11_01,2024-05-17_01
 
-Default blinking period is set to 2s. This is too long to be handled by
-the hardware (maximum is 1.69s).
+DPI hardware is an on-chip PCIe device on Marvell's arm64 SoC
+platforms. As Arnd suggested, CN10K belongs to ARCH_THUNDER
+lineage.
 
-Set the default blinking period to 1s to match what is done in the
-other LED drivers.
+Patch makes mrvl_cn10k_dpi driver dependent on CONFIG_ARCH_THUNDER.
 
-Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
 ---
- drivers/leds/leds-pca9532.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-index 673d4d5b62bb..266f6e5001be 100644
---- a/drivers/leds/leds-pca9532.c
-+++ b/drivers/leds/leds-pca9532.c
-@@ -247,8 +247,8 @@ static int pca9532_set_blink(struct led_classdev *led_cdev,
- 
- 	if (*delay_on == 0 && *delay_off == 0) {
- 		/* led subsystem ask us for a blink rate */
--		*delay_on = 1000;
--		*delay_off = 1000;
-+		*delay_on = 500;
-+		*delay_off = 500;
- 	}
- 
- 	err = pca9532_update_hw_blink(led, *delay_on, *delay_off);
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 64fcca9e44d7..f3bb75384627 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -588,6 +588,7 @@ config NSM
+ config MARVELL_CN10K_DPI
+ 	tristate "Octeon CN10K DPI driver"
+ 	depends on PCI
++	depends on ARCH_THUNDER || COMPILE_TEST
+ 	help
+ 	  Enables Octeon CN10K DMA packet interface (DPI) driver which
+ 	  intializes DPI hardware's physical function (PF) device's
 -- 
-2.45.0
+2.25.1
 
