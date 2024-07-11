@@ -1,112 +1,116 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A12D4CE09;
-	Thu, 11 Jul 2024 13:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A6F15ECD6;
+	Thu, 11 Jul 2024 13:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720704785; cv=none; b=VVWIU60/voQWtRG6misuzy8M7hpxMEhn7LMbXy+xQFJ9GyqkWe+SifaGxdMsAyu0SL3h3fnK0DJBZNIuIMDwGBO7W6+cecV8ALIvEqTphU/oKIXVRE4QxJ5Uv+zHQyp39b+AtZx0U++qNnRWR5rkP0O6UCD7zjgiOfmtV8tb5qQ=
+	t=1720704834; cv=none; b=shrAOCH02lOIsmIt6akFZMgDYG1uPCmv0YZTJH3qtrijTuTeLDU67urFch5Zl8ndU4t2ZVeWs+Bobu9TQJbbF9vwwYS2H8p0gxks2N8wWsw0dfGX2HgueIwYuX0c3uw52MFXoXcs4WUWrpUqqziS8MxlxPQrznRyQg9kyW49bPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720704785; c=relaxed/simple;
-	bh=Avkb30PRdUlac2ai5AaEn9yduRB8QqSAkcEZ2aaOQ18=;
+	s=arc-20240116; t=1720704834; c=relaxed/simple;
+	bh=Q0uJNTpk2Imumg1owNbTczldmVgomp8l5jwPmlVdno0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nnWrFBg0dDEzF8PATwCGrV0xebolIbFzj6tbd+tGWAABe62f8NMa73qgm8PLo12exoYsTSoYcFmthIbstkVQQ1O6qqirZgjhH3GtZ6Dq16kKnxygFsAZ6ZJzMcEskLhJfUFRqu16tgUOQOdbY0Dzz6dwDsQAVk4+xPRfjpZV9l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WKbCv5VSRzQlMm;
-	Thu, 11 Jul 2024 21:28:59 +0800 (CST)
-Received: from kwepemf200016.china.huawei.com (unknown [7.202.181.9])
-	by mail.maildlp.com (Postfix) with ESMTPS id C7830140361;
-	Thu, 11 Jul 2024 21:32:56 +0800 (CST)
-Received: from [10.108.234.194] (10.108.234.194) by
- kwepemf200016.china.huawei.com (7.202.181.9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 11 Jul 2024 21:32:55 +0800
-Message-ID: <4f9d5881-11e6-4064-ab69-ca6ef81582b3@huawei.com>
-Date: Thu, 11 Jul 2024 21:32:55 +0800
+	 In-Reply-To:Content-Type; b=PI+t7nYSyyoTCYNE9M7j8OyvO4tWHcPh8FQVhIkkiakAz/auzVeDrC5i4o1k6kLWxdEJ/yGerW6sNXimYm3sxu3VprFzDuuI9zXRWkaquiE4Oj9DjB/Pnu6uWY61Uwt3y7WosAlJZQAEa7i+x79A5OGDRGfkTvfdhjNlQtTPaR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eKmpcDrH; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eKmpcDrH"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BD2sUp017917;
+	Thu, 11 Jul 2024 13:33:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	CVa3k0i2OsR9Z5jhEKXiC8fF51xuj5g9e+59ICrlh4Y=; b=eKmpcDrHiub7sM00
+	omL44P1Rvg18kEKOoGMH8s7m3dXr7H3zi1EaJ78npFm9XTgnw6KYFMo02jYO4WHK
+	KOzC84mHy3XOx11AwqTN+Tqoyt1k35FjsxAbHnebHahD6f3EnbfqBqQfGbYJXEuE
+	MVQ8i1zZGldRy3irh3EYsdKqadcomV0W4ld3/+pPPg6LDtWeM/Z3uE8FZWgm++J9
+	x95UYhWI4EUeOHEO/vB7G4pUYFujKDi9YHL6M4FiztV+J9Z4IE1dCRoM2BWPDWi/
+	t/gY0iGOasECL9PDrAof1CZ4BjTPZgY9VM5EAgFLZHqjM9FSMcTPOnOMQOVzXho4
+	aOxdaQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40a8uhs8qy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 13:33:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46BDXgDk030452
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 13:33:42 GMT
+Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
+ 2024 06:33:38 -0700
+Message-ID: <0e9ddeba-ca2e-6f92-dde0-b74629928864@quicinc.com>
+Date: Thu, 11 Jul 2024 19:03:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] ext4: fix fast commit inode enqueueing during a full
- journal commit
-To: "Luis Henriques (SUSE)" <luis.henriques@linux.dev>, Theodore Ts'o
-	<tytso@mit.edu>, Andreas Dilger <adilger@dilger.ca>, Jan Kara <jack@suse.cz>,
-	Harshad Shirwadkar <harshadshirwadkar@gmail.com>
-CC: <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240711083520.6751-1-luis.henriques@linux.dev>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [RFC V3 2/4] firmware: arm_scmi: vendors: Add ARM SCMI QCOM
+ vendor protocol v1.0
 Content-Language: en-US
-From: "wangjianjian (C)" <wangjianjian3@huawei.com>
-In-Reply-To: <20240711083520.6751-1-luis.henriques@linux.dev>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>, <sudeep.holla@arm.com>,
+        <cristian.marussi@arm.com>, <andersson@kernel.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
+        <conor+dt@kernel.org>, Amir Vajid <avajid@quicinc.com>
+References: <20240702191440.2161623-1-quic_sibis@quicinc.com>
+ <20240702191440.2161623-3-quic_sibis@quicinc.com>
+ <2b278a27-f527-448c-99b5-fc307d792127@linaro.org>
+From: Sibi Sankar <quic_sibis@quicinc.com>
+In-Reply-To: <2b278a27-f527-448c-99b5-fc307d792127@linaro.org>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemf200016.china.huawei.com (7.202.181.9)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6az48Wt6plrdIL0jKBmYxUdXEWZ_51DX
+X-Proofpoint-ORIG-GUID: 6az48Wt6plrdIL0jKBmYxUdXEWZ_51DX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_09,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 clxscore=1015 mlxscore=0 malwarescore=0
+ mlxlogscore=946 lowpriorityscore=0 suspectscore=0 spamscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407110097
 
-On 2024/7/11 16:35, Luis Henriques (SUSE) wrote:
-> When a full journal commit is on-going, any fast commit has to be enqueued
-> into a different queue: FC_Q_STAGING instead of FC_Q_MAIN.  This enqueueing
-> is done only once, i.e. if an inode is already queued in a previous fast
-> commit entry it won't be enqueued again.  However, if a full commit starts
-> _after_ the inode is enqueued into FC_Q_MAIN, the next fast commit needs to
-> be done into FC_Q_STAGING.  And this is not being done in function
-> ext4_fc_track_template().
-> 
-> This patch fixes the issue by re-enqueuing an inode into the STAGING queue
-> during the fast commit clean-up callback if it has a tid (i_sync_tid)
-> greater than the one being handled.  The STAGING queue will then be spliced
-> back into MAIN.
-> 
-> This bug was found using fstest generic/047.  This test creates several 32k
-> bytes files, sync'ing each of them after it's creation, and then shutting
-> down the filesystem.  Some data may be loss in this operation; for example a
-> file may have it's size truncated to zero.
-> 
-> Signed-off-by: Luis Henriques (SUSE) <luis.henriques@linux.dev>
-> ---
-> Hi!
-> 
-> v4 of this patch enqueues the inode into STAGING *only* if the current tid
-> is non-zero.  It will be zero when doing an fc commit, and this would mean
-> to always re-enqueue the inode.  This fixes the regressions caught by Ted
-> in v3 with fstests generic/472 generic/496 generic/643.
-> 
-> Also, since 2nd patch of v3 has already been merged, I've rebased this patch
-> to be applied on top of it.
-> 
->   fs/ext4/fast_commit.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/fs/ext4/fast_commit.c b/fs/ext4/fast_commit.c
-> index 3926a05eceee..facbc8dbbaa2 100644
-> --- a/fs/ext4/fast_commit.c
-> +++ b/fs/ext4/fast_commit.c
-> @@ -1290,6 +1290,16 @@ static void ext4_fc_cleanup(journal_t *journal, int full, tid_t tid)
->   				       EXT4_STATE_FC_COMMITTING);
->   		if (tid_geq(tid, iter->i_sync_tid))
->   			ext4_fc_reset_inode(&iter->vfs_inode);
-> +		} else if (tid) {
-> +			/*
-> +			 * If the tid is valid (i.e. non-zero) re-enqueue the
-one quick question about tid, if one disk is using long time and its tid 
-  get wrapped to 0, is it a valid seq? I don't find code handling this 
-situation.
-> +			 * inode into STAGING, which will then be splice back
-> +			 * into MAIN
-> +			 */
-> +			list_add_tail(&EXT4_I(&iter->vfs_inode)->i_fc_list,
-> +				      &sbi->s_fc_q[FC_Q_STAGING]);
-> +		}
-> +
->   		/* Make sure EXT4_STATE_FC_COMMITTING bit is clear */
->   		smp_mb();
->   #if (BITS_PER_LONG < 64)
-> 
--- 
-Regards
 
+
+On 7/9/24 15:40, Konrad Dybcio wrote:
+> On 2.07.2024 9:14 PM, Sibi Sankar wrote:
+>> The ARM SCMI QCOM vendor protocol provides a generic way of exposing a
+>> number of Qualcomm SoC specific features (like memory bus scaling) through
+>> a mixture of pre-determined algorithm strings and param_id pairs hosted on
+>> the SCMI controller.
+>>
+> 
+> [...]
+
+Hey Konrad,
+
+Thanks for taking time to review the series.
+
+> 
+>> +/**
+>> + * qcom_scmi_vendor_protocol_cmd - vendor specific commands supported by Qualcomm SCMI
+>> + *                                 vendor protocol.
+> 
+> include the word 'enum' or:
+> 
+> warning: cannot understand function prototype: 'enum qcom_scmi_vendor_protocol_cmd '
+
+will fix it in the next re-spin.
+
+-Sibi
+
+> 
+> Konrad
