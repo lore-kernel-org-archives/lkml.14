@@ -1,47 +1,47 @@
 Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3817B16CD2E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D49F16D4CC
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720702844; cv=none; b=A7u8Hky3GjtPJoe92hRFwA9Yc4my8BvJUWYVc3Jsb8SwLsyQ1+ECf9ty5W3rS1y+2ll3cxsBTSBUy0eeKexm9xAOn+KC0hW5YcR7WK+53I2qA/l0dGjNCzaUK8gCTEJsvFC3qPlFpYDWo7H40GZopP8ZcrGhlPqM4CVym3/Jxws=
+	t=1720702851; cv=none; b=kZ/2UPImIEfGPYGXXbrT4I5kEfUaSoWy1Qd4gtv3RIifzWNm+78SpITWaZs1eBQbLPtedPMwLLtia3Xb/9+c4LhDQ/7MW+NMRcogDBx0H0B4aDAv0LYwiyOEcB0RViQrl186lQh8yxC8klLfa45Fv87B+Aqhomole8/txoNEzRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720702844; c=relaxed/simple;
-	bh=rW3a7ipFPyWa9DZI305j2H7A6+s/aEtUMkP08XIBa2Y=;
+	s=arc-20240116; t=1720702851; c=relaxed/simple;
+	bh=32WUeUrKPTK1On8oYr52pGY8kKKsIcbyD/ktcMgTl0I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R0tOErE7t3EZqiILMfe4YEw6bwTiUbku+8ZxE11Z18LrNQDeFr9qD+9ClTX3uZPICFoqDB8jSC8UqR63cDaPsPqJJT2RYQKk/HBlrdNp2vsUwWjxFlDaZGq8YG2mpniwd9UOkRQfyYUrkSgM45VbHCzioNbg/XeKP7OGRqZt/xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=S7gsYmEG; arc=none smtp.client-ip=188.40.30.78
+	 In-Reply-To:To:Cc; b=iCPlRkzFK4HFPpAZnNgPuOiacCH4ghjgPKHTgAVsbQNQdnDH58SGDs5a/umkaqzKYGWZGSlFCiJK0GTXSi/ByWX8txq7hFT+mps2yaD3nQ6Twsz7gpuH2wCGm8Xon04INBNpZcQyXL+/q76GpVVCXLTvDRquhbee1LaMvmdsfgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=0R5/4YvH; arc=none smtp.client-ip=188.40.30.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="S7gsYmEG"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="0R5/4YvH"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
 	s=default2211; h=Cc:To:In-Reply-To:References:Message-Id:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
 	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
 	:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=IK4l41sD/FRDaezgs+l6z4765eA6ACLdhNcpzaUhaU0=; b=S7gsYmEGwhnqosGOr57AECD2fi
-	c1UrjS+gt2lCId6ZyjVDCyVYX6mh6a7jDNYsICGMdZ0IVTmVBL6SSSVix9vg/caysBtPbIp8VJ7Y8
-	hFFZOosD9C2HhNYa7QgaC7VQwQjXuMI8lHDKXzaOPGtGSn80N5gZFBaisXiWOr0cB8IvoSxS6rO3O
-	5NgP5Dtq1vzG47rVkQzAdypp6VOpOpLPyz789w0PbB1deh+BopqaNQX3Wf0rB5t5O1GghFvF8Wrfd
-	Iixyn+MRGetiVPsNQksyiPIYHskNOnWEflUDXCC8aWTC+SDPx8Ybd8po6xbIvvvY2eM324da8/ebE
-	AjVa0SJA==;
+	bh=/x3Xwhy/zD+b8/iFmghy0uZLwRTAG0iaB95lyFsIrSY=; b=0R5/4YvH1GzTT+eLqA1zYwGrfo
+	DHt9Ex2kTaC1MkaMxG62DZghwUbzo3kanJQeIIxBrzxb2L5+dHn0jZJit/QJnWqAjHJ0kYF+5V3cE
+	x2SumkbwFgM33pGdjIqHg7INNR206RI9h8tPryTgQUQWbMUiHtZrlIyAHf39asq2x/InRnBucqs57
+	RlvZb5thdESwRGcEal4g5o3oHIHpdpO0doNPulnfdfd9dQ8HU3mRgeX5vj386JwFAWITYpKBCSlsh
+	ZniLxpsvHXN8UgxBwSPbMEnx4ezxzw5goP6nGI5HrxLCR1y/5O2h8Yi0Vboj2v0dyOxn2Xri5IrNP
+	4b345A3Q==;
 Received: from sslproxy02.your-server.de ([78.47.166.47])
 	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <esben@geanix.com>)
-	id 1sRtPW-000BX5-JU; Thu, 11 Jul 2024 15:00:34 +0200
+	id 1sRtPd-000BXZ-EN; Thu, 11 Jul 2024 15:00:41 +0200
 Received: from [87.49.147.209] (helo=localhost)
 	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <esben@geanix.com>)
-	id 1sRtPW-0004iJ-1F;
-	Thu, 11 Jul 2024 15:00:33 +0200
+	id 1sRtPY-0005XX-0j;
+	Thu, 11 Jul 2024 15:00:35 +0200
 From: Esben Haabendal <esben@geanix.com>
-Date: Thu, 11 Jul 2024 15:00:12 +0200
-Subject: [PATCH v3 12/15] mtd: spi-nor: winbond: Use new SPI_NOR_TRY_SFDP
- flag
+Date: Thu, 11 Jul 2024 15:00:15 +0200
+Subject: [PATCH v3 15/15] mtd: spi-nor: spansion: Drop redundant
+ SPI_NOR_SKIP_SFDP flag
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240711-macronix-mx25l3205d-fixups-v3-12-99353461dd2d@geanix.com>
+Message-Id: <20240711-macronix-mx25l3205d-fixups-v3-15-99353461dd2d@geanix.com>
 References: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
 In-Reply-To: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
@@ -64,154 +64,77 @@ Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
  Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
  linux-arm-kernel@lists.infradead.org, Esben Haabendal <esben@geanix.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720702815; l=5913;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720702815; l=2782;
  i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=rW3a7ipFPyWa9DZI305j2H7A6+s/aEtUMkP08XIBa2Y=;
- b=/ZXrx04LhEavsH5lGJMhRg3brHTT4chz7hClrZGAFV7ZMK0lktR35hBwhgaH0kmi3/d9bPZ5F
- jMr2vpwsPUXDVf86NNVcaGQP+yw3IpJvopo6jRWEqXw030ZnazYFG1R
+ bh=32WUeUrKPTK1On8oYr52pGY8kKKsIcbyD/ktcMgTl0I=;
+ b=kv2cu/A4E4HA+a4EuZNTqqPIMM+PoYEAWa3H1GKwKtiJ/oVRh7A0CWiRoFQt8GBkr8psS8Pbl
+ WfhMZzwLWsNAHxwdFNHKEg4bHEN1i00QOJnEkQduDBUG3+bN44oIiZC
 X-Developer-Key: i=esben@geanix.com; a=ed25519;
  pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
 X-Authenticated-Sender: esben@geanix.com
 X-Virus-Scanned: Clear (ClamAV 0.103.10/27333/Thu Jul 11 10:35:59 2024)
 
-This converts from the old (deprecated) implicit way of triggering an
-optional SFDP parse with fallback to the static configuration in the
-matching struct flash_info entry.
+With the implementation of SPI_NOR_TRY_SFDP flag, the removal of the
+deprecated mechanism for trying SFDP parsing, and the alignment of
+->default_init() hooks handling, the SPI_NOR_SKIP_SFDP flag has become a
+no-op, so it can safely be removed.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- drivers/mtd/spi-nor/winbond.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/mtd/spi-nor/core.c     | 2 +-
+ drivers/mtd/spi-nor/core.h     | 5 +----
+ drivers/mtd/spi-nor/spansion.c | 2 +-
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-index 142fb27b2ea9..42160257e270 100644
---- a/drivers/mtd/spi-nor/winbond.c
-+++ b/drivers/mtd/spi-nor/winbond.c
-@@ -101,7 +101,7 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.id = SNOR_ID(0xef, 0x40, 0x17),
- 		.name = "w25q64",
- 		.size = SZ_8M,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x40, 0x18),
- 		.name = "w25q128",
-@@ -110,13 +110,13 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.id = SNOR_ID(0xef, 0x40, 0x19),
- 		.name = "w25q256",
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index d58f107f62ec..518b2707ce80 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -3024,7 +3024,7 @@ static int spi_nor_init_params(struct spi_nor *nor)
+ 	if (spi_nor_needs_sfdp(nor)) {
+ 		ret = spi_nor_parse_sfdp(nor);
+ 		if (ret) {
+-			dev_err(nor->dev, "BFPT parsing failed. Please consider using SPI_NOR_SKIP_SFDP or SPI_NOR_TRY_SFDP when declaring the flash\n");
++			dev_err(nor->dev, "BFPT parsing failed. Please consider using SPI_NOR_TRY_SFDP when declaring the flash\n");
+ 			return ret;
+ 		}
+ 	} else {
+diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+index f4a76f42051a..ae10e12e9078 100644
+--- a/drivers/mtd/spi-nor/core.h
++++ b/drivers/mtd/spi-nor/core.h
+@@ -485,9 +485,7 @@ struct spi_nor_id {
+  *
+  * @no_sfdp_flags:  flags that indicate support that can be discovered via SFDP.
+  *                  Used when SFDP tables are not defined in the flash. These
+- *                  flags are used together with the SPI_NOR_SKIP_SFDP or
+- *                  SPI_NOR_TRY_SFDP flag.
+- *   SPI_NOR_SKIP_SFDP:       skip parsing of SFDP tables.
++ *                  flags are used together with the SPI_NOR_TRY_SFDP flag.
+  *   SECT_4K:                 SPINOR_OP_BE_4K works uniformly.
+  *   SPI_NOR_TRY_SFDP:        try parsing SFDP tables before using the
+  *                            parameters specified in this struct.
+@@ -536,7 +534,6 @@ struct flash_info {
+ #define SPI_NOR_RWW			BIT(9)
+ 
+ 	u8 no_sfdp_flags;
+-#define SPI_NOR_SKIP_SFDP		BIT(0)
+ #define SECT_4K				BIT(1)
+ #define SPI_NOR_TRY_SFDP		BIT(2)
+ #define SPI_NOR_DUAL_READ		BIT(3)
+diff --git a/drivers/mtd/spi-nor/spansion.c b/drivers/mtd/spi-nor/spansion.c
+index a58c0229003d..afcb684ffe4d 100644
+--- a/drivers/mtd/spi-nor/spansion.c
++++ b/drivers/mtd/spi-nor/spansion.c
+@@ -793,7 +793,7 @@ static const struct flash_info spansion_nor_parts[] = {
+ 		.name = "s25fl256s0",
  		.size = SZ_32M,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 		.fixups = &w25q256_fixups,
+ 		.sector_size = SZ_256K,
+-		.no_sfdp_flags = SPI_NOR_SKIP_SFDP | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
++		.no_sfdp_flags = SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+ 		.mfr_flags = USE_CLSR,
  	}, {
- 		.id = SNOR_ID(0xef, 0x40, 0x20),
- 		.name = "w25q512jvq",
- 		.size = SZ_64M,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x50, 0x12),
- 		.name = "w25q20bw",
-@@ -137,31 +137,31 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.name = "w25q16dw",
- 		.size = SZ_2M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x60, 0x16),
- 		.name = "w25q32dw",
- 		.size = SZ_4M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 		.otp = SNOR_OTP(256, 3, 0x1000, 0x1000),
- 	}, {
- 		.id = SNOR_ID(0xef, 0x60, 0x17),
- 		.name = "w25q64dw",
- 		.size = SZ_8M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x60, 0x18),
- 		.name = "w25q128fw",
- 		.size = SZ_16M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x60, 0x19),
- 		.name = "w25q256jw",
- 		.size = SZ_32M,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x60, 0x20),
- 		.name = "w25q512nwq",
-@@ -171,13 +171,13 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.name = "w25q16jv-im/jm",
- 		.size = SZ_2M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x70, 0x16),
- 		.name = "w25q32jv",
- 		.size = SZ_4M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x70, 0x17),
- 		.name = "w25q64jvm",
-@@ -188,7 +188,7 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.name = "w25q128jv",
- 		.size = SZ_16M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x70, 0x19),
- 		.name = "w25q256jvm",
-@@ -196,32 +196,32 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.id = SNOR_ID(0xef, 0x71, 0x19),
- 		.name = "w25m512jv",
- 		.size = SZ_64M,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x80, 0x16),
- 		.name = "w25q32jwm",
- 		.size = SZ_4M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 		.otp = SNOR_OTP(256, 3, 0x1000, 0x1000),
- 	}, {
- 		.id = SNOR_ID(0xef, 0x80, 0x17),
- 		.name = "w25q64jwm",
- 		.size = SZ_8M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x80, 0x18),
- 		.name = "w25q128jwm",
- 		.size = SZ_16M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x80, 0x19),
- 		.name = "w25q256jwm",
- 		.size = SZ_32M,
- 		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
--		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x80, 0x20),
- 		.name = "w25q512nwm",
+ 		.id = SNOR_ID(0x01, 0x02, 0x19, 0x4d, 0x00, 0x81),
 
 -- 
 2.45.2
