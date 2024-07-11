@@ -1,73 +1,105 @@
-Received: from w4.tutanota.de (w4.tutanota.de [81.3.6.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C05450FA
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 17:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.3.6.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2A5262BE
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 17:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720717802; cv=none; b=OANzLxuZX/Z+JXuDWQ1Q53p2m75C0sa+PpETQolwtnAPbbEvHUnd+WPft3tPpY6AAMzZ8zE+dJdrOb/hEzXeGGMujm0w1Ia9L51qSEgzGO/2GTMMspDsoo+BcqmzU5vj+EQ8+Ebwxct8F4+u3OqFVLw4VHJ9X0HxcyseOGZzZF0=
+	t=1720717832; cv=none; b=V6R/wO5l2D2nKQDR+zPElj7vJ9vI4aVN8dmph1/wGRotB6PchTZMepVEtCKIolezwfbuzl683Nlf/U+4bmUezFrnz67ObLkY4KO25S1b90ooi/icsElpyLPfWNjp1oXXKATedFPerXw2/hIPdUuaA7m5ZZJHMtQ3Wfi1sjKa06M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720717802; c=relaxed/simple;
-	bh=Dt2jDlu51FJ7yIE+cCPQqiQrbjFfMdXHky1gYYZKq40=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=lqBjlOA7f4O1972iZ4uwe8MdoIFX2/daiovWwhug8k2x/cD9mCI03f1dX85aMHn/4fiWWf4vgDGv7TWcb8IAiIg2sgXy2o+tOojXcaYk7VRcXlqidyKduB0jcuNPn8E4k9YdIyi36s186tL/AFQHQ94oEXbIqoYEEpoOaXaMLPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bens.haus; spf=pass smtp.mailfrom=bens.haus; dkim=pass (2048-bit key) header.d=bens.haus header.i=@bens.haus header.b=3PIXNsMG; arc=none smtp.client-ip=81.3.6.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bens.haus
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bens.haus
+	s=arc-20240116; t=1720717832; c=relaxed/simple;
+	bh=s6j7xeqBtWGlM1klvt8ONdlDq3uD3/K/kIeCRet83fQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m1UMZZa1iEwPTEMoJV1ubkQAL2oGnYZ8iJ5JupmCB4jJ8YED5Z9lo1lnV8YjWOOdt7dFtOYB8kSVgXZOGhSX+8DnZoUdbUIGgwXhmZLWAUXaTbieciEVqrdeHyVhcIRVIihGO58XhhSec0tXfjXSgkSaF98f13v1TTZz9Xi7Ra8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JTAGb/1u; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bens.haus header.i=@bens.haus header.b="3PIXNsMG"
-Received: from tutadb.w10.tutanota.de (unknown [192.168.1.10])
-	by w4.tutanota.de (Postfix) with ESMTP id A2F171060136;
-	Thu, 11 Jul 2024 16:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1720717199;
-	s=s1; d=bens.haus;
-	h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:References:Sender;
-	bh=yfa5gkD1FWLPTfcuSmuGqbkj1N3g5Xuz7kteG9KJtS4=;
-	b=3PIXNsMG8O+WfupeA9+q1BO9kIXKR0ZLwWTEylDX5deb5T+GsoxvUm/0V2xwA+F0
-	Fmmjt7zdQOYLZhWctLrMp5/TovRC+521ZSkWvGt3ui3wyS61UJq31cAuvAFteSsxt5f
-	4Rny0boNURYmLodoD8S6KcVXYP6hC6b66TV22Icy+nQ5m9EOnhgOEqdK2TuQ5uMKeVr
-	vmluoVGLnZo9eVQFN2KL4J/gIiNY3RXGzwAw16KRR6VHRyBKzsZYqH0/8tRYwFMWAh4
-	OJND7vCAZlmxXD5ftSjvtqdHbtavcp/CFve5zOYGnHSh7YM3aSb17xFEjCqIy1KhlSC
-	BZ2SprxjIg==
-Date: Thu, 11 Jul 2024 18:59:59 +0200 (GMT+02:00)
-From: Ben Schneider <ben@bens.haus>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-	Linux Arm Kernel <linux-arm-kernel@lists.infradead.org>,
-	Linux Kernel <linux-kernel@vger.kernel.org>
-Message-ID: <O1XjBTq--3-9@bens.haus>
-In-Reply-To: <dce98e50-6b50-4d4e-abe2-8419a675d25e@lunn.ch>
-References: <20240603012804.122215-1-ben@bens.haus> <20240603012804.122215-2-ben@bens.haus> <20240605194422.klxtxgyljrrllkzy@pali> <dce98e50-6b50-4d4e-abe2-8419a675d25e@lunn.ch>
-Subject: Re: [PATCH] cpufreq: enable 1200Mhz clock speed for armada-37xx
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JTAGb/1u"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-447f2f5891cso5953201cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 10:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1720717828; x=1721322628; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uMrodmUyUKlhvfzT8TSP1NFfD9HljVlU57hBQAsrNU8=;
+        b=JTAGb/1uUXjHVDJHJgQub1nupNkta+HetcpFQKpQfKqgS/+A07VgaQPKNolA1TWv3u
+         T1v6/3mss0QvC4VGeAD0H7vqu93a/yvkxnjJLDHLX3snCa9eG1uwj34Q+CzhzoT/n/p8
+         yDhr3VnVVWicKuPwYknofg7JCipzDtx7goZZk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720717828; x=1721322628;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uMrodmUyUKlhvfzT8TSP1NFfD9HljVlU57hBQAsrNU8=;
+        b=j5cLJUdnt7HUvHBA1kWYsyekAQXK1Sn3gnuMWkdgSbwOnzX3/Vb/NS+1B/VtRrTURb
+         GI4Fyer0bYrt/pg1GT9RpWKuW7UCTiJdfISxMM2no/6z9acdR5dl9uQbTJNRkjkX9cFx
+         tkv34lhU4t3kbtS853nUycIUa8dDx5VE5TRgNSliFaViGPgYUE7sT4vfulIXISFhJr9k
+         3iFtUFUj2ywRIBSmYCjmIPk45pXfHS8Q2Z2wEwdCGOBRhlUog91MAFid+DKkGPaEp1lW
+         rZvNJI3yp+w6ahTkAh/iaVDNbt3xUOflBFRgYm1RMMvoK+7Vfn6HS2Q5/Z77jWV3OVtl
+         zIeA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6MkcYJhJ9kN6I2rP0Vvm/suRTViYz7ID0p2CAX0K9F7oTAzlcOMka5Mcv17GuYZsuvJ92wuco6Dp43dva0GUPqpNBmuYlr7jqzTV5
+X-Gm-Message-State: AOJu0Yy4v3d695kP/wP2SyjLaCUI6uDe45qqHePFh/Ga9QHVZ2fshjuS
+	I6yCcVEICNar3h+fgsPhyqaRckgl05Sy8jdgdLJSYKHMgvIQaQWUEwy7kUuyviur+trPT3jH+Sk
+	=
+X-Google-Smtp-Source: AGHT+IEqpDCXQLFw1LDILgBK2DhtmDHu4vTZ4xYJkVPqxYkyGWJOwK4OzPX4XIZOe/THivgP49d4og==
+X-Received: by 2002:a05:622a:3c7:b0:447:f285:9262 with SMTP id d75a77b69052e-447fa908ba8mr105048151cf.42.1720717828591;
+        Thu, 11 Jul 2024 10:10:28 -0700 (PDT)
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9b26badsm31878941cf.17.2024.07.11.10.10.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 10:10:27 -0700 (PDT)
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-447f8aa87bfso9341cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 10:10:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVzV0g2hXqV0Z+st2QXiFmPZFE7XtyrKau7qM5Nr648YhkEOpmR/pHD666pTnuSCbgnVW+HmJMEWfrSzjULRlhfoxhH3MaAq1f+JTML
+X-Received: by 2002:ac8:4a15:0:b0:444:ccc5:f4c0 with SMTP id
+ d75a77b69052e-44d35468174mr3719571cf.15.1720717827112; Thu, 11 Jul 2024
+ 10:10:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240710190235.1095156-1-hsinyi@chromium.org>
+In-Reply-To: <20240710190235.1095156-1-hsinyi@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Thu, 11 Jul 2024 10:10:11 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W_KS2KXVDLFpNcgYpT9NJwNW-S-3nWfpfT-gibJVJYcQ@mail.gmail.com>
+Message-ID: <CAD=FV=W_KS2KXVDLFpNcgYpT9NJwNW-S-3nWfpfT-gibJVJYcQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/panel-edp: Add BOE NV140WUM-N41
+To: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Jun 5, 2024, 16:44 by andrew@lunn.ch:
+Hi,
 
-> On Wed, Jun 05, 2024 at 09:44:22PM +0200, Pali Roh=C3=A1r wrote:
+On Wed, Jul 10, 2024 at 12:02=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromium.org>=
+ wrote:
 >
->> So, go ahead with this change with my
->>
->> Reviewed-by: Pali Roh=C3=A1r <pali@kernel.org>
->>
+> The raw edid of the panel is:
+> 00 ff ff ff ff ff ff 00 09 e5 e8 0a 00 00 00 00
+> 2a 1f 01 04 a5 1e 13 78 03 fb f5 96 5d 5a 91 29
+> 1e 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+> 01 01 01 01 01 01 9c 3e 80 c8 70 b0 3c 40 30 20
+> 36 00 2e bc 10 00 00 1a 00 00 00 fd 00 28 3c 4c
+> 4c 10 01 0a 20 20 20 20 20 20 00 00 00 fe 00 42
+> 4f 45 20 43 51 0a 20 20 20 20 20 20 00 00 00 fe
+> 00 4e 56 31 34 30 57 55 4d 2d 4e 34 31 0a 00 26
 >
-> I defer to your knowledge in this matter.
->
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->
->  Andrew
->
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  drivers/gpu/drm/panel/panel-edp.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Hi all, just checking in to see if there are any outstanding concerns/issue=
-s outstanding with this patch? I am happy to report several more weeks of s=
-tability on two A3720 devices. Thanks!
+Applied, thanks!
 
-Ben
+[1/1] drm/panel-edp: Add BOE NV140WUM-N41
+      commit: 993d36ac99efeafeb7b5f12353def6d7d20d6389
