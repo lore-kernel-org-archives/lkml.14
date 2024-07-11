@@ -1,111 +1,104 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5E24CB23;
-	Thu, 11 Jul 2024 07:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485BC148847;
+	Thu, 11 Jul 2024 07:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720684374; cv=none; b=iX+CIALKWM/+p4mnyQNSrulxPLs/FZCusYEyphcsnsjZJSkRL68++qtqHkIHzG9X9lzqaFvyunPAPMsMnbK7YD8aYY/NapzloQUSI+Li5KWuVH47fP5DmGpU3/s5VjoxApJ41xQEbU0ZAzVUusF/YS+JgAGNL/ovDAO2GJaq6As=
+	t=1720684382; cv=none; b=aLbxSLeB/wrW686SR7xekk0IIFqEqIU4NZCMwWqsWYmyzkIr4XyG0+Wyv4opyudK1lD7PStUpEaPk3coHdXgbzWTtdleG2RoRoCndyW8pc/5k4UHT1C0nH4MjiztGhDqBayAh9O0usGaXazolEd1538w3t7QOivChB97ayFFt4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720684374; c=relaxed/simple;
-	bh=f9imbZGe1kYOiYqxOmqeAz7GGYqKuczZdX9oVcjGdfw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HFO+SGZZ2y9RH5IV78I8rRnxdx9PkbpPlHSTroOD1FvaxZ1fhIMPxpZO9A0cJ1d3lF94h6QqIrBYYF+v6TIJPqOPUIH0Sm3CfRU+k/9X7I+G5CtE5zgKOlPNYaVBho5pIPEVnVV+bHfLnkf9gqGehtvNuKdBGs4QsDQpSmJcegQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IkbbtiK9; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720684382; c=relaxed/simple;
+	bh=xTXN2dtxTf7A/9UJXOYSRARxg5U3uy73slffwuN6WTQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=itwUDvJXHson2XUJfgPAtkth5JJu8S76sq1Q3YltYjVad/XLICix/+NzX7hzNFVWHSlkgQv9z4QbD8Z0vf37AR0zxBC/+lqYmjrhWdPiswNvcu44u3NDsIkb7I1kV6kAXcVCwHgOvBuzsugsIO5pEq2YkVlKVhDksQth+OfXY5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF20VhMV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IkbbtiK9"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fbe6f83957so179495ad.3;
-        Thu, 11 Jul 2024 00:52:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720684372; x=1721289172; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=G/pM0ii4AWvEMx6IP5NLtIJfJq7Kju3DzysYHDFpTPc=;
-        b=IkbbtiK9xwfZuiKlZA4TDmk6WgUsTKSDEqVRG4iU0QrgeLcxhlusndRGX40jOqZZn0
-         ZnjPo1T7eTlgl0cS6Kv1B0AEubZWQTGTbMTePpbgqslQkiImmSGP+/SHFIlXyXqU4eSO
-         m6dp4KGG5e8FV//0Is7xGFmu/8qt3JSFozmV0lWtPjBjLGymazTCCdqBWdF/z7Qi/BJZ
-         YuYu7d3QDIeFvEOCxgOGkn/1CVRwwgyQ1HQpOhkgMWrJ+CTCsZg1Vntedx2s8g2eCLrj
-         CSfJfBg3cOZkW3kJ8c57tK5o/iB/kv33iTbg1Izq9bwrrtq2yHqoru3ZgK0pBPtCjNZD
-         4lLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720684372; x=1721289172;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G/pM0ii4AWvEMx6IP5NLtIJfJq7Kju3DzysYHDFpTPc=;
-        b=xFe0lGa1eymLrNgbVz2L/DrlGEf/aTUemoX7jakQieH22t+v/zoVIhIqexvFL0a7ay
-         6d8JBJdWrI1ZIYuhOK9jjXPg7EB8ip9pvuRrCx/dnD6QxhkJHQTsxTxrJymU9UUbaARp
-         1JEsyWa8BCjKiVzwty7jYj7Vwo2AkhA18Cu7b8qj+dsPqh2T00DEPH5lt/e/V7QHJeua
-         7gx9yNhoFf2vKFJaGy9ZMKSaTwzVvlglvXMw3d4rn1yOXsPo8/KgiC0Mh/pW9rujq4+K
-         I8ZgNUiQmEXLlp7QBvr02gjiw+g0WVNhDE8d6E1NIeZ2Eej77K9ZxGmvXgdVLF7StfmI
-         P32g==
-X-Forwarded-Encrypted: i=1; AJvYcCWsz/petR6SFv/QAMoiaLerKupwsr60Z17i2Kt0RcIYIrJtd0QzOfM53iIluNpbcgo8i+hImVaNHfSd0P1/ydYR2k0ps0oV7dXwUjPcKDhuCAuE9J8ruu9FmCgFX5eWneW2TKeaW9MB8swm7bLS
-X-Gm-Message-State: AOJu0Yw4xH4GvyCpb2x8l6tiHrAJ1G49ofePcw4tusaQzNPcFeJyeXnF
-	sQwZSkz4eNx/uW/onwX3wf0bbM1MrJg6RMw9LtcSDIJsCsIetoVV
-X-Google-Smtp-Source: AGHT+IElW/nCcl8RCV4Ba/dfDLe5nzp2Uz/ltjEraHHU7Gv873MDF76ORgZLEg2C2aWnuV74liEVOw==
-X-Received: by 2002:a17:902:ce86:b0:1fb:451a:449b with SMTP id d9443c01a7336-1fbb6efa3d2mr68794345ad.60.1720684372448;
-        Thu, 11 Jul 2024 00:52:52 -0700 (PDT)
-Received: from [192.168.0.31] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ac132esm44486745ad.210.2024.07.11.00.52.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 00:52:52 -0700 (PDT)
-Message-ID: <36fade92f6ed872d62c9fadecc88fd3b764a6423.camel@gmail.com>
-Subject: Re: [PATCH] bpf, selftests: fix a resource leak in main()
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Ma Ke <make24@iscas.ac.cn>, ast@kernel.org, daniel@iogearbox.net, 
- andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev,  john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com,  jolsa@kernel.org, mykolal@fb.com,
- shuah@kernel.org
-Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 11 Jul 2024 00:52:47 -0700
-In-Reply-To: <20240711074437.2283810-1-make24@iscas.ac.cn>
-References: <20240711074437.2283810-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF20VhMV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D26FCC116B1;
+	Thu, 11 Jul 2024 07:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720684381;
+	bh=xTXN2dtxTf7A/9UJXOYSRARxg5U3uy73slffwuN6WTQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=eF20VhMVvKNcxFrE+mBYyo0q3GzqwmyfBTl1lmMXopOI4I6O176xb9ZdjddQOcKHo
+	 u4Wo5RwLXlvkLkdPBJhzWjDmXv6qwMUJ73UrNZvRVNcU0IfPtpKDCtAEMV7sSqlkIu
+	 uZW6CmqWqaWO4Tz3zO30ZJkNCpKOMCF0ONqShY8SYbGaBj9LQmPOmu5BXsHI3Jvyce
+	 qGH8S5gu26bFZrv5OngfTGe7zY2kj4mkjILT/krw+5NoUAsd6kZ5ucCAUK+J/yKOnT
+	 bYvUVTvdFkwCRSimgsKTWQ3nR0iieVJKrP0fWjuz4G2zfdFkGOKw3cNhWTsPGQSCfe
+	 GE7wNq4n5wExQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD01C3DA47;
+	Thu, 11 Jul 2024 07:53:01 +0000 (UTC)
+From: Pieterjan Camerlynck via B4 Relay <devnull+pieterjanca.gmail.com@kernel.org>
+Subject: [PATCH v3 0/2] leds: leds-pca995x: Add support for NXP PCA9956B
+Date: Thu, 11 Jul 2024 09:52:21 +0200
+Message-Id: <20240711-pca995x-v3-0-a1bf1f3c3f5a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADWPj2YC/3WMwQ6CMBAFf4Xs2ZptodR68j+Mh1Ja2ESEtKbBE
+ P7dQozx4nFe3swC0QVyEc7FAsElijQ+MpSHAmxvHp1j1GYGgaJChZpN1mgtZ9YqK71WvnaNhfy
+ egvM076XrLXNP8TmG1x5OfFs/DY7fRuIMmawkclljiYiXbjB0P9pxgK2RxB9PZO/kjW9qVzWql
+ b/euq5vxZgtetYAAAA=
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Isai Gaspar <isaiezequiel.gaspar@nxp.com>, Marek Vasut <marex@denx.de>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Pieterjan Camerlynck <pieterjanca@gmail.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720684380; l=1336;
+ i=pieterjanca@gmail.com; s=20240709; h=from:subject:message-id;
+ bh=xTXN2dtxTf7A/9UJXOYSRARxg5U3uy73slffwuN6WTQ=;
+ b=YWKHaXwn+jK7EvJ9LJLdgV6AIIjMe82U/vCV0MCyl4ermO4p1CpJwnfrCPXwgxAqkNI+74KmA
+ oTzKwRHZbGnAo7aEmpIfKX0RkZDR1RS0qP63wuhs084eipEn9mLhbvg
+X-Developer-Key: i=pieterjanca@gmail.com; a=ed25519;
+ pk=gSAHfvqQjVhNa1MhUClqbt7d3S+fviKz6FdQVaWFRyM=
+X-Endpoint-Received: by B4 Relay for pieterjanca@gmail.com/20240709 with
+ auth_id=182
+X-Original-From: Pieterjan Camerlynck <pieterjanca@gmail.com>
+Reply-To: pieterjanca@gmail.com
 
-On Thu, 2024-07-11 at 15:44 +0800, Ma Ke wrote:
-> The requested resources should be closed before return in main(), otherwi=
-se
-> resource leak will occur. Add a check of cgroup_fd and close().
+This series adds support for NXP PCA9956B to the pca995x driver. This
+chip is similar to the others but has 24 instead of 16 outputs and a
+slightly different register layout. Datasheet available at [1].
 
-Note: it is better to group related patches to a patch-set.
+[1]: https://www.nxp.com/docs/en/data-sheet/PCA9956B.pdf
 
->=20
-> Fixes: 4939b2847d26 ("bpf, selftests: Use single cgroup helpers for both =
-test_sockmap/progs")
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
->  tools/testing/selftests/bpf/test_dev_cgroup.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/tools/testing/selftests/bpf/test_dev_cgroup.c b/tools/testin=
-g/selftests/bpf/test_dev_cgroup.c
-> index adeaf63cb6fa..e97fc061fab2 100644
-> --- a/tools/testing/selftests/bpf/test_dev_cgroup.c
-> +++ b/tools/testing/selftests/bpf/test_dev_cgroup.c
-> @@ -81,5 +81,7 @@ int main(int argc, char **argv)
->  	cleanup_cgroup_environment();
-> =20
->  out:
-> +	if (cgroup_fd >=3D 0)
-> +		close(cgroup_fd);
+Signed-off-by: Pieterjan Camerlynck <pieterjanca@gmail.com>
+---
+Changes in v3:
+- restore PCA995X_MAX_OUTPUTS and increase to 24
+- restore secondary for loop in pca995x_probe()
+- remove parenthesis around (chipdef->pwm_base)
+- Link to v2: https://lore.kernel.org/r/20240710-pca995x-v2-0-8fafb6e4b7d5@gmail.com
 
-This is a standalone program, and Linux closes file descriptors on process =
-exit,
-why do you think it's necessary to close the fd here?
+Thank you for the review Marek Vasut.
 
->  	return error;
->  }
+Changes in v2:
+- define seperate const struct pca995x_chipdef for each chip
+- remove chip enum
+- Link to v1: https://lore.kernel.org/r/20240710-pca995x-v1-0-545015603000@gmail.com
+
+---
+Pieterjan Camerlynck (2):
+      dt-bindings: leds: pca995x: Add new nxp,pca9956b compatible
+      leds: leds-pca995x: Add support for NXP PCA9956B
+
+ .../devicetree/bindings/leds/nxp,pca995x.yaml      |  6 ++-
+ drivers/leds/leds-pca995x.c                        | 59 ++++++++++++++--------
+ 2 files changed, 43 insertions(+), 22 deletions(-)
+---
+base-commit: 82d01fe6ee52086035b201cfa1410a3b04384257
+change-id: 20240709-pca995x-d7c5f97f6ebc
+
+Best regards,
+-- 
+Pieterjan Camerlynck <pieterjanca@gmail.com>
+
 
