@@ -1,142 +1,198 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2085.outbound.protection.outlook.com [40.107.96.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233FA16C87F
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 16:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720714871; cv=none; b=AQtXGYFMP7YQifLKwfTI1n4yFDvfTFr+lasqE3kuN7Du7A3Xu6BTQczZq9Cd3RzLPfFOrl2ye4IxxGuDQgc53FhTaQ7iOnSICmx+A+yqvtKFU5XLzOf7n3AQMYk4ACpVIaSbsWm75ZM6B2FnrBzPApdU/bmXhUJtNzbAc/3RJ3A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0667288B5;
+	Thu, 11 Jul 2024 16:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720714871; cv=fail; b=h5H+WiO0GQLTZt91LGfT1TFDsHXZhpYwfMaMWj+JBBor27/oIZ/1g++Ai34iVzKqQjwzKOnCNObzll/AH0LIpQrqmT/z3Pb9gMiAhDJbQIc76UOqOiEan3NjR9uhF1jU3Zuaj3n6LDGw6y5y3Jq0IHml/Q/vhPqRDyYYkEsqg0U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720714871; c=relaxed/simple;
-	bh=l4drfiF/RmBw22akhuvPKaORF8RgC3jLRDuFcvLUeL8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jgxQEwhX6DtyGqzob1j2B8GSsOEJjZWsIBrneBt8ID1WscwCyTiW1E/x5XtOEkzvLD3n2zrwfofQcJY0xPOn3iUGDX0s47JxMgJrgbxxTAU17VgB1YBu6EFH6Op4BRNrt0nL45V0ZjgkUqzyDdFboc/WqSPypbsCqAIq9WPU7vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cUYzuRwa; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com
+	bh=ugC9N7hgYAQ4pn3i+MvsaVzkA/byEPw7UZn2FbuNzmM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qNgKT2dsM0eMp1orn/0+7FPgPCfqTH2FY9VrOjzDUNUW2WSaI26tOpNGlIlpN9QFFSKhn1OFWQgFoMZQ3qH2iAChJHiZKmn/a/R2EG70wvCIewDLDmNffyVmTia3bmwZTNN6144jF4SY01QcBdZQ+AYHVQoZTSVzE5knKvbuim0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zH4sU3pq; arc=fail smtp.client-ip=40.107.96.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cUYzuRwa"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6511c587946so17965717b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720714869; x=1721319669; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tdAfz6F1LxB1SVILBmz3im7GucsBrJFjA6wosQSGALA=;
-        b=cUYzuRwa0xSek8kqHb+eRLvj99vKB9FJyTsFq9DhB6TMquvOvBwDJfxlzMscZuvG//
-         +y/z2Od9AMvsneriWYKQmpF4bLbu1FoEvZK8wIQLUWzCMfvlv+w4h1S6QtKKx44FbLWJ
-         t0VItBxJXmXCusWkNekzkIK2i2oOIhml+NpFvKMX3/sQwRdwflVSnabjTwU+ba3yOnc1
-         jWp/DmXPw7kLiLfJo/VtQngz57fV2zFrAaLQLRStAeoulUoPF6g5ifoa1OsICrq3nxCK
-         gxTjkJk27ZqsgBQffkhPuN1u6Z6HV+IQCVRsSDQwSqC+snA8MKa3SACfCw8jazGG32tE
-         x8zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720714869; x=1721319669;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tdAfz6F1LxB1SVILBmz3im7GucsBrJFjA6wosQSGALA=;
-        b=cUke+eLcO4unlFmCV4K85nP+4PI1dEux/cRQjgAggIOckPU599AmmyQOFeuLuMGYBd
-         jljCp/zVZb8Bsp+I/XYOdFWZoe+Ad56QcaXVqjWkawVnX0hL9uDhuWR2fwcYjj+ceio8
-         hYFGPJUvAyvT+jSMh1TDhl+Fc58NPrEOZiRWqvAjx3AymkX8EiimMRkmWZsWKBXn4Y66
-         e15pCllkeKolvq44JKuBiKBtgftdE2UEU9++lkxOEVOlcgydrCcT2qGE0UQR3FwA/bhD
-         dj4nJb+yZBDvnvwU2R4XLaC+CKwUfrSVFZY9gDfeFQedFM8PfK/sfZRMVgVvXKL0UZhW
-         8Y1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVPm2J5CZUvYOorxPV3YUbXSOojBfY49/IYkf3EBvskT28CPTQM2A/D6W12OWCITDLEn50zCrNIU9qsPMZGpC3Z4gUHYxC6yWPdLn17
-X-Gm-Message-State: AOJu0YwhM/yuv0b7MRl3m5673sa2fU4tiCFXNq5AYJalrRcYBrFzSvru
-	WvHrFXIxfLKc+47qPn4jOCE/SFx0nM4dJQ3h8ChZAdCqEa08u0y8Y/zQKYlzlzV6gQV4vYVDC7e
-	DTF2dCvkxUXHxy/Cyi50Vnyi+3Q==
-X-Google-Smtp-Source: AGHT+IFSs76JHmM2LmXNg32ck/ZKUQAWtLq3qigWNXo0ZTjrIc0iQb/8PWxfHMJzU/PwDwBuVbLVyBlgavSzN3LzrU8=
-X-Received: from mattgilbride.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:2ac5])
- (user=mattgilbride job=sendgmr) by 2002:a05:6902:200e:b0:e03:a2f7:71d with
- SMTP id 3f1490d57ef6-e041af3f7edmr322987276.0.1720714869205; Thu, 11 Jul 2024
- 09:21:09 -0700 (PDT)
-Date: Thu, 11 Jul 2024 16:20:57 +0000
-In-Reply-To: <20240711-b4-rbtree-v6-0-14bef1a8cdba@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zH4sU3pq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jbZP/wkG+siLHrMi8rQShhra9jwCa7SLuMjVR6l7BD+Idt1nKyaHX3Y+2jbUPXBlD9giJ5EvbGoQDOrO3MbOPNMd5TniaQsm2bzScGTittFTvEx6sXhd7wbemf3rkyLYul7Bdk2p+i3i7RfYKDXmFFhOZysG+LJc4MixTgJPR9ueeoN7cmvljRyok9fcPW7kKwg5Le7fs5PTWcaPnrXVnYY+KunJD8RG2PtyTG1r+MSQbO1q7GbP1lnniUiGIva40PWvRHHQhR+/tn74RulAxQqQE27sFm0N4U9Pjj4BNAamktKYaSl5mZTaOx1RMOTTGDsKKU1H7wI2Hk8VhSTy8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f/Y9D+/z+crwm8A5wrMIxz7LcxnnQp1OQ11/329GLH4=;
+ b=PF0AHI7UHBVg5XUHfqNBR6tg/ll50uOvdZkOvWQGjXRhfNHHsg/SdjLVYRpkRI72aqg+0mTx6CiTxiWTRZ0m9At8BczLZpBjBloBNFbRhYJ6GGCO9pDkGC1xnvlgs9WtFE3fZ3YJ8upz+I/leFKrRHOPLdy5cG308jqwn7hAXrCw1pLSnutcGprd7PdriDXbGOyl2wIj9pcNHHic6CpmrS05XexMFMLS7PD+Llti/76WZsviajwb+xIyFoUow4IaKtknqwL7oOVEI+7eYh3up48ZRePVKwfj/DFiKlfwYi/FBjc+xroxa1iEhST/SqBr0MP5F6c0rPFEYp82OY8uuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f/Y9D+/z+crwm8A5wrMIxz7LcxnnQp1OQ11/329GLH4=;
+ b=zH4sU3pquiMIf5qqtnsqpjE7o45zE4LxXDCqrhV45nxh/gaDMQW+/DFgpzFVKT+rqyL/fAqYD1n8busE+/6sD/GLEFe7BuFEXtnYWXjQaCXDUR9vlKzchZjLLxm/ly8tXIsz5+5eq7PSWdgeTMg1sG31LaMXdHHU/q+CiEhbhaY=
+Received: from DS7PR05CA0041.namprd05.prod.outlook.com (2603:10b6:8:2f::8) by
+ SN7PR12MB6691.namprd12.prod.outlook.com (2603:10b6:806:271::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7762.22; Thu, 11 Jul 2024 16:21:07 +0000
+Received: from DS1PEPF00017098.namprd05.prod.outlook.com
+ (2603:10b6:8:2f:cafe::a0) by DS7PR05CA0041.outlook.office365.com
+ (2603:10b6:8:2f::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23 via Frontend
+ Transport; Thu, 11 Jul 2024 16:21:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017098.mail.protection.outlook.com (10.167.18.102) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 16:21:07 +0000
+Received: from [10.236.30.66] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 11 Jul
+ 2024 11:21:05 -0500
+Message-ID: <3c35c4fd-3cae-4779-8b54-24a6fccb3017@amd.com>
+Date: Thu, 11 Jul 2024 11:21:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240711-b4-rbtree-v6-0-14bef1a8cdba@google.com>
-X-Mailer: b4 0.13.0
-Message-ID: <20240711-b4-rbtree-v6-1-14bef1a8cdba@google.com>
-Subject: [PATCH v6 1/6] rust: kernel: add `drop_contents` to `BoxExt`
-From: Matt Gilbride <mattgilbride@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?utf-8?q?Arve_Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Christian Brauner <brauner@kernel.org>
-Cc: Rob Landley <rob@landley.net>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Michel Lespinasse <michel@lespinasse.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Matt Gilbride <mattgilbride@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/5] selftests: KVM: Add a basic SNP smoke test
+To: Peter Gonda <pgonda@google.com>
+CC: <kvm@vger.kernel.org>, <shuah@kernel.org>, <thomas.lendacky@amd.com>,
+	<michael.roth@amd.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
+	<linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240710220540.188239-1-pratikrajesh.sampat@amd.com>
+ <20240710220540.188239-2-pratikrajesh.sampat@amd.com>
+ <CAMkAt6oc5YC8oLpvFDeCOrEH6Hm88M_U_eMBPXpQWvcqjL7nzg@mail.gmail.com>
+Content-Language: en-US
+From: "Sampat, Pratik Rajesh" <pratikrajesh.sampat@amd.com>
+In-Reply-To: <CAMkAt6oc5YC8oLpvFDeCOrEH6Hm88M_U_eMBPXpQWvcqjL7nzg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017098:EE_|SN7PR12MB6691:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79647990-a41f-4b09-ebd9-08dca1c5780e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q3psTUh2NXdVVVRIQTBpKzhPdHoyTHFYN3l0K0FUYjNhWjlSODFJREdpYTBw?=
+ =?utf-8?B?VnNJZGpOSG9xODhpWG1CZWY4UXVlMlBHWGNZWExSMHJ2QlYzK3cwbnVtWXVG?=
+ =?utf-8?B?WHJSekxncDA1WDl1UnBqVnRkVXllRmNiTjQ0S1M1QlErMHdOY3ZpNWxUS09L?=
+ =?utf-8?B?eDArNjJDZE9qRW5IVzN1ditmV0pjWldzWVFjZDJvM1FNdTZJMWR5VkE0ODRo?=
+ =?utf-8?B?ZXJYZUtxNXlPczhZZW9vYU84aENPQitrMFdGZ0dEVmFpWUY2eU5hN2xkREkx?=
+ =?utf-8?B?ZGVSZkw3SExoSTN4WkdyRitmRlBtRyttd3dteXFqRXQxVnVhNWpoNk8wWjZn?=
+ =?utf-8?B?ZmhEN05QM2tsdzBCOVhtUmFqdm5Od1NpSEIwTXdWVnpJYVpKV3lHd1E0UEsx?=
+ =?utf-8?B?R1BlRyt3VS9xN2hvQUw4WCtEdWdhTDlPdjY4MUk5U0VhajIyd1g2UitlY09L?=
+ =?utf-8?B?dnlVMERORDZXMk1EcHJaMEdXTFMrZjJkdGc0dzFVRm8xcWtpK3dNU0xwZ1FJ?=
+ =?utf-8?B?ZTA0VUNrdkxXTWMzQkdlNHI0Sm9KQ0dOeXpGV29jTWlSeUNSL2tsUGV4ZkhS?=
+ =?utf-8?B?ZmhVelliRG5iWjRSODRDbGpCamIrRFVlWDBXOHJyc3NDL3Vwd05ZdVZxMjVz?=
+ =?utf-8?B?QzYrbEtVckp2ZnJ6TDVXbXFSbWg1NWJPSGhoYjU2a0hDdlFHbjZNYjJ0dTVx?=
+ =?utf-8?B?WG9WWU54RUxZcGdUZVJnSEczTkpsTGZKUTdDMzI0d0twdTBzZlh3QVNLRy9t?=
+ =?utf-8?B?YkkrRDM2dFl4aTJFd1I1eFE5YVZ5VlgveGpDS2hGaGJjTDNCa2pGSitXby9H?=
+ =?utf-8?B?VXVadGhhOTVNYkM4VHNxM1FUR2cvTjZsRXBkK3BGOHh6VHBvdmdUNmg2N1Bx?=
+ =?utf-8?B?RFVlSHhhSjdyc1VNOUJzekFVb3Qrd3cxaFdrWTUwWmo2SDNzVGgyekVXb2Fj?=
+ =?utf-8?B?MHdQcHd2bGlPaUFEOG9JNU80emxQSGZJSTRYdUx4b2JGUDF3WnB0bklKQ24y?=
+ =?utf-8?B?QklaOVJ1d0xrU2lzbDRvQ09VUXg0VU5uTFVndEh1MngwVHhvYU1QVE9scWh3?=
+ =?utf-8?B?TDFSNFFvRE5QTHJ5dVhPazhiZFdCZjdwcGl5b0hLOWlnKzBQSGlIMmYwcWRk?=
+ =?utf-8?B?aGIwRjYvRXc5UVBtQ1Z6K2F4cklKU1lkbGJmZlpFZUJ4TS9LQnVTQytzdmQr?=
+ =?utf-8?B?c3hkWW9pNnhRQkNWenVBQkM2eFcwQjB1SGhzeGpDRWVZNURmQ1VPTGlNRGpR?=
+ =?utf-8?B?VzZQeEtRK2lJZ3NXN1FiMm5LWURic3BNY2JqY3lxN1BWblJZbU1LUEFxblJs?=
+ =?utf-8?B?RnNSaHJCQjJsOHhtcCtMeHBYcUxId1A2aWZZVGptNGRRRkI4cUNNRWt4cXFC?=
+ =?utf-8?B?RGlkcXRIUG9IZzlSSEw3WGdoWVBoa3JxbUxyMUd3NThta2QwL0dFZldTMG8y?=
+ =?utf-8?B?c1EvS3RoNUk3S29iWGxMcjBNTmVoQ2VnTW91WkpmYk9HTDJ6dXhLWkZXTW40?=
+ =?utf-8?B?ejVxUTFWK3VQQlpwZC9kWk0vbHkzM3kvQ1BXV1RFSUFPbXYvdlp1bGNuYmEy?=
+ =?utf-8?B?K2U5MUVCQzJCWUZ6ZkhOTU14Um0yMFpDd1plaUF2S2dzeHJ2U3RIMEdVV1B0?=
+ =?utf-8?B?R25TaGJibUhuOU5lVEtBUzU1QU5rVTdla056SStLWUVKMnVZenhMSHZoQTdK?=
+ =?utf-8?B?TnltdzhZbHcrSmZld3gwRmNxdlErZWhNWVlzWDhDdHVRL0FpU2VOTUl2SUdO?=
+ =?utf-8?B?cHgyVnVCMGtJMU50R3NuK1BZWTB6RUFGa21PMmpSOXJDbVhqRWI0UjB4VTJh?=
+ =?utf-8?B?bVRXR2JFblZ1THRtVHE2Vzg5SkNnS20xREE4eEVlL1pmWDlVYjd3SE96VERh?=
+ =?utf-8?B?S29zNkhEOFFPRjlHNndvQ20zZkM3a3RZbGlWWTBOMTc4dGxxaER3N1E3aVFO?=
+ =?utf-8?Q?BW7Yx0aLc2GlHKZ/pTmZ592iuz/kZXAz?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 16:21:07.1672
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79647990-a41f-4b09-ebd9-08dca1c5780e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017098.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6691
 
-From: Benno Lossin <benno.lossin@proton.me>
+Hi Peter,
 
-Sometimes (see [1]) it is necessary to drop the value inside of a
-`Box<T>`, but retain the allocation. For example to reuse the allocation
-in the future.
-Introduce a new function `drop_contents` that turns a `Box<T>` into
-`Box<MaybeUninit<T>>` by dropping the value.
+Thank you for your review!
 
-Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-Link: https://lore.kernel.org/rust-for-linux/20240418-b4-rbtree-v3-5-323e134390ce@google.com/ [1]
----
- rust/kernel/alloc/box_ext.rs | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+On 7/11/2024 10:16 AM, Peter Gonda wrote:
+> On Wed, Jul 10, 2024 at 4:06 PM Pratik R. Sampat
+> <pratikrajesh.sampat@amd.com> wrote:
+>>
+>> Extend sev_smoke_test to also run a minimal SEV-SNP smoke test that
+>> initializes and sets up private memory regions required to run a simple
+>> SEV-SNP guest.
+>>
+>> Similar to it's SEV-ES smoke test counterpart, this also does not support
+>> GHCB and ucall yet and uses the GHCB MSR protocol to trigger an exit of
+>> the type KVM_EXIT_SYSTEM_EVENT.
+>>
+>> Also, decouple policy and type and require functions to provide both
+>> such that there is no assumption regarding the type using policy.
+>>
+>> Signed-off-by: Pratik R. Sampat <pratikrajesh.sampat@amd.com>
+> 
+> Tested-by: Peter Gonda <pgonda@google.com>
+> 
+>>
+>> -       test_sev(guest_sev_code, SEV_POLICY_NO_DBG);
+>> -       test_sev(guest_sev_code, 0);
+>> +       test_sev(guest_sev_code, KVM_X86_SEV_VM, SEV_POLICY_NO_DBG);
+>> +       test_sev(guest_sev_code, KVM_X86_SEV_VM, 0);
+>>
+>>         if (kvm_cpu_has(X86_FEATURE_SEV_ES)) {
+>> -               test_sev(guest_sev_es_code, SEV_POLICY_ES | SEV_POLICY_NO_DBG);
+>> -               test_sev(guest_sev_es_code, SEV_POLICY_ES);
+>> +               test_sev(guest_sev_es_code, KVM_X86_SEV_ES_VM, SEV_POLICY_ES | SEV_POLICY_NO_DBG);
+>> +               test_sev(guest_sev_es_code, KVM_X86_SEV_ES_VM, SEV_POLICY_ES);
+>> +
+>> +               if (kvm_has_cap(KVM_CAP_XCRS) &&
+>> +                   (xgetbv(0) & XFEATURE_MASK_X87_AVX) == XFEATURE_MASK_X87_AVX) {
+>> +                       test_sync_vmsa(KVM_X86_SEV_ES_VM, SEV_POLICY_ES);
+>> +                       test_sync_vmsa(KVM_X86_SEV_ES_VM, SEV_POLICY_ES | SEV_POLICY_NO_DBG);
+>> +               }
+>> +       }
+>> +
+>> +       if (kvm_cpu_has(X86_FEATURE_SNP) && is_kvm_snp_supported()) {
+>> +               test_sev(guest_snp_code, KVM_X86_SNP_VM, SNP_POLICY_SMT | SNP_POLICY_RSVD_MBO);
+> 
+> I'd guess most systems have SMT enabled, but is there a way we can
+> check and toggle the SNP_POLICY_SMT policy bit programmatically?
+> 
 
-diff --git a/rust/kernel/alloc/box_ext.rs b/rust/kernel/alloc/box_ext.rs
-index 829cb1c1cf9e..557895db4f48 100644
---- a/rust/kernel/alloc/box_ext.rs
-+++ b/rust/kernel/alloc/box_ext.rs
-@@ -4,7 +4,7 @@
- 
- use super::{AllocError, Flags};
- use alloc::boxed::Box;
--use core::mem::MaybeUninit;
-+use core::{mem::MaybeUninit, ptr};
- 
- /// Extensions to [`Box`].
- pub trait BoxExt<T>: Sized {
-@@ -17,6 +17,20 @@ pub trait BoxExt<T>: Sized {
-     ///
-     /// The allocation may fail, in which case an error is returned.
-     fn new_uninit(flags: Flags) -> Result<Box<MaybeUninit<T>>, AllocError>;
-+
-+    /// Drops the contents, but keeps the allocation.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::alloc::flags;
-+    ///
-+    /// let value = Box::new([0; 32], flags::GFP_KERNEL);
-+    /// let value = value.unwrap().drop_contents();
-+    /// // Now we can re-use `value`:
-+    /// Box::write(value, [1; 32]);
-+    /// ```
-+    fn drop_contents(self) -> Box<MaybeUninit<T>>;
- }
- 
- impl<T> BoxExt<T> for Box<T> {
-@@ -53,4 +67,12 @@ fn new_uninit(flags: Flags) -> Result<Box<MaybeUninit<T>>, AllocError> {
-         // zero-sized types, we use `NonNull::dangling`.
-         Ok(unsafe { Box::from_raw(ptr) })
-     }
-+
-+    fn drop_contents(self) -> Box<MaybeUninit<T>> {
-+        let ptr = Box::into_raw(self);
-+        // SAFETY: `ptr` is valid, because it came from `Box::into_raw`.
-+        unsafe { ptr::drop_in_place(ptr) };
-+        // SAFETY: `ptr` is valid, because it came from `Box::into_raw`.
-+        unsafe { Box::from_raw(ptr.cast()) }
-+    }
- }
+We could do that by making a check to /sys/devices/system/cpu/smt/active
+maybe?
 
--- 
-2.45.2.803.g4e1b14247a-goog
+> Also should we have a base SNP policy so we don't have to read
+> `SNP_POLICY_SMT | SNP_POLICY_RSVD_MBO` every time? Not sure I think
+> selftests prefer more verbosity.
 
+Sure, that makes sense. I can also include the following to save us a
+few keystrokes and help read easier.
+#define SNP_POLICY	SNP_POLICY_SMT | SNP_POLICY_RSVD_MBO
+
+Thanks!
+Pratik
