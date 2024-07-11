@@ -1,93 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F8216E88D;
-	Thu, 11 Jul 2024 20:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C03A16DC1E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 20:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720729233; cv=none; b=i/UDbqUyr15PuplBDksjXuas/vIF9yzgoH33JIkXG5npZPzqfn2jGu4U/MBCkLDfBb2vlr/b5U/2bGx+MAPeF3x4Oo2W+jipOOBUYT+UA3CwZUTcYny4VsNlO1C+B6E7uXeweSjv/222I5dLFg0Qw3CbBEegbqM5beJdzR7kocU=
+	t=1720729521; cv=none; b=fuUsEosUKR+DcXcXqe1gQl1iy7S+N8EQvyTslBKMywFVFrGXBjbnZfdpxLPmnr4Jn0KAadRvbLwWRf3VKaGL2xFnOiXDxnfth2a6DHCN0YAEY1/5wJh+p0CsEpM415QEwl6iQR6bYsMx6mXs9w4MBwUWAxSF7l/0URJJroZ/bdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720729233; c=relaxed/simple;
-	bh=xa+rT4VmJOOY+hkHlExT68aShODjIMJJ+OQfbpBQ3fg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qAbJi4eIYTB7ZLaebuKmGKQXT4kKGHA+Udb3CsG4KjaU0m1qEkYcIKyiGlOHSa7LufeUy+2/w05KaU7LHvLZwk6f6lQVUXuAFe699MldaUAoIF1V455UDmvouJMWh0KVwu4NRrNv5zlCWGfI71IEwhBAeGsbPxKUZYxNo28GG7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=B08k7FoK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720729521; c=relaxed/simple;
+	bh=8bclKTm0mQjAtWAC6LCIUWGn+6C2ewID31E27vLw+5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LKLjh8rt4FWkjT6oPkFJGAxkgS5NY1Tk5eqmoYRYKCyuD9uj486adwlcW4lXx35w8covbYVqK1ZQyNMP59HAYkEuqzLW+ePQuRsdCgENXUXCNSZBCjC8Pz2L6FHx7vMcl4uJhRZk4/LPLxudldr6K5kH7li9Tcxed6c7Fp1l0cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kZIcqYJ7; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="B08k7FoK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45713C116B1;
-	Thu, 11 Jul 2024 20:20:31 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="B08k7FoK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1720729229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yt6QePxaysQIEy2W33NFuV82FH1yOwTPMayUT9I0nRc=;
-	b=B08k7FoKM2lth8Goud21+qdX9b42LABqtbFegs2oLDnZEvSCsNyDg1bmjyhL5o8Z9rok38
-	0bDYNxgm6Q6JMUOebYHP2hMK+PLa6CubiFXMr8PKb3jvY6/5lUdoVrvXPIB35+82ogkpdJ
-	pJFYgPAVaSkR/6oG//+B/wc8s6FL04E=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 0ffe4054 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 11 Jul 2024 20:20:29 +0000 (UTC)
-Date: Thu, 11 Jul 2024 22:20:26 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Yu Zhao <yuzhao@google.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	tglx@linutronix.de, linux-crypto@vger.kernel.org,
-	linux-api@vger.kernel.org, x86@kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
-	Carlos O'Donell <carlos@redhat.com>,
-	Florian Weimer <fweimer@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	Jann Horn <jannh@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH v22 1/4] mm: add MAP_DROPPABLE for designating always
- lazily freeable mappings
-Message-ID: <ZpA-iuAItDxBSfBS@zx2c4.com>
-References: <54b6de32-f127-4928-9f4a-acb8653e5c81@redhat.com>
- <ZpAcWvij59AzUD9u@zx2c4.com>
- <ZpAc118_U7p3u2gZ@zx2c4.com>
- <ZpAfigBHfHdVeyNO@zx2c4.com>
- <8586b19c-2e14-4164-888f-8c3b86f3f963@redhat.com>
- <ZpAqbh3TnB9hIRRh@zx2c4.com>
- <443146f4-9db8-4a19-91f1-b6822fad8ce8@redhat.com>
- <1c8632b4-06a5-49da-be0c-6fc7ac2b3257@redhat.com>
- <2c464271-1c61-4cd8-bd4e-4bd8aa01fa00@redhat.com>
- <CAOUHufYsxCb=taWWfUbuzi1Hmmug=ThQMoTjsxrtFkt=UXEu6w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kZIcqYJ7"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-75e7e110e89so831062a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1720729520; x=1721334320; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iMO3QJaNwKPEg2fkW9ocZ2ZzNc4qbi0eB4IVGf7OvXg=;
+        b=kZIcqYJ7b/9cyKAWeBRIyVZIhogyPJn8VDyodMfD2HELSbV08Tu+Q7tbPuSFGUrhzc
+         rz8pduoj3KReGbpNaAHHy5tJ12s3N5lZsGOk1tTxoYSHx6WBgi5VQYGubna81BPclV1E
+         gOxIMmJe6QVt2RTnpYY+fPHo/t7TvhZOm3iJ6iuLWLuqKygFYhIltmJcGTDugrIzR3e0
+         UoZ+ciLmDuTpLhAo7bArPSAlC6AIX0RF4PzdrMnSE5qkXJXupAntI0qeHY4PF1VSee18
+         mcVA4qPU6ovg8yY/4PThpcBdig3Nc1IedfTaBScqOfy2tDqoopdABkO1PXHB/A8kvoG6
+         xOrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720729520; x=1721334320;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iMO3QJaNwKPEg2fkW9ocZ2ZzNc4qbi0eB4IVGf7OvXg=;
+        b=EpioF6PEFCj81EWNCCZvBvNCyidZY8qB0rz8UC/sbaQi1ddEZmlHWljUGCiVsCLhbW
+         nJ1GZPBlcR4SlFW7kBgSG5whTcVw3H2Sw6/Z5eou+F3d82qXQKGUtP3Y06wHhaotu+1g
+         bWNJXURDc3MNMttbYKWtQBrXunDcBAVjnRcxd1pPJdZVpaKq01xxhPOlAvWrUaDPeSoq
+         jnu2+fr17So8vNxh8oh7Ff+ojGHXaW954XZVfzVmhWOyNDonx7uL08Bhfy/+sdEMdetu
+         IB5duT8+HjIPQ3z/mwoiQsRSQlLUOUjNFtFoz+sZwWmKX/lPjWqDSaCcI+aF4A45b2RA
+         A8Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyB746paFhBx+PbwW5SArwtIGuJ/UWJO+x1reo7VqFpZf3zbk3wgcuDCxjuV/QzJMoUd2XFHoJUU8HbW6vrRifFYsLDjvQqhbo1zU+
+X-Gm-Message-State: AOJu0YwXlmVlLrqv8ichpfnpSDHS3P0cBnXZVsA9MCJJksU3i69jznAz
+	fv4xUk0XsffTCiQEa4akGmpr7chYB4FKOoPTTvtxsNylPdH4sQjUHHigc+62SAA=
+X-Google-Smtp-Source: AGHT+IGd8D3/XoSU3Ju/bMAEpeWWMsStCF3C8xFRAptThUUyXilcXDIM/pIU++epptacQ5dkqr485g==
+X-Received: by 2002:a05:6a21:1690:b0:1c0:e322:e8c5 with SMTP id adf61e73a8af0-1c29821b544mr9879373637.26.1720729519712;
+        Thu, 11 Jul 2024 13:25:19 -0700 (PDT)
+Received: from [10.4.10.38] (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ad3460sm54408745ad.295.2024.07.11.13.25.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 13:25:19 -0700 (PDT)
+Message-ID: <ed410b0f-0062-4fbb-97e0-86fd492fb5ca@rivosinc.com>
+Date: Thu, 11 Jul 2024 16:25:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/8] RISC-V: Check scalar unaligned access on all CPUs
+To: Evan Green <evan@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+ <cleger@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>,
+ Charlie Jenkins <charlie@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>,
+ Andy Chiu <andy.chiu@sifive.com>, Eric Biggers <ebiggers@google.com>,
+ Greentime Hu <greentime.hu@sifive.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>,
+ Costa Shulyupin <costa.shul@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+ Anup Patel <apatel@ventanamicro.com>, Zong Li <zong.li@sifive.com>,
+ Sami Tolvanen <samitolvanen@google.com>,
+ Ben Dooks <ben.dooks@codethink.co.uk>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Erick Archer <erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, stable@vger.kernel.org
+References: <20240625005001.37901-1-jesse@rivosinc.com>
+ <20240625005001.37901-4-jesse@rivosinc.com>
+ <CALs-HsvE9PzTrhVO0umh3KaJuLQLdk-h8sYKBg7XA4a-MXAmOg@mail.gmail.com>
+Content-Language: en-US
+From: Jesse Taube <jesse@rivosinc.com>
+In-Reply-To: <CALs-HsvE9PzTrhVO0umh3KaJuLQLdk-h8sYKBg7XA4a-MXAmOg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOUHufYsxCb=taWWfUbuzi1Hmmug=ThQMoTjsxrtFkt=UXEu6w@mail.gmail.com>
 
-Hi David,
 
-On Thu, Jul 11, 2024 at 01:49:42PM -0600, Yu Zhao wrote:
-> On Thu, Jul 11, 2024 at 1:20 PM David Hildenbrand <david@redhat.com> wrote:
-> > > -       /* dirty lazyfree */
-> > > -       if (type == LRU_GEN_FILE && folio_test_anon(folio) && folio_test_dirty(folio)) {
-> > > -               success = lru_gen_del_folio(lruvec, folio, true);
-> > > -               VM_WARN_ON_ONCE_FOLIO(!success, folio);
-> > > -               folio_set_swapbacked(folio);
-> > > -               lruvec_add_folio_tail(lruvec, folio);
-> > > -               return true;
-> > > -       }
 
-> This is an optimization to avoid an unnecessary trip to
-> shrink_folio_list(), so it's safe to delete the entire 'if' block, and
-> that would be preferable than leaving a dangling 'if'.
+On 7/10/24 11:55, Evan Green wrote:
+> On Mon, Jun 24, 2024 at 5:51 PM Jesse Taube <jesse@rivosinc.com> wrote:
+>>
+>> Originally, the check_unaligned_access_emulated_all_cpus function
+>> only checked the boot hart. This fixes the function to check all
+>> harts.
+>>
+>> Fixes: 71c54b3d169d ("riscv: report misaligned accesses emulation to hwprobe")
+>> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+>> Cc: stable@vger.kernel.org
+>> ---
+>> V1 -> V2:
+>>   - New patch
+>> V2 -> V3:
+>>   - Split patch
+>> ---
+>>   arch/riscv/kernel/traps_misaligned.c | 23 ++++++-----------------
+>>   1 file changed, 6 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+>> index b62d5a2f4541..8fadbe00dd62 100644
+>> --- a/arch/riscv/kernel/traps_misaligned.c
+>> +++ b/arch/riscv/kernel/traps_misaligned.c
+>> @@ -526,31 +526,17 @@ int handle_misaligned_store(struct pt_regs *regs)
+>>          return 0;
+>>   }
+>>
+>> -static bool check_unaligned_access_emulated(int cpu)
+>> +static void check_unaligned_access_emulated(struct work_struct *unused)
+>>   {
+>> +       int cpu = smp_processor_id();
+>>          long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
+>>          unsigned long tmp_var, tmp_val;
+>> -       bool misaligned_emu_detected;
+>>
+>>          *mas_ptr = RISCV_HWPROBE_MISALIGNED_UNKNOWN;
+>>
+>>          __asm__ __volatile__ (
+>>                  "       "REG_L" %[tmp], 1(%[ptr])\n"
+>>                  : [tmp] "=r" (tmp_val) : [ptr] "r" (&tmp_var) : "memory");
+>> -
+>> -       misaligned_emu_detected = (*mas_ptr == RISCV_HWPROBE_MISALIGNED_EMULATED);
+>> -       /*
+>> -        * If unaligned_ctl is already set, this means that we detected that all
+>> -        * CPUS uses emulated misaligned access at boot time. If that changed
+>> -        * when hotplugging the new cpu, this is something we don't handle.
+>> -        */
+>> -       if (unlikely(unaligned_ctl && !misaligned_emu_detected)) {
+>> -               pr_crit("CPU misaligned accesses non homogeneous (expected all emulated)\n");
+>> -               while (true)
+>> -                       cpu_relax();
+>> -       }
+> 
+> This chunk was meant to detect and refuse to run on a system where a
+> heterogeneous CPU is hotplugged into a previously homogenous system.
+> The commit message doesn't mention this change, how come you
+> deleted it?
 
-Alright, I'll just remove that entire chunk then, for v+1 of this patch?
-That sounds prettttty okay.
+Sorry for the long wait.
+I do not remember why I removed this.
+Your right it shouldn't be removed, I added it back.
 
-Jason
+Thanks,
+Jesse Taube
+> 
+> 
+>> -
+>> -       return misaligned_emu_detected;
+>>   }
+>>
+>>   bool check_unaligned_access_emulated_all_cpus(void)
+>> @@ -562,8 +548,11 @@ bool check_unaligned_access_emulated_all_cpus(void)
+>>           * accesses emulated since tasks requesting such control can run on any
+>>           * CPU.
+>>           */
+>> +       schedule_on_each_cpu(check_unaligned_access_emulated);
+>> +
+>>          for_each_online_cpu(cpu)
+>> -               if (!check_unaligned_access_emulated(cpu))
+>> +               if (per_cpu(misaligned_access_speed, cpu)
+>> +                   != RISCV_HWPROBE_MISALIGNED_EMULATED)
+>>                          return false;
+>>
+>>          unaligned_ctl = true;
+>> --
+>> 2.45.2
+>>
