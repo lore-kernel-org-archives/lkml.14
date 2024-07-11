@@ -1,116 +1,85 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DA315957E;
-	Thu, 11 Jul 2024 16:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBCA16B392
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 16:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720714217; cv=none; b=XUUt/G5D6x7HmmXeqQHnqLg9axlZloKs8nRrQCNhnjK8m1t60gLy/yg+B8T8/JHMQRsuDd24tw1an0PjLDzZjb6L39aTESkr9YG+IFNZ1VseUheA9AiP+UeU5AMmOJIOCrhxbHMMnjCfQfBT9x3hgzHvUdwXGxiHEZlb2CleMQo=
+	t=1720714288; cv=none; b=dgW6S1OQzyS6BkNaA4chkH95mNUwSWul9kh5VucnWTUYqAuI/uHjE2ZKD998yjHb6AhC/OEfSzMaPCzWUQSTZUC7x8/Tzu0E+vESjm6Q6wrQktnA9CLY5RoDaQ1RB1C+MEU5Ar6cilzjwT1KnAZsJ0J1WbXHKG8+watdASOfJQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720714217; c=relaxed/simple;
-	bh=toos/atAMxpoRk1QwVzwIn/xX8NOj8ffSwRiozlKcbQ=;
-	h=Message-ID:Date:MIME-Version:To:References:Subject:From:Cc:
-	 In-Reply-To:Content-Type; b=QlZQ9jCVgFEFIZ5fw0hcJ9oMb6SPOewOg/5KmCC1hI+foJ237eS5SqMtKGNLDE4LXyUwd+Z2wQR+cT0BGyqtowFW0GCAyCfDE99Da/hvfefr4Dv04DoBkR0FoL5vgyjMpQIjXnDQmUHNZMQbklqAYT7GCgN1v2MSJizhZVU1j3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=rVVHP500; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720714288; c=relaxed/simple;
+	bh=v/Q/FkYQWlP5mhjRIjT1FY0WOityzEUvvrsfXcoTSMM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ke8SxGrsqzJ4xqbk/D9F9nBMSiaAZrPvd+gcBh/ubd+A++zT0mF9aVWmrDkzxAFAGqJJt91oGudSkDcxI+blzd+TTeUN1k/8XX7KtJ6lPCL+0MW8oUjWUaYtVB68pshI+11p0gwU5uNO0Djoa22XsWU8Ro8ubvaobb7lQxrtVpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y3v87nGQ; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="rVVHP500"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720714178; x=1721318978; i=markus.elfring@web.de;
-	bh=iCA+wBBrDEg85srNLY95LSkrYDhC1QURR+TnrO0mB7U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:References:
-	 Subject:From:Cc:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=rVVHP50064H3+NxqWnBBbLlsmJUgKEtW3UUIn0sX6hPrgvYM1R4yuk2oKp7i+Y+5
-	 tyfL1TpDF8L52wT0a3hRXYjVSL1P7ZcSZ7vPvzcfLyS5DEw59Jtw8cIVSRgRVSzlN
-	 CaHhrWpMZ4jNl5i9ed3mzjoYKQ0vqzptTWOvLxoTjTEfCATlR8hVF8yD76z2xC2s0
-	 WVzDHw/TJNhyVHhgYbXYSDWfZp56x6BVyo0ItJ3AYJ77sOTnOdU66ZnP3gO5BHpl1
-	 iYjGfgou8UiPltcWBQPbBV0dTWUdK58OiRCFc87VkdxP4ijB5IyfBJio1AHX5YrPS
-	 1lB0UXOYL3SX1hiGYw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLzn1-1sjsih2sAD-00M8X2; Thu, 11
- Jul 2024 18:09:38 +0200
-Message-ID: <91cfc410-744f-49f8-8331-733c41a43121@web.de>
-Date: Thu, 11 Jul 2024 18:09:26 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y3v87nGQ"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58ce966a1d3so14774a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720714285; x=1721319085; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=s55DGZEOMg9QZyntspE5hZ/WZzvStwyhAiZPOpnNBOw=;
+        b=y3v87nGQ8GNXpOfw3nPsFkObYSPF3YmtCfdX3ng07LOkc63BtvoZK6RI9l3jKTjoW1
+         LjnR2QPCODB6tVUsLzV2XsvsTNbbo03XnNf2L0MjWWQGcnLE6s75J4cNn5bt1sYVeuQ4
+         CJ3csHfajMLkqHjLtg0Ncy3+nCeMQ7Ty+UlhPE5sHyNtIqEvm971xaLiaCjd19r3YolY
+         Zij2fIu5soRQWUC3UZYkPL4ZOkTEZzThjfGIFGepmywfQJ53ONKajc8UMiEoYr+XH/sA
+         MPwnLfyQY3MU1s2MdEmrLCKrcas9Rgk9zvJu6mERC0+SS4O/RwocUpakd6KQt7WsK5KH
+         AZYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720714285; x=1721319085;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s55DGZEOMg9QZyntspE5hZ/WZzvStwyhAiZPOpnNBOw=;
+        b=U8eWGRIL1AX7vMJn0LCHpUvzQx1AUbrPTnOnV0lA3KcsnvcflkebVoDm17BdHBFQeL
+         ENghBQkLxLMI4wRJBtf/sEwga4gs7lym9LRJfuRoDn7gMu99stFf0A7nnbEFTsZDI72+
+         ST9Zb+lrmeopCj/JPZAVe4BUrgJRLTddMolSRgpmFVgZCNAM3PYZE8Hoaik1cL4ReLRt
+         EgT5r65rMo0ZA/ql7xfZeJZvrjarhF14TmzgnLhvuivR9ycfoKPW+Q+fO5lfBBWnBEPU
+         MqpYLLE78nvrG9LW1VS9BIM6ackVVaYhG6DLj1TAX5Pbww35fzCNUyuFDWNPX6uBZtet
+         mTqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXg5Fw6zsYSvK7lcp2cL+Y1PHbLee7xH0yQyAPYRQFpF+i0TAw7jJnE+2E10ZIPGTw/nqzLJ+48jRX5zwFq09/xW9PJXBtPv0Bgj83/
+X-Gm-Message-State: AOJu0YxKh5ajLip74stX4v+0gDJ/9Kl3khHhUYsKsJkv5Cmc3GCLaNxm
+	qQuJSI6yhWmbl7T1YvjIe5mxFVM6J/r0bNwbW1wSU9DdIgQaCuIkakBUeZ5X1qc4RuNzbfUVVVl
+	CqR6rdY1BWpgQJnVaYyrjABHbKcUAsR7D05+U
+X-Google-Smtp-Source: AGHT+IFRIy72DxyOnaKptYGPfmSI7TYhaeEIrTEN9HpfourjbZj/0m6vpze7o2/iiPAowVfOKX+Zg9a5/Y2TvKMPASg=
+X-Received: by 2002:a50:aa8d:0:b0:58b:b1a0:4a2d with SMTP id
+ 4fb4d7f45d1cf-5984e32241fmr231681a12.1.1720714284727; Thu, 11 Jul 2024
+ 09:11:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
- Herve Codina <herve.codina@bootlin.com>, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, netdev@vger.kernel.org,
- UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Daniel Machon <daniel.machon@microchip.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Lars Povlsen <lars.povlsen@microchip.com>, Lee Jones <lee@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Saravana Kannan <saravanak@google.com>, Simon Horman <horms@kernel.org>,
- Steen Hegelund <Steen.Hegelund@microchip.com>
-References: <20240627091137.370572-2-herve.codina@bootlin.com>
-Subject: Re: [PATCH v3 1/7] mfd: syscon: Add reference counting and device
- managed support
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Allan Nielsen <allan.nielsen@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Jakub Kicinski <kuba@kernel.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Paolo Abeni <pabeni@redhat.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-In-Reply-To: <20240627091137.370572-2-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LFxBbBSDsYV2z0yRm6Y6oG29nFJqIo210Cv0lweQhRokoOaMp2c
- 5IeyRxm67QFt5Y7Kojegg5OSD8tkKd7cq3tnAlbxWNukHx/4YKeDX3rhdrZ/sKghJaq923J
- O2zNJ9p/wKlhm/m5firh2qWJlH5tKas6Mkctf7fVwpFX3hlLTA6e3Hi5lI7yVgvZQsU50SS
- b8WAsD4LmYcDCTtg6J2lw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:67zTDbbpL1Y=;r8OJ82Rzrd5kNER/6Bwtek2zluy
- EEiPx4/efkk2tspOBTpJqtkZJ7zHi47ROcfdLPW9GPGf0mRGZ/QZ8R+5MgQym8MT/SoaHOhGJ
- VL7y3ItFOn45TFVHkQoKx2MBjG8+vjFle8ksRxHqslQZn4WY1jaBq8gk/smnklDS5XTQNESw4
- ypOUWNNPNicq+wdJcTdqBEjCXCohmB4JIPSJwCRU5ptM6x6X3FaQKLcWgTb6qX9EDF7zXt3IN
- GWukiV7uncVinK648zXKgI8gArw+dK2++f7gtpBf0OLCynRSgvcL7E04S2meNm3Tmct1+e4NC
- CnxyJGxLYkhDm9PPn+4vtArcTJy6jQR+c46dQ+aF7ODGtm6IYKMrhkYdWdMR6UXdyr+EUC0Au
- uDBprMwxw6s0PXckmi3vbZEh0dmz+HQh6lRzYCJqvu0qezIoGoAx81/Ox9H+nt+vxPqNoGHz7
- GI5NkRazUiDO2Fc5UbHkSHYTGpoMP9E+iE3npQ6PsGFjWVcX1P/K6Yf6MhS4Z6HX1YmDbDF7v
- 9Y9nLnh30Zhj9RAtlif45fFXEBUskZA4VY/iBduY4881M/U/+3qUt0djrQvwDWYuX322w1xDo
- cLG2s3ac7K75p4qFa4XkJBxolm8J7Id5roCQrYoFwLaWklxaWHkfsqLsohgjKhXr+R/k3gNB5
- 1boR3x1dyK4Ngu0YXXt7ZNIqoaID6pQ0Yh19CBo0dnz0MTHhOB3NGbZ0419d+HD8p0rFbne7t
- S13hVp+2Rn5u7xt6sInh0J7frMYrJfBE2NUDT8KX2k2riV53B9Vyu4ErhO01Wic5CooymJUOo
- TRWQsnSINZ3uUaoBpp14nOhg==
+References: <20240710220540.188239-1-pratikrajesh.sampat@amd.com> <20240710220540.188239-3-pratikrajesh.sampat@amd.com>
+In-Reply-To: <20240710220540.188239-3-pratikrajesh.sampat@amd.com>
+From: Peter Gonda <pgonda@google.com>
+Date: Thu, 11 Jul 2024 10:11:11 -0600
+Message-ID: <CAMkAt6pYAKzEVkKV1iriQei3opD9j3M4bM3-0yB4sX1wss+jsQ@mail.gmail.com>
+Subject: Re: [RFC 2/5] selftests: KVM: Decouple SEV ioctls from asserts
+To: "Pratik R. Sampat" <pratikrajesh.sampat@amd.com>
+Cc: kvm@vger.kernel.org, shuah@kernel.org, thomas.lendacky@amd.com, 
+	michael.roth@amd.com, seanjc@google.com, pbonzini@redhat.com, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-=E2=80=A6
-> +++ b/drivers/mfd/syscon.c
-=E2=80=A6
-> +static struct syscon *syscon_from_regmap(struct regmap *regmap)
-+{
-> +	struct syscon *entry, *syscon =3D NULL;
-> +
-> +	spin_lock(&syscon_list_slock);
-> +
-> +	list_for_each_entry(entry, &syscon_list, list)
-=E2=80=A6
-> +	spin_unlock(&syscon_list_slock);
-> +
-> +	return syscon;
-> +}
-=E2=80=A6
+> +int sev_vm_launch_update(struct kvm_vm *vm, uint32_t policy)
+> +{
+> +       struct userspace_mem_region *region;
+> +       int ctr, ret;
+>
+> +       hash_for_each(vm->regions.slot_hash, ctr, region, slot_node) {
+> +               ret = encrypt_region(vm, region, 0);
+> +               if (ret)
+> +                       return ret;
+> +       }
+>         if (policy & SEV_POLICY_ES)
+>                 vm_sev_ioctl(vm, KVM_SEV_LAUNCH_UPDATE_VMSA, NULL);
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(spinlock)(&syscon_list_slock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.10-rc7/source/include/linux/spinlock.h=
-#L561
-
-Regards,
-Markus
+Adding the sev-es policy bit for negative testing is a bit confusing,
+but I guess it works. For negative testing should we be more explicit?
+Ditto for other usages of `policy` simply to toggle sev-es features.
