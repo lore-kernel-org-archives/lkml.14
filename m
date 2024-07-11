@@ -1,61 +1,38 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE38515A84E;
-	Thu, 11 Jul 2024 10:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267B72209B;
+	Thu, 11 Jul 2024 10:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720693396; cv=none; b=JLwT/5sSXX6KF/xyw8qWbmA3GvrQnlG2GS18bOs9bn7HjDi/mmP1c5WaBvhKwbIG5gap0SQB+VZqQa3aGW+glGrOUbgnK1I81Ca+RV8SQ7u0X3GAtD89pWciu2WrVp1HkC2Vb60j6kaQlAQNh01AFZB4CdCCNNKaabHuzkjnAaU=
+	t=1720693420; cv=none; b=vBzhHDp1B3LAWnSPygtl93n4lDDVElCT6+pjJhTJzRM/+LuuP2fL33sBeqajcivSQLffRCzOxurv1LDPSNc63pe/ZZWpceUVsJE30bzqStCPBja28HZ/zSFS565f4hpxcSOsOmknO+um6SfOacZ7maLQQeiM6Ad8wUn/fCVwMUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720693396; c=relaxed/simple;
-	bh=I4Wm2dCQDbUbvMtkDuwA3lu+if7RvUcHtFzPKp2/Wzo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M2QI/lV8jxbwqXcplhew0BBlLTazg5hRcFNaWFJJCwm/G8emk1ZHZWLtHoCtYeoYUIFKSKvhFN51EVfktPHKzaJotBmpaoUag8W18xBgxhHRp0kqpRBqjKW0iMQTWBdnPSp2/5o1Jzl4CHlUfv0wdS8jC3xkPrzLcz75S9DVywI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=QvN8nJL0; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="QvN8nJL0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720693396; x=1752229396;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=I4Wm2dCQDbUbvMtkDuwA3lu+if7RvUcHtFzPKp2/Wzo=;
-  b=QvN8nJL0z62hCvjglyXgogSnvhuXl4bG6sJrbpxRNI+VS1BDEsyt9RvX
-   Eacalu0Mnr0p2dHdLsXEIrOKIAtHiMmaVQNaBtG29rCfzP2x6jS8n+zK9
-   JZIKvX7hqHu7E4tDa1rl2CdeDiBGaQlz2s5LqM/kgx/DcbRL0d1GDEv4s
-   Khp7NODerdzFHQ7VbXsumzYPZULcJh/4ELL/uZRG4fhKAVEP1VxKLaQze
-   YcEIlA6Du6qmWbIbOr/xTmlzHe2XMU4oEDruhvEqAJUzbZUgrgqLMRPfS
-   BbvSm5HWRNi6ix1vpbDduAr39XKJweOOyuSy7FPH4BClOAGIUoZII+oHc
-   Q==;
-X-CSE-ConnectionGUID: oE7M2H4IRp2wJBQtwWzi7w==
-X-CSE-MsgGUID: +GRrae6kTwCEA1RvWsqYrA==
-X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="29112250"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jul 2024 03:23:14 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Jul 2024 03:23:00 -0700
-Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 11 Jul 2024 03:22:58 -0700
-From: <daire.mcnamara@microchip.com>
-To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
-	<ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v7 2/3] PCI: microchip: Fix inbound address translation tables
-Date: Thu, 11 Jul 2024 11:22:18 +0100
-Message-ID: <20240711102218.2895429-4-daire.mcnamara@microchip.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240711102218.2895429-2-daire.mcnamara@microchip.com>
-References: <20240711102218.2895429-2-daire.mcnamara@microchip.com>
+	s=arc-20240116; t=1720693420; c=relaxed/simple;
+	bh=mRiJQf8HlUUGHS/Aw8yW+dJgWms8uN86w7mo04vnImw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NEKOBHygYjY0mjZUmRfpu0j6PZVd7suMg9bl3gH7j1/w9LXLeXXQMEKUd6M9thIyHBgLuZGJUKIUfPPCCRnu3ASJfULVNK0EuSYDeCdcrDwDJMVcCFPIoUcHOMFXbkqhhZ/aS4B8SXUJzTy+LeV6Cao4NrrJUAbKE0sBqRcPeXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WKW1P1dvfzQkjL;
+	Thu, 11 Jul 2024 18:19:37 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 246CF1401E0;
+	Thu, 11 Jul 2024 18:23:34 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 11 Jul 2024 18:23:33 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<corbet@lwn.net>, <haitao.huang@linux.intel.com>, <rdunlap@infradead.org>,
+	<kamalesh.babulal@oracle.com>
+CC: <cgroups@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] cgroup/misc: Introduce misc.events.local
+Date: Thu, 11 Jul 2024 10:14:57 +0000
+Message-ID: <20240711101457.2963104-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,209 +41,143 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-From: Daire McNamara <daire.mcnamara@microchip.com>
+Currently the event counting provided by misc.events is hierarchical,
+it's not practical if user is only concerned with events of a
+specified cgroup. Therefore, introduce misc.events.local collect events
+specific to the given cgroup.
 
-On Microchip PolarFire SoC the PCIe Root Port can be behind one of three
-general purpose Fabric Interface Controller (FIC) buses that encapsulates
-an AXI-S bus. Depending on which FIC(s) the Root Port is connected
-through to CPU space, and what address translation is done by that FIC,
-the Root Port driver's inbound address translation may vary.
+This is analogous to memory.events.local and pids.events.local.
 
-For all current supported designs and all future expected designs,
-inbound address translation done by a FIC on PolarFire SoC varies
-depending on whether PolarFire SoC in operating in coherent DMA mode or
-noncoherent DMA mode.
-
-The setup of the outbound address translation tables in the Root Port
-driver only needs to handle these two cases.
-
-Setup the inbound address translation tables to one of two address
-translations, depending on whether the rootport is being used with coherent
-DMA or noncoherent DMA.
-
-Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe controller driver")
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
- drivers/pci/controller/pcie-microchip-host.c | 106 +++++++++++++++++--
- 1 file changed, 97 insertions(+), 9 deletions(-)
+ Documentation/admin-guide/cgroup-v2.rst |  5 ++++
+ include/linux/misc_cgroup.h             |  3 ++
+ kernel/cgroup/misc.c                    | 39 +++++++++++++++++++++----
+ 3 files changed, 41 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 47c397ae515a..ed36337d1d28 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -7,16 +7,20 @@
-  * Author: Daire McNamara <daire.mcnamara@microchip.com>
-  */
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index adf77ed92687..6c6075ed4aa5 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -2692,6 +2692,11 @@ Miscellaneous controller provides 3 interface files. If two misc resources (res_
+ 		The number of times the cgroup's resource usage was
+ 		about to go over the max boundary.
  
-+#include <linux/align.h>
- #include <linux/bitfield.h>
-+#include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/log2.h>
- #include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
-+#include <linux/wordpart.h>
- 
- #include "../pci.h"
- 
-@@ -32,6 +36,9 @@
- #define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
- #define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
- 
-+#define MC_MAX_NUM_INBOUND_WINDOWS		8
-+#define MPFS_NC_BOUNCE_ADDR			0x80000000
++  misc.events.local
++        Similar to misc.events but the fields in the file are local to the
++        cgroup i.e. not hierarchical. The file modified event generated on
++        this file reflects only the local events.
 +
- /* PCIe Bridge Phy Regs */
- #define PCIE_PCI_IRQ_DW0			0xa8
- #define  MSIX_CAP_MASK				BIT(31)
-@@ -99,14 +106,15 @@
+ Migration and Ownership
+ ~~~~~~~~~~~~~~~~~~~~~~~
  
- /* PCIe AXI slave table init defines */
- #define ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
--#define  ATR_SIZE_SHIFT				1
--#define  ATR_IMPL_ENABLE			1
-+#define  ATR_SIZE_MASK				GENMASK(6, 1)
-+#define  ATR_IMPL_ENABLE			BIT(0)
- #define ATR0_AXI4_SLV0_SRC_ADDR			0x804u
- #define ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
- #define ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
- #define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
- #define  PCIE_TX_RX_INTERFACE			0x00000000u
- #define  PCIE_CONFIG_INTERFACE			0x00000001u
-+#define  TRSL_ID_AXI4_MASTER_0			0x00000004u
+diff --git a/include/linux/misc_cgroup.h b/include/linux/misc_cgroup.h
+index 618392d41975..49eef10c8e59 100644
+--- a/include/linux/misc_cgroup.h
++++ b/include/linux/misc_cgroup.h
+@@ -40,6 +40,7 @@ struct misc_res {
+ 	atomic64_t watermark;
+ 	atomic64_t usage;
+ 	atomic64_t events;
++	atomic64_t events_local;
+ };
  
- #define ATR_ENTRY_SIZE				32
+ /**
+@@ -53,6 +54,8 @@ struct misc_cg {
  
-@@ -933,6 +941,86 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
- 	return mc_allocate_msi_domains(port);
+ 	/* misc.events */
+ 	struct cgroup_file events_file;
++	/* misc.events.local */
++	struct cgroup_file events_local_file;
+ 
+ 	struct misc_res res[MISC_CG_RES_TYPES];
+ };
+diff --git a/kernel/cgroup/misc.c b/kernel/cgroup/misc.c
+index b92daf5d234d..0e26068995a6 100644
+--- a/kernel/cgroup/misc.c
++++ b/kernel/cgroup/misc.c
+@@ -134,6 +134,17 @@ static void misc_cg_update_watermark(struct misc_res *res, u64 new_usage)
+ 	}
  }
  
-+static void mc_pcie_setup_inbound_atr(int window_index, u64 axi_addr, u64 pcie_addr, u64 size)
++static void misc_cg_event(enum misc_res_type type, struct misc_cg *cg)
 +{
-+	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	u32 table_offset = window_index * ATR_ENTRY_SIZE;
-+	void __iomem *table_addr = bridge_base_addr + table_offset;
-+	u32 atr_sz;
-+	u32 val;
++	atomic64_inc(&cg->res[type].events_local);
++	cgroup_file_notify(&cg->events_local_file);
 +
-+	atr_sz = ilog2(size) - 1;
-+
-+	val = ALIGN_DOWN(lower_32_bits(pcie_addr), SZ_4K);
-+	val |= FIELD_PREP(ATR_SIZE_MASK, atr_sz);
-+	val |= ATR_IMPL_ENABLE;
-+
-+	writel(val, table_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-+
-+	writel(upper_32_bits(pcie_addr), table_addr + ATR0_PCIE_WIN0_SRC_ADDR);
-+
-+	writel(lower_32_bits(axi_addr), table_addr + ATR0_PCIE_WIN0_TRSL_ADDR_LSB);
-+	writel(upper_32_bits(axi_addr), table_addr + ATR0_PCIE_WIN0_TRSL_ADDR_UDW);
-+
-+	writel(TRSL_ID_AXI4_MASTER_0, table_addr + ATR0_PCIE_WIN0_TRSL_PARAM);
-+}
-+
-+static int mc_pcie_setup_inbound_ranges(struct platform_device *pdev, struct mc_pcie *port)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *dn = dev->of_node;
-+	struct of_range_parser parser;
-+	struct of_range range;
-+	int atr_index = 0;
-+
-+	/*
-+	 * MPFS PCIe Root Port is 32-bit only, behind a Fabric Interface
-+	 * Controller FPGA logic block which contains the AXI-S interface.
-+	 *
-+	 * From the point of view of the PCIe Root Port, there are only
-+	 * two supported Root Port configurations:
-+	 *
-+	 * Configuration 1: for use with fully coherent designs; supports a
-+	 * window from 0x0 (CPU space) to specified PCIe space.
-+	 *
-+	 * Configuration 2: for use with non-coherent designs; supports two
-+	 * 1 GB wide windows to CPU space; one mapping CPU space 0 to PCIe
-+	 * space 0x80000000 and mapping CPU space 0x40000000 to pcie
-+	 * space 0xc0000000. This cfg needs two windows because of how
-+	 * the MSI space is allocated in the AXI-S range on MPFS.
-+	 *
-+	 * The FIC interface outside the PCIe block *must* complete the inbound
-+	 * address translation as per MCHP MPFS FPGA design guidelines.
-+	 */
-+	if (device_property_read_bool(dev, "dma-noncoherent")) {
-+		/*
-+		 * Always need same two tables in this case.  Need two tables
-+		 * due to hardware interactions between address and size.
-+		 */
-+		mc_pcie_setup_inbound_atr(0, 0, MPFS_NC_BOUNCE_ADDR, SZ_1G);
-+		mc_pcie_setup_inbound_atr(1, SZ_1G, MPFS_NC_BOUNCE_ADDR + SZ_1G, SZ_1G);
-+	} else {
-+		/* Find any DMA ranges */
-+		if (of_pci_dma_range_parser_init(&parser, dn)) {
-+			/* No DMA range property - setup default */
-+			mc_pcie_setup_inbound_atr(0, 0, 0, SZ_4G);
-+			return 0;
-+		}
-+
-+		for_each_of_range(&parser, &range) {
-+			if (atr_index >= MC_MAX_NUM_INBOUND_WINDOWS) {
-+				dev_err(dev, "too many inbound ranges; %d available tables\n",
-+					MC_MAX_NUM_INBOUND_WINDOWS);
-+				return -EINVAL;
-+			}
-+			mc_pcie_setup_inbound_atr(atr_index, 0, range.pci_addr, range.size);
-+			atr_index++;
-+		}
++	for (; parent_misc(cg); cg = parent_misc(cg)) {
++		atomic64_inc(&cg->res[type].events);
++		cgroup_file_notify(&cg->events_file);
 +	}
-+
-+	return 0;
 +}
 +
- static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 				 phys_addr_t axi_addr, phys_addr_t pci_addr,
- 				 resource_size_t size)
-@@ -948,8 +1036,9 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
- 	       ATR0_AXI4_SLV0_TRSL_PARAM);
+ /**
+  * misc_cg_try_charge() - Try charging the misc cgroup.
+  * @type: Misc res type to charge.
+@@ -177,10 +188,7 @@ int misc_cg_try_charge(enum misc_res_type type, struct misc_cg *cg, u64 amount)
+ 	return 0;
  
--	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) |
--			    ATR_IMPL_ENABLE;
-+	val = ALIGN_DOWN(lower_32_bits(axi_addr), SZ_4K);
-+	val |= FIELD_PREP(ATR_SIZE_MASK, atr_sz);
-+	val |= ATR_IMPL_ENABLE;
- 	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
- 	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
+ err_charge:
+-	for (j = i; j; j = parent_misc(j)) {
+-		atomic64_inc(&j->res[type].events);
+-		cgroup_file_notify(&j->events_file);
+-	}
++	misc_cg_event(type, i);
  
-@@ -964,11 +1053,6 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 	val = upper_32_bits(pci_addr);
- 	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
- 	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
--
--	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
--	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
--	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
--	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
+ 	for (j = cg; j != i; j = parent_misc(j))
+ 		misc_cg_cancel_charge(type, j, amount);
+@@ -368,20 +376,33 @@ static int misc_cg_capacity_show(struct seq_file *sf, void *v)
+ 	return 0;
  }
  
- static int mc_pcie_setup_windows(struct platform_device *pdev,
-@@ -1131,6 +1215,10 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	if (ret)
- 		return ret;
+-static int misc_events_show(struct seq_file *sf, void *v)
++static int __misc_events_show(struct seq_file *sf, bool local)
+ {
+ 	struct misc_cg *cg = css_misc(seq_css(sf));
+ 	u64 events;
+ 	int i;
  
-+	ret = mc_pcie_setup_inbound_ranges(pdev, port);
-+	if (ret)
-+		return ret;
+ 	for (i = 0; i < MISC_CG_RES_TYPES; i++) {
+-		events = atomic64_read(&cg->res[i].events);
++		if (local)
++			events = atomic64_read(&cg->res[i].events_local);
++		else
++			events = atomic64_read(&cg->res[i].events);
+ 		if (READ_ONCE(misc_res_capacity[i]) || events)
+ 			seq_printf(sf, "%s.max %llu\n", misc_res_name[i], events);
+ 	}
+ 	return 0;
+ }
+ 
++static int misc_events_show(struct seq_file *sf, void *v)
++{
++	return __misc_events_show(sf, false);
++}
 +
- 	/* Address translation is up; safe to enable interrupts */
- 	ret = mc_init_interrupts(pdev, port);
- 	if (ret)
++static int misc_events_local_show(struct seq_file *sf, void *v)
++{
++	return __misc_events_show(sf, true);
++}
++
+ /* Misc cgroup interface files */
+ static struct cftype misc_cg_files[] = {
+ 	{
+@@ -409,6 +430,12 @@ static struct cftype misc_cg_files[] = {
+ 		.file_offset = offsetof(struct misc_cg, events_file),
+ 		.seq_show = misc_events_show,
+ 	},
++	{
++		.name = "events.local",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.file_offset = offsetof(struct misc_cg, events_local_file),
++		.seq_show = misc_events_local_show,
++	},
+ 	{}
+ };
+ 
 -- 
 2.34.1
 
