@@ -1,101 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5332515AAD3
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DED15B153
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720703998; cv=none; b=oP4j5pDhlpVlpgb9TVuT+8lMh4vQxl1iRFx0GnInb1Po9DYITP6tCv8PB/uZZQZG6tCjVFHFU8lpEHTa8w8gTHu7vWQiArtYQ7bd7amlY/+CNYXOSxb3QU3vNaMpRGBquopZCncbvGXqdOkX1/i/S8E0lu/cel3D+04jgjGhRms=
+	t=1720704017; cv=none; b=tJcwwi1c3KpQxSvM4CaHtJdLloAgfER+5JXPElSoXX4haUnK8ISnowWlD6+PLouK24boElHEv0x2bUA4X9ErfT1r2qeE7QeZjytmlIf+Nuvd8/u3xP3jrdhlxzHPejKbhDjQF5o/Ms2HTBT33CZcwB7KapPF8ETzyJBEAjnghV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720703998; c=relaxed/simple;
-	bh=gCwTYbQeabb3GfeJU/oEEubSclUQQgWDiIn0ljKgsxM=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=o5TRJ5c0AUvvWVxOgYBBsTd8AXxsggXTS8mndDM0DntGpdd0Vp5iPKD+4dGp9pIcBasW8c79QWIh9rSqw+3MDVlYVVZXpT8ru6sIRQ6Qe1f7KnuZWGImCbbqFMyVTzeN/KrRN7wclZPjMQ+g35I5LeGVomt91TD3U7YaN+p6pjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fWSyveEX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720704017; c=relaxed/simple;
+	bh=5SS6Gig9JOcYP1tR9qy0HzJLtPdDcsxtsaoCT8N8pvM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WPmM8HNwNfn2zFXILA9oHrw0DOOp+95nrKG3fezPCy4xH2kXK3/R4HnsatuHNdVR1b7BfLmw1s6Fba+tq4cFjowUzH7lfT1MIusFrcGg6r0849fyw04C0QJ4WhBz2kLprWZjfoOmLeS0XmziIhekcrBgX4R0MwzC7kZRACK2H0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=D2mA1RMZ; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fWSyveEX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720703995;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KQAneCFk7IMzHAKN9/AEAYz+zztVPj5RlKnWcmXPprE=;
-	b=fWSyveEX2pDKopsfQ84jgbkJx2t4fd5BVK9ElHuF/1f6KHxNaR6YGBgi4iTn8/dRyGczb9
-	yhtsouJxRj7brAv7eW75m8iOw4FDPduE5jRF56mrbCOoxMSQgab+wkH0e3PTZuVgFXoPbs
-	rGW5M4QjwTtWQ7aWJDfMqpAWbm9zk/Q=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-RhZZrTalNhum6sBZHdVoig-1; Thu,
- 11 Jul 2024 09:19:45 -0400
-X-MC-Unique: RhZZrTalNhum6sBZHdVoig-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0A7019560B1;
-	Thu, 11 Jul 2024 13:19:43 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.111])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC31E1956046;
-	Thu, 11 Jul 2024 13:19:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Eric Van Hensbergen <ericvh@kernel.org>,
-    Latchesar Ionkov <lucho@ionkov.net>,
-    Dominique Martinet <asmadeus@codewreck.org>
-cc: dhowells@redhat.com, Christian Schoenebeck <linux_oss@crudebyte.com>,
-    v9fs@lists.linux.dev, netfs@lists.linux.dev,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] 9p: Fix O_NONBLOCK read behaviour in P9L_DIRECT mode
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="D2mA1RMZ"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42565670e20so11919655e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1720704014; x=1721308814; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ym2mv6R1wISSehFAd6D4uPYCq8YgxL980mxPOz0BbwY=;
+        b=D2mA1RMZE9YuEs/r7M/E8aHSmCzlLDGJ3SrL6cO9ZNGe4sGmyDThTfiml7kqDERQOv
+         m83GSrOLw16TUU/l7ek2XKNloeNAHxJwGnbRsCYDD1DGyph9ezAfGG3Jrlr34r/HIE7F
+         Y4sUgFHjMYwCVI7q97VQyP9e5khZL5UxpplSbFzl3Kn3wAtxssRu7dG29QJ+YAFYRF1Z
+         MMgkjbsRT72iIsGqyUlYecX+kUztnXLkmqqYdGD0lbdsAOIwfjfthXInAxqALkZx57Bv
+         hYeLa5P/2o4KezGfnEOC0t42UmbwDd6Xs2hZ2ReHEn5hX9QMgyuuBwPItrjQJgijEXfA
+         jyxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720704014; x=1721308814;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ym2mv6R1wISSehFAd6D4uPYCq8YgxL980mxPOz0BbwY=;
+        b=K3eII8CObypZgCtxB3BGxK7CYaC839WciRWJ4cTPIdFNeudeg/aIe4rafMtBIjYYcK
+         WQFrGTWI93Oj6SqEsd5NrCDXhXWrjJCoIreNZAlzdlS1jqmNOSp5H7ugHorI66kQXm5p
+         cPVmCk84xovTRRFpJzyjCi2xY8yBjVEEX3iH376XzAsfA9zXEoDkFME1JIL22lFTt5bw
+         J/T7B4XxzEWoeakEeoMWCN7yG7vcYq79qLSbri6ZR9xxeLVt1Z1/crxn9Kv7XK07mVHW
+         F/bYRtdXm4dZQcrj/byohsKrRBTWCqc9HtWdr37Ox5WMHH/gFoYDTK2JxTG4Tl+K4Buu
+         QA5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUPz6NHiQTxhYDR5YF9kLFgekC2m5bh3dQl5vwvHw/hDa+wa27HNTlcVfdRjhOyPhaYwgfXTgVDtUUsb9RBmtIoTrMCXZxxaqFdn30W
+X-Gm-Message-State: AOJu0Yx+poZemuCfO3N0RVy0dWIKUVbPebLwWqfQItplNBimDy1GckCd
+	EyTICNXXrkFsbu71SVP7GJ5c1HSCh4iJIUmA86+8FJLLLSbyKyE++MYfYCe/TmI=
+X-Google-Smtp-Source: AGHT+IHDlGShq8OX6brCIrvM/SSvzZHCPM5f95IdzjifVjJpmMGv26lmBMO1Glf+xHPW9s2m+p7h6A==
+X-Received: by 2002:a7b:c4c7:0:b0:426:6fb1:6b64 with SMTP id 5b1f17b1804b1-427981b7727mr24132235e9.7.1720704014338;
+        Thu, 11 Jul 2024 06:20:14 -0700 (PDT)
+Received: from debian.fritz.box. (aftr-82-135-80-26.dynamic.mnet-online.de. [82.135.80.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279731a60dsm44652145e9.40.2024.07.11.06.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 06:20:13 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] dmaengine: dmatest: Explicitly cast divisor to u32
+Date: Thu, 11 Jul 2024 15:20:01 +0200
+Message-Id: <20240711132001.92157-1-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4058792.1720703979.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jul 2024 14:19:39 +0100
-Message-ID: <4058793.1720703979@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-With the 9p filesystem, in P9L_DIRECT mode, if O_NONBLOCK is set, a read
-should terminate after doing one piece of I/O.
+As the comment explains, the while loop ensures that runtime fits into
+32 bits. Since do_div() casts the divisor to u32 anyway, explicitly cast
+runtime to u32 to remove the following Coccinelle/coccicheck warning
+reported by do_div.cocci:
 
-Fixes: 80105ed2fd27 ("9p: Use netfslib read/write_iter")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218916
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
+  WARNING: do_div() does a 64-by-32 division, please consider using div64_s64 instead
+
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- fs/9p/vfs_addr.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/dmatest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index a97ceb105cd8..b443024bf715 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -77,6 +77,10 @@ static void v9fs_issue_read(struct netfs_io_subrequest =
-*subreq)
- 	 * cache won't be on server and is zeroes */
- 	__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
- =
-
-+	if ((fid->mode & P9L_DIRECT) &&
-+	    test_bit(NETFS_RREQ_NONBLOCK, &rreq->flags))
-+		set_bit(NETFS_RREQ_BLOCKED, &rreq->flags);
-+
- 	netfs_subreq_terminated(subreq, err ?: total, false);
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 1f201a542b37..91b2fbc0b864 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -500,7 +500,7 @@ static unsigned long long dmatest_persec(s64 runtime, unsigned int val)
+ 
+ 	per_sec *= val;
+ 	per_sec = INT_TO_FIXPT(per_sec);
+-	do_div(per_sec, runtime);
++	do_div(per_sec, (u32)runtime);
+ 
+ 	return per_sec;
  }
- =
+-- 
+2.39.2
 
