@@ -1,104 +1,125 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC7715ECDF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AC215252E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720703777; cv=none; b=MbZUO+PLpDdJgDuce9Jpg/BJpoYRSv02FhdixlIQstbW3Ry66cj23a3cZvCli/4yBBq8Q09bhE6XE3eslnFv5AEAa58Ejci4BpghBqv0iCoIS5hWKl+KOQ3jiZ/tSQu4gjBvOUSCovdsnisoitG5d0amLWDqWkCOkNHMKsPrgaQ=
+	t=1720703802; cv=none; b=UferMrku985zASsAgxsFuRP3HkHIf5iPL3tkNUdY9Q97MCTe1/+o1jfnVHtRtV2Gi8oB5sCbcvff9cWmT1ZSWOJlDHDoSsD1/RoNhJtwh8acBzSSmrAhyr63UFCeJI74qP38bWRZq/7wMP5Lb+/ARyLDjcg70e2VKuwRkCqw4g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720703777; c=relaxed/simple;
-	bh=h/SnQjeIotE/r0mBrmeTceepJ5qYMrJlJH23q1ifQhU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fAFd5qqKNe3TTMl62Gnpjibd8K2KJYZOFvUPJoZB+Pu+H2pSRVHGRgtKk8aI6Jg6jvKxMKrErVeSx5ZuFK6oKYg4bJ7rgC8TJ5tBbotqE305WmZl8MCgtwgFRoeohg4ZaOWz3AaNJ3JYkPRgKbVLh2FWbn8XfK9IayNu/UAKwrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJksXENK; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720703802; c=relaxed/simple;
+	bh=4ikN8JjZ+bXsTenqm2X8BKNxzCzpZv4nGiKyu8dkyWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FEqn3Ta14QqoELabbGUK67M9vw/L5iZyhyG6rYQWEqKgA76ztqC72TLJec+Imhd1ehy7M9qZ6jaYj4wRNDNRgC0NIDTjzwe5GsG4kAnA82O5I5pajOC2LQDdON6rRWlZadHI11HyaLJZvDNYBt1MyVhz5zXusDBfNt4KueUXCmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eiHXWkjD; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJksXENK"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4266fd395eeso6308405e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:16:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eiHXWkjD"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70b0428f793so685927b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:16:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720703774; x=1721308574; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C+btIB698AoBarUXfbFVZZbKwRwcIjCEhAp+IjhWQE4=;
-        b=FJksXENKjGYQsiIsUkSH16iKviQ8SP0Loy4WFwKnNtcZhD96zpA/RwZIxSz15pShr2
-         cQ0Z5sZ5zW3xTuMh0QYj++cWIOjit7NHwqxBIg+vnK35tIYPjlHNfwfMpEGZCb/sM6Eq
-         hsscvTNZmqJCntPKiz87Cuj4RG8H0rQH5LJk6iyQqO3jZgStcdZ+oA+JzykdMb0QDodV
-         RBgO9Rlb1EEIN7AVFwKe6OH8KsS6ZRxDZ6ZKHk4tAthqfiXu0z8b89roRK0iYM9JiYhq
-         BFyFg4QY0H3JxlJsg5DlZsUP6MMNPhUkog6FcN3cgQMmvUhypLRhb8WmpMzzj/u0bXa1
-         MIRA==
+        d=linaro.org; s=google; t=1720703800; x=1721308600; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wuplHtDIUsY+v60dipyWU9k8SUH+WJQjVihPpkXe2os=;
+        b=eiHXWkjDVLIUYlWvL56YD/VvZQRnfVI0njAfBQwZPsTdZ8xYqhkx3j5LndmnBn0fHg
+         pNxNn8scVZcoEl8CqGH5r9QONkaJVlBsRS0QinN1DT1xKcuhUGdsCz+8zkbQij7xRXN9
+         594WWeEuBjwKUb+4YwBFwY7oGy4nwEievCX39QaQE3G2NWW+IhtH8Yz01j9M8ikGM9Mq
+         4n7dpSpP9gWO1Ssubdw61N8W/4OGiBLwzu5yFPeFUkj4t8q5WVrYAeNbw0nOH/ObhpNf
+         W0BpsKtQ02nK3hLpqxKrRQX8qSMq+ekiZk5ffoGX55OsPKOumzQCEGx+4539INkG1ek1
+         COAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720703774; x=1721308574;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C+btIB698AoBarUXfbFVZZbKwRwcIjCEhAp+IjhWQE4=;
-        b=bzIzKr9JqgQKB50M1qbgERIsgtYrqRlQCTS+mitf6Lfxx8uVyMiPJuRjQyeYCmefsh
-         QC+uI3AlaW4tzGGZHR2hm0fCr503lQ/CuvolZFnHsBoZ+chiHXJy57UEeCx+DITrOy8L
-         GxCnfw+noXtpqb3302qd609Q6dx2RnQuT65TLFTRqeoXuP6YXiEt2gDO5WuHjsVO7Sok
-         bJ7HPHECk6gsywbXtLBmzbU7kcT/E1m7hEccaXjRuwOCFyncCFXpLkjwN5KDAwORumBm
-         a16w44ddH0pOEBdJdx4JzztV3xzvIko0i5Xg+H+a9KNySCubIOA+Og7jaH0Hr/zziDa0
-         zPUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdRGk6yYwMzrCirq1THejkA3GILa/Q7EoCUq2MuP0Hzt11X07YWSkDs66BWyiFZATXDzjYZPORFWqWXQqxRF8MaWBJFFXH+lzLZYg4
-X-Gm-Message-State: AOJu0YwxyPV1NPx9RxayUZXB43M+HZdRPAA6drOwbPsikPvgcy9RyN0m
-	L3TzltCwPxm03Fq6IGBDUksHswQkv8snwWddIFI9Hs4BUSiaiSP2
-X-Google-Smtp-Source: AGHT+IFL0UaiWD7mdTfNHJBjD/TlYPEODih+gOwr8wL08Wda8w+hrgiHASHLfRhsDgZcttdrt9CW1Q==
-X-Received: by 2002:a05:600c:54ca:b0:426:6902:7053 with SMTP id 5b1f17b1804b1-426707cc0d7mr58888065e9.15.1720703773802;
-        Thu, 11 Jul 2024 06:16:13 -0700 (PDT)
-Received: from eichest-laptop.gad.local ([2a02:168:af72:0:49a:1bc0:a7da:9525])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4267255858asm74132645e9.0.2024.07.11.06.16.12
+        d=1e100.net; s=20230601; t=1720703800; x=1721308600;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wuplHtDIUsY+v60dipyWU9k8SUH+WJQjVihPpkXe2os=;
+        b=Brh/QjJAWkzbcnLf4np0+CSguw6+lgfRu480lNluYvtAibZBER6FpG+IWw6zr20DCk
+         bjSFTc6CRfudwN7jnfVswz0SvH6r5ws6gkcreg1+hjwymcwOS/otFYrLUD5Gtvh9+1Rr
+         T/VTshMMSgks2NfZtWG/BkMiBmQ2CLqooEuoGljMmAOHQmjwmHiDBCdrKnUsNYvbmTfB
+         qFljv5dToPOJ00BTjmX8QbyLtJ+0jqQii8P2lei3is2EbQ0GsmBJ8dxrmmEmZD7OybOi
+         GK2lSINPmZPpzuteSlZvDvVcAbSXgVOSZ8F8EA3yRHc6hw90ZF9JcE0HatBzQYKJAGJu
+         j85A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7eQ8azpADkFOmB/AUjO++hVcdZ3oLPVGMlxBWSu22HIqe8lpwDAB0hkruWjEWhsA9upesqrAz1mryNjG1hvVnLR2m+v/mxVLR4QQZ
+X-Gm-Message-State: AOJu0Yw0TrlNtqFm5cUBkbNH3BmG1Czb/annkXHzI6K180DXPYUR6MGy
+	9DCmsp+jpWaqCXN+40ydwJff7yTQ1pZvXGyZqUQVqdvAbtO4yMui1Qwywix+deI=
+X-Google-Smtp-Source: AGHT+IHZ3UH1ty7UF4a3wIr5FEGH2dlGV92koJ4rrmQlAuhh3VFAuItSKIUZOvFCugjqmOgiWXH3+w==
+X-Received: by 2002:a05:6a20:d50b:b0:1c2:9f03:82d4 with SMTP id adf61e73a8af0-1c29f038726mr6683433637.53.1720703800081;
+        Thu, 11 Jul 2024 06:16:40 -0700 (PDT)
+Received: from localhost ([122.172.84.129])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b4396ab5esm5794716b3a.140.2024.07.11.06.16.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 06:16:13 -0700 (PDT)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	sergio.paracuellos@gmail.com,
-	florian.fainelli@broadcom.com,
-	krzysztof.kozlowski@linaro.org,
-	eichest@gmail.com,
-	robh@kernel.org,
-	frank.li@vivo.com
-Cc: linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] phy: marvell: phy-mvebu-cp110-comphy: improve eth_port1 on comphy4
-Date: Thu, 11 Jul 2024 15:12:47 +0200
-Message-ID: <20240711131612.98952-1-eichest@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 11 Jul 2024 06:16:39 -0700 (PDT)
+Date: Thu, 11 Jul 2024 18:46:37 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, Nikunj Kela <nkela@quicinc.com>,
+	Prasad Sodagudi <psodagud@quicinc.com>, linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] OPP: Fix support for required OPPs for multiple PM
+ domains
+Message-ID: <20240711131637.opzrayksfadimgq4@vireshk-i7>
+References: <20240618155013.323322-1-ulf.hansson@linaro.org>
+ <20240625105425.pkociumt4biv4j36@vireshk-i7>
+ <CAPDyKFpLfBjozpcOzKp4jngkYenqSdpmejvCK37XvE1-WbBY2g@mail.gmail.com>
+ <20240701114748.hodf6pngk7opx373@vireshk-i7>
+ <20240702051526.hyqhvmxnywofsjp2@vireshk-i7>
+ <CAPDyKFoA9O5a6xZ+948QOzYqsRjk_0jJaSxeYRwx=76YsLHzXQ@mail.gmail.com>
+ <20240711031356.rl2j6fqxrykmqfoy@vireshk-i7>
+ <CAPDyKFocjOt+JyzcAqOfCnmTxBMZmPjMerSh6RZ-hSMajRhzEA@mail.gmail.com>
+ <CAPDyKFoWgX=r1QtrcpEF-Y4BkiOtVnz4jaztL9zggo-=uiKsUg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoWgX=r1QtrcpEF-Y4BkiOtVnz4jaztL9zggo-=uiKsUg@mail.gmail.com>
 
-According to the CN9100_MPP_information document, CP_SRD4 (comphy 4)
-supports 2500 BASE-X and 5000 BASE-R for ETH_PORT1. I was able to test
-that 2500 BASE-X is indeed supported. Unfortunately, our HW does not
-support 5000 BASE-R, but I assume from the document that it does, so I
-set the muxing there too to 0x1.
+On 11-07-24, 13:05, Ulf Hansson wrote:
+> On Thu, 11 Jul 2024 at 12:31, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Thu, 11 Jul 2024 at 05:13, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 10-07-24, 15:51, Ulf Hansson wrote:
+> > > > I think this should work, but in this case we seem to need a similar
+> > > > thing for dev_pm_opp_set_rate().
+> > >
+> > > We don't go to that path for genpd's I recall. Do we ? For genpd's,
+> > > since there is no freq, we always call _set_opp().
+> >
+> > You are right! Although, maybe it's still preferred to do it in
+> > _set_opp() as it looks like the code would be more consistent? No?
 
-Signed-off-by: Stefan Eichenberger <eichest@gmail.com>
----
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Since the function already accepted a flag, it was very easier to just reuse it
+without.
 
-diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index da5e8f4057490..fefc02d921e69 100644
---- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -244,8 +244,8 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	GEN_CONF(4, 1, PHY_MODE_USB_HOST_SS, COMPHY_FW_MODE_USB3H),
- 	GEN_CONF(4, 1, PHY_MODE_PCIE, COMPHY_FW_MODE_PCIE),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
--	ETH_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_2500BASEX),
--	ETH_CONF(4, 1, PHY_INTERFACE_MODE_5GBASER, -1, COMPHY_FW_MODE_XFI),
-+	ETH_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_2500BASEX),
-+	ETH_CONF(4, 1, PHY_INTERFACE_MODE_5GBASER, 0x1, COMPHY_FW_MODE_XFI),
- 	ETH_CONF(4, 1, PHY_INTERFACE_MODE_10GBASER, -1, COMPHY_FW_MODE_XFI),
- 	/* lane 5 */
- 	ETH_CONF(5, 1, PHY_INTERFACE_MODE_RXAUI, 0x2, COMPHY_FW_MODE_RXAUI),
+> No matter how we do this, we end up enforcing OPPs for genpds.
+> 
+> It means that we may be requesting the same performance-level that we
+> have already requested for the device. Of course genpd manages this,
+> but it just seems a bit in-efficient to mee. Or maybe this isn't a big
+> deal as consumer drivers should end up doing this anyway?
+
+Normally I won't expect a consumer driver to do this check and so was the
+opp core handling that. But for genpd's we need to make this inefficient to not
+miss a vote.
+
+The problem is at another level though. Normally for any other device, like CPU,
+there is one vote for the entire range of devices supported by the OPP table.
+For example all CPUs of a cluster will share an OPP table (and they do dvfs
+together), and you call set_opp() for any of the CPU, we will go and change the
+OPP. There is no per-device vote.
+
+This whole design is broken in case of genpd, since you are expecting a separate
+vote per device. Ideally, each device should have had its own copy of the OPP
+table, but it is messy in case of genpd and to make it all work nicely, we may
+have to choose this inefficient way of doing it :(
+
 -- 
-2.43.0
-
+viresh
