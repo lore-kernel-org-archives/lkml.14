@@ -1,105 +1,189 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2041.outbound.protection.outlook.com [40.95.110.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EBD175AD
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720760424; cv=none; b=nt2iMzxj5KRaPkI7XqfhZtPtIynLDxAPQNIvM+GSxSqzxlgmn4HK7w3VwGBCXMX2B/28l+LTIKdCGoxbHOxyfiKz5/dbVft8wkke3bJoQdFQZSUj3GTON8WX4l8pqRV4lNG21kmtf0V/g/Sag5s/pUpJuT1dcLKpIk5NFMrf75M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720760424; c=relaxed/simple;
-	bh=xtREc+nIH3/pIs22PXknrsxKAv9mk8z/DpRw7fu7kso=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ix3Fey0ucEu1H/CGtikyY7Ta3oCAZ9j3cHwTUTyADfe4xOPEsA6zPhuOPs6RAW8ZZePyNzo9SUPePev/jyNnQ98Ka3T9/xMCu9QxlVdfCZBfYqwpIdpbY9jdM+RWEHe6nVKGzKmNnF4d9dwG7uSte285XEAuhvQSV0ajeirPypY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pB7faLpe; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4511156CF;
+	Fri, 12 Jul 2024 05:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.110.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720761066; cv=fail; b=S9uLFmGVpFilvjLLhUNRcG+1aYuehsGkamOLVA5aVf69TyWtzYCy2eqfSDp+j3UpQbtLOARu5alIV/HcseZfSs+x7sSb35hTE80xHCpqGy6BtdFAoj3cjy+SyKEy8jY/OMGxvNIt9Ix42SZqFyZxWHoNAnQ00sINJs8vxhEBb4Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720761066; c=relaxed/simple;
+	bh=b6HQOk/rtPO9YycvjTdiBHG4+Cy0LVY16plRWmZZyc0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ICYT0Bava7P6IKTXi0XBAoVgcnXn4ekwsqm62QeYJNigm0w/4nCcqHdIAV0f5rw4Bo5dr4qHbQTZzWNav8Exbbc7nLFb5f6iUsVcViIf0vEExKzeZoOhwbriOwrk+Li9KIa1ase5+aIga5Z+iBDwoHFKH/APdrQ5hu9XHomPmn8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=LWjy0NBo; arc=fail smtp.client-ip=40.95.110.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pB7faLpe"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-36796d2e5a9so965781f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:00:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="LWjy0NBo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=d3To1Gr5u+Ceehlu7xBq87msxvAhrN6h8KUW9dNOhGFzkXfjbukvZ24RRFC5v8QgbSA9Ude2EuekoRIFtBrkzy3xMtveWQyS7cKa1vTExYcne+4Oxktbw2m6ZESd42ZvrHJHU7AVozdDkY0qSPzi4PiI8++Pj8lY0bwBxX0Rs8ji9t1L1hwvE6Eb4rCCHXvy1lcJpRn2kq9wrh4BcOz6ePspb8zS9qU0sP2T4x8eAuqV7CAVZ9V3jne9ByZIXdqUWnGepBNi19GfWZpfrKj8pj81TObKQWOk8cp6zWn/D0CvT/K+OaRxtC265N5+YANpUf8cgaUQp6Pm7p74dMLNGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FxUKd2ZwHOmlo0sxM05/1HGUqehwogVpIdh5YE8ZoQU=;
+ b=q0aHgmbWhptJ5A2TZcG3OoaK/wLC4gl7kke134RTwVTKMZI86DXqsn2lmgo44z16gqhw5x9jZzDmqItltHMkF27915lgC69OnSslNkOi0VS9Ez1r4ClRZCBiQLBtWAqXo08JNNc5EDwwgQKU7wWpZ/sORViijaKUTUJB12+KKly0DpJSLCyk+DWwHtehah8mQ453kEo13ngKIg+A4JASBIh/kB28l2k/uJz9R652RLlP0k/ro3gfF3kUgZiIC7Hvsm9OZfxuddxdplBnUd7Qvx+S5nsAVeQp2w8xUHWtYKVgOS3XH5RWLuquY9NBQp8EV8k4gHjaf2X0VrNHr/0PLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 175.98.123.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
+ dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
+ dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720760421; x=1721365221; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xtREc+nIH3/pIs22PXknrsxKAv9mk8z/DpRw7fu7kso=;
-        b=pB7faLpeVi+WDWOq3IWH+hnI0QFI+KQGUj9uO4ENgazkYZg/8+gdHfguV9/fhEGip6
-         GaLl72DnNJZV4NKmdXk+sjUcAKRDt65rH5HZsrC3uS8YynIpgz6/CQGPFwcvNiA10pvd
-         m7zAdOxfsoyCLsPOTVi0UCjW6zwW2fzBrjJE4xjRKsiHCT1qt5KnR1ZvdXSroJBgIn/Z
-         qMlY6S1ufdNYC+pzE6LLcWHjT/YAmRG3mHPk/Ta7MTjx53k+rK4a7EVwAKXDCNvCcOjR
-         1fxomeSf7pKaWfryWiEU0fCCdBdIyasWkS73BE4TRtXjEQTgu8tuzDku4k5V1QYnMrSX
-         mD0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720760421; x=1721365221;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xtREc+nIH3/pIs22PXknrsxKAv9mk8z/DpRw7fu7kso=;
-        b=aDbSwgdYMnrt3w2th3wslREOzoTV5zz0eneMtbIodsgBzpbOiXOANq5gjYrdn7epk9
-         aQaX/I4HNkyAplNp/qv0JMlKhOAKvJ9pODGuhujXH/fmQ0lCdVgiAo1sLo6J6l+l02Nl
-         pkZ6usq7cHRPTeiaPKCR9/pjOKuMqTTOisWna5oWUauX/oxAoM1j64xoa9AlvvLlasH3
-         I3Hcf37sHn/WQXJIimdCB5WSH7fqWzbOVWQFdWSH7K/4JmVqBBNz6z1azZvRNHWIItnr
-         2rnHbeMJQsCzRcXArI0Y7RjhUOEEmqx8MsjZyz2EvA8BkEmX73i2W61bGbc+4qtPRmy8
-         Dasw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZzW6nTIZ+Uj34yji1BHIWem5SxZ8QbhArdv1NIPcy7se9nnlkuqPOgPyDaULxhgriSw/wczM3J5FPGrDq8/0sgvSbAIFZVX+XGm+y
-X-Gm-Message-State: AOJu0YzAnRgIRwCuRUzcc6VVzWXkMDCsHj3/WR610R5yu/jBOc+cQ5w/
-	y/AKex1t0Vmau6Kq7eZ9zNKSW02eCAG3GUkX5KKB1wb2eX3QTNSEWG3QXCYbRCI=
-X-Google-Smtp-Source: AGHT+IFiYFIGKJfQyPnchd/fwzShUwNh2360VhDrC8CiwYOSi3Z+91egB0zDkeO+M7mP7Zw60Obmkg==
-X-Received: by 2002:adf:f584:0:b0:367:993e:874f with SMTP id ffacd0b85a97d-367cea8f98fmr7195391f8f.34.1720760420550;
-        Thu, 11 Jul 2024 22:00:20 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde89198sm9143958f8f.60.2024.07.11.22.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:00:20 -0700 (PDT)
-Message-ID: <74fd5d7cabfda98f578b5a4d4f4df1adba05ca3d.camel@linaro.org>
-Subject: Re: [PATCH v3 2/2] clk: samsung: gs101: don't mark non-essential
- (UART) clocks critical
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Peter Griffin <peter.griffin@linaro.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi
- <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Michael
- Turquette <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Sam
- Protsenko <semen.protsenko@linaro.org>, Tudor Ambarus
- <tudor.ambarus@linaro.org>
-Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Date: Fri, 12 Jul 2024 06:00:19 +0100
-In-Reply-To: <0faacbeb-2ca3-4749-89a8-6dd81621a07d@samsung.com>
-References: 
-	<20240710-gs101-non-essential-clocks-2-v3-0-5dcb8d040d1c@linaro.org>
-	 <CGME20240710132933eucas1p1b4367ec7a3938a39e732b3079eff6f32@eucas1p1.samsung.com>
-	 <20240710-gs101-non-essential-clocks-2-v3-2-5dcb8d040d1c@linaro.org>
-	 <0faacbeb-2ca3-4749-89a8-6dd81621a07d@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3-1 
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FxUKd2ZwHOmlo0sxM05/1HGUqehwogVpIdh5YE8ZoQU=;
+ b=LWjy0NBoLLUQk6YTjA/1Lu4Lt9ZA7GS939yLK/y/vIfJwHkZBQCKLYIq6OWiY3A2VqnfcAU3Vc3G7kvJpMapxGp9JM0ri2KNaj2gTa33ODuTO9NTe77cuuK+BiQaZfTHtGET0/+ek7eY4EKWLSxosC5HY2c0rTbenNmU9aQ2QIw=
+Received: from SI2PR02CA0010.apcprd02.prod.outlook.com (2603:1096:4:194::15)
+ by TYZPR03MB8133.apcprd03.prod.outlook.com (2603:1096:400:45a::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.22; Thu, 11 Jul
+ 2024 19:37:59 +0000
+Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
+ (2603:1096:4:194:cafe::25) by SI2PR02CA0010.outlook.office365.com
+ (2603:1096:4:194::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23 via Frontend
+ Transport; Thu, 11 Jul 2024 19:37:59 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
+ SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 19:37:58 +0000
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
+ (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 03:37:56 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 12 Jul 2024 03:37:56 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 775AF5F675;
+	Thu, 11 Jul 2024 22:37:55 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 76600DC0F7F; Thu, 11 Jul 2024 22:37:55 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <linus.walleij@linaro.org>, <avifishman70@gmail.com>,
+	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
+	<yuenn@google.com>, <benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 2/7] pinctrl: nuvoton: npcm8xx: add gpi35 and gpi36
+Date: Thu, 11 Jul 2024 22:37:44 +0300
+Message-ID: <20240711193749.2397471-3-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240711193749.2397471-1-tmaimon77@gmail.com>
+References: <20240711193749.2397471-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E6:EE_|TYZPR03MB8133:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3cd5fd9d-a4fa-4bf5-0c47-08dca1e0f810
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|48200799018|7093399012|35950700016|61400799027|35450700002;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NlEcbF9L4OmS37US67uDdof8ps3lq7PMngjiNk9cPDSk6/GByArMibbhiEJV?=
+ =?us-ascii?Q?c7qAf4W2N/QdmS98Hp7F+uwauh+9ATfEJXa1n9jq+Pxk304jdyDAt6dA7MTL?=
+ =?us-ascii?Q?ogQ7ZjI9qDyiV+GcEpOzYB9b1TN+7vbkfpXwDXJOzYp2qP8IyL0EuDZKV1SZ?=
+ =?us-ascii?Q?7GvXHyQTXwkDXbYDrg3wrDl80aTbuo9Jrem7nB717ScIVlv2vUc6WCqPWOT/?=
+ =?us-ascii?Q?vt3rVxw4w08HgZNxkdjRf822/hnpafr2WBOYc6DRcF3fGSSiLx73CSmRqPrS?=
+ =?us-ascii?Q?DEf31fNyknnzouJHt3DuXH6Bj7F5bJPfaYFwJ/FxJA0wGDFyQ7wrsHFK7mOR?=
+ =?us-ascii?Q?A2p16fKQVAdqYO3ieK4N6aU/yEP0vjzoXGiDH3TPX8MtZ0+X8aU7GW1ym4j+?=
+ =?us-ascii?Q?0cqYTXl1x6+VI1r/dXDqoaG7RN1qpn2VUDgTiAC4tx2Fk6+fPmts4V8OkGwU?=
+ =?us-ascii?Q?2efqn1UoEZMjHqiC0rLTTsaJTYIFobsTWIJ+Am3rYm0/CSQHmsQOTIiJhl8t?=
+ =?us-ascii?Q?HBGVGBekvmLQBU4VNSwrQZOmO1AlQtI+pozqZEWcdehYXoXKe0Lgx9ANOknl?=
+ =?us-ascii?Q?xIe93aefwgl6pCZQ7laB1Fqi/eINQiGd0AHofgKEaYI3Tp4Ac6s6ho0uPOel?=
+ =?us-ascii?Q?tViF/ZJYHqL9hESz2c8W/StZ3j49ZIca25kES8Jr7jfjU3miq76snLqCRmb5?=
+ =?us-ascii?Q?wgOYGp/NEmJasW/XphTG16gZfTJXjFZ9PW9rD5IoBhRmhAIs2ik47CAmeq6m?=
+ =?us-ascii?Q?XgNJMY2zyA4hoe0hYTW/sgxS+ppUQWv4SFMkBqAUzGQhvqokuWKnSqwTiYPn?=
+ =?us-ascii?Q?5unEpPvpXrphTj442EPU/xXdO8HzJ8hk8j+Tzmuxv36COgz9oWm+CgGrd/hM?=
+ =?us-ascii?Q?8c5LBzP8h6N4dFQ5S4GYmkQUCPjvTInnwqEsoGQCuG3niVssKeMKoE1HbdiK?=
+ =?us-ascii?Q?JuspmReWPVTazz2Zictj0ZPHMc/GZGlVeR7KRQI2BrJdBXtQpSEc0M2SuT/0?=
+ =?us-ascii?Q?//0odG7bFm7lULLvouwk1pKn/hcBY/hHBoPoe1TWWHKpHRphs5Ko68tZvjeB?=
+ =?us-ascii?Q?vmhQhYHzcpGxdC1ayaKYGrnlGvGJDCCIX0691KkRmLxbS3XhWMTpzPiIRnH4?=
+ =?us-ascii?Q?2s2oLolRfM5L+ZNhIIPs2JCWM/gXrLIWLkuee+1hTyCwdDOj4L+kkuHijuCi?=
+ =?us-ascii?Q?fnXajsK4Udw/uCfRfOjyvBr2CL3hg3mhTib9aWppf8QYIHXlHVABZSY6b1X3?=
+ =?us-ascii?Q?3HOKYZf529pVO3YrNZ9wL7fT0Ml/wZ0lCQuArxNjRrDM3+j/+n1OHFXku5UY?=
+ =?us-ascii?Q?zwvE6iwcOkrZEjI4auUzByFjyRlt55oQMy4GYZ1ryMPrEkuTtuXdOZQGd9o0?=
+ =?us-ascii?Q?ggxFhipoKd+us/zzcLIojIBEA++oN1u/1cWUK0QXYwS65PIqFDUARAEpH672?=
+ =?us-ascii?Q?ZPyepcaf6D+CTvpYYabizKWfN4GTenHBx8Eh9HOLSP0urz3ijgHzyw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(48200799018)(7093399012)(35950700016)(61400799027)(35450700002);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 19:37:58.5377
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cd5fd9d-a4fa-4bf5-0c47-08dca1e0f810
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG1PEPF000082E6.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB8133
 
-On Wed, 2024-07-10 at 16:35 +0200, Marek Szyprowski wrote:
-> I think that it would be much better to check if earlycon is specified=
-=20
-> in kernel's cmdline and if so, simply mark those problematic clocks=20
-> critical in this driver. Make this code hidden under=20
-> IS_ENABLED(CONFIG_SERIAL_EARLYCON) to avoid polluting release builds.=20
-> Any comments?
+This patch adds support for GPIO pins GPI35 and GPI36 on the Nuvoton
+NPCM8xx BMC SoC.
 
-Good idea, I've found that i.MX appears to suffer from a similar problem,
-and I'm testing something similar now:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
-vers/clk/imx/clk.c#n157
+The pins are configured for only for input.
 
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Cheers,
-Andre'
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index 0cd8a5e00cde..cf021d0e8099 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -316,8 +316,8 @@ static struct irq_chip npcmgpio_irqchip = {
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+-static const int gpi36_pins[] = { 58 };
+-static const int gpi35_pins[] = { 58 };
++static const int gpi36_pins[] = { 36 };
++static const int gpi35_pins[] = { 35 };
+ 
+ static const int tp_jtag3_pins[] = { 44, 62, 45, 46 };
+ static const int tp_uart_pins[] = { 50, 51 };
+@@ -1366,6 +1366,8 @@ static const struct npcm8xx_pincfg pincfg[] = {
+ 	NPCM8XX_PINCFG(32,	spi0cs1, MFSEL1, 3,	smb14b, MFSEL7, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(33,	i3c4, MFSEL6, 10,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(34,	i3c4, MFSEL6, 10,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
++	NPCM8XX_PINCFG(35,	gpi35, MFSEL5, 16,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
++	NPCM8XX_PINCFG(36,	gpi36, MFSEL5, 18,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(37,	smb3c, I2CSEGSEL, 12,	smb23, MFSEL5, 31,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(38,	smb3c, I2CSEGSEL, 12,	smb23, MFSEL5, 31,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(39,	smb3b, I2CSEGSEL, 11,	smb22, MFSEL5, 30,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+@@ -1611,6 +1613,8 @@ static const struct pinctrl_pin_desc npcm8xx_pins[] = {
+ 	PINCTRL_PIN(32, "GPIO32/SMB14B_SCL/SPI0_nCS1"),
+ 	PINCTRL_PIN(33, "GPIO33/I3C4_SCL"),
+ 	PINCTRL_PIN(34, "GPIO34/I3C4_SDA"),
++	PINCTRL_PIN(35, "MCBPCK/GPI35_AHB2PCI_DIS"),
++	PINCTRL_PIN(36, "SYSBPCK/GPI36"),
+ 	PINCTRL_PIN(37, "GPIO37/SMB3C_SDA/SMB23_SDA"),
+ 	PINCTRL_PIN(38, "GPIO38/SMB3C_SCL/SMB23_SCL"),
+ 	PINCTRL_PIN(39, "GPIO39/SMB3B_SDA/SMB22_SDA"),
+@@ -2045,7 +2049,7 @@ static int npcm8xx_gpio_request_enable(struct pinctrl_dev *pctldev,
+ 	const unsigned int *pin = &offset;
+ 	int mode = fn_gpio;
+ 
+-	if (pin[0] >= 183 && pin[0] <= 189)
++	if ((pin[0] >= 183 && pin[0] <= 189) || pin[0] == 35 || pin[0] == 36)
+ 		mode = pincfg[pin[0]].fn0;
+ 
+ 	npcm8xx_setfunc(npcm->gcr_regmap, &offset, 1, mode);
+-- 
+2.34.1
 
