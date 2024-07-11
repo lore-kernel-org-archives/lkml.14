@@ -1,176 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48663376E5;
-	Thu, 11 Jul 2024 16:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634A716CD39;
+	Thu, 11 Jul 2024 16:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720716703; cv=none; b=fB3gPlKmE4ef5BSqNjA06gTnYaX7kaZtuJz4X3R+ZOn1WctczqlTa9hStjFTvQnVwCoPWcpWF66MCgL0Ufod/jzzt6sMOD8g0wo0lYXuL9nDHYRqVzOkyCp9wtuOpikGchiiyeb2uRLSgRhyghWKuM6RmkXj42BGniiYUvo0P4Y=
+	t=1720716878; cv=none; b=NU37QwA+3VG43Q7pMG59AHif9F+tsG4dQA5v9VmvG3HFboXgYb3OKZOZ4XCx5XDgXQgoc1rdeFHWaGuHL1dc1JIoUzLsERgiis4pbv63LYpkeMVtnAC+R3vGd02JDSlDzQ/O+mE/AcqSPVXIe2BkyL1wZKX6AB0dOd+gQy7tQfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720716703; c=relaxed/simple;
-	bh=kmGbtXEsMjJy/wpU2hA6AuW+oaSd10dmF9hCafZ07GI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mA90HvSnsn+MnFClJXV6JAEb2gUoDBuZiHZq2RJ7WbvFcmBrU4LxTP5FbfApaY0dZrt/apPf3RYh+AtJTFUJwRWk31LD5bDbBF0sqX9Ukk7D3vfBsedGUC+Fi5I6GnKHXRrnKcayQJzmVmw9VwmlHw9roOt5GwX0Oxq2Rs4AM6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6jgLrTt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720716878; c=relaxed/simple;
+	bh=YhiyGaiuRRSfHnjOqc3BEsL5YLjUMQ8IUktkjyA/ApU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IHt70+VoO3/M+p6r10siu37XSYLEtqN2LOE5m4mvmGA0g8FQvFbBBC3IfSqJ+k7CpUA/UNwz4XiFN1Mwdk9RH3DNFtAFt56gueCTtNyL5yTqnOWKWN/cZGaa/lHfXIstrN2dxbJRWTOuFx5eq/eTKJThbrNdva2iSugaRcqaD8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQjXmNL+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6jgLrTt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F39C116B1;
-	Thu, 11 Jul 2024 16:51:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQjXmNL+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3033C32786;
+	Thu, 11 Jul 2024 16:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720716702;
-	bh=kmGbtXEsMjJy/wpU2hA6AuW+oaSd10dmF9hCafZ07GI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e6jgLrTtoFWdwMS9eTSIt8y+gfMtPQ6WtVeTi1Jm5Rq6rJCBtKhgBiX0lwnGPSYjz
-	 POgkbYDJfaPdVrYeQQGmx4PJsSG4cOb1yCZtWnD3QLF1Tcu07O28a7iM3Ib8SCmAba
-	 JCIqali4EF+aY3T9oeQZMZXdXI0fMkjynqP+7mzVM5WSTUgZj6kIvgwZVpG0cgcp+W
-	 e8q6UrKbd27jWhCKkIc3AoSE6kxE8nUsGAsUBC1eSgA/xf4Xr5ZSYa6nPHeCw0XVqp
-	 qdkcXBQXKoXs8bxCODrFuPDRFEVzsL979JH7tQAhIa9HLRl39RllYBG+c3j0n63EdM
-	 pAgpLsnfPQNcQ==
-Date: Thu, 11 Jul 2024 09:51:42 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>,
-	kernel-team@fb.com, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 4/9] fs: have setattr_copy handle multigrain
- timestamps appropriately
-Message-ID: <20240711165142.GP612460@frogsfrogsfrogs>
-References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
- <20240711-mgtime-v5-4-37bb5b465feb@kernel.org>
+	s=k20201202; t=1720716877;
+	bh=YhiyGaiuRRSfHnjOqc3BEsL5YLjUMQ8IUktkjyA/ApU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MQjXmNL+3yXKgd+NtY095FUXMn8NiTd7S8AQkjb/t29nn2AVOmtFiyRiqb0Y4gJiH
+	 3ogQIC0RG96++F8RFVAwxFO7JVj05EGZcB46TNm5nOEnEjmj3JIqJ7Wey9naLG3s9v
+	 QMFXgGXjnImvUSxG2I7/38VwLp/gScCUQFppOLV6rwS3lvdygnxoFbBhCC1mo/4NDd
+	 12oE9OMp0Wn17xJgUmbQUeP26gsjvw25q0hkNxJaYHU3Ti71djA8ENZigyDYyN7zpm
+	 DaUcNPh7DZ3kUQEQgrbK4pjCIFCwPZddN/QLGcJWQxXYUZDduZpby//0AZOe1qqGf4
+	 ny4k282B+diuw==
+From: Kees Cook <kees@kernel.org>
+To: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: Kees Cook <kees@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] kunit: executor: Simplify string allocation handling
+Date: Thu, 11 Jul 2024 09:54:32 -0700
+Message-Id: <20240711165428.it.345-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711-mgtime-v5-4-37bb5b465feb@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2584; i=kees@kernel.org; h=from:subject:message-id; bh=YhiyGaiuRRSfHnjOqc3BEsL5YLjUMQ8IUktkjyA/ApU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkA5IYYbjf2+UDJNgaLFC2B6iPUrmI21ygPUrL YH9kE40FwCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpAOSAAKCRCJcvTf3G3A JpNwEACFEm4kfWxNFsNucbzTW5bNVxWSDSwx6Jg5wqG8ATXHyXz/WfyZQ2EhJYFd1nY0Zdvpbbg FTKAD/8hYHpy5Ci73htvaRe9QTl8LhTrR4QOs660Bd3wPh1ebm11IoDCadR6RF4nHzg1linuIw2 ZkrdfLOvq9AAu/9c+Xtl2zAprzYvLVRmxEZ+pNuVsAcLGBCZ6BIONR4F5fF7W2HVOtP4iuuxe5i qN9E6/okxDIN6Z29J0/1Ya8uR0jRI98376WOFYmvmV0/PYiwMrxIiaxbsoiO+nhqyjynW1DJoCh Ns6E/qJnGMs41e1FiI/m5sTgHlYX2Eqez+/Ge4VsQwz+vM+dT37R1h7wCgor8/+x+FV7c2vZgEz 3JzAP+2slipGc1wrCfUZ+H0eTjyizNv0POu8GZGQkrFB8+bCQGGceZ3SxbV8MWcWaKOz00hjV/e JOE3rCzsZkcAeBeRuQD2uVZkFPOK8hn9x4cwaPjx5CFq7cJTvA5w6ffYXKNhTTATEwsyhNM5ZEu PBicdrEvumhwSyCc80owOOJ2rB8DH19TKQufibxV7erwxrHKV0ilEwwsYeK7EdzjXqK0mLSCIMu /gPPWXnQTm6p1FVf3PkPpMihUkkJnp4C51hkZBp+LUIsVyjOw1oAbLJovTBuu9TfkWWJ0+BYibh t4/KHuUJzAWEJ
+ 0g==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 11, 2024 at 07:08:08AM -0400, Jeff Layton wrote:
-> The setattr codepath is still using coarse-grained timestamps, even on
-> multigrain filesystems. To fix this, we need to fetch the timestamp for
-> ctime updates later, at the point where the assignment occurs in
-> setattr_copy.
-> 
-> On a multigrain inode, ignore the ia_ctime in the attrs, and always
-> update the ctime to the current clock value. Update the atime and mtime
-> with the same value (if needed) unless they are being set to other
-> specific values, a'la utimes().
-> 
-> Note that we don't want to do this universally however, as some
-> filesystems (e.g. most networked fs) want to do an explicit update
-> elsewhere before updating the local inode.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+The alloc/copy code pattern is better consolidated to single kstrdup (and
+kstrndup) calls instead. This gets rid of deprecated[1] strncpy() uses as
+well. Replace one other strncpy() use with the more idiomatic strscpy().
 
-Makes sense to me,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Link: https://github.com/KSPP/linux/issues/90 [1]
+Reviewed-by: David Gow <davidgow@google.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: David Gow <davidgow@google.com>
+Cc: Rae Moar <rmoar@google.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+---
+ lib/kunit/executor.c      | 12 +++---------
+ lib/kunit/executor_test.c |  2 +-
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
---D
+diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+index 70b9a43cd257..34b7b6833df3 100644
+--- a/lib/kunit/executor.c
++++ b/lib/kunit/executor.c
+@@ -70,32 +70,26 @@ struct kunit_glob_filter {
+ static int kunit_parse_glob_filter(struct kunit_glob_filter *parsed,
+ 				    const char *filter_glob)
+ {
+-	const int len = strlen(filter_glob);
+ 	const char *period = strchr(filter_glob, '.');
+ 
+ 	if (!period) {
+-		parsed->suite_glob = kzalloc(len + 1, GFP_KERNEL);
++		parsed->suite_glob = kstrdup(filter_glob, GFP_KERNEL);
+ 		if (!parsed->suite_glob)
+ 			return -ENOMEM;
+-
+ 		parsed->test_glob = NULL;
+-		strcpy(parsed->suite_glob, filter_glob);
+ 		return 0;
+ 	}
+ 
+-	parsed->suite_glob = kzalloc(period - filter_glob + 1, GFP_KERNEL);
++	parsed->suite_glob = kstrndup(filter_glob, period - filter_glob, GFP_KERNEL);
+ 	if (!parsed->suite_glob)
+ 		return -ENOMEM;
+ 
+-	parsed->test_glob = kzalloc(len - (period - filter_glob) + 1, GFP_KERNEL);
++	parsed->test_glob = kstrdup(period + 1, GFP_KERNEL);
+ 	if (!parsed->test_glob) {
+ 		kfree(parsed->suite_glob);
+ 		return -ENOMEM;
+ 	}
+ 
+-	strncpy(parsed->suite_glob, filter_glob, period - filter_glob);
+-	strncpy(parsed->test_glob, period + 1, len - (period - filter_glob));
+-
+ 	return 0;
+ }
+ 
+diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
+index 3f7f967e3688..f0090c2729cd 100644
+--- a/lib/kunit/executor_test.c
++++ b/lib/kunit/executor_test.c
+@@ -286,7 +286,7 @@ static struct kunit_suite *alloc_fake_suite(struct kunit *test,
+ 
+ 	/* We normally never expect to allocate suites, hence the non-const cast. */
+ 	suite = kunit_kzalloc(test, sizeof(*suite), GFP_KERNEL);
+-	strncpy((char *)suite->name, suite_name, sizeof(suite->name) - 1);
++	strscpy((char *)suite->name, suite_name, sizeof(suite->name));
+ 	suite->test_cases = test_cases;
+ 
+ 	return suite;
+-- 
+2.34.1
 
-> ---
->  fs/attr.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 46 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/attr.c b/fs/attr.c
-> index 825007d5cda4..e03ea6951864 100644
-> --- a/fs/attr.c
-> +++ b/fs/attr.c
-> @@ -271,6 +271,42 @@ int inode_newsize_ok(const struct inode *inode, loff_t offset)
->  }
->  EXPORT_SYMBOL(inode_newsize_ok);
->  
-> +/**
-> + * setattr_copy_mgtime - update timestamps for mgtime inodes
-> + * @inode: inode timestamps to be updated
-> + * @attr: attrs for the update
-> + *
-> + * With multigrain timestamps, we need to take more care to prevent races
-> + * when updating the ctime. Always update the ctime to the very latest
-> + * using the standard mechanism, and use that to populate the atime and
-> + * mtime appropriately (unless we're setting those to specific values).
-> + */
-> +static void setattr_copy_mgtime(struct inode *inode, const struct iattr *attr)
-> +{
-> +	unsigned int ia_valid = attr->ia_valid;
-> +	struct timespec64 now;
-> +
-> +	/*
-> +	 * If the ctime isn't being updated then nothing else should be
-> +	 * either.
-> +	 */
-> +	if (!(ia_valid & ATTR_CTIME)) {
-> +		WARN_ON_ONCE(ia_valid & (ATTR_ATIME|ATTR_MTIME));
-> +		return;
-> +	}
-> +
-> +	now = inode_set_ctime_current(inode);
-> +	if (ia_valid & ATTR_ATIME_SET)
-> +		inode_set_atime_to_ts(inode, attr->ia_atime);
-> +	else if (ia_valid & ATTR_ATIME)
-> +		inode_set_atime_to_ts(inode, now);
-> +
-> +	if (ia_valid & ATTR_MTIME_SET)
-> +		inode_set_mtime_to_ts(inode, attr->ia_mtime);
-> +	else if (ia_valid & ATTR_MTIME)
-> +		inode_set_mtime_to_ts(inode, now);
-> +}
-> +
->  /**
->   * setattr_copy - copy simple metadata updates into the generic inode
->   * @idmap:	idmap of the mount the inode was found from
-> @@ -303,12 +339,6 @@ void setattr_copy(struct mnt_idmap *idmap, struct inode *inode,
->  
->  	i_uid_update(idmap, attr, inode);
->  	i_gid_update(idmap, attr, inode);
-> -	if (ia_valid & ATTR_ATIME)
-> -		inode_set_atime_to_ts(inode, attr->ia_atime);
-> -	if (ia_valid & ATTR_MTIME)
-> -		inode_set_mtime_to_ts(inode, attr->ia_mtime);
-> -	if (ia_valid & ATTR_CTIME)
-> -		inode_set_ctime_to_ts(inode, attr->ia_ctime);
->  	if (ia_valid & ATTR_MODE) {
->  		umode_t mode = attr->ia_mode;
->  		if (!in_group_or_capable(idmap, inode,
-> @@ -316,6 +346,16 @@ void setattr_copy(struct mnt_idmap *idmap, struct inode *inode,
->  			mode &= ~S_ISGID;
->  		inode->i_mode = mode;
->  	}
-> +
-> +	if (is_mgtime(inode))
-> +		return setattr_copy_mgtime(inode, attr);
-> +
-> +	if (ia_valid & ATTR_ATIME)
-> +		inode_set_atime_to_ts(inode, attr->ia_atime);
-> +	if (ia_valid & ATTR_MTIME)
-> +		inode_set_mtime_to_ts(inode, attr->ia_mtime);
-> +	if (ia_valid & ATTR_CTIME)
-> +		inode_set_ctime_to_ts(inode, attr->ia_ctime);
->  }
->  EXPORT_SYMBOL(setattr_copy);
->  
-> 
-> -- 
-> 2.45.2
-> 
-> 
