@@ -1,88 +1,113 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6371D16E88E;
-	Thu, 11 Jul 2024 18:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B0C54657;
+	Thu, 11 Jul 2024 18:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720723247; cv=none; b=Z+jpkkURdwZNPuB/AW3I/j7cNFrV9CJ8lQElExyII0Ne81rbKp/g0NMXFeRu9qKI/U6/vWl2TmwATUS4SHXG65crPokb0kml1LmAyMHwEoumItkqLX32nsj8DS7bqxblssrlrWAx1F961ISV1MTrPb9vIMmjpzJiaN3fdLcr55Y=
+	t=1720723380; cv=none; b=CiZrlwa4Pg9E0VbpndLelWM0OPHQGNIxwHNQOx2fiZ8Gni66nsKfRU/wPqhPj1aXkyOs+jbdcrpPeglvVGUy5R4XnZ8+IPgtVwrHBYDHKz2S5tUqXw6+32fdP/x2+Eb6UtcCTDEG2sl5IrKCWGoWJeoUNhk9ksNVDf6aO6yp5u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720723247; c=relaxed/simple;
-	bh=KkzxAaKkddVCCUjlNWAR/t6qE/P/eWm3PK1qOOz6Auc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LArl4paak/gsKXYMUbEM1k1aQgfoZjKwvHDNdTsfS+m+5EWZOdXg3rrbe16gX7GpKKKWt6Cw4y22V/mW5b9MADiMH2hBw39/gpaTZM23D+XQ1SkpIrbkCTQka8GtjaBTgJu4DByhA3K0WGYgwLUmuB+Y0af9uJdxhD98hoe6Wtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HStdeAhM; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1720723380; c=relaxed/simple;
+	bh=1VD1l8BcEO5CRrrIhm8LmbatrpLVg5M1IC6hBv4z6uQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O44DV9JnZpt+mQlEQbMbFmFcKNrXKL3c2YFDh3cXFy74PDEcl3cOZ8aL/jA4XibzDEDaXeyIVQ3CAp0KKoYZAlVskctXxPPHzzkXB97+HroKYIaX9zawvAUKISDxTCDWmL1P/tAeYVBacSFOvHdpviaZDFuzh46U7fKaVJTjNxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Yfg6Xzy2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HStdeAhM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1720723244;
-	bh=KkzxAaKkddVCCUjlNWAR/t6qE/P/eWm3PK1qOOz6Auc=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
-	b=HStdeAhM+QYvH0XVo2lmWa8287cpmSi22DF/AMI/nT6TxDH1ClZDY3MpkNspXQ5gg
-	 tv1J/hv+drorhLdlfcPcaNILK0ahxNoi/z7vyxdAjd0T7DJ0Vbtf5nuw6rOUNm/tQE
-	 pOUuMCYXex3u1nZKhitvr1/JmfvdL3BmWR6HrSqBlVI8c5Xs8FgopVpTuyl6T1orvQ
-	 1X6wc+MMczmy5D28oXsN2ah2QpUszHRkR5cpWVKjYRNX/HdM6w4i2x200TaFsd+g8c
-	 Im5gmt5tJiuyPzqk2poTT6VN1DJy8sX/lBiHXX8QeiA9c3dHuvKMZduilpzlxg+NTN
-	 KxjQ68PkaYE4w==
-Received: from smtpclient.apple (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: dwlsalmeida)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 382B837821DB;
-	Thu, 11 Jul 2024 18:40:38 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yfg6Xzy2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=bA0o/xfWTMOlDDaHwMD+yUJJ1Reh1OoOCi4t4sZG3qI=; b=Yfg6Xzy2kGAcEr/TfRFSpPb3TE
+	M1Z9/F/QJML9QR89+CICNJdYUHpb4fWqXlOBeH3zQRIEoqezFNzFFbnUTAUoqwQaqDBO+oYCSJ2TA
+	nlfrNd6RQC7V+gx0kMCdqTeiifkNXYC2SxEpLn3IL9RRJ4NoDHAxoShChBbW5l1hUQe5OqR1//U/T
+	trzJeuqGbzoGrfIHkNpzn8CXWbMtKY1qFTWmyo5jSk3cHP4nnwibUOUmiPJUKF7RWAmICtiV6IXZ4
+	8z+J4GldGet+Sz7Ri3YyOxAcOTa5y7tf4pQNZynTFpeFQdVlnrJZah8oA/0kgKZG3cWElT2/S3RGe
+	Rr2p3C3A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRykl-0000000BWdO-3FgH;
+	Thu, 11 Jul 2024 18:42:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6A81E30050D; Thu, 11 Jul 2024 20:42:51 +0200 (CEST)
+Date: Thu, 11 Jul 2024 20:42:51 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
+ to SRCU
+Message-ID: <20240711184251.GD27299@noisy.programming.kicks-ass.net>
+References: <20240711110235.098009979@infradead.org>
+ <20240711110401.311168524@infradead.org>
+ <20240711160652.GE16902@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [RFC PATCH] drm: panthor: add dev_coredumpv support
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <ZpAO6SJ9pZ2EOlrv@e110455-lin.cambridge.arm.com>
-Date: Thu, 11 Jul 2024 15:40:26 -0300
-Cc: Wedson Almeida Filho <wedsonaf@gmail.com>,
- ojeda@kernel.org,
- Danilo Krummrich <dakr@redhat.com>,
- lyude@redhat.com,
- robh@kernel.org,
- lina@asahilina.net,
- mcanal@igalia.com,
- airlied@gmail.com,
- rust-for-linux@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org,
- steven.price@arm.com,
- liviu.dudau@arm.com,
- mripard@kernel.org,
- tzimmermann@suse.de,
- daniel@ffwll.c
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0C74C2BA-753D-4D1E-A041-A55422947005@collabora.com>
-References: <20240710225011.275153-1-daniel.almeida@collabora.com>
- <ZpAO6SJ9pZ2EOlrv@e110455-lin.cambridge.arm.com>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711160652.GE16902@redhat.com>
 
-Hi Liviu,
-
-> Hi Daniel,
->=20
-> I know this is an RFC, but are you trying to avoid Cc-ing Panthor =
-maintainers
-> by mistake or by choice? I will be away on sabbatical from next week, =
-but
-> Steven Price at least would be interested in having a look.
-
-Definitely by mistake. Boris is my coworker, but everybody else should =
-have been on cc for sure.
-
-My apologies.
-
-=E2=80=94 Daniel
+On Thu, Jul 11, 2024 at 06:06:53PM +0200, Oleg Nesterov wrote:
+> I'll try to actually apply the whole series and read the code tomorrow.
+> Right now I can't understand this change... Just one question for now.
+> 
+> On 07/11, Peter Zijlstra wrote:
+> >
+> > @@ -1956,11 +1960,13 @@ static void prepare_uretprobe(struct upr
+> >  			 * attack from user-space.
+> >  			 */
+> >  			uprobe_warn(current, "handle tail call");
+> > -			goto err_uprobe;
+> > +			goto err_mem;
+> >  		}
+> >  		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
+> >  	}
+> >
+> > +	ri->srcu_idx = __srcu_read_lock(&uretprobes_srcu);
+> > +	ri->uprobe = uprobe;
+> 
+> It seems that, if we race with _unregister, this __srcu_read_lock()
+> can happen after call_srcu(uprobes_srcu, uprobe, uprobe_free_stage1)
+> was already called...
+> 
+> In this case read_lock "has no effect" in that uprobe_free_stage1()
+> can run before free_ret_instance() does srcu_read_unlock(ri->srcu_idx).
+> 
+> Perhaps it is fine, uprobe_free_stage1() does another call_srcu(),
+> but somehow I got lost.
+> 
+> Could you re-check this logic? Most probably I missed something, but still...
 
 
+  handle_swbp()
+    guard(srcu)(&uprobes_srcu);
+    handle_chain();
+      prepare_uretprobe()
+        __srcu_read_lock(&uretprobe_srcu);
+
+
+vs
+
+  uprobe_free_stage2
+    kfree(uprobe)
+
+  uprobe_free_stage1
+    call_srcu(&uretprobe_srcu, &uprobe->rcu, uprobe_free_stage2);
+
+  put_uprobe()
+    if (refcount_dec_and_test)
+      call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_stage1);
+  
+
+So my thinking was since we take uretprobe_srcu *inside* uprobe_srcu,
+this reference must be visible before we execute stage1, and as such
+stage2 cannot complete prematurely.
 
