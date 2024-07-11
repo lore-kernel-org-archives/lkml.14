@@ -1,291 +1,313 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8B01A00DF;
-	Thu, 11 Jul 2024 21:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95961A00C1
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 21:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720735060; cv=none; b=ZR86CSsU1dKUZ11u90Wh8pbVLJyGIQ1wdL6vQCU/dpuQxvxm9k8e/thVN1zHJ1DbxGjLGdsYnQZR1yyZp3wJ0EzFC5bl+qBB0hkh97KXB9aJQsJ5DhLxjhNZuJlgmezaMhhLV9Cjo5VDCKy2x0o3taRwrjCEs8rCEN/zfhgcy2M=
+	t=1720735074; cv=none; b=U5Adql50NHZrayJmqbJYhPaSpqSw06TpeU6Ucc3e2x1PDtI92p2rcY6+U1NeaFU+gldXBlxFBitF4tLlitLKFgIefE/7zXoQiijGWUzz8kAXDFDYcIFl7zh5QHLmBEUEJXSQM25TOxXPIfdmphn0vGHKVegAsfUGecqSmhO4/SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720735060; c=relaxed/simple;
-	bh=1IRXyi/lRo/A/NE66PocxoxjSzmZ7a9GKAafH7Rhuqw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GqbVjE5yBALXROaEScQcxABXlGRY5rO4CjZOQyBw3yMysnmSSX3GoBC2Qejn1k1P4zSEW//lPRHVla2HX+P5I+b5D5Pl8RCD/gLUgd5p/OY0iu9ijCScqIadIaaqnZzJCT/NxtRPlg+AecCXc+GmXN1EMIbRCuiY2HuSDj7L3io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHrbjRov; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720735074; c=relaxed/simple;
+	bh=o2WINdgMwEetaqCjxD7TvANT7De4VqeDnfoLcIy5vaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Q/lwrRZcRaq0LGOeX1Q1nh543TtM5AaL2AW5/bzntF/mAJiDvLNVuI2PGY5DHN2gPoNqscNYSn2SQVlrfFdOS75u4MEnQ5peq7+igQnaTiH7DF+Uvm+bLZmWynpHhqYTQNFuFVr1rFs2KLTuHvnXsD02glxAhubTohoBFpupvOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gohz1DTp; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHrbjRov"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B69C4AF0A;
-	Thu, 11 Jul 2024 21:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720735060;
-	bh=1IRXyi/lRo/A/NE66PocxoxjSzmZ7a9GKAafH7Rhuqw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QHrbjRovV4DVToZfDdEVJ6P5myNFcdRn0MRsz3AL9XYYikhAIW30CVkM+mf+H4yOL
-	 WkukyXiCao+VIWt7F8jkmnFY7tpjLA3GYOxhgH7AusLYUN2vkAC9VcCZxX8u+0QCh1
-	 tx94Cfb6ehIuj6LJL38VwTnk8mQ8UmX+6+KhqfK1wSXgS1ue6nnCZrFkwc0HIxFLVy
-	 +lzRMmkqx/9lrOKeIKwfizj4688KXCozvd3ycmrtKU/K37cM1zMVtHaaT7Sh2WuIYK
-	 lp1F8TwjObJUGQwE0V0xqyFNHrCCyCDQCCm2Cejj3K8BX3Rn/DUYCUxOk+vH6Y6tAA
-	 lHjnJI5IjPyNQ==
-From: Kees Cook <kees@kernel.org>
-To: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2] scsi: aacraid: struct {user,}sgmap{,64,raw}: Replace 1-element arrays with flexible arrays
-Date: Thu, 11 Jul 2024 14:57:38 -0700
-Message-Id: <20240711215739.208776-2-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240711212732.work.162-kees@kernel.org>
-References: <20240711212732.work.162-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gohz1DTp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720735071; x=1752271071;
+  h=date:from:to:cc:subject:message-id;
+  bh=o2WINdgMwEetaqCjxD7TvANT7De4VqeDnfoLcIy5vaQ=;
+  b=gohz1DTpL1HpNStHZAwgpAXl5+7rgCSVo/+gzCDx8ozPoP8NJhok8Y0Z
+   6giWN9fJKMNS9rCK96yy/5qf/DM1lxmVJimFTZcjBPF9Dub+gREXfzpBL
+   J5PSF6ed9PEqLGy5ncaCddIoF135yuUp2RlZ/eEbwZHEY/vB3GYB28EnL
+   Cs3hRzb2SKznHlGboATeAgWm40balYFYDLJ12kCH32DwPsIjGrmzsIv9r
+   FEc3G00Tp+brhT9fwL3S7CjMLx83d8QHRjhM1se9Tax0f38S139zOFjDR
+   TCSjH9awl/8HtRxE9m418VYbYpxQ97sQaU3UoSsfM+Ye9uTSaRLuU/0GK
+   Q==;
+X-CSE-ConnectionGUID: vPAf3cwiQoymrLBW8GN9yw==
+X-CSE-MsgGUID: bnUYuJujRiO2gA5nX1nUCA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="22023129"
+X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
+   d="scan'208";a="22023129"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 14:57:51 -0700
+X-CSE-ConnectionGUID: raHGYwsQSUa351SSLQwgAA==
+X-CSE-MsgGUID: 7qRDUC1vRJ+wKT9OlA0b/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
+   d="scan'208";a="48717304"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 11 Jul 2024 14:57:50 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sS1nQ-000Zx5-0W;
+	Thu, 11 Jul 2024 21:57:48 +0000
+Date: Fri, 12 Jul 2024 05:57:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:smp/core] BUILD SUCCESS
+ 77aeb1b685f9db73d276bad4bb30d48505a6fd23
+Message-ID: <202407120518.xhQWcRpO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9550; i=kees@kernel.org; h=from:subject; bh=1IRXyi/lRo/A/NE66PocxoxjSzmZ7a9GKAafH7Rhuqw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkFVSeO4OotIy2yFPrJ/hgkBtbPuoG4qpqHP2L Kgy6aEbcheJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpBVUgAKCRCJcvTf3G3A JnrXD/9G+frfTQSSE61nke4ZgullMSsS6L3uZzDaWk0ypajZMtlEeqmm/Ry0Dbo1BcoaQfVsqK6 0GUatVu9Cx4GHVB4usGeyUQj6xEYt+Sd6fMGkbadiaVG0jmOpEfER1bYDaxdtsr5HoQLvariaM4 oMonYR50nZ9n0SMiFg3cQbd2vZ5GZg9stJbRHWLuxUJr+t1GDFPQTKNKPXugZ5PEli0gku0Nz2F pxRtOpJ2fBlVqWbVSqtItlh/jSK8fQASKo1hh/0XpO02KbVy2lmj3jtL3y5luARmGwoWkOQf5Yl C/Lou4e9QhT51dE8fWj4nEoIwH2g+cpoGyx+4mOeSwZBUygzJgPkHmL9+OXy+r0wBPttUnvhec5 CueDAyCKOEBcqh2g2osr6vLvUT7ERKEd4f5E6JEU9L+Magv3PD5E7CSDkO3MCiYiO1WwtfQYbMe x7Fz/IS9k7fWgaeLdUWaWAdbhVXAF5fp8G2N40nzhHcR3rHvVw/SVFdJdgRulmr3DFM6xY/Efxa 94D4pGC2ChxE8Mbm6rf1PwchAjUNgb7OcQc224fNNkVS8zeaCRXc0xyjZY/+a692vpjjYtyPyQe yD/pv1Jvr6B6JHCk4XxKB/+SOIMGNwHvrfKJuDs6vkH4FXW01jNliryWg9X+3QBXa3hz5Nri9kc B8FvBM+dvlwMfVw==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
 
-Replace the deprecated[1] use of 1-element arrays in
-struct sgmap, struct sgmap64, struct sgmapraw, struct user_sgmap,
-and struct user_sgmap64 with modern flexible arrays. Additionally
-remove struct user_sgmapraw as it is unused.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp/core
+branch HEAD: 77aeb1b685f9db73d276bad4bb30d48505a6fd23  smp: Add missing destroy_work_on_stack() call in smp_call_on_cpu()
 
-The resulting binary output differences from this change are limited
-only to stack space consumption of the smaller "srbu" variable
-in aac_issue_safw_bmic_identify() and aac_get_safw_ciss_luns(),
-as well as the smaller associated pair of memcpy()s in
-aac_send_safw_bmic_cmd(). Artificially growing the size of srbu back to
-its prior size removes all binary differences[2].
+elapsed time: 1458m
 
-As an aside, after studying the aacraid driver code I wonder how
-aac_send_wellness_command() ever works. It is reporting a size 4 bytes
-too small for what it has constructed in memory in the DMA region:
-sgentry64 is size 12, whereas sgentry is size 8. Perhaps the hardware
-doesn't care. (Regardless, it is unchanged by this patch.)
+configs tested: 236
+configs skipped: 4
 
-Link: https://github.com/KSPP/linux/issues/79 [1]
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=dev/v6.10-rc2/1-element&id=45e6226bcbc5e982541754eca7ac29f403e82f5e [2]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
----
- drivers/scsi/aacraid/aachba.c   | 26 ++++++++++++--------------
- drivers/scsi/aacraid/aacraid.h  | 15 +++++----------
- drivers/scsi/aacraid/commctrl.c |  4 ++--
- drivers/scsi/aacraid/comminit.c |  3 +--
- drivers/scsi/aacraid/commsup.c  |  5 +++--
- 5 files changed, 23 insertions(+), 30 deletions(-)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
-index 497c6dd5df91..ec3834bda111 100644
---- a/drivers/scsi/aacraid/aachba.c
-+++ b/drivers/scsi/aacraid/aachba.c
-@@ -1267,7 +1267,7 @@ static int aac_read_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
- 			return ret;
- 		command = ContainerRawIo;
- 		fibsize = sizeof(struct aac_raw_io) +
--			((le32_to_cpu(readcmd->sg.count)-1) * sizeof(struct sgentryraw));
-+			(le32_to_cpu(readcmd->sg.count) * sizeof(struct sgentryraw));
- 	}
- 
- 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
-@@ -1302,7 +1302,7 @@ static int aac_read_block64(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_read64) +
--		((le32_to_cpu(readcmd->sg.count) - 1) *
-+		(le32_to_cpu(readcmd->sg.count) *
- 		 sizeof (struct sgentry64));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1337,7 +1337,7 @@ static int aac_read_block(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u32
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_read) +
--			((le32_to_cpu(readcmd->sg.count) - 1) *
-+			(le32_to_cpu(readcmd->sg.count) *
- 			 sizeof (struct sgentry));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1401,7 +1401,7 @@ static int aac_write_raw_io(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u
- 			return ret;
- 		command = ContainerRawIo;
- 		fibsize = sizeof(struct aac_raw_io) +
--			((le32_to_cpu(writecmd->sg.count)-1) * sizeof (struct sgentryraw));
-+			(le32_to_cpu(writecmd->sg.count) * sizeof(struct sgentryraw));
- 	}
- 
- 	BUG_ON(fibsize > (fib->dev->max_fib_size - sizeof(struct aac_fibhdr)));
-@@ -1436,7 +1436,7 @@ static int aac_write_block64(struct fib * fib, struct scsi_cmnd * cmd, u64 lba,
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_write64) +
--		((le32_to_cpu(writecmd->sg.count) - 1) *
-+		(le32_to_cpu(writecmd->sg.count) *
- 		 sizeof (struct sgentry64));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1473,7 +1473,7 @@ static int aac_write_block(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
- 	if (ret < 0)
- 		return ret;
- 	fibsize = sizeof(struct aac_write) +
--		((le32_to_cpu(writecmd->sg.count) - 1) *
-+		(le32_to_cpu(writecmd->sg.count) *
- 		 sizeof (struct sgentry));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1592,9 +1592,9 @@ static int aac_scsi_64(struct fib * fib, struct scsi_cmnd * cmd)
- 	/*
- 	 *	Build Scatter/Gather list
- 	 */
--	fibsize = sizeof (struct aac_srb) - sizeof (struct sgentry) +
-+	fibsize = sizeof(struct aac_srb) +
- 		((le32_to_cpu(srbcmd->sg.count) & 0xff) *
--		 sizeof (struct sgentry64));
-+		 sizeof(struct sgentry64));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
- 
-@@ -1624,7 +1624,7 @@ static int aac_scsi_32(struct fib * fib, struct scsi_cmnd * cmd)
- 	 *	Build Scatter/Gather list
- 	 */
- 	fibsize = sizeof (struct aac_srb) +
--		(((le32_to_cpu(srbcmd->sg.count) & 0xff) - 1) *
-+		((le32_to_cpu(srbcmd->sg.count) & 0xff) *
- 		 sizeof (struct sgentry));
- 	BUG_ON (fibsize > (fib->dev->max_fib_size -
- 				sizeof(struct aac_fibhdr)));
-@@ -1693,8 +1693,7 @@ static int aac_send_safw_bmic_cmd(struct aac_dev *dev,
- 	fibptr->hw_fib_va->header.XferState &=
- 		~cpu_to_le32(FastResponseCapable);
- 
--	fibsize  = sizeof(struct aac_srb) - sizeof(struct sgentry) +
--						sizeof(struct sgentry64);
-+	fibsize = sizeof(struct aac_srb) + sizeof(struct sgentry64);
- 
- 	/* allocate DMA buffer for response */
- 	addr = dma_map_single(&dev->pdev->dev, xfer_buf, xfer_len,
-@@ -2267,7 +2266,7 @@ int aac_get_adapter_info(struct aac_dev* dev)
- 		dev->a_ops.adapter_bounds = aac_bounds_32;
- 		dev->scsi_host_ptr->sg_tablesize = (dev->max_fib_size -
- 			sizeof(struct aac_fibhdr) -
--			sizeof(struct aac_write) + sizeof(struct sgentry)) /
-+			sizeof(struct aac_write)) /
- 				sizeof(struct sgentry);
- 		if (dev->dac_support) {
- 			dev->a_ops.adapter_read = aac_read_block64;
-@@ -2278,8 +2277,7 @@ int aac_get_adapter_info(struct aac_dev* dev)
- 			dev->scsi_host_ptr->sg_tablesize =
- 				(dev->max_fib_size -
- 				sizeof(struct aac_fibhdr) -
--				sizeof(struct aac_write64) +
--				sizeof(struct sgentry64)) /
-+				sizeof(struct aac_write64)) /
- 					sizeof(struct sgentry64);
- 		} else {
- 			dev->a_ops.adapter_read = aac_read_block;
-diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-index 8e7a0a5cb7aa..1d09d3ac6aa4 100644
---- a/drivers/scsi/aacraid/aacraid.h
-+++ b/drivers/scsi/aacraid/aacraid.h
-@@ -507,32 +507,27 @@ struct sge_ieee1212 {
- 
- struct sgmap {
- 	__le32		count;
--	struct sgentry	sg[1];
-+	struct sgentry	sg[];
- };
- 
- struct user_sgmap {
- 	u32		count;
--	struct user_sgentry	sg[1];
-+	struct user_sgentry	sg[];
- };
- 
- struct sgmap64 {
- 	__le32		count;
--	struct sgentry64 sg[1];
-+	struct sgentry64 sg[];
- };
- 
- struct user_sgmap64 {
- 	u32		count;
--	struct user_sgentry64 sg[1];
-+	struct user_sgentry64 sg[];
- };
- 
- struct sgmapraw {
- 	__le32		  count;
--	struct sgentryraw sg[1];
--};
--
--struct user_sgmapraw {
--	u32		  count;
--	struct user_sgentryraw sg[1];
-+	struct sgentryraw sg[];
- };
- 
- struct creation_info
-diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
-index e7cc927ed952..68240d6f27ab 100644
---- a/drivers/scsi/aacraid/commctrl.c
-+++ b/drivers/scsi/aacraid/commctrl.c
-@@ -523,7 +523,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
- 		goto cleanup;
- 	}
- 
--	if ((fibsize < (sizeof(struct user_aac_srb) - sizeof(struct user_sgentry))) ||
-+	if ((fibsize < sizeof(struct user_aac_srb)) ||
- 	    (fibsize > (dev->max_fib_size - sizeof(struct aac_fibhdr)))) {
- 		rcode = -EINVAL;
- 		goto cleanup;
-@@ -561,7 +561,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
- 		rcode = -EINVAL;
- 		goto cleanup;
- 	}
--	actual_fibsize = sizeof(struct aac_srb) - sizeof(struct sgentry) +
-+	actual_fibsize = sizeof(struct aac_srb) +
- 		((user_srbcmd->sg.count & 0xff) * sizeof(struct sgentry));
- 	actual_fibsize64 = actual_fibsize + (user_srbcmd->sg.count & 0xff) *
- 	  (sizeof(struct sgentry64) - sizeof(struct sgentry));
-diff --git a/drivers/scsi/aacraid/comminit.c b/drivers/scsi/aacraid/comminit.c
-index bd99c5492b7d..fee857236991 100644
---- a/drivers/scsi/aacraid/comminit.c
-+++ b/drivers/scsi/aacraid/comminit.c
-@@ -522,8 +522,7 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
- 	spin_lock_init(&dev->iq_lock);
- 	dev->max_fib_size = sizeof(struct hw_fib);
- 	dev->sg_tablesize = host->sg_tablesize = (dev->max_fib_size
--		- sizeof(struct aac_fibhdr)
--		- sizeof(struct aac_write) + sizeof(struct sgentry))
-+		- sizeof(struct aac_fibhdr) - sizeof(struct aac_write))
- 			/ sizeof(struct sgentry);
- 	dev->comm_interface = AAC_COMM_PRODUCER;
- 	dev->raw_io_interface = dev->raw_io_64 = 0;
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index 25cee03d7f97..47287559c768 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -2327,8 +2327,9 @@ static int aac_send_wellness_command(struct aac_dev *dev, char *wellness_str,
- 	sg64->sg[0].addr[0] = cpu_to_le32((u32)(addr & 0xffffffff));
- 	sg64->sg[0].count = cpu_to_le32(datasize);
- 
--	ret = aac_fib_send(ScsiPortCommand64, fibptr, sizeof(struct aac_srb),
--				FsaNormal, 1, 1, NULL, NULL);
-+	ret = aac_fib_send(ScsiPortCommand64, fibptr,
-+			   sizeof(struct aac_srb) + sizeof(struct sgentry),
-+			   FsaNormal, 1, 1, NULL, NULL);
- 
- 	dma_free_coherent(&dev->pdev->dev, datasize, dma_buf, addr);
- 
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240711   gcc-13.2.0
+arc                   randconfig-002-20240711   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-14.1.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-14.1.0
+arm                                 defconfig   gcc-13.2.0
+arm                             mxs_defconfig   clang-19
+arm                   randconfig-001-20240711   clang-19
+arm                   randconfig-001-20240711   gcc-13.2.0
+arm                   randconfig-002-20240711   gcc-13.2.0
+arm                   randconfig-002-20240711   gcc-13.3.0
+arm                   randconfig-003-20240711   clang-19
+arm                   randconfig-003-20240711   gcc-13.2.0
+arm                   randconfig-004-20240711   gcc-13.2.0
+arm                   randconfig-004-20240711   gcc-13.3.0
+arm                        vexpress_defconfig   clang-19
+arm64                            allmodconfig   clang-19
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240711   clang-19
+arm64                 randconfig-001-20240711   gcc-13.2.0
+arm64                 randconfig-002-20240711   gcc-13.2.0
+arm64                 randconfig-002-20240711   gcc-13.3.0
+arm64                 randconfig-003-20240711   gcc-13.2.0
+arm64                 randconfig-003-20240711   gcc-13.3.0
+arm64                 randconfig-004-20240711   gcc-13.2.0
+arm64                 randconfig-004-20240711   gcc-13.3.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240711   gcc-13.2.0
+csky                  randconfig-001-20240711   gcc-13.3.0
+csky                  randconfig-002-20240711   gcc-13.2.0
+csky                  randconfig-002-20240711   gcc-13.3.0
+hexagon                          allmodconfig   clang-19
+hexagon                          allyesconfig   clang-19
+hexagon               randconfig-001-20240711   clang-19
+hexagon               randconfig-002-20240711   clang-19
+i386                             allmodconfig   clang-18
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   clang-18
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   clang-18
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240711   gcc-13
+i386         buildonly-randconfig-002-20240711   gcc-10
+i386         buildonly-randconfig-002-20240711   gcc-13
+i386         buildonly-randconfig-003-20240711   gcc-13
+i386         buildonly-randconfig-004-20240711   gcc-13
+i386         buildonly-randconfig-004-20240711   gcc-8
+i386         buildonly-randconfig-005-20240711   gcc-10
+i386         buildonly-randconfig-005-20240711   gcc-13
+i386         buildonly-randconfig-006-20240711   gcc-13
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240711   gcc-13
+i386                  randconfig-002-20240711   gcc-10
+i386                  randconfig-002-20240711   gcc-13
+i386                  randconfig-003-20240711   gcc-13
+i386                  randconfig-003-20240711   gcc-8
+i386                  randconfig-004-20240711   gcc-13
+i386                  randconfig-005-20240711   clang-18
+i386                  randconfig-005-20240711   gcc-13
+i386                  randconfig-006-20240711   gcc-13
+i386                  randconfig-011-20240711   gcc-13
+i386                  randconfig-011-20240711   gcc-9
+i386                  randconfig-012-20240711   clang-18
+i386                  randconfig-012-20240711   gcc-13
+i386                  randconfig-013-20240711   gcc-13
+i386                  randconfig-014-20240711   clang-18
+i386                  randconfig-014-20240711   gcc-13
+i386                  randconfig-015-20240711   clang-18
+i386                  randconfig-015-20240711   gcc-13
+i386                  randconfig-016-20240711   gcc-13
+i386                  randconfig-016-20240711   gcc-9
+loongarch                        allmodconfig   gcc-13.3.0
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240711   gcc-13.2.0
+loongarch             randconfig-001-20240711   gcc-13.3.0
+loongarch             randconfig-002-20240711   gcc-13.2.0
+loongarch             randconfig-002-20240711   gcc-13.3.0
+m68k                             allmodconfig   gcc-13.3.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.3.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                           gcw0_defconfig   clang-19
+mips                      loongson3_defconfig   clang-19
+mips                         rt305x_defconfig   clang-19
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240711   gcc-13.2.0
+nios2                 randconfig-001-20240711   gcc-13.3.0
+nios2                 randconfig-002-20240711   gcc-13.2.0
+nios2                 randconfig-002-20240711   gcc-14.1.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.3.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.3.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                randconfig-001-20240711   gcc-13.2.0
+parisc                randconfig-001-20240711   gcc-13.3.0
+parisc                randconfig-002-20240711   gcc-13.2.0
+parisc                randconfig-002-20240711   gcc-13.3.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.3.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   clang-19
+powerpc                          allyesconfig   gcc-14.1.0
+powerpc                   bluestone_defconfig   clang-19
+powerpc                      katmai_defconfig   clang-19
+powerpc                       maple_defconfig   clang-19
+powerpc               randconfig-001-20240711   gcc-13.2.0
+powerpc               randconfig-001-20240711   gcc-14.1.0
+powerpc               randconfig-002-20240711   clang-19
+powerpc               randconfig-002-20240711   gcc-13.2.0
+powerpc               randconfig-003-20240711   clang-19
+powerpc               randconfig-003-20240711   gcc-13.2.0
+powerpc                     sequoia_defconfig   clang-19
+powerpc64             randconfig-001-20240711   gcc-13.2.0
+powerpc64             randconfig-001-20240711   gcc-14.1.0
+powerpc64             randconfig-002-20240711   clang-16
+powerpc64             randconfig-002-20240711   gcc-13.2.0
+powerpc64             randconfig-003-20240711   gcc-13.2.0
+powerpc64             randconfig-003-20240711   gcc-14.1.0
+riscv                            allmodconfig   gcc-14.1.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.3.0
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   clang-19
+riscv                            allyesconfig   gcc-14.1.0
+riscv                               defconfig   gcc-14.1.0
+riscv                 randconfig-001-20240711   clang-14
+riscv                 randconfig-001-20240711   gcc-13.2.0
+riscv                 randconfig-002-20240711   gcc-13.2.0
+riscv                 randconfig-002-20240711   gcc-14.1.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                              allnoconfig   gcc-13.2.0
+s390                              allnoconfig   gcc-14.1.0
+s390                             allyesconfig   clang-19
+s390                             allyesconfig   gcc-13.2.0
+s390                                defconfig   gcc-14.1.0
+s390                  randconfig-001-20240711   clang-19
+s390                  randconfig-001-20240711   gcc-13.2.0
+s390                  randconfig-002-20240711   gcc-13.2.0
+s390                  randconfig-002-20240711   gcc-14.1.0
+s390                       zfcpdump_defconfig   clang-19
+sh                               allmodconfig   gcc-13.3.0
+sh                                allnoconfig   gcc-13.2.0
+sh                               allyesconfig   gcc-13.3.0
+sh                                  defconfig   gcc-14.1.0
+sh                    randconfig-001-20240711   gcc-13.2.0
+sh                    randconfig-001-20240711   gcc-14.1.0
+sh                    randconfig-002-20240711   gcc-13.2.0
+sh                    randconfig-002-20240711   gcc-14.1.0
+sparc                            allmodconfig   gcc-13.3.0
+sparc64                             defconfig   gcc-14.1.0
+sparc64               randconfig-001-20240711   gcc-13.2.0
+sparc64               randconfig-001-20240711   gcc-14.1.0
+sparc64               randconfig-002-20240711   gcc-13.2.0
+sparc64               randconfig-002-20240711   gcc-14.1.0
+um                               allmodconfig   clang-19
+um                               allmodconfig   gcc-13.3.0
+um                                allnoconfig   clang-17
+um                                allnoconfig   gcc-13.2.0
+um                                allnoconfig   gcc-14.1.0
+um                               allyesconfig   gcc-13
+um                               allyesconfig   gcc-13.3.0
+um                                  defconfig   gcc-14.1.0
+um                             i386_defconfig   gcc-14.1.0
+um                    randconfig-001-20240711   gcc-13.2.0
+um                    randconfig-001-20240711   gcc-8
+um                    randconfig-002-20240711   gcc-13.2.0
+um                    randconfig-002-20240711   gcc-8
+um                           x86_64_defconfig   gcc-14.1.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240711   clang-18
+x86_64       buildonly-randconfig-002-20240711   clang-18
+x86_64       buildonly-randconfig-003-20240711   clang-18
+x86_64       buildonly-randconfig-004-20240711   clang-18
+x86_64       buildonly-randconfig-005-20240711   clang-18
+x86_64       buildonly-randconfig-006-20240711   clang-18
+x86_64                              defconfig   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                randconfig-001-20240711   clang-18
+x86_64                randconfig-002-20240711   clang-18
+x86_64                randconfig-003-20240711   clang-18
+x86_64                randconfig-004-20240711   clang-18
+x86_64                randconfig-005-20240711   clang-18
+x86_64                randconfig-006-20240711   clang-18
+x86_64                randconfig-011-20240711   clang-18
+x86_64                randconfig-012-20240711   clang-18
+x86_64                randconfig-013-20240711   clang-18
+x86_64                randconfig-014-20240711   clang-18
+x86_64                randconfig-015-20240711   clang-18
+x86_64                randconfig-016-20240711   clang-18
+x86_64                randconfig-071-20240711   clang-18
+x86_64                randconfig-072-20240711   clang-18
+x86_64                randconfig-073-20240711   clang-18
+x86_64                randconfig-074-20240711   clang-18
+x86_64                randconfig-075-20240711   clang-18
+x86_64                randconfig-076-20240711   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240711   gcc-13.2.0
+xtensa                randconfig-001-20240711   gcc-14.1.0
+xtensa                randconfig-002-20240711   gcc-13.2.0
+xtensa                randconfig-002-20240711   gcc-14.1.0
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
