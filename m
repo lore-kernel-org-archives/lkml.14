@@ -1,146 +1,110 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C65F16E861
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 18:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76F416E870;
+	Thu, 11 Jul 2024 18:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720720822; cv=none; b=pJnD8tMkRm2r6E+x9arnI0JkiL4lxd+A70NLZzLA2zPvWRjt6KjQJIY3wTDHLUf2UmQjy+hsC9zr2/5q52gAcrgfNFnFZWgfqvqqShzgVXlmhdx3MpmqmvzSIB2DO0RDEQ4qO7Gncc70vNwwC4lK+Om5IOzxbxauJGvrZrtnd1E=
+	t=1720720823; cv=none; b=nI3jmTBHX8mAm9UyNGGglKwdIPTAB7yYYMwDWeOR6ylBtolj8PJSY+dS3ImkgpmzJT2oTrMzQ1Id1X5obruzaf/6SpCYelRRE0MuUsGcSkC9v/t2Cq6oT2lm8USX/9DETqyzIa+U540CB1BhZg5Bgw/z8tacPT2GanwcSsROAKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720720822; c=relaxed/simple;
-	bh=MIIPAWLI0WoNL5OJW6h8lhVqWFcyLLZdhSdtRXLZ1T4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=pWjPmKwN1KqTo7Xh8k9QREN1vyrwwxXzikTZhwjy9qHpiKTRLzwMUACD7mzpMVrEFpr9Ums93+kRI9UL2g+AYG3AnJ5B0SueOBxZTtmLmKXVe/gTROIM3JnpEDIQPHxcfmIlXyU+pvrqGQiyzMhE5vAMpHMvXRCBI27a9loBjiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wJUOL54z; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1720720823; c=relaxed/simple;
+	bh=TiMKibYFLIqpKOzZI/Qxq1649SejuxuD1Q0Zim3d2ew=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=MzR0u6FOl4tTNYDrGh5pTeuG+BmAAzw6NUU3nS0PlkyIKfIdAYg/fuNKD5Qy3TGd8+VJbQXvIP9jNdo1nvaZDdHvBPuBaHDVRrIbu6El43l+LY7p8iBPm1G/1sWUaWCLkZLIY9Ygvdrj7802CwJI/H24htQkEZacEyQAxjghOiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n8ySceTx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wJUOL54z"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-651e54bb41bso17348037b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:00:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720720820; x=1721325620; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EzUK4p38UkhKDsbfF93yQRR2GPAzqU4EO+HGDDPIb8o=;
-        b=wJUOL54zlCKWRgBqG0vTrTEPJ3JIkhvVC41EjvZJfmkJySztLfVuaDvlvkQwl04Sn7
-         hxgT2+7wPQCZwAlmo1qlaShC2ionI6xOTYDgdxvJQkq7+Tsu3Mf5p1kdQYBD7yQk/UvX
-         aXfaaNqixyvguJ0AmMkExaHSdB6QL2Gzc6JjM3aKgzfkBP41XqdtTtiJ4tLsnACQrV3B
-         W2YuItARD6B3x8ekdnjthDwLC9qqhoYAviPBtAF/pXQaUHOI4I/q3k/zRy5Edkcn+xPy
-         cSsA5p6worJY4XMEFkTW6JGZxPECdjwA6qQZ9AmVj82zMAl7b/0HtlzTMhmOZ6Ictc8E
-         5yQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720720820; x=1721325620;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EzUK4p38UkhKDsbfF93yQRR2GPAzqU4EO+HGDDPIb8o=;
-        b=QWvzRv4LQW5PWThd8g1VF9p9cJBP3LdS7z7XQxbmqmSJPILFV6CGAviT1fXaSZc2+6
-         Pi8LMEFVfseLLCT0pdEs0zMXMU+H/4MvYd2EQ6HieaUepFFegnc5qF4e9ZSFA5dONRhL
-         Pabv5XyqGGgs4pAiVrof2jWyGey7TlZNMOFX/ISjNb4yr4HfauDtkChJ0Q1OrlzoMOYr
-         NFgyZXoZXL+Dt97Gs0iJeqkp0b0jHSuhneslniVDacVWGtcIxll8yrOlUbb8eW1+Guj/
-         tmuG3T6fPI8Ef/NCqJ6EvJ5r57Mjn2r8etJx+QhO9wAvKHtNaOsLYnbmi1HtsSxZibDJ
-         3C+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVbbTXpci7cg7G7+O0LJSOek4YZgsOUzJUVm+YgdB5d6rl9oP7+jqG+HnbDJp3cx9YrWpcOTU8DYzWyt1rjLQ6P9NGJGZKPviMLrkgi
-X-Gm-Message-State: AOJu0YyktUZ67ZF7akjcGZW6kHJZeyliLDo1D5MfaVwJtZc19WiQV3T/
-	csKNaQyZhlc5MufQgi1i0ID7evi/cRc9ujlhzSm2UA6HB2b0HQFKzpA2WKbSu0R86qPu1iObtGd
-	7q+jCSQ==
-X-Google-Smtp-Source: AGHT+IGk7HjCBqWpD+d/XmopT/Hsmtv7wH1IyWS+4QZ4y11/DDN/Lx4J0Msqdj8IwaEOMsdGEitrp70cKoog
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bd08:a1e0:c497:32db])
- (user=irogers job=sendgmr) by 2002:a05:6902:a07:b0:e03:b5d0:2aa2 with SMTP id
- 3f1490d57ef6-e041b1e255amr599255276.13.1720720820135; Thu, 11 Jul 2024
- 11:00:20 -0700 (PDT)
-Date: Thu, 11 Jul 2024 10:59:43 -0700
-In-Reply-To: <20240711180008.188906-1-irogers@google.com>
-Message-Id: <20240711180008.188906-4-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n8ySceTx"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BFmSig032636;
+	Thu, 11 Jul 2024 18:00:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=N7nvtSWo9WWnfpuIwR7eOP
+	es2K3UZsesR0FAqN+XzPY=; b=n8ySceTxPEhllQxusBNWI4Pifn6nyBWGrRjvQr
+	mO5EBgkDYpgCEyK6C5yJkAKKW/sm6T0CH/qnjC3nAgS6LGcg0paqzAE5OHhNyCJ3
+	3GjSa2mSBrpoMF1JUuslDKVjkBFZgBoKJNg7b82caZQu4p9+Chk24Ipo2/6PilKW
+	g+rUVZgCOsJX1/4OWY2cXlJFEG18DM4Z9V/IVoaYTMFJOvcO0RPhjUCbmxFDGuVb
+	HTnh3Sus/mxr+AU5TuGMTvEt1TyPXB0Ct9FYGHkyWB+7SrMNUSLtvFHjPZn0ryfP
+	v6y7/CKb1qy7CVmUFS9ye7li70fkfMt0FFq/IG5Gki38l2rQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40ajbqr9yq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 18:00:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46BI0Bo1015915
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 18:00:11 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
+ 2024 11:00:11 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Thu, 11 Jul 2024 10:52:13 -0700
+Subject: [PATCH v2] crypto: arm/xor - add missing MODULE_DESCRIPTION()
+ macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240711180008.188906-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Subject: [PATCH v4 03/28] perf cs-etm: Fix address sanitizer dso build failure
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240711-md-arm-arch-arm-lib-v2-1-ab08653dc106@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAMwbkGYC/32OTQ6DIBCFr2JYdxpBbLWr3qNxATiWSQQtqLEx3
+ r3oAbqY5H3J+5mNRQyEkT2yjQVcKNLgE4hLxoxV/o1AbWImciHzmxDgWlDBpTP2FD1pqDXvdCF
+ lLQrDUnIM2NF6tr6axFpFBB2UN/bo6snPKzgVJwyH3VKchvA9f1j4Efo/t3DgcC8LVVVV2Sohn
+ 5+ZDHlzNYNjzb7vP3e/ZG3XAAAA
+To: Russell King <linux@armlinux.org.uk>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.14.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: bO-38yDT1daemt-Es2Lnkm9b3ZDwEg6G
+X-Proofpoint-ORIG-GUID: bO-38yDT1daemt-Es2Lnkm9b3ZDwEg6G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_13,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=622 bulkscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 impostorscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407110125
 
-cs-etm.c had been missed from having accessor functions added for the
-sake of reference count checking. Add the function calls and missing
-dso accessor functions.
+With ARCH=arm and CONFIG_KERNEL_MODE_NEON=y, make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm/lib/xor-neon.o
 
-Fixes: ee756ef7491e ("perf dso: Add reference count checking and accessor functions")
-Signed-off-by: Ian Rogers <irogers@google.com>
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
+
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 ---
- tools/perf/util/cs-etm.c | 10 +++++-----
- tools/perf/util/dso.h    | 10 ++++++++++
- 2 files changed, 15 insertions(+), 5 deletions(-)
+Changes in v2:
+- No changes to the actual patch, just rebased to current linus/master
+- Hope to have these warnings fixed tree-wide in 6.11
+- Link to v1: https://lore.kernel.org/r/20240622-md-arm-arch-arm-lib-v1-1-753a8885da24@quicinc.com
+---
+ arch/arm/lib/xor-neon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index c53812f343e9..7fd976ea954b 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1013,7 +1013,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	if (!dso)
- 		goto out;
+diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
+index 522510baed49..cf57fca97908 100644
+--- a/arch/arm/lib/xor-neon.c
++++ b/arch/arm/lib/xor-neon.c
+@@ -8,6 +8,7 @@
+ #include <linux/raid/xor.h>
+ #include <linux/module.h>
  
--	if (dso->data.status == DSO_DATA_STATUS_ERROR &&
-+	if (dso__data(dso)->status == DSO_DATA_STATUS_ERROR &&
- 	    dso__data_status_seen(dso, DSO_DATA_STATUS_SEEN_ITRACE))
- 		goto out;
++MODULE_DESCRIPTION("NEON accelerated XOR implementation");
+ MODULE_LICENSE("GPL");
  
-@@ -1027,11 +1027,11 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	if (len <= 0) {
- 		ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' or debuginfod to export data from the traced system.\n"
- 				 "              Enable CONFIG_PROC_KCORE or use option '-k /path/to/vmlinux' for kernel symbols.\n");
--		if (!dso->auxtrace_warned) {
-+		if (!dso__auxtrace_warned(dso)) {
- 			pr_err("CS ETM Trace: Debug data not found for address %#"PRIx64" in %s\n",
--				    address,
--				    dso->long_name ? dso->long_name : "Unknown");
--			dso->auxtrace_warned = true;
-+				address,
-+				dso__long_name(dso) ? dso__long_name(dso) : "Unknown");
-+			dso__set_auxtrace_warned(dso);
- 		}
- 		goto out;
- 	}
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index d72f3b8c37f6..878c1f441868 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -280,6 +280,16 @@ static inline void dso__set_annotate_warned(struct dso *dso)
- 	RC_CHK_ACCESS(dso)->annotate_warned = 1;
- }
- 
-+static inline bool dso__auxtrace_warned(const struct dso *dso)
-+{
-+	return RC_CHK_ACCESS(dso)->auxtrace_warned;
-+}
-+
-+static inline void dso__set_auxtrace_warned(struct dso *dso)
-+{
-+	RC_CHK_ACCESS(dso)->auxtrace_warned = 1;
-+}
-+
- static inline struct auxtrace_cache *dso__auxtrace_cache(struct dso *dso)
- {
- 	return RC_CHK_ACCESS(dso)->auxtrace_cache;
--- 
-2.45.2.993.g49e7a77208-goog
+ #ifndef __ARM_NEON__
+
+---
+base-commit: 9d9a2f29aefdadc86e450308ff056017a209c755
+change-id: 20240622-md-arm-arch-arm-lib-9b1fb344923c
 
