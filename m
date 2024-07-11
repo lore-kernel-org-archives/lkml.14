@@ -1,216 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10431684A8
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720709937; cv=fail; b=ZuXG+y/X25fVkS5lAROaI6y7Os5cdcjC46GDpOe0pGeakbzeQhC8K4oZ/qcyp+6ywqohZg/9110frJ/HI5hd0y/GDhoY9aWFrcjV6GPNO6SCjI/mpQRSEPLMNd8icVInq1Nou07woRERa6of9fan1H2qrtEvPpde4S9t2Q0pjTw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720709937; c=relaxed/simple;
-	bh=jhqrBR6qZhr4qOYkw0R488uymhYibKY2QCmrAf3YIYM=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=PqyKwdpcU4nVVlacIHkgtoyNCKpKG4lvHvcCE3YgKwhQHpxS8NP6dkKacrtntCiSZp5E0f+30OCQJUFIscBC9P0IoD0XvH510VGRK6XhBE0GPPOLFpwXI8MKbxX98glhn+2nOS3vkY9r9DS0na3dSfsPftyzsFFbl4RSAMCSdEA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fe1Mligw; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2588B1E49B;
+	Thu, 11 Jul 2024 15:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720710031; cv=none; b=srhKXqlkOOUjWcXD+8ukatDWaSAtI4YKAxoWz2zidWK376L3bC7gpp46rNE7UmBZKvrIM5ctYHj2lOPvp5zFIhflV92FiJHie8vPNBQ5MJhVUXpxAnjL9lcd1L/lLtMEjqIiSJViT5y4lpfzynsp3/L42oBC8qK1bIrLG8bi0IM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720710031; c=relaxed/simple;
+	bh=itsb3ZhOZhDxbRFDuhwPmOmd5B61fMqvju+ZGjeXyag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eN0XkRhYm9LRBpcB7gb7tS/BPdBBhowVYM6ZoYu8BChQq29uIkqfSwmV44Z6R+voxjeSuTqVRMbog7G+r4ah4RASWTdhnNQ/7ztjtg0VOil/oZxNRkBn0fXc6ARgVf2GgTQ7ssyQLg9YKY5TqUy8qKAbD/ZSXYWmoCRQdaQRsuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OHjL7T02; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fe1Mligw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720709932; x=1752245932;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=jhqrBR6qZhr4qOYkw0R488uymhYibKY2QCmrAf3YIYM=;
-  b=fe1MligwX5bE4G3eYYlWc0twQFZImZlmy3l1tqjLumsOI9M+1gTADmdg
-   kNmjuddZ356K2/gcCFlHeMnTNFzpsOA0nBabKg8PlGb5OgP2WO2/TB7QT
-   s76ZKoc3SvU0Kl+cKmbyPl96dxdBOBShu1JsJcoaxMTHc+7WJsHPU0Vry
-   10UvDMY0pGagV0XfcEW+auT6YW1PkXPToVjoTvrK4j8SPx/G0Da9F0pwf
-   AovleyckfNiyHPBJ1CicAQ92/KPqtBLdFWAue5NR7owZYgoRXpOw0kKdL
-   y+nhRSai4XFEMCnfFmDMhapec2knnd1bhaBHwx5L4HQwxd3lEsUQ5LdMH
-   Q==;
-X-CSE-ConnectionGUID: bK/1bt5AQJiicVL88+H6Gg==
-X-CSE-MsgGUID: d247aFIpSN+neBfYZfRacQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="21004752"
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="21004752"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 07:58:49 -0700
-X-CSE-ConnectionGUID: RuW51F1fS22d+pHA1w3cEw==
-X-CSE-MsgGUID: 6gY+E+QYQy+xb6oJFV+YGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="48468596"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jul 2024 07:58:49 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 11 Jul 2024 07:58:47 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 11 Jul 2024 07:58:46 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 11 Jul 2024 07:58:46 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 11 Jul 2024 07:58:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gJDkpZ1uXpvVOZX8BeJCHoqeaeJxVOlBH2VsS4h3vnYnZz21gfVuX2E/XppngyQjhZT2Qb/qyxqXTlY2e8+BAGwcEBFV66wnLFac39z/+isnxLvmBpK01CF/x2xyVEG0wDG9W5+2/3mtvbBGQjuaXRw4Sni/u1o9GlHYgoC2Aqi0UPmwQo/fVSzUXzm4dQujOgFiQq1L4WQ/VgdgCzi5t7lAnjFwMoStuKYHjT2tpZo6srWLDGxpWHj+EgRoPhx9Ka92E5KnzAgpbag7eHuLa8SN9Kcxk0tr/cHyD53X9azq6NPyeK+ngZky40KmnldMe5E36QUkdRyrGKkV0EoLAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZBhkN75KnI0JGFgfuuqSE2NZavXSq+S4NynlBiPREuA=;
- b=m1SxCk+yxQ2Sbrng3PMN9V7E00d7Q/ArE41zQzyuafRjzghwO3R2pT5nhEAAKdQFKDgw71hh+nMmcguR5xExYi1hfwbDl8RESMSMthNPl8zhEg9wMd4fKYfDvYdFJIMZRqTFUEBOqIcvnBI82OSumCzF9J+VoUC4mQniu9j/mI7hTkFrawv5a3CyA0238WBAr2ecKqdB3xATfFjff9fHBWIWn6wwpfWHfGwcSdURkxfdy/rgKLC1Y8UbPqSXMVg5xjIT2xk2OagkQDPx5kDsq/VetpuTLS2HEWRCmFbPaKG3H+Cw+qqvI6PWnPCcjNtpPzabOQgTnFv6CMn1x201Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB6039.namprd11.prod.outlook.com (2603:10b6:8:76::6) by
- DS0PR11MB8113.namprd11.prod.outlook.com (2603:10b6:8:127::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7741.36; Thu, 11 Jul 2024 14:58:38 +0000
-Received: from DS7PR11MB6039.namprd11.prod.outlook.com
- ([fe80::3f0c:a44c:f6a2:d3a9]) by DS7PR11MB6039.namprd11.prod.outlook.com
- ([fe80::3f0c:a44c:f6a2:d3a9%3]) with mapi id 15.20.7762.020; Thu, 11 Jul 2024
- 14:58:38 +0000
-Date: Thu, 11 Jul 2024 22:58:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-CC: <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>, "Joel
- Stanley" <joel@jms.id.au>
-Subject: arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb:
- i2c-mux@70: idle-state: [0] is not of type 'integer'
-Message-ID: <Zo/zFIXN1DFoAsuC@rli9-mobl>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SG2PR04CA0171.apcprd04.prod.outlook.com (2603:1096:4::33)
- To DS7PR11MB6039.namprd11.prod.outlook.com (2603:10b6:8:76::6)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OHjL7T02"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720710028;
+	bh=itsb3ZhOZhDxbRFDuhwPmOmd5B61fMqvju+ZGjeXyag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OHjL7T02nlYOYz3aiCp07/l5asG9Ed/PCld4oMyOu9qgYD9chneaaV+4joG//kLzR
+	 uPA0SbAC4zTnxeBabO21Z92YcFXP8GopO91sC+WpEBecjQQUNfyjPxa0cNzLPnOIsx
+	 ieumt/wiGFAX/adpNibPQA1gUmaQJXET1ARhukYEY91NAjTHMCGk9Sk1oSkSyS/QkC
+	 3+xwLLD1T3LsPOSkHg0m8rUieNOAt/JD9oHIe6VgtZifSmxMw3/je2rTi+gbld9vF6
+	 qT28i+0F/b5HiJrZRs6yS4ZlOaiMAqaezQJhJSGlDW5meKRIAdl0IP4ZV5/PDW79mI
+	 lkfCqdfF1U3cg==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DC6FA3780627;
+	Thu, 11 Jul 2024 15:00:25 +0000 (UTC)
+Date: Thu, 11 Jul 2024 11:00:23 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, matthias.bgg@gmail.com,
+	tinghan.shen@mediatek.com, seiya.wang@mediatek.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, wenst@chromium.org
+Subject: Re: [PATCH] arm64: dts: mediatek: mt8195: Add power domain to
+ secondary XHCI
+Message-ID: <4ac0e464-5ef6-445d-a784-fe367ea23a2d@notapiano>
+References: <20240711093230.118534-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB6039:EE_|DS0PR11MB8113:EE_
-X-MS-Office365-Filtering-Correlation-Id: 89e1373b-502b-4587-89dc-08dca1b9f18e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|220923002;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?H/bhPeJjk3YRev3BWwopKUDNJ/N2GjjyXjeQ5EjCJk9dW1xVk8dZWB06AeId?=
- =?us-ascii?Q?i+0HUM6YG+a4bu5e+ByGjsha22cm5UGuk4JKPKNkpIljZytfsutti5128YIr?=
- =?us-ascii?Q?OnQgaEtK9ZbkXTcBbUmBBw0aukscxeuPvwtsQs0s/7aDWr4YhNgWKoajuF3p?=
- =?us-ascii?Q?iRYtMJhmqHwNKm4Bk2sOUwqBr9PERPmsKbPIyEAfd6o1S+0oc/nMpNGQKsl/?=
- =?us-ascii?Q?VXPPhQKhFn2PdxsDzLHqCVUo15IeuGav6HRZF2eS1vKlcjNoVg1zFvtMBN7/?=
- =?us-ascii?Q?CjFbDTqTphgvI2Q10OIY9BMHIPW5e+ya77Dqa1I4lIYjZAVzakmo5kjFl6lc?=
- =?us-ascii?Q?jlF/sGucxqr6Mu+XM0tMwm29qBmgMygfJJIUmaHBBjHqIIqpVSkQkqT427vB?=
- =?us-ascii?Q?FSZobFHxZIppaLIxRtJtGSjXovvqNSHLMOLdP7dIGgE4DHD5VkzDZDKF0dmZ?=
- =?us-ascii?Q?0GfyZ4sS9Vq4YeIWwoLcaWL6gbz1qL7DDtVfGlu3YcltsI8qffSMjF+Gydh4?=
- =?us-ascii?Q?WD7M0T0mJRGTwJJJGlC4EI1R9Z8zjeQTEcQcGi3z3DvUzJ0a4fssbNlmwN47?=
- =?us-ascii?Q?CMsB+TrWFjpCKXPriGvAWjA2hbna63lupirB8OWof8+6WDYYzRUDvQO5Oego?=
- =?us-ascii?Q?/NhF1uvwq2upp1a1cGEvmPPgbkaISsoEAIELndwBh1/bNXEQqy00xaSBSHQF?=
- =?us-ascii?Q?4tFncR8ssU8VH/3iiRek7Rva98O1xVMkKhnx3HFqq0joJtYMepm3/yIvC/gy?=
- =?us-ascii?Q?j/uEEUX8A8AAZydSBRoKQHuQcGTlrB543Wd4w6xu3ya5stWetFUN9Op0xMJk?=
- =?us-ascii?Q?Elu+gElMJ6/J6U1RhDyhPAlloZac3H4hkhcRB/bZAIdT4BYzgDOyfa6SxNlx?=
- =?us-ascii?Q?fBtVF4pyPlS2sKGYgelxTKakNaAtipNULF2tTEaBKEpp72d4cRUcSGVNtzcU?=
- =?us-ascii?Q?KTsABLm9Y2jQe77LRVj2LDET8vRXyosc7Kvv1cx7/w95E9UfbvTDBaKrDXho?=
- =?us-ascii?Q?kHz36j2wevbXmaejQeDeDveSzULFzC9au9gHAZBny1pAYCYABSqldCho9DjL?=
- =?us-ascii?Q?Hp0g2pU1Ps5KDBg0OfWSImxdjaNQsrdrs0jNv8BL4CEufsUglqH2aOHNwAT1?=
- =?us-ascii?Q?gCLpo5pJf7Z5fnP6NputFDXtC/P1rO4uyAdr836Tjffx2ZqAmJ9inzjo59dw?=
- =?us-ascii?Q?UL7loYOm4wJP3kIPSEilqxb+3TfWhtzSoOsPk52h3gstJROMcfYsS/gWGzNj?=
- =?us-ascii?Q?M2Y+3Di6iJCtv9LTpgHiBaZT4eeZDb3XJCRnxcDT0wzz4fWV2G/zT8UZhiTY?=
- =?us-ascii?Q?PBLXZaB4/8E8ndhI2rnqPDx5M5D11cMQFnxBB+N3l5kadUJFY2o4HZUbdyvj?=
- =?us-ascii?Q?tY7yu2Y=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB6039.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(220923002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?n31IdtuyGUad3uDharv1+KAl9za8Zq++kGj8FaXJwkIFg5nfhzfZYVixcFXR?=
- =?us-ascii?Q?W1nG/m6zGCVugjGM57kjRPq8OsWYp+WTbVXwZUdAIPq6egc6lVIy6gXrqD0L?=
- =?us-ascii?Q?rucuAv6/RC1sxdClrT5TXiai8IodExatkxr/iWGXCD3ErP7qQBbhBIe+tPwo?=
- =?us-ascii?Q?xuKzUWQolcxeKwEZUGWgpcYX0Egay7ug+W3yY1YeH0iWlsMNJJw+RXooy9WM?=
- =?us-ascii?Q?ycG/NQUXfHtJ36NdW+3emzGUWzwCH4UcSq2LppOvpOpM5QTWXFC9ayZ1E41F?=
- =?us-ascii?Q?zD2bQwMdfq9JHt4+wk4lU8RrM+F1j2rWY+gsV7tWza8ATfNFkEGyOahwigMo?=
- =?us-ascii?Q?5L+czq1r2ERHf3il9VDYiTHzFK27hKVYXi1L6DmyeTaNVELeknp6OE6FaLQs?=
- =?us-ascii?Q?3H6L6C7GcjACbwTcC7SmaDaxybs8VVuBnJUUkucY8O7nrhy7X5b+Tr/Kvy7t?=
- =?us-ascii?Q?NjfxHgrgSvA5aMnYYny8L5av4z5FEGWAF9cNCxFiu3zhJP+paB/jIXFsUal4?=
- =?us-ascii?Q?NnFmoN9MWfYHn/yBFw+cmf43qbuzy2aQ0QHFJYDcYAb85/w7GCNxsty1DZpq?=
- =?us-ascii?Q?PGyVzKlnbKiAqbdTodaEHQLepmPQhpo7Oj7wJ/B4cE+Z+kyBoLC06z1lZ7MS?=
- =?us-ascii?Q?tu+Ps9WseFlvvMFGwKthlUHvHwBtyhDbJIxUZIKGD/oN8VP65oJ1ao4wfRnM?=
- =?us-ascii?Q?rrMKI9NpeGaUK3QsX8xdSBTy1P34L82fVyZ6A6YCh34rpEtPYQ44SNwugXbh?=
- =?us-ascii?Q?S9dHZKMb6dZyKQjCdHpAHqSowT2kNLlo8SfkgnZEKbQl+qz8x7ASx5HM0Dlw?=
- =?us-ascii?Q?fBImozYlkrKec8+E7DslvQx4xG1pSDcK2rybsAHVx2jIDwhV8nxvPUyEudbZ?=
- =?us-ascii?Q?NQ0sUDb2M1pKzRlQuYm4tSkFqSfmwUzaG/45AUb2z2QzK+zhww1Q7fPEalYr?=
- =?us-ascii?Q?8gIBkvm6b3Rr/Ry3smdtZ4UPhalm5LuLhDPdkYgFCUgZvaCBKvFx1dUXx+u4?=
- =?us-ascii?Q?hsIQFGynNCt44HEZdSx4wWeoCkHirKR8tAmbopi2/fnmiPlvfMsUaffs556K?=
- =?us-ascii?Q?dmpKlEYRZ1Eh5BS+T2rg3bDpKVlBpbI1kdpeUS1SkCl8COniDwqVVl6o5DeW?=
- =?us-ascii?Q?E6fUGQoe2Yd//TOI60kabiGkET2xUUMzb4J/cWSkgXRQcR81uc9QB4g8qDkt?=
- =?us-ascii?Q?Hrq1eU+2oK9HGSsXnT/183QUUESq3ueFbPMv8fuPjsI3lHLeO/puUrpHLOEn?=
- =?us-ascii?Q?xwZQB9B9c9r6ZduIIdU9VTPjcygm58RNYuF628cR4DCfi/IUWTAxKKPVBy4I?=
- =?us-ascii?Q?RfgyjTepeKLl0KvftG+DBRmTJO7XZpzy7MtaWVjMstLlZLLlnnSyAIc8cMHt?=
- =?us-ascii?Q?AcBRFGPfmx/FIsrNpVM2EaiBkeuefcF/QQklta9TZ//o298kv/oH0PSpSzuf?=
- =?us-ascii?Q?G35BWjSXLU0mDjyj5oOkMNuMjVK33tqYjBF/Nii2O0YWOLNxE2VJgNKV4bZw?=
- =?us-ascii?Q?dTlWPtJb6loXqX7uXUIdL47xwVTrsMiZiGB6anV5Q9aFaljqNiltg5bjQz/H?=
- =?us-ascii?Q?pzvNNQ0Ny1b5oEfn2EjMV2mUETAJRDepAjU4V2EKI0OGSJUDl6kMnlvQQvXq?=
- =?us-ascii?Q?6A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89e1373b-502b-4587-89dc-08dca1b9f18e
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB6039.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 14:58:38.0203
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OhKz0xjrOCSW8iN1dAsoJBvaD1fCE4FFUFUx0OYRd/ZuVCKSgIksJu7dcPYW4u/RZvm1vpg6MMk66w27IiBfTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8113
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240711093230.118534-1-angelogioacchino.delregno@collabora.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9d9a2f29aefdadc86e450308ff056017a209c755
-commit: 2b8d94f4b4a4765dcbe4a48cb0d58b266c158a10 ARM: dts: aspeed: yosemite4: add Facebook Yosemite 4 BMC
-date:   11 months ago
-:::::: branch date: 3 hours ago
-:::::: commit date: 11 months ago
-config: arm-randconfig-051-20240711 (https://download.01.org/0day-ci/archive/20240711/202407110931.S4axppJr-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.3.0
-dtschema version: 2024.6.dev4+g23441a4
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240711/202407110931.S4axppJr-lkp@intel.com/reproduce)
+On Thu, Jul 11, 2024 at 11:32:30AM +0200, AngeloGioacchino Del Regno wrote:
+> The secondary XHCI controller, using a PHY that is shared between
+> it and the secondary PCI-Express controller, gets powered by the
+> PCIE_MAC_P1 power domain.
+> 
+> Add this power domain to the usb@11290000 node to fix probe.
+> 
+> Fixes: 37f2582883be ("arm64: dts: Add mediatek SoC mt8195 and evaluation board")
+> Reported-by: Nícolas F. R. A. Prado <nfraprado@collabora.com> #KernelCI
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/r/202407110931.S4axppJr-lkp@intel.com/
+Hi Angelo,
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@280: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@300: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@380: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@400: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@480: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
->> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-mux@70: idle-state: [0] is not of type 'integer'
-   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mux-pca954x.yaml#
->> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-mux@70: Unevaluated properties are not allowed ('idle-state' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mux-pca954x.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@500: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-mux@71: idle-state: [0] is not of type 'integer'
-   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mux-pca954x.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-mux@71: Unevaluated properties are not allowed ('idle-state' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mux-pca954x.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@580: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-   arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dtb: i2c-bus@600: Unevaluated properties are not allowed ('#interrupt-cells' was unexpected)
+thanks for the patch, but unfortunately it doesn't fix the issue:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[   10.772128] mtk-pcie-gen3 112f8000.pcie: host bridge /soc/pcie@112f8000 ranges:
+[   10.788914] mtk-pcie-gen3 112f8000.pcie:       IO 0x0024000000..0x00241fffff -> 0x0024000000
+[   10.802111] mtk-pcie-gen3 112f8000.pcie:      MEM 0x0024200000..0x0027ffffff -> 0x0024200000
+[   10.941278] mtk-pcie-gen3 112f8000.pcie: PCI host bridge to bus 0000:00
 
+[   10.785937] xhci-mtk 11290000.usb: uwk - reg:0x400, version:104
+[   10.796352] xhci-mtk 11290000.usb: xHCI Host Controller
+[   10.810530] xhci-mtk 11290000.usb: new USB bus registered, assigned bus number 5
+[   10.844258] xhci-mtk 11290000.usb: clocks are not stable (0x1003d0f)
+[   10.844262] xhci-mtk 11290000.usb: can't setup: -110
+[   10.844266] xhci-mtk 11290000.usb: USB bus 5 deregistered
+[   10.861969] xhci-mtk 11290000.usb: probe with driver xhci-mtk failed with error -110
+
+In fact it seems to have made the issue more frequent, as it happened every time
+for the 5 boots I tried.
+
+But that gives me idea to try booting with clk_ignore_unused and
+pd_ignore_unused. I'll update the report with the results.
+
+Thanks,
+Nícolas
+
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8195.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> index 2ee45752583c..96ad1b14626e 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> @@ -1445,6 +1445,7 @@ xhci1: usb@11290000 {
+>  			reg-names = "mac", "ippc";
+>  			interrupts = <GIC_SPI 530 IRQ_TYPE_LEVEL_HIGH 0>;
+>  			phys = <&u2port1 PHY_TYPE_USB2>;
+> +			power-domains = <&spm MT8195_POWER_DOMAIN_PCIE_MAC_P1>;
+>  			assigned-clocks = <&topckgen CLK_TOP_USB_TOP_1P>,
+>  					  <&topckgen CLK_TOP_SSUSB_XHCI_1P>;
+>  			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
+> -- 
+> 2.45.2
+> 
