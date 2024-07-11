@@ -1,154 +1,102 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80932119;
-	Thu, 11 Jul 2024 05:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB202119;
+	Thu, 11 Jul 2024 05:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720676971; cv=none; b=bGqoLCMSfIdDnOrwxdfkq3D8NOobS7VeBhzPW3dBiI86TxU8UfRqeI0XZVBReGEtWJhD9av8Fpj/2/CUz9k10xA3Lv6lMkdmqFMLk+5/IAloQvp/KxTULCvy1nX5sWJzWHoW0e+N0hXu05KrXTEEJJDENBSC863xBwy50ZtNWNM=
+	t=1720676982; cv=none; b=ASNVsNfJEK4j+72UrIZUzZgj1hjd8YZjLxmryJ25IturZtco/2sv3biYXqMwE+Guqyvi4QefwkQQGLycbhg6tnldod2B57agiG8T3m/Vy0TMPen7oZS1wb+mubmOgdpdQ9mtATQvzep0820rHiZkSR5G5kpuv8Gzcpnc9FmQa+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720676971; c=relaxed/simple;
-	bh=TtAx04AsrPmMaDmOaZr4TKNIJz6OqZOHS2TCRopxtTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c2z1AbZ2vKjTKqbwFyDZ713tMplvbziNxjtBrzY9BX6sm3fRLnKSaK6kuqKe+Den/F5jgOoOrXqZC1EX9Wz2DYYFBCpUYeywOnIf0Z+wRuE8GTWBkA6EvmJhOP5KanD0WjWX2mrbqd6T2AERzOEWoSmUp0or+UeG+YwEeHHainY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1720676982; c=relaxed/simple;
+	bh=IMMNbmISKN3AN3uDo01jjPKhfgtYPUQvEhZlKFLT7lA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WkgH+IIhq5MlwCTQie6XdL5hcOFNX6zT9VW4OqYC6WyyVUgjTEd63TkY3/z37K5EhWmvyWKa6i7iH9uxdKvoYE6msqa4mSB4f22PlVVWs3pBDJZOsIa1deXe5qZS870GWMXCSG05nvKFCfUg9WQkEDvVs4lK+616k7njsve19BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJ+56EeI; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4266edee10cso2865995e9.2;
-        Wed, 10 Jul 2024 22:49:29 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJ+56EeI"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3d9272287easo277423b6e.2;
+        Wed, 10 Jul 2024 22:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720676980; x=1721281780; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hCHZzAU8rNlCfCBN32z5tdinaQoz+7lypLVImk4abyM=;
+        b=NJ+56EeIRyK5y4dtRFB76MlGlIB3zcRPKM+GK+IQNat+ud9AuqXZsNkJ3x8RxbtHK6
+         sqpao7cr9PeeYMn5VTNECeq4Qfoiz3KKb2AaOqwGBrWcp20EMsTOKhJZrGZzTvV2ymVP
+         Y+drqvx9UulbIE46LONObBD1yIVWUkALdHAoTBJ95aM62qnnd4gR8BUeba/k91hRy2xs
+         iY15uTr2IxwLl4a0nwrRBihwUPbOlKxiQfCpK/a1azt/mvCGnKGD41o6xWZpxQ26ApU4
+         Ak5nHZnc6QeYfvs5NGiBxa9q4z+pPcJoQNhhVBWOjFfPEN7VetCJF7Bm4sjSU8O3Rz0C
+         HE2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720676968; x=1721281768;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1720676980; x=1721281780;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=00fvTifDFvVnBcJ6kYHawNRR9wAbk1H4q78FlXcE1x8=;
-        b=V+cUfUNOOMXl0iuR/7nFB6kyM0TO6Nz50Ouxqwa2YCvbn2XNtwICFWrZhCuxM0zVmX
-         y9/wyLGd6Foq8/mStmb+ejqgak+EzLS/fc5xUErRHpJ7fZzIE8a7LW0A6NNvLJQJ3p97
-         mgiOudtDiPNOg/YYa0D8q/RKMWZqs8NWy9NPRfOkpJ56XcjPDM0fYnc+cigO4DPmp58V
-         oxM6Mj5PHvUnkR/0BnW09kk0nN2zVygiG6I3WdYUnXSYMv3/n42KT7lTU9tmg73OkVZ5
-         BJI7AeHDi5Sx8w/PR/T0W0h0QUxfdW9XvnmF1ztHurrTR5/d44763jkUAjjdBK/QUqmv
-         wotQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJD0tLmNvs9P/vWLkdkXpCvCQq7Pfc86qOutWLKXIkLT9IrNbMFI80yvtZ84SGMw/2ojdjxz1zVpuk7MdzHvSoB1yRLn8Rh0mE+UL1Qsx2Svb0TLSSRc712Ouaf9YHiPDtUIPi
-X-Gm-Message-State: AOJu0Yzjf/nrnWapOF8KfINEbdBkB8e4APn3FjB6OuND5rDm5LA62wvQ
-	u/ii/gcIOhEsQKy91IE1pcMyPqIZFYsaUgqIMZblM439r/Jk+HKc
-X-Google-Smtp-Source: AGHT+IH1S2Mwi4vybh74mjAke/u9DirvmqwbDrxa8I/YMOrjllCOm2I5dAsxnn2JZZan2yI74IuS1w==
-X-Received: by 2002:a05:600c:6c51:b0:426:5e55:199a with SMTP id 5b1f17b1804b1-426707e3149mr44363655e9.23.1720676967885;
-        Wed, 10 Jul 2024 22:49:27 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427165c69f0sm80270865e9.30.2024.07.10.22.49.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 22:49:27 -0700 (PDT)
-Message-ID: <e321400f-0b76-4fdf-8773-cbad8a47baba@kernel.org>
-Date: Thu, 11 Jul 2024 07:49:25 +0200
+        bh=hCHZzAU8rNlCfCBN32z5tdinaQoz+7lypLVImk4abyM=;
+        b=MCPp/eL8y5AJ/V9VTPcKuEoFUS9Ck7Zqgb/BCoSWGQ2gUojNRbDdXLaWAfG8IQaOYU
+         KQgbwVf754KhgACYnj7j86RsEwX3r3WwacB5IfjM6cj4CG7RxSOJ1O1Yzq7GYuJXPF1S
+         4vkVr55z9UB6Sju5LboYS5zBcESe7JE+ff5eQirrafW9uBxjkkqD/VWlsWMaD8Wal45S
+         Xv5RmF2F1J38e23KgmqjTj9MU2scS6ZwP35g55Vp4YN/ZuXHtzr9hq8FHXwlmL1REIAd
+         QiwYo6hQ0yMa3ULuwm0kvVFD3moExwXTP1voy+8Ic4gHkgiQ97DpPRAiEavRkUtyBHQB
+         G4+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVtH2dM/RXhNdFfJIKEpINeKGt5ftfleIHEP+WcB2ebRNEKSRrK8iMzccPB3XSwwOdQxaZDmRw/2DvvtaQnYe5WInGldS/+2uaWxuyetrItmV7cAW3hFd4M975Pco+MBCHgZD2ZoLMZD03T3w==
+X-Gm-Message-State: AOJu0YxjG8yhdEErRUdD8K3U6DiUT/dy1i0cCbWMNC4TWxbepRySxms0
+	rnmgua4mCkNrAIYmwaiyb5BkEYdZ3UOz+Rtk1gyQy9XYNPXZ9b6D
+X-Google-Smtp-Source: AGHT+IEFoGyxuqLL8qcwW8QVwzy8KwhCryR/Jet3lHCc4LS5wiSziHX270IbTD0y1y3Sh1aUD5IOHw==
+X-Received: by 2002:a05:6808:238a:b0:3d9:2190:9d45 with SMTP id 5614622812f47-3d93bdd1404mr8494576b6e.10.1720676979923;
+        Wed, 10 Jul 2024 22:49:39 -0700 (PDT)
+Received: from bnew-VirtualBox ([2405:201:3020:7812:b416:d4b5:f43f:6324])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d667ec466sm3094454a12.60.2024.07.10.22.49.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 22:49:39 -0700 (PDT)
+Date: Thu, 11 Jul 2024 11:19:34 +0530
+From: Ankit Agrawal <agrawal.ag.ankit@gmail.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/clocksource/qcom: Add missing iounmap() on error
+ when reading clock frequency.
+Message-ID: <20240711054934.GA37910@bnew-VirtualBox>
+References: <20240710110813.GA15351@bnew-VirtualBox>
+ <2a3561cc-c6b3-4823-b488-fc8ebc53e1a6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] x86/entry_32: Use stack segment selector for VERW
- operand
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Uros Bizjak <ubizjak@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org, x86@kernel.org,
- Robert Gill <rtgill82@gmail.com>, Jari Ruusu <jariruusu@protonmail.com>,
- Brian Gerst <brgerst@gmail.com>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
- antonio.gomez.iglesias@linux.intel.com, daniel.sneddon@linux.intel.com,
- stable@vger.kernel.org
-References: <20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com>
- <8551ef61-71fb-18f3-a8a8-6c7c3ed731e6@gmail.com>
- <20240710231609.rbxd7m5mjk53rthl@desk>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20240710231609.rbxd7m5mjk53rthl@desk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a3561cc-c6b3-4823-b488-fc8ebc53e1a6@linaro.org>
 
-On 11. 07. 24, 1:16, Pawan Gupta wrote:
-> On Wed, Jul 10, 2024 at 11:50:50PM +0200, Uros Bizjak wrote:
-...
->>> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
->>> index d3a814efbff6..d54f6002e5a0 100644
->>> --- a/arch/x86/entry/entry_32.S
->>> +++ b/arch/x86/entry/entry_32.S
->>> @@ -253,6 +253,16 @@
->>>    .Lend_\@:
->>>    .endm
->>> +/*
->>> + * Safer version of CLEAR_CPU_BUFFERS that uses %ss to reference VERW operand
->>> + * mds_verw_sel. This ensures VERW will not #GP for an arbitrary user %ds.
->>> + */
->>> +.macro CLEAR_CPU_BUFFERS_SAFE
->>> +	ALTERNATIVE "jmp .Lskip_verw\@", "", X86_FEATURE_CLEAR_CPU_BUF
->>> +	verw	%ss:_ASM_RIP(mds_verw_sel)
->>> +.Lskip_verw\@:
->>> +.endm
->>
->> Why not simply:
->>
->> .macro CLEAR_CPU_BUFFERS_SAFE
->> 	ALTERNATIVE "", __stringify(verw %ss:_ASM_RIP(mds_verw_sel)),
->> X86_FEATURE_CLEAR_CPU_BUF
->> .endm
+On Wed, Jul 10, 2024 at 01:54:01PM +0200, Konrad Dybcio wrote:
+> On 10.07.2024 1:08 PM, Ankit Agrawal wrote:
+> > Add the missing iounmap() when clock frequency fails to get read by the
+> > of_property_read_u32() call.
+> > 
+> > Signed-off-by: Ankit Agrawal <agrawal.ag.ankit@gmail.com>
+> > ---
 > 
-> We can do it this way as well. But, there are stable kernels that don't
-> support relocations in ALTERNATIVEs. The way it is done in current patch
-> can be backported without worrying about which kernels support relocations.
+> Or even better, you can extract:
+> 
+> drivers/platform/x86/intel/pmc/core_ssram.c
+> 32:DEFINE_FREE(pmc_core_iounmap, void __iomem *, iounmap(_T));
+> 
+> into a common header, call it something less intel-specific and use
+> it with __free() here
 
-This sounds weird. There are code bases without ALTERNATIVE support at 
-all. Will you expand ALTERNATIVE into some cmp & jmp here due to that? No.
+Can you please give a place where adding it would be appropriate? I am
+new to contributing here, so any guidance on where to add the
+DEFINE_FREE would be really helpful!
 
-Instead, you can send this "backport" to stable for older kernels later, 
-once a proper patch is merged.
+Also, just trying to think out loud. Will the cpu0_base pointer (and
+also the source_base pointer) be required once this function exits? If
+so, I think I will also need to use no_free_ptr() to ensure that the
+memory doesn't get iounmap-ed once the function exits.
 
-thanks,
--- 
-js
-suse labs
-
+Thanks!
+Ankit
