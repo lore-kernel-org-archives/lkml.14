@@ -1,80 +1,101 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360FC155CAC;
-	Thu, 11 Jul 2024 09:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D29D156962;
+	Thu, 11 Jul 2024 09:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720688619; cv=none; b=PWwO2Wh+fCtylwmW2PiWwO5wmM7+Zjxer4uRnGNRE9aUChudL3EYqs3XN4TGlUpNvkjfrpFDOofwRBOhKmWmlZ3AXxIHIzlI4DBjAAB1T9JWhH304mZ0fyKivBLwMk5vrMwATBNHOQ5jz6kNOz9MruhaYfuc/fk0CiqO+tfRoFo=
+	t=1720688620; cv=none; b=MsCJQLNH4QT6dSAWQJaXOT5Z8MCqU+HeLV0Br1YOOS0t4csWVHr9KqUx8LzUL2ejLxEfE5m1k9KgA8+B2EVTHte9vCL0wnRpgPXUBSXxX/cEGNUojfv78EoCnJF7I4gH7yZaexfS/b/Wfh2qAharyvQOG7jULaKqfy8RMMInAYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720688619; c=relaxed/simple;
-	bh=jeEDe/8MtEbbTRbq+x6Zlhlnsoct6hDMzlKssrUGljo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UhE55IDkbV5wjz5n+Y44LEXDRpxdIvR8pn9kMi08fYOEwy9Eoolgpeppyj74Sq81unPSa0uCkW/UGEP2e3rVtEUl35qn3D1wFaHm31vZS0sPoky9lT0v/eHRQCb5mCudT2hJP8qnJRZ+FHAwP8LsmalvJSSMWVwEZ2iR2/ZpFYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XK1ebZAh; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720688620; c=relaxed/simple;
+	bh=0j9C0mA8leOd3/gYl9pkH5HlOMXlezBR9eyJZWtCdSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gLvRcBRUmSxfwuGA1DJeX9CbmAmPs7QIJt6LzllFYM7Hyk+Cr5FeXBhzWFjNntfMZNmYtAxL6PNsWE3qWYmxlADEXle45lHdFyXs7ufAf+FdTOP75uCmZDrPZ2RSv64j+O9smUxcTif4nhRqoqWzhMK9MjmE5f+Brt8n0pzmDec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pkm6nrV4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XK1ebZAh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yn/4uYOR0MzDP1hMwQP15burd4Chzf+nAfXSwrvjRPg=; b=XK1ebZAh+HCjYp1oViuJiR//xj
-	Sd95oMuFovK/BkncM6YHrnbELaDeDW6WInd4ap1UC0fG1gRQV4M1iY2SMbb+07mOcUCZ4bm68yUvj
-	+xwWLq25xqF+Qlk7yopNKUegn01WvPZpEHdMLqoAjMm/L5IQ/JuzP7GcTpOBsrxJikVG2yMb/70iq
-	LLKKUfBwEHSg6txyuLGzpCvE2pkR+ErEvNj1mnGMNoL+4c1YNEecK5YSgcXn7z47ZfsKoIbrQZoci
-	5SzX2y1hYu9oFib9H37c+8vQwmf3/+9bhzHhCJ4ekIUOwcpyiRV2k3nW//vGZOeqg7y36FtEwntxM
-	F+K4u+vA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRpi6-0000000AnX0-2uqm;
-	Thu, 11 Jul 2024 09:03:30 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2C92530050D; Thu, 11 Jul 2024 11:03:30 +0200 (CEST)
-Date: Thu, 11 Jul 2024 11:03:29 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Robert Gill <rtgill82@gmail.com>,
-	Jari Ruusu <jariruusu@protonmail.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	antonio.gomez.iglesias@linux.intel.com,
-	daniel.sneddon@linux.intel.com, stable@vger.kernel.org
-Subject: Re: [PATCH v4] x86/entry_32: Use stack segment selector for VERW
- operand
-Message-ID: <20240711090329.GI4587@noisy.programming.kicks-ass.net>
-References: <20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pkm6nrV4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9B4C116B1;
+	Thu, 11 Jul 2024 09:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720688620;
+	bh=0j9C0mA8leOd3/gYl9pkH5HlOMXlezBR9eyJZWtCdSw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Pkm6nrV42Al9oF8Iq/Hhe6ox6VNONX33SxTWhZ3kA+flV5Soh+gqauyFDNCS9k0bD
+	 6okQnlj7Vj/hINLPo5OLbn7QxgEDnWYS6zdjH99Ow45azgJlnQxh7f4XDGboAiK98w
+	 olgZ5uGiXdgzzQ8lzBBeXOno89BOpK/KoVSTR+phtE42VAUa5GJZNN4QCGaKUpm4To
+	 v9GFReyM3Fe8IzuCxruJmR4XoT+bM2gspER/WmVhxI/rqr045xUPwXGIOb2BpfWJt1
+	 AvrlUqexk4Fo98XwjrhY5VW+u7wZM0X/U3x71vYc7CQIaxsLScf8mva2fepZCvZPIT
+	 UmFM25zRMtAuQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1sRpiC-000000005Ql-3Bf3;
+	Thu, 11 Jul 2024 11:03:36 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH] arm64: dts: qcom: x1e80100: enable GICv3 ITS for PCIe
+Date: Thu, 11 Jul 2024 11:02:50 +0200
+Message-ID: <20240711090250.20827-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240710-fix-dosemu-vm86-v4-1-aa6464e1de6f@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 10, 2024 at 12:06:47PM -0700, Pawan Gupta wrote:
-> +/*
-> + * Safer version of CLEAR_CPU_BUFFERS that uses %ss to reference VERW operand
-> + * mds_verw_sel. This ensures VERW will not #GP for an arbitrary user %ds.
-> + */
-> +.macro CLEAR_CPU_BUFFERS_SAFE
-> +	ALTERNATIVE "jmp .Lskip_verw\@", "", X86_FEATURE_CLEAR_CPU_BUF
-> +	verw	%ss:_ASM_RIP(mds_verw_sel)
-> +.Lskip_verw\@:
-> +.endm
+The DWC PCIe controller can be used with its internal MSI controller or
+with an external one such as the GICv3 Interrupt Translation Service
+(ITS).
 
-I know this is somewhat of a common pattern, but I think it is silly in
-this case. Since we already have the ALTERNATIVE() why not NOP the one
-VERW instruction instead?
+Add the msi-map properties needed to use the GIC ITS. This will also
+make Linux switch to the ITS implementation, which allows for assigning
+affinity to individual MSIs.
 
-That is,
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-	ALTERNATIVE("", "verw %ss:_ASM_RIP(mds_verw_sel)", X86_FEATURE_CLEAR_CPU_BUF)
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index 32a73ff672be..5822ed97ad87 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -3114,6 +3114,8 @@ pcie6a: pci@1bf8000 {
+ 			linux,pci-domain = <7>;
+ 			num-lanes = <2>;
+ 
++			msi-map = <0x0 &gic_its 0xe0000 0x10000>;
++
+ 			interrupts = <GIC_SPI 773 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 774 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 837 IRQ_TYPE_LEVEL_HIGH>,
+@@ -3235,6 +3237,8 @@ pcie4: pci@1c08000 {
+ 			linux,pci-domain = <5>;
+ 			num-lanes = <2>;
+ 
++			msi-map = <0x0 &gic_its 0xc0000 0x10000>;
++
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
+@@ -5394,8 +5398,6 @@ gic_its: msi-controller@17040000 {
+ 
+ 				msi-controller;
+ 				#msi-cells = <1>;
+-
+-				status = "disabled";
+ 			};
+ 		};
+ 
+-- 
+2.44.2
 
-and call it a day?
