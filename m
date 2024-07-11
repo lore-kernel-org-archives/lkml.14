@@ -1,96 +1,125 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0A76149000
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 20:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CF318E20;
+	Thu, 11 Jul 2024 20:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720728558; cv=none; b=gUbljXSTnD2ZfcVr9gnLDOtiZf3TtqiA9iYUPWpUe9E7fMVRUwV1U4lgSeulAenx51CVDzpSrbcDoLBnxG1va6xDEiL6e63E6EcUtEwAYPDwfzRMU5cBaIvfUr/WXrT8Oc5noT4LuhKsaERteDUA11BEdhB+YYGfbq710LH7qrE=
+	t=1720728699; cv=none; b=u4GI89vjhcGz8sqPOmYg8MxseUucIRUK7CvP6dPibIrNA54rgsDStbhvAnqtXsivge4zWIGKS045Os+RCexy4eglOh2SdKe2qcskWtI/u6FaGKt5JM0FK5vUaLCoXA0Y+mtBUYjlhJVEToa/hZyNIL4ay8lvXyxxvZt2bgSzoXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720728558; c=relaxed/simple;
-	bh=IQEMcvQA4q5UdFL8E3k7bSfozbC0sE/EVwt+B8J4d+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XYVVcMIuDe2sQlZoSr9OEBCtXYuX7wjJ0PcUB5osCb71KiyWwdapTh/xEYzyaL84iFW55hX4j6Hcmegnosg41MH4DbbcAJetdXhtIOVNOL7gc6ra/ZmZnTAfL8p7KtQhxR34KxCRqBmclRdqK6NIwD2+USOnCcdFzayT0HHeD2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAF421007;
-	Thu, 11 Jul 2024 13:09:40 -0700 (PDT)
-Received: from [10.57.91.215] (unknown [10.57.91.215])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A365E3F762;
-	Thu, 11 Jul 2024 13:09:13 -0700 (PDT)
-Message-ID: <455ccc97-11bd-456d-92b3-b7c8fe4c8d9a@arm.com>
-Date: Thu, 11 Jul 2024 21:08:49 +0100
+	s=arc-20240116; t=1720728699; c=relaxed/simple;
+	bh=a4IaAwMHzvt/g9ptiPrgRWeIx0HREljSiORyiBGvSl4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=I71blgCOSDCvF0WSdFtcZHG29mKDjoTQ1DCoLPmbLNWHVE3gAr3c2fVtw9DfZ4/FuAcPsb+q7DSAdZhGkJ828mLVLXjrxPP39ODh4yvCvDjFFIKVsitjAYj61HJYSiRZ3XPJSdZHfBqURHUeoY/FuDd12Z23EDlKELbh/UCHV68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=C1/NzMWf; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C1/NzMWf"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BJtWjY012893;
+	Thu, 11 Jul 2024 20:11:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id; s=corp-2023-11-20; bh=bPDFKO
+	mAM620KQJrPcT369nPFBjX//sGP3qTkmP3d2A=; b=C1/NzMWfXwsRJ1co8XM3iB
+	lkf/lG+JzmFYUGsIoXmOOf+nUXcRKFbCgkkQ9W+nUWmM1sWjJDFT8Hn3DDp7dcqK
+	oHoFBL6IV32v5DZpQb7c8IVHbHPplYDXR0vR4kagu7Z06cBPmwgSULUEC1mlKqoq
+	PsEARxP3MzilJyTF4arGpCN23HbGaP3biylgPJCydLdiV1T1bZbkAEQKoyx0FtsG
+	kHkMEytnHAyEKUz6lYVwy3f/OHvak6+fbYe/GUNwK4B41jWCLmOB5zLTqLIma4Uy
+	bulHu6sU1vOMP5MnUwQOhj48vpJuiJwQLhKSIPalS0EVy97ui4CGGgDYJmLAtpMw
+	==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wkcjchj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jul 2024 20:11:33 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46BJHofv028793;
+	Thu, 11 Jul 2024 20:11:33 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 409vv5gadw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=NO);
+	Thu, 11 Jul 2024 20:11:33 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46BKBWkE010359;
+	Thu, 11 Jul 2024 20:11:32 GMT
+Received: from pp-thinkcentre-m82.us.oracle.com (dhcp-10-132-95-245.usdhcp.oraclecorp.com [10.132.95.245])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 409vv5gadb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=NO);
+	Thu, 11 Jul 2024 20:11:32 +0000
+From: Prakash Sangappa <prakash.sangappa@oracle.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dhowells@redhat.com, viro@zeniv.linux.org.uk
+Subject: [PATCH] vfs: ensure mount source is set to "none" if empty string specified
+Date: Thu, 11 Jul 2024 13:24:22 -0700
+Message-Id: <1720729462-30935-1-git-send-email-prakash.sangappa@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_14,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2407110140
+X-Proofpoint-ORIG-GUID: XngfTtqeEw_i6NTOO5Emtq2AGre32dMl
+X-Proofpoint-GUID: XngfTtqeEw_i6NTOO5Emtq2AGre32dMl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dma: Add IOMMU static calls with clear default ops
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
- Jason Gunthorpe <jgg@nvidia.com>, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev
-References: <98d1821780028434ff55b5d2f1feea287409fbc4.1720693745.git.leon@kernel.org>
- <f2b699aea8fff5589a674da2a567fd593ed2d386.1720693745.git.leon@kernel.org>
- <28309b7f-9809-452f-95fe-3448c15bdf1b@arm.com>
- <20240711185741.GC1815706@unreal>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240711185741.GC1815706@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 2024-07-11 7:57 pm, Leon Romanovsky wrote:
-> On Thu, Jul 11, 2024 at 07:23:20PM +0100, Robin Murphy wrote:
->> On 11/07/2024 11:38 am, Leon Romanovsky wrote:
->>> From: Leon Romanovsky <leonro@nvidia.com>
->>>
->>> Most of the IOMMU drivers are using the same DMA operations, which are
->>> default ones implemented in drivers/iomem/dma-iomem.c. So it makes sense
->>> to properly set them as a default with direct call without need to
->>> perform function pointer dereference.
->>>
->>> During system initialization, the IOMMU driver can set its own DMA and
->>> in such case, the default DMA operations will be overridden.
->>
->> I'm going to guess you don't actually mean "IOMMU drivers" in the usual
->> sense of drivers/iommu/, but rather "arch DMA ops (which often, but not
->> always, involve some sort of IOMMU)."
-> 
-> Yes, you are right. I used word "drivers" as a general term to describe
-> everything that implements their own ->map_page() callback.
-> 
->>
->> If so, I'd much rather see this done properly, i.e. hook everything up
->> similarly to dma-direct and be able to drop CONFIG_DMA_OPS for "modern"
->> dma-direct/iommu-dma architectures entirely. Furthermore the implementation
->> here isn't right - not only is it not conceptually appropriate to make
->> iommu-dma responsibile for proxying random arch DMA ops, but in practial
->> terms it's just plain broken, since the architectures which still have their
->> own DMA ops also don't use iommu-dma, so this is essentially disabling the
->> entire streaming DMA API on ARM/PowerPC/etc.
-> 
-> Sorry but I'm not sure that I understood your reply. Can you please clarify
-> what does it mean broken in this context?
-> 
-> All archs have one of the following options:
-> 1. No DMA ops -> for them dma_map_direct() will return True and they
-> never will enter into IOMMU path.
-> 2. Have DMA ops but without .map_page() -> they will use default IOMMU
-> 3. Have DMA ops with .map_page() -> they will use their own implementation
+Due to changes from commit 0f89589a8c6f1033cb847a606517998efb0da8ee
+mount source devname is no longer getting set to 'none' if an empty
+source string is passed. Therefore /proc/<PID>/mountinfo will have a
+empty string for source devname instead of 'none'.
 
-Urgh, sorry, let that instead be a lesson in not adding needless layers 
-of indirection that are named as confusingly as possible, then. Seems I 
-saw stubs plus static inline wrappers, managed to misread dma_iommu_* 
-vs. iommu_dma_*, and jump to the wrong conclusion of what was stubbed 
-out, not least since that was the only interpretation in which adding an 
-extra layer of inline wrappers would seem necessary in the first place. 
-If these dma_iommu_* functions serve no purpose other than to make the 
-code even more of a maze of twisty little passages, all alike, then 
-please just feed them to a grue instead.
+This is due to following change in this commit
+in vfs_parse_fs_string()
 
-Thanks,
-Robin.
+-       if (v_size > 0) {
++       if (value) {
+                param.string = kmemdup_nul(value, v_size, GFP_KERNEL);
+                if (!param.string)
+                        return -ENOMEM;
++               param.type = fs_value_is_string;
+        }
+
+That results in fc->source, which is copied from param.string, to point
+to an empty string instead of it being NULL. So, alloc_vfsmnt() called
+from vfs_create_mount() would be passed the empty string in fc->source
+not 'none'.
+
+This patch fix checks if fc->source is an empty string in the call to
+alloc_vfsmnt() and passes 'none'.
+
+The issue can be easily reproduced.
+ #mount -t tmpfs "" /tmp/tdir
+ #grep "/tmp/tdir" /proc/$$/mountinfo
+
+With the fix
+506 103 0:48 / /tmp/tdir rw,relatime shared:268 - tmpfs none rw,...
+
+Without the fix
+506 103 0:48 / /tmp/tdir rw,relatime shared:268 - tmpfs rw,...
+
+Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
+---
+ fs/namespace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 5a51315..409b48c 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1100,7 +1100,8 @@ struct vfsmount *vfs_create_mount(struct fs_context *fc)
+ 	if (!fc->root)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	mnt = alloc_vfsmnt(fc->source ?: "none");
++	mnt = alloc_vfsmnt(fc->source && strlen(fc->source) > 0 ?
++			   fc->source : "none");
+ 	if (!mnt)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-- 
+2.7.4
+
