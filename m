@@ -1,95 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DF6B674;
-	Thu, 11 Jul 2024 01:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2896FC3;
+	Thu, 11 Jul 2024 01:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720660246; cv=none; b=IzmSqlz+B9byiPOJRYtWl1ow04ui0qxonKqWLIGCrsHypO9Af//aidmaERxl3mXXRn/lzRqVmuiozA5aMu5D8mmOHEPwf7JU3wOlB2tw3lqyGciKJS5gqHk28eZYDyWktHgJB6r4xL9FTeBaUiNI0hWXAqABXtk3kDbtj4wGjTk=
+	t=1720660363; cv=none; b=UrK09f1jsRsSKbVJKHruKxTCXGiPTRC+++9uTNPdHImMi3oV5WR4o1Cqrv1qarC+8D/of9NZCrXWr7oLZT0k4fc6XkUBcBKWgeVVa4ThDGlq0PVD9Zjy3FxoYwpgS2y1bMdZH/wqMuuzukoNnO1ICFds5UwsGP75MqbBEJJHO7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720660246; c=relaxed/simple;
-	bh=4adTuxbDi35JH0mF6nibIf+rZaUnp1ZHEwRyH+5+8PI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=LHNgDJARQc9EBBdaNMKc5DDhH0tIXnd+xVpdnN9Lg01gx2DX6agmeCEX5rbpTf/kZARNl7ypbUhxwGEwNakCVFmzGxzIpo6xDpLJTakIHpHSnufkIMxoCc0LJ/sxVikE4nqCqa0wPZGsn+lKDXuitr/9B97eJUFeVaHwDlu8W6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnITX3Ag; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnITX3Ag"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F76C4AF07;
-	Thu, 11 Jul 2024 01:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720660245;
-	bh=4adTuxbDi35JH0mF6nibIf+rZaUnp1ZHEwRyH+5+8PI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=CnITX3AgLGKOxCjH5CBLtEW5HAngIKzDD9FF+XtS46V2CsusfOu98wN2mxuDbg87U
-	 RCDyDUcGDG+Du0JpTyAo4VgKe/DDEAe/lSMRQ4c0+U13DSCwuHkLVWQo2xMthg3ObN
-	 uf0lmxAAnoFM1j8IYOHa3desJnc35uWDFzPwbTYXVx6G6gl7GcUkuJh+sgNQaypWE0
-	 rhF1vDWEoumZGnP/jOufzNTdQqa/akzJSTyAHtNI1a2SLx7ecw5z1yH+mtHz2q0zyi
-	 ZTg2K1wnyZc14smU0qqpXKO1VLJZoDJTPkhWDjshaod3t8LjmWXjiaOHAh8n8PjY6/
-	 /CywQyV+yxlTg==
-From: Mark Brown <broonie@kernel.org>
-To: devicetree@vger.kernel.org, Rayyan Ansari <rayyan.ansari@linaro.org>
-Cc: alsa-devel@alsa-project.org, Banajit Goswami <bgoswami@quicinc.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- Rob Herring <robh@kernel.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20240710113833.39859-1-rayyan.ansari@linaro.org>
-References: <20240710113833.39859-1-rayyan.ansari@linaro.org>
-Subject: Re: [PATCH v2 0/2] ASoC: dt-bindings: convert qcom sound bindings
- to yaml
-Message-Id: <172066024227.393700.11903720765661169490.b4-ty@kernel.org>
-Date: Thu, 11 Jul 2024 02:10:42 +0100
+	s=arc-20240116; t=1720660363; c=relaxed/simple;
+	bh=O7UHm5mGZ4SXp7fR7bG+DpEoKu3hZUJvpz1WHuoRNrU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vqx/48J7lKnH4M5Yv6VLJNH6L977h3bmP2KmTvBXkgh8B5u4Gi2779Cf8C9c+pH32Cl/9icW3vlaRjOaadgo376cvDS65aOIbw/HxU7evPjGwS7khQDO+gQHDBh+LVr5lBzvTUdjtDe/MJRqRwA1lFFKAlayh0E1qO5bguGmx3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowADHqE10MY9mlj+8Ag--.2888S2;
+	Thu, 11 Jul 2024 09:12:21 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: njavali@marvell.com,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	skashyap@marvell.com,
+	himanshu.madhani@oracle.com,
+	dwagner@suse.de
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH v2] scsi: qla2xxx: Convert comma to semicolon
+Date: Thu, 11 Jul 2024 08:57:24 +0800
+Message-Id: <20240711005724.2358446-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-0bd45
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADHqE10MY9mlj+8Ag--.2888S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZrWxtrWUCF1UXry8AFb_yoWDGrc_uF
+	s0qrW2qrn0kr129w18Xr43A3yIvFWvqr1kC3WYyry5u3y8X347XF1Yqr43X3W3trWIyFW5
+	Aw4UXryjvF1rujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc2xSY4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfU5eOJUUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Wed, 10 Jul 2024 12:36:05 +0100, Rayyan Ansari wrote:
-> These patches convert the remaining plain text bindings for Qualcomm
-> sound drivers to dt schema, so device trees can be validated against
-> them.
-> 
-> v1: https://lore.kernel.org/all/20240709152808.155405-1-rayyan.ansari@linaro.org/
-> 
-> Thanks,
-> Rayyan
-> 
-> [...]
+Replace a comma between expression statements by a semicolon.
 
-Applied to
+Fixes: d4523bd6fd5d ("scsi: qla2xxx: Refactor asynchronous command initialization")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+Changelog:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+v1 -> v2:
 
-Thanks!
+1. Add Fixes tag.
+---
+ drivers/scsi/qla2xxx/qla_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1/2] ASoC: dt-bindings: qcom,msm8916-wcd-digital-codec: convert to dtschema
-      commit: 054ac9c97c7d9eb55f471fc6f019b654d17332a7
-[2/2] ASoC: dt-bindings: qcom,apq8096-sndcard: use dtschema
-      commit: 3cbda25e2db28b4352c73d4167f0dab10049ea54
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 8377624d76c9..e2ca9a14b643 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -423,7 +423,7 @@ qla2x00_async_logout(struct scsi_qla_host *vha, fc_port_t *fcport)
+ 	sp->type = SRB_LOGOUT_CMD;
+ 	sp->name = "logout";
+ 	qla2x00_init_async_sp(sp, qla2x00_get_async_timeout(vha) + 2,
+-			      qla2x00_async_logout_sp_done),
++			      qla2x00_async_logout_sp_done);
+ 
+ 	ql_dbg(ql_dbg_disc, vha, 0x2070,
+ 	    "Async-logout - hdl=%x loop-id=%x portid=%02x%02x%02x %8phC explicit %d.\n",
+-- 
+2.25.1
 
