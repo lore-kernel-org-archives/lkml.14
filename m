@@ -1,151 +1,116 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB7915F40D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 16:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C98155CB8;
+	Thu, 11 Jul 2024 16:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720714478; cv=none; b=aC0EW/Z9cE+8bb4JSf9IK9S+t03Sw1qMDF4/uGfEtlO+vZwvw1SCFZiSLJb9ardWszaZDCv4Zej3FwxcQZGDFrKB8wV/wbcKkh1rwXFeiyAC3HqfuGEhm/cSvuOWt2Bsfi10bBWWeK7+Ic846VGimoiuEvx8eE0CAZm9b7GQzsY=
+	t=1720714554; cv=none; b=NYNr9Hs6ws0DpWIbCMsd1bj3VTKqqKZ7A2pHOARGEWGA5aBU8/YSqXJFmMEXm+MU5wwWkAfDNHXbowt8eWj6OmQ5DYn/RhuUCtYM7+xru3m7rNLiLuYimkp7OQd/v1+609gYVH2Hs5l2aZgW1tC4hsGbWQeGX+RP32V+hRG+yKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720714478; c=relaxed/simple;
-	bh=p0Fd5kqP/qELdWU/vCSn4X7+8f2/BPDr6C4O+78HNvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T7s5iiLBg00s2Ziq9njZb51Ay3VPxZzn8LwjRvn7MEa5aSkcxUuBo+yawqG2juTCRk1sRbom+Ll7ED7YWBwUeQBgWdI9rVvQF/t6Tl3GVTKh7cG1NKyxq4XgoAaaovnv3zbRTGeaOYo7RZz477KKXlAVbvto48q78j/8UcIAkqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qz5aLucv; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720714554; c=relaxed/simple;
+	bh=nu4E+KG9xuPTzxWlnYTkEQF4+5J5OTZxHGatiEDscYA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FzbWmtJs3/+VQWOYjJ2+glZMTF1pp/lfm95odM2bN5DQnpY9uRLJvJpRyIqG+6T6WrpOvcVdNK1WNkXIkv1yPOGXghkQcnQjseFLoX9pv5GIZ7zWQXjeL5QcHJjHRUO6Rpa5AUEjrUEoXd+LLMUQBX+slO8ML+Nnj9euCDxFg9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DhMXRI0u; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qz5aLucv"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7eb41831704so2527039f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1720714476; x=1721319276; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fiasLvVkTXNMoP1/ktol3zYB4Lu4so/sXSPfIuMBjOQ=;
-        b=Qz5aLucvlf/bSSgVdKS+FXDEHc2cJHKFBytwnBaEBmh21lQCO6AhWfblRILnoQArLF
-         yhe2ENCRxCVNbO0oNb+0x3J5iXTLT0EocEdrGkl7okWzpGvVrcWc9wrcYiI5WbKa9fid
-         pmgDJfPk2HipTl9bIwN6G9qfxfZ767W43Q4+Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720714476; x=1721319276;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fiasLvVkTXNMoP1/ktol3zYB4Lu4so/sXSPfIuMBjOQ=;
-        b=rwXbfbkeRZrsfDnnW0TT+TXv76rVRvP2VnXZOxpM67FVwpBdo/z0xaet1OT2ZoiNik
-         b5jAi2xh6w+zkCpQr8UZrIepeerJ3eu/asFsDM7rY5qxF/4zE+LRbd3sqhH/Ieaj8XsA
-         greFI6PNDv4J/Oj+EoQpoEROaIxZozslRfebqsauqBjflgfPakgdC46nSDul0jBlb3Ov
-         jkuJK8jkW6gIgMrB+zPpK546I2FdrQreTt+CbGEk37l2Pe0nGD9w6mVAfn0KIOvT+jXq
-         ezH7H26JuKbGZfjVXl4DUZCJD3zfyO9H0NXu2rCiXYj+pRH0czOYsOPwv2npxJoSRc0I
-         mevA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHZk7jS254y9mNB488ZvOfaEyXOxei3A88QUVnFJsVnSnB+Yidvjde8IOXFrPNzAdcGKBs6eAMplpdoGXLDWduzgZCcmRD7sL6JuO+
-X-Gm-Message-State: AOJu0YwUXjZ6dGmGBzWi20BBya1+b1QCmqtzLIOZ3PWHoMoaCRxWm4FN
-	47SXRYrsfCpR2vvzimT6ptQ2HOKQM4cSWg32PFE0RXWKk6zvCpEx9+jOybWvQ/IUw6LT6Qijzye
-	M
-X-Google-Smtp-Source: AGHT+IGmK81I/5GXFu3J42YAbYO3XZVPUmrRPMyz4POXr/27hNbZoYV8FRFcwColnWFsAKPbFW7I8w==
-X-Received: by 2002:a5e:de42:0:b0:7f9:3fd9:cbb with SMTP id ca18e2360f4ac-806e171b3a5mr298153439f.1.1720714475739;
-        Thu, 11 Jul 2024 09:14:35 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c0b1c12750sm1895166173.125.2024.07.11.09.14.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 09:14:35 -0700 (PDT)
-Message-ID: <c5981eeb-4f6b-41d4-b630-5b17a1e2a00a@linuxfoundation.org>
-Date: Thu, 11 Jul 2024 10:14:34 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DhMXRI0u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720714552; x=1752250552;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nu4E+KG9xuPTzxWlnYTkEQF4+5J5OTZxHGatiEDscYA=;
+  b=DhMXRI0u1LRtD6MsfSwQSBtRv2Ui830u1omWKtfNbqUcZQJY/lY3RUwt
+   z0LeU22jg5unc8bhG3kaii2t7lJZ1fVnq5/Ni1BeZEvVMjFcRm1ZlgNDF
+   OrFAASAnIKhdzDO4s1JLm6O00sahncFQs8shQ4AYH6MRRSxt+MN6LURZh
+   VvxYGTPD2oLtc6aM/5RsR8XE1dmr/z0sYg7aNVazlsgz0JnSoxe3U4ShZ
+   lxW5DMv/VS0cWSZZAstqvU2/MiKx9bSbkkn6lpSj2oiXnV4VKRzX5ifSh
+   UpvB3/21yk/JxeyOpSEPva4O2x1nUQsPjb7NmbkQqDSeOs/DV//hzU0Fx
+   g==;
+X-CSE-ConnectionGUID: rps1EfeuTripT+iN6Kg5mg==
+X-CSE-MsgGUID: 0+dMQ5nSQvOmgzTB6cie5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="18256354"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="18256354"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 09:15:50 -0700
+X-CSE-ConnectionGUID: jY/+j+1lTM+b/+U45mdZ6Q==
+X-CSE-MsgGUID: SXO4woDFR5i9HztP026IJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="53559170"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orviesa005.jf.intel.com with ESMTP; 11 Jul 2024 09:15:49 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@kernel.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Cc: Kan Liang <kan.liang@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/x86/intel: Fix ARCH_PERFMON_NUM_COUNTER_LEAF
+Date: Thu, 11 Jul 2024 09:16:36 -0700
+Message-Id: <20240711161636.1428705-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] selftest: x86: conform tests to TAP format output
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: kernel@collabora.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240414131807.2253344-1-usama.anjum@collabora.com>
- <dd277b6b-b28e-4860-b285-e89fd5fd3d41@collabora.com>
- <90dc0dfc-4c67-4ea1-b705-0585d6e2ec47@linuxfoundation.org>
- <386da8e3-1559-4ec2-9a66-f5f3f6405a2b@collabora.com>
- <23db41bb-1f3b-4b7b-95ac-960b8775a062@collabora.com>
- <fb305513-580a-4bac-a078-fe0170a6ffa2@linuxfoundation.org>
- <f7eb356d-6fe7-4e36-9fd2-1518addc7bdb@collabora.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <f7eb356d-6fe7-4e36-9fd2-1518addc7bdb@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 7/10/24 02:58, Muhammad Usama Anjum wrote:
-> Hi Shuah,
-> 
-> Thank you for replying.
-> 
-> On 7/10/24 4:39 AM, Shuah Khan wrote:
->> On 7/2/24 04:17, Muhammad Usama Anjum wrote:
->>> On 6/10/24 10:19 AM, Muhammad Usama Anjum wrote:
->>>> Adding Borislav, Dave and x86 mailing list:
->>>>      Please review the series.
->>> Kind reminder
->>>
->>
->> Usama,
->>
->> As I mentioned another TAP conversion patch from you  patch if the
->> following command gives you TAP, there is  no need to convert.
->>
->> make -C tools/testing/tmp2 run_tests
->> make kselftest TARGETS=tmp2
->>
->> kselftest framework lib.mk and runtests wrappers take care for
->> TAP. The reason to take care of this at framework level is to
->> avoid changes to individual tests. The wrapper keys off of
->> KSFT_* codes returned from tests.
->>
->> Please don't send TAP conversion patches like this one. The output
->> from the commands will have duplicate messages. The reason tests
->> return
->>
->> make -C tools/testing/tmp2 run_tests
->> make kselftest TARGETS=tmp2
-> The current series have several improvements which are beneficial in
-> several ways. I think these improvements should be included. While
-> conforming for TAP following improvements have been made:
-> 
-> *[PATCH 1/4] check_initial_reg_state*
-> Removes manual counting of pass and fail tests
-> Increase readability and maintainability of tests
-> Print logs in standard format (without [RUN], [OK] tags)
-> 
-> *[PATCH 2/4] corrupt_xstate_header*
-> Correct the skip, pass and fail return codes. Otherwise the test always
-> return 0
-> Returns correct number of stats about passed/failed tests
-> Print logs in standard format
-> 
-> *[PATCH 3/4] fsgsbase_restore*
-> Add test skip support instead of returning success at skip time for the
-> kselftest script to understand correct exit status
-> Print details about errno if error occurs
-> Increase readability and maintainability
-> Print logs in standard format
-> 
-> *[PATCH 4/4 entry_from_vm86*
-> Remove manual pass/fail tests counting
-> Increase readability
-> Print details about errno if error occurs
-> Print logs in standard format
-> 
-> 
-> These improvements aren't evident from the description of patches as I
-> thought converting to TAP achieves all this by default. But I can improve
-> the patches description and send patch revision. Thoughts?
-> 
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Please drop the TAP conversion and make the other changes in your v2.
+The EAX of the CPUID Leaf 023H enumerates the mask of valid sub-leaves.
+To tell the availability of the sub-leaf 1 (enumerate the counter mask),
+perf should check the bit 1 (0x2) of EAS, rather than bit 0 (0x1).
 
-thanks,
--- Shuah
+The error is not user-visible on bare metal. Because the sub-leaf 0 and
+the sub-leaf 1 are always available. However, it may bring issues in a
+virtualization environment when a VMM only enumerates the sub-leaf 0.
+
+Fixes: eb467aaac21e ("perf/x86/intel: Support Architectural PerfMon Extension leaf")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/events/intel/core.c      | 4 ++--
+ arch/x86/include/asm/perf_event.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cd8f2db6cdf6..3fb81f7b618c 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4842,8 +4842,8 @@ static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
+ 	if (ebx & ARCH_PERFMON_EXT_EQ)
+ 		pmu->config_mask |= ARCH_PERFMON_EVENTSEL_EQ;
+ 
+-	if (sub_bitmaps & ARCH_PERFMON_NUM_COUNTER_LEAF_BIT) {
+-		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF,
++	if (sub_bitmaps & ARCH_PERFMON_NUM_COUNTER_LEAF) {
++		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF_BIT,
+ 			    &eax, &ebx, &ecx, &edx);
+ 		pmu->cntr_mask64 = eax;
+ 		pmu->fixed_cntr_mask64 = ebx;
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 91b73571412f..41ace8431e01 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -190,7 +190,7 @@ union cpuid10_edx {
+ #define ARCH_PERFMON_EXT_UMASK2			0x1
+ #define ARCH_PERFMON_EXT_EQ			0x2
+ #define ARCH_PERFMON_NUM_COUNTER_LEAF_BIT	0x1
+-#define ARCH_PERFMON_NUM_COUNTER_LEAF		0x1
++#define ARCH_PERFMON_NUM_COUNTER_LEAF		BIT(ARCH_PERFMON_NUM_COUNTER_LEAF_BIT)
+ 
+ /*
+  * Intel Architectural LBR CPUID detection/enumeration details:
+-- 
+2.38.1
+
