@@ -1,333 +1,263 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AAB17FD;
-	Thu, 11 Jul 2024 00:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4684B36C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720658929; cv=none; b=br1jSwJhPlecqLLh7omUWg4p2zk1WZyp1LFzj4fAMe6jIMDsEk1WcaXwDpr6Dy0cya3ONNKjh4U2Htxi70kWBbZa2q3Ya+GHsCNo5agPk2vE00pQBfLLjxj1i6Yw3j3c3xmg9N8RcZZx0bfeSLvrXAx3LCs2KN42hYXrz6yqIpo=
+	t=1720659927; cv=none; b=ZxLXOUPc1HO0njRJDjSlwDP5Y6tqJiU7VCLvmHw+5eONd64h8uZ97uVA8+mdu+JLcr43YSxrT7v0kWZvi3ygt0AkOKfLrDcF0H1/yRyIXrkfiAMJYvdESg5K1vrN4emL7DIPgYHX7N1sz+wlLon7RxgLvCa6WfTi5Usfcl8OZ58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720658929; c=relaxed/simple;
-	bh=1QWRTj0NgxJken/pxHFzYtCWzNKZqdt99bnCGV7dvX0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BaY+Yi3kwQjAag50SYYmBe9WWq8j+1OlU8uNSDwp4eI04is1ikJb92pbO0pQksVtk1eigcakvN98GZooSvezO0OwTkA0P6MuoTMvb6J6Uyd7WYecfEK6jF8JC4S31veZ9y4zPell9co9FuVHO2v9h/duu1FdbJ4g2zglPtlgLwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4QN8V+V; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4QN8V+V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720658927; x=1752194927;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=1QWRTj0NgxJken/pxHFzYtCWzNKZqdt99bnCGV7dvX0=;
-  b=l4QN8V+VJZpwkiwGoW85MkRcs8eD3wuviT2ZG++20RpUFMB51pU1duGV
-   sUu4B85axR7f30w7aNhwsb4MXc/g3Seo2SnfUpnRmyVAgkSqwPLjUB6fZ
-   qz1twEYMa9ATabMqCVmnXuek/z9YiBmbA+LG/cda5Ip/ZKE1+z6+hEUlL
-   UHpCTLcdbK5rtTpJmzGSFe3ZT6pFR4UoxEf+lSW7DAJHSSXg1F5m3dtUP
-   p0qBpyVHtZvkIbWuz2nqn0ZLBBSDVk3rhqxFeyXYbUSfQfRqGZWZmVjKT
-   niyUOWWctXsOUrgwzDxpVoIZDKRKiZbyx4e0WKCmH7KlNEAZpz2JJsxIx
-   g==;
-X-CSE-ConnectionGUID: 9cILeKfoQiW1fAhBxyNg9g==
-X-CSE-MsgGUID: zxpycwvnQcyuy8qJuy3GPg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="29172736"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="29172736"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 17:48:47 -0700
-X-CSE-ConnectionGUID: xYsy0nIxQsWSpu8gqq6RQw==
-X-CSE-MsgGUID: TKxZRBbsQM6REW2gGUJQ0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="48274689"
-Received: from bmurrell-mobl.amr.corp.intel.com (HELO vcostago-mobl3) ([10.124.221.70])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 17:48:46 -0700
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Rodrigo Cataldo via B4 Relay
- <devnull+rodrigo.cadore.l-acoustics.com@kernel.org>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, Kurt
- Kanzenbach <kurt.kanzenbach@linutronix.de>, "Christopher S. Hall"
- <christopher.s.hall@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Rodrigo Cataldo
- <rodrigo.cadore@l-acoustics.com>
-Subject: Re: [PATCH iwl-net] igc: Ensure PTM request is completed before
- timeout has started
-In-Reply-To: <20240708-igc-flush-ptm-request-before-timeout-6-10-v1-1-70e5ebec9efe@l-acoustics.com>
-References: <20240708-igc-flush-ptm-request-before-timeout-6-10-v1-1-70e5ebec9efe@l-acoustics.com>
-Date: Wed, 10 Jul 2024 17:48:45 -0700
-Message-ID: <87r0c0sqhe.fsf@intel.com>
+	s=arc-20240116; t=1720659927; c=relaxed/simple;
+	bh=S4PMUG762XDFwCaLT/8kI3VFTgLr/JjdNKfGoN6tkN0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=gZk4Ha+eayrQKBhJduYk6f3Yy13t7/JOcEpUPqoGReUx0/hJv9vLaBIUiI+aIeVZ18wv/cH8mdH2d5YsoUUgFHWG7TP1BUrSw+dPE+5MPphC2OxCPBhANv181EcYptat/MUua/pNVQWnqdnm6XP4RqSYaUbVzbrGY0ad8hnDUkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3810df375d0so10822485ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:05:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720659924; x=1721264724;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fg5VBGBGQdZQPpSowMtMTwufwdacosOLn+vpFIg8OVc=;
+        b=dYBnPKY4zwW+XVER5f9K0YxN4wlv+2RFQfnasa6kioU/fZYfwbzpcyYzflVJl8Cecl
+         GT7gO8HXwOVnUoe6WLe9eR64J7C33PKKAU1YjbdR2kEMlKtRxc2/Bt097yOMgkmlgONW
+         mjpj+JNMJWmjiVA0qvd9w4xeyYtNN79DlEdPsUGfxeJ+DcvX9sxB4DPAoincwLwrUeqA
+         IgknIaZFgQnIDqxTTW9QJm1TEZ4uhqKO4FBLaATOZsM7rx2c/QkTKfGzme53Go81rCKb
+         hDF+c2aXfgq0MNLrlpxsI/6s8FUBAhj9kZRgHkIPAHDmMt29Fki+ptyANwDSBFD2WJJj
+         qmeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbc9/FT8LzrDh4ImoEQDIUz4/1EWva4r3YUJy0bSIHGEmzS3w6vz/umnv7MQt7dR5hCswvW9r9ke1PfFdPAMwumdaq1iQCBgiCeYmj
+X-Gm-Message-State: AOJu0YyYkKHKM+d0YYFuIBf9RtMUFWFHdFnRGnPD9Tg8SCe8SpTbAoJW
+	m5Wb7jQ3zvLw/4Y3AEp8VqUhxWFPwuMEZsoyViwDjPoMCYmAkC5mf88gPxT05tFbOdAUYrFyBDj
+	wNzudrWrQcvj0OCzMFV1gkm3ezUdkO+JOaNuBWaqW/XwiKSa7FNtKDOE=
+X-Google-Smtp-Source: AGHT+IFVvEhAS8kyu8iHhjNSpYsahCzUB+XNAe7O1OewLV/A0qE5lGLrKLkw9AadISI52DE/8sT3E3RtElbkq1E4e1pVfNlikzlJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:1f04:b0:380:e1e4:4ba3 with SMTP id
+ e9e14a558f8ab-38d0b74ad7emr637805ab.2.1720659924340; Wed, 10 Jul 2024
+ 18:05:24 -0700 (PDT)
+Date: Wed, 10 Jul 2024 18:05:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000091e466061cee5be7@google.com>
+Subject: [syzbot] [jfs?] INFO: task hung in deactivate_super (3)
+From: syzbot <syzbot+cba6270878c89ed64a2d@syzkaller.appspotmail.com>
+To: brauner@kernel.org, jack@suse.cz, jfs-discussion@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-Rodrigo Cataldo via B4 Relay
-<devnull+rodrigo.cadore.l-acoustics.com@kernel.org> writes:
+Hello,
 
-> From: Rodrigo Cataldo <rodrigo.cadore@l-acoustics.com>
->
-> When a PTM is requested via wr32(IGC_PTM_STAT), the operation may only
-> be completed by the next read operation (flush). Unfortunately, the next
-> read operation in the PTM request loop happens after we have already
-> started evaluating the response timeout.
->
-> Thus, the following behavior has been observed::
->
->   phc2sys-1655  [010]   103.233752: funcgraph_entry:                    |  igc_ptp_getcrosststamp() {
->   phc2sys-1655  [010]   103.233754: funcgraph_entry:                    |    igc_phc_get_syncdevice_time() {
->   phc2sys-1655  [010]   103.233755: funcgraph_entry:                    |      igc_rd32() {
->   phc2sys-1655  [010]   103.233931: preempt_disable: caller=irq_enter_rcu+0x14 parent=irq_enter_rcu+0x14
->   phc2sys-1655  [010]   103.233932: local_timer_entry: vector=236
->   phc2sys-1655  [010]   103.233932: hrtimer_cancel: hrtimer=0xffff8edeef526118
->   phc2sys-1655  [010]   103.233933: hrtimer_expire_entry: hrtimer=0xffff8edeef526118 now=103200127876 function=tick_nohz_handler/0x0
->
->   ... tick handler ...
->
->   phc2sys-1655  [010]   103.233971: funcgraph_exit:       !  215.559 us |      }
->   phc2sys-1655  [010]   103.233972: funcgraph_entry:                    |      igc_rd32() {
->   phc2sys-1655  [010]   103.234135: funcgraph_exit:       !  164.370 us |      }
->   phc2sys-1655  [010]   103.234136: funcgraph_entry:         1.942 us   |      igc_rd32();
->   phc2sys-1655  [010]   103.234147: console:              igc 0000:03:00.0 enp3s0: Timeout reading IGC_PTM_STAT register
->
-> Based on the (simplified) code::
->
-> 	ctrl = rd32(IGC_PTM_CTRL);
->         /* simplified: multiple writes here */
-> 	wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
->
-> 	err = readx_poll_timeout(rd32, IGC_PTM_STAT, stat,
-> 				 stat, IGC_PTM_STAT_SLEEP,
-> 				 IGC_PTM_STAT_TIMEOUT);
-> 	if (err < 0) {
-> 		netdev_err(adapter->netdev, "Timeout reading IGC_PTM_STAT register\n");
-> 		return err;
-> 	}
->
-> Where readx_poll_timeout() starts the timeout evaluation before calling
-> the rd32() parameter (rd32() is a macro for igc_rd32()).
->
-> In the trace shown, the read operation of readx_poll_timeout() (second
-> igc_rd32()) took so long that the timeout (IGC_PTM_STAT_VALID) has expired
-> and no sleep has been performed.
->
-> With this patch, a write flush is added (which is an additional
-> igc_rd32() in practice) that can wait for the write before the timeout
-> is evaluated::
->
->   phc2sys-1615  [010]    74.517954: funcgraph_entry:                    |  igc_ptp_getcrosststamp() {
->   phc2sys-1615  [010]    74.517956: funcgraph_entry:                    |    igc_phc_get_syncdevicetime() {
->   phc2sys-1615  [010]    74.517957: funcgraph_entry:                    |      igc_rd32() {
->   phc2sys-1615  [010]    74.518127: preempt_disable: caller=irq_enter_rcu+0x14 parent=irq_enter_rcu+0x14
->   phc2sys-1615  [010]    74.518128: local_timer_entry: vector=236
->   phc2sys-1615  [010]    74.518128: hrtimer_cancel: hrtimer=0xffff96466f526118
->   phc2sys-1615  [010]    74.518128: hrtimer_expire_entry: hrtimer=0xffff96466f526118 now=74484007229 function=tick_nohz_handler/0x0
->
->   ... tick handler ...
->
->   phc2sys-1615  [010]    74.518180: funcgraph_exit:       !  222.282 us |      }
->   phc2sys-1615  [010]    74.518181: funcgraph_entry:                    |      igc_rd32() {
->   phc2sys-1615  [010]    74.518349: funcgraph_exit:       !  168.160 us |      }
->   phc2sys-1615  [010]    74.518349: funcgraph_entry:         1.970 us   |      igc_rd32();
->   phc2sys-1615  [010]    74.518352: hrtimer_init: hrtimer=0xffffa6f9413a3940 clockid=CLOCK_MONOTONIC mode=0x0
->   phc2sys-1615  [010]    74.518352: preempt_disable: caller=_raw_spin_lock_irqsave+0x28 parent=hrtimer_start_range_ns+0x56
->   phc2sys-1615  [010]    74.518353: hrtimer_start: hrtimer=0xffffa6f9413a3940 function=hrtimer_wakeup/0x0 expires=74484232878 softexpires=74484231878
->
->   .. hrtimer setup and return ...
->
->   kworker/10:1-242   [010]    74.518382: sched_switch: kworker/10:1:242 [120] W ==> phc2sys:1615 [120]
->   phc2sys-1615  [010]    74.518383: preempt_enable: caller=schedule+0x36 parent=schedule+0x36
->   phc2sys-1615  [010]    74.518384: funcgraph_entry:      !  100.088 us |      igc_rd32();
->   phc2sys-1615  [010]    74.518484: funcgraph_entry:         1.958 us   |      igc_rd32();
->   phc2sys-1615  [010]    74.518488: funcgraph_entry:         2.019 us   |      igc_rd32();
->   phc2sys-1615  [010]    74.518490: funcgraph_entry:         1.956 us   |      igc_rd32();
->   phc2sys-1615  [010]    74.518492: funcgraph_entry:         1.980 us   |      igc_rd32();
->   phc2sys-1615  [010]    74.518494: funcgraph_exit:       !  539.386 us |    }
->
-> Now the sleep is called as expected, and the operation succeeds.
-> Therefore, regardless of how long it will take for the write to be
-> completed, we will poll+sleep at least for the time specified in
-> IGC_PTM_STAT_TIMEOUT.
->
-> Fixes: a90ec8483732 ("igc: Add support for PTP getcrosststamp()")
-> Signed-off-by: Rodrigo Cataldo <rodrigo.cadore@l-acoustics.com>
-> ---
-> I have been searching for the proper solution for this PTM issue for a long
-> time. The issue was observed on a 13700 (Raptor Lake). We also use a 8500
-> (Coffee Lake) that is much less susceptible for this issue, but still
-> happens. Both are using I225-LM cards.
->
-> For a 24 hours test, idle system, I have observed with 13700::
->
-> 	number of timeouts in 86400 seconds: 2509
->
-> The same test on a 8500::
->
->         number of timeouts in 86400 seconds: 9
->
-> Where one PTM request is sent per second. Test was done this script::
->
->   record_multiple_timeout_param()
->   {
->   	local taskset_cpu=$1
->   	local cur_limit=$((SECONDS + LIMIT_SECONDS ))
->   	local timeouts=0
->   
->   	while [ $SECONDS -lt $cur_limit ]
->   	do
->   		REL_TO=$((cur_limit - SECONDS))
->   
->   		timeout $REL_TO taskset $taskset_cpu \
->   			phc2sys -c $ITF_NAME -s CLOCK_REALTIME -O 37 -m 1>/dev/null
->   		if [ $? -eq 255 ]; then
->   			timeouts=$((timeouts + 1))
->   		fi
->   	done
->   	printf "\tnumber of timeouts in %s seconds: %d\n" $LIMIT_SECONDS $timeouts
->   }
->
->   record_multiple_timeout_param $NON_ISOLCPU_MASK
->
-> Firmware version for the cards::
->
->   # lshw -class network -json | jq '.[0].product,.[0].configuration.firmware'
->   "Ethernet Controller I225-LM"
->   "1057:8754"
->
->   # lshw -class network -json | jq '.[2].product,.[2].configuration.firmware'
->   "Ethernet Controller I225-LM"
->   "1057:8754
->
-> A couple of attempts were made that did not lead to solving the
-> issue (disabling ASPM in kernel and boot, using periodic tick), and a couple
-> of solutions that worked but that were subpar:
->
-> 1. The issue was not observed for a phc2sys(8) running on a fully
->    isolated nohz_full core. We do not have the luxury of dedicating a a
->    core for it.
+syzbot found the following issue on:
 
-This one is interesting. Was it because the isolated CPU never got to
-sleep and readx_poll_timeout() became a busy loop? I am trying to fit
-this one on my mental model.
+HEAD commit:    34afb82a3c67 Merge tag '6.10-rc6-smb3-server-fixes' of git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1552e87e980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b63b35269462a0e0
+dashboard link: https://syzkaller.appspot.com/bug?extid=cba6270878c89ed64a2d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-> 2. Bumping the IGC_PTM_STAT_TIMEOUT value. Other machines may need
->    another value though.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-This one is not horrible as well. Some value like 400us comes to mind.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7152efb66a56/disk-34afb82a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/48c109ca6782/vmlinux-34afb82a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2b91e0cb5d11/bzImage-34afb82a.xz
 
-Your proposed fix looks fine as well, I was thinking a bit about it, and
-even if it's more a like a timing issue than "the absolutely correct
-fix", there are little chances for bad side effects.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cba6270878c89ed64a2d@syzkaller.appspotmail.com
 
-If there aren't any other ideas, I am fine with this:
+INFO: task syz-executor:5090 blocked for more than 143 seconds.
+      Not tainted 6.10.0-rc7-syzkaller-00012-g34afb82a3c67 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor    state:D stack:20240 pid:5090  tgid:5090  ppid:1      flags:0x00004004
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_write_slowpath+0xeeb/0x13b0 kernel/locking/rwsem.c:1178
+ __down_write_common+0x1af/0x200 kernel/locking/rwsem.c:1306
+ __super_lock fs/super.c:56 [inline]
+ __super_lock_excl fs/super.c:71 [inline]
+ deactivate_super+0xb5/0xf0 fs/super.c:505
+ cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1267
+ task_work_run+0x251/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x360 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7efcf0176f07
+RSP: 002b:00007ffc47cc5df8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007efcf0176f07
+RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffc47cc5eb0
+RBP: 00007ffc47cc5eb0 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffc47cc6f70
+R13: 00007efcf01e3515 R14: 0000555565e00590 R15: 000000000001a596
+ </TASK>
 
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Showing all locks held in the system:
+1 lock held by pool_workqueue_/3:
+ #0: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:323 [inline]
+ #0: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:939
+2 locks held by kworker/0:0/8:
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffffc900000d7d00 ((work_completion)(&data->fib_event_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
+ #1: ffffc900000d7d00 ((work_completion)(&data->fib_event_work)){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
+1 lock held by khungtaskd/30:
+ #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #0: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6614
+3 locks held by kworker/u8:2/35:
+ #0: ffff8880182ec148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff8880182ec148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffffc90000ab7d00 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
+ #1: ffffc90000ab7d00 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
+ #2: ffff88805d3a60e0 (&type->s_umount_key#53){++++}-{3:3}, at: super_trylock_shared+0x22/0xf0 fs/super.c:562
+3 locks held by kworker/0:2/779:
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffffc90003a0fd00 ((work_completion)(&data->fib_event_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
+ #1: ffffc90003a0fd00 ((work_completion)(&data->fib_event_work)){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
+ #2: ffff888079706240 (&data->fib_lock){+.+.}-{3:3}, at: nsim_fib_event_work+0x2d1/0x4130 drivers/net/netdevsim/fib.c:1489
+2 locks held by getty/4844:
+ #0: ffff88802aa8f0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc900031332f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6b5/0x1e10 drivers/tty/n_tty.c:2211
+1 lock held by syz-executor/5090:
+ #0: ffff88805d3a60e0 (&type->s_umount_key#53){++++}-{3:3}, at: __super_lock fs/super.c:56 [inline]
+ #0: ffff88805d3a60e0 (&type->s_umount_key#53){++++}-{3:3}, at: __super_lock_excl fs/super.c:71 [inline]
+ #0: ffff88805d3a60e0 (&type->s_umount_key#53){++++}-{3:3}, at: deactivate_super+0xb5/0xf0 fs/super.c:505
+3 locks held by kworker/1:4/5099:
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffff8880b9528948 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x441/0x770 kernel/sched/psi.c:988
+ #2: ffff888060b71240 (&data->fib_lock){+.+.}-{3:3}, at: nsim_fib_event_work+0x2d1/0x4130 drivers/net/netdevsim/fib.c:1489
+2 locks held by kworker/0:3/5153:
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffffc9000308fd00 (free_ipc_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
+ #1: ffffc9000308fd00 (free_ipc_work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
+3 locks held by kworker/1:7/5158:
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3223 [inline]
+ #0: ffff888015078948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3329
+ #1: ffffc90004d17d00 ((work_completion)(&data->fib_event_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3224 [inline]
+ #1: ffffc90004d17d00 ((work_completion)(&data->fib_event_work)){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3329
+ #2: ffff88807978b240 (&data->fib_lock){+.+.}-{3:3}, at: nsim_fib_event_work+0x2d1/0x4130 drivers/net/netdevsim/fib.c:1489
+2 locks held by syz.0.142/6159:
+3 locks held by syz-executor/6235:
+ #0: ffff88807b10cd88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close net/bluetooth/hci_core.c:510 [inline]
+ #0: ffff88807b10cd88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_unregister_dev+0x203/0x510 net/bluetooth/hci_core.c:2728
+ #1: ffff88807b10c078 (&hdev->lock){+.+.}-{3:3}, at: hci_dev_close_sync+0x494/0xf60 net/bluetooth/hci_sync.c:5063
+ #2: ffffffff8f7514c8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_disconn_cfm include/net/bluetooth/hci_core.h:1982 [inline]
+ #2: ffffffff8f7514c8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_hash_flush+0xa6/0x240 net/bluetooth/hci_conn.c:2593
+4 locks held by syz-executor/6238:
+ #0: ffff888061e64d88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_dev_do_close net/bluetooth/hci_core.c:510 [inline]
+ #0: ffff888061e64d88 (&hdev->req_lock){+.+.}-{3:3}, at: hci_unregister_dev+0x203/0x510 net/bluetooth/hci_core.c:2728
+ #1: ffff888061e64078 (&hdev->lock){+.+.}-{3:3}, at: hci_dev_close_sync+0x494/0xf60 net/bluetooth/hci_sync.c:5063
+ #2: ffffffff8f7514c8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_disconn_cfm include/net/bluetooth/hci_core.h:1982 [inline]
+ #2: ffffffff8f7514c8 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_hash_flush+0xa6/0x240 net/bluetooth/hci_conn.c:2593
+ #3: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:323 [inline]
+ #3: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:939
+1 lock held by syz.0.154/6438:
+ #0: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:323 [inline]
+ #0: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x451/0x830 kernel/rcu/tree_exp.h:939
+2 locks held by cmp/6566:
 
-> 3. Retry (multiple times) readx_poll_timeout() in case of failure. This may
->    significantly increase the function latency, because each
->    readx_poll_timeout() can take more than 100 us.
-> 4. Disabling preemption during the PTM request. Horrible.
->
+=============================================
 
-I wonder if you tried moving the I225 to the graphics card PCIe slot, or
-is it an onboard card? IIRC there are different PCIe controllers for the
-graphics slot vs. the other ones, at least on Coffee Lake.
-
-> For the Coffee Lake machine, the issue tends to be avoided because the
-> read does not take so long. Here is basically the same trace using the
-> Cofee Lake machine::
->
->   phc2sys-1204  [002]  1778.220288: funcgraph_entry:                    |  igc_ptp_getcrosststamp() {
->   phc2sys-1204  [002]  1778.220290: funcgraph_entry:                    |    igc_phc_get_syncdevicetime() {
->   phc2sys-1204  [002]  1778.220291: funcgraph_entry:                    |      igc_rd32() {
->   phc2sys-1204  [002]  1778.220373: preempt_disable: caller=irq_enter_rcu+0x14 parent=irq_enter_rcu+0x14
->   phc2sys-1204  [002]  1778.220374: local_timer_entry: vector=236
->   phc2sys-1204  [002]  1778.220375: hrtimer_cancel: hrtimer=0xffff894027326118
->   phc2sys-1204  [002]  1778.220376: hrtimer_expire_entry: hrtimer=0xffff894027326118 now=1778228034802 function=tick_nohz_handler/0x0
->
->   ... tick handler ...
->
->   phc2sys-1204  [002]  1778.220411: funcgraph_exit:       !  119.843 us |      }
->   phc2sys-1204  [002]  1778.220412: funcgraph_entry:                    |      igc_rd32() {
->   phc2sys-1204  [002]  1778.220492: funcgraph_exit:       + 80.094 us   |      }
->   phc2sys-1204  [002]  1778.220493: funcgraph_entry:        2.951 us    |      igc_rd32();
->   phc2sys-1204  [002]  1778.220497: hrtimer_init: hrtimer=0xffffa504c0d83aa0 clockid=CLOCK_MONOTONIC mode=0x0
->   phc2sys-1204  [002]  1778.220498: preempt_disable: caller=_raw_spin_lock_irqsave+0x28 parent=hrtimer_start_range_ns+0x56
->   phc2sys-1204  [002]  1778.220499: hrtimer_start: hrtimer=0xffffa504c0d83aa0 function=hrtimer_wakeup/0x0 expires=1778228158866 softexpires=1778228157866
->
->   ... timer setup ....
->
->   phc2sys-1204  [002]  1778.220509: preempt_enable: caller=_raw_spin_unlock_irqrestore+0x2b parent=hrtimer_start_range_ns+0x12d
->   phc2sys-1204  [002]  1778.220511: funcgraph_entry:        7.338 us   |      igc_rd32();
->   phc2sys-1204  [002]  1778.220519: funcgraph_entry:        2.769 us   |      igc_rd32();
->   phc2sys-1204  [002]  1778.220522: funcgraph_entry:        2.798 us   |      igc_rd32();
->   phc2sys-1204  [002]  1778.220525: funcgraph_entry:        2.736 us   |      igc_rd32();
->   phc2sys-1204  [002]  1778.220529: funcgraph_entry:        2.750 us   |      igc_rd32();
->   phc2sys-1204  [002]  1778.220532: funcgraph_exit:       !  242.656 us |    }
->
-> For both machines, I observed that the first igc_rd32() after an idle
-> period (more than 10us) tends to take significantly more time. I assume
-> this is a hardware power-saving technique, but I could not find any
-> mention in the manuals. This is very easily observable with an idle
-> system running phc2sys, since it will request only once every second.
->
-> This is the typical trace of the operation::
->
->   phc2sys-1204  [002]  1749.209397: funcgraph_entry:                   |  igc_ptp_getcrosststamp() {
->   phc2sys-1204  [002]  1749.209398: funcgraph_entry:                   |    igc_phc_get_syncdevicetime() {
->   phc2sys-1204  [002]  1749.209400: funcgraph_entry:      + 81.491 us  |      igc_rd32();
->   phc2sys-1204  [002]  1749.209482: funcgraph_entry:        3.691 us   |      igc_rd32();
->   phc2sys-1204  [002]  1749.209487: funcgraph_entry:        2.942 us   |      igc_rd32();
->   phc2sys-1204  [002]  1749.209490: hrtimer_init: hrtimer=0xffffa504c0d83a00 clockid=CLOCK_MONOTONIC mode=0x0
->   phc2sys-1204  [002]  1749.209491: preempt_disable: caller=_raw_spin_lock_irqsave+0x28 parent=hrtimer_start_range_ns+0x56
->   ... timer setup and it goes on like before ...
->
-> The preemption needs to happen for this issue, so that this power-saving
-> mode is triggered, making the igc_rd32 'slow enough' so that all of the
-> timeout is consumed before the card has time to answer.
->
-> I believe flushing the write solves the issue definitely, since the
-> write should be completed before the timeout has started. So that, even
-> if the timeout is consumed by a slow read operation, the write has been
-> received before and the card had time to process the request.
-> ---
->  drivers/net/ethernet/intel/igc/igc_ptp.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
-> index 1bb026232efc..d7269e4f1a21 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_ptp.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
-> @@ -1005,6 +1005,10 @@ static int igc_phc_get_syncdevicetime(ktime_t *device,
->  		 * VALID bit.
->  		 */
->  		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
-> +		/* Ensure the hardware receives the ptm request before the
-> +		 * response timeout starts.
-> +		 */
-> +		wrfl();
->  
->  		err = readx_poll_timeout(rd32, IGC_PTM_STAT, stat,
->  					 stat, IGC_PTM_STAT_SLEEP,
->
-> ---
-> base-commit: 0005b2dc43f96b93fc5b0850d7ca3f7aeac9129c
-> change-id: 20240705-igc-flush-ptm-request-before-timeout-6-10-f6e02c96f6d4
->
-> Best regards,
-> -- 
-> Rodrigo Cataldo <rodrigo.cadore@l-acoustics.com>
->
->
+NMI backtrace for cpu 1
+CPU: 1 PID: 30 Comm: khungtaskd Not tainted 6.10.0-rc7-syzkaller-00012-g34afb82a3c67 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
+ watchdog+0xfde/0x1020 kernel/hung_task.c:379
+ kthread+0x2f2/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 6233 Comm: syz-executor Not tainted 6.10.0-rc7-syzkaller-00012-g34afb82a3c67 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+RIP: 0010:__reset_page_owner+0x2c3/0x3f0 mm/page_owner.c:302
+Code: 01 00 00 00 48 c7 c7 40 e0 45 8e 48 8b 54 24 18 e8 92 a2 e2 02 e9 53 fe ff ff 48 8b 7c 24 20 e8 13 a8 01 00 8b 1d ad cc 7a 12 <44> 8b 7c 24 0c 44 89 ff 89 de e8 ee 3b 90 ff 41 39 df 75 07 e8 24
+RSP: 0018:ffffc90004ca7800 EFLAGS: 00000287
+RAX: 0000000000000000 RBX: 0000000001480001 RCX: ffffc90004ca7703
+RDX: 0000000000000000 RSI: ffffffff8bcaccc0 RDI: ffffffff8c1fe980
+RBP: 0000000000000001 R08: ffffffff8fad492f R09: 1ffffffff1f5a925
+R10: dffffc0000000000 R11: fffffbfff1f5a926 R12: ffff888026fc41cc
+R13: dffffc0000000000 R14: ffff888017c78e04 R15: ffff888017c78e10
+FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffa012d8270 CR3: 000000000e132000 CR4: 0000000000350ef0
+Call Trace:
+ <NMI>
+ </NMI>
+ <TASK>
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1093 [inline]
+ free_unref_page+0xd22/0xea0 mm/page_alloc.c:2588
+ vfree+0x186/0x2e0 mm/vmalloc.c:3355
+ kcov_put kernel/kcov.c:429 [inline]
+ kcov_close+0x2b/0x50 kernel/kcov.c:525
+ __fput+0x24c/0x8a0 fs/file_table.c:422
+ task_work_run+0x251/0x310 kernel/task_work.c:180
+ exit_task_work include/linux/task_work.h:38 [inline]
+ do_exit+0xa27/0x27e0 kernel/exit.c:876
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1025
+ get_signal+0x16a1/0x1740 kernel/signal.c:2909
+ arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:310
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xc9/0x360 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd4e79757db
+Code: Unable to access opcode bytes at 0x7fd4e79757b1.
+RSP: 002b:00007fffc3575b70 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007fd4e79757db
+RDX: 0000000000000000 RSI: 0000000000004c01 RDI: 0000000000000003
+RBP: 00007fffc3575c1c R08: 0000000000000000 R09: 00007fffc3575917
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fffc3575c90
+R13: 0000000000000bb8 R14: 000000000003eb2f R15: 000000000003e65c
+ </TASK>
 
 
-Cheers,
--- 
-Vinicius
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
