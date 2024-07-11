@@ -1,166 +1,151 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4734915AD99
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B826815AD99;
+	Thu, 11 Jul 2024 14:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720707607; cv=none; b=mlu+sBdZY3rVWQ2X3VI3R4nmTULk/NUFLYV7ofVEbjeQd1T5b9Icoh0zxr4SglQ6J4nxTQ9sosVcueiQxrAKg+GT+v2qkCX6w/BuR6BHx53lQnxoCHmrE25U05vdz3qno3biJHLobnbEVTKbdVgwd5kf78bBOdyV0Leuw1aMTng=
+	t=1720707614; cv=none; b=PBWuUAT+1jqGWLnJ2Pzf5xii/0ES+lH/t9JWH4PW8TzX91BC4wuoBI1RuEwUyvPE7NH+8GJV6sMcrP+OQerNIY6nmmXBn26tyZ/oDFOggm7NZeUciLh9Rajyt8Z5OOgimqw6RHMwbVPSKXSsSnT+p0BiVpptfV0rvCeaZF0mCnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720707607; c=relaxed/simple;
-	bh=+hIY6jEEHY+QzykeVvjms7qfTGWHP59V5+6Y4tJ3yKs=;
+	s=arc-20240116; t=1720707614; c=relaxed/simple;
+	bh=/VstGtV+katcjRzUb0Jru+O6vxW9u7IvFm83js3uw3A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z7yS0zBxFITn9NTDRahCRSKht2ywnE9dtR86SnwBMhT/FwAqlPWS6R+gqJg9gK5UvEmhNkblX1nuLJzXbBiwfvPIXBcwbSp1nVtI4qRHFsIxS12pR5YWXHJWZ4drp0uBiUj52MK6109eCr0EQVewcLi654ZmhaaxbGkc4rJrLX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B4fKK69+; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=tj6g0INOtk48gS0MPEK5mFjpkTRE2pdKelykVTJwRwhCFYgByjOvV6zBdYOohsQ6RFwLKIpiRgpcI3Y2jTZbQvzA+lRB+YkMwGFSXubfHrK74Xzdfh9jr7BlZ/0wQttMHOGeMFNXMDab532Ib2kmqo4mp6NRpD2Qq0KeeC9sW/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJcwOYmo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B4fKK69+"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58bac81f40bso1376974a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720707603; x=1721312403; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3npd6EQvPKgtV4//EqEfrX3c75XqGVaZsV1QiKxfuw=;
-        b=B4fKK69+CRAu1noe+uvQPknNc3N9myp1pIWy0dK7w/pGG7pmDrqg6UbG+bSt991SR/
-         ngQ9++5bZk3Y+IUAHqSzc8FideYnh/JhqXePAlN+ISS0AJBmKETCp+R4sTNKIcVl/Nyo
-         GO9JZTmWn0/n6BQNfuzj7eItXQtKlqFvRBRTPsNuGSxc+bdsdWcOYzIjV54Y1xfJRa/l
-         Tm0aFMo1FWPyd8zWTDqWaULWbbp8sG9DFxHFtd/4BEPg8aL4/hc2u4bJPIsah5pCNG0d
-         j0WPeVsoBGN84veei1+TWbmycfM5bZ/KcbOdRhJK5j8oE2/58lo1kvvc0uux7huS4jT3
-         iHhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720707603; x=1721312403;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o3npd6EQvPKgtV4//EqEfrX3c75XqGVaZsV1QiKxfuw=;
-        b=lx6l8jsPK8H3Oga5H8pm9hNRJxM0m5vcDZDDx+41iquGWTP/I/E6IuJCPnWonDoZfb
-         759jRYEGQqrMBu8ML9L8vyMINV3AUZ8Z9FpwjLYMzN8Wp40t53D4d2LF3iDYkGkyTYSL
-         jtJRVHaNWXC9IPEUP9XbO9IUQ0NrUSdJqrD2lSchujHW/DE+QmbD8bEreMNupljxNg4W
-         n/dLKd7FTSjFATEau5IcJQMU0405m/2dzR1hLF1AADdCVd04LF1KV5HeIgi0CtgOSzjk
-         vdYWlEaP2Aw6wMNxyo2RzSI/LEh8oxdhe6VfpEiWOC8CbYm/8E24zqvd7yK5dKyzDy3Q
-         Scnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtksSbPDeWMEM/UgOCgx/y2KoIbBEdxpx4qmTSYdrt7aetJLJVtpZ+yNLXBCyOMDAYqXx8b9JWnhandbnRhX39M9/Ptf+hXOWuogP3
-X-Gm-Message-State: AOJu0YwoF4iyhdEGk7kkCXuFbrcgI12TyziVTttjETG1jhUgagi929g+
-	QnOasfSIQru5FCAQR1h87vVPAGXgon6FWrs6TmaUHEFpN57QbgKnls5QoZIUmq0LpipOt2CPP8r
-	cMu8dnBBoCJCK7ZuLe8ebKLxhJ3mlmnT9/WHI6A==
-X-Google-Smtp-Source: AGHT+IE5YvixzSQthswNAQ80xQ/qshZBUGeuPv0J87cnzFcQKMSwoY8hFu9XvKRCoFQLhJKzWznYERboE6rsk2B8lPk=
-X-Received: by 2002:a05:6402:13d6:b0:58b:b864:ec77 with SMTP id
- 4fb4d7f45d1cf-594bcab03a8mr7502600a12.39.1720707603305; Thu, 11 Jul 2024
- 07:20:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJcwOYmo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 393CEC4AF07;
+	Thu, 11 Jul 2024 14:20:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720707614;
+	bh=/VstGtV+katcjRzUb0Jru+O6vxW9u7IvFm83js3uw3A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vJcwOYmoolGfg+xrhiOj/Bwvsa4Rw4RlmbK66NDCTgsDnaqS4259wWDNRltsFvJJU
+	 brxQtfc9Q513Xm43hZy/QRv6Zk1q7apIu4xko3U+V7uPbVjj3OKXAnSq47ZN4SVue2
+	 XfhQWtTVALMCig3tt3IbTCbvmMUx78JPeeU2xUMfB/vtb+dckrHbtzjYh2sVbb7nkK
+	 /UBss9AYOvMzCjwsje1syhYUrgNEiH3awy8ZlC53Np63wHpTNBIL5ssI14bIi/j7oY
+	 WFaL0VLCoPp7OWdINwjaea1L+DshjHxZECJ210qRQTEv1vXS+2poLgoUJpBmsGte6K
+	 0tWqrNS7MsOhQ==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eeb1051360so7886391fa.0;
+        Thu, 11 Jul 2024 07:20:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXsftutfRPQ70BBhK+s875bITOXA/1C6hCpJTO1bLtCrRep1yC1GeTxUji0gNkOv1Bz3lJun86LEpRPE2X3x6mCFDE9+ZFG0fD7UauRWtdL2W0kEwdvdj0rTYXNAxnOzE9fsCo48ZgI+g==
+X-Gm-Message-State: AOJu0Yyw9nD5PiUap6rco4565LLZNnK+iAPjwRYkc8PoAdTh2O59lRhQ
+	HNSs3DxaycD7t05hpjuNajBXxY46GpaJ3Jw2QW8LkYHIJ6wQJLiPOWhBRZfO2CsfuHTUqEkc4rU
+	fVS8d0GuNWmxuinneDZAsKUJO7Q==
+X-Google-Smtp-Source: AGHT+IE0CAYjyGnb5JatMHqj5ndbAwxzfnxdyxt2dr39gp4FD8KncQturA2vW4998XBh3dHYzOnJmewDL3lOw+gAh4U=
+X-Received: by 2002:a05:6512:54c:b0:524:43b2:d326 with SMTP id
+ 2adb3069b0e04-52eb99a273amr5209274e87.37.1720707612501; Thu, 11 Jul 2024
+ 07:20:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710084200.6561-1-shun-yi.wang@mediatek.com> <20240710084200.6561-2-shun-yi.wang@mediatek.com>
-In-Reply-To: <20240710084200.6561-2-shun-yi.wang@mediatek.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Thu, 11 Jul 2024 08:19:52 -0600
-Message-ID: <CANLsYkw8vanrYi0jvP+1jfZWrYBtTuXSJ5xywJYUDLhyRQUrWw@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/1] remoteproc: mediatek: Support reserved CMA regions
-To: Shun-yi Wang <shun-yi.wang@mediatek.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-remoteproc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, 
-	Project_Global_Chrome_Upstream_Group@mediatek.com, jason-ch.chen@mediatek.com, 
-	yaya.chang@mediatek.com, teddy.chen@mediatek.com
+References: <20240711-b4-upstream-j742s2-v1-1-8b9e41c18f91@ti.com>
+In-Reply-To: <20240711-b4-upstream-j742s2-v1-1-8b9e41c18f91@ti.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 11 Jul 2024 08:19:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJABHM9StutsYPjArjhnQ5vVyYK-ASd62iO6+jNBZVqig@mail.gmail.com>
+Message-ID: <CAL_JsqJABHM9StutsYPjArjhnQ5vVyYK-ASd62iO6+jNBZVqig@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: ti: Introduce J742S2 SoC and EVM
+To: Manorit Chawdhry <m-chawdhry@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Udit Kumar <u-kumar1@ti.com>, 
+	Neha Malcom Francis <n-francis@ti.com>, Aniket Limaye <a-limaye@ti.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Jul 2024 at 02:42, Shun-yi Wang <shun-yi.wang@mediatek.com> wrote:
+On Wed, Jul 10, 2024 at 11:26=E2=80=AFPM Manorit Chawdhry <m-chawdhry@ti.co=
+m> wrote:
 >
-> From: "shun-yi.wang" <shun-yi.wang@mediatek.com>
+> This series add the Linux support for our new family of device J742S2.
+> This device is a subset of J784S4 and shares the same memory map and
+> thus the nodes are being reused from J784S4 to avoid duplication.
 >
-> In order to reserve specific Contiguous Memory Allocator (CMA) regions
-> for hardware use. When the name of the reserved region contains "cma",
-> then a corresponding CMA heap is added.
+> Here are some of the salient features of the J742S2 automotive grade
+> application processor:
 >
-> Signed-off-by: shun-yi.wang <shun-yi.wang@mediatek.com>
+> The J742S2 SoC belongs to the K3 Multicore SoC architecture platform,
+> providing advanced system integration in automotive, ADAS and industrial
+> applications requiring AI at the network edge. This SoC extends the K3
+> Jacinto 7 family of SoCs with focus on raising performance and
+> integration while providing interfaces, memory architecture and compute
+> performance for multi-sensor, high concurrency applications.
+>
+> Some highlights of this SoC are:
+> * Up to Four Arm=C2=AE Cortex=C2=AE-A72 microprocessor subsystem at up to=
+ 2.0GHz,
+>   3 C7x floating point vector DSPs with Up to Two Deep-learning matrix
+>   multiply accelerator (MMAv2),
+> * 3D GPU: Automotive grade IMG BXS-4-64 MC1
+> * Vision Processing Accelerator (VPAC) with image signal processor and
+>   Depth and Motion Processing Accelerator (DMPAC)
+> * Three CSI2.0 4L RX plus two CSI2.0 4L TX, two DSI Tx, one eDP/DP and
+>   one DPI interface.
+> * Integrated gigabit ethernet switch, up to 4 ports ,two ports
+>   support 10Gb USXGMII; One 4 lane PCIe-GEN3 controllers, USB3.0
+>   Dual-role device subsystems, Up to 20 MCANs, among other peripherals.
+>
+> ( Refer Table 2-1 for Device comparison with J7AHP )
+>
+> Link: https://www.ti.com/lit/pdf/spruje3 (TRM)
+> Link: https://www.ti.com/lit/ug/sprujd8/sprujd8.pdf (EVM user guide)
+> Link: https://www.ti.com/lit/zip/SPAC001 (Schematics)
 > ---
->  drivers/remoteproc/mtk_scp.c | 38 ++++++++++++++++++++++++++++--------
->  1 file changed, 30 insertions(+), 8 deletions(-)
+> The series adds support for J742S2 family of SoCs. Also adds J742S2 EVM
+> Support and re-uses most of the stuff from the superset device J784s4.
 >
-
-I'm not sure what to do with this patch...  Is it a superset of your
-other patch [1]?  And if so why is it labelled as an RFC?
-
-Please read the documentation on submitting patches [2] and subscribe
-to the remoteproc mailing list to give you an idea of the patch
-workflow that is expected.
-
-Thanks,
-Mathieu
-
-[1]. [PATCH 1/1] remoteproc: mediatek: Support multiple reserved memory regions
-[2]. https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst
-
-> diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
-> index e744c07507ee..ca0a4a52ece9 100644
-> --- a/drivers/remoteproc/mtk_scp.c
-> +++ b/drivers/remoteproc/mtk_scp.c
-> @@ -4,6 +4,7 @@
+> Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/Makefile            |  3 ++
+>  arch/arm64/boot/dts/ti/k3-j742s2-evm.dts   | 22 ++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-j742s2-main.dtsi | 47 ++++++++++++++++++++++++=
+++++++
+>  arch/arm64/boot/dts/ti/k3-j742s2.dtsi      | 18 ++++++++++++
+>  4 files changed, 90 insertions(+)
 >
->  #include <asm/barrier.h>
->  #include <linux/clk.h>
-> +#include <linux/dma-heap.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
-> @@ -1006,22 +1007,43 @@ EXPORT_SYMBOL_GPL(scp_mapping_dm_addr);
+> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Mak=
+efile
+> index e20b27ddf901..4d0688c5cff7 100644
+> --- a/arch/arm64/boot/dts/ti/Makefile
+> +++ b/arch/arm64/boot/dts/ti/Makefile
+> @@ -119,6 +119,9 @@ dtb-$(CONFIG_ARCH_K3) +=3D k3-j784s4-evm-pcie0-pcie1-=
+ep.dtbo
+>  dtb-$(CONFIG_ARCH_K3) +=3D k3-j784s4-evm-quad-port-eth-exp1.dtbo
+>  dtb-$(CONFIG_ARCH_K3) +=3D k3-j784s4-evm-usxgmii-exp1-exp2.dtbo
 >
->  static int scp_map_memory_region(struct mtk_scp *scp)
->  {
-> -       int ret;
-> +       int ret, i, err;
->         const struct mtk_scp_sizes_data *scp_sizes;
-> +       struct device_node *node = scp->dev->of_node;
-> +       struct of_phandle_iterator it;
+> +# Boards with J742S2 SoC
+> +dtb-$(CONFIG_ARCH_K3) +=3D k3-j742s2-evm.dtb
 > +
-> +       i = 0;
-> +       of_for_each_phandle(&it, err, node, "memory-region", NULL, 0) {
-> +               ret = of_reserved_mem_device_init_by_idx(scp->dev, node, i);
+>  # Build time test only, enabled by CONFIG_OF_ALL_DTBS
+>  k3-am625-beagleplay-csi2-ov5640-dtbs :=3D k3-am625-beagleplay.dtb \
+>         k3-am625-beagleplay-csi2-ov5640.dtbo
+> diff --git a/arch/arm64/boot/dts/ti/k3-j742s2-evm.dts b/arch/arm64/boot/d=
+ts/ti/k3-j742s2-evm.dts
+> new file mode 100644
+> index 000000000000..98088ccfd76d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-j742s2-evm.dts
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.co=
+m/
+> + *
+> + * EVM Board Schematics: https://www.ti.com/lit/zip/SPAC001
+> + */
 > +
-> +               if (ret) {
-> +                       dev_err(scp->dev, "failed to assign memory-region: %s\n",
-> +                               it.node->name);
-> +                       of_node_put(it.node);
-> +                       return -ENOMEM;
-> +               }
-> +
-> +#ifdef CONFIG_DMABUF_HEAPS_CMA
-> +               if (strstr(it.node->name, "cma")) {
-> +                       /* Reserved cma memory region */
-> +                       ret = dma_heap_add_cma(scp->dev);
-> +                       if (ret) {
-> +                               dev_err(scp->dev, "Failed to add reserved cma");
-> +                               of_node_put(it.node);
-> +                               return ret;
-> +                       }
-> +               }
-> +#endif /* CONFIG_DMABUF_HEAPS_CMA */
->
-> -       ret = of_reserved_mem_device_init(scp->dev);
-> +               i++;
-> +       }
->
->         /* reserved memory is optional. */
-> -       if (ret == -ENODEV) {
-> +       if (!i) {
->                 dev_info(scp->dev, "skipping reserved memory initialization.");
->                 return 0;
->         }
->
-> -       if (ret) {
-> -               dev_err(scp->dev, "failed to assign memory-region: %d\n", ret);
-> -               return -ENOMEM;
-> -       }
-> -
->         /* Reserved SCP code size */
->         scp_sizes = scp->data->scp_sizes;
->         scp->cpu_addr = dma_alloc_coherent(scp->dev, scp_sizes->max_dram_size,
-> --
-> 2.18.0
->
+> +#include "k3-j784s4-evm.dts"
+> +#include "k3-j742s2.dtsi"
+
+The structure of this is weird and fragile. You delete nodes in
+k3-j742s2.dtsi which are defined indirectly (I assume) by
+k3-j784s4-evm.dts. When there's a 2nd board for this SoC, you are
+going to have to duplicate everything here. k3-j742s2.dtsi should
+include k3-j742s4.dtsi. And then you may need a common EVM board .dtsi
+to share.
+
+Rob
