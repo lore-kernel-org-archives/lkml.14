@@ -1,131 +1,94 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A17D1514C8
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B554315B;
+	Thu, 11 Jul 2024 08:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720687489; cv=none; b=j7YM4A0cMiMs1DtqhjizvqbcYYE1h/NNdvldisbGmvWnZlkd/dfFxU9LM0xLrMPQFqeNubscUk20UpYi+Btxn+PU8Ak7sLWFFQmubzJJ3qukjgoibJ7Rm0hqNxMdi9syBQKFD9TBVSs6GdNRKrBdGhhQlDcsPhNmvKtyl5OXPNs=
+	t=1720687513; cv=none; b=F6kBioAA4u+r4fxHm8b+32KTrMTnrsx1EPNCm+nafTBLn7A+dnjyVJ+/8i0n4g0F+zms878HobRDy/sTHSCSNxbBAXXwgMzvv0hqh2G3vSMzWV6S7OcYTsFyzdH8En7ypz2Ey2pRjJMmOBmrWd/Lx4hoxz3wSz0SgQPlO31zRYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720687489; c=relaxed/simple;
-	bh=f7TRHfNvwagNjQn0+Bm9Bf2LxyKqZlmh+fsFQb0vzrw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=poxCyYO45jM1siNBYBTy1M0R7yr2JdREFBMqm8FlNoyAZcXYQ3WOyMAO6rQZ55pp0TRcM50N21a9hY3+9F4eHPp2ILnOivQM8CxSILvyw7JxG/yiUnwo8v+Ehei//Pp+VcVifqVTGgk9Ony2ZSnlQYlOaaC9qr/VFImOzZlOWkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ILQLNCf9; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1720687513; c=relaxed/simple;
+	bh=QRGxbfH+3SeKRG16yQOvBXWdakQh0M8wwO69vXLtBIc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:To:From:Cc:
+	 References:In-Reply-To; b=kNcyEVdKSpBG+9pqn8039PVyyZ/1VYpq6gRMjCnqAcskOTRdA7+B+sfWjoFtSubkNqZ3jPkkG0kyex8inwqRsGUUPDzmEp75hxsWNHvBv6wI2ae6lz7Chg3t56BD7SkLudwuOEoteakwaWr1XWaTe+VkcTDcGEo4U9fAO/Fxpf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=jQqR5yg6; arc=none smtp.client-ip=195.113.20.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ILQLNCf9"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-36799fb93baso347796f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1720687485; x=1721292285; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w84xl8Y3F0+wt7yk4xgIfVPoRjH+R3/bz+ZyGkK2r0A=;
-        b=ILQLNCf9/6nea/52t0SJ29HeWQwCUluCsqKd/Frrb5mTjpmay2MMGuK+uJUhSZixHe
-         rjyQ7TYiL5jyITV81dkFja2pY97dDvHg4N2hY9Xi3B4fiXTuv+0be/dyJG2+ivqB2KwY
-         2rKChyh6lUwHW4E98/x2ZnwxW4PDz4A8ndbGof8XKYzXHYjmdvIivZq+/qV6F8qbyO1p
-         T76CIOixUjLaMksq01BrZGdT4nB9SwjL0b42/VyCNAbLeVV+YPFKZVH9G17Z8XM73Qrx
-         HwkTpDTeWuYFDQLfI7r+lhPuapeqnXvPrLJhAbyzZzyhHTyMHdL06aNLH7zld/OIOKQp
-         iIfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720687485; x=1721292285;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w84xl8Y3F0+wt7yk4xgIfVPoRjH+R3/bz+ZyGkK2r0A=;
-        b=gOnsyU0vS29FsS05lYKRV1XMK9PdEcmTVO2Ui7VqZ6X/6WXHzDAk1tsWwtnb2UddEH
-         SMls1qDisuzsAyXr9XuLI+VFkL67WAwgeABgEUdQovarQ9pwIsGbyHmufIPDVFfYWgNB
-         eHH/j3FMjXwk+7v4c6OexYkqh7Dr3VNtXOkaTba043T8eIiXQRCfcxIEbSUsYdgyTWfM
-         Vg4Cqm8Ag1F9npyhByjkdeFv13ehq/Wf2Po9bfXIypWjoZ/dSjyPIx6g/ZIzm8SyhkAb
-         TGWRgMil128ggFTq80pLptMr52BIw862I4SzLxYaPH0NIreRe/CK0ksT0ysPwvT2EuS6
-         wGcA==
-X-Gm-Message-State: AOJu0YzkHhiwH1D1Pojkijh38kmSMTXUiQl6uEmlJ9kbcLAADde3X0aW
-	bmCPfExbafxY8BtLiT5LFmE41VP+AlDL9iPs3XQCh81KYMdXdMX8Y81hmXED0udHRObKbz+TMAi
-	V3pc=
-X-Google-Smtp-Source: AGHT+IHcsX/3ApNweLCTUuqlWjawC95PiiJXDRaEgg1sHRt80HO87mQkMY3yMCRJPOsQAy/2J/uo2Q==
-X-Received: by 2002:a5d:58fb:0:b0:367:8875:dd4c with SMTP id ffacd0b85a97d-367cea7368dmr4449606f8f.23.1720687484600;
-        Thu, 11 Jul 2024 01:44:44 -0700 (PDT)
-Received: from debian.fritz.box. (aftr-82-135-80-26.dynamic.mnet-online.de. [82.135.80.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa06desm7221511f8f.76.2024.07.11.01.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 01:44:44 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: akpm@linux-foundation.org,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH v2] bootconfig: Remove duplicate included header file linux/bootconfig.h
-Date: Thu, 11 Jul 2024 10:43:16 +0200
-Message-Id: <20240711084315.1507-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="jQqR5yg6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
+	s=submission; t=1720685852; x=1721985852;
+	bh=Ls7RNbnmxHwm0IM0YhzLBLizkdiPlt+11EedtmZU+3k=; h=From;
+	b=jQqR5yg65sj8UpliFuByNMMGwzvR1CSXBc80hFLXtB02fQckgr/codwkbToD8dccv
+	 lMgXuGngFliqna6YO5PN1W6VQqxVVXFCh+uSKzQ7Wc5T+szbBqZUHiT8UvJPkj895y
+	 ylG05nbvZu4C45fY++oEI7b0NiRzOrar5QgSMXBjYqYWJZ37VBD/hF2eg1CFIArK64
+	 i5bRFwxYYQDWzNpe6+44UkL+X5Dc9p/Zk4k8nQhbGiunZB56Y+FYHPvsjgqypm3gkO
+	 5lH6oLZqJ4nJfaFjEYRtpJ8ymHZHlcgb/mImq8OfVBGExgimVeiLpxREyJmzWh4sF4
+	 QjkHQ4pq7NNIA==
+Received: from localhost (internet5.mraknet.com [185.200.108.250])
+	(authenticated)
+	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 46B8HVSV030720
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Thu, 11 Jul 2024 10:17:32 +0200 (CEST)
+	(envelope-from balejk@matfyz.cz)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 11 Jul 2024 10:17:31 +0200
+Message-Id: <D2MK87FSAP8Y.N9JBG2R7IBQX@matfyz.cz>
+Subject: Re: [PATCH] MAINTAINERS: repair file entry in MARVELL 88PM886 PMIC
+ DRIVER
+To: "Lukas Bulwahn" <lbulwahn@redhat.com>, "Lee Jones" <lee@kernel.org>
+From: "Karel Balej" <balejk@matfyz.cz>
+Cc: <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Lukas Bulwahn" <lukas.bulwahn@redhat.com>
+References: <20240711065140.140703-1-lukas.bulwahn@redhat.com>
+In-Reply-To: <20240711065140.140703-1-lukas.bulwahn@redhat.com>
 
-The header file linux/bootconfig.h is included whether __KERNEL__ is
-defined or not.
+Lukas Bulwahn, 2024-07-11T08:51:40+02:00:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+>
+> Commit f53d3efa366b ("MAINTAINERS: Add myself for Marvell 88PM886 PMIC")
+> adds a file entry referring to drivers/regulators/88pm886-regulator.c,
+> but the directory is actually called drivers/regulator. Note that there i=
+s
+> no 's' at the end.
+>
+> Hence, ./scripts/get_maintainer.pl --self-test=3Dpatterns complains about=
+ a
+> broken reference.
+>
+> Repair the file entry in the MARVELL 88PM886 PMIC DRIVER section.
+>
+> Fixes: f53d3efa366b ("MAINTAINERS: Add myself for Marvell 88PM886 PMIC")
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3eab44bd1010..bb7b5ecbc0b9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13495,7 +13495,7 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/mfd/marvell,88pm886-a1.yaml
+>  F:	drivers/input/misc/88pm886-onkey.c
+>  F:	drivers/mfd/88pm886.c
+> -F:	drivers/regulators/88pm886-regulator.c
+> +F:	drivers/regulator/88pm886-regulator.c
+>  F:	include/linux/mfd/88pm886.h
+> =20
+>  MARVELL ARMADA 3700 PHY DRIVERS
+> --=20
+> 2.45.2
 
-Include it only once before the #ifdef/#else/#endif preprocessor
-directives and remove the following make includecheck warning:
+Thank you for the fix and sorry for the trouble.
 
-  linux/bootconfig.h is included more than once
+Reviewed-by: Karel Balej <balejk@matfyz.cz>
 
-Move the comment to the top and delete the now empty #else block.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- Move comment and delete #else as suggested by Masami Hiramatsu
-- Link to v1: https://lore.kernel.org/linux-kernel/20240711002152.800028-2-thorsten.blum@toblux.com/
----
- lib/bootconfig.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 97f8911ea339..81f29c29f47b 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -4,8 +4,16 @@
-  * Masami Hiramatsu <mhiramat@kernel.org>
-  */
- 
--#ifdef __KERNEL__
-+/*
-+ * NOTE: This is only for tools/bootconfig, because tools/bootconfig will
-+ * run the parser sanity test.
-+ * This does NOT mean lib/bootconfig.c is available in the user space.
-+ * However, if you change this file, please make sure the tools/bootconfig
-+ * has no issue on building and running.
-+ */
- #include <linux/bootconfig.h>
-+
-+#ifdef __KERNEL__
- #include <linux/bug.h>
- #include <linux/ctype.h>
- #include <linux/errno.h>
-@@ -24,16 +32,6 @@ const char * __init xbc_get_embedded_bootconfig(size_t *size)
- 	return (*size) ? embedded_bootconfig_data : NULL;
- }
- #endif
--
--#else /* !__KERNEL__ */
--/*
-- * NOTE: This is only for tools/bootconfig, because tools/bootconfig will
-- * run the parser sanity test.
-- * This does NOT mean lib/bootconfig.c is available in the user space.
-- * However, if you change this file, please make sure the tools/bootconfig
-- * has no issue on building and running.
-- */
--#include <linux/bootconfig.h>
- #endif
- 
- /*
--- 
-2.39.2
-
+K. B.
