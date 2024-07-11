@@ -1,401 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8181A1A01A1
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 21:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A8113A868
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720735194; cv=none; b=L97n0PIgFfqs/GM+QvtrT2A9WIPfzBdMDHOYrSq52G+6MiGT2XMWJcsdfbyIdqLsJ+1jWg14PbrTSFpWliXSslKuxaZYB+MBjYwXClVJRpv21vmxXNjLatpPF5hkXdpXXMAdd5BoNo2/BNBLYCOVAoREBedUzjOxaTol55kzlqU=
+	t=1720735207; cv=none; b=Z77V5/1+qvIz0wLVMGTQbC1UBJWxfYdu5WGbJ4KURBQglopymZhNecx/MAWP68JsCxFTY+PAadEnHdLMw1PmEB4DkjF/Sm1ZAWXrrcYIGAXgXID80rjSW8rS9AQSDBeWhHnSH9j2DkubhKErfuxN0/NFb/igcFXcVhH3S7OTJUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720735194; c=relaxed/simple;
-	bh=QGeN6a5lszv25gLKLcKROrWNAHluSv3gWuzDAi7U1yg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=uMM/VAKa9EHZOf1wBFgZm/HQkeLwfQQfgOZqfCwc6gg1/fRb9bAABmS2yjkkDflNidPMl27hknMvfBcjh7Qg8PoX7NJ5/isDum3sbFzK2JM8WBdIDcU9R+A4xaBUVr+VMCfqxYJ8qusTTQTl9sKYg8Hw0+oRA8hMiHzRyXRSlHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iy2MJ43d; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720735207; c=relaxed/simple;
+	bh=pfCDGF8keLM5aPUqrUsGlT4loVO7m16an3Y85a7tH6k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=q4/q8jJLhXQyhRHMlcXQK2N0/0pYhk0RWK7bvQDlkF1M+WJpIPgVeVSq1o8D00c/A6NWSRnBvq79iBGNqAjb58U5lj+eKf8YZo0U3u0kXH2fHe41VFD2dVNOTW8BwEYCqwcIk4fCHi/CJUhlSanGNRec54f4CEnIecICF8z2qMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=e448ae8Z; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iy2MJ43d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720735193; x=1752271193;
-  h=date:from:to:cc:subject:message-id;
-  bh=QGeN6a5lszv25gLKLcKROrWNAHluSv3gWuzDAi7U1yg=;
-  b=Iy2MJ43dKjrrsZqYDOla6cI/TUiMsGvcJYZrx7vXQRzcsCveiZZ596d5
-   crh/Ctj9gadqlWpeKiGBTGBFmYFi6/2nTm0Bk1EfTEuBghAoCgl+ipzvf
-   PoIGehdz4f+3EKImEXNPgukyje0Xb0S+nK6cS9k8x+PHzf8SZTeDHM5Sr
-   Ff52ubEI4UYSXgXuU+9sTfgbfxBYl+G9VR/bb+zyWaZChFGBCKz91ZmPm
-   5oSadlnAM/cYVUpRQPbsb6/qhGC+4rg/5dclVLjMKI/WvEUZ7Mlor6g5/
-   IYxmuUzLo5nTHmCJ6MhKzI17JY7Pz0UivRDt5DMnXEi40qvtFnMRB/c/D
-   Q==;
-X-CSE-ConnectionGUID: DoWsqtYmQAKmjZ6tveafVg==
-X-CSE-MsgGUID: rUeGl6/LRS+0/t4EUd7LOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="18293261"
-X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
-   d="scan'208";a="18293261"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 14:59:53 -0700
-X-CSE-ConnectionGUID: Gi1EziO+Qn22aPpZm7/17A==
-X-CSE-MsgGUID: 0WXrZqPWRF2VWSFKbTCrWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
-   d="scan'208";a="79825958"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 11 Jul 2024 14:59:51 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sS1pM-000ZxR-1a;
-	Thu, 11 Jul 2024 21:59:48 +0000
-Date: Fri, 12 Jul 2024 05:59:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:for-neeraj.2024.07.10a] BUILD REGRESSION
- 6dfea2d3ac9e0874587c0c1d05fd829f520d5458
-Message-ID: <202407120543.IpY0WNtm-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="e448ae8Z"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70b1808dee9so1089026b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1720735205; x=1721340005; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0kJJ78M9DJ/3XjOw3vvvRZ7PzINUaxwHfYx+BpMkyk0=;
+        b=e448ae8Zjnz+802E3j5ab0oyjRVyVwTgUguWks/w8X0ykgugvwkphOxCYlkBa7vr9p
+         dXucB+hAZ33NVI8EEVu3HPAVBZ0VG3YkOs2MBpurxAf5kljJxibmX4Qrg+P4kFEQDv5e
+         o2or84T+NXymD/tsbZBRhM7D6bY5+1GoWzZYKwro7qIz76XxL5sRy3yt01h6sujwnuI/
+         Czd7F7NCd2UolUz/JvCN3C+J5tN1RPCXJPTWy4DFuFGDLGV+eXBbgeziyfogkIFXRrgK
+         TJdkNIdSls15ByDBvHOePiRQ3B6jTIC7JZs1l+eVJonejZyuDJJSW/Pdw0h9Zm+wq/RN
+         YiXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720735205; x=1721340005;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0kJJ78M9DJ/3XjOw3vvvRZ7PzINUaxwHfYx+BpMkyk0=;
+        b=bXkDTbscoAOm96GFK/4fxDX0VzjPn6IyOYwDEGkjHH1GdxyM0gXMsz78ac618cS1Ps
+         QH4xLcW0yFAVzTp/HuwUIBAzFPuwZy3mRYlCtWIQsti7LqMq+b8gkPhIfqEwM2tdEvge
+         mJx1CRHFCtwfS1+r9q5SBsJWyv4ZH1WLD5nrrWLqpWb3t7EttORXa0wVosQANUQm/p/3
+         j/vadRtITFbbacnxY/cS89DpV0L0WvMCJdjD0rA6J+2MCmwrqfcqXnNf8wfR9APSjPIN
+         jdJSX/Pg/KjsrNvhsGCPwAw/BYEbd8//hJpM3JyRWvoe/3zmakNx4Npl2eiKTw3ibqxQ
+         U77Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWL+hDttE+5bb0G+L0ZvhRYdXiMIqNFo7OzmDCUtMNeinzPC1YUTuiWrQrkNLg/efHrI54XEyHdssyhVM8vXZJuTSbRM3zsprM3520p
+X-Gm-Message-State: AOJu0YzNFXPZSNEHSyNlRJhWg6jPkDPDYaF8rDiHwSzV1VyI+gIlnuTP
+	b+BBEmGjDWe3YWboL/XOPoP4h/LSVP/x0HqCFxXsFAdVsWOW0eKJScVo4TigeEY=
+X-Google-Smtp-Source: AGHT+IGCRaQSLPQesi7EOhjSZ7CmfA2mWlibxmsfRsVL+D3SOaSzPbZ5wSzr2qwFqtsmhsCMyJ1BHA==
+X-Received: by 2002:a05:6a20:4f1e:b0:1c3:b2db:4ddd with SMTP id adf61e73a8af0-1c3b2db4e19mr3370833637.13.1720735205129;
+        Thu, 11 Jul 2024 15:00:05 -0700 (PDT)
+Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43898b10sm6169431b3a.7.2024.07.11.14.59.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 15:00:04 -0700 (PDT)
+From: Jesse Taube <jesse@rivosinc.com>
+To: linux-riscv@lists.infradead.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Evan Green <evan@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Jesse Taube <jesse@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Xiao Wang <xiao.w.wang@intel.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Erick Archer <erick.archer@gmx.com>,
+	Joel Granados <j.granados@samsung.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v4 4/7] RISC-V: Replace RISCV_MISALIGNED with RISCV_SCALAR_MISALIGNED
+Date: Thu, 11 Jul 2024 17:58:43 -0400
+Message-ID: <20240711215846.834365-5-jesse@rivosinc.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240711215846.834365-1-jesse@rivosinc.com>
+References: <20240711215846.834365-1-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-neeraj.2024.07.10a
-branch HEAD: 6dfea2d3ac9e0874587c0c1d05fd829f520d5458  rcu: Let dump_cpu_task() be used without preemption disabled
+Replace RISCV_MISALIGNED with RISCV_SCALAR_MISALIGNED to allow
+for the addition of RISCV_VECTOR_MISALIGNED in a later patch.
 
-Error/Warning reports:
+Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+---
+V2 -> V3:
+ - New patch
+V3 -> V4:
+ - No changes
+---
+ arch/riscv/Kconfig                    | 6 +++---
+ arch/riscv/include/asm/cpufeature.h   | 2 +-
+ arch/riscv/include/asm/entry-common.h | 2 +-
+ arch/riscv/kernel/Makefile            | 4 ++--
+ arch/riscv/kernel/fpu.S               | 4 ++--
+ 5 files changed, 9 insertions(+), 9 deletions(-)
 
-https://lore.kernel.org/oe-kbuild-all/202407110950.SoSbeyIm-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202407111030.UYYhi3JZ-lkp@intel.com
-
-Error/Warning: (recently discovered and may have been fixed)
-
-kernel/rcu/tree_exp.h:556:48: error: call to undeclared function 'csd_lock_is_stuck'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-kernel/rcu/tree_exp.h:556:48: error: implicit declaration of function 'csd_lock_is_stuck' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-kernel/rcu/tree_stall.h:798:49: error: call to undeclared function 'csd_lock_is_stuck'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-kernel/rcu/tree_stall.h:798:49: error: implicit declaration of function 'csd_lock_is_stuck' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-kernel/rcu/tree_stall.h:798:63: error: implicit declaration of function 'csd_lock_is_stuck' [-Werror=implicit-function-declaration]
-
-Error/Warning ids grouped by kconfigs:
-
-recent_errors
-|-- alpha-allyesconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- arm64-allnoconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- arm64-randconfig-001-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- arm64-randconfig-002-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- arm64-randconfig-003-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- arm64-randconfig-004-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- hexagon-allmodconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- hexagon-allyesconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- hexagon-randconfig-001-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- i386-allmodconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-allyesconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-buildonly-randconfig-001-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-buildonly-randconfig-002-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-buildonly-randconfig-003-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-buildonly-randconfig-004-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-buildonly-randconfig-005-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-buildonly-randconfig-006-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-defconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- i386-randconfig-001-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-randconfig-002-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-randconfig-003-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-randconfig-004-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-randconfig-005-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- i386-randconfig-006-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-randconfig-011-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-randconfig-012-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- i386-randconfig-013-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- i386-randconfig-015-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- i386-randconfig-016-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- loongarch-allmodconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- loongarch-randconfig-001-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- loongarch-randconfig-002-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- openrisc-allyesconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- parisc-allmodconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- parisc-allyesconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- parisc-defconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- parisc-randconfig-001-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- parisc-randconfig-002-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- powerpc-allmodconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- powerpc-allyesconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- powerpc-randconfig-002-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- powerpc64-randconfig-001-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- powerpc64-randconfig-002-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- powerpc64-randconfig-003-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- riscv-allmodconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- riscv-allyesconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- riscv-defconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- riscv-randconfig-001-20240711
-|   |-- kernel-rcu-tree_exp.h:error:implicit-declaration-of-function-csd_lock_is_stuck-is-invalid-in-C99-Werror-Wimplicit-function-declaration
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck-is-invalid-in-C99-Werror-Wimplicit-function-declaration
-|-- riscv-randconfig-002-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- s390-allmodconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- s390-allnoconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- s390-defconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- s390-randconfig-001-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- s390-randconfig-002-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- sh-defconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- sparc-allmodconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- sparc64-defconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- x86_64-allyesconfig
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- x86_64-buildonly-randconfig-002-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- x86_64-buildonly-randconfig-003-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- x86_64-buildonly-randconfig-004-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- x86_64-defconfig
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- x86_64-randconfig-014-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- x86_64-randconfig-015-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|-- x86_64-randconfig-016-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- x86_64-randconfig-072-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- x86_64-randconfig-074-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- x86_64-randconfig-076-20240711
-|   `-- kernel-rcu-tree_stall.h:error:implicit-declaration-of-function-csd_lock_is_stuck
-|-- x86_64-randconfig-161-20240711
-|   |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-`-- x86_64-rhel-8.3-rust
-    |-- kernel-rcu-tree_exp.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-    `-- kernel-rcu-tree_stall.h:error:call-to-undeclared-function-csd_lock_is_stuck-ISO-C99-and-later-do-not-support-implicit-function-declarations
-
-elapsed time: 1460m
-
-configs tested: 143
-configs skipped: 2
-
-tested configs:
-alpha                             allnoconfig   gcc-13.3.0
-alpha                            allyesconfig   gcc-13.3.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                   randconfig-001-20240711   gcc-13.2.0
-arc                   randconfig-002-20240711   gcc-13.2.0
-arm                              allmodconfig   gcc-14.1.0
-arm                               allnoconfig   clang-19
-arm                              allyesconfig   gcc-14.1.0
-arm                   randconfig-001-20240711   clang-19
-arm                   randconfig-002-20240711   gcc-13.3.0
-arm                   randconfig-003-20240711   clang-19
-arm                   randconfig-004-20240711   gcc-13.3.0
-arm64                            allmodconfig   clang-19
-arm64                             allnoconfig   gcc-13.3.0
-arm64                 randconfig-001-20240711   clang-19
-arm64                 randconfig-002-20240711   gcc-13.3.0
-arm64                 randconfig-003-20240711   gcc-13.3.0
-arm64                 randconfig-004-20240711   gcc-13.3.0
-csky                              allnoconfig   gcc-13.3.0
-csky                  randconfig-001-20240711   gcc-13.3.0
-csky                  randconfig-002-20240711   gcc-13.3.0
-hexagon                          allmodconfig   clang-19
-hexagon                           allnoconfig   clang-19
-hexagon                          allyesconfig   clang-19
-hexagon               randconfig-001-20240711   clang-19
-hexagon               randconfig-002-20240711   clang-19
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240711   gcc-13
-i386         buildonly-randconfig-002-20240711   gcc-10
-i386         buildonly-randconfig-003-20240711   gcc-13
-i386         buildonly-randconfig-004-20240711   gcc-8
-i386         buildonly-randconfig-005-20240711   gcc-10
-i386         buildonly-randconfig-006-20240711   gcc-13
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240711   gcc-13
-i386                  randconfig-002-20240711   gcc-10
-i386                  randconfig-003-20240711   gcc-8
-i386                  randconfig-004-20240711   gcc-13
-i386                  randconfig-005-20240711   clang-18
-i386                  randconfig-006-20240711   gcc-13
-i386                  randconfig-011-20240711   gcc-9
-i386                  randconfig-012-20240711   clang-18
-i386                  randconfig-013-20240711   gcc-13
-i386                  randconfig-014-20240711   clang-18
-i386                  randconfig-015-20240711   clang-18
-i386                  randconfig-016-20240711   gcc-9
-loongarch                        allmodconfig   gcc-13.3.0
-loongarch                         allnoconfig   gcc-13.3.0
-loongarch             randconfig-001-20240711   gcc-14.1.0
-loongarch             randconfig-002-20240711   gcc-14.1.0
-m68k                             allmodconfig   gcc-13.3.0
-m68k                              allnoconfig   gcc-13.3.0
-m68k                             allyesconfig   gcc-13.3.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.3.0
-nios2                             allnoconfig   gcc-13.3.0
-nios2                 randconfig-001-20240711   gcc-14.1.0
-nios2                 randconfig-002-20240711   gcc-14.1.0
-openrisc                          allnoconfig   gcc-13.3.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-13.3.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240711   gcc-14.1.0
-parisc                randconfig-002-20240711   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-13.3.0
-powerpc                          allyesconfig   clang-19
-powerpc               randconfig-001-20240711   gcc-14.1.0
-powerpc               randconfig-002-20240711   clang-19
-powerpc               randconfig-003-20240711   clang-19
-powerpc64             randconfig-001-20240711   gcc-14.1.0
-powerpc64             randconfig-002-20240711   clang-16
-powerpc64             randconfig-003-20240711   gcc-14.1.0
-riscv                            allmodconfig   clang-19
-riscv                             allnoconfig   gcc-13.3.0
-riscv                            allyesconfig   clang-19
-riscv                               defconfig   clang-19
-riscv                 randconfig-001-20240711   clang-14
-riscv                 randconfig-002-20240711   gcc-14.1.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                             allyesconfig   gcc-13.2.0
-s390                                defconfig   clang-19
-s390                  randconfig-001-20240711   clang-19
-s390                  randconfig-002-20240711   gcc-14.1.0
-sh                               allmodconfig   gcc-13.3.0
-sh                                allnoconfig   gcc-13.3.0
-sh                               allyesconfig   gcc-13.3.0
-sh                                  defconfig   gcc-14.1.0
-sh                    randconfig-001-20240711   gcc-14.1.0
-sh                    randconfig-002-20240711   gcc-14.1.0
-sparc                            allmodconfig   gcc-13.3.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240711   gcc-14.1.0
-sparc64               randconfig-002-20240711   gcc-14.1.0
-um                               allmodconfig   clang-19
-um                                allnoconfig   clang-17
-um                               allyesconfig   gcc-13
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                    randconfig-001-20240711   gcc-8
-um                    randconfig-002-20240711   gcc-8
-um                           x86_64_defconfig   clang-15
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240711   clang-18
-x86_64       buildonly-randconfig-002-20240711   clang-18
-x86_64       buildonly-randconfig-003-20240711   clang-18
-x86_64       buildonly-randconfig-004-20240711   clang-18
-x86_64       buildonly-randconfig-005-20240711   gcc-13
-x86_64       buildonly-randconfig-006-20240711   gcc-13
-x86_64                              defconfig   gcc-13
-x86_64                randconfig-001-20240711   gcc-13
-x86_64                randconfig-002-20240711   gcc-13
-x86_64                randconfig-003-20240711   gcc-11
-x86_64                randconfig-004-20240711   gcc-9
-x86_64                randconfig-005-20240711   clang-18
-x86_64                randconfig-006-20240711   gcc-13
-x86_64                randconfig-011-20240711   gcc-13
-x86_64                randconfig-012-20240711   clang-18
-x86_64                randconfig-013-20240711   gcc-13
-x86_64                randconfig-014-20240711   clang-18
-x86_64                randconfig-015-20240711   clang-18
-x86_64                randconfig-016-20240711   gcc-10
-x86_64                randconfig-071-20240711   gcc-13
-x86_64                randconfig-072-20240711   gcc-13
-x86_64                randconfig-073-20240711   clang-18
-x86_64                randconfig-074-20240711   gcc-13
-x86_64                randconfig-075-20240711   clang-18
-x86_64                randconfig-076-20240711   gcc-8
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.3.0
-xtensa                randconfig-001-20240711   gcc-14.1.0
-xtensa                randconfig-002-20240711   gcc-14.1.0
-
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index b94176e25be1..34d24242e37a 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -717,7 +717,7 @@ config THREAD_SIZE_ORDER
+ 	  Specify the Pages of thread stack size (from 4KB to 64KB), which also
+ 	  affects irq stack size, which is equal to thread stack size.
+ 
+-config RISCV_MISALIGNED
++config RISCV_SCALAR_MISALIGNED
+ 	bool
+ 	select SYSCTL_ARCH_UNALIGN_ALLOW
+ 	help
+@@ -734,7 +734,7 @@ choice
+ 
+ config RISCV_PROBE_UNALIGNED_ACCESS
+ 	bool "Probe for hardware unaligned access support"
+-	select RISCV_MISALIGNED
++	select RISCV_SCALAR_MISALIGNED
+ 	help
+ 	  During boot, the kernel will run a series of tests to determine the
+ 	  speed of unaligned accesses. This probing will dynamically determine
+@@ -745,7 +745,7 @@ config RISCV_PROBE_UNALIGNED_ACCESS
+ 
+ config RISCV_EMULATED_UNALIGNED_ACCESS
+ 	bool "Emulate unaligned access where system support is missing"
+-	select RISCV_MISALIGNED
++	select RISCV_SCALAR_MISALIGNED
+ 	help
+ 	  If unaligned memory accesses trap into the kernel as they are not
+ 	  supported by the system, the kernel will emulate the unaligned
+diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
+index 347805446151..0ed7d99c14dd 100644
+--- a/arch/riscv/include/asm/cpufeature.h
++++ b/arch/riscv/include/asm/cpufeature.h
+@@ -33,8 +33,8 @@ extern struct riscv_isainfo hart_isa[NR_CPUS];
+ 
+ void riscv_user_isa_enable(void);
+ 
+-#if defined(CONFIG_RISCV_MISALIGNED)
+ bool check_unaligned_access_emulated_all_cpus(void);
++#if defined(CONFIG_RISCV_SCALAR_MISALIGNED)
+ void unaligned_emulation_finish(void);
+ bool unaligned_ctl_available(void);
+ DECLARE_PER_CPU(long, misaligned_access_speed);
+diff --git a/arch/riscv/include/asm/entry-common.h b/arch/riscv/include/asm/entry-common.h
+index 2293e535f865..0a4e3544c877 100644
+--- a/arch/riscv/include/asm/entry-common.h
++++ b/arch/riscv/include/asm/entry-common.h
+@@ -25,7 +25,7 @@ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
+ void handle_page_fault(struct pt_regs *regs);
+ void handle_break(struct pt_regs *regs);
+ 
+-#ifdef CONFIG_RISCV_MISALIGNED
++#ifdef CONFIG_RISCV_SCALAR_MISALIGNED
+ int handle_misaligned_load(struct pt_regs *regs);
+ int handle_misaligned_store(struct pt_regs *regs);
+ #else
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 5b243d46f4b1..8d4e7d40e42f 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -62,8 +62,8 @@ obj-y	+= probes/
+ obj-y	+= tests/
+ obj-$(CONFIG_MMU) += vdso.o vdso/
+ 
+-obj-$(CONFIG_RISCV_MISALIGNED)	+= traps_misaligned.o
+-obj-$(CONFIG_RISCV_MISALIGNED)	+= unaligned_access_speed.o
++obj-$(CONFIG_RISCV_SCALAR_MISALIGNED)	+= traps_misaligned.o
++obj-$(CONFIG_RISCV_SCALAR_MISALIGNED)	+= unaligned_access_speed.o
+ obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)	+= copy-unaligned.o
+ 
+ obj-$(CONFIG_FPU)		+= fpu.o
+diff --git a/arch/riscv/kernel/fpu.S b/arch/riscv/kernel/fpu.S
+index 327cf527dd7e..f74f6b60e347 100644
+--- a/arch/riscv/kernel/fpu.S
++++ b/arch/riscv/kernel/fpu.S
+@@ -170,7 +170,7 @@ SYM_FUNC_END(__fstate_restore)
+ 	__access_func(f31)
+ 
+ 
+-#ifdef CONFIG_RISCV_MISALIGNED
++#ifdef CONFIG_RISCV_SCALAR_MISALIGNED
+ 
+ /*
+  * Disable compressed instructions set to keep a constant offset between FP
+@@ -224,4 +224,4 @@ SYM_FUNC_START(get_f64_reg)
+ 	fp_access_epilogue
+ SYM_FUNC_END(get_f64_reg)
+ 
+-#endif /* CONFIG_RISCV_MISALIGNED */
++#endif /* CONFIG_RISCV_SCALAR_MISALIGNED */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.2
+
