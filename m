@@ -1,123 +1,231 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9332555B;
-	Thu, 11 Jul 2024 08:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC709150991
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720686014; cv=none; b=rODIg/y5h9o6H5h2FI8tVkBYxMdmgsCysgRpiRSxYSh2+EtsQ4gCF2+pvoMJH+3q6Tu4ideBRUygfWPhiiHeOQrnXoKOsVNf8Hs9f0RE0oCwHjie84WXI96zEsX2LL/R1eQppiG35sl4PhT6flzviuRUbgCzAEcuD0Fyt5Ixjnk=
+	t=1720686026; cv=none; b=VmUmd+iE5UXlEBdZyuZQcpNaQJ6NOfRyclGoroI9lgcvgLDfdsAquzthLHGO2PEG+X6KRvMR16VzUtoRUqSckbX1lDptvAAHlBhU9vdnBUpR4aCrbTNg+8EklSDjhGXIh6DcdCpkDt8mC01Rw32TOI8bbfIzKrPjGwt50hdjpxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720686014; c=relaxed/simple;
-	bh=ECDjUX7sMoLGKS78SvFADoo7Z8KxnHERvqRD6Yv4Jd4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i1M606MViJgso0WhooRD+p7QLgAl62gboWGRbz3TAoheBsJS0NDBcaBi5TcPwckjNbqPuXpDOft2aaxsury0Qc37FCS6g+apAf2Av6u9Pqrf7P/dI4Zzaie9tm8xJEHLfE7Vd5FEvmfYEyKyjsSujqwNQQbh0V7TkqYZcsKo+Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oWO8OERk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oWO8OERk"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B4mr6f008781;
-	Thu, 11 Jul 2024 08:19:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=nDMGiZZIwHKkvAsjKVbyuA1P
-	GVr/46NInHQRhNbuLxo=; b=oWO8OERkrQ1/SGZTana4Wu+V2wexz5rgqbe9F8du
-	fumAFOTKr0xlHUzIJypI+I0jSqjpN/8v1csf1HCn2S28czPbh6rXzzNzh0pmuC7/
-	yeHacN8rzoQfSZcC8A6y1l55iEzvOdJjMFwdDv8A7dOSX9KQw7lQSBA76d54TIl4
-	EZVDmxp4bkYwZQ6cEUGKFTThYfbCukuirRo7ilahzivIpBZnw84LgbZQ2vALmYA1
-	6aeoN19XJEvZn5njFOVSmRpqxg0zhQ3Xqfi1SVEXkJy6jBcuCI3jaUAUfRMXJ9P1
-	ZsEgI116SrOrZyanEGE1skNNDiYuhtRHdCAH+8cLZMQ1CA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406x51bveq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 08:18:59 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46B8Iwdq004815
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 08:18:59 GMT
-Received: from taozha2-gv.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 11 Jul 2024 01:18:55 -0700
-From: Tao Zhang <quic_taozha@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan
-	<leo.yan@linux.dev>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: Tao Zhang <quic_taozha@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v2 3/3] coresight-tpda: Optimize the function of reading element size
-Date: Thu, 11 Jul 2024 16:17:50 +0800
-Message-ID: <20240711081750.21792-4-quic_taozha@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240711081750.21792-1-quic_taozha@quicinc.com>
-References: <20240711081750.21792-1-quic_taozha@quicinc.com>
+	s=arc-20240116; t=1720686026; c=relaxed/simple;
+	bh=KveHD5jbOQSZxWufNAA3bAkBfec+cpCYz7p5urYAGCA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JV9pMXMsAB4lyqBAdn3EMhcG80ULTXqffEKF26N3sOfjJGjm0tmWrSs24lP8EH1IXEN18NCnfMthbTJaWXdcaYeN/wSIPVytLKOAan+cGJumm71iT14jAqOVponJn6MedXlPbxGBET+KvaCM6eptLbMylMwexCPehTAwfE1cJGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-80d61a602f2so212763241.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:20:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720686024; x=1721290824;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I9V55ZdXNpFXSzjKazk2BYhj7255MteXQT8lNoXNpGQ=;
+        b=IjWkc+u2KJ37QJX1NIubHANeI166u9zQiBitYZNFwSoEHGiBIvimnTum9BkH5bwlFA
+         kDVQojCx8rSMkFeXHz/dSwCtmi8aHdSsOwz12voOhz2F1L6KRnfQ42xXiJFjtQXzYR1O
+         KCKguLOuaSDDQsw2VMzU3CbSKi1dTxOzz1SFeuXR+PoX+mwFuc3yYP2oe2Uu+IwiUF8u
+         oSfG02Lf7XF5GjWaQqzAyicajIndI3oohh65mVg5L4t8c5RPHDHXUbo819CjiVEVAfOr
+         CjPzqZaopxmpUD5/+PsKtx6oDFyOwoFUrNphtrVuC913ke8kK1G60lSHXMgis2zbU20R
+         waAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9jDaVbHIGx1Zm52LafGwSJcQPXSG66zhvJXMKlEMsyaEd/+T56PLMGH9yTf3m4Eg0ISskSZRsqTBgQd2GOCD+wwTuWnTR5A5Nrqux
+X-Gm-Message-State: AOJu0Yx9afmDZ6z+EsMqmkwBA686BGWIiOVPjshZX06vQlZedwGn8gtH
+	wcZeLMv4R6Xwb2RDwoeEfN6ccbKyOvyQyGRd7raWvqBcEraK39lQj/Las/qzCg4Da5owjF2Vn5H
+	DLmmvbSVYY6bLhMkTH2QmLitQNOg=
+X-Google-Smtp-Source: AGHT+IFNBlRV01qSTvUsWyfoF8g9J4oirMD1z8dQwaHLBy8K+0V9gAVsMNYkNJYu5EBpY4r8z8Ad5pQGJ14uh/6bzuU=
+X-Received: by 2002:a05:6102:4413:b0:48f:e638:270f with SMTP id
+ ada2fe7eead31-490321166b4mr9803091137.9.1720686023612; Thu, 11 Jul 2024
+ 01:20:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Py0Jf22VgcsTHbipkSopWNKQv4Lhpa99
-X-Proofpoint-ORIG-GUID: Py0Jf22VgcsTHbipkSopWNKQv4Lhpa99
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-11_04,2024-07-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- suspectscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407110057
+References: <20240711072929.3590000-1-ryan.roberts@arm.com> <20240711072929.3590000-2-ryan.roberts@arm.com>
+In-Reply-To: <20240711072929.3590000-2-ryan.roberts@arm.com>
+From: Barry Song <baohua@kernel.org>
+Date: Thu, 11 Jul 2024 20:20:11 +1200
+Message-ID: <CAGsJ_4zzZAjsBU0H9yL55pKW5yym4D+YExTVqXC=wkyC4ixnMQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] mm: Cleanup count_mthp_stat() definition
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	David Hildenbrand <david@redhat.com>, Lance Yang <ioworker0@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since the new funnel device supports multi-port output scenarios,
-there may be more than one TPDM connected to one TPDA. In this
-way, when reading the element size of the TPDM, TPDA driver needs
-to find the expected TPDM corresponding to the filter source.
-When TPDA finds a TPDM or a filter source from a input connection,
-it will read the Devicetree to get the expected TPDM's element
-size.
+On Thu, Jul 11, 2024 at 7:29=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+>
+> Let's move count_mthp_stat() so that it's always defined, even when THP
+> is disabled. Previously uses of the function in files such as shmem.c,
+> which are compiled even when THP is disabled, required ugly THP
+> ifdeferry. With this cleanup, we can remove those ifdefs and the
+> function resolves to a nop when THP is disabled.
+>
+> I shortly plan to call count_mthp_stat() from more THP-invariant source
+> files.
+>
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 
-Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
----
- drivers/hwtracing/coresight/coresight-tpda.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Acked-by: Barry Song <baohua@kernel.org>
 
-diff --git a/drivers/hwtracing/coresight/coresight-tpda.c b/drivers/hwtracing/coresight/coresight-tpda.c
-index bfca103f9f84..4936ba4a7625 100644
---- a/drivers/hwtracing/coresight/coresight-tpda.c
-+++ b/drivers/hwtracing/coresight/coresight-tpda.c
-@@ -110,6 +110,8 @@ static int tpda_get_element_size(struct tpda_drvdata *drvdata,
- 		    csdev->pdata->in_conns[i]->dest_port != inport)
- 			continue;
- 
-+		if (csdev->pdata->in_conns[i]->filter_src_dev)
-+			in = csdev->pdata->in_conns[i]->filter_src_dev;
- 		if (coresight_device_is_tpdm(in)) {
- 			if (drvdata->dsb_esize || drvdata->cmb_esize)
- 				return -EEXIST;
-@@ -124,7 +126,6 @@ static int tpda_get_element_size(struct tpda_drvdata *drvdata,
- 		}
- 	}
- 
--
- 	return rc;
- }
- 
--- 
-2.17.1
-
+> ---
+>  include/linux/huge_mm.h | 70 ++++++++++++++++++++---------------------
+>  mm/memory.c             |  2 --
+>  mm/shmem.c              |  6 ----
+>  3 files changed, 35 insertions(+), 43 deletions(-)
+>
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index cff002be83eb..cb93b9009ce4 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -108,6 +108,41 @@ extern struct kobj_attribute thpsize_shmem_enabled_a=
+ttr;
+>  #define HPAGE_PUD_MASK (~(HPAGE_PUD_SIZE - 1))
+>  #define HPAGE_PUD_SIZE ((1UL) << HPAGE_PUD_SHIFT)
+>
+> +enum mthp_stat_item {
+> +       MTHP_STAT_ANON_FAULT_ALLOC,
+> +       MTHP_STAT_ANON_FAULT_FALLBACK,
+> +       MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+> +       MTHP_STAT_SWPOUT,
+> +       MTHP_STAT_SWPOUT_FALLBACK,
+> +       MTHP_STAT_SHMEM_ALLOC,
+> +       MTHP_STAT_SHMEM_FALLBACK,
+> +       MTHP_STAT_SHMEM_FALLBACK_CHARGE,
+> +       MTHP_STAT_SPLIT,
+> +       MTHP_STAT_SPLIT_FAILED,
+> +       MTHP_STAT_SPLIT_DEFERRED,
+> +       __MTHP_STAT_COUNT
+> +};
+> +
+> +#if defined(CONFIG_TRANSPARENT_HUGEPAGE) && defined(CONFIG_SYSFS)
+> +struct mthp_stat {
+> +       unsigned long stats[ilog2(MAX_PTRS_PER_PTE) + 1][__MTHP_STAT_COUN=
+T];
+> +};
+> +
+> +DECLARE_PER_CPU(struct mthp_stat, mthp_stats);
+> +
+> +static inline void count_mthp_stat(int order, enum mthp_stat_item item)
+> +{
+> +       if (order <=3D 0 || order > PMD_ORDER)
+> +               return;
+> +
+> +       this_cpu_inc(mthp_stats.stats[order][item]);
+> +}
+> +#else
+> +static inline void count_mthp_stat(int order, enum mthp_stat_item item)
+> +{
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>
+>  extern unsigned long transparent_hugepage_flags;
+> @@ -263,41 +298,6 @@ struct thpsize {
+>
+>  #define to_thpsize(kobj) container_of(kobj, struct thpsize, kobj)
+>
+> -enum mthp_stat_item {
+> -       MTHP_STAT_ANON_FAULT_ALLOC,
+> -       MTHP_STAT_ANON_FAULT_FALLBACK,
+> -       MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+> -       MTHP_STAT_SWPOUT,
+> -       MTHP_STAT_SWPOUT_FALLBACK,
+> -       MTHP_STAT_SHMEM_ALLOC,
+> -       MTHP_STAT_SHMEM_FALLBACK,
+> -       MTHP_STAT_SHMEM_FALLBACK_CHARGE,
+> -       MTHP_STAT_SPLIT,
+> -       MTHP_STAT_SPLIT_FAILED,
+> -       MTHP_STAT_SPLIT_DEFERRED,
+> -       __MTHP_STAT_COUNT
+> -};
+> -
+> -struct mthp_stat {
+> -       unsigned long stats[ilog2(MAX_PTRS_PER_PTE) + 1][__MTHP_STAT_COUN=
+T];
+> -};
+> -
+> -#ifdef CONFIG_SYSFS
+> -DECLARE_PER_CPU(struct mthp_stat, mthp_stats);
+> -
+> -static inline void count_mthp_stat(int order, enum mthp_stat_item item)
+> -{
+> -       if (order <=3D 0 || order > PMD_ORDER)
+> -               return;
+> -
+> -       this_cpu_inc(mthp_stats.stats[order][item]);
+> -}
+> -#else
+> -static inline void count_mthp_stat(int order, enum mthp_stat_item item)
+> -{
+> -}
+> -#endif
+> -
+>  #define transparent_hugepage_use_zero_page()                           \
+>         (transparent_hugepage_flags &                                   \
+>          (1<<TRANSPARENT_HUGEPAGE_USE_ZERO_PAGE_FLAG))
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 802d0d8a40f9..a50fdefb8f0b 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -4597,9 +4597,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault=
+ *vmf)
+>
+>         folio_ref_add(folio, nr_pages - 1);
+>         add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
+> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>         count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_FAULT_ALLOC);
+> -#endif
+>         folio_add_new_anon_rmap(folio, vma, addr, RMAP_EXCLUSIVE);
+>         folio_add_lru_vma(folio, vma);
+>  setpte:
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index f24dfbd387ba..fce1343f44e6 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1776,9 +1776,7 @@ static struct folio *shmem_alloc_and_add_folio(stru=
+ct vm_fault *vmf,
+>
+>                         if (pages =3D=3D HPAGE_PMD_NR)
+>                                 count_vm_event(THP_FILE_FALLBACK);
+> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>                         count_mthp_stat(order, MTHP_STAT_SHMEM_FALLBACK);
+> -#endif
+>                         order =3D next_order(&suitable_orders, order);
+>                 }
+>         } else {
+> @@ -1803,10 +1801,8 @@ static struct folio *shmem_alloc_and_add_folio(str=
+uct vm_fault *vmf,
+>                                 count_vm_event(THP_FILE_FALLBACK);
+>                                 count_vm_event(THP_FILE_FALLBACK_CHARGE);
+>                         }
+> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>                         count_mthp_stat(folio_order(folio), MTHP_STAT_SHM=
+EM_FALLBACK);
+>                         count_mthp_stat(folio_order(folio), MTHP_STAT_SHM=
+EM_FALLBACK_CHARGE);
+> -#endif
+>                 }
+>                 goto unlock;
+>         }
+> @@ -2180,9 +2176,7 @@ static int shmem_get_folio_gfp(struct inode *inode,=
+ pgoff_t index,
+>                 if (!IS_ERR(folio)) {
+>                         if (folio_test_pmd_mappable(folio))
+>                                 count_vm_event(THP_FILE_ALLOC);
+> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>                         count_mthp_stat(folio_order(folio), MTHP_STAT_SHM=
+EM_ALLOC);
+> -#endif
+>                         goto alloced;
+>                 }
+>                 if (PTR_ERR(folio) =3D=3D -EEXIST)
+> --
+> 2.43.0
+>
