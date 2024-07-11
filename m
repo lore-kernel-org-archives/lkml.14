@@ -1,109 +1,131 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD8A166317;
-	Thu, 11 Jul 2024 15:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153B016B747
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720711550; cv=none; b=jYBBXEgA3osbVhNLuaEFJbhguYi+NEKnuWFrCw1OKSDn/94xMuUEd4kw+Lw1mVntQy8z0pEc9EI4Uzk4v6+OPVSnMLQzlY7Zc3BknHkKfIX7IdtkBYVw7msfwcphhvDhyK3/vqTL9q1xwTKfSfdTcUo/hpipADyflVFHQ6hl2TQ=
+	t=1720711596; cv=none; b=hCTUXKKrtsKmpnIoD/DhMMBuXATWJCmNzPPQXxvYgQlMTKUOwlvlujbElxhbdTWcG85/vhNY/5BNLn9OEajXPejMmY6mQogk7WOAZBJAtBNltfK4BObZLsIQr3iuAXnj2YmEqYsfkK7xCHdgWc5CSOfcQyMSADtdCaIbHfjCPtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720711550; c=relaxed/simple;
-	bh=zZ7J6+mm32LlLjWxlIjEykH6hwYEPzq7Mm6VwSTr5FI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=on/EaA0tzwNm03xYsPmjwHhrYQejynD9qQ3QVMwb2cGGC+mqTwU7ALrfpELc2UlgjOwpaVAN8XnU2CDFzzQCQXV3Wy/CQMTSKD3tWSONY++Ob4040sfX6NszknM3934wQkTRl+F9lrnlq2qY2QIpmwJOHoh+b7ZwwaVim7vT7fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=aqiA9ufA; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1720711596; c=relaxed/simple;
+	bh=Z2UifNQfHSWQactTbUxwngct7Jif7447IF3QEfZiqWY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HoqvDrBe2CdfBJBm6v9PXAZe5vPNjivfBe4oXlkiG3gMj1rPSK5z0tnK1vIB/JGWLDrjQocheEooCYlMyNdPeySc8EAZdiDA+qYVieo+gQkWTelD0l6jrTJWwzNgQDZz3qMcRnBemyUDRRIUPhenQlZlTUQd1CmQNWic0hL4eVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dm8Srm4/; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="aqiA9ufA"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 026BB1FE38;
-	Thu, 11 Jul 2024 17:25:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1720711535;
-	bh=YGIW/Vx8HzQ+wbnotFUYU6SkJgDBJDLpbLvh5NfbH1U=; h=From:To:Subject;
-	b=aqiA9ufASPnH6b6V4P6BPI7AB+4uEnEMqaPoC0ArVsGTNSvRFxhySQnZ602RrPPvf
-	 Dzu2CXVJVDeZ07XVJcyL0Acuu6pVSV4D07PqaqT8STbAAg7T1zR0IvzXyAoJXbKzTU
-	 vnrT3supUY50qsvdN5fqHY41lghet08QeFgwL7pobq8oOILfGN0V1/Is+duFHOWIw3
-	 7Xocx9RS+ehnRRPmAXIw0BGr+6kv4S6s0be11CPsy5pxXzPlIUxLrAzBbekJeY6+fE
-	 fb5rOXCjVDlZzyWcpo5CnKI8WTBRRgBClUkHz8ecxeR/mRzcN/hfIC9qkBYxLkGwmV
-	 ghvNkBLJWASEw==
-Date: Thu, 11 Jul 2024 17:25:31 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Francesco Dolcini <francesco@dolcini.it>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] PCI: ti: k3: Fix TI J721E PERST# polarity
-Message-ID: <20240711152531.GA35875@francesco-nb>
-References: <20240703100036.17896-1-francesco@dolcini.it>
- <Zo_qbspq0vA_p8VC@ryzen.lan>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dm8Srm4/"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e0354459844so1021743276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720711594; x=1721316394; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z2UifNQfHSWQactTbUxwngct7Jif7447IF3QEfZiqWY=;
+        b=Dm8Srm4/3k2UEj5Pe02DINegUCr/eEMDoyOSMG572SioW6VYEAA61+e4tg7qSzJ8T9
+         3WosFTFlDbR7kcJpU9fWeQkF1fp0ZLmES/wvMHwlJ/1qMvcD9Rj9kl5/AvLCRr4HGrRG
+         PKAH9K+Gl0eOJRtCu5LqaBUDhTZQrE1JvU0CwV5gR9igIt4+PHxXjRhHH2SGYHmeXC/z
+         7ZlXe6ryKVE7KMWV8BjpOg7EdvyGFVIRl7L45yFW1in2aTvJYDmcpQr8Bxpf1pUUOGgj
+         yRvBruI118fAdQXPMKcmpJD657fFU66S30CGsHjHZrY/LOIDLoKP2tsLK4P5IRgUyMyV
+         1Ljw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720711594; x=1721316394;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z2UifNQfHSWQactTbUxwngct7Jif7447IF3QEfZiqWY=;
+        b=NNN7YHtnBrXVv8hQq39KmKaQMIcEPry6xt0oB/M28ic379LE4eSlkn/sFROIzVNakW
+         A2BmCeB1HPw5RTOc/UvFPB3N1PTV4f/sYV3JrJp4mtUbQe6eaZprdxbq/ij4wQqHqwbs
+         F9HmVrTGeVztKHNWE9wYS5UQuFwyGNhw41Bkay99pxYHLt5BAROgorSCprnAf+B07yhX
+         GgkuWVzMHanA9oM/nK+zWDZzrc4C4s6Y5zR6iIFmrxoSst0L0/Y2eyA8Y0pkHxLa1F6o
+         7TYr2uoIk6yKKO4Nt0pNNAzCS53ALLU96ZpnbcTmuu+uRcfsHLjSr381HC4Cae8PLfrJ
+         oU1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUkfsoJ/GxLOzolhzyRiUcn9A7Mr5ndQxmqRyApyj5JymBvzaleF0XooFe6hDnQmOmkecYPQe2+kcj8TojWyz2vJsoQJ5s6UzEytIxu
+X-Gm-Message-State: AOJu0YxxlmQUbueAxrrClQqK/DYbLoh9hlRmKV6efBPhtZvEYJApcRzI
+	WeyAGJuejRgpGwZhmiNfUGxmX8ZYY82C1WP6XoOyirOzB9QG1eI5zUtebxfsbxNlVE4NY+0EKoF
+	2ciI0qX+L1JHzrOaMEohisy3SXEpty+FvFALE/w==
+X-Google-Smtp-Source: AGHT+IHRSvRxtciU4D9HXYrANT6oCsSmGR5hfnzw9CYJVDrCkRv/UkJgcHyyeRSNtmZhuOvpcZVYT0H141BgwBp64+o=
+X-Received: by 2002:a25:d852:0:b0:dfb:61e:3ee0 with SMTP id
+ 3f1490d57ef6-e041b034870mr9885394276.10.1720711593970; Thu, 11 Jul 2024
+ 08:26:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zo_qbspq0vA_p8VC@ryzen.lan>
+References: <20240618155013.323322-1-ulf.hansson@linaro.org>
+ <20240625105425.pkociumt4biv4j36@vireshk-i7> <CAPDyKFpLfBjozpcOzKp4jngkYenqSdpmejvCK37XvE1-WbBY2g@mail.gmail.com>
+ <20240701114748.hodf6pngk7opx373@vireshk-i7> <20240702051526.hyqhvmxnywofsjp2@vireshk-i7>
+ <CAPDyKFoA9O5a6xZ+948QOzYqsRjk_0jJaSxeYRwx=76YsLHzXQ@mail.gmail.com>
+ <20240711031356.rl2j6fqxrykmqfoy@vireshk-i7> <CAPDyKFocjOt+JyzcAqOfCnmTxBMZmPjMerSh6RZ-hSMajRhzEA@mail.gmail.com>
+ <CAPDyKFoWgX=r1QtrcpEF-Y4BkiOtVnz4jaztL9zggo-=uiKsUg@mail.gmail.com> <20240711131637.opzrayksfadimgq4@vireshk-i7>
+In-Reply-To: <20240711131637.opzrayksfadimgq4@vireshk-i7>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 11 Jul 2024 17:25:57 +0200
+Message-ID: <CAPDyKFqczrJzHApBOYRSg=MXzzd1_nSgQQ3QwKYLWzgZ+XY32A@mail.gmail.com>
+Subject: Re: [PATCH] OPP: Fix support for required OPPs for multiple PM domains
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nikunj Kela <nkela@quicinc.com>, Prasad Sodagudi <psodagud@quicinc.com>, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Niklas,
+On Thu, 11 Jul 2024 at 15:16, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 11-07-24, 13:05, Ulf Hansson wrote:
+> > On Thu, 11 Jul 2024 at 12:31, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > >
+> > > On Thu, 11 Jul 2024 at 05:13, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >
+> > > > On 10-07-24, 15:51, Ulf Hansson wrote:
+> > > > > I think this should work, but in this case we seem to need a similar
+> > > > > thing for dev_pm_opp_set_rate().
+> > > >
+> > > > We don't go to that path for genpd's I recall. Do we ? For genpd's,
+> > > > since there is no freq, we always call _set_opp().
+> > >
+> > > You are right! Although, maybe it's still preferred to do it in
+> > > _set_opp() as it looks like the code would be more consistent? No?
+>
+> Since the function already accepted a flag, it was very easier to just reuse it
+> without.
+>
+> > No matter how we do this, we end up enforcing OPPs for genpds.
+> >
+> > It means that we may be requesting the same performance-level that we
+> > have already requested for the device. Of course genpd manages this,
+> > but it just seems a bit in-efficient to mee. Or maybe this isn't a big
+> > deal as consumer drivers should end up doing this anyway?
+>
+> Normally I won't expect a consumer driver to do this check and so was the
+> opp core handling that. But for genpd's we need to make this inefficient to not
+> miss a vote.
+>
+> The problem is at another level though. Normally for any other device, like CPU,
+> there is one vote for the entire range of devices supported by the OPP table.
+> For example all CPUs of a cluster will share an OPP table (and they do dvfs
+> together), and you call set_opp() for any of the CPU, we will go and change the
+> OPP. There is no per-device vote.
+>
+> This whole design is broken in case of genpd, since you are expecting a separate
+> vote per device. Ideally, each device should have had its own copy of the OPP
+> table, but it is messy in case of genpd and to make it all work nicely, we may
+> have to choose this inefficient way of doing it :(
 
-On Thu, Jul 11, 2024 at 04:21:34PM +0200, Niklas Cassel wrote:
-> On Wed, Jul 03, 2024 at 12:00:34PM +0200, Francesco Dolcini wrote:
-> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > 
-> > Fix PCIe PERST# signal polarity in TI J721E used on TI K3 machines.
-> > 
-> > PCIe PERST# needs to be de-asserted for PCIe to work, however, the driver is
-> > doing the opposite and the device tree files are defining the signal with the
-> > wrong polarity to cope with that. Fix both the driver and the affected DT
-> > files.
-> 
-> While I understand why you want to fix this,
-> I'm not sure if you can actually do so without breaking device tree backwards
-> compatibility.
+Right, I get your point.
 
-I understand this, and at the same time I know that this was done in the
-past for exactly the same reason, see for example commit 87620512681a
-("PCI: apple: Fix PERST# polarity").
+Although, it seems to me that just limiting required-opps to
+performance-levels, could avoid us from having to enforce the OPPs for
+genpd. In other words, doing something along the lines of $subject
+patch should work fine.
 
-This patch was send not because the issue was noticed analyzing the
-code, but because during a bring-up of a new platform (based on
-k3-j784s4) using this PCIe controller driver the PCIe was not working
-and this lead to some time consuming debugging on both the
-hardware/software before finding this issue. That was worked around just
-by describing the HW incorrectly in the DT (the device tree of this
-board is not in mainline - yet).
+In fact, it looks to me that the required-opps handling for the
+*single* PM domain case, is already limited to solely
+performance-levels (opp-level), as there are no required_devs being
+assigned for it. Or did I get that wrong?
 
-With that said I cannot 100% judge the exact impact, I know most (but
-not all) of the boards and I think that making the change is beneficial
-despite what you correctly write.
-
-Most of the boards affected are from Texas Instruments (eval boards),
-plus one beagle and one board from Siemens. Let's see what these folks
-think about this change, these boards are all relatively recent.
-
-> Perhaps you could add a comment in the driver and the DTS files explaining
-> that the DTS is actually wrong, but cannot be changed because of DT backwards
-> compatibility.
-As I wrote my concern is on new boards. 
-
-BTW, the RS485 polarity for the UART used on all TI platform (including
-the very old ones) have a similar bug [1], however this bug is so old and
-deep into the code that we'll have to live with it.
-
-[1] https://lore.kernel.org/all/ZBItlBhzo+YETcJO@francesco-nb.int.toradex.com/
-
-Francesco
-
+Kind regards
+Uffe
