@@ -1,50 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775FE2904;
-	Thu, 11 Jul 2024 11:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6885D2904
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720698641; cv=none; b=mUmE8F1Ep03QyO+psM2FQqv3jcSJUndVmE91ar/iLoWECcqUIVOy5/+pniY0W1qxdN14537Ug6H90dGUbdtxSYXpOUmJscCdVtcqZbgRtfrRGySh+Tp63tGnRJTmeS1UofJRPKkCkzJggycNATAyQmB1Bevir7gkqQseIEG0LY4=
+	t=1720698699; cv=none; b=fpoPmDGyUJUO+awA9bOC+EN578T8x1IAgo0DUiCW1PhXpuuW9+0/z0nTBkDE73gLTIsFFbctvh9HZUEv/4Ms2aXEBGEhiGS+ozbOM5igp1QMplF56CFIJ5tOqDtqycNsZ1DGxfeUby9JqwxbjVEHp4iQ3eJNY7gH4srazOLPIeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720698641; c=relaxed/simple;
-	bh=zhGBVttiVu6iyO0JmAAPRwCToWBzxlnb/qyZuGhxfOM=;
+	s=arc-20240116; t=1720698699; c=relaxed/simple;
+	bh=hIGxdsVsxLIgmob+0fE5KxXGXuFHJzLVCg6wQsfjRVU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J6YQxETSpKTpem4Jos9pEhEqs/dsUrG4u1iwwVs0bta/BKCzumZZZreJ+IyFEupYUztbOCZxmRRe/4j1NbdsHGztu1pjznv0pN+Nv0M1N+ZGFmT2UDMPupKJKkqo1GvlB0AOv5C+Dt2gCau098baBJZyaq4uDqme93xKUx3eA7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QsAFGrTa; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=gTaDc8RLUz9aqE+t2vVUzvXbbo2gCm6HwbsAEE1Z8xueqtUImoCgKm1EBpn2Gt5UBB/XhxHKFCU5eADpsbfJyA3uAjzpXNyA8LLFcVWWlmHUiV8SUkcRr6RZ5HvvOHoSkifHiOX7UMqzbOuZNRpOh9XB923eN+sYWLUxzbVMNxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PTaUHIxg; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QsAFGrTa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720698640; x=1752234640;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zhGBVttiVu6iyO0JmAAPRwCToWBzxlnb/qyZuGhxfOM=;
-  b=QsAFGrTaA6MbjgebBCPgagBKa2VKpneKawtwdNp+toeGzTCZk7duRhgK
-   CIrZEG19ccjo4HyJqSVz9GaccGJFBSRTfLOMblbyb0ETAQ8vDItvFxuQa
-   OuC+KcHnZ0zi5nplnHTMud6OegDcc78UKRkkx29TfBoJKsQBybYyHSbs6
-   3i9EcNGTHEzdv53xW/6vswTFOeYhl0GeXN4K4C9qsgzEE24FYBeV16GBs
-   gDgnzyrRmfwNfjbmITXGXOENX2ool3iUWh7Ve6j4h5x7gs3NB/jKn5+1W
-   cOMKOmpTxy41IIW+2oMAt3C/wGLMX4YNsnc57cCkocSdN/8Ty/qm/MIaD
-   Q==;
-X-CSE-ConnectionGUID: mjluKvxJQSejJmJ5IbclRg==
-X-CSE-MsgGUID: ylxBAJJZS6y+PAbVhMbGDQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18211443"
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="18211443"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 04:50:39 -0700
-X-CSE-ConnectionGUID: P4W/58xTR4agRM6PuFkhqw==
-X-CSE-MsgGUID: smrXDWcKQROleRzT8/TSyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="79665436"
-Received: from mohdfai2-mobl.gar.corp.intel.com (HELO [10.247.74.239]) ([10.247.74.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 04:50:33 -0700
-Message-ID: <6bb1ba4a-41ba-4bc1-9c4b-abfb27944891@linux.intel.com>
-Date: Thu, 11 Jul 2024 18:50:26 +0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTaUHIxg"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c96187b3d1so591177a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720698698; x=1721303498; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aJJrseQEfg3j3LJ1tOzOpDcKnIMoClUQKxX10P83OEY=;
+        b=PTaUHIxgUbUMh42t5fCI1ON0pT/W8pEloHox8nqZbaeqiBhBnlQAZNRu7nXQviwge6
+         Bn2lM1CnRbNEgPmjQjdMhvX4A6MEL98r/WjZx0xydgc2kEk5zoidakrasWsN5srrQkZY
+         bupNa6992grb/vOcXHuxqRk6bMqKt2YwrT9Q50ZsN5pTIB224nX+beH6MvItS43aODoR
+         dVV9FeCsM+yPkK5tBPZUZZi/4j/bB4ilYgyxsv2PovwYGino7topIzDbGdbadglO1zVD
+         DAPQJnrRYSwL+mwXgVB7DiuYlL+uOgLwbRiBDpH3puB9Dodwl9xJg8qWyfJmcFDTJFV2
+         Qc9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720698698; x=1721303498;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aJJrseQEfg3j3LJ1tOzOpDcKnIMoClUQKxX10P83OEY=;
+        b=Ttumnhkw6hg0LyEm8HquAHfIKmLbi4GPAOP9SBGbozaS/zttrEniDnaNsBTrdk4NCz
+         jjb9JOgLplkpreyo9WPi8oFsznJVrGLGcFuzTl7gt1mmKYHW9tZMjGvT8P/trhLSmjSq
+         X8u3rqIjdAOd1TMfCIWL/vqFKbUjggF7dhFlJXoNHKQmWQu9Ze5fvv9kmCw3XvrtInJN
+         KhHTl6B8rq16fsOSEjhBnhF4xJ892XSL464r55DLpI4yjoVwbCQlN5ZhWxdcEV3NnG8Q
+         LS2cp/mOPekSjdQ7HEJgjaJBmU8N4KcrDmlNYqPZMd1f+nC0k2kyvU9N1px09fwtOZ0b
+         jBjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfx38wrxTRR+JPCBjv4kwjoP+1bzRlQL4bMASUfmz7S9i0qNinFyxlo/zEfOB0zdTF9WDUw9HI+Vgw1Hq1CVfM4X5SxQTdZiFlzbbe
+X-Gm-Message-State: AOJu0YzaE4iDY7CSXDejW+J3A6mv8pRKv90KLXmoZmBAGP/5Sk8mm1g0
+	paLbiY6vHt8CPhuN7p72HrvrMmDg74/A4DAanYsADdtjrC1kaKAx
+X-Google-Smtp-Source: AGHT+IEHNNn4a8XKmxXct+hWuMn/VO2hl+aQXm6B1er+w5jDgCHCa7OkH5FnK4dd5BvS+GN1rLzMNA==
+X-Received: by 2002:a17:90a:7e0e:b0:2c9:7e9c:9637 with SMTP id 98e67ed59e1d1-2ca35c2a6dcmr6426513a91.13.1720698697629;
+        Thu, 11 Jul 2024 04:51:37 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ca34e854ddsm5505815a91.25.2024.07.11.04.51.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 04:51:37 -0700 (PDT)
+Message-ID: <a0990d1f-ef25-4eae-98e5-6e65c8643313@gmail.com>
+Date: Thu, 11 Jul 2024 19:51:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,105 +61,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-net v2 2/3] igc: Fix reset adapter logics when tx mode
- change
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, Simon Horman <horms@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>,
- Paul Menzel <pmenzel@molgen.mpg.de>, Sasha Neftin <sasha.neftin@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20240707125318.3425097-1-faizal.abdul.rahim@linux.intel.com>
- <20240707125318.3425097-3-faizal.abdul.rahim@linux.intel.com>
- <87o774u807.fsf@intel.com>
+Subject: Re: [PATCH v3 1/2] mm/memcg: alignment memcg_data define condition
+To: Vlastimil Babka <vbabka@suse.cz>, alexs@kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
+ Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, Yoann Congal
+ <yoann.congal@smile.fr>, Masahiro Yamada <masahiroy@kernel.org>,
+ Petr Mladek <pmladek@suse.com>, Suren Baghdasaryan <surenb@google.com>
+References: <20240710054336.190410-1-alexs@kernel.org>
+ <42afbce8-7746-438f-ba3a-c997a2c702e5@suse.cz>
 Content-Language: en-US
-From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@linux.intel.com>
-In-Reply-To: <87o774u807.fsf@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <42afbce8-7746-438f-ba3a-c997a2c702e5@suse.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Vinicius,
 
-On 11/7/2024 6:44 am, Vinicius Costa Gomes wrote:
-> Faizal Rahim <faizal.abdul.rahim@linux.intel.com> writes:
-> 
->> Following the "igc: Fix TX Hang issue when QBV Gate is close" changes,
->> remaining issues with the reset adapter logic in igc_tsn_offload_apply()
->> have been observed:
+
+On 7/11/24 4:13 PM, Vlastimil Babka wrote:
+> On 7/10/24 7:43 AM, alexs@kernel.org wrote:
+>> From: "Alex Shi (Tencent)" <alexs@kernel.org>
 >>
->> 1. The reset adapter logics for i225 and i226 differ, although they should
->>     be the same according to the guidelines in I225/6 HW Design Section
->>     7.5.2.1 on software initialization during tx mode changes.
->> 2. The i225 resets adapter every time, even though tx mode doesn't change.
->>     This occurs solely based on the condition  igc_is_device_id_i225() when
->>     calling schedule_work().
->> 3. i226 doesn't reset adapter for tsn->legacy tx mode changes. It only
->>     resets adapter for legacy->tsn tx mode transitions.
->> 4. qbv_count introduced in the patch is actually not needed; in this
->>     context, a non-zero value of qbv_count is used to indicate if tx mode
->>     was unconditionally set to tsn in igc_tsn_enable_offload(). This could
->>     be replaced by checking the existing register
->>     IGC_TQAVCTRL_TRANSMIT_MODE_TSN bit.
+>> commit 21c690a349ba ("mm: introduce slabobj_ext to support slab object
+>> extensions") changed the folio/page->memcg_data define condition from
+>> MEMCG to SLAB_OBJ_EXT. And selected SLAB_OBJ_EXT for MEMCG, just for
+>> SLAB_MATCH(memcg_data, obj_exts), even no other relationship between them.
 >>
->> This patch resolves all issues and enters schedule_work() to reset the
->> adapter only when changing tx mode. It also removes reliance on qbv_count.
+>> Above action make memcg_data exposed and include SLAB_OBJ_EXT for
+>> !MEMCG. That's incorrect in logcial and pay on code size.
 >>
->> qbv_count field will be removed in a future patch.
+>> As Vlastimil Babka suggested, let's add _unused_slab_obj_ext for
+>> SLAB_MATCH for slab.obj_exts while !MEMCG. That could resolve the match
+>> issue, clean up the feature logical. And decouple the SLAB_OBJ_EXT from
+>> MEMCG in next patch.
 >>
->> Test ran:
->>
->> 1. Verify reset adapter behaviour in i225/6:
->>     a) Enrol a new GCL
->>        Reset adapter observed (tx mode change legacy->tsn)
->>     b) Enrol a new GCL without deleting qdisc
->>        No reset adapter observed (tx mode remain tsn->tsn)
->>     c) Delete qdisc
->>        Reset adapter observed (tx mode change tsn->legacy)
->>
->> 2. Tested scenario from "igc: Fix TX Hang issue when QBV Gate is closed"
->>     to confirm it remains resolved.
->>
->> Fixes: 175c241288c0 ("igc: Fix TX Hang issue when QBV Gate is closed")
->> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
->> Reviewed-by: Simon Horman <horms@kernel.org>
+>> Signed-off-by: Alex Shi (Tencent) <alexs@kernel.org>
+>> Cc: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Yoann Congal <yoann.congal@smile.fr>
+>> Cc: Masahiro Yamada <masahiroy@kernel.org>
+>> Cc: Petr Mladek <pmladek@suse.com>
+>> Cc: Suren Baghdasaryan <surenb@google.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
 >> ---
+>> v1->v3: take Vlastimil's suggestion and move SLAB_OBJ_EXT/MEMCG decouple
+>> to 2nd patch.
+>> ---
+>>  include/linux/mm_types.h | 8 ++++++--
+>>  mm/slab.h                | 4 ++++
+>>  2 files changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>> index ef09c4eef6d3..4ac3abc673d3 100644
+>> --- a/include/linux/mm_types.h
+>> +++ b/include/linux/mm_types.h
+>> @@ -180,8 +180,10 @@ struct page {
+>>  	/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+>>  	atomic_t _refcount;
+>>  
+>> -#ifdef CONFIG_SLAB_OBJ_EXT
+>> +#ifdef CONFIG_MEMCG
+>>  	unsigned long memcg_data;
+>> +#elif defined(CONFIG_SLAB_OBJ_EXT)
+>> +	unsigned long _unused_slab_obj_ext;
+>>  #endif
+>>  
+>>  	/*
+>> @@ -343,8 +345,10 @@ struct folio {
+>>  			};
+>>  			atomic_t _mapcount;
+>>  			atomic_t _refcount;
+>> -#ifdef CONFIG_SLAB_OBJ_EXT
+>> +#ifdef CONFIG_MEMCG
+>>  			unsigned long memcg_data;
+>> +#elif defined(CONFIG_SLAB_OBJ_EXT)
+>> +			unsigned long _unused_slab_obj_ext;
+>>  #endif
+>>  #if defined(WANT_PAGE_VIRTUAL)
+>>  			void *virtual;
+>> diff --git a/mm/slab.h b/mm/slab.h
+>> index 3586e6183224..8ffdd4f315f8 100644
+>> --- a/mm/slab.h
+>> +++ b/mm/slab.h
+>> @@ -98,7 +98,11 @@ SLAB_MATCH(flags, __page_flags);
+>>  SLAB_MATCH(compound_head, slab_cache);	/* Ensure bit 0 is clear */
+>>  SLAB_MATCH(_refcount, __page_refcount);
+>>  #ifdef CONFIG_SLAB_OBJ_EXT
+>> +#ifdef CONFIG_MEMCG
+>>  SLAB_MATCH(memcg_data, obj_exts);
+>> +#else
+>> +SLAB_MATCH(_unused_slab_obj_ext, obj_exts);
+>> +#endif
+>>  #endif
 > 
-> There were a quite a few bugs, some of them my fault, on this part of
-> the code, changing between the modes in the hardware.
+> Why not also #ifdef / #elif like above, instead of this nesting?
+
+Uh, it works too if MEMCG/SLAB_OBJ_EXT decoupled.
+but right, it could be written with #ifdef/#elif.
+
+Thanks
+Alex
 > 
-> So I would like some confirmation that ETF offloading/LaunchTime was
-> also tested with this change. Just to be sure.
+>>  #undef SLAB_MATCH
+>>  static_assert(sizeof(struct slab) <= sizeof(struct page));
 > 
-> But code-wise, looks good:
-> 
-> Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> 
-> 
-> Cheers,
-
-
-Tested etf with offload, looks like working correctly.
-
-1. mqprio
-tc qdisc add dev enp1s0 handle 100: parent root mqprio num_tc 3 \
-map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
-queues 1@0 1@1 2@2 \
-hw 0
-
-No reset adapter observed.
-
-2. etf with offload
-tc qdisc replace dev enp1s0 parent 100:1 etf \
-clockid CLOCK_TAI delta 300000 offload
-
-Reset adapter observed (tx mode legacy -> tsn).
-
-3. delete qdisc
-tc qdisc delete dev enp1s0 parent root handle 100
-
-Reset adapter observed (tx mode tsn -> legacy).
-
