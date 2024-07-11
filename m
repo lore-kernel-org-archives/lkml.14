@@ -1,246 +1,111 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D961653
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CE4653
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720688515; cv=none; b=J725KAdxDQNKLJKqJEO08js61o6nh3mBOjXj3Pg4jgmuNdKbkh6zAXoaq/wTVsdaDl4v9ThqQPPsmWXaE2zLVQAHK5hBYuSF4oDScO1uC26rC8nKLqWOj7aRtY63C/jgO66TPelhSn+F25v9CiImmA1HOA5r3kvtbuQ5HdqOGtg=
+	t=1720688569; cv=none; b=m9fgxe9p9WRoCdQMbm8hHUsQR/j1MNehuRupct9q2fi4OXoZX1eGYbW/bxC9wRm7dCXHjgs7VSkPGa7NBIJRFwaOqOmVKOVxWM4oA00dL5/nJd6rVjZ5ZQUwkGE0DgZZg/ZO5p4vN8RctYvMA6iQ/oT01+/t6oI2pbQSrYC4mRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720688515; c=relaxed/simple;
-	bh=lINr88gczmWj3d2leTgdQ31biQ3osRE/EoZDr9FFRPw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OATIiSR2xHoUo9Qx3+dwYwxJimwLTzDXiuuh0vdumItXrRcanJiIxGcxYdW+chadlJ5SR9cQxtfX4WLvi0bSWIW7iFKuWF5qFEoQv/BvQZ2mdprPcRPYk+gNum506fquiduN/8wW/UUfUv62mc1udwXpyusozjp0rLtyf6kve4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cGJ5E1pv; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1720688569; c=relaxed/simple;
+	bh=i9vhBcgM+kslb9tjmXIu2Ni6MbJN5bXv00H5799sU0s=;
+	h=Content-Type:Date:Message-Id:From:To:Subject:Cc:References:
+	 In-Reply-To; b=sGpzidFdrtdeuey3stTEEFFkIzy01HKIqKEEGtekOwMm0lOxRu4cYNsUZV0ea/8x4Zxx8dupL1YHPAu5zZcuGyLcpAWk4W6KH9RUCrt15zeX2E6JvLq25SlEweTGwXGqTZOT6j89qiT+4F8Y8AGXU8CVws9jGeXFBmYGWb3qFQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTAh+PNI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cGJ5E1pv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=lCt6G
-	meRArF+8nUi6YqN2qNoWrWjqPoXRRKGa+JcmaQ=; b=cGJ5E1pvgWniLR7qe03g7
-	t73P+5lb1lZ1BwaJDUwGcdk+8XHcITbKKJ3i7r7ByUHVjNHkPglwgYc2sASzwWpd
-	SSJdQ4xJQnn/bWK5qpLKK9fY7dAbOr98Dn1OBOBtyck6YqDNOheE0XpzvFKKENpz
-	g11etsTzAb06CEhBw0XvAA=
-Received: from localhost.localdomain (unknown [111.48.69.247])
-	by gzga-smtp-mta-g3-1 (Coremail) with SMTP id _____wCXb29Qn49mDOmHBA--.34288S2;
-	Thu, 11 Jul 2024 17:01:05 +0800 (CST)
-From: oushixiong1025@163.com
-To: Dave Airlie <airlied@redhat.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH] drm/ast: add multiple connectors support
-Date: Thu, 11 Jul 2024 17:01:02 +0800
-Message-Id: <20240711090102.352213-1-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTAh+PNI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB79FC116B1;
+	Thu, 11 Jul 2024 09:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720688569;
+	bh=i9vhBcgM+kslb9tjmXIu2Ni6MbJN5bXv00H5799sU0s=;
+	h=Date:From:To:Subject:Cc:References:In-Reply-To:From;
+	b=UTAh+PNIC8oY2FsfTnf13lwV6IGg52xwu2XhBlvpDWKHAELQ6uOEUflhyzwxLBdQb
+	 QAeB6ERxKJ6MpgeHvvylrW2/5F6Y/r6FBDCcIK14tVFHvtBNkhByO/jZT2uY1u99a7
+	 Rvy0FHkqKlf46XNLdvGjQRkpQO+P0gNiLw8DYFNXpGNEQqKXMVKxdEuKgkUg3Xyg6p
+	 4v4CJBszwfZhi2+pgyCjJmoAdAcmE+576rhm9OwSmXkn35aTeqpb1IY/ul30vspeAa
+	 YaIIwy9SAiXDT0GscOQ4Sj+wp5ngtfOYSVO7RNOWGKxDzkq/lLpBslF5SNArK9J5r6
+	 tBEjb9064M+jw==
+Content-Type: multipart/signed;
+ boundary=fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Thu, 11 Jul 2024 11:02:39 +0200
+Message-Id: <D2ML6RG09T38.RZU3CCH0XD9I@kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Esben Haabendal" <esben@geanix.com>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: core: add flag for doing optional
+ SFDP
+Cc: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Pratyush Yadav"
+ <pratyush@kernel.org>, "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Richard Weinberger" <richard@nod.at>, "Vignesh Raghavendra"
+ <vigneshr@ti.com>, <linux-mtd@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, "Rasmus Villemoes"
+ <rasmus.villemoes@prevas.dk>
+X-Mailer: aerc 0.16.0
+References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com> <20240603-macronix-mx25l3205d-fixups-v2-1-ff98da26835c@geanix.com> <a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org> <D1SZKLZBDDBA.1Z7ZD4UEOX05F@kernel.org> <871q413x72.fsf@geanix.com>
+In-Reply-To: <871q413x72.fsf@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXb29Qn49mDOmHBA--.34288S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3JF45Kw1DJFyfJF15CFyxGrg_yoWxtrW7pr
-	W8trZavr48XrsxWFn8AF4kGrnIyF9FyayUtr1rWw4a9w1kGw1DAF48Jrs8Za4DGrZ5AFyU
-	JanFqF47C3WUuw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j5BMtUUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXRQZD2XAmK5qkwAAs1
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+--fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-[WHY]
-The AST2600 tx_chip_types will be detected as AST_TX_DP, but some BMC
-boards that use AST2600 use the VGA interface instead of the DP interface.
-In this case, it will use Virtual connector as the DP is disconnected.
+Hi Esben,
 
-[HOW]
-Allows multiple physical connectors to exist at the same time.
+> > I actually had the same concern. But currently there is no
+> > non-deprecated way to handle this case, right?
+> >
+> > Right now we have the following cases:
+> >  (1) pure SFDP parsing
+> >  (2) non-SFDP flashes with static configuration only
+> >  (3) legacy implementation, where the magic flags decide whether we
+> >      use SFDP
+>
+> Actually, in the code we have two variants of 2.
+>
+> (2a) non-SFDP flashes with SPI_NOR_SKIP_SFDP set
+> (2b) non-SFDP flashes without SPI_NOR_SKIP_SFDP and with none of the
+>      DUAL/QUAD/OCTAL read bits set
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
----
- drivers/gpu/drm/ast/ast_drv.h  |  6 ++++-
- drivers/gpu/drm/ast/ast_main.c |  8 +++----
- drivers/gpu/drm/ast/ast_mode.c | 40 ++++++++++++++++++++--------------
- 3 files changed, 33 insertions(+), 21 deletions(-)
+Isn't (2b) my case (3)? The SPI_NOR_SKIP_SFDP flag was intended to
+be for flashes we know for a fact, there are no SFDP tables.
 
-diff --git a/drivers/gpu/drm/ast/ast_drv.h b/drivers/gpu/drm/ast/ast_drv.h
-index ba3d86973995..e326124b3fec 100644
---- a/drivers/gpu/drm/ast/ast_drv.h
-+++ b/drivers/gpu/drm/ast/ast_drv.h
-@@ -150,9 +150,13 @@ static inline struct ast_plane *to_ast_plane(struct drm_plane *plane)
-  * BMC
-  */
- 
-+#define MAX_CONNECTORS 2
-+
- struct ast_bmc_connector {
- 	struct drm_connector base;
--	struct drm_connector *physical_connector;
-+
-+	struct drm_connector *physical_connectors[MAX_CONNECTORS];
-+	int count;
- };
- 
- static inline struct ast_bmc_connector *
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index 0637abb70361..428529749ae6 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -85,7 +85,7 @@ static void ast_detect_tx_chip(struct ast_device *ast, bool need_post)
- 	if (!need_post) {
- 		jreg = ast_get_index_reg_mask(ast, AST_IO_VGACRI, 0xa3, 0xff);
- 		if (jreg & 0x80)
--			ast->tx_chip_types = AST_TX_SIL164_BIT;
-+			ast->tx_chip_types |= AST_TX_SIL164_BIT;
- 	}
- 
- 	if (IS_AST_GEN4(ast) || IS_AST_GEN5(ast) || IS_AST_GEN6(ast)) {
-@@ -97,7 +97,7 @@ static void ast_detect_tx_chip(struct ast_device *ast, bool need_post)
- 		jreg = ast_get_index_reg_mask(ast, AST_IO_VGACRI, 0xd1, 0xff);
- 		switch (jreg) {
- 		case 0x04:
--			ast->tx_chip_types = AST_TX_SIL164_BIT;
-+			ast->tx_chip_types |= AST_TX_SIL164_BIT;
- 			break;
- 		case 0x08:
- 			ast->dp501_fw_addr = drmm_kzalloc(dev, 32*1024, GFP_KERNEL);
-@@ -110,12 +110,12 @@ static void ast_detect_tx_chip(struct ast_device *ast, bool need_post)
- 			}
- 			fallthrough;
- 		case 0x0c:
--			ast->tx_chip_types = AST_TX_DP501_BIT;
-+			ast->tx_chip_types |= AST_TX_DP501_BIT;
- 		}
- 	} else if (IS_AST_GEN7(ast)) {
- 		if (ast_get_index_reg_mask(ast, AST_IO_VGACRI, 0xD1, TX_TYPE_MASK) ==
- 		    ASTDP_DPMCU_TX) {
--			ast->tx_chip_types = AST_TX_ASTDP_BIT;
-+			ast->tx_chip_types |= AST_TX_ASTDP_BIT;
- 			ast_dp_launch(&ast->base);
- 		}
- 	}
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 6695af70768f..31a49d32e506 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -1717,7 +1717,8 @@ static int ast_bmc_connector_helper_detect_ctx(struct drm_connector *connector,
- 					       bool force)
- {
- 	struct ast_bmc_connector *bmc_connector = to_ast_bmc_connector(connector);
--	struct drm_connector *physical_connector = bmc_connector->physical_connector;
-+	struct drm_connector *physical_connector;
-+	int i, count = bmc_connector->count;
- 
- 	/*
- 	 * Most user-space compositors cannot handle more than one connected
-@@ -1730,10 +1731,13 @@ static int ast_bmc_connector_helper_detect_ctx(struct drm_connector *connector,
- 	 *        than one connector per CRTC. The BMC should always be connected.
- 	 */
- 
--	if (physical_connector && physical_connector->status == connector_status_disconnected)
--		return connector_status_connected;
-+	for (i = 0; i < count; i++) {
-+		physical_connector = bmc_connector->physical_connectors[i];
-+		if (physical_connector && physical_connector->status == connector_status_connected)
-+			return connector_status_disconnected;
-+	}
- 
--	return connector_status_disconnected;
-+	return connector_status_connected;
- }
- 
- static int ast_bmc_connector_helper_get_modes(struct drm_connector *connector)
-@@ -1756,10 +1760,11 @@ static const struct drm_connector_funcs ast_bmc_connector_funcs = {
- 
- static int ast_bmc_connector_init(struct drm_device *dev,
- 				  struct ast_bmc_connector *bmc_connector,
--				  struct drm_connector *physical_connector)
-+				  struct drm_connector **physical_connector,
-+				  int count)
- {
- 	struct drm_connector *connector = &bmc_connector->base;
--	int ret;
-+	int i, ret;
- 
- 	ret = drm_connector_init(dev, connector, &ast_bmc_connector_funcs,
- 				 DRM_MODE_CONNECTOR_VIRTUAL);
-@@ -1768,13 +1773,16 @@ static int ast_bmc_connector_init(struct drm_device *dev,
- 
- 	drm_connector_helper_add(connector, &ast_bmc_connector_helper_funcs);
- 
--	bmc_connector->physical_connector = physical_connector;
-+	for (i = 0; i < count; i++)
-+		bmc_connector->physical_connectors[i] = physical_connector[i];
-+	bmc_connector->count = count;
- 
- 	return 0;
- }
- 
- static int ast_bmc_output_init(struct ast_device *ast,
--			       struct drm_connector *physical_connector)
-+			       struct drm_connector **physical_connector,
-+			       int count)
- {
- 	struct drm_device *dev = &ast->base;
- 	struct drm_crtc *crtc = &ast->crtc;
-@@ -1790,7 +1798,7 @@ static int ast_bmc_output_init(struct ast_device *ast,
- 		return ret;
- 	encoder->possible_crtcs = drm_crtc_mask(crtc);
- 
--	ret = ast_bmc_connector_init(dev, bmc_connector, physical_connector);
-+	ret = ast_bmc_connector_init(dev, bmc_connector, physical_connector, count);
- 	if (ret)
- 		return ret;
- 
-@@ -1852,8 +1860,8 @@ static const struct drm_mode_config_funcs ast_mode_config_funcs = {
- int ast_mode_config_init(struct ast_device *ast)
- {
- 	struct drm_device *dev = &ast->base;
--	struct drm_connector *physical_connector = NULL;
--	int ret;
-+	struct drm_connector *physical_connector[MAX_CONNECTORS] = {NULL};
-+	int count, ret;
- 
- 	ret = drmm_mutex_init(dev, &ast->modeset_lock);
- 	if (ret)
-@@ -1897,27 +1905,27 @@ int ast_mode_config_init(struct ast_device *ast)
- 		ret = ast_vga_output_init(ast);
- 		if (ret)
- 			return ret;
--		physical_connector = &ast->output.vga.connector;
-+		physical_connector[count++] = &ast->output.vga.connector;
- 	}
- 	if (ast->tx_chip_types & AST_TX_SIL164_BIT) {
- 		ret = ast_sil164_output_init(ast);
- 		if (ret)
- 			return ret;
--		physical_connector = &ast->output.sil164.connector;
-+		physical_connector[count++] = &ast->output.sil164.connector;
- 	}
- 	if (ast->tx_chip_types & AST_TX_DP501_BIT) {
- 		ret = ast_dp501_output_init(ast);
- 		if (ret)
- 			return ret;
--		physical_connector = &ast->output.dp501.connector;
-+		physical_connector[count++] = &ast->output.dp501.connector;
- 	}
- 	if (ast->tx_chip_types & AST_TX_ASTDP_BIT) {
- 		ret = ast_astdp_output_init(ast);
- 		if (ret)
- 			return ret;
--		physical_connector = &ast->output.astdp.connector;
-+		physical_connector[count++] = &ast->output.astdp.connector;
- 	}
--	ret = ast_bmc_output_init(ast, physical_connector);
-+	ret = ast_bmc_output_init(ast, physical_connector, count);
- 	if (ret)
- 		return ret;
- 
--- 
-2.25.1
+I'm looking at spi_nor_init_params(). Maybe I'm missing something?
 
+-michael
+
+> These almost handled the same way. But
+> spi_nor_manufacturer_init_params() is only called for 2b, and not for
+> 2a.
+>
+> Is this desired behavior, or something that we want to align?
+>
+> > Which case is eventually used depends on the ID of the flash -
+> > assuming there will only be IDs which either fall into (1) *or* (2).
+> > That assumption is clearly wrong :)
+> >
+> > I'd propose a new case in spi_nor_init_params()
+> >  (4) try SFDP with a fallback to the static flags from the
+> >      flash_info db.
+>
+> /Esben
+
+
+--fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZo+fsRIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/h1MAF7BL/jDkLdqERlyUh+I/4t+kL1NUWGFmhu
+bS97ljXW9gaw1lviFreW1tMzWHMxWysVAX9f66V0w0fvkut5oECvJRvE51x/yrW1
+Zib+7kOeztZN5UtkOvyZwIM33p0xpxdO4SA=
+=G+o7
+-----END PGP SIGNATURE-----
+
+--fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d--
