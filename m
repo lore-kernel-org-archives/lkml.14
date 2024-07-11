@@ -1,67 +1,36 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F0D15B0F2
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBDE15B0F2
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720686804; cv=none; b=QgeL/OaozpYnjVkyHH0iip2x+8M2NQ8DsMHTHhayMNBECyQRJhyAYTCIOUjQTz4tAa9qtzEJFZh7E1tz3zcmEpPeDAWOghlbM8GhTyA6phN17AtABCKQcTjrAZr157PCyNpSvfYcG+diRge3ST62OINHqbDjxuJSRvmd1OyrEt4=
+	t=1720686816; cv=none; b=dV+BbXo2X5Ni7fL394w+lHA0yd3MbGENLLOL+XMcea4b8vk4IQj6r7BXKa8iIKM0Reab+HkJny3YdzWGIKYi8WuweppI5Z5CvIbxPrUWfnJilWbfUqJmTnVoz576sVQYbjE9C8fRngv4i1JOakkQiYOw6yp3ZNLtvClB47i8NpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720686804; c=relaxed/simple;
-	bh=UL9Ym4ghZ4P1hcNZ1sjBqaf439ohb1DqkcuArs85SvQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oVvCdGPf56PD2sncgzMFrN48BJP1Q65jpEZNRfqwFwYImyrUdDW5rzL8/q1CQcMSinOu0ehAUAiKpzFsU3Gcjm5tfBYPO2hkvyTK2EH7yvkwv7ShefgE/kzOwrQCxe/yzlbzsVy7sy1byzwV/7OyYpWo6eSD7W52lhmu1QBblK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NAR/n9np; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAR/n9np"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2c98b080012so512988a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720686802; x=1721291602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uoB9n8vWkkLxgD9IA4qyD2Mvc7kqrqH6g6qZFUEn6Lc=;
-        b=NAR/n9np0f8m6KDqIVFJCRpPQ8zjGAiFkgRdqgxPLs9hvy2tzUXmRpRLdx8G+jMjrh
-         Lf8d2dRJJksEySBmLcnR6G4Da3Mn4hRmAV4Qfdrk7J4LLOuIVr5cQClBGLB3PnYkIcty
-         PuTYKzyXQIFJlLvP0ewkSjeFUk5JU7VD81W2PXC4A1z34vGEZLTq5p6kxA+VRcrgc4SC
-         //ph4qnJxFzUIMBmVTTOa3cxSjj0/MOwIa9rW7mkZ4fgw+n0n8omaqx6jytoMW2JECez
-         c9F1Ti0qNwhFamJpSs9ed/QII3b1BtosM3WoeMUXo1fNyH+79Zhmgy2OWXR+z2PeprcL
-         4b5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720686802; x=1721291602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uoB9n8vWkkLxgD9IA4qyD2Mvc7kqrqH6g6qZFUEn6Lc=;
-        b=Jj5PQ3cUQU/OItwkNXQc/h96giYvUaNub62z5sdkjRulqnV/kLrwZpqW+ZUkqq4vZi
-         jAXHB7j4ni5pM9DUoUznHOCWHdLA4DpT3/zeqVG2m9ofjpIJw7Hh++EI9T5Da+oVtEjE
-         VGYL4N0nQ0dpSZ/Uo64KlKu3O16LAcxl0GeB87qk4qHDvjNoLJ+Ylc4YP1JKvTtj4Z7C
-         ObB6x+GCCs8hS5qyYYOnPy+nYSnZCZbkI6SKivRkeHUchtZKMyEiFu5LnMc50uTpx0WT
-         JXLYKP2Wqb842PAJP1thYwoldauDfe4qy5nFwqZqRPj0QgPhjdUbGd6Xv7VcwbxRA2sa
-         JUnQ==
-X-Gm-Message-State: AOJu0Ywa6Ue9O4ornaxvMyX0XxUrm5RWn16EJ3ldJlgplDLP3MxBR4e9
-	BRXw26w9KcUfdX4NA7UnWi6uQQsBUDcBO3AhnFnv6SzjMldVs1TRNo6MYg==
-X-Google-Smtp-Source: AGHT+IE7xvCB435LadnhZhGsV045GEhu8HN53Oi5VkJ2sDh0SmOIv7YsJ//ii+BHlWvAoEL1M6b1hA==
-X-Received: by 2002:a17:90a:db58:b0:2c9:8d5d:d175 with SMTP id 98e67ed59e1d1-2ca35d59cedmr5880020a91.48.1720686801934;
-        Thu, 11 Jul 2024 01:33:21 -0700 (PDT)
-Received: from localhost ([47.254.32.37])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c9e47983d4sm9165752a91.30.2024.07.11.01.33.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2024 01:33:21 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH 7/7] workqueue: Rename wq_update_pod() to unbound_wq_update_pwq()
-Date: Thu, 11 Jul 2024 16:35:47 +0800
-Message-Id: <20240711083547.3981-8-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240711083547.3981-1-jiangshanlai@gmail.com>
-References: <20240711083547.3981-1-jiangshanlai@gmail.com>
+	s=arc-20240116; t=1720686816; c=relaxed/simple;
+	bh=q0kFuWpy/Q0SfNf7bROn3mekt5j/tbY9mvHj/9Me+3Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WNrAn7EnI6AQ8ytpLwiroqRPvOLVLfrnLNQSkBQGebkW8VmEnojjFczQS/25rjyZMF3HCL9wjktvk8OsJeUHsIRkLhRfSy/lrZPxxVQl3yVvfWcaRMLB+GxRgg1Xz4sXs8yO5v1Nqb4BxYLU0YwmfQDUq9Y/8uMSuf2zoiZNvl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=none smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=isrc.iscas.ac.cn
+Received: from sunying2022-ubuntu-01.cloud.onecloud.io (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowAAXHZnImI9mBB0vFQ--.56149S2;
+	Thu, 11 Jul 2024 16:33:13 +0800 (CST)
+From: sunying@isrc.iscas.ac.cn
+To: ebiederm@xmission.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: kexec@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	zhuhengbo@iscas.ac.cn,
+	Ying Sun <sunying@isrc.iscas.ac.cn>,
+	Petr Tesarik <petr@tesarici.cz>
+Subject: [PATCH v1] riscv/kexec_file: Fix relocation type R_RISCV_ADD16 and R_RISCV_SUB16 unknown
+Date: Thu, 11 Jul 2024 08:32:36 +0000
+Message-Id: <20240711083236.2859632-1-sunying@isrc.iscas.ac.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,126 +38,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAAXHZnImI9mBB0vFQ--.56149S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw4UWrWfAw13ZFWDAFW7XFb_yoW8Gryxp3
+	43Cr15KFs8GryxKw4xArykua4rW3Z8urW3Ja90kFyrJrnrJry8t3yqqw1UJa1jvr1FgrWS
+	vFy2gF95GF1jyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
+	DU0xZFpf9x0JUSiihUUUUU=
+X-CM-SenderInfo: 5vxq5x1qj6x21ufox2xfdvhtffof0/
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+From: Ying Sun <sunying@isrc.iscas.ac.cn>
 
-What wq_update_pod() does is just to update the pwq of the specific
-cpu.  Rename it and update the comments.
+Runs on the kernel with CONFIG_RISCV_ALTERNATIVE enabled:
+  kexec -sl vmlinux
 
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+Error:
+  kexec_image: Unknown rela relocation: 34
+  kexec_image: Error loading purgatory ret=-8
+and
+  kexec_image: Unknown rela relocation: 38
+  kexec_image: Error loading purgatory ret=-8
+
+The purgatory code uses the 16-bit addition and subtraction relocation
+type, but not handled, resulting in kexec_file_load failure.
+So add handle to arch_kexec_apply_relocations_add().
+
+Tested on RISC-V64 Qemu-virt, issue fixed.
+
+Co-developed-by: Petr Tesarik <petr@tesarici.cz>
+Signed-off-by: Petr Tesarik <petr@tesarici.cz>
+Signed-off-by: Ying Sun <sunying@isrc.iscas.ac.cn>
 ---
-Avoiding to call unbound_wq_update_pwq() in wq_affn_dfl_set() is in my
-todo list.  So the comments assuming unbound_wq_update_pwq() only to be
-called in cpu hotplug path is unchanged.
+ arch/riscv/kernel/elf_kexec.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- kernel/workqueue.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 21e1c5787ba4..cd6f2950ef6c 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -433,7 +433,7 @@ static struct wq_pod_type wq_pod_types[WQ_AFFN_NR_TYPES];
- static enum wq_affn_scope wq_affn_dfl = WQ_AFFN_CACHE;
- 
- /* buf for wq_update_unbound_pod_attrs(), protected by CPU hotplug exclusion */
--static struct workqueue_attrs *wq_update_pod_attrs_buf;
-+static struct workqueue_attrs *unbound_wq_update_pwq_attrs_buf;
- 
- static DEFINE_MUTEX(wq_pool_mutex);	/* protects pools and workqueues list */
- static DEFINE_MUTEX(wq_pool_attach_mutex); /* protects worker attach/detach */
-@@ -5351,13 +5351,12 @@ int apply_workqueue_attrs(struct workqueue_struct *wq,
- }
- 
- /**
-- * wq_update_pod - update pod affinity of a wq for CPU hot[un]plug
-+ * unbound_wq_update_pwq - update a pwq slot for CPU hot[un]plug
-  * @wq: the target workqueue
-- * @cpu: the CPU to update pool association for
-+ * @cpu: the CPU to update the pwq slot for
-  *
-  * This function is to be called from %CPU_DOWN_PREPARE, %CPU_ONLINE and
-- * %CPU_DOWN_FAILED.  @cpu is being hot[un]plugged, update pod affinity of
-- * @wq accordingly.
-+ * %CPU_DOWN_FAILED.  @cpu is in the same pod of the CPU being hot[un]plugged.
-  *
-  *
-  * If pod affinity can't be adjusted due to memory allocation failure, it falls
-@@ -5370,7 +5369,7 @@ int apply_workqueue_attrs(struct workqueue_struct *wq,
-  * CPU_DOWN. If a workqueue user wants strict affinity, it's the user's
-  * responsibility to flush the work item from CPU_DOWN_PREPARE.
-  */
--static void wq_update_pod(struct workqueue_struct *wq, int cpu)
-+static void unbound_wq_update_pwq(struct workqueue_struct *wq, int cpu)
- {
- 	struct pool_workqueue *old_pwq = NULL, *pwq;
- 	struct workqueue_attrs *target_attrs;
-@@ -5385,7 +5384,7 @@ static void wq_update_pod(struct workqueue_struct *wq, int cpu)
- 	 * Let's use a preallocated one.  The following buf is protected by
- 	 * CPU hotplug exclusion.
- 	 */
--	target_attrs = wq_update_pod_attrs_buf;
-+	target_attrs = unbound_wq_update_pwq_attrs_buf;
- 
- 	copy_workqueue_attrs(target_attrs, wq->unbound_attrs);
- 	wqattrs_actualize_cpumask(target_attrs, wq_unbound_cpumask);
-@@ -6590,7 +6589,7 @@ int workqueue_online_cpu(unsigned int cpu)
- 			int tcpu;
- 
- 			for_each_cpu(tcpu, pt->pod_cpus[pt->cpu_pod[cpu]])
--				wq_update_pod(wq, tcpu);
-+				unbound_wq_update_pwq(wq, tcpu);
- 
- 			mutex_lock(&wq->mutex);
- 			wq_update_node_max_active(wq, -1);
-@@ -6625,7 +6624,7 @@ int workqueue_offline_cpu(unsigned int cpu)
- 			int tcpu;
- 
- 			for_each_cpu(tcpu, pt->pod_cpus[pt->cpu_pod[cpu]])
--				wq_update_pod(wq, tcpu);
-+				unbound_wq_update_pwq(wq, tcpu);
- 
- 			mutex_lock(&wq->mutex);
- 			wq_update_node_max_active(wq, cpu);
-@@ -6913,9 +6912,8 @@ static int wq_affn_dfl_set(const char *val, const struct kernel_param *kp)
- 	wq_affn_dfl = affn;
- 
- 	list_for_each_entry(wq, &workqueues, list) {
--		for_each_online_cpu(cpu) {
--			wq_update_pod(wq, cpu);
--		}
-+		for_each_online_cpu(cpu)
-+			unbound_wq_update_pwq(wq, cpu);
- 	}
- 
- 	mutex_unlock(&wq_pool_mutex);
-@@ -7654,8 +7652,8 @@ void __init workqueue_init_early(void)
- 
- 	pwq_cache = KMEM_CACHE(pool_workqueue, SLAB_PANIC);
- 
--	wq_update_pod_attrs_buf = alloc_workqueue_attrs();
--	BUG_ON(!wq_update_pod_attrs_buf);
-+	unbound_wq_update_pwq_attrs_buf = alloc_workqueue_attrs();
-+	BUG_ON(!unbound_wq_update_pwq_attrs_buf);
- 
- 	/*
- 	 * If nohz_full is enabled, set power efficient workqueue as unbound.
-@@ -7920,12 +7918,12 @@ void __init workqueue_init_topology(void)
- 
- 	/*
- 	 * Workqueues allocated earlier would have all CPUs sharing the default
--	 * worker pool. Explicitly call wq_update_pod() on all workqueue and CPU
--	 * combinations to apply per-pod sharing.
-+	 * worker pool. Explicitly call unbound_wq_update_pwq() on all workqueue
-+	 * and CPU combinations to apply per-pod sharing.
- 	 */
- 	list_for_each_entry(wq, &workqueues, list) {
- 		for_each_online_cpu(cpu)
--			wq_update_pod(wq, cpu);
-+			unbound_wq_update_pwq(wq, cpu);
- 		if (wq->flags & WQ_UNBOUND) {
- 			mutex_lock(&wq->mutex);
- 			wq_update_node_max_active(wq, -1);
+diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
+index 11c0d2e0becf..3c37661801f9 100644
+--- a/arch/riscv/kernel/elf_kexec.c
++++ b/arch/riscv/kernel/elf_kexec.c
+@@ -451,6 +451,12 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 			*(u32 *)loc = CLEAN_IMM(CJTYPE, *(u32 *)loc) |
+ 				 ENCODE_CJTYPE_IMM(val - addr);
+ 			break;
++		case R_RISCV_ADD16:
++			*(u16 *)loc += val;
++			break;
++		case R_RISCV_SUB16:
++			*(u16 *)loc -= val;
++			break;
+ 		case R_RISCV_ADD32:
+ 			*(u32 *)loc += val;
+ 			break;
 -- 
-2.19.1.6.gb485710b
+2.34.1
 
