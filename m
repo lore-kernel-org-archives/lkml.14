@@ -1,80 +1,60 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE5D14B08C
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060AE14A633
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720683823; cv=none; b=czsx/Ej8f2TCWXrxG/zA6Ta+ZvlhjAXEfGalTTG+KyQ/QNapsR3BuE/PyD5q45O6002gMxb0mG34pgBopgCtylxD4mW2fKYntoLa9SI2HKwwY5PhxeJ+DL4e3Jo9x4Rqo1bU2jXiEo1zbmaJW/RUNYbFx7OP4tkVNLVIwB9JBQw=
+	t=1720683902; cv=none; b=oETIQI05+BI609Cm2O835l+NYI77TAndTysOG1BeZKrGCNkVDAeb7lStOQFInfLRZ5sMN9O+3CpTlxwnVMMW71JEBI4j1iNmitci8vhOT7pJ7jNpFQQnSJ6uESqeAHNgaL4o1ZBhezXG8Se32Uqp3gjWn96W1RQEqlp7nrq8xBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720683823; c=relaxed/simple;
-	bh=UfRSeFIcSvkUBr5Zi4f51R6wU0KwP1MShergxOiZ1nY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iw9mRy+GYug0lZnM1P/VU5khgpXfKWDa16xrlm00MTh09Zj0WQgIzzg9mmC5+zOxZY+tBjY3R0NbMlqFz9f6k5GwgSLihVPNn7QDjVGr3OOzPrlB8Fg4ePsoUuA/8Wl1dgyOaLfGSXIJMQiGSO5nSQ9Glf6tVpH48DineXnHCEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WX2C5B3P; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+J9WDxWg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X4uKc8K8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g1XqSaYg; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1720683902; c=relaxed/simple;
+	bh=dWO1XABC13Rs+hCpo4XrLk0JAwxOSW7wtGIhf2+uYUo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=G9ZjXWZlkQCQIlu5lnJFI9IrKzhZLtwi4Zxtcbhlfq1A9yO2r0bsArumFxf/todWWJZbW8FLiwEbWUXVbKrle/H3izciRDKa0feQ5enYx3TlgMF9mEpCKMemAOji+G2uM0XW7xOH0dfeHiX2Hak229csebiJ25bttl2bpxhT0FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LjGb0Per; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WX2C5B3P";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+J9WDxWg";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X4uKc8K8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g1XqSaYg"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D39DF2121E;
-	Thu, 11 Jul 2024 07:43:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720683819; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6GE/EgkSTHCy0F2vseSTXJXTTRUr4we0SLGgb0fQq4g=;
-	b=WX2C5B3PdT1qji2DGGpB93SpzoWyqfZ0BSKS0AEB5JiHHrjXGaCPsIFs2NE7prOcEOzEKC
-	H5aIFG90WvkMQiAw2I2Id+IkP2ke1UUaUBhh+zuXNrlje6R58QUq2CT2zDFFNfd/Xlb6p9
-	jhben9ftCH5QQ/6DkPG9p/TAAja4bgU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720683819;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6GE/EgkSTHCy0F2vseSTXJXTTRUr4we0SLGgb0fQq4g=;
-	b=+J9WDxWgFbAOdO/59OZqGt4/aGoRo5T9j4e6A1NVicmAULnmwHA4UaUkcpSU++zO/ADWj9
-	+gJtjIgZLhpTSwAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1720683817; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6GE/EgkSTHCy0F2vseSTXJXTTRUr4we0SLGgb0fQq4g=;
-	b=X4uKc8K8avESgHu5UEldTkILXKcJ4mwuOOKoWkcjYUDLDOOfKusci08okzI2eNK8nzxe/r
-	Lw2IPOuubperxYORcQ7n3IZGzbjJS440pDDV/D2brFs00qOvSWe/non35MWYHkWT4uDGdn
-	kPv1e7fbXMFlWI5/PFwznLj9eL1Ub/I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1720683817;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6GE/EgkSTHCy0F2vseSTXJXTTRUr4we0SLGgb0fQq4g=;
-	b=g1XqSaYgj4BfIiI5qnUIZPRUIEFpPn5HZplpJBv+/rumpWrRU1cP7E026k6R6UtRBavOly
-	9Iuio/UYsV7n4sBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE54E139E0;
-	Thu, 11 Jul 2024 07:43:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PWwtKimNj2aXFQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 11 Jul 2024 07:43:37 +0000
-Message-ID: <4b533d6c-b2f3-49eb-a7fb-807af482def8@suse.cz>
-Date: Thu, 11 Jul 2024 09:43:37 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LjGb0Per"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ee98947f70so5636211fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 00:44:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1720683897; x=1721288697; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=VM5TBvTpwknYaPGyjEUpi3Yz7BjmJkz9OLN+xweVaMQ=;
+        b=LjGb0Perr2J/FQ60kx3R4rkwS1xu4LFCJrYD/dqu0I3gsccSh6XUSXgzVUVvLAj6jG
+         lmxeWN/BVgKSaBZu3l0ikfciLoDFvd4Hd3az7q1/opthWrp+GV9N1516Zy5sPnZF8QDl
+         Ea0mBmQRclmHyCDBvdrSVrf/XY8zzNOuinqMGGtJb5BGuxUq2PU/sK02iRRy3SxytH0S
+         P/xeGE1iDuLbNTwqgVP0zSLfWq4XCWSM5Bi92fTVuqoFVPRrHSa/cbgbkHyjFdTTvppw
+         SHIPgNzdJ4jeYEs5DxqPyi+g0nnKUlL7MI9GCXtwDdAoIqXrCMfhr9EsS+BoJ05r1/28
+         +YKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720683897; x=1721288697;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VM5TBvTpwknYaPGyjEUpi3Yz7BjmJkz9OLN+xweVaMQ=;
+        b=AAdlR9p6DWXxA8xuSP02UOz0jk0e7+exBf/qGRaNeYooFPSj21RbL40nLJHNdEyVb6
+         8KtfrR7in/iW+Bbn0zv83tH6/5w7jpFjOiMR2qfDKRXd/TT5Tj4+biNIAlboFUd3Mt4u
+         0OAJ/gemyQMqxRrzKgpGoPcwbUfJKrkrUgn9i8XEx7s+HsFMOKxOhoelZ6aZ29acDTi0
+         k2CF4W5dQRxmuoEU/ACiySai4rS3kG6af6zVVoCA6ZKitrI8LbYPcED+6d7ysJsX3cxQ
+         6tRJAgMRjTqaDM22/Hzj/SwCxndqk5q3fF9W/5TjcKGPhyx5+kwS2ITQu6CBZNDDLvlm
+         jv5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWcVUttR9V4l/RfnQhDTWDKH/6IUJ3KpVWcn02yftcjB1OdWD7UmWx3KOh4f3XkDUJ7ifIsJs8xiedRzDVpV5XMhTSjziFo9d1TaP/J
+X-Gm-Message-State: AOJu0YyROl94H8gdZalDM/UKeP3X3fUEyUeD3BZ/pJA62K7Mhxv5Q26t
+	hEqZJh28kHzptM+J/6E+BJzse2iXylWMB8wbH0k02CpntRlA6sxSFDwhtxJFBcw=
+X-Google-Smtp-Source: AGHT+IGL0gMkSBaGDXnel0L0he0+Geb5Lig1vUQpIlMr5lh7WCoHJE2W5NuuujDRawcmT+3R/w3Dsg==
+X-Received: by 2002:a2e:90d0:0:b0:2ee:80b2:1e99 with SMTP id 38308e7fff4ca-2eeb31977famr45772941fa.44.1720683896915;
+        Thu, 11 Jul 2024 00:44:56 -0700 (PDT)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ca344c151csm5055544a91.12.2024.07.11.00.44.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 00:44:56 -0700 (PDT)
+Message-ID: <ca001842-92f4-46ff-80ee-e7a8a97fc433@suse.com>
+Date: Thu, 11 Jul 2024 17:14:50 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,176 +62,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/slub: quiet the clang warning with -Wunused-function
- enabled
+Subject: Re: [PATCH v2 3/3] btrfs: update stripe_extent delete loop
+ assumptions
+From: Qu Wenruo <wqu@suse.com>
+To: Johannes Thumshirn <jth@kernel.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Filipe Manana <fdmanana@suse.com>,
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>
+References: <20240711-b4-rst-updates-v2-0-d7b8113d88b7@kernel.org>
+ <20240711-b4-rst-updates-v2-3-d7b8113d88b7@kernel.org>
+ <08b5cf14-8b00-4a19-ae98-e83e83357688@suse.com>
 Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>,
- Nathan Chancellor <nathan@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, sxwjean@me.com, cl@linux.co,
- penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
- akpm@linux-foundation.org, roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
- xiongwei.song@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
- Nick Desaulniers <ndesaulniers@google.com>
-References: <20240710025418.394321-1-sxwjean@me.com>
- <Zo36BTqhzGkukyT_@casper.infradead.org>
- <20240710150154.GA1684801@thelio-3990X>
- <CAJuCfpFUawbMXf34YpUv_hrEvwOFX=CvPmyTS3CBOSZtC=c6Tg@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CAJuCfpFUawbMXf34YpUv_hrEvwOFX=CvPmyTS3CBOSZtC=c6Tg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJjTSJVBQkNOgemAAoJEMI9kfOh
+ Jf6oapEH/3r/xcalNXMvyRODoprkDraOPbCnULLPNwwp4wLP0/nKXvAlhvRbDpyx1+Ht/3gW
+ p+Klw+S9zBQemxu+6v5nX8zny8l7Q6nAM5InkLaD7U5OLRgJ0O1MNr/UTODIEVx3uzD2X6MR
+ ECMigQxu9c3XKSELXVjTJYgRrEo8o2qb7xoInk4mlleji2rRrqBh1rS0pEexImWphJi+Xgp3
+ dxRGHsNGEbJ5+9yK9Nc5r67EYG4bwm+06yVT8aQS58ZI22C/UeJpPwcsYrdABcisd7dddj4Q
+ RhWiO4Iy5MTGUD7PdfIkQ40iRcQzVEL1BeidP8v8C4LVGmk4vD1wF6xTjQRKfXHOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJjTSJuBQkNOge/AAoJEMI9kfOhJf6o
+ rq8H/3LJmWxL6KO2y/BgOMYDZaFWE3TtdrlIEG8YIDJzIYbNIyQ4lw61RR+0P4APKstsu5VJ
+ 9E3WR7vfxSiOmHCRIWPi32xwbkD5TwaA5m2uVg6xjb5wbdHm+OhdSBcw/fsg19aHQpsmh1/Q
+ bjzGi56yfTxxt9R2WmFIxe6MIDzLlNw3JG42/ark2LOXywqFRnOHgFqxygoMKEG7OcGy5wJM
+ AavA+Abj+6XoedYTwOKkwq+RX2hvXElLZbhYlE+npB1WsFYn1wJ22lHoZsuJCLba5lehI+//
+ ShSsZT5Tlfgi92e9P7y+I/OzMvnBezAll+p/Ly2YczznKM5tV0gboCWeusM=
+In-Reply-To: <08b5cf14-8b00-4a19-ae98-e83e83357688@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,me.com];
-	FREEMAIL_CC(0.00)[infradead.org,me.com,linux.co,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,kvack.org,vger.kernel.org,intel.com,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,me.com:email,intel.com:email,linux.dev:email]
-X-Spam-Flag: NO
-X-Spam-Score: -2.79
-X-Spam-Level: 
 
-On 7/10/24 11:40 PM, Suren Baghdasaryan wrote:
-> On Wed, Jul 10, 2024 at 8:02 AM Nathan Chancellor <nathan@kernel.org> wrote:
->>
->> On Wed, Jul 10, 2024 at 04:03:33AM +0100, Matthew Wilcox wrote:
->> > On Wed, Jul 10, 2024 at 10:54:18AM +0800, sxwjean@me.com wrote:
->> > > From: Xiongwei Song <xiongwei.song@linux.dev>
->> > >
->> > > The only user of prepare_slab_obj_exts_hook() is
->> > > alloc_tagging_slab_alloc_hook(), which can build with
->> > > CONFIG_MEM_ALLOC_PROFILING enabled. So, the warning was triggerred
->> > > when disabling CONFIG_MEM_ALLOC_PROFILING. Let's add "__maybe_unused"
->> > > for prepare_slab_obj_exts_hook().
->> >
->> > Perhaps instead clang can be fixed to match gcc's behaviour?
->>
->> Clang only differs from GCC on warning for unused static inline functions in .c
->> files, not .h files. The kernel already handles this in
->> include/linux/compiler_types.h but it disables this workaround for W=1 to catch
->> unused functions like this as a result of commit 6863f5643dd7 ("kbuild: allow
->> Clang to find unused static inline functions for W=1 build"):
->>
->> /*
->>  * GCC does not warn about unused static inline functions for -Wunused-function.
->>  * Suppress the warning in clang as well by using __maybe_unused, but enable it
->>  * for W=1 build. This will allow clang to find unused functions. Remove the
->>  * __inline_maybe_unused entirely after fixing most of -Wunused-function warnings.
->>  */
->> #ifdef KBUILD_EXTRA_WARN1
->> #define __inline_maybe_unused
->> #else
->> #define __inline_maybe_unused __maybe_unused
->> #endif
->>
->> So I don't really think there is much for clang to do here and I think having
->> the ability to find unused static inline functions in .c files is useful (you
->> might disagree, perhaps a revert could still be discussed). I guess
->> IS_ENABLED() can't be used there, so it seems like either taking this patch,
->> ignoring the warning, or refactoring the code in some other way are the only
->> options I see.
+
+
+在 2024/7/11 16:25, Qu Wenruo 写道:
 > 
-> I think this is the consequence of the recent refactoring I've done in
-> https://lore.kernel.org/all/20240704135941.1145038-1-surenb@google.com/.
-> There should be a cleaner way to fix this. I'll post it later today or
-> tomorrow morning.
+> 
+> 在 2024/7/11 15:51, Johannes Thumshirn 写道:
+>> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+>>
+>> btrfs_delete_raid_extent() was written under the assumption, that it's
+>> call-chain always passes a start, length tuple that matches a single
+>> extent. But btrfs_delete_raid_extent() is called by
+>> do_free_extent_acounting() which in term is called by > 
+>> __btrfs_free_extent().
+> 
+> But from the call site __btrfs_free_extent(), it is still called for a 
+> single extent.
+> 
+> Or we will get an error and abort the current transaction.
 
-Yeah looks like the non-empty prepare_slab_obj_exts_hook() could move to the
-#ifdef CONFIG_MEM_ALLOC_PROFILING section above
-alloc_tagging_slab_alloc_hook() and the empty one just removed.
+Or does it mean, one data extent can have multiple RST entries?
 
+Is that a non-zoned RST specific behavior?
+As I still remember that we split ordered extents for zoned devices, so 
+that it should always have one extent for each split OE.
+
+Thanks,
+Qu
+> 
+>>
+>> But this call-chain passes in a start address and a length that can
+>> possibly match multiple on-disk extents.
+> 
+> Mind to give a more detailed example on this?
+> 
 > Thanks,
-> Suren.
+> Qu
 > 
 >>
->> > > Reported-by: kernel test robot <lkp@intel.com>
->> > > Closes: https://lore.kernel.org/oe-kbuild-all/202407050845.zNONqauD-lkp@intel.com/
->> > > Signed-off-by: Xiongwei Song <xiongwei.song@linux.dev>
->> > > ---
->> > >  mm/slub.c | 4 ++--
->> > >  1 file changed, 2 insertions(+), 2 deletions(-)
->> > >
->> > > diff --git a/mm/slub.c b/mm/slub.c
->> > > index ce39544acf7c..2e26f20759c0 100644
->> > > --- a/mm/slub.c
->> > > +++ b/mm/slub.c
->> > > @@ -2027,7 +2027,7 @@ static inline bool need_slab_obj_ext(void)
->> > >     return false;
->> > >  }
->> > >
->> > > -static inline struct slabobj_ext *
->> > > +static inline struct slabobj_ext * __maybe_unused
->> > >  prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
->> > >  {
->> > >     struct slab *slab;
->> > > @@ -2068,7 +2068,7 @@ static inline bool need_slab_obj_ext(void)
->> > >     return false;
->> > >  }
->> > >
->> > > -static inline struct slabobj_ext *
->> > > +static inline struct slabobj_ext * __maybe_unused
->> > >  prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
->> > >  {
->> > >     return NULL;
->> > > --
->> > > 2.34.1
->> > >
->> > >
-
+>> To make this possible, we have to adjust the start and length of each
+>> btree node lookup, to not delete beyond the requested range.
+>>
+>> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+>> ---
+>>   fs/btrfs/raid-stripe-tree.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
+>> index fd56535b2289..6f65be334637 100644
+>> --- a/fs/btrfs/raid-stripe-tree.c
+>> +++ b/fs/btrfs/raid-stripe-tree.c
+>> @@ -66,6 +66,11 @@ int btrfs_delete_raid_extent(struct 
+>> btrfs_trans_handle *trans, u64 start, u64 le
+>>           if (ret)
+>>               break;
+>> +        start += key.offset;
+>> +        length -= key.offset;
+>> +        if (length == 0)
+>> +            break;
+>> +
+>>           btrfs_release_path(path);
+>>       }
+>>
+> 
