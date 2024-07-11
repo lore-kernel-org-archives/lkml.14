@@ -1,113 +1,109 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E163014A4E5
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE50D15A865;
+	Thu, 11 Jul 2024 11:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696048; cv=none; b=c6GimtlS6HY/X7979G+DDOs8zS6aQfgIJRFebyXHQkhKhXJil1/BWwSFU4H/hsDmWRU+xbrVlQCv5mdk35Yjy5KLs/BmTThdJzDfMctRzcKEBRhbTnaEIXUZpdXzC6PPBFJCNV+f/BYpL2zw2O/dOP2jHUCXldOEfve9nJVNNVs=
+	t=1720696049; cv=none; b=qE3id0b3dZa+GkwIMpF+pxQLRNzsPowXJ74X/ppUzoIZbjTGc8S1vBltniXmGL1xnQ6U4WX79ZoiCVSwDqN0ZcU+QoXiKQ5BMQAOmAgZ6xj1CqXg2gmNvLkBg02B7X5O7aujqjGQqD/haaWpcgMejTJr+9rJXng4rIkTGBcESag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696048; c=relaxed/simple;
-	bh=bdr7Qv4L5tPrAAQGniWMZ8aXQvkLhJUYw2j8R49nvvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q8wzHC6rsSAkHz58SBrFnssHdpmjcJFyMURLZF9BR30SmuEMW062+KOqMsDKQ57QRp/x5x9DrXEQyYvNEQbddlNvj3ZBctTc0hz9q2tsMJoZVphCXfemEd0kDxRmH1azeY7tMeeT0lhzijon3RqPiaJ5wgCOXjLrXf3235rnclc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vaJrJB1G; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720696049; c=relaxed/simple;
+	bh=SK0WpGxdLIMwlY7T1cLR+yWEBYicF8l1blnSe1p7LCU=;
+	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=jGuH/uhYd8fXaGrA/OVBCkindRsFIrBhqaEj/dzhPjEaAjK1xktE0JKxstWZYJHm08X+oBiqV6Bc12SUmuAvoRmiuG+5ODXvUFKZ8XfFOQb0vqFKyVc+UWDwUSMaDpk3IBJ2qKiId+sDoTekI/Vpgyc59BFNZnIlZ2znBGayPvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZeH51iyO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vaJrJB1G"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52ea5dc3c79so1060832e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720696045; x=1721300845; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6k1josUYaKJccQAezOxNpgtIgEzdm1ySywjOhe1mBcI=;
-        b=vaJrJB1G7wb7w+HUtMIbTteYET+PQu+4CqLkWSA6RJM7ssqE+gEopsU9Uy/Cy1A9Pm
-         fTolW5VgtmdpAmlxWvPlPtZQ0TEvLw/LWPScIdavgSYYUoTUFPlFhrYbRyONc6WooxxY
-         A4jKFiLcxXqupayovqhKyWd7OjDTpTn0MSE9HBeIy8g0Lrf0kCrjnrK225LX7vi+21L6
-         IRLnOtVcH0eTJinyQn2HqOD05zpvSGIhPFgy9CTJRl+zqhMdcmNLQ6On5xce9YtX8IEU
-         T6qrpVUgTusu+OSNrtRdaa4mlrmfLV3I3mthFEGeQQ3kVuTiPU6Kwa+DgWZOdlsAsQD+
-         Bw1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720696045; x=1721300845;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6k1josUYaKJccQAezOxNpgtIgEzdm1ySywjOhe1mBcI=;
-        b=dCyQ1H8WWNckVvlqkYYWljEO1FGTaHtPYzU6bcqeVxsa18J9IXZDRzbJ7vNiNfohae
-         BuRs3ReAwjBs3YPSIxTAAc9GeYyzLpSZurVmZL7pcK9we/NJoa3BZt0FHHvskKwZmnfT
-         2wEuWQ7RBSBGnyUJfszDIPZRaTmAN1rtbXwHmrOqsY8LrZPCv5ACHs8tJq+vpnxE4egM
-         a5l5NFpJOck6e8628nbvh9sL1MiutGVcVkC58P1Mdas9qOC9aePrDcLMhpIablgwJqcb
-         0sdRXoK+9fk/ErFP0XkAjUop+xkcqVe5aCN2Z3gv6KpVQcgefvnMz7q5LbH5p4u9vZYp
-         gHQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvo22bbFq1vdJ/adgZIlJLKQsavAP0qWvZ7SeKKqAM5YhWMLu8fzd0x4KfFLIG23ul1kACNdBd35WZW/e0Ifo/uHtd4Ij/tTBpZueV
-X-Gm-Message-State: AOJu0Yy/HjSFUM9fv2uflF7IEZbP+knOIkkPpUZGPZRtcr648lHJbrcF
-	WvFx+FrqrL9kT3EoAcecuWg2AdD0K4XefPUNX2r/IPEbgk6mCS6slg8t46gU9ec=
-X-Google-Smtp-Source: AGHT+IFJMwFpxedQ55eq8RkosPMI/H4P5xWD6f2RDmkSUZbsv9Lc5g+x23KiZbvtlWcYM7Bm3nhFtQ==
-X-Received: by 2002:a05:6512:e92:b0:52c:dfa0:dca0 with SMTP id 2adb3069b0e04-52eb99d323bmr6542914e87.43.1720696045231;
-        Thu, 11 Jul 2024 04:07:25 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e097bsm115686685e9.6.2024.07.11.04.07.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 04:07:24 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: linux-arm-msm@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 2/5] ARM: dts: qcom: asus,nexus7-flo: remove duplicate pinctrl handle in i2c nodes
-Date: Thu, 11 Jul 2024 12:01:39 +0100
-Message-ID: <20240711110545.31641-4-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240711110545.31641-2-rayyan.ansari@linaro.org>
-References: <20240711110545.31641-2-rayyan.ansari@linaro.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZeH51iyO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=VqlAJfIzp9p6gk1mqKZ345ZWdiXBhJmcK02is9mdROM=; b=ZeH51iyOE2w8ALI6fMUsjNe25t
+	MnKaYe0b1r5INsD7cEdQlbKjk4uMKau6MaN/V+YCDeyanwYFaf/XkMCl1LHa9qhULfiVd0XPfVxrw
+	19tdvPaX+z/iQhCN9SGOzYTaJBUwAO51CCohhlEMzFXFY6upXhdRdi5DMWGpXZHCJpZuM9MhRnAcq
+	T2x35WAWZ4Q+BDp0Ns9bRcTIZgFG3m4aCg5ZKs2u834LcRPDKFHsZxQDe4BtSr7xFVBNoQSfZgjua
+	t4t6El5MTGUPRZg2/VX1dEh5K1VI2VxaXug8JclihLdZQEXW0uWdWiaTHaga+PzTyK3OEZhVEqBEZ
+	HOwsR9ug==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRre0-0000000Ax6X-08o2;
+	Thu, 11 Jul 2024 11:07:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id C53E43021D4; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
+Message-Id: <20240711110400.768061729@infradead.org>
+User-Agent: quilt/0.65
+Date: Thu, 11 Jul 2024 13:02:40 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mingo@kernel.org,
+ andrii@kernel.org,
+ oleg@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ rostedt@goodmis.org,
+ mhiramat@kernel.org,
+ jolsa@kernel.org,
+ clm@meta.com,
+ paulmck@kernel.org
+Subject: [PATCH v2 05/11] perf/uprobe: Simplify UPROBE_HANDLER_REMOVE logic
+References: <20240711110235.098009979@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 
-Remove duplicate handle to i2c pins in the device tree, as they are
-already set in qcom-apq8064.dtsi.
+Specifically, get rid of the uprobe->consumers re-load, which isn't
+sound under RCU.
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
-v1 -> v2: split from main apq8064 patch 
+ kernel/events/uprobes.c |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
- arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts | 4 ----
- 1 file changed, 4 deletions(-)
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2101,6 +2101,7 @@ static void handler_chain(struct uprobe
+ 	struct uprobe_consumer *uc;
+ 	int remove = UPROBE_HANDLER_REMOVE;
+ 	bool need_prep = false; /* prepare return uprobe, when needed */
++	bool had_handler = false;
+ 
+ 	down_read(&uprobe->register_rwsem);
+ 	for (uc = uprobe->consumers; uc; uc = uc->next) {
+@@ -2115,16 +2116,26 @@ static void handler_chain(struct uprobe
+ 		if (uc->ret_handler)
+ 			need_prep = true;
+ 
++		/*
++		 * A single handler that does not mask out REMOVE, means the
++		 * probe stays.
++		 */
++		had_handler = true;
+ 		remove &= rc;
+ 	}
+ 
++	/*
++	 * If there were no handlers called, nobody asked for it to be removed
++	 * but also nobody got to mask the value. Fix it up.
++	 */
++	if (!had_handler)
++		remove = 0;
++
+ 	if (need_prep && !remove)
+ 		prepare_uretprobe(uprobe, regs); /* put bp at return */
+ 
+-	if (remove && uprobe->consumers) {
+-		WARN_ON(!uprobe_is_active(uprobe));
++	if (remove)
+ 		unapply_uprobe(uprobe, current->mm);
+-	}
+ 	up_read(&uprobe->register_rwsem);
+ }
+ 
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts
-index d460743fbb94..947183992850 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064-asus-nexus7-flo.dts
-@@ -125,8 +125,6 @@ &gsbi1 {
- &gsbi1_i2c {
- 	status = "okay";
- 	clock-frequency = <200000>;
--	pinctrl-0 = <&i2c1_pins>;
--	pinctrl-names = "default";
- 
- 	eeprom@52 {
- 		compatible = "atmel,24c128";
-@@ -148,8 +146,6 @@ &gsbi3 {
- 
- &gsbi3_i2c {
- 	clock-frequency = <200000>;
--	pinctrl-0 = <&i2c3_pins>;
--	pinctrl-names = "default";
- 	status = "okay";
- 
- 	trackpad@10 {
--- 
-2.45.2
 
