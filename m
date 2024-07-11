@@ -1,287 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2056.outbound.protection.outlook.com [40.95.110.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B553376;
-	Fri, 12 Jul 2024 00:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4062E376;
+	Fri, 12 Jul 2024 00:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.110.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720742856; cv=fail; b=LNhHigImzsHqmkNJ8jaUtzqzmg0YMAZ/prPe3BQQZ/t4Gr4w1XGwVYRgYRVXVXyB4kkwJyzSM1Bsb/jXwfRzAR1LsI2fWdd7HS5i/42LxjquHozOVjDgmTotxV5jnV01PYpAMfhI8aUhXPaye9cs6nSMmILazMjubYc/SCD3Abk=
+	t=1720743123; cv=fail; b=turzF+cA9SnOETEaodgrQIfkHT7AyCJ9q/LdQ2iR1X6EfkwELkcpoxSMetvr5b5okclE+idH1TicADLpFo/5LstpyxgFcel/9PxHTCgKBpm7ZqhucOtBzY98ogvGGem11zOv8SvJmC24elQ9oXEeTekNOqr03YoL/+Y/ZDlA+R0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720742856; c=relaxed/simple;
-	bh=+YO6S4Ob5D9FWyVtvHJQcYBp8r8PSdCKatB1+C1VOfg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=UUbZwD3XcupwmLOx8wtsZuxWLADYNnzLw/dE+hftZXZQfgBcP/MPH0HJc64Rgav6/NLQhIP4cz+deynns7WMTdyoh5qhoyHtuD12nnW+miGQWyAm7vZsuALH6rZl0m+elTNZfNLNnxsuJAnZUorpWaqw46mYdakIcMMb/os42Ks=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GHaJMFcB; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720743123; c=relaxed/simple;
+	bh=BhCEMzixjEMo9tD3CpkiBaQEQVgYASERGCLb9qFwnE0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f4reTwIgj6ITbOkKG8Ieqc6DFEWiCFp3neZwl9kZNtdEx5M488xsbmhz0od/DtoUMWWE9lNvceQ4GsynZeawwKraIgPphtg9hMl2DYWzRTOvp+IpIFJfO8xUTXMCCCSqLZsDJjkypDobgCGOz6YehhRqoZ1gESIgbrEcssFKaIw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=dR6SoeEG; arc=fail smtp.client-ip=40.95.110.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GHaJMFcB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720742855; x=1752278855;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=+YO6S4Ob5D9FWyVtvHJQcYBp8r8PSdCKatB1+C1VOfg=;
-  b=GHaJMFcB1lQGNVJ+joQSK8Pz8YJx+W5rcN1MBHEeV5PI/vazeo9vK/U3
-   Rrt2lWKGpq2UR8HFdodz1178KxaQdgL1KZIk16xlTtd2cdBCKepmXWqy0
-   mP0h6WKy3KgqY7RQEsLdmL3/SQIAfTbjY7akSNDXAk7aoQWWoifFj02X/
-   hUUGcLXo54iBN7qi3JXNRbSUwLmLOWPJMVCYVlMp48gnRy0A1Z4wjiUoJ
-   XfFpsc41cou7qAPx7xiD423BQE0aVf60tzXbbm/Pd9heJlKzPYbXZqLN5
-   +0q8acWv2YKOOXvLHECFquAUWI/+UVfUn7b0TlSTGOUfcldm5mAXIvwXz
-   g==;
-X-CSE-ConnectionGUID: k+socyC2ScO8PCXHxj4g7w==
-X-CSE-MsgGUID: cpDQlUVJQrO1EphNwEruEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="28840212"
-X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
-   d="scan'208";a="28840212"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 17:07:34 -0700
-X-CSE-ConnectionGUID: a8EjiY+ASaOsU6l1A7YdyA==
-X-CSE-MsgGUID: 1sSapPgcSaS9ob4cf9qa6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,201,1716274800"; 
-   d="scan'208";a="48825038"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jul 2024 17:07:34 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 11 Jul 2024 17:07:32 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 11 Jul 2024 17:07:32 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.44) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 11 Jul 2024 17:07:31 -0700
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="dR6SoeEG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xo0prpRUxZ7syIElFSN9y/OIjtaui0W3MhaBbdn3jlNSPGzslpnTnhIpMJJdyCvOnCeg+Go830BbeSwDaAEEDEAoPvdjiH3u7iCuTBG2eX/5W5xNHHBCMQIqQstXxB6ODRJVMYest6ohXazCsjPCyjH84E4njmBZctofw1XC0/OcZ46lPK4FYMnZpV3KIabfUx6qYNrhdTTOnfjRxIWXGlJc0iyuuUQE6a74tgopYzn0C/GyjS6BiihpBgMu0WS7HZzT+mYnrfJmNK182+SLaQtp3yPEfdaljZiSzkvQJoRu4/fTmeC616vm+BvMTwRd2rxcePyU/oucSklwOjFHRA==
+ b=f5e9KHnRIzmEZjSh7y6Df6oWAjfRaHByaF+ob9nA2QsW1wnK6qmWSXqRocFrT9ddc1XetQSz+FGyAq15AJtlBwSp4wmFzGXa1uPR5gbzLVJ8TFzMAXsadgygROT6T5eR2+sSvhzisQGm9oAzDvdpXFf5xl1djU8Nzw2oE9tEKbl/bpfYg8JA8VJrJJIBGn4O6AC6xMujYKwEV2HxLiIYcrAxl9sSjfL2A5Q3Q2nuwe+TCcy4gdkqpOimMl9k1MdyQ1r2/xjh26oa9JCVzt9iJRg3o5VJESn7N7f/lLCDEn7fIZcqCULfo+2uXc2RWDGsUdhglOr3RoUtrf+zNfZh/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cHSNdIx+KNFKVWBXgYUqCar8xisokgV1T/lVrE4FPus=;
- b=BD7ulCkY0jVVhaCUim5dBkV0n7rXOip5N8WKNNHrFlXI/gMvKmVYy8kk3tXEQ1jqxTiOGr7du78ZdkkFZG0q2Se7Ii7my/8+dkqXHWnBC8wq6ThLRddMSyFpaEcBJCw4laIheQVRhvjOykJjYe/uvx6HCZtHgXdRSa0jslEkuvV7qn6XbnJtS7M2mibVHsM3g+S1zttPmONBrONWyPziLhTTWs4FKeUZV7RT9Hr6BeoMmQ3mo+8mxQzHASslaPdFthihQOVeb39XA1P7Xjpk8GaL9w4QeZGfzHvyK69bBxwQI/hv1E1Y7v7R1JzePJq8LWG+1CEnXxpY41x1TSNuOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB6622.namprd11.prod.outlook.com (2603:10b6:a03:478::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Fri, 12 Jul
- 2024 00:07:23 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7762.020; Fri, 12 Jul 2024
- 00:07:23 +0000
-Date: Thu, 11 Jul 2024 17:07:21 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dirk Behme <dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>,
-	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC: <dirk.behme@de.bosch.com>, Rafael J Wysocki <rafael@kernel.org>, "Eugeniu
- Rosca" <eugeniu.rosca@bosch.com>,
-	<syzbot+ffa8143439596313a85a@syzkaller.appspotmail.com>, Ashish Sangwan
-	<a.sangwan@samsung.com>, Namjae Jeon <namjae.jeon@samsung.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2] drivers: core: synchronize really_probe() and
- dev_uevent()
-Message-ID: <669073b8ea479_5fffa294c1@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240513050634.3964461-1-dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240513050634.3964461-1-dirk.behme@de.bosch.com>
-X-ClientProxiedBy: MW4P222CA0009.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::14) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ bh=101RSNpPq47huqHs3QrH3qcaed0oAXODcnv4Mk7gMeU=;
+ b=GLL/RbLFUY0kXMcTwuK2VExnTEC0/5bpU4Hw4p3ervtMAecLF6hKLFZzl3isEq/4vDHrHiR7Gw4QbDiw4aO1YhQl5cLjre+x2oteo5D9kBnRVHIi3ZH58ausm60iIeJmnqPVaIUTgRlCBvYcOh7mwWFWHACGTZ0Bf7kQJuGHhRnlEeIFv7IX7vY2XTQBA0ti+mdit35XZxXUVZ1xoP4vmJxdISw6kOI19mk3eQDdni1Y7RD+qj0uP8uDUBvgRgECH7JrVLNHMrr3bgakk4JHwQvT/baGYQy+iFZoA1/OIQcKT2pbsWRq8ATOVfcuoOKB2M33x0pPYkew6n1QkOyAAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 175.98.123.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
+ dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=101RSNpPq47huqHs3QrH3qcaed0oAXODcnv4Mk7gMeU=;
+ b=dR6SoeEGBD9ITCGqChqlPYIDBzgfMwcpXzzU9RCui8kmDPgc6ZK6QLVyPiS+eVw0sNw7BjfTWe3lFwWCFSzYAyyNOBs8p1MR8vXU4I0HwH8FWPy34cQ9R0TTopgEYIPajuzRC+GzggXyOGmrV3/Fis/OpHd44twucV+mIEGdSLY=
+Received: from SI2PR02CA0006.apcprd02.prod.outlook.com (2603:1096:4:194::8) by
+ SEYPR03MB6532.apcprd03.prod.outlook.com (2603:1096:101:89::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7762.23; Thu, 11 Jul 2024 19:38:01 +0000
+Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
+ (2603:1096:4:194:cafe::a9) by SI2PR02CA0006.outlook.office365.com
+ (2603:1096:4:194::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23 via Frontend
+ Transport; Thu, 11 Jul 2024 19:38:01 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
+ SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 19:38:01 +0000
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
+ (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 03:37:58 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 12 Jul 2024 03:37:58 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 53A165F671;
+	Thu, 11 Jul 2024 22:37:57 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 53353DC0F7F; Thu, 11 Jul 2024 22:37:57 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <linus.walleij@linaro.org>, <avifishman70@gmail.com>,
+	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
+	<yuenn@google.com>, <benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 5/7] pinctrl: nuvoton: npcm8xx: remove unused lpcclk pin, group, function
+Date: Thu, 11 Jul 2024 22:37:47 +0300
+Message-ID: <20240711193749.2397471-6-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240711193749.2397471-1-tmaimon77@gmail.com>
+References: <20240711193749.2397471-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB6622:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f311b6d-8aeb-42a5-3330-08dca2069b07
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?jrrj9e9jtN+V7wsniph/AYadZJZlh/BL2JjmsnksXTlomSnr4PnmhEZBuPkk?=
- =?us-ascii?Q?kLBphx30zd62U3XLueWAcZYJg6EFA8YrXDAb/1V4IovwCA5IQHueFopM9jzy?=
- =?us-ascii?Q?+wUQNNdxhmxB8loe/AEfk2XB5Zl/aKXyT2wrRgIxSI+TRdtH92FfGzAJPlSu?=
- =?us-ascii?Q?ba6J6sL3fVGNee36cLj8nSnw86nVA5vM3jFeHt/jGp2fp2iecDT7YPH1rGHd?=
- =?us-ascii?Q?rtHq6GOJNzj7RgSVb1J+D81hNNopvLivC+ZEEorgYcK+1nZi4yp0akPkxyvy?=
- =?us-ascii?Q?Zx3y8Z/8Yx6Bv6Ik+Aze4t/uXYrSxqa1L8Ah9NRDBnQhTk2KJLxhDXdGXMrr?=
- =?us-ascii?Q?AFgZyp35Biy3Psqui3upUvznp0kkQAfSAiZc+s62iv7dIk7f8REj/eyok3fR?=
- =?us-ascii?Q?sFn/Zg5IvxjIFA99MPvnR0PUZxqbLAr8y4FaP5gfJVrDbMQ8036o1qrf4tFk?=
- =?us-ascii?Q?g5TrtE8YwExmfv5DndfkwDHCmk341k2yGD7MplifMpkgb3tB+bvw1Vxixez/?=
- =?us-ascii?Q?VttgGhoco3KeLRGqashgKFP6QDCQddDJGEV+8xsHzWN+ZFH7vXHq/hly7c+r?=
- =?us-ascii?Q?Ot9/CNGMh2/NchtyJ1tPOOgsA8x82EzTWjLHV/1orbkCZyClmAf6sBsN3uf5?=
- =?us-ascii?Q?af1fbx2zfTPvepFl/lydhTWKNOj2R9W3XT2XDr3ANo+nj4pfPAO8hJ2Dz7zt?=
- =?us-ascii?Q?KqLR+Sv9xH2M2UWlgAzBIz6DfNr7a0/yeDrGTgucLQrHMwPmUVMXTwaPyWEc?=
- =?us-ascii?Q?Kx//dRp1FNkvDVkn959FVLXelrgkVGFPhREAv1FIwnLJF6S/5I8MgG/syOGM?=
- =?us-ascii?Q?XdoY3LKnBlwSIMxaAN/g9xvxPAzxFJYLfNZX77N7lepWbh7IRiSvxb8EIgtR?=
- =?us-ascii?Q?WmOwDVcEq7Qq1uuK/aCwqE7tCOjHl4DFdZw3s3VuoXCVmSQBXNo/UtQqUhFE?=
- =?us-ascii?Q?ky+TdClID6WwZ/MJR9j81tRpfW+OURRJ4gWVkbHDxp4E1+/nRAlCNFTzd7p/?=
- =?us-ascii?Q?Mij82w7dgbJJDqif8ccLcMc0pSpzuvI2BYtJGhfZjuwYZBhtvZBgDpId6ufn?=
- =?us-ascii?Q?rV8JPJCr7T92kM1rgnIT4H/X/27A4KVCPf0S21ZWqU2v105nyijb5QQxBU3j?=
- =?us-ascii?Q?d+vm9fkZTcGuaCIfXm/3XdUD2SvjSoTe/3BThRFEASh+oBVokfT1dGNvWkO5?=
- =?us-ascii?Q?igrG56NRwKvVgPiEmqHzKH/CvW7m4/GLe6JJdC7NBQ09Jl7Y//RQzqFAyXaT?=
- =?us-ascii?Q?yJ7PtuGoKyJrv//RlOVmKmYS5Jwznov7zW3QzyaTM7ZZg2uqAzZbMBBn+2Of?=
- =?us-ascii?Q?7WE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Z3R2ncbfjFVxs6M6J6gp2JYyzPtkUKp+jcUR9ElG5X565FYGd4UdjfuxYlkh?=
- =?us-ascii?Q?PIiU9CHyqzaGEbO4RtMF92WqcE549jpy/b+PMkaQlRRrinq9RE7qoA2IDeGH?=
- =?us-ascii?Q?PSZeb4ZeQav+3iqBsg0OxHSmaAGR5cR7uZ3CPsNqD732MkOJbnx/gKT0H7b9?=
- =?us-ascii?Q?DRhEbKxyp2IiFS7RGWK8K7B747GTSwewtTGwzwhYXUGBioOePak10WHGs+UD?=
- =?us-ascii?Q?y6ExgjbUiZNXzq2auAFic0VmkHcIKYYrjRoLalQIhqF0wDIGcQ1iqNXRL7D7?=
- =?us-ascii?Q?BdtLM/2R+6T9u0hVxE/IBg/nYzXTMt2PMzyuJchdTdHBf8IopO0n2uKBLvAx?=
- =?us-ascii?Q?jmK8OyljDwdYliw0C9CSB3fVnODbfykN8O0LbrM6UWssByPYKcSgjYEsVkNG?=
- =?us-ascii?Q?0BudfcYp105EUZP2jk/7Cpn+Dfu9oIO7O95nI1Vo271q/xpPDor5O387LrbR?=
- =?us-ascii?Q?V/yuGzucS4xgJ9KGCnhZdnUw+0UQh+sOoL0M0i9C3+lhzM//Mz4wAQlbhUEN?=
- =?us-ascii?Q?jTuEhhqPfFkb5/n2ZgZKYtUVX5jzZdldK22FGYY4MOQS7MyeCctFcy1VfY5r?=
- =?us-ascii?Q?JMjgck5K/Jy2QtHnLYtowwISEz4OBDW0vPGRToiny2BwUMkBqDX1iItGKiSp?=
- =?us-ascii?Q?QVjmv3aN6Pfcy9/CSrwKmVU4Ohw9IQkB+CtsqbrtdiS1juce3b7bgvTPzObj?=
- =?us-ascii?Q?fVpQ9pS9uQUhjriELcBa+FKRV0xKPd9td/5eXwnxsk9u4YmuSrWd1kJE0zpt?=
- =?us-ascii?Q?UybR55ssD3/uSokuuAyPGXGRHtvZx57dvKwn8UzykLoJABxgvqd9i2Do18HA?=
- =?us-ascii?Q?/0K32ue8wZzdzBzSRcVJmOz29Dl6r8kNz8kcxXLyuY5iDRzI9Wl3IyahkE8i?=
- =?us-ascii?Q?aZGqQMqZyiOfU7kXriSEiae5VAfWy3mTBt4PMzyb3h8CU/HytspyExYrZjBr?=
- =?us-ascii?Q?2H6RwR117lsA5kJmDZKb8K3CcThcDJSIXzSUFEcFLLxC8qtRsVpF45HlSwLT?=
- =?us-ascii?Q?L1ieoyigHrkIjszqoaeskrFRTQ9oSkdzUSGV2A+A+59kwnz/AJ+DXU6kgMSc?=
- =?us-ascii?Q?wm0V+abAk6ECtNffepnqXiw4ZXx7MR7I1nBOwvoQ9P2Dta6PSMeN/VhFH9In?=
- =?us-ascii?Q?Stgs8cH6qCQUvMItcr2GHkgOjhrqxbxbj6g8Z03uRrw861qbrlZHyZjL828U?=
- =?us-ascii?Q?52pvBXK2MPZlj9kP0KVdy9rvXKLB4Cy4cVAlkbhkpaqujmHTYTCA078WPdK+?=
- =?us-ascii?Q?/g35Gt6rffTWV/X3WN6Tmt3cSHnesbDUs1bOlgwmuO5pFTC8d6S0z5vUtBGw?=
- =?us-ascii?Q?NC8Ks9VhfGBUQgdwfQdfwYKrLTj8+7DU8n5z/+/yjnSLn6VLObQL4KqNr2rd?=
- =?us-ascii?Q?i5dp4wnPQBdFiCmKWddwiiiSBHkyWTh31xDWe7c44Vf+jbHDydkucfxJncOo?=
- =?us-ascii?Q?RdYP/y266BBZqRRj+dljGh3af6Rd8r9ZR7bXSrHKOeFh6gCTe7Ptb2tp+okI?=
- =?us-ascii?Q?9lzawns3vKTy5Yy6ROfjwoyHwI6CcAEEm8xFPXBk/Z90eF800LCj+VS3sxJ4?=
- =?us-ascii?Q?XVHyXzJJXcKhBWj6y6nReMQwovxxp8fXGjxFU2jnjYHIFqfxntbfwWaf8YO5?=
- =?us-ascii?Q?hw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f311b6d-8aeb-42a5-3330-08dca2069b07
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 00:07:23.5407
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E6:EE_|SEYPR03MB6532:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4edba82-6461-4127-ba83-08dca1e0f9e5
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|35950700016|48200799018|61400799027|7416014|376014|7093399012|35450700002;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?CaTyCVURQk5k8WrM73pEOT+ZUPmI4EQnCSKgmYNdk2bC6RRgU7ZeuYdub/jF?=
+ =?us-ascii?Q?81fpW0uiyRT5oHS7fzFIFGUOpMJasRWjbsj4dew+OjujMMpiXK1OUjs7opxZ?=
+ =?us-ascii?Q?0lv2lvBvNZG3980y97hCGKU5FNOYg0jjawXayZ3GSzb922YJ/6+H9tpv3UFz?=
+ =?us-ascii?Q?wKbI0l2Dj1zfc5Eknc5Rk+e8S5if67bVivX5UfBJo19onFgKz0yeayEG9Rlz?=
+ =?us-ascii?Q?JfYfqfKrj+HWrmt4xuyR3rdCa97Fg/IL4+K7em6DyftEg4qROj/dlbTJ/GJ7?=
+ =?us-ascii?Q?cEbAWJP7QbDDwdHHNwbfgzSRppCZ4qc5aWgkGnX6A8MyBAU/VKoWy8afJSqL?=
+ =?us-ascii?Q?Aajyn1ZDwNrTlFFLGVmlD5yYlKgGozUT/JG40hjb5HjObv72LX6Nx8N/EwF9?=
+ =?us-ascii?Q?w/S5dQVfroXt/trKcRTJARYqJuwkVULVoYZqLKQ4GOHxpSwDdwNBa8ZX8EKJ?=
+ =?us-ascii?Q?zv2P0oMkwTwJSntDDa7PE9SfvjpnTuxrA+iIf2JUm0BMLoina5BwBT6oCRAl?=
+ =?us-ascii?Q?JXgBF1NLU0IMP7knJN7PcHxD77UO9cLyGw+MYixcJx8eSPBSIFeG5pWTiyT4?=
+ =?us-ascii?Q?i0xaJsuL7Xf4e6peb136RPvyv1h8uEMPHKK6YGjS4aETrTEZfb1axWDDEm8x?=
+ =?us-ascii?Q?38ewQfd2FNnDjBgpbTEu11/+YKgtDxTDib9rzRkGzJ2eoTbkn+YxN/aZ3m6A?=
+ =?us-ascii?Q?7nYNq06bCneWjJJlq7bzX2ZppR3IDilo5dDc8D9NJS6ESeKpfmzJ9sDi1ahs?=
+ =?us-ascii?Q?61T0fJKjAyUrmjDsS/V/AFFOdIieUeBcw3AXIp5OAQNPazhYs9xU9VsJyfKy?=
+ =?us-ascii?Q?T+Lq4nRTNm+wwtAmyea8o1q/NM8sjoRUeGmR1zGTary7L8Oood2qY93onUT+?=
+ =?us-ascii?Q?DPim6XWDQRCIbZvk8piO4LOTkpMRlccMDv+mJbjkA8zQCc24hQgNhGy6lK7q?=
+ =?us-ascii?Q?h56EzG30Er2mc18NsbSEPh39HIq5tYtXet5JdkPpK2xbcZ4ouSHbYVDViBuq?=
+ =?us-ascii?Q?+q1odeR3G8sLJwVmUqItSljtZUh78uDAAO4qYZO9Rte3gV9sF0kVe6H3TynW?=
+ =?us-ascii?Q?jJ5NHtCs5k4PZv2b4dhY/GaYKZ812y6bssjUXuaukWNem2oYgwxRbWW6D9yy?=
+ =?us-ascii?Q?Ga3O41NKIgs19tBnn/+92+L/iMpwuemf5LlnaWEr54LNwLaS+g5IwLk0PrI7?=
+ =?us-ascii?Q?qXM+9tOl2eA1WJeoHN0+h7RQ/cAwNNsgq+NZD2RUTIizXGiehideCwFnJRCN?=
+ =?us-ascii?Q?V8RSJYFlWdf02Kjjkne8qqiI8xM/LkOZlcMplFS6tXVzBw+f6B8+bsNGjpc3?=
+ =?us-ascii?Q?z83RtpK2NzYc27DP9SrZ9JMDVVtO96RhlyJtLIxckCdybmZcJ2nnXcDw6Yrt?=
+ =?us-ascii?Q?+jC3Op02nwofD/t/hB3ivcr9iQclRjssQ+RRquMadWUNCYQwaxo4mTqxGjSs?=
+ =?us-ascii?Q?Zr8/OiSGuGRNLtomPgiR1u24mSGjzPOV4KMnxW/P2SBg7i/7USu2vg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230040)(82310400026)(35950700016)(48200799018)(61400799027)(7416014)(376014)(7093399012)(35450700002);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 19:38:01.6158
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tmFXKUahjvkv9SfhaLdPwv93OIDR+sP6eRD07aNnvBllhcbwArnfciS7UfEPL/pXxPjh27UE9yzYC55eoX9i1mxhgEpFbA3Ym679wAcp/xg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6622
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4edba82-6461-4127-ba83-08dca1e0f9e5
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG1PEPF000082E6.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB6532
 
-Dirk Behme wrote:
-> Synchronize the dev->driver usage in really_probe() and dev_uevent().
-> These can run in different threads, what can result in the following
-> race condition for dev->driver uninitialization:
+Remove unused lpcclk pin, group and function on the Nuvoton NPCM8XX BMC
+SoC.
 
-This fix introduces an ABBA deadlock scenario via the known antipattern
-of taking the device_lock() within device attributes that are removed
-while the lock is held.
-
-Lockdep splat below. I previously reported this on a syzbot report
-against nvdimm subsytems with a more complicated splat [1], but this one
-is more straightforward.
-
-Recall that the reason this lockdep report is not widespread is because
-CXL and NVDIMM are among the only subsystems that add lockdep coverage
-to device_lock() with a local key.
-
-[1]: http://lore.kernel.org/667a2ae44c0c0_5be92947e@dwillia2-mobl3.amr.corp.intel.com.notmuch
-
-One potential hack is something like this if it is backstopped with
-synchronization between unregistering drivers from buses relative to
-uevent callbacks for those buses:
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 2b4c0624b704..dfba73ef39af 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2640,6 +2640,7 @@ static const char *dev_uevent_name(const struct kobject *kobj)
- static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
- {
-        const struct device *dev = kobj_to_dev(kobj);
-+       struct device_driver *driver;
-        int retval = 0;
- 
-        /* add device node properties if present */
-@@ -2668,8 +2669,14 @@ static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
-        if (dev->type && dev->type->name)
-                add_uevent_var(env, "DEVTYPE=%s", dev->type->name);
- 
--       if (dev->driver)
--               add_uevent_var(env, "DRIVER=%s", dev->driver->name);
-+       /*
-+        * While it is likely that this races driver detach, it is
-+        * unlikely that any driver attached with this device is racing being
-+        * freed relative to a uevent for the same device
-+        */
-+       driver = READ_ONCE(dev->driver);
-+       if (driver)
-+               add_uevent_var(env, "DRIVER=%s", driver->name);
- 
-        /* Add common DT information about the device */
-        of_device_uevent(dev, env);
-
-
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 ---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index 396bd07e7c74..bc947d0d6ede 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -570,7 +570,6 @@ static const int spi3cs3_pins[] = { 189 };
+ static const int ddc_pins[] = { 204, 205, 206, 207 };
+ 
+ static const int lpc_pins[] = { 95, 161, 163, 164, 165, 166, 167 };
+-static const int lpcclk_pins[] = { 168 };
+ static const int espi_pins[] = { 95, 161, 163, 164, 165, 166, 167, 168 };
+ 
+ static const int lkgpo0_pins[] = { 16 };
+@@ -807,7 +806,6 @@ struct npcm8xx_pingroup {
+ 	NPCM8XX_GRP(spi3cs3), \
+ 	NPCM8XX_GRP(spi0cs1), \
+ 	NPCM8XX_GRP(lpc), \
+-	NPCM8XX_GRP(lpcclk), \
+ 	NPCM8XX_GRP(espi), \
+ 	NPCM8XX_GRP(lkgpo0), \
+ 	NPCM8XX_GRP(lkgpo1), \
+@@ -1054,7 +1052,6 @@ NPCM8XX_SFUNC(spi3cs2);
+ NPCM8XX_SFUNC(spi3cs3);
+ NPCM8XX_SFUNC(spi0cs1);
+ NPCM8XX_SFUNC(lpc);
+-NPCM8XX_SFUNC(lpcclk);
+ NPCM8XX_SFUNC(espi);
+ NPCM8XX_SFUNC(lkgpo0);
+ NPCM8XX_SFUNC(lkgpo1);
+@@ -1277,7 +1274,6 @@ static struct npcm8xx_func npcm8xx_funcs[] = {
+ 	NPCM8XX_MKFUNC(spi3cs3),
+ 	NPCM8XX_MKFUNC(spi0cs1),
+ 	NPCM8XX_MKFUNC(lpc),
+-	NPCM8XX_MKFUNC(lpcclk),
+ 	NPCM8XX_MKFUNC(espi),
+ 	NPCM8XX_MKFUNC(lkgpo0),
+ 	NPCM8XX_MKFUNC(lkgpo1),
+@@ -1495,7 +1491,7 @@ static const struct npcm8xx_pincfg pincfg[] = {
+ 	NPCM8XX_PINCFG(165,	lpc, MFSEL1, 26,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(166,	lpc, MFSEL1, 26,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(167,	lpc, MFSEL1, 26,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+-	NPCM8XX_PINCFG(168,	lpcclk, MFSEL1, 31,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
++	NPCM8XX_PINCFG(168,	none, NONE, 0,		espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(169,	scipme, MFSEL3, 0,	smb21, MFSEL5, 29,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(170,	smi, MFSEL1, 22,	smb21, MFSEL5, 29,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(171,	smb6, MFSEL3, 1,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+-- 
+2.34.1
 
- ======================================================
- WARNING: possible circular locking dependency detected
- 6.10.0-rc7+ #275 Tainted: G           OE    N
- ------------------------------------------------------
- modprobe/2374 is trying to acquire lock:
- ffff8c2270070de0 (kn->active#6){++++}-{0:0}, at: __kernfs_remove+0xde/0x220
- 
- but task is already holding lock:
- ffff8c22016e88f8 (&cxl_root_key){+.+.}-{3:3}, at: device_release_driver_internal+0x39/0x210
- 
- which lock already depends on the new lock.
- 
- 
- the existing dependency chain (in reverse order) is:
- 
- -> #1 (&cxl_root_key){+.+.}-{3:3}:
-        __mutex_lock+0x99/0xc30
-        uevent_show+0xac/0x130
-        dev_attr_show+0x18/0x40
-        sysfs_kf_seq_show+0xac/0xf0
-        seq_read_iter+0x110/0x450
-        vfs_read+0x25b/0x340
-        ksys_read+0x67/0xf0
-        do_syscall_64+0x75/0x190
-        entry_SYSCALL_64_after_hwframe+0x76/0x7e
- 
- -> #0 (kn->active#6){++++}-{0:0}:
-        __lock_acquire+0x121a/0x1fa0
-        lock_acquire+0xd6/0x2e0
-        kernfs_drain+0x1e9/0x200
-        __kernfs_remove+0xde/0x220
-        kernfs_remove_by_name_ns+0x5e/0xa0
-        device_del+0x168/0x410
-        device_unregister+0x13/0x60
-        devres_release_all+0xb8/0x110
-        device_unbind_cleanup+0xe/0x70
-        device_release_driver_internal+0x1c7/0x210
-        driver_detach+0x47/0x90
-        bus_remove_driver+0x6c/0xf0
-        cxl_acpi_exit+0xc/0x11 [cxl_acpi]
-        __do_sys_delete_module.isra.0+0x181/0x260
-        do_syscall_64+0x75/0x190
-        entry_SYSCALL_64_after_hwframe+0x76/0x7e
- 
- other info that might help us debug this:
- 
-  Possible unsafe locking scenario:
- 
-        CPU0                    CPU1
-        ----                    ----
-   lock(&cxl_root_key);
-                                lock(kn->active#6);
-                                lock(&cxl_root_key);
-   lock(kn->active#6);
- 
-  *** DEADLOCK ***
