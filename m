@@ -1,556 +1,361 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BB6155C95;
-	Thu, 11 Jul 2024 08:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB5A1527AA
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720686615; cv=none; b=U5LNlQO3bi1wqCshCMc2MHJ7tWj3EUiV1VBkUl8HOus1LH+Nv9jUEosrm8nhSdQ+bLe9vmQnBWPnnjFSgptp6/eFGPj/zO+NeiW/hXlMXM3X1eas2MoTCt1qUVSg9uy3I076vZTt81wGO1eb3M0dAaSSDJuDrwlqK4T35DiWuz0=
+	t=1720686634; cv=none; b=EWIFbrHnEM5aosQvYQNL5wcrcvwF0PmwdLLpsG9yi9TsVB/kOBlYVH96L9t1J6lI8DCDuDR+nv/r5IqgCXkFM5ASPzZ5LdCxaehoB0d8jVbaRsBcD2yr5SkfsRs7aSkunIsJZGXivpKHyDyjLi3mB+RCAGUiyhcfJemWjUTZBzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720686615; c=relaxed/simple;
-	bh=T6QxeXNOG7mGRftu8TEzDtC1WY+dE3pSY91xYKJ06AM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=R2OIgJP7BftoKe8gGTapQ+xvFRPf1rPuZXLh9TT74TCFTCDU1AUlb5/HYYwOAebLISN9EMltqfwfiRir+iyee3fG8Ml5i1z4+FHFtzPJZh2OGW92sYjD+rfG47schNMetk0Hgiyyo1WXGfOvum+nXFUHaDsoP6c7/+b9IF9fvZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 16D751A1BE8;
-	Thu, 11 Jul 2024 10:30:12 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AE1B91A1BEA;
-	Thu, 11 Jul 2024 10:30:11 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id C83C3183487B;
-	Thu, 11 Jul 2024 16:30:09 +0800 (+08)
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: tj@kernel.org,
-	dlemoal@kernel.org,
-	cassel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	kernel@pengutronix.de,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v1 2/4] ata: ahci_imx: Clean up code by using i.MX8Q HSIO PHY driver
-Date: Thu, 11 Jul 2024 16:11:56 +0800
-Message-Id: <1720685518-20190-3-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1720685518-20190-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1720685518-20190-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1720686634; c=relaxed/simple;
+	bh=bZyesKFce9zELj+7t/yPJwzQmBYEem0557OVXL6LDiU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O0JffrbwICSLtLFrwU7anXXkHzHycm6/Smr+jtDGsrkubQZGcgGWqmFOAHSOh2q6J0m7ibWtlriEBp0HWEPI3vOtZK0doPLEwKuGaKjeXNOacNYa+aivqhzTQTa2MeK5ZKmdzendJg4WZDYXBSon8NfygsTbULbgEv/y50tggtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wK8M+9qY; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wK8M+9qY"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-80fbf874128so171780241.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720686630; x=1721291430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1Plbddgxcb39CZNvYV5SaVXitRhAbixtLDdRVzuyCS8=;
+        b=wK8M+9qYZ6G3k9+J4/pIqOo3IXXlrG/wDau0pRkTXa4pJNhSP/N0xm4lD/aZIOjk8V
+         xAqvtFLWCsWSre3XgR7pjIriWL9/Vvm6hOKcFlLvna8BJlSoVNqPs8UBjMmU7+ejQAVO
+         5heEihK1x/YOM2h3H3Do/M5BGXavICU7wB5qLnVyQfOXNcue4V3qU+P5n32DKi7Vc1zQ
+         4quPvoWS0cjAxhqSc00t2dpUqyMnMBnfPBRT+ClFWPZNTdBNTy9ytbN3Ik0wssOm2aY6
+         PMFsu2Pt1Sj3O83IpDIMyVXK41Pn4Y5VQfX8biT5aRhEVj4S23N5tQlj3yDDPydeY9Td
+         PftA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720686630; x=1721291430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1Plbddgxcb39CZNvYV5SaVXitRhAbixtLDdRVzuyCS8=;
+        b=voIn3JiuC8zY81/XZHvGdE/1g/3Q7HY6znMqlI2QanBfuJgJjOJe/aSQrYpWwbnF7C
+         AmBdPaq6f57K6TjMusl3Ibj/WVaJHKtyFgg085cM8HMdjM0kq8vkeTtDqEwKjMslUHSg
+         0lc5LJsxvk32Wt5MUIQj64taVxjst9pmYBYwzhYfYqHQ1Ud98guA9DzKFGecBcBfHXgN
+         Ko9usymIVzaWeFWX20HnhcStwTIrnK7n38eYhGiIi6y+N2CZsck6P0q4yUgUSK91CNS/
+         mIZbNpwRjRD0/hL3AIikNkr2nTA8rcEtAN4AplSFf4ceZAXLU/d3knOb2X7Cj8ite/Xn
+         xHGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVl85+N9YZqx3f/7LF1oNHmcHkqpfMlpkmzaarLD7wTIPzOlMHrNQK6/S/AZep+XmzqTvW14hU8e72qHw6TVyo/2fPKQSDvCoiZkbOa
+X-Gm-Message-State: AOJu0YyjHEZAbcoIDlMcwo1AVAvdawz9HirwlZZZBIGjyfEfK1pgMpQw
+	q2dMscmpW0T9GEDsSoEMHZ+gebTSHRi8dGcy6drshhtvPBPnScUaTIe9cuEKWCM5FuD1+nfnz9E
+	0uJM+4H/S7gG1vWyh1Ww3U4ce6vI3oOw7o7++2w==
+X-Google-Smtp-Source: AGHT+IFFi5dTOBXLqj7pg6WGGPXbaEHrfSYHLUxdI/3u+9vG6J1QIbCQTEZFJoDgQKo3WdP3BiIlRbXq5Er0wLrmj4s=
+X-Received: by 2002:a05:6102:4187:b0:48f:dec0:b6c0 with SMTP id
+ ada2fe7eead31-490321445d8mr9678461137.3.1720686629955; Thu, 11 Jul 2024
+ 01:30:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240709110708.903245467@linuxfoundation.org> <CA+G9fYsqkB4=pVZyELyj3YqUc9jXFfgNULsPk9t8q-+P1w_G6A@mail.gmail.com>
+In-Reply-To: <CA+G9fYsqkB4=pVZyELyj3YqUc9jXFfgNULsPk9t8q-+P1w_G6A@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 11 Jul 2024 14:00:17 +0530
+Message-ID: <CA+G9fYu=_8vT95Q0MQzzTcCr+RTdMi=6MdSN7Cwo=C215VE1fQ@mail.gmail.com>
+Subject: Re: [PATCH 6.9 000/197] 6.9.9-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org, Anders Roxell <anders.roxell@linaro.org>, 
+	Mike Christie <michael.christie@oracle.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	rcu <rcu@vger.kernel.org>, gnstark@salutedevices.com, 
+	linux-mm <linux-mm@kvack.org>, Jinliang Zheng <alexjlzheng@tencent.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Brendan Higgins <brendanhiggins@google.com>, "Eric W. Biederman" <ebiederm@xmission.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Clean up code by using PHY interface.
+On Wed, 10 Jul 2024 at 08:41, Naresh Kamboju <naresh.kamboju@linaro.org> wr=
+ote:
+>
+> On Tue, 9 Jul 2024 at 16:49, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 6.9.9 release.
+> > There are 197 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 11 Jul 2024 11:06:25 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patc=
+h-6.9.9-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git linux-6.9.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> Results from Linaro=E2=80=99s test farm.
+> The following kernel panic was noticed while running kunit tests.
+>
+> First seen on
+> git commit id: 2471237b27c681c22e5f2b7175584aa7d5c89bfc
+> date: on July 9th 2024.
+>
+>   GOOD: v6.9.7-223-g03247eed042d
+>   BAD: v6.9.8-198-g2471237b27c6
+>
+> Always reproduce: yes.
+>
+> * qemu-arm64, Juno-r2, rk3399-rock-pi-4b and qemu-x86_64 the kunit-boot f=
+ailed.
+>   - gcc-13-defconfig-kunit
+>   - clang-18-defconfig-kunit
+>   - clang-nightly-defconfig-kunit
+>   - gcc-8-defconfig-kunit
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Crash log [1]:
+> ---------
+> <4>[ 63.601683] kernel_init_freeable (init/main.c:1559)
+> <4>[ 63.602335] kernel_init (init/main.c:1446)
+> <4>[ 63.602980] ret_from_fork (arch/arm64/kernel/entry.S:861)
+> <3>[   63.603703]
+> <3>[   63.604057] The buggy address belongs to the object at fff00000c075=
+82e8
+> <3>[   63.604057]  which belongs to the cache inode_cache of size 616
+> <3>[   63.605281] The buggy address is located 80 bytes to the right of
+> <3>[   63.605281]  allocated 616-byte region [fff00000c07582e8,
+> fff00000c0758550)
+> <3>[   63.606592]
+> <3>[   63.607294] The buggy address belongs to the physical page:
+> <4>[   63.607948] page: refcount:1 mapcount:0 mapping:0000000000000000
+> index:0x0 pfn:0x100758
+> <4>[   63.608830] head: order:2 entire_mapcount:0 nr_pages_mapped:0 pinco=
+unt:0
+> <4>[   63.609593] flags:
+> 0xbfffe0000000840(slab|head|node=3D0|zone=3D2|lastcpupid=3D0x1ffff)
+> <4>[   63.610449] page_type: 0xffffffff()
+> <4>[   63.611934] raw: 0bfffe0000000840 fff00000c08d2dc0
+> dead000000000122 0000000000000000
+> <4>[   63.612810] raw: 0000000000000000 0000000080160016
+> 00000001ffffffff 0000000000000000
+> <4>[   63.613668] head: 0bfffe0000000840 fff00000c08d2dc0
+> dead000000000122 0000000000000000
+> <4>[   63.614525] head: 0000000000000000 0000000080160016
+> 00000001ffffffff 0000000000000000
+> <4>[   63.615694] head: 0bfffe0000000002 ffffc1ffc301d601
+> ffffc1ffc301d648 00000000ffffffff
+> <4>[   63.616583] head: 0000000400000000 0000000000000000
+> 00000000ffffffff 0000000000000000
+> <4>[   63.617391] page dumped because: kasan: bad access detected
+> <3>[   63.618034]
+> <3>[   63.618354] Memory state around the buggy address:
+> <3>[   63.619281]  fff00000c0758480: 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00
+> <3>[   63.620086]  fff00000c0758500: 00 00 00 00 00 00 00 00 00 00 fc
+> fc fc fc fc fc
+> <3>[   63.620886] >fff00000c0758580: fc fc fc fc fc fc fc fc fc fc 00
+> 00 00 00 00 00
+> <3>[   63.621664]                                ^
+> <3>[   63.622235]  fff00000c0758600: 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00
+> <3>[   63.623362]  fff00000c0758680: 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00
+> <3>[   63.624138]
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> <6>[   63.645148]         not ok 1 block_bits=3D10 cluster_bits=3D3
+> blocks_per_group=3D8192 group_count=3D4 desc_size=3D64
+> <6>[   63.658504]         ok 2 block_bits=3D12 cluster_bits=3D3
+> blocks_per_group=3D8192 group_count=3D4 desc_size=3D64
+> <1>[   63.674531] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000008
+> <1>[   63.675691] Mem abort info:
+> <1>[   63.676527]   ESR =3D 0x000000009600006b
+> <1>[   63.677658]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> <1>[   63.678274]   SET =3D 0, FnV =3D 0
+> <1>[   63.678906]   EA =3D 0, S1PTW =3D 0
+> <1>[   63.679880]   FSC =3D 0x2b: level -1 translation fault
+> <1>[   63.680879] Data abort info:
+> <1>[   63.681606]   ISV =3D 0, ISS =3D 0x0000006b, ISS2 =3D 0x00000000
+> <1>[   63.682544]   CM =3D 0, WnR =3D 1, TnD =3D 0, TagAccess =3D 0
+> <1>[   63.683493]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> <1>[   63.684732] [0000000000000008] user address but active_mm is swappe=
+r
+> <0>[   63.686080] Internal error: Oops: 000000009600006b [#1] PREEMPT SMP
+> <4>[   63.688843] Modules linked in:
+> <4>[   63.689662] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
+>     N 6.9.9-rc1 #1
+> <4>[   63.690522] Hardware name: linux,dummy-virt (DT)
+> <4>[   63.691532] pstate: 224000c9 (nzCv daIF +PAN -UAO +TCO -DIT
+> -SSBS BTYPE=3D--)
+> <4>[ 63.692423] pc : _raw_spin_lock_irq
+> (arch/arm64/include/asm/atomic_lse.h:271
+> arch/arm64/include/asm/cmpxchg.h:120
+> arch/arm64/include/asm/cmpxchg.h:169
+> include/linux/atomic/atomic-arch-fallback.h:2055
+> include/linux/atomic/atomic-arch-fallback.h:2173
+> include/linux/atomic/atomic-instrumented.h:1302
+> include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187
+> include/linux/spinlock_api_smp.h:120 kernel/locking/spinlock.c:170)
+> <4>[ 63.693097] lr : _raw_spin_lock_irq
+> (include/linux/atomic/atomic-arch-fallback.h:2172 (discriminator 1)
+> include/linux/atomic/atomic-instrumented.h:1302 (discriminator 1)
+> include/asm-generic/qspinlock.h:111 (discriminator 1)
+> include/linux/spinlock.h:187 (discriminator 1)
+> include/linux/spinlock_api_smp.h:120 (discriminator 1)
+> kernel/locking/spinlock.c:170 (discriminator 1))
+> <4>[   63.693714] sp : ffff800080087620
+> <4>[   63.694519] x29: ffff800080087680 x28: 1ffff00010010f45 x27:
+> ffff800080087a20
+> <4>[   63.696315] x26: 1ffff00010010f47 x25: ffff800080087a00 x24:
+> fff00000c99f0028
+> <4>[   63.697334] x23: 0000000000000000 x22: dfff800000000000 x21:
+> ffff800080087640
+> <4>[   63.698333] x20: 1ffff00010010ec4 x19: 0000000000000008 x18:
+> 000000004b9fd0a9
+> <4>[   63.699711] x17: 0000000000000000 x16: fff00000da13e180 x15:
+> ffffaa8e3330c4c4
+> <4>[   63.700732] x14: ffffaa8e33312508 x13: ffffaa8e3583b0ec x12:
+> ffff700010010ec9
+> <4>[   63.701734] x11: 1ffff00010010ec8 x10: ffff700010010ec8 x9 :
+> dfff800000000000
+> <4>[   63.702792] x8 : 0000000000000003 x7 : 0000000000000001 x6 :
+> ffff700010010ec8
+> <4>[   63.704539] x5 : ffff800080087640 x4 : ffff700010010ec8 x3 :
+> ffffaa8e3585c520
+> <4>[   63.705529] x2 : 0000000000000001 x1 : 0000000000000000 x0 :
+> 0000000000000000
+> <4>[   63.706625] Call trace:
+> <4>[ 63.707408] _raw_spin_lock_irq
+> (arch/arm64/include/asm/atomic_lse.h:271
+> arch/arm64/include/asm/cmpxchg.h:120
+> arch/arm64/include/asm/cmpxchg.h:169
+> include/linux/atomic/atomic-arch-fallback.h:2055
+> include/linux/atomic/atomic-arch-fallback.h:2173
+> include/linux/atomic/atomic-instrumented.h:1302
+> include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187
+> include/linux/spinlock_api_smp.h:120 kernel/locking/spinlock.c:170)
+> <4>[ 63.708130] wait_for_completion_timeout
+> (kernel/sched/completion.c:84 kernel/sched/completion.c:116
+> kernel/sched/completion.c:127 kernel/sched/completion.c:167)
+> <4>[ 63.708902] kunit_try_catch_run (lib/kunit/try-catch.c:85)
+> <4>[ 63.709710] kunit_run_case_catch_errors (lib/kunit/test.c:544)
+> <4>[ 63.710558] kunit_run_tests (lib/kunit/test.c:649)
+> <4>[ 63.711555] __kunit_test_suites_init (lib/kunit/test.c:732
+> (discriminator 1))
+> <4>[ 63.712489] kunit_run_all_tests (lib/kunit/executor.c:276
+> lib/kunit/executor.c:392)
+> <4>[ 63.713317] kernel_init_freeable (init/main.c:1559)
+> <4>[ 63.713971] kernel_init (init/main.c:1446)
+> <4>[ 63.714503] ret_from_fork (arch/arm64/kernel/entry.S:861)
+> <0>[ 63.716154] Code: 93407c02 d503201f 2a0003e1 52800022 (88e17e62)
+> All code
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>    0: 93407c02 sxtw x2, w0
+>    4: d503201f nop
+>    8: 2a0003e1 mov w1, w0
+>    c: 52800022 mov w2, #0x1                    // #1
+>   10:* 88e17e62 casa w1, w2, [x19] <-- trapping instruction
+>
+> Code starting with the faulting instruction
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>    0: 88e17e62 casa w1, w2, [x19]
+> <4>[   63.717705] ---[ end trace 0000000000000000 ]---
+> <6>[   63.718649] note: swapper/0[1] exited with irqs disabled
+> <6>[   63.720758] note: swapper/0[1] exited with preempt_count 1
+> <0>[   63.722091] Kernel panic - not syncing: Attempted to kill init!
+> exitcode=3D0x0000000b
+> <2>[   63.724608] SMP: stopping secondary CPUs
+> <0>[   63.725877] Kernel Offset: 0x2a8db2200000 from 0xffff800080000000
+> <0>[   63.726534] PHYS_OFFSET: 0x40000000
+> <0>[   63.727664] CPU features: 0x0,00000006,8f17bd7c,6766773f
+> <0>[   63.729291] Memory Limit: none
+> <0>[   63.731074] ---[ end Kernel panic - not syncing: Attempted to
+> kill init! exitcode=3D0x0000000b ]---
+>
+> Steps to reproduce on qemu-arm64 link provided [2].
+> Build artifacts arm64 link provided [3].
+> The Kconfig is built with defconfig+Kunit and the config link provided [4=
+].
+> This occurred on following Toolchain builds gcc-13, clang-18,
+> clang-nightly and gcc-8.
+>
+> Reproducible always on following devices and emulators,
+>  * rk3399-rock-pi-4b
+>  * qemu-arm64
+>  * qemu-x86_64
+>
+> I am bisecting this reported issue.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/ata/ahci_imx.c | 394 ++++++++++-------------------------------
- 1 file changed, 98 insertions(+), 296 deletions(-)
+Anders, bisected this issue and found this as the first bad commit and afte=
+r
+reverting this patch the boot pass and kernel panic were not found.
 
-diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c
-index cb768f66f0a70..0e9fddd02ee5f 100644
---- a/drivers/ata/ahci_imx.c
-+++ b/drivers/ata/ahci_imx.c
-@@ -19,6 +19,7 @@
- #include <linux/libata.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
-+#include <linux/phy/phy.h>
- #include <linux/thermal.h>
- #include "ahci.h"
- 
-@@ -44,42 +45,6 @@ enum {
- 	/* Clock Reset Register */
- 	IMX_CLOCK_RESET				= 0x7f3f,
- 	IMX_CLOCK_RESET_RESET			= 1 << 0,
--	/* IMX8QM HSIO AHCI definitions */
--	IMX8QM_SATA_PHY_RX_IMPED_RATIO_OFFSET	= 0x03,
--	IMX8QM_SATA_PHY_TX_IMPED_RATIO_OFFSET	= 0x09,
--	IMX8QM_SATA_PHY_IMPED_RATIO_85OHM	= 0x6c,
--	IMX8QM_LPCG_PHYX2_OFFSET		= 0x00000,
--	IMX8QM_CSR_PHYX2_OFFSET			= 0x90000,
--	IMX8QM_CSR_PHYX1_OFFSET			= 0xa0000,
--	IMX8QM_CSR_PHYX_STTS0_OFFSET		= 0x4,
--	IMX8QM_CSR_PCIEA_OFFSET			= 0xb0000,
--	IMX8QM_CSR_PCIEB_OFFSET			= 0xc0000,
--	IMX8QM_CSR_SATA_OFFSET			= 0xd0000,
--	IMX8QM_CSR_PCIE_CTRL2_OFFSET		= 0x8,
--	IMX8QM_CSR_MISC_OFFSET			= 0xe0000,
--
--	IMX8QM_LPCG_PHYX2_PCLK0_MASK		= (0x3 << 16),
--	IMX8QM_LPCG_PHYX2_PCLK1_MASK		= (0x3 << 20),
--	IMX8QM_PHY_APB_RSTN_0			= BIT(0),
--	IMX8QM_PHY_MODE_SATA			= BIT(19),
--	IMX8QM_PHY_MODE_MASK			= (0xf << 17),
--	IMX8QM_PHY_PIPE_RSTN_0			= BIT(24),
--	IMX8QM_PHY_PIPE_RSTN_OVERRIDE_0		= BIT(25),
--	IMX8QM_PHY_PIPE_RSTN_1			= BIT(26),
--	IMX8QM_PHY_PIPE_RSTN_OVERRIDE_1		= BIT(27),
--	IMX8QM_STTS0_LANE0_TX_PLL_LOCK		= BIT(4),
--	IMX8QM_MISC_IOB_RXENA			= BIT(0),
--	IMX8QM_MISC_IOB_TXENA			= BIT(1),
--	IMX8QM_MISC_PHYX1_EPCS_SEL		= BIT(12),
--	IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_1	= BIT(24),
--	IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_0	= BIT(25),
--	IMX8QM_MISC_CLKREQN_IN_OVERRIDE_1	= BIT(28),
--	IMX8QM_MISC_CLKREQN_IN_OVERRIDE_0	= BIT(29),
--	IMX8QM_SATA_CTRL_RESET_N		= BIT(12),
--	IMX8QM_SATA_CTRL_EPCS_PHYRESET_N	= BIT(7),
--	IMX8QM_CTRL_BUTTON_RST_N		= BIT(21),
--	IMX8QM_CTRL_POWER_UP_RST_N		= BIT(23),
--	IMX8QM_CTRL_LTSSM_ENABLE		= BIT(4),
- };
- 
- enum ahci_imx_type {
-@@ -95,14 +60,10 @@ struct imx_ahci_priv {
- 	struct clk *sata_clk;
- 	struct clk *sata_ref_clk;
- 	struct clk *ahb_clk;
--	struct clk *epcs_tx_clk;
--	struct clk *epcs_rx_clk;
--	struct clk *phy_apbclk;
--	struct clk *phy_pclk0;
--	struct clk *phy_pclk1;
--	void __iomem *phy_base;
--	struct gpio_desc *clkreq_gpiod;
- 	struct regmap *gpr;
-+	struct phy *sata_phy;
-+	struct phy *cali_phy0;
-+	struct phy *cali_phy1;
- 	bool no_device;
- 	bool first_time;
- 	u32 phy_params;
-@@ -450,201 +411,73 @@ ATTRIBUTE_GROUPS(fsl_sata_ahci);
- 
- static int imx8_sata_enable(struct ahci_host_priv *hpriv)
- {
--	u32 val, reg;
--	int i, ret;
-+	u32 val;
-+	int ret;
- 	struct imx_ahci_priv *imxpriv = hpriv->plat_data;
- 	struct device *dev = &imxpriv->ahci_pdev->dev;
- 
--	/* configure the hsio for sata */
--	ret = clk_prepare_enable(imxpriv->phy_pclk0);
--	if (ret < 0) {
--		dev_err(dev, "can't enable phy_pclk0.\n");
-+	/*
-+	 * Since "REXT" pin is only present for first lane of i.MX8QM
-+	 * PHY, it's calibration results will be stored, passed
-+	 * through second lane PHY, and shared with all three lane PHYs.
-+	 *
-+	 * Initialize the first two lane PHYs here, although only the
-+	 * third lane PHY is used by SATA.
-+	 */
-+	ret = phy_init(imxpriv->cali_phy0);
-+	if (ret) {
-+		dev_err(dev, "cali PHY init failed\n");
- 		return ret;
- 	}
--	ret = clk_prepare_enable(imxpriv->phy_pclk1);
--	if (ret < 0) {
--		dev_err(dev, "can't enable phy_pclk1.\n");
--		goto disable_phy_pclk0;
-+	ret = phy_power_on(imxpriv->cali_phy0);
-+	if (ret) {
-+		dev_err(dev, "cali PHY power on failed\n");
-+		goto err_cali_phy0_power_on;
- 	}
--	ret = clk_prepare_enable(imxpriv->epcs_tx_clk);
--	if (ret < 0) {
--		dev_err(dev, "can't enable epcs_tx_clk.\n");
--		goto disable_phy_pclk1;
-+	ret = phy_init(imxpriv->cali_phy1);
-+	if (ret) {
-+		dev_err(dev, "cali PHY1 init failed\n");
-+		goto err_cali_phy1_init;
- 	}
--	ret = clk_prepare_enable(imxpriv->epcs_rx_clk);
--	if (ret < 0) {
--		dev_err(dev, "can't enable epcs_rx_clk.\n");
--		goto disable_epcs_tx_clk;
-+	ret = phy_power_on(imxpriv->cali_phy1);
-+	if (ret) {
-+		dev_err(dev, "cali PHY1 power on failed\n");
-+		goto err_cali_phy1_power_on;
- 	}
--	ret = clk_prepare_enable(imxpriv->phy_apbclk);
--	if (ret < 0) {
--		dev_err(dev, "can't enable phy_apbclk.\n");
--		goto disable_epcs_rx_clk;
-+	ret = phy_init(imxpriv->sata_phy);
-+	if (ret) {
-+		dev_err(dev, "sata PHY init failed\n");
-+		goto err_sata_phy_init;
- 	}
--	/* Configure PHYx2 PIPE_RSTN */
--	regmap_read(imxpriv->gpr, IMX8QM_CSR_PCIEA_OFFSET +
--			IMX8QM_CSR_PCIE_CTRL2_OFFSET, &val);
--	if ((val & IMX8QM_CTRL_LTSSM_ENABLE) == 0) {
--		/* The link of the PCIEA of HSIO is down */
--		regmap_update_bits(imxpriv->gpr,
--				IMX8QM_CSR_PHYX2_OFFSET,
--				IMX8QM_PHY_PIPE_RSTN_0 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_0,
--				IMX8QM_PHY_PIPE_RSTN_0 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_0);
-+	ret = phy_set_mode(imxpriv->sata_phy, PHY_MODE_SATA);
-+	if (ret) {
-+		dev_err(dev, "unable to set SATA PHY mode\n");
-+		goto err_sata_phy_power_on;
- 	}
--	regmap_read(imxpriv->gpr, IMX8QM_CSR_PCIEB_OFFSET +
--			IMX8QM_CSR_PCIE_CTRL2_OFFSET, &reg);
--	if ((reg & IMX8QM_CTRL_LTSSM_ENABLE) == 0) {
--		/* The link of the PCIEB of HSIO is down */
--		regmap_update_bits(imxpriv->gpr,
--				IMX8QM_CSR_PHYX2_OFFSET,
--				IMX8QM_PHY_PIPE_RSTN_1 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_1,
--				IMX8QM_PHY_PIPE_RSTN_1 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_1);
-+	ret = phy_power_on(imxpriv->sata_phy);
-+	if (ret) {
-+		dev_err(dev, "sata PHY power up failed\n");
-+		goto err_sata_phy_power_on;
- 	}
--	if (((reg | val) & IMX8QM_CTRL_LTSSM_ENABLE) == 0) {
--		/* The links of both PCIA and PCIEB of HSIO are down */
--		regmap_update_bits(imxpriv->gpr,
--				IMX8QM_LPCG_PHYX2_OFFSET,
--				IMX8QM_LPCG_PHYX2_PCLK0_MASK |
--				IMX8QM_LPCG_PHYX2_PCLK1_MASK,
--				0);
--	}
--
--	/* set PWR_RST and BT_RST of csr_pciea */
--	val = IMX8QM_CSR_PCIEA_OFFSET + IMX8QM_CSR_PCIE_CTRL2_OFFSET;
--	regmap_update_bits(imxpriv->gpr,
--			val,
--			IMX8QM_CTRL_BUTTON_RST_N,
--			IMX8QM_CTRL_BUTTON_RST_N);
--	regmap_update_bits(imxpriv->gpr,
--			val,
--			IMX8QM_CTRL_POWER_UP_RST_N,
--			IMX8QM_CTRL_POWER_UP_RST_N);
--
--	/* PHYX1_MODE to SATA */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_PHYX1_OFFSET,
--			IMX8QM_PHY_MODE_MASK,
--			IMX8QM_PHY_MODE_SATA);
- 
--	/*
--	 * BIT0 RXENA 1, BIT1 TXENA 0
--	 * BIT12 PHY_X1_EPCS_SEL 1.
--	 */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_IOB_RXENA,
--			IMX8QM_MISC_IOB_RXENA);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_IOB_TXENA,
--			0);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_PHYX1_EPCS_SEL,
--			IMX8QM_MISC_PHYX1_EPCS_SEL);
--	/*
--	 * It is possible, for PCIe and SATA are sharing
--	 * the same clock source, HPLL or external oscillator.
--	 * When PCIe is in low power modes (L1.X or L2 etc),
--	 * the clock source can be turned off. In this case,
--	 * if this clock source is required to be toggling by
--	 * SATA, then SATA functions will be abnormal.
--	 * Set the override here to avoid it.
--	 */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_0 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_0,
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_0 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_0);
--
--	/* clear PHY RST, then set it */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_EPCS_PHYRESET_N,
--			0);
--
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_EPCS_PHYRESET_N,
--			IMX8QM_SATA_CTRL_EPCS_PHYRESET_N);
--
--	/* CTRL RST: SET -> delay 1 us -> CLEAR -> SET */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_RESET_N,
--			IMX8QM_SATA_CTRL_RESET_N);
--	udelay(1);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_RESET_N,
--			0);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_RESET_N,
--			IMX8QM_SATA_CTRL_RESET_N);
--
--	/* APB reset */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_PHYX1_OFFSET,
--			IMX8QM_PHY_APB_RSTN_0,
--			IMX8QM_PHY_APB_RSTN_0);
--
--	for (i = 0; i < 100; i++) {
--		reg = IMX8QM_CSR_PHYX1_OFFSET +
--			IMX8QM_CSR_PHYX_STTS0_OFFSET;
--		regmap_read(imxpriv->gpr, reg, &val);
--		val &= IMX8QM_STTS0_LANE0_TX_PLL_LOCK;
--		if (val == IMX8QM_STTS0_LANE0_TX_PLL_LOCK)
--			break;
--		udelay(1);
--	}
-+	/* The cali_phy# can be turned off after SATA PHY is initialized. */
-+	phy_power_off(imxpriv->cali_phy1);
-+	phy_exit(imxpriv->cali_phy1);
-+	phy_power_off(imxpriv->cali_phy0);
-+	phy_exit(imxpriv->cali_phy0);
- 
--	if (val != IMX8QM_STTS0_LANE0_TX_PLL_LOCK) {
--		dev_err(dev, "TX PLL of the PHY is not locked\n");
--		ret = -ENODEV;
--	} else {
--		writeb(imxpriv->imped_ratio, imxpriv->phy_base +
--				IMX8QM_SATA_PHY_RX_IMPED_RATIO_OFFSET);
--		writeb(imxpriv->imped_ratio, imxpriv->phy_base +
--				IMX8QM_SATA_PHY_TX_IMPED_RATIO_OFFSET);
--		reg = readb(imxpriv->phy_base +
--				IMX8QM_SATA_PHY_RX_IMPED_RATIO_OFFSET);
--		if (unlikely(reg != imxpriv->imped_ratio))
--			dev_info(dev, "Can't set PHY RX impedance ratio.\n");
--		reg = readb(imxpriv->phy_base +
--				IMX8QM_SATA_PHY_TX_IMPED_RATIO_OFFSET);
--		if (unlikely(reg != imxpriv->imped_ratio))
--			dev_info(dev, "Can't set PHY TX impedance ratio.\n");
--		usleep_range(50, 100);
--
--		/*
--		 * To reduce the power consumption, gate off
--		 * the PHY clks
--		 */
--		clk_disable_unprepare(imxpriv->phy_apbclk);
--		clk_disable_unprepare(imxpriv->phy_pclk1);
--		clk_disable_unprepare(imxpriv->phy_pclk0);
--		return ret;
--	}
-+	return 0;
- 
--	clk_disable_unprepare(imxpriv->phy_apbclk);
--disable_epcs_rx_clk:
--	clk_disable_unprepare(imxpriv->epcs_rx_clk);
--disable_epcs_tx_clk:
--	clk_disable_unprepare(imxpriv->epcs_tx_clk);
--disable_phy_pclk1:
--	clk_disable_unprepare(imxpriv->phy_pclk1);
--disable_phy_pclk0:
--	clk_disable_unprepare(imxpriv->phy_pclk0);
-+err_sata_phy_power_on:
-+	phy_exit(imxpriv->sata_phy);
-+err_sata_phy_init:
-+	phy_power_off(imxpriv->cali_phy1);
-+err_cali_phy1_power_on:
-+	phy_exit(imxpriv->cali_phy1);
-+err_cali_phy1_init:
-+	phy_power_off(imxpriv->cali_phy0);
-+err_cali_phy0_power_on:
-+	phy_exit(imxpriv->cali_phy0);
- 
- 	return ret;
- }
-@@ -698,6 +531,9 @@ static int imx_sata_enable(struct ahci_host_priv *hpriv)
- 		}
- 	} else if (imxpriv->type == AHCI_IMX8QM) {
- 		ret = imx8_sata_enable(hpriv);
-+		if (ret)
-+			goto disable_clk;
-+
- 	}
- 
- 	usleep_range(1000, 2000);
-@@ -736,8 +572,10 @@ static void imx_sata_disable(struct ahci_host_priv *hpriv)
- 		break;
- 
- 	case AHCI_IMX8QM:
--		clk_disable_unprepare(imxpriv->epcs_rx_clk);
--		clk_disable_unprepare(imxpriv->epcs_tx_clk);
-+		if (imxpriv->sata_phy) {
-+			phy_power_off(imxpriv->sata_phy);
-+			phy_exit(imxpriv->sata_phy);
-+		}
- 		break;
- 
- 	default:
-@@ -760,6 +598,9 @@ static void ahci_imx_error_handler(struct ata_port *ap)
- 
- 	ahci_error_handler(ap);
- 
-+	if (imxpriv->type == AHCI_IMX8QM)
-+		return;
-+
- 	if (!(imxpriv->first_time) || ahci_imx_hotplug)
- 		return;
- 
-@@ -986,65 +827,24 @@ static const struct scsi_host_template ahci_platform_sht = {
- 
- static int imx8_sata_probe(struct device *dev, struct imx_ahci_priv *imxpriv)
- {
--	struct resource *phy_res;
--	struct platform_device *pdev = imxpriv->ahci_pdev;
--	struct device_node *np = dev->of_node;
--
--	if (of_property_read_u32(np, "fsl,phy-imp", &imxpriv->imped_ratio))
--		imxpriv->imped_ratio = IMX8QM_SATA_PHY_IMPED_RATIO_85OHM;
--	phy_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
--	if (phy_res) {
--		imxpriv->phy_base = devm_ioremap(dev, phy_res->start,
--					resource_size(phy_res));
--		if (!imxpriv->phy_base) {
--			dev_err(dev, "error with ioremap\n");
--			return -ENOMEM;
--		}
--	} else {
--		dev_err(dev, "missing *phy* reg region.\n");
--		return -ENOMEM;
--	}
--	imxpriv->gpr =
--		 syscon_regmap_lookup_by_phandle(np, "hsio");
--	if (IS_ERR(imxpriv->gpr)) {
--		dev_err(dev, "unable to find gpr registers\n");
--		return PTR_ERR(imxpriv->gpr);
--	}
--
--	imxpriv->epcs_tx_clk = devm_clk_get(dev, "epcs_tx");
--	if (IS_ERR(imxpriv->epcs_tx_clk)) {
--		dev_err(dev, "can't get epcs_tx_clk clock.\n");
--		return PTR_ERR(imxpriv->epcs_tx_clk);
--	}
--	imxpriv->epcs_rx_clk = devm_clk_get(dev, "epcs_rx");
--	if (IS_ERR(imxpriv->epcs_rx_clk)) {
--		dev_err(dev, "can't get epcs_rx_clk clock.\n");
--		return PTR_ERR(imxpriv->epcs_rx_clk);
--	}
--	imxpriv->phy_pclk0 = devm_clk_get(dev, "phy_pclk0");
--	if (IS_ERR(imxpriv->phy_pclk0)) {
--		dev_err(dev, "can't get phy_pclk0 clock.\n");
--		return PTR_ERR(imxpriv->phy_pclk0);
--	}
--	imxpriv->phy_pclk1 = devm_clk_get(dev, "phy_pclk1");
--	if (IS_ERR(imxpriv->phy_pclk1)) {
--		dev_err(dev, "can't get phy_pclk1 clock.\n");
--		return PTR_ERR(imxpriv->phy_pclk1);
--	}
--	imxpriv->phy_apbclk = devm_clk_get(dev, "phy_apbclk");
--	if (IS_ERR(imxpriv->phy_apbclk)) {
--		dev_err(dev, "can't get phy_apbclk clock.\n");
--		return PTR_ERR(imxpriv->phy_apbclk);
-+	if (!(dev->bus_dma_limit)) {
-+		dev->bus_dma_limit = DMA_BIT_MASK(32);
-+		dev_dbg(dev, "imx8qm sata only supports 32bit dma.\n");
- 	}
- 
--	/* Fetch GPIO, then enable the external OSC */
--	imxpriv->clkreq_gpiod = devm_gpiod_get_optional(dev, "clkreq",
--				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
--	if (IS_ERR(imxpriv->clkreq_gpiod))
--		return PTR_ERR(imxpriv->clkreq_gpiod);
--	if (imxpriv->clkreq_gpiod)
--		gpiod_set_consumer_name(imxpriv->clkreq_gpiod, "SATA CLKREQ");
--
-+	imxpriv->sata_phy = devm_phy_get(dev, "sata-phy");
-+	if (IS_ERR(imxpriv->sata_phy))
-+		return dev_err_probe(dev, PTR_ERR(imxpriv->sata_phy),
-+				     "failed to get sata_phy\n");
-+
-+	imxpriv->cali_phy0 = devm_phy_get(dev, "cali-phy0");
-+	if (IS_ERR(imxpriv->cali_phy0))
-+		return dev_err_probe(dev, PTR_ERR(imxpriv->cali_phy0),
-+				     "failed to get cali_phy0\n");
-+	imxpriv->cali_phy1 = devm_phy_get(dev, "cali-phy1");
-+	if (IS_ERR(imxpriv->cali_phy1))
-+		return dev_err_probe(dev, PTR_ERR(imxpriv->cali_phy1),
-+				     "failed to get cali_phy1\n");
- 	return 0;
- }
- 
-@@ -1077,12 +877,6 @@ static int imx_ahci_probe(struct platform_device *pdev)
- 		return PTR_ERR(imxpriv->sata_ref_clk);
- 	}
- 
--	imxpriv->ahb_clk = devm_clk_get(dev, "ahb");
--	if (IS_ERR(imxpriv->ahb_clk)) {
--		dev_err(dev, "can't get ahb clock.\n");
--		return PTR_ERR(imxpriv->ahb_clk);
--	}
--
- 	if (imxpriv->type == AHCI_IMX6Q || imxpriv->type == AHCI_IMX6QP) {
- 		u32 reg_value;
- 
-@@ -1142,11 +936,8 @@ static int imx_ahci_probe(struct platform_device *pdev)
- 		goto disable_clk;
- 
- 	/*
--	 * Configure the HWINIT bits of the HOST_CAP and HOST_PORTS_IMPL,
--	 * and IP vendor specific register IMX_TIMER1MS.
--	 * Configure CAP_SSS (support stagered spin up).
--	 * Implement the port0.
--	 * Get the ahb clock rate, and configure the TIMER1MS register.
-+	 * Configure the HWINIT bits of the HOST_CAP and HOST_PORTS_IMPL.
-+	 * Set CAP_SSS (support stagered spin up) and Implement the port0.
- 	 */
- 	reg_val = readl(hpriv->mmio + HOST_CAP);
- 	if (!(reg_val & HOST_CAP_SSS)) {
-@@ -1159,8 +950,19 @@ static int imx_ahci_probe(struct platform_device *pdev)
- 		writel(reg_val, hpriv->mmio + HOST_PORTS_IMPL);
- 	}
- 
--	reg_val = clk_get_rate(imxpriv->ahb_clk) / 1000;
--	writel(reg_val, hpriv->mmio + IMX_TIMER1MS);
-+	if (imxpriv->type != AHCI_IMX8QM) {
-+		/*
-+		 * Get AHB clock rate and configure the vendor specified
-+		 * TIMER1MS register on i.MX53, i.MX6Q and i.MX6QP only.
-+		 */
-+		imxpriv->ahb_clk = devm_clk_get(dev, "ahb");
-+		if (IS_ERR(imxpriv->ahb_clk)) {
-+			dev_err(dev, "can't get ahb clock.\n");
-+			goto disable_sata;
-+		}
-+		reg_val = clk_get_rate(imxpriv->ahb_clk) / 1000;
-+		writel(reg_val, hpriv->mmio + IMX_TIMER1MS);
-+	}
- 
- 	ret = ahci_platform_init_host(pdev, hpriv, &ahci_imx_port_info,
- 				      &ahci_platform_sht);
--- 
-2.37.1
+# first bad commit: [6b91f756f49a16223085b38cedb7e297d134d64d]
+    kunit: Handle test faults
+    [ Upstream commit 3a35c13007dea132a65f07de05c26b87837fadc2 ]
 
+
+> Please let me know if you need more information.
+>
+> Links:
+> [1] https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.9.y/build/=
+v6.9.8-198-g2471237b27c6/testrun/24552495/suite/boot/test/gcc-13-lkftconfig=
+-kunit/log
+> [2] https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2j0Y=
+CwfoW0D9nrPUAeDspHG0iFE/reproducer
+> [3] https://storage.tuxsuite.com/public/linaro/lkft/builds/2j0Y8lX6zRNGTi=
+GTZmteMwzwHj2/
+> [4] https://storage.tuxsuite.com/public/linaro/lkft/builds/2j0Y8lX6zRNGTi=
+GTZmteMwzwHj2/config
+
+
+Bisection log:
+------
+$ git bisect log
+# bad: [6ced42af8b2d3a7dfca7121f6f01b19aa818eeab] Linux 6.9.9-rc1
+# good: [2106717b5214895a29c038b37f15d78a3202aa2b] Linux 6.9.8
+git bisect start 'stable-rc/linux-6.9.y' 'v6.9.8'
+# bad: [30dbb09f028b3de9e304e3ab0bbf123613d6b61f] KVM: s390: fix LPSWEY han=
+dling
+git bisect bad 30dbb09f028b3de9e304e3ab0bbf123613d6b61f
+# good: [81d79946a4623d2d2ce21e68ccd1e9997119e8ff]
+thermal/drivers/mediatek/lvts_thermal: Check NULL ptr on lvts_data
+git bisect good 81d79946a4623d2d2ce21e68ccd1e9997119e8ff
+# bad: [9a2f3e9cd7906c3dc5eebcc1d981c3403c742ea7] s390/pkey: Wipe
+sensitive data on failure
+git bisect bad 9a2f3e9cd7906c3dc5eebcc1d981c3403c742ea7
+# good: [1b4c766b624614df4deaf51d20dc596859ec8254] orangefs: fix
+out-of-bounds fsid access
+git bisect good 1b4c766b624614df4deaf51d20dc596859ec8254
+# bad: [867bfb350f89b328fe30537afda02fe4c4ae23f5] bpf: Avoid
+uninitialized value in BPF_CORE_READ_BITFIELD
+git bisect bad 867bfb350f89b328fe30537afda02fe4c4ae23f5
+# bad: [18363e5c5cbf3c51d0d857e4b9706674cbfd5a96] powerpc/xmon: Check
+cpu id in commands "c#", "dp#" and "dx#"
+git bisect bad 18363e5c5cbf3c51d0d857e4b9706674cbfd5a96
+# bad: [6b91f756f49a16223085b38cedb7e297d134d64d] kunit: Handle test faults
+git bisect bad 6b91f756f49a16223085b38cedb7e297d134d64d
+# good: [3bbd81663033fa72cac3a867e5284b925b445ad6] kunit: Fix timeout messa=
+ge
+git bisect good 3bbd81663033fa72cac3a867e5284b925b445ad6
+# first bad commit: [6b91f756f49a16223085b38cedb7e297d134d64d] kunit:
+Handle test faults
+
+-  Naresh
