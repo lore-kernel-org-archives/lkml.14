@@ -1,81 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E801161314
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C956D14BFA2;
+	Thu, 11 Jul 2024 14:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720706395; cv=none; b=YcokNRn9XRXqo3t16pabD5rxcLob6pQYOP0d939HywldiN08++ZgO0EpipmZU6HLVFVqhYWQdx6k/dsfxSp4B6iANMdr4FGWpouF0GpoE84fTLUWtXS0JvFXWpvBB+kmRZntlPMdTMYkYR7vLssjzzSdEFX0t92RHILyG7jFk6E=
+	t=1720706449; cv=none; b=ixJaziWfQ0OmUnYtoBTUavX5lTLvSm3OqGyRC+LCsyEAGOH027kTdp08SdjKBqLo0DA8AEHiGaUSVkM3y76JiQbl+NNtMviS6fqGDKXN/cCCwgtc8QDONyjsff4Fmz0sry/O6b42ejq9WZhGapnkp93cIQfD0DSTwRUU9XZjSH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720706395; c=relaxed/simple;
-	bh=7dV4ckuhGGV0wUAI/+cK+Tifo24B23NojR32tXkLDiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZxLeBkju56OQmBCaGIdoJbbFWLFYjlyDIzoUqrM3qkhPkEoRoZhEdYnCaN1udZDfERr1iOyBgZMAQoTht2s0VQdUvF6JsjZy7lbA59O6GMyHixewtTzpR/Y8U0sKkNHZr/vjSUKQPVkF7DTOV6+ju7kmCnPUTGZaiVK91Pvx9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B094DFEC;
-	Thu, 11 Jul 2024 07:00:18 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 727983F766;
-	Thu, 11 Jul 2024 06:59:50 -0700 (PDT)
-Date: Thu, 11 Jul 2024 15:59:19 +0200
-From: Beata Michalska <beata.michalska@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ionela.voinescu@arm.com, sudeep.holla@arm.com, will@kernel.org,
-	vincent.guittot@linaro.org, vanshikonda@os.amperecomputing.com,
-	sumitg@nvidia.com, yang@os.amperecomputing.com,
-	lihuisong@huawei.com, viresh.kumar@linaro.org, rafael@kernel.org
-Subject: Re: [PATCH v6 0/4] Add support for AArch64 AMUv1-based
- arch_freq_get_on_cpu
-Message-ID: <Zo_lN8jdgADwqvor@arm.com>
-References: <20240603082154.3830591-1-beata.michalska@arm.com>
- <ZowdalL3DfkHtaCg@arm.com>
+	s=arc-20240116; t=1720706449; c=relaxed/simple;
+	bh=v6S/vPhexI0x/jZZefTx2eflhLTX1D20zwHbs7IUE4A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ngq81FWJgKG6eZ7U8f2EKYE14wMjSzVKwUXlgc1KmZPXdbQfG8S75FKUeongdLzTFimU050ls+QUvmknhsM6R7li2YYEcEIWPoSPmvUzROsPfcHKEOv2VzU3Rrz0VhpoG9UBaIZ0UZ5a6JRPe1rYHCXpBv3AIMXFaDvX8fxdv9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQuGXK4v; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQuGXK4v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BB46C116B1;
+	Thu, 11 Jul 2024 14:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720706449;
+	bh=v6S/vPhexI0x/jZZefTx2eflhLTX1D20zwHbs7IUE4A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=jQuGXK4vMfYhGkWjnOBfCrYDXpIO9ttKLfbdoVn4cBbstbPFv+ud5HT/zc5TboGQs
+	 1jgMLCg05LRuFUqRprlYo7cLXmQqd8mJT/pB8yV8HIv7uXd26oRIO5RuH/8wKEJnUv
+	 MYQqcC4KavoLf/lrAYJP7Zv4hc8s2BfSLwWGsZKkILLadlyd9iXKOn2gimaK0/8bCE
+	 H6RsNs3aqccdyimbJb3qwG2x+v1K+cZsnKDlC6iAm7r5msGjO1/tuykkMvjp2l+cVy
+	 z0nuwGwoO2RidJiIonOn3/7CWiIAKwA5b0h+1+rmPDCkots4Sj+MQN0wF40R8RU7cL
+	 z3DySNJkm6IZg==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Manu Bretelle <chantra@meta.com>, Daniel Borkmann
+ <daniel@iogearbox.net>, KP Singh <kpsingh@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
+ <eddyz87@gmail.com>, Mykola Lysenko <mykolal@meta.com>, Alexei Starovoitov
+ <ast@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, "John
+ Fastabend" <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@google.com>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Shuah Khan
+ <shuah@kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Florent
+ Revest <revest@google.com>
+Subject: Re: [PATCH bpf] selftests/bpf: DENYLIST.aarch64: Remove fexit_sleep
+In-Reply-To: <SJ0PR15MB461564D3F7E7A763498CA6A8CBDB2@SJ0PR15MB4615.namprd15.prod.outlook.com>
+References: <20240705145009.32340-1-puranjay@kernel.org>
+ <c0ef7ecf-595b-375a-7785-d7bf50040c6b@iogearbox.net>
+ <mb61pjzhwvshc.fsf@kernel.org>
+ <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
+ <224eeadb-fc5f-baeb-0808-a4f9916afa3c@iogearbox.net>
+ <mb61ped836gn7.fsf@kernel.org>
+ <d36b0c2e-fdf2-d3b0-46a8-7936e0eda5a8@iogearbox.net>
+ <CACYkzJ5E+3xYkNsH7JoVkjabzSwnZZCzzTz5B50qDB7bLYkmMA@mail.gmail.com>
+ <890d23f2-636e-12d1-31cc-eb6469f2a9ac@iogearbox.net>
+ <SJ0PR15MB461564D3F7E7A763498CA6A8CBDB2@SJ0PR15MB4615.namprd15.prod.outlook.com>
+Date: Thu, 11 Jul 2024 14:00:26 +0000
+Message-ID: <mb61p5xtcyqo5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZowdalL3DfkHtaCg@arm.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Hi Catalin,
+--=-=-=
+Content-Type: text/plain
 
-On Mon, Jul 08, 2024 at 06:10:02PM +0100, Catalin Marinas wrote:
-> Hi Beata,
-> 
-> On Mon, Jun 03, 2024 at 09:21:50AM +0100, Beata Michalska wrote:
-> > Introducing arm64 specific version of arch_freq_get_on_cpu, cashing on
-> > existing implementation for FIE and AMUv1 support: the frequency scale
-> > factor, updated on each sched tick, serves as a base for retrieving
-> > the frequency for a given CPU, representing an average frequency
-> > reported between the ticks - thus its accuracy is limited.
-> > 
-> > The changes have been rather lightly (due to some limitations) tested on
-> > an FVP model. Note that some small discrepancies have been observed while
-> > testing (on the model) and this is currently being investigated, though it
-> > should not have any significant impact on the overall results.
-> 
-> What's the plan with this series? Are you still investigating those
-> discrepancies or is it good to go?
->
-Overall it should be good to go with small caveat:
-as per discussion [1] we might need to provide new sysfs attribute exposing an
-average frequency instead of plugging new code under existing cpuinfo_cur_freq.
-This is to avoid messing up with other archs and make a clean distinction on
-which attribute provides what information. 
-As such, the arch_freq_get_on_cpu implementation provided within this series
-[PATCH v6 3/4] will most probably be shifted to a new function.
 
-Hopefully will be able to send those changes soon.
+Hi,
+I was able find the root cause of this bug and will send a fix soon!
 
----
-[1] https://lore.kernel.org/all/ZmrB_DqtmVpvG30l@arm.com/
----
-BR
-Beata
+> Unable to handle kernel paging request at virtual address ffff0000c2a80e68
 
-> -- 
-> Catalin
+We are running this test on Qemu with '-cpu max', this means 52-bit
+virtual addresses are being used.
+
+The trampolines generation code has the following two lines:
+
+		emit_addr_mov_i64(A64_R(0), (const u64)im, ctx);
+		emit_call((const u64)__bpf_tramp_enter, ctx);
+
+here the address of struct bpf_tramp_image is moved to R0 and passed as
+an argument to __bpf_tramp_enter().
+
+emit_addr_mov_i64() assumes that the address passed to it is in the
+vmalloc space and uses at most 48 bits. It sets all the remaining bits
+to 1.
+
+but struct bpf_tramp_image is allocated using kzalloc() and when 52-bit
+VAs are used, its address is not guaranteed to be 48-bit, therefore we
+see this bug, where  0xfff[0]0000c2a80e68 is converted to
+0xfff[f]0000c2a80e68 when the trampoline is generated.
+
+The fix would be use emit_a64_mov_i64() for moving this address into R0.
+
+Thanks,
+Puranjay
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iIoEARYKADIWIQQ3wHGvVs/5bdl78BKwwPkjG3B2nQUCZo/lexQccHVyYW5qYXlA
+a2VybmVsLm9yZwAKCRCwwPkjG3B2nSWSAP40+KBbPkhEalekcuIWtipqJNWvWOv+
+HFovg3WjvmzQHQEApqvzcBklqoFjElN4F2mFoRixDur/X4XPbsFfhUiUoAY=
+=0Kvm
+-----END PGP SIGNATURE-----
+--=-=-=--
