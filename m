@@ -1,50 +1,51 @@
 Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86C57E0FC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F395422F17
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 02:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720665364; cv=none; b=rv19CXyjWWciKfXKkA0RataUKizuf2owKft9Z2n6E/jDxZ+waSFfkEE7W1CBqHIp7mFcrD59NlGCV+5XiawrX3NT1TCcUufdd+5Gj5Ldi9lnQs+l1Nkn0DXlgSOBJSc5Uc/YQEYrl2achPqRGMcBsdF+X2x1OytdpV40y5RMwz0=
+	t=1720665364; cv=none; b=qnqNFkPeAAEDvuehw88s2BUdFuBbZnF5uEWIVldFMpzUED9U7TdgUr2QXXfB7WMJSii4fNdix6VI8teTwQImVfof/WvmthHI9cI7t0OBTcuG4a8fJM8ZnXlUhp0L889LCN+RMEmcW0vg3rq6lFMrg9JffCUju9NR4v7PqRV5ntA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720665364; c=relaxed/simple;
-	bh=epLTkZNOB6OpkoXyb/vPfcZKaaf97RXsYzo/nRMIFwM=;
+	bh=YGLvWQJeQjTOKJ3gXmJbqqG2PVZ59UeXzZJl4sYUhTE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GA+Sq8MqqTBsLWsBtZP/SYm9eqdxlZss+g2kaYCXF8Q9go6FCEL84f0zqM+mIBhNCUNvwSsnP0/WryOIyVm4AoITm9s5CFCq4MYTNCVqVPOzxTSFAFjVJvLZUhhIcak9an46RQHTJ+gXghn/8VL4XKFSboFG52zFASE/jPuUdQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=cH3ln0+U; arc=none smtp.client-ip=18.9.28.11
+	 MIME-Version:Content-Type; b=aAN6osl8fAySMw5dzjOTix286Tc7dSaU6pdYOvqvh3CLaLK4gccarlPG7BSK2lXadPVk8H6wsd5lBv90DRCM04tqw2rhiIQT+Ri9K0vKYNDuNl4CQ4XIxvf/62aImlakOLHVGuAUn6791dv9uUCwKGWIt/Yulk0oiUsaX3p1mkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=Lw8/OaHK; arc=none smtp.client-ip=18.9.28.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="cH3ln0+U"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="Lw8/OaHK"
 Received: from cwcc.thunk.org (pool-173-48-116-79.bstnma.fios.verizon.net [173.48.116.79])
 	(authenticated bits=0)
         (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 46B2Zh48025438
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 46B2ZfY6025368
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 22:35:44 -0400
+	Wed, 10 Jul 2024 22:35:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1720665345; bh=1w3gnNNj+MgpqZ4HN8mLNqi65vmXapOmEMa7QOsH+Fg=;
+	t=1720665344; bh=nFoKNnZUpTVqvgOZgriC7SwE48n2Vz4fjiGPip26FTI=;
 	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=cH3ln0+Uh/P3M1oL8TTJpn7qIjwfJ4ACuLuE/ikTn5bbaMAuU0EQQNVhuNRM+iarT
-	 ZYwb9qo+fWgxRuZzKfE/C7b3ezHoyxMgwEe98PzeKYoKnUxnut/gl+Th5U2mGkY/3p
-	 9Jvi7BOB3lmj1JuyBA/SkcLQI1ahLNEiNTnX/kw4k3LF8B/oz6QYGt1hd8oDvRjGe6
-	 efOLIo2vvKc26QCUw71M6yWixErKGNiR5nutTNtvNLZI/cdPN8rlqAYhW838bai0qo
-	 CQQ4v9yUJ2LvclsMDfrRu1xp3LPoNikYjFoTI1oc0lmWtcFCSGuz98ZekCVzswDCXS
-	 FvLHPKVhjeDiQ==
+	b=Lw8/OaHKF/JQB5mnd5lcyg3CP+YavC3/2erCuwSxAfi1YmRrxQctZHOCC9oor7LkD
+	 ZCZlNbnE2GGkbXM3UIPG0YwY/REhYbg8phq0I1ccCDLy6ou1mcnm0+Eg0A6a+NWPqc
+	 uqvgHhIAg/ZA62oKrzCYCSw88WuD6THVMAP4MBLV0F9NLvzVjTCm/OGP2GNpHA9Z1P
+	 Mv6JWSaDB1lAxs/jEiLvY56rdR2oFY47W6O7m6N78zE6FyNZ12EDysjoRcS2QdSiBd
+	 p+4rEE40xYu7e6K5L9EwkAqk0UAH62MCTbXHNUhX9myqAJg1o2XmZsu5d8mB229mQD
+	 V4A2sBx9Glx6g==
 Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id D1E1715C18ED; Wed, 10 Jul 2024 22:35:41 -0400 (EDT)
+	id CC32115C18CB; Wed, 10 Jul 2024 22:35:41 -0400 (EDT)
 From: "Theodore Ts'o" <tytso@mit.edu>
-To: Andreas Dilger <adilger@dilger.ca>, Jan Kara <jack@suse.cz>,
-        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-        "Luis Henriques (SUSE)" <luis.henriques@linux.dev>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] ext4: fix fast commit inode enqueueing during a full journal commit
-Date: Wed, 10 Jul 2024 22:35:33 -0400
-Message-ID: <172066485813.400039.14328785579752390326.b4-ty@mit.edu>
+To: Kees Cook <kees@kernel.org>
+Cc: "Theodore Ts'o" <tytso@mit.edu>,
+        syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com,
+        Justin Stitt <justinstitt@google.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ext4: Use memtostr_pad() for s_volume_name
+Date: Wed, 10 Jul 2024 22:35:30 -0400
+Message-ID: <172066485809.400039.2045305282487026392.b4-ty@mit.edu>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240529092030.9557-1-luis.henriques@linux.dev>
-References: <20240529092030.9557-1-luis.henriques@linux.dev>
+In-Reply-To: <20240523225408.work.904-kees@kernel.org>
+References: <20240523225408.work.904-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,22 +56,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Wed, 29 May 2024 10:20:28 +0100, Luis Henriques (SUSE) wrote:
-> Here's v3 of this fix to the fast commit enqueuing bug triggered by fstest
-> generic/047.  This version simplifies the previous patch version by re-using
-> the i_sync_tid field in struct ext4_inode_info instead of adding a new one.
+On Thu, 23 May 2024 15:54:12 -0700, Kees Cook wrote:
+> As with the other strings in struct ext4_super_block, s_volume_name is
+> not NUL terminated. The other strings were marked in commit 072ebb3bffe6
+> ("ext4: add nonstring annotations to ext4.h"). Using strscpy() isn't
+> the right replacement for strncpy(); it should use memtostr_pad()
+> instead.
 > 
-> The extra patch includes a few extra fixes to the tid_t type handling.  Jan
-> brought to my attention the fact that this sequence number may wrap, and I
-> quickly found a few places in the code where the tid_geq() and tid_gt()
-> helpers had to be used.
 > 
 > [...]
 
-The second patch in this series was applied:
+Applied, thanks!
 
-[2/2] ext4: fix possible tid_t sequence overflows
-      commit: 63469662cc45d41705f14b4648481d5d29cf5999
+[1/1] ext4: Use memtostr_pad() for s_volume_name
+      commit: be27cd64461c45a6088a91a04eba5cd44e1767ef
 
 Best regards,
 -- 
