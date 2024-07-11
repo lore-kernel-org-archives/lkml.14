@@ -1,155 +1,111 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E3E156C40
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4EE155325;
+	Thu, 11 Jul 2024 09:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720688630; cv=none; b=DPQCm5HzvPf7qFY0khexCCBFUjQYizPhbVwnjCpDdDYOleM7XHvw7nhMvw2u8WrM5DSUR0C47pzHfpwXV90ia+cm4iK3k6lrNZYUerqNvdW1L1LAytkLJOCNxPU0LEDb74R37ed6Ln3MFVi5cXBrh31r6/1OL2rZDweT5yRVFYc=
+	t=1720688644; cv=none; b=AJmqiKkurvsQX9Nl8XoMof2cYSGSdivc/VkU9g4NNS27n9wRj9b/RbCiUmGA9e51fy4d1XI/Su3He6yn9CHgEjcYMG8EcE9BXuMwioFZ9UvJHVkGOQn317TKPWYQnw2npOqlhzdFaoH15OmVwCqdSAod4LozYtjdcFQ70N3Eu5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720688630; c=relaxed/simple;
-	bh=WEDuDSNQ9m/uB5n4fvxunG5m+kS+rSCd6kNLddKcIHw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=IPmzs7qLgHPgnVAnZtkTD4YD+4mK1Kk4F1pKTbkJI9kc8vWw6IZISDO5tTPvclzxrsvwjR9mvHIVAd5CR3giCbt8rbCb/vmySt5N9l7+0DKicj8piB6HXo2fyl6rtgZC3DgyhDPWsHYxOS17sLyaGGAXCNOWmlcsmNFbtLHPGd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=O8BeM2Hg; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1720688644; c=relaxed/simple;
+	bh=126h7BgakOY9B1KfYSP3zvNqNuyJvooSnnG3eUr2Jjs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MHPNuNqs/r2vumLajurl7YbwtAI8Lnatim2J6mmDiaMzsHx54+idu+S663Au5Yhh6fuQSMDW48fLeVrOcewsWF1/IksWhZVBPdPEKYKQLN9D+w4FeM8XOYdtm5T7qoLODJYw0VDn94lDcNIRbdKjzr5JHEXSkWtCHTuE1mRbbnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ofjd8Evw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O8BeM2Hg"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46B92jsk115679;
-	Thu, 11 Jul 2024 04:02:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1720688565;
-	bh=WEDuDSNQ9m/uB5n4fvxunG5m+kS+rSCd6kNLddKcIHw=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To;
-	b=O8BeM2Hg2G8MwZM7aIRPeymEOlngamRzyN5QoQvLfFuqgl/5cnaSjsZ7hqhGrNUZq
-	 jBm8Y2xmpyGhzhvc5SZcDD2vcgHPeubL3ldj/NMS2JQCxJicfixoDcIczbM7vAPXCt
-	 yIFS3YZcp+yBxCG97xtlewOFZvE9v8Lgaq40HNME=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46B92jmH102157
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 11 Jul 2024 04:02:45 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 11
- Jul 2024 04:02:45 -0500
-Received: from DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d]) by
- DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d%17]) with mapi id
- 15.01.2507.023; Thu, 11 Jul 2024 04:02:45 -0500
-From: "Xu, Baojun" <baojun.xu@ti.com>
-To: Simon Trimmer <simont@opensource.cirrus.com>
-CC: "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz"
-	<perex@perex.cz>,
-        "pierre-louis.bossart@linux.intel.com"
-	<pierre-louis.bossart@linux.intel.com>,
-        "Lu, Kevin" <kevin-lu@ti.com>,
-        "Ding,
- Shenghao" <shenghao-ding@ti.com>,
-        "Navada Kanyana, Mukund" <navada@ti.com>,
-        "13916275206@139.com" <13916275206@139.com>,
-        "Hampiholi, Vallabha"
-	<v-hampiholi@ti.com>,
-        "P O, Vijeth" <v-po@ti.com>,
-        "Holalu Yogendra,
- Niranjan" <niranjan.hy@ti.com>,
-        "alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "liam.r.girdwood@intel.com"
-	<liam.r.girdwood@intel.com>,
-        "yung-chuan.liao@linux.intel.com"
-	<yung-chuan.liao@linux.intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "soyer@irl.hu" <soyer@irl.hu>, "tiwai@suse.de" <tiwai@suse.de>
-Subject: Re: [EXTERNAL] RE: [PATCH v8] ALSA: hda/tas2781: Add tas2781 hda SPI
- driver
-Thread-Topic: [EXTERNAL] RE: [PATCH v8] ALSA: hda/tas2781: Add tas2781 hda SPI
- driver
-Thread-Index: AQHavhA+LICoIavOaEyXrK6TRE4VxrHNtVUAgCOvEuk=
-Date: Thu, 11 Jul 2024 09:02:45 +0000
-Message-ID: <9facad7a2baa414baf2989ad6ee1cd0e@ti.com>
-References: <20240614040554.610-1-baojun.xu@ti.com>,<000701dac16e$d31b8390$79528ab0$@opensource.cirrus.com>
-In-Reply-To: <000701dac16e$d31b8390$79528ab0$@opensource.cirrus.com>
-Accept-Language: en-GB, zh-CN, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ofjd8Evw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10B8C116B1;
+	Thu, 11 Jul 2024 09:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720688643;
+	bh=126h7BgakOY9B1KfYSP3zvNqNuyJvooSnnG3eUr2Jjs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ofjd8EvwqYzxM1pRlxJSYcuKkKQYlhlm4EmBFdlvghdth1DEnvs54kch9ATYuIKzw
+	 ztI+O3Yis/ffYva50F7gcq55lI6jj2Os/24X/7CZNodVBZZDltSdBS+6dgm2V3eiCS
+	 jlLLGIUUAP9BeVG7MzzvIggH15pfhufvexsh5HjRjgwUDDVQY7klx4AN2LWy/JhRUG
+	 VCwVxdlL973OP//FnbfsiS6BLUOM+tpRrso3A7tN6XFJoczsyJbu9gBFfCV2qmahBo
+	 4u6xN8vt+jNh4l2GaJYYoNgsF6Ks/ZoIRk2/7uQlCp6uyF9vAZKNp3lIfgn0dtt4Gi
+	 SKMrAxGhGF23A==
+Message-ID: <5142d8af-2b05-4018-a9c5-0a8b99719b0d@kernel.org>
+Date: Thu, 11 Jul 2024 11:03:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v0 1/2] dt-bindings: usb: qcom,dwc3: Add minItems for
+ interrupt info
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: gregkh@linuxfoundation.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+ quic_wcheng@quicinc.com, johan+linaro@kernel.org, quic_kriskura@quicinc.com,
+ linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240711065615.2720367-1-quic_varada@quicinc.com>
+ <5fb21a62-9c9e-45ed-bf3f-c4d54f243886@kernel.org>
+ <Zo+cDxiog/IXdt9S@hu-varada-blr.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Zo+cDxiog/IXdt9S@hu-varada-blr.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SGkgU2ltb24sDQoNCkFuc3dlciBpbiBsaW5lLg0KDQpCZXN0IFJlZ2FyZHMNCkppbQ0KDQo+IEZy
-b206IFNpbW9uIFRyaW1tZXIgPHNpbW9udEBvcGVuc291cmNlLmNpcnJ1cy5jb20+DQo+IFNlbnQ6
-IDE4IEp1bmUgMjAyNCAxOTowMQ0KPiBUbzogWHUsIEJhb2p1bg0KPiBDYzogcm9iaCtkdEBrZXJu
-ZWwub3JnOyBhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb207IGxnaXJkd29vZEBnbWFp
-bC5jb207IHBlcmV4QHBlcmV4LmN6OyBwaWVycmUtbG91aXMuYm9zc2FydEBsaW51eC5pbnRlbC5j
-b207IEx1LCBLZXZpbjsgRGluZywgU2hlbmdoYW87IE5hdmFkYSBLYW55YW5hLCBNdWt1bmQ7IDEz
-OTE2Mjc1MjA2QDEzOS5jb207IEhhbXBpaG9saSwgVmFsbGFiaGE7IFAgTywgVmlqZXRoOyBIb2xh
-bHUgWW9nZW5kcmEsIE5pcmFuamFuOyBhbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmc7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpYW0uci5naXJkd29vZEBpbnRlbC5jb207IHl1bmct
-Y2h1YW4ubGlhb0BsaW51eC5pbnRlbC5jb207IGJyb29uaWVAa2VybmVsLm9yZzsgc295ZXJAaXJs
-Lmh1OyB0aXdhaUBzdXNlLmRlDQo+IFN1YmplY3Q6IFtFWFRFUk5BTF0gUkU6IFtQQVRDSCB2OF0g
-QUxTQTogaGRhL3RhczI3ODE6IEFkZCB0YXMyNzgxIGhkYSBTUEkgZHJpdmVyDQo+IA0KPiA+IEZy
-b206IEJhb2p1biBYdSA8YmFvanVuLuKAinh1QOKAinRpLuKAimNvbT4gPiBTZW50OiBGcmlkYXks
-IEp1bmUgMTQsIDIwMjQgNTrigIowNiBBTSA+ICtzdGF0aWMgaW50IHRhczI3ODFfaGRhX2JpbmQo
-c3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsID4gKyB2b2lkICptYXN0
-ZXJfZGF0YSkgPiAreyA+ICsgc3RydWN0IHRhczI3ODFfaGRhICp0YXNfaGRhID0gZGV2X2dldF9k
-cnZkYXRhKGRldik7DQo+IFpqUWNtUVJZRnBmcHRCYW5uZXJTdGFydA0KPiBUaGlzIG1lc3NhZ2Ug
-d2FzIHNlbnQgZnJvbSBvdXRzaWRlIG9mIFRleGFzIEluc3RydW1lbnRzLg0KPiBEbyBub3QgY2xp
-Y2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IHJlY29nbml6ZSB0aGUgc291
-cmNlIG9mIHRoaXMgZW1haWwgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4gSWYgeW91IHdp
-c2ggdG8gcmVwb3J0IHRoaXMgbWVzc2FnZSB0byBJVCBTZWN1cml0eSwgcGxlYXNlIGZvcndhcmQg
-dGhlIG1lc3NhZ2UgYXMgYW4gYXR0YWNobWVudCB0byBwaGlzaGluZ0BsaXN0LnRpLmNvbQ0KPiAN
-Cj4gWmpRY21RUllGcGZwdEJhbm5lckVuZA0KPiANCj4gPiBGcm9tOiBCYW9qdW4gWHUgPGJhb2p1
-bi54dUB0aS5jb20+DQo+ID4gU2VudDogRnJpZGF5LCBKdW5lIDE0LCAyMDI0IDU6MDYgQU0NCj4g
-PiArc3RhdGljIGludCB0YXMyNzgxX2hkYV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0
-IGRldmljZSAqbWFzdGVyLA0KPiA+ICsgICAgIHZvaWQgKm1hc3Rlcl9kYXRhKQ0KPiA+ICt7DQo+
-ID4gKyAgICAgc3RydWN0IHRhczI3ODFfaGRhICp0YXNfaGRhID0gZGV2X2dldF9kcnZkYXRhKGRl
-dik7DQo+ID4gKyAgICAgc3RydWN0IGhkYV9jb21wb25lbnQgKmNvbXBzID0gbWFzdGVyX2RhdGE7
-DQo+ID4gKyAgICAgc3RydWN0IGhkYV9jb2RlYyAqY29kZWM7DQo+ID4gKyAgICAgaW50IHJldDsN
-Cj4gPiArDQo+ID4gKyAgICAgaWYgKHRhc19oZGEtPnByaXYtPmluZGV4IDwgMCB8fA0KPiA+ICsg
-ICAgICAgICB0YXNfaGRhLT5wcml2LT5pbmRleCA+PSBIREFfTUFYX0NPTVBPTkVOVFMgfHwNCj4g
-PiArICAgICAgICAgKCFjb21wcykpDQo+ID4gKyAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsN
-Cj4gPiArDQo+ID4gKyAgICAgY29tcHMgPSAmY29tcHNbdGFzX2hkYS0+cHJpdi0+aW5kZXhdOw0K
-PiA+ICsgICAgIGlmIChjb21wcy0+ZGV2KQ0KPiA+ICsgICAgICAgICAgICAgcmV0dXJuIC1FQlVT
-WTsNCj4gPiArDQo+ID4gKyAgICAgY29kZWMgPSBjb21wcy0+Y29kZWM7DQo+ID4gKw0KPiA+ICsg
-ICAgIHBtX3J1bnRpbWVfZ2V0X3N5bmMoZGV2KTsNCj4gPiArDQo+ID4gKyAgICAgY29tcHMtPmRl
-diA9IGRldjsNCj4gPiArDQo+ID4gKyAgICAgc3Ryc2NweShjb21wcy0+bmFtZSwgZGV2X25hbWUo
-ZGV2KSwgc2l6ZW9mKGNvbXBzLT5uYW1lKSk7DQo+ID4gKw0KPiA+ICsgICAgIHJldCA9IHRhc2Nv
-ZGVjX3NwaV9pbml0KHRhc19oZGEtPnByaXYsIGNvZGVjLCBUSElTX01PRFVMRSwNCj4gPiArICAg
-ICAgICAgICAgIHRhc2Rldl9md19yZWFkeSk7DQo+ID4gKyAgICAgaWYgKCFyZXQpDQo+ID4gKyAg
-ICAgICAgICAgICBjb21wcy0+cGxheWJhY2tfaG9vayA9IHRhczI3ODFfaGRhX3BsYXliYWNrX2hv
-b2s7DQo+ID4gKw0KPiAuLi4NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHRhczI3ODFfaGRhX3Vu
-YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwNCj4gPiArICAg
-ICB2b2lkICptYXN0ZXJfZGF0YSkNCj4gPiArew0KPiA+ICsgICAgIHN0cnVjdCB0YXMyNzgxX2hk
-YSAqdGFzX2hkYSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+ICsgICAgIHN0cnVjdCBoZGFf
-Y29tcG9uZW50ICpjb21wcyA9IG1hc3Rlcl9kYXRhOw0KPiA+ICsNCj4gPiArICAgICBjb21wcyA9
-ICZjb21wc1t0YXNfaGRhLT5wcml2LT5pbmRleF07DQo+ID4gKw0KPiA+ICsgICAgIGlmIChjb21w
-cy0+ZGV2ID09IGRldikgew0KPiA+ICsgICAgICAgICAgICAgY29tcHMtPmRldiA9IE5VTEw7DQo+
-ID4gKyAgICAgICAgICAgICBtZW1zZXQoY29tcHMtPm5hbWUsIDAsIHNpemVvZihjb21wcy0+bmFt
-ZSkpOw0KPiA+ICsgICAgICAgICAgICAgY29tcHMtPnBsYXliYWNrX2hvb2sgPSBOVUxMOw0KPiA+
-ICsgICAgIH0NCj4gPiArDQo+ID4gDQo+ID4gSSdkIGJlZW4gbWFraW5nIHN1cmUgeW91J3JlIG9u
-IENDIGJ1dCBpbiBhZGRpdGlvbiB0byB0aGUgb3RoZXIgcmV2aWV3DQo+IGNvbW1lbnRzIEkgd2Fu
-dGVkIHRvIGhpZ2hsaWdodCB0aGF0IHRoaXMgaW4gZm9yLW5leHQgd2lsbCBhZmZlY3QgdGhpcyBw
-YXRjaA0KPiBhbmQgcmVxdWlyZSBzaW1pbGFyIGNoYW5nZXMgdG8gdGhlc2UgaW4gdGhlIGkyYyBk
-cml2ZXI6DQo+IA0KPiBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9sb3JlLmtl
-cm5lbC5vcmcvYWxzYS1kZXZlbC84N2xlMzI3ZjI5LndsLXRpd2FpQHN1c2UuZGUvVC8qWjJlLjou
-LjoyMF9fO0l3ISFHM3ZLIVVHVW9Ga1lQOGpiak5ibnZpbmJzc2ZSaFpRcTUyR0VmZzFvOXRkUjA3
-Yi1YUEZVOGx5ZXdORFhDb2M0c3VLN0hQUlh3b0szcklQcUpLeFhMbEZuRSQNCj4gMjQwNjE3MTU0
-MTA1LjEwODYzNS0zLXNpbW9udDo6NDBvcGVuc291cmNlLmNpcnJ1cy5jb206MXNvdW5kOnBjaTpo
-ZGE6dGFzMjc4MQ0KPiBfaGRhX2kyYy5jDQo+IA0KDQpJIG1lcmdlIGNvZGUgdG8gbWFzdGVyIG9m
-IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9s
-aW51eC4NClRpbGwgbm93LCBzZWVtIHlvdXIgcGF0Y2ggbm90IGFwcGxpZWQgeWV0LCBzbyBJIGNh
-bid0IHBhc3MgdGhlIGNvbXBpbGUgaWYgSSBhcHBseSB5b3VyIHBhdGNoLg0KDQo+IC1TaW1vbg0K
-PiANCj4gDQo=
+On 11/07/2024 10:47, Varadarajan Narayanan wrote:
+>>
+>> but x1e80100 has 4, right?
+> 
+> Yes. Will have a separate block for ipq5332. Went with min/max based
+> on one of the previous blocks that had min/max as two and three for
+> a group of SoCs.
+> 
+
+Did you even test it before sending?
+
+Best regards,
+Krzysztof
+
