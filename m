@@ -1,86 +1,87 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8B214D283
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED454EB55
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720683028; cv=none; b=I5ZwQp3glhQNVJ/dlI33LqG3f9/xti4+7WYfseOqQIKEHg92QUIRwqrEl9gSRqYKmCu4mpikJ2uQNv2uF/MPrtBdkQxwRvHwqm9yk7a/stnYc2nBjDAAFnt6FwZcgN0BFrDllyIxzUUb6jE84eYdmRUL8ySYWkMfB/Sh4mBqrzQ=
+	t=1720683088; cv=none; b=s53XwmCh/v7NU5h10BzoQa1AD/XeL4Lqq/GDieWT0YwIBbdwiiUIaPI7Z6SsV5+K8KUczoopSFBUJaN5iDxcDK5qC6+oz7xFaG8YqUhC4JOVLvrpgoAhsMZjP8el3+3fN3MIpg0oUlMlkcXmuOSNJv6dyVfTrplNB5/Em5cCU9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720683028; c=relaxed/simple;
-	bh=CT2w5QA35aLjTLwarP/4uLIBR6BEN1ANVUeRxdhmPoo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=DmYfg+aD2wUgYoCIG6en29DSh4KyvOgZRB+ViV7SmqBQ8KLzt1kyiOYuRK2HUvC8dD4weIDI3yPrkxeVZsbFHQj5mns9+ss4sk+PcLSvqiaylKDL5WXirzzztBkqiljQbwN+bMPmB7yoZobjXcx+Pchb/ibaSbIaQ4kPeZtwVsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+	s=arc-20240116; t=1720683088; c=relaxed/simple;
+	bh=2ykrV+db0A9oXfPwOZSh0YWS78FhI0FWtnZN5Z6XYCg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Spr0H6g5u6v5tbff9HIUvVyYbGMEkbukaNMArhMPe6vBT6QkTB8zbRJQYM6fdJRJPuUw4jwICuPrL1edWYViP53+zFz85vxlSf6Atj8zWuKRzrY+0X2O+T1LUWC+8NGuffOiOArhedQLaQJ/pAhrFZqres9+8tJkLhIqq6uNJRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7fdfb3333e5so63349739f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 00:30:27 -0700 (PDT)
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-80627fd1a81so45340539f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 00:31:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720683026; x=1721287826;
+        d=1e100.net; s=20230601; t=1720683085; x=1721287885;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=54aAvm6LePKSlwnTq172Rk/A87OMUsHrkKd5lTJvMzw=;
-        b=TtT1yh1MGEdSfai2HPlEG0QeA9T54w1m4s/zZGFJVyj6BhHJ1y/WTPwHBGjFpYmZcw
-         v91yWCYcuy3/zCIa66NVZLfo8ceuQ6GqqKiJNtq5y14nGWVGBYavt2mnvPa+rJftvbEM
-         doWxgDud9zO1R6A72K2FonwnNlQ/6ex/zl6qcPORXtmLDBIQjJIRX3N7+WcgdCLOzUcP
-         x1KHF1jKPurdGuAUB+hIzIhxXwtfIn/rgwA/YwizaIQ73tr7psLfIR40UtsfkvFoKK4O
-         o7kK4S+yVr0Fgcs+q+LnSHjxy4kH6vqEQVZlJNeey7VC0qL0gutaRdOhkGe/6SB3++Bh
-         DcqA==
-X-Gm-Message-State: AOJu0YzYZgljS3JFYm5kzbZYl3AcEHtxiaIUxANomrRMV/gI6QIxsJ16
-	etGHFf4+vHKlwQthVADu/XEQVsb/pv6O9QbzVSed1HIVW4IUZwYAUssAJ7pLPiV647nLRnqm7mX
-	3L7c6YnGijNBuggYWV+2GICXSfRjxefXYgLvqjFwQGWWF8dXaQUENjtU=
-X-Google-Smtp-Source: AGHT+IF/9euBIQ8zE0JKguMDceR5Txqske6VIpLr3rdn5XagQic/P7rQaUz5coAD0DCaNkSKSoUML/Ltyklv+OrBMlhbLdTOadxK
+        bh=IxiJdl4VtQvTNmrKCocRbqkV0SinbYelbc+wAZLmHNQ=;
+        b=gI1gdO5Bba718qExaWqQAD9pq88iKZDOSQr/1JOqkoEjxJDaczaf1J0oRucFgSKFKi
+         YSgnHTtjK6pxJ3w+LebZoWW0gjV1M4Xjk02Ebozdxo+Jchnyl+5z02LmCLwokjV6dVU/
+         fvtLv/aHfewpNaEnb4wcaPOCqkrGwPG4slHCsPlIt3fCdz0f0X2/NBs+DrZLUiYUXod3
+         +gMxcg/wXvlCbViq5dg9jr/IhHsQukUiDqoHqAjuksKJcfoN9HfV8gvDAbjtdkptbvJH
+         oFFqn+2vX4pNIwt8IfMMSTjA7n0cPPFcPnlRYZlrHL1vtDGSO6Knvl7s/V0xZCZf7sTs
+         s22A==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ34pyavk5/hnUCFlgOO2Y33gDEb1t3iD4+bjOTV4AQNSeEgUBQRSfnM+xdO/MUonr2v88dGX33tayyAKTk4BtbmfzFZdibld0LPA6
+X-Gm-Message-State: AOJu0Yy7mgv5kG3LDdO12hWYqQ7U/cVyA8K7uiCLrmRs8+UQ6fD4LH3G
+	3jto94un/alsRQ2k8pQRoXfeZC5GB7JaDWc0vhkYm1U/zzmdCGORwnL8Dm9Mh+r3xUPxTVoy9kU
+	x+YbiF6irrk7kuh9sAe9GBhqh/ts5nCADz/JzEYrdYWddNBIpzdadIwQ=
+X-Google-Smtp-Source: AGHT+IFWckUCxHgwYGtn24fWh3b9Aa1oJyYIW3pH83j2rqWMToR0Qm4RcwrF2vzeHHitwxBvKQan6wwAGETGzhd46Y1AOmGtVRh0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:24d5:b0:4c0:a8a5:81f5 with SMTP id
- 8926c6da1cb9f-4c0b2b331c3mr630013173.4.1720683026355; Thu, 11 Jul 2024
- 00:30:26 -0700 (PDT)
-Date: Thu, 11 Jul 2024 00:30:26 -0700
+X-Received: by 2002:a05:6638:34a4:b0:4ba:f3bd:3523 with SMTP id
+ 8926c6da1cb9f-4c1bdedeac6mr126608173.2.1720683085409; Thu, 11 Jul 2024
+ 00:31:25 -0700 (PDT)
+Date: Thu, 11 Jul 2024 00:31:25 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008ea816061cf3bc76@google.com>
-Subject: [syzbot] Monthly usb report (Jul 2024)
-From: syzbot <syzbot+listeb8d66e6043d7c79c774@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000013c187061cf3c09c@google.com>
+Subject: [syzbot] Monthly bluetooth report (Jul 2024)
+From: syzbot <syzbot+listf73783798eb5d74d411e@syzkaller.appspotmail.com>
+To: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	luiz.dentz@gmail.com, marcel@holtmann.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello usb maintainers/developers,
+Hello bluetooth maintainers/developers,
 
-This is a 31-day syzbot report for the usb subsystem.
+This is a 31-day syzbot report for the bluetooth subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/usb
+https://syzkaller.appspot.com/upstream/s/bluetooth
 
-During the period, 2 new issues were detected and 3 were fixed.
-In total, 74 issues are still open and 343 have been fixed so far.
+During the period, 10 new issues were detected and 1 were fixed.
+In total, 53 issues are still open and 64 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref  Crashes Repro Title
-<1>  870     Yes   general protection fault in ir_raw_event_store_with_filter
-                   https://syzkaller.appspot.com/bug?extid=34008406ee9a31b13c73
-<2>  751     Yes   INFO: task hung in uevent_show
-                   https://syzkaller.appspot.com/bug?extid=edd9fe0d3a65b14588d5
-<3>  700     Yes   INFO: task hung in usbdev_open (2)
-                   https://syzkaller.appspot.com/bug?extid=b73659f5bb96fac34820
-<4>  646     Yes   INFO: task hung in hub_port_init (3)
-                   https://syzkaller.appspot.com/bug?extid=b6f11035e572f08bc20f
-<5>  498     Yes   INFO: rcu detected stall in hub_event
-                   https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
-<6>  483     Yes   INFO: rcu detected stall in corrupted (4)
-                   https://syzkaller.appspot.com/bug?extid=aa7d098bd6fa788fae8e
-<7>  409     Yes   INFO: task hung in r871xu_dev_remove
-                   https://syzkaller.appspot.com/bug?extid=f39c1dad0b7db49ca4a8
-<8>  377     Yes   INFO: rcu detected stall in syscall_exit_to_user_mode (2)
-                   https://syzkaller.appspot.com/bug?extid=a68ef3b1f46bc3aced5c
-<9>  304     Yes   KASAN: use-after-free Read in v4l2_fh_init
-                   https://syzkaller.appspot.com/bug?extid=c025d34b8eaa54c571b8
-<10> 243     Yes   INFO: rcu detected stall in addrconf_rs_timer (6)
-                   https://syzkaller.appspot.com/bug?extid=fecf8bd19c1f78edb255
+<1>  21879   Yes   possible deadlock in rfcomm_sk_state_change
+                   https://syzkaller.appspot.com/bug?extid=d7ce59b06b3eb14fd218
+<2>  13079   Yes   possible deadlock in rfcomm_dlc_exists
+                   https://syzkaller.appspot.com/bug?extid=b69a625d06e8ece26415
+<3>  5305    Yes   WARNING in hci_conn_timeout
+                   https://syzkaller.appspot.com/bug?extid=2446dd3cb07277388db6
+<4>  3382    Yes   KASAN: slab-use-after-free Read in __hci_req_sync
+                   https://syzkaller.appspot.com/bug?extid=27209997e4015fb4702e
+<5>  3246    Yes   WARNING in call_timer_fn
+                   https://syzkaller.appspot.com/bug?extid=6fb78d577e89e69602f9
+<6>  680     Yes   general protection fault in skb_release_data (2)
+                   https://syzkaller.appspot.com/bug?extid=ccfa5775bc1bda21ddd1
+<7>  411     Yes   KASAN: slab-use-after-free Read in sk_skb_reason_drop
+                   https://syzkaller.appspot.com/bug?extid=f115fcf7e49b2ebc902d
+<8>  250     Yes   general protection fault in lock_sock_nested
+                   https://syzkaller.appspot.com/bug?extid=d3ccfb78a0dc16ffebe3
+<9>  249     Yes   KASAN: slab-use-after-free Write in sco_sock_timeout
+                   https://syzkaller.appspot.com/bug?extid=4c0d0c4cde787116d465
+<10> 120     Yes   KASAN: slab-use-after-free Read in skb_release_head_state
+                   https://syzkaller.appspot.com/bug?extid=d863bc2d28ef7ff42984
 
 ---
 This report is generated by a bot. It may contain errors.
