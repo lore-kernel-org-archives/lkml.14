@@ -1,87 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591B712BF02
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFB512BF02;
+	Thu, 11 Jul 2024 08:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720687652; cv=none; b=jiUMwDVr8QULjBYwjJwkbRUdBfAaX4dzr8XFAOolAm5LvTzF5N0ykYjw41sqb0hzT1RY5BHh78ePi3LYTVo51d7Xa0HAkMHAo7VJ0YxyjwAimpB+s7vj7IDuk3qIWF9TjppYWP4T7OAfPCHUZrU3cEJv26OmrcJ5RydWS08j6Rk=
+	t=1720687674; cv=none; b=AswBK6S+rpIjbni2Ep1AXv2cC8L+31dBT5iflVbnbAjgXD4b/+q5dlTozVsVY5XVSEaNPcbIrFolm9V7ZwucPqGW4YPCKrxXLoN0tWp19M0KwLhiPUyK+YUrAk7/4NykDtKHM5M7HG3GKFNx6gKQTd+D6FkPWAmGQP4vltDFCRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720687652; c=relaxed/simple;
-	bh=5ZCyuD2DzmlBuVpILbtQgukvyp/ynyXyNQ79xarcr3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gs1HIyJpTq3I1+OacXnxFrwjdwPBLyan219ccccJdOnzzBz0MI33jK8FSML0/iAm0EiGPUa97fxaqXRosqKTtqYZArYEHZAvJuIJntr/Qag4HntFK0GnKRVFG6vi6UJ0GCYQg30rSxAvalEtW93t7erTYPj0mPWtiOGm+FR7zDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RoEP2nFq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720687674; c=relaxed/simple;
+	bh=hMfy74YYlrsHF3yA2hofdWVjdYwIcuxR3NacsnWwdIU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=tMqtz+ZBfgtLjb/gwwbFnSDBIBUm5eJ0PqKDquxawlapW4j/XtG5ulsF5x365ryOw4rn/MDu8m6rK+SrOAUGCqBvE0tD8Fdt1X5sgTQIExuisylZVdAo4WuDNmS3RKK7lOPkQ1oJmQcUV4u3WdIZUyMKDhJ9cfUEk0Ze9NHfpUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mPkzAW2K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vVYfrTdx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RoEP2nFq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720687649;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mPkzAW2K";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vVYfrTdx"
+Date: Thu, 11 Jul 2024 08:47:49 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720687670;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5ZCyuD2DzmlBuVpILbtQgukvyp/ynyXyNQ79xarcr3k=;
-	b=RoEP2nFqm3IbV3vQPqOBMvr1vRY+Bu5+H9Ts60zdM25BkJ3TMrRCONPmJvtKZLEtuA0EJy
-	ubNSvS91GNkut5+JZZK1pXFd7ze7AYOYTRkHn2GT9xefaVuwhQdoE103X96N2DY09B7vpD
-	X6wsQJmkIOv1jhvEqkX5wf1lHXvmFK0=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-393-Vfj7cJSFPT63hJ_UL7aRrw-1; Thu,
- 11 Jul 2024 04:47:26 -0400
-X-MC-Unique: Vfj7cJSFPT63hJ_UL7aRrw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8607C1955BCC;
-	Thu, 11 Jul 2024 08:47:24 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.32])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B79EB19560AE;
-	Thu, 11 Jul 2024 08:47:20 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 11 Jul 2024 10:45:47 +0200 (CEST)
-Date: Thu, 11 Jul 2024 10:45:42 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: andrii@kernel.org, mhiramat@kernel.org, clm@meta.com, jolsa@kernel.org,
-	mingo@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] uprobes: future cleanups for review
-Message-ID: <20240711084451.GA16902@redhat.com>
-References: <20240710140017.GA1074@redhat.com>
- <20240710163022.GA13298@redhat.com>
- <20240711082736.GG4587@noisy.programming.kicks-ass.net>
+	bh=Gcf3lDdrhhPrYEO/nWpoUqfXkWSFN6AmThPK46U89HE=;
+	b=mPkzAW2K0Y+zK0qGwEE8lxE6JcV0mAltNz3pzm9YKEDMuf7OKF2h6kBmZRq3aL0vwHHMzw
+	XEvG3vIiUDJ5ItqbACSy/nQV/ClN7bWs2jWCoOlJDrUrSe2rTLUUGwAtJRz6fXv6N1AHcL
+	kVanybCkEhGYGQzH8BCLoWbZIq5+AfBuVguFIWjkaAloFzIoZrWvUAcRtj34R9wG5bGvXV
+	iiYCvSuyAFVMYaFFN11eIJyRcZ1vtpgc2EFR5OgYc/Ny5wX8yIEKKl6zeT0541OBz6+i8f
+	k7jEL2UGe3TfYXVFW+viQnHWI/cSGqqhH06rB3ndevr9y7xKVDRp9GpLx6wdfA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720687670;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gcf3lDdrhhPrYEO/nWpoUqfXkWSFN6AmThPK46U89HE=;
+	b=vVYfrTdxhhP6hMHbpG87KRg+/AiY3K22FYs4aUR6mShKUPmyl7Ffi4o//BleXbV0w3KJ05
+	gG1rxW32HjjNsiCQ==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched: Update MAINTAINERS and CREDITS
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240708075752.GF11386@noisy.programming.kicks-ass.net>
+References: <20240708075752.GF11386@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711082736.GG4587@noisy.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Message-ID: <172068766925.2215.17525521312357894567.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 07/11, Peter Zijlstra wrote:
->
-> On Wed, Jul 10, 2024 at 06:30:22PM +0200, Oleg Nesterov wrote:
-> >
-> > In fact I would like to push 2 more cleanups before the more significant
-> > changes, but they certainly conflict with your ongoing work, albeit only
-> > textually.
-> >
-> > Let me send the patches for review anyway, perhaps you can take at least
-> > the 1st one.
-> >
-> > 3/3 is only compile tested so far. Andrii, can you take a look?
->
-> I was going to post a new version today, but I can wait and rebase on
+The following commit has been merged into the sched/core branch of tip:
 
-No, I do not want to delay your changes, please send the new version,
-I'll rebase these cleanups on top of it.
+Commit-ID:     db43a609d01e8bf9b812d45dc2945c65b57dd793
+Gitweb:        https://git.kernel.org/tip/db43a609d01e8bf9b812d45dc2945c65b57dd793
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 08 Jul 2024 09:57:52 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 11 Jul 2024 10:44:18 +02:00
 
-Oleg.
+sched: Update MAINTAINERS and CREDITS
 
+Thank you Daniel for having been our friend!
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/20240708075752.GF11386@noisy.programming.kicks-ass.net
+---
+ CREDITS     | 3 +++
+ MAINTAINERS | 1 -
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/CREDITS b/CREDITS
+index 0107047..88c4c08 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -271,6 +271,9 @@ D: Driver for WaveFront soundcards (Turtle Beach Maui, Tropez, Tropez+)
+ D: Various bugfixes and changes to sound drivers
+ S: USA
+ 
++N: Daniel Bristot de Oliveira
++D: Scheduler contributions, notably: SCHED_DEADLINE
++
+ N: Carlos Henrique Bauer
+ E: chbauer@acm.org
+ E: bauer@atlas.unisinos.br
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ca8f35..2e1b8bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19924,7 +19924,6 @@ R:	Dietmar Eggemann <dietmar.eggemann@arm.com> (SCHED_NORMAL)
+ R:	Steven Rostedt <rostedt@goodmis.org> (SCHED_FIFO/SCHED_RR)
+ R:	Ben Segall <bsegall@google.com> (CONFIG_CFS_BANDWIDTH)
+ R:	Mel Gorman <mgorman@suse.de> (CONFIG_NUMA_BALANCING)
+-R:	Daniel Bristot de Oliveira <bristot@redhat.com> (SCHED_DEADLINE)
+ R:	Valentin Schneider <vschneid@redhat.com> (TOPOLOGY)
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
