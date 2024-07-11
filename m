@@ -1,48 +1,53 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E94116D33F;
-	Thu, 11 Jul 2024 18:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F84E16F0D8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 18:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720721073; cv=none; b=dlYmfu2vcOAx/0cb2A0cTF459o/hrWMzKOMgvevyFA3WLlLGruWJPzPyTOdljiNYF4tfvSNS7PcSgX2ghVmLEAOE957s4tjF+fJeJamCIL5vPq8b7dyqXPfLYBHzh6QLvAGl0l+sq0FEqTZ8B91NW7FIsYZLgfgxI2t3Fy7OIQA=
+	t=1720721082; cv=none; b=VzmEcMZ+l3s1m55y/DgHp1En02pfgmNWrVzlrY8eO3bjqOuo2vjwmgCywAKKazhMM9LA+BS/E9qz5NuOPz5JnxNd1SnMhLXT8EauPArZK982QQGFg3SsCKLEFe0BoF5SAXGljm+RfMbgpk8wGJWnP6Vh42vC1ed7Qva3HODL8ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720721073; c=relaxed/simple;
-	bh=XBxod0zA2kJaQ30eaGrg8Gyqs6HEr8W4h16bYV+ocEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EAZuCXnWhSlcekW16bLNvMe81MCdXVsSwLdimeZVrb7NVTlmQ90ZZE8wq0/8GangP51pkK0fDlWXrl0/su7wkXc9RGhFoOC1TEj7GQGIibjZf04gMw26tqiOFNVsVcrea2jc/vAjwkA6iBVKjX+6hSi4P7V7XinNXP4Zp4oEmDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZPxjZNUG; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720721082; c=relaxed/simple;
+	bh=hvNPEB+rEKLF5Ml8Lj5DXvHU2eGQGia2o0wsQkix/jg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ta1CXsUyVS6Uukt/78G8N7fwLmuT2noDXyNoAUW5xZvqPPevqKQj6dtd1Q2rfTwgaYYZLN7dv14O/zlExp6GcnaediSjXqsuJtye6Rn47m7lEbYUZm1K1E5hXxYkWcucDK1qCVIEcFpehxFLeflymbO78+NcfKxu6u734aKacmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=cvmNE2uF; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZPxjZNUG"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BE01tH017618;
-	Thu, 11 Jul 2024 18:03:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nONQeuYbHLvRucyD7QhZjwXI2y6eI9gKzj/PG28Mnsk=; b=ZPxjZNUGsmcBi+5G
-	ffrG48WhB5Ds2J8F+jwTYQAu5L/qXaZxoOOxr5rnjGEMfj6tl6q0shuyZ5jAMRMc
-	uU4pzGMliYR0ukjzaZsfzJHkAIzdYX/2VSi8Ja3YKhUpfdE61Y/HjQ90ddyLEI0i
-	Cs1b0LTi9ycSqyCgVnPtPcOkZEedqPvEpx8cU+eohQz3BMq4K8/VqcHYdw9pxW/1
-	6CwLwCHzp6hjMPukcS9P42otWV9XZp7cavX+mBAfpgj1OQUKX+Eig6mx2T1OlDBj
-	B26qq41YNVGTqIhmQsdlJd5OFkBuJyLpdYPc+Rjvb09oEKMbFLA+JfP2WRGxpZvm
-	MDFdaA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40a8uhsxh6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 18:03:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46BI3Nbb015261
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 18:03:23 GMT
-Received: from [10.110.44.137] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
- 2024 11:03:22 -0700
-Message-ID: <fb285034-ed4c-4f20-ab80-cf91d36fc67c@quicinc.com>
-Date: Thu, 11 Jul 2024 11:03:15 -0700
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cvmNE2uF"
+Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
+	by cmsmtp with ESMTPS
+	id RcXKsciJ9vH7lRy9osOcCd; Thu, 11 Jul 2024 18:04:40 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id Ry9nse8QxO7CrRy9ns1IUH; Thu, 11 Jul 2024 18:04:40 +0000
+X-Authority-Analysis: v=2.4 cv=Pco0hThd c=1 sm=1 tr=0 ts=66901eb8
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=uBuKx8GwAAAA:8 a=bLk-5xynAAAA:8 a=yPCof4ZbAAAA:8
+ a=Tt-LMVSYixBJkh_1nL0A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=wZgZ3yaTFkxMEWn-yT5t:22 a=zSyb8xVVt2t83sZkrLMb:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=aTh8KIYPXZBPgzwwAjibUfCQIN6ZaSc1iXtBYCJLcu0=; b=cvmNE2uFMRGLY4oxQYa/5b9svX
+	BoAWyXAV+ma1+fjyIDcSMVuljfhTykUqU6e6xF2TkT5FLy2ko2louSkAzstA0herJtCU0Ix/8BFXW
+	2szxqF4Rr0c1cSPg8NJLvadN2HK0u78kuzUAMAKwHI4NqFLwUbis2VobTTHFcRVyJNQKI0yYm3wvk
+	PTH9IWdZcBj0Lsn1w/p32gqH9usLeb+ZWYyDHlChzLS9kD3EmN2q8w2bjomLE7hlh7sKW5si3m5an
+	BHNS6YyhbeGy246z0olbOV5f05IlOsUybA4ks+Wdl/P7ZS3YwSV74Kmvap+7Ky3jlY8Xly1RhUYMD
+	fbkmr/BA==;
+Received: from [201.172.173.139] (port=59958 helo=[192.168.15.4])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sRy9m-0025CJ-2Z;
+	Thu, 11 Jul 2024 13:04:39 -0500
+Message-ID: <bfcb72d7-bc3b-4398-be45-dabd60b73cf4@embeddedor.com>
+Date: Thu, 11 Jul 2024 12:04:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,145 +55,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/msm/dpu: don't play tricks with debug macros
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn
- Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jordan@cosmicpenguin.net>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Rajesh Yadav
-	<ryadav@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>
-References: <20240709-dpu-fix-wb-v1-0-448348bfd4cb@linaro.org>
- <20240709-dpu-fix-wb-v1-2-448348bfd4cb@linaro.org>
- <46487222-6818-b0bf-e5cc-2310d62b5fe6@quicinc.com>
- <CAA8EJpq7Lp-3V_AsLxO9ZOt8ZW1ZZ=FjhXV6R9jvH=sQ8XQE9w@mail.gmail.com>
+Subject: Re: [PATCH] scsi: aacraid: union aac_init: Replace 1-element array
+ with flexible array
+To: Kees Cook <kees@kernel.org>,
+ Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ linux-scsi@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240711174815.work.689-kees@kernel.org>
 Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <CAA8EJpq7Lp-3V_AsLxO9ZOt8ZW1ZZ=FjhXV6R9jvH=sQ8XQE9w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240711174815.work.689-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: FknxQBwkKNIhvDX2H5RiooBpUZc2PoF1
-X-Proofpoint-ORIG-GUID: FknxQBwkKNIhvDX2H5RiooBpUZc2PoF1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-11_13,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- mlxlogscore=999 lowpriorityscore=0 suspectscore=0 spamscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407110125
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sRy9m-0025CJ-2Z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.4]) [201.172.173.139]:59958
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFqfRmMRleoS0IrPOcHOHGYkECOAplvyPCgsINAF0yomcbDvOZWdkRn5zKcFIjnINunMPui3qM/jnFwUzA0CxJA5yJdSiGukzo8oXUam3Eg2cuxJUxyj
+ l9FlxxKsHhhUFSQ6lRVMZD45xBEvHHK5Grxy8nQoz6LzOXmpZzdUxI7dPFqfEUl2xeRUMKugofHaIXjatfRvx4Ep9YX7efjwyGMQZjCghtfooL9ri78txWhe
 
 
 
-On 7/10/2024 12:40 AM, Dmitry Baryshkov wrote:
-> On Tue, 9 Jul 2024 at 22:39, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
->>
->>
->>
->> On 7/9/2024 6:48 AM, Dmitry Baryshkov wrote:
->>> DPU debugging macros need to be converted to a proper drm_debug_*
->>> macros, however this is a going an intrusive patch, not suitable for a
->>> fix. Wire DPU_DEBUG and DPU_DEBUG_DRIVER to always use DRM_DEBUG_DRIVER
->>> to make sure that DPU debugging messages always end up in the drm debug
->>> messages and are controlled via the usual drm.debug mask.
->>>
->>
->> These macros have been deprecated, is this waht you meant by the
->> conversion to proper drm_debug_*?
+On 11/07/24 11:48, Kees Cook wrote:
+> Replace the deprecated[1] use of a 1-element array in
+> union aac_init with a modern flexible array.
 > 
-> Yes. Drop the driver-specific wrappers where they don't make sense.
-> Use sensible format strings in the cases where it actually does (like
-> VIDENC or _PLANE)
+> Additionally add __counted_by annotation since rrq is only ever accessed
+> after rr_queue_count has been set (with the same value used to control
+> the loop):
 > 
+>                  init->r8.rr_queue_count = cpu_to_le32(dev->max_msix);
+> 		...
+>                  for (i = 0; i < dev->max_msix; i++) {
+>                          addr = (u64)dev->host_rrq_pa + dev->vector_cap * i *
+>                                          sizeof(u32);
+>                          init->r8.rrq[i].host_addr_high = cpu_to_le32(
+>                                                  upper_32_bits(addr));
+> 
+> No binary differences are present after this conversion.
+> 
+> Link: https://github.com/KSPP/linux/issues/79 [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+> ---
+>   drivers/scsi/aacraid/aacraid.h | 2 +-
+>   drivers/scsi/aacraid/src.c     | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+> index 7d5a155073c6..659e393c1033 100644
+> --- a/drivers/scsi/aacraid/aacraid.h
+> +++ b/drivers/scsi/aacraid/aacraid.h
+> @@ -873,7 +873,7 @@ union aac_init
+>   			__le16	element_count;
+>   			__le16	comp_thresh;
+>   			__le16	unused;
+> -		} rrq[1];		/* up to 64 RRQ addresses */
+> +		} rrq[] __counted_by_le(rr_queue_count); /* up to 64 RRQ addresses */
+>   	} r8;
+>   };
+>   
+> diff --git a/drivers/scsi/aacraid/src.c b/drivers/scsi/aacraid/src.c
+> index 11ef58204e96..28115ed637e8 100644
+> --- a/drivers/scsi/aacraid/src.c
+> +++ b/drivers/scsi/aacraid/src.c
+> @@ -410,7 +410,7 @@ static void aac_src_start_adapter(struct aac_dev *dev)
+>   			lower_32_bits(dev->init_pa),
+>   			upper_32_bits(dev->init_pa),
+>   			sizeof(struct _r8) +
+> -			(AAC_MAX_HRRQ - 1) * sizeof(struct _rrq),
+> +			AAC_MAX_HRRQ * sizeof(struct _rrq),
 
-Ack but we need to not just drop the wrappers but drop the usage of 
-these macros as well because it is documented that they are deprecated.
+struct_size_t() can be used here?
 
-So I assume you want to get this in and do that as a follow up change?
+In any case:
 
->>
->> /* NOTE: this is deprecated in favor of drm_dbg(NULL, ...). */
->> #define DRM_DEBUG_DRIVER(fmt, ...)                                      \
->>           __drm_dbg(DRM_UT_DRIVER, fmt, ##__VA_ARGS__)
->>
->> I think all that this macro was doing was to have appropriate DRM_UT_*
->> macros enabled before calling the corresponding DRM_DEBUG_* macros. But
->> I think what was incorrect here is for DPU_DEBUG, we could have used
->> DRM_UT_CORE instead of DRM_UT_KMS.
-> 
-> It pretty much tries to overplay the existing drm debugging mechanism
-> by either sending the messages to the DRM channel or just using
-> pr_debug. With DYNAMIC_DEBUG being disabled pr_debug is just an empty
-> macro, so all the messages can end up in /dev/null. We should not be
-> trying to be too smart, using standard DRM_DEBUG_DRIVER should be
-> enough. This way all driver-related messages are controlled by
-> drm.debug including or excluding the 0x02 bit.
-> 
-> 
->>
->> And DRM_DEBUG_DRIVER should have been used instead of DRM_ERROR.
->>
->> Was this causing the issue of the prints not getting enabled?
-> 
-> I pretty much think so.
-> 
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Alright, I am okay with the approach, just one minor suggestion, to keep 
-the behavior intact, previously the code wanted DPU_DEBUG to be 
-controlled by DRM_UT_KMS and DPU_DEBUG_DRIVER controlled by DRM_UT_DRIVER.
+Thanks
+-- 
+Gustavo
 
-Keeping that intact, we need to use DRM_DEBUG_KMS for DPU_DEBUG?
-
->>
->>> Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>> ---
->>>    drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h | 14 ++------------
->>>    1 file changed, 2 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->>> index e2adc937ea63..935ff6fd172c 100644
->>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->>> @@ -31,24 +31,14 @@
->>>     * @fmt: Pointer to format string
->>>     */
->>>    #define DPU_DEBUG(fmt, ...)                                                \
->>> -     do {                                                               \
->>> -             if (drm_debug_enabled(DRM_UT_KMS))                         \
->>> -                     DRM_DEBUG(fmt, ##__VA_ARGS__); \
->>> -             else                                                       \
->>> -                     pr_debug(fmt, ##__VA_ARGS__);                      \
->>> -     } while (0)
->>> +     DRM_DEBUG_DRIVER(fmt, ##__VA_ARGS__)
->>>
->>>    /**
->>>     * DPU_DEBUG_DRIVER - macro for hardware driver logging
->>>     * @fmt: Pointer to format string
->>>     */
->>>    #define DPU_DEBUG_DRIVER(fmt, ...)                                         \
->>> -     do {                                                               \
->>> -             if (drm_debug_enabled(DRM_UT_DRIVER))                      \
->>> -                     DRM_ERROR(fmt, ##__VA_ARGS__); \
->>> -             else                                                       \
->>> -                     pr_debug(fmt, ##__VA_ARGS__);                      \
->>> -     } while (0)
->>> +     DRM_DEBUG_DRIVER(fmt, ##__VA_ARGS__)
->>>
->>>    #define DPU_ERROR(fmt, ...) pr_err("[dpu error]" fmt, ##__VA_ARGS__)
->>>    #define DPU_ERROR_RATELIMITED(fmt, ...) pr_err_ratelimited("[dpu error]" fmt, ##__VA_ARGS__)
->>>
-> 
-> 
-> 
+>   			0, 0, 0, NULL, NULL, NULL, NULL, NULL);
+>   	} else {
+>   		init->r7.host_elapsed_seconds =
