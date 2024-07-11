@@ -1,100 +1,72 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C8416D4F4;
-	Thu, 11 Jul 2024 16:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C307016D4FA;
+	Thu, 11 Jul 2024 16:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720716881; cv=none; b=tvOgGcbM6kiL/D+/dluTFLXCQQSaLn3WQZcU3TCFvT3pqU6lDGVIDoHQE9L9K3BC6IrlPSa8C3aCTvqDCKBc/3XU+QwyP8qg5yLDW7QH1Gr7+VRpKsPhyVxne1oEAbY3LrquCagAXG9ZcCqJz1L4EFvf/cHlp8t603r7MMKGHXg=
+	t=1720716898; cv=none; b=ts3cmTP22lEvI3WIx6UH4cLCbO9PrNdeTfjKphd+llOQyyKRVEndcj46w/F3KgUJR09Jon2YiTM6AtrWkxaoUqEDmFO+dotVAsGMMnKLgqNAxDUzD+Blc6MHN9Ab/LB8mO7vBb7WgW7L3/WTxRpU1UHHFx3Qz6doE4ashc6lEvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720716881; c=relaxed/simple;
-	bh=AFmcG/KEvllGzTWGQ+DiPSWbg3J8mbUzRHD1iS4cnLs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EokYA3TOmcpQxxxorPI9Qv6u0hHxmuYxRia5g8wfWLeIMthTh2whvssn191HQxCW/wu9obmH256h2clIfD4oTHD6Ecl840sDz7SmOUqAy7N2vNC+h7jvk7/iDUiGkfQYXxMw13GlnxPGEDNYOXQRbYbjp1v70LSOMjj6yfY+w7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=TmcQYI6l; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1720716898; c=relaxed/simple;
+	bh=MVK9BeYHvAOoRfQKzYtA768YXC95atMxl/kzYEyQkyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QFF6zeOivUEffWXhfn/Vhcd5xmEKyOGJ5ZTRd57csScCB1iyjVZ6cluCaGKTXZ2YUAkI5tl5MzqKubcAMDIkKnZ6EmIPYHmEDWpt2zYOt2YOOwUbwYj3MA6KFkkCaeA3VtFkmidAxiwpcowQIVi52ChKNvjtbuyMGeYFGUcSVPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hai204IJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="TmcQYI6l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720716879; x=1752252879;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AFmcG/KEvllGzTWGQ+DiPSWbg3J8mbUzRHD1iS4cnLs=;
-  b=TmcQYI6llWwxM96yjBctQbxFREFCpqOOb20BMRbvlfYZ0UEyiTjPiJKG
-   ory1r9dWZn/pLufOAz5EdZPFZfyEhyLNZKey5t4bgD/v/m6NsOWlH6fIV
-   UNclTbiEpl1U0cVuSV6ivUitqqKWQZcKUVUCCBU2Jwx/VSMuHPlNZTUB8
-   lO2SgxFIJ/G8z0qDkgWi6c+koPgVrf/FZW0N/XCIzwuBET5ql28o0Br4p
-   I5dFpvZsw4q5pxrGukJhaCESpehhXF4A4sLPDoZ+4WrkoTWnijCikTO1Q
-   vWrqXHj7vYDM1D9QQ54xXe812dEZHiyqIVYJ7JnAM2/gnelFkT9PfJGG1
-   Q==;
-X-CSE-ConnectionGUID: zM8v1C8oQ/SssnAxM3eiww==
-X-CSE-MsgGUID: hgIhfGcaQyqkhzbrf/VsWQ==
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="29772050"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jul 2024 09:54:32 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Jul 2024 09:54:01 -0700
-Received: from ROU-LL-M43238.amer.actel.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 11 Jul 2024 09:53:57 -0700
-From: <nicolas.ferre@microchip.com>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring
-	<robh@kernel.org>, <devicetree@vger.kernel.org>
-CC: Tudor Ambarus <tudor.ambarus@linaro.org>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-spi@vger.kernel.org>, "Nicolas
- Ferre" <nicolas.ferre@microchip.com>
-Subject: [PATCH] dt-bindings: spi: at91: Add sama7d65 compatible string
-Date: Thu, 11 Jul 2024 18:54:02 +0200
-Message-ID: <20240711165402.373634-1-nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hai204IJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5246DC116B1;
+	Thu, 11 Jul 2024 16:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720716898;
+	bh=MVK9BeYHvAOoRfQKzYtA768YXC95atMxl/kzYEyQkyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hai204IJH6H7UzIVP0dFSls/fp5lKlW6LpAJF42esXf/V+/jYFf0cQg1pkYBrCZkv
+	 riFU/Io8oLwkl0W0DwUGdKJedRaM4EeGyeb0oIKC9MyRKpGhaZoT8GwLAfVSpqkgT0
+	 FnM+7a8yOBZdze98ziAimcUnn6W+627GVjSPO9EC5b/txXLOFNoVtlZLMfXpPIP6km
+	 QE/VRwxMiN8oNIC2bZc7AgprWcIGNkSMxIAByZu0trZumOWO3UBrzK7V/+PNdnJrHM
+	 mQ7V+8EvtVJx5JKTyEe42nDdCviwOEFbuutRkTpIPagiQZmFgChPSZ63q6VzxeMlSs
+	 VT3Bc9Ogghb0w==
+Date: Thu, 11 Jul 2024 09:54:57 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] kunit: executor: Simplify string allocation handling
+Message-ID: <202407110951.664B5E0E@keescook>
+References: <20240710000220.work.852-kees@kernel.org>
+ <CABVgOSnXgA20O9bHTUP8uwcMH3Wggb2Agjpc3MK9qQa0+oH_Bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSnXgA20O9bHTUP8uwcMH3Wggb2Agjpc3MK9qQa0+oH_Bg@mail.gmail.com>
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+On Thu, Jul 11, 2024 at 01:39:15PM +0800, David Gow wrote:
+> On Wed, 10 Jul 2024 at 08:02, Kees Cook <kees@kernel.org> wrote:
+> > diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
+> > index 3f7f967e3688..7191be9c4f9b 100644
+> > --- a/lib/kunit/executor_test.c
+> > +++ b/lib/kunit/executor_test.c
+> > @@ -286,7 +286,7 @@ static struct kunit_suite *alloc_fake_suite(struct kunit *test,
+> >
+> >         /* We normally never expect to allocate suites, hence the non-const cast. */
+> >         suite = kunit_kzalloc(test, sizeof(*suite), GFP_KERNEL);
+> > -       strncpy((char *)suite->name, suite_name, sizeof(suite->name) - 1);
+> > +       strscpy((char *)suite->name, suite_name);
+> 
+> This is broken: we still need to pass the length of suite->name. The
+> (char *) cast, which is necessary to remove the 'cosnt' qualifier,
+> stops the strscpy() macro from treating suite->name as an array.
 
-Add compatible string for sama7d65. Like sam9x60 and sam9x7, it requires
-to bind to "atmel,at91rm9200-spi".
-Group these three under the same enum, sorted alphanumerically, and
-remove previously added item.
+Ah! Thanks for catching that. I do build tests with "allmodconfig", and
+I saw the #include for executor_test.c, but didn't notice it was for
+_builtin_ only...
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- .../devicetree/bindings/spi/atmel,at91rm9200-spi.yaml     | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml b/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml
-index 32e7c14033c2..d29772994cf5 100644
---- a/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml
-@@ -18,10 +18,10 @@ properties:
-     oneOf:
-       - const: atmel,at91rm9200-spi
-       - items:
--          - const: microchip,sam9x60-spi
--          - const: atmel,at91rm9200-spi
--      - items:
--          - const: microchip,sam9x7-spi
-+          - enum:
-+              - microchip,sam9x60-spi
-+              - microchip,sam9x7-spi
-+              - microchip,sama7d65-spi
-           - const: atmel,at91rm9200-spi
- 
-   reg:
 -- 
-2.39.2
-
+Kees Cook
