@@ -1,101 +1,150 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2C412B171
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 20:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018AB82D68
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 20:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720729646; cv=none; b=fR4nG8AWqly4cWLSBR+P4+Del9FXDmHCc1yf69Agch4MAVHu+lfsMhkb0Xg2rEX2lO+Db3CAb/XsaV0oA4Ccwcy0i5sdseYKJRKPAI9BDydRpKt8EZJ+lj5O1b8I1JfHBvEJQfKMeCu+3jUPKu8ZEjejDfw/ad4ItDnmMjYoVeo=
+	t=1720729812; cv=none; b=RIS6M4RHnaH4LAgebbnPVU0pMNXgTguGWS9BjhziM4GUwaPraKWsLdNnvbEZE7UtevZSGERZJ2+acA5kRt714jRu8ywv3CyV2YKDfo2uB+RJxNdZpDofOX+4Dm3zAcoWSxk1sz/Pfc/tY4mxGkAWiFsQ768Zptkem2vcLhKZI5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720729646; c=relaxed/simple;
-	bh=chDJJJWbG8wbMscp9nEe5dSFB9fITJITeU+CsbfKuXM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Vp60KpMRstZq4ieekspuX3nnven+CLoaSq52Cr0mN43+0Hvdfw/c+q8wokpwTwcsiQhU+bHBz+PekMhTCIb4vfXTMNlAtDEmbCUbR1gTIB+J10pWI+Lc0v7G0utUiDid+t3P0MDKKxwYD9d4G4ZiDGTGQidaJDxxfEu8sF+aiqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=JCjoJJ4+; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1720729812; c=relaxed/simple;
+	bh=Q8J4u+TRue0SPONN75ke4O5RBuo7YiRTdfcxYd743y0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FTGREP5SiYs7nafw8Q7IpeI4d/PseIw8pQ6+EtZs6NSrhqzkUnD1znq2TZsODMsoJQlypxR3I+nSkJlAMEMaIDoblE5mij2w8FhFZMjqcIE8lBZu8rBmelXqV9h67zSk0VYjD9pr5UdeawE+QW9LLakX4QzdAi9UuTOTAi4KPBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=phnp6ar0; arc=none smtp.client-ip=193.222.135.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="JCjoJJ4+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:References:In-Reply-To:Date:Cc:To:From:Subject:
-	Message-ID:Reply-To:Content-ID:Content-Description;
-	bh=chDJJJWbG8wbMscp9nEe5dSFB9fITJITeU+CsbfKuXM=; b=JCjoJJ4+S/g3rbeO00+Ps4ymIL
-	UG/KHIHSPhXHf0zQepCJMqEQYa3WrOqLTZUhAR61mCRmnWiXZjcW3yMY1r6JsGz3p58CGPk1LZS9f
-	53GdlmnUrf9hOM/RvFLFZCm9FHXD/x7gbRbDICuJfGBx39IqNxC6EQF9xKoVY8YPVzAeofzANVWAO
-	pvmI9z4wjItOuHgX6rnYTWVfadkDua9avN90GgH3OUn13kzGqZG9PalOnK/2Uc9Ab+GeRwwAyUyp3
-	jWfFsmp8YjFg70bRGVEgt5cw6wssYaaWNyURjaYFnq2z3Pg8r33gwmFCGLS1lTySrzAqA+B0z9wJ8
-	4uS+lz/Q==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <corsac@debian.org>)
-	id 1sS07R-00An92-58
-	for linux-kernel@vger.kernel.org; Thu, 11 Jul 2024 20:10:21 +0000
-Message-ID: <2d7bd8b2b9736d4a7d0a26169978372b5e002a62.camel@debian.org>
-Subject: Re: [PATCH] mm: huge_memory: don't force huge page alignment on 32
- bit
-From: Yves-Alexis Perez <corsac@debian.org>
-To: Yang Shi <shy828301@gmail.com>, jirislaby@kernel.org, surenb@google.com,
-  riel@surriel.com, willy@infradead.org, cl@linux.com,
- akpm@linux-foundation.org
-Cc: yang@os.amperecomputing.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Salvatore Bonaccorso <carnil@debian.org>, Ben
- Hutchings <ben@decadent.org.uk>
-Date: Thu, 11 Jul 2024 22:10:12 +0200
-In-Reply-To: <20240118133504.2910955-1-shy828301@gmail.com>
-References: <20240118133504.2910955-1-shy828301@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-1 
+	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="phnp6ar0"
+Received: (wp-smtpd smtp.tlen.pl 38260 invoked from network); 11 Jul 2024 22:23:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1720729406; bh=N6X9s7DMvS4stOXC63Qh/ErDHC3LOgu0EjpBk7+EkOE=;
+          h=From:To:Cc:Subject;
+          b=phnp6ar0kMcwf1akCDf+9+zLCRr/I1uB3sshilQ/BMeuDTajBw+bw2If7k09R6kv8
+           JGGxCQncjJiftKxWL0qs4bAczezOZcTsUB51wvvguP0tU1x9rUlVk6x0Q8nAUXA+Ay
+           gQwRCYVp8gmPVd6GgXbPhGPWkmjAH4zaZOi3mKAk=
+Received: from aafe223.neoplus.adsl.tpnet.pl (HELO localhost.localdomain) (mat.jonczyk@o2.pl@[83.4.134.223])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with SMTP
+          for <linux-raid@vger.kernel.org>; 11 Jul 2024 22:23:25 +0200
+From: =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+To: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+	stable@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Paul Luse <paul.e.luse@linux.intel.com>,
+	Xiao Ni <xni@redhat.com>,
+	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Subject: [PATCH] md/raid1: set max_sectors during early return from choose_slow_rdev()
+Date: Thu, 11 Jul 2024 22:23:16 +0200
+Message-Id: <20240711202316.10775-1-mat.jonczyk@o2.pl>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <349e4894-b6ea-6bc4-b040-4a816b6960ab@huaweicloud.com>
+References: <349e4894-b6ea-6bc4-b040-4a816b6960ab@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Debian-User: corsac
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 845761608838002fc020863bb3b1a580
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [MSPU]                               
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+Linux 6.9+ is unable to start a degraded RAID1 array with one drive,
+when that drive has a write-mostly flag set. During such an attempt,
+the following assertion in bio_split() is hit:
 
-On Thu, 2024-01-18 at 05:35 -0800, Yang Shi wrote:
-> The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
-> boundaries") caused two issues [1] [2] reported on 32 bit system or compa=
-t
-> userspace.
->=20
-> It doesn't make too much sense to force huge page alignment on 32 bit
-> system due to the constrained virtual address space.
+	BUG_ON(sectors <= 0);
 
-Hi people,
+Call Trace:
+	? bio_split+0x96/0xb0
+	? exc_invalid_op+0x53/0x70
+	? bio_split+0x96/0xb0
+	? asm_exc_invalid_op+0x1b/0x20
+	? bio_split+0x96/0xb0
+	? raid1_read_request+0x890/0xd20
+	? __call_rcu_common.constprop.0+0x97/0x260
+	raid1_make_request+0x81/0xce0
+	? __get_random_u32_below+0x17/0x70
+	? new_slab+0x2b3/0x580
+	md_handle_request+0x77/0x210
+	md_submit_bio+0x62/0xa0
+	__submit_bio+0x17b/0x230
+	submit_bio_noacct_nocheck+0x18e/0x3c0
+	submit_bio_noacct+0x244/0x670
 
-sorry for beeing so late. I've looked at this following the OpenSSH issue
-(CVE-2024-6387 [1]) and especially the impact on IA-32 installations where
-ASLR is apparently broken.
+After investigation, it turned out that choose_slow_rdev() does not set
+the value of max_sectors in some cases and because of it,
+raid1_read_request calls bio_split with sectors == 0.
 
-There was a recent thread [2] on oss-security discussing the issue.
+Fix it by filling in this variable.
 
-Looking at the commit log I think the intention was to fix this both for:
-- - 32 bit process running on 64 bit kernels: in_compat_syscall()
-- - all processes running on 32 bit kernels: IS_ENABLED(CONFIG_32BIT)
+This bug was introduced in
+commit dfa8ecd167c1 ("md/raid1: factor out choose_slow_rdev() from read_balance()")
+but apparently hidden until
+commit 0091c5a269ec ("md/raid1: factor out helpers to choose the best rdev from read_balance()")
+shortly thereafter.
 
-Unfortunately, as far as I can tell, CONFIG_32BIT is not enabled on 32bit x=
-86
-kernels. Maybe CONFIG_X86_32 would be the right one there?
+Cc: stable@vger.kernel.org # 6.9.x+
+Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
+Fixes: dfa8ecd167c1 ("md/raid1: factor out choose_slow_rdev() from read_balance()")
+Cc: Song Liu <song@kernel.org>
+Cc: Yu Kuai <yukuai3@huawei.com>
+Cc: Paul Luse <paul.e.luse@linux.intel.com>
+Cc: Xiao Ni <xni@redhat.com>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Link: https://lore.kernel.org/linux-raid/20240706143038.7253-1-mat.jonczyk@o2.pl/
 
-[1] https://www.openwall.com/lists/oss-security/2024/07/01/3
-[2] https://www.openwall.com/lists/oss-security/2024/07/08/3
-- --=20
-Yves-Alexis
------BEGIN PGP SIGNATURE-----
+--
 
-iQEzBAEBCAAdFiEE8vi34Qgfo83x35gF3rYcyPpXRFsFAmaQPCQACgkQ3rYcyPpX
-RFvSHQf/VE7td7scTTsrK7Cx0F3MmDLFgjUDbMDuyPq6lNQqnDbd2zc00JP1eeLs
-/mW1uZNbR92bn6xq2sPJu7c6tB3MJuiQme+ZqnPfIgyoWc89i6V6WUXTZN077lIl
-xJZxHLMei5KreHz66AYU66HdU89knMTcX362YyyI8dEZKXS3FlP0SLSoBM0UKY0G
-HYM6+GetE+fINhfNSMpHgqkTQB825Vqdq5UBsBjHYMg5RJ92/fDgUo5RD7qm/HVz
-SDDNSGwpVwYZ20RnnD+DOS9rsnyR4FcAP0m0dcTmQdM8GcY4SyjnEux5idvCicjy
-a1jmvsSLxCMZ9mZsrsipIZoNhSHlDA=3D=3D
-=3Df0Lk
------END PGP SIGNATURE-----
+Tested on both Linux 6.10 and 6.9.8.
+
+Inside a VM, mdadm testsuite for RAID1 on 6.10 did not find any problems:
+	./test --dev=loop --no-error --raidtype=raid1
+(on 6.9.8 there was one failure, caused by external bitmap support not
+compiled in).
+
+Notes:
+- I was reliably getting deadlocks when adding / removing devices
+  on such an array - while the array was loaded with fsstress with 20
+  concurrent processes. When the array was idle or loaded with fsstress
+  with 8 processes, no such deadlocks happened in my tests.
+  This occurred also on unpatched Linux 6.8.0 though, but not on
+  6.1.97-rc1, so this is likely an independent regression (to be
+  investigated).
+- I was also getting deadlocks when adding / removing the bitmap on the
+  array in similar conditions - this happened on Linux 6.1.97-rc1
+  also though. fsstress with 8 concurrent processes did cause it only
+  once during many tests.
+- in my testing, there was once a problem with hot adding an
+  internal bitmap to the array:
+	mdadm: Cannot add bitmap while array is resyncing or reshaping etc.
+	mdadm: failed to set internal bitmap.
+  even though no such reshaping was happening according to /proc/mdstat.
+  This seems unrelated, though.
+---
+ drivers/md/raid1.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 7b8a71ca66dd..82f70a4ce6ed 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -680,6 +680,7 @@ static int choose_slow_rdev(struct r1conf *conf, struct r1bio *r1_bio,
+ 		len = r1_bio->sectors;
+ 		read_len = raid1_check_read_range(rdev, this_sector, &len);
+ 		if (read_len == r1_bio->sectors) {
++			*max_sectors = read_len;
+ 			update_read_sectors(conf, disk, this_sector, read_len);
+ 			return disk;
+ 		}
+
+base-commit: 256abd8e550ce977b728be79a74e1729438b4948
+-- 
+2.25.1
+
