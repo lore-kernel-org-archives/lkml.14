@@ -1,115 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CAF15A87F;
-	Thu, 11 Jul 2024 08:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3742915B0F8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720686655; cv=none; b=juZsDX3gKNm+V02DqoyCBAinm23iwA/uEqvfp2qi3dmBDuyZIZB9u6LADlx9gkTSbMS1yIVU/q+FwmkNpHEGcnCbwBfsqfDnn/tBOO4eJt1REwSAMCC4hsjU3VafL1kDJ45YtVzHYU7mLaaUIkzPNEldD93LMlbgDAKfAVW2F+M=
+	t=1720686658; cv=none; b=GmwEtfxsZJoiAR1+5X4oM/p3T51FWwhyOlyTW9lF4CrkjlfSrX7yBLqbFN8LSzDtbKx/fCN5SBxmwqyBktza11sRanL4TbHn/0sQxyUDLNAre8b0HpY0QICWTUW1hgIJ/OBDA924/D+WO1Bx4l0uIy7MLe1weq/oO4eHKojmxgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720686655; c=relaxed/simple;
-	bh=Co2hf2aFg/DDh/+imxd7qZkGobFIm1pn0931psX820w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uALoet+VnGdW6r8jpE2yaHx3RH4/dIy/UWbl5mMGtpJpVJ1jKpoo0tJ3Jsf2EgGNGiohApKLYGfOTWPtkZ6QLKJwnyPAMX1paERQJsgdm5+CVXDru6ZxNA0VxF4KhNkWvI61NycdjEXo1Qy2FcvyRPosjCbcSF1/2qyYW4vgWUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjU07k5D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720686658; c=relaxed/simple;
+	bh=vq/fsSFpj4lf62kfSjY69N/eyTlPYqc7EZyIMw8xTZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A6DikLTcV6End7PurGgsFt2ZsZdwTZIJs4304/QAtLB53HtF3W5A2Zm90SusyJOvEXhuDio+7D3ydEZidtqqbxQSKaCLe/f6OcYxhqRA9zZ+Sxe+Tjj4tkrC9Oxo0x0p9s0eXKySp4fm1PM285bv7uRg+Z31I1OURofyXntUoKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ty6jpyPJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjU07k5D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D20BC116B1;
-	Thu, 11 Jul 2024 08:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720686654;
-	bh=Co2hf2aFg/DDh/+imxd7qZkGobFIm1pn0931psX820w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WjU07k5Dz6CrXTYARn1OTYxm1Yp+jqTA19ZewguJZNZ0APFX0Gdt4zcWKUBlD7Pgf
-	 dTmdTpV3kcL5zBTAhj0TQU0+YZOSg0Qe1yY3MfSBKgYtKHdH7r75he+AjziZdn7jCh
-	 oSP3KyhYd06S/Gw1+DYDhEUwF9opRal8iEq7PlCtwA1uxxm/GfDEzsQ6OgZDynSsBz
-	 DvdtlMqdxHXdClfke6ICfLQLC8uYQseuDDV1Nblw5hNSccWITlgNFSr1sYVlMCPcv3
-	 JKKKbMzZeLJ4p1Twsbamtl0u/XYSYNSOrIdnqs6t7ixczAi5UFHbzo6eydqNGFvsQN
-	 3/eypiXMNUW3A==
-Date: Thu, 11 Jul 2024 09:30:50 +0100
-From: Lee Jones <lee@kernel.org>
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: Riku Voipio <riku.voipio@iki.fi>, Pavel Machek <pavel@ucw.cz>,
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Christopher Cordahi <christophercordahi@nanometrics.ca>
-Subject: Re: [PATCH v2 2/4] leds: pca9532: Use PWM1 for hardware blinking
-Message-ID: <20240711083050.GK501857@google.com>
-References: <20240617143910.154546-1-bastien.curutchet@bootlin.com>
- <20240617143910.154546-3-bastien.curutchet@bootlin.com>
- <b88d211f-3c5b-4428-bd94-3d089c56ed22@bootlin.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ty6jpyPJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720686656;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=btXtWBcxdT6FJlBZbVF8gxUbmtiHEm3rZNQvGlu5PqE=;
+	b=Ty6jpyPJbrIokUWDj6Zm2n+pD3h1hdM1hDQOebIAWl98K2YDWm6Tjh5glrnw0Wfbz/9rlT
+	s30mjfNekGUbjkL60aAY2vyNBOhc1dBu3GBSTGa8GVTx73pzQpHcKGQieTpA8L8a9ReqME
+	MI/vSSDBp2WWr5fmt6Ns1eICUe1bM5A=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-59sh4HlZPpW-qrgD4_be-Q-1; Thu, 11 Jul 2024 04:30:54 -0400
+X-MC-Unique: 59sh4HlZPpW-qrgD4_be-Q-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4279837c024so4482485e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:30:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720686653; x=1721291453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=btXtWBcxdT6FJlBZbVF8gxUbmtiHEm3rZNQvGlu5PqE=;
+        b=V6g6HKlTyhbVdE3bHDf+Gd1gUHq66PxVJvJCJ0+fuOi53oOjfkchOSShcdfNbwuGQc
+         E2Yjof4AVNP39RhyF4bfSAuxcMMlXqdEaskYuCREJDwyF8eHW5M/th9qqrFnxgqSxkCy
+         u9gz5REPqjdJ2bjeRRJ/7Wt6M7J5n/hNzUlZmFqfU9wDXIDx70RRQKAAs/kfwpCxC7qd
+         csbcOxshzeDytBZNZ1gXVxyQMno/f9IdE1X/UvJllPlFBTJ4Ldv2XGDkn3vORCzQoBe1
+         FU2KhSxoYwKCxB4dPE8Mo29tOfTzE1h3Obub+/35dvsZuSbXWIFxhlISHRW9FigrMv8Z
+         ZjhQ==
+X-Gm-Message-State: AOJu0Yy5dI0j36QvaTiX1EVsHb+y0aPp3V1i75oYTKixpds68pVg15E3
+	jA2cf25U3NGNaUbFxQjS5DBdE4i23T81v9D+KIntysiw/dhjR8duHx6q5iF68slVfF9A7qO4KkR
+	Aa566O/D5r79jVWPKR6qEZy9nUnZpYmvAHqcpUMn7WCfahhCKUJMwfRsP9Ei3mUXzeoVbbLKmA/
+	vNHjSQ4vWkGjXBtdhhHzMj92pNezDmUNIpcM/1
+X-Received: by 2002:a5d:58f1:0:b0:367:8900:c621 with SMTP id ffacd0b85a97d-367ceaca897mr5750897f8f.56.1720686653569;
+        Thu, 11 Jul 2024 01:30:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFQE2zYNCu9jnbKuJ1vYypQltqtn1W53LvxLUbv4GeYPR8FiICVkKa9B4B4Tli9UJizVyY3iyXiiUMPse135wM=
+X-Received: by 2002:a5d:58f1:0:b0:367:8900:c621 with SMTP id
+ ffacd0b85a97d-367ceaca897mr5750879f8f.56.1720686653218; Thu, 11 Jul 2024
+ 01:30:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b88d211f-3c5b-4428-bd94-3d089c56ed22@bootlin.com>
+References: <20240710174031.312055-1-pbonzini@redhat.com> <20240710174031.312055-7-pbonzini@redhat.com>
+ <cd52fe00-b57b-495c-b55c-54fd381f7c66@linux.intel.com>
+In-Reply-To: <cd52fe00-b57b-495c-b55c-54fd381f7c66@linux.intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Thu, 11 Jul 2024 10:30:41 +0200
+Message-ID: <CABgObfZfyWzKRafPVcTyQ23oO=aAkc7Pmg8En4412J0vx1WotQ@mail.gmail.com>
+Subject: Re: [PATCH v5 6/7] KVM: x86: Implement kvm_arch_vcpu_pre_fault_memory()
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	isaku.yamahata@intel.com, seanjc@google.com, xiaoyao.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Jul 2024, Bastien Curutchet wrote:
+On Thu, Jul 11, 2024 at 7:37=E2=80=AFAM Binbin Wu <binbin.wu@linux.intel.co=
+m> wrote:
+> On 7/11/2024 1:40 AM, Paolo Bonzini wrote:
+> > Wire KVM_PRE_FAULT_MEMORY ioctl to __kvm_mmu_do_page_fault() to populat=
+e guest
+>
+> __kvm_mmu_do_page_fault() -> kvm_mmu_do_page_fault()
+>
+> > memory.  It can be called right after KVM_CREATE_VCPU creates a vCPU,
+> > since at that point kvm_mmu_create() and kvm_init_mmu() are called and
+> > the vCPU is ready to invoke the KVM page fault handler.
+> >
+> > The helper function kvm_mmu_map_tdp_page take care of the logic to
+>
+> kvm_mmu_map_tdp_page -> kvm_tdp_map_page()?
 
-> Hi Lee,
-> 
-> On 6/17/24 16:39, Bastien Curutchet wrote:
-> 
-> > +static int pca9532_update_hw_blink(struct pca9532_led *led,
-> > +				   unsigned long delay_on, unsigned long delay_off)
-> > +{
-> > +	struct pca9532_data *data = i2c_get_clientdata(led->client);
-> > +	unsigned int psc;
-> > +	int i;
-> > +
-> > +	/* Look for others LEDs that already use PWM1 */
-> > +	for (i = 0; i < data->chip_info->num_leds; i++) {
-> > +		struct pca9532_led *other = &data->leds[i];
-> > +
-> > +		if (other == led)
-> > +			continue;
-> > +
-> > +		if (other->state == PCA9532_PWM1) {
-> > +			if (other->ldev.blink_delay_on != delay_on ||
-> > +			    other->ldev.blink_delay_off != delay_off) {
-> > +				dev_err(&led->client->dev,
-> > +					"HW can handle only one blink configuration at a time\n");
-> 
-> I'm having some second thoughts about this dev_err().
-> 
-> It was dev_dbg() in V1, but based on your suggestion, I changed it to
-> dev_err() because an error was returned after.
-> 
-> I've worked more with this patch since it got applied, these error messages
-> appear frequently, though they don’t seem to be 'real' errors to me as the
-> software callback is used afterwards and the LED blinks at the expected
-> period.
-> 
-> Don't you think a dev_dbg() would be more appropriate in this case ? Or
-> perhaps a comment instead of a message ?
+Yes, will fix.
 
-If it's not an error, then don't return an error message.
+> > diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> > index 80e5afde69f4..4287a8071a3a 100644
+> > --- a/arch/x86/kvm/Kconfig
+> > +++ b/arch/x86/kvm/Kconfig
+> > @@ -44,6 +44,7 @@ config KVM
+> >       select KVM_VFIO
+> >       select HAVE_KVM_PM_NOTIFIER if PM
+> >       select KVM_GENERIC_HARDWARE_ENABLING
+> > +     select KVM_GENERIC_PRE_FAULT_MEMORY
+> >       select KVM_WERROR if WERROR
+> >       help
+> >         Support hosting fully virtualized guest machines using hardware
+> [...]
+> > index ba0ad76f53bc..a6968eadd418 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -4705,6 +4705,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm,=
+ long ext)
+> >       case KVM_CAP_MEMORY_FAULT_INFO:
+> >               r =3D 1;
+> >               break;
+> > +     case KVM_CAP_PRE_FAULT_MEMORY:
+> > +             r =3D tdp_enabled;
+> > +             break;
+> If !CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY, this should return 0.
 
-Maybe drop the message for a comment and return -EBUSY instead?
+This is x86-specific code and it CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY
+is always selected by CONFIG_KVM on x86 (that is, it does not depend
+on TDX or anything else).
 
-> > +				return -EINVAL;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	psc = ((delay_on + delay_off) * PCA9532_PWM_PERIOD_DIV - 1) / 1000;
-> > +	if (psc > U8_MAX) {
-> > +		dev_err(&led->client->dev, "Blink period too long to be handled by hardware\n");
-> 
-> Same comments for this dev_err()
-> 
-> > +		return -EINVAL;
-> > +	}
-> 
-> 
-> Best regards,
-> Bastien
+Paolo
 
--- 
-Lee Jones [李琼斯]
