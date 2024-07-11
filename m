@@ -1,573 +1,297 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E33157A74;
-	Thu, 11 Jul 2024 15:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA1A1642B;
+	Thu, 11 Jul 2024 15:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720711801; cv=none; b=Bil/+kMrSwfvmt/ry7FUlrg5MdE8THqybImIUDdQeB9fEpqjSWzfAwfKish/CDCGz2gXBEtvSRAwl7YiBC6CaEZ1Mpi3JILrw6bNBKYC/x5UwTodt3G4A99bDtsBZaBCnjhQyZUlsFCmvX66ZJtrapBWxGKgUb6pZ9vsE5tbWYc=
+	t=1720712052; cv=none; b=hdI/jL1v1AqNZBPD6kDpw3XSZqbLkfmxaSrsXVbUdolPBeOwySjiMdBHWwK+dKz9sY4uoxWSG/ElNGvh8HxIeZipfRl+uZj0PauQIhZcUnZ0RbnpnBG9mzII5FMCkUUIHqh5w8RO6sTO1lop7YtQYZQocrDuXXrLEVtj8TxSab4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720711801; c=relaxed/simple;
-	bh=4pgPsb4yww122kSHPXh4QJmyEMYnJ7qf6nUt65XlN98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EEknC6jVFhOhZZybPpnrUF//FBNG7dxWWzaGfndpxHYrUY9ljSimEm0U1yyo+rmDdDY5nI7/FL0p1jiJQfWM0xpISdqr+3CpBFnjhuczkVhm0YzhayIpRkHAni2cBFaytYbWXY+92L69yqYdAtKcANN0QxirTDUPWBsPEDeftWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUcJidn8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720712052; c=relaxed/simple;
+	bh=2ECKbJOAl1I4ejRED+BC4GWb8aavgKbho12qFEo0pkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VJMgo6zs1SsoNbKxi+Sfmo5PUlNcQdM0s1Gsk0KJWaRl5lr7CAnwyQfi0NFphSy86h3o8tBfGQimhJhSOlGq1oF1VAdsotHDX56Foq/VkP7czxrFdp219wKf8koWQOt2gtFnFO5iNZ78JG1b5ij7xnxZgBQkn2kyIj8INOYfipc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KibOrYWg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUcJidn8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD02FC116B1;
-	Thu, 11 Jul 2024 15:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720711801;
-	bh=4pgPsb4yww122kSHPXh4QJmyEMYnJ7qf6nUt65XlN98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YUcJidn8Lj3CiQw9fdOW6IixMuzoolSLYDhX2KFMOddKyRkKBasRnfIFMW2/JEBCF
-	 W9Mu8vp2B/+dGmS2mGdRPMd5itzMU3y1VcF5xt/3Qw+RfeW+5+1ouoxd5KAXE1zs90
-	 gwRRR6rETKz1LnZ3mFTzs/Rys+RN5IoiB9a6Q3vxCKNgHY9T4sjlZQfjC8rXdmExhE
-	 jNHZv/mNhGpsVEPoI2KLEasrlf3AnNX30vRV91ABMYF8Wu+ly2HwBjJ/JlspfcZm2X
-	 wAgQ3/MKSvzSgbUkGq60hmV7BUDuio1jHmkICRVNNrmw/ZpYKkmUQ2JdPoLfmBN+XQ
-	 4kMgmB752Z0PA==
-Date: Thu, 11 Jul 2024 16:29:52 +0100
-From: Lee Jones <lee@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Simon Horman <horms@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	UNGLinuxDriver@microchip.com,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 6/7] mfd: Add support for LAN966x PCI device
-Message-ID: <20240711152952.GL501857@google.com>
-References: <20240627091137.370572-1-herve.codina@bootlin.com>
- <20240627091137.370572-7-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KibOrYWg"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BBYugt024165;
+	Thu, 11 Jul 2024 15:34:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TLv239LCKbAksyk9+YP/RuXxIdndLsF1f28qyIKCIbg=; b=KibOrYWgXdq9Vn6J
+	15F9RU6/aiw8dO5Sz1nE5MjT72ojcIcY7+G0Zede0VV9x8OsoQMOpGx1nazyCtRb
+	nVgOyNvm6ls1xJ+9xZZpnbZnXZY5Pjxony4egPEQzw61fesIVeXU051I5vdGcqfc
+	Ic4FNdG5L9Woh2lQfu624Sai8yX8cGw7Bc/8QjGlhl9URJMR0JiHJWCpTDW7SaWn
+	kPIvPDTpGm7SesJ6AajYFheU/n9M1YIJzav8X9HWfCSwn0hhQjTAg9bAh71cq5xn
+	hfRPmH3u5/cmXzaP0Gxt3sc6PrNYHA0LUOfTZ6Plw/VkOkBeAS8p1XXNwYId8KH8
+	PkC+gw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406xpdvhkr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 15:34:05 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46BFY5VY028145
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 15:34:05 GMT
+Received: from [10.239.97.152] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
+ 2024 08:33:58 -0700
+Message-ID: <eeaf4f4e-5200-4b13-b38f-3f3385fc2a2b@quicinc.com>
+Date: Thu, 11 Jul 2024 23:33:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/13] media: qcom: camss: Add CSID Gen3 support for
+ SM8550
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, <rfoss@kernel.org>,
+        <todor.too@gmail.com>, <mchehab@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <quic_eberman@quicinc.com>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
+        Yongsheng Li
+	<quic_yon@quicinc.com>
+References: <20240709160656.31146-1-quic_depengs@quicinc.com>
+ <20240709160656.31146-10-quic_depengs@quicinc.com>
+ <e118f980-e10f-450c-8270-76602cc50b27@linaro.org>
+Content-Language: en-US
+From: Depeng Shao <quic_depengs@quicinc.com>
+In-Reply-To: <e118f980-e10f-450c-8270-76602cc50b27@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240627091137.370572-7-herve.codina@bootlin.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IhoCUpdVc9G2bTshws54_VnSTIwujG49
+X-Proofpoint-ORIG-GUID: IhoCUpdVc9G2bTshws54_VnSTIwujG49
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_11,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 lowpriorityscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407110110
 
-On Thu, 27 Jun 2024, Herve Codina wrote:
+Hi Bryan,
 
-> Add a PCI driver that handles the LAN966x PCI device using a device-tree
-> overlay. This overlay is applied to the PCI device DT node and allows to
-> describe components that are present in the device.
+On 7/10/2024 7:28 PM, Bryan O'Donoghue wrote:
+> On 09/07/2024 17:06, Depeng Shao wrote:
+>> The CSID in SM8550 is gen3, it has new register offset and new
+>> functionality. The buf done irq,register update and reset are
+>> moved to CSID gen3. And CSID gen3 has a new register block which
+>> is named as CSID top, it controls the output of CSID, since the
+>> CSID can connect to Sensor Front End (SFE) or original VFE, the
+>> register in top block is used to control the HW connection.
+>>
+>> Co-developed-by: Yongsheng Li <quic_yon@quicinc.com>
+>> Signed-off-by: Yongsheng Li <quic_yon@quicinc.com>
+>> Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
+>> ---
+>>   drivers/media/platform/qcom/camss/Makefile    |   1 +
+>>   .../platform/qcom/camss/camss-csid-gen3.c     | 445 ++++++++++++++++++
+>>   .../platform/qcom/camss/camss-csid-gen3.h     |  26 +
+>>   .../media/platform/qcom/camss/camss-csid.h    |   2 +
+>>   4 files changed, 474 insertions(+)
+>>   create mode 100644 drivers/media/platform/qcom/camss/camss-csid-gen3.c
+>>   create mode 100644 drivers/media/platform/qcom/camss/camss-csid-gen3.h
+>>
+
+>> +
+>> +#define        REG_UPDATE_RDI        reg_update_rdi
+>> +
+>> +static void __csid_configure_rx(struct csid_device *csid,
+>> +                struct csid_phy_config *phy, int vc)
+>> +{
+>> +    int val;
+>> +
+>> +    val = (phy->lane_cnt - 1) << CSI2_RX_CFG0_NUM_ACTIVE_LANES;
+>> +    val |= phy->lane_assign << CSI2_RX_CFG0_DL0_INPUT_SEL;
+>> +    val |= (phy->csiphy_id + CSI2_RX_CFG0_PHY_SEL_BASE_IDX) << 
+>> CSI2_RX_CFG0_PHY_NUM_SEL;
+>> +
+>> +    writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG0);
+>> +
+>> +    val = 1 << CSI2_RX_CFG1_PACKET_ECC_CORRECTION_EN;
+>> +    if (vc > 3)
+>> +        val |= 1 << CSI2_RX_CFG1_VC_MODE;
 > 
-> The memory from the device-tree is remapped to the BAR memory thanks to
-> "ranges" properties computed at runtime by the PCI core during the PCI
-> enumeration.
+> I realise downstream does these shifts but, I think in upstream we 
+> should just define a BIT(x)
 > 
-> The PCI device itself acts as an interrupt controller and is used as the
-> parent of the internal LAN966x interrupt controller to route the
-> interrupts to the assigned PCI INTx interrupt.
-
-Not entirely sure why this is in MFD.
-
-Also I'm unsure of his current views, but Greg has voiced pretty big
-feelings about representing PCI drivers as Platform ones in the past.
-
-/ Lee
-
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/mfd/Kconfig          |  24 ++++
->  drivers/mfd/Makefile         |   4 +
->  drivers/mfd/lan966x_pci.c    | 229 +++++++++++++++++++++++++++++++++++
->  drivers/mfd/lan966x_pci.dtso | 167 +++++++++++++++++++++++++
->  drivers/pci/quirks.c         |   1 +
->  5 files changed, 425 insertions(+)
->  create mode 100644 drivers/mfd/lan966x_pci.c
->  create mode 100644 drivers/mfd/lan966x_pci.dtso
+> #define CSI2_RX_CFG1_VC_MODE BIT(2)
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 266b4f54af60..15db144bc09b 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -144,6 +144,30 @@ config MFD_ATMEL_FLEXCOM
->  	  by the probe function of this MFD driver according to a device tree
->  	  property.
->  
-> +config MFD_LAN966X_PCI
-> +	tristate "Microchip LAN966x PCIe Support"
-> +	depends on PCI
-> +	select OF
-> +	select OF_OVERLAY
-> +	select IRQ_DOMAIN
-> +	help
-> +	  This enables the support for the LAN966x PCIe device.
-> +	  This is used to drive the LAN966x PCIe device from the host system
-> +	  to which it is connected.
-> +
-> +	  This driver uses an overlay to load other drivers to support for
-> +	  LAN966x internal components.
-> +	  Even if this driver does not depend on these other drivers, in order
-> +	  to have a fully functional board, the following drivers are needed:
-> +	    - fixed-clock (COMMON_CLK)
-> +	    - lan966x-oic (LAN966X_OIC)
-> +	    - lan966x-cpu-syscon (MFD_SYSCON)
-> +	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-> +	    - lan966x-pinctrl (PINCTRL_OCELOT)
-> +	    - lan966x-serdes (PHY_LAN966X_SERDES)
-> +	    - lan966x-miim (MDIO_MSCC_MIIM)
-> +	    - lan966x-switch (LAN966X_SWITCH)
-> +
->  config MFD_ATMEL_HLCDC
->  	tristate "Atmel HLCDC (High-end LCD Controller)"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index c66f07edcd0e..165a9674ff48 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -284,3 +284,7 @@ rsmu-i2c-objs			:= rsmu_core.o rsmu_i2c.o
->  rsmu-spi-objs			:= rsmu_core.o rsmu_spi.o
->  obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu-i2c.o
->  obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu-spi.o
-> +
-> +lan966x-pci-objs		:= lan966x_pci.o
-> +lan966x-pci-objs		+= lan966x_pci.dtbo.o
-> +obj-$(CONFIG_MFD_LAN966X_PCI)	+= lan966x-pci.o
-> diff --git a/drivers/mfd/lan966x_pci.c b/drivers/mfd/lan966x_pci.c
-> new file mode 100644
-> index 000000000000..c69350449b15
-> --- /dev/null
-> +++ b/drivers/mfd/lan966x_pci.c
-> @@ -0,0 +1,229 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Microchip LAN966x PCI driver
-> + *
-> + * Copyright (c) 2024 Microchip Technology Inc. and its subsidiaries.
-> + *
-> + * Authors:
-> + *	Clément Léger <clement.leger@bootlin.com>
-> + *	Hervé Codina <herve.codina@bootlin.com>
-> + */
-> +
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +#include <linux/slab.h>
-> +
-> +/* Embedded dtbo symbols created by cmd_wrap_S_dtb in scripts/Makefile.lib */
-> +extern char __dtbo_lan966x_pci_begin[];
-> +extern char __dtbo_lan966x_pci_end[];
-> +
-> +struct pci_dev_intr_ctrl {
-> +	struct pci_dev *pci_dev;
-> +	struct irq_domain *irq_domain;
-> +	int irq;
-> +};
-> +
-> +static int pci_dev_irq_domain_map(struct irq_domain *d, unsigned int virq, irq_hw_number_t hw)
-> +{
-> +	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops pci_dev_irq_domain_ops = {
-> +	.map = pci_dev_irq_domain_map,
-> +	.xlate = irq_domain_xlate_onecell,
-> +};
-> +
-> +static irqreturn_t pci_dev_irq_handler(int irq, void *data)
-> +{
-> +	struct pci_dev_intr_ctrl *intr_ctrl = data;
-> +	int ret;
-> +
-> +	ret = generic_handle_domain_irq(intr_ctrl->irq_domain, 0);
-> +	return IRQ_RETVAL(!ret);
-> +}
-> +
-> +static struct pci_dev_intr_ctrl *pci_dev_create_intr_ctrl(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev_intr_ctrl *intr_ctrl;
-> +	struct fwnode_handle *fwnode;
-> +	int ret;
-> +
-> +	if (!pdev->irq)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +
-> +	fwnode = dev_fwnode(&pdev->dev);
-> +	if (!fwnode)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	intr_ctrl = kmalloc(sizeof(*intr_ctrl), GFP_KERNEL);
-> +	if (!intr_ctrl)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	intr_ctrl->pci_dev = pdev;
-> +
-> +	intr_ctrl->irq_domain = irq_domain_create_linear(fwnode, 1, &pci_dev_irq_domain_ops,
-> +							 intr_ctrl);
-> +	if (!intr_ctrl->irq_domain) {
-> +		pci_err(pdev, "Failed to create irqdomain\n");
-> +		ret = -ENOMEM;
-> +		goto err_free_intr_ctrl;
-> +	}
-> +
-> +	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_INTX);
-> +	if (ret < 0) {
-> +		pci_err(pdev, "Unable alloc irq vector (%d)\n", ret);
-> +		goto err_remove_domain;
-> +	}
-> +	intr_ctrl->irq = pci_irq_vector(pdev, 0);
-> +	ret = request_irq(intr_ctrl->irq, pci_dev_irq_handler, IRQF_SHARED,
-> +			  dev_name(&pdev->dev), intr_ctrl);
-> +	if (ret) {
-> +		pci_err(pdev, "Unable to request irq %d (%d)\n", intr_ctrl->irq, ret);
-> +		goto err_free_irq_vector;
-> +	}
-> +
-> +	return intr_ctrl;
-> +
-> +err_free_irq_vector:
-> +	pci_free_irq_vectors(pdev);
-> +err_remove_domain:
-> +	irq_domain_remove(intr_ctrl->irq_domain);
-> +err_free_intr_ctrl:
-> +	kfree(intr_ctrl);
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static void pci_dev_remove_intr_ctrl(struct pci_dev_intr_ctrl *intr_ctrl)
-> +{
-> +	free_irq(intr_ctrl->irq, intr_ctrl);
-> +	pci_free_irq_vectors(intr_ctrl->pci_dev);
-> +	irq_dispose_mapping(irq_find_mapping(intr_ctrl->irq_domain, 0));
-> +	irq_domain_remove(intr_ctrl->irq_domain);
-> +	kfree(intr_ctrl);
-> +}
-> +
-> +static void devm_pci_dev_remove_intr_ctrl(void *data)
-> +{
-> +	struct pci_dev_intr_ctrl *intr_ctrl = data;
-> +
-> +	pci_dev_remove_intr_ctrl(intr_ctrl);
-> +}
-> +
-> +static int devm_pci_dev_create_intr_ctrl(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev_intr_ctrl *intr_ctrl;
-> +
-> +	intr_ctrl = pci_dev_create_intr_ctrl(pdev);
-> +	if (IS_ERR(intr_ctrl))
-> +		return PTR_ERR(intr_ctrl);
-> +
-> +	return devm_add_action_or_reset(&pdev->dev, devm_pci_dev_remove_intr_ctrl, intr_ctrl);
-> +}
-> +
-> +struct lan966x_pci {
-> +	struct device *dev;
-> +	int ovcs_id;
-> +};
-> +
-> +static int lan966x_pci_load_overlay(struct lan966x_pci *data)
-> +{
-> +	u32 dtbo_size = __dtbo_lan966x_pci_end - __dtbo_lan966x_pci_begin;
-> +	void *dtbo_start = __dtbo_lan966x_pci_begin;
-> +	int ret;
-> +
-> +	ret = of_overlay_fdt_apply(dtbo_start, dtbo_size, &data->ovcs_id, dev_of_node(data->dev));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static void lan966x_pci_unload_overlay(struct lan966x_pci *data)
-> +{
-> +	of_overlay_remove(&data->ovcs_id);
-> +}
-> +
-> +static int lan966x_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct lan966x_pci *data;
-> +	int ret;
-> +
-> +	/*
-> +	 * On ACPI system, fwnode can point to the ACPI node.
-> +	 * This driver needs an of_node to be used as the device-tree overlay
-> +	 * target. This of_node should be set by the PCI core if it succeeds in
-> +	 * creating it (CONFIG_PCI_DYNAMIC_OF_NODES feature).
-> +	 * Check here for the validity of this of_node.
-> +	 */
-> +	if (!dev_of_node(dev)) {
-> +		dev_err(dev, "Missing of_node for device\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Need to be done before devm_pci_dev_create_intr_ctrl.
-> +	 * It allocates an IRQ and so pdev->irq is updated.
-> +	 */
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_pci_dev_create_intr_ctrl(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	pci_set_drvdata(pdev, data);
-> +	data->dev = dev;
-> +
-> +	ret = lan966x_pci_load_overlay(data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pci_set_master(pdev);
-> +
-> +	ret = of_platform_default_populate(dev_of_node(dev), NULL, dev);
-> +	if (ret)
-> +		goto err_unload_overlay;
-> +
-> +	return 0;
-> +
-> +err_unload_overlay:
-> +	lan966x_pci_unload_overlay(data);
-> +	return ret;
-> +}
-> +
-> +static void lan966x_pci_remove(struct pci_dev *pdev)
-> +{
-> +	struct lan966x_pci *data = pci_get_drvdata(pdev);
-> +
-> +	of_platform_depopulate(data->dev);
-> +
-> +	lan966x_pci_unload_overlay(data);
-> +}
-> +
-> +static struct pci_device_id lan966x_pci_ids[] = {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_EFAR, 0x9660) },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, lan966x_pci_ids);
-> +
-> +static struct pci_driver lan966x_pci_driver = {
-> +	.name = "mchp_lan966x_pci",
-> +	.id_table = lan966x_pci_ids,
-> +	.probe = lan966x_pci_probe,
-> +	.remove = lan966x_pci_remove,
-> +};
-> +module_pci_driver(lan966x_pci_driver);
-> +
-> +MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
-> +MODULE_DESCRIPTION("Microchip LAN966x PCI driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/mfd/lan966x_pci.dtso b/drivers/mfd/lan966x_pci.dtso
-> new file mode 100644
-> index 000000000000..041f4319e4cd
-> --- /dev/null
-> +++ b/drivers/mfd/lan966x_pci.dtso
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2022 Microchip UNG
-> + */
-> +
-> +#include <dt-bindings/clock/microchip,lan966x.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/mfd/atmel-flexcom.h>
-> +#include <dt-bindings/phy/phy-lan966x-serdes.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +/ {
-> +	fragment@0 {
-> +		target-path="";
-> +		__overlay__ {
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			pci-ep-bus@0 {
-> +				compatible = "simple-bus";
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +
-> +				/*
-> +				 * map @0xe2000000 (32MB) to BAR0 (CPU)
-> +				 * map @0xe0000000 (16MB) to BAR1 (AMBA)
-> +				 */
-> +				ranges = <0xe2000000 0x00 0x00 0x00 0x2000000
-> +				          0xe0000000 0x01 0x00 0x00 0x1000000>;
-> +
-> +				oic: oic@e00c0120 {
-> +					compatible = "microchip,lan966x-oic";
-> +					#interrupt-cells = <2>;
-> +					interrupt-controller;
-> +					interrupts = <0>; /* PCI INTx assigned interrupt */
-> +					reg = <0xe00c0120 0x190>;
-> +				};
-> +
-> +				cpu_clk: cpu_clk {
-> +					compatible = "fixed-clock";
-> +					#clock-cells = <0>;
-> +					clock-frequency = <600000000>;  // CPU clock = 600MHz
-> +				};
-> +
-> +				ddr_clk: ddr_clk {
-> +					compatible = "fixed-clock";
-> +					#clock-cells = <0>;
-> +					clock-frequency = <30000000>;  // Fabric clock = 30MHz
-> +				};
-> +
-> +				sys_clk: sys_clk {
-> +					compatible = "fixed-clock";
-> +					#clock-cells = <0>;
-> +					clock-frequency = <15625000>;  // System clock = 15.625MHz
-> +				};
-> +
-> +				cpu_ctrl: syscon@e00c0000 {
-> +					compatible = "microchip,lan966x-cpu-syscon", "syscon";
-> +					reg = <0xe00c0000 0xa8>;
-> +				};
-> +
-> +				reset: reset@e200400c {
-> +					compatible = "microchip,lan966x-switch-reset";
-> +					reg = <0xe200400c 0x4>;
-> +					reg-names = "gcb";
-> +					#reset-cells = <1>;
-> +					cpu-syscon = <&cpu_ctrl>;
-> +				};
-> +
-> +				gpio: pinctrl@e2004064 {
-> +					compatible = "microchip,lan966x-pinctrl";
-> +					reg = <0xe2004064 0xb4>,
-> +					      <0xe2010024 0x138>;
-> +					resets = <&reset 0>;
-> +					reset-names = "switch";
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +					gpio-ranges = <&gpio 0 0 78>;
-> +					interrupt-parent = <&oic>;
-> +					interrupt-controller;
-> +					interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-> +					#interrupt-cells = <2>;
-> +
-> +					tod_pins: tod_pins {
-> +						pins = "GPIO_36";
-> +						function = "ptpsync_1";
-> +					};
-> +
-> +					fc0_a_pins: fcb4-i2c-pins {
-> +						/* RXD, TXD */
-> +						pins = "GPIO_9", "GPIO_10";
-> +						function = "fc0_a";
-> +					};
-> +
-> +				};
-> +
-> +				serdes: serdes@e202c000 {
-> +					compatible = "microchip,lan966x-serdes";
-> +					reg = <0xe202c000 0x9c>,
-> +					      <0xe2004010 0x4>;
-> +					#phy-cells = <2>;
-> +				};
-> +
-> +				mdio1: mdio@e200413c {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					compatible = "microchip,lan966x-miim";
-> +					reg = <0xe200413c 0x24>,
-> +					      <0xe2010020 0x4>;
-> +
-> +					resets = <&reset 0>;
-> +					reset-names = "switch";
-> +
-> +					lan966x_phy0: ethernet-lan966x_phy@1 {
-> +						reg = <1>;
-> +					};
-> +
-> +					lan966x_phy1: ethernet-lan966x_phy@2 {
-> +						reg = <2>;
-> +					};
-> +				};
-> +
-> +				switch: switch@e0000000 {
-> +					compatible = "microchip,lan966x-switch";
-> +					reg = <0xe0000000 0x0100000>,
-> +					      <0xe2000000 0x0800000>;
-> +					reg-names = "cpu", "gcb";
-> +
-> +					interrupt-parent = <&oic>;
-> +					interrupts = <12 IRQ_TYPE_LEVEL_HIGH>,
-> +						     <9 IRQ_TYPE_LEVEL_HIGH>;
-> +					interrupt-names = "xtr", "ana";
-> +
-> +					resets = <&reset 0>;
-> +					reset-names = "switch";
-> +
-> +					pinctrl-names = "default";
-> +					pinctrl-0 = <&tod_pins>;
-> +
-> +					ethernet-ports {
-> +						#address-cells = <1>;
-> +						#size-cells = <0>;
-> +
-> +						port0: port@0 {
-> +							phy-handle = <&lan966x_phy0>;
-> +
-> +							reg = <0>;
-> +							phy-mode = "gmii";
-> +							phys = <&serdes 0 CU(0)>;
-> +						};
-> +
-> +						port1: port@1 {
-> +							phy-handle = <&lan966x_phy1>;
-> +
-> +							reg = <1>;
-> +							phy-mode = "gmii";
-> +							phys = <&serdes 1 CU(1)>;
-> +						};
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 568410e64ce6..30b64994784c 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6241,6 +6241,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, 0x9660, of_pci_make_dev_node);
->  
->  /*
->   * Devices known to require a longer delay before first config space access
-> -- 
-> 2.45.0
+> val |= CSI2_RX_CFG1_VC_MODE;
 > 
 
--- 
-Lee Jones [李琼斯]
+Here CSI2_RX_CFG1_VC_MODE just means a register bit offset, not a 
+register configuration.
+
+Some fixed configuration can do this, but some register bits value are 
+configured based on actual parameter.
+e.g.;  val = (phy->lane_cnt - 1) << CSI2_RX_CFG0_NUM_ACTIVE_LANES;
+
+If we want to use macro definition, maybe we can do like below.
+
+#define CSI2_RX_CFG1_VC_MODE(n) ((n) << 2)
+val |= CSI2_RX_CFG1_VC_MODE(1);
+
+
+#define CSI2_RX_CFG0_DL0_INPUT_SEL(n) ((n) << 4)
+val |= CSI2_RX_CFG0_DL0_INPUT_SEL(phy->lane_assign)
+
+Could you please comment if we really need to do like this?
+
+
+>> +    writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG1);
+>> +}
+>> +
+>> +static void __csid_ctrl_rdi(struct csid_device *csid, int enable, u8 
+>> rdi)
+>> +{
+>> +    int val;
+>> +
+>> +    if (enable)
+>> +        val = 1 << RDI_CTRL_START_CMD;
+>> +    else
+>> +        val = 0 << RDI_CTRL_START_CMD;
+> 
+> Here is an example of how the bit shifting is weird
+> 
+> (0 << anything) is still zero
+> 
+
+Understood, the value is same, but we can know the configuration clearly 
+on this register bit. If we do like above way, then it likes below.
+
+#define RDI_CTRL_START_CMD(n) ((n) << 0)  --> it is same with (n), but 
+we don't know the register bit offset clearly if we use (n).
+
+if (enable)
+	val = RDI_CTRL_START_CMD(1);
+else
+	val = RDI_CTRL_START_CMD(0);
+
+>> +    writel_relaxed(val, csid->base + CSID_RDI_CTRL(rdi));
+>> +}
+>> +
+>> +static void __csid_configure_top(struct csid_device *csid)
+>> +{
+>> +    u32 val;
+>> +
+>> +    /* CSID "top" is a new function in Titan780.
+>> +     * CSID can connect to VFE & SFE(Sensor Front End).
+>> +     * This connection is ontrolled by CSID "top".
+>> +     * Only enable VFE path in current driver.
+>> +     */
+>> +    if (csid->top_base) {
+> 
+> When is csid->top_base NULL ?
+> 
+> Its required in your yaml.
+> 
+
+csid->top_base is NULL when it is csid lite, I will add this info in yaml.
+
+
+>> +
+>> +static void csid_configure_stream(struct csid_device *csid, u8 enable)
+>> +{
+>> +    u8 i;
+>> +
+>> +    /* Loop through all enabled VCs and configure stream for each */
+>> +    for (i = 0; i < MSM_CSID_MAX_SRC_STREAMS; i++)
+>> +        if (csid->phy.en_vc & BIT(i)) {
+>> +            /* Configure CSID "top" */
+>> +            __csid_configure_top(csid);
+>> +            __csid_configure_rdi_stream(csid, enable, i);
+>> +            __csid_configure_rx(csid, &csid->phy, i);
+>> +            __csid_ctrl_rdi(csid, enable, i);
+>> +        }
+>> +}
+> 
+> I really like this breakdown
+
+Sorry, I don't get it, do you mean you like that configuring the 
+different block use different functions, and no other meaning?
+
+>> +
+>> +static int csid_configure_testgen_pattern(struct csid_device *csid, 
+>> s32 val)
+>> +{
+>> +    if (val > 0 && val <= csid->testgen.nmodes)
+>> +        csid->testgen.mode = val;
+> 
+> Surely you should just set the val parameter directly ?
+> 
+> Also why is this a signed integer and how does it get assigned a 
+> negative value which we need to mitigate against here  >
+
+This was copied from csid-gen2 driver, they are same, so we can move to 
+common file.
+
+And the val comes from ctrl->val, so I guess this is the reason why this 
+agrument is signed integer.
+
+struct v4l2_ctrl {
+	...
+	s32 val;
+	...
+};
+
+
+
+>> +
+>> +static u32 csid_src_pad_code(struct csid_device *csid, u32 sink_code,
+>> +                 unsigned int match_format_idx, u32 match_code)
+>> +{
+>> +    switch (sink_code) {
+>> +    case MEDIA_BUS_FMT_SBGGR10_1X10:
+>> +    {
+>> +        u32 src_code[] = {
+>> +            MEDIA_BUS_FMT_SBGGR10_1X10,
+>> +            MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE,
+>> +        };
+>> +
+>> +        return csid_find_code(src_code, ARRAY_SIZE(src_code),
+>> +                      match_format_idx, match_code);
+>> +    }
+>> +    case MEDIA_BUS_FMT_Y10_1X10:
+>> +    {
+>> +        u32 src_code[] = {
+>> +            MEDIA_BUS_FMT_Y10_1X10,
+>> +            MEDIA_BUS_FMT_Y10_2X8_PADHI_LE,
+>> +        };
+>> +
+>> +        return csid_find_code(src_code, ARRAY_SIZE(src_code),
+>> +                      match_format_idx, match_code);
+>> +    }
+>> +    default:
+>> +        if (match_format_idx > 0)
+>> +            return 0;
+>> +
+>> +        return sink_code;
+>> +    }
+>> +}
+> 
+> Same code as in gen2.
+> 
+> You could move the gen2 version of this into camss-csid.c and just reuse 
+> in both.
+> 
+
+Sure, it is same with the comments in vfe driver, I will try to move 
+same code to camss-csid.c
+
+Thanks,
+Depeng
