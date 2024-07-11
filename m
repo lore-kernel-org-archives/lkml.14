@@ -1,85 +1,138 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689064779E;
-	Thu, 11 Jul 2024 10:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9AF157A59
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 10:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720693040; cv=none; b=Y74QxowV/CtG+eHjtSsyKcgqxXFwo9XgnDkqspN10OFNoTG2P6jQGTRQWzOFcx7w01sRLTj89ff5VZwOywsnVXw4XvEqNq38rbSktiZ1RynP8xekMqOXa/ThnTcUtsFm/WLrNnxoT+OTS+R1MRhpzK47HTfNSP8GCS3FkHIVbIw=
+	t=1720693204; cv=none; b=fmjBzehgUXaKndJjnqQQSTt9lnn7HAj4vx1kJKo95PDMgzkxFDkwO9Jn7sqbUwpXFBhSSt0Orb7QSehQjRlost+24JzfSeCJd4ZcUFPGfzFq8xk7zismmVtqcgg171rtepUa63Em92waBN/JODqsKumHjCakgroH+65fcqkIxuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720693040; c=relaxed/simple;
-	bh=/SH2t526dhX39mtIBzC9dl7zRsTEaWsVBT9qJQAA7Pg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pj8luQcfnKexplDVsyH17v58AXVT3bnT6WuVCVeRGtnhCkzHBmBHYWGnFwMugGPRdEqUCDeDZm/rzVmDZWPcymN8HsfsGZJISwaOoemjieLA1k7a5zZ8jEWEUcECzwbYOTTz+D8pOhcdGjrxW0wfT54CDBy93dQXr3NO181P2OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPbXmwf+; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720693204; c=relaxed/simple;
+	bh=Te0Lw1oxuPXepV/5h7IQuALOgj6ZhURsQxOt9/IHXPc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lhiCbTh1/zJf7zKKAmvR0zAQKGtJAQFR2zn4viMiqo74yhJjeib65NQgjZ2Enc+t97urIbBP5ZJhhyj35Z66LqM7cfPS9a+mKLRB8EDUAgsIqTXmUHlFbuFVIVqozBqF4zlzIUX1kmfT42Ppsssv1PeVyUBgOQhLNe3TFxA6xgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ut13nFWH; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPbXmwf+"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5c66b53232aso332412eaf.1;
-        Thu, 11 Jul 2024 03:17:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ut13nFWH"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4277a5ed48bso4983605e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 03:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720693038; x=1721297838; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/SH2t526dhX39mtIBzC9dl7zRsTEaWsVBT9qJQAA7Pg=;
-        b=fPbXmwf+yxxnhW6apUj8r8AwhaVAe4lmwovYpyt89dMK6NofKIZvaZY54unTWOJ6+d
-         rAU5NjzfAX1cs+U0umN5w+ZVWQWKY4Y0ApagyhyPWEKtsZZKCProb4hDCo3EKY78AiON
-         Doci3h4fioEcwtRJr5AXZSs2n95m8LwFLYIMPcntEEUHviZQVrJ5xxTSKLsPeNfEIQuE
-         ibtx/Ea6mRS6PDNAT0YIZOAS01z4VT9HrPEF2HMIvKHpTjkUwW85Ys2brR4ptTwrZ6ft
-         nF7kcwqNvVWzIcw9u59kbnwSMZe1msb5hwg3+NI6LRaVptpvvsz4s1NweUbPXvcgWuyr
-         FP0Q==
+        d=linaro.org; s=google; t=1720693201; x=1721298001; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NpEPOR+4bYifIxXAHWhUoDP3ysZA8Zm0c8+Ht0LO1TA=;
+        b=ut13nFWHV2SFSwyKg8eMtIyLnzLTRCi947pSOL7+KHsC5u2iDwVmceEU/6JlRjuJDe
+         7BY5tGwCaMt8xF4Q3jkblU/PGGIplgIMi6tQ8GoB9f4eb+L3aUc1Ohx+LvgTfaJeo0OQ
+         owuJ4zVqr/RUbYqoCpgnWL4Qf+OOHnVfnh1j4ZpNuUcSfPTqLfohIYsMwCunWl1BmG9P
+         PuNCHOpi8JHYFC6I0gwtLHX06L53lZgIrVZg3jDpQjLaihUuP5vwYy8w4sJ8u8ECqJB3
+         o0G5jOnxryXXYzY5iQvstsKlkUFCJAuQoullZpLhnn61XhJ4cRj9/q/UydjaV9yF7mXq
+         cLuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720693038; x=1721297838;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1720693201; x=1721298001;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/SH2t526dhX39mtIBzC9dl7zRsTEaWsVBT9qJQAA7Pg=;
-        b=Lm7b8D6lsYEvPBR/+A6l6VQjxzL9W2YnhxK4Ky4u3DNyqLzUhY8NY4McahDMlA54o7
-         wHhuScBXsGcp3rScOkuiAW1Waw+20vt0YT6uuvUJv2RipOoknBOBDntDx55aBAcVRo9t
-         NsiwbQH8FqTcodcat6Sox3xuJucOdIwGgInZbexHp5X9CEpSwkInonL6GbfhiobjPVPj
-         UCKZn7h8L+nv7SjlQ52vTE171mGKdCS57OCwxYbUhNy/CDCFTVn3V/0EObOuw6dXHI/h
-         99xZsbEruAJyARCW/tfqmJXi14dMxao2H7+djeyrl7ilUNeA/KbVKJLhedB/ql2ZDPWl
-         I06g==
-X-Forwarded-Encrypted: i=1; AJvYcCVbCDvojo2LKncRy3XOMDb7mpKHhs8dBFwrLTflvd6JI/PH8jFCb01esuU4IJI0kvf1fggmkQTFhtwgfu2CO4tyWfqHPhamWNpa6FrEK7l0rcgz4LRGwJeKGYnHODq8lOTR0was0xSQwA==
-X-Gm-Message-State: AOJu0YwIi+1LZAj8AHX98FLCwIGVSVW8MYdCldI4ZRBaCk08VrIuhEGs
-	q9vwUv9cx35eMUR7ALlR7c+Ek8NgC/O78Jy+1j7sMBh2U3J7IkN/9+p/oA2qd5ti+8jNMf0xVb/
-	hPPPtsdyIlNU197b+bizy3slnOys=
-X-Google-Smtp-Source: AGHT+IHE0CUu5uCHf8wuz70NvrhLwZ46PB/m2KnHmeab6LkAZaTxoQqnxGgC50x0jjH9cWOx4W08eoAx0h6xKooKYdU=
-X-Received: by 2002:a4a:1d02:0:b0:5c4:10df:c479 with SMTP id
- 006d021491bc7-5c68e0a1392mr8324798eaf.2.1720693038361; Thu, 11 Jul 2024
- 03:17:18 -0700 (PDT)
+        bh=NpEPOR+4bYifIxXAHWhUoDP3ysZA8Zm0c8+Ht0LO1TA=;
+        b=r60h4CFBKzvwezofz6mAi7YOrpkfgSVRgqQBd8SLGt25wZAKz5DkV5/Jm96r6lgrtU
+         vmz7zcN5u1WHClL2gyv6YSR2k6NgHjW7ZPhTIUD40MCIYE/7jbSbS2ra+ZsPD9Yt0Hjk
+         1kSqIt/6GdLYpcAp4A3oUDMnIbe3vWN4Ip5OEpgBg54bvf2O2sL3gzJeF8XblyEHqeMZ
+         eXpTpnL57tPxAyiHKUFdEvelTIoiFIEfN17QPHenI9JkO4Gdqm2vxpxmKZTBon06lYyN
+         l1mV32vWAYo8Hqs3SHNj3c//vqyT4amHHnLhTebP2JbWye5MLlKFIOJsRQEFv4TYhpLs
+         EF7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXE/SXxmhQ3eKqGqbXTdMVu+3QCsNWVq3jXbnbFTSj5/KylkMIAP6JKmu70KqRBc63XqHU0dP1YDJiDMkU6i1kZitL/D4O2Dnf5E1lU
+X-Gm-Message-State: AOJu0YwiPLiFRjFaazqClBtWHkC12QpNB3T6sYgIAIWoIa00CkW6UJ1O
+	rGzgvhEO1ZaAa1/1GL4e1b4C1qsLH30nP6wmQydXX4rtTYY3jn0dvCS5K48EI7A=
+X-Google-Smtp-Source: AGHT+IHhAvNQpxxxtu0l2TiI7e2EheLMZqNQ9j5p+6ozwhs2ZYLmXamkgwEmDJBnpLYODpEJcUMVEQ==
+X-Received: by 2002:a7b:cd1a:0:b0:426:4f47:6037 with SMTP id 5b1f17b1804b1-426707d7914mr50144105e9.19.1720693201030;
+        Thu, 11 Jul 2024 03:20:01 -0700 (PDT)
+Received: from [127.0.1.1] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266e861339sm125270025e9.12.2024.07.11.03.20.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 03:20:00 -0700 (PDT)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH 0/2] media: ov5675: Fixup ov5675 reset failures
+Date: Thu, 11 Jul 2024 11:20:00 +0100
+Message-Id: <20240711-linux-next-ov5675-v1-0-69e9b6c62c16@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711060939.1128-1-linux.amoon@gmail.com> <a8c1f49e-bf25-4fd3-a16f-13088f75767f@kwiboo.se>
- <CANAwSgQCn3jgiruiLs0cu-C+DguLtnk=msboAh8jNSF4P28gjA@mail.gmail.com> <2017670.43MJ0K8Myn@bagend>
-In-Reply-To: <2017670.43MJ0K8Myn@bagend>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Thu, 11 Jul 2024 15:47:02 +0530
-Message-ID: <CANAwSgQjTc7_DFyTSx8VSMmr69tYM=iSVc51RxgRoasj8Stgrg@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add missing pinctrl for PCIe30x4 node
-To: Diederik de Haas <didi.debian@cknow.org>
-Cc: Jonas Karlman <jonas@kwiboo.se>, linux-rockchip@lists.infradead.org, 
-	Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANCxj2YC/x3MSwqAMAwA0atI1gZStVa8irjwEzUgVVqVgvTuF
+ pdvMfOCZyfsoc1ecPyIl8MmqDyDaRvsyihzMhRUVGQU4S72Dmg5XHg8ujYaaxqJm3Iy5aIgdaf
+ jRcL/7PoYP2HfoWBjAAAA
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>, 
+ Jacopo Mondi <jacopo@jmondi.org>
+Cc: Johan Hovold <johan@kernel.org>, 
+ Kieran Bingham <kieran.bingham@ideasonboard.com>, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, stable@vger.kernel.org
+X-Mailer: b4 0.15-dev-13183
 
-Hi Diederik,
+One long running saga for me on the Lenovo X13s is the occasional failure
+to either probe or subsequently bring-up the ov5675 main RGB sensor on the
+laptop.
 
-On Thu, 11 Jul 2024 at 15:35, Diederik de Haas <didi.debian@cknow.org> wrote:
->
-> On Thursday, 11 July 2024 11:09:48 CEST Anand Moon wrote:
-> > Ok but it is better to update this in rk3588s-pinctrl.dtsi
->
-> It's probably better to base your patch(es) on Heiko's 'for-next' (or 'v6.11-
-> armsoc/dts64') branch as that file no longer exists there
+Initially I suspected the PMIC for this part as the PMIC is using a new
+interface on an I2C bus instead of an SPMI bus. In particular I thought
+perhaps the I2C write to PMIC had completed but the regulator output hadn't
+become stable from the perspective of the SoC. This however doesn't appear
+to be the case - I can introduce a delay of milliseconds on the PMIC path
+without resolving the sensor reset problem.
 
-Ok.
+Secondly I thought about reset pin polarity or drive-strength but, again
+playing about with both didn't yield decent results.
 
-Thanks
--Anand
+I also played with the duration of reset to no avail.
+
+The error manifested as an I2C write timeout to the sensor which indicated
+that the chip likely hadn't come out reset. An intermittent fault appearing
+in perhaps 1/10 or 1/20 reset cycles.
+
+Looking at the expression of the reset we see that there is a minimum time
+expressed in XVCLK cycles between reset completion and first I2C
+transaction to the sensor. The specification calls out the minimum delay @
+8192 XVCLK cycles and the ov5675 driver meets that timing almost exactly.
+
+A little too exactly - testing finally showed that we were too racy with
+respect to the minimum quiescence between reset completion and first
+command to the chip.
+
+Fixing this error I choose to base the fix again on the number of clocks
+but to also support any clock rate the chip could support by moving away
+from a define to reading and using the XVCLK.
+
+True enough only 19.2 MHz is currently supported but for the hypothetical
+case where some other frequency is supported in the future, I wanted the
+fix introduced in this series to still hold.
+
+Hence this series:
+
+1. Allows for any clock rate to be used in the valid range for the reset.
+2. Elongates the post-reset period based on clock cycles which can now
+vary.
+
+Patch #2 can still be backported to stable irrespective of patch #1.
+
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+Bryan O'Donoghue (2):
+      media: ov5675: Derive delay cycles from the clock rate reported
+      media: ov5675: Elongate reset to first transaction minimum gap
+
+ drivers/media/i2c/ov5675.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+---
+base-commit: 523b23f0bee3014a7a752c9bb9f5c54f0eddae88
+change-id: 20240710-linux-next-ov5675-60b0e83c73f1
+
+Best regards,
+-- 
+Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+
