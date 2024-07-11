@@ -1,104 +1,137 @@
-Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00001581F0;
-	Thu, 11 Jul 2024 08:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB501514E0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720686999; cv=none; b=Z0NvOAsBb1pPYcyYp65eoH52bMoTM0SRyU+6QndpUAkFoyBorkXtADE5Pnt9NIrB3iENuVPdfHGqQl5uFTQhzfbpdursGrF6DFJWl5pW3T+vdBtaGft4FYL9RBZI5XWcSl4bgBZ19WuNwXAhWj6L/nsCkRYNf8ZVCLEp7+lG+FM=
+	t=1720687031; cv=none; b=Y0y7Wu2OKvsoBFNIhxrlSSO1ZMF4jpXfG5UwwmSOyZrAvwThM27mvJNyJMVXXmC+ovAubtiIi8p8Ct2grlzODprjjGkWSVM9fFmYLXQ2O1dEgEjbrwXwWVUGSqt4p7SRX/RXk79eo0un1TzOeM4kpLLCx293SKp4emJcIkK7jZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720686999; c=relaxed/simple;
-	bh=1bwqFinbtDkxAjW+8WZSgeF63cbN78DWBNtyGL2nQlw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lxIiIfX3E4lw6MuDnPVqQIwJqqZdN1HlsZxaE7+WQRyizQqiC6dY1w4mkW29Gp8Xyxd49n/o7j6rk2CBw+3u7e61hYxFpOEosHTnfVSGzZp/ce4exIBeOIp54V4pm2oLtkaNBslZvI2vFSrsQotOp6g9ygCj+NmFMWgmBwa69wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=gAGyHnh1; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=KtBs9Wnt; arc=none smtp.client-ip=35.157.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
+	s=arc-20240116; t=1720687031; c=relaxed/simple;
+	bh=eRTxtAd+aiBxKhHy1Ms0fpAkVKz89XTsYBJnSiH/vNE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tBD9p+UQTVwo2DiEYI+TXw8/C6hIPPHWol3RsCAo08Dlgzv3zFjThM4IXk7y+/c51XPhvG733WwlzN0BvYrdY9e1+9V1EzsKtvcJ1vsbM8nc5P34Js8YKNmkjy1RFNT+oyMYU+xsMk4G1PU4Rora3GxgX4bmNjdUGC7Fb9w7+QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGJoH+0+; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="gAGyHnh1";
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="KtBs9Wnt"
-Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 96F1F1D43;
-	Thu, 11 Jul 2024 08:19:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGJoH+0+"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70b0013cf33so590709b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:37:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1720685961;
-	bh=2lEB1CwnPIAdMdowq8U5BKOPAzNq4douQboeJQ9Bho0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=gAGyHnh1h1+4+vr9qI1qCl99UqNtF0br+qa85Zr50J/O7EBPbyG5jNgqK16M5ygXQ
-	 R2dRxUbK1HiWAEF4Nwrb9ry21sfVmMWfjRRKMHWA4/NYx9Lug4fMgiCC96Vx9nO07/
-	 AB97AY7Tt+z84+I3yQ+IW5h8Y+61MmO3osicS+UY=
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 0EB6621C8;
-	Thu, 11 Jul 2024 08:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1720686452;
-	bh=2lEB1CwnPIAdMdowq8U5BKOPAzNq4douQboeJQ9Bho0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=KtBs9Wntn8bYdopHYHiA5ajMgyd/L1KY+9R+rk6AyT8pnNGYcl/lCzSW+/DgWkcj+
-	 lmkEe+gQ+xfI+Zd24CxKqHbm0+Y4tqc40bm8OhOL5y++qP9HIjNkE4/NWRD/QB3fbC
-	 Ay99ORjmdIhoL7Rp8djm7rgbBqP4rjricDMm0Wcs=
-Received: from [192.168.211.91] (192.168.211.91) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Thu, 11 Jul 2024 11:27:31 +0300
-Message-ID: <216de662-023a-4a94-8b07-d2affb72aeb5@paragon-software.com>
-Date: Thu, 11 Jul 2024 11:27:30 +0300
+        d=gmail.com; s=20230601; t=1720687029; x=1721291829; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=atTBjk9wptxxVtf7Y3tfuR/uu7YgNKVETKoQtx0qD6Y=;
+        b=SGJoH+0+ZY2QD6cm6zXev81p7oML/r0l8OdsYhns+LVIEKnKvhthk/Auy0JMm2ukoU
+         AvhG5Hqa2h+7uPxgFJJ7ytnFA3HPEf8/ZtPR2GZV3MOwHjTyNlBUiA8nDxpDvISsnYjO
+         JqYfhfdcNNpxJuZuKh62o/7oYDLr/PwarsfHtVJMZCnVxZTDeKodYa9SrKqSsSuWBYPJ
+         jV9Svfr/EpiG3UKYE2gndigZTeq7vFwBpwyGgsByig6plhIcZZ+vMxzoc/cBNobUL1aa
+         AePgsXEnBw92x2OoBuIMsqYCx4xjKCV2FcB2lqly50cToqwU2zlrO8Usw8aPQ8hJUSXB
+         KZoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720687029; x=1721291829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=atTBjk9wptxxVtf7Y3tfuR/uu7YgNKVETKoQtx0qD6Y=;
+        b=POtMv2PC4n+jfxrybMRYc2YI+NnJ/ryJfVYuIPxyBKPGEhzdxl45EUgYQiHdV4JPqC
+         concZUb3dN/zfxUVDUaVscIjUUTMFDw9T0l/anUB8RhlkcnHyV3fwh77uklx+/o+Lbvw
+         vysrh07+rttEzbNcZWtHE3r9pnsNgLz3j3XL1Ig+WxcUJR69SIYW5IFaT8zDBq0Oj3yN
+         5V9rCFEobHWPWFmaG2EyBK0YwpTChaSqBW8LhbdGeCshiPqGreAoX5723nYjEE+XpBKc
+         B1IBG6kJt92CgeA8WEQqyiH4kAZDP9Ue1pJ4PgmfyPsECkQ9gzfgRX8QjeAc2P61zocM
+         nVJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXehV8LoC5HibAyTJdGrnBvgCBc4r5/MFQAJJq36HAGxZfTTc9udiEWx3l8gHAnC9vuZdCHZ1sQagi/8oVKD659UIZenmFPeOzWt+9S
+X-Gm-Message-State: AOJu0Yz385LXuZxF3nsiaKFCzQJTizMiYsEs4Rs4dCMIPCynVi4b04XY
+	tycsllf6VSPgXtcJLvMHjkSnOJq+TuaN2xK+K0HlY1h/x/GXhfj3
+X-Google-Smtp-Source: AGHT+IFigDR87HJX5Kkn2JMv3ufTLyQ4WVF4QUdRKgricWGF9fAUSAIYjx5H538G8KVh9siAZ6puwg==
+X-Received: by 2002:a05:6a20:729a:b0:1c0:f323:1bd8 with SMTP id adf61e73a8af0-1c29820667cmr8967595637.7.1720687028971;
+        Thu, 11 Jul 2024 01:37:08 -0700 (PDT)
+Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ad3837sm45535835ad.300.2024.07.11.01.37.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 01:37:08 -0700 (PDT)
+Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
+	by twhmp6px (Postfix) with ESMTPS id 913E3805EE;
+	Thu, 11 Jul 2024 16:46:31 +0800 (CST)
+From: Cheng Ming Lin <linchengming884@gmail.com>
+To: miquel.raynal@bootlin.com,
+	vigneshr@ti.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: richard@nod.at,
+	alvinzhou@mxic.com.tw,
+	leoyu@mxic.com.tw,
+	Cheng Ming Lin <chengminglin@mxic.com.tw>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] mtd: spinand: macronix: Fixed warning: Function paramteter or member not described
+Date: Thu, 11 Jul 2024 16:36:11 +0800
+Message-Id: <20240711083611.364431-1-linchengming884@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [ntfs3?] KASAN: slab-out-of-bounds Read in mi_enum_attr
-To: Dmitry Vyukov <dvyukov@google.com>, Lizhi Xu <lizhi.xu@windriver.com>
-CC: <linux-kernel@vger.kernel.org>, <ntfs3@lists.linux.dev>,
-	<linux-fsdevel@vger.kernel.org>,
-	<syzbot+a426cde6dee8c2884b0b@syzkaller.appspotmail.com>,
-	<syzkaller-bugs@googlegroups.com>, Kees Cook <keescook@google.com>
-References: <CACT4Y+ZWjUE6-q1YF=ZaPjKgGZBw4JLD1v2DphSgCAVf1RzE8g@mail.gmail.com>
- <20240705135250.3587041-1-lizhi.xu@windriver.com>
- <CACT4Y+YrjD=3Tn6o4FJFefDYsOCbUFWahPUp87PXXcHQsr0xXg@mail.gmail.com>
-Content-Language: en-US
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-In-Reply-To: <CACT4Y+YrjD=3Tn6o4FJFefDYsOCbUFWahPUp87PXXcHQsr0xXg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+Content-Transfer-Encoding: 8bit
 
-On 08.07.2024 09:54, Dmitry Vyukov wrote:
-> On Fri, 5 Jul 2024 at 15:52, Lizhi Xu <lizhi.xu@windriver.com> wrote:
->> On Thu, 4 Jul 2024 15:44:02 +0200, Dmitry Vyukov wrote:
->>>> index 53629b1f65e9..a435df98c2b1 100644
->>>> --- a/fs/ntfs3/record.c
->>>> +++ b/fs/ntfs3/record.c
->>>> @@ -243,14 +243,14 @@ struct ATTRIB *mi_enum_attr(struct mft_inode *mi, struct ATTRIB *attr)
->>>>                  off += asize;
->>>>          }
->>>>
->>>> -       asize = le32_to_cpu(attr->size);
->>>> -
->>>>          /* Can we use the first field (attr->type). */
->>>>          if (off + 8 > used) {
->>>>                  static_assert(ALIGN(sizeof(enum ATTR_TYPE), 8) == 8);
->>>>                  return NULL;
->>>>          }
->>>>
->>>> +       asize = le32_to_cpu(attr->size);
->>>> +
->>>>          if (attr->type == ATTR_END) {
->>>>                  /* End of enumeration. */
->>>>                  return NULL;
->>> Hi Lizhi,
->>>
->>> I don't see this fix mailed as a patch. Do you plan to submit it officially?
->> Hi Dmitry Vyukov,
->> Here: https://lore.kernel.org/all/20240202033334.1784409-1-lizhi.xu@windriver.com
-> I don't see this patch merged upstream.  Was it lost? Perhaps it needs
-> to be resent.
-Hi, Lizhi, Dmitry, This patch is indeed not present in either the 
-upstream or our repository. I will retest it and figure out why I didn't 
-add it. Around the same time, I was making changes to mi_enum_attr, so I 
-might have mixed something up. Thanks for your attention! Regards,
-Konstantin
+From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+
+Fixed the warnings: Function paramteter or member 'xxx' not described
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202407110520.pbPnrOlM-lkp@intel.com/
+Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
+---
+ drivers/mtd/nand/spi/macronix.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
+index c61f1ba31f0c..ea956933e8a1 100644
+--- a/drivers/mtd/nand/spi/macronix.c
++++ b/drivers/mtd/nand/spi/macronix.c
+@@ -101,12 +101,16 @@ static int mx35lf1ge4ab_ecc_get_status(struct spinand_device *spinand,
+ }
+ 
+ /**
++ * write_Plane_Select_bit_in_cadd - Write Plane Select bit to the column address
++ * @spinand: SPI NAND device
++ * @req: NAND I/O request object
++ * @column: the column address
++ *
+  * Macronix serial NAND flash with a two-plane structure
+- * should insert Plane Select bit to the column address
++ * should insert Plane Select bit into the column address
+  * during the write_to_cache operation.
+- * Additionally, MX35{U,F}2G14AC also need to insert Plane
+- * Select bit to the column address during the read_from_cache
+- * operation.
++ *
++ * Return: the column address after insertion of Plane Select bit
+  */
+ static unsigned int write_Plane_Select_bit_in_cadd(struct spinand_device *spinand,
+ 			const struct nand_page_io_req *req, unsigned int column)
+@@ -116,6 +120,17 @@ static unsigned int write_Plane_Select_bit_in_cadd(struct spinand_device *spinan
+ 	return column | (req->pos.plane << fls(nanddev_page_size(nand)));
+ }
+ 
++/**
++ * read_Plane_Select_bit_in_cadd - Write Plane Select bit to the column address
++ * @spinand: SPI NAND device
++ * @req: NAND I/O request object
++ * @column: the column address
++ *
++ * MX35{U,F}2G14AC also need to insert Plane Select bit
++ * into the column address during the read_from_cache operation.
++ *
++ * Return: the column address after insertion of Plane Select bit
++ */
+ static u16 read_Plane_Select_bit_in_cadd(struct spinand_device *spinand,
+ 			const struct nand_page_io_req *req, u16 column)
+ {
+
+base-commit: 6000ef48e571f49a636b0c51494c1326ff9b7736
+prerequisite-patch-id: 5cea93c94f6237a2f8f51397ba76187952ef45b2
+-- 
+2.25.1
+
