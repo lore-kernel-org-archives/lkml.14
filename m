@@ -1,131 +1,146 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8DFBE5A;
-	Thu, 11 Jul 2024 01:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E058801;
+	Thu, 11 Jul 2024 01:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720662701; cv=none; b=KGd97wcBSFNuqEIq4xz9zCKuP7DCD1EdZ9ck8TvpzCPLIQS8vb4/RP0O4oSRigr+M39iPiIcc3bdvAaT7j1rJMbTEFS2+RJMb1TVTRzS259PPORERG1RMC4f+wV1LADrv6J915dgDzvNwhKrFa3Oj0lz3/gd/Fa9jMqmGMIPfoE=
+	t=1720662834; cv=none; b=Ba5x5lFSlW7PZHMMVyqUGGvu4TFcckt8TcsvhZeHZY+Pb6GNs0gh1+9xApLOU+zyYagNDcrlc46b9lGmEc5R7G0vOaQ85uIxRSMqbvqM7yemwCdmvxnDXIN9kPvBdrM8l4fFcOVSRBYbfMLbYFWxZP79VD/Tg6eg9FH10PJ4fiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720662701; c=relaxed/simple;
-	bh=fL4FZ4hZXaG4km0dzBkdmtfNkxTIYuyoHOEm0Cgnkpc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IR0gTwg6s8XoGoKXbuQS52w76z0ED1LuVejK6UB+Q9ZDVDY7OJljK2fulNh/rm01+LJc9sLh52MhQBraIuUlD6XpB5jif4iCBjls7scpQxUwugO3iI1PHRjJ4WqErL/io8DhyrL6AozBHHcFHCNuaD9dAsWhN3kdX84LCTzWFJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=U4P+gjBP; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1720662834; c=relaxed/simple;
+	bh=V0su/2TVwxm7ML1o7WKw5VLN0Yqb3uJ2r3KKs/Mko04=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=RwyQK9Y9ZvMM1UnvTFnKIPhTePQqVRc2C4x3Z6I6r8IkusdNZqaYUe/NMOdNJrIOZj8XZ3oae8aGhEy0hOU8xDJEkwXT2vtWPAI5Ras5hLaKW5oLi0UHT20QTnDSNJgzAYoQy72Pu4XVMGwxtXu2uSFQyB8cPa/g3c2y+Kx8AWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=bIzmUleh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IrUfFWem; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="U4P+gjBP"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id B0E3C88709;
-	Thu, 11 Jul 2024 03:51:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1720662696;
-	bh=7Zr7gH5qHOUFxru02iy24qF4XGxxRzCJESt0mNpg1NI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U4P+gjBP8n2RYiyXL8QSo/IDW/W69FdB4qDPlKGtF97q2aUeueiLeHB7KxTgBXC5c
-	 jWGTo0fJAaM3CR7G/LLt5q++U0IHcmQvOWYKyxjjUHMTZloKTZmhGgUsZhLpdwJqMI
-	 64FF+qh+ovPI5V7ImpD8EAh2AzHd9X/15oZnMEIJicl/+7XR0p2RXm/CoRZSMfOA2y
-	 /eJcL+c5FrX1wS9ci5Qo0GfHeKzlK69Y4YHJGSsjLez8F+IuCC/Vq98kh3KSd8l+TM
-	 FC/CraGfHz/9o9Z0FxYgwnc6JkQ33+wWY/XS6ItUt//4ZzRq84/l/gKmiegkDWZhKT
-	 JI/nB5w1OkR6w==
-Message-ID: <fe6d1df7-eefc-4e4e-9f3c-989f982b0daa@denx.de>
-Date: Thu, 11 Jul 2024 03:29:28 +0200
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="bIzmUleh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IrUfFWem"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 240B81140C0B;
+	Wed, 10 Jul 2024 21:53:52 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Wed, 10 Jul 2024 21:53:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1720662832;
+	 x=1720749232; bh=blYGdh72QWxBvqFvSyMrnSkviyCQU3tEmPuUaU4E6Tc=; b=
+	bIzmUleh48on1QgxG+ZuzhrpJAeYJ/kbOcUPCiGo4dIAf5rnMxS2iseRZ6MDsMJk
+	i52NmQXfJHFeihqlghPgG9etJvRfCJxyW9PyRNTirvvb9UDPZvHB6BldDeVkemsz
+	f1g07ids4dd5gAd6grKGiQrb/T6cbY/gzQt/5D31Cv/g5nC4Y1tuW2ngojv+Kv7/
+	WWOLUeJvhWcGnzSkKmXrjRCTRNMp0e4bbXCspQ5wPxY+5njtQYvn0Ed/WEx5eYLy
+	mDDYZaRm+Ty6l7EkMCzX5nBB1/7s39KckghwW9p31DqGyUXd2NiZ2NYUQMzMkZ5+
+	MtBWqhV5vN0Ek12DE8N1eQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720662832; x=
+	1720749232; bh=blYGdh72QWxBvqFvSyMrnSkviyCQU3tEmPuUaU4E6Tc=; b=I
+	rUfFWem8XnqFRRqjqo/UDmUFkDnDNxf3jzyOUWLE06VIqceIOobQEFdf52OXGoS7
+	g1/Ip/IJw51aONCKCT/jHPC9zx/GvNKu2ZLI/cWlml2ipNtEvFWVbupYx29X0pWp
+	OUrRyPWy+PSrB76iy5sIriOlCSpIa0z8x0tWlMhrsBrVt+lF8WOVX4ZFPlgACvMz
+	kKsmdyRi0L3Mjk/i/nYyYHn1tO5KGxPzVGqaBR8L8bolY6ukTuJ68dyXdMLBA3wM
+	vCgiLkV1rQ6T+37sanPEXxeCnlx6dsKkqxZUCeO4Cf4GUGC5AuC/yGgtEm1/E4xP
+	qMM1oZjyZzyombBBuXssQ==
+X-ME-Sender: <xms:LjuPZsHoNiCaX2K7bdug5uYm-7FMWD8pyc0FabfSifBRdaSHisu8Eg>
+    <xme:LjuPZlWcYETmflykB6ZZRJNh5BoPHe3sA2DfDNo60O3gBzzj8uqG2sdcLpdi7wLY9
+    4kN6KGNQ_5n2XcMHX0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeefgdehfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:LzuPZmJGU7Xj4JwVgAsOMedQx2RGSk1eLkCNiCpX7A3UX4NZwnOL_w>
+    <xmx:LzuPZuFv7ChyOVk8h10Bkt9MhLlUDQZUSw0lHOdoUdcSPAj1Yckl2A>
+    <xmx:LzuPZiWN31a3zsnRpU_SRQA6lcsjqzrsB24DXwz6PbYoWCPRkr4JiA>
+    <xmx:LzuPZhPzAIvZmpSw7CVR44Bvq2FmVzpF1Lm_nAkaJYZu_Rx0Cf1Q3Q>
+    <xmx:MDuPZkIApB6PeRPf7sMNFo96_LJpq-_AIPoUQswEwMCbzEI1B-iM94SG>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id DE20E36A0074; Wed, 10 Jul 2024 21:53:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] leds: leds-pca995x: Add support for NXP PCA9956B
-To: pieterjanca@gmail.com, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Isai Gaspar <isaiezequiel.gaspar@nxp.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240710-pca995x-v2-0-8fafb6e4b7d5@gmail.com>
- <20240710-pca995x-v2-2-8fafb6e4b7d5@gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240710-pca995x-v2-2-8fafb6e4b7d5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Message-Id: <a8741e38-837b-4fbb-8656-1e6d50bdfcc0@app.fastmail.com>
+In-Reply-To: <alpine.DEB.2.21.2407101015120.38148@angie.orcam.me.uk>
+References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com>
+ <Zn1FuxNw2CUttzdg@alpha.franken.de>
+ <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com>
+ <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk>
+ <fbd421a6-cf37-49ab-bdbe-6128a7cae8be@app.fastmail.com>
+ <Zoz6+YmUk7CBsNFw@alpha.franken.de>
+ <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com>
+ <Zo457UgAkhbAgm2R@alpha.franken.de>
+ <alpine.DEB.2.21.2407101015120.38148@angie.orcam.me.uk>
+Date: Thu, 11 Jul 2024 09:53:30 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc: "Jonathan Corbet" <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/10/24 4:32 PM, Pieterjan Camerlynck via B4 Relay wrote:
 
-[...]
 
-> @@ -52,9 +68,9 @@ struct pca995x_led {
->   };
->   
->   struct pca995x_chip {
-> +	const struct pca995x_chipdef *chipdef;
->   	struct regmap *regmap;
-> -	struct pca995x_led leds[PCA995X_MAX_OUTPUTS];
-> -	int btype;
-> +	struct pca995x_led leds[];
+=E5=9C=A82024=E5=B9=B47=E6=9C=8810=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
+=8D=885:21=EF=BC=8CMaciej W. Rozycki=E5=86=99=E9=81=93=EF=BC=9A
+> On Wed, 10 Jul 2024, Thomas Bogendoerfer wrote:
+>
+>> > > I'm considering to apply your patch, how much testing/verificatio=
+n did
+>> > > this patch see ? Do have some test binaries ?
+>> >=20
+>> > It has been tested against Debian rootfs. There is no need to test =
+againt special binary,
+>> > but you need NaN2008 hardware such as Loongson 3A4000.
+>>=20
+>> that's just one case, what about NaN2008 binaries on a legacy MIPS CP=
+U ?
+>
+>  It would be good to check with hard-float QEMU configured for writabl=
+e=20
+> FCSR.NAN2008 (which is one way original code was verified) that things=20
+> have not regressed.  And also what happens if once our emulation has=20
+> triggered for the unsupported FCSR.NAN2008 mode, an attempt is made to=20
+> flip the mode bit via ptrace(2), e.g. under GDB, which I reckon our=20
+> emulation permits for non-legacy CPUs (and which I think should not be=20
+> allowed under the new setting).
 
-Please increase PCA995X_MAX_OUTPUTS to 24 and avoid this variable length 
-array at the end.
+PTrace is working as expected (reflects emulated value).
 
->   };
->   
->   static int pca995x_brightness_set(struct led_classdev *led_cdev,
-> @@ -62,10 +78,11 @@ static int pca995x_brightness_set(struct led_classdev *led_cdev,
->   {
->   	struct pca995x_led *led = ldev_to_led(led_cdev);
->   	struct pca995x_chip *chip = led->chip;
-> +	const struct pca995x_chipdef *chipdef = chip->chipdef;
->   	u8 ledout_addr, pwmout_addr;
->   	int shift, ret;
->   
-> -	pwmout_addr = (chip->btype ? PCA9955B_PWM0 : PCA9952_PWM0) + led->led_no;
-> +	pwmout_addr = (chipdef->pwm_base) + led->led_no;
+The actual switchable NaN hardware (M5150, P5600) uses a dedicated Confi=
+g7
+bit rather than writable FCSR.NAN2008 to control NaN2008 mode. This is u=
+ndocumented
+and not present on some RTL releases. FCSR.NAN2008 is R/O as per The MIP=
+S32 Instruction
+Set Manual. This renders the purposed test pointless.
 
-Parenthesis around (chipdef->pwm_base) not needed.
+That being said, I'll catch some time later to test behaviour with purpo=
+sed QEMU modification
+but I think it's good to go now.=20
 
->   	ledout_addr = PCA995X_LEDOUT0 + (led->led_no / PCA995X_OUTPUTS_PER_REG);
->   	shift = PCA995X_LDRX_BITS * (led->led_no % PCA995X_OUTPUTS_PER_REG);
->   
-> @@ -101,24 +118,24 @@ static const struct regmap_config pca995x_regmap = {
->   
->   static int pca995x_probe(struct i2c_client *client)
->   {
-> -	struct fwnode_handle *led_fwnodes[PCA995X_MAX_OUTPUTS] = { 0 };
->   	struct fwnode_handle *np, *child;
->   	struct device *dev = &client->dev;
-> +	const struct pca995x_chipdef *chipdef;
->   	struct pca995x_chip *chip;
->   	struct pca995x_led *led;
-> -	int i, btype, reg, ret;
-> +	int reg, ret;
->   
-> -	btype = (unsigned long)device_get_match_data(&client->dev);
-> +	chipdef = device_get_match_data(&client->dev);
->   
->   	np = dev_fwnode(dev);
->   	if (!np)
->   		return -ENODEV;
->   
-> -	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> +	chip = devm_kzalloc(dev, struct_size(chip, leds, chipdef->num_leds), GFP_KERNEL);
+Thanks
+- Jiaxun
 
-This won't be needed once you fix up PCA995X_MAX_OUTPUTS above.
+>
+>   Maciej
 
->   	if (!chip)
->   		return -ENOMEM;
->   
-> -	chip->btype = btype;
-> +	chip->chipdef = chipdef;
->   	chip->regmap = devm_regmap_init_i2c(client, &pca995x_regmap);
->   	if (IS_ERR(chip->regmap))
->   		return PTR_ERR(chip->regmap);
-
-It is starting to look pretty good, thanks !
+--=20
+- Jiaxun
