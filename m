@@ -1,176 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417A015ECCA;
-	Thu, 11 Jul 2024 14:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBE115AD99;
+	Thu, 11 Jul 2024 14:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720707649; cv=none; b=JPHeHSi29KbC+L0hcISvPzKIUKMdRSQPTkYjt7EoHAsP2S+Gr0pHjKmMsPSaaeaEj4B6KEcZWW+QBLuAmFJqMqD3eOyehfspD1X09OYwv7H/87YrMQHEUBWLyftNUVDugMz7aqStv2+TdGOq2KxJpKlHj1kbkwdrUvXovqI5P4k=
+	t=1720707672; cv=none; b=uElEEHaiceMkZTL+PKgHmLWD09FgFB5Q0ZUVMVxY9Z9QTzYzjKygzrHdjeFoelu0NCgClooMWVyreFgi0DmjDpGrjBloJn3xb2+z69sAhGeBZhfxbq+jjduOO07nryLD9CvbI06li/L6B+yDcGN8NYK/StXvnvnS7IzBYchbgUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720707649; c=relaxed/simple;
-	bh=pquOPkCraFMTEeTmUKF4GVnjPOMtCd1vv88fzoBbSas=;
+	s=arc-20240116; t=1720707672; c=relaxed/simple;
+	bh=EVzV5gygTBPaMO6VawoS8jAqq4SBfpcm8pnxcTObV1Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AczJMlsyLKyFDpG0H8XS1Q9l+YUzfqek3Oyz5GlZglL4XQn2rjUZITpkv4tEE1Pe9Vjo/Dz0Ft2+PMIv3e1PmrjlAU+7onHrdfCbOQpEfLR1qF/zGN2AttkJNJa8DyEWeAPYN2p7Wcg2xSlzgQ+jEfd9Jwcc+YOifxoD1lti4zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1F14FEC;
-	Thu, 11 Jul 2024 07:21:11 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 377EE3F766;
-	Thu, 11 Jul 2024 07:20:44 -0700 (PDT)
-Date: Thu, 11 Jul 2024 15:20:41 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-	"james.quinlan@broadcom.com" <james.quinlan@broadcom.com>,
-	"f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-	"etienne.carriere@st.com" <etienne.carriere@st.com>,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	"michal.simek@amd.com" <michal.simek@amd.com>,
-	"quic_sibis@quicinc.com" <quic_sibis@quicinc.com>,
-	"quic_nkela@quicinc.com" <quic_nkela@quicinc.com>,
-	"ptosi@google.com" <ptosi@google.com>,
-	"dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-	"souvik.chakravarty@arm.com" <souvik.chakravarty@arm.com>,
-	Etienne Carriere <etienne.carriere@foss.st.com>
-Subject: Re: [PATCH v2 6/8] firmware: arm_scmi: Make OPTEE transport a
- standalone driver
-Message-ID: <Zo_qOcRa11INO8cs@pluto>
-References: <20240710173153.4060457-1-cristian.marussi@arm.com>
- <20240710173153.4060457-7-cristian.marussi@arm.com>
- <PAXPR04MB8459B0299D11F08605C20BB988A52@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUHyQDasvs9yWMhM+J9ocSAJ/P+Tj1BKJiJ96luNhxyCpVy3I5qHP1RV7u3xXFF6H+0/lWeDcR/dSXfEh5Dcv1FIKM++Si1acq1kCI6ocgM8iiVxpvELm6ZfgGwNHPd9UUBd3UeikpmGUFaWJcaac/coRGmxrlsOVVw8/GmBVzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWl3dqbi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWl3dqbi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BCB8C116B1;
+	Thu, 11 Jul 2024 14:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720707672;
+	bh=EVzV5gygTBPaMO6VawoS8jAqq4SBfpcm8pnxcTObV1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tWl3dqbi9l+exogGQkFYJPdgJPRrrVZpD0UcL4MrMsZUXBgE3ElcD+bsnupXR79oU
+	 EQZjriJdpTO+K1qwW705WnrtgosmqrvzWsAEcnFipurNpabVjL34Q2f8QtVfoj5mRz
+	 1Bub1oz7Qym7t0v2sTB5fE7iQp+RnMjenW+cX2JSK9+6vZ5W7c5oGJIPralU1QA6tG
+	 PqXWq3DyaqkhRuzUcxxeLTQ20lBBckYsPFklx+RVXpaqDdQG/aB1p650lp9KVJNCJ5
+	 P1VbCfuK4xWLCUkIIa70qlJNUY7dSJzA6UprdnDF0Mb4A8EflIuBO5mh0ZCUjqpqY6
+	 EwSnnmddgyLkA==
+Date: Thu, 11 Jul 2024 15:21:08 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Ian Abbott <abbotti@mev.co.uk>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RESEND PATCH] rtc: ds1343: Force SPI chip select to be active
+ high
+Message-ID: <bd7c0eb9-bcb6-42e3-8be6-3d07452e3fd5@sirena.org.uk>
+References: <20240710175246.3560207-1-abbotti@mev.co.uk>
+ <20240710184053c34201f0@mail.local>
+ <2b0e8a6c-f89e-4d71-a816-9da46ea695eb@mev.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="X16MSWMy47KogHCw"
+Content-Disposition: inline
+In-Reply-To: <2b0e8a6c-f89e-4d71-a816-9da46ea695eb@mev.co.uk>
+X-Cookie: Individualists unite!
+
+
+--X16MSWMy47KogHCw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459B0299D11F08605C20BB988A52@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-On Thu, Jul 11, 2024 at 12:57:46PM +0000, Peng Fan wrote:
-> > Subject: [PATCH v2 6/8] firmware: arm_scmi: Make OPTEE transport a
-> > standalone driver
-> > 
-> > Make SCMI OPTEE transport a standalone driver that can be optionally
-> > loaded as a module.
-> > 
-> > CC: Etienne Carriere <etienne.carriere@foss.st.com>
-> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> > ---
-> > v1 --> v2
-> > - handle platform_driver_register() failures
-> > ---
-> >  drivers/firmware/arm_scmi/Kconfig             |  6 +-
-> >  drivers/firmware/arm_scmi/Makefile            |  2 +-
-> >  drivers/firmware/arm_scmi/common.h            |  3 -
-> >  drivers/firmware/arm_scmi/driver.c            |  3 -
-> >  .../{optee.c => scmi_transport_optee.c}       | 91 ++++++++++---------
-> >  5 files changed, 52 insertions(+), 53 deletions(-)  rename
-> > drivers/firmware/arm_scmi/{optee.c => scmi_transport_optee.c} (90%)
-> > 
-> > diff --git a/drivers/firmware/arm_scmi/Kconfig
-> > b/drivers/firmware/arm_scmi/Kconfig
-> > index a4d44ef8bf45..def7e3f09356 100644
-> > --- a/drivers/firmware/arm_scmi/Kconfig
-> > +++ b/drivers/firmware/arm_scmi/Kconfig
-> > @@ -89,8 +89,8 @@ config ARM_SCMI_TRANSPORT_MAILBOX
-> >  	  will be called scmi_transport_mailbox.
-> > 
-> >  config ARM_SCMI_TRANSPORT_OPTEE
-> > -	bool "SCMI transport based on OP-TEE service"
-> > -	depends on OPTEE=y || OPTEE=ARM_SCMI_PROTOCOL
-> > +	tristate "SCMI transport based on OP-TEE service"
-> > +	depends on OPTEE
-> >  	select ARM_SCMI_HAVE_TRANSPORT
-> >  	select ARM_SCMI_HAVE_SHMEM
-> >  	select ARM_SCMI_HAVE_MSG
-> > @@ -100,6 +100,8 @@ config ARM_SCMI_TRANSPORT_OPTEE
-> > 
-> >  	  If you want the ARM SCMI PROTOCOL stack to include
-> > support for a
-> >  	  transport based on OP-TEE SCMI service, answer Y.
-> > +	  This driver can also be built as a module.  If so, the module
-> > +	  will be called scmi_transport_optee.
-> > 
-> >  config ARM_SCMI_TRANSPORT_SMC
-> >  	tristate "SCMI transport based on SMC"
-> > diff --git a/drivers/firmware/arm_scmi/Makefile
-> > b/drivers/firmware/arm_scmi/Makefile
-> > index 6868a47fa4ab..b04119ce972f 100644
-> > --- a/drivers/firmware/arm_scmi/Makefile
-> > +++ b/drivers/firmware/arm_scmi/Makefile
-> > @@ -7,13 +7,13 @@ scmi-driver-
-> > $(CONFIG_ARM_SCMI_RAW_MODE_SUPPORT) += raw_mode.o
-> >  scmi-transport-$(CONFIG_ARM_SCMI_HAVE_SHMEM) = shmem.o
-> >  scmi-transport-$(CONFIG_ARM_SCMI_HAVE_MSG) += msg.o
-> >  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_VIRTIO) += virtio.o
-> > -scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_OPTEE) += optee.o
-> > scmi-protocols-y := base.o clock.o perf.o power.o reset.o sensors.o
-> > system.o voltage.o powercap.o  scmi-protocols-y += pinctrl.o  scmi-
-> > module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
-> > 
-> >  obj-$(CONFIG_ARM_SCMI_TRANSPORT_SMC) +=
-> > scmi_transport_smc.o
-> >  obj-$(CONFIG_ARM_SCMI_TRANSPORT_MAILBOX) +=
-> > scmi_transport_mailbox.o
-> > +obj-$(CONFIG_ARM_SCMI_TRANSPORT_OPTEE) +=
-> > scmi_transport_optee.o
-> > 
-> >  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
-> >  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-module.o diff --git
-> > a/drivers/firmware/arm_scmi/common.h
-> > b/drivers/firmware/arm_scmi/common.h
-> > index edb786cde25c..0ce1d804b3fc 100644
-> > --- a/drivers/firmware/arm_scmi/common.h
-> > +++ b/drivers/firmware/arm_scmi/common.h
-> > @@ -289,9 +289,6 @@ int
-> > scmi_xfer_raw_wait_for_message_response(struct scmi_chan_info
-> > *cinfo,  #ifdef CONFIG_ARM_SCMI_TRANSPORT_VIRTIO  extern const
-> > struct scmi_desc scmi_virtio_desc;  #endif -#ifdef
-> > CONFIG_ARM_SCMI_TRANSPORT_OPTEE -extern const struct
-> > scmi_desc scmi_optee_desc; -#endif
-> > 
-> >  void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr,
-> > void *priv);
-> > 
-> > diff --git a/drivers/firmware/arm_scmi/driver.c
-> > b/drivers/firmware/arm_scmi/driver.c
-> > index b14c5326930a..67b416c7f2f5 100644
-> > --- a/drivers/firmware/arm_scmi/driver.c
-> > +++ b/drivers/firmware/arm_scmi/driver.c
-> > @@ -3251,9 +3251,6 @@ ATTRIBUTE_GROUPS(versions);
-> > 
-> >  /* Each compatible listed below must have descriptor associated with
-> > it */  static const struct of_device_id scmi_of_match[] = { -#ifdef
-> > CONFIG_ARM_SCMI_TRANSPORT_OPTEE
-> > -	{ .compatible = "linaro,scmi-optee", .data =
-> > &scmi_optee_desc },
-> > -#endif
-> >  #ifdef CONFIG_ARM_SCMI_TRANSPORT_VIRTIO
-> >  	{ .compatible = "arm,scmi-virtio", .data = &scmi_virtio_desc},
-> > #endif diff --git a/drivers/firmware/arm_scmi/optee.c
-> > b/drivers/firmware/arm_scmi/scmi_transport_optee.c
-> > similarity index 90%
-> > rename from drivers/firmware/arm_scmi/optee.c rename to
-> > drivers/firmware/arm_scmi/scmi_transport_optee.c
-> > index 99f3b0bfb956..7a16c8d3e213 100644
-> > --- a/drivers/firmware/arm_scmi/optee.c
-> > +++ b/drivers/firmware/arm_scmi/scmi_transport_optee.c
-> > @@ -1,6 +1,6 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /*
-> > - * Copyright (C) 2019-2021 Linaro Ltd.
-> > + * Copyright (C) 2019-2024 Linaro Ltd.
-> 
-> This should be kept unchanged?
+On Thu, Jul 11, 2024 at 03:05:01PM +0100, Ian Abbott wrote:
 
-Not sure, like I said previously, how to go about years.
-Thanks,
-Cristian
+> I think the devicetree node for the RTC device ought to be setting
+> `spi-cs-high` but cannot do so at the moment because the driver clobbers it.
+
+Specifying spi-cs-high in the device tree should almost always be
+redundant or a mistake, if the device needs a high chip select then we
+already know that from the compatible.  The property is adding nothing
+but potential confusion, in the normal course of affairs the driver
+should just specify the configuration it needs for the bus.
+
+--X16MSWMy47KogHCw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaP6lMACgkQJNaLcl1U
+h9C4hgf+I5lbIHVNYT9X+IHAW9VbWGC3NJG/GzSxonaA+chDK4FHyDlJU/ZnEtj0
+8Dftfoy2RAMOivQp0mK9VQHoo9M/pEeBhzmFzaY6cOc2mKEDVrWgZQ+KLP2VWgBp
+HhS89oe8vRv4z+ivGoa2Y6ErOYxFAZuizjkBRGeNLmt6lnb4TGFbbANAgCLm0MI3
+BYn2NM4qtLXUE0wsvd0qV92v1V7t1Mo6JWG+hrv0+32EHuFkacBtvKIniR9z2aHz
+IhqJHjnfy0zWcNKeDy0BfTUUGe/MpP3BTDbMrntmZVBbet3gYSS3Toqfkq0LiVIb
+sXxp0DE+qpmQC/lewp0gn0PKJ/TJEA==
+=1sxe
+-----END PGP SIGNATURE-----
+
+--X16MSWMy47KogHCw--
