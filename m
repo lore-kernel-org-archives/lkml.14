@@ -1,42 +1,35 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F29915A865
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38811155A34;
+	Thu, 11 Jul 2024 08:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720686658; cv=none; b=GHlsC1IwNp6obKJ+/fiWd6HdT7W9avrEQpQOBgEZfp9/rRziE7PpF9ALonNgzDDefoaC5hz+kyJtP40mjw0pLoPUwkYcRmmHL/63GQx3sy0CmuXnch6cK6TVvXukCfHSwCK9sZY4HfB4/rt1jpcF3N3BZR+W/TXrTeletOnPhpI=
+	t=1720686674; cv=none; b=FWlA8EfDBw32/UnbkcBy8w5b5uxamO7IHk6l5yA/S9ctjtvpyn2ixa2/bxl7y0MU+OqFZ7dvL0g2eA+IBJX0+OfnT3JvGZuViYQxc4FhPswCIBUUY7vUDZxhuekdOgXK8X6o7IdziMDOhtTaR9k2NZ0h8e+WLHSsb9rax/smbvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720686658; c=relaxed/simple;
-	bh=GNnb2pMEpLCZWuU8exB1G4Ok1i/56wOMag9mtFIm49I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iXmDhe2hcR+K/ebnGqEGUKcFxD96MGVJQCd7AQONdIOL57UMChosu8xFkg0K81i59UItPNZWKgBIrjreHwuZnuBdqcUPQN0IIZTVPz0gWkJXLTEWMMylFUKWblKQWbUSt9H3BpHw7OKxuEqZ5hTbr8n35UhhbvTFhubTvZO1dRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=akx8IgIN; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1720686674; c=relaxed/simple;
+	bh=aC3Xr9tS22ND23vxAONRN3pa/zO5+j1Y/oCN8be4Ids=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=phSEfK3tk+vrwtA/ujSIzxf7dzh427drR6p7OzuT3Q2fptvV8yRRsHRleIKkLo9TyZou2k4aK6heuinnij50vmewONzl1MD0321yUEZQ/UZvon8arPpVGwwGZhFdbq2UBjg4rQcDU1PXsgp7ZrmNPB+wW6RYvVFsPqYuvUBCIjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKe0I392; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="akx8IgIN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=P+uBeegXTfrwt6
-	z+MKaVDcauEQ2cMUwbT1jXu03xNsk=; b=akx8IgINx6+frcTynwYHGUMx3B3S/B
-	6ccUemnF+1fVjBblUeDVehwjMuW/h7tnSgoIq/EUmu4Oc7dpAkuqnsOy/Hb09sps
-	+QejBZW8wHdMGxZs8Topwla9ASdY7RvkNv0Q3YpBWi+en+utY/y2IhW+NoJ0Zi7s
-	WWSI2y8jTResX39Sx/Y9+tUWNUPY9i6VSnDvdcXtBm0HZnn/r7P+voEGijpjWn8w
-	USBSS02d/m2VxyL4JdOg4syIJDbrE71yjaQazLLnsm+VNz8CyiZBY1VpQTi68hXr
-	iOx2Lc1rQKN82y4iBSmygSgD7wDOKR2xmARP7atm3FHvg1FWZ1H7E7YQ==
-Received: (qmail 777695 invoked from network); 11 Jul 2024 10:30:52 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Jul 2024 10:30:52 +0200
-X-UD-Smtp-Session: l3s3148p1@0iKxlPQcOoQgAwDPXwmZAIsFIv4n+Dpm
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: rcar: ensure Gen3+ reset does not disturb local targets
-Date: Thu, 11 Jul 2024 10:30:44 +0200
-Message-ID: <20240711083043.8334-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKe0I392"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A5D0FC4AF0A;
+	Thu, 11 Jul 2024 08:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720686673;
+	bh=aC3Xr9tS22ND23vxAONRN3pa/zO5+j1Y/oCN8be4Ids=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KKe0I3923FdDqHvWUh6oX1FOOD0dAUqy3ws6sX7bdqT35X6RXXENDNezfvhpMpy1f
+	 l3wQILHmbnyV+LlHM/enz2pMHEiuPFzgKF/Lz0ai3Y7hFXbjeELAdIzf00WVueKWWX
+	 bQyxoAObhQDriQ/U+8dAQ695ia3III3rJZwJ/3bBEmc4jlJUcgT0mjt9CkdemnqKWw
+	 Nen4ezEB1djRqweqe/S/tLmZ6zj8NnjsezDXXgvK245mjiCoSBCF/EZdjGOx3gw5a/
+	 hrP2rkD/32xnFY4XRHDVDdOGpTKyJB+5vrAqeZ1pGKUX/jwhDn1z4RaxnK8Eq60elK
+	 fN4xRQX0lqubQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9200BC433E9;
+	Thu, 11 Jul 2024 08:31:13 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,51 +37,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 net] net: ethernet: mtk-star-emac: set mac_managed_pm when
+ probing
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172068667359.28697.10752199531087262735.git-patchwork-notify@kernel.org>
+Date: Thu, 11 Jul 2024 08:31:13 +0000
+References: <20240708065210.4178980-1-jianhui.lee@canonical.com>
+In-Reply-To: <20240708065210.4178980-1-jianhui.lee@canonical.com>
+To: Jian Hui Lee <jianhui.lee@canonical.com>
+Cc: nbd@nbd.name, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
+ lorenzo@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, f.fainelli@gmail.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 
-R-Car Gen3+ needs a reset before every controller transfer. That erases
-configuration of a potentially in parallel running local target
-instance. To avoid this disruption, avoid controller transfers if a
-local target is running. Also, disable SMBusHostNotify because it
-requires being a controller and local target at the same time.
+Hello:
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/i2c/busses/i2c-rcar.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 8f2ede534f30..29cbeda59f3e 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -884,6 +884,10 @@ static int rcar_i2c_do_reset(struct rcar_i2c_priv *priv)
- {
- 	int ret;
- 
-+	/* Don't reset if a slave instance is currently running */
-+	if (priv->slave)
-+		return -EISCONN;
-+
- 	ret = reset_control_reset(priv->rstc);
- 	if (ret)
- 		return ret;
-@@ -1176,6 +1180,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 	if (of_property_read_bool(dev->of_node, "smbus"))
- 		priv->flags |= ID_P_HOST_NOTIFY;
- 
-+	/* R-Car Gen3+ needs a reset before every transfer */
- 	if (priv->devtype >= I2C_RCAR_GEN3) {
- 		priv->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
- 		if (IS_ERR(priv->rstc)) {
-@@ -1186,6 +1191,9 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 		ret = reset_control_status(priv->rstc);
- 		if (ret < 0)
- 			goto out_pm_put;
-+
-+		/* hard reset disturbs HostNotify local target, so disable it */
-+		priv->flags &= ~ID_P_HOST_NOTIFY;
- 	}
- 
- 	ret = platform_get_irq(pdev, 0);
+On Mon,  8 Jul 2024 14:52:09 +0800 you wrote:
+> The below commit introduced a warning message when phy state is not in
+> the states: PHY_HALTED, PHY_READY, and PHY_UP.
+> commit 744d23c71af3 ("net: phy: Warn about incorrect mdio_bus_phy_resume() state")
+> 
+> mtk-star-emac doesn't need mdiobus suspend/resume. To fix the warning
+> message during resume, indicate the phy resume/suspend is managed by the
+> mac when probing.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2,net] net: ethernet: mtk-star-emac: set mac_managed_pm when probing
+    https://git.kernel.org/netdev/net/c/8c6790b5c25d
+
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
