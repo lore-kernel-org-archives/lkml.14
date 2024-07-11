@@ -1,65 +1,48 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 6.mo584.mail-out.ovh.net (6.mo584.mail-out.ovh.net [188.165.36.253])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819A5132104
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3986113328E
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.36.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761574; cv=none; b=oxY9mt87AMtt6H77QRt0XRyiHtjY5gGTpaFqVG6/Fut3t2lPM3/Ml89+kvU3ih+679HUvCh7eEl1ydyOuxJH7BzwORk2gtkR7b8CnNi/4O6hXwomPzpgZloe6hhdrwY1vyUrkQnge3PdadFOk/q5yGPBBQK9is+kwwppSVQJpEI=
+	t=1720761579; cv=none; b=UyY+C2Kk9/c3SbfbrgosVX+xf+VYtniw5K301UnleguXwz3rtLNiF4DQzjHgL2kN9yZOrdJC7ahjQWxOBDCDSLOBtLjvrZ9rs2VSfF8Ar+6T2bsRmG6ldj7r7T31z17XPFraHsdr9fyk+juqFYGbDjIw+s/w7xZGGJap7dZczuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720761574; c=relaxed/simple;
-	bh=26FMC06RAj74awgXpxaoTTL9LLEerkdHyU5eXGMrwqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VAijNxZwwM6cImRktEoQV6+27gCGYGGIGTiUQnmqIXDB0f74vz780qBb7cCpeM2DMe0emixadSOFyICMrIqG45NRhoJ0a0cWtSsDxsVolK+S9YdLLeVEj5So1go6iG4IIwrZDoQhqJik6xaJp1FFQ3yt8X2ma2L0RAXQBX3vjr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QedeuExY; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QedeuExY"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70b05260c39so1189954b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:19:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720761572; x=1721366372; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xM31fGaT/iXt00GqtzCm1xbl9EeHSa7uOeAlnW7mZpk=;
-        b=QedeuExYntVxq2cC6otKpTnVxgDG/EDzgpSDLs0oLsmfgQ8SlO2ACtv1et3TqaWQAZ
-         bqKchcBBeXi6rKHBOg4LzCTn9Dh4Tk98Ix6LSsSLQGnF5v0UyD3g695rl6GwHFqmqM/0
-         SzL6gNRrW4/eEJOl7dKvPGGOzq0h0V/mb4D2Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720761572; x=1721366372;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xM31fGaT/iXt00GqtzCm1xbl9EeHSa7uOeAlnW7mZpk=;
-        b=vbozd5oiaZNl1p1enyTX4yr1ViP/UT5A/O9MCSzvFr55e5ULP1DSaX/fHVO7Qd8Kax
-         OlooI1OpFAsE9pyonXDwEWgr/cFJQjwWDgyLaySRvcPqWWEgMTESZIoZqWMmyWfcqvL8
-         i1k1tY1iB6vV/S4YL733PJlcJx5fGfPb/d5/XNo92mcbArdbTYu5pG8hkpYWkB/zpc3u
-         EWnUBbIe7yF9zflL1liGZ8DM+wlL9QjgHK0owi6LMr3dvgzSXdJec7JyWA7TRZTToWIL
-         I8qz7+jcTnnUrIo+nOIAIMi3Q2A2VIkU0GlnxYWb0j+e8sYIZl9LnSmGU1uKHffYSlx6
-         kCPA==
-X-Gm-Message-State: AOJu0YxyyNqiVLUvtpX0QdOo8yEX10xLLwvGBO/whp7qC/XZNUCVAWaz
-	g93GC/T4r7jEpdFxN+JTs1PDsnEZ7OwojYUUMPVoyIFH+AdNV1DUkf50SyF4Rg5z3YVZ4gV6+xy
-	Dy4Qg
-X-Google-Smtp-Source: AGHT+IEl0D1pr3FtX9Qv5hugbvRDGy3/Sf955VMF/uhacWvDXMBmDUtTt4wYr4NBZQeAPEBI7ar+xw==
-X-Received: by 2002:a05:6a00:124a:b0:70a:fdd8:51f2 with SMTP id d2e1a72fcca58-70b43566035mr12187438b3a.15.1720761571860;
-        Thu, 11 Jul 2024 22:19:31 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:15f3:5252:ec56:52ae])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967851sm6553436b3a.109.2024.07.11.22.19.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:19:31 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v6 12/23] zram: check that backends array has at least one backend
-Date: Fri, 12 Jul 2024 14:18:23 +0900
-Message-ID: <20240712051850.484318-13-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-In-Reply-To: <20240712051850.484318-1-senozhatsky@chromium.org>
-References: <20240712051850.484318-1-senozhatsky@chromium.org>
+	s=arc-20240116; t=1720761579; c=relaxed/simple;
+	bh=NZ8T7Ds3iZep5vO1ifYcykqOpLll7nDm1BsynJvV7Oo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d5L/F7S+aj5R4EbUxcm4i7/GpugoW7a9BWeBtyOJQtHSKOhAAA60s8V0JCAN6VQfPM+6Jc+/47onRu28VCmWGcZO2BDyzP/GzylJ1E9swGzfyLVn0MHqeTL0Rx81LC+ziJFDN2eKw619Jq/PhS3C9Aj7ILOcQ3FoPvFpkGeU67c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.36.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director10.ghost.mail-out.ovh.net (unknown [10.109.139.93])
+	by mo584.mail-out.ovh.net (Postfix) with ESMTP id 4WKrL24Ffhz19f0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 23:20:10 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-8rwxz (unknown [10.108.42.201])
+	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 50E101FDFC;
+	Thu, 11 Jul 2024 23:20:07 +0000 (UTC)
+Received: from etezian.org ([37.59.142.96])
+	by ghost-submission-6684bf9d7b-8rwxz with ESMTPSA
+	id PzeKC6dokGZO4gsAyuFlTg
+	(envelope-from <andi@etezian.org>); Thu, 11 Jul 2024 23:20:07 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-96R001e9cb5549-685d-425f-a6a9-8576c3d7597e,
+                    47FBFB77BDCA57EA66E7955FCDEBFA84A3B4AB1A) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:194.230.248.195
+From: Andi Shyti <andi.shyti@kernel.org>
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: Andi Shyti <andi.shyti@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	virtualization@lists.linux.dev
+Subject: [PATCH 0/2] Cleanup the MAINTAINER's file
+Date: Fri, 12 Jul 2024 01:19:24 +0200
+Message-ID: <20240711231927.3103820-1-andi.shyti@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,74 +50,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 7541840528265644655
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrfeehgddvudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpedtveeuieehfeetudejhfehleeijedvveetleefhfehuedtleektdevjedujefgvdenucfkphepuddvjedrtddrtddruddpudelgedrvdeftddrvdegkedrudelhedpfeejrdehledrudegvddrleeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekgedpmhhouggvpehsmhhtphhouhht
 
-Make sure that backends array has anything apart from the
-sentinel NULL value.
+Hi,
 
-We also select LZO_BACKEND if none backends were selected.
+while reviewing Wolfram's series, I received some delivery
+failure notifications for e-mails that don't exist anymore.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/Kconfig | 19 +++++++++++++------
- drivers/block/zram/zcomp.c |  8 ++++++++
- 2 files changed, 21 insertions(+), 6 deletions(-)
+With this series I'm removing:
 
-diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
-index ddc19853ea96..40e035468de2 100644
---- a/drivers/block/zram/Kconfig
-+++ b/drivers/block/zram/Kconfig
-@@ -15,12 +15,6 @@ config ZRAM
- 
- 	  See Documentation/admin-guide/blockdev/zram.rst for more information.
- 
--config ZRAM_BACKEND_LZO
--	bool "lzo and lzo-rle compression support"
--	depends on ZRAM
--	select LZO_COMPRESS
--	select LZO_DECOMPRESS
--
- config ZRAM_BACKEND_LZ4
- 	bool "lz4 compression support"
- 	depends on ZRAM
-@@ -51,6 +45,19 @@ config ZRAM_BACKEND_842
- 	select 842_COMPRESS
- 	select 842_DECOMPRESS
- 
-+config ZRAM_BACKEND_FORCE_LZO
-+	depends on ZRAM
-+	def_bool !ZRAM_BACKEND_LZ4 && !ZRAM_BACKEND_LZ4HC && \
-+		!ZRAM_BACKEND_ZSTD && !ZRAM_BACKEND_DEFLATE && \
-+		!ZRAM_BACKEND_842
-+
-+config ZRAM_BACKEND_LZO
-+	bool "lzo and lzo-rle compression support" if !ZRAM_BACKEND_FORCE_LZO
-+	depends on ZRAM
-+	default ZRAM_BACKEND_FORCE_LZO
-+	select LZO_COMPRESS
-+	select LZO_DECOMPRESS
-+
- choice
- 	prompt "Default zram compressor"
- 	default ZRAM_DEF_COMP_LZORLE
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index 48ac7a3e8906..cb7afbd4d8fe 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -191,6 +191,14 @@ struct zcomp *zcomp_create(const char *alg)
- 	struct zcomp *comp;
- 	int error;
- 
-+	/*
-+	 * The backends array has a sentinel NULL value, so the minimum
-+	 * size is 1. In order to be valid the array, apart from the
-+	 * sentinel NULL element, should have at least one compression
-+	 * backend selected.
-+	 */
-+	BUILD_BUG_ON(ARRAY_SIZE(backends) <= 1);
-+
- 	comp = kzalloc(sizeof(struct zcomp), GFP_KERNEL);
- 	if (!comp)
- 		return ERR_PTR(-ENOMEM);
+ - Conghui Chen <conghui.chen@intel.com>
+ - Thor Thayer <thor.thayer@linux.intel.com>
+
+unfortunately both from Intel :-(
+
+In the case of Altera's subsystems (except for the i2c), I didn't
+really know what to do with them, so that I marked them as
+Orphan.
+
+Andi
+
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+Cc: virtualization@lists.linux.dev
+
+Andi Shyti (2):
+  MAINTAINERS: i2c-virtio: Drop Conghui Chen from Maintainers
+  MAINTAINERS: Drop Thor Thayer from maintainers
+
+ MAINTAINERS | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
 -- 
-2.45.2.993.g49e7a77208-goog
+2.45.2
 
