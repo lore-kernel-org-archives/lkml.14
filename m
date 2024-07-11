@@ -1,96 +1,102 @@
-Received: from msa.smtpout.orange.fr (msa-211.smtpout.orange.fr [193.252.23.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C9116E89C
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 17:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077D415ECCA;
+	Thu, 11 Jul 2024 17:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720719114; cv=none; b=OMGGX4QkIA0vRq2zQ9ZxQGw4lCBCkWvzlcZilUgOBR+KmmIM0IoV6Q73niRkjQSZu0PK2GuAPJhrtux8PhyHj2zY6W0uaQRlqCYvD6yOfqZFYx3F0ewjUPzSEIcBq/bFRsL7iuBku9u342vUbNVImwj0SID0i7Px3din4PqRx6o=
+	t=1720719324; cv=none; b=XwVIBtYQvdQ4Ss76+WvZu1j0LS+UZrm56XxMUaBz9Hpx3b9lAdde9Bjfc+3o0t1cJvIXZKijUCHQpdWdSHBtEoHKXwpU57OZBnJ4uTS1Em2dZj08SowFLsbcaUoz4aF2rA7yEoWdqdR/j+8gvTb7CNugvaHSr6l80EdaN083Mbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720719114; c=relaxed/simple;
-	bh=I1lh+9PWxnRfpKf5KyMuGtWHTLzEMQ4QrU/SElqg0lw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BTdDiMUttHWVV4dPD9IFUJP+DiRhrsZ+LBPe7bQ7aMXtsJJEQsE9ko0VJhx0OeNmqgoDS89hgGADGiPu7d/HFBv/pBL1GRdQ1s3mqNgf0AVUqfxe6GjtqrbvG3iHWlMx0UkTE2IU9O6JXEzc5p7Jiae8Zvtjrx1AJ2FCWNDgdyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=AI76M2CN; arc=none smtp.client-ip=193.252.23.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720719324; c=relaxed/simple;
+	bh=Yq5IPf1HRPSyNRcPOhcfpmbjqBQXjhii33FKiak2WP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nsj1By/WVpNtXvRK7wxyf2NOsJNGkAe8j2Ngrj3Qtxo6N1fGs7/rnmlfUcsk6OfWX1wKIOhn+4vWdzxaIyKn8FS5e0EvLCr7AX44BKxfOLvLlfQFCPmVjmWteSDnaO6FyWpZ25GdlWqjgfLz1M+oqM+OHYFo8R2FH1hpnpY/X2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aIPJ9u0h; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="AI76M2CN"
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id RxdPsAr1uHTrpRxdwsVM6q; Thu, 11 Jul 2024 19:31:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720719105;
-	bh=CYDBY2pWQO+vL7jUvHWkdq6VSa180NCvhyL35LhJ4nw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=AI76M2CNz/N0+vD1wQnHuPFx3lNMObmO+djuwzVfE+tEFcf41Gc4mxZ9lWQE9ygtD
-	 73FG9DaAXzSrSVqCt89PNak4DHz0jBDk30k0SQPUwuFp4OUY4dNL6dRqZgZY7bHvl3
-	 QC1PoyOOivnLhNtxvWk4PKNNK/uYCzZK29IdIHHlW7Qrd1JvZo5qs7hMgA+qF/v7GL
-	 ZkG6rTisyxlvedh1MOALNEIgyV8CSOIEvPboywkMMUGQd0+urlO5JSrcLr3LwN5C5S
-	 RyQ/qcicJIM+8VJcyUlehJBjc4gKwl1VNBX7gMrJuTc3Ld/hAoUqyjlkjFOS6YGyil
-	 FHdESRH/i/nug==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 11 Jul 2024 19:31:45 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: vkoul@kernel.org,
-	kishon@kernel.org
-Cc: linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 4/4] phy: cadence-torrent: Constify a u32[]
-Date: Thu, 11 Jul 2024 19:31:09 +0200
-Message-ID: <34e23ceb6b7b7eb730ee8deee21d231b504dc65f.1720718240.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1720718240.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1720718240.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aIPJ9u0h"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BD2LO7007421;
+	Thu, 11 Jul 2024 17:35:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qNPf0d2xbAM8URqvKSWu8WshjIdAJFLq2jdFkPgYo2k=; b=aIPJ9u0hBoZUGZ+C
+	VjBCfdT242yhcU/dTCGwU7+4+BnGthPusUwd4F3vFc5uIx7iCl9jRy2LWoROt4hE
+	+Wc1xz4FfRurvOUa8D2mVAhz+koE+cY3BVP0twdzj9erzfokvRQhZY4BPb8f/oMT
+	yzIDrnkyoA213a+7LQDmL+/jVRQXv6zqfkal8vNyTwTvFcSvzCf84bzb7YgNXB3e
+	esz+2F1bsaUBE1YSh+rXZAZm2OrkDVcSCtDG84yHaQRJaITJzDhhnIgTGZJL42Dx
+	Jk25llWRhsO4WiH0M5Su2wnn345sC0uiyr9Lmct7x4pepz9ksQGSO8/rZYIWU2K2
+	BMQQoA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4091jdqcvp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 17:35:17 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46BHZGAt031757
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 17:35:16 GMT
+Received: from [10.81.24.74] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
+ 2024 10:35:15 -0700
+Message-ID: <f623ca12-6911-48d0-8706-483f38a99b13@quicinc.com>
+Date: Thu, 11 Jul 2024 10:35:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs/adfs: add MODULE_DESCRIPTION
+To: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Jan Kara <jack@suse.cz>
+References: <20240523-md-adfs-v1-1-364268e38370@quicinc.com>
+ <20240524-zumal-butterbrot-015b2a21efd5@brauner>
+ <20240527164022.GE2118490@ZenIV>
+ <20240528-gehemmt-umziehen-510568bb05ac@brauner>
+Content-Language: en-US
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240528-gehemmt-umziehen-510568bb05ac@brauner>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: B8dvNRnMd4KtbiTIJfnGVLX6N3pIlPeZ
+X-Proofpoint-ORIG-GUID: B8dvNRnMd4KtbiTIJfnGVLX6N3pIlPeZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_12,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=846
+ mlxscore=0 priorityscore=1501 phishscore=0 clxscore=1011 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407110122
 
-'cdns_torrent_refclk_driver_mux_table' is not modified in this driver.
-And it is only used as a "const u32 *".
+On 5/28/24 03:00, Christian Brauner wrote:
+> On Mon, May 27, 2024 at 05:40:22PM +0100, Al Viro wrote:
+>> On Fri, May 24, 2024 at 03:13:04PM +0200, Christian Brauner wrote:
+>>> On Thu, 23 May 2024 06:58:01 -0700, Jeff Johnson wrote:
+>>>> Fix the 'make W=1' issue:
+>>>> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/adfs/adfs.o
+>>>>
+>>>>
+>>>
+>>> Sure, why not.
+>>
+>> Might make sense to move those into a separate branch, IMO (and feel
+>> free to slap ACKed-by: Al Viro <viro@zeniv.linux.org.uk> on those -
+>> AFAICS all of them look reasonable).
+> 
+> Thanks! Added Acks to all of them and about to push it to
+> #vfs.module.description.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+Following up since I don't see this in linux-next and hope to have all 
+of these warnings fixed tree-wide in 6.11.
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  93578	   4798	     16	  98392	  18058	drivers/phy/cadence/phy-cadence-torrent.o
-
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  93606	   4790	     16	  98412	  1806c	drivers/phy/cadence/phy-cadence-torrent.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only.
----
- drivers/phy/cadence/phy-cadence-torrent.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
-index e99fa19aafb2..098c141c28c2 100644
---- a/drivers/phy/cadence/phy-cadence-torrent.c
-+++ b/drivers/phy/cadence/phy-cadence-torrent.c
-@@ -285,7 +285,7 @@ static const int refclk_driver_parent_index[] = {
- 	CDNS_TORRENT_RECEIVED_REFCLK
- };
- 
--static u32 cdns_torrent_refclk_driver_mux_table[] = { 1, 0 };
-+static const u32 cdns_torrent_refclk_driver_mux_table[] = { 1, 0 };
- 
- enum cdns_torrent_phy_type {
- 	TYPE_NONE,
--- 
-2.45.2
-
+/jeff
