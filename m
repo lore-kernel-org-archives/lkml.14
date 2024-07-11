@@ -1,97 +1,113 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9FC158DBF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017A514A4E5
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720695956; cv=none; b=eKnHB2bEhQ55aV7joeXVYA0Ha6zx2TmNxhru8RBk7SZqOaVem9u4xI9btTBFz+NpPV9+XL6VijaayQQThwT0zaSN3dJ/SkzaNyB3TqDuaFGWYozmPC/MmKu9ZiumuDuZYVyFbSqldBvngh5tFdOdqpAGsFx7nHA+IqubK4xAvB4=
+	t=1720696032; cv=none; b=ASbLfUFGAl825zj7a2A2GBfp7gDlB3iL19oKLKsDaPBGF+VoE1dZKIeN1QsVBunssqk3wZRVeUoUAhRbR27nPB6vmH5SwwhYlXtPBGD9TuDtXeiqCq/gbnXZbgJ+85NBJN79E50jy5H9ObKvCJ4oQl0idkxJP+3abCU98oo9K8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720695956; c=relaxed/simple;
-	bh=j9NiAkcYaZRamBP4qRY3h61EYjWuLcJWwXFrgkmMxhc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OrFU5+QGYBm7o2uMxNm3zQ7DhQP1uNj3p3nAT/FJxIZeBizIg3QhmLuvCxLcv+SfbCtccGLPvVIT393E9rEWBTCz0tcoJvYiYFsEQap9RRzRJTgxoh4OznkwTE3u+xZM5Pca9K651iyY70g1IADrMyocR5VtJgs++F57O9IRVds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NXE8x6CS; arc=none smtp.client-ip=209.85.219.175
+	s=arc-20240116; t=1720696032; c=relaxed/simple;
+	bh=DXiyJvnZaoXMSX7dmB8Mx+Bw81ZcG1UbxSGB35kWLl4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TitS4T9Che2oIWwUp8SRH3Rxkh0NJRiX59NYk1It9ehTvCWXigGe7DVRN6NzXmvX6ln+oNfGsS5sh/7uhxNkAR8WNZMtdZTrUdhpCgFqrWpIslaN8hYBzceR9ZQOQHPen7s4vHI9vNHRcL1Lhh8mPBMPRy+qmYP/s40Nx6uvu8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jZKWLQib; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NXE8x6CS"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e03c689addcso664160276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:05:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZKWLQib"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-426717a2d12so4688225e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:07:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720695954; x=1721300754; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j9NiAkcYaZRamBP4qRY3h61EYjWuLcJWwXFrgkmMxhc=;
-        b=NXE8x6CSZHTwPIXNdvJkrHhs8T62DP6eLaxflpb2uynoki2fmz1eG6hrL4Z/9154dA
-         N8ZjkNF5bKl1P6kaI3+IcqplAx6Ex29DO8niwk3wlkxzdJXCqVNiv6cB1NeevofpRdgf
-         6r/nY+/kG3FRJBrP8qdD4zdMQyBtD4t65Mplv3e/VdDCi5VM+rGCT79eBLNRHqOnBZNE
-         mRrxkZCGayDBn5OFMVvldLeULdINXibXHVAx9W4z2NNnOxQDoVS9Ctt65ngK2otlYwCd
-         YWFVM++Y8J76S0WbjV2NaWN4ikKsc1OS9XE/4XoG6lw8davOMshR82DpoNa4jOxcfiHb
-         vrCA==
+        d=linaro.org; s=google; t=1720696029; x=1721300829; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YAbKmOiNIkgQtdozoam3aD9572Bcc6PrMc/2R0CeN18=;
+        b=jZKWLQibqPe7CHxoj7mOuKWn7d5GQk2nNreRn8YWzedXuH/JqZGtGpnSTZHnuIU64X
+         5v/dZVJuPihZ34hc0Ca3gGIE5qshBwWt9Roc1w7KGjcZOV0hBCU+YOzJaFdOS30byzOm
+         u0hjdo8TgvUGyC4NjgSRhxM+ADXxWxBMH0MDPIQH7g3r8wEEvT8vpe1XxFBgXpt1BRqZ
+         QKoT28zYrLa9jkmOvgVA8GESoWtzn8JYwiNZbk+ENUXEMutUw5lmIfH5SGZ0DgLZ+8OR
+         Eg04JXZpN3O4TV9bmGVkg5K6AnAhoq44SNyEhQWClDhTLjP26zuGxST6tZSHe+RGk206
+         7yLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720695954; x=1721300754;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1720696029; x=1721300829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=j9NiAkcYaZRamBP4qRY3h61EYjWuLcJWwXFrgkmMxhc=;
-        b=wubD+ZT77vmml3h6pHPRBATY1m+JuxuB3O8Ctzk08e1ael89QiEGcEdLUxO0R1msvw
-         xoDxidUehV7gBzIBQKKFKGKYvOtE8Vz/77VLtTyCSdTS3180iLEbre6jEInmxyBosmpI
-         pTmw+nuOwfqPYv4wAPhJtjjHKIh9CMqyero2blCkfPhxZF9SRIyrMGqq7kYCiwqbhOzp
-         X4apUHdF7n+kO/zfZXP65CHhs/6H6lkbrexITg9RpnZsdpfcmGiJhZyGVJH7TJ1zaxu1
-         hY7lvsLWOQ4AfZX9k4cjnFW7bK1BBFKw3mUfnkMjICp/2zfgQDqHLHycaoHbWU+pDKrX
-         eJ9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVFmpjd6QUbge5pFo/vmFEpAG6AdVSYkwzTFKgcZZk2T6YmAoN8DHfJBLfj1o1JvEheKy9brmWlZiyNkht1wDJCVs0rs8Xc3RQXvP3Q
-X-Gm-Message-State: AOJu0Yz4AulOiG98qyVMNHF74H5tBy8lSXJqi/DJSSe5DCSzKoAmTXNQ
-	/NvO64j0+axl78a+26W2cwdp6VDseyRmRsTIm+Ddhk81FUzFD214OkqEKhdoPLEBo2EzEHpR5ts
-	MmUB0/g2UvWz35JNZ3Iy5HkCnChThXyUVJbxuww==
-X-Google-Smtp-Source: AGHT+IFr78C3FB3Wiso6ZeI7SPSIkZqE37WM3KiUtBxtkNcdoByPdi/4+jEHifoR7ryqA6byJNjbDwvYVpZ0laFSM0U=
-X-Received: by 2002:a25:d809:0:b0:e03:af3d:d4d6 with SMTP id
- 3f1490d57ef6-e041b20c6b3mr9365953276.42.1720695953858; Thu, 11 Jul 2024
- 04:05:53 -0700 (PDT)
+        bh=YAbKmOiNIkgQtdozoam3aD9572Bcc6PrMc/2R0CeN18=;
+        b=MIiYgBrM0t6wn+QZ/DF10wHv36Mji4sHppguwfbkpaObCx9ysZCzUGSM6zP0WuFCVu
+         SUzC+wEJjzQaG8aNXBIFwaKfIx1+f88Xu/v14hQZqiWu15gH3PbUW2dKjZKRhDsnMw9U
+         nh9qIDgJKyXDVZ17eEy3YGkiJC90SLBUA7nxEpJMWgLmw0RuIwW36tnr07rcwVWriFX8
+         2SaCr2c5BRL7CH0rmJjEzGtNEiTO7mdxyzYAcnY/zUcWdSkx7EKj8AP9WlZ1jXtaHpGW
+         9fwDPCa617WMKKE59RIfismo9kZpI1+Kes6bZf+s+2E3vOrWiCmgZQatJRtBWkUaKCat
+         1kBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlcfFsqFwCOA43rKDV1E4MwY+06RBrz1psHYsOsFPdx2aaUHj/1VOHLAZ7eIfM++N7WrqmQ4DfboUYPXrIhzdh5k+E8z+CJXkfQqXZ
+X-Gm-Message-State: AOJu0YzhoHkYTdIwl6IKZO6A1Fmm2eLrd7MOmBIxi61JjC8U1YUbQ02F
+	dt53BfseP7bYkdAh1OoXU2lNwlsD8l4ZXVtXEKUXLh3Wo8FVfy2M9mfV5eUzzzc=
+X-Google-Smtp-Source: AGHT+IFojqfVrVy4buGmCYzQG8sYbeFjwl9PTyhMXZHY8rqQdHfhqHTIZrZEeL+UTqbEW2AI511d6g==
+X-Received: by 2002:a05:600c:1c99:b0:426:63bc:f031 with SMTP id 5b1f17b1804b1-427981b4c8fmr20806045e9.1.1720696029395;
+        Thu, 11 Jul 2024 04:07:09 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e097bsm115686685e9.6.2024.07.11.04.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 04:07:05 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: linux-arm-msm@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 0/5] ARM: dts: qcom: adhere to pinctrl dt schema
+Date: Thu, 11 Jul 2024 12:01:37 +0100
+Message-ID: <20240711110545.31641-2-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618155013.323322-1-ulf.hansson@linaro.org>
- <20240625105425.pkociumt4biv4j36@vireshk-i7> <CAPDyKFpLfBjozpcOzKp4jngkYenqSdpmejvCK37XvE1-WbBY2g@mail.gmail.com>
- <20240701114748.hodf6pngk7opx373@vireshk-i7> <20240702051526.hyqhvmxnywofsjp2@vireshk-i7>
- <CAPDyKFoA9O5a6xZ+948QOzYqsRjk_0jJaSxeYRwx=76YsLHzXQ@mail.gmail.com>
- <20240711031356.rl2j6fqxrykmqfoy@vireshk-i7> <CAPDyKFocjOt+JyzcAqOfCnmTxBMZmPjMerSh6RZ-hSMajRhzEA@mail.gmail.com>
-In-Reply-To: <CAPDyKFocjOt+JyzcAqOfCnmTxBMZmPjMerSh6RZ-hSMajRhzEA@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 11 Jul 2024 13:05:17 +0200
-Message-ID: <CAPDyKFoWgX=r1QtrcpEF-Y4BkiOtVnz4jaztL9zggo-=uiKsUg@mail.gmail.com>
-Subject: Re: [PATCH] OPP: Fix support for required OPPs for multiple PM domains
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Nikunj Kela <nkela@quicinc.com>, Prasad Sodagudi <psodagud@quicinc.com>, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 11 Jul 2024 at 12:31, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Thu, 11 Jul 2024 at 05:13, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 10-07-24, 15:51, Ulf Hansson wrote:
-> > > I think this should work, but in this case we seem to need a similar
-> > > thing for dev_pm_opp_set_rate().
-> >
-> > We don't go to that path for genpd's I recall. Do we ? For genpd's,
-> > since there is no freq, we always call _set_opp().
->
-> You are right! Although, maybe it's still preferred to do it in
-> _set_opp() as it looks like the code would be more consistent? No?
+Hi,
+The following patches make the device trees compliant with the pinctrl
+text to dt schema conversion here:
+https://lore.kernel.org/all/20240709162009.5166-1-rayyan.ansari@linaro.org/
 
-No matter how we do this, we end up enforcing OPPs for genpds.
+v1: https://lore.kernel.org/all/20240710084250.11342-1-rayyan.ansari@linaro.org/
 
-It means that we may be requesting the same performance-level that we
-have already requested for the device. Of course genpd manages this,
-but it just seems a bit in-efficient to mee. Or maybe this isn't a big
-deal as consumer drivers should end up doing this anyway?
+Thanks,
+Rayyan
 
-Kind regards
-Uffe
+Rayyan Ansari (5):
+  ARM: dts: qcom: apq8064-pins: correct error in drive-strength property
+  ARM: dts: qcom: asus,nexus7-flo: remove duplicate pinctrl handle in
+    i2c nodes
+  ARM: dts: qcom: apq8064: adhere to pinctrl dtschema
+  ARM: dts: qcom: ipq8064: adhere to pinctrl dtschema
+  ARM: dts: qcom: ipq4019: adhere to pinctrl dtschema
+
+ .../dts/qcom/qcom-apq8064-asus-nexus7-flo.dts |   4 -
+ .../boot/dts/qcom/qcom-apq8064-cm-qs600.dts   |  25 +-
+ .../boot/dts/qcom/qcom-apq8064-ifc6410.dts    |  25 +-
+ arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi | 362 +++++++-----------
+ .../qcom-apq8064-sony-xperia-lagan-yuga.dts   |  10 +-
+ arch/arm/boot/dts/qcom/qcom-apq8064.dtsi      |  34 +-
+ .../boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi |  34 +-
+ .../boot/dts/qcom/qcom-ipq4018-jalapeno.dts   |  27 +-
+ .../boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi |  26 +-
+ .../boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi |  14 +-
+ .../dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts    |   8 +-
+ .../dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts    |   2 +-
+ .../boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi |   6 +-
+ arch/arm/boot/dts/qcom/qcom-ipq8064-ap148.dts |  11 +-
+ .../arm/boot/dts/qcom/qcom-ipq8064-rb3011.dts |  76 ++--
+ arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi      | 114 +++---
+ 16 files changed, 309 insertions(+), 469 deletions(-)
+
+-- 
+2.45.2
+
