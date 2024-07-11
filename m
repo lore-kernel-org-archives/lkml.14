@@ -1,54 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E451A2FB2
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F7A1A38E0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720736890; cv=none; b=AVss1olNHqWi2DaPyve+LQgsBVjKUGvl5f/WB9KPj8+3dec5oYDZ4f+wOKYulpb8GzJ18+F+/K7YvueM7eeWNUxRg+2H/CYpXrql5DIIAJWYkGVGPPZS9UjlfySuSJJ0ndFVpp04ZSAAlmHQW9YBiqCuby7lJIJoHnAYdbf9wwQ=
+	t=1720736891; cv=none; b=r5KLD758nN2rtVXJ+IS8KdbVhawR+GyfXfK34pUiBuxHL9xNzmyUQEfcl/DB53M8TBFhIPSHn1pB2rSQ/pnL/0s0jeilNCzRb3AAUf8Z3/0laJnfSnzgf6iGwQBLCVXnJNuMRORtJfRt4aS/p30+zsmDfEu50tAl/auBvpF5L+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720736890; c=relaxed/simple;
-	bh=UIuuI8pj3ZeyK5S9JQuOd5zsynrclPUOgJSVOjpDijA=;
+	s=arc-20240116; t=1720736891; c=relaxed/simple;
+	bh=pEl5heZgxHtlWuvvajR2J+DBVOf+jkhfdZulTczQpYk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k7fuCFJRPHxmV7DJukto6MJZ6GCL5kI54EcwE4Pv3+lkUJU2YFSL2A4Zzp1+uSlpVgRvxh+dGaVz7KapLtduhWJ7z5jWAP79XYBbtPxOCjobwP9wunrnWe9mZG8oMYo0+e5MNp4p8b0TnJ04Mvo78COPsOFQs2H7lR+VepLnQKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SZYGxme4; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=S11A4Q1Hjg/Nbb20VA7STiTojZfTUf2zvpQ1JX01thQG+1QeO8H8UdZB/nGyu4+PHDxd1RBPiJaqIdEQ1Y46+SSIMmabFIseNw4PcEwnQNS6VYnc7D1kDk9Rv1ejcgBaMyRUfYTDWc3FY28CXeVcJoXEAk4rxDrlcb8+6x72E84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B408irKu; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SZYGxme4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B408irKu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720736887;
+	s=mimecast20190719; t=1720736889;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=p5Ee96ulXxhjmi3RItKf8tKz5A6ffGeMgjDgibBuQZU=;
-	b=SZYGxme4tz+Q1hYqTgAQPRASiT2axb9EvVHhUTH+mtN+UmfH1fyxhtK5wi2a0qVj+wsSM8
-	BWvq2rxnKgW38jh8QxxqiefM/ksPXlRTH0eEY85TZMbIs37nLaGV6Kmx1tJIO//ZBXceJZ
-	IyjCd34M0UY2LvXFAW4uJtoyFTywiJc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=H1VFMLLfYUOuUXaenTPqPnVHdgLceGR9dY67SpFugho=;
+	b=B408irKuSiazy+6I2Ulmi3GbVruRn/9pzL645aBIaj8jz0v/U54CKBiMSs9Ns9GohwfOX+
+	vTFiOa1UY0o45Uc18GSojWh+g+fKefenwUFipZ4+ztQmvanzbZUq1rWSpl0S8vzozROXSU
+	EgCdUyXxvIvfrhJD/6k/KaotSO6mvWg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-425-fEqQouoeOpK14cdJxf_YVA-1; Thu,
- 11 Jul 2024 18:28:04 -0400
-X-MC-Unique: fEqQouoeOpK14cdJxf_YVA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-459-W3ZwWlsdP4SRt5V9jcAj0w-1; Thu,
+ 11 Jul 2024 18:28:06 -0400
+X-MC-Unique: W3ZwWlsdP4SRt5V9jcAj0w-1
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C61F19560BA;
-	Thu, 11 Jul 2024 22:28:03 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1E211956095;
+	Thu, 11 Jul 2024 22:28:05 +0000 (UTC)
 Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E46D419560AE;
-	Thu, 11 Jul 2024 22:28:02 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E80AF19560AE;
+	Thu, 11 Jul 2024 22:28:04 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: seanjc@google.com,
 	michael.roth@amd.com
-Subject: [PATCH 09/12] KVM: guest_memfd: move check for already-populated page to common code
-Date: Thu, 11 Jul 2024 18:27:52 -0400
-Message-ID: <20240711222755.57476-10-pbonzini@redhat.com>
+Subject: [PATCH 11/12] KVM: extend kvm_range_has_memory_attributes() to check subset of attributes
+Date: Thu, 11 Jul 2024 18:27:54 -0400
+Message-ID: <20240711222755.57476-12-pbonzini@redhat.com>
 In-Reply-To: <20240711222755.57476-1-pbonzini@redhat.com>
 References: <20240711222755.57476-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -61,63 +61,94 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Do not allow populating the same page twice with startup data.  In the
-case of SEV-SNP, for example, the firmware does not allow it anyway,
-since the launch-update operation is only possible on pages that are
-still shared in the RMP.
-
-Even if it worked, kvm_gmem_populate()'s callback is meant to have side
-effects such as updating launch measurements, and updating the same
-page twice is unlikely to have the desired results.
-
-Races between calls to the ioctl are not possible because kvm_gmem_populate()
-holds slots_lock and the VM should not be running.  But again, even if
-this worked on other confidential computing technology, it doesn't matter
-to guest_memfd.c whether this is an intentional attempt to do something
-fishy, or missing synchronization in userspace, or even something
-intentional.  One of the racers wins, and the page is initialized by
-either kvm_gmem_prepare_folio() or kvm_gmem_populate().
-
-Anyway, out of paranoia, adjust sev_gmem_post_populate() anyway to use
-the same errno that kvm_gmem_populate() is using.
+While currently there is no other attribute than KVM_MEMORY_ATTRIBUTE_PRIVATE,
+KVM code such as kvm_mem_is_private() is written to expect their existence.
+Allow using kvm_range_has_memory_attributes() as a multi-page version of
+kvm_mem_is_private(), without it breaking later when more attributes are
+introduced.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/svm/sev.c | 2 +-
- virt/kvm/guest_memfd.c | 7 +++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c   |  2 +-
+ include/linux/kvm_host.h |  2 +-
+ virt/kvm/kvm_main.c      | 13 +++++++------
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index df8818759698..397ef9e70182 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -2213,7 +2213,7 @@ static int sev_gmem_post_populate(struct kvm *kvm, gfn_t gfn_start, kvm_pfn_t pf
- 		if (ret || assigned) {
- 			pr_debug("%s: Failed to ensure GFN 0x%llx RMP entry is initial shared state, ret: %d assigned: %d\n",
- 				 __func__, gfn, ret, assigned);
--			ret = -EINVAL;
-+			ret = ret ? -EINVAL : -EEXIST;
- 			goto err;
- 		}
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 4e0e9963066f..f6b7391fe438 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -7524,7 +7524,7 @@ static bool hugepage_has_attrs(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 	const unsigned long end = start + KVM_PAGES_PER_HPAGE(level);
  
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 509360eefea5..266810bb91c9 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -650,6 +650,13 @@ long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long
- 			break;
- 		}
+ 	if (level == PG_LEVEL_2M)
+-		return kvm_range_has_memory_attributes(kvm, start, end, attrs);
++		return kvm_range_has_memory_attributes(kvm, start, end, ~0, attrs);
  
-+		if (folio_test_uptodate(folio)) {
-+			folio_unlock(folio);
-+			folio_put(folio);
-+			ret = -EEXIST;
-+			break;
-+		}
-+
- 		folio_unlock(folio);
- 		if (!IS_ALIGNED(gfn, (1 << max_order)) ||
- 		    (npages - i) < (1 << max_order))
+ 	for (gfn = start; gfn < end; gfn += KVM_PAGES_PER_HPAGE(level - 1)) {
+ 		if (hugepage_test_mixed(slot, gfn, level - 1) ||
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index f6e11991442d..456dbdf7aaaf 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2410,7 +2410,7 @@ static inline unsigned long kvm_get_memory_attributes(struct kvm *kvm, gfn_t gfn
+ }
+ 
+ bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+-				     unsigned long attrs);
++				     unsigned long mask, unsigned long attrs);
+ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+ 					struct kvm_gfn_range *range);
+ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 8ab9d8ff7b74..62e5d9b0ae83 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2402,21 +2402,21 @@ static u64 kvm_supported_mem_attributes(struct kvm *kvm)
+ 
+ /*
+  * Returns true if _all_ gfns in the range [@start, @end) have attributes
+- * matching @attrs.
++ * such that the bits in @mask match @attrs.
+  */
+ bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+-				     unsigned long attrs)
++				     unsigned long mask, unsigned long attrs)
+ {
+ 	XA_STATE(xas, &kvm->mem_attr_array, start);
+-	unsigned long mask = kvm_supported_mem_attributes(kvm);;
+ 	unsigned long index;
+ 	void *entry;
+ 
++	mask &= kvm_supported_mem_attributes(kvm);
+ 	if (attrs & ~mask)
+ 		return false;
+ 
+ 	if (end == start + 1)
+-		return kvm_get_memory_attributes(kvm, start) == attrs;
++		return (kvm_get_memory_attributes(kvm, start) & mask) == attrs;
+ 
+ 	guard(rcu)();
+ 	if (!attrs)
+@@ -2427,7 +2427,8 @@ bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 			entry = xas_next(&xas);
+ 		} while (xas_retry(&xas, entry));
+ 
+-		if (xas.xa_index != index || xa_to_value(entry) != attrs)
++		if (xas.xa_index != index ||
++		    (xa_to_value(entry) & mask) != attrs)
+ 			return false;
+ 	}
+ 
+@@ -2526,7 +2527,7 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
+ 	mutex_lock(&kvm->slots_lock);
+ 
+ 	/* Nothing to do if the entire range as the desired attributes. */
+-	if (kvm_range_has_memory_attributes(kvm, start, end, attributes))
++	if (kvm_range_has_memory_attributes(kvm, start, end, ~0, attributes))
+ 		goto out_unlock;
+ 
+ 	/*
 -- 
 2.43.0
 
