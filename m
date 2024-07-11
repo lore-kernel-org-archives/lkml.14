@@ -1,192 +1,169 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD2610A36;
-	Thu, 11 Jul 2024 01:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077CF2B9D8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720660483; cv=none; b=Ai9ryazEBVve/EMowsjAvjOby7YUAa0IAUrfLUdfDCvjfoXTtoTR41IK3ejbZaT88vHRUIWj7aG1piNMr0VYHXg9nToRFQwvaqPmUep1UdbjVvVz1bHwcM3cE76CIM3psSSmNYzwt3TU5VYjCu1Wn7ReLd//y4wrNbCE8EXK/xA=
+	t=1720660485; cv=none; b=VrEquISOOHXGC3YAas60xh9ERwz3Of2m7bMrrtX84ZiMlOAl27SnGsv6PsD4jyHeFSKDTGfMZQSDaKmr8h7mcdV+kA8tLUIIY/TcnjoM+chohzyvIA2YhUchFs7NNmlu8fL5MVjDg5fNK8OSi9eu/jS44PWzgxFUuvnt1JRbNsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720660483; c=relaxed/simple;
-	bh=6/zkEDXjZjxv6dDfH3KWAd0N7AnaFH1Zmp5aws/7dQk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sI7rDliEmEIRyR5Yy1kW8j+Pgu2K/HF+Wom7MBVSQf2QcKt7XEg/UZYiWLzz4Kwzk5JYWxgKh9ITZ4lsml1FaCkTe/QuhCIOP9urhUrVzqYZEHM/QqYdUiQi21cdHzyVOFzueYI9LfHi6Wd2k5KEc7Wf+nIJQXZSSKHy3RpatuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jAUiNpn4; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1720660485; c=relaxed/simple;
+	bh=B76XIdQ1CDDECWfXcwdOXIW7b0jWnE9PUtadr970HqA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=U06Jrw5wC5uPDa7OqaZu8suY3Bei5AZJdag3I+XKkDGKSFPcR9hBpRug7YQmEXfroeMNyTStJrVl1Z53xwFHHI3QWzR61DNbxhr1nqGo73rhwoMQ6RqprgQ2Polhb68tDSybI71lEzo1q7sSNjF1UYcX0DR5SVOIpDtlZFWNKdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTIXIXZT; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAUiNpn4"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fafc9e07f8so2504905ad.0;
-        Wed, 10 Jul 2024 18:14:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTIXIXZT"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-706524adf91so338202b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2024 18:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720660481; x=1721265281; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rr7Q65/uUNMtJMngxD5LyYKesf+tbYcSf5IHS4oP4n8=;
-        b=jAUiNpn4e5i8hbgW/V9nHh1y59tzaQH2MI3E39ZRSwTckpsbUPo6zdDi0M7Qj1H1Ew
-         sHrPSR4u8vPArEXfIe4QSskottINLFSo3J1CCphBTdUoRgiOeg9oAPxEk76DJcVY1x2I
-         YcI6sfZRVVs09dEVw8O9gdFaoVO0OGQRCGjXMyrC7VVf1/8g/Lwc4lLNr/6LrLHHoJvB
-         +z2FuTKpxJ4D2kMufB/PS0heZs6wMCE/bZIlAhMNBBDHzNmdq6QgZHBr0ZzxKVmOjQXS
-         4vZOTwCQYbQA9jDkLG3+erjcGabcObbLsJATKHnQHHX14MLW+SuTCbHQG/mkzPsLX7fd
-         Pq0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720660481; x=1721265281;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1720660483; x=1721265283; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rr7Q65/uUNMtJMngxD5LyYKesf+tbYcSf5IHS4oP4n8=;
-        b=oXBvrlDHANZWtoLM326Sf/ZiLS7s7E65/KZSacRuwDgT4rBhCXbi96P79mmLuqVSuf
-         lFwcsmsOqKnw7JUuj12wAXZ/QLWCB0HaO3sxpwJUibaH5RrNRxcNPFU3G3x/InTXdPvD
-         4yfihOVH4EkKWDQaO7S5LKpQwULORcfA9qDwXXskLKli06RPWFjgtUqBt7ed8TMd3B6x
-         XgrDZHhXca3/7F9wmtDdPdS95pgt//bk1CwneDENy71NXcXS3rhH+e0mZ0BerMDNgrsu
-         sqXM/NSWPtH+DdUE+zLyk8Kt+2GzzrCRqBylGWrqhkM9CxsOWLEgLNpdMF4lIq/Va1p9
-         8OBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPzrKGNiHpTDhGHvBmm0J+KZgcnYo4JbEabFLCgv8aZdPYF4pxt7eW+zEYyXFXyr3V52NIFlzhckrRVFLkNsar0U4seuGxv+QvK+gX7t9xoovjgkz1YsA/QV0533QVOk8Hh6vH5sNnqsG9qi/l/G2auppb6UOv5KPE9Y1MUxaJsYUZ
-X-Gm-Message-State: AOJu0YxAfNFHfRgMIXFrZyleiHeykJdquZ7fuCEdxD7nbJmM1A3HCPdP
-	jrNrIv7zvjVgClvTPxB1//KMRL/ZF2H2Xc2+s+vHmv2rrzuIrkxU
-X-Google-Smtp-Source: AGHT+IFJUeFA3eAzgk0yLfvuWC7HhHDzJ0TYJRTj/e7EpBNO4Fa5aqAl/Zb3JcJpxWMpURw+W2y5RA==
-X-Received: by 2002:a17:903:2bcb:b0:1f8:5a64:b468 with SMTP id d9443c01a7336-1fbb6ed9d22mr62847735ad.47.1720660480788;
-        Wed, 10 Jul 2024 18:14:40 -0700 (PDT)
-Received: from debian ([2601:646:8f03:9fee:398f:325f:a0e2:200f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab7c66sm39383215ad.121.2024.07.10.18.14.39
+        bh=WNee8CxlBJQRxu0uozPUhxI7io6SutdLO5rI8f9raRQ=;
+        b=CTIXIXZTXljU03Cr22Wc56rWF0FhCK963z/V6DVuDb8mXJ0ydrxCPzmVLbnWwxxpgp
+         SnVtB/sbWLYJvkrFgoQh9RUA0NmTSHgHHC80suWTDQtUt/M7OBrryu6VZmI7ne/sfLZa
+         9jEDtUXtguEK1NC6ukQ8rUmxa9/ULq0LfXwF8orUxZDpuVIy/LuJF1v2AlPPDqTtTxNs
+         toU64wxkLMeBFRnMYYWjxMGCPRzFjcqS8Nu62bBgbzQXjGX3lAa7ypouZKzUNYx/7yaM
+         grKdSDsYz4EelpIKR1qdK4XQob+bEt/gxy80X4vv8AEgeqHlXPVmc6f5fAIDQnM4moUv
+         JDww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720660483; x=1721265283;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WNee8CxlBJQRxu0uozPUhxI7io6SutdLO5rI8f9raRQ=;
+        b=CW/Fkv90Sw2a+I36wTT/2lrh0OErS7b9oOJfO/mQFL4tTvkYwzfnBMGWx5SnzeN2K0
+         P/x46mKpyc+6tA8/qu8l5w2JG2VY4uJblLRqDldcjrl4xH1Uj1ziCj6bv9XN/epGfMO+
+         0+PQWd44vyRAMyNGQcaydna1nqNrjPd9CQZs9YlquovIEELg4bapBhz5FAWNgejKwuXG
+         08J4Ij2TfqV9/XIK7XXk3t/OiW8xgoICwFPmsn/XiJ7LIgFlkk/Q4EeipbxyGSdUT0PH
+         JK4VDAGukacYdLsO2S4nJQEWOjmbTL69ye4V7JdnimPSaZ7udeEtScp40NeRA4NiFcky
+         ByvA==
+X-Gm-Message-State: AOJu0YzGssoS+azgBowp5QT3Jl1ETXGSBSeMvCuPqxXOlbgff3jQ4UV1
+	QgeIjaXGiAxMumn1DcPWyBH7JvlZtjiuyMstfFhkzFMkerkteBtr
+X-Google-Smtp-Source: AGHT+IHNNzMNeMltV6bT+JJpVs0WM+vzv7oq8+Q5qSQc8wx35GlTy9vd3QgCNzuM5VYpWlyUIwPmeA==
+X-Received: by 2002:a05:6a00:b56:b0:706:8a67:c395 with SMTP id d2e1a72fcca58-70b434f6165mr9059520b3a.6.1720660483076;
+        Wed, 10 Jul 2024 18:14:43 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b4397ece4sm4581186b3a.144.2024.07.10.18.14.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 18:14:40 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Wed, 10 Jul 2024 18:14:25 -0700
-To: Terry Bowman <Terry.Bowman@amd.com>
-Cc: nifan.cxl@gmail.com, Dan Williams <dan.j.williams@intel.com>,
-	ira.weiny@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, ming4.li@intel.com,
-	vishal.l.verma@intel.com, jim.harris@samsung.com,
-	ilpo.jarvinen@linux.intel.com, ardb@kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yazen.Ghannam@amd.com, Robert.Richter@amd.com,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 1/9] PCI/AER: Update AER driver to call root port and
- downstream port UCE handlers
-Message-ID: <Zo8x8YvdHSgcjGcR@debian>
-References: <20240617200411.1426554-1-terry.bowman@amd.com>
- <20240617200411.1426554-2-terry.bowman@amd.com>
- <6675d1cc5d08_57ac294d5@dwillia2-xfh.jf.intel.com.notmuch>
- <ecc5fbd0-52e1-443f-8e5a-2546328319b2@amd.com>
- <668ef3a2.050a0220.96a0c.4f5c@mx.google.com>
- <8bf0d1c9-632e-458b-9b78-0faeea0472f8@amd.com>
+        Wed, 10 Jul 2024 18:14:42 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+From: Tejun Heo <tj@kernel.org>
+To: void@manifault.com
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	schatzberg.dan@gmail.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	changwoo@igalia.com,
+	righi.andrea@gmail.com,
+	Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4/6] sched_ext: s/SCX_RQ_BALANCING/SCX_RQ_IN_BALANCE/ and add SCX_RQ_IN_WAKEUP
+Date: Wed, 10 Jul 2024 15:14:01 -1000
+Message-ID: <20240711011434.1421572-5-tj@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240711011434.1421572-1-tj@kernel.org>
+References: <20240711011434.1421572-1-tj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8bf0d1c9-632e-458b-9b78-0faeea0472f8@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 10, 2024 at 04:48:09PM -0500, Terry Bowman wrote:
-> Hi Fan,
-> 
-> On 7/10/24 15:48, nifan.cxl@gmail.com wrote:
-> > On Mon, Jun 24, 2024 at 12:56:29PM -0500, Terry Bowman wrote:
-> >> Hi Dan,
-> >>
-> >> I added a response below.
-> >>
-> >> On 6/21/24 14:17, Dan Williams wrote:
-> >>> Terry Bowman wrote:
-> >>>> The AER service driver does not currently call a handler for AER
-> >>>> uncorrectable errors (UCE) detected in root ports or downstream
-> >>>> ports. This is not needed in most cases because common PCIe port
-> >>>> functionality is handled by portdrv service drivers.
-> >>>>
-> >>>> CXL root ports include CXL specific RAS registers that need logging
-> >>>> before starting do_recovery() in the UCE case.
-> >>>>
-> >>>> Update the AER service driver to call the UCE handler for root ports
-> >>>> and downstream ports. These PCIe port devices are bound to the portdrv
-> >>>> driver that includes a CE and UCE handler to be called.
-> >>>>
-> >>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >>>> Cc: linux-pci@vger.kernel.org
-> >>>> ---
-> >>>>  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
-> >>>>  1 file changed, 20 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> >>>> index 705893b5f7b0..a4db474b2be5 100644
-> >>>> --- a/drivers/pci/pcie/err.c
-> >>>> +++ b/drivers/pci/pcie/err.c
-> >>>> @@ -203,6 +203,26 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >>>>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> >>>>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> >>>>  
-> >>>> +	/*
-> >>>> +	 * PCIe ports may include functionality beyond the standard
-> >>>> +	 * extended port capabilities. This may present a need to log and
-> >>>> +	 * handle errors not addressed in this driver. Examples are CXL
-> >>>> +	 * root ports and CXL downstream switch ports using AER UIE to
-> >>>> +	 * indicate CXL UCE RAS protocol errors.
-> >>>> +	 */
-> >>>> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> >>>> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
-> >>>> +		struct pci_driver *pdrv = dev->driver;
-> >>>> +
-> >>>> +		if (pdrv && pdrv->err_handler &&
-> >>>> +		    pdrv->err_handler->error_detected) {
-> >>>> +			const struct pci_error_handlers *err_handler;
-> >>>> +
-> >>>> +			err_handler = pdrv->err_handler;
-> >>>> +			status = err_handler->error_detected(dev, state);
-> >>>> +		}
-> >>>> +	}
-> >>>> +
-> >>>
-> >>> Would not a more appropriate place for this be pci_walk_bridge() where
-> >>> the ->subordinate == NULL and these type-check cases are unified?
-> >>
-> >> It does. I can take a look at moving that.
-> > 
-> > Has that already been handled in pci_walk_bridge?
-> > 
-> > The function pci_walk_bridge() will call report_error_detected, where
-> > the err handler will be called. 
-> > https://elixir.bootlin.com/linux/v6.10-rc6/source/drivers/pci/pcie/err.c#L80
-> > 
-> > Fan
-> > 
-> 
-> You would think so but the UCE handler was not called in my testing for the PCIe 
-> ports (RP,USP,DSP). The pci_walk_bridge() function has 2 cases:
-> - If there is a subordinate/secondary bus then the callback is called for
-> those downstream devices but not the port itself.
-> - If there is no subordinate/secondary bus then the callback is invoked for the 
-> port itself.
-> 
-> The function header comment may explain it better:
-> /**                                                                                                                                                                                                                
->  * pci_walk_bridge - walk bridges potentially AER affected                                                                                                                                                         
->  * @bridge:     bridge which may be a Port, an RCEC, or an RCiEP                                                                                                                                                   
->  * @cb:         callback to be called for each device found                                                                                                                                                        
->  * @userdata:   arbitrary pointer to be passed to callback                                                                                                                                                         
->  *                                                             
->  * If the device provided is a bridge, walk the subordinate bus, including                                                                                                                                         
->  * any bridged devices on buses under this bus.  Call the provided callback                                                                                                                                        
->  * on each device found.                                                                                                                                                                                           
->  *                                                                                                                                                                                                                 
->  * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,                                                                                                                                          
->  * call the callback on the device itself. 
->  */
-> 
-> Regards,
-> Terry
+SCX_RQ_BALANCING is used to mark that the rq is currently in balance().
+Rename it to SCX_RQ_IN_BALANCE and add SCX_RQ_IN_WAKEUP which marks whether
+the rq is currently enqueueing for a wakeup. This will be used to implement
+direct dispatching to local DSQ of another CPU.
 
-OK, interesting.
-Btw, what is the "state" passed to pcie_do_recovery(...state...)?
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Acked-by: David Vernet <void@manifault.com>
+---
+ kernel/sched/ext.c   | 13 +++++++++----
+ kernel/sched/sched.h |  6 ++++--
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-Fan
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index d4f801cd2548..57d6ea65f857 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -1827,6 +1827,9 @@ static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags
+ {
+ 	int sticky_cpu = p->scx.sticky_cpu;
+ 
++	if (enq_flags & ENQUEUE_WAKEUP)
++		rq->scx.flags |= SCX_RQ_IN_WAKEUP;
++
+ 	enq_flags |= rq->scx.extra_enq_flags;
+ 
+ 	if (sticky_cpu >= 0)
+@@ -1843,7 +1846,7 @@ static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags
+ 
+ 	if (p->scx.flags & SCX_TASK_QUEUED) {
+ 		WARN_ON_ONCE(!task_runnable(p));
+-		return;
++		goto out;
+ 	}
+ 
+ 	set_task_runnable(rq, p);
+@@ -1858,6 +1861,8 @@ static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags
+ 		touch_core_sched(rq, p);
+ 
+ 	do_enqueue_task(rq, p, enq_flags, sticky_cpu);
++out:
++	rq->scx.flags &= ~SCX_RQ_IN_WAKEUP;
+ }
+ 
+ static void ops_dequeue(struct task_struct *p, u64 deq_flags)
+@@ -2420,7 +2425,7 @@ static int balance_one(struct rq *rq, struct task_struct *prev, bool local)
+ 	bool has_tasks = false;
+ 
+ 	lockdep_assert_rq_held(rq);
+-	rq->scx.flags |= SCX_RQ_BALANCING;
++	rq->scx.flags |= SCX_RQ_IN_BALANCE;
+ 
+ 	if (static_branch_unlikely(&scx_ops_cpu_preempt) &&
+ 	    unlikely(rq->scx.cpu_released)) {
+@@ -2514,7 +2519,7 @@ static int balance_one(struct rq *rq, struct task_struct *prev, bool local)
+ has_tasks:
+ 	has_tasks = true;
+ out:
+-	rq->scx.flags &= ~SCX_RQ_BALANCING;
++	rq->scx.flags &= ~SCX_RQ_IN_BALANCE;
+ 	return has_tasks;
+ }
+ 
+@@ -5063,7 +5068,7 @@ static bool can_skip_idle_kick(struct rq *rq)
+ 	 * The race window is small and we don't and can't guarantee that @rq is
+ 	 * only kicked while idle anyway. Skip only when sure.
+ 	 */
+-	return !is_idle_task(rq->curr) && !(rq->scx.flags & SCX_RQ_BALANCING);
++	return !is_idle_task(rq->curr) && !(rq->scx.flags & SCX_RQ_IN_BALANCE);
+ }
+ 
+ static bool kick_one_cpu(s32 cpu, struct rq *this_rq, unsigned long *pseqs)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 86314a17f1c7..8a0e8052f6b0 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -737,8 +737,10 @@ enum scx_rq_flags {
+ 	 * only while the BPF scheduler considers the CPU to be online.
+ 	 */
+ 	SCX_RQ_ONLINE		= 1 << 0,
+-	SCX_RQ_BALANCING	= 1 << 1,
+-	SCX_RQ_CAN_STOP_TICK	= 1 << 2,
++	SCX_RQ_CAN_STOP_TICK	= 1 << 1,
++
++	SCX_RQ_IN_WAKEUP	= 1 << 16,
++	SCX_RQ_IN_BALANCE	= 1 << 17,
+ };
+ 
+ struct scx_rq {
+-- 
+2.45.2
 
-> 
-> >>
-> >> Regards,
-> >> Terry
