@@ -1,82 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55E315EFAE;
-	Thu, 11 Jul 2024 13:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8544615E5CD;
+	Thu, 11 Jul 2024 13:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720704275; cv=none; b=DcrtpGiFgQxfmVanrZV55YdZJZwbAjUaKizax53D199ElkrD1tJTdf1nJPMcAYU8BX1JZk/ROISac/EDJhON1/6+hnayk++4cNj6XTnW8kIa1Ga8InSFUVBc45cS0Fm88iaJWtL68DlhZwx+PgNOVCR6avSKOuGGoIyeHOCpJiQ=
+	t=1720704286; cv=none; b=Lq7KbPCT5dLXlN/ykZzAz4stsO8oNcNB5VdbGpXg86DmQFq1kYTtrKZrsgJioYgIms8+wSr2pnjssgq1vfA3cPIJd+oBasOK8ZafGgbURv8F5iY0Gu3uYijC4XckcG2V/9TrNPeNnvZaQhGdHLm/9If3k+2+668RsP41WPeJPWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720704275; c=relaxed/simple;
-	bh=w1u81luxRSKXuuP8bL2ZtVySjx/0jxSrRzrfaS7TWpk=;
+	s=arc-20240116; t=1720704286; c=relaxed/simple;
+	bh=NbE9x6Xf/jq9TnQJ4Rb5fku1CzVanp9X9CpEqwMhFwg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HqsHFzUONatg617mG+Jvr+lsFMhL3wcqPgYCg7oDffTzAhvD7BEMSW4upEKgQ66nsgg8lXqWqWMUXFrMm9ambFuwaiHEoPAJPuF5bqYFPJs+KQPuuvUSZFhHvuYuWkrdIcoUlm3TvHcv/vy7YZ7ARohRVn2IXSKOA9n/7NCwDmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnKlRyzT; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnKlRyzT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720704274; x=1752240274;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=w1u81luxRSKXuuP8bL2ZtVySjx/0jxSrRzrfaS7TWpk=;
-  b=fnKlRyzTMusmSQxIr//bTdOI1F6boLgTfbRyVQUJnNsQyZPOY7wrhGDR
-   OVJhlorejfnUVWxDwHVLbCP2luSVg9K5/RGzYx5QYH2mknkAeEc2MKoZy
-   0iAzz6Q/jZPGk3T0DsDCqKdPbPiWnLEAJd2GEROsNHJj6UgdPqTFj1lwI
-   /yHfD7OGTnXPVQ20SqJx4tCKwPNWJuKRX0zg5SyK+U8Acf1A12nqA/Jt0
-   fB2EOBEy4pxASqpJsvqgbMp95mmV2QpM3NypwPYC6hxJTAUcGWnq2lwvQ
-   N/wylCQ9rNKZKOkFztasjAYZm2hYXjsckhqre+yEd1YAn+2Ll5+7/I8fS
-   w==;
-X-CSE-ConnectionGUID: 8hmpUz8XR5+VWRgfZtNGig==
-X-CSE-MsgGUID: +ZeZT5nYSlK2yJu456jxQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="28676502"
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="28676502"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:24:33 -0700
-X-CSE-ConnectionGUID: w68rnNGyTX+raf3+ra/vZQ==
-X-CSE-MsgGUID: xfhpknJGQvakxEtM1SwOLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="53376105"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 11 Jul 2024 06:24:27 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sRtmZ-000ZJz-2y;
-	Thu, 11 Jul 2024 13:24:23 +0000
-Date: Thu, 11 Jul 2024 21:23:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	David Hildenbrand <david@redhat.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	linux-um@lists.infradead.org, linux-remoteproc@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] virtio: fix vq # for balloon
-Message-ID: <202407112113.SzSpdDLK-lkp@intel.com>
-References: <3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lVhmbk+Ut3y6kDLyKfBlctVlDUZRuH5jP9jDuyMIGIGkxEtBnPnP7U03pnNBn8BTzTU4Xxw/WEJdejABd2WMzdf5yQK4aPB7BUslifMMCHPHmFSrSAqzWqApinmc2xA7uwP/bLXGleK8XgwVVUCO2PeDJtB/5U8GvgfWfE8D2Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26760FEC;
+	Thu, 11 Jul 2024 06:25:09 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3792E3F766;
+	Thu, 11 Jul 2024 06:24:40 -0700 (PDT)
+Date: Thu, 11 Jul 2024 14:24:37 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v5 4/7] firmware: arm_scmi: add initial support for i.MX
+ MISC protocol
+Message-ID: <Zo_dFcoBkC8X6u44@pluto>
+References: <20240621-imx95-bbm-misc-v2-v5-0-b85a6bf778cb@nxp.com>
+ <20240621-imx95-bbm-misc-v2-v5-4-b85a6bf778cb@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,91 +49,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst@redhat.com>
+In-Reply-To: <20240621-imx95-bbm-misc-v2-v5-4-b85a6bf778cb@nxp.com>
 
-Hi Michael,
+On Fri, Jun 21, 2024 at 03:04:39PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> i.MX95 System Manager(SM) firmware includes a SCMI vendor protocol, SCMI
+> MISC protocol which includes controls that are misc settings/actions that
+> must be exposed from the SM to agents. They are device specific and are
+> usually define to access bit fields in various mix block control modules,
+> IOMUX_GPR, and other General Purpose registers, Control Status Registers
+> owned by the SM.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-kernel test robot noticed the following build errors:
+Hi,
 
-[auto build test ERROR on next-20240710]
-[cannot apply to uml/next remoteproc/rproc-next s390/features linus/master uml/fixes v6.10-rc7 v6.10-rc6 v6.10-rc5 v6.10-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+LGTM,
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Michael-S-Tsirkin/virtio_balloon-add-work-around-for-out-of-spec-QEMU/20240711-004346
-base:   next-20240710
-patch link:    https://lore.kernel.org/r/3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst%40redhat.com
-patch subject: [PATCH v2 2/2] virtio: fix vq # for balloon
-config: i386-randconfig-014-20240711 (https://download.01.org/0day-ci/archive/20240711/202407112113.SzSpdDLK-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240711/202407112113.SzSpdDLK-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407112113.SzSpdDLK-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/virtio/virtio_pci_common.c:391:1: error: version control conflict marker in file
-     391 | <<<<<<< HEAD
-         | ^
->> drivers/virtio/virtio_pci_common.c:392:30: error: use of undeclared identifier 'queue_idx'
-     392 |                 vqs[i] = vp_setup_vq(vdev, queue_idx++, vqi->callback,
-         |                                            ^
-   2 errors generated.
-
-
-vim +391 drivers/virtio/virtio_pci_common.c
-
-   365	
-   366	static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
-   367				    struct virtqueue *vqs[],
-   368				    struct virtqueue_info vqs_info[])
-   369	{
-   370		struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-   371		int i, err;
-   372	
-   373		vp_dev->vqs = kcalloc(nvqs, sizeof(*vp_dev->vqs), GFP_KERNEL);
-   374		if (!vp_dev->vqs)
-   375			return -ENOMEM;
-   376	
-   377		err = request_irq(vp_dev->pci_dev->irq, vp_interrupt, IRQF_SHARED,
-   378				dev_name(&vdev->dev), vp_dev);
-   379		if (err)
-   380			goto out_del_vqs;
-   381	
-   382		vp_dev->intx_enabled = 1;
-   383		vp_dev->per_vq_vectors = false;
-   384		for (i = 0; i < nvqs; ++i) {
-   385			struct virtqueue_info *vqi = &vqs_info[i];
-   386	
-   387			if (!vqi->name) {
-   388				vqs[i] = NULL;
-   389				continue;
-   390			}
- > 391	<<<<<<< HEAD
- > 392			vqs[i] = vp_setup_vq(vdev, queue_idx++, vqi->callback,
-   393					     vqi->name, vqi->ctx,
-   394	=======
-   395			vqs[i] = vp_setup_vq(vdev, i, callbacks[i], names[i],
-   396					     ctx ? ctx[i] : false,
-   397	>>>>>>> f814759f80b7... virtio: fix vq # for balloon
-   398					     VIRTIO_MSI_NO_VECTOR);
-   399			if (IS_ERR(vqs[i])) {
-   400				err = PTR_ERR(vqs[i]);
-   401				goto out_del_vqs;
-   402			}
-   403		}
-   404	
-   405		return 0;
-   406	out_del_vqs:
-   407		vp_del_vqs(vdev);
-   408		return err;
-   409	}
-   410	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Cristian
