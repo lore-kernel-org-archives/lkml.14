@@ -1,87 +1,89 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F3C4F1E2
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A71D518
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720687527; cv=none; b=tuhOUYCJZF87XchMGKWg3gESTE62u7pbY6L0CFPv4+a7oz4V6IZLXnPkps/sgaoKXADFXC+Gb9Kw8ZMbkt9Z2f8tjPZXmbzjbcd/nr6m2lTTlM3+ekoz71/9wqGTUJ0dA+gtTK+bp+h3TsJ/TS+cV64TcBkHUyZftxK8xthZYlA=
+	t=1720687646; cv=none; b=IDrM30+AgyEaRZXj+M/RwtnuOH2ryY0IKoEZTyEkrnAkkDPWQ89T1w6Z3XyN3s2oxkWd1iKJlNWnhU++OPAL9EMXI/3t6eY+uYHB7DtYLt67RahA0nuhA9MaVAapxKcYZT9Xhbqb/2WckQKeS/Ur+zeaHJ6pZtdNTSJC29yBK8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720687527; c=relaxed/simple;
-	bh=IS4sZjlIbsHkMT8tbcQGLv09+Y4M+/UZ4yxhx//V6Pc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GWrklpwBjTljIfyUU9OgUSl8ySV4y2ZvcFSmj+QrfcvjsVBVz9umlzsRWnv1Nl3IjRy7qk8iF7ILwI9Y3odCtWGE0+P6WefUTCN3Rk25UIX2QGNiOJaGOKLWEUUJHSKtMQzGV/NejWQjb6YHj8eFWbZrYIg4UF1kOP+dFHyaONc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-05 (Coremail) with SMTP id zQCowAC3veWVm49mlSy3Ag--.57394S2;
-	Thu, 11 Jul 2024 16:45:17 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	asad.kamal@amd.com,
-	lijo.lazar@amd.com,
-	make24@iscas.ac.cn,
-	le.ma@amd.com,
-	kenneth.feng@amd.com,
-	evan.quan@amd.com
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	s=arc-20240116; t=1720687646; c=relaxed/simple;
+	bh=/UcrM9S9fPVMtzAalcskkXvVlbajPVnGUkiWQO2xdWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GX7uNiJzkF3yagJm8yb1LMptP4sOwlCaPsFHuPyuMGv8LAG6xEgvH9pD+V+Dl9z6YAb/bqvS33zonRM2pV5BrKJv3UYxboFSrOroguDCyrgj0Frv24bRvUb17WIg0vze/ecUn+V4p9//GlvYcQTwWlQR41Sk6yw23iUkc8pocuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=kXATyhs4; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="kXATyhs4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=/Ucr
+	M9S9fPVMtzAalcskkXvVlbajPVnGUkiWQO2xdWU=; b=kXATyhs4/LsJkNPCZwXN
+	V1fyBCC/+TxuDeQBSDqdIL7K3UJxMefdRXUv5q4GJ05xLsljauaIh8wHeSKuHx1s
+	Os5NLJz4UovGqRDyfGTOT4Eh8S9+D/KUSQvHFwNzEbiMj26HcD5K7giB8poixolX
+	dEwXFVvY1iEmXd1c2hE86A2XiAGwJFlhAqZvk5Ho3FB9wTe1KCqtgAeUChfSID16
+	nDUuLG4NyWLgBSTPRb/gLcABr4Y0uzrL6eMpWIYmMzjsptcG0CzGVeFLVYOnTX+p
+	HrX8AzrSpoeamZM9uysq2NOUH3gRTjUczXpVJ5Xd5bb6qqoxJe8dma7j7cgW+PJD
+	Cg==
+Received: (qmail 782210 invoked from network); 11 Jul 2024 10:47:22 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Jul 2024 10:47:22 +0200
+X-UD-Smtp-Session: l3s3148p1@O+6qz/QcHtwgAwDPXwmZAIsFIv4n+Dpm
+Date: Thu, 11 Jul 2024 10:47:21 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Jian Jun Chen <jian.jun.chen@intel.com>, linux-i2c@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/amdgpu: Fix uninitialized variable warnings
-Date: Thu, 11 Jul 2024 16:45:09 +0800
-Message-Id: <20240711084509.2432392-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] MAINTAINERS: delete entry for Conghui Chen
+Message-ID: <Zo-cGVD_mvezDMoZ@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jian Jun Chen <jian.jun.chen@intel.com>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20240706144150.2668-2-wsa+renesas@sang-engineering.com>
+ <20240708061937.p7lhz7eho4dh5bv7@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAC3veWVm49mlSy3Ag--.57394S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtryrZr45Zr4rWw43Xr1DZFb_yoW3GFX_Kr
-	4UJasrGrn2yF1q9r1UZayFqa42yF98uF4vqas3ta4Fv3yxX343Xr93WrykXF1ruF43C3Zr
-	A34UWry5A39IkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-	YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUQZ23UUUUU=
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LlX4jScTkSgHKceY"
+Content-Disposition: inline
+In-Reply-To: <20240708061937.p7lhz7eho4dh5bv7@vireshk-i7>
 
-Return 0 to avoid returning an uninitialized variable r.
 
-Fixes: 230dd6bb6117 ("drm/amd/amdgpu: implement mode2 reset on smu_v13_0_10")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
- drivers/gpu/drm/amd/amdgpu/smu_v13_0_10.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--LlX4jScTkSgHKceY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/smu_v13_0_10.c b/drivers/gpu/drm/amd/amdgpu/smu_v13_0_10.c
-index 04c797d54511..0af648931df5 100644
---- a/drivers/gpu/drm/amd/amdgpu/smu_v13_0_10.c
-+++ b/drivers/gpu/drm/amd/amdgpu/smu_v13_0_10.c
-@@ -91,7 +91,7 @@ static int smu_v13_0_10_mode2_suspend_ip(struct amdgpu_device *adev)
- 		adev->ip_blocks[i].status.hw = false;
- 	}
- 
--	return r;
-+	return 0;
- }
- 
- static int
--- 
-2.25.1
 
+> May be we can add Jian as "R:" here to keep someone from Intel in loop ?
+
+Yes, it would surely be nice to have someone from Intel in the loop. As
+Jian did not respond up to now, I suggest to add him with a seperate
+patch, though. Let's get rid of the bounce first.
+
+
+--LlX4jScTkSgHKceY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaPnBkACgkQFA3kzBSg
+KbYp+Q//bh9qbtiA0zdbNxQ3P37IvH19O7gILsfN3jffvqqBrVvhLmnjQ3olpPIM
+f3jI6TwCU+KlsvGt54IN0rMeF3R3PFDbq4fSbB3NwnucqX+MyeEBmM+nQsc/FPzd
+hXH9F3mdNNw0QPk24qOWLWwSe9m3H9yZvJg4wkj8w5jDAREtbTMZS/lPfuRcjE0l
+3iWzK6Rwj/v4zf/gbyP/3J3Udea0IJRO+oIdJKnXVbqwV4VyX+uKDFG8EKX84g5Q
+UBSW889qOa0aNs7T01Orn2an+jti0j+XAy/UQK10d6hC2UT8YL7p3KeKWKhLfgPC
+V8VLdRRrjMv08GCqgkpKq8w0odSuglmOqZ6pQgf+TaVRNic46+w4NI0yrICxEb3O
+c/ag3TqtJNvp7UFenM/irqDb4/448F0DHVD9XonZ1hvJr47I/15psxoBPHQlG9/T
+zm1FomYQiXlaXubD1U3W1xdgEkV0gbLcS4eMI9zzTiZXQenV1zLcsbkAXJccqUAo
+hBsZcueHh9piknxpPEbUfXy8VS9iL1zyo4/zsZMyklY68aCxdcH3r798FJwwIQVK
+ryvXe0BLBvGQoh4PK588d6R3b4Lp3tjkBS2jcjph4ncdA+A7JPbQOBkotmRfnrDY
+i27EJZ0OqqGRfw0/F015dgSNfq2YBJTk6K/eYDKw4bLyjULBjYA=
+=xJIJ
+-----END PGP SIGNATURE-----
+
+--LlX4jScTkSgHKceY--
