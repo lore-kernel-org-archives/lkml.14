@@ -1,139 +1,99 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F2316EB4E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 18:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4088E16D4FA
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 18:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720720877; cv=none; b=WlawUJiJ6YFmG+d5wF15LBXwAfVoTRLJGy1gNy9XFs9Cav0JhRFel/aRbmbdcaXhWwl026Q9k5rpO6MTMF8jayOUOI7YmfZIINZldBQ1R+8liis+qMtol5NckzoZHaJa/RQ+DXH/Ile5INu7HXDEOk1kJVuiJlEqtXT1JtmuHYM=
+	t=1720720978; cv=none; b=OxlcRlgjN9aoNwAuAJrkNA0Elq9faexfd3K5mV0aAsnvRnyzWVRcY+J39cS3qBXHM0J7ZdmhBL+FjusFi2af5r4X2VqgkQmN+EwmKmUtPK3BaEeCJjPR5JvuDvxCMz+b8XNaE9nSKY3mLOUWdphmKxmqWwH8C4s8Tq1z+3nsjNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720720877; c=relaxed/simple;
-	bh=sUheNSIamO8SvMj19zBLNxCVmjvlLRxDlh7AUAyjtXE=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ml853xuOMgYeZ6dhOSPtPPbe06gJBvj2yp5NyRrIJgSWdwcLVLV5p7Rm9KkTTNG7s/+Ql+1TvVRtvXYGjGlyC3Xdlez8zckhaLG/Tphh5A9rws3YccWmyK1tooZ3/FC6SwjzmyJn4XFwrO+sDZZqEXpOhlFygKV4sDer1YQihaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A62cr04h; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A62cr04h"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6511c587946so20063057b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720720875; x=1721325675; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DzgUQ0L67yHK9ZgYOmZnLIT3MZDT9EVRhOxDmj12OGQ=;
-        b=A62cr04hkQQibp8J0OdcECSoPMzacbWQ/GxOr3Az4CjlWJJe12QTN8OUPgQSRlkVhF
-         ENyvH1fbqpWq/A5FViAXBwUCHsV9FXQgC4lYX/GN33y6VApwYa9+vs47xiH+vOozn6Vq
-         rff/IzHvuo8VlT29alNRbdHzWcyBDzAUo3SeZ5o2OuOSDioa/57NMBFsh2bGG7WChNdB
-         fjSEbn5wUDbv3BCVnukhWLAOn5EygM+uc9LV9ttxFn7GAwO7tYNBK+3cy7wPfra5io+o
-         TWDdF2QH0Nchz4oAL5oZ/OZWPaYGZiZy22rBGWNTXxy4tMQlC3ak5HoPtTJU7bGVq2Sd
-         2NxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720720875; x=1721325675;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DzgUQ0L67yHK9ZgYOmZnLIT3MZDT9EVRhOxDmj12OGQ=;
-        b=RBUdPxM/wjK3Llq7wzCEsaLmYEpBaBtw2g+r2iyPHtzFCh8tzzUdQ+DOF4T5AJaAki
-         F2UJch4S6reWKp2j+SRhmKWMEOTGdDnDDW0wqUl2gVsEne7ZzHg0f1I7yaQQl7RRw4Y1
-         2YM6f2KkwyosrjUf3MTUeEx4VLIZwsbjdS96n2iCJlkY7m9STfXTw+ROzI+ZJrWFX5q5
-         QOLb3CFwsmDEfMmEiJ5dd0RYe0Hcy4/Mf0BIFuMSwy7HST7A1ijinGQsl2GyEU2mQvUo
-         St3/v5J6QY+l7LZdfk7+C8+YJz5BDzyc5FHYfvWttBSTreTlp2mS0yTcKNCbzNuzWjcI
-         Z+TA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDphCJ7WMnCKM/oaLBg74td0HonrI+oIMfNJ6Md1jKr2Jl5kN1tpeeqp54zV8yddCkDy7KiROKfCOgM8I/6adM6ZQhiRgxpTLVdZun
-X-Gm-Message-State: AOJu0YxOyboNXyUWHNN+4HYSSjj9eDLuRrVZ/WfvaDKuwdzeZ7hzWTDL
-	hN92hJdR+DtTDCfgcGqMMyVuO2oPua6jHUK+MEePkp+Bdtb6ssFMlzOfaNp1tOEj1JrqIBl2NrT
-	llrF9kQ==
-X-Google-Smtp-Source: AGHT+IF6ZsAvtsfjEpCo3Gdjx73peL+tpHFo6fSjhaKLM0gD5zmtULo0VxwhlOW9Ohb+tLATOGzcVSe0U1oD
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bd08:a1e0:c497:32db])
- (user=irogers job=sendgmr) by 2002:a05:6902:2403:b0:e03:554e:f396 with SMTP
- id 3f1490d57ef6-e041b05b915mr366242276.6.1720720875256; Thu, 11 Jul 2024
- 11:01:15 -0700 (PDT)
-Date: Thu, 11 Jul 2024 11:00:08 -0700
-In-Reply-To: <20240711180008.188906-1-irogers@google.com>
-Message-Id: <20240711180008.188906-29-irogers@google.com>
+	s=arc-20240116; t=1720720978; c=relaxed/simple;
+	bh=/b9okvaaC1rTIiEDjxKRa8CcXKvVKnj5+Q/x678IcFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FDZTIrvE4yzn7cLrb5A0AloPuGBXyGu6+XFBvxhCpx6VqOkf+kjaIi1ubxhhOHoCjI5dA3Qwzn+eNuFYPwfeNfF6Tqj1O8qSw26czvPFq62t8hxR46wz0J01aPV9HiB6/IAsBTY976ymcQBFiZkCvr4ubTrBSuqnBzd1+Ytgnvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C3A71007;
+	Thu, 11 Jul 2024 11:03:20 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 184D43F766;
+	Thu, 11 Jul 2024 11:02:48 -0700 (PDT)
+Message-ID: <7ef6cd1e-3dc6-452e-ac1c-128ee98acdb0@arm.com>
+Date: Thu, 11 Jul 2024 19:02:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240711180008.188906-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Subject: [PATCH v4 28/28] perf session: Constify tool
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dma: call unconditionally to unmap_page and unmap_sg
+ callbacks
+To: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, Jason Gunthorpe <jgg@nvidia.com>
+References: <98d1821780028434ff55b5d2f1feea287409fbc4.1720693745.git.leon@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <98d1821780028434ff55b5d2f1feea287409fbc4.1720693745.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Make tool const now that all uses are const and
-perf_tool__fill_defaults won't be used. The aim is to better capture
-that sessions don't mutate tools.
+On 11/07/2024 11:38 am, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Almost all users of ->map_page()/map_sg() callbacks implement
+> ->unmap_page()/unmap_sg() callbacks too. One user which doesn't do it,
+> is dummy DMA ops interface, and the use of this interface is to fail
+> the operation and in such case, there won't be any call to
+> ->unmap_page()/unmap_sg().
+> 
+> This patch removes the existence checks of ->unmap_page()/unmap_sg()
+> and calls to it directly to create symmetrical interface to
+> ->map_page()/map_sg().
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/session.c | 6 +++---
- tools/perf/util/session.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Now that all the common cases have been mopped up by dma-direct, I'm 
+inclined to agree that this seems reasonable. For sure there is code out 
+there still abusing random DMA API calls as a cache maintenance 
+interface because it thinks it knows better, but even that's going to be 
+running on platforms where it expects unmap to have the desired effect 
+anyway, so the chance of somehow ending up with the dummy ops and 
+crashing seems sufficiently unlikely.
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index ad5da61d2330..0c7cc092887d 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1765,7 +1765,7 @@ static int __perf_session__process_decomp_events(struct perf_session *session);
- static int __perf_session__process_pipe_events(struct perf_session *session)
- {
- 	struct ordered_events *oe = &session->ordered_events;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	struct ui_progress prog;
- 	union perf_event *event;
- 	uint32_t size, cur_size = 0;
-@@ -2195,7 +2195,7 @@ static int __perf_session__process_events(struct perf_session *session)
- 		.in_place_update = session->data->in_place_update,
- 	};
- 	struct ordered_events *oe = &session->ordered_events;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	struct ui_progress prog;
- 	int err;
- 
-@@ -2245,7 +2245,7 @@ static int __perf_session__process_events(struct perf_session *session)
- static int __perf_session__process_dir_events(struct perf_session *session)
- {
- 	struct perf_data *data = session->data;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	int i, ret, readers, nr_readers;
- 	struct ui_progress prog;
- 	u64 total_size = perf_data__size(session->data);
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 7f69baeae7fb..7c8dd6956330 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -43,7 +43,7 @@ struct perf_session {
- 	u64			one_mmap_offset;
- 	struct ordered_events	ordered_events;
- 	struct perf_data	*data;
--	struct perf_tool	*tool;
-+	const struct perf_tool	*tool;
- 	u64			bytes_transferred;
- 	u64			bytes_compressed;
- 	struct zstd_data	zstd_data;
--- 
-2.45.2.993.g49e7a77208-goog
+However, I'm a little wary of the static checker brigade noticing that 
+and trying to "fix" it by reinstating these tests, so perhaps it's worth 
+just adding unmaps to the dummy ops (with a WARN() in them) as well for 
+the sake of cleanliness and avoidance of any doubt.
 
+Thanks,
+Robin.
+
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>   kernel/dma/mapping.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index 81de84318ccc..6832fd6f0796 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -177,7 +177,7 @@ void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
+>   	if (dma_map_direct(dev, ops) ||
+>   	    arch_dma_unmap_page_direct(dev, addr + size))
+>   		dma_direct_unmap_page(dev, addr, size, dir, attrs);
+> -	else if (ops->unmap_page)
+> +	else
+>   		ops->unmap_page(dev, addr, size, dir, attrs);
+>   	debug_dma_unmap_page(dev, addr, size, dir);
+>   }
+> @@ -291,7 +291,7 @@ void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+>   	if (dma_map_direct(dev, ops) ||
+>   	    arch_dma_unmap_sg_direct(dev, sg, nents))
+>   		dma_direct_unmap_sg(dev, sg, nents, dir, attrs);
+> -	else if (ops->unmap_sg)
+> +	else
+>   		ops->unmap_sg(dev, sg, nents, dir, attrs);
+>   }
+>   EXPORT_SYMBOL(dma_unmap_sg_attrs);
