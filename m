@@ -1,109 +1,82 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D38216DEB2;
-	Thu, 11 Jul 2024 17:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD05450FA;
+	Thu, 11 Jul 2024 17:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720717933; cv=none; b=HSZdbpSnry4uRJT9kFhyY9VnXrdcmQFfIF01YpRHD+V6ZaMMVkQuVZWHqryeI5weJnAG5ZpTmGr0U0t0VSyO/RgCYaTYrJ5W86m6ltQTN32/dlC/vVNWUspx+qKfL/ph2Jwjvretv6V/8RH/ZVcfPHJOR2YgZL5B39HdDMCDx7E=
+	t=1720717991; cv=none; b=I7HpscrldIdx2tcTH5JvqO0Deq5p3fcIDGmy0ci+dYkQO9/6AIwO3z0SlBuO44L96E85H+Y6ZJS3sB/MBm7mvqC5T9UF5kGMuJMZdIhk4RBjPqNqs9uvuhZSiiiYw4gC2Rutvqx1ulK1fZHw4F6cbGntHQoHHXLZ11l47zynZBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720717933; c=relaxed/simple;
-	bh=5YIqNKwyUr+LG6yUl04mH/OQyT4FdO5vSgs3hwM55I0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d/f1Mpm5LBO7N1DtXoblQRNZRAusA7JGB/JeNYdZVtkBNv3NCXJCpAoqeZmwwaFwjLZsly5vu+JHAE+jQHLhfAQK1RahLvPUDqtxZs8cgHooY9ksce9WhLNZ56NNozwSrTm4PQdI2GaRNmbU0N7x8ICkjZPT3UU9kRc9v7+0zMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+j50o02; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720717991; c=relaxed/simple;
+	bh=xaKsQpF71MSFmC0xsITNp3M5gYzUZlBQesDbEER8aRE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z2QwcZzUw0c+OANfUiHVc28XFOKZWyTjfVfQwjNho04NoInx2LVYTDiCnzqeKecGe895DyqPUj04FgG2kiDSMyjH8M+waCf3e8++kT50xj9teN/Ru870YWGJkh/mtRTYHacDK90IxJn1IMKsrVMzUi19B8QcXwcC1lfRzjt2XMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUngXAXl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+j50o02"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7611b6a617cso850354a12.3;
-        Thu, 11 Jul 2024 10:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720717931; x=1721322731; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q8FKh1codzdsvdDdcwzA56jGoX640hJ0GFCrKgUVpxc=;
-        b=Q+j50o02gOE4ypwdedtfu1m7jsyfyWQsw/LTVi+cOF9SxrGKWrgvfap1LKI5Z0hua0
-         l5BD80ViOQ5gxx0bKVhdE/gZwIj1iPuwcsTHJvLe/cPqxRTbB/+IXqWjZ/mLfiPOJ283
-         0xUZ8XUPu+ZMA9Az+G/j4ROBxjaYNgH99xSXCDJsuQKbZRJvWF6byHoTA0TSWPqwpbA6
-         qLR63m4I7pA51E09tO6E5J5rUuTnMLEKyqcXkHbv8/jC7gmkSj4aiOwHni32MWpvdbCy
-         du/3Ad+pksHrwpRJRFWN8V5vK+piee/2r4gHGWTb7+Zm1gkTZoRiQkW8iCNpuzQ/VuyT
-         C6Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720717931; x=1721322731;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q8FKh1codzdsvdDdcwzA56jGoX640hJ0GFCrKgUVpxc=;
-        b=pPEbjpQv1b3zxyiFRb/fSHwkquqvmgWyWEVINRfZbjvUTk5N2tZGuO9SI8u2v8eny6
-         zeKyoMt8UDjbHmSby7xf0/kPgM4svdPHLo73s3U1nsO+dMND+d6Tu1h5qHkqTwKkQXlR
-         P0BmphOS921m3Y176o9GnqByGVMT6yAr1g7fR4r7CjhvuuSg3dT0Vl60VH2gNqrY5zN+
-         GFm6L76xRqFsud3LPehDQF+tJ+4Ln5qiD+W4lXQuG8ParDxyI99nbbeg4hKthLKWHK0o
-         /h3p2mzzPcc6oslYttQ7BEDsDyqDS74E88RVGdVLm/6qVLZJFORnTseK7Ls1fV8r1/D1
-         9paQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOkIKptQ9qJh3w6W3uuZS7NqRQ//hKWRql12lg/2e/6XixR5VnS0PyCNt5EWXDFt6lzY1KqkqhV79UPmNRE8PZ+udGFJOG04Wxg2usXkM/p0g5v0QoFQMG/6lSHoS9cC1of4MW12ff+4nop3186aYH
-X-Gm-Message-State: AOJu0YwWjbR/SzeyWfYPmDEumbhxIfT9+PWDzx1fZOvxxJqmGxyQAWNm
-	a2Ho+a+mrln02YZPCL1hUsqhW38icfkSw3Iwhr2YeG9UX8VSoNJEsLLoCFgZzPeyiaeYJO/Sq3Z
-	Ro6pUxz/T04pEAE9vGxFjzevN3Jc=
-X-Google-Smtp-Source: AGHT+IEXzsRL6ePSLYpXeg43d3J9B8DS4lHxsJA1VKNfsJe+PrY7j7Hl0j8NkYgMtVTyShQUgXo0PXxEB2CxxwdWORw=
-X-Received: by 2002:a17:90a:f0d6:b0:2c8:6a9d:5060 with SMTP id
- 98e67ed59e1d1-2ca35be1129mr7306896a91.7.1720717931172; Thu, 11 Jul 2024
- 10:12:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUngXAXl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A419CC116B1;
+	Thu, 11 Jul 2024 17:13:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720717990;
+	bh=xaKsQpF71MSFmC0xsITNp3M5gYzUZlBQesDbEER8aRE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nUngXAXlBPFuZAJ7YrQh1lA8I7U2wZ3rMquELhfTAjK5H6al2vkjY35knKCZizZp8
+	 FrtoBKgBSM7mpfRTA/fT2musgNKf9ncvxZkFNz2vwUcLuAyN8dsQTEq0OQiuWRkpXG
+	 4HpQK/2vyT03C8XqX2Kknw89oNeYf1cxNuvy6ZgoGwQnFSuM8HY421g+1+8hnnjgoW
+	 ToI91YFhcpY0ydPlqhK/SW/8+iuT+P8BUcT5RPKm5/qb70elLGDnX2NVT+lhtMpum7
+	 seBacQqZEZ9oKLaI6OzjwRtm51Q3V6jAqAmU2aCtsTdaS/5phcI2yZbCzOPqJbeyjY
+	 qNeQbX5Jw9nTA==
+From: Kees Cook <kees@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Peng Liu <liupeng256@huawei.com>,
+	"Dr. Thomas Orgis" <thomas.orgis@uni-hamburg.de>,
+	Ismael Luceno <ismael@iodev.co.uk>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] tsacct: Replace strncpy() with strscpy()
+Date: Thu, 11 Jul 2024 10:13:09 -0700
+Message-Id: <20240711171308.work.995-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710140017.GA1074@redhat.com> <20240710163022.GA13298@redhat.com>
- <20240710163133.GD13298@redhat.com> <20240711092619.GA18031@redhat.com>
-In-Reply-To: <20240711092619.GA18031@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 11 Jul 2024 10:11:58 -0700
-Message-ID: <CAEf4Bzb0ErnW0o09fk2TCJnY3LNW7U4aB0YcUJqKjfNH+m-uyA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] uprobes: make uprobe_register() return struct uprobe *
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org, clm@meta.com, 
-	jolsa@kernel.org, mingo@kernel.org, paulmck@kernel.org, rostedt@goodmis.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=942; i=kees@kernel.org; h=from:subject:message-id; bh=xaKsQpF71MSFmC0xsITNp3M5gYzUZlBQesDbEER8aRE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmkBKlYLWBH+hNVujXhbheeiLsYWDV5guB5thjH umH2hIqAcSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpASpQAKCRCJcvTf3G3A Jok0EACNE8GTbsRAEKnflQ2G8v+TvQZ62CugkWiPe6oYsvwxU/nlLWyxp8x6JchhoSeag6R5Bfl l8rte8qbEAZejHnWR2Jk6hCvBqRzjRV1WyPAEr5h16yIhHrgzUiYt/3dR+FZnCI+LNFECDOGrhf aOUhG//mvSvf/82+qNGQrpG/viMWn4r7aDgyqM12tHaZjlwdBX080NrC3RoaI/IQLiMvVHFlPFg aNJJ/Zv6T6J6CzWnUnkIAbUL1+MufQcMbYb4+HZCydJkHUvg/0UlFMTUIJwY6rtzreO59taW2er yjZ+H7dVqcd4ivgv5/grkNjGeCTz02EPA+LMrsiSbNwsif3ZG49AFyOr0tXClJ5guv2iBXhpT/O Vw+Myv6USPnK6m+hit3DOEjYp++wyH/gr4oZV1+JnNgFRv0py8n9jHDqQXp6FfosyRu6T5bgyA0 Xc4GLd5pHkyHuLHSgDOvd1Q2kkj89bFuuPOy+LNZbhn1MrxOKNYKj/CNc+Vdlwx7QycVbPUQguB 0qsld82RCzqzZlPVrp7SfNlfvQkd2N8ymJz1DquhN/ppz0O/0h339VpeECvmYpJ0a46dxnqK6Ja uIENPbTD58USqSWxVwAk8ELPKkqsswe4E89199K5ADzgxlIvGgQftTSSvcZpHTz+P8g3F9gAx8j UJKnZENKvww8zq
+ Q==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 11, 2024 at 2:28=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 07/10, Oleg Nesterov wrote:
-> >
-> > -void uprobe_unregister(struct inode *inode, loff_t offset, struct upro=
-be_consumer *uc)
-> > +void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *=
-uc)
-> >  {
-> > -     struct uprobe *uprobe;
-> > -
-> > -     uprobe =3D find_uprobe(inode, offset);
-> > -     if (WARN_ON(!uprobe))
-> > -             return;
-> > -
-> >       down_write(&uprobe->register_rwsem);
-> >       __uprobe_unregister(uprobe, uc);
-> >       up_write(&uprobe->register_rwsem);
-> > -     put_uprobe(uprobe);
->
-> OK, this is obviously wrong, needs get_uprobe/put_uprobe. __uprobe_unregi=
-ster()
-> can free this uprobe, so up_write(&uprobe->register_rwsem) is not safe.
+Replace the deprecated[1] use of strncpy() in bacct_add_tsk(). Since this
+is UAPI, include trailing padding in the copy.
 
-uprobe_register(), given it returns an uprobe instance to the caller
-should keep refcount on it (it belongs to uprobe_consumer). That's
-what I did for my patches, are you going to do that as well?
+Link: https://github.com/KSPP/linux/issues/90 [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Peng Liu <liupeng256@huawei.com>
+Cc: "Dr. Thomas Orgis" <thomas.orgis@uni-hamburg.de>
+Cc: Ismael Luceno <ismael@iodev.co.uk>
+---
+ kernel/tsacct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We basically do the same thing, just interfaces look a bit different.
+diff --git a/kernel/tsacct.c b/kernel/tsacct.c
+index 4252f0645b9e..16b283f9d831 100644
+--- a/kernel/tsacct.c
++++ b/kernel/tsacct.c
+@@ -76,7 +76,7 @@ void bacct_add_tsk(struct user_namespace *user_ns,
+ 	stats->ac_minflt = tsk->min_flt;
+ 	stats->ac_majflt = tsk->maj_flt;
+ 
+-	strncpy(stats->ac_comm, tsk->comm, sizeof(stats->ac_comm));
++	strscpy_pad(stats->ac_comm, tsk->comm);
+ }
+ 
+ 
+-- 
+2.34.1
 
-
->
-> I'll send V2 on top of Peter's new version.
->
-> Oleg.
->
