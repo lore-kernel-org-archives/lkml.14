@@ -1,115 +1,116 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F374963F;
-	Thu, 11 Jul 2024 08:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78F57C086;
+	Thu, 11 Jul 2024 08:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720685651; cv=none; b=PIXSqqg16INr2syFDFoWr1bRLHYP9izBFFIoGFFrWbyg9wePXunkzhT0akCyVAK4Zc+mre+4nvVp4v5uhpGvtJEXyCWhQy52R1KhrP9fcrZ8NBV3TPk9Z/njphSgnttVlH2D0UJstd4VF0D1g/eO/TA210QlKZkGGSiNqAuW5JQ=
+	t=1720685727; cv=none; b=TFBEE6OSSVWokYeFF7b6kAq+KqQiAdrt5YblUReh+rk1E9xq4vfg+64dEaBQoWbx6NfwVu+XVKOwC+lzYhC8ja+5l55DrzygTr+0fat5gjtfAgVp15wVRO67cntIUn1iTDSHe3DB/F8k3348pw2Tpyto1zxdnTX7sXKbF7jxg1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720685651; c=relaxed/simple;
-	bh=ODRBh1j5JOL23CNW0NPbioHV5i2u27rEl/C70xk/qAc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LnnUSKcP+14teCBokzbQR6vBs8Fr/YV6+5JgQJbZSF4c4Rb/o7OKNHa6ufbzB/kY4YyIZkfy+fAQcfIsjbvZRjWMDSEwAAjQFtHDnlOdT9KbfcUDZ5zqMGFF9nOla82X9Y29DWl49+XCnSivxgNk9o7InT9I2izPuTBO9dnuns0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fboff7G0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720685727; c=relaxed/simple;
+	bh=x1Jcj6NeCHQN+40mLrILfGkWZv5ImKM4gWH+YNibv8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4YNYg+9L/7dWNMMGs4pjDrw5L7q7/lMzHxK9XO8rFHbNCMTtZEjlo/xp4pF9hl3xnldEpCvsTUK+UX7T8b8wBf/NYTvo/+1MrGVNq3b4RyOp66fa6tBhmQTCkBrIFLPegmAPtnAJTuVrD53X1103CWJmzxW14IeKslqpziGS2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bDIS618x; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fboff7G0"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B4mlX1019994;
-	Thu, 11 Jul 2024 08:13:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DX+WWo53/HpJBzzJRou4FUISP0oOuCAi1n81bqWUF7w=; b=Fboff7G0y+NA7/ps
-	W7kDb4oLBHRakjHfMxIvPFkoS5e3Y9/JL2XbkIS3/asB3ijeF7iMDv4wNiYAcsmN
-	DS+Yi9tLC4UplXEaxmgnVQTCHKBvJ5H8CofPyczsa/Ftp8t9CLKKuWpKDTzBazKh
-	/GuLf+yWX7en4HxL/eZX4jv8qmYgY2Gop4nwE2SELFbOoAHjflZpR1x87VwRXLak
-	OQyrh4TjdM5uCB7WcEwl/QnCJIVujp+x/kj6eU1ucmhWNc1YwhXDy/5+7U+6SyK7
-	0rq0zMnPw6sY4+iOty7jjw6GoAagLqGWnBgKx+W/S58vadAHKjZ5n+rHN7eSZ31M
-	RsigdA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wmmuu8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 08:13:58 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46B8DvSG025373
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 08:13:57 GMT
-Received: from [10.217.219.148] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
- 2024 01:13:50 -0700
-Message-ID: <5dc07ab0-0332-4c4b-8627-fdb2662b0ef2@quicinc.com>
-Date: Thu, 11 Jul 2024 13:43:47 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bDIS618x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6wtDOfAx6qXoOFW0qLJr9ozkAFTcFE7m6rFzVFkQzO0=; b=bDIS618xw2CxgiOtsh/B1dnK1c
+	5JxPG3AbH1eB2KbyzbpFIS68eMDIWBBCocACVVe0B0ks1BIusZuYjKgOxgUn5YaUaSuDLiX7savkg
+	qv+Ib+kmFId0ueTeEQsoI+aPpbo3dN1DGWQeGZ/laUcxWPDhYdj0dDwXR/knUfxWq2vYVNbV3vXCZ
+	hXAftDHoT3WLufeo50lSqDsPIPI9pPrXbHOscPRD57CGGM4MbercD0nOAs/1WOJRLbY0kD1PbeGps
+	/CeRzudxg3FpfW/wEJ1NfH/LEGC9fRLCIt+d0P8Hy7udIGJzm2pdYWzps+bx5H/BRQeoha+vqYmMV
+	9poUU9Bg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRoxA-000000013Yy-0kHs;
+	Thu, 11 Jul 2024 08:15:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CCDF730050D; Thu, 11 Jul 2024 10:14:59 +0200 (CEST)
+Date: Thu, 11 Jul 2024 10:14:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Yian Chen <yian.chen@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v4 03/16] x86/alternatives: Disable LASS when patching
+ kernel alternatives
+Message-ID: <20240711081459.GE4587@noisy.programming.kicks-ass.net>
+References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
+ <20240710160655.3402786-4-alexander.shishkin@linux.intel.com>
+ <20240710171836.GGZo7CbFJeZwLCZUAt@fat_crate.local>
+ <cqacx3crogegwyslm25kwcdcezgg2n44lhy3mg5qkka3vgn4xa@lhqsoseyduus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: gadget: uvc: Add H264 frame format support
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Jing Leng <jleng@ambarella.com>,
-        Felipe Balbi <balbi@kernel.org>, Jack Pham <quic_jackp@quicinc.com>,
-        <kernel@quicinc.com>, Wesley Cheng <quic_wcheng@quicinc.com>,
-        "Laurent
- Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally
-	<dan.scally@ideasonboard.com>,
-        Vijayavardhan Vennapusa
-	<quic_vvreddy@quicinc.com>,
-        Krishna Kurapati <quic_kriskura@quicinc.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240708041328.1942-1-quic_akakum@quicinc.com>
- <2024071054-anatomist-purchase-1e98@gregkh>
-Content-Language: en-US
-From: AKASH KUMAR <quic_akakum@quicinc.com>
-In-Reply-To: <2024071054-anatomist-purchase-1e98@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: n2_Tga6ZxRR6ZF-F-edWEDkbn-hie9Vt
-X-Proofpoint-ORIG-GUID: n2_Tga6ZxRR6ZF-F-edWEDkbn-hie9Vt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-11_04,2024-07-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=574
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407110056
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cqacx3crogegwyslm25kwcdcezgg2n44lhy3mg5qkka3vgn4xa@lhqsoseyduus>
 
-Sure greg adding the details in documentation and yeah it is needed as i 
-have changed uvc frame structure
-from single to separate for mjpeg, uncompressed and h264.
-Updating the details in next patchset.
-> On Mon, Jul 08, 2024 at 09:43:28AM +0530, Akash Kumar wrote:
->> Add support for framebased frame format which can be used to support
->> multiple formats like H264 or H265 other than mjpeg and YUV frames.
->>
->> Framebased format is set to H264 by default, which can be updated to
->> other formats by updating the GUID through guid configfs attribute.
->>
->> Signed-off-by: Akash Kumar <quic_akakum@quicinc.com>
->> ---
->>   drivers/usb/gadget/function/uvc_configfs.c | 570 ++++++++++++++++++---
->>   drivers/usb/gadget/function/uvc_configfs.h |  34 +-
->>   drivers/usb/gadget/function/uvc_v4l2.c     |  80 ++-
->>   include/uapi/linux/usb/video.h             |  62 +++
->>   4 files changed, 638 insertions(+), 108 deletions(-)
-> DOn't you need to add the new configfs entries to Documentation/ABI/?
->
-> And how is anyone going to know about this new api or format if there
-> are not new files?  WHere is it now documented?
->
-> thanks,
->
-> greg k-h
-Thanks,
-Akash
+On Thu, Jul 11, 2024 at 01:33:23AM +0300, Kirill A. Shutemov wrote:
+> On Wed, Jul 10, 2024 at 07:18:36PM +0200, Borislav Petkov wrote:
+> > On Wed, Jul 10, 2024 at 07:06:39PM +0300, Alexander Shishkin wrote:
+> > >  static void text_poke_memcpy(void *dst, const void *src, size_t len)
+> > >  {
+> > > -	memcpy(dst, src, len);
+> > > +	stac();
+> > > +	__inline_memcpy(dst, src, len);
+> > > +	clac();
+> > 
+> > I think you need LASS-specific stac()/clac() or an alternative_2 or so. You
+> > can't cause that perf penalty on !LASS machines.
+> 
+> Hm. Do we have text_poke() in hot path?
+> 
+> Even if we do, I doubt flipping AC flag would make any performance
+> difference in context of all locking and TLB flushing we do in this
+> codepath.
+
+The one where performance might matter is text_poke_early(), the full
+fat one is comically slow as you point out.
