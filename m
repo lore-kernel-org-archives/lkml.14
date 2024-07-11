@@ -1,110 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE0D15ECCA
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBAC15ECCA
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720708046; cv=none; b=fXxOe/wZmqMRAmP3XkJTV8QFdzm/EVlc+n9b7y6/3hTcRBCusfhdhtnksHMRHk78+DhLMncUq6tXsIzWrEtXie4/RmR4qJAyjpGS4F0Ceyou06lhdGu25tvcFZSEwtUvjkd775SHLR9eeZpplmGTi25ej/HkYRIqN3v8hbQgbQw=
+	t=1720708130; cv=none; b=LnnnnW8/PcC+qV+vW++OhTgaxRAgqNCBj6CM3v24qj7IVBUvu4WOu1UmE97d2B8RzO6XtNPPN1eWTFO1EDkGWC9nF0fsvKz6bI2X+D/qfsmcd/DadvwtI8/fblcHejcGQZ0i6Vc81qpkqm9Y0ayHKKJ+sBBkcKd+dWAiNpysOpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720708046; c=relaxed/simple;
-	bh=XMcLDNucyi6nSPUmygOtXlWNTj77p1UId/vpj/H+HtA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=o/5x1kdjSZloD9R+RnkBXBtl8ZJsBIfhYf5DDS3WjHDojHe7cZfnJBKf8wkEJeHWXDp4liulr4XGrx+s8uMA4r89yvUt9nSfpCcmi8kAB89NzjnHK83czUzP+EEHiAJ/I2llAR5tJX7kyAS/dd5N/7eoXe2Rq3bRxKpmSnqq6VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WsC5l2Pr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WsC5l2Pr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720708043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pmruj8JQx1mckIvgayGotRB4kpYx01J5hU6lzx2ILak=;
-	b=WsC5l2Pr9sklarCVGVqyVXrbDkmiGG6iNtZ9LZ0KeQV8IGQKk/skCHFWbtTHgoRhIIvues
-	JXPBAZwc3BqYtjz14xl1yu0YeH1OW78tujg53ap5lTWDu+uLGNNKq4qZbEomGEZfEBBdro
-	cSFLLzU24Og/xprIRSflcgha7wWx/NU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-103-xfzCKadoNuGGq2e-TZVIFA-1; Thu, 11 Jul 2024 10:27:22 -0400
-X-MC-Unique: xfzCKadoNuGGq2e-TZVIFA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42668699453so8209215e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:27:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720708041; x=1721312841;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pmruj8JQx1mckIvgayGotRB4kpYx01J5hU6lzx2ILak=;
-        b=aUu4qfuT/6zvwzdD5CRS3+djc0eVFMFAJunVZBAuyFDhiI1QV8N0BfbGQbEeuciCfq
-         gj++h86VwfL3q283BA7VETpcDXcNwM7IlqDynXkUhTVNvoDDZTb0N5c5yKplltRGEF5z
-         +1tY4rT09kSNZbF8tEz/e+Fv+MlQd9OYbkbvU7P+gNitR8M1nSPK/0cTJUorNIOTc6UX
-         wG24p21QRevovGtW8EmZ2i2XkEE4WVUqQTsd+1jrpE3hzlQ+tNGwbJbtNaxSY7moqVTc
-         G3vDv7caayb5FSGauziXlkR24YpOprI7YxTmONZNaJD3NTuhVmmkEfDIpMtPa791NuDk
-         FkxQ==
-X-Gm-Message-State: AOJu0YyQGYWs6T1rtpN2Q19tMDNYcMBAZwSZf9+kc16+zvarye2MFgyV
-	YHVGAeBsUkc374WeS1+CpBX6i1wivaLGEyU55OK6lTVsExLsoFlyNvqmx5CSkAYFafUZ+k+djeX
-	ZTS60LO/KkMpnxDJqb8DSvxWKWSXqyg/KIYI91qYH1WkAfhIVgk88pdzaNCy1ww==
-X-Received: by 2002:a05:600c:2109:b0:426:58cb:8ca4 with SMTP id 5b1f17b1804b1-426708f1d36mr69105145e9.37.1720708041271;
-        Thu, 11 Jul 2024 07:27:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnWMP7EKz4R63Sf6vdBXXcYvsJMKmcS8ZNh8guNp/zMBSdKX64ea5/eGfU35uCKVEDl19oUw==
-X-Received: by 2002:a05:600c:2109:b0:426:58cb:8ca4 with SMTP id 5b1f17b1804b1-426708f1d36mr69104815e9.37.1720708040684;
-        Thu, 11 Jul 2024 07:27:20 -0700 (PDT)
-Received: from ?IPV6:2003:cf:d74b:1cd5:1c4c:c09:d73b:c07d? (p200300cfd74b1cd51c4c0c09d73bc07d.dip0.t-ipconnect.de. [2003:cf:d74b:1cd5:1c4c:c09:d73b:c07d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f737a63sm117471955e9.36.2024.07.11.07.27.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 07:27:19 -0700 (PDT)
-Message-ID: <151cc130-3584-4b07-96e0-765b7efa43fe@redhat.com>
-Date: Thu, 11 Jul 2024 16:27:18 +0200
+	s=arc-20240116; t=1720708130; c=relaxed/simple;
+	bh=eiSasGCrA3fKd8PFdd7iVlxNpta3/jrT40usetjF85o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=esnUK+6Swq9ysAGlY5MxsTzmJYWShArKLkzlVHPCCoi4J8FjEy4MtOaueGSGsD7gCHjXWp3SlNd+fWQcammbZ4JbOQ/4kAlMlBbShvULyDfqo5z1yu3aYMgOfSQPSgx4zPK1czHRC+x+frkaPyvIMwKX2XGEtOGJZ0aaxj6Gf1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:9b6b:6da0:997b:7165])
+	by andre.telenet-ops.be with bizsmtp
+	id mEUg2C00546XLxg01EUgre; Thu, 11 Jul 2024 16:28:40 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sRumY-001kQg-Ff;
+	Thu, 11 Jul 2024 16:28:40 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sRumm-0009sm-0p;
+	Thu, 11 Jul 2024 16:28:40 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] platform: cznic: CZNIC_PLATFORMS should depend on MACH_ARMADA_38X || ARCH_MVEBU || PPC_P2020
+Date: Thu, 11 Jul 2024 16:28:38 +0200
+Message-Id: <80e17dffa8f4c1d3fdedd4d82df3a722aa4044ff.1720707932.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] virtio-fs: Add 'file' mount option
-From: Hanna Czenczek <hreitz@redhat.com>
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
- Miklos Szeredi <mszeredi@redhat.com>, German Maglione
- <gmaglione@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>
-References: <20240709111918.31233-1-hreitz@redhat.com>
- <20240709175652.GB1040492@perftesting>
- <8ebfc48f-9a93-45ed-ba88-a4e4447d997a@redhat.com>
- <20240710184222.GA1167307@perftesting>
- <453a5eb6-204f-403a-b41d-faefdbcb8f50@redhat.com>
-Content-Language: en-US
-In-Reply-To: <453a5eb6-204f-403a-b41d-faefdbcb8f50@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 11.07.24 10:21, Hanna Czenczek wrote:
-> On 10.07.24 20:42, Josef Bacik wrote:
+CZ.NIC's Turris devices are based on Marvell Armada 385 or 3720, or on
+Freescale P2020 SoCs.  Hence add dependencies on MACH_ARMADA_38X,
+ARCH_MVEBU, and PPC_P2020, to prevent asking the user about these
+drivers when configuring a kernel that cannot run on any CZ.NIC Turris
+system.
 
-[...]
+Fixes: 992f1a3d4e88498d ("platform: cznic: Add preliminary support for Turris Omnia MCU")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Perhaps the dependency on PPC_P2020 should be dropped?
+---
+ drivers/platform/cznic/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
->> So then the question is, why does it matter what virtiofsd is 
->> exposing?  I guess
->> that's the better question.  The guest shouldn't have to care if it's a
->> directory or a file right?  The mountpoint is going to be a 
->> directory, whatever
->> is backing it shouldn't matter.  Could you describe the exact thing 
->> you're
->> trying to accomplish?  Thanks,
->
-> The mount point needs to be of the same mode as the root node of the 
-> mounted filesystem, or it’ll be inaccessible after mounting[1].  In 
-> this case, I want to export a regular file as the root node, so the 
-> root node must be a regular file, too:
-
-Sorry, I meant “[…], so the mount point must be a regular file, too”.
-
-Hanna
+diff --git a/drivers/platform/cznic/Kconfig b/drivers/platform/cznic/Kconfig
+index 6edac80d5fa37762..70f5e683f61f2708 100644
+--- a/drivers/platform/cznic/Kconfig
++++ b/drivers/platform/cznic/Kconfig
+@@ -6,6 +6,7 @@
+ 
+ menuconfig CZNIC_PLATFORMS
+ 	bool "Platform support for CZ.NIC's Turris hardware"
++	depends on MACH_ARMADA_38X || ARCH_MVEBU || PPC_P2020 || COMPILE_TEST
+ 	help
+ 	  Say Y here to be able to choose driver support for CZ.NIC's Turris
+ 	  devices. This option alone does not add any kernel code.
+-- 
+2.34.1
 
