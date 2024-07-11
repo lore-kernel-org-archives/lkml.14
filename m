@@ -1,508 +1,251 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2931A0AF1;
-	Thu, 11 Jul 2024 21:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B94316D324;
+	Thu, 11 Jul 2024 21:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720732591; cv=none; b=XcANpEA1yIbeBberW0tptrYVl5rXfqOpVIbqoaq2bVtBtan2nQ+sscjcXAtHF1oP7+u6fuysBkJ0pVMC/FX4MeQIfxOcZRV9jdhtw6gR3IA9ue1yezHtGtATVWDBecBjSVh6WH+nKSoP/13S2JbxBE61tCPLIz8mHeRCeutUVOY=
+	t=1720732647; cv=none; b=i7jAwD0kuRDd5IxWZbIHjjisf+WEzFZFoULTpI2zQqn9LBKB9BAh8a0ErNOcxgAFSQL+mVSNc21MOKAtoJF6/lXY+0AyusWs9MODW5jKzhxMGrSvc0mYEJzHEC/nbivQtYBchXm+8Rzc64xOEYKmJgm/nSGk1Lm6Di4Jz1WYz/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720732591; c=relaxed/simple;
-	bh=mXlp8AXeYs1aDEecQQhE5xrrli/ravongaTp4YEvJjM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZYbzggS0h7qmZxh54bdhO2Xl3AWOBdD4rx0QHpS8SN4kGK279Zq6615kvXOI4dJYtmOSiRvXw+6p1Pndoxq1N32Rhz/fl/u/IsolGH/clXbhy7RTdNq/U7cvffn+tjZbet0aNVvotMAneznngHb6plSh9v0YagTSsTj0Z36XvcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GsgHAtYA; arc=none smtp.client-ip=209.85.208.44
+	s=arc-20240116; t=1720732647; c=relaxed/simple;
+	bh=RpjRG8g1/F7J1W4iZNeHwl9ZfrXytIdknIVJmm5AHfQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IzT1cmczf/oVTtRB73o2ukDgyoBqQA9GacI9xqsP7bGzaZIr6PXDfs1df6itKopXrsvQzwpQ/xgC9txlM1hPaZTht9B7UhMDNh83s16j8fLVbFSi34/oASkV5urhqRgwb5Bm6dwxADHIc4He+YOK6SeBOiXWQeIrUgcsxtPtHcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BtewKqpo; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsgHAtYA"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5854ac817afso1742481a12.2;
-        Thu, 11 Jul 2024 14:16:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtewKqpo"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38027so1534768a12.1;
+        Thu, 11 Jul 2024 14:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720732588; x=1721337388; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ERqlFA6Bq2+zv49jpttYmy1q1HQyui34ltOA6nDZRxM=;
-        b=GsgHAtYAkGwRCEL2hwQ2ZHnY+1yRM6r/wa4cM6SetuRfx9gg/4wrCQIHS7eJqDEEVW
-         9hXfc2nMQl9l/eej4tpSuFIE5BU740/FtdPQok4pxufZJZDxs0FF4iNph24R4a+xZXJk
-         vjYMtZdybujD7G/qDu4EMfYIDh74iJT+hCSR2x93p/7NPdddpHZUxn3V6l+Bq8al9gtE
-         VFPJ/fz2yZAiPo+Z+ot98R+yBJZ8cge52amJ+cYVwiRvPgCVEEX8br/t+DZTfNnvR8aN
-         NNEtMt6CHpo654Tc7JdpEKKOdGFqmN/qpuC1KAezFDgXUHWhzWhpi4yMDlhnPfcJBITX
-         qmLw==
+        d=gmail.com; s=20230601; t=1720732643; x=1721337443; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CZcaI5+6z82r9vq6pp4cVgvJLD8/+zJh4wg+noG/zTM=;
+        b=BtewKqpoQWHUPL99YOuzLe+fcBTVSfWtajLloqCZxuRan2gf4A/ypmw81Ki90H4edQ
+         XgmiwV8eaAhvwcbM5R1anfloamqfeYsnXZjAzMPr0Tn3K2QYnAVkyunV6y3y0W/19/Pb
+         m+/Xnwei05wMyzJRXnT+YuiCz3Rr5w1bcN9coAX1q2xkjmj+lbDCvLWrGQ36ZZOr6gws
+         iC0rBYc0CpD53qN1bmNiWOB0El3zN/PXBHbPPCYV+4ZbOMbtqUC0JUOOpGQsxebKtRO4
+         5HBRf8vvOPJutTorTA/K0XRlw97aIT8FNfFCGC+i0azr5xwxG7aEEmcK+EWsoxwejLUt
+         tHcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720732588; x=1721337388;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ERqlFA6Bq2+zv49jpttYmy1q1HQyui34ltOA6nDZRxM=;
-        b=GJ64IubndiEBxBJiWt+mhkIa2DA5Azikxxd9KKBqEw/E91ZzC/UFTwQLhVKCaHLl1D
-         a20aOT/JJWiFo9TrCJrKKl3qI7ycSD2d5Yxf4RInwDEmKqWqvFvT3dXCkf9z/3trSRcR
-         j4jkFiPI1/No/rIVa2gM7J2Muw/aRWg/hBmfocXjVoTFh+CxPF343zLMjQAdlnAqBJ+X
-         KVb/892TBWR5s59XxzRz0WZ4eM8xhOoe41YTAIdQP+Fm9qDUP6qGVaqcIwA9LzSYV4zk
-         88wOiXyQ1gFPuVcqJV3T45C3KmpYbXlw8Q5t6f8x6llmP0qsWIre4cPOH0wSXYwGTL5t
-         fu4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWcG2RYI1uPnbdPX8jNvq0fuzlnxlBMpPHho5AHskBcFYrXgZwkS/uIxdo4jqwg6J1R+rMVnYcH0sO5ddJ65G0rhC+bpPUjd6AGC1qd6l1NxHtOVorQJxgjUAbf4aIimfUJm9ixZQEQzQX/N5YvJIaAWZUViv10jN5QzwMWVI3IXH0UPQ==
-X-Gm-Message-State: AOJu0YzyaWKHUT5+tJ8R2laK+yqebSEm5uoDIk911FFbq8725YIQNBFB
-	9X8+mWaXkPEsJk7+DIu1RoXjbkVfGUMVCXzswX0YDx5JD0WKNQo1
-X-Google-Smtp-Source: AGHT+IGm7EgVWvkJNX/R8I+9PeJdcZv20AS+90ljfrjvX7Rk42cZ++VCnMjDtswmCoZdhZb1/VaYDA==
-X-Received: by 2002:a50:ee93:0:b0:57c:fda3:b669 with SMTP id 4fb4d7f45d1cf-594bb180488mr5340564a12.17.1720732587637;
-        Thu, 11 Jul 2024 14:16:27 -0700 (PDT)
-Received: from localhost.localdomain ([2a04:ee41:82:7577:3e02:47b2:c845:ae3a])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bd45a1b6sm3815737a12.60.2024.07.11.14.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 14:16:27 -0700 (PDT)
-From: Vasileios Amoiridis <vassilisamir@gmail.com>
-To: jic23@kernel.org,
-	lars@metafoo.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andriy.shevchenko@linux.intel.com
-Cc: vassilisamir@gmail.com,
-	ang.iglesiasg@gmail.com,
-	linus.walleij@linaro.org,
-	biju.das.jz@bp.renesas.com,
-	javier.carrasco.cruz@gmail.com,
-	semen.protsenko@linaro.org,
-	579lpy@gmail.com,
-	ak@it-klinger.de,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 09/10] iio: pressure: bmp280: Add data ready trigger support
-Date: Thu, 11 Jul 2024 23:15:57 +0200
-Message-Id: <20240711211558.106327-10-vassilisamir@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240711211558.106327-1-vassilisamir@gmail.com>
-References: <20240711211558.106327-1-vassilisamir@gmail.com>
+        d=1e100.net; s=20230601; t=1720732643; x=1721337443;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CZcaI5+6z82r9vq6pp4cVgvJLD8/+zJh4wg+noG/zTM=;
+        b=d5pHbVuGBQwWdfHKkI1aqyU1SdroHTPjcVDrUqpkN1C4XQB3Jc4p1FxQbKNNoh9nos
+         1ywGKmPnXu6LsfVkemh69v/Wta2F1d8P1jIwYTGMePY7MJiYC+nz+Z/K4tIdw2v51Mgx
+         jo125we4GeHiuNqIOgozPJaKsMkwBt2Jqrqb10ItPC+AJXw8UPUQI9vrPmnEMOyiubmQ
+         kraKq/uU9JewyYVzYhMtF4raOe251rRNsNKduUDwPcqQ2Cc0qwpUSwbkUVb3lWjNToAM
+         TDBQtFQCBtrWAT0D5pUgk++iBr98GpjUTR5OLOsa4BNABUam00LKzEP4vIfjNGnFv/mJ
+         9m5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXtl6NPinKE18zsVJnycf0iLQW5+VLGBH7heH0QYPlGD30xLovj6lm9OB9w9zGVTNBWgC6GQ/mAcWXS5VFA1aG2xyhafDryfYjhuR8P/WluaxcpRP6fM8ixItzLPCRYqfQz3agylFc6ygs=
+X-Gm-Message-State: AOJu0YwdgWCkdCZGkEoR9/0Bvlm0xxje5m9/KEcRCh7a6OlZCQqHqV7r
+	UkfuxEnVFF0CJeN3o9+1AcNc0VxV48K7ZszfXPYEJdb8roku6p9S
+X-Google-Smtp-Source: AGHT+IETl+vIg7IhxTUhL4uj8vO5jfAtMX+OC788CD/RERkRMNUie3Oga3XfiHTBxFlvuuJR2sL2zQ==
+X-Received: by 2002:a05:6402:2354:b0:58d:d1d5:da65 with SMTP id 4fb4d7f45d1cf-594baf91407mr8936223a12.11.1720732643086;
+        Thu, 11 Jul 2024 14:17:23 -0700 (PDT)
+Received: from [192.168.178.20] (dh207-43-148.xnet.hr. [88.207.43.148])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bda30b18sm3829176a12.95.2024.07.11.14.17.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 14:17:22 -0700 (PDT)
+Message-ID: <0ece317b-74ae-4f15-bc28-d85972ef18b7@gmail.com>
+Date: Thu, 11 Jul 2024 23:17:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PROBLEM linux-next] drivers/hwmon/aht10.c:224: warning: Function
+ parameter or struct member 'data' not described in 'aht10_interval_write'
+To: Guenter Roeck <linux@roeck-us.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+ "Johannes Cornelis Draaijer (datdenkikniet)" <jcdra1@gmail.com>
+References: <851b86f1-5757-4f4a-960a-2d4ecb840734@gmail.com>
+ <07955cfb-aae7-4a97-8222-b9c235e7c8c2@roeck-us.net>
+Content-Language: en-US
+From: Mirsad Todorovac <mtodorovac69@gmail.com>
+In-Reply-To: <07955cfb-aae7-4a97-8222-b9c235e7c8c2@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The BMP3xx and BMP5xx sensors have an interrupt pin which can be used as
-a trigger for when there are data ready in the sensor for pick up.
 
-This use case is used along with NORMAL_MODE in the sensor, which allows
-the sensor to do consecutive measurements depending on the ODR rate value.
 
-The trigger pin can be configured to be open-drain or push-pull and either
-rising or falling edge.
+On 7/11/24 19:11, Guenter Roeck wrote:
+> On 7/11/24 09:57, Mirsad Todorovac wrote:
+>> Hi all,
+>>
+>> On the linux-next vanilla tree next-20240709, there is a lot of complaining about
+>> code like these, which is not an error, but it seems like documentation lags behind
+>> the [dynamic] source development.
+>>
+>> If you  are interested in reporting these to the respective maintainers and developers,
+>> give me a ping.
+>>
+>> drivers/hwmon/aht10.c:224: warning: Function parameter or struct member 'data' not described in 'aht10_interval_write'
+>> drivers/hwmon/aht10.c:224: warning: Function parameter or struct member 'val' not described in 'aht10_interval_write'
+>> drivers/hwmon/aht10.c:235: warning: Function parameter or struct member 'data' not described in 'aht10_interval_read'
+>> drivers/hwmon/aht10.c:235: warning: Function parameter or struct member 'val' not described in 'aht10_interval_read'
+>> drivers/hwmon/aht10.c:244: warning: Function parameter or struct member 'data' not described in 'aht10_temperature1_read'
+>> drivers/hwmon/aht10.c:244: warning: Function parameter or struct member 'val' not described in 'aht10_temperature1_read'
+>> drivers/hwmon/aht10.c:259: warning: Function parameter or struct member 'data' not described in 'aht10_humidity1_read'
+>> drivers/hwmon/aht10.c:259: warning: Function parameter or struct member 'val' not described in 'aht10_humidity1_read'
+>>
+> 
+> I'll be happy to accept patches, but plain reports like this are just noise.
+> 
+> Guenter
+> 
 
-No support is added yet for interrupts for FIFO, WATERMARK and out of range
-values.
+Hi, Mr. Guenter,
 
-Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
----
- drivers/iio/pressure/bmp280-core.c   | 271 ++++++++++++++++++++++++++-
- drivers/iio/pressure/bmp280-regmap.c |   2 +-
- drivers/iio/pressure/bmp280.h        |  23 ++-
- 3 files changed, 290 insertions(+), 6 deletions(-)
+Thank you kindly for your reply.
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index fc8d42880eb8..ee9b9676ad10 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -37,12 +37,14 @@
- #include <linux/module.h>
- #include <linux/nvmem-provider.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <linux/random.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- 
- #include <linux/iio/buffer.h>
- #include <linux/iio/iio.h>
-+#include <linux/iio/trigger.h>
- #include <linux/iio/trigger_consumer.h>
- #include <linux/iio/triggered_buffer.h>
- 
-@@ -1770,6 +1772,129 @@ static int bmp380_chip_config(struct bmp280_data *data)
- 	return 0;
- }
- 
-+static void bmp380_trigger_reenable(struct iio_trigger *trig)
-+{
-+	struct bmp280_data *data = iio_trigger_get_drvdata(trig);
-+	unsigned int tmp;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, BMP380_REG_INT_STATUS, &tmp);
-+	if (ret)
-+		dev_err(data->dev, "Failed to reset interrupt\n");
-+}
-+
-+static int bmp380_data_rdy_trigger_set_state(struct iio_trigger *trig,
-+					     bool state)
-+{
-+	struct bmp280_data *data = iio_trigger_get_drvdata(trig);
-+	int ret;
-+
-+	guard(mutex)(&data->lock);
-+
-+	ret = regmap_update_bits(data->regmap, BMP380_REG_INT_CTRL,
-+				 BMP380_INT_CTRL_DRDY_EN,
-+				 FIELD_PREP(BMP380_INT_CTRL_DRDY_EN,
-+					    state ? 1 : 0));
-+	if (ret) {
-+		dev_err(data->dev, "Could not enable/disable interrupt\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct iio_trigger_ops bmp380_trigger_ops = {
-+	.set_trigger_state = &bmp380_data_rdy_trigger_set_state,
-+	.reenable = &bmp380_trigger_reenable,
-+};
-+
-+static int bmp380_int_config(struct bmp280_data *data)
-+{
-+	int ret, int_cfg = FIELD_PREP(BMP380_INT_CTRL_OPEN_DRAIN,
-+				      data->trig_open_drain) |
-+			   FIELD_PREP(BMP380_INT_CTRL_LEVEL,
-+				      data->trig_active_high);
-+
-+	ret = regmap_update_bits(data->regmap, BMP380_REG_INT_CTRL,
-+				 BMP380_INT_CTRL_SETTINGS_MASK, int_cfg);
-+	if (ret) {
-+		dev_err(data->dev, "Could not set interrupt settings\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bmp380_trigger_probe(struct iio_dev *indio_dev)
-+{
-+	struct bmp280_data *data = iio_priv(indio_dev);
-+	struct fwnode_handle *fwnode;
-+	int ret, irq, irq_type;
-+	struct irq_data *desc;
-+
-+	fwnode = dev_fwnode(data->dev);
-+	if (!fwnode)
-+		return -ENODEV;
-+
-+	irq = fwnode_irq_get_byname(fwnode, "DRDY");
-+	if (!irq) {
-+		dev_err(data->dev, "No DRDY interrupt found\n");
-+		return -ENODEV;
-+	}
-+
-+	desc = irq_get_irq_data(irq);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	irq_type = irqd_get_trigger_type(desc);
-+	switch (irq_type) {
-+	case IRQF_TRIGGER_RISING:
-+		data->trig_active_high = true;
-+		break;
-+	case IRQF_TRIGGER_FALLING:
-+		data->trig_active_high = false;
-+		break;
-+	default:
-+		dev_err(data->dev, "Invalid interrupt type specified\n");
-+		return -EINVAL;
-+	}
-+
-+	data->trig_open_drain = fwnode_property_read_bool(fwnode,
-+							  "int-open-drain");
-+
-+	ret = bmp380_int_config(data);
-+	if (ret)
-+		return ret;
-+
-+	data->trig = devm_iio_trigger_alloc(data->dev, "%s-dev%d",
-+					    indio_dev->name,
-+					    iio_device_id(indio_dev));
-+	if (!data->trig)
-+		return -ENOMEM;
-+
-+	data->trig->ops = &bmp380_trigger_ops;
-+	iio_trigger_set_drvdata(data->trig, data);
-+
-+	ret = devm_request_irq(data->dev, irq,
-+			       &iio_trigger_generic_data_rdy_poll,
-+			       IRQF_ONESHOT, indio_dev->name, data->trig);
-+	if (ret) {
-+		dev_err(data->dev, "request irq failed\n");
-+		return ret;
-+	}
-+
-+	ret = devm_iio_trigger_register(data->dev, data->trig);
-+	if (ret) {
-+		dev_err(data->dev, "iio trigger register failed\n");
-+		return ret;
-+	}
-+
-+	indio_dev->trig = iio_trigger_get(data->trig);
-+
-+	return 0;
-+}
-+
-+
- static irqreturn_t bmp380_trigger_handler(int irq, void *p)
- {
- 	struct iio_poll_func *pf = p;
-@@ -1863,6 +1988,7 @@ const struct bmp280_chip_info bmp380_chip_info = {
- 	.wait_conv = bmp380_wait_conv,
- 	.preinit = bmp380_preinit,
- 
-+	.trigger_probe = bmp380_trigger_probe,
- 	.trigger_handler = bmp380_trigger_handler,
- };
- EXPORT_SYMBOL_NS(bmp380_chip_info, IIO_BMP280);
-@@ -2400,6 +2526,135 @@ static int bmp580_chip_config(struct bmp280_data *data)
- 	return 0;
- }
- 
-+static void bmp580_trigger_reenable(struct iio_trigger *trig)
-+{
-+	struct bmp280_data *data = iio_trigger_get_drvdata(trig);
-+	unsigned int tmp;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, BMP580_REG_INT_STATUS, &tmp);
-+	if (ret)
-+		dev_err(data->dev, "Failed to reset interrupt\n");
-+}
-+
-+static int bmp580_data_rdy_trigger_set_state(struct iio_trigger *trig,
-+					     bool state)
-+{
-+	struct bmp280_data *data = iio_trigger_get_drvdata(trig);
-+	int ret;
-+
-+	guard(mutex)(&data->lock);
-+
-+	ret = regmap_update_bits(data->regmap, BMP580_REG_INT_CONFIG,
-+				 BMP580_INT_CONFIG_INT_EN,
-+				 FIELD_PREP(BMP580_INT_CONFIG_INT_EN,
-+					    state ? 1 : 0));
-+	if (ret) {
-+		dev_err(data->dev, "Could not enable/disable interrupt\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct iio_trigger_ops bmp580_trigger_ops = {
-+	.set_trigger_state = &bmp580_data_rdy_trigger_set_state,
-+	.reenable = &bmp580_trigger_reenable,
-+};
-+
-+static int bmp580_int_config(struct bmp280_data *data)
-+{
-+	int ret, int_cfg = FIELD_PREP(BMP580_INT_CONFIG_OPEN_DRAIN,
-+				      data->trig_open_drain) |
-+			   FIELD_PREP(BMP580_INT_CONFIG_LEVEL,
-+				      data->trig_active_high);
-+
-+	ret = regmap_update_bits(data->regmap, BMP580_REG_INT_CONFIG,
-+				 BMP580_INT_CONFIG_MASK, int_cfg);
-+	if (ret) {
-+		dev_err(data->dev, "Could not set interrupt settings\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_set_bits(data->regmap, BMP580_REG_INT_SOURCE,
-+			      BMP580_INT_SOURCE_DRDY);
-+	if (ret) {
-+		dev_err(data->dev, "Could not set interrupt source\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bmp580_trigger_probe(struct iio_dev *indio_dev)
-+{
-+	struct bmp280_data *data = iio_priv(indio_dev);
-+	struct fwnode_handle *fwnode;
-+	int ret, irq, irq_type;
-+	struct irq_data *desc;
-+
-+	fwnode = dev_fwnode(data->dev);
-+	if (!fwnode)
-+		return -ENODEV;
-+
-+	irq = fwnode_irq_get_byname(fwnode, "DRDY");
-+	if (!irq) {
-+		dev_err(data->dev, "No DRDY interrupt found\n");
-+		return -ENODEV;
-+	}
-+
-+	desc = irq_get_irq_data(irq);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	irq_type = irqd_get_trigger_type(desc);
-+	switch (irq_type) {
-+	case IRQF_TRIGGER_RISING:
-+		data->trig_active_high = true;
-+		break;
-+	case IRQF_TRIGGER_FALLING:
-+		data->trig_active_high = false;
-+		break;
-+	default:
-+		dev_err(data->dev, "Invalid interrupt type specified\n");
-+		return -EINVAL;
-+	}
-+
-+	data->trig_open_drain = fwnode_property_read_bool(fwnode,
-+							  "int-open-drain");
-+
-+	ret = bmp580_int_config(data);
-+	if (ret)
-+		return ret;
-+
-+	data->trig = devm_iio_trigger_alloc(data->dev, "%s-dev%d",
-+					    indio_dev->name,
-+					    iio_device_id(indio_dev));
-+	if (!data->trig)
-+		return -ENOMEM;
-+
-+	data->trig->ops = &bmp580_trigger_ops;
-+	iio_trigger_set_drvdata(data->trig, data);
-+
-+	ret = devm_request_irq(data->dev, irq,
-+			       &iio_trigger_generic_data_rdy_poll,
-+			       IRQF_ONESHOT, indio_dev->name, data->trig);
-+	if (ret) {
-+		dev_err(data->dev, "request irq failed\n");
-+		return ret;
-+	}
-+
-+	ret = devm_iio_trigger_register(data->dev, data->trig);
-+	if (ret) {
-+		dev_err(data->dev, "iio trigger register failed\n");
-+		return ret;
-+	}
-+
-+	indio_dev->trig = iio_trigger_get(data->trig);
-+
-+	return 0;
-+}
-+
- static irqreturn_t bmp580_trigger_handler(int irq, void *p)
- {
- 	struct iio_poll_func *pf = p;
-@@ -2476,6 +2731,7 @@ const struct bmp280_chip_info bmp580_chip_info = {
- 	.wait_conv = bmp580_wait_conv,
- 	.preinit = bmp580_preinit,
- 
-+	.trigger_probe = bmp580_trigger_probe,
- 	.trigger_handler = bmp580_trigger_handler,
- };
- EXPORT_SYMBOL_NS(bmp580_chip_info, IIO_BMP280);
-@@ -3020,10 +3276,17 @@ int bmp280_common_probe(struct device *dev,
- 	 * however as it happens, the BMP085 shares the chip ID of BMP180
- 	 * so we look for an IRQ if we have that.
- 	 */
--	if (irq > 0 && (chip_id  == BMP180_CHIP_ID)) {
--		ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
--		if (ret)
--			return ret;
-+	if (irq > 0) {
-+		if (chip_id == BMP180_CHIP_ID) {
-+			ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
-+			if (ret)
-+				return ret;
-+		}
-+		if (data->chip_info->trigger_probe) {
-+			ret = data->chip_info->trigger_probe(indio_dev);
-+			if (ret)
-+				return ret;
-+		}
- 	}
- 
- 	ret = data->chip_info->set_mode(data, BMP280_SLEEP);
-diff --git a/drivers/iio/pressure/bmp280-regmap.c b/drivers/iio/pressure/bmp280-regmap.c
-index d27d68edd906..cccdf8fc6c09 100644
---- a/drivers/iio/pressure/bmp280-regmap.c
-+++ b/drivers/iio/pressure/bmp280-regmap.c
-@@ -109,7 +109,7 @@ static bool bmp380_is_writeable_reg(struct device *dev, unsigned int reg)
- 	case BMP380_REG_FIFO_WATERMARK_LSB:
- 	case BMP380_REG_FIFO_WATERMARK_MSB:
- 	case BMP380_REG_POWER_CONTROL:
--	case BMP380_REG_INT_CONTROL:
-+	case BMP380_REG_INT_CTRL:
- 	case BMP380_REG_IF_CONFIG:
- 	case BMP380_REG_ODR:
- 	case BMP380_REG_OSR:
-diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
-index 93c006c33552..73d0d25ae0f4 100644
---- a/drivers/iio/pressure/bmp280.h
-+++ b/drivers/iio/pressure/bmp280.h
-@@ -55,8 +55,17 @@
- #define BMP580_CMD_NVM_WRITE_SEQ_1	0xA0
- #define BMP580_CMD_SOFT_RESET		0xB6
- 
-+#define BMP580_INT_STATUS_DRDY_MASK	BIT(0)
- #define BMP580_INT_STATUS_POR_MASK	BIT(4)
- 
-+#define BMP580_INT_SOURCE_DRDY		BIT(0)
-+
-+#define BMP580_INT_CONFIG_MASK		GENMASK(3, 0)
-+#define BMP580_INT_CONFIG_LATCH		BIT(0)
-+#define BMP580_INT_CONFIG_LEVEL		BIT(1)
-+#define BMP580_INT_CONFIG_OPEN_DRAIN	BIT(2)
-+#define BMP580_INT_CONFIG_INT_EN	BIT(3)
-+
- #define BMP580_STATUS_CORE_RDY_MASK	BIT(0)
- #define BMP580_STATUS_NVM_RDY_MASK	BIT(1)
- #define BMP580_STATUS_NVM_ERR_MASK	BIT(2)
-@@ -117,7 +126,7 @@
- #define BMP380_REG_OSR			0x1C
- #define BMP380_REG_POWER_CONTROL	0x1B
- #define BMP380_REG_IF_CONFIG		0x1A
--#define BMP380_REG_INT_CONTROL		0x19
-+#define BMP380_REG_INT_CTRL		0x19
- #define BMP380_REG_INT_STATUS		0x11
- #define BMP380_REG_EVENT		0x10
- #define BMP380_REG_STATUS		0x03
-@@ -175,6 +184,14 @@
- #define BMP380_TEMP_MEAS_OFFSET		163
- #define BMP380_PRESS_MEAS_OFFSET	392
- 
-+#define BMP380_INT_STATUS_DRDY		BIT(3)
-+
-+#define BMP380_INT_CTRL_SETTINGS_MASK	GENMASK(2, 0)
-+#define BMP380_INT_CTRL_OPEN_DRAIN	BIT(0)
-+#define BMP380_INT_CTRL_LEVEL		BIT(1)
-+#define BMP380_INT_CTRL_LATCH		BIT(2)
-+#define BMP380_INT_CTRL_DRDY_EN		BIT(6)
-+
- #define BMP380_MIN_TEMP			-4000
- #define BMP380_MAX_TEMP			8500
- #define BMP380_MIN_PRES			3000000
-@@ -399,6 +416,9 @@ struct bmp280_data {
- 	struct regmap *regmap;
- 	struct completion done;
- 	bool use_eoc;
-+	bool trig_open_drain;
-+	bool trig_active_high;
-+	struct iio_trigger *trig;
- 	const struct bmp280_chip_info *chip_info;
- 	union {
- 		struct bmp180_calib bmp180;
-@@ -497,6 +517,7 @@ struct bmp280_chip_info {
- 	int (*set_mode)(struct bmp280_data *data, u8 mode);
- 	int (*wait_conv)(struct bmp280_data *data);
- 
-+	int (*trigger_probe)(struct iio_dev *indio_dev);
- 	irqreturn_t (*trigger_handler)(int irq, void *p);
- };
- 
--- 
-2.25.1
+I agree with you that it adds a lot traffic to the channel with little "signal" when compared to the "noise".
 
+However, there is about a 100 such warnings from 26 modules, and I do not feel competent and equipped to
+analyse all of these:
+
+      1 arch/x86/entry/common.c
+      1 arch/x86/kernel/apic/apic.c
+      4 arch/x86/kernel/cpu/mtrr/amd.c
+      1 arch/x86/kernel/cpu/mtrr/centaur.c
+      1 arch/x86/mm/pat/memtype.c
+     13 arch/x86/mm/pgtable.c
+      1 block/blk-merge.c
+      1 drivers/firmware/efi/libstub/efi-stub-helper.c
+      8 drivers/hwmon/aht10.c
+      2 drivers/hwtracing/intel_th/core.c
+     10 drivers/hwtracing/intel_th/msu.c
+     17 drivers/memstick/core/memstick.c
+      2 drivers/pinctrl/pinctrl-aw9523.c
+      2 drivers/tty/n_hdlc.c
+      1 fs/bcachefs/io_write.c
+      1 fs/gfs2/glock.c
+      2 fs/gfs2/super.c
+      6 fs/nilfs2/btnode.c
+      7 fs/nilfs2/ioctl.c
+      3 fs/nilfs2/super.c
+      4 fs/ufs/inode.c
+      2 kernel/reboot.c
+      2 kernel/time/tick-broadcast.c
+      5 lib/842/842_compress.c
+      4 lib/842/842_decompress.c
+      1 mm/page_counter.c
+
+In particular, those are expanded as:
+
+arch/x86/mm/pat/memtype.c:708: warning: Function parameter or struct member 'pfn' not described in 'pat_pfn_immune_to_uc_mtrr'
+arch/x86/mm/pgtable.c:652: warning: Function parameter or struct member 'reserve' not described in 'reserve_top_address'
+arch/x86/mm/pgtable.c:701: warning: Function parameter or struct member 'p4d' not described in 'p4d_set_huge'
+arch/x86/mm/pgtable.c:701: warning: Function parameter or struct member 'addr' not described in 'p4d_set_huge'
+arch/x86/mm/pgtable.c:701: warning: Function parameter or struct member 'prot' not described in 'p4d_set_huge'
+arch/x86/mm/pgtable.c:711: warning: Function parameter or struct member 'p4d' not described in 'p4d_clear_huge'
+arch/x86/mm/pgtable.c:728: warning: Function parameter or struct member 'pud' not described in 'pud_set_huge'
+arch/x86/mm/pgtable.c:728: warning: Function parameter or struct member 'addr' not described in 'pud_set_huge'
+arch/x86/mm/pgtable.c:728: warning: Function parameter or struct member 'prot' not described in 'pud_set_huge'
+arch/x86/mm/pgtable.c:754: warning: Function parameter or struct member 'pmd' not described in 'pmd_set_huge'
+arch/x86/mm/pgtable.c:754: warning: Function parameter or struct member 'addr' not described in 'pmd_set_huge'
+arch/x86/mm/pgtable.c:754: warning: Function parameter or struct member 'prot' not described in 'pmd_set_huge'
+arch/x86/mm/pgtable.c:781: warning: Function parameter or struct member 'pud' not described in 'pud_clear_huge'
+arch/x86/mm/pgtable.c:796: warning: Function parameter or struct member 'pmd' not described in 'pmd_clear_huge'
+arch/x86/entry/common.c:211: warning: Function parameter or struct member 'regs' not described in 'do_int80_emulation'
+block/blk-merge.c:220: warning: Function parameter or struct member 'len' not described in 'get_max_segment_size'
+lib/842/842_compress.c:479: warning: Function parameter or struct member 'in' not described in 'sw842_compress'
+lib/842/842_compress.c:479: warning: Function parameter or struct member 'ilen' not described in 'sw842_compress'
+lib/842/842_compress.c:479: warning: Function parameter or struct member 'out' not described in 'sw842_compress'
+lib/842/842_compress.c:479: warning: Function parameter or struct member 'olen' not described in 'sw842_compress'
+lib/842/842_compress.c:479: warning: Function parameter or struct member 'wmem' not described in 'sw842_compress'
+lib/842/842_decompress.c:279: warning: Function parameter or struct member 'in' not described in 'sw842_decompress'
+lib/842/842_decompress.c:279: warning: Function parameter or struct member 'ilen' not described in 'sw842_decompress'
+lib/842/842_decompress.c:279: warning: Function parameter or struct member 'out' not described in 'sw842_decompress'
+lib/842/842_decompress.c:279: warning: Function parameter or struct member 'olen' not described in 'sw842_decompress'
+arch/x86/kernel/cpu/mtrr/amd.c:61: warning: Function parameter or struct member 'reg' not described in 'amd_set_mtrr'
+arch/x86/kernel/cpu/mtrr/amd.c:61: warning: Function parameter or struct member 'base' not described in 'amd_set_mtrr'
+arch/x86/kernel/cpu/mtrr/amd.c:61: warning: Function parameter or struct member 'size' not described in 'amd_set_mtrr'
+arch/x86/kernel/cpu/mtrr/amd.c:61: warning: Function parameter or struct member 'type' not described in 'amd_set_mtrr'
+arch/x86/kernel/cpu/mtrr/centaur.c:28: warning: Function parameter or struct member 'replace_reg' not described in 'centaur_get_free_region'
+mm/page_counter.c:400: warning: Function parameter or struct member 'counter' not described in 'page_counter_calculate_protection'
+drivers/pinctrl/pinctrl-aw9523.c:562: warning: Function parameter or struct member 'awi' not described in '_aw9523_gpio_get_multiple'
+drivers/pinctrl/pinctrl-aw9523.c:562: warning: Function parameter or struct member 'mask' not described in '_aw9523_gpio_get_multiple'
+arch/x86/kernel/apic/apic.c:2138: warning: Function parameter or struct member 'spurious_interrupt' not described in 'DEFINE_IDTENTRY_IRQ'
+kernel/reboot.c:234: warning: Function parameter or struct member 'cmd' not described in 'do_kernel_restart'
+kernel/reboot.c:965: warning: Function parameter or struct member 'poweroff_delay_ms' not described in 'hw_failure_emergency_poweroff'
+kernel/time/tick-broadcast.c:1026: warning: Function parameter or struct member 'bc' not described in 'tick_broadcast_setup_oneshot'
+kernel/time/tick-broadcast.c:1026: warning: Function parameter or struct member 'from_periodic' not described in 'tick_broadcast_setup_oneshot'
+fs/ufs/inode.c:398: warning: Function parameter or struct member 'inode' not described in 'ufs_getfrag_block'
+fs/ufs/inode.c:398: warning: Function parameter or struct member 'fragment' not described in 'ufs_getfrag_block'
+fs/ufs/inode.c:398: warning: Function parameter or struct member 'bh_result' not described in 'ufs_getfrag_block'
+fs/ufs/inode.c:398: warning: Function parameter or struct member 'create' not described in 'ufs_getfrag_block'
+fs/nilfs2/btnode.c:175: warning: Function parameter or struct member 'btnc' not described in 'nilfs_btnode_prepare_change_key'
+fs/nilfs2/btnode.c:175: warning: Function parameter or struct member 'ctxt' not described in 'nilfs_btnode_prepare_change_key'
+fs/nilfs2/btnode.c:238: warning: Function parameter or struct member 'btnc' not described in 'nilfs_btnode_commit_change_key'
+fs/nilfs2/btnode.c:238: warning: Function parameter or struct member 'ctxt' not described in 'nilfs_btnode_commit_change_key'
+fs/nilfs2/btnode.c:278: warning: Function parameter or struct member 'btnc' not described in 'nilfs_btnode_abort_change_key'
+fs/nilfs2/btnode.c:278: warning: Function parameter or struct member 'ctxt' not described in 'nilfs_btnode_abort_change_key'
+fs/nilfs2/super.c:121: warning: Function parameter or struct member 'sb' not described in '__nilfs_error'
+fs/nilfs2/super.c:121: warning: Function parameter or struct member 'function' not described in '__nilfs_error'
+fs/nilfs2/super.c:121: warning: Function parameter or struct member 'fmt' not described in '__nilfs_error'
+fs/nilfs2/ioctl.c:120: warning: Function parameter or struct member 'dentry' not described in 'nilfs_fileattr_get'
+fs/nilfs2/ioctl.c:120: warning: Function parameter or struct member 'fa' not described in 'nilfs_fileattr_get'
+fs/nilfs2/ioctl.c:133: warning: Function parameter or struct member 'idmap' not described in 'nilfs_fileattr_set'
+fs/nilfs2/ioctl.c:133: warning: Function parameter or struct member 'dentry' not described in 'nilfs_fileattr_set'
+fs/nilfs2/ioctl.c:133: warning: Function parameter or struct member 'fa' not described in 'nilfs_fileattr_set'
+fs/nilfs2/ioctl.c:164: warning: Function parameter or struct member 'inode' not described in 'nilfs_ioctl_getversion'
+fs/nilfs2/ioctl.c:164: warning: Function parameter or struct member 'argp' not described in 'nilfs_ioctl_getversion'
+fs/gfs2/glock.c:1277: warning: Function parameter or struct member 'ip' not described in '__gfs2_holder_init'
+fs/bcachefs/io_write.c:1584: warning: Function parameter or struct member 'bch2_write' not described in 'CLOSURE_CALLBACK'
+fs/gfs2/super.c:735: warning: Function parameter or struct member 'who' not described in 'gfs2_freeze_super'
+fs/gfs2/super.c:803: warning: Function parameter or struct member 'who' not described in 'gfs2_thaw_super'
+drivers/tty/n_hdlc.c:140: warning: Function parameter or struct member 'write_work' not described in 'n_hdlc'
+drivers/tty/n_hdlc.c:140: warning: Function parameter or struct member 'tty_for_write_work' not described in 'n_hdlc'
+drivers/memstick/core/memstick.c:206: warning: Function parameter or struct member 'host' not described in 'memstick_detect_change'
+drivers/memstick/core/memstick.c:222: warning: Function parameter or struct member 'host' not described in 'memstick_next_req'
+drivers/memstick/core/memstick.c:222: warning: Function parameter or struct member 'mrq' not described in 'memstick_next_req'
+drivers/memstick/core/memstick.c:248: warning: Function parameter or struct member 'host' not described in 'memstick_new_req'
+drivers/memstick/core/memstick.c:265: warning: Function parameter or struct member 'mrq' not described in 'memstick_init_req_sg'
+drivers/memstick/core/memstick.c:265: warning: Function parameter or struct member 'tpc' not described in 'memstick_init_req_sg'
+drivers/memstick/core/memstick.c:265: warning: Function parameter or struct member 'sg' not described in 'memstick_init_req_sg'
+drivers/memstick/core/memstick.c:295: warning: Function parameter or struct member 'mrq' not described in 'memstick_init_req'
+drivers/memstick/core/memstick.c:295: warning: Function parameter or struct member 'tpc' not described in 'memstick_init_req'
+drivers/memstick/core/memstick.c:295: warning: Function parameter or struct member 'buf' not described in 'memstick_init_req'
+drivers/memstick/core/memstick.c:295: warning: Function parameter or struct member 'length' not described in 'memstick_init_req'
+drivers/memstick/core/memstick.c:366: warning: Function parameter or struct member 'card' not described in 'memstick_set_rw_addr'
+drivers/memstick/core/memstick.c:513: warning: Function parameter or struct member 'host' not described in 'memstick_add_host'
+drivers/memstick/core/memstick.c:549: warning: Function parameter or struct member 'host' not described in 'memstick_remove_host'
+drivers/memstick/core/memstick.c:571: warning: Function parameter or struct member 'host' not described in 'memstick_free_host'
+drivers/memstick/core/memstick.c:582: warning: Function parameter or struct member 'host' not described in 'memstick_suspend_host'
+drivers/memstick/core/memstick.c:594: warning: Function parameter or struct member 'host' not described in 'memstick_resume_host'
+drivers/firmware/efi/libstub/efi-stub-helper.c:613: warning: Function parameter or struct member 'out' not described in 'efi_load_initrd'
+drivers/hwtracing/intel_th/core.c:866: warning: Function parameter or struct member 'drvdata' not described in 'intel_th_alloc'
+drivers/hwtracing/intel_th/core.c:866: warning: Function parameter or struct member 'ndevres' not described in 'intel_th_alloc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'msu_base' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'mbuf_priv' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'work' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'switch_on_unlock' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'orig_addr' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'orig_sz' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'iter_list' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'stop_on_full' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'do_irq' not described in 'msc'
+drivers/hwtracing/intel_th/msu.c:168: warning: Function parameter or struct member 'multi_is_broken' not described in 'msc'
+drivers/hwmon/aht10.c:224: warning: Function parameter or struct member 'data' not described in 'aht10_interval_write'
+drivers/hwmon/aht10.c:224: warning: Function parameter or struct member 'val' not described in 'aht10_interval_write'
+drivers/hwmon/aht10.c:235: warning: Function parameter or struct member 'data' not described in 'aht10_interval_read'
+drivers/hwmon/aht10.c:235: warning: Function parameter or struct member 'val' not described in 'aht10_interval_read'
+drivers/hwmon/aht10.c:244: warning: Function parameter or struct member 'data' not described in 'aht10_temperature1_read'
+drivers/hwmon/aht10.c:244: warning: Function parameter or struct member 'val' not described in 'aht10_temperature1_read'
+drivers/hwmon/aht10.c:259: warning: Function parameter or struct member 'data' not described in 'aht10_humidity1_read'
+drivers/hwmon/aht10.c:259: warning: Function parameter or struct member 'val' not described in 'aht10_humidity1_read'
+
+These do not break builds, so maybe there are higher priorities, but I will trust your judgment
+as if a senior developer's ...
+
+Best regards,
+Mirsad Todorovac
