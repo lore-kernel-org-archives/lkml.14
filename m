@@ -1,385 +1,193 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E4F16B3B5
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28305158DC8;
+	Thu, 11 Jul 2024 11:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696066; cv=none; b=WkltDb6uV4+Kv5X9tBucjbaWIz9Hw53HGC3pZ4eMLLfVy+uzKTmcNWZUP7W4G4uPsgM8bkXm+u2ndUgFTh1Uv9lwbOs9lJngiCJYlXUIgKfUe7JIYFbxVCQOfolvzatacARxXa16p1pMvvjT00+eDtSWmTyTaEF9xlU0mzBvb3o=
+	t=1720696105; cv=none; b=EXGKbG5hFIYvWqZd4iLzD5rftg3iiN7f5jQYcSyldXj4NrKNolA20ALEvYOSrunMOzPXsgDgl/+wP2ITtRuajkZHihBbK7BvzRr/sWl0t5mWN2OtXr5xJMdkP3uljt0LzGOWLsas5yQ6+7+qLd0OD6LEwhB1IlZ/FnGywmwxujk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696066; c=relaxed/simple;
-	bh=vRkPSZqqP2Ub9QQ0bedvniV/QeQePhUuQpL6De/PvEk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h3FymaR1gxhk4kiAXK3b37p38422XIDCa6SVAnEcEIeoGXp6cfIthIhyanO8cONP/hU4ROmgvMcP6kwS+RmvEcG7PvayK1GkQDeHHR+VqjpYF43XiOHvF5mVkZHq/COSCy9xSP2STSI0ug5/VxofM3/y0070RDdtO91bcFjleLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XiWWq9+S; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720696105; c=relaxed/simple;
+	bh=6RdMfN8GT5TlOHt8U/xfrPGOCLGbZMq30a98R04eApo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=U9Fr1Fmh2QHLcz6l5Z1mO30b2LrQCFu4QiyO5uO8PPcxYMz8Ck6Y7Sz2kmDquAOzKM4fZKg/ZM4GRmBkjBVDxIgmk+qvoch3hPS0FXA4/Lf9J76QkYGMnGZPZV+e2JfgqyZyaumEdXillw4noQ6SnTH9lE0MkjpXTycGfrzh054=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeooJrr2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XiWWq9+S"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52ea952ce70so836972e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:07:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720696063; x=1721300863; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z18fpVFr58tys4XrUSwectRYwpEzklmwvrd9y9cFb6g=;
-        b=XiWWq9+SNBBRV0KgmFE3VmhM34yRZKgo55QAYvzo0XIwRXulDIvRamQ0pY8R0SIA4m
-         k0+H4mT52wqFqCHWdmRC3QNcnlzavsoboupGpUXMRL9cE3EXfmF/+EEttw/3PbFjwH3d
-         AgL98I8+a1y5pZ/iTctEWNKSOAVrB6iMEEupSaKN0MxIP9xhi2PmAjohIrjctTM/Hyyq
-         GoGUAsCMzZmvAGDqt7LBsashtddyL+sr//GMoVSsBbfMhy2bF7ZSqhw2OkmWjxWwJKw6
-         n3py245BBA6ptEhp8q60SiihqeSrLHaJLckkyqfKkUwDjz5gN/nYzDc2nog/8SLcuwZh
-         9f6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720696063; x=1721300863;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z18fpVFr58tys4XrUSwectRYwpEzklmwvrd9y9cFb6g=;
-        b=OUoQQ3V04Fk7ToSBq2/L+/HX/4jfc87Y11U/HE24dDY+8AXiK6Q+daPy9wGxo+NJ/G
-         c7Sv5d/3bi7hlA56IIOSjC790I402ZnQu9y9+pZ7sHE+qOxShzpLQ7ugNRkCvcgzZstU
-         E3GtqDU2ifMY8Pyu9cCozW3uwDfjc5jTjWFJVUWH0eTx6doDGCxsH2A77pS/6jUeoSWJ
-         spRwkQIzeffUlWHyKQs/iHo29CAw+a3Jm42Fkt+kogRQLtP3blBP1/K8M39rjOTXp/61
-         sQScIS/om/i0cuQtGxNcCT52LaNy/57l5C8pOkEsgncMMaNXXsS6Y65Jh1ZaaVsXqb90
-         wHaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVs8z4hEstcSAlDezQaHOIfaR5Pebm2029s/11oiuy92HTSGgN7kOhAFEjywdzueP8Thfy36S9M1spSLrjgab5WO9/xtMVKaIZWftx5
-X-Gm-Message-State: AOJu0Yz0MzjUdiZXG5tujNy7AzD5w9OMiwfle4QKhqnu1xu5rWRUTw3u
-	HIb+FkQd2M6GojiF73M5OtlufvouSq9AFm/LisnrhDrgz47Ll3X/aqQC1EHQxwo=
-X-Google-Smtp-Source: AGHT+IGG1bHPmUMBD8uC04E8dWEfKEbOdB3naDFsmpKcSAuaMxqacCHsYpotPgLWsa7hJ5WeFS135w==
-X-Received: by 2002:a05:6512:224f:b0:52e:be0d:56dd with SMTP id 2adb3069b0e04-52ebe0d579emr4971267e87.40.1720696063095;
-        Thu, 11 Jul 2024 04:07:43 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e097bsm115686685e9.6.2024.07.11.04.07.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 04:07:42 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: linux-arm-msm@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 5/5] ARM: dts: qcom: ipq4019: adhere to pinctrl dtschema
-Date: Thu, 11 Jul 2024 12:01:42 +0100
-Message-ID: <20240711110545.31641-7-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240711110545.31641-2-rayyan.ansari@linaro.org>
-References: <20240711110545.31641-2-rayyan.ansari@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeooJrr2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E947EC116B1;
+	Thu, 11 Jul 2024 11:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720696104;
+	bh=6RdMfN8GT5TlOHt8U/xfrPGOCLGbZMq30a98R04eApo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=FeooJrr2+az8wlTlJzJNBNTQgbxo5CoT2v0Uu+ysdwGu6rdm2VDD2gtW/LX6qPqPB
+	 5Nvb3nBvD0x+DfyM0z1IuR/5LHBKrT6u30B7EgL0mgkd0jIpIYNnJObs3StrfSgtNP
+	 m/FzuafDk+x3L3bw1HyKZ+ayyU9bmpZwnIu6cJeEw+mRQ/Elti8ogWbdykQjEt6YfW
+	 mrpKLaYpU5r2jhB3LxfkqTs1P5CMvvJkBC16o8quM1AshhIP/IzGQzpiifFk1AdE63
+	 sdIfrjMieal+/+h+IfW0CbGzEWTPPjpuO6bsodSxLxx+UoSrZxPMwpKLR0cekPTkKA
+	 ZOAzKJn5iiz8Q==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v5 0/9] fs: multigrain timestamp redux
+Date: Thu, 11 Jul 2024 07:08:04 -0400
+Message-Id: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABS9j2YC/2XOTQ6DIBRG0a0YxqV5/Cl01H00HaCAklZtwJg2x
+ r0XHVgbh98L54YJRRu8jeiSTSjY0Uffd2mIU4aqRne1xd6kjShQDjnNcVsPvrVYVEZCSaSRBFB
+ 6/ArW+fcaut3Tbnwc+vBZuyNZrofESDBgTaRighpw0l0fNnT2ee5DjZbGSH+uALI5mhxRhhOqF
+ QejDo7tndgcS06KkhqtVcmYODi+d3JzfPknOFblrhSFY39unucvAjh/HUUBAAA=
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
+ Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
+ Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+ Randy Dunlap <rdunlap@infradead.org>, kernel-team@fb.com, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
+ linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5229; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=6RdMfN8GT5TlOHt8U/xfrPGOCLGbZMq30a98R04eApo=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmj70f3nAKvVzwWbeFtmY26vMEGFNsy5Y6kvcLp
+ I62wXPcziGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZo+9HwAKCRAADmhBGVaC
+ FYmPD/46BtIEjpmLwuzvndS0jbI/Wx/CH2yPVhvmwMG/KhPp04qOzAI2cR4fpjbY48b1RS15EX/
+ eQh4kQ/ICIMpeQeqkfqd9DQVUzJgf3yVREXHgEii7ZZT0+h8aX1/Hu8DJ0gpA/MjjNNNX59wlCR
+ 8Bpt0pFE35x0cnXa1b763A2pyYAZQz/zvvBSIik1M4OtnFbfKg05c1gPsCyipDy4LZUG2E6g6dE
+ QaC1jw5+m2mRceWloHK08sosonspLLe6bKh6JiTM5PrlBbnOntz8jDYs+vxqJUSFNEGqOEgrOY9
+ SJO08W33hjJ/0tpz/xpTuExehB9mjd9Djal1+XCnJcou+si7ooTss3nQlK8sSyl+f5Mk+dFY8an
+ 8gx+8gCBWo51IiGREPJFAHG45iXx8jzYIhkgMCb8HtLaKpkB7uZE5mCQ9VWT6ELeBTJSLzJXhCh
+ as0kDeofDpVZftPnGQDqpGTRj42/oWHrVKYyOVH897WJs+HpI16CDYPbikYXz4f51hl7Z8LwKCU
+ qbC8oga88Ww5f5/lXGabKKIH/nFXA0ayz0Hn2NCQD+e9lbbUSzX5QoGQ7hEaURES6eEB/2PcXUR
+ JEMj2g5MEISh+nqOCHWZJAED0JYhV6HoSFGOvRZwyTz7Td+2fNU/LNyqmjiGQNob0GkH7LjxvcZ
+ eMV9Prfj8m7Iynw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Pass dtbs_check for qcom,ipq4019-pinctrl.yaml.
+tl;dr for those who have been following along:
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+There are several changes in this version. The conversion of ctime to
+be a ktime_t value has been dropped, and we now use an unused bit in
+the nsec field as the QUERIED flag (like the earlier patchset did).
+
+The floor value is now tracked as a monotonic clock value, and is
+converted to a realtime value on an as-needed basis. This eliminates the
+problem of trying to detect when the realtime clock jumps backward.
+
+Longer patch description for those just joining in:
+
+At LSF/MM this year, we had a discussion about the inode change
+attribute. At the time I mentioned that I thought I could salvage the
+multigrain timestamp work that had to be reverted last year [1].
+
+That version had to be reverted because it was possible for a file to
+get a coarse grained timestamp that appeared to be earlier than another
+file that had recently gotten a fine-grained stamp.
+
+This version corrects the problem by establishing a per-time_namespace
+ctime_floor value that should prevent this from occurring. In the above
+situation, the two files might end up with the same timestamp value, but
+they won't appear to have been modified in the wrong order.
+
+That problem was discovered by the test-stat-time gnulib test. Note that
+that test still fails on multigrain timestamps, but that's because its
+method of determining the minimum delay that will show a timestamp
+change will no longer work with multigrain timestamps. I have a patch to
+change the testcase to use a different method that is in the process of
+being merged.
+
+The testing I've done seems to show performance parity with multigrain
+timestamps enabled vs. disabled, but it's hard to rule this out
+regressing some workload.
+
+This set is based on top of Christian's vfs.misc branch (which has the
+earlier change to track inode timestamps as discrete integers). If there
+are no major objections, I'd like to have this considered for v6.12,
+after a nice long full-cycle soak in linux-next.
+
+PS: I took a stab at a conversion for bcachefs too, but it's not
+trivial. bcachefs handles timestamps backward from the way most
+block-based filesystems do. Instead of updating them in struct inode and
+eventually copying them to a disk-based representation, it does the
+reverse and updates the timestamps in its in-core image of the on-disk
+inode, and then copies that into struct inode. Either that will need to
+be changed, or we'll need to come up with a different way to do this for
+bcachefs.
+
+[1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-v1 -> v2: corrected commit message, added r-b tag
+Changes in v5:
+- refetch coarse time in coarse_ctime if not returning floor
+- timestamp_truncate before swapping new ctime value into place
+- track floor value as atomic64_t
+- cleanups to Documentation file
+- Link to v4: https://lore.kernel.org/r/20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org
 
- .../boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi | 34 ++++++++-----------
- .../boot/dts/qcom/qcom-ipq4018-jalapeno.dts   | 27 ++++++---------
- .../boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi | 26 +++++---------
- .../boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi | 14 ++++----
- .../dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts    |  8 ++---
- .../dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts    |  2 +-
- .../boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi |  6 ++--
- 7 files changed, 50 insertions(+), 67 deletions(-)
+Changes in v4:
+- reordered tracepoint fields for better packing
+- rework percpu counters again to also count fine grained timestamps
+- switch to try_cmpxchg for better efficiency
+- Link to v3: https://lore.kernel.org/r/20240705-mgtime-v3-0-85b2daa9b335@kernel.org
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi
-index da67d55fa557..0d23c03fae33 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4018-ap120c-ac.dtsi
-@@ -28,46 +28,42 @@ key-reset {
- };
- 
- &tlmm {
--	i2c0_pins: i2c0_pinmux {
--		mux_i2c {
--			function = "blsp_i2c0";
--			pins = "gpio58", "gpio59";
--			drive-strength = <16>;
--			bias-disable;
--		};
-+	i2c0_pins: i2c0-state {
-+		function = "blsp_i2c0";
-+		pins = "gpio58", "gpio59";
-+		drive-strength = <16>;
-+		bias-disable;
- 	};
- 
--	mdio_pins: mdio_pinmux {
--		mux_mdio {
-+	mdio_pins: mdio-state {
-+		mdio-pins {
- 			pins = "gpio53";
- 			function = "mdio";
- 			bias-pull-up;
- 		};
- 
--		mux_mdc {
-+		mdc-pins {
- 			pins = "gpio52";
- 			function = "mdc";
- 			bias-pull-up;
- 		};
- 	};
- 
--	serial0_pins: serial0_pinmux {
--		mux_uart {
--			pins = "gpio60", "gpio61";
--			function = "blsp_uart0";
--			bias-disable;
--		};
-+	serial0_pins: serial0-state {
-+		pins = "gpio60", "gpio61";
-+		function = "blsp_uart0";
-+		bias-disable;
- 	};
- 
--	spi0_pins: spi0_pinmux {
--		mux_spi {
-+	spi0_pins: spi0-state {
-+		spi0-pins {
- 			function = "blsp_spi0";
- 			pins = "gpio55", "gpio56", "gpio57";
- 			drive-strength = <12>;
- 			bias-disable;
- 		};
- 
--		mux_cs {
-+		spi0-cs-pins {
- 			function = "gpio";
- 			pins = "gpio54", "gpio4";
- 			drive-strength = <2>;
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts b/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts
-index 365fbac417fd..ac3b30072a22 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4018-jalapeno.dts
-@@ -11,40 +11,35 @@ / {
- };
- 
- &tlmm {
--	mdio_pins: mdio_pinmux {
--		pinmux_1 {
-+	mdio_pins: mdio-state {
-+		mdio-pins {
- 			pins = "gpio53";
- 			function = "mdio";
-+			bias-pull-up;
- 		};
- 
--		pinmux_2 {
-+		mdc-pins {
- 			pins = "gpio52";
- 			function = "mdc";
--		};
--
--		pinconf {
--			pins = "gpio52", "gpio53";
- 			bias-pull-up;
- 		};
- 	};
- 
--	serial_pins: serial_pinmux {
--		mux {
--			pins = "gpio60", "gpio61";
--			function = "blsp_uart0";
--			bias-disable;
--		};
-+	serial_pins: serial-state{
-+		pins = "gpio60", "gpio61";
-+		function = "blsp_uart0";
-+		bias-disable;
- 	};
- 
--	spi_0_pins: spi_0_pinmux {
--		pin {
-+	spi_0_pins: spi-0-state {
-+		spi0-pins {
- 			function = "blsp_spi0";
- 			pins = "gpio55", "gpio56", "gpio57";
- 			drive-strength = <2>;
- 			bias-disable;
- 		};
- 
--		pin_cs {
-+		spi0-cs-pins {
- 			function = "gpio";
- 			pins = "gpio54", "gpio59";
- 			drive-strength = <2>;
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi
-index f7ac8f9d0b6f..efbe89dd4793 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk01.1.dtsi
-@@ -34,30 +34,22 @@ &prng {
- };
- 
- &tlmm {
--	serial_pins: serial_pinmux {
--		mux {
--			pins = "gpio60", "gpio61";
--			function = "blsp_uart0";
--			bias-disable;
--		};
-+	serial_pins: serial-state {
-+		pins = "gpio60", "gpio61";
-+		function = "blsp_uart0";
-+		bias-disable;
- 	};
- 
--	spi_0_pins: spi_0_pinmux {
--		pinmux {
--			function = "blsp_spi0";
--			pins = "gpio55", "gpio56", "gpio57";
--		};
--		pinmux_cs {
--			function = "gpio";
--			pins = "gpio54";
--		};
--		pinconf {
-+	spi_0_pins: spi-0-state {
-+		spi0-pins {
- 			pins = "gpio55", "gpio56", "gpio57";
-+			function = "blsp_spi0";
- 			drive-strength = <12>;
- 			bias-disable;
- 		};
--		pinconf_cs {
-+		spi0-cs-pins {
- 			pins = "gpio54";
-+			function = "gpio";
- 			drive-strength = <2>;
- 			bias-disable;
- 			output-high;
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi
-index 374af6dd360a..91e296d2ea82 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk04.1.dtsi
-@@ -24,26 +24,26 @@ memory {
- 
- 	soc {
- 		pinctrl@1000000 {
--			serial_0_pins: serial0-pinmux {
-+			serial_0_pins: serial0-state {
- 				pins = "gpio16", "gpio17";
- 				function = "blsp_uart0";
- 				bias-disable;
- 			};
- 
--			serial_1_pins: serial1-pinmux {
-+			serial_1_pins: serial1-state {
- 				pins = "gpio8", "gpio9",
- 					"gpio10", "gpio11";
- 				function = "blsp_uart1";
- 				bias-disable;
- 			};
- 
--			spi_0_pins: spi-0-pinmux {
--				pinmux {
-+			spi_0_pins: spi-0-state {
-+				spi0-pins {
- 					function = "blsp_spi0";
- 					pins = "gpio13", "gpio14", "gpio15";
- 					bias-disable;
- 				};
--				pinmux_cs {
-+				spi0-cs-pins {
- 					function = "gpio";
- 					pins = "gpio12";
- 					bias-disable;
-@@ -51,13 +51,13 @@ pinmux_cs {
- 				};
- 			};
- 
--			i2c_0_pins: i2c-0-pinmux {
-+			i2c_0_pins: i2c-0-state {
- 				pins = "gpio20", "gpio21";
- 				function = "blsp_i2c0";
- 				bias-disable;
- 			};
- 
--			nand_pins: nand-pins {
-+			nand_pins: nand-state {
- 				pins = "gpio53", "gpio55", "gpio56",
- 					"gpio57", "gpio58", "gpio59",
- 					"gpio60", "gpio62", "gpio63",
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts
-index ea2987fcbff8..41c5874f6f97 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c1.dts
-@@ -19,20 +19,20 @@ spi@78b6000 {
- 		};
- 
- 		pinctrl@1000000 {
--			serial_1_pins: serial1-pinmux {
-+			serial_1_pins: serial1-state {
- 				pins = "gpio8", "gpio9",
- 					"gpio10", "gpio11";
- 				function = "blsp_uart1";
- 				bias-disable;
- 			};
- 
--			spi_0_pins: spi-0-pinmux {
--				pinmux {
-+			spi_0_pins: spi-0-state {
-+				spi0-pins {
- 					function = "blsp_spi0";
- 					pins = "gpio13", "gpio14", "gpio15";
- 					bias-disable;
- 				};
--				pinmux_cs {
-+				spio-cs-pins {
- 					function = "gpio";
- 					pins = "gpio12";
- 					bias-disable;
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts
-index bd3553dd2070..67ee99d69757 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1-c2.dts
-@@ -9,7 +9,7 @@ / {
- 
- 	soc {
- 		pinctrl@1000000 {
--			serial_1_pins: serial1-pinmux {
-+			serial_1_pins: serial1-state {
- 				pins = "gpio8", "gpio9";
- 				function = "blsp_uart1";
- 				bias-disable;
-diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
-index 7ef635997efa..cc88cf5f0d9b 100644
---- a/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-ipq4019-ap.dk07.1.dtsi
-@@ -24,19 +24,19 @@ chosen {
- 
- 	soc {
- 		pinctrl@1000000 {
--			serial_0_pins: serial0-pinmux {
-+			serial_0_pins: serial0-state {
- 				pins = "gpio16", "gpio17";
- 				function = "blsp_uart0";
- 				bias-disable;
- 			};
- 
--			i2c_0_pins: i2c-0-pinmux {
-+			i2c_0_pins: i2c-0-state {
- 				pins = "gpio20", "gpio21";
- 				function = "blsp_i2c0";
- 				bias-disable;
- 			};
- 
--			nand_pins: nand-pins {
-+			nand_pins: nand-state {
- 				pins = "gpio53", "gpio55", "gpio56",
- 				       "gpio57", "gpio58", "gpio59",
- 				       "gpio60", "gpio62", "gpio63",
+Changes in v3:
+- Drop the conversion of i_ctime fields to ktime_t, and use an unused bit
+  of the i_ctime_nsec field as QUERIED flag.
+- Better tracepoints for tracking floor and ctime updates
+- Reworked percpu counters to be more useful
+- Track floor as monotonic value, which eliminates clock-jump problem
+
+Changes in v2:
+- Added Documentation file
+- Link to v1: https://lore.kernel.org/r/20240626-mgtime-v1-0-a189352d0f8f@kernel.org
+
+---
+Jeff Layton (9):
+      fs: add infrastructure for multigrain timestamps
+      fs: tracepoints around multigrain timestamp events
+      fs: add percpu counters for significant multigrain timestamp events
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      Documentation: add a new file documenting multigrain timestamps
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+
+ Documentation/filesystems/multigrain-ts.rst | 120 ++++++++++++++
+ fs/attr.c                                   |  52 ++++++-
+ fs/btrfs/file.c                             |  25 +--
+ fs/btrfs/super.c                            |   3 +-
+ fs/ext4/super.c                             |   2 +-
+ fs/inode.c                                  | 234 ++++++++++++++++++++++++----
+ fs/stat.c                                   |  39 ++++-
+ fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
+ fs/xfs/xfs_iops.c                           |  10 +-
+ fs/xfs/xfs_super.c                          |   2 +-
+ include/linux/fs.h                          |  34 +++-
+ include/trace/events/timestamp.h            | 109 +++++++++++++
+ mm/shmem.c                                  |   2 +-
+ 13 files changed, 560 insertions(+), 78 deletions(-)
+---
+base-commit: 7507ae6c41bb8990d3ae98ad0f5b0c15ca4156fe
+change-id: 20240626-mgtime-5cd80b18d810
+
+Best regards,
 -- 
-2.45.2
+Jeff Layton <jlayton@kernel.org>
 
