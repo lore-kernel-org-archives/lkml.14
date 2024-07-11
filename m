@@ -1,128 +1,81 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EA215ECF9
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA75715F40D
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720705747; cv=none; b=ubahRKDnDwBq/wqHZ0/rXIsgYloWbypagCzlK/aqnRoR4zO+CPo0XaZH40TcUdF4g/3E9ZxHRSeYirpEnIWAca1qf1ICroyoraQesoxeSdC1/C3jhp8zJjqBGu496HGarEhWlGjlehbgyBxk/gr9lcguSY3kzRdTzVxc5Xo6J2g=
+	t=1720705771; cv=none; b=J02Hccn7k+4RHy1IWdCJFtiBX4HlCLuuhKHTMh4rYMNLxOdL9bv9X9FH/3Ue7cS5Ndj7sYow3nWStINya4hs3QMlsZvAVEEOsNny006g/Xgu8TiCRVTn7FpUq4oSAtPqWoMGH9Qkmw13jt6hfl6+o8dq718mqw4HoKtYHzSelH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720705747; c=relaxed/simple;
-	bh=W54KqAxBeEcjgM+33L4oqZYLuZPu56t4BE6U2Z5/TX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k0IcBH0UnNdBVand00Jw/DgXLxSNIaGo4/wQHimnn14E3Vm3EaP6F3vScoptUkoI+AgvWmkRvB8rrI3tXOv3MbUnjwevQUZmFJ8UTBfTd/I2ysYPN1hasuocs522CFIGJvIzgHijwqsMcuX3bjgpmRLyTfKzRv2jwgKWJK4MpGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mLk9bE7v; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1720705771; c=relaxed/simple;
+	bh=81S5KcgENsWZs22Mkf32vSoMGhT4YlUQsyv3AXIX+XQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Ce9VjHmuR6AjZz3qe4rSFuqP5IuTLpuZRlDmWxoHQvmwhZTw18nXMWB+M+ag6sSNS8saZxKGY59YwIBz1+J4RH6YIKXdbKxXbrII4oMBqf6Fy9KBSwMWqpMv0EAo1zvoIW/La9P6TFVr0FWg5qheSMSFPjrqt7LS5j+MInYjzRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZ6nBu0p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mLk9bE7v"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-58bac81f419so1153507a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720705743; x=1721310543; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W54KqAxBeEcjgM+33L4oqZYLuZPu56t4BE6U2Z5/TX4=;
-        b=mLk9bE7vzqBqckQOpUm5Etyj4rl0Umgamuq1eoQokobZ6bU+eBBbs0eX0ocx9F03WI
-         0tQLTeDeRFEUI2LdJ1/p4BmE6XYYQxZnmSfz4p/hSj8r48RkfkvA9nPtwKHPoSur4ErK
-         ypPPcwPz+ltAqPsp8VVeDE8TUCIZ23D+6+mcAKzXJEA8xcB8elIvBs+YKDErTp+8nAlg
-         amlbgTOCXV0q/EB+DpagG0+x50htFSqvv61rggaoBw4gVfuXm6nVT25dg3JKNdfxEfSs
-         XqtFA2IYdXidVbNYt/b4UzBkjTG91nJ+LnpyOFoMLxYenNJbcD+gakqbcfPwMKFoqTuy
-         Va0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720705743; x=1721310543;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W54KqAxBeEcjgM+33L4oqZYLuZPu56t4BE6U2Z5/TX4=;
-        b=dkoR29cuiyL+5qQ3VMi5/xsbmPBuTtVMgek900BnXcca7eR7J2vY6Jz3zXpu9dTRZA
-         IX4ePDovXA/NCsVwT6cOopliOtcpuPnUezToKYA6fvyD2vY7GTG2XYi06wGPYsroHwct
-         xSaTH2p5oOUTNa/tdgZZCkVsDIyC+iojhbsckL3G5pDGZc5Oy/WhZj39sw6QJ/XyGv+o
-         maBnUmOQoIBhn3zyZ331dFs17gKt0LeEYPKJNYDgpvebBBx0jycxBI8VRC9kKvW4N7Pz
-         316/3ugyD92Jnft9Tm6HFvWHhwPMW+Qb3DGXKGSyfzLMacyNDtaDxAswrPueEgm+2Esd
-         E6vA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnnlskYa8zOQ9HNrLlznA/NdWrMJ49tvPfT4hMhVRAySbWDGV/ippoG1woOD6rI9ijm6G1STu3B2/OSkrdrIuqoQg6FyiwRZXKezSl
-X-Gm-Message-State: AOJu0Yyx0Bg/yUYzZGPM279oqrQnyZub3JYDc0IBy31TxFuk5ZRvA97p
-	tp0DbQHWj5Fpdirh5WRlrV0sJx5fYdshl9k7ivko3gwbdN3IHXCS+WPGo7Ez3jRsYU0q3O2lVDP
-	o
-X-Google-Smtp-Source: AGHT+IGfZtfMRXh9eucxPcMyGgSKnlhrHCt5178yGG2pvQUfh4KnB/rp6xhNMhfb/jt99oV6gpBEgA==
-X-Received: by 2002:a17:906:7d1:b0:a6f:e47d:a965 with SMTP id a640c23a62f3a-a780b6ff0ecmr556134066b.41.1720705742926;
-        Thu, 11 Jul 2024 06:49:02 -0700 (PDT)
-Received: from localhost (p50915eb1.dip0.t-ipconnect.de. [80.145.94.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bcd09sm259787466b.19.2024.07.11.06.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 06:49:02 -0700 (PDT)
-Date: Thu, 11 Jul 2024 15:49:00 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: axi-pwmgen: add .max_register to regmap
-Message-ID: <4hbaesqrfjrqs2chu7b3kpg3lnaqoezf7ymo2yj4jwtdzs3exz@tah2c3ht5gow>
-References: <20240711125743.3956935-1-tgamblin@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZ6nBu0p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99796C4AF0C;
+	Thu, 11 Jul 2024 13:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720705770;
+	bh=81S5KcgENsWZs22Mkf32vSoMGhT4YlUQsyv3AXIX+XQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=VZ6nBu0pvtT13GZtf/ofPyWOV6HsDTRrbC5EXuNqan5kuJtJIXHeel+MPXmHo0ac9
+	 BuHPOaKCYa1eU5FOoO/xCFBxeMwNNObWyWpQqGfuHwMVxGNUlOOVhETNo5PeqvxXwv
+	 I82v3aKisXUE08BaL0zxgmE66WOoo1aHQ3yj7qJoyq2g7IL3fiCa8foICNxydYwnZJ
+	 kWd+Nn7nWuiXbhQnJ3jbS6pKO2yONOsvU/YoSSzmoWBUlZc3yhDZ0nAC0V2ecgMY9l
+	 YruXP3nhYTHP4qqmul5wQhVAkVFgUyVAHgTb8r8rfqAtg9geJGTggKUmknPPTp5BIb
+	 qnQmuKRkfrD5w==
+From: Mark Brown <broonie@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240711055352.3411807-1-linux@roeck-us.net>
+References: <20240711055352.3411807-1-linux@roeck-us.net>
+Subject: Re: [PATCH] regmap: kunit: Add test cases for
+ regmap_multi_reg_(read,write}()
+Message-Id: <172070576932.33675.15532798097685737806.b4-ty@kernel.org>
+Date: Thu, 11 Jul 2024 14:49:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="x7ayujcswi4gl5ge"
-Content-Disposition: inline
-In-Reply-To: <20240711125743.3956935-1-tgamblin@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-d4707
 
+On Wed, 10 Jul 2024 22:53:52 -0700, Guenter Roeck wrote:
+> Add test cases for regmap_multi_reg_read() and regmap_multi_reg_write().
+> 
+> 
 
---x7ayujcswi4gl5ge
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-Hello Trevor,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
 
-On Thu, Jul 11, 2024 at 08:57:42AM -0400, Trevor Gamblin wrote:
-> This was missed in the basic driver and is useful for debug, so add it.
->=20
-> Example regmap output before the patch:
->=20
-> |root@zed-tg:~# cat /sys/kernel/debug/regmap/44a60000.pwm/registers
-> |0: 00020100
->=20
-> And with it:
->=20
-> |root@zed-tg:~# cat /sys/kernel/debug/regmap/44a60000.pwm/registers
-> |00: 00020100
-> |04: 00000000
-> |08: 00000000
-> |0c: 601a3471
-> |10: 00000000
-> |14: 00000002
-> |18: 00000001
-> |1c: 00000000
-> |...
->=20
-> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
-> ---
-> v2 just adds an example of the effect to the commit log.
-> ---
+Thanks!
 
-Makes sense. I applied it to pwm/for-next.
+[1/1] regmap: kunit: Add test cases for regmap_multi_reg_(read,write}()
+      commit: c2bb8198fee88a428513f8d023c627ecd13aa694
 
-Thanks
-Uwe
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
---x7ayujcswi4gl5ge
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaP4soACgkQj4D7WH0S
-/k6pdAf+NCsft6eAjUSGESUighMEydt+KWlcrmnm3GiFAA01qfzWscHxGhnMU3jP
-NlTt/Ksz7YlqDWRIk4DBwKbYQmg/MqF+c0K3HLUMq2w+rZBf1gNUQLDnbfUAXUKe
-WlxjgEudclGn+Qmix/02JkBb93EGN9JLN04vs5lWXiCBM0ZFh4dm1xsD5VJkUtwi
-jp2RON5UlfRHuZNWXmf0di4ziTY2l75GPzc/qeQdMimAeFhLBtHiRxz/gO4NST5I
-nOlHAs6wTgpe8FRDnJkCFDITV+r/ak9o6iKrJsIagFZtgr0b3W91HaeGTzT1KB34
-m1GOnvuloxFe7KmP/vvaEo59u81i0w==
-=L73+
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---x7ayujcswi4gl5ge--
+Thanks,
+Mark
+
