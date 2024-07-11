@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238B91C14;
-	Thu, 11 Jul 2024 06:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291131C14;
+	Thu, 11 Jul 2024 06:25:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720679133; cv=none; b=WOr8WGlcURVbwagrPDDDY8GR9kYcUGWVd9rOsxeGlh96ErfJaAKr3zKlRFmbcNSHyRG41U58lEtR1mFSJ0xS5z9upEHz70mO7h6PFi02YvBLWyLUAnI2tobTAnO+Hwm23iEA9CdTRumEAs6tqHHb9tPdZFdc0z4T0wCANlsV0mY=
+	t=1720679153; cv=none; b=XDPTFjOsH1n334iFXO/oqTNf42jrJkxvayczFw1SYTEiQBNpOCoig9WNxoBiz0FXIVMhcheC+mAlfShWIgilnl8Gp0H6R7iTceZox1a4TM2i/J43pI1XMKxwJYezy6W08gUvrqJ5xX/7B8bmXF+VhfMm71dsCAPG7qm6/X0QIkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720679133; c=relaxed/simple;
-	bh=YQfeuPN2HOffCv0MVzTXwIsDX0oyjlA8SwrOf5ZnO2k=;
+	s=arc-20240116; t=1720679153; c=relaxed/simple;
+	bh=PleP9t/ax+Sp2aeZHu4QJBNkcPjSGKK8qgyTeC5ChdE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rqgfdsvmxcjp5s/BtErYPO9NNmYkvhpKImvTXiCVoJkiVVoKlJlDs2nY9sPlKxZkdQQ/MN+4fvPH07tujV86UGIQhmL/UT7ZUt0+xD0eg5bRgYKJGxPFrjGl4Td/S5q3cmg6IaWdqkExcL3fz62Nkyfk9a9NOfAQ2tXuowPzRcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON5/gIDn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DsaS9FqU9057rOnrCblxKtjmOiJOiWdErr1jcgMLCUYcHFjDoLgN9cEom8fwcbvqkeyaJSUqQ0bX8NzoZXAxMk7Qtwy49lD8GfrPvK/RpZ3wkxYEPfoD0Hicbj5UDTcMdSwUn/p/Yhs5x1u1mDrDKtuasKwXhHUSxDJnGGD7u0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rGHfp4AO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON5/gIDn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41563C116B1;
-	Thu, 11 Jul 2024 06:25:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rGHfp4AO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD8F6C116B1;
+	Thu, 11 Jul 2024 06:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720679132;
-	bh=YQfeuPN2HOffCv0MVzTXwIsDX0oyjlA8SwrOf5ZnO2k=;
+	s=k20201202; t=1720679152;
+	bh=PleP9t/ax+Sp2aeZHu4QJBNkcPjSGKK8qgyTeC5ChdE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ON5/gIDnPsfVCZ/QIqwJ4P9F562+8pwPRhjsP781+12O13KiubrqYxouc24RQ5+G4
-	 Kao00dsMVmIn7fs7FpTfU10zM+dYIetlhwnCCH6HDpWE4/LhBFiATYeIEfPOCAEQ19
-	 wkK9SSPmsyoZFYSyskfnXiWdcjvK1c0oTj2fBtRFMimJFHk0SzVg07lok5DwVYOQkq
-	 xB+/9dlhTmvFM5Hl/6y7wSw8wbWvKda9wVaGqKcJVc8DoIRd95CobPvwulz/+FXLVg
-	 SwD2E7KE78k2+dkb3MHa2OVhZL3lyA0Lmmwf8CoKr15r2sUEmsvMhYH5eql88/c6DH
-	 3mR8I+cFYnw+w==
-Message-ID: <00706b14-9366-4109-802c-c52aefb67cd0@kernel.org>
-Date: Thu, 11 Jul 2024 08:25:22 +0200
+	b=rGHfp4AOHiWG2s5wcAxRMXKoGxac8gDTtFHOlVixcf4pJ++04/JFJMl3v7Rkpd03v
+	 X5pIUGmdpVpTzNr3z/NmwJkIO78997WuhoL87Oj+CXMXQpAOrMeL3CExvg73xSHwHj
+	 YFYm5kEL7neWUAgtM/hGMmnKKS1aCT1Dz9mMCF0UbuuXjUgvhYBoc2k2KpTUM61628
+	 P1ZHQtXddDtqpAmDkZ5qkkb9UjTBOI8PBGf4ggUGeOZLkW6wrogD1n5uAXDmjSkC4z
+	 RVo47taUdgcB0fJHqk9bT7QaN/CgBZdx9y4Olt9HfNhIw/Hhkg4SOcptnUYQWYroF8
+	 4LseV80J4pddQ==
+Message-ID: <467a6379-6ee7-46b0-90c8-340e12f7a556@kernel.org>
+Date: Thu, 11 Jul 2024 08:25:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,20 +35,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: thermal: amlogic,thermal: add
- optional power-domains
-To: George Stark <gnstark@salutedevices.com>, andi.shyti@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- neil.armstrong@linaro.org, khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, glaroque@baylibre.com,
- rafael@kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com,
- lukasz.luba@arm.com, b.galvani@gmail.com, mmkurbanov@sberdevices.ru
-Cc: linux-i2c@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kernel@salutedevices.com
-References: <20240710223214.2348418-1-gnstark@salutedevices.com>
- <20240710223214.2348418-3-gnstark@salutedevices.com>
+Subject: Re: [PATCH 1/5] dt-bindings: display: panel: samsung,atna33xc20:
+ Document ATNA45AF01
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>
+References: <20240710-x1e80100-crd-backlight-v1-0-eb242311a23e@linaro.org>
+ <20240710-x1e80100-crd-backlight-v1-1-eb242311a23e@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -94,17 +94,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240710223214.2348418-3-gnstark@salutedevices.com>
+In-Reply-To: <20240710-x1e80100-crd-backlight-v1-1-eb242311a23e@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/07/2024 00:32, George Stark wrote:
-> On newer SoCs, the thermal hardware can require a power domain to
-> operate so add corresponding optional property.
+On 10/07/2024 19:04, Stephan Gerhold wrote:
+> The Samsung ATNA45AF01 panel is an AMOLED eDP panel that has backlight
+> control over the DP AUX channel. While it works almost correctly with the
+> generic "edp-panel" compatible, the backlight needs special handling to
+> work correctly. It is similar to the existing ATNA33XC20 panel, just with
+> a larger resolution and size.
 > 
-> Signed-off-by: George Stark <gnstark@salutedevices.com>
+> Add a new "samsung,atna45af01" compatible to describe this panel in the DT.
+> 
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
