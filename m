@@ -1,283 +1,790 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE95715A862;
-	Thu, 11 Jul 2024 11:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3566516728E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696052; cv=none; b=ZzEcim+gD7ZwvFjDbixX+IY7B/NMWmQQRWJlDThog9A803jBu8Bj955qBX5CIPgaj1MAAI+dCwYBYHAJucqLEnmyygqiTnd+uuXCtayg5Xq4JDvceeay/c/9V/DBvAhkg2NPUP7YI5KYd/4Of97cjPlxmqKaerPRTbYqd+FozFU=
+	t=1720696057; cv=none; b=W6i+6cc/YJB2q4rFvc+FUfYJtrb2YCONX9uLRqg4rtnLeXSPQA0cSMS4s3O8QyQGg6uh5M2ihAr2nMd8RqvyHzooDgdpw8N0hFlAh8ZuobGmDkKTsxyr75hHxssYLiRQUvBX0+E2gGd0/C8yRVnl/JRAKlJUt7JcMIGnAw40rXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696052; c=relaxed/simple;
-	bh=kPusR43PaKG6xBD/RrcIcx3B27TqPHToNy/IwucFazM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XHOGwUH8b8csqBiNwEtoZkhGQ05xce942YXwbhUWrq5YaAkb8ZeKr5OeSTw8pnYReOkk6hZul5TdmbZzuBSMc+GpZtOzHpW/sOIdKQJgvBWN1TqSZ6GumKxd643XB6rZyyaucha2MYYFs1tHhJTn3Py5jMZ2D97PCVJWz4ilfzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=OV9sPOO+; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1720696057; c=relaxed/simple;
+	bh=kqJX76Mn8cDxykgVLWz/CyHYEjNIdrVDrQ8i+8Fsnl0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hW2gs9QBs+g9isAtpWalqlazl9cS8jIGYKq61savQC1DdEugjro4TMVfVJMqvb3z0Bg8CWcBimOSbvvUKXAsHqHd8qe8wemoF2m5wA711CdbOiRxNFQB+/kq4EW/CpgCad7TEVe0VvBF5c4zElpa4tXuxAbCGQX0z3ap0ulMWfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IbVJL0qa; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="OV9sPOO+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1JZyvQjOyuYs5ChZOgRL/rdy0pG9Al5yiAdrNH5g4ws=; t=1720696048; x=1721300848; 
-	b=OV9sPOO+i0dmug1zofaGoiP6ry9KlQxBZnR0d8jEQycU19MKHVeIIT705hvtFg6MlfihXz0qFp1
-	vDI0o4VBoVL19H/qDGbEL4fKou+2xXqIBm32kPMcftXOGMsOlvC5pOTPGSGIEPP5NDccB6CuTv82z
-	xeBA2GGysv3XyaYLj7Vxq0TgrI5cjGHMJ076i8krbx6GmlEQKihmYS8EOlY+DrFr/KM1QALA9Btp8
-	Jzpw1cFZZJ8geKbEdKVf/5T4Et+yFDMmtenAP2H64y+jq+/XARe+GbxYZuZm+WsgL6t3N7Mk/lnOy
-	DkHcXfPxKE2m8xNl4nPztxFqH3ung4RJVdOQ==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1sRre1-00000002a7O-1VAd; Thu, 11 Jul 2024 13:07:25 +0200
-Received: from p5b13a475.dip0.t-ipconnect.de ([91.19.164.117] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1sRre1-00000001796-0cwU; Thu, 11 Jul 2024 13:07:25 +0200
-Message-ID: <47f3716dd48ecdc35d823fbab087332fbf3a24d5.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v3] sh: Restructure setup code to reserve memory regions
- earlier
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>, 
-	ysato@users.sourceforge.jp, dalias@libc.org
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
- robh+dt@kernel.org,  kernel@quicinc.com
-Date: Thu, 11 Jul 2024 13:07:24 +0200
-In-Reply-To: <20240520175802.2002183-1-quic_obabatun@quicinc.com>
-References: <20240520175802.2002183-1-quic_obabatun@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IbVJL0qa"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so4580415e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720696053; x=1721300853; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PkwYmQe+vZGY2hDDPre+UOvj5tCpzJQ0BK04WwUrAsU=;
+        b=IbVJL0qacZsoNIRMR40g7Lmt8RKkUydeNxtU3pbuSSt5bNrYgctKzFXh2FIquBgDHZ
+         FnkJwcauM3t6rP8ibUqRduooByjT429qN8HUK3sDz6FHXqlx4vJosvlxenTm7NbU6GBf
+         7c4EJtvK0Q2KWq3L/Sx1IRm1xabN5ZD4HK7elIgI1owXugQK/XbJ/pChcew3UO2UaJsX
+         tjNLE4AmuXDHziU42w9bB1P20jkLdjgXRvt2Xqc8FQn+oBwm7kqvkE8Xx9ocGnijRtvo
+         24oR2g3LFvYpCqXbMkAyzRQhjHMIFeEOB10BuwBvLf7K7vbCE71Xrts8MP6cSLc62XwW
+         RSWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720696053; x=1721300853;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PkwYmQe+vZGY2hDDPre+UOvj5tCpzJQ0BK04WwUrAsU=;
+        b=IcaqzckqVy4XuM5KxmLqksXyfeCnHdG5tZtEHFfMoEEBs01S6ehSjMbBtMXizOeWEw
+         DUjIejiA3H81/nIcOwGm+1Hiu2XkiAb8uq1tRqNo9dNpON2l1nMnQmFRz4yVRfEzncW4
+         ByeDlmTHjshIfMep/QoM6DPChhRku0w94vsdXAHM65BoMak74Crqn+s5k1mZUJ6vuwhJ
+         NGi0hSxUlMBSUo0OnAJRysc3Xosn2uwdollpSRvj0VrjyZFnBR2Z4g7S8UEnDusSI4Rb
+         MSCCi1NelWf35qBuCbfEkCIVynO1uLQhdoaMcRv4uRbTbIt3VHB9ZDE3Z/O8NQIrOQD9
+         lpsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJQEHCqNvvK8MlBMiSfm/NnicfTB+NlrHiKq6siircNKCg1ei8TtUkXW4yfNW2eIpRNmmzQM03DMixIRfZmbfOuHkw9nLbe5CfyuLQ
+X-Gm-Message-State: AOJu0YzTmZ5DGyfk8PwtSnt2s9g30laKJS1l1VhrGU9p4sWxmoHbo8RD
+	f1gqWjUZ29n9nuTDCpsqqh2mxhhYb0n+xhKjzyUEEKpRDB/PJbLZ86rT0qWeQr4kNMCoQtZU7zH
+	Q
+X-Google-Smtp-Source: AGHT+IHBh4dHMyrCPLkP/FOL2l52pUNwR1mMtGgYmKjbhR9sjU223yVx+aIwcwtw9asdHQA6+droqA==
+X-Received: by 2002:a05:600c:3516:b0:424:aa83:ef27 with SMTP id 5b1f17b1804b1-427981b2222mr20837385e9.1.1720696053510;
+        Thu, 11 Jul 2024 04:07:33 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e097bsm115686685e9.6.2024.07.11.04.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 04:07:33 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: linux-arm-msm@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 3/5] ARM: dts: qcom: apq8064: adhere to pinctrl dtschema
+Date: Thu, 11 Jul 2024 12:01:40 +0100
+Message-ID: <20240711110545.31641-5-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240711110545.31641-2-rayyan.ansari@linaro.org>
+References: <20240711110545.31641-2-rayyan.ansari@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Transfer-Encoding: 8bit
 
-Hi Oreoluwa,
+Pass dtbs_check for qcom,apq8064-pinctrl.yaml.
 
-On Mon, 2024-05-20 at 10:58 -0700, Oreoluwa Babatunde wrote:
-> The unflatten_device_tree() function contains a call to
-> memblock_alloc(). This is a problem because this allocation is done
-> before any of the reserved memory regions are set aside in
-> paging_init().
-> As a result, there is a possibility for memblock to unknowingly allocate
-> from any of the memory regions that are meant to be reserved.
->=20
-> Hence, restructure the setup code to set aside reserved memory
-> regions before any allocations are done using memblock.
->=20
-> Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-> ---
-> v3:
-> - Instead of moving all of paging_init(), move only the parts
->   that are responsible for setting aside the reserved memory
->   regions.
->=20
-> v2:
-> https://lore.kernel.org/all/20240423233150.74302-1-quic_obabatun@quicinc.=
-com/
-> - Added Rob Herrings Reviewed-by.
-> - cc Andrew Morton to assist with merging this for sh architecture.
->   Similar change made for loongarch and openrisc in v1 have already
->   been merged.
->=20
-> v1:
-> https://lore.kernel.org/all/1707524971-146908-4-git-send-email-quic_obaba=
-tun@quicinc.com/
->=20
->  arch/sh/include/asm/setup.h |  1 -
->  arch/sh/kernel/setup.c      | 43 +++++++++++++++++++++++++++++++++++-
->  arch/sh/mm/init.c           | 44 -------------------------------------
->  3 files changed, 42 insertions(+), 46 deletions(-)
->=20
-> diff --git a/arch/sh/include/asm/setup.h b/arch/sh/include/asm/setup.h
-> index fc807011187f..5feed99b9b7a 100644
-> --- a/arch/sh/include/asm/setup.h
-> +++ b/arch/sh/include/asm/setup.h
-> @@ -19,7 +19,6 @@
->  #define COMMAND_LINE ((char *) (PARAM+0x100))
-> =20
->  void sh_mv_setup(void);
-> -void check_for_initrd(void);
->  void per_cpu_trap_init(void);
-> =20
->  #endif /* _SH_SETUP_H */
-> diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
-> index 620e5cf8ae1e..f5b6078173c9 100644
-> --- a/arch/sh/kernel/setup.c
-> +++ b/arch/sh/kernel/setup.c
-> @@ -114,7 +114,7 @@ static int __init early_parse_mem(char *p)
->  }
->  early_param("mem", early_parse_mem);
-> =20
-> -void __init check_for_initrd(void)
-> +static void __init check_for_initrd(void)
->  {
->  #ifdef CONFIG_BLK_DEV_INITRD
->  	unsigned long start, end;
-> @@ -172,6 +172,42 @@ void __init check_for_initrd(void)
->  #endif
->  }
-> =20
-> +static void __init early_reserve_mem(void)
-> +{
-> +	unsigned long start_pfn;
-> +	u32 zero_base =3D (u32)__MEMORY_START + (u32)PHYSICAL_OFFSET;
-> +	u32 start =3D zero_base + (u32)CONFIG_ZERO_PAGE_OFFSET;
-> +
-> +	/*
-> +	 * Partially used pages are not usable - thus
-> +	 * we are rounding upwards:
-> +	 */
-> +	start_pfn =3D PFN_UP(__pa(_end));
-> +
-> +	/*
-> +	 * Reserve the kernel text and Reserve the bootmem bitmap. We do
-> +	 * this in two steps (first step was init_bootmem()), because
-> +	 * this catches the (definitely buggy) case of us accidentally
-> +	 * initializing the bootmem allocator with an invalid RAM area.
-> +	 */
-> +	memblock_reserve(start, (PFN_PHYS(start_pfn) + PAGE_SIZE - 1) - start);
-> +
-> +	/*
-> +	 * Reserve physical pages below CONFIG_ZERO_PAGE_OFFSET.
-> +	 */
-> +	if (CONFIG_ZERO_PAGE_OFFSET !=3D 0)
-> +		memblock_reserve(zero_base, CONFIG_ZERO_PAGE_OFFSET);
-> +
-> +	/*
-> +	 * Handle additional early reservations
-> +	 */
-> +	check_for_initrd();
-> +	reserve_crashkernel();
-> +
-> +	if (sh_mv.mv_mem_reserve)
-> +		sh_mv.mv_mem_reserve();
-> +}
-> +
->  #ifndef CONFIG_GENERIC_CALIBRATE_DELAY
->  void calibrate_delay(void)
->  {
-> @@ -319,9 +355,14 @@ void __init setup_arch(char **cmdline_p)
-> =20
->  	sh_mv_setup();
-> =20
-> +	sh_mv.mv_mem_init();
-> +
->  	/* Let earlyprintk output early console messages */
->  	sh_early_platform_driver_probe("earlyprintk", 1, 1);
-> =20
-> +	/* set aside reserved memory regions */
-> +	early_reserve_mem();
-> +
->  #ifdef CONFIG_OF_EARLY_FLATTREE
->  #ifdef CONFIG_USE_BUILTIN_DTB
->  	unflatten_and_copy_device_tree();
-> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-> index bf1b54055316..4559f5bea782 100644
-> --- a/arch/sh/mm/init.c
-> +++ b/arch/sh/mm/init.c
-> @@ -242,55 +242,11 @@ static void __init do_init_bootmem(void)
->  	sparse_init();
->  }
-> =20
-> -static void __init early_reserve_mem(void)
-> -{
-> -	unsigned long start_pfn;
-> -	u32 zero_base =3D (u32)__MEMORY_START + (u32)PHYSICAL_OFFSET;
-> -	u32 start =3D zero_base + (u32)CONFIG_ZERO_PAGE_OFFSET;
-> -
-> -	/*
-> -	 * Partially used pages are not usable - thus
-> -	 * we are rounding upwards:
-> -	 */
-> -	start_pfn =3D PFN_UP(__pa(_end));
-> -
-> -	/*
-> -	 * Reserve the kernel text and Reserve the bootmem bitmap. We do
-> -	 * this in two steps (first step was init_bootmem()), because
-> -	 * this catches the (definitely buggy) case of us accidentally
-> -	 * initializing the bootmem allocator with an invalid RAM area.
-> -	 */
-> -	memblock_reserve(start, (PFN_PHYS(start_pfn) + PAGE_SIZE - 1) - start);
-> -
-> -	/*
-> -	 * Reserve physical pages below CONFIG_ZERO_PAGE_OFFSET.
-> -	 */
-> -	if (CONFIG_ZERO_PAGE_OFFSET !=3D 0)
-> -		memblock_reserve(zero_base, CONFIG_ZERO_PAGE_OFFSET);
-> -
-> -	/*
-> -	 * Handle additional early reservations
-> -	 */
-> -	check_for_initrd();
-> -	reserve_crashkernel();
-> -}
-> -
->  void __init paging_init(void)
->  {
->  	unsigned long max_zone_pfns[MAX_NR_ZONES];
->  	unsigned long vaddr, end;
-> =20
-> -	sh_mv.mv_mem_init();
-> -
-> -	early_reserve_mem();
-> -
-> -	/*
-> -	 * Once the early reservations are out of the way, give the
-> -	 * platforms a chance to kick out some memory.
-> -	 */
-> -	if (sh_mv.mv_mem_reserve)
-> -		sh_mv.mv_mem_reserve();
-> -
->  	memblock_enforce_memory_limit(memory_limit);
->  	memblock_allow_resize();
-> =20
+Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+---
+v1 -> v2: split previous 2 commits from this patch, corrected commit message
 
-This is missing an include of <asm/kexec.h> in arch/sh/kernel/setup.c:
+ .../boot/dts/qcom/qcom-apq8064-cm-qs600.dts   |  25 +-
+ .../boot/dts/qcom/qcom-apq8064-ifc6410.dts    |  25 +-
+ arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi | 350 +++++++-----------
+ .../qcom-apq8064-sony-xperia-lagan-yuga.dts   |  10 +-
+ arch/arm/boot/dts/qcom/qcom-apq8064.dtsi      |  34 +-
+ 5 files changed, 166 insertions(+), 278 deletions(-)
 
-  CC      io_uring/notif.o
-  CC      lib/zlib_inflate/inftrees.o
-arch/sh/kernel/setup.c: In function 'early_reserve_mem':
-arch/sh/kernel/setup.c:205:9: error: implicit declaration of function 'rese=
-rve_crashkernel'; did you mean 'parse_crashkernel'? [-Werror=3Dimplicit-fun=
-ction-declaration]
-  205 |         reserve_crashkernel();
-      |         ^~~~~~~~~~~~~~~~~~~
-      |         parse_crashkernel
-  CC      net/core/flow_dissector.o
-  AR      block/partitions/built-in.a
-  CC      block/elevator.o
-  CC      block/blk-core.o
-cc1: some warnings being treated as errors
-  CC      crypto/shash.o
-make[4]: *** [scripts/Makefile.build:244: arch/sh/kernel/setup.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  CC      crypto/crc32c_generic.o
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts
+index 671d58cc2741..178c55c1efeb 100644
+--- a/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064-cm-qs600.dts
+@@ -188,24 +188,17 @@ &sdcc4 {
+ };
+ 
+ &tlmm_pinmux {
+-	card_detect: card_detect {
+-		mux {
+-			pins = "gpio26";
+-			function = "gpio";
+-			bias-disable;
+-		};
++	card_detect: card-detect-state {
++		pins = "gpio26";
++		function = "gpio";
++		bias-disable;
+ 	};
+ 
+-	pcie_pins: pcie_pinmux {
+-		mux {
+-			pins = "gpio27";
+-			function = "gpio";
+-		};
+-		conf {
+-			pins = "gpio27";
+-			drive-strength = <12>;
+-			bias-disable;
+-		};
++	pcie_pins: pcie-state {
++		pins = "gpio27";
++		function = "gpio";
++		drive-strength = <12>;
++		bias-disable;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts
+index ed86b24119c9..b3ff8010b149 100644
+--- a/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts
+@@ -321,24 +321,17 @@ &sdcc4 {
+ };
+ 
+ &tlmm_pinmux {
+-	card_detect: card_detect {
+-		mux {
+-			pins = "gpio26";
+-			function = "gpio";
+-			bias-disable;
+-		};
++	card_detect: card-detect-state {
++		pins = "gpio26";
++		function = "gpio";
++		bias-disable;
+ 	};
+ 
+-	pcie_pins: pcie_pinmux {
+-		mux {
+-			pins = "gpio27";
+-			function = "gpio";
+-		};
+-		conf {
+-			pins = "gpio27";
+-			drive-strength = <12>;
+-			bias-disable;
+-		};
++	pcie_pins: pcie-state {
++		pins = "gpio27";
++		function = "gpio";
++		drive-strength = <12>;
++		bias-disable;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi
+index 107fc19f1331..e53de709e9d1 100644
+--- a/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064-pins.dtsi
+@@ -1,318 +1,218 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ &tlmm_pinmux {
+-	sdc4_gpios: sdc4-gpios {
+-		pios {
+-			pins = "gpio63", "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
+-			function = "sdc4";
+-		};
+-	};
+-
+-	sdcc1_pins: sdcc1-pin-active {
+-		clk {
++	sdcc1_default_state: sdcc1-default-state {
++		clk-pins {
+ 			pins = "sdc1_clk";
+ 			drive-strength = <16>;
+ 			bias-disable;
+ 		};
+ 
+-		cmd {
++		cmd-pins {
+ 			pins = "sdc1_cmd";
+ 			drive-strength = <10>;
+ 			bias-pull-up;
+ 		};
+ 
+-		data {
++		data-pins {
+ 			pins = "sdc1_data";
+ 			drive-strength = <10>;
+ 			bias-pull-up;
+ 		};
+ 	};
+ 
+-	sdcc3_pins: sdcc3-pin-active {
+-		clk {
++	sdcc3_default_state: sdcc3-default-state {
++		clk-pins {
+ 			pins = "sdc3_clk";
+ 			drive-strength = <8>;
+ 			bias-disable;
+ 		};
+ 
+-		cmd {
++		cmd-pins {
+ 			pins = "sdc3_cmd";
+ 			drive-strength = <8>;
+ 			bias-pull-up;
+ 		};
+ 
+-		data {
++		data-pins {
+ 			pins = "sdc3_data";
+ 			drive-strength = <8>;
+ 			bias-pull-up;
+ 		};
+ 	};
+ 
+-	ps_hold: ps_hold {
+-		mux {
+-			pins = "gpio78";
+-			function = "ps_hold";
+-		};
++	sdc4_default_state: sdc4-default-state {
++		pins = "gpio63", "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
++		function = "sdc4";
+ 	};
+ 
+-	i2c1_pins: i2c1 {
+-		mux {
+-			pins = "gpio20", "gpio21";
+-			function = "gsbi1";
+-		};
++	gsbi1_uart_2pins: gsbi1-uart-2pins-state {
++		pins = "gpio18", "gpio19";
++		function = "gsbi1";
++	};
+ 
+-		pinconf {
+-			pins = "gpio20", "gpio21";
+-			drive-strength = <16>;
+-			bias-disable;
+-		};
++	gsbi1_uart_4pins: gsbi1-uart-4pins-state {
++		pins = "gpio18", "gpio19", "gpio20", "gpio21";
++		function = "gsbi1";
+ 	};
+ 
+-	i2c1_pins_sleep: i2c1_pins_sleep {
+-		mux {
+-			pins = "gpio20", "gpio21";
+-			function = "gpio";
+-		};
+-		pinconf {
+-			pins = "gpio20", "gpio21";
++	gsbi4_uart_pin_a: gsbi4-uart-pin-active-state {
++		rx-pins {
++			pins = "gpio11";
++			function = "gsbi4";
+ 			drive-strength = <2>;
+ 			bias-disable;
+ 		};
+-	};
+ 
+-	gsbi1_uart_2pins: gsbi1_uart_2pins {
+-		mux {
+-			pins = "gpio18", "gpio19";
+-			function = "gsbi1";
++		tx-pins {
++			pins = "gpio10";
++			function = "gsbi4";
++			drive-strength = <4>;
++			bias-disable;
+ 		};
+ 	};
+ 
+-	gsbi1_uart_4pins: gsbi1_uart_4pins {
+-		mux {
+-			pins = "gpio18", "gpio19", "gpio20", "gpio21";
+-			function = "gsbi1";
+-		};
++	gsbi6_uart_2pins: gsbi6-uart-2pins-state {
++		pins = "gpio14", "gpio15";
++		function = "gsbi6";
+ 	};
+ 
+-	i2c2_pins: i2c2 {
+-		mux {
+-			pins = "gpio24", "gpio25";
+-			function = "gsbi2";
+-		};
+-
+-		pinconf {
+-			pins = "gpio24", "gpio25";
+-			drive-strength = <16>;
+-			bias-disable;
+-		};
++	gsbi6_uart_4pins: gsbi6-uart-4pins-state {
++		pins = "gpio14", "gpio15", "gpio16", "gpio17";
++		function = "gsbi6";
+ 	};
+ 
+-	i2c2_pins_sleep: i2c2_pins_sleep {
+-		mux {
+-			pins = "gpio24", "gpio25";
+-			function = "gpio";
+-		};
+-
+-		pinconf {
+-			pins = "gpio24", "gpio25";
+-			drive-strength = <2>;
+-			bias-disable;
+-		};
++	gsbi7_uart_2pins: gsbi7-uart-2pins-state {
++		pins = "gpio82", "gpio83";
++		function = "gsbi7";
+ 	};
+ 
+-	i2c3_pins: i2c3 {
+-		mux {
+-			pins = "gpio8", "gpio9";
+-			function = "gsbi3";
+-		};
+-
+-		pinconf {
+-			pins = "gpio8", "gpio9";
+-			drive-strength = <16>;
+-			bias-disable;
+-		};
++	gsbi7_uart_4pins: gsbi7_uart_4pins-state {
++		pins = "gpio82", "gpio83", "gpio84", "gpio85";
++		function = "gsbi7";
+ 	};
+ 
+-	i2c3_pins_sleep: i2c3_pins_sleep {
+-		mux {
+-			pins = "gpio8", "gpio9";
+-			function = "gpio";
+-		};
+-		pinconf {
+-			pins = "gpio8", "gpio9";
+-			drive-strength = <2>;
+-			bias-disable;
+-		};
++	i2c1_default_state: i2c1-default-state {
++		pins = "gpio20", "gpio21";
++		function = "gsbi1";
++		drive-strength = <16>;
++		bias-disable;
+ 	};
+ 
+-	i2c4_pins: i2c4 {
+-		mux {
+-			pins = "gpio12", "gpio13";
+-			function = "gsbi4";
+-		};
+-
+-		pinconf {
+-			pins = "gpio12", "gpio13";
+-			drive-strength = <16>;
+-			bias-disable;
+-		};
++	i2c1_sleep_state: i2c1-sleep-state {
++		pins = "gpio20", "gpio21";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
+ 	};
+ 
+-	i2c4_pins_sleep: i2c4_pins_sleep {
+-		mux {
+-			pins = "gpio12", "gpio13";
+-			function = "gpio";
+-		};
+-		pinconf {
+-			pins = "gpio12", "gpio13";
+-			drive-strength = <2>;
+-			bias-disable;
+-		};
++	i2c2_default_state: i2c2-default-state {
++		pins = "gpio24", "gpio25";
++		function = "gsbi2";
++		drive-strength = <16>;
++		bias-disable;
+ 	};
+ 
+-	spi5_default: spi5_default {
+-		pinmux {
+-			pins = "gpio51", "gpio52", "gpio54";
+-			function = "gsbi5";
+-		};
+-
+-		pinmux_cs {
+-			function = "gpio";
+-			pins = "gpio53";
+-		};
+-
+-		pinconf {
+-			pins = "gpio51", "gpio52", "gpio54";
+-			drive-strength = <16>;
+-			bias-disable;
+-		};
+-
+-		pinconf_cs {
+-			pins = "gpio53";
+-			drive-strength = <16>;
+-			bias-disable;
+-			output-high;
+-		};
++	i2c2_sleep_state: i2c2-sleep-state {
++		pins = "gpio24", "gpio25";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
+ 	};
+ 
+-	spi5_sleep: spi5_sleep {
+-		pinmux {
+-			function = "gpio";
+-			pins = "gpio51", "gpio52", "gpio53", "gpio54";
+-		};
+-
+-		pinconf {
+-			pins = "gpio51", "gpio52", "gpio53", "gpio54";
+-			drive-strength = <2>;
+-			bias-pull-down;
+-		};
++	i2c3_default_state: i2c3-default-state {
++		pins = "gpio8", "gpio9";
++		function = "gsbi3";
++		drive-strength = <16>;
++		bias-disable;
+ 	};
+ 
+-	i2c6_pins: i2c6 {
+-		mux {
+-			pins = "gpio16", "gpio17";
+-			function = "gsbi6";
+-		};
+-
+-		pinconf {
+-			pins = "gpio16", "gpio17";
+-			drive-strength = <16>;
+-			bias-disable;
+-		};
++	i2c3_sleep_state: i2c3-sleep-state {
++		pins = "gpio8", "gpio9";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
+ 	};
+ 
+-	i2c6_pins_sleep: i2c6_pins_sleep {
+-		mux {
+-			pins = "gpio16", "gpio17";
+-			function = "gpio";
+-		};
+-		pinconf {
+-			pins = "gpio16", "gpio17";
+-			drive-strength = <2>;
+-			bias-disable;
+-		};
++	i2c4_default_state: i2c4-default-state {
++		pins = "gpio12", "gpio13";
++		function = "gsbi4";
++		drive-strength = <16>;
++		bias-disable;
+ 	};
+ 
+-	gsbi4_uart_pin_a: gsbi4-uart-pin-active-state {
+-		rx-pins {
+-			pins = "gpio11";
+-			function = "gsbi4";
+-			drive-strength = <2>;
+-			bias-disable;
+-		};
+-
+-		tx-pins {
+-			pins = "gpio10";
+-			function = "gsbi4";
+-			drive-strength = <4>;
+-			bias-disable;
+-		};
++	i2c4_sleep_state: i2c4-sleep-state {
++		pins = "gpio12", "gpio13";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
+ 	};
+ 
+-	gsbi6_uart_2pins: gsbi6_uart_2pins {
+-		mux {
+-			pins = "gpio14", "gpio15";
+-			function = "gsbi6";
+-		};
++	i2c6_default_state: i2c6-default-state {
++		pins = "gpio16", "gpio17";
++		function = "gsbi6";
++		drive-strength = <16>;
++		bias-disable;
+ 	};
+ 
+-	gsbi6_uart_4pins: gsbi6_uart_4pins {
+-		mux {
+-			pins = "gpio14", "gpio15", "gpio16", "gpio17";
+-			function = "gsbi6";
+-		};
++	i2c6_sleep_state: i2c6-sleep-state {
++		pins = "gpio16", "gpio17";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
+ 	};
+ 
+-	gsbi7_uart_2pins: gsbi7_uart_2pins {
+-		mux {
+-			pins = "gpio82", "gpio83";
+-			function = "gsbi7";
+-		};
++	i2c7_default_state: i2c7-default-state {
++		pins = "gpio84", "gpio85";
++		function = "gsbi7";
++		drive-strength = <16>;
++		bias-disable;
+ 	};
+ 
+-	gsbi7_uart_4pins: gsbi7_uart_4pins {
+-		mux {
+-			pins = "gpio82", "gpio83", "gpio84", "gpio85";
+-			function = "gsbi7";
+-		};
++	i2c7_sleep_state: i2c7-sleep-state {
++		pins = "gpio84", "gpio85";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
+ 	};
+ 
+-	i2c7_pins: i2c7 {
+-		mux {
+-			pins = "gpio84", "gpio85";
+-			function = "gsbi7";
++	spi5_default_state: spi5-default-state {
++		spi5-pins {
++			pins = "gpio51", "gpio52", "gpio54";
++			function = "gsbi5";
++			drive-strength = <16>;
++			bias-disable;
+ 		};
+ 
+-		pinconf {
+-			pins = "gpio84", "gpio85";
++		spi5-cs-pins {
++			pins = "gpio53";
++			function = "gpio";
+ 			drive-strength = <16>;
+ 			bias-disable;
++			output-high;
+ 		};
+ 	};
+ 
+-	i2c7_pins_sleep: i2c7_pins_sleep {
+-		mux {
+-			pins = "gpio84", "gpio85";
++	spi5_sleep_state: spi5-sleep-state {
++		spi5-pins {
++			pins = "gpio51", "gpio52", "gpio53", "gpio54";
+ 			function = "gpio";
+-		};
+-		pinconf {
+-			pins = "gpio84", "gpio85";
+ 			drive-strength = <2>;
+-			bias-disable;
++			bias-pull-down;
+ 		};
+ 	};
+ 
+-	riva_fm_pin_a: riva-fm-active {
++	riva_fm_pin_a: riva-fm-active-state {
+ 		pins = "gpio14", "gpio15";
+ 		function = "riva_fm";
+ 	};
+ 
+-	riva_bt_pin_a: riva-bt-active {
++	riva_bt_pin_a: riva-bt-active-state {
+ 		pins = "gpio16", "gpio17";
+ 		function = "riva_bt";
+ 	};
+ 
+-	riva_wlan_pin_a: riva-wlan-active {
++	riva_wlan_pin_a: riva-wlan-active-state {
+ 		pins = "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
+ 		function = "riva_wlan";
+ 
+@@ -320,22 +220,24 @@ riva_wlan_pin_a: riva-wlan-active {
+ 		bias-pull-down;
+ 	};
+ 
+-	hdmi_pinctrl: hdmi-pinctrl {
+-		mux {
+-			pins = "gpio70", "gpio71", "gpio72";
+-			function = "hdmi";
+-		};
+-
+-		pinconf_ddc {
++	hdmi_pinctrl: hdmi-pinctrl-state {
++		ddc-pins {
+ 			pins = "gpio70", "gpio71";
++			function = "hdmi";
+ 			bias-pull-up;
+ 			drive-strength = <2>;
+ 		};
+ 
+-		pinconf_hpd {
++		hpd-pins {
+ 			pins = "gpio72";
++			function = "hdmi";
+ 			bias-pull-down;
+ 			drive-strength = <16>;
+ 		};
+ 	};
++
++	ps_hold_default_state: ps-hold-default-state {
++		pins = "gpio78";
++		function = "ps_hold";
++	};
+ };
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts
+index 2412aa3e3e8d..7752f07973f9 100644
+--- a/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064-sony-xperia-lagan-yuga.dts
+@@ -373,21 +373,21 @@ &sdcc3 {
+ 	cd-gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
+ 
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sdcc3_pins>, <&sdcc3_cd_pin_a>;
++	pinctrl-0 = <&sdcc3_default_state>, <&sdcc3_cd_pin_a>;
+ 
+ 	status = "okay";
+ };
+ 
+ &tlmm_pinmux {
+-	gsbi5_uart_pin_a: gsbi5-uart-pin-active {
+-		rx {
++	gsbi5_uart_pin_a: gsbi5-uart-pin-active-state {
++		rx-pins {
+ 			pins = "gpio52";
+ 			function = "gsbi5";
+ 			drive-strength = <2>;
+ 			bias-pull-up;
+ 		};
+ 
+-		tx {
++		tx-pins {
+ 			pins = "gpio51";
+ 			function = "gsbi5";
+ 			drive-strength = <4>;
+@@ -396,7 +396,7 @@ tx {
+ 	};
+ 
+ 
+-	sdcc3_cd_pin_a: sdcc3-cd-pin-active {
++	sdcc3_cd_pin_a: sdcc3-cd-pin-active-state {
+ 		pins = "gpio26";
+ 		function = "gpio";
+ 
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
+index 769e151747c3..00f273ffea9c 100644
+--- a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
+@@ -302,7 +302,7 @@ tlmm_pinmux: pinctrl@800000 {
+ 			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&ps_hold>;
++			pinctrl-0 = <&ps_hold_default_state>;
+ 		};
+ 
+ 		sfpb_wrapper_mutex: syscon@1200000 {
+@@ -435,8 +435,8 @@ gsbi1_serial: serial@12450000 {
+ 
+ 			gsbi1_i2c: i2c@12460000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+-				pinctrl-0 = <&i2c1_pins>;
+-				pinctrl-1 = <&i2c1_pins_sleep>;
++				pinctrl-0 = <&i2c1_default_state>;
++				pinctrl-1 = <&i2c1_sleep_state>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x12460000 0x1000>;
+ 				interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
+@@ -465,8 +465,8 @@ gsbi2: gsbi@12480000 {
+ 			gsbi2_i2c: i2c@124a0000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+ 				reg = <0x124a0000 0x1000>;
+-				pinctrl-0 = <&i2c2_pins>;
+-				pinctrl-1 = <&i2c2_pins_sleep>;
++				pinctrl-0 = <&i2c2_default_state>;
++				pinctrl-1 = <&i2c2_sleep_state>;
+ 				pinctrl-names = "default", "sleep";
+ 				interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
+@@ -489,8 +489,8 @@ gsbi3: gsbi@16200000 {
+ 			ranges;
+ 			gsbi3_i2c: i2c@16280000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+-				pinctrl-0 = <&i2c3_pins>;
+-				pinctrl-1 = <&i2c3_pins_sleep>;
++				pinctrl-0 = <&i2c3_default_state>;
++				pinctrl-1 = <&i2c3_sleep_state>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16280000 0x1000>;
+ 				interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
+@@ -528,8 +528,8 @@ gsbi4_serial: serial@16340000 {
+ 
+ 			gsbi4_i2c: i2c@16380000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+-				pinctrl-0 = <&i2c4_pins>;
+-				pinctrl-1 = <&i2c4_pins_sleep>;
++				pinctrl-0 = <&i2c4_default_state>;
++				pinctrl-1 = <&i2c4_sleep_state>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16380000 0x1000>;
+ 				interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+@@ -565,8 +565,8 @@ gsbi5_spi: spi@1a280000 {
+ 				compatible = "qcom,spi-qup-v1.1.1";
+ 				reg = <0x1a280000 0x1000>;
+ 				interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
+-				pinctrl-0 = <&spi5_default>;
+-				pinctrl-1 = <&spi5_sleep>;
++				pinctrl-0 = <&spi5_default_state>;
++				pinctrl-1 = <&spi5_sleep_state>;
+ 				pinctrl-names = "default", "sleep";
+ 				clocks = <&gcc GSBI5_QUP_CLK>, <&gcc GSBI5_H_CLK>;
+ 				clock-names = "core", "iface";
+@@ -599,8 +599,8 @@ gsbi6_serial: serial@16540000 {
+ 
+ 			gsbi6_i2c: i2c@16580000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+-				pinctrl-0 = <&i2c6_pins>;
+-				pinctrl-1 = <&i2c6_pins_sleep>;
++				pinctrl-0 = <&i2c6_default_state>;
++				pinctrl-1 = <&i2c6_sleep_state>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16580000 0x1000>;
+ 				interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
+@@ -635,8 +635,8 @@ gsbi7_serial: serial@16640000 {
+ 
+ 			gsbi7_i2c: i2c@16680000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+-				pinctrl-0 = <&i2c7_pins>;
+-				pinctrl-1 = <&i2c7_pins_sleep>;
++				pinctrl-0 = <&i2c7_default_state>;
++				pinctrl-1 = <&i2c7_sleep_state>;
+ 				pinctrl-names = "default", "sleep";
+ 				reg = <0x16680000 0x1000>;
+ 				interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
+@@ -945,7 +945,7 @@ sdcc4: mmc@121c0000 {
+ 			dmas = <&sdcc4bam 2>, <&sdcc4bam 1>;
+ 			dma-names = "tx", "rx";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&sdc4_gpios>;
++			pinctrl-0 = <&sdc4_default_state>;
+ 		};
+ 
+ 		sdcc4bam: dma-controller@121c2000 {
+@@ -962,7 +962,7 @@ sdcc1: mmc@12400000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&sdcc1_pins>;
++			pinctrl-0 = <&sdcc1_default_state>;
+ 			arm,primecell-periphid = <0x00051180>;
+ 			reg = <0x12400000 0x2000>;
+ 			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.45.2
 
-Can you fix that? And, while at it, also rebase the patch against v6.10-rc1
-so it applies cleanly against my SH Linux tree?
-
-Besides, I have tested the patch and I can confirm that my J2 board still
-boots fine with the patch applied.
-
-Sorry for being so super-late with the review. I hope you can still send
-an updated patch by tomorrow or Saturday.
-
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
