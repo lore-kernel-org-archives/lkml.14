@@ -1,215 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB52315DBD8;
-	Thu, 11 Jul 2024 12:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7FA1E892
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 12:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720702204; cv=none; b=D36+87KYQGA5oOHx861yQnsz22SrejUDFN77VyIJqll+pzBZmTinT4rp1WylF2SfSjPa0yrlgqaiKTE36t4ZPUZ7xk5emlc8NQw6388nv5l9dRgPdSd8DGTEgOJZZsM/UoE9O/yFWjCPYCdE+kRaFHk6zPso+gYw/hs/tUAD9vY=
+	t=1720702331; cv=none; b=XoKdfGaFEn18sIWjkEbmLhjH8rFTsuD0PO9p2V3Ifv+qVQup1q+uVu4k8mMjuzdjX4Swz6CXGv5WtkGgArfBAJStEkV2+5mdp5/30HxJ9E8Qn0YYMfTB8joyLUaONkoEi5LAA2CtB5ntZSgh0tOiQe5Vdd48is7MpiRAANzaGNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720702204; c=relaxed/simple;
-	bh=LChaZQrDDIvn0psEh8DZJO9LEOgGVb1xHMb/crsN88M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EuiCQNxF9ge+4cOGg7LkGv6mfFOewUZi+eR4AcxoZwZ1Yc0yRnymWViZrieBy39MPHNY8voZFFSfDoXvhuAP+v52K+mkAZIax+zOHJz4gWutPEfRCJoooLX0CDV3FULpClP04RLc1EVac6vOvJnw0yj93EZ+GaQTButRHhfuRPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZ3toTfq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZ3toTfq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3E2B4C4AF0A;
-	Thu, 11 Jul 2024 12:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720702204;
-	bh=LChaZQrDDIvn0psEh8DZJO9LEOgGVb1xHMb/crsN88M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=bZ3toTfq37IOsGeGswVa2TiiC3WZnEZPBakMzYZBaSP+dHzanLvdSYBDihohKZ+/G
-	 NPzrFkun/bDfo/sTxarufr4Mu8jDj1MhzJImWOHjAIaIb0E9FnWOZJJxcTAWDUxrKk
-	 EInjlRq3rSGQmEMH5nFBEivvyq0qIr7pu3vBi5zqQsGo6EYEBBdc3Vu2qwjDI6QYp1
-	 8v5B3dfxSatal9gl/YZQm6Fcb+LtBUjFhrhoYx9OIzJ/ImPQgrJjN3eJ8Lq09Iwtxk
-	 ZaDEMarBQ0HQw7sKN7NWiWXdaDPDSFJnijZI9USbWKviaXcEOGpk5JcFq09b/x/EYX
-	 0+D88HXVUSKkg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B48BC3DA4D;
-	Thu, 11 Jul 2024 12:50:04 +0000 (UTC)
-From: Pieterjan Camerlynck via B4 Relay <devnull+pieterjanca.gmail.com@kernel.org>
-Date: Thu, 11 Jul 2024 14:49:51 +0200
-Subject: [PATCH v4 2/2] leds: leds-pca995x: Add support for NXP PCA9956B
+	s=arc-20240116; t=1720702331; c=relaxed/simple;
+	bh=EeZp5cBT2dg/F6gWl/xazDokgGm++c0kuRd4tNsbtMQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eTMmJPxjdMoNgi9uiUjXaxsFPOeDkoYLNx4f3lPE0wSn7yMwFmk2nkkKbPC4e3+l1eZKsJYhOW516O5QS47fWvkanm8anYw4/EBdT9otbJtRzoLlT3iGd2pmeLHVYsNoID5moDlLBfbR+0LmqY+/9xpXtDkx+q0A9plmRbI+kzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WKZNj65nhznZvB;
+	Thu, 11 Jul 2024 20:51:33 +0800 (CST)
+Received: from dggpeml500003.china.huawei.com (unknown [7.185.36.200])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0861F180087;
+	Thu, 11 Jul 2024 20:52:03 +0800 (CST)
+Received: from huawei.com (10.44.142.84) by dggpeml500003.china.huawei.com
+ (7.185.36.200) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
+ 2024 20:52:02 +0800
+From: Yu Liao <liaoyu15@huawei.com>
+To: <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>
+CC: <liaoyu15@huawei.com>, <liwei391@huawei.com>, <wangxiongfeng2@huawei.com>,
+	<yangyicong@huawei.com>, <frederic@kernel.org>, <mingo@kernel.org>
+Subject: [PATCH v2] tick/broadcast: Ensure the timer device of hrtimer broadcast is enabled
+Date: Thu, 11 Jul 2024 20:48:43 +0800
+Message-ID: <20240711124843.64167-1-liaoyu15@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240711-pca995x-v4-2-702a67148065@gmail.com>
-References: <20240711-pca995x-v4-0-702a67148065@gmail.com>
-In-Reply-To: <20240711-pca995x-v4-0-702a67148065@gmail.com>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Isai Gaspar <isaiezequiel.gaspar@nxp.com>, Marek Vasut <marex@denx.de>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Pieterjan Camerlynck <pieterjanca@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720702203; l=4852;
- i=pieterjanca@gmail.com; s=20240709; h=from:subject:message-id;
- bh=T4iJuBVE1eU6/XQMFNfp3e4U02iQNfiueccUGicFjdY=;
- b=dM5AR45rO16uxS9wb8YOLntCo6aQIxBImqozba3Dg5YYianG3AQ1qdQexYHr4ixwL5o9kv4HK
- ZJ9CqNClfIdAtpZsdPIMFR7Tj0yPx2FJkWxBWfdzJlyvyp92JhA2JlN
-X-Developer-Key: i=pieterjanca@gmail.com; a=ed25519;
- pk=gSAHfvqQjVhNa1MhUClqbt7d3S+fviKz6FdQVaWFRyM=
-X-Endpoint-Received: by B4 Relay for pieterjanca@gmail.com/20240709 with
- auth_id=182
-X-Original-From: Pieterjan Camerlynck <pieterjanca@gmail.com>
-Reply-To: pieterjanca@gmail.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500003.china.huawei.com (7.185.36.200)
 
-From: Pieterjan Camerlynck <pieterjanca@gmail.com>
+It was found that running the LTP hotplug stress test on a aarch64
+machine could produce rcu_sched stall warnings.
 
-Add support for PCA9956B chip, which belongs to the same family.
+The issue is the following:
 
-This chip features 24 instead of 16 outputs, so add a chipdef struct to
-deal with the different register layouts.
+CPU1 (owns the broadcast hrtimer)	CPU2
 
-Reviewed-by: Marek Vasut <marex@denx.de>
-Signed-off-by: Pieterjan Camerlynck <pieterjanca@gmail.com>
+				tick_broadcast_enter()
+				  //shutdown local timer device
+				  broadcast_shutdown_local()
+				...
+				tick_broadcast_exit()
+				  clockevents_switch_state(dev, CLOCK_EVT_STATE_ONESHOT)
+				  //timer device remains shutdown
+				  cpumask_set_cpu(cpu, tick_broadcast_force_mask)
+
+				initiates offlining of CPU1
+take_cpu_down()
+/*
+ * CPU1 shuts down and does not
+ * send broadcast IPI anymore
+ */
+				takedown_cpu()
+				  hotplug_cpu__broadcast_tick_pull()
+				    //move broadcast hrtimer to this CPU
+				    clockevents_program_event()
+				      bc_set_next()
+					hrtimer_start()
+					/*
+					 * timer device remains shutdown,
+					 * because only the first expiring
+					 * timer will trigger clockevent
+					 * device reprogramming
+					 */
+
+What happens is that CPU2 exits broadcast mode with force bit set, then
+we don't reprogram the local timer device and expect to handle the
+expired event by broadcast mechanism, but this can not be done because
+CPU1 is offlined by CPU2. We switch the clockevent to ONESHOT state,
+but some device like arm arch timer don't implement set_state_oneshot
+handler, so the switch operation does nothing but change the value
+of dev->state_use_accessors.
+
+After CPU2 takes over the broadcast duty, CPU2 is also unable to handle
+broadcasting by itself because the local timer device is still shutdown,
+due to only the first expiring timer will trigger clockevent device
+reprogramming. The worst result is all CPUs are stucked.
+
+Fix this issue by reprogramming the local timer device if the clockevent
+device of the CPU that owns broadcast timer is shutdown. As we owns
+broadcast timer, clear the force mask bit.
+
+Signed-off-by: Yu Liao <liaoyu15@huawei.com>
 ---
- drivers/leds/leds-pca995x.c | 59 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 39 insertions(+), 20 deletions(-)
+Changes in v2:
+ - Move the check to hotplug_cpu__broadcast_tick_pull()
+ - Remove the conditon 'expires >= next_event'
+ - Link to v1: https://lore.kernel.org/all/20231218025844.55675-1-liaoyu15@huawei.com/
 
-diff --git a/drivers/leds/leds-pca995x.c b/drivers/leds/leds-pca995x.c
-index 78215dff1499..686b77772cce 100644
---- a/drivers/leds/leds-pca995x.c
-+++ b/drivers/leds/leds-pca995x.c
-@@ -19,10 +19,6 @@
- #define PCA995X_MODE1			0x00
- #define PCA995X_MODE2			0x01
- #define PCA995X_LEDOUT0			0x02
--#define PCA9955B_PWM0			0x08
--#define PCA9952_PWM0			0x0A
--#define PCA9952_IREFALL			0x43
--#define PCA9955B_IREFALL		0x45
- 
- /* Auto-increment disabled. Normal mode */
- #define PCA995X_MODE1_CFG		0x00
-@@ -34,17 +30,38 @@
- #define PCA995X_LDRX_MASK		0x3
- #define PCA995X_LDRX_BITS		2
- 
--#define PCA995X_MAX_OUTPUTS		16
-+#define PCA995X_MAX_OUTPUTS		24
- #define PCA995X_OUTPUTS_PER_REG		4
- 
- #define PCA995X_IREFALL_FULL_CFG	0xFF
- #define PCA995X_IREFALL_HALF_CFG	(PCA995X_IREFALL_FULL_CFG / 2)
- 
--#define PCA995X_TYPE_NON_B		0
--#define PCA995X_TYPE_B			1
--
- #define ldev_to_led(c)	container_of(c, struct pca995x_led, ldev)
- 
-+struct pca995x_chipdef {
-+	unsigned int num_leds;
-+	u8 pwm_base;
-+	u8 irefall;
-+};
-+
-+static const struct pca995x_chipdef pca9952_chipdef = {
-+	.num_leds	= 16,
-+	.pwm_base	= 0x0a,
-+	.irefall	= 0x43,
-+};
-+
-+static const struct pca995x_chipdef pca9955b_chipdef = {
-+	.num_leds	= 16,
-+	.pwm_base	= 0x08,
-+	.irefall	= 0x45,
-+};
-+
-+static const struct pca995x_chipdef pca9956b_chipdef = {
-+	.num_leds	= 24,
-+	.pwm_base	= 0x0a,
-+	.irefall	= 0x40,
-+};
-+
- struct pca995x_led {
- 	unsigned int led_no;
- 	struct led_classdev ldev;
-@@ -54,7 +71,7 @@ struct pca995x_led {
- struct pca995x_chip {
- 	struct regmap *regmap;
- 	struct pca995x_led leds[PCA995X_MAX_OUTPUTS];
--	int btype;
-+	const struct pca995x_chipdef *chipdef;
- };
- 
- static int pca995x_brightness_set(struct led_classdev *led_cdev,
-@@ -62,10 +79,11 @@ static int pca995x_brightness_set(struct led_classdev *led_cdev,
+ kernel/time/tick-broadcast.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/kernel/time/tick-broadcast.c b/kernel/time/tick-broadcast.c
+index 771d1e040303..0edff1e46b7c 100644
+--- a/kernel/time/tick-broadcast.c
++++ b/kernel/time/tick-broadcast.c
+@@ -1141,6 +1141,7 @@ void tick_broadcast_switch_to_oneshot(void)
+ #ifdef CONFIG_HOTPLUG_CPU
+ void hotplug_cpu__broadcast_tick_pull(int deadcpu)
  {
- 	struct pca995x_led *led = ldev_to_led(led_cdev);
- 	struct pca995x_chip *chip = led->chip;
-+	const struct pca995x_chipdef *chipdef = chip->chipdef;
- 	u8 ledout_addr, pwmout_addr;
- 	int shift, ret;
++	struct tick_device *td = this_cpu_ptr(&tick_cpu_device);
+ 	struct clock_event_device *bc;
+ 	unsigned long flags;
  
--	pwmout_addr = (chip->btype ? PCA9955B_PWM0 : PCA9952_PWM0) + led->led_no;
-+	pwmout_addr = chipdef->pwm_base + led->led_no;
- 	ledout_addr = PCA995X_LEDOUT0 + (led->led_no / PCA995X_OUTPUTS_PER_REG);
- 	shift = PCA995X_LDRX_BITS * (led->led_no % PCA995X_OUTPUTS_PER_REG);
+@@ -1148,6 +1149,21 @@ void hotplug_cpu__broadcast_tick_pull(int deadcpu)
+ 	bc = tick_broadcast_device.evtdev;
  
-@@ -104,11 +122,12 @@ static int pca995x_probe(struct i2c_client *client)
- 	struct fwnode_handle *led_fwnodes[PCA995X_MAX_OUTPUTS] = { 0 };
- 	struct fwnode_handle *np, *child;
- 	struct device *dev = &client->dev;
-+	const struct pca995x_chipdef *chipdef;
- 	struct pca995x_chip *chip;
- 	struct pca995x_led *led;
--	int i, btype, reg, ret;
-+	int i, reg, ret;
- 
--	btype = (unsigned long)device_get_match_data(&client->dev);
-+	chipdef = device_get_match_data(&client->dev);
- 
- 	np = dev_fwnode(dev);
- 	if (!np)
-@@ -118,7 +137,7 @@ static int pca995x_probe(struct i2c_client *client)
- 	if (!chip)
- 		return -ENOMEM;
- 
--	chip->btype = btype;
-+	chip->chipdef = chipdef;
- 	chip->regmap = devm_regmap_init_i2c(client, &pca995x_regmap);
- 	if (IS_ERR(chip->regmap))
- 		return PTR_ERR(chip->regmap);
-@@ -170,21 +189,21 @@ static int pca995x_probe(struct i2c_client *client)
- 		return ret;
- 
- 	/* IREF Output current value for all LEDn outputs */
--	return regmap_write(chip->regmap,
--			    btype ? PCA9955B_IREFALL : PCA9952_IREFALL,
--			    PCA995X_IREFALL_HALF_CFG);
-+	return regmap_write(chip->regmap, chipdef->irefall, PCA995X_IREFALL_HALF_CFG);
- }
- 
- static const struct i2c_device_id pca995x_id[] = {
--	{ "pca9952", .driver_data = (kernel_ulong_t)PCA995X_TYPE_NON_B },
--	{ "pca9955b", .driver_data = (kernel_ulong_t)PCA995X_TYPE_B },
-+	{ "pca9952", .driver_data = (kernel_ulong_t)&pca9952_chipdef },
-+	{ "pca9955b", .driver_data = (kernel_ulong_t)&pca9955b_chipdef },
-+	{ "pca9956b", .driver_data = (kernel_ulong_t)&pca9956b_chipdef },
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, pca995x_id);
- 
- static const struct of_device_id pca995x_of_match[] = {
--	{ .compatible = "nxp,pca9952",  .data = (void *)PCA995X_TYPE_NON_B },
--	{ .compatible = "nxp,pca9955b", .data = (void *)PCA995X_TYPE_B },
-+	{ .compatible = "nxp,pca9952", .data = &pca9952_chipdef },
-+	{ .compatible = "nxp,pca9955b", . data = &pca9955b_chipdef },
-+	{ .compatible = "nxp,pca9956b", .data = &pca9956b_chipdef },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, pca995x_of_match);
-
+ 	if (bc && broadcast_needs_cpu(bc, deadcpu)) {
++		/*
++		 * If the broadcast force bit is set, then we haven't
++		 * reprogrammed local timer device, so it remains shutdowned.
++		 * clockevents_program_event() will start a hrtimer when
++		 * the broadcast device is based on hrtimer, and only the
++		 * first expiring timer will trigger clockevent device
++		 * reprogramming.
++		 *
++		 * Reprogram the cpu local timer device to avoid it being shut down.
++		 */
++		if (tick_check_broadcast_expired()) {
++			cpumask_clear_cpu(smp_processor_id(), tick_broadcast_force_mask);
++			tick_program_event(td->evtdev->next_event, 1);
++		}
++
+ 		/* This moves the broadcast assignment to this CPU: */
+ 		clockevents_program_event(bc, bc->next_event, 1);
+ 	}
 -- 
-2.45.2
-
+2.33.0
 
