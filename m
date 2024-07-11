@@ -1,137 +1,132 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E693712FB02
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACBD12FF71
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720681898; cv=none; b=MN1XlMxxfEtqGADuDvd9OYK1LfS7guSLpAU7qquQxDw85CZFL2fNKQzwnY5wdni3N3enyb18/EvyvDgxfiNfc44e0TmpA0Yc6kC8L36WplNvnxWVJl4iKRQuBizZkeEUdjWpinlzHZ3aydZBCTxaQpO6ltYRj5lVgsT8mZduquk=
+	t=1720682078; cv=none; b=IzxTOMlxgyMv/n9hCUf4dlNDnbrOcBxO0cE88y97Jfa6OCt4ACyXABTNxtAwbIk0+5kw/uV1ILFjrfEiaMhIX67xta1PRCDbGeCe2c7oUg57/NCh6sE2XKhHmIQMbPcN93s1ENozxKQm8a3t1I74MczlspRFxKSczLiI522VGj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720681898; c=relaxed/simple;
-	bh=VIAV0i8bfBGJmr2ASHi9uepl/tgYVYGPQgjFhw98zcU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pw31RAT6Z2DFfUmtenEqG/ENQCjgjXIdFywtSmXGPoC3wPa6ZKPKTBGXQ9Qu+ZU6muJubKCWOz8G/Gdedm9/Z1R6uJyf3wqn8p0tgcZ8VcVSdbM2Bdp4dK40KDx3FPR+FOsZTK+qMdJwGxCcmpYXnBKKUmIo3mM6wOxm4PcLRyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LwArbRcz; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LwArbRcz"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso4466221fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 00:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720681895; x=1721286695; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a8FpGfJhKHRH51INGqjbfreZcK/LNo4iyWKefVeCz8o=;
-        b=LwArbRczHX09SzBLu2F7ctkxsGY5eoxRiYvWxDCwK5pbm/8HTW+B37ki7KuI6UZmxv
-         O51el9nqk5wZ6mHIBltTQuDZwJ3uTpMYpmv8UfysS8mWEw4hA7reNGCNUDJin5CQvKHl
-         sYYvkZ7dZBOmj+eY38AcM+qqACgSPPFReFGvOHiDhV1ErtiNMrJlzoKnpe0TxXxrung+
-         ccHfuyU5kRkQcYmz6hHl488uLzJEQeCDof/tJOHu+DAPzCWT+MgMG8z1RjTJdUIvrnTK
-         2OWJ4rUqc5KTIcr5lAH9EEjG5ICr4VNbzQnsFj57lMl3HrGgp0AwUHOCgBhkgTG8KdxA
-         t/1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720681895; x=1721286695;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a8FpGfJhKHRH51INGqjbfreZcK/LNo4iyWKefVeCz8o=;
-        b=PeKPjgN8JQ9zueLuUyFT5Ie1L9YWg0+Q9/fIOv65CY2A19dxSh9qTfTzFr0mTLW/Tg
-         HWujiKuKc+mid2X3uzDno6L4VKtSEdzp8hZ7AVneauDGsW+ucEglU33yq4qfJC7FTpst
-         PPxCzEO+BtrlLgBcvSMLpd9lTAQyOEV345iM+wL3CnJUCvz/xb14yMQdTcQmtAxV+POv
-         CHEbQUisWQ14+zZLuvEeolyr2TkR6FRERj8RFSQ9rrv5f4guhcsQVgWg95251Ks1rQ91
-         zcRMWic/LDRjIgsI1hYMy8PeufmLklWUnEIKL2lys+CH/3VQIcYNeDqK+6WnaTkqL9zO
-         dGow==
-X-Forwarded-Encrypted: i=1; AJvYcCW/uMUZw89g0cij17boaPT8YDV9aqndhenbmVlKfztPSVIfneZUssordnWHPxcHZD2EyRB6ub5647/uUqz36aSlMKWMg1wx70rAD6fz
-X-Gm-Message-State: AOJu0Yw5bTv7MgsocMc7DRl4tW/jPrI+k/Aoqu/LWnmwkjztlSMps8aA
-	lz99Kt+Yg1lWOUz6cFA9qHkdyiDQUinz1BK3WjQU7hTJnz8kw1s5kg9qVSDlqoy68FfMbvwj9GT
-	ZbdBjK5+/DaEtoeu4Bo42j7cM9T+wc9OAiF4PEg==
-X-Google-Smtp-Source: AGHT+IHcmrV3Xm79/GKLrO5u/EIzHMqb39TGt7V4F8gME6OClLLzo6aZsZ4SHb9OWD9Ho4J3EkV7V/Xbc5AIozEv7nY=
-X-Received: by 2002:a2e:9495:0:b0:2ec:1ce8:9a7d with SMTP id
- 38308e7fff4ca-2eeb30b83f4mr49649831fa.4.1720681894945; Thu, 11 Jul 2024
- 00:11:34 -0700 (PDT)
+	s=arc-20240116; t=1720682078; c=relaxed/simple;
+	bh=umgp6A9ocfsCRENUP33QgEjljReB72E+CZe+xkKrGfY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TsI/bkmQOsC/gjwqZxb8zZpsZ5l2IVZre0YBb43UdLOzdij5ieT2lhXsz8NNNOqJ/JCb2tKwDdWlsnVTzxPcbJFz3GIVqn/VVrIBGNToGx3sbRSnIhN8wEVD57IAVcWzBZ2y52bZPeW2dd8HC6rMlbCo7gqj3LY6BAhkJA6M5HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4WKQss6qrbz1xtVx;
+	Thu, 11 Jul 2024 15:12:49 +0800 (CST)
+Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1D5E014010C;
+	Thu, 11 Jul 2024 15:14:26 +0800 (CST)
+Received: from huawei.com (10.173.127.72) by kwepemd200019.china.huawei.com
+ (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 11 Jul
+ 2024 15:14:25 +0800
+From: Miaohe Lin <linmiaohe@huawei.com>
+To: <akpm@linux-foundation.org>, <muchun.song@linux.dev>
+CC: <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/hugetlb: fix possible recursive locking detected warning
+Date: Thu, 11 Jul 2024 15:10:01 +0800
+Message-ID: <20240711071001.3475337-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709-hci_qca_refactor-v3-0-5f48ca001fed@linaro.org>
- <172064103479.11923.11962118903624442308.git-patchwork-notify@kernel.org>
- <CABBYNZKvSF9h1K29oex3kXm+2h+62gwJ8+YJPM0Orap6_xVDTQ@mail.gmail.com> <05ae1a45-107e-4d01-9cfe-648b52cbb364@linaro.org>
-In-Reply-To: <05ae1a45-107e-4d01-9cfe-648b52cbb364@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 11 Jul 2024 09:11:23 +0200
-Message-ID: <CAMRc=MfgBhMZvBD70bAxc1Lw-zTU_7ByaxBqPfgD0WZ6Hq+MOQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Bluetooth: hci_qca: use the power sequencer for wcn7850
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: patchwork-bot+bluetooth@kernel.org, marcel@holtmann.org, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	quic_bgodavar@quicinc.com, quic_rjliao@quicinc.com, andersson@kernel.org, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, bartosz.golaszewski@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200019.china.huawei.com (7.221.188.193)
 
-On Thu, Jul 11, 2024 at 12:08=E2=80=AFAM Konrad Dybcio <konrad.dybcio@linar=
-o.org> wrote:
->
-> On 10.07.2024 10:43 PM, Luiz Augusto von Dentz wrote:
-> > Hi Bartosz,
-> >
-> > On Wed, Jul 10, 2024 at 3:50=E2=80=AFPM <patchwork-bot+bluetooth@kernel=
-.org> wrote:
-> >>
-> >> Hello:
-> >>
-> >> This series was applied to bluetooth/bluetooth-next.git (master)
-> >> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-> >>
-> >> On Tue, 09 Jul 2024 14:18:31 +0200 you wrote:
-> >>> The following series extend the usage of the power sequencing subsyst=
-em
-> >>> in the hci_qca driver.
-> >>>
-> >>> The end goal is to convert the entire driver to be exclusively pwrseq=
--based
-> >>> and simplify it in the process. However due to a large number of user=
-s we
-> >>> need to be careful and consider every case separately.
-> >>>
-> >>> [...]
-> >>
-> >> Here is the summary with links:
-> >>   - [v3,1/6] dt-bindings: bluetooth: qualcomm: describe the inputs fro=
-m PMU for wcn7850
-> >>     https://git.kernel.org/bluetooth/bluetooth-next/c/e1c54afa8526
-> >>   - [v3,2/6] Bluetooth: hci_qca: schedule a devm action for disabling =
-the clock
-> >>     https://git.kernel.org/bluetooth/bluetooth-next/c/a887c8dede8e
-> >>   - [v3,3/6] Bluetooth: hci_qca: unduplicate calls to hci_uart_registe=
-r_device()
-> >>     https://git.kernel.org/bluetooth/bluetooth-next/c/cdd10964f76f
-> >>   - [v3,4/6] Bluetooth: hci_qca: make pwrseq calls the default if avai=
-lable
-> >>     https://git.kernel.org/bluetooth/bluetooth-next/c/958a33c3f9fc
-> >>   - [v3,5/6] Bluetooth: hci_qca: use the power sequencer for wcn7850 a=
-nd wcn6855
-> >>     https://git.kernel.org/bluetooth/bluetooth-next/c/4fa54d8731ec
-> >>   - [v3,6/6] arm64: dts: qcom: sm8650-qrd: use the PMU to power up blu=
-etooth
-> >>     (no matching commit)
-> >
-> > Last one doesn't apply so you will probably need to rebase or
-> > something if it really needs to go thru bluetooth-next.
->
-> Bartosz forgot to mention it should go through qcom
->
-> Konrad
+When tries to demote 1G hugetlb folios, a lockdep warning is observed:
 
-Yes, sorry. That's alright, if patches 1-5/6 make v6.11 then I'll just
-resend patch 6/6 to Bjorn directly next release and we'll avoid a
-cross-tree merge this way.
+============================================
+WARNING: possible recursive locking detected
+6.10.0-rc6-00452-ga4d0275fa660-dirty #79 Not tainted
+--------------------------------------------
+bash/710 is trying to acquire lock:
+ffffffff8f0a7850 (&h->resize_lock){+.+.}-{3:3}, at: demote_store+0x244/0x460
 
-Thanks!
-Bart
+but task is already holding lock:
+ffffffff8f0a6f48 (&h->resize_lock){+.+.}-{3:3}, at: demote_store+0xae/0x460
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&h->resize_lock);
+  lock(&h->resize_lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+4 locks held by bash/710:
+ #0: ffff8f118439c3f0 (sb_writers#5){.+.+}-{0:0}, at: ksys_write+0x64/0xe0
+ #1: ffff8f11893b9e88 (&of->mutex#2){+.+.}-{3:3}, at: kernfs_fop_write_iter+0xf8/0x1d0
+ #2: ffff8f1183dc4428 (kn->active#98){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x100/0x1d0
+ #3: ffffffff8f0a6f48 (&h->resize_lock){+.+.}-{3:3}, at: demote_store+0xae/0x460
+
+stack backtrace:
+CPU: 3 PID: 710 Comm: bash Not tainted 6.10.0-rc6-00452-ga4d0275fa660-dirty #79
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x68/0xa0
+ __lock_acquire+0x10f2/0x1ca0
+ lock_acquire+0xbe/0x2d0
+ __mutex_lock+0x6d/0x400
+ demote_store+0x244/0x460
+ kernfs_fop_write_iter+0x12c/0x1d0
+ vfs_write+0x380/0x540
+ ksys_write+0x64/0xe0
+ do_syscall_64+0xb9/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa61db14887
+RSP: 002b:00007ffc56c48358 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fa61db14887
+RDX: 0000000000000002 RSI: 000055a030050220 RDI: 0000000000000001
+RBP: 000055a030050220 R08: 00007fa61dbd1460 R09: 000000007fffffff
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+R13: 00007fa61dc1b780 R14: 00007fa61dc17600 R15: 00007fa61dc16a00
+ </TASK>
+
+Lockdep considers this an AA deadlock because the different resize_lock
+mutexes reside in the same lockdep class, but this is a false positive.
+Place them in distinct classes to avoid these warnings.
+
+Fixes: 8531fc6f52f5 ("hugetlb: add hugetlb demote page support")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ mm/hugetlb.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 45fd3bc75332..2004e6d3f7ca 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4659,6 +4659,8 @@ bool __init __attribute((weak)) arch_hugetlb_valid_size(unsigned long size)
+ 	return size == HPAGE_SIZE;
+ }
+ 
++static struct lock_class_key hugetlb_resize_keys[HUGE_MAX_HSTATE];
++
+ void __init hugetlb_add_hstate(unsigned int order)
+ {
+ 	struct hstate *h;
+@@ -4671,6 +4673,7 @@ void __init hugetlb_add_hstate(unsigned int order)
+ 	BUG_ON(order < order_base_2(__NR_USED_SUBPAGE));
+ 	h = &hstates[hugetlb_max_hstate++];
+ 	mutex_init(&h->resize_lock);
++	lockdep_set_class(&h->resize_lock, &hugetlb_resize_keys[hstate_index(h)]);
+ 	h->order = order;
+ 	h->mask = ~(huge_page_size(h) - 1);
+ 	for (i = 0; i < MAX_NUMNODES; ++i)
+-- 
+2.33.0
+
