@@ -1,417 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BAC167DA8;
-	Thu, 11 Jul 2024 14:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA53167D98
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720708487; cv=none; b=S6FAM1IoBDnZrlV6T7duDpu+/mvXotImeVqMnCLqkuWEilONF7MUHalIqKIL/b5XcyqeP9qvLhdrHAE13pqAL1dA0nhFhDRxAxaEV1bzzoJSKGJaHsSJjyxdvsfHkEyKX5AHUNs5X1oM4iGshPNj810r6Ksn0kBFDigy8kYyj7c=
+	t=1720708491; cv=none; b=haBKduU0Gb2/3e/uymjOEL5FjGNTYJ1KQr9744ciO/cI8n0tdi0eY9v2T1uaI1SY/rb7R+S0wskrI/JR8ksd2uRvQWed88W5PMyhbkreetgpTUtDyGnnNul1b+a+mpcvDmXMc6kvFSbj7FPwO3LHp1wF31WnSuarTdwQGCFxF7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720708487; c=relaxed/simple;
-	bh=u+JLQpY2OGFSvyqiP0oNI4X+ySZWmc0hNBY3OoLpvTw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BmydqMBce4r4LbHdnaF7aW6Ks8Ku7UZk+v05VFR7iJrXwm7Y/J8Zrp/Jw8NTCalSeOxctuaH9otSlOnpUOOKJgRiHY1kdZqOxzVIk0SBKgYZOVRr/e1bVHAvrGRcHVhevbz0f151LYWLS1TkMXeyi+Pipc1Qj9M/S6yNUaCm1L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9A1ZWus; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720708491; c=relaxed/simple;
+	bh=OtD5w4O17pfucl+CttlNKi56rcMH+DmgjTajFT8Nxt8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=th7PN0Xl5FozaH1Jl8i9AiKnrdVZqTjd9wyhQiMqMFoTG2TIdf8pks8109MMR74CR0/WJ62c8mxGRZIKi4fzKxS7HUcRi1iERqQl1z2hOU/ftp6z6U3CzJXOIduL/wVw86Slkukvf2Xs+TEiCt3NX1OoxfIuYp+rNMtLC+xSBLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=egmESOME; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9A1ZWus"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8490BC116B1;
-	Thu, 11 Jul 2024 14:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720708487;
-	bh=u+JLQpY2OGFSvyqiP0oNI4X+ySZWmc0hNBY3OoLpvTw=;
-	h=From:Date:Subject:To:Cc:From;
-	b=s9A1ZWus2u/s3VdNqvfq5TnQkOHcQ+E+yMcB8FG3yojvKvocStUsBpAEJnqkpVVnI
-	 NEcpIyKsKgGNll95XbRT2sH6pt1BcuJjprDmYrPGONiyNQKLs59mnBJ6y3GmaqzLBd
-	 i+feY7H7u5fNayN8vpmU+KeoaJzq3fPVQ+8Sgi7Jjcv27qHYHi+a1rID+K1r6DuMxa
-	 YuBUwV6/WlRDvup3E3H1o8B2lcf8ksTWmi8TZoFqGNQ94tzwnD6H0cASHk94zbdMGQ
-	 /XOTVo+jBrxPwEPvesKCp0AEUN8P3hNPYywJF5lDahq6XIjg0du9ElidpX2TtPAfxA
-	 GwwLEcYftnBog==
-From: Mark Brown <broonie@kernel.org>
-Date: Thu, 11 Jul 2024 15:33:28 +0100
-Subject: [PATCH] kselftest/alsa: Use card name rather than number in test
- names
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="egmESOME"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-48c2d353b01so320289137.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720708488; x=1721313288; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ia5VWAmVE202W09H7T09ZTGBTXMKlnDirEHWYCjYaBI=;
+        b=egmESOMENIPvDOX6aEbrA+yEGlCxZu3THFfqPWS7HYRF1dUhCXgH7WAfvCMU6jDgIE
+         QVDE8k7DVMBYdp6gBLx49sMw/ZiCSpu7cGSFGwiYx4nzTYfcf/LcBdp3YagqEkCq4KXw
+         oBz54KtJ1A/4VbcFUu8T7wg604bajltIns/OM13Zo264+aJBcx5cQcarcqxq2v/j9pb8
+         BbV0kCz9DhNiwQmqZRbvLB2lH3ioDIwV1ALfe7uy2a/A4PTX0hfoCsMwCuCzzBJxSu9L
+         Mo4kjtUvRl2QJ0Qq/Qb+W7TE2j2gEcedJkb/dzRV8tn6KGzhojVyG6dUxYmHkOZGhqxn
+         0pzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720708488; x=1721313288;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ia5VWAmVE202W09H7T09ZTGBTXMKlnDirEHWYCjYaBI=;
+        b=vDwYCgkSBCv2DqWCAg2/ly8LYMbRP0E8ENHtyY5mDCpgg40z4cSxwT38CUo1qiZ4/m
+         /HmQFqdNFVcxGuDa1L5Vv1lDB8eJuGVHNNOojW6I0h3iZs4XFdDAUeyliYovLTAraoH3
+         WP9FCXBZKntQ0jyVzB2rkmy1BYbK1HZ/IYEUlNxZTceTTzGUspw+ZiAhVtYP4t910ciE
+         RtZ6bSMBWmxx8G+bn/IctvQcnT+x/+B2y3jXWcDXaILF3wQPFTeiP31blBFJdGVrO8dI
+         Mua+gUw5AqYqn33b3MBTCnPtnYp9GFz/r/x+48XHtaHMhnhG0RB7AjolOvTsSu4M2U4b
+         am8A==
+X-Gm-Message-State: AOJu0YyInVDlK7JXJbMndcQXGnuSu4Uk9DQNpr8l36ZrJCqc5vCQITrp
+	LUWEuXK3eRdmmOTgTKhF6utZFOZVFMKTCni0vVIWSKtcnmLf95dgtBVGIgzlyatzgmjBI1U+0VS
+	Rv2rWXZ8mtD3HLZAoWNdrjK4RQB6PQskJqU27Kar52OWfBiwwQvodlA==
+X-Google-Smtp-Source: AGHT+IGCovsJEmu4vcWA6S0y5OBnGLGLrTJ/HdK6Mh5oMR1bLky3o6bI6znsvDSf0rf/E6g7mqNlBRzXFhPOel2+Uto=
+X-Received: by 2002:a05:6102:3713:b0:48f:dec0:b6bf with SMTP id
+ ada2fe7eead31-490320f7414mr11258733137.4.1720708487053; Thu, 11 Jul 2024
+ 07:34:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240711-alsa-kselftest-board-name-v1-1-ab5cf2dbbea6@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADftj2YC/x3MQQqDMBBG4avIrB1IJCB4ldLF1PzRoTaWjIgg3
- t3g8lu8d5KhKIyG5qSCXU3XXOHbhsZZ8gTWWE2d64LrvWdZTPhrWNIG2/izSomc5QdGEC8xhjG
- Jo9r/C5Iez/v1vq4bQlO3K2sAAAA=
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-sound@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13170; i=broonie@kernel.org;
- h=from:subject:message-id; bh=u+JLQpY2OGFSvyqiP0oNI4X+ySZWmc0hNBY3OoLpvTw=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmj+2Ekf3wRYUeio+n3/rUkalFzeUoYxJ/Da2Erwhc
- MbQDjA+JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZo/thAAKCRAk1otyXVSH0EB5B/
- sGj1T4OaXaWh/RtRN5F+4/hqe4v9bV9sFApvnwk0NpdGrvCsVzCh98D1chMighLDbtCdBX9Wbcjw09
- TFjbudmgyVi+2dMH5lObbEWMeuCYGevyOFvUkorT1OE+nE0FNZFJNgm/i8E8EJHdcNSBDsJ6cjsdbV
- NpPB/ejUDKZcISa+osgM/2mxTSwdGnXHgsB7dcGg4ip3wakezG7ZIwS6gRokJF8inAuv//1EY3ffWy
- lrAFXaBkn1CLX4e7VSlEn8RQUHdHSwt6m7lL4DltSo7HAdxdTtzf+csdxJhJ7TAKQEQYs7N6uenuLG
- DfmGpFdmHRY8dza9h2hQO9gJ7gcpAr
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 11 Jul 2024 20:04:35 +0530
+Message-ID: <CA+G9fYuCp7Q71_o74yo9ge_5-G=Ho9bC3kJdX_JvtoqWOQujkA@mail.gmail.com>
+Subject: next: arm64: defconfig: gcc-8: drivers/bluetooth/hci_qca.c:2501:2:
+ error: label at end of compound statement
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Currently for the PCM and mixer tests we report test names which identify
-the card being tested with the card number. This ensures we have unique
-names but since card numbers are dynamically assigned at runtime the names
-we end up with will often not be stable on systems with multiple cards
-especially where those cards are provided by separate modules loeaded at
-runtime. This makes it difficult for automated systems and UIs to relate
-test results between runs on affected platforms.
+The arm64 defconfig gcc-8 build failed [1] due to these warnings / errors on the
+Linux next-20230711 tag. But the gcc-13 builds pass.
 
-Address this by replacing our use of card numbers with card names which are
-more likely to be stable across runs. We use the long name since in the
-case where we have two of the same card it is more likely to include
-deduplication information (eg, HDA cards include the address/IRQ). The
-resulting information is not the most beautiful for human readers but the
-majority of kselftest output consumption is automated systems and it wasn't
-that great anyway.
+LKFT is testing older toolchain support till gcc-8.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/alsa/mixer-test.c | 76 ++++++++++++++++---------------
- tools/testing/selftests/alsa/pcm-test.c   | 35 ++++++++------
- 2 files changed, 60 insertions(+), 51 deletions(-)
+The following recent changes cause this failure.
+a887c8dede8e1 Bluetooth: hci_qca: schedule a devm action for disabling the clock
 
-diff --git a/tools/testing/selftests/alsa/mixer-test.c b/tools/testing/selftests/alsa/mixer-test.c
-index 1c04e5f638a0..df9ae3b4e2df 100644
---- a/tools/testing/selftests/alsa/mixer-test.c
-+++ b/tools/testing/selftests/alsa/mixer-test.c
-@@ -33,6 +33,7 @@
- struct card_data {
- 	snd_ctl_t *handle;
- 	int card;
-+	const char *card_name;
- 	struct pollfd pollfd;
- 	int num_ctls;
- 	snd_ctl_elem_list_t *ctls;
-@@ -91,6 +92,7 @@ static void find_controls(void)
- 		err = snd_card_get_longname(card, &card_longname);
- 		if (err != 0)
- 			card_longname = "Unknown";
-+		card_data->card_name = card_longname;
- 		ksft_print_msg("Card %d - %s (%s)\n", card,
- 			       card_name, card_longname);
- 
-@@ -389,16 +391,16 @@ static void test_ctl_get_value(struct ctl_data *ctl)
- 	/* If the control is turned off let's be polite */
- 	if (snd_ctl_elem_info_is_inactive(ctl->info)) {
- 		ksft_print_msg("%s is inactive\n", ctl->name);
--		ksft_test_result_skip("get_value.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("get_value.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	/* Can't test reading on an unreadable control */
- 	if (!snd_ctl_elem_info_is_readable(ctl->info)) {
- 		ksft_print_msg("%s is not readable\n", ctl->name);
--		ksft_test_result_skip("get_value.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("get_value.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
-@@ -413,8 +415,8 @@ static void test_ctl_get_value(struct ctl_data *ctl)
- 		err = -EINVAL;
- 
- out:
--	ksft_test_result(err >= 0, "get_value.%d.%d\n",
--			 ctl->card->card, ctl->elem);
-+	ksft_test_result(err >= 0, "get_value.%s.%d\n",
-+			 ctl->card->card_name, ctl->elem);
- }
- 
- static bool strend(const char *haystack, const char *needle)
-@@ -431,7 +433,7 @@ static void test_ctl_name(struct ctl_data *ctl)
- {
- 	bool name_ok = true;
- 
--	ksft_print_msg("%d.%d %s\n", ctl->card->card, ctl->elem,
-+	ksft_print_msg("%s.%d %s\n", ctl->card->card_name, ctl->elem,
- 		       ctl->name);
- 
- 	/* Only boolean controls should end in Switch */
-@@ -453,8 +455,8 @@ static void test_ctl_name(struct ctl_data *ctl)
- 		}
- 	}
- 
--	ksft_test_result(name_ok, "name.%d.%d\n",
--			 ctl->card->card, ctl->elem);
-+	ksft_test_result(name_ok, "name.%s.%d\n",
-+			 ctl->card->card_name, ctl->elem);
- }
- 
- static void show_values(struct ctl_data *ctl, snd_ctl_elem_value_t *orig_val,
-@@ -682,30 +684,30 @@ static void test_ctl_write_default(struct ctl_data *ctl)
- 	/* If the control is turned off let's be polite */
- 	if (snd_ctl_elem_info_is_inactive(ctl->info)) {
- 		ksft_print_msg("%s is inactive\n", ctl->name);
--		ksft_test_result_skip("write_default.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_default.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	if (!snd_ctl_elem_info_is_writable(ctl->info)) {
- 		ksft_print_msg("%s is not writeable\n", ctl->name);
--		ksft_test_result_skip("write_default.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_default.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	/* No idea what the default was for unreadable controls */
- 	if (!snd_ctl_elem_info_is_readable(ctl->info)) {
- 		ksft_print_msg("%s couldn't read default\n", ctl->name);
--		ksft_test_result_skip("write_default.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_default.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	err = write_and_verify(ctl, ctl->def_val, NULL);
- 
--	ksft_test_result(err >= 0, "write_default.%d.%d\n",
--			 ctl->card->card, ctl->elem);
-+	ksft_test_result(err >= 0, "write_default.%s.%d\n",
-+			 ctl->card->card_name, ctl->elem);
- }
- 
- static bool test_ctl_write_valid_boolean(struct ctl_data *ctl)
-@@ -815,15 +817,15 @@ static void test_ctl_write_valid(struct ctl_data *ctl)
- 	/* If the control is turned off let's be polite */
- 	if (snd_ctl_elem_info_is_inactive(ctl->info)) {
- 		ksft_print_msg("%s is inactive\n", ctl->name);
--		ksft_test_result_skip("write_valid.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_valid.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	if (!snd_ctl_elem_info_is_writable(ctl->info)) {
- 		ksft_print_msg("%s is not writeable\n", ctl->name);
--		ksft_test_result_skip("write_valid.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_valid.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
-@@ -846,16 +848,16 @@ static void test_ctl_write_valid(struct ctl_data *ctl)
- 
- 	default:
- 		/* No tests for this yet */
--		ksft_test_result_skip("write_valid.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_valid.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	/* Restore the default value to minimise disruption */
- 	write_and_verify(ctl, ctl->def_val, NULL);
- 
--	ksft_test_result(pass, "write_valid.%d.%d\n",
--			 ctl->card->card, ctl->elem);
-+	ksft_test_result(pass, "write_valid.%s.%d\n",
-+			 ctl->card->card_name, ctl->elem);
- }
- 
- static bool test_ctl_write_invalid_value(struct ctl_data *ctl,
-@@ -1027,15 +1029,15 @@ static void test_ctl_write_invalid(struct ctl_data *ctl)
- 	/* If the control is turned off let's be polite */
- 	if (snd_ctl_elem_info_is_inactive(ctl->info)) {
- 		ksft_print_msg("%s is inactive\n", ctl->name);
--		ksft_test_result_skip("write_invalid.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_invalid.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	if (!snd_ctl_elem_info_is_writable(ctl->info)) {
- 		ksft_print_msg("%s is not writeable\n", ctl->name);
--		ksft_test_result_skip("write_invalid.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_invalid.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
-@@ -1058,28 +1060,28 @@ static void test_ctl_write_invalid(struct ctl_data *ctl)
- 
- 	default:
- 		/* No tests for this yet */
--		ksft_test_result_skip("write_invalid.%d.%d\n",
--				      ctl->card->card, ctl->elem);
-+		ksft_test_result_skip("write_invalid.%s.%d\n",
-+				      ctl->card->card_name, ctl->elem);
- 		return;
- 	}
- 
- 	/* Restore the default value to minimise disruption */
- 	write_and_verify(ctl, ctl->def_val, NULL);
- 
--	ksft_test_result(pass, "write_invalid.%d.%d\n",
--			 ctl->card->card, ctl->elem);
-+	ksft_test_result(pass, "write_invalid.%s.%d\n",
-+			 ctl->card->card_name, ctl->elem);
- }
- 
- static void test_ctl_event_missing(struct ctl_data *ctl)
- {
--	ksft_test_result(!ctl->event_missing, "event_missing.%d.%d\n",
--			 ctl->card->card, ctl->elem);
-+	ksft_test_result(!ctl->event_missing, "event_missing.%s.%d\n",
-+			 ctl->card->card_name, ctl->elem);
- }
- 
- static void test_ctl_event_spurious(struct ctl_data *ctl)
- {
--	ksft_test_result(!ctl->event_spurious, "event_spurious.%d.%d\n",
--			 ctl->card->card, ctl->elem);
-+	ksft_test_result(!ctl->event_spurious, "event_spurious.%s.%d\n",
-+			 ctl->card->card_name, ctl->elem);
- }
- 
- int main(void)
-diff --git a/tools/testing/selftests/alsa/pcm-test.c b/tools/testing/selftests/alsa/pcm-test.c
-index de664dedb541..a7b1e6e876c5 100644
---- a/tools/testing/selftests/alsa/pcm-test.c
-+++ b/tools/testing/selftests/alsa/pcm-test.c
-@@ -24,6 +24,7 @@ typedef struct timespec timestamp_t;
- 
- struct card_data {
- 	int card;
-+	const char *name;
- 	pthread_t thread;
- 	struct card_data *next;
- };
-@@ -35,6 +36,7 @@ struct pcm_data {
- 	int card;
- 	int device;
- 	int subdevice;
-+	const char *card_name;
- 	snd_pcm_stream_t stream;
- 	snd_config_t *pcm_config;
- 	struct pcm_data *next;
-@@ -191,6 +193,7 @@ static void find_pcms(void)
- 		if (!card_data)
- 			ksft_exit_fail_msg("Out of memory\n");
- 		card_data->card = card;
-+		card_data->name = card_longname;
- 		card_data->next = card_list;
- 		card_list = card_data;
- 
-@@ -232,6 +235,7 @@ static void find_pcms(void)
- 					pcm_data->card = card;
- 					pcm_data->device = dev;
- 					pcm_data->subdevice = subdev;
-+					pcm_data->card_name = card_name;
- 					pcm_data->stream = stream;
- 					pcm_data->pcm_config = conf_get_subtree(card_config, key, NULL);
- 					pcm_data->next = pcm_list;
-@@ -294,9 +298,9 @@ static void test_pcm_time(struct pcm_data *data, enum test_class class,
- 
- 	desc = conf_get_string(pcm_cfg, "description", NULL, NULL);
- 	if (desc)
--		ksft_print_msg("%s.%s.%d.%d.%d.%s - %s\n",
-+		ksft_print_msg("%s.%s.%s.%d.%d.%s - %s\n",
- 			       test_class_name, test_name,
--			       data->card, data->device, data->subdevice,
-+			       data->card_name, data->device, data->subdevice,
- 			       snd_pcm_stream_name(data->stream),
- 			       desc);
- 
-@@ -352,9 +356,9 @@ static void test_pcm_time(struct pcm_data *data, enum test_class class,
- 			old_format = format;
- 			format = snd_pcm_format_value(alt_formats[i]);
- 			if (format != SND_PCM_FORMAT_UNKNOWN) {
--				ksft_print_msg("%s.%d.%d.%d.%s.%s format %s -> %s\n",
-+				ksft_print_msg("%s.%s.%d.%d.%s.%s format %s -> %s\n",
- 						 test_name,
--						 data->card, data->device, data->subdevice,
-+						 data->card_name, data->device, data->subdevice,
- 						 snd_pcm_stream_name(data->stream),
- 						 snd_pcm_access_name(access),
- 						 snd_pcm_format_name(old_format),
-@@ -430,9 +434,9 @@ static void test_pcm_time(struct pcm_data *data, enum test_class class,
- 		goto __close;
- 	}
- 
--	ksft_print_msg("%s.%s.%d.%d.%d.%s hw_params.%s.%s.%ld.%ld.%ld.%ld sw_params.%ld\n",
-+	ksft_print_msg("%s.%s.%s.%d.%d.%s hw_params.%s.%s.%ld.%ld.%ld.%ld sw_params.%ld\n",
- 		         test_class_name, test_name,
--			 data->card, data->device, data->subdevice,
-+			 data->card_name, data->device, data->subdevice,
- 			 snd_pcm_stream_name(data->stream),
- 			 snd_pcm_access_name(access),
- 			 snd_pcm_format_name(format),
-@@ -491,9 +495,10 @@ static void test_pcm_time(struct pcm_data *data, enum test_class class,
- 		 * Anything specified as specific to this system
- 		 * should always be supported.
- 		 */
--		ksft_test_result(!skip, "%s.%s.%d.%d.%d.%s.params\n",
-+		ksft_test_result(!skip, "%s.%s.%s.%d.%d.%s.params\n",
- 				 test_class_name, test_name,
--				 data->card, data->device, data->subdevice,
-+				 data->card_name, data->device,
-+				 data->subdevice,
- 				 snd_pcm_stream_name(data->stream));
- 		break;
- 	default:
-@@ -501,14 +506,16 @@ static void test_pcm_time(struct pcm_data *data, enum test_class class,
- 	}
- 
- 	if (!skip)
--		ksft_test_result(pass, "%s.%s.%d.%d.%d.%s\n",
-+		ksft_test_result(pass, "%s.%s.%s.%d.%d.%s\n",
- 				 test_class_name, test_name,
--				 data->card, data->device, data->subdevice,
-+				 data->card_name, data->device,
-+				 data->subdevice,
- 				 snd_pcm_stream_name(data->stream));
- 	else
--		ksft_test_result_skip("%s.%s.%d.%d.%d.%s\n",
-+		ksft_test_result_skip("%s.%s.%s.%d.%d.%s\n",
- 				 test_class_name, test_name,
--				 data->card, data->device, data->subdevice,
-+				 data->card_name, data->device,
-+				 data->subdevice,
- 				 snd_pcm_stream_name(data->stream));
- 
- 	if (msg[0])
-@@ -609,8 +616,8 @@ int main(void)
- 					      conf->filename, conf->config_id);
- 
- 	for (pcm = pcm_missing; pcm != NULL; pcm = pcm->next) {
--		ksft_test_result(false, "test.missing.%d.%d.%d.%s\n",
--				 pcm->card, pcm->device, pcm->subdevice,
-+		ksft_test_result(false, "test.missing.%s.%d.%d.%s\n",
-+				 pcm->card_name, pcm->device, pcm->subdevice,
- 				 snd_pcm_stream_name(pcm->stream));
- 	}
- 
+Build errors with gcc-8:
+-----------
+drivers/bluetooth/hci_qca.c: In function 'qca_serdev_remove':
+drivers/bluetooth/hci_qca.c:2501:2: error: label at end of compound statement
+  default:
+  ^~~~~~~
+make[5]: *** [scripts/Makefile.build:244: drivers/bluetooth/hci_qca.o]
+Error 1a887c8dede8e1 Bluetooth: hci_qca: schedule a devm action for
+disabling the clock
 
----
-base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-change-id: 20240711-alsa-kselftest-board-name-e4a1add4cfa0
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+Build data:
+------
+  * Build name: gcc-8-defconfig
+  * git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  * git_sha: f477dd6eede3ecedc8963478571d99ec3bf3f762
+  * git_short_log: f477dd6eede3 ("Add linux-next specific files for 20240711")
+  * Config: defconfig
+  * arch: arm64
+  * toolchain: gcc-8
 
+Steps to reproduce:
+-------
+# tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
+--kconfig defconfig
+
+Build log links,
+---------------
+ [1] https://storage.tuxsuite.com/public/linaro/lkft/builds/2j5nr85T4iLl99RjcJ9oy9O3eo2/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
