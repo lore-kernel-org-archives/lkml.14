@@ -1,36 +1,37 @@
-Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
+Received: from msa.smtpout.orange.fr (msa-211.smtpout.orange.fr [193.252.23.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96D916DC16
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 19:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6D616F0E9
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 19:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720726502; cv=none; b=afz0tJYIfx3BkcNCnsci+vWgmqSNjP9i5RL5ioYCLeP8/pYTxLJrYPx/mIqcQhuU9ZCECY+dN2Qz/KHbV3IVSMyXdpEplZYHDD4QftHSHDINwqRmb1jlkCE6EAJKrfFLYr6uY9kF9K/JFliRYFAEH0oWGojmhkzQDhxxHd1/5TA=
+	t=1720726506; cv=none; b=a6AmLV8rUoiiq64bK0MnzhU1YRV6kIUNoi2i+LendAd1NO5rOaC5rcRMMhT/vuQTLD6DMaBgrCVJ6RWbF72TuaH95+OmyPcrBbY5GxEwDyuo2rc8k8uaUJN3A/jpEMjSYQq/eWXrU2Jg1TI/2W8J9rDhKNAtRMB0iRr02epLM4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720726502; c=relaxed/simple;
-	bh=v71AQWRiys5rJQ4xv9+/2guDlwUCwFTFheOUGFbDVbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QODF7GWnwjEUEWibwjAxceV61Li/Lrifln/zyZnFKOkag7BxlTTZSrPEIUNY9LsHkBsIMle2Oy+ry4OY0XiIzmQ3vEd+H2ocGf8yW5uf/VmZyKdpRokAtyo32eIe7EjV8c2mJporqKfLmPJtCqeG8nnZ+pwJGbTkle3ZBXWcihA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=SZqgLZD2; arc=none smtp.client-ip=80.12.242.15
+	s=arc-20240116; t=1720726506; c=relaxed/simple;
+	bh=x68ESisQH80WW9Hmoe5cxe8M7THJVffjZhGe8eKvGQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FAHd6m71jGkd18WJyJUXEyAlejWzW0YUgQnQGpO1xbq6apKMTqomlyIL3OkOCVcpG5KgCkJbYr/eg2HrwwVkRkM2/Q92fOjGhMWu4JHJj87/ZsHcOUrrxjeShcsmWbWQze/P0ZV+W8dNDC1qxmFFY90+iUAGta4ZiMFihlEFR+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=G4FCmE10; arc=none smtp.client-ip=193.252.23.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="SZqgLZD2"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="G4FCmE10"
 Received: from fedora.. ([77.131.3.214])
 	by smtp.orange.fr with ESMTPA
-	id RzZBsCMFrj4pfRzZBsIiR7; Thu, 11 Jul 2024 21:34:58 +0200
+	id RzZBsCMFrj4pfRzZHsIiSB; Thu, 11 Jul 2024 21:35:03 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720726498;
-	bh=zXP3sX2ock8JSJD3V0LkyeBJQLuvRqLa/4BAy1nJsH8=;
+	s=t20230301; t=1720726503;
+	bh=+R7FMy9AXoamPmQBHl0PouZlAVVAloz2ln5nMlCPFco=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=SZqgLZD2K5Whf1JsFaD1Hx/LG/aial+SuQnUKiQqbtrDMVSULcUGttuqBJnUyr6iw
-	 sY+Ci+uM7iEuFaB23QEzV5il7gu/sEhSaEYmGiZxe/7vE/AUXWSK5tXuzJq5UTdS2v
-	 UMI3Ljg9y9GRW4gy+g+2auZimAQvXqJk1P+dpzQhkVwVuO5UmFdmasxqphitmw6TuB
-	 TU8MlVhOTN7aFQQALmAS2l6N8KF1peE3dJc/FqzXDesQS6Y0xFGZ0Y0ZJCo848B3UH
-	 YA0kNse3ZP7CeMXkMieJeMTV9RuXoS+4O1HWnzKwplp/q3AqNxf7na6tChIQFjbIVo
-	 w9/jkDgmKusnw==
+	b=G4FCmE10keN47ZT0oy7vcEVw+P05COp971q569t5kqgym7lD3ENBPU+VwI9cntx/z
+	 8dSrndaG7iv76mVM2IFztFqCb2qAkQxgXmkP4zqZVUAIeEufn8LHOKY7roFiDPX8cr
+	 zPjaAm3PLkMLfkHAH3XnOLIgptNnUnIv0BkilwdDbOVmaT5eQQx1MxFzDu+0CrEfKI
+	 3ophi6NDVNA9LE02ljoqzR2wTMy+rbdO79oU5RB+06pGlNFUDN1ioCU5p/fjoXYmdh
+	 LuQgx9ZgX2eK+x9d40YpbLS9p8SyhhG/1dgwZqNY3FfttuZr8FXZTesBvHN1JQp3be
+	 I+aJFk5GhtzRw==
 X-ME-Helo: fedora..
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 11 Jul 2024 21:34:58 +0200
+X-ME-Date: Thu, 11 Jul 2024 21:35:03 +0200
 X-ME-IP: 77.131.3.214
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To: vkoul@kernel.org,
@@ -39,10 +40,12 @@ Cc: linux-phy@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 0/3] phy: cadence: Sierra: Constify some structs
-Date: Thu, 11 Jul 2024 21:34:51 +0200
-Message-ID: <cover.1720723132.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 3/3] phy: cadence: Sierra: Constify a u32[]
+Date: Thu, 11 Jul 2024 21:34:54 +0200
+Message-ID: <43d881d52e3c1632ad197d4c2c18b6c481a13b24.1720723132.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1720723132.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1720723132.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,28 +54,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series is just about constification of some structs.
+'cdns_sierra_pll_mux_table' is not modified in this driver.
+And it is only used as a "const u32 *".
 
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
+
+On a x86_64, with allmodconfig:
 Before:
 ======
    text	   data	    bss	    dec	    hex	filename
-  60489	   4342	     16	  64847	   fd4f	drivers/phy/cadence/phy-cadence-sierra.o
+  60937	   3894	     16	  64847	   fd4f	drivers/phy/cadence/phy-cadence-sierra.o
 
 After:
 =====
    text	   data	    bss	    dec	    hex	filename
   60897	   3878	     16	  64791	   fd17	drivers/phy/cadence/phy-cadence-sierra.o
 
-All patches have been compile tested only.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only.
+---
+ drivers/phy/cadence/phy-cadence-sierra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Christophe JAILLET (3):
-  phy: cadence: Sierra: Constify struct cdns_reg_pairs
-  phy: cadence: Sierra: Constify struct cdns_sierra_vals
-  phy: cadence: Sierra: Constify a u32[]
-
- drivers/phy/cadence/phy-cadence-sierra.c | 88 ++++++++++++------------
- 1 file changed, 44 insertions(+), 44 deletions(-)
-
+diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
+index 947492c8f381..3010c9f24136 100644
+--- a/drivers/phy/cadence/phy-cadence-sierra.c
++++ b/drivers/phy/cadence/phy-cadence-sierra.c
+@@ -310,7 +310,7 @@ static const struct clk_parent_data pll_mux_parent_data[][SIERRA_NUM_CMN_PLLC_PA
+ 	},
+ };
+ 
+-static u32 cdns_sierra_pll_mux_table[][SIERRA_NUM_CMN_PLLC_PARENTS] = {
++static const u32 cdns_sierra_pll_mux_table[][SIERRA_NUM_CMN_PLLC_PARENTS] = {
+ 	[CMN_PLLLC] = { 0, 1 },
+ 	[CMN_PLLLC1] = { 1, 0 },
+ };
 -- 
 2.45.2
 
