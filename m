@@ -1,58 +1,58 @@
 Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEDB846D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5408F4E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720660410; cv=none; b=P4HkFVvECP2fND3XldTXPuZ17kCCqbclZySEnKKcXzS4WajF/6WLGdv6uLYasmt7O7l5c3dhXd3TfXFCY6QKOFtpATicIqmzwY7VRw//7YHWx/tmP/O4zTXjH8Nf0D2i5EZHPCivJ3y9sMeW9rtNJNJJ5eQRgoHJRWtUod3hYzg=
+	t=1720660411; cv=none; b=nKUsvAIi3ozQpdicK3pJLstoFe3mlAMxhN0z5narmN0MbcmFteO3rJDF5ykHXWzR+FLZTMAI4gGnj1ms1gn7hiLVSVn2KgcBFABU1y0x4y/osqnGfSvfa0laT5dTqRPtzJmYlnTjSAL2fNPxUDg0i+c6ogLL5LcB41F72tTP/2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720660410; c=relaxed/simple;
-	bh=+vDrfx9gSCcmmVlhUxDIg7dDIHdSBMWpGmxEX3W09v4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=Zde8cwf1srvvT1pP16z51ZVyICrx9ENiLiE1iYp4DsJxUIbVTiT2PPynQ9r6nSTOdgWiT+85dEAM0Lu2INjIBIs6VRbaWPA6xiExvByfWp3ye94CHFpirFgVESEG98tDQhQFuNC2ete+APMkIvEk7ZOiMn7MrqkE8snjKE+bt38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AlP888SP; arc=none smtp.client-ip=203.254.224.24
+	s=arc-20240116; t=1720660411; c=relaxed/simple;
+	bh=vEA3KXSIAhaD+zPw0CsEnqeejkEmDhNscB3wVGeIHyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=mxLmfSk0uHUVAaHkd7OjQx9lxBROZIjR8W7PgpvmbtzZ3rbBz5okJzMbg0Go4Rvuxplq97mvw6sBSEGs75nG+FE214Y4PkzOxMzRWc5k+vAV/Q8G7/FT/JO2Nl4yi/HLbrqOtBMlvNTxnAMEh+JoXdpFWtIgXhHNPGUmG6qMV68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vAuLPQr4; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AlP888SP"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240711011325epoutp01859ebdcad726e2cab1ad85d85a8b4700~hA4XKftrm3069030690epoutp01p
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:13:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240711011325epoutp01859ebdcad726e2cab1ad85d85a8b4700~hA4XKftrm3069030690epoutp01p
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vAuLPQr4"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240711011326epoutp010964b6d01a74ef7c6ef700ea9af21d5c~hA4XyC0Y23103431034epoutp01Z
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:13:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240711011326epoutp010964b6d01a74ef7c6ef700ea9af21d5c~hA4XyC0Y23103431034epoutp01Z
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1720660405;
-	bh=XLfN72mNtIGtMdNbunDcS+ZxnGbyTvCYz2gJ3EuHUN0=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=AlP888SPoHzt2np0MXPT1zHcKYZZl0uVUPeTd2ZO3KuJ33SuYaxzII77QhYx9Av52
-	 OzQvJw22iLwz5ecYwTKRv5GGfaa9c728noqGi03MOwI98Xb+mgz5k99Dvsfmh7GCtd
-	 4oug/zeSOl3OL0xKza7112/atxc1NXzvwISMQRoU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240711011325epcas2p2fa7c5dcc443e3f9f51943d1d47d5e500~hA4WkEWpG0058500585epcas2p2A;
+	s=mail20170921; t=1720660406;
+	bh=D5r1Rcdl8j5s7c0Hxhg9GSw1ryrOrFCSJgC2vioYM0M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vAuLPQr4PhNXudP5Rm8jFbwFrmUJ0PJ9QkWYsyossbircXEDxC75D70d4RULSmwrC
+	 IJKD0imetLtvAVmJS76+gxQzBQwzJ9ADSYbv2oXtqUuX87nI5OZcmJpVhcAbPyh046
+	 4uhoDnaAeJyRGvcWTb/OFwDYP7E9BcY5aRi3YbwQ=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+	20240711011325epcas2p340f9d86caf367dd5e88d6acc2ac1f7fd~hA4XNe6Q32919329193epcas2p3O;
 	Thu, 11 Jul 2024 01:13:25 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.90]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4WKGv85gpRz4x9Py; Thu, 11 Jul
-	2024 01:13:24 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	86.E2.09485.4B13F866; Thu, 11 Jul 2024 10:13:24 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.69]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4WKGv91jMkz4x9Px; Thu, 11 Jul
+	2024 01:13:25 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6B.55.09848.4B13F866; Thu, 11 Jul 2024 10:13:25 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
 	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240711011324epcas2p26548bc764e4e8edec63cc1ebffe70ede~hA4Vq2i300059100591epcas2p2J;
+	20240711011324epcas2p21d1f4da7cedcba4aaadbe7343a568aca~hA4V7OLrT3263832638epcas2p2G;
 	Thu, 11 Jul 2024 01:13:24 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240711011324epsmtrp1ea6b09cd8b1cd99fcd618edee7c77252~hA4Vp4opk0440904409epsmtrp1P;
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240711011324epsmtrp2e756d41868d2917da8ac4c238f8085f3~hA4V6Xo0b0825808258epsmtrp2m;
 	Thu, 11 Jul 2024 01:13:24 +0000 (GMT)
-X-AuditID: b6c32a46-f3bff7000000250d-96-668f31b436b6
+X-AuditID: b6c32a45-1c7ff70000002678-64-668f31b4d668
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	75.1D.07412.4B13F866; Thu, 11 Jul 2024 10:13:24 +0900 (KST)
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9B.35.19057.4B13F866; Thu, 11 Jul 2024 10:13:24 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.229.9.60]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240711011323epsmtip22ffdcb16e2f6e77699f35253b4696ce2~hA4Vb4HXQ0294702947epsmtip2I;
-	Thu, 11 Jul 2024 01:13:23 +0000 (GMT)
+	20240711011324epsmtip2cb8307c258dcbd8b78e5aea47f410255~hA4VpGqVU0294702947epsmtip2J;
+	Thu, 11 Jul 2024 01:13:24 +0000 (GMT)
 From: Sunyeal Hong <sunyeal.hong@samsung.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
 	<s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar
@@ -62,10 +62,12 @@ To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
 Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, Sunyeal Hong <sunyeal.hong@samsung.com>
-Subject: [PATCH v3 0/4] initial clock support for exynosauto v920 SoC
-Date: Thu, 11 Jul 2024 10:13:12 +0900
-Message-ID: <20240711011316.2713270-1-sunyeal.hong@samsung.com>
+Subject: [PATCH v3 2/4] arm64: dts: exynos: add initial CMU clock nodes in
+ ExynosAuto v920
+Date: Thu, 11 Jul 2024 10:13:14 +0900
+Message-ID: <20240711011316.2713270-3-sunyeal.hong@samsung.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240711011316.2713270-1-sunyeal.hong@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,87 +75,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmue4Ww/40g1VLtCwezNvGZrFm7zkm
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDJsWRmVeSWpSXmKPExsWy7bCmme5Ww/40g0/vmSwezNvGZrFm7zkm
 	i+tfnrNazD9yjtXi/PkN7BabHl9jtfjYc4/V4vKuOWwWM87vY7K4eMrV4v+eHewWh9+0s1r8
 	u7aRxaJp2XomBz6P9zda2T02repk89i8pN6jb8sqRo/Pm+QCWKOybTJSE1NSixRS85LzUzLz
 	0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA7lRSKEvMKQUKBSQWFyvp29kU5ZeW
-	pCpk5BeX2CqlFqTkFJgX6BUn5haX5qXr5aWWWBkaGBiZAhUmZGcsfJhWsJenYueO+SwNjE84
-	uxg5OSQETCTaPr1jA7GFBHYwSqzt9epi5AKyPzFKLJnQyQjhfGOU+HN1BRNMx8KVv9ghEnsZ
-	Jc41b2aDcD4ySjS+7GfpYuTgYBPQlfjzzwEkLiKwh0liy/klTCAOs8BZRom7cxawg4wSFnCV
-	mHShjxHEZhFQlbhwcwkriM0rYC/x9OgzZoh18hIX1zxng4gLSpyc+YQFxGYGijdvnc0MMlRC
-	oJVDYv/SbkaIBheJ1ssz2SBsYYlXx7ewQ9hSEi/726DsfInJ198yQTQ3MEpc+9cNtc1eYtGZ
-	n+wgLzALaEqs36UPYkoIKEscuQW1l0+i4/Bfdogwr0RHmxBEo5rEpyuXoYbISBw7AXO+h8SK
-	Iw3Q8I2VeHismX0Co/wsJN/MQvLNLIS9CxiZVzGKpRYU56anFhsVGMEjNTk/dxMjOKlque1g
-	nPL2g94hRiYOxkOMEhzMSiK88290pwnxpiRWVqUW5ccXleakFh9iNAWG70RmKdHkfGBazyuJ
-	NzSxNDAxMzM0NzI1MFcS573XOjdFSCA9sSQ1OzW1ILUIpo+Jg1OqgcnlilvwgoM7rHkaQ858
-	eFj3OzP6ctrbH03MJe4+7G0W2zn260i3iU02/nUgPWNFZcBV29bzlx1S43YHR3VIv3Mos3ac
-	1LnLRo2T96nJI/PlicWaN9vSvn/dybPhDHfoww3lDcU9hz7/1DJd0pD+2uruz+jDmrV3NHn8
-	fyocvFe84N2aPzf658c3TOWJ6xex0tP0fGcpsfJ+7LouxsmrU6bvlvJXD940UerGRLOiHczX
-	2hVsflXFNht/evJimtCC2dd1vvsrXn9r6ruk0FRrlvM/kQbdarn51xwUJIyS122fMrVnplZD
-	8S7zxXdleaotY8yOPFouvnhOxowci4Nbuz3WGi+Vla67qGnOEir6WomlOCPRUIu5qDgRAKBx
-	w18zBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrALMWRmVeSWpSXmKPExsWy7bCSvO4Ww/40gymTWSwezNvGZrFm7zkm
+	pCpk5BeX2CqlFqTkFJgX6BUn5haX5qXr5aWWWBkaGBiZAhUmZGd0bv7FVHBbpOJTs0ID4xaB
+	LkZODgkBE4lj2w+xdDFycQgJ7GCUeLnlGRuE84lR4sO0VVCZb4wSz77eYIJpmXiijRHEFhLY
+	yyixYJIdRNFHRon/T2YAJTg42AR0Jf78cwCJiwjsYZLYcn4JE4jDLHCWUeLunAXsIN3CAjES
+	L19eYQVpYBFQldh4OxwkzCtgL3Ft2TKoZfISF9c8ZwOxOQUcJDZdWcMMUSMocXLmExYQmxmo
+	pnnrbGaQ+RICMzkkbpxcANXsItEy8zE7hC0s8er4FihbSuLzu71sEHa+xOTrb5kgmhsYJa79
+	62aGSNhLLDrzkx3kOGYBTYn1u/RBTAkBZYkjt6D28kl0HP7LDhHmlehoE4JoVJP4dOUy1BAZ
+	iWMnnkHZHhILNz6GBuhkRonGk9uYJzAqzELyziwk78xCWLyAkXkVo1hqQXFuemqxUYEhPIKT
+	83M3MYKTrZbrDsbJbz/oHWJk4mA8xCjBwawkwjv/RneaEG9KYmVValF+fFFpTmrxIUZTYFhP
+	ZJYSTc4Hpvu8knhDE0sDEzMzQ3MjUwNzJXHee61zU4QE0hNLUrNTUwtSi2D6mDg4pRqY9izZ
+	r7Tt1Ym5izoKglkzuuYocP7emu3ceuBXWtp0aYeGaS7akp+n35l8r4mV8U9HeXGRw8YUm9Pm
+	XfdFUspnSCqrLzd42sipNeWN/H/pXS+XVh2+usrjsVSA9A6v6bdPHpZjvG+5co3NP3E1PVdd
+	sZ67lxNeyf/dqVHNLPGWd8Wqd673OB47sezyMp/dJBPod8LGeK82wxfmuv4Ey3chN8Oco2pm
+	N6/feCF3X8yKieu2eu9pKVbzD5c+V3MwIuFzhHL8UXOlRW26C/59fr77zWL7085p2ppr/6z5
+	XvSC+43O5gwX25JdrVHf99zQiFrT53B1dk4Zb/6KpRIfDI3ibvm3ievzr41c6vxDNSdEiaU4
+	I9FQi7moOBEADDhwrj8EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsWy7bCSvO4Ww/40g4f3RSwezNvGZrFm7zkm
 	i+tfnrNazD9yjtXi/PkN7BabHl9jtfjYc4/V4vKuOWwWM87vY7K4eMrV4v+eHewWh9+0s1r8
-	u7aRxaJp2XomBz6P9zda2T02repk89i8pN6jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4MhY+
-	TCvYy1Oxc8d8lgbGJ5xdjJwcEgImEgtX/mLvYuTiEBLYzSgx99s1NoiEjMTGhv/sELawxP2W
-	I6wQRe8ZJY5e2APkcHCwCehK/PnnABIXETjEJDHx81MWEIdZ4DKjxLG7k5lBuoUFXCUmXehj
-	BLFZBFQlLtxcwgpi8wrYSzw9+owZYoO8xMU1z9kg4oISJ2c+YQGxmYHizVtnM09g5JuFJDUL
-	SWoBI9MqRsnUguLc9NxkwwLDvNRyveLE3OLSvHS95PzcTYzgQNfS2MF4b/4/vUOMTByMhxgl
-	OJiVRHjn3+hOE+JNSaysSi3Kjy8qzUktPsQozcGiJM5rOGN2ipBAemJJanZqakFqEUyWiYNT
-	qoEpZ1pDuHfZlYJQq9NLv9VNzI0U+j3V5lD6zzQ/v4UuD5rSX6y4v9jr6a3PTyrDfrdqb1+m
-	r/WqbfoKI50P1d4uvXY9Cd3/BdlKPYrvqDOzrly3cK3Yb/aUpYIKXn4qh7Uu931eGvW2Sf3y
-	/CVai599cq9UF1ufP3+dzbMqpqUJz/cKHjJSumBv019ccuHrr1eTO8R5nB/78if4sDY2Ca2c
-	v3B3oatq31nOxlJRi/Covoj6lHmeEwouhB6Pyim1rn8x4Wrfzlilu08u37YsOrLHMqoy/dBF
-	1uv3Jinrb3/GtXLrolep9snCe6Yvi/B0ytjJoOB+UT+m7IUF58Fp6SxrWT0LpvKY3bw3oVnq
-	t6cSS3FGoqEWc1FxIgB/CL6M4wIAAA==
-X-CMS-MailID: 20240711011324epcas2p26548bc764e4e8edec63cc1ebffe70ede
+	u7aRxaJp2XomBz6P9zda2T02repk89i8pN6jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Mjo3
+	/2IquC1S8alZoYFxi0AXIyeHhICJxMQTbYxdjFwcQgK7GSV2Np9hg0jISGxs+M8OYQtL3G85
+	wgpR9J5R4ubTCUAOBwebgK7En38OIHERgUNMEhM/P2UBcZgFLjNKHLs7mRmkW1ggSuJa826w
+	BhYBVYmNt8NBwrwC9hLXli1jglggL3FxzXOwxZwCDhKbrqwBaxUCqtm08j0rRL2gxMmZT1hA
+	bGag+uats5knMArMQpKahSS1gJFpFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcFxo
+	ae1g3LPqg94hRiYOxkOMEhzMSiK88290pwnxpiRWVqUW5ccXleakFh9ilOZgURLn/fa6N0VI
+	ID2xJDU7NbUgtQgmy8TBKdXAVL9XNVd53yGpLn8OlpOGUrfMdi5ITIjPdjt+0Z+D+5ckj++/
+	xq+vmtZxld/j8uuOqg8QqEv8cUJSq3vVJO0z+iUtFu+eL2c/eJv5pqlA29y9Ly/6/s/zFxIv
+	sq6o0lqoErXhRcMqv2//PTIC264utfflq+iLzgw90/VStvB1yL3OJ8bX7MJ6Z67ccTkkWnrR
+	t6+cB+cGLDPO3ths6xfWXaJZfeyCYfuFJ3s2xV4I7v8nefj8t0kXo4LKvkiekQvTn5vVfHqP
+	hNKHGO0n5Z6sm08bxnHeeLH5icrWhC3HsnyiO69MWWDxel3HCyXn66/cLGOC/yzK5WJ4HNS6
+	fNrMbc1pK1d+mPxAsex/T9g8JZbijERDLeai4kQAzU9ZcvoCAAA=
+X-CMS-MailID: 20240711011324epcas2p21d1f4da7cedcba4aaadbe7343a568aca
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240711011324epcas2p26548bc764e4e8edec63cc1ebffe70ede
-References: <CGME20240711011324epcas2p26548bc764e4e8edec63cc1ebffe70ede@epcas2p2.samsung.com>
+X-CMS-RootMailID: 20240711011324epcas2p21d1f4da7cedcba4aaadbe7343a568aca
+References: <20240711011316.2713270-1-sunyeal.hong@samsung.com>
+	<CGME20240711011324epcas2p21d1f4da7cedcba4aaadbe7343a568aca@epcas2p2.samsung.com>
 
-This patchset adds initial clock driver support for Exynos Auto v920 SoC.
-This driver uses HW Auto Clock gating. So all gate clocks did not register.
+Add cmu_top, cmu_peric0 clock nodes and
+switch USI clocks instead of dummy fixed-rate-clock.
 
-Below CMU blocks are supported in this patchset and remains will be
-implemented later.
+Signed-off-by: Sunyeal Hong <sunyeal.hong@samsung.com>
+---
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi | 40 +++++++++++++------
+ 1 file changed, 27 insertions(+), 13 deletions(-)
 
-- CMU_TOP
-- CMU_PERIC0
-
-Changes in v3:
- - Change SoC name from Exynos Auto to ExynosAuto
- - Change the makefile order to the bottom of exynosautov9
- - Add PLL_531x formula for integer PLL
-
-Changes in v2:
- - Fix typo from v209 to v920
- - Change USI clock to appropriate
- - Merge headers into binding patches
- - Change clock-name to the recommended name
-
-Sunyeal Hong (4):
-  dt-bindings: clock: add ExynosAuto v920 SoC CMU bindings
-  arm64: dts: exynos: add initial CMU clock nodes in ExynosAuto v920
-  clk: samsung: clk-pll: Add support for pll_531x
-  clk: samsung: add top clock support for ExynosAuto v920 SoC
-
- .../clock/samsung,exynosautov920-clock.yaml   |  115 ++
- .../arm64/boot/dts/exynos/exynosautov920.dtsi |   40 +-
- drivers/clk/samsung/Makefile                  |    1 +
- drivers/clk/samsung/clk-exynosautov920.c      | 1173 +++++++++++++++++
- drivers/clk/samsung/clk-pll.c                 |   45 +
- drivers/clk/samsung/clk-pll.h                 |    1 +
- .../clock/samsung,exynosautov920.h            |  191 +++
- 7 files changed, 1553 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/samsung,exynosautov920-clock.yaml
- create mode 100644 drivers/clk/samsung/clk-exynosautov920.c
- create mode 100644 include/dt-bindings/clock/samsung,exynosautov920.h
-
+diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+index c1c8566d74f5..54fc32074379 100644
+--- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+@@ -6,6 +6,7 @@
+  *
+  */
+ 
++#include <dt-bindings/clock/samsung,exynosautov920.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/soc/samsung,exynos-usi.h>
+ 
+@@ -38,17 +39,6 @@ xtcxo: clock {
+ 		clock-output-names = "oscclk";
+ 	};
+ 
+-	/*
+-	 * FIXME: Keep the stub clock for serial driver, until proper clock
+-	 * driver is implemented.
+-	 */
+-	clock_usi: clock-usi {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <200000000>;
+-		clock-output-names = "usi";
+-	};
+-
+ 	cpus: cpus {
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+@@ -182,6 +172,28 @@ chipid@10000000 {
+ 			reg = <0x10000000 0x24>;
+ 		};
+ 
++		cmu_peric0: clock-controller@10800000 {
++			compatible = "samsung,exynosautov920-cmu-peric0";
++			reg = <0x10800000 0x8000>;
++			#clock-cells = <1>;
++
++			clocks = <&xtcxo>,
++				 <&cmu_top DOUT_CLKCMU_PERIC0_NOC>,
++				 <&cmu_top DOUT_CLKCMU_PERIC0_IP>;
++			clock-names = "oscclk",
++				      "noc",
++				      "ip";
++		};
++
++		cmu_top: clock-controller@11000000 {
++			compatible = "samsung,exynosautov920-cmu-top";
++			reg = <0x11000000 0x8000>;
++			#clock-cells = <1>;
++
++			clocks = <&xtcxo>;
++			clock-names = "oscclk";
++		};
++
+ 		gic: interrupt-controller@10400000 {
+ 			compatible = "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+@@ -213,7 +225,8 @@ usi_0: usi@108800c0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+-			clocks = <&clock_usi>, <&clock_usi>;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI00_USI>;
+ 			clock-names = "pclk", "ipclk";
+ 			status = "disabled";
+ 
+@@ -224,7 +237,8 @@ serial_0: serial@10880000 {
+ 				interrupts = <GIC_SPI 764 IRQ_TYPE_LEVEL_HIGH>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&uart0_bus>;
+-				clocks = <&clock_usi>, <&clock_usi>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI00_USI>;
+ 				clock-names = "uart", "clk_uart_baud0";
+ 				samsung,uart-fifosize = <256>;
+ 				status = "disabled";
 -- 
 2.45.2
 
