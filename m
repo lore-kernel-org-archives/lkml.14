@@ -1,100 +1,143 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8167714F9EA;
-	Thu, 11 Jul 2024 08:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C786E150987;
+	Thu, 11 Jul 2024 08:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720685932; cv=none; b=fP9j7GCW8QwPN4zV9E9heYqFTAWn1P1Dp/RddMV46TaUcO4/JNY/EEAf/QN6t/7RYQwCoyAqUhqkI5skxJa9CsVoEPIP5A9BKbUJeLqCutTIwPaYmqJDSoPevAoTxfQbmVtCFLz9uMCHDMmrdGvfH2hFkYGmz1eN05gAomzPCFg=
+	t=1720685964; cv=none; b=igoMvBuRXt5yhsDxj6e3wYZ0GvLZ/7/GHRjXXJlJeNvdBFHFZZnmNOp69PLydmeRmKi0gSW6kDq4ahrpedOnsFZv5/C+HmsuFzYZYr/U8QbXDyxaZovbvElvzfGa4toIiJEPV7GW1PtxqNmrfJ5aWRXvBruGqG9HrZaDwILjcFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720685932; c=relaxed/simple;
-	bh=CwDci9vRjYo9CAjJdyXJrVoCQNKghc/BQ7rniuB/qaw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZRpfQmwscCtMmPzXAXOKboCldROuOkU8zee+7bbUiYz6esphMR9johlllkQBuTWdU6Rep+zckpXOnjGnJaKc65IvhXvdiLuM6O1iSfnC7iRcWq9WNlYevxTYl48VPIaiqkef4aKDqkfgvsaoebcG6JGn+4a1p+NTaLEMgV/D72M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DqyP4sZN; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1720685964; c=relaxed/simple;
+	bh=XC2r9myoV9mK755CGiB2PbIgBad5ZaKbGq7IcSd7/Dw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nn01jJ0aO1rI1yfxGovyay7AgHZ5all3c/ADbUgauVMsS+Qj6kYhgi7qXtDCjAqVE1Yb4hpg2pve12+Ij+3gzPEberbWsOeePhmxjsot799MVEaWYw+RjKQyeG5VHVRDqArUsokHcN8maRso3HtF7TXhPh+6TBjq7hAxqkXHOy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=perwwfyZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DqyP4sZN"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 2703C4000F;
-	Thu, 11 Jul 2024 08:18:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720685923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=40fIdy34lgcI2e31bZTL+O/QYbIYmqzcDPmH5hhaCkQ=;
-	b=DqyP4sZNOUv6eIBbdwi3KnrS6C+0OSmH2iVrxWVmXp3YBHD86ZDtEomoVp7GBD/dB1uwW9
-	AeT+VRJg6V6eAER8s3K626rqHAuWdduTjzK24Ly5IC5R1wAXR/pE90epYlEeNpnYTrqXV9
-	BzcT0M3aRxc0Y6Fa+jcoD8DiwCPbBdSJvUmPeILi5o8KTlGX+DxOFmo+8mmZwJCZQImD5T
-	BNbmtmoUB0DeWyE+V1fDkh+wBG2+ppep1Zs5A3RfmZiH1Yr3KeZ+XzSNo+QOdPQJ3VbxcE
-	ySuITjVKLuyjopgmKWXn57LAOkuyWIX95ukISQDLXWoO1x+Ljz7yf2qW0B++sg==
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Christopher Cordahi <christophercordahi@nanometrics.ca>,
-	Bastien Curutchet <bastien.curutchet@bootlin.com>
-Subject: [PATCH 2/2] mmc: davinci_mmc: report all possible bus widths
-Date: Thu, 11 Jul 2024 10:18:38 +0200
-Message-ID: <20240711081838.47256-3-bastien.curutchet@bootlin.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240711081838.47256-1-bastien.curutchet@bootlin.com>
-References: <20240711081838.47256-1-bastien.curutchet@bootlin.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="perwwfyZ"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B4mnCf011431;
+	Thu, 11 Jul 2024 08:18:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=wWjrqp89UnF8NqshoLlbQS5w
+	pJVq1NqW54XTbTeq0QM=; b=perwwfyZYnPQFGMtoPH0TtUofngrNZtTCrpYT1kF
+	K8CEaCrQg/cGNDF8kzwyhVgZ5ADwCo8hRq7gfsA6jSIX0eFXmv8cvNPqxmytlDbZ
+	rbU6/Zl4sFqeezf7W/Jp3DDXL1PTEU+qEnRIhI5rk7lJZlFlzYvsvdZYsiW+3P/G
+	WlHOPS8lfNJA14/S8NYOQhJaLfnkKs1DDMXGQQ91J/fFap2jsTlyfqHylTtXfVzy
+	Xcl4oYmitG9gRxLcsdxVhKQhfF3n4TnM3GqSZ0ImdpmZjZZ+CWgJCqK3mX3vrxLV
+	a6uhN8NwP0FaWBU+uYaGXCstzSvFAfUjzFuj4pbG1cL4gA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 409vydsxcx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 08:18:52 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46B8IpJn026746
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jul 2024 08:18:51 GMT
+Received: from taozha2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 11 Jul 2024 01:18:47 -0700
+From: Tao Zhang <quic_taozha@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan
+	<leo.yan@linux.dev>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+CC: Tao Zhang <quic_taozha@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: arm: qcom,coresight-static-replicator: Add property for source filtering
+Date: Thu, 11 Jul 2024 16:17:48 +0800
+Message-ID: <20240711081750.21792-2-quic_taozha@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240711081750.21792-1-quic_taozha@quicinc.com>
+References: <20240711081750.21792-1-quic_taozha@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: bastien.curutchet@bootlin.com
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: xynafpUtVZsCdcqLaUgeRYPc5fJlUFg7
+X-Proofpoint-ORIG-GUID: xynafpUtVZsCdcqLaUgeRYPc5fJlUFg7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-11_04,2024-07-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=999 impostorscore=0
+ suspectscore=0 spamscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407110056
 
-A dev_info() at probe's end() report the supported bus width. It never
-reports 8-bits width while the driver can handle it.
+The is some "magic" hard coded filtering in the replicators,
+which only passes through trace from a particular "source". Add
+a new property "filter-src" to label a phandle to the coresight
+trace source device matching the hard coded filtering for the port.
 
-Update the info message at then end of the probe to report the use of
-8-bits data when needed.
-
-Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
 ---
- drivers/mmc/host/davinci_mmc.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ .../arm/arm,coresight-static-replicator.yaml  | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
-index c302eb380e42..9cbde800685d 100644
---- a/drivers/mmc/host/davinci_mmc.c
-+++ b/drivers/mmc/host/davinci_mmc.c
-@@ -1187,7 +1187,7 @@ static int davinci_mmcsd_probe(struct platform_device *pdev)
- 	struct mmc_davinci_host *host = NULL;
- 	struct mmc_host *mmc = NULL;
- 	struct resource *r, *mem = NULL;
--	int ret, irq;
-+	int ret, irq, bus_width;
- 	size_t mem_size;
- 	const struct platform_device_id *id_entry;
+diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
+index 1892a091ac35..0d258c79eb94 100644
+--- a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
++++ b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
+@@ -45,7 +45,22 @@ properties:
+     patternProperties:
+       '^port@[01]$':
+         description: Output connections to CoreSight Trace bus
+-        $ref: /schemas/graph.yaml#/properties/port
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++
++        properties:
++          endpoint:
++            $ref: /schemas/graph.yaml#/$defs/endpoint-base
++            unevaluatedProperties: false
++
++            properties:
++              filter-src:
++                $ref: /schemas/types.yaml#/definitions/phandle
++                description:
++                  phandle to the coresight trace source device matching the
++                  hard coded filtering for this port
++
++              remote-endpoint: true
  
-@@ -1317,9 +1317,14 @@ static int davinci_mmcsd_probe(struct platform_device *pdev)
+ required:
+   - compatible
+@@ -72,6 +87,7 @@ examples:
+                 reg = <0>;
+                 replicator_out_port0: endpoint {
+                     remote-endpoint = <&etb_in_port>;
++                    filter-src = <&tpdm_video>;
+                 };
+             };
  
- 	rename_region(mem, mmc_hostname(mmc));
- 
-+	if (mmc->caps & MMC_CAP_8_BIT_DATA)
-+		bus_width = 8;
-+	else if (mmc->caps & MMC_CAP_4_BIT_DATA)
-+		bus_width = 4;
-+	else
-+		bus_width = 1;
- 	dev_info(mmc_dev(host->mmc), "Using %s, %d-bit mode\n",
--		host->use_dma ? "DMA" : "PIO",
--		(mmc->caps & MMC_CAP_4_BIT_DATA) ? 4 : 1);
-+		 host->use_dma ? "DMA" : "PIO", bus_width);
- 
- 	return 0;
- 
+@@ -79,6 +95,7 @@ examples:
+                 reg = <1>;
+                 replicator_out_port1: endpoint {
+                     remote-endpoint = <&tpiu_in_port>;
++                    filter-src = <&tpdm_mdss>;
+                 };
+             };
+         };
 -- 
-2.45.0
+2.17.1
 
