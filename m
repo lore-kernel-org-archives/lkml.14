@@ -1,137 +1,65 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAA0155312
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9135915217F;
+	Thu, 11 Jul 2024 08:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720685624; cv=none; b=ByGl41W1k8BGawUhjNgvPiD1x4IHk6XbvQaWsE+6tcClX7Rn7CFiCL0a5ewufYP3M6kAaNSYRUXx6yeSo3jxvixEhseTeHLhZcCzYXAxz1S/0II5lj6L5ri9xFFN5WuA9SAgu2r5PBjcK/8VdZarUQVvP3k+0ACmxjpYLl1SQig=
+	t=1720685643; cv=none; b=uDCYalDJJbOFbnTD/y5rQwOXnJccZ68DUHHUOw+b9ujKyqo73OpkmVXeYu0W/3TRptb+Xfanr8a+C6MKch+efpH0LbnVpTEa4SoF4HxZnjcVuKF/vz/EnsamwjJDp0hTaj3NMvuGMEnJTm8fdvCH+HTL3ncSKQv2wIgo14DTqk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720685624; c=relaxed/simple;
-	bh=eI/hajbdA+0Rm/p6P9F4jJIv5qhR/mAL+TsDqW7Y3as=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=co3BHuk9dQIQ5v9n5LoH/rTpydEAbYslIYPGNpWaZcpZkyCyJK/PajyL8XadW0inQlayp+nKLFqNeaIVpdof9kPBqhvoPmjL8LENJ40OKDMWyFcR21ZEzpcaE3lfcLIB0wxmSCefM2G0oasiF+EwLU8nhfoYVPt7sQDou8WuMFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fRhRq6t4; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fRhRq6t4"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38027so618499a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 01:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720685621; x=1721290421; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvTe9WRrtDlz1Jy2LpZjEQGJotsWMz6Pvf+dzDrN3iE=;
-        b=fRhRq6t46btwedVqHYka3HYI/ehBxGMR+tySNwBUxkpJIrEm7F1hbs7A0kOsjsZkA3
-         swJOYY5gC8JRpLWEjDxXyZjorpzlawH1foga9+fzXs0QE5RP3Ahz7CqTEItjOVT22e2D
-         8V9ovE0UQjyfhvLNqXZZhNU3Ogroe11U6oY3cwvIjc7uPXEvGSz8/mL/1cQlflIPJctY
-         2DUZB4KZ609Tg9MQLPG1SWr1EGmqn9EmnvuqMFw+uiRfvHeCYOD5K3ndQmA0vvnQE+p7
-         L3IWveHuzED3ACijODlYSEIjq1iO7ahB7H17HjjAHDEUp8ITJqRABc3WquKDXBl9NKFM
-         cW1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720685621; x=1721290421;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IvTe9WRrtDlz1Jy2LpZjEQGJotsWMz6Pvf+dzDrN3iE=;
-        b=h+XgFwg9vSqglTlUv46jNKpLpck4hze/EWBD/ranyEta6cMvawwD446wSpmZHhbMEA
-         Fugkg5VtTJAQZKoAU2SfxsK+BHqVItzak50pagUA/IO3Mo3Cjxp/HKrOzlDk+ml1pnzQ
-         c7f44iEii2xbyjmpHctO+4EQSI5Vw9GPcMAZjeey0Ck8JZN8ah4ctXc5Uk6pOrssODwN
-         I8mAISDJ31gF3yazhVXmq1DJdFZDnlTB+1JLUC/LY4Sd7aWPeCqzyCxtzoldL1LC3Qjn
-         6TTaStG6OedwSgAX4koTfEE/rf0SDsZgURGlU1+o4favmQX1O8KsSzM4217vzt4x23qh
-         tarw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpXAOO/vYOiFGJlw/WbzgSctbJKnV3jvXpAa3Ozob1zAat45RqNq878lH4y10BU3Qx73TKs2Rp1coHYY+7zL2K+muPSpeFb8aLWP9k
-X-Gm-Message-State: AOJu0Ywj8BbL0ojsJdspwF4aTeXaPy3BMN3fXe51BJJrVwFX4/B/SbZj
-	1133T3q+jE7S8mmp09dIvX/ik4vVSuY6sAW3/U/iUXpwmbcT7X8zZJ9wE4pkQnZ9n/ub0vrVV6Q
-	T
-X-Google-Smtp-Source: AGHT+IH0DQ63yM5AH6DvvXzYYY41PJu/2xwyhi0Q2SOrjQgcllimfZ5GRDL0RyenxtLJEbGV6Jl+ag==
-X-Received: by 2002:a17:906:245a:b0:a72:518e:7c8b with SMTP id a640c23a62f3a-a780b689fb3mr601415066b.11.1720685620585;
-        Thu, 11 Jul 2024 01:13:40 -0700 (PDT)
-Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a856251sm234228466b.185.2024.07.11.01.13.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 01:13:40 -0700 (PDT)
-Message-ID: <069282eb-d891-4537-bdc0-85de17b5e61f@linaro.org>
-Date: Thu, 11 Jul 2024 10:13:38 +0200
+	s=arc-20240116; t=1720685643; c=relaxed/simple;
+	bh=9noRXAQFo9bH77pQhyhU8JQGqy3FQwmsoYj1QuO107Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TSbGBQPyx/zb54b3OWGa+kuwr+DGTT6CvNCYuuVBuRRjrwyMF/Gmotb6AqhMncJOyo9Pbys6F/osJOHj6m6XbmTHyHS8B2b5QSJL/RQsblSzckV95bOymlKUxaLjOTwPOrQHIzkkkgBWpvxfbx2QBlz3ifQBJDcGHNuxt8jQcdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: by air.basealt.ru (Postfix, from userid 490)
+	id CDF4C2F20251; Thu, 11 Jul 2024 08:13:58 +0000 (UTC)
+X-Spam-Level: 
+Received: from [192.168.0.102] (unknown [178.76.204.78])
+	by air.basealt.ru (Postfix) with ESMTPSA id 419612F20260;
+	Thu, 11 Jul 2024 08:13:58 +0000 (UTC)
+Message-ID: <4bf1acdd-9ab3-2e83-d491-79039c6d0e92@basealt.ru>
+Date: Thu, 11 Jul 2024 11:13:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers/clocksource/qcom: Add missing iounmap() on error
- when reading clock frequency.
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-To: Ankit Agrawal <agrawal.ag.ankit@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240710110813.GA15351@bnew-VirtualBox>
- <2a3561cc-c6b3-4823-b488-fc8ebc53e1a6@linaro.org>
- <20240711054934.GA37910@bnew-VirtualBox>
- <793b70b2-d6c1-4e4b-96a5-8a257837eafb@linaro.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 fs/bfs 0/2] bfs: fix null-ptr-deref and possible
+ warning in bfs_move_block() func
 Content-Language: en-US
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <793b70b2-d6c1-4e4b-96a5-8a257837eafb@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ lvc-patches@linuxtesting.org, "Tigran A. Aivazian"
+ <aivazian.tigran@gmail.com>, dutyrok@altlinux.org,
+ linux-fsdevel@vger.kernel.org
+References: <20240711073238.44399-1-kovalev@altlinux.org>
+ <5c191e5d-b64c-4e3c-9f70-9cd3371a3142@web.de>
+From: kovalev@altlinux.org
+In-Reply-To: <5c191e5d-b64c-4e3c-9f70-9cd3371a3142@web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 11.07.2024 10:11 AM, Konrad Dybcio wrote:
-> On 11.07.2024 7:49 AM, Ankit Agrawal wrote:
->> On Wed, Jul 10, 2024 at 01:54:01PM +0200, Konrad Dybcio wrote:
->>> On 10.07.2024 1:08 PM, Ankit Agrawal wrote:
-
-[...]
-
+11.07.2024 10:47, Markus Elfring wrote:
+> …
+>> [PATCHv2 fs/bfs 1/2] bfs: prevent null pointer dereference in bfs_move_block()
+> …
 > 
-> Ohh right source_base is a global variable.. perhaps the original patch
-> here makes more sense given we definitely don't wanna unmap that..
+> I find it usually helpful to separate the version identifier from the previous key word.
 > 
-> So I'd say let's go with this one after all
-> 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> How do you think about to improve the outline another bit (also for the cover letter)?
 
-We should probably also check if msm_timer_init() succeeds and unmap
-if that fails.. we can just check the return value of that function
-and if it's non-zero, call iounmap
+I will take your recommendation into account when submitting the next 
+versions, if there are any comments on the patches themselves.
 
-Konrad
+> Regards,
+> Markus
+
+-- 
+Thanks,
+Vasiliy Kovalev
