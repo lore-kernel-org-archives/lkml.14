@@ -1,60 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB2915B0E5
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD7B15B113
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 11:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720698866; cv=none; b=kNX8vjI+bZotevVx1KDYp8kvKYfscI6vC6E+bvPAeRIk3p/QK7Gz6lowM6TsdvjnoxEqPLnQTEh+SniEfJ3JgvdRmAiI3YC+Mw7hmjqAkFUqGxghZ3yiJ1obviDfheREdiPqEiSJhuLStBVdgCsFF7hI8BRlDoepyKwGAdQJM8M=
+	t=1720698899; cv=none; b=Nlju/BaSjBz8uMvm19SsF2BHLWc8FKyvtyfaTLGQlAQ90Z3pGRPnnA9gN6Z+F0v9DWU1s5f5wnvHSTXRlKrRrg7yb+eNz1WEVkFEqBYp7bbjcY327LVc2sWBiq4HFg+iEf7SXYnlQZTqrGx+o+e7bE8l5xGfrUwNYHzwUNvpRDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720698866; c=relaxed/simple;
-	bh=GYItkA+pjOofIuPg+Nv3z7NU9TVj+vHwJBg4ucKCyYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YeRg+feQizoC2nuK8Kjt0VWzZXx/yrBrjy5lKVjBgZOTIfaukR5wVLpqpkTtzhuJyD42pN20I/3i/QbADtW5eUd/vtSO3rP67UbmTJ9uAIHavJdpXaooy/qtr0N8I/mvN/aijMOMQvYeBeSSAd6xLgXFr7+YTzszTUGcKET5ltY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WSGJf1Ai; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720698899; c=relaxed/simple;
+	bh=IdjLAHC8Ml0Zk3Ol4hgBt0RReXSyC9D+z0qNStfQcw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mrvNNyjNiWkB2NjpZZlHjLlCUmxNNoqep1QKyFr4DBs6wyYuF28+m/ub1kuBAmzxa7JVOBwT1lPTgFY47TUOST+P5FZnnE947ZdQ6V+eOTySVDOKVnODzWdbfgBU328liqji6gZVG507KqW17STikoJ3HMNIoMjVCHdUFrRKexA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dhmCCytJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WSGJf1Ai"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720698864; x=1752234864;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=GYItkA+pjOofIuPg+Nv3z7NU9TVj+vHwJBg4ucKCyYM=;
-  b=WSGJf1AiuIu5pDAxaImjL8cF3jkX3h6/TH7ks8+up9b4rKMW4yQ1pV5l
-   47GOxLcwgfHn1uoQWg4PcXR/eJH0IEYuTNLEPdrilB+7hsO0+5cqxVevn
-   ja+A3dfmMOScYyF+U0G6B+z/35MK+aPi6/K0o06h9xKPjlaetjT39RrUH
-   OoCy9S0Op25NFdpxDstsdNV23ZAJ5KPPBv6Ji1HEwPPWmKoVzSE93nic3
-   AWSpUKS91EYZ3zOM41F8CM7nMamzz2fDKV24L2WOcj7mz3SFSbXAvR0MZ
-   C1+ykrSrRCAjeJNQssoCPuD9UufRH5XT65DJhI08qopSK2YctyBaOwY31
-   g==;
-X-CSE-ConnectionGUID: 03trkIZJS+O1+BJmotNJUQ==
-X-CSE-MsgGUID: gu3f63XQSGujcAwuBs11Pg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="21889801"
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="21889801"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 04:54:24 -0700
-X-CSE-ConnectionGUID: zXzOrVypSuGlUZKwCDcVZQ==
-X-CSE-MsgGUID: MU7nCr+gRuKAeXKQawz8LA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="48428715"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 11 Jul 2024 04:54:22 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sRsNP-000ZEO-2F;
-	Thu, 11 Jul 2024 11:54:19 +0000
-Date: Thu, 11 Jul 2024 19:53:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: WANG Xuerui <git@xen0n.name>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>
-Subject: drivers/pci/controller/pcie-mediatek.c:925:43: warning: '%d'
- directive output may be truncated writing between 1 and 10 bytes into a
- region of size 6
-Message-ID: <202407111957.xE3bLmJi-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dhmCCytJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720698896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GLUrFLCqikNAsPcbf03qUnXoJ46gCuQE0XBBtbkOSEc=;
+	b=dhmCCytJbLvmJhYSH5aHbRM6sCnBycoUMuwVUbK2hwFqBD4WPsuyqtRXIvtWmpLHt4bW99
+	C4CIGdCfjArjS7wrROIdTc8RMlHaCc8h+mB4zCas2rc0s17N9/Hk9+I7z6JjWBqQQj1lGP
+	80OjKrqFsWVzgx1Ej8JZCi5Qj8Hx/cQ=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-136-ev1PWeEJOAOGIaBNAU4DiA-1; Thu, 11 Jul 2024 07:54:55 -0400
+X-MC-Unique: ev1PWeEJOAOGIaBNAU4DiA-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ee9308bc8cso6964201fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 04:54:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720698894; x=1721303694;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GLUrFLCqikNAsPcbf03qUnXoJ46gCuQE0XBBtbkOSEc=;
+        b=cEtwqp3Pi1ljO4l/CexCCwjLbb9y7dcd07AoEIS6HC590vsJ1EpLCgRRy4VN5F1KRb
+         oGUWnPlbKWqlhmNIupPCMhfXpcnD499WDB7KfmK/Hpw64N1t8za0hg+Oe1YW7llYryfS
+         j5KCu5a0iMLggAXEEvqMW2eMOnYJCyrQ3GPogFKKnFSJu+C34hJ5mC9LBkihI377qoct
+         mCwoE1Etv8I7Wy6ieGNNBsfxX1OohYbxX6mN9KHGq0095FZAYxy14cBPFy7Fvzby7omY
+         i6w0tHgchfyXhI24lh4b0CPuCY8z+Z3kPNWaiPCk1SNHuk0vnK5nIdFTFxkmur5n28oW
+         9C+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWvStlbM0UYbm1g5ImJc/VqGsQGTl8rVgX5EnJXi58aZ7Q1RK9C4rJFGwxhGfN0nzexbtWp7WbQXkV6a1l95EEQCzeEHeOQardSx0Tg
+X-Gm-Message-State: AOJu0Yw/56PApnAaB6o/TdLgE/Gz2VI99gASM5xd9NLFSrBViNRny/Vc
+	BfwQuElk4m4oR0dEKcPloA5aBAhi2jmd3hdnAzJsJ17+U0SWpu3sibROg6iBK3zAhLABdkwCfo6
+	AAcmpFI6t7NE72xRHfCI3JDPvkxWv9nXp9+X8+NdnRqijpWGNHCWwaX0pf0Zz7g==
+X-Received: by 2002:a2e:90cc:0:b0:2ee:7a7e:8ebb with SMTP id 38308e7fff4ca-2eeb3198b20mr51410591fa.52.1720698893669;
+        Thu, 11 Jul 2024 04:54:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEdSlbHD+ZgkWTuRRwa17SNwKB4KIBO0IU5PmgF3bItPbAkUonL9qMh9qOg9B0O82tb2+tcog==
+X-Received: by 2002:a2e:90cc:0:b0:2ee:7a7e:8ebb with SMTP id 38308e7fff4ca-2eeb3198b20mr51410401fa.52.1720698892904;
+        Thu, 11 Jul 2024 04:54:52 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc7:341:761e:f82:fc9a:623b:3fd1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279accecf4sm17799785e9.39.2024.07.11.04.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 04:54:52 -0700 (PDT)
+Date: Thu, 11 Jul 2024 07:54:48 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	Ani Sinha <anisinha@redhat.com>,
+	Eduardo Habkost <eduardo@habkost.net>,
+	Igor Mammedov <imammedo@redhat.com>,
+	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Shannon Zhao <shannon.zhaosl@gmail.com>,
+	Yanan Wang <wangyanan55@huawei.com>, linux-edac@kernel.org,
+	linux-kernel@vger.kernel.org, qemu-arm@nongnu.org,
+	qemu-devel@nongnu.org
+Subject: Re: [PATCH 1/6] arm/virt: Wire up GPIO error source for ACPI / GHES
+Message-ID: <20240711075332-mutt-send-email-mst@kernel.org>
+References: <cover.1720690278.git.mchehab+huawei@kernel.org>
+ <b9cd4a65d3389102def662a8bc09ffaa622265f7.1720690278.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,196 +83,163 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <b9cd4a65d3389102def662a8bc09ffaa622265f7.1720690278.git.mchehab+huawei@kernel.org>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9d9a2f29aefdadc86e450308ff056017a209c755
-commit: 3f301dc292eb122eff61b8b2906e519154b0327f LoongArch: Replace -ffreestanding with finer-grained -fno-builtin's
-date:   11 months ago
-config: loongarch-randconfig-001-20240711 (https://download.01.org/0day-ci/archive/20240711/202407111957.xE3bLmJi-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240711/202407111957.xE3bLmJi-lkp@intel.com/reproduce)
+On Thu, Jul 11, 2024 at 11:52:03AM +0200, Mauro Carvalho Chehab wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Creates a GED - Generic Event Device and set a GPIO to
+> be used or error injection.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  hw/arm/virt-acpi-build.c | 29 +++++++++++++++++++++++++----
+>  hw/arm/virt.c            | 12 +++++++++++-
+>  include/hw/boards.h      |  1 +
+>  3 files changed, 37 insertions(+), 5 deletions(-)
+> 
+> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+> index e10cad86dd73..b6f2e55014a2 100644
+> --- a/hw/arm/virt-acpi-build.c
+> +++ b/hw/arm/virt-acpi-build.c
+> @@ -63,6 +63,7 @@
+>  
+>  #define ARM_SPI_BASE 32
+>  
+> +#define ACPI_GENERIC_EVENT_DEVICE "GEDD"
+>  #define ACPI_BUILD_TABLE_SIZE             0x20000
+>  
+>  static void acpi_dsdt_add_cpus(Aml *scope, VirtMachineState *vms)
+> @@ -155,9 +156,14 @@ static void acpi_dsdt_add_gpio(Aml *scope, const MemMapEntry *gpio_memmap,
+>  
+>      Aml *aei = aml_resource_template();
+>      /* Pin 3 for power button */
+> -    const uint32_t pin_list[1] = {3};
+> +    uint32_t pin = 3;
+>      aml_append(aei, aml_gpio_int(AML_CONSUMER, AML_EDGE, AML_ACTIVE_HIGH,
+> -                                 AML_EXCLUSIVE, AML_PULL_UP, 0, pin_list, 1,
+> +                                 AML_EXCLUSIVE, AML_PULL_UP, 0, &pin, 1,
+> +                                 "GPO0", NULL, 0));
+> +    pin = 6;
+> +    /* Pin 8 for generic error */
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407111957.xE3bLmJi-lkp@intel.com/
+For real? Code says 6, comment says 8.
 
-All warnings (new ones prefixed by >>):
-
-   drivers/pci/controller/pcie-mediatek.c: In function 'mtk_pcie_parse_port':
->> drivers/pci/controller/pcie-mediatek.c:925:43: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 6 [-Wformat-truncation=]
-     925 |         snprintf(name, sizeof(name), "port%d", slot);
-         |                                           ^~
-   drivers/pci/controller/pcie-mediatek.c:925:38: note: directive argument in the range [0, 2147483647]
-     925 |         snprintf(name, sizeof(name), "port%d", slot);
-         |                                      ^~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:925:9: note: 'snprintf' output between 6 and 15 bytes into a destination of size 10
-     925 |         snprintf(name, sizeof(name), "port%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:932:45: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 4 [-Wformat-truncation=]
-     932 |         snprintf(name, sizeof(name), "sys_ck%d", slot);
-         |                                             ^~
-   drivers/pci/controller/pcie-mediatek.c:932:38: note: directive argument in the range [0, 2147483647]
-     932 |         snprintf(name, sizeof(name), "sys_ck%d", slot);
-         |                                      ^~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:932:9: note: 'snprintf' output between 8 and 17 bytes into a destination of size 10
-     932 |         snprintf(name, sizeof(name), "sys_ck%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:940:45: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 4 [-Wformat-truncation=]
-     940 |         snprintf(name, sizeof(name), "ahb_ck%d", slot);
-         |                                             ^~
-   drivers/pci/controller/pcie-mediatek.c:940:38: note: directive argument in the range [0, 2147483647]
-     940 |         snprintf(name, sizeof(name), "ahb_ck%d", slot);
-         |                                      ^~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:940:9: note: 'snprintf' output between 8 and 17 bytes into a destination of size 10
-     940 |         snprintf(name, sizeof(name), "ahb_ck%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:945:45: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 4 [-Wformat-truncation=]
-     945 |         snprintf(name, sizeof(name), "axi_ck%d", slot);
-         |                                             ^~
-   drivers/pci/controller/pcie-mediatek.c:945:38: note: directive argument in the range [0, 2147483647]
-     945 |         snprintf(name, sizeof(name), "axi_ck%d", slot);
-         |                                      ^~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:945:9: note: 'snprintf' output between 8 and 17 bytes into a destination of size 10
-     945 |         snprintf(name, sizeof(name), "axi_ck%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:950:45: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 4 [-Wformat-truncation=]
-     950 |         snprintf(name, sizeof(name), "aux_ck%d", slot);
-         |                                             ^~
-   drivers/pci/controller/pcie-mediatek.c:950:38: note: directive argument in the range [0, 2147483647]
-     950 |         snprintf(name, sizeof(name), "aux_ck%d", slot);
-         |                                      ^~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:950:9: note: 'snprintf' output between 8 and 17 bytes into a destination of size 10
-     950 |         snprintf(name, sizeof(name), "aux_ck%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:955:46: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 3 [-Wformat-truncation=]
-     955 |         snprintf(name, sizeof(name), "obff_ck%d", slot);
-         |                                              ^~
-   drivers/pci/controller/pcie-mediatek.c:955:38: note: directive argument in the range [0, 2147483647]
-     955 |         snprintf(name, sizeof(name), "obff_ck%d", slot);
-         |                                      ^~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:955:9: note: 'snprintf' output between 9 and 18 bytes into a destination of size 10
-     955 |         snprintf(name, sizeof(name), "obff_ck%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:960:46: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 3 [-Wformat-truncation=]
-     960 |         snprintf(name, sizeof(name), "pipe_ck%d", slot);
-         |                                              ^~
-   drivers/pci/controller/pcie-mediatek.c:960:38: note: directive argument in the range [0, 2147483647]
-     960 |         snprintf(name, sizeof(name), "pipe_ck%d", slot);
-         |                                      ^~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:960:9: note: 'snprintf' output between 9 and 18 bytes into a destination of size 10
-     960 |         snprintf(name, sizeof(name), "pipe_ck%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:965:47: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
-     965 |         snprintf(name, sizeof(name), "pcie-rst%d", slot);
-         |                                               ^~
-   drivers/pci/controller/pcie-mediatek.c:965:38: note: directive argument in the range [0, 2147483647]
-     965 |         snprintf(name, sizeof(name), "pcie-rst%d", slot);
-         |                                      ^~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:965:9: note: 'snprintf' output between 10 and 19 bytes into a destination of size 10
-     965 |         snprintf(name, sizeof(name), "pcie-rst%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:971:47: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
-     971 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
-         |                                               ^~
-   drivers/pci/controller/pcie-mediatek.c:971:38: note: directive argument in the range [0, 2147483647]
-     971 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
-         |                                      ^~~~~~~~~~~~
-   drivers/pci/controller/pcie-mediatek.c:971:9: note: 'snprintf' output between 10 and 19 bytes into a destination of size 10
-     971 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Comments must come before the code they comment, not after it,
+then this kind of thing won't happen.
 
 
-vim +925 drivers/pci/controller/pcie-mediatek.c
+> +    aml_append(aei, aml_gpio_int(AML_CONSUMER, AML_EDGE, AML_ACTIVE_HIGH,
+> +                                 AML_EXCLUSIVE, AML_PULL_UP, 0, &pin, 1,
+>                                   "GPO0", NULL, 0));
+>      aml_append(dev, aml_name_decl("_AEI", aei));
+>  
+> @@ -166,6 +172,11 @@ static void acpi_dsdt_add_gpio(Aml *scope, const MemMapEntry *gpio_memmap,
+>      aml_append(method, aml_notify(aml_name(ACPI_POWER_BUTTON_DEVICE),
+>                                    aml_int(0x80)));
+>      aml_append(dev, method);
+> +    method = aml_method("_E06", 0, AML_NOTSERIALIZED);
+> +    aml_append(method, aml_notify(aml_name(ACPI_GENERIC_EVENT_DEVICE),
+> +                                  aml_int(0x80)));
+> +    aml_append(dev, method);
+> +
+>      aml_append(scope, dev);
+>  }
+>  
+> @@ -800,6 +811,15 @@ static void build_fadt_rev6(GArray *table_data, BIOSLinker *linker,
+>      build_fadt(table_data, linker, &fadt, vms->oem_id, vms->oem_table_id);
+>  }
+>  
+> +static void acpi_dsdt_add_generic_event_device(Aml *scope)
+> +{
+> +    Aml *dev = aml_device(ACPI_GENERIC_EVENT_DEVICE);
+> +    aml_append(dev, aml_name_decl("_HID", aml_string("PNP0C33")));
+> +    aml_append(dev, aml_name_decl("_UID", aml_int(0)));
+> +    aml_append(dev, aml_name_decl("_STA", aml_int(0xF)));
+> +    aml_append(scope, dev);
+> +}
+> +
+>  /* DSDT */
+>  static void
+>  build_dsdt(GArray *table_data, BIOSLinker *linker, VirtMachineState *vms)
+> @@ -842,9 +862,9 @@ build_dsdt(GArray *table_data, BIOSLinker *linker, VirtMachineState *vms)
+>                        irqmap[VIRT_ACPI_GED] + ARM_SPI_BASE, AML_SYSTEM_MEMORY,
+>                        memmap[VIRT_ACPI_GED].base);
+>      } else {
+> -        acpi_dsdt_add_gpio(scope, &memmap[VIRT_GPIO],
+> -                           (irqmap[VIRT_GPIO] + ARM_SPI_BASE));
+>      }
+> +    acpi_dsdt_add_gpio(scope, &memmap[VIRT_GPIO],
+> +                       (irqmap[VIRT_GPIO] + ARM_SPI_BASE));
+>  
+>      if (vms->acpi_dev) {
+>          uint32_t event = object_property_get_uint(OBJECT(vms->acpi_dev),
+> @@ -858,6 +878,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker, VirtMachineState *vms)
+>      }
+>  
+>      acpi_dsdt_add_power_button(scope);
+> +    acpi_dsdt_add_generic_event_device(scope);
+>  #ifdef CONFIG_TPM
+>      acpi_dsdt_add_tpm(scope, vms);
+>  #endif
+> diff --git a/hw/arm/virt.c b/hw/arm/virt.c
+> index b0c68d66a345..874a8612ef2d 100644
+> --- a/hw/arm/virt.c
+> +++ b/hw/arm/virt.c
+> @@ -997,6 +997,13 @@ static void create_rtc(const VirtMachineState *vms)
+>  }
+>  
+>  static DeviceState *gpio_key_dev;
+> +
+> +static DeviceState *gpio_error_dev;
+> +static void virt_set_error(void)
+> +{
+> +    qemu_set_irq(qdev_get_gpio_in(gpio_error_dev, 0), 1);
+> +}
+> +
+>  static void virt_powerdown_req(Notifier *n, void *opaque)
+>  {
+>      VirtMachineState *s = container_of(n, VirtMachineState, powerdown_notifier);
+> @@ -1014,6 +1021,8 @@ static void create_gpio_keys(char *fdt, DeviceState *pl061_dev,
+>  {
+>      gpio_key_dev = sysbus_create_simple("gpio-key", -1,
+>                                          qdev_get_gpio_in(pl061_dev, 3));
+> +    gpio_error_dev = sysbus_create_simple("gpio-key", -1,
+> +                                          qdev_get_gpio_in(pl061_dev, 6));
+>  
+>      qemu_fdt_add_subnode(fdt, "/gpio-keys");
+>      qemu_fdt_setprop_string(fdt, "/gpio-keys", "compatible", "gpio-keys");
+> @@ -2385,8 +2394,8 @@ static void machvirt_init(MachineState *machine)
+>      if (has_ged && aarch64 && firmware_loaded && virt_is_acpi_enabled(vms)) {
+>          vms->acpi_dev = create_acpi_ged(vms);
+>      } else {
+> -        create_gpio_devices(vms, VIRT_GPIO, sysmem);
+>      }
+> +    create_gpio_devices(vms, VIRT_GPIO, sysmem);
+>  
+>      if (vms->secure && !vmc->no_secure_gpio) {
+>          create_gpio_devices(vms, VIRT_SECURE_GPIO, secure_sysmem);
+> @@ -3100,6 +3109,7 @@ static void virt_machine_class_init(ObjectClass *oc, void *data)
+>      mc->default_ram_id = "mach-virt.ram";
+>      mc->default_nic = "virtio-net-pci";
+>  
+> +    mc->set_error = virt_set_error;
+>      object_class_property_add(oc, "acpi", "OnOffAuto",
+>          virt_get_acpi, virt_set_acpi,
+>          NULL, NULL);
+> diff --git a/include/hw/boards.h b/include/hw/boards.h
+> index ef6f18f2c1a7..6cf01f3934ae 100644
+> --- a/include/hw/boards.h
+> +++ b/include/hw/boards.h
+> @@ -304,6 +304,7 @@ struct MachineClass {
+>      const CPUArchIdList *(*possible_cpu_arch_ids)(MachineState *machine);
+>      int64_t (*get_default_cpu_node_id)(const MachineState *ms, int idx);
+>      ram_addr_t (*fixup_ram_size)(ram_addr_t size);
+> +    void (*set_error)(void);
+>  };
+>  
+>  /**
+> -- 
+> 2.45.2
 
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  910  
-4f6f0460448d57 drivers/pci/host/pcie-mediatek.c       Honghui Zhang 2017-08-10  911  static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  912  			       struct device_node *node,
-4f6f0460448d57 drivers/pci/host/pcie-mediatek.c       Honghui Zhang 2017-08-10  913  			       int slot)
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  914  {
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  915  	struct mtk_pcie_port *port;
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  916  	struct device *dev = pcie->dev;
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  917  	struct platform_device *pdev = to_platform_device(dev);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  918  	char name[10];
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  919  	int err;
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  920  
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  921  	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  922  	if (!port)
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  923  		return -ENOMEM;
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  924  
-1eacd7b84e0413 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10 @925  	snprintf(name, sizeof(name), "port%d", slot);
-e2dcd20b1645a7 drivers/pci/controller/pcie-mediatek.c Dejin Zheng   2020-06-03  926  	port->base = devm_platform_ioremap_resource_byname(pdev, name);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  927  	if (IS_ERR(port->base)) {
-4f6f0460448d57 drivers/pci/host/pcie-mediatek.c       Honghui Zhang 2017-08-10  928  		dev_err(dev, "failed to map port%d base\n", slot);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  929  		return PTR_ERR(port->base);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  930  	}
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  931  
-4f6f0460448d57 drivers/pci/host/pcie-mediatek.c       Honghui Zhang 2017-08-10  932  	snprintf(name, sizeof(name), "sys_ck%d", slot);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  933  	port->sys_ck = devm_clk_get(dev, name);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  934  	if (IS_ERR(port->sys_ck)) {
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  935  		dev_err(dev, "failed to get sys_ck%d clock\n", slot);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  936  		return PTR_ERR(port->sys_ck);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  937  	}
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  938  
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  939  	/* sys_ck might be divided into the following parts in some chips */
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  940  	snprintf(name, sizeof(name), "ahb_ck%d", slot);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  941  	port->ahb_ck = devm_clk_get_optional(dev, name);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  942  	if (IS_ERR(port->ahb_ck))
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  943  		return PTR_ERR(port->ahb_ck);
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  944  
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  945  	snprintf(name, sizeof(name), "axi_ck%d", slot);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  946  	port->axi_ck = devm_clk_get_optional(dev, name);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  947  	if (IS_ERR(port->axi_ck))
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  948  		return PTR_ERR(port->axi_ck);
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  949  
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  950  	snprintf(name, sizeof(name), "aux_ck%d", slot);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  951  	port->aux_ck = devm_clk_get_optional(dev, name);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  952  	if (IS_ERR(port->aux_ck))
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  953  		return PTR_ERR(port->aux_ck);
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  954  
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  955  	snprintf(name, sizeof(name), "obff_ck%d", slot);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  956  	port->obff_ck = devm_clk_get_optional(dev, name);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  957  	if (IS_ERR(port->obff_ck))
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  958  		return PTR_ERR(port->obff_ck);
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  959  
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  960  	snprintf(name, sizeof(name), "pipe_ck%d", slot);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  961  	port->pipe_ck = devm_clk_get_optional(dev, name);
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  962  	if (IS_ERR(port->pipe_ck))
-6be22343cc546b drivers/pci/controller/pcie-mediatek.c Chunfeng Yun  2019-04-10  963  		return PTR_ERR(port->pipe_ck);
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  964  
-4f6f0460448d57 drivers/pci/host/pcie-mediatek.c       Honghui Zhang 2017-08-10  965  	snprintf(name, sizeof(name), "pcie-rst%d", slot);
-608fcac7ce31b9 drivers/pci/host/pcie-mediatek.c       Philipp Zabel 2017-07-19  966  	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  967  	if (PTR_ERR(port->reset) == -EPROBE_DEFER)
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  968  		return PTR_ERR(port->reset);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  969  
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  970  	/* some platforms may use default PHY setting */
-4f6f0460448d57 drivers/pci/host/pcie-mediatek.c       Honghui Zhang 2017-08-10  971  	snprintf(name, sizeof(name), "pcie-phy%d", slot);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  972  	port->phy = devm_phy_optional_get(dev, name);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  973  	if (IS_ERR(port->phy))
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  974  		return PTR_ERR(port->phy);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  975  
-4f6f0460448d57 drivers/pci/host/pcie-mediatek.c       Honghui Zhang 2017-08-10  976  	port->slot = slot;
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  977  	port->pcie = pcie;
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  978  
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  979  	if (pcie->soc->setup_irq) {
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  980  		err = pcie->soc->setup_irq(port, node);
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  981  		if (err)
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  982  			return err;
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  983  	}
-b099631df160ec drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-08-10  984  
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  985  	INIT_LIST_HEAD(&port->list);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  986  	list_add_tail(&port->list, &pcie->ports);
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  987  
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  988  	return 0;
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  989  }
-637cfacae96fa6 drivers/pci/host/pcie-mediatek.c       Ryder Lee     2017-05-21  990  
-
-:::::: The code at line 925 was first introduced by commit
-:::::: 1eacd7b84e0413f55fbc0c61874f745cc5e2ed9e PCI: mediatek: Switch to use platform_get_resource_byname()
-
-:::::: TO: Ryder Lee <ryder.lee@mediatek.com>
-:::::: CC: Bjorn Helgaas <bhelgaas@google.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
