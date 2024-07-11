@@ -1,187 +1,237 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F8914C587
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E87314387F;
+	Thu, 11 Jul 2024 13:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720703668; cv=none; b=dxGVCDbMFqAWS1uGeA7ZzOrIMXUv7JWzk2S3sDsYYNqKKeUGk8cbWeBVnrsHS3u8HWwtX6CE93lx5z9RsSC5PhRlb2hMh0ZIPuyWODIfMzg3nVHaXHUiAOuhtCf+c8cYaGHVpZCRzy5rBQnVzKT80oYRjDBwPk8hl67cuoZyDNI=
+	t=1720703680; cv=none; b=EAKk1wALj5n/yLtaj17FdHw/nAHKM1ufN7T4JSmgj+7C0epZyY+Nt0NFjcAo3aa1Ql4cZkWLV5W4jG7KxslWzhzdzZdlERV7FppIIQbY5700w4rCCwB/2FHlTrvZKzS4bVIKKJ6w6ti1mV7vfo8tUNUYILJiwlvdG7i/E4uwiEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720703668; c=relaxed/simple;
-	bh=rX2o5TNF2sxFdJGUuLW3hs3BgO6xhdaxeIGoh+lsZRY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pmynwaD1pF5QsoXE2bwVfNLlCF908ijO3/Sh2obFe8V+AGPMn0zmhSNYGOLe9pGJYqEyOfgDDNntFXH2F+KuXeyXG0neskhgSBVqcFSAx8esdVgpCmmva7C14CK7Y0LhE63nv9/4VvqbmA+W4xiZiHwVkb39ue8CKlf0pzfS9iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q1sDKwhx; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720703680; c=relaxed/simple;
+	bh=kMnDnHC6peKRuh1EGNmjeyJ26izdf2QlJfUQUmJcaUs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uMnlx9nSirsaQl1MQPM/FxmMKOyYtrqiis/xUfBQTxgEvIRJUs1CAKL51K3oxP+VQqy2AL92dMpaKRjrlxIzgNAlBd5r/l9xMhK2e6nFNUZdZW9kfoVsWwg3kOLXHw55/ZdSc5DLs/DVusV1cdtogp7cJk815dKvcGlG7pd+CrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KqX/3Vl7; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q1sDKwhx"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c983d8bdc7so737820a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 06:14:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqX/3Vl7"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-36796a9b636so418077f8f.2;
+        Thu, 11 Jul 2024 06:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720703666; x=1721308466; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2D4aHwswwM4NqPAOXG3fEumKo2hscS5ep5Tu5PbXU/c=;
-        b=q1sDKwhxCmdcVo7Tz/WarJs2WMKOmZVutloBQJ+cT6DuktoHVKTDolE2sWcVWSBDXQ
-         em7xs55UO5c4bQtEtUCmSVH/jTwAVqjmPHvFNHmTSc+jCglEg8uoAOyX5XXgMnw3sJKA
-         NHUsSvwT/jJ0lne+cxGyQ8Sdp8aNQleKW/2bOVbCdiIS1Zu8j0yqcbM6eGos5PF1Yv5U
-         DTqGjwweStycyuHkNjj7nVtoLU4dBog2LvGkrwCIX/EK0C1HLrvO/0s30XNZFRK9MUIw
-         FGNtigNxebuiFizwgpy07HjxgmTigVj1TZ1WGxJvletQBiu+mvVpk6QrtudNNkEgq1oX
-         siYw==
+        d=gmail.com; s=20230601; t=1720703677; x=1721308477; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t4OCWGJiZF/0bRCpKNuOlysMxuhgiQ6tCE4ubqby34g=;
+        b=KqX/3Vl7t/wfJiIkMeaOuc4F5ljj+3VBLqx6OlOgiKeNis12UeJGKbYZiV99dk6YQx
+         kGZZwBrryKOcNiZ4wGe8sl03bx/DwMOXiNsJ4AqGj8O26SVgN951mN5yMMTqv7P75x3q
+         fTap7QeV8N5y8peXy6D3XI3ofelfq7oklIn8HWACoWETCzkBRyiR9PbRAhO1FQIHYeDZ
+         dgqEsFgc65BP/a2zhR0+WClMxDOFXXPIK3yxtwDqLDYf37OFn8Kl0ZnAPSjAuniaVmax
+         58l/LD5683xFslQKVeQ2F5epmwvBNju9xg3+U3Z26sDOXclMuTqIFoBbAm+/ndOpbIqc
+         +Vxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720703666; x=1721308466;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2D4aHwswwM4NqPAOXG3fEumKo2hscS5ep5Tu5PbXU/c=;
-        b=ep2NetmWyKWwO/y+ftWd5Ojnw/UJHTCHz7cNp/ksyYsFbHvoBFblbMnXXvUL7j2rHC
-         eYtwY4vOj5YMXSjJuVn7togDVP6AqjFJp7R61oQizXO3E1RegF4VSU2qeMok70BrLUiL
-         CQVWMiAlKyJB9RN4u+rv8FUS9kDchHtYa7/+AmD56nKY7z1yaVitqHbp3Piys9JrtT2W
-         s6iX+OHA3yLEKPMgheL0KlroNCWpIzTD4i3NVi7WSQub/vUDhOQVTrAs6ENNjDK0Jk/q
-         6Zj+kdngtjFJG8MZ9lodDGTiNMuAQn3Uh5jcLR/ffM7I8HWNdM41QUvDhc3Vz7WvfTn/
-         itSg==
-X-Forwarded-Encrypted: i=1; AJvYcCX06mkasoIUqOEZiphm1jgnMpbDcggIz1od7OkQCSICMyThS/+jP8OC1pinI2XiAAbkC2JgPuTs4KkUcbzbUvN9GnI6oM0CF9tAcMn6
-X-Gm-Message-State: AOJu0YyUHybrhHrRPoX/cZ0U19bpQcp88Vc2SnlXGj0AIw8m9L83kXkB
-	21VaNO+QsjymDSfYRKbaioq5RdTlMgJNue0YiPBUHuL65mPYH8fXrBAf5Es6b039CjruHp9sLxp
-	YibPQpLBhzydOHKFqsGeBFBdPFSvO3a4fUnsybQ==
-X-Google-Smtp-Source: AGHT+IErQLzLlTEDyE3WJuQw4hks/9BAeR6qnkZb/+NCoxRAyea5EDRu7Q8Z1cTAIYj4PS4tLHbvPQsOY9wJYD6oOtQ=
-X-Received: by 2002:a17:90b:1c0e:b0:2c9:9f50:466a with SMTP id
- 98e67ed59e1d1-2ca35d5c570mr6528843a91.48.1720703666451; Thu, 11 Jul 2024
- 06:14:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720703677; x=1721308477;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t4OCWGJiZF/0bRCpKNuOlysMxuhgiQ6tCE4ubqby34g=;
+        b=v8wCELUXNNsWj/nNhyl+1h3OLEMjYL2bxRiRCX2CMEV1YzKEswG1W++uyrixjQqmG1
+         54Ws5C1FDKcFn2cXM9zr5eQRoW9iEWmqszz1tVtp8/Ls96KJlQWJYWZCZDcW1tF/3pSd
+         3aZcETdq+kG36+KpGYsNa+1LXrRQqJMURBhMTK8vAfnsGiDb+Blt8ZHw69K1MkrjvuqJ
+         5SdW5/vE/AuWxSUZCGrWEKbzb+yF2QJqKhbpiBuvRbO09Iu3V4t2PWNiyG8Rbc5te2w4
+         uBAvIt3myvLtAtSWzR1eP4s48XOGRtqP/XWN96nIjycuvWuPLfLnDiml2LZRIF80pwmq
+         RsZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPwUQ//Q5J7N8c5uV2wxtSw0MAlZjyB1X17NXG2/vquZYpaNx0OFPs7Qup8QJfa5QheoLtyEUk/osqfGbF0jsgsamKOo9rOjosfFSERd9StTJ9ApmrHLLLT0DHssHqr1Ep4WSp
+X-Gm-Message-State: AOJu0Yy/iwTZxzT7U0Ijlvc2y5/GtUXLPZ0TW7L7KMZq0WZ8S/ZT5YUu
+	UrBvBXXVKAxhpKHJVN302s5rfb04n1h7Y+r/touqL8nRc3KAk6BC
+X-Google-Smtp-Source: AGHT+IFLRQKrYhYC/sTj1Qavq3fPHiBPSsbJARrF8r320pwtNbFg+4Jo4N9/rNMW6J7a5CZjYkRDLQ==
+X-Received: by 2002:a5d:6288:0:b0:367:9ab5:2c80 with SMTP id ffacd0b85a97d-367cead86f8mr5141333f8f.57.1720703676389;
+        Thu, 11 Jul 2024 06:14:36 -0700 (PDT)
+Received: from localhost ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa0694sm7768958f8f.66.2024.07.11.06.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 06:14:36 -0700 (PDT)
+From: Richard Gobert <richardbgobert@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	idosch@nvidia.com,
+	amcohen@nvidia.com,
+	petrm@nvidia.com,
+	gnault@redhat.com,
+	jbenc@redhat.com,
+	b.galvani@gmail.com,
+	martin.lau@kernel.org,
+	daniel@iogearbox.net,
+	aahila@google.com,
+	liuhangbin@gmail.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org
+Cc: Richard Gobert <richardbgobert@gmail.com>
+Subject: [PATCH net-next v3 1/2] net: vxlan: enable local address bind for vxlan sockets
+Date: Thu, 11 Jul 2024 15:14:10 +0200
+Message-Id: <20240711131411.10439-2-richardbgobert@gmail.com>
+In-Reply-To: <20240711131411.10439-1-richardbgobert@gmail.com>
+References: <20240711131411.10439-1-richardbgobert@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710090210.41856-1-kprateek.nayak@amd.com>
- <20240710090210.41856-3-kprateek.nayak@amd.com> <CAKfTPtCNJUC-gNNPkEBRT5a2UVcPUHLdzUJ+-egZGQ5ihnU0Kw@mail.gmail.com>
- <20240711091936.GJ4587@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240711091936.GJ4587@noisy.programming.kicks-ass.net>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 11 Jul 2024 15:14:14 +0200
-Message-ID: <CAKfTPtCDUhqZz2Q=k--=y8o4iiSeseLXMMruhZAuEd2Bb6iEoA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] sched/core: Introduce SM_IDLE and an idle re-entry
- fast-path in __schedule()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, linux-kernel@vger.kernel.org, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Imran Khan <imran.f.khan@oracle.com>, 
-	Leonardo Bras <leobras@redhat.com>, Guo Ren <guoren@kernel.org>, Rik van Riel <riel@surriel.com>, 
-	Tejun Heo <tj@kernel.org>, Cruz Zhao <CruzZhao@linux.alibaba.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Julia Lawall <julia.lawall@inria.fr>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 11 Jul 2024 at 11:19, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jul 11, 2024 at 10:00:15AM +0200, Vincent Guittot wrote:
-> > On Wed, 10 Jul 2024 at 11:03, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
->
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index 1e0c77eac65a..417d3ebbdf60 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -6343,19 +6343,12 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> > >   * Constants for the sched_mode argument of __schedule().
-> > >   *
-> > >   * The mode argument allows RT enabled kernels to differentiate a
-> > > - * preemption from blocking on an 'sleeping' spin/rwlock. Note that
-> > > - * SM_MASK_PREEMPT for !RT has all bits set, which allows the compiler to
-> > > - * optimize the AND operation out and just check for zero.
-> > > + * preemption from blocking on an 'sleeping' spin/rwlock.
-> > >   */
-> > > -#define SM_NONE                        0x0
-> > > -#define SM_PREEMPT             0x1
-> > > -#define SM_RTLOCK_WAIT         0x2
-> > > -
-> > > -#ifndef CONFIG_PREEMPT_RT
-> > > -# define SM_MASK_PREEMPT       (~0U)
-> > > -#else
-> > > -# define SM_MASK_PREEMPT       SM_PREEMPT
-> > > -#endif
-> > > +#define SM_IDLE                        (-1)
-> > > +#define SM_NONE                        0
-> > > +#define SM_PREEMPT             1
-> > > +#define SM_RTLOCK_WAIT         2
-> > >
-> > >  /*
-> > >   * __schedule() is the main scheduler function.
-> > > @@ -6396,11 +6389,12 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> > >   *
-> > >   * WARNING: must be called with preemption disabled!
-> > >   */
-> > > -static void __sched notrace __schedule(unsigned int sched_mode)
-> > > +static void __sched notrace __schedule(int sched_mode)
-> > >  {
-> > >         struct task_struct *prev, *next;
-> > >         unsigned long *switch_count;
-> > >         unsigned long prev_state;
-> > > +       bool preempt = sched_mode > 0;
-> > >         struct rq_flags rf;
-> > >         struct rq *rq;
-> > >         int cpu;
-> > > @@ -6409,13 +6403,13 @@ static void __sched notrace __schedule(unsigned int sched_mode)
-> > >         rq = cpu_rq(cpu);
-> > >         prev = rq->curr;
-> > >
-> > > -       schedule_debug(prev, !!sched_mode);
-> > > +       schedule_debug(prev, preempt);
-> > >
-> > >         if (sched_feat(HRTICK) || sched_feat(HRTICK_DL))
-> > >                 hrtick_clear(rq);
-> > >
-> > >         local_irq_disable();
-> > > -       rcu_note_context_switch(!!sched_mode);
-> > > +       rcu_note_context_switch(preempt);
-> > >
-> > >         /*
-> > >          * Make sure that signal_pending_state()->signal_pending() below
-> > > @@ -6449,7 +6443,12 @@ static void __sched notrace __schedule(unsigned int sched_mode)
-> > >          * that we form a control dependency vs deactivate_task() below.
-> > >          */
-> > >         prev_state = READ_ONCE(prev->__state);
-> > > -       if (!(sched_mode & SM_MASK_PREEMPT) && prev_state) {
-> > > +       if (sched_mode == SM_IDLE) {
-> > > +               if (!rq->nr_running) {
-> > > +                       next = prev;
-> > > +                       goto picked;
-> > > +               }
-> > > +       } else if (!preempt && prev_state) {
-> >
-> > With CONFIG_PREEMPT_RT, it was only for SM_PREEMPT but not for SM_RTLOCK_WAIT
->
-> Bah, yes. But then schedule_debug() and rcu_note_context_switch() have
-> an argument that is called 'preempt' but is set for SM_RTLOCK_WAIT.
->
-> Now, I think the RCU think is actually correct here, it doesn't want to
-> consider SM_RTLOCK_WAIT as a voluntary schedule point, because spinlocks
-> don't either. But it is confusing as heck.
->
-> We can either write things like:
->
->         } else if (sched_mode != SM_PREEMPT && prev_state) {
+This patch adds support for binding to a local address in vxlan sockets.
+It achieves this by using vxlan_addr union to represent a local address
+to bind to, and copying it to udp_port_cfg in vxlan_create_sock.
 
-this would work with something like below
+Also change vxlan_find_sock to search the socket based on listening address.
 
-#ifdef CONFIG_PREEMPT_RT
-          # define SM_RTLOCK_WAIT       2
-#else
-         # define SM_RTLOCK_WAIT       SM_PREEMPT
-#endif
+Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+---
+ drivers/net/vxlan/vxlan_core.c | 55 ++++++++++++++++++++++++----------
+ 1 file changed, 40 insertions(+), 15 deletions(-)
 
->
-> or do silly things like:
->
-> #define SM_IDLE (-16)
->
-> keep the SM_MASK_PREEMPT trickery and do:
->
->         } else if (!(sched_mode & SM_MASK_PREEMPT) && prev_state) {
->
-> Not sure that is actually going to matter at this point though.
+diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
+index ba59e92ab941..b6e34e037d4b 100644
+--- a/drivers/net/vxlan/vxlan_core.c
++++ b/drivers/net/vxlan/vxlan_core.c
+@@ -72,22 +72,35 @@ static inline bool vxlan_collect_metadata(struct vxlan_sock *vs)
+ }
+ 
+ /* Find VXLAN socket based on network namespace, address family, UDP port,
+- * enabled unshareable flags and socket device binding (see l3mdev with
+- * non-default VRF).
++ * bounded address, enabled unshareable flags and socket device binding
++ * (see l3mdev with non-default VRF).
+  */
+ static struct vxlan_sock *vxlan_find_sock(struct net *net, sa_family_t family,
+-					  __be16 port, u32 flags, int ifindex)
++					  __be16 port, u32 flags, int ifindex,
++					  union vxlan_addr *saddr)
+ {
+ 	struct vxlan_sock *vs;
+ 
+ 	flags &= VXLAN_F_RCV_FLAGS;
+ 
+ 	hlist_for_each_entry_rcu(vs, vs_head(net, port), hlist) {
+-		if (inet_sk(vs->sock->sk)->inet_sport == port &&
++		struct sock *sk = vs->sock->sk;
++		struct inet_sock *inet = inet_sk(sk);
++
++		if (inet->inet_sport == port &&
+ 		    vxlan_get_sk_family(vs) == family &&
+ 		    vs->flags == flags &&
+-		    vs->sock->sk->sk_bound_dev_if == ifindex)
+-			return vs;
++		    vs->sock->sk->sk_bound_dev_if == ifindex) {
++			if (family == AF_INET &&
++			    inet->inet_rcv_saddr == saddr->sin.sin_addr.s_addr)
++				return vs;
++#if IS_ENABLED(CONFIG_IPV6)
++			else if (ipv6_addr_cmp(&sk->sk_v6_rcv_saddr,
++					       &saddr->sin6.sin6_addr) == 0)
++				return vs;
++#endif
++		}
++
+ 	}
+ 	return NULL;
+ }
+@@ -135,11 +148,12 @@ static struct vxlan_dev *vxlan_vs_find_vni(struct vxlan_sock *vs,
+ /* Look up VNI in a per net namespace table */
+ static struct vxlan_dev *vxlan_find_vni(struct net *net, int ifindex,
+ 					__be32 vni, sa_family_t family,
+-					__be16 port, u32 flags)
++					__be16 port, u32 flags,
++					union vxlan_addr *saddr)
+ {
+ 	struct vxlan_sock *vs;
+ 
+-	vs = vxlan_find_sock(net, family, port, flags, ifindex);
++	vs = vxlan_find_sock(net, family, port, flags, ifindex, saddr);
+ 	if (!vs)
+ 		return NULL;
+ 
+@@ -2315,7 +2329,7 @@ static int encap_bypass_if_local(struct sk_buff *skb, struct net_device *dev,
+ 		dst_release(dst);
+ 		dst_vxlan = vxlan_find_vni(vxlan->net, dst_ifindex, vni,
+ 					   addr_family, dst_port,
+-					   vxlan->cfg.flags);
++					   vxlan->cfg.flags, &vxlan->cfg.saddr);
+ 		if (!dst_vxlan) {
+ 			DEV_STATS_INC(dev, tx_errors);
+ 			vxlan_vnifilter_count(vxlan, vni, NULL,
+@@ -3503,8 +3517,9 @@ static const struct ethtool_ops vxlan_ethtool_ops = {
+ 	.get_link_ksettings	= vxlan_get_link_ksettings,
+ };
+ 
+-static struct socket *vxlan_create_sock(struct net *net, bool ipv6,
+-					__be16 port, u32 flags, int ifindex)
++static struct socket *vxlan_create_sock(struct net *net, bool ipv6, __be16 port,
++					u32 flags, int ifindex,
++					union vxlan_addr *addr)
+ {
+ 	struct socket *sock;
+ 	struct udp_port_cfg udp_conf;
+@@ -3517,8 +3532,17 @@ static struct socket *vxlan_create_sock(struct net *net, bool ipv6,
+ 		udp_conf.use_udp6_rx_checksums =
+ 		    !(flags & VXLAN_F_UDP_ZERO_CSUM6_RX);
+ 		udp_conf.ipv6_v6only = 1;
++#if IS_ENABLED(CONFIG_IPV6)
++		memcpy(&udp_conf.local_ip6.s6_addr32,
++		       &addr->sin6.sin6_addr.s6_addr32,
++		       sizeof(addr->sin6.sin6_addr.s6_addr32));
++#endif
+ 	} else {
+ 		udp_conf.family = AF_INET;
++		udp_conf.local_ip.s_addr = addr->sin.sin_addr.s_addr;
++		memcpy(&udp_conf.local_ip.s_addr,
++		       &addr->sin.sin_addr.s_addr,
++		       sizeof(addr->sin.sin_addr.s_addr));
+ 	}
+ 
+ 	udp_conf.local_udp_port = port;
+@@ -3536,7 +3560,8 @@ static struct socket *vxlan_create_sock(struct net *net, bool ipv6,
+ /* Create new listen socket if needed */
+ static struct vxlan_sock *vxlan_socket_create(struct net *net, bool ipv6,
+ 					      __be16 port, u32 flags,
+-					      int ifindex)
++					      int ifindex,
++					      union vxlan_addr *addr)
+ {
+ 	struct vxlan_net *vn = net_generic(net, vxlan_net_id);
+ 	struct vxlan_sock *vs;
+@@ -3551,7 +3576,7 @@ static struct vxlan_sock *vxlan_socket_create(struct net *net, bool ipv6,
+ 	for (h = 0; h < VNI_HASH_SIZE; ++h)
+ 		INIT_HLIST_HEAD(&vs->vni_list[h]);
+ 
+-	sock = vxlan_create_sock(net, ipv6, port, flags, ifindex);
++	sock = vxlan_create_sock(net, ipv6, port, flags, ifindex, addr);
+ 	if (IS_ERR(sock)) {
+ 		kfree(vs);
+ 		return ERR_CAST(sock);
+@@ -3605,7 +3630,7 @@ static int __vxlan_sock_add(struct vxlan_dev *vxlan, bool ipv6)
+ 		spin_lock(&vn->sock_lock);
+ 		vs = vxlan_find_sock(vxlan->net, ipv6 ? AF_INET6 : AF_INET,
+ 				     vxlan->cfg.dst_port, vxlan->cfg.flags,
+-				     l3mdev_index);
++				     l3mdev_index, &vxlan->cfg.saddr);
+ 		if (vs && !refcount_inc_not_zero(&vs->refcnt)) {
+ 			spin_unlock(&vn->sock_lock);
+ 			return -EBUSY;
+@@ -3615,7 +3640,7 @@ static int __vxlan_sock_add(struct vxlan_dev *vxlan, bool ipv6)
+ 	if (!vs)
+ 		vs = vxlan_socket_create(vxlan->net, ipv6,
+ 					 vxlan->cfg.dst_port, vxlan->cfg.flags,
+-					 l3mdev_index);
++					 l3mdev_index, &vxlan->cfg.saddr);
+ 	if (IS_ERR(vs))
+ 		return PTR_ERR(vs);
+ #if IS_ENABLED(CONFIG_IPV6)
+-- 
+2.36.1
+
