@@ -1,50 +1,74 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B0C54657;
-	Thu, 11 Jul 2024 18:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E818B38398;
+	Thu, 11 Jul 2024 18:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720723380; cv=none; b=CiZrlwa4Pg9E0VbpndLelWM0OPHQGNIxwHNQOx2fiZ8Gni66nsKfRU/wPqhPj1aXkyOs+jbdcrpPeglvVGUy5R4XnZ8+IPgtVwrHBYDHKz2S5tUqXw6+32fdP/x2+Eb6UtcCTDEG2sl5IrKCWGoWJeoUNhk9ksNVDf6aO6yp5u8=
+	t=1720723475; cv=none; b=PaLSE1qWaosII5bfJ70ucGL4H0yIx6ntC2RpMUSyuWvboT65HsctHeYPecPhWZtYg+OpeAaN8xfEupyngy6vcHul+48d5E8/QHKAZP58tNmjoylAb3icfe3+HbboU0lG5V4p5gO0ufe/I+tp+c3P04l04QUKqKlLqetlJGgFXs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720723380; c=relaxed/simple;
-	bh=1VD1l8BcEO5CRrrIhm8LmbatrpLVg5M1IC6hBv4z6uQ=;
+	s=arc-20240116; t=1720723475; c=relaxed/simple;
+	bh=SEFCc513xCNJSG9UVFgYdr0OMgjdLx1OXfmbJqmjliM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O44DV9JnZpt+mQlEQbMbFmFcKNrXKL3c2YFDh3cXFy74PDEcl3cOZ8aL/jA4XibzDEDaXeyIVQ3CAp0KKoYZAlVskctXxPPHzzkXB97+HroKYIaX9zawvAUKISDxTCDWmL1P/tAeYVBacSFOvHdpviaZDFuzh46U7fKaVJTjNxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Yfg6Xzy2; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q72k0+ufvOggFoj2+mg/lb6eN3b+8P1CE7jM8h9txyLS6RRArjpM5cIW0NC2UKk+XB8L27dL/b++4qo7VqyZukuggU8CDpwjWCwAV5W8UcldIJ7qCIwd8iWYChlL7XScprigQs5m8ES8Di345+McJ4CfVGVU47VlX2RB3STWk2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWjcuDWx; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yfg6Xzy2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bA0o/xfWTMOlDDaHwMD+yUJJ1Reh1OoOCi4t4sZG3qI=; b=Yfg6Xzy2kGAcEr/TfRFSpPb3TE
-	M1Z9/F/QJML9QR89+CICNJdYUHpb4fWqXlOBeH3zQRIEoqezFNzFFbnUTAUoqwQaqDBO+oYCSJ2TA
-	nlfrNd6RQC7V+gx0kMCdqTeiifkNXYC2SxEpLn3IL9RRJ4NoDHAxoShChBbW5l1hUQe5OqR1//U/T
-	trzJeuqGbzoGrfIHkNpzn8CXWbMtKY1qFTWmyo5jSk3cHP4nnwibUOUmiPJUKF7RWAmICtiV6IXZ4
-	8z+J4GldGet+Sz7Ri3YyOxAcOTa5y7tf4pQNZynTFpeFQdVlnrJZah8oA/0kgKZG3cWElT2/S3RGe
-	Rr2p3C3A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRykl-0000000BWdO-3FgH;
-	Thu, 11 Jul 2024 18:42:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6A81E30050D; Thu, 11 Jul 2024 20:42:51 +0200 (CEST)
-Date: Thu, 11 Jul 2024 20:42:51 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
-	paulmck@kernel.org
-Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
- to SRCU
-Message-ID: <20240711184251.GD27299@noisy.programming.kicks-ass.net>
-References: <20240711110235.098009979@infradead.org>
- <20240711110401.311168524@infradead.org>
- <20240711160652.GE16902@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWjcuDWx"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70b09cb7776so1058170b3a.1;
+        Thu, 11 Jul 2024 11:44:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720723473; x=1721328273; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=81F7Jmh/XxgGOMMJv6GwxpQ3JjZzTcsp+Xpu4neomkU=;
+        b=dWjcuDWxsfVUuiF945u1ZCgmgACDVu/3GgmrU9cg9CBgaSyPFA59Luaqx7WPPrAq2B
+         WUV8gx9p+VPW5Ddeni9YBV6JGlSiBcac1wBa3SlQ51vzMwhyBButUlVMXoGZjfTDxhok
+         xyA+3ZZAl51/tDm0WKhoGcYu4KyGJef3Jj+QH9P+bKx2CtgsTmiCYydMtdYGDiHjIEax
+         33a93OQGo4PmZiM6/prAXcBz4nNSxiqVXGbdaOJNYQXs024C/61k8XSuLhxvEpp8vFqR
+         17+UCVwScx2Ib3PskNojIQEftZVvmlySk8rSgRP+hrSWSz39ewhT38xzTqNlRFRYqWMw
+         8ktw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720723473; x=1721328273;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=81F7Jmh/XxgGOMMJv6GwxpQ3JjZzTcsp+Xpu4neomkU=;
+        b=qsemrLiIDZUbMzfSZXegzJeQNfv6pMFGPRYu6hsZGV8SUu+VYXFV5kUuXMnp1BL9G6
+         ZnaSJIHebYMi7YLwFtJrzSf4/m4hYmje3CFy/xcxGs+C+jG7H8NoS913CCiUrOeqp6mn
+         dlarPOi8qvg1qffD/oktHqS86nVLtAXm85qOyKQ8GW6aFjPRV/ZCfrD6/NObk2pcxuYK
+         o/+dcZi049zFN5gE+xX4q31MndVcdERhAELOuW6TLZ2k5uHMZgoO1MlCUjAFgyhpFC7t
+         NWEY8NWVPjkR28ZvYOUOxWvxHlowdnwn2J2xo3BmSPFcpBoM+gmhpASrWwPrNnHM8W3B
+         mYsw==
+X-Forwarded-Encrypted: i=1; AJvYcCWs6cy1Rx713wZGSOh/OVaCf9NgtYxfWwFNXmPgyX9h3kUuSnL7IjsXvbR2ERmVdhobtPamyiKXNkH8dyrRJLuDnhXIqxco0IZZ8wFLItFqODAv6XVRTSB7nU9BxFwb7d8MNB0DMsPX27luIKopzwXU9EQ8oYmyy81Z/EmE5h3WmA==
+X-Gm-Message-State: AOJu0YyDEbRaK6NNLJKV7nVwHp/Ry+hPS7uMKj+mJzA2Ll9xrL9mw7Yd
+	oHk7FHBUwS0z6237Ob6Ib0hIP3ONV4C6j3AU1eArii9XaJ3+0EJK
+X-Google-Smtp-Source: AGHT+IGrNhyhr4lJ/caU15aCmXa8NIU4JW+ZCRr9qtS57I+xiOizFgSPzdyXR1KOhdGx0whGrYN7uA==
+X-Received: by 2002:a05:6a20:3941:b0:1c2:8b7f:5eb4 with SMTP id adf61e73a8af0-1c29820c03bmr10025148637.5.1720723473090;
+        Thu, 11 Jul 2024 11:44:33 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b54ea2279sm3622293b3a.171.2024.07.11.11.44.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 11:44:32 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 11 Jul 2024 08:44:31 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kamalesh Babulal <kamalesh.babulal@oracle.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>
+Subject: Re: [PATCH v3 1/2] cgroup: Show # of subsystem CSSes in cgroup.stat
+Message-ID: <ZpAoD7_o8bf6yVGr@slm.duckdns.org>
+References: <20240710182353.2312025-1-longman@redhat.com>
+ <20240711134927.GB456706@cmpxchg.org>
+ <4e1078d6-6970-4eea-8f73-56a3815794b5@redhat.com>
+ <ZpAT_xu0oXjQsKM7@slm.duckdns.org>
+ <76e70789-986a-44c2-bfdc-d636f425e5ae@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,61 +77,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240711160652.GE16902@redhat.com>
+In-Reply-To: <76e70789-986a-44c2-bfdc-d636f425e5ae@redhat.com>
 
-On Thu, Jul 11, 2024 at 06:06:53PM +0200, Oleg Nesterov wrote:
-> I'll try to actually apply the whole series and read the code tomorrow.
-> Right now I can't understand this change... Just one question for now.
-> 
-> On 07/11, Peter Zijlstra wrote:
-> >
-> > @@ -1956,11 +1960,13 @@ static void prepare_uretprobe(struct upr
-> >  			 * attack from user-space.
-> >  			 */
-> >  			uprobe_warn(current, "handle tail call");
-> > -			goto err_uprobe;
-> > +			goto err_mem;
-> >  		}
-> >  		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
-> >  	}
-> >
-> > +	ri->srcu_idx = __srcu_read_lock(&uretprobes_srcu);
-> > +	ri->uprobe = uprobe;
-> 
-> It seems that, if we race with _unregister, this __srcu_read_lock()
-> can happen after call_srcu(uprobes_srcu, uprobe, uprobe_free_stage1)
-> was already called...
-> 
-> In this case read_lock "has no effect" in that uprobe_free_stage1()
-> can run before free_ret_instance() does srcu_read_unlock(ri->srcu_idx).
-> 
-> Perhaps it is fine, uprobe_free_stage1() does another call_srcu(),
-> but somehow I got lost.
-> 
-> Could you re-check this logic? Most probably I missed something, but still...
+Hello,
 
+On Thu, Jul 11, 2024 at 01:39:38PM -0400, Waiman Long wrote:
+> On 7/11/24 13:18, Tejun Heo wrote:
+...
+> Currently, I use the for_each_css() macro for iteration. If you mean
+> displaying all the possible cgroup subsystems even if they are not enabled
+> for the current cgroup, I will have to manually do the iteration.
 
-  handle_swbp()
-    guard(srcu)(&uprobes_srcu);
-    handle_chain();
-      prepare_uretprobe()
-        __srcu_read_lock(&uretprobe_srcu);
+Just wrapping it with for_each_subsys() should do, no? for_each_css() won't
+iterate anything if css doesn't exist for the cgroup.
 
+Thanks.
 
-vs
-
-  uprobe_free_stage2
-    kfree(uprobe)
-
-  uprobe_free_stage1
-    call_srcu(&uretprobe_srcu, &uprobe->rcu, uprobe_free_stage2);
-
-  put_uprobe()
-    if (refcount_dec_and_test)
-      call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_stage1);
-  
-
-So my thinking was since we take uretprobe_srcu *inside* uprobe_srcu,
-this reference must be visible before we execute stage1, and as such
-stage2 cannot complete prematurely.
-
+-- 
+tejun
