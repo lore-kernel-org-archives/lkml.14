@@ -1,148 +1,145 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3776416E884
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 17:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3B216D9C4;
+	Thu, 11 Jul 2024 17:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720717880; cv=none; b=rIR8UUpZQjPZSSFSrZoEjtRjaWsr4SkX7ATDCiOvWyK8yTgg/I4Is6JfaKvV0NFzM71TlnR/zXZSyhQ0xDyLHxLi5prxetbZCHvRaOOGCIDIeMcYqIqYZsHNB6QcE3rx7j4vgDrdg/Suf/ws1w4HhU/u0ueSTb/9dpxUhakoFkk=
+	t=1720717913; cv=none; b=d/ivtGlnRS8EzeI64D+M3EAYZxVZnVGoknC6WKJKhQtd/U7g6dJVRzbYPLlYfXhfnqaGoNq9V+z/qX6GY7VHFuCLhWFVnLBiFDWMHLe4wyJy3u0AMCj0u+jg+X5npMso3CZbhp9Ui66h/ZdjVSpiXAO/1pEqCvgBbakugUjIsRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720717880; c=relaxed/simple;
-	bh=ybLm2Mh70JkPHjadaTUG9Ccy0wH8e2FzaoJ7biYYUkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nCoBMVW7OT5+zNVKGe0pJmhXnCIUzqQ4g5OhOQAvbXGJvWBspNUtM6IYqfZSr42WVowjUSYUWIG73yB5efqCDGK7VU1BCWZKhEiK5qbd69XWCkgR1h7C43UdzuCmwShd7E1YJft+kJMF60G1ScQ7BvIHPGsMh98TQ5pdXA1fjrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PjepNAzB; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1720717913; c=relaxed/simple;
+	bh=SB4qpL0ljjDFKe87ww/4LxfqyDSj1myALSPSgu7rtm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OFHh8P0FFLGXq03h21Bb6C46K9F2Dtrbm15CPDHXRrmF0EIaFj7XNhUusGeyIv6o/fUGpTtpnIk2nMYo4kYG2htFqTkQ+DVq5GISXWBuydose1+N4iRcnip9NbnCS+UiAsWQxDaoEELW8VVlvmoBh9mmDoso4nbunbebjYkdihM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLvOMh8n; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjepNAzB"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fbd1c26f65so6909415ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 10:11:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLvOMh8n"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fb0d88fd25so8930595ad.0;
+        Thu, 11 Jul 2024 10:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720717878; x=1721322678; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+U5JA9G9Mz2ca7U7rdAg2xh6eWn3oK/tMDxHq4OtzSQ=;
-        b=PjepNAzBSzHLHECXtdHvQW7e7TmHUuwxHAw2h9CLgUz2Cs0EJPt9hsh0MIQKOg6Nvi
-         8ZXVoDtpXXAqDJh5AtG3/9SljYoJj7Q4nq6k3RNkr1pDqk7aKzlidN7/8YIVWVCy7jF+
-         iL6uZxiCAbmrBDMApRofPkSP+WE2VEeBSdeHMv6O7rC991xbxT3RmP6t/qEY6gvTL3Ai
-         UzcK2CItc6UO6s4KQib5AbB7omygIX8Ujmm8QrEYSeovdhbkL1ZZfAiybGJ6qFS9i6o0
-         3YRoJxRf+RE8Stw9IwQ8FqANLYUURLz/XyA2VQep/pITYzWGxS1wl0H2RUB6xMHNALak
-         vEQQ==
+        d=gmail.com; s=20230601; t=1720717911; x=1721322711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=m47qfjSsIdeACPwsQ7umtFEk6SMHW9nnMDK6Ss+HmZ4=;
+        b=RLvOMh8n/k+F3+t9rOQgCbEzdLmyvEfMaOBp2TTtu//zy/bnCFSBI5ydVEzbhPP/8b
+         EYVzZHJCvoRXyx+V5WqZy06Qgj6UEJn7OfsnK2BuzuKqmyO0WOA6ClK8JECvoXyHvIF4
+         qnB58OCcYucgdMKAuV1ZpuivhjiSRQHTHjuTsHdgAuQfgb+CpO7fYHBPBlXGlLafA5FL
+         WhvXJBhBAb0l50PHkH0Y146R3NUaXRy9b6Bgeu1cNIt/O2ygPkwHMmOEZBJ8/qc8Jxto
+         i0r3RtL0JaRWrHqDZ9MUlcgfSZWLsZyZlXXBkYKxIkTWwf1DS81ulxBsz0FDBSmBUUmL
+         qXiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720717878; x=1721322678;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+U5JA9G9Mz2ca7U7rdAg2xh6eWn3oK/tMDxHq4OtzSQ=;
-        b=mAplqcsWwnwy4Zsbbarbs4xIX1mAwr2Ak4z/vLch3msXgaiuBoZF2V0c0owPMCrK1+
-         7TObgfC8RfD16nsHwVBECTzXqOhT9NH+yN1Gy9UvuqwKjdJup+WuQiPqf2Nd0ycBVjGw
-         hfK3+7RmRv6GyQSvy9u3XUmudYvjYk/+IvjLXVzntBklXfSuS3iEczqG0Q8I++fBBaEq
-         BvrwUcivAPMOQia/+dE2Bezk97hpbYapAsqeaOH0JxIFotL4n7w3vd6hU7DvylCtlAtI
-         2AAD3jYbiOxJgzt9nXWtFzgpjJmHUeJJY0Lor6nDj1JHxdcPfAfoGywzyqEqgfV7LzMF
-         Ee2A==
-X-Gm-Message-State: AOJu0YxUwBG8FH7jJ6l5s1qRb88dEBjz6GF8xLBLtuP9UQF9oaos33Vp
-	5qWa//tiaAQ+zFgbDGhDQvfX+V57+RkBBVO8idGHcR92F+3cSQTc8+4u+Q==
-X-Google-Smtp-Source: AGHT+IFMzCoBx2mN8vTQXJjkXtYTXsrtv4x1hfDH0LeV56k9hcTslD18I+Z6ZhXt4MLgxOtE/roNBg==
-X-Received: by 2002:a17:902:d2c4:b0:1fa:12b4:587c with SMTP id d9443c01a7336-1fbb6ef53a0mr76745295ad.56.1720717878013;
-        Thu, 11 Jul 2024 10:11:18 -0700 (PDT)
-Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab8026sm53038075ad.179.2024.07.11.10.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 10:11:17 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 11 Jul 2024 07:11:16 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Subject: [PATCH UPDATED 3/7] workqueue: Remove cpus_read_lock() from
- apply_wqattrs_lock()
-Message-ID: <ZpASNBN0hpTVcjE-@slm.duckdns.org>
-References: <20240711083547.3981-1-jiangshanlai@gmail.com>
- <20240711083547.3981-4-jiangshanlai@gmail.com>
+        d=1e100.net; s=20230601; t=1720717911; x=1721322711;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m47qfjSsIdeACPwsQ7umtFEk6SMHW9nnMDK6Ss+HmZ4=;
+        b=StGIa+3B1ugClFcbRpy6zsCaS7Q53SsKu8I3GFtMPb2AuoVBStFCYYL8U9zTrjL/PN
+         jFNigCCKwVO7bJ1Q0+fQ9kw8uaMlihqeAOKZYkr5U5LQ4jtx7U+zHGHFGZMqrOgZu3TF
+         3Eg7jNStIXmURDSpPLkTWLqS5iexneoNjYsd0hni0PlqSNPQ2tz3jp+XJyII9c3nWjgR
+         vzQizsx3tLMO4t4FKqnt6eOhWnzzOtn2q8XMLCV5PVGHq1JC4acUBunFKoBvOJKocQVf
+         xpvBR8HCKe7odgyKmqpH9N2uPmVgZVNOnpPeigWWutpTND2paISlSYPuVByzzx7t5fVZ
+         LqxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsApoYUA4Drc18NC44ENY8k4TstIVFppdH97SkNzE5JxiZBoRFN4Wgv7Mu2h7aDx8cQl+1QHfCjKzZbaU4EHCvJ5ZnmWnElWn2e+UHjl6ixfYtlKj+TVOHzuotEDSh2m3w3Eg6tbRiEF4=
+X-Gm-Message-State: AOJu0YzjITdB8F2HoX+ZA0r//MSbEJtzrXq6h8KF79vTvxmj1+S62vFI
+	PjOwDDTY4h+Dlq29x1AglDiV38D8rKe/jtOHhfb0nQU+yB9mptqF
+X-Google-Smtp-Source: AGHT+IEyhSgZRxfPq+6W5q2bVgO8+UyCzKDTVGp76qMjFUJ3wv5npzar4nrLFoy14lAyZUxkPOTvSA==
+X-Received: by 2002:a17:902:cece:b0:1fb:d378:9e12 with SMTP id d9443c01a7336-1fbefef501amr3434345ad.27.1720717910832;
+        Thu, 11 Jul 2024 10:11:50 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ac851fsm52823565ad.240.2024.07.11.10.11.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 10:11:49 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <07955cfb-aae7-4a97-8222-b9c235e7c8c2@roeck-us.net>
+Date: Thu, 11 Jul 2024 10:11:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711083547.3981-4-jiangshanlai@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PROBLEM linux-next] drivers/hwmon/aht10.c:224: warning: Function
+ parameter or struct member 'data' not described in 'aht10_interval_write'
+To: Mirsad Todorovac <mtodorovac69@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+ "Johannes Cornelis Draaijer (datdenkikniet)" <jcdra1@gmail.com>
+References: <851b86f1-5757-4f4a-960a-2d4ecb840734@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <851b86f1-5757-4f4a-960a-2d4ecb840734@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From 49d94fbe1f8c275c793e298e8a38278e90029cf6 Mon Sep 17 00:00:00 2001
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Date: Thu, 11 Jul 2024 16:35:43 +0800
-Subject: [PATCH] workqueue: Remove cpus_read_lock() from apply_wqattrs_lock()
+On 7/11/24 09:57, Mirsad Todorovac wrote:
+> Hi all,
+> 
+> On the linux-next vanilla tree next-20240709, there is a lot of complaining about
+> code like these, which is not an error, but it seems like documentation lags behind
+> the [dynamic] source development.
+> 
+> If you  are interested in reporting these to the respective maintainers and developers,
+> give me a ping.
+> 
+> drivers/hwmon/aht10.c:224: warning: Function parameter or struct member 'data' not described in 'aht10_interval_write'
+> drivers/hwmon/aht10.c:224: warning: Function parameter or struct member 'val' not described in 'aht10_interval_write'
+> drivers/hwmon/aht10.c:235: warning: Function parameter or struct member 'data' not described in 'aht10_interval_read'
+> drivers/hwmon/aht10.c:235: warning: Function parameter or struct member 'val' not described in 'aht10_interval_read'
+> drivers/hwmon/aht10.c:244: warning: Function parameter or struct member 'data' not described in 'aht10_temperature1_read'
+> drivers/hwmon/aht10.c:244: warning: Function parameter or struct member 'val' not described in 'aht10_temperature1_read'
+> drivers/hwmon/aht10.c:259: warning: Function parameter or struct member 'data' not described in 'aht10_humidity1_read'
+> drivers/hwmon/aht10.c:259: warning: Function parameter or struct member 'val' not described in 'aht10_humidity1_read'
+> 
 
-1726a1713590 ("workqueue: Put PWQ allocation and WQ enlistment in the same
-lock C.S.") led to the following possible deadlock:
+I'll be happy to accept patches, but plain reports like this are just noise.
 
-  WARNING: possible recursive locking detected
-  6.10.0-rc5-00004-g1d4c6111406c #1 Not tainted
-   --------------------------------------------
-   swapper/0/1 is trying to acquire lock:
-   c27760f4 (cpu_hotplug_lock){++++}-{0:0}, at: alloc_workqueue (kernel/workqueue.c:5152 kernel/workqueue.c:5730)
-
-   but task is already holding lock:
-   c27760f4 (cpu_hotplug_lock){++++}-{0:0}, at: padata_alloc (kernel/padata.c:1007)
-   ...
-   stack backtrace:
-   ...
-   cpus_read_lock (include/linux/percpu-rwsem.h:53 kernel/cpu.c:488)
-   alloc_workqueue (kernel/workqueue.c:5152 kernel/workqueue.c:5730)
-   padata_alloc (kernel/padata.c:1007 (discriminator 1))
-   pcrypt_init_padata (crypto/pcrypt.c:327 (discriminator 1))
-   pcrypt_init (crypto/pcrypt.c:353)
-   do_one_initcall (init/main.c:1267)
-   do_initcalls (init/main.c:1328 (discriminator 1) init/main.c:1345 (discriminator 1))
-   kernel_init_freeable (init/main.c:1364)
-   kernel_init (init/main.c:1469)
-   ret_from_fork (arch/x86/kernel/process.c:153)
-   ret_from_fork_asm (arch/x86/entry/entry_32.S:737)
-   entry_INT80_32 (arch/x86/entry/entry_32.S:944)
-
-This is caused by pcrypt allocating a workqueue while holding
-cpus_read_lock(), so workqueue code can't do it again as that can lead to
-deadlocks if down_write starts after the first down_read.
-
-The pwq creations and installations have been reworked based on
-wq_online_cpumask rather than cpu_online_mask making cpus_read_lock() is
-unneeded during wqattrs changes. Fix the deadlock by removing
-cpus_read_lock() from apply_wqattrs_lock().
-
-tj: Updated changelog.
-
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Fixes: 1726a1713590 ("workqueue: Put PWQ allocation and WQ enlistment in the same lock C.S.")
-Link: http://lkml.kernel.org/r/202407081521.83b627c1-lkp@intel.com
-Acked-by: Tejun Heo <tj@kernel.org>
----
- kernel/workqueue.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index a345a72395e7..9b7c1fcd934b 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -5113,15 +5113,12 @@ static struct pool_workqueue *alloc_unbound_pwq(struct workqueue_struct *wq,
- 
- static void apply_wqattrs_lock(void)
- {
--	/* CPUs should stay stable across pwq creations and installations */
--	cpus_read_lock();
- 	mutex_lock(&wq_pool_mutex);
- }
- 
- static void apply_wqattrs_unlock(void)
- {
- 	mutex_unlock(&wq_pool_mutex);
--	cpus_read_unlock();
- }
- 
- /**
--- 
-2.45.2
+Guenter
 
