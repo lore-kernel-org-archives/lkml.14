@@ -1,105 +1,175 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5E142042;
-	Thu, 11 Jul 2024 05:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97A4442042;
+	Thu, 11 Jul 2024 05:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720675667; cv=none; b=lm/wZbEOu5HRixZLHXQPaVnTb9Kf4NOs1lQB7o2aKX4/6ONaYwc/Sc1kHg6ymyGhKN35wPi3I7SyAgiPpl6hxWxudzO1S1GgYD88sScVRfaNJTBjcZSAAoiqXOHHUautucGrZVcxDYT/BXcqzH5/VUWUwp/VDSE2qymxYW7q4N4=
+	t=1720675690; cv=none; b=Q0vdqqShPIez8RwfmgUNpLNfQ8qlbFlnEcvPLLFnOTvER6WyhJJRz/Pf1INRf5BD8FpPdXhFBbrCOMo0VEv3Y0rEYR1iHBIsY908BRdn6TiS+zvKcG4jksh5KmMtELs9JPQdkxeP4B9A/B0+VWY1qZ2BPZ/YYZNQYKHv/ACBvZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720675667; c=relaxed/simple;
-	bh=HSsX0RnRuDFdjgHKzOQtBjgv2nX0He6FmULrIZgV2do=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mi5md1nnfk3nCvfIsOTX1BRlNGkUnUtiw6ugn3koiLVrOe1mk/sywHm1hfL3Mcr+GLZLLMkRfpg9hjoPSzBSrhCzhKX24NL86RfUD1O8wk8kwsjocaLS5/a0ilUl0uA8pMsLrsEYZ78MrNs2/6vcFmPkCcgmuwWENkIg3AsOhYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ZOXrs43I; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=CSwpWI6L reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1720675690; c=relaxed/simple;
+	bh=9wRMpcR2MTSNEmVYFkWaKPhYyo8CtH0UOqW5Xg3dUQg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h9m40L95RF6YPH4rOwVtXdnFEebIxO1DIuEH7iOZYYEc4PyuLXbDGSbsHArKAL9PMpgdN9nrGfQZhuMJrArXoLy0Uqm+/6nhuM9tJu2pFkqbAHLTUSXgh7bft6qTo4ADNDJ6SDPAarI0UL9ZULaOKZDmFzCf/uw5W8d0yQ2qra0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=m2E39IdP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZOXrs43I";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="CSwpWI6L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1720675664; x=1752211664;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HSsX0RnRuDFdjgHKzOQtBjgv2nX0He6FmULrIZgV2do=;
-  b=ZOXrs43ISmbjEKXnExZdRQfpw/PvqOwc5L5J3d2g76O7m45M5zFMSn/8
-   FKco8rFUHGOwZRFy+VQqPpJzNJYopbpoddA44j61JrP2CUQdVv10AMzj0
-   bl01lb6a74ui400RoGqQI4Qph96MCx+/i8ivFzmzpuBhgBXLNmrnviecU
-   C/kvsi/EZ/LOlkc9psUPHx4QADTxxlS14LZ/ah/9BVZrOux71s+DE6pTB
-   mSUDNerO5qgbZ+9VvWQGyl/3eVimDrqzOYPwfzyk/JkWN+iS0NPQbPXLD
-   AHvM0JbaW7f2tSAE/mO7mkdWl1sZyXY993yD0NsEgrxKjGPj0+nKX490n
-   A==;
-X-CSE-ConnectionGUID: 4R+YyxF4TvuAdyuF6HKwhg==
-X-CSE-MsgGUID: Fn3IlePpQkWP6bFs1b+N/A==
-X-IronPort-AV: E=Sophos;i="6.09,199,1716242400"; 
-   d="scan'208";a="37850448"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 11 Jul 2024 07:27:40 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A54FD16337A;
-	Thu, 11 Jul 2024 07:27:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1720675656;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=HSsX0RnRuDFdjgHKzOQtBjgv2nX0He6FmULrIZgV2do=;
-	b=CSwpWI6Lf4xrqzWYv5+Hmj2pkBU90Gz5eSk8N1mrQhjPh9iid9DEuc3WNe/CBO2vvRCExT
-	hjwwRzC+dNFp3HjXY1mfa1T4re9x2giweXhnmJhZTtfGmzLUZIRf7NdRIoxcLlIfRFGzE0
-	ejAQfvXWaP1AWJ5im+lmoYtF4QDEU3kuUJZdBcfY3L2gJPWXUgJh3qBIAI02iTxLQHL1mT
-	RBAQi/t5pPQONzWEOqokoAVFyiLLeCUIx3R0QESg0Z1SQ70S5oweDGm22Ibw6H/xQaVuIC
-	sztdr1U8B/GpEW3FoKO8JmKS146OS9hgGNJ2Udwkn35e9BV3xH+AqJ7iGjfaCw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, mturquette@baylibre.com, Stephen Boyd <sboyd@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, quentin.schulz@cherry.de, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/6] dt-bindings: clocks: add binding for generic clock-generators
-Date: Thu, 11 Jul 2024 07:27:40 +0200
-Message-ID: <1899010.tdWV9SEqCh@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <68f6dc44a8202fd83792e58aea137632.sboyd@kernel.org>
-References: <20240709123121.1452394-1-heiko@sntech.de> <21244242.0c2gjJ1VT2@diego> <68f6dc44a8202fd83792e58aea137632.sboyd@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="m2E39IdP"
+Received: from rrs24-12-35.corp.microsoft.com (unknown [131.107.159.213])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D421F20B7165;
+	Wed, 10 Jul 2024 22:28:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D421F20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1720675681;
+	bh=/zshC6CTq+p0Y7ChToV4TV9M5RPtsazYfEI083x3oo0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=m2E39IdPBUTRvZ4piku11ncWJGVGW3Cx7ZGEg/DZClj2TV24nD13DjwvbhaPJDkXW
+	 rRdDvE2G4nAAXUZN3DKrvGDlwCiEgN+p94Znkb4QRLnPlinFLrLdFqiKRiyXJOnlIz
+	 7JJMERvS7m/Q6aPY+I78kIODviKbAGR/ZfHeivyI=
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+To: 
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	intel-gfx@lists.freedesktop.org (open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS),
+	intel-xe@lists.freedesktop.org (open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS),
+	linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS),
+	linux-fbdev@vger.kernel.org (open list:FRAMEBUFFER LAYER)
+Subject: [PATCH v4 0/6] Make I2C terminology more inclusive for I2C Algobit and consumers
+Date: Thu, 11 Jul 2024 05:27:28 +0000
+Message-Id: <20240711052734.1273652-1-eahariha@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Am Donnerstag, 11. Juli 2024, 01:21:15 CEST schrieb Stephen Boyd:
-> Quoting Heiko St=FCbner (2024-07-10 00:45:17)
-> > Am Mittwoch, 10. Juli 2024, 09:02:34 CEST schrieb Alexander Stein:
-> > >=20
-> > > So essentially only enable-gpios and vdd-supply is added in compariso=
-n to
-> > > fixed-clock. Does it make sense to add that to the fixed-clocks inste=
-ad?
-> > > Similar to fixed-regulator.
-> >=20
-> > I wasn't that sure which way to go in the first place.
-> > The deciding point was reading that line about the fixed clock not
-> > being gateable, so I opted to not touch the fixed-clock.
-> >=20
-> > But you're definitly right, this _could_ live inside the fixed-clock
-> > as well, if we decide to get rid of the not-gateable thing above.
->=20
-> It's probably more complicated to combine it with the fixed-clock
-> binding after making properties required like vdd-supply. I'd just make
-> a new binding and look at combining later.
+I2C v7, SMBus 3.2, and I3C 1.1.1 specifications have replaced "master/slave"
+with more appropriate terms. Inspired by and following on to Wolfram's
+series to fix drivers/i2c/[1], fix the terminology for users of the
+I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
+in the specification.
 
-Maybe I am missing something IMHO adding optional vdd-supply and
-enable-gpios doesn't seem a big deal.
-Anyway I don't have a hard opinion here. To me fixed-clocks still
-seems very appropriate for having a controlling GPIO and power supply.
-I just would get rid of the (comment only) hint they are ungatable.
+Compile tested, no functionality changes intended
 
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+Please chime in with your opinions and suggestions.
 
+Since v3 of this patch series, we have settled on inclusive terminology in the
+i2c subsystem with Wolfram and Andi in commits d77367fff7c0 ("docs: i2c: summary:
+document use of inclusive language") and 20738cb9fa7a ("docs: i2c: summary: be
+clearer with 'controller/target' and 'adapter/client' pairs")
+
+This series is based on v6.10-rc7
+
+[1]: https://lore.kernel.org/all/20240322132619.6389-1-wsa+renesas@sang-engineering.com/
+----
+
+changelog:
+v3->v4:
+- v3 link: https://lore.kernel.org/all/20240508234342.2927398-1-eahariha@linux.microsoft.com/
+- Settle on inclusive terminology in the i2c subsystem with Wolfram in commits d77367fff7c0 ("docs: i2c: summary: document use of inclusive language") and 20738cb9fa7a ("docs: i2c: summary: be clearer with 'controller/target' and 'adapter/client' pairs")
+- Rebase onto v6.10-rc7
+
+v2->v3:
+- v2 link: https://lore.kernel.org/all/20240503181333.2336999-1-eahariha@linux.microsoft.com/
+- Drop drivers/media patches [Mauro]
+- Pick up Acked-by Alex (modulo typo correction, hope you don't mind) [amdgpu, radeon]
+- Pick up Acked-by Thomas [smscufx, viafb]
+- Revert eDP change in drm/i915 [Jani, Rodrigo, Andi]
+
+v1->v2:
+- v1 link: https://lore.kernel.org/all/20240430173812.1423757-1-eahariha@linux.microsoft.com/ 
+- Switch to specification verbiage master->controller, slave->target, drop usage of host/client [Thomas]
+- Pick up Reviewed-bys and Acked-bys from Rodrigo, Zhi, and Thomas [gma500, i915]
+- Fix up some straggler master/slave terms in amdgpu, cx25821, ivtv, cx23885
+
+v0->v1:
+- v0 link: https://lore.kernel.org/all/20240329170038.3863998-1-eahariha@linux.microsoft.com/
+- Drop drivers/infiniband patches [Leon, Dennis]
+- Switch to specification verbiage master->controller, slave->target, drop usage of client [Andi, Ville, Jani, Christian]
+- Add I3C specification version in commit messages [Andi]
+- Pick up Reviewed-bys from Martin and Simon [sfc]
+- Drop i2c/treewide patch to make this series independent from Wolfram's ([1]) [Wolfram]
+- Split away drm/nouveau patch to allow expansion into non-I2C non-inclusive terms
+
+Easwar Hariharan (6):
+  drm/amdgpu, drm/radeon: Make I2C terminology more inclusive
+  drm/gma500: Make I2C terminology more inclusive
+  drm/i915: Make I2C terminology more inclusive
+  sfc: falcon: Make I2C terminology more inclusive
+  fbdev/smscufx: Make I2C terminology more inclusive
+  fbdev/viafb: Make I2C terminology more inclusive
+
+ .../gpu/drm/amd/amdgpu/amdgpu_atomfirmware.c  |  8 ++---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_i2c.c       | 10 +++----
+ drivers/gpu/drm/amd/amdgpu/atombios_i2c.c     |  8 ++---
+ drivers/gpu/drm/amd/amdgpu/atombios_i2c.h     |  2 +-
+ drivers/gpu/drm/amd/amdgpu/smu_v11_0_i2c.c    | 20 ++++++-------
+ .../gpu/drm/amd/display/dc/bios/bios_parser.c |  2 +-
+ .../drm/amd/display/dc/bios/bios_parser2.c    |  2 +-
+ .../drm/amd/display/dc/core/dc_link_exports.c |  4 +--
+ drivers/gpu/drm/amd/display/dc/dc.h           |  2 +-
+ drivers/gpu/drm/amd/display/dc/dce/dce_i2c.c  |  4 +--
+ .../display/include/grph_object_ctrl_defs.h   |  2 +-
+ drivers/gpu/drm/amd/include/atombios.h        |  2 +-
+ drivers/gpu/drm/amd/include/atomfirmware.h    | 26 ++++++++--------
+ .../powerplay/hwmgr/vega20_processpptables.c  |  4 +--
+ .../amd/pm/powerplay/inc/smu11_driver_if.h    |  2 +-
+ .../inc/pmfw_if/smu11_driver_if_arcturus.h    |  2 +-
+ .../inc/pmfw_if/smu11_driver_if_navi10.h      |  2 +-
+ .../pmfw_if/smu11_driver_if_sienna_cichlid.h  |  2 +-
+ .../inc/pmfw_if/smu13_driver_if_aldebaran.h   |  2 +-
+ .../inc/pmfw_if/smu13_driver_if_v13_0_0.h     |  2 +-
+ .../inc/pmfw_if/smu13_driver_if_v13_0_7.h     |  2 +-
+ .../gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c |  4 +--
+ .../amd/pm/swsmu/smu11/sienna_cichlid_ppt.c   |  8 ++---
+ drivers/gpu/drm/gma500/cdv_intel_lvds.c       |  2 +-
+ drivers/gpu/drm/gma500/intel_bios.c           | 22 +++++++-------
+ drivers/gpu/drm/gma500/intel_bios.h           |  4 +--
+ drivers/gpu/drm/gma500/intel_gmbus.c          |  2 +-
+ drivers/gpu/drm/gma500/psb_drv.h              |  2 +-
+ drivers/gpu/drm/gma500/psb_intel_drv.h        |  2 +-
+ drivers/gpu/drm/gma500/psb_intel_lvds.c       |  4 +--
+ drivers/gpu/drm/gma500/psb_intel_sdvo.c       | 26 ++++++++--------
+ drivers/gpu/drm/i915/display/dvo_ch7017.c     | 14 ++++-----
+ drivers/gpu/drm/i915/display/dvo_ch7xxx.c     | 18 +++++------
+ drivers/gpu/drm/i915/display/dvo_ivch.c       | 16 +++++-----
+ drivers/gpu/drm/i915/display/dvo_ns2501.c     | 18 +++++------
+ drivers/gpu/drm/i915/display/dvo_sil164.c     | 18 +++++------
+ drivers/gpu/drm/i915/display/dvo_tfp410.c     | 18 +++++------
+ drivers/gpu/drm/i915/display/intel_bios.c     | 22 +++++++-------
+ .../gpu/drm/i915/display/intel_display_core.h |  2 +-
+ drivers/gpu/drm/i915/display/intel_dsi.h      |  2 +-
+ drivers/gpu/drm/i915/display/intel_dsi_vbt.c  | 20 ++++++-------
+ drivers/gpu/drm/i915/display/intel_dvo.c      | 14 ++++-----
+ drivers/gpu/drm/i915/display/intel_dvo_dev.h  |  2 +-
+ drivers/gpu/drm/i915/display/intel_gmbus.c    |  4 +--
+ drivers/gpu/drm/i915/display/intel_sdvo.c     | 30 +++++++++----------
+ drivers/gpu/drm/i915/display/intel_vbt_defs.h |  4 +--
+ drivers/gpu/drm/i915/gvt/edid.c               | 28 ++++++++---------
+ drivers/gpu/drm/i915/gvt/edid.h               |  4 +--
+ drivers/gpu/drm/i915/gvt/opregion.c           |  2 +-
+ drivers/gpu/drm/radeon/atombios.h             | 16 +++++-----
+ drivers/gpu/drm/radeon/atombios_i2c.c         |  4 +--
+ drivers/gpu/drm/radeon/radeon_combios.c       | 28 ++++++++---------
+ drivers/gpu/drm/radeon/radeon_i2c.c           | 10 +++----
+ drivers/gpu/drm/radeon/radeon_mode.h          |  6 ++--
+ drivers/net/ethernet/sfc/falcon/falcon.c      |  2 +-
+ drivers/video/fbdev/smscufx.c                 |  4 +--
+ drivers/video/fbdev/via/chip.h                |  8 ++---
+ drivers/video/fbdev/via/dvi.c                 | 24 +++++++--------
+ drivers/video/fbdev/via/lcd.c                 |  6 ++--
+ drivers/video/fbdev/via/via_aux.h             |  2 +-
+ drivers/video/fbdev/via/via_i2c.c             | 12 ++++----
+ drivers/video/fbdev/via/vt1636.c              |  6 ++--
+ 62 files changed, 275 insertions(+), 275 deletions(-)
+
+
+base-commit: 256abd8e550ce977b728be79a74e1729438b4948
+-- 
+2.34.1
 
