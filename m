@@ -1,111 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CE4653
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 09:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14C0653;
+	Thu, 11 Jul 2024 09:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720688569; cv=none; b=m9fgxe9p9WRoCdQMbm8hHUsQR/j1MNehuRupct9q2fi4OXoZX1eGYbW/bxC9wRm7dCXHjgs7VSkPGa7NBIJRFwaOqOmVKOVxWM4oA00dL5/nJd6rVjZ5ZQUwkGE0DgZZg/ZO5p4vN8RctYvMA6iQ/oT01+/t6oI2pbQSrYC4mRo=
+	t=1720688601; cv=none; b=mLXp/+q4BCnbmVHRzfaLRFpRQsuyETJCvz+dEclajEoTjMEW5r2pexg2iOQwa9Xz2KDTLf33yToHW1YgiEAkUCHkYrmhMo/zELrg+3kG7fFjjf4OY4eezP07NoEiIoOqfNGMxvZI8BzsmwvFUlROZ74fDdbW0XyKmi9HdIe0oK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720688569; c=relaxed/simple;
-	bh=i9vhBcgM+kslb9tjmXIu2Ni6MbJN5bXv00H5799sU0s=;
-	h=Content-Type:Date:Message-Id:From:To:Subject:Cc:References:
-	 In-Reply-To; b=sGpzidFdrtdeuey3stTEEFFkIzy01HKIqKEEGtekOwMm0lOxRu4cYNsUZV0ea/8x4Zxx8dupL1YHPAu5zZcuGyLcpAWk4W6KH9RUCrt15zeX2E6JvLq25SlEweTGwXGqTZOT6j89qiT+4F8Y8AGXU8CVws9jGeXFBmYGWb3qFQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTAh+PNI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTAh+PNI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB79FC116B1;
-	Thu, 11 Jul 2024 09:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720688569;
-	bh=i9vhBcgM+kslb9tjmXIu2Ni6MbJN5bXv00H5799sU0s=;
-	h=Date:From:To:Subject:Cc:References:In-Reply-To:From;
-	b=UTAh+PNIC8oY2FsfTnf13lwV6IGg52xwu2XhBlvpDWKHAELQ6uOEUflhyzwxLBdQb
-	 QAeB6ERxKJ6MpgeHvvylrW2/5F6Y/r6FBDCcIK14tVFHvtBNkhByO/jZT2uY1u99a7
-	 Rvy0FHkqKlf46XNLdvGjQRkpQO+P0gNiLw8DYFNXpGNEQqKXMVKxdEuKgkUg3Xyg6p
-	 4v4CJBszwfZhi2+pgyCjJmoAdAcmE+576rhm9OwSmXkn35aTeqpb1IY/ul30vspeAa
-	 YaIIwy9SAiXDT0GscOQ4Sj+wp5ngtfOYSVO7RNOWGKxDzkq/lLpBslF5SNArK9J5r6
-	 tBEjb9064M+jw==
-Content-Type: multipart/signed;
- boundary=fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Thu, 11 Jul 2024 11:02:39 +0200
-Message-Id: <D2ML6RG09T38.RZU3CCH0XD9I@kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Esben Haabendal" <esben@geanix.com>
-Subject: Re: [PATCH v2 1/2] mtd: spi-nor: core: add flag for doing optional
- SFDP
-Cc: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Pratyush Yadav"
- <pratyush@kernel.org>, "Miquel Raynal" <miquel.raynal@bootlin.com>,
- "Richard Weinberger" <richard@nod.at>, "Vignesh Raghavendra"
- <vigneshr@ti.com>, <linux-mtd@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, "Rasmus Villemoes"
- <rasmus.villemoes@prevas.dk>
-X-Mailer: aerc 0.16.0
-References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com> <20240603-macronix-mx25l3205d-fixups-v2-1-ff98da26835c@geanix.com> <a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org> <D1SZKLZBDDBA.1Z7ZD4UEOX05F@kernel.org> <871q413x72.fsf@geanix.com>
-In-Reply-To: <871q413x72.fsf@geanix.com>
+	s=arc-20240116; t=1720688601; c=relaxed/simple;
+	bh=67Tf/XdUpSnJC8ZXDvEuXufSsK4HxkPYN7baaSuScD0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=psjhcwv+PSniXv6kUygbTqlfjFRkeZo9bYTUEKQwQu3Dg3+gKpPFEwVSrD1iYTTZ/7PHKHvNCPLJFTFoWIypjolR7luwXD0Fl8M3rD9bV5nmDI+aSv0pzAuKQrxd3hLtRLD/waekB83UogCnBQbZwqRMaXLk87vFCV0PP8ZcLIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WKTK248hnz4f3jt8;
+	Thu, 11 Jul 2024 17:03:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 415E81A0572;
+	Thu, 11 Jul 2024 17:03:10 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP2 (Coremail) with SMTP id Syh0CgB34YbMn49msI0qBw--.62219S4;
+	Thu, 11 Jul 2024 17:03:09 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: tj@kernel.org,
+	josef@toxicpanda.com,
+	bvanassche@acm.org,
+	jack@suse.cz,
+	axboe@kernel.dk
+Cc: cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH 0/2] blk-ioprio: remove per-disk structure
+Date: Thu, 11 Jul 2024 17:00:57 +0800
+Message-Id: <20240711090059.3998565-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgB34YbMn49msI0qBw--.62219S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYc7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
---fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+From: Yu Kuai <yukuai3@huawei.com>
 
-Hi Esben,
+Yu Kuai (2):
+  blk-ioprio: remove ioprio_blkcg_from_bio()
+  blk-ioprio: remove per-disk structure
 
-> > I actually had the same concern. But currently there is no
-> > non-deprecated way to handle this case, right?
-> >
-> > Right now we have the following cases:
-> >  (1) pure SFDP parsing
-> >  (2) non-SFDP flashes with static configuration only
-> >  (3) legacy implementation, where the magic flags decide whether we
-> >      use SFDP
->
-> Actually, in the code we have two variants of 2.
->
-> (2a) non-SFDP flashes with SPI_NOR_SKIP_SFDP set
-> (2b) non-SFDP flashes without SPI_NOR_SKIP_SFDP and with none of the
->      DUAL/QUAD/OCTAL read bits set
+ block/blk-cgroup.c |  8 -------
+ block/blk-ioprio.c | 57 +---------------------------------------------
+ block/blk-ioprio.h |  9 --------
+ 3 files changed, 1 insertion(+), 73 deletions(-)
 
-Isn't (2b) my case (3)? The SPI_NOR_SKIP_SFDP flag was intended to
-be for flashes we know for a fact, there are no SFDP tables.
+-- 
+2.39.2
 
-I'm looking at spi_nor_init_params(). Maybe I'm missing something?
-
--michael
-
-> These almost handled the same way. But
-> spi_nor_manufacturer_init_params() is only called for 2b, and not for
-> 2a.
->
-> Is this desired behavior, or something that we want to align?
->
-> > Which case is eventually used depends on the ID of the flash -
-> > assuming there will only be IDs which either fall into (1) *or* (2).
-> > That assumption is clearly wrong :)
-> >
-> > I'd propose a new case in spi_nor_init_params()
-> >  (4) try SFDP with a fallback to the static flags from the
-> >      flash_info db.
->
-> /Esben
-
-
---fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZo+fsRIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/h1MAF7BL/jDkLdqERlyUh+I/4t+kL1NUWGFmhu
-bS97ljXW9gaw1lviFreW1tMzWHMxWysVAX9f66V0w0fvkut5oECvJRvE51x/yrW1
-Zib+7kOeztZN5UtkOvyZwIM33p0xpxdO4SA=
-=G+o7
------END PGP SIGNATURE-----
-
---fe1ae7df5776f1f2d791dc960f71a027ee6121d702749e13e956e1272f1d--
