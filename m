@@ -1,271 +1,94 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D2812FF71;
-	Thu, 11 Jul 2024 07:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957F612FF88;
+	Thu, 11 Jul 2024 07:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720681704; cv=none; b=NgLNv84Ts+9ifDaCLJlN+cEuihlnF6gStDGWr1QSwoBX9hf+QEFyLa7E8hAgsgQAfLmnwYbaS+DC7qExAAtGTc/EPqUUlDnIUfX4blULNWswqBjW35p558vScyOTXbEfG2PSg3JbK7pTHxLjkx4CaebLPmh4aV06h+FZXwt5llE=
+	t=1720681869; cv=none; b=WzBs7gxVCIL8GiqC/fqJqyzWPY4q+3XZEfumu1JLA9YMEVdwK+5Sx1MZqlKOq+BPMwv+v8305K2lbbkl4ENirkCOJpFnzxkKS7Vi1Kf4C22ZmmKYDj3YLeBrj8xGBokgJZBf9DvqDjr5B5ocF/JKdb3GaBJPOoKsFRu/31gecDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720681704; c=relaxed/simple;
-	bh=tS+OusqglwII9Oh8jwE+31yUzsC3175g4YbMyRvsVrs=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=Fb5gWJ92Rk8877hgx9mw+8svHJf9PsDwXVPIoXo46q64LvqxQNN8yZBuHaclk1JsWR8Ye3M9uaszU+oxjo6WCe42srb4OfOL3diVnxFkGHm9v9djp1PgHuj5+XpSSWeXxwU8g3ItRiB9Sp3tZVjHitVJsP3Mu8xfdYkvWqobdN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HEZ6tKvB; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEZ6tKvB"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52e9f863c46so624809e87.1;
-        Thu, 11 Jul 2024 00:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720681701; x=1721286501; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tS+OusqglwII9Oh8jwE+31yUzsC3175g4YbMyRvsVrs=;
-        b=HEZ6tKvBtHcoa1/Gvrv33CpmDYg6l7SH/HEbaidTDYeEfXRWgpighPcaiNG+oEc5pl
-         lr1Nlkg1dIcAE4Vs52uNdh6pfDItTc7t2XzRp1grwzR5I/+lPzpxmRG/nx2AC/TvypwJ
-         AeKDjnxvkiKFFXg1PTrdtxxG/h6+SLb3I1WHQb2KpVtH6WUWxS9l8QWsbKVjoRFiPRXM
-         CKI+nXXFppaQutdMQWrr1sOxWXiCPdp4CgNx4HGwZCtkzhLUNsjXaFbyP47RYpItQi5l
-         MXC0GYg72ArGMIhFNDv5U/E+eOyUcL+BzvzeeLga23fE0GqLHBdOwPi4uj7NeiPJuPea
-         /Kiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720681701; x=1721286501;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tS+OusqglwII9Oh8jwE+31yUzsC3175g4YbMyRvsVrs=;
-        b=sr56movDL24Lxsk3g/LTIGybPvKWlFdFiN3rtOAvdQ80zT1NEW/b3XTL0aHsVEtTfL
-         2bZ+o5ddV3MAL1b6aBLQim76CXTwvsyP0PrlLmIClI152L6oo8Ajx7cFAQB66EWkGySE
-         pTuznilp7vROA1ojUy3tsAL64h/07Zcq2nFkTbGj0RPR/gxwmp4F8ZmGt7eKGTHfeyW9
-         3YlxvDW8ma/0uvnq/tdL9LL5UFYpV0ewFS1DAQQvKjGmAGdDtN+A735EkABh9OppY75q
-         owN0e6K3315RKP0wpnYkaoJp+ZtjHfgSq7X06U+Ruf2jlua1s7O83gh7VoNCO4cwFGTo
-         NNqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUubLSL3BAqsm7bCIaiopyzzN55ocbWES6uM7l0p/rQN+LOHIMKmzXspqSTON5BS0C+l5UHlq1Zvz4d9pt4xRUHY/s9FAWXtjZG2SSGCU67TPi9NvTpQoRk2lgscdaE4ZPCYdaGI1UEWuAzZ/oVmjgLVIfz+hb8+Wf46BCmFexogABQ3Q==
-X-Gm-Message-State: AOJu0Yz5iTVawrBDmSFMTlMtBT8ifCLzJXa6NvJ9wVdmu4y1yIYusDIz
-	fiwroLjo8KKpDyJrq4u24XfIfKuZe8e0OWrh93gkW6F3Vmr4O4YRIT3ebEq/
-X-Google-Smtp-Source: AGHT+IF8ndhQWKLZYKZRgh0LQz+uDp0LDnnrjbssWSZHZB+zwt1PnkHq99C0weqNdu2BHIrqHiDw5g==
-X-Received: by 2002:a05:6512:3b82:b0:52c:fd49:d42 with SMTP id 2adb3069b0e04-52eb9990d58mr4801546e87.14.1720681700618;
-        Thu, 11 Jul 2024 00:08:20 -0700 (PDT)
-Received: from localhost (host-79-55-57-217.retail.telecomitalia.it. [79.55.57.217])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e097bsm107815295e9.6.2024.07.11.00.08.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 00:08:20 -0700 (PDT)
-Date: Thu, 11 Jul 2024 09:08:18 +0200
-From: Matteo Martelli <matteomartelli3@gmail.com>
-To: Marius.Cristea@microchip.com, 
- jic23@kernel.org, 
- matteomartelli3@gmail.com
-Cc: robh@kernel.org, 
- krzk+dt@kernel.org, 
- conor+dt@kernel.org, 
- devicetree@vger.kernel.org, 
- lars@metafoo.de, 
- linux-iio@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Message-ID: <668f84e2f3e10_2b423707a@njaxe.notmuch>
-In-Reply-To: <88a54c736e0c39ead34dbde53c813526484d767d.camel@microchip.com>
-References: <20240704-iio-pac1921-v2-0-0deb95a48409@gmail.com>
- <20240704-iio-pac1921-v2-2-0deb95a48409@gmail.com>
- <20240707160442.6bab64c9@jic23-huawei>
- <668bec2a8b23a_6e037017@njaxe.notmuch>
- <88a54c736e0c39ead34dbde53c813526484d767d.camel@microchip.com>
-Subject: Re: [PATCH v2 2/2] iio: adc: add support for pac1921
+	s=arc-20240116; t=1720681869; c=relaxed/simple;
+	bh=4W3vs38AT9kQ3vdhQynMgIJXMDLIST7oSVRkYD5cx9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HZ2iPpZj5224D+O6Ul9Rvsb4L0/tcls9KakSa9JKQvui27lKMUiF6UO/5jStx3W6zt1qY/LU3JMR0umLgL5ItQl9TPuwFjKTJ9ooKdZsOE+7WVWXZAAZnFgIbCia++8AxJUsisbgX0qlMkoxG1j6NZ8eJeqnF7bBy7ZRcHkvsCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowACHjeVbhY9m9za0Ag--.57384S2;
+	Thu, 11 Jul 2024 15:10:29 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mykolal@fb.com,
+	shuah@kernel.org,
+	sowmini.varadhan@oracle.com
+Cc: bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>
+Subject: [PATCH] selftests/bpf:fix a resource leak in main()
+Date: Thu, 11 Jul 2024 15:10:18 +0800
+Message-Id: <20240711071018.2197252-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACHjeVbhY9m9za0Ag--.57384S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw15AFyrWry8JF1Dtr47Jwb_yoWfKwcE93
+	yjqrn7GFs0vFn8Ar15Kw4rCrs5uw4rWrW7GrsIqFy3tw4DXrsxGF4v9rn8Aa4fWrZxurZF
+	yFykX34aka1jvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3AFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWlnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUOrcfUUUUU
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Hi Marius,
+The requested resources should be closed before return in main(), otherwise
+ resource leak will occur. Add a check of cg_fd before close().
 
-Marius.Cristea@ wrote:
-> > I think that the OUT pin might not be used at all in many use cases
-> > so I would
-> > leave the OUT pin setting as fixed for now and maybe extend it in the=
+Fixes: 435f90a338ae ("selftests/bpf: add a test case for sock_ops perf-event notification")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ tools/testing/selftests/bpf/test_tcpnotify_user.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > future
-> > when more use cases arise. I am open to reconsider this though.
-> > =
+diff --git a/tools/testing/selftests/bpf/test_tcpnotify_user.c b/tools/testing/selftests/bpf/test_tcpnotify_user.c
+index 595194453ff8..f81c60db586e 100644
+--- a/tools/testing/selftests/bpf/test_tcpnotify_user.c
++++ b/tools/testing/selftests/bpf/test_tcpnotify_user.c
+@@ -161,7 +161,8 @@ int main(int argc, char **argv)
+ 	error = 0;
+ err:
+ 	bpf_prog_detach(cg_fd, BPF_CGROUP_SOCK_OPS);
+-	close(cg_fd);
++	if (cg_fd >= 0)
++		close(cg_fd);
+ 	cleanup_cgroup_environment();
+ 	perf_buffer__free(pb);
+ 	return error;
+-- 
+2.25.1
 
-> =
-
-> The OUT functionality could be set from the device tree.
-
-I think this should to be controlled during runtime since it's a configur=
-ation
-that changes the device operation mode and so also what measurements are
-exposed to the user. An additional DT property could be useful but I am n=
-ot
-sure it would fit in the DT scope.
-Anyway I will leave this for future extensions.
-
-...
-> > > > ---
-> > > > =C2=A0.../ABI/testing/sysfs-bus-iio-adc-pac1921=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 45 +
-> > > > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 7 +
-> > > > =C2=A0drivers/iio/adc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 10 +
-> > > > =C2=A0drivers/iio/adc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 1 +
-> > > > =C2=A0drivers/iio/adc/pac1921.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1038
-> > > > ++++++++++++++++++++
-> > > > =C2=A05 files changed, 1101 insertions(+)
-> > > > =
-
-> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1921
-> > > > b/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1921
-> > > > new file mode 100644
-> > > > index 000000000000..4a32e2d4207b
-> > > > --- /dev/null
-> > > > +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1921
-> > > Quite a bit of custom ABI in here.
-> > > =
-
-> > > Rule of thumb is that custom ABI is more or less pointless ABI for
-> > > 99% of users
-> > > because standard userspace won't use it.=C2=A0 So keep that in mind=
- when
-> > > defining it.
-> > > =
-
-> > > > @@ -0,0 +1,45 @@
-> > > > +What:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0
-> > > > /sys/bus/iio/devices/iio:deviceX/resolution_bits
-> > > > +KernelVersion:=C2=A0=C2=A0=C2=A0=C2=A0 6.10
-> > > > +Contact:=C2=A0=C2=A0 linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ADC=
- measurement resolution. Can be either 11 bits or
-> > > > 14 bits
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (de=
-fault). The driver sets the same resolution for
-> > > > both VBUS and
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 VSE=
-NSE measurements even if the hardware could be
-> > > > configured to
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mea=
-sure VBUS and VSENSE with different resolutions.
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Thi=
-s attribute affects the integration time: with 14
-> > > > bits
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 res=
-olution the integration time is increased by a
-> > > > factor of
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1.9=
- (the driver considers a factor of 2). See Table
-> > > > 4-5 in
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev=
-ice datasheet for details.
-> > > =
-
-> > > Is the integration time ever high enough that it matters?
-> > > People tend not to do power measurement 'quickly'.
-> > > =
-
-> > > If we are doing it quickly then you'll probably want to be
-> > > providing buffered
-> > > support and that does allow you to 'read' the resolution for a part=
-
-> > > where
-> > > it changes for some other reason.=C2=A0=C2=A0 I haven't yet underst=
-ood this
-> > > case.
-> > =
-
-> > I will remove this control and fix the resolution bits to 14 (highest=
-
-> > value),
-> > same as the HW default.
-> =
-
-> The resolution could be set from the device tree. As default it could
-> be 14 bits like into the hardware. The user could add
-> "microchip,low_resolution_voltage" into the device tree in order to use=
-
-> only 11 bits for voltage samples.
-
-I think this should be controlled during runtime since it does not depend=
- on
-the HW design but more on the user preferences about measurements precisi=
-on.
-As Jonathan pointed out, since custom ABIs should be avoided when possibl=
-e, I
-will leave it out from now until it becomes necessary and fix the resolut=
-ion to
-14 bits, as the HW default.
-
-...
-> > > > +What:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 /sys/bus/iio/devices/iio:devices/filters_en
-> > > > +KernelVersion:=C2=A0=C2=A0=C2=A0=C2=A0 6.10
-> > > > +Contact:=C2=A0=C2=A0 linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Att=
-ribute to enable/disable ADC post filters. Enabled
-> > > > by
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 def=
-ault.
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Thi=
-s attribute affects the integration time: with
-> > > > filters
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ena=
-bled the integration time is increased by 50%. See
-> > > > Table 4-5
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in =
-device datasheet for details.
-> > > =
-
-> > > Do we have any idea what this filter is? Datasheet seems very vague=
-
-> > > indeed and from
-> > > a control point of view that makes this largely useless. How does
-> > > userspace know
-> > > whether to turn it on?
-> > > =
-
-> > > We have an existing filter ABI but with so little information no
-> > > way to fit this in.
-> > > Gut feeling, leave it on all the time and drop the control
-> > > interface.
-> > =
-
-> > I will remove this control and leave it on all the time as the HW
-> > default.
-> > =
-
-> =
-
-> The filters could be enabled from the device tree. As default it could
-> be disabled.
-> As a small detail here this is a post processing digital filter that
-> could be enabled/disabled inside the PAC module.
-> =
-
-
-Same reasoning of the resolution_bits parameter applies here. I will fix =
-the
-filters to enabled, as the HW default. If there is any particular reason =
-to
-prefer the filters fixed as disabled I will change that.
-
-...
-> Thanks,
-> Marius
-
-Thanks,
-Matteo=
