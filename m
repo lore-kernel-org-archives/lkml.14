@@ -1,87 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0211C3D;
-	Thu, 11 Jul 2024 05:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5E142042;
+	Thu, 11 Jul 2024 05:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720675614; cv=none; b=uxin3HyECrssatJkFpaZ4ADd1pCcKbJIKoPaJ8S8LWLg3/Kyp7wEN6I2frsiCef7aSTDFyd/CDGdvf2cTMamcDCx1tGUZguSDdcYKx5mf9JeH7EMOZojimKrHV28b3N57WpdM+fwt2xlhuViS9zoCkoMcTceqtAh6D0a3dtGS+g=
+	t=1720675667; cv=none; b=lm/wZbEOu5HRixZLHXQPaVnTb9Kf4NOs1lQB7o2aKX4/6ONaYwc/Sc1kHg6ymyGhKN35wPi3I7SyAgiPpl6hxWxudzO1S1GgYD88sScVRfaNJTBjcZSAAoiqXOHHUautucGrZVcxDYT/BXcqzH5/VUWUwp/VDSE2qymxYW7q4N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720675614; c=relaxed/simple;
-	bh=CsBxqXxsnlnIpJPe1pd2qKHMevWjw0yx/s0ljzQ6Rys=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGqfp0pOTCT2i5U7yohv6JOtRkNt1hCnfmqMzo9CXGR5JWF9WxgIWMcofa8Px929xbo2yA2JGCpZiCmBYBcshoz1RK1qcMErNsQngn/xK5R20M/zT/CqpbrgiiJqjqmDJvGpJ0BpyAEIQ+lsg5l+HmAPnoEeyyyo5W/nxLvvC/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hcrtkpq0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720675667; c=relaxed/simple;
+	bh=HSsX0RnRuDFdjgHKzOQtBjgv2nX0He6FmULrIZgV2do=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Mi5md1nnfk3nCvfIsOTX1BRlNGkUnUtiw6ugn3koiLVrOe1mk/sywHm1hfL3Mcr+GLZLLMkRfpg9hjoPSzBSrhCzhKX24NL86RfUD1O8wk8kwsjocaLS5/a0ilUl0uA8pMsLrsEYZ78MrNs2/6vcFmPkCcgmuwWENkIg3AsOhYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ZOXrs43I; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=CSwpWI6L reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hcrtkpq0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57DECC4AF0A;
-	Thu, 11 Jul 2024 05:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720675614;
-	bh=CsBxqXxsnlnIpJPe1pd2qKHMevWjw0yx/s0ljzQ6Rys=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Hcrtkpq0JDLkd5yfNqRKBhyrIWtytjOo8z7Gmxsu+xZ5apUxOk04diSAhdcRDmlUz
-	 Wt3ySEnHuEs8ezQy70pJVV2PFNWFvPcW4V9B4DPAgcc8hVcugKqvYvOaUyzyw/lmlM
-	 VSZtR4oNW3bmlLmY1ipo5IdY5iSo7GijOoAdyYSbXRn26qiF6OE6pny2PoByBLICZO
-	 RJ+4r96blIyNm/HGZF5s3bLeihiXH1Tiz1Q8D5VueW0VqQl8QlrqH8Y10G0Vz6VCSl
-	 i7thcRYE4iH8SfeJkPyO28HzMzZlN6f03d8FAE5akAsguEF+hoxVYvUBTjJPJ6SaXz
-	 y4Y3r3RB4Fhuw==
-Date: Thu, 11 Jul 2024 07:26:45 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Tony Luck <tony.luck@intel.com>, Daniel Ferguson
- <danielf@os.amperecomputing.com>, Ard Biesheuvel <ardb@kernel.org>, James
- Morse <james.morse@arm.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Len Brown <lenb@kernel.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Shiju Jose <shiju.jose@huawei.com>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>, Dan
- Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Shuai Xue <xueshuai@linux.alibaba.com>,
- linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] RAS: ACPI: APEI: add conditional compilation to ARM
- error report functions
-Message-ID: <20240711072645.776c0f5d@foz.lan>
-In-Reply-To: <20240708144312.GDZov7AEzBDfSEGQEY@fat_crate.local>
-References: <cover.1720436039.git.mchehab+huawei@kernel.org>
-	<f520f2529bb27d452a2dee762b6968939df42f45.1720436039.git.mchehab+huawei@kernel.org>
-	<20240708113234.GDZovOUgjXFt2XoNg6@fat_crate.local>
-	<20240708141025.3e5ddd51@foz.lan>
-	<20240708144312.GDZov7AEzBDfSEGQEY@fat_crate.local>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZOXrs43I";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="CSwpWI6L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1720675664; x=1752211664;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HSsX0RnRuDFdjgHKzOQtBjgv2nX0He6FmULrIZgV2do=;
+  b=ZOXrs43ISmbjEKXnExZdRQfpw/PvqOwc5L5J3d2g76O7m45M5zFMSn/8
+   FKco8rFUHGOwZRFy+VQqPpJzNJYopbpoddA44j61JrP2CUQdVv10AMzj0
+   bl01lb6a74ui400RoGqQI4Qph96MCx+/i8ivFzmzpuBhgBXLNmrnviecU
+   C/kvsi/EZ/LOlkc9psUPHx4QADTxxlS14LZ/ah/9BVZrOux71s+DE6pTB
+   mSUDNerO5qgbZ+9VvWQGyl/3eVimDrqzOYPwfzyk/JkWN+iS0NPQbPXLD
+   AHvM0JbaW7f2tSAE/mO7mkdWl1sZyXY993yD0NsEgrxKjGPj0+nKX490n
+   A==;
+X-CSE-ConnectionGUID: 4R+YyxF4TvuAdyuF6HKwhg==
+X-CSE-MsgGUID: Fn3IlePpQkWP6bFs1b+N/A==
+X-IronPort-AV: E=Sophos;i="6.09,199,1716242400"; 
+   d="scan'208";a="37850448"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 11 Jul 2024 07:27:40 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A54FD16337A;
+	Thu, 11 Jul 2024 07:27:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1720675656;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=HSsX0RnRuDFdjgHKzOQtBjgv2nX0He6FmULrIZgV2do=;
+	b=CSwpWI6Lf4xrqzWYv5+Hmj2pkBU90Gz5eSk8N1mrQhjPh9iid9DEuc3WNe/CBO2vvRCExT
+	hjwwRzC+dNFp3HjXY1mfa1T4re9x2giweXhnmJhZTtfGmzLUZIRf7NdRIoxcLlIfRFGzE0
+	ejAQfvXWaP1AWJ5im+lmoYtF4QDEU3kuUJZdBcfY3L2gJPWXUgJh3qBIAI02iTxLQHL1mT
+	RBAQi/t5pPQONzWEOqokoAVFyiLLeCUIx3R0QESg0Z1SQ70S5oweDGm22Ibw6H/xQaVuIC
+	sztdr1U8B/GpEW3FoKO8JmKS146OS9hgGNJ2Udwkn35e9BV3xH+AqJ7iGjfaCw==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, mturquette@baylibre.com, Stephen Boyd <sboyd@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, quentin.schulz@cherry.de, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/6] dt-bindings: clocks: add binding for generic clock-generators
+Date: Thu, 11 Jul 2024 07:27:40 +0200
+Message-ID: <1899010.tdWV9SEqCh@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <68f6dc44a8202fd83792e58aea137632.sboyd@kernel.org>
+References: <20240709123121.1452394-1-heiko@sntech.de> <21244242.0c2gjJ1VT2@diego> <68f6dc44a8202fd83792e58aea137632.sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-Em Mon, 8 Jul 2024 16:43:12 +0200
-Borislav Petkov <bp@alien8.de> escreveu:
+Am Donnerstag, 11. Juli 2024, 01:21:15 CEST schrieb Stephen Boyd:
+> Quoting Heiko St=FCbner (2024-07-10 00:45:17)
+> > Am Mittwoch, 10. Juli 2024, 09:02:34 CEST schrieb Alexander Stein:
+> > >=20
+> > > So essentially only enable-gpios and vdd-supply is added in compariso=
+n to
+> > > fixed-clock. Does it make sense to add that to the fixed-clocks inste=
+ad?
+> > > Similar to fixed-regulator.
+> >=20
+> > I wasn't that sure which way to go in the first place.
+> > The deciding point was reading that line about the fixed clock not
+> > being gateable, so I opted to not touch the fixed-clock.
+> >=20
+> > But you're definitly right, this _could_ live inside the fixed-clock
+> > as well, if we decide to get rid of the not-gateable thing above.
+>=20
+> It's probably more complicated to combine it with the fixed-clock
+> binding after making properties required like vdd-supply. I'd just make
+> a new binding and look at combining later.
 
-> On Mon, Jul 08, 2024 at 02:10:25PM +0200, Mauro Carvalho Chehab wrote:
-> > This patch itself just add conditionals to optimize out code on
-> > non-ARM architectures. The next one will add some ARM-specific bits
-> > inside ARM processor CPER trace, thus causing compilation breakages
-> > on non-ARM, due to arm-specific kAPI bits that will be used then.  
-> 
-> Are you sure?
+Maybe I am missing something IMHO adding optional vdd-supply and
+enable-gpios doesn't seem a big deal.
+Anyway I don't have a hard opinion here. To me fixed-clocks still
+seems very appropriate for having a controlling GPIO and power supply.
+I just would get rid of the (comment only) hint they are ungatable.
 
-That is what reviews to past attempts to merge patch 2 implied. 
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-> I have both patches applied and then practically reverting the second one
-> builds an allmodconfig just fine.
 
-I double-checked the logic: I noticed just one kABI symbol that
-it is arm-specific (CPU midr), and there is has already a wrapper 
-for it.
-
-I also did a cross-compilation for both x86_64 and s390 to verify,
-and indeed it is building fine without the ifdefs.
-
-So, I'll drop patch 1.
-
-Thanks,
-Mauro
