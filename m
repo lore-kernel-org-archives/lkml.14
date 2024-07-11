@@ -1,103 +1,222 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B429274416;
-	Thu, 11 Jul 2024 08:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2EE14F9EA;
+	Thu, 11 Jul 2024 08:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720685808; cv=none; b=ZxX2Z1VKaVJqxXZM4jrnn5lrmncYEv9A1uRJ1u+COX+6AtY5CPFEt/9EyKDwz1i2ka0KAWjT1sE2C2NLw3GtxwvNgR6rbVihmCj4TT2ef+ngWJ7Px54Nzfyr5R0gq0XNtUZQazquinxh2iZznFzJonPNSbTSrtwTz2SEhTcF3xg=
+	t=1720685896; cv=none; b=TJbLZV0TytWXPGHCNcPx8BsDlFo2NRSgFOCdCY4NCJc8yjxYmIiakEI3KNV/ySeaVff4TM/sVOkRaWInPOChZyersRcRr9/k9PqO4eH8YZVmR8zZMfTwAjc4xdQWRQ6awZxKZvq/WkJKyCUwW+9S9h5Y8GPw3mhJyG8er+3pnA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720685808; c=relaxed/simple;
-	bh=QgeL2GqOGBjF1DLizKD6yRiZVHfq/LMsmIek5y8EN78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e78/wjfPUsM2BZgAS6G6gKNmHUCXPCldysCMWGoWcfSAwNoU7q9PUsAcQ02nUnHnLRpLu9hgiV+pMl41ovuyuEw4+7fLfTUmC+Oq7HkLsWBMIZvhYMYhcvEylRIe12wotBwVRAOlFhRmr4lcPBRnqs3h+NKLa79ltDqvVX4IEp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TtsbYuzi; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720685896; c=relaxed/simple;
+	bh=hZ5aBRIk6w1Xb/vi90JXT8G+yOEd1bCt1HTZvEBYk8I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DMcs5k9sEqDiDVFg56ZeKJQOzU0qO6OJKMR+RD4Q6mojbwvYEVDmIjGBuP67Y2Bk5nnjB2NNTIalbNYvNxjcpBT/PqvCaP5uncBJZxZIWXtpzeAtUQ97JUPshQCTAUOhRFQlGUaGzNgE4Vlbn5cLHWGhdpB3QyE1FWn09JcTJk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KD6XpLIo; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TtsbYuzi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QgeL2GqOGBjF1DLizKD6yRiZVHfq/LMsmIek5y8EN78=; b=TtsbYuziPKcH1tdpn2eTwcTjtU
-	n8A4XZ7GqNLHvESSPfJUll7xTTbgAAYN6N11zqioYiG6A5lameU28MOTp4rKr6AN9MiZO7W3nux2v
-	RNzgqOru1J9b8ebLF0GIR/tlkBmPuhycRtPGScgAEF1o7fgAV+8s/NZWvwblJxXTz8T7L3ntsfCKN
-	p/btlCalKJ8kKNxCm0WvkppjIOnoMAoEBqdlCH5gcQz/J93dt7o6KgSn1CIjeauEzvOSIOHpIPwpk
-	odoRBLHMH7CYhFTCgf5b4eESGzFBA8ym1lZDeOGl4vyj9aa8VTsR6/C6+OkalqOL4DZqNnA3/VQ+A
-	5vlW/4hA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRoya-0000000Akum-45Ao;
-	Thu, 11 Jul 2024 08:16:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 92D8830050D; Thu, 11 Jul 2024 10:16:28 +0200 (CEST)
-Date: Thu, 11 Jul 2024 10:16:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Yian Chen <yian.chen@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 03/16] x86/alternatives: Disable LASS when patching
- kernel alternatives
-Message-ID: <20240711081628.GF4587@noisy.programming.kicks-ass.net>
-References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
- <20240710160655.3402786-4-alexander.shishkin@linux.intel.com>
- <20240710171836.GGZo7CbFJeZwLCZUAt@fat_crate.local>
- <cqacx3crogegwyslm25kwcdcezgg2n44lhy3mg5qkka3vgn4xa@lhqsoseyduus>
- <7bbf9cae-6392-47a4-906c-7c27b1b1223d@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KD6XpLIo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720685895; x=1752221895;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=hZ5aBRIk6w1Xb/vi90JXT8G+yOEd1bCt1HTZvEBYk8I=;
+  b=KD6XpLIoqY7PcWZq/15XDGAZTTVHkMVVfxYdJYWuF3mn2aEWaxEeGIE5
+   frNRjvnAppS2NzlbeC/uT5Gjd/X6/qb7e7oxuxkp3krDevHbVlEZ67UXx
+   2Mrc2sgnlAtao4UHq02gVrHi0tkxMZYqtlCT51fF/Mv4jUPI/avthHgmt
+   05WnlR+OiQqNGKozNvqQcgHJCY4KB0LEklbmoH0TcKMNivtGCLVvS5arI
+   5Z6rgMrl/glkt4Pdf/K5vOSgMUDvO+BqLXW2DK3RrxvINXftbKZ/NR6sK
+   yBiapvGnu0V4a6w0oaf4tqyMqpJOk3zdGpBcYgeWB0tffBCbfno6CdMnY
+   w==;
+X-CSE-ConnectionGUID: hdj13rKpQ7iuRSQoj+ON8Q==
+X-CSE-MsgGUID: lEal/3S2TCGQg+wnXV9fUw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18185567"
+X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
+   d="scan'208";a="18185567"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:18:14 -0700
+X-CSE-ConnectionGUID: KnCuWWB9TMOXEKuc/B/AzQ==
+X-CSE-MsgGUID: jSKVOxgZRjim/5y9+s5xow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
+   d="scan'208";a="71705902"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:18:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Jul 2024 11:18:07 +0300 (EEST)
+To: Gergo Koteles <soyer@irl.hu>
+cc: Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ike.pan@canonical.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/4] platform/x86: ideapad-laptop: move ymc_trigger_ec
+ from lenovo-ymc
+In-Reply-To: <44f63dfa758c811ae941216874fbb1ec77f4a293.1720515666.git.soyer@irl.hu>
+Message-ID: <828057ef-b941-879e-170e-f4e769d4b77a@linux.intel.com>
+References: <cover.1720515666.git.soyer@irl.hu> <44f63dfa758c811ae941216874fbb1ec77f4a293.1720515666.git.soyer@irl.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7bbf9cae-6392-47a4-906c-7c27b1b1223d@intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Jul 10, 2024 at 04:05:31PM -0700, Dave Hansen wrote:
+On Tue, 9 Jul 2024, Gergo Koteles wrote:
 
-> But, I'm 100% sure that we want to distinguish a LASS-necessitated
-> stac()/clac() from a SMAP-necessitated one somehow.
+> Some models need to trigger the EC for the yoga mode control to work
+> properly. EC triggering consists of a VPC call that needs to be
+> synchronized. The vpc_mutex is in the ideapad-laptop module, so
+> synchronization is easier there.
+> 
+> Move the ymc_trigger_ec function to the ideapad-laptop module.
+> 
+> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> ---
+>  drivers/platform/x86/Kconfig          |  1 +
+>  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++
+>  drivers/platform/x86/ideapad-laptop.h |  2 ++
+>  drivers/platform/x86/lenovo-ymc.c     | 34 ++++-----------------------
+>  4 files changed, 26 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 665fa9524986..ddfccc226751 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -477,6 +477,7 @@ config LENOVO_YMC
+>  	tristate "Lenovo Yoga Tablet Mode Control"
+>  	depends on ACPI_WMI
+>  	depends on INPUT
+> +	depends on IDEAPAD_LAPTOP
+>  	select INPUT_SPARSEKMAP
+>  	help
+>  	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 464cc5fd0088..4dcdbb153dda 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -1615,6 +1615,24 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
+>  	priv->r_touchpad_val = value;
+>  }
+>  
+> +void ideapad_ymc_trigger_ec(void)
+> +{
+> +	struct ideapad_private *priv;
+> +	int ret;
+> +
+> +	guard(mutex)(&ideapad_shared_mutex);
+> +
+> +	priv = ideapad_shared;
+> +	if (!priv)
+> +		return;
+> +
+> +	scoped_guard(mutex, &priv->vpc_mutex)
 
-Yeah, if only to make it easier to understand the code.
+It feels the ordering in this series is off because patch 2 add the 
+mutex and here you add it into yet another function. If this patch 
+would be before the other, the mutex changes could all go into the same 
+patch.
+
+> +		ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
+> +	if (ret)
+> +		dev_warn(&priv->platform_device->dev, "Could not write YMC: %d\n", ret);
+> +}
+> +EXPORT_SYMBOL_GPL(ideapad_ymc_trigger_ec);
+
+This export should be namespaced.
+
+I'll have to say I can accept this approach only grudgingly... it feels 
+off even if I understand why you have to do this cross driver thing.
+
+-- 
+ i.
+
+>  static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>  {
+>  	struct ideapad_private *priv = data;
+> diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
+> index 4498a96de597..4dcbed842b0b 100644
+> --- a/drivers/platform/x86/ideapad-laptop.h
+> +++ b/drivers/platform/x86/ideapad-laptop.h
+> @@ -13,6 +13,8 @@
+>  #include <linux/jiffies.h>
+>  #include <linux/errno.h>
+>  
+> +void ideapad_ymc_trigger_ec(void);
+> +
+>  enum {
+>  	VPCCMD_R_VPC1 = 0x10,
+>  	VPCCMD_R_BL_MAX,
+> diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
+> index e1fbc35504d4..0819e9823ca9 100644
+> --- a/drivers/platform/x86/lenovo-ymc.c
+> +++ b/drivers/platform/x86/lenovo-ymc.c
+> @@ -62,19 +62,14 @@ static const struct dmi_system_id allowed_chasis_types_dmi_table[] = {
+>  
+>  struct lenovo_ymc_private {
+>  	struct input_dev *input_dev;
+> -	struct acpi_device *ec_acpi_dev;
+>  };
+>  
+> -static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_private *priv)
+> +static void lenovo_ymc_trigger_ec(void)
+>  {
+> -	int err;
+> -
+> -	if (!priv->ec_acpi_dev)
+> +	if (!ec_trigger)
+>  		return;
+>  
+> -	err = write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
+> -	if (err)
+> -		dev_warn(&wdev->dev, "Could not write YMC: %d\n", err);
+> +	ideapad_ymc_trigger_ec();
+>  }
+>  
+>  static const struct key_entry lenovo_ymc_keymap[] = {
+> @@ -125,11 +120,9 @@ static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
+>  
+>  free_obj:
+>  	kfree(obj);
+> -	lenovo_ymc_trigger_ec(wdev, priv);
+> +	lenovo_ymc_trigger_ec();
+>  }
+>  
+> -static void acpi_dev_put_helper(void *p) { acpi_dev_put(p); }
+> -
+>  static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
+>  {
+>  	struct lenovo_ymc_private *priv;
+> @@ -149,23 +142,6 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
+>  	if (!priv)
+>  		return -ENOMEM;
+>  
+> -	if (ec_trigger) {
+> -		pr_debug("Lenovo YMC enable EC triggering.\n");
+> -		priv->ec_acpi_dev = acpi_dev_get_first_match_dev("VPC2004", NULL, -1);
+> -
+> -		if (!priv->ec_acpi_dev) {
+> -			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
+> -			return -ENODEV;
+> -		}
+> -		err = devm_add_action_or_reset(&wdev->dev,
+> -				acpi_dev_put_helper, priv->ec_acpi_dev);
+> -		if (err) {
+> -			dev_err(&wdev->dev,
+> -				"Could not clean up EC ACPI device: %d\n", err);
+> -			return err;
+> -		}
+> -	}
+> -
+>  	input_dev = devm_input_allocate_device(&wdev->dev);
+>  	if (!input_dev)
+>  		return -ENOMEM;
+> @@ -192,7 +168,7 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
+>  	dev_set_drvdata(&wdev->dev, priv);
+>  
+>  	/* Report the state for the first time on probe */
+> -	lenovo_ymc_trigger_ec(wdev, priv);
+> +	lenovo_ymc_trigger_ec();
+>  	lenovo_ymc_notify(wdev, NULL);
+>  	return 0;
+>  }
+> 
