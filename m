@@ -1,179 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013064.outbound.protection.outlook.com [52.101.67.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1717016DC30;
-	Thu, 11 Jul 2024 18:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720722017; cv=none; b=mQIYn1a0vHsWnt1gtON/g2sIPqU+2Hcw/lvHpPNOGuJJoj3QVaDnMF4kRqH4+X6SrBLnDbxwXJ99v35dR8v+FTDVzQzDUMAp5NDiGeWOs4lr2vanEBQ81+gsrDo1wE2jJeYU41+nDbuCt4DUvyT1C+P+P9Ee5WqgS4dM9qeA2H0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720722017; c=relaxed/simple;
-	bh=BwtKKuGG+KAGYojkzRg+plCNMfPy+VwWCQn81e2kjlk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GXoC5NVJAUITDYP//3EyShwRkwsiyeBB59aWamN2LWFK8pkVXvKJfMhbaLvlomm8ITKkW5osoEnxx1n0/jFJgo6DzEYHi9MDd+lEETCb4UOLLOiqrP4I5G1Cr1PZyloUGeUnJpDiMSGDdhNGmwyjpyb0rI9fsQohiD+CjXarmK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry/JgySD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8B716E87D;
+	Thu, 11 Jul 2024 18:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720722023; cv=fail; b=TvTS2DDyY9uG9xRfnMsd8X5nHqIsnHaF1CwmJXTVrvrPakAi8YqmKNGgKlTvbFF47AIkvY06LMkgwf+Tua6rFQMbz6BFNY/RjEO/WQdvgMhKfnkSB0U9p4KhIn0qFWvYX6jzIEiQwoPXVnkH74NfTjgXbveUc1/wnViFa7qALGQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720722023; c=relaxed/simple;
+	bh=fSK6/khQWHcHhYwL/7q0VT7xBau0KJTduHTplySxMfw=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=DFVdBMu0nAcQXMT+ZmrqdT7inAsAFa6obUjc2goZVTSs/S11QTsKKo07CTf9Efw23vLacXO3cLsRYaCb8fBi/Y3lQPMM7eqE9DaU3tK5CX7QRi0lR17OtrcTBsBn/qo4HrNFHYtTDXqwDbPLI8husaDOK0Z/KRKl9b4n0Ts9pwM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=F7LCceiW; arc=fail smtp.client-ip=52.101.67.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry/JgySD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE29C116B1;
-	Thu, 11 Jul 2024 18:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720722016;
-	bh=BwtKKuGG+KAGYojkzRg+plCNMfPy+VwWCQn81e2kjlk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ry/JgySDXIxZnii43HzeySZPabhcql3VGmTqXFqpkFc1KLH1B2Pov444C0kYZK24a
-	 8EHwlxGmVOyK1DU6fTAcr5nKSqufJfrQvYtxSihVByNZikkzqzeF5INJ7CsQm4v9p1
-	 0uRJkeDp9dyDXAbzOKKhnuKLE0a9KIaMilQBOVZqoIfjrDIMa43kfKnM5SYX1Sbv3r
-	 UZ9nRy24Ax3yl7jv799w0BwaHKtKaBNHWF+hcMHeNax/2f/SILYYAxl2h2kyi78obm
-	 naCXD9Cm1fSBWTHAaVehv2c+EVyRQJfxFQv9tpNl6lAp6c5Z6pKX2FAdKy7daNCB4V
-	 Xyttby2wezCkw==
-Message-ID: <0b2fe3a733119b84baf0d65c097f4d716d4c9040.camel@kernel.org>
-Subject: Re: [PATCH 1/3] nfsd: fix refcount leak when failing to hash
- nfsd_file
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever III <chuck.lever@oracle.com>, Youzhong Yang
- <youzhong@gmail.com>
-Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai
- Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Linux NFS Mailing
- List <linux-nfs@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>
-Date: Thu, 11 Jul 2024 14:20:14 -0400
-In-Reply-To: <1874B388-3A15-4D06-A328-C8581F5FE896@oracle.com>
-References: <20240710-nfsd-next-v1-0-21fca616ac53@kernel.org>
-	 <20240710-nfsd-next-v1-1-21fca616ac53@kernel.org>
-	 <CADpNCvYknMBXf+V=vBLkjOMhTFRN-3o2R9A2c5J4POuaD49kMw@mail.gmail.com>
-	 <50afe4a63be26a946257c335188e230c86beb148.camel@kernel.org>
-	 <1874B388-3A15-4D06-A328-C8581F5FE896@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F7LCceiW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BWjv79Kw6ppK4ESGrrF70NCJmHu1svugScju1ekEYx147h3FbNAP+cvA53i659V7Zy0yzSv3ArY9AYrKwYNoGkhcYXBaaIZjzg9oCp9o5QL9WOrGODBmryeBFKH0PuJnpAqiJrLLvfPxjK2STH/zvcOgW8OJjk/zSH/EtS+Gg6ztC5uHwuXzHst+IDfnoz7xeepM+RsTTpCvyAGK/d6ElXxoSSEFxcI/CCiv7JHJVAxkbrc38Rdcmc6VmVq8JCQwy4hfITs3uGRot/93iXpRjzhhWnF3CudfNmgAA+9hRHJr1GU3c4O2Q+5q9qNZw97wNLCeJYWI3cicjc5PEpvWmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AYIJQPTw6Y7jhRozwFeoTj8X4A9n/DLtphwYYcnPji4=;
+ b=qymngHXWeCqzCR4rjhirg6S+ArjO5QBpzGeFbLQ7rn/KKc6H8c8NtdD0B+O1dp6iBEnLj3Ytc8t0nUfs4mQtuwESzkTWeranPeOyGz6e3K/QTPZCEiQHpVwGbM+7vo93SRayoj++6MIGo/sSNxuhKHBtQQPALqn+g4YAVfhJ0iUmah1fmvplIvlw10GqHmriOZ6gPjHcHx5o3vMmPr0cKiMmKM2uZdwnbF4JK06u2wxgYPtJks7plV0JVqQ3bi09L9ay3xtZLltUzubTLa+3WyNW0Dozb1/2iG7nZvc6k3OvmopOQuMyO41AufPmPwtvjP9alzg1ASKIDzgYcrTNJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AYIJQPTw6Y7jhRozwFeoTj8X4A9n/DLtphwYYcnPji4=;
+ b=F7LCceiWuBzSxU/qpgFEaxhHiRCbmoEdNmw0wqe8ZievnUYgqj/S4393wPjLU7xar5UHKJqTjCAT9znUoZYGui60JudZrT6oGEpg68wmHgvoaQXc73hE+3IcJP4H8ggOJt30topIAyKvqPj1CUglV37ekC3Di5XC3+sXGfosjGE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7514.eurprd04.prod.outlook.com (2603:10a6:10:1f7::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23; Thu, 11 Jul
+ 2024 18:20:17 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7741.033; Thu, 11 Jul 2024
+ 18:20:17 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH 0/4] can: fsl,flexcan: add fsl,s32v234-flexcan and imx95
+ wakeup
+Date: Thu, 11 Jul 2024 14:19:59 -0400
+Message-Id: <20240711-flexcan-v1-0-d5210ec0a34b@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE8ikGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDcwNL3bSc1IrkxDzdZHPT5LTUNKPE5CRLJaDqgqLUtMwKsEnRsbW1AFE
+ X7hBZAAAA
+To: Marc Kleine-Budde <mkl@pengutronix.de>, 
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ haibo.chen@nxp.com, imx@lists.linux.dev, han.xu@nxp.com, 
+ Frank Li <Frank.Li@nxp.com>, 
+ Chircu-Mare Bogdan-Petru <Bogdan.Chircu@freescale.com>, 
+ Dan Nica <dan.nica@nxp.com>, 
+ Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>, 
+ Li Yang <leoyang.li@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>, 
+ Leonard Crestez <cdleonard@gmail.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720722012; l=1349;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=fSK6/khQWHcHhYwL/7q0VT7xBau0KJTduHTplySxMfw=;
+ b=PT656OmZrqVRcyD7FLW3uZdkZlWinLJ3eppqtaGBh/pXWdSCmkd5LFwhCV4XnqiQr0BEQH9dB
+ ujazgjkA3DwC1G7R9Y+xZJbaJmAMjgsDKq7k/gjwnOhMKUZ/tEg0qlX
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR05CA0134.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::19) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7514:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab5d23c6-5ef1-47d2-73da-08dca1d61de5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MUgveVhSeisyYU42UnhNcXVaUXZuUXo1N0VwNklqQkpPUUNtTDh2YTFUZ3BU?=
+ =?utf-8?B?UEdEQVZ5VWp2bjkyejU0NjJDa3RueENXcGpSK0tCbzNyQXh6NGNCSXBXeUpz?=
+ =?utf-8?B?Y0MyTmhnOElaR2FyeUJoUWRoQk5wVXk4UGNES292cnBZQ0tTclZ2d3JEQmxt?=
+ =?utf-8?B?QkVwcER6b3ZtTVRGRUNjcStrbWowSzhQNmpJSVRsOFdKcFJhUmlQV3lSelJj?=
+ =?utf-8?B?UVVVZlJqYkJzdlJEdmQ1Y3QwNlhEMEJ5eHJBRW1KTlBndlMxRkQ1NHlPaHBu?=
+ =?utf-8?B?QVVWWkJ0WFpLZmY3V3FpQWxuaFdMUlBobWEwOVhYazkrTlhUaGdaQ2ErcEtw?=
+ =?utf-8?B?b2Zubzh2MHhlN2xxazNCTnVGQ2w0UG8rRGdSK3NkNjJiWXJsaFRMVkZYNnFp?=
+ =?utf-8?B?VlVXeTdXZGRTTGlXRGtPM0pwTHlUSmZadXljSDE0bjVLWkJqUEkwQVg2MjZv?=
+ =?utf-8?B?c3RrN05yTW1KOVJZY3pweTVCaHRKNW1BbzNUWm9uUW0vQ2hid01oR2M4TWpJ?=
+ =?utf-8?B?Y25VSkg4UkNvZWVJTzNjbTI0ZUIyOVllYnMxVDN0cFNocGJoNjZzVm5XVUpi?=
+ =?utf-8?B?SnV5N05mMnVpVFBoNnV4WXhqQnRNQXNBd1FVVk4vVlZRZnNSUk5jREorUFZw?=
+ =?utf-8?B?MnJieVBSaTl2a0JRcm5wK1NKeXF6S2tIR200Qm9CcVBYR1JubVNic3RJczVO?=
+ =?utf-8?B?M2pXYm55NmgxRFdoYzNIeGdOblVuaXFNVmxiZ2NXQ0pRUTZBd2RvNDJJY3Fs?=
+ =?utf-8?B?QVZ0aDUwbkpTTnJPUGdUSElzQjF0MjFCcGJJQXlDcS9BbVFsVDdlbTByRjFq?=
+ =?utf-8?B?WmI4VVVyNnBXby8rRVpFV1d4NWZ1WjlWblE0b1VKdVZOVTZiR2JQNGJVOVRD?=
+ =?utf-8?B?Sk4rOVNvOXMvTjF3QUtQdnRtRko0bVRnNU5tUDR5SEhnenZ1bW9DaVNLM1hz?=
+ =?utf-8?B?c3ZxUDcxVTRjVXE4M25wOEptSlkrTFVhTXdKNFJwd285WTY4QXNBYmNIRTMz?=
+ =?utf-8?B?clo5SHRiTFZqbXZTQXNMUCtyeTgrY2RKVTZ4YVRHMHU3TC9ONEZVS1BiYnFs?=
+ =?utf-8?B?dnVKMTBlSXhqYkVBbjZEYjFQRVRGSVhhaDZKTno0TDFEbWp2LzFieTNXUVF6?=
+ =?utf-8?B?TFZQTS81YUtOb3piMjNlWE4wbXhsUDBVc3gwdm11Um5xNzU1Zk9RaW00enFj?=
+ =?utf-8?B?VUVpTXVzamxSOFFkdW5vOUtheGlTd2FocFVIUkRZRUR5Z2txM0tjaWJmK1E1?=
+ =?utf-8?B?UHBzSEJVNGQ5OG9kV0dnYXZvclBlaUF2S0MrWllxYVYvTW0yMXFjajZ5ZmV3?=
+ =?utf-8?B?YkhpaTlTODh6SVo4VG5pM0JtbFBpNVV5NHpBM0pFVUp4N3pqaHlwOEhmZ0lV?=
+ =?utf-8?B?QXNocEFGUjh0VGlLWGptK2FyMkI0Z0JNT2lMMzdDUnJIMmVFb2l3b1lqL2h2?=
+ =?utf-8?B?b2pjSzgzMGxxb2ZnaGlaSkdhWEQ2bWFqUlZFTHZ4MGIxR3hnSU8rVFhWZ2Ev?=
+ =?utf-8?B?MkhmOXU0TnBsTG9rZTJ4MHZ3bDZjUURpUGhQNDByTXVFMmVaczYrVzJYM2t3?=
+ =?utf-8?B?dVpWSFVVUWV2VjFyczJIYjFrbnpucTJUNHJsL3F6YVJEQm1VTUZiMTNGRzZF?=
+ =?utf-8?B?bWcwTjZCTXhxNzlXcjU3WlNzMDBxc01hcDZxZ1pabWZkYnhxLzR5UHEyemdI?=
+ =?utf-8?B?VGgzVHhXOWxmWHJTVmpJS0VVWTJQU2oxZG9WS3FabW5Eb1pPaE14amlPSVdu?=
+ =?utf-8?B?LzhUaU1xalBhODhpTWtQNnhMdXczajFQbzQ4TjQ4NjFWNFZYTlJLRk9IdElz?=
+ =?utf-8?B?NU0yOGR3QTVvbGwyZTdwVTFhWUpKR2NJVGM2N1dqQmNTM0U5eGMvb1VmUnkv?=
+ =?utf-8?B?d3U5QXh1Ukd3Sld1QVFkTGZiNzVxMTNrT1QxRzlXbHJVaUE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q1UvdFhkb3VzczYzK3kyVWtLUjh1VTlTeTlsZkZ0VHFqUTFTWXdwcTQrVFU4?=
+ =?utf-8?B?UnozNDRzdUdySVRHc1VidUpSbEhZRFJQS3hEM2w3N25QN0t6QUUvZmhjSWJj?=
+ =?utf-8?B?UWxkWnd2Q3dUNGRQWTQwRjZ2YThqb3VuRXlscElsSG1TcjI4TDk3M2tpUVZW?=
+ =?utf-8?B?V3RQME13aXZrbFVSZlpxTHpFUE5zU3MyYmpOLytvNHpITGpiU2xLRmtHaDlL?=
+ =?utf-8?B?cG85YXRqZ2RvSEZuMlZwTmRiY0ZYNjdlM0gzVVJ0QTZrL0s1OVJ0YU90dXNq?=
+ =?utf-8?B?ZWtYWHhGaks0VWRrR0hJSHZSWlpzdDljZmNPOFdxTmdxSTRjNW80UnBSQlgy?=
+ =?utf-8?B?UXlJMWZWUyt3TVNHejdpenZna2hMaGNBdDN5b0F2dzhVTk0wNEZxRlpzR2Ew?=
+ =?utf-8?B?cy9YYlpLb3JxRFBQdjJUR1A4VldYb010ZGlPbFVVTCtWc0JXRWw2VDgreHR0?=
+ =?utf-8?B?YldXeEF6WGkwbm4zWVpsWkk2d1I3OXcyMTQ1ZnJDWlZiVTRCbExlcGFxbmts?=
+ =?utf-8?B?MnVGNW9ZMkJOWWtERlJlZFBrZGFTTlJXZFNpSzQvQldaNkJVeUl4RWx0aDBU?=
+ =?utf-8?B?Tk80eW1zOVRGdTdPY05DR2FUazhhOG9Yc1QrcmhLU1UyU1ppWXNwd1Q3cnJY?=
+ =?utf-8?B?UDIrc3RDaTZTNU9sdTlhRzNBVHNoR1QyN3dEbGUyM1VxdC9Ec3laVERodmJQ?=
+ =?utf-8?B?ZzYxWVdZNHM3RTBqOHRuYnpIaEZ0b2NxSFltUU0zbjgvSWJlcHdYWnZLVlJh?=
+ =?utf-8?B?ODNQSnpJU2VqVnJQbDg1OHc0citmQytJSEpFZlJwcTIwalE4SFdjNGEvMXFB?=
+ =?utf-8?B?M0ZzUmpQVVJnMGczNkppQ29wS00zSnR1c1d5NlJiY2pPNEJ2bFRwWjVyZmZI?=
+ =?utf-8?B?Rm1BeFVNSlZjZjRjWm1CaGsveEc1WTA3emFhZFRrbnllS2JydFd4YlNsZUdI?=
+ =?utf-8?B?UlJiQWRSMVZVcEdGRlZpcGgvOUVHWU1SOW8wR2pkMUFocVJDZ2FoNHlYK3NQ?=
+ =?utf-8?B?N052aEx6UCtyQzRqbEtXaHc5NE5pcEFiNS91aUpjWUhBQUsvYzZiRnh0b1VM?=
+ =?utf-8?B?TEhubWxxQ0FKWnVtTzlXTXlxc0ozS1dQYUxkWGdtNVR2R1VRallXcWlpemFW?=
+ =?utf-8?B?WGRZaGF5U0VYN1ZtVys4ZWZLRjdUWmVScXpWRS9XalIwTUpwRTJ0K3FpTFZU?=
+ =?utf-8?B?SnR3RUhWZ3g1bldlWlF1cnkybUFrMHVMSEpFZ1VsSHhxOGdZTEVjYjZFR1Qr?=
+ =?utf-8?B?cEF2UThwdUFZQ3dWZkNJdnIyekk2T3gydm9ydkRrVXRpRnJuMkxlN0NOME9u?=
+ =?utf-8?B?VkE3eDZORVgrS28wWkFzVmh5RDEyUzFBdklzZXZ1NGFNNGRPZmZSTmVQQmJt?=
+ =?utf-8?B?Q3JuNlVUakFLQmRXa3RLNlNJT3pNYWNyOHQ4WmFVUi9KeTI3V1AwT1pPdEpm?=
+ =?utf-8?B?R3JOZGpNaGZJUlNSLytsWGFDVDBveVNGdzdOKzBpNmF2Wk01M1pZZHNLNFl4?=
+ =?utf-8?B?OXNNbXdVZHVCcEFvZGRDTjhkNmxLbjE2L05ibTl1ZGhHUDc1OC9xVmRrRExK?=
+ =?utf-8?B?WkpQcFZwY0xuMFBIdUlRdVhiZWc4ZGJMRVJmOUN3NEVEMWxmc3JiSG02RWN2?=
+ =?utf-8?B?VGphV0ZBSjhISDJXYWhUZ3RpL2QxOU5JRDJYdVI4WVIvQTY5MThRdjBLOUdB?=
+ =?utf-8?B?MlRhNHEzTGxralFSWm55cktYY3lGNm9OaEZzZXdqemtKZmdKSTc3eVJ1akpP?=
+ =?utf-8?B?MjBPeVhrVnQyWXhqMTFvL0M1Nk1Md1ZReld1b2NZbEpjSDFNaUxEZ1BGblo4?=
+ =?utf-8?B?RGYySjhxSkZuSWlmUTBmN3ZML2hBQXZWcytnR3JNN0JZNHhSUG5HYkg5SkQv?=
+ =?utf-8?B?b09GOTZwNzNmSE9abURMTjQwMWROeFk3NWhTZWxDZ3dQTWUwbS8yV1NBU3Js?=
+ =?utf-8?B?QTVIL2lsenpmUGN2SmV4L0pONSsraUV3bEJIVWtOd2ZIT2hRdHhFWGpYL0pt?=
+ =?utf-8?B?Q1BoY2o1NVdzR1RabE51WDB4T1R5NzVSeVBlckJZd3pkUkNYenoyR21YRi9v?=
+ =?utf-8?B?dU11aTNkcEFvcmdQcy81YVc1bk1JL2t1R1dXdkN0TUxUc05KOC9lSXpJWU56?=
+ =?utf-8?Q?E5QE5XNeyw2Yf00AcSBe1thnS?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab5d23c6-5ef1-47d2-73da-08dca1d61de5
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 18:20:17.7634
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tB9RHFudSs4i+8s8copdpC6QBlswaMCD9UigbkqBdYTbpX6cVjvICVadvxsyNqzMbOEgfXQ/z7zTsgw96w+0ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7514
 
-On Thu, 2024-07-11 at 18:16 +0000, Chuck Lever III wrote:
->=20
->=20
-> > On Jul 11, 2024, at 1:53=E2=80=AFPM, Jeff Layton <jlayton@kernel.org>
-> > wrote:
-> >=20
-> > On Thu, 2024-07-11 at 13:05 -0400, Youzhong Yang wrote:
-> > > Shouldn't we have fh_put(fhp) before 'retry'?
-> > >=20
-> >=20
-> > A subtle question, actually...
-> >=20
-> > It probably wouldn't hurt to do that, but I don't think it's
-> > required.
-> >=20
-> > The main reason we call fh_put is to force a second call to
-> > nfsd_set_fh_dentry. IOW, we want to redo the lookup by filehandle
-> > and
-> > find the inode.
-> >=20
-> > In the EEXIST case, presumably we have found the inode but we raced
-> > with another task in setting an nfsd_file for it in the hash.
-> > That's
-> > different from the case where the thing was unhashed or we got an
-> > EOPENSTALE.=C2=A0 So, I think we probably don't require refinding the
-> > inode
-> > in that case.
-> >=20
-> > More pointedly, I'm not sure this particular case is actually
-> > possible.
-> > The entries are hashed on the inode pointer value, and we're
-> > searching
-> > and inserting into the hash under the i_lock.
-> >=20
-> > Chuck, thoughts?
->=20
-> Is the question whether we want to dput() the dentry that
-> is attached to the fhp ? fh_verify's API contract says:
->=20
-> 310=C2=A0 * Regardless of success or failure of fh_verify(), fh_put()
-> should be
-> 311=C2=A0 * called on @fhp when the caller is finished with the
-> filehandle.=20
->=20
-> It looks like none of nfsd_file_acquire's callers do an
-> fh_put() in their error flows.
->=20
-> But maybe I've misunderstood the issue.
->=20
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+To: David S. Miller <davem@davemloft.net>
+To: Eric Dumazet <edumazet@google.com>
+To: Jakub Kicinski <kuba@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: haibo.chen@nxp.com
+Cc: imx@lists.linux.dev
+Cc: han.xu@nxp.com
 
-Note that this API is weird and doesn't conform to typical get/put
-semantics.
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Chircu-Mare Bogdan-Petru (1):
+      can: flexcan: Add S32V234 support to FlexCAN driver
 
-The fhp is instantiated before nfsd_file_do_acquire is called, and all
-of the callers that I can see do eventually call fh_put on it. fh_put
-is idempotent, so there should be no harm in calling it multiple times.
+Frank Li (1):
+      dt-bindings: can: fsl,flexcan: add compatible string fsl,s32v234-flexcan
 
-My question here though was more about this EEXIST case. Should we even
-bother checking for that? I don't see how it's possible.
+Haibo Chen (2):
+      bingdings: can: flexcan: move fsl,imx95-flexcan standalone
+      can: flexcan: add wakeup support for imx95
 
->=20
-> > > On Wed, Jul 10, 2024 at 9:06=E2=80=AFAM Jeff Layton <jlayton@kernel.o=
-rg>
-> > > wrote:
-> > > >=20
-> > > > At this point, we have a new nf that we couldn't properly
-> > > > insert
-> > > > into
-> > > > the hashtable. Just free it before retrying, since it was never
-> > > > hashed.
-> > > >=20
-> > > > Fixes: c6593366c0bf ("nfsd: don't kill nfsd_files because of
-> > > > lease
-> > > > break error")
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > > =C2=A0fs/nfsd/filecache.c | 4 +++-
-> > > > =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > > index f84913691b78..4fb5e8546831 100644
-> > > > --- a/fs/nfsd/filecache.c
-> > > > +++ b/fs/nfsd/filecache.c
-> > > > @@ -1038,8 +1038,10 @@ nfsd_file_do_acquire(struct svc_rqst
-> > > > *rqstp,
-> > > > struct svc_fh *fhp,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (likely(ret =3D=3D 0)=
-)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 goto open_file;
-> > > >=20
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret =3D=3D -EEXIST)
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret =3D=3D -EEXIST) {
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 nfsd_file_free(nf);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 goto retry;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 trace_nfsd_file_insert_e=
-rr(rqstp, inode, may_flags,
-> > > > ret);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D nfserr_jukebo=
-x;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto construction_err;
-> > > >=20
-> > > > --
-> > > > 2.45.2
-> > > >=20
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
->=20
->=20
-> --
-> Chuck Lever
->=20
->=20
+ .../devicetree/bindings/net/can/fsl,flexcan.yaml   |  5 +-
+ drivers/net/can/flexcan/flexcan-core.c             | 54 ++++++++++++++++++++--
+ drivers/net/can/flexcan/flexcan.h                  |  2 +
+ 3 files changed, 53 insertions(+), 8 deletions(-)
+---
+base-commit: a4cf44c1ad6471737cf687b1f1644cf33641e738
+change-id: 20240709-flexcan-c75cfef2acb9
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+
