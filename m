@@ -1,434 +1,175 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11020120.outbound.protection.outlook.com [52.101.56.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077271A071C
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720735237; cv=none; b=H6sWvkuiA4taY07aBx+8bWp8i3pZQYQ/jENBnCltP6dHAVV8QMnVgapkaW9v0p8MfgqqVGAyuhLsuoU4VAlY1QoSIcCmNaLOz9pvY2YpttqEOwMqYt/3pzCyFNFQa5iBghxh9ByWO4CIyWCRWTojqr5+49nJLedVpfz0s6BfUqI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720735237; c=relaxed/simple;
-	bh=uUkIKzgpeV9poQGuQgH7m38NJ3QTu9XmVqHaoyovk5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kGrqa4nkSaA0Zxza6aCuwNmGT0tDloh2Q+hOF+joNgCmOChYdOgVHz/gs5s0+owaEwMQhYQmALLdryROq/s5NbAuPH/D64REJcoiRdqJ6dqEXdjI033kwqXTBGj21SwBl5Yt7AbsdEMku6FmxH0gl8lc4HBDhVuLPxkkU5GWDvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IaeVW5cQ; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B621A071C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720735246; cv=fail; b=C8yCAO9oh0K413e4Er99VkHnGk94vXcMI09rEm0OqJBBErzphuIAaPn8kEqZkBaeg0QVyLx8W5zxGnwGYA1rkNWC5wC3rVzsSKMqpouDa71f5wuQzVmE0GQn11zEA/XSGYOYmBv/uT1gKHxqLMsnoqo7/TYBKWhskmDznBs24G4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720735246; c=relaxed/simple;
+	bh=R5OR02Lhj41Wz3mJqdMz5pSZ8HPa20ACHFziSnHX8RU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=CssSSc0oz61UYZT9dAHBpc3EylyHOfi+7a9ZaovddMV5+7b4R26RDeKvCl5OzCVJBsS+jNPmYjc+MI9ARZtetRp4E+wO/e/nQ7fNMk5ctL+PFyT9cCEywB5+ADusFS0qNonYtfPATzAD5weWygy0kDexx8pt3lKut0TApSGdzsk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=O4mDbKjm; arc=fail smtp.client-ip=52.101.56.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IaeVW5cQ"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-70af8128081so1161634b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:00:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="O4mDbKjm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Yg0aHwqTVA8CPV82/ZafGhq39I9jWyUtTG+00Yi5RttvK03igNk3g23B8jPDooO872aR0dT5/GcuA2mvrO7U5kDI+MY4HFVtYdYv0yJJNyGiJe3ytYchhRg9JYT2RbGOWV6eoX+zubalQrJVu63ECvERexM4p2+SPm4uHEl+Lb7AfMR+j0ZtqROfUioR2Mzkce2l9cMmh8LGI4F7xQEXN9QNCS0YykMZTtxJtmk4Yv0KXu8yErdQkrKEWr/j/k1OkVpb8W2OZuBg949OXAbklxUimMbCGMDFb6+WaprIe4A6AebuiHuYvgoiJjI92myVGBSxz/F3xYlZVp7BnI2iBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R5OR02Lhj41Wz3mJqdMz5pSZ8HPa20ACHFziSnHX8RU=;
+ b=wXsw1iblxlHdVkqFEvLJxlF49pGBbKk1qY5Pw8Hd2gHiaH2YW3sP+hyBM5a97e3m6v2KuLEVTN1k/m/L7taVXuEpsGqMpx3csvqNrPn30u6O7mcPLnQQ+l2kBz8lp+m6uaEBa6b9F6n4S9d3rbM7lOeRt7jh68tQaPfNUhEHDwa6AaYWgBwPVbUDiYFIJH9xGnDM+HSEA/GU16kiTNLqRTtddUUVRGLoeWDsq3halid3AmFXVU/7PsSB4/azp3007IJbFz+7JvZ/KCk0hoTeObU6siHksPE/MLTLCIMxaJ16jIkxKeQvsSvvOz2Xn71IUmbIhApkuSBlSmMRExGBpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1720735234; x=1721340034; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cmnOdnYQkT9OwWlI4B0RYyL3TA7usThz18amYXfsut0=;
-        b=IaeVW5cQqrv/IP0h5e7l954cYK4L3KHi+EV1k517c/LJ2/kdObNxw1CpfJoMXN7Cxn
-         jazSYCa+VQntGPsd/AJLnFBo3JxdSq1Bbz1J5VKQ9M1cAgvYvAzmO96nvHz2BXvvxAqA
-         1vLFV7XatNgRwtTeg3fTZND34Lfr+aXHfAU5R9vOk7HlkuDK2LXA7rUO7DSrYJlmyt7O
-         tYQ7JzTsQ3dQlM4jZybocGi7plZ2MG/OCJIZSvM1IfmI7sjb6VbQB54bJ5FahuxcjgiR
-         k/24s1CPUjUjeSiupC2IHSKCY1F7b6Cu3DGRy7BjBMpq1QStYZr0ZHSKDW+dx0hCDFmj
-         qgsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720735234; x=1721340034;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cmnOdnYQkT9OwWlI4B0RYyL3TA7usThz18amYXfsut0=;
-        b=fDyGMTYy9/yTa6qUA9xqYn0sQPVewhhlSJupXc6SC5yZ2HG5KfMmGNYwQgBsMF5+fj
-         bTWjFABhi8MsvXd7Z47jD7uDC8W3vH6o61Rfj9LYwoAU5JtsFFrvF38QylDGO1YFPYUP
-         6gsk9xTvwV70HKvt9pe7HFXhJ1BsjKrz0nRUt5ZdfE8JUGnsLmrQhPHfRovq3BvEjYRc
-         u9SpUhRnF7j1u5uPctuvztziWsjbbrWrkXEroMV/g+d5yqv+huKYc6IFK9gc9FaeCHQk
-         JnzVFjR4Dhzjoyd/6rZ264QRqDPvcxxwZmwdFdRPrq+FKLrPyMp/a43MlCnYVtDG0YkS
-         ylSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTGJ/niV+r1Cxs2Uf2wcsCHHINGbrxn7UN5X/NrVuo2A40vRHrZ0PNwDOIXPAEbQhN9aIVZ6rUyF4HMBz/IeYDXC78+BMgVYtNlOLF
-X-Gm-Message-State: AOJu0Yz2NAWOuzneQ2oPxTQ29Fa3dfpzcNsbcm87IV/jIC5BYwiGdSzX
-	rDF/XUhbjitxmYahtSa3vAd1+OD1uX9Fi/1MQcX6yWZKAnrqHrgOcC6+AH4uwgA=
-X-Google-Smtp-Source: AGHT+IHOxBItzqvcR4rdJ3ERPtForTh3tSEBoMjJosihuhoQ+3n2ldoLhiHEdlXJbeUwcmWrawqwUQ==
-X-Received: by 2002:a05:6a00:3cd1:b0:704:209a:c59e with SMTP id d2e1a72fcca58-70b4354a98bmr12373559b3a.9.1720735234185;
-        Thu, 11 Jul 2024 15:00:34 -0700 (PDT)
-Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43898b10sm6169431b3a.7.2024.07.11.15.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 15:00:33 -0700 (PDT)
-From: Jesse Taube <jesse@rivosinc.com>
-To: linux-riscv@lists.infradead.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Evan Green <evan@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Jesse Taube <jesse@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Xiao Wang <xiao.w.wang@intel.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Zong Li <zong.li@sifive.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Erick Archer <erick.archer@gmx.com>,
-	Joel Granados <j.granados@samsung.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v4 6/7] RISC-V: Report vector unaligned access speed hwprobe
-Date: Thu, 11 Jul 2024 17:58:45 -0400
-Message-ID: <20240711215846.834365-7-jesse@rivosinc.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240711215846.834365-1-jesse@rivosinc.com>
-References: <20240711215846.834365-1-jesse@rivosinc.com>
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R5OR02Lhj41Wz3mJqdMz5pSZ8HPa20ACHFziSnHX8RU=;
+ b=O4mDbKjmo1HUsQbwM6M5OhIfXST+3Uz2QEMfPEcmA7RT7W8exh/uG3nIE6GY4PGDTbv2bt70tzihRiBugI7REhJA5OVuxpBrE7GFs0s+GHu3L38Ly/GANrCCBoH5oyqN6gdr2V37p/LmX4dWXxT+Ezil7Ax2zm/n8xvQv7zVRYg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from BN0PR01MB6862.prod.exchangelabs.com (2603:10b6:408:161::11) by
+ PH7PR01MB7824.prod.exchangelabs.com (2603:10b6:510:1dc::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7741.35; Thu, 11 Jul 2024 22:00:35 +0000
+Received: from BN0PR01MB6862.prod.exchangelabs.com
+ ([fe80::8a1e:34a8:2ad9:7f83]) by BN0PR01MB6862.prod.exchangelabs.com
+ ([fe80::8a1e:34a8:2ad9:7f83%3]) with mapi id 15.20.7762.020; Thu, 11 Jul 2024
+ 22:00:35 +0000
+From: Carl Worth <carl@os.amperecomputing.com>
+To: James Morse <james.morse@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Reinette Chatre
+ <reinette.chatre@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, H Peter Anvin
+ <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>, James Morse
+ <james.morse@arm.com>, shameerali.kolothum.thodi@huawei.com, D Scott
+ Phillips OS <scott@os.amperecomputing.com>, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>, Xin
+ Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com, David Hildenbrand
+ <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>, Dave Martin
+ <dave.martin@arm.com>
+Subject: Re: [PATCH v3 00/38] x86/resctrl: Move the resctrl filesystem code
+ to /fs/resctrl
+In-Reply-To: <20240614150033.10454-1-james.morse@arm.com>
+References: <20240614150033.10454-1-james.morse@arm.com>
+Date: Thu, 11 Jul 2024 15:00:27 -0700
+Message-ID: <87bk33d1xg.fsf@rasp.cworth.amperemail.amperecomputing.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR04CA0247.namprd04.prod.outlook.com
+ (2603:10b6:303:88::12) To BN0PR01MB6862.prod.exchangelabs.com
+ (2603:10b6:408:161::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR01MB6862:EE_|PH7PR01MB7824:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2aed34ef-a69e-4277-89f5-08dca1f4e437
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|7416014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3jYPhVoZpsS2Hk7BfcuoMi3gwkraUk2e6RPrhez4gsSNV5HC+cB5ZNWeSSWA?=
+ =?us-ascii?Q?iUXGQ2tJIxjJaJirC6EZ4hQJisYMp3wSJI0YNrGqTzTK9HjqIkD2AffWq5Qq?=
+ =?us-ascii?Q?Rl78QMURCYJ/t9vpLK4sg8moABBj8/iXUIO7/ujvfNo0k0LbG/xRxs4ccTuJ?=
+ =?us-ascii?Q?6ZoucvwYEWMWA7X2nj22WZJIwm3YkWmWzIh7ZoUHOmp5GTaKwKU3gqts2KEK?=
+ =?us-ascii?Q?jEcVwY8pZjfzcID3PmMGDrEpvXw5r8CV47Ye5PX22wXNJMUTI1e50l4Pjgut?=
+ =?us-ascii?Q?LudcUag+A6wFDyC33sDN+MbQVg0hD2TwG5kstO7yhXrBEitI49/ewpH+WfXt?=
+ =?us-ascii?Q?aQBfODvMhOneBPQkx0+HaiwvuANL4zfldOmTIQlGMbwLQeQ0FX8riWO2XcqY?=
+ =?us-ascii?Q?9fK3xn8uhZHWpniuay0dXL1wb/o/XqiWdLwz+csw/77gu5XIzlo29AtlOVzJ?=
+ =?us-ascii?Q?YqukfTa3o3ayghVexrIqsUkEPqleolIp4J/UE/drR/WroS1WoxZ2uABd/FZ+?=
+ =?us-ascii?Q?Vxya1e+mq/+Ajn6E41ZFaYIfY1+vdTsfuilamrsdcSDJoWvEGF+0mW6O+m7K?=
+ =?us-ascii?Q?sIaFS0LKaeM3F86D3Aj21sO7CcxLx1MmZZuW82FFT2zeEoMt1vyWd6s8/FrZ?=
+ =?us-ascii?Q?FSDolQRqI1ciZLjTct+CbPBMPYn4UuvmoNKwU02AH97ei4orWlCtyBbdFpRT?=
+ =?us-ascii?Q?CBN/MIyDIK4NWrhmEVG6aiu6xffafiLVY5dl1XSEKh6vNEghGJQfnlKh9ECg?=
+ =?us-ascii?Q?gi43PGR9mtyzIS8OH6e9fzym0JoPlC3+lS9Q8bnuyAoan1nnbqJQvj8nBf7a?=
+ =?us-ascii?Q?KTjFbndDDIucGSwEISswFrTM9rHWCJBMFW9T9+HOe+XhslF3ZGLnhBcKWdWw?=
+ =?us-ascii?Q?2hR4nIBBF/9CUtV+bW1Cn9jIJtdZwUxzAI+0zGGPWk7K7SpeUuJ+4v2vo7LF?=
+ =?us-ascii?Q?LSaHnhzJCzoji+RaVQf4iJ7G7RRu/+S0sERqalht6CIMn7tCGCKUtgvFElSV?=
+ =?us-ascii?Q?pVMaSmJhQQyP3Rac13LYH0o3VGQ4Stt879duowT2tqX9gClAkD34PEijFvkK?=
+ =?us-ascii?Q?N54LTIMJhuwUD/fb7zrxkiPrR7XV3QbENK7Lmq/lxvjgJ9bn8KgU+T1MbicE?=
+ =?us-ascii?Q?3UNjczIvMLz11Rfkj9eDNA0OO3zrl3ry1arS1DoHIVD+SrGehPY1p0+52MSB?=
+ =?us-ascii?Q?8xAsRrGPEjRQAfo+K5BW6CSmt0iBCsGeL1nEOoksT7P/t3xhEbs5ZVkn9v55?=
+ =?us-ascii?Q?KZLra0gYIGo8lfIkdP2n5qdn6/3XHG9HM5UM9rACYpnzFMXdCkFOwxn6Azeo?=
+ =?us-ascii?Q?fv28b6ofuSqUu9UT+p2gRd9murQco1m0BTmk6L5OiIcZ8gwDq0NNTxuP5k+3?=
+ =?us-ascii?Q?eV+9cSGObOmktIUip3cWBNnBm1eeSI1b/czTCZwwDhSsvar2Tw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR01MB6862.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?GthScPsmsz0AXTjcy2eP14HPkREuDgluCk4SFc+7PDEvDdPt6Adpx1vsmkuo?=
+ =?us-ascii?Q?G2gTJ13bFwBbdDYO7CsfeFQHQV46Dw7zLy/6sDuPYQgf6DzTzFm29A870AEs?=
+ =?us-ascii?Q?0tDpftT7SCrI1o4RxrAE51Q17EBGJLOHvKvubu+7qcq6oV/sM2JoLJHL3ZiQ?=
+ =?us-ascii?Q?P0MTBk51JWHgutulu4FW6QroLABa0J+T2JeOYyZSQjpb447vH6oqOFbuoTd0?=
+ =?us-ascii?Q?+AcqrL1ItWf95bfWOqX1fPzTqQSGRiwU8QLRdmU4QmwRKmdHGjfRZYjNaJTc?=
+ =?us-ascii?Q?TN71QBa85ztYjHtLzE5WUXEe+JwvHNtaKb7H+E/YKsTAYiHqIIsk6+bHCU0S?=
+ =?us-ascii?Q?PE9ZrMy1noc1nG+uGB3I7dVY/rgP8n/yxzZO/fz+5hUe0OaR7l4geHy0ox2x?=
+ =?us-ascii?Q?j84lgGyT0lsRtDh73T/SrPjEPb2o94CXDK99GeaKp8fJ9/XQBLr1u4/kMugT?=
+ =?us-ascii?Q?oIR213X66XdM9ppX1Ng+GBQj+XMLvNcntSs4K+Q2Xz1Xi8XsnSFVjdLuGAmz?=
+ =?us-ascii?Q?TuE8SQBdu6uPGoHPkm+dTzP0R0oEDsvZdSewVRlrJALxYWTIN2sPUJu4Cp7F?=
+ =?us-ascii?Q?XiOopUE2hBh2+fttNEH1jCuOGtT3bXLL4EorrRKsr7icoh3xOHQCdm4rjspP?=
+ =?us-ascii?Q?U2/qfA6XWi6AIVBuuaQl0VXkYw7GAuhfFJVO+WL1hT+HrlF0OrDUul287OGP?=
+ =?us-ascii?Q?6kcTz8t15FEEc/MWUolB4MxM3B8xNzSC4wmkV8mxZTCB7SUcW9tQBiUm76id?=
+ =?us-ascii?Q?pFMV6m6dSojwSkpfDC/0vLJfGY5YAfN2sH3cPKSCutKLW6IO49ReqhTaEntg?=
+ =?us-ascii?Q?atjilVL1eRa0MaozK42MtSeLA36lB6hkP5+vROauek2K+kD9csxom+8axr79?=
+ =?us-ascii?Q?gYcohSLaqzfNGNeJ560RizOK/NHIzQJzO9yD/CQc+zzc+Y0An4qNrE/GQfXb?=
+ =?us-ascii?Q?dxbh5gOIpvAeQ7075e2Tjl1JXdbmCegVuSE8LRHE/QrhasA/bW0OX2ZccRdy?=
+ =?us-ascii?Q?3bsWIbrteAXCQmH571UkVbUP0UlS+O+J6kkE+Ll2yAuLwduyHd3We1j2ZJxp?=
+ =?us-ascii?Q?p3VduzxXK6DaOaZcpJ0KjE/Kg7eOI0uv3Ce4IOywoLU2EQlQVt/klVK6V0qa?=
+ =?us-ascii?Q?STt7g+CJdG5cMjaWQoo2AKfr8YPpVI7Hx3VDDI0XannzlFgDsDLKaPmkCENf?=
+ =?us-ascii?Q?2gfFM5PzX8U/dqOEvjHzDg3LF+9RwuDS/HKE7M0WnhsOZRZ0K/lXs5LFTD1j?=
+ =?us-ascii?Q?b0aHHYH8FlsSHnzsK04PPaxr17jgW4/5uNhKDI4bykgogAfQXIqNkBx+CdMb?=
+ =?us-ascii?Q?mB/uQwfXQBZOflpKYlqGG7R71iRR33nozswbOTODBVaM16Oslq53v36zq//2?=
+ =?us-ascii?Q?JP5A0QQqKqkRf42w5Gbj/Jyte5kcoO+2NkZdRuBGkJ4pYhXg1ztF+rguylJX?=
+ =?us-ascii?Q?NOLytHGUHoDSN5c+YT7vDd8VIpy68ljLsAc4a72p28nhyKLxP+mkGqtY3+mv?=
+ =?us-ascii?Q?YZZjeq6PVUzuLm/wEJGf+q6v9sb8U2bU7Ri8mcAdfhCujbAim0uV+I9+ZBNl?=
+ =?us-ascii?Q?ELVPKwjfRpRpKsrs4ra/9nJRYG1T1Zh9ioGPfA7zNfzduN48LsktKM1X6Q1+?=
+ =?us-ascii?Q?4THt+Jqb3pz3EnSTDOImFJc=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2aed34ef-a69e-4277-89f5-08dca1f4e437
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR01MB6862.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 22:00:35.4208
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ah2x+z0FH9LzMnsKnzwKyreMN9vAu5zv5+Hyk0a+LpqJuruO2mGwbYPsIaxpMVSwVbShM5jDjgjzZnwlM0sYEUjzX6+yrr8vE7L5bZCX6HU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR01MB7824
 
-Detect if vector misaligned accesses are faster or slower than
-equivalent vector byte accesses. This is useful for usermode to know
-whether vector byte accesses or vector misaligned accesses have a better
-bandwidth for operations like memcpy.
+James Morse <james.morse@arm.com> writes:
+> This is the final series that allows other architectures to implement resctrl.
+> The final patch to move the code has been ommited, but can be generated using
+> the python script at the end of the series.
+> The final move is a bit of a monster. I don't expect that to get merged as part
+> of this series - we should wait for it to make less impact on other
+> series.
 
-Signed-off-by: Jesse Taube <jesse@rivosinc.com>
----
-V1 -> V2:
- - Add Kconfig options
- - Add WORD_EEW to vec-copy-unaligned.S
-V2 -> V3:
- - Remove unnecessary comment
- - Remove local_irq_enable
-V3 -> V4:
- - Add preempt_disable/enable
- - Alphabetize includes in vec-copy-unaligned.S and unaligned_access_speed.c
- - Add duplicate comments above mb() to please checkpatch
- - change all_cpus_vec_supported to all_cpus_vec_unsupported
-    so speed is tested if any cpus support unaligned vector accesses
- - Spell out _VECTOR_ in macros
----
- arch/riscv/Kconfig                         |  18 +++
- arch/riscv/kernel/Makefile                 |   3 +-
- arch/riscv/kernel/copy-unaligned.h         |   5 +
- arch/riscv/kernel/sys_hwprobe.c            |   6 +
- arch/riscv/kernel/unaligned_access_speed.c | 134 ++++++++++++++++++++-
- arch/riscv/kernel/vec-copy-unaligned.S     |  58 +++++++++
- 6 files changed, 221 insertions(+), 3 deletions(-)
- create mode 100644 arch/riscv/kernel/vec-copy-unaligned.S
+Thanks, again, James.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index ffbe0fdd7fb3..e98139340c1c 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -807,6 +807,24 @@ config RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
- 	  will dynamically determine the speed of vector unaligned accesses on
- 	  the underlying system if they are supported.
- 
-+config RISCV_SLOW_VECTOR_UNALIGNED_ACCESS
-+	bool "Assume the system supports slow vector unaligned memory accesses"
-+	depends on NONPORTABLE
-+	help
-+	  Assume that the system supports slow vector unaligned memory accesses. The
-+	  kernel and userspace programs may not be able to run at all on systems
-+	  that do not support unaligned memory accesses.
-+
-+config RISCV_EFFICIENT_VECTOR_UNALIGNED_ACCESS
-+	bool "Assume the system supports fast vector unaligned memory accesses"
-+	depends on NONPORTABLE
-+	help
-+	  Assume that the system supports fast vector unaligned memory accesses. When
-+	  enabled, this option improves the performance of the kernel on such
-+	  systems. However, the kernel and userspace programs will run much more
-+	  slowly, or will not be able to run at all, on systems that do not
-+	  support efficient unaligned memory accesses.
-+
- endchoice
- 
- endmenu # "Platform type"
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 5b243d46f4b1..291935a084d5 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -64,7 +64,8 @@ obj-$(CONFIG_MMU) += vdso.o vdso/
- 
- obj-$(CONFIG_RISCV_MISALIGNED)	+= traps_misaligned.o
- obj-$(CONFIG_RISCV_MISALIGNED)	+= unaligned_access_speed.o
--obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)	+= copy-unaligned.o
-+obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)		+= copy-unaligned.o
-+obj-$(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)	+= vec-copy-unaligned.o
- 
- obj-$(CONFIG_FPU)		+= fpu.o
- obj-$(CONFIG_FPU)		+= kernel_mode_fpu.o
-diff --git a/arch/riscv/kernel/copy-unaligned.h b/arch/riscv/kernel/copy-unaligned.h
-index e3d70d35b708..85d4d11450cb 100644
---- a/arch/riscv/kernel/copy-unaligned.h
-+++ b/arch/riscv/kernel/copy-unaligned.h
-@@ -10,4 +10,9 @@
- void __riscv_copy_words_unaligned(void *dst, const void *src, size_t size);
- void __riscv_copy_bytes_unaligned(void *dst, const void *src, size_t size);
- 
-+#ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-+void __riscv_copy_vec_words_unaligned(void *dst, const void *src, size_t size);
-+void __riscv_copy_vec_bytes_unaligned(void *dst, const void *src, size_t size);
-+#endif
-+
- #endif /* __RISCV_KERNEL_COPY_UNALIGNED_H */
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index 2e3e324bad38..99d3e63d0444 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -221,6 +221,12 @@ static u64 hwprobe_vec_misaligned(const struct cpumask *cpus)
- #else
- static u64 hwprobe_vec_misaligned(const struct cpumask *cpus)
- {
-+	if (IS_ENABLED(CONFIG_RISCV_EFFICIENT_VECTOR_UNALIGNED_ACCESS))
-+		return RISCV_HWPROBE_VECTOR_MISALIGNED_FAST;
-+
-+	if (IS_ENABLED(CONFIG_RISCV_SLOW_VECTOR_UNALIGNED_ACCESS))
-+		return RISCV_HWPROBE_VECTOR_MISALIGNED_SLOW;
-+
- 	return RISCV_HWPROBE_VECTOR_MISALIGNED_UNKNOWN;
- }
- #endif
-diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-index 24b8883a23f0..74f3bfa5e0bb 100644
---- a/arch/riscv/kernel/unaligned_access_speed.c
-+++ b/arch/riscv/kernel/unaligned_access_speed.c
-@@ -6,11 +6,13 @@
- #include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/jump_label.h>
-+#include <linux/kthread.h>
- #include <linux/mm.h>
- #include <linux/smp.h>
- #include <linux/types.h>
- #include <asm/cpufeature.h>
- #include <asm/hwprobe.h>
-+#include <asm/vector.h>
- 
- #include "copy-unaligned.h"
- 
-@@ -267,12 +269,140 @@ static int check_unaligned_access_speed_all_cpus(void)
- }
- #endif
- 
-+#ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-+static void check_vector_unaligned_access(struct work_struct *unused)
-+{
-+	int cpu = smp_processor_id();
-+	u64 start_cycles, end_cycles;
-+	u64 word_cycles;
-+	u64 byte_cycles;
-+	int ratio;
-+	unsigned long start_jiffies, now;
-+	struct page *page;
-+	void *dst;
-+	void *src;
-+	long speed = RISCV_HWPROBE_VECTOR_MISALIGNED_SLOW;
-+
-+	if (per_cpu(vector_misaligned_access, cpu) != RISCV_HWPROBE_VECTOR_MISALIGNED_SLOW)
-+		return;
-+
-+	page = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
-+	if (!page) {
-+		pr_warn("Allocation failure, not measuring vector misaligned performance\n");
-+		return;
-+	}
-+
-+	/* Make an unaligned destination buffer. */
-+	dst = (void *)((unsigned long)page_address(page) | 0x1);
-+	/* Unalign src as well, but differently (off by 1 + 2 = 3). */
-+	src = dst + (MISALIGNED_BUFFER_SIZE / 2);
-+	src += 2;
-+	word_cycles = -1ULL;
-+
-+	/* Do a warmup. */
-+	kernel_vector_begin();
-+	__riscv_copy_vec_words_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+
-+	start_jiffies = jiffies;
-+	while ((now = jiffies) == start_jiffies)
-+		cpu_relax();
-+
-+	/*
-+	 * For a fixed amount of time, repeatedly try the function, and take
-+	 * the best time in cycles as the measurement.
-+	 */
-+	while (time_before(jiffies, now + (1 << MISALIGNED_ACCESS_JIFFIES_LG2))) {
-+		start_cycles = get_cycles64();
-+		/* Ensure the CSR read can't reorder WRT to the copy. */
-+		mb();
-+		__riscv_copy_vec_words_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+		/* Ensure the copy ends before the end time is snapped. */
-+		mb();
-+		end_cycles = get_cycles64();
-+		if ((end_cycles - start_cycles) < word_cycles)
-+			word_cycles = end_cycles - start_cycles;
-+	}
-+
-+	byte_cycles = -1ULL;
-+	__riscv_copy_vec_bytes_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+	start_jiffies = jiffies;
-+	while ((now = jiffies) == start_jiffies)
-+		cpu_relax();
-+
-+	while (time_before(jiffies, now + (1 << MISALIGNED_ACCESS_JIFFIES_LG2))) {
-+		start_cycles = get_cycles64();
-+		/* Ensure the CSR read can't reorder WRT to the copy. */
-+		mb();
-+		__riscv_copy_vec_bytes_unaligned(dst, src, MISALIGNED_COPY_SIZE);
-+		/* Ensure the copy ends before the end time is snapped. */
-+		mb();
-+		end_cycles = get_cycles64();
-+		if ((end_cycles - start_cycles) < byte_cycles)
-+			byte_cycles = end_cycles - start_cycles;
-+	}
-+
-+	kernel_vector_end();
-+
-+	/* Don't divide by zero. */
-+	if (!word_cycles || !byte_cycles) {
-+		pr_warn("cpu%d: rdtime lacks granularity needed to measure unaligned vector access speed\n",
-+			cpu);
-+
-+		return;
-+	}
-+
-+	if (word_cycles < byte_cycles)
-+		speed = RISCV_HWPROBE_VECTOR_MISALIGNED_FAST;
-+
-+	ratio = div_u64((byte_cycles * 100), word_cycles);
-+	pr_info("cpu%d: Ratio of vector byte access time to vector unaligned word access is %d.%02d, unaligned accesses are %s\n",
-+		cpu,
-+		ratio / 100,
-+		ratio % 100,
-+		(speed ==  RISCV_HWPROBE_VECTOR_MISALIGNED_FAST) ? "fast" : "slow");
-+
-+	per_cpu(vector_misaligned_access, cpu) = speed;
-+}
-+
-+static int riscv_online_cpu_vec(unsigned int cpu)
-+{
-+	check_vector_unaligned_access(NULL);
-+	return 0;
-+}
-+
-+/* Measure unaligned access speed on all CPUs present at boot in parallel. */
-+static int vec_check_unaligned_access_speed_all_cpus(void *unused)
-+{
-+	schedule_on_each_cpu(check_vector_unaligned_access);
-+
-+	/*
-+	 * Setup hotplug callbacks for any new CPUs that come online or go
-+	 * offline.
-+	 */
-+	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
-+				  riscv_online_cpu_vec, NULL);
-+
-+	return 0;
-+}
-+#else /* CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS */
-+static int vec_check_unaligned_access_speed_all_cpus(void *unused)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int check_unaligned_access_all_cpus(void)
- {
--	bool all_cpus_emulated;
-+	bool all_cpus_emulated, all_cpus_vec_unsupported;
- 
- 	all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
--	check_vector_unaligned_access_emulated_all_cpus();
-+	all_cpus_vec_unsupported = check_vector_unaligned_access_emulated_all_cpus();
-+
-+	if (!all_cpus_vec_unsupported &&
-+	    IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
-+		kthread_run(vec_check_unaligned_access_speed_all_cpus,
-+			    NULL, "vec_check_unaligned_access_speed_all_cpus");
-+	}
- 
- 	if (!all_cpus_emulated)
- 		return check_unaligned_access_speed_all_cpus();
-diff --git a/arch/riscv/kernel/vec-copy-unaligned.S b/arch/riscv/kernel/vec-copy-unaligned.S
-new file mode 100644
-index 000000000000..d16f19f1b3b6
---- /dev/null
-+++ b/arch/riscv/kernel/vec-copy-unaligned.S
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2024 Rivos Inc. */
-+
-+#include <linux/args.h>
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+
-+	.text
-+
-+#define WORD_EEW 32
-+
-+#define WORD_SEW CONCATENATE(e, WORD_EEW)
-+#define VEC_L CONCATENATE(vle, WORD_EEW).v
-+#define VEC_S CONCATENATE(vle, WORD_EEW).v
-+
-+/* void __riscv_copy_vec_words_unaligned(void *, const void *, size_t) */
-+/* Performs a memcpy without aligning buffers, using word loads and stores. */
-+/* Note: The size is truncated to a multiple of WORD_EEW */
-+SYM_FUNC_START(__riscv_copy_vec_words_unaligned)
-+	andi  a4, a2, ~(WORD_EEW-1)
-+	beqz  a4, 2f
-+	add   a3, a1, a4
-+	.option push
-+	.option arch, +zve32x
-+1:
-+	vsetivli t0, 8, WORD_SEW, m8, ta, ma
-+	VEC_L v0, (a1)
-+	VEC_S v0, (a0)
-+	addi  a0, a0, WORD_EEW
-+	addi  a1, a1, WORD_EEW
-+	bltu  a1, a3, 1b
-+
-+2:
-+	.option pop
-+	ret
-+SYM_FUNC_END(__riscv_copy_vec_words_unaligned)
-+
-+/* void __riscv_copy_vec_bytes_unaligned(void *, const void *, size_t) */
-+/* Performs a memcpy without aligning buffers, using only byte accesses. */
-+/* Note: The size is truncated to a multiple of 8 */
-+SYM_FUNC_START(__riscv_copy_vec_bytes_unaligned)
-+	andi a4, a2, ~(8-1)
-+	beqz a4, 2f
-+	add  a3, a1, a4
-+	.option push
-+	.option arch, +zve32x
-+1:
-+	vsetivli t0, 8, e8, m8, ta, ma
-+	vle8.v v0, (a1)
-+	vse8.v v0, (a0)
-+	addi a0, a0, 8
-+	addi a1, a1, 8
-+	bltu a1, a3, 1b
-+
-+2:
-+	.option pop
-+	ret
-+SYM_FUNC_END(__riscv_copy_vec_bytes_unaligned)
--- 
-2.45.2
+As with previous versions, I've tested this code (along with additional
+MPAM code from you and other code we've written), to test MPAM
+functionality on an Ampere implementation.
 
+I replied to the in the series which introduces
+CONFIG_RESCTRL_FS_PSEUDO_LOCK to point out how that commit will actually
+break compilation if that option is not selected, (and I described the
+minor change needed to fix that).
+
+With that fixed, for the series:
+
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+
+-Carl
