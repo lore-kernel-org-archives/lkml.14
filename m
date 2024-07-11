@@ -1,114 +1,157 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D81A28FF;
-	Thu, 11 Jul 2024 15:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E27316C684
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720713362; cv=none; b=IlRfXixNHTvUs2jz8FneAmod6I/Ju8E945POpCW84HVSLScz6ZTN+vMzTjQ9IetLZctJ31OptJAR2093G/C6daqN7d/FHvrACZJrA6+w+feEQw+sU/3Ggl28sRX40F/wGqtHR/SzOr6ndPG0tzT4gb9NCKy253i7o7APGnvxn/s=
+	t=1720713370; cv=none; b=caiUj09IEGdrFg4ExYQt8ld/H9+I4nMhhm6x5GDVXOyvVszSY2EjmZhB+3k2aL6DKgPE9SnlSCarNhQ0Z1aNSQBih8OBmbFu7ZfSjxiWmtAPzVlIUSQtUFqMEt7dxfJL5N84gAgX+I+//FCz+J/mViOdpjOAUasMWs1tMBsr5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720713362; c=relaxed/simple;
-	bh=pvwZQWKRM8P3abXf9MKAFwoT+CyflxB2xiAXKKtM8o0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=G3YjarjLreh/YYvYnw4i2fbCKaFTIK445yqqYZmsBiWgBsrpSp89Snb28jOi+q1zLpuNaOoLaLMt2Rj/IS1/z+Ilf709I0pHPqcwrqI4yPk6nyRfSKKFA+iut4Vilt/E5JZNwpCSqtgsFcNnl5w2wG6sDniB/p0IfNXiBtkhIwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=qNrm3aXV; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1720713370; c=relaxed/simple;
+	bh=fK93rdN7UPAjzzNdY9a2W7zpHlmO1W+0cPnbEmcEXTU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DbdFaCr3CJZbTyJFSs+n8eLjzkaASSzwKviY9sgdQSDACWMA5DSHH9WM7YRpjPRJU2MoQuiyE8AKnIppLZyV9OB84PxQyKCr6AAQ3Gd9CZil5V3gK7FKDmYpct1/QPVyfxHIBY2OHiuq4f9IyDKY1PIcuO+PdpT86dv347Yyk+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XNWNLECw; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="qNrm3aXV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=COVnHoaV6XQK+0UAiwgzJJpAqirYx+8+7V18TlawizU=; b=qNrm3aXVoxJJ9bN0EsVCVSRHlI
-	x+24kwbaPNkZRu4HFgvkwfM5vDNyuoknBivTehKIjog6wpPLIG9WlNk2XLrl4K4xWf9FcueAP/nhW
-	XsQA07d5ONdYw3R+d4RrMVlMoCxf+YwFbPEPyuf5LhUdsE1TPVPdddQWWd4Qu5/2yOszJukh1OCxl
-	1YAn8cG1EdbO32Ga7WdJHT8NSVw476vANsJWrAAAzTyReAzFJtJKTzA32rpN2byrVRyy4Lv+n2uRh
-	F/cy0Globu5FOxLW6kzV5+vcSyViHM1a+Xna4lx1s85sYXYcVcs8J536FX78IFvz8/PN8SOli7Uww
-	0+BIH56w==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sRw93-000LSe-4J; Thu, 11 Jul 2024 17:55:45 +0200
-Received: from [178.197.248.35] (helo=linux.home)
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sRw92-0009bc-2C;
-	Thu, 11 Jul 2024 17:55:44 +0200
-Subject: Re: [PATCH bpf] selftests/bpf: DENYLIST.aarch64: Remove fexit_sleep
-To: Puranjay Mohan <puranjay@kernel.org>, Manu Bretelle <chantra@meta.com>,
- KP Singh <kpsingh@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
- <eddyz87@gmail.com>, Mykola Lysenko <mykolal@meta.com>,
- Alexei Starovoitov <ast@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Florent Revest <revest@google.com>
-References: <20240705145009.32340-1-puranjay@kernel.org>
- <c0ef7ecf-595b-375a-7785-d7bf50040c6b@iogearbox.net>
- <mb61pjzhwvshc.fsf@kernel.org>
- <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
- <224eeadb-fc5f-baeb-0808-a4f9916afa3c@iogearbox.net>
- <mb61ped836gn7.fsf@kernel.org>
- <d36b0c2e-fdf2-d3b0-46a8-7936e0eda5a8@iogearbox.net>
- <CACYkzJ5E+3xYkNsH7JoVkjabzSwnZZCzzTz5B50qDB7bLYkmMA@mail.gmail.com>
- <890d23f2-636e-12d1-31cc-eb6469f2a9ac@iogearbox.net>
- <SJ0PR15MB461564D3F7E7A763498CA6A8CBDB2@SJ0PR15MB4615.namprd15.prod.outlook.com>
- <mb61p5xtcyqo5.fsf@kernel.org>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <9b188f97-f5ef-8f06-50a2-26a43b58f7ed@iogearbox.net>
-Date: Thu, 11 Jul 2024 17:55:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNWNLECw"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e026a2238d8so1065746276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720713367; x=1721318167; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o9NK8vbwSl6fVYipiYD+K+b1VqL0LZzXwcN17mQG4N4=;
+        b=XNWNLECwCeqYN2s8mXpun7H5BoRAbK3P8xAtol1uqw1cP2DWYnc7Vg5cKAxEpyEbn3
+         ROwCxaMsYrwpAEO+WJel+fWtNWRlZ259Do37x7xNp+Ba3l4EYfJXlMeQIIzPzdK706kL
+         2aCadurOtzdadzyZnK/O74GN4K9zKX0DDX73QPVyJ2WdR9Sm/NyhqrrykeXuGmpIQAcT
+         2X1OLou1BCwgpiyGJKqVEAovIGDfJ0ROYOSRRzVMtiapETt0+uSMrHXZuIucDBQSUzuR
+         bv4wZJW0kaCfDO2qWGQM6wkrkLhtcbR9wfpGFVyIUDjmn9GSUg2K3UN3RcR9zwGU1Wx3
+         qmQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720713367; x=1721318167;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o9NK8vbwSl6fVYipiYD+K+b1VqL0LZzXwcN17mQG4N4=;
+        b=vjmXhPj2iAOgxUppEqywh47Q+kmQjBV7rs9mT1i8FUfNRbeOpfUrb1qKOzqb3xAluP
+         6SpZw3kRJvv0R1IKkV8PQz6NUyYjvJbGAVGhlRJFpCwwuFs0ndxioARo8C7afD+8D5uw
+         o99OExp6LRTP6mUo7L/FfC3wbZLZ/SJ3KyEBqTiK49qsPWb55z2EhMeRnVBxqEY2Afw+
+         P3xqthSVMDFc4EFJcqzn5PUFGQCf/9kWDgNptarCtDxkGDGiz+LOgK7upVzs4K9yPN9V
+         HUUIOJn5BumtGwBBTdzU+xZs6FyypqK96ekUbm3ollCpJTcTprFcOcD7Dwb/FiqdX6pp
+         s3qA==
+X-Forwarded-Encrypted: i=1; AJvYcCXc1bfOSn3m5hvlAMQEST+raXwOwj7iwDY2v6IYXx8TXPllEmQPcpnxXr5YX2H3bUq1XOdPsru8m9yc3aPsbdyQfhTqVdR+5P2hqvwu
+X-Gm-Message-State: AOJu0YwW3IM+WhGGtdAjZ43oj9KgbgJUSdv6ZhnKyTFOrqR4N4ulAhTf
+	stJBDCq8IUdIGEMbiEWogF1qedQNq8VSRbmdVawBQzXCbu5gPR1N20gDNiETq2Nxq4zHwATxHPS
+	XZRzwFJMuzBBNGRSzooc5/Tw/JNLqH3y+qE2pZQ==
+X-Google-Smtp-Source: AGHT+IFkr/j+VnCO+Vl5QVu0QsqTKrqy4owjYSW/qtao35IwLP4Q3jMZYHSbiM4nmMtUoEAIPyhT561j44bWpNjvOPg=
+X-Received: by 2002:a25:868b:0:b0:e03:5dd4:ec1a with SMTP id
+ 3f1490d57ef6-e041b03c277mr10295295276.4.1720713367555; Thu, 11 Jul 2024
+ 08:56:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <mb61p5xtcyqo5.fsf@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27333/Thu Jul 11 10:35:59 2024)
+References: <20240708121018.246476-1-ciprianmarian.costea@oss.nxp.com>
+ <20240708121018.246476-2-ciprianmarian.costea@oss.nxp.com>
+ <6a577d6c-04ad-4c12-bfad-815e811deee3@intel.com> <123ce7e1-1981-4a41-a131-168f4f7b5417@oss.nxp.com>
+In-Reply-To: <123ce7e1-1981-4a41-a131-168f4f7b5417@oss.nxp.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 11 Jul 2024 17:55:31 +0200
+Message-ID: <CAPDyKFoHmvZLogUY=-WXM2G+g1h=fbaakySHCJh7MSaFMYuCXw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] mmc: sdhci-esdhc-imx: disable card detect wake for
+ S32G based platforms
+To: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Haibo Chen <haibo.chen@nxp.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, s32@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 7/11/24 4:00 PM, Puranjay Mohan wrote:
-> 
-> Hi,
-> I was able find the root cause of this bug and will send a fix soon!
-> 
->> Unable to handle kernel paging request at virtual address ffff0000c2a80e68
-> 
-> We are running this test on Qemu with '-cpu max', this means 52-bit
-> virtual addresses are being used.
-> 
-> The trampolines generation code has the following two lines:
-> 
-> 		emit_addr_mov_i64(A64_R(0), (const u64)im, ctx);
-> 		emit_call((const u64)__bpf_tramp_enter, ctx);
-> 
-> here the address of struct bpf_tramp_image is moved to R0 and passed as
-> an argument to __bpf_tramp_enter().
-> 
-> emit_addr_mov_i64() assumes that the address passed to it is in the
-> vmalloc space and uses at most 48 bits. It sets all the remaining bits
-> to 1.
-> 
-> but struct bpf_tramp_image is allocated using kzalloc() and when 52-bit
-> VAs are used, its address is not guaranteed to be 48-bit, therefore we
-> see this bug, where  0xfff[0]0000c2a80e68 is converted to
-> 0xfff[f]0000c2a80e68 when the trampoline is generated.
-> 
-> The fix would be use emit_a64_mov_i64() for moving this address into R0.
+On Thu, 11 Jul 2024 at 16:26, Ciprian Marian Costea
+<ciprianmarian.costea@oss.nxp.com> wrote:
+>
+> On 7/10/2024 3:34 PM, Adrian Hunter wrote:
+> > On 8/07/24 15:10, Ciprian Costea wrote:
+> >> In case of S32G based platforms, GPIO CD used for card detect
+> >> wake mechanism is not available.
+> >>
+> >> For this scenario the newly introduced flag
+> >> 'ESDHC_FLAG_SKIP_CD_WAKE' is used.
+> >>
+> >> Signed-off-by: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
+> >
+> > Should have:
+> >
+> >   - put the patch set version number (v2) in the subject e.g.
+> >     [PATCH v2 1/3] mmc: sdhci-esdhc-imx: disable card detect wake for S32G based platforms
+> >
+> >   - added Haibo Chen's Reviewed-by tag
+> >
+> > Anyway:
+> >
+> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> >
+>
+> Hello Adrian,
+>
+> Sorry for bothering you with this question, but should I send a new
+> patchset adding the new version or what is the process after this step ?
+> For example, should I send this patchset again with V3 adding all the
+> ACKs & Reviewed-by tags to each commit from the patchset ?
 
-Excellent find!
+No need to send a new version this time, I can add Haibo's tag when
+applying. Although I prefer an ack from him for patch3 before I merge
+this.
+
+Kind regards
+Uffe
+
+>
+> Best Regards,
+> Ciprian
+>
+> >
+> >> ---
+> >>   drivers/mmc/host/sdhci-esdhc-imx.c | 8 ++++++--
+> >>   1 file changed, 6 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+> >> index 40a6e2f8145a..21d984a77be8 100644
+> >> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> >> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> >> @@ -201,6 +201,9 @@
+> >>   /* ERR004536 is not applicable for the IP  */
+> >>   #define ESDHC_FLAG_SKIP_ERR004536  BIT(17)
+> >>
+> >> +/* The IP does not have GPIO CD wake capabilities */
+> >> +#define ESDHC_FLAG_SKIP_CD_WAKE             BIT(18)
+> >> +
+> >>   enum wp_types {
+> >>      ESDHC_WP_NONE,          /* no WP, neither controller nor gpio */
+> >>      ESDHC_WP_CONTROLLER,    /* mmc controller internal WP */
+> >> @@ -298,7 +301,7 @@ static struct esdhc_soc_data usdhc_s32g2_data = {
+> >>      .flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_MAN_TUNING
+> >>                      | ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
+> >>                      | ESDHC_FLAG_HS400 | ESDHC_FLAG_HS400_ES
+> >> -                    | ESDHC_FLAG_SKIP_ERR004536,
+> >> +                    | ESDHC_FLAG_SKIP_ERR004536 | ESDHC_FLAG_SKIP_CD_WAKE,
+> >>   };
+> >>
+> >>   static struct esdhc_soc_data usdhc_imx7ulp_data = {
+> >> @@ -1726,7 +1729,8 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
+> >>              host->mmc->caps |= MMC_CAP_1_8V_DDR | MMC_CAP_3_3V_DDR;
+> >>
+> >>              /* GPIO CD can be set as a wakeup source */
+> >> -            host->mmc->caps |= MMC_CAP_CD_WAKE;
+> >> +            if (!(imx_data->socdata->flags & ESDHC_FLAG_SKIP_CD_WAKE))
+> >> +                    host->mmc->caps |= MMC_CAP_CD_WAKE;
+> >>
+> >>              if (!(imx_data->socdata->flags & ESDHC_FLAG_HS200))
+> >>                      host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
+> >
+>
