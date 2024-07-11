@@ -1,158 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2A816B752;
-	Thu, 11 Jul 2024 16:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778A216B752;
+	Thu, 11 Jul 2024 16:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720715725; cv=none; b=d9r7CRGIx82YPM5bnS0cT0drDdbN39EnU0ANLtkLgpG5l3lNFhMGmzYHnQ2R0FfPjXpgDOQb77ONUsEckkqM67vaKHY9QWQL+KzEfXdiY4TcLGZbJdHg7JxgRewD0pjYLJs40NwFvSZome9dM++lw70w0bm6vJprD/DDx4RC1ps=
+	t=1720715751; cv=none; b=GpggJUhlv9t5PzKyrcopAz6LQC7jVewuhvgHgCZbi5eUGU1gP7uDhJqLTOrqYWlc6SRMHrsXjQXaB+8WrAs4nAJPNhj1tpr0r9WbZo5eT+F+zZsOgutfFigIbU9v8GSdBb9DauB7XZxc/fd/8aXl69kjiu3QU8bi29BiEvv1r/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720715725; c=relaxed/simple;
-	bh=eYOzrKzYkBArUGV+retdG2v4fSbxeHESNpJPniHrEBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hwmbukn1aQk+Mphk9wuQcIRZVMv4pihJUBMX+xQkGAP4eVvtxCSrteliQgfqVgiRGo3Fzvr6omlVNoI3MjviIWF3rR+Q8VD4U54d1+LHECNUtWrzYEByKIkMpWDzhx8E81N13Hmu/d9oQPTkFyBmcN1uixN7hy4E5QJXJj9gHhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kty32UDH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kty32UDH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49893C116B1;
-	Thu, 11 Jul 2024 16:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720715725;
-	bh=eYOzrKzYkBArUGV+retdG2v4fSbxeHESNpJPniHrEBk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kty32UDHqUwc34fH+pbtVG4FtlLSqpihl2Oc+Hx7JE/2QJAOzQDDdd+WDi2mpE1FR
-	 ZRrliVHVYrxT73c5ivaXYRtGNOypC2rjHn0GspIwx18EiujaaBZPWBReeLhHof6AQo
-	 KcE3iC9+6EU4S8xKN3dNo6itXqwJDzE2Jh0U086Jl1YY7TWF7FsoQekJJUzjNBNyPz
-	 sOctkctn3WNBmPUZZtVkzDYsOgUYuIGMKxtwUOYHfd2cs3AzCYs1vtPTEUUmVnCRy/
-	 r8sALqwCo5bDRDDISgYzxZlOqdSj/f43VR73tyNDJMtEzx6AzvNfC2CXY04fTc08vW
-	 fdndubSKuYHeA==
-Date: Thu, 11 Jul 2024 09:35:24 -0700
-From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Gatlin Newhouse <gatlin.newhouse@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>, Xin Li <xin3.li@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	t.p.northover@gmail.com, Fangrui Song <maskray@google.com>
-Subject: Re: [PATCH v4] x86/traps: Enable UBSAN traps on x86
-Message-ID: <202407110924.81A08DD4D@keescook>
-References: <20240710203250.238782-1-gatlin.newhouse@gmail.com>
- <20240711081031.GB4587@noisy.programming.kicks-ass.net>
- <CANpmjNObEzShHvw19EAntPvCYJbqezKBq+pB=mkd7j3sXDEE7A@mail.gmail.com>
+	s=arc-20240116; t=1720715751; c=relaxed/simple;
+	bh=zbEHVRkDsvgXvgy7ePG+HZP/L/SCK/mB/uExSVUIwQ4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZhOn9ibjwUyGgxIYgSF7rETCiiL8Qbc1L1flav3IAXZnrvCazPnF/Pi0+XHI2GaMdS20FQ/MXF4s4wee/miIdSnB1TrE/2bcAoR1EdRmEuAcIWA3Nw0k3sWY/ZFqtRhyvnwY/41MMUtcWMbXfY1lk8JEXjmGa6vFPKALd6naYYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B66EA21BDB;
+	Thu, 11 Jul 2024 16:35:47 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 86C80139E7;
+	Thu, 11 Jul 2024 16:35:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ID2lIOMJkGa0NwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 11 Jul 2024 16:35:47 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Thu, 11 Jul 2024 18:35:30 +0200
+Subject: [PATCH 1/2] mm, slab: put should_failslab() back behind
+ CONFIG_SHOULD_FAILSLAB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNObEzShHvw19EAntPvCYJbqezKBq+pB=mkd7j3sXDEE7A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240711-b4-fault-injection-reverts-v1-1-9e2651945d68@suse.cz>
+References: <20240711-b4-fault-injection-reverts-v1-0-9e2651945d68@suse.cz>
+In-Reply-To: <20240711-b4-fault-injection-reverts-v1-0-9e2651945d68@suse.cz>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, 
+ Akinobu Mita <akinobu.mita@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Christoph Lameter <cl@linux.com>, 
+ David Rientjes <rientjes@google.com>, 
+ Roman Gushchin <roman.gushchin@linux.dev>, 
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4644; i=vbabka@suse.cz;
+ h=from:subject:message-id; bh=zbEHVRkDsvgXvgy7ePG+HZP/L/SCK/mB/uExSVUIwQ4=;
+ b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBmkAne2MB78FAzF9cge2o8lX8PRgTFUuIDeWIGI
+ vdS6xc0p1CJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCZpAJ3gAKCRC74LB10kWI
+ mpD+CACkvSZCKzbtwIQGbMaxAGE6arvHPzZDGEKnPm90OsjQ/svV+W/kmwFLbyfc9FYzxoK7Q3+
+ XeRX2uxBj6CFYm2iYuBMkUlG9xYT/UHDhBfzRXSF503fcD0Px26q9Nt9FlPJu9/5MtWy3kQpTZr
+ 6yO3l/UZ0qWsLBv56Mwncrimgdlg+heHDFAVYpK5OCkwWwoUMyn/7Xd+JdZWBRTnqL2xRTcpGM+
+ sE/rGJwqp/2ZX1qRjeW/brP+D7fFM/dAmT+hQ8WBkvOF3mLabth3TiaI/mDt/nn5scYFegTcj1+
+ ZwtvW3N3vnLh8kRVJ2NmmQMdl6Lf1XhMqrKOt4CvjLYnWfwt
+X-Developer-Key: i=vbabka@suse.cz; a=openpgp;
+ fpr=A940D434992C2E8E99103D50224FA7E7CC82A664
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Queue-Id: B66EA21BDB
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[];
+	TAGGED_RCPT(0.00)[]
+X-Spam-Level: 
 
-On Thu, Jul 11, 2024 at 11:06:12AM +0200, Marco Elver wrote:
-> On Thu, 11 Jul 2024 at 10:10, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Jul 10, 2024 at 08:32:38PM +0000, Gatlin Newhouse wrote:
-> > > Currently ARM architectures extract which specific sanitizer
-> > > has caused a trap via encoded data in the trap instruction.
-> > > Clang on x86 currently encodes the same data in ud1 instructions
-> > > but the x86 handle_bug() and is_valid_bugaddr() functions
-> > > currently only look at ud2s.
-> > >
-> > > Bring x86 to parity with arm64, similar to commit 25b84002afb9
-> > > ("arm64: Support Clang UBSAN trap codes for better reporting").
-> > > Enable the reporting of UBSAN sanitizer detail on x86 architectures
-> > > compiled with clang when CONFIG_UBSAN_TRAP=y.
-> >
-> > Can we please get some actual words on what code clang will generate for
-> > this? This doesn't even refer to the clang commit.
-> >
-> > How am I supposed to know if the below patch matches what clang will
-> > generate etc..
-> 
-> I got curious what the history of this is - I think it was introduced
-> in https://github.com/llvm/llvm-project/commit/c5978f42ec8e9, which
-> was reviewed here: https://reviews.llvm.org/D89959
+This mostly reverts commit 4f6923fbb352 ("mm: make should_failslab
+always available for fault injection"). The commit made
+should_failslab() a noinline function that's always called from the slab
+allocation hotpath, even if it's empty because CONFIG_SHOULD_FAILSLAB is
+not enabled, and there is no option to disable that call. This is
+visible in profiles and the function call overhead can be noticeable
+especially with cpu mitigations.
 
-Sorry, I should have suggested this commit be mentioned in the commit
-log. The details are in llvm/lib/Target/X86/X86MCInstLower.cpp:
-https://github.com/llvm/llvm-project/commit/c5978f42ec8e9#diff-bb68d7cd885f41cfc35843998b0f9f534adb60b415f647109e597ce448e92d9f
+Meanwhile the bpftrace program example in the commit silently does not
+work without CONFIG_SHOULD_FAILSLAB anyway with a recent gcc, because
+the empty function gets a .constprop clone that is actually being called
+(uselessly) from the slab hotpath, while the error injection is hooked
+to the original function that's not being called at all [1].
 
-  case X86::UBSAN_UD1:
-    EmitAndCountInstruction(MCInstBuilder(X86::UD1Lm)
-                                .addReg(X86::EAX)
-                                .addReg(X86::EAX)
-                                .addImm(1)
-                                .addReg(X86::NoRegister)
-                                .addImm(MI->getOperand(0).getImm())
-                                .addReg(X86::NoRegister));
+Thus put the whole should_failslab() function back behind
+CONFIG_SHOULD_FAILSLAB. It's not a complete revert of 4f6923fbb352 - the
+int return type that returns -ENOMEM on failure is preserved, as well
+ALLOW_ERROR_INJECTION annotation. The BTF_ID() record that was meanwhile
+added is also guarded by CONFIG_SHOULD_FAILSLAB.
 
-Which is using the UD1Lm template from
-https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/X86/X86InstrSystem.td#L27
+[1] https://github.com/bpftrace/bpftrace/issues/3258
 
-  def UD1Lm   : I<0xB9, MRMSrcMem, (outs), (ins GR32:$src1, i32mem:$src2),
-                  "ud1{l}\t{$src2, $src1|$src1, $src2}", []>, TB, OpSize32;
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ include/linux/fault-inject.h |  5 ++---
+ kernel/bpf/verifier.c        |  2 ++
+ mm/failslab.c                | 14 ++++++++------
+ mm/slub.c                    |  8 --------
+ 4 files changed, 12 insertions(+), 17 deletions(-)
 
-It uses OpSize32, distinct from UD1Wm (16) and UD1Qm (64).
-
-> But besides that, there's very little documentation. Either Gatlin or
-> one of the other LLVM folks might have more background, but we might
-> be out of luck if that 1 commit is all there is.
-> 
-> [+Cc Tim, author of the LLVM commit]
-> 
-> > > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-> > > index a3ec87d198ac..ccd573d58edb 100644
-> > > --- a/arch/x86/include/asm/bug.h
-> > > +++ b/arch/x86/include/asm/bug.h
-> > > @@ -13,6 +13,17 @@
-> > >  #define INSN_UD2     0x0b0f
-> > >  #define LEN_UD2              2
-> > >
-> > > +/*
-> > > + * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
-> > > + */
-> > > +#define INSN_ASOP    0x67
-> >
-> > I asked, but did not receive answer, *WHY* does clang add this silly
-> > prefix? AFAICT this is entirely spurious and things would be simpler if
-> > we don't have to deal with it.
-
-Even if we change LLVM, I'd still like to support the older versions, so
-we'll need to handle this regardless.
-
-> >
-> > > +#define OPCODE_PREFIX        0x0f
-> >
-> > This is *NOT* a prefix, it is an escape, please see the SDM Vol 2
-> > Chapter 'Instruction Format'. That ASOP thing above is a prefix.
-> >
-> > > +#define OPCODE_UD1   0xb9
-> > > +#define OPCODE_UD2   0x0b
-> >
-> > These are second byte opcodes. The actual (single byte opcodes) of those
-> > value exist and are something entirely different (0xB0+r is MOV, and
-> > 0x0B is OR).
-
-What would be your preferred names for all of these defines?
+diff --git a/include/linux/fault-inject.h b/include/linux/fault-inject.h
+index 6d5edef09d45..be6d0bc111ad 100644
+--- a/include/linux/fault-inject.h
++++ b/include/linux/fault-inject.h
+@@ -102,11 +102,10 @@ static inline bool __should_fail_alloc_page(gfp_t gfp_mask, unsigned int order)
+ }
+ #endif /* CONFIG_FAIL_PAGE_ALLOC */
+ 
+-int should_failslab(struct kmem_cache *s, gfp_t gfpflags);
+ #ifdef CONFIG_FAILSLAB
+-extern bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags);
++int should_failslab(struct kmem_cache *s, gfp_t gfpflags);
+ #else
+-static inline bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags)
++static inline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+ {
+ 	return false;
+ }
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 214a9fa8c6fb..e455654f3b91 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -21123,7 +21123,9 @@ BTF_SET_START(btf_non_sleepable_error_inject)
+  */
+ BTF_ID(func, __filemap_add_folio)
+ BTF_ID(func, should_fail_alloc_page)
++#ifdef CONFIG_FAILSLAB
+ BTF_ID(func, should_failslab)
++#endif
+ BTF_SET_END(btf_non_sleepable_error_inject)
+ 
+ static int check_non_sleepable_error_inject(u32 btf_id)
+diff --git a/mm/failslab.c b/mm/failslab.c
+index ffc420c0e767..af16c2ed578f 100644
+--- a/mm/failslab.c
++++ b/mm/failslab.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/fault-inject.h>
++#include <linux/error-injection.h>
+ #include <linux/slab.h>
+ #include <linux/mm.h>
+ #include "slab.h"
+@@ -14,23 +15,23 @@ static struct {
+ 	.cache_filter = false,
+ };
+ 
+-bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags)
++int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+ {
+ 	int flags = 0;
+ 
+ 	/* No fault-injection for bootstrap cache */
+ 	if (unlikely(s == kmem_cache))
+-		return false;
++		return 0;
+ 
+ 	if (gfpflags & __GFP_NOFAIL)
+-		return false;
++		return 0;
+ 
+ 	if (failslab.ignore_gfp_reclaim &&
+ 			(gfpflags & __GFP_DIRECT_RECLAIM))
+-		return false;
++		return 0;
+ 
+ 	if (failslab.cache_filter && !(s->flags & SLAB_FAILSLAB))
+-		return false;
++		return 0;
+ 
+ 	/*
+ 	 * In some cases, it expects to specify __GFP_NOWARN
+@@ -41,8 +42,9 @@ bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+ 	if (gfpflags & __GFP_NOWARN)
+ 		flags |= FAULT_NOWARN;
+ 
+-	return should_fail_ex(&failslab.attr, s->object_size, flags);
++	return should_fail_ex(&failslab.attr, s->object_size, flags) ? -ENOMEM : 0;
+ }
++ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
+ 
+ static int __init setup_failslab(char *str)
+ {
+diff --git a/mm/slub.c b/mm/slub.c
+index 4927edec6a8c..2e7c7289de91 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3875,14 +3875,6 @@ static __always_inline void maybe_wipe_obj_freeptr(struct kmem_cache *s,
+ 			0, sizeof(void *));
+ }
+ 
+-noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+-{
+-	if (__should_failslab(s, gfpflags))
+-		return -ENOMEM;
+-	return 0;
+-}
+-ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
+-
+ static __fastpath_inline
+ struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s, gfp_t flags)
+ {
 
 -- 
-Kees Cook
+2.45.2
+
