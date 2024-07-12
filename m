@@ -1,49 +1,32 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1956D101C5;
-	Fri, 12 Jul 2024 03:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C5C624
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 04:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720756442; cv=none; b=aFxPcwe358VxaGdaXPhPuSTqOY56hI/DUqJ+KUAZYjcT6SYQimWOu2E6bxGX14jO8AM5cxATmYjw1C29FFJTqeadRWt293+uhW3rZZ35vRhLwQOG/IZBTPXxdQ4P+uiiGPZeA7YzeUSR5U1VdDPnF2GKRdx22kDaQ9vPnBiQT5A=
+	t=1720756886; cv=none; b=AY7wnduv6G+ZhFiTQ3O358gVb5wj34I4ieusKWyLKG34/c2BSNrnuYB0baH2zhuhABxcl6v5lskFHFWB9iP3HVzMBPEMrxja8Wslu7I+M9fu3jjx03veVXI1zBxH5jOLviYKTQNEwQlMZ5Dyun5g/sz0W1jhD6cK9Smg5OoFr3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720756442; c=relaxed/simple;
-	bh=WWUBlswncwwbJ4inWGQiISoHu6TfJPC8iilnZiac7CE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=pRr5a1Pewnllgys0pRag/Qr3HAA/yWz2Jlc75OcNsCB1/JwG+dW2PS/bybk4/jR2fM4sWSTEksroxLF+1qJVxH9kSx2L1ZCdnKbMo0ccsP1Mo6J+CyXKTUFfmXP7dc+rQy8jonw7f0piwwIC56YOzAcvk9zCAsk/iKAk7YVYmuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4fzRG6w; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720756886; c=relaxed/simple;
+	bh=KH5KHtRJDyJtKgLZ6xrQSvRQ/J+p9oJZervF4lsyX+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nb9RmpTpA+ZgowEwDjeMdol+Zem5ETZmsl3W7TCgMFqohepmOEyhWNXDmEUUkf6ZnnNRsZHYvc4s+cruWSNDcnP15njUn/8g0DPFhIMwxmz3s1AMabi4POs7ka8TQgbAXLaY7TkhxtoRAg3oRhGGoS0PSgiCENBU1XrMxWv0waA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ybF11d2z; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4fzRG6w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720756441; x=1752292441;
-  h=message-id:date:mime-version:to:cc:from:subject:
-   content-transfer-encoding;
-  bh=WWUBlswncwwbJ4inWGQiISoHu6TfJPC8iilnZiac7CE=;
-  b=N4fzRG6wsjI4ylS1UEZ27inhxg3Ji+Bqasm14U21VNutEB7mQquyDwPF
-   P78uxg+oQ+/QLFSJVHguFZrTv5wEyC5XDknSsrgVNS16F2+OYT+ZgBvll
-   FUjTeo92SzyxK6r/GU5j4HEcg1hzxeT0/n4ejnZIDdwPQZNKyqapvjrjy
-   oD5HQSZvyCumZD1b+n0O+TRpzu96ah5/fvTzjeO3Db7EGwYkR2yvtFMMg
-   AylFi94wqXVEqmldSfhcGpweFyuOXDv6oBKr3y/HDWRxevSKKLtUOwMpJ
-   3161ZZE9FmNNjEwoJbDWwhATiVOhkN0m38DBI38bC8N36ZV8JarWkIUNz
-   Q==;
-X-CSE-ConnectionGUID: JJOwuz3bT82FXwJGQFvUuQ==
-X-CSE-MsgGUID: 7Q+UMWanSweBum6dh5Z+cQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="28855756"
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="28855756"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 20:54:00 -0700
-X-CSE-ConnectionGUID: EhFlkDZTTxKfUmDUvECziA==
-X-CSE-MsgGUID: vKYKXNnLSpyScB6Ef8Wv2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="53971681"
-Received: from hongyuni-mobl.ccr.corp.intel.com (HELO [10.124.244.70]) ([10.124.244.70])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 20:53:57 -0700
-Message-ID: <8804c63f-bca7-40c6-8be7-7b7bcfb66dec@linux.intel.com>
-Date: Fri, 12 Jul 2024 11:53:55 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ybF11d2z"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1720756881; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=/VZJgwIDEY1bFqqyo1Sj8OxXpbkhbY9mmx+7bOp9cv4=;
+	b=ybF11d2zPNWAmGxj1Jw3kuuJIOJ7f+ZFmryNVQnstbUq9UGQfQcKT3F+1Qa+ZWJBOoS6XASQm0l5ZZKYgkk0m2Xzs+hyhZQNoMqqv2RgHaH2KDDbzAVb/mlODsZFlWesFOVoHWRjbJzd9ObZOdIkKxG7kb8R0+N2DryCF29P4js=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033023225041;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0WAMhfpp_1720756880;
+Received: from 30.97.56.66(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WAMhfpp_1720756880)
+          by smtp.aliyun-inc.com;
+          Fri, 12 Jul 2024 12:01:21 +0800
+Message-ID: <bd6459a5-5bfd-4986-b110-6b8af1e0eda8@linux.alibaba.com>
+Date: Fri, 12 Jul 2024 12:01:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,29 +34,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: sfr@canb.auug.org.au
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, linux-kernel@vger.kernel.org,
- linux-next@vger.kernel.org, kirill.shutemov@linux.intel.com
-From: "Ning, Hongyu" <hongyu.ning@linux.intel.com>
-Subject: linux-next tag next-240709: potential bug from commit "28ab42489515
- Merge branch 'linux-next' of
- git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git"
+Subject: Re: [RFC PATCH 1/3] memory tiering: read last_cpupid correctly in
+ do_huge_pmd_numa_page()
+To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>,
+ "Huang, Ying" <ying.huang@intel.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
+References: <20240712024455.163543-1-zi.yan@sent.com>
+ <20240712024455.163543-2-zi.yan@sent.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20240712024455.163543-2-zi.yan@sent.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
-Hi all,
 
-on a local linux-next (KVM/QEMU based guest kernel target) regular 
-regression check environment, found a potential regression issue 
-introduced by "28ab42489515 Merge branch 'linux-next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git",
+On 2024/7/12 10:44, Zi Yan wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> last_cpupid is only available when memory tiering is off or the folio
+> is in toptier node. Complete the check to read last_cpupid when it is
+> available.
+> 
+> Before the fix, the default last_cpupid will be used even if memory
+> tiering mode is turned off at runtime instead of the actual value. This
+> can prevent task_numa_fault() from getting right numa fault stats, but
+> should not cause any crash. User might see performance changes after the
+> fix.
+> 
+> Fixes: 33024536bafd ("memory tiering: hot page selection with hint page fault latency")
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
 
-detailed tracked in https://bugzilla.kernel.org/show_bug.cgi?id=219034
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-would you help to check it?
-
-please let me know if any further track/debug needed.
-
--=Hongyu Ning
+> ---
+>   mm/huge_memory.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index d7c84480f1a4..07d9dde4ca33 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1705,7 +1705,8 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+>   	 * For memory tiering mode, cpupid of slow memory page is used
+>   	 * to record page access time.  So use default value.
+>   	 */
+> -	if (node_is_toptier(nid))
+> +	if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING) ||
+> +	    node_is_toptier(nid))
+>   		last_cpupid = folio_last_cpupid(folio);
+>   	target_nid = numa_migrate_prep(folio, vmf, haddr, nid, &flags);
+>   	if (target_nid == NUMA_NO_NODE)
