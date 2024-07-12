@@ -1,210 +1,181 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2116.outbound.protection.outlook.com [40.107.237.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE74812B171;
-	Fri, 12 Jul 2024 15:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720799956; cv=none; b=iB6omTZRsRq8pEEIM14YYAyjDQn34wyN5dLdqv60UYDG09aEWpJoUPUyhoeTFFBSkyuTKvQDwM5Pe8k1IFbH68tWcxH+H8fmFKobGc/fsKpiExQfqOzoY5D88NiQM2gaOqvdAW20coIsu+lta8X/Z2MNpcPyIhLfqMpSJP4kpvM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720799956; c=relaxed/simple;
-	bh=1XxPkXT2cZSD8gaND0V1dsa/Ud1ckMXhXBO5kB+gWLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fLV2z51amVlHdgRlKEBvKuGapLtCbR6Fm3kYFlte/xEVcY4DivilGKk/FfHHM90dXISW+yrV8Q7aKKSPDKLoFMiB1FMsASoUvsczsAfxQ+2b53s4Iy9RQB+P5HqDRSzox71GB22/De1F/5wO16YqJKBW3tRv9Lh8bMVhG3yELgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=Tf5p0h0N; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0361176232;
+	Fri, 12 Jul 2024 15:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.116
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720799962; cv=fail; b=CntZcPwvWYKpknflNlYU5adaNMS3NCHuOEhqMkqJkBQgtNXBsxQN3DUmrl1i8xcSzFTg/kC/PQDtYkl6x3TMf7P/szw2PkI4bgeU0RGYfV7/7v2y26M0DiS7aUSjvEz8/utA1lpottHB21YiGt1qAoFiXlAomZiEXDhhksD3Kkc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720799962; c=relaxed/simple;
+	bh=KfkWm2sHJYxiKCck6h/NmiL9hMiXtI2UoZI9Gr1i+1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ClN69gOgaaq1/gO06bcajbVJISbvpfQ+WqoZ60ZqM+iU4JVEJD/O2WxyeDRh4lLKwsOwKoZvxbTkNo58V+S0842rhPlIXRTY9NXzTvSQtgGRFo0ZVLWYutbt4A9VkZdEW6kwMe5z+YSm4k8NQ5QZMoSIkp7/pgsyPsLaoXAsA10=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=Q5BU/txJ; arc=fail smtp.client-ip=40.107.237.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="Tf5p0h0N"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="Q5BU/txJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pqpJ+KnlghOLt99Rw7fvCBXS34cJ/nY8HKXX8QBUymIQ04wYc1banI+XuFMjIVPdp0DEoeXKtCJTBY21adoujoEP4AJXTXoRkarIKrdj8Nw2y1GuVINWmRXLCZACLhTxDfYA+T1rlvMrrHoEGsUisxPdAXd62WBKfKvASrkN8g+oHG7m15xiDrJZqDtHgnlFJLb8Qm2tjT9rYNWpN7vwccGc8xE8Y3S8Z+kTqnaZzddwf1GTy1Fr2Qxc2BjtCARqYPICJs/cOnhrHt2S64Hw0SskSowplL67kMS19RWwBp+ACDJPw9v/WMX/hCPcVN4VlAsxpKY5Ec7qKecEtg6YIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m6xTkbfCKHtPsLO9wNV8wJbADLLHwaAOm6JsLtOK1q0=;
+ b=AHVBkIs0nzEt2b0pkGqNq1eq1Hx0dSsGyl1vj5rEquE56othST6T7prOkkERsvzbVBg2LiSTYl/lv/3RwZtvjnej8uGLLaWHK5zP62G5A41dii7FuV+htkvAcD73yX7NH+UQJ6cFU2iV5FXEzEU+UOTVmN4/3OVmjPl8ludJtF2t2gkspb9DRBw6lKqFVZ7V6Eb9tYc64q7DWDVOnpVsYodkb58ZATb4jHWbXO7A2NR6KzJuo6pik2Kfc/DlaxgJ0AZXzH2Ik8/5ftpMDimzL9tcrVtJ/d3bv5ktczlBCGPlhn7f42UmL266dechX/eWI2BzLt1dgXMopc3DYM0OIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1720799955; x=1752335955;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GwKqpMAjyij41rR5tqu84wg1nwS/hoIAR0ee3YtldEI=;
-  b=Tf5p0h0Nekm3iMbX/p0qiUmy83IznfXz8jjbLIneGP5S8ReY5OwpzCHY
-   l5xFtHDdwACwA42exis0azlrbLMlWyFm65GhfnrNnx9OQREAbIPW2LP6P
-   4N0y7R09D8B7JVU6SekBKtwrpXk+hecVx9PeVZf7Pa9P1MTbMgv8uSz+9
-   8=;
-X-IronPort-AV: E=Sophos;i="6.09,203,1716249600"; 
-   d="scan'208";a="666998267"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 15:59:11 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:9937]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.58.123:2525] with esmtp (Farcaster)
- id 58fbeed2-d56e-4815-89ca-4919342de76b; Fri, 12 Jul 2024 15:59:11 +0000 (UTC)
-X-Farcaster-Flow-ID: 58fbeed2-d56e-4815-89ca-4919342de76b
-Received: from EX19D003UWB003.ant.amazon.com (10.13.138.116) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Fri, 12 Jul 2024 15:59:10 +0000
-Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
- EX19D003UWB003.ant.amazon.com (10.13.138.116) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Fri, 12 Jul 2024 15:59:10 +0000
-Received: from [127.0.0.1] (172.19.88.180) by mail-relay.amazon.com
- (10.250.64.254) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34 via Frontend
- Transport; Fri, 12 Jul 2024 15:59:06 +0000
-Message-ID: <e26ec0bb-3c20-4732-a09b-83b6b6a6419a@amazon.co.uk>
-Date: Fri, 12 Jul 2024 16:59:05 +0100
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m6xTkbfCKHtPsLO9wNV8wJbADLLHwaAOm6JsLtOK1q0=;
+ b=Q5BU/txJFxToyFu9tyH+Mw3Azg4McnsAr4abSrtiW+RdCQuuA6liZ+1W75queLpqxeWHzEB32PjO+5O5OmNqsa1JF1cl6ykoNAxWD4BHnBZlUFhC2sL1jIXpi5NxNtwQ7k+Cu6OyBpooMYhpGQCvT/K81EsUV9sA7SpYYTp/X9c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MN2PR01MB5471.prod.exchangelabs.com (2603:10b6:208:11b::13) by
+ PH0PR01MB8070.prod.exchangelabs.com (2603:10b6:510:295::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7741.35; Fri, 12 Jul 2024 15:59:12 +0000
+Received: from MN2PR01MB5471.prod.exchangelabs.com
+ ([fe80::dba1:7502:f7ff:3f80]) by MN2PR01MB5471.prod.exchangelabs.com
+ ([fe80::dba1:7502:f7ff:3f80%7]) with mapi id 15.20.7762.020; Fri, 12 Jul 2024
+ 15:59:12 +0000
+From: Yang Shi <yang@os.amperecomputing.com>
+To: corsac@debian.org,
+	willy@infradead.org,
+	jirislaby@kernel.org,
+	surenb@google.com,
+	riel@surriel.com,
+	cl@linux.com,
+	carnil@debian.org,
+	ben@decadent.org.uk,
+	akpm@linux-foundation.org
+Cc: yang@os.amperecomputing.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] mm: huge_memory: use !CONFIG_64BIT to relax huge page alignment on 32 bit machines
+Date: Fri, 12 Jul 2024 08:58:55 -0700
+Message-ID: <20240712155855.1130330-1-yang@os.amperecomputing.com>
+X-Mailer: git-send-email 2.41.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH0PR03CA0313.namprd03.prod.outlook.com
+ (2603:10b6:610:118::34) To MN2PR01MB5471.prod.exchangelabs.com
+ (2603:10b6:208:11b::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 8/8] kvm: gmem: Allow restricted userspace mappings
-To: David Hildenbrand <david@redhat.com>, <seanjc@google.com>, Fuad Tabba
-	<tabba@google.com>
-CC: <pbonzini@redhat.com>, <akpm@linux-foundation.org>, <dwmw@amazon.co.uk>,
-	<rppt@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<willy@infradead.org>, <graf@amazon.com>, <derekmn@amazon.com>,
-	<kalyazin@amazon.com>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <dmatlack@google.com>, <chao.p.peng@linux.intel.com>,
-	<xmarcalx@amazon.co.uk>, James Gowans <jgowans@amazon.com>
-References: <20240709132041.3625501-1-roypat@amazon.co.uk>
- <20240709132041.3625501-9-roypat@amazon.co.uk>
- <CA+EHjTynVpsqsudSVRgOBdNSP_XjdgKQkY_LwdqvPkpJAnAYKg@mail.gmail.com>
- <47ce1b10-e031-4ac1-b88f-9d4194533745@redhat.com>
- <f7106744-2add-4346-b3b6-49239de34b7f@amazon.co.uk>
- <f21d8157-a5e9-4acb-93fc-d040e9b585c8@redhat.com>
-From: Patrick Roy <roypat@amazon.co.uk>
-Content-Language: en-US
-Autocrypt: addr=roypat@amazon.co.uk; keydata=
- xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
- NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
- wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
- CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
- AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
- AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
- IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
- 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
- 8hlxFQM=
-In-Reply-To: <f21d8157-a5e9-4acb-93fc-d040e9b585c8@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR01MB5471:EE_|PH0PR01MB8070:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6cad084f-0dca-4ea0-3413-08dca28b921b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|366016|7416014|376014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qOMWv5Buihvnv4kf+N7KGVlnZVRBx5syrjXJJ57trN1ieRsKnG10hC68xvRh?=
+ =?us-ascii?Q?Kx04b7oXUXoLwydCh8f40qQzZpkV4AR7KvsusdkvJiVJp7YC3sEOVxrIXwuO?=
+ =?us-ascii?Q?b40DX2R7PYYAYz7vVCnU5aIEuuhHMPuW0AhNLr6s+N/VDWMI7As9kCI/UjrN?=
+ =?us-ascii?Q?L7+XjWKlsv5IhbQmoI+47JPah8yYJITWa5QzG45n1jSzcplPP3o0kpxlugKd?=
+ =?us-ascii?Q?jBYydbS2HamVlikL20h5x4rnThU6mk9A1TPHGdFHtMp51B45BL4tV2wSHPR1?=
+ =?us-ascii?Q?ya/dBKbHm2689Zf7KbUh0IcLSXyVuy9zNofL4T78u74iv61jlbmbSeu9Puku?=
+ =?us-ascii?Q?tGytWj+omfZLyA2psBX4Su5PsoVSsckOhkoYKf8jrzKgbP7uPQU3z3IjxhrM?=
+ =?us-ascii?Q?5mQbZ1uAmsC3bE4J7xokA/jSCAaG17GZtzmyE4njMlTzsukmdPBZI0wpwFvz?=
+ =?us-ascii?Q?hjUJ86LgaBFGflmXXOQJjWjcwKr8OJY390bI0BnE6wyBKcvotuRq83Kfijxs?=
+ =?us-ascii?Q?seCIMaeJ0LDo2UvEGSjcDqdVI765vxcLrKtthk5zYlFkNpGF2u4EGTOdnWNq?=
+ =?us-ascii?Q?CL3lZZt+gqpHh+iJxNKp2o2G6XikC67TgriJBorLcQw+F8M+Uc+XSPhe26oM?=
+ =?us-ascii?Q?ejuJz97Cv++p2/SbLF2ArC53VcW3uSQjn/94eQeuaU1r7pcbrB1aApOyEPVK?=
+ =?us-ascii?Q?QfGwFYT8qYvP6OjWn1yLe0kYTaT08bHLOaDmRp7fKCU5PXzg1CqmHbzrl+me?=
+ =?us-ascii?Q?LcaBAPWYTZBuU1rOqSfXKgdQYX6J68j4K2pSHgsH/v/DWhN4kPpKGxytFUQd?=
+ =?us-ascii?Q?RXQP8Yyflbr3+faAE7EPms7syUeyAeix2q1+7ZNdwZTTE48mypGb84U8jYA7?=
+ =?us-ascii?Q?/ala6nbtKErPDUG4vRWHLQZBKAWJ9BVkx3RFBJORK71yjKk76Vt3GZFwBsNb?=
+ =?us-ascii?Q?zW/hZdpeY9Zy3AjUzsU2ak6avUmZfylmMY5ARwOyAhi1UNv03Uy9KNtLdW0t?=
+ =?us-ascii?Q?gKq2rMUypZAXGfJ90U0POod/ywgLDI6D2t4a3fLo56GgALjxkQZvLdHBa9qF?=
+ =?us-ascii?Q?IksHxs70guE/zKhzEkk28bakMhPpSE/bZe6T3Lwlo8Sd9oTPU8y+mX0tMCio?=
+ =?us-ascii?Q?BuxOE0F3V5l7lHLzb50PIegTAfLmbFzFB2nJfFWpyF4exEUIQ+fMkMGR1g3H?=
+ =?us-ascii?Q?er0mSlnp+kQAb0cv6yDE/nMZdhPHE3rrIK/O3vnJehgdbI0+OGw1C6KzQpQH?=
+ =?us-ascii?Q?7XneyrHbixrcxRlSfDOLAYktcBLfSpxGS368ea9EgikqmP2hyX3nZfelAFVB?=
+ =?us-ascii?Q?TpAkk4dPu7XHqLtuHd23cZbkWh2yvzGnckoColtHNBDepwaR69VB7T2zeBxS?=
+ =?us-ascii?Q?OOfQHhE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR01MB5471.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(366016)(7416014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?U4DlLOuWwDbuxw+Le71Xiio+SO2z1160fPtX1zqrYHaKwr076dQ1BaNRAfs9?=
+ =?us-ascii?Q?qGCp5AHxgvfZm+i69i4g5M0ASFDXCOQoDaSPS8CB/0ElYWc7yEKll1VpL/kp?=
+ =?us-ascii?Q?5QSJcp/YZgkXWFKRKSXpzkEZCGH0u9Lp2pq3jfo8ssgW2afSNuWSknkySbfH?=
+ =?us-ascii?Q?lrQz6q9yATjF/D61MW+miQYSMO2y7cmhi+TcGGjWB0kPhUV1MJ59bs1BF/jF?=
+ =?us-ascii?Q?cZrCngCMr2YOyTCVNIQXCmSd4/11y7g0VXXk7CydqkXWH98ZY7JC8VXUwArw?=
+ =?us-ascii?Q?vMEY4Z6tsYC5InI9GTkzzDgjDnHQwRLCBG65pQSZLMCLSV9BkwZTvm2R6F+v?=
+ =?us-ascii?Q?A3KsRsUz2PYQ7dKkQrogFXdVRiU9zHyh5+LEEtrqOACucfaZkjhV2K8k6uNF?=
+ =?us-ascii?Q?nE3l58IVYptWgtNgVv6rfACwrkYrF1SHeapNEo6SvwrzFGBBrE7l4pzvYxr2?=
+ =?us-ascii?Q?H9pQ8jWa/Vq0BSPWnj0a/cl4fWyEV92cpYmr1yEq2kC/ecSmV1YOLbZlGdMY?=
+ =?us-ascii?Q?yW0CWvZ1Cxmg4xqC8fGygwxkvlECkpxszWwU71aGXAzKLAiahJNcag75azCU?=
+ =?us-ascii?Q?AQZ40J3BLjN1OSLNcts/czId3iAYMO96Mi0mtElhDBWUKmZHsgJajsBJVqMf?=
+ =?us-ascii?Q?COjrYrZUPnWwJ3VnGP9aMpw81gVFsmh1yQ0aUwWiCsAdYSrJXbqAwqsWzsJ8?=
+ =?us-ascii?Q?cZ7Gotl1uGbQYwyz3iGe7reSuF6y/jo02MPYXmxH60nublhg2vjeKO7SllZT?=
+ =?us-ascii?Q?dJvm6ycqihpttC66m4OAWL/uWnuKHLH+yHpikYvSqNVs5wenmxYBlj/jKepF?=
+ =?us-ascii?Q?r+Avx2g4pUMEXjLayJyQdu/ISYoEpv58SnshlE3eB2s7gd1dPSrzL9lt46hl?=
+ =?us-ascii?Q?gRnFEKwKWQa0X7qH4HjGCH5ZY45UqESDx30Zq5XJrdBznph5ppirNvmljmTb?=
+ =?us-ascii?Q?AulDYF9BOLWbz3oNQh7i0xdOPkA55ggTWX7X0FTx3O1ypoXyTutW3o0Ib0uU?=
+ =?us-ascii?Q?OkSVuU6355dCibQPmHodXonGs4COfmIzU8XRR1aj3zT5v4xvFzP0a2eUURdb?=
+ =?us-ascii?Q?gQYsKPJosll5O8gaYf3wRaHgbDr9NV6qrCiNjlEsAWAswSEFx7IOpwQ7lJNR?=
+ =?us-ascii?Q?yWQ9dJxlFFR1dDCb6T3ydSrOQx51rSpoT+5xLtAcwKQTjnskDSXWkgj/e0xk?=
+ =?us-ascii?Q?DOf3FAG8WlbLIh5S/BmbVWRWUDUIwwKyS+xkDSxp25tUTK0k/9Wp2BPcnpt7?=
+ =?us-ascii?Q?La8xWssNiou5hJwaSyFTiBjqlOPpGvQSOXVBDKpLBc5PkQm4uuXbRKcCoPdB?=
+ =?us-ascii?Q?i3/x+d3kiiaZS6pv2tLwYq0BUe058HQRPSrUP0AfbXAGj7du+vC8cGz9TRaV?=
+ =?us-ascii?Q?+Qo5NlWXQuk8xhu28/FhwmGGrzLCLkNVn8qyLqpJHw7Ydbj5JRszM5272t/n?=
+ =?us-ascii?Q?nVYrZW9o7s/RWYIt3WT9KrUCWvDyCzdNyBH8rLpLCcx1+jeo4+hT0+fG0cZI?=
+ =?us-ascii?Q?MhKJAa7FoePsEgAkMsKyx7Q2v3KR1WbrphMzEpXmOvTBo8L3D1dm+1aktFlz?=
+ =?us-ascii?Q?CBFjRflUg1pFGponPqfo8OrrtlZbW261L+z6h2P1tt8+nh4zxWspT4JNaouM?=
+ =?us-ascii?Q?7mEQ5aSn06k7ZDqJUklytK8=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cad084f-0dca-4ea0-3413-08dca28b921b
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR01MB5471.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 15:59:12.4443
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4RMN5p0BTSd93bsOosD15ba3QU+zoN7WlgSADaPQReCV1r/U813IBZ8K4/MPKOL7sA+ASADPp0fCwtUxvPV+wZmmCFLWc9DtqgsqCHkgvS0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB8070
 
-Hey,
+Yves-Alexis Perez reported commit 4ef9ad19e176 ("mm: huge_memory: don't
+force huge page alignment on 32 bit") didn't work for x86_32 [1].  It is
+because x86_32 uses CONFIG_X86_32 instead of CONFIG_32BIT.
 
-On Wed, 2024-07-10 at 22:12 +0100, David Hildenbrand wrote:
-> On 10.07.24 11:51, Patrick Roy wrote:
->>
->>
->> On 7/9/24 22:13, David Hildenbrand wrote:
->>> On 09.07.24 16:48, Fuad Tabba wrote:
->>>> Hi Patrick,
->>>>
->>>> On Tue, Jul 9, 2024 at 2:21 PM Patrick Roy <roypat@amazon.co.uk> wrote:
->>>>>
->>>>> Allow mapping guest_memfd into userspace. Since AS_INACCESSIBLE is set
->>>>> on the underlying address_space struct, no GUP of guest_memfd will be
->>>>> possible.
->>>>
->>>> This patch allows mapping guest_memfd() unconditionally. Even if it's
->>>> not guppable, there are other reasons why you wouldn't want to allow
->>>> this. Maybe a config flag to gate it? e.g.,
->>>
->>>
->>> As discussed with Jason, maybe not the direction we want to take with
->>> guest_memfd.
->>> If it's private memory, it shall not be mapped. Also not via magic
->>> config options.
->>>
->>> We'll likely discuss some of that in the meeting MM tomorrow I guess
->>> (having both shared and private memory in guest_memfd).
->>
->> Oh, nice. I'm assuming you mean this meeting:
->> https://lore.kernel.org/linux-mm/197a2f19-c71c-fbde-a62a-213dede1f4fd@google.com/T/?
->> Would it be okay if I also attend? I see it also mentions huge pages,
->> which is another thing we are interested in, actually :)
-> 
-> Hi,
-> 
-> sorry for the late reply. Yes, you could have joined .... too late.
+!CONFIG_64BIT should cover all 32 bit machines.
 
-No worries, I did end up joining to listen in to y'all's discussion
-anyway :)
+[1] https://lore.kernel.org/linux-mm/CAHbLzkr1LwH3pcTgM+aGQ31ip2bKqiqEQ8=FQB+t2c3dhNKNHA@mail.gmail.com/
 
-> There will be a summary posted soon. So far the agreement is that we're
-> planning on allowing shared memory as part guest_memfd, and will allow
-> that to get mapped and pinned. Private memory is not going to get mapped
-> and pinned.
-> 
-> If we have to disallow pinning of shared memory on top for some use
-> cases (i.e., no directmap), I assume that could be added.
-> 
->>
->>> Note that just from staring at this commit, I don't understand the
->>> motivation *why* we would want to do that.
->>
->> Fair - I admittedly didn't get into that as much as I probably should
->> have. In our usecase, we do not have anything that pKVM would (I think)
->> call "guest-private" memory. I think our memory can be better described
->> as guest-owned, but always shared with the VMM (e.g. userspace), but
->> ideally never shared with the host kernel. This model lets us do a lot
->> of simplifying assumptions: Things like I/O can be handled in userspace
->> without the guest explicitly sharing I/O buffers (which is not exactly
->> what we would want long-term anyway, as sharing in the guest_memfd
->> context means sharing with the host kernel), we can easily do VM
->> snapshotting without needing things like TDX's TDH.EXPORT.MEM APIs, etc.
-> 
-> Okay, so essentially you would want to use guest_memfd to only contain
-> shard memory and disallow any pinning like for secretmem.
+Fixes: 4ef9ad19e176 ("mm: huge_memory: don't force huge page alignment on 32 bit")
+Reported-by: Yves-Alexis Perez <corsac@debian.org>
+Tested-By: Yves-Alexis Perez <corsac@debian.org>
+Cc: <stable@vger.kernel.org>    [6.8+]
+Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+---
+ mm/huge_memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, this is pretty much what I thought we wanted before listening in
-on Wednesday.
-
-I've actually be thinking about this some more since then though. With
-hugepages, if the VM is backed by, say, 2M pages, our on-demand direct
-map insertion approach runs into the same problem that CoCo VMs have
-when they're backed by hugepages: How to deal with the guest only
-sharing a 4K range in a hugepage? If we want to restore the direct map
-for e.g. the page containing kvm-clock data, then we can't simply go
-ahead and restore the direct map for the entire 2M page, because there
-very well might be stuff in the other 511 small guest pages that we
-really do not want in the direct map. And we can't even take the
-approach of letting the guest deal with the problem, because here
-"sharing" is driven by the host, not the guest, so the guest cannot
-possibly know that it maybe should avoid putting stuff it doesn't want
-shared into those remaining 511 pages! To me that sounds a lot like the
-whole "breaking down huge folios to allow GUP to only some parts of it"
-thing mentioned on Wednesday.
-
-Now, if we instead treat "guest memory without direct map entries" as
-"private", and "guest memory with direct map entries" as "shared", then
-the above will be solved by whatever mechanism allows gupping/mapping of
-only the "shared" parts of huge folios, IIUC. The fact that GUP is then
-also allowed for the "shared" parts is not actually a problem for us -
-we went down the route of disabling GUP altogether here because based on
-[1] it sounded like GUP for anything gmem related would never happen.
-But after something is re-inserted into the direct map, we don't very
-much care if it can be GUP-ed or not. In fact, allowing GUP for the
-shared parts probably makes some things easier for us, as we can then do
-I/O without bounce buffers by just in-place converting I/O-buffers to
-shared, and then treating that shared slice of guest_memfd the same way
-we treat traditional guest memory today. In a very far-off future, we'd
-like to be able to do I/O without ever reinserting pages into the direct
-map, but I don't think adopting this private/shared model for gmem would
-block us from doing that?
-
-Although all of this does hinge on us being able to do the in-place
-shared/private conversion without any guest involvement. Do you envision
-that to be possible?
-
-> If so, I wonder if it wouldn't be better to simply add KVM support to
-> consume *real* secretmem memory? IIRC so far there was only demand to
-> probably remove the directmap of private memory in guest_memfd, not of
-> shared memory.
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-
-Best, 
-Patrick
-
-[1]: https://lore.kernel.org/all/ZdfoR3nCEP3HTtm1@casper.infradead.org/
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2120f7478e55..64f00aedf9af 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -857,7 +857,7 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
+ 	loff_t off_align = round_up(off, size);
+ 	unsigned long len_pad, ret, off_sub;
+ 
+-	if (IS_ENABLED(CONFIG_32BIT) || in_compat_syscall())
++	if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
+ 		return 0;
+ 
+ 	if (off_end <= off_align || (off_end - off_align) < size)
+-- 
+2.41.0
 
