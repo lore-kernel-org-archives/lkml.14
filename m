@@ -1,96 +1,85 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147A3157E84
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC7910F7;
+	Fri, 12 Jul 2024 10:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720778723; cv=none; b=mm6423aVxOnFYpCOAeGbc4r9aY8cVJ/6r2j1GIVxcMIQCzSaMp3XMjLMXjOZoCRg7+waDDNHwW+xpFqHYDandMggivtKhHi7XihUsHyQP5OMblGHj5txsTJjxd+OxfX9kXIdyIfdTwAcdaBH7yJmLA/4EC+pIiLD+6zjl4pPxFg=
+	t=1720778745; cv=none; b=sHMq5/OaZZRw6xZ6oZljGcMwo+kY1t9jf/nt+vYudTjxvzVo9DY6riCH8o8Q5CAzYnpccBXGj/90gzpulh4DDs2x3zU9x++PoQbNcyJZOqWoaqwec1AwF8LoLmHWHPSvN4qAKL6/kcYmLpGx0Pj08xYBRf8PAJ8ICeH/2iZT3wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720778723; c=relaxed/simple;
-	bh=H5hvUUZnnhkIagL+5ouebBqnH8nfRt+MjD3u0w4kG+o=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dZvITJ167i9VyH8cmQ5LiXiioZP38QHlp0IC21wdv/gxU6qEax7XYEv9G9ABlgc1gRqIBTye5zl6F+2BvAucZNb/EtvYXDsJuW70diMGYlPBS6+Q6D3WCCzn54QnjhJLQFmB1C9r219WxMUNXIPwSOm/1/dgRxlnOnK0PNZ5My0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f6218c0d68so205927539f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 03:05:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720778721; x=1721383521;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3BNPueG2xNKE2bHt9i3oEOq35MviFRHZw36CwFEMpwU=;
-        b=liQ65BP2mYRUxBmuPZDwoTog7ylZr3C+5GnX8x/N7+PQBM+d2qgR6M7EoMHZIUw2HY
-         /W2maRtQHR2AQrequLVgEre14V8oUlgX4kV47riL8XYO7jmjTGqWPTI6WmQSZ+dm3NhP
-         62xeX2l/VmMYv+awo3SlJ976GhCmptQLrdZXTth/fubJowza7MNG/jrFsFESA74xXlK1
-         lba3/fCDsyAEYdh92N3S1WPkJFxOQtvYPhuAuWutWfnLL/N3f5HPxhLJnbB8aixjv6hr
-         PWYrilP6joagMFYRgHi/zdUYfeHWmhk+Fg5NdnDn6k/IdSUKZSKUQN95SjslCPaIOLTM
-         bLfA==
-X-Gm-Message-State: AOJu0Yyviy3KrNLnr6+fin97YCxH8MzNKgGHcm0oNOVb/sexUA3I00UR
-	4AjdJsZwu2WBfsR3PcvF/oHqrJEIEXdgxWU/z5dI3b0C6AqGaflX8cKGOP13ZRZrXesEQO+n7H/
-	s7SC2CjCmfF5ioM7jiYctX+ZfqgOQ5gLmkELCsV1wIdL3Dax1211Cj04=
-X-Google-Smtp-Source: AGHT+IF3woUspVQwnqcAgv9lOUWwCpgqFPDPmAEczN1F1IJQqcZGwsRpEdWZ2CMzo+AkFY9TislhPJ/7nbdl1D4rIRNr/ACqZWpW
+	s=arc-20240116; t=1720778745; c=relaxed/simple;
+	bh=eNpOohRTg3sL6MiRjtOVbuLFKyzUozLlvJcudOSO/xI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MH4tNTxLi+14tYUQBiApFrFf52JskKr5WTYaZNOuzkiG1/vbzal4012kxzSsYhCGP9YA3A7SstifTWLxmKlrK6evHiCOtru3KS1qX28TYFLD3Avn4ZvbUegzQKOTVgcs06kO3eUaCan7CZUk47Js3TVUEEAPpd4PMnNjbpYKwU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WL6YP4rH4zQlTd;
+	Fri, 12 Jul 2024 18:00:57 +0800 (CST)
+Received: from kwepemf200016.china.huawei.com (unknown [7.202.181.9])
+	by mail.maildlp.com (Postfix) with ESMTPS id A224D14097F;
+	Fri, 12 Jul 2024 18:04:55 +0800 (CST)
+Received: from [10.108.234.194] (10.108.234.194) by
+ kwepemf200016.china.huawei.com (7.202.181.9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 12 Jul 2024 18:04:54 +0800
+Message-ID: <20b9015d-80ed-4864-811a-ff4b0e3774dd@huawei.com>
+Date: Fri, 12 Jul 2024 18:04:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2416:b0:4c0:8165:c395 with SMTP id
- 8926c6da1cb9f-4c0b2a93c4dmr1100964173.3.1720778721318; Fri, 12 Jul 2024
- 03:05:21 -0700 (PDT)
-Date: Fri, 12 Jul 2024 03:05:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006be44a061d0a04d9@google.com>
-Subject: [syzbot] Monthly wireless report (Jul 2024)
-From: syzbot <syzbot+list0abfba96ee1d82542925@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] jbd2: make '0' an invalid transaction sequence
+To: Luis Henriques <luis.henriques@linux.dev>, Andreas Dilger
+	<adilger@dilger.ca>
+CC: Wang Jianjian <wangjianjian0@foxmail.com>, Theodore Ts'o <tytso@mit.edu>,
+	Jan Kara <jack@suse.cz>, Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+	<linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240711083520.6751-1-luis.henriques@linux.dev>
+ <4f9d5881-11e6-4064-ab69-ca6ef81582b3@huawei.com>
+ <878qy8nem5.fsf@brahms.olymp>
+ <tencent_CF3DC37BEB2026CB2F68408A2B62314E0C08@qq.com>
+ <A90C7898-B704-4B2A-BFE6-4A32050763F0@dilger.ca> <87ed7znf8n.fsf@linux.dev>
+ <87wmlrkkch.fsf_-_@linux.dev>
+Content-Language: en-US
+From: "wangjianjian (C)" <wangjianjian3@huawei.com>
+In-Reply-To: <87wmlrkkch.fsf_-_@linux.dev>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemf200016.china.huawei.com (7.202.181.9)
 
-Hello wireless maintainers/developers,
+On 2024/7/12 17:53, Luis Henriques wrote:
+> Since there's code (in fast-commit) that already handles a '0' tid as a
+> special case, it's better to ensure that jbd2 never sets it to that value
+> when journal->j_transaction_sequence increment wraps.
+> 
+> Suggested-by: Andreas Dilger <adilger@dilger.ca>
+> Signed-off-by: Luis Henriques (SUSE) <luis.henriques@linux.dev>
+> ---
+>   fs/jbd2/transaction.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+> index 66513c18ca29..4dbdd37349c3 100644
+> --- a/fs/jbd2/transaction.c
+> +++ b/fs/jbd2/transaction.c
+> @@ -84,6 +84,8 @@ static void jbd2_get_transaction(journal_t *journal,
+>   	transaction->t_state = T_RUNNING;
+>   	transaction->t_start_time = ktime_get();
+>   	transaction->t_tid = journal->j_transaction_sequence++;
+> +	if (unlikely(transaction->t_tid == 0))
+> +		transaction->t_tid = journal->j_transaction_sequence++;
+Do we need add j_transaction_sequence again here? if tansanction->t_tid 
+== 0, then journal->j_trnasaction_sequence must be 1
 
-This is a 31-day syzbot report for the wireless subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/wireless
+>   	transaction->t_expires = jiffies + journal->j_commit_interval;
+>   	atomic_set(&transaction->t_updates, 0);
+>   	atomic_set(&transaction->t_outstanding_credits,
+-- 
+Regards
 
-During the period, 4 new issues were detected and 7 were fixed.
-In total, 30 issues are still open and 136 have been fixed so far.
-
-Some of the still happening issues:
-
-Ref  Crashes Repro Title
-<1>  15869   Yes   WARNING in __ieee80211_beacon_get
-                   https://syzkaller.appspot.com/bug?extid=18c783c5cf6a781e3e2c
-<2>  5038    Yes   WARNING in __cfg80211_ibss_joined (2)
-                   https://syzkaller.appspot.com/bug?extid=7f064ba1704c2466e36d
-<3>  970     Yes   WARNING in ieee80211_start_next_roc
-                   https://syzkaller.appspot.com/bug?extid=c3a167b5615df4ccd7fb
-<4>  562     Yes   WARNING in __rate_control_send_low (2)
-                   https://syzkaller.appspot.com/bug?extid=8dd98a9e98ee28dc484a
-<5>  186     Yes   WARNING in rate_control_rate_init (3)
-                   https://syzkaller.appspot.com/bug?extid=9bdc0c5998ab45b05030
-<6>  157     No    INFO: rcu detected stall in ieee80211_handle_queued_frames
-                   https://syzkaller.appspot.com/bug?extid=1c991592da3ef18957c0
-<7>  85      Yes   WARNING in ieee80211_free_ack_frame (2)
-                   https://syzkaller.appspot.com/bug?extid=ac648b0525be1feba506
-<8>  58      No    INFO: task hung in wiphy_unregister (2)
-                   https://syzkaller.appspot.com/bug?extid=abba31ed4fc4178349e9
-<9>  44      Yes   possible deadlock in zd_chip_disable_rxtx
-                   https://syzkaller.appspot.com/bug?extid=0ec3d1a6cf1fbe79c153
-<10> 42      Yes   WARNING in cfg80211_bss_color_notify
-                   https://syzkaller.appspot.com/bug?extid=d073f255508305ccb3fd
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
