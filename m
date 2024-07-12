@@ -1,139 +1,81 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F52E17F4E6
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 18:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE08182C3;
+	Fri, 12 Jul 2024 18:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720807993; cv=none; b=aZU8/aovDl4Y9+7bFKTqD4VdN3cn0gj4sFADI+ZgEk9IO47iy50q94EaOAYtEwsLdY4qd2px8sJ0n5/r8exYNntbHuVggzFnBr+3+644ysl9RIAxRQcP6hkhmNXRanB2azwzOodcw3//+ZRXDd9ntvtReMnL46M+PaYXKFhkxSA=
+	t=1720808173; cv=none; b=pLBUJc/8r0KataBKqy66zgg90LMmjCAgEaJKznTHG+c6neUP3pBbrxRuEhW9YMNNO7YFqW+cNCshqKHhDlDOSOEkLf5LYsjf2lEmFssbTH0AtNoGrtpqdTbFCltoCko8rkit4vzxbGSc99mkzVkodPStoITFiNhVVoV88KhktsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720807993; c=relaxed/simple;
-	bh=sUheNSIamO8SvMj19zBLNxCVmjvlLRxDlh7AUAyjtXE=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=YOi8HZsA6mlrh6q+D03Iw9jOMIgbp9QwiR5bQhDUverIU2RrtqCsEQ7cLMrwhcCUVgVL7qWFp4yVt1Jgc3cw+h7LFJeuGGhgqzxjwG7DPy59jvdh+EiSVs8MbYbU/Q4SdlCH01tSFw9mk1m3hZxBwGEpT0R71DBfSQfsJFHSd8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SjQrw9WO; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1720808173; c=relaxed/simple;
+	bh=t8snUp8OlpFu84YVregM/JCFkWMWslnOdGZMoDXezMA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=telkF/hHJXsXBXWWIca5KkOKnyXMBCEhKVMDt/IIV0PrceTd4G4a19wutrwFfINFH7U2nFddWz4Lv/HBuCCUHRvM+wAv8lD222xZQ5EPh+HTqFTFgnw+2VpZzKWVxUyBbSx32bSLGvgxFbtjdICX37t6unk+4OBYgQ8+vyNd0bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sBhmwunQ; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SjQrw9WO"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-653306993a8so37569207b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 11:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720807990; x=1721412790; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DzgUQ0L67yHK9ZgYOmZnLIT3MZDT9EVRhOxDmj12OGQ=;
-        b=SjQrw9WOhPtCuoJDNhuMHweOV7gQ9mK7LuDbSS2TafyJHxozCGDaudmRZmuvbwNzkC
-         AQJtP3//pCleloSeRtPxj3XZdKwarSMcNDYoIarIaEgdr96/GuEnD1zTnpCGFxyrmhl3
-         2gCOkgXB7rqukJ2KBjxRGlRvoTAA6GdSoG9EYFsbWlsQvEB47dOfFV5MIDKlp4dAxfA/
-         hTCCSuE3slbHIYE2aPyCAyaGw/AwlVdrVrX3PmxztJZl0qbizmktkBKJje/rNrUsjJND
-         pjFp8zSSxAkTLqPtKwIL7XayZxHnxx4IQ01voSnVVxzd98/uNFMIIl7JuwCh45ja06uv
-         5L7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720807990; x=1721412790;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DzgUQ0L67yHK9ZgYOmZnLIT3MZDT9EVRhOxDmj12OGQ=;
-        b=kS16KEgJGdXl2MF6P8lF93TqZBrF6Y6HiB/eNRP5ih8WqCis8292Ud8e5Nv6w3oKuQ
-         em/cWiSIs+gu8VPi5hEo1Z4e3INuWP96Nn+lF0KNM2hXfnljo/M1KVp8PXV3bOz2CHkf
-         rRMqyENeB436Fu1Xgy0xKj0XALTXQMIgEI2G2yuOZzXvOVB5jHwWm2y/FI4WTSPcWkHx
-         4ugc5aByT9Bp++kBEOW9kfTvpCHzvXtbMLuwHni64E6eO+8lzXUsXw+zMxCWoCiVEfYQ
-         uFIxb5Pda7BX9Ct7WLHmn8awBz9GSH/ywyAdLhyfE1SMK3udba0St2P4iPhafSN+tYnY
-         9dLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjAi/kni5TvUCfmVX3nJzyDcPK6UKfWqnRzi1OEKWuxQy63rirrHmFBJKFPJnifW6s0F88sNZB1vZIe/ImlQYNgB0jFqCsBYjKroZT
-X-Gm-Message-State: AOJu0YxhP9RbpAzcdwcHGRFtEE8fPnnqluxUck0pPIJkprj/9L5ihZX4
-	mp18wPzdm7oyQdRVp4eOS38lwx8zaT6HPo36uOMiySUtZyux6BSbses//kP/PVQykxdzfp6qv9n
-	m0vt8+A==
-X-Google-Smtp-Source: AGHT+IHiAKXzsCdcEZM+MFSDfgz1r4L7ozGy4B9BF+4puH4qqiiY89mJfDURywhS/WGVSxBcH3QuZhcuBDvg
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:2e7d:d47a:a0c6:e3b1])
- (user=irogers job=sendgmr) by 2002:a05:6902:188a:b0:e03:2217:3c8f with SMTP
- id 3f1490d57ef6-e041b035055mr23746276.2.1720807990114; Fri, 12 Jul 2024
- 11:13:10 -0700 (PDT)
-Date: Fri, 12 Jul 2024 11:11:08 -0700
-In-Reply-To: <20240712181108.475336-1-irogers@google.com>
-Message-Id: <20240712181108.475336-28-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sBhmwunQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720808139; x=1721412939; i=markus.elfring@web.de;
+	bh=t8snUp8OlpFu84YVregM/JCFkWMWslnOdGZMoDXezMA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=sBhmwunQYOeOrhcHiiqMEEhfttL86bQ6UpIJ7eurXNKlxyEXUHj72ldM7RkJK1/C
+	 HSvcDboK/o8S34W3v+z3vwAceoWMgW4xD2CKlZePx+F4kOGPNHK/T+PL8F2/2aZVX
+	 Paaa0DA6Yzet+1vGesTjcvmNfzElXDMZMoPVeHgkry5D5uRZzKhpao6rGM5h9BNAm
+	 I5NzoerbMTF3RaCzTo1XULvGUXtc1T5lmS+Mq0sptl0eZNNQoIYzQXtBTD5pnmlcY
+	 Itr2zHuXNGDUnyt+qmajJJz7pnu2wQ+LdkjLnF7lWZPnu04c+jbydEr9W6F3/mtx/
+	 UFxX5juKkLcYvBPx7A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MgRQJ-1rsRYi1UkB-00gF3g; Fri, 12
+ Jul 2024 20:15:39 +0200
+Message-ID: <10a70b9a-4ae5-4293-9fee-317b46390179@web.de>
+Date: Fri, 12 Jul 2024 20:15:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240712181108.475336-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Subject: [PATCH v5 27/27] perf session: Constify tool
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Pankaj Gupta <pankaj.gupta@nxp.com>, devicetree@vger.kernel.org,
+ linux-doc@vger.kernel.org, imx@lists.linux.dev, kernel@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Fabio Estevam <festevam@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+References: <20240712-imx-se-if-v5-0-66a79903a872@nxp.com>
+Subject: Re: [PATCH v5 0/5] Changes in v5:
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240712-imx-se-if-v5-0-66a79903a872@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:RnONSGcbcr2GQOx/W/vt/PcQTj0CXwIS349iWWj5F/2VEFs7rgf
+ 1wyaCcRS7m/gvK1PsNgspSi/TI7yFkPR0jKr/hAWhuX2CQxfWuP9Bl+qwVuTSl2BoSrGiYE
+ XXxe5TygU/1NcgBIH1twGqP7yngMnjaJWoL7yOmBR3uah5jtqHMsh1fcnuZScBGmxj8Xt3M
+ ouJUI1xNTK8AGskf2Ge1g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:J+whdxPLS+w=;1+u74jRR5R8v8owJqhj4Udbaom0
+ gn0WvXhiefGxk7qvXxJmgcorpzUD1SLyNDTYQfAYadbmKDTB5dvm/jqaiC0nQVz3X/QKm1oAN
+ Swbtydo8YfFPHce0W76VpqbJM78L0CTtw9sKZwmxBq4W7Nz+lIUjp+C9drnmh87Qqzl2r11lV
+ 0uRx0MsP+QvNG0st9Q5dYL5T4hGVoythYs+VTSJ2PnWs26KxG0hYVS021gL0vRaM6dPrhVSM1
+ SjIkTbWzDZbRXat8LAvEc8n/vQ2TXXUqLjNqiwr4uA8uIy4Oxa7jdhMZt4jAFujwU1Mu6kEAa
+ EIGp+daHUoH8S121f9dR0e/lBaEqIJ5+xEikiYldyXzhokdLtbpSWz8ctt4DioNN8Me0i8UGP
+ mMM2E+938CHFba6EHEZVl4W2gcwWMIZsyxX+UAowfhtA3hfEAsyHw8dsZ+bc8gcX+NsXDNS+3
+ QSx1t4IonG23OZbMpb5Gcf6WKKFAvP0Wt6kVt2wCqGq9Hizq79Ir7LG3FI5Ge9rrgNn3m92El
+ 6diMjONEMuHqLEFAZHAiBPTPd5PxbehAS1s199q8w++wdLHr7IJQw/coHpxuugm7kpH76QeCT
+ KKDqZOikl+O3oV/drKBEopwE6svqv04KPhZKJkH7h2jLgU8MFjxqi13Mb6F5DYreKyjP4c38o
+ i1HtgnvmnDBgjYEuHF7mWHqQSl1rK/Ppm+W3Od9+npPkml9OGOfaDyAhWNBpJ/PyhBt5VrGpb
+ STPkO0MsBuaCkFYriSwXPy7FbHlS2hF9D0gmhB8y6ah/BKGCcm+YgcwjL/OQijx/RwLCas3k5
+ rcP9xgywgNqZR8Nl8fDC6m6g==
 
-Make tool const now that all uses are const and
-perf_tool__fill_defaults won't be used. The aim is to better capture
-that sessions don't mutate tools.
+Please choose more appropriate subjects (also for subsequent cover letter variations).
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/session.c | 6 +++---
- tools/perf/util/session.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index ad5da61d2330..0c7cc092887d 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1765,7 +1765,7 @@ static int __perf_session__process_decomp_events(struct perf_session *session);
- static int __perf_session__process_pipe_events(struct perf_session *session)
- {
- 	struct ordered_events *oe = &session->ordered_events;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	struct ui_progress prog;
- 	union perf_event *event;
- 	uint32_t size, cur_size = 0;
-@@ -2195,7 +2195,7 @@ static int __perf_session__process_events(struct perf_session *session)
- 		.in_place_update = session->data->in_place_update,
- 	};
- 	struct ordered_events *oe = &session->ordered_events;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	struct ui_progress prog;
- 	int err;
- 
-@@ -2245,7 +2245,7 @@ static int __perf_session__process_events(struct perf_session *session)
- static int __perf_session__process_dir_events(struct perf_session *session)
- {
- 	struct perf_data *data = session->data;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	int i, ret, readers, nr_readers;
- 	struct ui_progress prog;
- 	u64 total_size = perf_data__size(session->data);
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 7f69baeae7fb..7c8dd6956330 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -43,7 +43,7 @@ struct perf_session {
- 	u64			one_mmap_offset;
- 	struct ordered_events	ordered_events;
- 	struct perf_data	*data;
--	struct perf_tool	*tool;
-+	const struct perf_tool	*tool;
- 	u64			bytes_transferred;
- 	u64			bytes_compressed;
- 	struct zstd_data	zstd_data;
--- 
-2.45.2.993.g49e7a77208-goog
-
+Regards,
+Markus
