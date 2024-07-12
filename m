@@ -1,54 +1,54 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8BD17085D;
-	Fri, 12 Jul 2024 15:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA98173355;
+	Fri, 12 Jul 2024 15:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720798181; cv=none; b=ZG2UOqCOp+2pAyGEBGrCt2bm8hqbrICEFBmwRnEo+CzdBlNKDq+JobroMmenfPwlgD64QM2WUupDzJd791MqOqemaJioUaNjcw7RQDu2XJyi4DXvhIXdeLyTLNX5IjLX04/cWcmg6V70grp2G+6HJK5KZoDr0cLjpFVSzWAUtY8=
+	t=1720798181; cv=none; b=MAX3spxzefOmf3f+YfqiEMMywRApKgT/k+1n5Yuuln1k1tayoNU7bfiCk3n/gJ0RInWGqNqDuZgNRaGlrnF7NSgcUh4LZ+dHdUDa65XD+GbORZ2ad8176rNQfomAhtepGrUxxbrVv6XIaMwfJ34yKAJ+kUiWFmkyICOOetfbxcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720798181; c=relaxed/simple;
-	bh=+IMZBOwNJ5AwNiX0hjiRah2gQJchIdnWIXPtSSevNfU=;
+	bh=HPOa7SO7k3gMpMxm2fStIX1ktgAqbZGZTR/v8zwBfK8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gDNx5UtgIzDxKaCWkeYPCigEpjqsD81yX6r8CLDqHOCVpmL+jys03WnBqT3LCOTcp/sgthkCF3TzgNbkjRwisPyZmccKdg4CKyVetln+hM2rKqDg2pO4N7C6ZjjDjKTzciLlcLpaOi6TM/mpBbdo5PuNIL0Ks7piDqjmG/wRlxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gs/ng3Sm; arc=none smtp.client-ip=209.85.160.179
+	 To:Cc:Content-Type; b=o9R8hz6S46XFmE6Gx12WN/ubMRWRhWYKPsmvSRlETuv3QPO+rl4vlzTneQJTc3ZSgTxfVBQqbVW7xxou3mfYT2aHKqcpy01L70SiSRJCfQyDfrWoB//2G26Lc0+ezjd8/mqQGtGXVkWGvngiMYU4sDgKFkGwrUFP83Hyxwhk7to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bQPQ6hsD; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gs/ng3Sm"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-447e1eb0117so11454851cf.3;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQPQ6hsD"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52ea5dc3c66so3499302e87.3;
         Fri, 12 Jul 2024 08:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720798179; x=1721402979; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720798178; x=1721402978; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ve3CcOjeMtMU8bzJnjUvgQ5PtDwAZqsbHa46kIGMMDU=;
-        b=Gs/ng3SmCWOHPfHf9Kx4U32hL24IXUw9X8PM/AxENhOrwkybRcT8uAb2L9aXZR2dAi
-         pS0j1gm8oE0wy61CdzgIbufthnb+8iQFd3BhSgxHSuoC1Dm5vZz4u0BIirfN/y63Zk9t
-         udEXZc311R3vXqNWd2lwMaH4c0kkdXq8FhiImutgrvp1EmIIddVeJ53+WD2zUb3hswgR
-         kGbXbi1GGfvIKxTMWiEXwzusvAJYSzMAMT0bI5t9TeHCWjX75l+u3xJRVsXY5D1YJ9jo
-         VGuH2uwJM8VCUEAMORHCEjl5GL0kHcPym4SfdLVIk+Q1T5UmN8Wv0U9SXe6ZWt7qfyva
-         eT5A==
+        bh=zaX0XYEC7+5BC2mmjhTtFBMlwPorZ67nD0Jvqe+jk94=;
+        b=bQPQ6hsDFJaf4nBVRyxVJtxdty5L4gwK9HqVuwLUFmL6quXMjD9E69jcLXD4/1MdII
+         5evOqU+zZIOKZ2Ebiz+arK7IJsWR/lG8fS2b5tGIHhGAhWExEq4hy3oVnt/PY1Cef7EP
+         pzenLabj56VxdJRUbh+oNmIW6fMLVBeaUDDpwcjR4GKufUs9Pd/qL4zDQsmjBwSU+1aI
+         C8Q+UjH4c1Wjo3/EUfmm2T1flFBiUoClZxy2KlOp/mzpwLSgPEaD+oU/Hxf7NniSyMKK
+         /4GTHEkz0pbo/qEFJiDHTVx2i8NCI8Ku0Qk8cB4A1dvfbyIULk1rtbss1B1At8XqqiA9
+         6WcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720798179; x=1721402979;
+        d=1e100.net; s=20230601; t=1720798178; x=1721402978;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ve3CcOjeMtMU8bzJnjUvgQ5PtDwAZqsbHa46kIGMMDU=;
-        b=F85XHUhepzZqCV2QLPHeAOFb/M4Iag/AnY/TzDXsfVu0vxp/TSlgVNJ916VA4TuikR
-         IzjNdTX7hPRiQp4pG2hHx49zcHi7dcDc2uZG+PVhD3+5yYdWS+cTPLYZQDk8EuUoUKAx
-         jUPgkuIQiX1xJnsPH5WoaC7HVISxMmwougCCSYx4gv4ohbCVDdvVVwCqE+JTfiBgsVeV
-         1t/ytZViUBmZOtf80EOGsYFtVlwXMsWaWpL9ghN9B1R5ORwVAP2ZJ7DnMz+E99bE7kC6
-         ah/Ova79DiA/WFWnnuLY92QOKUxdEqDnAX8camHXSmZeTxid4nCd3fT9OexfeEkOvQVi
-         K3sA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Qz3iabkSWcbTmnrdl3pGpkdhnvijJMhwPGgQUAXIUqfhSlGSVXIRUcHBhzB1Xbs8BXkVSazeGauamGHiBaNeV6n0qfJq7MjC7NcbgMk6iLIQ2+WNjHFTxBIewCACfIaFoTUdDO+Wv75ttNF3nyVBvhFvNpyUTDONuRPkbftsBENJj8x1vezAHSjlAg6bMPqPJEqO68vsXhR1W+gZhe8UGjTfSKlj
-X-Gm-Message-State: AOJu0YwP/60a7lw7PNCn+CiV42nakblYO3IpBQwkFVPQz9dFx/zktrm1
-	zBLRFGBTXKdZldoU9NALeFOC3ADD0+nw0yaMptzN3AQ96JsxZbMnEATQ1M0pI1UfSaNcQKnSUWJ
-	29Z9qSGgBRIwRPQp6cIgCx1Qbn4bg5sKl
-X-Google-Smtp-Source: AGHT+IHedDfgr4oxy9l8g1SV0quzS/13qgZuFj80DhQ5BESrPL+1aCpiI5uk0XVyzQs7IElyHA+EFOWUbNnnwSnOSC8=
-X-Received: by 2002:a05:622a:3c9:b0:446:49f1:79a with SMTP id
- d75a77b69052e-447fa89dfc5mr148250941cf.24.1720798178892; Fri, 12 Jul 2024
+        bh=zaX0XYEC7+5BC2mmjhTtFBMlwPorZ67nD0Jvqe+jk94=;
+        b=mhhaCgsYcfM/gKjcmuvU8uVDssbou+MIwE6JodOk13QLNWDGKzta/wXhs84u4zfrP5
+         OrMVJvmMBMKS58PzbyFApQAM3enPXoBhJR4QOBmIu4gZeX8fkaG1vbXmvoehdBgs1pp9
+         nkCyYf8jedldBupc/7yeIIXndvqFd/QkZ0zWjs4GMNbNh64j7MbUmAPCh2BNKzbtXdIU
+         OMAiZGorvJsHGi8C1gT06j+LF8arnFTawdOZ+NELTVrlIOV/YLzcDiH7PZBnIwuZoXoe
+         wexTh7Jd+gvJL4viK17R4oZKG5EizxGQLv8IhL7N5DGLm0Hz467RDf/foooZ7IekgrHn
+         c+Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBdME+dB9P5XmcUfjYMSvz+GuzM1Q98wUnYip+9Esho2xg66FlkgdDyg48Lspm1ID8aMkKR7T/9iyJjLE6JYKn5mbGcHbzxI+VjdS4zMutJwuSwM+JX+/HLttYEALXXG/lYlmpV6OgK+/WJrI3R3qy
+X-Gm-Message-State: AOJu0Yw5PiMOKDd2bd+wjkmCTnXWvj+zhTCm+GZNtNbH0lS497SWOQX2
+	XW9bjNxmUUMnQZmxX4GIthAtwE3pGgJri1qZp3eNVkKJpT6lqLJq/t6AHkVMINaCjdg2OIUPcLE
+	rqrOrsjVAxDmU5gNbi1+mwUf37Ag=
+X-Google-Smtp-Source: AGHT+IGCLqcRVIjkEweK3/aJoRkXomVZUL7NSVyAYSUancplZJbd0v8xwYtl00L4HXyB8SfTVbQss29eUX0O33rWZDQ=
+X-Received: by 2002:a05:6512:2349:b0:52c:a20e:4da4 with SMTP id
+ 2adb3069b0e04-52eb99d6033mr11893379e87.57.1720798178042; Fri, 12 Jul 2024
  08:29:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,100 +56,137 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627161315.98143-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240627161315.98143-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVLSpaUtdXFv3VXFc5G61dmRX2C1iW9C+km23g6EgZJOg@mail.gmail.com>
- <CA+V-a8vABF6vg+J7DAGzgnw8612oe6VfJkc5y-krySvnpAnPkQ@mail.gmail.com> <CAMuHMdXuyQZ=SFfQa5kvZTwYa0uRXc7khJ-vOYBRE5SCd11rPw@mail.gmail.com>
-In-Reply-To: <CAMuHMdXuyQZ=SFfQa5kvZTwYa0uRXc7khJ-vOYBRE5SCd11rPw@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 12 Jul 2024 16:28:08 +0100
-Message-ID: <CA+V-a8ui9AKDOZzg_dgPXeGhGE-+rBHU8O1tpdb8w8myo-1p5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] clk: renesas: Add family-specific clock driver for RZ/V2H(P)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240711110235.098009979@infradead.org> <CAEf4BzZ+ygwfk8FKn5AS_Ny=igvGcFzdDLE2FjcvwjCKazEWMA@mail.gmail.com>
+ <20240712131016.GI27299@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240712131016.GI27299@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 12 Jul 2024 08:29:21 -0700
+Message-ID: <CAEf4BzZqKCR-EQz6LTi-YvFY4RnYb_NnQXtwgZCv6aUo7gjkHg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] perf/uprobe: Optimize uprobes
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: oleg@redhat.com, mingo@kernel.org, andrii@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com, 
+	paulmck@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+On Fri, Jul 12, 2024 at 6:10=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Thu, Jul 11, 2024 at 09:57:44PM -0700, Andrii Nakryiko wrote:
+>
+> > Anyways, if you'd like to use it, it's at [0]. All you should need to
+> > build and run it is:
+> >
+> >   $ cd examples/c
+> >   $ make -j$(nproc) uprobe-stress
+> >   $ sudo ./uprobe-stress -tN -aM -mP -fR
+>
+> >   [0] https://github.com/libbpf/libbpf-bootstrap/commit/2f88cef90f9728e=
+c8c7bee7bd48fdbcf197806c3
+>
+> So, I cannot clone that [0] URL I had to click around github shite for a
+> while to figure out wtf to clone and where your commit lives, turns out
+> it is:
 
-On Fri, Jul 12, 2024 at 4:23=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, Jul 12, 2024 at 5:14=E2=80=AFPM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Fri, Jul 12, 2024 at 12:59=E2=80=AFPM Geert Uytterhoeven
-> > > On Thu, Jun 27, 2024 at 6:14=E2=80=AFPM Prabhakar <prabhakar.csengg@g=
-mail.com> wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Add family-specific clock driver for RZ/V2H(P) SoCs.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > ---
-> > > > v2->v3
-> > > > - Dropped num_hw_resets from struct rzv2h_cpg_priv
-> > > > - Dropped range_check for module clocks
-> > > > - Made mon_index to s8 instead of u8 in struct rzv2h_mod_clk
-> > > > - Added support for critical module clocks with DEF_MOD_CRITICAL
-> > > > - Added check for mon_index in rzv2h_mod_clock_endisable and
-> > > >   rzv2h_mod_clock_is_enabled()
->
-> > > > --- /dev/null
-> > > > +++ b/drivers/clk/renesas/rzv2h-cpg.h
->
-> > > > +/**
-> > > > + * struct rzv2h_reset - Reset definitions
-> > > > + *
-> > > > + * @reset_index: reset register index
-> > > > + * @reset_bit: reset bit
-> > > > + * @mon_index: monitor register index
-> > > > + * @mon_bit: monitor bit
-> > > > + */
-> > > > +struct rzv2h_reset {
-> > > > +       u8 reset_index;
-> > > > +       u8 reset_bit;
-> > > > +       u8 mon_index;
-> > > > +       u8 mon_bit;
-> > > > +};
-> > > > +
-> > > > +#define RST_ID(x, y)   ((((x) * 16)) + (y))
-> > > > +
-> > > > +#define DEF_RST_BASE(_id, _resindex, _resbit, _monindex, _monbit) =
-     \
-> > > > +       [_id] =3D { \
-> > >
-> > > Indexing by _id means the reset array will be very sparse.  E.g. the
-> > > innocent-looking r9a09g057_resets[] with only a single entry takes
-> > > 600 bytes.
-> > >
-> > > If you do need the full array for indexing, please allocate and
-> > > populate it at runtime.
-> > >
-> > OK, I will use the radix tree for resets (is that OK)?
->
-> You mean XArray? include/linux/radix-tree.h has:
->
->     /* Keep unconverted code working */
->     #define radix_tree_root         xarray
->     #define radix_tree_node         xa_node
->
-Yes, I meant the above.
+Sorry, my bad, it's just "normal" Github stuff, but yes, I also find
+it quite confusing, so should have been more explicit that this is
+uprobe-stress branch in libbpf/libbpf-bootstrap Github repo.
 
-> Given a single xa_node is already 576 bytes, just allocating the full
-> linear reset array at runtime is probably better.
 >
-Agreed, I will create a linear reset array and loop through the array
-based on reset index and reset bit to match with id whenever required.
+>         $ git clone https://github.com/libbpf/libbpf-bootstrap.git
+>         $ cd libbpf-bootstrap
+>         $ git checkout uprobe-stress
 
-Cheers,
-Prabhakar
+Yes, sorry, as I said, I should have been more thorough in my
+instructions. You did a great job figuring all the above out, the next
+step is to make sure all the git submodules are checked out, so, in
+addition to the above you are just missing git submodule
+initialization:
+
+$ git submodule update --init --recursive
+$ cd examples/c
+$ make -j%(nproc) uprobe-stress
+
+NOTE: Don't run just `make`, because it will build all the examples,
+which have extra dependencies, and we don't want to go over that with
+you :) Stick to `make uprobe-stress` to build just an uprobe-stress
+binary.
+
+The only extra thing that you might need (if you don't have that
+already on your build machine) is development versions of libelf and
+zlib, as dependencies of libbpf (that would be elfutils-libelf-devel
+and zlib-devel packages in Fedora, I think). libbpf-bootstrap is
+trying to be as self-contained and dependency free as possible (which
+is also why git submodules).
+
+You were worried about BTF. This tool doesn't need BTF and it should
+work without it enabled in kernel config (but if you do want BTF
+generation to succeed, I think the only kernel build requirement for
+that is up-to-date pahole from dwarves package).
+
+As for the kernel config, I don't think you need anything BPF-specific beyo=
+nd:
+
+CONFIG_BPF=3Dy
+CONFIG_BPF_EVENTS=3Dy
+CONFIG_BPF_SYSCALL=3Dy
+
+But just in case, we maintain a list of kernel configuration that *all
+of BPF selftests* require (see [0]), so worst case just append that to
+your config (but really, above three is probably all you need,
+assuming you have all the non-BPF perf/tracing/uprobe configs
+enabled).
+
+  [0] https://github.com/torvalds/linux/blob/master/tools/testing/selftests=
+/bpf/config
+
+>
+> But then I do the above and I'm greeted with:
+>
+> root@ivb-ep:/usr/src/libbpf-bootstrap/examples/c# make -j40
+>   MKDIR    .output
+>   MKDIR    .output/libbpf
+>   MKDIR    bpftool
+>   LIB      libbpf.a
+>   BPFTOOL  bpftool/bootstrap/bpftool
+> make[1]: *** /usr/src/libbpf-bootstrap/libbpf/src: No such file or direct=
+ory.  Stop.
+> make: *** [Makefile:87: /usr/src/libbpf-bootstrap/examples/c/.output/libb=
+pf.a] Error 2
+> make: *** Waiting for unfinished jobs....
+> make[1]: *** /usr/src/libbpf-bootstrap/bpftool/src: No such file or direc=
+tory.  Stop.
+> make: *** [Makefile:95: /usr/src/libbpf-bootstrap/examples/c/.output/bpft=
+ool/bootstrap/bpftool] Error 2
+>
+>
+> Now what ?!?
+>
+> BPF is ever such unusable shite :/ It's very near as bad as qemu.
+>
+
+Sorry, not going into discussions about this :) I do agree initial
+setup is not straightforward, and this libbpf-bootstrap repo is
+actually an attempt to let users start quickly by doing a minimal and
+more-or-less straightforward BPF setup (which is why I built
+uprobe-stress on top of libbpf-bootstrap setup instead of BPF
+selftests; that would be even more painful process for you which I
+didn't want to force you through, see above about
+selftests/bpf/config).
+
+But just keep in mind that using BPF here isn't some sort of random
+choice just because I tend to work mostly with BPF. BPF is the only
+interface to multi-uprobe attachment, it's a lightweight and
+low-overhead way to know whether uprobes are triggered (I do
+memory-mapped sharing of per-cpu counters between BPF/kernel and user
+space, no extra syscall overhead, blocking, or unnecessary memory
+ordering is added). And in general, whether you like it or not, most
+people would never care to use uprobes if not for BPF as an interface
+into that.
+
+I'm not trying to convert you into BPF or anything like that, but this
+has to use BPF for end-to-end testing.
+
+But you are close, please don't give up!
