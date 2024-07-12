@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9DF152500;
-	Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B99514F109
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720779633; cv=none; b=GyngVUEuWDwdcW1ReeiMcAjwg3gmoiyAaFZSPu2NfSAhjIAdi5+/l+rYHnlaLmyIz+4/e4utlJ3+brpjlL8BrAvLWwyxsU5SGc084KP4m1Q8YmnD7DVpzYvbxZ7OlZdpMQ1CzZ31z4Q3jon8fjSAOEMSp68YvUvRv5R0FF1cUqM=
+	t=1720779633; cv=none; b=HF9iFMeQxGecunD9FxgCzwNwKiyaI5IaKZbVF5OgVmjODJVR67ZDzMnRnLYo6XgRgEmDhVkov/uE1yrtipxP11dreovZxEFcmE6ainiysDwhlUjdbeHbmcBeknb0NJGe5+gitQkM5WvaTfs9HmGoCxFOXHcWWvHzzClDRL4Q6UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720779633; c=relaxed/simple;
-	bh=VVoIxpcBpsu5DTyIieNUadbasv+xGN5WhTLbUa6mR/c=;
+	bh=z7JPQE37pSyjNSZtNlu6IO/vJDtKDa4C76kcC+2CYrY=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lZ1lqtg80/x17W1ZwNJNVOyja4jYyr8DW88RUW/jLl9db/cSheCF6h/Cwd7tb/xfaeD0TTIHKXrN8DRPVEvmC2qKp7MYY3Lq3iS8i6Lr3Cc6XhKu+D51xOPJZkMK5i3S661lkZopq3ZXjWOkw8+3d5TI3CDcvcu5mffA3DF1n/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuCJckfV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=jlX31PamWLIuCV2StQ7FbpMi+F1pA/ECVP0aYpAAvcTStGBT3IFJMBX8zM/c2rg7UX1AzhgZswKTmtf75J42sR4b3CTVdXiVuqHOJslTBMimSkqZqMkA04+LOXfp7sSCHMD4F2z7T0xsAvET6slr6+g39XvWhwYWwTztEQnEIFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxBirr1A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuCJckfV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A3984C4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxBirr1A"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AA387C4AF0C;
 	Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720779632;
-	bh=VVoIxpcBpsu5DTyIieNUadbasv+xGN5WhTLbUa6mR/c=;
+	bh=z7JPQE37pSyjNSZtNlu6IO/vJDtKDa4C76kcC+2CYrY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HuCJckfV+Y2YomYDLLyNFm4QYZDL+JVt6WlrvWFNYv6yVHh+6d8bHsc2cHao9BEVH
-	 7+E5qsJrddW46aPiQAOXRfzEHH1QqtIIybderNU55GqK6rQJTon8+Zx/clW7BIkc1m
-	 b5VBcEAyekiCYDfxuO662s8FQXmWEecRNfBw9b63v2EiczLsNSsrsaatrWkwY3RWFZ
-	 AXhm4TZtuLKSkDy/3obgSBFF/UuPVIfScVJggzpu3/xoTWaV450mdXkWhUppfUQJfF
-	 SrWD0hBQ7HXir7SIl28OHO2epJ8m/fkNAZEV20EujfQPjAF/A1C7Gu0JV6flCEimTN
-	 j/JbUo4xYZn+Q==
+	b=YxBirr1AcJPqVOzgNyhbrxe24kATHJg7cbH0n9efMvsjs0paONyjWv5pJRr7xNUMz
+	 k4UBUKOjDFc+uzvFUglhrYkgxOYpPO56lNn9DS1Mp8JQphIrMg2OBpuDnYwLLEipAw
+	 27WA0QdOfeE8hXXfl0RVr8HZx4JY4lhEJbupgmePTIGGev0i/rEAXkZX0LjwCJANkc
+	 96NzZnO/RXH7MDUtMhzH1tb3a0oQdfxi7QSInwKpuM8s94N0fomduHQT4bEiy/+OgG
+	 c6d/RWd6L6I2V7TOXOF0ur1dY0G9dKbXdddowSgd1ST49WKnjkm5MddDpBOeb9iyL/
+	 VExc6Yi03xa9w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 90E99C43468;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9F0A5C433E9;
 	Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,42 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v5] riscv: hwprobe: export highest virtual userspace address
+Subject: Re: [PATCH v2] riscv: Add tracepoints for SBI calls and returns
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <172077963258.4770.205626830375405089.git-patchwork-notify@kernel.org>
+ <172077963264.4770.1010194114117186773.git-patchwork-notify@kernel.org>
 Date: Fri, 12 Jul 2024 10:20:32 +0000
-References: <20240410144558.1104006-1-cleger@rivosinc.com>
-In-Reply-To: <20240410144558.1104006-1-cleger@rivosinc.com>
-To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@ci.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, corbet@lwn.net, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, rehn@rivosinc.com, charlie@rivosinc.com,
- sorear@fastmail.com, jrtc27@jrtc27.com
+References: <20240321230131.1838105-1-samuel.holland@sifive.com>
+In-Reply-To: <20240321230131.1838105-1-samuel.holland@sifive.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ ajones@ventanamicro.com, aou@eecs.berkeley.edu, alexghiti@rivosinc.com,
+ apatel@ventanamicro.com, maz@kernel.org, paul.walmsley@sifive.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed, 10 Apr 2024 16:45:57 +0200 you wrote:
-> Some userspace applications (OpenJDK for instance) uses the free MSBs
-> in pointers to insert additional information for their own logic and
-> need to get this information from somewhere. Currently they rely on
-> parsing /proc/cpuinfo "mmu=svxx" string to obtain the current value of
-> virtual address usable bits [1]. Since this reflect the raw supported
-> MMU mode, it might differ from the logical one used internally which is
-> why arch_get_mmap_end() is used. Exporting the highest mmapable address
-> through hwprobe will allow a more stable interface to be used. For that
-> purpose, add a new hwprobe key named
-> RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS which will export the highest
-> userspace virtual address.
+On Thu, 21 Mar 2024 16:01:25 -0700 you wrote:
+> These are useful for measuring the latency of SBI calls. The SBI HSM
+> extension is excluded because those functions are called from contexts
+> such as cpuidle where instrumentation is not allowed.
+> 
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v5] riscv: hwprobe: export highest virtual userspace address
-    https://git.kernel.org/riscv/c/c9b8cd139c1d
+  - [v2] riscv: Add tracepoints for SBI calls and returns
+    https://git.kernel.org/riscv/c/56c1c1a09ab9
 
 You are awesome, thank you!
 -- 
