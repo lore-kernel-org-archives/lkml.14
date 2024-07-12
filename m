@@ -1,128 +1,191 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312F02E3E5
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE6313D609
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720772606; cv=none; b=PmYrMMsoiUU7BnwV9CFC86Pv1/VQg4KDa8DDLYKEC+OcjGIOPAn1XkpudhLxwaDNFL/FRruYch1XZ4rBeIVvb+x+5Rm/Z2IBc9A9WkoRuHRcKmM6uZVL6euDcJa05pERZTpLmxvqAchaXS4GCgB06xiIKW3ZaDbJu898/PCl82c=
+	t=1720772640; cv=none; b=neXZx5Xftc1L3pd34Ovmqve1s9NN07tyAz4mtnGJLK4iZbJSvcczwB3DJAnI7b1PT7YIqoKZpiYcdSiB9oPk5UgMzmGMOchHwLDCQkoJeCHGVrrAtHJ5f1xYPa3Tp9fapuRBE+1XBBihSkIXBj/YnnCw+PaXNek7AEq2YhrN+9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720772606; c=relaxed/simple;
-	bh=k4DqjM+f2mpsIHVU3sYPFhWs1zxrgHI2U6K0amjP790=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=XuzjgRny/E9iluhXXTwYCjB3U4Ek5OQM/KeguvYcwq1SQf5C4evwkPNadtBKAzp1Cqe5kvLCc55kK3PRVpK4jJ52JXekePzoD3oQwZET9CC1Ss3mHSJcyWG7VDJWJ/r2IqP/myqgU/4ZoImkgavSxJdkQAqcWHCX3+dOZr/SPqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=f4X13abJ; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="f4X13abJ"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240712082316epoutp01df2ed7ddfa8e85ba90bd211a6d42cbdc~haY84U1_V1784517845epoutp01e
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:23:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240712082316epoutp01df2ed7ddfa8e85ba90bd211a6d42cbdc~haY84U1_V1784517845epoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1720772596;
-	bh=EN2jPuqsDevY28zpnNxB4ovNHRij5bWkyvMEhUSw2Sg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f4X13abJ596q46JWe9vPb+8ZFybe1rCxJUe78G/h2H8VtbWZLiSTPScQ+98d1Xzdj
-	 szrn025sLmd32gTAVUj8Hls0hwKsni6FlT3vfwDR/PqI4B0vqLYK+gqYLR+zExPDv1
-	 gMRIFRbJTzuB0l8wnPJRfivaagY2ukZASE8KTySg=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240712082316epcas5p35604a34dfcf2354a6b13fe6b8b4a5fc2~haY8obsCL2635226352epcas5p36;
-	Fri, 12 Jul 2024 08:23:16 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4WL4Nf14bWz4x9Q2; Fri, 12 Jul
-	2024 08:23:14 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6D.C7.19174.AE7E0966; Fri, 12 Jul 2024 17:23:06 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240712065750epcas5p2149131922a27554e6a40313e5c73699e~hZOXCVf222681526815epcas5p2B;
-	Fri, 12 Jul 2024 06:57:50 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240712065750epsmtrp2ca7a7789bd9d3112d069765defcde925~hZOXA82723072830728epsmtrp2N;
-	Fri, 12 Jul 2024 06:57:50 +0000 (GMT)
-X-AuditID: b6c32a50-87fff70000004ae6-88-6690e7eafd35
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BF.FC.18846.EE3D0966; Fri, 12 Jul 2024 15:57:50 +0900 (KST)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240712065749epsmtip163077e8f8b8a31d4f3c51eb31c04eb76~hZOWAz0Y31597715977epsmtip1W;
-	Fri, 12 Jul 2024 06:57:49 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: hch@infradead.org
-Cc: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org, xue01.he@samsung.com
-Subject: Re: Re: [PATCH v2] io_uring: Avoid polling configuration errors
-Date: Fri, 12 Jul 2024 14:57:45 +0800
-Message-Id: <20240712065745.808422-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <ZpC9HxJnokkbjKAO@infradead.org>
+	s=arc-20240116; t=1720772640; c=relaxed/simple;
+	bh=96SPCQiSgOxraPa5O4Ow8Hx1Id2vJ8/LG/Es8VJOpsc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=G1zSm6iDC4Fl6mGIL63HsPLizSCcsYMQJFKriw31UxfxWZ4KCcL5rL5xBv1vwDdM6NGrYI/TlTPPCy3AuOvTCToMZv/+IPGyrqlkbDiiBO62iqgG/LUR7gT6kQQes9UyDOUI9qT/z5ioKNrY5v9DxtAe+SvwHijtvD/rUGRjtj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4WL3dD1VGjz9v7Hp
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 15:49:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 9124F140ABE
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 16:07:11 +0800 (CST)
+Received: from [10.221.99.159] (unknown [10.221.99.159])
+	by APP2 (Coremail) with SMTP id GxC2BwDXe90i5JBmuR9PAQ--.17117S2;
+	Fri, 12 Jul 2024 09:07:10 +0100 (CET)
+Message-ID: <d6a76968-d10b-c60b-245a-f58116eca6af@huaweicloud.com>
+Date: Fri, 12 Jul 2024 10:06:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCHv2 0/4] tools/memory-model: Define more of LKMM in
+ tools/memory-model
+From: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
+To: Alan Stern <stern@rowland.harvard.edu>,
+ Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+Cc: paulmck@kernel.org, parri.andrea@gmail.com, will@kernel.org,
+ peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+ dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+ akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+ urezki@gmail.com, quic_neeraju@quicinc.com, frederic@kernel.org,
+ linux-kernel@vger.kernel.org, lkmm@lists.linux.dev
+References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
+ <88c1ebc8-4805-4d1d-868a-889043899979@rowland.harvard.edu>
+ <bbc3bd10-3bf5-4b1a-a275-dd328c42e307@huaweicloud.com>
+ <f93f140b-13bc-4d00-adee-46cc1c016480@rowland.harvard.edu>
+ <4792c9e7-2594-3600-5d82-4cb1443fe670@huaweicloud.com>
+Content-Language: en-US
+In-Reply-To: <4792c9e7-2594-3600-5d82-4cb1443fe670@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMJsWRmVeSWpSXmKPExsWy7bCmlu6r5xPSDBbPUrGYs2obo8Xqu/1s
-	FqcnLGKyeNd6jsXiV/ddRovLu+awWZyd8IHVouvCKTYHDo+ds+6ye2xeoeVx+WypR9+WVYwe
-	nzfJBbBGZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXm
-	AF2ipFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwKdArTswtLs1L18tLLbEyNDAw
-	MgUqTMjOOD69j6mgn6Vi39HEBsZFzF2MHBwSAiYS2x74djFycQgJ7GGUePHrHwuE84lR4kn7
-	eyY45++3L0AZTrCO9Tf2QiV2Mkq0TWtmhHB+MEo03WhiBqliE1CS2L/lAyOILSIgKnFv+hUw
-	m1mgWuL/sh52EFtYwENiwrvVYFNZBFQlvnzdDlbDK2AlsWv+enaIbfISN7v2g83kFNCVaDh1
-	mA2iRlDi5MwnLBAz5SWat85mBjlCQuARu8TViR+ZIZpdJFY3/GKCsIUlXh3fAjVUSuLzu71s
-	EHa+xOTv6xkh7BqJdZvfQb1pLfHvyh4WUCAxC2hKrN+lDxGWlZh6ah0TxF4+id7fT6DG80rs
-	mAdjK0ksObICaqSExO8Ji1ghbA+J3T2rmCGB1cAosW7bJ/YJjAqzkPwzC8k/sxBWL2BkXsUo
-	lVpQnJuemmxaYKibl1oOj+Xk/NxNjODUqRWwg3H1hr96hxiZOBgPMUpwMCuJ8Hqe7U8T4k1J
-	rKxKLcqPLyrNSS0+xGgKDPGJzFKiyfnA5J1XEm9oYmlgYmZmZmJpbGaoJM77unVuipBAemJJ
-	anZqakFqEUwfEwenVAPT7iiTHc8MgvcK8i19MGlmSr/zltyc6XkR1UwPvHYK1SXGTNawOXxr
-	z+1+z8Rp+hlv7946dWmP1s05s+dpWzTNK9NtPLL41dFTH15d5fiyX/Hp/S+NcsvDOQ/cfeMv
-	fGC9rWF68xejvknB4pNNSxLfc09vOv+06nlYkbe68pKrHgmHDO7nv7NPYJ6e66G49MKx6TFB
-	2mrHLp4p2vYpwPXC3jBFA3MR9soLDbfksiamaq8z1p2acJnVZmZ6ZeDWTcpXM0z4NV1n/Qp2
-	2t5iI1j4Y4PjYjmhCas01u+tUOorW8AqPHvp47dTJgiHya0y3qT5bAWzlOqke8eecH0wf6P8
-	cvaZ/ROvL3o7/9ll4ZU7pymxFGckGmoxFxUnAgDI/fY8JgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsWy7bCSnO67yxPSDCZ0K1jMWbWN0WL13X42
-	i9MTFjFZvGs9x2Lxq/suo8XlXXPYLM5O+MBq0XXhFJsDh8fOWXfZPTav0PK4fLbUo2/LKkaP
-	z5vkAlijuGxSUnMyy1KL9O0SuDKOT+9jKuhnqdh3NLGBcRFzFyMnh4SAicT6G3uZuhi5OIQE
-	tjNK/Ns7mQ0iISGx49EfVghbWGLlv+fsEEXfGCUuXGlkBEmwCShJ7N/yAcwWERCVuDf9CiNI
-	EbNAI6PE8h0HWUASwgIeEhPerQazWQRUJb583Q7WwCtgJbFr/np2iA3yEje79oOdxCmgK9Fw
-	6jDYFUICOhLLbjayQtQLSpyc+QRsDjNQffPW2cwTGAVmIUnNQpJawMi0ilE0taA4Nz03ucBQ
-	rzgxt7g0L10vOT93EyM4qLWCdjAuW/9X7xAjEwfjIUYJDmYlEV7Ps/1pQrwpiZVVqUX58UWl
-	OanFhxilOViUxHmVczpThATSE0tSs1NTC1KLYLJMHJxSDUwTtxiG79Fzlgwqz2E49KGv4fsU
-	GyP/hXP59VgOF4gHSDG9vPa4S+aj/Za1zGFOq74cNlh6RTx1g9Aew93ljcpni13+MDw7FcfI
-	+t66+UXr+eqqk480H/kceGdt1iTnVp1THb7k5ONdgSmf1mjscd9x8cOCqIYrfgom8yxElP6s
-	lbDPelBbdVMpIYFN07vQr8iK79/aR+ejbucF/gleyHo8MHfBJttmV2333uTzkvcN56mvfCL2
-	VMvbYK/R4U+z2T2qPtzZ5a359M2f7XN0gzWenOx1DvG86eMv5zvXpubc0a2BXQyJuob/S+9J
-	tGV1JE9+GlWdcz/+1PPXXwvclpS77JzBf/fWGV5ZTQ13BSWW4oxEQy3mouJEALsA1vvZAgAA
-X-CMS-MailID: 20240712065750epcas5p2149131922a27554e6a40313e5c73699e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240712065750epcas5p2149131922a27554e6a40313e5c73699e
-References: <ZpC9HxJnokkbjKAO@infradead.org>
-	<CGME20240712065750epcas5p2149131922a27554e6a40313e5c73699e@epcas5p2.samsung.com>
+X-CM-TRANSID:GxC2BwDXe90i5JBmuR9PAQ--.17117S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3AryDZr4UWw1fJw4DXFyrJFb_yoW7XFWUp3
+	yUXFZ5Jr45Za18C3ykCF4UXw1rKrWqy3y5XrWrt3y3ZF43KFW5Jay0ywsF9F9rAr1Iqw1k
+	ZF17JF98CF9rAaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF
+	7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYY7kG6xAYrwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU1db1UUUUU
+X-CM-SenderInfo: xkhu0tnqos00pfhgvzhhrqqx5xdzvxpfor3voofrz/
 
->This is wrong for multiple reasons.  One is that we can't simply poke
->into block device internals like this in a higher layer like io_uring.
->Second blkdev_get_no_open is in no way available for use outside the
->block layer.  The fact that the even exist as separate helpers that
->aren't entirely hidden is a decade old layering violation in blk-cgroup.
+On 6/10/2024 10:38 AM, Hernan Ponce de Leon wrote:
+> On 6/8/2024 3:00 AM, Alan Stern wrote:
+>> On Wed, Jun 05, 2024 at 09:58:42PM +0200, Jonas Oberhauser wrote:
+>>>
+>>>
+>>> Am 6/4/2024 um 7:56 PM schrieb Alan Stern:
+>>>> Just to clarify: Your first step encompasses patches 1 - 3, and the
+>>>> second step is patch 4.  The first three patches can be applied now, 
+>>>> but
+>>>> the last one needs to wait until herd7 has been updated.  Is this all
+>>>> correct?
+>>>
+>>> Exactly.
+>>
+>> With regard to patch 4, how much thought have you and Hernan given to
+>> backward compatibility?  Once herd7 is changed, old memory model files
+>> will no longer work correctly.
+>>
+> 
+> Honestly, I did not think much about this (at least until Akira 
+> mentioned in my PR). My hope was that changes to the model could be 
+> back-ported to previous kernel versions. However that would not work for 
+> existing out-of-tree files.
+> 
+> My question is: is compatibility with out-of-tree files really a 
+> requirement? I would argue that if people are using outdated models, 
+> they may get wrong results anyway. This is because some of the changes 
+> done to lkmm during the last few years change the expected result for 
+> some litmus tests.
+> 
+> Hernan
 
-Got it, thanks.
+I pushed some new changes to the code for backward compatibility [1]. 
+The series also needs the patch at the bottom to properly deal with the 
+ordering of failing CAses and non-returning operations. With it, all 
+litmus tests return the correct result (the script needs to pass option 
+-lkmm-legacy false to herd).
 
->If you want to advertize this properly we'll need a flag in struct
->file or something similar.
+Implementation-wise, there are two things that I would like to have:
 
-Thanks, I will try to do this.
+- atomic_add_unless implementation is treated different than the rest 
+and it is one of the few remaining cases where memory orderings are 
+hardcoded [2]. I would like to define it in the .def file as
 
---
-hexue
+	atomic_add_unless(X,V,U) __atomic_add_unless{ONCE}(X,V,U)
+
+- "deref" and "lderef" instructions seems to add a "rb_dep" fence. None 
+of the model files (.cat, .def, .bell) refers to "rb_dep" so this looks 
+useless to me. However, I never checked the details of these 
+dereferencing instruction so I might be missing something. Maybe Paul 
+can clarify.
+
+Hernan
+
+[1] https://github.com/herd/herdtools7/pull/865
+[2] https://github.com/herd/herdtools7/issues/868
+
+
+diff --git a/tools/memory-model/linux-kernel.def 
+b/tools/memory-model/linux-kernel.def
+index 001366ff3fb4..5a40c2cad39b 100644
+--- a/tools/memory-model/linux-kernel.def
++++ b/tools/memory-model/linux-kernel.def
+@@ -32,10 +32,10 @@ xchg(X,V)  __xchg{MB}(X,V)
+  xchg_relaxed(X,V) __xchg{ONCE}(X,V)
+  xchg_release(X,V) __xchg{RELEASE}(X,V)
+  xchg_acquire(X,V) __xchg{ACQUIRE}(X,V)
+-cmpxchg(X,V,W) __cmpxchg{MB}(X,V,W)
+-cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE}(X,V,W)
+-cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE}(X,V,W)
+-cmpxchg_release(X,V,W) __cmpxchg{RELEASE}(X,V,W)
++cmpxchg(X,V,W) __cmpxchg{MB,ONCE}(X,V,W)
++cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE,ONCE}(X,V,W)
++cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE,ONCE}(X,V,W)
++cmpxchg_release(X,V,W) __cmpxchg{RELEASE,ONCE}(X,V,W)
+
+  // Spinlocks
+  spin_lock(X) { __lock(X); }
+@@ -63,14 +63,14 @@ atomic_set(X,V) { WRITE_ONCE(*X,V); }
+  atomic_read_acquire(X) smp_load_acquire(X)
+  atomic_set_release(X,V) { smp_store_release(X,V); }
+
+-atomic_add(V,X) { __atomic_op(X,+,V); }
+-atomic_sub(V,X) { __atomic_op(X,-,V); }
+-atomic_and(V,X) { __atomic_op(X,&,V); }
+-atomic_or(V,X)  { __atomic_op(X,|,V); }
+-atomic_xor(V,X) { __atomic_op(X,^,V); }
+-atomic_inc(X)   { __atomic_op(X,+,1); }
+-atomic_dec(X)   { __atomic_op(X,-,1); }
+-atomic_andnot(V,X) { __atomic_op(X,&~,V); }
++atomic_add(V,X) { __atomic_op{NORETURN}(X,+,V); }
++atomic_sub(V,X) { __atomic_op{NORETURN}(X,-,V); }
++atomic_and(V,X) { __atomic_op{NORETURN}(X,&,V); }
++atomic_or(V,X)  { __atomic_op{NORETURN}(X,|,V); }
++atomic_xor(V,X) { __atomic_op{NORETURN}(X,^,V); }
++atomic_inc(X)   { __atomic_op{NORETURN}(X,+,1); }
++atomic_dec(X)   { __atomic_op{NORETURN}(X,-,1); }
++atomic_andnot(V,X) { __atomic_op{NORETURN}(X,&~,V); }
+
+  atomic_add_return(V,X) __atomic_op_return{MB}(X,+,V)
+  atomic_add_return_relaxed(V,X) __atomic_op_return{ONCE}(X,+,V)
+@@ -127,10 +127,10 @@ atomic_xchg(X,V) __xchg{MB}(X,V)
+  atomic_xchg_relaxed(X,V) __xchg{ONCE}(X,V)
+  atomic_xchg_release(X,V) __xchg{RELEASE}(X,V)
+  atomic_xchg_acquire(X,V) __xchg{ACQUIRE}(X,V)
+-atomic_cmpxchg(X,V,W) __cmpxchg{MB}(X,V,W)
+-atomic_cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE}(X,V,W)
+-atomic_cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE}(X,V,W)
+-atomic_cmpxchg_release(X,V,W) __cmpxchg{RELEASE}(X,V,W)
++atomic_cmpxchg(X,V,W) __cmpxchg{MB,ONCE}(X,V,W)
++atomic_cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE,ONCE}(X,V,W)
++atomic_cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE,ONCE}(X,V,W)
++atomic_cmpxchg_release(X,V,W) __cmpxchg{RELEASE,ONCE}(X,V,W)
+
+  atomic_sub_and_test(V,X) __atomic_op_return{MB}(X,-,V) == 0
+  atomic_dec_and_test(X)  __atomic_op_return{MB}(X,-,1) == 0
+
