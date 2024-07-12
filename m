@@ -1,266 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF1A143C6B
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B532B13E41A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720774492; cv=none; b=NBrkFb6r47hBkKZiXN/Yy8Mr5YH1g3lDi+6jJHr1UCgyb0NLFSB5toSUisD/u846y5by8NxtAVBE+YLBcVadvERnRsOQdKfxATdjWgbZ4yXvCPSVum8bfS4q6BSM4G/GbdhcThGxpcbKwEYPKRVAMpj3H0nbviNIyqTd4IepGiA=
+	t=1720774589; cv=none; b=hZ42XecDDoxl31svUX9Fy0szwz8SQHIv8OYiG8nDYRws30OAnRduEUb+kJCIuCURL9KhoVUqq0Uir4/dSfxXIiziyX8f7nIvj3XR0HALe2qfKd5oc+ngOdvrmeO/8Jd+v+LfDBs06rZmPJQDiIi5uUVodtkOTM0i0q6hQt5ewHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720774492; c=relaxed/simple;
-	bh=xCYPR3PI6bxPO/fQptRxI7tJvEMtvWLt8trPp7HUf7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SYWCmG3yF9IQ0EYT1X+ymiuLaM8yH7aj7efG51NDtBZGs02RKL4CUs/k+SePTwWoVvrB356RLTZgs0bspXoDPJ5Tgm4dSCDA4f7txhb8kGhMTQW0bXxVuF6Jzbsaz/DRezw8mfeyXGone1aQGTIfknz7lwjpGK/pUdZROgPtLVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GKVzHXLp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720774589; c=relaxed/simple;
+	bh=8IEUg8/eSlzQvlwuZ/W3Z+vIWwo5Zej2UShiVakZwGM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Z4vh09amr5l3jCFE992bkQd+64zVlF1vph7fzdTk05A/izy4mtw/XVaE8sMFV6OrhDRzQRYw8RuB6IM6tPQmq+ZDi8TH8tP1c7qQYKPkG865fSozak0AHsr8GFoExQ6JYLua2Ngyf3opoyy8kX8HW5LlBf34Ot2ivaaneHBdTrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jB/1F2M1; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GKVzHXLp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720774489;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YGUwzKz1FC7XKNssvzh/Aj+HVOd49bkbQ0nivkkXFmg=;
-	b=GKVzHXLpcM1ziU5NbEeYl3y7/uzxpz2jU7aJY0BXFKFtDaqx13OOQuxQI3L9JgbCi2/pD0
-	HwrYlHEXbIORFlIB+dQdRNEJTzmEIJ4SY0RP3GX7kFClpCtmuLJLbrUroqdHi/4udA8FHv
-	jgpBmqzVhO8sWPREMKEVdSY+slXj+2M=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-kJKUVUC5NPCFIfWixtsu9g-1; Fri, 12 Jul 2024 04:54:41 -0400
-X-MC-Unique: kJKUVUC5NPCFIfWixtsu9g-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-426724679f0so14459515e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 01:54:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jB/1F2M1"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-65cd720cee2so16217537b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 01:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720774586; x=1721379386; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZKEGbykYk5TZAEolv3veio4AcHQ3n9AaxWALsKzF+q8=;
+        b=jB/1F2M1CfrFJrpErj8MWSntgkfWHY7f5jgyfs+34ihLuAUrKTZzs4MoFYe5WcYaO7
+         xnUobB4fCm8RGJTB033hV4pixQi4/YA7Ol0X/AyIHvQGyAVzoCbexGKA+QqAbFumwlcV
+         GnNjymHqDYOpTXYJdZm7QGPk5DEToXsANsTSeGrW06uhpO910j0GX+caY4X9BUWSg4ZD
+         +/aXPLjxg5kIYxJaUddV75cgFbGxREdEuGv+sfzQbI7np/0qRLxMLi9l7o3BTMgjKOQF
+         hvIPqNJO/KdfEqwuvAZv3facBuQDENQMQylU9DMqYBmXOguQn80LTa8DUAetOotN3noI
+         5Smw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720774480; x=1721379280;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YGUwzKz1FC7XKNssvzh/Aj+HVOd49bkbQ0nivkkXFmg=;
-        b=cHyhOXzx+tVjY35JZcXn+V1c2morH599xbiay/fXDigEYGrPzNplrilCY8xrKnlVSh
-         70Rk98SZMlKWTlnbHXcOe9Kq4bdEmM/Omt8suJts8CIDm1ZLIQlKzfCZhGYG4YIqjXJJ
-         Nk6LzsRrhbmFjDfXu+HN6zVQIdctmYOwfgJHafNpAj9S8ZfiI1FMONjdly7/L4TVOjRh
-         a/w9K3NolgAr2wr+udLpN7w3FHvM+6ymV3llhyWW39DO0UUznTcq+dKa64tgMOuZz2Oy
-         Lh8I4tcqsb7ATKPVLc2B2zzh2vtsRiKdxwWyUGaJtdRmb24lgOREKDClspWyN1Qyw0sr
-         vVEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlViT3UwbUM/UunrdsLzmfIPm64LRtyyglxejyf9/qx1oALG3vs6zLnZwR2VnreOYU9wIj4QpXcGkSb+dhR/wOltMMLmeMbBP63UY1
-X-Gm-Message-State: AOJu0YxHDeIuB3Bx8WKuY40F+AdYRGWRmcAE58t9TSwMhewUgWao9uJ9
-	TwecZjC84Xm6YbeZgKUYcLyf26ERxL69Z6g/SPzLm4JX8DkqF0UQTvGa7o6bGZIlOMOUCV+6it+
-	0IM6c38rnkB09THzJ02BFCLxp6tBon8WHesslzOsk539K/w85P49BGK07vhKfhg==
-X-Received: by 2002:a05:600c:1c1c:b0:424:8be4:f2c with SMTP id 5b1f17b1804b1-4279dabdfa1mr19063595e9.2.1720774480472;
-        Fri, 12 Jul 2024 01:54:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFkkoUJWogIxc8aAVkgm7MgPD/u3veQ1A4xDoDJJYafBVdLp0C0nWIxuogLeydo1P5/GhsYSA==
-X-Received: by 2002:a05:600c:1c1c:b0:424:8be4:f2c with SMTP id 5b1f17b1804b1-4279dabdfa1mr19063395e9.2.1720774480104;
-        Fri, 12 Jul 2024 01:54:40 -0700 (PDT)
-Received: from fedora ([2a01:e0a:257:8c60:80f1:cdf8:48d0:b0a1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde8476dsm9631003f8f.36.2024.07.12.01.54.39
+        d=1e100.net; s=20230601; t=1720774586; x=1721379386;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZKEGbykYk5TZAEolv3veio4AcHQ3n9AaxWALsKzF+q8=;
+        b=XrPUlGeZ0ZWPex7fFSrwp6b79Z7HcG7udroOXEPgdvcJgygnrgk7M+dJzWnW/LDFUw
+         +7adGIxF7hLo1MRwCsbKwwYgvgqUVmlgQBev1tTymsLCewVDPkbYJ4fXvFnReSuwX7r5
+         DP8cfUu5Nv2KO49nPM3Wdc5vKQO/2qD4T5UJNXgOM9HlcRXm5P91ZYZtNvb6d1uGelrd
+         g9LfDjLk/fXCWghapDwLwMwCqxaoSx1aQONBnzm68mrX8c+i4Ui+pVtpIeIUKdLk4vyR
+         p44nHovfvziWgfPvuETAFuDNaBc54+ivt5wVvtEsVXqS75xqZcLEurzzL6y2aMyNuqIh
+         cdCw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0mvz2yow4esLAFD0htPHfz//4daa33B3j6BHJLGmTLPVYS0z9hVsa0fFZYsOjwEXaB/JoDrKflhyxW05n3olElhN+/dTL7SLofmWv
+X-Gm-Message-State: AOJu0YyUxD1Rnt45Qzb40/LYMteXmQ+JS+cZ4dAuRf2nOUgovp3Gszsk
+	cYuYTRGA1vrFCVNS3ZptS70AlX9JGC2qij0kwwJn1biGDFrx8/NfDQDI1Ygn8w==
+X-Google-Smtp-Source: AGHT+IG42qjdytaoa1iAmt27ZcGzYpIdyY5FTx+R68VeXp1fc8qPNJCDIUt/qzCmpk8baLbEnC/TSg==
+X-Received: by 2002:a81:8ac3:0:b0:646:5f95:9c7d with SMTP id 00721157ae682-658f01fda1bmr108621857b3.36.1720774586407;
+        Fri, 12 Jul 2024 01:56:26 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e69d9dfcsm14260607b3.118.2024.07.12.01.56.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 01:54:39 -0700 (PDT)
-Date: Fri, 12 Jul 2024 10:54:37 +0200
-From: Matias Ezequiel Vara Larsen <mvaralar@redhat.com>
-To: Steven Price <steven.price@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Subject: Re: [PATCH v4 00/15] arm64: Support for running as a guest in Arm CCA
-Message-ID: <ZpDvTXMDq6i+4O0m@fedora>
-References: <20240701095505.165383-1-steven.price@arm.com>
+        Fri, 12 Jul 2024 01:56:25 -0700 (PDT)
+Date: Fri, 12 Jul 2024 01:56:04 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+cc: yangge <yangge1116@126.com>, linux-mm@kvack.org, 
+    linux-kernel@vger.kernel.org, 21cnbao@gmail.com, david@redhat.com, 
+    baolin.wang@linux.alibaba.com, aneesh.kumar@linux.ibm.com, 
+    liuzixing@hygon.cn, hughd@google.com
+Subject: Re: [PATCH V4] mm/gup: Clear the LRU flag of a page before adding
+ to LRU batch
+In-Reply-To: <1720075944-27201-1-git-send-email-yangge1116@126.com>
+Message-ID: <503f0df7-91e8-07c1-c4a6-124cad9e65e7@google.com>
+References: <1720075944-27201-1-git-send-email-yangge1116@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701095505.165383-1-steven.price@arm.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Jul 01, 2024 at 10:54:50AM +0100, Steven Price wrote:
-> This series adds support for running Linux in a protected VM under the
-> Arm Confidential Compute Architecture (CCA). This has been updated
-> following the feedback from the v3 posting[1]. Thanks for the feedback!
-> Individual patches have a change log. But things to highlight:
-> 
->  * a new patch ("firmware/psci: Add psci_early_test_conduit()") to
->    prevent SMC calls being made on systems which don't support them -
->    i.e. systems without EL2/EL3 - thanks Jean-Philippe!
-> 
->  * two patches dropped (overriding set_fixmap_io). Instead
->    FIXMAP_PAGE_IO is modified to include PROT_NS_SHARED. When support
->    for assigning hardware devices to a realm guest is added this will
->    need to be brought back in some form. But for now it's just adding
->    complixity and confusion for no gain.
-> 
->  * a new patch ("arm64: mm: Avoid TLBI when marking pages as valid")
->    which avoids doing an extra TLBI when doing the break-before-make.
->    Note that this changes the behaviour in other cases when making
->    memory valid. This should be safe (and saves a TLBI for those cases),
->    but it's a separate patch in case of regressions.
-> 
->  * GIC ITT allocation now uses a custom genpool-based allocator. I
->    expect this will be replaced with a generic way of allocating
->    decrypted memory (see [4]), but for now this gets things working
->    without wasting too much memory.
-> 
-> The ABI to the RMM from a realm (the RSI) is based on the final RMM v1.0
-> (EAC 5) specification[2]. Future RMM specifications will be backwards
-> compatible so a guest using the v1.0 specification (i.e. this series)
-> will be able to run on future versions of the RMM without modification.
-> 
-> This series is based on v6.10-rc1. It is also available as a git
-> repository:
-> 
-> https://gitlab.arm.com/linux-arm/linux-cca cca-guest/v4
-> 
-> This series (the guest side) should be in a good state so please review
-> with the intention that this could be merged soon. The host side will
-> require more iteration so the versioning of the series will diverge -
-> so for now continue to use v3 for the host support.
-> 
-> Introduction (unchanged from v2 posting)
-> ============
-> A more general introduction to Arm CCA is available on the Arm
-> website[3], and links to the other components involved are available in
-> the overall cover letter.
-> 
-> Arm Confidential Compute Architecture adds two new 'worlds' to the
-> architecture: Root and Realm. A new software component known as the RMM
-> (Realm Management Monitor) runs in Realm EL2 and is trusted by both the
-> Normal World and VMs running within Realms. This enables mutual
-> distrust between the Realm VMs and the Normal World.
-> 
-> Virtual machines running within a Realm can decide on a (4k)
-> page-by-page granularity whether to share a page with the (Normal World)
-> host or to keep it private (protected). This protection is provided by
-> the hardware and attempts to access a page which isn't shared by the
-> Normal World will trigger a Granule Protection Fault.
-> 
-> Realm VMs can communicate with the RMM via another SMC interface known
-> as RSI (Realm Services Interface). This series adds wrappers for the
-> full set of RSI commands and uses them to manage the Realm IPA State
-> (RIPAS) and to discover the configuration of the realm.
-> 
-> The VM running within the Realm needs to ensure that memory that is
-> going to use is marked as 'RIPAS_RAM' (i.e. protected memory accessible
-> only to the guest). This could be provided by the VMM (and subject to
-> measurement to ensure it is setup correctly) or the VM can set it
-> itself.  This series includes a patch which will iterate over all
-> described RAM and set the RIPAS. This is a relatively cheap operation,
-> and doesn't require memory donation from the host. Instead, memory can
-> be dynamically provided by the host on fault. An alternative would be to
-> update booting.rst and state this as a requirement, but this would
-> reduce the flexibility of the VMM to manage the available memory to the
-> guest (as the initial RIPAS state is part of the guest's measurement).
-> 
-> Within the Realm the most-significant active bit of the IPA is used to
-> select whether the access is to protected memory or to memory shared
-> with the host. This series treats this bit as if it is attribute bit in
-> the page tables and will modify it when sharing/unsharing memory with
-> the host.
-> 
-> This top bit usage also necessitates that the IPA width is made more
-> dynamic in the guest. The VMM will choose a width (and therefore which
-> bit controls the shared flag) and the guest must be able to identify
-> this bit to mask it out when necessary. PHYS_MASK_SHIFT/PHYS_MASK are
-> therefore made dynamic.
-> 
-> To allow virtio to communicate with the host the shared buffers must be
-> placed in memory which has this top IPA bit set. This is achieved by
-> implementing the set_memory_{encrypted,decrypted} APIs for arm64 and
-> forcing the use of bounce buffers. For now all device access is
-> considered to required the memory to be shared, at this stage there is
-> no support for real devices to be assigned to a realm guest - obviously
-> if device assignment is added this will have to change.
-> 
-> Finally the GIC is (largely) emulated by the (untrusted) host. The RMM
-> provides some management (including register save/restore) but the
-> ITS buffers must be placed into shared memory for the host to emulate.
-> There is likely to be future work to harden the GIC driver against a
-> malicious host (along with any other drivers used within a Realm guest).
-> 
-> [1] https://lore.kernel.org/lkml/20240605093006.145492-1-steven.price%40arm.com
-> [2] https://developer.arm.com/documentation/den0137/1-0eac5/
-> [3] https://www.arm.com/architecture/security-features/arm-confidential-compute-architecture
-> [4] https://lore.kernel.org/lkml/ZmNJdSxSz-sYpVgI%40arm.com
-> 
-> Jean-Philippe Brucker (1):
->   firmware/psci: Add psci_early_test_conduit()
-> 
-> Sami Mujawar (2):
->   arm64: rsi: Interfaces to query attestation token
->   virt: arm-cca-guest: TSM_REPORT support for realms
-> 
-> Steven Price (7):
->   arm64: realm: Query IPA size from the RMM
->   arm64: Mark all I/O as non-secure shared
->   arm64: Make the PHYS_MASK_SHIFT dynamic
->   arm64: Enforce bounce buffers for realm DMA
->   arm64: mm: Avoid TLBI when marking pages as valid
->   irqchip/gic-v3-its: Share ITS tables with a non-trusted hypervisor
->   irqchip/gic-v3-its: Rely on genpool alignment
-> 
-> Suzuki K Poulose (5):
->   arm64: rsi: Add RSI definitions
->   arm64: Detect if in a realm and set RIPAS RAM
->   arm64: Enable memory encrypt for Realms
->   arm64: Force device mappings to be non-secure shared
->   efi: arm64: Map Device with Prot Shared
-> 
->  arch/arm64/Kconfig                            |   3 +
->  arch/arm64/include/asm/fixmap.h               |   2 +-
->  arch/arm64/include/asm/io.h                   |   8 +-
->  arch/arm64/include/asm/mem_encrypt.h          |  17 ++
->  arch/arm64/include/asm/pgtable-hwdef.h        |   6 -
->  arch/arm64/include/asm/pgtable-prot.h         |   3 +
->  arch/arm64/include/asm/pgtable.h              |  13 +-
->  arch/arm64/include/asm/rsi.h                  |  64 ++++++
->  arch/arm64/include/asm/rsi_cmds.h             | 134 +++++++++++
->  arch/arm64/include/asm/rsi_smc.h              | 142 ++++++++++++
->  arch/arm64/include/asm/set_memory.h           |   3 +
->  arch/arm64/kernel/Makefile                    |   3 +-
->  arch/arm64/kernel/efi.c                       |   2 +-
->  arch/arm64/kernel/rsi.c                       | 104 +++++++++
->  arch/arm64/kernel/setup.c                     |   8 +
->  arch/arm64/mm/init.c                          |  10 +-
->  arch/arm64/mm/pageattr.c                      |  76 ++++++-
->  drivers/firmware/psci/psci.c                  |  25 +++
->  drivers/irqchip/irq-gic-v3-its.c              | 142 +++++++++---
->  drivers/virt/coco/Kconfig                     |   2 +
->  drivers/virt/coco/Makefile                    |   1 +
->  drivers/virt/coco/arm-cca-guest/Kconfig       |  11 +
->  drivers/virt/coco/arm-cca-guest/Makefile      |   2 +
->  .../virt/coco/arm-cca-guest/arm-cca-guest.c   | 211 ++++++++++++++++++
->  include/linux/psci.h                          |   5 +
->  25 files changed, 953 insertions(+), 44 deletions(-)
->  create mode 100644 arch/arm64/include/asm/mem_encrypt.h
->  create mode 100644 arch/arm64/include/asm/rsi.h
->  create mode 100644 arch/arm64/include/asm/rsi_cmds.h
->  create mode 100644 arch/arm64/include/asm/rsi_smc.h
->  create mode 100644 arch/arm64/kernel/rsi.c
->  create mode 100644 drivers/virt/coco/arm-cca-guest/Kconfig
->  create mode 100644 drivers/virt/coco/arm-cca-guest/Makefile
->  create mode 100644 drivers/virt/coco/arm-cca-guest/arm-cca-guest.c
-> 
-> -- 
-> 2.34.1
-> 
-> 
+On Thu, 4 Jul 2024, yangge1116@126.com wrote:
 
-Hello,
+> From: yangge <yangge1116@126.com>
+> 
+> If a large number of CMA memory are configured in system (for example, the
+> CMA memory accounts for 50% of the system memory), starting a virtual
+> virtual machine with device passthrough, it will
+> call pin_user_pages_remote(..., FOLL_LONGTERM, ...) to pin memory.
+> Normally if a page is present and in CMA area, pin_user_pages_remote()
+> will migrate the page from CMA area to non-CMA area because of
+> FOLL_LONGTERM flag. But the current code will cause the migration failure
+> due to unexpected page refcounts, and eventually cause the virtual machine
+> fail to start.
+> 
+> If a page is added in LRU batch, its refcount increases one, remove the
+> page from LRU batch decreases one. Page migration requires the page is not
+> referenced by others except page mapping. Before migrating a page, we
+> should try to drain the page from LRU batch in case the page is in it,
+> however, folio_test_lru() is not sufficient to tell whether the page is
+> in LRU batch or not, if the page is in LRU batch, the migration will fail.
+> 
+> To solve the problem above, we modify the logic of adding to LRU batch.
+> Before adding a page to LRU batch, we clear the LRU flag of the page so
+> that we can check whether the page is in LRU batch by folio_test_lru(page).
+> It's quite valuable, because likely we don't want to blindly drain the LRU
+> batch simply because there is some unexpected reference on a page, as
+> described above.
+> 
+> This change makes the LRU flag of a page invisible for longer, which
+> may impact some programs. For example, as long as a page is on a LRU
+> batch, we cannot isolate it, and we cannot check if it's an LRU page.
+> Further, a page can now only be on exactly one LRU batch. This doesn't
+> seem to matter much, because a new page is allocated from buddy and
+> added to the lru batch, or be isolated, it's LRU flag may also be
+> invisible for a long time.
+> 
+> Fixes: 9a4e9f3b2d73 ("mm: update get_user_pages_longterm to migrate pages allocated from CMA region")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: yangge <yangge1116@126.com>
 
-I tested this series on QEMU/KVM with the CCA patches(v2) and the FVP
-model. I could not find any evident issue.
+This is an interesting patch, and may (but might not) be a very good one.
 
-Tested-by: Matias Ezequiel Vara Larsen <mvaralar@redhat.com>
+I have no objection to it going forward to 6.11-rc, but I do object to
+the Cc stable, and its current placing in mm-hotfixes-unstable (if that
+means it's to be rushed into 6.10 final).
 
+This is a subtle change to PG_lru handling, altering how that has been
+managed since 5.11 (and before).  I have not observed any ill effect
+from this patch, but I'm not at all confident in understanding its
+implications - though perhaps braver and quicker minds are confident.
+
+To judge by the commit message, it's entirely to suit the
+		if (!folio_test_lru(folio) && drain_allow) {
+line in collect_longterm_unpinnable_folios(). And it is attractive
+to associate the PG_lru with the unraised refcount.
+
+But I worry that it may not be to the benefit of others: for example,
+page reclaim's isolate_lru_folios() will no longer be able to isolate
+folios on the LRU while they're on an fbatch.  Which may be okay (in
+the dirty case, pageout() loses interest once it finds refcount raised,
+so nothing lost there), or might not be.
+
+It's good to try this, but please don't rush it in.
+Thanks,
+Hugh
