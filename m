@@ -1,82 +1,109 @@
-Received: from mx.astralinux.ru (mx.astralinux.ru [89.232.161.68])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C2E158862;
-	Fri, 12 Jul 2024 09:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.232.161.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA2B85C56;
+	Fri, 12 Jul 2024 09:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720778117; cv=none; b=qlOiMzpdQOKJxpuConhSvdDYIcPyx+CFBcOhLZROrSzVL3D6u5pVDkFfY7WzaG4uoq792qHAC97n0o3vbBuNcWcbLhv+lIynh4gWX9VtCft2H+ltLPMWqWe4mP37PrEBhZGIL03cPSHyzo1MZFdunsIXFFzTUWmi0BiS2cXdn5E=
+	t=1720778183; cv=none; b=pGpruw11q1hgswPhGWcud2pX6kt9+84uafaiJifZrqmu6wsYmIm+NB+IlLcFSgHAkK7yEYE/c39lfxORoEfNdoA7Y7zfyh3Jw2daCc8y7Vn/VZDXdLl8ExQtfVkj9Wj84sTQx+wghlcEOTRrfS1PwxPYAZS21ZoTglDP5YBPZKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720778117; c=relaxed/simple;
-	bh=iJgyElM1/pCaQWMPuPOElKf2CgYLrCM9dalPOtcCNOA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nchOfJMQC9CzRxe2eHcizdpdd3WKybbeyxCDG6T2NtKypvt0CbnjuOe2qvRLYysU0BnJ6xkS9v38RtJR2K7b9oBfXXSSoIujobQYTj7w9DGOwcT6x/rrGqiTPMYhfc1kaNxkUgaag3spClLusTEX3jh426R/1fhMqeZVL+grRzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=89.232.161.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from [10.177.185.111] (helo=new-mail.astralinux.ru)
-	by mx.astralinux.ru with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <adiupina@astralinux.ru>)
-	id 1sSBvU-000fCI-5b; Fri, 12 Jul 2024 11:46:48 +0300
-Received: from rbta-msk-lt-302690.astralinux.ru (unknown [10.177.232.141])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4WL4vz0csjz1c00g;
-	Fri, 12 Jul 2024 11:46:55 +0300 (MSK)
-From: Alexandra Diupina <adiupina@astralinux.ru>
-To: Xiaowei Song <songxiaowei@hisilicon.com>
-Cc: Alexandra Diupina <adiupina@astralinux.ru>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] PCI: kirin: Fix buffer overflow
-Date: Fri, 12 Jul 2024 11:43:09 +0300
-Message-Id: <20240712084309.13248-1-adiupina@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1720778183; c=relaxed/simple;
+	bh=tl6N0hu6dDW8dL4edLLnimfluXh5GhPNCtgrIxcUBRM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=IGFM5EO2vCC2T4VQZ9LLJxIYh7R9osQe7wdNADRbkbtRT39t/CFDGQ7Wnj7mkcdNTu/GlGAnhqLOKY9OX3sMbiLbvUfY+QM11bOt82nXvt3dKS8eIDURPeuyPOcqSpxs4+MEp9gFs7r94BWJt0OM/gSRzFdEnrZQI/DBQGv8IW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=dbR6Ekqj; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="dbR6Ekqj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720778130; x=1721382930; i=markus.elfring@web.de;
+	bh=qA8dZxx5ZAywJE0Ce/DvrSCgak1qKg/qBSRGPZMW8gA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=dbR6EkqjUFukvLWHaRUTvXDZ9Q3eh2KY+bnr9u0PzwHn8JOXU+2s/bLlAU0nLVe9
+	 QvAFPPlYMy/RuXwut44zlkSZ0xzBv5FeQ/LEAsLp2MhVjkOsM2IOGPAC7cAVr9dAK
+	 UoCMq5LMERNdaDq6vsLOJ97/1PV8FMtinIrSYNW+2IrFu7yKcIMjjUNLctBZ+Oq+1
+	 s9u4qmipSYoPLMlLpF1TZhPZG3T0NK7OU50HjWl4KEh9GysgmBCExnchvh92ppN2y
+	 y97jzSqZeZPemiVieJRZ6Idvuxf9PCEe40iY16M5rK6ST4TBgeoPke+jOfwk2+QwO
+	 INUGAEyvltYlVPOvQQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MiuSe-1rpYG625Ei-00aqKn; Fri, 12
+ Jul 2024 11:55:30 +0200
+Message-ID: <bb82eb1b-e284-45c4-b80f-7bdb65e0449d@web.de>
+Date: Fri, 12 Jul 2024 11:55:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: 0
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhgvgigrnhgurhgrucffihhuphhinhgruceorgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeduleetfeehffekueeuffektefgudfgffeutdefudfghedvieffheehleeuieehteenucffohhmrghinheplhhinhhugihtvghsthhinhhgrdhorhhgnecukfhppedutddrudejjedrvdefvddrudegudenucfrrghrrghmpehhvghloheprhgsthgrqdhmshhkqdhlthdqfedtvdeiledtrdgrshhtrhgrlhhinhhugidrrhhupdhinhgvthepuddtrddujeejrddvfedvrddugedumeehledtjeeipdhmrghilhhfrhhomheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehsohhnghigihgrohifvghisehhihhsihhlihgtohhnrdgtohhmpdhrtghpthhtoheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhrtghpthhtohepfigrnhhgsghinhhghhhuiheshhhishhilhhitghonhdrtghomhdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpdhrtghpth
- htohepkhifsehlihhnuhigrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhgnecuffhrrdghvggsucetnhhtihhsphgrmhemucenucfvrghgshem
-X-DrWeb-SpamVersion: Dr.Web Antispam 1.0.7.202406240#1720716691#02
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.65.05230, Virus records: 12048491, Updated: 2024-Jul-12 06:59:55 UTC]
+User-Agent: Mozilla Thunderbird
+To: Liu Ying <victor.liu@nxp.com>, imx@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
+ kernel@pengutronix.de
+Cc: LKML <linux-kernel@vger.kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+ Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
+ Francesco Dolcini <francesco@dolcini.it>, Frank Li <Frank.Li@nxp.com>,
+ =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Vinod Koul <vkoul@kernel.org>
+References: <20240712093243.2108456-10-victor.liu@nxp.com>
+Subject: Re: [PATCH v2 09/16] drm/imx: Add i.MX8qxp Display Controller KMS
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240712093243.2108456-10-victor.liu@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:x9ykM0EokxdM3FPtkxqlt9BWgSTGc7SN4QMfykDtXMfy4tE/R4V
+ VIutO0wDF9pNtFqDiB2Sw/ippBTdON8SV/JXiqxA1GNrH0RlaXK9gPs+v22H8lJRlDFrZYb
+ eg/WVdGIfHbFpD7NNh8SnaBSI5Qrdv4LCw8HoDuVRO4NyLTSmzQVpEiuQ4TQ84UTqmKKBCL
+ AksP3YqG6upl26uMsoG4Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:cmvPTZFViww=;IPRzr2aMIAI2Eacf50wbgoYbdk5
+ TOdtCR+2fvYykEtrSZrVUcSam1mZVyNtKhdnF4hk7dWgpdkejJ2bs+InkkcWWXphjw7vN7DZN
+ Aotcw8N015YTbepLD7+93uloalx9djgetGsf1ELc2534uxqcOtZeGcRJt5UfmZNWBbXbnAyka
+ geAXRUXxnHONW0Kic+v1ohsrzvxZFcqvTgXD0vXrsxE4hSme/yzlfAXSOaIVS/elAMIFvGC6A
+ QzO0IKkcQrXxur/LyOfiv5zmDZJ6t2tYH9W1o7eE8TExFzFVL7g+NzoDOGkFhtG2LFGogPd4U
+ IZ9r4lU84oKckhcj+FPv3ezk2tYrXTo4om2BxH6cqdB/LeExUZ6Q1qiDX3b3j38pW4fo+kJlj
+ GJtyxvFEwOjFcXOaBsWsFSnUF/Dde4bKFsq5qPjrOzINVBc2xtbdKASuWr4MCxWDFr/DGggof
+ +gUR701hj3xIQB8W4YYecYyynry81nAMDZ93ePD6h08My9PEAewu/jSgZumsa1NthBYX0aKEe
+ f1A2WDyeclq67htJ4zOPjtq6SL5vzQT8S6NTIQjSUkEVEVEDAeAMyGzfM97lUxgK9op2adFJp
+ yBYYzn033Rxe82PAImS+59rZ1HQCSfkqZVIpvaCKC3gbIoVyk0sASyUB0deNpejYtZSmvO+S8
+ aaWSd8ckIIwyqtJ0o2jCDyqdRUk17b//UpHyGdVM5NTyE9Od2sJkCO7EPcPg1ZHs9i/dr9kn1
+ gkhTdVRhOUtL7HSlfgLYblcS5DrolohfLnnEDDke/+St7e2CBw5M6yc+0CttQ7AvQSlHqdwwk
+ CvIIwV8Mh+WKgvGJ80U/In0g==
 
-In kirin_pcie_parse_port() pcie->num_slots is compared to
-pcie->gpio_id_reset size (MAX_PCI_SLOTS). Need to fix
-condition to pcie->num_slots >= MAX_PCI_SLOTS to
-avoid out of bounds array access.
+=E2=80=A6
+> +++ b/drivers/gpu/drm/imx/dc/dc-crtc.c
+> @@ -0,0 +1,578 @@
+=E2=80=A6
+> +static void dc_crtc_queue_state_event(struct drm_crtc_state *crtc_state=
+)
+> +{tglx@linutronix.de
+=E2=80=A6
+> +	spin_lock_irq(&crtc->dev->event_lock);
+> +	if (crtc_state->event) {
+=E2=80=A6
+> +	}
+> +	spin_unlock_irq(&crtc->dev->event_lock);
+> +}
+=E2=80=A6
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(spinlock_irq)(&crtc->dev->event_lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.10-rc7/source/include/linux/spinlock.h=
+#L567
 
-Fixes: b22dbbb24571 ("PCI: kirin: Support PERST# GPIOs for HiKey970 external PEX 8606 bridge")
-Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
----
- drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index d5523f302102..5ef3384c137d 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -413,7 +413,7 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
- 				continue;
- 
- 			pcie->num_slots++;
--			if (pcie->num_slots > MAX_PCI_SLOTS) {
-+			if (pcie->num_slots >= MAX_PCI_SLOTS) {
- 				dev_err(dev, "Too many PCI slots!\n");
- 				ret = -EINVAL;
- 				goto put_node;
--- 
-2.30.2
-
+Regards,
+Markus
