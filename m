@@ -1,123 +1,103 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE85114F132
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4EB14A4C8
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720778106; cv=none; b=jW9SC7oZg9Zg+/Q5hlBJQr2MA546UpiKzTy41KkMG0kWGGjdDurNTILBa039AqQSCPH3+s/juoPK9twIJfeBwJDw1Vh1wKdXR/8ZP7kWxAH9Nm3cef2td27QnWjyEC1o95gxd9PU79EUfLyIkuHrPUiqRMfaSka3n059PUPYtFw=
+	t=1720778113; cv=none; b=tj6Fgg/UABLNLXOFOY9B09CS2+2e//qsRR8vNr/14XsEX/eIRQojTeKPLNe3DQg4X6Ku8pA+Ip0PD40z4MftaauhGVFKMhkdt+ihJJkFzavo/A9WWq1dQGetQSXZnf6QJRr8lWl0WlX72ND16zv/sv0PK+50rIoTug+YNWP/UxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720778106; c=relaxed/simple;
-	bh=BKoJFwAmycB7Kma4J/9n0dCdGo15MiIP+EskSWqagKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GZ3SAl1VAloIltvMSlOELcSZciffc2MTK188Uil0sLTyRQFsqR8nEE978o2PLu6lEJwmfv44m1t4W4N2CahssP9br/rbOgDUBvTnt0AwFNa5r9A5R415udUFUYfZogqjta3gvPbdeRK2SzIz4UE5s9vtCEBmHcDmLsxbZRNMFxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=UltaTzy0; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1720778113; c=relaxed/simple;
+	bh=VHgWyoWjIKaO1gLhmwyqxCG0NgL1aQmum5wsVrDPiiE=;
+	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:References:
+	 In-Reply-To; b=k7vntSGtCnmofk1YSfjo3SwvGRKOT7P3OtXHRQ0GmqolRbsjlFeXTZ4q1AoiB7hxRVqXZSrPfBYOra+C0qAESt0pqu2Y5WfK2N5gyuP+eDLaWx6BzX36FjS2JL8+iVO3U6sj1LR9XYhms1IE8tOIp5qes1N0ThTznnv4MUvfM2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZecFFwwt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="UltaTzy0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=xQaGUFxI3F9bIC
-	0Je/JYNWxB96sa3rnzDYmiL5jgjgk=; b=UltaTzy0hvYwLJ0qoR6z2j8fk7Rcz6
-	jTfDIa9dBX/FgFGKg66+2r6i/qrdgANRyCQVAEMwgjeKYlvg+DItt4wm9OjUSRg5
-	NabgnPUZSM2MHPFJW8UXC23kxfRGiEjTsn9iK5b7ABzQpoB7eUNr0SOKhUxnRAjx
-	ucCStDEDpjZ/zR78BMAqyx88q8+53Sd7P/eDlC3H5A32FyzeyJoIvE3hpcIGXvYs
-	+fuLqOqILwWtW43iB5G1j6BTVVSnbcBo4id/bkDmg98MxkNWebGMdq14HguOIQe5
-	6Vynv5s4XDahMeAjrPcuft2Z6iP0Df8OCYyOp6ZrYW2D108ODyOfvu8w==
-Received: (qmail 1114581 invoked from network); 12 Jul 2024 11:54:59 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jul 2024 11:54:59 +0200
-X-UD-Smtp-Session: l3s3148p1@jbJP3wkdeKIgAwDPXwmZAIsFIv4n+Dpm
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-i2c@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: document new callbacks in i2c_algorithm
-Date: Fri, 12 Jul 2024 11:52:40 +0200
-Message-ID: <20240712095453.11440-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZecFFwwt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3E2C32786;
+	Fri, 12 Jul 2024 09:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720778112;
+	bh=VHgWyoWjIKaO1gLhmwyqxCG0NgL1aQmum5wsVrDPiiE=;
+	h=Date:Cc:From:To:Subject:References:In-Reply-To:From;
+	b=ZecFFwwtAOOh80u9qYekts6l8YtCdGU8XuUm+MNK8HHev1vlPyexWEISjh0+hvUBG
+	 1ayBH6kTc2hC/9xkViVT/C1PqnzHi4riccGduaeyeSKvkwWNNyNK1vXVteWzbt1xzR
+	 VeMkpwkv5WclR9EqxIEq7y2n9nPq+Xh43YnebkzySOHBlCgYKLuHkqvP2E749NDGXz
+	 tq0rfl7Fx9l0cwnOpwuMqjdhzkozLhZrEtSB6L3qszO87Ax1ukfa1qPYxR5xtR3R2g
+	 8bgkzOCE0NwnVv6RLOhJWzXfNLbJbLBUOLv/Rb3Obak1Miezs+gsvrjIzqsi7SrFvn
+	 ahkJeQYZ4mzpA==
+Content-Type: multipart/signed;
+ boundary=aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Fri, 12 Jul 2024 11:55:08 +0200
+Message-Id: <D2NGXHZ2VTK0.M0AOB4CM7MHM@kernel.org>
+Cc: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Rasmus
+ Villemoes" <rasmus.villemoes@prevas.dk>,
+ <linux-arm-kernel@lists.infradead.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Esben Haabendal" <esben@geanix.com>, "Tudor Ambarus"
+ <tudor.ambarus@linaro.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Miquel
+ Raynal" <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>, "Nicolas Ferre"
+ <nicolas.ferre@microchip.com>, "Alexandre Belloni"
+ <alexandre.belloni@bootlin.com>, "Claudiu Beznea"
+ <claudiu.beznea@tuxon.dev>
+Subject: Re: [PATCH v3 00/15] mtd: spi-nor: macronix: workaround for device
+ id re-use
+X-Mailer: aerc 0.16.0
+References: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
+In-Reply-To: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When updating the callbacks, adding their kernel-doc was forgotten. Add
-it now.
+--aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/r/20240712165527.75e4ddc9@canb.auug.org.au
-Fixes: a93c2e5fe766 ("i2c: reword i2c_algorithm according to newest specification")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
+Hi,
 
-Andi, this is the minimal fix for the the regression reported by
-Stephen. Please apply it on top of the rewording series. There will be
-more fixes in this paragraph but these should go better via my tree, I
-guess, after I pulled yours.
+On Thu Jul 11, 2024 at 3:00 PM CEST, Esben Haabendal wrote:
+> As a consequence, the SPI_NOR_SKIP_SFDP flag is no more, and all
+> drivers that have been doing optional SFDP is now marked explicitly to
+> do that using the SPI_NOR_TRY_SFDP.
 
- include/linux/i2c.h | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+First, I haven't looked at your patchset at the moment. But I'd like
+to take the opportunity to discuss the following (and excuse me that
+I didn't had this idea before all your work on this).
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 9d45b7b912dd..e9cc14b1f9a1 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -513,10 +513,10 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
- 
- /**
-  * struct i2c_algorithm - represent I2C transfer method
-- * @master_xfer: Issue a set of i2c transactions to the given I2C adapter
-+ * @xfer: Issue a set of i2c transactions to the given I2C adapter
-  *   defined by the msgs array, with num messages available to transfer via
-  *   the adapter specified by adap.
-- * @master_xfer_atomic: same as @master_xfer. Yet, only using atomic context
-+ * @xfer_atomic: same as @xfer. Yet, only using atomic context
-  *   so e.g. PMICs can be accessed very late before shutdown. Optional.
-  * @smbus_xfer: Issue smbus transactions to the given I2C adapter. If this
-  *   is not present, then the bus layer will try and convert the SMBus calls
-@@ -525,27 +525,33 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
-  *   so e.g. PMICs can be accessed very late before shutdown. Optional.
-  * @functionality: Return the flags that this algorithm/adapter pair supports
-  *   from the ``I2C_FUNC_*`` flags.
-- * @reg_slave: Register given client to I2C slave mode of this adapter
-- * @unreg_slave: Unregister given client from I2C slave mode of this adapter
-+ * @reg_target: Register given client to local target mode of this adapter
-+ * @unreg_target: Unregister given client from local target mode of this adapter
-+ *
-+ * @master_xfer: deprecated, use @xfer
-+ * @master_xfer_atomic: deprecated, use @xfer_atomic
-+ * @reg_slave: deprecated, use @reg_target
-+ * @unreg_slave: deprecated, use @unreg_target
-+ *
-  *
-  * The following structs are for those who like to implement new bus drivers:
-  * i2c_algorithm is the interface to a class of hardware solutions which can
-  * be addressed using the same bus algorithms - i.e. bit-banging or the PCF8584
-  * to name two of the most common.
-  *
-- * The return codes from the ``master_xfer{_atomic}`` fields should indicate the
-+ * The return codes from the ``xfer{_atomic}`` fields should indicate the
-  * type of error code that occurred during the transfer, as documented in the
-  * Kernel Documentation file Documentation/i2c/fault-codes.rst. Otherwise, the
-  * number of messages executed should be returned.
-  */
- struct i2c_algorithm {
- 	/*
--	 * If an adapter algorithm can't do I2C-level access, set master_xfer
-+	 * If an adapter algorithm can't do I2C-level access, set xfer
- 	 * to NULL. If an adapter algorithm can do SMBus access, set
- 	 * smbus_xfer. If set to NULL, the SMBus protocol is simulated
- 	 * using common I2C messages.
- 	 *
--	 * master_xfer should return the number of messages successfully
-+	 * xfer should return the number of messages successfully
- 	 * processed, or a negative value on error
- 	 */
- 	union {
--- 
-2.43.0
+First, I'd like to see it the other way around, that is, doing SFDP
+by default and let the driver opt-out instead of opt-in. This will
+also align with the current "SFDP only driver", i.e. if a flash is
+not known we try SFDP anyway. Going forward, I'd say this is also
+the sane behavior and we don't have to add any flags if someone want
+to add support for an (older) flash with the same ID but without
+SFDP. With the current approach, we'd have to add the TRY_SFDP flag.
 
+Now we might play it safe and add that SPI_NOR_SKIP_SFDP to any
+flash which doesn't do the SFDP parsing (because it has size !=3D 0
+and not any of the magic flags set) - or we might just go ahead and
+do the probing first for *any* flashes. Yes we might issue an
+unsupported opcode, but we already do that with the generic SFDP
+flash driver. So no big deal maybe (?). Vendors where we know for a
+fact that they don't have any SFDP (Everspin I'm looking at you),
+would of course set the SKIP_SFDP flag.
+
+-michael
+
+--aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZpD9fRIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/gW0QF/aA10t5iors/5JcBokw9E47uTSzUvxCoi
+NSOzc/Px3FUg1ZGuj0lS82ccJeCIbR69AX4gt2bRjp5TWDp7clxAH0mAE0UWreMw
+ZHmZ6GClSkkuvrktzl8GLR5tFulIDA5Xabo=
+=LhXX
+-----END PGP SIGNATURE-----
+
+--aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686--
