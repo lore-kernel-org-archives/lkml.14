@@ -1,55 +1,55 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704C9178360;
-	Fri, 12 Jul 2024 17:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E7417798F;
+	Fri, 12 Jul 2024 17:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720806949; cv=none; b=dBInTWesRZm/25i4+K4vOzwQ6RRgoaquNlLUtkfvCpUi5cH7JPjCUFnmkqXudSPfAVgAJGxglc+KUMwNhr4XrL7MrZHGjseyd2d5NvXM/tVIiMM0ZkTNHwGKSFQEYKqNV8TO57Ibhd6MCmeSLAOMZt78VYCclTWTvjGYtz68h3I=
+	t=1720806951; cv=none; b=JskQwMQlqkbRQ+fZAv6ADgWCV2uF3gOaSHSXJ5I1Llqrm+Y4/gbw7HEXZJzvY6rLIcntr8T6itYzUJIwvIG6HR3VzAp3g7LeEzkydfde2bS2cSjhk4wCAqfEEJkAHcqVEUiofdWERoefnvvXVXvNnDyvVvswGUg660NAJrEKXoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720806949; c=relaxed/simple;
-	bh=ZrGuylYZL5r0EHyuJ+QIVnMjVBx6kGv4inSolAZMQf0=;
+	s=arc-20240116; t=1720806951; c=relaxed/simple;
+	bh=JWDxtIIFsMTGvONofJ08gEV7+Adqo+yzbkNuJPnzKIQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fWjElDWyYpO3M7lGbISR/3efwI5bj3W+nfAte+BzGEfjwqoiEooIvGWLTZji8uRE6cvtxyYTUxWwGaX58fNrfpD7eTFQWNIaVMW4tpXS/EDsXonIoCjSHgOPgR54oblOvUyMK6O2d1U0u78UAz6B5+DH+Yh6dFY/wnC90mQpXBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=HsInQFD7; arc=none smtp.client-ip=67.231.148.174
+	 MIME-Version:Content-Type; b=mDtyQngHwuo6dsWfjR/h54hbxdzXqn8ivRFwZ5hdVrTTWVcOuNEKqx5OGOotF9R8pG0aROtT6NPYLIR072uG5XCxS1G+W1/m1dOZYgQa8+5mZ2VM0V+05OAAqj+biZCZQij3dimiEMrZZ6cieWghB67IfluPhpK0sfiGtXIo4ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=POzNK1MV; arc=none smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="HsInQFD7"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46C9JDUa026705;
-	Fri, 12 Jul 2024 10:55:36 -0700
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="POzNK1MV"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CDhMmo012540;
+	Fri, 12 Jul 2024 10:55:43 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=znVGa+L5x8Y9Ij1gI9CN4aRei
-	MZKW1FBqsp7anO+Ea0=; b=HsInQFD7WvEOr5BBO7we+3PbEZY4qZTwTIMpSnhwo
-	9Av5NxP/dtp6+8iEpvpQXpbNXdSPZ+5ovpV12HsuQR0TDgUzQpekLKtMMSW5GkYY
-	vDudBcHmT93soHlGaSh3NwAoZhfafyc/dJbc9XdgmwCqNrOz6Pn3QKqEU/PyUG/c
-	mN7ed7LEAaNLDsq0+YGeILSyLFDiDeDpEQjSe2YwsPcGSoVwhu+P1D+B7ryozPIh
-	FmT8ycujpBsrkdM66bzmCsgfMPvqjEcZ8bSZoAQkJDM6i84bjx0zaA+HWj4cNhna
-	D299jXvyHSNf02Uqmoy/bXBSKlJxj/8jhrd5g1/YVW3zg==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 40b1rgsm3r-1
+	:references:subject:to; s=pfpt0220; bh=NyQt9MUCC7SGPDN9c7fSHTBWW
+	hum4Np31X9m6KhKLz0=; b=POzNK1MVZd387eDIjDpaLc/mgS3tKdSYJOOLKldYH
+	oWvXcaC8bSGOhbu19eyvIUdZaT6m3w9QiOMz/+tFKbTH/7LujcCcO9qquGbGgx+r
+	5/6TUs3AF0zrdLNHyslBd2xGxqhfoqdOOFZ0HFW4I4KKs+Kjan0udBAB1Qdn04f2
+	7BC0i85tyObyfjiQxdspcDT6M3was7JAXlGHafjAz9Q7mvhrSTSh7tJiz0JojgHa
+	W/drpWflNMnFS8jnIPrveAqtOuD0UbF15AUkW+wHm5VsZG1tqnLdjlhzoz/WRLCs
+	7zlDEAJDrW6uZSuNN4jpBzDqSkGDpIuKEvUR2nSW5XMyg==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 40b5m68wps-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jul 2024 10:55:36 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+	Fri, 12 Jul 2024 10:55:43 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 12 Jul 2024 10:55:35 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 12 Jul 2024 10:55:34 -0700
+ 15.2.1544.4; Fri, 12 Jul 2024 10:55:41 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Fri, 12 Jul 2024 10:55:41 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id C07BF3F70A1;
-	Fri, 12 Jul 2024 10:55:31 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id C51BC3F70A1;
+	Fri, 12 Jul 2024 10:55:38 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
         <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
         <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [net-next PATCH v9 03/11] octeontx2-pf: Create representor netdev
-Date: Fri, 12 Jul 2024 23:25:12 +0530
-Message-ID: <20240712175520.7013-4-gakula@marvell.com>
+Subject: [net-next PATCH v9 05/11] octeontx2-af: Add packet path between representor and VF
+Date: Fri, 12 Jul 2024 23:25:14 +0530
+Message-ID: <20240712175520.7013-6-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240712175520.7013-1-gakula@marvell.com>
 References: <20240712175520.7013-1-gakula@marvell.com>
@@ -60,389 +60,516 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: U91pffqTru4XxLq1Nke4XCuNPt8XVcHN
-X-Proofpoint-GUID: U91pffqTru4XxLq1Nke4XCuNPt8XVcHN
+X-Proofpoint-GUID: UfFg9RxDNrDSEO9Kj_QZ_BW4RE_rXL8N
+X-Proofpoint-ORIG-GUID: UfFg9RxDNrDSEO9Kj_QZ_BW4RE_rXL8N
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-12_13,2024-07-11_01,2024-05-17_01
 
-Adds initial devlink support to set/get the switchdev mode.
-Representor netdevs are created for each rvu devices when
-the switch mode is set to 'switchdev'. These netdevs are
-be used to control and configure VFs.
+Current HW, do not support in-built switch which will forward pkts
+between representee and representor. When representor is put under
+a bridge and pkts needs to be sent to representee, then pkts from
+representor are sent on a HW internal loopback channel, which again
+will be punted to ingress pkt parser. Now the rules that this patch
+installs are the MCAM filters/rules which will match against these
+pkts and forward them to representee.
+The rules that this patch installs are for basic
+representor <=> representee path similar to Tun/TAP between VM and
+Host.
 
 Signed-off-by: Geetha sowjanya <gakula@marvell.com>
 Reviewed-by: Simon Horman <horms@kernel.org>
 ---
- .../ethernet/marvell/octeontx2.rst            |  85 +++++++++
- .../marvell/octeontx2/nic/otx2_devlink.c      |  49 ++++++
- .../net/ethernet/marvell/octeontx2/nic/rep.c  | 165 ++++++++++++++++++
- .../net/ethernet/marvell/octeontx2/nic/rep.h  |   3 +
- 4 files changed, 302 insertions(+)
+ .../net/ethernet/marvell/octeontx2/af/mbox.h  |   7 +
+ .../net/ethernet/marvell/octeontx2/af/rvu.h   |   7 +-
+ .../marvell/octeontx2/af/rvu_devlink.c        |   6 +
+ .../ethernet/marvell/octeontx2/af/rvu_nix.c   |   7 +-
+ .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 247 ++++++++++++++++++
+ .../marvell/octeontx2/af/rvu_switch.c         |  18 +-
+ .../net/ethernet/marvell/octeontx2/nic/rep.c  |  18 ++
+ 7 files changed, 303 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst b/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst
-index 1e196cb9ce25..e6845ef4e320 100644
---- a/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst
-+++ b/Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst
-@@ -14,6 +14,7 @@ Contents
- - `Basic packet flow`_
- - `Devlink health reporters`_
- - `Quality of service`_
-+- `RVU representors`_
- 
- Overview
- ========
-@@ -340,3 +341,87 @@ Setup HTB offload
-         # tc class add dev <interface> parent 1: classid 1:2 htb rate 10Gbit prio 2 quantum 188416
- 
-         # tc class add dev <interface> parent 1: classid 1:3 htb rate 10Gbit prio 2 quantum 32768
-+
-+
-+RVU Representors
-+================
-+
-+RVU representor driver adds support for creation of representor devices for
-+RVU PFs' VFs in the system. Representor devices are created when user enables
-+the switchdev mode.
-+Switchdev mode can be enabled either before or after setting up SRIOV numVFs.
-+All representor devices share a single NIXLF but each has a dedicated queue
-+(ie RQ/SQ. RVU PF representor driver registers a separate netdev for each
-+RQ/SQ queue pair.
-+
-+HW doesn't have a in-built switch which can do L2 learning and forward pkts
-+between representee and representor. Hence packet patch between representee
-+and it's representor is achieved by setting up appropriate NPC MCAM filters.
-+Transmit packets matching these filters will be loopbacked through hardware
-+loopback channel/interface (ie instead of sending them out of MAC interface).
-+Which will again match the installed filters and will be forwarded.
-+This way representee => representor and representor => representee packet
-+path is achieved.These rules get installed when representors are created
-+and gets active/deactivate based on the representor/representee interface state.
-+
-+Usage example:
-+
-+ - List of devices on the system before vfs are created::
-+
-+	# devlink dev
-+	pci/0002:02:00.0
-+	pci/0002:1c:00.0
-+
-+- Change device to switchdev mode::
-+	# devlink dev eswitch set pci/0002:1c:00.0 mode switchdev
-+
-+ - List the devices on the system::
-+
-+	# ip link show
-+
-+Sample output::
-+
-+	# ip link show
-+	eth0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether 7e:58:2d:b6:97:51 brd ff:ff:ff:ff:ff:ff
-+	r0p1v0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether 7e:5a:66:ea:fe:d6 brd ff:ff:ff:ff:ff:ff
-+	r1p1v1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether de:29:be:10:9e:bf brd ff:ff:ff:ff:ff:ff
-+	r2p1v2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether 4a:12:c7:a2:66:ad brd ff:ff:ff:ff:ff:ff
-+	r3p1v3: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether c2:b8:a8:0e:73:fd brd ff:ff:ff:ff:ff:ff
-+
-+
-+RVU representors can be managed using devlink ports
-+(see :ref:`Documentation/networking/devlink/devlink-port.rst <devlink_port>`) interface.
-+
-+ - Show devlink ports of representors::
-+
-+	# devlink port
-+
-+Sample output::
-+
-+	pci/0002:1c:00.0/0: type eth netdev r0p1v0 flavour pcipf controller 0 pfnum 1 vfnum 0 external false splittable false
-+	pci/0002:1c:00.0/1: type eth netdev r1p1v1 flavour pcivf controller 0 pfnum 1 vfnum 1 external false splittable false
-+	pci/0002:1c:00.0/2: type eth netdev r2p1v2 flavour pcivf controller 0 pfnum 1 vfnum 2 external false splittable false
-+	pci/0002:1c:00.0/3: type eth netdev r3p1v3 flavour pcivf controller 0 pfnum 1 vfnum 3 external false splittable false
-+
-+Function attributes
-+===================
-+
-+The RVU representor support function attributes for representors
-+Port function configuration of the representors are supported through devlink eswitch port.
-+
-+MAC address setup
-+-----------------
-+
-+RVU representor driver support devlink port function attr mechanism to setup MAC
-+address. (refer to Documentation/networking/devlink/devlink-port.rst)
-+
-+ - To setup MAC address for port 2::
-+
-+$ devlink port function set  pci/0002:1c:00.0/2 hw_addr 5c:a1:1b:5e:43:11 state active
-+
-+
-+To remove the representors from the system. Change the device to legacy mode.
-+
-+ - Change device to legacy mode::
-+
-+	# devlink dev eswitch set pci/0002:1c:00.0 mode legacy
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
-index 53f14aa944bd..33ec9a7f7c03 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
-@@ -141,7 +141,56 @@ static const struct devlink_param otx2_dl_params[] = {
- 			     otx2_dl_ucast_flt_cnt_validate),
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
+index 7e99c983a353..95f849685353 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
+@@ -146,6 +146,7 @@ M(LMTST_TBL_SETUP,	0x00a, lmtst_tbl_setup, lmtst_tbl_setup_req,    \
+ M(SET_VF_PERM,		0x00b, set_vf_perm, set_vf_perm, msg_rsp)	\
+ M(PTP_GET_CAP,		0x00c, ptp_get_cap, msg_req, ptp_get_cap_rsp)	\
+ M(GET_REP_CNT,		0x00d, get_rep_cnt, msg_req, get_rep_cnt_rsp)	\
++M(ESW_CFG,		0x00e, esw_cfg, esw_cfg_req, msg_rsp)	\
+ /* CGX mbox IDs (range 0x200 - 0x3FF) */				\
+ M(CGX_START_RXTX,	0x200, cgx_start_rxtx, msg_req, msg_rsp)	\
+ M(CGX_STOP_RXTX,	0x201, cgx_stop_rxtx, msg_req, msg_rsp)		\
+@@ -1534,6 +1535,12 @@ struct get_rep_cnt_rsp {
+ 	u64 rsvd;
  };
  
-+#ifdef CONFIG_RVU_ESWITCH
-+static int otx2_devlink_eswitch_mode_get(struct devlink *devlink, u16 *mode)
-+{
-+	struct otx2_devlink *otx2_dl = devlink_priv(devlink);
-+	struct otx2_nic *pfvf = otx2_dl->pfvf;
++struct esw_cfg_req {
++	struct mbox_msghdr hdr;
++	u8 ena;
++	u64 rsvd;
++};
 +
-+	if (!otx2_rep_dev(pfvf->pdev))
+ struct flow_msg {
+ 	unsigned char dmac[6];
+ 	unsigned char smac[6];
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
+index 562c6f7e73da..776dd92910f0 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
+@@ -597,6 +597,7 @@ struct rvu {
+ 	u16			rep_pcifunc;
+ 	int			rep_cnt;
+ 	u16			*rep2pfvf_map;
++	u8			rep_mode;
+ };
+ 
+ static inline void rvu_write64(struct rvu *rvu, u64 block, u64 offset, u64 val)
+@@ -1027,7 +1028,7 @@ int rvu_ndc_fix_locked_cacheline(struct rvu *rvu, int blkaddr);
+ /* RVU Switch */
+ void rvu_switch_enable(struct rvu *rvu);
+ void rvu_switch_disable(struct rvu *rvu);
+-void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc);
++void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc, bool ena);
+ void rvu_switch_enable_lbk_link(struct rvu *rvu, u16 pcifunc, bool ena);
+ 
+ int rvu_npc_set_parse_mode(struct rvu *rvu, u16 pcifunc, u64 mode, u8 dir,
+@@ -1041,4 +1042,8 @@ int rvu_mcs_flr_handler(struct rvu *rvu, u16 pcifunc);
+ void rvu_mcs_ptp_cfg(struct rvu *rvu, u8 rpm_id, u8 lmac_id, bool ena);
+ void rvu_mcs_exit(struct rvu *rvu);
+ 
++/* Representor APIs */
++int rvu_rep_pf_init(struct rvu *rvu);
++int rvu_rep_install_mcam_rules(struct rvu *rvu);
++void rvu_rep_update_rules(struct rvu *rvu, u16 pcifunc, bool ena);
+ #endif /* RVU_H */
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
+index 7498ab429963..4d29c509ef6b 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
+@@ -1468,6 +1468,9 @@ static int rvu_devlink_eswitch_mode_get(struct devlink *devlink, u16 *mode)
+ 	struct rvu *rvu = rvu_dl->rvu;
+ 	struct rvu_switch *rswitch;
+ 
++	if (rvu->rep_mode)
 +		return -EOPNOTSUPP;
 +
-+	*mode = pfvf->esw_mode;
+ 	rswitch = &rvu->rswitch;
+ 	*mode = rswitch->mode;
+ 
+@@ -1481,6 +1484,9 @@ static int rvu_devlink_eswitch_mode_set(struct devlink *devlink, u16 mode,
+ 	struct rvu *rvu = rvu_dl->rvu;
+ 	struct rvu_switch *rswitch;
+ 
++	if (rvu->rep_mode)
++		return -EOPNOTSUPP;
++
+ 	rswitch = &rvu->rswitch;
+ 	switch (mode) {
+ 	case DEVLINK_ESWITCH_MODE_LEGACY:
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+index 126941ae0f77..5b3e4e59afcb 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+@@ -2741,7 +2741,7 @@ void rvu_nix_tx_tl2_cfg(struct rvu *rvu, int blkaddr, u16 pcifunc,
+ 	int schq;
+ 	u64 cfg;
+ 
+-	if (!is_pf_cgxmapped(rvu, pf))
++	if (!is_pf_cgxmapped(rvu, pf) && !is_rep_dev(rvu, pcifunc))
+ 		return;
+ 
+ 	cfg = enable ? (BIT_ULL(12) | RVU_SWITCH_LBK_CHAN) : 0;
+@@ -4372,8 +4372,6 @@ int rvu_mbox_handler_nix_set_mac_addr(struct rvu *rvu,
+ 	if (test_bit(PF_SET_VF_TRUSTED, &pfvf->flags) && from_vf)
+ 		ether_addr_copy(pfvf->default_mac, req->mac_addr);
+ 
+-	rvu_switch_update_rules(rvu, pcifunc);
+-
+ 	return 0;
+ }
+ 
+@@ -5165,7 +5163,7 @@ int rvu_mbox_handler_nix_lf_start_rx(struct rvu *rvu, struct msg_req *req,
+ 	pfvf = rvu_get_pfvf(rvu, pcifunc);
+ 	set_bit(NIXLF_INITIALIZED, &pfvf->flags);
+ 
+-	rvu_switch_update_rules(rvu, pcifunc);
++	rvu_switch_update_rules(rvu, pcifunc, true);
+ 
+ 	return rvu_cgx_start_stop_io(rvu, pcifunc, true);
+ }
+@@ -5193,6 +5191,7 @@ int rvu_mbox_handler_nix_lf_stop_rx(struct rvu *rvu, struct msg_req *req,
+ 	if (err)
+ 		return err;
+ 
++	rvu_switch_update_rules(rvu, pcifunc, false);
+ 	rvu_cgx_tx_enable(rvu, pcifunc, true);
+ 
+ 	return 0;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
+index cf13c5f0a3c5..5f2e2cbd165a 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
+@@ -13,6 +13,253 @@
+ #include "rvu.h"
+ #include "rvu_reg.h"
+ 
++static u16 rvu_rep_get_vlan_id(struct rvu *rvu, u16 pcifunc)
++{
++	int id;
++
++	for (id = 0; id < rvu->rep_cnt; id++)
++		if (rvu->rep2pfvf_map[id] == pcifunc)
++			return id;
++	return 0;
++}
++
++static int rvu_rep_tx_vlan_cfg(struct rvu *rvu,  u16 pcifunc,
++			       u16 vlan_tci, int *vidx)
++{
++	struct nix_vtag_config_rsp rsp = {};
++	struct nix_vtag_config req = {};
++	u64 etype = ETH_P_8021Q;
++	int err;
++
++	/* Insert vlan tag */
++	req.hdr.pcifunc = pcifunc;
++	req.vtag_size = VTAGSIZE_T4;
++	req.cfg_type = 0; /* tx vlan cfg */
++	req.tx.cfg_vtag0 = true;
++	req.tx.vtag0 = FIELD_PREP(NIX_VLAN_ETYPE_MASK, etype) | vlan_tci;
++
++	err = rvu_mbox_handler_nix_vtag_cfg(rvu, &req, &rsp);
++	if (err) {
++		dev_err(rvu->dev, "Tx vlan config failed\n");
++		return err;
++	}
++	*vidx = rsp.vtag0_idx;
++	return 0;
++}
++
++static int rvu_rep_rx_vlan_cfg(struct rvu *rvu, u16 pcifunc)
++{
++	struct nix_vtag_config req = {};
++	struct nix_vtag_config_rsp rsp;
++
++	/* config strip, capture and size */
++	req.hdr.pcifunc = pcifunc;
++	req.vtag_size = VTAGSIZE_T4;
++	req.cfg_type = 1; /* rx vlan cfg */
++	req.rx.vtag_type = NIX_AF_LFX_RX_VTAG_TYPE0;
++	req.rx.strip_vtag = true;
++	req.rx.capture_vtag = false;
++
++	return rvu_mbox_handler_nix_vtag_cfg(rvu, &req, &rsp);
++}
++
++static int rvu_rep_install_rx_rule(struct rvu *rvu, u16 pcifunc,
++				   u16 entry, bool rte)
++{
++	struct npc_install_flow_req req = {};
++	struct npc_install_flow_rsp rsp = {};
++	struct rvu_pfvf *pfvf;
++	u16 vlan_tci, rep_id;
++
++	pfvf = rvu_get_pfvf(rvu, pcifunc);
++
++	/* To steer the traffic from Representee to Representor */
++	rep_id = rvu_rep_get_vlan_id(rvu, pcifunc);
++	if (rte) {
++		vlan_tci = rep_id | BIT_ULL(8);
++		req.vf = rvu->rep_pcifunc;
++		req.op = NIX_RX_ACTIONOP_UCAST;
++		req.index = rep_id;
++	} else {
++		vlan_tci = rep_id;
++		req.vf = pcifunc;
++		req.op = NIX_RX_ACTION_DEFAULT;
++	}
++
++	rvu_rep_rx_vlan_cfg(rvu, req.vf);
++	req.entry = entry;
++	req.hdr.pcifunc = 0; /* AF is requester */
++	req.features = BIT_ULL(NPC_OUTER_VID) | BIT_ULL(NPC_VLAN_ETYPE_CTAG);
++	req.vtag0_valid = true;
++	req.vtag0_type = NIX_AF_LFX_RX_VTAG_TYPE0;
++	req.packet.vlan_etype = cpu_to_be16(ETH_P_8021Q);
++	req.mask.vlan_etype = cpu_to_be16(ETH_P_8021Q);
++	req.packet.vlan_tci = cpu_to_be16(vlan_tci);
++	req.mask.vlan_tci = cpu_to_be16(0xffff);
++
++	req.channel = RVU_SWITCH_LBK_CHAN;
++	req.chan_mask = 0xffff;
++	req.intf = pfvf->nix_rx_intf;
++
++	return rvu_mbox_handler_npc_install_flow(rvu, &req, &rsp);
++}
++
++static int rvu_rep_install_tx_rule(struct rvu *rvu, u16 pcifunc, u16 entry,
++				   bool rte)
++{
++	struct npc_install_flow_req req = {};
++	struct npc_install_flow_rsp rsp = {};
++	struct rvu_pfvf *pfvf;
++	int vidx, err;
++	u16 vlan_tci;
++	u8 lbkid;
++
++	pfvf = rvu_get_pfvf(rvu, pcifunc);
++	vlan_tci = rvu_rep_get_vlan_id(rvu, pcifunc);
++	if (rte)
++		vlan_tci |= BIT_ULL(8);
++
++	err = rvu_rep_tx_vlan_cfg(rvu, pcifunc, vlan_tci, &vidx);
++	if (err)
++		return err;
++
++	lbkid = pfvf->nix_blkaddr == BLKADDR_NIX0 ? 0 : 1;
++	req.hdr.pcifunc = 0; /* AF is requester */
++	if (rte) {
++		req.vf = pcifunc;
++	} else {
++		req.vf = rvu->rep_pcifunc;
++		req.packet.sq_id = vlan_tci;
++		req.mask.sq_id = 0xffff;
++	}
++
++	req.entry = entry;
++	req.intf = pfvf->nix_tx_intf;
++	req.op = NIX_TX_ACTIONOP_UCAST_CHAN;
++	req.index = (lbkid << 8) | RVU_SWITCH_LBK_CHAN;
++	req.set_cntr = 1;
++	req.vtag0_def = vidx;
++	req.vtag0_op = 1;
++	return rvu_mbox_handler_npc_install_flow(rvu, &req, &rsp);
++}
++
++int rvu_rep_install_mcam_rules(struct rvu *rvu)
++{
++	struct rvu_switch *rswitch = &rvu->rswitch;
++	u16 start = rswitch->start_entry;
++	struct rvu_hwinfo *hw = rvu->hw;
++	u16 pcifunc, entry = 0;
++	int pf, vf, numvfs;
++	int err, nixlf, i;
++	u8 rep;
++
++	for (pf = 1; pf < hw->total_pfs; pf++) {
++		if (!is_pf_cgxmapped(rvu, pf))
++			continue;
++
++		pcifunc = pf << RVU_PFVF_PF_SHIFT;
++		rvu_get_nix_blkaddr(rvu, pcifunc);
++		rep = true;
++		for (i = 0; i < 2; i++) {
++			err = rvu_rep_install_rx_rule(rvu, pcifunc,
++						      start + entry, rep);
++			if (err)
++				return err;
++			rswitch->entry2pcifunc[entry++] = pcifunc;
++
++			err = rvu_rep_install_tx_rule(rvu, pcifunc,
++						      start + entry, rep);
++			if (err)
++				return err;
++			rswitch->entry2pcifunc[entry++] = pcifunc;
++			rep = false;
++		}
++
++		rvu_get_pf_numvfs(rvu, pf, &numvfs, NULL);
++		for (vf = 0; vf < numvfs; vf++) {
++			pcifunc = pf << RVU_PFVF_PF_SHIFT |
++				  ((vf + 1) & RVU_PFVF_FUNC_MASK);
++			rvu_get_nix_blkaddr(rvu, pcifunc);
++
++			/* Skip installimg rules if nixlf is not attached */
++			err = nix_get_nixlf(rvu, pcifunc, &nixlf, NULL);
++			if (err)
++				continue;
++			rep = true;
++			for (i = 0; i < 2; i++) {
++				err = rvu_rep_install_rx_rule(rvu, pcifunc,
++							      start + entry,
++							      rep);
++				if (err)
++					return err;
++				rswitch->entry2pcifunc[entry++] = pcifunc;
++
++				err = rvu_rep_install_tx_rule(rvu, pcifunc,
++							      start + entry,
++							      rep);
++				if (err)
++					return err;
++				rswitch->entry2pcifunc[entry++] = pcifunc;
++				rep = false;
++			}
++		}
++	}
++	return 0;
++}
++
++void rvu_rep_update_rules(struct rvu *rvu, u16 pcifunc, bool ena)
++{
++	struct rvu_switch *rswitch = &rvu->rswitch;
++	struct npc_mcam *mcam = &rvu->hw->mcam;
++	u32 max = rswitch->used_entries;
++	int blkaddr;
++	u16 entry;
++
++	if (!rswitch->used_entries)
++		return;
++
++	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NPC, 0);
++
++	if (blkaddr < 0)
++		return;
++
++	rvu_switch_enable_lbk_link(rvu, pcifunc, ena);
++	mutex_lock(&mcam->lock);
++	for (entry = 0; entry < max; entry++) {
++		if (rswitch->entry2pcifunc[entry] == pcifunc)
++			npc_enable_mcam_entry(rvu, mcam, blkaddr, entry, ena);
++	}
++	mutex_unlock(&mcam->lock);
++}
++
++int rvu_rep_pf_init(struct rvu *rvu)
++{
++	u16 pcifunc = rvu->rep_pcifunc;
++	struct rvu_pfvf *pfvf;
++
++	pfvf = rvu_get_pfvf(rvu, pcifunc);
++	set_bit(NIXLF_INITIALIZED, &pfvf->flags);
++	rvu_switch_enable_lbk_link(rvu, pcifunc, true);
++	rvu_rep_rx_vlan_cfg(rvu, pcifunc);
++	return 0;
++}
++
++int rvu_mbox_handler_esw_cfg(struct rvu *rvu, struct esw_cfg_req *req,
++			     struct msg_rsp *rsp)
++{
++	if (req->hdr.pcifunc != rvu->rep_pcifunc)
++		return 0;
++
++	rvu->rep_mode = req->ena;
++
++	if (req->ena)
++		rvu_switch_enable(rvu);
++	else
++		rvu_switch_disable(rvu);
 +
 +	return 0;
 +}
 +
-+static int otx2_devlink_eswitch_mode_set(struct devlink *devlink, u16 mode,
-+					 struct netlink_ext_ack *extack)
-+{
-+	struct otx2_devlink *otx2_dl = devlink_priv(devlink);
-+	struct otx2_nic *pfvf = otx2_dl->pfvf;
-+	int ret = 0;
-+
-+	if (!otx2_rep_dev(pfvf->pdev))
-+		return -EOPNOTSUPP;
-+
-+	if (pfvf->esw_mode == mode)
-+		return 0;
-+
-+	switch (mode) {
-+	case DEVLINK_ESWITCH_MODE_LEGACY:
-+		rvu_rep_destroy(pfvf);
-+		break;
-+	case DEVLINK_ESWITCH_MODE_SWITCHDEV:
-+		ret = rvu_rep_create(pfvf, extack);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (!ret)
-+		pfvf->esw_mode = mode;
-+
-+	return ret;
-+}
-+#endif
-+
- static const struct devlink_ops otx2_devlink_ops = {
-+#ifdef CONFIG_RVU_ESWITCH
-+	.eswitch_mode_get = otx2_devlink_eswitch_mode_get,
-+	.eswitch_mode_set = otx2_devlink_eswitch_mode_set,
-+#endif
- };
+ int rvu_mbox_handler_get_rep_cnt(struct rvu *rvu, struct msg_req *req,
+ 				 struct get_rep_cnt_rsp *rsp)
+ {
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c
+index ceb81eebf65e..268efb7c1c15 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_switch.c
+@@ -166,6 +166,8 @@ void rvu_switch_enable(struct rvu *rvu)
  
- int otx2_register_dl(struct otx2_nic *pfvf)
+ 	alloc_req.contig = true;
+ 	alloc_req.count = rvu->cgx_mapped_pfs + rvu->cgx_mapped_vfs;
++	if (rvu->rep_mode)
++		alloc_req.count = alloc_req.count * 4;
+ 	ret = rvu_mbox_handler_npc_mcam_alloc_entry(rvu, &alloc_req,
+ 						    &alloc_rsp);
+ 	if (ret) {
+@@ -189,7 +191,12 @@ void rvu_switch_enable(struct rvu *rvu)
+ 	rswitch->used_entries = alloc_rsp.count;
+ 	rswitch->start_entry = alloc_rsp.entry;
+ 
+-	ret = rvu_switch_install_rules(rvu);
++	if (rvu->rep_mode) {
++		rvu_rep_pf_init(rvu);
++		ret = rvu_rep_install_mcam_rules(rvu);
++	} else {
++		ret = rvu_switch_install_rules(rvu);
++	}
+ 	if (ret)
+ 		goto uninstall_rules;
+ 
+@@ -222,6 +229,9 @@ void rvu_switch_disable(struct rvu *rvu)
+ 	if (!rswitch->used_entries)
+ 		return;
+ 
++	if (rvu->rep_mode)
++		goto free_ents;
++
+ 	for (pf = 1; pf < hw->total_pfs; pf++) {
+ 		if (!is_pf_cgxmapped(rvu, pf))
+ 			continue;
+@@ -249,6 +259,7 @@ void rvu_switch_disable(struct rvu *rvu)
+ 		}
+ 	}
+ 
++free_ents:
+ 	uninstall_req.start = rswitch->start_entry;
+ 	uninstall_req.end =  rswitch->start_entry + rswitch->used_entries - 1;
+ 	free_req.all = 1;
+@@ -258,12 +269,15 @@ void rvu_switch_disable(struct rvu *rvu)
+ 	kfree(rswitch->entry2pcifunc);
+ }
+ 
+-void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc)
++void rvu_switch_update_rules(struct rvu *rvu, u16 pcifunc, bool ena)
+ {
+ 	struct rvu_switch *rswitch = &rvu->rswitch;
+ 	u32 max = rswitch->used_entries;
+ 	u16 entry;
+ 
++	if (rvu->rep_mode)
++		return rvu_rep_update_rules(rvu, pcifunc, ena);
++
+ 	if (!rswitch->used_entries)
+ 		return;
+ 
 diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-index b0a0080e50d7..6ea5b4904a7c 100644
+index a021350fe83a..b993b03622dd 100644
 --- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
 +++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-@@ -28,6 +28,164 @@ MODULE_DESCRIPTION(DRV_STRING);
+@@ -28,6 +28,22 @@ MODULE_DESCRIPTION(DRV_STRING);
  MODULE_LICENSE("GPL");
  MODULE_DEVICE_TABLE(pci, rvu_rep_id_table);
  
-+static int rvu_rep_napi_init(struct otx2_nic *priv,
-+			     struct netlink_ext_ack *extack)
++static int rvu_eswitch_config(struct otx2_nic *priv, u8 ena)
 +{
-+	struct otx2_qset *qset = &priv->qset;
-+	struct otx2_cq_poll *cq_poll = NULL;
-+	struct otx2_hw *hw = &priv->hw;
-+	int err = 0, qidx, vec;
-+	char *irq_name;
++	struct esw_cfg_req *req;
 +
-+	qset->napi = kcalloc(hw->cint_cnt, sizeof(*cq_poll), GFP_KERNEL);
-+	if (!qset->napi)
++	mutex_lock(&priv->mbox.lock);
++	req = otx2_mbox_alloc_msg_esw_cfg(&priv->mbox);
++	if (!req) {
++		mutex_unlock(&priv->mbox.lock);
 +		return -ENOMEM;
-+
-+	/* Register NAPI handler */
-+	for (qidx = 0; qidx < hw->cint_cnt; qidx++) {
-+		cq_poll = &qset->napi[qidx];
-+		cq_poll->cint_idx = qidx;
-+		cq_poll->cq_ids[CQ_RX] =
-+			(qidx <  hw->rx_queues) ? qidx : CINT_INVALID_CQ;
-+		cq_poll->cq_ids[CQ_TX] = (qidx < hw->tx_queues) ?
-+					  qidx + hw->rx_queues :
-+					  CINT_INVALID_CQ;
-+		cq_poll->cq_ids[CQ_XDP] = CINT_INVALID_CQ;
-+		cq_poll->cq_ids[CQ_QOS] = CINT_INVALID_CQ;
-+
-+		cq_poll->dev = (void *)priv;
-+		netif_napi_add(priv->reps[qidx]->netdev, &cq_poll->napi,
-+			       otx2_napi_handler);
-+		napi_enable(&cq_poll->napi);
 +	}
-+	/* Register CQ IRQ handlers */
-+	vec = hw->nix_msixoff + NIX_LF_CINT_VEC_START;
-+	for (qidx = 0; qidx < hw->cint_cnt; qidx++) {
-+		irq_name = &hw->irq_name[vec * NAME_SIZE];
-+
-+		snprintf(irq_name, NAME_SIZE, "rep%d-rxtx-%d", qidx, qidx);
-+
-+		err = request_irq(pci_irq_vector(priv->pdev, vec),
-+				  otx2_cq_intr_handler, 0, irq_name,
-+				  &qset->napi[qidx]);
-+		if (err) {
-+			NL_SET_ERR_MSG_FMT_MOD(extack,
-+					       "RVU REP IRQ registration failed for CQ%d",
-+					       qidx);
-+			goto err_free_cints;
-+		}
-+		vec++;
-+
-+		/* Enable CQ IRQ */
-+		otx2_write64(priv, NIX_LF_CINTX_INT(qidx), BIT_ULL(0));
-+		otx2_write64(priv, NIX_LF_CINTX_ENA_W1S(qidx), BIT_ULL(0));
-+	}
-+	priv->flags &= ~OTX2_FLAG_INTF_DOWN;
++	req->ena = ena;
++	otx2_sync_mbox_msg(&priv->mbox);
++	mutex_unlock(&priv->mbox.lock);
 +	return 0;
-+
-+err_free_cints:
-+	otx2_free_cints(priv, qidx);
-+	otx2_disable_napi(priv);
-+	return err;
 +}
 +
-+static void rvu_rep_free_cq_rsrc(struct otx2_nic *priv)
-+{
-+	struct otx2_qset *qset = &priv->qset;
-+	struct otx2_cq_poll *cq_poll = NULL;
-+	int qidx, vec;
-+
-+	/* Cleanup CQ NAPI and IRQ */
-+	vec = priv->hw.nix_msixoff + NIX_LF_CINT_VEC_START;
-+	for (qidx = 0; qidx < priv->hw.cint_cnt; qidx++) {
-+		/* Disable interrupt */
-+		otx2_write64(priv, NIX_LF_CINTX_ENA_W1C(qidx), BIT_ULL(0));
-+
-+		synchronize_irq(pci_irq_vector(priv->pdev, vec));
-+
-+		cq_poll = &qset->napi[qidx];
-+		napi_synchronize(&cq_poll->napi);
-+		vec++;
-+	}
-+	otx2_free_cints(priv, priv->hw.cint_cnt);
-+	otx2_disable_napi(priv);
-+}
-+
-+void rvu_rep_destroy(struct otx2_nic *priv)
-+{
-+	struct rep_dev *rep;
-+	int rep_id;
-+
-+	priv->flags |= OTX2_FLAG_INTF_DOWN;
-+	rvu_rep_free_cq_rsrc(priv);
-+	for (rep_id = 0; rep_id < priv->rep_cnt; rep_id++) {
-+		rep = priv->reps[rep_id];
-+		unregister_netdev(rep->netdev);
-+		free_netdev(rep->netdev);
-+	}
-+	kfree(priv->reps);
-+}
-+
-+int rvu_rep_create(struct otx2_nic *priv, struct netlink_ext_ack *extack)
-+{
-+	int rep_cnt = priv->rep_cnt;
-+	struct net_device *ndev;
-+	struct rep_dev *rep;
-+	int rep_id, err;
-+	u16 pcifunc;
-+
-+	priv->reps = kcalloc(rep_cnt, sizeof(struct rep_dev *), GFP_KERNEL);
-+	if (!priv->reps)
-+		return -ENOMEM;
-+
-+	for (rep_id = 0; rep_id < rep_cnt; rep_id++) {
-+		ndev = alloc_etherdev(sizeof(*rep));
-+		if (!ndev) {
-+			NL_SET_ERR_MSG_FMT_MOD(extack,
-+					       "PFVF representor:%d creation failed",
-+					       rep_id);
-+			err = -ENOMEM;
-+			goto exit;
-+		}
-+
-+		rep = netdev_priv(ndev);
-+		priv->reps[rep_id] = rep;
-+		rep->mdev = priv;
-+		rep->netdev = ndev;
-+		rep->rep_id = rep_id;
-+
-+		ndev->min_mtu = OTX2_MIN_MTU;
-+		ndev->max_mtu = priv->hw.max_mtu;
-+		pcifunc = priv->rep_pf_map[rep_id];
-+		rep->pcifunc = pcifunc;
-+
-+		snprintf(ndev->name, sizeof(ndev->name), "r%dp%d", rep_id,
-+			 rvu_get_pf(pcifunc));
-+
-+		eth_hw_addr_random(ndev);
-+		err = register_netdev(ndev);
-+		if (err) {
-+			NL_SET_ERR_MSG_MOD(extack,
-+					   "PFVF reprentator registration failed");
-+			free_netdev(ndev);
-+			goto exit;
-+		}
-+	}
-+	err = rvu_rep_napi_init(priv, extack);
-+	if (err)
-+		goto exit;
-+
-+	return 0;
-+exit:
-+	while (--rep_id >= 0) {
-+		rep = priv->reps[rep_id];
-+		unregister_netdev(rep->netdev);
-+		free_netdev(rep->netdev);
-+	}
-+	kfree(priv->reps);
-+	return err;
-+}
-+
- static void rvu_rep_rsrc_free(struct otx2_nic *priv)
+ static netdev_tx_t rvu_rep_xmit(struct sk_buff *skb, struct net_device *dev)
  {
- 	struct otx2_qset *qset = &priv->qset;
-@@ -167,6 +325,10 @@ static int rvu_rep_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct rep_dev *rep = netdev_priv(dev);
+@@ -161,6 +177,7 @@ void rvu_rep_destroy(struct otx2_nic *priv)
+ 	struct rep_dev *rep;
+ 	int rep_id;
+ 
++	rvu_eswitch_config(priv, false);
+ 	priv->flags |= OTX2_FLAG_INTF_DOWN;
+ 	rvu_rep_free_cq_rsrc(priv);
+ 	for (rep_id = 0; rep_id < priv->rep_cnt; rep_id++) {
+@@ -221,6 +238,7 @@ int rvu_rep_create(struct otx2_nic *priv, struct netlink_ext_ack *extack)
  	if (err)
- 		goto err_detach_rsrc;
+ 		goto exit;
  
-+	err = otx2_register_dl(priv);
-+	if (err)
-+		goto err_detach_rsrc;
-+
++	rvu_eswitch_config(priv, true);
  	return 0;
- 
- err_detach_rsrc:
-@@ -188,6 +350,9 @@ static void rvu_rep_remove(struct pci_dev *pdev)
- {
- 	struct otx2_nic *priv = pci_get_drvdata(pdev);
- 
-+	otx2_unregister_dl(priv);
-+	if (!(priv->flags & OTX2_FLAG_INTF_DOWN))
-+		rvu_rep_destroy(priv);
- 	rvu_rep_rsrc_free(priv);
- 	otx2_detach_resources(&priv->mbox);
- 	if (priv->hw.lmt_info)
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.h b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-index 565e75628df2..c04874c4d4c6 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-@@ -28,4 +28,7 @@ static inline bool otx2_rep_dev(struct pci_dev *pdev)
- {
- 	return pdev->device == PCI_DEVID_RVU_REP;
- }
-+
-+int rvu_rep_create(struct otx2_nic *priv, struct netlink_ext_ack *extack);
-+void rvu_rep_destroy(struct otx2_nic *priv);
- #endif /* REP_H */
+ exit:
+ 	while (--rep_id >= 0) {
 -- 
 2.25.1
 
