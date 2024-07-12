@@ -1,130 +1,116 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654D239B
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 06:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2898339B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 06:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720766847; cv=none; b=nGRQXfn7qz38ttFkp+genWPg4iPlPN+w1qQ6sLFqdlY1pewrGrHMw6uO2tXoxTIAj7RzE9kSYP6QOxb0hfu+O6VUbgAme61/8McrOLa8Y7KIhqIK2k6gEkg6PBik1wt+6BA951FVAbRBsoK2LdP8iqXd5wtJIDjE2sz6ZakhKNM=
+	t=1720766912; cv=none; b=su7x/zpih3eutCl6L0F+tc4Qy6bgNUvbR0hQC5OTuEktdm22w+QbjdpdZcVmDeUYrP2/YLvh7zcxhyE/nRALs8zafcd528aamfzQgkOV6UYlkqIstmpoeVEkzEQ1SLDoTZdJfdBY+byN+vdVeXt+xUXYcCem/ogsfpLBZfLtMLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720766847; c=relaxed/simple;
-	bh=QGTTnwLcEeZ1TU9i63V+wmMJ3YBUJ/KHbzy7UwOJ9TE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LEbtwShkuT75irFKJQcmNXhzMLW1qinSjFqqchyC16ADJhDJs0WThkdaFBXOLXsRoNM2NOb/Xbzt1aoQ/An4cky/i5IWahCz6V+GxKkMzbH4hkPGDTrS4AVW1Z0MptuGIi2Dvcy37mxJlwVQrpEXxwqIgeNEGT6gg3HICnXJf8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WL28W35mqzwX7S;
-	Fri, 12 Jul 2024 14:42:35 +0800 (CST)
-Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A2441403D1;
-	Fri, 12 Jul 2024 14:47:20 +0800 (CST)
-Received: from huawei.com (10.173.127.72) by kwepemd200019.china.huawei.com
- (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 12 Jul
- 2024 14:47:19 +0800
-From: Miaohe Lin <linmiaohe@huawei.com>
-To: <akpm@linux-foundation.org>
-CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm/memory-failure: fix VM_BUG_ON_PAGE(PagePoisoned(page)) when unpoison memory
-Date: Fri, 12 Jul 2024 14:42:49 +0800
-Message-ID: <20240712064249.3882707-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1720766912; c=relaxed/simple;
+	bh=xMV/z33NFOqMzM8JfcQjaOoMBKUPMqBIE+lUrEw52mE=;
+	h=From:Date:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W7Qks+WcA3f4hH5eH3MkNMSZv3wJh3WfqVrscn4LNRDRz3zKHQ974K83zaUKBgWMQJ/rEKt16DWZAt97qeKnimYAQyWZWOqtbxG1XAClaynDf0YyEKCENelRoHj6sMExXgGTBcQL5ABbzYgIvJ3a5IkDJ/i0V/W/SYTAmi9EhlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AHMvc0aH; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AHMvc0aH"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52ea929ea56so3242470e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 23:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1720766908; x=1721371708; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xMV/z33NFOqMzM8JfcQjaOoMBKUPMqBIE+lUrEw52mE=;
+        b=AHMvc0aHgPq7Y9HYk50YMCWVNOm9G8MDpaQuSapvXGbxoZ5CNBcIwePQuca0Ob1fOX
+         QIQ/UeKsi5hXNLklD5442bmfrNnRrl3rVHHH3rss8cczxjOijVeVxT4nUBMfaqfB7uvW
+         7+d0/SWj8YhfH8UN0889k9NyAG/MPpD+nPqAKyQRiUS3ZjBafoTGRz/uNRGWO/W4cdCn
+         UtTeK31p8w7AMi+BRnuClXUlE9pXtX/vN28Axa5Q0EG+1MavLUQOvm80nOxfXs/cMmqU
+         M8iI5MRPR4s6RTjjBUL5zwP2P1OSohQpUfmAf87kWSq/+CBZh2fZFEVoNVp8Eblb+pOI
+         3Unw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720766908; x=1721371708;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xMV/z33NFOqMzM8JfcQjaOoMBKUPMqBIE+lUrEw52mE=;
+        b=fRXlaKcMpJ2SN//nIlZaPaGowtGVnJUppc85fOka/pZnGkJVkPckZeqqqAcXPeoi0L
+         jPwUrlR17vx5CnRLe1yW50Piijabq1gqsuZ14YfN6oMn7CWDT5a5TtX6PNHawAU3e1LN
+         NX2QgPT4jcjvAiRUq2MJxfN6EtKbwBajtnDGoXs4EbCXnMS+88WPv+PkI0aBCn1zScX9
+         gPgEKyT56/STOxT+2avUdpO5T/P6zuDrQOkjr+6ZWIRtr3CxGHrkV4gGTNyg/3cFFJXv
+         GbGy9fU/7nGE9T8bsQthbd1MWaU9EkBcW6whIYocFHVXqHFrLzxUkwWHmyuHYT4KXPVR
+         MUbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVj/7fbKRRmK9dHupjtIwl+GUHYxicF1kHVCBzvFEKOOuJyccNkvRhD82sewy9G2GEMq7prijWHMd1ZFpMi6jn8sJKxj2hafWfZrpYL
+X-Gm-Message-State: AOJu0Yxmy1bd97h59tpBSnXpUFX2jUp3ws9im+fnM1jlTxYhK5A6iawe
+	azMY9GRoK+PpQHdcdB+Su3eeXIvn+RLbjVEc370pTUvuJ+21ikeCFB/s+g0QT3Q=
+X-Google-Smtp-Source: AGHT+IHTtmtrVLLE7aDfY6kkhvZrmZsV2MnTKBQLikl9TyOMWMFZLyZQL7bTaCQtck/kvBawPV6jfQ==
+X-Received: by 2002:a05:6512:3499:b0:52e:936e:a237 with SMTP id 2adb3069b0e04-52eb999b382mr6496264e87.16.1720766908188;
+        Thu, 11 Jul 2024 23:48:28 -0700 (PDT)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a872002sm314623966b.211.2024.07.11.23.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 23:48:27 -0700 (PDT)
+From: Petr Tesarik <petr.tesarik@suse.com>
+X-Google-Original-From: Petr Tesarik <ptesarik@suse.com>
+Date: Fri, 12 Jul 2024 08:48:26 +0200
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Petr Tesarik
+ <petr@tesarici.cz>
+Subject: Re: [PATCH] sysfs/cpu: Make crash_hotplug attribute world-readable
+Message-ID: <20240712084826.3128cba2@mordecai.tesarici.cz>
+In-Reply-To: <06c0d61f-8dcb-46f6-8710-db1c6163907b@linux.ibm.com>
+References: <20240711103409.319673-1-petr.tesarik@suse.com>
+	<59d88de7-369a-44e8-a965-109c8690869e@linux.ibm.com>
+	<20240712082124.272e079f@meshulam.tesarici.cz>
+	<06c0d61f-8dcb-46f6-8710-db1c6163907b@linux.ibm.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200019.china.huawei.com (7.221.188.193)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-When I did memory failure tests recently, below panic occurs:
+On Fri, 12 Jul 2024 12:01:29 +0530
+Sourabh Jain <sourabhjain@linux.ibm.com> wrote:
 
-page dumped because: VM_BUG_ON_PAGE(PagePoisoned(page))
-kernel BUG at include/linux/page-flags.h:616!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-CPU: 3 PID: 720 Comm: bash Not tainted 6.10.0-rc1-00195-g148743902568 #40
-RIP: 0010:unpoison_memory+0x2f3/0x590
-RSP: 0018:ffffa57fc8787d60 EFLAGS: 00000246
-RAX: 0000000000000037 RBX: 0000000000000009 RCX: ffff9be25fcdc9c8
-RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff9be25fcdc9c0
-RBP: 0000000000300000 R08: ffffffffb4956f88 R09: 0000000000009ffb
-R10: 0000000000000284 R11: ffffffffb4926fa0 R12: ffffe6b00c000000
-R13: ffff9bdb453dfd00 R14: 0000000000000000 R15: fffffffffffffffe
-FS:  00007f08f04e4740(0000) GS:ffff9be25fcc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000564787a30410 CR3: 000000010d4e2000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- unpoison_memory+0x2f3/0x590
- simple_attr_write_xsigned.constprop.0.isra.0+0xb3/0x110
- debugfs_attr_write+0x42/0x60
- full_proxy_write+0x5b/0x80
- vfs_write+0xd5/0x540
- ksys_write+0x64/0xe0
- do_syscall_64+0xb9/0x1d0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f08f0314887
-RSP: 002b:00007ffece710078 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000009 RCX: 00007f08f0314887
-RDX: 0000000000000009 RSI: 0000564787a30410 RDI: 0000000000000001
-RBP: 0000564787a30410 R08: 000000000000fefe R09: 000000007fffffff
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000009
-R13: 00007f08f041b780 R14: 00007f08f0417600 R15: 00007f08f0416a00
- </TASK>
-Modules linked in: hwpoison_inject
----[ end trace 0000000000000000 ]---
-RIP: 0010:unpoison_memory+0x2f3/0x590
-RSP: 0018:ffffa57fc8787d60 EFLAGS: 00000246
-RAX: 0000000000000037 RBX: 0000000000000009 RCX: ffff9be25fcdc9c8
-RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff9be25fcdc9c0
-RBP: 0000000000300000 R08: ffffffffb4956f88 R09: 0000000000009ffb
-R10: 0000000000000284 R11: ffffffffb4926fa0 R12: ffffe6b00c000000
-R13: ffff9bdb453dfd00 R14: 0000000000000000 R15: fffffffffffffffe
-FS:  00007f08f04e4740(0000) GS:ffff9be25fcc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000564787a30410 CR3: 000000010d4e2000 CR4: 00000000000006f0
-Kernel panic - not syncing: Fatal exception
-Kernel Offset: 0x31c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
----[ end Kernel panic - not syncing: Fatal exception ]---
+> Hello Petr,
+>=20
+> On 12/07/24 11:51, Petr Tesa=C5=99=C3=ADk wrote:
+> > On Fri, 12 Jul 2024 10:00:09 +0530
+> > Sourabh Jain <sourabhjain@linux.ibm.com> wrote:
+> > =20
+> >> Hello Petr,
+> >>
+> >> Just want to mentioned few points about the commit message. No strong
+> >> opinion on changing the commit message.
+> >>
+> >> On 11/07/24 16:04, Petr Tesarik wrote: =20
+> >>> From: Petr Tesarik <ptesarik@suse.com>
+> >>>
+> >>> There is no reason to restrict access to this attribute, as it merely
+> >>> reports whether crash elfcorehdr is automatically updated on CPU hot
+> >>> plug/unplug and/or online/offline events. =20
+> >> Now, it is not just elfcorehdr; there could be multiple kexec segments
+> >> based on the architecture's needs.
+> >> For example, on PowerPC, it is elfcorehdr and FDT. =20
+> > Right. I am even working with a PowerVM LPAR on an L922 system now. ;-)
+> >
+> > OTOH I was just too lazy to invent my own description, so I took it
+> > from Documentation/ABI/testing/sysfs-devices-system-cpu. That one
+> > could be improved. And a couple of other places... Expect a patch. =20
+> Thanks for point it out, I will send a patch to fix the ABI document for=
+=20
+> crash_hotplug and other places in the kernel. Thanks,
 
-The root cause is that unpoison_memory() tries to check the PG_HWPoison
-flags of an uninitialized page. So VM_BUG_ON_PAGE(PagePoisoned(page)) is
-triggered. This can be reproduced by below steps:
-1.Offline memory block:
- echo offline > /sys/devices/system/memory/memory12/state
-2.Get offlined memory pfn:
- page-types -b n -rlN
-3.Write pfn to unpoison-pfn
- echo <pfn> > /sys/kernel/debug/hwpoison/unpoison-pfn
+Oh, I was planning to do that, but if you want to send a patch
+yourself, I won't duplicate efforts. There are other cleanups on my
+TODO list.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- mm/memory-failure.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 581d3e5c9117..8c765329829f 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -2564,6 +2564,13 @@ int unpoison_memory(unsigned long pfn)
- 		goto unlock_mutex;
- 	}
- 
-+	if (PagePoisoned(p)) {
-+		unpoison_pr_info("%#lx: page is uninitialized\n",
-+				 pfn, &unpoison_rs);
-+		ret = -EOPNOTSUPP;
-+		goto unlock_mutex;
-+	}
-+
- 	if (!PageHWPoison(p)) {
- 		unpoison_pr_info("%#lx: page was already unpoisoned\n",
- 				 pfn, &unpoison_rs);
--- 
-2.33.0
-
+Petr T
