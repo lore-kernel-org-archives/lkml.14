@@ -1,136 +1,141 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99014143747;
-	Fri, 12 Jul 2024 09:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51722143747
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720775354; cv=none; b=B1XHoXHU/viJxbPN9p7GszhHcMMdEuBa1zQ8p7o868QHbUVvwowATZHEdsnwCudJoNMbl0ivEW/0UgITEK74eyLTbSyTzQHmv34U6xQuYGcMQT04w6Opz7GbioS/fS/HJ4IuxebKZtJwNPEx/0j2nqICyc23C3YxlS6tPh143yQ=
+	t=1720775361; cv=none; b=ArmzzptfNYx6+wfNz1TR0eK6Szax0FphXtYZzzNvRLgcYEyrVkfcf+pmp7/ogPBwVcqIPi0ptdYSC4yhGMvcnhBwYtHJFszJxqGq6gltIJMB8LvSr8MGAOwY0+ErKAGTkOAg+cBQobGNS8rRTg2IfSIFgmbHLEup6ERpXqO0tv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720775354; c=relaxed/simple;
-	bh=Dkgox/IQTwaQ+eQxNPJVC2wknfvPEUKKuT06ZCrgfKk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=rbLnVIMTjxvHHuoiNEfMAumYSywNFoNp7orEJKubLwAuTHsbxztwE/vTmaRV22G82jiH4UNcrSDwsgOFImy2m1jW1kd9MIXUX6ek6rmXwKxi6cLlMWnFULnwGLdupxpY+7eCb/dZK+P5PWt7O1t2DkD9NbpIwMP5aQ+Zzf+lRew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=M7SN+q9i; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NrQeQaoA; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720775361; c=relaxed/simple;
+	bh=FRMwaS7pbLLRvTwAaGpoDBvcuIzMitqPS+0MpEDLaeU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o3JAs4NS2q+rTTN1nRkDmbIu8aVF1iVO7ShLz2q+rvBYhR9yzBghoqizUPp17IpN/vCu8XYR0OeTMMpWx/I2a3sO5O1ZGmM3eBX0kIPKmD0P1erVB/t1eN+nx9nXmq702YkDyWHARBfbmY653oSRpBhgW15UToNvskrsTvq2yfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cfy0oVu6; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="M7SN+q9i";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NrQeQaoA"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id AF4B4138221C;
-	Fri, 12 Jul 2024 05:09:11 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 12 Jul 2024 05:09:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1720775351;
-	 x=1720861751; bh=sZ7e4XevovcBdrC0s9li43TyJDtZzYkioK9A8LGqM/Y=; b=
-	M7SN+q9i0T1/jB6rkxntX3fgDkaikboa5B4fEQ7f99816KkJDDm+CP8PZpT8ZezN
-	GNUQGwX8pzFBddHKwfg2FfGNMroyt65wjVT3xmfuIHK9WbS9ETLz6G3Tl6PSN+/F
-	Gfumz/LDeEJNUhs/uKhyYOFI8xO/2U2gYlzfwSI9iCp9A1u8FAaz3YdE96uOlsIy
-	C3z1sY56kT3e9DuxQR+jFBJ1IFYSZVRPnixfa4p7PBQmFvT6dCgKuWiOYdwH2RC8
-	FCkIWbjvRk0llcGrJ0HVxt8Kl4gGJsU5QivQRQPATjazMWPswZcZVynMUPFb/PJN
-	uQk5pfumf9/XpeBnVjhcTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720775351; x=
-	1720861751; bh=sZ7e4XevovcBdrC0s9li43TyJDtZzYkioK9A8LGqM/Y=; b=N
-	rQeQaoAYrmIx4P9f1dJ204CLgUujqrXKFMFrNNLiFFla4i8EB7bhNuKzjgRj3DGO
-	Eym3G3cXIPA9uQzYswhcEucP6Mvp9c5FLUD/cdWl6bl7XVW+IM2TekwG8A4C79S9
-	RKniQ50ZGXAG+CDKWB/rNZdBZS4WCdmBTR/EUR3Rn55HgdUBgbbooTGJE781Y63f
-	S6Uud8LVRJi2zAyBSMhQQqQAgB1U3UpaSfZgH22siiPk6Nybr5f46Z1EhpNLZ6n7
-	L3D7R8EZOD7aNt3qY7lxRGjX9Jaluw6Js9KGMNAtvS0npAU0x/wzA6w3JvX3vwzq
-	2Y/W0ngCQNcaYui6ZdOew==
-X-ME-Sender: <xms:tPKQZsDR-wmYFg7MIczctzGLNXIg6jYekOWPBAT2oOYzOgmMIKfXtA>
-    <xme:tPKQZujqoKOXxeixBmlq_wWrG20-7I5PX6o1IAasYCOnLRcrQWPaioJkPDCSXXEcY
-    0tjiQB1LzzzPzvF32A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeeigddtkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:tPKQZvnM0POoj8h13xHmxb_HKBiaQZefN_oNtqRHbw4JDgxKnPxd9A>
-    <xmx:tPKQZixofpA8v3Gue5nkhh60aW_mzdzZJE689uqiwWZsm0JkKizC7A>
-    <xmx:tPKQZhSnPYREvuE2yvUVgs7XB7xgq8KM2oeEU38DYPogz8EKybqKvg>
-    <xmx:tPKQZta3spHoTBC_qk6-TiezbpzzI7noO1wvjB0mBLDEKDwWuROD3A>
-    <xmx:t_KQZhwIZzgBoFR5lfyh56NGNRguMKKXxXb63UdfFG80E_XGEKAnPekG>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 1B788B6008F; Fri, 12 Jul 2024 05:09:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cfy0oVu6"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e03618fc78bso1623640276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 02:09:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720775358; x=1721380158; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SCNPSZL1ytzjE/7mUpIJ/u/e4A8RUCUKfpqrgKWdK38=;
+        b=cfy0oVu6GxJsi0WxhM7lOt9ySNp2dKWdqa1bUUE/XYdpQKAycfcWAyzAPB+1K+CUkh
+         RL1Ie7cVhDeq1r+hLO5nLcLR3KYSJupdch9GHIYGxL+sK79SmD/jRcKzlO60EL2eEJmP
+         70srzDWptQ5HglE2KMhT1SnXEQXgQ1YVBK/sTBnrYVkhrG0kjH+joN6sgUWpvqaauaQ0
+         019qN1cTAXFiaycUJDc+qcu0rWIy6Y2+f8JJjMD5/9+Eg+so6Cqe9b14Gm/6xzmbnUBR
+         hJZRiNoxcADeff7WoXmS5dtUtprlWdPtLh2+hFxok1FI7NAw3N0sx+OdhznigX4pdlss
+         HQFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720775358; x=1721380158;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SCNPSZL1ytzjE/7mUpIJ/u/e4A8RUCUKfpqrgKWdK38=;
+        b=unEuVPZBxh3cpKi6ZS3cGa7ZFYgjErdqcX1od+S5cEpP1tl6Wf117Gpjy/ibm97oba
+         Rgb4xbAYoGaW8snfPlGe7DXyzCD8DV8+fiXITYxw99YaeA/aYZhbzA3satNfPRFL4qvx
+         Xqv+Ytegdts/XOWS9DJkbvSjDBrEytpLMaohL2zu7cgherA7AGTowGzFOWCh25pAy4+f
+         FJ3Hb2m0osejxf2zDu7T+5xERpQFhGzxs+ugOOjLivCk7XksclN3Jl2nQyoXBtHlIgBO
+         x5bwP3f1EClHlkb09iQEUCPXE9dMgENIsjqRb7Soo6INOyN0zXzoYr+X46ZB+Bh5vLaV
+         7ELA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3QiPFb0XEgSPXH24RO7yQaf2QEu45kZu+C68iWYN7rW4OpqWmSGnBYWoNu+OjYNsu1mnt1amvZouBEEA58j+tMiQIzcdEDKHhi467
+X-Gm-Message-State: AOJu0YwF27D6TZXVsH0R+Mq6CrjV0bwI4YP4VM9E/t0smKF+NPQrTW21
+	iQTgVEcmjOdsB9FQm9LC1eor3PuM3WozmJ0h9mvcN3+xzQLfWpGt1imT95pCW8MLztjsrs5yES5
+	xjfKZc7N+/W1cNhjiwghMTxrl5ybh5nyyJprEoQ==
+X-Google-Smtp-Source: AGHT+IH2ZhkNSr3lAO0ISZV3PDaROoLe9tlom5kTqum4o5uFiWztS750eAeqlWthH+6h3mahZ3jiz9uDI9AN/j+tZEY=
+X-Received: by 2002:a5b:503:0:b0:e03:6085:33ef with SMTP id
+ 3f1490d57ef6-e041b166fa3mr12051590276.41.1720775358054; Fri, 12 Jul 2024
+ 02:09:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <b8fa2389-e666-4631-a872-d0144fb7b3ac@app.fastmail.com>
-In-Reply-To: 
- <CAK7LNARpWB6Pqa80KDmpdJ_Rf5FZc71_bX9eSy3fFVCAyg8CAg@mail.gmail.com>
-References: <20240704143611.2979589-1-arnd@kernel.org>
- <20240704143611.2979589-2-arnd@kernel.org>
- <CAK7LNARpWB6Pqa80KDmpdJ_Rf5FZc71_bX9eSy3fFVCAyg8CAg@mail.gmail.com>
-Date: Fri, 12 Jul 2024 11:07:34 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Masahiro Yamada" <masahiroy@kernel.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas@fjasle.eu>, "Vineet Gupta" <vgupta@kernel.org>,
- "Russell King" <linux@armlinux.org.uk>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, guoren <guoren@kernel.org>,
- "Brian Cain" <bcain@quicinc.com>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Dinh Nguyen" <dinguyen@kernel.org>,
- "Jonas Bonn" <jonas@southpole.se>,
- "Stefan Kristiansson" <stefan.kristiansson@saunalahti.fi>,
- "Stafford Horne" <shorne@gmail.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, "Rich Felker" <dalias@libc.org>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "David S . Miller" <davem@davemloft.net>,
- "Andreas Larsson" <andreas@gaisler.com>,
- "Christian Brauner" <brauner@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 01/17] syscalls: add generic scripts/syscall.tbl
-Content-Type: text/plain;charset=utf-8
+References: <CA+G9fYuCp7Q71_o74yo9ge_5-G=Ho9bC3kJdX_JvtoqWOQujkA@mail.gmail.com>
+ <CAMRc=Md5zmFxXXM89LQs6dspC0xnp_6=z=+a2SQypWjwpiRgow@mail.gmail.com> <f6afe212-8b28-450e-ae54-0de996be078e@app.fastmail.com>
+In-Reply-To: <f6afe212-8b28-450e-ae54-0de996be078e@app.fastmail.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Fri, 12 Jul 2024 11:09:07 +0200
+Message-ID: <CACMJSetxpEL0pomsiZffXr3bFYEGLMBvOcZDZHkizxRx92HVQg@mail.gmail.com>
+Subject: Re: next: arm64: defconfig: gcc-8: drivers/bluetooth/hci_qca.c:2501:2:
+ error: label at end of compound statement
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, 
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 12, 2024, at 10:43, Masahiro Yamada wrote:
-> On Thu, Jul 4, 2024 at 11:36=E2=80=AFPM Arnd Bergmann <arnd@kernel.org=
-> wrote:
+On Fri, 12 Jul 2024 at 11:04, Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> I know this is already written in this way
-> in include/uapi/asm-generic/unistd.h, but
-> the native and compat have the same function name.
+> On Fri, Jul 12, 2024, at 10:34, Bartosz Golaszewski wrote:
 >
+> > The actual code looks like this now:
+> >
+> >       case QCA_WCN7850:
+> >               if (power->vregs_on)
+> >                       qca_power_shutdown(&qcadev->serdev_hu);
+> >               break;
+> >       default:
+> >
+> > What can be done to silence this warning? Or should we just ignore it b=
+ecause
+> > it's gcc 8?
 >
-> Can we simplify it like this?
+> clang-18 and gcc-10 still warn as well:
 >
-> 65     common  readv                           sys_readv
-> 66     common  writev                          sys_writev
+> 5:1: warning: label at end of compound statement is a C23 extension [-Wc2=
+3-extensions]
+>
+> It's easy enough to fix it by dropping the redundant 'default:'
+> line or adding a 'break;' Luiz just committed a fix, see below.
+>
+>      Arnd
+>
+> commit f14c0bb78769f2670fdd8bcd28ca5543a7601c33
+> Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+> Date:   Wed Jul 10 22:30:57 2024 -0400
+>
+>     Bluetooth: hci_qca: Fix build error
+>
+>     This fixes the following build error introduced by a887c8dede8e
+>     ("Bluetooth: hci_qca: schedule a devm action for disabling the clock"=
+):
+>
+>     drivers/bluetooth/hci_qca.c: In function =E2=80=98qca_serdev_remove=
+=E2=80=99:
+>     drivers/bluetooth/hci_qca.c:2501:2: error: label at end of compound s=
+tatement
+>      2501 |  default:
+>           |  ^~~~~~~
+>
+>     Fixes: a887c8dede8e ("Bluetooth: hci_qca: schedule a devm action for =
+disabling the clock")
+>     Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 030153d468bf..ca6466676902 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -2499,6 +2499,7 @@ static void qca_serdev_remove(struct serdev_device =
+*serdev)
+>                         qca_power_shutdown(&qcadev->serdev_hu);
+>                 break;
+>         default:
+> +               break;
+>         }
+>
+>         hci_uart_unregister_device(&qcadev->serdev_hu);
+>
 
-Good idea. It looks like this came from 5f764d624a89 ("fs:
-remove the compat readv/writev syscalls"), and I'll fix it up
-in my follow-up series, which has a lot of other cleanups
-like this one across architectures.
+Ah, I saw the break in the file and thought it was me who had it in
+the code in the first place but obviously not. Thanks, nevermind my
+comment.
 
-Thanks,
-
-     Arnd
+Bart
