@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCD117839E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7DD178CC3;
 	Fri, 12 Jul 2024 16:05:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720800350; cv=none; b=MeChP5Y5ktq/aIdlqRPqthIodkyZqaPcYpFpkqduG0UkItXjaLBd1EXI1XFN2H8lHxvQYHwa8Mp+Lh4oYmdUniH4SNSqsu1GuOLLxYtsK8KpD5UawCSkTDaqUASe+qi073cerPEYD6XkBTfyrq+1YngOTSLeaueVNi9T1nmy3xU=
+	t=1720800350; cv=none; b=caz9Bpz6q33mi2eMiZhH4Xya07Gg52q+VRsnGcyZZ+Ily7ZAWTf1LECj2dBj0vuA1OghYFgJeHbtv7Cn+/HG3/u/j3ELIcC7Xk+mKW94zMB25819lNwSJltyyig3sQchK+djckwr8NufR6cCGjXtgXYoUX4yqDB21R39HZjOeNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720800350; c=relaxed/simple;
-	bh=K2e/z0FUveDK57CAtbFJZg9dUOn7SdN6CleNSbeSgqY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cx5m0UOs4/XI0/c6YrfX+Xeukq0tum0z3fItQE+mKaHPxnR5oF0Q1KZwbSqlv52mstK60nCy8n1TQ054TAKHorVdcLOE1536v94p+jQm8n8Wffo++eUBW1mG7vgypPt9rbcBq/2BFt9GShESV6KqQzxlxwfTykD03pvYhcBEkPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uKJNo+9d; arc=none smtp.client-ip=10.30.226.201
+	bh=DIuKMhvoUzcjDYRjoaWwhs8QIMJ6Yag2oR43O8xrLjA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Ab65t4S1ki/DNYZSX7BoD5AXlrFk3WGxJFfjSCUtnZZD59hKudBoOyNd0iy2zVElDzKoyUDk32zthLzGv70nvtcbzimpFMK/TEwexVjKWh0WV7zvBjbhQadRAQgtwUgotzYmxAfki95Dma0MQ2kpCBPna33xxBgbCDr8hLXGz/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBUcz3k6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uKJNo+9d"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B7E5C4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBUcz3k6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 218A2C4AF0A;
 	Fri, 12 Jul 2024 16:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720800350;
-	bh=K2e/z0FUveDK57CAtbFJZg9dUOn7SdN6CleNSbeSgqY=;
+	bh=DIuKMhvoUzcjDYRjoaWwhs8QIMJ6Yag2oR43O8xrLjA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=uKJNo+9d4tySZEgflUbZK/RdfTfdmtFhLnNGI8qhEmQP0ovHMIDJCSQav5QUe3eC9
-	 ZbnLjC9RBBzvPGq6sPR9/ylreMMz4yP3PACXFRcbwgRU00bT7Ok1ubQDPrn3ydZKKP
-	 ZJqE+f4ZC1YTZKmMp1dGm9Vd9APqOOAToLoHrl0BPrUg+lFtf0M2zM2z+38/RUFLqi
-	 zYRUcV6FOqHFPxMkr2T6xEgzJrhiib1+y9JrjJ0adaozFHIxassTmE1JMED2kaViaS
-	 +1e4jwmntLY3Q9V6A+TrP11wRKigTwl78+FHdlmqCB7lc6NdRBoCJuPq60pFQOqid7
-	 skuXBfBpkmqPw==
+	b=DBUcz3k6DsdzW8XdjldXeeYo+H4D+usq+a/X9uLKcKCUUY0ejlZgTmNlmx0aAhXUA
+	 NSHkusRjumuecy3xK2kdqJXh7z2nSUKLAXvpKxLQYvzTaQgpEWw9BQSIL4dOQpgAwo
+	 9XHPGpxhvz5WpSV9i0AXQ1MHEtKrHAh8jGPULmRMblu5024umLFEAnALmHdAv/87cO
+	 y+w96iGEac/pZxPqJJSIyYH4IGR/1uVuRocJMp0Zy+NKZptssJfpl98nyGqis7AcYK
+	 w3I2IQcg1wrKFls1jbWdth2zhbE1nhhG3+Omk2bEEAritL6+BduyCIocEAbzRcHq7j
+	 xAp1Nem0J5Vgw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F2701C43153;
-	Fri, 12 Jul 2024 16:05:49 +0000 (UTC)
-Subject: Re: [GIT PULL] USB driver fixes for 6.10-final
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 19530DAE95C;
+	Fri, 12 Jul 2024 16:05:50 +0000 (UTC)
+Subject: Re: [GIT PULL] TTY / Serial driver fixes for 6.10-final
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZpEIK6JklAx8aZ08@kroah.com>
-References: <ZpEIK6JklAx8aZ08@kroah.com>
+In-Reply-To: <ZpEIPXujV_586zPp@kroah.com>
+References: <ZpEIPXujV_586zPp@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZpEIK6JklAx8aZ08@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.10-final
-X-PR-Tracked-Commit-Id: 70c8e3944063a83b7fae1996db7971e9b858c635
+X-PR-Tracked-Message-Id: <ZpEIPXujV_586zPp@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-6.10-final
+X-PR-Tracked-Commit-Id: 2ac33975abda6921896e52372aec2be2cf51ab37
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1293147aa8c79381de155ef480e5b5769725182a
-Message-Id: <172080034998.10368.6931484274376268477.pr-tracker-bot@kernel.org>
-Date: Fri, 12 Jul 2024 16:05:49 +0000
+X-PR-Merge-Commit-Id: 1cb67bcc2165c24ad26c5786771cca9c91a1fedf
+Message-Id: <172080035009.10368.2070496630330068752.pr-tracker-bot@kernel.org>
+Date: Fri, 12 Jul 2024 16:05:50 +0000
 To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jiri Slaby <jslaby@suse.cz>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 12 Jul 2024 12:40:43 +0200:
+The pull request you sent on Fri, 12 Jul 2024 12:41:01 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.10-final
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-6.10-final
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1293147aa8c79381de155ef480e5b5769725182a
+https://git.kernel.org/torvalds/c/1cb67bcc2165c24ad26c5786771cca9c91a1fedf
 
 Thank you!
 
