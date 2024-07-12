@@ -1,127 +1,140 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B59171E66;
-	Fri, 12 Jul 2024 13:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AE616D4C0;
+	Fri, 12 Jul 2024 13:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720792512; cv=none; b=suUE8rnjF3Ll0w8PLt/OCxVasFG8nu4a95I83cEzQ2vfXc697kivpvrtyh62dXH/HQLiyKKnfbr7+itaHlFp/hFHPwcKGy4cuh5XJh3Hwg2E5xQ/C0szhMjdPhtVM51B8dV6ZBELcAUDtyvWhEPu+5GlZmIU2Wa5az608+6eW0E=
+	t=1720792555; cv=none; b=FHu+TrPhRrlc2+hH794mo47rBytSRVWw7Qv6kUusoFnvf6ed343c7/QcIssDtwp3K+9+QEmPJnIyfJe/S0HODM40Wxjly34DJJwu65R43F/WuxPPFecfPSmWgDFyJDT6umzMecsUEwdZSHcvmEi0E4ril/wqhu2EWfgcPKcE7D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720792512; c=relaxed/simple;
-	bh=PG7WDG2wxP6E4zUX9w3RjCYf8TYepGOJj7vXvWmU9zk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cZNKL5fS4udFglMIKKUB1glPZSwOIXookq+gv5yT5w8JBb2eiTkHhLu+iCeXbmpxu/4juxU5Uvs1j2Or3s/5//wX3IZpwIMDVxWeIFeEQkg2C22CGLFyTx4z4S5kEmmbl7I26EPPO6FBD6z3QFpofjDvwUSPgoMg9TxsPS5HyBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-651da7c1531so19825387b3.0;
-        Fri, 12 Jul 2024 06:55:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720792507; x=1721397307;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=66ZxvuflQ1CFAf8nLezfYlKzbT94Oozorkv5Eix20iA=;
-        b=Jho4WBH+1ZJq8L0X1xykC0sIJ9uz3mhsOe2dwNRivYno71uAI0lmEGksMtVe457aFw
-         yj49DaGr1cxdVoPzwBvhPSYIVm0nUXZ/4FTxyD2azXgneAN3v9DclnhPPrFnFLB6iZ5v
-         OGFTFugPP+ArtxJAi07483Z7gg0W6RelrI+4rUnIDKPWNKNoBTdXtSvukNmUjyG+n/Nt
-         AsKs8MlQBoexgkULiY8POo/n5jvZF3/0B6vHBuogCvB4bwCIDorCRBho991MLBNixXbt
-         wcu7MzE77DiDQPi1xzu0lyVtxmRcu6LSxFxcb9zM6WpWK7S3ja3ydSifmAaw8PF2LK0f
-         578g==
-X-Forwarded-Encrypted: i=1; AJvYcCWRIus5vYtqoG/Uag2dSUcXyE3OVdY0vIbtiXgBsy5iKCgrBOCRkwFC8HCenrXU5gFi9fZC6U50hUx2cDW7/xnqWMlPJRas7WswJXmD5vIDN7/V1s3BYdlm9j6oq+b997Hd2bmE9K+dVuuiTjcoJgAVu+ZbC7wTo89oNvBCwZTXU7MX/VRpe7e+nSM=
-X-Gm-Message-State: AOJu0YwMtUsCxlqVq4hGacc7SPozY4sZvBZ/zJBO/0Pyz/0ng5xHm6N9
-	t1hRuQyyuOBkCE5TAgM0imSUrf/NfHaQDqeIozfhzEUmfCItIUGyJunxFBu9
-X-Google-Smtp-Source: AGHT+IGlpMZ4Bh2/+PjLddF/OgtvWciafZOaq/PuNY40RMa1Y8XZBmGVRjK412QkLzARZdMakpvZzw==
-X-Received: by 2002:a81:8a84:0:b0:648:2c60:fdee with SMTP id 00721157ae682-658f0bc6201mr114554107b3.38.1720792507472;
-        Fri, 12 Jul 2024 06:55:07 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e521c7bcsm14706647b3.65.2024.07.12.06.55.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jul 2024 06:55:07 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e03a581276eso1850321276.2;
-        Fri, 12 Jul 2024 06:55:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVp+rs2cuTf1yUBSBZlkLGyQzuj8EVY11psplgqPcwlcP0vKkIL6lz4cyrRaIoSiOKPNVcygngaEvGQYPlIvfUBgdG1clryrnuy2WLHUyOHelkKa8fYAjmzVR6ur7Ejd1tAe4pR8UuP1WJZQSZ5yljgd7JQV4qA38vuU/swIeMZC3g3dzPwIezx75Q=
-X-Received: by 2002:a25:c787:0:b0:e03:606b:ad2b with SMTP id
- 3f1490d57ef6-e041b15aae9mr13588579276.57.1720792506677; Fri, 12 Jul 2024
- 06:55:06 -0700 (PDT)
+	s=arc-20240116; t=1720792555; c=relaxed/simple;
+	bh=CSZadZ3S2hbNqK7vpQbuXOyEYF9smErz7q0oizKFpV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OIsUC5aZjh3M7Vk4j8QxM+zIL8La1nfNYV4LE7/LgsVxn+9+5EpH1ym5gTeMROnApCClGlURVi0TIArtQKa+hR2REvT/oPSLInEn5u6KwMgmllBHydSxwJaZHonrUdvA/R9uKqGD6XI9OwlhDL5dlfkKeiGiJ/gvDYAeo6Bm+Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugySXiRg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugySXiRg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0C4C32782;
+	Fri, 12 Jul 2024 13:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720792555;
+	bh=CSZadZ3S2hbNqK7vpQbuXOyEYF9smErz7q0oizKFpV0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ugySXiRghfMOYtlEvtT25hMaTcTXwgUQ5g0IEgOXYyuQFgZ5dgu2sxlA6rMYGgxj8
+	 gJgkiPDcLJG+yQksGYm+ZrQaF4Qu2I4ZVuTsEstckbOkvYQvi6z6qqq8AwH390x8t3
+	 ARbtYZaR1NQedrB+3yp0GZwEwNE2EbHgJs/VoB0K+MN2VM/hXIJT9bjMMQUmeWHE0R
+	 c6aQAVCzV9HpR2LnNkeLFRMz/iuVnr9FffSReNOxeLLzTdAQ8XjU/DhFThmN5QJ6z2
+	 CFbb3LWqUfZTNpUiy2KrnzAOg+H96BqXd0FOuEYy7bRLCKzbeLjpnRQr1FHlUOMi5N
+	 c0WU1EMo8+a1A==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL for v6.11] vfs mount api
+Date: Fri, 12 Jul 2024 15:55:41 +0200
+Message-ID: <20240712-vfs-mount-42ac86732006@brauner>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628131021.177866-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240628131021.177866-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240628131021.177866-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 12 Jul 2024 15:54:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVd2k7WsPU9htW1LmDrjOgoQ1C8J=8i7ZAs7LS5XYBCXQ@mail.gmail.com>
-Message-ID: <CAMuHMdVd2k7WsPU9htW1LmDrjOgoQ1C8J=8i7ZAs7LS5XYBCXQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] clk: renesas: rzg2l-cpg: Use devres API to register clocks
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3945; i=brauner@kernel.org; h=from:subject:message-id; bh=CSZadZ3S2hbNqK7vpQbuXOyEYF9smErz7q0oizKFpV0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRNNH2kH/tKbBLvm2tei3bMZpUq35Tm1rvOXOuRm/Wsy Ma2zk75jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIno7WL4w++UH2i/vj23xWvm zHXH9J69OnhhBYvu1ytckgXJYj/dtjIyvFx1xaZ8+9400dmL36qWNq7I9t6gJ8b9amvb24J/Dl3 SPAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+Hey Linus,
 
-On Fri, Jun 28, 2024 at 3:11=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> We are using devres APIs for divider, mux and pll5 clocks so for
-> consistency use the devres APIs for module and PLL clocks.
->
-> While at it switched to clk_hw_register() instead of clk_register()
-> as this has been marked as deprecated interface.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+/* Summary */
+This contains work for the mount api:
 
-Thanks for your patch!
+- Add a generic helper to parse uid and gid mount options. Currently we
+  open-code the same logic in various filesystems which is error prone.
+  Especially since the verification of uid and gid mount options is a sensitive
+  operation in the face of idmappings. Add a generic helper and convert all
+  filesystems over to it. Make sure that filesystems that are mountable in
+  unprivileged containers verify that the specified uid and gid can be
+  represented in the owning namespace of the filesystem.
 
-> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> @@ -1023,6 +1023,7 @@ rzg2l_cpg_pll_clk_register(const struct cpg_core_cl=
-k *core,
->         struct clk_init_data init;
->         const char *parent_name;
->         struct pll_clk *pll_clk;
-> +       int ret;
->
->         parent =3D clks[core->parent & 0xffff];
->         if (IS_ERR(parent))
-> @@ -1045,7 +1046,11 @@ rzg2l_cpg_pll_clk_register(const struct cpg_core_c=
-lk *core,
->         pll_clk->priv =3D priv;
->         pll_clk->type =3D core->type;
->
-> -       return clk_register(NULL, &pll_clk->hw);
-> +       ret =3D devm_clk_hw_register(dev, &pll_clk->hw);
-> +       if (ret)
-> +               return NULL;
+- Convert hostfs to the new mount api.
 
-rzg2l_cpg_pll_clk_register() can return an ERR_PTR, so please
-propagate the error code.
+/* Testing */
+clang: Debian clang version 16.0.6 (26)
+gcc: (Debian 13.2.0-24)
 
-> +
-> +       return pll_clk->hw.clk;
->  }
+All patches are based on v6.10-rc1 and have been sitting in linux-next.
+No build failures or warnings were observed.
 
-The rest LGTM.
+/* Conflicts */
+No known conflicts.
 
-Gr{oetje,eeting}s,
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
 
-                        Geert
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+are available in the Git repository at:
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.11.mount.api
+
+for you to fetch changes up to eea6a8322efd3982e59c41a5b61948a0b043ca58:
+
+  fuse: Convert to new uid/gid option parsing helpers (2024-07-03 16:55:11 +0200)
+
+Please consider pulling these changes from the signed vfs-6.11.mount.api tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.11.mount.api
+
+----------------------------------------------------------------
+Eric Sandeen (18):
+      fs_parse: add uid & gid option option parsing helpers
+      autofs: Convert to new uid/gid option parsing helpers
+      debugfs: Convert to new uid/gid option parsing helpers
+      efivarfs: Convert to new uid/gid option parsing helpers
+      exfat: Convert to new uid/gid option parsing helpers
+      ext4: Convert to new uid/gid option parsing helpers
+      hugetlbfs: Convert to new uid/gid option parsing helpers
+      isofs: Convert to new uid/gid option parsing helpers
+      ntfs3: Convert to new uid/gid option parsing helpers
+      tmpfs: Convert to new uid/gid option parsing helpers
+      smb: client: Convert to new uid/gid option parsing helpers
+      tracefs: Convert to new uid/gid option parsing helpers
+      vboxsf: Convert to new uid/gid option parsing helpers
+      fat: move debug into fat_mount_options
+      fat: Convert to new mount api
+      fat: Convert to new uid/gid option parsing helpers
+      fuse: verify {g,u}id mount options correctly
+      fuse: Convert to new uid/gid option parsing helpers
+
+Hongbo Li (1):
+      hostfs: convert hostfs to use the new mount API
+
+Nathan Chancellor (1):
+      hostfs: Add const qualifier to host_root in hostfs_fill_super()
+
+ Documentation/filesystems/mount_api.rst |   9 +-
+ fs/autofs/inode.c                       |  16 +-
+ fs/debugfs/inode.c                      |  16 +-
+ fs/efivarfs/super.c                     |  12 +-
+ fs/exfat/super.c                        |   8 +-
+ fs/ext4/super.c                         |  22 +-
+ fs/fat/fat.h                            |  18 +-
+ fs/fat/inode.c                          | 674 ++++++++++++++++----------------
+ fs/fat/namei_msdos.c                    |  38 +-
+ fs/fat/namei_vfat.c                     |  38 +-
+ fs/fs_parser.c                          |  34 ++
+ fs/fuse/inode.c                         |  24 +-
+ fs/hostfs/hostfs_kern.c                 |  83 +++-
+ fs/hugetlbfs/inode.c                    |  12 +-
+ fs/isofs/inode.c                        |  16 +-
+ fs/ntfs3/super.c                        |  12 +-
+ fs/smb/client/fs_context.c              |  39 +-
+ fs/tracefs/inode.c                      |  16 +-
+ fs/vboxsf/super.c                       |  16 +-
+ include/linux/fs_parser.h               |   6 +-
+ mm/shmem.c                              |  12 +-
+ 21 files changed, 594 insertions(+), 527 deletions(-)
