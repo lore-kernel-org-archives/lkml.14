@@ -1,16 +1,16 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08D18F58
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 12:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8E316F856
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 12:53:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720788836; cv=none; b=MrtU6oHtH5wESJ7t9sq06rrDXmOfIOecquPdz12uZAZo7s6XT+AMA75xYS2pGjh5sCqOVFcz8bvVWBaTl9R9U2myEkiKNcWU7VWjkPiAelmqCPdkGqTEMx79zORzs6L+DcIUVuxB3O/mEeh7d+ZCugMu3wiifM0pJjvh4aQBHcI=
+	t=1720788837; cv=none; b=XTipcVFY9Xo/GIhTorS9/QaVOGyrtqp0V/gfwMn65MfI0KgwjrHrtu6yCkEN22LuC5N7E1ckcVmnnIj9s2rV1rmjsFaKkyNMQ1KiBmNdnmAiHaekh+oiKjmMKLO2itViLqPPcHiFpAEyg2KsRXGwblulYHFD5c/8pot+52ZbgnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720788836; c=relaxed/simple;
-	bh=FvTL+4M1+BNimn+VUCXkx6CvZ/Xfa8z12Q3birBWV4A=;
+	s=arc-20240116; t=1720788837; c=relaxed/simple;
+	bh=/4cY90ODw2YhhtNukeJTzWx99qRyTdoKxmZbXQb+myo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bTAcnzP+xa31KEmO5I/TTeLf5zMisLicYZCIPNEKhKOhbP26xE2BuxUDPiqQfuNqUN/LucYlZ4PEVzdaHm8WH8sXsBTyxQ9AbzD+1vSUXrS1jqOB6GMAAdbcJ8r/vuz3d56pdG3HX96ciWE5vYSFVXOKsjRdiu+aLe+6wqtjJks=
+	 MIME-Version:Content-Type; b=i3eyNNFwoxaSC5ctdTxQaFTZJZbx2UQKdPcNrC4ARY4JsGrOMsq2aOEbpGk8E7jlO5iiUKWTCAF9Vd93lHX+fR1m2O/o+u05l65otpvyPuctlZeXlpMVabF5g+F6jT1jAF9wNPu/6EPgyL7oo/6Q9zx1cwjEXpYNLVHtu+UNGB0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WLBNw5VJRz4x0t;
-	Fri, 12 Jul 2024 22:53:52 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WLBNx5qhvz4x1V;
+	Fri, 12 Jul 2024 22:53:53 +1000 (AEST)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <ab30ae302783d8617d407864b92db1b926ab5ab9.1720694914.git.christophe.leroy@csgroup.eu>
-References: <ab30ae302783d8617d407864b92db1b926ab5ab9.1720694914.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH] powerpc: Remove 40x leftovers
-Message-Id: <172078879461.310795.8861994461453100289.b4-ty@ellerman.id.au>
+To: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Nick Bowler <nbowler@draconx.ca>
+Cc: Pawel Moll <pawel.moll@arm.com>
+In-Reply-To: <20240711035428.16696-1-nbowler@draconx.ca>
+References: <20240711035428.16696-1-nbowler@draconx.ca>
+Subject: Re: [PATCH] macintosh/therm_windtunnel: fix module unload.
+Message-Id: <172078879460.310795.17178596698046388308.b4-ty@ellerman.id.au>
 Date: Fri, 12 Jul 2024 22:53:14 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,13 +37,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Jul 2024 12:49:01 +0200, Christophe Leroy wrote:
+On Wed, 10 Jul 2024 23:54:17 -0400, Nick Bowler wrote:
+> The of_device_unregister call in therm_windtunnel's module_exit procedure
+> does not fully reverse the effects of of_platform_device_create in the
+> module_init prodedure.  Once you unload this module, it is impossible
+> to load it ever again since only the first of_platform_device_create
+> call on the fan node succeeds.
 > 
-
+> This driver predates first git commit, and it turns out back then
+> of_platform_device_create worked differently than it does today.
+> So this is actually an old regression.
+> 
+> [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc: Remove 40x leftovers
-      https://git.kernel.org/powerpc/c/3efe19a9b15411119d4a35ec5790ad49f0a0234c
+[1/1] macintosh/therm_windtunnel: fix module unload.
+      https://git.kernel.org/powerpc/c/fd748e177194ebcbbaf98df75152a30e08230cc6
 
 cheers
