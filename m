@@ -1,55 +1,55 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7381176FDB
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B422C178375
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720803660; cv=none; b=bI8jhRwV/7tTyb6jBnp3mxIrNvST+U8g/LvjizWVkOws3rkN+mXHpGbRHiGq8h4tqP5iC+TImFO4DsB2e7MCGaf3P/vnfnSg/b3Mgt2EQYg1Fa2eA1K52gtTPuFhnlLIn4iFA9DF4j+SjUlmVJ37NGcblya0fzKVajy1V7xxFpk=
+	t=1720803666; cv=none; b=FMbpE7dlsoNXAvQAfMYCOTqu3ARoBNIYVWXIy4V3nfPVReGY7VmCbOxTCbA9BgsaA2wTR4r9SC/Suz5qUEQDwdOQtJOSwW7zOt/7LEAYss9FCW6Vdu1KJl95XqIqylx+BSAkpoLlKNpQSCi2YvWm1iYSkaiiW4nafZJzDCfTFZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720803660; c=relaxed/simple;
-	bh=0ox/fHV0whWmOA16gHsV/BoM3g3RhG5o+vu5pBfDGGQ=;
+	s=arc-20240116; t=1720803666; c=relaxed/simple;
+	bh=WYamHMKq11ekPlGjt0Tp4cGSXpKCPA/6UkC+Za8VmrE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KiJKeqLAA+KyEK9mYtbBqryyHNd8mgwVlkQwdOOIPJLGWNO8gBmDssHxtI+07LGR8iZLMYMZwtK6JN/fTlM0TgGE0JLycpRki5ptQWB5HQRQUhR2aHNPhfAH4+PJ1fY/g+BzEfhzFKFpowIg5sEE7fzvUVPNMcP63zll1Az8uCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GF9046HL; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=MxKK4/dFUC0FVZxK3jiorFuwWzaKmz9rJWSwGY+gsI2icYaePt0MKL2CS+ZVHkU0v+x1KuzIKd3iy3VMxKJJI3REnKBNVzMbU15c0DtZzVAds9DCcmXzn5eihpuiC37NEYQ2xJvmU9Okzn2ruMp9cbBTUARdDyKv6B0Jb5W/AY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2nvjJHX1; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GF9046HL"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-36793373454so1383523f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:00:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2nvjJHX1"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e03fe45dc0bso3791120276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720803657; x=1721408457; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720803663; x=1721408463; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=27EENIWQHHAHugBK1Q6SYWc3PF1x6i/tf/vuqqwaqlI=;
-        b=GF9046HLblGUxJUtYgpxP67eEVdgAfBrcUV4iSPM2WlIEqpn4gIv4PcTXSK0rkdxdr
-         mNbtBUdwOOVbMm6xEjCb9nugjmGbLsQVjFU8pQGXTmiq0Y42P+NcR704zJ5iPzANB6fV
-         U08hoj97XEOEETAzerxeMPJyod8RqAFzXxRxkmmxJUtwXRtug5Ka3pN1lQP/c/Jz0bGt
-         /BOOm52j5DVOvPHjgjfynAiLexEMejqyrD7tzQKFnyD9pX+7vLX7FQmhBBJ0s7O/P71y
-         lFL8NDGqyfXzjg6mfpIG9Hh4ZlJBH4mztcMpieNlrZSjPixmym7/fFG456PNKrPAHVBb
-         ApzA==
+        bh=uRdo734SZY7LgE59iZWS/AzLUQw9XRryPytUBqM/u/Y=;
+        b=2nvjJHX1vBCEHiZ/eZE+RsLY4OryH28oLsB/kAMco1NvemfN6bh8Uj0v8HGGmZsRAI
+         jgm7mhu2spmdoQVzNV3TQNKn4+g/ETQbEfDFgq0Zb96+2GmWA5Ezdjl+R0Wb0D/ky8RD
+         6FSOJXwTLx9ElIN9PeDs1onJZAmdtxH+7vyZ9hCyKV1E4EEDn+c0oX4O+l/wXXABnthu
+         L4IyhCk+g+nMnTCq532FY5ehMSqRpcjnwCpyk/u+il1JZMGiOAOMoxJaW39sPAKlvXb8
+         2Nx6SXUtDlXvo5eBkefUXc4iZMz7X2+AcaILmiIwhPqUdHAKJu5FwSm/YFHeHA3vq+sW
+         EpeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720803657; x=1721408457;
+        d=1e100.net; s=20230601; t=1720803663; x=1721408463;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=27EENIWQHHAHugBK1Q6SYWc3PF1x6i/tf/vuqqwaqlI=;
-        b=dk6Ig6SHNB7UqH8o4KvwZAreFEhwBx0vMVwj58utW9S70XWrsWyplCCKaAQlLbeokv
-         puK0PhlY2OO9A5ZdbMJ5fwZU7N5WvpVil0LvFdWRJLo/9Jp4mmNpJ06wETHxdtqfvn1b
-         JT/X4oPe2pGXsZqW9BT57CUCZY9o/DOHHhl7MFYd8KM8hxP+ryFK3e46xLA+iXXr+3ff
-         Xc5qUMvqVB6mivwt/ci4Q2sN/IUGInoaQTyF/WNeceKrPAzcGyzmT9sHhqwHsGtcP8O+
-         z3Suh1YqsQJiXIWUv/HLMMzk6lTRltQ5nF/90EYWUhSwn6kjMDWyJB9CTUqIok2F30gt
-         9NSg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3KcqLM4+96RUWwDGfjUiWB/2xP/dLgOG3wCDSWZXkutyW+ckEhO9evZgWoRvfo85foifs9IV+9TG1wvU3B03K2k864tIfQN97E0ky
-X-Gm-Message-State: AOJu0YzG4fenuM2OzLvtytu3B9pKsPHhgIaHugrX0UvtruX/EDkHliou
-	D4t54cgGdVae2l2bvK9h7+Dk0etupFn9PQbo3UHBOj7YvMUan2rAcOvtF3vQNGiG8OG1Z2tM1BQ
-	7mNJKAJMk4w==
-X-Google-Smtp-Source: AGHT+IGA7T3CScQphIzrB5GwbqwR/XvQ+ZJeEz+EAB7hHAYrv99hyozzic8O5c9/DkjRZkjaSXDa+Xm3xrwxfw==
+        bh=uRdo734SZY7LgE59iZWS/AzLUQw9XRryPytUBqM/u/Y=;
+        b=Rxg4ie3Tuj0Iv4JMc6uuiW9x1y7fidxW6tYK2cBmZUGXOdzzBRgbTdI8rd76kWj9Vh
+         3nWPk4nH6XiaHvFIhc8HEUjb43hu7W6p4BFomeU70pKPjkKS+ff3GWoZdy+liNEuZjRt
+         3BuwQYzVULUTBXtiIlAK9O3wkyAOQv26kB9Y0rzZq02CwYHTwM1a9G9HyKCFTIgBvfG6
+         5fahbJ4D1/rGGAXntHnRzbLulGQ42k9MLc5qm6q3cQqT8ky+ZQwwwIZZ4/dv6++4fNp8
+         MnfpXUpMAANT962HjQmRkPa8oNyPzKB3DZ+oKKk++CK84VYyC8hfFAyZ5j9D2bsO6a/Y
+         /gsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ21s5/a4vsrBWRXvoNhVI/OXzJMy7pNgxKniI4h5IiudpYBveUNYqoNIes8VioiqgMrkXU2vhL+53vYSlV20Hj7o7mGXnWP6xPCuU
+X-Gm-Message-State: AOJu0Yx5zC9Aio2f5mN7ZiTBBIgzShpbe7hGnCtn6dq1llxE33Reqg+k
+	y0OgM3YHbicdFeipr9VPCFBC/AUYkGl77ScYPxwsvwjVpv893u8a/Na4zUNcmzVGfj1esSSTpjw
+	+jHGLSeUgSg==
+X-Google-Smtp-Source: AGHT+IFYA55X1keLcQMRBGeCAFNmP+QStD5pTx8+8q+l5zrMjeIlti4CTq5gIWF/C14pV/xqXPndYQF6ybLHYg==
 X-Received: from beeg.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:11db])
- (user=jackmanb job=sendgmr) by 2002:a05:6000:14c:b0:360:727b:8b5d with SMTP
- id ffacd0b85a97d-367cea738dbmr25053f8f.6.1720803657248; Fri, 12 Jul 2024
- 10:00:57 -0700 (PDT)
-Date: Fri, 12 Jul 2024 17:00:20 +0000
+ (user=jackmanb job=sendgmr) by 2002:a05:6902:1b12:b0:e03:b3e8:f9a1 with SMTP
+ id 3f1490d57ef6-e041b02fabamr791937276.2.1720803662807; Fri, 12 Jul 2024
+ 10:01:02 -0700 (PDT)
+Date: Fri, 12 Jul 2024 17:00:22 +0000
 In-Reply-To: <20240712-asi-rfc-24-v1-0-144b319a40d8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240712-asi-rfc-24-v1-0-144b319a40d8@google.com>
 X-Mailer: b4 0.14-dev
-Message-ID: <20240712-asi-rfc-24-v1-2-144b319a40d8@google.com>
-Subject: [PATCH 02/26] x86: Create CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
+Message-ID: <20240712-asi-rfc-24-v1-4-144b319a40d8@google.com>
+Subject: [PATCH 04/26] objtool: let some noinstr functions make indirect calls
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -83,266 +83,53 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	kvm@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Currently a nop config. Keeping as a separate commit for easy review of
-the boring bits. Later commits will use and enable this new config.
+As described in the comment, some noinstr functions really need to make
+indirect calls.
 
-This config is only added for non-UML x86_64 as other architectures do
-not yet have pending implementations. It also has somewhat artificial
-dependencies on !PARAVIRT and !KASAN which are explained in the Kconfig
-file.
+Those functions could be rewritten to use static calls, but that just
+shifts the "assume it's instrumented" to "assume the indirect call is
+fine" which seems like just moving the problem around.
 
-Co-developed-by: Junaid Shahid <junaids@google.com>
+Instead here's a way to selectively mark functions that are known to be
+in the danger zone, and we'll just have to be careful with them.
+
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- arch/alpha/include/asm/Kbuild      |  1 +
- arch/arc/include/asm/Kbuild        |  1 +
- arch/arm/include/asm/Kbuild        |  1 +
- arch/arm64/include/asm/Kbuild      |  1 +
- arch/csky/include/asm/Kbuild       |  1 +
- arch/hexagon/include/asm/Kbuild    |  1 +
- arch/loongarch/include/asm/Kbuild  |  1 +
- arch/m68k/include/asm/Kbuild       |  1 +
- arch/microblaze/include/asm/Kbuild |  1 +
- arch/mips/include/asm/Kbuild       |  1 +
- arch/nios2/include/asm/Kbuild      |  1 +
- arch/openrisc/include/asm/Kbuild   |  1 +
- arch/parisc/include/asm/Kbuild     |  1 +
- arch/powerpc/include/asm/Kbuild    |  1 +
- arch/riscv/include/asm/Kbuild      |  1 +
- arch/s390/include/asm/Kbuild       |  1 +
- arch/sh/include/asm/Kbuild         |  1 +
- arch/sparc/include/asm/Kbuild      |  1 +
- arch/um/include/asm/Kbuild         |  1 +
- arch/x86/Kconfig                   | 19 +++++++++++++++++++
- arch/xtensa/include/asm/Kbuild     |  1 +
- include/asm-generic/asi.h          |  5 +++++
- 22 files changed, 44 insertions(+)
+ tools/objtool/check.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/alpha/include/asm/Kbuild b/arch/alpha/include/asm/Kbuild
-index 396caece6d6d9..ca72ce3baca13 100644
---- a/arch/alpha/include/asm/Kbuild
-+++ b/arch/alpha/include/asm/Kbuild
-@@ -5,3 +5,4 @@ generic-y += agp.h
- generic-y += asm-offsets.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += asi.h
-diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
-index 3c1afa524b9c2..60bdeffa7c31e 100644
---- a/arch/arc/include/asm/Kbuild
-+++ b/arch/arc/include/asm/Kbuild
-@@ -4,3 +4,4 @@ generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += parport.h
- generic-y += user.h
-+generic-y += asi.h
-diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-index 03657ff8fbe3d..1e2c3d8dbbd99 100644
---- a/arch/arm/include/asm/Kbuild
-+++ b/arch/arm/include/asm/Kbuild
-@@ -6,3 +6,4 @@ generic-y += parport.h
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 0a33d9195b7a9..a760a858d8aa3 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -3425,6 +3425,17 @@ static bool pv_call_dest(struct objtool_file *file, struct instruction *insn)
+ 	return file->pv_ops[idx].clean;
+ }
  
- generated-y += mach-types.h
- generated-y += unistd-nr.h
-+generic-y += asi.h
-diff --git a/arch/arm64/include/asm/Kbuild b/arch/arm64/include/asm/Kbuild
-index 4b6d2d52053e4..f95699a559309 100644
---- a/arch/arm64/include/asm/Kbuild
-+++ b/arch/arm64/include/asm/Kbuild
-@@ -5,6 +5,7 @@ generic-y += qrwlock.h
- generic-y += qspinlock.h
- generic-y += parport.h
- generic-y += user.h
-+generic-y += asi.h
++static inline bool allow_noinstr_indirect_call(struct symbol *func)
++{
++	/*
++	 * These functions are noinstr but make indirect calls. The programmer
++	 * solemnly promises that the target functions are noinstr too, but they
++	 * might be in modules so we can't prove it here.
++	 */
++	return (!strcmp(func->name, "asi_exit") ||
++		!strcmp(func->name, "__asi_enter"));
++}
++
+ static inline bool noinstr_call_dest(struct objtool_file *file,
+ 				     struct instruction *insn,
+ 				     struct symbol *func)
+@@ -3437,6 +3448,9 @@ static inline bool noinstr_call_dest(struct objtool_file *file,
+ 		if (file->pv_ops)
+ 			return pv_call_dest(file, insn);
  
- generated-y += cpucap-defs.h
- generated-y += sysreg-defs.h
-diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
-index 1117c28cb7e8a..5e49ccb571644 100644
---- a/arch/csky/include/asm/Kbuild
-+++ b/arch/csky/include/asm/Kbuild
-@@ -10,3 +10,4 @@ generic-y += qspinlock.h
- generic-y += parport.h
- generic-y += user.h
- generic-y += vmlinux.lds.h
-+generic-y += asi.h
-\ No newline at end of file
-diff --git a/arch/hexagon/include/asm/Kbuild b/arch/hexagon/include/asm/Kbuild
-index 3ece3c93fe086..744ffbeeb7ae4 100644
---- a/arch/hexagon/include/asm/Kbuild
-+++ b/arch/hexagon/include/asm/Kbuild
-@@ -3,3 +3,4 @@ generic-y += extable.h
- generic-y += iomap.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += asi.h
-diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
-index 2dbec7853ae86..66fcd325d6083 100644
---- a/arch/loongarch/include/asm/Kbuild
-+++ b/arch/loongarch/include/asm/Kbuild
-@@ -27,3 +27,4 @@ generic-y += param.h
- generic-y += posix_types.h
- generic-y += resource.h
- generic-y += kvm_para.h
-+generic-y += asi.h
-diff --git a/arch/m68k/include/asm/Kbuild b/arch/m68k/include/asm/Kbuild
-index 0dbf9c5c6faeb..faf0f135df4ab 100644
---- a/arch/m68k/include/asm/Kbuild
-+++ b/arch/m68k/include/asm/Kbuild
-@@ -4,3 +4,4 @@ generic-y += extable.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += spinlock.h
-+generic-y += asi.h
-diff --git a/arch/microblaze/include/asm/Kbuild b/arch/microblaze/include/asm/Kbuild
-index a055f5dbe00a3..012e4bf83c134 100644
---- a/arch/microblaze/include/asm/Kbuild
-+++ b/arch/microblaze/include/asm/Kbuild
-@@ -8,3 +8,4 @@ generic-y += parport.h
- generic-y += syscalls.h
- generic-y += tlb.h
- generic-y += user.h
-+generic-y += asi.h
-diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-index 7ba67a0d6c97b..3191699298d80 100644
---- a/arch/mips/include/asm/Kbuild
-+++ b/arch/mips/include/asm/Kbuild
-@@ -13,3 +13,4 @@ generic-y += parport.h
- generic-y += qrwlock.h
- generic-y += qspinlock.h
- generic-y += user.h
-+generic-y += asi.h
-diff --git a/arch/nios2/include/asm/Kbuild b/arch/nios2/include/asm/Kbuild
-index 7fe7437555fb4..bfdc4026c5b16 100644
---- a/arch/nios2/include/asm/Kbuild
-+++ b/arch/nios2/include/asm/Kbuild
-@@ -5,3 +5,4 @@ generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += spinlock.h
- generic-y += user.h
-+generic-y += asi.h
-diff --git a/arch/openrisc/include/asm/Kbuild b/arch/openrisc/include/asm/Kbuild
-index c8c99b554ca4c..d137c4e08e369 100644
---- a/arch/openrisc/include/asm/Kbuild
-+++ b/arch/openrisc/include/asm/Kbuild
-@@ -7,3 +7,4 @@ generic-y += spinlock.h
- generic-y += qrwlock_types.h
- generic-y += qrwlock.h
- generic-y += user.h
-+generic-y += asi.h
-diff --git a/arch/parisc/include/asm/Kbuild b/arch/parisc/include/asm/Kbuild
-index 4fb596d94c893..3cbb4eb14712c 100644
---- a/arch/parisc/include/asm/Kbuild
-+++ b/arch/parisc/include/asm/Kbuild
-@@ -5,3 +5,4 @@ generic-y += agp.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += user.h
-+generic-y += asi.h
-diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
-index 61a8d5555cd7e..103c7e2f66987 100644
---- a/arch/powerpc/include/asm/Kbuild
-+++ b/arch/powerpc/include/asm/Kbuild
-@@ -8,3 +8,4 @@ generic-y += mcs_spinlock.h
- generic-y += qrwlock.h
- generic-y += vtime.h
- generic-y += early_ioremap.h
-+generic-y += asi.h
-diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-index 504f8b7e72d41..08c199a56731e 100644
---- a/arch/riscv/include/asm/Kbuild
-+++ b/arch/riscv/include/asm/Kbuild
-@@ -9,3 +9,4 @@ generic-y += qrwlock.h
- generic-y += qrwlock_types.h
- generic-y += user.h
- generic-y += vmlinux.lds.h
-+generic-y += asi.h
-diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
-index 4b904110d27cb..b5caf77e8d955 100644
---- a/arch/s390/include/asm/Kbuild
-+++ b/arch/s390/include/asm/Kbuild
-@@ -7,3 +7,4 @@ generated-y += unistd_nr.h
- generic-y += asm-offsets.h
- generic-y += kvm_types.h
- generic-y += mcs_spinlock.h
-+generic-y += asi.h
-diff --git a/arch/sh/include/asm/Kbuild b/arch/sh/include/asm/Kbuild
-index fc44d9c88b419..ea19e45158285 100644
---- a/arch/sh/include/asm/Kbuild
-+++ b/arch/sh/include/asm/Kbuild
-@@ -3,3 +3,4 @@ generated-y += syscall_table.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += parport.h
-+generic-y += asi.h
-diff --git a/arch/sparc/include/asm/Kbuild b/arch/sparc/include/asm/Kbuild
-index 43b0ae4c2c211..cb9062c9be17f 100644
---- a/arch/sparc/include/asm/Kbuild
-+++ b/arch/sparc/include/asm/Kbuild
-@@ -4,3 +4,4 @@ generated-y += syscall_table_64.h
- generic-y += agp.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += asi.h
-diff --git a/arch/um/include/asm/Kbuild b/arch/um/include/asm/Kbuild
-index b2d834a29f3a9..1bcb16b09dc49 100644
---- a/arch/um/include/asm/Kbuild
-+++ b/arch/um/include/asm/Kbuild
-@@ -28,3 +28,4 @@ generic-y += trace_clock.h
- generic-y += kprobes.h
- generic-y += mm_hooks.h
- generic-y += vga.h
-+generic-y += asi.h
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 928820e61cb50..ff74aa53842ea 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2516,6 +2516,25 @@ config MITIGATION_PAGE_TABLE_ISOLATION
++		if (allow_noinstr_indirect_call(insn->sym))
++			return true;
++
+ 		return false;
+ 	}
  
- 	  See Documentation/arch/x86/pti.rst for more details.
- 
-+config MITIGATION_ADDRESS_SPACE_ISOLATION
-+	bool "Allow code to run with a reduced kernel address space"
-+	default n
-+	depends on X86_64 && !PARAVIRT && !KASAN && !UML
-+	help
-+	  This feature provides the ability to run some kernel code
-+	  with a reduced kernel address space. This can be used to
-+	  mitigate some speculative execution attacks.
-+
-+	  The !PARAVIRT dependency is only because of lack of testing; in theory
-+	  the code is written to work under paravirtualization. In practice
-+	  there are likely to be unhandled cases, in particular concerning TLB
-+	  flushes.
-+
-+	  The !KASAN dependency is mainly because ASI creates a secondary
-+	  direct-map region in order to implement local-nonsensitive memory.
-+	  This dependencies will later be removed with extensions to the KASAN
-+	  implementation.
-+
- config MITIGATION_RETPOLINE
- 	bool "Avoid speculative indirect branches in kernel"
- 	select OBJTOOL if HAVE_OBJTOOL
-diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-index fa07c686cbcc2..07cea6902f980 100644
---- a/arch/xtensa/include/asm/Kbuild
-+++ b/arch/xtensa/include/asm/Kbuild
-@@ -8,3 +8,4 @@ generic-y += parport.h
- generic-y += qrwlock.h
- generic-y += qspinlock.h
- generic-y += user.h
-+generic-y += asi.h
-diff --git a/include/asm-generic/asi.h b/include/asm-generic/asi.h
-new file mode 100644
-index 0000000000000..c4d9a5ff860a9
---- /dev/null
-+++ b/include/asm-generic/asi.h
-@@ -0,0 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_GENERIC_ASI_H
-+#define __ASM_GENERIC_ASI_H
-+
-+#endif
 
 -- 
 2.45.2.993.g49e7a77208-goog
