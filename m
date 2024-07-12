@@ -1,59 +1,62 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AED14F70
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED35179A7;
+	Fri, 12 Jul 2024 05:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761541; cv=none; b=gszjUko3IIYoplz/bBwu8GLKeVs9B2GtL2M3WahPjCtWrf6Tw9E5m5kt6CYcZZ+59Lzdv+2TW/EnPrg9kNFtvuYwxE53A5ZdMb45+vsseYYLVcpEYsOwWghLkm8GYJqE6DmNicajLocbJcue71bt3vjGLPEJsOC80xkf2DU7BQA=
+	t=1720761542; cv=none; b=ocv/13m5E5EY8mJFmeS8Joy5i89Jiavb0uaHWL+N3NZBvcM0qcij+IxDoczvnzsDs1nbHqCzudaLSmMepeZ3PcKnYTki+sqeUCqc1V3OCP5UNMxbIVhYHjLUR4GhncjtsWhvivMGXFEMVBDdm0uGN7NswIf+98l5EB01NmH1aLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720761541; c=relaxed/simple;
-	bh=WUxIGU0rtRMWn+LWARjnczpSHXVVxsgYXM6gxpBMNzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BoULNGFvgD8cH8u8ybAktaHaOTnHe3h9RGIlnjuO7XnztA+VUSGGL8yq24d+LRcsWuobzATbLnf6JUcJHh7XMrOAtu0Ng5vjZSqoM+8VoOw35BZ9Z/xkvjhbVIfb9p5JvQkRVDkxYE6+z98QEmnuifwEu1mSv0384n7cCzKWZ0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jxP6uBdI; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1720761542; c=relaxed/simple;
+	bh=l6nvyllH4QEDzSHsVde4XTA4lsBdgRU1D1GLy5qtsH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cq41OzK5NeZXuUBKi4A9yXnbW2l/ATX/8ES/94lKnb4NbnexT7hTFa6TMkQXifPBLAXbQOpuFJ+Z4o0CDAxO/DH0Digr3CDOBZQLXG8BC87zZSloalSj3pYAT/3VirnPd6I2jf6/vyKJ1uZ1uRw83KnxRBk06OEBb+cdk9cm65c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kcS1mnMc; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jxP6uBdI"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6f8d0a00a35so1331011a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:18:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcS1mnMc"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3d9272287easo812297b6e.2;
+        Thu, 11 Jul 2024 22:19:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720761538; x=1721366338; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720761540; x=1721366340; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W6OXg817dhfYOLW3flKAXNdYBiz43qkGMpm3eFZy+Os=;
-        b=jxP6uBdIOjDN7Ibhfhelk1cg4eU2aFthQObjhUid1txvY2FhQqy7V0G5wZ+/XTIeCW
-         IERHeYowHdb0j3GSnQXd1xAsYhSKMY4pGYC54vLvK7Ara3K/jWr2EdbccElv+5ViTyF7
-         3dwoNph7G7pZ7RPowJXaZjCm+IfuP/ZAgOZNQ=
+        bh=M1CGwcQZMXLIzxE6Px/5LUIZz/+qZ5J0Np8VPgeqfF4=;
+        b=kcS1mnMcj6l+G0U/Vgz7apTvOUbDiMAh4imwT1flJTu9x3B/q2okJKWkVEkE/4bACT
+         PeqHFKyZKbUYEEdlSecYao1GFtrqRGQY2oPKzoxQJHyKmLTpoT1CiUi0p86ao4/ZPBoU
+         AkFBU3IJnikygLq7/fJW0f6QMuw+CGpLZXlELyU9F4IUkzw0xAPUul+O372BxosGHYJZ
+         q7ekROPiEsVVg7MfujSSqkbTpU5RDxq6zQTPtt7AnrJ+B+VZfHkL835Y1BsDREWtX9jr
+         ZQKtW7W4KcDuQuWM4qpo8gQ3bqYN/DVBlQGpLJ6Ydg4+SFp2R4EeJ/JinCcqmhYBqonG
+         +4EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720761538; x=1721366338;
+        d=1e100.net; s=20230601; t=1720761540; x=1721366340;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=W6OXg817dhfYOLW3flKAXNdYBiz43qkGMpm3eFZy+Os=;
-        b=tTKaN67G0+7ttKsuqE/lH9ViU0ZtV1hJLb5iLFTMEjooyr6JAxPrmfKgnFf/yK3M1H
-         bdDUEeAJ6vqxBxXnUJWDLACc06fXdJKvE6f+LAZ5ACMCTf9pUXALnQUAzRFdxNNpLWME
-         z0XvSfRH4AH2TXZivxAzxudjYRnmdBArl98EJEwkNHyQTXcwOLupSExrXNlc9IhikLVN
-         Eyu6hKYkuAJBNYpQ98H/XPX0kaHuMaOySIeZtuhHBXWSh64dzyuotrIARBJkUg1go1PZ
-         ax/O/+J/kIXcolsy+P3b5HaY2KjJJz6hEAqAGEsRxtR8IBM7q5XerXNXowyOXgHgtmdQ
-         pv/g==
-X-Gm-Message-State: AOJu0YyT2lB1m/7QmaESbx9udgYDzhDGPbLV/ipdFkJACfqpMGrd/q7C
-	AEduiHSApewnJtK1MHGaA+X7ePpcdkfaW4gluLu7+tX41sgX8azAuctZOL+nEw==
-X-Google-Smtp-Source: AGHT+IGj4V+yjVYsghE7DvUFAIsdirwBzPO2EERHzfydZRWY3jBrE95wKK7HHMunvGGLpFjgnRfwmg==
-X-Received: by 2002:a05:6830:1e99:b0:703:6847:3ab8 with SMTP id 46e09a7af769-70375a45ca7mr11587947a34.25.1720761538573;
-        Thu, 11 Jul 2024 22:18:58 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:15f3:5252:ec56:52ae])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967851sm6553436b3a.109.2024.07.11.22.18.56
+        bh=M1CGwcQZMXLIzxE6Px/5LUIZz/+qZ5J0Np8VPgeqfF4=;
+        b=GENLTk6V9q8F0FGWu/m0TApcD1h5LJUVkSqE9ixsJ2onohd4ZGmGRTD6QbMwjyWEm5
+         pkDIRjIwCowTlJeyT1c9ZUYTSAY7XoMJQdrBMLr+sjb5qrl4W/H58B7Ck8Ws0z2xoo5J
+         fSDKDBUpU7+3Vzxm6fQ0se48C9Z5/zSt9Y8ArkpXkaWHpOGCm7eX98kWr7lnR3bTZWMH
+         sU5n+1ad7RGTQlyt848G9GPAMPY9e2wdT79V/mZpoPmy23Nw1/p1b4hptnePFFIljI6E
+         VW/i5HqgvdLwdyR8UuQrFDJPpSzlwaQvh9WJO44pRYIPZZctIGxOXHdRD9RTTLZYeGOm
+         XDTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXRlCM9fVex5eXz8oSYk5lHodJe/kbuF/nBXyQ5JAL11BpLQniJbjreuKwZZ8AAdCvkRr8ngO8fYN5RRO1lTJM5N3TCFFw4r7NdwXb
+X-Gm-Message-State: AOJu0Ywh4PDC63Z5PTILXBdtXyNe86Zy/VCnKnXJ4S8+mh2rlbqxuuqi
+	WyUdq+0D6AeKRhPjgaK53uu1PAUpwQIoe+iFxI4BnFTh7wYjkkPlYtppAQ==
+X-Google-Smtp-Source: AGHT+IGGK71r3iEz9krfXkoSAEVHEPqDp4gsemuUJgntwfe0HJR1E88DoN9bqbClm5Sznlmb3YFqig==
+X-Received: by 2002:a05:6808:1928:b0:3d5:6775:1288 with SMTP id 5614622812f47-3d93befbab7mr11449547b6e.14.1720761539541;
+        Thu, 11 Jul 2024 22:18:59 -0700 (PDT)
+Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:acda:de52:5c83:f72d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d669d525csm4328972a12.73.2024.07.11.22.18.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:18:58 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v6 00/23] zram: introduce custom comp backends API
-Date: Fri, 12 Jul 2024 14:18:11 +0900
-Message-ID: <20240712051850.484318-1-senozhatsky@chromium.org>
+        Thu, 11 Jul 2024 22:18:59 -0700 (PDT)
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: linux-input@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] Input: usbtouchscreen - use driver core to instantiate device attributes
+Date: Thu, 11 Jul 2024 22:18:43 -0700
+Message-ID: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -63,119 +66,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series introduces support for run-time compression algorithms
-tuning, so users, for instance, can adjust compression/acceleration
-levels and provide pre-trained compression/decompression dictionaries
-which certain algorithms support.
+Instead of manually creating driver-specific device attributes
+set struct usb_driver->dev_groups pointer to have the driver core
+do it.
 
-At this point we stop supporting (old/deprecated) comp API.  We may
-add new acomp API support in the future, but before that zram needs
-to undergo some major rework (we are not ready for async compression).
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/touchscreen/usbtouchscreen.c | 31 +++++++++++++++-------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
-Some benchmarks for reference (look at column #2)
-
-*** zstd
-/sys/block/zram0/mm_stat
-1750650880 504575194 514392064        0 514392064        1        0    34204    34204
-
-*** zstd level=-1
-/sys/block/zram0/mm_stat
-1750638592 591816152 603758592        0 603758592        1        0    34288    34288
-
-*** zstd level=8
-/sys/block/zram0/mm_stat
-1750659072 486924248 496377856        0 496377856        1        0    34204    34204
-
-*** zstd dict=/home/ss/zstd-dict-amd64
-/sys/block/zram0/mm_stat
-1750634496 465853994 475230208        0 475230208        1        0    34185    34185
-
-*** zstd level=8 dict=/home/ss/zstd-dict-amd64
-/sys/block/zram0/mm_stat
-1750650880 430760956 439967744        0 439967744        1        0    34185    34185
-
-*** lz4
-/sys/block/zram0/mm_stat
-1750663168 664194239 676970496        0 676970496        1        0    34288    34288
-
-*** lz4 dict=/home/ss/lz4-dict-amd64
-/sys/block/zram0/mm_stat
-1750650880 619901052 632061952        0 632061952        1        0    34278    34278
-
-*** lz4 level=5 dict=/home/ss/lz4-dict-amd64
-/sys/block/zram0/mm_stat
-1750650880 727180082 740884480        0 740884480        1        0    34438    34438
-
-v5..v6:
-- const-ify zcomp ops (Thomas Weissschuh)
-
-Sergey Senozhatsky (23):
-  lib: zstd: export API needed for dictionary support
-  lib: lz4hc: export LZ4_resetStreamHC symbol
-  lib: zstd: fix null-deref in ZSTD_createCDict_advanced2()
-  zram: introduce custom comp backends API
-  zram: add lzo and lzorle compression backends support
-  zram: add lz4 compression backend support
-  zram: add lz4hc compression backend support
-  zram: add zstd compression backend support
-  zram: pass estimated src size hint to zstd
-  zram: add zlib compression backend support
-  zram: add 842 compression backend support
-  zram: check that backends array has at least one backend
-  zram: introduce zcomp_params structure
-  zram: recalculate zstd compression params once
-  zram: extend comp_algorithm attr write handling
-  zram: add support for dict comp config
-  zram: introduce zcomp_req structure
-  zram: introduce zcomp_ctx structure
-  zram: move immutable comp params away from per-CPU context
-  zram: add dictionary support to lz4
-  zram: add dictionary support to lz4hc
-  zram: add dictionary support to zstd backend
-  Documentation/zram: add documentation for algorithm parameters
-
- Documentation/admin-guide/blockdev/zram.rst |  45 +++-
- drivers/block/zram/Kconfig                  |  76 +++++--
- drivers/block/zram/Makefile                 |   8 +
- drivers/block/zram/backend_842.c            |  61 ++++++
- drivers/block/zram/backend_842.h            |  10 +
- drivers/block/zram/backend_deflate.c        | 146 +++++++++++++
- drivers/block/zram/backend_deflate.h        |  10 +
- drivers/block/zram/backend_lz4.c            | 127 +++++++++++
- drivers/block/zram/backend_lz4.h            |  10 +
- drivers/block/zram/backend_lz4hc.c          | 128 +++++++++++
- drivers/block/zram/backend_lz4hc.h          |  10 +
- drivers/block/zram/backend_lzo.c            |  59 +++++
- drivers/block/zram/backend_lzo.h            |  10 +
- drivers/block/zram/backend_lzorle.c         |  59 +++++
- drivers/block/zram/backend_lzorle.h         |  10 +
- drivers/block/zram/backend_zstd.c           | 226 ++++++++++++++++++++
- drivers/block/zram/backend_zstd.h           |  10 +
- drivers/block/zram/zcomp.c                  | 195 ++++++++---------
- drivers/block/zram/zcomp.h                  |  71 ++++--
- drivers/block/zram/zram_drv.c               | 117 +++++++++-
- drivers/block/zram/zram_drv.h               |   1 +
- include/linux/zstd.h                        | 167 +++++++++++++++
- lib/lz4/lz4hc_compress.c                    |   1 +
- lib/zstd/compress/zstd_compress.c           |   2 +
- lib/zstd/zstd_compress_module.c             |  49 +++++
- lib/zstd/zstd_decompress_module.c           |  36 ++++
- 26 files changed, 1505 insertions(+), 139 deletions(-)
- create mode 100644 drivers/block/zram/backend_842.c
- create mode 100644 drivers/block/zram/backend_842.h
- create mode 100644 drivers/block/zram/backend_deflate.c
- create mode 100644 drivers/block/zram/backend_deflate.h
- create mode 100644 drivers/block/zram/backend_lz4.c
- create mode 100644 drivers/block/zram/backend_lz4.h
- create mode 100644 drivers/block/zram/backend_lz4hc.c
- create mode 100644 drivers/block/zram/backend_lz4hc.h
- create mode 100644 drivers/block/zram/backend_lzo.c
- create mode 100644 drivers/block/zram/backend_lzo.h
- create mode 100644 drivers/block/zram/backend_lzorle.c
- create mode 100644 drivers/block/zram/backend_lzorle.h
- create mode 100644 drivers/block/zram/backend_zstd.c
- create mode 100644 drivers/block/zram/backend_zstd.h
-
+diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
+index dd6b12c6dc58..8b3a6e7fd990 100644
+--- a/drivers/input/touchscreen/usbtouchscreen.c
++++ b/drivers/input/touchscreen/usbtouchscreen.c
+@@ -240,6 +240,7 @@ static const struct usb_device_id usbtouch_devices[] = {
+ 	{}
+ };
+ 
++static struct usbtouch_device_info usbtouch_dev_info[];
+ 
+ /*****************************************************************************
+  * e2i Part
+@@ -466,7 +467,19 @@ static struct attribute *mtouch_attrs[] = {
+ 	NULL
+ };
+ 
++static bool mtouch_group_visible(struct kobject *kobj)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct usb_interface *intf = to_usb_interface(dev);
++	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
++
++	return usbtouch->type == &usbtouch_dev_info[DEVTYPE_3M];
++}
++
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(mtouch);
++
+ static const struct attribute_group mtouch_attr_group = {
++	.is_visible = SYSFS_GROUP_VISIBLE(mtouch),
+ 	.attrs = mtouch_attrs,
+ };
+ 
+@@ -506,21 +519,12 @@ static int mtouch_get_fw_revision(struct usbtouch_usb *usbtouch)
+ static int mtouch_alloc(struct usbtouch_usb *usbtouch)
+ {
+ 	struct mtouch_priv *priv;
+-	int ret;
+ 
+ 	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+ 	usbtouch->priv = priv;
+-	ret = sysfs_create_group(&usbtouch->interface->dev.kobj,
+-				 &mtouch_attr_group);
+-	if (ret) {
+-		kfree(usbtouch->priv);
+-		usbtouch->priv = NULL;
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -571,7 +575,6 @@ static void mtouch_exit(struct usbtouch_usb *usbtouch)
+ {
+ 	struct mtouch_priv *priv = usbtouch->priv;
+ 
+-	sysfs_remove_group(&usbtouch->interface->dev.kobj, &mtouch_attr_group);
+ 	kfree(priv);
+ }
+ #endif
+@@ -1842,6 +1845,13 @@ static void usbtouch_disconnect(struct usb_interface *intf)
+ 	kfree(usbtouch);
+ }
+ 
++static const struct attribute_group *usbtouch_groups[] = {
++#ifdef CONFIG_TOUCHSCREEN_USB_3M
++	&mtouch_attr_group,
++#endif
++	NULL
++};
++
+ MODULE_DEVICE_TABLE(usb, usbtouch_devices);
+ 
+ static struct usb_driver usbtouch_driver = {
+@@ -1852,6 +1862,7 @@ static struct usb_driver usbtouch_driver = {
+ 	.resume		= usbtouch_resume,
+ 	.reset_resume	= usbtouch_reset_resume,
+ 	.id_table	= usbtouch_devices,
++	.dev_groups	= usbtouch_groups,
+ 	.supports_autosuspend = 1,
+ };
+ 
 -- 
 2.45.2.993.g49e7a77208-goog
 
