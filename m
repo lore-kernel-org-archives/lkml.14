@@ -1,438 +1,138 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013055.outbound.protection.outlook.com [52.101.67.55])
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4601442F7;
-	Fri, 12 Jul 2024 09:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720776395; cv=fail; b=MFOWhDQivZirxEDa1fUjaRygwudk2/TrHV53/NKDVfdZdN2TckeVCkCl+XbQgq9sNTRVeKetXaf4BStLNKG1ZGhCbeRn9nnmNQGFxt2cocqcLLaKCHyi2PUZ4MpPJOvN0wKmKnOdU5qKnmBV2/AWzaSTJEc+UMW7KmZChMNgSSw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720776395; c=relaxed/simple;
-	bh=ZW5VUdc3IBiHSCnuEZ0jJWdPFaCBEMIZhu4c5aJFtKQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lAEKSzAQpRlL/InlBx5tUUOMliYrW6tX7HnbkMNFtNtfenWud/XM+w4wVRAx22an1DEpFNp9oOhKwQMl0YkBcfx7JwuysHWUQHZ9Whb7+wLqWHQBA5vGUFxiQ4Lx32hkp7vUff58eTchU3sjOjnAX3tJO2vcCjZLXbMHKFfACq4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=babR7y0T; arc=fail smtp.client-ip=52.101.67.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F56143C51
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720776398; cv=none; b=QNcQfUVD1BCg2DSf0xmTEdX2Wjh8Jt2sN6UuKTDxaoksbQhi0NFe9bbtYKuTWjwdQNA3BvD1OLY+CgEaG2LDqVuSmSXq3Br9yEmFvcBre5/NGwejTD6JCPhopblq74bSkbGGiyZjdZuECAdmiGWpEhwtcALyB64GM1lnBCkv0LU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720776398; c=relaxed/simple;
+	bh=XTHhkNfW6DjDt9wKWePcdKsctLMF24Lq3kjl0NCYTl0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aE9/DERGmBAKb85D1DVd7nCbkbNWT5xrqveHPYqWKJccmfUiNrGeiNmk3b0DEhRZcff6SpKbbyZ9On/oCVfwdlhIKDvdIRAFV5pRvG62GgR7TfAHpWsUtmq/Pzjpvi7VAPMsnNJh7zfHtdSxc5eB/a76MMmKgz+rnoxT5bxrZzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=x458Hlnl; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="babR7y0T"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IozinDbC+sA/WatyxNjXbOVIDntYO/PoHIa5EKRBLHb/0bUnxzLI5pQ0ESZ+GCUNH5B+XRofFOPgGj8yLBpsPjg9EHCHetEv0epXLzMCGdV1+H8WMo9H/0PUPmZm58FYX/Xzg0/+CVppE7hDUNthYag1zA4VBf0i+Yr3M0ZsFI3k2TB8cxmRRbzAyUKL7OgkLKVYb2pQjC1KrD32zIuhQ7ep8Zhp3s8MVrgXxAJAyuOy6HHFRnlGFkV1GpPVkqYPJAkkpTMhrub0fTOCr+H9I222mokSOKt3P/Q5G/HKqePLHmXXjXUAVyHBM6vtVDTNg1fPzHslfibRDUgOngi1Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gxvJmSbW8JauPoVbLzhu4Vb+YpmEesx3Xp/kZ30aEHo=;
- b=rCXBADRV5L74y1X/+L4L1MmtioehZ3RvpmpbNEsNbXF++bdJ5WWhKO/C3JYeEXg/9BrPOtKuybycYycRykaQiIoXQ9DpXfVvkcCLep9KzUuCj+O29YtNxKlCLeQwh1KmSUzz47P4+86iBmgxgH8fxBIXxBR6M01wMpG9TURYJWLeeJWDh5VOam78ntxxP4SBaG27ss9e71eV6Eync2l6L77XRL/ajAvn3g3PtzUD4JZ1RyjAerMDGAH0Pu0JQJh1R8pSeUuQ5/OYm8lnK71/iIajYXFHpohFv4vT+xxZZ7XbnkGCnTi+MhUFKZbvyHosH5UePhqiS7onTQkAXikV2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gxvJmSbW8JauPoVbLzhu4Vb+YpmEesx3Xp/kZ30aEHo=;
- b=babR7y0TtKB/VH3c5sFi3XFgmj+TbftBdOBtFrAOgM/H7CE3pTE7C7vqbWP1CdQ0iwLnteYHa71GmRsLMBWXK1svvd0NwdEVSQ+ZsPOEkZOhQxe5b6eU5APXcrs5Ehc5LcQHs+lN/HBIWmtZJslyq11mOk3NlGt659+uTXQLpc8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by GV1PR04MB10242.eurprd04.prod.outlook.com (2603:10a6:150:1a8::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.20; Fri, 12 Jul
- 2024 09:26:31 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%2]) with mapi id 15.20.7762.020; Fri, 12 Jul 2024
- 09:26:31 +0000
-From: Liu Ying <victor.liu@nxp.com>
-To: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	tglx@linutronix.de,
-	vkoul@kernel.org,
-	kishon@kernel.org,
-	aisheng.dong@nxp.com,
-	agx@sigxcpu.org,
-	francesco@dolcini.it,
-	frank.li@nxp.com
-Subject: [DO NOT MERGE PATCH v2 16/16] arm64: dts: imx8qxp-mek: Add MX8-DLVDS-LCD1 display module support
-Date: Fri, 12 Jul 2024 17:32:43 +0800
-Message-Id: <20240712093243.2108456-17-victor.liu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20240712093243.2108456-1-victor.liu@nxp.com>
-References: <20240712093243.2108456-1-victor.liu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0054.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::13) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="x458Hlnl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Mr/oLSebsAjrIhR//GSxa555Ns9T6USHYiGG2DRTKnM=; b=x458Hlnls9sQkvci39L51g2Oej
+	21LoK3PM7sE9QmB2meixSowq0mOeFojd4kxI/Ea+DdLWktGZW5LClgC/L+OLPkHISp56Kf0pPIPv/
+	YltrOgtC1nyTYPiZ1JWBD/BxoHBVECAKqY4RG6g03Hi5/JU0nHO6w0YNvIUa5dhIRNf3ypq5hSiOy
+	8cEQs3ZYms+XzQTi9RJp1JlXJFSTxcIuUGkjlaI56cnpl3x0qGadsPQHiV46K+xcKb/C33whJ1Mfj
+	xsTvhkcOnkf465yS8dR6TXdqKuhYkOTOsvIeUX4KFgopTjt41W6oTd0Y4vBzKl/l/oiDCctJUZ5N/
+	uArKweyw==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1sSCXv-000CeK-MD; Fri, 12 Jul 2024 11:26:31 +0200
+Received: from [87.49.147.209] (helo=localhost)
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <esben@geanix.com>)
+	id 1sSCXv-000I8s-00;
+	Fri, 12 Jul 2024 11:26:31 +0200
+From: Esben Haabendal <esben@geanix.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Michael Walle
+ <mwalle@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,  Richard
+ Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
+  Nicolas Ferre <nicolas.ferre@microchip.com>,  Alexandre Belloni
+ <alexandre.belloni@bootlin.com>,  Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  Rasmus Villemoes
+ <rasmus.villemoes@prevas.dk>,  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 15/15] mtd: spi-nor: spansion: Drop redundant
+ SPI_NOR_SKIP_SFDP flag
+In-Reply-To: <20240711-macronix-mx25l3205d-fixups-v3-15-99353461dd2d@geanix.com>
+	(Esben Haabendal's message of "Thu, 11 Jul 2024 15:00:15 +0200")
+References: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
+	<20240711-macronix-mx25l3205d-fixups-v3-15-99353461dd2d@geanix.com>
+Date: Fri, 12 Jul 2024 11:26:30 +0200
+Message-ID: <87zfqnufjt.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|GV1PR04MB10242:EE_
-X-MS-Office365-Filtering-Correlation-Id: 256092d4-8da7-4dc0-4008-08dca254b6d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?y8G/rRwvZ4q7mc/viQ/huduXwT92sVVGcDna7M+ULGMqG2TPv+v6h38JYwNF?=
- =?us-ascii?Q?kIDql/s/tSvdBlrfI79TE19YXBBYsmOrkw/ulT9KrUNa1VMXPmGMYwurRzuu?=
- =?us-ascii?Q?DWvMlFosVFpR6vP25YngVZC9+FZTpVuyr4jG8Nhu5gC0NIssFp8AVhytpQCe?=
- =?us-ascii?Q?4bF/jVxg3xnePAQ9QW+aTfqZiuQP9xZpt6CpHoFmDEU6JNTDhnGYqUBpIkEa?=
- =?us-ascii?Q?L0jvKDQ51+g6AgTws/MgbXSL983wFyx5gA9TzhYd6W5seuPFHB0gNrZIjDid?=
- =?us-ascii?Q?jfGbswZS3sdzsqknVdv9aMvtNsDVpfA0sADGFkJWqSWm6LEha5hqslA0oZle?=
- =?us-ascii?Q?B3DSmkqsQ4uMIbJ/4Yug5/y64oSImFzn1b71aVw8/JL9d+EUTQwcEUktEF7s?=
- =?us-ascii?Q?ENjtIMLbi2xNoIYXZG9Q+i78M7akIi9hPMTSf0Ed7aFCgLr0HqYfy1pHXnfB?=
- =?us-ascii?Q?c4N05H9fwQDj5pYb3GwhvOz3Cop47WmLBkRa0laC3fxxoKRvW8/ncNMOZ39b?=
- =?us-ascii?Q?ooH88lvnlCnK24cdTcRb5s42bI3fV3Kyg/qXrkPSBzvXyJiBeuLGDmX/AFba?=
- =?us-ascii?Q?QatlqkKoHe/N/0oSbrEqmBFKneY3PGPGuM426B0x77/4Su2E+N8/7ag1l9Zq?=
- =?us-ascii?Q?0QatIxTNGX93eciQxywcKtVrNDuaTsoBDiwZs5j/EbwVPPAMXf++FZLLzQg6?=
- =?us-ascii?Q?HkmGE6b4DHijChyIxYy8B6tpjhR21JamXRB/NKbm97VsJKpo/0A1bm3ACHpr?=
- =?us-ascii?Q?Nb57vAsDOlNfN58aW7MgNNZKORJ1GrNN7LiKoI9ud/FLlHDr4+Rc+EmPqJ1F?=
- =?us-ascii?Q?/JPEW0911Bo/x/YDv+w5Irn5O/gscHgvMI7prRCKi5gRnlqBoOSBihjjqazq?=
- =?us-ascii?Q?bJXHVgmGBf6rk9vHMIAHW1fmjIS6IXCnHsuexh1M+6TcKtJN1gfUN3BCv9QZ?=
- =?us-ascii?Q?YG+5+PhusL20U4piHH/g0xJ5Bu3AGjNCBsUS3HloRwcmTM9a+HTS3JT0Nu0I?=
- =?us-ascii?Q?SkxkU1M47mbpw44E5kRk1wZC1yHe2MMuglX+sWYblSCig8YF83u8hju5l5k0?=
- =?us-ascii?Q?Gwf/S0YifbmVT8MjgtkcwU0vZoNeok2C8gLBS7iHMaFUu85SAPGRwJWUd+Rx?=
- =?us-ascii?Q?FUXG21iV++PyLrrVfcfZtew3feIxAzWqR+FcxQT2VphNI5omJXBDJ6jSQqsT?=
- =?us-ascii?Q?GTsLMUglgfmIRcJCMisDL5229KdLCp2hppXubeqennSrvlVuu8Vdua8kRTp7?=
- =?us-ascii?Q?2j9KcUJBfWsbfA6V4+1nDXrSILl2YBzJnHMmyam+EWRYDSQ0wtAFOsMOhhrR?=
- =?us-ascii?Q?e7DxZ1rkg4loTS+cipVbkTm82IXT4c3nuIcArN197foM7eBzYzEzPDsqw7v+?=
- =?us-ascii?Q?CNUL+y/g8xMGzqgy1qUk2ceJ9Z5OzzdzIE0dnusYi3rvTr+PUQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ebo8UCXkL83iJYDNkpXdG2x5qZh8oXv8G7HU5AWaGAaKw27UkYbe6mtYQBCe?=
- =?us-ascii?Q?dFdQY8j34LgSvlAytJbD12LJ8o3N2atvWNDsx8rUoTof+jfUaCT67twBV2+o?=
- =?us-ascii?Q?FY8PIrR+G8Q+q8ODfYZ9cFj5mvQsZOhu83R7rwB3F5vZRdv71Qyx1yHP0+OA?=
- =?us-ascii?Q?kQovNLVMVslab0L/Ols3SvzW6DSsVPeOtqTK20pv8opOQ2OLQ+c6U5T6B11z?=
- =?us-ascii?Q?njEkPjqVODLCu82OBRUfKWIeBe+xGRxlphLvnymAseL4ELi/QAhCeNJCYqWr?=
- =?us-ascii?Q?z2LObuGbEhqyam9m1nlLGId3xU5U7K/TKWqDxrZVxmEU2g4EG2Ko+Z5Ha/38?=
- =?us-ascii?Q?YK5PyQHjgtKkjK2PJZQETf1Xpt2sqWU4zgGrf13bTQyTQYmtSZTUc9khj29n?=
- =?us-ascii?Q?T0UuA593ygMFiiiZAla+FCBL/cZT6xk487otTqEpp6mLXp8IkHFOtZnOhUOi?=
- =?us-ascii?Q?1EmO87GKeoAzZAVEUWIJZvaiqTDmivsnDZyymC+GyXfwrnPLdnAZGUsg/yOk?=
- =?us-ascii?Q?PxvWcZJvOG9UaThIGGYM3gLxnKC+ZhKiakyjXKgtKk425G6Ka3qSavFuPxcc?=
- =?us-ascii?Q?EWi0yNCYueW/CHdglBhWpmf/H70lOoO6a5lFM9YCY6ri9g1HMDsJGWnTNo2U?=
- =?us-ascii?Q?yyIJiE7g5MDYArupjXHWfypUE7ymIPcp30BLxm5nvIdyX7GteBvDoJzw87h8?=
- =?us-ascii?Q?k+B2JEIk2YxA5lwEvThCzOcaqBlifoHy/ipnpo3lhXiXBeOth6nq9ip99v7V?=
- =?us-ascii?Q?OtOMBXRrxzARQ3T3TzQZklzHSyYSJkQL9ewxd6pQEe/+RMj/d6J6XmyX2pTp?=
- =?us-ascii?Q?TrXdGkCoIjHW1nDARiCY4IgSaj9U/kaSVhwevvak9RbLEz42MJ+tM0Pgc27v?=
- =?us-ascii?Q?1CCQY0gvkPH5uCB+9nkwwtyH6s8Dp1zUT2SJXTg2KkVOUs4NvqJ32kyxuDnW?=
- =?us-ascii?Q?3rRqXNXchZa/fyvHwu5kfLaeWgVa5v5XHRqaaJDv9WbONcb9HgTNUPb54vOb?=
- =?us-ascii?Q?uh/vh33zzSQ6gq9NZHPteItTDQuu7SbpbrCwQIDGTpJPkpFVvqogh7fYwBXh?=
- =?us-ascii?Q?DSUAX9KiuWrpNtkdJPFU3hJOmEWADx1rStvQhl0A1L2GOnaRBlMN3yRknfEc?=
- =?us-ascii?Q?OVMl+lvZvwKYdh/a4yBQmuohbDvh5iKf7++KodUkS1z3ioC9kIlIfOccwzpy?=
- =?us-ascii?Q?Mk24Doe9q7WceIJ6eRSoy3sxN5yZVigPXE5bulfxjfkVJjA8yNePnwSD/3iU?=
- =?us-ascii?Q?bjIf/dZYfQj02kwFP6yAv6+O5M7uRMF61GgjekeK1RO11W+v8/F0zMmN1Ib1?=
- =?us-ascii?Q?mR0CBvp+eVgfrkKmXbkuBxx7LxT5kyZEc/0l7I2meM842GvfzApg/p5sYZy6?=
- =?us-ascii?Q?OUTwYAI4n7sDMfGPjhzrwX2m928nSV+w06Dl6mwJr+cg1XyBodWyJAo5nxSA?=
- =?us-ascii?Q?nuntnjKAGEbJxPKBvX8YjHQ3LcyD4OSaKW7/kdb3WNfZoAxdXnRyVaiBdxeK?=
- =?us-ascii?Q?mwVWeFtpEawp4YhDwqONWTaaa0RXlOV7OmKiZJxK4bg5KM+xbBofT8NIq2JS?=
- =?us-ascii?Q?QZgwdMO6+JtbDroEWeyeLgwO3+DwQtZheVUj/R5S?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 256092d4-8da7-4dc0-4008-08dca254b6d5
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 09:26:31.0366
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zJLWtVEf3vxBvF2cGSMTdAYH92zI/vkMK1maKxrTOiDNcLOPi7Zjzn+ZyRJuwxQyqY3gGN7nq14uSP3YGiIqqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10242
+Content-Type: text/plain
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27333/Thu Jul 11 10:35:59 2024)
 
-MX8-DLVDS-LCD1 display module integrates a KOE TX26D202VM0BWA LCD panel
-and a touch IC.  Add an overlay to support the LCD panel on i.MX8qxp
-MEK.  mipi_lvds_0_ldb channel0 and mipi_lvds_1_ldb channel1 send odd
-and even pixels to the panel respectively.
+Esben Haabendal <esben@geanix.com> writes:
 
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
----
-v2:
-* New patch. (Francesco)
+> With the implementation of SPI_NOR_TRY_SFDP flag, the removal of the
+> deprecated mechanism for trying SFDP parsing, and the alignment of
+> ->default_init() hooks handling, the SPI_NOR_SKIP_SFDP flag has become a
+> no-op, so it can safely be removed.
+>
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
 
- arch/arm64/boot/dts/freescale/Makefile        |   4 +
- .../imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso | 183 ++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  30 +++
- 3 files changed, 217 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso
+Should I split this into a commit for the spansion change, and one for
+the core change?
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index f04c22b7de72..289e4b2b4f20 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -234,6 +234,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-eval-v3.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-iris.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-iris-v2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-+
-+imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd-dtbs += imx8qxp-mek.dtb imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtbo
-+dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtb
-+
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-9x9-qsb.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso b/arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso
-new file mode 100644
-index 000000000000..7ddd90e68754
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek-mx8-dlvds-lcd1-lvds0-odd.dtso
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2024 NXP
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/firmware/imx/rsrc.h>
-+
-+&{/} {
-+	panel-lvds0 {
-+		compatible = "koe,tx26d202vm0bwa";
-+		backlight = <&backlight_lvds1>;
-+		power-supply = <&reg_vcc_per_3v3>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				dual-lvds-odd-pixels;
-+
-+				panel_lvds0_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				dual-lvds-even-pixels;
-+
-+				panel_lvds1_in: endpoint {
-+					remote-endpoint = <&lvds1_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&backlight_lvds1 {
-+	status = "okay";
-+};
-+
-+&dc0_framegen0 {
-+	assigned-clocks = <&clk IMX_SC_R_DC_0_PLL_0 IMX_SC_PM_CLK_PLL>,
-+			  <&clk IMX_SC_R_DC_0 IMX_SC_PM_CLK_MISC0>;
-+	assigned-clock-parents = <0>,
-+				 <&clk IMX_SC_R_DC_0_PLL_0 IMX_SC_PM_CLK_PLL>;
-+	assigned-clock-rates = <940320000>;
-+};
-+
-+&dc0_pixel_link0 {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&dc0_pc {
-+	status = "okay";
-+
-+	channel@0 {
-+		status = "okay";
-+	};
-+};
-+
-+&mipi_lvds_0_ldb {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	fsl,companion-ldb = <&mipi_lvds_1_ldb>;
-+	status = "okay";
-+
-+	channel@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0>;
-+		status = "okay";
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_lvds0_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&mipi_lvds_0_phy {
-+	status = "okay";
-+};
-+
-+&mipi_lvds_0_pxl2dpi {
-+	fsl,companion-pxl2dpi = <&mipi_lvds_1_pxl2dpi>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			mipi_lvds_0_pxl2dpi_dc0_pixel_link0: endpoint@0 {
-+				status = "okay";
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			mipi_lvds_0_pxl2dpi_mipi_lvds_0_ldb_ch0: endpoint@0 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-+
-+&mipi_lvds_1_ldb {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	channel@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>;
-+		status = "okay";
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lvds1_out: endpoint {
-+				remote-endpoint = <&panel_lvds1_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&mipi_lvds_1_phy {
-+	status = "okay";
-+};
-+
-+&mipi_lvds_1_pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm_mipi_lvds1>;
-+	status = "okay";
-+};
-+
-+&mipi_lvds_1_pxl2dpi {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			mipi_lvds_1_pxl2dpi_dc0_pixel_link0: endpoint@1 {
-+				status = "okay";
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			mipi_lvds_1_pxl2dpi_mipi_lvds_1_ldb_ch1: endpoint@1 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-index bf88f189c6fe..6389c32eb910 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-@@ -16,11 +16,35 @@ chosen {
- 		stdout-path = &lpuart0;
- 	};
- 
-+	backlight_lvds1: backlight-lvds1 {
-+		compatible = "pwm-backlight";
-+		pwms = <&mipi_lvds_1_pwm 0 100000 0>;
-+		brightness-levels = <0 100>;
-+		num-interpolated-steps = <100>;
-+		default-brightness-level = <100>;
-+		power-supply = <&reg_vcc_12v0>;
-+		status = "disabled";
-+	};
-+
- 	memory@80000000 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x80000000 0 0x40000000>;
- 	};
- 
-+	reg_vcc_12v0: regulator-vcc-12v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_12V0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	reg_vcc_per_3v3: regulator-vcc-per-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_PER_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	reg_usdhc2_vmmc: usdhc2-vmmc {
- 		compatible = "regulator-fixed";
- 		regulator-name = "SD1_SPWR";
-@@ -497,6 +521,12 @@ IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX       0x06000020
- 		>;
- 	};
- 
-+	pinctrl_pwm_mipi_lvds1: mipilvds1pwmgrp {
-+		fsl,pins = <
-+			IMX8QXP_MIPI_DSI1_GPIO0_00_MIPI_DSI1_PWM0_OUT		0x00000020
-+		>;
-+	};
-+
- 	pinctrl_typec: typecgrp {
- 		fsl,pins = <
- 			IMX8QXP_SPI2_SCK_LSIO_GPIO1_IO03                        0x06000021
--- 
-2.34.1
+/Esben
 
+> ---
+>  drivers/mtd/spi-nor/core.c     | 2 +-
+>  drivers/mtd/spi-nor/core.h     | 5 +----
+>  drivers/mtd/spi-nor/spansion.c | 2 +-
+>  3 files changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+> index d58f107f62ec..518b2707ce80 100644
+> --- a/drivers/mtd/spi-nor/core.c
+> +++ b/drivers/mtd/spi-nor/core.c
+> @@ -3024,7 +3024,7 @@ static int spi_nor_init_params(struct spi_nor *nor)
+>  	if (spi_nor_needs_sfdp(nor)) {
+>  		ret = spi_nor_parse_sfdp(nor);
+>  		if (ret) {
+> -			dev_err(nor->dev, "BFPT parsing failed. Please consider using SPI_NOR_SKIP_SFDP or SPI_NOR_TRY_SFDP when declaring the flash\n");
+> +			dev_err(nor->dev, "BFPT parsing failed. Please consider using SPI_NOR_TRY_SFDP when declaring the flash\n");
+>  			return ret;
+>  		}
+>  	} else {
+> diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+> index f4a76f42051a..ae10e12e9078 100644
+> --- a/drivers/mtd/spi-nor/core.h
+> +++ b/drivers/mtd/spi-nor/core.h
+> @@ -485,9 +485,7 @@ struct spi_nor_id {
+>   *
+>   * @no_sfdp_flags:  flags that indicate support that can be discovered via SFDP.
+>   *                  Used when SFDP tables are not defined in the flash. These
+> - *                  flags are used together with the SPI_NOR_SKIP_SFDP or
+> - *                  SPI_NOR_TRY_SFDP flag.
+> - *   SPI_NOR_SKIP_SFDP:       skip parsing of SFDP tables.
+> + *                  flags are used together with the SPI_NOR_TRY_SFDP flag.
+>   *   SECT_4K:                 SPINOR_OP_BE_4K works uniformly.
+>   *   SPI_NOR_TRY_SFDP:        try parsing SFDP tables before using the
+>   *                            parameters specified in this struct.
+> @@ -536,7 +534,6 @@ struct flash_info {
+>  #define SPI_NOR_RWW			BIT(9)
+>  
+>  	u8 no_sfdp_flags;
+> -#define SPI_NOR_SKIP_SFDP		BIT(0)
+>  #define SECT_4K				BIT(1)
+>  #define SPI_NOR_TRY_SFDP		BIT(2)
+>  #define SPI_NOR_DUAL_READ		BIT(3)
+> diff --git a/drivers/mtd/spi-nor/spansion.c b/drivers/mtd/spi-nor/spansion.c
+> index a58c0229003d..afcb684ffe4d 100644
+> --- a/drivers/mtd/spi-nor/spansion.c
+> +++ b/drivers/mtd/spi-nor/spansion.c
+> @@ -793,7 +793,7 @@ static const struct flash_info spansion_nor_parts[] = {
+>  		.name = "s25fl256s0",
+>  		.size = SZ_32M,
+>  		.sector_size = SZ_256K,
+> -		.no_sfdp_flags = SPI_NOR_SKIP_SFDP | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+> +		.no_sfdp_flags = SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+>  		.mfr_flags = USE_CLSR,
+>  	}, {
+>  		.id = SNOR_ID(0x01, 0x02, 0x19, 0x4d, 0x00, 0x81),
