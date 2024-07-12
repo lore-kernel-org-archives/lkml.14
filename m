@@ -1,116 +1,89 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19DC172BAF;
-	Fri, 12 Jul 2024 14:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8E6EAC7;
+	Fri, 12 Jul 2024 14:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720794878; cv=none; b=HbN7WlrtRtV0aLJDMEMZHusdiincbKBm81fQrAYEa19rjzQ2zDi2KOiuO6D00IkFQ6if1v0V65F04QRbagb3wfI0VWaX1IgXjtdQY1BjRgu7z4ywyivfL8/x7GZMsvDwPG++eg+SHeRq3Vur6Rp7FkBjJ17A0ho+EGNZ2y8H0D8=
+	t=1720794915; cv=none; b=OOm+K7TQ+N3gOrt5oHbLrb4VBYjsTjpOIDEDYLwR5ezrP/wab+1ZWa7qKeTiCSMOwL9DoS3UIaFklz4QkC6zU79viPuc87U/n9Y8usG0f797HnSlxqKQpcuw/PbJcGbjf4/niLhTcLNEw7CnOEs9/24M/Y+MsZGQlLSICgxzUqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720794878; c=relaxed/simple;
-	bh=l7PJwe3KWvK5haT5OB1kVY4lIVopAz5D0IUJmHHLV5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EFHurp/tK+E8YqcBIaoduL/3tOJfHDh2mqh49Omh6N4wjOdJoOG8+oCPxCwgY9TYFHaOM0+AnwMr29cC5fVqOiObaO4fuv0lqcc3t/CKTnw1p7rXeDHLSdzm3WhB3IBoixxQu65hfBd724psfZMgOsDGImuuRTekDEwqP/y6Low=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-585e774fd3dso2852783a12.0;
-        Fri, 12 Jul 2024 07:34:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720794875; x=1721399675;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vTHbgE6h5G2xxuO/oI+Wjht6sqYDxcfoXzE4OLT7DJE=;
-        b=sS/gsoXbXu5miNMu3U4LZkuOQd1p5f/LcZaHLnXf/uw2eFNnujn/ZJ/49oCALt+Gee
-         Bp/+A3Uph3BXRtVd47O2M/T18voNlToQfBP0SqSk1/oOGBaLxP1JCnksxJVsj13c0D5c
-         2Rhu2CGIpGUCUKHlH0t+iEJ6wnWBZayWBAfeckekHyqpJzLsC0Z1rxVM4WHYXzUMFAih
-         EG2o9AHrunCLANQO/uScm2OYKolk0AzmT/p+xwWYqawO5fuSju6wbzjbtvYWF3IQwIDF
-         YBzoWqt7yj8aKzZXMrndFLAfPN3XMwWW8sVw0YkojePYQc478JgL+DoBLnp4WE6G+VwQ
-         kv8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWFE3C3m1+PltdtYhJVWyrjmITSHr381z4EN1DubS4oed5GrHnPdAWFpMNSyoqKsvOt9MrstTdXrHl4pL2DSqdOELYlBWh9JTWt3zMX1BkGKuxrPDM+soVcmYrN4bLbRxm2jZ4t1cBwcFbPfcnRg6ACVYCIM2oRCLv6+c7X
-X-Gm-Message-State: AOJu0YxdvOS1/aUkJwMFrT910BQl3yLMXLzTgYS3M+zwvQimdbzndvd3
-	vdl+s7nOD2weptjp2VZQduvjHYR9tob5rgKfDSaQrJ+E3dIdb8Pw
-X-Google-Smtp-Source: AGHT+IFx7bkphX+JOo4An8ROVYQ7B6+7lTK29sRJe5lcOp44HVCPT6mVOPXizz7IVkDmbqw4pyxUww==
-X-Received: by 2002:a05:6402:2742:b0:57c:610a:6e7f with SMTP id 4fb4d7f45d1cf-594baf8719fmr9753671a12.11.1720794874945;
-        Fri, 12 Jul 2024 07:34:34 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-008.fbsv.net. [2a03:2880:30ff:8::face:b00c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bb9605dcsm4634440a12.6.2024.07.12.07.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 07:34:34 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	Jakub Kicinski <kuba@kernel.org>,
-	=?UTF-8?q?Bruno=20Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
-	Matt Mackall <mpm@selenic.com>
-Cc: thepacketgeek@gmail.com,
-	riel@surriel.com,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH net v2] net: netconsole: Disable target before netpoll cleanup
-Date: Fri, 12 Jul 2024 07:34:15 -0700
-Message-ID: <20240712143415.1141039-1-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1720794915; c=relaxed/simple;
+	bh=+CiVeB36WC3XhinXVvw3aBG/Q6TEMnuDcanTg5z9DXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=toOsg+tMJpmRJBGaUH3XbM4mxnvsyvPbewK9RnzsfZ4RXdmkh7zpslioZ5VQzPfk6+2mA6Axj4wA1Lw0rAeoCNPwwZrwM9ZO6oPapAJia8TIYxla4Dwlqr1AkmQhKWHIReN9tjKouWdsqW910tNWwIHhV8efebSOEIPIBsSQmAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RCA9lVVX; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RCA9lVVX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0858B6000B;
+	Fri, 12 Jul 2024 14:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720794905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+CiVeB36WC3XhinXVvw3aBG/Q6TEMnuDcanTg5z9DXE=;
+	b=RCA9lVVX1fd75spCVuVahSk1RoqL9eZbgexe3LnZmD+IsA7s0KLR4kU0QT6UQzVSQrcrPX
+	hRiL3pPLMNwY4j16hbLtdlG5J+BEEA1PW7OW7sjOjXbSeY14TvMoAj1mIPMbsItiZvowOQ
+	piShlvO2atXTdq/ISgShhl/xtRHkX+Z96RhtZHiU1TLZR7Gnw5w1RasNCG0SS+DHpspE3C
+	dZUPWp3bNqaTriRX3hgPZNbOHazHGNgNQK8n++DqtMVk37DB13EUCRlel7A9e3Q4Zwg3Ay
+	L9g8Ji7Nb82hIJNCnIwTjQT/ej4Az4/PbJYd7xyyek1Zmaaf4T3FbmlAXVsP/w==
+Date: Fri, 12 Jul 2024 16:35:03 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Frank Li <Frank.Li@nxp.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Han Xu <han.xu@nxp.com>, Vinod Koul
+ <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: fsl-mxs-dma: Add compatible
+ string "fsl,imx8qxp-dma-apbh"
+Message-ID: <20240712163503.69dad6b1@xps-13>
+In-Reply-To: <20240527121836.178457-1-miquel.raynal@bootlin.com>
+References: <20240520-gpmi_nand-v2-2-e3017e4c9da5@nxp.com>
+	<20240527121836.178457-1-miquel.raynal@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Currently, netconsole cleans up the netpoll structure before disabling
-the target. This approach can lead to race conditions, as message
-senders (write_ext_msg() and write_msg()) check if the target is
-enabled before using netpoll. The sender can validate that the target is
-enabled, but, the netpoll might be de-allocated already, causing
-undesired behaviours.
+Hi Vinod,
 
-This patch reverses the order of operations:
-1. Disable the target
-2. Clean up the netpoll structure
+miquel.raynal@bootlin.com wrote on Mon, 27 May 2024 14:18:36 +0200:
 
-This change eliminates the potential race condition, ensuring that
-no messages are sent through a partially cleaned-up netpoll structure.
+> On Mon, 2024-05-20 at 16:09:13 UTC, Frank Li wrote:
+> > Add compatible string "fsl,imx8qxp-dma-apbh". It requires power-domains
+> > compared with "fsl,imx28-dma-apbh".
+> >=20
+> > Allow 'power-domains' property because i.MX8DXL i.MX8QM and i.MX8QXP ne=
+ed
+> > it.
+> >=20
+> > Keep the same restriction about 'power-domains' for other compatible
+> > strings.
+> >=20
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org> =20
+>=20
+> Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git =
+nand/next, thanks.
 
-Fixes: 2382b15bcc39 ("netconsole: take care of NETDEV_UNREGISTER event")
-Cc: stable@vger.kernel.org
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changelog:
+I just realize now I picked this up whereas it was not intended to be
+merged through mtd. I'm fine keeping this patch for the next merge
+window if I get your explicit agreement otherwise I'll drop it.
 
-v2:
- * Targeting "net" instead of "net-dev" (Jakub)
-
-v1:
- * https://lore.kernel.org/all/20240709144403.544099-4-leitao@debian.org/
-
- drivers/net/netconsole.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index d7070dd4fe73..aa66c923790f 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -974,6 +974,7 @@ static int netconsole_netdev_event(struct notifier_block *this,
- 				/* rtnl_lock already held
- 				 * we might sleep in __netpoll_cleanup()
- 				 */
-+				nt->enabled = false;
- 				spin_unlock_irqrestore(&target_list_lock, flags);
- 
- 				__netpoll_cleanup(&nt->np);
-@@ -981,7 +982,6 @@ static int netconsole_netdev_event(struct notifier_block *this,
- 				spin_lock_irqsave(&target_list_lock, flags);
- 				netdev_put(nt->np.dev, &nt->np.dev_tracker);
- 				nt->np.dev = NULL;
--				nt->enabled = false;
- 				stopped = true;
- 				netconsole_target_put(nt);
- 				goto restart;
--- 
-2.43.0
-
+Thanks,
+Miqu=C3=A8l
