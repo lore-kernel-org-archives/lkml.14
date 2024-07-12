@@ -1,99 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D3D2E3E5;
-	Fri, 12 Jul 2024 08:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DDA13D601;
+	Fri, 12 Jul 2024 08:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720772426; cv=none; b=pDG1iKG6xYUSeOqAtY0mpBMu3b6YJozXvED9v4ZnsAKpdbdHIBkD+TVgx6R8vEBNLJqbjkDMMV/0ot9as8kzicjGpAzp1Vwc5YT+iQvfIwedknaqHh3rnIwl/laJEf0BavlSTuHJL4CBgfeF12ANDIycHEjAWinyV2Tu3fQJ2W8=
+	t=1720772472; cv=none; b=jnmFikqEJOyY3NpkQD7W2iVK7q2cLEKrKCqutVvnTWmuC5MN9ybUB+sP8LV9ZrKM1TlADcAkkx+1tlKjFd8L0oh3Aoh4eDYmXcwFYfYX6IWrOHX+iSpa2NrAFEo9V6yC83H2y3QIQSzIA8mv30ABfbWQhZSpDg8vvr6UodaRBwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720772426; c=relaxed/simple;
-	bh=mksiNGL71vBTfMC2oL1EyJAq8EgwBRCDXPevFY/JTgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BABB7ztCLCisIUqLd78/5kZ7iU4XNa/9TFE5Q+9RIKbc7LCNMQ7oqC37l7Z33uVcRaJbXxWagN4bXM3/MHDafuHrcqxIctqlw4qr/HXaELJytPPl9UyJfP0KJtipnzg1Axj8PGibYNzSUaHrBWrr/WkTKNRF0u0xBJnCTZ9a7z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fiT0IAnp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720772472; c=relaxed/simple;
+	bh=UYd8B6nbv4Ic8XdLU0JyQpuWnMpczUrarlWTU56zvyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gTUrOqGJ7X6FfpYNFMAlemCQaMqIx6nFIXapEm77AID+CHlQOMDGUs6nsrRwe53jFCkruhI4MlRv2+eqQXU4bvuQHsQUCe7UaV6il+jLVfkylaPZW2PGnBGwCTy8IYmE6WSyacK/R3GTZlWmpcyI7qzipQRcN5bBPHy6g76btTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Ve9dDWD1; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fiT0IAnp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E22BEC4AF09;
-	Fri, 12 Jul 2024 08:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720772426;
-	bh=mksiNGL71vBTfMC2oL1EyJAq8EgwBRCDXPevFY/JTgA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fiT0IAnpHP8Itv7lpRCpYlB6GY6LLvHaYQPStPvr8ZDBM6ZvQeosmPteC3E/jQvmY
-	 M4too9FGwLl75KfLzjcpZZwXCj03Ul3lnFxZz5ux1Gqa5G/LDSCFjL495cf8DbqeHL
-	 x5PnJnRJFUuQi003A9LPcalPOHx+VZ79xIlvcfHkvsiy3pnJV59oKb/hiQyoa0gul1
-	 6r2/oJWvaEl5WcGmExWayh6vN5XHkuKhCPwXeQF78u51KOwX5w38KQtdNF7j47JWHS
-	 wKK+xrozuVmu2KxjomByWBVnWjLzR51ZfSb8nlWY5SWdNI64HNoG5CHkAOlZ1d2AIX
-	 /+Z48TZws10+A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sSBVw-000000006Lc-0GDs;
-	Fri, 12 Jul 2024 10:20:24 +0200
-Date: Fri, 12 Jul 2024 10:20:24 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100: enable GICv3 ITS for PCIe
-Message-ID: <ZpDnSL8as7km9_0b@hovoldconsulting.com>
-References: <20240711090250.20827-1-johan+linaro@kernel.org>
- <f7e74a6f-0548-4caa-a8fc-8180c619c9aa@linaro.org>
- <Zo-ssBBDbHRLtAwG@hovoldconsulting.com>
- <Zo_zu-RmbZyKijVQ@hovoldconsulting.com>
- <20240711161947.GA4434@thinkpad>
- <20240711164153.GA4992@thinkpad>
- <ZpAPaker8mulvKCj@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Ve9dDWD1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720772468;
+	bh=UYd8B6nbv4Ic8XdLU0JyQpuWnMpczUrarlWTU56zvyw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ve9dDWD1aMPL0aCuq0X9Tw+Vhke0eUwIIUSRuo5vv6m6/8JSUbSBzvt7t8kj0Ljm7
+	 E+8Z7c2wGe8gnXN1bOpDmUXd4p6Q611eDZyN2O65PAGn5LtfWSZK+revM4ypRIjH43
+	 vq/ZcKQR1QuRDke5ZnK1jQJAwlAY8CfF3WNY3gily2fq3vTTflaN5vQyJPQFAMWRfj
+	 eWshNOdFAEN/F5r08h8yvtoVvF2ov+TV0QaBn5I4u8Vd6RlSFZeCrYtUaoRSCUKwsO
+	 gAyROsWj0CR9eJ36bgaOnt7GU4pQ1OHI7sLLNJG5/MH1IzV9F0koJSqHZRAstj568M
+	 SjtfhGCIV7Bmw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EB48237821DB;
+	Fri, 12 Jul 2024 08:21:07 +0000 (UTC)
+Message-ID: <1b1231e5-cf10-4a26-8a62-311f4d8bcae9@collabora.com>
+Date: Fri, 12 Jul 2024 10:21:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZpAPaker8mulvKCj@hovoldconsulting.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] remoteproc: mediatek: Support multiple reserved
+ memory regions
+To: Shun-yi Wang <shun-yi.wang@mediatek.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+ linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ jason-ch.chen@mediatek.com, yaya.chang@mediatek.com,
+ teddy.chen@mediatek.com, olivia.wen@mediatek.com
+References: <20240703115308.17436-1-shun-yi.wang@mediatek.com>
+ <20240703115308.17436-2-shun-yi.wang@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240703115308.17436-2-shun-yi.wang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 11, 2024 at 06:59:22PM +0200, Johan Hovold wrote:
-> On Thu, Jul 11, 2024 at 10:11:53PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Jul 11, 2024 at 09:49:52PM +0530, Manivannan Sadhasivam wrote:
-
-> > > My hunch is the PHY settings. But Abel cross checked the PHY settings with
-> > > internal documentation and they seem to match. Also, Qcom submitted a series
-> > > that is supposed to fix stability issues with Gen4 [1]. With this series, Gen 4
-> > > x4 setup is working on SA8775P-RIDE board as reported by Qcom. But Abel
-> > > confirmed that it didn't help him with the link downgrade issue.
-> > > 
-> > > Perhaps you can give it a try and see if it makes any difference for
-> > > this issue?
+Il 03/07/24 13:53, Shun-yi Wang ha scritto:
+> From: "shun-yi.wang" <shun-yi.wang@mediatek.com>
 > 
-> If there are known issues with running at Gen4 speed without that
-> series, then it seems quite likely that doing so anyway could also cause
-> correctable errors.
+> SCP supports multiple reserved memory regions, intended for
+> specific hardwards.
 > 
-> Unfortunately, I get a hypervisor reset when I tried booting with that
-> series so there appears to be some implicit dependency on something
-> else (e.g. the 4l stuff).
+> Signed-off-by: shun-yi.wang <shun-yi.wang@mediatek.com>
+> ---
+>   drivers/remoteproc/mtk_scp.c | 25 +++++++++++++++++--------
+>   1 file changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+> index 9ecd5ea04b5f3..1902826cea0af 100644
+> --- a/drivers/remoteproc/mtk_scp.c
+> +++ b/drivers/remoteproc/mtk_scp.c
+> @@ -1006,22 +1006,31 @@ EXPORT_SYMBOL_GPL(scp_mapping_dm_addr);
+>   
+>   static int scp_map_memory_region(struct mtk_scp *scp)
+>   {
+> -	int ret;
+> +	int ret, i, err;
+>   	const struct mtk_scp_sizes_data *scp_sizes;
+> +	struct device_node *node = scp->dev->of_node;
+> +	struct of_phandle_iterator it;
 
-The first patch in that series breaks icc handling, which crashes
-machines like the X13s and the x1e80100 CRD on boot. I've just reported
-this here:
 
-	https://lore.kernel.org/lkml/ZpDlf5xD035x2DqL@hovoldconsulting.com/
+	struct device_node *node = scp->dev->of_node;
+  	const struct mtk_scp_sizes_data *scp_sizes;
+	struct of_phandle_iterator it;
+	int i = 0;
+	int ret;
 
-With that fixed, and with the hacky dependency on having max-link-speed
-specified in the DT for the series to have any affect at all, the gen4
-stability series indeed seems to make the AER error go away (Abel just
-confirmed using a branch I'd prepared).
+	of_for_each_phandle(&it, ret, node, "memory-region", NULL, 0) {
+		ret = ...
+		if (ret) .....
+		i++;
+	}
 
-Let's try to get that series in shape and merged in some form as
-everyone will be hitting these Correctable Errors currently with the
-NVMe on x1e80100.
+> +
+> +	i = 0;
+> +	of_for_each_phandle(&it, err, node, "memory-region", NULL, 0) {
+> +		ret = of_reserved_mem_device_init_by_idx(scp->dev, node, i);
+> +
+> +		if (ret) {
+> +			dev_err(scp->dev, "failed to assign memory-region: %s\n",
+> +				it.node->name);
+> +			of_node_put(it.node);
+> +			return -ENOMEM;
+> +		}
+>   
+> -	ret = of_reserved_mem_device_init(scp->dev);
+> +		i++;
+> +	}
+>   
+>   	/* reserved memory is optional. */
+> -	if (ret == -ENODEV) {
+> +	if (!i) {
 
-Johan
+	if (i == 0) {
+		dev_dbg(scp->dev, "skipping reserved memory initialization\n");
+		return 0;
+	}
+
+
+Regards,
+Angelo
+
+
