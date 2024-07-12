@@ -1,144 +1,207 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B7413E02D;
-	Fri, 12 Jul 2024 09:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AB114884E;
+	Fri, 12 Jul 2024 09:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720774818; cv=none; b=NZho6i5h34JU0WmUev56Y+rNpMZkdZxd87pvMIW1p6+on5f7Mr/RXUDeh1YQ5H0BRwv+s18/+HoAivzo4i+t8Ac1axaB9YQD4Ceu/W7wjTC13WZgSxfhZbDU5vUCl0y/mINnx3oV9ikt5Kzv5jUDjpUAMAsnOTkee1E1Ug9e+cg=
+	t=1720774823; cv=none; b=o567Sy3+Cp33s23ciG3e1Sn3shk8D3/YlNzvwUota8nmuzgQ8PmEUrvEmFzylavNU0LPO8bbe8u4mjNaUvz50BOvNJrNCWRAFG+6nfyxSuDhwZGBkWI7epy/NFcbsHk2xvqxHmiXrt1Vh+rTIGNNEpWJ9RfgfTkOL/NEPLWpPrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720774818; c=relaxed/simple;
-	bh=IUjQuc+xzVDbHxpaTQ8Oy+CrD0FdWfp/rAI9b+8o2Ek=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PF3gMjh0ffLqUpGwJAhH+VNZkRRpXGcULnl3B3aOrhHdz+LiubY/N3QGBvFrVUQpAwDn3uxUubUCKAXoSW2lOtrwJGL5FuO/93AMzvXSLGuHazD9ftYwWsfpoHZWh/tMLGL4iL1/kvxQu882bwnkTzdCwWbzHyEm+8/0RrWP/0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WL55q38Mvz1T68n;
-	Fri, 12 Jul 2024 16:55:27 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 845ED140361;
-	Fri, 12 Jul 2024 17:00:12 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 12 Jul 2024 17:00:12 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <tj@kernel.org>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
-	<lizefan.x@bytedance.com>, <hannes@cmpxchg.org>
-CC: <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] blk-cgroup: move congestion_count to struct blkcg
-Date: Fri, 12 Jul 2024 08:51:41 +0000
-Message-ID: <20240712085141.3288708-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720774823; c=relaxed/simple;
+	bh=uxYO52ltdR2PNRJ6oSXEONigvyRNjnTBKwbjZQwPy+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJoNVcVDKEu77nwPjZZJVGiyoAajyYeEqvO3LMw1PJN5tFQ0eseQeItT1Q41ZC7KMvEfV45aQEivD8BEqtWI1IT7tNXNypgnLD6JwnukOTgGMoPW3HVlnaURyrHCSbeA2fdB9aKUGRm5s90J/nDd2UhGyp1PpbSZt4+X0B1SDWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=p6TLCviy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p6TLCviy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vIxJ9d7tmxDH2tQfYINrnWcP20UCiZxZZimj0EyFxIs=; b=p6TLCviySBKdIDFJzxXsnjUVVJ
+	bv8DOoPPcHDB2D+0aKzFXVBtT25P3IDF72Lf4xs/8vb07qREVQabQY436Jxf7pmJ4GGoLdORzIkPk
+	TFuTkS4WllYd7k6yXXn4uylaMWy8Fgtldp3f1rQKwMcF4UT3SH71WpzWdW8oYvpqVfFobF60C6q4L
+	JI/m8a2CjJKq22iASmLkcAKg/mQnjMIgxcNFhmOviQ7oKesYhvK3DL/kuT+OsPlexsNFcY1Y9NzMe
+	vYEVTrChnOkEnxm68jIyNEOKelMBXV2aOglMns/MpGLtaU46kYrWFZ3Rx4GRyUzZPIJEnePaBA/P7
+	3tLEV0XQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sSC8P-00000001GbO-1EGG;
+	Fri, 12 Jul 2024 09:00:09 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id AE4FC30050D; Fri, 12 Jul 2024 11:00:08 +0200 (CEST)
+Date: Fri, 12 Jul 2024 11:00:08 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Mirsad Todorovac <mtodorovac69@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
+ syscall_get_arguments()
+Message-ID: <20240712090008.GA19796@noisy.programming.kicks-ass.net>
+References: <20240708202202.work.477-kees@kernel.org>
+ <20240711214450.GG27299@noisy.programming.kicks-ass.net>
+ <202407111500.B86485B3@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202407111500.B86485B3@keescook>
 
-The congestion_count was introduced by commit d09d8df3a294 ("blkcg:
-add generic throttling mechanism"), but since it is closely related
-to the blkio subsys, it is not appropriate to put it in the struct
-cgroup, so move it to struct blkcg.
+On Thu, Jul 11, 2024 at 04:10:43PM -0700, Kees Cook wrote:
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
-only compiling tested
----
- block/blk-cgroup.c          |  4 +++-
- block/blk-cgroup.h          | 10 ++++++----
- include/linux/cgroup-defs.h |  3 ---
- 3 files changed, 9 insertions(+), 8 deletions(-)
+> The long answer is long, and comes in two halves: the language half and
+> the fortify half.
+> 
+> First, the C standard requires that all function argument arrays be
+> decayed to pointers, so your prototype is semantically handled as if
+> it were:
+> 
+> void syscall_get_arguments(struct pt_regs *regs, unsigned long *args)
+> 
+> The "6" is just totally thrown away by the language. :(
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 37e6cc91d576..01d3408c2fc6 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -2183,11 +2183,13 @@ void blk_cgroup_bio_start(struct bio *bio)
- bool blk_cgroup_congested(void)
- {
- 	struct cgroup_subsys_state *css;
-+	struct blkcg *blkcg;
- 	bool ret = false;
- 
- 	rcu_read_lock();
- 	for (css = blkcg_css(); css; css = css->parent) {
--		if (atomic_read(&css->cgroup->congestion_count)) {
-+		blkcg = css_to_blkcg(css);
-+		if (atomic_read(&blkcg->congestion_count)) {
- 			ret = true;
- 			break;
- 		}
-diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
-index bd472a30bc61..16a2fbd4adca 100644
---- a/block/blk-cgroup.h
-+++ b/block/blk-cgroup.h
-@@ -95,6 +95,8 @@ struct blkcg {
- 	struct cgroup_subsys_state	css;
- 	spinlock_t			lock;
- 	refcount_t			online_pin;
-+	/* If there is block congestion on this cgroup. */
-+	atomic_t congestion_count;
- 
- 	struct radix_tree_root		blkg_tree;
- 	struct blkcg_gq	__rcu		*blkg_hint;
-@@ -374,7 +376,7 @@ static inline void blkcg_use_delay(struct blkcg_gq *blkg)
- 	if (WARN_ON_ONCE(atomic_read(&blkg->use_delay) < 0))
- 		return;
- 	if (atomic_add_return(1, &blkg->use_delay) == 1)
--		atomic_inc(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_inc(&blkg->blkcg->congestion_count);
- }
- 
- static inline int blkcg_unuse_delay(struct blkcg_gq *blkg)
-@@ -399,7 +401,7 @@ static inline int blkcg_unuse_delay(struct blkcg_gq *blkg)
- 	if (old == 0)
- 		return 0;
- 	if (old == 1)
--		atomic_dec(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_dec(&blkg->blkcg->congestion_count);
- 	return 1;
- }
- 
-@@ -418,7 +420,7 @@ static inline void blkcg_set_delay(struct blkcg_gq *blkg, u64 delay)
- 
- 	/* We only want 1 person setting the congestion count for this blkg. */
- 	if (!old && atomic_try_cmpxchg(&blkg->use_delay, &old, -1))
--		atomic_inc(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_inc(&blkg->blkcg->congestion_count);
- 
- 	atomic64_set(&blkg->delay_nsec, delay);
- }
-@@ -435,7 +437,7 @@ static inline void blkcg_clear_delay(struct blkcg_gq *blkg)
- 
- 	/* We only want 1 person clearing the congestion count for this blkg. */
- 	if (old && atomic_try_cmpxchg(&blkg->use_delay, &old, 0))
--		atomic_dec(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_dec(&blkg->blkcg->congestion_count);
- }
- 
- /**
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 293af7f8a694..ae04035b6cbe 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -539,9 +539,6 @@ struct cgroup {
- 	/* used to store eBPF programs */
- 	struct cgroup_bpf bpf;
- 
--	/* If there is block congestion on this cgroup. */
--	atomic_t congestion_count;
--
- 	/* Used to store internal freezer state */
- 	struct cgroup_freezer_state freezer;
- 
--- 
-2.34.1
+Bah. I mean, I understand why, they *are* pointers after all. But to
+then also discard the object size is just silly. I mean, traditionally C
+doesn't give a crap about object size -- it is irrelevant.
+
+But with alias analysis (which we switch off) and doubly so with this
+fortify stuff, you do care about it.
+
+So why throw it out?
+
+> *However* the compilers _will_ do things with it while generating
+> diagnostics, but only from the caller's perspective (code _inside_
+> has no awareness of the "6" unless the function has been inlined, sort
+> of). For example:
+> 
+> 	unsigned long toosmall[4];
+> 	...
+> 	syscall_get_arguments(regs, toosmall);
+> 
+> Produces:
+> 
+> <source>:60:5: warning: 'syscall_get_arguments' accessing 48 bytes in a region of size 32 [-Wstringop-overflow=]
+>    60 |     syscall_get_arguments(regs, toosmall);
+>       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Makes sense.
+
+> But syscall_get_arguments() internally has no idea what size "args" is:
+> 
+> void noinline syscall_get_arguments(struct pt_regs *regs, unsigned long args[6])
+> {
+> 	report(sizeof(args));
+> 	report(__builtin_object_size(args, 1));
+> 	report(__builtin_dynamic_object_size(args, 1));
+>         memcpy(args, (typeof(args))&regs->bx, 6*sizeof(args[0]));
+> }
+> 
+> Which reports 8, SIZE_MAX (unknown), and SIZE_MAX (unknown) respectively.
+
+And that's just daft :/
+
+> And the language is so busted about this that there is actually a
+> diagnostic for "don't do that" that shows up with this code:
+> 
+> <source>: In function 'syscall_get_arguments':
+> <source>:53:22: warning: 'sizeof' on array function parameter 'args' will return size of 'long unsigned int *' [-Wsizeof-array-argument]
+>    53 |         report(sizeof(args));
+>       |                      ^
+
+:-( This just doesn't make sense. How can you be so inconsistent about
+things.
+
+What will actually break if you 'fix' this? Given that inlining (see
+below) changes the rules willy nilly, I feel we can (and should!) just
+fix this.
+
+> _However_, if we _inline_ the function, suddenly _bos and _bdos know
+> what's going on since they have visibility into the actual objection
+> definition:
+> 
+> void inline syscall_get_arguments(struct pt_regs *regs, unsigned long args[6])
+
+*sigh* yes ofcourse, inlineing in C is a mess, it really does change the
+meaning of what you've written.
+
+Combine this with the fact that 'inline' doesn't actually mean anything
+much these days because the compiler will do whatever it feels like
+anyway, and you've got a language that's like *really* hard to use.
+
+Hence our noinline and __always_inline attributes to force it where we
+need to.
+
+> Now it reports 8, 32 (8 * the "toosmall" array size 4), 32 (same: _bdos
+> falls back to _bos if there is no dynamic component). Note this is _not_
+> 6, but 4, the actual object size.
+> 
+> Using the newer arg-sized array prototypes using a named argument _does_
+> inform the internals, but that requires changing the calling convention
+> for what is supposed to be a fixed size, and only behaves at runtime,
+> which is just silly for compile-time fixed sizes. For example:
+> 
+> void noinline syscall_get_arguments(struct pt_regs *regs, int n, unsigned long args[n])
+> ...
+> 	syscall_get_arguments(regs, 6, toosmall);
+> 
+> Does report the expected things for _bdos internally (48), but not for
+> sizeof (8) nor _bos (SIZE_MAX). Of course if we inline it, _bos starts
+> working and, along with _bdos, realizes it was lied to, and reports
+> 32 again.
+
+WTF ?!?! How can all this be so inconsistent and why are people okay
+with that?
+
+> For the patch in this thread, the W=1 case was reported (overread of
+> "bx"), because normally fortify would just ignore the overread of
+> the source.
+
+So I'm not entirely sure I agree with that argument. Yes, &regs->bx is
+'unsigned long *' and sizeof(unsigned long) is 8 (if we assume 64bit).
+However, you can also read it as the point of pt_regs where bx sits --
+which is a far more sensible interpretation IMO.
+
+Because then we're looking at struct pt_regs and an offset therein.
+
+> Finally to answer your question about working around this case, _bos/_bdos
+> will see right through the casting because it operates on the actual
+> object behind it. (And casts to an array type are illegal too.)
+> 
+>     unsigned long args[6];
+> 
+>     report(__builtin_object_size((typeof(args))&regs->bx, 1));
+> 
+> <source>: In function 'show':
+> <source>:76:34: error: cast specifies array type
+>    76 |     report(__builtin_object_size((typeof(args))&regs->bx, 1));
+>       |                                  ^
+> 
+> And a (char *) cast doesn't work: _bos(1) reports 8, the size of bx. Using
+> locals doesn't help either:
+> 
+>     void *ptr = (void *)&regs->bx;
+> 
+>     report(__builtin_object_size(ptr, 1));
+> 
+> Still 8. And ultimately this is good, since fortify will see through to
+> the actual object that could get overflowed, etc. It's the behavior we
+> want for the overflow defense.
+
+So really pt_regs *is* an array of unsigned long, and I feel it is
+really unfortunate we cannot express this in a way that is more concise.
 
