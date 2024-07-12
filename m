@@ -1,104 +1,132 @@
-Received: from out28-148.mail.aliyun.com (out28-148.mail.aliyun.com [115.124.28.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CDF17BB6;
-	Fri, 12 Jul 2024 09:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D08682D93
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720777867; cv=none; b=n7cM58veBi/kd7uPuzFzLQR31N38YYO0nofHWejmyENJIn4JW50dAS1of2yP926tsB2+iqb37yNHh8ijuWfIXQTEHRKNxO8jUXOaI7RYo9LpAyof4tB5n0PzQJxRqbUHxOBuP0ZsOUZWGYrFIQIe8xKlP6yoMZfQmqYshR025oA=
+	t=1720777917; cv=none; b=uw0TKZUi37kn1W/z09NCt/HDQdiuhXPs5wHwlKQaY48c4oeAHrdT7DcHdurhqsrGDvh9nty/siaqwuQqDn31RmmC/EWYtt8lhBGJq1ZnYd7ml7mcS0asg4s89u8kbSsELK5uPY0F1evkr8kGzaHxVMXjuvL6IFxrDCECcdjALGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720777867; c=relaxed/simple;
-	bh=pUaulvtdD9qQg/45WX1ET2WbuAUsRQxwcTQt/oHElw8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hvvfrHbGrt9ateHdZYlivh6JfHo6F31+y6ukHzUCQWtJ80IF3yEaKSBgIhSa2cZoeP+rCRSL0W2D6vq8kqdGZlWD0bkCurkTF1UnGeG7Mp5jRsVH4B3HGRtXosAEx9Fh93s6o/eZQsIwOJpZAJJYBNUEyA5rB36LpXVGoeHyRbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.08055284|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.211365-0.00225663-0.786379;FP=16534973576804402570|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033023108233;MF=wangshuaijie@awinic.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.YOOi3cV_1720777846;
-Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.YOOi3cV_1720777846)
-          by smtp.aliyun-inc.com;
-          Fri, 12 Jul 2024 17:50:54 +0800
-From: wangshuaijie@awinic.com
-To: krzk@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmitry.torokhov@gmail.com,
-	jeff@labundy.com,
-	kangjiajun@awinic.com,
-	krzk+dt@kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liweilei@awinic.com,
-	robh@kernel.org,
-	wangshuaijie@awinic.com
-Subject: Re: [PATCH V2 3/5] Add aw9610x series related interfaces to the aw_sar driver
-Date: Fri, 12 Jul 2024 09:50:46 +0000
-Message-ID: <20240712095046.2396720-1-wangshuaijie@awinic.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <4d8b7fe5-a566-49f7-8924-3c310af2f7cd@kernel.org>
-References: <4d8b7fe5-a566-49f7-8924-3c310af2f7cd@kernel.org>
+	s=arc-20240116; t=1720777917; c=relaxed/simple;
+	bh=SC+TuyPNMRtOq4AxrVGHb15gUZN6Nm5Et0LQjEWYa94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B2QCArRis33Ggurw3izpZiz3ofRljvTtdK4GpA0WHhigalup0WZtQi6gWNCt2B2VfXrJ4jKN63cjFml3ykxE0WJfpPO6YBBYk1/YosrasrjUYj0hypLtFSzW7Kgaseqj0hlJsj4iE+nXVYk4zXLFNW/PkEZn/rQHbV0InKRdvrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yzbiX2SD; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzbiX2SD"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58be2b8b6b2so2345209a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 02:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720777913; x=1721382713; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=N1tjS6YMJlUOsz8nCx6JnOaz0fTKHxP1Aid+ErSztLE=;
+        b=yzbiX2SDzxT5wXOS/yRi3b0TF1vpp79EmcXtm3yms32rp3p2fCJA2tmCLtDrAlij8e
+         M9uXeJPMag+wjrzOsCu3xYKgYM//j2qMgrEDhBkdeaMKmbTcBsVQtDu/LvWjYE1esxSk
+         VRoqgIeI/HSxw9a8lQ64pjOPRCuXL8VKw/36s92y5jp5l3s9t4qd+pZvhkiUezOrWv/F
+         kRjE0FqV608O/w2bRb6q0qZNtWqyL+7SHsRdMU0DWTQ3LH0PLn//AALTnKAwveFH7NIR
+         fmQ953SXEk/TFc2+PUAmpaZnpJ29ysS4oPFA2BFBH3JHxkW4QImvnWS0m9+RfGIhE62O
+         QNbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720777913; x=1721382713;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N1tjS6YMJlUOsz8nCx6JnOaz0fTKHxP1Aid+ErSztLE=;
+        b=Qcs/BBuJvhnrKtDjg+GepZ9mPMVc3Hgx/YDf/+jHBuslUCL1jHbkPVyULhh4fHeLSI
+         KlVtaqQUEO5kVqky2q39S3q5kUYoBfkIJXQPt0caveZYyYSToDBXju4bFCbAlNQG4sTz
+         xW1KUpzeUd0by6mPtndzYl1Z8tTbqk+twgxqoe7WHA6eL9M6zPDpowFa/xR26Yp64kSz
+         WpI7/9kB52Djl+F7J1po9IMK44HFAxuiFlnEQOJeNE9p7UsB+BtPImdF6nTNSbix915o
+         pPNRnDAIYNUAmyEf/Z9jp/SignwlFh5hiWL1JOUJyCaEYtz06GRIXlR682f+oV5ZGfuU
+         2U1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVyuqA6JdufxNmJuFp6J6lolQEGO3jq+vTxQHWP+WcY80LajQq9qubORNU7viLwHgRjWhId7FjzF9Nn/+LAeJ+WKTKwe1zKjhX9gqoG
+X-Gm-Message-State: AOJu0Yzc9ucV79R400DYHOZCIUrC4lAaiKq+lDn1VxCsYNVxrOgm65Cx
+	qPXYqdvcsZJBE/Gr/OT7VlRQdHz6E1G2j7ohScPY6fJCz2TwopgNqcrD2681vgY=
+X-Google-Smtp-Source: AGHT+IFA9XmaUvi1bhmsqdbkB1U0DhUmANNu5GdHUGH1Sx3c6bPH9amZuemJKhaQSyoKVeIPmS4o2A==
+X-Received: by 2002:a17:907:9619:b0:a72:5bb9:b140 with SMTP id a640c23a62f3a-a780b884a31mr923374066b.54.1720777912526;
+        Fri, 12 Jul 2024 02:51:52 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a7ff282sm329968866b.130.2024.07.12.02.51.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jul 2024 02:51:52 -0700 (PDT)
+Message-ID: <a6ae5f72-76e2-4c80-8039-b3bb07ce3a3d@linaro.org>
+Date: Fri, 12 Jul 2024 11:51:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drivers/clocksource/qcom: Add missing iounmap() on
+ errors in msm_dt_timer_init() function.
+To: Ankit Agrawal <agrawal.ag.ankit@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240712082747.GA182658@bnew-VirtualBox>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240712082747.GA182658@bnew-VirtualBox>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,=0D
-=0D
-On Wed, 5 Jun 2024 12:22:16, krzk@kernel.org wrote:=0D
->On 05/06/2024 11:11, wangshuaijie@awinic.com wrote:=0D
->> From: shuaijie wang <wangshuaijie@awinic.com>=0D
->> =0D
->=0D
->No commit msg, no proper subject prefix.=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>=0D
->> | Reported-by: kernel test robot <lkp@intel.com>=0D
->> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>=0D
->> | Reported-by: Dan Carpenter <error27@gmail.com>=0D
->=0D
->Drop all these, this is some bogus tags. Tag never starts with pipe, btw.=
-=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> ---=0D
->>  drivers/input/misc/aw_sar/aw9610x/aw9610x.c | 884 ++++++++++++++++++++=
-=0D
->>  drivers/input/misc/aw_sar/aw9610x/aw9610x.h | 327 ++++++++=0D
->>  2 files changed, 1211 insertions(+)=0D
->>  create mode 100644 drivers/input/misc/aw_sar/aw9610x/aw9610x.c=0D
->>  create mode 100644 drivers/input/misc/aw_sar/aw9610x/aw9610x.h=0D
->=0D
->...=0D
->=0D
->> +struct aw_reg_data {=0D
->> +	unsigned char rw;=0D
->> +	unsigned short reg;=0D
->> +};=0D
->> +/********************************************=0D
->> + * Register Access=0D
->> + *******************************************/=0D
->> +#define REG_NONE_ACCESS					(0)=0D
->> +#define REG_RD_ACCESS					(1 << 0)=0D
->> +#define REG_WR_ACCESS					(1 << 1)=0D
->> +=0D
->> +static const struct aw_reg_data g_aw9610x_reg_access[] =3D {=0D
->=0D
->Ehh... so we are at basics of C. Data structures do not go to headers.=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->=0D
->Best regards,=0D
->Krzysztof=0D
-=0D
-Kind regards,=0D
-Wang Shuaijie=0D
+On 12.07.2024 10:27 AM, Ankit Agrawal wrote:
+> Add the missing iounmap() when clock frequency fails to get read by the
+> of_property_read_u32() call, or if the call to msm_timer_init() fails.
+> 
+> Signed-off-by: Ankit Agrawal <agrawal.ag.ankit@gmail.com>
+> ---
+
+For your future submissions: run:
+
+/scripts/checkpatch.pl -g $(git describe --abbrev=0)..
+
+to run some static checks, such as "title is rather long"
+
+
+..but I don't mind!
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
