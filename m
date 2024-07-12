@@ -1,191 +1,204 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013008.outbound.protection.outlook.com [52.101.67.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE6313D609
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720772640; cv=none; b=neXZx5Xftc1L3pd34Ovmqve1s9NN07tyAz4mtnGJLK4iZbJSvcczwB3DJAnI7b1PT7YIqoKZpiYcdSiB9oPk5UgMzmGMOchHwLDCQkoJeCHGVrrAtHJ5f1xYPa3Tp9fapuRBE+1XBBihSkIXBj/YnnCw+PaXNek7AEq2YhrN+9E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720772640; c=relaxed/simple;
-	bh=96SPCQiSgOxraPa5O4Ow8Hx1Id2vJ8/LG/Es8VJOpsc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=G1zSm6iDC4Fl6mGIL63HsPLizSCcsYMQJFKriw31UxfxWZ4KCcL5rL5xBv1vwDdM6NGrYI/TlTPPCy3AuOvTCToMZv/+IPGyrqlkbDiiBO62iqgG/LUR7gT6kQQes9UyDOUI9qT/z5ioKNrY5v9DxtAe+SvwHijtvD/rUGRjtj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4WL3dD1VGjz9v7Hp
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 15:49:04 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 9124F140ABE
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 16:07:11 +0800 (CST)
-Received: from [10.221.99.159] (unknown [10.221.99.159])
-	by APP2 (Coremail) with SMTP id GxC2BwDXe90i5JBmuR9PAQ--.17117S2;
-	Fri, 12 Jul 2024 09:07:10 +0100 (CET)
-Message-ID: <d6a76968-d10b-c60b-245a-f58116eca6af@huaweicloud.com>
-Date: Fri, 12 Jul 2024 10:06:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653182E3E5;
+	Fri, 12 Jul 2024 08:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720772763; cv=fail; b=ERMFM+IB6uHQP6BlwnBRohG/BBHDUpaM2KxmFJ6OhOceQHrXGz8cMqJT5vBA7EzJfd+SPRY1peQbF9X76cQH7DWQMdXZg2IdP1aTGJ/50PjJ5vCdPklTZkKi71N0CJNGVzTnJjh0JSTGR9sOnP9OHEnk/+kVZS+9NQkRTCwe8Fk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720772763; c=relaxed/simple;
+	bh=Il+wxcOEKJGwoUkNcp3B/7VGpHjvfy/O6b7GgproFUA=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=R41xzhGwRzQQQ7XwBW1w8869gQv7zktPJumGd6f4CGm2/Ep431E3P7FtE009nfG3VnC/bFTN+om7q555mDlz8kdfvnjJUn1j2XAZFGVgMcacaJi09Uirx2QrVz3SHGpybxVfckK+Kl2pU7PRXs/M/RWiIWo742LlkrbIHm2A3Qg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=CL8tTdVB; arc=fail smtp.client-ip=52.101.67.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="CL8tTdVB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XPngex7vt9yA9/nf8Z1CVQbOcfv9KCuGZtbpyY2/iGDvoHowf+ItRpCyBbC4hOC+DC7B5VVpB60hStPAlho7Ewx4mW7HNgKtgVZkBBYHyAD5lOrmgtuXQ0gdesrfACO3aX6lVIqC65YYTU5KeOrhKKf8Ie+QG3TSw6wckcI7y/buF5lkY/ALu8h5CBU1U0QGxbFwrQvC03hYEmyqGPuNx6qV9r2JCcTQFu/kY8IaMN+SY9UaRZSzXqZnojRAjZIqES4m4ZvL8zLHg4YJ2T4j1GKqBC8fN6At3pazOO/bCv2mXdguDCL3OrE5UQB773kvXK3zdTsBPiFOw9yB6OHipQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jlbFHm8J2dCkiMO5gfQe3ixgb4wzY3HBWNB2MgzF8ug=;
+ b=pO3enY1FLeDF9Nu5rPcBSPcvMPlCzX9VX1nN9tK9yx36F9INhhO8SoWy8A8AWGFB7v2bUEprjRjGw0BUtgJkdq9EzKm634dZMYlg9M1G4Ptld+3wPsWT+d/+mgJDxWWTUAv8H7PPg0Lmn8cG9xdYOVUvtZ33MPUHZ8xL+r/GkbQiM9zmPb9342uNmbZOiaIruF25OwNQsOZjJh9ufmM6z60hCFS8CtEc91jTE6OCuLkO1iWJXbqY4u49Ma+yjEqwRX2V8MY1ieprzA+eKt5umF/J5CxBf1CfbsSaiPTM4T94PdICTEWrZYdUHlLE1SxlxvlYfB9nyrEFF6h3PPIgTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jlbFHm8J2dCkiMO5gfQe3ixgb4wzY3HBWNB2MgzF8ug=;
+ b=CL8tTdVB71AkFx/iA6duP+TaBle9HlR3eM5CNhZhMZVhTuGbl0XzX2b59wIfQ/E13Vp9PiPaKHmY69b5DeLvQc8nUAc1LYE9c27N6zpXhaovSiMVQ72NCjijc+XVj+UPEePY5va2TlIz0kNcyVND4WUmkVEXzXUk8VjaWVjuqu0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PA1PR04MB10865.eurprd04.prod.outlook.com (2603:10a6:102:48a::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.20; Fri, 12 Jul
+ 2024 08:25:58 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.7762.020; Fri, 12 Jul 2024
+ 08:25:58 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH 0/6] remoteproc: imx_rproc: various patches for misc
+Date: Fri, 12 Jul 2024 16:34:53 +0800
+Message-Id: <20240712-imx_rproc-v1-0-7bcf6732d328@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK7qkGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDc0Mj3czciviigqL8ZF0j0zTjxCRzU+NkUwsloPqCotS0zAqwWdGxtbU
+ ApvoZO1sAAAA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Richard Zhu <hongxing.zhu@nxp.com>
+Cc: linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Peng Fan <peng.fan@nxp.com>, Terry Lv <terry.lv@nxp.com>, 
+ Jacky Bai <ping.bai@nxp.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720773307; l=1329;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=Il+wxcOEKJGwoUkNcp3B/7VGpHjvfy/O6b7GgproFUA=;
+ b=4pL6mmmoeOYK96KbSf/Tys7D6+Don473+tWD7tOM939t+ggQBdB5zGSAbQj2dWZMdwCGi7pDb
+ i08tBhBfCqhDYIoc0+MWOYTQN2tXfTNn9JtCDjnrX5Lp7/atCbksHR6
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SI2P153CA0013.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::12) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCHv2 0/4] tools/memory-model: Define more of LKMM in
- tools/memory-model
-From: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
-To: Alan Stern <stern@rowland.harvard.edu>,
- Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-Cc: paulmck@kernel.org, parri.andrea@gmail.com, will@kernel.org,
- peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
- dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
- akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
- urezki@gmail.com, quic_neeraju@quicinc.com, frederic@kernel.org,
- linux-kernel@vger.kernel.org, lkmm@lists.linux.dev
-References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
- <88c1ebc8-4805-4d1d-868a-889043899979@rowland.harvard.edu>
- <bbc3bd10-3bf5-4b1a-a275-dd328c42e307@huaweicloud.com>
- <f93f140b-13bc-4d00-adee-46cc1c016480@rowland.harvard.edu>
- <4792c9e7-2594-3600-5d82-4cb1443fe670@huaweicloud.com>
-Content-Language: en-US
-In-Reply-To: <4792c9e7-2594-3600-5d82-4cb1443fe670@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwDXe90i5JBmuR9PAQ--.17117S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3AryDZr4UWw1fJw4DXFyrJFb_yoW7XFWUp3
-	yUXFZ5Jr45Za18C3ykCF4UXw1rKrWqy3y5XrWrt3y3ZF43KFW5Jay0ywsF9F9rAr1Iqw1k
-	ZF17JF98CF9rAaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF
-	7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYY7kG6xAYrwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU1db1UUUUU
-X-CM-SenderInfo: xkhu0tnqos00pfhgvzhhrqqx5xdzvxpfor3voofrz/
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA1PR04MB10865:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43e8b56b-ed36-4575-8de4-08dca24c414b
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Ym9oMFdUL1I3SkIwMDNuU3pyY0lKVDNueFEvREdIWklaQVJXK0Naa0RFbkkv?=
+ =?utf-8?B?YXRhU3g3eW5LR3JRVU54dEZhamxjNFZ6Lys3anRhc091bVNibDRnUUpNdmx6?=
+ =?utf-8?B?bHBvVWhGNDFZWW03b05XSWVIL0hocWM4WlBURDdTdWQxdHd4TENrMVp3N2dY?=
+ =?utf-8?B?V3JWeGNGVVBmNDBvSXJxQnA3aGdVNFhqZDJ1elF4Y0I0a1c1azY5QnFlbjRH?=
+ =?utf-8?B?UndtQTFUZkRQZmhHQmh2Nm5hYVNianhNQlVyT1M0dmlDRlV1aVBuRnk3WC8v?=
+ =?utf-8?B?dmMrSEh2Y0lwMzhOVGc1WUhSSyt4VGo3YXBtTzUrdVF1SFUzaGlUcDhQS3Nr?=
+ =?utf-8?B?SDg3UStUZ2ZFMFVyWjFGRENrVEJjcXZScXMrMk9zZlNXdlViZVI5M0NVY0dW?=
+ =?utf-8?B?N2E0dEFOaFhxdmJRaERseUt6NFlRdHJyejBIU1RrTllUcTMrVnhpMDBOT1RM?=
+ =?utf-8?B?Q2tYMkM0a0l3ZC9PSDZ5bDRFT2lKZFlYeVNqNzZyOXlZWHlmM2xmMmVENEhU?=
+ =?utf-8?B?S2ZxSmI2VE9teCtESE41R1ZIYWNzdnh1SlpXNE45KzNLcWpOODhsQndIRHIw?=
+ =?utf-8?B?RENsWWljOXY1TVZxVkFtbTFaRG5XTFhTSXFrOEo0RzBnOFc4azNieXpmcFBX?=
+ =?utf-8?B?N1VSeVpSTll2TTJHdDc5THpSSE9PZE1rWTZPcnpEbkwyWTZRUy9CbGRTTkNp?=
+ =?utf-8?B?dG9UampqaU9pbGhUamswMFlSMXZiU25qR0RML01FZVpCbFZGNHQxL1h1Z1FX?=
+ =?utf-8?B?aUtRaTkybFA0ZC80MnZMVGNac2d4dENtczdOeUVJTllWZ2p1dDhiN0F5dHNF?=
+ =?utf-8?B?aVhoYlpKNHhtTUR6QnVZZEhXaFBlbEZGTEx3RllJcjJDSmp1N1VtMnBvaHRl?=
+ =?utf-8?B?ZitLL3JCMW9hTUdqN0RMWGpaNkFNRU5RNm5XSlBnQzVROHRVdEYwTE9sck9D?=
+ =?utf-8?B?UG13L1NDTXhVMVliZHFXRW1ramdOb25vblorMWVUbmpPSGFuZEt6enhOTkxH?=
+ =?utf-8?B?cHE4RDBRQWllRm5CSGJtWTVPWFpHLzVzditqR0FXbnd6b2NNUnJQdHBHaEN0?=
+ =?utf-8?B?RnRuV0hBeHorZHJWZWIzSm1oY2VNOGthZjJjeTNVR1ZWbmZiR1N2cDFsRjRE?=
+ =?utf-8?B?ZE9vS1NvTi9HMUM0YWsvY204WEJkTG1OK1NHb1JvbmxUUkd2ZzBxUHI0ZEJG?=
+ =?utf-8?B?aUNRbjUvTjJQL2NwU0sxWkFDVk1STE1ZalJSdFp2UjRLWnQrZ3QvcC93TEty?=
+ =?utf-8?B?LzhDQUNDcU9hWTU5NmNkZUliejRaMHp6cGV4WE1oSU1vSzg5aGFKYTZkWlFP?=
+ =?utf-8?B?encxekxzOGdEQll2K1JtZjVqK3NlRWFXZlhCbWRsWi9EQjFVOTk0TnFIRjRp?=
+ =?utf-8?B?TVdiQXN5Y0JvZWhjQkxvbGc1cWFUSnVPMkdySk4zMi9ISzJlWGtkQ1FRTHZX?=
+ =?utf-8?B?dTJhQSt1VlQ5bm9pdEdnTDd3L3BhSUowRmNFUjhMKzhJaWFtM0ZGNFRMVkd1?=
+ =?utf-8?B?L2g5aElRbExueFN6Wk9DbFc4M0gvcE9aMnlCT1kwMW5VOGY5WEttTnMyeGJp?=
+ =?utf-8?B?QjZUZDl4MFBuWkw1S2JITjdmV2xnL0V0NVBjSFJHTFRWdXplVEF0Ylh5TE15?=
+ =?utf-8?B?K2JwLzNieWxubkdxbE5GTGlkTXptZUNDTjNaNm54VGdxTnVVeUR2TnpYZ3Va?=
+ =?utf-8?B?Yi9hTW9sY3UwQVRhMXNwRkprNS9QSTA5M21lUjk3RVJVOW56bTJmSkZ5KzdF?=
+ =?utf-8?B?LzZaVXVSOHZNY1FpNFNWcTdYeThaRDUyMDVIbHdkSGpFSEFXdFRqUlVMS0w3?=
+ =?utf-8?Q?8nHbdM2eyM3f5htDzMUcqeVbe+JGEDgcDCdb0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SXdFK3lWRFZnR0ZQdzU5N1Evay9qM2RMQVZQaWVuMWNwbDVHcW1YMHpEb2hT?=
+ =?utf-8?B?RGJMTFpZc012VUNwalVxVSt0MFQ4Um1YbGdQSzdTQklRa21hSEVoRHcxVTVj?=
+ =?utf-8?B?YjZoamxlSG9vVGdDQjkzQ2JYWmRaaGc0YWhGaXUxWG9mYUR4V0VobXJMcmcv?=
+ =?utf-8?B?eGxoRmlFS0JaR3AvMno1dFI2czY3WC9mWERsRXFzcXFCV2RUL21wSzNEZ0F4?=
+ =?utf-8?B?azZWK1B3MzNOU2t0OXJscmRoZXRtMENLWUFWSTRlckRIWlI5dGJSOUJxbXBo?=
+ =?utf-8?B?OUErWXQwTkFad1FrR1FjUTQ1bWFqY1ZpWXhCdlA4YjlBa29OWWYrWEpZY29T?=
+ =?utf-8?B?M3NxWTdOb2hRZHNINTdhdHk4RGFSVTNzSDNvS0R3OURKYU5kZHNQWmNEeEFO?=
+ =?utf-8?B?Yjd5UDlGNEFxUU9LelVCRjJBYXNtVUMwdUJvZkVMNjV1NndUOGVaV3VoVEpy?=
+ =?utf-8?B?VWVvdm1GVTk3U2M3dnVmL1hhaGM5Y0MvbVg3WUk5WnB3TFl5NThyTDVSajc1?=
+ =?utf-8?B?NDBrMWZ5ZkRlZ0tCeU84N0ZBQWJQSUJSTFpBWCtUdjRiOGlSdmJ0ZzFxeGM5?=
+ =?utf-8?B?bDRxWDJOVUV6OWhsREkwRkN0Zk42UmZIUVNHb0YraVg0NVB5cWN6Q2ZmMTN6?=
+ =?utf-8?B?UHZQV3VISUltODZMY0ttUEJxNEUrSlc2TURydnk0SFUxSVJuTHhucld2S1BV?=
+ =?utf-8?B?dXloVGgvVFl6eWVoZGQ1VEpqQ0trZkZXSWtyd0JUb3BRb1FvU2V3SVNmMFV3?=
+ =?utf-8?B?U09VOTZZMUJVSnZuUmk2bGtEaHowbndERGpWUzdndlVMNmZDMTY5K2lUbkhB?=
+ =?utf-8?B?S2FIeXNCSFhITHRKZVZqMDB5bDlPUG5sQ3FrSWR3UVhVOXpseUNqY2tibG8y?=
+ =?utf-8?B?MUJONTZna1UrRTBZd3F0aTZjeWpuSStMY3U1d0N6UEwxOU9IQ3FDaEVjcTdt?=
+ =?utf-8?B?MWFsWXVqSnZYcmRjMjNFd0srT3BxbURCTUtoUTRmQ0NtaGUxNW9YMURLKzF0?=
+ =?utf-8?B?MkxKN2xMaDBFd1U5Y0l0WEdkQUtWTm1QclVteHc5TnlGZVJZZXI4MFpoejRB?=
+ =?utf-8?B?Qk1oK1dMNkhDZnBaemhQK3lVRlNVa3NSMmx4elg2amMxVVFZcWoyaTJ4QXhU?=
+ =?utf-8?B?eGthZlM0eFlLcDBrUHNwaDF5MFliaVJkQ2tJRFBHYmZTSG4wUzhJUDRSOEp6?=
+ =?utf-8?B?QVpabHloV2Y4R3A3MVBhMTdsNDUzeFdIMk1jUmhRMlZTeEdZbGk0S1JOMkxM?=
+ =?utf-8?B?ZmsrS20rMllONDZHYnRaUGlBaDRUVzJYYXB3WUtUa3dTd29RcXNVeEZnTGM3?=
+ =?utf-8?B?MkpRdFlzeGJNMVgyQ3gyVUdGZjJHSXJ0UC9vZVlqRHp1c0VqU1g3K1NvL3JN?=
+ =?utf-8?B?RnJ3T2E0cUVYSmZvZEU3aVBsM0tDcm42SDRJUVNQRTllUW12M3F0YmdRZ0Uv?=
+ =?utf-8?B?ZXhqM0VaSW5DcjJLaHRHa2VKa0RTSHpYRVNlb0FocWE2OC85NGM3TnB0QlRo?=
+ =?utf-8?B?SnluNFdDYVN2Y1pDaDk5V25UMkxueXY1MU5VVjZ0cHd1UWZRZDVtVEdudWFL?=
+ =?utf-8?B?b2o4YmEwdlVJakFNTFoyN1A3YmtraE9LYWt6YndWWjY1NnpISWRHcXh3WTJk?=
+ =?utf-8?B?UXRTcE1WQjNMNDdxMnNqTjZLYy9lWGcxR3FLVjVjNWdBVDd1NnRUd01hTDlC?=
+ =?utf-8?B?NGRpNEhQdTVpUlVRd1F4SHVrd0Z3cVROR0JRcHVWcWpWK2NVNHVyRWdxY1BY?=
+ =?utf-8?B?dHArQ1dDUnNPak5sK0E3VzFKMTl2dWVuYWhTNVJ4Qk5sR2lCT29iM2MwdDlL?=
+ =?utf-8?B?alVTOEJGVWp4UVpYRCtXR2w3c1FFNVdvRnVrb2Z6SmZkKzYraGhpNExLZlZq?=
+ =?utf-8?B?U2szV3F3aHZncVRTS25xREZGZFdFTkdiT29pVDhodU5wV0dYajlMNGFrbkNx?=
+ =?utf-8?B?ckt2UGZiK1dXd29BbzkvcnZiRzF1em5iT0lubU5nSXZHTXMxcWV0bTNFRmFp?=
+ =?utf-8?B?MFNWSnVobDFub1F2b3FuRlplWE9iOEx3UmFsUHRnWFpTeGZZUmFtYzJrQUV3?=
+ =?utf-8?B?MEFJYUFpZzZNVnVvRzBKa3lTcGN6TzFVR2gwUm0wWlhiU2NOa3B4OW9aVDZF?=
+ =?utf-8?Q?qKMiqK4RtA5d5Ddeaobzwraog?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43e8b56b-ed36-4575-8de4-08dca24c414b
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 08:25:57.9234
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nuLQLI7t4fSKF4rW6zO7mAXoyh4I1CzCXZmKxBy7zrBEQYPlhJmX3ETv/OYILY6wiPtUINe029vo5BHGgGlyaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10865
 
-On 6/10/2024 10:38 AM, Hernan Ponce de Leon wrote:
-> On 6/8/2024 3:00 AM, Alan Stern wrote:
->> On Wed, Jun 05, 2024 at 09:58:42PM +0200, Jonas Oberhauser wrote:
->>>
->>>
->>> Am 6/4/2024 um 7:56 PM schrieb Alan Stern:
->>>> Just to clarify: Your first step encompasses patches 1 - 3, and the
->>>> second step is patch 4.  The first three patches can be applied now, 
->>>> but
->>>> the last one needs to wait until herd7 has been updated.  Is this all
->>>> correct?
->>>
->>> Exactly.
->>
->> With regard to patch 4, how much thought have you and Hernan given to
->> backward compatibility?  Once herd7 is changed, old memory model files
->> will no longer work correctly.
->>
-> 
-> Honestly, I did not think much about this (at least until Akira 
-> mentioned in my PR). My hope was that changes to the model could be 
-> back-ported to previous kernel versions. However that would not work for 
-> existing out-of-tree files.
-> 
-> My question is: is compatibility with out-of-tree files really a 
-> requirement? I would argue that if people are using outdated models, 
-> they may get wrong results anyway. This is because some of the changes 
-> done to lkmm during the last few years change the expected result for 
-> some litmus tests.
-> 
-> Hernan
+This patchset is to upstream a few patches that in NXP downstream for
+quite sometime. For patches directly cherry-picked from NXP downstream,
+I keep the R-b tags.
 
-I pushed some new changes to the code for backward compatibility [1]. 
-The series also needs the patch at the bottom to properly deal with the 
-ordering of failing CAses and non-returning operations. With it, all 
-litmus tests return the correct result (the script needs to pass option 
--lkmm-legacy false to herd).
+Patch 1 is a minor fix to DDR alias.
+Patch 2 was sent out before,
+https://patchwork.kernel.org/project/linux-remoteproc/patch/20220111033333.403448-1-peng.fan@oss.nxp.com/#25144792
+this is just a resend
+Patch 3 is to avoid mu interrupt trigger earlier.
+Patch 4 is merge small area to support elf that has large section
+Patch 5 and Patch 6 is i.MX7ULP requires a message before linux
+reboot/poweroff, so need use non block mu to send message.
 
-Implementation-wise, there are two things that I would like to have:
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Peng Fan (6):
+      remoteproc: imx_rproc: correct ddr alias for i.MX8M
+      remoteproc: imx_rproc: use imx specific hook for find_loaded_rsc_table
+      remoteproc: imx_rproc: initialize workqueue earlier
+      remoteproc: imx_rproc: merge TCML/U
+      remoteproc: imx_rproc: allow tx_block to be set
+      remoteproc: imx_rproc: handle system off for i.MX7ULP
 
-- atomic_add_unless implementation is treated different than the rest 
-and it is one of the few remaining cases where memory orderings are 
-hardcoded [2]. I would like to define it in the .def file as
+ drivers/remoteproc/imx_rproc.c | 85 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 63 insertions(+), 22 deletions(-)
+---
+base-commit: f477dd6eede3ecedc8963478571d99ec3bf3f762
+change-id: 20240712-imx_rproc-25f3ab753c58
 
-	atomic_add_unless(X,V,U) __atomic_add_unless{ONCE}(X,V,U)
-
-- "deref" and "lderef" instructions seems to add a "rb_dep" fence. None 
-of the model files (.cat, .def, .bell) refers to "rb_dep" so this looks 
-useless to me. However, I never checked the details of these 
-dereferencing instruction so I might be missing something. Maybe Paul 
-can clarify.
-
-Hernan
-
-[1] https://github.com/herd/herdtools7/pull/865
-[2] https://github.com/herd/herdtools7/issues/868
-
-
-diff --git a/tools/memory-model/linux-kernel.def 
-b/tools/memory-model/linux-kernel.def
-index 001366ff3fb4..5a40c2cad39b 100644
---- a/tools/memory-model/linux-kernel.def
-+++ b/tools/memory-model/linux-kernel.def
-@@ -32,10 +32,10 @@ xchg(X,V)  __xchg{MB}(X,V)
-  xchg_relaxed(X,V) __xchg{ONCE}(X,V)
-  xchg_release(X,V) __xchg{RELEASE}(X,V)
-  xchg_acquire(X,V) __xchg{ACQUIRE}(X,V)
--cmpxchg(X,V,W) __cmpxchg{MB}(X,V,W)
--cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE}(X,V,W)
--cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE}(X,V,W)
--cmpxchg_release(X,V,W) __cmpxchg{RELEASE}(X,V,W)
-+cmpxchg(X,V,W) __cmpxchg{MB,ONCE}(X,V,W)
-+cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE,ONCE}(X,V,W)
-+cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE,ONCE}(X,V,W)
-+cmpxchg_release(X,V,W) __cmpxchg{RELEASE,ONCE}(X,V,W)
-
-  // Spinlocks
-  spin_lock(X) { __lock(X); }
-@@ -63,14 +63,14 @@ atomic_set(X,V) { WRITE_ONCE(*X,V); }
-  atomic_read_acquire(X) smp_load_acquire(X)
-  atomic_set_release(X,V) { smp_store_release(X,V); }
-
--atomic_add(V,X) { __atomic_op(X,+,V); }
--atomic_sub(V,X) { __atomic_op(X,-,V); }
--atomic_and(V,X) { __atomic_op(X,&,V); }
--atomic_or(V,X)  { __atomic_op(X,|,V); }
--atomic_xor(V,X) { __atomic_op(X,^,V); }
--atomic_inc(X)   { __atomic_op(X,+,1); }
--atomic_dec(X)   { __atomic_op(X,-,1); }
--atomic_andnot(V,X) { __atomic_op(X,&~,V); }
-+atomic_add(V,X) { __atomic_op{NORETURN}(X,+,V); }
-+atomic_sub(V,X) { __atomic_op{NORETURN}(X,-,V); }
-+atomic_and(V,X) { __atomic_op{NORETURN}(X,&,V); }
-+atomic_or(V,X)  { __atomic_op{NORETURN}(X,|,V); }
-+atomic_xor(V,X) { __atomic_op{NORETURN}(X,^,V); }
-+atomic_inc(X)   { __atomic_op{NORETURN}(X,+,1); }
-+atomic_dec(X)   { __atomic_op{NORETURN}(X,-,1); }
-+atomic_andnot(V,X) { __atomic_op{NORETURN}(X,&~,V); }
-
-  atomic_add_return(V,X) __atomic_op_return{MB}(X,+,V)
-  atomic_add_return_relaxed(V,X) __atomic_op_return{ONCE}(X,+,V)
-@@ -127,10 +127,10 @@ atomic_xchg(X,V) __xchg{MB}(X,V)
-  atomic_xchg_relaxed(X,V) __xchg{ONCE}(X,V)
-  atomic_xchg_release(X,V) __xchg{RELEASE}(X,V)
-  atomic_xchg_acquire(X,V) __xchg{ACQUIRE}(X,V)
--atomic_cmpxchg(X,V,W) __cmpxchg{MB}(X,V,W)
--atomic_cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE}(X,V,W)
--atomic_cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE}(X,V,W)
--atomic_cmpxchg_release(X,V,W) __cmpxchg{RELEASE}(X,V,W)
-+atomic_cmpxchg(X,V,W) __cmpxchg{MB,ONCE}(X,V,W)
-+atomic_cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE,ONCE}(X,V,W)
-+atomic_cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE,ONCE}(X,V,W)
-+atomic_cmpxchg_release(X,V,W) __cmpxchg{RELEASE,ONCE}(X,V,W)
-
-  atomic_sub_and_test(V,X) __atomic_op_return{MB}(X,-,V) == 0
-  atomic_dec_and_test(X)  __atomic_op_return{MB}(X,-,1) == 0
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
 
