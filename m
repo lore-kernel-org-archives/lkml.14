@@ -1,121 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E4014D714;
-	Fri, 12 Jul 2024 09:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F791459E3
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720777933; cv=none; b=En7l0QXZ/cDmz8EJKXR9/Ha9ym+YQEZ4Uwdeq3bLLKFcmaH5Wqm4TFCXt/35ajBdDQhhw/uOC8jPIoulaLNZXaYrGn5DlkDHL7v9IJRCSvDK1fcwrfKZZn9TO9ylSUYLJcSxoVIoxOec4JZK98snTLpPjXtgL7n20n4qpnZxBRU=
+	t=1720778000; cv=none; b=uY9xeUIGlevTjCJ6Mt1Bdq2cFu/Ljhbp2fAJ8UuVPbijKVCdcDDEnQ2Yo3UasusgqCfnpxhbZ0ZsnzaRjI3DWKm0uoT4Njl9whnIsJ6EHPGhNG9HtZFgcxaAnal0KJy1K+dLtANMrsO7f8YwGqtqio85xDo4Ve+dmeEhUP80ymE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720777933; c=relaxed/simple;
-	bh=Fl758Lbh3U7r3qwMeOeC068iOhZAyZs+9551apx3XuI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dq2In2wO9AadOdQJAJcvdGEjbD8K/OhuScoWVbWTHbPj6GKKebr2k8OUGC/5KbaTQFs1l/IrmStVwfH/xOovRtGbExXx0ZtR5OVvVoL88e3eLNBrxhN3Y+EV9z2HjJzv+C6E1BJIrDuH9HAOVjV8ZYTvEmT82cqrlYKDkfb95fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfKin0kY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720778000; c=relaxed/simple;
+	bh=fGqiR3p2twEgtGIGqX8CX2k7VlpahxZtzaoWMggY8kw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UjZTkYH4H41GwI45dWs5aevNmm7lADivGTUWQVbijNaketTjYZqN9q3W7GjLXyS5U1+8dXmmdvOZlnb5yN6B93UO3je3d0ymBBx7rFnqcJ14UYA53CTOHWXzGPfWo9wRw/6jxxrf2R0FfUA6QzdVtLKf4V3yDjlU/MqJM4iZnf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XPrGjomU; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfKin0kY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57222C32782;
-	Fri, 12 Jul 2024 09:52:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720777932;
-	bh=Fl758Lbh3U7r3qwMeOeC068iOhZAyZs+9551apx3XuI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IfKin0kYJ+79JXJqxoCueZ3pzQIxv3ZL7sxUgimO39yNxQ7vzhL6BfRABAWRGfKH5
-	 wU6IveRj41ScWHy+nrNz9OEMHfUKXnpXEUKQLlVgs8ssHAsrPB3XQ+yOQI4PQwEpQW
-	 HToZSL7qeddwK1WQmcHb9DzsK/BMvLJ8IwF939rXZmCosYLh/57sJCvqmYh8i3woOJ
-	 OS9k3/7b4AqAmWgosJ3lIAndalDIEOaio1/FBvbJaDIJ6D13eIwVyydqRwvfTaMReS
-	 DvL61s2zxQAmEz24K36VE9Q4wNg1ONEqccWDP1Y17S+yP4d5edEtU5I+HYJxL/mjdx
-	 LStYKUXPMJdaQ==
-Message-ID: <cf02eb9b-2304-4db5-96f9-cfe89037faad@kernel.org>
-Date: Fri, 12 Jul 2024 11:52:08 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XPrGjomU"
+X-Envelope-To: adilger@dilger.ca
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1720777994;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=420HDkg/RbN0mlADGGoKNBBDxwvgvCBrqnNYOxwbTVc=;
+	b=XPrGjomUdpQXr8zzgWOyfZg9XSmmiI8C7K193g3xRpQJmNn0jFmIfRAQVwf+/srxGfZ5D5
+	UcopNtbfhdANN/+cvHNdZQZJWGjY95hpE46Smx6mO3v2Ra6SCHcNSGRrCbrKEaQrhMRRdg
+	L1LDZD5DwGQZVTwLA6vLAF4dGTyWd6U=
+X-Envelope-To: wangjianjian0@foxmail.com
+X-Envelope-To: wangjianjian3@huawei.com
+X-Envelope-To: tytso@mit.edu
+X-Envelope-To: jack@suse.cz
+X-Envelope-To: harshadshirwadkar@gmail.com
+X-Envelope-To: linux-ext4@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Luis Henriques <luis.henriques@linux.dev>
+To: Andreas Dilger <adilger@dilger.ca>
+Cc:  Wang Jianjian <wangjianjian0@foxmail.com>,  "wangjianjian (C)"
+ <wangjianjian3@huawei.com>,  Theodore Ts'o <tytso@mit.edu>,  Jan Kara
+ <jack@suse.cz>,  Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+  linux-ext4@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] jbd2: make '0' an invalid transaction sequence
+In-Reply-To: <87ed7znf8n.fsf@linux.dev> (Luis Henriques's message of "Fri, 12
+	Jul 2024 10:15:04 +0100")
+References: <20240711083520.6751-1-luis.henriques@linux.dev>
+	<4f9d5881-11e6-4064-ab69-ca6ef81582b3@huawei.com>
+	<878qy8nem5.fsf@brahms.olymp>
+	<tencent_CF3DC37BEB2026CB2F68408A2B62314E0C08@qq.com>
+	<A90C7898-B704-4B2A-BFE6-4A32050763F0@dilger.ca>
+	<87ed7znf8n.fsf@linux.dev>
+Date: Fri, 12 Jul 2024 10:53:02 +0100
+Message-ID: <87wmlrkkch.fsf_-_@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Removal of MSC-5000/5080 touchscreen/touchkey drivers?
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Sangwon Jee <jeesw@melfas.com>, Joonyoung Shim <jy0922.shim@samsung.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <ZpC7G0AVMB98og6H@google.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ZpC7G0AVMB98og6H@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Migadu-Flow: FLOW_OUT
 
-On 12/07/2024 07:11, Dmitry Torokhov wrote:
-> Hi,
-> 
-> Sorry for a somewhat wide and random distribution, but I was wondering
-> if anyone knows if drivers/input/touchscreen/mcs5000_ts.c and
-> drivers/input/keyboard/mcs_touchkey.c are still relevant these days?
-> 
-> Looking at Melfas web-site it looks like these were the 1st generation
-> of their chips, manufactured 2000-2007. The drivers were contributed by
-> Samsung long time ago, they rely on custom platform data (no DT support)
-> and as far as I can see we never had a user of them in mainline.
-> 
-> Should I simply remove them? Does anyone know?
+Since there's code (in fast-commit) that already handles a '0' tid as a
+special case, it's better to ensure that jbd2 never sets it to that value
+when journal->j_transaction_sequence increment wraps.
 
-Digging in history, commit claims this was for S3C6410 NCP board (with
-Samsung S3C6410 SoC), which had a board-file:
-arch/arm/mach-s3c64xx/mach-ncp.c
-But the touchscreen was never added to the board file, thus mainline
-kernel never had it fully working.
+Suggested-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Luis Henriques (SUSE) <luis.henriques@linux.dev>
+---
+ fs/jbd2/transaction.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The NCP board file was finally removed in v6.3 in commit:
-743c8fbb90ca4c02bdf4087fa9f1885ddd85041b
-
-I say drop the driver.
-
-Best regards,
-Krzysztof
-
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 66513c18ca29..4dbdd37349c3 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -84,6 +84,8 @@ static void jbd2_get_transaction(journal_t *journal,
+ 	transaction->t_state = T_RUNNING;
+ 	transaction->t_start_time = ktime_get();
+ 	transaction->t_tid = journal->j_transaction_sequence++;
++	if (unlikely(transaction->t_tid == 0))
++		transaction->t_tid = journal->j_transaction_sequence++;
+ 	transaction->t_expires = jiffies + journal->j_commit_interval;
+ 	atomic_set(&transaction->t_updates, 0);
+ 	atomic_set(&transaction->t_outstanding_credits,
