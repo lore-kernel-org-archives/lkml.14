@@ -1,197 +1,113 @@
-Received: from out28-1.mail.aliyun.com (out28-1.mail.aliyun.com [115.124.28.1])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1141422D0;
-	Fri, 12 Jul 2024 11:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D926C4A3D;
+	Fri, 12 Jul 2024 11:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720784262; cv=none; b=R6iM1aKuo5OFtIuh73i/0RHmJTfdNrjKcZ5nvmpNa+aPR18Dp/wmikXQTJwLPSl1KHRH5ER9YfpTxJaNgmOyX2JCghXXJ+7iGA/pkiK3VugKJ5cljtn0KC7K3dZ4MikRqvb6nLw2DOey/qF3+Y9i/5Bk8fxezgsWB33Q373gkxs=
+	t=1720784477; cv=none; b=J80c+17i8pC2wwQmpVsAIpCIgCDgpsYo+22lk561IW67SLxm5gZ2ZVs/BX7wM8Sbo4FIrmwcqNDhpFhAoosbl6o+i99amwZRO7wTNHucCRNhkvFBNtLX6TbSAGVXi/0Pxd6HKuQnspO+PROJMd9U70jdEpZbQ4efZQBaEPpoBEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720784262; c=relaxed/simple;
-	bh=kGkxw6mKbQlTWnL7jHOxa8Fs6bpUivRXuJuxan8ou1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tI+299Uu3MiFvldUsBEjfLvBhpiVKnUWuXxY46EzO9aABn1LT/4wtFsTN3XHKgurKB/H6wfqwAWAxHzkLg2hqSU/piCK3OzdJ8NzFqf8Qzt2IBfFxpsZkLpEAp1+OymEnkUz1iOyxkFv2ng4tCpWuo+XB2v3HOdgVQGNfoShboA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436264|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.455054-0.000424186-0.544521;FP=7453663783424890238|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033070021168;MF=wangshuaijie@awinic.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.YOU1nyH_1720783933;
-Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.YOU1nyH_1720783933)
-          by smtp.aliyun-inc.com;
-          Fri, 12 Jul 2024 19:32:15 +0800
-From: wangshuaijie@awinic.com
-To: jic23@kernel.org,
-	lars@metafoo.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	waqar.hameed@axis.com,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: wangshuaijie@awinic.com,
-	liweilei@awinic.com,
-	kangjiajun@awinic.com
-Subject: [PATCH V3 1/2] dt-bindings: iio: Add YAML to Awinic proximity sensor
-Date: Fri, 12 Jul 2024 11:31:59 +0000
-Message-ID: <20240712113200.2468249-2-wangshuaijie@awinic.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240712113200.2468249-1-wangshuaijie@awinic.com>
-References: <20240712113200.2468249-1-wangshuaijie@awinic.com>
+	s=arc-20240116; t=1720784477; c=relaxed/simple;
+	bh=/9KhqEJTypNqnFHIEeuXNVKbUv/lh5PoQ/8pTaDM/ps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fOo0RUndmOdb6NfcJwKl8M79YNzbEcXvgnX7SuR1CAlmZrIjShdZ5N31gvxbin1fPY5IcmMtcWEZRikorxLP87ppWIqNqIAM9LLTppXJ24Z8bC9/KQqVG5rqMQQIhAx10tlfJQOuq9E+VnoS+j/DBFxLBJiYHY8lZqtl8bG9nFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R663tXBD; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R663tXBD"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46CBedxp062112;
+	Fri, 12 Jul 2024 06:40:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1720784439;
+	bh=xx+IPyfid+GvirErrxib8ttv/veQTjav2d5pwS73HpI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=R663tXBD976lrswtz22sFImLlbecjARt5vZrIPiZGxV0xsKqjfN+F3jeajcFAbfgi
+	 MCXb30BAUJrscR1is50rR0OxKn2wUIe7UCaOF/px8AboaH3+58ibOFZHQLyRRNDTGq
+	 H6hRZHZeaddBXK2BESBzGhjr/uhTr9ywev4Xu9c8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46CBednV069325
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 12 Jul 2024 06:40:39 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 12
+ Jul 2024 06:40:38 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 12 Jul 2024 06:40:38 -0500
+Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46CBeVwe046608;
+	Fri, 12 Jul 2024 06:40:32 -0500
+Message-ID: <4cdcf7af-fb0e-47a4-b38a-b8ad98c90188@ti.com>
+Date: Fri, 12 Jul 2024 17:10:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] net: ti: icssg-prueth: Split out common
+ object into module
+To: Thorsten Leemhuis <linux@leemhuis.info>, Andrew Lunn <andrew@lunn.ch>
+CC: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Diogo Ivo
+	<diogo.ivo@siemens.com>, Roger Quadros <rogerq@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet
+	<edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, <srk@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        kernel test robot <lkp@intel.com>
+References: <20240606073639.3299252-1-danishanwar@ti.com>
+ <66b917d6-3b72-41c5-9e30-e87cf5505729@lunn.ch>
+ <c720c13d-de0e-440d-a10b-717f6012bf56@leemhuis.info>
+ <ca53f2e2-6cc5-42ea-8faf-7d9b7d14421d@leemhuis.info>
+Content-Language: en-US
+From: MD Danish Anwar <danishanwar@ti.com>
+In-Reply-To: <ca53f2e2-6cc5-42ea-8faf-7d9b7d14421d@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: shuaijie wang <wangshuaijie@awinic.com>
 
-Add the awinic,aw96xxx.yaml file to adapt to the awinic proximity sensor driver.
-Addressing the issues raised in the previous version.
-1. Add a description about the hardware device.
-2. Remove inappropriate configuration items.
-3. Modify the formatting issues.
 
-Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>
----
- .../iio/proximity/awinic,aw96xxx.yaml         | 127 ++++++++++++++++++
- 1 file changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/awinic,aw96xxx.yaml
+On 12/07/24 4:42 pm, Thorsten Leemhuis wrote:
+> On 26.06.24 09:19, Thorsten Leemhuis wrote:
+>> On 06.06.24 17:54, Andrew Lunn wrote:
+>>>> +EXPORT_SYMBOL_GPL(icssg_class_set_mac_addr);
+>>>> +EXPORT_SYMBOL_GPL(icssg_class_disable);
+>>>> +EXPORT_SYMBOL_GPL(icssg_class_default);
+>>>> +EXPORT_SYMBOL_GPL(icssg_class_promiscuous_sr1);
+>>> [...]
+>>> Please could you clean up the namespace a little. icssg_ and prueth_
+>>> are O.K, but we also have arc/emac_rockchip.c, allwinner/sun4i-emac.c,
+>>> ibm/emac/, and qualcomm/emac/ using the emac_ prefix.
+>>
+>> Just wondering (not as a regression tracker, just as someone that ran
+>> into this and carries the patch in his tree to avoid a build error for
+>> next):
+>>
+>> What happened to this fix? After above feedback nearly 20 days ago
+>> nothing happened afaics. Did this fall through the cracks? Or was some
+>> other solution found and I just missed this (and thus can drop the fix
+>> from my tree)?
+> 
+> That inquiry lead to a review from Roger (thx!) more than two weeks ago,
+> but that was all afaics. Makes me wonder if this regression will hit
+> mainline soon, as the merge window might open on Monday already.
+> 
+> Ciao, Thorsten
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/awinic,aw96xxx.yaml b/Documentation/devicetree/bindings/iio/proximity/awinic,aw96xxx.yaml
-new file mode 100644
-index 000000000000..459cb1644d3c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/awinic,aw96xxx.yaml
-@@ -0,0 +1,127 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/awinic,aw96xxx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Awinic's AW96XXX capacitive proximity sensor
-+
-+maintainers:
-+  - Shuaijie Wang <wangshuaijie@awinic.com>
-+
-+description: |
-+  Awinic's AW96XXX proximity sensor.
-+  The specific absorption rate (SAR) is a metric that measures
-+  the degree of absorption of electromagnetic radiation emitted by wireless
-+  devices, such as mobile phones and tablets, by human tissue.
-+  In mobile phone applications, the proximity sensor is primarily used to detect
-+  the proximity of the human body to the phone. When the phone approaches the human body,
-+  it will actively reduce the transmit power of the antenna to keep the SAR within a safe
-+  range. Therefore, we also refer to the proximity sensor as a SAR sensor.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - awinic,aw96103
-+      - awinic,aw96105
-+      - awinic,aw96303
-+      - awinic,aw96305
-+      - awinic,aw96308
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Generated by the device to announce that a close/far
-+      proximity event has happened.
-+    maxItems: 1
-+
-+  awinic,sar-num:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Set the number of the SAR(Specific Absorption Rate) sensor.
-+      It is set to 0 if one awinic sar chip is used.
-+      If two awinic sar chips are used, awinic,sar-label in the first
-+      awinic-sar should be set to 0 and awinic,sar-label in the second
-+      awinic-sar should be set to 1.
-+      In an application where a device utilizes multiple proximity sensors,
-+      it is used to retrieve the names of the register configuration files
-+      that the drivers need to load. For example: aw963xx_reg_0.bin/aw963xx_reg_1.bin
-+
-+  awinic,regulator-power-supply:
-+    description:
-+      Choose if you want to use a regulator to power the chip. Then the
-+      vccX-supply has to be set.
-+
-+  vcc0-supply:
-+    description:
-+      Optional regulator for chip, 1.7V-3.6V.
-+      If two awinic sar chips are used, the first regulator
-+      should set the ID to vcc0-supply and the second regulator
-+      should set the ID to vcc1-supply.
-+
-+  awinic,channel-use-mask:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The mask of channels used.
-+      Configure according to the specific chip channel used.
-+      Bit[31:0] Each bit represents a channel.
-+      If the customer uses ch0 and ch2, then channel_use_mask=<0x05>
-+      For a 3-channel chip, the maximum value is 0x07;
-+      For a 5-channel chip, the maximum value is 0x1F;
-+      For a 8-channel chip, the maximum value is 0xFF;
-+
-+  awinic,monitor-esd:
-+    type: boolean
-+    description:
-+      Choose if you want to monitor ESD.
-+
-+  awinic,pin-set-inter-pull-up:
-+    type: boolean
-+    description:
-+      Choose if you want to set the interrupt pin to internal pull-up.
-+
-+  awinic,using-pm-ops:
-+    type: boolean
-+    description:
-+      Choose if you want to change the chip mode on suppend and resume.
-+
-+  awinic,use-plug-cail:
-+    type: boolean
-+    description:
-+      Choose If you want to perform calibration when plugging and unplugging the charger.
-+
-+  awinic,irq-mux:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [2, 5]
-+    description:
-+      You only need to set this configuration item if you are using AW96308 adn AW96305BFOR.
-+      If CS2 is used as the interrupt pin, this item should be set to 2.
-+      If CS5 is used as the interrupt pin, this item should be set to 5.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - awinic,sar-num
-+  - awinic,channel-use-mask
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        proximity@12 {
-+            compatible = "awinic,aw96308";
-+            reg = <0x12>;
-+            interrupt-parent = <&gpio>;
-+            interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-+            awinic,sar-num = <0>;
-+            awinic,channel-use-mask = <0xff>;
-+            awinic,irq-mux = <2>;
-+        };
-+    };
+
+Andrew L has given comment to clean up the API names. I will rename the
+APIs being exported from emac_ prefix to icssg_ prefix and re-spin this.
+
 -- 
-2.45.1
-
+Thanks and Regards,
+Danish
