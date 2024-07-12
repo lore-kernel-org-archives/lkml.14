@@ -1,67 +1,65 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AC317BCE;
-	Fri, 12 Jul 2024 05:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DFB1BDE6
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761542; cv=none; b=jFUAp1MBozMNEwFOKVATx26De9VL1M897hBrfj7GE3uNTVHMs7FOiiT1uLKX4G3QPvjvXlFzvYbewToeTjmLSn0XcqMWPpgKbnSv88l1Nz31o+PVOLdOFaqZwd9OWUWKUx9UJ0y9MzePF2DXho7l2TES7DWltYet1XrKfOWQlXY=
+	t=1720761545; cv=none; b=g7cmoNMT3+F65AppIe5bElLVI5vk4Z+Mj1kSbPFULhJNuBdCvnikYPA3EJ2g6X5o1X7sLv2aV56MhNMck0WlUaZEGJGc5aTiOndCzXkDjsoiOSpRPnSxN1jnJrZ1132exjIh0SgcIeG+7jwtk9LvYn+zV/OXLnARcUyt3RCSyDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720761542; c=relaxed/simple;
-	bh=CN/ITA2G6cUvJqw4Cnp6OChd0HkQBlwBpF31CGCHrqM=;
+	s=arc-20240116; t=1720761545; c=relaxed/simple;
+	bh=xetQK4NvrTVzpEMIZzjKGoPzjTKxq2X0OCSfKW+YHz0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hP+KnrxX6LNYywjPTy5DOB5FOcyueHDw4I/gonYkolFJ8aHHBq6hKEYPc9I+OmtgGxgdNKXqj6GvOlv+5ZBVEmdmCbb8+Veolho9J/t8s0RcNnXDGysrNWDhq3FZv2GVK82LcXBiRt6YZ1Xmj1vvHIejcBaVj8N86M1ELzf2WvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=atfht8Ln; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=CUUrbUWFCBaO9ecs9usEaQt+IckWuBA+D9nW+tWas9F7Y7Uvdicj3b2VmDr5R4RcGbjldaNW0ahaf9C8ZlqK1cH580/T0q5LkL96uIc+QZpZivk8o68ao9as/pOjiHXZgQecn4jx/2HRGHkqkSlcK/kgEwBhCBtiVjTI8BgzLl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Gs9fwuyu; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atfht8Ln"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70b31272a04so1786505b3a.1;
-        Thu, 11 Jul 2024 22:19:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gs9fwuyu"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3d93147ac6bso901509b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720761541; x=1721366341; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1720761543; x=1721366343; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aH9D5gn2H045SFSH2+RZMGbl4EE1+sMrVrGFVphOnxc=;
-        b=atfht8LnkcsSfYLRnSpbWFFivsEthC/yWYTNXs1yqIqybLzUwLB4DEnJBOgIVba12X
-         leuQoBqh+bNgDwno6utwKC1iXTLwB/zzcgRbkmRVAgcu3aAWOIZoQnRczq5QidrOgHOq
-         o6KbZpV07UNZ6a4Vb066p+XIva28UviQJCnfdTBpN7oUeqKpiFJyjr+wbeKSzk6W+n8I
-         tbg478+BRCGXYvay2g4sOGxt8KYZSBKUcl+ZUq+qz0DmWHaj2ioA0NJSxTF61HyiZ8gv
-         GuWEOCIBJU3ILNwxCdbWwA4fxZZ5lJxBPjnTEXwpTzLuSIm9s6HlV0ZyIw2NZhPc5id2
-         rTWw==
+        bh=jK4yGCTZGoA8FfUJeWZ5DsSBcIzSsvHoyFCV3fGU2TI=;
+        b=Gs9fwuyuwT0kLv/YmYZLYneamvUz1jIG6WvpKn1TS0NSn4JSX2g34UOGo9UzkKmDql
+         yeptBi49sxyYygyQpCTGELDK02o+fmdWS7+xYXiJe8Kqwu8i+p28F500ZegVY9lHMQR9
+         Vp2mL6yRYQckISDI/YzwEHNVwAWsOegcbmCSU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720761541; x=1721366341;
+        d=1e100.net; s=20230601; t=1720761543; x=1721366343;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aH9D5gn2H045SFSH2+RZMGbl4EE1+sMrVrGFVphOnxc=;
-        b=ay+FoJwTw88ZyrSsOy7I1u7fRlua98s+QyLZ6P6c8D324v7IfB07jfcERvpsGuWjXQ
-         ZxBg7TIWhzpYa7Wu9tfpmGKab7n31KMSJW3clj8EcoUzx4BG26pehqHd9P5bWbEWx+Uu
-         /CJxAzEFHScBXI/T0En7//tj0O/OxLjKfGYWnV7ZBCZNruHYcbUWO+syT6aq2bbG9p4s
-         f4LBvSGIr6XS8dCRBF93wJ+RmreBHyLdmLUSSuAZE4DzpLSgBBRQwhHEo3vg8MU69VWb
-         KpGUkaMClbPHhfGugbvYhyncDOZl0+Kk3UoaFNfXpvNldyeNh/WSmb48N0WpPlzfsTJc
-         rmgg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6ZIOrXt5UpiFNh0zHXGMd8AbmGO5fZiXOJfs4rE/MaVZ5nBpOdav4v96kVi9AAjDGaJZTK581DEL8+YinrAgQgUeJevYeW0O9Mxer
-X-Gm-Message-State: AOJu0Yz1LI+ENcgN1WcladTAPV+m/4ERo+DqwFYtEx9ctN4hDb4OyUB8
-	aCnbEeJp6WBGzCZNShgBsFNnxpudS1NCulbugeh8Fi7DFA54SfvpFMdEhw==
-X-Google-Smtp-Source: AGHT+IH+1Fjy+5YmoEXdFBXLdEYNXdt5IyzDYa7+xI0zjYHno2WkVwviU2hONJAxLdN8jl6AV4hQwQ==
-X-Received: by 2002:a05:6a20:9143:b0:1b5:cc1f:38d4 with SMTP id adf61e73a8af0-1c3bead10ebmr2669281637.17.1720761540483;
-        Thu, 11 Jul 2024 22:19:00 -0700 (PDT)
-Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:acda:de52:5c83:f72d])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d669d525csm4328972a12.73.2024.07.11.22.18.59
+        bh=jK4yGCTZGoA8FfUJeWZ5DsSBcIzSsvHoyFCV3fGU2TI=;
+        b=bU1N+qJAFLi5/1Lm2atPAJsjzlK3Gp2sq6d+2nRBgGozGJwbgH27oeo1VcXu1kOJvS
+         l3y4NEF0369NhddD0Msm65K2ywKrHrL65Ge0R7zNnRO1ag9DTJh1Sjx0In0XP0fxA6NP
+         eyeSwBU9NF0cFiaSLGF2bWhWuP4K3TQpNnJ1j0J23gECpHZ+y9kpTSCMCZZNaXNFRhO/
+         yxpxrKzgmJ416bXWOq2pWvG/WAZuCl99l3QLYzTW8kitSSreOZTdhUCRGn1HHG/92vnP
+         Djt6uaIhCdbCH8t3ZnrFEt/9tCwPupT28JulduNEayXzpnxYwNhC8kciPFHz8Bv9rgsT
+         GaXg==
+X-Gm-Message-State: AOJu0Yy8iUSkyqyLv7dGbx4g1/j7oKZ7NuM5WvhLzjq/k+IS5Rd1ULfh
+	71yGxFzuW73Vf6giJXnzTsGL6Gry+ZJo2uCR9JGv27sZ6a1/kXk2upQpEDqVQg==
+X-Google-Smtp-Source: AGHT+IHVu0899IACUROmpvF1H0znP5GmchmoXxv8zKFqxqWYcBpnyKonZrqH8uozm0s1Iz9VsavLhQ==
+X-Received: by 2002:a05:6808:2395:b0:3d9:2fd5:6c14 with SMTP id 5614622812f47-3d93c033989mr12604186b6e.29.1720761543355;
+        Thu, 11 Jul 2024 22:19:03 -0700 (PDT)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:15f3:5252:ec56:52ae])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967851sm6553436b3a.109.2024.07.11.22.19.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:18:59 -0700 (PDT)
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: linux-input@vger.kernel.org
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] Input: usbtouchscreen - remove custom USB_DEVICE_HID_CLASS macro
-Date: Thu, 11 Jul 2024 22:18:44 -0700
-Message-ID: <20240712051851.3463657-2-dmitry.torokhov@gmail.com>
+        Thu, 11 Jul 2024 22:19:03 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Nick Terrell <terrelln@fb.com>
+Subject: [PATCH v6 02/23] lib: lz4hc: export LZ4_resetStreamHC symbol
+Date: Fri, 12 Jul 2024 14:18:13 +0900
+Message-ID: <20240712051850.484318-3-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-In-Reply-To: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
-References: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20240712051850.484318-1-senozhatsky@chromium.org>
+References: <20240712051850.484318-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,41 +68,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There already exists perfectly suitable USB_DEVICE_INTERFACE_CLASS
-macro, use it.
+This symbol is needed to enable lz4hc dictionary support.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Nick Terrell <terrelln@fb.com>
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/input/touchscreen/usbtouchscreen.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ lib/lz4/lz4hc_compress.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
-index 8b3a6e7fd990..57a5b7d503d5 100644
---- a/drivers/input/touchscreen/usbtouchscreen.c
-+++ b/drivers/input/touchscreen/usbtouchscreen.c
-@@ -130,18 +130,13 @@ enum {
- 	DEVTYPE_ETOUCH,
- };
+diff --git a/lib/lz4/lz4hc_compress.c b/lib/lz4/lz4hc_compress.c
+index e7ac8694b797..bc45594ad2a8 100644
+--- a/lib/lz4/lz4hc_compress.c
++++ b/lib/lz4/lz4hc_compress.c
+@@ -621,6 +621,7 @@ void LZ4_resetStreamHC(LZ4_streamHC_t *LZ4_streamHCPtr, int compressionLevel)
+ 	LZ4_streamHCPtr->internal_donotuse.base = NULL;
+ 	LZ4_streamHCPtr->internal_donotuse.compressionLevel = (unsigned int)compressionLevel;
+ }
++EXPORT_SYMBOL(LZ4_resetStreamHC);
  
--#define USB_DEVICE_HID_CLASS(vend, prod) \
--	.match_flags = USB_DEVICE_ID_MATCH_INT_CLASS \
--		| USB_DEVICE_ID_MATCH_DEVICE, \
--	.idVendor = (vend), \
--	.idProduct = (prod), \
--	.bInterfaceClass = USB_INTERFACE_CLASS_HID
--
- static const struct usb_device_id usbtouch_devices[] = {
- #ifdef CONFIG_TOUCHSCREEN_USB_EGALAX
- 	/* ignore the HID capable devices, handled by usbhid */
--	{USB_DEVICE_HID_CLASS(0x0eef, 0x0001), .driver_info = DEVTYPE_IGNORE},
--	{USB_DEVICE_HID_CLASS(0x0eef, 0x0002), .driver_info = DEVTYPE_IGNORE},
-+	{USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0001, USB_INTERFACE_CLASS_HID),
-+		.driver_info = DEVTYPE_IGNORE},
-+	{USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0002, USB_INTERFACE_CLASS_HID),
-+		.driver_info = DEVTYPE_IGNORE},
- 
- 	/* normal device IDs */
- 	{USB_DEVICE(0x3823, 0x0001), .driver_info = DEVTYPE_EGALAX},
+ int LZ4_loadDictHC(LZ4_streamHC_t *LZ4_streamHCPtr,
+ 	const char *dictionary,
 -- 
 2.45.2.993.g49e7a77208-goog
 
