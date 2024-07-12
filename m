@@ -1,319 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6ED2032A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 19:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AF52032A;
+	Fri, 12 Jul 2024 19:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720813249; cv=none; b=roWyvSzSIAxHLjL8wFuH9yr97zhS+2KMhq/kyxRsA0+733CkpiuxadGJbTAcALNOwG7vXMmqRRGgYryuzd3wa/xghIrGcY98P8EEvd8JsWowlKxNfjbop0sEeAn9uBvfM0FgOqX3Xag2HoydpYIDSrsVHukVP06tal2/a/M8eTk=
+	t=1720813334; cv=none; b=R2VzcApKeqJeNMwI90+HN+lF0Qm1wqFuF2gy6UQL+OTWHNvkj6D9oJkfFi/zfUg2kIjfFfQD7m6ExnJ0xKo32xJDLzu4bALT0dP4PlLHhzEM5g0/mYxyuIa+bEvu38rRtNuEsiJg2q04TAokhlzlHP3+1HVd3Cdsad1OV21MlH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720813249; c=relaxed/simple;
-	bh=nuLCVc8jMbYe90IHZEaUZgeJpygDFxblkZEyYUHyi3k=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=NExXKJVLs2vycEDpWgHoEirfCCZEVwdayAST13Xe7XlwEB1yNn0M7PnokP7kc/DgTmzq4kNgBSizLhMnqIyZhTT8pT4StVNoRWh5FWjf0Mxa6dMXc2Saxqea9gb+WLt16h2KxqkHYh08Ia0Fcy5JcLUHplvh1tXJRhQvP2xeiq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GtElwmi/; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1720813334; c=relaxed/simple;
+	bh=TgRCdc2jdk93faAJSlXtDv3nImud6PYYBQfTIb7ydxE=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=DC1qeBT2qhlNumxAUUxDIHZZJZN/OTnu6/sz5iaicB3/AdD/egImUTCmW/MQB56bU+korZkABcJ/UPu4316k/YMbd3YP005BDcSbk660qKFjJnsSw8bDmg0AOaKzUCfF+Cc4HYRcx8xkz1S9DjCnbs07IDVlQEt4ij2H07WXEc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cktrqCsx; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GtElwmi/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cktrqCsx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720813247; x=1752349247;
-  h=date:from:to:cc:subject:message-id;
-  bh=nuLCVc8jMbYe90IHZEaUZgeJpygDFxblkZEyYUHyi3k=;
-  b=GtElwmi/fOMce9seWOg2NV1l3GRVpc2g9yCoGongWA7iVPorhei3WMgb
-   7LO1mELrF6Bt5lYqgoiEt4eLDPSNawwWBGIA1x36gHjrwbzBZ4r8gVlaW
-   q7s1rr55b/83RzbEmHg3HBXPRT3GM7d3SG5VZVBahiOwt8q5F2jwtP7bb
-   VxZ0pHs7qrkO1hUnQIZmQ5Cvl9vplAR0mjnKDOo08wki0WSyGY8BsvIxG
-   s1c7/RqCiUGpo2Lzl4B4PNEROSrZGj9IB8awXJSJF+RI6buMVKjciml8j
-   7Ny+wKMw/XIcbwG4SLqJJplqxbk8bM09J+0TIpAzWn1y1sdxVBswhTYte
-   w==;
-X-CSE-ConnectionGUID: TiWFaueFQuqZtk6JIQGF+A==
-X-CSE-MsgGUID: vK+w76xcQYiw3cAI9axe2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="17981501"
+  t=1720813332; x=1752349332;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TgRCdc2jdk93faAJSlXtDv3nImud6PYYBQfTIb7ydxE=;
+  b=cktrqCsxk6s/BTAqzq5X094L3D/Eguh5LF3Vf7N62aAYm0O4trwuUINI
+   iI7Cuzrqy22piQ61cnKj3FwNqupP+8608iWZ11K+VROsiqfRwkddFzViv
+   tcYVKdyPKhIZSLRaOyF9LL2HtVUU+dkD39FhRPsdyFrXuu8ToqvFRK6Ns
+   b7Xe3/Xs4iUrtslUzA6eWkHZqbxdo5OklMg6WhEchNirIF032oxTlJ7lP
+   x4mRn4u3hb40bYD5LwqMPprQdxARU05vkAIKDYh9ddwe8lZGeN+W/GbnI
+   85hKaBY9QysM3PHLl1wqzJDBFmP6wbLCTLoZTeG+Xwnh9PyNuP2md1xiQ
+   Q==;
+X-CSE-ConnectionGUID: YeMiUY/1SmSRffp0DNnr2g==
+X-CSE-MsgGUID: uuWnC/y5Rju/cQ+sNasEow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="35813289"
 X-IronPort-AV: E=Sophos;i="6.09,203,1716274800"; 
-   d="scan'208";a="17981501"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 12:40:45 -0700
-X-CSE-ConnectionGUID: 6HSTk66eSmKxIzBwAk4Jvg==
-X-CSE-MsgGUID: /OivGGwOQo25dkqqdQMhqg==
+   d="scan'208";a="35813289"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 12:42:12 -0700
+X-CSE-ConnectionGUID: +FGsCYj1TGWmcg4WjdjiCg==
+X-CSE-MsgGUID: vjGVLZT5TvaFY6q+LMl7qA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,203,1716274800"; 
-   d="scan'208";a="72209745"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 12 Jul 2024 12:40:45 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sSM8I-000bCI-1A;
-	Fri, 12 Jul 2024 19:40:42 +0000
-Date: Sat, 13 Jul 2024 03:40:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20240710-cbc] BUILD
- REGRESSION 811bc7260e24cf06adefdbf8debb2a83d213e02d
-Message-ID: <202407130318.L7fTzXeb-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="53366204"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.110.177])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 12:42:11 -0700
+Subject: [PATCH] driver core: Fix uevent_show() vs driver detach race
+From: Dan Williams <dan.j.williams@intel.com>
+To: gregkh@linuxfoundation.org
+Cc: syzbot+4762dd74e32532cda5ff@syzkaller.appspotmail.com,
+ Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, stable@vger.kernel.org,
+ Ashish Sangwan <a.sangwan@samsung.com>, Namjae Jeon <namjae.jeon@samsung.com>,
+ Dirk Behme <dirk.behme@de.bosch.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Date: Fri, 12 Jul 2024 12:42:09 -0700
+Message-ID: <172081332794.577428.9738802016494057132.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20240710-cbc
-branch HEAD: 811bc7260e24cf06adefdbf8debb2a83d213e02d  ethtool: Avoid -Wflex-array-member-not-at-end warning
+uevent_show() wants to de-reference dev->driver->name. There is no clean
+way for a device attribute to de-reference dev->driver unless that
+attribute is defined via (struct device_driver).dev_groups. Instead, the
+anti-pattern of taking the device_lock() in the attribute handler risks
+deadlocks with code paths that remove device attributes while holding
+the lock.
 
-Error/Warning reports:
+This deadlock is typically invisible to lockdep given the device_lock()
+is marked lockdep_set_novalidate_class(), but some subsystems allocate a
+local lockdep key for @dev->mutex to reveal reports of the form:
 
-https://lore.kernel.org/oe-kbuild-all/202407120926.PaHnpipg-lkp@intel.com
+ ======================================================
+ WARNING: possible circular locking dependency detected
+ 6.10.0-rc7+ #275 Tainted: G           OE    N
+ ------------------------------------------------------
+ modprobe/2374 is trying to acquire lock:
+ ffff8c2270070de0 (kn->active#6){++++}-{0:0}, at: __kernfs_remove+0xde/0x220
 
-Error/Warning: (recently discovered and may have been fixed)
+ but task is already holding lock:
+ ffff8c22016e88f8 (&cxl_root_key){+.+.}-{3:3}, at: device_release_driver_internal+0x39/0x210
 
-./usr/include/linux/usb/video.h:403:15: error: unknown type name 'offsetof'
-./usr/include/linux/usb/video.h:405:15: error: expected declaration specifiers or '...' before string constant
+ which lock already depends on the new lock.
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
 
-arch/powerpc/include/asm/hvcall.h:697:48: error: structure containing a flexible array member is not at the end of another structure [-Werror=flex-array-member-not-at-end]
-arch/powerpc/perf/hv-common.c:12:56: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-arch/powerpc/platforms/powermac/nvram.c:62:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-arch/sparc/kernel/ds.c:891:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/s390/scsi/zfcp_fc.h:105:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/xen/pci.c:48:55: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-net/netfilter/x_tables.c:811:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+ the existing dependency chain (in reverse order) is:
 
-Error/Warning ids grouped by kconfigs:
+ -> #1 (&cxl_root_key){+.+.}-{3:3}:
+        __mutex_lock+0x99/0xc30
+        uevent_show+0xac/0x130
+        dev_attr_show+0x18/0x40
+        sysfs_kf_seq_show+0xac/0xf0
+        seq_read_iter+0x110/0x450
+        vfs_read+0x25b/0x340
+        ksys_read+0x67/0xf0
+        do_syscall_64+0x75/0x190
+        entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-recent_errors
-|-- arm-allmodconfig
-|   |-- drivers-crypto-caam-caamalg_qi2.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-crypto-rockchip-rk3288_crypto.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   `-- drivers-scsi-lpfc-lpfc_hw4.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- arm-allyesconfig
-|   |-- drivers-crypto-caam-caamalg_qi2.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-crypto-rockchip-rk3288_crypto.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   `-- drivers-scsi-lpfc-lpfc_hw4.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- arm64-randconfig-002-20240712
-|   `-- drivers-xen-pci.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- i386-allmodconfig
-|   |-- usr-include-linux-ethtool.h:error:expected-declaration-specifiers-or-...-before-string-constant
-|   |-- usr-include-linux-ethtool.h:error:unknown-type-name-offsetof
-|   |-- usr-include-linux-usb-video.h:error:expected-declaration-specifiers-or-...-before-string-constant
-|   `-- usr-include-linux-usb-video.h:error:unknown-type-name-offsetof
-|-- i386-allyesconfig
-|   |-- usr-include-linux-ethtool.h:error:expected-declaration-specifiers-or-...-before-string-constant
-|   |-- usr-include-linux-ethtool.h:error:unknown-type-name-offsetof
-|   |-- usr-include-linux-usb-video.h:error:expected-declaration-specifiers-or-...-before-string-constant
-|   `-- usr-include-linux-usb-video.h:error:unknown-type-name-offsetof
-|-- i386-buildonly-randconfig-001-20240711
-|   |-- usr-include-linux-usb-video.h:error:expected-declaration-specifiers-or-...-before-string-constant
-|   `-- usr-include-linux-usb-video.h:error:unknown-type-name-offsetof
-|-- loongarch-allmodconfig
-|   |-- drivers-gpu-drm-nouveau-nouveau_svm.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-power-supply-cros_charge-control.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-scsi-lpfc-lpfc_hw4.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   `-- lib-test_hmm.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- m68k-allmodconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- m68k-allyesconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- microblaze-allmodconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- microblaze-allyesconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- mips-allmodconfig
-|   `-- arch-mips-include-asm-kvm_host.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- mips-allnoconfig
-|   `-- arch-mips-include-asm-kvm_host.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- mips-allyesconfig
-|   |-- arch-mips-include-asm-kvm_host.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   `-- drivers-scsi-lpfc-lpfc_hw4.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- openrisc-allyesconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- parisc-allmodconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- parisc-allyesconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- powerpc-allmodconfig
-|   |-- arch-powerpc-include-asm-hvcall.h:error:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- arch-powerpc-perf-hv-common.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- arch-powerpc-platforms-powermac-nvram.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-crypto-caam-caamalg_qi2.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-gpu-drm-nouveau-nouveau_svm.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-scsi-lpfc-lpfc_hw4.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- lib-test_hmm.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   `-- net-netfilter-x_tables.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- powerpc64-randconfig-001-20240711
-|   `-- arch-powerpc-include-asm-hvcall.h:error:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- powerpc64-randconfig-003-20240711
-|   `-- arch-powerpc-platforms-powermac-nvram.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- powerpc64-randconfig-003-20240712
-|   `-- drivers-scsi-lpfc-lpfc_hw4.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- s390-allyesconfig
-|   |-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-s390-scsi-zfcp_fc.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   `-- net-netfilter-x_tables.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- sh-allmodconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- sh-allyesconfig
-|   `-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|-- sparc-allmodconfig
-|   |-- arch-sparc-kernel-ds.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   |-- drivers-leds-leds-cros_ec.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-|   `-- drivers-scsi-lpfc-lpfc_hw4.h:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
-`-- sparc64-defconfig
-    `-- arch-sparc-kernel-ds.c:warning:structure-containing-a-flexible-array-member-is-not-at-the-end-of-another-structure
+ -> #0 (kn->active#6){++++}-{0:0}:
+        __lock_acquire+0x121a/0x1fa0
+        lock_acquire+0xd6/0x2e0
+        kernfs_drain+0x1e9/0x200
+        __kernfs_remove+0xde/0x220
+        kernfs_remove_by_name_ns+0x5e/0xa0
+        device_del+0x168/0x410
+        device_unregister+0x13/0x60
+        devres_release_all+0xb8/0x110
+        device_unbind_cleanup+0xe/0x70
+        device_release_driver_internal+0x1c7/0x210
+        driver_detach+0x47/0x90
+        bus_remove_driver+0x6c/0xf0
+        cxl_acpi_exit+0xc/0x11 [cxl_acpi]
+        __do_sys_delete_module.isra.0+0x181/0x260
+        do_syscall_64+0x75/0x190
+        entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-elapsed time: 1445m
+The observation though is that driver objects are typically much longer
+lived than device objects. It is reasonable to perform lockless
+de-reference of a @driver pointer even if it is racing detach from a
+device. Given the infrequency of driver unregistration, use
+synchronize_rcu() in module_remove_driver() to close any potential
+races.  It is potentially overkill to suffer synchronize_rcu() just to
+handle the rare module removal racing uevent_show() event.
 
-configs tested: 139
-configs skipped: 3
+Thanks to Tetsuo Handa for the debug analysis of the syzbot report [1].
 
-tested configs:
-alpha                             allnoconfig   gcc-13.3.0
-alpha                            allyesconfig   gcc-13.3.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                   randconfig-001-20240712   gcc-13.2.0
-arc                   randconfig-002-20240712   gcc-13.2.0
-arm                              allmodconfig   gcc-14.1.0
-arm                               allnoconfig   clang-19
-arm                              allyesconfig   gcc-14.1.0
-arm                   randconfig-001-20240712   clang-19
-arm                   randconfig-002-20240712   clang-19
-arm                   randconfig-003-20240712   gcc-14.1.0
-arm                   randconfig-004-20240712   clang-15
-arm64                            allmodconfig   clang-19
-arm64                             allnoconfig   gcc-14.1.0
-arm64                 randconfig-001-20240712   gcc-14.1.0
-arm64                 randconfig-002-20240712   gcc-14.1.0
-arm64                 randconfig-003-20240712   clang-19
-arm64                 randconfig-004-20240712   clang-17
-csky                              allnoconfig   gcc-14.1.0
-csky                  randconfig-001-20240712   gcc-14.1.0
-csky                  randconfig-002-20240712   gcc-14.1.0
-hexagon                          allmodconfig   clang-19
-hexagon                           allnoconfig   clang-19
-hexagon                          allyesconfig   clang-19
-hexagon               randconfig-001-20240712   clang-14
-hexagon               randconfig-002-20240712   clang-19
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240712   gcc-9
-i386         buildonly-randconfig-002-20240712   clang-18
-i386         buildonly-randconfig-003-20240712   clang-18
-i386         buildonly-randconfig-004-20240712   clang-18
-i386         buildonly-randconfig-005-20240712   gcc-11
-i386         buildonly-randconfig-006-20240712   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240712   clang-18
-i386                  randconfig-002-20240712   clang-18
-i386                  randconfig-003-20240712   clang-18
-i386                  randconfig-004-20240712   clang-18
-i386                  randconfig-005-20240712   clang-18
-i386                  randconfig-006-20240712   clang-18
-i386                  randconfig-011-20240712   clang-18
-i386                  randconfig-012-20240712   clang-18
-i386                  randconfig-013-20240712   clang-18
-i386                  randconfig-014-20240712   gcc-10
-i386                  randconfig-015-20240712   gcc-10
-i386                  randconfig-016-20240712   gcc-12
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch             randconfig-001-20240712   gcc-14.1.0
-loongarch             randconfig-002-20240712   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                 randconfig-001-20240712   gcc-14.1.0
-nios2                 randconfig-002-20240712   gcc-14.1.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240712   gcc-14.1.0
-parisc                randconfig-002-20240712   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc               randconfig-001-20240712   clang-15
-powerpc               randconfig-002-20240712   clang-19
-powerpc64             randconfig-001-20240712   clang-19
-powerpc64             randconfig-002-20240712   clang-19
-powerpc64             randconfig-003-20240712   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                               defconfig   clang-19
-riscv                 randconfig-001-20240712   clang-19
-riscv                 randconfig-002-20240712   gcc-14.1.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   clang-19
-s390                  randconfig-001-20240712   gcc-14.1.0
-s390                  randconfig-002-20240712   gcc-14.1.0
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sh                    randconfig-001-20240712   gcc-14.1.0
-sh                    randconfig-002-20240712   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240712   gcc-14.1.0
-sparc64               randconfig-002-20240712   gcc-14.1.0
-um                               allmodconfig   clang-19
-um                                allnoconfig   clang-17
-um                               allyesconfig   gcc-13
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                    randconfig-001-20240712   clang-19
-um                    randconfig-002-20240712   clang-15
-um                           x86_64_defconfig   clang-15
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240712   clang-18
-x86_64       buildonly-randconfig-002-20240712   clang-18
-x86_64       buildonly-randconfig-003-20240712   clang-18
-x86_64       buildonly-randconfig-004-20240712   clang-18
-x86_64       buildonly-randconfig-005-20240712   clang-18
-x86_64       buildonly-randconfig-006-20240712   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                randconfig-001-20240712   gcc-12
-x86_64                randconfig-002-20240712   gcc-13
-x86_64                randconfig-003-20240712   gcc-12
-x86_64                randconfig-004-20240712   clang-18
-x86_64                randconfig-005-20240712   gcc-13
-x86_64                randconfig-006-20240712   clang-18
-x86_64                randconfig-011-20240712   clang-18
-x86_64                randconfig-012-20240712   clang-18
-x86_64                randconfig-013-20240712   clang-18
-x86_64                randconfig-014-20240712   gcc-13
-x86_64                randconfig-015-20240712   clang-18
-x86_64                randconfig-016-20240712   clang-18
-x86_64                randconfig-071-20240712   gcc-13
-x86_64                randconfig-072-20240712   gcc-11
-x86_64                randconfig-073-20240712   clang-18
-x86_64                randconfig-074-20240712   gcc-9
-x86_64                randconfig-075-20240712   clang-18
-x86_64                randconfig-076-20240712   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                randconfig-001-20240712   gcc-14.1.0
-xtensa                randconfig-002-20240712   gcc-14.1.0
+Fixes: c0a40097f0bc ("drivers: core: synchronize really_probe() and dev_uevent()")
+Reported-by: syzbot+4762dd74e32532cda5ff@syzkaller.appspotmail.com
+Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Closes: http://lore.kernel.org/5aa5558f-90a4-4864-b1b1-5d6784c5607d@I-love.SAKURA.ne.jp [1]
+Link: http://lore.kernel.org/669073b8ea479_5fffa294c1@dwillia2-xfh.jf.intel.com.notmuch
+Cc: stable@vger.kernel.org
+Cc: Ashish Sangwan <a.sangwan@samsung.com>
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/base/core.c   |   13 ++++++++-----
+ drivers/base/module.c |    4 ++++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 2b4c0624b704..b5399262198a 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -25,6 +25,7 @@
+ #include <linux/mutex.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/netdevice.h>
++#include <linux/rcupdate.h>
+ #include <linux/sched/signal.h>
+ #include <linux/sched/mm.h>
+ #include <linux/string_helpers.h>
+@@ -2640,6 +2641,7 @@ static const char *dev_uevent_name(const struct kobject *kobj)
+ static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
+ {
+ 	const struct device *dev = kobj_to_dev(kobj);
++	struct device_driver *driver;
+ 	int retval = 0;
+ 
+ 	/* add device node properties if present */
+@@ -2668,8 +2670,12 @@ static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
+ 	if (dev->type && dev->type->name)
+ 		add_uevent_var(env, "DEVTYPE=%s", dev->type->name);
+ 
+-	if (dev->driver)
+-		add_uevent_var(env, "DRIVER=%s", dev->driver->name);
++	/* Synchronize with module_remove_driver() */
++	rcu_read_lock();
++	driver = READ_ONCE(dev->driver);
++	if (driver)
++		add_uevent_var(env, "DRIVER=%s", driver->name);
++	rcu_read_unlock();
+ 
+ 	/* Add common DT information about the device */
+ 	of_device_uevent(dev, env);
+@@ -2739,11 +2745,8 @@ static ssize_t uevent_show(struct device *dev, struct device_attribute *attr,
+ 	if (!env)
+ 		return -ENOMEM;
+ 
+-	/* Synchronize with really_probe() */
+-	device_lock(dev);
+ 	/* let the kset specific function add its keys */
+ 	retval = kset->uevent_ops->uevent(&dev->kobj, env);
+-	device_unlock(dev);
+ 	if (retval)
+ 		goto out;
+ 
+diff --git a/drivers/base/module.c b/drivers/base/module.c
+index a1b55da07127..b0b79b9c189d 100644
+--- a/drivers/base/module.c
++++ b/drivers/base/module.c
+@@ -7,6 +7,7 @@
+ #include <linux/errno.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
++#include <linux/rcupdate.h>
+ #include "base.h"
+ 
+ static char *make_driver_name(struct device_driver *drv)
+@@ -97,6 +98,9 @@ void module_remove_driver(struct device_driver *drv)
+ 	if (!drv)
+ 		return;
+ 
++	/* Synchronize with dev_uevent() */
++	synchronize_rcu();
++
+ 	sysfs_remove_link(&drv->p->kobj, "module");
+ 
+ 	if (drv->owner)
+
