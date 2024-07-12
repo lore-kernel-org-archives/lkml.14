@@ -1,196 +1,121 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D206127702;
-	Fri, 12 Jul 2024 08:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4165635;
+	Fri, 12 Jul 2024 08:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720773732; cv=none; b=j0vgxosWOfLuJUZNIki3kXQ4eVEul8xtxLj9PnQ74MfFfkPSzFYdaA1bA+TJP4xKmOJKKOk4M/vEuTV3xwdplkV7SdVFyopygur4zJLak0TDVlGaFzcGlzKV19cE+fcZlb2wRIC5rFFQemjsdk1CsSai2FZjLApv5hnqrOAlfOQ=
+	t=1720773875; cv=none; b=WmBMY4rkgpM0mIFZpWpo+0PTTH7680TV961oc/S3ekIkEUvlJMff+GbxPRso7danAp6EQ61BLfcZRfAzYKgmNAlI4eUGo786DXhmCebPLM8Hs3G7dsIqKQ2E8lJy9mJ9Bsrp7ZrwIJtQ8Ko4eMxWsIhovJi18a+R6PtwcusuHSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720773732; c=relaxed/simple;
-	bh=deIY9WdhSs7IZNSJ93+yMXTu61kSfvMEpDIe3BbF73w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PhNFfJ9/IU8aQAitPLP4HpFds/5Jr08k7ti66BpYaZWj4bKQI2bSEaKlHgUnftD4yKt0jFvDeu2V9Ls2IEjoVVDDnxvzF27RKumQqeZPAxNYxvFdJ83jHs9J31RFG6nEWns09Sc2OCPH8L5aesKUn1BmdP0YwqbG7mJK960p6Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WL4j44lGNzxWGD;
-	Fri, 12 Jul 2024 16:37:28 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id ECB2E140156;
-	Fri, 12 Jul 2024 16:42:05 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 12 Jul 2024 16:42:05 +0800
-Message-ID: <df38c0fb-64a9-48da-95d7-d6729cc6cf34@huawei.com>
-Date: Fri, 12 Jul 2024 16:42:05 +0800
+	s=arc-20240116; t=1720773875; c=relaxed/simple;
+	bh=NumRR0RCvVDFyEdBAXLJ0YgPft63M41HMl+6GgZ3D5s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z9GoPBG9wyxniyMd+x3MkYyZPJNOLEZt1NQaLtnwp8amSY4i/i4Xr3y/pXF8dNeZjxOY2kzD5qY5JRhn8JBtoEurgwSYZq9VktDyVLEpqymjoWEscTsntRscJNeKmvVw6K0WQ1ptkpSfPkti+QL59ZDtIYMs4OEnP2Ngdb3wVBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HoECx6WJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HoECx6WJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F34C4AF12;
+	Fri, 12 Jul 2024 08:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720773875;
+	bh=NumRR0RCvVDFyEdBAXLJ0YgPft63M41HMl+6GgZ3D5s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HoECx6WJPivcwwOtmNO4WSnbKAxK+F1X/nIXrzqX7I2ClCPkenzPNgmgcxWYnNNTr
+	 +eHg7IrEnrrU/XLq1PPYujLigkRRFnsFiBFJz3EKMLz5DZuqO3C6EIsJ0R7fW1UHFY
+	 d7WfuSsvFL5h3n0uFcUqMWlc6R3aYc3tyfYMvM6/pp8PQ4mTGG56Cd7FDkiUCrtdB9
+	 3Rq2+EUgfhUEvAU/s0ktnei2dq/hiFSK00QPsG+dqzs0YXk3HdpH4FBb8Egjw9bQBk
+	 7YjnI+z7hm91e30k8L//zRdR12FJrlJ8KbkH8Wogzh90Be8QJ9tcCXFGsdizyBPFNA
+	 Mc3hJTqf71MUQ==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52ea34ffcdaso1973939e87.1;
+        Fri, 12 Jul 2024 01:44:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXcNLuTlR8RIooFIhDz58+7/TH6WJyRZXXe5mo1VRiKlKjT3Vm0EHyFrHGTt61wuCinMFcHdVcxxNV7SxG2c1EbE92WAIM8ZmumP5LgYomLg0wBALmT8mWWm+K3hWoBinBIFsFo7inQvYarIHE/JPbx80CYkLM6k/qJ5YwdKs3WGEMtY9Q7rV62AaaJOTlr+pURMywP4RE7jTV/jPF4DoQn882xJFftwHzc2NSJRNgePNh7+KXiWvQ0thgsR/0GZbvUIqmtDw==
+X-Gm-Message-State: AOJu0Ywj6QZL/NCvEZTM8ojdngJQdnf1GoJ4HiWQTqgLBFJGkhKgIrUe
+	pFac8jwGOXe3aa7Pks6n4QXPAPGUQp4S/0QenhzkoKGJqUHSahKtVV2vbVahKBzQ5HauxBcxf35
+	02fyskksASZLakAZodAwamW506wU=
+X-Google-Smtp-Source: AGHT+IHZKCf4H2Js0tpWEkxjRgvOVSTSmHh2++u39t+AXmtYzsuw+IcCP9SIl21t50d9MSfsFywqiN6yBQKVqEDvNIk=
+X-Received: by 2002:a2e:8e8c:0:b0:2ee:8698:10ed with SMTP id
+ 38308e7fff4ca-2eeb3190d76mr66407281fa.49.1720773873600; Fri, 12 Jul 2024
+ 01:44:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 06/13] mm: page_frag: reuse existing space for
- 'size' and 'pfmemalloc'
-To: Alexander Duyck <alexander.duyck@gmail.com>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
-References: <20240625135216.47007-1-linyunsheng@huawei.com>
- <20240625135216.47007-7-linyunsheng@huawei.com>
- <12a8b9ddbcb2da8431f77c5ec952ccfb2a77b7ec.camel@gmail.com>
- <808be796-6333-c116-6ecb-95a39f7ad76e@huawei.com>
- <a026c32218cabc7b6dc579ced1306aefd7029b10.camel@gmail.com>
- <f4ff5a42-9371-bc54-8523-b11d8511c39a@huawei.com>
- <96b04ebb7f46d73482d5f71213bd800c8195f00d.camel@gmail.com>
- <5daed410-063b-4d86-b544-d1a85bd86375@huawei.com>
- <CAKgT0UdJPcnfOJ=-1ZzXbiFiA=8a0z_oVBgQC-itKB1HWBU+yA@mail.gmail.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <CAKgT0UdJPcnfOJ=-1ZzXbiFiA=8a0z_oVBgQC-itKB1HWBU+yA@mail.gmail.com>
+References: <20240704143611.2979589-1-arnd@kernel.org> <20240704143611.2979589-2-arnd@kernel.org>
+In-Reply-To: <20240704143611.2979589-2-arnd@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 12 Jul 2024 17:43:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARpWB6Pqa80KDmpdJ_Rf5FZc71_bX9eSy3fFVCAyg8CAg@mail.gmail.com>
+Message-ID: <CAK7LNARpWB6Pqa80KDmpdJ_Rf5FZc71_bX9eSy3fFVCAyg8CAg@mail.gmail.com>
+Subject: Re: [PATCH 01/17] syscalls: add generic scripts/syscall.tbl
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Vineet Gupta <vgupta@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Christian Brauner <brauner@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-openrisc@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/7/12 0:49, Alexander Duyck wrote:
-> On Thu, Jul 11, 2024 at 1:16 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> On 2024/7/10 23:28, Alexander H Duyck wrote:
-> 
-> ...
-> 
->>>>
->>>> Yes, agreed. It would be good to be more specific about how to avoid
->>>> the above problem using a signed negative number for 'remaining' as
->>>> I am not sure how it can be done yet.
->>>>
->>>
->>> My advice would be to go back to patch 3 and figure out how to do this
->>> re-ordering without changing the alignment behaviour. The old code
->>> essentially aligned both the offset and fragsz by combining the two and
->>> then doing the alignment. Since you are doing a count up setup you will
->>
->> I am not sure I understand 'aligned both the offset and fragsz ' part, as
->> 'fragsz' being aligned or not seems to depend on last caller' align_mask,
->> for the same page_frag_cache instance, suppose offset = 32768 initially for
->> the old code:
->> Step 1: __page_frag_alloc_align() is called with fragsz=7 and align_mask=~0u
->>        the offset after this is 32761, the true fragsz is 7 too.
->>
->> Step 2: __page_frag_alloc_align() is called with fragsz=7 and align_mask=-16
->>         the offset after this is 32752, the true fragsz is 9, which does
->>         not seems to be aligned.
-> 
-> I was referring to my original code before this patchset. I was doing
-> the subtraction of the fragsz first, and then aligning which would end
-> up padding the end of the frame as it was adding to the total size by
-> pulling the offset down *after* I had already subtracted fragsz. The
-> result was that I was always adding additional room depending on the
-> setting of the fragsz and how it related to the alignment. After
-> changing the code to realign on the start of the next frag the fragsz
-> is at the mercy of the next caller's alignment. In the event that the
-> caller didn't bother to align the fragsz by the align mask before hand
-> they can end up with a scenario that might result in false sharing.
+On Thu, Jul 4, 2024 at 11:36=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> The asm-generic/unistd.h header still follows the old style of defining
+> system call numbers and the table. Most architectures got the new
+> syscall.tbl format as part of the y2038 conversion back in 2018, but
+> the newer architectures that share a single table never did.
+>
+> I did a semi-automated conversion of the asm-generic/unistd.h contents
+> into a syscall.tbl format, using the ABI field to take care of all
+> the relevant differences that are encoded using #ifdef checks in the
+> existing header.
+>
+> Conversion of the architectures is done one at a time in order to
+> be able to review or revert them as needed.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-So it is about ensuring the additional room due to alignment requirement
-being placed at the end of a fragment, in order to avoid false sharing
-between the last fragment and the current fragment as much as possible,
-right?
 
-I am generally agreed with above if we can also ensure skb coaleasing by
-doing offset count-up instead of offset countdown.
 
-If there is conflict between them, I am assuming that enabling skb frag
-coaleasing is prefered over avoiding false sharing, right?
+> +65     common  readv                           sys_readv                =
+       sys_readv
+> +66     common  writev                          sys_writev               =
+       sys_writev
 
-> 
->> The above is why I added the below paragraph in the doc to make the semantic
->> more explicit:
->> "Depending on different aligning requirement, the page_frag API caller may call
->> page_frag_alloc*_align*() to ensure the returned virtual address or offset of
->> the page is aligned according to the 'align/alignment' parameter. Note the size
->> of the allocated fragment is not aligned, the caller needs to provide an aligned
->> fragsz if there is an alignment requirement for the size of the fragment."
->>
->> And existing callers of page_frag aligned API does seems to follow the above
->> rule last time I checked.
->>
->> Or did I miss something obvious here?
-> 
-> No you didn't miss anything. It is just that there is now more
-> potential for error than there was before.
 
-I guess the 'error' is referred to the 'false sharing' mentioned above,
-right? If it is indeed an error, are we not supposed to fix it instead
-of allowing such implicit implication? Allowing implicit implication
-seems to make the 'error' harder to reproduce and debug.
+Nit.
 
-> 
->>> need to align the remaining, then add fragsz, and then I guess you
->>> could store remaining and then subtract fragsz from your final virtual
->>> address to get back to where the starting offset is actually located.
->>
->> remaining = __ALIGN_KERNEL_MASK(nc->remaining, ~align_mask);
->> remaining += fragsz;
->> nc->remaining = remaining;
->> return encoded_page_address(nc->encoded_va) + (size + remaining) - fragsz;
->>
->> If yes, I am not sure what is the point of doing the above yet, it
->> just seem to make thing more complicated and harder to understand.
-> 
-> That isn't right. I am not sure why you are adding size + remaining or
-> what those are supposed to represent.
 
-As the above assumes 'remaining' is a negative value as you suggested,
-(size + remaining) is supposed to represent the offset of next fragment
-to ensure we have count-up offset for enabling skb frag coaleasing, and
-'- fragsz' is used to get the offset of current fragment.
+I know this is already written in this way
+in include/uapi/asm-generic/unistd.h, but
+the native and compat have the same function name.
 
-> 
-> The issue was that the "remaining" ends up being an unaligned value as
-> you were starting by aligning it and then adding fragsz. So by
-> subtracting fragsz you can get back to the aliglined start. What this
-> patch was doing before was adding the raw unaligned nc->remaining at
-> the end of the function.
-> 
->>>
->>> Basically your "remaining" value isn't a safe number to use for an
->>> offset since it isn't aligned to your starting value at any point.
->>
->> Does using 'aligned_remaining' local variable to make it more obvious
->> seem reasonable to you?
-> 
-> No, as the value you are storing above isn't guaranteed to be aligned.
-> If you stored it before adding fragsz then it would be aligned.
 
-I have a feeling that what you are proposing may be conflict with enabling
-skb frag coaleasing, as doing offset count-up seems to need some room to
-be reserved at the begin of a allocated fragment due to alignment requirement,
-and that may mean we need to do both fragsz and offset aligning.
+Can we simplify it like this?
 
-Perhaps the 'remaining' changing in this patch does seems to make things
-harder to discuss. Anyway, it would be more helpful if there is some pseudo
-code to show the steps of how the above can be done in your mind.
+65     common  readv                           sys_readv
+66     common  writev                          sys_writev
 
-> 
->>>
->>> As far as the negative value, it is more about making it easier to keep
->>> track of what is actually going on. Basically we can use regular
->>> pointer math and as such I suspect the compiler is having to do extra
->>> instructions to flip your value negative before it can combine the
->>> values via something like the LEA (load effective address) assembler
->>> call.
->>
->> I am not an asm expert here, I am not sure I understand the optimization
->> trick here.
-> 
-> The LEA instruction takes a base address adds 1/2/4/8 times a multiple
-> and then a fixed offset all in one function and provides an address as
-> an output. The general idea is that you could look at converting
-> things such that you are putting together the page address +
-> remaining*1 + PAGE_SIZE. Basically what I was getting at is that
-> addition works, but it doesn't do negative values for the multiple.
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
