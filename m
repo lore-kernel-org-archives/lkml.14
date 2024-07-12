@@ -1,129 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9121494BC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720777236; cv=none; b=NAc0Mwg6/WAVemxsHHAz7IJUFr9Wl/7KwJKUf1mErQhy/RLNr+QaqRwXg0f86vaUJkiIlY9hisF7dtFeLwwCftV1G2G2Nb4MXTGZC614a0L3O0tJNrNxx0OstDXxu5NeO3V6e4n4fcrmYVaISp7TuiTi5dR4ZZa5gNEhNCBM3C8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720777236; c=relaxed/simple;
-	bh=bdil4uP/Y1K/s8nVUqnOIAceh5fft63Q5jINgGxdLpY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YbgoWKQGNWkL/9pmzS8WygrkAuwvcgFUPZIylSQWRdSGt1yNPWRU+f0F7M+9HN1o2xN9veLEUTVuN/GJ4qZt/mX0tyJH0xyXwuwD5CMv8VzGBpCTFpFhQRstoCt9g2IaiXg0lM2Sf3GOA5TOGembAEekmg8z+fgZSTrV0jYzdv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8YhYKUj; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E014884E;
+	Fri, 12 Jul 2024 09:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720777262; cv=fail; b=rzG6+Ru4H9zI5+JFtSyuuMTOH+JGetKVs8MOHdky+wStJ5MkF3mrpBcPCM7jLbIJukmILw4pTC3/GbtNSQre8JY1hUzPYlhkk6MhVjF1AzWt7NF64A845+g443JGUnSUFD91NKVJDi/MFbbuxSbrw9eOcOyK5uj+PqsJmJv8XNU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720777262; c=relaxed/simple;
+	bh=cUCbqBu3WZjjYMLel3czDGZznRwyS/yOAfBLaw4zJfQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kbMC/nmTrc6CpojowUdtDi23vfw9xaf2DZtuKEZqwF+pCM3DNqOaKSaEoPUuKLwWbky1h4xs4DqYLhMhySGAa7EvCfKmdcwExOUdc91uHxTMl/FLCa/DZp1ERJL8PGNHMDz27p8hljoGCX6SNXFM+gr2vUBD5zN5B+LNXsFnDpw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R8qnlByp; arc=fail smtp.client-ip=40.107.102.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8YhYKUj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A133FC32782
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720777235;
-	bh=bdil4uP/Y1K/s8nVUqnOIAceh5fft63Q5jINgGxdLpY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F8YhYKUjPKxjDUNF8SW6mJfGo7hwe2lVL3NxKCc+qKZ2163AR6A7qhwYNBKljbw2O
-	 a0eoqvfr7UTpW/rUJ7SkmhneHGLwxwuXX6VDdRkQC3RshzdWdrrjhP8D1K3NbEXEb3
-	 3//W2ZrpyIoq9C8p+EjsBCec/JNemFsSyNcRcx4TOFfN4VTmO6OtwjvEakXYjWXjyY
-	 ZNPMxDhZKufB/kvdbyie+7z05o6dCopnLpXRc4BSLfpxwf8UavZGcw1E2wG3i1nyQM
-	 sp0xyX2+8LsTppQbbeOprLRkNYmtUdLo23krMC48evf/SF71zs1Y3jWB2/5wwRRpHQ
-	 Qsp8SyMGrP7zQ==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-595856e2336so3023971a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 02:40:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW7Q5UL6O1KvbvSTc4/uPtsst59S5VaxTxgYBsWOIJlxzrVZGYtqCMK1Z1YWC3dEwUqiIH9HbImrMFbcC8xFCMTeCE3ZwxSDrN8gwor
-X-Gm-Message-State: AOJu0YxxEqP7dWPEZJb0piec/6dHYvaBc4zZYMLyv0F9sFOrBBKHgA3c
-	VTpmBlkI2BA1/LXMVqRLwrOcxItebEaFefaV9dLYKb8zUa7h3+TOcTfWct3iTJDOKQIeD7NR/ox
-	v8MMvh1d5yEE+zXq/i5xhNSKkQ0Y=
-X-Google-Smtp-Source: AGHT+IENvC5KTbUrIoAa+LJp6jkAzFzcRy/GBh7O8aXK9H4i7J17bzLGyt2VeHNvl3QFh3I+ShXrGe2b+gD96H2r85k=
-X-Received: by 2002:a50:d744:0:b0:57c:a8e5:35f0 with SMTP id
- 4fb4d7f45d1cf-59963bf4683mr1476060a12.2.1720777234300; Fri, 12 Jul 2024
- 02:40:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R8qnlByp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y5YIFNLrvVanO13yxsr32N63d21HpGP36RtUDuwdBx1JllU6pxDhaS/cffl18aaDYICpAyGVBIVdJgWEf/rFPiur1Rp60A2JcO3Hb14OhRZLTrxLkA4hGDGzMz5mMVBAYFdVPexkq3FVZ7lf9eMcUjM4AwvtXsPE9AOEReq9R9d7y89AUI23XWdhDkpA3mGBfhzJAyXYiJ1crpZxlS2R2BcT75UBtQCq4r+Wte89QfgeiC7z8vveriA2Pkehbsw5dZ06ku1J1hs83JeTJ/fVEjaINUvWjKU8eVV4tZgA3RiNXfWp9LNul/I8Rae8wEXixgciWPgbV/r46vYSch7bAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4iAzIhXRS23uxup2OTH7bZGTs1kGjAjiZY8GzVTtDNw=;
+ b=FIkkhRnAgBO3pvTZUQWN4xYg9D15bPPeWdsk19v3UknQj4WzSUVOE1FaiHthYokg7FSLbsPmdDYMMn/juixP05bFeGCQWIjLTokJ1R8zADsGDbL+uXy8rI0a67KJRtgOgOdnaFn/MX6RhmE+elHGHnh/hKegR71wKvIz7vXDHHoUG0XbJnTxqjfbW060Zj6/GS0/hjh/CTXK//+FdUGt5RB/aJbaggXQ+IM7H4YniaYt2lTebcqWF21yIHXhITR+fHTloiycq1sQFA6tFJnmptviQfZ6iMKtxza33m35rEC10bHko6jHCBoOPJXxqdvwd/RYbPkjJD75rk2kbkbuzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4iAzIhXRS23uxup2OTH7bZGTs1kGjAjiZY8GzVTtDNw=;
+ b=R8qnlBypsNG/DuL7kZfCKPRwsFkc03L1WSXNlY5KSoc3s0xBtNVyAlr+H1nxdob6j++5jZPktJnCUQPL8Jdbjkx9s8S1W6fr/PfR9RtzceCfreW5bOo89FGxaGTNLMbGd1d22x368ghybI79dD0Kf1GUgywhKB16fP9rAsCeYys=
+Received: from DM6PR06CA0045.namprd06.prod.outlook.com (2603:10b6:5:54::22) by
+ CY5PR12MB6430.namprd12.prod.outlook.com (2603:10b6:930:3a::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7741.36; Fri, 12 Jul 2024 09:40:56 +0000
+Received: from CY4PEPF0000E9CE.namprd03.prod.outlook.com
+ (2603:10b6:5:54:cafe::fa) by DM6PR06CA0045.outlook.office365.com
+ (2603:10b6:5:54::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23 via Frontend
+ Transport; Fri, 12 Jul 2024 09:40:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9CE.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Fri, 12 Jul 2024 09:40:56 +0000
+Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 04:40:48 -0500
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
+	<thomas.lendacky@amd.com>
+CC: <ravi.bangoria@amd.com>, <hpa@zytor.com>, <rmk+kernel@armlinux.org.uk>,
+	<peterz@infradead.org>, <james.morse@arm.com>, <lukas.bulwahn@gmail.com>,
+	<arjan@linux.intel.com>, <j.granados@samsung.com>, <sibs@chinatelecom.cn>,
+	<nik.borisov@suse.com>, <michael.roth@amd.com>, <nikunj.dadhania@amd.com>,
+	<babu.moger@amd.com>, <x86@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>, <manali.shukla@amd.com>,
+	<jmattson@google.com>
+Subject: [PATCH v2 0/4] x86/cpu: Add Bus Lock Detect support for AMD
+Date: Fri, 12 Jul 2024 09:39:39 +0000
+Message-ID: <20240712093943.1288-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240712091506.28140-1-yangtiezhu@loongson.cn> <20240712091506.28140-5-yangtiezhu@loongson.cn>
-In-Reply-To: <20240712091506.28140-5-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 12 Jul 2024 17:40:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
-Message-ID: <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/4] LoongArch: Remove -fno-jump-tables for objtool
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CE:EE_|CY5PR12MB6430:EE_
+X-MS-Office365-Filtering-Correlation-Id: db9c784a-d086-4e2d-79a7-08dca256babf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+0o8V7AE5pLmK6aDArByL8ZRpLzzwR47MsNOUdfdtSV0uvgxFvkemh3Nqfyy?=
+ =?us-ascii?Q?y/ncKRy62e8+n0qkjkL4f8l6eq2mGf1brh6TytQFYLiiOkBxot72nBabLfGP?=
+ =?us-ascii?Q?5N2zl3yHLUYqgAukI82+47yc8dg5ixgkIQvP3stpVcVHjRmRLM5COqYrREaH?=
+ =?us-ascii?Q?VvfJytttSnlzzM+/SnPdoWUVnD02eke+0CVNPBNyMh2vBQpkYpayGPP+Rp4R?=
+ =?us-ascii?Q?qaeP+2Xxd3JNIlIkYF17lw9CckQ62v5+cU1AAoFWVZDCp9uXOV/dgRj191di?=
+ =?us-ascii?Q?by+qaBm0DlMRUl3v89fyB5WyB5JdJ51hlz+BEz7fshf5Yt5CVVUuEQrz9tPN?=
+ =?us-ascii?Q?Br8iojzERVWXP0iZTyCPNRYqG9tGTWxhm0PX75YrKCD3lYI3zo3H+5sDJOCc?=
+ =?us-ascii?Q?NAL5nqYze+s8AXkNTbOhoAXJDrxlHss3qmDrGS9RsO5rLqAV4calK2/RkZ43?=
+ =?us-ascii?Q?/LpLALEUoWbULcB5+15ELFKyOx6ghihstbtEFN/6H1Wi82fqAWZCxptlcUYz?=
+ =?us-ascii?Q?u/ocGAxdJzIch2AaLdCXqI0Y2rDaiC/WIzkKAgpXw0llDH/tVcjapNqqov1a?=
+ =?us-ascii?Q?7XaoFyZupuRxs+uQAifsnFqOnJm4yLir+LvEJuaGdRebY4KlXmKt+QqFFhKh?=
+ =?us-ascii?Q?fwG+XbAjPv3cEAbkjJ8VL/s8aOhaXTOPU4AKGdneTyvbP8HbAiff2vGp6nTP?=
+ =?us-ascii?Q?aOGanxyMEiElZQDFOYy4sKwxYdNi+WZLmAf8K65rWIpcy6EQ6vytYxVS6YaW?=
+ =?us-ascii?Q?BXMRzw3Fs/xOZZrbsXl2XACQuJIrC9B0rorJU1O2YEgfO2lQIWfVKBYj3bL5?=
+ =?us-ascii?Q?vV7+49fDZIn4uXcUQqfBU/QPrI7W+BbXc/X/rtvQvQrskCvhruRKFuqSz41J?=
+ =?us-ascii?Q?7yg4d110ctbKvgwvX5bSBp8Gepgqp/Ud5XKt9NqDoR684grZBiieuIh9ejhJ?=
+ =?us-ascii?Q?cRW3gf6IeIEiv3RLwaOvRfj1uiBKxMk3NG16DWTh9PAXKCtIS3rViBGJZCPl?=
+ =?us-ascii?Q?7QvVkQw6Z5FU4wJ1tsZKbMwXTeY0j8E5Llls9sRvC7OWjkUz9TmQ8cg2Cnxz?=
+ =?us-ascii?Q?szh2jmsxQ6bJxn5cnmJFLM9cYY6a2asKcNfsraPbndG23mXkdVpNf8QnYBkI?=
+ =?us-ascii?Q?AURYzBL0A4Evf4Wg4ECdjxuBb8k4TmxN3Em/0nRd11ALhWFtjeqx+2OfRxHc?=
+ =?us-ascii?Q?QjDZfLH44Cj5cR7B4j9+FcBZX2fJ/4D5iJlzrwKjYREmhJFwdVqcIF8+S3e3?=
+ =?us-ascii?Q?T4k7EIJQcqzQRVdCYNkrqTPQ47ZuwdoWnVl4b54oP/WPKsjFR1+WQHykPUTF?=
+ =?us-ascii?Q?I5wRmrCxUpsLzV33Q76gHL3BYCpC+3ueGQyw/w3vPjLjJfIEUcBVM+ksK6+u?=
+ =?us-ascii?Q?WZBWfIkI96d0IzVoErIu6XzKb+8mm9jWAvnK16Zn13RdxNSglg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 09:40:56.2515
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: db9c784a-d086-4e2d-79a7-08dca256babf
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9CE.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6430
 
-Hi, Tiezhu,
+Upcoming AMD uarch will support Bus Lock Detect (called Bus Lock Trap
+in AMD docs). Add support for the same in Linux. Bus Lock Detect is
+enumerated with cpuid CPUID Fn0000_0007_ECX_x0 bit [24 / BUSLOCKTRAP].
+It can be enabled through MSR_IA32_DEBUGCTLMSR. When enabled, hardware
+clears DR6[11] and raises a #DB exception on occurrence of Bus Lock if
+CPL > 0. More detail about the feature can be found in AMD APM[1].
 
-On Fri, Jul 12, 2024 at 5:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/Kconfig  | 8 +++++++-
->  arch/loongarch/Makefile | 6 ++----
->  2 files changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index ddc042895d01..57f28450a2ed 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -143,7 +143,7 @@ config LOONGARCH
->         select HAVE_LIVEPATCH
->         select HAVE_MOD_ARCH_SPECIFIC
->         select HAVE_NMI
-> -       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_=
-SUB && !CC_IS_CLANG
-> +       select HAVE_OBJTOOL if TOOLCHAIN_SUPPORTS_OBJTOOL && !CC_IS_CLANG
->         select HAVE_PCI
->         select HAVE_PERF_EVENTS
->         select HAVE_PERF_REGS
-> @@ -276,6 +276,12 @@ config AS_HAS_LBT_EXTENSION
->  config AS_HAS_LVZ_EXTENSION
->         def_bool $(as-instr,hvcl 0)
->
-> +config CC_HAS_ANNOTATE_TABLEJUMP
-> +       def_bool $(cc-option,-mannotate-tablejump)
-> +
-> +config TOOLCHAIN_SUPPORTS_OBJTOOL
-> +       def_bool AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB && CC_HAS_=
-ANNOTATE_TABLEJUMP
-Can AS_HAS_THIN_ADD_SUB be removed now?
+Patches are prepared on tip/master (a6fffa92da54).
 
-Huacai
+[1]: AMD64 Architecture Programmer's Manual Pub. 40332, Rev. 4.07 - June
+     2023, Vol 2, 13.1.3.6 Bus Lock Trap
+     https://bugzilla.kernel.org/attachment.cgi?id=304653
 
-> +
->  menu "Kernel type and options"
->
->  source "kernel/Kconfig.hz"
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 8674e7e24c4a..186c75c80daa 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -99,10 +99,8 @@ KBUILD_AFLAGS                        +=3D $(call cc-op=
-tion,-mno-relax) $(call cc-option,-Wa$(comma)-mno
->  KBUILD_CFLAGS                  +=3D $(call cc-option,-mno-relax) $(call =
-cc-option,-Wa$(comma)-mno-relax)
->  KBUILD_AFLAGS                  +=3D $(call cc-option,-mthin-add-sub) $(c=
-all cc-option,-Wa$(comma)-mthin-add-sub)
->  KBUILD_CFLAGS                  +=3D $(call cc-option,-mthin-add-sub) $(c=
-all cc-option,-Wa$(comma)-mthin-add-sub)
-> -
-> -ifdef CONFIG_OBJTOOL
-> -KBUILD_CFLAGS                  +=3D -fno-jump-tables
-> -endif
-> +KBUILD_AFLAGS                  +=3D $(call cc-option,-mannotate-tablejum=
-p) $(call cc-option,-Wa$(comma)-mannotate-tablejump)
-> +KBUILD_CFLAGS                  +=3D $(call cc-option,-mannotate-tablejum=
-p) $(call cc-option,-Wa$(comma)-mannotate-tablejump)
->
->  KBUILD_RUSTFLAGS               +=3D --target=3Dloongarch64-unknown-none-=
-softfloat
->  KBUILD_RUSTFLAGS_MODULE                +=3D -Crelocation-model=3Dpic
-> --
-> 2.42.0
->
->
+v1: https://lore.kernel.org/r/20240429060643.211-1-ravi.bangoria@amd.com
+v1->v2:
+- Call bus_lock_init() from common.c. Although common.c is shared across
+  all X86_VENDOR_*, bus_lock_init() internally checks for
+  X86_FEATURE_BUS_LOCK_DETECT, hence it's safe to call it from common.c.
+- s/split-bus-lock.c/bus_lock.c/ for a new filename.
+- Add a KVM patch to disable Bus Lock Trap unconditionally when SVM
+  support is missing.
+
+Note:
+A Qemu fix is also require to handle corner case where a hardware
+instruction or data breakpoint is created by Qemu remote debugger (gdb)
+on the same instruction which also causes a Bus Lock. I'll post a Qemu
+patch separately.
+
+Ravi Bangoria (4):
+  x86/split_lock: Move Split and Bus lock code to a dedicated file
+  x86/bus_lock: Add support for AMD
+  KVM: SVM: Don't advertise Bus Lock Detect to guest if SVM support is
+    missing
+  KVM: SVM: Add Bus Lock Detect support
+
+ arch/x86/include/asm/cpu.h     |   4 +
+ arch/x86/kernel/cpu/Makefile   |   1 +
+ arch/x86/kernel/cpu/bus_lock.c | 406 ++++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/common.c   |   2 +
+ arch/x86/kernel/cpu/intel.c    | 407 ---------------------------------
+ arch/x86/kvm/svm/nested.c      |   3 +-
+ arch/x86/kvm/svm/svm.c         |  16 +-
+ 7 files changed, 430 insertions(+), 409 deletions(-)
+ create mode 100644 arch/x86/kernel/cpu/bus_lock.c
+
+-- 
+2.34.1
+
