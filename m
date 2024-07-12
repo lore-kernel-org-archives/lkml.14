@@ -1,85 +1,77 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95677156F53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1408157478
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720778723; cv=none; b=PESLCfgjzl49JRESWubW5EJvHVP0KLWvr/LpIJjRyVujp62wROWNRqR+GMfUpPYjeTivjLkjtYSplrNwRfblLP3pl7QHHnJ/5e5L2lrY2bXQuhGDp46jrnqORTwJfkx+FYn9hVEOa8csrFS1fejmyHxxeEc/FelCKIHa8G7TdCY=
+	t=1720778723; cv=none; b=ewN1UVKp/2yGWL1WH6JGnB8PwcAfE5JGJn+IsB3AvakHgWMjOZwn3618GLAyF4/bTDZJZ/ckFlRpj4oD45Xk4QJeGOyQJhn8PjvLb4wRz9kZUUZCV3bG2eOp7Qyw+UyUwWMOe4EoTf/AeE7OfSQ4+4Qju5zK6ZWpfSuuyWFNlNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720778723; c=relaxed/simple;
-	bh=8n//yCu3buR4+e1lv5PjDX0ysI+RLwDYqkS84oE1H/E=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ekAu4lInImmpCRsmfvlmROdOIr+LHprWR/xZWvfOBeiLfV1OG0ShwW/3ZMLdAUwgfaIIG400PDMBx+3qvb+rxX1Jzc5or64bNu3eUQvs4FNq7k1hOdHDRcfK1grx8jnYxiF5swY4xhOT7VFUB/xQ6DLxX6GAXI6x6jEi9D+secY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+	bh=cnp/jBauw5TdNqTWXgohodyEGsjA86x4uCkuOKVGfRE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=G9uOasjv9/yKiFl4bZNRbyNabphMF3MfMBSOOj+yVYoCfciZHkbzMlFaWNXTyexEp94tkS4p1ZS807CNPr8kauHsxmxE9wuI3QxgmzXxdenx78EQT9fzKEGFBqXoegsuGx/U2KylgkJmD6U4PuMvqmCr9FLItMOhtXfqmds8BJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f12ee1959cso207856939f.1
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8045e14c387so259282239f.0
         for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 03:05:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720778720; x=1721383520;
+        d=1e100.net; s=20230601; t=1720778721; x=1721383521;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0uHsZOblIlCto3szinYzdnH/4DK64wZXbj0uuuOWfuI=;
-        b=EWhJ2kJSZ5cUw9C121Ae0oywbDA46AH904h2heTwvPprwkokFcLEIwEgVe8G6q+MXo
-         yDxX4Rhymi9qIOPOdbCN2OjQAvqF4iheBFzNumLjA2xf1vg6gXm46ix6cS8pMf/PNi7D
-         jjQVgBd6oEc8CYyO54z24aLFMmEAEv9BaILCXA0kPUm66ccwTXqR/lexJ1pRnpXOM5hn
-         ghSVFbN3bkjy943Fau1xgydpBKqRWvnRb7kEhjtmh/7ooHnJ4wGE1JkDBkmNG9y6IXHF
-         f9o68Mewjh3FcijdEORhqpe7RegiyFU4NDVCRTnx4AkhFqDsOtW1g1M208OOJeK0v7zY
-         AbzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtMeqPbLYXS+EMx1AGPHeSIybhXcXBeNJhvlcvvoiyQV30FivUc+GoLYMmDMxNM7WrdEHvHx+8IxfasoKAIaEcXiSdoujqAMg8YAT3
-X-Gm-Message-State: AOJu0YzJLAp8+91WfPKgLos7xLCyyoIFM+9qN2VI7r4gc3+ObSLvHK7i
-	ZujfSgtkSVGq2H9eEEt73L79PVOQAvhPcZyiBklxBTBJynZdKVFAt9DXNLdv75LgwShkBQz+JV5
-	/LmuEOMMwuKET1cC/0iIiRLa/Mb5Cn401aooXzTaO8jcHRoDy2jNwRcY=
-X-Google-Smtp-Source: AGHT+IEJllwVtrrFwnlf4BoFNXUnBWp3r4bVSoixFZy6CM+73QhjZ8xzls6n+RjZvrZx5GGA3gEPZlVcxvmnm2yuvSaIGcaFxOCV
+        bh=iyg9rhejF8Qe5A3voFgG9tU6Ju6NThvDf3tGPwmTcgg=;
+        b=UVZZBjATV2W7ZBrOBvs3zK5fFekUWxyxO4jzg/cMmHNGXPP+C5wE6PKxiRVgeDjGvv
+         KFOIth27I/aSNRTNCF64rvVUWjzqw/vehA2kb3GGd/Y1IBidD3sbc/Uh/Yq0fqCL4Wwp
+         GpAmlcfGfc//hgzBFgHkVm39YC43yLoUagw9Unp1BSUxNHxdUfLAcIqM7mDjGMPovm1P
+         7nf5bGL4d3hgpilkAwHMY6DP/4OI8gps61nOMJVnxt6mL+7gn7BAoji6twuiu7AIiXrn
+         cYaJEZMmAohvDxUIBK7kQzWvjmaZq5NAv7UXaBOkcFgtj9k5QOUmtpME4OwEgvKgPCjP
+         izpA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6jrk6zb/acpudTLntX1qxgTX/j/7KFcuUb31Ii/ZuWlx40/bwALV5CWyxSXfa/4EcBjLkWHaoCU1+rDOHYjdIYXCa3ox3SzMG+7Va
+X-Gm-Message-State: AOJu0Yy0Hl8A6fhvHoxPSPXmd26HGFQDfOlzZvkXmvcqQA9Hm6kncXti
+	vgZWddiMTNvz7rxFTQ2omQKdNSs00PiECMG4W1sjdOUflm2wMWZFxwXYpKpY0wgI6IQDZO652Bc
+	bExavf71fFuyhqThR0xjtRmsD6j/ljqkwdCFjDaw6SgdtURVp3TliDXM=
+X-Google-Smtp-Source: AGHT+IFFBk/W1SQSv0kMIAhACc/3QzDzQ1IHiTDda01MIv9ZAbtoVD6gv6Et4UAM+5UIVNANJhxXnWsOn0amnEVcYvFYxkoWdGnx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:840f:b0:4c0:9a05:44d0 with SMTP id
- 8926c6da1cb9f-4c0b2869dd6mr809708173.1.1720778720634; Fri, 12 Jul 2024
- 03:05:20 -0700 (PDT)
-Date: Fri, 12 Jul 2024 03:05:20 -0700
+X-Received: by 2002:a05:6638:24d5:b0:4c0:a8a5:81f5 with SMTP id
+ 8926c6da1cb9f-4c0b2b331c3mr891446173.4.1720778721119; Fri, 12 Jul 2024
+ 03:05:21 -0700 (PDT)
+Date: Fri, 12 Jul 2024 03:05:21 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000617cd8061d0a0448@google.com>
-Subject: [syzbot] Monthly dri report (Jul 2024)
-From: syzbot <syzbot+list557ff60c2cbd295a5cc0@syzkaller.appspotmail.com>
-To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000068db93061d0a0468@google.com>
+Subject: [syzbot] Monthly serial report (Jul 2024)
+From: syzbot <syzbot+list7b2f8c4a3e5b92bb88db@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello dri maintainers/developers,
+Hello serial maintainers/developers,
 
-This is a 31-day syzbot report for the dri subsystem.
+This is a 31-day syzbot report for the serial subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/dri
+https://syzkaller.appspot.com/upstream/s/serial
 
-During the period, 3 new issues were detected and 0 were fixed.
-In total, 21 issues are still open and 31 have been fixed so far.
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 16 issues are still open and 42 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref Crashes Repro Title
-<1> 468     Yes   WARNING in drm_syncobj_array_find
-                  https://syzkaller.appspot.com/bug?extid=95416f957d84e858b377
-<2> 278     Yes   WARNING in vkms_get_vblank_timestamp (2)
-                  https://syzkaller.appspot.com/bug?extid=93bd128a383695391534
-<3> 38      Yes   WARNING in drm_mode_create_lease_ioctl
-                  https://syzkaller.appspot.com/bug?extid=6754751ad05524dae739
-<4> 17      Yes   WARNING in drm_gem_prime_fd_to_handle
-                  https://syzkaller.appspot.com/bug?extid=268d319a7bfd92f4ae01
-<5> 13      No    WARNING in drm_atomic_helper_wait_for_vblanks (3)
-                  https://syzkaller.appspot.com/bug?extid=0ac28002caff799b9e57
-<6> 10      Yes   divide error in drm_mode_vrefresh
-                  https://syzkaller.appspot.com/bug?extid=622bba18029bcde672e1
-<7> 4       Yes   WARNING in drm_gem_object_handle_put_unlocked
-                  https://syzkaller.appspot.com/bug?extid=ef3256a360c02207a4cb
-<8> 4       Yes   divide error in drm_mode_debug_printmodeline
-                  https://syzkaller.appspot.com/bug?extid=2e93e6fb36e6fdc56574
-<9> 2       Yes   WARNING in drm_prime_destroy_file_private (2)
-                  https://syzkaller.appspot.com/bug?extid=59dcc2e7283a6f5f5ba1
+<1> 114     Yes   INFO: task can't die in show_free_areas
+                  https://syzkaller.appspot.com/bug?extid=8f41dccfb6c03cc36fd6
+<2> 67      Yes   BUG: soft lockup in tx
+                  https://syzkaller.appspot.com/bug?extid=5e87db90e68fbc4707c6
+<3> 39      No    INFO: task hung in filemap_fault (6)
+                  https://syzkaller.appspot.com/bug?extid=cbbcd52813dd10467cfe
+<4> 13      Yes   KASAN: slab-use-after-free Read in tty_write_room (2)
+                  https://syzkaller.appspot.com/bug?extid=2a81fdd5c6ddffee3894
+<5> 6       Yes   INFO: task hung in paste_selection (2)
+                  https://syzkaller.appspot.com/bug?extid=275e275bd3f536725dd8
 
 ---
 This report is generated by a bot. It may contain errors.
