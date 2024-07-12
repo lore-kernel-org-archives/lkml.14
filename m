@@ -1,89 +1,107 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0194217085C
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 13:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ECEEAC7;
+	Fri, 12 Jul 2024 13:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720791123; cv=none; b=TF6Wzk7Bdhi4ogPjXUZnsYLoc+N80fRGqNGyBIIP1ybOGSc2+L+L9uCiAtGD/OpuJxIg8WO7IhoVjopYX3ZtV7VKsVWhEau5wImlZvJYqI7Vet3xQvtOj6ZfQoauQYix+mAcMfq6ITYns9u1wShntNFygTWAar+nexURoGkaK88=
+	t=1720791160; cv=none; b=rLm1cbFf6GrBJi414sKt0gJ161/HSH6uhMgMz+ARC9ZSX/W+SGM15peahtUgoItmnz4FLRrvzJIJjOWzl0ZhOH+2dEbftTfss3QkOlXyb/YNs0iJAU8ENLWAp9XpBQ7C2fv1eb6+4g7m45bR7E9dwjH6XrBsYEfWtoZ8uSt0baE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720791123; c=relaxed/simple;
-	bh=XwEHyALYRExbX2pRbkL3utJyLPIwlkRBZVdNdRJYw+4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mjx/qZioG1VgvaOLKmtWz8XB4eCq98/Ov3FVx+mbVPB20VO66D4uco3ODhoPZ1eeEfkFXQNA+ycgej7a+Z7cGj/rILsticcla6yzB/Dmv8oWTAXazBFpsK9lSL9t/CBKFRULI/CrkD5KOj6N2b2tTiGhK7to16CE45TSeYBfKMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kntL+IZA; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1720791160; c=relaxed/simple;
+	bh=IKBrzGC73MnXcUEDdfFMiJvHDd3uSvUh+ioavB0SEP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YJnAvHbPK0SVTM+OUY1p/JhzgedwKmShfn+xv7HJb8yJz87cd0lflMDpqvo3aw7iaphbnujLRH/AY9dOdND6LR0Gh3gTeXxG/1R9LhvIr5XQ244C8ErGUDyl5Te4AeMcirC1++4ffJgwfeMKbAILP8AgcoKNtMNw3x1orDkYYSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ttl//4lg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kntL+IZA"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2c98c453912so1697064a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 06:32:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720791121; x=1721395921; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlcXnTAyG1qwnoAXhkdhe6yOcbdDru78Zg28CF9eSjM=;
-        b=kntL+IZAc9twDfCQrDu4zvBe4qgM3ss9BJRX11wbNmAly5ikWZyUsLbci1Pvj73E2o
-         zyTTLgOIaUVx+RLlDSOBNLpSGJadfjn+ZlwS2xxKL1eAVQNx/Qg8/gcpIylcTTvUa1gi
-         VWQmN2jUEiy95eEK6P0h45tw/1eCPTvbzhPmQsEJ+Ewl8USxQPuGFngdKr5atKTtzrsM
-         xabSPh9dvmSeO1I/KZMdXAA3FL1gOQJ3/30tJBHgAE+z0Zys7bRdAER1KdXg40RuAxxQ
-         o4znqdyVCSbl7anCJNL6YBlcn4XzyoSbhiaINuS1fonoGzMrwN2sbEaSexiEtDpdXdMC
-         ysYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720791121; x=1721395921;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlcXnTAyG1qwnoAXhkdhe6yOcbdDru78Zg28CF9eSjM=;
-        b=eJiOinExSNr8esose9TxNyMU1cXGVLw7YtsV+q/WtbnLQ8AVz8M1rnw3GBjk4UHDp0
-         pwgtjnO2CwNCDUft8uuZDWsyt5nV9UMk4khmDtTMW9urxSXoQiHkRYC0k18L6W/CvUR4
-         bvyFd/We5gx8f7vw1n7G8psaDFyIV1iIFXd/aid7K5mDDlIea/3Fz4DGAwMdtCeTBIlL
-         XprcNwdk8sS/KzfHJuXI0LE4bYNacGlrcJKHAxH7sFpXoLcMFdFs9ThVbO82a3gNVj4u
-         EqXnsPVxQstL8oHoPTnTY70RNuB2RK8ezEK1ZbFOC4t6eE/vQXDGxmoZLoXOC7IBC9rO
-         mhaw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4u47sBt+ROKXaFUw/xc9DDl8EQscjQWyTuzdq/DIdIMTeumlOvRVq7jpGUR5Fn4z3WfkObgxAZ04iN6zBFMBeDJjCfcgfmqRBmJB6
-X-Gm-Message-State: AOJu0YxJSD1AZ723bLUS0wkCDkV62LtS3rjuGCpt9uHd1LAHj/PUreLA
-	FfFRWLGSAkZzoKdV+dESdqZr6ezr4SnceU1YwShy+p0wKrAjJeJQ7cNmXgmyNYASmvc+eJKGF0p
-	DWA==
-X-Google-Smtp-Source: AGHT+IEVDawGmhURpZGLMNfqqfdjGi+eb1+WnZuWI/OM/9laSwCR3IXn8ahwQlyxin/gJx1/hmD7pDFxvqE=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:cb93:b0:2c9:61f9:9aea with SMTP id
- 98e67ed59e1d1-2ca35d39330mr44466a91.5.1720791121058; Fri, 12 Jul 2024
- 06:32:01 -0700 (PDT)
-Date: Fri, 12 Jul 2024 06:31:59 -0700
-In-Reply-To: <5a9d0c9c-ef97-4a77-b81b-a67bd27603aa@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ttl//4lg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB1CC32782;
+	Fri, 12 Jul 2024 13:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720791160;
+	bh=IKBrzGC73MnXcUEDdfFMiJvHDd3uSvUh+ioavB0SEP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ttl//4lgujTwp0lvVga4ytCW7tFrduw+bW1vdP3BsNLSCcTP6qvKLWO/ZMeRITwCk
+	 X/pgPU0R/jG42oqMv3OXzGxKzxM5V++2GaMnJJdvl29XyVIHvmOPuEA5r0kZHLWKWM
+	 pr94S4M1RtK6BmmRWs6ax/t5SKD1BZZxXNOYk1Y8=
+Date: Fri, 12 Jul 2024 15:32:37 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Frank Scheiner <frank.scheiner@web.de>
+Cc: stable@vger.kernel.org, akpm@linux-foundation.org, allen.lkml@gmail.com,
+	broonie@kernel.org, conor@kernel.org, f.fainelli@gmail.com,
+	jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+	linux@roeck-us.net, lkft-triage@lists.linaro.org,
+	patches@kernelci.org, patches@lists.linux.dev, pavel@denx.de,
+	rwarsow@gmx.de, shuah@kernel.org, srw@sladewatkins.net,
+	sudipm.mukherjee@gmail.com, torvalds@linux-foundation.org,
+	=?utf-8?B?VG9tw6HFoQ==?= Glozar <tglozar@gmail.com>
+Subject: Re: [PATCH 5.10 000/284] 5.10.221-rc2 review
+Message-ID: <2024071237-hypnotize-lethargic-98f2@gregkh>
+References: <20240704094505.095988824@linuxfoundation.org>
+ <76458f11-0ca4-4d3b-a9bc-916399f76b54@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240517173926.965351-1-seanjc@google.com> <20240517173926.965351-13-seanjc@google.com>
- <5a9d0c9c-ef97-4a77-b81b-a67bd27603aa@intel.com>
-Message-ID: <ZpEwT59eveCC79uN@google.com>
-Subject: Re: [PATCH v2 12/49] KVM: x86: Reject disabling of MWAIT/HLT
- interception when not allowed
-From: Sean Christopherson <seanjc@google.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
-	Kechen Lu <kechenl@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Binbin Wu <binbin.wu@linux.intel.com>, 
-	Yang Weijiang <weijiang.yang@intel.com>, Robert Hoo <robert.hoo.linux@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76458f11-0ca4-4d3b-a9bc-916399f76b54@web.de>
 
-On Fri, Jul 12, 2024, Xiaoyao Li wrote:
-> On 5/18/2024 1:38 AM, Sean Christopherson wrote:
-> > @@ -6565,33 +6571,29 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
-> >   		break;
-> >   	case KVM_CAP_X86_DISABLE_EXITS:
-> >   		r = -EINVAL;
-> > -		if (cap->args[0] & ~KVM_X86_DISABLE_VALID_EXITS)
-> > +		if (cap->args[0] & ~kvm_get_allowed_disable_exits())
+On Thu, Jul 11, 2024 at 12:56:44PM +0200, Frank Scheiner wrote:
+> Dear Greg, dear Sasha,
 > 
-> sigh.
+> I noticed a build failure for linux-5.10.y for ia64 ([1]) (sorry,
+> actually since 5.10.221-rc1, but I didn't notice that build failure
+> before yesterday :-/ and as the review window for 5.10.222-rc1 is not
+> yet open, I thought I send it now as response to the last review window
+> announcement for 5.10.221-rc2):
 > 
-> KVM_X86_DISABLE_VALID_EXITS has no user now. But we cannot remove it since
-> it's in uapi header, right?
+> https://github.com/linux-ia64/linux-stable-rc/actions/runs/9771252437/job/26974019958#step:8:3524:
+> ```
+> [...]
+> CC [M]  drivers/pps/pps.o
+> drivers/firmware/efi/memmap.c:16:10: fatal error: asm/efi.h: No such
+> file or directory
+>    16 | #include <asm/efi.h>
+>       |          ^~~~~~~~~~~
+> compilation terminated.
+> [...]
+> ```
+> 
+> [1]:
+> https://github.com/linux-ia64/linux-stable-rc/actions/runs/9771252437#summary-26974019958
+> 
+> This is related to the recent addition of this change set:
+> 
+> efi: memmap: Move manipulation routines into x86 arch tree
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.10.y&id=31e0721aeabde29371f624f56ce2f403508527a5
+> 
+> ...to linux-5.10.y. For ia64 this change set on its own seems incomplete
+> as it requires a header not available for ia64 w/o additional changes.
+> 
+> Adding:
+> 
+> efi: ia64: move IA64-only declarations to new asm/efi.h header
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8ff059b8531f3b98e14f0461859fc7cdd95823e4
+> 
+> ...or from here (according to GitHub this is in linux-stable(-rc)
+> starting with linux-5.12.y):
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=8ff059b8531f3b98e14f0461859fc7cdd95823e4
+> 
+> fixes it for me with 5.10.222-rc1, see for example [2].
+> 
+> [2]:
+> https://github.com/linux-ia64/linux-stable-rc/actions/runs/9871144965#summary-27258970494
 
-We can, actually.  Forcing userspace to make changes when userspace updates their
-copy of the headers is ok (building directly against kernel headers is discouraged).
+I'm confused, which commit should we add, or should we just revert what
+we have now?
+
+And I thought that ia64 was dead?
+
+thanks,
+
+greg k-h
