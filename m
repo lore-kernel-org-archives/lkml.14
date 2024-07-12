@@ -1,129 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C15317996;
-	Fri, 12 Jul 2024 06:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F8F339AB;
+	Fri, 12 Jul 2024 06:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720766512; cv=none; b=ePbnCRh8QlQwh0qyWV2KMBr0EiUsQg6xDJHWgG23UFvH59qEG1kAAPs6z1uh3cGY4105XOSZ/1Qvr8cn036cgErX4ySHyHx8/p03/nlHXpenCo4U1ArqHODbBBaWGmYUMvuMO9hcn/zdYE3SpSrdQQEM325Dqnnp+pQ6s04SMgM=
+	t=1720766641; cv=none; b=Dic2gmOpSlscivYWq8ztaQ3ZJMLtxyfzxRwM4bkqsx9fWCttsYIZvWWCiFeCH1JSp9zoVPHgibIjtEodx78fmqpNLkK1ddDrPpwq2/EiL3Sg9aUhviQamBRV2BhHjfkjYykSqjXW+wdPv/bcZwkpnU/A2MsYNrCjT0cBu1WyWpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720766512; c=relaxed/simple;
-	bh=yAw59STucqdoVIH1PxfAXM1wGfcmkq3fRDsmT9Q1lIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FXWKyR14E2JEvAZkctG0uNdEqb3zDhsolFgvX2/OQWKHHaf1yaoMh6zZuzvL/iRPV6Lb69aSe4K9zyx8tqdYSfT0jJ4KDtn7A4xVKbkiQz7tSmcDxWdU1klz8q40fthbniRpCd9oIxzsL8HIecSRL9+KJtSaN2ua1DXJyB8RMIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYWdu5wP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720766641; c=relaxed/simple;
+	bh=sjO2zR1sARW3qaRzUw3BJVWpTRtHcuCdfx0jVM3jOM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YavFgF20iLdnXj0bn7ZLVaINqB+jqjVOiCYGCWqeEj+NQbDa42vbCYAsR8Uly6pCX4wPPapXHuTtjPn2oHZLJkSm4a/lbnXFmncKFDWfVHfzLXj6Tf3Vnhc3EXKA8/POFnF16+LTxpdnvwvsMBPWeBh9Yi8IDCQmhWXDf1ij9Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=b3j1xGkq; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYWdu5wP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9312EC3277B;
-	Fri, 12 Jul 2024 06:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720766511;
-	bh=yAw59STucqdoVIH1PxfAXM1wGfcmkq3fRDsmT9Q1lIo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hYWdu5wP1CDRiGy7DGdfX+QAz6OaQlFYYsuD99o3STjYrye+JuMGfXhHyQylgllba
-	 KADh1OaLyalIS6kjvYKY0noagZOEsCsr0x/Q7dubPAA9aLBUulnjEJX1NUKbsZz7h7
-	 Z5Bm8iGp7fsNOMZIKCZzWxIgvw7d0jCSZSRCXvwd0jrnVg1RF4fcQxqOflbr3fg0MW
-	 VkSyNhj3sLVszp4HM4HOaZkee9vD0L8uTfYRk9osv9jLfk3WJHSwCUNR6nozUXvZOO
-	 WmlDJtoFaHgZU9ep/5O209f3wWneWypAZ99ILMH81qgHfmQ/IiHEbkknhhWdoYnV8D
-	 secw2Tbw2VveQ==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: tglx@linutronix.de
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] irqdomain: Fix the kernel-doc and plug it into Documentation
-Date: Fri, 12 Jul 2024 08:41:48 +0200
-Message-ID: <20240712064148.157040-1-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b3j1xGkq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720766636;
+	bh=DkpQcD8KqW6VzkolOtblVBkpGn+rBLbx0Cx7ikepTaE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=b3j1xGkqsxHlU1PJAK4HxT94HuXWrQUtEB3AWHSZO6XN7cxepQcc+iX5ZyVU3+rnx
+	 5N8qTTbV/a3troVvXHwnFHD/hiFwJVJwwz19eetzGa6gZ+xHazVPeIR9kMn6fCQLXT
+	 NK+TitCQDfLqPty7VmG/vsd8Kb+ElkwGn0cLR+IJYYrhd/x6bU3Nc1XbZ0YAonK0Ye
+	 ECMAVOdkgT5+/Q2pO+LoxSLjFwayp1dwNSm4VNJO/PtUk/B3juSd8Cb7YaZCl8DijZ
+	 nEYRrGnSw11EJoB+GqTG5/GVS3caiDy/bWx9QbKKYsPH/AYlMiFSMpYXh3jIQEFzs1
+	 R41kG7DLaHp8g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WL2B40LcCz4wZx;
+	Fri, 12 Jul 2024 16:43:54 +1000 (AEST)
+Date: Fri, 12 Jul 2024 16:43:54 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Tejun Heo <tj@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the cgroup tree
+Message-ID: <20240712164354.65cb32bc@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/E.IBjcoRjRRa7SRu71RsIsk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-There were several undocumented fields in structs irq_domain_ops and
-irq_domain_info. Document them.
+--Sig_/E.IBjcoRjRRa7SRu71RsIsk
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-irq_domain_ops::revmap_size contained "[]" in the description, which is
-not allowed in sphinx. Remove that.
+Hi all,
 
-Finally, plug the whole header (irqdomain.h) into genericirq.rst, so
-that the docs is autogenerated and hyperlinks to these structure
-created.
+After merging the cgroup tree, today's linux-next build (htmldocs)
+failed like this:
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jonathan Corbet <corbet@lwn.net>
----
- Documentation/core-api/genericirq.rst |  2 ++
- include/linux/irqdomain.h             | 20 +++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+Sphinx parallel build error:
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xfd in position 558: i=
+nvalid start byte
 
-diff --git a/Documentation/core-api/genericirq.rst b/Documentation/core-api/genericirq.rst
-index 582bde9bf5a9..25f94dfd66fa 100644
---- a/Documentation/core-api/genericirq.rst
-+++ b/Documentation/core-api/genericirq.rst
-@@ -410,6 +410,8 @@ which are used in the generic IRQ layer.
- .. kernel-doc:: include/linux/interrupt.h
-    :internal:
- 
-+.. kernel-doc:: include/linux/irqdomain.h
-+
- Public Functions Provided
- =========================
- 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 02cd486ac354..de6105f68fec 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -74,11 +74,24 @@ void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
-  * struct irq_domain_ops - Methods for irq_domain objects
-  * @match: Match an interrupt controller device node to a host, returns
-  *         1 on a match
-+ * @select: Match an interrupt controller fw specification. It is more generic
-+ *	    than @match as it receives a complete struct irq_fwspec. Therefore,
-+ *	    @select is preferred if provided. Returns 1 on a match.
-  * @map: Create or update a mapping between a virtual irq number and a hw
-  *       irq number. This is called only once for a given mapping.
-  * @unmap: Dispose of such a mapping
-  * @xlate: Given a device tree node and interrupt specifier, decode
-  *         the hardware irq number and linux irq type value.
-+ * @alloc: Allocate @nr_irqs interrupts starting from @virq.
-+ * @free: Free @nr_irqs interrupts starting from @virq.
-+ * @activate: Activate one interrupt in HW (@irqd). If @reserve is set, only
-+ *	      reserve the vector. If unset, assign the vector (called from
-+ *	      request_irq()).
-+ * @deactivate: Disarm one interrupt (@irqd).
-+ * @translate: Given @fwspec, decode the hardware irq number (@out_hwirq) and
-+ *	       linux irq type value (@out_type). This is a generalised @xlate
-+ *	       (over struct irq_fwspec) and is preferred if provided.
-+ * @debug_show: For domains to show specific data for an interrupt in debugfs.
-  *
-  * Functions below are provided by the driver and called whenever a new mapping
-  * is created or an old mapping is disposed. The driver can then proceed to
-@@ -131,6 +144,9 @@ struct irq_domain_chip_generic;
-  * Optional elements:
-  * @fwnode:	Pointer to firmware node associated with the irq_domain. Pretty easy
-  *		to swap it for the of_node via the irq_domain_get_of_node accessor
-+ * @bus_token:	@fwnode's device_node might be used for several irq domains. But
-+ *		in connection with @bus_token, the pair shall be unique in a
-+ *		system.
-  * @gc:		Pointer to a list of generic chips. There is a helper function for
-  *		setting up one or more generic chips for interrupt controllers
-  *		drivers using the generic chip library which uses this pointer.
-@@ -144,7 +160,9 @@ struct irq_domain_chip_generic;
-  * @exit:	Function called when the domain is destroyed
-  *
-  * Revmap data, used internally by the irq domain code:
-- * @revmap_size:	Size of the linear map table @revmap[]
-+ * @hwirq_max:		Top limit for the HW irq number. Especially to avoid
-+ *			conflicts/failures with reserved HW irqs. Can be ~0.
-+ * @revmap_size:	Size of the linear map table @revmap
-  * @revmap_tree:	Radix map tree for hwirqs that don't fit in the linear map
-  * @revmap:		Linear table of irq_data pointers
-  */
--- 
-2.45.2
+Caused by commit
 
+  704f684e15ad ("cgroup: Add Michal Koutn=C3=BD as a maintainer")
+
+I tracked this down using
+
+  git diff stable.. | cat -v | grep -F 'M-}'
+
+and finding the commit that added the line that was output.
+I tested it by building with the commit temporarily reverted.  I have
+left that commit in today's linux-next.
+
+Clearly (I think) there is nothing wrong with the commit, but the Sphinx
+utf-8 decoder also clearly does not think it is valid UTF-8 :-(
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/E.IBjcoRjRRa7SRu71RsIsk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaQ0KoACgkQAVBC80lX
+0GwmkAf+Ldn784aksxZtzY2wP1cgyK+W6oRUh175s9+nybqVgS87L2cjnk8nsh3b
+KPx2oMP+FWHkWwp0M5ZrnUIPN7vrkPBx+FIMJsf/1pJEF67aKCSpTycvflJsw6+4
+OzBbgDmra05GpxBfmAauHG59gaJ0y7UgTOfzhMiY5im5vuJZd0CgmFzwkeyZtbqp
+xdV8vW4uw/XWJ4dKt1/a2P7dziYdmXxMBUN6CnxSBzR65mE7Nk/eKl/dRNh0LFQv
+rvHrcz3GU6UprRswF+ZTD4MyUieQMRtVbXPmxJsbU9ISHZXNfqsZpa3CTzjQo5IJ
+7hMcughCyYSo4b1XnqT6hwOa8Fw5qg==
+=U9Tg
+-----END PGP SIGNATURE-----
+
+--Sig_/E.IBjcoRjRRa7SRu71RsIsk--
