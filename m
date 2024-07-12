@@ -1,93 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FE9374D3
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A10E143C6E;
+	Fri, 12 Jul 2024 09:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720777162; cv=none; b=r72fOdUhU8X+/FuCeSSHOseDcyYxZqRZpLVNImVV3d+o1nL9Tr1KGSVFNTamjE/H8qP5kjcGfk6mL3EE1DmL0jcKEn8+PKdXT0rpcyOpEx9Trp6WRGy/Zt58y4p2CJ8Phn6aV0dCwLq/dkwuHz6HrIeTmOWw2iwYe9JH3X0iy2k=
+	t=1720777217; cv=none; b=Buiyc2wvpySBTY6+OloJHSyOQrA9kcybXW1olRESa3Fny5wqf812nyK9Rl9sFakzxYri7wxzD0NCSwPGYS1X4T47Lb7/9rNijF8DVbbr3UxGh4fC1cl9V/uSl3jBoqipq3qviS1JtyQeALg7TPfGTu7Mm1oNpvh26QdvjTeMUKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720777162; c=relaxed/simple;
-	bh=ABBFD44TlD2+CFl0N8Dv7XBTTUHJ1evLqOSfbZ3nsuE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kf4BABSlVUebGGTeL4vzlaFhTDO0KIlReig5zn2+TrBFeRsw4yQodjiu+bKA1TZxWGx5G/C/0uY+kuXsbt4UtvLLCQQtDZeManOQ1yhOURYFnam35ifMRAADXG6QzKcTZR7BqfbkkoVP/k8QbKTsNnUhw+nPfevffFdh2yzYfZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=F/rlRtEl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720777217; c=relaxed/simple;
+	bh=0QB4avtqHAByN9Y/i8mu+GJUKZUD7/BNSTgpqU9Kt0Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W9RtEsQJYsgywKOB76uclqBxvOF4/gHcrlL21fu1sQXe5+qiZe8QkzK9MBv9x+iI+wPJurYlXL9/M8WaRbKQeWSSQi4tHSaEYq1rockvrlUbb4sOynCTQxfo+M84ZiJ7AZVhXR+QAWd1xKkqTWC48G9domZn6guipSoFEEGJutk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLPjIF7J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="F/rlRtEl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7470FC32782;
-	Fri, 12 Jul 2024 09:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720777161;
-	bh=ABBFD44TlD2+CFl0N8Dv7XBTTUHJ1evLqOSfbZ3nsuE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=F/rlRtElVtoEZ3B2O/SjnsFLnq42sKglsRTmpL8s79B+SXRcjUogcQ7RsgeP3lfyU
-	 t/v0f7dj1HicIGbAsK9eIdneP/CzQMWdMTqGlnnoP5W9M1ZgCLbWzxxFq+en6CXT+p
-	 i0Cm7a7HxwhZtB2NlYnvmYtrmP//hFUa323k+MUc=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] ARM: sa1100: make match function take a const pointer
-Date: Fri, 12 Jul 2024 11:39:17 +0200
-Message-ID: <20240712093916.2121096-2-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLPjIF7J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E46A6C4AF0B;
+	Fri, 12 Jul 2024 09:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720777216;
+	bh=0QB4avtqHAByN9Y/i8mu+GJUKZUD7/BNSTgpqU9Kt0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FLPjIF7JNbVupl7884yK+FwM2TxooTjLKaA4sd/uigakeIBP89NOytxLO3wp1g5Xe
+	 JMrGPBXpKpeVghpqk7XnBPVu65MOGLlEr+dTt5AnKVG6BxGFIA2QLv5LAg4VSdeOtA
+	 zJZYjRi8U8zFUmiwJKaf3Zevjq3Rm+z3OSjKh3wJhPiBsHua6i1kRw7CB2WI2gBW6Q
+	 jkgJHwayT1McgLLb8xSgdshlHYsEfZZ5BA+yJa0sV1W4KBLgnf4isygCRwn3InQ5ux
+	 n99bKorxL6i9Jnw4BfqhEHgZ4eLe5VBPNj1QA7JF0Y+cH7WJUU8XpAd8SIalgZnGqk
+	 CsVHhGXfdpIWQ==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5c680f40faeso49850eaf.1;
+        Fri, 12 Jul 2024 02:40:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVIB8o7YD99s7wDqw47/9CwWSsLpniS46Bm3XiBE4OWtVi2uAxDmUg/TKE0S60yJxf7MmtQkzB8nfO4385fcz+LXayK9Y6IYpHBk5nZoh/0IOVISJzLHIFpaVaaL5xliS8a9IHGSfjxkA==
+X-Gm-Message-State: AOJu0Yy3Q6qGB00wMwRk2RO2S/sMrqOeevIwkf+idZkWt5dfHc6tyU13
+	UV7oo9C19ViIptZ8hrSCMdcTrbpSGpV7Ew0E4sYSWjcHoh72uGozCQVuuQIXM7izs7TpARohqSY
+	pGPD3Ib5vwNRJzyzsXIHFK22/2SI=
+X-Google-Smtp-Source: AGHT+IEdhCaEWm8tJiXywb0s1a3ZSyKgNu5DyhAYYzrFaZq8wv5wjQ5n5SaUqhfGoTbY5Fdoi4gdY6AJTTGZvtWNZqE=
+X-Received: by 2002:a4a:e088:0:b0:5cd:13e0:b0d3 with SMTP id
+ 006d021491bc7-5cd13e0b282mr857068eaf.2.1720777216176; Fri, 12 Jul 2024
+ 02:40:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2016; i=gregkh@linuxfoundation.org; h=from:subject; bh=ABBFD44TlD2+CFl0N8Dv7XBTTUHJ1evLqOSfbZ3nsuE=; b=owGbwMvMwCRo6H6F97bub03G02pJDGkTfh7ptXnaevlhvdvkYn7e51etrorfiHz9tOqm9Z6kj hns2dW7OmJZGASZGGTFFFm+bOM5ur/ikKKXoe1pmDmsTCBDGLg4BWAipyoZFpzIX5/yfaXwZsEL L5757L2WsHf9ziyGOZwNGz/lPE67I7/mb3KHYUJa1UlhDQA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+References: <20240710-fix-modpost-warning-default_dram_nodes-v1-1-8961453cc82d@kernel.org>
+ <87jzhsa05p.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <87jzhsa05p.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 12 Jul 2024 11:40:04 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gHHkFnJEf2CQ5Rmz9+_7u1EqBPiycuFL1huPJf9Pvc6Q@mail.gmail.com>
+Message-ID: <CAJZ5v0gHHkFnJEf2CQ5Rmz9+_7u1EqBPiycuFL1huPJf9Pvc6Q@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: HMAT: Mark hmat_set_default_dram_perf() as __init
+To: "Huang, Ying" <ying.huang@intel.com>, Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, Ho-Ren Chuang <horen.chuang@linux.dev>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In commit d69d80484598 ("driver core: have match() callback in struct
-bus_type take a const *"), the match callback for busses was changed to
-take a const pointer to struct device_driver.  Unfortunately I missed
-fixing up the sa1111 code, and was only noticed after-the-fact by the
-kernel test robot.  Resolve this issue by properly changing the
-sa111_match() function.
+On Thu, Jul 11, 2024 at 8:56=E2=80=AFAM Huang, Ying <ying.huang@intel.com> =
+wrote:
+>
+> Nathan Chancellor <nathan@kernel.org> writes:
+>
+> > After commit 4dc70b711dbc ("memory tier: consolidate the initialization
+> > of memory tiers"), there is a modpost warning when
+> > hmat_set_default_dram_perf() is not inlined into its callsite, as it
+> > appears that default_dram_nodes may be accessed after its memory has
+> > been freed.
+> >
+> >   WARNING: modpost: vmlinux: section mismatch in reference: hmat_set_de=
+fault_dram_perf+0x18 (section: .text) -> default_dram_nodes (section: .init=
+.data)
+> >
+> > The single callsite, hmat_init(), is __init, so this warning is not a
+> > problem in reality but it is easily solvable by marking
+> > hmat_set_default_dram_perf() as __init, which should have been done whe=
+n
+> > this function was added in commit 3718c02dbd4c ("acpi, hmat: calculate
+> > abstract distance with HMAT").
+>
+> Good catch!  Thanks for your fix!  If it's necessary, feel free to add
+>
+> Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
 
-Cc: Russell King <linux@armlinux.org.uk>
-Fixes: d69d80484598 ("driver core: have match() callback in struct bus_type take a const *")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm/common/sa1111.c               | 4 ++--
- arch/arm/include/asm/hardware/sa1111.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Thanks for the patch and the review!
 
-diff --git a/arch/arm/common/sa1111.c b/arch/arm/common/sa1111.c
-index 1fbd7363cf11..550978dc3c50 100644
---- a/arch/arm/common/sa1111.c
-+++ b/arch/arm/common/sa1111.c
-@@ -1339,10 +1339,10 @@ EXPORT_SYMBOL_GPL(sa1111_get_irq);
-  *	We model this as a regular bus type, and hang devices directly
-  *	off this.
-  */
--static int sa1111_match(struct device *_dev, struct device_driver *_drv)
-+static int sa1111_match(struct device *_dev, const struct device_driver *_drv)
- {
- 	struct sa1111_dev *dev = to_sa1111_device(_dev);
--	struct sa1111_driver *drv = SA1111_DRV(_drv);
-+	const struct sa1111_driver *drv = SA1111_DRV(_drv);
- 
- 	return !!(dev->devid & drv->devid);
- }
-diff --git a/arch/arm/include/asm/hardware/sa1111.h b/arch/arm/include/asm/hardware/sa1111.h
-index d8c6f8a99dfa..a815f39b4243 100644
---- a/arch/arm/include/asm/hardware/sa1111.h
-+++ b/arch/arm/include/asm/hardware/sa1111.h
-@@ -404,7 +404,7 @@ struct sa1111_driver {
- 	void (*remove)(struct sa1111_dev *);
- };
- 
--#define SA1111_DRV(_d)	container_of((_d), struct sa1111_driver, drv)
-+#define SA1111_DRV(_d)	container_of_const((_d), struct sa1111_driver, drv)
- 
- #define SA1111_DRIVER_NAME(_sadev) ((_sadev)->dev.driver->name)
- 
--- 
-2.45.2
+I'm expecting Dan/Dave to take care of it (or please let me know if
+I'm expected to pick it up).
 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202406292310.hlRATeZJ-lkp=
+@intel.com/
+> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> > ---
+> > I left off a fixes tag as I assume this is going to be squashed into th=
+e
+> > former change mentioned above, as it is still in mm-unstable, but feel
+> > free to add one if the patch is going to be standalone.
+> > ---
+> >  drivers/acpi/numa/hmat.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> > index a2f9e7a4b479..ca0c0ea3e1ef 100644
+> > --- a/drivers/acpi/numa/hmat.c
+> > +++ b/drivers/acpi/numa/hmat.c
+> > @@ -933,7 +933,7 @@ static int hmat_callback(struct notifier_block *sel=
+f,
+> >       return NOTIFY_OK;
+> >  }
+> >
+> > -static int hmat_set_default_dram_perf(void)
+> > +static __init int hmat_set_default_dram_perf(void)
+> >  {
+> >       int rc;
+> >       int nid, pxm;
+> >
+> > ---
+> > base-commit: 17bcc624e67da6383060ee24483db77aa17276aa
+> > change-id: 20240710-fix-modpost-warning-default_dram_nodes-38b6faffe3da
+> >
+> > Best regards,
+>
+> --
+> Best Regards,
+> Huang, Ying
+>
