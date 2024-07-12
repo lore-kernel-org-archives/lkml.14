@@ -1,76 +1,69 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A7215FA96
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 11:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA9F1422C3;
+	Fri, 12 Jul 2024 11:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720782393; cv=none; b=Oy7OvGnk8NLrzR2nxPRYwiQBWKSn+PYl6xlKo2GCaiNFFLlc8YATzTB497S0AULjmgTqcA09rFo+3FZZBoHZ5flpVCrYooCan3PYbr79VwBYX1gDSefRv2Tc8a5XggysggMLo1rllSZAEYTG1oCY/D62XPyBEI1znyRvCDj6KgE=
+	t=1720782448; cv=none; b=gB8qR9nh0k6vFL6aH8CdvOq2ttomJ5lvFrWM7zc9yhsq6XBeHSxJe+8FYFjkLCH4PExxirTZw95BAYYD/UO2yvowy8PM5oQ/5hoo6i7fydmf1WNn4xFxZLOqNezRUKnuZuleuySBA2/NU/pOur+yEI5i4jSYARXidssfpTcaGig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720782393; c=relaxed/simple;
-	bh=FCxp0fUbHWnhbVpNYJWX9LRebR9PxOi72i3DY4Pj0ZU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TTnYoTHAStGHjksFVefDDg6OwZ7K3Ex3B1sgLPs1cPvhSLtipdY57/cW4Eu27zYJ8e1+YeiQzRCIJH0xHIhPi2YDibvhxUMQqjnuUAduTcOo36eR5uvlBZMegCIQ2c6qT/tQ7wDaxrprMZzB35k6Kz/K1OshD1irNoyVPqvEQoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=ratatoskr.trumtrar.info)
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <s.trumtrar@pengutronix.de>)
-	id 1sSE6G-0001hW-KD; Fri, 12 Jul 2024 13:06:04 +0200
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Date: Fri, 12 Jul 2024 13:05:55 +0200
-Subject: [PATCH 1/2] dt-bindings: display: simple: Document support for
- Innolux G070ACE-LH3
+	s=arc-20240116; t=1720782448; c=relaxed/simple;
+	bh=J5B4V+GxjTUk/uTZIdgig3t7RPhLCkFHCun4ASHiAlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=blk+Iv6qRIhxGSELub5efZ2ynGyVJHf6+dXXVVI+7RjRb66BmOCKXx/Fn7sA0f9pJtp3eQjJG4DHrDFctjroHea+sm9LZH737GVqiFDXTXCFFZ/lM86UgjIJaTRDy6Z69k+xKmlXrLILWgTK1GhQDCZpbrEGqtE8jEFotlAHrlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnwFS+fn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnwFS+fn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27C2BC32782;
+	Fri, 12 Jul 2024 11:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720782448;
+	bh=J5B4V+GxjTUk/uTZIdgig3t7RPhLCkFHCun4ASHiAlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tnwFS+fnNraQw6n/j+xWTvycP5JpS8ghclHM/iG/fZx4sNZ05NqQo6pFCk0t8KGjj
+	 FnEqxNlq18vGbdPl2UpxLhTU+M6Qza5B3MWMlGGM5/UNlCqIwtNj4tDSBn/XyRUzo8
+	 XKqfboBT0h1xCkl6Z/auKnNT5pz8WEA0fu8KTwD9NijCYwcQepAb2836nPUjOi0P2i
+	 DlXGwVmSwCZuoUb0kV7IeA7IOMKUFanGXipOU/A4ElTTSfmM9RNKkMfjjV8ycwitPV
+	 wg1xtSZ4KifdFQdISyMhxdW/IPBRkIyyKtte6Q+IYjmTBH2AeLInOXUtrF5v4fuWfv
+	 fHYrM1rhgIWaA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sSE7b-000000001aF-1Odx;
+	Fri, 12 Jul 2024 13:07:27 +0200
+Date: Fri, 12 Jul 2024 13:07:27 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] power: supply: qcom_battmgr: Ignore extra __le32 in info
+ payload
+Message-ID: <ZpEOb-fOc04bknxy@hovoldconsulting.com>
+References: <20240712-x1e80100-battmgr-v1-1-a253d767f493@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240712-b4-v6-10-topic-innolux-v1-1-bb0acf273d0d@pengutronix.de>
-References: <20240712-b4-v6-10-topic-innolux-v1-0-bb0acf273d0d@pengutronix.de>
-In-Reply-To: <20240712-b4-v6-10-topic-innolux-v1-0-bb0acf273d0d@pengutronix.de>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, 
- kernel@pengutronix.de
-X-Mailer: b4 0.14.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: s.trumtrar@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240712-x1e80100-battmgr-v1-1-a253d767f493@linaro.org>
 
-Add Innolux G070ACE-LH3 7" WVGA (800x480) TFT LCD panel compatible string.
+On Fri, Jul 12, 2024 at 12:00:03PM +0200, Stephan Gerhold wrote:
+> Some newer ADSP firmware versions on X1E80100 report an extra __le32 at the
+> end of the battery information request payload, causing qcom_battmgr to
+> fail to initialize. Adjust the check to ignore the extra field in the info
+> payload so we can support both old and newer firmware versions.
+> 
+> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
----
- Documentation/devicetree/bindings/display/panel/panel-simple.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Can confirm that the old fw still works (didn't really look at the
+patch):
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 5067f5c0a2723..e9941a077a20d 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -180,6 +180,8 @@ properties:
-       - innolux,at070tn92
-         # Innolux G070ACE-L01 7" WVGA (800x480) TFT LCD panel
-       - innolux,g070ace-l01
-+        # Innolux G070ACE-LH3 7" WVGA (800x480) TFT LCD panel with WLED backlight
-+      - innolux,g070ace-lh3
-         # Innolux G070Y2-L01 7" WVGA (800x480) TFT LCD panel
-       - innolux,g070y2-l01
-         # Innolux G070Y2-T02 7" WVGA (800x480) TFT LCD TTL panel
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
 
--- 
-2.45.1
-
+Johan
