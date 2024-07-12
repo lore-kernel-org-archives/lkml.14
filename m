@@ -1,172 +1,113 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D36224FD;
-	Fri, 12 Jul 2024 05:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257821863F;
+	Fri, 12 Jul 2024 05:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720763365; cv=none; b=Bi5ejQFGAw7Rh6GEUuZhXIAjJJ+Nu3gLcu4Hlxx2Aw2w3zQkt2M1xcZIjKsQzTrRPSvcH3kAdTsn5ALgNhDsaMKKMDaoEj5MzXdlO/YxzjmEpQx49+9CYLU4V9D0feJFPrDGv4VCi7c0GimeRMzOM2Rq8RwgbpE+it4n6l89dsE=
+	t=1720763409; cv=none; b=GvojRerLq//OVpsyn5aX9iKcQ0dg5caQO2dfqdI10KENLxLqooxRI/HWXXvL2RBvibtplwwKha+rgptw/nFJjV5wlQSnzahBcQtDH1N9jcdogh+EUGbbXmQXN7sYUgMgtFbDs0v8Ca6VPjmKwFIr7XHQY4ERc6pdVY1mWhY2AWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720763365; c=relaxed/simple;
-	bh=wP3SDvx8OfDrIGVvuNEUoyAcuewxx420nSKrf+kytOY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=WtIC31qE5C7qANHeS78jPgU5tf0VHXl/Gi0i7+AKuStZwTJIfN7vlZUUUsAqSbBL3cV1IgCIRYFuJBVr/GmXud6ln10mTSMP7zm439pGTWAhRQqTB/SO3w5NpvwIDGN4y52NBNIH7D0Ixx5lno8cW9z6zhWbgsxLYuoEzJTVN0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LNNtCWma; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1720763409; c=relaxed/simple;
+	bh=Xv80tVSnPrM4VWZniXWKQL3aRojFkZXrIFjdTvs6Wuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z52z2G/eSgc2vfNNTZbsbtS2lSkwCQd5pIbRHbOvdUV9KlL4lnPnTWow9+TGZKRzfhy3yPK+CLni5smaduQecPaGXRBXq4cbbs3bIYaiuOZWo72lL5zUlZfwFsdiRL8ZXiAKjRn139Y6S7qqdHz6aGNwUK6CKN2hLbN1XlQ7LSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YD1yjeCC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LNNtCWma"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46BHKm6V032360;
-	Fri, 12 Jul 2024 05:49:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:in-reply-to:message-id:references:subject:to; s=
-	qcppdkim1; bh=a9wiS4K7OGztqgFCkvlDKejP8Anlwdwfkaa47JEiWAA=; b=LN
-	NtCWmaE9iVbj2gWNM/cXbFhwtSsO2URgQ599UTN75cpR7NNzTnlipt4ixrl7MNk+
-	halEbeyL8wmYoob2LLzBsfxarBztgfNFkYSTlzBJoVFg/opSBpfM4pWz+KL0tXn3
-	fFTHIVmtasfz15arwxOO0zBgKspmdMlavFTpd8rAQhtdVCMLXyJpCXauA8cfacdh
-	pviJ+1gdccHEL1d65bSdM//tfGTSK8FPEIOQQmStXMQPaJ7ONnImw5O5fjNgmqaa
-	tgEzNvDzeO9d8nWhXLr/WLF2IVur2nfO8PRfCSWb4n3r0J7itJk7mZ4p6cuhjuh2
-	Pe10GMztIPVGk+cTvzsQ==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40ac0gjh0k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jul 2024 05:49:13 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTP id 46C5nApI020511;
-	Fri, 12 Jul 2024 05:49:10 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 407g4fvaqa-1;
-	Fri, 12 Jul 2024 05:49:10 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46C5n960020505;
-	Fri, 12 Jul 2024 05:49:09 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-dikshita-hyd.qualcomm.com [10.213.110.13])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 46C5n9AT020503;
-	Fri, 12 Jul 2024 05:49:09 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 347544)
-	id B3A781287; Fri, 12 Jul 2024 11:19:01 +0530 (+0530)
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 1/2] PM: domains: add device managed version of dev_pm_domain_attach|detach_list()
-Date: Fri, 12 Jul 2024 11:18:30 +0530
-Message-Id: <1720763312-13018-2-git-send-email-quic_dikshita@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1720763312-13018-1-git-send-email-quic_dikshita@quicinc.com>
-References: <1720763312-13018-1-git-send-email-quic_dikshita@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Wvwl86paHEyAthcndckSETwmFaof1Sqm
-X-Proofpoint-GUID: Wvwl86paHEyAthcndckSETwmFaof1Sqm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-12_03,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
- mlxscore=0 impostorscore=0 clxscore=1015 suspectscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407120037
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YD1yjeCC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE993C3277B;
+	Fri, 12 Jul 2024 05:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720763408;
+	bh=Xv80tVSnPrM4VWZniXWKQL3aRojFkZXrIFjdTvs6Wuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YD1yjeCCSycI/tSjnNSuu9nTNToI27bZDgFLm/N14vJSAUrbYruF4fEO/OJayK8KB
+	 y2DKNg97VVjfFnzcTQj8GITABL29rngfsQ7TjUhw6dS4bvsobyqLp7TVyKXsnxJt7f
+	 eJqq7qQE//yXTFIJ7L2NcX7rsHvadZRcl2yc9j46AnPf1tXBp3VPuiHm4GZ7sqqsnt
+	 3i7yG3RfWN2psc0a2EDGzR/P4fMFJ58qHwCSnyJnqOjXuz741LsFWUtP37dWw3vgVg
+	 5oXanE3CvykcZskNLfqW6AKhEsaAvOFB8uhSs/QzhD70F2DypRMDB7GIBUuafozpRc
+	 3IF0hpigper0Q==
+Date: Fri, 12 Jul 2024 08:50:04 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH 2/2] dma: Add IOMMU static calls with clear default ops
+Message-ID: <20240712055004.GE1815706@unreal>
+References: <98d1821780028434ff55b5d2f1feea287409fbc4.1720693745.git.leon@kernel.org>
+ <f2b699aea8fff5589a674da2a567fd593ed2d386.1720693745.git.leon@kernel.org>
+ <28309b7f-9809-452f-95fe-3448c15bdf1b@arm.com>
+ <20240711185741.GC1815706@unreal>
+ <455ccc97-11bd-456d-92b3-b7c8fe4c8d9a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <455ccc97-11bd-456d-92b3-b7c8fe4c8d9a@arm.com>
 
-This patch adds the devres-enabled version of dev_pm_domain_attach|detach_list.
-If client drivers use devm_pm_domain_attach_list() to attach the PM domains,
-devm_pm_domain_detach_list() will be invoked implicitly during remove phase.
+On Thu, Jul 11, 2024 at 09:08:49PM +0100, Robin Murphy wrote:
+> On 2024-07-11 7:57 pm, Leon Romanovsky wrote:
+> > On Thu, Jul 11, 2024 at 07:23:20PM +0100, Robin Murphy wrote:
+> > > On 11/07/2024 11:38 am, Leon Romanovsky wrote:
+> > > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > > 
+> > > > Most of the IOMMU drivers are using the same DMA operations, which are
+> > > > default ones implemented in drivers/iomem/dma-iomem.c. So it makes sense
+> > > > to properly set them as a default with direct call without need to
+> > > > perform function pointer dereference.
+> > > > 
+> > > > During system initialization, the IOMMU driver can set its own DMA and
+> > > > in such case, the default DMA operations will be overridden.
+> > > 
+> > > I'm going to guess you don't actually mean "IOMMU drivers" in the usual
+> > > sense of drivers/iommu/, but rather "arch DMA ops (which often, but not
+> > > always, involve some sort of IOMMU)."
+> > 
+> > Yes, you are right. I used word "drivers" as a general term to describe
+> > everything that implements their own ->map_page() callback.
+> > 
+> > > 
+> > > If so, I'd much rather see this done properly, i.e. hook everything up
+> > > similarly to dma-direct and be able to drop CONFIG_DMA_OPS for "modern"
+> > > dma-direct/iommu-dma architectures entirely. Furthermore the implementation
+> > > here isn't right - not only is it not conceptually appropriate to make
+> > > iommu-dma responsibile for proxying random arch DMA ops, but in practial
+> > > terms it's just plain broken, since the architectures which still have their
+> > > own DMA ops also don't use iommu-dma, so this is essentially disabling the
+> > > entire streaming DMA API on ARM/PowerPC/etc.
+> > 
+> > Sorry but I'm not sure that I understood your reply. Can you please clarify
+> > what does it mean broken in this context?
+> > 
+> > All archs have one of the following options:
+> > 1. No DMA ops -> for them dma_map_direct() will return True and they
+> > never will enter into IOMMU path.
+> > 2. Have DMA ops but without .map_page() -> they will use default IOMMU
+> > 3. Have DMA ops with .map_page() -> they will use their own implementation
+> 
+> Urgh, sorry, let that instead be a lesson in not adding needless layers of
+> indirection that are named as confusingly as possible, then. Seems I saw
+> stubs plus static inline wrappers, managed to misread dma_iommu_* vs.
+> iommu_dma_*, and jump to the wrong conclusion of what was stubbed out, not
+> least since that was the only interpretation in which adding an extra layer
+> of inline wrappers would seem necessary in the first place. If these
+> dma_iommu_* functions serve no purpose other than to make the code even more
+> of a maze of twisty little passages, all alike, then please just feed them
+> to a grue instead.
 
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
----
- drivers/base/power/common.c | 41 +++++++++++++++++++++++++++++++++++++++++
- include/linux/pm_domain.h   |  4 ++++
- 2 files changed, 45 insertions(+)
+This is done to keep layering similar to existing in DMA subsystem. We
+have special files and calls to dma-direct, it looks natural to have
+special files and call to dma-iommu. It is not nice to call to drivers/iommu
+from kernel/dma/mapping.c
 
-diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-index 327d168..082691e 100644
---- a/drivers/base/power/common.c
-+++ b/drivers/base/power/common.c
-@@ -277,6 +277,47 @@ int dev_pm_domain_attach_list(struct device *dev,
- EXPORT_SYMBOL_GPL(dev_pm_domain_attach_list);
- 
- /**
-+ * dev_pm_domain_detach_list - devres-enabled version of dev_pm_domain_detach_list.
-+ * @list: The list of PM domains to detach.
-+ *
-+ * This function reverse the actions from devm_pm_domain_attach_list().
-+ * it will be invoked during the remove phase from drivers implicitly if driver
-+ * uses devm_pm_domain_attach_list() to attach the PM domains.
-+ */
-+void devm_pm_domain_detach_list(void *_list)
-+{
-+	struct dev_pm_domain_list *list = _list;
-+
-+	dev_pm_domain_detach_list(list);
-+}
-+EXPORT_SYMBOL_GPL(devm_pm_domain_detach_list);
-+
-+/**
-+ * devm_pm_domain_attach_list - devres-enabled version of dev_pm_domain_attach_list
-+ *
-+ * NOTE: this will also handle calling devm_pm_domain_detach_list() for
-+ * you during remove phase.
-+ *
-+ * Returns the number of attached PM domains or a negative error code in case of
-+ * a failure.
-+ */
-+int devm_pm_domain_attach_list(struct device *dev,
-+			       const struct dev_pm_domain_attach_data *data,
-+			       struct dev_pm_domain_list **list)
-+{
-+	int ret, num_pds = 0;
-+
-+	num_pds = dev_pm_domain_attach_list(dev, data, list);
-+
-+	ret = devm_add_action_or_reset(dev, devm_pm_domain_detach_list, (void *)list);
-+	if (ret)
-+		return ret;
-+
-+	return num_pds;
-+}
-+EXPORT_SYMBOL_GPL(devm_pm_domain_attach_list);
-+
-+/**
-  * dev_pm_domain_detach - Detach a device from its PM domain.
-  * @dev: Device to detach.
-  * @power_off: Used to indicate whether we should power off the device.
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index 772d328..2f00150 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -450,8 +450,12 @@ struct device *dev_pm_domain_attach_by_name(struct device *dev,
- int dev_pm_domain_attach_list(struct device *dev,
- 			      const struct dev_pm_domain_attach_data *data,
- 			      struct dev_pm_domain_list **list);
-+int devm_pm_domain_attach_list(struct device *dev,
-+			       const struct dev_pm_domain_attach_data *data,
-+			       struct dev_pm_domain_list **list);
- void dev_pm_domain_detach(struct device *dev, bool power_off);
- void dev_pm_domain_detach_list(struct dev_pm_domain_list *list);
-+void devm_pm_domain_detach_list(void *list);
- int dev_pm_domain_start(struct device *dev);
- void dev_pm_domain_set(struct device *dev, struct dev_pm_domain *pd);
- int dev_pm_domain_set_performance_state(struct device *dev, unsigned int state);
--- 
-2.7.4
+Thanks
 
+> 
+> Thanks,
+> Robin.
