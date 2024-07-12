@@ -1,425 +1,139 @@
-Received: from out28-196.mail.aliyun.com (out28-196.mail.aliyun.com [115.124.28.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2721D14F9D0;
-	Fri, 12 Jul 2024 09:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A3C14600B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720778076; cv=none; b=DABloqSTuxl3wk1eTbPkGaCob/Phk43xCfLJP+PIpnX0xI7/qkUPluDESGA1mESOtBSp6zhrILqg4aK0il3WysdkLl36cYfMtBmNxQa6GoUcJGi4V3NW0GCZIgTQbiC939W0pQPm1i+1De3LKrNKlK92GaF7Rze3cVpV5wVWtTw=
+	t=1720778091; cv=none; b=DDtzXfttyzQpohlMa39BkC3NmTog1PudEjH1L5OAYA+brHoU82gDHITbGYWNRZd18qAgXiatEqQTlXBOlkV0Alc4tJanVmYjzNM24VxPqq2bZLX1irfZEEJTtVBmbv1rIM5o4L3rc7reqb0vNuakH8QY9y95q/MtNJT38GiJkuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720778076; c=relaxed/simple;
-	bh=YlQSwi0LmTuNuZ3Gjoa5u2tBF8NrkDZiazQr/V4iedU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L+UrtYQeBuYOXu97R1A0riRDE16RSz1KgmpxKsl6N8e4FApwkqbomFWLjbZsT4XPZ0rBJXn1q4eKNwPtPprf0H32xDnV68YM/+c43lIVWgZS4sksW3IvZH5NvZK8RDqEzlP9e2eL+VMKGVbbdazWLQK0FLjuUdtvOIp1ig17/m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436259|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.00669916-0.000523345-0.992777;FP=12185036613028283619|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033055230028;MF=wangshuaijie@awinic.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.YOP7P8n_1720777739;
-Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.YOP7P8n_1720777739)
-          by smtp.aliyun-inc.com;
-          Fri, 12 Jul 2024 17:49:07 +0800
-From: wangshuaijie@awinic.com
-To: krzk@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmitry.torokhov@gmail.com,
-	jeff@labundy.com,
-	kangjiajun@awinic.com,
-	krzk+dt@kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liweilei@awinic.com,
-	robh@kernel.org,
-	wangshuaijie@awinic.com
-Subject: Re: [PATCH V2 5/5] Add support for Awinic sar sensor
-Date: Fri, 12 Jul 2024 09:48:59 +0000
-Message-ID: <20240712094859.2395364-1-wangshuaijie@awinic.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <d659cd9c-86e6-4f77-9157-fd6a7b47ea31@kernel.org>
-References: <d659cd9c-86e6-4f77-9157-fd6a7b47ea31@kernel.org>
+	s=arc-20240116; t=1720778091; c=relaxed/simple;
+	bh=0EHyVYUm+nhOIMyjF0qXrLcKScZWSXFE3KlYuk5bhag=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dLqsZvjnyjVP12rfMSzFmaW5iswzgfEqR5UsisbPsAPrORLQppCB51e6uNpbLVG0tc0xmUVgsOAhYQ8tAb2ItN36ktKeKf49jg4/Fua71mmZjDSgg+30W6jCWRKuNi04J1QUH9dLCkq1hnmlEQty2+YszvXQQ2WUV0Nn2nkB6TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=abOh2T+A; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="abOh2T+A"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-59a47d5c22aso136812a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 02:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720778088; x=1721382888; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pFarToQcBAfs6/zZ3KxBjQqvHfbYLRHa6Rvj0qeALC8=;
+        b=abOh2T+AyxwvdZwl8sykbeEIh81eCN5aYImMrh7J34cBZ9uxG9mFlDU19sdVXqczRy
+         1WtD9Ls2HhmE/+9sUg1ux2d3bl9lwFLvxjGh9JZBPjOTCU3qFMZwgNubG2XFc/lJnqX5
+         EfD73p3jlDVDV2/SMT2lwvxrv6yQphWC/xbpxd6AUPcDjELcocOOj+YLjfEf603b7lQm
+         87wgefVutb7oqHJUpSvKHVfpMTv0IlZSVxYGDWKMg8YxlRRNI+lWuE3DketG493YECow
+         icLHoMAemr9tJvN7RQcPDgMwHH0Kj73qsdsUKTqOS8j4dAOFco6jRBNRr+1NAqrnuSHc
+         7R0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720778088; x=1721382888;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pFarToQcBAfs6/zZ3KxBjQqvHfbYLRHa6Rvj0qeALC8=;
+        b=B+eTKkAp1mI17rhIb2PLF2EYEYJpYmlNGp7drQYi+rFJ+SpXLHitW4scnGgwySrBuI
+         Yjh8n/5LvegpMe9gW/yMh14qBKHtzFaWABHU6mqtd5Sew2cIjzDSoJzygMz07U1P5jYj
+         IftNQQ6e9/yfxyV/4GVEmgj/8dRNX8mEOAmU0KW5Ijg7dJHSMsvA1iMeZpkjaDHiiZD0
+         kCE13+3kgjE1i20h9NfutBA+KJ5WcR1cG94D5gCGhLkvqPTVmntun3w0CDbj+0rYgv/B
+         ItGtLas0/VVcDDjET25XAPQISC4tGpO57Gf1PbE/uoimKT648wW+e0PRtUB585r6WSEP
+         NknA==
+X-Forwarded-Encrypted: i=1; AJvYcCXb9wuwQOZQfbWXpfid+X0Il8nVnYvJayP2kgmqNMQQWdCS6OKHyAD9+TN0FH6tX2sV5QO3sIRrr7hnz9swgHl4ezeIpmKPjZuWmQR8
+X-Gm-Message-State: AOJu0Yz4ghBRkP98Oz7A/hYSgclUd0yjiZ+BgHCl1PgNUqN431uUNuXn
+	CKc26uz5b6EIhYRKww7URXmVH+LMtd2a700A2YgACms03t9jFs3xoI/apmD54jSWDkD69RP5mlB
+	l
+X-Google-Smtp-Source: AGHT+IFe9k8flo1HTWUWxTj4wgCOcEsCxMxM2KjHvlE6NvwP3oNQDCf6EAaxugji8FXkF5AGVu/Tsw==
+X-Received: by 2002:a05:6402:2794:b0:58d:ebf9:4e2b with SMTP id 4fb4d7f45d1cf-594ba98f46bmr7884764a12.2.1720778086737;
+        Fri, 12 Jul 2024 02:54:46 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bc4e81a6sm4369823a12.49.2024.07.12.02.54.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jul 2024 02:54:46 -0700 (PDT)
+Message-ID: <512601f7-0299-487b-ba7d-7941cf1f0151@linaro.org>
+Date: Fri, 12 Jul 2024 11:54:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drivers/clocksource/qcom: Add missing iounmap() on
+ errors in msm_dt_timer_init() function.
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+To: Ankit Agrawal <agrawal.ag.ankit@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240712082747.GA182658@bnew-VirtualBox>
+ <a6ae5f72-76e2-4c80-8039-b3bb07ce3a3d@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <a6ae5f72-76e2-4c80-8039-b3bb07ce3a3d@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,=0D
-=0D
-On Wed, 5 Jun 2024 12:33:11, krzk@kernel.org wrote:=0D
->On 05/06/2024 11:11, wangshuaijie@awinic.com wrote:=0D
->> From: shuaijie wang <wangshuaijie@awinic.com>=0D
->> =0D
->> Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>=0D
->> | Reported-by: kernel test robot <lkp@intel.com>=0D
->> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>=0D
->> | Reported-by: Dan Carpenter <error27@gmail.com>=0D
->> ---=0D
->>  drivers/input/misc/Kconfig         |    9 +=0D
->>  drivers/input/misc/Makefile        |    1 +=0D
->>  drivers/input/misc/aw_sar/Makefile |    2 +=0D
->>  drivers/input/misc/aw_sar/aw_sar.c | 2036 ++++++++++++++++++++++++++++=
-=0D
->>  drivers/input/misc/aw_sar/aw_sar.h |   15 +=0D
->>  5 files changed, 2063 insertions(+)=0D
->>  create mode 100644 drivers/input/misc/aw_sar/Makefile=0D
->>  create mode 100644 drivers/input/misc/aw_sar/aw_sar.c=0D
->>  create mode 100644 drivers/input/misc/aw_sar/aw_sar.h=0D
->> =0D
->> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig=0D
->> index 6ba984d7f0b1..ac56fdd21839 100644=0D
->> --- a/drivers/input/misc/Kconfig=0D
->> +++ b/drivers/input/misc/Kconfig=0D
->> @@ -939,4 +939,13 @@ config INPUT_STPMIC1_ONKEY=0D
->>  	  To compile this driver as a module, choose M here: the=0D
->>  	  module will be called stpmic1_onkey.=0D
->>  =0D
->> +config AWINIC_SAR=0D
->> +	tristate "Awinic sar sensor support"=0D
->> +	depends on I2C=0D
->> +	help=0D
->> +	  Say Y to enable support for the Awinic sar sensor driver.=0D
->> +=0D
->> +	  To compile this driver as a module, choose M here: the=0D
->> +	  module will be called awinic_sar.=0D
->> +=0D
->>  endif=0D
->> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile=0D
->> index 04296a4abe8e..6ee1870ea677 100644=0D
->> --- a/drivers/input/misc/Makefile=0D
->> +++ b/drivers/input/misc/Makefile=0D
->> @@ -90,3 +90,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)		+=3D wm831x-on.o=0D
->>  obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)	+=3D xen-kbdfront.o=0D
->>  obj-$(CONFIG_INPUT_YEALINK)		+=3D yealink.o=0D
->>  obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)	+=3D ideapad_slidebar.o=0D
->> +obj-$(CONFIG_AWINIC_SAR)		+=3D aw_sar/=0D
->> diff --git a/drivers/input/misc/aw_sar/Makefile b/drivers/input/misc/aw_=
-sar/Makefile=0D
->> new file mode 100644=0D
->> index 000000000000..c357ecaa4f98=0D
->> --- /dev/null=0D
->> +++ b/drivers/input/misc/aw_sar/Makefile=0D
->> @@ -0,0 +1,2 @@=0D
->> +obj-$(CONFIG_AWINIC_SAR) +=3D awinic_sar.o=0D
->> +awinic_sar-objs :=3D ./comm/aw_sar_comm_interface.o aw_sar.o ./aw9610x/=
-aw9610x.o ./aw963xx/aw963xx.o=0D
->> diff --git a/drivers/input/misc/aw_sar/aw_sar.c b/drivers/input/misc/aw_=
-sar/aw_sar.c=0D
->> new file mode 100644=0D
->> index 000000000000..ab89fed65a6a=0D
->> --- /dev/null=0D
->> +++ b/drivers/input/misc/aw_sar/aw_sar.c=0D
->> @@ -0,0 +1,2036 @@=0D
->> +// SPDX-License-Identifier: GPL-2.0=0D
->> +/*=0D
->> + * AWINIC sar sensor driver=0D
->> + *=0D
->> + * Author: Shuaijie Wang<wangshuaijie@awinic.com>=0D
->> + *=0D
->> + * Copyright (c) 2024 awinic Technology CO., LTD=0D
->> + */=0D
->> +#include "./comm/aw_sar_chip_interface.h"=0D
->> +#include "aw_sar.h"=0D
->> +=0D
->> +#define AW_SAR_I2C_NAME		"awinic_sar"=0D
->> +=0D
->> +/*=0D
->> + * Please check which power_supply on your platform=0D
->> + * can get the charger insertion information, then select it.=0D
->> + * eg: "usb"/"charger"/"mtk-master-charger"/"mtk_charger_type"=0D
->> + */=0D
->> +#define USB_POWER_SUPPLY_NAME   "charger"=0D
->> +/*=0D
->> + * Check which of your power_supply properties is available=0D
->> + * for the charger insertion information and select it.=0D
->> + * eg: POWER_SUPPLY_PROP_ONLINE/POWER_SUPPLY_PROP_PRESENT=0D
->> + */=0D
->> +#define AW_USB_PROP_ONLINE	POWER_SUPPLY_PROP_ONLINE=0D
->> +=0D
->> +#define AW_I2C_RW_RETRY_TIME_MIN		(2000)=0D
->> +#define AW_I2C_RW_RETRY_TIME_MAX		(3000)=0D
->> +#define AW_RETRIES				(5)=0D
->> +=0D
->> +#define AW_SAR_AWRW_OffSET			(20)=0D
->> +#define AW_SAR_AWRW_DATA_WIDTH			(5)=0D
->> +#define AW_DATA_OffSET_2			(2)=0D
->> +#define AW_DATA_OffSET_3			(3)=0D
->> +#define AW_POWER_ON_SYSFS_DELAY_MS		(5000)=0D
->> +#define AW_SAR_MONITOR_ESD_DELAY_MS		(5000)=0D
->> +#define AW_SAR_OFFSET_LEN			(15)=0D
->> +#define AW_SAR_VCC_MIN_UV			(1700000)=0D
->> +#define AW_SAR_VCC_MAX_UV			(3600000)=0D
->> +=0D
->> +static struct mutex aw_sar_lock;=0D
->> +=0D
->> +static int32_t aw_sar_get_chip_info(struct aw_sar *p_sar);=0D
->> +static void aw_sar_sensor_free(struct aw_sar *p_sar);=0D
->> +=0D
->> +//Because disable/enable_irq api Therefore, IRQ is embedded=0D
->> +void aw_sar_disable_irq(struct aw_sar *p_sar)=0D
->> +{=0D
->> +	if (p_sar->irq_init.host_irq_stat =3D=3D IRQ_ENABLE) {=0D
->> +		disable_irq(p_sar->irq_init.to_irq);=0D
->> +		p_sar->irq_init.host_irq_stat =3D IRQ_DISABLE;=0D
->> +	}=0D
->> +}=0D
->> +=0D
->> +void aw_sar_enable_irq(struct aw_sar *p_sar)=0D
->> +{=0D
->> +	if (p_sar->irq_init.host_irq_stat =3D=3D IRQ_DISABLE) {=0D
->> +		enable_irq(p_sar->irq_init.to_irq);=0D
->> +		p_sar->irq_init.host_irq_stat =3D IRQ_ENABLE;=0D
->> +	}=0D
->> +}=0D
->> +=0D
->> +//Chip logic part start=0D
->> +//Load default array function=0D
->> +static int32_t=0D
->> +aw_sar_para_loaded_func(struct i2c_client *i2c, const struct aw_sar_par=
-a_load_t *para_load)=0D
->> +{=0D
->> +	int32_t ret;=0D
->> +	int32_t i;=0D
->=0D
->int32_t? So you send user-space driver to the kernel? That would explain=0D
->this terrible coding style, but it is a clear no-go.=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->=0D
->...=0D
->=0D
->> +static void aw_sar_monitor_work(struct work_struct *aw_work)=0D
->> +{=0D
->> +	struct aw_sar *p_sar =3D container_of(aw_work, struct aw_sar, monitor_=
-work.work);=0D
->> +	uint32_t data;=0D
->> +	int32_t ret;=0D
->> +=0D
->> +	ret =3D aw_sar_i2c_read(p_sar->i2c, 0x0000, &data);=0D
->> +	if (ret !=3D 0) {=0D
->> +		dev_err(p_sar->dev, "read 0x0000 err: %d", ret);=0D
->> +		return;=0D
->> +	}=0D
->> +	if (data =3D=3D 0 && p_sar->driver_code_initover_flag) {=0D
->> +		dev_err(p_sar->dev, "aw_chip may reset");=0D
->> +		aw_sar_disable_irq(p_sar);=0D
->> +		ret =3D aw_sar_chip_init(p_sar);=0D
->> +		if (ret !=3D 0)=0D
->> +			return;=0D
->> +	}=0D
->> +	queue_delayed_work(p_sar->monitor_wq, &p_sar->monitor_work,=0D
->> +			msecs_to_jiffies(AW_SAR_MONITOR_ESD_DELAY_MS));=0D
->> +}=0D
->> +=0D
->> +static int32_t aw_sar_monitor_esd_init(struct aw_sar *p_sar)=0D
->> +{=0D
->> +	p_sar->monitor_wq =3D create_singlethread_workqueue("aw_sar_workqueue"=
-);=0D
->> +	if (!p_sar->monitor_wq) {=0D
->> +		dev_err(&p_sar->i2c->dev, "aw_sar_workqueue error");=0D
->> +		return -EINVAL;=0D
->> +	}=0D
->> +	INIT_DELAYED_WORK(&p_sar->monitor_work, aw_sar_monitor_work);=0D
->> +	queue_delayed_work(p_sar->monitor_wq, &p_sar->monitor_work,=0D
->> +			msecs_to_jiffies(AW_SAR_MONITOR_ESD_DELAY_MS));=0D
->> +=0D
->> +	return 0;=0D
->> +}=0D
->> +=0D
->> +static void aw_sar_sensor_free(struct aw_sar *p_sar)=0D
->> +{=0D
->> +	if (g_aw_sar_driver_list[p_sar->curr_use_driver_type].p_chip_deinit !=
-=3D NULL)=0D
->> +		g_aw_sar_driver_list[p_sar->curr_use_driver_type].p_chip_deinit(p_sar=
-);=0D
->> +}=0D
->> +=0D
->> +=0D
->> +/* Drive logic entry */=0D
->> +static int32_t aw_sar_i2c_probe(struct i2c_client *i2c)=0D
->> +{=0D
->> +	struct aw_sar *p_sar;=0D
->> +	int32_t ret;=0D
->> +=0D
->> +	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_I2C)) {=0D
->> +		pr_err("check_functionality failed!\n");=0D
->> +		return -EIO;=0D
->> +	}=0D
->> +=0D
->> +	p_sar =3D devm_kzalloc(&i2c->dev, sizeof(struct aw_sar), GFP_KERNEL);=
-=0D
->=0D
->Heh, so you upstream 10 year old code?=0D
->=0D
->sizeof(*)=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> +	if (!p_sar) {=0D
->> +		ret =3D -ENOMEM;=0D
->> +		goto err_malloc;=0D
->=0D
->That's just return.=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> +	}=0D
->> +=0D
->> +	p_sar->dev =3D &i2c->dev;=0D
->> +	p_sar->i2c =3D i2c;=0D
->> +	i2c_set_clientdata(i2c, p_sar);=0D
->> +=0D
->> +	//1.Judge whether to use regular power supply. If yes, supply power=0D
->> +	ret =3D aw_sar_regulator_power(p_sar);=0D
->> +	if (ret !=3D 0) {=0D
->> +		dev_err(&i2c->dev, "regulator_power error!");=0D
->> +		goto err_malloc;=0D
->> +	}=0D
->> +=0D
->> +	//2.Get chip initialization resources=0D
->> +	ret =3D aw_sar_get_chip_info(p_sar);=0D
->> +	if (ret !=3D 0) {=0D
->> +		dev_err(&i2c->dev, "chip_init error!");=0D
->=0D
->DON't SCREAM! No need!=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> +		goto err_chip_init;=0D
->> +	}=0D
->> +=0D
->> +	//3.Chip initialization process=0D
->> +	ret =3D aw_sar_init(p_sar);=0D
->> +	if (ret !=3D 0) {=0D
->> +		dev_err(&i2c->dev, "sar_init error!");=0D
->> +		goto err_sar_init;=0D
->> +	}=0D
->> +=0D
->> +	if (p_sar->dts_info.monitor_esd_flag) {=0D
->> +		ret =3D aw_sar_monitor_esd_init(p_sar);=0D
->> +		if (ret !=3D 0) {=0D
->> +			dev_err(&i2c->dev, "monitor_esd_init error!");=0D
->> +			goto err_esd_init;=0D
->> +		}=0D
->> +	}=0D
->> +=0D
->> +	dev_dbg(&i2c->dev, "probe success!");=0D
->=0D
->No. Drop all silly function entry/exit/success messages.=0D
->=0D
->EVERYWHERE.=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> +=0D
->> +	return 0;=0D
->> +=0D
->=0D
->=0D
->> +static const struct of_device_id aw_sar_dt_match[] =3D {=0D
->> +	{ .compatible =3D "awinic,aw96103" },=0D
->> +	{ .compatible =3D "awinic,aw96105" },=0D
->> +	{ .compatible =3D "awinic,aw96303" },=0D
->> +	{ .compatible =3D "awinic,aw96305" },=0D
->> +	{ .compatible =3D "awinic,aw96308" },=0D
->=0D
->So all are compatible... express it in bindings.=0D
->=0D
-=0D
-Yes, all of them are compatible.=0D
-=0D
->> +	{ },=0D
->> +};=0D
->> +=0D
->> +static const struct i2c_device_id aw_sar_i2c_id[] =3D {=0D
->> +	{ AW_SAR_I2C_NAME, 0 },=0D
->> +	{ },=0D
->> +};=0D
->> +MODULE_DEVICE_TABLE(i2c, aw_sar_i2c_id);=0D
->> +=0D
->> +static struct i2c_driver aw_sar_i2c_driver =3D {=0D
->> +	.driver =3D {=0D
->> +		.name =3D AW_SAR_I2C_NAME,=0D
->> +		.owner =3D THIS_MODULE,=0D
->=0D
->NAK=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> +		.of_match_table =3D aw_sar_dt_match,=0D
->> +		.pm =3D &aw_sar_pm_ops,=0D
->> +	},=0D
->> +	.probe =3D aw_sar_i2c_probe,=0D
->> +	.remove =3D aw_sar_i2c_remove,=0D
->> +	.shutdown =3D aw_sar_i2c_shutdown,=0D
->> +	.id_table =3D aw_sar_i2c_id,=0D
->> +};=0D
->> +=0D
->> +static int32_t __init aw_sar_i2c_init(void)=0D
->> +{=0D
->> +	int32_t ret;=0D
->> +=0D
->> +	ret =3D i2c_add_driver(&aw_sar_i2c_driver);=0D
->> +	if (ret) {=0D
->> +		pr_err("fail to add aw_sar device into i2c\n");=0D
->> +		return ret;=0D
->> +	}=0D
->=0D
->Srsly, this is just NAK. This code is way too poor. Get some internal=0D
->help from awinic, because this should not be sent.=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->> +=0D
->> +	return 0;=0D
->> +}=0D
->> +=0D
->> +module_init(aw_sar_i2c_init);=0D
->> +static void __exit aw_sar_i2c_exit(void)=0D
->> +{=0D
->> +	i2c_del_driver(&aw_sar_i2c_driver);=0D
->> +}=0D
->> +module_exit(aw_sar_i2c_exit);=0D
->> +MODULE_DESCRIPTION("AWINIC SAR Driver");=0D
->> +MODULE_LICENSE("GPL v2");=0D
->> diff --git a/drivers/input/misc/aw_sar/aw_sar.h b/drivers/input/misc/aw_=
-sar/aw_sar.h=0D
->> new file mode 100644=0D
->> index 000000000000..7a139f56e9c3=0D
->> --- /dev/null=0D
->> +++ b/drivers/input/misc/aw_sar/aw_sar.h=0D
->> @@ -0,0 +1,15 @@=0D
->> +/* SPDX-License-Identifier: GPL-2.0-only */=0D
->> +#ifndef AW_SAR_H_=0D
->> +#define AW_SAR_H_=0D
->> +=0D
->> +void aw_sar_disable_irq(struct aw_sar *p_sar);=0D
->> +void aw_sar_enable_irq(struct aw_sar *p_sar);=0D
->> +=0D
->> +int32_t aw_sar_soft_reset(struct aw_sar *p_sar);=0D
->> +int32_t aw_sar_check_init_over_irq(struct aw_sar *p_sar);=0D
->> +int32_t aw_sar_update_fw(struct aw_sar *p_sar);=0D
->> +int32_t aw_sar_load_def_reg_bin(struct aw_sar *p_sar);=0D
->> +void aw_sar_mode_set(struct aw_sar *p_sar, uint8_t curr_mode);=0D
->> +int32_t aw_sar_update_reg_set_func(struct aw_sar *p_sar);=0D
->=0D
->=0D
->Why is all this needed for one file and why is it here?=0D
->=0D
-=0D
-The patch for v3 will fix these issues.=0D
-=0D
->Best regards,=0D
->Krzysztof=0D
-=0D
-Kind regards,=0D
-Wang Shuaijie=
+On 12.07.2024 11:51 AM, Konrad Dybcio wrote:
+> On 12.07.2024 10:27 AM, Ankit Agrawal wrote:
+>> Add the missing iounmap() when clock frequency fails to get read by the
+>> of_property_read_u32() call, or if the call to msm_timer_init() fails.
+>>
+>> Signed-off-by: Ankit Agrawal <agrawal.ag.ankit@gmail.com>
+>> ---
+> 
+> For your future submissions: run:
+> 
+> /scripts/checkpatch.pl -g $(git describe --abbrev=0)..
+> 
+> to run some static checks, such as "title is rather long"
+> 
+> 
+> ..but I don't mind!
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Also:
+
+Fixes: 6e3321631ac2 ("ARM: msm: Add DT support to msm_timer")
+
+Konrad
