@@ -1,138 +1,110 @@
-Received: from mail1.perex.cz (mail1.perex.cz [77.48.224.245])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE0017622F;
-	Fri, 12 Jul 2024 16:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.48.224.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234B21482EE;
+	Fri, 12 Jul 2024 16:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720801541; cv=none; b=Jv6dCOvwmXhPfvNgiEgTCQHiA9SXK1pVf56J2psOZerVhWIUKcAXhcoxDjyhQqrv81hqjcjBOTo75ThX8ilQ8vHIyqgy6VWgbYN1JmntTMC1BmuBmrj8yyT2KVyAKhm3OtCVJV0C3vOXqrTBMc96xruac0RV9qs96nRxEz+zS2g=
+	t=1720801614; cv=none; b=HqUOdoZEMJ5fGCG4IDjvIp9F5TP5WvJ3NOVXmpiMtd0wxeiuL81mzxpDMAW7D+CECY88cN6JyhjY72LIDOB7H50zok5UhtV5rXw4wVg2fYNytLA+JVLs2+FpLyhCiHHrtTXWsm16jGZ2fo5MVvam86+3+JWlweUxaymOalnDgLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720801541; c=relaxed/simple;
-	bh=Z5kmgF9LvYBeJxCKb81WkdtZxSg4mhdw/2J4+GixorM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ea0Ayz+bRQDy7ZhS9DLVkP5C4XfBvWtUI4d4nwOAfkhSLlZXhssVVoISLpAzTeRwukt38MVQm8shnPT+H3+kvkHccwZMLb8WcWpX1pQ+NW2XO7big1daSmT36jfd9JFHCD+R9LfDlEKBtD33xvCaeApuWlXqoJLBBxA9LvYJThs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz; spf=pass smtp.mailfrom=perex.cz; dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b=GhgfAKxw; arc=none smtp.client-ip=77.48.224.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perex.cz
+	s=arc-20240116; t=1720801614; c=relaxed/simple;
+	bh=8xueuFh66IOZH5nB59tpVHpKkEs7lwbBx9lTmbkBLRw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jKyyMytIhsyfKesERBINJZ6y7eGcMggVrDyQRnGlNXSQ1xzFQLYoLeeEKU+LdkzHL/BQt1XEPfY85b/8V6D7BRRFcSqBUqZeutSiIEmV0QWLGJstxEQ2ZdBnTAkm0klZHDNwd4pI990NsnV91dnjPCgeJciZrE6izGRY9rwLSWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=fN8LIlVQ; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="GhgfAKxw"
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-	by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id E04A33622B;
-	Fri, 12 Jul 2024 18:25:28 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz E04A33622B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-	t=1720801528; bh=5yaBTIvXUpa60kxJ7bIM2RSzaH80TJaXXzx7FGpu3zQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GhgfAKxwA51q91q4Kj4kCDThva9oo67LRJiv23szUaLjiMpN2dJ6/cvkfFlINwZFT
-	 WClrR2eGx1t+Ea6pw9A7BkQGy4BbCkx5seMK0LsGyaEnpMiP6qmZgvjYBuugx5gB8g
-	 WKrmBp4cVIZHd7OA8dfUk1NHk9LYyVTgQHc5pbXE=
-Received: from [192.168.100.98] (unknown [192.168.100.98])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: perex)
-	by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-	Fri, 12 Jul 2024 18:25:21 +0200 (CEST)
-Message-ID: <c1be6bec-90f5-4bb3-b6b0-8524095fc490@perex.cz>
-Date: Fri, 12 Jul 2024 18:25:21 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="fN8LIlVQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720801600; x=1721406400; i=spasswolf@web.de;
+	bh=aJ0Pj4SQBF9yDLIqf75TpxCyvDNf0udTd7nS3n1EoaA=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=fN8LIlVQyTnmECLU0M0z/BUZkXiK/m52jAJjnNeVr0twJNamRii6LvLxnSbdRFoZ
+	 n3fwwV49V+scl5+ex6rSmoFVagz7xiDuLPeh7gppzI03w6b4EhY+6oIGIjcOBODne
+	 fKd4kCqnjbr8kg3uBLY8Mpo1OuE1T/RMpypFSGhbp5I7rXcu5OBYcXc2ypgXiuj7R
+	 gN5zWICRCU36MAc3vsDkZjqXGAa14yBXI3ej9qrg853byXkuewJHdW1faahjqbkVa
+	 VDWdr/E5fm5cNk0VXM/uG3wRKnuhNsOJUgGgUBptcUwyU28pB+5IIebPpb+EuXlNF
+	 kEqruAXzgNVyzBz4iQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([84.119.92.193]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N4vNe-1sKiQ834rM-015T0S; Fri, 12
+ Jul 2024 18:26:40 +0200
+Message-ID: <6407b0ef1ee38cfa29c5b7ce9f185cda04209f66.camel@web.de>
+Subject: Re: commit 1c29a32ce65f4cd0f1c causes Bad rss-counter state and
+ firefox-esr crash in linux-next-20240613
+From: Bert Karwatzki <spasswolf@web.de>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Jiri Olsa <olsajiri@gmail.com>,
+ linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
+ linux-next@vger.kernel.org
+Date: Fri, 12 Jul 2024 18:26:39 +0200
+In-Reply-To: <eee7hvd6vh4v65ta5fl7iacth7yesvryktxouu34uy4cxpxalm@ngeeuayw2lxp>
+References: <20240712121800.3049-1-spasswolf@web.de>
+	 <20240712121800.3049-2-spasswolf@web.de>
+	 <eee7hvd6vh4v65ta5fl7iacth7yesvryktxouu34uy4cxpxalm@ngeeuayw2lxp>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kselftest/alsa: Use card name rather than number in test
- names
-To: Mark Brown <broonie@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Takashi Iwai <tiwai@suse.com>,
- Shuah Khan <shuah@kernel.org>, linux-sound@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240711-alsa-kselftest-board-name-v1-1-ab5cf2dbbea6@kernel.org>
- <7cd921b3-fed9-4b0c-9ba8-381e45ef4218@perex.cz>
- <b3fdbb63-067b-4ff4-8fd8-1c2455a553a5@sirena.org.uk>
- <877cdrt3zc.wl-tiwai@suse.de> <e4962ea0-3f03-43b5-b773-68abe1d73cc9@perex.cz>
- <bb42afb8-48a7-4daf-b28b-b82bd5c77d57@sirena.org.uk>
-From: Jaroslav Kysela <perex@perex.cz>
-Content-Language: en-US
-Autocrypt: addr=perex@perex.cz; keydata=
- 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
-In-Reply-To: <bb42afb8-48a7-4daf-b28b-b82bd5c77d57@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kivOzDX+2AGX0oejXMWjRdC8XotU2+/61jOD6zt7KRCMCCagRq7
+ jI38Hh54D2depuMgJ8pGvgit4ld4Zpuwo/BNwhM46/BgsdY1wxNyjR+l4qYgKlf3sEHOUf8
+ frJA3HgxLmGC3lXy/jWVe8hiG7vAlVT7GSDjWIpLzkQK1DAcPW9oJy6O+yTdFne0LzuhpR4
+ wgqmiT53CtT1R7BPjXRpQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RpdpzLKFOQ0=;+wFm20eCSAwG/y9n5H6g+W74OoT
+ +NQU47PuQXQxfoEvu2PKlwP+FAJA3dN3mrgbxfRLCRxd/xUf5LT2ITLUz5kgQOBA0s5+Hr+kc
+ vIfBnovGWgDUcfoN8FJsGpwYihazJYkOYJS40uinWCZl5fzdXKBWMJqUAfL0SBaoDqNWl1zZO
+ 9CXH0tHlBPfZ5edV6IBn3iMbCzQgaYlces/x3MZMOFga9ZWTipciyzmAIzxnv8yUnPQRBe2d1
+ gsP25ZULjbzgW1Gx+UaeDjlp5G4P7UP3h3tGaUPvSUqmGq46LnOaNTF30JnBENB6riwi4MatU
+ gda1YXilQCu6CgrNkMCL61kgYQ/nAELqwcvPa+7h8j7H8MCpaQZCgo7Z8enhunwcn800SxV/q
+ jWHwshbVCXPuHVVrA5NmHDgG8C9b2RAm2PQCRoTbLgUYzh+JP+4rJYYSVH8ZmUGH+oAp+GX0N
+ H3W9MKwuR3jh0xFiUWRJspq1TdhVHxwm9DXPUlCjAtL1X9i73VkTKt9qxmut7dKvEYzxQfeBW
+ 0rdVxKJXY7gOA3CCdEVzkepn4Gfi5prXKEw5m9kQP3DaOFqVWqlJaRWAuSXGhHR9Gw6phRNtg
+ OjBuB90Y21Bk1iDjwtH6RSBzdiX+wg6142DsYzKCAT8FCgVL0W28sYhFqKK4E5QXj7KGyEc0A
+ 6hNvaEJ5t+Ztcuqk/FY6H+XkSARm2D9x5LH+8GAJe7j/0UgZVspcPCpiFjhY7bcNAUSdj4qd6
+ OUMZObbiRmY/2h2rapoU5cgLsRY94k182OXYt8mfXlA+dx/3ZSNfH2zcAhXF0Wogx+vVZgYZm
+ v1DDU35BzCyg5nBqw57CQkmQ==
 
-On 12. 07. 24 15:00, Mark Brown wrote:
-> On Fri, Jul 12, 2024 at 11:20:05AM +0200, Jaroslav Kysela wrote:
->> On 12. 07. 24 10:21, Takashi Iwai wrote:
-> 
->>> OTOH, longname can be really ugly to read, and it can vary because it
->>> often embeds address or irq numbers in the string.
-> 
-> Capturing that variation is one of the goals - it should mostly be
-> stable between runs.
-> 
->>> If a general name is the goal, how about using shortname instead?
-> 
->>> Or use id field, as Jaroslav suggested, but without the card number
->>> suffix; then it's unique among multiple cards.
-> 
->> I prefer this (use only ID field). This string can be also set in the user
->> space using sysfs/udev, so the administrator may change it if the default is
->> not ideal.
-> 
-> The trouble with the ID field is that it's too short and seems likely to
-> create collisions, for example HDA stuff just seems to default to NVidia
-> for nVidia cards which seems very likely to create collisions if someone
-> has two graphics cards in their system.
+Am Freitag, dem 12.07.2024 um 11:38 -0400 schrieb Liam R. Howlett:
+> * Bert Karwatzki <spasswolf@web.de> [240712 08:18]:
+> > I did some experiments on the rss counter bug. The next patch is made =
+for linux-next-20240613
+> > with commit 1c29a32ce65f4cd0f1c0f9 reverted. Then I simply inlined the=
+ code of do_vmi_unmap()
+> > and do_vmi_align_munmap() into mmap_region(). This version of the code=
+ works fine and does not
+> > show the rss counter bug.
+>
+> Are you still working with v1 of this patch set?
+>
+> I root-caused the rss counter issue and seg fault to the fact that next
+> or prev may be expanded and I was using the new start/end on munmap() in
+> the completion.  This was fixed in subsequent patches.
+>
+> I've sent v4 recently, but will have to a v5 to back off the removal of
+> arch_unmap() for PPC.
+>
+> ...
+>
+> Thanks,
+> Liam
 
-The default IDs are always unique - see snd_card_set_id_no_lock() in 
-sound/core/init.c . Basically, the suffix will follow the device probe order 
-in this case.
+Sorry, that was a mistake when using git send-email while working on anoth=
+er bug
+I accidently sent this old mail. I actually have tested the v3 and v4 patc=
+hsets
+on linux-next up to 2024711 with no error. I havent't tested v4 on linux-
+20240712, yet, because next-20240712 has a deadlock issue:
+https://lore.kernel.org/all/20240712080414.GA47643@google.com/
+(while sending a mail to this issue, I accidently send the old mail, too)
 
-				Jaroslav
-
--- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
-
+Bert Karwatzki
