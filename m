@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B6410F7
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9DF152500;
+	Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720779633; cv=none; b=gfw2CDSAKYkTGv6gTMHcE/UNt3YiPpWcSWIMa0QwEcYrTKGna0utZ8PGExVJaTWmrB7uV/fjJEEcnoCRoiuOYBoRCF/+dg8/hlbL0/uZLR3dqDN5lEAmxcvGT4B2I9CsGagTv/TFa2vU/4lw+NN5Ka5St3mM2vW0RNTQ+B/j1lg=
+	t=1720779633; cv=none; b=GyngVUEuWDwdcW1ReeiMcAjwg3gmoiyAaFZSPu2NfSAhjIAdi5+/l+rYHnlaLmyIz+4/e4utlJ3+brpjlL8BrAvLWwyxsU5SGc084KP4m1Q8YmnD7DVpzYvbxZ7OlZdpMQ1CzZ31z4Q3jon8fjSAOEMSp68YvUvRv5R0FF1cUqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720779633; c=relaxed/simple;
-	bh=saXSXc7EtV5Q2Yrc557rIZq81TgZK3+FXyLIFKgsj6M=;
+	bh=VVoIxpcBpsu5DTyIieNUadbasv+xGN5WhTLbUa6mR/c=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=HgXVNqvtGnPGgSGEcrCva0uD3XaLcEX32szcGu+kVC/J2zj+SVCjW+qORqBQCVBUgDe3+4oT+GV54a1ypAA0TppnpzARnimXdO1ar2nxRPwXkokmzCBXRDxrrV4ehOoAOSaySZKvRT862+NMIF9MFuk53Fgu+ArE6LpzfPJj0oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HprjVqNK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=lZ1lqtg80/x17W1ZwNJNVOyja4jYyr8DW88RUW/jLl9db/cSheCF6h/Cwd7tb/xfaeD0TTIHKXrN8DRPVEvmC2qKp7MYY3Lq3iS8i6Lr3Cc6XhKu+D51xOPJZkMK5i3S661lkZopq3ZXjWOkw8+3d5TI3CDcvcu5mffA3DF1n/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuCJckfV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HprjVqNK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 844FBC4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuCJckfV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A3984C4AF0B;
 	Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720779632;
-	bh=saXSXc7EtV5Q2Yrc557rIZq81TgZK3+FXyLIFKgsj6M=;
+	bh=VVoIxpcBpsu5DTyIieNUadbasv+xGN5WhTLbUa6mR/c=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HprjVqNKWKBnZEqhy9YZNpR8SxioY9YsM0R/jhRIH+Y2VBO4L3qw4NIRbj4rIh/DV
-	 i0nWF6kaTkK1AU4pLuiwo8Ad3XiaKG/9qKBIVFOoV08s0pFhEezrE6jcqm4et/jC1J
-	 N3yIidI0F5ncopxbLfcZqMiOtoVkfdXeFvPEhoKVaSpw5/JvJvo/5HgSp0BkMryUyO
-	 swlFycGc4fVcuTeQX9LDrOqO0f/bB6vuLwsiFOp6qti3Wr2Epk8WKWEdOMuAA12agF
-	 MGmimgGkwfaZiOq5eOsbk/ZE8pDDH3kpd8KiBYvuRGu7TMfamDS79z1j2u0CI7HppG
-	 Tdxa7gzffkF/Q==
+	b=HuCJckfV+Y2YomYDLLyNFm4QYZDL+JVt6WlrvWFNYv6yVHh+6d8bHsc2cHao9BEVH
+	 7+E5qsJrddW46aPiQAOXRfzEHH1QqtIIybderNU55GqK6rQJTon8+Zx/clW7BIkc1m
+	 b5VBcEAyekiCYDfxuO662s8FQXmWEecRNfBw9b63v2EiczLsNSsrsaatrWkwY3RWFZ
+	 AXhm4TZtuLKSkDy/3obgSBFF/UuPVIfScVJggzpu3/xoTWaV450mdXkWhUppfUQJfF
+	 SrWD0hBQ7HXir7SIl28OHO2epJ8m/fkNAZEV20EujfQPjAF/A1C7Gu0JV6flCEimTN
+	 j/JbUo4xYZn+Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 78381C433E9;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 90E99C43468;
 	Fri, 12 Jul 2024 10:20:32 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,41 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v5] riscv: Optimize crc32 with Zbc extension
+Subject: Re: [PATCH v5] riscv: hwprobe: export highest virtual userspace address
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <172077963248.4770.592373890802161820.git-patchwork-notify@kernel.org>
+ <172077963258.4770.205626830375405089.git-patchwork-notify@kernel.org>
 Date: Fri, 12 Jul 2024 10:20:32 +0000
-References: <20240621054707.1847548-1-xiao.w.wang@intel.com>
-In-Reply-To: <20240621054707.1847548-1-xiao.w.wang@intel.com>
-To: Wang@ci.codeaurora.org, Xiao W <xiao.w.wang@intel.com>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, charlie@rivosinc.com,
- andy.chiu@sifive.com, conor.dooley@microchip.com, greentime.hu@sifive.com,
- ajones@ventanamicro.com, heiko@sntech.de, david.laight@aculab.com,
- haicheng.li@intel.com, linux-kernel@vger.kernel.org
+References: <20240410144558.1104006-1-cleger@rivosinc.com>
+In-Reply-To: <20240410144558.1104006-1-cleger@rivosinc.com>
+To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@ci.codeaurora.org
+Cc: linux-riscv@lists.infradead.org, corbet@lwn.net, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rehn@rivosinc.com, charlie@rivosinc.com,
+ sorear@fastmail.com, jrtc27@jrtc27.com
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Fri, 21 Jun 2024 13:47:07 +0800 you wrote:
-> As suggested by the B-ext spec, the Zbc (carry-less multiplication)
-> instructions can be used to accelerate CRC calculations. Currently, the
-> crc32 is the most widely used crc function inside kernel, so this patch
-> focuses on the optimization of just the crc32 APIs.
-> 
-> Compared with the current table-lookup based optimization, Zbc based
-> optimization can also achieve large stride during CRC calculation loop,
-> meantime, it avoids the memory access latency of the table-lookup based
-> implementation and it reduces memory footprint.
+On Wed, 10 Apr 2024 16:45:57 +0200 you wrote:
+> Some userspace applications (OpenJDK for instance) uses the free MSBs
+> in pointers to insert additional information for their own logic and
+> need to get this information from somewhere. Currently they rely on
+> parsing /proc/cpuinfo "mmu=svxx" string to obtain the current value of
+> virtual address usable bits [1]. Since this reflect the raw supported
+> MMU mode, it might differ from the logical one used internally which is
+> why arch_get_mmap_end() is used. Exporting the highest mmapable address
+> through hwprobe will allow a more stable interface to be used. For that
+> purpose, add a new hwprobe key named
+> RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS which will export the highest
+> userspace virtual address.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v5] riscv: Optimize crc32 with Zbc extension
-    https://git.kernel.org/riscv/c/a43fe27d6503
+  - [v5] riscv: hwprobe: export highest virtual userspace address
+    https://git.kernel.org/riscv/c/c9b8cd139c1d
 
 You are awesome, thank you!
 -- 
