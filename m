@@ -1,65 +1,67 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690F02EAE6
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C59C32C8E;
+	Fri, 12 Jul 2024 05:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761548; cv=none; b=J7RKBar/9LDGhaoe/0eVmV/eowUxr4/IddW6V//5RqjgT37Ci3ChuU7/fK+yaiKCdSZC6s23QrYmNyezyRZBYYaHn/wTp1Hoii/VuuvNc6CBpDqEhix1VQdv5Hc7xmN+VrwgnpSxd5yb42VacyfV6weTQy/NP0afHy1IJxaqmjM=
+	t=1720761548; cv=none; b=rIpqPRSgtVQkNp9da0fELXSphsn4I2oGsEhe9Lm/ttu3XIHVDDWGZJKbGuvvq2F0rsTH6Mb2skA3PcKWLd1uwgpQyLDEGB9xZ5b0lp10wzxXWQivAQJC6OM+dpXgo6EH9ye0g8kIveIhDE0i9DrhJWjq23WHYyCs0HPCqUXL/3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720761548; c=relaxed/simple;
-	bh=vdYvQfcQu1mt93UPykwvclLXnIntkTvh7GSWCA4dW2s=;
+	bh=7v5J+LI43kRT+11Ciog0l20mx78IvpIS1F9DPhEZPDU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A8ChtScIC6BnQNunDcN9ob8CZ9FtSLL+V+USgB7JGLR+kM1Ob56jN5MpOnMRLWVp1Nl9Tf88QY4hU5PlbgU1q7iFSNYD0MvARP1GOXtfKr8ubsz6wfSaO0i6qq/WtaHAGGkUztW0imY17xJuVY8SSo2nrFOCl44V/Nz1tjOF9d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DcxBJ++I; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 MIME-Version; b=u80BuP2SddQXss+tN3Vm2WkSkxsOfolJ3a/FEUhhooRKkOADBYdxzdXrzyMoh3unO4nQH2LoegIIKOj4UwCKl5hJXhj5djEu/mK+6gPHNdnMOWbQWz7IERH9qkFQSfIcwa/q8KMDmJaTdwZkdHOuHl1yAllpKu/Xt20HJXl7l0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ew7toQ4/; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DcxBJ++I"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7036e383089so909634a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:19:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew7toQ4/"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-25d634c5907so915742fac.2;
+        Thu, 11 Jul 2024 22:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720761545; x=1721366345; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720761545; x=1721366345; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ECaTUdajKrss2jyo4a5iaGCo7q7p1EgM+Xi9/dziakE=;
-        b=DcxBJ++IqOrORfS1Rqen2SVdkyzNAjPUj/F0bTCwPVTkMZJCMjCosR/Ss9lBfLRoiY
-         BjslASMeb3Wf2Nw2g8JlrCrZRsEdTY6YmcyT2nU1hFEzFv7cgSMdeBfO27oYOeEruxXV
-         zZqPoHXOFBsKFHTFi9BtnRQqBfKvzPeMZcpdQ=
+        bh=5F0niynViJ6QyVEvqCOujqexF9M4RH7/E0H24Q65TVU=;
+        b=Ew7toQ4/lfmvwi1q2Qxx+zNuUG3rqGoz7RHDcf0OT/wyAMNDQVk/IgOYBSPQvgDZjR
+         KFLNXCqhBmyRTxBnND7Jx9ZNVAk4Dbe7AH7nNYErL6aqRuTDiV+PQPKEdFa+gAZPvevz
+         XZJtY9o8Vpg8z4bZ8nMpr5qDXLIMSRdCZUfZdBSfG80YPAsyhwmqu2vCvkMRLvenCtZO
+         eqWByCTRZ+X4DMr++oKAkPcKH6W/l+YBwO5nQDFIBi6Y2Rq5mXtxkDGqbmtYlwYWhNdi
+         37SaVaZL6iz8RUNzK3arKZitDvXhE4VyNB7yhQjNjp7z+//M6YH/33bOrLKvx6ubisRd
+         byOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1720761545; x=1721366345;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ECaTUdajKrss2jyo4a5iaGCo7q7p1EgM+Xi9/dziakE=;
-        b=BYDuv857NTAsSq3HtWj0Yqb+FVL+2Q5Yh3/DY76EZg7N5sng0LK8+I2qjJZECPfZJ4
-         iKIQ4V+XEp2yYtwH8EX1PN514QjFEJKM3p1/7UFVl9yrCYr5wsxz39Zn+5M+ueJhtY4Y
-         VODOvvcV2H/zZpS/VLwWLwJRJWPxrYMnxzOP2iMuHPNdIu8JrevfQbN1LsgwvvN2OGcT
-         vT+sEr8/BkBiIp4mL7XXEGYDmaa8ITsOFuEyThzpMpdM5UZhYhOo95GVHHUomKqOFff4
-         WdGwD1fq9G8lWB9gn6CNkNoxm0Vj+UVKpyKWjQLepke1FGDI4fAScvbwq3qSGGmbUbPW
-         DcBg==
-X-Gm-Message-State: AOJu0Yyw0BAdjww62zN/TjBY4vUtbZsQVzu+A6MZf5Vr+D5APIRLOMKj
-	GA4Z6Sr0N0zp0OoGbEzE+NlDpLlDe7flZ7KKwV1Xm2Oi6X+dYajWTsjj4i4GrQ==
-X-Google-Smtp-Source: AGHT+IFrDm6735UI/63EjXzjrotK6RyvKolr4AO3e1cwckwjGynCvF7pulss+Ma/8qhI3+63C1uKjQ==
-X-Received: by 2002:a05:6830:849:b0:704:46de:5820 with SMTP id 46e09a7af769-70446de5c70mr9419292a34.34.1720761545505;
+        bh=5F0niynViJ6QyVEvqCOujqexF9M4RH7/E0H24Q65TVU=;
+        b=uORfHFsauqMXwVrVTj9dx66g4/lBuK9dA7orxMOzxlB9T8xbje/DMTSB4/V4ky5t4u
+         /fDXDzeTDXirU5no/lIGZECvrMwpDjXkIMOh7SN+zGXYPRM1WYQNv7cOTnDAMBDO+KSS
+         dIbyqwIEKKDeHtKqO87uhrIasYeoLb9CBYJ7cxLoHvz1gODQhFD5hxDpAduiV+TLZ6si
+         aWjQvuqUWtwG4tQ+vINfL4xW506kQDbo6STxUsw0Cy9e84HZUYkUhx+zutoSUuVI054l
+         2IttoYb77bD0lrPuKRsd4XMkIzq0Wh1FTMCV5I4OWFYwCAzCk2YgUhP5dpniyuu8Nt+n
+         5jgA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4VXgi4MFGYLNvgumHhmApWe43ePwdpbhlCYB8h3VdS4aTyRc3V76yKcurKt5DaLPS3Mv0TtdQ1uPnSCcOf3XgCYQH/36cFhKJ6jE1
+X-Gm-Message-State: AOJu0YyQP15h2PMdF5R9QZzleF0F1a+hH9vzQJ/kU0/Z3eoxiQ8MGmy6
+	olJ92B+3YrqgukwPEy/eFDGaZV8JpwWeghgOy6JPs68Q0S4jqygzLdQk7g==
+X-Google-Smtp-Source: AGHT+IGBDZpckVwtpgJ6NTT8H8+EV1SqceOhmbJsUjC/PtJCG8GqY2skiKGGmMTea8ErZhlbLQWI+g==
+X-Received: by 2002:a05:6870:3287:b0:25e:1c7c:3de9 with SMTP id 586e51a60fabf-25eae7efbdcmr8459914fac.15.1720761545321;
         Thu, 11 Jul 2024 22:19:05 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:15f3:5252:ec56:52ae])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967851sm6553436b3a.109.2024.07.11.22.19.04
+Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:acda:de52:5c83:f72d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d669d525csm4328972a12.73.2024.07.11.22.19.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:19:05 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Nick Terrell <terrelln@fb.com>
-Subject: [PATCH v6 03/23] lib: zstd: fix null-deref in ZSTD_createCDict_advanced2()
-Date: Fri, 12 Jul 2024 14:18:14 +0900
-Message-ID: <20240712051850.484318-4-senozhatsky@chromium.org>
+        Thu, 11 Jul 2024 22:19:04 -0700 (PDT)
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: linux-input@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 7/8] Input: usbtouchscreen - use guard notation when acquiring mutexes
+Date: Thu, 11 Jul 2024 22:18:49 -0700
+Message-ID: <20240712051851.3463657-7-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-In-Reply-To: <20240712051850.484318-1-senozhatsky@chromium.org>
-References: <20240712051850.484318-1-senozhatsky@chromium.org>
+In-Reply-To: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
+References: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,31 +70,136 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ZSTD_createCDict_advanced2() must ensure that
-ZSTD_createCDict_advanced_internal() has successfully
-allocated cdict.  customMalloc() may be called under
-low memory condition and may be unable to allocate
-workspace for cdict.
+This makes the code more compact and error handling more robust.
 
-Cc: Nick Terrell <terrelln@fb.com>
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- lib/zstd/compress/zstd_compress.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/input/touchscreen/usbtouchscreen.c | 65 +++++++++++-----------
+ 1 file changed, 33 insertions(+), 32 deletions(-)
 
-diff --git a/lib/zstd/compress/zstd_compress.c b/lib/zstd/compress/zstd_compress.c
-index c1c316e9e289..e48c73880477 100644
---- a/lib/zstd/compress/zstd_compress.c
-+++ b/lib/zstd/compress/zstd_compress.c
-@@ -5336,6 +5336,8 @@ ZSTD_CDict* ZSTD_createCDict_advanced2(
-                         dictLoadMethod, cctxParams.cParams,
-                         cctxParams.useRowMatchFinder, cctxParams.enableDedicatedDictSearch,
-                         customMem);
-+    if (!cdict)
-+        return NULL;
+diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
+index ecde2eaf1f72..0015f0a6de01 100644
+--- a/drivers/input/touchscreen/usbtouchscreen.c
++++ b/drivers/input/touchscreen/usbtouchscreen.c
+@@ -1349,6 +1349,20 @@ static void usbtouch_irq(struct urb *urb)
+ 			__func__, retval);
+ }
  
-     if (ZSTD_isError( ZSTD_initCDict_internal(cdict,
-                                     dict, dictSize,
++static int usbtouch_start_io(struct usbtouch_usb *usbtouch)
++{
++	guard(mutex)(&usbtouch->pm_mutex);
++
++	if (!usbtouch->type->irq_always)
++		if (usb_submit_urb(usbtouch->irq, GFP_KERNEL))
++			return -EIO;
++
++	usbtouch->interface->needs_remote_wakeup = 1;
++	usbtouch->is_open = true;
++
++	return 0;
++}
++
+ static int usbtouch_open(struct input_dev *input)
+ {
+ 	struct usbtouch_usb *usbtouch = input_get_drvdata(input);
+@@ -1357,23 +1371,12 @@ static int usbtouch_open(struct input_dev *input)
+ 	usbtouch->irq->dev = interface_to_usbdev(usbtouch->interface);
+ 
+ 	r = usb_autopm_get_interface(usbtouch->interface) ? -EIO : 0;
+-	if (r < 0)
+-		goto out;
+-
+-	mutex_lock(&usbtouch->pm_mutex);
+-	if (!usbtouch->type->irq_always) {
+-		if (usb_submit_urb(usbtouch->irq, GFP_KERNEL)) {
+-			r = -EIO;
+-			goto out_put;
+-		}
+-	}
++	if (r)
++		return r;
++
++	r = usbtouch_start_io(usbtouch);
+ 
+-	usbtouch->interface->needs_remote_wakeup = 1;
+-	usbtouch->is_open = true;
+-out_put:
+-	mutex_unlock(&usbtouch->pm_mutex);
+ 	usb_autopm_put_interface(usbtouch->interface);
+-out:
+ 	return r;
+ }
+ 
+@@ -1382,11 +1385,11 @@ static void usbtouch_close(struct input_dev *input)
+ 	struct usbtouch_usb *usbtouch = input_get_drvdata(input);
+ 	int r;
+ 
+-	mutex_lock(&usbtouch->pm_mutex);
+-	if (!usbtouch->type->irq_always)
+-		usb_kill_urb(usbtouch->irq);
+-	usbtouch->is_open = false;
+-	mutex_unlock(&usbtouch->pm_mutex);
++	scoped_guard(mutex, &usbtouch->pm_mutex) {
++		if (!usbtouch->type->irq_always)
++			usb_kill_urb(usbtouch->irq);
++		usbtouch->is_open = false;
++	}
+ 
+ 	r = usb_autopm_get_interface(usbtouch->interface);
+ 	usbtouch->interface->needs_remote_wakeup = 0;
+@@ -1394,8 +1397,7 @@ static void usbtouch_close(struct input_dev *input)
+ 		usb_autopm_put_interface(usbtouch->interface);
+ }
+ 
+-static int usbtouch_suspend
+-(struct usb_interface *intf, pm_message_t message)
++static int usbtouch_suspend(struct usb_interface *intf, pm_message_t message)
+ {
+ 	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
+ 
+@@ -1407,20 +1409,19 @@ static int usbtouch_suspend
+ static int usbtouch_resume(struct usb_interface *intf)
+ {
+ 	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
+-	int result = 0;
+ 
+-	mutex_lock(&usbtouch->pm_mutex);
++	guard(mutex)(&usbtouch->pm_mutex);
++
+ 	if (usbtouch->is_open || usbtouch->type->irq_always)
+-		result = usb_submit_urb(usbtouch->irq, GFP_NOIO);
+-	mutex_unlock(&usbtouch->pm_mutex);
++		return usb_submit_urb(usbtouch->irq, GFP_NOIO);
+ 
+-	return result;
++	return 0;
+ }
+ 
+ static int usbtouch_reset_resume(struct usb_interface *intf)
+ {
+ 	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
+-	int err = 0;
++	int err;
+ 
+ 	/* reinit the device */
+ 	if (usbtouch->type->init) {
+@@ -1434,12 +1435,12 @@ static int usbtouch_reset_resume(struct usb_interface *intf)
+ 	}
+ 
+ 	/* restart IO if needed */
+-	mutex_lock(&usbtouch->pm_mutex);
++	guard(mutex)(&usbtouch->pm_mutex);
++
+ 	if (usbtouch->is_open)
+-		err = usb_submit_urb(usbtouch->irq, GFP_NOIO);
+-	mutex_unlock(&usbtouch->pm_mutex);
++		return usb_submit_urb(usbtouch->irq, GFP_NOIO);
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static void usbtouch_free_buffers(struct usb_device *udev,
 -- 
 2.45.2.993.g49e7a77208-goog
 
