@@ -1,67 +1,64 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999E02744E;
-	Fri, 12 Jul 2024 05:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7CC7604D
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761548; cv=none; b=Mpz/sit3Us4tiGiUzemvYC6KK6tCuhYXwvvevEGv+CwhkwsKfprVyfLOe9ort30iFggH9ewX+v08byTyCuei1sVGcV0vBYbr7Y4/xGwQxeB7g3UQyeVlmsh7mo5n3uDsTybAm59vFl9pEN7VpErvZN22PI1CDz2ED3E/xRRMFCE=
+	t=1720761558; cv=none; b=INKhKuON1ZUOfX97YAzxYZPjojBA72VNlB+Q2ePvtl6km9Mn54AJSPTn+ZGBzL6P2TDkOqoD3DZZN7DhoUwwDv78UW7N1ppB2KuSs6cNZWa8Z+/SVaiyjBWD0daES9SgfO6KL3S+0oLPpzRXNoOaU+EzMnZQ6xhLHIkooS/fNk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720761548; c=relaxed/simple;
-	bh=fTcLjuZPxcAF/chYZp3qpmVvmgMoeulkbrhYgOBsWvU=;
+	s=arc-20240116; t=1720761558; c=relaxed/simple;
+	bh=CHEdMiMhgYInwkfp3Q8EUoDNjUdbVZTVY8neSKYoHcQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BgAwBxUvni242rcr2CyXSk4UnMUfeBwEbNn4FXFLMpjMbHuHhMFlCW3yq7xog/SB4OmpkH7goax0qPv2y/nd6ZRIcuCMy6K/Fg65BiFlO39ZhdZe9HJ62HQIuihVpJUG27ZR6+uOyk4d5CJtNWGh/WzS0UlWJBGOfxitfXXjT5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F1Og2Rkp; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=u9R+Y6wKvGUGhdesOwQ0j9lCqO6glS6C6f8zR/ZiXewEpAnLBjubC4ouL66q9bKzdyDuDGQAuKqxBTZ/zR/UAhFZh0Aw8vLfUApxS3lud7kASROMBzcZ4a3Bjdqj8enGYDAu4Z2lXAJcYduyIZ/jeA7wYxMlC5ECc/CxkxT2xqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=g0invbkq; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1Og2Rkp"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c9cc681ee4so832321b6e.0;
-        Thu, 11 Jul 2024 22:19:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g0invbkq"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70b1808dee9so1273709b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:19:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720761544; x=1721366344; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1720761556; x=1721366356; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c/BRz+lp5JToKR2qecU6LCfvsua/98uDjuU+S8tlz78=;
-        b=F1Og2Rkp/1M1o2lbpubZTR7O/eYUuZJfFCGZPucWPDwYKi50nTERRlp5RSy4CY3nXM
-         WvzwICvDbb/0VwTimUV37DN/2U+rAhiE6TqUMM8lianw7/DQo1arEcA1arqG2vQ07OFk
-         z0Xey0OM1dZGbu17GcplM4KFu3NVCx3Qmf/s/TpILZW7WI9AoIUhQYh1iMz5mj/o4ksG
-         ZPesZVDxkxt3jIG8IQs8m7H4HOC7EGBeMSBErWjO0KvaCVlpZQgBMYCdoL1Y56UQQLWS
-         SxU7z8n5aLbiflExsPlOeOidzF8Rf1TuUZRR8Ze0OhiRZN/oExVDijdgpulxTlzF66w4
-         dmTA==
+        bh=ht+3f0FtpNtS8JqL2/xQ8Ijm+o7mHtqwCkWXqPcnDZA=;
+        b=g0invbkqhBhQdepPCNaYu+h9XtRnS35Pfu+mCn+PCIqkn7JZSuL9Ss8jFryqfKZ5fr
+         srbKKlvbVZmK8QUIwCj+PpRle1568QaTCFDP0LIvz6+M7E411itB2BB+B1xc7NpCpDA+
+         LfBdjOKG75h+N8ZSp28eK6AhZpRc5LSxF1dWI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720761544; x=1721366344;
+        d=1e100.net; s=20230601; t=1720761556; x=1721366356;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c/BRz+lp5JToKR2qecU6LCfvsua/98uDjuU+S8tlz78=;
-        b=Z9bluBgfGE99b0au/GM+1p1GewQVVfpYWvxzeEP90PYnkrS+TLhof1x/Okrqyel7c2
-         t2NB71shfPcSQgngVAMPzR9eEHTsaHY0nRrZAu4U6yZgJkQv5fOaF7hE4LuGev8XIM0L
-         ZKKej52bMUgqk1xYpB3dl6RXhzuuMTro+BY5c3xrSQrv2EbVA1fA384KVamrNhIBw8RL
-         rW/e4O9GrVi33crrsKLMa9w9vMpcM/LQ1gWZousxYGiLVmbY7Jh1dM9LFachMK8jCvXh
-         AivKR/L9EGRsH6NIddtIT2I1ebiIJPhHskq/zBCkpYJz/G573aOlwNQIpxEyVBOKn1g+
-         YeTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlx/seYF0UM7P4IfmDPYsC0TdWnpNbFPyM/dGgyU/+2Csdg0gXWisGyk2jGLqb6Gp7um6eViZ8yGIqQK6YNbyaniLCps7xic3kC3fN
-X-Gm-Message-State: AOJu0YzCB/Z80VM9O+gqrJW96WuoL6ICJsI/EY9Ma/YINw34N69k6G+h
-	rDWXU7bkE3mbrUFutvrfHdtdvtLrS9zabXxofWi6FYuaZzsZzKydZmLIWw==
-X-Google-Smtp-Source: AGHT+IEFjvPvMtRn+5IjKcQEa+UMjWng75hFyUhIL74WR7WmEw9TfNW4vLZirRPCCkyAlhB7nKCvlA==
-X-Received: by 2002:a54:4094:0:b0:3d9:dabc:7b76 with SMTP id 5614622812f47-3d9dabc7fe4mr6655462b6e.23.1720761544176;
-        Thu, 11 Jul 2024 22:19:04 -0700 (PDT)
-Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:acda:de52:5c83:f72d])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d669d525csm4328972a12.73.2024.07.11.22.19.03
+        bh=ht+3f0FtpNtS8JqL2/xQ8Ijm+o7mHtqwCkWXqPcnDZA=;
+        b=Rs+pBfe6IE+lhvKUbmgyPAoRMCIHPxViPPvG8AQeyNAebDuEy7IqNmagDJAxKFEiUe
+         2Th8AvK4fSUMl8EeQib0+WawOoBNhTcLMYryKJ382ZeP0KTsiIn64poUEojI6M6Va3yB
+         s3ReVvNXSve7cJ03Ur38PPm7ZWiEN6mmwml+RILNsNQUzpDrxYdcfWPu299B2kUICoqt
+         0bkm/2KX420pPAY5Q9QNCwCYdAdNM5qKNCzhtrrTigRLcenYNMr1auE+xt7E9t7FUUfu
+         /q0H2Z4C+c4LdDmWCWOVlZY2fkHIzhjUIIW+QCU3pI5zDAgeKP1y+VcNil6SkxnYRWba
+         YGDQ==
+X-Gm-Message-State: AOJu0YzvXmLvf7Sq+gqOtdqB1SlcSrfAqS9H3T0RvrChj2aTORHcJi18
+	CRXr1zAdSUCB0xQMDHQoM/5obW2c8ljtwhYJD+TOofMLcwfGatvaWiYaWeNxUQ==
+X-Google-Smtp-Source: AGHT+IFPxq3Ug+6gPgibAegfNfHZ6jTYh+2Ha++Ld63dB5qwMyEoq8pNQLcTBS0RFKlpop4EU3wxPQ==
+X-Received: by 2002:a05:6a00:10d5:b0:705:9992:d8ad with SMTP id d2e1a72fcca58-70b4358d3c9mr11355015b3a.19.1720761549718;
+        Thu, 11 Jul 2024 22:19:09 -0700 (PDT)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:15f3:5252:ec56:52ae])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967851sm6553436b3a.109.2024.07.11.22.19.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:19:03 -0700 (PDT)
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: linux-input@vger.kernel.org
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/8] Input: usbtouchscreen - split device info table into individual pieces
-Date: Thu, 11 Jul 2024 22:18:48 -0700
-Message-ID: <20240712051851.3463657-6-dmitry.torokhov@gmail.com>
+        Thu, 11 Jul 2024 22:19:09 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v6 05/23] zram: add lzo and lzorle compression backends support
+Date: Fri, 12 Jul 2024 14:18:16 +0900
+Message-ID: <20240712051850.484318-6-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-In-Reply-To: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
-References: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20240712051850.484318-1-senozhatsky@chromium.org>
+References: <20240712051850.484318-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,866 +67,220 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Instead of using a single table containing information about various
-touchscreens and enums to match the driver ID table data with chip
-information define individual per-protocol instances of
-usbtouch_device_info structure and reference them directly from
-the usbtouch_devices ID table. This is simpler, safer, and uses less
-memory in case some protocols are disabled.
+Add s/w lzo/lzorle compression support.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/input/touchscreen/usbtouchscreen.c | 624 ++++++++++-----------
- 1 file changed, 293 insertions(+), 331 deletions(-)
+ drivers/block/zram/Kconfig          | 23 +++++++++++++++
+ drivers/block/zram/Makefile         |  3 ++
+ drivers/block/zram/backend_lzo.c    | 43 ++++++++++++++++++++++++++++
+ drivers/block/zram/backend_lzo.h    | 10 +++++++
+ drivers/block/zram/backend_lzorle.c | 44 +++++++++++++++++++++++++++++
+ drivers/block/zram/backend_lzorle.h | 10 +++++++
+ drivers/block/zram/zcomp.c          |  7 +++++
+ 7 files changed, 140 insertions(+)
+ create mode 100644 drivers/block/zram/backend_lzo.c
+ create mode 100644 drivers/block/zram/backend_lzo.h
+ create mode 100644 drivers/block/zram/backend_lzorle.c
+ create mode 100644 drivers/block/zram/backend_lzorle.h
 
-diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
-index 813a04ba75a2..ecde2eaf1f72 100644
---- a/drivers/input/touchscreen/usbtouchscreen.c
-+++ b/drivers/input/touchscreen/usbtouchscreen.c
-@@ -106,32 +106,6 @@ struct usbtouch_usb {
- };
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index ace5698db5f6..ce70b8ef3405 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -15,8 +15,31 @@ config ZRAM
  
+ 	  See Documentation/admin-guide/blockdev/zram.rst for more information.
  
--/* device types */
--enum {
--	DEVTYPE_IGNORE = -1,
--	DEVTYPE_EGALAX,
--	DEVTYPE_PANJIT,
--	DEVTYPE_3M,
--	DEVTYPE_ITM,
--	DEVTYPE_ETURBO,
--	DEVTYPE_GUNZE,
--	DEVTYPE_DMC_TSC10,
--	DEVTYPE_IRTOUCH,
--	DEVTYPE_IRTOUCH_HIRES,
--	DEVTYPE_IDEALTEK,
--	DEVTYPE_GENERAL_TOUCH,
--	DEVTYPE_GOTOP,
--	DEVTYPE_JASTEC,
--	DEVTYPE_E2I,
--	DEVTYPE_ZYTRONIC,
--	DEVTYPE_TC45USB,
--	DEVTYPE_NEXIO,
--	DEVTYPE_ELO,
--	DEVTYPE_ETOUCH,
--};
--
--static const struct usbtouch_device_info usbtouch_dev_info[];
--
- /*****************************************************************************
-  * e2i Part
-  */
-@@ -164,6 +138,16 @@ static int e2i_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++config ZRAM_BACKEND_LZO
++	bool "lzo and lzo-rle compression support"
++	depends on ZRAM
++	select LZO_COMPRESS
++	select LZO_DECOMPRESS
 +
-+static const struct usbtouch_device_info e2i_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x7fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x7fff,
-+	.rept_size	= 6,
-+	.init		= e2i_init,
-+	.read_data	= e2i_read_data,
-+};
- #endif
- 
- 
-@@ -247,6 +231,17 @@ static int egalax_get_pkt_len(unsigned char *buf, int len)
- 
- 	return 0;
- }
++choice
++	prompt "Default zram compressor"
++	default ZRAM_DEF_COMP_LZORLE
++	depends on ZRAM
 +
-+static const struct usbtouch_device_info egalax_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x07ff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x07ff,
-+	.rept_size	= 16,
-+	.get_pkt_len	= egalax_get_pkt_len,
-+	.read_data	= egalax_read_data,
-+	.init		= egalax_init,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -293,6 +288,16 @@ static int etouch_get_pkt_len(unsigned char *buf, int len)
- 
- 	return 0;
- }
++config ZRAM_DEF_COMP_LZORLE
++	bool "lzo-rle"
++	depends on ZRAM_BACKEND_LZO
 +
-+static const struct usbtouch_device_info etouch_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x07ff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x07ff,
-+	.rept_size	= 16,
-+	.get_pkt_len	= etouch_get_pkt_len,
-+	.read_data	= etouch_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -307,6 +312,15 @@ static int panjit_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++config ZRAM_DEF_COMP_LZO
++	bool "lzo"
++	depends on ZRAM_BACKEND_LZO
 +
-+static const struct usbtouch_device_info panjit_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.rept_size	= 8,
-+	.read_data	= panjit_read_data,
-+};
- #endif
- 
- 
-@@ -340,39 +354,6 @@ struct mtouch_priv {
- 	u8 fw_rev_minor;
- };
- 
--static ssize_t mtouch_firmware_rev_show(struct device *dev,
--				struct device_attribute *attr, char *output)
--{
--	struct usb_interface *intf = to_usb_interface(dev);
--	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
--	struct mtouch_priv *priv = usbtouch->priv;
--
--	return sysfs_emit(output, "%1x.%1x\n",
--			  priv->fw_rev_major, priv->fw_rev_minor);
--}
--static DEVICE_ATTR(firmware_rev, 0444, mtouch_firmware_rev_show, NULL);
--
--static struct attribute *mtouch_attrs[] = {
--	&dev_attr_firmware_rev.attr,
--	NULL
--};
--
--static bool mtouch_group_visible(struct kobject *kobj)
--{
--	struct device *dev = kobj_to_dev(kobj);
--	struct usb_interface *intf = to_usb_interface(dev);
--	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
--
--	return usbtouch->type == &usbtouch_dev_info[DEVTYPE_3M];
--}
--
--DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(mtouch);
--
--static const struct attribute_group mtouch_attr_group = {
--	.is_visible = SYSFS_GROUP_VISIBLE(mtouch),
--	.attrs = mtouch_attrs,
--};
--
- static int mtouch_get_fw_revision(struct usbtouch_usb *usbtouch)
- {
- 	struct usb_device *udev = interface_to_usbdev(usbtouch->interface);
-@@ -467,6 +448,51 @@ static void mtouch_exit(struct usbtouch_usb *usbtouch)
- 
- 	kfree(priv);
- }
++endchoice
 +
-+static struct usbtouch_device_info mtouch_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x4000,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x4000,
-+	.rept_size	= 11,
-+	.read_data	= mtouch_read_data,
-+	.alloc		= mtouch_alloc,
-+	.init		= mtouch_init,
-+	.exit		= mtouch_exit,
-+};
+ config ZRAM_DEF_COMP
+ 	string
++	default "lzo-rle" if ZRAM_DEF_COMP_LZORLE
++	default "lzo" if ZRAM_DEF_COMP_LZO
+ 	default "unset-value"
+ 
+ config ZRAM_WRITEBACK
+diff --git a/drivers/block/zram/Makefile b/drivers/block/zram/Makefile
+index de9e457907b1..2a3db3368af9 100644
+--- a/drivers/block/zram/Makefile
++++ b/drivers/block/zram/Makefile
+@@ -1,4 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
 +
-+static ssize_t mtouch_firmware_rev_show(struct device *dev,
-+				struct device_attribute *attr, char *output)
+ zram-y	:=	zcomp.o zram_drv.o
+ 
++zram-$(CONFIG_ZRAM_BACKEND_LZO)	+= backend_lzorle.o backend_lzo.o
++
+ obj-$(CONFIG_ZRAM)	+=	zram.o
+diff --git a/drivers/block/zram/backend_lzo.c b/drivers/block/zram/backend_lzo.c
+new file mode 100644
+index 000000000000..4c9e611f6c03
+--- /dev/null
++++ b/drivers/block/zram/backend_lzo.c
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/lzo.h>
++
++#include "backend_lzo.h"
++
++static void *lzo_create(void)
 +{
-+	struct usb_interface *intf = to_usb_interface(dev);
-+	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
-+	struct mtouch_priv *priv = usbtouch->priv;
-+
-+	return sysfs_emit(output, "%1x.%1x\n",
-+			  priv->fw_rev_major, priv->fw_rev_minor);
-+}
-+static DEVICE_ATTR(firmware_rev, 0444, mtouch_firmware_rev_show, NULL);
-+
-+static struct attribute *mtouch_attrs[] = {
-+	&dev_attr_firmware_rev.attr,
-+	NULL
-+};
-+
-+static bool mtouch_group_visible(struct kobject *kobj)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct usb_interface *intf = to_usb_interface(dev);
-+	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
-+
-+	return usbtouch->type == &mtouch_dev_info;
++	return kzalloc(LZO1X_MEM_COMPRESS, GFP_KERNEL);
 +}
 +
-+DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(mtouch);
++static void lzo_destroy(void *ctx)
++{
++	kfree(ctx);
++}
 +
-+static const struct attribute_group mtouch_attr_group = {
-+	.is_visible = SYSFS_GROUP_VISIBLE(mtouch),
-+	.attrs = mtouch_attrs,
-+};
- #endif
- 
- 
-@@ -501,6 +527,16 @@ static int itm_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++static int lzo_compress(void *ctx, const unsigned char *src, size_t src_len,
++			unsigned char *dst, size_t *dst_len)
++{
++	int ret;
 +
-+static const struct usbtouch_device_info itm_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.max_press	= 0xff,
-+	.rept_size	= 8,
-+	.read_data	= itm_read_data,
-+};
- #endif
- 
- 
-@@ -535,6 +571,16 @@ static int eturbo_get_pkt_len(unsigned char *buf, int len)
- 		return 3;
- 	return 0;
- }
++	ret = lzo1x_1_compress(src, src_len, dst, dst_len, ctx);
++	return ret == LZO_E_OK ? 0 : ret;
++}
 +
-+static const struct usbtouch_device_info eturbo_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x07ff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x07ff,
-+	.rept_size	= 8,
-+	.get_pkt_len	= eturbo_get_pkt_len,
-+	.read_data	= eturbo_read_data,
-+};
- #endif
- 
- 
-@@ -553,6 +599,15 @@ static int gunze_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++static int lzo_decompress(void *ctx, const unsigned char *src, size_t src_len,
++			  unsigned char *dst, size_t dst_len)
++{
++	int ret;
 +
-+static const struct usbtouch_device_info gunze_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.rept_size	= 4,
-+	.read_data	= gunze_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -636,6 +691,16 @@ static int dmc_tsc10_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++	ret = lzo1x_decompress_safe(src, src_len, dst, &dst_len);
++	return ret == LZO_E_OK ? 0 : ret;
++}
 +
-+static const struct usbtouch_device_info dmc_tsc10_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x03ff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x03ff,
-+	.rept_size	= 5,
-+	.init		= dmc_tsc10_init,
-+	.read_data	= dmc_tsc10_read_data,
++const struct zcomp_ops backend_lzo = {
++	.compress	= lzo_compress,
++	.decompress	= lzo_decompress,
++	.create_ctx	= lzo_create,
++	.destroy_ctx	= lzo_destroy,
++	.name		= "lzo",
 +};
- #endif
- 
- 
-@@ -651,6 +716,24 @@ static int irtouch_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
+diff --git a/drivers/block/zram/backend_lzo.h b/drivers/block/zram/backend_lzo.h
+new file mode 100644
+index 000000000000..93d54749e63c
+--- /dev/null
++++ b/drivers/block/zram/backend_lzo.h
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +
-+static const struct usbtouch_device_info irtouch_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.rept_size	= 8,
-+	.read_data	= irtouch_read_data,
-+};
++#ifndef __BACKEND_LZO_H__
++#define __BACKEND_LZO_H__
 +
-+static const struct usbtouch_device_info irtouch_hires_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x7fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x7fff,
-+	.rept_size	= 8,
-+	.read_data	= irtouch_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -665,6 +748,15 @@ static int tc45usb_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++#include "zcomp.h"
 +
-+static const struct usbtouch_device_info tc45usb_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.rept_size	= 5,
-+	.read_data	= tc45usb_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -704,6 +796,16 @@ static int idealtek_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 		return 0;
- 	}
- }
++extern const struct zcomp_ops backend_lzo;
 +
-+static const struct usbtouch_device_info idealtek_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.rept_size	= 8,
-+	.get_pkt_len	= idealtek_get_pkt_len,
-+	.read_data	= idealtek_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -719,6 +821,15 @@ static int general_touch_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++#endif /* __BACKEND_LZO_H__ */
+diff --git a/drivers/block/zram/backend_lzorle.c b/drivers/block/zram/backend_lzorle.c
+new file mode 100644
+index 000000000000..19a9ce132046
+--- /dev/null
++++ b/drivers/block/zram/backend_lzorle.c
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +
-+static const struct usbtouch_device_info general_touch_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x7fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x7fff,
-+	.rept_size	= 7,
-+	.read_data	= general_touch_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -733,6 +844,15 @@ static int gotop_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/lzo.h>
 +
-+static const struct usbtouch_device_info gotop_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x03ff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x03ff,
-+	.rept_size	= 4,
-+	.read_data	= gotop_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -747,6 +867,15 @@ static int jastec_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
++#include "backend_lzorle.h"
 +
-+static const struct usbtouch_device_info jastec_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.rept_size	= 4,
-+	.read_data	= jastec_read_data,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -783,6 +912,16 @@ static int zytronic_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 0;
- }
++static void *lzorle_create(void)
++{
++	return kzalloc(LZO1X_MEM_COMPRESS, GFP_KERNEL);
++}
 +
-+static const struct usbtouch_device_info zytronic_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x03ff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x03ff,
-+	.rept_size	= 5,
-+	.read_data	= zytronic_read_data,
-+	.irq_always     = true,
-+};
- #endif
- 
- /*****************************************************************************
-@@ -1019,6 +1158,15 @@ static int nexio_read_data(struct usbtouch_usb *usbtouch, unsigned char *pkt)
- 	}
- 	return 0;
- }
++static void lzorle_destroy(void *ctx)
++{
++	kfree(ctx);
++}
 +
-+static const struct usbtouch_device_info nexio_dev_info = {
-+	.rept_size	= 1024,
-+	.irq_always	= true,
-+	.read_data	= nexio_read_data,
-+	.alloc		= nexio_alloc,
-+	.init		= nexio_init,
-+	.exit		= nexio_exit,
++static int lzorle_compress(void *ctx, const unsigned char *src, size_t src_len,
++			   unsigned char *dst, size_t *dst_len)
++{
++	int ret;
++
++	ret = lzorle1x_1_compress(src, src_len, dst, dst_len, ctx);
++	return ret == LZO_E_OK ? 0 : ret;
++}
++
++static int lzorle_decompress(void *ctx, const unsigned char *src,
++			     size_t src_len, unsigned char *dst,
++			     size_t dst_len)
++{
++	int ret;
++
++	ret = lzo1x_decompress_safe(src, src_len, dst, &dst_len);
++	return ret == LZO_E_OK ? 0 : ret;
++}
++
++const struct zcomp_ops backend_lzorle = {
++	.compress	= lzorle_compress,
++	.decompress	= lzorle_decompress,
++	.create_ctx	= lzorle_create,
++	.destroy_ctx	= lzorle_destroy,
++	.name		= "lzo-rle",
 +};
- #endif
+diff --git a/drivers/block/zram/backend_lzorle.h b/drivers/block/zram/backend_lzorle.h
+new file mode 100644
+index 000000000000..6ecb163b09f1
+--- /dev/null
++++ b/drivers/block/zram/backend_lzorle.h
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#ifndef __BACKEND_LZORLE_H__
++#define __BACKEND_LZORLE_H__
++
++#include "zcomp.h"
++
++extern const struct zcomp_ops backend_lzorle;
++
++#endif /* __BACKEND_LZORLE_H__ */
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index 2f75f18fc1ca..e358319c59dc 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -12,7 +12,14 @@
  
+ #include "zcomp.h"
  
-@@ -1037,232 +1185,17 @@ static int elo_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
- 
- 	return 1;
- }
--#endif
--
--
--/*****************************************************************************
-- * the different device descriptors
-- */
--static const struct usbtouch_device_info usbtouch_dev_info[] = {
--#ifdef CONFIG_TOUCHSCREEN_USB_ELO
--	[DEVTYPE_ELO] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.max_press	= 0xff,
--		.rept_size	= 8,
--		.read_data	= elo_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_EGALAX
--	[DEVTYPE_EGALAX] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x07ff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x07ff,
--		.rept_size	= 16,
--		.get_pkt_len	= egalax_get_pkt_len,
--		.read_data	= egalax_read_data,
--		.init		= egalax_init,
--	},
--#endif
- 
--#ifdef CONFIG_TOUCHSCREEN_USB_PANJIT
--	[DEVTYPE_PANJIT] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.rept_size	= 8,
--		.read_data	= panjit_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_3M
--	[DEVTYPE_3M] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x4000,
--		.min_yc		= 0x0,
--		.max_yc		= 0x4000,
--		.rept_size	= 11,
--		.read_data	= mtouch_read_data,
--		.alloc		= mtouch_alloc,
--		.init		= mtouch_init,
--		.exit		= mtouch_exit,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_ITM
--	[DEVTYPE_ITM] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.max_press	= 0xff,
--		.rept_size	= 8,
--		.read_data	= itm_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_ETURBO
--	[DEVTYPE_ETURBO] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x07ff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x07ff,
--		.rept_size	= 8,
--		.get_pkt_len	= eturbo_get_pkt_len,
--		.read_data	= eturbo_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_GUNZE
--	[DEVTYPE_GUNZE] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.rept_size	= 4,
--		.read_data	= gunze_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_DMC_TSC10
--	[DEVTYPE_DMC_TSC10] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x03ff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x03ff,
--		.rept_size	= 5,
--		.init		= dmc_tsc10_init,
--		.read_data	= dmc_tsc10_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
--	[DEVTYPE_IRTOUCH] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.rept_size	= 8,
--		.read_data	= irtouch_read_data,
--	},
--
--	[DEVTYPE_IRTOUCH_HIRES] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x7fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x7fff,
--		.rept_size	= 8,
--		.read_data	= irtouch_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_IDEALTEK
--	[DEVTYPE_IDEALTEK] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.rept_size	= 8,
--		.get_pkt_len	= idealtek_get_pkt_len,
--		.read_data	= idealtek_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_GENERAL_TOUCH
--	[DEVTYPE_GENERAL_TOUCH] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x7fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x7fff,
--		.rept_size	= 7,
--		.read_data	= general_touch_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_GOTOP
--	[DEVTYPE_GOTOP] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x03ff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x03ff,
--		.rept_size	= 4,
--		.read_data	= gotop_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_JASTEC
--	[DEVTYPE_JASTEC] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.rept_size	= 4,
--		.read_data	= jastec_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_E2I
--	[DEVTYPE_E2I] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x7fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x7fff,
--		.rept_size	= 6,
--		.init		= e2i_init,
--		.read_data	= e2i_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_ZYTRONIC
--	[DEVTYPE_ZYTRONIC] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x03ff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x03ff,
--		.rept_size	= 5,
--		.read_data	= zytronic_read_data,
--		.irq_always     = true,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_ETT_TC45USB
--	[DEVTYPE_TC45USB] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x0fff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x0fff,
--		.rept_size	= 5,
--		.read_data	= tc45usb_read_data,
--	},
--#endif
--
--#ifdef CONFIG_TOUCHSCREEN_USB_NEXIO
--	[DEVTYPE_NEXIO] = {
--		.rept_size	= 1024,
--		.irq_always	= true,
--		.read_data	= nexio_read_data,
--		.alloc		= nexio_alloc,
--		.init		= nexio_init,
--		.exit		= nexio_exit,
--	},
--#endif
--#ifdef CONFIG_TOUCHSCREEN_USB_EASYTOUCH
--	[DEVTYPE_ETOUCH] = {
--		.min_xc		= 0x0,
--		.max_xc		= 0x07ff,
--		.min_yc		= 0x0,
--		.max_yc		= 0x07ff,
--		.rept_size	= 16,
--		.get_pkt_len	= etouch_get_pkt_len,
--		.read_data	= etouch_read_data,
--	},
--#endif
-+static const struct usbtouch_device_info elo_dev_info = {
-+	.min_xc		= 0x0,
-+	.max_xc		= 0x0fff,
-+	.min_yc		= 0x0,
-+	.max_yc		= 0x0fff,
-+	.max_press	= 0xff,
-+	.rept_size	= 8,
-+	.read_data	= elo_read_data,
- };
++#include "backend_lzo.h"
++#include "backend_lzorle.h"
++
+ static const struct zcomp_ops *backends[] = {
++#if IS_ENABLED(CONFIG_ZRAM_BACKEND_LZO)
++	&backend_lzorle,
++	&backend_lzo,
 +#endif
- 
- 
- /*****************************************************************************
-@@ -1540,10 +1473,8 @@ static int usbtouch_probe(struct usb_interface *intf,
- 	int err = -ENOMEM;
- 
- 	/* some devices are ignored */
--	if (id->driver_info == DEVTYPE_IGNORE)
--		return -ENODEV;
--
--	if (id->driver_info >= ARRAY_SIZE(usbtouch_dev_info))
-+	type = (const struct usbtouch_device_info *)id->driver_info;
-+	if (!type)
- 		return -ENODEV;
- 
- 	endpoint = usbtouch_get_input_endpoint(intf->cur_altsetting);
-@@ -1556,8 +1487,6 @@ static int usbtouch_probe(struct usb_interface *intf,
- 		goto out_free;
- 
- 	mutex_init(&usbtouch->pm_mutex);
--
--	type = &usbtouch_dev_info[id->driver_info];
- 	usbtouch->type = type;
- 
- 	usbtouch->data_size = type->rept_size;
-@@ -1741,106 +1670,139 @@ static const struct attribute_group *usbtouch_groups[] = {
- static const struct usb_device_id usbtouch_devices[] = {
- #ifdef CONFIG_TOUCHSCREEN_USB_EGALAX
- 	/* ignore the HID capable devices, handled by usbhid */
--	{USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0001, USB_INTERFACE_CLASS_HID),
--		.driver_info = DEVTYPE_IGNORE},
--	{USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0002, USB_INTERFACE_CLASS_HID),
--		.driver_info = DEVTYPE_IGNORE},
-+	{ USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0001, USB_INTERFACE_CLASS_HID),
-+		.driver_info = 0 },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0002, USB_INTERFACE_CLASS_HID),
-+		.driver_info = 0 },
- 
- 	/* normal device IDs */
--	{USB_DEVICE(0x3823, 0x0001), .driver_info = DEVTYPE_EGALAX},
--	{USB_DEVICE(0x3823, 0x0002), .driver_info = DEVTYPE_EGALAX},
--	{USB_DEVICE(0x0123, 0x0001), .driver_info = DEVTYPE_EGALAX},
--	{USB_DEVICE(0x0eef, 0x0001), .driver_info = DEVTYPE_EGALAX},
--	{USB_DEVICE(0x0eef, 0x0002), .driver_info = DEVTYPE_EGALAX},
--	{USB_DEVICE(0x1234, 0x0001), .driver_info = DEVTYPE_EGALAX},
--	{USB_DEVICE(0x1234, 0x0002), .driver_info = DEVTYPE_EGALAX},
-+	{ USB_DEVICE(0x3823, 0x0001),
-+		.driver_info = (kernel_ulong_t)&egalax_dev_info },
-+	{ USB_DEVICE(0x3823, 0x0002),
-+		.driver_info = (kernel_ulong_t)&egalax_dev_info },
-+	{ USB_DEVICE(0x0123, 0x0001),
-+		.driver_info = (kernel_ulong_t)&egalax_dev_info },
-+	{ USB_DEVICE(0x0eef, 0x0001),
-+		.driver_info = (kernel_ulong_t)&egalax_dev_info },
-+	{ USB_DEVICE(0x0eef, 0x0002),
-+		.driver_info = (kernel_ulong_t)&egalax_dev_info },
-+	{ USB_DEVICE(0x1234, 0x0001),
-+		.driver_info = (kernel_ulong_t)&egalax_dev_info },
-+	{ USB_DEVICE(0x1234, 0x0002),
-+		.driver_info = (kernel_ulong_t)&egalax_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_PANJIT
--	{USB_DEVICE(0x134c, 0x0001), .driver_info = DEVTYPE_PANJIT},
--	{USB_DEVICE(0x134c, 0x0002), .driver_info = DEVTYPE_PANJIT},
--	{USB_DEVICE(0x134c, 0x0003), .driver_info = DEVTYPE_PANJIT},
--	{USB_DEVICE(0x134c, 0x0004), .driver_info = DEVTYPE_PANJIT},
-+	{ USB_DEVICE(0x134c, 0x0001),
-+		.driver_info = (kernel_ulong_t)&panjit_dev_info },
-+	{ USB_DEVICE(0x134c, 0x0002),
-+		.driver_info = (kernel_ulong_t)&panjit_dev_info },
-+	{ USB_DEVICE(0x134c, 0x0003),
-+		.driver_info = (kernel_ulong_t)&panjit_dev_info },
-+	{ USB_DEVICE(0x134c, 0x0004),
-+		.driver_info = (kernel_ulong_t)&panjit_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_3M
--	{USB_DEVICE(0x0596, 0x0001), .driver_info = DEVTYPE_3M},
-+	{ USB_DEVICE(0x0596, 0x0001),
-+		.driver_info = (kernel_ulong_t)&mtouch_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_ITM
--	{USB_DEVICE(0x0403, 0xf9e9), .driver_info = DEVTYPE_ITM},
--	{USB_DEVICE(0x16e3, 0xf9e9), .driver_info = DEVTYPE_ITM},
-+	{ USB_DEVICE(0x0403, 0xf9e9),
-+		.driver_info = (kernel_ulong_t)&itm_dev_info },
-+	{ USB_DEVICE(0x16e3, 0xf9e9),
-+		.driver_info = (kernel_ulong_t)&itm_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_ETURBO
--	{USB_DEVICE(0x1234, 0x5678), .driver_info = DEVTYPE_ETURBO},
-+	{ USB_DEVICE(0x1234, 0x5678),
-+		.driver_info = (kernel_ulong_t)&eturbo_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_GUNZE
--	{USB_DEVICE(0x0637, 0x0001), .driver_info = DEVTYPE_GUNZE},
-+	{ USB_DEVICE(0x0637, 0x0001),
-+		.driver_info = (kernel_ulong_t)&gunze_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_DMC_TSC10
--	{USB_DEVICE(0x0afa, 0x03e8), .driver_info = DEVTYPE_DMC_TSC10},
-+	{ USB_DEVICE(0x0afa, 0x03e8),
-+		.driver_info = (kernel_ulong_t)&dmc_tsc10_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
--	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
--	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
--	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
--	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
-+	{ USB_DEVICE(0x255e, 0x0001),
-+		.driver_info = (kernel_ulong_t)&irtouch_dev_info },
-+	{ USB_DEVICE(0x595a, 0x0001),
-+		.driver_info = (kernel_ulong_t)&irtouch_dev_info },
-+	{ USB_DEVICE(0x6615, 0x0001),
-+		.driver_info = (kernel_ulong_t)&irtouch_dev_info },
-+	{ USB_DEVICE(0x6615, 0x0012),
-+		.driver_info = (kernel_ulong_t)&irtouch_hires_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_IDEALTEK
--	{USB_DEVICE(0x1391, 0x1000), .driver_info = DEVTYPE_IDEALTEK},
-+	{ USB_DEVICE(0x1391, 0x1000),
-+		.driver_info = (kernel_ulong_t)&idealtek_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_GENERAL_TOUCH
--	{USB_DEVICE(0x0dfc, 0x0001), .driver_info = DEVTYPE_GENERAL_TOUCH},
-+	{ USB_DEVICE(0x0dfc, 0x0001),
-+		.driver_info = (kernel_ulong_t)&general_touch_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_GOTOP
--	{USB_DEVICE(0x08f2, 0x007f), .driver_info = DEVTYPE_GOTOP},
--	{USB_DEVICE(0x08f2, 0x00ce), .driver_info = DEVTYPE_GOTOP},
--	{USB_DEVICE(0x08f2, 0x00f4), .driver_info = DEVTYPE_GOTOP},
-+	{ USB_DEVICE(0x08f2, 0x007f),
-+		.driver_info = (kernel_ulong_t)&gotop_dev_info },
-+	{ USB_DEVICE(0x08f2, 0x00ce),
-+		.driver_info = (kernel_ulong_t)&gotop_dev_info },
-+	{ USB_DEVICE(0x08f2, 0x00f4),
-+		.driver_info = (kernel_ulong_t)&gotop_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_JASTEC
--	{USB_DEVICE(0x0f92, 0x0001), .driver_info = DEVTYPE_JASTEC},
-+	{ USB_DEVICE(0x0f92, 0x0001),
-+		.driver_info = (kernel_ulong_t)&jastec_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_E2I
--	{USB_DEVICE(0x1ac7, 0x0001), .driver_info = DEVTYPE_E2I},
-+	{ USB_DEVICE(0x1ac7, 0x0001),
-+		.driver_info = (kernel_ulong_t)&e2i_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_ZYTRONIC
--	{USB_DEVICE(0x14c8, 0x0003), .driver_info = DEVTYPE_ZYTRONIC},
-+	{ USB_DEVICE(0x14c8, 0x0003),
-+		.driver_info = (kernel_ulong_t)&zytronic_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_ETT_TC45USB
- 	/* TC5UH */
--	{USB_DEVICE(0x0664, 0x0309), .driver_info = DEVTYPE_TC45USB},
-+	{ USB_DEVICE(0x0664, 0x0309),
-+		.driver_info = (kernel_ulong_t)&tc45usb_dev_info },
- 	/* TC4UM */
--	{USB_DEVICE(0x0664, 0x0306), .driver_info = DEVTYPE_TC45USB},
-+	{ USB_DEVICE(0x0664, 0x0306),
-+		.driver_info = (kernel_ulong_t)&tc45usb_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_NEXIO
- 	/* data interface only */
--	{USB_DEVICE_AND_INTERFACE_INFO(0x10f0, 0x2002, 0x0a, 0x00, 0x00),
--		.driver_info = DEVTYPE_NEXIO},
--	{USB_DEVICE_AND_INTERFACE_INFO(0x1870, 0x0001, 0x0a, 0x00, 0x00),
--		.driver_info = DEVTYPE_NEXIO},
-+	{ USB_DEVICE_AND_INTERFACE_INFO(0x10f0, 0x2002, 0x0a, 0x00, 0x00),
-+		.driver_info = (kernel_ulong_t)&nexio_dev_info },
-+	{ USB_DEVICE_AND_INTERFACE_INFO(0x1870, 0x0001, 0x0a, 0x00, 0x00),
-+		.driver_info = (kernel_ulong_t)&nexio_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_ELO
--	{USB_DEVICE(0x04e7, 0x0020), .driver_info = DEVTYPE_ELO},
-+	{ USB_DEVICE(0x04e7, 0x0020),
-+		.driver_info = (kernel_ulong_t)&elo_dev_info },
- #endif
- 
- #ifdef CONFIG_TOUCHSCREEN_USB_EASYTOUCH
--	{USB_DEVICE(0x7374, 0x0001), .driver_info = DEVTYPE_ETOUCH},
-+	{ USB_DEVICE(0x7374, 0x0001),
-+		.driver_info = (kernel_ulong_t)&etouch_dev_info },
- #endif
- 
--	{}
-+	{ }
+ 	NULL
  };
- MODULE_DEVICE_TABLE(usb, usbtouch_devices);
  
 -- 
 2.45.2.993.g49e7a77208-goog
