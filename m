@@ -1,192 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2261613FFC;
-	Fri, 12 Jul 2024 17:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3186910E0;
+	Fri, 12 Jul 2024 17:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720806917; cv=none; b=g4Z/uJDU4irJMcavPMRvS+oqER58ZRD4sUtJJUPyzMxDDnjdBuEaN1ONPdV/OH9gJ+pxtxS9SjgATTEPcJeGTOuZdp/Qq8NCuZEasa0gu6vjxKZq/y2ioRiH6RrLWnDuJ85Gp9WQveBdikL6c3Pm6uGSiEUVzxDJIZgsZ7J6YuI=
+	t=1720806934; cv=none; b=B1L+ZxS0BIUXa8nGW5HT5myRN6CshmZ1lYmbH+6fc3L9xkopPcNr15Cu1cl2dvC0qdTQnM+/jpfmu4SHWbhDWyfs671H/ctZqBXMSG+JNNYvsRyOz1xtUO7yOsqMbnuvmXcEoaudX0x98KVWsw2PcHn6xXS45bYcvDxjfA5Plmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720806917; c=relaxed/simple;
-	bh=FHmrHzxibyVk/KILfp/j7tI5EEgd1xbMGwm/W572nA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fyLW9nF6fp3HV5MFEW5EDMKRsME2FeBMQMuoqxN4ZSBN/Z7FYOE0xK6Onqo8yyNFP7DKJYKG3x4lfVmYJ0lRKv1pS2a6yrPtaEy/scOmjepLtUvermSyvPcC/hpdYKgmGJPTy03sQ2cbQNHLfjOcPnoTSAuA9bLLJpwugcJnVko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZDDAmUp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720806934; c=relaxed/simple;
+	bh=2dPqBsT3rQ9d+vV76feNKwSNuwCVJupRQM5iwqAdVX0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K7XlGd9MzQEYsDB2ShLHQakoDEODfVBbBJsb/p5WHeO1HFgmXJ0dTKGmf/eq04QvTMb+TVbrcq8eg9y2KvVDI7oXA760OxdV7gTnRdPm9G/W9WAZYp1df5xqr+JOJT1qKRH1rSYtlAlE3nBXGJBs8zaKGOs7jv0L7vV8Dx+uTt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=d4S7DPPT; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZDDAmUp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4EFCC32782;
-	Fri, 12 Jul 2024 17:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720806916;
-	bh=FHmrHzxibyVk/KILfp/j7tI5EEgd1xbMGwm/W572nA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HZDDAmUpXuofN+3Z45Tqo6EtIdqOqC/L4ukoMhmvCL0CxXimnqM6WmXjUyNduXQ6n
-	 kMQ5Hn3s1Xrmgl4+eedTssm59E/LX+GZ7dIB3T8UuBNBGpNSmOVm88Suc8Qrxt1AWE
-	 GZq4rWoesFvIGr07p1i5v2n2F+dVS9mfRaMl/Mh2MA6Q4zJh9ncE39F5Vq/RutF7ut
-	 8D1+SXwSm8qYfur8N0rO11xxSqUXAywNWQf53r3Pgs3hV1QhipQau/nprcWJMj3DZl
-	 gnM59foLi1cp4jHWpkEoLwOjJwNJxgIiNZ3j/+Xwkmy41PbYujvs8czIrcAqcE4Xbv
-	 8twVI11Sgrlkg==
-Date: Fri, 12 Jul 2024 10:55:16 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Mirsad Todorovac <mtodorovac69@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/syscall: Avoid memcpy() for ia32
- syscall_get_arguments()
-Message-ID: <202407121008.EDAD65A33@keescook>
-References: <20240708202202.work.477-kees@kernel.org>
- <20240711214450.GG27299@noisy.programming.kicks-ass.net>
- <202407111500.B86485B3@keescook>
- <20240712090008.GA19796@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="d4S7DPPT"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CDhMme012540;
+	Fri, 12 Jul 2024 10:55:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	pfpt0220; bh=dq7IvSq7iQghn8RjR51zLxLZ+mNPp11Lv5OyNAV2yJM=; b=d4S
+	7DPPTRkFA0jW6xEcEEcl+DuHAkkvTVU/xowQa5O15tjW+ozQQ4oo2ebIq0JEP0yA
+	e2yFMcoHHezgInMV0Zsd9GQw7h4zIAm9v5YsAXaKnRJSvkAUiAd/R9WvPGNgfcxj
+	oJ69QkBH88k+yplOtrThxEmbGolRVJAan2wwK7vaotIiVGBlHelgCHMArJ341M0b
+	7uOTOBNzBDCgmms/0czydOjgE6bLSWRpQDG60H3zIU/RqE+BzumCH4Yphi4sW9BG
+	wwJ1/u7bbw3BSHzpR50S1Kzg9KKdxEmhTW1/DWHKITzNjtbFmdRM3jDOpIl3W+xw
+	K8POQ9mBdO4/6dQRvQw==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 40b5m68wm7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jul 2024 10:55:25 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Fri, 12 Jul 2024 10:55:24 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Fri, 12 Jul 2024 10:55:24 -0700
+Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
+	by maili.marvell.com (Postfix) with ESMTP id 3C0963F70A1;
+	Fri, 12 Jul 2024 10:55:20 -0700 (PDT)
+From: Geetha sowjanya <gakula@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
+        <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
+        <sbhatta@marvell.com>, <hkelam@marvell.com>
+Subject: [net-next PATCH v9 00/11] Introduce RVU representors  
+Date: Fri, 12 Jul 2024 23:25:09 +0530
+Message-ID: <20240712175520.7013-1-gakula@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240712090008.GA19796@noisy.programming.kicks-ass.net>
+Content-Type: text/plain
+X-Proofpoint-GUID: TKk40u4H8koVPK2ZAFxzk0EQIzEtRmX3
+X-Proofpoint-ORIG-GUID: TKk40u4H8koVPK2ZAFxzk0EQIzEtRmX3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-12_13,2024-07-11_01,2024-05-17_01
 
-On Fri, Jul 12, 2024 at 11:00:08AM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 11, 2024 at 04:10:43PM -0700, Kees Cook wrote:
-> 
-> > The long answer is long, and comes in two halves: the language half and
-> > the fortify half.
-> > 
-> > First, the C standard requires that all function argument arrays be
-> > decayed to pointers, so your prototype is semantically handled as if
-> > it were:
-> > 
-> > void syscall_get_arguments(struct pt_regs *regs, unsigned long *args)
-> > 
-> > The "6" is just totally thrown away by the language. :(
-> 
-> Bah. I mean, I understand why, they *are* pointers after all. But to
-> then also discard the object size is just silly. I mean, traditionally C
-> doesn't give a crap about object size -- it is irrelevant.
-> 
-> But with alias analysis (which we switch off) and doubly so with this
-> fortify stuff, you do care about it.
-> 
-> So why throw it out?
+This series adds representor support for each rvu devices.
+When switchdev mode is enabled, representor netdev is registered
+for each rvu device. In implementation of representor model, 
+one NIX HW LF with multiple SQ and RQ is reserved, where each
+RQ and SQ of the LF are mapped to a representor. A loopback channel
+is reserved to support packet path between representors and VFs.
+CN10K silicon supports 2 types of MACs, RPM and SDP. This
+patch set adds representor support for both RPM and SDP MAC
+interfaces.
 
-Yes, it boggles the mind. And for a language that doesn't care about
-size, it sure cares about size in weird places.
+- Patch 1: Refactors and exports the shared service functions.
+- Patch 2: Implements basic representor driver.
+- Patch 3: Add devlink support to create representor netdevs that
+  can be used to manage VFs.
+- Patch 4: Implements basec netdev_ndo_ops.
+- Patch 5: Installs tcam rules to route packets between representor and
+	   VFs.
+- Patch 6: Enables fetching VF stats via representor interface
+- Patch 7: Adds support to sync link state between representors and VFs .
+- Patch 8: Enables configuring VF MTU via representor netdevs.
+- Patch 9: Add representors for sdp MAC.
+- Patch 10: Add devlink port support.
 
-> > And the language is so busted about this that there is actually a
-> > diagnostic for "don't do that" that shows up with this code:
-> > 
-> > <source>: In function 'syscall_get_arguments':
-> > <source>:53:22: warning: 'sizeof' on array function parameter 'args' will return size of 'long unsigned int *' [-Wsizeof-array-argument]
-> >    53 |         report(sizeof(args));
-> >       |                      ^
-> 
-> :-( This just doesn't make sense. How can you be so inconsistent about
-> things.
-> 
-> What will actually break if you 'fix' this? Given that inlining (see
-> below) changes the rules willy nilly, I feel we can (and should!) just
-> fix this.
 
-I'm not sure -- I have kind of given up on "standard" C helping with any
-of this. I look to consistent language extensions now, and where there
-isn't any, we've been trying to create them. :P And we're not alone:
-Apple's -fbounds-safety stuff[1] looks good too, and overlaps with what
-we were already designing with the "counted_by" attribute:
-https://discourse.llvm.org/t/rfc-enforcing-bounds-safety-in-c-fbounds-safety/
-(We borrowed the "counted_by" name, which is better than what we were
-calling it: "element_count".)
+Command to create PF/VF representor
+#devlink dev eswitch set pci/0002:1c:00.0 mode switchdev
+VF representors are created for each VF when switch mode is set switchdev on representor PCI device
 
-> > Does report the expected things for _bdos internally (48), but not for
-> > sizeof (8) nor _bos (SIZE_MAX). Of course if we inline it, _bos starts
-> > working and, along with _bdos, realizes it was lied to, and reports
-> > 32 again.
-> 
-> WTF ?!?! How can all this be so inconsistent and why are people okay
-> with that?
+#devlink dev
+pci/0002:01:00.0
+pci/0002:02:00.0
+pci/0002:1c:00.0
 
-This. A thousands times, this. I'm really not okay with it, and we've
-been working to get rid of every ambiguity we trip over. It's made sane
-bounds checking in Linux extremely hard to get right.
+#devlink dev eswitch set pci/0002:1c:00.0 mode switchdev
 
-For more fun with array bounds, the one that absolutely floored me was
-the exception over trailing arrays:
+# ip link show
+	eth0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether 7e:58:2d:b6:97:51 brd ff:ff:ff:ff:ff:ff
+	r0p1v0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether 7e:5a:66:ea:fe:d6 brd ff:ff:ff:ff:ff:ff
+	r1p1v1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether de:29:be:10:9e:bf brd ff:ff:ff:ff:ff:ff
+	r2p1v2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether 4a:12:c7:a2:66:ad brd ff:ff:ff:ff:ff:ff
+	r3p1v3: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000 link/ether c2:b8:a8:0e:73:fd brd ff:ff:ff:ff:ff:ff
 
-struct middle_t {
-	u8 array[6];
-	int foo;
-} *middle;
 
-__builtin_object_size(middle->array, 1)  ==  6
+~# devlink port
+pci/0002:1c:00.0/0: type eth netdev r0p1v0 flavour pcipf controller 0 pfnum 1 vfnum 0 external false splittable false
+pci/0002:1c:00.0/1: type eth netdev r1p1v1 flavour pcivf controller 0 pfnum 1 vfnum 1 external false splittable false
+pci/0002:1c:00.0/2: type eth netdev r2p1v2 flavour pcivf controller 0 pfnum 1 vfnum 2 external false splittable false
+pci/0002:1c:00.0/3: type eth netdev r3p1v3 flavour pcivf controller 0 pfnum 1 vfnum 3 external false splittable false
 
-struct trailing_t {
-	int foo;
-	u8 array[6];
-} *trailing;
 
-__builtin_object_size(trailing->array, 1)  ==  SIZE_MAX ("unknown")
+-----------
+v1-v2:
+ -Fixed build warnings.
+ -Address review comments provided by "Kalesh Anakkur Purayil".
 
-Because of all the fake flexible array abuses over decades, _bos/_bdos
-were forced to _ignore_ the size of an array if it was the last member
-of a struct. But after C99 flexible arrays were introduced (24 years
-ago), nobody cleaned this up! We had to go get the compilers to create
--fstrict-flex-arrays=3 so that all those weird behaviors would go away:
-https://git.kernel.org/linus/df8fc4e934c12b906d08050d7779f292b9c5c6b5
+v2-v3:
+ - Used extack for error messages.
+ - As suggested reworked commit messages.
+ - Fixed sparse warning.
 
-> > For the patch in this thread, the W=1 case was reported (overread of
-> > "bx"), because normally fortify would just ignore the overread of
-> > the source.
-> 
-> So I'm not entirely sure I agree with that argument. Yes, &regs->bx is
-> 'unsigned long *' and sizeof(unsigned long) is 8 (if we assume 64bit).
-> However, you can also read it as the point of pt_regs where bx sits --
-> which is a far more sensible interpretation IMO.
-> 
-> Because then we're looking at struct pt_regs and an offset therein.
+v3-v4: 
+ - Patch 2 & 3: Fixed coccinelle reported warnings.
+ - Patch 10: Added devlink port support.
 
-Right -- the way to make this unambiguous has been to make sure there
-is an addressable object which contains the elements in question. For
-the least disruption, the best we were able to do is introduce the
-struct_group() helper. It's internally ugly, but it works.
+v4-v5:
+  - Patch 3: Removed devm_* usage in rvu_rep_create()
+  - Patch 3: Fixed build warnings.
 
-> So really pt_regs *is* an array of unsigned long, and I feel it is
-> really unfortunate we cannot express this in a way that is more concise.
+v5-v6:
+  - Addressed review comments provided by "Simon Horman".
+  - Added review tag. 
 
-A way to do this would be:
+v6-v7:
+  - Rebased on top net-next branch.
 
-struct pt_regs {
-	union {
-		struct {
-			unsigned long bx;
-			unsigned long cx;
-			unsigned long dx;
-			unsigned long si;
-			unsigned long di;
-			unsigned long bp;
-		};
-		unsigned long syscall_regs[6];
-	};
-	unsigned long ax;
-	...
-};
+v7-v8:
+   - Implmented offload stats ndo.
+   - Added documentation.
 
-Now regs->syscall_regs is addressable, sized, etc. "bx" means just bx,
-and "syscall_regs" means all 6.
+v8-v9:
+   - Updated the documentation.
 
-I wrote up a bunch of notes about much of this horror last year here:
-https://people.kernel.org/kees/bounded-flexible-arrays-in-c
+Geetha sowjanya (11):
+  octeontx2-pf: Refactoring RVU driver
+  octeontx2-pf: RVU representor driver
+  octeontx2-pf: Create representor netdev
+  octeontx2-pf: Add basic net_device_ops
+  octeontx2-af: Add packet path between representor and VF
+  octeontx2-pf: Get VF stats via representor
+  octeontx2-pf: Add support to sync link state between representor and
+    VFs
+  octeontx2-pf: Configure VF mtu via representor
+  octeontx2-pf: Add representors for sdp MAC
+  octeontx2-pf: Add devlink port support
+  octeontx2-pf: Implement offload stats ndo for representors
 
--Kees
+ .../ethernet/marvell/octeontx2.rst            |  85 ++
+ .../net/ethernet/marvell/octeontx2/Kconfig    |   8 +
+ .../ethernet/marvell/octeontx2/af/Makefile    |   3 +-
+ .../ethernet/marvell/octeontx2/af/common.h    |   2 +
+ .../net/ethernet/marvell/octeontx2/af/mbox.h  |  74 ++
+ .../net/ethernet/marvell/octeontx2/af/npc.h   |   1 +
+ .../net/ethernet/marvell/octeontx2/af/rvu.c   |  11 +
+ .../net/ethernet/marvell/octeontx2/af/rvu.h   |  30 +-
+ .../marvell/octeontx2/af/rvu_debugfs.c        |  27 -
+ .../marvell/octeontx2/af/rvu_devlink.c        |   6 +
+ .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  81 +-
+ .../marvell/octeontx2/af/rvu_npc_fs.c         |   5 +
+ .../ethernet/marvell/octeontx2/af/rvu_reg.h   |   4 +
+ .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 464 +++++++++++
+ .../marvell/octeontx2/af/rvu_struct.h         |  26 +
+ .../marvell/octeontx2/af/rvu_switch.c         |  20 +-
+ .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +
+ .../ethernet/marvell/octeontx2/nic/cn10k.c    |   4 +-
+ .../ethernet/marvell/octeontx2/nic/cn10k.h    |   2 +-
+ .../marvell/octeontx2/nic/otx2_common.c       |  58 +-
+ .../marvell/octeontx2/nic/otx2_common.h       |  84 +-
+ .../marvell/octeontx2/nic/otx2_devlink.c      |  49 ++
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 305 +++++---
+ .../marvell/octeontx2/nic/otx2_txrx.c         |  38 +-
+ .../marvell/octeontx2/nic/otx2_txrx.h         |   3 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  19 +-
+ .../net/ethernet/marvell/octeontx2/nic/rep.c  | 725 ++++++++++++++++++
+ .../net/ethernet/marvell/octeontx2/nic/rep.h  |  53 ++
+ 28 files changed, 1962 insertions(+), 227 deletions(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.h
 
 -- 
-Kees Cook
+2.25.1
+
