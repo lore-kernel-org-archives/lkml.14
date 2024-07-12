@@ -1,119 +1,93 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C5A7EF09;
-	Fri, 12 Jul 2024 11:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09AE624;
+	Fri, 12 Jul 2024 11:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720783243; cv=none; b=WPw7mqW9PHOt2WBi0Tk9XyQjzTd0EtocLJmsuXiPGVtQzAeMjTxpz1uMgasYY6ldon61guZtv2fJUWtHLI5yB84/QTNsDROD/wZpx6ZOrCgpg6cqxMwdhq01cZm332K0jNFFWfSroIwsYM5AbIV+k9tSCIj5TA7ELUsfkNc85fo=
+	t=1720783401; cv=none; b=Q8thfUzgCvDCLfwD+dAu77H0aRjOLyAZ3rjtD28g7PBZvsvfMSw14Q95IbHMBJJIuSqyFW2ERxshKHPiFvR2nlx9wpqx4VkKy89gB40l0PlZO/RIN5NCK7JYNZ64/ZZx/bIaVwcccpc4SqBuzK1GG1M5gjPlWXI8ZCT0TEnr42Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720783243; c=relaxed/simple;
-	bh=2vS20Ep8ZAaCHpMOeANEzKfY3e41sVjlOIwRfXNfiNE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IjVf40t27jT+HEEm6x43dA72PAJ8qeX+BhR72hDhZ1LbLIqg7dthRxdDcx6xHZ+pabHwugcCASXhPHXOXXgk31FDgC70u6Kas4T6V/DiL+BnzW5G/9HbGvUBwipqEql/UMVXAuztD7mRgIKXmVvx0HdaymhOh2wEVKvjhRfNh7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=asLguyKX; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="asLguyKX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720783242; x=1752319242;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2vS20Ep8ZAaCHpMOeANEzKfY3e41sVjlOIwRfXNfiNE=;
-  b=asLguyKXNFJkEP4lv32FvYshDwRCYaKs00OVXm1TIg3cMR+I1LqUesjI
-   IcxI+MjhG7Exq3qaz1VubbM7h0z3zWYfgKnmCtt2MQFiYoU8bQjtsBEiV
-   NJ1q+Z4Vpy5NDKQpMSOXkVw+BGWm1tvWo2ySSCi09Ru41MSt76rUSTiNO
-   IqV3ED2d9eaKfO8oY5hSMivSJnRQcHKmb6pQQFi1GT/ibRdZJCujGwl7K
-   ub4J+ewY0qZIMMTPt9rdp68FzfJyBO3w6pwDlsbZ33IAf5tmRCBvi6sev
-   /bZBPrZVSwvu7Lq1jfauRQQktiCBi9QFsbdD6ixKQol92JBvzUq+BA578
-   g==;
-X-CSE-ConnectionGUID: 7sR71l0RTy+K4/gLrcpizw==
-X-CSE-MsgGUID: T2yuLgl/SzuY7Cf/EGmb1w==
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="29165133"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Jul 2024 04:20:35 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Jul 2024 04:20:03 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 12 Jul 2024 04:20:00 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>,
-	<hkallweit1@gmail.com>, <linux@armlinux.org.uk>, <edumazet@google.com>,
-	<pabeni@redhat.com>, <horatiu.vultur@microchip.com>,
-	<linux-kernel@vger.kernel.org>, <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net] net: phy: micrel: Fix the KSZ9131 MDI-X status issue
-Date: Fri, 12 Jul 2024 16:46:48 +0530
-Message-ID: <20240712111648.282897-1-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720783401; c=relaxed/simple;
+	bh=wb/37Rnyi2RsZUtH3sbD46Do0fPo09ABddJTvcslUVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pL+wDJeYNyaLc8JUW03VEimrndedyaRrvKMB5cuhusKJCaWcPrIx8jzICTETFXmHJSvJxsS8EhAJEqbwyVyBVZ6oCOZqN9zQ8Tbfik4yZSUBnUCGLlB2jAbYP1sLaZVcqRRMWvsfxuzBFvTY1PaG4iJ5rXd6lAUbPmGlgNDCulc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sSEMM-0003FX-00; Fri, 12 Jul 2024 13:22:42 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 3996BC0120; Fri, 12 Jul 2024 13:20:56 +0200 (CEST)
+Date: Fri, 12 Jul 2024 13:20:56 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, daniel.lezcano@linaro.org,
+	paulburton@kernel.org, peterz@infradead.org, mail@birger-koblitz.de,
+	bert@biot.com, john@phrozen.org, sander@svanheule.net,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-mips@vger.kernel.org, kabel@kernel.org, ericwouds@gmail.com
+Subject: Re: [PATCH v5 00/10] mips: Support for RTL9302C
+Message-ID: <ZpERmHxcqF/gQRTi@alpha.franken.de>
+References: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240710043524.1535151-1-chris.packham@alliedtelesis.co.nz>
 
-Access information about Auto mdix completion and pair selection from the
-KSZ9131's Auto/MDI/MDI-X status register
+On Wed, Jul 10, 2024 at 04:35:14PM +1200, Chris Packham wrote:
+> This series adds basic support for the RTL9302C reference board. Currently the
+> focus is on the CPU block stuff. I hope to get around to the DSA switch driver
+> eventually but this is a small start that lets me boot a mainline kernel on the
+> board I have. I initialiy started with code from openwrt but have paired it
+> down to just the clocksource driver and devicetree.
+> 
+> The first two patches in this series are fixing some complaints from make
+> dtbs_check for some existing realtek dts files. They can be applied on their
+> own if desired.
+> 
+> Chris Packham (10):
+>   mips: dts: realtek: use "serial" instead of "uart" in node name
+>   mips: dts: realtek: add device_type property to cpu node
+>   dt-bindings: vendor-prefixes: Add Cameo Communications
+>   dt-bindings: mips: realtek: Add rtl930x-soc compatible
+>   dt-bindings: timer: Add schema for realtek,otto-timer
+>   dt-bindings: interrupt-controller: realtek,rtl-intc: Add rtl9300-intc
+>   clocksource: realtek: Add timer driver for rtl-otto platforms
+>   mips: select REALTEK_OTTO_TIMER for Realtek platforms
+>   mips: generic: add fdt fixup for Realtek reference board
+>   mips: dts: realtek: Add RTL9302C board
+> 
+>  .../realtek,rtl-intc.yaml                     |  20 +-
+>  .../devicetree/bindings/mips/realtek-rtl.yaml |   4 +
+>  .../bindings/timer/realtek,otto-timer.yaml    |  63 ++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  arch/mips/Kconfig                             |   1 +
+>  arch/mips/boot/dts/realtek/Makefile           |   1 +
+>  .../cameo-rtl9302c-2x-rtl8224-2xge.dts        |  73 +++++
+>  arch/mips/boot/dts/realtek/rtl838x.dtsi       |   1 +
+>  arch/mips/boot/dts/realtek/rtl83xx.dtsi       |   4 +-
+>  arch/mips/boot/dts/realtek/rtl930x.dtsi       |  79 +++++
+>  arch/mips/generic/Makefile                    |   1 +
+>  arch/mips/generic/board-realtek.c             |  79 +++++
+>  drivers/clocksource/Kconfig                   |  10 +
+>  drivers/clocksource/Makefile                  |   1 +
+>  drivers/clocksource/timer-rtl-otto.c          | 291 ++++++++++++++++++
+>  include/linux/cpuhotplug.h                    |   1 +
+>  16 files changed, 628 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/timer/realtek,otto-timer.yaml
+>  create mode 100644 arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
+>  create mode 100644 arch/mips/boot/dts/realtek/rtl930x.dtsi
+>  create mode 100644 arch/mips/generic/board-realtek.c
+>  create mode 100644 drivers/clocksource/timer-rtl-otto.c
 
-Fixes: b64e6a8794d9 ("net: phy: micrel: Add PHY Auto/MDI/MDI-X set driver for KSZ9131")
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
----
- drivers/net/phy/micrel.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+applied patch 1-4, 6 and 8-10 to mips-next.
 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index ebafedde0ab7..fddc1b91ba7f 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1438,6 +1438,9 @@ static int ksz9131_config_init(struct phy_device *phydev)
- #define MII_KSZ9131_AUTO_MDIX		0x1C
- #define MII_KSZ9131_AUTO_MDI_SET	BIT(7)
- #define MII_KSZ9131_AUTO_MDIX_SWAP_OFF	BIT(6)
-+#define MII_KSZ9131_DIG_AXAN_STS	0x14
-+#define MII_KSZ9131_DIG_AXAN_STS_LINK_DET	BIT(14)
-+#define MII_KSZ9131_DIG_AXAN_STS_A_SELECT	BIT(12)
- 
- static int ksz9131_mdix_update(struct phy_device *phydev)
- {
-@@ -1452,14 +1455,24 @@ static int ksz9131_mdix_update(struct phy_device *phydev)
- 			phydev->mdix_ctrl = ETH_TP_MDI;
- 		else
- 			phydev->mdix_ctrl = ETH_TP_MDI_X;
-+
-+		phydev->mdix = phydev->mdix_ctrl;
- 	} else {
-+		ret = phy_read(phydev, MII_KSZ9131_DIG_AXAN_STS);
-+		if (ret < 0)
-+			return ret;
-+
- 		phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
--	}
- 
--	if (ret & MII_KSZ9131_AUTO_MDI_SET)
--		phydev->mdix = ETH_TP_MDI;
--	else
--		phydev->mdix = ETH_TP_MDI_X;
-+		if (ret & MII_KSZ9131_DIG_AXAN_STS_LINK_DET) {
-+			if (ret & MII_KSZ9131_DIG_AXAN_STS_A_SELECT)
-+				phydev->mdix = ETH_TP_MDI;
-+			else
-+				phydev->mdix = ETH_TP_MDI_X;
-+		} else {
-+			phydev->mdix = ETH_TP_MDI_INVALID;
-+		}
-+	}
- 
- 	return 0;
- }
+Thomas.
+
 -- 
-2.34.1
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
