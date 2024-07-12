@@ -1,127 +1,108 @@
-Received: from fout1-smtp.messagingengine.com (fout1-smtp.messagingengine.com [103.168.172.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1A313B2A8;
-	Fri, 12 Jul 2024 06:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A0513D538;
+	Fri, 12 Jul 2024 06:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720767275; cv=none; b=Uq+kuPnGkUyote9Rma0xaYk+onOQT6RQmSRRC4xC4b2sGQwaXc0vTWx6qlTsYsdFyNaFfmhkZB29jNatZwQGHr0y0EJJiAmfcDpm/lR7y56mdgNd4nSR8ErYxgG4WdDqIAUxVytuE0yJaI+L1ZyOxCgPUNnvqzTCdn3IQhLMOPg=
+	t=1720767290; cv=none; b=AzPqZXTBjnZWow/iIKOmOryUg089XMUO8Vsj7cNkQ8R0ZeukX/B+YBIcdiU7MnlM0pFwwQ6OXVgxuws+coXJ+eHhnYWAVqwrh0Fkk1Rm/zMCsBDm1DGYypm95mSQl5wKa6G5A6erXBMeX5jmudLbawE//CREVj9r8TPRjCx/Oz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720767275; c=relaxed/simple;
-	bh=R/n1S2lU3wjKVB5Twt0F6ddDg+D3Vh0Kp3XTwGX53ZA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=eQEnkiSRbl+FHoXgNTnWfloE1mPH7mWDT48oi100pk79WQWJVqYuEV6OTRDqqpcK194Kf2Hiy9QKtYKG8PoDL8+6Gkv0MSSTvWn/fhRkwgoW6NC4y8JkQi/EGzyUCxrkROHAHDmYY01PATFh8Im5l4q96UzRpsvIExna15LA/UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=UK4VZkrQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PgIg7rp2; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720767290; c=relaxed/simple;
+	bh=mQvjWlhdUJODo7htZQ1+hcdFam/twUz6WZBVeqfHTXg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fAuL8fjmCZKF9ctw5E0WLm+dCowX8dzE9X5MIgOxwABLA1MeEv1FdwqRIAEGWSsi2mFHqLkRdSOLk/wsdpMD8ASagN2oOBKrH9nL2bi790NHXwwKItXPlzzg1VG0MlMQNSQpLS6PzVuiZT/yNHruiD+9K2+/UTjmZoU8SudF7F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNQNOJfd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="UK4VZkrQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PgIg7rp2"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 66076138880C;
-	Fri, 12 Jul 2024 02:54:32 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 12 Jul 2024 02:54:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1720767272; x=1720853672; bh=PDVQUKl+Ba
-	T+zis/3VmiEmMf8+afWtbIXBJXNSBs60U=; b=UK4VZkrQNX5quSRwdSj5FvyrUU
-	XZLceuSSzhbaPZyuj0pTmdzLm8v5CbhcUW+YnniE9xTVzgBU67SaqMq1JH+YVxxy
-	1RNppFuMcl4cfZwlFcxmNa1yG/goYFOeJ+7o+x094rp2uDAA2haiVZhdk9sYNyPi
-	9B4PjeV21dAZIIovuX01EoyYVgTK9J9mrVmNHfFsDYh3JTccRbmuaqFEm9KlqhdI
-	5+CLkue46PQSB4gFp8qaERxRfoskwUC4EFJU2lIHCqe5UoMAq5bTeN75Dj8vpj2Z
-	lNWK8B02B0zp/GWU1wsjZPdkWp4o4ERgpFTdoQ8t1dU5e68ZeYnnLBc6R6rQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1720767272; x=1720853672; bh=PDVQUKl+BaT+zis/3VmiEmMf8+af
-	WtbIXBJXNSBs60U=; b=PgIg7rp2MgujU27m7rkpXci6myMoHKnc8qeuBTcn0wD2
-	shRTEsaG+v3KINiTDCRwP5VqQko8Jd2uIkcle6mVqTrRMdohC1n3VVmNWGGtoCPq
-	g8UoNo0QK+YiQXjjrSuPl8bN+Glx6kocaOO9b11kSbZKhqe8ABV/Z9oBRoGSdvLw
-	a7aHz4yndw5FHo1XxgDVcD/f10LFA5bmgOmwNwia9k80VfpIKtOchKjvsg/LbM9Q
-	RGj8WxapwDgB+kzSH8u5v23OCOyd/wh+Xlra4Rrm1yeiffyTRNyhWXzucqVqPM1/
-	4NNx54PuUtTaqKyYX2ze/1k63AhUCOJ/JybNfYAE/Q==
-X-ME-Sender: <xms:JtOQZoZIhW9iqZDb3amQNZQ83lfZCw3Lh086Q4pzGBV_daCdNu9k7w>
-    <xme:JtOQZjZhZpLUJ3Lf7jQGduMZ0kOcA_CKRa764OL5Cf-9AYnVbhb3zSwfm-tOqiqJ8
-    znJRMpfjs39KeAYlQc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeehgdduudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnheplefgieffiedtvdffteeiheekfeeifefgtdejgefhheetkeeigfeltdevtdek
-    heejnecuffhomhgrihhnpehkrghllhhshihmshdurdhsrghspdhkrghllhhshihmshdvrd
-    hsrghspdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:JtOQZi9AFrpx2QSmrtYgZX4XZT0QlGRTubNZqWj1VsiliNSZ0C75BQ>
-    <xmx:JtOQZir6WmskDXpvoPq156kau3NCS_FhVIGZkfpcnGuc3iP8qlR4wA>
-    <xmx:JtOQZjoEerkZ23eMfFyGfMkN1qMEMYxpkhzux-ybCvgJVMYH5lhe9g>
-    <xmx:JtOQZgSFHku4PJm0UIoOfOkXAVs8DZpGW2WeRlVhv7-pMhuSPI0vbQ>
-    <xmx:KNOQZm35KjA5oNEUEGBsAMlTc3KNniGeZdq0N3TeI_zT3BUKEnRvP1sv>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7B5CDB6008D; Fri, 12 Jul 2024 02:54:30 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNQNOJfd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19AAAC4AF07;
+	Fri, 12 Jul 2024 06:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720767290;
+	bh=mQvjWlhdUJODo7htZQ1+hcdFam/twUz6WZBVeqfHTXg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=gNQNOJfdeRMDorQD77FQu6qn3j0KMvbEqq6iCAXtINIuQz0f4EJLIcXzFsnKJPeLh
+	 KKR2tRFWfNHyRFLfvrFZlPSeS7LfF6AuuRlhtSYio7U1Yv9i/8b/IlyW0ZSnkARHgM
+	 bPu5Km/JbVXVYiwPRABq1aIUJQ4lW1d1GcergPYfPZmpcq3GMDZOdFU77iomxpZxLI
+	 qcB9s7NzGddeBJwKFsoLm0ZPmoC4Den8xvr+8Y8DegVNpPtyETNS0zJQBTjfFPJAM8
+	 P0IE6pcUbotSCf4JRxnAGi2zlp9ZREg16MJdIHw549DmnE2zV4wQ4KrqIie1pZsxC5
+	 2q3T/U3bfgl5g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07781C3DA4D;
+	Fri, 12 Jul 2024 06:54:50 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Date: Fri, 12 Jul 2024 14:54:46 +0800
+Subject: [PATCH 1/5] soc: amlogic: meson-gx-socinfo: add new SoCs id
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1a9e8039-0bf8-40b4-ad07-a51ea569b7b2@app.fastmail.com>
-In-Reply-To: 
- <1f28df2a177cf632ac70162b345dc59711959f48.1720763318.git.christophe.leroy@csgroup.eu>
-References: 
- <1f28df2a177cf632ac70162b345dc59711959f48.1720763318.git.christophe.leroy@csgroup.eu>
-Date: Fri, 12 Jul 2024 08:53:08 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Alexander Lobakin" <alobakin@pm.me>,
- "Nathan Chancellor" <nathan@kernel.org>, "Kees Cook" <kees@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "kernel test robot" <lkp@intel.com>
-Subject: Re: [PATCH] vmlinux.lds.h: catch .bss..L* sections into BSS")
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240712-soc_info-v1-1-05ba95929d5a@amlogic.com>
+References: <20240712-soc_info-v1-0-05ba95929d5a@amlogic.com>
+In-Reply-To: <20240712-soc_info-v1-0-05ba95929d5a@amlogic.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720767287; l=1125;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=nnMjotXuHyUIt8Kx/nCa5XJH4NAVjChyKcIYDRAZ0Ws=;
+ b=K2wHE0oUM7+bxhhudhE+NS3cqsySKqwMYTRXO3u1/826jSaFfDzabCLBVDD2ggy/RhSsImpVP
+ eUd8thcgohACM1bc6py1qK9wuxEz7fF/aezCnHlp9kaUm0E+YZsAAVQ
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-On Fri, Jul 12, 2024, at 07:51, Christophe Leroy wrote:
-> Commit 9a427556fb8e ("vmlinux.lds.h: catch compound literals into
-> data and BSS") added catches for .data..L* and .rodata..L* but missed
-> .bss..L*
->
-> Since commit 5431fdd2c181 ("ptrace: Convert ptrace_attach() to use
-> lock guards") the following appears at build:
->
->   LD      .tmp_vmlinux.kallsyms1
-> powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data33' from 
-> `kernel/ptrace.o' being placed in section `.bss..Lubsan_data33'
->   NM      .tmp_vmlinux.kallsyms1.syms
->   KSYMS   .tmp_vmlinux.kallsyms1.S
->   AS      .tmp_vmlinux.kallsyms1.S
->   LD      .tmp_vmlinux.kallsyms2
-> powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data33' from 
-> `kernel/ptrace.o' being placed in section `.bss..Lubsan_data33'
->   NM      .tmp_vmlinux.kallsyms2.syms
->   KSYMS   .tmp_vmlinux.kallsyms2.S
->   AS      .tmp_vmlinux.kallsyms2.S
->   LD      vmlinux
-> powerpc64-linux-ld: warning: orphan section `.bss..Lubsan_data33' from 
-> `kernel/ptrace.o' being placed in section `.bss..Lubsan_data33'
->
-> Lets add .bss..L* to BSS_MAIN macro to catch those sections into BSS.
->
-> Fixes: 9a427556fb8e ("vmlinux.lds.h: catch compound literals into data 
-> and BSS")
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: 
-> https://lore.kernel.org/oe-kbuild-all/202404031349.nmKhyuUG-lkp@intel.com/
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Applied to the asm-generic tree, thanks!
+Add new definition for Amlogi SoCs, include S4, C3, T7, A4, A5.
 
-         Arnd
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+ drivers/soc/amlogic/meson-gx-socinfo.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 8809a948201a..7549f1644e5e 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -41,6 +41,11 @@ static const struct meson_gx_soc_id {
+ 	{ "G12B", 0x29 },
+ 	{ "SM1", 0x2b },
+ 	{ "A1", 0x2c },
++	{ "T7", 0x36 },
++	{ "S4", 0x37 },
++	{ "A5", 0x3c },
++	{ "C3", 0x3d },
++	{ "A4", 0x40 },
+ };
+ 
+ static const struct meson_gx_package_id {
+@@ -76,6 +81,11 @@ static const struct meson_gx_package_id {
+ 	{ "S905X3", 0x2b, 0x10, 0x3f },
+ 	{ "S905D3", 0x2b, 0x30, 0x3f },
+ 	{ "A113L", 0x2c, 0x0, 0xf8 },
++	{ "S805X2", 0x37, 0x2, 0xf },
++	{ "C308L", 0x3d, 0x1, 0xf },
++	{ "A311D2", 0x36, 0x1, 0xf },
++	{ "A113X2", 0x3c, 0x1, 0xf },
++	{ "A113L2", 0x40, 0x1, 0xf },
+ };
+ 
+ static inline unsigned int socinfo_to_major(u32 socinfo)
+
+-- 
+2.37.1
+
+
