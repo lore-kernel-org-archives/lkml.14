@@ -1,318 +1,84 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF80614265A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F3F13E41A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720774472; cv=none; b=hi6xZ581sVbyO18TDeJDrOq1qBB0Ip8m9L0lSSk5ShNtZscJr15OLZOX+bDj/19zL1gSG4wUKYJ0xsl344wb2kp3HcqZ+3KGCPb4REVPRQqgQrqV+NoHFmlf0JcxNKX+uz3j6ISkz8PQoucol/m//5+2Kv7425MQQLQoE7OMrcc=
+	t=1720774485; cv=none; b=qZzQDb4WW0yjkN/axYob+rz178XTG9i3f7BmlWrKalqWQ/Zo0PGGt99Cf1HlFPONCbvT+yRF89Z6zF46W6Y8IzHkN0ErMcLzlBmNxzCEZREgMVzTt0f3bB1F0ZBf7o+RW0e89BW2oW8+V/B7UfYx4cTctDa5hqs+Zq9pf3+dNno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720774472; c=relaxed/simple;
-	bh=Wbb1FijNhfNROnsYW4E19syqV9gjAepOgcjzWx0x5AU=;
+	s=arc-20240116; t=1720774485; c=relaxed/simple;
+	bh=KBF1tbOWGnT1tf80E0eOFPpWPxkx+z9V0AzaHMrmLKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hNY7E3prlcayVbowpHe0aEeQzkwglQKrLjqI9DFNRE0WtkwqDDgAEXcjQ9DYOZ6W65vlVAS0sxM8CMCx0T75rZ2vynoc5Sa2DCz/EVJ2+bnTeLq8Jfi6Mj2q1QJ1K2htmpUxSgn9H6g9lDC4D+IctlJ42A7j3teGGnuUvKyg5r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=p+FR6TMe; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X2k4m2SedPZI9y0xBbeMJr2lSeW74j5v4EGRmBj1EzVZXcG54/JUU16R8GN68D7Eh3v2ULb5AzwpUE9JEsbzpJQht7G1LpKRvptGvYGk3XiiYK0SaChLO9+dk9hw6aEx7sstqF4aNEW8Qt9+Qi+LxI+U4wFFLaoWN+8X6IeWtR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lzNWrdPF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="p+FR6TMe"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-356c4e926a3so1119440f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 01:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720774468; x=1721379268; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9InJSzy0ES6bg+8MGtn3MK1Bwf9ZBDLRJ2XsmfgOvc=;
-        b=p+FR6TMexOC0wwTjPHpxlHihnG81Ytf9J7jEI/CuNNWmhtyx+4joA3Sh1Tz9D38/C/
-         Fe3z3DRtKKOM+gANOVE4/bqjudVV6QQtSp9fiSXcRMsdpdHOmCAxGjIxGfH9Z3wFA5rg
-         zk5ZzmHVK26uhMT3NhsSN+RhpZksBdvBvVgoFsvAdkEHqQqDbS068nPMzxeC1W1xkY1g
-         yLg5GppgxEdbjKgH2bgtBN0nvlMN/Qw+19NmAqrU8WF/aFag2fjVmllU3BkYq6VdHhRa
-         /ocZO+oS2zbxXTqdu0jGkPDx+QXE2Eyccc4Lhs2Mob6h74HIiOMKEjjvAWdftyF2LQdc
-         v4fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720774468; x=1721379268;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y9InJSzy0ES6bg+8MGtn3MK1Bwf9ZBDLRJ2XsmfgOvc=;
-        b=DEr96yhecO9Jv+RQ9PH/GaYUd4ReEI3zn6yU57uYt+Ffv6+mscCsmV4oaOdld32SmI
-         n3texXj9sh+gMDXdD32NOE+EV0TBrjnOn9K+dW8lI/D6r0u5naSRAUbMrGgxtH6E8tS0
-         xobWvAa9Sz57fZ2xTaKLrIRZ4gwIb2UnJv7dOU2+EiFzhbrjDCEPFVwgxrT8VZGgODjO
-         wshN8jwEiuiRQ3/++OFHONZ7+d6z1SpX2u0SaY1r1cigrbfqGgwGBqezL2w3SL6ULRMm
-         hpFuNR9DleMqisXLQe37Xr0yifliYdgpHB7wq1uSLrjJH3RVz4RP7FkSlbJetj4QoCdT
-         rCWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHmGurl8bVhaj9NZqjeNqoD3c/JRONpS8/Ss+aN/RMZAGF2V3zc3Dql29jS7JUQKUTUi9Uqqe4alR6W1FYzJm0jcyEpAEdzottULbt
-X-Gm-Message-State: AOJu0YzhVxYOEIhPt0tB2jpQvDlYODIYl+C4X4903XZJuOoavRIRJrto
-	ESHLr5RO2ftCOif42mQILT3dQkO2/55lA+YI/1XxHZQ0l9NJIIPSZ4LoDfi4UJg=
-X-Google-Smtp-Source: AGHT+IHD4MV1Mmsw+K5iradfuCMgKB56j98M6M1zcRyASCH4zkXlQMd8jezMCRK6rG3ByRTw0+9ZzA==
-X-Received: by 2002:adf:eb81:0:b0:367:9ce3:167a with SMTP id ffacd0b85a97d-367ceadb3e7mr7065472f8f.64.1720774468043;
-        Fri, 12 Jul 2024 01:54:28 -0700 (PDT)
-Received: from localhost (p50915eb1.dip0.t-ipconnect.de. [80.145.94.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa067dsm9712869f8f.78.2024.07.12.01.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 01:54:27 -0700 (PDT)
-Date: Fri, 12 Jul 2024 10:54:26 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Farouk Bouabid <farouk.bouabid@cherry.de>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Quentin Schulz <quentin.schulz@cherry.de>, Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 2/6] pwm: add mule pwm-over-i2c driver
-Message-ID: <5hd7fndgivgusx76wq6mbvgefngd3tllqsfsk6pppbphchczte@ujagkep4miet>
-References: <20240529-buzzer_support-v1-0-fd3eb0a24442@cherry.de>
- <20240529-buzzer_support-v1-2-fd3eb0a24442@cherry.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lzNWrdPF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF83FC4AF0B;
+	Fri, 12 Jul 2024 08:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720774485;
+	bh=KBF1tbOWGnT1tf80E0eOFPpWPxkx+z9V0AzaHMrmLKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lzNWrdPFcsNcDn32Kx9K26QKyltPBG1z5fLwk8BH542fx7TjLWHG7JdkhOeHyG+d/
+	 kJhsUWugSFcwBhGr8gmBztqkUpZCfQ1X7h2HaHOR9+ESrLmojbO197iOISepk2AAmI
+	 /x+FqXfBu/n+OED9Mny4LHI+5Kk8bJQHbgzbUBCo=
+Date: Fri, 12 Jul 2024 10:54:42 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Vamsi Krishna Attunuru <vattunuru@marvell.com>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Jerin Jacob <jerinj@marvell.com>,
+	Srujana Challa <schalla@marvell.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v10 1/1] misc: mrvl-cn10k-dpi: add Octeon
+ CN10K DPI administrative driver
+Message-ID: <2024071232-kindling-either-de2c@gregkh>
+References: <2024070333-matchless-batch-57ec@gregkh>
+ <20240706153009.3775333-1-vattunuru@marvell.com>
+ <2024071026-squirt-trustful-5845@gregkh>
+ <MW4PR18MB52442E363AE0BED30607F251A6A42@MW4PR18MB5244.namprd18.prod.outlook.com>
+ <2024071053-mahogany-cavalier-6692@gregkh>
+ <MW4PR18MB524491EEA2A628469595FE47A6A42@MW4PR18MB5244.namprd18.prod.outlook.com>
+ <2024071012-backpedal-punctured-5d7b@gregkh>
+ <SJ0PR18MB52467C544972534F6DECDC48A6A62@SJ0PR18MB5246.namprd18.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wbrgntclef5fmbs4"
-Content-Disposition: inline
-In-Reply-To: <20240529-buzzer_support-v1-2-fd3eb0a24442@cherry.de>
-
-
---wbrgntclef5fmbs4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <SJ0PR18MB52467C544972534F6DECDC48A6A62@SJ0PR18MB5246.namprd18.prod.outlook.com>
 
-Hello,
+On Fri, Jul 12, 2024 at 08:44:22AM +0000, Vamsi Krishna Attunuru wrote:
+> 
+> >> >> >>
+> >> >> >> +config MARVELL_CN10K_DPI
+> >> >> >> +	tristate "Octeon CN10K DPI driver"
+> >> >> >> +	depends on ARM64 && PCI
+> >> >> >
+> >> >> >Why does ARM64 matter here?  I don't see any dependency required
+> >of it.
+> >> >> >
+> >> >> Thanks, Greg, for your time. This DPI device is an on-chip PCIe
+> >> >> device and only present on Marvell's CN10K platforms(which are
+> >> >> 64-bit ARM SoC
+> >> >processors), so added those dependency.
+> >> >
+> >> >Then perhaps keep the ARM64 and add a COMPILE_TEST option as well so
+> >> >that we can build this as part of normal testing?
+> >> >
+> >> >So that would be:
+> >> >	depends on PCI && (ARM64 || COMPILE_TEST) right?
+> >> >
+> >> Yes, it makes sense to add. Can I send this fix as next version now so
+> >> that it will show up in next release, please suggest.
+> >
+> >Send it as a follow-on patch on top of my tree, doing what Arnd suggested.
+> 
+> Hi Greg, I submitted the follow-on patch on top of your char-misc-testing.
+> Please let me know if there is any additional action required on my part.
 
-On Wed, May 29, 2024 at 12:10:31PM +0200, Farouk Bouabid wrote:
-> Mule is a device that can output a PWM signal based on I2C commands.
->=20
-> Add pwm driver for Mule PWM-over-I2C controller.
->=20
-> Signed-off-by: Farouk Bouabid <farouk.bouabid@cherry.de>
-> ---
->  drivers/pwm/Kconfig    |  10 +++++
->  drivers/pwm/Makefile   |   1 +
->  drivers/pwm/pwm-mule.c | 115 +++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 126 insertions(+)
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 4b956d661755..eb8cfa113ec7 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -425,6 +425,16 @@ config PWM_MICROCHIP_CORE
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-microchip-core.
-> =20
-> +config PWM_MULE
-> +	tristate "Mule PWM-over-I2C support"
-> +	depends on I2C && OF
+Just now applied, this crossed in the email ether.
 
-It would be easy to drop the hard dependency on OF. Please do that.
-
-Given that that part doesn't seem to be available for individual sale, I
-suggest to add something like:
-
-	depends on (ARM64 && ARCH_ROCKCHIP) || COMPILE_TEST
-
-to not annoy people configuring a kernel for x86 or s390.
-
-> +	help
-> +	  PWM driver for Mule PWM-over-I2C controller. Mule is a device
-> +	  that can output a PWM signal based on I2C commands.
-
-How is that different from a PWM that is an ordinary I2C device? If
-there is no difference, I'd just call this "an I2C device". Also "can
-output a PWM signal" is a given for PWM drivers :-)
-
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-mule.
-> +
->  config PWM_MXS
->  	tristate "Freescale MXS PWM support"
->  	depends on ARCH_MXS || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index c5ec9e168ee7..cdd736ea3244 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -38,6 +38,7 @@ obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
->  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
->  obj-$(CONFIG_PWM_MICROCHIP_CORE)	+=3D pwm-microchip-core.o
->  obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
-> +obj-$(CONFIG_PWM_MULE)		+=3D pwm-mule.o
->  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
->  obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
->  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
-> diff --git a/drivers/pwm/pwm-mule.c b/drivers/pwm/pwm-mule.c
-> new file mode 100644
-> index 000000000000..e8593a48b16e
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-mule.c
-> @@ -0,0 +1,115 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Mule PWM-over-I2C controller driver
-> + *
-> + * Copyright (C) 2024 Theobroma Systems Design und Consulting GmbH
-
-Is there a publicly available datasheet? I guess not. (I ask because
-adding a link there to such a document would be nice.)
-
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +
-> +struct mule_pwm {
-> +	struct mutex lock;
-> +	struct regmap *regmap;
-> +};
-> +
-> +static const struct regmap_config pwm_mule_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +};
-> +
-> +#define MULE_PWM_DCY_REG	0x0
-> +#define MULE_PWM_FREQ_L_REG	0x1	/* LSB register */
-> +#define MULE_PWM_FREQ_H_REG	0x2	/* MSB register */
-> +
-> +#define NANOSECONDS_TO_HZ(x) (1000000000UL/(x))
-
-Don't introduce such a macro if you only use it once. Having the
-division in the function results in code that is easier to read (IMHO).
-
-> +static int pwm_mule_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			      const struct pwm_state *state)
-> +{
-> +	struct mule_pwm *priv =3D pwmchip_get_drvdata(chip);
-> +	u8 duty_cycle;
-> +	u64 freq;
-> +	int ret;
-> +
-> +	freq =3D NANOSECONDS_TO_HZ(state->period);
-> +
-> +	if (freq > U16_MAX) /* Frequency is 16-bit wide */ {
-> +		dev_err(chip->dev,
-> +			"Failed to set frequency: %llu Hz: out of 16-bit range\n", freq);
-> +		return -EINVAL;
-> +	}
-
-You're supposed to configure the biggest possible period not bigger than
-the requested period. So this should be:
-
-	/*
-	 * The period is configured using a 16 bit wide register holding
-	 * the frequency in Hz.
-	 */
-	unsigned int period =3D min_t(u64, state->period, NSEC_PER_SEC);
-	unsigned int freq =3D DIV_ROUND_UP(NSEC_PER_SEC, period);
-
-	if (freq > U16_MAX)
-		return -EINVAL;
-
-> +	if (state->enabled)
-> +		duty_cycle =3D pwm_get_relative_duty_cycle(state, 100);
-
-This is wrong for two reasons:
-
- - It uses rounding to the nearest duty_cycle, however you're supposed
-   to round down.
- - It uses the requested period instead of the real one.
-
-I wonder why the hardware doesn't use the whole 8 bits here.
-
-> +	else
-> +		duty_cycle =3D 0;
-> +
-> +	mutex_lock(&priv->lock);
-
-If you use the guard helper, you don't need to resort to goto for error
-handling.
-
-> +	ret =3D regmap_bulk_write(priv->regmap, MULE_PWM_FREQ_L_REG, &freq, 2);
-> +	if (ret) {
-> +		dev_err(chip->dev,
-> +			"Failed to set frequency: %llu Hz: %d\n", freq, ret);
-> +		goto out;
-> +	}
-> +
-> +	ret =3D regmap_write(priv->regmap, MULE_PWM_DCY_REG, duty_cycle);
-> +	if (ret)
-> +		dev_err(chip->dev,
-> +			"Failed to set duty cycle: %u: %d\n", duty_cycle, ret);
-
-Please document how the hardware behaves here in a "Limitations" section
-as several other drivers do. Questions to answer include: Does it
-complete a period when the parameters are updated? Can it happen that a
-glitch is emitted while MULE_PWM_FREQ_[LH]_REG is updated but
-MULE_PWM_DCY_REG isn't yet? Maybe updating MULE_PWM_FREQ_[LH]_REG isn't
-even atomic? "Doesn't support disabling, configures duty_cycle=3D0 when
-disabled is requested."
-
-Maybe write all three registers in a bulk write, then you might even be
-able to drop the lock.
-
-Also please fail silently.
-
-> +out:
-> +	mutex_unlock(&priv->lock);
-> +	return ret;
-> +}
-> +
-> +static const struct pwm_ops pwm_mule_ops =3D {
-> +	.apply =3D pwm_mule_apply,
-
-Is .get_state not possible to implement (then please document that with a r=
-eason)?
-
-> +};
-> +
-> +static int pwm_mule_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev =3D &client->dev;
-> +	struct pwm_chip *chip;
-> +	struct mule_pwm *priv;
-> +
-> +	chip =3D devm_pwmchip_alloc(dev, 1, sizeof(*priv));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	priv =3D pwmchip_get_drvdata(chip);
-> +
-> +	mutex_init(&priv->lock);
-> +
-> +	priv->regmap =3D devm_regmap_init_i2c(client, &pwm_mule_config);
-> +	if (IS_ERR(priv->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(priv->regmap),
-> +				     "Failed to allocate i2c register map\n");
-> +
-> +	chip->ops =3D &pwm_mule_ops;
-> +
-> +	return devm_pwmchip_add(dev, chip);
-
-Error message if this fails, please.
-
-> +}
-
-Best regards
-Uwe
-
---wbrgntclef5fmbs4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaQ70AACgkQj4D7WH0S
-/k7/gQf/Q+SdZqNCkDwpvZRbQGIjpyKxHGDP30YB3HC97oU7mrFiybp5l20eBhSh
-n/WDFCvdBYeiKsMLuWgN7RVITqfHJNa0gT22Lhf6l0Sco1ZykjQDuAVPbkNyp/jd
-FFf+EFHa3QhLAxsCvCNc18TvnBImTasMPFQ1preymMa/ISA93OAL4paT5+7Pix/R
-zdD0oPZjQ3tul9MJhqOUBtPdh+QcRaYx9a8shRzmk6FMBAZFSVq0lwErIAgI7Zp7
-InKTINIO9Y/f+xLeMqi3X+cLzCOBY7AaqFGbOPNnyFKCRZYDH88knYaUSAzh4V49
-eqzPSd6OEKPEdcD5vCj1jt1Fcdna+A==
-=gYdx
------END PGP SIGNATURE-----
-
---wbrgntclef5fmbs4--
+greg k-h
