@@ -1,68 +1,50 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4609043AA9;
-	Fri, 12 Jul 2024 17:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02332747D;
+	Fri, 12 Jul 2024 17:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720806205; cv=none; b=iiP1d0R50ZRfKOxGbCujRzOBuLNEu+O5tFKL3e0EKLiHVGu4dVH4AsjncOIzEdEfpT+lKg8v9IEpPyxY/gi3Xmiq3Ex6JEp5thXX1kJwpj7CnHmngEN4wdGDXof0HFxZM+xNTavvZAMm/gsdYuoN0IPOv5w81wnB4ys9d5fnKAI=
+	t=1720806334; cv=none; b=fWZNT8MxR3uQ76T233zQlG78AAdZRBjMkIBmVwYHXVC7i4PArKMpITuEBcSM7xG5tjkAqp6UR9Ot3dcc+siiICIiVOmGwf5iKamgbehQY6SOa0qZL08YAfiM81fmuHCePcoB7K3Xq8McP69CQ7b96XH2J4SXHiRBMlrf4iRjjzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720806205; c=relaxed/simple;
-	bh=qqDxsW8JKNo4pUvPxIdtXjmqmRm9U7qlNWm3bk3xRVc=;
+	s=arc-20240116; t=1720806334; c=relaxed/simple;
+	bh=TeCewhItFSnag4sc4XNBJtcr219/o5hveH/NrYbp2KA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UsHTatK0cAU33ZKZ1ezQlLVeQnQkMe3senGDwIen4K173/kfilxLAHE1K+xKK1izusaYs7Dr1lQAbbfJ9X0wmtmCgghARdU5jlty2rUCO+sbo89pd7J3r7E2E9Q5t5WC85nUyls9pu0wYAyqXLOz/0xTsKrnTvIi7IQpZ8dD5jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=epiI7NKn; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=GU4sqPF5YRJSlltrzbeNQ90fwQCmCUjgCgqfSN8uSxGoMC3d+X5W6lI2LXx/mgId7KhRYa0EKY1zipiUAgOaDzHcNtWRULp0oaWqhX0pEdhWM60uwZGWWH3cgn0uChUcnI/bCsD4yQOuKL1r7G0PcouyzIUMbA9pIP6tb010ys8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=GOKiCDZa; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="epiI7NKn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BaNbiP+w4TmaIHZFkKIxIGkit2bo/A0i+pALN4QBZkI=; b=epiI7NKnu3BMCNcQ1ZGCpK4wNO
-	oGOBbczEzsofAerhLjb+5E9D5xUZZv6sSvh0ZOr4JpEH7aIxNNb2lskWvheFGtnOlVYMvNJXRZKN4
-	e7XbYBhGixpAevHHnasnaBx2CtueoVwgnrCoFIeTl3jh69wR/td8oq9SZcPc9TYWwaNlfhDVYNSdQ
-	pzltnW/EoXIKLStkdD2r7oDKZ4dgSZlSDt8u+gp+byhdpLXok1zl6/TlT+2sriz9fw8ULPp3g6XTe
-	59cl7/TT9i42qnKhMp7cIzBSvrxZqJy0i4IAKAYLPB93htn+ydqZLmatZj0SQyP+aBUxPMuM4+w2V
-	uhplDG6Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sSKIb-0000000Cjju-2X8w;
-	Fri, 12 Jul 2024 17:43:13 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1E93D30050D; Fri, 12 Jul 2024 19:43:13 +0200 (CEST)
-Date: Fri, 12 Jul 2024 19:43:13 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Phil Auld <pauld@redhat.com>, Clark Williams <williams@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [RFC PATCH v3 10/10] sched/fair: Throttle CFS tasks on return to
- userspace
-Message-ID: <20240712174313.GW27299@noisy.programming.kicks-ass.net>
-References: <20240711130004.2157737-1-vschneid@redhat.com>
- <20240711130004.2157737-11-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="GOKiCDZa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1720806324; x=1721411124; i=j.neuschaefer@gmx.net;
+	bh=tPGCKNuxFDqyixISCoMhBEbanP1o4lTHf1B7ly5Vmm4=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=GOKiCDZaHuwtds/+rhAT+fe48IarcS06cg51eJUc1q9BWpgk5YPcGWjKb2eaQa0n
+	 3sxv6m5FFethmaR6RPjXZO14Fz0KmYzCI64tp8+/oUNISMd+1NpXUas9fjTrZtKCG
+	 lsZN7wFKaH/9xJsQGyBt6GiqQbxXwXlaM5wb09MYdVN8P125O1VxBNM7x6Hys47xi
+	 BHCiqoXZQs+q7gakNJ5NngLOBHBFaR09lhbLgSjeIsqoa3ruKxxa9SyAB+Tn9jpV0
+	 vmIf8l8ajWzMJSYL8D5UxihpHcmKUGd/UFdEuZ1NS2F6AxjP7c5tLanKe2r8X6SgA
+	 GNXCD13Eg8SY0j2iAw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from probook ([81.173.233.81]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWRVh-1sqhdH2AUV-00Owur; Fri, 12
+ Jul 2024 19:45:24 +0200
+Date: Fri, 12 Jul 2024 19:45:22 +0200
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: linus.walleij@linaro.org, avifishman70@gmail.com, tali.perry1@gmail.com,
+	joel@jms.id.au, venture@google.com, yuenn@google.com,
+	benjaminfair@google.com, linux-gpio@vger.kernel.org,
+	openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/7] pinctrl: nuvoton: npcm8xx: remove unused smb4den
+ pin, group, function
+Message-ID: <ZpFrslx57m62SEsg@probook>
+References: <20240711193749.2397471-1-tmaimon77@gmail.com>
+ <20240711193749.2397471-5-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,102 +53,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240711130004.2157737-11-vschneid@redhat.com>
+In-Reply-To: <20240711193749.2397471-5-tmaimon77@gmail.com>
+X-Provags-ID: V03:K1:vwEDLW8CSrIZ9k/KspWiiHdEKMe0tlSqJnPaFjO1HpgkyyZisA+
+ FW10ALY01vhA571jR+f7pcE3HqDn/TcShquGb2eYXB2ilfy2ork0NJQwrWEloTsagXMEaAi
+ uemv089G25izhe02KuYo4fW7T3FKMt9bX+5vyR56H1Dutx1OSQq6AaDi9GFJakRBSrca2R1
+ EofrnSKdpdSnFU08CtzdQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:w4IxSsobjkg=;kH0ARQQHdmtmdsC/ZqbYSHC9sI2
+ Ez7XilIu+IJWpFNCihYSLHBSpNoQ6DJsuWJJbYnF6m4P71gR+MMHPP/gTd5l9nDBa2g2NrXQa
+ ukZZKZh5CQ90xsKSxiIOSKfU0253tBRMpXxO1qjqHmHZSxD6d9F561B5w115Be9GUSn9C2q2d
+ ipMvLJOqb6py3nIRjpu+xp+URd20aegqGZsX7CrVcthWnLCbStDZA+boxC9V4oi5w9KabQsUu
+ EmtMnrwxpUkirGKGVACM6gFfAywGCFmbSoV7ZI0+CyL1loyqwHm4TKUcB/VgeFthxFZ+A4stJ
+ 2G90FnSU8lbkACQCJb5k78ICk+DCxcSh6vezqGc8gKDQL4UwonkYkxRSjIpLsyOCQ6XtpJr7B
+ So4xWvQOZPvxrGwvotXRDJJ4FPy28etd4AcEWmzWb+MmkP37qpXzX0HP55/OyWHPdfGOLonz/
+ SEBZbMdtuicmg6hPqzm6yASWCh6volPTfBTS1vnOA903CZ0HbNIyXJKrG4tiQ+V4o9s9aEsGh
+ MjMoZ6+E4btgmSS1Dvrfgy6DqbPfej/RR6b/vKhohbcYmkBeu7as4QghosKMMvlRINFsMGvlw
+ 2NmaBECl5asEw6wTa1AHb+FEhCalRUiXsTicVDDx/6Dwzq19PWf3nY03/uTjKMDeQLg7br1R3
+ WVozDLVrDeGQIp7uOUR7OZSjWEUU0XvSUmuVtoBf7Kbh9b9HlMN02SwfuZj2OIFkoO0q8kbGA
+ SdBUicrrIhz0cmLgvcj2SccUGDj6m8Qo4UGNdihPWFUXz3X9xSAxH/KAluVuHE4RHu9wiPS6n
+ h7jfkm7csE97N1mOMDLck0ug==
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 11, 2024 at 03:00:04PM +0200, Valentin Schneider wrote:
+On Thu, Jul 11, 2024 at 10:37:46PM +0300, Tomer Maimon wrote:
+> Remove unused smb4den pin, group and function on the Nuvoton NPCM8XX BMC
+> SoC.
 
-> +static void throttle_one_task(struct cfs_rq *cfs_rq, struct task_struct *p)
->  {
-> +	long task_delta, idle_task_delta;
-> +	struct sched_entity *se = &p->se;
-> +
-> +	list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
->  
-> +	task_delta = 1;
-> +	idle_task_delta = cfs_rq_is_idle(cfs_rq) ? 1 : 0;
-> +
-> +	for_each_sched_entity(se) {
-> +		cfs_rq = cfs_rq_of(se);
-> +
-> +		if (!se->on_rq)
-> +			return;
-> +
-> +		dequeue_entity(cfs_rq, se, DEQUEUE_SLEEP);
-> +		cfs_rq->h_nr_running -= task_delta;
-> +		cfs_rq->idle_h_nr_running -= idle_task_delta;
-> +
-> +		if (cfs_rq->load.weight) {
-> +			/* Avoid re-evaluating load for this entity: */
-> +			se = parent_entity(se);
-> +			break;
-> +		}
-> +	}
-> +
-> +	for_each_sched_entity(se) {
-> +		cfs_rq = cfs_rq_of(se);
-> +		/* throttled entity or throttle-on-deactivate */
-> +		if (!se->on_rq)
-> +			goto throttle_done;
-> +
-> +		update_load_avg(cfs_rq, se, 0);
-> +		se_update_runnable(se);
-> +		cfs_rq->h_nr_running -= task_delta;
-> +		cfs_rq->h_nr_running -= idle_task_delta;
-> +	}
-> +
-> +throttle_done:
-> +	/* At this point se is NULL and we are at root level*/
-> +	sub_nr_running(rq_of(cfs_rq), 1);
->  }
+Does "unused" mean that they are just unused in current board designs,
+or does the hardware functionality actually not exist?
 
-I know you're just moving code around, but we should look if we can
-share code between this and dequeue_task_fair().
+Best regards, J
 
-I have patches around this in that eevdf series I should send out again,
-I'll try and have a stab.
-
-> -static void task_throttle_cancel_irq_work_fn(struct irq_work *work)
-> +static void throttle_cfs_rq_work(struct callback_head *work)
->  {
-> -       /* Write me */
-> +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
-> +	struct sched_entity *se;
-> +	struct rq *rq;
-> +	struct cfs_rq *cfs_rq;
-> +
-> +	WARN_ON_ONCE(p != current);
-> +	p->sched_throttle_work.next = &p->sched_throttle_work;
-> +	/*
-> +	 * If task is exiting, then there won't be a return to userspace, so we
-> +	 * don't have to bother with any of this.
-> +	 */
-> +	if ((p->flags & PF_EXITING))
-> +		return;
-> +
-> +	CLASS(task_rq_lock, rq_guard)(p);
-> +	rq = rq_guard.rq;
-
-The other way to write this is:
-
-	scoped_guard (task_rq_lock, p) {
-		struct rq *rq = scope.rq;
-
-> +	se = &p->se;
-> +	cfs_rq = cfs_rq_of(se);
-> +
-> +	/*
-> +	 * If not in limbo, then either replenish has happened or this task got
-> +	 * migrated out of the throttled cfs_rq, move along
-> +	 */
-> +	if (!cfs_rq->throttle_count)
-> +		return;
-> +
-> +	update_rq_clock(rq);
-> +
-> +	throttle_one_task(cfs_rq, p);
-> +
-> +	resched_curr(rq);
-
-	}
-
->  }
+>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+>
+> diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl=
+/nuvoton/pinctrl-npcm8xx.c
+> index f342aec3f6ca..396bd07e7c74 100644
+> --- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+> @@ -438,7 +438,6 @@ static const int smb4_pins[]  =3D { 28, 29 };
+>  static const int smb4b_pins[] =3D { 18, 19 };
+>  static const int smb4c_pins[] =3D { 20, 21 };
+>  static const int smb4d_pins[] =3D { 22, 23 };
+> -static const int smb4den_pins[] =3D { 17 };
+>  static const int smb5_pins[]  =3D { 26, 27 };
+>  static const int smb5b_pins[] =3D { 13, 12 };
+>  static const int smb5c_pins[] =3D { 15, 14 };
+> @@ -700,7 +699,6 @@ struct npcm8xx_pingroup {
+>  	NPCM8XX_GRP(smb4b), \
+>  	NPCM8XX_GRP(smb4c), \
+>  	NPCM8XX_GRP(smb4d), \
+> -	NPCM8XX_GRP(smb4den), \
+>  	NPCM8XX_GRP(smb5), \
+>  	NPCM8XX_GRP(smb5b), \
+>  	NPCM8XX_GRP(smb5c), \
+> @@ -949,7 +947,6 @@ NPCM8XX_SFUNC(smb4);
+>  NPCM8XX_SFUNC(smb4b);
+>  NPCM8XX_SFUNC(smb4c);
+>  NPCM8XX_SFUNC(smb4d);
+> -NPCM8XX_SFUNC(smb4den);
+>  NPCM8XX_SFUNC(smb5);
+>  NPCM8XX_SFUNC(smb5b);
+>  NPCM8XX_SFUNC(smb5c);
+> @@ -1173,7 +1170,6 @@ static struct npcm8xx_func npcm8xx_funcs[] =3D {
+>  	NPCM8XX_MKFUNC(smb4b),
+>  	NPCM8XX_MKFUNC(smb4c),
+>  	NPCM8XX_MKFUNC(smb4d),
+> -	NPCM8XX_MKFUNC(smb4den),
+>  	NPCM8XX_MKFUNC(smb5),
+>  	NPCM8XX_MKFUNC(smb5b),
+>  	NPCM8XX_MKFUNC(smb5c),
+> @@ -1348,7 +1344,7 @@ static const struct npcm8xx_pincfg pincfg[] =3D {
+>  	NPCM8XX_PINCFG(14,	gspi, MFSEL1, 24,	smb5c, I2CSEGSEL, 20,	none, NONE,=
+ 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+>  	NPCM8XX_PINCFG(15,	gspi, MFSEL1, 24,	smb5c, I2CSEGSEL, 20,	none, NONE,=
+ 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+>  	NPCM8XX_PINCFG(16,	lkgpo0, FLOCKR1, 0,	smb7b, I2CSEGSEL, 27,	tp_gpio2b=
+, MFSEL7, 10,	none, NONE, 0,		none, NONE, 0,		SLEW),
+> -	NPCM8XX_PINCFG(17,	pspi, MFSEL3, 13,	cp1gpio5, MFSEL6, 7,	smb4den, I2C=
+SEGSEL, 23,	none, NONE, 0,		none, NONE, 0,		SLEW),
+> +	NPCM8XX_PINCFG(17,	pspi, MFSEL3, 13,	cp1gpio5, MFSEL6, 7,	none, NONE, =
+0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+>  	NPCM8XX_PINCFG(18,	pspi, MFSEL3, 13,	smb4b, I2CSEGSEL, 14,	none, NONE,=
+ 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+>  	NPCM8XX_PINCFG(19,	pspi, MFSEL3, 13,	smb4b, I2CSEGSEL, 14,	none, NONE,=
+ 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+>  	NPCM8XX_PINCFG(20,	hgpio0,	MFSEL2, 24,	smb15, MFSEL3, 8,	smb4c, I2CSEG=
+SEL, 15,	none, NONE, 0,		none, NONE, 0,		SLEW),
+> --
+> 2.34.1
+>
