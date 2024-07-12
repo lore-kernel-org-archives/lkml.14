@@ -1,560 +1,227 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329661741D3;
-	Fri, 12 Jul 2024 16:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E77176223
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 16:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720801514; cv=none; b=ojSl6zb/crDZYKu0pE8KiBJKdBWW7f8xcmzZRTcnJ/MzSzToeU3bptwQjOURbkDIDNRTSVWbs4Y83S+aOzYejz3zVh4Q8S5zT29ZlwrQZ4pae0OWsY924vNCXe21zTJWnUkXCR7to6SCMJmxWtPwKicKMgGazBGRAPzUH2ZBaOs=
+	t=1720801526; cv=none; b=FYHiwqG5LVppZHFJKZrX5NL/b8slIBZr26w7GVe1VEhTs5hkPoemi3hrNFxANinwN4Nm8NnEBwm8fYDbPIV8D8d/yM8VteS+FpnliupNL95gmAygk47VEa+9hJ60+PPkZAMKaoy6xoE6YHr+EkWnTzww/x8uTJUHwvVyIK1zz3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720801514; c=relaxed/simple;
-	bh=vBWp0eFBW3luhlfkfPlWk3c2EFS9kqF6BBVIgbv5R5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YygsomQRPxUoE+2EL10hziTJ8z8NYir0haiFNZAXA5Zw+ySnf7xtLlxD/7jlCvEdzBFGNjioyJyD6HGcGJntxZIfZlFD5kIzbmcxptpDz7vQBm/K6Mro3uZu3cQwGKWnNjH3COCBqVp0oj5kBngMtsAmv8PFWL4O+T7isgh/cIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=d4qWYCk8; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="d4qWYCk8"
-Received: from ideasonboard.com (mob-5-90-56-63.net.vodafone.it [5.90.56.63])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 38CC47CC;
-	Fri, 12 Jul 2024 18:24:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1720801475;
-	bh=vBWp0eFBW3luhlfkfPlWk3c2EFS9kqF6BBVIgbv5R5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d4qWYCk82rIkXLWa4UiAB+RHW+0rnuYTqqydxuYaarrIcsS+ITnlFIBCOJKw+X3Zs
-	 Po5CMzcZFs3UiNvyGwAyKxj09ew5dkTYC7C5WKV7fXz5BbvTTonS8CtxOWXjP6n6cC
-	 3CgykYBfNSPzNdnOImBffyDQeCFTRfr1rU+TQLSI=
-Date: Fri, 12 Jul 2024 18:25:06 +0200
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Mingjia Zhang <mingjia.zhang@mediatek.com>, Jack Zhu <jack.zhu@starfivetech.com>, 
-	Keith Zhao <keith.zhao@starfivetech.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>
-Subject: Re: =?utf-8?B?5Zue5aSNOiDlm57lpI06IOWbnuWkjTog5Zue5aSNOiBbUEFU?=
- =?utf-8?Q?CH_v?= =?utf-8?Q?5?= 08/14] staging: media: starfive: Add for
- StarFive ISP 3A SC
-Message-ID: <vxlefgqtdy6qucjxk7npq5snjful3apnsd43jefpxqs42ozkfz@v6ixvqw2vxvh>
-References: <20240709083824.430473-1-changhuang.liang@starfivetech.com>
- <20240709083824.430473-9-changhuang.liang@starfivetech.com>
- <hxv4l4t32a7il5zv2wk7btydlk6qokyborevbnrajpwziaalva@lly6nfkts2no>
- <ZQ0PR01MB13024CFE2FCCF4D39E3FAEDEF2A52@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
- <b45mnwf4p4ygrvukzdmrvbffndmqg5fncyepg2yxize7wq3a75@v6doupiawwnt>
- <ZQ0PR01MB1302A295EC18E19578026E0BF2A62@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
- <gppf6abnt3pjmaonnulszamnsusmnjreeygch7y3ty7sqzdbsl@xcxvrcaurkho>
- <ZQ0PR01MB1302BD81B29FCC7B484AF68CF2A62@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
- <nyuphmofpqrytwsvi2rnhqoqk5y2zy74ihume4fh7r2yfnwqtm@cb6hxibfuzwq>
- <ZQ0PR01MB1302FD6AE6EB5FA39B25803FF2A62@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+	s=arc-20240116; t=1720801526; c=relaxed/simple;
+	bh=EHvFOFdqxiALWutzm4ZbIEBVQoN9CChrKBm3c+x5CXU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=V1nMebNwcGrGjt/Abnq6HZ+m20JNyF05Fa9Qk+PSl+S44Az+ZdJ+fqK5kYwcHl8qJ6T9vEI7AoaPqM0FMyoYA9xA3yf6a9U2BrJCn2JuXS5FbxGPgUow800/iw3Tv6uQO9S7NZfOl2ZS4sGsYG9cbOhLQeeKHwKTSSlOA4QOdaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-37492fe22cdso16191445ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:25:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720801524; x=1721406324;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RY8tmSXFtFicyqMKxNE6cQXAsZnp+myCf3QfOjYv+Lg=;
+        b=oqO1MVzHetLKu/7w/ZZjhf0/ggx+TOGObP3zftJ8RrFdqysAldSAtrjUPx0PdUSAyc
+         y7lHyQKS7uBZfPt16t4BvVDVjU0TB22f+bprVkehBA4tNFnfMKB1RQwVBoSklfBbNxR7
+         kLrQI4NbmG8fPWY1k/QzYtBO+gruppmYOj8iKSlucOOpT0ZbidiYRe6LI/vf3RFLSx9m
+         nxfY5akBRAjwi7IXXxA60fJB9szP8g7V5lCSDD2VVawyBgVQmeEI6xnVhSySSPgzyhCb
+         UQDxYOjMh/1bwRIE85stkTpp323yWr4Z/4OtYf9Pehx57g+Db+ysnruaxQorQDfBfHZF
+         7q3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWOoD8N6GkW0inBP4boW6Fc3oh4Ljb5W4xVcxprJJzjx7zvYXqeZqLG2s74qz5/wxf2yy+HBDw4LO32dGhJY2vI32hjib0Im1bEO14y
+X-Gm-Message-State: AOJu0YxMrvfo79Q90zLOmXoWv3U3x15rgXQjbkG2wm+ZVOtmTOzFFpbF
+	ndk/bdnftWeq5vgnBfAly22BpOnyuLIuPTubqy+PdkEiLa7UW5D8YRTA0jwJwZ7SI9bR2AYkUc1
+	MGnQP1d5//hTP4my0w2ediV8RvSB9wVpYZeC8tRKw1QuBgqtFPtTYJ5E=
+X-Google-Smtp-Source: AGHT+IF4ct2kNSmu9fhsnfd3q+UitUMPmnfPORcpf4BJuOQ+z91JPwGev+iuCYx12kXNnIb7JbTt7bTnkW/p8L1feEtLDMupnW+6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZQ0PR01MB1302FD6AE6EB5FA39B25803FF2A62@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+X-Received: by 2002:a92:c562:0:b0:381:f3bf:c5d2 with SMTP id
+ e9e14a558f8ab-38ee37a005bmr1384515ab.3.1720801524344; Fri, 12 Jul 2024
+ 09:25:24 -0700 (PDT)
+Date: Fri, 12 Jul 2024 09:25:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000968ac6061d0f53ba@google.com>
+Subject: [syzbot] [bpf?] [net?] KASAN: stack-out-of-bounds Read in xdp_do_check_flushed
+From: syzbot <syzbot+709e4c85c904bcd62735@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bigeasy@linutronix.de, bp@alien8.de, 
+	bpf@vger.kernel.org, daniel@iogearbox.net, dave.hansen@linux.intel.com, 
+	davem@davemloft.net, eddyz87@gmail.com, edumazet@google.com, 
+	haoluo@google.com, hawk@kernel.org, hpa@zytor.com, 
+	jacob.jun.pan@linux.intel.com, jasowang@redhat.com, jiri@resnulli.us, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, martin.lau@linux.dev, 
+	mingo@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com, 
+	pbonzini@redhat.com, peterz@infradead.org, sdf@fomichev.me, song@kernel.org, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wei.liu@kernel.org, 
+	willemdebruijn.kernel@gmail.com, x86@kernel.org, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi again
+Hello,
 
-On Fri, Jul 12, 2024 at 01:37:58PM GMT, Changhuang Liang wrote:
-> Hi, Jacopo
->
-> > Hi Changhuang
-> >
-> > On Fri, Jul 12, 2024 at 01:00:03PM GMT, Changhuang Liang wrote:
-> > > Hi, Jacopo
-> > >
-> > > >
-> > > > Hi Changhuang
-> > > >
-> > > > On Fri, Jul 12, 2024 at 08:36:21AM GMT, Changhuang Liang wrote:
-> > > > > Hi, Jacopo
-> > > > >
-> > > > > [...]
-> > > > > > > > > +
-> > > > > > > > > +void stf_set_scd_addr(struct stfcamss *stfcamss,
-> > > > > > > > > +		      dma_addr_t yhist_addr, dma_addr_t scd_addr,
-> > > > > > > > > +		      enum stf_isp_type_scd type_scd) {
-> > > > > > > > > +	stf_isp_reg_set_bit(stfcamss, ISP_REG_SC_CFG_1,
-> > > > ISP_SC_SEL_MASK,
-> > > > > > > > > +			    SEL_TYPE(type_scd));
-> > > > > > > > > +	stf_isp_reg_write(stfcamss, ISP_REG_SCD_CFG_0, scd_addr);
-> > > > > > > > > +	stf_isp_reg_write(stfcamss, ISP_REG_YHIST_CFG_4,
-> > > > > > > > > +yhist_addr); }
-> > > > > > > > > +
-> > > > > > > > > +static void stf_isp_fill_yhist(struct stfcamss *stfcamss,
-> > > > > > > > > +void
-> > > > > > > > > +*vaddr) {
-> > > > > > > > > +	struct jh7110_isp_sc_buffer *sc = (struct
-> > > > > > > > > +jh7110_isp_sc_buffer
-> > > > > > *)vaddr;
-> > > > > > > > > +	u32 reg_addr = ISP_REG_YHIST_ACC_0;
-> > > > > > > > > +	u32 i;
-> > > > > > > > > +
-> > > > > > > > > +	for (i = 0; i < 64; i++, reg_addr += 4)
-> > > > > > > > > +		sc->y_histogram[i] = stf_isp_reg_read(stfcamss,
-> > > > reg_addr);
-> > > > > > > >
-> > > > > > > > If you have a contigous memory space to read, could
-> > > > > > > > memcpy_fromio() help instead of going through 64 reads ?
-> > > > > > > >
-> > > > > > >
-> > > > > > > I will try this function.
-> > > > > > >
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +static void stf_isp_fill_flag(struct stfcamss *stfcamss, void
-> > *vaddr,
-> > > > > > > > > +			      enum stf_isp_type_scd *type_scd) {
-> > > > > > > > > +	struct jh7110_isp_sc_buffer *sc = (struct
-> > > > > > > > > +jh7110_isp_sc_buffer *)vaddr;
-> > > > > > > > > +
-> > > > > > > > > +	*type_scd = stf_isp_get_scd_type(stfcamss);
-> > > > > > > > > +	if (*type_scd == TYPE_AWB) {
-> > > > > > > > > +		sc->flag = JH7110_ISP_SC_FLAG_AWB;
-> > > > > > > > > +		*type_scd = TYPE_OECF;
-> > > > > > > > > +	} else {
-> > > > > > > > > +		sc->flag = JH7110_ISP_SC_FLAG_AE_AF;
-> > > > > > > > > +		*type_scd = TYPE_AWB;
-> > > > > > > >
-> > > > > > > > Is this correct ? Why are you overwriting the value read
-> > > > > > > > from HW that indicates AE/AF stats with AWB ones ?
-> > > > > > >
-> > > > > > > The AWB frame and AE/AF frames will alternate, so the current
-> > > > > > > frame indicates the AE/AF, then set AWB type just for next AWB
-> > frame.
-> > > > > > >
-> > > > > >
-> > > > > > Ah! Shouldn't it be userspace configuring which type of
-> > > > > > statistics it wants to receive instead of the driver alternating the two ?
-> > > > > >
-> > > > >
-> > > > > No, this is determined by hardware, cannot be configured by userspace.
-> > > > >
-> > > >
-> > > >
-> > > > So this
-> > > > 	stf_isp_reg_set_bit(stfcamss, ISP_REG_SC_CFG_1, ISP_SC_SEL_MASK,
-> > > > 			    SEL_TYPE(type_scd));
-> > > >
-> > > > doesn't actually select which stats type you get from the HW
-> > > >
-> > >
-> > > You can understand it that way. But it still needs to be written to work with
-> > the hardware.
-> > >
-> >
-> > ack, maybe a comment here as well would help
-> >
->
-> Agreed.
->
-> > > > > > > >
-> > > > > > > > > +	}
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > >  irqreturn_t stf_line_irq_handler(int irq, void *priv)  {
-> > > > > > > > >  	struct stfcamss *stfcamss = priv;
-> > > > > > > > >  	struct stf_capture *cap =
-> > > > > > > > > &stfcamss->captures[STF_CAPTURE_YUV];
-> > > > > > > > > +	struct stf_capture *cap_scd =
-> > > > > > > > > +&stfcamss->captures[STF_CAPTURE_SCD];
-> > > > > > > > >  	struct stfcamss_buffer *change_buf;
-> > > > > > > > > +	enum stf_isp_type_scd type_scd;
-> > > > > > > > > +	u32 value;
-> > > > > > > > >  	u32 status;
-> > > > > > > > >
-> > > > > > > > >  	status = stf_isp_reg_read(stfcamss,
-> > ISP_REG_ISP_CTRL_0);
-> > > > @@
-> > > > > > > > > -467,6
-> > > > > > > > > +513,17 @@ irqreturn_t stf_line_irq_handler(int irq, void
-> > > > > > > > > +*priv)
-> > > > > > > > >  					stf_set_yuv_addr(stfcamss,
-> > > > change_buf->addr[0],
-> > > > > > > > >  							 change_buf->addr[1]);
-> > > > > > > > >  			}
-> > > > > > > > > +
-> > > > > > > > > +			value = stf_isp_reg_read(stfcamss,
-> > > > > > > > ISP_REG_CSI_MODULE_CFG);
-> > > > > > > > > +			if (value & CSI_SC_EN) {
-> > > > > > > > > +				change_buf =
-> > > > stf_change_buffer(&cap_scd->buffers);
-> > > > > > > > > +				if (change_buf) {
-> > > > > > > > > +					stf_isp_fill_flag(stfcamss,
-> > > > change_buf->vaddr,
-> > > > > > > > > +							  &type_scd);
-> > > > > > > > > +					stf_set_scd_addr(stfcamss,
-> > > > change_buf->addr[0],
-> > > > > > > > > +							 change_buf->addr[1], type_scd);
-> > > > > > > >
-> > > > > > > > Sorry if I'm un-familiar with the HW but this seems to be
-> > > > > > > > the
-> > > > line-interrupt.
-> > > > > > > > Are you swapping buffers every line or it's just that you
-> > > > > > > > have a single line irq for the stats ?
-> > > > > > > >
-> > > > > > >
-> > > > > > > Every frame triggers a line-interrupt, and we will swap buffers in it.
-> > > > > > >
-> > > > > >
-> > > > > > ah, frames completion triggers a line-interrupt ?
-> > > > > >
-> > > > >
-> > > > > Every frame will trigger line-interrupt and stf_isp_irq_handler.
-> > > > > We use line-interrupt changing buffer, the stf_isp_irq_handler
-> > > > > will indicate that image transfer to DDR is complete.
-> > > > >
-> > > > >
-> > > > > > > > > +				}
-> > > > > > > > > +			}
-> > > > > > > > >  		}
-> > > > > > > > >
-> > > > > > > > >  		stf_isp_reg_set_bit(stfcamss, ISP_REG_CSIINTS, @@
-> > > > -485,6
-> > > > > > +542,7
-> > > > > > > > @@
-> > > > > > > > > irqreturn_t stf_isp_irq_handler(int irq, void *priv)  {
-> > > > > > > > >  	struct stfcamss *stfcamss = priv;
-> > > > > > > > >  	struct stf_capture *cap =
-> > > > > > > > > &stfcamss->captures[STF_CAPTURE_YUV];
-> > > > > > > > > +	struct stf_capture *cap_scd =
-> > > > > > > > > +&stfcamss->captures[STF_CAPTURE_SCD];
-> > > > > > > > >  	struct stfcamss_buffer *ready_buf;
-> > > > > > > > >  	u32 status;
-> > > > > > > > >
-> > > > > > > > > @@ -496,6 +554,14 @@ irqreturn_t stf_isp_irq_handler(int
-> > > > > > > > > irq, void
-> > > > *priv)
-> > > > > > > > >  				vb2_buffer_done(&ready_buf->vb.vb2_buf,
-> > > > > > > > VB2_BUF_STATE_DONE);
-> > > > > > > > >  		}
-> > > > > > > > >
-> > > > > > > > > +		if (status & ISPC_SC) {
-> > > > > > > > > +			ready_buf = stf_buf_done(&cap_scd->buffers);
-> > > > > > > > > +			if (ready_buf) {
-> > > > > > > > > +				stf_isp_fill_yhist(stfcamss, ready_buf->vaddr);
-> > > > > > > > > +				vb2_buffer_done(&ready_buf->vb.vb2_buf,
-> > > > > > > > VB2_BUF_STATE_DONE);
-> > > > > > > > > +			}
-> > > > > > > > > +		}
-> > > > > > > > > +
-> > > > > > > > >  		stf_isp_reg_write(stfcamss, ISP_REG_ISP_CTRL_0,
-> > > > > > > > >  				  (status & ~ISPC_INT_ALL_MASK) |
-> > > > > > > > >  				  ISPC_ISP | ISPC_CSI | ISPC_SC); diff --git
-> > > > > > > > > a/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > > > > > b/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > > > > > index fcda0502e3b0..0af7b367e57a 100644
-> > > > > > > > > --- a/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > > > > > +++ b/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > > > > > @@ -10,6 +10,7 @@
-> > > > > > > > >  #ifndef STF_ISP_H
-> > > > > > > > >  #define STF_ISP_H
-> > > > > > > > >
-> > > > > > > > > +#include <linux/jh7110-isp.h>
-> > > > > > > > >  #include <media/v4l2-subdev.h>
-> > > > > > > > >
-> > > > > > > > >  #include "stf-video.h"
-> > > > > > > > > @@ -107,6 +108,12 @@
-> > > > > > > > >  #define Y_COOR(y)				((y) << 16)
-> > > > > > > > >  #define X_COOR(x)				((x) << 0)
-> > > > > > > > >
-> > > > > > > > > +#define ISP_REG_SCD_CFG_0			0x098
-> > > > > > > > > +
-> > > > > > > > > +#define ISP_REG_SC_CFG_1			0x0bc
-> > > > > > > > > +#define ISP_SC_SEL_MASK				GENMASK(31, 30)
-> > > > > > > > > +#define SEL_TYPE(n)				((n) << 30)
-> > > > > > > > > +
-> > > > > > > > >  #define ISP_REG_LCCF_CFG_2			0x0e0
-> > > > > > > > >  #define ISP_REG_LCCF_CFG_3			0x0e4
-> > > > > > > > >  #define ISP_REG_LCCF_CFG_4			0x0e8
-> > > > > > > > > @@ -305,6 +312,10 @@
-> > > > > > > > >  #define DNRM_F(n)				((n) << 16)
-> > > > > > > > >  #define CCM_M_DAT(n)				((n) << 0)
-> > > > > > > > >
-> > > > > > > > > +#define ISP_REG_YHIST_CFG_4			0xcd8
-> > > > > > > > > +
-> > > > > > > > > +#define ISP_REG_YHIST_ACC_0			0xd00
-> > > > > > > > > +
-> > > > > > > > >  #define ISP_REG_GAMMA_VAL0			0xe00
-> > > > > > > > >  #define ISP_REG_GAMMA_VAL1			0xe04
-> > > > > > > > >  #define ISP_REG_GAMMA_VAL2			0xe08
-> > > > > > > > > @@ -389,6 +400,15 @@
-> > > > > > > > >  #define IMAGE_MAX_WIDTH				1920
-> > > > > > > > >  #define IMAGE_MAX_HEIGH				1080
-> > > > > > > > >
-> > > > > > > > > +#define ISP_YHIST_BUFFER_SIZE			(64 * sizeof(__u32))
-> > > > > > > >
-> > > > > > > > Should this be in the uAPI header as it is useful to userspace as
-> > well ?
-> > > > > > > >
-> > > > > > > > you could:
-> > > > > > > >
-> > > > > > > > struct jh7110_isp_sc_buffer {
-> > > > > > > > 	__u8 y_histogram[ISP_YHIST_BUFFER_SIZE];
-> > > > > > > > 	__u32 reserv0[33];
-> > > > > > > > 	__u32 bright_sc[4096];
-> > > > > > > > 	__u32 reserv1[96];
-> > > > > > > > 	__u32 ae_hist_y[128];
-> > > > > > > > 	__u32 reserv2[511];
-> > > > > > > > 	__u16 flag;
-> > > > > > > > };
-> > > > > > > >
-> > > > > > > > ofc if the size is made part of the uAPI you need a more
-> > > > > > > > proper name such as JH7110_ISP_YHIST_SIZE
-> > > > > > > >
-> > > > > > >
-> > > > > > > OK, I will try this.
-> > > > > > >
-> > > > > > > > > +
-> > > > > > > > > +enum stf_isp_type_scd {
-> > > > > > > > > +	TYPE_DEC = 0,
-> > > > > > > > > +	TYPE_OBC,
-> > > > > > > > > +	TYPE_OECF,
-> > > > > > > > > +	TYPE_AWB,
-> > > > > > > > > +};
-> > > > > > > > > +
-> > > > > > > > >  /* pad id for media framework */  enum stf_isp_pad_id {
-> > > > > > > > >  	STF_ISP_PAD_SINK = 0,
-> > > > > > > > > @@ -429,5 +449,8 @@ int stf_isp_unregister(struct
-> > > > > > > > > stf_isp_dev *isp_dev);
-> > > > > > > > >
-> > > > > > > > >  void stf_set_yuv_addr(struct stfcamss *stfcamss,
-> > > > > > > > >  		      dma_addr_t y_addr, dma_addr_t uv_addr);
-> > > > > > > > > +void stf_set_scd_addr(struct stfcamss *stfcamss,
-> > > > > > > > > +		      dma_addr_t yhist_addr, dma_addr_t scd_addr,
-> > > > > > > > > +		      enum stf_isp_type_scd type_scd);
-> > > > > > > > >
-> > > > > > > > >  #endif /* STF_ISP_H */
-> > > > > > > > > diff --git
-> > > > > > > > > a/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > > > > > b/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > > > > > index 989b5e82bae9..2203605ec9c7 100644
-> > > > > > > > > --- a/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > > > > > +++ b/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > > > > > @@ -125,6 +125,14 @@ static int
-> > > > > > > > > stf_video_init_format(struct
-> > > > > > > > stfcamss_video *video)
-> > > > > > > > >  	return 0;
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > > > +static int stf_video_scd_init_format(struct
-> > > > > > > > > +stfcamss_video
-> > > > > > > > > +*video)
-> > > > > > > >
-> > > > > > > > Make it void if it can't fail (see below)
-> > > > > > > >
-> > > > > > >
-> > > > > > > OK.
-> > > > > > >
-> > > > > > > > > +{
-> > > > > > > > > +	video->active_fmt.fmt.meta.dataformat =
-> > > > > > > > video->formats[0].pixelformat;
-> > > > > > > > > +	video->active_fmt.fmt.meta.buffersize = sizeof(struct
-> > > > > > > > > +jh7110_isp_sc_buffer);
-> > > > > > > > > +
-> > > > > > > > > +	return 0;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > >  /*
-> > -----------------------------------------------------------------------------
-> > > > > > > > >   * Video queue operations
-> > > > > > > > >   */
-> > > > > > > > > @@ -330,6 +338,78 @@ static const struct vb2_ops
-> > > > > > > > > stf_video_vb2_q_ops =
-> > > > > > > > {
-> > > > > > > > >  	.stop_streaming  = video_stop_streaming,  };
-> > > > > > > > >
-> > > > > > > > > +static int video_scd_queue_setup(struct vb2_queue *q,
-> > > > > > > > > +				 unsigned int *num_buffers,
-> > > > > > > > > +				 unsigned int *num_planes,
-> > > > > > > > > +				 unsigned int sizes[],
-> > > > > > > > > +				 struct device *alloc_devs[]) {
-> > > > > > > > > +	if (*num_planes)
-> > > > > > > > > +		return sizes[0] < sizeof(struct jh7110_isp_sc_buffer) ?
-> > > > -EINVAL :
-> > > > > > > > > +0;
-> > > > > > > > > +
-> > > > > > > > > +	*num_planes = 1;
-> > > > > > > > > +	sizes[0] = sizeof(struct jh7110_isp_sc_buffer);
-> > > > > > > > > +
-> > > > > > > > > +	return 0;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +static int video_scd_buf_init(struct vb2_buffer *vb) {
-> > > > > > > > > +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-> > > > > > > > > +	struct stfcamss_buffer *buffer = to_stfcamss_buffer(vbuf);
-> > > > > > > > > +	dma_addr_t *paddr;
-> > > > > > > > > +
-> > > > > > > > > +	paddr = vb2_plane_cookie(vb, 0);
-> > > > > > > > > +	buffer->addr[0] = *paddr;
-> > > > > > > > > +	buffer->addr[1] = buffer->addr[0] +
-> > > > > > > > > +ISP_YHIST_BUFFER_SIZE;
-> > > > > > > >
-> > > > > > > > Interesting, I don't see many users of vb2_plane_cookie() in
-> > > > > > > > mainline and I'm not sure what this gives you as you use it
-> > > > > > > > to program the
-> > > > > > following registers:
-> > > > > > > >
-> > > > > > > > 	stf_isp_reg_write(stfcamss, ISP_REG_SCD_CFG_0, scd_addr);
-> > > > > > > > 	stf_isp_reg_write(stfcamss, ISP_REG_YHIST_CFG_4,
-> > > > > > > > yhist_addr);
-> > > > > > > >
-> > > > > > >
-> > > > > > > We set the value for ISP hardware, then ISP will transfer the
-> > > > > > > statistics to the
-> > > > > > buffer.
-> > > > > > > when the stf_isp_irq_handler interrupt is triggered, indicates
-> > > > > > > that the buffer fill is complete.
-> > > > > > >
-> > > > > >
-> > > > > > So I take this as
-> > > > > >
-> > > > > > 	paddr = vb2_plane_cookie(vb, 0);
-> > > > > > 	buffer->addr[0] = *paddr;
-> > > > > > 	buffer->addr[1] = buffer->addr[0] + ISP_YHIST_BUFFER_SIZE;
-> > > > > >
-> > > > > >         stf_set_scd_addr(stfcamss, change_buf->addr[0],
-> > > > > >                          change_buf->addr[1], type_scd);
-> > > > > >
-> > > > > > Makes the ISP transfer data directly to the memory areas in
-> > > > > > addr[0] and addr[1] (which explains why struct
-> > > > > > jh7110_isp_sc_buffer is packed, as it has to match the HW
-> > > > > > registers layout)
-> > > > > >
-> > > > > > If this is the case, why are you then manually copying the
-> > > > > > histograms and the flags to vaddr ?
-> > > > > >
-> > > > >
-> > > > > Yes, your are right.
-> > > > > But actually there is a problem with our ISP RTL.
-> > > > > We set this yhist_addr to ISP, but it actually not work.
-> > > > > 	stf_isp_reg_write(stfcamss, ISP_REG_YHIST_CFG_4, yhist_addr); or
-> > > > > I will drop this line in next version.
-> > > > >
-> > > > > So, in this structure
-> > > > > struct jh7110_isp_sc_buffer {
-> > > > > 	__u32 y_histogram[64];
-> > > > > 	__u32 reserv0[33];
-> > > > > 	__u32 bright_sc[4096];
-> > > > > 	__u32 reserv1[96];
-> > > > > 	__u32 ae_hist_y[128];
-> > > > > 	__u32 reserv2[511];
-> > > > > 	__u16 flag;
-> > > > > };
-> > > > >
-> > > > > Only
-> > > > >
-> > > > > 	__u32 reserv0[33];
-> > > > > 	__u32 bright_sc[4096];
-> > > > > 	__u32 reserv1[96];
-> > > > > 	__u32 ae_hist_y[128];
-> > > > > 	__u32 reserv2[511];
-> > > > >
-> > > > > transfer by ISP hardware.
-> > > > >
-> > > > > I need to fill
-> > > > > 	__u32 y_histogram[64];
-> > > > > 	__u16 flag;
-> > > > >
-> > > > > by vaddr.
-> > > >
-> > > > I see.
-> > > >
-> > > > Apart from the fact you can drop paddr and vb2_plane_cookie() and
-> > > > use vaddr for all (if I'm not mistaken), could you please record the
-> > > > above rationale for manually filling y_histogram and flag by hand in
-> > > > a comment to avoid future readers being confused by this as I was ?
-> > > >
-> > >
-> > > Still need to keep the paddr and vb2_plane_cookie() for
-> >
-> > If you were using the dma API to issue DMA transfers then I would understand
-> > you would have to use the dma_handles as set by dma_alloc_attrs(), but in
-> > the vb2 world buf->vaddr = buf->cookie.
-> >
->
-> Yes, but vb2_plane_cookie() actually called the vb2_dc_cookie,
->
-> const struct vb2_mem_ops vb2_dma_contig_memops = {
-> 	.alloc		= vb2_dc_alloc,
-> 	.put		= vb2_dc_put,
-> 	.get_dmabuf	= vb2_dc_get_dmabuf,
-> 	.cookie		= vb2_dc_cookie,
-> 	.vaddr		= vb2_dc_vaddr,
-> 	.mmap		= vb2_dc_mmap,
-> 	.get_userptr	= vb2_dc_get_userptr,
-> 	.put_userptr	= vb2_dc_put_userptr,
-> 	.prepare	= vb2_dc_prepare,
-> 	.finish		= vb2_dc_finish,
-> 	.map_dmabuf	= vb2_dc_map_dmabuf,
-> 	.unmap_dmabuf	= vb2_dc_unmap_dmabuf,
-> 	.attach_dmabuf	= vb2_dc_attach_dmabuf,
-> 	.detach_dmabuf	= vb2_dc_detach_dmabuf,
-> 	.num_users	= vb2_dc_num_users,
-> };
->
-> static void *vb2_dc_cookie(struct vb2_buffer *vb, void *buf_priv)
-> {
-> 	struct vb2_dc_buf *buf = buf_priv;
->
-> 	return &buf->dma_addr;
-> }
->
-> It not return the buf->vaddr = buf->cookie.
+syzbot found the following issue on:
 
-right right
+HEAD commit:    523b23f0bee3 Add linux-next specific files for 20240710
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=13187c7e980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=98dd8c4bab5cdce
+dashboard link: https://syzkaller.appspot.com/bug?extid=709e4c85c904bcd62735
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106dd859980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111637b9980000
 
-I was only aware of vb2_dma_contig_plane_dma_addr() to get the
-dma_addr handle, and I just realized it internally gets the plane
-cookie:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/345bcd25ed2f/disk-523b23f0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a4508962d345/vmlinux-523b23f0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4ba5eb555639/bzImage-523b23f0.xz
 
-static inline dma_addr_t
-vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb, unsigned int plane_no)
-{
-	dma_addr_t *addr = vb2_plane_cookie(vb, plane_no);
+The issue was bisected to:
 
-	return *addr;
-}
+commit fecef4cd42c689a200bdd39e6fffa71475904bc1
+Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date:   Thu Jul 4 14:48:15 2024 +0000
 
->
-> Regards,
-> Changhuang
->
-> > Anyway, I haven't run this part of the code, if you could verify the addresses of
-> > paddr and vaddr are different, then I'll be happy to shut up :)
+    tun: Assign missing bpf_net_context.
 
-Now I'm happy to shut up then :)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=164d6f76980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=154d6f76980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=114d6f76980000
 
-Thanks for explaining
-   j
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+709e4c85c904bcd62735@syzkaller.appspotmail.com
+Fixes: fecef4cd42c6 ("tun: Assign missing bpf_net_context.")
 
-> >
-> >
-> > > 	__u32 reserv0[33];
-> > > 	__u32 bright_sc[4096];
-> > > 	__u32 reserv1[96];
-> > > 	__u32 ae_hist_y[128];
-> > >  	__u32 reserv2[511];
-> > >
-> > > Because this part is filled by the hardware.
-> > >
-> > > I will add more information for struct jh7110_isp_sc_buffer
-> > >
-> >
-> > Thanks, a comment in buf_init() to explain that part of the struct is filled by
-> > hw and part has to be manually filled would be enough. From an userspace
-> > API point of view 'struct jh7110_isp_sc_buffer' will just match the HW layout,
-> > regardless of how it is filled up.
-> >
-> > > Regards,
-> > > Changhuang
-> > >
-> > >
+==================================================================
+BUG: KASAN: stack-out-of-bounds in bpf_net_ctx_get_all_used_flush_lists include/linux/filter.h:837 [inline]
+BUG: KASAN: stack-out-of-bounds in xdp_do_check_flushed+0x231/0x240 net/core/filter.c:4298
+Read of size 4 at addr ffffc90003def7f8 by task syz-executor156/5107
+
+CPU: 0 UID: 0 PID: 5107 Comm: syz-executor156 Not tainted 6.10.0-rc7-next-20240710-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ bpf_net_ctx_get_all_used_flush_lists include/linux/filter.h:837 [inline]
+ xdp_do_check_flushed+0x231/0x240 net/core/filter.c:4298
+ __napi_poll+0xe4/0x490 net/core/dev.c:6774
+ napi_poll net/core/dev.c:6840 [inline]
+ net_rx_action+0x89b/0x1240 net/core/dev.c:6962
+ handle_softirqs+0x2c4/0x970 kernel/softirq.c:554
+ do_softirq+0x11b/0x1e0 kernel/softirq.c:455
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ tun_get_user+0x2884/0x4720 drivers/net/tun.c:1936
+ tun_chr_write_iter+0x113/0x1f0 drivers/net/tun.c:2052
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0xa72/0xc90 fs/read_write.c:590
+ ksys_write+0x1a0/0x2c0 fs/read_write.c:643
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f26cdb99d90
+Code: 40 00 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d 11 e3 07 00 00 74 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 48 83 ec 28 48 89
+RSP: 002b:00007ffd1139eb08 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f26cdb99d90
+RDX: 000000000000fdef RSI: 0000000020000200 RDI: 00000000000000c8
+RBP: 0000000000000000 R08: 00007ffd1139ec38 R09: 00007ffd1139ec38
+R10: 00007ffd1139ec38 R11: 0000000000000202 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007ffd1139eb40 R15: 00007ffd1139eb30
+ </TASK>
+
+The buggy address belongs to stack of task syz-executor156/5107
+ and is located at offset 88 in frame:
+ do_softirq+0x0/0x1e0
+
+This frame has 2 objects:
+ [32, 40) 'flags.i.i.i105'
+ [64, 72) 'flags.i.i.i'
+
+The buggy address belongs to the virtual mapping at
+ [ffffc90003de8000, ffffc90003df1000) created by:
+ copy_process+0x5d1/0x3d90 kernel/fork.c:2206
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x6b798
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x2dc2(GFP_KERNEL|__GFP_HIGHMEM|__GFP_NOWARN|__GFP_ZERO), pid 5089, tgid 5089 (sshd), ts 45267990588, free_ts 13316620078
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1493
+ prep_new_page mm/page_alloc.c:1501 [inline]
+ get_page_from_freelist+0x2ccb/0x2d80 mm/page_alloc.c:3480
+ __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4738
+ alloc_pages_mpol_noprof+0x3e8/0x680 mm/mempolicy.c:2263
+ vm_area_alloc_pages mm/vmalloc.c:3584 [inline]
+ __vmalloc_area_node mm/vmalloc.c:3660 [inline]
+ __vmalloc_node_range_noprof+0x971/0x1460 mm/vmalloc.c:3841
+ alloc_thread_stack_node kernel/fork.c:314 [inline]
+ dup_task_struct+0x444/0x8c0 kernel/fork.c:1115
+ copy_process+0x5d1/0x3d90 kernel/fork.c:2206
+ kernel_clone+0x226/0x8f0 kernel/fork.c:2788
+ __do_sys_clone kernel/fork.c:2931 [inline]
+ __se_sys_clone kernel/fork.c:2915 [inline]
+ __x64_sys_clone+0x258/0x2a0 kernel/fork.c:2915
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 1 tgid 1 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1094 [inline]
+ free_unref_page+0xd22/0xea0 mm/page_alloc.c:2644
+ free_contig_range+0x9e/0x160 mm/page_alloc.c:6694
+ destroy_args+0x8a/0x890 mm/debug_vm_pgtable.c:1017
+ debug_vm_pgtable+0x4be/0x550 mm/debug_vm_pgtable.c:1397
+ do_one_initcall+0x248/0x880 init/main.c:1267
+ do_initcall_level+0x157/0x210 init/main.c:1329
+ do_initcalls+0x3f/0x80 init/main.c:1345
+ kernel_init_freeable+0x435/0x5d0 init/main.c:1578
+ kernel_init+0x1d/0x2b0 init/main.c:1467
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Memory state around the buggy address:
+ ffffc90003def680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc90003def700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffffc90003def780: 00 00 00 00 f1 f1 f1 f1 00 f2 f2 f2 00 f3 f3 f3
+                                                                ^
+ ffffc90003def800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc90003def880: f1 f1 f1 f1 00 f3 f3 f3 00 00 00 00 00 00 00 00
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
