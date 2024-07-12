@@ -1,159 +1,86 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD9516F85A;
-	Fri, 12 Jul 2024 12:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3E016F840;
+	Fri, 12 Jul 2024 12:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720788286; cv=none; b=MjrVroAV26ecWA/gZLI89D8wBhB03v9lgitQKtu1AKc7F5itvUorujRAdzq8QobqW9p9DcgsNktlohEXiWluCmOVbtsmdZ5EW35fQCjWqmyDWX/qNbGN+GF08FgWq18Bk/gGwXGJFBOX4tjAFf+aJh8ZAkGchgAAK/+RJ9FxbLE=
+	t=1720788288; cv=none; b=RA1kJUQe6AmdcmMI2mwl/LOQPt18cj991aWziXL8bS1Q1Gr8LU5cD5L9OtH7BanLgF1wlgBuxsIcFgG7hcVaYXwmW9EH1TDUVGUB+mf+Ntw02jZqqZkwmuNtHz7x1UBsMVeDHkxncqUVJx6rlbW3tidH8BI/hKfy5ruIQxViMBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720788286; c=relaxed/simple;
-	bh=uayfwc7zaHpay9gBZLMKZsr6recU8UX7T3703k1ppJE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=iZlbFrobNZmuoz6Qq1UQHqTeSwXAbdtANnzCojSBjQUUV4D0LqXHr0Hls6CjiCIG/u4nOJvzIfQndbSPASB8wDpwP5+CXBiwIJO4DguVDtLMAmsXLZ+YgP/mK+8hVBT7bh1W9YJqKh5s43zAMWbVK68tPHDCIQgeFCntHFLBaE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=me29irso; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1720788288; c=relaxed/simple;
+	bh=E3FVpYnRRpsgm++NuqRqUW9525EUFMflnlTae1gx0Gc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=tefMEV0DZRvl6I056bh30bPupaQs44qzvGoJj4qYzCAM9SaqebrmD5hJUrjSYDERaTLDSQ7FV3D/qlT2Ikk3qrzcexb2Asz6cb5o49AbnGSxqNA+uim8V/oFYE3Jldv7fz1nUo0i/JneME3bG7PEBLLYBz8SGV6Z6LxrEK0I82I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=tYHCHXXW; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="me29irso"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CCXPIC011771;
-	Fri, 12 Jul 2024 12:44:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LFoJzH2tRLlH37n1tUXEvEFwJRnSHELZkaV25RncfhM=; b=me29irso1NHvGaQ5
-	8yaOm3BbsgC5RBw2AkOLQwFMFzSG6uqMuZ0SUYYptNpwgxFQkGf43q+WXiVtfYaJ
-	fAvsuXGYbAscoEAbWFiB4Ad6hbAvglFev67jvyVZ+LhH8jAKkZy2KAm1HfD5/f06
-	2rIQAoulCabEHd8Pr3MawrQGtksKTz0ftoHLfUHIeSUfAT0OHiYxSex84IcROWPK
-	JC5GuLIQjmmv6aquJJyFrDUq1D//pqvbrqbO4i3yp3F4ZxvaDnXqJWe0XIGUzYI0
-	mZfVzwciGP0Ftqd4KiH/H5a0OHptMfOy4PEwTScG6imCWuO7AGE+Vc26flyOH12S
-	Qdh2TQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wgwy8ye-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jul 2024 12:44:26 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46CCiPXw024627
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jul 2024 12:44:25 GMT
-Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 12 Jul 2024 05:44:18 -0700
-From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Date: Fri, 12 Jul 2024 18:13:28 +0530
-Subject: [PATCH 1/5] dt-bindings: iio: adc: Add ADC5 GEN3 Channel info for
- pm8775 PMIC
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tYHCHXXW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720788280;
+	bh=J9ISOixeuCIIdseLMlAuXrHGH7ICrLMAzKSNlG7raHU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tYHCHXXWTApWYqTMNFMZcvcY01vcXh1Ll7HqkdV02pZuo7S3czeHeBbCY6xgq6SFo
+	 giKRrR0Tzh2CcTl74TQrhQvkP7KPemONS97qxRWwxVaZ8QUXlKa6962Z/s7fPNuScM
+	 wy+oFZXJkmVspvSdIp1hp8whhxBYq1g3mS413fjUkitsT1KnnkBpZYDKCsZcyVzhTw
+	 dyHu9H7aGaRZD1MMrkLOcfwbGwmPTjUrBEDwaV9yvU5erTNsOj2KfYUtncH5DZeD1j
+	 cenHyP1h480xFCXQZwckOeNRgzSsCJ+QX5ObHmOojegG4stCpSNwRbqCM07BOZ7NYv
+	 KXqpEd+VIJKUQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WLBBJ3zMGz4w2R;
+	Fri, 12 Jul 2024 22:44:40 +1000 (AEST)
+Date: Fri, 12 Jul 2024 22:44:38 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Vamsi Attunuru
+ <vattunuru@marvell.com>
+Subject: linux-next: unexpected file added by the char-misc tree
+Message-ID: <20240712224438.2d6e0cf6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240712-mbg-tm-support-v1-1-7d78bec920ca@quicinc.com>
-References: <20240712-mbg-tm-support-v1-0-7d78bec920ca@quicinc.com>
-In-Reply-To: <20240712-mbg-tm-support-v1-0-7d78bec920ca@quicinc.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        "Thara
- Gopinath" <thara.gopinath@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-CC: Kamal Wadhwa <quic_kamalw@quicinc.com>,
-        Taniya Das
-	<quic_tdas@quicinc.com>,
-        Jishnu Prakash <quic_jprakash@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        "Imran
- Shaik" <quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: q0CZ0Be9kE5wf-gzs1vTsJnwqvz-wVOo
-X-Proofpoint-ORIG-GUID: q0CZ0Be9kE5wf-gzs1vTsJnwqvz-wVOo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-12_09,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- adultscore=0 malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407120086
+Content-Type: multipart/signed; boundary="Sig_/bhlR1eVm/eRtMX6x5gs5Chg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Add definitions for ADC5 GEN3 virtual channels(combination of ADC channel
-number and PMIC SID number) used by PM8775.
+--Sig_/bhlR1eVm/eRtMX6x5gs5Chg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
----
- .../iio/adc/qcom,spmi-adc5-gen3-pm8775.h           | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Hi all,
 
-diff --git a/include/dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8775.h b/include/dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8775.h
-new file mode 100644
-index 000000000000..84ab07ed73cc
---- /dev/null
-+++ b/include/dt-bindings/iio/adc/qcom,spmi-adc5-gen3-pm8775.h
-@@ -0,0 +1,42 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_QCOM_SPMI_VADC_PM8775_H
-+#define _DT_BINDINGS_QCOM_SPMI_VADC_PM8775_H
-+
-+#include <dt-bindings/iio/adc/qcom,spmi-vadc.h>
-+
-+/* ADC channels for PM8775_ADC for PMIC5 Gen3 */
-+#define PM8775_ADC5_GEN3_REF_GND(sid)			((sid) << 8 | ADC5_GEN3_REF_GND)
-+#define PM8775_ADC5_GEN3_1P25VREF(sid)			((sid) << 8 | ADC5_GEN3_1P25VREF)
-+#define PM8775_ADC5_GEN3_VREF_VADC(sid)			((sid) << 8 | ADC5_GEN3_VREF_VADC)
-+#define PM8775_ADC5_GEN3_DIE_TEMP(sid)			((sid) << 8 | ADC5_GEN3_DIE_TEMP)
-+
-+#define PM8775_ADC5_GEN3_AMUX1_THM(sid)			((sid) << 8 | ADC5_GEN3_AMUX1_THM)
-+#define PM8775_ADC5_GEN3_AMUX2_THM(sid)			((sid) << 8 | ADC5_GEN3_AMUX2_THM)
-+#define PM8775_ADC5_GEN3_AMUX3_THM(sid)			((sid) << 8 | ADC5_GEN3_AMUX3_THM)
-+#define PM8775_ADC5_GEN3_AMUX4_THM(sid)			((sid) << 8 | ADC5_GEN3_AMUX4_THM)
-+#define PM8775_ADC5_GEN3_AMUX5_THM(sid)			((sid) << 8 | ADC5_GEN3_AMUX5_THM)
-+#define PM8775_ADC5_GEN3_AMUX6_THM(sid)			((sid) << 8 | ADC5_GEN3_AMUX6_THM)
-+#define PM8775_ADC5_GEN3_AMUX1_GPIO9(sid)		((sid) << 8 | ADC5_GEN3_AMUX1_GPIO)
-+#define PM8775_ADC5_GEN3_AMUX2_GPIO10(sid)		((sid) << 8 | ADC5_GEN3_AMUX2_GPIO)
-+#define PM8775_ADC5_GEN3_AMUX3_GPIO11(sid)		((sid) << 8 | ADC5_GEN3_AMUX3_GPIO)
-+#define PM8775_ADC5_GEN3_AMUX4_GPIO12(sid)		((sid) << 8 | ADC5_GEN3_AMUX4_GPIO)
-+
-+/* 100k pull-up2 */
-+#define PM8775_ADC5_GEN3_AMUX1_THM_100K_PU(sid)		((sid) << 8 | ADC5_GEN3_AMUX1_THM_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX2_THM_100K_PU(sid)		((sid) << 8 | ADC5_GEN3_AMUX2_THM_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX3_THM_100K_PU(sid)		((sid) << 8 | ADC5_GEN3_AMUX3_THM_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX4_THM_100K_PU(sid)		((sid) << 8 | ADC5_GEN3_AMUX4_THM_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX5_THM_100K_PU(sid)		((sid) << 8 | ADC5_GEN3_AMUX5_THM_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX6_THM_100K_PU(sid)		((sid) << 8 | ADC5_GEN3_AMUX6_THM_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX1_GPIO9_100K_PU(sid)	((sid) << 8 | ADC5_GEN3_AMUX1_GPIO_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX2_GPIO10_100K_PU(sid)	((sid) << 8 | ADC5_GEN3_AMUX2_GPIO_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX3_GPIO11_100K_PU(sid)	((sid) << 8 | ADC5_GEN3_AMUX3_GPIO_100K_PU)
-+#define PM8775_ADC5_GEN3_AMUX4_GPIO12_100K_PU(sid)	((sid) << 8 | ADC5_GEN3_AMUX4_GPIO_100K_PU)
-+
-+#define PM8775_ADC5_GEN3_VPH_PWR(sid)			((sid) << 8 | ADC5_GEN3_VPH_PWR)
-+
-+#endif /* _DT_BINDINGS_QCOM_SPMI_VADC_PM8775_H */
+Commit
 
--- 
-2.25.1
+  5f67eef6dff3 ("misc: mrvl-cn10k-dpi: add Octeon CN10K DPI administrative =
+driver")
 
+added this unexpected file:
+
+  drivers/misc/Makefile.rej
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bhlR1eVm/eRtMX6x5gs5Chg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaRJTYACgkQAVBC80lX
+0Gze9QgAlItiNThgpLaIo8LD6spD93ZzNJu5LPGXhs9w546pTRcnND+DKHi2Zt3E
+oUrjc12eAJIBczjQno71Ol+4Az4wul4g7kFhF6AKIp0ahXhIUtFOX9KelSNtdwtT
+ioiEozBr3Y/RedXdjMnSXrHxSkk0PRt/CYWY+Ik8AsCDGZpHVIIOAcY8mLos0CMP
+n6UVo13fmLUruU6qNh6V3tn5M5g+rj+O3jX/lkbJhSnnfK+JunpjA9hgiWfB46gE
+3jg5lyiGhcr4xBphQdJTydV8pItaK8M8xb9wSbJfqw+0JNYOpFsDm5tfFBM2l/Rg
+cQbeuF1tDhx2UUqYyTe27x0N0h218w==
+=W8zH
+-----END PGP SIGNATURE-----
+
+--Sig_/bhlR1eVm/eRtMX6x5gs5Chg--
