@@ -1,146 +1,118 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2F6179AA;
-	Fri, 12 Jul 2024 13:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACC616FF2A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 13:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720790276; cv=none; b=gTeds2HHGHbpvMixttnJHoAo9PXoQ/AIzlQHcSrgL+90y5osLnClrnYAOxIuoulc8g4k05eCm6hmBNzS2tEU90sO0w99qp5D1id/ns65lRcIVmcXDujFp/UywtWdP3Q2DCbI/GA8W+Ykwg0dwUcQyFDdxbJqlhpyoT5crmIRQ6M=
+	t=1720790351; cv=none; b=AdnbJ/qYJeGi+nsYmPrLUFnJHKJ+qjduPqej4eHze8OW+1YyMNYwyteR5NiYeZXgHgUTn+AVy6jvA4WaabGIEpWG026jLm781Rb0L1Zc+UKqv3SqOPXI1j2oWp2/WDTIeQDSpjZhr598qdxB7pnnlnuDdYvHjy/4zx4ACR1EyTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720790276; c=relaxed/simple;
-	bh=ewGQKC9ANPMxT9I5iskSAjtMvBqKRiomquLrkvI5Avc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jnxrDmNeI2KjcrpQBLrY8HfMHXJT/TtsMKKm+D7m/Acqk0iEu0YdC3xX2lhID/JTnfBjPw6A4QVEMUxurto+rN2CyQMEsIzZPUzXpKZ6Q9oBja8g7vGBX5Nn8ad82MoJl4hFkXjR+j3TAZW2Ojn8zJbZs9CT1aEUUFtWGGAC2yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=x559r/oe; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1720790351; c=relaxed/simple;
+	bh=mpPEqNHUboHg5X4DuAYbZYtk5ez8+vBp8ZUbNSPbIkI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=T7eYMotHora9Qc3047wu64bQjwnf7hmLyDCfCWgBdvmVbBOgNKueVKE6wnDRJLEwW4Z+xL29AR22S7Ia1Dqlx7jLLBaKGcS9nhXdOMFlXnxWieyNAFuS2fD9D36geSAnumAxHy7TULt7xFTxdunXNmo0kZiVO06PTlqcjYYyJOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oMAGvgJ1; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="x559r/oe"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46C8X9Vj004034;
-	Fri, 12 Jul 2024 15:17:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=GPNNdFG7/0l0CF7aIlpKbg
-	MiRxXwV7FSN15i1F01Eo4=; b=x559r/oengxe8fA9Gxt2xYzs2RTPLZiAxGcCKP
-	i4WTo+O7D9N+Hb+n3MB4DS/JwuQUxl7xz9sslfRzDJi+bXhxse8yv44ubCDiEZhF
-	oG2BW/V0zektHpuMb+rET1zI7rL6+EgvoMWRWrGkSmVk45vSNhcmN2+Ft0NKYwsQ
-	86GzbibjScvDRz/knnwvADVUop6aiu02VTuN4OmDi3WfQwnKTSfipdom3rGG9NEt
-	tKzzFBkxzYfEk2jP9/MD1BuFQZ7lxZk+0JjZKDK6F4V/RXZ/LIEvroNdoXDKTaBN
-	zE3fdvDlpeEKnVyrP0vkBa0kR0mOXGAQ0CJTwqpVGTH4M1sQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 406whg9qj0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jul 2024 15:17:28 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9F5224002D;
-	Fri, 12 Jul 2024 15:17:24 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA15F20D3F5;
-	Fri, 12 Jul 2024 15:16:26 +0200 (CEST)
-Received: from localhost (10.252.16.177) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 12 Jul
- 2024 15:16:26 +0200
-From: Yannick Fertre <yannick.fertre@foss.st.com>
-To: Yannick Fertre <yannick.fertre@foss.st.com>,
-        Raphael Gallais-Pou
-	<raphael.gallais-pou@foss.st.com>,
-        Philippe Cornu
-	<philippe.cornu@foss.st.com>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter
-	<daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: display: st,stm32-ltdc: Document stm32mp25 compatible
-Date: Fri, 12 Jul 2024 15:16:24 +0200
-Message-ID: <20240712131624.98898-1-yannick.fertre@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oMAGvgJ1"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CDILjo023659;
+	Fri, 12 Jul 2024 13:18:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references; s=
+	corp-2023-11-20; bh=UoIL+vCtOh0fhA5lR3F1t22mJvNzXPZjXUGWRT0A8lY=; b=
+	oMAGvgJ1av1S92KxLZpNDpMZ441JMOeBFZ5STUhmTN36ehXhmayNIRRrgnQH+F9r
+	CSt/ihMS46oaumteLnb4bQkW43lKFTwc41pqKnZKHCSSAbUa/hwB08yyX5Tf+pPU
+	vDkgsd+v4hNGhG2kv5OdJcvbRYx0o+gna+Ay8aXKbBM8RtpUZfqr98JwSa00SnjO
+	0+DQBddO/SpznMe2pJVAr3LRh0b0SgkAwy4FFr3fCyDuzbBgq8OYPP0flPhQ31QP
+	oRoctodnPVzcvb77kH64h8PT2TwklcUoCtsZZWNEsknywLDQSpZE3qaoHqjt6to9
+	ewF1RPFV9NnNE/n5is05Bg==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 407emt34yc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Jul 2024 13:18:56 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46CCVnUM022018;
+	Fri, 12 Jul 2024 13:18:55 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 409vv3snpr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Jul 2024 13:18:55 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46CDIsD9029886;
+	Fri, 12 Jul 2024 13:18:54 GMT
+Received: from ca-dev63.us.oracle.com (ca-dev63.us.oracle.com [10.211.8.221])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 409vv3snp2-2;
+	Fri, 12 Jul 2024 13:18:54 +0000
+From: Steve Sistare <steven.sistare@oracle.com>
+To: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        Si-Wei Liu <si-wei.liu@oracle.com>,
+        Eugenio Perez Martin <eperezma@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Dragos Tatulea <dtatulea@nvidia.com>,
+        Steve Sistare <steven.sistare@oracle.com>
+Subject: [PATCH V2 1/7] vhost-vdpa: count pinned memory
+Date: Fri, 12 Jul 2024 06:18:47 -0700
+Message-Id: <1720790333-456232-2-git-send-email-steven.sistare@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1720790333-456232-1-git-send-email-steven.sistare@oracle.com>
+References: <1720790333-456232-1-git-send-email-steven.sistare@oracle.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-12_09,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2407120089
+X-Proofpoint-GUID: bbr0eCVG20NSa_bbxeF3aQ5F1lkneOWZ
+X-Proofpoint-ORIG-GUID: bbr0eCVG20NSa_bbxeF3aQ5F1lkneOWZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-12_09,2024-07-11_01,2024-05-17_01
 
-Add "st,stm32mp25-ltdc" compatible for SOC MP25. This new SOC introduces
-new clocks (bus, ref & lvds). Bus clock was separated from lcd clock.
-New sources are possible for lcd clock (lvds / ref).
+Remember the count of pinned memory for the device.
 
-Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
+Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
 ---
- .../bindings/display/st,stm32-ltdc.yaml       | 29 +++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ drivers/vhost/vdpa.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-index d6ea4d62a2cf..680669c44b80 100644
---- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-+++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-@@ -12,7 +12,9 @@ maintainers:
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index 63a53680a85c..963f3704bc39 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -60,6 +60,7 @@ struct vhost_vdpa {
+ 	struct vdpa_iova_range range;
+ 	u32 batch_asid;
+ 	bool suspended;
++	long pinned_vm;
+ };
  
- properties:
-   compatible:
--    const: st,stm32-ltdc
-+    enum:
-+      - st,stm32-ltdc
-+      - st,stm32mp25-ltdc
+ static DEFINE_IDA(vhost_vdpa_ida);
+@@ -926,6 +927,7 @@ static void vhost_vdpa_pa_unmap(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
+ 			unpin_user_page(page);
+ 		}
+ 		atomic64_sub(PFN_DOWN(map->size), &dev->mm->pinned_vm);
++		v->pinned_vm -= PFN_DOWN(map->size);
+ 		vhost_vdpa_general_unmap(v, map, asid);
+ 		vhost_iotlb_map_free(iotlb, map);
+ 	}
+@@ -1009,9 +1011,10 @@ static int vhost_vdpa_map(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
+ 		return r;
+ 	}
  
-   reg:
-     maxItems: 1
-@@ -24,7 +26,9 @@ properties:
-     minItems: 1
+-	if (!vdpa->use_va)
++	if (!vdpa->use_va) {
+ 		atomic64_add(PFN_DOWN(size), &dev->mm->pinned_vm);
+-
++		v->pinned_vm += PFN_DOWN(size);
++	}
+ 	return 0;
+ }
  
-   clocks:
--    maxItems: 1
-+    minItems: 1
-+    items:
-+      description: Lcd Clock
- 
-   clock-names:
-     items:
-@@ -42,6 +46,27 @@ properties:
-       - for internal dpi input of the MIPI DSI host controller.
-       Note: These 2 endpoints cannot be activated simultaneously.
- 
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - st,stm32mp25-ltdc
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: bus clock
-+            - description: reference clock
-+            - description: lvds clock
-+        clock-names:
-+          items:
-+            - const: bus
-+            - const: ref
-+            - const: lvds
-+
- required:
-   - compatible
-   - reg
 -- 
-2.34.1
+2.39.3
 
