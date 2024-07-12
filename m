@@ -1,77 +1,87 @@
 Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1408157478
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB742157469
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:05:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720778723; cv=none; b=ewN1UVKp/2yGWL1WH6JGnB8PwcAfE5JGJn+IsB3AvakHgWMjOZwn3618GLAyF4/bTDZJZ/ckFlRpj4oD45Xk4QJeGOyQJhn8PjvLb4wRz9kZUUZCV3bG2eOp7Qyw+UyUwWMOe4EoTf/AeE7OfSQ4+4Qju5zK6ZWpfSuuyWFNlNA=
+	t=1720778723; cv=none; b=jbSwZR0D4bYHfpJko+7CkRNPbM/aOgIld7LuHGzG++oA/wyvU3Sd/gVxirT5x8wBwdoQfDANJ6yqIL2nbNhwZpezLa4fAsH98zuWC/lKRScn5xj8qGxa4pDRM90CXYeu+M73139ZQ0VJQzzEUI0pcpaVIZtxukzTLKiewUjLHXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720778723; c=relaxed/simple;
-	bh=cnp/jBauw5TdNqTWXgohodyEGsjA86x4uCkuOKVGfRE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=G9uOasjv9/yKiFl4bZNRbyNabphMF3MfMBSOOj+yVYoCfciZHkbzMlFaWNXTyexEp94tkS4p1ZS807CNPr8kauHsxmxE9wuI3QxgmzXxdenx78EQT9fzKEGFBqXoegsuGx/U2KylgkJmD6U4PuMvqmCr9FLItMOhtXfqmds8BJw=
+	bh=DikmJ9E0CkpxwbNQafR/uYCkxku/pf/Nz17bFWwUQD4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=LNxsDR0Ga0KRk9xPVybnl8wYr0OSor10fQHYEb9fvm+Zj0oiWx9OYiCxov0hn2BO+OlXgQfziwqA+Yz1cyWGaatPT8LF1Ed+1Zx7WRdonN4fXJpIjbqrAMa+d/6vBR0PcL++SY/nqd1Qdq1/AWagwUVB6c5mewQ3gpHE3IJaRAM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8045e14c387so259282239f.0
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-804b8301480so204896239f.0
         for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 03:05:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1720778721; x=1721383521;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iyg9rhejF8Qe5A3voFgG9tU6Ju6NThvDf3tGPwmTcgg=;
-        b=UVZZBjATV2W7ZBrOBvs3zK5fFekUWxyxO4jzg/cMmHNGXPP+C5wE6PKxiRVgeDjGvv
-         KFOIth27I/aSNRTNCF64rvVUWjzqw/vehA2kb3GGd/Y1IBidD3sbc/Uh/Yq0fqCL4Wwp
-         GpAmlcfGfc//hgzBFgHkVm39YC43yLoUagw9Unp1BSUxNHxdUfLAcIqM7mDjGMPovm1P
-         7nf5bGL4d3hgpilkAwHMY6DP/4OI8gps61nOMJVnxt6mL+7gn7BAoji6twuiu7AIiXrn
-         cYaJEZMmAohvDxUIBK7kQzWvjmaZq5NAv7UXaBOkcFgtj9k5QOUmtpME4OwEgvKgPCjP
-         izpA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6jrk6zb/acpudTLntX1qxgTX/j/7KFcuUb31Ii/ZuWlx40/bwALV5CWyxSXfa/4EcBjLkWHaoCU1+rDOHYjdIYXCa3ox3SzMG+7Va
-X-Gm-Message-State: AOJu0Yy0Hl8A6fhvHoxPSPXmd26HGFQDfOlzZvkXmvcqQA9Hm6kncXti
-	vgZWddiMTNvz7rxFTQ2omQKdNSs00PiECMG4W1sjdOUflm2wMWZFxwXYpKpY0wgI6IQDZO652Bc
-	bExavf71fFuyhqThR0xjtRmsD6j/ljqkwdCFjDaw6SgdtURVp3TliDXM=
-X-Google-Smtp-Source: AGHT+IFFBk/W1SQSv0kMIAhACc/3QzDzQ1IHiTDda01MIv9ZAbtoVD6gv6Et4UAM+5UIVNANJhxXnWsOn0amnEVcYvFYxkoWdGnx
+        bh=Sbd91EqdxWCu/AGP/6JU5N6zMd6H/sbaW+FVWVJC6ew=;
+        b=g3ZEN8h3ZzWz8a0+7K+8Cv+6b8JhKiDPPChSDxx2fFS+LiJeUKxmGRzuYbcSiX3x2h
+         IMBx3MKLy/Rn5uW1Cu0jeakEB2GdHYzSZJI5Xbx1bKgLnPvBeEwc+b36IX8PK1mo+48O
+         SOti0RIu4Ev1TTWagkT3CWpJKa6MLG+C30bw8m3hYnU/Z1fAEf9+6eg5NC96glBLQ8GX
+         FZ9/dbml43WgRWTgaHSCMuwzfrdJIJs4LpFxz8I+4ZhwZldobX9VxktGXSq4OC6b03KD
+         6+cR5kcweW3+bPogNRUTSPjMezithF5A5oocsy8JO5iTxRUlcflcWGMGu24kHMvF3cXQ
+         hQxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwpwnRBn+FHkv4EbYCxQBi8lgRXWfx030qVvNBgL2kgL2Mnjli6R9kUELiQRnIEF7MnevR4bzQwDxJE48wm8FGjKSMaeeAV5Pr0z23
+X-Gm-Message-State: AOJu0YxQz+mDZssu+ePp/syjJL1pxJ3hXBFUQImBW28LXwYDgNIncmoq
+	BtcudcIFhgN/elvYnSPkNAgyP47KlHrug3qxvHTQMRuqDxxXdDW3LeB5ihI6EnADpVscbL7IkCA
+	LqPkly/8lqIJo2XcAZfQSOOfDMvt+ou/qo9SJcfX71GUpPPpyFENuymM=
+X-Google-Smtp-Source: AGHT+IGOOu5kA2OdFNx3OPYCfpBjbuyZtWQxI+rSmp0aKMpP/GM8DhnuanvAXnFLoMgIkRMkFSPKyuZ7sLUB9otUh7fA+i7L+Nnw
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:24d5:b0:4c0:a8a5:81f5 with SMTP id
- 8926c6da1cb9f-4c0b2b331c3mr891446173.4.1720778721119; Fri, 12 Jul 2024
- 03:05:21 -0700 (PDT)
-Date: Fri, 12 Jul 2024 03:05:21 -0700
+X-Received: by 2002:a05:6638:8601:b0:4c0:9a05:44c4 with SMTP id
+ 8926c6da1cb9f-4c0b24e9f62mr666495173.0.1720778720883; Fri, 12 Jul 2024
+ 03:05:20 -0700 (PDT)
+Date: Fri, 12 Jul 2024 03:05:20 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000068db93061d0a0468@google.com>
-Subject: [syzbot] Monthly serial report (Jul 2024)
-From: syzbot <syzbot+list7b2f8c4a3e5b92bb88db@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000065473a061d0a0451@google.com>
+Subject: [syzbot] Monthly ntfs3 report (Jul 2024)
+From: syzbot <syzbot+list90007c8b31066d0be99e@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
+	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello serial maintainers/developers,
+Hello ntfs3 maintainers/developers,
 
-This is a 31-day syzbot report for the serial subsystem.
+This is a 31-day syzbot report for the ntfs3 subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/serial
+https://syzkaller.appspot.com/upstream/s/ntfs3
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 16 issues are still open and 42 have been fixed so far.
+During the period, 2 new issues were detected and 0 were fixed.
+In total, 32 issues are still open and 48 have been fixed so far.
 
 Some of the still happening issues:
 
-Ref Crashes Repro Title
-<1> 114     Yes   INFO: task can't die in show_free_areas
-                  https://syzkaller.appspot.com/bug?extid=8f41dccfb6c03cc36fd6
-<2> 67      Yes   BUG: soft lockup in tx
-                  https://syzkaller.appspot.com/bug?extid=5e87db90e68fbc4707c6
-<3> 39      No    INFO: task hung in filemap_fault (6)
-                  https://syzkaller.appspot.com/bug?extid=cbbcd52813dd10467cfe
-<4> 13      Yes   KASAN: slab-use-after-free Read in tty_write_room (2)
-                  https://syzkaller.appspot.com/bug?extid=2a81fdd5c6ddffee3894
-<5> 6       Yes   INFO: task hung in paste_selection (2)
-                  https://syzkaller.appspot.com/bug?extid=275e275bd3f536725dd8
+Ref  Crashes Repro Title
+<1>  11954   Yes   VFS: Busy inodes after unmount (use-after-free)
+                   https://syzkaller.appspot.com/bug?extid=0af00f6a2cba2058b5db
+<2>  5491    Yes   possible deadlock in mi_read
+                   https://syzkaller.appspot.com/bug?extid=bc7ca0ae4591cb2550f9
+<3>  3908    Yes   possible deadlock in ni_fiemap
+                   https://syzkaller.appspot.com/bug?extid=c300ab283ba3bc072439
+<4>  3543    Yes   KASAN: out-of-bounds Write in end_buffer_read_sync
+                   https://syzkaller.appspot.com/bug?extid=3f7f291a3d327486073c
+<5>  2533    Yes   kernel BUG in dnotify_free_mark
+                   https://syzkaller.appspot.com/bug?extid=06cc05ddc896f12b7ec5
+<6>  870     Yes   possible deadlock in ntfs_fiemap
+                   https://syzkaller.appspot.com/bug?extid=96cee7d33ca3f87eee86
+<7>  562     Yes   possible deadlock in ntfs_set_state (2)
+                   https://syzkaller.appspot.com/bug?extid=c2ada45c23d98d646118
+<8>  97      No    possible deadlock in ntfs_fallocate
+                   https://syzkaller.appspot.com/bug?extid=adacb2b0c896bc427962
+<9>  92      Yes   BUG: unable to handle kernel NULL pointer dereference in attr_make_nonresident
+                   https://syzkaller.appspot.com/bug?extid=5b6ed16da1077f45bc8e
+<10> 82      Yes   possible deadlock in ntfs_mark_rec_free (2)
+                   https://syzkaller.appspot.com/bug?extid=016b09736213e65d106e
 
 ---
 This report is generated by a bot. It may contain errors.
