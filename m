@@ -1,144 +1,120 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5344F17CA00
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 18:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A64A17D898;
+	Fri, 12 Jul 2024 18:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720807974; cv=none; b=nSDAUuoWNX1/6VNmHYpFamBgsNBW85iox6hBxdRlfgDsdTv0hvPtqu3DRofoCwIBmvEenBqrhx4Y9eTkQ5ALMYEOpInlRGsGcBIPdR+rwqb86fLUNO8cJdDA4vU6NmhN0r4GulKZJQgMbuF67uTBqIKEcXBHONY1DacC+bfbicU=
+	t=1720807976; cv=none; b=LWjFjIlU0z0be8pH9C322b2UPZ+JcqGWvTmeQxJWNEA2VXK117n6l1bsnL3hx3kV6qOeBemel9hER3dUJAZeAcf9N0IcoouPW+Nej7JzuDb9FoYgvjlzIvt98azx2sEVo99/Z4IhZoTX2RM/Wcf1VVvpyUOdsMoQQJEB72deU2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720807974; c=relaxed/simple;
-	bh=PQFAc94b+3E6J2xiJdbKRsuyLtZHAm+NZj3v+mP90Hc=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=lkAT6ZdDQvD4Yp1eVATlCaaL1ZCGWBasG4g2CX9eOs5rcY71vDbdAjtZ+oy1BcHujAzf9QImoadLZYoyU7sbm26sRP05lou41sM3cLvAsSehkbt95SmK15JUsxT0mqIMUcU29/YSNuIfvKUnsfZCQcKXjKU3zqlz6iZRJL4vf0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CGLxMRCj; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1720807976; c=relaxed/simple;
+	bh=hLZ13tB6qAQEHvHpUsidz/Qnom4FichvzgyqtE0sOJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZZAQNkucNpGpCk/IRrNKvlSBMeVpqIG2JZ81C6PlMdmTyOpaFKy2fUkQOSx2vxHgGGM/1oITQ5SkY8RaLDboJix0V3wtL5WJUk52KgzORnO3urufIM6eUgCiJrtVZbo7e3AMiepvfVat74f0hkRZkCTd8Ll7eqyXr2Ac075SO3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oibZr1LI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CGLxMRCj"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e03a92302d1so3686675276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 11:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720807972; x=1721412772; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dI8yaROyMxBgkl/C6HStDZ1DbB4Rpu7ZnQVumFggSVU=;
-        b=CGLxMRCjyiGKsZNLZBfsHfkedwFQZ/BLnEm30ySaBUPCUrpaBZqZIsOPlloR6SiN97
-         zZRuFO+kEcbmnO5RgXYvnKC2jGvcRe5Ms4fodNBADG3UHGM0cfCRWlm62buB6b/aQ9Ms
-         8MDtg6ZnpJ8Sx9FaL+AVEMu2UGMF3PvpHa5pO9rrpHVNhaXjApCq2GrxitURLF8CUNfT
-         80PUzkYsYSeXHfJvJJM6aBU5EY7Yy4epd/HHDtd428elb2hIv8XbiYYBadPesa/60ChQ
-         UWtlI91Oqe5Tr4gpdf3h4YcaQywa3QdNxlRYBcp1OlUVE3bfpIaBJ4QolgvZ4KHZfc6w
-         sOyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720807972; x=1721412772;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dI8yaROyMxBgkl/C6HStDZ1DbB4Rpu7ZnQVumFggSVU=;
-        b=RftWne8bPikvG9dhds/adpKsjjllVatGbnV1EYAR7k2vMjusGypgDho7JKkwPHkpa7
-         SFL02hqY6LW5Vc5QPnMpCt0wawxVEhsnuF55c75USHcE+wvlI88bfZHnPBVw9qcae13s
-         KaLCQg0vFuArjdrnvzNMlOSPyS1t7eK86INa89IaMUylqOZZOy7IdyDS7FzSS+A9khfo
-         zODGhS1ETPzLMd1yJYIorpXgHQLdaa/sIn4niGUcdLA+FXL40QL6D8DHzMKn6ISZPt+0
-         kZqc+bh9Aql8KWaPfzqkpvxhnrs3iydL3N8RNuVhTC/R69xgGHxoVEGtcrogea6VxVqC
-         oCFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuP/csKnJKRBa+IkVXyKJPHzX/T58w6//lSK4qHM/n4pPgyejilBnTeEeYazZk6/RhAaveMlW40/3v4wTY5NvrZywbCbPcloGI/ZZl
-X-Gm-Message-State: AOJu0Yzna1Dm0HVNFSTfh+2aapVqbwvIQVBgQONRP/g4S3NHoMfV1S70
-	PpCuLi6wmMFyBLiG+0GW/zsRRuto/GV7g/y5dRwxd1F59OqPynIhtkL4NOIzRDR2o1KCBauWqwz
-	eqRrxSw==
-X-Google-Smtp-Source: AGHT+IEdjKOWNbH6lHnQ3hQD9ZpV0aONsOjoRMeD9l9g2HUs1hV6yUVjuLwzYNk5GAitqb5lFTEdkOp686G6
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:2e7d:d47a:a0c6:e3b1])
- (user=irogers job=sendgmr) by 2002:a05:6902:1146:b0:e03:6556:9fa1 with SMTP
- id 3f1490d57ef6-e041b11d3demr762464276.8.1720807972320; Fri, 12 Jul 2024
- 11:12:52 -0700 (PDT)
-Date: Fri, 12 Jul 2024 11:11:00 -0700
-In-Reply-To: <20240712181108.475336-1-irogers@google.com>
-Message-Id: <20240712181108.475336-20-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oibZr1LI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A43D8C4AF12;
+	Fri, 12 Jul 2024 18:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720807975;
+	bh=hLZ13tB6qAQEHvHpUsidz/Qnom4FichvzgyqtE0sOJw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oibZr1LIQWv1tC997nGrg8NSafblI/Uv6Mgy30HhWxzN5aOrL0agOBXi9y7Weo3CU
+	 +9pBEMHGJRcQ2XqHYqYbYT4JEUTEB0Bp/oAtwJA1+IIFKX6SPpLb9Fu+A4kaWpVS/h
+	 hgiMks3LioZnDfGWCgFneN2BeNs6/fewsrcokSP1BrEeIhwrUDcwJZp8nY2rxzLA4A
+	 gQDA/TSPNJzHPgBvwPDvMoFWgP1b+kdJTbyeCOdKAKH0DxwgHx4aMWerTMFSdg4DXV
+	 A11910we7S8LsTZ2JgsdYWJiribIqwImSJHwa1vGhp/lyQwxvmEJGgJzi71p3Blb+2
+	 KyEChaAligCHg==
+From: superm1@kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Mathias Nyman <mathias.nyman@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+	Daniel Drake <drake@endlessos.org>,
+	Gary Li <Gary.Li@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v3 3/5] PCI: Verify functions currently in D3cold have entered D0
+Date: Fri, 12 Jul 2024 13:12:44 -0500
+Message-ID: <20240712181246.811044-4-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240712181246.811044-1-superm1@kernel.org>
+References: <20240712181246.811044-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240712181108.475336-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Subject: [PATCH v5 19/27] perf mem: Use perf_tool__init
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Use perf_tool__init so that more uses of struct perf_tool can be const
-and not relying on perf_tool__fill_defaults.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+It is reported that USB4 routers and downstream devices may behave
+incorrectly if a dock cable is plugged in at approximately the time that
+the autosuspend_delay is configured. In this situation the device has
+attempted to enter D3cold, but didn't finish D3cold entry when the PCI
+core tried to transition it back to D0.
+
+Empirically measuring this situation an "aborted" D3cold exit takes
+~60ms and a "normal" D3cold exit takes ~6ms.
+
+The PCI-PM 1.2 spec specifies that the restore time for functions
+in D3cold is either 'Full context restore or boot latency'.
+
+As PCIe r6.0 sec 5.8 specifies that the device will have gone
+through a conventional reset, it may take some time for the
+device to be ready.
+
+Wait up to 1 sec as specified in PCIe r6.0 sec 6.6.1 for a device
+in D3cold to return to D0.
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- tools/perf/builtin-mem.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+ drivers/pci/pci.c | 11 +++++++++++
+ drivers/pci/pci.h |  1 +
+ 2 files changed, 12 insertions(+)
 
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index c2038a32543c..c12ca0ec1237 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -285,7 +285,23 @@ static int report_raw_events(struct perf_mem *mem)
- 		.force = mem->force,
- 	};
- 	int ret;
--	struct perf_session *session = perf_session__new(&data, &mem->tool);
-+	struct perf_session *session;
-+
-+	perf_tool__init(&mem->tool, /*ordered_events=*/true);
-+	mem->tool.sample		= process_sample_event;
-+	mem->tool.mmap		= perf_event__process_mmap;
-+	mem->tool.mmap2		= perf_event__process_mmap2;
-+	mem->tool.comm		= perf_event__process_comm;
-+	mem->tool.lost		= perf_event__process_lost;
-+	mem->tool.fork		= perf_event__process_fork;
-+	mem->tool.attr		= perf_event__process_attr;
-+	mem->tool.build_id	= perf_event__process_build_id;
-+	mem->tool.namespaces	= perf_event__process_namespaces;
-+	mem->tool.auxtrace_info  = perf_event__process_auxtrace_info;
-+	mem->tool.auxtrace       = perf_event__process_auxtrace;
-+	mem->tool.auxtrace_error = perf_event__process_auxtrace_error;
-+
-+	session = perf_session__new(&data, &mem->tool);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 658a139f74ab0..14dab7bc64ba4 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1396,6 +1396,17 @@ int pci_power_up(struct pci_dev *dev)
+ 	else if (state == PCI_D2)
+ 		udelay(PCI_PM_D2_DELAY);
  
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
-@@ -449,21 +465,6 @@ int cmd_mem(int argc, const char **argv)
- {
- 	struct stat st;
- 	struct perf_mem mem = {
--		.tool = {
--			.sample		= process_sample_event,
--			.mmap		= perf_event__process_mmap,
--			.mmap2		= perf_event__process_mmap2,
--			.comm		= perf_event__process_comm,
--			.lost		= perf_event__process_lost,
--			.fork		= perf_event__process_fork,
--			.attr		= perf_event__process_attr,
--			.build_id	= perf_event__process_build_id,
--			.namespaces	= perf_event__process_namespaces,
--			.auxtrace_info  = perf_event__process_auxtrace_info,
--			.auxtrace       = perf_event__process_auxtrace,
--			.auxtrace_error = perf_event__process_auxtrace_error,
--			.ordered_events	= true,
--		},
- 		.input_name		 = "perf.data",
- 		/*
- 		 * default to both load an store sampling
++	/*
++	 * D3cold -> D0 will have gone through a conventional reset and may need
++	 * time to be ready.
++	 */
++	if (dev->current_state == PCI_D3cold) {
++		int ret;
++
++		ret = pci_dev_wait(dev, PCI_DEV_WAIT_D3COLD_D0, PCI_RESET_WAIT);
++		if (ret)
++			return ret;
++	}
+ end:
+ 	dev->current_state = PCI_D0;
+ 	if (need_restore)
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 88f54d22118dc..9482539b9830a 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -11,6 +11,7 @@ enum pci_reset_type {
+ 	PCI_DEV_WAIT_BUS_RESET,
+ 	PCI_DEV_WAIT_RESUME,
+ 	PCI_DEV_WAIT_DPC,
++	PCI_DEV_WAIT_D3COLD_D0,
+ };
+ 
+ /* Number of possible devfns: 0.0 to 1f.7 inclusive */
 -- 
-2.45.2.993.g49e7a77208-goog
+2.43.0
 
