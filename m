@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D76815B13D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7CC16F856
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 14:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720793319; cv=none; b=aBBtLZQT1anih2r+B+ljQN6dj3cAymYYwPDMRDGujL4vTTJywMIfOIacRTWzdWrBBsy54Fi1J0fpsFGzFZVVaWPueGPSRJ5qGnWCjYy9MyhEAQOfd9rGHN4f0pBl4htIJhq3XzZARZE140gVpv7/VYdLXRohMwIt57YXbq1uvXk=
+	t=1720793319; cv=none; b=DsEib82UgZhet42B/SHdR9jQnis/pFGi7/JS74BYRi+SoPYKHDdpW06bm952VWHf+VLOHHcarrQJGEonMI4Utv5U5g0Zxv2NwFFiInZ+/8q9oT1sPzRLmX6i2LOL8//aQl0bjGKWxakWd6qSuN2OzwcRDNvG2NHHCD+cU5E5Hsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720793319; c=relaxed/simple;
-	bh=1tdVOay90qKoOBtZsqzjMTRYxUTqdTqLiJ2eTqVl8pQ=;
+	bh=d6yyoRJi3R7yLXIYWh6FukyOXX8Ng8iIFRGZyBMCrXo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rzdOY4jUGogkw689Nn4c6lhRJDVVULX2awnMUsA07e49ErvTnZvBEWCB4H7Ln9Kt9kLYwNGoAhKO9wOMBhIKl3akQYZ+MN8FNbO07H1bc8NhanA0kQV2oLplYMFKAB3IJgBpwY3oyfMgJM71XJAby36tOKlTMdMUVGByO34jyEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GK3m/Myd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tvuVTUmKJptpuDM8q6rJ7eHurxHLIj+t6z4f7rCTFC94NVXJFn+HbhhfOD5hYfZtoevlAgj8AKYJN6WIXEsGgoAxbrn4BaLgdGD8TpZksJLpPmC6jnM8J6SPqyea0YiJIa1G5yo7bIZvk61kVsJgieQSGfY7iglYRLJ/Mcw/i7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnDTtrTV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GK3m/Myd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1950C32786;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnDTtrTV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7F70C4AF0C;
 	Fri, 12 Jul 2024 14:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1720793318;
-	bh=1tdVOay90qKoOBtZsqzjMTRYxUTqdTqLiJ2eTqVl8pQ=;
+	bh=d6yyoRJi3R7yLXIYWh6FukyOXX8Ng8iIFRGZyBMCrXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GK3m/MydnKsOO1mz/qpTsUU9Nr0bk06clrR4al/JiC6cqzmPsBG5Hg/HbrJB6V5p/
-	 VfO1OeNQUzdM+OAukBXhVBcVRSp5SB+3n5uLIFzmDi3kBmFiZEqg9NVVvYSbC5VVoc
-	 eoyXCcg3bLYTzGi26SRde1JghliDd10PABRONJVZC2NJ9XUN2ijKT90rpaFnI7/sK5
-	 jtgGc+IwwfRZqgutxUkGBICwFtSEUcLruWvBq6auro1SmcJ7J3HlBcVUK+8MKfgMhb
-	 /dMLabtmPad37/NGQduHsN/yIc9xDE/Cr8JDp731IT3AI/lwsZXg+aPNrmSpKGjpV1
-	 36B76Ub7UWTQg==
+	b=HnDTtrTVCPk95Zr6JsIUWD3Cm2jUSrQTDVV7VSJSR+G6Y0J8PExnHlOhBGExpz+TP
+	 acrxF8PmDPQ52yA50xcbEEKzYOtvaTtPuxPQM7d2f/4F19BoFpyUD4L8LWdNNJIYIH
+	 0lIzNGb3PWHO8cVAm3isOou6Wo+1lvYkXgruQD/KWyM1u3Ei+aRLpix5yFv67564Ox
+	 4913kyPvgObMRIriJfAML5rGzl+Vsjw5FJK7dLWi4olahVkKd6/rh8ZVRydVO3XbWz
+	 BOfg1yvGjaXlmfxlx7SOzSkhoZflX0kKXyIhkQ1tLBDfF9eGps/QPB0hTtK34JjXa+
+	 BnnkmwjwvBJeA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sSGww-000000006KD-1grC;
+	id 1sSGww-000000006KH-2R4B;
 	Fri, 12 Jul 2024 16:08:38 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	alsa-devel@alsa-project.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 1/3] soundwire: bus: suppress probe deferral errors
-Date: Fri, 12 Jul 2024 16:07:59 +0200
-Message-ID: <20240712140801.24267-2-johan+linaro@kernel.org>
+Subject: [PATCH v3 3/3] soundwire: bus: clean up probe warnings
+Date: Fri, 12 Jul 2024 16:08:01 +0200
+Message-ID: <20240712140801.24267-4-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.2
 In-Reply-To: <20240712140801.24267-1-johan+linaro@kernel.org>
 References: <20240712140801.24267-1-johan+linaro@kernel.org>
@@ -52,49 +52,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Soundwire driver probe errors are currently being logged both by the bus
-code and driver core:
-
-	wsa884x-codec sdw:4:0:0217:0204:00:0: Probe of wsa884x-codec failed: -12
-	wsa884x-codec sdw:4:0:0217:0204:00:0: probe with driver wsa884x-codec failed with error -12
-
-Drop the redundant bus error message, which is also incorrectly being
-logged on probe deferral:
-
-	wsa884x-codec sdw:4:0:0217:0204:00:0: Probe of wsa884x-codec failed: -517
-
-Note that no soundwire driver uses the driver struct name field, which
-will be removed by a follow-on change.
+Clean up the probe warning messages by using a common succinct and
+greppable format (e.g. without __func__ and with a space after ':').
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/soundwire/bus_type.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/soundwire/bus_type.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-index c32faace618f..85fa5970d98a 100644
+index 3979be0f8b65..3930b245008d 100644
 --- a/drivers/soundwire/bus_type.c
 +++ b/drivers/soundwire/bus_type.c
-@@ -83,7 +83,6 @@ static int sdw_drv_probe(struct device *dev)
- 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
- 	struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
- 	const struct sdw_device_id *id;
--	const char *name;
- 	int ret;
+@@ -123,7 +123,7 @@ static int sdw_drv_probe(struct device *dev)
+ 	/* init the dynamic sysfs attributes we need */
+ 	ret = sdw_slave_sysfs_dpn_init(slave);
+ 	if (ret < 0)
+-		dev_warn(dev, "Slave sysfs init failed:%d\n", ret);
++		dev_warn(dev, "failed to initialise sysfs: %d\n", ret);
  
  	/*
-@@ -108,11 +107,6 @@ static int sdw_drv_probe(struct device *dev)
- 
- 	ret = drv->probe(slave, id);
- 	if (ret) {
--		name = drv->name;
--		if (!name)
--			name = drv->driver.name;
--
--		dev_err(dev, "Probe of %s failed: %d\n", name, ret);
- 		dev_pm_domain_detach(dev, false);
- 		return ret;
+ 	 * Check for valid clk_stop_timeout, use DisCo worst case value of
+@@ -147,7 +147,7 @@ static int sdw_drv_probe(struct device *dev)
+ 	if (drv->ops && drv->ops->update_status) {
+ 		ret = drv->ops->update_status(slave, slave->status);
+ 		if (ret < 0)
+-			dev_warn(dev, "%s: update_status failed with status %d\n", __func__, ret);
++			dev_warn(dev, "failed to update status at probe: %d\n", ret);
  	}
+ 
+ 	mutex_unlock(&slave->sdw_dev_lock);
 -- 
 2.44.2
 
