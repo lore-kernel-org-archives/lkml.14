@@ -1,57 +1,58 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81B1174EF3
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 16:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904A817622F
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 16:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720800248; cv=none; b=kI4PKrx/TjOzIjmi1zdzIstSLQAgdBicWK28CKHo+PlSGiD3F2KTvEMtzziYuUfjYo/HMM0ACFiC85fq/AkqIySqRuLIKoW7hKpLbL/FUTirRBzeJB0nBsGGQD9XUamGk2sj0ulrHHYNVh+4oqJVUnHPFpYdOmphTdOix/g1HUQ=
+	t=1720800249; cv=none; b=h246FTkydE3u8XOY19q/su3xskm7a7RMzh0V7Km3RxkqRNgCQQ+2XXmRrb+wvEVYN/N0Js9CpDQ7a5ukOScMYYChS1zW6wjR4yaYXoxeFydVdgTL7DphcXuhaw1/+c0uhWfdnvuDKQTSdOXrIq4a0q79ILQ8+NstPCBagwX7frE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720800248; c=relaxed/simple;
-	bh=Y/k/wdBv/5beOfFpJAQFfQXG5QorlewTAyQxhJSger4=;
+	s=arc-20240116; t=1720800249; c=relaxed/simple;
+	bh=jcbI0ILmzg2rz8ajY9fDpFx5bxGc9dBImltD76qGtXE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nvFIdFctQinxBy8/7UxyXm0M1sKr5OC8QzPGBxN6RO7NO6y0LanTkgSUExrLe2DIu/jQzx0wA56bqRZLpCSDqZfqn3kgeFwLHQkCU6TE/PqwpnbGqIkIoFpPqpp7XDhdI/9kIhi9KVSLz4MHuXDJ0WOBgNm8YqwrkjDbk4dDEMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QnmO49jl; arc=none smtp.client-ip=209.85.160.54
+	 MIME-Version:Content-Type; b=I506oqGvfnF2AReoVklFUegUgvUgSANul3viLLcJL23cGb8R8KPz7L+Zy0jxCEQxl7HdqXJCf69AMTczQOFxDOczyKM5t5AS0xFnu/Or4s9Ap+Hn4i+2USehxAAmWTtLVddS6+JN5d0rLsuYhzZoSjP56M4Sp+iiWGb46t3SX6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XADlh/Ml; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QnmO49jl"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-25e04a7d9f1so1061671fac.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:04:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XADlh/Ml"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-703ba2477bdso1037463a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:04:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720800245; x=1721405045; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720800247; x=1721405047; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xtk0UvTBio0HdPiv9SeTHdQ/nYZSzty+YaDbepVhjDk=;
-        b=QnmO49jlVfOP5X+O3cHivPKymPZJd4lFil1HBGfoJ4qvg0IbvoPY9m5+ZokpaLpA7I
-         n8X+LlmymvsfE/47bQaV69wiGdOq4DIOIeymue6tFahIFyx3XueT678CYrhADLp/U35t
-         Gi78sFv2PYchfiYGMJJjcs0AWleJTuJu94gBBTtU8xO8uKivjWKDpyDYaZLwxW6btNlt
-         9HKfm4CxTucC66ijB11ptNxaug7uHPVY68m4fGMTJbf3ITmjFrlBnF7oE+XFFtCBNzaJ
-         1/uzj0V7sXa3Wd5Rm1QFGSoM+Cl5wZWSzfM94o0qaRY9aHu+SOodD7Wo0atNq0RXYVqV
-         SAXQ==
+        bh=60eUVwKVeZ7BrLO6pxv9nbYIZ9oGCgCB8H4hO/TeI/g=;
+        b=XADlh/MlstSnuIy9Po0NBK6gB/5MwLA2JBwujo5/dxAw6HK0PCWcxbpCuQbYr9lAi5
+         0H33dyyCBQ2Sh4TlCY5zASlVDiQSwtO0/Z63h5e0evVqQMXRuk0voySi52RFC6M/fjv4
+         Yl+tMyWXs36VMO3BlJRCfGiyIcbVRC99BQieuhqLE49y7jzQ20VtPMVN9cUigcnV9/6F
+         2mgqm9Mz7ZY3BtRzObZa2u+5Sjj47f/PzIk2vz4CQ9TLsJvJRoB9LiPgYGNCcKbd8s3U
+         iuS9s/N/hZtvLJVMexCHFs2cSu48EcWtl3u6ximw+xehO740PWhBn6RK5lnhZ8FoOwLe
+         iufQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720800245; x=1721405045;
+        d=1e100.net; s=20230601; t=1720800247; x=1721405047;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xtk0UvTBio0HdPiv9SeTHdQ/nYZSzty+YaDbepVhjDk=;
-        b=uyjbm/NMy3ckVSmoxJ+ZFNvY7hrrf56ZdtiTJAKEpmus+fcab+FhY5rSjVUO3qL/ey
-         VFFUnAEmxmlCl7G8F6BIA0SltRhPMNqf9MbHldj9GHt4UoB7sycAKCiBYgHXc8xND2IZ
-         ST1aygMcne0aQdXvfUeZgT55qgD+HDGwVCQ7XPPFs5godqssM1EA7q/y6oJ49+blpBMi
-         trcQcMSJc7QHUkvx873g+f9DTt2dD7JHO50MfD1F7Owb1ndXRgaA9GacvXIF4vEwXrdF
-         E8ETOC4ARzD9d+MNHGRXe5fqfqkfkcuWuojcWv+S4Es3VgnOoimIqLUHbou//dIectan
-         bz2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXPYPYWBt+9yVfxfjHXIchkILcfYNGpVPG0rVtX/2VeB2t1vHhkrofzBOn5fejwNOW+Cz38js2M3IUO6N/nrxUs+ZN0Y2pQ1xspRacx
-X-Gm-Message-State: AOJu0YwecPIDKDc2zxoJsVB2hLS3IFpJ6D/MxmA1O/zvk/GrLzYzmh40
-	3KQAv47cvKKIxjT8NH3RhIr9iA81J7CPwRQwoxx02IISVlY5Px2ngrskEYNpq2g=
-X-Google-Smtp-Source: AGHT+IH9XtVdLylUZCQ+EzQ5KpOpsjBt1EAapLPX8XGhtAR2cvYah4rBJcTwPGQIOWEJcZUPCn7lRA==
-X-Received: by 2002:a05:6870:d612:b0:25e:8509:160e with SMTP id 586e51a60fabf-25eae74a09amr10623112fac.3.1720800244908;
-        Fri, 12 Jul 2024 09:04:04 -0700 (PDT)
+        bh=60eUVwKVeZ7BrLO6pxv9nbYIZ9oGCgCB8H4hO/TeI/g=;
+        b=GO9sby822n3/WYkZtaleN6nwW0froQN96sDJVhOxutnwNdxrTLXuj1ir3qsRc+fbmy
+         LhiApPEy/Xqs6TtYUMhHCxg0TZIExtfo6UkA5J0ooFBfkHkHMT2ICPT/0MzFUFQIWLyQ
+         He5fFUSQc2b1LQBkOpOsnlCUqXMLmhC/pmKKm8Rb9IO/Hxc6k8w7HG4gYHvuIHt27f1j
+         kuseuZCsERsu12xoHZE2SznHg37a+wvMQrd+GgaHgkcYSTgoU06pv0aBg4Ob7p8N82oT
+         viCPfIBYbClMG3IiEZRjzCVOl77BvckyKvgQWLjxEcIcTj94JYg3chsqs+yaZDHIAG16
+         CcIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlahOXhBMoxYpYPNZdoxcgA2b4tTpr8sJTQMU9OoYUOFEP7IwfDktvTHREm6s2mb7b+50AjupQqieqa8Y+/NVNnObhoyZYIkmF5ynJ
+X-Gm-Message-State: AOJu0YxdRo/G9Q9TuJF9licF1Pv4xXxF90Od320FEs+gnleaI6JqH1JD
+	0CvEGblEelPMdN6P06pEHq2iR9PHDgkwrLRs4uQTT+3bfpGt7hlAbNmCbOAqTPzrrqkQKSpRX8X
+	A
+X-Google-Smtp-Source: AGHT+IEuQNhkpjMbmrtQ5ogRBVhUZBpJ4I4zgpDiKAPbDUpxqOcQNOVerUGUqq5HZO5btAfIiNVRjw==
+X-Received: by 2002:a9d:6a56:0:b0:704:45bb:267f with SMTP id 46e09a7af769-70445bb3223mr13140566a34.5.1720800246613;
+        Fri, 12 Jul 2024 09:04:06 -0700 (PDT)
 Received: from localhost.localdomain (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-70374f78d35sm1615131a34.23.2024.07.12.09.04.04
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-70374f78d35sm1615131a34.23.2024.07.12.09.04.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 09:04:04 -0700 (PDT)
+        Fri, 12 Jul 2024 09:04:06 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>,
 	Marius Cristea <marius.cristea@microchip.com>,
@@ -62,9 +63,9 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] iio: dac: mcp4728: use devm_regulator_get_enable_read_voltage()
-Date: Fri, 12 Jul 2024 11:03:53 -0500
-Message-ID: <20240712-iio-regulator-refactor-round-3-v1-2-835017bae43d@baylibre.com>
+Subject: [PATCH 4/6] iio: dac: mcp4922: drop remove() callback
+Date: Fri, 12 Jul 2024 11:03:55 -0500
+Message-ID: <20240712-iio-regulator-refactor-round-3-v1-4-835017bae43d@baylibre.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240712-iio-regulator-refactor-round-3-v1-0-835017bae43d@baylibre.com>
 References: <20240712-iio-regulator-refactor-round-3-v1-0-835017bae43d@baylibre.com>
@@ -78,94 +79,62 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.14.0
 Content-Transfer-Encoding: 8bit
 
-This makes use of the new devm_regulator_get_enable_read_voltage()
-helper function to reduce boilerplate code in the MCP4728 DAC driver.
+By using devm_iio_device_register(), we can drop the remove() callback
+in the mcp4922 driver. We can also remove spi_set_drvdata() since there
+are no more callers of spi_get_drvdata(). Also use dev_err_probe()
+while we are at it.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/iio/dac/mcp4728.c | 33 +++++++--------------------------
- 1 file changed, 7 insertions(+), 26 deletions(-)
+ drivers/iio/dac/mcp4922.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/iio/dac/mcp4728.c b/drivers/iio/dac/mcp4728.c
-index 300985beb35d..192175dc6419 100644
---- a/drivers/iio/dac/mcp4728.c
-+++ b/drivers/iio/dac/mcp4728.c
-@@ -84,7 +84,6 @@ enum mcp4728_scale {
+diff --git a/drivers/iio/dac/mcp4922.c b/drivers/iio/dac/mcp4922.c
+index f89af70fa5af..26aa99059813 100644
+--- a/drivers/iio/dac/mcp4922.c
++++ b/drivers/iio/dac/mcp4922.c
+@@ -138,7 +138,6 @@ static int mcp4922_probe(struct spi_device *spi)
  
- struct mcp4728_data {
- 	struct i2c_client *client;
--	struct regulator *vdd_reg;
- 	bool powerdown;
- 	int scales_avail[MCP4728_N_SCALES * 2];
- 	struct mcp4728_channel_data chdata[MCP4728_N_CHANNELS];
-@@ -415,15 +414,9 @@ static void mcp4728_init_scale_avail(enum mcp4728_scale scale, int vref_mv,
- 	data->scales_avail[scale * 2 + 1] = value_micro;
- }
+ 	state->vref_mv = ret / 1000;
  
--static int mcp4728_init_scales_avail(struct mcp4728_data *data)
-+static int mcp4728_init_scales_avail(struct mcp4728_data *data, int vdd_mv)
- {
--	int ret;
--
--	ret = regulator_get_voltage(data->vdd_reg);
--	if (ret < 0)
+-	spi_set_drvdata(spi, indio_dev);
+ 	id = spi_get_device_id(spi);
+ 	indio_dev->info = &mcp4922_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+@@ -149,22 +148,13 @@ static int mcp4922_probe(struct spi_device *spi)
+ 		indio_dev->num_channels = MCP4922_NUM_CHANNELS;
+ 	indio_dev->name = id->name;
+ 
+-	ret = iio_device_register(indio_dev);
+-	if (ret) {
+-		dev_err(&spi->dev, "Failed to register iio device: %d\n",
+-				ret);
 -		return ret;
--
--	mcp4728_init_scale_avail(MCP4728_SCALE_VDD, ret / 1000, data);
-+	mcp4728_init_scale_avail(MCP4728_SCALE_VDD, vdd_mv, data);
- 	mcp4728_init_scale_avail(MCP4728_SCALE_VINT_NO_GAIN, 2048, data);
- 	mcp4728_init_scale_avail(MCP4728_SCALE_VINT_GAIN_X2, 4096, data);
+-	}
++	ret = devm_iio_device_register(&spi->dev, indio_dev);
++	if (ret)
++		return dev_err_probe(&spi->dev, ret, "Failed to register iio device\n");
  
-@@ -530,17 +523,12 @@ static int mcp4728_init_channels_data(struct mcp4728_data *data)
  	return 0;
  }
  
--static void mcp4728_reg_disable(void *reg)
+-static void mcp4922_remove(struct spi_device *spi)
 -{
--	regulator_disable(reg);
+-	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+-
+-	iio_device_unregister(indio_dev);
 -}
--
- static int mcp4728_probe(struct i2c_client *client)
- {
- 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
- 	struct mcp4728_data *data;
- 	struct iio_dev *indio_dev;
--	int ret;
-+	int ret, vdd_mv;
  
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
- 	if (!indio_dev)
-@@ -550,18 +538,11 @@ static int mcp4728_probe(struct i2c_client *client)
- 	i2c_set_clientdata(client, indio_dev);
- 	data->client = client;
- 
--	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
--	if (IS_ERR(data->vdd_reg))
--		return PTR_ERR(data->vdd_reg);
--
--	ret = regulator_enable(data->vdd_reg);
--	if (ret)
-+	ret = devm_regulator_get_enable_read_voltage(&client->dev, "vdd");
-+	if (ret < 0)
- 		return ret;
- 
--	ret = devm_add_action_or_reset(&client->dev, mcp4728_reg_disable,
--				       data->vdd_reg);
--	if (ret)
--		return ret;
-+	vdd_mv = ret / 1000;
- 
- 	/*
- 	 * MCP4728 has internal EEPROM that save each channel boot
-@@ -575,7 +556,7 @@ static int mcp4728_probe(struct i2c_client *client)
- 			"failed to read mcp4728 current configuration\n");
- 	}
- 
--	ret = mcp4728_init_scales_avail(data);
-+	ret = mcp4728_init_scales_avail(data, vdd_mv);
- 	if (ret) {
- 		return dev_err_probe(&client->dev, ret,
- 				     "failed to init scales\n");
+ static const struct spi_device_id mcp4922_id[] = {
+ 	{"mcp4902", ID_MCP4902},
+@@ -180,7 +170,6 @@ static struct spi_driver mcp4922_driver = {
+ 		   .name = "mcp4922",
+ 		   },
+ 	.probe = mcp4922_probe,
+-	.remove = mcp4922_remove,
+ 	.id_table = mcp4922_id,
+ };
+ module_spi_driver(mcp4922_driver);
 
 -- 
 2.43.0
