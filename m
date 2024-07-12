@@ -1,55 +1,55 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D81178361
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3D9178CEA
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720803664; cv=none; b=WxkGRHdE4I5i/UVf1QOXa3Zx20P+DBcgeoBwiZgW93B9ZrRyWUqbKJ/r5vosFwNdAHo94JoZbUf+JkBQ7kvEJFer0eh54I/4kSO2R0WAO3jS6CTVPSUex2b6RaeT+GpnMD3iL9TmuU3cc56lLGtVPOmDpHzgXzR7PZfOTt/wX/c=
+	t=1720803670; cv=none; b=gNdTf7fyMX0TdcbRmFbZIbDEvpswzSpZCJ9fr6vlJcl5fyvwT2RGLZ2bVQiKUROUz56t7CRuQAvGpRbYqFoE4el1DhTOtC9FXZihA0aLnP5HYNfeQfy4rVZuAYc/MRt57VwovAzLVXsJhe1k8iFFUqXd74hgvPhQYRusOFHBwO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720803664; c=relaxed/simple;
-	bh=7hFccffoH6+2s6A+xgGH3BAwy9+MyU9gEGjy8kzQy10=;
+	s=arc-20240116; t=1720803670; c=relaxed/simple;
+	bh=4l/aFGSn0+cUe0grjkF9kj1YjmhkIf8eDVOhTK2vwB0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JdNAbcFKgjIfFXScgpi6zH3xIVdzk6dxVMm1IFzTMp2acF9JQfm2ll+mm/r89pDReRnmq5/7p1PUUIVfpqryK8/9iNlJmgSS71P1qSYAGPtn8zm6ItIPoF20rESIy99Kpq3MG/DOVvnrEjXEsXC1oNR+EuqMYi23xJ5KMtsxeC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YIqDaR1J; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=WLXEhHh+BSJgiChWR3dk0cN2r42F26451n6F0ADWQ4f5Pij5PAAb4mdWs432eAjBiqY68ES9kBTC6qrE4HMSEOoUprKWVKiJ+HEUg8BkJPKgcfIerUEUrtkIlj6KJ+T72YIHrqBJ7L5Vfgm7Qeu4bcQma7hxSmJC8gEVBWg2bCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4Wjwa4mB; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YIqDaR1J"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-426620721c2so15366385e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:01:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4Wjwa4mB"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-42794cb8251so13392445e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720803660; x=1721408460; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720803666; x=1721408466; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PMdbHr8f+bHJyqhYwYG2FeYYV8yyAj+rEymiJJJZ+c4=;
-        b=YIqDaR1JDjsKswpltImZIoVteGIZ1DuELoFXymxz3GwQsTWq8t/aGvOAY+oqk649v5
-         JuIklSH3a89w4WMt+ssYOkcNpy0yVHPAwMnunkQlDRiOkEyI4g+UErcQPEM8if3nMn9k
-         TmGGqtkQxJWeWTNR19PJwazHQc7tNY6MzsIgSbxUHNmsiPR+HTx1HPHUcZ+uV3J0iHyk
-         rqztansgulYBMHm9SKr68rzgNl201QUVr9Q94MlwBq5HKlsBL1v4uvnSqABdTK4dTafo
-         /JachCrFTb6Z+igR2s352y1dBdnwZ7XjnHn0hheGNPYClDc/+c7DO2IFbMMA6R1UE/Ir
-         rvaA==
+        bh=A+jkQL2bLgnd1dA3asyFJ85yKqjjPIZgiPP4ZLm28ds=;
+        b=4Wjwa4mBK3eZaHpx91r4Zb5MbwJMDC5svsczkvs185E9Lsy/6w6WqilsFw26SdWtDw
+         M38ePalloGdDpKlufv4+9ZAEmpeE9/rJq3H4qS0ND3OrxqdyiFZzQnCDdW6PM0E5tKOh
+         CqUmGPd/S5DjQAEP4ZYOpglDHmySAfOngWril1hO+8AJmUIrnGZKndidr55xGam3+LUC
+         3UaFU2BO8oFT3i29506YWadZ7BYVKbylBrkhH2KTDUjAdU1e0nW8AsoPSeGyALFTuXUG
+         KbJjhpjORIKWAfaItRXP73NQToPJK6/wfsbpv67n+4pdO25q3YpXgc+hqiTCWLg+H7Y2
+         yFDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720803660; x=1721408460;
+        d=1e100.net; s=20230601; t=1720803666; x=1721408466;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PMdbHr8f+bHJyqhYwYG2FeYYV8yyAj+rEymiJJJZ+c4=;
-        b=mww391dGDimYw+TokBzDDH9WTu9cz3UzTjXKYD7FspN3VcZgxBUf+N9G4easFbTK8g
-         b4ibl7nHqb5MQ0WJsf3XTukptMU3pPAnA7kR0RGgGQtHjLbXqs3GyMYFgI3Bs3NTv7xQ
-         1IqK4FGEH3J4HrDoLi+th+16SZ0AhE5RZrh0L6ZrkKbZ8pDhQkn5J/5TUirqeAsjviZu
-         858YhBveC8072qL/rqMvJOAtNxthaaFDhhclh96L7UrxwgbmV78OYmCK24iYRnw87o3W
-         HFWW7Wc8oUZviREHTq0dEARjVOuM+5GvcODVlxlljYCME/QSwUt2wUuKZd35fmMED+MH
-         hasQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUG/ddv8x/qGpz9Ec4n21ErTZHmKXw+gJty2l7kOVPxB9d4EXV3QuCjIMMt8BXIccj1Zo+Id2ho6b1fCeSSPe/6SuEYiI7OeUvW43iG
-X-Gm-Message-State: AOJu0Yw2HB0HmUqLrTV2mP49PSg3tADndUe7HVkwHFgULTibzKJ54GPa
-	7+oWT7rVpZrbB2miCBTZffLaYhK+GTIG8vz7pK+pHzSwLGhLPpbs+wSK84fLFM3vZm1e5UIEq7o
-	CqZXj7Wu1NA==
-X-Google-Smtp-Source: AGHT+IEVF7omOk0dAyaMWn9nP5g1PTxgYRWlYkZl2KK6tCcUkjJHKogxau8pwI0HbmROqrqrZGZvZockxDjFbQ==
+        bh=A+jkQL2bLgnd1dA3asyFJ85yKqjjPIZgiPP4ZLm28ds=;
+        b=Jz5hBcBFG+uIEpCWuupJnc2isz94vvRAB5vJ9cBVg7LVJHHZiZqH2Ac21AmsPQdXPA
+         T+OCrvKnihT0Q8HJG/cTMiAcRtACeJ3FJPD9T4UP0E7ZCmPxPUL60Z71tcyBQA24ahXN
+         p8/Oi+FlSDcKtDa8cPTD0l70UhrvgNfdQLaO4Aelmy3vfj2U1LmyBSJgS+43SYeBPeu+
+         if4u/9HjO02ai4bxRGNYteZaLQgBdh3i58e9G1UzHOG/KXy9qfjmWlB+3NofaS26Cnd5
+         PpL2NBQ3V791nSHZ/PHlAQTpOwU1REoc+S4qHaH6zqLqWuA/7fUEigIyPp9PWNvqMTus
+         YqNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN82vKzUE+mBeR/JZJWnA68QxvFYRfkE1feaf/MN/XTHA6Lnxb0Gy8pSVxnX3Fx2fJLf4eZvLJ5CqQOnCV/UvLB36BDqMMVSZ+1iel
+X-Gm-Message-State: AOJu0YxsmLigFTRhhFQy7I7OWF51mbu7hQT4mWRjr8myS7Pk1sDopxWm
+	Fhzdhg6Ct0CHWeZ9XsjbJAoE34cB31hP7K3IZO3Xjy/7BVPRQEuXE7R53olUPlXDizFXFIwXAUY
+	UCBSDYEHPaQ==
+X-Google-Smtp-Source: AGHT+IHocE6UCQJXGH4jW5S1f1i1qM0rmNw/QM4OyMtcRUe5WUau/3oluaHQD6zUlZ5KVAkubOggLQncuc63kw==
 X-Received: from beeg.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:11db])
- (user=jackmanb job=sendgmr) by 2002:a05:600c:1c13:b0:426:6668:d59 with SMTP
- id 5b1f17b1804b1-426707f91dbmr1903295e9.3.1720803659878; Fri, 12 Jul 2024
- 10:00:59 -0700 (PDT)
-Date: Fri, 12 Jul 2024 17:00:21 +0000
+ (user=jackmanb job=sendgmr) by 2002:adf:ea0c:0:b0:367:8147:25c5 with SMTP id
+ ffacd0b85a97d-367cea8ef32mr16488f8f.8.1720803665595; Fri, 12 Jul 2024
+ 10:01:05 -0700 (PDT)
+Date: Fri, 12 Jul 2024 17:00:23 +0000
 In-Reply-To: <20240712-asi-rfc-24-v1-0-144b319a40d8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240712-asi-rfc-24-v1-0-144b319a40d8@google.com>
 X-Mailer: b4 0.14-dev
-Message-ID: <20240712-asi-rfc-24-v1-3-144b319a40d8@google.com>
-Subject: [PATCH 03/26] mm: asi: Introduce ASI core API
+Message-ID: <20240712-asi-rfc-24-v1-5-144b319a40d8@google.com>
+Subject: [PATCH 05/26] mm: asi: Add infrastructure for boot-time enablement
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -83,673 +83,346 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	kvm@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-From: Junaid Shahid <junaids@google.com>
+Add a boot time parameter to control the newly added X86_FEATURE_ASI.
+"asi=on" or "asi=off" can be used in the kernel command line to enable
+or disable ASI at boot time. If not specified, ASI enablement depends
+on CONFIG_ADDRESS_SPACE_ISOLATION_DEFAULT_ON, which is off by default.
+asi_check_boottime_disable() is modeled after
+pti_check_boottime_disable().
 
-Introduce core API for Address Space Isolation (ASI).
-Kernel address space isolation provides the ability to run some kernel
-code with a restricted kernel address space.
+The boot parameter is currently ignored until ASI is fully functional.
 
-There can be multiple classes of such restricted kernel address spaces
-(e.g. KPTI, KVM-PTI etc.). Each ASI class is identified by an index.
-The ASI class can register some hooks to be called when
-entering/exiting the restricted address space.
+Once we have a set of ASI features checked in that we have actually
+tested, we will stop ignoring the flag. But for now let's just add the
+infrastructure so we can implement the usage code.
 
-Currently, there is a fixed maximum number of ASI classes supported.
-In addition, each process can have at most one restricted address space
-from each ASI class. Neither of these are inherent limitations and
-are merely simplifying assumptions for the time being.
-
-(The high-level ASI API was derived from the original ASI RFC by
-Alexandre Chartre [0]).
-
-[0]:
-https://lore.kernel.org/kvm/1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com
-
-Signed-off-by: Ofir Weisse <oweisse@google.com>
-Signed-off-by: Junaid Shahid <junaids@google.com>
+Co-developed-by: Junaid Shahid <junaids@google.com>
+Co-developed-by: Yosry Ahmed <yosryahmed@google.com>
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- arch/x86/include/asm/asi.h       | 175 +++++++++++++++++++++++++++++
- arch/x86/include/asm/processor.h |   8 ++
- arch/x86/include/asm/tlbflush.h  |   2 +
- arch/x86/mm/Makefile             |   1 +
- arch/x86/mm/asi.c                | 234 +++++++++++++++++++++++++++++++++++++++
- arch/x86/mm/init.c               |   3 +-
- arch/x86/mm/tlb.c                |   2 +-
- include/asm-generic/asi.h        |  50 +++++++++
- include/linux/mm_types.h         |   7 ++
- kernel/fork.c                    |   3 +
- mm/init-mm.c                     |   4 +
- 11 files changed, 487 insertions(+), 2 deletions(-)
+ arch/x86/Kconfig                         |  8 +++++
+ arch/x86/include/asm/asi.h               | 20 +++++++++--
+ arch/x86/include/asm/cpufeatures.h       |  1 +
+ arch/x86/include/asm/disabled-features.h |  8 ++++-
+ arch/x86/mm/asi.c                        | 61 +++++++++++++++++++++++++++-----
+ arch/x86/mm/init.c                       |  4 ++-
+ include/asm-generic/asi.h                |  4 +++
+ 7 files changed, 92 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-new file mode 100644
-index 0000000000000..a052e561b2b70
---- /dev/null
-+++ b/arch/x86/include/asm/asi.h
-@@ -0,0 +1,175 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_ASI_H
-+#define _ASM_X86_ASI_H
-+
-+#include <asm-generic/asi.h>
-+
-+#include <asm/pgtable_types.h>
-+#include <asm/percpu.h>
-+#include <asm/processor.h>
-+#include <linux/sched.h>
-+
-+#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-+
-+/*
-+ * Overview of API usage by ASI clients:
-+ *
-+ * Setup: First call asi_init() to create a domain. At present only one domain
-+ * can be created per mm per class, but it's safe to asi_init() this domain
-+ * multiple times. For each asi_init() call you must call asi_destroy() AFTER
-+ * you are certain all CPUs have exicted the restricted address space (by
-+ * calling asi_exit()).
-+ *
-+ * Runtime usage:
-+ *
-+ * 1. Call asi_enter() to switch to the restricted address space. This can't be
-+ *    from an interrupt or exception handler and preemption must be disabled.
-+ *
-+ * 2. Execute untrusted code.
-+ *
-+ * 3. Call asi_relax() to inform the ASI subsystem that untrusted code execution
-+ *    is finished. This doesn't cause any address space change.
-+ *
-+ * 4. Either:
-+ *
-+ *    a. Go back to 1.
-+ *
-+ *    b. Call asi_exit() before returning to userspace. This immediately
-+ *       switches to the unrestricted address space.
-+ *
-+ * The region between 1 and 3 is called the "ASI critical section". During the
-+ * critical section, it is a bug to access any sensitive data, and you mustn't
-+ * sleep.
-+ *
-+ * The restriction on sleeping is not really a fundamental property of ASI.
-+ * However for performance reasons it's important that the critical section is
-+ * absolutely as short as possible. So the ability to do sleepy things like
-+ * taking mutexes oughtn't to confer any convenience on API users.
-+ *
-+ * Similarly to the issue of sleeping, the need to asi_exit in case 4b is not a
-+ * fundamental property of the system but a limitation of the current
-+ * implementation. With further work it is possible to context switch
-+ * from and/or to the restricted address space, and to return to userspace
-+ * directly from the restricted address space, or _in_ it.
-+ *
-+ * Note that the critical section only refers to the direct execution path from
-+ * asi_enter to asi_relax: it's fine to access sensitive data from exceptions
-+ * and interrupt handlers that occur during that time. ASI will re-enter the
-+ * restricted address space before returning from the outermost
-+ * exception/interrupt.
-+ *
-+ * Note: ASI does not modify KPTI behaviour; when ASI and KPTI run together
-+ * there are 2+N address spaces per task: the unrestricted kernel address space,
-+ * the user address space, and one restricted (kernel) address space for each of
-+ * the N ASI classes.
-+ */
-+
-+#define ASI_MAX_NUM_ORDER	2
-+#define ASI_MAX_NUM		(1 << ASI_MAX_NUM_ORDER)
-+
-+struct asi_hooks {
-+	/*
-+	 * Both of these functions MUST be idempotent and re-entrant. They will
-+	 * be called in no particular order and with no particular symmetry wrt.
-+	 * the number of calls. They are part of the ASI critical section, so
-+	 * they must not sleep and must not access sensitive data.
-+	 */
-+	void (*post_asi_enter)(void);
-+	void (*pre_asi_exit)(void);
-+};
-+
-+/*
-+ * An ASI class is a type of isolation that can be applied to a process. A
-+ * process may have a domain for each class.
-+ */
-+struct asi_class {
-+	struct asi_hooks ops;
-+	const char *name;
-+};
-+
-+/*
-+ * An ASI domain (struct asi) represents a restricted address space. The
-+ * unrestricted address space (and user address space under PTI) are not
-+ * represented as a domain.
-+ */
-+struct asi {
-+	pgd_t *pgd;
-+	struct asi_class *class;
-+	struct mm_struct *mm;
-+	int64_t ref_count;
-+};
-+
-+DECLARE_PER_CPU_ALIGNED(struct asi *, curr_asi);
-+
-+void asi_init_mm_state(struct mm_struct *mm);
-+
-+int  asi_register_class(const char *name, const struct asi_hooks *ops);
-+void asi_unregister_class(int index);
-+
-+int  asi_init(struct mm_struct *mm, int asi_index, struct asi **out_asi);
-+void asi_destroy(struct asi *asi);
-+
-+/* Enter an ASI domain (restricted address space) and begin the critical section. */
-+void asi_enter(struct asi *asi);
-+
-+/*
-+ * Leave the "tense" state if we are in it, i.e. end the critical section. We
-+ * will stay relaxed until the next asi_enter.
-+ */
-+void asi_relax(void);
-+
-+/* Immediately exit the restricted address space if in it */
-+void asi_exit(void);
-+
-+/* The target is the domain we'll enter when returning to process context. */
-+static __always_inline struct asi *asi_get_target(struct task_struct *p)
-+{
-+	return p->thread.asi_state.target;
-+}
-+
-+static __always_inline void asi_set_target(struct task_struct *p,
-+					   struct asi *target)
-+{
-+	p->thread.asi_state.target = target;
-+}
-+
-+static __always_inline struct asi *asi_get_current(void)
-+{
-+	return this_cpu_read(curr_asi);
-+}
-+
-+/* Are we currently in a restricted address space? */
-+static __always_inline bool asi_is_restricted(void)
-+{
-+	return (bool)asi_get_current();
-+}
-+
-+/* If we exit/have exited, can we stay that way until the next asi_enter? */
-+static __always_inline bool asi_is_relaxed(void)
-+{
-+	return !asi_get_target(current);
-+}
-+
-+/*
-+ * Is the current task in the critical section?
-+ *
-+ * This is just the inverse of !asi_is_relaxed(). We have both functions in order to
-+ * help write intuitive client code. In particular, asi_is_tense returns false
-+ * when ASI is disabled, which is judged to make user code more obvious.
-+ */
-+static __always_inline bool asi_is_tense(void)
-+{
-+	return !asi_is_relaxed();
-+}
-+
-+static __always_inline pgd_t *asi_pgd(struct asi *asi)
-+{
-+	return asi ? asi->pgd : NULL;
-+}
-+
-+#define INIT_MM_ASI(init_mm) \
-+	.asi_init_lock = __MUTEX_INITIALIZER(init_mm.asi_init_lock),
-+
-+#endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
-+
-+#endif
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index dc45d622eae4e..a42f03ff3edca 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -5,6 +5,7 @@
- #include <asm/processor-flags.h>
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index ff74aa53842e..7f21de55d6ac 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2535,6 +2535,14 @@ config MITIGATION_ADDRESS_SPACE_ISOLATION
+ 	  This dependencies will later be removed with extensions to the KASAN
+ 	  implementation.
  
- /* Forward declaration, a strange C thing */
-+struct asi;
- struct task_struct;
- struct mm_struct;
- struct io_bitmap;
-@@ -489,6 +490,13 @@ struct thread_struct {
- 	struct thread_shstk	shstk;
++config ADDRESS_SPACE_ISOLATION_DEFAULT_ON
++	bool "Enable address space isolation by default"
++	default n
++	depends on ADDRESS_SPACE_ISOLATION
++	help
++	  If selected, ASI is enabled by default at boot if the asi=on or
++	  asi=off are not specified.
++
+ config MITIGATION_RETPOLINE
+ 	bool "Avoid speculative indirect branches in kernel"
+ 	select OBJTOOL if HAVE_OBJTOOL
+diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
+index a052e561b2b7..04ba2ec7fd28 100644
+--- a/arch/x86/include/asm/asi.h
++++ b/arch/x86/include/asm/asi.h
+@@ -6,6 +6,7 @@
+ 
+ #include <asm/pgtable_types.h>
+ #include <asm/percpu.h>
++#include <asm/cpufeature.h>
+ #include <asm/processor.h>
+ #include <linux/sched.h>
+ 
+@@ -64,6 +65,9 @@
+  * the N ASI classes.
+  */
+ 
++/* Try to avoid this outside of hot code (see comment on _static_cpu_has). */
++#define static_asi_enabled() cpu_feature_enabled(X86_FEATURE_ASI)
++
+ #define ASI_MAX_NUM_ORDER	2
+ #define ASI_MAX_NUM		(1 << ASI_MAX_NUM_ORDER)
+ 
+@@ -101,6 +105,8 @@ struct asi {
+ 
+ DECLARE_PER_CPU_ALIGNED(struct asi *, curr_asi);
+ 
++void asi_check_boottime_disable(void);
++
+ void asi_init_mm_state(struct mm_struct *mm);
+ 
+ int  asi_register_class(const char *name, const struct asi_hooks *ops);
+@@ -124,7 +130,9 @@ void asi_exit(void);
+ /* The target is the domain we'll enter when returning to process context. */
+ static __always_inline struct asi *asi_get_target(struct task_struct *p)
+ {
+-	return p->thread.asi_state.target;
++	return static_asi_enabled()
++	       ? p->thread.asi_state.target
++	       : NULL;
+ }
+ 
+ static __always_inline void asi_set_target(struct task_struct *p,
+@@ -135,7 +143,9 @@ static __always_inline void asi_set_target(struct task_struct *p,
+ 
+ static __always_inline struct asi *asi_get_current(void)
+ {
+-	return this_cpu_read(curr_asi);
++	return static_asi_enabled()
++	       ? this_cpu_read(curr_asi)
++	       : NULL;
+ }
+ 
+ /* Are we currently in a restricted address space? */
+@@ -144,7 +154,11 @@ static __always_inline bool asi_is_restricted(void)
+ 	return (bool)asi_get_current();
+ }
+ 
+-/* If we exit/have exited, can we stay that way until the next asi_enter? */
++/*
++ * If we exit/have exited, can we stay that way until the next asi_enter?
++ *
++ * When ASI is disabled, this returns true.
++ */
+ static __always_inline bool asi_is_relaxed(void)
+ {
+ 	return !asi_get_target(current);
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 3c7434329661..a6b213c7df44 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -470,6 +470,7 @@
+ #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* "" BHI_DIS_S HW control available */
+ #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* "" BHI_DIS_S HW control enabled */
+ #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* "" Clear branch history at vmexit using SW loop */
++#define X86_FEATURE_ASI			(21*32+5) /* Kernel Address Space Isolation */
+ 
+ /*
+  * BUG word(s)
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..c7964ed4fef8 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -50,6 +50,12 @@
+ # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
  #endif
  
 +#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-+	struct {
-+		/* Domain to enter when returning to process context. */
-+		struct asi	*target;
-+	} asi_state;
++# define DISABLE_ASI		0
++#else
++# define DISABLE_ASI		(1 << (X86_FEATURE_ASI & 31))
 +#endif
 +
- 	/* Floating point and extended processor state */
- 	struct fpu		fpu;
- 	/*
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 25726893c6f4d..ed847567b25de 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -391,6 +391,8 @@ static inline bool huge_pmd_needs_flush(pmd_t oldpmd, pmd_t newpmd)
- }
- #define huge_pmd_needs_flush huge_pmd_needs_flush
+ #ifdef CONFIG_MITIGATION_RETPOLINE
+ # define DISABLE_RETPOLINE	0
+ #else
+@@ -154,7 +160,7 @@
+ #define DISABLED_MASK17	0
+ #define DISABLED_MASK18	(DISABLE_IBT)
+ #define DISABLED_MASK19	(DISABLE_SEV_SNP)
+-#define DISABLED_MASK20	0
++#define DISABLED_MASK20	(DISABLE_ASI)
+ #define DISABLED_MASK21	0
+ #define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
  
-+unsigned long build_cr3(pgd_t *pgd, u16 asid, unsigned long lam);
-+
- #ifdef CONFIG_ADDRESS_MASKING
- static inline  u64 tlbstate_lam_cr3_mask(void)
- {
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 428048e73bd2e..499233f001dc2 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_NUMA_EMU)		+= numa_emulation.o
- obj-$(CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS)	+= pkeys.o
- obj-$(CONFIG_RANDOMIZE_MEMORY)			+= kaslr.o
- obj-$(CONFIG_MITIGATION_PAGE_TABLE_ISOLATION)	+= pti.o
-+obj-$(CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION)		+= asi.o
- 
- obj-$(CONFIG_X86_MEM_ENCRYPT)	+= mem_encrypt.o
- obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_amd.o
 diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-new file mode 100644
-index 0000000000000..c5979d78fdbbd
---- /dev/null
+index c5979d78fdbb..21207a3e8b17 100644
+--- a/arch/x86/mm/asi.c
 +++ b/arch/x86/mm/asi.c
-@@ -0,0 +1,234 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/compiler_types.h>
-+#include <linux/export.h>
-+#include <linux/percpu.h>
-+#include <linux/spinlock.h>
+@@ -4,7 +4,9 @@
+ #include <linux/percpu.h>
+ #include <linux/spinlock.h>
+ 
++#include <linux/init.h>
+ #include <asm/asi.h>
++#include <asm/cmdline.h>
+ #include <asm/pgalloc.h>
+ #include <asm/mmu_context.h>
+ 
+@@ -28,6 +30,9 @@ int asi_register_class(const char *name, const struct asi_hooks *ops)
+ {
+ 	int i;
+ 
++	if (!boot_cpu_has(X86_FEATURE_ASI))
++		return 0;
 +
-+#include <asm/asi.h>
-+#include <asm/pgalloc.h>
-+#include <asm/mmu_context.h>
-+
-+static struct asi_class asi_class[ASI_MAX_NUM];
-+static DEFINE_SPINLOCK(asi_class_lock);
-+
-+DEFINE_PER_CPU_ALIGNED(struct asi *, curr_asi);
-+EXPORT_SYMBOL(curr_asi);
-+
-+static inline bool asi_class_registered(int index)
-+{
-+	return asi_class[index].name != NULL;
-+}
-+
-+static inline bool asi_index_valid(int index)
-+{
-+	return index >= 0 && index < ARRAY_SIZE(asi_class);
-+}
-+
-+int asi_register_class(const char *name, const struct asi_hooks *ops)
-+{
-+	int i;
-+
-+	VM_BUG_ON(name == NULL);
-+
-+	spin_lock(&asi_class_lock);
-+
-+	for (i = 0; i < ARRAY_SIZE(asi_class); i++) {
-+		if (!asi_class_registered(i)) {
-+			asi_class[i].name = name;
-+			if (ops != NULL)
-+				asi_class[i].ops = *ops;
-+			break;
-+		}
-+	}
-+
-+	spin_unlock(&asi_class_lock);
-+
-+	if (i == ARRAY_SIZE(asi_class))
-+		i = -ENOSPC;
-+
-+	return i;
-+}
-+EXPORT_SYMBOL_GPL(asi_register_class);
-+
-+void asi_unregister_class(int index)
-+{
-+	BUG_ON(!asi_index_valid(index));
-+
-+	spin_lock(&asi_class_lock);
-+
-+	WARN_ON(asi_class[index].name == NULL);
-+	memset(&asi_class[index], 0, sizeof(struct asi_class));
-+
-+	spin_unlock(&asi_class_lock);
-+}
-+EXPORT_SYMBOL_GPL(asi_unregister_class);
-+
-+
-+static void __asi_destroy(struct asi *asi)
-+{
-+	lockdep_assert_held(&asi->mm->asi_init_lock);
-+
-+}
-+
-+int asi_init(struct mm_struct *mm, int asi_index, struct asi **out_asi)
-+{
-+	struct asi *asi;
-+	int err = 0;
-+
-+	*out_asi = NULL;
-+
-+	BUG_ON(!asi_index_valid(asi_index));
-+
-+	asi = &mm->asi[asi_index];
-+
-+	BUG_ON(!asi_class_registered(asi_index));
-+
-+	mutex_lock(&mm->asi_init_lock);
-+
-+	if (asi->ref_count++ > 0)
-+		goto exit_unlock; /* err is 0 */
-+
-+	BUG_ON(asi->pgd != NULL);
-+
-+	/*
-+	 * For now, we allocate 2 pages to avoid any potential problems with
-+	 * KPTI code. This won't be needed once KPTI is folded into the ASI
-+	 * framework.
-+	 */
-+	asi->pgd = (pgd_t *)__get_free_pages(
-+		GFP_KERNEL_ACCOUNT | __GFP_ZERO, PGD_ALLOCATION_ORDER);
-+	if (!asi->pgd) {
-+		err = -ENOMEM;
-+		goto exit_unlock;
-+	}
-+
-+	asi->class = &asi_class[asi_index];
-+	asi->mm = mm;
-+
-+exit_unlock:
-+	if (err)
-+		__asi_destroy(asi);
-+	else
-+		*out_asi = asi;
-+
-+	mutex_unlock(&mm->asi_init_lock);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(asi_init);
-+
-+void asi_destroy(struct asi *asi)
-+{
-+	struct mm_struct *mm;
-+
-+	if (!asi)
+ 	VM_BUG_ON(name == NULL);
+ 
+ 	spin_lock(&asi_class_lock);
+@@ -52,6 +57,9 @@ EXPORT_SYMBOL_GPL(asi_register_class);
+ 
+ void asi_unregister_class(int index)
+ {
++	if (!boot_cpu_has(X86_FEATURE_ASI))
 +		return;
 +
-+	mm = asi->mm;
-+	/*
-+	 * We would need this mutex even if the refcount was atomic as we need
-+	 * to block concurrent asi_init calls.
-+	 */
-+	mutex_lock(&mm->asi_init_lock);
+ 	BUG_ON(!asi_index_valid(index));
+ 
+ 	spin_lock(&asi_class_lock);
+@@ -63,11 +71,36 @@ void asi_unregister_class(int index)
+ }
+ EXPORT_SYMBOL_GPL(asi_unregister_class);
+ 
++void __init asi_check_boottime_disable(void)
++{
++	bool enabled = IS_ENABLED(CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION_DEFAULT_ON);
++	char arg[4];
++	int ret;
++
++	ret = cmdline_find_option(boot_command_line, "asi", arg, sizeof(arg));
++	if (ret == 3 && !strncmp(arg, "off", 3)) {
++		enabled = false;
++		pr_info("ASI disabled through kernel command line.\n");
++	} else if (ret == 2 && !strncmp(arg, "on", 2)) {
++		enabled = true;
++		pr_info("Ignoring asi=on param while ASI implementation is incomplete.\n");
++	} else {
++		pr_info("ASI %s by default.\n",
++			enabled ? "enabled" : "disabled");
++	}
++
++	if (enabled)
++		pr_info("ASI enablement ignored due to incomplete implementation.\n");
++}
+ 
+ static void __asi_destroy(struct asi *asi)
+ {
+-	lockdep_assert_held(&asi->mm->asi_init_lock);
 +	WARN_ON_ONCE(asi->ref_count <= 0);
-+	if (--(asi->ref_count) == 0) {
-+		free_pages((ulong)asi->pgd, PGD_ALLOCATION_ORDER);
-+		memset(asi, 0, sizeof(struct asi));
-+	}
-+	mutex_unlock(&mm->asi_init_lock);
-+}
-+EXPORT_SYMBOL_GPL(asi_destroy);
++	if (--(asi->ref_count) > 0)
++		return;
+ 
++	free_pages((ulong)asi->pgd, PGD_ALLOCATION_ORDER);
++	memset(asi, 0, sizeof(struct asi));
+ }
+ 
+ int asi_init(struct mm_struct *mm, int asi_index, struct asi **out_asi)
+@@ -77,6 +110,9 @@ int asi_init(struct mm_struct *mm, int asi_index, struct asi **out_asi)
+ 
+ 	*out_asi = NULL;
+ 
++	if (!boot_cpu_has(X86_FEATURE_ASI))
++		return 0;
 +
-+static noinstr void __asi_enter(void)
-+{
-+	u64 asi_cr3;
-+	struct asi *target = asi_get_target(current);
-+
-+	/*
-+	 * This is actually false restriction, it should be fine to be
-+	 * preemptible during the critical section. But we haven't tested it. We
-+	 * will also need to disable preemption during this function itself and
-+	 * perhaps elsewhere. This false restriction shouldn't create any
-+	 * additional burden for ASI clients anyway: the critical section has
-+	 * to be as short as possible to avoid unnecessary ASI transitions so
-+	 * disabling preemption should be fine.
-+	 */
-+	VM_BUG_ON(preemptible());
-+
-+	if (!target || target == this_cpu_read(curr_asi))
+ 	BUG_ON(!asi_index_valid(asi_index));
+ 
+ 	asi = &mm->asi[asi_index];
+@@ -121,7 +157,7 @@ void asi_destroy(struct asi *asi)
+ {
+ 	struct mm_struct *mm;
+ 
+-	if (!asi)
++	if (!boot_cpu_has(X86_FEATURE_ASI) || !asi)
+ 		return;
+ 
+ 	mm = asi->mm;
+@@ -130,11 +166,7 @@ void asi_destroy(struct asi *asi)
+ 	 * to block concurrent asi_init calls.
+ 	 */
+ 	mutex_lock(&mm->asi_init_lock);
+-	WARN_ON_ONCE(asi->ref_count <= 0);
+-	if (--(asi->ref_count) == 0) {
+-		free_pages((ulong)asi->pgd, PGD_ALLOCATION_ORDER);
+-		memset(asi, 0, sizeof(struct asi));
+-	}
++	__asi_destroy(asi);
+ 	mutex_unlock(&mm->asi_init_lock);
+ }
+ EXPORT_SYMBOL_GPL(asi_destroy);
+@@ -178,6 +210,9 @@ static noinstr void __asi_enter(void)
+ 
+ noinstr void asi_enter(struct asi *asi)
+ {
++	if (!static_asi_enabled())
 +		return;
 +
-+	VM_BUG_ON(this_cpu_read(cpu_tlbstate.loaded_mm) ==
-+		  LOADED_MM_SWITCHING);
-+
-+	/*
-+	 * Must update curr_asi before writing CR3 to ensure an interrupting
-+	 * asi_exit sees that it may need to switch address spaces.
-+	 */
-+	this_cpu_write(curr_asi, target);
-+
-+	asi_cr3 = build_cr3(target->pgd,
-+			    this_cpu_read(cpu_tlbstate.loaded_mm_asid),
-+			    tlbstate_lam_cr3_mask());
-+	write_cr3(asi_cr3);
-+
-+	if (target->class->ops.post_asi_enter)
-+		target->class->ops.post_asi_enter();
-+}
-+
-+noinstr void asi_enter(struct asi *asi)
-+{
-+	VM_WARN_ON_ONCE(!asi);
-+
-+	asi_set_target(current, asi);
-+	barrier();
-+
-+	__asi_enter();
-+}
-+EXPORT_SYMBOL_GPL(asi_enter);
-+
-+inline_or_noinstr void asi_relax(void)
-+{
-+	barrier();
-+	asi_set_target(current, NULL);
-+}
-+EXPORT_SYMBOL_GPL(asi_relax);
-+
-+noinstr void asi_exit(void)
-+{
-+	u64 unrestricted_cr3;
-+	struct asi *asi;
-+
-+	preempt_disable_notrace();
-+
-+	VM_BUG_ON(this_cpu_read(cpu_tlbstate.loaded_mm) ==
-+		  LOADED_MM_SWITCHING);
-+
-+	asi = this_cpu_read(curr_asi);
-+	if (asi) {
-+		if (asi->class->ops.pre_asi_exit)
-+			asi->class->ops.pre_asi_exit();
-+
-+		unrestricted_cr3 =
-+			build_cr3(this_cpu_read(cpu_tlbstate.loaded_mm)->pgd,
-+				  this_cpu_read(cpu_tlbstate.loaded_mm_asid),
-+				  tlbstate_lam_cr3_mask());
-+
-+		write_cr3(unrestricted_cr3);
-+		/*
-+		 * Must not update curr_asi until after CR3 write, otherwise a
-+		 * re-entrant call might not enter this branch. (This means we
-+		 * might do unnecessary CR3 writes).
-+		 */
-+		this_cpu_write(curr_asi, NULL);
+ 	VM_WARN_ON_ONCE(!asi);
+ 
+ 	asi_set_target(current, asi);
+@@ -189,8 +224,10 @@ EXPORT_SYMBOL_GPL(asi_enter);
+ 
+ inline_or_noinstr void asi_relax(void)
+ {
+-	barrier();
+-	asi_set_target(current, NULL);
++	if (static_asi_enabled()) {
++		barrier();
++		asi_set_target(current, NULL);
 +	}
+ }
+ EXPORT_SYMBOL_GPL(asi_relax);
+ 
+@@ -199,6 +236,9 @@ noinstr void asi_exit(void)
+ 	u64 unrestricted_cr3;
+ 	struct asi *asi;
+ 
++	if (!static_asi_enabled())
++		return;
 +
-+	preempt_enable_notrace();
-+}
-+EXPORT_SYMBOL_GPL(asi_exit);
+ 	preempt_disable_notrace();
+ 
+ 	VM_BUG_ON(this_cpu_read(cpu_tlbstate.loaded_mm) ==
+@@ -229,6 +269,9 @@ EXPORT_SYMBOL_GPL(asi_exit);
+ 
+ void asi_init_mm_state(struct mm_struct *mm)
+ {
++	if (!boot_cpu_has(X86_FEATURE_ASI))
++		return;
 +
-+void asi_init_mm_state(struct mm_struct *mm)
-+{
-+	memset(mm->asi, 0, sizeof(mm->asi));
-+	mutex_init(&mm->asi_init_lock);
-+}
+ 	memset(mm->asi, 0, sizeof(mm->asi));
+ 	mutex_init(&mm->asi_init_lock);
+ }
 diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 679893ea5e687..5b06d30dee672 100644
+index 5b06d30dee67..e2a29f6779d9 100644
 --- a/arch/x86/mm/init.c
 +++ b/arch/x86/mm/init.c
-@@ -249,7 +249,8 @@ static void __init probe_page_size_mask(void)
- 	/* By the default is everything supported: */
+@@ -27,6 +27,7 @@
+ #include <asm/text-patching.h>
+ #include <asm/memtype.h>
+ #include <asm/paravirt.h>
++#include <asm/asi.h>
+ 
+ /*
+  * We need to define the tracepoints somewhere, and tlb.c
+@@ -250,7 +251,7 @@ static void __init probe_page_size_mask(void)
  	__default_kernel_pte_mask = __supported_pte_mask;
  	/* Except when with PTI where the kernel is mostly non-Global: */
--	if (cpu_feature_enabled(X86_FEATURE_PTI))
-+	if (cpu_feature_enabled(X86_FEATURE_PTI) ||
-+	    IS_ENABLED(CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION))
+ 	if (cpu_feature_enabled(X86_FEATURE_PTI) ||
+-	    IS_ENABLED(CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION))
++	    cpu_feature_enabled(X86_FEATURE_ASI))
  		__default_kernel_pte_mask &= ~_PAGE_GLOBAL;
  
  	/* Enable 1 GB linear kernel mappings if available: */
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 6ca18ac9058b6..9a5afeac96547 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -155,7 +155,7 @@ static inline u16 user_pcid(u16 asid)
- 	return ret;
- }
+@@ -757,6 +758,7 @@ void __init init_mem_mapping(void)
+ 	unsigned long end;
  
--static inline_or_noinstr unsigned long build_cr3(pgd_t *pgd, u16 asid, unsigned long lam)
-+inline_or_noinstr unsigned long build_cr3(pgd_t *pgd, u16 asid, unsigned long lam)
- {
- 	unsigned long cr3 = __sme_pa_nodebug(pgd) | lam;
+ 	pti_check_boottime_disable();
++	asi_check_boottime_disable();
+ 	probe_page_size_mask();
+ 	setup_pcid();
  
 diff --git a/include/asm-generic/asi.h b/include/asm-generic/asi.h
-index c4d9a5ff860a9..3660fc1defe87 100644
+index 3660fc1defe8..d0a451f9d0b7 100644
 --- a/include/asm-generic/asi.h
 +++ b/include/asm-generic/asi.h
-@@ -2,4 +2,54 @@
- #ifndef __ASM_GENERIC_ASI_H
- #define __ASM_GENERIC_ASI_H
+@@ -48,6 +48,10 @@ static inline struct asi *asi_get_target(struct task_struct *p) { return NULL; }
  
-+#ifndef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-+
-+#define ASI_MAX_NUM_ORDER		0
-+#define ASI_MAX_NUM			0
-+
-+#ifndef _ASSEMBLY_
-+
-+struct asi_hooks {};
-+struct asi {};
-+
-+static inline
-+int asi_register_class(const char *name, const struct asi_hooks *ops)
-+{
-+	return 0;
-+}
-+
-+static inline void asi_unregister_class(int asi_index) { }
-+
-+static inline void asi_init_mm_state(struct mm_struct *mm) { }
-+
-+static inline int asi_init(struct mm_struct *mm, int asi_index,
-+			   struct asi **asi_out)
-+{
-+	return 0;
-+}
-+
-+static inline void asi_destroy(struct asi *asi) { }
-+
-+static inline void asi_enter(struct asi *asi) { }
-+
-+static inline void asi_relax(void) { }
-+
-+static inline bool asi_is_relaxed(void) { return true; }
-+
-+static inline bool asi_is_tense(void) { return false; }
-+
-+static inline void asi_exit(void) { }
-+
-+static inline bool asi_is_restricted(void) { return false; }
-+
-+static inline struct asi *asi_get_current(void) { return NULL; }
-+
-+static inline struct asi *asi_get_target(struct task_struct *p) { return NULL; }
-+
-+static inline pgd_t *asi_pgd(struct asi *asi) { return NULL; }
-+
-+#endif  /* !_ASSEMBLY_ */
-+
-+#endif /* !CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
-+
- #endif
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 5240bd7bca338..226a586ebbdca 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -19,8 +19,10 @@
- #include <linux/workqueue.h>
- #include <linux/seqlock.h>
- #include <linux/percpu_counter.h>
-+#include <linux/mutex.h>
+ static inline pgd_t *asi_pgd(struct asi *asi) { return NULL; }
  
- #include <asm/mmu.h>
-+#include <asm/asi.h>
- 
- #ifndef AT_VECTOR_SIZE_ARCH
- #define AT_VECTOR_SIZE_ARCH 0
-@@ -802,6 +804,11 @@ struct mm_struct {
- 		atomic_t membarrier_state;
- #endif
- 
-+#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-+		struct asi asi[ASI_MAX_NUM];
-+		struct mutex asi_init_lock;
-+#endif
++#define static_asi_enabled() false
 +
- 		/**
- 		 * @mm_users: The number of users including userspace.
- 		 *
-diff --git a/kernel/fork.c b/kernel/fork.c
-index aebb3e6c96dc6..a6251d11106a6 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -109,6 +109,7 @@
- #include <asm/mmu_context.h>
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
-+#include <asm/asi.h>
- 
- #include <trace/events/sched.h>
- 
-@@ -1292,6 +1293,8 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
- 		mm->def_flags = 0;
- 	}
- 
-+	asi_init_mm_state(mm);
++static inline void asi_check_boottime_disable(void) { }
 +
- 	if (mm_alloc_pgd(mm))
- 		goto fail_nopgd;
+ #endif  /* !_ASSEMBLY_ */
  
-diff --git a/mm/init-mm.c b/mm/init-mm.c
-index 24c8093792745..e820e1c6edd48 100644
---- a/mm/init-mm.c
-+++ b/mm/init-mm.c
-@@ -12,6 +12,7 @@
- #include <linux/user_namespace.h>
- #include <linux/iommu.h>
- #include <asm/mmu.h>
-+#include <asm/asi.h>
- 
- #ifndef INIT_MM_CONTEXT
- #define INIT_MM_CONTEXT(name)
-@@ -44,6 +45,9 @@ struct mm_struct init_mm = {
- #endif
- 	.user_ns	= &init_user_ns,
- 	.cpu_bitmap	= CPU_BITS_NONE,
-+#ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-+	INIT_MM_ASI(init_mm)
-+#endif
- 	INIT_MM_CONTEXT(init_mm)
- };
- 
+ #endif /* !CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
 
 -- 
 2.45.2.993.g49e7a77208-goog
