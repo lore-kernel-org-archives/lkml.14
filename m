@@ -1,156 +1,158 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCF82E3E5;
-	Fri, 12 Jul 2024 08:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97F8142648;
+	Fri, 12 Jul 2024 08:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720772472; cv=none; b=pbHbDJZWCFcsfTVhO9zo3wf1T/ahDYlj+xnwQEVyBBHvc4W3nSOwoqw2+RRI9D25qZf4i6HCU/egNxubvjxbFqb3ck9lGphpgdz6lCa2Er4k/HJpsg/0gTh6d762kD2oIRf32X8ydMX183Oy3cPblfFEgL1ygO8tSIS99ApoH+k=
+	t=1720772475; cv=none; b=GVmgkdgSahEQBG1/8RWRvS8N53n6Z2ttRoLgNb4YgRsjBFDsO62R43Rqs+sIjcHhnvWbisBEbIy/Ij7rkvu+RWBadVjw24jtcgD2oDosMU7jaFpx1PS4UvWGHK/Jf5hn5/Ffod5t7C5MYmhPwsBD+9AUrj31dtYfVH6AmDD3aNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720772472; c=relaxed/simple;
-	bh=lcIxnxTVnl7eemhsDeBtjmieMiTqljeGdfc5S4iHFWY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NuG2VTfiw7qNw6bgMWvauFpW24ECTBvlG5Eg6umL1l0k5wGTYVuBBgcbBlyokL+/3IrychFj2DJ4JWalLlA1JCYHZ81GEppprZvG1WWfS2fkW1TW7Zaq5UC7/bzyO1/Xm4Cx6wDTnPWGYCjqG4w4UDQTXQ8TPNkHoWydFJyF4RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=D6UzQg9P; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1720772475; c=relaxed/simple;
+	bh=p9/qiAKcZbyP9wlf3L0QQhEm0oQL1Tnf2wENYdgqhS0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p/HED1n9vinnGCU5gsW0dSTz6bWf+7vj3q4u/lsx5/eqvGCxmyY2Lroc8taAp/YOcnbfwqquEh4PNVVxGEtxMFmVt/JlX4BStCTYY5RxPFb238pkUsm8NcfIJgsIqwSoWP5yjl12URsCAV7n3zjrzztzKOO9SA9FGak2hWZ7wzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VTxBamhV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a3qo/WpF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uk9jn/w7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Gvn1FByN; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="D6UzQg9P"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=lcIxnxTVnl7eemhsDeBtjmieMiTqljeGdfc5S4iHFWY=; b=D6UzQg9PXsMWYd67Vt5J9PuK0P
-	1xQqh0XjxrgQYSaLeHw1dXhozg6f51dU3KeMOV/HzXN+rZhUlCpwah3Lx/MyZom2RsQY+eI6NLECY
-	4vi2c9G7q+TbVu2ofATbYF1nhYnhnAhsUhy7PIBGjDeGx7VIHg6up+cINV1dOESIeoD55mOoRmeb+
-	KVpC+9Bjzv0/b4UUSCSJFpVSIABLnnNYaQ1hOEUiElTSIKCH+P3S35GTvWVjC8yD53emrZBPqMkGW
-	mSperykogVaW/4N8l3pYPrpSi1FMBjB46zbpRjGPnAGioY6BgXLUttvNCxgTeQKdR7Y2wYbE2LV/z
-	AGINDtmQ==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sSBWT-0001oA-Qt; Fri, 12 Jul 2024 10:20:57 +0200
-Received: from [87.49.147.209] (helo=localhost)
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sSBWS-000Q04-2s;
-	Fri, 12 Jul 2024 10:20:56 +0200
-From: Esben Haabendal <esben@geanix.com>
-To: Erez <erezgeva2@gmail.com>
-Cc: Michael Walle <mwalle@kernel.org>,  Tudor Ambarus
- <tudor.ambarus@linaro.org>,  Jaime Liao <jaimeliao@mxic.com.tw>,
-  leoyu@mxic.com.tw,  Alvin Zhou <alvinzhou@mxic.com.tw>,  Julien Su
- <juliensu@mxic.com.tw>,  Erez Geva <erezgeva@nwtime.org>,
-  linux-mtd@lists.infradead.org,  Pratyush Yadav <pratyush@kernel.org>,
-  linux-kernel@vger.kernel.org,  Miquel Raynal <miquel.raynal@bootlin.com>,
-  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  devicetree@vger.kernel.org,  Rob Herring
- <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
- Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: mtd: macronix,mx25l12833f: add
- SPI-NOR chip
-In-Reply-To: <CANeKEMNtXb4ZV7kcLbHY+Mti6dPV9UZ2wTyUq5z0qtmtNNqSVA@mail.gmail.com>
-	(Erez's message of "Fri, 12 Jul 2024 00:09:01 +0200")
-References: <20240629103914.161530-1-erezgeva@nwtime.org>
-	<20240629103914.161530-4-erezgeva@nwtime.org>
-	<1c457520-07b7-4bde-b040-e8bca959a4f5@linaro.org>
-	<CANeKEMOODBNZA6efh0E0Ga_KaVs5Y3WLcUftRhNwYHhnXO=GNw@mail.gmail.com>
-	<CANeKEMO42rJt5Ob4_HDcZ3eEMvuMOPvRaFaLwL8SA65NtxSV7A@mail.gmail.com>
-	<1d56c3b2-7adf-45b9-a509-956340f3f17b@linaro.org>
-	<CANeKEMMe-Onpn7xWQHgWz1Ps_uQPEMa7HrKA00HpoKjG+DCJNQ@mail.gmail.com>
-	<3bafcbea-6aa5-43ca-9d12-3916be3fe03d@linaro.org>
-	<CANeKEMM02-Jvb8Pd0fZJFnRg-hsAW+hckYWm11tZZXNMPSPJ=w@mail.gmail.com>
-	<9b45cc73-2251-4085-af95-7ccd00dd6d3b@linaro.org>
-	<CANeKEMP+mRefYZNb+TuBmOD7dC6=7Rg7D1EcfnjJoiaeaV28SQ@mail.gmail.com>
-	<875xtd48ps.fsf@geanix.com>
-	<CANeKEMNJ3_ET5pQo2wg7_GSLX+vE+dqW-CV=v2DnG10xcgSdzQ@mail.gmail.com>
-	<D2MZ405LVTN8.3LTVN3KTUD6A3@kernel.org>
-	<CANeKEMNtXb4ZV7kcLbHY+Mti6dPV9UZ2wTyUq5z0qtmtNNqSVA@mail.gmail.com>
-Date: Fri, 12 Jul 2024 10:20:56 +0200
-Message-ID: <878qy7vx5j.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VTxBamhV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a3qo/WpF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uk9jn/w7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Gvn1FByN"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CCE771FB71;
+	Fri, 12 Jul 2024 08:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720772472; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=myQxO7WO5T9CFH3oPmFlxpq8hqCNcsmKBXpMHwzA1KY=;
+	b=VTxBamhVjolVsWvKHm7HtZyoFt84+LN9ENnOV49NlJ7mcUpePrPaTN12J3ln6+AOLHwtw+
+	iO92OBxp+dNOJxcYcSOh91N4433iFF+dio9Akk9mpQBq0NXaGxOvSp+ppTzvCNqaTa/pnt
+	8i6P+O5wsQy/vW6f//flMhZhrYCjzDU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720772472;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=myQxO7WO5T9CFH3oPmFlxpq8hqCNcsmKBXpMHwzA1KY=;
+	b=a3qo/WpFwlagMk221vR2zJQva+WvLdRyQ1/N09tQudIX7F2t5bbt/DRAg8k8y7a52nsFv6
+	6d37pq/Kpfm+v8AQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="uk9jn/w7";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Gvn1FByN
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720772471; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=myQxO7WO5T9CFH3oPmFlxpq8hqCNcsmKBXpMHwzA1KY=;
+	b=uk9jn/w7SYRzB2NvPAuLvE03/OEBrj50rxjOliVZiZtHGiMDDF1sbJCIDN2zowMrmhmH8w
+	pKEsvE4xB/mm26VsIuwenOMgmsZdV8zA8jQ1W10NTgLbUWOR75vAe8bA3mwbbI4yBLu7Qf
+	ZyDgWhAA0W6t+MPsGdRRPaiYztdZVok=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720772471;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=myQxO7WO5T9CFH3oPmFlxpq8hqCNcsmKBXpMHwzA1KY=;
+	b=Gvn1FByNPh6gzNnatLD3LAeNjoUWYQ2PWaLT0YDP6p4tVj6j55QVU7O2B9jpo1+Nb9SLTu
+	r76yKq1E6aK0bNAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 76DB21373E;
+	Fri, 12 Jul 2024 08:21:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CqRsG3fnkGZTAgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 12 Jul 2024 08:21:11 +0000
+Date: Fri, 12 Jul 2024 10:21:43 +0200
+Message-ID: <877cdrt3zc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-sound@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kselftest/alsa: Use card name rather than number in test names
+In-Reply-To: <b3fdbb63-067b-4ff4-8fd8-1c2455a553a5@sirena.org.uk>
+References: <20240711-alsa-kselftest-board-name-v1-1-ab5cf2dbbea6@kernel.org>
+	<7cd921b3-fed9-4b0c-9ba8-381e45ef4218@perex.cz>
+	<b3fdbb63-067b-4ff4-8fd8-1c2455a553a5@sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27333/Thu Jul 11 10:35:59 2024)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Level: 
+X-Rspamd-Queue-Id: CCE771FB71
 
-Erez <erezgeva2@gmail.com> writes:
+On Thu, 11 Jul 2024 18:19:25 +0200,
+Mark Brown wrote:
+> 
+> On Thu, Jul 11, 2024 at 06:08:38PM +0200, Jaroslav Kysela wrote:
+> > On 11. 07. 24 16:33, Mark Brown wrote:
+> 
+> > > Address this by replacing our use of card numbers with card names which are
+> > > more likely to be stable across runs. We use the long name since in the
+> 
+> > I think that a combination of card number and card ID may be sufficient (and
+> > a compromise). It's shorter and user-friendly. Additionally, a table may be
+> > printed at the beginning of report with card number, card ID and long card
+> > name for further processing and identification.
+> 
+> These don't help, the problem is that anything which includes the card
+> number in the test name result is going to result in unstable test names
+> depending on race conditions at boot.  There are automated systems that
+> parse kselftest output generically, I'm not sure there's a great deal of
+> enthusiasm for writing a custom parser for the ALSA selftests
+> specifically.
 
-> On Thu, 11 Jul 2024 at 21:57, Michael Walle <mwalle@kernel.org> wrote:
->> On Thu Jul 11, 2024 at 8:57 PM CEST, Erez wrote:
->> > Yes, I think we should.
->> >
->> > Reading the specification provided publicly by Macronix.
->> > For all the JEDEC IDs with the no SFDP flag in drivers/mtd/spi-nor/macronix.c
->> > All of them have a new version or a new chip with the same JEDEC ID
->> > that supports SFDP.
->> > There are 2 chips that Macronix does not provide spec. in public.
->> > I can ask Macronix technical support on these 2 chips.
->>
->> We don't add flashes we cannot test.
->
-> I did not suggest adding anything new.
-> I refer to the list of chips we already have in drivers/mtd/spi-nor/macronix.c
-> I presume someone tested them before adding them to the list in the past.
-> And probably the old chip did not have the SFDP table back then.
->
-> What I checked with the chip specifications is that all Macronix chips
-> since 2010 have SFDP.
->
-> The situation today is that all Macronix chips that are NOT in the
-> Macronix table work based on the SFDP table.
-> But new chips that use a JEDEC found in the Macronix table, skip the
-> SFDP table and use the setting of the old chip.
+OTOH, longname can be really ugly to read, and it can vary because it
+often embeds address or irq numbers in the string.
 
-Not entirely true.
+If a general name is the goal, how about using shortname instead?
 
-Those that entries in the Macronix table that has SPI_NOR_DUAL_READ
-and/or SPI_NOR_QUAD_READ in no_sfdp_flags is caught by
-the magic flags matching in spi_nor_init_params_deprecated() and will
-have spi_nor_parse_sfdp() called from
-spi_nor_sfdp_init_params_deprecated(). So flashes reusing ID for these
-will have the SFDP tables parsed.
+Or use id field, as Jaroslav suggested, but without the card number
+suffix; then it's unique among multiple cards.
 
-The rest of the entries in the Macronix table is not so lucky. When a
-replacement chip (with the same ID) is used, it will not be configured
-with the values found in SFDP table.
 
-> So I suggest we read the SFDP table for all Macronix chips.
+thanks,
 
-Based on their strategy of re-using flash ID, I think this is a sane
-approach.
-
-> Old Macronix chips that do not have SFDP will use the setting from the
-> Macronix table. i.e backward compatible.
-> While new chips which do have an SFDP table will work with the new
-> setting we find in the table.
-
-Yes, if we apply the new SPI_NOR_TRY_SFDP flag to the matching table
-entries.
-
-> Of course, we might have issues in parsing the SFDP table itself.
-> So we fix them as developers report and send chip ID and part number
-> with the SFDP table content.
-> I do not see the point of "hiding" with the old setting.
-> Anyhow, as we do not like the IDs table and keep it for backward-compatible,
-> so it only makes sense we should use the SFDP table as much as possible.
->
-> My check was to ensure Tudor that all Macronix chips have SFDP whether
-> they are in the IDs table or not and we are not wasting a no-op on a
-> chip which can not have an SFDP table.
->
-> All I suggest is we add the new 'SPI_NOR_TRY_SFDP' flag, to all
-> Macronix chips.. Which will try to read the SFDP to any Macronix chip.
-
-Makes sense. But obviously comes with a risk as we won't be able to
-test all chips for regression when doing that.
-
-/Esben
+Takashi
