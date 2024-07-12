@@ -1,115 +1,121 @@
-Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEAB17BB6;
-	Fri, 12 Jul 2024 09:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E4014D714;
+	Fri, 12 Jul 2024 09:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720777924; cv=none; b=XXeuJJLYFQRlHVAFMuqnV55R4JyMGW+vUz36b9hVlqqywayXjvkgIc/yXSmPBIExhIDRMVZ17BAgt12Wa+TgAGZ6wmHVb/Ki/SOIDGzlbJ/++1vY6pUgxWD2kIVl60HLotafcZ6EsHxlYae4EakbAHDtZS9DWM1tIaTidWsM7Xk=
+	t=1720777933; cv=none; b=En7l0QXZ/cDmz8EJKXR9/Ha9ym+YQEZ4Uwdeq3bLLKFcmaH5Wqm4TFCXt/35ajBdDQhhw/uOC8jPIoulaLNZXaYrGn5DlkDHL7v9IJRCSvDK1fcwrfKZZn9TO9ylSUYLJcSxoVIoxOec4JZK98snTLpPjXtgL7n20n4qpnZxBRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720777924; c=relaxed/simple;
-	bh=qnwmKA1E77dU3/Siq976FhjiJYE//apcHV6ykvuw28g=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=EoySB0l+IaL8vJaD+HAxtXCBi6FuRqVA/O6IU0WkNBlaYPBCMc7owXWt+nzoDJqKO6nqjits8Eh6xwE7Fxz6LmCKkfZ1QxhUddVhk2/Rn6zZvIrhMDmimIYKtKlOqlYNYZemkvhZriksyYj+cbqGbLmON0ybtmzEOGtYYZgDUvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=BryiJl3/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mKW/aPEL; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1720777933; c=relaxed/simple;
+	bh=Fl758Lbh3U7r3qwMeOeC068iOhZAyZs+9551apx3XuI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dq2In2wO9AadOdQJAJcvdGEjbD8K/OhuScoWVbWTHbPj6GKKebr2k8OUGC/5KbaTQFs1l/IrmStVwfH/xOovRtGbExXx0ZtR5OVvVoL88e3eLNBrxhN3Y+EV9z2HjJzv+C6E1BJIrDuH9HAOVjV8ZYTvEmT82cqrlYKDkfb95fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfKin0kY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BryiJl3/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mKW/aPEL"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 8B8671144813;
-	Fri, 12 Jul 2024 05:52:01 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 12 Jul 2024 05:52:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1720777921;
-	 x=1720864321; bh=1i/vtDPCq+ba017V3YOHCPsm2lCK+3guf6JFMXq0RyM=; b=
-	BryiJl3/LeVnnYFdHpoPCySMaI2nQ0N9aTak6myPMZ/SpBJI79xI19jV+NWlOZ/z
-	VtKZ/uE62ZoxIyUmFMlG3pMDW1DZMsBQsetdpvTc2SULUjJOb5vtjt0Zrv1EY9+J
-	pE7nQFXZDCa/NbNYCRWYE6kp0635Xi9kKh111aVivrEWx6jqeaSmkJhLN3UmD90L
-	meb2VdT5oWq3H+lVxTc6R7EIJJjPpIxzPXbxCvhd6TPkZI/boR9OoDqd0Xhw0R9Z
-	Bly/zCXJca3ia9fngzeT1VAUN0vxipsampUrtWpSUfrgyRbJ0gPAS/sRqOrga3Xg
-	m6W+pKalUpsbQRW70GYJ+A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720777921; x=
-	1720864321; bh=1i/vtDPCq+ba017V3YOHCPsm2lCK+3guf6JFMXq0RyM=; b=m
-	KW/aPELPox1MQtH5P/ZEPY7vSavQVzUfjDwjXyQHh4HWwE94syilyoFuOAhsbK5r
-	eCBX35owLoxxbcPMVI03LTZfLKepw2THRDLthNe4C/avTn48Cek5P234wQ44yT81
-	qPpCkAsAjEzn91m5RkSzEHT1tsbskEn18u50+u5YgRsYoID6/4hC/4plO9f49NxV
-	khiFwUEBjy5/Ib9l6OJFPMu24dydw+dLCctmBCLJL4z7VkSjmAyDGtruvtu8pU18
-	0Zc/CXmDSqC90lXGAboG86keD2on/th6I8ZZJ/XKlSf1Fru91j7L/cLV6YA+Zvu5
-	FiOqsCkp3vxTlmrK1yHgQ==
-X-ME-Sender: <xms:wPyQZj0y9QPTem1RXtyhRyIa0I8B1Sxt1CjvG-wKc9md4F1-IaZuDA>
-    <xme:wPyQZiFOu3g8WwmwqQ4h4apvxKXIOmOxbnm1IAxwwxQHYwTWJS7zNP4wy568mIjPf
-    nNZkFFtKk-g381X2no>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeeigdduiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepofgfggfkjghffffhvfevufgtgfesth
-    hqredtreerjeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnuges
-    rghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpeegfeejhedvledvffeijeeijeeivd
-    dvhfeliedvleevheejleetgedukedtgfejveenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:wPyQZj5Cvkvn-18UIBtVc5StNpUruuckhhcwQYHvtRfloaTFs0XfnQ>
-    <xmx:wPyQZo1UkUm-DbrKid-G4csibAFm03UIie2r3gyHuQy6cvarAGCjXg>
-    <xmx:wPyQZmFyF1mINj0dNhWl9mjHq-7VtihI1t1ycPvHRmeGzRwA6Smtnw>
-    <xmx:wPyQZp91ERAWvRpw3s6lmOHg1ELMmZX8k-U00HQIedceW6XnV25OzA>
-    <xmx:wfyQZrQK4I9a2pd-C2GeXNJl4A98NLd_5hbUPwyIF0zdcmt7SDM3jriG>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 60055B6008D; Fri, 12 Jul 2024 05:52:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfKin0kY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57222C32782;
+	Fri, 12 Jul 2024 09:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720777932;
+	bh=Fl758Lbh3U7r3qwMeOeC068iOhZAyZs+9551apx3XuI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IfKin0kYJ+79JXJqxoCueZ3pzQIxv3ZL7sxUgimO39yNxQ7vzhL6BfRABAWRGfKH5
+	 wU6IveRj41ScWHy+nrNz9OEMHfUKXnpXEUKQLlVgs8ssHAsrPB3XQ+yOQI4PQwEpQW
+	 HToZSL7qeddwK1WQmcHb9DzsK/BMvLJ8IwF939rXZmCosYLh/57sJCvqmYh8i3woOJ
+	 OS9k3/7b4AqAmWgosJ3lIAndalDIEOaio1/FBvbJaDIJ6D13eIwVyydqRwvfTaMReS
+	 DvL61s2zxQAmEz24K36VE9Q4wNg1ONEqccWDP1Y17S+yP4d5edEtU5I+HYJxL/mjdx
+	 LStYKUXPMJdaQ==
+Message-ID: <cf02eb9b-2304-4db5-96f9-cfe89037faad@kernel.org>
+Date: Fri, 12 Jul 2024 11:52:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7351db74-fb04-4d0f-93ae-d3a3a3a310ff@app.fastmail.com>
-In-Reply-To: <20240712093524.905556-2-u.kleine-koenig@baylibre.com>
-References: <20240712093524.905556-2-u.kleine-koenig@baylibre.com>
-Date: Fri, 12 Jul 2024 11:51:38 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] UAPI/ioctl: Improve parameter name of ioctl request definition
- helpers
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Removal of MSC-5000/5080 touchscreen/touchkey drivers?
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Sangwon Jee <jeesw@melfas.com>, Joonyoung Shim <jy0922.shim@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org
+References: <ZpC7G0AVMB98og6H@google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ZpC7G0AVMB98og6H@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 12, 2024, at 11:35, Uwe Kleine-K=C3=B6nig wrote:
-> The third parameter to _IOR et al is a type name, not a size. So the
-> parameter being named "size" is irritating. Rename it to "argtype"
-> instead to reduce confusion.
->
-> There is a very minor chance that this breaks stuff. It only hurts
-> however if there is a variable (or macro) in userspace that is called
-> "argtype" *and* it's used in the parameters of _IOR and friends. IMHO
-> this is negligible because usually definitions making use of these
-> macros are provided by kernel headers (i.e. us) or if they are
-> replicated in userspace code, they are replicated and so supposed to
-> match the kernel definitions (e.g. to make them usable by programs
-> without the need to update the kernel headers used to compile the
-> program).
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> ---
-> Hello,
->
-> if there are doubts about using "argtype": Would "_argtype" be better?
+On 12/07/2024 07:11, Dmitry Torokhov wrote:
+> Hi,
+> 
+> Sorry for a somewhat wide and random distribution, but I was wondering
+> if anyone knows if drivers/input/touchscreen/mcs5000_ts.c and
+> drivers/input/keyboard/mcs_touchkey.c are still relevant these days?
+> 
+> Looking at Melfas web-site it looks like these were the 1st generation
+> of their chips, manufactured 2000-2007. The drivers were contributed by
+> Samsung long time ago, they rely on custom platform data (no DT support)
+> and as far as I can see we never had a user of them in mainline.
+> 
+> Should I simply remove them? Does anyone know?
 
-The patch looks good to me, and I think using 'argtype'
-is fine. I would apply it directly, but not with the current
-timing just ahead of the merge window.
+Digging in history, commit claims this was for S3C6410 NCP board (with
+Samsung S3C6410 SoC), which had a board-file:
+arch/arm/mach-s3c64xx/mach-ncp.c
+But the touchscreen was never added to the board file, thus mainline
+kernel never had it fully working.
 
-If there are no other comments, how about I take this after -rc1?
-You may have to remind me about it.
+The NCP board file was finally removed in v6.3 in commit:
+743c8fbb90ca4c02bdf4087fa9f1885ddd85041b
 
-      Arnd
+I say drop the driver.
+
+Best regards,
+Krzysztof
+
