@@ -1,103 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.astralinux.ru (mx.astralinux.ru [89.232.161.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4EB14A4C8
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C2E158862;
+	Fri, 12 Jul 2024 09:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.232.161.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720778113; cv=none; b=tj6Fgg/UABLNLXOFOY9B09CS2+2e//qsRR8vNr/14XsEX/eIRQojTeKPLNe3DQg4X6Ku8pA+Ip0PD40z4MftaauhGVFKMhkdt+ihJJkFzavo/A9WWq1dQGetQSXZnf6QJRr8lWl0WlX72ND16zv/sv0PK+50rIoTug+YNWP/UxM=
+	t=1720778117; cv=none; b=qlOiMzpdQOKJxpuConhSvdDYIcPyx+CFBcOhLZROrSzVL3D6u5pVDkFfY7WzaG4uoq792qHAC97n0o3vbBuNcWcbLhv+lIynh4gWX9VtCft2H+ltLPMWqWe4mP37PrEBhZGIL03cPSHyzo1MZFdunsIXFFzTUWmi0BiS2cXdn5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720778113; c=relaxed/simple;
-	bh=VHgWyoWjIKaO1gLhmwyqxCG0NgL1aQmum5wsVrDPiiE=;
-	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:References:
-	 In-Reply-To; b=k7vntSGtCnmofk1YSfjo3SwvGRKOT7P3OtXHRQ0GmqolRbsjlFeXTZ4q1AoiB7hxRVqXZSrPfBYOra+C0qAESt0pqu2Y5WfK2N5gyuP+eDLaWx6BzX36FjS2JL8+iVO3U6sj1LR9XYhms1IE8tOIp5qes1N0ThTznnv4MUvfM2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZecFFwwt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZecFFwwt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3E2C32786;
-	Fri, 12 Jul 2024 09:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720778112;
-	bh=VHgWyoWjIKaO1gLhmwyqxCG0NgL1aQmum5wsVrDPiiE=;
-	h=Date:Cc:From:To:Subject:References:In-Reply-To:From;
-	b=ZecFFwwtAOOh80u9qYekts6l8YtCdGU8XuUm+MNK8HHev1vlPyexWEISjh0+hvUBG
-	 1ayBH6kTc2hC/9xkViVT/C1PqnzHi4riccGduaeyeSKvkwWNNyNK1vXVteWzbt1xzR
-	 VeMkpwkv5WclR9EqxIEq7y2n9nPq+Xh43YnebkzySOHBlCgYKLuHkqvP2E749NDGXz
-	 tq0rfl7Fx9l0cwnOpwuMqjdhzkozLhZrEtSB6L3qszO87Ax1ukfa1qPYxR5xtR3R2g
-	 8bgkzOCE0NwnVv6RLOhJWzXfNLbJbLBUOLv/Rb3Obak1Miezs+gsvrjIzqsi7SrFvn
-	 ahkJeQYZ4mzpA==
-Content-Type: multipart/signed;
- boundary=aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Fri, 12 Jul 2024 11:55:08 +0200
-Message-Id: <D2NGXHZ2VTK0.M0AOB4CM7MHM@kernel.org>
-Cc: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Rasmus
- Villemoes" <rasmus.villemoes@prevas.dk>,
- <linux-arm-kernel@lists.infradead.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Esben Haabendal" <esben@geanix.com>, "Tudor Ambarus"
- <tudor.ambarus@linaro.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Miquel
- Raynal" <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
- "Vignesh Raghavendra" <vigneshr@ti.com>, "Nicolas Ferre"
- <nicolas.ferre@microchip.com>, "Alexandre Belloni"
- <alexandre.belloni@bootlin.com>, "Claudiu Beznea"
- <claudiu.beznea@tuxon.dev>
-Subject: Re: [PATCH v3 00/15] mtd: spi-nor: macronix: workaround for device
- id re-use
-X-Mailer: aerc 0.16.0
-References: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
-In-Reply-To: <20240711-macronix-mx25l3205d-fixups-v3-0-99353461dd2d@geanix.com>
+	s=arc-20240116; t=1720778117; c=relaxed/simple;
+	bh=iJgyElM1/pCaQWMPuPOElKf2CgYLrCM9dalPOtcCNOA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nchOfJMQC9CzRxe2eHcizdpdd3WKybbeyxCDG6T2NtKypvt0CbnjuOe2qvRLYysU0BnJ6xkS9v38RtJR2K7b9oBfXXSSoIujobQYTj7w9DGOwcT6x/rrGqiTPMYhfc1kaNxkUgaag3spClLusTEX3jh426R/1fhMqeZVL+grRzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=89.232.161.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from [10.177.185.111] (helo=new-mail.astralinux.ru)
+	by mx.astralinux.ru with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <adiupina@astralinux.ru>)
+	id 1sSBvU-000fCI-5b; Fri, 12 Jul 2024 11:46:48 +0300
+Received: from rbta-msk-lt-302690.astralinux.ru (unknown [10.177.232.141])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4WL4vz0csjz1c00g;
+	Fri, 12 Jul 2024 11:46:55 +0300 (MSK)
+From: Alexandra Diupina <adiupina@astralinux.ru>
+To: Xiaowei Song <songxiaowei@hisilicon.com>
+Cc: Alexandra Diupina <adiupina@astralinux.ru>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] PCI: kirin: Fix buffer overflow
+Date: Fri, 12 Jul 2024 11:43:09 +0300
+Message-Id: <20240712084309.13248-1-adiupina@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-DrWeb-SpamScore: 0
+X-DrWeb-SpamState: legit
+X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhgvgigrnhgurhgrucffihhuphhinhgruceorgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeduleetfeehffekueeuffektefgudfgffeutdefudfghedvieffheehleeuieehteenucffohhmrghinheplhhinhhugihtvghsthhinhhgrdhorhhgnecukfhppedutddrudejjedrvdefvddrudegudenucfrrghrrghmpehhvghloheprhgsthgrqdhmshhkqdhlthdqfedtvdeiledtrdgrshhtrhgrlhhinhhugidrrhhupdhinhgvthepuddtrddujeejrddvfedvrddugedumeehledtjeeipdhmrghilhhfrhhomheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehsohhnghigihgrohifvghisehhihhsihhlihgtohhnrdgtohhmpdhrtghpthhtoheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhrtghpthhtohepfigrnhhgsghinhhghhhuiheshhhishhilhhitghonhdrtghomhdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpdhrtghpth
+ htohepkhifsehlihhnuhigrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhgnecuffhrrdghvggsucetnhhtihhsphgrmhemucenucfvrghgshem
+X-DrWeb-SpamVersion: Dr.Web Antispam 1.0.7.202406240#1720716691#02
+X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.65.05230, Virus records: 12048491, Updated: 2024-Jul-12 06:59:55 UTC]
 
---aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+In kirin_pcie_parse_port() pcie->num_slots is compared to
+pcie->gpio_id_reset size (MAX_PCI_SLOTS). Need to fix
+condition to pcie->num_slots >= MAX_PCI_SLOTS to
+avoid out of bounds array access.
 
-Hi,
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-On Thu Jul 11, 2024 at 3:00 PM CEST, Esben Haabendal wrote:
-> As a consequence, the SPI_NOR_SKIP_SFDP flag is no more, and all
-> drivers that have been doing optional SFDP is now marked explicitly to
-> do that using the SPI_NOR_TRY_SFDP.
+Fixes: b22dbbb24571 ("PCI: kirin: Support PERST# GPIOs for HiKey970 external PEX 8606 bridge")
+Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
+---
+ drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-First, I haven't looked at your patchset at the moment. But I'd like
-to take the opportunity to discuss the following (and excuse me that
-I didn't had this idea before all your work on this).
+diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+index d5523f302102..5ef3384c137d 100644
+--- a/drivers/pci/controller/dwc/pcie-kirin.c
++++ b/drivers/pci/controller/dwc/pcie-kirin.c
+@@ -413,7 +413,7 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
+ 				continue;
+ 
+ 			pcie->num_slots++;
+-			if (pcie->num_slots > MAX_PCI_SLOTS) {
++			if (pcie->num_slots >= MAX_PCI_SLOTS) {
+ 				dev_err(dev, "Too many PCI slots!\n");
+ 				ret = -EINVAL;
+ 				goto put_node;
+-- 
+2.30.2
 
-First, I'd like to see it the other way around, that is, doing SFDP
-by default and let the driver opt-out instead of opt-in. This will
-also align with the current "SFDP only driver", i.e. if a flash is
-not known we try SFDP anyway. Going forward, I'd say this is also
-the sane behavior and we don't have to add any flags if someone want
-to add support for an (older) flash with the same ID but without
-SFDP. With the current approach, we'd have to add the TRY_SFDP flag.
-
-Now we might play it safe and add that SPI_NOR_SKIP_SFDP to any
-flash which doesn't do the SFDP parsing (because it has size !=3D 0
-and not any of the magic flags set) - or we might just go ahead and
-do the probing first for *any* flashes. Yes we might issue an
-unsupported opcode, but we already do that with the generic SFDP
-flash driver. So no big deal maybe (?). Vendors where we know for a
-fact that they don't have any SFDP (Everspin I'm looking at you),
-would of course set the SKIP_SFDP flag.
-
--michael
-
---aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZpD9fRIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/gW0QF/aA10t5iors/5JcBokw9E47uTSzUvxCoi
-NSOzc/Px3FUg1ZGuj0lS82ccJeCIbR69AX4gt2bRjp5TWDp7clxAH0mAE0UWreMw
-ZHmZ6GClSkkuvrktzl8GLR5tFulIDA5Xabo=
-=LhXX
------END PGP SIGNATURE-----
-
---aee9b33c528211d8b06b0c46e19f7e654e98074c381b0b5a8e637c093686--
