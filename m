@@ -1,49 +1,49 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACC616FF2A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C0816FF45
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 13:19:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720790351; cv=none; b=AdnbJ/qYJeGi+nsYmPrLUFnJHKJ+qjduPqej4eHze8OW+1YyMNYwyteR5NiYeZXgHgUTn+AVy6jvA4WaabGIEpWG026jLm781Rb0L1Zc+UKqv3SqOPXI1j2oWp2/WDTIeQDSpjZhr598qdxB7pnnlnuDdYvHjy/4zx4ACR1EyTM=
+	t=1720790351; cv=none; b=g7aeBV4me635V3yN/mbr2N0JTe/34D8M6Xa35wVcyRf+EUfsZxKui73a7VHc6Ns7Xvx0xKp7/AID77mO16m8DkVeBR6FPgueykTkhPmtTeKd4skLIIlSmrlpm2QAQGG4od7wGJOr7sfZJ7SWhE2NUd6aPkSKF2mahox4PBC7Bc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720790351; c=relaxed/simple;
-	bh=mpPEqNHUboHg5X4DuAYbZYtk5ez8+vBp8ZUbNSPbIkI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=T7eYMotHora9Qc3047wu64bQjwnf7hmLyDCfCWgBdvmVbBOgNKueVKE6wnDRJLEwW4Z+xL29AR22S7Ia1Dqlx7jLLBaKGcS9nhXdOMFlXnxWieyNAFuS2fD9D36geSAnumAxHy7TULt7xFTxdunXNmo0kZiVO06PTlqcjYYyJOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oMAGvgJ1; arc=none smtp.client-ip=205.220.177.32
+	bh=dN4nSJyVUk1dN2K4WL25CJ+DanbiyhmkRdutX8DGPEo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=YTsXhpy1TpkdYArg+MxS8sYlLKlLYmEN5hDNT/ZUa87fgBLEyO7lGQw9Y/ecdf1jkPqHuXYVIDPyaLL2AwFJKEKxtWbkRy6FRSEJpugO4qn5m2lQNwvP4yxa14CBinFWWr3CUpvB54Zj9S5w+sBslYcyNL0xBP/DzGY5fEINC0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ek3m3TW4; arc=none smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oMAGvgJ1"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CDILjo023659;
-	Fri, 12 Jul 2024 13:18:56 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ek3m3TW4"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CDILeT025537;
+	Fri, 12 Jul 2024 13:19:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	corp-2023-11-20; bh=UoIL+vCtOh0fhA5lR3F1t22mJvNzXPZjXUGWRT0A8lY=; b=
-	oMAGvgJ1av1S92KxLZpNDpMZ441JMOeBFZ5STUhmTN36ehXhmayNIRRrgnQH+F9r
-	CSt/ihMS46oaumteLnb4bQkW43lKFTwc41pqKnZKHCSSAbUa/hwB08yyX5Tf+pPU
-	vDkgsd+v4hNGhG2kv5OdJcvbRYx0o+gna+Ay8aXKbBM8RtpUZfqr98JwSa00SnjO
-	0+DQBddO/SpznMe2pJVAr3LRh0b0SgkAwy4FFr3fCyDuzbBgq8OYPP0flPhQ31QP
-	oRoctodnPVzcvb77kH64h8PT2TwklcUoCtsZZWNEsknywLDQSpZE3qaoHqjt6to9
-	ewF1RPFV9NnNE/n5is05Bg==
+	corp-2023-11-20; bh=7twIdosg+tLq6GhSfBDMiJ/UOzlk+u2dnfv1CdH0B4A=; b=
+	ek3m3TW4f7X33wlg8gpBSSSeib5FDuy76Pr0vnreLbotWO/iFthKK5bK6rJMHV0p
+	uTSwTbv9GHUSRG0rsBY8JuMbCjD2zVsd4pG2khdhu9kqhAU7MzEKhxPyNcOqpluf
+	CfFD8gua7/RiQNFspP8vudnePjLwmljRjIjDXdjwCBAempH6tSCpVQHcxRLTROZF
+	hoY4I4dAnYAuGh7BFLiqZtI8QrkXBmPP5RI5FrKeWDVtPxYml+qfYdoDw3GIRtQH
+	jQyw2/PR1aJ2pH4gpwxoXhImrpppe35TXO+YovTcCLy69UYSaHTaAvp6ZTPgIrvK
+	iY9xW+BbqsfnMtjSG5hwnQ==
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 407emt34yc-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wknuv06-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Jul 2024 13:18:56 +0000 (GMT)
+	Fri, 12 Jul 2024 13:18:59 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46CCVnUM022018;
-	Fri, 12 Jul 2024 13:18:55 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46CDGAop022665;
+	Fri, 12 Jul 2024 13:18:59 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 409vv3snpr-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 409vv3snsf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Jul 2024 13:18:55 +0000
+	Fri, 12 Jul 2024 13:18:58 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46CDIsD9029886;
-	Fri, 12 Jul 2024 13:18:54 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46CDIsDL029886;
+	Fri, 12 Jul 2024 13:18:58 GMT
 Received: from ca-dev63.us.oracle.com (ca-dev63.us.oracle.com [10.211.8.221])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 409vv3snp2-2;
-	Fri, 12 Jul 2024 13:18:54 +0000
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 409vv3snp2-8;
+	Fri, 12 Jul 2024 13:18:58 +0000
 From: Steve Sistare <steven.sistare@oracle.com>
 To: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
 Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
@@ -52,9 +52,9 @@ Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
         Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
         Dragos Tatulea <dtatulea@nvidia.com>,
         Steve Sistare <steven.sistare@oracle.com>
-Subject: [PATCH V2 1/7] vhost-vdpa: count pinned memory
-Date: Fri, 12 Jul 2024 06:18:47 -0700
-Message-Id: <1720790333-456232-2-git-send-email-steven.sistare@oracle.com>
+Subject: [PATCH V2 7/7] vdpa/mlx5: new owner capability
+Date: Fri, 12 Jul 2024 06:18:53 -0700
+Message-Id: <1720790333-456232-8-git-send-email-steven.sistare@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1720790333-456232-1-git-send-email-steven.sistare@oracle.com>
 References: <1720790333-456232-1-git-send-email-steven.sistare@oracle.com>
@@ -65,54 +65,38 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ph
  mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
  definitions=main-2407120089
-X-Proofpoint-GUID: bbr0eCVG20NSa_bbxeF3aQ5F1lkneOWZ
-X-Proofpoint-ORIG-GUID: bbr0eCVG20NSa_bbxeF3aQ5F1lkneOWZ
+X-Proofpoint-GUID: HTQ-eJL4yOmSDO90ENaV7xnBeb0JrbnM
+X-Proofpoint-ORIG-GUID: HTQ-eJL4yOmSDO90ENaV7xnBeb0JrbnM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Remember the count of pinned memory for the device.
+The mlx5 vdpa device supports ownership transfer to a new process, so
+advertise VHOST_BACKEND_F_NEW_OWNER.  User virtual addresses are not
+used after they are initially translated to physical, so VHOST_IOTLB_REMAP
+is not required, hence VHOST_BACKEND_F_IOTLB_REMAP is not advertised.
 
 Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
 ---
- drivers/vhost/vdpa.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/vdpa/mlx5/net/mlx5_vnet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 63a53680a85c..963f3704bc39 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -60,6 +60,7 @@ struct vhost_vdpa {
- 	struct vdpa_iova_range range;
- 	u32 batch_asid;
- 	bool suspended;
-+	long pinned_vm;
- };
+diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+index ecfc16151d61..b8b16dc499da 100644
+--- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
++++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+@@ -2698,7 +2698,8 @@ static void unregister_link_notifier(struct mlx5_vdpa_net *ndev)
  
- static DEFINE_IDA(vhost_vdpa_ida);
-@@ -926,6 +927,7 @@ static void vhost_vdpa_pa_unmap(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
- 			unpin_user_page(page);
- 		}
- 		atomic64_sub(PFN_DOWN(map->size), &dev->mm->pinned_vm);
-+		v->pinned_vm -= PFN_DOWN(map->size);
- 		vhost_vdpa_general_unmap(v, map, asid);
- 		vhost_iotlb_map_free(iotlb, map);
- 	}
-@@ -1009,9 +1011,10 @@ static int vhost_vdpa_map(struct vhost_vdpa *v, struct vhost_iotlb *iotlb,
- 		return r;
- 	}
- 
--	if (!vdpa->use_va)
-+	if (!vdpa->use_va) {
- 		atomic64_add(PFN_DOWN(size), &dev->mm->pinned_vm);
--
-+		v->pinned_vm += PFN_DOWN(size);
-+	}
- 	return 0;
+ static u64 mlx5_vdpa_get_backend_features(const struct vdpa_device *vdpa)
+ {
+-	return BIT_ULL(VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK);
++	return BIT_ULL(VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK) |
++	       BIT_ULL(VHOST_BACKEND_F_NEW_OWNER);
  }
  
+ static int mlx5_vdpa_set_driver_features(struct vdpa_device *vdev, u64 features)
 -- 
 2.39.3
 
