@@ -1,233 +1,77 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1245176ABE
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE04C1EA85
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720804190; cv=none; b=Pna0wb4AFgNC4cXjdn4sdtU2PPLutlJ3O9cBnyOFCLGNOdWiNEQrp79RD5vJxqiGdbhtZttWtdwWAKqofo6ElqE5U7FcXl/EMmNdFS4JRxAE41NFC9flxRDcyxQ3Yx3UGvG6LxNZv6UudI3+TGILyL7o6Pn3I8GxSJWrGBccxbE=
+	t=1720804205; cv=none; b=Svx9lQ11buDs5skXvXooJV1w+sYINEarS97hUubNi9GLYR5jvPgMIkXOxrJjDMOACReOGDAxZinSM/wXBiKpOsHd8LkVi/8wKL5wJ82Sjkx5CjzGNW7bS9JptO1sV2aWt3v1BEb4y7ulPk2qZZARK8OhhGtTFgA0c0AidX5YQWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720804190; c=relaxed/simple;
-	bh=6tgkrdVDa5dO23xQQght0Ng+/wDIbTHMud7WpTmLNbo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H34ODdxqCPGDN+Wo1ean+gMB91ji/9h1fbrci1zBZjkT5j2cBm7MQZeO1hcMfL93+9LDkHysgbIISBZZ3lW8JHtHkG9VuJF6Cez/+cGISefNXSt4UpGt0h9Zr2Ak3afJKTotc5Nzn9YRzjDCXJR/l+P/NMI3JHnpRtEkhp+/2H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c+zND2oO; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c+zND2oO"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-585e774fd3dso3047416a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:09:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720804185; x=1721408985; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7nY0eQU/tg2nCxr+WiXke0QlA4moV9D3eyAAMfVXyTw=;
-        b=c+zND2oO0QvfveJRoh0+pT6ulUxZu5aUGtHc5G2EpFjpr4y0+yQyoMGUNnxJZhwF7B
-         VGzCVwPOkz6z5aXs7ntymlUA1aEDnKrcdRcDOfRb3Q2QlFeYsjBwneRsuSAszCVph3ci
-         zPWFLQnVUlAglzIpV4y2GyDuR81neQInX76fxSDXB5c/sXrDvATq5Q+mjkt4rVa3uf6C
-         3yeBI8k1vUh5chrq8Vod3rEZXvlT1xEUt80iaNkR9UyKASaVOi08RzKDMZpsvrv6T0vP
-         EZ2qBpkOU6lnmdNYZPhI4gsOglzqQLzk9AOqeMLZaew5WR9YOmX7kt6WE5l4ZklmN2ag
-         tE5A==
+	s=arc-20240116; t=1720804205; c=relaxed/simple;
+	bh=16jfph0RZCWtvIyndElAe3dvIat1XCr05PdV7AU7tV8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sg0mF0FxPq+Nk3e4iCrGeyzxfhtWo5oa9KKl+lq+I7DpHn25AWmK1wK3eNtg09G33Lmkwb2bi0DkM/2gjWhO+e1sZW4hs+zD5ZWgBWJ2xaCTJVN6p0B/VZXDapTu9HwWddXyECo+wgD6jZQwhRlGrg36r8dBf35rroaMF1FF4Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-804888d4610so233138939f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:10:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720804185; x=1721408985;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7nY0eQU/tg2nCxr+WiXke0QlA4moV9D3eyAAMfVXyTw=;
-        b=QNV1ZBmsQDYgLpdNhKTsthdjIA1sAF/Z8acOBhOGj4y29aD3MF+h7WDQLHTEFVTihW
-         9x42vrK/QBaWQOqoaXC7RPeKJL2zO1AddyN4hxVTimxvn+lfVXmJ71XtkrysJUHnpcYB
-         K0hcnzO2ksVXBwGukziTp7JpZaRn2aODcWQIOWHMUQqiheBymi3xcfulUaHNYGtc4bIV
-         SY3U2eFhba6nN58LMvfa8L6q0bRsuQ6jAjQPxlo7CbafQu8RggGEnangntNi8HTpPlhM
-         SwVllr4NsLapoGoC0AvlN6LX2xpanHAbOF8hiEYG5Cp3wMipFSD7o4TGSRcmFpWsauzs
-         TTWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0Wo9Akya8sLbsvF+sRms8gIi2ovlgPu/QDa6gu/UPZf4t4bsMlGkxg138suChCy3jBGh3AHNjdEyXOcOLvTV5SwCNa8sypranD3K4
-X-Gm-Message-State: AOJu0Yy1vggcV4TAJniolOAdR6cGGaVo20gD8SRgvY+IR9WutxcEbM/F
-	B6oLbAnu1ylqXVJTMCJyfaXYxOoT8wlVV/cWKco0eH9xxPl6yvYWX1sWNQtTqxk=
-X-Google-Smtp-Source: AGHT+IGhlF+D6i2f93oWiQUD7N6Ca4gkcUIWssLva7MfhIN2bbrAB4lN1vZ78G8Sb5kAz2YFpuYDTQ==
-X-Received: by 2002:a17:906:528c:b0:a6f:d990:338c with SMTP id a640c23a62f3a-a780b6b18c1mr835509866b.20.1720804185058;
-        Fri, 12 Jul 2024 10:09:45 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a871f0esm363750466b.194.2024.07.12.10.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 10:09:44 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Fri, 12 Jul 2024 18:09:43 +0100
-Subject: [PATCH v4 1/2] clk: samsung: gs101: allow earlycon to work
- unconditionally
+        d=1e100.net; s=20230601; t=1720804203; x=1721409003;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UMTg6foxnmww8UGT4+LezD+QiVNDfhqGjXbeHbYDlWQ=;
+        b=WDOLdqUBm+pZIIi5ycBD6ap8vgZjVwbjkXOiJybsS/BQUOcdW2EJM8/kSwTFepnhIg
+         uzdboK8CCMfC+qU4aWVTbsYlR5F7BoJpMMgWaaYuj+CB2u0TJ1DD4+xaQIuR9t7Brj3p
+         skiXsoxj/xLzhlg93QN/Zs7GZbps0LPacXMk4XXdlvQBgI4Kds6YM4ocs/To1MXskWPx
+         5I3m6xGz+XLnXL7ewxXRK8iB0YRO7TT5rJL0UX/rmgiiTfpigTV54pcmCEku4AOOQWyE
+         yOb0nkvRNLvMqLiTA/DFYedQDJpRCC+ts9G7aughMg+Bed6Kkd3OIAHJBwB2p8/3ty5W
+         v9qw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOV/V8WW72+//wyJ2oF/OvjQ8Eh5OUHWNgUm5D8ZFWXJrqvmB59JvpBYw2sosOTyJ8NSbHpsqxGK6OV+FmC43ow1qm+1PdxISsXbbG
+X-Gm-Message-State: AOJu0YzCQbDQjKmcbxirH8r6xXZ0mEvOlYrf3cxe15phPu4i1iB/BE/b
+	DydvQIm26Ku5o98qD7s5o7Xq0V6HR4AbNEfu0otnIdBT5GrsaG8aXFuoHiK1fisziZxLDjehy2A
+	A0LFN0xH+Zh+dbqKEJ3V3zFlEUqf7ZsVE1+Isp7aDnj5pXn4Gp1MtZ8A=
+X-Google-Smtp-Source: AGHT+IEJZjuf2gYy+pY3NG98U4qzYz9im6X+ZVcZFK4JUGIwyXYeq3SI6ARl39NV5HXFsilDRS+qHnJ5t/xjG8gxi5VZZXF3EzeB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240712-gs101-non-essential-clocks-2-v4-1-310aee0de46e@linaro.org>
-References: <20240712-gs101-non-essential-clocks-2-v4-0-310aee0de46e@linaro.org>
-In-Reply-To: <20240712-gs101-non-essential-clocks-2-v4-0-310aee0de46e@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.13.0
+X-Received: by 2002:a05:6e02:152f:b0:38b:462b:8dd with SMTP id
+ e9e14a558f8ab-38e62268c4bmr2588145ab.3.1720804202911; Fri, 12 Jul 2024
+ 10:10:02 -0700 (PDT)
+Date: Fri, 12 Jul 2024 10:10:02 -0700
+In-Reply-To: <0000000000001e3b8505e9f95e3d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003e26e7061d0ff386@google.com>
+Subject: Re: [syzbot] [ntfs3?] possible deadlock in ntfs_read_folio
+From: syzbot <syzbot+8ef76b0b1f86c382ad37@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, anton@tuxera.com, 
+	brauner@kernel.org, david@fromorbit.com, linkinjeon@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, 
+	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-earlycon depends on the bootloader setup UART clocks being retained.
-This patch adds some logic to detect these clocks if earlycon is
-enabled, to bump their usage count during init and release them again
-at the end of init.
+syzbot suspects this issue was fixed by commit:
 
-This helps with cases where the UART clocks (or their parents) get
-disabled during loading of other drivers (e.g. i2c) causing earlycon to
-stop to work sometime into the boot, halting the whole system.
+commit 7ffa8f3d30236e0ab897c30bdb01224ff1fe1c89
+Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+Date:   Mon Jan 15 07:20:25 2024 +0000
 
-The general idea is based on similar code in the i.MX clock driver, but
-since our clocks are coming from various different clock units, we have
-to run this code multiple times until all required UART clocks have
-probed.
+    fs: Remove NTFS classic
 
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- drivers/clk/samsung/clk-gs101.c | 100 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17bc0ea5980000
+start commit:   2a6526c4f389 Merge tag 'linux_kselftest-kunit-fixes-6.8-rc..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b0b9993d7d6d1990
+dashboard link: https://syzkaller.appspot.com/bug?extid=8ef76b0b1f86c382ad37
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f19fde80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ceb0cbe80000
 
-diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs101.c
-index 85098c61c15e..429690757923 100644
---- a/drivers/clk/samsung/clk-gs101.c
-+++ b/drivers/clk/samsung/clk-gs101.c
-@@ -8,8 +8,13 @@
- 
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/of_clk.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
- 
- #include <dt-bindings/clock/google,gs101.h>
- 
-@@ -4381,6 +4386,99 @@ static const struct samsung_cmu_info peric1_cmu_info __initconst = {
- 
- /* ---- platform_driver ----------------------------------------------------- */
- 
-+static struct {
-+	struct mutex lock;
-+
-+	bool bump_refs;
-+
-+	struct clk **clks;
-+	size_t n_clks;
-+} gs101_stdout_clks __initdata = {
-+	.lock = __MUTEX_INITIALIZER(gs101_stdout_clks.lock),
-+};
-+
-+static int __init gs101_keep_uart_clocks_param(char *str)
-+{
-+	gs101_stdout_clks.bump_refs = true;
-+	return 0;
-+}
-+early_param("earlycon", gs101_keep_uart_clocks_param);
-+
-+static void __init gs101_bump_uart_clock_references(void)
-+{
-+	size_t n_clks;
-+
-+	/* We only support device trees - do nothing if not available. */
-+	if (!IS_ENABLED(CONFIG_OF))
-+		return;
-+
-+	n_clks = of_clk_get_parent_count(of_stdout);
-+	if (!n_clks || !of_stdout)
-+		return;
-+
-+	mutex_lock(&gs101_stdout_clks.lock);
-+
-+	/*
-+	 * We only need to run this code if required to do so, and if we have
-+	 * not succeeded previously, which will be the case if not all required
-+	 * clocks were ready yet during previous attempts.
-+	 */
-+	if (!gs101_stdout_clks.bump_refs)
-+		goto out_unlock;
-+
-+	if (!gs101_stdout_clks.clks) {
-+		gs101_stdout_clks.n_clks = n_clks;
-+
-+		gs101_stdout_clks.clks = kcalloc(gs101_stdout_clks.n_clks,
-+					       sizeof(*gs101_stdout_clks.clks),
-+					       GFP_KERNEL);
-+		if (!gs101_stdout_clks.clks)
-+			goto out_unlock;
-+	}
-+
-+	/* assume that this time we'll be able to grab all required clocks */
-+	gs101_stdout_clks.bump_refs = false;
-+	for (size_t i = 0; i < n_clks; ++i) {
-+		struct clk *clk;
-+
-+		/* we might have grabbed this clock in a previous attempt */
-+		if (gs101_stdout_clks.clks[i])
-+			continue;
-+
-+		clk = of_clk_get(of_stdout, i);
-+		if (IS_ERR(clk)) {
-+			/*
-+			 * clock might not have probed yet so we'll have to try
-+			 * again next time
-+			 */
-+			gs101_stdout_clks.bump_refs = true;
-+			continue;
-+		}
-+
-+		if (clk_prepare_enable(clk)) {
-+			clk_put(clk);
-+			continue;
-+		}
-+		gs101_stdout_clks.clks[i] = clk;
-+	}
-+
-+out_unlock:
-+	mutex_unlock(&gs101_stdout_clks.lock);
-+}
-+
-+static int __init gs101_drop_extra_uart_clock_references(void)
-+{
-+	for (size_t i = 0; i < gs101_stdout_clks.n_clks; ++i) {
-+		clk_disable_unprepare(gs101_stdout_clks.clks[i]);
-+		clk_put(gs101_stdout_clks.clks[i]);
-+	}
-+
-+	kfree(gs101_stdout_clks.clks);
-+
-+	return 0;
-+}
-+late_initcall_sync(gs101_drop_extra_uart_clock_references);
-+
- static int __init gs101_cmu_probe(struct platform_device *pdev)
- {
- 	const struct samsung_cmu_info *info;
-@@ -4389,6 +4487,8 @@ static int __init gs101_cmu_probe(struct platform_device *pdev)
- 	info = of_device_get_match_data(dev);
- 	exynos_arm64_register_cmu(dev, dev->of_node, info);
- 
-+	gs101_bump_uart_clock_references();
-+
- 	return 0;
- }
- 
+If the result looks correct, please mark the issue as fixed by replying with:
 
--- 
-2.45.2.993.g49e7a77208-goog
+#syz fix: fs: Remove NTFS classic
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
