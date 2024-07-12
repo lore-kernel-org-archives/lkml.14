@@ -1,105 +1,111 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95DE13D619
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 12:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9AD14E2E9;
+	Fri, 12 Jul 2024 12:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720788195; cv=none; b=VQ8GGsVIuS89xkRYn0iIr38uhtTEFpfOQbMsRwGGpb4U6xo0fMG+AZKLyST983NbARvhlvZh1wpu2F1b0AxDw2H0t26trZEa1bTETbRrJkah+OiL+Nxul+LXgDZ0fb74s/18s71XISSnDV/12UovCVpooaw3LwD7WLy3VW5viqE=
+	t=1720788254; cv=none; b=g9pBquhOKqZ3Yf2wldWshqTjsEfTssE09aTDr8OK2fMbD1VuGSZSGyhN1+N99JJv38qDLSkd/FqIAHylCq3Xc3E+iZSwLsYSqdwP7CPPSeo53qo6h5BKv9MaI/Xm9DSbS1/OIcm0WCVMsPSloPOargaRVPyubKiGbE5rTIMO2R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720788195; c=relaxed/simple;
-	bh=fT+Bhjgp9vjGiECuUQwPkyEv/BsipRr4+reXgqzsDIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQTiafsFDjiLY98yer4YnmhSMqx1q2u97JAgk3HRPDcfrzCuJMnq8iF2tHUzZbvqbCeQWXoBvRUIoCDF5T2r+iTQCFoorj768BU+xoCjc85WHrm+oPIhRshdPJG9Gnrp3wWxqvxMgK+ZR/gtTtUVHqXL8fkrPKkqqDbOg6wTU6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=OecoPeRo; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1720788254; c=relaxed/simple;
+	bh=6ufvLZh6JA1HntVTiuUbcXQAn3diVx42qGV3EGVvscE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mtILrkzBu4Z0XgLYzWmCvraVO1G8wYRROpW//3Qu+ZluM8LHlIC9Kh3d7eisfGoxjOLBG7JXm4kT9upBayGD7A993iDIpMvmWevoLYR7mGUhDvp+wOnGZwdAjI0kzUC5bT48kbqrWyuNerpdQiC2BP1iO8ATHZ9KHVfZP4T+j7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=qbN6Sm+w; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OecoPeRo"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e03a0faee1eso1921976276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1720788193; x=1721392993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TCLw51Ov+fzPQqS/+3p89aoPh13Gnr3eNhlUOT4KGkY=;
-        b=OecoPeRoLewgccWAxdww8hBCm7oALZTFZzb82KDQBJeoFYNzoKf24aNYT8ts8D0jec
-         5/SQwCiZqpSSVNaqdVg+3chZoVB1lX+VoP2fLPuZswg9q3hCPz1gRjY0SZsoO1sXVYIB
-         dIceGz34bQWpdp89ytRZFArczgfIithKcCUZYGOlyzMeyUaMgsqhHdOOybJeRmZxAX+S
-         s+SM/RSM61My34Oh2YiaMnDmYvXX+kcrdO7KlVhdT7xTT+38AAkxW0LS+syO6QIFoDUq
-         e79e9uPh8HKwDwWrt7lYY9xNFCau/5Dhz4K5WocwoggPUX8Y43CgsaCqG16XF3KAtS/N
-         KQzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720788193; x=1721392993;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TCLw51Ov+fzPQqS/+3p89aoPh13Gnr3eNhlUOT4KGkY=;
-        b=DZq5ZploPNXfSh+ZQ20aDvaE/ousx+Q+u0oMSaejstNPBm5SjH/D+dCHq1h3skQMJc
-         fWRtNcP7h2Al9pUu183FDneZkE15n1Tbzw+vIORPNv0G9i66+BrRDwHCXI3JGmid2FcN
-         +aU+77o0UuW4KqTA6KLk0e0WvyXpGLks6qzuvfwJCYjuItMZtW9FF+5/gIU/a4i0cLsl
-         nAKMlsmYyCXdQF9VgLJ7FOtWYVC04ioof0cwF/XFopa4LnMOCSkfbMhMePS4+ano/5TC
-         dQDojR3xAFv6ZQkm7yJfxaXkgrtqp+zcXnqCLIARz0wwKHYvTBWewbZAY8JP3eC1utrp
-         qwJw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3Y6A5aoBuTbif4qYjGlYUDKw/tuyyDaIXoiD2W+lDOfTBV6wpf7rA9FuW6Z1e2eLByC+h3GJtYmwcR1yv2DvnT/qhTJwtvW5UR0a0
-X-Gm-Message-State: AOJu0YxpRDmeunEgcK20JX0+43sFQxyUmZHvX7vlzZbxIifYn+SueUfu
-	TF6zl6fsjnPnmBwqZ48cn/3aN0kZl45QOH7DJjiiOZZI32XmXPiUmztBAsTjvj0=
-X-Google-Smtp-Source: AGHT+IEdvjEYH3YJfdXqM+Dc9L3bXQquOW4fau6cdS1Z+dA+ArZi7tFzhHqA4MvsKaCznd0OQ52Lgw==
-X-Received: by 2002:a25:874f:0:b0:e03:60b4:1311 with SMTP id 3f1490d57ef6-e041b032e00mr10507728276.9.1720788192827;
-        Fri, 12 Jul 2024 05:43:12 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9b26c9dsm40245411cf.14.2024.07.12.05.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 05:43:12 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sSFcF-000FbT-SJ;
-	Fri, 12 Jul 2024 09:43:11 -0300
-Date: Fri, 12 Jul 2024 09:43:11 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] iommufd: Add check on user response code
-Message-ID: <20240712124311.GY14050@ziepe.ca>
-References: <20240710083341.44617-1-baolu.lu@linux.intel.com>
- <20240710083341.44617-3-baolu.lu@linux.intel.com>
- <20240711233950.GU14050@ziepe.ca>
- <b4758476-6de2-4d3e-91b2-10599a37d00e@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="qbN6Sm+w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720788241; x=1721393041; i=spasswolf@web.de;
+	bh=o1bGVqOFBjkQcYKjdJ9UbZexqkUKxlvj8kOA0HhkZuw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=qbN6Sm+wGDGXmrhm3m2cr6WcH5HCyzHvb3YOz5Ez9kD4iDD6747ubTldJUBC5GAF
+	 DfUSXzQhINInGrkwa4oIjwJvwnuCluocR5Ew2JOdC1IQUwXREecypRvQ229GS1LaK
+	 M9FOhxI4l57bNKZev9YKgFI7eLXG7GNbakdUMIePIEPT9nWvz3zC+IVFGFuuVZYV8
+	 ji65d/1kRRpnsjqta0Y11vC3GsMssLNuaBtxedQNxwXGLfAPiEPAQIO1nw3+CCVlF
+	 lZdZUHrsm7VeiMLO7YlGIInmCCqxDRSoWaVTdUQM63RB5yzZWBDmgSPjOgwpNVfvX
+	 /EGBQuri780/fuiz8A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from localhost.localdomain ([84.119.92.193]) by smtp.web.de
+ (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 1MNOV6-1siITT2P8M-00N6UL; Fri, 12 Jul 2024 14:44:01 +0200
+From: Bert Karwatzki <spasswolf@web.de>
+To: Pei Li <peili.dev@gmail.com>
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org,
+	syzbot+35a4414f6e247f515443@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	senozhatsky@chromium.org
+Subject: Re: [PATCH] mm: Fix mmap_assert_locked() in follow_pte()
+Date: Fri, 12 Jul 2024 14:43:57 +0200
+Message-ID: <20240712124359.3199-1-spasswolf@web.de>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: 20240712121800.3049-1-spasswolf@web.de
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4758476-6de2-4d3e-91b2-10599a37d00e@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:QrKMnFDuH2I9+4nVwL03BNGAfmYfTc2RgqzO22r8ATYSy6lJLtr
+ /0WOeyc6NgNxvxO7SoaRYkiolL6QIMXXibAu2RoQg/94Yii+EU8BeFuXe6JTwd5B3hPSWtC
+ plztMw+RINRDzvUUtww3kykFalrpoPVuCQVo8gGNmQCZgeMV0J2ptIjpY2NkAQAlGXjp8mQ
+ suKhrzTp8+id6M8DIUt+A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:X9mWF1c9VR4=;6V7S6xu/wfZbMJ9yJpqO5GpEcyn
+ 4/gYb00mhpDcIkodseQ0JL8fOPSwJ9Yh7O8yTuGgzoj+EQCGcdGljEEQ4PG4nSOsHZWabsY6A
+ n/wjxOQJyX0a4ugluabwJXDaHVEhxj1TWM/PdVIEfuP3cSlMFenxNtWKCDfx9hgZFKF7SoYgt
+ R0rD0baGO5j6090cN3p0NBjkofdCT60gFO13ZKpa7wg3F79AUuFF5NN/HEs+n32dt5L1mYOxw
+ tJYlzmRhvT2uNNWd75w9Bl99v3vTmCPQCRfzdPFhZiIOYr0gfedqStXr/p8bibXjmFzL9ebtQ
+ 1sYiZigGnj3oGL1/y+jgwIccqu3kgCfSxlM0dNH9ph69U4vO6O795GR2jBp3RY9fQ/jBhn+sg
+ hKwvA2ZalXFW7O69ygdG3wZBPRxkfxOc5gE4d6I7U01KEkf+cJef2GxL+oGu7dBp80LLNX8Ny
+ IO2eBhraPn6+MWTidoS6UWtqIU5WehuxTkeRExInmXYyiQB9U8OaBdRB/5iStMKJaw3bhXm4z
+ SnIQAqo2l46YwI65cn2PTgHex9oX4uzMPp7l9VH4+BOWz5xz91whiZSoXOZQXov5uI4QgMozP
+ NMRQdg1WCCSjNCxNojkoayyuhOZt/LEMnxCNHhp5QfuwNWQL3fLNg6Sjul06hX/tqTrEXXBoK
+ q8uj0gbz5l+VxINsBS/YaD0c7n0X3hGdDXz6ciZd2rQX7SGXO6xR0elJt6r/5OKDB9LKt44HZ
+ CagqBUkgIAtp64gHC/P82wujssLBzx5FOqO7sIPgSNydezgqE2D5IztbOglP2JvIOFAirHigq
+ qlfdUqvgVjmiHDAhj67ckv0Q==
 
-On Fri, Jul 12, 2024 at 10:54:11AM +0800, Baolu Lu wrote:
-> diff --git a/drivers/iommu/iommufd/fault.c b/drivers/iommu/iommufd/fault.c
-> index 29f522819759..a643d5c7c535 100644
-> --- a/drivers/iommu/iommufd/fault.c
-> +++ b/drivers/iommu/iommufd/fault.c
-> @@ -305,10 +305,10 @@ static ssize_t iommufd_fault_fops_write(struct file
-> *filep, const char __user *b
->                 if (rc)
->                         break;
-> 
-> -               static_assert(IOMMUFD_PAGE_RESP_SUCCESS ==
-> -                             IOMMU_PAGE_RESP_SUCCESS);
-> -               static_assert(IOMMUFD_PAGE_RESP_INVALID ==
-> -                             IOMMU_PAGE_RESP_INVALID);
-> +               static_assert((int)IOMMUFD_PAGE_RESP_SUCCESS ==
-> +                             (int)IOMMU_PAGE_RESP_SUCCESS);
-> +               static_assert((int)IOMMUFD_PAGE_RESP_INVALID ==
-> +                             (int)IOMMU_PAGE_RESP_INVALID);
->                 if (response.code != IOMMUFD_PAGE_RESP_SUCCESS &&
->                     response.code != IOMMUFD_PAGE_RESP_INVALID) {
->                         rc = -EINVAL;
+diff --git a/mm/memory.c b/mm/memory.c
+index 282203363177..2f4b4322ec0e 100644
+=2D-- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1817,6 +1817,7 @@ static void unmap_single_vma(struct mmu_gather *tlb,
+ {
+ 	unsigned long start =3D max(vma->vm_start, start_addr);
+ 	unsigned long end;
++	bool mm_read_locked;
 
-Yep, my compiler doesn't warn on that apparently..
+ 	if (start >=3D vma->vm_end)
+ 		return;
+@@ -1829,11 +1830,11 @@ static void unmap_single_vma(struct mmu_gather *tl=
+b,
 
-Jason
+ 	if (unlikely(vma->vm_flags & VM_PFNMAP)) {
+ 		if (!mm_wr_locked)
+-			mmap_read_lock(vma->vm_mm);
++			mm_read_locked =3D !mmap_read_trylock(vma->vm_mm);
+
+ 		untrack_pfn(vma, 0, 0, mm_wr_locked);
+
+-		if (!mm_wr_locked)
++		if (!mm_wr_locked && !mm_read_locked)
+ 			mmap_read_unlock(vma->vm_mm);
+ 	}
+
+
+This seems to fix the issue without completely removing the locking.
+
+Bert Karwatzki
