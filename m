@@ -1,82 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2BF17165A;
-	Fri, 12 Jul 2024 13:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05B716EB6E;
+	Fri, 12 Jul 2024 13:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720792131; cv=none; b=n2bH+WOZme8R34vgjKMnB9yuoVA5kJ697rkcG0Q8lAnSSvol9KD/wKJ0KzrXriVhpu/o4IpzzKvH4ARWZCnR4K0Z+5skvqVAqyhtMiYwjVRMICCH0/hXIYwyM766R3ka8EjYxPiVZC0z6ArKdSa5MckaQY5BrpR61g+wY6DmmXQ=
+	t=1720792140; cv=none; b=MNtuf9hoO23v+p8WVQGZfETFkKfJs1ERJUTYPHjpSAGESM8KF8/ZBBeJQS9vCPipcV8K420wSZPBVoT4Kr5vLLBivRhXibqOPEo4Kgp/wIqjwuwkbK5wXvI8yjGjXYNLDRE+z+WbDP3Zj1sQTU/pMe8p1sTXKQWfYE+Lxap0jaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720792131; c=relaxed/simple;
-	bh=UAVO/gXLGNIHoqILwVTdS3n2/0dHqnDhY4+Q6hSW59Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gfI1LuohUHJxJSisAKFD9AUSIOgM4lQXtteLQXmlbge09Ss3GEdeMzReJYOEOmLY8+LD854V5U5/2KuvdYB4WxVwYHZxp+uD7WgUoY3u0fVwAQaDlkdopi9rz2XmNwPKGhOctUbRVOTjlgOFfdYK8lwAvJPcCdH0GC1FZtfhTGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6UHG8RJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720792140; c=relaxed/simple;
+	bh=Tu42nau61uQUrM2WkU0xQHoUNzdUiCiLufs8uTvML20=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dau1Na2BE8Z7EUCffRu2L8fcfzbSjdemTnUD+5NEeSBpXI720edKLKp3hjuNAIW+neY287n9I8v8GVVsOTgnNkDgUNuFuxRHebtn+bsVlMrOcpkew5eVNrn/FpA+Ca1auU7AtQDGMLeYcWSqyKr+aeoZBkkmSubzE/2L1/VQHh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWCWqkEp; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6UHG8RJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A787C32786;
-	Fri, 12 Jul 2024 13:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720792131;
-	bh=UAVO/gXLGNIHoqILwVTdS3n2/0dHqnDhY4+Q6hSW59Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S6UHG8RJDoFnnQ1f++vKtWyN5wGmHFUPPQu7B06L3suYJ9aksheWYADKe5WhqdJVH
-	 hFUGrkLQy5HxvKtSAJfXm3D3SGLWQtgdjBcltgTJNcjzp1OZjYCfN7JITz9ozBySVb
-	 m1wdwky67VAbo9fTQkNNVXJK3Awq2l1vvCkmbhou5D65gyV8FqwMy5JcljY0BldpgE
-	 G/WB/8MLfZDIVIwmTu0J4+bag+/Vsgf5X8klPWJ4YDOLhxUr60/gBgdOxQboyMrPxo
-	 SeBjRkCOTCyBDAzQ9qpwQnlNIxF+Vyhw9l2apKyqlxk3bva98RqGfjtdcbZ+0E7VcE
-	 sgvrTu5KvZo4Q==
-Date: Fri, 12 Jul 2024 14:48:46 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Kanak Shilledar <kanakshilledar@gmail.com>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Drew Fustini <drew@pdp7.com>
-Subject: Re: [PATCH v3 1/1] riscv: dts: thead: add basic spi node
-Message-ID: <20240712-denote-disprove-ce271b70c78c@spud>
-References: <20240705093503.215787-1-kanakshilledar@gmail.com>
- <20240705093503.215787-2-kanakshilledar@gmail.com>
- <CAGLn_=tT08KUX0J+WURq=EXKDPj=--Wg3qmCjnzGxNeMcz3NOg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWCWqkEp"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4ef76f04977so667966e0c.2;
+        Fri, 12 Jul 2024 06:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720792137; x=1721396937; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CNeMMGyKMUpPSQSPubxQiT+hSpfRpgXCDkgjBJjYMQA=;
+        b=VWCWqkEpmrLYYAAi6RSLkFhP9XA1iya9+W+R+f/5LhnSDKLjbXlEmtsmpbSayacbW3
+         qKXF5c4PDOJqvobdhwBVX7LjEvQAMeswibXu1OIBTKES1hbkML79KwflC5ie+imN9G3V
+         PvWsIvWts7YM38Cw/eDHULufuN54tGSwYc6IlWbzVJygJ1asntRTFi4OaZhZ29W89KOG
+         3w1HrRx2Lh5ixhsAof7L9cD3AxbWDqSePxOMWc73zvxtx2B+C87xs4rWNasrmwXsEogh
+         PXMmfTxOrNuNx/iF7Qq9u5jqzTmvDV7OlFlO9/1zo4Yh5ztCylOd1eLP01xK17KudiXd
+         S32g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720792137; x=1721396937;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CNeMMGyKMUpPSQSPubxQiT+hSpfRpgXCDkgjBJjYMQA=;
+        b=JErKuJzgma2aDIcmr5TQcqSlviSd9vTeHizvHSY3CXxS/JEDls4QW8EtMRJ6lJ0f+f
+         jnoh4FuUklpQoKJAtLv7qhBoUbjAsO8pHNDC2UOjZncgUTO+N0smUbfk4KLBLljOZIYC
+         IvQKhgYb0YVF4JSeHLSv3+gyu8xZBA7t9eGIdGI4UgOWkFirIMTBaZF0Zov4Qp4TtRW2
+         uuYSegfTOJwut5I59lyVBUB9UBj7wcDG57g/4e+kNDEluMOhfY0dkoakBaNmDiBLsrKj
+         EFpwbWLrH+7zB13s748m7xHANB1U5cyMk/t8RD1XQRCZvBhvp9Wx/h1535bjYtI6wJ9m
+         Qx7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUp4zKAVFjhSvjGfTXBDRFIf0Jq8w/00YrGx0f8sWqi04Lb/miJ4x9AXcOT8QDGdy2ekEpXRSQfWE9ChyakBnWP8YlGaN+KxqMOxTe1LERsqXQCBNsGdv9b0UzGN+5PthR8FzBYxpdHz5zZScxcy6L7kjgxnI7c5UAUdA+KURFh8Bzkj4Vf5Mc/mzj2N/3haC4ZsZk1RdqI3MVWxpvIQsFHxvqH0zaO
+X-Gm-Message-State: AOJu0Yzujh3AwkofQ0tmxar71oorpHpErfweHz8FT6J4t9l9yeMnaqak
+	x1wAyYf9CXpnJiFOE35XVD5EtYTJaDG9j2yQb2KvMkcUcEsRozQVKYR3g2fzbkY7yowopl8vgXF
+	L6Kd/SWIglwKYn6Qi9gu+zVmonwQ=
+X-Google-Smtp-Source: AGHT+IEVNhqRMz9n9crf1r6WaUvNgJ/dyDPHlu7D7kgnmKPUhB8R0X+CUwUXHsUwxzcfSlFGxKZUeQJI5wevih/Gk48=
+X-Received: by 2002:a05:6122:21ac:b0:4ef:52e2:6763 with SMTP id
+ 71dfb90a1353d-4f33f318833mr13257634e0c.13.1720792137495; Fri, 12 Jul 2024
+ 06:48:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TVaUuin2MQ5RhBaQ"
-Content-Disposition: inline
-In-Reply-To: <CAGLn_=tT08KUX0J+WURq=EXKDPj=--Wg3qmCjnzGxNeMcz3NOg@mail.gmail.com>
+References: <20240627161315.98143-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240627161315.98143-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV4GUKc=LFStKHO47vPJLZs3Vmvz-L7L81bC5DmdK5ztA@mail.gmail.com>
+In-Reply-To: <CAMuHMdV4GUKc=LFStKHO47vPJLZs3Vmvz-L7L81bC5DmdK5ztA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 12 Jul 2024 14:47:27 +0100
+Message-ID: <CA+V-a8t3GVMo8N=uBn58=S9=0MtuaCtxxN4OC5F-i7Vp8ntcpg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: clock: renesas: Document RZ/V2H(P)
+ SoC CPG
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Geert,
 
---TVaUuin2MQ5RhBaQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the review.
 
-On Fri, Jul 12, 2024 at 02:11:18PM +0530, Kanak Shilledar wrote:
-> Hi,
-> Any updates on this patch?
+On Fri, Jul 12, 2024 at 12:58=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+<snip>
+> > +++ b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+> > +  '#clock-cells':
+> > +    description: |
+> > +      - For CPG core clocks, the two clock specifier cells must be "CP=
+G_CORE"
+> > +        and a core clock reference, as defined in
+> > +        <dt-bindings/clock/renesas,r9a09g057-cpg.h>,
+> > +      - For module clocks, the two clock specifier cells must be "CPG_=
+MOD" and
+> > +        a module number.  The module number is calculated as the CLKON=
+ register
+> > +        offset index multiplied by 16, plus the actual bit in the regi=
+ster
+> > +        used to turn the CLK ON. For example, for CGC_GIC_0_GICCLK, th=
+e
+> > +        calculation is (1 * 16 + 3) =3D 19.
+>
+> Using hexadecimal for the final number may be more readable,
+> also in the DTS?
+>
+> (1 * 16 + 3) =3D 0x13?
+>
+Agreed I will update the value to hex.
 
-It's too late for 6.11, it'll have to wait until 6.12. If Drew has his
-tree set up already, he can at least queue it.
+> > +    const: 2
+> > +
+> > +  '#power-domain-cells':
+> > +    const: 0
+> > +
+> > +  '#reset-cells':
+> > +    description:
+> > +      The single reset specifier cell must be the reset number. The re=
+set number
+> > +      is calculated as the reset register offset index multiplied by 1=
+6, plus the
+> > +      actual bit in the register used to reset the specific IP block. =
+For example,
+> > +      for SYS_0_PRESETN, the calculation is (3 * 16 + 0) =3D 48.
+>
+> (3 * 16 + 0) =3D 0x30?
+>
+OK.
+
+> > --- /dev/null
+> > +++ b/include/dt-bindings/clock/renesas,r9a09g057-cpg.h
+> > @@ -0,0 +1,21 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > + *
+> > + * Copyright (C) 2024 Renesas Electronics Corp.
+> > + */
+> > +#ifndef __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
+> > +#define __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
+>
+> __DT_BINDINGS_CLOCK_RENESAS_R9A09G057_CPG_H__
+>
+> [...]
+>
+> > +#endif /* __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__ */
+>
+> __DT_BINDINGS_CLOCK_RENESAS_R9A09G057_CPG_H__
+>
+Oops, I missed updating it after the file name change.
 
 Cheers,
-Conor.
-
---TVaUuin2MQ5RhBaQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpE0PgAKCRB4tDGHoIJi
-0rtMAQCWJsLbWrTJXYut90rqVRHP9fRSrbjQdZDQo5ZoXTEV1QEA/54A9PCC3MiB
-dTITiySq8lWR2Wr/Z+OPHYT1jvO59Qo=
-=ocR0
------END PGP SIGNATURE-----
-
---TVaUuin2MQ5RhBaQ--
+Prabhakar
