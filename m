@@ -1,143 +1,284 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396E0174EE7
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 15:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4307212B171;
+	Fri, 12 Jul 2024 15:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720799838; cv=none; b=rbyKk2lljjL+YYp3+cNZXwBBKejOKJPY3QFRxZlfTlCvads3AH5K7JsrH/KJ8KBQNXOfu6w8lyoLGvE1DrNNucr4RQrBARtebcya7mblFekNONGHW2NZxx99LbybbGWNavkBbpHWEY3YP7CtGT4OMuH6k1Mr7WZhxxdEdhA+BzU=
+	t=1720799945; cv=none; b=ZCi9xchuZdk5LAaUZjAknL4AhHoz1YXcfrAOCi96FWJXRx9rxhhmR84MS2ag5jJScL0sVvrhLFPHZ60yHfmZtSn5EWIQ5BeJ9g69K/IYzM9zVuSHSf408IreAOQLl987wfyUJn7t41cGHbu+RfMcHPRGOOlKaPe9ZC/r2Vut+mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720799838; c=relaxed/simple;
-	bh=92LbG9az5ZEmo10Huxxe9QhBwRq7LYH80MayzdsZijw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kOnXqmPKJ2Bjuss7tfGmQsIYN07DV2oS4t4oacRnaNtv+9MG6Z3HDAwUjqjXgSCuS4gyhPIBAs2w+pRZWauP6y7cvkBfkssZeU8/khwCCM7Ty4EFs/Vz9c1Jw0YicjKzHuaSp+IiG/LCfghDWlj8tHw37nVYFx1HQw6QaZL3l3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WDN5wQ57; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720799945; c=relaxed/simple;
+	bh=2Ugv1jiVfwwJ9oYOA6esGHBNP3BzQlNgxve8Nyki/Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DffUHpgw7uA2Zxe/4ARcXl2N5dB2NNDMQ2JQswUh4iyQEVOaKO+eIl8sAm6kly3HVbxqyW739TIVW6yjj/TU9Oe2j5J0dYcjsp8FW4tdSSbhWKGykkQ94FjZY5mevg7jKDGyu4/UpRNjdqHT7m2YELySKVlGtQoAXdIxudJuodg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ipbKcPhs; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDN5wQ57"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720799836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=unIhgmQoVncSJ3ToST2Rwgc1eOZuFM/cCjT8vffTDPA=;
-	b=WDN5wQ57QkrzoRc0TMmssXZNtDHVN+I4KcOODNciog+K93M1z9Wq6CgMZx+TYGP1VL0XvC
-	H1INBfsxek7hIRr1e1yXY0BpcdNw4ARaXIo+n4lcVZufRaBLWteZMVdcqDvknmQc6XF0/d
-	88zQYLSQfl5XHMy3eDSMSk+Sqm7tslM=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-450-uXImx0XKMVui_bxBm6uGQg-1; Fri, 12 Jul 2024 11:57:14 -0400
-X-MC-Unique: uXImx0XKMVui_bxBm6uGQg-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52e969d0198so2295108e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:57:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720799833; x=1721404633;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=unIhgmQoVncSJ3ToST2Rwgc1eOZuFM/cCjT8vffTDPA=;
-        b=R+kmfHR9VbdWyyByeqWguzpyi10W2M/W9tPXFQQtEoaFKJAgJCkVTgCi0l5PaMRm3v
-         Xdn8w0V2GzpBUIyKUsAPMQ8rU4lAKpSCQH7diF2WPSQq9E0rTpFwg8JKUWDGJBpq1iKd
-         WpPzyYA6KYa8g3KXkFYsd5cIVbqt+bYUOWLg07V716OGUe+hq6u9arKoA9dz5SPdSBwF
-         aG4YKr5iNVGkFpWxfs3Yrsz+gztSxCiy9L2jb34XSI0F0giCv+B7J1aD7S/6v8ZEuKLY
-         3Jk9M6PIqXbd2j7H8Ov9a2wvJ1yruVsMoLRb27pE0oyHJtnudatzi+0F+GUFO7M5FFWV
-         1OZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCtypDXcnE+l3jyedMxFIO9beZqXaZCgpTWreGWqoqq0qQwtGnYW/QTJH7N9B2iGmcEsYMNl5VDsJDVYpHfkZyVOeTMNipTkApxX5Y
-X-Gm-Message-State: AOJu0YyzyO+9X15oyQNeaYP72BMDL5mqZVk+7YbHtFs8CA0WUZH4Jqdr
-	n6UTn/FaSj1hwjug94QxdFJxFnVyHFKGNlxYp5yVimhZ/wEmmSxRF5IHUbRzt6mbsvayLi+L0MY
-	0pxhGqburWVCOfViZK/Qt1/r1fYxtl4w3IM5tUwljXEIVZsIi6m/P2QGlUpMYAg==
-X-Received: by 2002:a05:6512:3d87:b0:52c:df77:6507 with SMTP id 2adb3069b0e04-52eb99a1482mr10843653e87.37.1720799833508;
-        Fri, 12 Jul 2024 08:57:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHblt6jVYY/WnfcCaSWSerVrk0LdnPIVMWY7Mr9poNBoiIc9yN4ioDL526CLoIo6o3GqO2tDg==
-X-Received: by 2002:a05:6512:3d87:b0:52c:df77:6507 with SMTP id 2adb3069b0e04-52eb99a1482mr10843635e87.37.1720799833133;
-        Fri, 12 Jul 2024 08:57:13 -0700 (PDT)
-Received: from [192.168.10.81] ([151.95.101.29])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4279f2c254dsm27493245e9.46.2024.07.12.08.57.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jul 2024 08:57:12 -0700 (PDT)
-Message-ID: <f06ef91d-7f8c-4f69-8535-fee372766a7f@redhat.com>
-Date: Fri, 12 Jul 2024 17:57:10 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ipbKcPhs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720799941;
+	bh=2Ugv1jiVfwwJ9oYOA6esGHBNP3BzQlNgxve8Nyki/Xk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ipbKcPhsMsQG1xBWbTeLT9v1e+dwC5VvbBARfYvyMy9IvmazJSeQdQZAj4ykpcDxz
+	 OT63+K001JNu1cZ9LNXUDsQP5XPLVuZkD1WWFqQu40HLn7FDeDSNOZQcj0nvIHpGNq
+	 d68HIVnVGjq3/qdYIKFjf/gjtTSE9pJXTuDLuKlq8R8msvLg+byEeqhSm++9vITlI3
+	 FJwXux4BZUsfrOo7RKq+G0YOf/6CX8WIPyx1AbFD5kFmyezowZk79W8zmdtC2dWQ+L
+	 z5uecZIhtpKTQP26dEFJGmUXT9pziXErj9vbA3zzdViDAEIfeBzcSaY1NecpCFw/yY
+	 GIE3BZvB+N11A==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D293F3782102;
+	Fri, 12 Jul 2024 15:58:58 +0000 (UTC)
+Date: Fri, 12 Jul 2024 11:58:56 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Macpaul Lin <macpaul.lin@mediatek.com>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Bear Wang <bear.wang@mediatek.com>,
+	Pablo Sun <pablo.sun@mediatek.com>
+Subject: Re: Probe failure of usb controller @11290000 on MT8195 after
+ next-20231221
+Message-ID: <ea97fb15-684e-4009-b312-f39c2acdde5b@notapiano>
+References: <9fce9838-ef87-4d1b-b3df-63e1ddb0ec51@notapiano>
+ <064935d8-fbda-4eda-b013-8c8fc63b561c@collabora.com>
+ <375b2345-657a-4b8f-b5e3-dc16784ffde9@notapiano>
+ <da27d957-866f-f055-9e83-cdc362d98dc7@mediatek.com>
+ <2dba1638-f155-463b-8f87-421101b8f4f2@collabora.com>
+ <521df3a8-5bc2-4e81-a819-02b755c88d3a@notapiano>
+ <ac0d1ba5-1ed0-4d4d-a287-1d3e6efadc0a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] kvm: Note an RCU quiescent state on guest exit
-To: Leonardo Bras <leobras@redhat.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
- Leonardo Bras <leobras.c@gmail.com>, Sean Christopherson
- <seanjc@google.com>, Frederic Weisbecker <frederic@kernel.org>,
- Marcelo Tosatti <mtosatti@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-References: <20240511020557.1198200-1-leobras@redhat.com>
- <ZkJsvTH3Nye-TGVa@google.com>
- <CAJ6HWG7pgMu7sAUPykFPtsDfq5Kfh1WecRcgN5wpKQj_EyrbJA@mail.gmail.com>
- <68c39823-6b1d-4368-bd1e-a521ade8889b@paulmck-laptop>
- <ZkQ97QcEw34aYOB1@LeoBras>
- <17ebd54d-a058-4bc8-bd65-a175d73b6d1a@paulmck-laptop>
- <ZnPUTGSdF7t0DCwR@LeoBras>
- <ec8088fa-0312-4e98-9e0e-ba9a60106d58@paulmck-laptop>
- <ZnosF0tqZF72XARQ@LeoBras> <ZnosnIHh3b2vbXgX@LeoBras>
- <Zo8WuwOBSeAcHMp9@LeoBras>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <Zo8WuwOBSeAcHMp9@LeoBras>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac0d1ba5-1ed0-4d4d-a287-1d3e6efadc0a@collabora.com>
 
-On 7/11/24 01:18, Leonardo Bras wrote:
-> What are your thoughts on above results?
-> Anything you would suggest changing?
+On Fri, Jul 12, 2024 at 10:12:39AM +0200, AngeloGioacchino Del Regno wrote:
+> Il 11/07/24 18:33, Nícolas F. R. A. Prado ha scritto:
+> > On Thu, Jul 11, 2024 at 11:21:14AM +0200, AngeloGioacchino Del Regno wrote:
+> > > Il 11/07/24 06:13, Macpaul Lin ha scritto:
+> > > > 
+> > > > 
+> > > > On 7/11/24 03:15, Nícolas F. R. A. Prado wrote:
+> > > > > On Fri, Jan 19, 2024 at 10:12:07AM +0100, AngeloGioacchino Del Regno wrote:
+> > > > > > Il 18/01/24 19:36, Nícolas F. R. A. Prado ha scritto:
+> > > > > > > Hi,
+> > > > > > > 
+> > > > > > > KernelCI has identified a failure in the probe of one of the USB controllers on
+> > > > > > > the MT8195-Tomato Chromebook [1]:
+> > > > > > > 
+> > > > > > > [   16.336840] xhci-mtk 11290000.usb: uwk - reg:0x400, version:104
+> > > > > > > [   16.337081] xhci-mtk 11290000.usb: xHCI Host Controller
+> > > > > > > [   16.337093] xhci-mtk 11290000.usb: new USB bus
+> > > > > > > registered, assigned bus number 5
+> > > > > > > [   16.357114] xhci-mtk 11290000.usb: clocks are not stable (0x1003d0f)
+> > > > > > > [   16.357119] xhci-mtk 11290000.usb: can't setup: -110
+> > > > > > > [   16.357128] xhci-mtk 11290000.usb: USB bus 5 deregistered
+> > > > > > > [   16.359484] xhci-mtk: probe of 11290000.usb failed with error -110
+> > > > > > > 
+> > > > > > > A previous message [2] suggests that a force-mode phy property that has been
+> > > > > > > merged might help with addressing the issue, however it's not clear to me how,
+> > > > > > > given that the controller at 1129000 uses a USB2 phy and the phy driver patch
+> > > > > > > only looks for the property on USB3 phys.
+> > > > > > > 
+> > > > > > > Worth noting that the issue doesn't always happen. For instance the test did
+> > > > > > > pass for next-20240110 and then failed again on today's next [3]. But it does
+> > > > > > > seem that the issue was introduced, or at least became much more likely, between
+> > > > > > > next-20231221 and next-20240103, given that it never happened out of 10 runs
+> > > > > > > before, and after that has happened 5 out of 7 times.
+> > > > > > > 
+> > > > > > > Note: On the Tomato Chromebook specifically this USB controller is not connected
+> > > > > > > to anything.
+> > > > > > > 
+> > > > > > > [1] https://urldefense.com/v3/__https://linux.kernelci.org/test/case/id/659ce3506673076a8c52a428/__;!!CTRNKA9wMg0ARbw!jtg5drII8WUPwTiL4sWZiSRPXN-EBN8ctTGI85sirqvkmaUbA5z-wrLqPPfxlZZkQ7NItOWDT97OSdENT5oGHKY$
+> > > > > > > [2] https://lore.kernel.org/all/239def9b-437b-9211-7844-af4332651df0@mediatek.com/
+> > > > > > > [3] https://urldefense.com/v3/__https://linux.kernelci.org/test/case/id/65a8c66ee89acb56ac52a405/__;!!CTRNKA9wMg0ARbw!jtg5drII8WUPwTiL4sWZiSRPXN-EBN8ctTGI85sirqvkmaUbA5z-wrLqPPfxlZZkQ7NItOWDT97OSdENi-d0sVc$
+> > > > > > > 
+> > > > > > > Thanks,
+> > > > > > > Nícolas
+> > > > > > 
+> > > > > > Hey Nícolas,
+> > > > > > 
+> > > > > > I wonder if this is happening because of async probe... I have seen those happening
+> > > > > > once in a (long) while on MT8186 as well with the same kind of flakiness and I am
+> > > > > > not even able to reproduce anymore.
+> > > > > > 
+> > > > > > For MT8195 Tomato, I guess we can simply disable that controller without any side
+> > > > > > effects but, at the same time, I'm not sure that this would be the right thing to
+> > > > > > do in this case.
+> > > > > > 
+> > > > > > Besides, the controller at 11290000 is the only one that doesn't live behind MTU3,
+> > > > > > but I don't know if that can ring any bell....
+> > > > > 
+> > > > > An update on this issue: it looks like it only happens if "xhci-mtk
+> > > > > 11290000.usb" probes before "mtk-pcie-gen3 112f8000.pcie". What they have in
+> > > > > common is that both of those nodes use phys that share the same t-phy block:
+> > > > > pcie uses the usb3 phy while xhci uses the usb2 phy. So it seems that some of
+> > > > > the initialization done by the pcie controller might be implicitly needed by the
+> > > > > usb controller.
+> > > > > 
+> > > > > This should help to narrow down the issue and find a proper fix for it.
+> > > > > 
+> > > > > Thanks,
+> > > > > Nícolas
+> > > > 
+> > > > 'force-mode' should only applied to the boards which require XHCI
+> > > > function instead of a PCIE port.
+> > > > 
+> > > > For example, mt8395-genio-1200-evk.dts requires property 'force-mode' to
+> > > > fix probe issue for USBC @11290000.
+> > > > 
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git/commit/?h=v6.10-next/dts64&id=666e6f39faff05fe12bfc64c64aa9015135ce783
+> > > > 
+> > > > 'force-mode' should be no need for tomato boards and the behavior should
+> > > > be the same as before.
+> > > > 
+> > > > Another possibility is the firmware change on tomato boards. I'm not
+> > > > sure if there is any changes on tomato's recent firmware for tphy of
+> > > > this port, which could also be a reason causes this kind of failure.
+> > > > I don't have tomato boards on hand.
+> > > > 
+> > > 
+> > > Hello Macpaul,
+> > > 
+> > > it's just about the usb node missing a power domain: as the PCIE_MAC_P1 domain
+> > > seems to be shared between USB and PCIe, adding it to the USB node fixes the
+> > > setup phase.
+> > > 
+> > > I'll send a devicetree fix soon.
+> > 
+> > Hi,
+> > 
+> > As I replied to that patch
+> > (https://lore.kernel.org/all/20240711093230.118534-1-angelogioacchino.delregno@collabora.com)
+> > it didn't fix the issue for me, but I have more updates:
+> > 
+> > I confirmed the pcie was doing some required setup since disabling the pcie1
+> > node made the issue always happen, and that also made it easier to test.
+> > 
+> > I was able to track the issue down to the following clock:
+> > <&infracfg_ao CLK_INFRA_AO_PCIE_P1_TL_96M>
+> > 
+> > Adding it to the clocks property of the xhci1 node fixed the issue.
+> > 
+> 
+> Clocks is what I tried first, and didn't do anything for me...
+> 
+> ..anyway, can you at this point try to run that solution on the multiple
+> devices that we have in the lab through KernelCI?
+> 
+> That would help validating that you're not facing the same false positive
+> as mine from yesterday...
 
-Can you run the test with a conditional on "!tick_nohz_full_cpu(vcpu->cpu)"?
+Hi,
 
-If your hunch is correct that nohz-full CPUs already avoid 
-invoke_rcu_core() you might get the best of both worlds.
+I've ran 10 times with and 10 times without the following patch:
 
-tick_nohz_full_cpu() is very fast when there is no nohz-full CPU, 
-because then it shortcuts on context_tracking_enabled() (which is just a 
-static key).
+  diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+  index 2ee45752583c..611afe4de968 100644
+  --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+  +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+  @@ -1453,9 +1453,10 @@ xhci1: usb@11290000 {
+                                   <&topckgen CLK_TOP_SSUSB_P1_REF>,
+                                   <&apmixedsys CLK_APMIXED_USB1PLL>,
+                                   <&clk26m>,
+  -                                <&pericfg_ao CLK_PERI_AO_SSUSB_1P_XHCI>;
+  +                                <&pericfg_ao CLK_PERI_AO_SSUSB_1P_XHCI>,
+  +                                <&infracfg_ao CLK_INFRA_AO_PCIE_P1_TL_96M>;
+                          clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck",
+  -                                     "xhci_ck";
+  +                                     "xhci_ck", "frmcnt_ck";
+                          mediatek,syscon-wakeup = <&pericfg 0x400 104>;
+                          wakeup-source;
+                          status = "disabled";
 
-Paolo
+In both cases I also had
 
+  diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
+  index fe5400e17b0f..e50be8a82d49 100644
+  --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
+  +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
+  @@ -613,7 +613,7 @@ flash@0 {
+   };
+  
+   &pcie1 {
+  -       status = "okay";
+  +       /* status = "okay"; */
+  
+          pinctrl-names = "default";
+          pinctrl-0 = <&pcie1_pins_default>;
+
+to make the issue always happen.
+
+For reproducibility purposes, this was tested on next-20240703 with the
+following config: http://0x0.st/XMGM.txt
+
+And the results confirm that every run (10/10) with the patch didn't experience
+the issue:
+
+   https://lava.collabora.dev/scheduler/job/14805738
+   https://lava.collabora.dev/scheduler/job/14805757
+   https://lava.collabora.dev/scheduler/job/14805759
+   https://lava.collabora.dev/scheduler/job/14805789
+   https://lava.collabora.dev/scheduler/job/14805791
+   https://lava.collabora.dev/scheduler/job/14805792
+   https://lava.collabora.dev/scheduler/job/14805795
+   https://lava.collabora.dev/scheduler/job/14805799
+   https://lava.collabora.dev/scheduler/job/14805816
+   https://lava.collabora.dev/scheduler/job/14805820
+
+While every run (10/10) without the patch experienced the issue:
+
+   https://lava.collabora.dev/scheduler/job/14805740
+   https://lava.collabora.dev/scheduler/job/14805758
+   https://lava.collabora.dev/scheduler/job/14805787
+   https://lava.collabora.dev/scheduler/job/14805790
+   https://lava.collabora.dev/scheduler/job/14805793
+   https://lava.collabora.dev/scheduler/job/14805796
+   https://lava.collabora.dev/scheduler/job/14805803
+   https://lava.collabora.dev/scheduler/job/14805818
+   https://lava.collabora.dev/scheduler/job/14805822
+   https://lava.collabora.dev/scheduler/job/14805876
+
+These runs are across different units of tomato-r2. I also tried on tomato-r3
+with the same result:
+without clock, fail: https://lava.collabora.dev/scheduler/job/14806546
+with clock, pass: https://lava.collabora.dev/scheduler/job/14806547
+
+So this definitely fixes it. Whether or not this is the right fix, or how to
+describe this clock, I'll need your and MediaTek's help to figure out.
+
+Thanks,
+Nícolas
+
+> 
+> > I'm just not sure from a DT perspective what's the right way to describe this
+> > clock. The node doesn't have the frmcnt_ck, is this that clock? Or is it
+> > another clock that currently isn't described in the dt-bindings and driver?
+> > 
+> 
+> That's the PCI-Express Root Port (RP) Transaction Layer (TL) clock... and I have
+> no idea why this has anything to do with USB.
+> 
+> MediaTek, is that a hardware quirk? What is the relation between this clock and
+> the USB controller at 11290000?
+> 
+> Thanks,
+> Angelo
+> 
+> > Thanks,
+> > Nícolas
+> 
