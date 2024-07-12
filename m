@@ -1,109 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA2614E2E8
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B05D512
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720780666; cv=none; b=hEv5mMrtytowA1gJTc5tahvCeDPPpHmkjlkwzxUgiRegk1Nhg63Cbgx45Exn6sExzJhzk77XIpIQ2rB1DPrinX67dcWAjbSJcLDMLDd77DZukBIBQCuhOZu0cTcchK4ai/YPG1uHGVi6JK0D/VO+SC8kyRVn93fdLL8fKQMYdGg=
+	t=1720780729; cv=none; b=XRGlU8mchmOoPciqn7m5LiLHfDXYtuJWQwbx21eAbF56bX7/68sRzvMpXH6Hp4B7oOfAB02BjKjG2szKBDGfyM9p5r7bo812MYaoJP+a5VAcx1qg3rwjOOkXmAJjO29650hK9vkF2g4y/U9y6Ge0EnIZXV1C/GeiT8e9Rjkd2eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720780666; c=relaxed/simple;
-	bh=qz2O/MprPmBzNSiPtCWHRajDdNanqFOrS14tWtMM04Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=imsFb7gy/8a0nQLLinN0fa4gYvFa0CsQadLU47y8h2awZvleU1OvAGsxdSxE+cnQHCXw4RkeG1LaKz2XA2D/6VFs5mg4mgpsMNwq7uWFYUjfXK4oah9CuaXND/eA77yZptfzvstIKu7aQlgtVcj/6rjgW3ES3pN5g6H5Ql0q2dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WaMh4ffo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720780729; c=relaxed/simple;
+	bh=ydVMv0vySirm8dVUM0myomFn3ZxNp4h/hxXEjoCFK6A=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pB5A2OTV+RUwDSbOdhTqvuM3KmWOEjgIjlJyecKG+kWyzO6fT2E9Tomh3hRDAfoYC8yYfuRG8ZM3AaI27kOKUp950xFmZB/u6b1FfKj18arPhTFlnhZv90I2syrt3jZKIFDR3mJtlsWF5frJZ/E4yDfCo0Yd4y69JfPX/QUSt7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=krD0HkEf; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WaMh4ffo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720780663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GxLBBwSqa+0c5TKVpHyNF//OUvkQJIf+ltYzYVrXt3E=;
-	b=WaMh4ffoI7EnjFudaO/fXZyQjPK7TDYkJApQ+HceLEdgaX38p2kcY35OgDxm5pjkyXXmol
-	uE5wG6UsFzi+2J8Q5f1xznKAJipUNz9eotEZETEtoMWSMYJW0MsRR1fIbH0VI2cPwMhMNP
-	f58zQVd5URCLfN23meqZPE6K16yHTJ8=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-523-8EXkAw8vOXOxbx0nUEOgqQ-1; Fri,
- 12 Jul 2024 06:37:39 -0400
-X-MC-Unique: 8EXkAw8vOXOxbx0nUEOgqQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D774B1955BCE;
-	Fri, 12 Jul 2024 10:37:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.173])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D146D19560AA;
-	Fri, 12 Jul 2024 10:37:23 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 12 Jul 2024 12:35:57 +0200 (CEST)
-Date: Fri, 12 Jul 2024 12:35:45 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Phil Auld <pauld@redhat.com>, Clark Williams <williams@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [RFC PATCH v3 03/10] task_work, sched: Add a _locked variant to
- task_work_cancel()
-Message-ID: <20240712103544.GB31100@redhat.com>
-References: <20240711130004.2157737-1-vschneid@redhat.com>
- <20240711130004.2157737-4-vschneid@redhat.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="krD0HkEf"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46CAcJbj110842;
+	Fri, 12 Jul 2024 05:38:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1720780699;
+	bh=W/Z3C2cI7ppQME+mYRiG+8nSdB35hlEhW1U12Imi++M=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=krD0HkEfig8tvJSJyGE4XpRmqkENvJjIfXJe5wHQZWb4Fzlt0tI3nK3CsFDtTdBox
+	 g+kLeYhrts8u1lgOe2NV+culQpq7h2vivNmF2x1UvHLrJ12hDcG3v5v/rfTOAgahvz
+	 FDCJZGuoP8498KtAhJ3hBM47t31KwGPMCAaBwpwk=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46CAcJtW039126
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 12 Jul 2024 05:38:19 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 12
+ Jul 2024 05:38:18 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 12 Jul 2024 05:38:19 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46CAcHm2088301;
+	Fri, 12 Jul 2024 05:38:18 -0500
+Date: Fri, 12 Jul 2024 16:08:16 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Roger Quadros <rogerq@kernel.org>,
+        Swapnil Kashinath Jakhade
+	<sjakhade@cadence.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>,
+        "vkoul@kernel.org"
+	<vkoul@kernel.org>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
+        "theo.lebrun@bootlin.com" <theo.lebrun@bootlin.com>,
+        "robh@kernel.org"
+	<robh@kernel.org>,
+        "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+        "srk@ti.com" <srk@ti.com>, Milind
+ Parab <mparab@cadence.com>
+Subject: Re: [PATCH v2] phy: cadence-torrent: add support for three or more
+ links using 2 protocols
+Message-ID: <c60a1e83-c2ad-4a04-9deb-073c69a4a06d@ti.com>
+References: <20240710115624.3232925-1-s-vadapalli@ti.com>
+ <LV3PR07MB1036463AB8AB5D38D003175E6C5A52@LV3PR07MB10364.namprd07.prod.outlook.com>
+ <7504ea5a-335b-4152-a0f4-5be68f048903@ti.com>
+ <0dc54057-d7a0-4123-badc-8f7f07f2d930@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240711130004.2157737-4-vschneid@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <0dc54057-d7a0-4123-badc-8f7f07f2d930@kernel.org>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 07/11, Valentin Schneider wrote:
->
-> Later commits will need to issue a task_work_cancel() from within the
-> scheduler with the task's ->pi_lock held.
->
-> Add a _locked variant that expects p->pi_lock to be held. Expose it in a
-> separate scheduler header file, as this really is a scheduler-only
-> interface.
->
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> ---
->  kernel/sched/task_work_sched.h | 14 +++++++
->  kernel/task_work.c             | 67 ++++++++++++++++++++++++++--------
->  2 files changed, 66 insertions(+), 15 deletions(-)
->  create mode 100644 kernel/sched/task_work_sched.h
+Roger, Swapnil,
 
-I am not sure the new task_work_sched.h makes sense, but I won't argue.
+On Thu, Jul 11, 2024 at 11:04:57AM +0300, Roger Quadros wrote:
+> Siddharth,
+> 
+> On 11/07/2024 10:53, Siddharth Vadapalli wrote:
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+[...]
 
+> > I suppose that PCIe is the only such protocol since it can have
+> > different speeds despite a single protocol (Gen1, Gen2, Gen3...), unlike
+> > other protocols which have a fixed speed and therefore the PLL
+> > associated with them doesn't have to be reconfigured as the rate will
+> > never change. Please let me know if there are other protocols (maybe DP?)
+> > which also require such special handling.
+> 
+> The constraint is PLL frequency and not protocols as such right?
+> e.g. If there are 4 protocols that all use same PLL frequency then we should
+> be able to support it?
+> 
+> How about updating the patch to limit on number of PLL frequencies rather than
+> number of protocols? This should deal with PCIe multi-link case as well.
+
+I suppose that an indirect way of determining whether a configuration
+can be supported or not is by checking if an entry exists in the "tables"
+(link_cmn_vals_tbl). That should be accurate since it reflects what the
+driver supports.
+
+I will update this patch accordingly so that Swapnil's inputs regarding
+PCIe Multi-link are also addressed.
+
+I am describing the logic for the updated patch below. Please share your
+feedback.
+
+1. All single-link configurations (1 sub-node) can have only one
+protocol and will be handled via the "phy_ops" callbacks namely:
+.init, .power_on, ...
+No change will be made to this existing implementation.
+
+2. All multi-link configurations (2 or more sub-nodes) have to be
+configured via cdns_torrent_phy_configure_multilink().
+
+CASE-1 (2 Links/Sub-nodes):
+Check if there is an entry in "link_cmn_vals_entries" for the requested
+configuration and configure accordingly. This should handle the PCIe
+Multi-link configuration as well as other similar configurations which
+have a single protocol but cannot be treated as two single link
+configurations performed successively for each link.
+
+CASE-2 (3 or more Links/Sub-nodes):
+
+The links shall be grouped together by the protocol. Since we eventually
+have to look for an entry in "link_cmn_vals_entries", it is safe to impose
+the constraint that there shouldn't be more than 2 Protocols as the table
+is of the form:
+(phy_type1, phy_type2)
+i.e. Protocol 1, Protocol 2.
+It is guaranteed to be the case that Protocol1 != Protocol2 due to the
+following reason:
+If Protocol 1 == Protocol 2, it could have been represented in the
+device-tree using either:
+a) single link (sub-node)
+b) double link (sub-node) -> Special cases like PCIe Multi-link
+
+So assuming the above, we can enforce the constraint that there should
+be only 2 Protocols when 3 or more Links are present in the device-tree.
+This also handles the cases of
+PCIe Multi-Link + USB, PCIe Multi-Link + Q/SGMII
+which Swapnil has pointed to at [1], since PCIe Multi-Link is now a new
+protocol in itself (PHY_TYPE_PCIE_ML) and shall be represented in that
+manner in the device-tree when it is expected to be combined with a second
+protocol.
+
+After grouping the links by protocol, we can check for the entry in
+"link_cmn_vals_entries" and proceed to configure it identical to the
+2 Link case.
+
+[1] https://github.com/t-c-collab/linux/commits/ti-linux-6.1.y-torrent-multi-pcie-sgmii-v1
+
+Regards,
+Siddharth.
