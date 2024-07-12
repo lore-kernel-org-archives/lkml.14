@@ -1,64 +1,67 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2743EA83
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999E02744E;
+	Fri, 12 Jul 2024 05:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761550; cv=none; b=O7cuDtg9NUcsZhXeWaJ2+B1fLRMgg+L4ULbG5qeEL49biz8y/qnHBAFW5fsF9EwAB+Vjf16ki4+1LKtF/O8NTuuTyH6XvVnkF5Zn1CZdN2g+i6QcgMeu5WevdY9WzRULc5ZEBL1PW5TASjnk3BggfymW+ehWh3M2KwHi1E81+b4=
+	t=1720761548; cv=none; b=Mpz/sit3Us4tiGiUzemvYC6KK6tCuhYXwvvevEGv+CwhkwsKfprVyfLOe9ort30iFggH9ewX+v08byTyCuei1sVGcV0vBYbr7Y4/xGwQxeB7g3UQyeVlmsh7mo5n3uDsTybAm59vFl9pEN7VpErvZN22PI1CDz2ED3E/xRRMFCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720761550; c=relaxed/simple;
-	bh=pCVGUI9coQ1GGtjREQtr7J4m3xMvhJ3HzpTiTLdKH+4=;
+	s=arc-20240116; t=1720761548; c=relaxed/simple;
+	bh=fTcLjuZPxcAF/chYZp3qpmVvmgMoeulkbrhYgOBsWvU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fyrbk3ymspBuDZNZorqEjqsWGfrDSmhymeu4MQwVG9rTQRPTxMY8xhOBVPIv0uJwQhW99QNyKvYdfTOaiWbUqjZSl1z8yYp/C4lczRw2+Y3251Z2NhhH1ce5EnLdk0sxgjB/WFrWFxWT9tJEGvpLMwdzOE7gJL/Sl+u182TgK14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HRQRMu1y; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 MIME-Version; b=BgAwBxUvni242rcr2CyXSk4UnMUfeBwEbNn4FXFLMpjMbHuHhMFlCW3yq7xog/SB4OmpkH7goax0qPv2y/nd6ZRIcuCMy6K/Fg65BiFlO39ZhdZe9HJ62HQIuihVpJUG27ZR6+uOyk4d5CJtNWGh/WzS0UlWJBGOfxitfXXjT5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F1Og2Rkp; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HRQRMu1y"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70af3d9169bso1513329b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:19:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1Og2Rkp"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c9cc681ee4so832321b6e.0;
+        Thu, 11 Jul 2024 22:19:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720761548; x=1721366348; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720761544; x=1721366344; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1KDwed5gvq8MMsbXHf9gcLXNPE5BVPoiraQJBExsFrE=;
-        b=HRQRMu1yS8b//U/1ahm0MJV+mbxAL3wpJ7G5mi1BNvuaONIZFdnUf906mWe2rHKo1y
-         tRgSjSznfVbtiypz80ZNrkAXxNODNet8Ap/MUCf8mcjFypsXvePI1UAUx3DLFacsdf21
-         FUYXxMwJa10GtihraU+KnY9245HsYRubKA/ZU=
+        bh=c/BRz+lp5JToKR2qecU6LCfvsua/98uDjuU+S8tlz78=;
+        b=F1Og2Rkp/1M1o2lbpubZTR7O/eYUuZJfFCGZPucWPDwYKi50nTERRlp5RSy4CY3nXM
+         WvzwICvDbb/0VwTimUV37DN/2U+rAhiE6TqUMM8lianw7/DQo1arEcA1arqG2vQ07OFk
+         z0Xey0OM1dZGbu17GcplM4KFu3NVCx3Qmf/s/TpILZW7WI9AoIUhQYh1iMz5mj/o4ksG
+         ZPesZVDxkxt3jIG8IQs8m7H4HOC7EGBeMSBErWjO0KvaCVlpZQgBMYCdoL1Y56UQQLWS
+         SxU7z8n5aLbiflExsPlOeOidzF8Rf1TuUZRR8Ze0OhiRZN/oExVDijdgpulxTlzF66w4
+         dmTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720761548; x=1721366348;
+        d=1e100.net; s=20230601; t=1720761544; x=1721366344;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1KDwed5gvq8MMsbXHf9gcLXNPE5BVPoiraQJBExsFrE=;
-        b=OJYIJHFDBBAjufQ0B5YXmAEIgqBRNQtJRrynZmz+0ON8X7GTzgFRFUFnf9vHL49tCm
-         cVAkC5iPZObeALVPu6V4mruN/k8RB84MBH+169FRj1cDLVga5VedvLR1xUWxvaBbiL0K
-         jCzhf6RykL5nFv1XFLKtZEZodLN1Nt1qjBnWKqDmsko2hcqoLgiY9ESlL/eRypCgY6RN
-         Why5Ktf5RL9pUO/f1lqi0f0Y72Neu/NtFjo5ZJFTatWOBcSIVYwYPtzStQ39P/IrWptO
-         3QWnaI+8Mp2eq45T1/LAiSGzNvZApEKAf05RffmUapjLJ2OHhGsviX2GjXv/x2j6ccLG
-         vM1Q==
-X-Gm-Message-State: AOJu0YxAzm3Qt0YLkObf0Es/QR3tFr26WJQ+PIc9rHfnsJXYglK4aCdi
-	f4rb/JWVMaNU4FUhfzS1m7zplTxjuwFiMx7im9vJBsVyad7U1E2xb4yBmLrf4w==
-X-Google-Smtp-Source: AGHT+IEVbSRo9/zmQe3hVmgfASHQ42mDbldrkwdybM6dWRDIos7ub3FGpiHE9dx3HCWuQzYvJI98Kw==
-X-Received: by 2002:a05:6a00:1401:b0:70a:ff09:f151 with SMTP id d2e1a72fcca58-70b43584ffcmr12860231b3a.20.1720761547622;
-        Thu, 11 Jul 2024 22:19:07 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:15f3:5252:ec56:52ae])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967851sm6553436b3a.109.2024.07.11.22.19.06
+        bh=c/BRz+lp5JToKR2qecU6LCfvsua/98uDjuU+S8tlz78=;
+        b=Z9bluBgfGE99b0au/GM+1p1GewQVVfpYWvxzeEP90PYnkrS+TLhof1x/Okrqyel7c2
+         t2NB71shfPcSQgngVAMPzR9eEHTsaHY0nRrZAu4U6yZgJkQv5fOaF7hE4LuGev8XIM0L
+         ZKKej52bMUgqk1xYpB3dl6RXhzuuMTro+BY5c3xrSQrv2EbVA1fA384KVamrNhIBw8RL
+         rW/e4O9GrVi33crrsKLMa9w9vMpcM/LQ1gWZousxYGiLVmbY7Jh1dM9LFachMK8jCvXh
+         AivKR/L9EGRsH6NIddtIT2I1ebiIJPhHskq/zBCkpYJz/G573aOlwNQIpxEyVBOKn1g+
+         YeTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlx/seYF0UM7P4IfmDPYsC0TdWnpNbFPyM/dGgyU/+2Csdg0gXWisGyk2jGLqb6Gp7um6eViZ8yGIqQK6YNbyaniLCps7xic3kC3fN
+X-Gm-Message-State: AOJu0YzCB/Z80VM9O+gqrJW96WuoL6ICJsI/EY9Ma/YINw34N69k6G+h
+	rDWXU7bkE3mbrUFutvrfHdtdvtLrS9zabXxofWi6FYuaZzsZzKydZmLIWw==
+X-Google-Smtp-Source: AGHT+IEFjvPvMtRn+5IjKcQEa+UMjWng75hFyUhIL74WR7WmEw9TfNW4vLZirRPCCkyAlhB7nKCvlA==
+X-Received: by 2002:a54:4094:0:b0:3d9:dabc:7b76 with SMTP id 5614622812f47-3d9dabc7fe4mr6655462b6e.23.1720761544176;
+        Thu, 11 Jul 2024 22:19:04 -0700 (PDT)
+Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:acda:de52:5c83:f72d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d669d525csm4328972a12.73.2024.07.11.22.19.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:19:07 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v6 04/23] zram: introduce custom comp backends API
-Date: Fri, 12 Jul 2024 14:18:15 +0900
-Message-ID: <20240712051850.484318-5-senozhatsky@chromium.org>
+        Thu, 11 Jul 2024 22:19:03 -0700 (PDT)
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: linux-input@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 6/8] Input: usbtouchscreen - split device info table into individual pieces
+Date: Thu, 11 Jul 2024 22:18:48 -0700
+Message-ID: <20240712051851.3463657-6-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-In-Reply-To: <20240712051850.484318-1-senozhatsky@chromium.org>
-References: <20240712051850.484318-1-senozhatsky@chromium.org>
+In-Reply-To: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
+References: <20240712051851.3463657-1-dmitry.torokhov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,413 +70,867 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Moving to custom backends implementation gives us ability to
-have our own minimalistic and extendable API, and algorithms
-tunings becomes possible.
+Instead of using a single table containing information about various
+touchscreens and enums to match the driver ID table data with chip
+information define individual per-protocol instances of
+usbtouch_device_info structure and reference them directly from
+the usbtouch_devices ID table. This is simpler, safer, and uses less
+memory in case some protocols are disabled.
 
-The list of compression backends is empty at this point,
-we will add backends in the followup patches.
-
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/block/zram/Kconfig    |  39 +--------
- drivers/block/zram/zcomp.c    | 151 +++++++++++-----------------------
- drivers/block/zram/zcomp.h    |  29 ++++---
- drivers/block/zram/zram_drv.c |   9 +-
- 4 files changed, 76 insertions(+), 152 deletions(-)
+ drivers/input/touchscreen/usbtouchscreen.c | 624 ++++++++++-----------
+ 1 file changed, 293 insertions(+), 331 deletions(-)
 
-diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
-index eacf1cba7bf4..ace5698db5f6 100644
---- a/drivers/block/zram/Kconfig
-+++ b/drivers/block/zram/Kconfig
-@@ -3,7 +3,6 @@ config ZRAM
- 	tristate "Compressed RAM block device support"
- 	depends on BLOCK && SYSFS && MMU
- 	depends on HAVE_ZSMALLOC
--	depends on CRYPTO_LZO || CRYPTO_ZSTD || CRYPTO_LZ4 || CRYPTO_LZ4HC || CRYPTO_842
- 	select ZSMALLOC
- 	help
- 	  Creates virtual block devices called /dev/zramX (X = 0, 1, ...).
-@@ -16,45 +15,9 @@ config ZRAM
- 
- 	  See Documentation/admin-guide/blockdev/zram.rst for more information.
- 
--choice
--	prompt "Default zram compressor"
--	default ZRAM_DEF_COMP_LZORLE
--	depends on ZRAM
--
--config ZRAM_DEF_COMP_LZORLE
--	bool "lzo-rle"
--	depends on CRYPTO_LZO
--
--config ZRAM_DEF_COMP_ZSTD
--	bool "zstd"
--	depends on CRYPTO_ZSTD
--
--config ZRAM_DEF_COMP_LZ4
--	bool "lz4"
--	depends on CRYPTO_LZ4
--
--config ZRAM_DEF_COMP_LZO
--	bool "lzo"
--	depends on CRYPTO_LZO
--
--config ZRAM_DEF_COMP_LZ4HC
--	bool "lz4hc"
--	depends on CRYPTO_LZ4HC
--
--config ZRAM_DEF_COMP_842
--	bool "842"
--	depends on CRYPTO_842
--
--endchoice
--
- config ZRAM_DEF_COMP
- 	string
--	default "lzo-rle" if ZRAM_DEF_COMP_LZORLE
--	default "zstd" if ZRAM_DEF_COMP_ZSTD
--	default "lz4" if ZRAM_DEF_COMP_LZ4
--	default "lzo" if ZRAM_DEF_COMP_LZO
--	default "lz4hc" if ZRAM_DEF_COMP_LZ4HC
--	default "842" if ZRAM_DEF_COMP_842
-+	default "unset-value"
- 
- config ZRAM_WRITEBACK
-        bool "Write back incompressible or idle page to backing device"
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index 8237b08c49d8..2f75f18fc1ca 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -1,7 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Copyright (C) 2014 Sergey Senozhatsky.
-- */
- 
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -15,92 +12,68 @@
- 
- #include "zcomp.h"
- 
--static const char * const backends[] = {
--#if IS_ENABLED(CONFIG_CRYPTO_LZO)
--	"lzo",
--	"lzo-rle",
--#endif
--#if IS_ENABLED(CONFIG_CRYPTO_LZ4)
--	"lz4",
--#endif
--#if IS_ENABLED(CONFIG_CRYPTO_LZ4HC)
--	"lz4hc",
--#endif
--#if IS_ENABLED(CONFIG_CRYPTO_842)
--	"842",
--#endif
--#if IS_ENABLED(CONFIG_CRYPTO_ZSTD)
--	"zstd",
--#endif
-+static const struct zcomp_ops *backends[] = {
-+	NULL
+diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
+index 813a04ba75a2..ecde2eaf1f72 100644
+--- a/drivers/input/touchscreen/usbtouchscreen.c
++++ b/drivers/input/touchscreen/usbtouchscreen.c
+@@ -106,32 +106,6 @@ struct usbtouch_usb {
  };
  
--static void zcomp_strm_free(struct zcomp_strm *zstrm)
-+static void zcomp_strm_free(struct zcomp *comp, struct zcomp_strm *zstrm)
- {
--	if (!IS_ERR_OR_NULL(zstrm->tfm))
--		crypto_free_comp(zstrm->tfm);
-+	if (zstrm->ctx)
-+		comp->ops->destroy_ctx(zstrm->ctx);
- 	vfree(zstrm->buffer);
--	zstrm->tfm = NULL;
-+	zstrm->ctx = NULL;
- 	zstrm->buffer = NULL;
- }
  
--/*
-- * Initialize zcomp_strm structure with ->tfm initialized by backend, and
-- * ->buffer. Return a negative value on error.
-- */
--static int zcomp_strm_init(struct zcomp_strm *zstrm, struct zcomp *comp)
-+static int zcomp_strm_init(struct zcomp *comp, struct zcomp_strm *zstrm)
- {
--	zstrm->tfm = crypto_alloc_comp(comp->name, 0, 0);
-+	zstrm->ctx = comp->ops->create_ctx();
+-/* device types */
+-enum {
+-	DEVTYPE_IGNORE = -1,
+-	DEVTYPE_EGALAX,
+-	DEVTYPE_PANJIT,
+-	DEVTYPE_3M,
+-	DEVTYPE_ITM,
+-	DEVTYPE_ETURBO,
+-	DEVTYPE_GUNZE,
+-	DEVTYPE_DMC_TSC10,
+-	DEVTYPE_IRTOUCH,
+-	DEVTYPE_IRTOUCH_HIRES,
+-	DEVTYPE_IDEALTEK,
+-	DEVTYPE_GENERAL_TOUCH,
+-	DEVTYPE_GOTOP,
+-	DEVTYPE_JASTEC,
+-	DEVTYPE_E2I,
+-	DEVTYPE_ZYTRONIC,
+-	DEVTYPE_TC45USB,
+-	DEVTYPE_NEXIO,
+-	DEVTYPE_ELO,
+-	DEVTYPE_ETOUCH,
+-};
+-
+-static const struct usbtouch_device_info usbtouch_dev_info[];
+-
+ /*****************************************************************************
+  * e2i Part
+  */
+@@ -164,6 +138,16 @@ static int e2i_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
 +
- 	/*
- 	 * allocate 2 pages. 1 for compressed data, plus 1 extra for the
- 	 * case when compressed size is larger than the original one
- 	 */
- 	zstrm->buffer = vzalloc(2 * PAGE_SIZE);
--	if (IS_ERR_OR_NULL(zstrm->tfm) || !zstrm->buffer) {
--		zcomp_strm_free(zstrm);
-+	if (!zstrm->ctx || !zstrm->buffer) {
-+		zcomp_strm_free(comp, zstrm);
- 		return -ENOMEM;
- 	}
++static const struct usbtouch_device_info e2i_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x7fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x7fff,
++	.rept_size	= 6,
++	.init		= e2i_init,
++	.read_data	= e2i_read_data,
++};
+ #endif
+ 
+ 
+@@ -247,6 +231,17 @@ static int egalax_get_pkt_len(unsigned char *buf, int len)
+ 
  	return 0;
  }
- 
-+static const struct zcomp_ops *lookup_backend_ops(const char *comp)
-+{
-+	int i = 0;
 +
-+	while (backends[i]) {
-+		if (sysfs_streq(comp, backends[i]->name))
-+			break;
-+		i++;
-+	}
-+	return backends[i];
-+}
-+
- bool zcomp_available_algorithm(const char *comp)
- {
--	/*
--	 * Crypto does not ignore a trailing new line symbol,
--	 * so make sure you don't supply a string containing
--	 * one.
--	 * This also means that we permit zcomp initialisation
--	 * with any compressing algorithm known to crypto api.
--	 */
--	return crypto_has_comp(comp, 0, 0) == 1;
-+	return lookup_backend_ops(comp) != NULL;
- }
++static const struct usbtouch_device_info egalax_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x07ff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x07ff,
++	.rept_size	= 16,
++	.get_pkt_len	= egalax_get_pkt_len,
++	.read_data	= egalax_read_data,
++	.init		= egalax_init,
++};
+ #endif
  
- /* show available compressors */
- ssize_t zcomp_available_show(const char *comp, char *buf)
- {
--	bool known_algorithm = false;
- 	ssize_t sz = 0;
- 	int i;
+ /*****************************************************************************
+@@ -293,6 +288,16 @@ static int etouch_get_pkt_len(unsigned char *buf, int len)
  
--	for (i = 0; i < ARRAY_SIZE(backends); i++) {
--		if (!strcmp(comp, backends[i])) {
--			known_algorithm = true;
-+	for (i = 0; i < ARRAY_SIZE(backends) - 1; i++) {
-+		if (!strcmp(comp, backends[i]->name)) {
- 			sz += scnprintf(buf + sz, PAGE_SIZE - sz - 2,
--					"[%s] ", backends[i]);
-+					"[%s] ", backends[i]->name);
- 		} else {
- 			sz += scnprintf(buf + sz, PAGE_SIZE - sz - 2,
--					"%s ", backends[i]);
-+					"%s ", backends[i]->name);
- 		}
- 	}
- 
--	/*
--	 * Out-of-tree module known to crypto api or a missing
--	 * entry in `backends'.
--	 */
--	if (!known_algorithm && crypto_has_comp(comp, 0, 0) == 1)
--		sz += scnprintf(buf + sz, PAGE_SIZE - sz - 2,
--				"[%s] ", comp);
--
--	sz += scnprintf(buf + sz, PAGE_SIZE - sz, "\n");
- 	return sz;
- }
- 
-@@ -115,38 +88,25 @@ void zcomp_stream_put(struct zcomp *comp)
- 	local_unlock(&comp->stream->lock);
- }
- 
--int zcomp_compress(struct zcomp_strm *zstrm,
--		const void *src, unsigned int *dst_len)
-+int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
-+		   const void *src, unsigned int *dst_len)
- {
--	/*
--	 * Our dst memory (zstrm->buffer) is always `2 * PAGE_SIZE' sized
--	 * because sometimes we can endup having a bigger compressed data
--	 * due to various reasons: for example compression algorithms tend
--	 * to add some padding to the compressed buffer. Speaking of padding,
--	 * comp algorithm `842' pads the compressed length to multiple of 8
--	 * and returns -ENOSP when the dst memory is not big enough, which
--	 * is not something that ZRAM wants to see. We can handle the
--	 * `compressed_size > PAGE_SIZE' case easily in ZRAM, but when we
--	 * receive -ERRNO from the compressing backend we can't help it
--	 * anymore. To make `842' happy we need to tell the exact size of
--	 * the dst buffer, zram_drv will take care of the fact that
--	 * compressed buffer is too big.
--	 */
--	*dst_len = PAGE_SIZE * 2;
-+	/* The dst buffer should always be 2 * PAGE_SIZE */
-+	size_t dlen = 2 * PAGE_SIZE;
-+	int ret;
- 
--	return crypto_comp_compress(zstrm->tfm,
--			src, PAGE_SIZE,
--			zstrm->buffer, dst_len);
-+	ret = comp->ops->compress(zstrm->ctx, src, PAGE_SIZE,
-+				  zstrm->buffer, &dlen);
-+	if (!ret)
-+		*dst_len = dlen;
-+	return ret;
- }
- 
--int zcomp_decompress(struct zcomp_strm *zstrm,
--		const void *src, unsigned int src_len, void *dst)
-+int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
-+		     const void *src, unsigned int src_len, void *dst)
- {
--	unsigned int dst_len = PAGE_SIZE;
--
--	return crypto_comp_decompress(zstrm->tfm,
--			src, src_len,
--			dst, &dst_len);
-+	return comp->ops->decompress(zstrm->ctx, src, src_len,
-+				     dst, PAGE_SIZE);
- }
- 
- int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node)
-@@ -158,7 +118,7 @@ int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node)
- 	zstrm = per_cpu_ptr(comp->stream, cpu);
- 	local_lock_init(&zstrm->lock);
- 
--	ret = zcomp_strm_init(zstrm, comp);
-+	ret = zcomp_strm_init(comp, zstrm);
- 	if (ret)
- 		pr_err("Can't allocate a compression stream\n");
- 	return ret;
-@@ -170,7 +130,7 @@ int zcomp_cpu_dead(unsigned int cpu, struct hlist_node *node)
- 	struct zcomp_strm *zstrm;
- 
- 	zstrm = per_cpu_ptr(comp->stream, cpu);
--	zcomp_strm_free(zstrm);
-+	zcomp_strm_free(comp, zstrm);
  	return 0;
  }
- 
-@@ -199,32 +159,21 @@ void zcomp_destroy(struct zcomp *comp)
- 	kfree(comp);
- }
- 
--/*
-- * search available compressors for requested algorithm.
-- * allocate new zcomp and initialize it. return compressing
-- * backend pointer or ERR_PTR if things went bad. ERR_PTR(-EINVAL)
-- * if requested algorithm is not supported, ERR_PTR(-ENOMEM) in
-- * case of allocation error, or any other error potentially
-- * returned by zcomp_init().
-- */
- struct zcomp *zcomp_create(const char *alg)
- {
- 	struct zcomp *comp;
- 	int error;
- 
--	/*
--	 * Crypto API will execute /sbin/modprobe if the compression module
--	 * is not loaded yet. We must do it here, otherwise we are about to
--	 * call /sbin/modprobe under CPU hot-plug lock.
--	 */
--	if (!zcomp_available_algorithm(alg))
--		return ERR_PTR(-EINVAL);
--
- 	comp = kzalloc(sizeof(struct zcomp), GFP_KERNEL);
- 	if (!comp)
- 		return ERR_PTR(-ENOMEM);
- 
--	comp->name = alg;
-+	comp->ops = lookup_backend_ops(alg);
-+	if (!comp->ops) {
-+		kfree(comp);
-+		return ERR_PTR(-EINVAL);
-+	}
 +
- 	error = zcomp_init(comp);
- 	if (error) {
- 		kfree(comp);
-diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-index e9fe63da0e9b..e5eb5ec4c645 100644
---- a/drivers/block/zram/zcomp.h
-+++ b/drivers/block/zram/zcomp.h
-@@ -1,7 +1,4 @@
- /* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Copyright (C) 2014 Sergey Senozhatsky.
-- */
++static const struct usbtouch_device_info etouch_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x07ff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x07ff,
++	.rept_size	= 16,
++	.get_pkt_len	= etouch_get_pkt_len,
++	.read_data	= etouch_read_data,
++};
+ #endif
  
- #ifndef _ZCOMP_H_
- #define _ZCOMP_H_
-@@ -12,13 +9,26 @@ struct zcomp_strm {
- 	local_lock_t lock;
- 	/* compression/decompression buffer */
- 	void *buffer;
--	struct crypto_comp *tfm;
-+	void *ctx;
+ /*****************************************************************************
+@@ -307,6 +312,15 @@ static int panjit_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info panjit_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.rept_size	= 8,
++	.read_data	= panjit_read_data,
++};
+ #endif
+ 
+ 
+@@ -340,39 +354,6 @@ struct mtouch_priv {
+ 	u8 fw_rev_minor;
+ };
+ 
+-static ssize_t mtouch_firmware_rev_show(struct device *dev,
+-				struct device_attribute *attr, char *output)
+-{
+-	struct usb_interface *intf = to_usb_interface(dev);
+-	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
+-	struct mtouch_priv *priv = usbtouch->priv;
+-
+-	return sysfs_emit(output, "%1x.%1x\n",
+-			  priv->fw_rev_major, priv->fw_rev_minor);
+-}
+-static DEVICE_ATTR(firmware_rev, 0444, mtouch_firmware_rev_show, NULL);
+-
+-static struct attribute *mtouch_attrs[] = {
+-	&dev_attr_firmware_rev.attr,
+-	NULL
+-};
+-
+-static bool mtouch_group_visible(struct kobject *kobj)
+-{
+-	struct device *dev = kobj_to_dev(kobj);
+-	struct usb_interface *intf = to_usb_interface(dev);
+-	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
+-
+-	return usbtouch->type == &usbtouch_dev_info[DEVTYPE_3M];
+-}
+-
+-DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(mtouch);
+-
+-static const struct attribute_group mtouch_attr_group = {
+-	.is_visible = SYSFS_GROUP_VISIBLE(mtouch),
+-	.attrs = mtouch_attrs,
+-};
+-
+ static int mtouch_get_fw_revision(struct usbtouch_usb *usbtouch)
+ {
+ 	struct usb_device *udev = interface_to_usbdev(usbtouch->interface);
+@@ -467,6 +448,51 @@ static void mtouch_exit(struct usbtouch_usb *usbtouch)
+ 
+ 	kfree(priv);
+ }
++
++static struct usbtouch_device_info mtouch_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x4000,
++	.min_yc		= 0x0,
++	.max_yc		= 0x4000,
++	.rept_size	= 11,
++	.read_data	= mtouch_read_data,
++	.alloc		= mtouch_alloc,
++	.init		= mtouch_init,
++	.exit		= mtouch_exit,
 +};
 +
-+struct zcomp_ops {
-+	int (*compress)(void *ctx, const unsigned char *src, size_t src_len,
-+			unsigned char *dst, size_t *dst_len);
++static ssize_t mtouch_firmware_rev_show(struct device *dev,
++				struct device_attribute *attr, char *output)
++{
++	struct usb_interface *intf = to_usb_interface(dev);
++	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
++	struct mtouch_priv *priv = usbtouch->priv;
 +
-+	int (*decompress)(void *ctx, const unsigned char *src, size_t src_len,
-+			  unsigned char *dst, size_t dst_len);
++	return sysfs_emit(output, "%1x.%1x\n",
++			  priv->fw_rev_major, priv->fw_rev_minor);
++}
++static DEVICE_ATTR(firmware_rev, 0444, mtouch_firmware_rev_show, NULL);
 +
-+	void *(*create_ctx)(void);
-+	void (*destroy_ctx)(void *ctx);
++static struct attribute *mtouch_attrs[] = {
++	&dev_attr_firmware_rev.attr,
++	NULL
++};
 +
-+	const char *name;
- };
++static bool mtouch_group_visible(struct kobject *kobj)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct usb_interface *intf = to_usb_interface(dev);
++	struct usbtouch_usb *usbtouch = usb_get_intfdata(intf);
++
++	return usbtouch->type == &mtouch_dev_info;
++}
++
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(mtouch);
++
++static const struct attribute_group mtouch_attr_group = {
++	.is_visible = SYSFS_GROUP_VISIBLE(mtouch),
++	.attrs = mtouch_attrs,
++};
+ #endif
  
- /* dynamic per-device compression frontend */
- struct zcomp {
- 	struct zcomp_strm __percpu *stream;
--	const char *name;
-+	const struct zcomp_ops *ops;
- 	struct hlist_node node;
- };
  
-@@ -33,10 +43,9 @@ void zcomp_destroy(struct zcomp *comp);
- struct zcomp_strm *zcomp_stream_get(struct zcomp *comp);
- void zcomp_stream_put(struct zcomp *comp);
+@@ -501,6 +527,16 @@ static int itm_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
  
--int zcomp_compress(struct zcomp_strm *zstrm,
--		const void *src, unsigned int *dst_len);
--
--int zcomp_decompress(struct zcomp_strm *zstrm,
--		const void *src, unsigned int src_len, void *dst);
-+int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
-+		   const void *src, unsigned int *dst_len);
-+int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
-+		     const void *src, unsigned int src_len, void *dst);
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info itm_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.max_press	= 0xff,
++	.rept_size	= 8,
++	.read_data	= itm_read_data,
++};
+ #endif
  
- #endif /* _ZCOMP_H_ */
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index efcb8d9d274c..93042da8ccdf 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1327,7 +1327,8 @@ static int zram_read_from_zspool(struct zram *zram, struct page *page,
- 		ret = 0;
- 	} else {
- 		dst = kmap_local_page(page);
--		ret = zcomp_decompress(zstrm, src, size, dst);
-+		ret = zcomp_decompress(zram->comps[prio], zstrm,
-+				       src, size, dst);
- 		kunmap_local(dst);
- 		zcomp_stream_put(zram->comps[prio]);
+ 
+@@ -535,6 +571,16 @@ static int eturbo_get_pkt_len(unsigned char *buf, int len)
+ 		return 3;
+ 	return 0;
+ }
++
++static const struct usbtouch_device_info eturbo_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x07ff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x07ff,
++	.rept_size	= 8,
++	.get_pkt_len	= eturbo_get_pkt_len,
++	.read_data	= eturbo_read_data,
++};
+ #endif
+ 
+ 
+@@ -553,6 +599,15 @@ static int gunze_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info gunze_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.rept_size	= 4,
++	.read_data	= gunze_read_data,
++};
+ #endif
+ 
+ /*****************************************************************************
+@@ -636,6 +691,16 @@ static int dmc_tsc10_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info dmc_tsc10_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x03ff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x03ff,
++	.rept_size	= 5,
++	.init		= dmc_tsc10_init,
++	.read_data	= dmc_tsc10_read_data,
++};
+ #endif
+ 
+ 
+@@ -651,6 +716,24 @@ static int irtouch_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info irtouch_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.rept_size	= 8,
++	.read_data	= irtouch_read_data,
++};
++
++static const struct usbtouch_device_info irtouch_hires_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x7fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x7fff,
++	.rept_size	= 8,
++	.read_data	= irtouch_read_data,
++};
+ #endif
+ 
+ /*****************************************************************************
+@@ -665,6 +748,15 @@ static int tc45usb_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info tc45usb_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.rept_size	= 5,
++	.read_data	= tc45usb_read_data,
++};
+ #endif
+ 
+ /*****************************************************************************
+@@ -704,6 +796,16 @@ static int idealtek_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 		return 0;
  	}
-@@ -1414,7 +1415,8 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- compress_again:
- 	zstrm = zcomp_stream_get(zram->comps[ZRAM_PRIMARY_COMP]);
- 	src = kmap_local_page(page);
--	ret = zcomp_compress(zstrm, src, &comp_len);
-+	ret = zcomp_compress(zram->comps[ZRAM_PRIMARY_COMP], zstrm,
-+			     src, &comp_len);
- 	kunmap_local(src);
+ }
++
++static const struct usbtouch_device_info idealtek_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.rept_size	= 8,
++	.get_pkt_len	= idealtek_get_pkt_len,
++	.read_data	= idealtek_read_data,
++};
+ #endif
  
- 	if (unlikely(ret)) {
-@@ -1601,7 +1603,8 @@ static int zram_recompress(struct zram *zram, u32 index, struct page *page,
- 		num_recomps++;
- 		zstrm = zcomp_stream_get(zram->comps[prio]);
- 		src = kmap_local_page(page);
--		ret = zcomp_compress(zstrm, src, &comp_len_new);
-+		ret = zcomp_compress(zram->comps[prio], zstrm,
-+				     src, &comp_len_new);
- 		kunmap_local(src);
+ /*****************************************************************************
+@@ -719,6 +821,15 @@ static int general_touch_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
  
- 		if (ret) {
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info general_touch_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x7fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x7fff,
++	.rept_size	= 7,
++	.read_data	= general_touch_read_data,
++};
+ #endif
+ 
+ /*****************************************************************************
+@@ -733,6 +844,15 @@ static int gotop_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info gotop_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x03ff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x03ff,
++	.rept_size	= 4,
++	.read_data	= gotop_read_data,
++};
+ #endif
+ 
+ /*****************************************************************************
+@@ -747,6 +867,15 @@ static int jastec_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
++
++static const struct usbtouch_device_info jastec_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.rept_size	= 4,
++	.read_data	= jastec_read_data,
++};
+ #endif
+ 
+ /*****************************************************************************
+@@ -783,6 +912,16 @@ static int zytronic_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 0;
+ }
++
++static const struct usbtouch_device_info zytronic_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x03ff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x03ff,
++	.rept_size	= 5,
++	.read_data	= zytronic_read_data,
++	.irq_always     = true,
++};
+ #endif
+ 
+ /*****************************************************************************
+@@ -1019,6 +1158,15 @@ static int nexio_read_data(struct usbtouch_usb *usbtouch, unsigned char *pkt)
+ 	}
+ 	return 0;
+ }
++
++static const struct usbtouch_device_info nexio_dev_info = {
++	.rept_size	= 1024,
++	.irq_always	= true,
++	.read_data	= nexio_read_data,
++	.alloc		= nexio_alloc,
++	.init		= nexio_init,
++	.exit		= nexio_exit,
++};
+ #endif
+ 
+ 
+@@ -1037,232 +1185,17 @@ static int elo_read_data(struct usbtouch_usb *dev, unsigned char *pkt)
+ 
+ 	return 1;
+ }
+-#endif
+-
+-
+-/*****************************************************************************
+- * the different device descriptors
+- */
+-static const struct usbtouch_device_info usbtouch_dev_info[] = {
+-#ifdef CONFIG_TOUCHSCREEN_USB_ELO
+-	[DEVTYPE_ELO] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.max_press	= 0xff,
+-		.rept_size	= 8,
+-		.read_data	= elo_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_EGALAX
+-	[DEVTYPE_EGALAX] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x07ff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x07ff,
+-		.rept_size	= 16,
+-		.get_pkt_len	= egalax_get_pkt_len,
+-		.read_data	= egalax_read_data,
+-		.init		= egalax_init,
+-	},
+-#endif
+ 
+-#ifdef CONFIG_TOUCHSCREEN_USB_PANJIT
+-	[DEVTYPE_PANJIT] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.rept_size	= 8,
+-		.read_data	= panjit_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_3M
+-	[DEVTYPE_3M] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x4000,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x4000,
+-		.rept_size	= 11,
+-		.read_data	= mtouch_read_data,
+-		.alloc		= mtouch_alloc,
+-		.init		= mtouch_init,
+-		.exit		= mtouch_exit,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_ITM
+-	[DEVTYPE_ITM] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.max_press	= 0xff,
+-		.rept_size	= 8,
+-		.read_data	= itm_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_ETURBO
+-	[DEVTYPE_ETURBO] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x07ff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x07ff,
+-		.rept_size	= 8,
+-		.get_pkt_len	= eturbo_get_pkt_len,
+-		.read_data	= eturbo_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_GUNZE
+-	[DEVTYPE_GUNZE] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.rept_size	= 4,
+-		.read_data	= gunze_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_DMC_TSC10
+-	[DEVTYPE_DMC_TSC10] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x03ff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x03ff,
+-		.rept_size	= 5,
+-		.init		= dmc_tsc10_init,
+-		.read_data	= dmc_tsc10_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
+-	[DEVTYPE_IRTOUCH] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.rept_size	= 8,
+-		.read_data	= irtouch_read_data,
+-	},
+-
+-	[DEVTYPE_IRTOUCH_HIRES] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x7fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x7fff,
+-		.rept_size	= 8,
+-		.read_data	= irtouch_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_IDEALTEK
+-	[DEVTYPE_IDEALTEK] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.rept_size	= 8,
+-		.get_pkt_len	= idealtek_get_pkt_len,
+-		.read_data	= idealtek_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_GENERAL_TOUCH
+-	[DEVTYPE_GENERAL_TOUCH] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x7fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x7fff,
+-		.rept_size	= 7,
+-		.read_data	= general_touch_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_GOTOP
+-	[DEVTYPE_GOTOP] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x03ff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x03ff,
+-		.rept_size	= 4,
+-		.read_data	= gotop_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_JASTEC
+-	[DEVTYPE_JASTEC] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.rept_size	= 4,
+-		.read_data	= jastec_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_E2I
+-	[DEVTYPE_E2I] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x7fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x7fff,
+-		.rept_size	= 6,
+-		.init		= e2i_init,
+-		.read_data	= e2i_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_ZYTRONIC
+-	[DEVTYPE_ZYTRONIC] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x03ff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x03ff,
+-		.rept_size	= 5,
+-		.read_data	= zytronic_read_data,
+-		.irq_always     = true,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_ETT_TC45USB
+-	[DEVTYPE_TC45USB] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x0fff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x0fff,
+-		.rept_size	= 5,
+-		.read_data	= tc45usb_read_data,
+-	},
+-#endif
+-
+-#ifdef CONFIG_TOUCHSCREEN_USB_NEXIO
+-	[DEVTYPE_NEXIO] = {
+-		.rept_size	= 1024,
+-		.irq_always	= true,
+-		.read_data	= nexio_read_data,
+-		.alloc		= nexio_alloc,
+-		.init		= nexio_init,
+-		.exit		= nexio_exit,
+-	},
+-#endif
+-#ifdef CONFIG_TOUCHSCREEN_USB_EASYTOUCH
+-	[DEVTYPE_ETOUCH] = {
+-		.min_xc		= 0x0,
+-		.max_xc		= 0x07ff,
+-		.min_yc		= 0x0,
+-		.max_yc		= 0x07ff,
+-		.rept_size	= 16,
+-		.get_pkt_len	= etouch_get_pkt_len,
+-		.read_data	= etouch_read_data,
+-	},
+-#endif
++static const struct usbtouch_device_info elo_dev_info = {
++	.min_xc		= 0x0,
++	.max_xc		= 0x0fff,
++	.min_yc		= 0x0,
++	.max_yc		= 0x0fff,
++	.max_press	= 0xff,
++	.rept_size	= 8,
++	.read_data	= elo_read_data,
+ };
++#endif
+ 
+ 
+ /*****************************************************************************
+@@ -1540,10 +1473,8 @@ static int usbtouch_probe(struct usb_interface *intf,
+ 	int err = -ENOMEM;
+ 
+ 	/* some devices are ignored */
+-	if (id->driver_info == DEVTYPE_IGNORE)
+-		return -ENODEV;
+-
+-	if (id->driver_info >= ARRAY_SIZE(usbtouch_dev_info))
++	type = (const struct usbtouch_device_info *)id->driver_info;
++	if (!type)
+ 		return -ENODEV;
+ 
+ 	endpoint = usbtouch_get_input_endpoint(intf->cur_altsetting);
+@@ -1556,8 +1487,6 @@ static int usbtouch_probe(struct usb_interface *intf,
+ 		goto out_free;
+ 
+ 	mutex_init(&usbtouch->pm_mutex);
+-
+-	type = &usbtouch_dev_info[id->driver_info];
+ 	usbtouch->type = type;
+ 
+ 	usbtouch->data_size = type->rept_size;
+@@ -1741,106 +1670,139 @@ static const struct attribute_group *usbtouch_groups[] = {
+ static const struct usb_device_id usbtouch_devices[] = {
+ #ifdef CONFIG_TOUCHSCREEN_USB_EGALAX
+ 	/* ignore the HID capable devices, handled by usbhid */
+-	{USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0001, USB_INTERFACE_CLASS_HID),
+-		.driver_info = DEVTYPE_IGNORE},
+-	{USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0002, USB_INTERFACE_CLASS_HID),
+-		.driver_info = DEVTYPE_IGNORE},
++	{ USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0001, USB_INTERFACE_CLASS_HID),
++		.driver_info = 0 },
++	{ USB_DEVICE_INTERFACE_CLASS(0x0eef, 0x0002, USB_INTERFACE_CLASS_HID),
++		.driver_info = 0 },
+ 
+ 	/* normal device IDs */
+-	{USB_DEVICE(0x3823, 0x0001), .driver_info = DEVTYPE_EGALAX},
+-	{USB_DEVICE(0x3823, 0x0002), .driver_info = DEVTYPE_EGALAX},
+-	{USB_DEVICE(0x0123, 0x0001), .driver_info = DEVTYPE_EGALAX},
+-	{USB_DEVICE(0x0eef, 0x0001), .driver_info = DEVTYPE_EGALAX},
+-	{USB_DEVICE(0x0eef, 0x0002), .driver_info = DEVTYPE_EGALAX},
+-	{USB_DEVICE(0x1234, 0x0001), .driver_info = DEVTYPE_EGALAX},
+-	{USB_DEVICE(0x1234, 0x0002), .driver_info = DEVTYPE_EGALAX},
++	{ USB_DEVICE(0x3823, 0x0001),
++		.driver_info = (kernel_ulong_t)&egalax_dev_info },
++	{ USB_DEVICE(0x3823, 0x0002),
++		.driver_info = (kernel_ulong_t)&egalax_dev_info },
++	{ USB_DEVICE(0x0123, 0x0001),
++		.driver_info = (kernel_ulong_t)&egalax_dev_info },
++	{ USB_DEVICE(0x0eef, 0x0001),
++		.driver_info = (kernel_ulong_t)&egalax_dev_info },
++	{ USB_DEVICE(0x0eef, 0x0002),
++		.driver_info = (kernel_ulong_t)&egalax_dev_info },
++	{ USB_DEVICE(0x1234, 0x0001),
++		.driver_info = (kernel_ulong_t)&egalax_dev_info },
++	{ USB_DEVICE(0x1234, 0x0002),
++		.driver_info = (kernel_ulong_t)&egalax_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_PANJIT
+-	{USB_DEVICE(0x134c, 0x0001), .driver_info = DEVTYPE_PANJIT},
+-	{USB_DEVICE(0x134c, 0x0002), .driver_info = DEVTYPE_PANJIT},
+-	{USB_DEVICE(0x134c, 0x0003), .driver_info = DEVTYPE_PANJIT},
+-	{USB_DEVICE(0x134c, 0x0004), .driver_info = DEVTYPE_PANJIT},
++	{ USB_DEVICE(0x134c, 0x0001),
++		.driver_info = (kernel_ulong_t)&panjit_dev_info },
++	{ USB_DEVICE(0x134c, 0x0002),
++		.driver_info = (kernel_ulong_t)&panjit_dev_info },
++	{ USB_DEVICE(0x134c, 0x0003),
++		.driver_info = (kernel_ulong_t)&panjit_dev_info },
++	{ USB_DEVICE(0x134c, 0x0004),
++		.driver_info = (kernel_ulong_t)&panjit_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_3M
+-	{USB_DEVICE(0x0596, 0x0001), .driver_info = DEVTYPE_3M},
++	{ USB_DEVICE(0x0596, 0x0001),
++		.driver_info = (kernel_ulong_t)&mtouch_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_ITM
+-	{USB_DEVICE(0x0403, 0xf9e9), .driver_info = DEVTYPE_ITM},
+-	{USB_DEVICE(0x16e3, 0xf9e9), .driver_info = DEVTYPE_ITM},
++	{ USB_DEVICE(0x0403, 0xf9e9),
++		.driver_info = (kernel_ulong_t)&itm_dev_info },
++	{ USB_DEVICE(0x16e3, 0xf9e9),
++		.driver_info = (kernel_ulong_t)&itm_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_ETURBO
+-	{USB_DEVICE(0x1234, 0x5678), .driver_info = DEVTYPE_ETURBO},
++	{ USB_DEVICE(0x1234, 0x5678),
++		.driver_info = (kernel_ulong_t)&eturbo_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_GUNZE
+-	{USB_DEVICE(0x0637, 0x0001), .driver_info = DEVTYPE_GUNZE},
++	{ USB_DEVICE(0x0637, 0x0001),
++		.driver_info = (kernel_ulong_t)&gunze_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_DMC_TSC10
+-	{USB_DEVICE(0x0afa, 0x03e8), .driver_info = DEVTYPE_DMC_TSC10},
++	{ USB_DEVICE(0x0afa, 0x03e8),
++		.driver_info = (kernel_ulong_t)&dmc_tsc10_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
+-	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
+-	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
+-	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
+-	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
++	{ USB_DEVICE(0x255e, 0x0001),
++		.driver_info = (kernel_ulong_t)&irtouch_dev_info },
++	{ USB_DEVICE(0x595a, 0x0001),
++		.driver_info = (kernel_ulong_t)&irtouch_dev_info },
++	{ USB_DEVICE(0x6615, 0x0001),
++		.driver_info = (kernel_ulong_t)&irtouch_dev_info },
++	{ USB_DEVICE(0x6615, 0x0012),
++		.driver_info = (kernel_ulong_t)&irtouch_hires_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_IDEALTEK
+-	{USB_DEVICE(0x1391, 0x1000), .driver_info = DEVTYPE_IDEALTEK},
++	{ USB_DEVICE(0x1391, 0x1000),
++		.driver_info = (kernel_ulong_t)&idealtek_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_GENERAL_TOUCH
+-	{USB_DEVICE(0x0dfc, 0x0001), .driver_info = DEVTYPE_GENERAL_TOUCH},
++	{ USB_DEVICE(0x0dfc, 0x0001),
++		.driver_info = (kernel_ulong_t)&general_touch_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_GOTOP
+-	{USB_DEVICE(0x08f2, 0x007f), .driver_info = DEVTYPE_GOTOP},
+-	{USB_DEVICE(0x08f2, 0x00ce), .driver_info = DEVTYPE_GOTOP},
+-	{USB_DEVICE(0x08f2, 0x00f4), .driver_info = DEVTYPE_GOTOP},
++	{ USB_DEVICE(0x08f2, 0x007f),
++		.driver_info = (kernel_ulong_t)&gotop_dev_info },
++	{ USB_DEVICE(0x08f2, 0x00ce),
++		.driver_info = (kernel_ulong_t)&gotop_dev_info },
++	{ USB_DEVICE(0x08f2, 0x00f4),
++		.driver_info = (kernel_ulong_t)&gotop_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_JASTEC
+-	{USB_DEVICE(0x0f92, 0x0001), .driver_info = DEVTYPE_JASTEC},
++	{ USB_DEVICE(0x0f92, 0x0001),
++		.driver_info = (kernel_ulong_t)&jastec_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_E2I
+-	{USB_DEVICE(0x1ac7, 0x0001), .driver_info = DEVTYPE_E2I},
++	{ USB_DEVICE(0x1ac7, 0x0001),
++		.driver_info = (kernel_ulong_t)&e2i_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_ZYTRONIC
+-	{USB_DEVICE(0x14c8, 0x0003), .driver_info = DEVTYPE_ZYTRONIC},
++	{ USB_DEVICE(0x14c8, 0x0003),
++		.driver_info = (kernel_ulong_t)&zytronic_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_ETT_TC45USB
+ 	/* TC5UH */
+-	{USB_DEVICE(0x0664, 0x0309), .driver_info = DEVTYPE_TC45USB},
++	{ USB_DEVICE(0x0664, 0x0309),
++		.driver_info = (kernel_ulong_t)&tc45usb_dev_info },
+ 	/* TC4UM */
+-	{USB_DEVICE(0x0664, 0x0306), .driver_info = DEVTYPE_TC45USB},
++	{ USB_DEVICE(0x0664, 0x0306),
++		.driver_info = (kernel_ulong_t)&tc45usb_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_NEXIO
+ 	/* data interface only */
+-	{USB_DEVICE_AND_INTERFACE_INFO(0x10f0, 0x2002, 0x0a, 0x00, 0x00),
+-		.driver_info = DEVTYPE_NEXIO},
+-	{USB_DEVICE_AND_INTERFACE_INFO(0x1870, 0x0001, 0x0a, 0x00, 0x00),
+-		.driver_info = DEVTYPE_NEXIO},
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x10f0, 0x2002, 0x0a, 0x00, 0x00),
++		.driver_info = (kernel_ulong_t)&nexio_dev_info },
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x1870, 0x0001, 0x0a, 0x00, 0x00),
++		.driver_info = (kernel_ulong_t)&nexio_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_ELO
+-	{USB_DEVICE(0x04e7, 0x0020), .driver_info = DEVTYPE_ELO},
++	{ USB_DEVICE(0x04e7, 0x0020),
++		.driver_info = (kernel_ulong_t)&elo_dev_info },
+ #endif
+ 
+ #ifdef CONFIG_TOUCHSCREEN_USB_EASYTOUCH
+-	{USB_DEVICE(0x7374, 0x0001), .driver_info = DEVTYPE_ETOUCH},
++	{ USB_DEVICE(0x7374, 0x0001),
++		.driver_info = (kernel_ulong_t)&etouch_dev_info },
+ #endif
+ 
+-	{}
++	{ }
+ };
+ MODULE_DEVICE_TABLE(usb, usbtouch_devices);
+ 
 -- 
 2.45.2.993.g49e7a77208-goog
 
