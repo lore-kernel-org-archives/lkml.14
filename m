@@ -1,160 +1,155 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF2715E83;
-	Fri, 12 Jul 2024 04:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D9217C96;
+	Fri, 12 Jul 2024 04:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720760278; cv=none; b=FDDEqjjfvqv/nEObbclCqJN9Ldpld7G23O7fwc/5wFYHDssLMZ+KBbwJTi1c4xrcYJrbbToc4na4mTIMYjxNx1BcIhNYMp2pOEzMfj27N/cmV6BqurNAI1AqXklERssVFFz7I5uNb72Vz2yJAnck1HPrT+92XtDSyOMrfg3g97Y=
+	t=1720760294; cv=none; b=It8Psnp+7PNmJThCXV0uCGmAd6TEVm6rLiDE7g1wIYnEZi/tV2ysoHfRlgbRWwTwsYtZRpU6NkYb77WHdRtdg+hkpDbeRymX8IxWif+RyRQ0h/+vNEjI9siEKcBIXrwgceKtt/O2WHNq0YW/dfd+UUOZAkTTo7wax4JTfENLrg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720760278; c=relaxed/simple;
-	bh=XF/ip4QNMmObtpMNy5uwbrxVBFm5W7dTrDLY8KaJIIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oFiNufLszvN3IaR25A0Ma3koAaJGdS8mXZaR2ovKP0yO+qI/mGTxyAQRkmiB7dY/yE3lekjCHBbxAGDF5sOJYs6qen7p8Tu7g23JYJlM9hYdpqkbhcMg/AE1zEu9bM0+zpr1160lPP+fyb29gHq2omhziCJnDJ14CRxsL7RRk3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jzak3L1Y; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720760294; c=relaxed/simple;
+	bh=4Dh4BhQU/enHyhgZOhpsslzQX5NTr6GaYASU2sFsAZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZC7crVKXUmolhDjdjE3JBZSrrEF0ZVGiovsdij2qfzF2qHgKNDAYM4NeBip0122E4tAPOaWBOBmjGwUKZZeOisL69UMzeArgfH/GiPh2D4RiZlBP0DerIAvKWqxrkAXpinv+AlICyiwNAco7Dzg+Sga9Pxui9OVlegsXHEwmTfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sE0X3RQt; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jzak3L1Y"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70b09cb7776so1346932b3a.1;
-        Thu, 11 Jul 2024 21:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720760276; x=1721365076; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cgc5qzxw5wK05hMWCEUdBVLXJ0/WrgFO139zlUvcUS4=;
-        b=Jzak3L1YcQe8kkaiizbvwRu/GquP85GqYgi9sRoQtUTL0lnTrbWo06VqhRPsvR4MQ0
-         kKvOsrsMgTvF5mjb0RneheQjiIFdyp6x1SRatVEyG/S261OF/kqqWlCGVknoWOnc9Knr
-         nZkZire9M26Z8Rg6PexeBxFe1sZCLe58D/MZSh4ihbAJE2xk5ouV86m5VPglywX3+P3X
-         zJJ/5RA49cdye2GbrW9TPan2EKIQu5QQQcD0GZAlYRN7pTCC3kHf/w3VIsujcFj1EqB/
-         9tf48fJXmm4N6gALddpJYV9kC5Ej3GQ+2Szp6QVaD7ylLZX3h5e2OWIXIJzh1jtaVr04
-         UkTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720760276; x=1721365076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cgc5qzxw5wK05hMWCEUdBVLXJ0/WrgFO139zlUvcUS4=;
-        b=eO17Z8PNG75OURJkMB8/gyyaqaPHVbu7ochY1QFvFjTZgD4VSVzim3lhpE5fBuabZV
-         EEfRHATDSgBiWGQuhdcnMCBv4ML0SKKzZ/vDBu/K0VXQnP3g5peiDb3s/mKHZTxt11BZ
-         8Okl9uq31JNoKO/SXl24XY5ohm6Z8Wc+LLVcSxnUmc+mT0rR8/I5HowHn10zrsRiYUnr
-         zKcSy3kABXHssRUgcGcaOke458l7jpeujunc7qACdQ+sK3Of8PzLfgNyjLA59AJxvL6G
-         xYOGF1cBgEwNS1GRM7R+HiZVylSwSVbVN0zsEGYAw8GM8rD7vcq35AqbmMO0GZYgxh19
-         70dw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Wp0Z6T4F4+wjyFcThx0DxLRFf+NFDDud/rDapcFeBo1XSOpTYmg2nxlI9wF96pXERxW/gsDFH/m/GoI/XcOBZRh5kHwuHV0oWMP8rMtP2uUhEEbnNsW2SvtL8BOJVOSfgAkKVilqH/KsB0Pl2dUk
-X-Gm-Message-State: AOJu0YxETB4IGHBYWYPC4jxc8yqujjURv+f/5BNqkCrdohpT4xNQAIrb
-	ubyimj+VSpqqFfNA3ExwcG5S2nWWM2QbTjzDYwCcTlrC3AxL4y3QYYMrjD2cJV4tOPu04XSRSYV
-	p6Qt78HqTgOZwddf4UuNwzlyfyjk=
-X-Google-Smtp-Source: AGHT+IEUkeZtcyGtlaj1RFsDY8XRb2zXNgRyQzpsu3Xb7SVhQeA1Hi5KxpSqWP6IoNyOD56FgMHHOTYrBBurmIi/o8Q=
-X-Received: by 2002:a05:6a21:39a:b0:1c0:f48e:a5ed with SMTP id
- adf61e73a8af0-1c29824d6d8mr10526627637.37.1720760276248; Thu, 11 Jul 2024
- 21:57:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sE0X3RQt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1720759712;
+	bh=9FwLU3TuUr3CTim33ErSUoBRj8iBha51//MEqJpMSaQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sE0X3RQtTgS7a1gIPMkfoH/k+C10RwKe1Ruwgv5mtgGpY7QeAjIPGlX3FefJGHZ81
+	 s/dxnFue97CPzwEMwcjvPT0wrMHlbeEafPCHh0iy6f3RjMlQJ9p1CsHtvqoGtsXbdL
+	 USocc7ijb3tWW6zrJ7Gu6PQnMdIO9BeMZiTteusvSeWbhMaVTxoFi0pkuEWIqwFg4u
+	 2p7lM0V2tYFrR53pIfPFYVSBdqlMTwzFjXh5CbqA8JviTlHQbPlPejja/++fOjrNpA
+	 RE/0tKWdsRAIxH0kKDwNay2Nui6qwErKofx4WWfV/kWUAhId1TofP/zqeOlmzbqg2V
+	 BvQe3KnY7Fj+Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WKzcw3vHZz4wZx;
+	Fri, 12 Jul 2024 14:48:32 +1000 (AEST)
+Date: Fri, 12 Jul 2024 14:48:31 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Lee Jones <lee@kernel.org>
+Cc: Christian Marangi <ansuelsmth@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the leds-lj tree
+Message-ID: <20240712144831.269b1bc6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711110235.098009979@infradead.org>
-In-Reply-To: <20240711110235.098009979@infradead.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 11 Jul 2024 21:57:44 -0700
-Message-ID: <CAEf4BzZ+ygwfk8FKn5AS_Ny=igvGcFzdDLE2FjcvwjCKazEWMA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] perf/uprobe: Optimize uprobes
-To: Peter Zijlstra <peterz@infradead.org>, oleg@redhat.com
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	jolsa@kernel.org, clm@meta.com, paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_//7Cb_No.v3_Dz+SvTz/xHuP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_//7Cb_No.v3_Dz+SvTz/xHuP
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 11, 2024 at 4:07=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> Hi!
->
-> These patches implement the (S)RCU based proposal to optimize uprobes.
->
-> On my c^Htrusty old IVB-EP -- where each (of the 40) CPU calls 'func' in =
-a
-> tight loop:
->
->   perf probe -x ./uprobes test=3Dfunc
->   perf stat -ae probe_uprobe:test  -- sleep 1
->
->   perf probe -x ./uprobes test=3Dfunc%return
->   perf stat -ae probe_uprobe:test__return -- sleep 1
->
-> PRE:
->
->   4,038,804      probe_uprobe:test
->   2,356,275      probe_uprobe:test__return
->
-> POST:
->
->   7,216,579      probe_uprobe:test
->   6,744,786      probe_uprobe:test__return
->
-> (copy-paste FTW, I didn't do new numbers because the fast paths didn't ch=
-ange --
->  and quick test run shows similar numbers)
->
-> Patches also available here:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/upr=
-obes
->
->
-> Changes since last time:
->  - better split with intermediate inc_not_zero()
->  - fix UPROBE_HANDLER_REMOVE
->  - restored the lost rcu_assign_pointer()
->  - avoid lockdep for uretprobe_srcu
->  - add missing put_uprobe() -> srcu_read_unlock() conversion
->  - actually initialize return_instance::has_ref
->  - a few comments
->  - things I don't remember
->
->
+Hi all,
 
-Hey Peter!
+After merging the leds-lj tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Thanks for the v2, I plan to look at it more thoroughly tomorrow. But
-meanwhile I spent a good chunk of today to write an uprobes
-stress-test, so we can validate that we are not regressing anything
-(yes, I don't trust lockless code and people in general ;)
+In file included from drivers/leds/leds-lp5569.c:11:
+drivers/leds/leds-lp5569.c: In function 'lp5569_post_init_device':
+drivers/leds/leds-lp5569.c:204:52: error: passing argument 3 of 'lp55xx_rea=
+d' from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+  204 |                           chip, LP5569_REG_STATUS, &val);
+      |                                                    ^~~~
+      |                                                    |
+      |                                                    int *
+include/linux/iopoll.h:46:28: note: in definition of macro 'read_poll_timeo=
+ut'
+   46 |                 (val) =3D op(args); \
+      |                            ^~~~
+In file included from drivers/leds/leds-lp5569.c:20:
+drivers/leds/leds-lp55xx-common.h:229:62: note: expected 'u8 *' {aka 'unsig=
+ned char *'} but argument is of type 'int *'
+  229 | extern int lp55xx_read(struct lp55xx_chip *chip, u8 reg, u8 *val);
+      |                                                          ~~~~^~~
+drivers/leds/leds-lp5569.c:204:52: error: passing argument 3 of 'lp55xx_rea=
+d' from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+  204 |                           chip, LP5569_REG_STATUS, &val);
+      |                                                    ^~~~
+      |                                                    |
+      |                                                    int *
+include/linux/iopoll.h:51:36: note: in definition of macro 'read_poll_timeo=
+ut'
+   51 |                         (val) =3D op(args); \
+      |                                    ^~~~
+drivers/leds/leds-lp55xx-common.h:229:62: note: expected 'u8 *' {aka 'unsig=
+ned char *'} but argument is of type 'int *'
+  229 | extern int lp55xx_read(struct lp55xx_chip *chip, u8 reg, u8 *val);
+      |                                                          ~~~~^~~
+cc1: all warnings being treated as errors
 
-Anyways, if you'd like to use it, it's at [0]. All you should need to
-build and run it is:
+Caused by commit
 
-  $ cd examples/c
-  $ make -j$(nproc) uprobe-stress
-  $ sudo ./uprobe-stress -tN -aM -mP -fR
+  d9cc80b1c9b4 ("leds: leds-lp5569: Enable chip after chip configuration")
 
+I have applied the folloing patch for today.
 
-N, M, P, R are number of threads dedicated to one of four functions of
-the stress test: triggering user space functions (N),
-attaching/detaching various random subsets of uprobes (M), mmap()ing
-parts of executable with uprobes (P), and forking the process and
-triggering uprobes for a little bit (R). The idea is to test various
-timings and interleavings of uprobe-related logic.
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 12 Jul 2024 14:40:23 +1000
+Subject: [PATCH] fixup for "leds: leds-lp5569: Enable chip after chip confi=
+guration"
 
-You should only need not-too-old Clang to build everything (Clang 12+
-should work, I believe). But do let me know if you run into troubles.
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/leds/leds-lp5569.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I did run this stress test for a little while on current
-bpf-next/master with no issues detected (yay!).
+diff --git a/drivers/leds/leds-lp5569.c b/drivers/leds/leds-lp5569.c
+index 52fb83f35bb7..623030f2f5ac 100644
+--- a/drivers/leds/leds-lp5569.c
++++ b/drivers/leds/leds-lp5569.c
+@@ -173,6 +173,7 @@ static int lp5569_post_init_device(struct lp55xx_chip *=
+chip)
+ {
+ 	int ret;
+ 	int val;
++	u8 u8val;
+=20
+ 	val =3D LP5569_DEFAULT_CONFIG;
+ 	val |=3D FIELD_PREP(LP5569_CP_MODE_MASK, chip->pdata->charge_pump_mode);
+@@ -201,7 +202,7 @@ static int lp5569_post_init_device(struct lp55xx_chip *=
+chip)
+=20
+ 	read_poll_timeout(lp55xx_read, ret, !(val & LP5569_STARTUP_BUSY),
+ 			  LP5569_STARTUP_SLEEP, LP5569_STARTUP_SLEEP * 10, false,
+-			  chip, LP5569_REG_STATUS, &val);
++			  chip, LP5569_REG_STATUS, &u8val);
+=20
+ 	return lp5569_init_program_engine(chip);
+ }
+--=20
+2.43.0
 
-But then I also ran it on Linux built from perf/uprobes branch (these
-patches), and after a few seconds I see that there is no more
-attachment/detachment happening. Eventually I got splats, which you
-can see in [1]. I used `sudo ./uprobe-stress -a10 -t5 -m5 -f3` command
-to run it inside my QEMU image.
+--=20
+Cheers,
+Stephen Rothwell
 
-So there is still something off, hopefully this will help to debug and
-hammer out any remaining kinks. Thanks!
+--Sig_//7Cb_No.v3_Dz+SvTz/xHuP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-  [0] https://github.com/libbpf/libbpf-bootstrap/commit/2f88cef90f9728ec8c7=
-bee7bd48fdbcf197806c3
-  [1] https://gist.github.com/anakryiko/f761690addf7aa5f08caec95fda9ef1a
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaQtZ8ACgkQAVBC80lX
+0Gz+ZwgAnV2MJqxmT9iVUINH8mireQ1MCzb9jY05YbCA7vvCJXvNIGXn02bAqqae
+WN1YkMtjEzLSQp6RVvM/vr4ASWHJPywYuSbUbZImO8H/gmtqdkHDbp5SAO5VJk20
+Ga8Aqb/7AY1U0dCRhwYHbHQuMC+Cq8zLMeWeQVG3whWShv05wv+iwb+YCOD4nGUb
+TLeugztkwB9Kf1na1Y623UY48Q+0xfRzPMZZGVzmSX9inOiSxD7jiTMFJwv8o9Oo
+zmEDzRwv6LRT1m5TWFp6RJqOimkCOjERQvFZzsNYyeX3XOaV4FrJHG53YEBQ8ivA
+tsnzzLuZH/F/K126A2f5B76ZYZoKTg==
+=jaMN
+-----END PGP SIGNATURE-----
+
+--Sig_//7Cb_No.v3_Dz+SvTz/xHuP--
