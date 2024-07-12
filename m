@@ -1,143 +1,75 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B5C13B78A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 05:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A58D28370;
+	Fri, 12 Jul 2024 05:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761597; cv=none; b=nlM0+6t57ExkBJgE6fu8N0aV4S2idsza7z4OYIF7SXVOpG+0JB12U56IxiGvg1nhCW0sUSsUOAx2kXk3p3FWhG64xPcGOmta176Lmqv/ORhA4jOeEZO5JvPx4PLqP16rup2hVPyAYOq181Kv4RtF8o5Y++EJ3lnRPe8Uk0Oo7pg=
+	t=1720761633; cv=none; b=fxyIULY3Wpa/qeQMyqIrqHgmzQMbekvWCnUAuLdrBnjtXCWTlSU9h8uLzAftsxHso7Dcr2wn8EOkxllQgTdMfQygRbK6bLd0Dt5udjzGnHBIhCojqOo12nbrTZeVncirwpyr2nTdrAJnhoueWl3QtHoQxHqPM88Nk7V+XZC8rfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720761597; c=relaxed/simple;
-	bh=zEQaHkIHnLEwcguffr+8edDadfr0KsJyp3aPZNLWx+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f3SNaIs6CL0fB9o7biDTv9Wm0v1XhCS97gYeSRpKuoIYoKezaWpp6kPHv/zpLat5HMmNBE73KnEhPptpw88V/L2Jr4+uLIapuev3cPr68jRQT0M8vl/hFAwsxS2xj+rZYxtY+erD9L6YG5vpmydVaE9LL96lriDn/uXnJ2ldYxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=N3erS5ff; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1720761633; c=relaxed/simple;
+	bh=nYjlKwhIX1L0qtnjhzKtgns8Ws95fvv+IWSXmNEJmT0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q1VzMPvBUQRc+0NpN4QZoaZFWR1lbBZl8ZXbNRhDKJ/gz55RdJSweyQwt7kiJcjtQ+BdeK20NPLJjGFgUH08ZPQQeeY/K/CPYGVgLxL1F7yUNRjM7SkTu1VNXXbVIEaNAXG9D2OQGx3wPEDIwxXZzS4sTX02TS5oPKf3T78rrTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YKOzWjRU; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N3erS5ff"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3d9dbbaa731so910453b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 22:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1720761595; x=1721366395; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dJs3uYAgmbjgEj5efu8Z24w0fCzDc8W+Wf0sVn//syU=;
-        b=N3erS5ffP4rFeNpcrVj9WfS3/FR0fcC7U3Y0J8z4ptVxhl+18RCUxS9EBzU3zyRAml
-         TXmXEKgC54RfOp/SVXJbZbFX1GjX36bSM/hhRHcOhy0S0u3NHTundEy6+bF0CUuACynM
-         G9RibQU5PBP/sSG1MpsSpfahhc/1qQSCJ7QJc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720761595; x=1721366395;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dJs3uYAgmbjgEj5efu8Z24w0fCzDc8W+Wf0sVn//syU=;
-        b=GUXnNRJ3gkclD3qLj5ozg8ug1ukgwdgffgdXmEHTWcNjfMdJqsgNJLRwPBKR6EHWZR
-         +g6UAmbC/y3rk3VSPsWtT+nvAkfspBAzy3EMfH2j9GzI26B8kmqpL7Uxp5RUKbg4Sl+u
-         GYtV+8hjjfkrQvlA/6ddRD2tGhj7pRd3kfHsOgDs3CIWjmYP1rXdYtHj7yuFkBCSByiP
-         IPa2iS8yv/rjNiq4WnuAaWa3vs9bNacMy5Z49kLyTj+WyEFxPGSDLgrdgtIRJbDCn0wo
-         ddJlox5X1bdMjDdZOi2/x1/krZ8Vp3FgKbDP2kmZHRSOrePg/LHbEnY8RQPq2m4xs0BG
-         Pm7A==
-X-Gm-Message-State: AOJu0YyHyOlGwX3eDqWzxZ0B4nxA8AjbLid66sG1UIT0zQj+YTxwe5e8
-	NfWfeqspq9hZywO8wqoQS04nspFw0JhqFU1tfXgdByuLPioxu1hz0H4TOxylfQ==
-X-Google-Smtp-Source: AGHT+IGeKCj6wggEIhkK5rbVRPufA0jXDRCHo+n4P5SDGOIZsguPpIWfq3UtLpR21utxnl1c5msKMw==
-X-Received: by 2002:a05:6808:15a2:b0:3da:a793:f10e with SMTP id 5614622812f47-3daa793fe0amr3234374b6e.18.1720761594886;
-        Thu, 11 Jul 2024 22:19:54 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:15f3:5252:ec56:52ae])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b43967851sm6553436b3a.109.2024.07.11.22.19.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:19:54 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v6 23/23] Documentation/zram: add documentation for algorithm parameters
-Date: Fri, 12 Jul 2024 14:18:34 +0900
-Message-ID: <20240712051850.484318-24-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-In-Reply-To: <20240712051850.484318-1-senozhatsky@chromium.org>
-References: <20240712051850.484318-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YKOzWjRU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hvC/5AkHO/OeeJro5Mw7Jxkxmq3vhHmUumiCck6LtWE=; b=YKOzWjRUhpSVw5NUTTXHlN48sV
+	eKqZ3lcm3RnVbq7pkowyf30yrp56LKf/k212lkbMQalmr5lhNgdcV7L6tdMwtAKYSMXMPahxZ19BC
+	iOKqMvn7zUbhjNQ6G2qIWalgJEM8nYK69yq/X0huoqLWL9yF258gqDp1oj6S8CG/3obGFyp4oE2P4
+	347gc2lFXs1s1e6zKoeNfuX5tRgJY+es/iEBVmXg2pNFLIhmpPj3L0L24rpRqXZrs9Skp1eL1Igf+
+	bx7AEfioIIVA4Y0iKmVmysybW5LBVc6dZA+QT9SDUC0x7qDUym5dW6JeJT5WMbFLbBuYV7uXJbBtw
+	JknaPJHQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sS8hr-0000000GUnG-17id;
+	Fri, 12 Jul 2024 05:20:31 +0000
+Date: Thu, 11 Jul 2024 22:20:31 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: hexue <xue01.he@samsung.com>
+Cc: axboe@kernel.dk, asml.silence@gmail.com, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] io_uring: Avoid polling configuration errors
+Message-ID: <ZpC9HxJnokkbjKAO@infradead.org>
+References: <CGME20240711082438epcas5p3732ee8528964d2334f5670e36b0c3f10@epcas5p3.samsung.com>
+ <20240711082430.609597-1-xue01.he@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711082430.609597-1-xue01.he@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Document brief description of compression algorithms' parameters:
-compression level and pre-trained dictionary.
+On Thu, Jul 11, 2024 at 04:24:30PM +0800, hexue wrote:
+> +	if (!ctx->check_poll_queue) {
+> +		struct block_device *bdev;
+> +		struct request_queue *q;
+> +		struct inode *inode = req->file->f_inode;
+> +
+> +		if (inode->i_rdev) {
+> +			bdev = blkdev_get_no_open(inode->i_rdev);
+> +			q = bdev->bd_queue;
+> +			if (!test_bit(QUEUE_FLAG_POLL, &q->queue_flags))
+> +				pr_warn("the device does't configured with poll queues\n");
+> +		}
+> +		ctx->check_poll_queue = true;
+> +	}
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- Documentation/admin-guide/blockdev/zram.rst | 45 ++++++++++++++++-----
- 1 file changed, 36 insertions(+), 9 deletions(-)
+This is wrong for multiple reasons.  One is that we can't simply poke
+into block device internals like this in a higher layer like io_uring.
+Second blkdev_get_no_open is in no way available for use outside the
+block layer.  The fact that the even exist as separate helpers that
+aren't entirely hidden is a decade old layering violation in blk-cgroup.
 
-diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
-index 091e8bb38887..e3cdbf4ba61f 100644
---- a/Documentation/admin-guide/blockdev/zram.rst
-+++ b/Documentation/admin-guide/blockdev/zram.rst
-@@ -102,15 +102,33 @@ Examples::
- 	#select lzo compression algorithm
- 	echo lzo > /sys/block/zram0/comp_algorithm
- 
--For the time being, the `comp_algorithm` content does not necessarily
--show every compression algorithm supported by the kernel. We keep this
--list primarily to simplify device configuration and one can configure
--a new device with a compression algorithm that is not listed in
--`comp_algorithm`. The thing is that, internally, ZRAM uses Crypto API
--and, if some of the algorithms were built as modules, it's impossible
--to list all of them using, for instance, /proc/crypto or any other
--method. This, however, has an advantage of permitting the usage of
--custom crypto compression modules (implementing S/W or H/W compression).
-+For the time being, the `comp_algorithm` content shows only compression
-+algorithms that are supported by zram.
-+
-+It is also possible to pass algorithm specific configuration parameters::
-+
-+	#set compression level to 8
-+	echo "zstd level=8" > /sys/block/zram0/comp_algorithm
-+
-+Note that `comp_algorithm` also supports `algo=name` format::
-+
-+	#set compression level to 8
-+	echo "algo=zstd level=8" > /sys/block/zram0/comp_algorithm
-+
-+Certain compression algorithms support pre-trained dictionaries, which
-+significantly change algorithms' characteristics. In order to configure
-+compression algorithm to use external pre-trained dictionary, pass full
-+path to the dictionary along with other parameters::
-+
-+	#pass path to pre-trained dictionary
-+	echo "algo=zstd dict=/etc/dictioary" > /sys/block/zram0/comp_algorithm
-+
-+Parameters are algorithm specific: not all algorithms support pre-trained
-+dictionaries, not all algorithms support 'level'. Furthermore, for certain
-+algorithms 'level' controls the compression level (the higher the value the
-+better the compression ratio, it even can take negatives values for some
-+algorithms), for other algorithms 'level' is acceleration level (the higher
-+the value the lower the compression ratio).
- 
- 4) Set Disksize
- ===============
-@@ -442,6 +460,15 @@ configuration:::
- 	#select deflate recompression algorithm, priority 2
- 	echo "algo=deflate priority=2" > /sys/block/zramX/recomp_algorithm
- 
-+The `recomp_algorithm` also supports algorithm configuration parameters, e.g.
-+compression level and pre-trained dircionary::
-+
-+	#pass compression level
-+	echo "algo=zstd level=8" > /sys/block/zramX/recomp_algorithm
-+
-+	#pass path to pre-trained dictionary
-+	echo "algo=zstd dict=/etc/dictioary" > /sys/block/zramX/recomp_algorithm
-+
- Another device attribute that CONFIG_ZRAM_MULTI_COMP enables is recompress,
- which controls recompression.
- 
--- 
-2.45.2.993.g49e7a77208-goog
+If you want to advertize this properly we'll need a flag in struct
+file or something similar.
 
