@@ -1,189 +1,127 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2056.outbound.protection.outlook.com [40.95.110.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4062E376;
-	Fri, 12 Jul 2024 00:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.110.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720743123; cv=fail; b=turzF+cA9SnOETEaodgrQIfkHT7AyCJ9q/LdQ2iR1X6EfkwELkcpoxSMetvr5b5okclE+idH1TicADLpFo/5LstpyxgFcel/9PxHTCgKBpm7ZqhucOtBzY98ogvGGem11zOv8SvJmC24elQ9oXEeTekNOqr03YoL/+Y/ZDlA+R0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720743123; c=relaxed/simple;
-	bh=BhCEMzixjEMo9tD3CpkiBaQEQVgYASERGCLb9qFwnE0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f4reTwIgj6ITbOkKG8Ieqc6DFEWiCFp3neZwl9kZNtdEx5M488xsbmhz0od/DtoUMWWE9lNvceQ4GsynZeawwKraIgPphtg9hMl2DYWzRTOvp+IpIFJfO8xUTXMCCCSqLZsDJjkypDobgCGOz6YehhRqoZ1gESIgbrEcssFKaIw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=dR6SoeEG; arc=fail smtp.client-ip=40.95.110.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA23376
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 00:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720743222; cv=none; b=f/yDcEx+pPAaos5C4QHCTS3jXTcc80f/1s1ncqfrHcFHYrtxBCzBY+bEW9sg3Fe2LxEVPxpKwocguB4Q8fY0bE5IVMTs1IYJ5HAiSANG6lUCr0Pk07Zt6fWLy3E4rA5a19EeaqvlXOrdCPSNXQXYmW6paz1+Y7LxHr9Y+9+T3ds=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720743222; c=relaxed/simple;
+	bh=5a8vBn/YHW4mLzVnW5So/Jm3wAhZJ78cpeMq82a27lA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gJy35Q/dXhIh4J/GZjx+42wCZ/eIn0gyWWHnlUhrDNWyrU3+/aa2ntFbfWWHyZy0HBJ6TxF0Uv+CWMjxRub3KPgSJe72xUfq85upzrbobS7H3CW1GfTiiKQJgEQBm0sa+Riz2aVc+Nnt1fTPMNLhdQx1kgEA+isSx3vn4HxeQYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dTpZ/ADO; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="dR6SoeEG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=f5e9KHnRIzmEZjSh7y6Df6oWAjfRaHByaF+ob9nA2QsW1wnK6qmWSXqRocFrT9ddc1XetQSz+FGyAq15AJtlBwSp4wmFzGXa1uPR5gbzLVJ8TFzMAXsadgygROT6T5eR2+sSvhzisQGm9oAzDvdpXFf5xl1djU8Nzw2oE9tEKbl/bpfYg8JA8VJrJJIBGn4O6AC6xMujYKwEV2HxLiIYcrAxl9sSjfL2A5Q3Q2nuwe+TCcy4gdkqpOimMl9k1MdyQ1r2/xjh26oa9JCVzt9iJRg3o5VJESn7N7f/lLCDEn7fIZcqCULfo+2uXc2RWDGsUdhglOr3RoUtrf+zNfZh/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=101RSNpPq47huqHs3QrH3qcaed0oAXODcnv4Mk7gMeU=;
- b=GLL/RbLFUY0kXMcTwuK2VExnTEC0/5bpU4Hw4p3ervtMAecLF6hKLFZzl3isEq/4vDHrHiR7Gw4QbDiw4aO1YhQl5cLjre+x2oteo5D9kBnRVHIi3ZH58ausm60iIeJmnqPVaIUTgRlCBvYcOh7mwWFWHACGTZ0Bf7kQJuGHhRnlEeIFv7IX7vY2XTQBA0ti+mdit35XZxXUVZ1xoP4vmJxdISw6kOI19mk3eQDdni1Y7RD+qj0uP8uDUBvgRgECH7JrVLNHMrr3bgakk4JHwQvT/baGYQy+iFZoA1/OIQcKT2pbsWRq8ATOVfcuoOKB2M33x0pPYkew6n1QkOyAAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 175.98.123.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
- dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
- dkim=none (message not signed); arc=none (0)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dTpZ/ADO"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-447df43324fso69141cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jul 2024 17:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=101RSNpPq47huqHs3QrH3qcaed0oAXODcnv4Mk7gMeU=;
- b=dR6SoeEGBD9ITCGqChqlPYIDBzgfMwcpXzzU9RCui8kmDPgc6ZK6QLVyPiS+eVw0sNw7BjfTWe3lFwWCFSzYAyyNOBs8p1MR8vXU4I0HwH8FWPy34cQ9R0TTopgEYIPajuzRC+GzggXyOGmrV3/Fis/OpHd44twucV+mIEGdSLY=
-Received: from SI2PR02CA0006.apcprd02.prod.outlook.com (2603:1096:4:194::8) by
- SEYPR03MB6532.apcprd03.prod.outlook.com (2603:1096:101:89::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7762.23; Thu, 11 Jul 2024 19:38:01 +0000
-Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
- (2603:1096:4:194:cafe::a9) by SI2PR02CA0006.outlook.office365.com
- (2603:1096:4:194::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23 via Frontend
- Transport; Thu, 11 Jul 2024 19:38:01 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
- smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
- designate permitted sender hosts)
-Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
- SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 19:38:01 +0000
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
- (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
- 2024 03:37:58 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Fri, 12 Jul 2024 03:37:58 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id 53A165F671;
-	Thu, 11 Jul 2024 22:37:57 +0300 (IDT)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id 53353DC0F7F; Thu, 11 Jul 2024 22:37:57 +0300 (IDT)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <linus.walleij@linaro.org>, <avifishman70@gmail.com>,
-	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
-	<yuenn@google.com>, <benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 5/7] pinctrl: nuvoton: npcm8xx: remove unused lpcclk pin, group, function
-Date: Thu, 11 Jul 2024 22:37:47 +0300
-Message-ID: <20240711193749.2397471-6-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240711193749.2397471-1-tmaimon77@gmail.com>
-References: <20240711193749.2397471-1-tmaimon77@gmail.com>
+        d=google.com; s=20230601; t=1720743220; x=1721348020; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FvmJJCnLXZLr1KbbD5fKBqYw5WHyRFvoxJIcU+eMWec=;
+        b=dTpZ/ADOQmm+mqKXztmACMd/f82S9JeRII1UdB+3DW0Sp8YvI4fWR++ciqXi8KSxfs
+         XBDgjz5B/1bCcOLIZMaWaGVsHwZKEDTd66+5RSZMQE2rsEQ1IF49Xd/rqVws8Qn6hJ0n
+         JlSFx+OxPN29j+iSt7WrI3wN2OOR1xbZ75HwFRE2Va4TD0utLqgKwuHg4sRE6f2UQtwC
+         EKbD/1JlaUBOL2xZNQ84zZU3qZAVRyCrN1pW0WKtFBK081ok3d0W3A1iYUaPDcQAw8TE
+         KStNRPCOM4iCyUhy6ViHI9CCC61hS293/ZTOiM+GyptFygyphwp2Lo3sCaG4fDG30l+i
+         0afA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720743220; x=1721348020;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FvmJJCnLXZLr1KbbD5fKBqYw5WHyRFvoxJIcU+eMWec=;
+        b=V41rneISWADCiKFQicBivtgUjs6PQ0aEM2LhnIPEqyoF6A/zdWzzE0IkiKKb6hUatR
+         UuLw9TtezsT5zbMwNK4ySnXGcFZsOHCe1n1q12HqASrWJeSn6JAJMnB2Yaw3zPtD9WXm
+         ExEF8NOoA20zPDqxMx1Rtscgz34PmJ59h+6M1xNYfj65xGgAgSUBEraHeAQueOrKsbqt
+         sEs+FAQrv/PVYBMTcLZF8Acy88S8/4N+rXr4m6QrHQ8tCUSoGfzV2vlXfX/7fttf42Ng
+         2syQivgvHL9gnHnHyBjdAFRsx9rDO8P03nvUMHPX7V0raF+xhiVx4hOKffVZi0K9++/A
+         +7yw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDa52SpK4Hw4G93B9sWFEKJvaXs+dQz+MR4LfGNtqMiUpEprefVVbe8csXjAb0z/nv3U+X5I1leszJSpTu5mUH6jkmFG+gOMg4HGwP
+X-Gm-Message-State: AOJu0YzgTcWCKq7X6488/bkt67TECWTIW7srXmXCYxBG0QWYdQXQFlRJ
+	3B3K2qSKC/vnSQlkDQPL7UnwmwMnDovTGqlpb3k2TRAqqn5OyhIBL/8jLc9wDz7MGti7wemx37d
+	UYw3fZe+iVgGKga1omzwGSm6Ust4wCXDoSON7c3nOUq2YqOwezp+n
+X-Google-Smtp-Source: AGHT+IFAD8sqxPusycnznfFlRILtgKPfwSQZVQ/Kk7PE0REcOpbukysMQqB4REQvgqThSoihTZy/us5ruUkCyrSKJFk=
+X-Received: by 2002:ac8:5994:0:b0:446:64ad:ee91 with SMTP id
+ d75a77b69052e-44e75322eefmr1457141cf.20.1720743219959; Thu, 11 Jul 2024
+ 17:13:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E6:EE_|SEYPR03MB6532:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4edba82-6461-4127-ba83-08dca1e0f9e5
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|35950700016|48200799018|61400799027|7416014|376014|7093399012|35450700002;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CaTyCVURQk5k8WrM73pEOT+ZUPmI4EQnCSKgmYNdk2bC6RRgU7ZeuYdub/jF?=
- =?us-ascii?Q?81fpW0uiyRT5oHS7fzFIFGUOpMJasRWjbsj4dew+OjujMMpiXK1OUjs7opxZ?=
- =?us-ascii?Q?0lv2lvBvNZG3980y97hCGKU5FNOYg0jjawXayZ3GSzb922YJ/6+H9tpv3UFz?=
- =?us-ascii?Q?wKbI0l2Dj1zfc5Eknc5Rk+e8S5if67bVivX5UfBJo19onFgKz0yeayEG9Rlz?=
- =?us-ascii?Q?JfYfqfKrj+HWrmt4xuyR3rdCa97Fg/IL4+K7em6DyftEg4qROj/dlbTJ/GJ7?=
- =?us-ascii?Q?cEbAWJP7QbDDwdHHNwbfgzSRppCZ4qc5aWgkGnX6A8MyBAU/VKoWy8afJSqL?=
- =?us-ascii?Q?Aajyn1ZDwNrTlFFLGVmlD5yYlKgGozUT/JG40hjb5HjObv72LX6Nx8N/EwF9?=
- =?us-ascii?Q?w/S5dQVfroXt/trKcRTJARYqJuwkVULVoYZqLKQ4GOHxpSwDdwNBa8ZX8EKJ?=
- =?us-ascii?Q?zv2P0oMkwTwJSntDDa7PE9SfvjpnTuxrA+iIf2JUm0BMLoina5BwBT6oCRAl?=
- =?us-ascii?Q?JXgBF1NLU0IMP7knJN7PcHxD77UO9cLyGw+MYixcJx8eSPBSIFeG5pWTiyT4?=
- =?us-ascii?Q?i0xaJsuL7Xf4e6peb136RPvyv1h8uEMPHKK6YGjS4aETrTEZfb1axWDDEm8x?=
- =?us-ascii?Q?38ewQfd2FNnDjBgpbTEu11/+YKgtDxTDib9rzRkGzJ2eoTbkn+YxN/aZ3m6A?=
- =?us-ascii?Q?7nYNq06bCneWjJJlq7bzX2ZppR3IDilo5dDc8D9NJS6ESeKpfmzJ9sDi1ahs?=
- =?us-ascii?Q?61T0fJKjAyUrmjDsS/V/AFFOdIieUeBcw3AXIp5OAQNPazhYs9xU9VsJyfKy?=
- =?us-ascii?Q?T+Lq4nRTNm+wwtAmyea8o1q/NM8sjoRUeGmR1zGTary7L8Oood2qY93onUT+?=
- =?us-ascii?Q?DPim6XWDQRCIbZvk8piO4LOTkpMRlccMDv+mJbjkA8zQCc24hQgNhGy6lK7q?=
- =?us-ascii?Q?h56EzG30Er2mc18NsbSEPh39HIq5tYtXet5JdkPpK2xbcZ4ouSHbYVDViBuq?=
- =?us-ascii?Q?+q1odeR3G8sLJwVmUqItSljtZUh78uDAAO4qYZO9Rte3gV9sF0kVe6H3TynW?=
- =?us-ascii?Q?jJ5NHtCs5k4PZv2b4dhY/GaYKZ812y6bssjUXuaukWNem2oYgwxRbWW6D9yy?=
- =?us-ascii?Q?Ga3O41NKIgs19tBnn/+92+L/iMpwuemf5LlnaWEr54LNwLaS+g5IwLk0PrI7?=
- =?us-ascii?Q?qXM+9tOl2eA1WJeoHN0+h7RQ/cAwNNsgq+NZD2RUTIizXGiehideCwFnJRCN?=
- =?us-ascii?Q?V8RSJYFlWdf02Kjjkne8qqiI8xM/LkOZlcMplFS6tXVzBw+f6B8+bsNGjpc3?=
- =?us-ascii?Q?z83RtpK2NzYc27DP9SrZ9JMDVVtO96RhlyJtLIxckCdybmZcJ2nnXcDw6Yrt?=
- =?us-ascii?Q?+jC3Op02nwofD/t/hB3ivcr9iQclRjssQ+RRquMadWUNCYQwaxo4mTqxGjSs?=
- =?us-ascii?Q?Zr8/OiSGuGRNLtomPgiR1u24mSGjzPOV4KMnxW/P2SBg7i/7USu2vg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230040)(82310400026)(35950700016)(48200799018)(61400799027)(7416014)(376014)(7093399012)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 19:38:01.6158
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4edba82-6461-4127-ba83-08dca1e0f9e5
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E6.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB6532
+References: <20240711212514.2372780-1-yoann.congal@smile.fr>
+ <CAGETcx--FNpz3o5TiZ3T6UkMHKBUjD8cwHR6eQAjM-U86=p_Eg@mail.gmail.com> <f2044667-e235-4abc-924e-3615c60681f1@smile.fr>
+In-Reply-To: <f2044667-e235-4abc-924e-3615c60681f1@smile.fr>
+From: Saravana Kannan <saravanak@google.com>
+Date: Thu, 11 Jul 2024 17:13:01 -0700
+Message-ID: <CAGETcx-ioF=jTbyQMeD2fsYKz8q5vw_TWYWS9m8H5=pCo5KFYA@mail.gmail.com>
+Subject: Re: [PATCH] regulator: core: Set the fwnode for regulator_dev
+To: Yoann Congal <yoann.congal@smile.fr>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove unused lpcclk pin, group and function on the Nuvoton NPCM8XX BMC
-SoC.
+On Thu, Jul 11, 2024 at 3:19=E2=80=AFPM Yoann Congal <yoann.congal@smile.fr=
+> wrote:
+>
+> Le 11/07/2024 =C3=A0 23:29, Saravana Kannan a =C3=A9crit :
+> > On Thu, Jul 11, 2024 at 2:25=E2=80=AFPM Yoann Congal <yoann.congal@smil=
+e.fr> wrote:
+> >>
+> >> From: Yoann Congal <yoann.congal@smile.fr>
+> >>
+> >> After commit 3fb16866b51d ("driver core: fw_devlink: Make cycle
+> >> detection more robust"), fw_devlink prints an error when consumer
+> >> devices don't have their fwnode set. This used to be ignored silently.
+> >>
+> >> Set the fwnode in regulator_dev so fw_devlink can find them and proper=
+ly
+> >> track their dependencies.
+> >>
+> >> This fixes errors like this:
+> >>   stpmic1-regulator 5c002000.i2c:stpmic@33:regulators: Failed to creat=
+e device link (0x180) with 2-0033
+> >>
+> >> NB: This is similar to the commit a26cc2934331 ("drm/mipi-dsi: Set the
+> >> fwnode for mipi_dsi_device") applied to the regulator framework.
+> >>
+> >> Cc: Saravana Kannan <saravanak@google.com>
+> >> Cc: stable@vger.kernel.org # 5.13.x
+> >> Fixes: 63c7c9e16c8e ("regulator: core: Get and put regulator of_node")
+> >> Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+> >
+> > The change is valid but the problem is that managed device links don't
+> > work correctly for "class" type devices. So, we can't merge this
+> > change yet.
+>
+> I was totally unaware of that.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Yeah, it's not obvious. The TL;DR of the problem is that your consumer
+will end up waiting for ever for the supplier to probe but a "class"
+device never probes.
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-index 396bd07e7c74..bc947d0d6ede 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-@@ -570,7 +570,6 @@ static const int spi3cs3_pins[] = { 189 };
- static const int ddc_pins[] = { 204, 205, 206, 207 };
- 
- static const int lpc_pins[] = { 95, 161, 163, 164, 165, 166, 167 };
--static const int lpcclk_pins[] = { 168 };
- static const int espi_pins[] = { 95, 161, 163, 164, 165, 166, 167, 168 };
- 
- static const int lkgpo0_pins[] = { 16 };
-@@ -807,7 +806,6 @@ struct npcm8xx_pingroup {
- 	NPCM8XX_GRP(spi3cs3), \
- 	NPCM8XX_GRP(spi0cs1), \
- 	NPCM8XX_GRP(lpc), \
--	NPCM8XX_GRP(lpcclk), \
- 	NPCM8XX_GRP(espi), \
- 	NPCM8XX_GRP(lkgpo0), \
- 	NPCM8XX_GRP(lkgpo1), \
-@@ -1054,7 +1052,6 @@ NPCM8XX_SFUNC(spi3cs2);
- NPCM8XX_SFUNC(spi3cs3);
- NPCM8XX_SFUNC(spi0cs1);
- NPCM8XX_SFUNC(lpc);
--NPCM8XX_SFUNC(lpcclk);
- NPCM8XX_SFUNC(espi);
- NPCM8XX_SFUNC(lkgpo0);
- NPCM8XX_SFUNC(lkgpo1);
-@@ -1277,7 +1274,6 @@ static struct npcm8xx_func npcm8xx_funcs[] = {
- 	NPCM8XX_MKFUNC(spi3cs3),
- 	NPCM8XX_MKFUNC(spi0cs1),
- 	NPCM8XX_MKFUNC(lpc),
--	NPCM8XX_MKFUNC(lpcclk),
- 	NPCM8XX_MKFUNC(espi),
- 	NPCM8XX_MKFUNC(lkgpo0),
- 	NPCM8XX_MKFUNC(lkgpo1),
-@@ -1495,7 +1491,7 @@ static const struct npcm8xx_pincfg pincfg[] = {
- 	NPCM8XX_PINCFG(165,	lpc, MFSEL1, 26,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
- 	NPCM8XX_PINCFG(166,	lpc, MFSEL1, 26,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
- 	NPCM8XX_PINCFG(167,	lpc, MFSEL1, 26,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
--	NPCM8XX_PINCFG(168,	lpcclk, MFSEL1, 31,	espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
-+	NPCM8XX_PINCFG(168,	none, NONE, 0,		espi, MFSEL4, 8,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
- 	NPCM8XX_PINCFG(169,	scipme, MFSEL3, 0,	smb21, MFSEL5, 29,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
- 	NPCM8XX_PINCFG(170,	smi, MFSEL1, 22,	smb21, MFSEL5, 29,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
- 	NPCM8XX_PINCFG(171,	smb6, MFSEL3, 1,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
--- 
-2.34.1
+And the fix is non-trivial. So, it's been on my todo list for a bit.
 
+> > So, for now, we shouldn't land this. Are you not seeing probing issues
+> > when you do this? Or significant changes/delays in probing?
+>
+> I just checked my logs : No probing issue nor noticeable delay.
+
+With your change, I'm guessing you see more links under /sys/class/devlink
+
+Are all the consumers in these new links "class" type consumers too
+(like other regulator devices, etc)?
+
+> Thanks for your answer, I'll drop this for now.
+
+Thanks.
+
+-Saravana
