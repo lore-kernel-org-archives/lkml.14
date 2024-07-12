@@ -1,102 +1,140 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EA9143758
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000E9143747;
+	Fri, 12 Jul 2024 09:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720775407; cv=none; b=JOehpy9mE02iCAgASl86NgdBo3Pp3Ar64i9JEB4qqUjGS2ChLb/BpBwPUdVpHBMYofyYRr907Jgl2oI4FUhOLdHC8hzbdeCvr2dNyIj0S/Vka68bT7nSy+gxP5lqoioesntyZOuA2FiwpTgOtdthxiz3Z/MIz90PunB8l9Qo6JE=
+	t=1720775455; cv=none; b=oQZrdH4vGN59szeuIgVusAnKr66aRUbL8qhZV2t+VbY8rzg/ADQQ3chsrYmQWtVvA5s2sWXrpn44jIByweVj4Xxi/RV3nH4A3/MJDPE07U5XaNCIhItMXbN8F/VSQyvfWNjyr1SenGtrMSTZolqtHImNIXEBObzrg4uwKoxrkvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720775407; c=relaxed/simple;
-	bh=92ARlhMrFxnltJoEG/KO+vFy4IkhU7sCILYUeEcc59U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QMMI2nDRDS8RI6olXjXO+k9SAjvBVnnSppFPvug573wcpH9TfjRMV/QyKZJSQOMpVrM6Hv5/87OUae6YPDNYqC5qdwu/z/YcmKtQs5kxC7Y0+/4C8znCPBCTM80RGBgMpxZ/mZWqOZ4tT8TnK64z6h5uDXJBAAx6Uf5T5BBxCfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZDRxxwMq; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720775455; c=relaxed/simple;
+	bh=RqrDhr4mKdHOIlBs1nQe1pWETVXoN5c5DZn2yZP90V8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LUA0mr8G72r16tiMXZn8HcLQ5DbcSOKLzxz2t87j1XbI8toSo/j2rG5rmrppL1iwezF0gY+5tP6uSuxG/K7T5sApl94ajp5e0rJHcUl86lLd8DgqybLzsSCXScf0ZT2SzSnbuZKF6clOxHBiRhj3mZ/n1cSqXArBCm7L9b7d6ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RIdtfsdn; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDRxxwMq"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e03a63ec15eso1728306276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 02:10:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720775405; x=1721380205; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hp1jgtDDKp2yfm23SCirsWH2DTom7+EqUMqjaOQMl8s=;
-        b=ZDRxxwMqJmoRDPLP7dH9E9jpMk71/QoGUf2ECb4jZj+4pF1t2GBGJe3l3SwyhQ67o2
-         mAjgDHFokj3v17519JNJfbq25ilBq132jODpr4ugCWjG0kTqYzy1a3Arv0vNXCWwCYfc
-         nbZaBXiSi4VoM5TWrwC3xEu17WbHp3MP8kqjT02qE3Unr68NIw9tWW5/bESHB4qpmxyw
-         2wc77vtErItuPHKN0SSkFumtBGBk4EA5tj8C6yJ4zWO+7bvWr7vZjCBseydCwHjbrlvW
-         u7OI+bm2EoDR/j2n8UJlL43owxfROht9K74qxQ7pOdHdAdKUq7e99w/zlS4RYsdCiGgp
-         Hl2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720775405; x=1721380205;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hp1jgtDDKp2yfm23SCirsWH2DTom7+EqUMqjaOQMl8s=;
-        b=O4zIar8efzPCeMXRp0yXeFTZfmmZOGgh+8pQzL7N22O9idvvje+WaLsSEn9ReUHV+u
-         Au/nfDTWL51kuNPW6iMJyTFr+HCKsC6hw3ok0VrN1r0+42i6eRbF0PMR0SYZKj1WSFiV
-         /ebzodRIJjkxebov/H/eYPgktYVx3vjcwOo5Xzjro+JLLjRjoGqYan4OFe2LzsP0k97Z
-         ZFMuQHuLGmmkIu92ncYfgC+Q6+k5Q26xRjaZ9RfS7aATlwKHW0A2SjPkpDsLMYGmVYSL
-         RIFQSafdTESMzi0w8Psq2oebhBA37++m7Jj4RQ52AjbqBv6xWmBRtg0nFWq63i3OiOcQ
-         o60w==
-X-Forwarded-Encrypted: i=1; AJvYcCUwfxSQ74SEipBCkEYpPKw+UjVDDM+zUp8fCqbkkM6Oj74RaeC3WNESqbUA2y00uyX2Eac9fe8LiFC/L5Q2kPv5ZbLyUlmNCZWD7c8z
-X-Gm-Message-State: AOJu0Yz5WEuuC4UBoWZUNEUiemz60qCCx204kE6MzII8Rf9K9YF2zLb4
-	j3kRTogT9STYs2K0XNgK6kOi5DVNkja0jeEYKMHnyqDCOE8N8h/0o0JMsUqLcoIhVdZq1Oz6ac6
-	+puFSCWxuLRrhzhswy20hcpHttkcPwKqufD4Tdg==
-X-Google-Smtp-Source: AGHT+IEhhN868PqjoOtPt4/HXGxzNPUJJGslyFKUXQCrTsbztUttPEoG4X/T5cjLdpglfCj2+mvP6vMuVbajMoDBAHo=
-X-Received: by 2002:a5b:1cd:0:b0:e03:5895:31b8 with SMTP id
- 3f1490d57ef6-e041b059200mr12504526276.26.1720775404920; Fri, 12 Jul 2024
- 02:10:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RIdtfsdn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720775452;
+	bh=RqrDhr4mKdHOIlBs1nQe1pWETVXoN5c5DZn2yZP90V8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RIdtfsdnYXpnFid3qwfKgEuFSBviD1hq9vmC7ckpVQNWVz1XULbbBo4PB8vKIT3GU
+	 +7ooljJpIhTEre1z9Et0ihFEorobz865JKit4HBF/Q+DumvD7sba6Kd2PuXpLs4TaI
+	 gm47Q0Y4UTzFrOlBaoFU/KztCjjSZ3MbwwVQcme9ZqVkXs9m6xRhZos+r5i8Tl/m5o
+	 xleLUt1p8A7Bux3Dr5d5YJONaBIGZSRfaBrG5nCp7IFvHJR2DX0mgtLbguaRr4G8ne
+	 2Fu4Ll5ToP/88sKARx/qTOY5GwVyn/zsyoVtIn3brxlv0zrP/bUWzRT+XVIPYxtjKf
+	 LFLuFwrwM5HDw==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 11E1137821DB;
+	Fri, 12 Jul 2024 09:10:52 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: kernelci@lists.linux.dev
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Testing Quality Call notes - 2024-07-11
+Date: Fri, 12 Jul 2024 11:11:21 +0200
+Message-Id: <20240712091121.19116-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708121018.246476-1-ciprianmarian.costea@oss.nxp.com>
-In-Reply-To: <20240708121018.246476-1-ciprianmarian.costea@oss.nxp.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 12 Jul 2024 11:09:28 +0200
-Message-ID: <CAPDyKFoWdRdi-NZbtj4yXeBxiH9o1+J0uux+Aiaw8AQbUGpM5A@mail.gmail.com>
-Subject: Re: [PATCH 0/3] address S32G2/S32G3 SoC based boards particularities
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Haibo Chen <haibo.chen@nxp.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, s32@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 8 Jul 2024 at 14:10, Ciprian Costea
-<ciprianmarian.costea@oss.nxp.com> wrote:
->
-> This patchset addresses S32G2/S32G3 SoC based boards
-> uSDHC controller particularities such as:
-> - GPIO card detect wake mechanism is not available
->
-> It also fixes a clocking usage issue on 'clk_get_rate',
-> in case of 'per' clock.
->
-> Changes in v2:
->  - Dropped option to not change pinctrl during PM.
-> Instead, when S32G2/S32G3 uSDHC pinctrl entries will be
-> upstream'ed, 'sleep' pinctrl will not be defined.
->
-> Ciprian Costea (3):
->   mmc: sdhci-esdhc-imx: disable card detect wake for S32G based
->     platforms
->   mmc: sdhci-esdhc-imx: obtain the 'per' clock rate after its enablement
->   MAINTAINERS: add 's32@nxp.com' as relevant mailing list for
->     'sdhci-esdhc-imx' driver
->
->  MAINTAINERS                        |  1 +
->  drivers/mmc/host/sdhci-esdhc-imx.c | 16 +++++++++++++---
->  2 files changed, 14 insertions(+), 3 deletions(-)
->
+Hello,
 
-Applied for next, thanks!
+KernelCI is hosting a bi-weekly call on Thursday to discuss improvements to
+existing upstream tests, the development of new tests to increase kernel
+testing coverage, and the enablement of these tests in KernelCI. In recent
+months, we at Collabora have focused on various kernel areas, assessing the
+tests already available upstream and contributing patches to make them
+easily runnable in CIs.
 
-Kind regards
-Uffe
+Below is a list of the tests we've been working on and their latest status
+updates, as discussed in the last meeting held on 2024-07-11:
+
+*USB/PCI devices kselftest*
+
+- Upstream test to detect unprobed devices on discoverable buses:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=dacf1d7a78bf8a131346c47bfba7fe1f3ff44beb
+- Updated KernelCI PRs according to feedback, now waiting for the first
+  test results: https://github.com/kernelci/kernelci-core/pull/2577 and
+  https://github.com/kernelci/kernelci-pipeline/pull/642
+
+*Error log test*
+
+- Proposing new kselftest to report device log errors:
+  https://lore.kernel.org/all/20240423-dev-err-log-selftest-v1-0-690c1741d68b@collabora.com/
+- Series got Acked-By from Greg, going to be picked up by Shuah soon
+- Feedback from Tim Bird: this series follows an unusual model where
+  tests can only fail but never pass, as no test case is generated unless
+  there is an error. It takes an unusual approach to detect regressions and
+  fixes. The autogenerated test case names are not very descriptive.
+
+*Suspend/resume in cpufreq kselftest*
+
+- Enabling suspend/resume test within the cpufreq kselftest in KernelCI -
+- Sent patch upstream for adding RTC wakeup alarm in the cpufreq
+  kselftest:
+  https://lore.kernel.org/all/2e667d-668ff800-1-22d70300@133606496/
+- Received a review from Rafael J. Wysocki, who suggested using the
+  rtcwake utility instead of the sysfs entry
+
+*Boot time test*
+
+- Drafted initial implementation with two scripts, a config fragment and
+  a bootconfig file
+- One script generates a YAML file containing initial timestamps for
+  relevant boot events, parsed from the trace file (run once)
+- The other script is the actual test, which takes the generated YAML
+  file and a delta in seconds as arguments. The script then parses the
+  current trace file and checks if any timestamp deviates from the
+  reference timestamps in the YAML file by more than the specified delta.
+- Tracking only a few functions at the moment (populate_rootfs,
+  unpack_to_rootfs, run_init_process). Next steps: refine bootconfig file
+  to include more tracepoints (potentially initcalls too?). Useful
+  tracepoints should be discussed upstream.
+- Will present this at LPC 2024 (embedded and IoT MC)
+
+*Support for benchmark data in KTAP*
+
+- Tim Bird is working on adding performance data to KTAP output, which
+  can be used in tests to detect slowdowns
+- The idea is to keep reference values and criteria separate from the
+  test itself
+- There is a need to store per-platform files with previous times for
+  comparison
+- Will need to figure out where these files can be stored so they can be
+  shared and used by different people and systems. Potential options: KCIDB
+  or https://github.com/kernelci/platform-test-parameters
+- Submitted a proposal for LPC 2024 
+- Other related topics for discussion at LPC 2024 include: how to avoid
+  device tree overhead in the boot process and boot phases (time-critical
+  vs non-critical)
+
+*TAP conformance in kselftests*
+
+- Focusing on standardizing the way kernel's testing modules report
+  results
+- Discussion ongoing upstream over patches converting tests to TAP:
+  https://lore.kernel.org/all/fb305513-580a-4bac-a078-fe0170a6ffa2@linuxfoundation.org
+  and
+  https://lore.kernel.org/all/6d82fa16-ed2e-41f1-a466-c752032b6f68@linuxfoundation.org
+
+Please reply to this thread if you'd like to join the call or discuss any
+of the topics further. We look forward to collaborating with the community
+to improve upstream tests and expand coverage to more areas of interest
+within the kernel.
+
+Best regards,
+
+Laura Nao
+
+
