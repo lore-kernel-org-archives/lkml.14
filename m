@@ -1,135 +1,92 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071B3179658
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F431741ED;
+	Fri, 12 Jul 2024 17:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720804207; cv=none; b=X/4cde8dX7Oh5SIvTQMasZYai9LBmjv/dT6Va0ptVTr4MKAdk6h6KLEdHq+QDpYgHdr/AxWISkztiuwQM3IbOI9vMCFMZiwVawOcMdW0vSUAIavQ4Hqi/wSdhyqPIfPgj0mnWz4H7u7l+uWG2WO4iYNaEZWHKNxyx0gWRh++7KE=
+	t=1720804227; cv=none; b=WkX/N8GHjCxgoIW/wZILxuDiqJsGPkZNCyZUcleOxhr1PRTEEGukXwHhbiS0qrvfXnxKJzQXvRUQ0avOIF/8ZT4jAd3P/OGm0zb+XUHDT0LIaHdfp8qd7h1ovM0UXhaoShbu6ttLWFwHSGXmTFMQaPbx+Z2Jnlj1A6phF40P5EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720804207; c=relaxed/simple;
-	bh=iG2xqENYZFTFr1IbouCj87WCkOw9JaByFRY/xIAfdYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fwrr7ASmpcKwGL34O+dtRIcA3gAWGl2abvCueJzKC9z7OwNQG1gv9oGMxIGNmIm7BFCylUpYLxt/qJFB0SPzxnbLOi+ZSRZ/PUZQiP2hvK9gWX3LmA2fzwZfL5iOjfXax1Nlux8yaNED10QCTyrePHVrBuh4b07+vCCYsult7KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Epp83Y2f; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Epp83Y2f"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4266edcc54cso1385e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:10:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720804204; x=1721409004; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rMZXVu60zJG58GKh3Q1lSirg7a2qt1HU65yEcaRG7AA=;
-        b=Epp83Y2fdc0xyoLw+mqFMtIY1yYxQGg7he4PNAs7yf+32ywBhW60uvKKpJexsNnQ53
-         IHBZkffIMHFxw+WBFB/JWg+ADWjTYvRZFPKLBYNkZtslJxSKhTFZYg/gOMrjNoun2UbR
-         G1+7h+cIimpCpaQzWZeMS9QKSGsyJ1CdoppEzxz/JzC6RSYV/VuurffUp2nCDMdJs12x
-         QJeIQIUgZl3p4ExQWvefvQCfFs5FknQNxjKIXxLqFEHG55r31Xv2jlsQxJTVfgMRvx7O
-         ZdC9d6hAFL+f+zfOcG4hqxQBWp35Jz3kTxp5EUCBiPTxX3dlI23u8hWNkLhuMLLzlvwx
-         wM5A==
+	s=arc-20240116; t=1720804227; c=relaxed/simple;
+	bh=P/vj0tML+5sLhokNg//BJblNlTH8Oeuu7lKQm4cUE5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D0rdxQ5eFp/ivWj62X3DwI7Sy6aUpDmZq2xxDA1FPd+e1xclv1UXK4f1TiEZ/aYNUEqQIePqpWSiFYgE6GTTct3cP7GX1ST1hNqU1696KduTFH/TBJJZimwfbQ6ykaMHzVl9D+KKe/0DcCrQPupSXUjWDYJrXNjEpukfQvbHs9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6561850a7bcso21995497b3.3;
+        Fri, 12 Jul 2024 10:10:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720804204; x=1721409004;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rMZXVu60zJG58GKh3Q1lSirg7a2qt1HU65yEcaRG7AA=;
-        b=hhcO1FDEC5Wcx8qglhBPb7qFHy1FkT+8+sCM21QYT+5XUVXGNmMHY5wRpo0T2XwgJz
-         vPyM/FZv+g35llD3lNCFmppMUbynN/ujjowfAT8kU9pjBiCkIfhDNPOVQomZrvQKR46G
-         jNHlr6EJq9q4YrXFAj+pyRiggJITrVRbpt14cjbRUkGvXLrOzNalDFWSRw+NejJhVces
-         S6zxaj1vErqqHErnHaHdxxzaC80lI6anmFewYghRxFjKDlQNsfN+nbyJoVOijdCW6m3Q
-         R8SFpy3BRd8R86KSy2Bl4XeUd2Ech/mZMAbyw8p71y5iJbYOnK/O6BPwA8PIVpfSZrzu
-         8O+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWKZZRS2suw3i2bdgg/LUQ0LXTQ2uPRCbUhFnhME5OvtpFW0Cr2HBaylGOLqIdz3D3ijDcfD5pBU27tCCojAVEGGMGNlbcdlEWB2THx
-X-Gm-Message-State: AOJu0YwrG0FySfhB93KtlkJnuxVeyS87VHtVKv5nxFvX2PyoD+8HPsw0
-	fdYw7c/2KI8+BrgzH/U2B56GE4wT6Mux2YLyUy0qNvS54Fc1ifmRqNf9HFm1+A==
-X-Google-Smtp-Source: AGHT+IHW4j/Ai/a9CGXSUWjW4J7ti0hzG99uRbbUAmwE86eZrQEMYyuJ3dymC0HiUJLsh8BfgBWNwg==
-X-Received: by 2002:a05:600c:378d:b0:426:6edd:61a7 with SMTP id 5b1f17b1804b1-4279f09320amr1596615e9.7.1720804204187;
-        Fri, 12 Jul 2024 10:10:04 -0700 (PDT)
-Received: from google.com (60.58.155.104.bc.googleusercontent.com. [104.155.58.60])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-426740daf6dsm60948655e9.1.2024.07.12.10.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 10:10:03 -0700 (PDT)
-Date: Fri, 12 Jul 2024 17:09:57 +0000
-From: Brendan Jackman <jackmanb@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Liran Alon <liran.alon@oracle.com>,
-	Jan Setje-Eilers <jan.setjeeilers@oracle.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mel Gorman <mgorman@suse.de>, Lorenzo Stoakes <lstoakes@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-	Khalid Aziz <khalid.aziz@oracle.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Paul Turner <pjt@google.com>, Reiji Watanabe <reijiw@google.com>,
-	Junaid Shahid <junaids@google.com>,
-	Ofir Weisse <oweisse@google.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Patrick Bellasi <derkling@google.com>,
-	KP Singh <kpsingh@google.com>,
-	Alexandra Sandulescu <aesa@google.com>,
-	Matteo Rizzo <matteorizzo@google.com>, Jann Horn <jannh@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, Dennis Zhou <dennis@kernel.org>
-Subject: Re: [PATCH 00/26] Address Space Isolation (ASI) 2024
-Message-ID: <ZpFjZfgrmhHwZLJU@google.com>
-References: <20240712-asi-rfc-24-v1-0-144b319a40d8@google.com>
+        d=1e100.net; s=20230601; t=1720804224; x=1721409024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vdymif93j3WT4mEDNRmiwZsKR34HhTzNWp4qIqS/+dY=;
+        b=SxPD3cVbnj83SefefqmxovTfPmuP43q3ntbz4PwBZwSVfsp5+hmf01qmR8yF58MKZA
+         ZPscituCejy2nM+qiYt8fUJqnDJ4M8fGNlTYM2S+oXcIoB1OxgiAXcJKvbC7DMhQ7hv2
+         7yEzgf+qJB+JxdPq368vu9pDYj4S8a5tLEmANRqAVskap+w/hK/EjT76rEBxUb94u+kb
+         MmMp8ngyAJUo9ujC+S+zFTFNsAZaHBXZqUhjjTfCrdFFwqrXHmlk6nLeNgotHi6wp2o5
+         /kYrE1+CfyAIBpIFscpydHNK+wPtfruBPYFzZNu6L5Eazf+3njZHILOb0FXl9y4MIBqH
+         KMXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbSw9StlwKH9F3SnwDQ6t8pV04t1vWABhyYHnhn4s3vh6AX8LzTf7Vfg1ml4pQrEb76aACSOvPL0L2qdfpnCItJJRt9Pw/dONBL+liogzywXE+KSMAdTTPrHOvOhOVlszAhBDwcVa33AtRi4aSk9E4pdtplVkkQ7j5TDkr1PqBm0Ei6IPmhxwSB/YTxJtUUvn4tZNXTiFuXbyG1twT67jFY/kmEi9vYklhjV8=
+X-Gm-Message-State: AOJu0Yx4VNFFWC7F1hPYxZNgL0t38vQNSl4ii5dyv2qeIpQKLq+KU9hJ
+	nqJUUy/7CrBjb5BNbVq+ZsU1fRcV5ntTELyE8RG5Iy97QOdJtQYucUkAVq6g
+X-Google-Smtp-Source: AGHT+IHbf1ZPWpkegIvxeEaUwk3tdCIsPvIM0Lan2AbRp1z8YEmauvQDap3uRs+T9+W+hsHPz4rJOw==
+X-Received: by 2002:a0d:e616:0:b0:643:c2bf:c156 with SMTP id 00721157ae682-658eed628fbmr120677577b3.19.1720804223695;
+        Fri, 12 Jul 2024 10:10:23 -0700 (PDT)
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e4f18f0csm15634707b3.58.2024.07.12.10.10.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jul 2024 10:10:23 -0700 (PDT)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6510c0c8e29so21731097b3.0;
+        Fri, 12 Jul 2024 10:10:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXVNQLREwE8XbTI6KT0K8QI0ML84eUK6q+dAUhRupR0Thzp+ThOAilG3t0nc9wIxb2S6x84ofQBYKLEf3ENLZb5RVdm6B3oQrkZ1HEgnmeEO7qRz0Sa6M0IQ6SFyhBxuynj/596NGOwGcH6grOXNLnWzxeOuha8njb80LhE/ysw393W0rfacR/1v9j0OgiMr/OL5ZBSWj0toS80GOygagc9rWEciu7qqDBLLWk=
+X-Received: by 2002:a0d:eec6:0:b0:646:fe8e:f03b with SMTP id
+ 00721157ae682-658ee791211mr114821107b3.2.1720804223028; Fri, 12 Jul 2024
+ 10:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240712-asi-rfc-24-v1-0-144b319a40d8@google.com>
+References: <20240531065723.1085423-1-claudiu.beznea.uj@bp.renesas.com> <7f99cb63-0c6b-460e-934b-4e7e8d84bb3a@tuxon.dev>
+In-Reply-To: <7f99cb63-0c6b-460e-934b-4e7e8d84bb3a@tuxon.dev>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 12 Jul 2024 19:10:10 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXN7xCtjRraTu=3JS6x8GCo7iuS40PVTN_DPvhA-AMqfw@mail.gmail.com>
+Message-ID: <CAMuHMdXN7xCtjRraTu=3JS6x8GCo7iuS40PVTN_DPvhA-AMqfw@mail.gmail.com>
+Subject: Re: [PATCH v9 0/9] watchdog: rzg2l_wdt: Add support for RZ/G3S
+To: claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc: wim@linux-watchdog.org, linux@roeck-us.net, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, p.zabel@pengutronix.de, 
+	geert+renesas@glider.be, magnus.damm@gmail.com, biju.das.jz@bp.renesas.com, 
+	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	claudiu.beznea.uj@bp.renesas.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Well, off to a good start...
+Hi Claudiu,
 
-REFLECT MODE:
-    The To: and Cc: headers will be fully populated, but the only
-    address given to the mail server for actual delivery will be
-    Brendan Jackman <jackmanb@google.com>
+On Fri, Jul 12, 2024 at 5:39=E2=80=AFPM claudiu beznea <claudiu.beznea@tuxo=
+n.dev> wrote:
+> Can you please let me know if there is anything you would like me to
+> address for this series?
 
-    Addresses in To: and Cc: headers will NOT receive this series.
+Your series was merged in watchdog/master two days ago, and is part
+of next-20240711 and later.
 
-Apparently gmail is too clever for this and sent my mail out anyway.
-So, some corrections, more probably to come on monday.
+Gr{oetje,eeting}s,
 
-On Fri, Jul 12, 2024 at 05:00:18PM +0000, Brendan Jackman wrote:
-> Overview
-> ========
-> This RFC 
+                        Geert
 
-Yes, this is an RFC, definitely not a PATCH. Sorry for the bogus
-subject...
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-> Rough structure of this series:
-> 
-> - 01-14: Establish ASI infrastructure, e.g. for manipulating pagetables,
->   performing address space transitions.
-> - 15-19: Map data into the restricted address space.
-
-Actually 15-20
-
-> - 20-23: Finalize a functionality correct ASI for KVM. 
-
-21-24
-
-> - 24-26: Switch it on and demonstrate actual vuln mitigation.
-
-25-26
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
