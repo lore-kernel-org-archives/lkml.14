@@ -1,101 +1,88 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AFF172BD2
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 15:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFC6171E73;
+	Fri, 12 Jul 2024 15:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720797174; cv=none; b=MSxOzji449DzuSk8rNtF7EZz3nyJXx6abcPeiueDTbHir8hWBgdH/mS2Nn+gsixwqpCQp4b0FrWeY2IqYO51OzGL1qlHLsHsp1mcUxBOnSLCLpfx/iLSYrmnkkCpQDQbpiTy2PVw3+YJwYXQ0FkG9wUfSBvFvXeXPpzy4M9oPm4=
+	t=1720797216; cv=none; b=YijjXJwu2lzY4B3QOlxDppCa215EvzO5G3ebEm/ZgWgyxON5mhi6iiZ0O+QfcIBQWF/Uabz7WDLusze5g0YZ921cZMyUE3ETU0E7ST7uFiOKBV4DqM1zpZR5gs5nkVTJcVdOJy0MTlTmUYIqZBf+X26eryAfDwkPQce8SNN0YHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720797174; c=relaxed/simple;
-	bh=9BeUzXJjHysaSyowS0b6W+lvKasnTxqlLnwfpZRUPQg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Vd+jPsf7xN4/Tb+CNR12wwsuc4cTLu3UtKViUEZoirundPLNWHvNadc1WTbLuTpQoNXQ5Cafdjmm4zMDHhTQIM//t5rmeOS4hXuwsdPSESalWgVgGAOmb9MUu3wOBakvl0qM4Yid11li3lLKj/XKY1t4uiTvFxZJYYtr6jvoDbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=blOvoGIz; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1720797216; c=relaxed/simple;
+	bh=MnzR0VjdJ5NoBmz1xLLAIhcfaMNgCeiuxKwyJbWLlEo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=f69BuxvnfxGqoITy3O+DUR5q2njwKCjLkck+tZo2FYHlfYKY60M8y4vtgJCsbTXMMQcFyWA/oITVmZCgZc+OcNAasAqUvxvCPykpIDbMKTGEFlnYnb7pLzBfUlfGsYekFZbWkqr+weBJzLxNncKFX17gX7l2w8YxLQJ0zzb1lPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=0+K/iYoW; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="blOvoGIz"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1faf91cbe19so14153755ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720797172; x=1721401972; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hUu8mGS1OQxBMeoqKcwdn/WJeVzZBowT4FUswTBpL4Q=;
-        b=blOvoGIzxsHDi8Y+0Vgl4RtYLBGA1dDa4UPElgJ6nVS4ncmkyaVTsCu45OuAuk6x+/
-         V9x0E7pARXOdGeG/yQvjX08uSWIjb7OKPmH84CabpJi7rD1Cbc7JE//048fnX9D4Fdfx
-         n16Ma+ZRJVK4A/VLSNHgvpZ/4lON+jxijAQ+3Uw5Oc692EI2/DT1dokIIv2yMd3FsvDW
-         jJsQ4cynRYWtvhu3kxI1Y1iDz3VW15fpzzx0C8jaJk8vpVoJeo6BZJ0mRcOaFdER8hFp
-         6PO7nBlKE3WGO+UIAYYdc3oTW1YfZ7DXyFs4qNq/KBR4HZfCTazrbCl+JeLpA5uciKWZ
-         3awg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720797172; x=1721401972;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hUu8mGS1OQxBMeoqKcwdn/WJeVzZBowT4FUswTBpL4Q=;
-        b=SfXrWLjXlolohNqbctxBN9FFi+6INMIFsCzHT28iWTmfxuJdY2/nrLod7pYve1EAgw
-         7clhkw4LBbcVCndNmhB5leqHkbUdeJndH6nI89y0KsZj+HlMmedIpN8Vqnbz5XbFAbza
-         tkVDvn4hNBH8+nkaVw1PoULncdzGxN0qbNrIAM9qIQ7cIoT+PdIL7UEv1z4IPMmjxkBg
-         Pb1RwSaWYDfBcuveUuTMrcDV2EQLeEWkf1CJaK8nSyL1QNl9D8nK7mnh9eaE66hgDvI7
-         Xx9dk4dvkbRqm5N6G34tiBSt8LLnch8GZNsLE48SsjFQ+C4ZtRdVL3ocG+Qzzkqz8Tys
-         cjqg==
-X-Gm-Message-State: AOJu0Yzz2KRpWn0/5kHflzGBY01hShu0WC7CprunvEbtghqameatWQUM
-	4QTqfNFnbPLxBysmiaSZFVsGAsRVP5l6q/c5H6Pd1fH1LFJxOnMCRFsR4U818hgM5IhfXwqwxGf
-	18A==
-X-Google-Smtp-Source: AGHT+IEUE3RwZfydvmvGzSOcHXyGrTF07p1ZkjrHKehYizMX0HteiU6qGOi9myjkfJZgQKr0WaGhxCPzpHg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:2bcb:b0:1f7:1d6a:786c with SMTP id
- d9443c01a7336-1fbb6edea46mr234215ad.11.1720797172460; Fri, 12 Jul 2024
- 08:12:52 -0700 (PDT)
-Date: Fri, 12 Jul 2024 08:12:51 -0700
-In-Reply-To: <SA1PR11MB67348BD07CCCF8D52FCAC8FEA8A42@SA1PR11MB6734.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="0+K/iYoW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720797212;
+	bh=MnzR0VjdJ5NoBmz1xLLAIhcfaMNgCeiuxKwyJbWLlEo=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+	b=0+K/iYoW68JAOflPcuy9TwjDOY5gFuRs08GQ7ZhxZCUZQfNvA5gu3AE4peaZhvqsj
+	 4ahC/HaLLhZjZKGja1SO/7MXctzd6i1lU5dcEpG69vZe1h2mcSbc4lhRgrtrhgZimE
+	 RnYybGCq0zZx/ShTchOJflUXReep6P+UJ5mZEatRdWkeSNMP3Li+HJ7N8iUdb5gmdB
+	 Sl2ox1fXBkDWcvD2TjbIdliXkCjxTYCQo1z36XyXY62sW6aHjC4JItDiLB173CV1qe
+	 Ld1uhRY9pJwC3GvM1ayCTuVC3TI3lVJblnrP0BS+ittNtDUkCIk3nKCjIEgLH+bDM+
+	 lJ85rLPZfHNwQ==
+Received: from smtpclient.apple (cola.collaboradmins.com [IPv6:2a01:4f8:1c1c:5717::1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: dwlsalmeida)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 250E93780844;
+	Fri, 12 Jul 2024 15:13:28 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240207172646.3981-1-xin3.li@intel.com> <20240207172646.3981-10-xin3.li@intel.com>
- <ZmoYvcbFBPJ5ARma@google.com> <SA1PR11MB67348BD07CCCF8D52FCAC8FEA8A42@SA1PR11MB6734.namprd11.prod.outlook.com>
-Message-ID: <ZpFH86n_YY5ModwK@google.com>
-Subject: Re: [PATCH v2 09/25] KVM: VMX: Switch FRED RSP0 between host and guest
-From: Sean Christopherson <seanjc@google.com>
-To: Xin3 Li <xin3.li@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "shuah@kernel.org" <shuah@kernel.org>, 
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	Ravi V Shankar <ravi.v.shankar@intel.com>, "xin@zytor.com" <xin@zytor.com>
-Content-Type: text/plain; charset="us-ascii"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [RFC PATCH] drm: panthor: add dev_coredumpv support
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <ZpFDeajsuVONbSYJ@cassiopeiae>
+Date: Fri, 12 Jul 2024 12:13:15 -0300
+Cc: Steven Price <steven.price@arm.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>,
+ ojeda@kernel.org,
+ lyude@redhat.com,
+ robh@kernel.org,
+ lina@asahilina.net,
+ mcanal@igalia.com,
+ airlied@gmail.com,
+ rust-for-linux@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0A0C1EFC-29A1-4D73-8B02-CC1C693D6A7A@collabora.com>
+References: <20240710225011.275153-1-daniel.almeida@collabora.com>
+ <fe84a028-01a8-4987-b1b7-141fb76d263c@arm.com>
+ <4344B22F-D859-4C64-A351-69FFB5208362@collabora.com>
+ <ZpFDeajsuVONbSYJ@cassiopeiae>
+To: Danilo Krummrich <dakr@redhat.com>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-On Wed, Jul 10, 2024, Xin3 Li wrote:
-> > On Wed, Feb 07, 2024, Xin Li wrote:
-> > > Switch MSR_IA32_FRED_RSP0 between host and guest in
-> > > vmx_prepare_switch_to_{host,guest}().
-> > >
-> > > MSR_IA32_FRED_RSP0 is used during ring 3 event delivery only, thus
-> > > KVM, running on ring 0, can run safely with guest FRED RSP0, i.e., no
-> > > need to switch between host/guest FRED RSP0 during VM entry and exit.
-> > >
-> > > KVM should switch to host FRED RSP0 before returning to user level,
-> > > and switch to guest FRED RSP0 before entering guest mode.
-> > 
-> > Heh, if only KVM had a framework that was specifically designed for context
-> > switching MSRs on return to userspace.  Translation: please use the
-> > user_return_msr() APIs.
-> 
-> IIUC the user return MSR framework works for MSRs that are per CPU
-> constants, but like MSR_KERNEL_GS_BASE, MSR_IA32_FRED_RSP0 is a per
-> *task* constant, thus we can't use it.
 
-Ah, in that case, the changelog is very misleading and needs to be fixed.
-Alternatively, is the desired RSP0 value tracked anywhere other than the MSR?
-E.g. if it's somewhere in task_struct, then kvm_on_user_return() would restore
-the current task's desired RSP0.  Even if we don't get fancy, avoiding the RDMSR
-to get the current task's value would be nice.
+
+> On 12 Jul 2024, at 11:53, Danilo Krummrich <dakr@redhat.com> wrote:
+>=20
+> You could also just define those structures in a C header directly and =
+use it
+> from Rust, can't you?
+>=20
+
+
+Sure, I am open to any approach here. Although this looks a bit reversed =
+to me.
+
+i.e.: why should I declare these structs in a separate language and =
+file, and then use them in Rust through bindgen? Sounds clunky.
+
+Right now, they are declared right next to where they are used in the =
+code, i.e.: in the same Rust file. And so long as they=E2=80=99re =
+#[repr(C)] we know that an equivalent C version can generated by =
+cbindgen.
+
+
