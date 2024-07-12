@@ -1,109 +1,148 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7DB1422B1;
-	Fri, 12 Jul 2024 07:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4374213E02A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 07:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720770529; cv=none; b=s9U/PmDQg2unCrO1EOq1V3y2Uc2sTAkfwIAdtSh4RymWZBRyiU97z425dl4QxY/m5oDtm0xCRD6FXINqolrD95jhXVhMRahH/RWMQjf3aiXFAgIfvBzDRidRjynfTapd9kX8+zvD15wjv1av06xWHSArMiQqlPZckp0n4n3TEGo=
+	t=1720770554; cv=none; b=l6WmMf0VT9e4UJs9LWZ+1n4uB872E0HQ6lW3mOvSxBP53F4Nukkz9pdDtluVOWNytQG1WnrBawmBfs8aHH9a/3VBy26I94PPkYdBHTguNCqP+JcOfTVdgb/YbzfbDQTpy/765o7fNjWvZKGkXfWOWAOjQh7I3sNhwISXz1R57p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720770529; c=relaxed/simple;
-	bh=Pv3ReBbFDrRzKBp0pYyoWKmnUJmOhSx6MpxIF4C+hpQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Mp80OsA5MTuH55TTUTZtzwBCfiKbfiQ9fz02T9cigXsku5ygSs8IMgAPE88LxAyXyo453rsCOKWsQfDRKsVXzeZFBO0uN/p3yasTw4njxmB0VMp4T9NcK8xbB+vdP5lLr56FdRTO1bbgPJnzi+Ff5LTDLDJY0Sv1tIx+xIx/Mpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4266f535e82so11111475e9.1;
-        Fri, 12 Jul 2024 00:48:47 -0700 (PDT)
+	s=arc-20240116; t=1720770554; c=relaxed/simple;
+	bh=GgyXeX6vRq/B+zT7c/I8o809APEqFYzIqOfSPZTJV4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EbCel0i0zP5R1NkH34XhyLgK0qdzVG+xpcUsHbh3NrBNk99HyRCzNGRVkmeF+389ze/i0u4Ojk1kIh6wdDgCpP/8mdCF+1/Fw/ObgV7UgQkX508uq0kTrx6ICLbysjaysHHUN7Y6GFxLhECyZnTT61I6cgomIMRwC8z+EiufTO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=GBeS11TK; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="GBeS11TK"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-367b8a60b60so952841f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 00:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1720770550; x=1721375350; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gQ8ijy1w9qa1wZbbcvL0kjrbjKmo8bNSB+DJPQwcHnU=;
+        b=GBeS11TKS4Dv9SbQt0K/2wJJka/oijyLSL7jo67WmEc0CgUBWt0jTY6KaaQnYoJsEu
+         KaaBAZ3KLEXJopq9hqgRNVg3auTJ1qYEPBGzzU+fj8wJ/SMknu6T156AVDMyDhhfKNGJ
+         bmJ1k1hmNZ5ngZP18QheQsejDeV4XdF38TRL8NocmJITO2ZUtqWA5Lqzqzrps1EgFZtF
+         A+6peCmg4j+ekRtIw8f7pRneMlHEn3R+pV9lCG7nLuYCSc6E60fHeUXTGkKjjaD2nsjV
+         NZMsrgLyQehbPrWOQ1lPLnycoP/wshuOteyuuXK4Yaax1QvLsXYxvldzwMvTIwXAocqE
+         HG+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720770526; x=1721375326;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FU/sAo9QXGocL/MbdLgzEi6X9hN6Ia2DdL8qs9+GIJg=;
-        b=qyUMuRqMXR7RDwEHEdwPUkFMQKvNniINnzTLQ7gdiPGOmcby8BogFvzjQA+A4Xp/T9
-         RtdkutX9VrwDnrycdTsNGi3ezMYcMQxmTicb93B56byoM2kHMPlM19KKS7oXFv8dWW8p
-         d6niVr+2xDcJ9S8yN4H5m9KWe5pv61E8pXHDIVv1m+Sc56//fPVx+/gMeJRIPGPPBoZA
-         R0heq3z+mh0aqzyDq1ul8YrRzpOpx72lmsqqV3Vlkb/OTSnwlYiyxZEPcSXuEWeTFLui
-         Ltk8/1l6u0XxakY9G2o8VNeC7/CML+uTWhUm+Cg7dmigBnRdZOMhCD2/p2tUG7l2Luyg
-         jbCw==
-X-Forwarded-Encrypted: i=1; AJvYcCXL2sprZa95+zHC+GCCReR+DE8p8scURwInXTQ0ytBOe0ZxDtzueF45h3AEtvA9yiygZbTHEtTi0hCB3fkSz8oeL+CjW71K8RRPYgk9
-X-Gm-Message-State: AOJu0Yw6ntm8ipbFu+t/xtjkD1ybt8m9W3oJziJjJN6jzCvgkmvUdop3
-	BlFn12rkpA1W0BRIzbJinLjil7ibjtpSfEiIKVuygg5gbJdocdhR
-X-Google-Smtp-Source: AGHT+IEg/QqLkAdxijfiOX8BsO14Gs84p/1C+xuD6t83ahgeXqp7lD6CFmr7NDaqwTvE/2MQbzfvTA==
-X-Received: by 2002:a05:600c:4c15:b0:425:7796:8e2c with SMTP id 5b1f17b1804b1-426707d8b58mr76198545e9.12.1720770526078;
-        Fri, 12 Jul 2024 00:48:46 -0700 (PDT)
-Received: from [127.0.0.1] (p200300f6f73ce200fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f73c:e200:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f2d74d5sm13532115e9.46.2024.07.12.00.48.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 00:48:45 -0700 (PDT)
-From: Johannes Thumshirn <jth@kernel.org>
-Date: Fri, 12 Jul 2024 09:48:38 +0200
-Subject: [PATCH v3 3/3] btrfs: update stripe_extent delete loop assumptions
+        d=1e100.net; s=20230601; t=1720770550; x=1721375350;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gQ8ijy1w9qa1wZbbcvL0kjrbjKmo8bNSB+DJPQwcHnU=;
+        b=nVnUrZdw+Prrn1nXZPG/+QW/pg+igmUi13HuSLAWROXjupMRjBIsAM/x/R+tpz+08x
+         w3rstITicmk6wmYgtdGx3tw6VQ2xh3V61bpx9fhA+d/gj1+D31z8wGz+HnyE8zD3LIc8
+         iJoJNa+lZRP0n7doDGfOuucU2LlEwX2H0OXPlnDCKdpjoA1gGO4llyfpFyjNibc0Sp/Z
+         Q0AeK8Ra+wxZb1E3n4UIHVrjiHRq5GZnOmHuOSC80deXUqGZSGH655DKCGoajKwWBdW3
+         5GNfYdvhbi8I1FMpQphvrojts5Cz5GHNR4QqFjvNhtkR/sE34aOQzYKg+7YGky8RdeNs
+         2sZA==
+X-Forwarded-Encrypted: i=1; AJvYcCX61GLTKDm8gBNZ4bHp+TnvpwdJhIMi7M95FAlM27BMEqtwQQZlirTamQ18dWl2pUPu1bTEc9beUX/XlZr4qr6ksPvPMnSQh5G8D6hE
+X-Gm-Message-State: AOJu0Ywrx4g3WJaYDQgoZKERUC1xNDiftIt6wYZCCCyPrpQvT0Q8BJl1
+	anMq1CTeWjlL3oYn82RO6uviIS8uQSsf94cdFEDPsphlbFRf53DkMm+1kgFvcvi1aVi88rCax3G
+	1
+X-Google-Smtp-Source: AGHT+IGHj2HvbZP4hc88ihdmh15kc6PiOMtrsrZeH+p1UwP0kL1uZIIQk4Qau93XYXPUg/qe5DNZZw==
+X-Received: by 2002:a5d:654d:0:b0:367:8f98:c503 with SMTP id ffacd0b85a97d-367cea45cffmr6602885f8f.1.1720770550532;
+        Fri, 12 Jul 2024 00:49:10 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.171])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa0613sm9565691f8f.88.2024.07.12.00.49.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jul 2024 00:49:10 -0700 (PDT)
+Message-ID: <b5dd19d3-9a08-4187-b976-c197a2c0d9d7@tuxon.dev>
+Date: Fri, 12 Jul 2024 10:49:07 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/11] i2c: riic: Enable runtime PM autosuspend support
+Content-Language: en-US
+To: Biju Das <biju.das.jz@bp.renesas.com>,
+ Chris Brandt <Chris.Brandt@renesas.com>,
+ "andi.shyti@kernel.org" <andi.shyti@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "geert+renesas@glider.be" <geert+renesas@glider.be>,
+ "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20240711115207.2843133-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240711115207.2843133-5-claudiu.beznea.uj@bp.renesas.com>
+ <TY3PR01MB1134615117603F62796558D1486A62@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <e574e2a6-b231-4737-9501-342445923542@tuxon.dev>
+ <TY3PR01MB1134611DB941585B340D09B7186A62@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <TY3PR01MB1134611DB941585B340D09B7186A62@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240712-b4-rst-updates-v3-3-5cf27dac98a7@kernel.org>
-References: <20240712-b4-rst-updates-v3-0-5cf27dac98a7@kernel.org>
-In-Reply-To: <20240712-b4-rst-updates-v3-0-5cf27dac98a7@kernel.org>
-To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
- David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Qu Wenru <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>, 
- Johannes Thumshirn <johannes.thumshirn@wdc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1160; i=jth@kernel.org;
- h=from:subject:message-id; bh=84BxxsaozfQOVybRl0+FKGjleLtGfNGJKDIsOaj3c0M=;
- b=owGbwMvMwCV2ad4npfVdsu8YT6slMaRNuH/rk2KGq53r6f/b9+xpcj/iFvRg4W2t++xNJib9n
- wv1F4ee6yhlYRDjYpAVU2Q5Hmq7X8L0CPuUQ6/NYOawMoEMYeDiFICJKHozMuzQXr3y9OxA9i9F
- fn+7nKJLwhIXm1465v3u2/Hp85V5epYw/K9x8ukJOWTa17RrwhUh3q++iobq2Zx7XiizVNhPsLt
- wigEA
-X-Developer-Key: i=jth@kernel.org; a=openpgp;
- fpr=EC389CABC2C4F25D8600D0D00393969D2D760850
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-btrfs_delete_raid_extent() was written under the assumption, that it's
-call-chain always passes a start, length tuple that matches a single
-extent. But btrfs_delete_raid_extent() is called by
-do_free_extent_acounting() which in term is called by
-__btrfs_free_extent().
 
-But this call-chain passes in a start address and a length that can
-possibly match multiple on-disk extents.
+On 12.07.2024 10:45, Biju Das wrote:
+> Hi Claudiu,
+> 
+>> -----Original Message-----
+>> From: claudiu beznea <claudiu.beznea@tuxon.dev>
+>> Sent: Friday, July 12, 2024 8:41 AM
+>> Subject: Re: [PATCH v3 04/11] i2c: riic: Enable runtime PM autosuspend support
+>>
+>> Hi, Biju,
+>>
+>> On 12.07.2024 10:15, Biju Das wrote:
+>>> Hi Claudiu,
+>>>
+>>>> -----Original Message-----
+>>>> From: Claudiu <claudiu.beznea@tuxon.dev>
+>>>> Sent: Thursday, July 11, 2024 12:52 PM
+>>>> Subject: [PATCH v3 04/11] i2c: riic: Enable runtime PM autosuspend
+>>>> support
+>>>>
+>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>
+>>>> Enable runtime PM autosuspend support for the RIIC driver. With this,
+>>>> in case there are consecutive xfer requests the device wouldn't be
+>>>> runtime enabled/disabled after each consecutive xfer but after the
+>>>> the delay configured by user. With this, we can avoid touching
+>>>> hardware registers involved in runtime PM suspend/resume saving in this way some cycles. The
+>> default chosen autosuspend delay is zero to keep the previous driver behavior.
+>>>
+>>> On the other hand, you are saving power. Currently the driver is
+>>> highly optimized for Power usage.
+>>>
+>>> Before transfer turn on the clock
+>>> After transfer turn off the clock, this is the optimal power usage correspond to suspend delay.
+>>>
+>>> By adding suspend delay, you are consuming power corresponding to that
+>>> delay.
+>>
+>> The default delay is zero, see the following diff in this patch:
+>>
+>> @@ -479,6 +481,8 @@ static int riic_i2c_probe(struct platform_device *pdev)
+>>
+>>  	i2c_parse_fw_timings(dev, &i2c_t, true);
+>>
+>> +	pm_runtime_set_autosuspend_delay(dev, 0);
+> 
+> I just provided justification, why you addes 0  msec here, compared to xx msec
+> in the original internal version.
 
-To make this possible, we have to adjust the start and length of each
-btree node lookup, to not delete beyond the requested range.
+Isn't it in the commit description already?
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
----
- fs/btrfs/raid-stripe-tree.c | 5 +++++
- 1 file changed, 5 insertions(+)
+"The default chosen autosuspend delay is zero to keep the
+previous driver behavior."
 
-diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
-index 53ca2c1a32ac..684d4744f02d 100644
---- a/fs/btrfs/raid-stripe-tree.c
-+++ b/fs/btrfs/raid-stripe-tree.c
-@@ -66,6 +66,11 @@ int btrfs_delete_raid_extent(struct btrfs_trans_handle *trans, u64 start, u64 le
- 		if (ret)
- 			break;
- 
-+		start += key.offset;
-+		length -= key.offset;
-+		if (length == 0)
-+			break;
-+
- 		btrfs_release_path(path);
- 	}
- 
-
--- 
-2.43.0
-
+> 
+> Cheers,
+> Biju
