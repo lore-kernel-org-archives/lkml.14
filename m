@@ -1,130 +1,107 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDDF171E66
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 14:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE98172791
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 14:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720795427; cv=none; b=efgICoLrRSl8st1W1k9JdJ/t7rbPuJhyTYU2rZw2KoJAcHkTYavzPDxZ9QrTb5hgVz1+EX/ZTjo+DJ3tq6ksdg5eUmSeDEpGllhflIz3AldNAz4wnYDwM+C8wFGEtirpGimZuiZJVaFDDITtQGpU//qzXRER1uIDya0bp5dXojg=
+	t=1720795504; cv=none; b=Mez7O97GF/ovT+CnDSp8v0k2MP+s4BfEyK5LMVL+YKSVJALxU6EZoAPv7vpQ39Y3JQP40+JubI+q8cs40czC7RVG2Iv8kLHucRqeWxZVKAwlSESSCk/UONeuWnbZ15TODQkMFUaBR/2SF7UJaMAgIiXYwcMwvqtXLLbWjagcbpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720795427; c=relaxed/simple;
-	bh=m4x7cIKYi9K2bRrl+wEQc5BTywPzUjq2zs946U6vHeY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ByYeayb4W5GvFTu/UaT+FFyEQXqAg+xhYzwxQCMUy9yeDlXCxF5NX3ZEw/DabgFhae6sqGNsrH6l3qcIrtXgIi4aNMvxJUwIxNmEYhaeNRw8ump+Tm39hWWCbMtypBUOV55/d68fgxqw66QUoe8eDjiaQXddE4wvoySdc58ptRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=N/z5Vvml; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1720795504; c=relaxed/simple;
+	bh=+YtTtxGbBziQHCzvi1efpwobTUyygckgfzKma2ANla0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n4Rbf3+XJNRN8vHrLL/MCwUfkBJ1Z64vRTR4w1Ms10hu5EEZG742R9OyocZTIBdg0kEmiZNY0umM2XaXUoJRD/6xq0GkOrBE0UwtjtsooWym664ZrWpcIFGp9hOdq2oP6+EXXL2SgIUUi74YgruUdcFNiH/jV10vGJdxkQmKOjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=synOcHlc; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="N/z5Vvml"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=DogGsreGZlacWKpAGSJpIB1wlRRqT/2GkqnxKuBXHqo=; b=N/z5Vvmlhs85Il9/7pdtp61ewx
-	yRrto5KQLNMnayKJ1+6Pf+jbVXyZNe24SIX64SKnTzbNovs3HohNz+aRVucHgyIEUdvtlU4FPG6vQ
-	iMeeBY+RavEiEQtw8hfX0fO92YZBF1DHGojaISOryL7wD0J0EFcj9ejjkz8AAtcjbC4MzhRop8fuP
-	tx3qZ672TH5qzpNsIiChOqqd4rY4zQYh06GR6K9h5sCgHT2cXhTN3GgWmMFavyniatTX88PIYfFcS
-	v/9c4bGiAtPBumcrBkTEeatF6gxs1caOgIhdYVKOO/vFNS1vyC3djOPP2uhg3EHrX4UXTBtTGZIZH
-	f/ZtHbJg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <corsac@debian.org>)
-	id 1sSHUX-00BSVo-Qi; Fri, 12 Jul 2024 14:43:21 +0000
-Date: Fri, 12 Jul 2024 16:41:59 +0200
-From: Yves-Alexis Perez <corsac@debian.org>
-To: Yang Shi <shy828301@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, jirislaby@kernel.org,
-	surenb@google.com, riel@surriel.com, cl@linux.com,
-	akpm@linux-foundation.org, yang@os.amperecomputing.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH] mm: huge_memory: don't force huge page alignment on 32
- bit
-Message-ID: <ZpFAt6ha2KbFRoFn@corsac.net>
-References: <20240118133504.2910955-1-shy828301@gmail.com>
- <2d7bd8b2b9736d4a7d0a26169978372b5e002a62.camel@debian.org>
- <CAHbLzkr1LwH3pcTgM+aGQ31ip2bKqiqEQ8=FQB+t2c3dhNKNHA@mail.gmail.com>
- <ZpBFjzIEpq6RIM8I@casper.infradead.org>
- <CAHbLzkpitWRK2q3JidRdyQxajz+MixiO1bX08btVu9Ch0i6Kxw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="synOcHlc"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52ea33671ffso2157544e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 07:45:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720795500; x=1721400300; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DHPNyb/tJ1VWWeymMmdH4zoCwAXbQXpyF4Qjg1xHg1Q=;
+        b=synOcHlcnT58Lgj4kLkkPAwdqnEZ4+c14qb0s41H+Pw7yVE9NqGUy+KFyNhvQcL/UD
+         UHPTUSulAcv262xIu6NzRmk2ypx8jYUhYuTtunWAiLoRfNn6D5mXOSyC4odSpJtMUMnn
+         qCGbi+FBQJALGpa4tzUeJ3lXvmUQFMiP2sHHCgZ3lwNAbv/4ZWRaeJnynHAyighvx+/T
+         0t2tlPYT/9AaLFSfyofXfilRaOnP+2t+HzQZsTDj/OuO3AGFoVQCSdaxIYRyV/DFMdof
+         PSlr9UR8I01QA9cQae/Rf09iKNG2z3/8uKiByWqSjRHD/Hc4gohUjgFdSmoNRilK+plU
+         yd+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720795500; x=1721400300;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DHPNyb/tJ1VWWeymMmdH4zoCwAXbQXpyF4Qjg1xHg1Q=;
+        b=PxT12B88H9wSchJn8Z508Xh6PJfLf3UFSIiErNLX65Pfnx2ZGPTfyt81LjNuEiq3GK
+         /RgLDe27+PMWi2/RDsrSLEVwVNkd6kruFXfkUxeK9kr7R0dayK8TN5gSHHxtUJFvrWwa
+         GB7H2Xm5pRDy+kh87UThyXnADDatBHOiYN4Bw7t72V3IRNtAxqMPCAsSFVUaN+IATUtq
+         M4aMRYUsnW4wJX6wL9uqMkNIdHAPchSZ150lAY0yzPnfLcqNT5sOdLcRZbmwK/PBkREw
+         bNh2bp3jXrJ3aBwpbR6w1lIMJdRmsCUGa8RYBkR5MEMNsy4szlYRjfHqibSgTAdLcTu2
+         LbNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXWtiHIIlcYk/Dc0qya89u6tD2XhLbEQEl4WmlY0R2PtpvFfSsTO7heGwezXbI4xeZ3+SYNHuUlW6ZFUWole2ndrXcZn6za1aaTPu0
+X-Gm-Message-State: AOJu0Yzk44oExTqgf+LsdUkscs8h6hjPcjHrbM3Ow2LGcR0qE5dlEygF
+	j/FCm/gvJ0uc4AygM05nqlBrDkrj/MXl1gVtN8mioxVTymyJUXpoElChIrHKk1s=
+X-Google-Smtp-Source: AGHT+IGzE/OcadTjDAGe2TP8Cuo9c94sqsqcU4eLkqtdPUECgrzsl+GfWxtdin0klh12Cy8BNzpK3Q==
+X-Received: by 2002:ac2:46e5:0:b0:52e:7684:a385 with SMTP id 2adb3069b0e04-52eb99d3265mr6232252e87.52.1720795499568;
+        Fri, 12 Jul 2024 07:44:59 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52eb906e739sm1293862e87.252.2024.07.12.07.44.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jul 2024 07:44:59 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: Linus <torvalds@linux-foundation.org>,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v6.10-rc8
+Date: Fri, 12 Jul 2024 16:44:57 +0200
+Message-Id: <20240712144457.169093-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHbLzkpitWRK2q3JidRdyQxajz+MixiO1bX08btVu9Ch0i6Kxw@mail.gmail.com>
-X-Debian-User: corsac
 
-On Thu, Jul 11, 2024 at 01:53:04PM -0700, Yang Shi wrote:
-> On Thu, Jul 11, 2024 at 1:50 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Thu, Jul 11, 2024 at 01:47:00PM -0700, Yang Shi wrote:
-> > > +++ b/mm/huge_memory.c
-> > > @@ -857,7 +857,8 @@ static unsigned long
-> > > __thp_get_unmapped_area(struct file *filp,
-> > >         loff_t off_align = round_up(off, size);
-> > >         unsigned long len_pad, ret, off_sub;
-> > >
-> > > -       if (IS_ENABLED(CONFIG_32BIT) || in_compat_syscall())
-> > > +       if (IS_ENABLED(CONFIG_32BIT) || IS_ENABLED(CONFIG_X86_32) ||
-> > > +           in_compat_syscall())
-> >
-> > Why not:
-> >
-> >         if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
-> 
-> Nothing specific, just didn't think of it, sigh...
-> 
-> Thanks for the suggestion. Definitely preferable way.
-> 
-And I just did a quick test rebuilding a kernel with
-!IS_ENABLED(CONFIG_64BIT) and running on an i386 Debian sid
-installation.
+Hi Linus,
 
-I can confirm it seems to work as intended:
+Here's a PR with a couple of MMC fixes intended for v6.10-rc8. Details about the
+highlights are as usual found in the signed tag.
 
-Before:
-root@testvm:~# uname -a
-Linux testvm 6.9.8-686-pae #1 SMP PREEMPT_DYNAMIC Debian 6.9.8-1 (2024-07-07) i686 GNU/Linux
-root@testvm:~# for i in {0..9}; do cat /proc/self/maps |grep libc.so |head -n1; done
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c00000-b7c22000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
+Please pull this in!
+
+Kind regards
+Ulf Hansson
 
 
-After:
+The following changes since commit ab069ce125965a5e282f7b53b86aee76ab32975c:
 
-root@testvm:~# uname -a
-Linux testvm 6.9.8+ #1 SMP PREEMPT_DYNAMIC Fri Jul 12 15:23:07 CEST 2024 i686 GNU/Linux
-root@testvm:~# for i in {0..9}; do cat /proc/self/maps |grep libc.so |head -n1; done
-b7cf3000-b7d15000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7d7a000-b7d9c000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7d8b000-b7dad000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7d4b000-b7d6d000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7d64000-b7d86000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7d15000-b7d37000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7c9e000-b7cc0000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7d68000-b7d8a000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7cf6000-b7d18000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
-b7ce6000-b7d08000 r--p 00000000 fe:00 933        /usr/lib/i386-linux-gnu/libc.so.6
+  mmc: sdhci: Do not lock spinlock around mmc_gpio_get_ro() (2024-06-20 16:42:30 +0200)
 
-So:
-Tested-By: Yves-Alexis Perez <corsac@debian.org>
+are available in the Git repository at:
 
-I didn't try on other 32b architectures though.
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.10-rc4-2
 
-Regards,
--- 
-Yves-Alexis Perez
+for you to fetch changes up to 16198eef11c1929374381d7f6271b4bf6aa44615:
+
+  mmc: davinci_mmc: Prevent transmitted data size from exceeding sgm's length (2024-07-11 17:48:54 +0200)
+
+----------------------------------------------------------------
+MMC host:
+ - davinci_mmc: Prevent transmitted data size from exceeding sgm's length
+ - sdhci: Fix max_seg_size for 64KiB PAGE_SIZE
+
+----------------------------------------------------------------
+Adrian Hunter (1):
+      mmc: sdhci: Fix max_seg_size for 64KiB PAGE_SIZE
+
+Bastien Curutchet (1):
+      mmc: davinci_mmc: Prevent transmitted data size from exceeding sgm's length
+
+ drivers/mmc/host/davinci_mmc.c |  3 +++
+ drivers/mmc/host/sdhci.c       | 15 +++++++++++++++
+ 2 files changed, 18 insertions(+)
