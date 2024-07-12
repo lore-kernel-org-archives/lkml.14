@@ -1,267 +1,116 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E2216F831
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC49F16F844
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720779787; cv=none; b=MJ/qAa0toCfVh4kT0O25cnZGJkQUXTu3FYF0YRMB6wfwCQoklZ2qoWEXSyQgnc6WAdJphvi1RSdWmM5r1Eddp65ZxH1aBcVDPjRujUNC9+cdf7rDqGwhd7Gs33iiWS6CsjGMPJZ4IEwXXHahzOu2f/14TSEAFztHi6uxBqlMAkQ=
+	t=1720779791; cv=none; b=dg32HWi7XH/Fqmt5j9mEWpP+JP+IF+IusQnaYPMb+3+KZ3b67Z8/Uos6h2i8AJRGY9mjFAqP96McLeyAk+Xc5Yo6+JBk1E91QCavqmb+xymsi/MLyD+34FjimuyWPLP8DNsCPKenTV/qBjYlK1ji6IQiy0X0VMw2uq6pzGfCew8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720779787; c=relaxed/simple;
-	bh=wZRKP7nDhoSPLzcqOUMoUSFBKE8aiivx6pZpDeh+KyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LRBXMQ2XEyTE6BdlgJiBOXVpOfD9q0lO80ykEtU48Xq4UZu79HKTFrE6IbY70byM9FcS2wO7llIvVh970HcJfH1Bk4k+Nf4bJQ7KpcPuaw8uXTN50ykyexv0zD6ktcPYHzimDFeRedf+2824MbuNR9I2blOKni5XKihKUPYW0mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LTBHdaiO; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720779791; c=relaxed/simple;
+	bh=qrk0LVcmuVjiEcv7KyZeL00+thrBnOd8/EoHt4sBkOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K2aiyHwkQpT+Uk1n6hZyBio4ctO472eZs5QXVO+u+Vre555ei/NQMlo6ORG80hy2Ttn8M3ohEoUPgP+SUdFx7ERxVsaB33YkZJPyQxFLHx8zdns+Tx8wnvJgpL79/cx+JYRu4bulk+mDkiO33npTo0ZxI66fU8P4VIFyaAilWcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=F+opiLwp; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTBHdaiO"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-36794da7c96so1040018f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 03:23:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="F+opiLwp"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a77b60cafecso232506566b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 03:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720779784; x=1721384584; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AvSzWZ4RPZWpHAYvZ7ovInhjLve5KVWdGP1z4smKc8c=;
-        b=LTBHdaiONDI+nyCdjhWtXAR2xsS36Os2lWpGuv/no71Wdul30vM0dhbhXpvFT7mHxS
-         3vhE+vOw2klPANx1G5zwBMtTC10s7TeChuQCK1paDZrzk+/QMqp/HGWDBCBWT6Y5Lfcn
-         NEE9klN/UfCRE3QVYZHg1Qe1xlPlKL6JDYjTSm2OgOwpvOXHSjddfWacqjPA6ga1S55+
-         nnChWTMzLemH6oZCLkLmrnM9OfW4RXitmXx62zttDkLJANdbdU38xjrErGLo/MKVKVY9
-         EMnawMpCLgssdfOu0nCJ5464H08estL3HJegYVdkNpxQSAYQNes6q0GckxJpZIvrBnn4
-         dgCQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720779787; x=1721384587; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qrk0LVcmuVjiEcv7KyZeL00+thrBnOd8/EoHt4sBkOg=;
+        b=F+opiLwp3R97klDdaMLuiKOsIdTDMJTeRCFZ5YQH1XHqf0VqRrBUvLDPSYW+ugTo3f
+         oeKGVPtJIOzIDZV+8aHHABTsg1O0dIsXIr1qTmx0FQ8jACm0sh3ecIo9/Awbp2wWqnrf
+         2Hvk0WniTApHhyqrVexgK69jr6stBhW5vzKuvUKff+hlJxKLqJaF7rsuN/lwZwHChauR
+         IUPj3tOYRtz0XYTipCiRQcjbsIYPaDszVgb26NclK0w5anNAuFS9Y+jNAxRR+BNjOMl8
+         FPpLk6Sl7/UwXBjuC9XDUCQ+bSja4kvQa5/9olguJgp2/FBZQ718fz5YFioyheCI1+eO
+         W4vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720779784; x=1721384584;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AvSzWZ4RPZWpHAYvZ7ovInhjLve5KVWdGP1z4smKc8c=;
-        b=Wy8j3Rcx/KZbMEcZFygqYxbcTQk3/Tluu6O3w3Qwrrgpf8otLTAjgYGc07ty/8UGG/
-         6n06re6fkJhSPuUfOIm/jLWNGGBEeWsTozogpJXFfk36m0q7NCsetM2xp31XmgLbXVOU
-         eGnBza24/INH/rdeY2eGTsGZLj3czI0xoBF9w03aBO6yJkChOFPbtYK/NMDenruQxIJD
-         v8bLvvSjONvF++EzT0HADbQ3ymFAd9MOcstRpnK00kcMG3Af+1b3rj2SVhBWGiCxVLBx
-         OdwVl2yOVmUEqqELsMDdYiR4OoVgV5d7RepE21pFrSIfeSp3TLWYmkDk983kD/HSaigB
-         ETGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzsK9/NgX7WrNG2HiXeFjnhiYFZGzGXT0AOtyA37cK3l5fyi73lORWjGKr8gCqzY+VHZEKRHL6MCKNqlQ6m+/9N3y/hPAtfNtSGrnD
-X-Gm-Message-State: AOJu0Yx4Q7mYlAAyzIr7qDO1m9di1CE0WW/S2eSKDHAJR3powPC8YJa6
-	u+FugT1D/p+V8VcpeLprDU/Bfg9z1w0UOe9WXldcQWh34ke81K4ND+98bmMGuSc=
-X-Google-Smtp-Source: AGHT+IHzT2J3mTVoCZJ5r0fsOC5+sDVLqrON4rQGn86Q0ieoOdHY+/Xt6w7qzQgBlK7Za4+m1tgp9w==
-X-Received: by 2002:a5d:548a:0:b0:367:892a:b32 with SMTP id ffacd0b85a97d-367cead8f99mr6582511f8f.60.1720779784099;
-        Fri, 12 Jul 2024 03:23:04 -0700 (PDT)
-Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde89164sm9911058f8f.63.2024.07.12.03.23.03
+        d=1e100.net; s=20230601; t=1720779787; x=1721384587;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qrk0LVcmuVjiEcv7KyZeL00+thrBnOd8/EoHt4sBkOg=;
+        b=Y8KWLtnpwjjF8JiZXbnndTkhFmOcsaafkektIpzg8GvPu761zHRXrS+I1+morbrdTp
+         HVEQveVY+MsccN59/165agOLYvGPyy6ot0srhR5zTHjkgcZuIblqQxYcozZRSZTfS2au
+         xwnY8bM197G3HC7JD3zt3TBddx2TX8euoK2InwD2eMYiUBgTeUt4FolFg/rrWtSKbcHf
+         ESA71C5/URwZhxq2R7+PuiAcWSNQpvgqa1uFTRDXyKlH2jyLKyBrpKdrSdP6imJf1Vzx
+         QjIYQvRHaHjZscSGzGnCS27LvIC0UM4htkWjMV+DSTxblq/UQKduL1wRP/UKtEKstMR8
+         dGfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr5S8GL8CV8a9XVwu7z7KZsY6sojjteJ09fwNpbzbIzp/xTBzl4DMZETxwqdNAfYAGJgMlfc+1jweN9h+UnkAqurdUODV+Q0CbfQ4b
+X-Gm-Message-State: AOJu0YzSwEb6Uu98hB5Af3gM7HYWdK46dFOFItqzSvmHKLWnS1oUrx9k
+	tb1s/mW5SHdxbXmLW63E8arr4rtnrjZFrsj15wvFJCQ4+2PnU2QiH5cntS0LftTnNPYhgDV5THv
+	2
+X-Google-Smtp-Source: AGHT+IFG0J6IkxmWgik1JhA9krrIT763djjpb2/xyRINL7DV5Gi3UhRk38CA3x9QcfjUIWGM5OvikQ==
+X-Received: by 2002:a17:906:1583:b0:a72:4a4f:23d6 with SMTP id a640c23a62f3a-a780b6882d5mr698656466b.8.1720779787038;
+        Fri, 12 Jul 2024 03:23:07 -0700 (PDT)
+Received: from localhost (p50915eb1.dip0.t-ipconnect.de. [80.145.94.177])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a797e3b160dsm216698866b.204.2024.07.12.03.23.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 03:23:03 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v5 12/17] coresight: Expose map arguments in trace ID API
-Date: Fri, 12 Jul 2024 11:20:21 +0100
-Message-Id: <20240712102029.3697965-13-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240712102029.3697965-1-james.clark@linaro.org>
-References: <20240712102029.3697965-1-james.clark@linaro.org>
+        Fri, 12 Jul 2024 03:23:06 -0700 (PDT)
+Date: Fri, 12 Jul 2024 12:23:05 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] UAPI/ioctl: Improve parameter name of ioctl request
+ definition helpers
+Message-ID: <payyjsywrmqt6wirl3eiq2bndfbfgk2epp2cgojm3oetj5fx7l@apfkwfprjwe4>
+References: <20240712093524.905556-2-u.kleine-koenig@baylibre.com>
+ <7351db74-fb04-4d0f-93ae-d3a3a3a310ff@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r7vzfxn6wa55mgjx"
+Content-Disposition: inline
+In-Reply-To: <7351db74-fb04-4d0f-93ae-d3a3a3a310ff@app.fastmail.com>
 
-From: James Clark <james.clark@arm.com>
 
-The trace ID API is currently hard coded to always use the global map.
-Add public versions that allow the map to be passed in so that Perf
-mode can use per-sink maps. Keep the non-map versions so that sysfs
-mode can continue to use the default global map.
+--r7vzfxn6wa55mgjx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-System ID functions are unchanged because they will always use the
-default map.
+Hey Arnd,
 
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- .../hwtracing/coresight/coresight-trace-id.c  | 36 ++++++++++++++-----
- .../hwtracing/coresight/coresight-trace-id.h  | 20 +++++++++--
- 2 files changed, 45 insertions(+), 11 deletions(-)
+On Fri, Jul 12, 2024 at 11:51:38AM +0200, Arnd Bergmann wrote:
+> On Fri, Jul 12, 2024, at 11:35, Uwe Kleine-K=F6nig wrote:
+> > if there are doubts about using "argtype": Would "_argtype" be better?
+>=20
+> The patch looks good to me, and I think using 'argtype'
+> is fine. I would apply it directly, but not with the current
+> timing just ahead of the merge window.
 
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-index 19005b5b4dc4..5561989a03fa 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.c
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-@@ -12,7 +12,7 @@
- 
- #include "coresight-trace-id.h"
- 
--/* Default trace ID map. Used on systems that don't require per sink mappings */
-+/* Default trace ID map. Used in sysfs mode and for system sources */
- static struct coresight_trace_id_map id_map_default;
- 
- /* maintain a record of the mapping of IDs and pending releases per cpu */
-@@ -47,7 +47,7 @@ static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
- #endif
- 
- /* unlocked read of current trace ID value for given CPU */
--static int _coresight_trace_id_read_cpu_id(int cpu)
-+static int _coresight_trace_id_read_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
- {
- 	return atomic_read(&per_cpu(cpu_id, cpu));
- }
-@@ -152,7 +152,7 @@ static void coresight_trace_id_release_all_pending(void)
- 	DUMP_ID_MAP(id_map);
- }
- 
--static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
-+static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
- {
- 	unsigned long flags;
- 	int id;
-@@ -160,7 +160,7 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
- 	spin_lock_irqsave(&id_map_lock, flags);
- 
- 	/* check for existing allocation for this CPU */
--	id = _coresight_trace_id_read_cpu_id(cpu);
-+	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
- 	if (id)
- 		goto get_cpu_id_clr_pend;
- 
-@@ -196,13 +196,13 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
- 	return id;
- }
- 
--static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
-+static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
- {
- 	unsigned long flags;
- 	int id;
- 
- 	/* check for existing allocation for this CPU */
--	id = _coresight_trace_id_read_cpu_id(cpu);
-+	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
- 	if (!id)
- 		return;
- 
-@@ -254,22 +254,40 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
- 
- int coresight_trace_id_get_cpu_id(int cpu)
- {
--	return coresight_trace_id_map_get_cpu_id(cpu, &id_map_default);
-+	return _coresight_trace_id_get_cpu_id(cpu, &id_map_default);
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
- 
-+int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
-+{
-+	return _coresight_trace_id_get_cpu_id(cpu, id_map);
-+}
-+EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id_map);
-+
- void coresight_trace_id_put_cpu_id(int cpu)
- {
--	coresight_trace_id_map_put_cpu_id(cpu, &id_map_default);
-+	_coresight_trace_id_put_cpu_id(cpu, &id_map_default);
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
- 
-+void coresight_trace_id_put_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
-+{
-+	_coresight_trace_id_put_cpu_id(cpu, id_map);
-+}
-+EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id_map);
-+
- int coresight_trace_id_read_cpu_id(int cpu)
- {
--	return _coresight_trace_id_read_cpu_id(cpu);
-+	return _coresight_trace_id_read_cpu_id(cpu, &id_map_default);
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id);
- 
-+int coresight_trace_id_read_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
-+{
-+	return _coresight_trace_id_read_cpu_id(cpu, id_map);
-+}
-+EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id_map);
-+
- int coresight_trace_id_get_system_id(void)
- {
- 	return coresight_trace_id_map_get_system_id(&id_map_default);
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
-index 49438a96fcc6..840babdd0794 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.h
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.h
-@@ -42,8 +42,6 @@
- #define IS_VALID_CS_TRACE_ID(id)	\
- 	((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_TOP))
- 
--/* Allocate and release IDs for a single default trace ID map */
--
- /**
-  * Read and optionally allocate a CoreSight trace ID and associate with a CPU.
-  *
-@@ -59,6 +57,12 @@
-  */
- int coresight_trace_id_get_cpu_id(int cpu);
- 
-+/**
-+ * Version of coresight_trace_id_get_cpu_id() that allows the ID map to operate
-+ * on to be provided.
-+ */
-+int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
-+
- /**
-  * Release an allocated trace ID associated with the CPU.
-  *
-@@ -72,6 +76,12 @@ int coresight_trace_id_get_cpu_id(int cpu);
-  */
- void coresight_trace_id_put_cpu_id(int cpu);
- 
-+/**
-+ * Version of coresight_trace_id_put_cpu_id() that allows the ID map to operate
-+ * on to be provided.
-+ */
-+void coresight_trace_id_put_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
-+
- /**
-  * Read the current allocated CoreSight Trace ID value for the CPU.
-  *
-@@ -92,6 +102,12 @@ void coresight_trace_id_put_cpu_id(int cpu);
-  */
- int coresight_trace_id_read_cpu_id(int cpu);
- 
-+/**
-+ * Version of coresight_trace_id_read_cpu_id() that allows the ID map to operate
-+ * on to be provided.
-+ */
-+int coresight_trace_id_read_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
-+
- /**
-  * Allocate a CoreSight trace ID for a system component.
-  *
--- 
-2.34.1
+Yes, having it in next for some time is a good idea for sure.
 
+> If there are no other comments, how about I take this after -rc1?
+> You may have to remind me about it.
+
+I'll ping you.
+
+Best regards
+Uwe
+
+--r7vzfxn6wa55mgjx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaRBAcACgkQj4D7WH0S
+/k6KtggApbi7Ik4HZeeYZvYBZz+oozbuGzdDpSgxs3GFjXkpHZupaca0Rxc2eqlD
+Sa1SlUev0zSeZnbzCq099fqqwDxyKGFGVQ7esLwrVbliA+Dum0ZWK7RslLKFCDLy
+SRnLeeONYE5eJt4fPz7qRUE3ba8R+zgaGS36l9nSZ7ey0aWPRMuSzoY0pOJSxCPH
+Vkn7R1ao6WbvbUn+qrso5Lqwe5vl92+ntaVWcHC62IR2JGcwCHj2YF6nUtxidNwT
+zE/GG0X7+pa1ywVxhQ5BBk75gu7F/pSAX+Fj7pagfTsUQzV9lw//EBqpoYlNEvwS
+hHZD+Erp7OmdMfm88TVrHdjnJ4Q/Hw==
+=YQPz
+-----END PGP SIGNATURE-----
+
+--r7vzfxn6wa55mgjx--
