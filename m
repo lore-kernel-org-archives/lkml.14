@@ -1,83 +1,39 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [178.154.239.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AC013B2A8;
-	Fri, 12 Jul 2024 06:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FE913D538;
+	Fri, 12 Jul 2024 06:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720767190; cv=none; b=HzOw/gTt2W1dzKLQ2lSu4GIp498AXTXzFaLpwN5ikRePLTZtEfsN8UQoY5yDrY0AX57CyHIUPo2YCuTiLM/2y7xH11HBL4SQGQEjeG0p+hqyDkOSfL5QIJonRlDdLcPlRWmJc6GCiwWFLkhlE0ArB8ZSEDNPLUZ+huJjNCNcYz4=
+	t=1720767209; cv=none; b=WLyZrzHBtEAXoc57ybxvkvpATPfc8fvjQ6cPHlAKKZz9iwL1nzKuZnqhWQARYNiOSu7kvDBP3KdLA+cjQa7TzbE31YipsUztendTzRj5ltuB/JbNIERTUeOPsW3FIQ1CaDIpJvPU5gbcXAISpB+OyDLTeAH6+afpfJFCX5n1Xgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720767190; c=relaxed/simple;
-	bh=O5VBXpqJ+9U+4H7Q/wM6kgTXFMevkRjYnuE++Y3XvrE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iIHSCA9ubwx1NWxDX05MpWsmXQX2pas6OxnUVzSklKum3mVwfwN2d+PFyN22zmN0yh/Gf2ulh1wxZlWXtalnffSeyvxJLz1RM8nGu93KfoPpmDo24RScUVqxOBerOrnIMNyUSvDU6cykft/gAXIhJ4xv1xsDbRSZTkH6nLTUW1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e7TKs2gb; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720767209; c=relaxed/simple;
+	bh=lQr3zTV4Hs4Qve7Qg4aH4x9tajKv/zU8LjRs62XLFJU=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=cTMgXqob3MvHBq0S+2IUuEn6q5F19wYmqgyNxF60JQqDPdM2u07BjIuJQTpgyUYbfUI6Eatrrc58TQ1fUoniAvHLKxJUbUbn3HgTG6KdedxELKvVyKmy9UqndqHiNhI81LKnTAKpC46yLIa4Y1jHjvEF9EVsFhsSSvlm++gFDCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=AipPJD7b; arc=none smtp.client-ip=178.154.239.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7TKs2gb"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a77d9217e6fso218701066b.2;
-        Thu, 11 Jul 2024 23:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720767186; x=1721371986; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XXFbQXPtGb/+GNQzqGBVwiqUU8qK0zWwlp6dRJu4EPY=;
-        b=e7TKs2gbGSc/Br9AcqK2VD8eTqvktVkyPprzFpXYKY3+cu1wsH5v+azVY/KSvplUXv
-         WrWzYQjbV36JWIZOOCi8Y+0fgt489PJ272FR0i+EVk2hsl9Kj1bt9YwUvrUajgInrQY8
-         vJVJb4vcXhY3g/kQHHJVBnUJNcCaqSLZ647rsPiKNXTHckjuu7D6G7+R73YqV7eXD/Ye
-         3r0UwZldLgUZ/2rLrsctm5KHHBxiOO4rQZ3ul11GktT0uSv0sV68OmZNMI2rRQMEGDef
-         5fzHeCHCp47JrZe0jIAv+UTHfdENVn0hJ7Jd5VcM5asJX2Vu+/bvpZaDf5S2eachBZM6
-         hVFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720767186; x=1721371986;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XXFbQXPtGb/+GNQzqGBVwiqUU8qK0zWwlp6dRJu4EPY=;
-        b=Sq4issAsTbqp+kjL/9B8Pq2ds3lYQ6zH31e5spVxguSpIBJf1zzmPiQcMz489LTTXK
-         /wGmJcJxyZ8eHYfti/xMXeeXeOi0dcXWYjYnmUH5cQF/OYVYmou0XlD6pol/GjP56rmP
-         2sfiQEv0JTAEtgnNE3zNitR9kLnrsr9kaQghuNXBzrkXCQgiVVQXtwEgG5frIfwNFU4W
-         zWMnOGt2UDYZUcmt0BnlBQss/3mxQ4l64tTuXEySg/UW0U7KPX/7nq4w99m/2hgHqrwx
-         6iq2G1G772uEwom5CSaBPcWbjckHJFCd5pprftwgnmhdsebJTZhO1/Bc5O4wRemp39Ul
-         32XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUS54gm/tPOFCCxx1+8WYPmRjsmyhJlWbcoIEEtX5TxRscQSIu3m4JRIZ0e5giZfijKsFRw37M3A+AKJf7eilnl57NtjQEiQ9iPkH9EP07RXBdvpFsbHORrWqs3RG92IF5aFvN3n1iuXLas7NXa1EutS4JeQowS6tD2mgow1Gmp2BWUww==
-X-Gm-Message-State: AOJu0YzlFRrm6hnbnrVwsYBEpF7lxkkNSIuC/5SOQJzp8qP+XIMVvfE1
-	aFxPlKWrCuYl0hpmaTRFZs35Iq1Vws0UDDgxAXaExx4ePmvJ9sw0
-X-Google-Smtp-Source: AGHT+IFCJKh4sLArYjTnbB0nGhUrzlB2tvngFTC7NTzAQMeZzbab4y1gGt01y8cztsXxNaiOErShrQ==
-X-Received: by 2002:a17:906:3c1a:b0:a77:cd4f:e4ef with SMTP id a640c23a62f3a-a780b89f428mr652622866b.63.1720767186147;
-        Thu, 11 Jul 2024 23:53:06 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a86f636sm315628666b.208.2024.07.11.23.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 23:53:05 -0700 (PDT)
-Message-ID: <468b5725d0f191c20ada9524ecb7da8a48d56d97.camel@gmail.com>
-Subject: Re: [PATCH 2/2] iio: dac: support the ad8460 Waveform DAC
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
-	 <Jonathan.Cameron@Huawei.com>, "Tinaco, Mariel" <Mariel.Tinaco@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, "Hennerich, Michael"
- <Michael.Hennerich@analog.com>,  Marcelo Schmitt
- <marcelo.schmitt1@gmail.com>, Dimitri Fedrau <dima.fedrau@gmail.com>,
- Guenter Roeck <linux@roeck-us.net>, Nuno Sa <nuno.sa@analog.com>
-Date: Fri, 12 Jul 2024 08:57:00 +0200
-In-Reply-To: <733f4f7b-53b2-46c1-8bf8-5ed357adab30@baylibre.com>
-References: <20240510064053.278257-1-Mariel.Tinaco@analog.com>
-	 <20240510064053.278257-3-Mariel.Tinaco@analog.com>
-	 <20240511174405.10d7fce8@jic23-huawei>
-	 <SJ0PR03MB62241801F72B21EEC9CDCCBD91D42@SJ0PR03MB6224.namprd03.prod.outlook.com>
-	 <20240628194546.2f608365@jic23-huawei>
-	 <SJ0PR03MB62246270CC24E70732D0288F91DA2@SJ0PR03MB6224.namprd03.prod.outlook.com>
-	 <20240708170504.00006c9d@Huawei.com>
-	 <ccce603d36fa2fd590b563955bcd2cda085773e5.camel@gmail.com>
-	 <733f4f7b-53b2-46c1-8bf8-5ed357adab30@baylibre.com>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="AipPJD7b"
+Received: from mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:610c:0:640:1005:0])
+	by forward100a.mail.yandex.net (Yandex) with ESMTPS id 868A146DDF;
+	Fri, 12 Jul 2024 09:53:16 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ErZAAk8r94Y0-BFVgIa0Q;
+	Fri, 12 Jul 2024 09:53:15 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1720767195; bh=s0W+M7SwbaRwDy5FEB7++51ukOT+SMdA/kwv36UdyZA=;
+	h=Date:To:From:Subject:Message-ID;
+	b=AipPJD7b8v/04bB12hqVsVe0cnQQcT6S62HPJ9WjyYdfkKVABl6iBwKfxQ+0jCv0L
+	 TJMk/1crh2btfkrh5yGeJbON6tcc3f2JLOJj7LNzeg49LzF5EzdrrJLLt3YZWEfkhy
+	 gclio198T/ZpjQdKiHsk+9g2wDbhOJEiWoHC2Miw=
+Authentication-Results: mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <a6d068a26a90057fb3cdaa59f9d57a2af41a6b22.camel@yandex.ru>
+Subject: Lockup of (raid5 or raid6) + vdo after taking out a disk under load
+From: Konstantin Kharlamov <Hi-Angel@yandex.ru>
+To: Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>, 
+	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 12 Jul 2024 09:53:14 +0300
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.52.3 
@@ -88,222 +44,168 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-07-11 at 16:31 -0500, David Lechner wrote:
-> On 7/11/24 4:20 AM, Nuno S=C3=A1 wrote:
-> > On Mon, 2024-07-08 at 17:05 +0100, Jonathan Cameron wrote:
-> > > On Mon, 8 Jul 2024 05:17:55 +0000
-> > > "Tinaco, Mariel" <Mariel.Tinaco@analog.com> wrote:
-> > >=20
-> > > > > -----Original Message-----
-> > > > > From: Jonathan Cameron <jic23@kernel.org>
-> > > > > Sent: Saturday, June 29, 2024 2:46 AM
-> > > > > To: Tinaco, Mariel <Mariel.Tinaco@analog.com>
-> > > > > Cc: linux-iio@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > > > > kernel@vger.kernel.org; Lars-Peter Clausen <lars@metafoo.de>; Rob
-> > > > > Herring
-> > > > > <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Cono=
-r
-> > > > > Dooley
-> > > > > <conor+dt@kernel.org>; Liam Girdwood <lgirdwood@gmail.com>; Mark =
-Brown
-> > > > > <broonie@kernel.org>; Hennerich, Michael
-> > > > > <Michael.Hennerich@analog.com>;
-> > > > > Marcelo Schmitt <marcelo.schmitt1@gmail.com>; Dimitri Fedrau
-> > > > > <dima.fedrau@gmail.com>; Guenter Roeck <linux@roeck-us.net>
-> > > > > Subject: Re: [PATCH 2/2] iio: dac: support the ad8460 Waveform DA=
-C
-> > > > >=20
-> > > > > [External]
-> > > > > =C2=A0=20
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +static int ad8460_get_powerdown_mode(struct iio_dev *indio=
-_dev,
-> > > > > > > > +				=C2=A0=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec
-> > > > > > > > *chan) {
-> > > > > > > > +	return 0;=C2=A0=20
-> > > > > > >=20
-> > > > > > > Why have the stubs in here?=C2=A0=20
-> > > > > >=20
-> > > > > > Should I move the stubs to a different place in the code or rem=
-ove
-> > > > > > them altogether since there is only a single powerdown mode
-> > > > > > available=C2=A0=20
-> > > > > Ah. I'd not really understood what was going on here.=C2=A0 This =
-is fine as
-> > > > > is.
-> > > > > =C2=A0=20
-> > > > > > > AD8460_HVDAC_DATA_WORD_HIGH(index),=C2=A0=20
-> > > > > > > > +			=C2=A0=C2=A0=C2=A0 ((val >> 8) & 0xFF));=C2=A0=20
-> > > > > > >=20
-> > > > > > > bulk write? or do these need to be ordered?=C2=A0=20
-> > > > > >=20
-> > > > > > For this I used bulk read/write this way.
-> > > > > >=20
-> > > > > > static int ad8460_set_hvdac_word(struct ad8460_state *state,
-> > > > > > 				 int index,
-> > > > > > 				 int val)
-> > > > > > {
-> > > > > > 	u8 regvals[AD8460_DATA_BYTE_WORD_LENGTH];=C2=A0=20
-> > > > > regmap bulk accesses (when spi anyway) should be provided with DM=
-A
-> > > > > safe
-> > > > > buffers.
-> > > > > Easiest way to do that is add one with __aligned(IIO_DMA_MINALIGN=
-) to
-> > > > > the
-> > > > > end of the ad8460_state structure.=C2=A0 Possibly you'll need a l=
-ock to
-> > > > > protect it -
-> > > > > I
-> > > > > haven't checked.=C2=A0=20
-> > > > > >=20
-> > > > > > 	regvals[0] =3D val & 0xFF;
-> > > > > > 	regvals[1] =3D (val >> 8) & 0xFF;=C2=A0=20
-> > > > >=20
-> > > > > That is an endian conversion so use appropriate endian function t=
-o
-> > > > > fill it
-> > > > > efficiently and document clearly what is going on.
-> > > > >=20
-> > > > >=20
-> > > > > 	put_unaligned_le16()
-> > > > > =C2=A0=20
-> > > > > >=20
-> > > > > > 	return regmap_bulk_write(state->regmap,=C2=A0=20
-> > > > > AD8460_HVDAC_DATA_WORD_LOW(index),=C2=A0=20
-> > > > > > 				 regvals,=C2=A0=20
-> > > > > AD8460_DATA_BYTE_WORD_LENGTH); }=C2=A0=20
-> > > > > >=20
-> > > > > > =C2=A0
-> > > > > > > > +}=C2=A0=20
-> > > > > =C2=A0=20
-> > > > > > > > +	state->regmap =3D devm_regmap_init_spi(spi,
-> > > > > > > > &ad8460_regmap_config);
-> > > > > > > > +	if (IS_ERR(state->regmap))
-> > > > > > > > +		return dev_err_probe(&spi->dev, PTR_ERR(state-
-> > > > > > > > >regmap),
-> > > > > > > > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to initialize
-> > > > > > > > regmap");
-> > > > > > > > +
-> > > > > > > > +	ret =3D devm_iio_dmaengine_buffer_setup_ext(&spi->dev,
-> > > > > > > > indio_dev,
-> > > > > > > > +"tx",
-> > > > > > > > +=C2=A0=20
-> > > > > > > IIO_BUFFER_DIRECTION_OUT);
-> > > > > > >=20
-> > > > > > > Ah. I take back my binding comment. I assume this is mapping =
-some
-> > > > > > > non standard interface for the parallel data flow?=C2=A0=20
-> > > > > >=20
-> > > > > > Yes, the HDL side doesn't follow yet the standard IIO backend f=
-rom
-> > > > > > which this driver was tested=C2=A0=20
-> > > > >=20
-> > > > > Hmm. I'd like to see this brought inline with the other iio backe=
-nd
-> > > > > drivers if
-> > > > > possible.=C2=A0=20
-> > > >=20
-> > > > Does this mean that we would need to implement an AXI IP core on th=
-e
-> > > > FPGA side to be able to test this?
-> > >=20
-> > > Don't think so.=C2=A0 That framework is meant to support any equivale=
-nt IP.
-> > > So whatever you have should be supportable. Maybe it's somewhat of a =
-stub
-> > > driver though if there isn't anything controllable.
-> > >=20
-> > > It's Nuno's area of expertise though +CC.
-> > >=20
-> >=20
-> > Hi Jonathan,
-> >=20
-> > Yeah, I did reply David (IIRC) about the very same question. In the
-> > design/HW Mariel
-> > is working on the DAC is directly connected to the DMA core which is ha=
-ndled
-> > already
-> > by a proper dma controller driver. So in this case I'm really not seein=
-g the
-> > backend
-> > need right now (maybe in the future we may have another design for this
-> > device that
-> > could justify for a backend device but no idea on that).
-> >=20
-> > As you mention, we could very well do a stub platform driver so we can =
-use
-> > the
-> > backend framework (like dma-backend or something) that could pretty muc=
-h be
-> > a stub
-> > for the DMA controller. But is it worth it though? We'd actually be "ly=
-ing"
-> > in terms
-> > of HW description as the DMA is a property of the actual converter.
-> >=20
-> > - Nuno S=C3=A1
-> >=20
-> >=20
->=20
-> I'm a bit inclined to agree with Jonathan here. I could see someone in th=
-e
-> future,
-> wanting to, e.g., use DMA + a GPIO controller for the parallel interface =
-if
-> they
-> didn't have an FPGA. So it seems a bit more future-proof to just always u=
-se
-> the
-> IIO backend framework for the parallel interface.
+(this is a dup of yesterday's bugzilla bug 219030 as some maintainers
+prefer bugreporting over bugzilla some over ML, and the cases are
+indistinguishable)
 
-I do agree it's more future but guessing usecases is not something I tend t=
-o
-like much (often just results in code that never gets __really__ used). We =
-can
-very well take care of it when a usecase pops up and we have an actual devi=
-ce
-that can be represented by a backend :).
+We're seeing this on both LTS `6.1.97` as well the newest stable
+`6.9.8` (note though that VDO was only merged in 6.9, so for upstream
+it's probably the only one that matters. Traces below are from 6.9.8).
 
->=20
-> FWIW, I don't think it would be "lying" since the io-backend DT node woul=
-d be
-> representing physical parallel bus between the DMA controller and the ADC
-> chip.
+Creating a raid5 (alternatively raid6) + VDO, then starting a load and
+after a minute physically taking out a disk of the VG results in a
+lockup stack getting spammed over and over.
 
-To me, it's really a stretch having a backend with the only reason (op) of
-requesting the DMA channel. I still think you're pushing to much and going
-around with wording to justify for the DMA property :). The parallel bus is=
- part
-of the DAC and directly connects to the DMA data lines so it really looks t=
-o me
-the dma is a property of the actual DAC.
+Seems unreproducible by removing a disk through software means of
+`/sys/block/sdX/device/delete`, i.e. it seem to only happen when either
+removing the disk physically or by disabling power on the JBOD slot
+with a command like `sg_ses --dev-slot-num=3D9 --set=3D3:4:1 /dev/sg26`.
 
-That said and Mariel can help here, I did not really looked into the design
-myself and I'm just stating (or what I understood) what Mariel told me. But=
- if
-there's some other piece of HW sitting between the DMA and the bus then it =
-would
-be easier for me to agree even if we don't have any real control over that
-device.
+Also when lockup happens, `reboot -ff` no longer does anything.
 
-> But if DT maintainers are OK with the idea that a DMA channel can be dire=
-ctly
-> wired to an external chip, I guess I won't complain. :-)
+When looking at repeating stacktraces, the execution seems to loop
+around `raid5_get_active_stripe`, `raid5_compute_sector`,
+`raid5_release_stripe`.
 
-That's the case in here so I don't see why it should be a problem :). It's =
-the
-same with the axi-dac/adc. It's all inside the FPGA but different cores/IPS=
-.
+# Steps to reproduce
 
-FWIW, I'm ok if we go the backend direction even if I don't fully agree wit=
-h it
-(at least with the understanding I have so far about the design). I definit=
-ely
-want to see more users of it but I also don't think it should be a rule for=
- any
-fairly high speed converter to have a backend associated.
+1. Create raid5 LV + VDO by executing a `./mk_lvm_raid5.sh /dev/sdX1
+/dev/sdY1 /dev/sdZ1` where `mk_lvm_raid5.sh` has the following content:
 
-- Nuno S=C3=A1
+    #!/bin/bash
+
+    set -exu
+
+    if [ "$#" -ne 3 ]; then
+        echo "Wrong number of parameters.
+    Usage: $(basename $0) disk1 disk2 disk3"
+        exit 1
+    fi
+
+    # create the VG
+    pvcreate -f "$1" "$2" "$3"
+    vgcreate p_r5 "$1" "$2" "$3"
+
+    # create the LV
+    lvcreate --type raid5 -i 2 -L 21474836480b -I 64K -n
+vdo_internal_deco_vol p_r5 -y
+    lvconvert -y --type vdo-pool --virtualsize 107374182400B -n
+deco_vol p_r5/vdo_internal_deco_vol
+
+2. Start load by executing `fio ./fio-30%write.fio` with the `fio-
+30%write.fio` having the following content:
+
+    [test IOPS]
+    blocksize=3D8k
+    filename=3D/dev/p_r5/deco_vol
+    filesize=3D100G
+    direct=3D1
+    buffered=3D0
+    ioengine=3Dlibaio
+    iodepth=3D32
+    rw=3Drandrw
+    rwmixwrite=3D30
+    numjobs=3D4
+    group_reporting
+    time_based
+    runtime=3D99h
+    clat_percentiles=3D0
+    unlink=3D1
+
+3. Wait for about a minute
+4. Remove a disk of the volume group, either physically, or by turning
+off jbod slot's power (DO NOT use /=E2=80=A6/device/delete).
+5. Wait 30 seconds
+
+## Expected
+
+`dmesg -w` won't show anything interesting
+
+## Actual
+
+`dmesg -w` starts showing up traces as follows (not sure why the
+missing line numbers, I have debug symbols locally, I can decode them
+manually with `gdb` if needed):
+
+    [=E2=80=A6]
+    [  869.086048] mpt3sas_cm0: log_info(0x31110e05): originator(PL),
+code(0x11), sub_code(0x0e05)
+    [  869.139959] mpt3sas_cm0: mpt3sas_transport_port_remove: removed:
+sas_addr(0x5002538a67b01303)
+    [  869.140085] mpt3sas_cm0: removing handle(0x0022),
+sas_addr(0x5002538a67b01303)
+    [  869.140191] mpt3sas_cm0: enclosure logical
+id(0x50015b2140128f7f), slot(12)
+    [  869.140293] mpt3sas_cm0: enclosure level(0x0000), connector
+name(     )
+    [  893.262506] watchdog: BUG: soft lockup - CPU#5 stuck for 26s!
+[mdX_raid5:24608]
+    [  893.262641] Modules linked in: dm_raid mptctl mptbase bonding
+fcoe libfcoe 8021q garp mrp libfc stp llc scsi_transport_fc
+sch_fq_codel softdog dm_round_robin scsi_dh_alua intel_rapl_msr
+coretemp intel_rapl_common sb_edac x86_pkg_temp_thermal
+intel_powerclamp ast kvm_intel drm_shmem_helper drm_kms_helper kvm
+crct10dif_pclmul crc32_pclmul ghash_clmulni_intel sha512_ssse3
+sha256_ssse3 sha1_ssse3 aesni_intel crypto_simd cryptd rapl
+intel_cstate wdat_wdt intel_pch_thermal ipmi_ssif dm_multipath
+acpi_ipmi sg ipmi_si ipmi_devintf ipmi_msghandler acpi_pad
+acpi_power_meter ramoops reed_solomon efi_pstore drm ip_tables x_tables
+autofs4 raid10 raid456 async_raid6_recov async_memcpy async_pq
+async_xor xor async_tx raid6_pq libcrc32c raid0 ses enclosure mlx5_ib
+ib_core raid1 ixgbe igb mlx5_core mdio_devres xfrm_algo i2c_algo_bit
+e1000e mpt3sas hwmon dca mdio i2c_i801 ahci lpc_ich ptp i2c_smbus
+mfd_core raid_class libahci pps_core libphy scsi_transport_sas
+    [  893.264033] CPU: 5 PID: 24608 Comm: mdX_raid5 Not tainted 6.9.8-
+bstrg #3
+    [  893.264254] Hardware name: AIC HA401-LB2/LIBRA, BIOS LIBBV071
+04/19/2017
+    [  893.264479] RIP: 0010:_raw_spin_lock_irqsave+0xe/0x30
+    [  893.264714] Code: 48 89 ef 5d e9 13 33 47 ff 0f 1f 00 90 90 90
+90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 41 54 55 48 89 fd
+9c 41 5c <fa> bf 01 00 00 00 e8 07 96 43 ff 48 89 ef e8 df 32 47 ff 4c
+89 e0
+    [  893.265229] RSP: 0018:ffffbc306091fd70 EFLAGS: 00000246
+    [  893.265502] RAX: 0000000000000001 RBX: 0000000000000001 RCX:
+0000000000000000
+    [  893.265783] RDX: 0000000000000001 RSI: 0000000000000003 RDI:
+ffff9fbacf48c430
+    [  893.266069] RBP: ffff9fbacf48c430 R08: ffff9fcac1254d58 R09:
+00000000ffffffff
+    [  893.266366] R10: 0000000000000000 R11: ffffbc306091fe20 R12:
+0000000000000246
+    [  893.266664] R13: ffff9fcac1254dc0 R14: 0000000000000000 R15:
+0000000000739d18
+    [  893.266968] FS:  0000000000000000(0000)
+GS:ffff9fc9fff40000(0000) knlGS:0000000000000000
+    [  893.267282] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    [  893.267603] CR2: 000055f91452ff88 CR3: 0000000124c74004 CR4:
+00000000003706f0
+    [  893.267933] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000
+    [  893.268268] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400
+    [  893.268605] Call Trace:
+    [  893.268945]  <IRQ>
+    [  893.269285]  ? watchdog_timer_fn+0x24b/0x2d0
+    [  893.269638]  ? __pfx_watchdog_timer_fn+0x10/0x10
+    [  893.269990]  ? __hrtimer_run_queues+0x112/0x2b0
+    [  893.270347]  ? hrtimer_interrupt+0x101/0x240
+    [  893.270708]  ? __sysvec_apic_timer_interrupt+0x6e/0x180
+    [  893.271075]  ? sysvec_apic_timer_interrupt+0x9d/0xd0
+    [  893.271448]  </IRQ>
+    [  893.271816]  <TASK>
+    [  893.272184]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+    [  893.272568]  ? _raw_spin_lock_irqsave+0xe/0x30
+    [  893.272956]  __wake_up+0x1d/0x60
+    [  893.273345]  md_wakeup_thread+0x38/0x70
+    [  893.273738]  raid5d+0x32a/0x5d0 [raid456]
+    [  893.274147]  md_thread+0xc1/0x170
+    [  893.274545]  ? __pfx_autoremove_wake_function+0x10/0x10
+    [  893.274951]  ? __pfx_md_thread+0x10/0x10
+    [  893.275358]  kthread+0xff/0x130
+    [  893.275760]  ? __pfx_kthread+0x10/0x10
+    [  893.276172]  ret_from_fork+0x30/0x50
+    [  893.276568]  ? __pfx_kthread+0x10/0x10
+    [  893.276961]  ret_from_fork_asm+0x1a/0x30
+    [  893.277351]  </TASK>
 
