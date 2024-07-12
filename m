@@ -1,122 +1,156 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+Received: from sonic305-2.consmr.mail.bf2.yahoo.com (sonic305-2.consmr.mail.bf2.yahoo.com [74.6.133.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3667D2747D
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BA21401B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.133.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720806342; cv=none; b=G8fzCghhumm8T0lJfvHC4RplfeNCxoU+qVoACjRDQVhJVEfmZYZzNaYhGUmlawNCEwqIuTkljceJGexxVTphccnnlvb+0B4tzfZ/cQg47EZXVzgRXMxqL7QuXyNkSUAV9aRAsgERoiFOP6p07Un0fqX/CdwBt45I0DEearzrwCk=
+	t=1720806377; cv=none; b=m7twAHxi4xn/TVRdAd27nevzmg8xpdJ/2FcTXzEQRTtX64dgfJlNSzzaqGut5wMuGQf84ZQB/j8HsQfjnwPLObB9j9SU5fapy5+u+g2bQvDe+G0WJ5QRqZGXu2S1FxCe8nuOtEL6PvvK2h/iiA6ZCy1yfx9/CnjG4i83Bvs/FEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720806342; c=relaxed/simple;
-	bh=X13h60Czwbm2ujyxIP806a+AW/lW7IB0AqcSBAamTB4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i8fGX0Hd9fPOgCdZ5fhNpBFLyFjLMhsldOCi+KtODToeVsZOGq+OE19RWlnbqcLM4xNtgJLiYhdsKONWLhSVX88KhG6PDap2wO0cVdBBg/CeowMIIL6VGWrSrv82Zm29heuco4Yk4qW+1umsWHaZch8762zymbUlfqGSkAG4VO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7eTcqJc; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720806377; c=relaxed/simple;
+	bh=WlGKpvlNF1lzFDcxufqLDraiNz0X7f/75T7wvtywCq4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=VgYJ8QSGBGvKa1tQrXEXsd9GmyWH5gggfyWwnNmedsxxz20dhl6m9AR79zVyb7yW+eDzEcZAoyZIoqgAGb7seVtwWtMHiQTcerE0Eq2g9bTLV9FxDqD6bE+kl6tTm8kpOgwRByyxo0TAwcYBCxFPf7IqyGjppeH8pIBp92aPSZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=verizon.net; spf=pass smtp.mailfrom=verizon.net; dkim=pass (2048-bit key) header.d=verizon.net header.i=@verizon.net header.b=o4nNJW4E; arc=none smtp.client-ip=74.6.133.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=verizon.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=verizon.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7eTcqJc"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5c66b53232aso1060420eaf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720806340; x=1721411140; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tNXQMXtVVY9UI6zu3BBCUXELAve7Ltcp0DjuWc3krBw=;
-        b=V7eTcqJcSh5lrOvaKkDcybVRfsWTMArITu+BYJgwKi7wmGwZAjBhPPbJ2SLdNmj0+1
-         tvpo+gPS1Q8CHgje0/iLZS+RgWgplC04oyEBCDmNR4MB62Zxz7PY52SrLinXgb3fkiT8
-         wkvCTImCgNZg3UxNkA05zMDV05KPMImqK66p9XNEOC1AkoiyB6s8TRUbkleLcajnXq9U
-         EXxbWVnUrGXWmgPAB5nC3xvY/rl80u6amE+b6jJZSP0cUSQxjNigaybbPXDEUDHG4Wp9
-         K4Kcg97SHTnwtWMtJ5PiDdVZcQfgDS/88hu8bSY51KqA/y0MZS0Qfb9LmaVrLKxjd/gM
-         Lc6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720806340; x=1721411140;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tNXQMXtVVY9UI6zu3BBCUXELAve7Ltcp0DjuWc3krBw=;
-        b=X8mDaeV+lKF3u/M8ZQgRqB43WdtGN6MBCnv0/Z/ejWeoQ5/qpRM0D6IVc3h0caJr22
-         Azb/Rq3gepANOcU3ckMS4j/RCi/XrFroSYIlFaXPFCwukmXMSqA/9V3TXBPZ1Jgs1LrY
-         Rl7HuVNioA16SfGA01hBqF9YwFoWpo7o+n0d2LsESk4xk8yMFaazNbF+/PDKwAcsyAoa
-         xj50+TkhHsu7aN0Sp+fOTMK34YNkAix57/624wT68iC+T+31kmqAlcUwurinwHY2xI8V
-         p8AjYGc9DstVNRaqtjGcPfgZ52HO9IvdwXQzgiCEintZBBHP8wA1e7hR3CWgmQj98qJY
-         OfQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqPbZ1aTlOg2fNwJlPaIWwdo4FQjFwxGEeUhP45wFa6rUQjweLnrGauk8yKTEZw3cUiLNerhH603qKkxKd2hGuXyCnBN0BacBGW+Az
-X-Gm-Message-State: AOJu0Yx2KUlt0Mc4aVF+yhvKmVmA1ErQf8z8hEWcvWrYsqeAqjaUNTnO
-	bV6aPnG+EDpA310xTICmUrrv3TXgS4xc8vP8PrAxq0Gg5CM9AWvd3V2CnYYY
-X-Google-Smtp-Source: AGHT+IF9PKjomOSMUJmoLDlemBt+PLgMux6m5VCf86phTvzU1z2v2Giz3TyPGWhJB2bd25AAHSvm3Q==
-X-Received: by 2002:a05:6359:5d25:b0:1aa:c73d:5a83 with SMTP id e5c5f4694b2df-1aade04191amr928556155d.1.1720806340226;
-        Fri, 12 Jul 2024 10:45:40 -0700 (PDT)
-Received: from embed-PC.. ([122.183.46.111])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-77d669d5282sm5097810a12.67.2024.07.12.10.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 10:45:39 -0700 (PDT)
-From: Abhishek Tamboli <abhishektamboli9@gmail.com>
-To: airlied@gmail.com,
-	daniel@ffwll.ch,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	rbmarliere@gmail.com,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] drm: Fix documentation warning for read_mpcc_state in mpc.h
-Date: Fri, 12 Jul 2024 23:15:10 +0530
-Message-Id: <20240712174510.70467-1-abhishektamboli9@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=verizon.net header.i=@verizon.net header.b="o4nNJW4E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verizon.net; s=a2048; t=1720806374; bh=JPSaYPl5e8ipRPWuWieBl3AaPuOTC1l4ulWSr3aNPl8=; h=From:To:Subject:Date:References:From:Subject:Reply-To; b=o4nNJW4EUWxEA5LBpGhZUM4wt2ZG2evA1oa/o4MZhLwJ9I94ntwKDsFfEv9f9NHIltpQsux7q/yVXnEEKe9o16+RfvSBE41v6R5pPSxSRj85D4qndUyZjhxu2v25dFf6nmiJCZB+tsvJ4U3QqSRE3pC0yICSlBkTBqrbLz0GN4WscEDQVsMzkznciDpr43w0VyYABohhoFv+k85gOSjAS3qMwweFho0aYNFzI3OT1dOgo471rVKbXX3V+0p0flE1rKlI47c/oPVcLtWXZuT4n53odV0FYCZQnKKnV8dtLjGzUHBGdvv2429SeKrZTJyrRgOofDLLiyZNWQsnJdTDYw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1720806374; bh=3XCDRTfJfCxdc1I4a7YT2gNegvaJiYJ8GTMlalKIKAP=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=tuzfmQQvurb6uyXTlxTjjYKVN+uMhjxrhjhtGu5SjBLt02tSOQMAO4E/rLaOMjZ4BXzGajMJufO2E2ttGw41REdMAvYQzalJ4WWHb5SzffhEemwsd0dUmqS6XB9mFSIpa7N8LrHTG7WoynErJxTzmJchlHtmUNI/bxCGkWFkbJ/PHbMVZsb+gxHYi+caS5DPeYr0Bj0RjiR9QJuDxnhMzaape4LbXxSw9JdkmPmuoRLvEWCZ6DGsZdVQN+lPFw0bviKQMshsatJpgGd7dpYHW9YETlVCjMoR6sw2tRjciDpDNDYY5LsfEBuFf8fsirIig4aLsehPJ3ItC7EU4HCXnQ==
+X-YMail-OSG: xP_Xz6oVM1lIP14Rh1La.eiGNuwIT4N6f6ijUJ0M.kVPTVltIWpriVWQ95gcZBc
+ yTCUYkkGMlz1elTi5z67VIqRtPU5bmr4phvvkgaKTmhmq0kvkwF.Zv4Sv6ag1p47WelZ9yehDWa9
+ lQNXtu9sexBk628YYgS5vC8FZoYfLCtQK24JJqp43sq1Gor2P9Rn49xmGjIWHdriM7LfTr9SwB2d
+ 7PyYLFZ2lk5Q8VKcHZDrvZudPPeGvze_Uqw9qauKUQEjsvR7l_VV6E65sCka2i5Dbh25SlUAQc3M
+ is5CU6pqQYVaRWiNAe7ZxJjUCtdKerlWhGkTXBTm7ECD2V0wDNq41VLMBqazp6ahD3IMuLdxVT58
+ zMefHglf4txGEcgKQmiprnCCYUGgssDhaADdKGHYM3O5.9em4kWY5IbGzuIpjYkAKXJN0.wp8hpv
+ T7nzIKCwh1Kw4iqvTqQpOOX_lGmrui7yPbvxKNzQAxgdomyqCO.VqEi2Flu_uU4Gyp7w_a3ERHrA
+ zp8WVtAQBZZ.SSpeJQhjcy2TSL99V8ae834OB0Nmalcq1TecP1vu1fkXRRestmId6nmVGNKlYiav
+ pBKnMvHNkVy1Aqp8HPgbg_PYeoy6yHmCtiTn3PJTtr8H.RThjaqoQTjoGrkRW5ILquQBTIAOXSDO
+ 9_jWcWLEekwlJ.lk0XSCgWXY3.EfmRYGu8FBiZ4odVGyW4pb2Rfa14.M_uTf5ID1qo4E8B0.Qr_p
+ G9NIT.djc.AVJWj98cmf3nKYVdsve1rgfwP5yVLZDJQqIdSs.as5kLHlhbbip1SaGCIdx8NEVP_1
+ YKy7XCZL9YJZDWhfuz3zBaJ8fZsgnFIj7n6OV1N51ANVGjXn4_yL9.BpgDW1WPGkMzOYGl9Tt8p7
+ QG_.TLt0sf6qy1dWkLAalciEOrY1gPe.DGHYixFmqiuGgsePdCLEVUF.mSrsxZtukCGHdjvCaDiX
+ t4S7XWos6Y0vfpuWtgUbY61p3rYoAs4.X2kvWBgk1y6514S22570p3O9Yqi3ttUERCXgvjal0Uzb
+ 8HZgBL4g6fPhZt_3Shj3jTJrJ1tIJZX1p9.Ul4AVXUoONXKW_2uC3w_X.EfJKE1mlSZFZG.ussMf
+ Vsf8mVJOVy0cvad6QIKti9rtud17vNDtsOe3M9iy64EgrOpeTbhmqqzGynIV28Op3HEeCcyla73l
+ zWtvgi1FnFmlgzz5dbbmT2xO6tht0tBJ7O38mF0zt0e3Qrr3s3ODMRVdywdNSRwupOevmUeqzbdD
+ Wejnpf5tdUxqC8o00aWSu3CrkxqlPmDc2vZiTG8O1l15gfWjOz_ohDQqIR18YaJXVUchv7qzoGVy
+ 5Xn57wERBzLffQeEX0f1t6H0.kYhQ0kpRJuC_R2T4Wt8ZK7Y0s9EWSA6NAmdjH1ooDkgynEKIGMR
+ urTD8dYPGleOWAYnNf33.1K7GU_qFpHTNsjPhETcWC2uOzs2nKrPy9ytGM3HaRkJTo6uaq80qL9s
+ cUsAY10in_Mbd0Hq7oX9NSMYsrGWvGnfKHa25dvg2jtOeECgJsJ1tBFsRhdkA.M7ghwq33hkOkNq
+ sDtUT4bW.HvOLQPFzPu0vQsG1hsLdkF7JhYAhtDxiHUq_56C8DZlqqphmZFp7mX2AXnXw9jMDKLk
+ ij8q2uygQjON3KRxCbl9ZP_PHPzPGKtSqSEOCmVWvZrRqfoajEuWQO2r4Id4HPP5wFovupm7.dIC
+ WfXMbZjqeX1TJ41rJLPw3cEXSYPg5bfMWCW9Mcsn_EkmpZBz9VRHIWmugTcxOzqeOa7H5qHKsAYL
+ kNH1E1VqvxlklZ2nAQuHbUq4mCwO3WH5JZVXlT7p15eQA9Mh4nqIZgZuogSNSXDbLqN8f0bhHI4m
+ TQ7VtoqU7DnfgvqFwbsRE1S1C3lCErDfwwTqqvO6WE79MIiFRi7ga1vXGuvDX37TAZHs59WJ2km9
+ nk20u3diaZPiwln.A.YqlOS_rlzTJlUJ_BcqaDIdyYZ8aUsLgfrFQ6jGBi6qZgwqoy10lcYk9RyN
+ xfHkdkCOa3FgUABG5zaUP60obA6ozIMho_7FaCGE4BuE40tUVkBOg94XCZBkXKZq5hekDLmQtEN8
+ Xz_mJ2qWqmPAf8_94ioVxhB7AxIW_ivDMMvT9BQ50fkJ3c.E2XPsX9y6WYFJGa9MfC3EmNpUt_Pn
+ qMq91MHOis8xpg.FGcmWKV6o98FJtfe1TwuKp..BcTMGmARF.DQof_V2QcY7_ROQ_3xB4HRepM1l
+ ucEL6ybY.X0sc.hNcLmVT5E13wY2NCbQBma3cj_Np7najEYv3BYpYBU0.uQ--
+X-Sonic-MF: <bluescreen_avenger@verizon.net>
+X-Sonic-ID: 656020e9-f2a5-4f1d-b5f8-25bc94a6537a
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Fri, 12 Jul 2024 17:46:14 +0000
+Received: by hermes--production-bf1-7bd4f49c5c-9tkdt (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 836e3dcf6b04f831b9630d063d64fdd5;
+          Fri, 12 Jul 2024 17:15:49 +0000 (UTC)
+From: nerdopolis <bluescreen_avenger@verizon.net>
+To: gregkh@linuxfoundation.org, jirislaby@kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [Resend/Correction] When /dev/console is a disconnected /dev/ttyS0,
+ TCGETS on /dev/console results in EIO (Even if TIOCCONS is called on a PTY)
+Date: Fri, 12 Jul 2024 13:15:48 -0400
+Message-ID: <3245549.5fSG56mABF@nerdopolis2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+References: <3245549.5fSG56mABF.ref@nerdopolis2>
+X-Mailer: WebService/1.1.22501 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-Add detail description for the read_mpcc_state function in the
-mpc_funcs struct to resolve the documentation warning.
+Hi
 
-A kernel-doc warning was addressed:
-./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:547: warning:
-Function parameter or struct member 'read_mpcc_state' not
-described in 'mpc_funcs'.
+I am resending as I realized I sent in Rich Text instead of Plain Text.
+I am sorry if any of you got this duplicate email
 
-Signed-off-by: Abhishek Tamboli <abhishektamboli9@gmail.com>
----
- drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Background:--------------------------------------------------------------------
+This issue becomes evident on VT-less kernels. As when there is no /dev/tty0
+device, the console defaults to being /dev/ttyS0 instead. Although this can
+also be replicated if booting a standard kernel with 'console=ttyS0' and ensure
+nothing is plugged into /dev/ttyS0.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-index 34a398f23fc6..9e65ecf1d3b0 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
-@@ -282,6 +282,22 @@ struct mpcc_state {
-  * struct mpc_funcs - funcs
-  */
- struct mpc_funcs {
-+	/**
-+	 * @read_mpcc_state:
-+	 *
-+	 * Reads the state of a given MPCC instance.
-+	 *
-+	 * Parameters:
-+	 *
-+	 * - [in/out] mpc - MPC context.
-+	 * - [in] mpcc_inst - MPCC Instance whose state is to be read.
-+	 * - [out] mpcc_state - MPCC state structure where the state
-+	 *                    of the MPCC instance will be stored.
-+	 *
-+	 * Return:
-+	 *
-+	 * void
-+	 */
- 	void (*read_mpcc_state)(
- 			struct mpc *mpc,
- 			int mpcc_inst,
--- 
-2.34.1
+
+This issue prevents systemd from logging to the console.
+systemd when logging to /dev/console, long story short it calls isatty() on
+/dev/console, and when /dev/console is actually /dev/ttyS0, and nothing is
+connected to /dev/ttyS0, isatty() fails on /dev/console due to an input/output
+error, causing systemd to not log the console output, because it rejects
+/dev/console as not being a terminal.
+
+
+
+This is noticed on a VT-less system with Plymouth. Plymouth calls the TIOCCONS
+ioctl on a pty device it requests, to redirect console output, and in newer
+versions, it displays the console logs on its own without the assistance of a
+VT.
+
+
+This part of it works, Plymouth is able to 'see' what gets written to
+/dev/console, log output from processes that write to /dev/console directly
+(for example 'echo hi > /dev/console") do appear in plymouth's
+/var/log/boot.log, it is just that systemd is not writing to /dev/console
+because isatty() fails to report /dev/console as a tty device.
+
+
+The alternate fix in for systemds https://github.com/systemd/systemd/pull/33690
+is believed to be that when TIOCCONS is called on a PTY, or another terminal
+device, that trying to call TCGETS on /dev/console should no longer result
+in an error.
+
+
+
+Replicating the issue:---------------------------------------------------------
+
+This program replicates it:
+-------------------------------------------------------------------------------
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+
+int main(void)
+{
+        int fd;
+
+        if (getuid() != 0) {
+                printf("Must be root\n");
+                return 1;
+        }
+
+        fd = open ("/dev/console", O_RDONLY);
+        if (!isatty(fd)) {
+                printf("err on /dev/console: %s\n", strerror(errno));
+        }
+        return 0;
+}
+
+-------------------------------------------------------------------------------
+
+When the kernel console is /dev/ttyS0 and /dev/ttySO has no device connected,
+it prints "err on /dev/console: Input/output error"
+
+
+When I strace it, the relevant line is:
+ioctl(3</dev/console<char 5:1>>, TCGETS, 0x7f...) = -1 EIO (Input/output error)
+
+
+I have not been able to come up with a proposed fix
+
+Thanks
+
 
