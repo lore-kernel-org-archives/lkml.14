@@ -1,91 +1,119 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2134B13D51E;
-	Fri, 12 Jul 2024 09:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AF3143C51;
+	Fri, 12 Jul 2024 09:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720777462; cv=none; b=YZPsgXLv5gz9XfdKwslPIWhyScoInYjChYv/vibo1ONbMxFmFRvNQjT/hbATU21iXLxWxrW1F4Rmtd5pRjHAgZ7QhZXOE8WUwi78LSw5XQb5Q6iaH9RL5jlw7STvWYMYKuJLRYFcuRMlQAqIGMb4CbsGTQk9VMVIZEYRTssB2j8=
+	t=1720777493; cv=none; b=POiWDyDt5K/S5HLIq85/VrvAU/cY4IvSTvX4kxf+G0cEGtTgGPDMP54mOnJwxd+fNJfbvCK9FU+6hVgswcBkpwIx61cvf3fCj5zFytrZdewqIxWEtFxBgT7yulJaDfLwS9q/7yuNWPu3s23ISX7RwWgX9YeDJN2WK3FoJDi3sUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720777462; c=relaxed/simple;
-	bh=q13i1UrJbetK34WE2V5NdO5LnYAjKeg/a8WeJvLRFjo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uvkWQQz0KFbqtJYDvFaT6tkI0lJZ67NAMWMAjUp2QAsIBtM8AiEH2zSglslC3UHKqC5Jo/07FOqTd+g+3E+KCLMuYuZ75YvwGWpbcrexGaxlFUaBpS2jmNb3mWyUrlcTz7FP5FPgFjvHlkyV1swuxlmnjj4Nix1pG/dslEUgaoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=EvOYAsIa; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1720777493; c=relaxed/simple;
+	bh=pye52lxJTMqD0ED0N9d93NrRojesTispGsNfpnuU8S4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aGc0E2q12NIwlIhrQHGRf9YK81RkHzJVg/COIckGhuxC+mgDcITF8NJe/2FWx+qA9Izd50iJSUuaYIj+BkaSyRg87CPQcd8p32C9IP7Juie7ghtLvaZsNsba3nAiqFheXE/anrN8j+9WdAARQN5PNNrZSwBeJntir5LgexIeGG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LyBIbhzZ; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="EvOYAsIa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=sDiUZ4QoH7yxeVq4sOH+f1iqy4IHQrCh16bS9Hu+pw8=; t=1720777459; x=1721382259; 
-	b=EvOYAsIanIjfp/bvdXJj749oc7pauSuKW4wiwCTuhFlgbq7A+iKtF7Vzd22Pnc3dXmhbjikD2LV
-	/7vIWQfDGCeOecbb/295ctLN2aL0yE1UncV20v+4iEdgVh6AQIhAC2FIBLl0wBAh2s/1xEU8v6ycC
-	HG1mPLMeawuw0KjF3AuN0fRiI7X1+W5j/PCauwEZvrCCZgw9l0H6LWiLoK2FhAZBRQFnLCQ+X9dsT
-	8pcm05IfhTEkkKF0xUnibdyEQDTADXbzpDgIbMLGpwgUycAFRRNSI3M/LlWXtRM0Nf7IsVjsg5GkS
-	v/2/N1YiXrUvtQkJjQ8VNIgJ3i+ODwiT5arQ==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1sSCp5-00000000KCN-3kgO; Fri, 12 Jul 2024 11:44:15 +0200
-Received: from p5b13a475.dip0.t-ipconnect.de ([91.19.164.117] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1sSCp5-00000000RTp-2shE; Fri, 12 Jul 2024 11:44:15 +0200
-Message-ID: <d2f868b2184bf05e782374d4316a4ed4c1e4fe2c.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v3] sh: Restructure setup code to reserve memory regions
- earlier
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>, 
-	ysato@users.sourceforge.jp, dalias@libc.org
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
- robh+dt@kernel.org,  kernel@quicinc.com
-Date: Fri, 12 Jul 2024 11:44:15 +0200
-In-Reply-To: <fd55bf91-cc59-403f-bbba-88b63c8535df@quicinc.com>
-References: <20240520175802.2002183-1-quic_obabatun@quicinc.com>
-	 <47f3716dd48ecdc35d823fbab087332fbf3a24d5.camel@physik.fu-berlin.de>
-	 <fd55bf91-cc59-403f-bbba-88b63c8535df@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LyBIbhzZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720777491; x=1752313491;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pye52lxJTMqD0ED0N9d93NrRojesTispGsNfpnuU8S4=;
+  b=LyBIbhzZhxUFWjTOsedoiY0dgWo0EOi+NcAPucNMhVdTp/MDwyT8peSA
+   mUpZHpHkz8+wHvZiTaHtpMjgHgGKu4Z8U+Fkzj1LlgKDAsrwkos/4wcVl
+   K+2JW8IhZBKQHcctUB7eRghchWzqr7gUMx22iXqurVCvIeK9BUvtii2vf
+   b/jllQIb6aBj7BtKZDidvLRqISblQmVxBucA2IJRXRY6974rmmIp498Yg
+   EaULivB/sg3+YSocw6YneIJSXJT5jYpHodccPu8V+T3KKJ9KLLTw16OzB
+   wikR+T9FM2MrWS5M0mu+8DGbTanJlm/l4h+zzChf8kj4qb8B33UVGb9hZ
+   g==;
+X-CSE-ConnectionGUID: pMjvJMMrQFebfrtl5fsSFQ==
+X-CSE-MsgGUID: zXTLhCynQxiXVlideBB7VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="18076945"
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="18076945"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 02:44:51 -0700
+X-CSE-ConnectionGUID: G4rJcSO1Qeu3ga65EOemYQ==
+X-CSE-MsgGUID: tiuiRH0xSFm8EmaZmNG+vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="49524299"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by orviesa007.jf.intel.com with ESMTP; 12 Jul 2024 02:44:48 -0700
+Received: from fedora.igk.intel.com (Metan_eth.igk.intel.com [10.123.220.124])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id 7D46D12409;
+	Fri, 12 Jul 2024 10:44:46 +0100 (IST)
+From: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
+To: intel-wired-lan@lists.osuosl.org
+Cc: apw@canonical.com,
+	joe@perches.com,
+	dwaipayanray1@gmail.com,
+	lukas.bulwahn@gmail.com,
+	akpm@linux-foundation.org,
+	willemb@google.com,
+	edumazet@google.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>
+Subject: [Intel-wired-lan] [PATCH iwl-next v2 0/6] Add support for devlink health events
+Date: Fri, 12 Jul 2024 05:32:45 -0400
+Message-Id: <20240712093251.18683-1-mateusz.polchlopek@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Transfer-Encoding: 8bit
 
-Hi Oreoluwa,
+Reports for two kinds of events are implemented, Malicious Driver
+Detection (MDD) and Tx hang.
 
-On Thu, 2024-07-11 at 14:50 -0700, Oreoluwa Babatunde wrote:
-> Thanks for taking a look and testing the patch!
->=20
-> I have made the changes you mentioned and
-> uploaded the new version of the patch here:
-> https://lore.kernel.org/all/20240711214438.3920702-1-quic_obabatun@quicin=
-c.com/
->=20
-> Please let me know if you need me to do anything else.
+Patches 1, 2: minor core improvements (checkpatch.pl and devlink extension)
+Patches 3, 4, 5: ice devlink health infra + straightforward status reports
+Patch 6: extension to dump also skb on Tx hang, this patch have much of
+ copy-paste from:
+ - net/core/skbuff.c (function skb_dump() - modified to dump into buffer)
+ - lib/hexdump.c (function print_hex_dump() - adjusted)
 
-Perfect, thanks a lot! I will retest this updated version as well as review
-it and then add the R-B and T-B tags, then merge the patch this evening.
+---
+v2:
+- added additional cast to long in function ice_tx_hang_reporter_dump() - patch 3
+- removed size_mul() in devlink_fmsg_binary_pair_put() call - patch 3
 
-Thanks a lot for your patience!
+v1:
+- initial series
+https://lore.kernel.org/netdev/20240703125922.5625-1-mateusz.polchlopek@intel.com/
+---
 
-Adrian
+Ben Shelton (1):
+  ice: Add MDD logging via devlink health
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Przemek Kitszel (5):
+  checkpatch: don't complain on _Generic() use
+  devlink: add devlink_fmsg_put() macro
+  ice: add Tx hang devlink health reporter
+  ice: print ethtool stats as part of Tx hang devlink health reporter
+  ice: devlink health: dump also skb on Tx hang
+
+ drivers/net/ethernet/intel/ice/Makefile       |   1 +
+ .../intel/ice/devlink/devlink_health.c        | 484 ++++++++++++++++++
+ .../intel/ice/devlink/devlink_health.h        |  45 ++
+ drivers/net/ethernet/intel/ice/ice.h          |   2 +
+ drivers/net/ethernet/intel/ice/ice_ethtool.c  |  10 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool.h  |   2 +
+ .../ethernet/intel/ice/ice_ethtool_common.h   |  19 +
+ drivers/net/ethernet/intel/ice/ice_main.c     |  17 +-
+ include/net/devlink.h                         |  11 +
+ scripts/checkpatch.pl                         |   2 +
+ 10 files changed, 585 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/net/ethernet/intel/ice/devlink/devlink_health.c
+ create mode 100644 drivers/net/ethernet/intel/ice/devlink/devlink_health.h
+ create mode 100644 drivers/net/ethernet/intel/ice/ice_ethtool_common.h
+
+-- 
+2.38.1
+
