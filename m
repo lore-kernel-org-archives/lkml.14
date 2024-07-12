@@ -1,117 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC96617D35D;
-	Fri, 12 Jul 2024 18:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5344F17CA00
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 18:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720807975; cv=none; b=rXVRd52/DhvmCgjXrJtW7Fq5Qqfq1U5+Mm8RWpzG1qDKVCL0uYoh56qLfEObq5DXzgBoMWrRI9iHzu9SKfJi0xxVyizPVjq2R2iTRAhxnqPuAusTe6EDeEnPvCgwnTd8/sUnuXLc8rZUlhQbFE7LHIcacqY8m+kfKvM7DADaTWs=
+	t=1720807974; cv=none; b=nSDAUuoWNX1/6VNmHYpFamBgsNBW85iox6hBxdRlfgDsdTv0hvPtqu3DRofoCwIBmvEenBqrhx4Y9eTkQ5ALMYEOpInlRGsGcBIPdR+rwqb86fLUNO8cJdDA4vU6NmhN0r4GulKZJQgMbuF67uTBqIKEcXBHONY1DacC+bfbicU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720807975; c=relaxed/simple;
-	bh=AMtk4b2IlFGIBldcx6HMuJbUNmXf2iqdlc1O1ICsuTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VupyPPZyxSzLWNMZ2o04DHJUMqf5D+OBdvnXml/4fz8gYMorq9qPaAK7oHJ+NgOi7RISge9SNFfgaEqtiTfA42qGPFTtWeaPU40J0B1fJ2XC0b99sfDwrSAFLImxVVpMnzYGCLZMpR8IBhKlyvZQmVJEiLTRooXRs8e05+TAiAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGmcLY1c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720807974; c=relaxed/simple;
+	bh=PQFAc94b+3E6J2xiJdbKRsuyLtZHAm+NZj3v+mP90Hc=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=lkAT6ZdDQvD4Yp1eVATlCaaL1ZCGWBasG4g2CX9eOs5rcY71vDbdAjtZ+oy1BcHujAzf9QImoadLZYoyU7sbm26sRP05lou41sM3cLvAsSehkbt95SmK15JUsxT0mqIMUcU29/YSNuIfvKUnsfZCQcKXjKU3zqlz6iZRJL4vf0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CGLxMRCj; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGmcLY1c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E3BC4AF13;
-	Fri, 12 Jul 2024 18:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720807974;
-	bh=AMtk4b2IlFGIBldcx6HMuJbUNmXf2iqdlc1O1ICsuTg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZGmcLY1cEouptx9VXFMDD6hB8itjvpeUsKLDbxROK2AvjDLYed2Gz7BVk6YUKUjf4
-	 M3vomZtilLfZmhhy4vS/m5DTUAXsZKse6MHPslgIxyR1dVVjPDBkM2CdzGHchF8+un
-	 M/uZ+ydwZplcCUcSTibuTuCF8XcvhF3CnVTVT3P3rPnujrbhk/+VTvxBVLf3UutyN2
-	 zluHaFrbQoWZbNyzr/aXKKSOvfazv5e0je5UN47ELZG1CKZbTGgb4vN01opzLxcaee
-	 KkkjscBdv+SUeMaOtylR0Dtpb4/6XSWdiXI44AdDMWcA0G3WunkHVRSHYkFlUD2ivw
-	 1Ln6qOnKSyKwQ==
-From: superm1@kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Mathias Nyman <mathias.nyman@intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-	Daniel Drake <drake@endlessos.org>,
-	Gary Li <Gary.Li@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v3 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in pci_dev_wait()
-Date: Fri, 12 Jul 2024 13:12:43 -0500
-Message-ID: <20240712181246.811044-3-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240712181246.811044-1-superm1@kernel.org>
-References: <20240712181246.811044-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CGLxMRCj"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e03a92302d1so3686675276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 11:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720807972; x=1721412772; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dI8yaROyMxBgkl/C6HStDZ1DbB4Rpu7ZnQVumFggSVU=;
+        b=CGLxMRCjyiGKsZNLZBfsHfkedwFQZ/BLnEm30ySaBUPCUrpaBZqZIsOPlloR6SiN97
+         zZRuFO+kEcbmnO5RgXYvnKC2jGvcRe5Ms4fodNBADG3UHGM0cfCRWlm62buB6b/aQ9Ms
+         8MDtg6ZnpJ8Sx9FaL+AVEMu2UGMF3PvpHa5pO9rrpHVNhaXjApCq2GrxitURLF8CUNfT
+         80PUzkYsYSeXHfJvJJM6aBU5EY7Yy4epd/HHDtd428elb2hIv8XbiYYBadPesa/60ChQ
+         UWtlI91Oqe5Tr4gpdf3h4YcaQywa3QdNxlRYBcp1OlUVE3bfpIaBJ4QolgvZ4KHZfc6w
+         sOyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720807972; x=1721412772;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dI8yaROyMxBgkl/C6HStDZ1DbB4Rpu7ZnQVumFggSVU=;
+        b=RftWne8bPikvG9dhds/adpKsjjllVatGbnV1EYAR7k2vMjusGypgDho7JKkwPHkpa7
+         SFL02hqY6LW5Vc5QPnMpCt0wawxVEhsnuF55c75USHcE+wvlI88bfZHnPBVw9qcae13s
+         KaLCQg0vFuArjdrnvzNMlOSPyS1t7eK86INa89IaMUylqOZZOy7IdyDS7FzSS+A9khfo
+         zODGhS1ETPzLMd1yJYIorpXgHQLdaa/sIn4niGUcdLA+FXL40QL6D8DHzMKn6ISZPt+0
+         kZqc+bh9Aql8KWaPfzqkpvxhnrs3iydL3N8RNuVhTC/R69xgGHxoVEGtcrogea6VxVqC
+         oCFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuP/csKnJKRBa+IkVXyKJPHzX/T58w6//lSK4qHM/n4pPgyejilBnTeEeYazZk6/RhAaveMlW40/3v4wTY5NvrZywbCbPcloGI/ZZl
+X-Gm-Message-State: AOJu0Yzna1Dm0HVNFSTfh+2aapVqbwvIQVBgQONRP/g4S3NHoMfV1S70
+	PpCuLi6wmMFyBLiG+0GW/zsRRuto/GV7g/y5dRwxd1F59OqPynIhtkL4NOIzRDR2o1KCBauWqwz
+	eqRrxSw==
+X-Google-Smtp-Source: AGHT+IEdjKOWNbH6lHnQ3hQD9ZpV0aONsOjoRMeD9l9g2HUs1hV6yUVjuLwzYNk5GAitqb5lFTEdkOp686G6
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:2e7d:d47a:a0c6:e3b1])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1146:b0:e03:6556:9fa1 with SMTP
+ id 3f1490d57ef6-e041b11d3demr762464276.8.1720807972320; Fri, 12 Jul 2024
+ 11:12:52 -0700 (PDT)
+Date: Fri, 12 Jul 2024 11:11:00 -0700
+In-Reply-To: <20240712181108.475336-1-irogers@google.com>
+Message-Id: <20240712181108.475336-20-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240712181108.475336-1-irogers@google.com>
+X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
+Subject: [PATCH v5 19/27] perf mem: Use perf_tool__init
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+Use perf_tool__init so that more uses of struct perf_tool can be const
+and not relying on perf_tool__fill_defaults.
 
-A device that has gone through a reset may return a value in PCI_COMMAND
-but that doesn't mean it's finished transitioning to D0.  On devices that
-support power management explicitly check PCI_PM_CTRL on everything but
-system resume to ensure the transition happened.
-
-Devices that don't support power management and system resume will
-continue to use PCI_COMMAND.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- drivers/pci/pci.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ tools/perf/builtin-mem.c | 33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 115361a08d9e3..658a139f74ab0 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1279,21 +1279,33 @@ static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_type, int
- 	 * the read (except when CRS SV is enabled and the read was for the
- 	 * Vendor ID; in that case it synthesizes 0x0001 data).
- 	 *
--	 * Wait for the device to return a non-CRS completion.  Read the
--	 * Command register instead of Vendor ID so we don't have to
--	 * contend with the CRS SV value.
-+	 * Wait for the device to return a non-CRS completion.  On devices
-+	 * that support PM control and on waits that aren't part of system
-+	 * resume read the PM control register to ensure the device has
-+	 * transitioned to D0.  On devices that don't support PM control,
-+	 * or during system resume read the command register to instead of
-+	 * Vendor ID so we don't have to contend with the CRS SV value.
- 	 */
- 	for (;;) {
--		u32 id;
--
- 		if (pci_dev_is_disconnected(dev)) {
- 			pci_dbg(dev, "disconnected; not waiting\n");
- 			return -ENOTTY;
- 		}
- 
--		pci_read_config_dword(dev, PCI_COMMAND, &id);
--		if (!PCI_POSSIBLE_ERROR(id))
--			break;
-+		if (dev->pm_cap && reset_type != PCI_DEV_WAIT_RESUME) {
-+			u16 pmcsr;
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index c2038a32543c..c12ca0ec1237 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -285,7 +285,23 @@ static int report_raw_events(struct perf_mem *mem)
+ 		.force = mem->force,
+ 	};
+ 	int ret;
+-	struct perf_session *session = perf_session__new(&data, &mem->tool);
++	struct perf_session *session;
 +
-+			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-+			if (!PCI_POSSIBLE_ERROR(pmcsr) &&
-+				(pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D0)
-+				break;
-+		} else {
-+			u32 id;
++	perf_tool__init(&mem->tool, /*ordered_events=*/true);
++	mem->tool.sample		= process_sample_event;
++	mem->tool.mmap		= perf_event__process_mmap;
++	mem->tool.mmap2		= perf_event__process_mmap2;
++	mem->tool.comm		= perf_event__process_comm;
++	mem->tool.lost		= perf_event__process_lost;
++	mem->tool.fork		= perf_event__process_fork;
++	mem->tool.attr		= perf_event__process_attr;
++	mem->tool.build_id	= perf_event__process_build_id;
++	mem->tool.namespaces	= perf_event__process_namespaces;
++	mem->tool.auxtrace_info  = perf_event__process_auxtrace_info;
++	mem->tool.auxtrace       = perf_event__process_auxtrace;
++	mem->tool.auxtrace_error = perf_event__process_auxtrace_error;
 +
-+			pci_read_config_dword(dev, PCI_COMMAND, &id);
-+			if (!PCI_POSSIBLE_ERROR(id))
-+				break;
-+		}
++	session = perf_session__new(&data, &mem->tool);
  
- 		if (delay > timeout) {
- 			pci_warn(dev, "not ready %dms after %s; giving up\n",
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+@@ -449,21 +465,6 @@ int cmd_mem(int argc, const char **argv)
+ {
+ 	struct stat st;
+ 	struct perf_mem mem = {
+-		.tool = {
+-			.sample		= process_sample_event,
+-			.mmap		= perf_event__process_mmap,
+-			.mmap2		= perf_event__process_mmap2,
+-			.comm		= perf_event__process_comm,
+-			.lost		= perf_event__process_lost,
+-			.fork		= perf_event__process_fork,
+-			.attr		= perf_event__process_attr,
+-			.build_id	= perf_event__process_build_id,
+-			.namespaces	= perf_event__process_namespaces,
+-			.auxtrace_info  = perf_event__process_auxtrace_info,
+-			.auxtrace       = perf_event__process_auxtrace,
+-			.auxtrace_error = perf_event__process_auxtrace_error,
+-			.ordered_events	= true,
+-		},
+ 		.input_name		 = "perf.data",
+ 		/*
+ 		 * default to both load an store sampling
 -- 
-2.43.0
+2.45.2.993.g49e7a77208-goog
 
