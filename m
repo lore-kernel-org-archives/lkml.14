@@ -1,153 +1,140 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012020.outbound.protection.outlook.com [52.101.66.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F406916CD12;
-	Fri, 12 Jul 2024 13:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720792496; cv=fail; b=B4rBcenRTg0v5Mo6rsWbSxE4TeV4Tz1wVz6kWZ3gHSLlZ92o9MqbAlidT3Sb+euWL0UktxchktNqTrT2RNFKsjl59cdAcWNK09sPNCnMx0ZDoBkLGP4L2ZEaZoSUViY/13nWIJvuCAOzB3cPm6wGcJ9Y2hj0eo0EolBKoUy7tJA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720792496; c=relaxed/simple;
-	bh=uA93U13abOwRgVBWi28hQt24i7nIxMAGd4fIOa1nlXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=a8tS/6fUj8asTRWv+0gYBikGNvkhvG4PAypjmp/8o0VmsBHIWlBynHofSx1Xl4bhyOUvjX/NkUEc7zq0YguyLiUKZuGIjH8lWzkjVu34nQ4kiIdvzowVvHQJyiXEXd5m3u4uIQguVHEUW8z1a1q2IWdp9E0rgMb9EoAk990tlCo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=hIN9X43K; arc=fail smtp.client-ip=52.101.66.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAECA16CD12;
+	Fri, 12 Jul 2024 13:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720792506; cv=none; b=joqbdUGyb4ShR1aLjXZhFjl3aHFxvFjKGTIO1vueLLWYbhXXsD80bj8z0wNccUdTR/WkZ5fgpko0E6ifXct2ZCQiUHjgX+iIcCF80NaKwd9S+X1Uu+5tiacFAk2cSWTQb2iML5xW2Cp4ioUuwhjeUrbQfyBS6Lwy++9A2VAXXqE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720792506; c=relaxed/simple;
+	bh=ziAkUQPSRF/ipI1Oq+b7qdZXl5boe3MmXIx+Ir7QFbg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PlO5ctjQb+bo9PovJZc4Zg3484LbC+ynV0Yv3S+0kSAii/xZpmSlS9+jj6nbZCTFidaBu6B9KrjGFL5N7b3H8eZpeys2UuRzFTXv4kFFrrrcbmH+bGFbhd9mJx0eEpXY0/d1CDa0xF8bcvoL12SvqWDeZNsFNJKgKR4QKhAHYp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTobzlFA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hIN9X43K"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=elaw1KlUak/PTzQg3KlU2S/uw3qX+LNStGJwlhpZG8smToMBDyrvd0AkU3Brae9Zr9t427OmCpzR3r14wwFGhtQxwe+HVdhVstTOez6Sd2x06fD7RqdVO6iKeyMrpa5HdssqkyhqtlDAFkVEnYQBnBeZreTy80BfYdpFDbvGyI5+4sMm43A2uNTw+PZ5dhdg4aYLQTcT72ELVkgZC1vTKNwubOmBBwGy2JIEuhB3FtebAIL+4kXmSZqi5yVTr3ujMFRx1wr3O2PQXoABHITx5mnpPaIrNSf9K15mBQFBea4BJBV8HKN9+FHyCf6+HO7VNqXxeaKBvHzF38GcFc91Pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BZQZMH/E+U+68F159rDS7TlLRCOciTMRaAR9pEwIJc4=;
- b=YjTCBGtKPi2+dJPre7EJb156GJYctef/dVJr+bYCJJGAgrSP7wlw71VFoq9edUuQF7HWvqImTiYLSG7Rmc2Dg/U476kc6pUaLf2NdrIE2/fqvcBkSvh5pP8OlmPCgbmky2lSaQXn8VdEYuMJyEU7KTTDachTZWsG4KM65BhhlFpy8W+hXcduaTgbh0U6R+vKb4uuL/5LkDtZCYUOMUsmcABj2DDD2DBc65uyPY4U9nAMowa+VcwfeTl0dIVqRoCfIYdvT3OlF8w49sUZTsn2jra7MOBGJgkQUHztGiwOh/Uw9vfXpYZIWKBg3aywuVU9Jvg/FV5Z+xy5EUkwL5cHKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BZQZMH/E+U+68F159rDS7TlLRCOciTMRaAR9pEwIJc4=;
- b=hIN9X43K3O1IxAnm/B72VvyR2RzLVa4cSBOsic/sQuRHFlusiF+vubHEG/fxFxDCAgn7hC5S/cFsqxF7W74AteAb9WSU5iZZGh+ipVlvx0B55Iy1AHQq9T1Dcqae2rhjwgmmmXxQMagxSEYr88mb3yIW0nB6JqkXI4zFyj5rptk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB7PR04MB4555.eurprd04.prod.outlook.com (2603:10a6:5:33::26) by
- AS4PR04MB9689.eurprd04.prod.outlook.com (2603:10a6:20b:4fc::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7741.36; Fri, 12 Jul 2024 13:54:51 +0000
-Received: from DB7PR04MB4555.eurprd04.prod.outlook.com
- ([fe80::86ff:def:c14a:a72a]) by DB7PR04MB4555.eurprd04.prod.outlook.com
- ([fe80::86ff:def:c14a:a72a%4]) with mapi id 15.20.7741.017; Fri, 12 Jul 2024
- 13:54:51 +0000
-Date: Fri, 12 Jul 2024 16:54:48 +0300
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: Madalin Bucur <madalin.bucur@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	leit@meta.com,
-	"open list:FREESCALE QORIQ DPAA ETHERNET DRIVER" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dpaa: Fix compilation Warning
-Message-ID: <20240712135448.6sxgevfu7hwgkve3@skbuf>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240712134817.913756-1-leitao@debian.org>
-X-ClientProxiedBy: VE1PR08CA0001.eurprd08.prod.outlook.com
- (2603:10a6:803:104::14) To DB7PR04MB4555.eurprd04.prod.outlook.com
- (2603:10a6:5:33::26)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTobzlFA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30795C32782;
+	Fri, 12 Jul 2024 13:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720792506;
+	bh=ziAkUQPSRF/ipI1Oq+b7qdZXl5boe3MmXIx+Ir7QFbg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TTobzlFA/dkCJIbNe8s/ReWoRPe3eu/mXZzYXoaFou+qhUOkg5LTx+aPlRH6NgJ6P
+	 e0TI7vdmxGnNA2uwvY6V0nZa3xLAjsuCW9mOb8puCMSCyly56ynetc4gxN22Fm7d6j
+	 as0U1yag3LlX3R7se5667e74ltEgxsNUvXjKqq+FPYOXrcxxZGCWZjtgmdUqxqyocM
+	 pdmZVcRJS6jyK8Du0qDXaAhYGaIeZ95G7BtKrgDtQPNPxpyBaIRwkIab1d9Xgob726
+	 iDCdFH957CUcNztdfpei2pNY/ehqeNQn6EJ7ZbItAi6kPtxyzQDK9DsFjDBepzuMmg
+	 PFNffqI9k18Yg==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL for v6.11] vfs pg_error
+Date: Fri, 12 Jul 2024 15:54:57 +0200
+Message-ID: <20240712-vfs-pgerror-ced219c8c800@brauner>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB7PR04MB4555:EE_|AS4PR04MB9689:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b71c578-a111-4ef8-4329-08dca27a3371
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WiADx88k/7VTU0kp73Ev9M+4ULBC7aSsX5WxYbkRuOYtUBR81tvTeHK+fjy7?=
- =?us-ascii?Q?fYxhpvsDI2rcAM5EiVfhAYsVQExnrUcm+/H6KFizvE8YieK3iWehWGOV/Qwy?=
- =?us-ascii?Q?T4PC1a0bdJWJN1zijunqNKZ4AmKBVKe5499gApfoAocLpPL5Y0dhWgOQUm/F?=
- =?us-ascii?Q?/5kb9qjp0b/kfRc4gXvP33zD7e8d7EcA63YRU2ILzcPfn3QiW2xEHfXzAXC8?=
- =?us-ascii?Q?Vu+ORfScjxZH9n1/yOX7GuN6TNsrIgd7MJBpByTxaGPcRFF6eHfVNogOgwGz?=
- =?us-ascii?Q?6fqf8+EAue990geDC4l0jWOSnbEMg0mBmBct4YLUZVsmcOS0poTxGCWwZOOs?=
- =?us-ascii?Q?AzxAwit56pprmBPrtp7Wodz80dM6VWtu9kpoNPcNLE0dZjl4ceaODT+ZUVgn?=
- =?us-ascii?Q?rUvlJ7JR62n0NAyGTHkmDIH/xQ/n8QU7vXvjX8FgV+JbVEV+qBuSv0Xqk+D1?=
- =?us-ascii?Q?nTXSr/Vlye2k4pRxJ2BZgubN2JisOJTPcbdFk3uzqJRwizdwM4HmAmh2Cxrx?=
- =?us-ascii?Q?5DqRVhWM8V4Sbj1kjj7tp+4vPigatjIe6S0ae04UKjd7NsVnAq91ODOU++RI?=
- =?us-ascii?Q?SFTylTec9jjfwpV51YDV93XA455Dk3xFZKl36Hp1j4L7TjmZgB9SkSJNLxvK?=
- =?us-ascii?Q?w5w6DOO7XCZEj4wKWO1ugknF//yA/4kvTjb5b5G5MJ3q1HRLO3GJd8szyzdX?=
- =?us-ascii?Q?zJ0za9WbBlWs9xzSZm+2l176M7G5R3OKCRyREJRppK8mh4wifFKePGv6zts9?=
- =?us-ascii?Q?k2NdZsE/O18FR1QmSVkMYQq1zwonjB4110+2yGMEreBlzhUWX6qU6lJ34/Ku?=
- =?us-ascii?Q?6woJwpEHbWBLGHFs4NX4MuMKdDL259kB1D09su+xD13MmlGv4YXN/rNT2UtH?=
- =?us-ascii?Q?hFh+vuvL26DspkJOdPpvSc0TuCRbtsoSQ+LulTKsasveuFEg/MsxOESuc7Zk?=
- =?us-ascii?Q?sdMdbYZgXDemQiZWjmtO5pWfJEwihrp92m+9XgN8jx3Q1e8sDqUy+/MDoTuG?=
- =?us-ascii?Q?Qr3Fz7YMAFgfRarjTKj6doecEm2a+GMzrgJp9+75NUp60xVgy+jMzzZOiWuP?=
- =?us-ascii?Q?h3lKQSP5b4IQVU2Da5giOyvgNoU1uPXjHHXIVumXrXxsLyEygTQnju6FMwLQ?=
- =?us-ascii?Q?dumMWcTwgQqq264VvT1EMj1g2X3HZZTH+hTODq5DB+OC14ipnPcOuO9YL26k?=
- =?us-ascii?Q?YsXSmWfoBXzSk6YDZDKMX9teStsYHJFecrpAXp0eZPXIR1mnwubTopYchMqx?=
- =?us-ascii?Q?R3pLTxO0MUHz5+IEjINkQwFs2NLJVFgAvOWd68sQuqEOW+s4t/t6Nuea/vXU?=
- =?us-ascii?Q?ua8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4555.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cbstIaxErW5SC9quCTOc/PfXzXObgcQ1/qnaVYRIJ4UzDAljjmf75R30rj2y?=
- =?us-ascii?Q?pFoopqwFCkhmgbE3ju11B1QuUXVhObmQVwCNf0v5YNdiyJPEjA3pzHOt9SQh?=
- =?us-ascii?Q?ed1aLlEOYriLxA3j4wSDbfiekt6Edma4PAKxZghX/TN02mzdxGzFWIFty71E?=
- =?us-ascii?Q?po+7Sq2M6gwobQxFrxB7Hdy/WNWr87+GNzcC3iq+AEYk2/lyxL02D4REPqqS?=
- =?us-ascii?Q?ohSEwHObHZ0wxqSJjcuy+eCk1yzlTMXV0T/a6AkyutXQurKj5nWJH/0Sa4e6?=
- =?us-ascii?Q?fG8DeGHzOlJyBAywzjTAnUWRGSZlRi1tzRrJ2RWhXtVTk3SrIWByIugvPXWG?=
- =?us-ascii?Q?wPOn1R+efTfYHAr+E8br65M2IHzgG7dj26Z/jXd+NP2wLW/lb2ME3HemVPlb?=
- =?us-ascii?Q?J3eU1vHWRodMJJp8qcc70GmYMd1FVjdKss0om9EhEwF0LkdopXsQdt8TsXIj?=
- =?us-ascii?Q?hU2XMCF9Ui6tfeK0Q/jzwOagFGmJ0UCsRXrb+DhtYwdOqBY+qjKQGXJsbSxd?=
- =?us-ascii?Q?2yxWPOxfuzgGSuhWgZ50vGW6VMIElxYZfSj2ltR6G4PMvP8eDNIlf2HBLmHb?=
- =?us-ascii?Q?2YJwwx1uJaVO+t8XQG6Bkpaf3QvOSzz1GTBWM7h0zsPvh6GKcNE2pyT/48+l?=
- =?us-ascii?Q?7i+C/alS/xC1uTBjNg9d9sMr1HSfgRmAsVcU2WSDhKAOLI/Wwivz0l+Hu09c?=
- =?us-ascii?Q?myB9NYlMf+RL64Sh0D2GDdBJD/T6CgBFj8HUOBaY37Fq+Ny561zU13r1+VZI?=
- =?us-ascii?Q?bB0h41FBLQRbIIu0HMTc38A1mlCaBEg1YVzXmiYX2lxLpDl2/ZGQabNZKf2Z?=
- =?us-ascii?Q?XN8YjFZveTxVkgz2ar2t6YdDdsbKOPBqLod3CWEb0dJcP5w3DgAqpslfZF2h?=
- =?us-ascii?Q?I2B9s4n6Q7rogvJ6DJ9HoqLGUFh5AXUYdhs1/n7VqQH8K+slOUc8F7WonqxB?=
- =?us-ascii?Q?BLgNk+cE4nQkWLq0SMwIrLcAPAyys7qNg9PR633WZFA4wMHJGxqFnJGcEsCv?=
- =?us-ascii?Q?ltVvMMOoUA2NEc9oMbhrtnu3KOlILZflnXgYnrIMo97leTJgMqlB3DoqQISp?=
- =?us-ascii?Q?cBr78mXfgkeCfeOAprkpCYIY/IMvE/CeYZhd/TmwtDrh1iMYr1nCEUl1eyFk?=
- =?us-ascii?Q?f+V5EJ9QJWViyXQ2VX8YHjsCd3+DN4B9zk+Tr3vAvb0+RRad5sYcU8cNQ14U?=
- =?us-ascii?Q?cBiDUyeMnkTh+eIkc+Vp57f+M2iFoLnOPpxKWZDGSXYECvtNZjwRfJqynPH+?=
- =?us-ascii?Q?l2K/Gxt4WnrmlHEAsYQrbIiPUbCE4M9MdEISw7egqbNHIDQItu2bDjWkp7/g?=
- =?us-ascii?Q?7rxEz+9RxeLS/NptY2qi6/84eeNaDun8R7pu9g0vz4bKTtBbZR7bPgOCo5E+?=
- =?us-ascii?Q?E6Rq8aJepISww5H0gyJW2GKQIPxWJaSdl++RfMCXrCRbbmk6oEwPBOkgNll4?=
- =?us-ascii?Q?sEZJ2ixa8RsP8j+5I4vMfxfmgazlCBMnqZPnVp7t+OOFIUe4sRJWoONoyvQ3?=
- =?us-ascii?Q?JbiISFCzhDVZSIer/QdNl/Bg2a/gbRnBoCEAj7mEN5e77BETjgwKy6eIgJvD?=
- =?us-ascii?Q?pYhsQGQ2y6sz2tPEtiQv0oWXIqnhzUwDsCQctMksCXtotPPnYQHItHy/HSYV?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b71c578-a111-4ef8-4329-08dca27a3371
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4555.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 13:54:51.5858
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t3+MywDOVCJb+2u3LILxKhQG9rG37JNqJo2iaH42F9Hz1QMORZoxKw/C4+KYaLfh3jT/knRvAqjQs5VGgZjDeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9689
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3822; i=brauner@kernel.org; h=from:subject:message-id; bh=ziAkUQPSRF/ipI1Oq+b7qdZXl5boe3MmXIx+Ir7QFbg=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRNNN2889gJ09lbZFNrMj522rK+PX/jZW2erxfX6Zeq0 l5/yh74dJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEyk2pWR4dWLqL0le25eqJv0 QXTZuZmuZ9hUPLpkjjaqzTj0uTdntybDX2Hhn44Xzk9L+BXeF7V75sZZpxJf/88Q4uZ2vFjdNGN iPisA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 12, 2024 at 06:48:16AM -0700, Breno Leitao wrote:
-> Remove variables that are defined and incremented but never read.
-> This issue appeared in network tests[1] as:
-> 
-> 	drivers/net/ethernet/freescale/dpaa/dpaa_eth_sysfs.c:38:6: warning: variable 'i' set but not used [-Wunused-but-set-variable]
-> 	38 |         int i = 0;
-> 	   |             ^
-> 
-> Link: https://netdev.bots.linux.dev/static/nipa/870263/13729811/build_clang/stderr [1]
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
+Hey Linus,
 
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+/* Summary */
+This contains work to remove almost all remaining users of PG_error from
+filesystems and filesystem helper libraries. An additional patch will be coming
+in via the jfs tree which tests the PG_error bit. Afterwards nothing will be
+testing it anymore and it's safe to remove all places which set or clear the
+PG_error bit. The goal is to fully remove PG_error by the next merge window.
+
+/* Testing */
+clang: Debian clang version 16.0.6 (26)
+gcc: (Debian 13.2.0-24)
+
+All patches are based on v6.10-rc1 and have been sitting in linux-next.
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with mainline
+=============================
+
+There's one merge conflict in fs/nsfs/symlink.c
+After conflict resolution the function should look like this:
+
+static int nfs_symlink_filler(struct file *file, struct folio *folio)
+{
+        struct inode *inode = folio->mapping->host;
+        int error;
+
+        error = NFS_PROTO(inode)->readlink(inode, &folio->page, 0, PAGE_SIZE);
+        folio_end_read(folio, error == 0);
+        return error;
+}
+
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.11.pg_error
+
+for you to fetch changes up to 7ad635ea82704a64c40aba67a7d04293d4780f0f:
+
+  buffer: Remove calls to set and clear the folio error flag (2024-05-31 12:31:43 +0200)
+
+Please consider pulling these changes from the signed vfs-6.11.pg_error tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.11.pg_error
+
+----------------------------------------------------------------
+Matthew Wilcox (Oracle) (16):
+      befs: Convert befs_symlink_read_folio() to use folio_end_read()
+      coda: Convert coda_symlink_filler() to use folio_end_read()
+      cramfs: Convert cramfs_read_folio to use a folio
+      efs: Convert efs_symlink_read_folio to use a folio
+      hpfs: Convert hpfs_symlink_read_folio to use a folio
+      isofs: Convert rock_ridge_symlink_read_folio to use a folio
+      hostfs: Convert hostfs_read_folio() to use a folio
+      jffs2: Remove calls to set/clear the folio error flag
+      nfs: Remove calls to folio_set_error
+      orangefs: Remove calls to set/clear the error flag
+      reiserfs: Remove call to folio_set_error()
+      romfs: Convert romfs_read_folio() to use a folio
+      ufs: Remove call to set the folio error flag
+      vboxsf: Convert vboxsf_read_folio() to use a folio
+      iomap: Remove calls to set and clear folio error flag
+      buffer: Remove calls to set and clear the folio error flag
+
+ fs/befs/linuxvfs.c            | 10 ++++------
+ fs/buffer.c                   |  7 +------
+ fs/coda/symlink.c             | 10 +---------
+ fs/cramfs/inode.c             | 25 ++++++++++---------------
+ fs/efs/symlink.c              | 14 +++++---------
+ fs/hostfs/hostfs_kern.c       | 23 ++++++-----------------
+ fs/hpfs/namei.c               | 15 +++------------
+ fs/iomap/buffered-io.c        |  8 --------
+ fs/isofs/rock.c               | 17 ++++++++---------
+ fs/jffs2/file.c               | 14 +++-----------
+ fs/mpage.c                    | 13 +++----------
+ fs/nfs/read.c                 |  2 --
+ fs/nfs/symlink.c              | 12 ++----------
+ fs/nfs/write.c                |  1 -
+ fs/orangefs/inode.c           | 13 +++----------
+ fs/orangefs/orangefs-bufmap.c |  4 +---
+ fs/reiserfs/inode.c           |  1 -
+ fs/romfs/super.c              | 22 ++++++----------------
+ fs/ufs/dir.c                  |  1 -
+ fs/vboxsf/file.c              | 18 +++++-------------
+ 20 files changed, 61 insertions(+), 169 deletions(-)
