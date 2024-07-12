@@ -1,221 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B234B13CFB0;
-	Fri, 12 Jul 2024 06:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B51913CFB0;
+	Fri, 12 Jul 2024 06:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720764460; cv=none; b=qtAy77lBUNOUe8NwncDwlNNJhuz18nDE6xqxYauHmNCEEmTXN+ucmTskfEhvcKrsE05B5ryMo93L3jlZ8P4TxkJY8vGRs1YdmLUpsKvqxdqnnGOeLLVfKJlEBexNeXP8fX7bJoziMi7XKNi6LRZTM6uB9jHw/dRU2WSGRl1JZHg=
+	t=1720764493; cv=none; b=UjJkuPGvJ1vcdSh2z1KxMqKlt6FGHz0xQp1EFVGiUQFCnYjg/S6UtSPR+I6HzLA29U5a+L3A1CimpGuskBEv0YLcwAOJxKsnYI+6naudabuYBKO6vKycurg5z6+ztTGH3oJbWiuSCd2N68p7vNrKXpzaMdqstijzQNk+rgd7JDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720764460; c=relaxed/simple;
-	bh=o5lvfeUUUoomFKAxIJKfOCvtb4tndh2fIBaR29n/aJ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=riSEu6kd1MorlxuY0CAAMXjR8pRxZ75IFwM/oHWMCwZsUbA5KBbVnH7VlHPz/gt+SngYQQyHMWUc4MuZCZNJWH6PWMxZ8fGgMQvkrA6Hx7Fj+6C3I5Tb2/5wZyJyFipagwfD2JPFWyk4IrOxF/R5MMONvviu+IPnH6jdGOS8WDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l/oIGFNN; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720764493; c=relaxed/simple;
+	bh=oOmEa1P3IKAGNFZfngYwKWSd+Br874qTAS3G64tjdgg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fpm5HMT6Rb5mbjpg+rbBFpJnyleVNEIwiiFxvNZWxQ9C6sZFQ5PJf8TAACLUczNkCy3tMs2grqu6ti7Et7Azh0nEEJEGWVGcRHrBgFUTTgow2N7eH4cT6XPXtimIdTl+emBwJqXkty2cBTpD3NeENGrWccLkVDfaju3W1/d5xjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=mDsbVsSc; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Iw3rgzXw reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l/oIGFNN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720764459; x=1752300459;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=o5lvfeUUUoomFKAxIJKfOCvtb4tndh2fIBaR29n/aJ0=;
-  b=l/oIGFNNYDOIZz4eQp46DuQ/6XCx7iv7QOa18htTT+viSw8WZU/RLEYJ
-   H8Sz8abvXZyn+XxpFup6lje9FS0SdqMcorOoKNAW8oaShl1Y6bR+EvF1G
-   tMDtoyRZGsC/hPiq72gDWgJVXomXUjgoNOy88UOTC2BqcUlewLqEdhhaA
-   5Vb/r8xr+Caag9+776+0cyGY0YfU8sln/GYeBre7bVgp/MA6u4wN7wp65
-   5mz5Rb3GYonWyTkQhSh0j4M91vjMIwgbRQyMeEz2NZJYncxG31tfM8j9c
-   jrFQadEhkies0KPfKkPNssgbImAx3Nob8ZyqHDIFw57L3hf70Ns4BlptV
-   w==;
-X-CSE-ConnectionGUID: LwVlmWuATWG0WzkJ9esOeg==
-X-CSE-MsgGUID: GR/Sm1nqSP+NYHt4voYy/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="29597392"
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="29597392"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 23:07:26 -0700
-X-CSE-ConnectionGUID: Bh92un7EQhSrbbkHsWaPRA==
-X-CSE-MsgGUID: xPBQA+kiQAquipaFJnLmzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="49219323"
-Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa006.jf.intel.com with ESMTP; 11 Jul 2024 23:07:23 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Jinrong Liang <cloudliang@tencent.com>,
-	Yongwei Ma <yongwei.ma@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2] KVM: x86/pmu: Insert #GP for invalid architectural PMU MSRs access
-Date: Fri, 12 Jul 2024 12:49:17 +0000
-Message-Id: <20240712124917.68858-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="mDsbVsSc";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Iw3rgzXw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1720764490; x=1752300490;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9kkQv+TWA9nQxOn83JfnaiK6tbtRd6yY1Ho2RrmzOk8=;
+  b=mDsbVsScVdKKgYBwbcr1mDt3/KlIGcGMEqrMiJ3SalHS81TR9aGmz5z4
+   xmDQ7jvIcWAXOBUbZV+6O2fYBNuJQL7gC265XIpZmUnzegYOx9MwgWs1k
+   6lu59rINPvngFPARsxboe7VET1CD8cRtqtG3UA2OLH6dl7zBPPCsbSZ8P
+   I8Sl7aHdmUnbfFUB2jlFILZnlPevmfNx7uxqSFE50t6LbbsA+B+RUVK27
+   oWQFw5s2eJEI8d7W97jnFORjW2AHJJOFrD9in4G256YG84+VN31hoN8tw
+   ekK3RyM2Om7IqDqH6tqQB3QZk5yNVnW7NB6h4dl3BKR3NxEa1W4V/ygz7
+   g==;
+X-CSE-ConnectionGUID: ijGMlMZrQLCwQSsfFBkBGA==
+X-CSE-MsgGUID: WHEqB7i0TnWd7EzlQqfYBw==
+X-IronPort-AV: E=Sophos;i="6.09,202,1716242400"; 
+   d="scan'208";a="37873063"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 12 Jul 2024 08:08:07 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 52BBA164423;
+	Fri, 12 Jul 2024 08:08:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1720764482;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=9kkQv+TWA9nQxOn83JfnaiK6tbtRd6yY1Ho2RrmzOk8=;
+	b=Iw3rgzXwVxbizrITOLFdZrD4PgrE4WYEVXH2U1xJU22JJlPxDPwZT0Ln3X2D39D3/OVq0H
+	NMSJtR7dk2P5Q8q9IAUxKISScCl0yyqorESNhHIpls3ZEnzL4X8V4b841BSMvT9FZPkBL0
+	9OUkMah6RNN7JSX17Tr1Ab+uo/A6OFKOT3twFgTrppGv0UwHDFas0rC+HqKC+FGVWHLjh3
+	NgyIsu/WAQ1nC0jfM68bXOEhwTP9IioSK6S4L5rZqWwVpaN5btSdlmhhjg2oEPUmanRtwx
+	gaUKJ+srN3w/VIrpEQfA+9agpZmP1OY9BBh2xbh/NNSeyul+Io72Byez+gQF+g==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: York Sun <york.sun@nxp.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter <rric@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH 4/6] dt-bindings: memory: fsl: Add compatible string nxp, imx9-memory-controller
+Date: Fri, 12 Jul 2024 08:08:05 +0200
+Message-ID: <3238685.5fSG56mABF@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <ZpCiujvOKJpz6/JU@lizhi-Precision-Tower-5810>
+References: <20240709-imx95_edac-v1-0-3e9c146c1b01@nxp.com> <6068670.lOV4Wx5bFT@steina-w> <ZpCiujvOKJpz6/JU@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-Return KVM_MSR_RET_INVALID instead of 0 to inject #GP to guest for all
-invalid architectural PMU MSRs access.
+Hi Frank,
 
-Currently KVM silently drops the access and doesn't inject #GP for some
-invalid PMU MSRs like MSR_P6_PERFCTR0/MSR_P6_PERFCTR1,
-MSR_P6_EVNTSEL0/MSR_P6_EVNTSEL1, but KVM still injects #GP for all other
-invalid PMU MSRs.
+Am Freitag, 12. Juli 2024, 05:27:54 CEST schrieb Frank Li:
+> On Wed, Jul 10, 2024 at 09:18:16AM +0200, Alexander Stein wrote:
+> > Hi Frank,
+> >=20
+> > Am Dienstag, 9. Juli 2024, 22:23:05 CEST schrieb Frank Li:
+> > > iMX9 memory controller is similar with other layerscape chips. But so=
+me
+> > > register layout has a little bit difference, so add new compatible st=
+ring
+> > > 'nxp,imx9-memory-controller' for it.
+> >=20
+> > Is this controller the same for all i.MX9 SoC? E.g. i.MX91, i.MX93,
+> > i.MX95 and any future variants?
+>=20
+> So far it is the same. I can't prodicting future. Not plan to change it
+> yet.
 
-This behavior is introduced by 'commit 5753785fa977 ("KVM: do not #GP
-on perf MSR writes when vPMU is disabled")' in 2012. This looks more
-like a quirk and just want to respect some guests odd behavior for the
-legacy non-architectural PMUs.
+Okay, thanks for clarification. If DT maintainers are okay this way, I do n=
+ot object.
 
-But for platforms with architectural PMU nowadays, this quirk can be
-dropped. Especially since Perfmon v6 starts, the GP counters could
-become discontinuous on HW, It's possible that HW doesn't support GP
-counters 0 and 1. #GP needs to be injected to guest to notify this case.
+Best regards,
+Alexander
 
-All PMU related kselftests
-(pmu_counters_test/pmu_event_filter_test/vmx_pmu_caps_test) and KUT PMU
-tests (pmu/pmu_lbr/pmu_pebs) pass with this patch on Sapphire Rapids.
+> Frank=20
+>=20
+> >=20
+> > Best regards,
+> > Alexander
+> >=20
+> > > imx9 need two 'reg', one for DDR controller and the other is ECC inje=
+ct
+> > > engine register space. Keep the same restriction for other compatible
+> > > string.
+> > >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  .../bindings/memory-controllers/fsl/fsl,ddr.yaml   | 31 ++++++++++++=
++++++++++-
+> > >  1 file changed, 30 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl=
+/fsl,ddr.yaml b/Documentation/devicetree/bindings/memory-controllers/fsl/fs=
+l,ddr.yaml
+> > > index 84f778a99546b..e0786153eec73 100644
+> > > --- a/Documentation/devicetree/bindings/memory-controllers/fsl/fsl,dd=
+r.yaml
+> > > +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/fsl,dd=
+r.yaml
+> > > @@ -40,6 +40,7 @@ properties:
+> > >            - fsl,p1021-memory-controller
+> > >            - fsl,p2020-memory-controller
+> > >            - fsl,qoriq-memory-controller
+> > > +          - nxp,imx9-memory-controller
+> > > =20
+> > >    interrupts:
+> > >      maxItems: 1
+> > > @@ -51,13 +52,41 @@ properties:
+> > >      type: boolean
+> > > =20
+> > >    reg:
+> > > -    maxItems: 1
+> > > +    items:
+> > > +      - description: Controller register space
+> > > +      - description: Inject register space
+> > > +    minItems: 1
+> > > +
+> > > +  reg-names:
+> > > +    items:
+> > > +      - const: ctrl
+> > > +      - const: inject
+> > > +    minItems: 1
+> > > =20
+> > >  required:
+> > >    - compatible
+> > >    - interrupts
+> > >    - reg
+> > > =20
+> > > +allOf:
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            enum:
+> > > +              - nxp,imx9-memory-controller
+> > > +    then:
+> > > +      properties:
+> > > +        reg:
+> > > +          minItems: 2
+> > > +        reg-names:
+> > > +          minItems: 2
+> > > +    else:
+> > > +      properties:
+> > > +        reg:
+> > > +          maxItems: 1
+> > > +        reg-names: false
+> > > +
+> > >  additionalProperties: false
+> > > =20
+> > >  examples:
+> > >=20
+> > >=20
+> >=20
+> >=20
+>=20
+>=20
+>=20
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/kvm/x86.c                            | 53 ++++++++++++-------
- .../selftests/kvm/x86_64/pmu_counters_test.c  | 12 +++--
- 2 files changed, 42 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 994743266480..800442db0f21 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4051,16 +4051,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_IA32_MC0_CTL2 ... MSR_IA32_MCx_CTL2(KVM_MAX_MCE_BANKS) - 1:
- 		return set_msr_mce(vcpu, msr_info);
- 
--	case MSR_K7_PERFCTR0 ... MSR_K7_PERFCTR3:
--	case MSR_P6_PERFCTR0 ... MSR_P6_PERFCTR1:
--	case MSR_K7_EVNTSEL0 ... MSR_K7_EVNTSEL3:
--	case MSR_P6_EVNTSEL0 ... MSR_P6_EVNTSEL1:
--		if (kvm_pmu_is_valid_msr(vcpu, msr))
--			return kvm_pmu_set_msr(vcpu, msr_info);
--
--		if (data)
--			kvm_pr_unimpl_wrmsr(vcpu, msr, data);
--		break;
- 	case MSR_K7_CLK_CTL:
- 		/*
- 		 * Ignore all writes to this no longer documented MSR.
-@@ -4137,6 +4127,24 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		vcpu->arch.guest_fpu.xfd_err = data;
- 		break;
- #endif
-+	case MSR_K7_PERFCTR0 ... MSR_K7_PERFCTR3:
-+	case MSR_P6_PERFCTR0 ... MSR_P6_PERFCTR1:
-+	case MSR_K7_EVNTSEL0 ... MSR_K7_EVNTSEL3:
-+	case MSR_P6_EVNTSEL0 ... MSR_P6_EVNTSEL1:
-+		/*
-+		 * Some legacy guests don't expect to get a #GP if these MSRs
-+		 * are invalid on the old platforms with non-architectural PMUs.
-+		 * Refer: commit 5753785fa977 ("KVM: do not #GP on perf MSR writes
-+		 * when vPMU is disabled")
-+		 */
-+		if (!vcpu_to_pmu(vcpu)->version) {
-+			if (kvm_pmu_is_valid_msr(vcpu, msr))
-+				return kvm_pmu_set_msr(vcpu, msr_info);
-+			if (data)
-+				kvm_pr_unimpl_wrmsr(vcpu, msr, data);
-+			break;
-+		}
-+		fallthrough;
- 	default:
- 		if (kvm_pmu_is_valid_msr(vcpu, msr))
- 			return kvm_pmu_set_msr(vcpu, msr_info);
-@@ -4239,14 +4247,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_DRAM_ENERGY_STATUS:	/* DRAM controller */
- 		msr_info->data = 0;
- 		break;
--	case MSR_K7_EVNTSEL0 ... MSR_K7_EVNTSEL3:
--	case MSR_K7_PERFCTR0 ... MSR_K7_PERFCTR3:
--	case MSR_P6_PERFCTR0 ... MSR_P6_PERFCTR1:
--	case MSR_P6_EVNTSEL0 ... MSR_P6_EVNTSEL1:
--		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
--			return kvm_pmu_get_msr(vcpu, msr_info);
--		msr_info->data = 0;
--		break;
- 	case MSR_IA32_UCODE_REV:
- 		msr_info->data = vcpu->arch.microcode_version;
- 		break;
-@@ -4496,6 +4496,23 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		msr_info->data = vcpu->arch.guest_fpu.xfd_err;
- 		break;
- #endif
-+	case MSR_K7_EVNTSEL0 ... MSR_K7_EVNTSEL3:
-+	case MSR_K7_PERFCTR0 ... MSR_K7_PERFCTR3:
-+	case MSR_P6_PERFCTR0 ... MSR_P6_PERFCTR1:
-+	case MSR_P6_EVNTSEL0 ... MSR_P6_EVNTSEL1:
-+		/*
-+		 * Some legacy guests don't expect to get a #GP if these MSRs
-+		 * are invalid on the old platforms with non-architectural PMUs.
-+		 * Refer: commit 5753785fa977 ("KVM: do not #GP on perf MSR writes
-+		 * when vPMU is disabled")
-+		 */
-+		if (!vcpu_to_pmu(vcpu)->version) {
-+			if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
-+				return kvm_pmu_get_msr(vcpu, msr_info);
-+			msr_info->data = 0;
-+			break;
-+		}
-+		fallthrough;
- 	default:
- 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
- 			return kvm_pmu_get_msr(vcpu, msr_info);
-diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-index 698cb36989db..69fca57dedef 100644
---- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-@@ -358,7 +358,8 @@ static void guest_test_rdpmc(uint32_t rdpmc_idx, bool expect_success,
- static void guest_rd_wr_counters(uint32_t base_msr, uint8_t nr_possible_counters,
- 				 uint8_t nr_counters, uint32_t or_mask)
- {
--	const bool pmu_has_fast_mode = !guest_get_pmu_version();
-+	uint8_t guest_pmu_version = guest_get_pmu_version();
-+	const bool pmu_has_fast_mode = !guest_pmu_version;
- 	uint8_t i;
- 
- 	for (i = 0; i < nr_possible_counters; i++) {
-@@ -377,12 +378,13 @@ static void guest_rd_wr_counters(uint32_t base_msr, uint8_t nr_possible_counters
- 		const bool expect_success = i < nr_counters || (or_mask & BIT(i));
- 
- 		/*
--		 * KVM drops writes to MSR_P6_PERFCTR[0|1] if the counters are
--		 * unsupported, i.e. doesn't #GP and reads back '0'.
-+		 * KVM drops writes to MSR_P6_PERFCTR[0|1] for non-architectural PMUs
-+		 * if the counters are unsupported, i.e. doesn't #GP and reads back '0'.
- 		 */
- 		const uint64_t expected_val = expect_success ? test_val : 0;
--		const bool expect_gp = !expect_success && msr != MSR_P6_PERFCTR0 &&
--				       msr != MSR_P6_PERFCTR1;
-+		const bool expect_gp = !expect_success &&
-+				       (guest_pmu_version ||
-+					(msr != MSR_P6_PERFCTR0 && msr != MSR_P6_PERFCTR1));
- 		uint32_t rdpmc_idx;
- 		uint8_t vector;
- 		uint64_t val;
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-base-commit: 771df9ffadb8204e61d3e98f36c5067102aab78f
--- 
-2.40.1
 
