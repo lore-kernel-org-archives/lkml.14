@@ -1,151 +1,134 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05B716EB6E;
-	Fri, 12 Jul 2024 13:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6151170855;
+	Fri, 12 Jul 2024 13:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720792140; cv=none; b=MNtuf9hoO23v+p8WVQGZfETFkKfJs1ERJUTYPHjpSAGESM8KF8/ZBBeJQS9vCPipcV8K420wSZPBVoT4Kr5vLLBivRhXibqOPEo4Kgp/wIqjwuwkbK5wXvI8yjGjXYNLDRE+z+WbDP3Zj1sQTU/pMe8p1sTXKQWfYE+Lxap0jaE=
+	t=1720792254; cv=none; b=bhe6aflciE0KeXNVPTD1cvyYicrNamAPUe0wf+p02h4SreD2Yjg0UUKHzlJ0rQ33+hwDfFSZBcSD4IgYLB1yG4mR7c39QLiHZ+YSGgCuvr1UiQjh83moRfE+NvZ0Juc0dry/7hA1uBgcCJEWtLTKqDTKvWWgWYZajw3XDRnP94U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720792140; c=relaxed/simple;
-	bh=Tu42nau61uQUrM2WkU0xQHoUNzdUiCiLufs8uTvML20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dau1Na2BE8Z7EUCffRu2L8fcfzbSjdemTnUD+5NEeSBpXI720edKLKp3hjuNAIW+neY287n9I8v8GVVsOTgnNkDgUNuFuxRHebtn+bsVlMrOcpkew5eVNrn/FpA+Ca1auU7AtQDGMLeYcWSqyKr+aeoZBkkmSubzE/2L1/VQHh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWCWqkEp; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720792254; c=relaxed/simple;
+	bh=I4s3pgMz9i4x52INpWCVjdgMEszmPrFIycRjFHUxwUI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FIzf1ipvC7jRKUqd5d1nWp0ByxUSlHPh9NMAcEG5zXVN3HoWF+ZjcVLRoAqwYPYGtf5aeYnj+qy4+toG6yR4Y+zCOUkIjoQMYromQ4c0clqyLaxUF+kfQMEd65FlXyjULJYP+u8AsF5BZkA/8gujJTjgAApV+Yjv2x8kU9Y6EqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=DgEbzBux; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWCWqkEp"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4ef76f04977so667966e0c.2;
-        Fri, 12 Jul 2024 06:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720792137; x=1721396937; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CNeMMGyKMUpPSQSPubxQiT+hSpfRpgXCDkgjBJjYMQA=;
-        b=VWCWqkEpmrLYYAAi6RSLkFhP9XA1iya9+W+R+f/5LhnSDKLjbXlEmtsmpbSayacbW3
-         qKXF5c4PDOJqvobdhwBVX7LjEvQAMeswibXu1OIBTKES1hbkML79KwflC5ie+imN9G3V
-         PvWsIvWts7YM38Cw/eDHULufuN54tGSwYc6IlWbzVJygJ1asntRTFi4OaZhZ29W89KOG
-         3w1HrRx2Lh5ixhsAof7L9cD3AxbWDqSePxOMWc73zvxtx2B+C87xs4rWNasrmwXsEogh
-         PXMmfTxOrNuNx/iF7Qq9u5jqzTmvDV7OlFlO9/1zo4Yh5ztCylOd1eLP01xK17KudiXd
-         S32g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720792137; x=1721396937;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CNeMMGyKMUpPSQSPubxQiT+hSpfRpgXCDkgjBJjYMQA=;
-        b=JErKuJzgma2aDIcmr5TQcqSlviSd9vTeHizvHSY3CXxS/JEDls4QW8EtMRJ6lJ0f+f
-         jnoh4FuUklpQoKJAtLv7qhBoUbjAsO8pHNDC2UOjZncgUTO+N0smUbfk4KLBLljOZIYC
-         IvQKhgYb0YVF4JSeHLSv3+gyu8xZBA7t9eGIdGI4UgOWkFirIMTBaZF0Zov4Qp4TtRW2
-         uuYSegfTOJwut5I59lyVBUB9UBj7wcDG57g/4e+kNDEluMOhfY0dkoakBaNmDiBLsrKj
-         EFpwbWLrH+7zB13s748m7xHANB1U5cyMk/t8RD1XQRCZvBhvp9Wx/h1535bjYtI6wJ9m
-         Qx7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUp4zKAVFjhSvjGfTXBDRFIf0Jq8w/00YrGx0f8sWqi04Lb/miJ4x9AXcOT8QDGdy2ekEpXRSQfWE9ChyakBnWP8YlGaN+KxqMOxTe1LERsqXQCBNsGdv9b0UzGN+5PthR8FzBYxpdHz5zZScxcy6L7kjgxnI7c5UAUdA+KURFh8Bzkj4Vf5Mc/mzj2N/3haC4ZsZk1RdqI3MVWxpvIQsFHxvqH0zaO
-X-Gm-Message-State: AOJu0Yzujh3AwkofQ0tmxar71oorpHpErfweHz8FT6J4t9l9yeMnaqak
-	x1wAyYf9CXpnJiFOE35XVD5EtYTJaDG9j2yQb2KvMkcUcEsRozQVKYR3g2fzbkY7yowopl8vgXF
-	L6Kd/SWIglwKYn6Qi9gu+zVmonwQ=
-X-Google-Smtp-Source: AGHT+IEVNhqRMz9n9crf1r6WaUvNgJ/dyDPHlu7D7kgnmKPUhB8R0X+CUwUXHsUwxzcfSlFGxKZUeQJI5wevih/Gk48=
-X-Received: by 2002:a05:6122:21ac:b0:4ef:52e2:6763 with SMTP id
- 71dfb90a1353d-4f33f318833mr13257634e0c.13.1720792137495; Fri, 12 Jul 2024
- 06:48:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="DgEbzBux"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=11Vk88tlyuFmzDsyuNNsYY0Ie7tF1wOIOkc5fFbyGsI=; b=DgEbzBuxtGhLQ7NIeBsJYtQK98
+	/plQR9kp9kWmr0xA2rIQrxesq+S3mXAxGonR2HKfe1CzG6pLVxU5HF4V+LKbdW46MhSrM20okOWUH
+	UQwaFuJqChfyT12CSkf4wsspfdoHJHq6fPEQ3xq2BEg/ibknYZ3StQpy/AYNGB2n3dksrt7V3IS3/
+	WCNWtLKXBM/HF2QGRzwJ2huH6aYlEGdY/Brn2uiPSOl17FNc1iC5C8dz/7qqpxW1MY8wYbIv0qW/4
+	kXs57L84gvpkg7Ijjt9ofkuaFtXEZE+jIdr5+snp6FWsmxjXpnmvbeqDZzISYwNGlmAEAMzsu0uA0
+	qoaOX7iw==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1sSGfL-0002si-Io; Fri, 12 Jul 2024 15:50:27 +0200
+Received: from [178.197.248.35] (helo=linux.home)
+	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1sSGfK-000DNZ-1o;
+	Fri, 12 Jul 2024 15:50:26 +0200
+Subject: Re: [PATCH bpf] selftests/bpf: DENYLIST.aarch64: Remove fexit_sleep
+To: Puranjay Mohan <puranjay@kernel.org>, Manu Bretelle <chantra@meta.com>,
+ KP Singh <kpsingh@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
+ <eddyz87@gmail.com>, Mykola Lysenko <mykolal@meta.com>,
+ Alexei Starovoitov <ast@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Florent Revest <revest@google.com>
+References: <20240705145009.32340-1-puranjay@kernel.org>
+ <c0ef7ecf-595b-375a-7785-d7bf50040c6b@iogearbox.net>
+ <mb61pjzhwvshc.fsf@kernel.org>
+ <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
+ <224eeadb-fc5f-baeb-0808-a4f9916afa3c@iogearbox.net>
+ <mb61ped836gn7.fsf@kernel.org>
+ <d36b0c2e-fdf2-d3b0-46a8-7936e0eda5a8@iogearbox.net>
+ <CACYkzJ5E+3xYkNsH7JoVkjabzSwnZZCzzTz5B50qDB7bLYkmMA@mail.gmail.com>
+ <890d23f2-636e-12d1-31cc-eb6469f2a9ac@iogearbox.net>
+ <SJ0PR15MB461564D3F7E7A763498CA6A8CBDB2@SJ0PR15MB4615.namprd15.prod.outlook.com>
+ <mb61p5xtcyqo5.fsf@kernel.org>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <978e127b-4967-950d-ccca-8575d1a885ae@iogearbox.net>
+Date: Fri, 12 Jul 2024 15:50:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627161315.98143-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240627161315.98143-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV4GUKc=LFStKHO47vPJLZs3Vmvz-L7L81bC5DmdK5ztA@mail.gmail.com>
-In-Reply-To: <CAMuHMdV4GUKc=LFStKHO47vPJLZs3Vmvz-L7L81bC5DmdK5ztA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 12 Jul 2024 14:47:27 +0100
-Message-ID: <CA+V-a8t3GVMo8N=uBn58=S9=0MtuaCtxxN4OC5F-i7Vp8ntcpg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: renesas: Document RZ/V2H(P)
- SoC CPG
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <mb61p5xtcyqo5.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27334/Fri Jul 12 10:35:53 2024)
 
-Hi Geert,
+Hi Puranjay,
 
-Thank you for the review.
+On 7/11/24 4:00 PM, Puranjay Mohan wrote:
+[...]
+> I was able find the root cause of this bug and will send a fix soon!
+> 
+>> Unable to handle kernel paging request at virtual address ffff0000c2a80e68
+> 
+> We are running this test on Qemu with '-cpu max', this means 52-bit
+> virtual addresses are being used.
+> 
+> The trampolines generation code has the following two lines:
+> 
+> 		emit_addr_mov_i64(A64_R(0), (const u64)im, ctx);
+> 		emit_call((const u64)__bpf_tramp_enter, ctx);
+> 
+> here the address of struct bpf_tramp_image is moved to R0 and passed as
+> an argument to __bpf_tramp_enter().
+> 
+> emit_addr_mov_i64() assumes that the address passed to it is in the
+> vmalloc space and uses at most 48 bits. It sets all the remaining bits
+> to 1.
+> 
+> but struct bpf_tramp_image is allocated using kzalloc() and when 52-bit
+> VAs are used, its address is not guaranteed to be 48-bit, therefore we
+> see this bug, where  0xfff[0]0000c2a80e68 is converted to
+> 0xfff[f]0000c2a80e68 when the trampoline is generated.
+> 
+> The fix would be use emit_a64_mov_i64() for moving this address into R0.
 
-On Fri, Jul 12, 2024 at 12:58=E2=80=AFPM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-<snip>
-> > +++ b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
-> > +  '#clock-cells':
-> > +    description: |
-> > +      - For CPG core clocks, the two clock specifier cells must be "CP=
-G_CORE"
-> > +        and a core clock reference, as defined in
-> > +        <dt-bindings/clock/renesas,r9a09g057-cpg.h>,
-> > +      - For module clocks, the two clock specifier cells must be "CPG_=
-MOD" and
-> > +        a module number.  The module number is calculated as the CLKON=
- register
-> > +        offset index multiplied by 16, plus the actual bit in the regi=
-ster
-> > +        used to turn the CLK ON. For example, for CGC_GIC_0_GICCLK, th=
-e
-> > +        calculation is (1 * 16 + 3) =3D 19.
->
-> Using hexadecimal for the final number may be more readable,
-> also in the DTS?
->
-> (1 * 16 + 3) =3D 0x13?
->
-Agreed I will update the value to hex.
+It looks like there is still an issue left. A recent CI run on bpf-next is
+still hitting the same on arm64:
 
-> > +    const: 2
-> > +
-> > +  '#power-domain-cells':
-> > +    const: 0
-> > +
-> > +  '#reset-cells':
-> > +    description:
-> > +      The single reset specifier cell must be the reset number. The re=
-set number
-> > +      is calculated as the reset register offset index multiplied by 1=
-6, plus the
-> > +      actual bit in the register used to reset the specific IP block. =
-For example,
-> > +      for SYS_0_PRESETN, the calculation is (3 * 16 + 0) =3D 48.
->
-> (3 * 16 + 0) =3D 0x30?
->
-OK.
+Base:
 
-> > --- /dev/null
-> > +++ b/include/dt-bindings/clock/renesas,r9a09g057-cpg.h
-> > @@ -0,0 +1,21 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > + *
-> > + * Copyright (C) 2024 Renesas Electronics Corp.
-> > + */
-> > +#ifndef __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
-> > +#define __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
->
-> __DT_BINDINGS_CLOCK_RENESAS_R9A09G057_CPG_H__
->
-> [...]
->
-> > +#endif /* __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__ */
->
-> __DT_BINDINGS_CLOCK_RENESAS_R9A09G057_CPG_H__
->
-Oops, I missed updating it after the file name change.
+   https://github.com/kernel-patches/bpf/commits/series/870746%3D%3Ebpf-next/
 
-Cheers,
-Prabhakar
+CI:
+
+   https://github.com/kernel-patches/bpf/actions/runs/9905842936/job/27366435436
+
+   [...]
+   #89/11   fexit_bpf2bpf/func_replace_global_func:OK
+   #89/12   fexit_bpf2bpf/fentry_to_cgroup_bpf:OK
+   #89/13   fexit_bpf2bpf/func_replace_progmap:OK
+   #89      fexit_bpf2bpf:OK
+   Error: The operation was canceled.
+
+Thanks,
+Daniel
