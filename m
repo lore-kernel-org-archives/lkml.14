@@ -1,109 +1,130 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD39F13D891;
-	Fri, 12 Jul 2024 08:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5144413D504
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 08:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720773142; cv=none; b=j3vXjfu9gJtZuOfs57J2Ojs8A4qPRYqezue4hvEpXOKVCyLos6CzeB+42dAeHmJujjgOZmtS3muzM4b0hqidwY1q5PCvkkp4v576RhQvHfFpkKurS6FbczAa1Mrbcnw7N8B3jJnZlLIkxq2plUgEgU/7nS77NusMWZd83IOlQ24=
+	t=1720773264; cv=none; b=q2D8qCgDReF3AFiY/ysBgDyjMliKuzybWewM9MjQkyHg3bsI0CR067B/dMJSRk5aNaxYlVAYyNmvXexpfbPI255L610EajOhmMn7naAH7QJnpr0YLXXysi5nTQ5ynb/Kj4z11SLYTwPmfk+pIjVb7mnp9giNnBoFhXGpnDbmuQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720773142; c=relaxed/simple;
-	bh=n1zxY5qH8904VuJHNeImarl5a09WAl8K0FSrsBJ4FYE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QDn3Cuzh/OAT1Ni5ORfMEhHOfzn22p8arwVmYo6sMCVhTaA1I/eaXzEfFbVRgJ6O31TMWYVL/ISjEZWai/z1UkSwwasExh2p0STUQPkH2yuEnaJm8mgljzORqnhucdrzrCWJxyTA+PE+U5N0qwMLp5BoOPIkiv0XgRkE4S6Cdk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=tFm+6zH7; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1720773264; c=relaxed/simple;
+	bh=hEEcy46RO7V68UI4b8DWMk/Sw0GV6jX3upU1MX1NCNY=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b9Z9eR4xwv6JcDevHDNnj1YaKzX6xbI4JlEkun45WYmTmxUeHXsLtKp4twOzdBppNajgX+sFCMMjlcCNmT5d5Xb5WWv9xnl3M8Ai4YwtCTxEOO4+MUxnHlFAPyIMN7AnRfjj30exwSnrAg/LYBAHQq60cu1b/aPX/9ip+Lik9bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kJOIIWU6; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="tFm+6zH7"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 46C8VgfiE313779, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1720773102; bh=n1zxY5qH8904VuJHNeImarl5a09WAl8K0FSrsBJ4FYE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=tFm+6zH7wRiw3WALQ3iK4Q3wGDDloNokBkw1Nl9WlEWJwsi8jLopXajw2RpdRttdT
-	 f38w3sqUSIZ8gMHGiXGsjzbQ3Ke5IRGJnyqCuAkjv8oTvNBr/Zt7FLStdQGn6jVCYw
-	 55Z3ib+RcKnWUd/C39KSc6bxfqkbLSXoMQVMfyUHELs6FbIPscfddHWiH3xT/agWZa
-	 cowp0T2I3ZFuZzCIDrpCepoep8lyoiKGnWzdxDq06xE1cc8OdLS08k1+4dC+dDzXLF
-	 RsjC6eBhD64TwkJXT4QfrQ+k748CPE38hXC6YDEuxEXJjwpLNLUgHD0NvNRrsiZ9eF
-	 X98GmQMDmDn6A==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 46C8VgfiE313779
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Jul 2024 16:31:42 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 12 Jul 2024 16:31:42 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Jul 2024 16:31:42 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Fri, 12 Jul 2024 16:31:42 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch"
-	<andrew@lunn.ch>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "horms@kernel.org"
-	<horms@kernel.org>,
-        "rkannoth@marvell.com" <rkannoth@marvell.com>,
-        "jdamato@fastly.com" <jdamato@fastly.com>,
-        Ping-Ke Shih <pkshih@realtek.com>, Larry Chiu <larry.chiu@realtek.com>
-Subject: RE: [PATCH net-next v23 04/13] rtase: Implement the interrupt routine and rtase_poll
-Thread-Topic: [PATCH net-next v23 04/13] rtase: Implement the interrupt
- routine and rtase_poll
-Thread-Index: AQHa0no69wfdkW7mNUmbfRSXLRon/rHxzNEAgAD5ekA=
-Date: Fri, 12 Jul 2024 08:31:41 +0000
-Message-ID: <55abfcf00da1494fbc98fc0389ab7c3a@realtek.com>
-References: <20240710033234.26868-1-justinlai0215@realtek.com>
-	<20240710033234.26868-5-justinlai0215@realtek.com>
- <20240711183640.02241a9a@kernel.org>
-In-Reply-To: <20240711183640.02241a9a@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kJOIIWU6"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ebed33cb65so23970281fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 01:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720773260; x=1721378060; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vNDrI3O2vapYfHdlJEtPCv7zDNFd4Jc3cF7Xop8DfQM=;
+        b=kJOIIWU6iYbb3e/kDqehvju41Udhwh9d3UcaqV8cjRFKS1w/PELrXZTcx2jucP9r9I
+         aHcTTTO/LElfzYC4YbE1CvrsntLwNJq8e3PsHPTRXPKZMvltvFLooWSokGo/4tx8iiVH
+         ytFe/bCtTlDqwyQKuNj4YkbsPNKgsGUymtgfXTl5tOHkswvgijLVAtkiRO8rCmgBQPYY
+         PsRj4airLoQ3/4FtUsrVAH94iCTLK/Z2//H9hj/pl0y3vmUm3LIUo8ONRFdvhXDdxMkI
+         eZnSRCmEm8DZX9YDcKGXGGPJWiLSBhI4wv/6oJLRfzEEP0neMf60euvDgsBUohyWJyq+
+         oHog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720773260; x=1721378060;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vNDrI3O2vapYfHdlJEtPCv7zDNFd4Jc3cF7Xop8DfQM=;
+        b=UagF3b7W8VKW3XqIKjMTa/iAhry4WvJkunxaWPjcwvLD8md0OKnEowTjZIPVrQm07I
+         HxPYG1d36mYSSC8vTp+PpvzsKCE3MWWNg+WbMvJzVuDqlxa0bzld4Zl8ZQYomqYOMX3t
+         WlhAJPxhrYxxcYyJfthLuTsrD60Gat1iSwoXM7gzmw6fvPG5l/Rv1H0RmWtUYpFYf2pg
+         hdrWVAnZG6mso+h/YAIuofNH5tBAC0wrjaLuvxh+YqhwuampDOxpX5DYVNn+BPGLxSrZ
+         DzjglFWPlPJIMPMrrMCzEd5Q3vsWh5BwQNwvX15AVqSw/h3EPFcJc494aBZoEfxeJNf7
+         OSHA==
+X-Gm-Message-State: AOJu0YwRD5hi3vx83Sr53vzO1/qnEMHyCHxK4sdCctYh5kFbXQeHE34d
+	R5dZMrPzwA5pNqQI2Sno4ZU3SEcRrC0dRXYlA/IACR052uNgPj9YNedjHnj4Sdrh49hRey714aO
+	+85nZ9aZgCZYEDPQ9UMGMrKgcG5Ii62BYvVoNNQ==
+X-Google-Smtp-Source: AGHT+IHVj+wjXgDktMpG8zdUN+g+WLxyO6cDA/LdfvRtCl8Ry37DhiQDAsTV3vRrqH09CAlUDxv6WEACdtb0FfVZuYA=
+X-Received: by 2002:a2e:9204:0:b0:2e1:2169:a5cc with SMTP id
+ 38308e7fff4ca-2eeb30dafd7mr69368611fa.15.1720773260158; Fri, 12 Jul 2024
+ 01:34:20 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 12 Jul 2024 03:34:19 -0500
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <CA+G9fYuCp7Q71_o74yo9ge_5-G=Ho9bC3kJdX_JvtoqWOQujkA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CA+G9fYuCp7Q71_o74yo9ge_5-G=Ho9bC3kJdX_JvtoqWOQujkA@mail.gmail.com>
+Date: Fri, 12 Jul 2024 03:34:19 -0500
+Message-ID: <CAMRc=Md5zmFxXXM89LQs6dspC0xnp_6=z=+a2SQypWjwpiRgow@mail.gmail.com>
+Subject: Re: next: arm64: defconfig: gcc-8: drivers/bluetooth/hci_qca.c:2501:2:
+ error: label at end of compound statement
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> On Wed, 10 Jul 2024 11:32:25 +0800 Justin Lai wrote:
-> > +#ifdef CONFIG_NET_POLL_CONTROLLER
-> > +/* Polling 'interrupt' - used by things like netconsole to send skbs
-> > + * without having to re-enable interrupts. It's not called while
-> > + * the interrupt routine is executing.
-> > + */
-> > +static void rtase_netpoll(struct net_device *dev) {
-> > +     const struct rtase_private *tp =3D netdev_priv(dev);
-> > +     const struct pci_dev *pdev =3D tp->pdev;
-> > +
-> > +     disable_irq(pdev->irq);
-> > +     rtase_interrupt(pdev->irq, dev);
->=20
-> Why do you need to implement a separate netpoll handler?
-> netpoll is optional, if driver doesn't implement it core will just core y=
-our NAPI
-> handlers with a budget of 0 (to only clean up Tx, see NAPI documentation)=
-.
->=20
-> disable_irq() sleeps, you most definitely can't call it here.
+On Thu, 11 Jul 2024 16:34:35 +0200, Naresh Kamboju
+<naresh.kamboju@linaro.org> said:
+> The arm64 defconfig gcc-8 build failed [1] due to these warnings / errors on the
+> Linux next-20230711 tag. But the gcc-13 builds pass.
+>
+> LKFT is testing older toolchain support till gcc-8.
+>
+> The following recent changes cause this failure.
+> a887c8dede8e1 Bluetooth: hci_qca: schedule a devm action for disabling the clock
+>
+> Build errors with gcc-8:
+> -----------
+> drivers/bluetooth/hci_qca.c: In function 'qca_serdev_remove':
+> drivers/bluetooth/hci_qca.c:2501:2: error: label at end of compound statement
+>   default:
+>   ^~~~~~~
+> make[5]: *** [scripts/Makefile.build:244: drivers/bluetooth/hci_qca.o]
+> Error 1a887c8dede8e1 Bluetooth: hci_qca: schedule a devm action for
+> disabling the clock
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Build data:
+> ------
+>   * Build name: gcc-8-defconfig
+>   * git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   * git_sha: f477dd6eede3ecedc8963478571d99ec3bf3f762
+>   * git_short_log: f477dd6eede3 ("Add linux-next specific files for 20240711")
+>   * Config: defconfig
+>   * arch: arm64
+>   * toolchain: gcc-8
+>
+> Steps to reproduce:
+> -------
+> # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
+> --kconfig defconfig
+>
+> Build log links,
+> ---------------
+>  [1] https://storage.tuxsuite.com/public/linaro/lkft/builds/2j5nr85T4iLl99RjcJ9oy9O3eo2/
+>
 > --
-> pw-bot: cr
+> Linaro LKFT
+> https://lkft.linaro.org
+>
+>
 
-Hi Jakub,
+The actual code looks like this now:
 
-After confirming, I think there is no need to implement the netpoll handler=
-,
-so I will remove it.
+	case QCA_WCN7850:
+		if (power->vregs_on)
+			qca_power_shutdown(&qcadev->serdev_hu);
+		break;
+	default:
+
+What can be done to silence this warning? Or should we just ignore it because
+it's gcc 8?
+
+Bartosz
