@@ -1,604 +1,386 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC2413E41A;
-	Fri, 12 Jul 2024 11:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B1C3157E6B;
+	Fri, 12 Jul 2024 11:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720784838; cv=none; b=SGgCs5+uITNrtOBn56t7aeg8n1F+RFq0Azzsly7ORazo4WFLf6rkekj/imDIGDeTEfdMCiqCj5AjQag4VDKn/vpv3pshyUgRjJcN3GrVgcxEr/txI6WqqBkuio+UXJ4sCYRSoG1ZSnvHjeyeL9QACDMa8bj4Hfp/o8geUiomhOA=
+	t=1720784919; cv=none; b=MlZuHG4kVDnLp1+vZarjzaiq4510CU4RxM2eL+F93tMBxSJ5ITTHsEJEl8nWXi3vYDhDPA30EqkT0gvL2IS4Xa+3jrv8VDgswmNKTtTipKFaMf/Y60xrkB9Ty6wIZ5GIaC6U3YZwCHapULYpnhG7USdgJtcaRFPGO4EovnWh1cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720784838; c=relaxed/simple;
-	bh=T/3oI02kJkTX1Yr1xDgUh5F5FCTmLxt7AM3acs9HL74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p/YlTp8UKK+WMvzzanTmIINK5hNI2xtriYVuszL+D+QuK4uwby2WN/nMehD97BIAnlS6mnOxeNA2t5yxOXNI/sMQBELxFwltcAcJee5Gao0pQBp4TQFPo4OX6qoYht/vEcq05Jc0X5SkUBl9apYc0q0vOE3VlFseEOtSCLB2yeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=D0OG3ePY; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D0OG3ePY"
-Received: from ideasonboard.com (mob-5-90-56-63.net.vodafone.it [5.90.56.63])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4AF7F5A5;
-	Fri, 12 Jul 2024 13:36:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1720784192;
-	bh=T/3oI02kJkTX1Yr1xDgUh5F5FCTmLxt7AM3acs9HL74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D0OG3ePYzEDC2YxCfmHw6Ekw1lo1/itgwu4jipkaVhLZKeOuCjcgwJWfivYUk3u+i
-	 bZxhPPovMsl+jmF0uePTzkCrpDcAHyRGpQIFkkrRHonnVcxrDM6UtwPaKn7AXOBq57
-	 gfWvT4Q6oBFME7xEALZ/naQymGg8Bb5i53UUu9oQ=
-Date: Fri, 12 Jul 2024 13:37:02 +0200
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Mingjia Zhang <mingjia.zhang@mediatek.com>, Jack Zhu <jack.zhu@starfivetech.com>, 
-	Keith Zhao <keith.zhao@starfivetech.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>
-Subject: Re: =?utf-8?B?5Zue5aSNOiDlm57lpI06IFtQQVRDSCB2?= =?utf-8?Q?5?=
- 08/14] staging: media: starfive: Add for StarFive ISP 3A SC
-Message-ID: <gppf6abnt3pjmaonnulszamnsusmnjreeygch7y3ty7sqzdbsl@xcxvrcaurkho>
-References: <20240709083824.430473-1-changhuang.liang@starfivetech.com>
- <20240709083824.430473-9-changhuang.liang@starfivetech.com>
- <hxv4l4t32a7il5zv2wk7btydlk6qokyborevbnrajpwziaalva@lly6nfkts2no>
- <ZQ0PR01MB13024CFE2FCCF4D39E3FAEDEF2A52@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
- <b45mnwf4p4ygrvukzdmrvbffndmqg5fncyepg2yxize7wq3a75@v6doupiawwnt>
- <ZQ0PR01MB1302A295EC18E19578026E0BF2A62@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+	s=arc-20240116; t=1720784919; c=relaxed/simple;
+	bh=egGOy+DbgfmJ0SM1cWXRVqAWOpUqsSRDpLQhMuuU0c8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AhaN5+tgtTfHAy2akoj6Z6hAo5hhl4PXmUOJBY4y8sC8KRmaxVI7ooCX0vxBkNUYQKBKIi5y4CAbuqM7U5Ax/yZDo++q6lXtgBGAXs4U/Vyv1efuYyrK0F6VGwudpGSqnuRSqXQRYddahORMXQoGc7bEyPaDm6iiowJXy5ymvs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C15D01007;
+	Fri, 12 Jul 2024 04:49:01 -0700 (PDT)
+Received: from [10.57.93.135] (unknown [10.57.93.135])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B23B3F762;
+	Fri, 12 Jul 2024 04:48:33 -0700 (PDT)
+Message-ID: <01c05fb2-16ce-450c-befb-8a92ac2a8af9@arm.com>
+Date: Fri, 12 Jul 2024 12:48:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZQ0PR01MB1302A295EC18E19578026E0BF2A62@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] iommu: Resolve fwspec ops automatically
+To: Jon Hunter <jonathanh@nvidia.com>, Will Deacon <will@kernel.org>,
+ Joerg Roedel <joro@8bytes.org>
+Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Saravana Kannan <saravanak@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo
+ <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Yong Wu <yong.wu@mediatek.com>,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <cover.1719919669.git.robin.murphy@arm.com>
+ <0e2727adeb8cd73274425322f2f793561bdc927e.1719919669.git.robin.murphy@arm.com>
+ <0eec5f84-6b39-43ba-ab2f-914688a5cf45@nvidia.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <0eec5f84-6b39-43ba-ab2f-914688a5cf45@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Changhuang
+On 2024-07-12 12:01 pm, Jon Hunter wrote:
+> Hi Robin,
+> 
+> On 02/07/2024 12:40, Robin Murphy wrote:
+>> There's no real need for callers to resolve ops from a fwnode in order
+>> to then pass both to iommu_fwspec_init() - it's simpler and more sensible
+>> for that to resolve the ops itself. This in turn means we can centralise
+>> the notion of checking for a present driver, and enforce that fwspecs
+>> aren't allocated unless and until we know they will be usable.
+>>
+>> Also use this opportunity to modernise with some "new" helpers that
+>> arrived shortly after this code was first written; the generic
+>> fwnode_handle_get() clears up that ugly get/put mismatch, while
+>> of_fwnode_handle() can now abstract those open-coded dereferences.
+>>
+>> Tested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>> v2: Add of_fwnode_handle() cleanup as well
+>> ---
+>>   drivers/acpi/arm64/iort.c             | 19 +++++--------------
+>>   drivers/acpi/scan.c                   |  8 +++-----
+>>   drivers/acpi/viot.c                   | 11 ++---------
+>>   drivers/iommu/arm/arm-smmu/arm-smmu.c |  3 +--
+>>   drivers/iommu/iommu-priv.h            |  2 ++
+>>   drivers/iommu/iommu.c                 |  9 ++++++---
+>>   drivers/iommu/mtk_iommu_v1.c          |  2 +-
+>>   drivers/iommu/of_iommu.c              | 19 ++++++-------------
+>>   drivers/iommu/tegra-smmu.c            |  2 +-
+>>   include/acpi/acpi_bus.h               |  3 +--
+>>   include/linux/iommu.h                 | 13 ++-----------
+>>   11 files changed, 30 insertions(+), 61 deletions(-)
+>>
+>> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+>> index c0b1c2c19444..1b39e9ae7ac1 100644
+>> --- a/drivers/acpi/arm64/iort.c
+>> +++ b/drivers/acpi/arm64/iort.c
+>> @@ -1221,10 +1221,10 @@ static bool iort_pci_rc_supports_ats(struct 
+>> acpi_iort_node *node)
+>>   static int iort_iommu_xlate(struct device *dev, struct 
+>> acpi_iort_node *node,
+>>                   u32 streamid)
+>>   {
+>> -    const struct iommu_ops *ops;
+>>       struct fwnode_handle *iort_fwnode;
+>> -    if (!node)
+>> +    /* If there's no SMMU driver at all, give up now */
+>> +    if (!node || !iort_iommu_driver_enabled(node->type))
+>>           return -ENODEV;
+>>       iort_fwnode = iort_get_fwnode(node);
+>> @@ -1232,19 +1232,10 @@ static int iort_iommu_xlate(struct device 
+>> *dev, struct acpi_iort_node *node,
+>>           return -ENODEV;
+>>       /*
+>> -     * If the ops look-up fails, this means that either
+>> -     * the SMMU drivers have not been probed yet or that
+>> -     * the SMMU drivers are not built in the kernel;
+>> -     * Depending on whether the SMMU drivers are built-in
+>> -     * in the kernel or not, defer the IOMMU configuration
+>> -     * or just abort it.
+>> +     * If the SMMU drivers are enabled but not loaded/probed
+>> +     * yet, this will defer.
+>>        */
+>> -    ops = iommu_ops_from_fwnode(iort_fwnode);
+>> -    if (!ops)
+>> -        return iort_iommu_driver_enabled(node->type) ?
+>> -               -EPROBE_DEFER : -ENODEV;
+>> -
+>> -    return acpi_iommu_fwspec_init(dev, streamid, iort_fwnode, ops);
+>> +    return acpi_iommu_fwspec_init(dev, streamid, iort_fwnode);
+>>   }
+>>   struct iort_pci_alias_info {
+>> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+>> index 503773707e01..8d5a589db141 100644
+>> --- a/drivers/acpi/scan.c
+>> +++ b/drivers/acpi/scan.c
+>> @@ -1577,12 +1577,11 @@ int acpi_dma_get_range(struct device *dev, 
+>> const struct bus_dma_region **map)
+>>   #ifdef CONFIG_IOMMU_API
+>>   int acpi_iommu_fwspec_init(struct device *dev, u32 id,
+>> -               struct fwnode_handle *fwnode,
+>> -               const struct iommu_ops *ops)
+>> +               struct fwnode_handle *fwnode)
+>>   {
+>>       int ret;
+>> -    ret = iommu_fwspec_init(dev, fwnode, ops);
+>> +    ret = iommu_fwspec_init(dev, fwnode);
+>>       if (ret)
+>>           return ret;
+>> @@ -1639,8 +1638,7 @@ static int acpi_iommu_configure_id(struct device 
+>> *dev, const u32 *id_in)
+>>   #else /* !CONFIG_IOMMU_API */
+>>   int acpi_iommu_fwspec_init(struct device *dev, u32 id,
+>> -               struct fwnode_handle *fwnode,
+>> -               const struct iommu_ops *ops)
+>> +               struct fwnode_handle *fwnode)
+>>   {
+>>       return -ENODEV;
+>>   }
+>> diff --git a/drivers/acpi/viot.c b/drivers/acpi/viot.c
+>> index c8025921c129..2aa69a2fba73 100644
+>> --- a/drivers/acpi/viot.c
+>> +++ b/drivers/acpi/viot.c
+>> @@ -307,21 +307,14 @@ void __init acpi_viot_init(void)
+>>   static int viot_dev_iommu_init(struct device *dev, struct viot_iommu 
+>> *viommu,
+>>                      u32 epid)
+>>   {
+>> -    const struct iommu_ops *ops;
+>> -
+>> -    if (!viommu)
+>> +    if (!viommu || !IS_ENABLED(CONFIG_VIRTIO_IOMMU))
+>>           return -ENODEV;
+>>       /* We're not translating ourself */
+>>       if (device_match_fwnode(dev, viommu->fwnode))
+>>           return -EINVAL;
+>> -    ops = iommu_ops_from_fwnode(viommu->fwnode);
+>> -    if (!ops)
+>> -        return IS_ENABLED(CONFIG_VIRTIO_IOMMU) ?
+>> -            -EPROBE_DEFER : -ENODEV;
+>> -
+>> -    return acpi_iommu_fwspec_init(dev, epid, viommu->fwnode, ops);
+>> +    return acpi_iommu_fwspec_init(dev, epid, viommu->fwnode);
+>>   }
+>>   static int viot_pci_dev_iommu_init(struct pci_dev *pdev, u16 dev_id, 
+>> void *data)
+>> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c 
+>> b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+>> index 87c81f75cf84..c200e6d3aed5 100644
+>> --- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
+>> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+>> @@ -178,8 +178,7 @@ static int arm_smmu_register_legacy_master(struct 
+>> device *dev,
+>>           it.cur_count = 1;
+>>       }
+>> -    err = iommu_fwspec_init(dev, &smmu_dev->of_node->fwnode,
+>> -                &arm_smmu_ops);
+>> +    err = iommu_fwspec_init(dev, NULL);
+>>       if (err)
+>>           return err;
+>> diff --git a/drivers/iommu/iommu-priv.h b/drivers/iommu/iommu-priv.h
+>> index 5f731d994803..078cafcf49b4 100644
+>> --- a/drivers/iommu/iommu-priv.h
+>> +++ b/drivers/iommu/iommu-priv.h
+>> @@ -17,6 +17,8 @@ static inline const struct iommu_ops 
+>> *dev_iommu_ops(struct device *dev)
+>>       return dev->iommu->iommu_dev->ops;
+>>   }
+>> +const struct iommu_ops *iommu_ops_from_fwnode(const struct 
+>> fwnode_handle *fwnode);
+>> +
+>>   int iommu_group_replace_domain(struct iommu_group *group,
+>>                      struct iommu_domain *new_domain);
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 9df7cc75c1bc..7618c4285cf9 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -2822,11 +2822,14 @@ const struct iommu_ops 
+>> *iommu_ops_from_fwnode(const struct fwnode_handle *fwnode
+>>       return ops;
+>>   }
+>> -int iommu_fwspec_init(struct device *dev, struct fwnode_handle 
+>> *iommu_fwnode,
+>> -              const struct iommu_ops *ops)
+>> +int iommu_fwspec_init(struct device *dev, struct fwnode_handle 
+>> *iommu_fwnode)
+>>   {
+>> +    const struct iommu_ops *ops = iommu_ops_from_fwnode(iommu_fwnode);
+>>       struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+>> +    if (!ops)
+>> +        return -EPROBE_DEFER;
+>> +
+>>       if (fwspec)
+>>           return ops == fwspec->ops ? 0 : -EINVAL;
+>> @@ -2838,7 +2841,7 @@ int iommu_fwspec_init(struct device *dev, struct 
+>> fwnode_handle *iommu_fwnode,
+>>       if (!fwspec)
+>>           return -ENOMEM;
+>> -    of_node_get(to_of_node(iommu_fwnode));
+>> +    fwnode_handle_get(iommu_fwnode);
+>>       fwspec->iommu_fwnode = iommu_fwnode;
+>>       fwspec->ops = ops;
+>>       dev_iommu_fwspec_set(dev, fwspec);
+>> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+>> index 2b64ea46318f..c6ea5b4baff3 100644
+>> --- a/drivers/iommu/mtk_iommu_v1.c
+>> +++ b/drivers/iommu/mtk_iommu_v1.c
+>> @@ -412,7 +412,7 @@ static int mtk_iommu_v1_create_mapping(struct 
+>> device *dev,
+>>           return -EINVAL;
+>>       }
+>> -    ret = iommu_fwspec_init(dev, &args->np->fwnode, &mtk_iommu_v1_ops);
+>> +    ret = iommu_fwspec_init(dev, of_fwnode_handle(args->np));
+>>       if (ret)
+>>           return ret;
+>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+>> index 3afe0b48a48d..08c523ad55ad 100644
+>> --- a/drivers/iommu/of_iommu.c
+>> +++ b/drivers/iommu/of_iommu.c
+>> @@ -21,26 +21,19 @@ static int of_iommu_xlate(struct device *dev,
+>>                 struct of_phandle_args *iommu_spec)
+>>   {
+>>       const struct iommu_ops *ops;
+>> -    struct fwnode_handle *fwnode = &iommu_spec->np->fwnode;
+>>       int ret;
+>> -    ops = iommu_ops_from_fwnode(fwnode);
+>> -    if ((ops && !ops->of_xlate) ||
+>> -        !of_device_is_available(iommu_spec->np))
+>> +    if (!of_device_is_available(iommu_spec->np))
+>>           return -ENODEV;
+>> -    ret = iommu_fwspec_init(dev, fwnode, ops);
+>> +    ret = iommu_fwspec_init(dev, of_fwnode_handle(iommu_spec->np));
+>> +    if (ret == -EPROBE_DEFER)
+>> +        return driver_deferred_probe_check_state(dev);
+>>       if (ret)
+>>           return ret;
+>> -    /*
+>> -     * The otherwise-empty fwspec handily serves to indicate the 
+>> specific
+>> -     * IOMMU device we're waiting for, which will be useful if we 
+>> ever get
+>> -     * a proper probe-ordering dependency mechanism in future.
+>> -     */
+>> -    if (!ops)
+>> -        return driver_deferred_probe_check_state(dev);
+>> -    if (!try_module_get(ops->owner))
+>> +    ops = dev_iommu_fwspec_get(dev)->ops;
+>> +    if (!ops->of_xlate || !try_module_get(ops->owner))
+>>           return -ENODEV;
+>>       ret = ops->of_xlate(dev, iommu_spec);
+>> diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+>> index f86c7ae91814..4365d9936e68 100644
+>> --- a/drivers/iommu/tegra-smmu.c
+>> +++ b/drivers/iommu/tegra-smmu.c
+>> @@ -837,7 +837,7 @@ static int tegra_smmu_configure(struct tegra_smmu 
+>> *smmu, struct device *dev,
+>>       const struct iommu_ops *ops = smmu->iommu.ops;
+>>       int err;
+>> -    err = iommu_fwspec_init(dev, &dev->of_node->fwnode, ops);
+>> +    err = iommu_fwspec_init(dev, of_fwnode_handle(dev->of_node));
+>>       if (err < 0) {
+>>           dev_err(dev, "failed to initialize fwspec: %d\n", err);
+>>           return err;
+>> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+>> index 1a4dfd7a1c4a..9d815837e297 100644
+>> --- a/include/acpi/acpi_bus.h
+>> +++ b/include/acpi/acpi_bus.h
+>> @@ -736,8 +736,7 @@ struct iommu_ops;
+>>   bool acpi_dma_supported(const struct acpi_device *adev);
+>>   enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev);
+>>   int acpi_iommu_fwspec_init(struct device *dev, u32 id,
+>> -               struct fwnode_handle *fwnode,
+>> -               const struct iommu_ops *ops);
+>> +               struct fwnode_handle *fwnode);
+>>   int acpi_dma_get_range(struct device *dev, const struct 
+>> bus_dma_region **map);
+>>   int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+>>                  const u32 *input_id);
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index 17b3f36ad843..81893aad9ee4 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -1005,11 +1005,9 @@ struct iommu_mm_data {
+>>       struct list_head    sva_handles;
+>>   };
+>> -int iommu_fwspec_init(struct device *dev, struct fwnode_handle 
+>> *iommu_fwnode,
+>> -              const struct iommu_ops *ops);
+>> +int iommu_fwspec_init(struct device *dev, struct fwnode_handle 
+>> *iommu_fwnode);
+>>   void iommu_fwspec_free(struct device *dev);
+>>   int iommu_fwspec_add_ids(struct device *dev, const u32 *ids, int 
+>> num_ids);
+>> -const struct iommu_ops *iommu_ops_from_fwnode(const struct 
+>> fwnode_handle *fwnode);
+>>   static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct 
+>> device *dev)
+>>   {
+>> @@ -1315,8 +1313,7 @@ static inline void iommu_device_unlink(struct 
+>> device *dev, struct device *link)
+>>   }
+>>   static inline int iommu_fwspec_init(struct device *dev,
+>> -                    struct fwnode_handle *iommu_fwnode,
+>> -                    const struct iommu_ops *ops)
+>> +                    struct fwnode_handle *iommu_fwnode)
+>>   {
+>>       return -ENODEV;
+>>   }
+>> @@ -1331,12 +1328,6 @@ static inline int iommu_fwspec_add_ids(struct 
+>> device *dev, u32 *ids,
+>>       return -ENODEV;
+>>   }
+>> -static inline
+>> -const struct iommu_ops *iommu_ops_from_fwnode(const struct 
+>> fwnode_handle *fwnode)
+>> -{
+>> -    return NULL;
+>> -}
+>> -
+>>   static inline int
+>>   iommu_dev_enable_feature(struct device *dev, enum iommu_dev_features 
+>> feat)
+>>   {
+> 
+> 
+> I am seeing some failures on -next with some of our devices. Bisect is 
+> pointing to this commit. Looks like the host1x device is no longer 
+> probing successfully. I see the following ...
+> 
+>   tegra-host1x 50000000.host1x: failed to initialize fwspec: -517
+>   nouveau 57000000.gpu: failed to initialize fwspec: -517
+> 
+> The probe seems to be deferred forever. The above is seen on Tegra210 
+> but Tegra30 and Tegra194 are also having the same problem. Interestingly 
+> it is not all devices and so make me wonder if we are missing something 
+> on these devices? Let me know if you have any thoughts.
 
-On Fri, Jul 12, 2024 at 08:36:21AM GMT, Changhuang Liang wrote:
-> Hi, Jacopo
->
-> [...]
-> > > > > +
-> > > > > +void stf_set_scd_addr(struct stfcamss *stfcamss,
-> > > > > +		      dma_addr_t yhist_addr, dma_addr_t scd_addr,
-> > > > > +		      enum stf_isp_type_scd type_scd) {
-> > > > > +	stf_isp_reg_set_bit(stfcamss, ISP_REG_SC_CFG_1, ISP_SC_SEL_MASK,
-> > > > > +			    SEL_TYPE(type_scd));
-> > > > > +	stf_isp_reg_write(stfcamss, ISP_REG_SCD_CFG_0, scd_addr);
-> > > > > +	stf_isp_reg_write(stfcamss, ISP_REG_YHIST_CFG_4, yhist_addr); }
-> > > > > +
-> > > > > +static void stf_isp_fill_yhist(struct stfcamss *stfcamss, void
-> > > > > +*vaddr) {
-> > > > > +	struct jh7110_isp_sc_buffer *sc = (struct jh7110_isp_sc_buffer
-> > *)vaddr;
-> > > > > +	u32 reg_addr = ISP_REG_YHIST_ACC_0;
-> > > > > +	u32 i;
-> > > > > +
-> > > > > +	for (i = 0; i < 64; i++, reg_addr += 4)
-> > > > > +		sc->y_histogram[i] = stf_isp_reg_read(stfcamss, reg_addr);
-> > > >
-> > > > If you have a contigous memory space to read, could memcpy_fromio()
-> > > > help instead of going through 64 reads ?
-> > > >
-> > >
-> > > I will try this function.
-> > >
-> > > > > +}
-> > > > > +
-> > > > > +static void stf_isp_fill_flag(struct stfcamss *stfcamss, void *vaddr,
-> > > > > +			      enum stf_isp_type_scd *type_scd) {
-> > > > > +	struct jh7110_isp_sc_buffer *sc = (struct jh7110_isp_sc_buffer
-> > > > > +*)vaddr;
-> > > > > +
-> > > > > +	*type_scd = stf_isp_get_scd_type(stfcamss);
-> > > > > +	if (*type_scd == TYPE_AWB) {
-> > > > > +		sc->flag = JH7110_ISP_SC_FLAG_AWB;
-> > > > > +		*type_scd = TYPE_OECF;
-> > > > > +	} else {
-> > > > > +		sc->flag = JH7110_ISP_SC_FLAG_AE_AF;
-> > > > > +		*type_scd = TYPE_AWB;
-> > > >
-> > > > Is this correct ? Why are you overwriting the value read from HW
-> > > > that indicates AE/AF stats with AWB ones ?
-> > >
-> > > The AWB frame and AE/AF frames will alternate, so the current frame
-> > > indicates the AE/AF, then set AWB type just for next AWB frame.
-> > >
-> >
-> > Ah! Shouldn't it be userspace configuring which type of statistics it wants to
-> > receive instead of the driver alternating the two ?
-> >
->
-> No, this is determined by hardware, cannot be configured by userspace.
->
+Ugh, tegra-smmu has been doing a complete nonsense this whole time - on 
+closer inspection, it's passing the fwnode of the *client device* where 
+it should be that of the IOMMU device :(
 
+I *think* it should probably just be a case of:
 
-So this
-	stf_isp_reg_set_bit(stfcamss, ISP_REG_SC_CFG_1, ISP_SC_SEL_MASK,
-			    SEL_TYPE(type_scd));
+-    err = iommu_fwspec_init(dev, of_fwnode_handle(dev->of_node));
++    err = iommu_fwspec_init(dev, of_fwnode_handle(smmu->dev->of_node));
 
-doesn't actually select which stats type you get from the HW
+since smmu->dev appears to be the same one initially passed to 
+iommu_device_register(), so it at least ought to match and work, but the 
+SMMU device vs. MC device thing leaves me mildly wary of how correct it 
+might be overall.
 
-> > > >
-> > > > > +	}
-> > > > > +}
-> > > > > +
-> > > > >  irqreturn_t stf_line_irq_handler(int irq, void *priv)  {
-> > > > >  	struct stfcamss *stfcamss = priv;
-> > > > >  	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_YUV];
-> > > > > +	struct stf_capture *cap_scd =
-> > > > > +&stfcamss->captures[STF_CAPTURE_SCD];
-> > > > >  	struct stfcamss_buffer *change_buf;
-> > > > > +	enum stf_isp_type_scd type_scd;
-> > > > > +	u32 value;
-> > > > >  	u32 status;
-> > > > >
-> > > > >  	status = stf_isp_reg_read(stfcamss, ISP_REG_ISP_CTRL_0); @@
-> > > > > -467,6
-> > > > > +513,17 @@ irqreturn_t stf_line_irq_handler(int irq, void *priv)
-> > > > >  					stf_set_yuv_addr(stfcamss, change_buf->addr[0],
-> > > > >  							 change_buf->addr[1]);
-> > > > >  			}
-> > > > > +
-> > > > > +			value = stf_isp_reg_read(stfcamss,
-> > > > ISP_REG_CSI_MODULE_CFG);
-> > > > > +			if (value & CSI_SC_EN) {
-> > > > > +				change_buf = stf_change_buffer(&cap_scd->buffers);
-> > > > > +				if (change_buf) {
-> > > > > +					stf_isp_fill_flag(stfcamss, change_buf->vaddr,
-> > > > > +							  &type_scd);
-> > > > > +					stf_set_scd_addr(stfcamss, change_buf->addr[0],
-> > > > > +							 change_buf->addr[1], type_scd);
-> > > >
-> > > > Sorry if I'm un-familiar with the HW but this seems to be the line-interrupt.
-> > > > Are you swapping buffers every line or it's just that you have a
-> > > > single line irq for the stats ?
-> > > >
-> > >
-> > > Every frame triggers a line-interrupt, and we will swap buffers in it.
-> > >
-> >
-> > ah, frames completion triggers a line-interrupt ?
-> >
->
-> Every frame will trigger line-interrupt and stf_isp_irq_handler.
-> We use line-interrupt changing buffer, the stf_isp_irq_handler will indicate that
-> image transfer to DDR is complete.
->
->
-> > > > > +				}
-> > > > > +			}
-> > > > >  		}
-> > > > >
-> > > > >  		stf_isp_reg_set_bit(stfcamss, ISP_REG_CSIINTS, @@ -485,6
-> > +542,7
-> > > > @@
-> > > > > irqreturn_t stf_isp_irq_handler(int irq, void *priv)  {
-> > > > >  	struct stfcamss *stfcamss = priv;
-> > > > >  	struct stf_capture *cap = &stfcamss->captures[STF_CAPTURE_YUV];
-> > > > > +	struct stf_capture *cap_scd =
-> > > > > +&stfcamss->captures[STF_CAPTURE_SCD];
-> > > > >  	struct stfcamss_buffer *ready_buf;
-> > > > >  	u32 status;
-> > > > >
-> > > > > @@ -496,6 +554,14 @@ irqreturn_t stf_isp_irq_handler(int irq, void *priv)
-> > > > >  				vb2_buffer_done(&ready_buf->vb.vb2_buf,
-> > > > VB2_BUF_STATE_DONE);
-> > > > >  		}
-> > > > >
-> > > > > +		if (status & ISPC_SC) {
-> > > > > +			ready_buf = stf_buf_done(&cap_scd->buffers);
-> > > > > +			if (ready_buf) {
-> > > > > +				stf_isp_fill_yhist(stfcamss, ready_buf->vaddr);
-> > > > > +				vb2_buffer_done(&ready_buf->vb.vb2_buf,
-> > > > VB2_BUF_STATE_DONE);
-> > > > > +			}
-> > > > > +		}
-> > > > > +
-> > > > >  		stf_isp_reg_write(stfcamss, ISP_REG_ISP_CTRL_0,
-> > > > >  				  (status & ~ISPC_INT_ALL_MASK) |
-> > > > >  				  ISPC_ISP | ISPC_CSI | ISPC_SC); diff --git
-> > > > > a/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > b/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > index fcda0502e3b0..0af7b367e57a 100644
-> > > > > --- a/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > +++ b/drivers/staging/media/starfive/camss/stf-isp.h
-> > > > > @@ -10,6 +10,7 @@
-> > > > >  #ifndef STF_ISP_H
-> > > > >  #define STF_ISP_H
-> > > > >
-> > > > > +#include <linux/jh7110-isp.h>
-> > > > >  #include <media/v4l2-subdev.h>
-> > > > >
-> > > > >  #include "stf-video.h"
-> > > > > @@ -107,6 +108,12 @@
-> > > > >  #define Y_COOR(y)				((y) << 16)
-> > > > >  #define X_COOR(x)				((x) << 0)
-> > > > >
-> > > > > +#define ISP_REG_SCD_CFG_0			0x098
-> > > > > +
-> > > > > +#define ISP_REG_SC_CFG_1			0x0bc
-> > > > > +#define ISP_SC_SEL_MASK				GENMASK(31, 30)
-> > > > > +#define SEL_TYPE(n)				((n) << 30)
-> > > > > +
-> > > > >  #define ISP_REG_LCCF_CFG_2			0x0e0
-> > > > >  #define ISP_REG_LCCF_CFG_3			0x0e4
-> > > > >  #define ISP_REG_LCCF_CFG_4			0x0e8
-> > > > > @@ -305,6 +312,10 @@
-> > > > >  #define DNRM_F(n)				((n) << 16)
-> > > > >  #define CCM_M_DAT(n)				((n) << 0)
-> > > > >
-> > > > > +#define ISP_REG_YHIST_CFG_4			0xcd8
-> > > > > +
-> > > > > +#define ISP_REG_YHIST_ACC_0			0xd00
-> > > > > +
-> > > > >  #define ISP_REG_GAMMA_VAL0			0xe00
-> > > > >  #define ISP_REG_GAMMA_VAL1			0xe04
-> > > > >  #define ISP_REG_GAMMA_VAL2			0xe08
-> > > > > @@ -389,6 +400,15 @@
-> > > > >  #define IMAGE_MAX_WIDTH				1920
-> > > > >  #define IMAGE_MAX_HEIGH				1080
-> > > > >
-> > > > > +#define ISP_YHIST_BUFFER_SIZE			(64 * sizeof(__u32))
-> > > >
-> > > > Should this be in the uAPI header as it is useful to userspace as well ?
-> > > >
-> > > > you could:
-> > > >
-> > > > struct jh7110_isp_sc_buffer {
-> > > > 	__u8 y_histogram[ISP_YHIST_BUFFER_SIZE];
-> > > > 	__u32 reserv0[33];
-> > > > 	__u32 bright_sc[4096];
-> > > > 	__u32 reserv1[96];
-> > > > 	__u32 ae_hist_y[128];
-> > > > 	__u32 reserv2[511];
-> > > > 	__u16 flag;
-> > > > };
-> > > >
-> > > > ofc if the size is made part of the uAPI you need a more proper name
-> > > > such as JH7110_ISP_YHIST_SIZE
-> > > >
-> > >
-> > > OK, I will try this.
-> > >
-> > > > > +
-> > > > > +enum stf_isp_type_scd {
-> > > > > +	TYPE_DEC = 0,
-> > > > > +	TYPE_OBC,
-> > > > > +	TYPE_OECF,
-> > > > > +	TYPE_AWB,
-> > > > > +};
-> > > > > +
-> > > > >  /* pad id for media framework */
-> > > > >  enum stf_isp_pad_id {
-> > > > >  	STF_ISP_PAD_SINK = 0,
-> > > > > @@ -429,5 +449,8 @@ int stf_isp_unregister(struct stf_isp_dev
-> > > > > *isp_dev);
-> > > > >
-> > > > >  void stf_set_yuv_addr(struct stfcamss *stfcamss,
-> > > > >  		      dma_addr_t y_addr, dma_addr_t uv_addr);
-> > > > > +void stf_set_scd_addr(struct stfcamss *stfcamss,
-> > > > > +		      dma_addr_t yhist_addr, dma_addr_t scd_addr,
-> > > > > +		      enum stf_isp_type_scd type_scd);
-> > > > >
-> > > > >  #endif /* STF_ISP_H */
-> > > > > diff --git a/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > b/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > index 989b5e82bae9..2203605ec9c7 100644
-> > > > > --- a/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > +++ b/drivers/staging/media/starfive/camss/stf-video.c
-> > > > > @@ -125,6 +125,14 @@ static int stf_video_init_format(struct
-> > > > stfcamss_video *video)
-> > > > >  	return 0;
-> > > > >  }
-> > > > >
-> > > > > +static int stf_video_scd_init_format(struct stfcamss_video
-> > > > > +*video)
-> > > >
-> > > > Make it void if it can't fail (see below)
-> > > >
-> > >
-> > > OK.
-> > >
-> > > > > +{
-> > > > > +	video->active_fmt.fmt.meta.dataformat =
-> > > > video->formats[0].pixelformat;
-> > > > > +	video->active_fmt.fmt.meta.buffersize = sizeof(struct
-> > > > > +jh7110_isp_sc_buffer);
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > >  /* -----------------------------------------------------------------------------
-> > > > >   * Video queue operations
-> > > > >   */
-> > > > > @@ -330,6 +338,78 @@ static const struct vb2_ops
-> > > > > stf_video_vb2_q_ops =
-> > > > {
-> > > > >  	.stop_streaming  = video_stop_streaming,  };
-> > > > >
-> > > > > +static int video_scd_queue_setup(struct vb2_queue *q,
-> > > > > +				 unsigned int *num_buffers,
-> > > > > +				 unsigned int *num_planes,
-> > > > > +				 unsigned int sizes[],
-> > > > > +				 struct device *alloc_devs[]) {
-> > > > > +	if (*num_planes)
-> > > > > +		return sizes[0] < sizeof(struct jh7110_isp_sc_buffer) ? -EINVAL :
-> > > > > +0;
-> > > > > +
-> > > > > +	*num_planes = 1;
-> > > > > +	sizes[0] = sizeof(struct jh7110_isp_sc_buffer);
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int video_scd_buf_init(struct vb2_buffer *vb) {
-> > > > > +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-> > > > > +	struct stfcamss_buffer *buffer = to_stfcamss_buffer(vbuf);
-> > > > > +	dma_addr_t *paddr;
-> > > > > +
-> > > > > +	paddr = vb2_plane_cookie(vb, 0);
-> > > > > +	buffer->addr[0] = *paddr;
-> > > > > +	buffer->addr[1] = buffer->addr[0] + ISP_YHIST_BUFFER_SIZE;
-> > > >
-> > > > Interesting, I don't see many users of vb2_plane_cookie() in
-> > > > mainline and I'm not sure what this gives you as you use it to program the
-> > following registers:
-> > > >
-> > > > 	stf_isp_reg_write(stfcamss, ISP_REG_SCD_CFG_0, scd_addr);
-> > > > 	stf_isp_reg_write(stfcamss, ISP_REG_YHIST_CFG_4, yhist_addr);
-> > > >
-> > >
-> > > We set the value for ISP hardware, then ISP will transfer the statistics to the
-> > buffer.
-> > > when the stf_isp_irq_handler interrupt is triggered, indicates that
-> > > the buffer fill is complete.
-> > >
-> >
-> > So I take this as
-> >
-> > 	paddr = vb2_plane_cookie(vb, 0);
-> > 	buffer->addr[0] = *paddr;
-> > 	buffer->addr[1] = buffer->addr[0] + ISP_YHIST_BUFFER_SIZE;
-> >
-> >         stf_set_scd_addr(stfcamss, change_buf->addr[0],
-> >                          change_buf->addr[1], type_scd);
-> >
-> > Makes the ISP transfer data directly to the memory areas in addr[0] and addr[1]
-> > (which explains why struct jh7110_isp_sc_buffer is packed, as it has to match
-> > the HW registers layout)
-> >
-> > If this is the case, why are you then manually copying the histograms and the
-> > flags to vaddr ?
-> >
->
-> Yes, your are right.
-> But actually there is a problem with our ISP RTL.
-> We set this yhist_addr to ISP, but it actually not work.
-> 	stf_isp_reg_write(stfcamss, ISP_REG_YHIST_CFG_4, yhist_addr);
-> or I will drop this line in next version.
->
-> So, in this structure
-> struct jh7110_isp_sc_buffer {
-> 	__u32 y_histogram[64];
-> 	__u32 reserv0[33];
-> 	__u32 bright_sc[4096];
-> 	__u32 reserv1[96];
-> 	__u32 ae_hist_y[128];
-> 	__u32 reserv2[511];
-> 	__u16 flag;
-> };
->
-> Only
->
-> 	__u32 reserv0[33];
-> 	__u32 bright_sc[4096];
-> 	__u32 reserv1[96];
-> 	__u32 ae_hist_y[128];
-> 	__u32 reserv2[511];
->
-> transfer by ISP hardware.
->
-> I need to fill
-> 	__u32 y_histogram[64];
-> 	__u16 flag;
->
-> by vaddr.
+(Also now I'm wondering why I didn't just use dev_fwnode() there...)
 
-I see.
-
-Apart from the fact you can drop paddr and vb2_plane_cookie() and use
-vaddr for all (if I'm not mistaken), could you please record the above
-rationale for manually filling y_histogram and flag by hand in a
-comment to avoid future readers being confused by this as I was ?
-
-Thank you
-   j
-
->
-> Regards,
-> Changhuang
->
-> >                 ready_buf = stf_buf_done(&cap_scd->buffers);
-> >                 if (ready_buf) {
-> >                         stf_isp_fill_yhist(stfcamss, ready_buf->vaddr);
-> >                         vb2_buffer_done(&ready_buf->vb.vb2_buf,
-> > VB2_BUF_STATE_DONE);
-> >                 }
-> >
-> >                 change_buf = stf_change_buffer(&cap_scd->buffers);
-> >                 if (change_buf) {
-> >                         stf_isp_fill_flag(stfcamss, change_buf->vaddr,
-> >                                           &type_scd);
-> >
-> > If I read vb2_dc_alloc_coherent() right 'cookie' == 'vaddr'
-> >
-> > static int vb2_dc_alloc_coherent(struct vb2_dc_buf *buf) {
-> > 	struct vb2_queue *q = buf->vb->vb2_queue;
-> >
-> > 	buf->cookie = dma_alloc_attrs(buf->dev,
-> > 				      buf->size,
-> > 				      &buf->dma_addr,
-> > 				      GFP_KERNEL | q->gfp_flags,
-> > 				      buf->attrs);
-> > 	if (!buf->cookie)
-> > 		return -ENOMEM;
-> >
-> > 	if (q->dma_attrs & DMA_ATTR_NO_KERNEL_MAPPING)
-> > 		return 0;
-> >
-> > 	buf->vaddr = buf->cookie;
-> > 	return 0;
-> > }
-> >
-> > Could you verify what you get by printing out 'paddr' and 'vaddr' in
-> > video_scd_buf_init() ?
-> >
-> >
-> > > >
-> > > > > +	buffer->vaddr = vb2_plane_vaddr(vb, 0);
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int video_scd_buf_prepare(struct vb2_buffer *vb) {
-> > > > > +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-> > > > > +
-> > > > > +	if (sizeof(struct jh7110_isp_sc_buffer) > vb2_plane_size(vb, 0))
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	vb2_set_plane_payload(vb, 0, sizeof(struct
-> > > > > +jh7110_isp_sc_buffer));
-> > > > > +
-> > > > > +	vbuf->field = V4L2_FIELD_NONE;
-> > > >
-> > > > is this necessary ?
-> > > >
-> > >
-> > > Will drop it.
-> > >
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int video_scd_start_streaming(struct vb2_queue *q,
-> > > > > +unsigned int count) {
-> > > > > +	struct stfcamss_video *video = vb2_get_drv_priv(q);
-> > > > > +
-> > > > > +	video->ops->start_streaming(video);
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static void video_scd_stop_streaming(struct vb2_queue *q) {
-> > > > > +	struct stfcamss_video *video = vb2_get_drv_priv(q);
-> > > > > +
-> > > > > +	video->ops->stop_streaming(video);
-> > > > > +
-> > > > > +	video->ops->flush_buffers(video, VB2_BUF_STATE_ERROR); }
-> > > > > +
-> > > > > +static const struct vb2_ops stf_video_scd_vb2_q_ops = {
-> > > > > +	.queue_setup     = video_scd_queue_setup,
-> > > > > +	.wait_prepare    = vb2_ops_wait_prepare,
-> > > > > +	.wait_finish     = vb2_ops_wait_finish,
-> > > > > +	.buf_init        = video_scd_buf_init,
-> > > > > +	.buf_prepare     = video_scd_buf_prepare,
-> > > > > +	.buf_queue       = video_buf_queue,
-> > > > > +	.start_streaming = video_scd_start_streaming,
-> > > > > +	.stop_streaming  = video_scd_stop_streaming, };
-> > > > > +
-> > > > >  /* -----------------------------------------------------------------------------
-> > > > >   * V4L2 ioctls
-> > > > >   */
-> > > > > @@ -448,6 +528,37 @@ static const struct v4l2_ioctl_ops
-> > > > > stf_vid_ioctl_ops
-> > > > = {
-> > > > >  	.vidioc_streamoff               = vb2_ioctl_streamoff,
-> > > > >  };
-> > > > >
-> > > > > +static int video_scd_g_fmt(struct file *file, void *fh, struct
-> > > > > +v4l2_format *f) {
-> > > > > +	struct stfcamss_video *video = video_drvdata(file);
-> > > > > +	struct v4l2_meta_format *meta = &f->fmt.meta;
-> > > > > +
-> > > > > +	if (f->type != video->type)
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	meta->dataformat = video->active_fmt.fmt.meta.dataformat;
-> > > > > +	meta->buffersize = video->active_fmt.fmt.meta.buffersize;
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static const struct v4l2_ioctl_ops stf_vid_scd_ioctl_ops = {
-> > > > > +	.vidioc_querycap                = video_querycap,
-> > > > > +	.vidioc_enum_fmt_meta_cap       = video_enum_fmt,
-> > > > > +	.vidioc_g_fmt_meta_cap          = video_scd_g_fmt,
-> > > > > +	.vidioc_s_fmt_meta_cap          = video_scd_g_fmt,
-> > > > > +	.vidioc_try_fmt_meta_cap        = video_scd_g_fmt,
-> > > > > +	.vidioc_reqbufs                 = vb2_ioctl_reqbufs,
-> > > > > +	.vidioc_querybuf                = vb2_ioctl_querybuf,
-> > > > > +	.vidioc_qbuf                    = vb2_ioctl_qbuf,
-> > > > > +	.vidioc_expbuf                  = vb2_ioctl_expbuf,
-> > > > > +	.vidioc_dqbuf                   = vb2_ioctl_dqbuf,
-> > > > > +	.vidioc_create_bufs             = vb2_ioctl_create_bufs,
-> > > > > +	.vidioc_prepare_buf             = vb2_ioctl_prepare_buf,
-> > > > > +	.vidioc_streamon                = vb2_ioctl_streamon,
-> > > > > +	.vidioc_streamoff               = vb2_ioctl_streamoff,
-> > > > > +};
-> > > > > +
-> > > > >  /* -----------------------------------------------------------------------------
-> > > > >   * V4L2 file operations
-> > > > >   */
-> > > > > @@ -473,6 +584,9 @@ static int stf_link_validate(struct media_link *link)
-> > > > >  	struct stfcamss_video *video = video_get_drvdata(vdev);
-> > > > >  	int ret;
-> > > > >
-> > > > > +	if (video->type == V4L2_BUF_TYPE_META_CAPTURE)
-> > > > > +		return 0;
-> > > > > +
-> > > > >  	ret = stf_video_check_format(video);
-> > > > >
-> > > > >  	return ret;
-> > > > > @@ -506,7 +620,11 @@ int stf_video_register(struct stfcamss_video
-> > > > *video,
-> > > > >  	q = &video->vb2_q;
-> > > > >  	q->drv_priv = video;
-> > > > >  	q->mem_ops = &vb2_dma_contig_memops;
-> > > > > -	q->ops = &stf_video_vb2_q_ops;
-> > > > > +
-> > > > > +	if (video->type == V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> > > > > +		q->ops = &stf_video_vb2_q_ops;
-> > > > > +	else
-> > > > > +		q->ops = &stf_video_scd_vb2_q_ops;
-> > > > >  	q->type = video->type;
-> > > > >  	q->io_modes = VB2_DMABUF | VB2_MMAP;
-> > > > >  	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-> > > > > @@ -529,16 +647,28 @@ int stf_video_register(struct stfcamss_video
-> > > > *video,
-> > > > >  		goto err_mutex_destroy;
-> > > > >  	}
-> > > > >
-> > > > > -	ret = stf_video_init_format(video);
-> > > > > -	if (ret < 0) {
-> > > > > -		dev_err(video->stfcamss->dev,
-> > > > > -			"Failed to init format: %d\n", ret);
-> > > > > -		goto err_media_cleanup;
-> > > > > +	if (video->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-> > > > > +		ret = stf_video_init_format(video);
-> > > >
-> > > > I don't think this can fail
-> > > >
-> > >
-> > > This already exists, and I probably will not change it here.
-> > >
-> >
-> > No problem! Maybe something for later when de-staging the driver.
-> >
-> > Thanks
-> >   j
-> > > >
+Thanks,
+Robin.
