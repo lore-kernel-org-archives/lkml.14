@@ -1,170 +1,84 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D45018E0E;
-	Fri, 12 Jul 2024 07:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C143FBE68
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 07:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720770376; cv=none; b=LTS/clj2+Y4QYfSc/RkTTIttc3a1XCWarquc7hE56Y65cn4TfzzMRPtH9vXoYgXl1nq9GpkcblGj9NWKAzhdTQpzNlH+jneDEVwWNfArzYYP6XyfxOLAYx93qEeXUEjB7odS0Untse8kwWMCwKCfFdQWetXhzpGtvD5z0yOSFR0=
+	t=1720770377; cv=none; b=Qg/AqJYRY8dbZFeoFjtoGZhLWbz/tRgLSQLR6b5hij83kHtsaDpS3U0/p36d/+6z2Xbtsml9ysQJUxt+v+X7r4lZiCpHfUTBneRDFVotlKTfEBZWIwHL/zeuP3ELGuHnxqCtAJFncByUpPlf4bwX/vuBkNSMfYCC2u89Sko7lWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720770376; c=relaxed/simple;
-	bh=FLZJ2DNKRObjLLAsheukVyi/6CyxQ92QWG6OPveNOeQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=jjuQba2wzFIN6dMsXy7ZefLlDAcjxFuU8KWRfE9NPMh+JnGMFNBpEgcsaf71TNv206ytGTWGojHy+Mvru0CuZpub+aVX6DPeeNRCObt6Oigsx7T36b/ZimU/r6XY/NdNzVLWuDb2HN0B6npJwyhxRd9+JfOqZRKPq2MJxGGZpZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LH19nVHR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FzAoSyOC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LH19nVHR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FzAoSyOC; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1720770377; c=relaxed/simple;
+	bh=YX7j78VLNzPW2wYMCt+KHgvkC89kIfvd3P2qlzl3kOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BZRRR5uNqeVxaBZfZ0ez14edAsTsbsMLs93906oq04SEHfIHl+GsV4/MY4p9WWhKLLxc3geGxMHkZkLxzO+ctSOSFVky2IOPrmVeIly4oea7EwGNZ77jOyP3IZ9MXTMcxYvnVAPUt21lLNW42W2vFDIs3OgWre6wKfw2bUHGDrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UH1VUXf2; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LH19nVHR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FzAoSyOC";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LH19nVHR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FzAoSyOC"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C414B21A9A;
-	Fri, 12 Jul 2024 07:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720770372; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4POzoQr9IczO1/1hb4qIFi9RmUkhNPmaG86SNToS2gI=;
-	b=LH19nVHRKIjBbPoqtXGprVQ2hNAT0WOPe9GuF1HlLiMXIc5CL8ZGHXdNrXKWTtiNbZyI/b
-	NlGKGCKaDDPmUjWAIiwWOj3XWlBTfLAzPukjEhIyR6iGR5ZvMCG3Ns3+gqdT3EoAjWjhuR
-	Tz3uXDFpafvopVTB6/6YaJfaYEm2RUA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720770372;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4POzoQr9IczO1/1hb4qIFi9RmUkhNPmaG86SNToS2gI=;
-	b=FzAoSyOCUDdGV8TKV7UatWnRqNwqYGuldnQ0KcWgU4oEfBAQUFVkzZ4G9BpKVLiKmTD7xc
-	zxDKYgqWwfkrUDCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720770372; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4POzoQr9IczO1/1hb4qIFi9RmUkhNPmaG86SNToS2gI=;
-	b=LH19nVHRKIjBbPoqtXGprVQ2hNAT0WOPe9GuF1HlLiMXIc5CL8ZGHXdNrXKWTtiNbZyI/b
-	NlGKGCKaDDPmUjWAIiwWOj3XWlBTfLAzPukjEhIyR6iGR5ZvMCG3Ns3+gqdT3EoAjWjhuR
-	Tz3uXDFpafvopVTB6/6YaJfaYEm2RUA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720770372;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4POzoQr9IczO1/1hb4qIFi9RmUkhNPmaG86SNToS2gI=;
-	b=FzAoSyOCUDdGV8TKV7UatWnRqNwqYGuldnQ0KcWgU4oEfBAQUFVkzZ4G9BpKVLiKmTD7xc
-	zxDKYgqWwfkrUDCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A6CE13686;
-	Fri, 12 Jul 2024 07:46:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fRRyJETfkGbrdgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 12 Jul 2024 07:46:12 +0000
-Date: Fri, 12 Jul 2024 09:46:44 +0200
-Message-ID: <87a5int5ln.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] sound fixes for 6.10
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UH1VUXf2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720770375; x=1752306375;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=YX7j78VLNzPW2wYMCt+KHgvkC89kIfvd3P2qlzl3kOc=;
+  b=UH1VUXf2yGsJsfDReP3AU+yEaxKcdHIUe05FT1sT7Hy2wz5flErMSOGf
+   JqLCWs43SFf8J6MdWHSVt33EQGw0Hgj7Az9pI9aXaZmOlO9FzigJNKpIu
+   YkMa8X7UOZwEuVUqem6BeR9GD6UlnxtKQH4yuQDLunBe1yp8OjnVquVk3
+   MvVfkmXwctWSuUax4YaFLbRtKh4NL75XjgX8VJmP+GPbaaqNxd8SAHiSC
+   lsv16Aa3z5ahhLKIKlcJlfiBj86guh9OsGfueUpLkb8HPY0b9l3SmgOTa
+   qFtMk2QeXG4FqqeuYDVp8FNsPHMWMkauTgJHCg3AvvtXJtFaoDMiyjyiO
+   Q==;
+X-CSE-ConnectionGUID: fJV3POIMQ82SO2tMU84u4A==
+X-CSE-MsgGUID: rd6vKsIBRpuy5SKRpkg9tA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="28802279"
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="28802279"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 00:46:15 -0700
+X-CSE-ConnectionGUID: lusxwEWdQxSGr2pDSlUzQQ==
+X-CSE-MsgGUID: SFg6/hAiQjSD5O+4Vdg8RQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="49599474"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 12 Jul 2024 00:46:14 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sSAyp-000aVP-2M;
+	Fri, 12 Jul 2024 07:46:11 +0000
+Date: Fri, 12 Jul 2024 15:45:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Appana Durga Kedareswara rao <appana.durga.kedareswara.rao@amd.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: ERROR: modpost: "xmb_manager_register"
+ [drivers/misc/xilinx_tmr_manager.ko] undefined!
+Message-ID: <202407121554.m95t606T-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-2
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Linus,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   43db1e03c086ed20cc75808d3f45e780ec4ca26e
+commit: f5ec7f54fdba7fef051c65e975612edf46d4934d drivers: misc: Add Support for TMR Manager
+date:   1 year, 6 months ago
+config: microblaze-allmodconfig (https://download.01.org/0day-ci/archive/20240712/202407121554.m95t606T-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240712/202407121554.m95t606T-lkp@intel.com/reproduce)
 
-please pull sound fixes for v6.10 from:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407121554.m95t606T-lkp@intel.com/
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.10
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-The topmost commit is f19e1027f6c0f5fae18b2f2ed88b55a6a637f76e
+>> ERROR: modpost: "xmb_manager_register" [drivers/misc/xilinx_tmr_manager.ko] undefined!
 
-----------------------------------------------------------------
-
-sound fixes for 6.10-final
-
-Majority of changes here are small device-specific fixes for ASoC
-SOF / Intel and usual HD-audio quirks.
-
-The only significant high LOC is found in the Cirrus firmware driver,
-but all those are for hardening against malicious firmware blobs, and
-they look fine for taking as a last minute fix, too.
-
-----------------------------------------------------------------
-
-Bard Liao (1):
-      ASoC: rt711-sdw: add missing readable registers
-
-Dmitry Savin (1):
-      ALSA: hda: cs35l41: Fix swapped l/r audio channels for Lenovo ThinBook 13x Gen4
-
-Edson Juliano Drosdeck (1):
-      ALSA: hda/realtek: Limit mic boost on VAIO PRO PX
-
-Kai Vehmanen (1):
-      ASoC: SOF: Intel: hda: fix null deref on system suspend entry
-
-Micha³ Kopeæ (1):
-      ALSA: hda/realtek: add quirk for Clevo V5[46]0TU
-
-Nazar Bilinskyi (1):
-      ALSA: hda/realtek: Enable Mute LED on HP 250 G7
-
-Peter Ujfalusi (1):
-      ASoC: SOF: Intel: hda-pcm: Limit the maximum number of periods by MAX_BDL_ENTRIES
-
-Richard Fitzgerald (5):
-      firmware: cs_dsp: Fix overflow checking of wmfw header
-      firmware: cs_dsp: Return error if block header overflows file
-      firmware: cs_dsp: Validate payload length before processing block
-      firmware: cs_dsp: Prevent buffer overrun when processing V2 alg headers
-      firmware: cs_dsp: Use strnlen() on name fields in V1 wmfw files
-
----
- drivers/firmware/cirrus/cs_dsp.c     | 231 +++++++++++++++++++++++++----------
- sound/pci/hda/cs35l41_hda_property.c |   4 +-
- sound/pci/hda/patch_realtek.c        |   4 +
- sound/soc/codecs/rt711-sdw.c         |   2 +
- sound/soc/sof/intel/hda-dai.c        |  12 +-
- sound/soc/sof/intel/hda-pcm.c        |   6 +
- 6 files changed, 184 insertions(+), 75 deletions(-)
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
