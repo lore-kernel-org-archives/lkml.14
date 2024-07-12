@@ -1,59 +1,61 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F3B17624C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29450178CC3
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 17:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720804188; cv=none; b=ocuWrbMAGjJPokwCqAMBUwUy5ek8ZlrjdVT/UKF3pyYyVB2SVkdjxnKcUbyo/v+D922w23i6Ze8AtN9WPRLpZklXI+rY4vZYsn8aOSrXDipa0sId+zaeV91aGGhjIrDlsN3lGn5cZRmcBLKJ6ET1pyClnM7OuECAElsZshs7UNs=
+	t=1720804189; cv=none; b=ng4z57XRfYXoekRzMeGztUvz+i1EfH+ChdUihfNsHFHywL/ATuaWrrjbSF0BXW3hNOjsZMTStZt/z9AKM+kXyrnumIkDoF0C42QQP1xF4Ddu5vCjg4wRHfs+KuWTEYmYse/vWmwvORH23E1/DcN32yo60z+8AVLh5M0cghC8KBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720804188; c=relaxed/simple;
-	bh=IvYiOk43NNLFvoIso1SMpTkb2IyLTMaSDdcgZBde4sM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rXYS7XHGyFenJsRSGmR6dFtApxJxppCjmMk/F0OhPAkL/cIfQ0Jl8RQ+WABRkkYHzbFRaSKB0TwpI4gGqzPeTxxwTlrFA69yFVTei1gbZuuNrbw7Rdli7cQrJe7v/pdq7Tm3DdfoWH02oO/siY9h/hd7WJaqYELCpodJ0/m0J0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IB5B9ht1; arc=none smtp.client-ip=209.85.218.54
+	s=arc-20240116; t=1720804189; c=relaxed/simple;
+	bh=bSuhaMRom2cOObZWO5sZ0z5SXM43/G/at3phYRV+d3A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=iHoP9Ac3XFOT6FJ/6/E/Jj+0/SMkwWdOWYwMY0K8R7eeir0AQcXRXmN1ghkJClVerVkWB3Sd24RXvnaKB+Gi697wkpMZsdYwFchpL8DE1Qnwm3BS61T+nr3/axUYPEWK0EuyXr24BZ/Qgogw8qWrrvxoCMDGr8jbqZy91FowCYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j0e0W9M2; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IB5B9ht1"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso272500466b.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j0e0W9M2"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a77c2d89af8so291271566b.2
         for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720804184; x=1721408984; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fnhm523hS4IDFhkj8U4RWRolcD19Piba7MrN9aiVgQE=;
-        b=IB5B9ht1UpjPgaKNp3hX4EaNj7ilkCF7om9IWRRprM5l97yh1/wzDcybyGnY+/TQcj
-         i1Xeygq7aP6FHHfYTh+ohhvEeOlqU/PgcvIL0px24xIvmQiW3YwNGdfxFdZexld85Yf5
-         ATsWIkksb1zfsFyyRTTVCUHMxvlhw6Wn/K0fQaLj+jhMsuhGPc0rH7G4VRjwCTrSCmeT
-         6n3izTnz6zA46Leeeg6JKYEL42IJHFz7K8090HdhU/OvMGBrazWiLQRhlAeh4SfSsIV4
-         LjMCguGW8Z+8lVsfYK5MLhv1bWszm0tbLxzvg5ZGm4in5NCkE1BAn0fl0gfxGF7kaW6D
-         eKUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720804184; x=1721408984;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1720804185; x=1721408985; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Fnhm523hS4IDFhkj8U4RWRolcD19Piba7MrN9aiVgQE=;
-        b=H7PxEbdEA3rv3rgy7afHUg8Ou57bmuiWGqKczQh9MUyzM90XUzPS+2WarWvkZFpo94
-         G8MZJv8J6G5NwDtku6n4vFzRFdU7bi0vlVXmy6HT0YXiQ/8dJ3pIXznyAJRrBFOQ/rxe
-         FK7Cf2RsZmvA0hI+V0Sk0DVQ7prObv7W0PZ2YYzbKoHhKpxwunpSQ/ifhZTcfLIITqKn
-         D+VQkX4y/H5dGcxQSfvcGWgYb3+Us29XzhhfyG2sIDqqR+ybeVkdvSC//padnBC8YtAb
-         Y5OubRGZE20uz01m8Q+D3bfagh+kmG2rCl5yPvgtfV/cRQY3Bx10OBqhQdQbh/rRzALT
-         DpCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvGjwO1F6fKQMHQFRviX9NuVzV0FDdIQ3qQ7iIVvRmqG+RUntgXSzhhz4q4Tg7T3lwLhd/tmtZQAbNjg9Q2ZkDE3YHLb1gKD/rOBuU
-X-Gm-Message-State: AOJu0Yyyxt01+ksrjl1BXGGmFcNHNA99roYXybAW7AKnNe2oZZirBnb9
-	ZQ18ONNdJeTXhHh5RHOcphfYxiemw8hpUYQpI/qhIGdMVGfOPOCtLMN4fr+Jwx4=
-X-Google-Smtp-Source: AGHT+IG4TH6RpE92PDuHakkWNmOybXTmwNcx+nqarKFaRp+ljxkRFFwn0hjm78OZrfbRQp1qxbfQAw==
-X-Received: by 2002:a17:907:3f12:b0:a72:7736:9e03 with SMTP id a640c23a62f3a-a780b881c7cmr1089046766b.52.1720804184549;
-        Fri, 12 Jul 2024 10:09:44 -0700 (PDT)
+        bh=oV5839hmVClg70c+3TJ1+3UQGJnal/6xSUyTsvV9VcQ=;
+        b=j0e0W9M2sjT9AJ3H9DQG1Yp2zQKHsyqhw/2eQZnlSppZrG+oOX04uT6LiwE49nCy+w
+         TKgHQtKZSxFIjfWTdk9Zi7u6YE6MAiMdlD5rJEPQn7r/5STckStcyAGDNVipEsgHkDTh
+         XgHM4KenKEwoFgtGcbSBvv8V+1p84ljjjHiSaQQD0JgIuSkSnJLYFtoPXuv2tefXtNaQ
+         9k5jP9c+78R0swbdoyxlUxF66U+quuzFKe8bqOs6zhugiDgtGRi6J2QoZNtNpWp4x4V5
+         2FVzTyVT3eqb1Jg+N7JYIsdUT7yD5hWmec0b0rBWbM/HkDn050xtnw5RnX+tB/+zPmmq
+         5Axg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720804185; x=1721408985;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oV5839hmVClg70c+3TJ1+3UQGJnal/6xSUyTsvV9VcQ=;
+        b=ProM+0S+Zoj41/RPY66aoAfPnQwiGt3+8ivVVWV3N1yp2yWbFSxGx7Iwb2tB0TcDgP
+         zGiPY5dlXNfmg+nFL5NPF90DySdDJM2eQj5PClOoVJvlsmkdcKcK4i8VJeoPXciYoaIc
+         7S21TcbPG3VNaoqZm5d0qBwAz3DO0R78U0e+siIdAwlY/F8MnZsl/F1b8u8YrE/cjQ5g
+         esNG1517jnPhzAS27eYei8s63tvJLsUe7MzHNKZjdHheKKW1iMhgd3pXa6IHBl9/lDks
+         Zirg8kbwSifreDjeqlfOoK2s1T9EBZa2EV5z1MQLpR68M7YMlCmNnsMRuQeAPw4UV6IO
+         2urg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXPYCW4a/nThxQT3yCbIjh9anxLln7XOqZn8di+zMfZtyDovpGOEGSXwmy9lUuaXPb20ztxw1x97yu9TpRCVHvjBQkcMlfekfSaG8C
+X-Gm-Message-State: AOJu0Yyirp1sLZpEnvx0E1pjyGEApyObNdXgbbXVHyVvtSJUswQC0hPd
+	JXT63ticqn5IkD245xe5tLtgLEZ8U7QLyNOqAQ252ocKV07DqrtH1Q3/JDtEbPw=
+X-Google-Smtp-Source: AGHT+IE0X62zA1SBHKfJXtmQHhmzvuqxC+xWaR1cQ47oVYBeYJTjmS0OEYuGETVV0+yrZAnB2M1JfQ==
+X-Received: by 2002:a17:907:ea1:b0:a75:110d:fa53 with SMTP id a640c23a62f3a-a780b885565mr1041251666b.49.1720804185474;
+        Fri, 12 Jul 2024 10:09:45 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a871f0esm363750466b.194.2024.07.12.10.09.44
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a871f0esm363750466b.194.2024.07.12.10.09.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 10:09:44 -0700 (PDT)
+        Fri, 12 Jul 2024 10:09:45 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Subject: [PATCH v4 0/2] gs101 oriole: UART clock fixes
-Date: Fri, 12 Jul 2024 18:09:42 +0100
-Message-Id: <20240712-gs101-non-essential-clocks-2-v4-0-310aee0de46e@linaro.org>
+Date: Fri, 12 Jul 2024 18:09:44 +0100
+Subject: [PATCH v4 2/2] clk: samsung: gs101: don't mark non-essential
+ (UART) clocks critical
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,10 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAFdjkWYC/4XOsW7CMBCA4VdBnnvRnW0gZeI9KgZjXxKL1EZ3U
- dQW5d0JMLRbx3/59N+MsmRWc9jcjPCcNdeyhn/bmDiE0jPktLaxaD16h9ArIUGpBViVy5TDCHG
- s8aJgYRecbbELdObWrMRVuMtfT/7jtHYn9ROmQTj8ouQQ311LtqG9323JAkEoSbhJEvQnX45jL
- kFqU6V/mEPWqcr383h2D/nl7OmfudkBwjbFc5vQY6L4Fz4ty3IHts1uLA0BAAA=
+Message-Id: <20240712-gs101-non-essential-clocks-2-v4-2-310aee0de46e@linaro.org>
+References: <20240712-gs101-non-essential-clocks-2-v4-0-310aee0de46e@linaro.org>
+In-Reply-To: <20240712-gs101-non-essential-clocks-2-v4-0-310aee0de46e@linaro.org>
 To: Peter Griffin <peter.griffin@linaro.org>, 
  Krzysztof Kozlowski <krzk@kernel.org>, 
  Sylwester Nawrocki <s.nawrocki@samsung.com>, 
@@ -80,44 +81,70 @@ Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.13.0
 
-Hi,
+The peric0_top1_ipclk_0 and peric0_top1_pclk_0 are the clocks going to
+peric0/uart_usi, with pclk being the bus clock. Without pclk running,
+any bus access will hang.
+Unfortunately, in commit d97b6c902a40 ("arm64: dts: exynos: gs101:
+update USI UART to use peric0 clocks") the gs101 DT ended up specifying
+an incorrect pclk in the respective node and instead the two clocks
+here were marked as critical.
 
-This series fixes a long-standing issue in the gs101 clocking / uart
-handling.
+Since then, the DT has been updated to use the correct clock in
+commit 21e4e8807bfc ("arm64: dts: exynos: gs101: use correct clocks for
+usi_uart") and the driver here should be corrected and the work-around
+removed.
 
-We can now disable clocks that had previously been marked critical, and
-still get a working earlycon.
-
-There is a preparatory patch, and then a patch to drop an incorrect clock
-counting work-around. That 2nd patch is essentially the last remaining patch
-[1] with all review comments addressed, from the series [2] that was sent
-earlier this year, see lore links below.
-
-Patch 2 can not come before or without patch 1.
-
+Link: https://lore.kernel.org/all/d45de3b2bb6b48653842cf1f74e58889ed6783ae.camel@linaro.org/ [1]
+Fixes: 893f133a040b ("clk: samsung: gs101: add support for cmu_peric0")
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
-
-[1] https://lore.kernel.org/all/20240130093812.1746512-6-andre.draszik@linaro.org/
-[2] https://lore.kernel.org/all/20240130093812.1746512-1-andre.draszik@linaro.org/
-[3] https://lore.kernel.org/all/d45de3b2bb6b48653842cf1f74e58889ed6783ae.camel@linaro.org/
-
-Changes in v4:
-- new patch "clk: samsung: gs101: allow earlycon to work unconditionally"
-- update commit message for patch 2
-- Link to v3: https://lore.kernel.org/r/20240710-gs101-non-essential-clocks-2-v3-0-5dcb8d040d1c@linaro.org
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
 ---
-André Draszik (2):
-      clk: samsung: gs101: allow earlycon to work unconditionally
-      clk: samsung: gs101: don't mark non-essential (UART) clocks critical
+v4:
+- the earlycon issue described in the commit message in previous
+  versions of this patch is gone with "clk: samsung: gs101: allow
+  earlycon to work unconditionally", so no need to mention anything
 
- drivers/clk/samsung/clk-gs101.c | 106 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 102 insertions(+), 4 deletions(-)
+v3:
+- add git commit SHA1s (Krzysztof)
+- add link to wordier description of earlycon issue
+
+v2:
+- commit message typo fixed
+- collect Reviewed-by: tags
 ---
-base-commit: 523b23f0bee3014a7a752c9bb9f5c54f0eddae88
-change-id: 20240430-gs101-non-essential-clocks-2-6a3280fa1be8
+ drivers/clk/samsung/clk-gs101.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Best regards,
+diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs101.c
+index 429690757923..a6fc4d7e47fd 100644
+--- a/drivers/clk/samsung/clk-gs101.c
++++ b/drivers/clk/samsung/clk-gs101.c
+@@ -3951,20 +3951,18 @@ static const struct samsung_gate_clock peric0_gate_clks[] __initconst = {
+ 	     "gout_peric0_peric0_top0_pclk_9", "mout_peric0_bus_user",
+ 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_PCLK_9,
+ 	     21, 0, 0),
+-	/* Disabling this clock makes the system hang. Mark the clock as critical. */
+ 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_0,
+ 	     "gout_peric0_peric0_top1_ipclk_0", "dout_peric0_usi0_uart",
+ 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP1_IPCLKPORT_IPCLK_0,
+-	     21, CLK_IS_CRITICAL, 0),
++	     21, 0, 0),
+ 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_2,
+ 	     "gout_peric0_peric0_top1_ipclk_2", "dout_peric0_usi14_usi",
+ 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP1_IPCLKPORT_IPCLK_2,
+ 	     21, CLK_SET_RATE_PARENT, 0),
+-	/* Disabling this clock makes the system hang. Mark the clock as critical. */
+ 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP1_PCLK_0,
+ 	     "gout_peric0_peric0_top1_pclk_0", "mout_peric0_bus_user",
+ 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP1_IPCLKPORT_PCLK_0,
+-	     21, CLK_IS_CRITICAL, 0),
++	     21, 0, 0),
+ 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP1_PCLK_2,
+ 	     "gout_peric0_peric0_top1_pclk_2", "mout_peric0_bus_user",
+ 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP1_IPCLKPORT_PCLK_2,
+
 -- 
-André Draszik <andre.draszik@linaro.org>
+2.45.2.993.g49e7a77208-goog
 
