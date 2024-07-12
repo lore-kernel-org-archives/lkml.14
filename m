@@ -1,118 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF6E441D
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 14:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE32C1E4BE;
+	Fri, 12 Jul 2024 14:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720794604; cv=none; b=Zvmt41HdbQSAE8WrtJZdZbEjMoN8OnuQ9sIxUL6b63AGAoRL7buOMCGVfBKRpywj4aIU23CICT41MF28DVh+ZpHGFTySgE+doaSuGU6StzWqSuO6gBWdT6tbXBWIf0K1au09l+Xktt5tCZL4u8cE7MJoYG3X+QHnMSFmTl7HGKs=
+	t=1720794630; cv=none; b=GLxxG1lQMq5q1Hj1BUZ0u2MGFRDXTmgkh3v1xeVG6IPNQ4Ce7NHjjyhomWHRwZB5d14f1hZLAUfV7xOJ8YaUMLoqvyW/PVzBD4YpP4X+nJFmd/qlICqc8FgqWJI2g5NEGednmC7cCuM49eHH35wRFUmKuNIUGwygGxBYvBkaQ7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720794604; c=relaxed/simple;
-	bh=xNf1tJFXF2XZo5kA4RL74P4CbwPpLhsf5gbnmAkL9hI=;
+	s=arc-20240116; t=1720794630; c=relaxed/simple;
+	bh=alcBCeBHwiXj0n+hXF8W7ZUTjf6ut9oBuOsr8yu14vw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nu3hFRbqX8hygH7cRRDsfk1yAkSl875L9/SuVflH+lYtrNxVqSllKY2MR6KnMoWYp+MNDFDQcL5UwpMH093ipMAGa0EFG4Obhb0pwQ6J1an2+mXneWgt2yHMn3R81Jcu3g7uqHK1tef6LhoYG5G/fHnRLiw9BDfDY0608/awxk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hGUiEDUY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=cxsN2uWG6lhuBlQUUGz1TBHHBMRdI/XfecSWduHTxSMOmXwOgeEDA/W4zQ9yq7kpq7AFJfhN9Lm4krY46RMSykyNd1qknHcO89biMvibuZTezDER/0BietA4iaJ8aValrlAjTUBYgkddhzmsMMF+1+KzSef8uBCxNX0LgSJc2NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NNZabkAN; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hGUiEDUY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720794602;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Em+4lpr48F+sTPUkNgk9R0TQyrZ2qwV17RRP7sfDWpk=;
-	b=hGUiEDUYXMYqBEK6OouKdEyiBHzpEyeEsqLPmLnKwnIxERD3aoniJRFu3WSvugJ0F8chOd
-	hY5zrk45q95ue2PjGBZm+GrBNO4IGx6h0snMTScMW7uTru9rotg5vU4WafXfoEzW4lbmzj
-	fNNwiaSSSN7JCXS6AOwPO3porhUB7mQ=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-vrWwab8kOD-6noca_F_X7A-1; Fri, 12 Jul 2024 10:30:00 -0400
-X-MC-Unique: vrWwab8kOD-6noca_F_X7A-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2c96e73c886so1836599a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 07:30:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNZabkAN"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ee9174c5c0so1991121fa.1;
+        Fri, 12 Jul 2024 07:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720794627; x=1721399427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=alcBCeBHwiXj0n+hXF8W7ZUTjf6ut9oBuOsr8yu14vw=;
+        b=NNZabkANmpZMbNt3zgtwFP0t/ewewtbDvusQ7JtU4Z+I+6w0BeXsY12SvY+AVIt6FA
+         WhVCQBjSdnrvsZMYOxg9OVyKtRMjUat3Y77fmFgv1AlnsmeMPeH89RTXKN12zOPnSNfg
+         AUHmTT4KJO1I0UzV0UgjoAB7C+O+L5IEJ4uf1Q1y+x6dLvwoTG25DrHWaAKpc5zZHZ1Z
+         zDcMYTXuW6Jk7dZFhntNFh0ks2pYbWNKmLsOc050Etv3JhnLn2BathoEpplRbg6Lc7PL
+         1uFT2PVw9fCsV+7utpNUNJBVh29kpft+UD1eAGgu7g6weYBfUQ5KIOwxDXIOmOufOT6g
+         tCYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720794599; x=1721399399;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Em+4lpr48F+sTPUkNgk9R0TQyrZ2qwV17RRP7sfDWpk=;
-        b=R9lUYNViak3BSuZNhgoNmE8Z+mFfpcw8JIQ+v61RNaawaaOz+u5ViWwdCuHv5Km6Pd
-         DDdw+EeyJ91dUbbTEBwoDzO3Dkrwk9WfJ+Aeeq5GD8y59XT+HTStT97YxLy12fyUZQbq
-         Cnys6WHL74y8B/uzzknnZiEHmIcRFflWUXXRD4+MXcA97IN6CMlF44B/SA+8yJDYBhVM
-         oOuRbbnPmYJlhLmZlOFIQvg7o94xRZd9Nz8vE/Zm8BsJArQ+59r6M0W7ChttrBhlJq8w
-         +2zmnR+edDF4B6q1lasfEVfJ/YkohB38iqUlFdpchvqSY9ZMHPh8ubAYYFMqlE4NZ0Xo
-         KuXw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+zgJ5uvRwb8sn12wPwxb92tvl6LYSv28+T9G/E5I5SEZr5sm3siWC6f1D12zw6ZzWykRKj8Ua2kR4w5zzBDsbU+NX0i6zBTrofNEH
-X-Gm-Message-State: AOJu0YwOOmQlBvaT5wjeGN7i5ANFCL26AZmBKdXWDaxqbwK5Q+1Kl7In
-	lLRAELiw1lml67skVwhCHi686G5YL7kjQLOnU+yPzA2ewVwK/9JEMZtdsQlseUfdb7FzUEWPuJP
-	afrVUUuoMRB+fMXjWqAzOCvzR3PbqX4cRdXH4nldvzPSXQq2IaO/wHw+vuc8kPXFIJiNKl81FYj
-	TwYSgi7TM3lGUPtbc/q4srKXgAuTAsl0wupvin
-X-Received: by 2002:a17:90a:70c6:b0:2c8:87e:c2d9 with SMTP id 98e67ed59e1d1-2ca35d43887mr9092110a91.39.1720794599179;
-        Fri, 12 Jul 2024 07:29:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGEyEXCNphbXM4G/rPhQQo3eVo3TcpH/vUgTlLXnK+HK0NsMDnIjoeWz76/qY2/k2Ca8KWUcmscnLjrUmqi++Q=
-X-Received: by 2002:a17:90a:70c6:b0:2c8:87e:c2d9 with SMTP id
- 98e67ed59e1d1-2ca35d43887mr9092063a91.39.1720794598057; Fri, 12 Jul 2024
- 07:29:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720794627; x=1721399427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=alcBCeBHwiXj0n+hXF8W7ZUTjf6ut9oBuOsr8yu14vw=;
+        b=OQpk892MUxvaS+0LbF+697zyMswtsO7wFWCQx++7OG+9Sc8j45m0Fx0CLQQlTlsLHE
+         RRDVwqg08XL5QuIO80iDgQDZFp7rH/4kZm7lCL9U+r2FsKnESIwMMvLnU89L5jVpk7xU
+         62SAdLjyR/khGFBp0w1mEqSF6emIK/JnRgROvXlR+ZlUGJdzF5E69qqO6vtxXNKYDz7V
+         xDapoM5vbyEj0PVCQw4waKw0hiOg0dWJ+a2gGODobMX6wmKnsVtpHnvNQr4yNI9T+kHR
+         FgeYLmJt+4kbIKOBQFKpa9DAn/Jd68rqCxOG2+0Eon4kXxWhFoUN45+W09FlPQLXsftO
+         939w==
+X-Forwarded-Encrypted: i=1; AJvYcCXBT5F7O1pxSpgS4U8dVY9lDGq5u4pomnvcjPFiHAtobwoDh25EOaaSGlFYqS/rtS+YcFFSt/W/qlseHlb8FoFame98fvkCk1K9Kw9F3B2xcl61FQu+grTEqjG4baglUa6XM0VuH7PxBZDwCyU=
+X-Gm-Message-State: AOJu0Yxz5FY7tdJF3zQvJy5ozhlxkZYzC8hyemSd8jqK4KOPiLUK98q/
+	dNfWxAZiszHjwSC0TQFYXx2wOyPp9nmhijZBgjMDND0Yn5ihBNIsTMqLvldxkxuUYqxj8fDWcgh
+	jdQTawfLjT0QytIQwNOmMGjN2lAlXYw==
+X-Google-Smtp-Source: AGHT+IG8gtYHcWhYIa/raxAMEUfMDAXaH2ixSD7lXeKGzT1uyDGpJqXE7og93Moj5HtYaifBaQHPa90q88CmIKnndh0=
+X-Received: by 2002:a2e:9859:0:b0:2ec:4a95:5f05 with SMTP id
+ 38308e7fff4ca-2eec98bbdfcmr29501431fa.3.1720794626549; Fri, 12 Jul 2024
+ 07:30:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <124bbda3-7ccf-4e6b-b30d-7115e1c2620f@stanley.mountain>
-In-Reply-To: <124bbda3-7ccf-4e6b-b30d-7115e1c2620f@stanley.mountain>
-From: Eric Curtin <ecurtin@redhat.com>
-Date: Fri, 12 Jul 2024 15:29:21 +0100
-Message-ID: <CAOgh=Fx6hcJdbQpna2JJhnzp=YG_nyg-gpd=ZH7CewudtgDhAA@mail.gmail.com>
-Subject: Re: [PATCH] nvme: apple: remove some dead code
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20240712141844.3274214-1-Frank.Li@nxp.com>
+In-Reply-To: <20240712141844.3274214-1-Frank.Li@nxp.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Fri, 12 Jul 2024 11:30:14 -0300
+Message-ID: <CAOMZO5DyP_V7+hSGm6q2ReTUhQ6ebTaLrx=qNhkuFSpCHc+8NA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] watchdog: imx7ulp_wdt: move post_rcs_wait into
+ struct imx_wdt_hw_feature
+To: Frank Li <Frank.Li@nxp.com>
+Cc: linux@roeck-us.net, alice.guo@nxp.com, imx@lists.linux.dev, 
+	kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	s.hauer@pengutronix.de, shawnguo@kernel.org, wim@linux-watchdog.org, 
+	ye.li@nxp.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 12 Jul 2024 at 15:13, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+On Fri, Jul 12, 2024 at 11:19=E2=80=AFAM Frank Li <Frank.Li@nxp.com> wrote:
 >
-> platform_get_irq() never returns zero so we can remove his dead code.
-> Checking for zero is a historical artifact from over ten years ago.
+> Move post_rcs_wait into struct imx_wdt_hw_feature to simple code logic fo=
+r
+> difference compatible string.
 >
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> i.MX93 watchdog needn't wait 2.5 clocks after RCS is done. So needn't set
 
-There's quite a few return paths in platform_get_irq_optional, are we
-sure it can never be zero?
+s/needn't/does not need
 
-Not calling out a specific case here, but it's not so clear to me how
-we can guarantee platform_get_irq() is never zero,
-
-Is mise le meas/Regards,
-
-Eric Curtin
-
-> ---
->  drivers/nvme/host/apple.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/nvme/host/apple.c b/drivers/nvme/host/apple.c
-> index b1387dc459a3..f5a3a4e8b1e5 100644
-> --- a/drivers/nvme/host/apple.c
-> +++ b/drivers/nvme/host/apple.c
-> @@ -1417,10 +1417,6 @@ static struct apple_nvme *apple_nvme_alloc(struct platform_device *pdev)
->                 ret = anv->irq;
->                 goto put_dev;
->         }
-> -       if (!anv->irq) {
-> -               ret = -ENXIO;
-> -               goto put_dev;
-> -       }
->
->         anv->mmio_coproc = devm_platform_ioremap_resource_byname(pdev, "ans");
->         if (IS_ERR(anv->mmio_coproc)) {
-> --
-> 2.43.0
->
->
-
+You mention i.MX93 here, but the code touches i.MX8ULP. Is that correct?
