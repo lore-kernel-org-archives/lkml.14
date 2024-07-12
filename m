@@ -1,72 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E971313D51E;
-	Fri, 12 Jul 2024 09:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E91F143C6E
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 09:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720777494; cv=none; b=TzwysmijXa9zp0rwGaTWBqr1SU6YhfwLU3tjz171tSQqCc/AvYsGjwxMmlqNdDnnTukJ4LFdZ6rzgzHg+AvRy9wfAGmj93O8gjdAAGOqgpEP/LEkhrXwU9BA6awOYS4tsEtggBOepSMU/onuH6oRXYs58qjMbos71KMUciR9ewg=
+	t=1720777495; cv=none; b=Jwu2gn6sIMTn8o8H2/rJeLWX9wvU812dR8xRNIxO8Lq7Il5BTpF2IsMr8H1bEglp7vsLKwOuyWrJ3SIWBGHvY5a8Q8d0zsbRMol/cVkUl5qcccNItIcRsmcwO+O6e0WqWuZksXPsrCrwXhN7aWtCRPs0Eml6Fl0CbZy2ogWqsak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720777494; c=relaxed/simple;
-	bh=sQKpq1440VG+bHpu22o4DA2miwD/NHYAEoARj0gEpQw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WHkEp3AZfu6XAH9hp/BCh6Qrpd4OfJvelQu3s/xbuw0shiKNJroZtNBeQD4TZOo3KRLFQ86X2vHLKryb3oNQkeRfHmdYE75dsINz9LhWoMmrE3BM5cXZCjRpp6WsKRsIFDhFkja3tbo8ITRIi7Gfi0hRie+uBP0cXTOqEpfRsmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cXuMCsAa; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720777495; c=relaxed/simple;
+	bh=cXCdImPJbnsBK/VrSVyH007UEnp46KCD6ej0jXeOF/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qeY8QNJomycD6I0N/0CNMmEYk4mkEtRzVw0ScwEXILe2gQRj+Yr+QIQLeaM4i504xy6LoKXaTxYWccxApkgLKMLkoL3g+eh5YGZ9wGSfMqKSEBn7tkGm6uLG+0ANn7mRs39+0LVZOVD/UYW/qk3ZcJJkiTcpv4mguXt4AQMOMOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XSbkAQO+; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cXuMCsAa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720777493; x=1752313493;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sQKpq1440VG+bHpu22o4DA2miwD/NHYAEoARj0gEpQw=;
-  b=cXuMCsAa6l7o7CDQg9yN26kCmgamn4LjWvj7u9JdqnUXETpE9uWsPlf3
-   oAQE8zppEjEvVX2zkSwfzZ05Sxtp1F54uu6hyAx0+9jw1420bBEEP9K6n
-   6TcxqmrSumNqT1r8Bq5+rQTZIqI0Mu5kWTc253O2B86m/fVyVeR8s9LgB
-   5DYVSTGkDaq8RRiJ65gpl5vLL9AdBHBoA5nhkhI9p+uplls+YQlkrnOG8
-   PVs231x3gYPIyXjbBouvmezCjJkKEZEbe1fAdq4dUGFNSSv8RwABCxRS1
-   F6fFMlcuvUFNCnUtUuXyuLBbN4dbtBidF7nvRVX1SHm1JFrfkTAnLQmwK
-   Q==;
-X-CSE-ConnectionGUID: vlmgwypwQfG3SPaL9o9QWg==
-X-CSE-MsgGUID: Umi/3B9MSrGuDbhEtv/o7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="18076953"
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="18076953"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 02:44:52 -0700
-X-CSE-ConnectionGUID: OkcfGZRFSjyr9FwohQgC5Q==
-X-CSE-MsgGUID: UEfdgnPOQ9yCOCtsSqkHBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="49524305"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orviesa007.jf.intel.com with ESMTP; 12 Jul 2024 02:44:49 -0700
-Received: from fedora.igk.intel.com (Metan_eth.igk.intel.com [10.123.220.124])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 410E412417;
-	Fri, 12 Jul 2024 10:44:47 +0100 (IST)
-From: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-To: intel-wired-lan@lists.osuosl.org
-Cc: apw@canonical.com,
-	joe@perches.com,
-	dwaipayanray1@gmail.com,
-	lukas.bulwahn@gmail.com,
-	akpm@linux-foundation.org,
-	willemb@google.com,
-	edumazet@google.com,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSbkAQO+"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-36798779d75so1595500f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 02:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720777492; x=1721382292; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bx3ZLiQpsD97OnOBkPiwMTW+SDsVv5mtS+7DR50XRN4=;
+        b=XSbkAQO+XCpxiraFkzQ1XWnieUFe2kLRiNiO0CAMyhnBHvDrtGieuaBO1uMSGlI5iL
+         nCeAnlFFRe1bV+55t9m85q0MKnpzJGew/KI5RuYauxOAbFY1DyDAPYlIKbEtVDCeb8vn
+         FDXvKqRAW1W5WT5zXioliFpkXjfbx8fDAQt1qvXphsxAivFSPaKB7a1LxZjkLxGWlXtV
+         UXFdPAP9KhIwtb0WxXmgDt8DXzRsSJ+vpGlWfXZRAO+URucu+FXq8u1PZpEv52BxPixA
+         3Vo4STPMBDjJb8Nv5aecwF2tSyjEPYw1DU/LKUyBlTT7cs29tlDbm+7WaFS5dDZfhkpz
+         5xzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720777492; x=1721382292;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bx3ZLiQpsD97OnOBkPiwMTW+SDsVv5mtS+7DR50XRN4=;
+        b=bKRL9adiLp+vb6qX+H9QJMoeRKHOTRUfT3NDPLWUyJfOG/tmVSCKyI1wdq0vL9oTh/
+         p//T/q1nB7cAMdJY3EOIRM8BwCJ7IwajcM9O5URFZK5KbWa951tqzMvGDfigBB9EjQx+
+         44yN8MMFp9/u7dFaUBk0xqH+8MwVPfqKo+xYIFD+gR3r6whvyi9xdaBf8NxScrPwpLVu
+         4jzhSqrqiby0I8kNX++8gbb0ikEMZKLMP5gytN/dyGslz+B51twYT2QIo7jEWS9ZvoKm
+         gkJXds3DNOQyV9UPLOUE4k9ryNcDuZLU6y2EgC/3wWtOuBjJLP37OdT/HQOtHUY5WidS
+         QSVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCSGFTewLx1ag/fIntaAxb3xQB2/WllN+338930+kHwFKtcsAyuRh/dCfSImVraZY8rtEX02MnuwDiu2enj6zC+7N9hX70gMZJuWYw
+X-Gm-Message-State: AOJu0YyebtJAs2Hp9OCt4m1QWeQAmvYXOGSnEQPqbc3tztEuIL6pLHcp
+	h2QbCQQoP7cqEcHdefI5yNUdWrx413RPH0mj6lssTGz3ZLsBmZ7m
+X-Google-Smtp-Source: AGHT+IHhl2Camhpoa0lc3UDP9FEESedsTjtgIu4HIxAuOHr8BvFsUU79gNYIqPaLnkfMTAJP+HYRmg==
+X-Received: by 2002:a5d:5311:0:b0:367:955b:b8b2 with SMTP id ffacd0b85a97d-367cea6b795mr8462599f8f.18.1720777491450;
+        Fri, 12 Jul 2024 02:44:51 -0700 (PDT)
+Received: from sacco.home ([2a01:cb1d:410:d000:694d:fc10:55f0:9f1f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa067dsm9851861f8f.78.2024.07.12.02.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jul 2024 02:44:51 -0700 (PDT)
+From: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+To: linux@armlinux.org.uk,
+	robh@kernel.org,
+	rmk+kernel@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Wojciech Drewek <wojciech.drewek@intel.com>,
-	Simon Horman <horms@kernel.org>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-Subject: [Intel-wired-lan] [PATCH iwl-next v2 1/6] checkpatch: don't complain on _Generic() use
-Date: Fri, 12 Jul 2024 05:32:46 -0400
-Message-Id: <20240712093251.18683-2-mateusz.polchlopek@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240712093251.18683-1-mateusz.polchlopek@intel.com>
-References: <20240712093251.18683-1-mateusz.polchlopek@intel.com>
+	javier.carrasco.cruz@gmail.com,
+	skhan@linuxfoundation.org,
+	Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+Subject: [PATCH 1/1] arm: devtree: fix missing device_node cleanup
+Date: Fri, 12 Jul 2024 11:44:48 +0200
+Message-ID: <20240712094448.159784-1-vincenzo.mezzela@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,35 +71,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Device node `cpus` is allocated but never released using `of_node_put`.
 
-Improve CamelCase recognition logic to avoid reporting on
- _Generic() use.
+This patch introduces the __free attribute for `cpus` device_node that
+automatically handle the cleanup of the resource by adding a call to
+`of_node_put` at the end of the current scope. This enhancement aims to
+mitigate memory management issues associated with forgetting to release
+the resources.
 
-Other C keywords, such as _Bool, are intentionally omitted, as those
-should be rather avoided in new source code.
-
-Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
+Signed-off-by: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
 ---
- scripts/checkpatch.pl | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/kernel/devtree.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 2b812210b412..c4a087d325d4 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -5840,6 +5840,8 @@ sub process {
- #CamelCase
- 			if ($var !~ /^$Constant$/ &&
- 			    $var =~ /[A-Z][a-z]|[a-z][A-Z]/ &&
-+#Ignore C keywords
-+			    $var !~ /^_Generic$/ &&
- #Ignore some autogenerated defines and enum values
- 			    $var !~ /^(?:[A-Z]+_){1,5}[A-Z]{1,3}[a-z]/ &&
- #Ignore Page<foo> variants
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index fdb74e64206a..223d66a5fff3 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -70,14 +70,14 @@ void __init arm_dt_init_cpu_maps(void)
+ 	 * contain a list of MPIDR[23:0] values where MPIDR[31:24] must
+ 	 * read as 0.
+ 	 */
+-	struct device_node *cpu, *cpus;
+ 	int found_method = 0;
+ 	u32 i, j, cpuidx = 1;
+ 	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
+ 
+ 	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
+ 	bool bootcpu_valid = false;
+-	cpus = of_find_node_by_path("/cpus");
++	struct device_node *cpu;
++	struct device_node *cpus __free(device_node) = of_find_node_by_path("/cpus");
+ 
+ 	if (!cpus)
+ 		return;
 -- 
-2.38.1
+2.43.0
 
