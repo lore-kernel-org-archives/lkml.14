@@ -1,64 +1,112 @@
-Received: from mail.ngn.tf (ngn.tf [193.106.196.85])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC931BC57;
-	Sat, 13 Jul 2024 09:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.106.196.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3322F56
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 09:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720862113; cv=none; b=twt2UnASQfC3zvHTvQXC0Sj9rMrTl3nUaNXvEhUvURR1Y/dmwAFwDad0wY6jMZqVTjRgjQ7BQ/BsJeLpY/nxC9WUDDBKu42shZ87M3aebsfB5RxZ6m0Howw47dU4QhmazIhosfOUr2LKkfU1+BM66aDuriaJSIdeXtarRL1URj0=
+	t=1720862179; cv=none; b=UhurO2JgZ7Pk36uddWowCuynZRm4IdYHY7aFfxlYn4m8Y1saQOutVU7sap/8dXgCkayAx/ooGO33JUFA6ImPMhFuOp/tvbxeKI7CfHkRdxjcXR36ouWj7LKRpQahCy8D1S6Up9ZupdMpiybtRjhQUvkVE/e3O14v2Y6RJLkKj7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720862113; c=relaxed/simple;
-	bh=cXVQENL6ezEh/B8TnMDQ24J2n6O8LNrqU9d5J6TC008=;
+	s=arc-20240116; t=1720862179; c=relaxed/simple;
+	bh=f5XH7GE7UW+5NxurpuuNWVoWS5u4W0/2oFYnOLscQS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCPabPwLfHCUD90nfFXjoYsYaaxB1Cvyp3ccIaeplIBOArqQsO5r055+xbYkEA4VeCw17mF8BPyNCj7oD7UEiR5xRssMWFEPdf+ENCOjEAOansVIbyr3noUMxsm91kQSVxEOchV3fqbGat9us1yy4Rioab9Je4G3C+MZacPx7jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf; spf=pass smtp.mailfrom=ngn.tf; dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b=jP9Oj8k3; arc=none smtp.client-ip=193.106.196.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ngn.tf
+	 Content-Type:Content-Disposition:In-Reply-To; b=HLuF1DiFnMXFhjwO6aTu6a3Cjn5eKa+qHV14zKH0nrj0zBdGgZxjTT3igeqYpx03/6T+pzjWohMeu2SGWfynqOwHTk7wMEuZg5TfAqx2PSG23KKJIm4qo7WbvT1Ny/8fINOuYjO00uOfCd0BAPcDWWnxjwMxjpFrkRbFrZYC0jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=h44VWUV2; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b="jP9Oj8k3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ngn.tf; s=mail;
-	t=1720861556; bh=cXVQENL6ezEh/B8TnMDQ24J2n6O8LNrqU9d5J6TC008=;
-	h=From:To:Cc:Subject:References:In-Reply-To;
-	b=jP9Oj8k35UX5FcuG37gd1FW4f/OGF4fqSonMjwyGqyEz9341ad7sRjPl+sYgdVHR2
-	 DBTZguo55T55fZJw3MDVbp+qskevuKmN0/Pd/vsS6k4yLAvIUyiFKo5TJAm4okrsDl
-	 SHznMpXspePp7/PxM6w5hjB/5QxXOLjWYwROXKtcxOoOIjZpaE5QJLTdmCOWjjU1Tj
-	 +h4wSv+zYYSftEzhYA+HiF6FlZty9/ANVgoNNTqF10R5X2dxVNeP64mrDj/KSeUl+u
-	 Aiv5OGHK3hE4f5v9qr8AiS9mAMYNP7/NpBBOXKBMQ2rN5jcCiNFD/qqYDgGqnCaDuh
-	 s5cZMM1kOz5VA==
-Date: Sat, 13 Jul 2024 12:05:32 +0300
-From: ngn <ngn@ngn.tf>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: shpchp: Remove hpc_ops
-Message-ID: <ZpJDXNtOQWSqG0mi@archbtw>
-References: <abb0f57ee513af545be761988fa9ad5ce5703060.1718949042.git.ngn@ngn.tf>
- <20240712224425.GA351076@bhelgaas>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="h44VWUV2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=XDRS
+	/6cs5bdPFA+LrH3rGhIIHv1K5EwCRbp5pZE62JQ=; b=h44VWUV2WAzCzwXrhbzD
+	ivZYzo8iT2MnQEX0o2S5L3XpK6G8hDcR4K67KruFhQBtN4p8x8ZR3V5fH5xGOqE6
+	gXz1FpIPigJZ+bLUs/aY6xkTvSivXhCBuqjbcuY3ie2y/yE9oDhpEWUxth93/V7N
+	EMBlGYMisdlP4GeowtRNk78SAqFb3lJvDE9XO58mn3Cq7ne1vDDkGDh6+GDtxn1f
+	45m6PzgWeEKriaiNYX912u95Lf1DamwnmfffoWlyZJviBAtnUIGaghVHAKwVzmbP
+	f0mSQCMObi2yQnwlO8SONWj7h6BEZ8jf4CTg8lYQ9x2iuigAucu9GxMkjDh+6m3s
+	AQ==
+Received: (qmail 1388966 invoked from network); 13 Jul 2024 11:16:15 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jul 2024 11:16:15 +0200
+X-UD-Smtp-Session: l3s3148p1@lzmtch0dFJhehhtW
+Date: Sat, 13 Jul 2024 11:16:15 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] i2c-host for v6.11
+Message-ID: <ZpJF39FFqnJfinQn@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+References: <yxymqbpeuhq52w3ie5nl5pkoojjuybaeodqtrd6uhe2rkmfhfb@3dqr6vefsdxh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="N6CllmnFtRXh3XUM"
+Content-Disposition: inline
+In-Reply-To: <yxymqbpeuhq52w3ie5nl5pkoojjuybaeodqtrd6uhe2rkmfhfb@3dqr6vefsdxh>
+
+
+--N6CllmnFtRXh3XUM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240712224425.GA351076@bhelgaas>
 
-On Fri, Jul 12, 2024 at 05:44:25PM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 21, 2024 at 09:35:00AM +0300, ngn wrote:
-> > fix checpatch warnings and call hpc_ops functions directly, this has been
-> > also done in pciehp with commit 82a9e79ef132
-> 
-> Trivial changes like checkpatch fixes should be in a separate patch
-> from substantive things.  This helps make both easier to review.
-> 
-> It *might* be worthwhile to remove hpc_ops, although shpchp is pretty
-> old and dusty by now, and it's hard to justify touching things like
-> that because the risk of breaking something is relatively high and the
-> benefit is relatively low.
-> 
-> The fact that shpchp is the only user of hpc_ops does make me a little
-> more sympathetic to the idea of removing it, though.
-> 
+Hi Andi,
 
-Thanks for the reply! I'll just remove hpc_ops then, and I'll send a separate
-patch.
+> Not a massive pull request. The majority of changes relate to the
+> naming convention updates. Other than that, the holiday period
+> has given us some slack in the number of patches queued for this
+> pull request.
+
+Thanks, pulled!
+
+> There is still one pending documentation fix required for an
+> issue reported by Stephen that I haven't noticed. I need to add
+> the documentation check to my workflow. If you don't have the
+> bandwidth, I can take care of it.
+
+I applied the fix on top to silence the warning now in linux-next.
+
+> I also have a pending patch for a v2 pull request from Hans de
+> Goede ("i2c: i801: Use a different adapter name for IDF
+> adapters") that is waiting for precedence.
+
+Can these patches be included, too? I think they are good to go.
+
+http://patchwork.ozlabs.org/project/linux-i2c/list/?series=410673
+
+Or are there issues with them?
+
+> I wish you a great rest of the weekend,
+
+Thank you! Same to you (and everyone else!)
+
+   Wolfram
+
+--N6CllmnFtRXh3XUM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaSRd8ACgkQFA3kzBSg
+KbZ8xRAAkyDxEofHH6jMPS9U4FRx3tFdoJhWVtt4PPfojd4BJbYDFgdmauLUBMiY
+0oFVOTAEd8KRuXfPvUCfXyAaPDcUK1kQ3c3FQaradHt6OCkZ1gGM8Wnzt7Cn2huf
+RP2wIgsc2Ya7wClecXRpnRj7m88pWc9Lw0zKrWdl154FMZSbMsndRD3QJLVXNFcp
+LCAYetsxW+bOPgNus0pyaX9P4YYP25s42XhxRLDsHvC/t1AcT+pkwrbCpq7DF6rl
+/ZLNcbaosFCeMb692cKCfgf8uHQcy0zUqbzl1CwQH6yoSO7MNh75j9OaLbfT9C5v
+mMuTO4xnHdqlkC2/fof2ZH+37t0hcEFMIqkX7GyA73u3KxLO9U+lHrQ9YhVpZkwn
+BMV5LO5InZcJ4dF1pZXhuNtT5dr1HWtYuqJ/MSVUGM2SyXtGZ9EAH2MjbA/9I9x1
+crioa1m0nApWafjqUX9NLvx6z8A56oVjuAqXV3MhKOef7kS4fVNaQ5iJxNqLMmI7
+4HO8IlPkgMEg9HRVU37MvS2o0WkZj3h6udYYpUw7+slGCc4gTbLD97gRdwpVJkn/
+XValydLPzMKbdiG1k/mnHKJIfI1otKdey8hoOYkhsQelQrTnZvYK63ad7nDCqzhP
+tjkWGmOIqeK+RymkGZyFpnOSqziXQPrnyyh2yvu8HWIZdu2kgfU=
+=ySo1
+-----END PGP SIGNATURE-----
+
+--N6CllmnFtRXh3XUM--
