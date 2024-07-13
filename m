@@ -1,87 +1,94 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57E8757E7
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 12:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F3912E1D2
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 12:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720874345; cv=none; b=p+u/+9/CNHdlYBDZ7I5M9tVpc7W+wRz5d1Jg2/V5BYYWqffUCsB0ESmXp0xY23fHgy6vB5Uygy7W4nsfJo3+7fsKERXMxZYmNxyESds9ZL+cM/Sfd5A0GMpQ9c7qlF0wGyS7QB9UACmqQkPw2gqayTZCApJVNm4LaATCvADLbY0=
+	t=1720874453; cv=none; b=KvnGcbaIMz0tmmzD//RpYcN1r29cGfAFk83NswNgNbipfDtVkd8xtPxZ5imD8i2e7I3DnDd6E2FG8JycmGW2NFH9foUL+u8UU4WcQRScpQkJhIhzaJYgs4Hef94I3YWDHBm4oHZLWAIJHp/SewgZnq89LSfm+nuk8OBgJjhSNc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720874345; c=relaxed/simple;
-	bh=4+95kjVIjtlcszRvAKuUnMD1B3e2E+wMO/ciEz+40YI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WAMhHRGrEZP7zROmoZsjDpkM2xBVZb82boWXq3dljYKLizKWWxMr8y36Gr3F3ZFkhf4kUtKB2u6i/b+i5oKxj4jmBBMmj6vOUTnG42DKuFE/ibIhfwFt1eEvWyWC63i4QJojOjX8fpVLNEOSPek0BHYEBR/4wq+uYXkdlhHOJDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Sx9WZETm; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1720874453; c=relaxed/simple;
+	bh=4yFSu7XXmhJSzSwUYrnLbemHBPSoslS8OR1+wHBffNg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=idF1+zB9SGiQvwg2in9Xc8h/Ha++3o68vdsl6GReYR6ZrQL+0onrB+sKqpz/h5JJ7PGw9yKjz0mx9KpUPa3twZUc74CtOIH7CpjOw3wercAWRCeg4jlZvv6DbdWgvb+6H3LbMUHfO0Se9VKyndOrdh2LO+PyuzWoce+gB59u7to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=BocKxkQ/; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Sx9WZETm"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-584e3442410so489153a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 05:39:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="BocKxkQ/"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2eea0cbc96bso3446681fa.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 05:40:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1720874342; x=1721479142; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u8hkhdHmp9Cd52s/KNQtC+KUQpLlcR8ECOfdL5ZTCiU=;
-        b=Sx9WZETmQE5lwyaVI826BgQHQfwXxae6v71Vms9/wQMcmLGeQl83xqFcHDGLw2o4F7
-         P5gE3h+JIuJWOVAS0SBiekb2JVV/8ikPv9av/WYBFHU53++Fk/gY1R7oz1h3Z0L2Qg5U
-         2dE2fWbSmDz+s50Te0P+sizMDQMH+p9jMSbukWGTYpMv248jVQAuFKE/4PYY82jbxN1w
-         +A84n3F1n64McNEISGUVFUJVZzq7vKlrBqpZRa38Rv8ND1+DfZmKrNA2DPQ934vW8ZDy
-         UqmzMBqLDKy/DOeIMV3li3BxqonynEh0lqP8NNmQ0FtOKbUmKa7juilKWaCF5P3qj/fM
-         D0ow==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1720874449; x=1721479249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ev9MEMcim44wSH4EZqGa+LQX0BIyzafscHDCWffwRWI=;
+        b=BocKxkQ/HzQcpANfCO5t4JmrzMAHxH5Y8yw7LEbnv7wVQima6z1FIJR6H+I5VFLKxj
+         b1jqpKCNgZrgrG+vE5qZiKP+PvkXJZRmxm4OSP8p8dKsUntHjoID36zdfWHGg7gpqKG3
+         3Zw9H51p7SanxmuulCVD2Yp9Yv/tRLAgxYtwEKQvgmr3h/eniyCHBa1OmaG/z1mFT4HJ
+         P+AGsaTT14W/vIE5FBI/Qz4+RDHvFCLyHwdX0YBBHZ8gtxk9sm+SW1RscVs4DlrDn0Qc
+         S++NoikIXvnNIXQFStEEsWx0MxMM2yHF08D6MWCplKmbLXzepz3H8c5Gggf8MGfMXTSs
+         MC5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720874342; x=1721479142;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u8hkhdHmp9Cd52s/KNQtC+KUQpLlcR8ECOfdL5ZTCiU=;
-        b=ZOX9RzzvfMNvWSQhFG9JFy/8yGv80Rc8v+3Nw2laDRc1rxuSXCqI27rgVzIf/oxkJs
-         aj1gSJzBhouTqXQ0lYKTTYrkDVTbYTNwC75ZEt45OqGTMrcMzGHeCdtEihzIuQwDrkkz
-         ddlFkPnba5vwBZGc+dfmCxLt5KUEaTAorhWhRiNPbPLiE275+b5S94jxAExVEfZ6dcjT
-         qxs9+2V42NxQm4/+HI35tywVZ5l/YRz/ZuyupmHYcEX6mmjH7o+8eaznQKKrGUCS4iH5
-         vdPC6UnNRy78LsZBm7K9Hf/GBFQntRmcdlmzX/ckhr4+FqGZviEi7OvwTEkADdqfXpgk
-         JNYA==
-X-Gm-Message-State: AOJu0YzmSBUgWvxGrKGw5PtagE1+kqs9TN5ZHoPCZxwkkJ4OgkUvDYD1
-	oy6Pmm+SP60BEtV3o0l58U6u1jRssuZM0w6SlLvSVIFiKh4FqlAE6oIdgq8g26Q=
-X-Google-Smtp-Source: AGHT+IHyCFkgxA6T9OzJ7BZMsLeqWafRuWRco2VTLlq/+AX/e6UKF0v+jmeU9JYYH/Mvg952m9fn6Q==
-X-Received: by 2002:a17:906:5a52:b0:a77:af07:b97e with SMTP id a640c23a62f3a-a780b683d00mr811317666b.2.1720874341628;
-        Sat, 13 Jul 2024 05:39:01 -0700 (PDT)
-Received: from ?IPV6:2a02:aa7:464b:1644:7862:56e0:794e:2? ([2a02:aa7:464b:1644:7862:56e0:794e:2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820d52sm47609466b.214.2024.07.13.05.38.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Jul 2024 05:39:00 -0700 (PDT)
-Message-ID: <7ca9cfc8-3423-476f-b768-8f089dae140a@kernel.dk>
-Date: Sat, 13 Jul 2024 06:38:58 -0600
+        d=1e100.net; s=20230601; t=1720874449; x=1721479249;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ev9MEMcim44wSH4EZqGa+LQX0BIyzafscHDCWffwRWI=;
+        b=pHl5w6fg8Fwtzr4XpVEtNAmR4XkC40oZ6zALIrib3e1lbfImzAZb662Cj5TnBl5b6e
+         J8wUX9EBXgH8VPrHSbUnbjB2oI97hsk3vshJBNELtWJcte+2VCh5HLmMFerbrS1vJzN2
+         YlJ2OaWovUO0W/9vUTGXq7XdZdtt2nlelgYsgZIrh4BrUxjaf6bmv884d9BWLCsyzbwj
+         cTm6EG6/fOQ9LNIukaO80OHpJtHnOmLQLADDRKKulSThlDHAbW9Dr+vOB19BufDh8euX
+         Wvb48hSps80mlExzJt52cQlskpeUQJNjI7m3snXJYXV2tyrBgA9tAlJIrT2KXzI3HU0+
+         wMMQ==
+X-Gm-Message-State: AOJu0Yym2DBwHxkP175BJozLHHDibTVoHAa6+36ZHgiGwAL4WomZRdch
+	PQbhks5AMTbnOXinhp4475KAqvxuKmWm/tic8CbW0jXlIV36hFvL2LfNI7ae4iA=
+X-Google-Smtp-Source: AGHT+IEDmDpZI2HOW9VBq0n2GsPSGvdL5UM+HjYSsiEoOGG4Tzgtwq9ejM87FCvZTWOzaPyOAXNkUQ==
+X-Received: by 2002:ac2:5b04:0:b0:52c:dc76:4876 with SMTP id 2adb3069b0e04-52ec3faf952mr3591414e87.6.1720874449263;
+        Sat, 13 Jul 2024 05:40:49 -0700 (PDT)
+Received: from [127.0.0.1] ([2a02:aa7:464b:1644:7862:56e0:794e:2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed252d6a1sm177225e87.175.2024.07.13.05.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jul 2024 05:40:48 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: syzbot <syzbot+1e811482aa2c70afa9a0@syzkaller.appspotmail.com>, 
+ io-uring@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+ Pavel Begunkov <asml.silence@gmail.com>, 
+ Gabriel Krisman Bertazi <krisman@suse.de>, 
+ Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <903da529-eaa3-43ef-ae41-d30f376c60cc@I-love.SAKURA.ne.jp>
+References: <0000000000007b7ce6061d1caec0@google.com>
+ <903da529-eaa3-43ef-ae41-d30f376c60cc@I-love.SAKURA.ne.jp>
+Subject: Re: [PATCH] io_uring: Check socket is valid in
+ io_bind()/io_listen()
+Message-Id: <172087444804.7272.17982342612300126690.b4-ty@kernel.dk>
+Date: Sat, 13 Jul 2024 06:40:48 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring: Check socket is valid in io_bind()/io_listen()
-To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
- syzbot <syzbot+1e811482aa2c70afa9a0@syzkaller.appspotmail.com>,
- io-uring@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- Pavel Begunkov <asml.silence@gmail.com>,
- Gabriel Krisman Bertazi <krisman@suse.de>
-Cc: linux-kernel@vger.kernel.org
-References: <0000000000007b7ce6061d1caec0@google.com>
- <903da529-eaa3-43ef-ae41-d30f376c60cc@I-love.SAKURA.ne.jp>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <903da529-eaa3-43ef-ae41-d30f376c60cc@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
 
-On 7/13/24 4:05 AM, Tetsuo Handa wrote:
+
+On Sat, 13 Jul 2024 19:05:02 +0900, Tetsuo Handa wrote:
 > We need to check that sock_from_file(req->file) != NULL.
+> 
+> 
 
-Yep indeed, that was missed. Thanks, I'll apply this, just moving
-the assignment to where the NULL check is for consistency's sake.
+Applied, thanks!
 
+[1/1] io_uring: Check socket is valid in io_bind()/io_listen()
+      commit: ad00e629145b2b9f0d78aa46e204a9df7d628978
+
+Best regards,
 -- 
 Jens Axboe
+
 
 
