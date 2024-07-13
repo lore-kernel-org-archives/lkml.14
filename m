@@ -1,108 +1,126 @@
-Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057EF29401
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 22:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E44C146A6D
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 22:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720910058; cv=none; b=KkZpF1n7EetFyOs+WBIsKFxRE903lr6L/6vpnS3JOkkGGZhGGWfvUnecC1nm8VoX3ROB1K0uhUsl6HiLxzKCnmKCgZzwsFXc1OGk0HZtGdnl30nBmg++/nq6npICMjMbcH0M1tupJu6EBK9e+TlGlzidCwZrPKeSLRufTaZgOaI=
+	t=1720910124; cv=none; b=ToOlApTNyNPFe7opgnUY1sxfUANdoPt9N/p3EZop6bC0BxaZB98JrPdB4YrWH3DpsRRIV4ibpgNuf7GRWMgh0JaDvgrnePAkzhWcT/1oIuyMSlWebx72KGfKV3DWJII827KZY7KgowvMexU64+fPos0UrC1zDlhdPxlExmg8OrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720910058; c=relaxed/simple;
-	bh=H7Wqs9IY0RVk3/f8b71KD0COfcu6Ng2RKx6CTnHunBk=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=FQSqt6yFeu9OD2CrG7iDAI+leU7QaEuooALMfQFfbo5SyqEc9IHhLoOoqT9vY8D6ay/2NFaagrSKVp15eBrooPWm0XJrFYI5Tufu6XbTfASjsl331eSmzGt/8lNWZELUa7hnQDOVaJO83nnvYlwaPEKa+g/luewJdY6PQVWXp6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b=ViurjQkx; arc=none smtp.client-ip=212.77.101.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1720910124; c=relaxed/simple;
+	bh=v53LsPjL4NbtXyTKg2jMCfMm9WLoShyCu0Vc0CFSrgY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ueO+gZ0wk3sCTeMA14tTd+faocr+2jTd4ypTNLz9IRCBMPbQy+v31LFqnKR+rVOyEVKcU72TV2p34QgQQuIRFG+cIFXGJ+6POosALwwwmoWFajuHF1iAVAzfkBY1OMpkvXAMaMOjjUJ106D1dRDQHfZtMwBC/C4v6iBgU0bM2zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=T4i+RL37; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="ViurjQkx"
-Received: (wp-smtpd smtp.wp.pl 44297 invoked from network); 14 Jul 2024 00:34:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1720910046; bh=W3lApuN7YTRnEcM3XCm9T9HOweCmIdx72YW45Ridj4A=;
-          h=From:To:Subject;
-          b=ViurjQkxraPQnJOQurZBwphlA+HnUEZ4V2AKL4y91ir2Oi+ryDAxD1UXZobPVutKv
-           8KnmcgdQWw26NC99xfVCGilzl/0aujJh+d+q3FkoPm92e68LJGwTLACwKXiMnSCFnQ
-           L5teRuGhB+xZ12Ng0GAZwLlR6fE4i/QOEGQno4U0=
-Received: from 83.24.148.52.ipv4.supernova.orange.pl (HELO laptop-olek.lan) (olek2@wp.pl@[83.24.148.52])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <davem@davemloft.net>; 14 Jul 2024 00:34:06 +0200
-From: Aleksander Jan Bajkowski <olek2@wp.pl>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	olek2@wp.pl,
-	shannon.nelson@amd.com,
-	sd@queasysnail.net,
-	u.kleine-koenig@pengutronix.de,
-	john@phrozen.org,
-	ralf@linux-mips.org,
-	ralph.hempel@lantiq.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: ethernet: lantiq_etop: fix memory disclosure
-Date: Sun, 14 Jul 2024 00:33:57 +0200
-Message-Id: <20240713223357.2911169-1-olek2@wp.pl>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="T4i+RL37"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-380eb36f5ceso13207685ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 15:35:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1720910122; x=1721514922; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z9djOW17Hq6Bkvn3DcF8Wpe8/RB5nd3f1kRECjv6cq8=;
+        b=T4i+RL37YaqiPkPsV9qj5B6/CLcVoHp5YrkGWcemAN+l3jef0HpELAior7an8rsxPT
+         TpQ7k28eZmtY2SmoSFfs4S0x2X2lr0tmVB24wwG2BO0Jqfuogzu6gou+Xufc+fSRT6FY
+         am2Wx95thhGHJ3jbCFRr1PD3zPS7vN9PYvt/GRfvX81vozke5ke7mj4OvYQutN9vIayc
+         JUkxLRsEELFnWNqLTHYla/Kou99lZQ+ACM0++cILxQ4dwM3jlJ8t2HauFoUJdcnho+QM
+         k/wd0p5JREoXlBwDHagjoszzHL67NFKLltopTbynZdW/FyXoKrxchbXb8c5l7jNy0tg9
+         Qu9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720910122; x=1721514922;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z9djOW17Hq6Bkvn3DcF8Wpe8/RB5nd3f1kRECjv6cq8=;
+        b=ZFjx+nFGQf3uy92Mam5P6P3clTZZeHCjbXAxXs7b2fGtoMKFSFl0On57tXNsO9VrMl
+         UyOSY09pyeV13INwkI67tPf/W8Pragjz2Riv9H7RpLAaLAaVZV4HworWeJRI7c4f0J9L
+         k8IlrB4FvjA6jFeLUtiOx6q54VanbDBHIZSiviVM937/IsyYyQTkD2lqDjOvwiiYjxvI
+         WfnI9jyoNoAnC637zNMx17NiFYmIh03N6Y28pRzVcnzacKkqzwfNK76rH47D5Bzm0C8g
+         kkC6a7xh+vvJMRgDId08lPIl/JtBPtLp+KEfTuy2LM0NxbdduxKoac0TOiy7LejLvSDv
+         NbiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXURDgMZfi3HJ3TKGLEwcfrERh4JP0kMk8cpztDnywfabpMUBx/TtYuD6nBr7G9HVv8S/DAHcyoA/JmDJEkw3tdvOE0SGtCnnbThFQf
+X-Gm-Message-State: AOJu0YyUiVoduEzJ7fhYTHoXx80r6ou4Kefr895yUbsH3s0osp7IkuIs
+	Avtz4eTsd8Xvs2+Yc058xPfVgQkCIRcNdUwxgMTBTTc9pOwWD1Ry6qY9qrAJeNM=
+X-Google-Smtp-Source: AGHT+IGNoMVxgXKi4Huov/Am3Ivchl0iprmp4ADpiiyaxEKkK4U/SDRcp1yh3lV7jZtqlVQMYQIEhg==
+X-Received: by 2002:a05:6e02:1aaa:b0:37a:a9f0:f263 with SMTP id e9e14a558f8ab-38a5910a9dbmr198272225ab.20.1720910122467;
+        Sat, 13 Jul 2024 15:35:22 -0700 (PDT)
+Received: from [127.0.1.1] ([2601:1c2:1802:170:d7fc:57d0:ada6:13b7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc4d9d8sm14640025ad.264.2024.07.13.15.35.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jul 2024 15:35:22 -0700 (PDT)
+From: Drew Fustini <drew@pdp7.com>
+Date: Sat, 13 Jul 2024 15:35:10 -0700
+Subject: [PATCH RFC net-next 1/4] dt-bindings: net: snps,dwmac: allow
+ dwmac-3.70a to set pbl properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: b5f9b250616002899b8321895476c16d
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000B [gaOU]                               
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240713-thead-dwmac-v1-1-81f04480cd31@tenstorrent.com>
+References: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
+In-Reply-To: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, Jisheng Zhang <jszhang@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+ Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
+ Fu Wei <wefu@redhat.com>, Conor Dooley <conor@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720910119; l=1130;
+ i=dfustini@tenstorrent.com; s=20230430; h=from:subject:message-id;
+ bh=L968+RrYNmrkLCbknalApiDQwXty2dLJdHRIixXyCag=;
+ b=L3rqLpVjtvL21xgmZs17aB0F6yoEoEFcG/yalWgNg23k2p7NGXFOeub8Bz4u6U8EICTfuR3s6
+ 7Lx5UJrPN2QAxVkpjpSt/mOQiqvngcDggj0buGRWYjAWtMSM++8boGB
+X-Developer-Key: i=dfustini@tenstorrent.com; a=ed25519;
+ pk=p3GKE9XFmjhwAayAHG4U108yag7V8xQVd4zJLdW0g7g=
 
-When applying padding, the buffer is not zeroed, which results in
-memory disclosure. This patch uses skb_put_padto() to pad Ethernet
-frames properly.
+From: Jisheng Zhang <jszhang@kernel.org>
 
-It appears that only the MAC in xrx100 and newer SoCs supports
-padding by hardware, so software padding must be applied.
+snps dwmac 3.70a also supports setting pbl related properties, such as
+"snps,pbl", "snps,txpbl", "snps,rxpbl" and "snps,no-pbl-x8".
 
-Fixes: 504d4721ee8e ("MIPS: Lantiq: Add ethernet driver")
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Link: https://lore.kernel.org/r/20230827091710.1483-2-jszhang@kernel.org
+Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Signed-off-by: Drew Fustini <drew@pdp7.com>
 ---
- drivers/net/ethernet/lantiq_etop.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/lantiq_etop.c b/drivers/net/ethernet/lantiq_etop.c
-index 0b9982804370..196715d9ea43 100644
---- a/drivers/net/ethernet/lantiq_etop.c
-+++ b/drivers/net/ethernet/lantiq_etop.c
-@@ -478,11 +478,11 @@ ltq_etop_tx(struct sk_buff *skb, struct net_device *dev)
- 	struct ltq_etop_priv *priv = netdev_priv(dev);
- 	struct ltq_etop_chan *ch = &priv->ch[(queue << 1) | 1];
- 	struct ltq_dma_desc *desc = &ch->dma.desc_base[ch->dma.desc];
--	int len;
- 	unsigned long flags;
- 	u32 byte_offset;
- 
--	len = skb->len < ETH_ZLEN ? ETH_ZLEN : skb->len;
-+	if (skb_put_padto(skb, ETH_ZLEN))
-+		return NETDEV_TX_OK;
- 
- 	if ((desc->ctl & (LTQ_DMA_OWN | LTQ_DMA_C)) || ch->skb[ch->dma.desc]) {
- 		netdev_err(dev, "tx ring full\n");
-@@ -497,12 +497,13 @@ ltq_etop_tx(struct sk_buff *skb, struct net_device *dev)
- 	netif_trans_update(dev);
- 
- 	spin_lock_irqsave(&priv->lock, flags);
--	desc->addr = ((unsigned int)dma_map_single(&priv->pdev->dev, skb->data, len,
--						DMA_TO_DEVICE)) - byte_offset;
-+	desc->addr = ((unsigned int)dma_map_single(&priv->pdev->dev, skb->data,
-+						   skb->len, DMA_TO_DEVICE)) -
-+						   byte_offset;
- 	/* Make sure the address is written before we give it to HW */
- 	wmb();
- 	desc->ctl = LTQ_DMA_OWN | LTQ_DMA_SOP | LTQ_DMA_EOP |
--		LTQ_DMA_TX_OFFSET(byte_offset) | (len & LTQ_DMA_SIZE_MASK);
-+		LTQ_DMA_TX_OFFSET(byte_offset) | (skb->len & LTQ_DMA_SIZE_MASK);
- 	ch->dma.desc++;
- 	ch->dma.desc %= LTQ_DESC_NUM;
- 	spin_unlock_irqrestore(&priv->lock, flags);
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 21cc27e75f50..0ad3bf5dafa7 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -584,6 +584,7 @@ allOf:
+               - qcom,sa8775p-ethqos
+               - qcom,sc8280xp-ethqos
+               - snps,dwmac-3.50a
++              - snps,dwmac-3.70a
+               - snps,dwmac-4.10a
+               - snps,dwmac-4.20a
+               - snps,dwmac-5.20
+
 -- 
-2.39.2
+2.34.1
 
