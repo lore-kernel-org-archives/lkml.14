@@ -1,159 +1,108 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A878133406
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 13:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1963B13699F;
+	Sat, 13 Jul 2024 13:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720877399; cv=none; b=WhjxzcRHijgdxyYAbQj4TKg4W202OiZKiKl9CCHyFTWVXNAIqtvX/7b6k2D96N1wEiN+GyyofIJgw32Ihtmbkm//8f29rMLGVhnK8pL9CFuevOqQ8Qt35fjJVpFDVWyY17wk5OMnc9gmNRwptWEXGP3q6dlqugNXyYuRXZ0gcpM=
+	t=1720877542; cv=none; b=nIuABID5pw6rEWfAqUaE+quYYj3R26xsfMd2Ql19RjS/luDvpd8g9vrIbuMDahBMTi8fAC7HvW4UPbsKzzBEQZKSzW7PUJfFYBTDry4apnXJT4RCI5hO1Tfzks0xZH3eRF2LP4JfUJAOISQ3owR55U7op+/8h2llnhoHZa7u7Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720877399; c=relaxed/simple;
-	bh=XHf0EOHfMZxurw0jxGXTS2u4VOUHYpcwyRa19VHm9gM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=edFai5k09Sq1vJr7TbU7MmRgG16Bl8yGX6yau8l0jaGmBvQxymfqMJjv5ccgPgA6N9SqgMmdNmNTvKnw2ObeoUoo3G50bCyOX2RwqKfu4TmjayM1nmeO0N+qDWSg0BgiORzgzS6rd2j979Q/RB3ieqFeHoKGQ9NOiYkcu+6b/Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LSRebKk5; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1720877542; c=relaxed/simple;
+	bh=7vJTLOSKsEXQcV+T2iHLq856lmYwkODA1Mmhnz5dkJ4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=Rxvn7lJoIxyu7jUKYT4iMLf7pfmHZzni/VFCueJjdzwn/2qaJ+rLj/P4Jypzw8L7vgPiknW3GPyLewYZ8bGgOkZVTdoEv2+q/a/YB3AuTgyzd4HXYjIUusoMozdfEvlq+9PNW4WnIMvAOC9KJSgsB4vk0ui7s1XA76tPUh29ArY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=nPeMeDIA; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LSRebKk5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720877388; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Tf+iCn9J1tf0mbYcwxtjryzLvO9qhkxHYDxVzJSYovE=;
-	b=LSRebKk5qxJUGDX8wYjzWlCZTsU1v5UPIVhTs4abHClir2fa1SIBIz91i6RhQ1zRyt7DvfgZbHfsWfa6Oi1vE9mY3Oi6yYNrjUavmZSUg7MBSMbrcBvXuXiaq14rK0krWp6PoSTzpGexdbvtxKsUqIwymofGM0WOM6q5jdctVPE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0WAR.kD7_1720877069;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WAR.kD7_1720877069)
-          by smtp.aliyun-inc.com;
-          Sat, 13 Jul 2024 21:24:30 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com
-Cc: willy@infradead.org,
-	david@redhat.com,
-	21cnbao@gmail.com,
-	ryan.roberts@arm.com,
-	ziy@nvidia.com,
-	ioworker0@gmail.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] mm: shmem: rename shmem_is_huge() to shmem_huge_global_enabled()
-Date: Sat, 13 Jul 2024 21:24:21 +0800
-Message-Id: <26dfca33f394b5cfa68e4dbda60bf5f54e41c534.1720755678.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1720755677.git.baolin.wang@linux.alibaba.com>
-References: <cover.1720755677.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="nPeMeDIA"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1720877530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gdsA/FWKhdawJ5GjAEMw4Scb4231JfvIGWeKzVvBLl0=;
+	b=nPeMeDIAUE6dGEBgaCGnsMJooRVdoxUOL/1VdWuEZbO9L2D/GfinCwRWviD1f0wvImQ7JS
+	HbPMVY1OXjAc6fImCZtxrGuFAzRj50Y2ywAGI8ZOYEJychIpRe5vW3P2zO9t59i0dNsxmH
+	XZ978LBYKIHBQ9nWpE+R9DZHv4zPcjtHqD/OkMcGYTRw6Y+NucbB25PXFyXF4YdRtIE4au
+	IWDASFLoBtBluKis5+Bt8N7ph0mytNMWD5iClw7hferXXA3p1Biwvw8ZfZVGptT/KlNjJK
+	OYMGlUCP87MSnfT4x7JpTkzoU0wlcDxaXlnxuch/DuGDGVMHnYE/us0TdUVQQg==
+Date: Sat, 13 Jul 2024 15:32:09 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Diederik de Haas <didi.debian@cknow.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Alex Bee <knaerzche@gmail.com>,
+ linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Johan
+ Jonker <jbx6244@gmail.com>, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: Add sdmmc/sdio/emmc reset
+ controls for RK3328
+In-Reply-To: <20240710132830.14710-4-didi.debian@cknow.org>
+References: <20240710132830.14710-1-didi.debian@cknow.org>
+ <20240710132830.14710-4-didi.debian@cknow.org>
+Message-ID: <2b8fc2a116900bae9b30fa3225235b3c@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-The shmem_is_huge() is now used to check if the top-level huge page is enabled,
-thus rename it to reflect its usage.
+Hello Diederik,
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- include/linux/shmem_fs.h |  9 +++++----
- mm/huge_memory.c         |  5 +++--
- mm/shmem.c               | 15 ++++++++-------
- 3 files changed, 16 insertions(+), 13 deletions(-)
+On 2024-07-10 15:28, Diederik de Haas wrote:
+> From: Alex Bee <knaerzche@gmail.com>
+> 
+> The DW MCI controller driver will use them to reset the IP block before
+> initialisation.
+> 
+> Fixes: d717f7352ec6 ("arm64: dts: rockchip: add sdmmc/sdio/emmc nodes
+> for RK3328 SoCs")
+> Signed-off-by: Alex Bee <knaerzche@gmail.com>
+> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
 
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index 1d06b1e5408a..405ee8d3589a 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -111,14 +111,15 @@ extern void shmem_truncate_range(struct inode *inode, loff_t start, loff_t end);
- int shmem_unuse(unsigned int type);
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--extern bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
--			  struct mm_struct *mm, unsigned long vm_flags);
-+extern bool shmem_huge_global_enabled(struct inode *inode, pgoff_t index, bool shmem_huge_force,
-+				      struct mm_struct *mm, unsigned long vm_flags);
- unsigned long shmem_allowable_huge_orders(struct inode *inode,
- 				struct vm_area_struct *vma, pgoff_t index,
- 				bool global_huge);
- #else
--static __always_inline bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
--					  struct mm_struct *mm, unsigned long vm_flags)
-+static __always_inline bool shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
-+						      bool shmem_huge_force, struct mm_struct *mm,
-+						      unsigned long vm_flags)
- {
- 	return false;
- }
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index f9696c94e211..cc9bad12be75 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -152,8 +152,9 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
- 	 * own flags.
- 	 */
- 	if (!in_pf && shmem_file(vma->vm_file)) {
--		bool global_huge = shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
--							!enforce_sysfs, vma->vm_mm, vm_flags);
-+		bool global_huge = shmem_huge_global_enabled(file_inode(vma->vm_file),
-+							     vma->vm_pgoff, !enforce_sysfs,
-+							     vma->vm_mm, vm_flags);
- 
- 		if (!vma_is_anon_shmem(vma))
- 			return global_huge ? orders : 0;
-diff --git a/mm/shmem.c b/mm/shmem.c
-index db7e9808830f..1445dcd39b6f 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -548,9 +548,9 @@ static bool shmem_confirm_swap(struct address_space *mapping,
- 
- static int shmem_huge __read_mostly = SHMEM_HUGE_NEVER;
- 
--static bool __shmem_is_huge(struct inode *inode, pgoff_t index,
--			    bool shmem_huge_force, struct mm_struct *mm,
--			    unsigned long vm_flags)
-+static bool __shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
-+					bool shmem_huge_force, struct mm_struct *mm,
-+					unsigned long vm_flags)
- {
- 	loff_t i_size;
- 
-@@ -581,14 +581,15 @@ static bool __shmem_is_huge(struct inode *inode, pgoff_t index,
- 	}
- }
- 
--bool shmem_is_huge(struct inode *inode, pgoff_t index,
-+bool shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
- 		   bool shmem_huge_force, struct mm_struct *mm,
- 		   unsigned long vm_flags)
- {
- 	if (HPAGE_PMD_ORDER > MAX_PAGECACHE_ORDER)
- 		return false;
- 
--	return __shmem_is_huge(inode, index, shmem_huge_force, mm, vm_flags);
-+	return __shmem_huge_global_enabled(inode, index, shmem_huge_force,
-+					   mm, vm_flags);
- }
- 
- #if defined(CONFIG_SYSFS)
-@@ -1156,7 +1157,7 @@ static int shmem_getattr(struct mnt_idmap *idmap,
- 			STATX_ATTR_NODUMP);
- 	generic_fillattr(idmap, request_mask, inode, stat);
- 
--	if (shmem_is_huge(inode, 0, false, NULL, 0))
-+	if (shmem_huge_global_enabled(inode, 0, false, NULL, 0))
- 		stat->blksize = HPAGE_PMD_SIZE;
- 
- 	if (request_mask & STATX_BTIME) {
-@@ -2153,7 +2154,7 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
- 		return 0;
- 	}
- 
--	huge = shmem_is_huge(inode, index, false, fault_mm,
-+	huge = shmem_huge_global_enabled(inode, index, false, fault_mm,
- 			     vma ? vma->vm_flags : 0);
- 	/* Find hugepage orders that are allowed for anonymous shmem. */
- 	if (vma && vma_is_anon_shmem(vma))
--- 
-2.39.3
+Looking good to me, cross-referencing the RK3328 TRM checks out.
 
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> index 95c3f1303544..16b4faa22e4f 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> @@ -910,6 +910,8 @@ sdmmc: mmc@ff500000 {
+>  		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+>  		fifo-depth = <0x100>;
+>  		max-frequency = <150000000>;
+> +		resets = <&cru SRST_MMC0>;
+> +		reset-names = "reset";
+>  		status = "disabled";
+>  	};
+> 
+> @@ -922,6 +924,8 @@ sdio: mmc@ff510000 {
+>  		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+>  		fifo-depth = <0x100>;
+>  		max-frequency = <150000000>;
+> +		resets = <&cru SRST_SDIO>;
+> +		reset-names = "reset";
+>  		status = "disabled";
+>  	};
+> 
+> @@ -934,6 +938,8 @@ emmc: mmc@ff520000 {
+>  		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+>  		fifo-depth = <0x100>;
+>  		max-frequency = <150000000>;
+> +		resets = <&cru SRST_EMMC>;
+> +		reset-names = "reset";
+>  		status = "disabled";
+>  	};
