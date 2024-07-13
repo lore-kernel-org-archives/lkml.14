@@ -1,411 +1,98 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail-40140.protonmail.ch (mail-40140.protonmail.ch [185.70.40.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1F4BA40;
-	Sat, 13 Jul 2024 17:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDC5BA40;
+	Sat, 13 Jul 2024 17:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720891633; cv=none; b=kYfhoOJjSesucwEnf8RNbNGO4hBNppeYQS8qC/UGBpwDCQB0fvzgwmlcl6s1sZBhsPnqms4cbdOb8Ovp7Weo50WT0VfJMMJwAXKfeGWgSpd5hhggdFZ+UtCeFXMKOLWm1wzd121L3rI5vbDnngNK3WaOSzcylrcQVtYTUyp0+sQ=
+	t=1720891667; cv=none; b=D+eENIJ8Dw6Bsc9c10j2hT4wFOnrmc9FtEoot83OtyPkg4y0TWr2EbvSUJXdKt60eDCY83MqDLV9QIDvhcNauflTmYCA46jTAxBR6u0Z1u6hwgHcVksjdPFvy1qTSXCWba45vZo5yZ0ifFNT6f+lxdX2wjcxgDStYCyT+uX/ngQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720891633; c=relaxed/simple;
-	bh=Y9N4zsvW8wverBTOJn10UOXQFw1+/0sTYADFjDj3mzg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=YlrrSTrSJ0t81VWoZ3rC4LNSXdtZxuLES3lzNiC3jlCsJFXwMHPxCFecX/FIzX4RNYhgiZ9Fos6XlD+zqsfR27CNCeSLJ0/BnwTjeXy0pSs/Jjeh1fAscKabZSEG+d7TbLkZucMxvkPk/EY2Ptve6xIvuJp0VLmYSILu7REVyMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hDFwU1yK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1720891667; c=relaxed/simple;
+	bh=CMbyQCRW3QjSNDtrZLqub2EssK7RoLcv0g/PG0hYges=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=G5MNUbZxOVQIwuPMSXP+5zt2G1OQw8qtX1NCOgDoWfhR36lLk/xN0YnQ0/g9S1PVJOGpeHjCka8B2biOdg7L0pdEitSBAFanqdPQCt2t5zNNy8Yep+vnNUuWGEzo8FxZi909WfEprB3giuF2X6P4KTy70Ce5MnUo/mwhKKHTwoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=InAbALiB; arc=none smtp.client-ip=185.70.40.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hDFwU1yK"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46DGRk5R012543;
-	Sat, 13 Jul 2024 17:26:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=C
-	SLDSdcY14vRIETpzgs7gw6TRPx3zqsfbJC50nghrqI=; b=hDFwU1yKiC8cGX7c/
-	sXnLzDClrhKj4RpcvWxgoDn+lGXQ8ZBSoj4pRdgw+XIIgaiBzObXs2OsOocY2OjB
-	q8nqS+aQgPH3DTZ7koWYoLM0ZEXjQAcUsO5dEHMCE3KUiOynGdffAu0hYiu2LrGt
-	gH4w8+Yu8ox3o/nt9dwCCHgH7cMm8k6hpShp1QYkM//jvege30KWHI8pEkKBcMvZ
-	/fZYK5tVmoMPdRTvpp4uCgrNGOT6VcJMYs3qWigseBeIOMxC6b/VZA1TxGiQQ1cs
-	/YfZhhXTDECfL2Wpc+r+EvmXc8CuxLR1BsiTSLbL47+Q7za6m3XhTtT0RfwaKjD4
-	NCUSw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40brr1gcqh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 13 Jul 2024 17:26:55 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46DHQtrI025847;
-	Sat, 13 Jul 2024 17:26:55 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40brr1gcqe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 13 Jul 2024 17:26:55 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46DFARDC013906;
-	Sat, 13 Jul 2024 17:21:54 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 407gn1ck7w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 13 Jul 2024 17:21:54 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46DHLmCP19268070
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 13 Jul 2024 17:21:50 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 80CDF20043;
-	Sat, 13 Jul 2024 17:21:48 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DC39E20040;
-	Sat, 13 Jul 2024 17:21:45 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.49.134])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Sat, 13 Jul 2024 17:21:45 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="InAbALiB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1720891657; x=1721150857;
+	bh=3ma9Jn4pZDj6IW33R3W1pBkMWtSx2AXWQvS0vLsnG84=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=InAbALiB3GvY9KTmZVN6QkFs4qtbHoXdZE0JTxl6cltduTF6VBYx3cpBb/T4RYKtU
+	 k4WfMul3/eMSr4nvPTtfucrUy6EEd72Rxv0Ng5J0LtcjmPSgW0hQZHmjJ3Z2xw+IA0
+	 bM+M2YCoCyuhJvuey7w4rDZZmqtuSHk6qd6GO56jaosOzwC/gFvewiJt2mqj+oFT9o
+	 oPftKXE1gyG3N+Dd74Hf0KUalmSszWDI0qGb14PHAOTVrNCRdoUdQUkTHTrUOfUmkj
+	 OjmbxsjA+Q7WVanzLbnSQe0HbpNbsrkpXkNcJYrVcfCto1DGyKuwloGsNtxHFb8lCG
+	 DU4qh2t/rLFxw==
+Date: Sat, 13 Jul 2024 17:27:33 +0000
+To: linux-kernel@vger.kernel.org
+From: "Lin, Meng-Bo" <linmengbo06890@proton.me>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: [PATCH] arm64: dts: qcom: msm8916-samsung-grandmax: Add touchscreen
+Message-ID: <20240713172724.34658-1-linmengbo06890@proton.me>
+Feedback-ID: 112742687:user:proton
+X-Pm-Message-ID: 310e0059fa85ef97870cada5a561fdd7c9440981
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH V6 17/18] tools/perf: Update data_type_cmp and
- sort__typeoff_sort function to include var_name in comparison
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZpKVROoPC5KBTPAj@google.com>
-Date: Sat, 13 Jul 2024 22:51:33 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <75010931-82A9-4640-8C55-2062A3726970@linux.vnet.ibm.com>
-References: <20240707144419.92510-1-atrajeev@linux.vnet.ibm.com>
- <20240707144419.92510-18-atrajeev@linux.vnet.ibm.com>
- <ZpGfYVc_ewcsQxWL@google.com>
- <6733E9A7-1118-46A5-8C17-DC22A9C47207@linux.vnet.ibm.com>
- <ZpKVROoPC5KBTPAj@google.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ZkfD4AkCbdHAsR3WIBpz1_x5I9wBwy4T
-X-Proofpoint-GUID: NXDc1dseNCeY5ZQYdzBXnyxfW_M6sek_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-13_13,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 spamscore=0 adultscore=0
- malwarescore=0 suspectscore=0 mlxscore=0 priorityscore=1501
- mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2407130131
 
+Grand Max uses an Imagis IST3038 touchscreen that is connected to
+blsp_i2c5. Add it to the device tree.
 
+Signed-off-by: "Lin, Meng-Bo" <linmengbo06890@proton.me>
+---
+ .../dts/qcom/msm8916-samsung-grandmax.dts     | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-> On 13 Jul 2024, at 8:25=E2=80=AFPM, Namhyung Kim <namhyung@kernel.org> =
-wrote:
->=20
-> On Sat, Jul 13, 2024 at 11:52:30AM +0530, Athira Rajeev wrote:
->>=20
->>=20
->>> On 13 Jul 2024, at 2:55=E2=80=AFAM, Namhyung Kim =
-<namhyung@kernel.org> wrote:
->>>=20
->>> On Sun, Jul 07, 2024 at 08:14:18PM +0530, Athira Rajeev wrote:
->>>> Currently data_type_cmp() only compares size and type name.
->>>> But in cases where the type name of two data type entries
->>>> is same, but var_name is different, the comparison can't =
-distinguish
->>>> two different types.
->>>>=20
->>>> Consider there is a "long unsigned int" with var_name as "X" and =
-there
->>>> is global variable "long unsigned int". Currently since
->>>> data_type_cmp uses only type_name for comparison ( "long unsigned =
-int"),
->>>> it won't distinguish these as separate entries. Update the
->>>=20
->>> I'm still not sure if it's ok.  It intentionally merges different
->>> instances of the same type together as it's a data 'type' profile.
->>>=20
->>>=20
->>>> functions "data_type_cmp" as well as "sort__typeoff_sort" to
->>>> compare variable names after type name if it exists.
->>>>=20
->>>> Also updated "hist_entry__typeoff_snprintf" to print var_name if
->>>> it is set. With the changes,
->>>>=20
->>>>    11.42%  long unsigned int  long unsigned int +0 =
-(current_stack_pointer)
->>>>    4.68%  struct paca_struct  struct paca_struct +2312 (__current)
->>>>    4.57%  struct paca_struct  struct paca_struct +2354 =
-(irq_soft_mask)
->>>>    2.69%  struct paca_struct  struct paca_struct +2808 (canary)
->>>>    2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
->>>>    2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
->>>>    1.43%  long unsigned int  long unsigned int +0 (no field)
->>>=20
->>> It seems like an output of `perf report -s type,typeoff`.  But I'm
->>> curious how it'd work with -s type only?  I guess it'd have two =
-separate
->>> entries for 'long unsigned int'.  Ideally we can have a single entry
->>> with two different fields.
->>>=20
->>> For example, `perf report -s type,typeoff -H`:
->>>=20
->>> 12.85%     long unsigned int
->>>    11.42%     long unsigned int +0 (current_stack_pointer)
->>>     1.43%     long unsigned int +0 (no field)
->>> ...
->>>=20
->>=20
->> Hi Namhyung,
->>=20
->> Thanks for the comments.
->>=20
->> While printing, the check for field is done only in =
-=E2=80=9Csort__typeoff_sort=E2=80=9D.
->> To summarise,
->> 1. While adding the data type in rb node, if the entry has different =
-field, new entry will be added. So we will have different entries in rb =
-node if field differs.
->> 2. While using sort key to display, for =E2=80=9Ctypeoff=E2=80=9D, we =
-use sort__typeoff_sort . For =E2=80=9Ctype=E2=80=9D, we use =
-=E2=80=9Csort__type_sort=E2=80=9D
->> 3. In =E2=80=9Csort__type_sort=E2=80=9D type_name is used. Hence =
-result will have only single entry
->> 4. In =E2=80=9Csort__typeoff_sort=E2=80=9D we added check for =
-=E2=80=9Cvar_name=E2=80=9D too in this patch. So result will have two =
-entries if field differs
->=20
-> I see.
->=20
->>=20
->> Example:
->>=20
->> Using -H option,
->>=20
->> ./perf report -s type,typeoff -H
->>=20
->>    17.65%     struct paca_struct
->>        4.68%     struct paca_struct +2312 (__current)
->>        4.57%     struct paca_struct +2354 (irq_soft_mask)
->>        2.69%     struct paca_struct +2808 (canary)
->>        2.68%     struct paca_struct +8 (paca_index)
->>        2.24%     struct paca_struct +48 (data_offset)
->>        0.55%     struct paca_struct +2816 =
-(mmiowb_state.nesting_count)
->>        0.18%     struct paca_struct +2818 =
-(mmiowb_state.mmiowb_pending)
->>        0.03%     struct paca_struct +2352 (hsrr_valid)
->>        0.02%     struct paca_struct +2356 (irq_work_pending)
->>        0.00%     struct paca_struct +0 (lppaca_ptr)
->>    12.85%     long unsigned int
->>       11.42%     long unsigned int +0 (current_stack_pointer)
->>        1.43%     long unsigned int +0 (no field)
->>=20
->> As you mentioned, we have single entry with two different fields:
->>=20
->> 12.85%     long unsigned int
->>       11.42%     long unsigned int +0 (current_stack_pointer)
->>        1.43%     long unsigned int +0 (no field)
->>=20
->> With perf report -s type:
->>=20
->>    17.65%  struct paca_struct
->>    12.85%  long unsigned int
->>     1.69%  struct task_struct
->>     1.51%  struct rq
->>     1.49%  struct pt_regs
->>     1.41%  struct vm_fault
->>     1.20%  struct inode
->>     1.15%  struct file
->>     1.08%  struct sd_lb_stats
->>     0.90%  struct security_hook_list
->>     0.86%  struct seq_file
->>     0.79%  struct cfs_rq
->>     0.78%  struct irq_desc
->>     0.72%  long long unsigned int
->>=20
->>=20
->> Where as with perf report -s typeoff:
->>=20
->>    11.42%  long unsigned int +0 (current_stack_pointer)
->>     4.68%  struct paca_struct +2312 (__current)
->>     4.57%  struct paca_struct +2354 (irq_soft_mask)
->>     2.69%  struct paca_struct +2808 (canary)
->>     2.68%  struct paca_struct +8 (paca_index)
->>     2.24%  struct paca_struct +48 (data_offset)
->>     1.43%  long unsigned int +0 (no field)
->>=20
->>=20
->> Namhyung,
->>=20
->> If the above shared result for =E2=80=9Ctype=E2=80=9D and =
-=E2=80=9Ctypeoff=E2=80=9D looks good and other changes are fine, I will =
-post V7 with change for sort cmp to use cmp_null.
->> Please share your response.
->=20
-> Great, it looks all good.  Please send v7.
->=20
-> But I think it's a bit late to add this to the upcoming window.
-
-Ok Namhyung.
-I have posted V7 with suggested changes. Please review the changes. If =
-it is not possible to pick in upcoming window, if it all looks good, =
-please pick it for the next possible window.
-
-Thanks for checking and sharing your comments,
-Athira
-
->=20
-> Thanks,
-> Namhyung
->=20
->>=20
->> Thanks
->> Athira
->>=20
->>>>=20
->>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>> ---
->>>> tools/perf/util/annotate-data.c | 24 ++++++++++++++++++++++--
->>>> tools/perf/util/sort.c          | 23 +++++++++++++++++++++--
->>>> 2 files changed, 43 insertions(+), 4 deletions(-)
->>>>=20
->>>> diff --git a/tools/perf/util/annotate-data.c =
-b/tools/perf/util/annotate-data.c
->>>> index 8d05f3dbddf6..759c6a22e719 100644
->>>> --- a/tools/perf/util/annotate-data.c
->>>> +++ b/tools/perf/util/annotate-data.c
->>>> @@ -167,7 +167,7 @@ static void exit_type_state(struct type_state =
-*state)
->>>> }
->>>>=20
->>>> /*
->>>> - * Compare type name and size to maintain them in a tree.
->>>> + * Compare type name, var_name  and size to maintain them in a =
-tree.
->>>> * I'm not sure if DWARF would have information of a single type in =
-many
->>>> * different places (compilation units).  If not, it could compare =
-the
->>>> * offset of the type entry in the .debug_info section.
->>>> @@ -176,12 +176,32 @@ static int data_type_cmp(const void *_key, =
-const struct rb_node *node)
->>>> {
->>>> const struct annotated_data_type *key =3D _key;
->>>> struct annotated_data_type *type;
->>>> + int64_t ret =3D 0;
->>>>=20
->>>> type =3D rb_entry(node, struct annotated_data_type, node);
->>>>=20
->>>> if (key->self.size !=3D type->self.size)
->>>> return key->self.size - type->self.size;
->>>> - return strcmp(key->self.type_name, type->self.type_name);
->>>> +
->>>> + ret =3D strcmp(key->self.type_name, type->self.type_name);
->>>> + if (ret) {
->>>> + return ret;
->>>> + }
->>>=20
->>> No need for the parentheses.
->> Sure, will fix it
->>=20
->>>=20
->>>> +
->>>> + /*
->>>> +  * Compare var_name if it exists for key and type.
->>>> +  * If both nodes doesn't have var_name, but one of
->>>> +  * them has, return non-zero. This is to indicate nodes
->>>> +  * are not the same if one has var_name, but other doesn't.
->>>> +  */
->>>> + if (key->self.var_name && type->self.var_name) {
->>>> + ret =3D strcmp(key->self.var_name, type->self.var_name);
->>>> + if (ret)
->>>> + return ret;
->>>> + } else if (key->self.var_name || type->self.var_name)
->>>> + return 1;
->>>=20
->>> I think you need to compare the order properly like in cmp_null() in
->>> util/sort.c.  Please see below.
->>>=20
->>>> +
->>>> + return ret;
->>>> }
->>>>=20
->>>> static bool data_type_less(struct rb_node *node_a, const struct =
-rb_node *node_b)
->>>> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
->>>> index cd39ea972193..c6d885060ee7 100644
->>>> --- a/tools/perf/util/sort.c
->>>> +++ b/tools/perf/util/sort.c
->>>> @@ -2267,9 +2267,25 @@ sort__typeoff_sort(struct hist_entry *left, =
-struct hist_entry *right)
->>>> right_type =3D right->mem_type;
->>>> }
->>>>=20
->>>> + /*
->>>> +  * Compare type_name first. Next, ompare var_name if it exists
->>>> +  * for left and right hist_entry. If both entries doesn't have
->>>> +  * var_name, but one of them has, return non-zero. This is to
->>>> +  * indicate entries are not the same if one has var_name, but the
->>>> +  * other doesn't.
->>>> +  * If type_name and var_name is same, use mem_type_off field.
->>>> +  */
->>>> ret =3D strcmp(left_type->self.type_name, =
-right_type->self.type_name);
->>>> if (ret)
->>>> return ret;
->>>> +
->>>> + if (left_type->self.var_name && right_type->self.var_name) {
->>>> + ret =3D strcmp(left_type->self.var_name, =
-right_type->self.var_name);
->>>> + if (ret)
->>>> + return ret;
->>>> + } else if (right_type->self.var_name || left_type->self.var_name)
->>>> + return 1;
->>>=20
->>> } else if (!left_type->self.var_name !=3D =
-!right_type->self.var_name)
->>> return cmp_null(left_type->self.var_name, =
-right_type->self.var_name);
->>>=20
->>> Thanks,
->>> Namhyung
->>>=20
->> Sure, will fix this
->>=20
->> Thanks
->> Athira
->>=20
->>=20
->>>> +
->>>> return left->mem_type_off - right->mem_type_off;
->>>> }
->>>>=20
->>>> @@ -2305,9 +2321,12 @@ static int =
-hist_entry__typeoff_snprintf(struct hist_entry *he, char *bf,
->>>> char buf[4096];
->>>>=20
->>>> buf[0] =3D '\0';
->>>> - if (list_empty(&he_type->self.children))
->>>> + if (list_empty(&he_type->self.children)) {
->>>> snprintf(buf, sizeof(buf), "no field");
->>>> - else
->>>> + if (he_type->self.var_name)
->>>> + strcpy(buf, he_type->self.var_name);
->>>> +
->>>> + } else
->>>> fill_member_name(buf, sizeof(buf), &he_type->self,
->>>> he->mem_type_off, true);
->>>> buf[4095] =3D '\0';
->>>> --=20
->>>> 2.43.0
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dts b/arch/a=
+rm64/boot/dts/qcom/msm8916-samsung-grandmax.dts
+index 135df1739dbd..5806a28b7bec 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dts
+@@ -47,12 +47,34 @@ &battery {
+ =09constant-charge-voltage-max-microvolt =3D <4400000>;
+ };
+=20
++&blsp_i2c5 {
++=09status =3D "okay";
++
++=09touchscreen@50 {
++=09=09compatible =3D "imagis,ist3038";
++=09=09reg =3D <0x50>;
++
++=09=09interrupts-extended =3D <&tlmm 13 IRQ_TYPE_EDGE_FALLING>;
++
++=09=09touchscreen-size-x =3D <720>;
++=09=09touchscreen-size-y =3D <1280>;
++
++=09=09vdd-supply =3D <&reg_vdd_tsp_a>;
++=09=09vddio-supply =3D <&pm8916_l6>;
++
++=09=09pinctrl-0 =3D <&ts_int_default>;
++=09=09pinctrl-names =3D "default";
++
++=09=09linux,keycodes =3D <KEY_APPSELECT KEY_BACK>;
++=09};
++};
++
+ &reg_motor_vdd {
+ =09gpio =3D <&tlmm 72 GPIO_ACTIVE_HIGH>;
+ };
+=20
+ &reg_touch_key {
+-=09status =3D "disabled";
++=09status =3D "disabled"; /* Using Imagis touch key*/
+ };
+=20
+ &sound {
+--=20
+2.39.2
 
 
