@@ -1,78 +1,49 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78711176FC3;
-	Sat, 13 Jul 2024 16:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3070513B287;
+	Sat, 13 Jul 2024 16:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720889812; cv=none; b=D0xpf0d1IljQtnIr4nWFdhBjRbpovodBWB7PI3mK2iAcSPICnP1HdjJIF7o6BpF8MsgIGsn+tX5KEE0S784DmJxNDwSlGJbMfbvua38ZBaUC5It0fU00hL+0UccyOXCxlOGxR2y3Snb5ZBSqwYF43xbrl/cbWuDAiEaJGbEWFew=
+	t=1720889970; cv=none; b=ODyCFYn9qhdtTmUNmKVaUqSDD2YNumlwCgGpR+M+iLHT8yhuNjnbECYpEp+5X5A6GHEfcdKr7xGHuVXrhTLCW15j5Lyd7lIKs3Oxcg3GaDRel5sxUm4jfplyaSWD+oMpIzpPgMEPoaDwLGUuk3L8h/K6PcP0KGl9itkqhkIok+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720889812; c=relaxed/simple;
-	bh=5dtkt3foy1LlHAubXjttqnWX4U2/UIURJA/E3n+faQ4=;
+	s=arc-20240116; t=1720889970; c=relaxed/simple;
+	bh=KYBad74cZVInqYWF85EGV9C9g4LucoMsE/dNGXtFggU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eVU5xQ91Yx9cMCo0BUYPHLrx13PLK05rYMybL27wr8cjwrSSWVYCB4MbRUXvVMgO1Y/7ABIRcky70WuWDlQfunroHpXkkgc7/kG6ujJrkQVEWZoMPAaY3S60/24o3yLS+AaX2tQEGaSEnfEZzySdwod7NlytKOay2r804x0CbvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XKD4Ol0N; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	 MIME-Version; b=tAbv4iLS/TnftM/3AYyV+P3TsrUPCeC5cpplkFeVKqp3dVTOlgsdOrxSr9rM4pDVGhAOCY/ULwWoLNRUF4OpixBAv2hpg6h01l75e0zjYq9qx/AR43E1gbdVHJLg+KAJSlMS/jp2Lgx9zwkU8whBwsJBuEXJjTxCLMkcusa3Hrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivG7ua0f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XKD4Ol0N"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46DFQtCT018948;
-	Sat, 13 Jul 2024 16:56:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=w6BVTnKXTthzG
-	43h+yDbowAsR1UCsEYMBgvMNmDCzPI=; b=XKD4Ol0Nf78mIzDki5e2vk23cq+mm
-	kJIJ0NDpno6xcZisd6oSXSrBER+f1OAXhUQAWffm2sLrWrBjlLVTb8fmIfBiFdxo
-	XL3RAKc8T9EA1sKLh8E4nne45d8ZO7exeg5Ne1CyUgWNlQOuwfw53rAYsbAG4k5V
-	ntx2yfTB1XdGAKc7VNj8Rc/NUXmAU+E3dA5OOQriLXzd7+38hPOMWINX/TIzuDov
-	OcjORM2i0BhlEvEJxWq+ajkjlaivS2yKK8bFUuGjY5DINSeoRdqV2utJtVEYtAMN
-	QVJ2MqDMhoh+WwenhmlsKybKu5QWRAy92xJNiuZpNAFtauFOKc0lYQFkw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40brr10c4j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 13 Jul 2024 16:56:41 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46DGueWq011952;
-	Sat, 13 Jul 2024 16:56:40 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40brr10c4g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 13 Jul 2024 16:56:40 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46DFQa8m010234;
-	Sat, 13 Jul 2024 16:56:39 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40bqxks5th-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 13 Jul 2024 16:56:39 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46DGuXu649873402
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 13 Jul 2024 16:56:35 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4EE8520040;
-	Sat, 13 Jul 2024 16:56:33 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3FE2220043;
-	Sat, 13 Jul 2024 16:56:30 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.49.134])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 13 Jul 2024 16:56:30 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
-        christophe.leroy@csgroup.eu
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH V7 18/18] tools/perf: Set instruction name to be used with insn-stat when using raw instruction
-Date: Sat, 13 Jul 2024 22:25:29 +0530
-Message-Id: <20240713165529.59298-19-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240713165529.59298-1-atrajeev@linux.vnet.ibm.com>
-References: <20240713165529.59298-1-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivG7ua0f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F9BC32781;
+	Sat, 13 Jul 2024 16:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720889969;
+	bh=KYBad74cZVInqYWF85EGV9C9g4LucoMsE/dNGXtFggU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ivG7ua0fflJ90aOgBFrUgWD74Fli9Tt2UpLfAAa5BmG38tcX1yzE5dT0+R8fu2o8Q
+	 v7wM+vzKoqBt0Gix3uFgjZ7aOkTpjzY2SADh+SlSjjo/H76d+rBGCib/FS4tigubCM
+	 WjRwsOBipxMb78kh8kTzJDo43CN+CRuHfh1uT5tWY/nVC5mbl/vzPVL2/k9HC+okQI
+	 5Kp4jqK99HflrmHzA4iowWdyzZmgEP3lt9rzq0Iss775MaR2/nfT2qEAtss45A3Z29
+	 XHOefIVdkUHIN2fry/uTVYjbq693nsIr8HSmctvU+oT4umRVeY6uyjZBHCwlImIXG5
+	 PSJWPtxTsZwgw==
+From: neeraj.upadhyay@kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: rcu@vger.kernel.org,
+	kernel-team@meta.com,
+	rostedt@goodmis.org,
+	mingo@kernel.org,
+	peterz@infradead.org,
+	paulmck@kernel.org,
+	leobras@redhat.com,
+	imran.f.khan@oracle.com,
+	riel@surriel.com,
+	neeraj.upadhyay@kernel.org
+Subject: [PATCH  1/3] locking/csd_lock: Print large numbers as negatives
+Date: Sat, 13 Jul 2024 22:28:44 +0530
+Message-Id: <20240713165846.216174-1-neeraj.upadhyay@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240713165642.GA215331@neeraj.linux>
+References: <20240713165642.GA215331@neeraj.linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,198 +51,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: k7G6XxTqJ3ALag11-k6fH3qMKjhINEpC
-X-Proofpoint-GUID: 3Ou496sEUkqw-Q51lDuCMMvxwrjEELR1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-13_13,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407130127
 
-Since the "ins.name" is not set while using raw instruction,
-perf annotate with insn-stat gives wrong data:
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Result from "./perf annotate --data-type --insn-stat":
+The CSD-lock-hold diagnostics from CONFIG_CSD_LOCK_WAIT_DEBUG are
+printed in nanoseconds as unsigned long longs, which is a bit obtuse for
+human readers when timing bugs result in negative CSD-lock hold times.
+Yes, there are some people to whom it is immediately obvious that
+18446744073709551615 is really -1, but for the rest of us...
 
-Annotate Instruction stats
-total 615, ok 419 (68.1%), bad 196 (31.9%)
+Therefore, print these numbers as signed long longs, making the negative
+hold times immediately apparent.
 
-  Name      :  Good   Bad
-  -----------------------------------------------------------
-            :   419   196
-
-Patch sets "dl->ins.name" in arch specific function "check_ppc_insn"
-while initialising "struct disasm_line". Also update "ins_find" function
-to pass "struct disasm_line" as a parameter so as to set its name field
-in arch specific call.
-
-With the patch changes:
-
-  Annotate Instruction stats
-  total 609, ok 446 (73.2%), bad 163 (26.8%)
-
-  Name/opcode         :  Good   Bad
-  -----------------------------------------------------------
-  58                  :   323    80
-  32                  :    49    43
-  34                  :    33    11
-  OP_31_XOP_LDX       :     8    20
-  40                  :    23     0
-  OP_31_XOP_LWARX     :     5     1
-  OP_31_XOP_LWZX      :     2     3
-  OP_31_XOP_LDARX     :     3     0
-  33                  :     0     2
-  OP_31_XOP_LBZX      :     0     1
-  OP_31_XOP_LWAX      :     0     1
-  OP_31_XOP_LHZX      :     0     1
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Reported-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Imran Khan <imran.f.khan@oracle.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Leonardo Bras <leobras@redhat.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Signed-off-by: Neeraj Upadhyay <neeraj.upadhyay@kernel.org>
 ---
- .../perf/arch/powerpc/annotate/instructions.c  | 18 +++++++++++++++---
- tools/perf/builtin-annotate.c                  |  4 ++--
- tools/perf/util/annotate.c                     |  2 +-
- tools/perf/util/disasm.c                       | 10 +++++-----
- tools/perf/util/disasm.h                       |  2 +-
- 5 files changed, 24 insertions(+), 12 deletions(-)
+ kernel/smp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index af1032572bf3..ede9eeade0ab 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -189,8 +189,9 @@ static int cmp_offset(const void *a, const void *b)
- 	return (val1->value - val2->value);
- }
- 
--static struct ins_ops *check_ppc_insn(u32 raw_insn)
-+static struct ins_ops *check_ppc_insn(struct disasm_line *dl)
- {
-+	int raw_insn = dl->raw.raw_insn;
- 	int opcode = PPC_OP(raw_insn);
- 	int mem_insn_31 = PPC_21_30(raw_insn);
- 	struct insn_offset *ret;
-@@ -198,19 +199,30 @@ static struct ins_ops *check_ppc_insn(u32 raw_insn)
- 		"OP_31_INSN",
- 		mem_insn_31
- 	};
-+	char name_insn[32];
- 
+diff --git a/kernel/smp.c b/kernel/smp.c
+index f085ebcdf9e7..81f7083a53e2 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -248,8 +248,8 @@ static bool csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64 *ts1, in
+ 	cpu_cur_csd = smp_load_acquire(&per_cpu(cur_csd, cpux)); /* Before func and info. */
+ 	/* How long since this CSD lock was stuck. */
+ 	ts_delta = ts2 - ts0;
+-	pr_alert("csd: %s non-responsive CSD lock (#%d) on CPU#%d, waiting %llu ns for CPU#%02d %pS(%ps).\n",
+-		 firsttime ? "Detected" : "Continued", *bug_id, raw_smp_processor_id(), ts_delta,
++	pr_alert("csd: %s non-responsive CSD lock (#%d) on CPU#%d, waiting %lld ns for CPU#%02d %pS(%ps).\n",
++		 firsttime ? "Detected" : "Continued", *bug_id, raw_smp_processor_id(), (s64)ts_delta,
+ 		 cpu, csd->func, csd->info);
  	/*
- 	 * Instructions with opcode 32 to 63 are memory
- 	 * instructions in powerpc
- 	 */
- 	if ((opcode & 0x20)) {
-+		/*
-+		 * Set name in case of raw instruction to
-+		 * opcode to be used in insn-stat
-+		 */
-+		if (!strlen(dl->ins.name)) {
-+			sprintf(name_insn, "%d", opcode);
-+			dl->ins.name = strdup(name_insn);
-+		}
- 		return &load_store_ops;
- 	} else if (opcode == 31) {
- 		/* Check for memory instructions with opcode 31 */
- 		ret = bsearch(&mem_insns_31_opcode, ins_array, ARRAY_SIZE(ins_array), sizeof(ins_array[0]), cmp_offset);
--		if (ret != NULL)
-+		if (ret) {
-+			if (!strlen(dl->ins.name))
-+				dl->ins.name = strdup(ret->name);
- 			return &load_store_ops;
--		else {
-+		} else {
- 			mem_insns_31_opcode.value = PPC_22_30(raw_insn);
- 			ret = bsearch(&mem_insns_31_opcode, arithmetic_ins_op_31, ARRAY_SIZE(arithmetic_ins_op_31),
- 					sizeof(arithmetic_ins_op_31[0]), cmp_offset);
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index b10b7f005658..cf60392b1c19 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -396,10 +396,10 @@ static void print_annotate_item_stat(struct list_head *head, const char *title)
- 	printf("total %d, ok %d (%.1f%%), bad %d (%.1f%%)\n\n", total,
- 	       total_good, 100.0 * total_good / (total ?: 1),
- 	       total_bad, 100.0 * total_bad / (total ?: 1));
--	printf("  %-10s: %5s %5s\n", "Name", "Good", "Bad");
-+	printf("  %-20s: %5s %5s\n", "Name/opcode", "Good", "Bad");
- 	printf("-----------------------------------------------------------\n");
- 	list_for_each_entry(istat, head, list)
--		printf("  %-10s: %5d %5d\n", istat->name, istat->good, istat->bad);
-+		printf("  %-20s: %5d %5d\n", istat->name, istat->good, istat->bad);
- 	printf("\n");
- }
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 8db2f32700aa..e1f24dff8042 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2229,7 +2229,7 @@ static struct annotated_item_stat *annotate_data_stat(struct list_head *head,
- 		return NULL;
- 
- 	istat->name = strdup(name);
--	if (istat->name == NULL) {
-+	if ((istat->name == NULL) || (!strlen(istat->name))) {
- 		free(istat);
- 		return NULL;
- 	}
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 63681df6482b..cd283c42195c 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -859,7 +859,7 @@ static void ins__sort(struct arch *arch)
- 	qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
- }
- 
--static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_insn)
-+static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
- {
- 	struct ins *ins;
- 	const int nmemb = arch->nr_instructions;
-@@ -871,7 +871,7 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
- 		 */
- 		struct ins_ops *ops;
- 
--		ops = check_ppc_insn(raw_insn);
-+		ops = check_ppc_insn(dl);
- 		if (ops)
- 			return ops;
- 	}
-@@ -905,9 +905,9 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
- 	return ins ? ins->ops : NULL;
- }
- 
--struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
-+struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
- {
--	struct ins_ops *ops = __ins__find(arch, name, raw_insn);
-+	struct ins_ops *ops = __ins__find(arch, name, dl);
- 
- 	if (!ops && arch->associate_instruction_ops)
- 		ops = arch->associate_instruction_ops(arch, name);
-@@ -917,7 +917,7 @@ struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
- 
- static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, struct map_symbol *ms)
- {
--	dl->ins.ops = ins__find(arch, dl->ins.name, dl->raw.raw_insn);
-+	dl->ins.ops = ins__find(arch, dl->ins.name, dl);
- 
- 	if (!dl->ins.ops)
- 		return;
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index c1bb1e484bfb..f56beedeb9da 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -105,7 +105,7 @@ struct annotate_args {
- struct arch *arch__find(const char *name);
- bool arch__is(struct arch *arch, const char *name);
- 
--struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn);
-+struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl);
- int ins__scnprintf(struct ins *ins, char *bf, size_t size,
- 		   struct ins_operands *ops, int max_ins_name);
- 
+ 	 * If the CSD lock is still stuck after 5 minutes, it is unlikely
 -- 
-2.43.0
+2.40.1
 
