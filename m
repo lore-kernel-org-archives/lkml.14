@@ -1,183 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA30B12E1D2;
-	Sat, 13 Jul 2024 12:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61434C8E
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 12:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720874547; cv=none; b=daKAJ/5aAhj/k1k7QgLJOx6SKAVjrZNTy/uyrRZe0TlubZNwpGv+h8IBI3niOfeclI+sr0lu66U/6rCe4hLjdn6IVd8rIiRYcdSmrqDNIZMblmCcGSm3mhlag59HXEz3Sphh0OBo8Y6Yu3Vls1iJnQ7AjmlFNg80+5lMlbwVOk8=
+	t=1720874845; cv=none; b=m4RcaKBM2y5/dk1n5mLRMRxn/sY2I4EzzgZeKAt2dj3x1krXfsPr4i1PDBc+6699/zAcuhWOCPotV1lIZjbUF6O+k3dbv99eIMGBDVP+iCzynsOqHE+O336SVHgDRoCTH25Hj2PKyhywHI+L5t7qR/iSLcZN7gboL08uQmgBKew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720874547; c=relaxed/simple;
-	bh=RkZOnT6YMC5COcaGvMUt7vuwc+JGYeeX8BB4xirSbk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unTvdPOBw+Op6I6whae8lLuv1jvbKh1YfPWchGfdHjXVDrKzCyEJ92HD7NFJVup0IB71wz01qUeQ77jHzuBp8lkn/rI52x35Xtu54MgI52Nu4YhvMoItZURPtC/3NcPXMPYV2VRYFXCuA17orYHuiZuXC6DgFzDnqgtnA1nHL+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JOFDZF4o; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1720874845; c=relaxed/simple;
+	bh=xZLNfkg6Nq4XTIY/Bndu/mqP9e+QUaD+KGDAB6Xqkz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mW+ZaxE91EdA/ygdtxCH5QNwkFx5haEvA7/TchF6U50cBaUtasg3cLf23xwz+9nyTXE7YG7g32NTaFpYLUftYTICZMx7+x1nKexrrxtA91ARC9iUm5Hc9dwk0CBHE5q3pqFJ3pZTxCy3kgYMxiENXn9LKmv1mKPPAOvfvQPT+PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=iB4SSS82; arc=none smtp.client-ip=193.222.135.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JOFDZF4o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720874546; x=1752410546;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RkZOnT6YMC5COcaGvMUt7vuwc+JGYeeX8BB4xirSbk4=;
-  b=JOFDZF4oz8HFymFV0UBveCHVKrSUYBQ+9pk5G5m490STmjZGiyahF20G
-   gr3Qcbva3toRIg4gyzMMEAI7n8lV5u0Rh0sZkISyEbqKtdl00bajKfqmE
-   47AGqzafCfN48Va9058CaF8vFip2bXLHkpgZ0/0ROa83UvXd/YlCzUhjO
-   +iK2ZD2x79RvvHr/B3TPZytlnBcSxp8J+Dy9XcvCijAIfy7AsaNvcc4rZ
-   tW7oGdGtsNy4fBK6ubFkSE1H2Vs20uliBlVrJRH2wdVJs5NOnuImian7m
-   haH3CTxD15+qAwLsCmPWKnV9T2Bz7Mrj/U9Qh2VqtRsPiF5KVvphCo2nH
-   A==;
-X-CSE-ConnectionGUID: u96SDWmxRh6arrziYPd/OA==
-X-CSE-MsgGUID: HMJfKbKiSS+oMCIoA8V2wg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="22126972"
-X-IronPort-AV: E=Sophos;i="6.09,206,1716274800"; 
-   d="scan'208";a="22126972"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2024 05:42:25 -0700
-X-CSE-ConnectionGUID: 91LwFNLZRPC3ilSOyFGWNQ==
-X-CSE-MsgGUID: OnZ4kMcFTYePvsQ6hEWl0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,206,1716274800"; 
-   d="scan'208";a="49046677"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 13 Jul 2024 05:42:19 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sSc4u-000c4T-2N;
-	Sat, 13 Jul 2024 12:42:16 +0000
-Date: Sat, 13 Jul 2024 20:41:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ravi Bangoria <ravi.bangoria@amd.com>, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	seanjc@google.com, pbonzini@redhat.com, thomas.lendacky@amd.com
-Cc: oe-kbuild-all@lists.linux.dev, ravi.bangoria@amd.com, hpa@zytor.com,
-	rmk+kernel@armlinux.org.uk, peterz@infradead.org,
-	james.morse@arm.com, lukas.bulwahn@gmail.com, arjan@linux.intel.com,
-	j.granados@samsung.com, sibs@chinatelecom.cn, nik.borisov@suse.com,
-	michael.roth@amd.com, nikunj.dadhania@amd.com, babu.moger@amd.com,
-	x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	santosh.shukla@amd.com, ananth.narayan@amd.com,
-	sandipan.das@amd.com, manali.shukla@amd.com, jmattson@google.com
-Subject: Re: [PATCH v2 1/4] x86/split_lock: Move Split and Bus lock code to a
- dedicated file
-Message-ID: <202407132059.uppmW6rR-lkp@intel.com>
-References: <20240712093943.1288-2-ravi.bangoria@amd.com>
+	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="iB4SSS82"
+Received: (wp-smtpd smtp.tlen.pl 47963 invoked from network); 13 Jul 2024 14:40:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1720874440; bh=xZLNfkg6Nq4XTIY/Bndu/mqP9e+QUaD+KGDAB6Xqkz0=;
+          h=Subject:To:Cc:From;
+          b=iB4SSS82aYraFWXixHvG2FD9hrUQUmU8dBCukI87ok1j7C2uUUiNJfGvpgS2HXjzt
+           AF/Pg9LgBTimUgcbFzl74csu+59Vf1rUvYrcyU6oYQM4NmDFfYDrXxeuJEqOYDyfnE
+           /m4zKBnkiByN7oCRQZWO6GAY0Lc/xyjp0VTAdfhE=
+Received: from aafe223.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.134.223])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <yukuai1@huaweicloud.com>; 13 Jul 2024 14:40:39 +0200
+Message-ID: <5d698ca4-b6a0-4567-ab6c-899b34293056@o2.pl>
+Date: Sat, 13 Jul 2024 14:40:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240712093943.1288-2-ravi.bangoria@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] md/raid1: set max_sectors during early return from
+ choose_slow_rdev()
+To: Yu Kuai <yukuai1@huaweicloud.com>, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org, Song Liu <song@kernel.org>,
+ Paul Luse <paul.e.luse@linux.intel.com>, Xiao Ni <xni@redhat.com>,
+ Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <349e4894-b6ea-6bc4-b040-4a816b6960ab@huaweicloud.com>
+ <20240711202316.10775-1-mat.jonczyk@o2.pl>
+ <e9585300-1666-ca71-8684-8824fe2ddaf1@huaweicloud.com>
+Content-Language: en-GB
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <e9585300-1666-ca71-8684-8824fe2ddaf1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 2cda0889d6b0ad5206b8d2265bcfc8ce
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [IYNR]                               
 
-Hi Ravi,
+W dniu 12.07.2024 o 03:16, Yu Kuai pisze:
+> Hi,
+>
+> 在 2024/07/12 4:23, Mateusz Jończyk 写道:
+>> Linux 6.9+ is unable to start a degraded RAID1 array with one drive,
+>> when that drive has a write-mostly flag set. During such an attempt,
+>> the following assertion in bio_split() is hit:
+>>
+[snip]
+>
+> Thanks for the patch!
+>
+> Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+>
+> BTW, do you have plans to add a new test to mdadm tests? I'll
+> pick it up if you don't, just let me know.
+>
+> Thanks,
+> Kuai
 
-kernel test robot noticed the following build errors:
+Yes, I'm working on it.
 
-[auto build test ERROR on tip/master]
-[also build test ERROR on next-20240712]
-[cannot apply to tip/x86/core kvm/queue linus/master tip/auto-latest kvm/linux-next v6.10-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Greetings,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ravi-Bangoria/x86-split_lock-Move-Split-and-Bus-lock-code-to-a-dedicated-file/20240712-175306
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20240712093943.1288-2-ravi.bangoria%40amd.com
-patch subject: [PATCH v2 1/4] x86/split_lock: Move Split and Bus lock code to a dedicated file
-config: i386-randconfig-015-20240713 (https://download.01.org/0day-ci/archive/20240713/202407132059.uppmW6rR-lkp@intel.com/config)
-compiler: gcc-11 (Ubuntu 11.4.0-4ubuntu1) 11.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240713/202407132059.uppmW6rR-lkp@intel.com/reproduce)
+Mateusz
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407132059.uppmW6rR-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/x86/kernel/cpu/bus_lock.c: In function 'split_lock_warn':
->> arch/x86/kernel/cpu/bus_lock.c:219:21: error: 'struct task_struct' has no member named 'reported_split_lock'
-     219 |         if (!current->reported_split_lock)
-         |                     ^~
-   arch/x86/kernel/cpu/bus_lock.c:222:16: error: 'struct task_struct' has no member named 'reported_split_lock'
-     222 |         current->reported_split_lock = 1;
-         |                ^~
-   arch/x86/kernel/cpu/bus_lock.c: At top level:
-   arch/x86/kernel/cpu/bus_lock.c:250:6: error: redefinition of 'handle_guest_split_lock'
-     250 | bool handle_guest_split_lock(unsigned long ip)
-         |      ^~~~~~~~~~~~~~~~~~~~~~~
-   In file included from arch/x86/kernel/cpu/bus_lock.c:12:
-   arch/x86/include/asm/cpu.h:42:20: note: previous definition of 'handle_guest_split_lock' with type 'bool(long unsigned int)' {aka '_Bool(long unsigned int)'}
-      42 | static inline bool handle_guest_split_lock(unsigned long ip)
-         |                    ^~~~~~~~~~~~~~~~~~~~~~~
-   arch/x86/kernel/cpu/bus_lock.c:292:6: error: redefinition of 'handle_user_split_lock'
-     292 | bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-         |      ^~~~~~~~~~~~~~~~~~~~~~
-   In file included from arch/x86/kernel/cpu/bus_lock.c:12:
-   arch/x86/include/asm/cpu.h:37:20: note: previous definition of 'handle_user_split_lock' with type 'bool(struct pt_regs *, long int)' {aka '_Bool(struct pt_regs *, long int)'}
-      37 | static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-         |                    ^~~~~~~~~~~~~~~~~~~~~~
-   arch/x86/kernel/cpu/bus_lock.c:300:6: error: redefinition of 'handle_bus_lock'
-     300 | void handle_bus_lock(struct pt_regs *regs)
-         |      ^~~~~~~~~~~~~~~
-   In file included from arch/x86/kernel/cpu/bus_lock.c:12:
-   arch/x86/include/asm/cpu.h:47:20: note: previous definition of 'handle_bus_lock' with type 'void(struct pt_regs *)'
-      47 | static inline void handle_bus_lock(struct pt_regs *regs) {}
-         |                    ^~~~~~~~~~~~~~~
-   arch/x86/kernel/cpu/bus_lock.c:401:13: error: redefinition of 'sld_setup'
-     401 | void __init sld_setup(struct cpuinfo_x86 *c)
-         |             ^~~~~~~~~
-   In file included from arch/x86/kernel/cpu/bus_lock.c:12:
-   arch/x86/include/asm/cpu.h:36:27: note: previous definition of 'sld_setup' with type 'void(struct cpuinfo_x86 *)'
-      36 | static inline void __init sld_setup(struct cpuinfo_x86 *c) {}
-         |                           ^~~~~~~~~
-
-
-vim +219 arch/x86/kernel/cpu/bus_lock.c
-
-   213	
-   214	static void split_lock_warn(unsigned long ip)
-   215	{
-   216		struct delayed_work *work;
-   217		int cpu;
-   218	
- > 219		if (!current->reported_split_lock)
-   220			pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-   221					    current->comm, current->pid, ip);
-   222		current->reported_split_lock = 1;
-   223	
-   224		if (sysctl_sld_mitigate) {
-   225			/*
-   226			 * misery factor #1:
-   227			 * sleep 10ms before trying to execute split lock.
-   228			 */
-   229			if (msleep_interruptible(10) > 0)
-   230				return;
-   231			/*
-   232			 * Misery factor #2:
-   233			 * only allow one buslocked disabled core at a time.
-   234			 */
-   235			if (down_interruptible(&buslock_sem) == -EINTR)
-   236				return;
-   237			work = &sl_reenable_unlock;
-   238		} else {
-   239			work = &sl_reenable;
-   240		}
-   241	
-   242		cpu = get_cpu();
-   243		schedule_delayed_work_on(cpu, work, 2);
-   244	
-   245		/* Disable split lock detection on this CPU to make progress */
-   246		sld_update_msr(false);
-   247		put_cpu();
-   248	}
-   249	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
