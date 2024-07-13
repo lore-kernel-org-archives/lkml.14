@@ -1,122 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA63F29401;
-	Sat, 13 Jul 2024 02:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96014168B7
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 02:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720836819; cv=none; b=K5gEB5lOcyHGPyKyeO5I3qk+bVPEVMg8O17MHEwa1zW3EMQTQkWJa/QSR0VvC1zYBluCPsuu1Z4f5oQvTxreQB9VYWshCEigi9z9cs6/FfsSehRoUxgW7v7rpWWX8/2IPzEg5M7s6EbDkTo0nB8jXIa8d2qxA+NufgnZFKEvosM=
+	t=1720836904; cv=none; b=Ai7ut3Pgx0l4SiM/XuUSHIFlVdPUFNtVhKkviI0cskujD7nb00R3k4dzd3LSP2OjtgyMs8Z3KHDYSJan7ldiGb9kOLi+z4fQ0v01MlOkU7GIYTXZs5udd7fRIw9QcFvYSfOTePMk9PxY3ppR52c8l3swlo795XgNti4pVP8/yDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720836819; c=relaxed/simple;
-	bh=2Em9aXUK4hj994y2DrlM4htA/Mn72IIDxtASYHeCNb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PJHHo7rHsfK7b7FEP+HfmPLiwlfcPY3hLXG5z8Nh+94tWFCHJsBwY+gW+TAhJvTL46DRRs4kX4uHo9MsDxV/mDUvBfxlnu9twGDT6cDVCAyr5rApXnjSkTfaSGebOT5jD5ONO/wJNTWXEGYKqW1HW7CBag04k74C3OIpyKCYpPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I13Twe6b; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I13Twe6b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720836818; x=1752372818;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2Em9aXUK4hj994y2DrlM4htA/Mn72IIDxtASYHeCNb4=;
-  b=I13Twe6bliP/N1tsoZmV0HhkwLJrismCYuvOWxzry+fmF1Q8GiDXLQHU
-   3xBegFQoKDHwV86wdgc/t3X6Eoh4WhpOBmGw0omtj5LY9DttqxtiwjXSF
-   Ho3aVeuYzInytoDRbrP2hijp3ruZbVFsdchMye+bIRMoo+Cwvky/loXVW
-   iLtbLB/G18kRSwnttotXSWo5VHmqQBXscUGgK0aVmx5kDxBJJw9k5U78d
-   4dS7xDDSI+CiHIUbml1TEmOlJve9mM8HohgeLFJASs0oBE+UEBbO+PiUt
-   WzlUHEBiaxkIdokxU/bQQ9TsNVDGSKnAUtv0GY1YTesiup5i6L45F8rFm
-   w==;
-X-CSE-ConnectionGUID: mdm38AozTt2ruVqvQw6bgg==
-X-CSE-MsgGUID: SavpnTgUTeiB3G46bIwxqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="12531282"
-X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
-   d="scan'208";a="12531282"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 19:13:37 -0700
-X-CSE-ConnectionGUID: eMkj99wjQe2+EhROswhplQ==
-X-CSE-MsgGUID: RMdm8jjqShaZtcmnZ6/B0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
-   d="scan'208";a="53449935"
-Received: from linux-pnp-server-16.sh.intel.com ([10.239.177.152])
-  by fmviesa005.fm.intel.com with ESMTP; 12 Jul 2024 19:13:35 -0700
-From: Yu Ma <yu.ma@intel.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	mjguzik@gmail.com,
-	edumazet@google.com
-Cc: yu.ma@intel.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pan.deng@intel.com,
-	tianyou.li@intel.com,
-	tim.c.chen@intel.com,
-	tim.c.chen@linux.intel.com
-Subject: [PATCH v4 3/3] fs/file.c: add fast path in find_next_fd()
-Date: Fri, 12 Jul 2024 22:39:17 -0400
-Message-ID: <20240713023917.3967269-4-yu.ma@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240713023917.3967269-1-yu.ma@intel.com>
-References: <20240614163416.728752-1-yu.ma@intel.com>
- <20240713023917.3967269-1-yu.ma@intel.com>
+	s=arc-20240116; t=1720836904; c=relaxed/simple;
+	bh=mZjF58qK2WpLCkoES8ZKlJx5azVD6vs8qZQ2WRU0hRk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=T8cPQ5ONGE1z0UYBjhik+ThBPg6aNBamFcWLN+boLeyDThd+mNPhLDV1gi7KO5/ee0ciA+HlWI9uYWdjOXWkmHmhXfQd8+xMuuHbB8xE+8ZXW9jJSbFaium93Dg/26cR/Irz0yyzY9+gTsRGcILw5jrbE9T9V/NlPzGa2mKSyog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-376210a881dso28689615ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 19:15:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720836902; x=1721441702;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B9Kk8CJVUPg3VRcQyUc/7+rXvK/IRtTgNpnGXejXDlE=;
+        b=gnroOvIw9IXPy4m9zsfqPRvTMVMVlphEG/wCeng/Z/m1NEn39Oyo5RGK62d5ai5YKw
+         JWLzvUlAz/tJJTZi2Al6x7bRQmeAzGiqb+HV4pBHG1AVn/BBI3VUjRkdU3V+Jjqx4pze
+         jkTMgLCle8zQjx+1Xzu4M6/D+k5tB7XPL4+8/LZb2wx951hH+5UPqL42Cu5oVbLbaw1H
+         SV1VfubXA72hkID0x0gAuLWLJ3FGrxFDqSndvrVDDc2mjrCU0sVYzFJxswRcn/NLoWBC
+         AbKhsCpqXHfUop1SNkB0AeX59lIVYnu3uyxiiRemji2zA6mYCsp0zhuz9HeZs8SaxXng
+         SZtw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTspixsOlbGAKgkax+6wuVRb0iyFO0ZcPjA2jMUr/Coaugj0jbXSwgN8AaBDCR8ftTIdc0vPbDYfjj0LmOWm+B68s3tDaaxq2R0Foz
+X-Gm-Message-State: AOJu0YxL2wXL+4KTMSTVnBXwoSgZBuVhsW8aC5Wu10lm/A7btTD98YLT
+	HREYqwMzb0yl0mkvDin1q1P1MKYuowqbvib0ctm1eg9/EO+r5FKtLuOet99qqVBbzRp7kxbP/B/
+	/0uPHWDy4ccBvDMwUx9oZngsYOEUlb6wbpy7VS9BUEs7iJVifGBpDpN4=
+X-Google-Smtp-Source: AGHT+IFeQNxrS4G/fznoOn96fm+gKOSxCHn6WWbIKrujIh+7mZOSeJn9ia5XCTpmIuM4rbYwUhw4RvbErHJ7vItgQh/+0qv88qSy
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:874c:0:b0:380:f12f:30d9 with SMTP id
+ e9e14a558f8ab-38a585851c9mr2513265ab.2.1720836901620; Fri, 12 Jul 2024
+ 19:15:01 -0700 (PDT)
+Date: Fri, 12 Jul 2024 19:15:01 -0700
+In-Reply-To: <20240713014858.1281-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003ce1d3061d17904c@google.com>
+Subject: Re: [syzbot] [mm?] BUG: unable to handle kernel paging request in list_lru_add
+From: syzbot <syzbot+2403e3909382fbdeaf6c@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Skip 2-levels searching via find_next_zero_bit() when there is free slot in the
-word contains next_fd, as:
-(1) next_fd indicates the lower bound for the first free fd.
-(2) There is fast path inside of find_next_zero_bit() when size<=64 to speed up
-searching.
-(3) After fdt is expanded (the bitmap size doubled for each time of expansion),
-it would never be shrunk. The search size increases but there are few open fds
-available here.
+Hello,
 
-This fast path is proposed by Mateusz Guzik <mjguzik@gmail.com>, and agreed by
-Jan Kara <jack@suse.cz>, which is more generic and scalable than previous
-versions. And on top of patch 1 and 2, it improves pts/blogbench-1.1.0 read by
-8% and write by 4% on Intel ICX 160 cores configuration with v6.10-rc7.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in list_lru_del
 
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Yu Ma <yu.ma@intel.com>
----
- fs/file.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 1 PID: 5638 Comm: syz-executor Not tainted 6.10.0-rc7-syzkaller-00141-g43db1e03c086-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+RIP: 0010:list_lru_del+0x247/0x310 mm/list_lru.c:132
+Code: 1c 00 4d 89 3f 49 8d 7f 08 48 89 f8 48 c1 e8 03 80 3c 28 00 74 05 e8 88 02 1c 00 4d 89 7f 08 48 83 c3 10 48 89 d8 48 c1 e8 03 <80> 3c 28 00 74 08 48 89 df e8 7b 01 1c 00 48 ff 0b 48 8b 44 24 28
+RSP: 0018:ffffc9000405fbd8 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000010 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: ffffffff8bcaccc0 RDI: ffff88806ced81c0
+RBP: dffffc0000000000 R08: ffffffff8fac686f R09: 1ffffffff1f58d0d
+R10: dffffc0000000000 R11: fffffbfff1f58d0e R12: ffff88801fb75240
+R13: ffff88801fb75200 R14: ffff88801fb75240 R15: ffff88806ced81b8
+FS:  000055555b96b500(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055d5667df000 CR3: 000000007b826000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ inode_lru_list_del fs/inode.c:485 [inline]
+ evict_inodes+0x22d/0x690 fs/inode.c:732
+ generic_shutdown_super+0x9d/0x2d0 fs/super.c:627
+ bch2_kill_sb+0x41/0x50 fs/bcachefs/fs.c:2052
+ deactivate_locked_super+0xc4/0x130 fs/super.c:473
+ cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1267
+ task_work_run+0x24f/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x360 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9fb9b76f07
+Code: a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 a8 ff ff ff f7 d8 64 89 02 b8
+RSP: 002b:00007ffcfeb94e78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007f9fb9b76f07
+RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffcfeb94f30
+RBP: 00007ffcfeb94f30 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffcfeb95ff0
+R13: 00007f9fb9be3515 R14: 000000000001ce83 R15: 000000000001cd13
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:list_lru_del+0x247/0x310 mm/list_lru.c:132
+Code: 1c 00 4d 89 3f 49 8d 7f 08 48 89 f8 48 c1 e8 03 80 3c 28 00 74 05 e8 88 02 1c 00 4d 89 7f 08 48 83 c3 10 48 89 d8 48 c1 e8 03 <80> 3c 28 00 74 08 48 89 df e8 7b 01 1c 00 48 ff 0b 48 8b 44 24 28
+RSP: 0018:ffffc9000405fbd8 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000010 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: ffffffff8bcaccc0 RDI: ffff88806ced81c0
+RBP: dffffc0000000000 R08: ffffffff8fac686f R09: 1ffffffff1f58d0d
+R10: dffffc0000000000 R11: fffffbfff1f58d0e R12: ffff88801fb75240
+R13: ffff88801fb75200 R14: ffff88801fb75240 R15: ffff88806ced81b8
+FS:  000055555b96b500(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055d5667df000 CR3: 000000007b826000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	1c 00                	sbb    $0x0,%al
+   2:	4d 89 3f             	mov    %r15,(%r15)
+   5:	49 8d 7f 08          	lea    0x8(%r15),%rdi
+   9:	48 89 f8             	mov    %rdi,%rax
+   c:	48 c1 e8 03          	shr    $0x3,%rax
+  10:	80 3c 28 00          	cmpb   $0x0,(%rax,%rbp,1)
+  14:	74 05                	je     0x1b
+  16:	e8 88 02 1c 00       	call   0x1c02a3
+  1b:	4d 89 7f 08          	mov    %r15,0x8(%r15)
+  1f:	48 83 c3 10          	add    $0x10,%rbx
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	80 3c 28 00          	cmpb   $0x0,(%rax,%rbp,1) <-- trapping instruction
+  2e:	74 08                	je     0x38
+  30:	48 89 df             	mov    %rbx,%rdi
+  33:	e8 7b 01 1c 00       	call   0x1c01b3
+  38:	48 ff 0b             	decq   (%rbx)
+  3b:	48 8b 44 24 28       	mov    0x28(%rsp),%rax
 
-diff --git a/fs/file.c b/fs/file.c
-index 1be2a5bcc7c4..a3ce6ba30c8c 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -488,9 +488,20 @@ struct files_struct init_files = {
- 
- static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
- {
-+	unsigned int bitbit = start / BITS_PER_LONG;
-+	unsigned int bit;
-+
-+	/*
-+	 * Try to avoid looking at the second level bitmap
-+	 */
-+	bit = find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_LONG,
-+				 start & (BITS_PER_LONG -1));
-+	if (bit < BITS_PER_LONG) {
-+		return bit + bitbit * BITS_PER_LONG;
-+	}
-+
- 	unsigned int maxfd = fdt->max_fds; /* always multiple of BITS_PER_LONG */
- 	unsigned int maxbit = maxfd / BITS_PER_LONG;
--	unsigned int bitbit = start / BITS_PER_LONG;
- 
- 	bitbit = find_next_zero_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
- 	if (bitbit >= maxfd)
--- 
-2.43.0
+
+Tested on:
+
+commit:         43db1e03 Merge tag 'for-6.10/dm-fixes-2' of git://git...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=1566ca21980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=42a432cfd0e579e0
+dashboard link: https://syzkaller.appspot.com/bug?extid=2403e3909382fbdeaf6c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16185766980000
 
