@@ -1,107 +1,73 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from mail-40135.protonmail.ch (mail-40135.protonmail.ch [185.70.40.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E3B1757D;
-	Sat, 13 Jul 2024 17:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727741757D
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 17:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720891205; cv=none; b=gnAQWwcADqjxuUYokfx5caAQB8l2e8OgR8lQwRbO3dSWwiOa5GVZoQGUxRWg2eS3C3Jtc52F5JqGDJFwdfHsTzE+scXMa1/EmejprmDVarRy5fMfxswgk/NTrK6r9zG7jNtoDjTmEGfJuS+SvzfbFftxCryhbcGi0jvK8u9AOp4=
+	t=1720891239; cv=none; b=beORFpNnKDFYlpHtw0kGhzmoow1NwoaU1X8hi0JL8slzFUlhs9V9bRx8mgyrIZqjWJnihMyfcSZgttmOjdxjRds9nMTHOCkfG1WEN7dG+GOUTXPLegnTrYBulStuGAfk82v7WBko7ItBqC/jB22Bamowo3PvzS6KnAeK0tkPimY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720891205; c=relaxed/simple;
-	bh=5Xt//YVwJ8nURHEZ3A+WnyEhChXU9IS7HnsxEpO+hEA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZnoNTxDTlfFxR6AMI4tqTulGZZW7RW0wxbgWvKSQonr+JI8cOYGgJQV82X2ZlpDzintHMfjZsmTuh22DoKlNMloXVHnxGCRvLgnh1MJN/SCpBiX6clVAO9BurvGg8OxresvqK5m+88rRB6c+We+3Vdqdj9d+CQMN7uBhsoB2DU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from [2601:18c:9101:a8b6:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1sSgKJ-000000000C2-2Hfp;
-	Sat, 13 Jul 2024 13:14:27 -0400
-Message-ID: <8975d74f5807f76478ed08206dd5eda133a55bb0.camel@surriel.com>
-Subject: Re: [PATCH  1/3] locking/csd_lock: Print large numbers as negatives
-From: Rik van Riel <riel@surriel.com>
-To: neeraj.upadhyay@kernel.org, linux-kernel@vger.kernel.org
-Cc: rcu@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org, 
- mingo@kernel.org, peterz@infradead.org, paulmck@kernel.org,
- leobras@redhat.com,  imran.f.khan@oracle.com
-Date: Sat, 13 Jul 2024 13:14:27 -0400
-In-Reply-To: <20240713165846.216174-1-neeraj.upadhyay@kernel.org>
-References: <20240713165642.GA215331@neeraj.linux>
-	 <20240713165846.216174-1-neeraj.upadhyay@kernel.org>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33Aeo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdYdIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gUmllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986ogEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHVWjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE+BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTeg4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/j
-	ddPxKRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/NefO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0MmG1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tPokBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznnekoTE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44NcQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhIomYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0IpQrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkEc4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1720891239; c=relaxed/simple;
+	bh=ANQHS9HUmHlYvmKjLH/u/zyALfJtBztdbVB93inesCY=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=USQQvQUxAzKv+4ABFIyxn2UmQSif2rBb9bu+lJ4KsAeyAL82DhWbgN4FN4iHfdJ/dXn0kbb5iiLnWAGFPo5+ieW7kWx07BzCGRAQKExY+X5dZwOPH6d3/ZePzatgEN1ga9HwHzSg3kv+H4Rw2D+EKnlzq2AqZs4G4KN/7iH8YwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ZbriIsec; arc=none smtp.client-ip=185.70.40.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ZbriIsec"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=irhr7zf4fvc5vobsx2qwtpj2my.protonmail; t=1720891228; x=1721150428;
+	bh=eJcIiNtsTLDnA2FylVg1vCQcHDpyde2OGog/Rht7LOI=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=ZbriIsectR261a0qO0Pgo+T/m4HnIL6gJjNVJdWrD6UmhU/KdGjR8pIFbC+l96ga+
+	 EbHf0GYn2ixPguXYRk4slJj2fS4YqjZmDdAHXeJdsHqSQuY5ZSXFS7PRbZweEl5EOW
+	 8rVYKZg6KKLq+/67t1ighCiDPsYrnu0nkNptRXKnquuw8SYioRH/rhJbHAfFAOU4fA
+	 h0xOtaucsxkNVidTEpwnfySziOj2YMlPuY4lh3tfkCe9WQxl5k7g7td8OzqyEW4CTc
+	 5LKx1V8P4sXkYhZhSUIdc1b1wJoBQYvysQ94qpegMU9BJ9eJo+jd+Ykg1TQ2RY+nNv
+	 i3W5G53n4dP6w==
+Date: Sat, 13 Jul 2024 17:20:17 +0000
+To: Thomas Zimmermann <tzimmermann@suse.de>
+From: Tj <tj.iam.tj@proton.me>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "1075713@bugs.debian.org" <1075713@bugs.debian.org>
+Subject: Regression: firmware/sysfb.c device path
+Message-ID: <lLyvPFC_APGHNfyGNHRpQy5izBikkaTPOpHooZIT3fFAoJPquSI31ZMueA99XTdr8ysir3X7O7IMdc6za-0m79vr_claeparHhoRouVgHOI=@proton.me>
+Feedback-ID: 113488376:user:proton
+X-Pm-Message-ID: 9cbf234fcfc8491f556759df5cff1f03e8cddffa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2024-07-13 at 22:28 +0530, neeraj.upadhyay@kernel.org wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
->=20
-> The CSD-lock-hold diagnostics from CONFIG_CSD_LOCK_WAIT_DEBUG are
-> printed in nanoseconds as unsigned long longs, which is a bit obtuse
-> for
-> human readers when timing bugs result in negative CSD-lock hold
-> times.
-> Yes, there are some people to whom it is immediately obvious that
-> 18446744073709551615 is really -1, but for the rest of us...
->=20
-To clarify the report a little bit: it appears that, on some CPU
-models, occasionally sched_clock() values jump backward, on the
-same CPU.
+The recent commits to add the parent device path broke Debian's kvm based Q=
+A workers for testing installer ISOs after a kernel upgrade from v6.8.12 to=
+ v6.9.7. For the details:
 
-Looking at the number of systems where this happened over time,
-leaving out the exact numbers, the distribution looks something
-like this:
-- 1 day:     N systems
-- 3 days:   3N systems
-- 1 week:   7N systems
-- 1 month: 26N systems
-- 90 days: 72N systems
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1075713
 
-This does not appear to be a case of a few systems with bad
-hardware, where it happens constantly to the same systems, but
-something that many systems experience occasionally, and then
-not again for months.
+It took some time to  track it down since the superficial symptom appeared =
+to involve the QXL driver. It turned out however to be the fbdev driver; sp=
+ecifically the change in the parent device path in sysfs reported between t=
+he two kernels:
 
-The systems in question advertise CONSTANT_TSC, NONSTOP_TSC,
-and generally seem to have stable, nonstop, monotonic TSC
-values, but sometimes the values go back in time a little bit.
-The cycles_2_ns data does not appear to change during the
-episodes of sched_clock() going backward.
+6.8.12:=20
 
-The csd_lock code is not the only thing that breaks when the
-sched_clock values go backward, but it seems to be the best thing
-we seem to have right now to detect it.
+/sys/class/graphics/fb0 -> ../../devices/platform/vesa-framebuffer.0/graphi=
+cs/fb0
 
-I don't know whether adding more detection of this issue would
-increase the number of systems where backwards sched_clock is
-observed.
+6.9.7:
 
-Many of the systems with backwards going TSC values seem to
-encounter a bunch of them across some time period, end up
-getting rebooted, and then behave well for months after.
+/sys/class/graphics/fb0 -> ../../devices/pci0000:00/0000:00:01.0/vesa-frame=
+buffer.0/graphics/fb0
 
-> Reported-by: Rik van Riel <riel@surriel.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Imran Khan <imran.f.khan@oracle.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Leonardo Bras <leobras@redhat.com>
-> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Signed-off-by: Neeraj Upadhyay <neeraj.upadhyay@kernel.org>
->=20
-Reviewed-by: Rik van Riel <riel@surriel.com>
+This breaks xserver-xorg-core's libfbdevhw.so because it differentiates cod=
+e-paths based on whether "devices/pci" is matched in the symlink.
 
---=20
-All Rights Reversed.
+See hw/xfree86/fbdevhw/fbdevhw.c::fbdev_open()
+
+https://gitlab.freedesktop.org/xorg/xserver/-/blob/master/hw/xfree86/fbdevh=
+w/fbdevhw.c?ref_type=3Dheads#L381
