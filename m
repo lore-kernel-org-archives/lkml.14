@@ -1,175 +1,156 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2050.outbound.protection.outlook.com [40.107.212.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CD945945;
-	Sat, 13 Jul 2024 07:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720856522; cv=fail; b=PZFHud0qS/N2Js650OhlSJBolXAZ4sRIMy1K4e3Y9VwrUxZiJQB+BCC/DOAP9dbgnCBG8u+2jROqscZcU3yIQZZVAL7PMAnjBOAB8ujBMo/ddD6Uz+cT9oYGgf/kfCYYOuJuE/4tNWmTedZWs4ZKvTwigNm5qO+u9H/yWpNDkTk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720856522; c=relaxed/simple;
-	bh=bEZmwaq4UKj7ZwJGI9eye5beIViaFiQXdxh96NbgUjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZXcA+urlLM2eTQQkNQPytTBQdhtUsOj39ii7tF1Pv3XOZdSbKvkuyxslJSX+DHuW4DeGet2LfBh2bi+qZOk/lZNnpuUCjcf89gsPbu3XRN1nOwoiYJMV7zQ/Rtq+SPwEqTszNvE0exvRy2y001QFDup4nQGin3vGzAYYSpC8z9Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PnABQ/G0; arc=fail smtp.client-ip=40.107.212.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9663A1B6
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 07:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720856588; cv=none; b=PkvoXRGnGv6gw9zyXzegDzrFAy7P0FMsLZfbDIzD0VgqS8ELwK5ayFcItKovo3SzFX9pLuCpJh6wEWlYF8v0zEqm/1kDdFRDMrzzYmwXusr90mt8BQk4O3V8QPPASS27VyXgFBpQX0EM2oRAvAE6d4JBuiqcpmvk5CTb3AJQxT4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720856588; c=relaxed/simple;
+	bh=ZWqEdHgcz+4uudQU/sHPR34TpX60s9IZRz8RQ5VkdOs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R6y2yRVlnc8Zz5YYbRX43VinjSTDIgbhdDqSW5u+sf2i9LsACZkh7brWax7gytbv0fEu/1ItFIt7t5dPBivQ3IEc9yV/qAxei9E9c8seYq9ZxXn0JALMriz0nx481YsZjs5b5QlXcXGRnynihuS19Rtg/zQ/VcLnhQYwolMHGVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S3bhHixt; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PnABQ/G0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fdDPouigtL8kb5OcuP6j7ubB3wLLNbmO9R+cmf8EElE/NGgBPo8RQPJugp2J+niFjkKhCCnE4OCUC+5B4p6WHv6a1+XawKuc6MPvvKoQEdvLZyHryLu/smzgxUXpmU6uwBN1HmVFuqRpljIXNxU77bDK/Wed3/Q6momQrUJiPfgoTBgwGJWFFxBVuVDyiO7hGkXzkrpXDuPq4sQKESHywz99t7At5+nrRTA7GCU3p1seADz9P/Wx0cZ0jV00/iOOjLUl7FTpNTq2kHEPPYY/ujWP3f9uMlo570rI9z+YNY/Z4yTiBgXKW56NhVyUNi6jrsRiehzIxHOg9TAswoXJxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N7gBAdi3YseLNj+omLDCEu19SzX1LeD0sbp5YqR3Ij8=;
- b=iGs1RX/oB8OwoeiVcrJ2Aq3DpDhJNw1rdWbnymDje+vvALHzUitPXWXhFfXT8NpFse/1+JYYcIYMOv1AJbjPydaD3TPjj9Aut9iK1iz1LpPsB4wocteXPLmbJykaZOBb6p7g6DXNILSCKpm7NHIzinZb6qzdQBHc3zRGCDmdzToCtae760kg2hwmb2PcDdFuidC96AnPSTQbhWnkrwsOycC3y/uH13WyP2H3WMSn8dhMU3GbkNohX0pFoIAZyCTzsjZJdDDaQ2PmufWXPNfqAng/bJNRfcheE3U8OABH2XJFxWmR0cfwxlGPxa+tcnv8XZohVkMzxIBpBMMY4gEvEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N7gBAdi3YseLNj+omLDCEu19SzX1LeD0sbp5YqR3Ij8=;
- b=PnABQ/G0IT7guPZwWBGNmgM37rDP0SLzXZKsGcrK0xKGPfyy7QFLTB0xmsSCzCFBKnNddWVGlKOAetdyvrEKtMqzlfipNkB5C0g8Qv3ZAH+MxIGikjko/P5DzmxU94zpkjh7hckpsZOr1OVt1gI4GOLm2inky7wqivrccn5OWC8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by SJ2PR12MB9244.namprd12.prod.outlook.com (2603:10b6:a03:574::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Sat, 13 Jul
- 2024 07:41:58 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%6]) with mapi id 15.20.7762.016; Sat, 13 Jul 2024
- 07:41:58 +0000
-Date: Sat, 13 Jul 2024 09:41:54 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] cxl/acpi: Add platform flag for HPA address
- translation
-Message-ID: <ZpIvwsu39jC3r0Ns@rric.localdomain>
-References: <20240701174754.967954-1-rrichter@amd.com>
- <20240701174754.967954-4-rrichter@amd.com>
- <669086821f136_5fffa29473@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <669086821f136_5fffa29473@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: FR0P281CA0245.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:af::6) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S3bhHixt"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ea1a69624so2885108e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 00:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1720856584; x=1721461384; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K0ss37jV9lTaJ6DYS3+pxIxXoElnFV986o3Klbi+DcM=;
+        b=S3bhHixtFcylGimLnpRTNG63sIKqHOXKuh5E06TUQAk6BXRHojLkUhWCbT9v7FCMCu
+         V01oFVg+A3dI8TnZJRLYF02hZAhz7nJ6oNchCbUOv5ULG6Vf5huN8tPXrWr4KLU4xTWZ
+         CuDl8OF5GhPxEXavStcv3+p/AazDOMPmeEqa8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720856584; x=1721461384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K0ss37jV9lTaJ6DYS3+pxIxXoElnFV986o3Klbi+DcM=;
+        b=fpMlTugwYCd1Czh2+M/WJheRANXXWkjWsWHskdjqvxeyHnZBayTe3J8fa1lAXpxS6j
+         WyulVhe6AgSEW4E8KCHMel4gM0V1E11QBu3cR/COXOYdseqcSY+fzCPhr2t7lukt61Uf
+         N4nUj5exAmajDTVBMf0YNydHKeCp5agH0T9+lJeocMexeXodGrT6npfh2GJVyE32dlEh
+         KLnwGT+YWORoXmjVvVhQeiPfIB4H41d9PPhIvok5/Nevbs5Dd4bHpQqUBxNNZ6b175Kj
+         d4uYWMuK2qV8gM6zGgWY8WsO2WfcvD3MYQ4AGAhSi44Yr9eqgiYxuVZ/Ax6yyb65fbAP
+         GNjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFfnSpnKZWj5+MvEIkMExQJ+scjGzqaWVU2844XDZvNjoP4jUO3tfw0Dh/7ii0KOBOc+uNaONAmKXiFZSXTNhcWYT8kRsUWaQnS9+r
+X-Gm-Message-State: AOJu0YyiSUVBuic55umTPjbcko/NGxBif9+GwgZNSEEBgMk5HMVHv8sr
+	hVHgYCgAO+QRPbXE1gm2wiR962WHhByakAdQzHc6CWhWbtYXUhYytJf3N0DfsSygpkHM56GK5Co
+	gg0RIQS6mI/cprc8Ix4VgJQXPTtgzK++qp1yQ
+X-Google-Smtp-Source: AGHT+IFPi274+tFWUtAjuaJOoWwBzCxKxVXq5jOkTPqm/Wd71CXr/zbc+FsAJ1xNZz/WbG8M1xvWmwzFo3GKXUEW99U=
+X-Received: by 2002:ac2:5972:0:b0:52e:be50:9c55 with SMTP id
+ 2adb3069b0e04-52ebe509db8mr5677138e87.52.1720856583990; Sat, 13 Jul 2024
+ 00:43:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|SJ2PR12MB9244:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d6f033b-931d-44a8-7a00-08dca30f46a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0FCDaDB6dM0twOASZkao8lnnWwlXsrAdXvncG9m3MaGIAj1cpOE7U96ps3go?=
- =?us-ascii?Q?SaikYMxblNPVe1km0QPNuJNam6aE3K4U1KebnPPldNLmaTRuuzQlrfcL10H4?=
- =?us-ascii?Q?FFKy7eMU7VS3sSSNhReXVlDrnFf7QfINxvPdJaBZ9sWBvXC1S/Gpcgh71PBN?=
- =?us-ascii?Q?u2US2d36b2jO5QtmvgP9QtHO7D0zIR3/8lrwf+AijdrRmGXiyd0Tf8ajmSIL?=
- =?us-ascii?Q?gwdSXU86gfwplrQ9nX+5kzKHBIzNfQkPHnacUw5PU6OFs0zc3+cJxe7g53Xm?=
- =?us-ascii?Q?xBe1RAo/OHSN5BKmHLN6bjkSS9UdtySIZ7OsX183yLe9GVvXpAHZtF/0OXLl?=
- =?us-ascii?Q?xZVqxOFcIvzMBaryOpmF6w9R124IW4uLRcKv+hO61mGUQyUSquJKbogesTIr?=
- =?us-ascii?Q?RST8zbUCse5FukTCA0UcRtp97B6O9m6jpCgIl+Ifs6gOg1MIYa+kr3ry9S7Q?=
- =?us-ascii?Q?2itHrFg8WDwi1IPBQKBq37pPDzycboBrpBhpJyZCqakl33VtrrhzEzmUXRSY?=
- =?us-ascii?Q?ERhKy/Y3UrXfwjPYdpcmNM0Xa+C/EQ99zIHAhBKCfPoM6Gc2lnHw6Ha5cppZ?=
- =?us-ascii?Q?6fCDapoCnAV4nPJufXEZAveqQG2x1d2fb+63Hj3zsXHA58sDaLVFw3wJb0ga?=
- =?us-ascii?Q?0wrabiGXxiEm77dufNE2TNakfmUaCmEc869fgukp/xODi85eyYyuRJOV0XrH?=
- =?us-ascii?Q?hyfQIohvo2OLZ1IMAe7dPubugvLCycxqdmdqtvuzvyqOPrd9cJC5X5CKx7oq?=
- =?us-ascii?Q?WftLHHyukd8iQVHez8ZNA3DCZx8irN+e8o4+yr1r4lSix1GL+/fclCcFZhjj?=
- =?us-ascii?Q?YRzMf56gyloS1F5i2ViwJEqp3mqJAGNgcuagd3yxcXSkKqHZVqWwJK/2KbiT?=
- =?us-ascii?Q?xNIqgstA5lZQ2Za2Le/zvdeiJL+7Qvqk4lTnwJB5stIDReT+H2eQqr3fVK35?=
- =?us-ascii?Q?Os3Db1sDOLMND0NPk1EtqNA3zrxzIsfvHr3MzpuZmnNoVlBIk7sQlp7fQF2v?=
- =?us-ascii?Q?l2fu9wqUHM6jSZCQ6obYE8HRc22fMRPaodWfOL/xNPEm091JmZ5716z3+Jax?=
- =?us-ascii?Q?vghoZLGB7ug4iWzrsVW5uIVQZpSHXfxJc4ODmFDR/7/Wk81uilfJPIPm82F1?=
- =?us-ascii?Q?OBv4qwu+Yt/DoMyXX7sD1b2+mr+tXAiDO1eIWrnSgx5pc0RkOAAVqdob9ccE?=
- =?us-ascii?Q?odYZRfxOWsAVJvuLYvAuz9BrgFAlAXyBPC+K5AhEGV5HlDU5nqDZm9WbndbP?=
- =?us-ascii?Q?zjNnwt7FSqi1Z2G+YgIIjJxijYy0IK+YGUVDglMFbRij5HbCuu4MYECfxTrN?=
- =?us-ascii?Q?OQYwj9dZO0saZNoym3iKVJSkA6XEQaOkJDHiBHMVRWXJIA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rJYMbF0hKdNPK/1pTjDjc1gRQTKW0VrPnUXSp6pX5gsx5DRNggKcw7M+JO3z?=
- =?us-ascii?Q?NtK76Wbds9dZygn9aDFTDdDfscpHBgW8nUtc/tYeROUJ70mWNWay1RpqqLO3?=
- =?us-ascii?Q?Qkb0OeDxQ30izvx35BBvdbyUnE+cZ4SrUExpeWtXe71ErceJzoVRoBOqEvKP?=
- =?us-ascii?Q?MbxDpDthqFGReVh89uaqDUj1OnJGGndvapFsAjS4GqugXmXbE4KDZtYzNmYZ?=
- =?us-ascii?Q?Vo+6ZlCc6J0E3N4vsVnUBbNQqa+CtZyj3/3B5jk8tVHgcFH8dui6UlvdWEGM?=
- =?us-ascii?Q?WjhdYsXlFykk2mUmLLMNoM2vpfCLlHrD1g/+DuAAQvl8Szfizqup+GkjYVcv?=
- =?us-ascii?Q?JNA1rZcwSNbIOWkXUQyAUrMCrihSBOjcVH6agJo9U4ipMiqhBb3Pga4Yz75i?=
- =?us-ascii?Q?1lLQKxZmhXIccUijWXyj038F9Q/iNdkam3vTWbPO9zH1z+FVYP/WYizgc5uy?=
- =?us-ascii?Q?UvN0xOyWSn7TXhQJox1qgExnNvPZA4Svkt5w/P9B7CTqPa8rUEQEXEiotdaV?=
- =?us-ascii?Q?wgi5tv/mfBWPmiXsjD+P+quIH/CszwFUT3GXq1WETuPn7bf0NNLWvQK96cJc?=
- =?us-ascii?Q?DeFaaJoHxhXhrXYQ3nrSXCn+XlZ3hK1fpGO6toCkRT2R0DFksppgbyn1edFc?=
- =?us-ascii?Q?PsylmGqS6h9heb38kQZkgcwLpMQio5BCEqvj2Zg0ufAvKa2zZqbM52KNXTA1?=
- =?us-ascii?Q?qpRYqIGuDQpHMRKRu+espg0wa362fMAM9JUELOrP7SRPJlz14QMGr/vtDVhd?=
- =?us-ascii?Q?pYTOc2I5hlyXkDme6Gfm1WUJD7JoVYJF5SLT/eJrJSqkBfugzQwU8SrYyMdX?=
- =?us-ascii?Q?vdTXA6Y4XbtxyaMje4AHdhFpSp+Iyh6OqzSyaLWlcWVBQHQhLJ0HPMhW9tzO?=
- =?us-ascii?Q?VPq1abqpD0q0gQ+puGloTSA+3LEuv+wTVH98AYUsxSLhdqSEh4M6hD8koDN6?=
- =?us-ascii?Q?ioKfpBQmYcLE0fNGrFLW5F7l4ZjQySNH/v2b+f85STRpZ0ayH/VWEuYuLTIo?=
- =?us-ascii?Q?UnKOfHJTJhZJZgwakYBegqMKmXEfNqvw05wYVzMc71+oQnsHLjVO5BaF78NB?=
- =?us-ascii?Q?S9y8OStG9ih+DRCOYa48XpAb/6pIzH9DwEleiskivV8zP16GcEOAofK3aWs1?=
- =?us-ascii?Q?8NnjR2QcgwyFT/kEBLFaIv5Un0VoDS3tVZ1pGD1L0Jszr8BduPsm7br0Ixp4?=
- =?us-ascii?Q?73ScDb7J4H56+o0pfg0xJIbPEIJMG5eS4LLxieppDcJhW36fpdhoZtu3WiNa?=
- =?us-ascii?Q?5nkFI6oBC/+BJl3ApAVSY3QTA6YoBFx1PEFovPQhLrHqtCfzl7VzGUJLXOU3?=
- =?us-ascii?Q?QfDaAyoSfW0xjGNhn+Dt3Dup2fPME3L01BQpiXJ9ZWuczkXk99ltq6q4Rp9x?=
- =?us-ascii?Q?fJ/XnZ9qC/vj7mJnW58cRhuyG3dMJ5BXw7FTECmApQu1UTTK6NvkcFh21Kkz?=
- =?us-ascii?Q?8kswL9KCHXd8k+MG8uGWfGfOeA0eCpDO//6ubO1oyQEBdQGtHg63s279ZP+o?=
- =?us-ascii?Q?jXK2GdASfioVXTCzw/5GxlKGmesvu05akg1sfxIj9CfnsL6riSTv7D8MQoF3?=
- =?us-ascii?Q?kDRqVnkoaRpduIIyzhABrDuViLBozIvO0bXwfJ3f?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d6f033b-931d-44a8-7a00-08dca30f46a2
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2024 07:41:58.5651
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eu6dgspm7ey+FHrlUQ9IwATOgnNBUv9Zq8KdEWPT3z4WRf57QNzW1oPZndxIK8sA2Wl5HH9m+fZ26qPX7bekdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9244
+References: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com> <CAP-5=fVwZfV+gNWcmEtRnkOtrvozMdXPVrZ37COHkf4BX1VPgw@mail.gmail.com>
+In-Reply-To: <CAP-5=fVwZfV+gNWcmEtRnkOtrvozMdXPVrZ37COHkf4BX1VPgw@mail.gmail.com>
+From: Ajay Kaher <ajay.kaher@broadcom.com>
+Date: Sat, 13 Jul 2024 13:12:52 +0530
+Message-ID: <CAD2QZ9ZLHQ62d5CDpf14DkrWFs_FggRMdqzGFz3qsmF_vmS00Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/3] perf: add logic to collect off-cpu samples
+To: Ian Rogers <irogers@google.com>
+Cc: chu howard <howardchu95@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	rostedt@goodmis.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, yangjihong1@huawei.com, 
+	zegao2021@gmail.com, leo.yan@linux.dev, asmadeus@codewreck.org, 
+	siyanteng@loongson.cn, sunhaiyong@loongson.cn, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com, 
+	Vamsi Krishna Brahmajosyula <vamsi-krishna.brahmajosyula@broadcom.com>, nadav.amit@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11.07.24 18:27:30, Dan Williams wrote:
-> Robert Richter wrote:
-> > Adding an early check to detect platform specifics to (later) enable
-> > HPA address translation. The cxl_root structure is used to store that
-> > information.
-> > 
-> > Note: The platform check will be added later when enabling address
-> > translation.
-> 
-> It feels odd to have a flag at the root for this because the translation
-> is at the host-bridge level, right?
-> 
-> I was more thinking of a solution that does:
-> 
-> spa = cxld_hpa_to_spa(cxld);
-> 
-> ...and then internal to that the code walks the port hierarchy from it's
-> host port to the host bridge. Then does something like
-> 
-> hb->hpa_to_spa(hb, hpa)
-> 
-> Where @hb is:
-> 
-> struct cxl_hb {
-> 	struct cxl_port port;
-> 	u64 (*hpa_to_spa)(struct cxl_hb *, u64);
-> }
+On Fri, Jul 12, 2024 at 3:28=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Thu, Jul 11, 2024 at 5:16=E2=80=AFAM Ajay Kaher <ajay.kaher@broadcom.c=
+om> wrote:
+> >
+> > Add --off-cpu-kernel option to capture off-cpu sample alongwith on-cpu
+> > samples.
+> >
+> > off-cpu samples represent time spent by task when it was on wait queue
+> > (schedule out to waiting for events, blocked on I/O, locks, timers,
+> > paging/swapping, etc)
+> >
+> > Refer following links for more details:
+> > https://lpc.events/event/17/contributions/1556/
+> > https://www.youtube.com/watch?v=3DsF2faKGRnjs
+>
+> Hi Ajay,
+>
+> I wonder if Howard's improvements (not landed) for `perf record
+> --off-cpu` would solve this problem for you?
+> https://lore.kernel.org/lkml/20240424024805.144759-1-howardchu95@gmail.co=
+m/
+> Or is that approach problematic due to the use of BPF?
+>
 
-Ok, will consider that for the rework.
+Thanks Ian for your response and sharing Howard's improvements.
 
--Robert
+Yes, perf --off-cpu is based upon BPF and having following restrictions:
+
+- target binary should be compiled with frame pointer, same mentioned
+  in tools/perf/Documentation/perf-record.txt:
+  =EF=BB=BFNote that BPF can collect stack traces using frame pointer ("fp"=
+) only,
+  as of now. So the applications built without the frame pointer might see
+  bogus addresses.
+
+- perf should be complied with BUILD_BPF_SKEL=3D1:
+  Warning: option `off-cpu' is being ignored because no BUILD_BPF_SKEL=3D1
+
+- off-cpu, on-cpu samples are not on the same result page.
+  (I guess Howard has improve this, not tried his patches)
+
+I have tried to collect the off-cpu sample same as on-cpu sample with the h=
+elp
+of  kernel/events/core.c. We will get one off-cpu sample from the target ta=
+sk
+sched-out to sched-in. Or we can say off-cpu samples are not dependent on
+frequency provided by the user to perf record.
+
+I am also worried about having so many samples if sched-in/out
+frequency is high.
+Thinking to merge samples if attributes are the same (i.e. stacktrace)
+and add the
+off-cpu period to previous samples with the same attribute.
+
+-Ajay
+
+> Thanks,
+> Ian
+>
+> > Ajay Kaher (3):
+> >   perf/core: add logic to collect off-cpu sample
+> >   perf/record: add options --off-cpu-kernel
+> >   perf/report: add off-cpu samples
+> >
+> >  include/linux/perf_event.h            | 16 ++++++++++++++
+> >  include/uapi/linux/perf_event.h       |  3 ++-
+> >  kernel/events/core.c                  | 27 ++++++++++++++++++-----
+> >  tools/include/uapi/linux/perf_event.h |  3 ++-
+> >  tools/perf/builtin-record.c           |  2 ++
+> >  tools/perf/util/events_stats.h        |  2 ++
+> >  tools/perf/util/evsel.c               |  4 ++++
+> >  tools/perf/util/hist.c                | 31 ++++++++++++++++++++++++---
+> >  tools/perf/util/hist.h                |  1 +
+> >  tools/perf/util/record.h              |  1 +
+> >  tools/perf/util/sample.h              |  1 +
+> >  11 files changed, 81 insertions(+), 10 deletions(-)
+> >
+> > --
+> > 2.39.0
+> >
