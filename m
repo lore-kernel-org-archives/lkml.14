@@ -1,880 +1,123 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C6113C9AF;
-	Sat, 13 Jul 2024 16:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C5413B287;
+	Sat, 13 Jul 2024 16:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720888537; cv=none; b=cwW56i7ygoE2L2DpAXtzZvcLy83joH8Dvorrh2EPVrZ8pCM78A/h+6MDjWb5ZGesB1ZdE5ssZknEGO1/9xlQuaYY9sAXBwXaGSByKowqNWeNfValvcQpMCcRPTk6QrgsuZQVjPr1zCCN4yAtjuyge+GDQ1NqEI1HpYDDC9tL28o=
+	t=1720889768; cv=none; b=WW+4GR9i47hfRhvuDtUmwolMIFiomLsdkCFy6PPdV0YpRiqAnQTT+ePwk6YKe7ei5Dr8Q7KB7Ms/y1lzU4n+cwMHH1dagHnlYjEZYV0l5rVFGnYBkAkC9bBSHSJb6ke3LADXknRPvVao6I5rgNGEqp/jxDwfYAxoKS6cDhxDMhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720888537; c=relaxed/simple;
-	bh=vKHze9rMLJEaPqJZTJ+oXh6/w8mfYqkJ6ozoD305Lgg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=excnbh7bLMABWjFlRi6D5A0nOinGoGLkKDHVE/dOzprlFP78KZiYIe537npyjsyOb1+GRNumOizmNhcRbIKK8Rr3JhljAWaA8wiwMooL7xLL/cTY+KuRcKONzODJKQKxM/KIg0K8iyabC31GyMvbjJ91ADJrWDdNcxI49u9PsWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAloDPLl; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720889768; c=relaxed/simple;
+	bh=+8ou4jOda7rMv75YTQ7kLFOSOP6gThDj9zdygA14m1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=W7jn2pSCBKvqvV3GcVYKiyKJH/RKKW3//wTHVhglbLAloYLNcVTajzxBjE7vFvZe9CDyA9h0ZqEgwK/W9DUlya+0qTIqEBsQ9kjshokuomvdHzvd/UbYq++z+0OfrWjvXQxDB/T3qmlQVnxj5UjOv2bObQvuGJRO1p9gahJMiFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rmJMTSpr; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAloDPLl"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-595856e2336so5021953a12.1;
-        Sat, 13 Jul 2024 09:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720888533; x=1721493333; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hIRAK4fJdzL0RgGywp1Tl20vyk4tUZoMBwOv0mEzVNg=;
-        b=bAloDPLlMeqtX1Y+d3eL2RyNT+g0bFPh71+sbQtVp9ke7wN0YPFrL0oWxzhAxqXbQX
-         rbM6hRr9/jbXyq/PuRW4VrbucCmQ+LOTkB90hGFSzmbRweXrOvF3N6lWGgcJyuizWQ35
-         OcNXZeReJowczNTLzE3v6sK7RYC/M40i/0aaBCRkWc2o/ueFj9hNkCpWwlHFrhfg6EzD
-         JcWJfQY+kxf9nzrHxZkcaO+nh7W8+aRyEuMEl34LmUWOKQ0cQk+DlrqB7uY81WvT5wPx
-         PPmsBm/v6mSPFoAxmcDvLkqhQRvuHrbEP1mqxc5fCvGymTA7pcC151JdOPwVtcx9NrQk
-         8cSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720888533; x=1721493333;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hIRAK4fJdzL0RgGywp1Tl20vyk4tUZoMBwOv0mEzVNg=;
-        b=RT8t7N2e+e4oaN48qIyQzKVKaPKtjAeqRIkNF4WowNOGDokf2fzSe5fTkjHxK0nj2e
-         fejOen91rkuDI4AEkHg3w5BWYXXZZTFZJk5BMJpZHqowLeE1TklUUpAXZ61DtGXmxX0L
-         8sr8QVHSzhFNEu3c9ft3GP/+48RFykGzTnT2TJQhHku8vFCMatZf8tPP2Zqz+6rppa3m
-         R0BhzQDKkr14p2nLnisNvvAPqXeYKILnDLslmpwIeJugMxifhlrNBnRKUWe4SYJpr6SC
-         jnZsmxXAxlgB99nrq3ECixJ1jj5Mche80dv8FUhrvr3v1Bai++/WRs0G9hBBWqWFKyHy
-         IlrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWo1eW9wcr+4jKyrnE/VA7NY3xLh1cGl9Hi4S7s32Oo9n2KfzfvVkpITpbTFBsddVd+XUzVCuPrVC+gQ8nQtsnJsI5odEl46mIns74oqf5G/UGdWi6pmTmcEQ/3KhnYifh3oYvDTrFy+rrEzBwUGl8EDCY3FpjLz0sisp55fIROEnG7v615/M0DmfXrO2y2zRQhfYiopBG5GuhkPPvqqdZFM9piFmXTFGEyCQ==
-X-Gm-Message-State: AOJu0YzujwCrvpeib6rqXQ3FFVE0WfCMPYNNRTZayBsgf4leWhmTaPrX
-	NxFL3sbYJCqPpDZj2dMnGMo0uWnbk6yzMm1zi7V8M2DyCVBirfHA
-X-Google-Smtp-Source: AGHT+IHwBM383M+z8GqlVeJQwZypi50YOmytldTjhC3WT2+cOlUZGOS9S9PONJ4uzWTarGKNXBmIRw==
-X-Received: by 2002:a50:d4d6:0:b0:595:7779:1f7 with SMTP id 4fb4d7f45d1cf-59960008613mr3991429a12.16.1720888532459;
-        Sat, 13 Jul 2024 09:35:32 -0700 (PDT)
-Received: from localhost.localdomain ([94.120.81.83])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b26f62bd9sm953753a12.94.2024.07.13.09.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jul 2024 09:35:32 -0700 (PDT)
-From: =?UTF-8?q?Mustafa=20Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: mustafa.eskieksi@gmail.com,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	pavel@ucw.cz,
-	lee@kernel.org,
-	linux-leds@vger.kernel.org,
-	rishitbansal0@gmail.com,
-	bahaku@elrant.team,
-	carlosmiguelferreira.2003@gmail.com,
-	alviro.iskandar@gnuweeb.org,
-	ammarfaizi2@gnuweeb.org,
-	bedirhan_kurt22@erdogan.edu.tr
-Subject: [PATCH v6] platform/x86: Add wmi driver for Casper Excalibur laptops
-Date: Sat, 13 Jul 2024 19:35:21 +0300
-Message-ID: <20240713163521.21958-2-mustafa.eskieksi@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240713163521.21958-1-mustafa.eskieksi@gmail.com>
-References: <20240713163521.21958-1-mustafa.eskieksi@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rmJMTSpr"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46DGR9xQ007645;
+	Sat, 13 Jul 2024 16:55:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pp1; bh=gaEeJvcdxtPqR
+	OzBKZFbR4JjVC2CIIbd8gbZSMkJASY=; b=rmJMTSpri59gKIHUVwlZIfm0NWeBV
+	ISoPJlFWem7SINOd57iNVx012arqN3Ep48i89O1B4hWE+zwtNkPYAMWGPNHXCecw
+	P5fJxJW54kGvgCtGvYsXQPcUCVUi3S+OoIvngxCb+Rs12Ziz0NYj+EPbTTZH2oEz
+	6DuM9tc6fxtdTGtsQi/1t48HJ101seD6oTfmrk0rrCUpNhEZ/IOnJTc6NQmRYjw/
+	qMe72Vfkc2GQWc5EFtW09L6O6erItP5+JNLgc9XSzlz1L9S1e+C/pi7cxdeD1GO3
+	S1+Giy/rS5XgyG8ldpJzaiEqzGkGQzzDYuoMxTAwj4qv0AYjRjhZf2LFw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40brr2gcd4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 13 Jul 2024 16:55:52 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46DGtqon015146;
+	Sat, 13 Jul 2024 16:55:52 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40brr2gccr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 13 Jul 2024 16:55:52 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46DDneFY011368;
+	Sat, 13 Jul 2024 16:55:51 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 40bpec1fku-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 13 Jul 2024 16:55:51 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46DGtjKw53739804
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 13 Jul 2024 16:55:47 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 976A920040;
+	Sat, 13 Jul 2024 16:55:45 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BF08420043;
+	Sat, 13 Jul 2024 16:55:42 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.49.134])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 13 Jul 2024 16:55:42 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
+        christophe.leroy@csgroup.eu
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH V7 03/18] tools/perf: Update TYPE_STATE_MAX_REGS to include max of regs in powerpc
+Date: Sat, 13 Jul 2024 22:25:14 +0530
+Message-Id: <20240713165529.59298-4-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20240713165529.59298-1-atrajeev@linux.vnet.ibm.com>
+References: <20240713165529.59298-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FY1-UpCxQAkFwVv0ONoydQKjb5mQ0b80
+X-Proofpoint-ORIG-GUID: _UMfHxLYjlu6OYwEw_J68fB13MX_U7UC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-13_13,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 suspectscore=0 priorityscore=1501 adultscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407130127
 
-This wmi driver supports changing Casper Excalibur laptops' keyboard
-backlight brightness and color, reading fan speeds and changing power
-profiles. Multicolor led device is used for backlight, platform_profile
-for power management and hwmon for fan speeds. It supports both old (10th
-gen or older) and new (11th gen or newer) laptops. It uses x86_match_cpu
-to check if the laptop is old or new.
+TYPE_STATE_MAX_REGS is arch-dependent. Currently this is defined
+to be 16. While checking if reg is valid using has_reg_type,
+max value is checked using TYPE_STATE_MAX_REGS value. Define
+this conditionally for powerpc.
 
-Signed-off-by: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
+Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
 ---
-Changes in v6:
- - Added "rgb" to zone names and changed kbd_zoned_backlight-corners to
-   backlight.
- - Changed led structure to have 3 seperate subleds instead of one rgb
-   subled.
- - Removed led_cache.
- - Removing platform_profile and destroying casper_mutex is managed by
-   devm_add_action_or_reset now.
- - Removed casper_wmi_remove.
- - Reordered some variables.
-Changes in v5:
- - Added mutex_destroy to casper_wmi_probe error handling
- - casper_multicolor_register now sets all leds to CASPER_DEFAULT_COLOR
- - Some minor changes
-Changes in v4:
- - Renamed casper_driver to casper_drv
- - Moved all global variables to casper_drv struct. Devices access
-  casper_drv via wdev's driver_data.
- - Removed struct led_cache, because only its u32 array was used. It is
-   replaced with color_cache.
- - Added mutex_locks in casper_set and casper_query, so they now accept
-   casper_drv instead of wmi_device as argument.
- - Changed endianess conversion in hwmon_read to something sparse doesn't
-   complain about.
- - Moved registrations of multicolor leds and platform profile to their
-   own functions. This makes casper_wmi_probe more readable.
- - Added .no_singleton to wmi_device.
- - Some minor changes.
-Changes in v3:
- - Replaced led_control attribute with multicolor led interface.
- - Added struct led_cache, instead of storing only last color change.
- - Added dmi list to prevent registering platform_profile driver in models
-   that doesn't have this feature.
- - Added a x86_cpu_id to differentiate older laptops that are reporting
-   fan speeds in big-endian. Also newer laptops have a different power
-   profile scheme. I'm using x86_cpu_id because they don't have a
-   difference in model names, only in cpu generations (the official driver
-   download page makes you select your cpu's generation too).
- - Removed hwmon_pwm device in favor of platform_profile driver. It
-   indirectly affects fans' speed but they also affect frequency and
-   power consumption as well.
- - Replaced handwritten masks with GENMASK equivalents.
- - Replaced led_classdev_register with
-   devm_led_classdev_multicolor_register. This should solve the bug
-   where led_classdev remains registered even if casper_wmi_probe
-   returns -ENODEV.
- - Removed select NEW_LEDS and LEDS_CLASS, because it creates recursive
-   dependencies.
- - And some minor changes.
-Changes in v2:
- - Added masks for
- - Changed casper_set and casper_query returns Linux error code rather
-   than acpi_status.
- - replaced complicated bit operations with FIELD_GET.
- - Fixed some indentation and spacing.
- - Broke fan speeds further.
- - Moved module metadata to the end of the file.
----
- MAINTAINERS                       |   6 +
- drivers/platform/x86/Kconfig      |  14 +
- drivers/platform/x86/Makefile     |   1 +
- drivers/platform/x86/casper-wmi.c | 656 ++++++++++++++++++++++++++++++
- 4 files changed, 677 insertions(+)
- create mode 100644 drivers/platform/x86/casper-wmi.c
+ tools/perf/util/annotate-data.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a48ddea7b9b..13844ad3d12 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4907,6 +4907,12 @@ S:	Maintained
- W:	https://wireless.wiki.kernel.org/en/users/Drivers/carl9170
- F:	drivers/net/wireless/ath/carl9170/
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 6fe8ee8b8410..992b7ce4bd11 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -189,7 +189,11 @@ struct type_state_stack {
+ };
  
-+CASPER EXCALIBUR WMI DRIVER
-+M:	Mustafa Ekşi <mustafa.eskieksi@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/casper-wmi.c
-+
- CAVIUM I2C DRIVER
- M:	Robert Richter <rric@kernel.org>
- S:	Odd Fixes
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 665fa952498..7560d90ce75 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1182,6 +1182,20 @@ config SEL3350_PLATFORM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called sel3350-platform.
+ /* FIXME: This should be arch-dependent */
++#ifdef __powerpc__
++#define TYPE_STATE_MAX_REGS  32
++#else
+ #define TYPE_STATE_MAX_REGS  16
++#endif
  
-+config CASPER_WMI
-+	tristate "Casper Excalibur Laptop WMI driver"
-+	depends on ACPI_WMI
-+	depends on HWMON
-+	depends on LEDS_CLASS_MULTICOLOR
-+	select ACPI_PLATFORM_PROFILE
-+	help
-+	  Say Y here if you want to support WMI-based fan speed reporting,
-+	  power management and keyboard backlight support on Casper Excalibur
-+	  Laptops.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called casper-wmi.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config P2SB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e1b14294706..639509f9afa 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
-+obj-$(CONFIG_CASPER_WMI)		+= casper-wmi.o
- 
- # Acer
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-diff --git a/drivers/platform/x86/casper-wmi.c b/drivers/platform/x86/casper-wmi.c
-new file mode 100644
-index 00000000000..51981e591ee
---- /dev/null
-+++ b/drivers/platform/x86/casper-wmi.c
-@@ -0,0 +1,656 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <linux/module.h>
-+#include <linux/bits.h>
-+#include <linux/bitops.h>
-+#include <linux/acpi.h>
-+#include <linux/leds.h>
-+#include <linux/slab.h>
-+#include <linux/wmi.h>
-+#include <linux/device.h>
-+#include <linux/hwmon.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
-+#include <acpi/acexcep.h>
-+#include <linux/bitfield.h>
-+#include <linux/platform_profile.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/mutex_types.h>
-+#include <linux/err.h>
-+#include <linux/mutex.h>
-+#include <linux/container_of.h>
-+
-+#include <linux/dmi.h>
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+
-+#define CASPER_WMI_GUID "644C5791-B7B0-4123-A90B-E93876E0DAAD"
-+
-+#define CASPER_READ 0xfa00
-+#define CASPER_WRITE 0xfb00
-+#define CASPER_GET_HARDWAREINFO 0x0200
-+#define CASPER_SET_LED 0x0100
-+#define CASPER_POWERPLAN 0x0300
-+
-+#define CASPER_KEYBOARD_LED_1 0x03
-+#define CASPER_KEYBOARD_LED_2 0x04
-+#define CASPER_KEYBOARD_LED_3 0x05
-+#define CASPER_ALL_KEYBOARD_LEDS 0x06
-+#define CASPER_CORNER_LEDS 0x07
-+#define CASPER_LED_COUNT 4
-+
-+static const char * const zone_names[CASPER_LED_COUNT] = {
-+	"casper:rgb:kbd_zoned_backlight-right",
-+	"casper:rgb:kbd_zoned_backlight-middle",
-+	"casper:rgb:kbd_zoned_backlight-left",
-+	"casper:rgb:backlight",
-+};
-+
-+#define CASPER_LED_ALPHA GENMASK(31, 24)
-+#define CASPER_LED_RED	 GENMASK(23, 16)
-+#define CASPER_LED_GREEN GENMASK(15, 8)
-+#define CASPER_LED_BLUE  GENMASK(7, 0)
-+#define CASPER_DEFAULT_COLOR (CASPER_LED_RED | CASPER_LED_GREEN | \
-+			      CASPER_LED_BLUE)
-+#define CASPER_FAN_CPU 0
-+#define CASPER_FAN_GPU 1
-+
-+enum casper_power_profile_old {
-+	CASPER_HIGH_PERFORMANCE = 1,
-+	CASPER_GAMING		= 2,
-+	CASPER_TEXT_MODE	= 3,
-+	CASPER_POWERSAVE	= 4
-+};
-+
-+enum casper_power_profile_new {
-+	CASPER_NEW_HIGH_PERFORMANCE	= 0,
-+	CASPER_NEW_GAMING		= 1,
-+	CASPER_NEW_AUDIO		= 2
-+};
-+
-+struct casper_quirk_entry {
-+	bool big_endian_fans;
-+	bool no_power_profiles;
-+	bool new_power_scheme;
-+};
-+
-+struct casper_fourzone_led {
-+	struct led_classdev_mc mc_led;
-+	struct mc_subled *subleds;
-+};
-+
-+struct casper_drv {
-+	struct platform_profile_handler handler;
-+	struct mutex casper_mutex;
-+	struct casper_fourzone_led *leds;
-+	struct wmi_device *wdev;
-+	struct casper_quirk_entry *quirk_applied;
-+};
-+
-+struct casper_wmi_args {
-+	u16 a0, a1;
-+	u32 a2, a3, a4, a5, a6, a7, a8;
-+};
-+
-+enum casper_led_mode {
-+	LED_NORMAL = 0x10,
-+	LED_BLINK = 0x20,
-+	LED_FADE = 0x30,
-+	LED_HEARTBEAT = 0x40,
-+	LED_REPEAT = 0x50,
-+	LED_RANDOM = 0x60
-+};
-+
-+static int casper_set(struct casper_drv *drv, u16 a1, u8 led_id, u32 data)
-+{
-+	struct casper_wmi_args wmi_args;
-+	struct acpi_buffer input;
-+	acpi_status status = 0;
-+	int ret = 0;
-+
-+	wmi_args = (struct casper_wmi_args) {
-+		.a0 = CASPER_WRITE,
-+		.a1 = a1,
-+		.a2 = led_id,
-+		.a3 = data
-+	};
-+
-+	input = (struct acpi_buffer) {
-+		(acpi_size) sizeof(struct casper_wmi_args),
-+		&wmi_args
-+	};
-+
-+	mutex_lock(&drv->casper_mutex);
-+
-+	status = wmidev_block_set(drv->wdev, 0, &input);
-+	if (ACPI_FAILURE(status))
-+		ret = -EIO;
-+
-+	mutex_unlock(&drv->casper_mutex);
-+	return ret;
-+}
-+
-+static int casper_query(struct casper_drv *drv, u16 a1,
-+			struct casper_wmi_args *out)
-+{
-+	struct casper_wmi_args wmi_args;
-+	struct acpi_buffer input;
-+	union acpi_object *obj;
-+	acpi_status status = 0;
-+	int ret = 0;
-+
-+	wmi_args = (struct casper_wmi_args) {
-+		.a0 = CASPER_READ,
-+		.a1 = a1
-+	};
-+	input = (struct acpi_buffer) {
-+		(acpi_size) sizeof(struct casper_wmi_args),
-+		&wmi_args
-+	};
-+
-+	mutex_lock(&drv->casper_mutex);
-+
-+	status = wmidev_block_set(drv->wdev, 0, &input);
-+	if (ACPI_FAILURE(status)) {
-+		ret = -EIO;
-+		goto unlock;
-+	}
-+
-+	obj = wmidev_block_query(drv->wdev, 0);
-+	if (!obj) {
-+		ret = -EIO;
-+		goto unlock;
-+	}
-+
-+	if (obj->type != ACPI_TYPE_BUFFER) { // obj will be 0x10 on failure
-+		ret = -EINVAL;
-+		goto freeobj;
-+	}
-+	if (obj->buffer.length != sizeof(struct casper_wmi_args)) {
-+		ret = -EIO;
-+		goto freeobj;
-+	}
-+
-+	memcpy(out, obj->buffer.pointer, sizeof(struct casper_wmi_args));
-+
-+freeobj:
-+	kfree(obj);
-+unlock:
-+	mutex_unlock(&drv->casper_mutex);
-+	return ret;
-+}
-+
-+static u32 get_zone_color(struct casper_fourzone_led z)
-+{
-+	return  FIELD_PREP(CASPER_LED_RED, z.subleds[0].intensity) |
-+		FIELD_PREP(CASPER_LED_GREEN, z.subleds[1].intensity) |
-+		FIELD_PREP(CASPER_LED_BLUE, z.subleds[2].intensity);
-+}
-+
-+static enum led_brightness get_casper_brightness(struct led_classdev *led_cdev)
-+{
-+	struct casper_drv *drv = dev_get_drvdata(led_cdev->dev->parent);
-+	struct casper_wmi_args hardware_alpha = {0};
-+
-+	if (strcmp(led_cdev->name, zone_names[3]) == 0)
-+		return drv->leds[3].mc_led.led_cdev.brightness;
-+
-+	casper_query(drv, CASPER_GET_HARDWAREINFO, &hardware_alpha);
-+
-+	return hardware_alpha.a6;
-+}
-+
-+static void set_casper_brightness(struct led_classdev *led_cdev,
-+				  enum led_brightness brightness)
-+{
-+	u32 bright_with_mode, bright_prep, led_data, led_data_no_alpha;
-+	struct casper_drv *drv;
-+	u8 zone_to_change;
-+	size_t zone;
-+
-+	drv = dev_get_drvdata(led_cdev->dev->parent);
-+
-+	for (size_t i = 0; i < CASPER_LED_COUNT; i++)
-+		if (strcmp(led_cdev->name, zone_names[i]) == 0)
-+			zone = i;
-+	if (zone == 3)
-+		zone_to_change = CASPER_CORNER_LEDS;
-+	else
-+		zone_to_change = zone + CASPER_KEYBOARD_LED_1;
-+
-+	led_data_no_alpha = get_zone_color(drv->leds[zone]) & ~CASPER_LED_ALPHA;
-+
-+	bright_with_mode = brightness | LED_NORMAL;
-+
-+	bright_prep = FIELD_PREP(CASPER_LED_ALPHA, bright_with_mode);
-+	led_data = bright_prep | led_data_no_alpha;
-+	casper_set(drv, CASPER_SET_LED, zone_to_change, led_data);
-+}
-+
-+static int casper_platform_profile_get(struct platform_profile_handler *pprof,
-+				       enum platform_profile_option *profile)
-+{
-+	struct casper_drv *drv = container_of(pprof, struct casper_drv,
-+					      handler);
-+	struct casper_wmi_args ret_buff = {0};
-+	int ret;
-+
-+	ret = casper_query(drv, CASPER_POWERPLAN, &ret_buff);
-+	if (ret)
-+		return ret;
-+
-+	if (drv->quirk_applied->new_power_scheme) {
-+		switch (ret_buff.a2) {
-+		case CASPER_NEW_HIGH_PERFORMANCE:
-+			*profile = PLATFORM_PROFILE_PERFORMANCE;
-+			break;
-+		case CASPER_NEW_GAMING:
-+			*profile = PLATFORM_PROFILE_BALANCED;
-+			break;
-+		case CASPER_NEW_AUDIO:
-+			*profile = PLATFORM_PROFILE_LOW_POWER;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		return 0;
-+	}
-+
-+	switch (ret_buff.a2) {
-+	case CASPER_HIGH_PERFORMANCE:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	case CASPER_GAMING:
-+		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+		break;
-+	case CASPER_TEXT_MODE:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case CASPER_POWERSAVE:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int casper_platform_profile_set(struct platform_profile_handler *pprof,
-+				       enum platform_profile_option profile)
-+{
-+	struct casper_drv *drv = container_of(pprof, struct casper_drv,
-+					      handler);
-+	enum casper_power_profile_old prf_old;
-+	enum casper_power_profile_new prf_new;
-+
-+	if (drv->quirk_applied->new_power_scheme) {
-+
-+		switch (profile) {
-+		case PLATFORM_PROFILE_PERFORMANCE:
-+			prf_new = CASPER_NEW_HIGH_PERFORMANCE;
-+			break;
-+		case PLATFORM_PROFILE_BALANCED:
-+			prf_new = CASPER_NEW_GAMING;
-+			break;
-+		case PLATFORM_PROFILE_LOW_POWER:
-+			prf_new = CASPER_NEW_AUDIO;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		return casper_set(drv, CASPER_POWERPLAN, prf_new, 0);
-+	}
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		prf_old = CASPER_HIGH_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		prf_old = CASPER_GAMING;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		prf_old = CASPER_TEXT_MODE;
-+		break;
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		prf_old = CASPER_POWERSAVE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return casper_set(drv, CASPER_POWERPLAN, prf_old, 0);
-+}
-+
-+static umode_t casper_wmi_hwmon_is_visible(const void *drvdata,
-+					   enum hwmon_sensor_types type,
-+					   u32 attr, int channel)
-+{
-+	return 0444;
-+}
-+
-+static int casper_wmi_hwmon_read(struct device *dev,
-+				 enum hwmon_sensor_types type, u32 attr,
-+				 int channel, long *val)
-+{
-+	struct casper_drv *drv = dev_get_drvdata(dev->parent);
-+	struct casper_wmi_args out = { 0 };
-+	int ret;
-+
-+	ret = casper_query(drv, CASPER_GET_HARDWAREINFO, &out);
-+	if (ret)
-+		return ret;
-+
-+	switch (channel) {
-+	case CASPER_FAN_CPU:
-+		if (drv->quirk_applied->big_endian_fans)
-+			*val = be16_to_cpu(*(__be16 *)&out.a4);
-+		else
-+			*val = out.a5;
-+		break;
-+	case CASPER_FAN_GPU:
-+		if (drv->quirk_applied->big_endian_fans)
-+			*val = be16_to_cpu(*(__be16 *)&out.a5);
-+		else
-+			*val = out.a5;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int casper_wmi_hwmon_read_string(struct device *dev,
-+					enum hwmon_sensor_types type, u32 attr,
-+					int channel, const char **str)
-+{
-+	if (channel == CASPER_FAN_CPU)
-+		*str = "cpu_fan_speed";
-+	else if (channel == CASPER_FAN_GPU)
-+		*str = "gpu_fan_speed";
-+	return 0;
-+}
-+
-+static const struct hwmon_ops casper_wmi_hwmon_ops = {
-+	.is_visible = &casper_wmi_hwmon_is_visible,
-+	.read = &casper_wmi_hwmon_read,
-+	.read_string = &casper_wmi_hwmon_read_string,
-+};
-+
-+static const struct hwmon_channel_info *const casper_wmi_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info casper_wmi_hwmon_chip_info = {
-+	.ops = &casper_wmi_hwmon_ops,
-+	.info = casper_wmi_hwmon_info,
-+};
-+
-+static struct casper_quirk_entry gen_older_than_11 = {
-+	.big_endian_fans = true,
-+	.new_power_scheme = false
-+};
-+
-+static struct casper_quirk_entry gen_newer_than_11 = {
-+	.big_endian_fans = false,
-+	.new_power_scheme = true
-+};
-+
-+static const struct x86_cpu_id casper_gen[] = {
-+	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE, &gen_older_than_11),
-+	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE, &gen_older_than_11),
-+	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE, &gen_newer_than_11),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE, &gen_newer_than_11),
-+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE, &gen_newer_than_11),
-+	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE, &gen_newer_than_11),
-+	{}
-+};
-+
-+static struct casper_quirk_entry quirk_no_power_profile = {
-+	.no_power_profiles = true
-+};
-+
-+static struct casper_quirk_entry quirk_has_power_profile = {
-+	.no_power_profiles = false
-+};
-+
-+static const struct dmi_system_id casper_quirks[] = {
-+	{
-+		.ident = "CASPER EXCALIBUR G650",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G650")
-+		},
-+		.driver_data = &quirk_no_power_profile
-+	},
-+	{
-+		.ident = "CASPER EXCALIBUR G670",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G670")
-+		},
-+		.driver_data = &quirk_no_power_profile
-+	},
-+	{
-+		.ident = "CASPER EXCALIBUR G750",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G750")
-+		},
-+		.driver_data = &quirk_no_power_profile
-+	},
-+	{
-+		.ident = "CASPER EXCALIBUR G770",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G770")
-+		},
-+		.driver_data = &quirk_has_power_profile
-+	},
-+	{
-+		.ident = "CASPER EXCALIBUR G780",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G780")
-+		},
-+		.driver_data = &quirk_has_power_profile
-+	},
-+	{
-+		.ident = "CASPER EXCALIBUR G870",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G870")
-+		},
-+		.driver_data = &quirk_has_power_profile
-+	},
-+	{
-+		.ident = "CASPER EXCALIBUR G900",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G900")
-+		},
-+		.driver_data = &quirk_has_power_profile
-+	},
-+	{
-+		.ident = "CASPER EXCALIBUR G911",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+				  "CASPER BILGISAYAR SISTEMLERI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EXCALIBUR G911")
-+		},
-+		.driver_data = &quirk_has_power_profile
-+	},
-+	{ }
-+};
-+
-+static void casper_pp_remove(void *data)
-+{
-+	platform_profile_remove();
-+}
-+
-+static int casper_platform_profile_register(struct casper_drv *drv)
-+{
-+	int ret = 0;
-+
-+	drv->handler.profile_get = casper_platform_profile_get;
-+	drv->handler.profile_set = casper_platform_profile_set;
-+
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, drv->handler.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, drv->handler.choices);
-+	if (!drv->quirk_applied->new_power_scheme)
-+		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-+			drv->handler.choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, drv->handler.choices);
-+
-+	ret = platform_profile_register(&drv->handler);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(&drv->wdev->dev, casper_pp_remove,
-+				       NULL);
-+	if (ret)
-+		platform_profile_remove();
-+
-+	return ret;
-+}
-+
-+static int casper_multicolor_register(struct casper_drv *drv)
-+{
-+	int ret = 0;
-+
-+	drv->leds = devm_kcalloc(&drv->wdev->dev,
-+		CASPER_LED_COUNT, sizeof(*drv->leds), GFP_KERNEL);
-+	if (!drv->leds)
-+		return -ENOMEM;
-+
-+	for (size_t i = 0; i < CASPER_LED_COUNT; i++) {
-+		drv->leds[i].subleds = devm_kcalloc(&drv->wdev->dev, 3,
-+				sizeof(struct mc_subled), GFP_KERNEL);
-+		if (!drv->leds[i].subleds)
-+			return -ENOMEM;
-+		for (size_t j = 0; j < 3; j++) {
-+			drv->leds[i].subleds[j] = (struct mc_subled) {
-+				.color_index = LED_COLOR_ID_RED + j,
-+				.brightness = 255,
-+				.intensity = 255
-+			};
-+		}
-+		drv->leds[i].mc_led = (struct led_classdev_mc){
-+			.led_cdev = {
-+				.name = zone_names[i],
-+				.brightness = 0,
-+				.max_brightness = 2,
-+				.brightness_set = &set_casper_brightness,
-+				.brightness_get = &get_casper_brightness,
-+				.color = LED_COLOR_ID_MULTI,
-+			},
-+			.num_colors = 3,
-+			.subled_info = drv->leds[i].subleds
-+		};
-+
-+		ret = devm_led_classdev_multicolor_register(&drv->wdev->dev,
-+							&drv->leds[i].mc_led);
-+		if (ret)
-+			return -ENODEV;
-+	}
-+
-+	// Setting leds to the default color
-+	ret = casper_set(drv, CASPER_SET_LED, CASPER_ALL_KEYBOARD_LEDS,
-+			 CASPER_DEFAULT_COLOR);
-+	if (ret)
-+		return ret;
-+
-+	ret = casper_set(drv, CASPER_SET_LED, CASPER_CORNER_LEDS,
-+			 CASPER_DEFAULT_COLOR);
-+	return ret;
-+}
-+
-+static void casper_mutex_destroy(void *data)
-+{
-+	mutex_destroy((struct mutex *)data);
-+}
-+
-+static int casper_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct casper_quirk_entry *pp_quirk;
-+	const struct dmi_system_id *dmi_id;
-+	const struct x86_cpu_id *gen_id;
-+	struct device *hwmon_dev;
-+	struct casper_drv *drv;
-+	int ret;
-+
-+	drv = devm_kzalloc(&wdev->dev, sizeof(*drv), GFP_KERNEL);
-+	if (!drv)
-+		return -ENOMEM;
-+
-+	drv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, drv);
-+
-+	gen_id = x86_match_cpu(casper_gen);
-+	if (!gen_id)
-+		return -ENODEV;
-+
-+	drv->quirk_applied = (struct casper_quirk_entry *)gen_id->driver_data;
-+
-+	dmi_id = dmi_first_match(casper_quirks);
-+	if (!dmi_id)
-+		return -ENODEV;
-+
-+	pp_quirk = (struct casper_quirk_entry *)dmi_id->driver_data;
-+	drv->quirk_applied->no_power_profiles = pp_quirk->no_power_profiles;
-+
-+	mutex_init(&drv->casper_mutex);
-+	ret = devm_add_action_or_reset(&wdev->dev, casper_mutex_destroy,
-+				       &drv->casper_mutex);
-+	if (ret)
-+		return ret;
-+
-+	ret = casper_multicolor_register(drv);
-+	if (ret)
-+		return ret;
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
-+						"casper_wmi", wdev,
-+						&casper_wmi_hwmon_chip_info,
-+						NULL);
-+	if (IS_ERR(hwmon_dev))
-+		return PTR_ERR(hwmon_dev);
-+
-+	if (!drv->quirk_applied->no_power_profiles) {
-+		ret = casper_platform_profile_register(drv);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct wmi_device_id casper_wmi_id_table[] = {
-+	{ CASPER_WMI_GUID, NULL },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, casper_wmi_id_table);
-+
-+static struct wmi_driver casper_drv = {
-+	.driver = {
-+		.name = "casper-wmi",
-+	},
-+	.id_table = casper_wmi_id_table,
-+	.probe = casper_wmi_probe,
-+	.no_singleton = true,
-+};
-+
-+module_wmi_driver(casper_drv);
-+
-+MODULE_AUTHOR("Mustafa Ekşi <mustafa.eskieksi@gmail.com>");
-+MODULE_DESCRIPTION("Casper Excalibur Laptop WMI driver");
-+MODULE_LICENSE("GPL");
+ /*
+  * State table to maintain type info in each register and stack location.
 -- 
-2.45.2
+2.43.0
 
