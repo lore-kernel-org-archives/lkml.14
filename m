@@ -1,93 +1,64 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mail.ngn.tf (ngn.tf [193.106.196.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBC549659
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 09:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC931BC57;
+	Sat, 13 Jul 2024 09:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.106.196.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720861969; cv=none; b=jg8fdrDASjrrhapoCAKmmibolHkS2XqIuibhZC2c7ooB7G7Liq82vTVhH5PF4Wn5d/M7G3ncq4scSN98lPoX7ZcY3M5wjkENBFt4mkhdhDtW85Id9gj9C/PE9VAeHE53e5LLd3gCJQPl3tWK+S2OgpAm7AvWIPQfgY7T48dRx6Y=
+	t=1720862113; cv=none; b=twt2UnASQfC3zvHTvQXC0Sj9rMrTl3nUaNXvEhUvURR1Y/dmwAFwDad0wY6jMZqVTjRgjQ7BQ/BsJeLpY/nxC9WUDDBKu42shZ87M3aebsfB5RxZ6m0Howw47dU4QhmazIhosfOUr2LKkfU1+BM66aDuriaJSIdeXtarRL1URj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720861969; c=relaxed/simple;
-	bh=6pPFEgSAaEpj4a0f4CB1UkJ7Ri072cAizXQ2IOWTDCE=;
+	s=arc-20240116; t=1720862113; c=relaxed/simple;
+	bh=cXVQENL6ezEh/B8TnMDQ24J2n6O8LNrqU9d5J6TC008=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DR19aXFUp6pj4V/IzFO5dTQOr0mKKeVP7axizxHAokj151f+Lkecg41eGmuBHnHakWj2cMGiufqJ+FQTd+LdJDub3dyStdhLqp3zskigSN4FliekDKsEZDnvwaQN7EzG0AX6QxxObxjtmQ8SwZQPq2rL+MYnsLRXxp3VIQXW2B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=GaRyj04l; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCPabPwLfHCUD90nfFXjoYsYaaxB1Cvyp3ccIaeplIBOArqQsO5r055+xbYkEA4VeCw17mF8BPyNCj7oD7UEiR5xRssMWFEPdf+ENCOjEAOansVIbyr3noUMxsm91kQSVxEOchV3fqbGat9us1yy4Rioab9Je4G3C+MZacPx7jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf; spf=pass smtp.mailfrom=ngn.tf; dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b=jP9Oj8k3; arc=none smtp.client-ip=193.106.196.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ngn.tf
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="GaRyj04l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=6pPF
-	EgSAaEpj4a0f4CB1UkJ7Ri072cAizXQ2IOWTDCE=; b=GaRyj04ltVmRVLtTjkh/
-	RnM5fG0xNfHiBC3cRhiv1o9vYq103Ih1Cr/m9jwWmS2z1PS9N1EYSeOAp83USYlE
-	ioUcJ39JhyQR1bdqQWLv6HN4wTEIssNUxSCSEsS5QUxknvRhEFPpG82BYQm/G/iQ
-	zT3RQnNi/S3jL0ql7y81JG6dMWmxZKReDuOypMCrWUdNhOzp9TFCUeAzDpmRw0za
-	85rv/e9FSC7t6kC+U+0q16lj8hSrr1SJG05R7ynAWlJAvl9YiwbCqsV5NFR32kLp
-	np3iXQTfT42ZoRt7UV2Jnnkk4UDKTa+MrSUqbWmxg1DvKk5CnN6AUrXOmEchHRLj
-	5w==
-Received: (qmail 1388248 invoked from network); 13 Jul 2024 11:12:43 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jul 2024 11:12:43 +0200
-X-UD-Smtp-Session: l3s3148p1@+fwLZh0d3K9ehhtW
-Date: Sat, 13 Jul 2024 11:12:43 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-i2c@vger.kernel.org
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: document new callbacks in i2c_algorithm
-Message-ID: <ZpJFC7NIsqWj3yXw@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org
-References: <20240712095453.11440-2-wsa+renesas@sang-engineering.com>
+	dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b="jP9Oj8k3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ngn.tf; s=mail;
+	t=1720861556; bh=cXVQENL6ezEh/B8TnMDQ24J2n6O8LNrqU9d5J6TC008=;
+	h=From:To:Cc:Subject:References:In-Reply-To;
+	b=jP9Oj8k35UX5FcuG37gd1FW4f/OGF4fqSonMjwyGqyEz9341ad7sRjPl+sYgdVHR2
+	 DBTZguo55T55fZJw3MDVbp+qskevuKmN0/Pd/vsS6k4yLAvIUyiFKo5TJAm4okrsDl
+	 SHznMpXspePp7/PxM6w5hjB/5QxXOLjWYwROXKtcxOoOIjZpaE5QJLTdmCOWjjU1Tj
+	 +h4wSv+zYYSftEzhYA+HiF6FlZty9/ANVgoNNTqF10R5X2dxVNeP64mrDj/KSeUl+u
+	 Aiv5OGHK3hE4f5v9qr8AiS9mAMYNP7/NpBBOXKBMQ2rN5jcCiNFD/qqYDgGqnCaDuh
+	 s5cZMM1kOz5VA==
+Date: Sat, 13 Jul 2024 12:05:32 +0300
+From: ngn <ngn@ngn.tf>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: shpchp: Remove hpc_ops
+Message-ID: <ZpJDXNtOQWSqG0mi@archbtw>
+References: <abb0f57ee513af545be761988fa9ad5ce5703060.1718949042.git.ngn@ngn.tf>
+ <20240712224425.GA351076@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0O3ODi0lby7/2WmP"
-Content-Disposition: inline
-In-Reply-To: <20240712095453.11440-2-wsa+renesas@sang-engineering.com>
-
-
---0O3ODi0lby7/2WmP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240712224425.GA351076@bhelgaas>
 
-On Fri, Jul 12, 2024 at 11:52:40AM +0200, Wolfram Sang wrote:
-> When updating the callbacks, adding their kernel-doc was forgotten. Add
-> it now.
->=20
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/r/20240712165527.75e4ddc9@canb.auug.org.au
-> Fixes: a93c2e5fe766 ("i2c: reword i2c_algorithm according to newest speci=
-fication")
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Fri, Jul 12, 2024 at 05:44:25PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 21, 2024 at 09:35:00AM +0300, ngn wrote:
+> > fix checpatch warnings and call hpc_ops functions directly, this has been
+> > also done in pciehp with commit 82a9e79ef132
+> 
+> Trivial changes like checkpatch fixes should be in a separate patch
+> from substantive things.  This helps make both easier to review.
+> 
+> It *might* be worthwhile to remove hpc_ops, although shpchp is pretty
+> old and dusty by now, and it's hard to justify touching things like
+> that because the risk of breaking something is relatively high and the
+> benefit is relatively low.
+> 
+> The fact that shpchp is the only user of hpc_ops does make me a little
+> more sympathetic to the idea of removing it, though.
+> 
 
-Applied to for-next, thanks!
-
-
---0O3ODi0lby7/2WmP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaSRQsACgkQFA3kzBSg
-KbY0NA/8CzYY/bw3jbv65ifAZdaGsW9dYVc5O2caiVdMx83raWjhzaGEiDg6SvV1
-7lZhYeiaaJzc3ZxAUkmpNDnIu/0/c0u8e1Kelc+8XsBNus6rGcRpY59JxAW2wrr1
-EF4jNoc6E0vzrAXNy2N80FZHzHdA0Xw20DBd67p1bok4od06/4yK8Igss/7XwKp6
-Vu+zJLW3rFbYCfSteli4l8ROu6Rp8WCxMoX2B4hQ5L5uyYDxXFcUIkWiATu4eVF0
-RRsyIMs2GyxyZSo2PiHUILQIHkp6EUiphkwHPCaVR+ZHAyxvTiRP34608w1ZilOO
-aEG+vpuck7SFvK3t3X5hvNy3o/VbyYZepCvdc1DHdmH87jRp4YBjrhJ/ta0vMPge
-e4WkNoWCpPyVycnv5fkq94vzJyIRqqFBIFihWJvqmu7yfoIy8IsGVbo7FTcUCTgR
-zQHK4gcF61lEoYTFabyJ9wkqAdQn3bGbAGUnVsnQtMXSbHDMxbBEjdPh/zyrTszw
-yY1Z+Zr1yy3+RSL1K0j9qTC9ocKD/uk+MHcWn+PAnfJrehCCzEHI+9iu2fRCp1SU
-ml7cO5dI5RkeM/hXVSHwnQ6hP+IiOz+qBKBULiubAIiH7038Qb/WyOW75sBEwE6s
-CYKgyGEsAuRMp5wS0ddilw7NyqiPDESrt/FXv73KdVrpVF7qQ1I=
-=Dowj
------END PGP SIGNATURE-----
-
---0O3ODi0lby7/2WmP--
+Thanks for the reply! I'll just remove hpc_ops then, and I'll send a separate
+patch.
