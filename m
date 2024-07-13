@@ -1,146 +1,128 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB83B17BC9;
-	Sat, 13 Jul 2024 00:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E609DD2F5;
+	Sat, 13 Jul 2024 00:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720831573; cv=none; b=JbExBzFpgTlvzFn1RW7pm/0Rrq1cqH027J/HnBuZvig54rf52l6m8oPz0A7tEVvi/TdiU8q/awvDKDSc37HYbquX7gGdenyB2BgfaDGGCBwNh8GO6HV4SUlvGn9ORxTeNsPOuSwn/IVYQZjuQNApCAocUlDRFa9uHlXpVUXycLM=
+	t=1720831731; cv=none; b=K8MtGOSAX2RCG7m8qckudoQ2+3+kHvUjkLwiZ1yqV2FiTStHn4Vs4RlcSGTkVgRZSnrNhaJT1wLvXoe6I3XOe2LWz+pI4Uf3OUFkL9S2v7ThT6PCt6iVr5tKirqKDIVoIbhlOOM0fALiqS5UUgnv9fIZHusKLD9dpIKcnU+EG7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720831573; c=relaxed/simple;
-	bh=gF3dYtJRopNzsiJmALQlPNHh11Zr31c4yEibSp9jEII=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BeuPmaoqfU72jZ0mk/VhAs7mtImoaV62yAumVW7ht5or0OsnCX53kwFJfkqwiYfBKcTx3/UNHvWhB5mGWZqU6eSzmVbYQsE/HrpHenvr98bNSGhQONuyyDex0h/8HA8XTywnK4nmueBU1Uk09KkKh1jPiguHkGBZmlXI/cmfS8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.97.1)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1sSQl7-000000005ba-3zH3;
-	Sat, 13 Jul 2024 00:37:06 +0000
-Date: Sat, 13 Jul 2024 01:37:02 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>,
-	Aurelien Jarno <aurelien@aurel32.net>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@debian.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>,
-	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/3] hwrng: add hwrng support for Rockchip RK3568
-Message-ID: <cover.1720830725.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1720831731; c=relaxed/simple;
+	bh=6HsKtFDDgviwQH1b4AdwR89R/oIpdTxW9lu5rBhyzP8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eM7Mxe94Acv9/yUqYrg2ZsygxiH8EYzG3/bJYXwbM2rZ27arJH4TJ5xp1TbxOnNixY+O1s8d/JAGOJeGFKDdZI4o9TdVpwnRCO58Nx8j0aHe8+Dv9G7/p7PjeAduO3aHpAaxRdMNVG/qWI/fmMZLFPvsiTWdLjrExtu+fGEZXCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COFWUYvi; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COFWUYvi"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-59a47d5c22aso1296203a12.1;
+        Fri, 12 Jul 2024 17:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720831728; x=1721436528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6HsKtFDDgviwQH1b4AdwR89R/oIpdTxW9lu5rBhyzP8=;
+        b=COFWUYvixkhRX0/u9grV8jo3EjbiesoRyVUOIpGUR6yyZ6QgYFzEQOxNDL6c4lR5HO
+         h/F02hhJjbnM6NS4L8Er0mYx5jaaEUgCFVHd6s0Fk4Kk2U6hYz+LMBYVPA7EYVFgHMks
+         t9qwS8p0Ure20gaDSUoGSxG9rL/6fRv2MK1H9ygDdUAnvanjeLisky+Ltjxmgy7bUWhP
+         DKlkrM9b9f26FvcLcKsxyNe9MqEEWxisGV1HrOyA2GlrGxEFAKc12o8iT5WjJFFHRPDF
+         ijjKPH82nPHK/PTh+yRb+kPbqSZLT00/vvz1pFRAAhGyhv/KTCT/WHgTL0xxjKPFx1xT
+         GZDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720831728; x=1721436528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6HsKtFDDgviwQH1b4AdwR89R/oIpdTxW9lu5rBhyzP8=;
+        b=DgbB2nuSexdRNCA2F8ApeOVkxVgu5uKrc361EYxXLecxnz3/Y262Gxi2cCosvUEwuj
+         qcUnkVFBPVaq1D/Q5AFTzYN2kV1hYdi/mvXV1aAlnvrtGo4VkAyNdEC7+aHfwHHYlqE3
+         o14bOL2DsjNounFFf/3zfbW/8cu/TnGnbK2o7zFUrBu57QLp8TwDGioCKzl8NOGdz3kf
+         d8Woe0NRnxh03dU1sTzLBWo9L6mIBZ6QVzPx/LUkT6j8/11WXQakg1cW9HCin9n9WIG1
+         3z+qBvbTBZV24Bo326/UcIerNo9WgWFPuGtsGqnENhGPc5vaI85vd7rd2SayRDs73UiO
+         tqoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVctJj1+1zWTaHSF1NeG1apxh+eR/MtBIUHzd9IEmOd5uKb1ApAu4BZB0j0CLD06wAoGzR6dhZbrO/ew2XyprTDx74JiiLVN1eMJO2pXMmmFxlts4DQz2t3bw9tqG9Z1+Zc/faT8Eo5WmEvQDE=
+X-Gm-Message-State: AOJu0YyqvUJLGDvScSLS5v0wy9VEoGAfTJJTYyZB7iYRBofqQJD/Kpy/
+	qN4GHZu8h9N4yoW19eLaFHSpGkEmEPU3cF5eWrQmRid+2GESc3kfzNO1Cxdod9bGKCI2Olon2JS
+	gFHfsSRNJuQxoEJN3jVCNr0YzsXQ=
+X-Google-Smtp-Source: AGHT+IFeeJ3/yWZLz9nMde/4bWSuZg18FBSHV/qNjaFCrj/uBC8/sAe66xVQO4ioF4q/Ni373euOM4ug9j90dYFf/so=
+X-Received: by 2002:a17:906:195a:b0:a77:e48d:bc9 with SMTP id
+ a640c23a62f3a-a780b68a472mr741456766b.16.1720831727888; Fri, 12 Jul 2024
+ 17:48:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240710225011.275153-1-daniel.almeida@collabora.com>
+ <fe84a028-01a8-4987-b1b7-141fb76d263c@arm.com> <4344B22F-D859-4C64-A351-69FFB5208362@collabora.com>
+ <ZpFDeajsuVONbSYJ@cassiopeiae> <0A0C1EFC-29A1-4D73-8B02-CC1C693D6A7A@collabora.com>
+ <ZpFMmAEdqo1dhj0s@cassiopeiae>
+In-Reply-To: <ZpFMmAEdqo1dhj0s@cassiopeiae>
+From: Dave Airlie <airlied@gmail.com>
+Date: Sat, 13 Jul 2024 10:48:36 +1000
+Message-ID: <CAPM=9twNU3Wm02zCqzipSt4mDU3UUF5AyVycpBkPTGqv7fwPAQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] drm: panthor: add dev_coredumpv support
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, Steven Price <steven.price@arm.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, ojeda@kernel.org, lyude@redhat.com, robh@kernel.org, 
+	lina@asahilina.net, mcanal@igalia.com, rust-for-linux@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rockchip SoCs used to have a random number generator as part of their
-crypto device.
+On Sat, 13 Jul 2024 at 01:32, Danilo Krummrich <dakr@redhat.com> wrote:
+>
+> On Fri, Jul 12, 2024 at 12:13:15PM -0300, Daniel Almeida wrote:
+> >
+> >
+> > > On 12 Jul 2024, at 11:53, Danilo Krummrich <dakr@redhat.com> wrote:
+> > >
+> > > You could also just define those structures in a C header directly an=
+d use it
+> > > from Rust, can't you?
+> > >
+> >
+> >
+> > Sure, I am open to any approach here. Although this looks a bit reverse=
+d to me.
+> >
+> > i.e.: why should I declare these structs in a separate language and fil=
+e, and then use them in Rust through bindgen? Sounds clunky.
+>
+> The kernel exposes the uAPI as C header files. You just choose to do the
+> implementation in the kernel in Rust.
+>
+> Hence, I'd argue that the uAPI header is the actual source. So, we should
+> generate stuff from those headers and not the other way around I think.
+>
+> >
+> > Right now, they are declared right next to where they are used in the c=
+ode, i.e.: in the same Rust file. And so long as they=E2=80=99re #[repr(C)]=
+ we know that an equivalent C version can generated by cbindgen.
+> >
+>
+> I'm not sure whether it's a good idea to generate uAPI header files in ge=
+neral.
+>
+> How do we ensure that the generated header file are useful for userspace =
+in
+> terms of readability and documentation?
+>
+> How do we (easily) verify that changes in the Rust code don't break the u=
+API by
+> due to leading to changes in the generated header files?
+>
+> Do we have guarantees that future releases of cbindgen can't break anythi=
+ng?
 
-However newer Rockchip SoCs like the RK3568 have an independent True
-Random Number Generator device. This patchset adds a driver for it and
-enables it in the device tree.
+I think I'm on the uapi should remain in C for now, we define uapi
+types with the kernel types and we have downstream tools to scan and
+parse them to deal with alignments and padding (I know FEX relies on
+it), so I think we should be bindgen from uapi headers into rust for
+now. There might be a future where this changes, but that isn't now
+and I definitely don't want to mix C and rust uapi in one driver.
 
-v5 -> v6:
- * Patch 1: unchanged
-
- * Patch 2: get rid of #ifdef
-   - use if (IS_ENABLED(...)) { ... }instead of #ifdef inside functions
-   - use __maybe_unused for functions previously enclosed by #ifdef'ery
-
- * Patch 3: unchanged
-
-v4 -> v5:
- * Patch 1: always use RK3568 name
-   - use full RK3568 name in patch description
-   - add RK3568 to title in binding
-
- * Patch 2: full name and cosmetics
-   - also always mention RK3568 as there may be other RNG in other
-     (future) Rockchip SoCs
-   - remove debug output on successful probe
-   - use MODULE_AUTHOR several times instead of single comma-separated
-
- * Patch 3: unchanged
-
-v3 -> v4:
- * Patch 1: minor corrections
-   - fix Rokchip -> Rockchip typo
-   - change commit title as requested
-
- * Patch 2: improved error handling and resource management
-   - Always use writel() instead of writel_relaxed()
-   - Use pm_runtime_resume_and_get
-   - Correctly return error code in rk_rng_read()
-   - Make use of devm_reset_control_array_get_exclusive
-   - Use devm_pm_runtime_enable and there by get rid of rk_rng_remove()
-
- * Patch 3:
-   - Move node to conform with ordering by address
-
-v2 -> v3: patch adopted by Daniel Golle
- * Patch 1: address comments of Krzysztof Kozlowski, add MAINTAINERS
-   - improved description
-   - meaningful clock-names
-   - add entry in MAINTAINERS files
-
- * Patch 2: numerous code-style improvements
-   - drop misleading rk_rng_write_ctl(), simplify I/O writes
-   - drop unused TRNG_RNG_DOUT_[1-7] macros
-   - handle error handling for pm_runtime_get_sync()
-   - use memcpy_fromio() instead of open coding for-loop
-   - some minor white-spaces fixes
-
- * Patch 3:
-   - use clock-names as defined in dt-bindings
-
-v1 -> v2:
- * Patch 1: fix issues reported by Rob Herring and Krzysztof Kozlowski:
-   - Rename rockchip-rng.yaml into rockchip,rk3568-rng.yaml
-   - Fix binding title and description
-   - Fix compatible property
-   - Rename clocks and add the corresponding descriptions
-   - Drop reset-names
-   - Add a bus definition with #address-cells and #size-cells to the
-     example.
-
- * Patch 2: fix issue reported by kernel test robot <lkp@intel.com>
-   - Do not read the random registers as big endian, looking at the
-     RK3568 TRM this is actually not needed. This fixes a sparse
-     warning.
-
- * Patch 3: unchanged
-
-Aurelien Jarno (3):
-  dt-bindings: rng: Add Rockchip RK3568 TRNG
-  hwrng: add hwrng driver for Rockchip RK3568 SoC
-  arm64: dts: rockchip: add DT entry for RNG to RK356x
-
- .../bindings/rng/rockchip,rk3568-rng.yaml     |  61 +++++
- MAINTAINERS                                   |   7 +
- arch/arm64/boot/dts/rockchip/rk356x.dtsi      |   9 +
- drivers/char/hw_random/Kconfig                |  14 ++
- drivers/char/hw_random/Makefile               |   1 +
- drivers/char/hw_random/rockchip-rng.c         | 220 ++++++++++++++++++
- 6 files changed, 312 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rng/rockchip,rk3568-rng.yaml
- create mode 100644 drivers/char/hw_random/rockchip-rng.c
-
--- 
-2.45.2
+Dave.
