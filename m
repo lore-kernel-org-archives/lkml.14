@@ -1,77 +1,111 @@
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4C51B960
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 07:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687B9101D5;
+	Sat, 13 Jul 2024 07:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720856683; cv=none; b=Y9agBJ9GHnXL80rvDsqnFG+GKP69goKeaU3Ayq40s65z1ZIRPwxDEuQ6+WOJAohsheukjjBJ6So7yUyT4nn8VQCIH3SPsfEfUQBLQmd1qk3sGSJsmeZjPA4Q1T74Y/jXqYtwosOhGreDIj6dPLOKYJ64FYpXJFgYzpJybSQLmps=
+	t=1720856877; cv=none; b=iWJ4mZN12DCr3DizaeSQQbQh9UmQB8XIqCl7Bp+nu08B2L15xPsenSpZWoGeQZQM7fowXkEok606nRT5aaqoTbD+SZCuHn4xMNzIXbe5F5XSG4lu04/LuKK+ISAyA6O5IzWgRuA7Wxh3KrP5W6SMWM3wFSywcgEBD/91Y2xc+4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720856683; c=relaxed/simple;
-	bh=J0PzgiEXf2NNhQ8wFAX6wADfm0QBmzJQo/EBBq4GmxE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AEupNW+LzwBZg/COAIuGTowMD52+8YGKOTkRzzEsw6IA5s/K4bA7B6iWfhqePzK1spfgZeRZbu6geuW/wW1nIezVInHYXUX7VaYcdvsC1gE4606H8Bw0efhyCHCEk9PnIZwXRRD3BgL9ICf7y4FmCiZ5vbEpFJJTC/GdKbOSIkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id CB1A2606BA37;
-	Sat, 13 Jul 2024 09:35:28 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id Ny2PvNGbggCq; Sat, 13 Jul 2024 09:35:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 252586196A6F;
-	Sat, 13 Jul 2024 09:35:28 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id EW9KpJFCFHXD; Sat, 13 Jul 2024 09:35:28 +0200 (CEST)
-Received: from foxxylove.corp.sigma-star.at (unknown [82.150.214.1])
-	by lithops.sigma-star.at (Postfix) with ESMTPSA id D883D6196A6B;
-	Sat, 13 Jul 2024 09:35:27 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	chengzhihao1@huawei.com,
-	Richard Weinberger <richard@nod.at>,
-	Ben Hutchings <bwh@kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] ubi: Fix ubi_init() ubiblock_exit() section mismatch
-Date: Sat, 13 Jul 2024 09:35:19 +0200
-Message-Id: <20240713073519.25325-1-richard@nod.at>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1720856877; c=relaxed/simple;
+	bh=hClNeZXf/HT0BsbMx7fG9NUOdX2m7PgVo+dYXWa77SM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LcRjzluPPlID98+iWsAoZ+otgB3M3YBQ3Hh2vpDumJGhsMm1UVppqaYA4v0gdeLiotJX+hNUEjLVzPSBUQ3QGT2UwjnRZJalSpen7ptQTzbXBke7WekJIl1LqficsRlOtU0SGlv+q8iL4yKVjfEHau83qoH+JCQGZ6GFo7F8GmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=lNfbOrpT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZwNSv+6s; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="lNfbOrpT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZwNSv+6s"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 67D071141FAA;
+	Sat, 13 Jul 2024 03:47:54 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sat, 13 Jul 2024 03:47:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm1; t=1720856874; x=1720943274; bh=HRQNq8s9JmqkZ0Ob0Og2B
+	8lcbEhlLJEuplxADn3x+wQ=; b=lNfbOrpTXvsnO/pjDqVHw87b1/xD3Y4ju7B9n
+	EYfKWk3VNmvAhiSmw7pkMoqB5ApSkpgRPTKF6KGspYlBQ+5SOSK8AyDcm2tPi0Vs
+	vlYSKdTVQqiHxLxx2sjROqxSPku7lJjM9u2atoTgjJnDOvPa7O1YxY2M/DNlz8HM
+	JRRtxw97wLC8Mkam6aOvZo+JmFE61D+HuTZ3G7HeSe1D1lOFrgrazh/rVptvnz0M
+	j2+rLCdeaLJuPkeb0Pcga53ANnv/Ew8qPgbkT1j9jBD9ubdU2OPyzCMSYUKApwfp
+	0K2PdPGgt2240LwYtGakSq0r9wiL1qhs51iouFvs13KMvtfrA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1720856874; x=1720943274; bh=HRQNq8s9JmqkZ0Ob0Og2B8lcbEhl
+	LJEuplxADn3x+wQ=; b=ZwNSv+6swRik7OGQY1p6BotOO1vJSNrUfVoHEU1VII/8
+	xtoGT0xmtmDHfWFBs7zBLwJqBsOWvbdrOOHSTvJQ87lajfxQ5++lSRX/nRLQvK2u
+	4lmih+B+gi+1eUsj57m6eDK9vS19IQvCt5s0FtNJEnNGHo2mdFlPqn5uadXeWahE
+	TB+E/fk9qZtwC3JQRVuwgkJD+tB0i/LUSbyWPTUWbckBsOgkEoRJJafa3YefMpjJ
+	2YwYdHZHYzhgsiJDJCwz9B90IG8M1Fq2ISXoNb3kKjZFWeBJ2ASZ3ebnr3zAZkMf
+	I3QmxEeniyllTy7MDIuECoooejvPsARBZzT5cFmuBw==
+X-ME-Sender: <xms:KTGSZh7913t_iWSKSPIZGdWQHoSkHyZXN3VQ6UgNXhP44JyCYMBP9Q>
+    <xme:KTGSZu7V_Wtm-kfgkxwmY868z_aXRJoMGQhf9m3lCzqH7I8o2rl7dXCGdq5vO_Gle
+    c-2V1MRt_vLWY5kAss>
+X-ME-Received: <xmr:KTGSZodCEJzdSGaEpRho8Jq4PlM-StCZJSBF2p6CLr75PP3HPuUazRmFi3f0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeejgdduvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdehkeeigeeggfelkeeufeefjeduvd
+    ejveduvdehtdegveeftdeugeetvdeltdejnecuffhomhgrihhnpehkvghrnhgvlhdrohhr
+    ghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
+    hkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:KTGSZqIJCbok3RF6_D8yqVYkavYZ3iAbPus54OSgXPvI-PFxq6u0FQ>
+    <xmx:KTGSZlJqHO6Kyzq77rV-YrxEzN6HFKzcpEBiH-So5Z68oyzdjHb25w>
+    <xmx:KTGSZjyNHYr6cCrA3h4M2JjpfWg9CZXzFS5fqQDksa47uVPHxyvYOw>
+    <xmx:KTGSZhKcZglb3_a5gQ8mxmVG4lKgfvM9DrctfvKPZJ8p_jYcNGgbgQ>
+    <xmx:KjGSZs_agL3dzYdiarjRW-FTLHP46mR1mn1EXh96eNBdgK1Iryly2GKw>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 13 Jul 2024 03:47:49 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	linux-input@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v3 0/1] hid-asus: use hid for keyboard brightness control
+Date: Sat, 13 Jul 2024 19:47:32 +1200
+Message-ID: <20240713074733.77334-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Since ubiblock_exit() is now called from an init function,
-the __exit section no longer makes sense.
+Refactored V1 of patch to remove the report_id change as it isn't required.
 
-Cc: Ben Hutchings <bwh@kernel.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407131403.wZJpd8n2-lkp@i=
-ntel.com/
-Signed-off-by: Richard Weinberger <richard@nod.at>
----
- drivers/mtd/ubi/block.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changelog:
+- V3
+  - Fix an issue with array initialisation
+- V2
+  - Split patch in two (use hid, and change report_id)
+  - Drop the report_id changing as not required
+  - Use dmi_check_system() for DMI matching
 
-diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
-index bf7308e8ec2fe..60d0155be869f 100644
---- a/drivers/mtd/ubi/block.c
-+++ b/drivers/mtd/ubi/block.c
-@@ -670,7 +670,7 @@ int __init ubiblock_init(void)
- 	return ret;
- }
-=20
--void __exit ubiblock_exit(void)
-+void ubiblock_exit(void)
- {
- 	ubi_unregister_volume_notifier(&ubiblock_notifier);
- 	ubiblock_remove_all();
---=20
-2.35.3
+History:
+- https://lore.kernel.org/linux-input/20240528013959.14661-1-luke@ljones.dev/T/#u
+
+Luke D. Jones (1):
+  hid-asus: use hid for brightness control on keyboard
+
+ drivers/hid/hid-asus.c                     |  7 +++++
+ drivers/platform/x86/asus-wmi.c            |  3 +-
+ include/linux/platform_data/x86/asus-wmi.h | 36 ++++++++++++++++++++++
+ 3 files changed, 45 insertions(+), 1 deletion(-)
+
+-- 
+2.45.2
 
