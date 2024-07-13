@@ -1,72 +1,115 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5753D6B
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 02:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F00D1FB4;
+	Sat, 13 Jul 2024 02:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720836064; cv=none; b=a8XVU+lL0vCyvLNs3VEeoRCsT1xhnEc/uXDzxtXJDyY3OlK92TCE/vpVrcPcwBr4KiSQCXF1iJXOJ3bMVhQELpjfRkfHCyZZEN6rKs13a279C7XCQnhMkeIwa+PBLAAPNoyAmv38QvZiPJST/Ry3DEca4Jr8AAjNijTnQNT0cJg=
+	t=1720836800; cv=none; b=rv6CxP+3bkcSBymvgXrpEAwAJxUEQ9l0aNdmAa0sk2nm6+8dIdfHFz0fPpsJibmbcGYt8INno9SbH+QdWG6K1r/oMur4r2AYu9ZoUcV71nXkEbqqLYKuNRcirXPnj5D7RnLL05K/RX+Cd7nbFwIEiyUTmF41rE4At911Gz57RdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720836064; c=relaxed/simple;
-	bh=8C7uohOlostzz5+UGk4IYvyLu/D6l2yNBbJdK025D3I=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=E8J88Ytw8Ru6oVImIoHj8+2adErVOa4ko6M+x6TYt7pyS3gt161H/7HhFihmX5Inkx0zardny/bp4DmkMMB7361+jYQrBRHi9uqD1HM4Ouqk0ENXZu5+FPtzVVVOE/47sS9RKgfxRKKlhvY4Nb/qaMD+pjbAY4IEFwFMZ1Q0b58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8045e14c387so365518839f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 19:01:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720836062; x=1721440862;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3sjybt7XmUoM4lMDfHpYg/1Rda9g3OrqN4nnbEwRRk=;
-        b=aBcndEStAsTr8LwO9RGwABQeYZgcTLq/nNCL8iIFGXGitdu/PrbXkBHAJRTdDaaHG4
-         GpNfAUkUZ347kUZX+4Z6t3B6nQV0or23ItiP9gTx+kchDcUoGBlGaz+3JxZl4Sh8Cdp2
-         gW9qGvBKGuSEV2EwWPyQ3ISMt92xP1niJl9vBLOkneSzoCnQxkvxyPO/vaSOo3VT+F1J
-         cIDDYZ13tf+No/wey/jVD2Oag1qhkz7RHonENPuV+oUH/lcCFKYhpqaoQ6ovR6cVeqlq
-         ywCk+BQFzObH2xkRut4EVgQvidNAbykUHpj8bcmwLbCZgrAQ98t1vUhiYuHDC/LBK+Rp
-         BOsA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4eukS4tM4/gImeoF3zMo1+d/msCPNKcooTKqXS7O63ZwYamzN19L/DOAu9gbOwkZTxp2NZsv8gNZg5mZuwm8f3YIXsW+t/qokBWoJ
-X-Gm-Message-State: AOJu0Yw50y1sGJPWrIO8kMCKYApN0y1agMLvKV+t3AJwgwwQcTxTphta
-	s4WC2qW4f5ioAzh6oFBKZeT2ysrL9zrhGjrzucekoo/3kudJ+roUo5QoB+h/AXSkcDII9wJMga1
-	axJANG8WhcQecVNcxFoXmQK6kYqblbFkQ5AzaFaBWR4taa/0YMU7lbrI=
-X-Google-Smtp-Source: AGHT+IHXtqLP/hwBvQYYO0+uA2GDJiSe0XwhuawZwGXsidxWMyYRpOsoNTGR7hGKsUO/C1+hUIuu412SIeNP1ut3i9LRcRDLampm
+	s=arc-20240116; t=1720836800; c=relaxed/simple;
+	bh=i0I8QWNsM4G1mHZmeVaLIHQgGk4PNpA7jkE//Yfz0A4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JvnSJJofjGlxvaM1eU7gVGjSvdYM7As3ZEM6epzp/pnprExhCUM4z4EDClNb4kd67mh6X35mInanKqEIhU4jtBbNGZVmkwcDsGj8MjfzpO2BdrOfXgtXZfz/bDBirCBGL5nXWuVMTHzrsNLH5Fk9PsghYNSrS19MDOjG86yJ0/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bOzmMuZl; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bOzmMuZl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720836798; x=1752372798;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=i0I8QWNsM4G1mHZmeVaLIHQgGk4PNpA7jkE//Yfz0A4=;
+  b=bOzmMuZl/DeeaNnFb4MmyosvXxMJ9Sf0u63Zrx7tZiG+88YPRwOEZAwF
+   hNBUIATrynHrE1LD24PozkiJDdonxzhJPUvCYV84wq6ts5MD7ueMoyfr8
+   rVCtCTC45ppYIaDvVNNZUl7XTRsSC4EY65p6WchtMmUe3AeurC3xu7NbC
+   DjB7LJppC27EgymOiJER71YwYFHUqfsPP5fcd7ahSJe2cJndzWqxRQ+LX
+   jZ1Lz2BF/Zf7ADpOkfuZKn4tuYY05dlBygTEjCEnhQo6IAYKNyFy9i2dj
+   nChvq3YqzPeOpSXFxSVMdY8LX96ZgnG9kfLQEeS6yV3ECzI3a8JAMeS+W
+   g==;
+X-CSE-ConnectionGUID: i7eVGVInRkGSYrrEtimdFg==
+X-CSE-MsgGUID: nnLUEjDNRRmmpXGuWpO5jQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="12531265"
+X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
+   d="scan'208";a="12531265"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 19:13:18 -0700
+X-CSE-ConnectionGUID: 7l8LxtmoRCaWA/sgg2j34Q==
+X-CSE-MsgGUID: /2wzwrsOQxOsNcXz2rE3mA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
+   d="scan'208";a="53449876"
+Received: from linux-pnp-server-16.sh.intel.com ([10.239.177.152])
+  by fmviesa005.fm.intel.com with ESMTP; 12 Jul 2024 19:13:15 -0700
+From: Yu Ma <yu.ma@intel.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	mjguzik@gmail.com,
+	edumazet@google.com
+Cc: yu.ma@intel.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pan.deng@intel.com,
+	tianyou.li@intel.com,
+	tim.c.chen@intel.com,
+	tim.c.chen@linux.intel.com
+Subject: [PATCH v4 0/3] fs/file.c: optimize the critical section of file_lock in
+Date: Fri, 12 Jul 2024 22:39:14 -0400
+Message-ID: <20240713023917.3967269-1-yu.ma@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240614163416.728752-1-yu.ma@intel.com>
+References: <20240614163416.728752-1-yu.ma@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3402:b0:7f6:1e9c:d6f4 with SMTP id
- ca18e2360f4ac-8000435faeamr48154839f.3.1720836062216; Fri, 12 Jul 2024
- 19:01:02 -0700 (PDT)
-Date: Fri, 12 Jul 2024 19:01:02 -0700
-In-Reply-To: <20240713011317.1220-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000349146061d175ed1@google.com>
-Subject: Re: [syzbot] [net?] BUG: sleeping function called from invalid
- context in synchronize_net
-From: syzbot <syzbot+9b277e2c2076e2661f61@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+pts/blogbench-1.1.0 is a benchmark designed to replicate the
+load of a real-world busy file server by multiple threads of
+random reads, writes, and rewrites. When running default configuration
+with multiple parallel threads, hot spin lock contention is observed
+from alloc_fd(), file_closed_fd() and put_unused_fd() around file_lock.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+These 3 patches are created to reduce the critical section of file_lock
+in alloc_fd() and close_fd(). As a result, on top of patch 1,
+pts/blogbench-1.1.0 has been improved by 22% for read and 8% for write
+on Intel ICX 160 cores configuration with v6.10-rc7.
 
-Reported-and-tested-by: syzbot+9b277e2c2076e2661f61@syzkaller.appspotmail.com
+v3 -> v4:
+1. Rebased the patch set to v6.10-rc7 and updated performance results.
+2. Updated patch 1 to revise the order of fd checking.
+3. As proposed by Mateusz Guzik <mjguzik gmail.com>, and agreed by Jan Kara
+<jack@suse.cz> and Tim Chen <tim.c.chen@linux.intel.com>, updated patch 3 with
+a more generic and scalable fast path for the word contains next_fd.
 
-Tested on:
+v2 -> v3:
+1. Rebased the patch set to latest v6.10-rc6 and updated the performance results
+2. Reordered the patches as suggested by Mateusz Guzik <mjguzik gmail.com>
+3. Updated the fast path from alloc_fd() to find_next_fd() as suggested by
+Mateusz Guzik <mjguzik gmail.com> and Jan Kara <jack@suse.cz>, it is efficient
+and more concise than v2.
 
-commit:         523b23f0 Add linux-next specific files for 20240710
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=10241c2d980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=98dd8c4bab5cdce
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b277e2c2076e2661f61
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15cdcd9e980000
+v1 -> v2:
+1. Rebased the patch set to latest v6.10-rc4 and updated the performance results
+2. Fixed the bug identified by Mateusz Guzik in patch 1 with adding rlimit check
+for fast path
+3. Updated patch 3 to remove sanity_check directly per the alignment with
+maintainer
 
-Note: testing is done by a robot and is best-effort only.
+Yu Ma (3):
+  fs/file.c: remove sanity_check and add likely/unlikely in alloc_fd()
+  fs/file.c: conditionally clear full_fds
+  fs/file.c: add fast path in find_next_fd()
+
+ fs/file.c | 50 +++++++++++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 21 deletions(-)
+
+-- 
+2.43.0
+
