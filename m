@@ -1,312 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEAC2F2A;
-	Sat, 13 Jul 2024 08:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E374DF51B;
+	Sat, 13 Jul 2024 09:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720861069; cv=none; b=iBSuxFs249fq0ekQ5fKcnGHIovo++6CJgMYrXPvN9a+4nJ/LK4N47oqcZITQc2fJrku5sccZPAaTcFNjcmwyJ65BSBatCVTlZsyUmMaPfEqdkfedbvVlu1uj1gLJy0xgSYwWHfq8XJr3N/tO++B0M751mobU2fIShUcBS+2ZwU4=
+	t=1720861267; cv=none; b=kr4LlcpTlGbNPReqbW7VZnvb1rO8kZboxMYaEvmDroc3/BToCGNMu1V4r5zqjK5Xrcgg6HaUPlGP9vuy1GYFrsLkMR3OruLCWtuf60cu9oDVrBHNtV4nvstkY8X6+KR3fOLGrTBAFirl7GnnkHTIjhUbLevxVT43bsATNz5A/Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720861069; c=relaxed/simple;
-	bh=eQHy9Aq5uiTJpp6v4FXGsWqk9+4D+0tP2x7VDhutY88=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DW3hvN46RpDlY0H2hXqKmEy1BdCbkE9I6/u45L+T24EUESOvcjQX9RJ+FLZ6wsBomlLNRVT1CYts5ZAhoSm1v6so/57dz2J2rRamSPI/6bS6UoCKa4Jb7/ltNA695jh9+1J4RcE9poiXwN7RtKDZJF7e2wI6JHmeQ6KCx68ant0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbdzxIgA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720861267; c=relaxed/simple;
+	bh=AU4aZ1uPRSLMLiFt+ciYhu5p+gCYQFcXXg7tP8WhCsc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=U6Rmt81q0Sr2rhf/NhDab5YjUiW5046fFfU8On6f1G50GpX7aVDThQ+aE/I/pw5Z1RHB8ebvYiedGzr4hfyWwDUUUz6QBwlTyOu+QKHPu5fB0/aVNT31yCol1aq6aYTD/kyeZ3aukDrJcmQcmKLdVqFBn6oyt/qR86hJ3Gnw85E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=g+nIF5An; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbdzxIgA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C80C32781;
-	Sat, 13 Jul 2024 08:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720861068;
-	bh=eQHy9Aq5uiTJpp6v4FXGsWqk9+4D+0tP2x7VDhutY88=;
-	h=Date:From:To:Cc:Subject:From;
-	b=RbdzxIgA4dsOGrL1JkQfST8CBXnXAkSAM/xlANAPLaAQXvJ8UamchEtCYrSK6DOS8
-	 ihbwLqT9/9C/QqA8AJS5dOZiwY+cFInjbKOFQkvG8H018XF6MiFX8/y4UkjRHnl29g
-	 YWQICC+rh5wpjkC4U52HotUlgMjAgFz22AvsRjmrwo01CPAKj0TSKwDRnb0UyiEa0R
-	 68f4LwXTF5pCX/wBbUWeoulIHhpwj0wt+8KpVxrX7rcyI+zRrGqRUsc9AzC44VUbPG
-	 o7AqF8TTvgOaZdQ5t1m5NMyLq8c6DkbibK0uwbw2x0sZWMAdiTw2npQFZSzqzpMZcr
-	 zwG7WwDx23h0w==
-Date: Sat, 13 Jul 2024 10:57:45 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>, Andi Shyti <andi.shyti@kernel.org>
-Subject: [GIT PULL] i2c-host for v6.11
-Message-ID: <yxymqbpeuhq52w3ie5nl5pkoojjuybaeodqtrd6uhe2rkmfhfb@3dqr6vefsdxh>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="g+nIF5An"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720861230; x=1721466030; i=markus.elfring@web.de;
+	bh=rxSz+nti3Y7xyZJUy2uJZMnwJpt0QbSgZPWpnBH8KVY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=g+nIF5AnukW3CbaO6QmKU3hcfGr2OLTXyO76ASRa3jsbld4IpHZ0S1a08yXqI3IN
+	 pZHPWpYfVxshqbeY9pKtFig+P5NFnwsBQ2irrLXJ5nCsoLpEASJpUw8h5OpEDEK3n
+	 eHFv5/icPjzrFcRj8lFCJ/N4TE5nNVyLbffkXvUKNc9W9TSPVDkI0ofo3vAoPEd/x
+	 zKaGsS2RUr+cRz1y2JOpCA/X+/wkQtltb5aiyThr2vYg1oD1XI4AsbVDl6MiY5RLA
+	 +JpLLyAJqLe1J3kyMZ4QcHYsMpBjh/sBhcaAjnvVpxPsandYi+Q1Gbv2wtZ+cMefO
+	 pXOpxK9TsiEjSsI8uw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MGxMP-1sWjTa4BTX-00GtG5; Sat, 13
+ Jul 2024 11:00:30 +0200
+Message-ID: <d4be0dc8-f6db-4bf1-bb6d-ccff161dfde9@web.de>
+Date: Sat, 13 Jul 2024 11:00:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+To: x86@kernel.org, kernel-janitors@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Fenghua Yu <fenghua.yu@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@redhat.com>, Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] x86/resctrl: Use seq_putc() in two functions
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YwND3k/hg7wTMF5WfdBpQioSbMiWFoEM2imh2B5V1MFOLCiWkKT
+ csvnDxFRxJywlqvznHnUf7x+e+nK1m1ta50qEjzV8yusA0Vix4EeP96cQNiB+4aiQmmKO/o
+ CWkhD6KAnRqe2rdUW983zTrLsG3SM3u/bTOQgl4/fAoIFwuQ/4Yhx9qTvXSGgUZ5d3YVpCQ
+ XkCrTCB77kC5Uh6NbQUYw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:hgNA7d5SdZQ=;ByellkoZIVUw3fH2XHP8q5x/s/M
+ mDD1oAu9A/hEwP/NVhTPjxrXQqU1OJSYd4gYawjNEzdL85t4OsB3DtKsSaT7iVsd0nJ5ZymZM
+ pPiCpyQXTQSWeiHrD0EIedMA8MJfmgNanIWvWY+6Z5Xd+mFRlzW3R1ImUiQwtAh6yWg6JRJtP
+ ccNtu1fPzI3ITE/M2GSRgvOc2wqeSCsvfuCMpS9XvulGGLBtefDOAcLTHkV1zRsscVAdLrfwl
+ u0hZc1T2FUSTFIubI9o5gvKLQRPoN4emS4g6SuWAxZDbln/CNwYr700Q/h/qLzdJGPjBasDgG
+ LJykdgH7ur+VYCDNYVScc8j7g6jwQ8MiUYHOJpCJXS4+en5tyU59SDy/oqdIbA434SfQrC0sg
+ ZgcMT8M6w+vOoID04BfXjZAZ0bNX0vogwWr3b2aSkvFOvJgjM5P9dihuewjEgN6Qgo1sDkJHj
+ orqMxpypJ9pcGcDIlXTjaNIwej6IbphG3UqexsIx9ozxN8y/uIeHhmYcPfuYvQVpPf40dzJZ4
+ sMt44SnEVF9fKRCTLiWab3mwxnZqt+Y+6kM/7to0jjFPqHK+zanMwBYwCEfvxSGTrdSWR55tY
+ EMbFeeVVL4SBPa9mbdsNC7YhV3nf8evlfn9JVjfiYOXMsnRUkXi0kjnTGahSApJRvXejB5G73
+ qQGqeqMDnAsjoWK8BjV591aQ/HNhNZ/A82w7zn47LX49w1NfnMOWOfK2uOKJiUZ3jnvHqa7kw
+ kWcRQuqaFr77vzeiKkMHFG3kSZ0QQ/FY2d/TAXQIa5t1J9rQgAlSF6C4v5LDhkdnkHKdFxq2H
+ sFy9UUfDYTWxUxPsLY/46vFg==
 
-Hi Wolfram,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 13 Jul 2024 10:43:14 +0200
 
-Not a massive pull request. The majority of changes relate to the
-naming convention updates. Other than that, the holiday period
-has given us some slack in the number of patches queued for this
-pull request.
+Single characters should be put into a sequence.
+Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
 
-There is still one pending documentation fix required for an
-issue reported by Stephen that I haven't noticed. I need to add
-the documentation check to my workflow. If you don't have the
-bandwidth, I can take care of it.
+This issue was transformed by using the Coccinelle software.
 
-I also have a pending patch for a v2 pull request from Hans de
-Goede ("i2c: i801: Use a different adapter name for IDF
-adapters") that is waiting for precedence.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 4 ++--
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-I wish you a great rest of the weekend,
-Andi
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/c=
+pu/resctrl/ctrlmondata.c
+index 50fa1fe9a073..dce68f19c29d 100644
+=2D-- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -452,7 +452,7 @@ static void show_doms(struct seq_file *s, struct resct=
+rl_schema *schema, int clo
+ 	seq_printf(s, "%*s:", max_name_width, schema->name);
+ 	list_for_each_entry(dom, &r->ctrl_domains, hdr.list) {
+ 		if (sep)
+-			seq_puts(s, ";");
++			seq_putc(s, ';');
 
-The following changes since commit 256abd8e550ce977b728be79a74e1729438b4948:
+ 		if (is_mba_sc(r))
+ 			ctrl_val =3D dom->mbps_val[closid];
+@@ -464,7 +464,7 @@ static void show_doms(struct seq_file *s, struct resct=
+rl_schema *schema, int clo
+ 			   ctrl_val);
+ 		sep =3D true;
+ 	}
+-	seq_puts(s, "\n");
++	seq_putc(s, '\n');
+ }
 
-  Linux 6.10-rc7 (2024-07-07 14:23:46 -0700)
+ int rdtgroup_schemata_show(struct kernfs_open_file *of,
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/=
+resctrl/rdtgroup.c
+index d7163b764c62..d4e216073e7a 100644
+=2D-- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1605,7 +1605,7 @@ static int mbm_config_show(struct seq_file *s, struc=
+t rdt_resource *r, u32 evtid
 
-are available in the Git repository at:
+ 	list_for_each_entry(dom, &r->mon_domains, hdr.list) {
+ 		if (sep)
+-			seq_puts(s, ";");
++			seq_putc(s, ';');
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-6.11
+ 		memset(&mon_info, 0, sizeof(struct mon_config_info));
+ 		mon_info.evtid =3D evtid;
+@@ -1614,7 +1614,7 @@ static int mbm_config_show(struct seq_file *s, struc=
+t rdt_resource *r, u32 evtid
+ 		seq_printf(s, "%d=3D0x%02x", dom->hdr.id, mon_info.mon_config);
+ 		sep =3D true;
+ 	}
+-	seq_puts(s, "\n");
++	seq_putc(s, '\n');
 
-for you to fetch changes up to ab1c7ea48f6e225aa40eff3be45a47c7d93cb3b8:
+ 	mutex_unlock(&rdtgroup_mutex);
+ 	cpus_read_unlock();
+=2D-
+2.45.2
 
-  dt-bindings: i2c: amlogic,meson6-i2c: add optional power-domains (2024-07-12 01:57:57 +0200)
-
-----------------------------------------------------------------
-This release includes significant updates, with the primary
-change being the renaming from "master/slave" to
-"controller/target" to adhere to I2C v7 and SMBus 3.2 standards.
-
-New Support:
-
- - Added support for Intel Arrow Lake-H.
- - Added I2C support in the Arioha SoC by linking the Mediatek
-   I2C controller.
-
-Cleanups:
-
- - Added the MODULE_DESCRIPTION() macro, resolving a modpost
-   warning in the ALi 1563 Southbridge driver.
- - Constified the regmap_config declaration in the i2c-designware
-   driver.
- - Improved the coding style in the Renesas R-Car driver by
-   removing unnecessary semicolons after brackets.
-
-General improvements:
-
- - In the OMAP device, replaced NOIRQ_SYSTEM_SLEEP_PM_OPS with
-   RUNTIME_PM_OPS to enable waking up the controller during
-   suspend() before suspend_noirq() kicks in.
- - Improved logging in the Xilinx driver.
- - Added a warning (WARN()) in the Renesas R-Car driver for
-   spurious interrupts.
-
-DTS Changes:
-
- - Removed address-cell and size-cell from the Atmel at91sam,
-   nVidia Tegra 20, and Samsung S3c2410 devices.
- - Fixed Texas Instruments OMAP4 I2C controller to comply with
-   the i2c-controller.yaml schema.
- - Improved indentation in DTS examples for several I2C devices.
- - Converted the NXP LPC1788 binding to the dt-schema.
- - Added documentation for the compatible string
-   thead,th1520-i2c.
- - Added the "power-domains" property for the Meson I2C driver.
-
-----------------------------------------------------------------
-George Stark (1):
-      dt-bindings: i2c: amlogic,meson6-i2c: add optional power-domains
-
-Jarkko Nikula (1):
-      i2c: i801: Add support for Intel Arrow Lake-H
-
-Javier Carrasco (1):
-      i2c: designware: Constify read-only struct regmap_config
-
-Jeff Johnson (1):
-      i2c: add missing MODULE_DESCRIPTION() macros
-
-Kanak Shilledar (1):
-      dt-bindings: i2c: nxp,lpc1788-i2c: convert to dt schema
-
-Krzysztof Kozlowski (5):
-      dt-bindings: i2c: atmel,at91sam: drop unneeded address/size-cells
-      dt-bindings: i2c: nvidia,tegra20: drop unneeded address/size-cells
-      dt-bindings: i2c: samsung,s3c2410: drop unneeded address/size-cells
-      dt-bindings: i2c: ti,omap4: reference i2c-controller.yaml schema
-      dt-bindings: i2c: adjust indentation in DTS example to coding style
-
-Lorenzo Bianconi (1):
-      i2c: mt7621: Add Airoha EN7581 i2c support
-
-Marc Ferland (1):
-      i2c: xiic: improve error message when transfer fails to start
-
-Nicolas Ferre (1):
-      dt-bindings: i2c: at91: Add sama7d65 compatible string
-
-Thomas Bonnefille (1):
-      dt-bindings: i2c: dw: Document compatible thead,th1520-i2c
-
-Thomas Richard (2):
-      i2c: omap: switch to NOIRQ_SYSTEM_SLEEP_PM_OPS() and RUNTIME_PM_OPS()
-      i2c: omap: wakeup the controller during suspend() callback
-
-Wolfram Sang (62):
-      i2c: rcar: WARN about spurious irqs
-      i2c: rcar: minor changes to adhere to coding style
-      i2c: reword i2c_algorithm according to newest specification
-      i2c: ali15x3: reword according to newest specification
-      i2c: altera: reword according to newest specification
-      i2c: au1550: reword according to newest specification
-      i2c: bcm-kona: reword according to newest specification
-      i2c: bcm2835: reword according to newest specification
-      i2c: brcmstb: reword according to newest specification
-      i2c: cht-wc: reword according to newest specification
-      i2c: cp2615: reword according to newest specification
-      i2c: cros-ec-tunnel: reword according to newest specification
-      i2c: davinci: reword according to newest specification
-      i2c: digicolor: reword according to newest specification
-      i2c: diolan-u2c: reword according to newest specification
-      i2c: dln2: reword according to newest specification
-      i2c: fsi: reword according to newest specification
-      i2c: gpio: reword according to newest specification
-      i2c: highlander: reword according to newest specification
-      i2c: hisi: reword according to newest specification
-      i2c: hix5hd2: reword according to newest specification
-      i2c: i801: reword according to newest specification
-      i2c: ibm_iic: reword according to newest specification
-      i2c: iop3xx: reword according to newest specification
-      i2c: isch: reword according to newest specification
-      i2c: jz4780: reword according to newest specification
-      i2c: kempld: reword according to newest specification
-      i2c: ljca: reword according to newest specification
-      i2c: lpc2k: reword according to newest specification
-      i2c: ls2x: reword according to newest specification
-      i2c: mlxcpld: reword according to newest specification
-      i2c: mpc: reword according to newest specification
-      i2c: mt7621: reword according to newest specification
-      i2c: mv64xxx: reword according to newest specification
-      i2c: ocores: reword according to newest specification
-      i2c: octeon: reword according to newest specification
-      i2c: opal: reword according to newest specification
-      i2c: owl: reword according to newest specification
-      i2c: pasemi: reword according to newest specification
-      i2c: piix4: reword according to newest specification
-      i2c: powermac: reword according to newest specification
-      i2c: pxa-pci: reword according to newest specification
-      i2c: riic: reword according to newest specification
-      i2c: rk3x: reword according to newest specification
-      i2c: robotfuzz-osif: reword according to newest specification
-      i2c: rzv2m: reword according to newest specification
-      i2c: sis5595: reword according to newest specification
-      i2c: sprd: reword according to newest specification
-      i2c: stm32f4: reword according to newest specification
-      i2c: sun6i-p2wi: reword according to newest specification
-      i2c: taos-evm: reword according to newest specification
-      i2c: tegra-bpmp: reword according to newest specification
-      i2c: thunderx-pcidrv: reword according to newest specification
-      i2c: tiny-usb: reword according to newest specification
-      i2c: uniphier-f: reword according to newest specification
-      i2c: uniphier: reword according to newest specification
-      i2c: viperboard: reword according to newest specification
-      i2c: viai2c: reword according to newest specification
-      i2c: nvidia-gpu: reword according to newest specification
-      i2c: virtio: reword according to newest specification
-      i2c: cpm: reword according to newest specification
-      i2c: st: reword according to newest specification
-
- .../bindings/i2c/amlogic,meson6-i2c.yaml           |   3 +
- .../devicetree/bindings/i2c/atmel,at91sam-i2c.yaml |  10 +-
- .../devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml  |  28 +++---
- .../devicetree/bindings/i2c/i2c-demux-pinctrl.yaml | 112 ++++++++++-----------
- .../devicetree/bindings/i2c/i2c-lpc2k.txt          |  33 ------
- .../bindings/i2c/nvidia,tegra20-i2c.yaml           |   6 --
- .../devicetree/bindings/i2c/nxp,lpc1788-i2c.yaml   |  54 ++++++++++
- .../devicetree/bindings/i2c/renesas,iic-emev2.yaml |  14 +--
- .../devicetree/bindings/i2c/renesas,rcar-i2c.yaml  |  20 ++--
- .../devicetree/bindings/i2c/renesas,riic.yaml      |  34 +++----
- .../bindings/i2c/renesas,rmobile-iic.yaml          |  24 ++---
- .../bindings/i2c/samsung,s3c2410-i2c.yaml          |   6 --
- .../bindings/i2c/snps,designware-i2c.yaml          |   4 +
- .../devicetree/bindings/i2c/st,stm32-i2c.yaml      |  66 ++++++------
- .../devicetree/bindings/i2c/ti,omap4-i2c.yaml      |  64 +++++-------
- Documentation/i2c/busses/i2c-i801.rst              |   1 +
- MAINTAINERS                                        |   2 +-
- drivers/i2c/busses/Kconfig                         |   3 +-
- drivers/i2c/busses/i2c-ali1563.c                   |   1 +
- drivers/i2c/busses/i2c-ali15x3.c                   |   2 +-
- drivers/i2c/busses/i2c-altera.c                    |   4 +-
- drivers/i2c/busses/i2c-au1550.c                    |  15 ++-
- drivers/i2c/busses/i2c-bcm-kona.c                  |  13 ++-
- drivers/i2c/busses/i2c-bcm2835.c                   |  10 +-
- drivers/i2c/busses/i2c-brcmstb.c                   |  11 +-
- drivers/i2c/busses/i2c-ccgx-ucsi.c                 |   1 +
- drivers/i2c/busses/i2c-cht-wc.c                    |   8 +-
- drivers/i2c/busses/i2c-cp2615.c                    |  10 +-
- drivers/i2c/busses/i2c-cpm.c                       |   4 +-
- drivers/i2c/busses/i2c-cros-ec-tunnel.c            |   4 +-
- drivers/i2c/busses/i2c-davinci.c                   |  17 ++--
- drivers/i2c/busses/i2c-designware-platdrv.c        |   2 +-
- drivers/i2c/busses/i2c-digicolor.c                 |   6 +-
- drivers/i2c/busses/i2c-diolan-u2c.c                |   2 +-
- drivers/i2c/busses/i2c-dln2.c                      |   4 +-
- drivers/i2c/busses/i2c-fsi.c                       |  56 +++++------
- drivers/i2c/busses/i2c-gpio.c                      |   8 +-
- drivers/i2c/busses/i2c-highlander.c                |   2 +-
- drivers/i2c/busses/i2c-hisi.c                      |   8 +-
- drivers/i2c/busses/i2c-hix5hd2.c                   |   6 +-
- drivers/i2c/busses/i2c-i801.c                      |  15 +--
- drivers/i2c/busses/i2c-ibm_iic.c                   |  27 ++---
- drivers/i2c/busses/i2c-iop3xx.c                    |  15 ++-
- drivers/i2c/busses/i2c-isch.c                      |   2 +-
- drivers/i2c/busses/i2c-jz4780.c                    |   4 +-
- drivers/i2c/busses/i2c-kempld.c                    |   4 +-
- drivers/i2c/busses/i2c-ljca.c                      |  20 ++--
- drivers/i2c/busses/i2c-lpc2k.c                     |  10 +-
- drivers/i2c/busses/i2c-ls2x.c                      |  11 +-
- drivers/i2c/busses/i2c-mlxcpld.c                   |  14 +--
- drivers/i2c/busses/i2c-mpc.c                       |   4 +-
- drivers/i2c/busses/i2c-mt7621.c                    |  26 ++---
- drivers/i2c/busses/i2c-mv64xxx.c                   |  12 +--
- drivers/i2c/busses/i2c-nvidia-gpu.c                |   7 +-
- drivers/i2c/busses/i2c-ocores.c                    |   8 +-
- drivers/i2c/busses/i2c-octeon-core.c               |   6 +-
- drivers/i2c/busses/i2c-octeon-core.h               |   4 +-
- drivers/i2c/busses/i2c-octeon-platdrv.c            |   2 +-
- drivers/i2c/busses/i2c-omap.c                      |  36 +++++--
- drivers/i2c/busses/i2c-opal.c                      |  10 +-
- drivers/i2c/busses/i2c-owl.c                       |  12 +--
- drivers/i2c/busses/i2c-pasemi-core.c               |   6 +-
- drivers/i2c/busses/i2c-piix4.c                     |   2 +-
- drivers/i2c/busses/i2c-powermac.c                  |  14 +--
- drivers/i2c/busses/i2c-pxa-pci.c                   |   2 +-
- drivers/i2c/busses/i2c-pxa.c                       |   1 +
- drivers/i2c/busses/i2c-qup.c                       |   1 +
- drivers/i2c/busses/i2c-rcar.c                      |  13 ++-
- drivers/i2c/busses/i2c-riic.c                      |   8 +-
- drivers/i2c/busses/i2c-rk3x.c                      |  20 ++--
- drivers/i2c/busses/i2c-robotfuzz-osif.c            |   4 +-
- drivers/i2c/busses/i2c-rzv2m.c                     |  12 +--
- drivers/i2c/busses/i2c-sis5595.c                   |   2 +-
- drivers/i2c/busses/i2c-sprd.c                      |  16 +--
- drivers/i2c/busses/i2c-st.c                        |   8 +-
- drivers/i2c/busses/i2c-stm32f4.c                   |   8 +-
- drivers/i2c/busses/i2c-sun6i-p2wi.c                |  20 ++--
- drivers/i2c/busses/i2c-taos-evm.c                  |   2 +-
- drivers/i2c/busses/i2c-tegra-bpmp.c                |   4 +-
- drivers/i2c/busses/i2c-thunderx-pcidrv.c           |   2 +-
- drivers/i2c/busses/i2c-tiny-usb.c                  |   6 +-
- drivers/i2c/busses/i2c-uniphier-f.c                |  26 +++--
- drivers/i2c/busses/i2c-uniphier.c                  |  15 ++-
- drivers/i2c/busses/i2c-viai2c-common.c             |   2 +-
- drivers/i2c/busses/i2c-viai2c-wmt.c                |   8 +-
- drivers/i2c/busses/i2c-viai2c-zhaoxin.c            |  12 +--
- drivers/i2c/busses/i2c-viperboard.c                |  10 +-
- drivers/i2c/busses/i2c-virtio.c                    |   2 +-
- drivers/i2c/busses/i2c-xiic.c                      |   9 +-
- include/linux/i2c.h                                |  24 ++++-
- 90 files changed, 604 insertions(+), 582 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-lpc2k.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/nxp,lpc1788-i2c.yaml
