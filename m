@@ -1,61 +1,61 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB15E14E2C0
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 22:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B851214EC5E
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 22:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720910126; cv=none; b=Qflso1A6YRYZpnghqrINbkVB5rCkAJjW5xZmaDcHS0ZUXgGM86Jrkf0vRZqhjwemk5WkUPq5wkOomCOnA9soDwTny5Rq/1VXIw4og0JFOyVNpvVKic85ltYcxOWac5/i8LoLHi3KHY7cSvU7kNRPDbp5dMIXVNYenxA1HtHsUxM=
+	t=1720910129; cv=none; b=TnPNcRINrGHnc7Qul3Epvl7ET5eurMaKpMSqhSSdoSujPv+Cl5E1oo+anGPYa3chBDTgKYNyEqP1UUjEuAYxcBzDIptN2wCHKz3rdjV3IHC2SDExqul768aXo18efQm0sPeWKrzfkWmeMHVfXs3FQHrFQBa/w5EulcHh5omCuDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720910126; c=relaxed/simple;
-	bh=zCLySV5EiWp6xCmHvjwHnXYPPFGzjEkiFSbsL+beAvY=;
+	s=arc-20240116; t=1720910129; c=relaxed/simple;
+	bh=Q5Q8qlpa5kCEcYBj1kgWUIre0E1iungJE/D6o8c2PKM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gtBAhYiwBUU6FKSYLRFhhKqz+o5QcWCk6yQqsGF+zWyxcvOePYGBFMzCXMGh0PBkKM19qxp/OIPa/y4lxXzXK7e7Lbbgvjk70Sv1BUn074V9goDFI/9c2cWDZRi7jcQKymR+z+NGaTO35f7KmnwkW6ZoSGPtpaMm9ria14NiE4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=VQWcCCCG; arc=none smtp.client-ip=209.85.167.180
+	 In-Reply-To:To:Cc; b=c9LhRaHJujcvln5CRHcEWQzpx55UR28vVP/ABBNIB1CRF+C6Iq85t/4YH3XnAZ4+p7NjYTsuOiEFOmSnYk1Yv+VOOhHSbPro8DBi/z/T9iXuluqB8r1D79+RaELGyks5yyZd/3Psg/mv4havYIYDaJsIsiMhPzwWks6dQFeVbCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=tCFpbXf4; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="VQWcCCCG"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3d9c487b2b5so1899199b6e.3
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 15:35:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="tCFpbXf4"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fb05b0be01so22109245ad.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 15:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1720910124; x=1721514924; darn=vger.kernel.org;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1720910127; x=1721514927; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=alTBG+u/YLjKyTy47XAD1gqzMa09sOqVoRaB/kIbg6M=;
-        b=VQWcCCCGe85V0eos3nAAwlsMOcZe7ohy5/MpR8gktKpRrRTX6hVgQtB/mQ4HXZu9+S
-         kr6danvovbxyHEfNhd+A1ovmD3scVFPB6IECR3nPLmEwGOs/ZYJLuwN7Zyuqe94Ata8a
-         C2iuFJ5F+7mHkpEOXZF+BvRDOgVihX8FzoJlsJgPrwtwQmsUXfk5RKhsZCTbUV8ikhF5
-         UN5t7ElLR1y2AUSrXIgfcQpdoH4t/DlaX5a6JbdRoCOShN5w5onfDG9QcCr2lm/wiqyL
-         Lx9L/98h9lTPyC/3pZR3hGInZ484Axj9haHo/fG58aTku5ZRZdJ4BxdSGCbfovMFkQmc
-         Zgqw==
+        bh=fMe9w4Sl4nYm2juZuyLgqok6sq0vOd/dm0cLXM37PB8=;
+        b=tCFpbXf4Mg2ZUEn5qNqW5Gcn9XYK3MZVTAW5DKMnR2dz3ApxxCdJaY7F1HlWbjCmoc
+         mwKJP/Xql4O/VEMXRYLtD4bpUk8NLV+nZHGMZgASmPJqQpHX+2hMAZ+PA3OG0wXnb4Je
+         H+coo1inIfGwA/OnHsbbMaFWiaJ/9diRtlbP7eAtdUGfgqBXfGX315kEyVQVn200RWsK
+         efo9I0KxtLtl1aipJXjnYfMzqvs7H2ZvocelSTuHqSMIYTyiwrqfdZmorS7HRXgCePfF
+         WPMibRpXDJ2km00ahj8NFnRk4ibrVx2sgmgq57CzvnYHc4l1Q+rKusys3bthTRnkst/w
+         jzXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720910124; x=1721514924;
+        d=1e100.net; s=20230601; t=1720910127; x=1721514927;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=alTBG+u/YLjKyTy47XAD1gqzMa09sOqVoRaB/kIbg6M=;
-        b=qrjYdEYy1TKI5aaJC/0YTVSWk/EOAN87LnhU6pcLvBl4af5z3Rzdovhl3YG08k9qxc
-         1haIWcv/SzlOC0RjxlUt11CZ/Jbo2TNCyXW0uRsu3vXdsaNuY//j5Nej3T1YriogjMKj
-         r1fpgfhru43HNyhVdGzQtZqXbALBQ8zsZ9k6n+VYeq+fmsbBpxdYjZw5BAF2DVGpU0e4
-         zJKukT+fCNzn2bxuzp/ujydVqfJIcF6oc2b+YIJm9yc2QJbpGaLiys4Em/vb8TgtCFyY
-         O9LKAi+oUodQBkSj2oLtDxvIohUernWeaLtg/6U+fy85YvexsfgSuyREwH5umReFj/TR
-         I4Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKavD7FOkzpQKDXXZNMMQdvxiypkWENO+RcBfmn+TJeFUofvvCYCvLit3RJh4NeIJEMKPgiYkTo1aBkh+hSj3zDxxO9k/OzGJsPqbI
-X-Gm-Message-State: AOJu0YzKiqflFWl4ha3Frbhof8ONxlUCUiunL8A5nMcwv2t8wF5lElnS
-	9g31gTJR8w/sYxYu5Brd8j4z81SwDdbNUehlaX5PT9g1x2FFTZZLytj2AWSo2+c=
-X-Google-Smtp-Source: AGHT+IEYT0gC2VTZYS2sf8gfKkEAnenEHDXxurHyzMbwt0lUKt7Uw0JJq9+GvaJQa3SRamrYdVWDxQ==
-X-Received: by 2002:a54:4887:0:b0:3da:a6ce:f02c with SMTP id 5614622812f47-3daa6cef4c8mr8226788b6e.20.1720910123980;
-        Sat, 13 Jul 2024 15:35:23 -0700 (PDT)
+        bh=fMe9w4Sl4nYm2juZuyLgqok6sq0vOd/dm0cLXM37PB8=;
+        b=mfaDHQ7eZ7b0/iKslD2AX4hUXWVOGCKDDPleB3hCwX4bSDvT6M/DU4lmlCxI2BuPHt
+         hpch3IMdBxCegpkBlM0Z5uo6VwVoBcpFy673AdwfBqhawcQ6iuQMvgNFGSI48krFIjyC
+         8l3XrZkfMh96B9j1PPUHwUH8VCbkJ1KasO030psdEhetSfb5wfXeaOOQjNlVKyi+tnHz
+         zNMrQPCxQDBLt3v+OMUa3ookC0pTyxlph6/c9hhterF1vq6bv25KVgi/jzY+4xz2Wo1E
+         Xg7RQU9BxBPvCiK+5JvOCFYxi5PGAhJ+COrMHdttxhadaHw/vmvsJVsoIxZWu6FBQyFT
+         YgHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqvc3AKxRmvHu3apLSAY/WHiwlvl+UzAdH6e8otKIalgITJ7R2OPbLFZCQTW9MuvWv2twC5LIyCFsv1VNzFYYbAEDDd/zQbm1wFcI0
+X-Gm-Message-State: AOJu0YxqG+Li9JS50m34hrK2s8JLgZdI3LTJYMJhzes1RIgauhLWUBVa
+	R6HYKoU/5a+xDYt7CHmI9eppZVAelPRn/08KSGaZk8RVreYsk/JIdnDcltBR4bE=
+X-Google-Smtp-Source: AGHT+IGObIZ643TT2wBhyhU7VKoiLnFm1jB2Pr2MWhe0lodyFncsHzDT94Hk/HfjPv+LynUfQ7XAoQ==
+X-Received: by 2002:a17:902:f541:b0:1fb:1faa:96af with SMTP id d9443c01a7336-1fbb6ee18d5mr128941985ad.43.1720910126825;
+        Sat, 13 Jul 2024 15:35:26 -0700 (PDT)
 Received: from [127.0.1.1] ([2601:1c2:1802:170:d7fc:57d0:ada6:13b7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc4d9d8sm14640025ad.264.2024.07.13.15.35.22
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc4d9d8sm14640025ad.264.2024.07.13.15.35.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jul 2024 15:35:23 -0700 (PDT)
+        Sat, 13 Jul 2024 15:35:26 -0700 (PDT)
 From: Drew Fustini <drew@pdp7.com>
-Date: Sat, 13 Jul 2024 15:35:11 -0700
-Subject: [PATCH RFC net-next 2/4] dt-bindings: net: add T-HEAD dwmac
- support
+Date: Sat, 13 Jul 2024 15:35:13 -0700
+Subject: [PATCH RFC net-next 4/4] riscv: dts: thead: Add TH1520 ethernet
+ nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240713-thead-dwmac-v1-2-81f04480cd31@tenstorrent.com>
+Message-Id: <20240713-thead-dwmac-v1-4-81f04480cd31@tenstorrent.com>
 References: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
 In-Reply-To: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -85,140 +85,386 @@ Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720910119; l=3679;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720910119; l=9168;
  i=dfustini@tenstorrent.com; s=20230430; h=from:subject:message-id;
- bh=Y0E8nHMS0ChuTKJIO/9LY9pitgmvEOTz6OdEh2EGJdM=;
- b=CnXpDka3RYSnvNevDmDeEY3cdh4Cuclhx83gpRYciYZPaW7Lncl7HiKfGGZ+vf+vL/6bKiiAg
- NqzeNosEJGHCjNVVRAFPPUyhZ9vKonMP2wKOgI5NMbo4mgJUTSUKo60
+ bh=pgJZ1RvKmdYSrnUvyessF+9Y4MQGDYFqOhd3RpDVmoA=;
+ b=Rg/C5Qgi/ty5j4VgYT6Mazq4CfBfpa3p/eKX8d+sJCxiFC4gifdbfADVvkecRYSbGYXkr6qCK
+ fqVq2+Ay3AtD/sz+7kxXZ+5CH5iC7ILOF7vxN7fEhW+yjrA8jrwN89b
 X-Developer-Key: i=dfustini@tenstorrent.com; a=ed25519;
  pk=p3GKE9XFmjhwAayAHG4U108yag7V8xQVd4zJLdW0g7g=
 
-From: Jisheng Zhang <jszhang@kernel.org>
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-Add documentation to describe T-HEAD dwmac.
-
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Link: https://lore.kernel.org/r/20230827091710.1483-3-jszhang@kernel.org
 Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 [drew: change apb registers from syscon to second reg of gmac node]
 Signed-off-by: Drew Fustini <drew@pdp7.com>
 ---
- .../devicetree/bindings/net/snps,dwmac.yaml        |  1 +
- .../devicetree/bindings/net/thead,dwmac.yaml       | 81 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 3 files changed, 83 insertions(+)
+ arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts |  89 ++++++++++++++
+ .../boot/dts/thead/th1520-lichee-module-4a.dtsi    | 131 +++++++++++++++++++++
+ arch/riscv/boot/dts/thead/th1520.dtsi              |  55 ++++++++-
+ 3 files changed, 273 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 0ad3bf5dafa7..d417f0e2d9c6 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -97,6 +97,7 @@ properties:
-         - snps,dwxgmac-2.10
-         - starfive,jh7100-dwmac
-         - starfive,jh7110-dwmac
-+        - thead,th1520-dwmac
+diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+index e9f573c7e67c..59b84a318e03 100644
+--- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
++++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+@@ -15,6 +15,7 @@ / {
+ 	compatible = "beagle,beaglev-ahead", "thead,th1520";
  
-   reg:
-     minItems: 1
-diff --git a/Documentation/devicetree/bindings/net/thead,dwmac.yaml b/Documentation/devicetree/bindings/net/thead,dwmac.yaml
-new file mode 100644
-index 000000000000..5618ede47925
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/thead,dwmac.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/thead,dwmac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ 	aliases {
++		ethernet0 = &gmac0;
+ 		gpio0 = &gpio0;
+ 		gpio1 = &gpio1;
+ 		gpio2 = &gpio2;
+@@ -111,6 +112,23 @@ &sdio0 {
+ 	status = "okay";
+ };
+ 
++&gmac0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac0_pins>;
++	phy-handle = <&phy0>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++};
 +
-+title: T-HEAD DWMAC Ethernet controller
++&mdio0 {
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
++		reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
++	};
++};
 +
-+maintainers:
-+  - Jisheng Zhang <jszhang@kernel.org>
+ &padctrl_aosys {
+ 	led_pins: led-0 {
+ 		led-pins {
+@@ -130,6 +148,77 @@ led-pins {
+ };
+ 
+ &padctrl0_apsys {
++	gmac0_pins: gmac0-0 {
++		tx-pins {
++			pins = "GMAC0_TX_CLK",
++			       "GMAC0_TXEN",
++			       "GMAC0_TXD0",
++			       "GMAC0_TXD1",
++			       "GMAC0_TXD2",
++			       "GMAC0_TXD3";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <25>;
++			input-disable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
 +
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - thead,th1520-dwmac
-+  required:
-+    - compatible
++		rx-pins {
++			pins = "GMAC0_RX_CLK",
++			       "GMAC0_RXDV",
++			       "GMAC0_RXD0",
++			       "GMAC0_RXD1",
++			       "GMAC0_RXD2",
++			       "GMAC0_RXD3";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <1>;
++			input-enable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - thead,th1520-dwmac
-+      - const: snps,dwmac-3.70a
++		mdc-pins {
++			pins = "GMAC0_MDC";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <13>;
++			input-disable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
 +
-+  reg:
-+    minItems: 2
-+    maxItems: 2
-+    items:
-+      - description: DesignWare GMAC IP core registers
-+      - description: GMAC APB registers
++		mdio-pins {
++			pins = "GMAC0_MDIO";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <13>;
++			input-enable;
++			input-schmitt-enable;
++			slew-rate = <0>;
++		};
 +
-+  reg-names:
-+    minItems: 2
-+    maxItems: 2
-+    items:
-+      - const: dwmac
-+      - const: apb
++		phy-reset-pins {
++			pins = "GMAC0_COL"; /* GPIO3_21 */
++			bias-disable;
++			drive-strength = <3>;
++			input-disable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - phy-mode
++		phy-interrupt-pins {
++			pins = "GMAC0_CRS"; /* GPIO3_22 */
++			function = "gpio";
++			bias-pull-up;
++			drive-strength = <1>;
++			input-enable;
++			input-schmitt-enable;
++			slew-rate = <0>;
++		};
++	};
 +
-+allOf:
-+  - $ref: snps,dwmac.yaml#
+ 	uart0_pins: uart0-0 {
+ 		tx-pins {
+ 			pins = "UART0_TXD";
+diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+index b5ab80fcd4c3..8a5012f3f3ee 100644
+--- a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
++++ b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+@@ -11,6 +11,11 @@ / {
+ 	model = "Sipeed Lichee Module 4A";
+ 	compatible = "sipeed,lichee-module-4a", "thead,th1520";
+ 
++	aliases {
++		ethernet0 = &gmac0;
++		ethernet1 = &gmac1;
++	};
 +
-+unevaluatedProperties: false
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x00000000 0x2 0x00000000>;
+@@ -29,6 +34,12 @@ &dmac0 {
+ 	status = "okay";
+ };
+ 
++&aogpio {
++	gpio-line-names = "", "", "",
++			  "GPIO00",
++			  "GPIO04";
++};
 +
-+examples:
-+  - |
-+    gmac0: ethernet@e7070000 {
-+        compatible = "thead,th1520-dwmac", "snps,dwmac-3.70a";
-+        reg = <0xe7070000 0x2000>, <0xec003000 0x1000>;
-+        reg-names = "dwmac", "apb";
-+        clocks = <&clk 1>, <&clk 2>;
-+        clock-names = "stmmaceth", "pclk";
-+        interrupts = <66>;
-+        interrupt-names = "macirq";
-+        phy-mode = "rgmii-id";
-+        snps,fixed-burst;
-+        snps,axi-config = <&stmmac_axi_setup>;
-+        snps,pbl = <32>;
-+        phy-handle = <&phy0>;
+ &aonsys_clk {
+ 	clock-frequency = <73728000>;
+ };
+@@ -62,6 +73,22 @@ &dmac0 {
+ 	status = "okay";
+ };
+ 
++&gmac0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac0_pins>, <&mdio0_pins>;
++	phy-handle = <&phy0>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++};
 +
-+        mdio {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            compatible = "snps,dwmac-mdio";
++&gmac1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac1_pins>;
++	phy-handle = <&phy1>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++};
 +
-+            phy0: ethernet-phy@0 {
-+                reg = <0>;
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e1736969189b..c724c2c4e06c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19319,6 +19319,7 @@ M:	Fu Wei <wefu@redhat.com>
- L:	linux-riscv@lists.infradead.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/clock/thead,th1520-clk-ap.yaml
-+F:	Documentation/devicetree/bindings/net/thead,dwmac.yaml
- F:	arch/riscv/boot/dts/thead/
- F:	drivers/clk/thead/clk-th1520-ap.c
- F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
+ &gpio0 {
+ 	gpio-line-names = "", "", "", "", "", "", "", "", "", "",
+ 			  "", "", "", "", "", "", "", "", "", "",
+@@ -94,3 +121,107 @@ &gpio3 {
+ 			  "GPIO09",
+ 			  "GPIO10";
+ };
++
++&mdio0 {
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++	};
++
++	phy1: ethernet-phy@2 {
++		reg = <2>;
++	};
++};
++
++&padctrl0_apsys {
++	gmac0_pins: gmac0-0 {
++		tx-pins {
++			pins = "GMAC0_TX_CLK",
++			       "GMAC0_TXEN",
++			       "GMAC0_TXD0",
++			       "GMAC0_TXD1",
++			       "GMAC0_TXD2",
++			       "GMAC0_TXD3";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <25>;
++			input-disable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++
++		rx-pins {
++			pins = "GMAC0_RX_CLK",
++			       "GMAC0_RXDV",
++			       "GMAC0_RXD0",
++			       "GMAC0_RXD1",
++			       "GMAC0_RXD2",
++			       "GMAC0_RXD3";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <1>;
++			input-enable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++	};
++
++	gmac1_pins: gmac1-0 {
++		tx-pins {
++			pins = "GPIO2_18", /* GMAC1_TX_CLK */
++			       "GPIO2_20", /* GMAC1_TXEN */
++			       "GPIO2_21", /* GMAC1_TXD0 */
++			       "GPIO2_22", /* GMAC1_TXD1 */
++			       "GPIO2_23", /* GMAC1_TXD2 */
++			       "GPIO2_24"; /* GMAC1_TXD3 */
++			function = "gmac1";
++			bias-disable;
++			drive-strength = <25>;
++			input-disable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++
++		rx-pins {
++			pins = "GPIO2_19", /* GMAC1_RX_CLK */
++			       "GPIO2_25", /* GMAC1_RXDV */
++			       "GPIO2_30", /* GMAC1_RXD0 */
++			       "GPIO2_31", /* GMAC1_RXD1 */
++			       "GPIO3_0",  /* GMAC1_RXD2 */
++			       "GPIO3_1";  /* GMAC1_RXD3 */
++			function = "gmac1";
++			bias-disable;
++			drive-strength = <1>;
++			input-enable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++	};
++
++	mdio0_pins: mdio0-0 {
++		mdc-pins {
++			pins = "GMAC0_MDC";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <13>;
++			input-disable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++
++		mdio-pins {
++			pins = "GMAC0_MDIO";
++			function = "gmac0";
++			bias-disable;
++			drive-strength = <13>;
++			input-enable;
++			input-schmitt-enable;
++			slew-rate = <0>;
++		};
++	};
++};
++
++&sdio0 {
++	bus-width = <4>;
++	max-frequency = <198000000>;
++	status = "okay";
++};
+diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+index 34b3e10bab09..21f9f81e5322 100644
+--- a/arch/riscv/boot/dts/thead/th1520.dtsi
++++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+@@ -153,6 +153,12 @@ uart_sclk: uart-sclk-clock {
+ 		#clock-cells = <0>;
+ 	};
+ 
++	stmmac_axi_config: stmmac-axi-config {
++		snps,wr_osr_lmt = <15>;
++		snps,rd_osr_lmt = <15>;
++		snps,blen = <0 0 64 32 0 0 0>;
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&plic>;
+@@ -201,6 +207,50 @@ uart0: serial@ffe7014000 {
+ 			status = "disabled";
+ 		};
+ 
++		gmac1: ethernet@ffe7060000 {
++			compatible = "thead,th1520-dwmac", "snps,dwmac-3.70a";
++			reg = <0xff 0xe7060000 0x0 0x2000>, <0xff 0xec004000 0x0 0x1000>;
++			reg-names = "dwmac", "apb";
++			interrupts = <67 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			clocks = <&clk CLK_GMAC_AXI>, <&clk CLK_GMAC_AXI>;
++			clock-names = "stmmaceth", "pclk";
++			snps,pbl = <32>;
++			snps,fixed-burst;
++			snps,multicast-filter-bins = <64>;
++			snps,perfect-filter-entries = <32>;
++			snps,axi-config = <&stmmac_axi_config>;
++			status = "disabled";
++
++			mdio1: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
++		gmac0: ethernet@ffe7070000 {
++			compatible = "thead,th1520-dwmac", "snps,dwmac-3.70a";
++			reg = <0xff 0xe7070000 0x0 0x2000>, <0xff 0xec003000 0x0 0x1000>;
++			reg-names = "dwmac", "apb";
++			interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			clocks = <&clk CLK_GMAC_AXI>, <&clk CLK_GMAC_AXI>;
++			clock-names = "stmmaceth", "pclk";
++			snps,pbl = <32>;
++			snps,fixed-burst;
++			snps,multicast-filter-bins = <64>;
++			snps,perfect-filter-entries = <32>;
++			snps,axi-config = <&stmmac_axi_config>;
++			status = "disabled";
++
++			mdio0: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		emmc: mmc@ffe7080000 {
+ 			compatible = "thead,th1520-dwcmshc";
+ 			reg = <0xff 0xe7080000 0x0 0x10000>;
+@@ -293,7 +343,7 @@ gpio3: gpio-controller@0 {
+ 		padctrl1_apsys: pinctrl@ffe7f3c000 {
+ 			compatible = "thead,th1520-group2-pinctrl";
+ 			reg = <0xff 0xe7f3c000 0x0 0x1000>;
+-			clocks = <&apb_clk>;
++			clocks = <&clk CLK_PERI_APB_PCLK>;
+ 		};
+ 
+ 		gpio@ffec005000 {
+@@ -339,7 +389,8 @@ gpio1: gpio-controller@0 {
+ 		padctrl0_apsys: pinctrl@ffec007000 {
+ 			compatible = "thead,th1520-group3-pinctrl";
+ 			reg = <0xff 0xec007000 0x0 0x1000>;
+-			clocks = <&apb_clk>;
++			clocks = <&clk CLK_PERI_APB_PCLK>;
++
+ 		};
+ 
+ 		uart2: serial@ffec010000 {
 
 -- 
 2.34.1
