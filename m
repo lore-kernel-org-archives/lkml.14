@@ -1,82 +1,92 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-21.smtpout.orange.fr [80.12.242.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8B713B2A5
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 17:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051F113B2AC;
+	Sat, 13 Jul 2024 17:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720890567; cv=none; b=eZQbBLSyGP0lbjJZdY5mIuW+Ay3LfnxuE2mbA2fWM50lJErLTQIatyqgY7Fa0Y4oU9W779VHefySomQxCjnBNDjUj4bGfTZas+tSMLugecEGzPmGg1+TOVNMVVJUeWZ515c4xy2TeqYqULsiOhxhCt3iENvAoza8h2jwqdIqUNc=
+	t=1720890604; cv=none; b=lyNV9rA7mczUtBL/TyxxO8rnFK5ZZ9dOJDgyXAgynZkYPJQHemL8SSfXFYGCSlj2AQH2utlKiIsbzxdg87kJGzCg4l4Nddh1RsWNESEaWvILfORpudbrfRa7Ix4w95p/3BW1O+sPT1CyNtEhmhEpc2LPE3SXWNjozzfkg+p1RCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720890567; c=relaxed/simple;
-	bh=pfQ1m0rvUgOjeAPoUcq8dNXwr6uRl7ZE9dTDU0qqP0k=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=hxS8WEC30yW5faegyUI87QJ/ZtLriFTDCpzRxII35AJcZheIHgnC+/0D+oR2Es09WVia+FPwaU+J/nQPTyonVckjOf+VJeodivGJXSLXLgmU0fR8QMPZGHXGpXeBsscE51CFOjcLEkwpiy2NL1hm5t9UxCr92nMd9/QLdUNCH9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b=r6VLBqE0; arc=none smtp.client-ip=212.77.101.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1720890604; c=relaxed/simple;
+	bh=C2lNemA5dYx0FUsiuNvgvejDSIQjYAYQUEEQ8tLbxz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KcdU4MhdZVGTgDl+sfR1msuu9HFWw95AUWdqA6EeLnmV8X6xHXs1qZSq4jD3oSgkoTT8FYAqevHaN0h4kC5Na1kjPDWRqC/mRIk0/s5YsPRNkdk9Sn6xlj4MbyXzLv5cPp/JTY7JsCBWgd9w9nEhZz3QIDWNXw/fK8tRlJlEUYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dNPUGXhF; arc=none smtp.client-ip=80.12.242.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="r6VLBqE0"
-Received: (wp-smtpd smtp.wp.pl 1451 invoked from network); 13 Jul 2024 19:09:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1720890562; bh=7o8mzc213EEKgCOXqvfrefpkdDjhgWDGYyRAq4cTJo0=;
-          h=From:To:Subject;
-          b=r6VLBqE02iYYFE3IVu876jKXU38PdPH1H0LLDo2bi0eBs5Lrz+R6bt6AiJRs0fHcB
-           hleUe9a1jZ0w3MxZES9cN54UWyy/81EcrDH1sNw1Npu+9Mp5xRRjHQEVTaiKmD1UFQ
-           0Kq4Us5A4HOY3LGv8gafvM/KepOMq1TKhLFSmj/I=
-Received: from 83.24.148.52.ipv4.supernova.orange.pl (HELO laptop-olek.lan) (olek2@wp.pl@[83.24.148.52])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <davem@davemloft.net>; 13 Jul 2024 19:09:22 +0200
-From: Aleksander Jan Bajkowski <olek2@wp.pl>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	olek2@wp.pl,
-	jacob.e.keller@intel.com,
-	horms@kernel.org,
-	u.kleine-koenig@pengutronix.de,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] net: ethernet: lantiq_etop: remove redundant device name setup
-Date: Sat, 13 Jul 2024 19:09:20 +0200
-Message-Id: <20240713170920.863171-1-olek2@wp.pl>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dNPUGXhF"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id SauhsgQxjqvisSauhsE1rF; Sat, 13 Jul 2024 13:27:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1720870060;
+	bh=PDwTxGCe+tbryrWNO+5MDjX4lRzsTsMGx8e5EPmnsf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=dNPUGXhFKQJBkKjNzoUDCKgfDG8FZdbdi1ni8lSeqjOstOdUxXjaJNuBaaBKJqQ6B
+	 ksijwVSQnxpi370BhrtwTILPG2xeUAbmfE/n3n12fp6JF++VLPEXSccM3GrDn9Jfna
+	 ohgY19gqpdpV4vSpy/q+E1hPHsNsS0Om1SefTCGgiVi+a9kBztUx2VXgOh3kI3NtAQ
+	 nNZOzCLHt/Q3ew2MlupdPgBQyIvU+fFebFh941JCRvAOl4JmApywCnZ9oa5FoXmLPp
+	 5wBHcfoC8k9k7+KdBZpcHfK1uMdZhaJ8fZv7Bcyww7IHLs3MPSfBCTqzvcJPiEfyie
+	 DGGwFJ/iQamUA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 13 Jul 2024 13:27:40 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <a9137e59-80de-4314-8658-cf7e8105322d@wanadoo.fr>
+Date: Sat, 13 Jul 2024 13:27:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MEDIA: USB: UVC: Corrected Errors in Macro Definitions
+To: aditya-chari25 <adi25charis@gmail.com>,
+ laurent.pinchart@ideasonboard.com, mchehab@kernel.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240713110858.307085-1-adi25charis@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240713110858.307085-1-adi25charis@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-WP-MailID: 16fb977d773cd3be13d03770da642e94
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [8VMU]                               
 
-The same name is set when allocating the netdevice structure in the
-alloc_etherdev_mq()->alloc_etherrdev_mqs() function. Therefore, there
-is no need to manually set it.
+Le 13/07/2024 à 13:08, aditya-chari25 a écrit :
+> macro definitions had errors since they weren't enclosed in parenthesis
+> hence I rectified those errors
 
-This fixes CheckPatch warnings:
-WARNING: Prefer strscpy over strcpy - see: https://github.com/KSPP/linux/issues/88
-	strcpy(dev->name, "eth%d");
+Hi,
 
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
----
- drivers/net/ethernet/lantiq_etop.c | 1 -
- 1 file changed, 1 deletion(-)
+The driver does *not* compile anymore with this patch.
 
-diff --git a/drivers/net/ethernet/lantiq_etop.c b/drivers/net/ethernet/lantiq_etop.c
-index 0b9982804370..9e6984815386 100644
---- a/drivers/net/ethernet/lantiq_etop.c
-+++ b/drivers/net/ethernet/lantiq_etop.c
-@@ -675,7 +675,6 @@ ltq_etop_probe(struct platform_device *pdev)
- 		err = -ENOMEM;
- 		goto err_out;
- 	}
--	strcpy(dev->name, "eth%d");
- 	dev->netdev_ops = &ltq_eth_netdev_ops;
- 	dev->ethtool_ops = &ltq_etop_ethtool_ops;
- 	priv = netdev_priv(dev);
--- 
-2.39.2
+Can you elaborate on what you are trying to fix and if your chnage is at 
+least compile-tested?
+
+CJ
+
+> 
+> Signed-off-by: aditya-chari25 <adi25charis@gmail.com>
+> ---
+>   drivers/media/usb/uvc/uvc_driver.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 8fe24c98087e..6e14b9dc3886 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -2424,9 +2424,9 @@ static const struct uvc_device_info uvc_quirk_force_y8 = {
+>   	.quirks = UVC_QUIRK_FORCE_Y8,
+>   };
+>   
+> -#define UVC_INFO_QUIRK(q) (kernel_ulong_t)&(struct uvc_device_info){.quirks = q}
+> -#define UVC_INFO_META(m) (kernel_ulong_t)&(struct uvc_device_info) \
+> -	{.meta_format = m}
+> +#define UVC_INFO_QUIRK(q) {(kernel_ulong_t)&(struct uvc_device_info){.quirks = q}}
+> +#define UVC_INFO_META(m) {(kernel_ulong_t)&(struct uvc_device_info) \
+> +	{.meta_format = m}}
+>   
+>   /*
+>    * The Logitech cameras listed below have their interface class set to
 
