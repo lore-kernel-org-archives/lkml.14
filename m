@@ -1,182 +1,117 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7F83BBE5;
-	Sat, 13 Jul 2024 02:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541281755B
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 02:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720837168; cv=none; b=hfYd3YRvn4TAqlQLJnGnThfYtn1fL1FT/DAGPPwdo2WmI6HI9N1sIl9QOIfGP+F5GYXko/R23+OCMwxyLEBr6E5nKBpVk/7HtPqDfEgQajvmbgepxC8OAmDh1k2uBKjQuyD91moLHTG+A+pod3FS3wad+Iqq5xNXbv4A/1XKYRU=
+	t=1720837350; cv=none; b=swB7Y2zZAgGCARddc0JBYQWEgvNmmW/A+XyD5kVazxk7sonBajckTyYkObuYMSI3U1t5KxFu+ae/QdOsMsWwVoEI1bRnhK1/R1cA/Wgz3JWzg2wqJjTJ6k64TGzV/K8amZXAoiU/rC90dYDTXRannoLeWxiV724ftRDkh/jlf4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720837168; c=relaxed/simple;
-	bh=O9ltKFpaw07JOwOY7Yb+YIhc3w7Xh+r0G45nYtCCSWk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BafC/T8PRMq/FtC4qk5yi2LS0zZBq8WDafGPV7f1wq2JT4H1HsWjGvqN2U9E1BoSjwO/8ApmlFoad2R8aTtb3Mvj6zuQDrUkVpLgfwHP6aJe1OEtmc2zcZWiObBoXGRoZYSCztQ/RjJf4I8BZ8G7seMc3DA0BiusGU/MkSBNET4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=fb5gk2+T; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1720837350; c=relaxed/simple;
+	bh=lXqgkt2H22OrWd0Xr/ds8mNtVYxJTGNWblZs/3ShZU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4pFM78fT88o8r0TD3xDJn6WwzkHGjmE+L3XZdLfMWWkpP7jXohb4Llv5nM6Upe0R9O0eth0IPre/eE1tF9GAplEhn2X3C7pZaPr8TpJwe3cs90Z3B/nr2IcF3wT62a5pEZmnOLwy0NObWLu376Evgdm9iXS1gP8n3qM2qPssnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=ifBQmJ7h; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="fb5gk2+T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1720837160;
-	bh=O9ltKFpaw07JOwOY7Yb+YIhc3w7Xh+r0G45nYtCCSWk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fb5gk2+TxwJENs01xSri8CIH5wkizXIouiQ8qZnuUtUjv6Ot1AoWIhEwhOmGL93ok
-	 SkWH3IgGjZ/vNMMM4vZ5JgsWEsTzTiiiHklDmLc4EifCf/Zrkyj+orzZwtF3IVuOXn
-	 foqxKZvHx08U9XfERlZegUOA8foDv2zJJuOzgf0lDKR7u89lKonL/r1gWeh9fWFs4Y
-	 08u1hznF/ovE5kNxDW/HCPY8o4jRbt7HqrHYj5fV85x/sLDDEllfhe1TJGnjNtu9WA
-	 shvXPVPp+tIZiWjLC8u4QE5YCEf/qfwyhgAfQlOS8dly0ZOota0VvwaU0xmMDZg58L
-	 V6htT8TN4/dfw==
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 8A9A26007C;
-	Sat, 13 Jul 2024 02:19:17 +0000 (UTC)
-Received: by x201s (Postfix, from userid 1000)
-	id 98EB6203283; Sat, 13 Jul 2024 02:19:11 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Ratheesh Kannoth <rkannoth@marvell.com>,
-	Florian Westphal <fw@strlen.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 04/13] net/sched: cls_flower: prepare fl_{set,dump}_key_flags() for ENC_FLAGS
-Date: Sat, 13 Jul 2024 02:19:01 +0000
-Message-ID: <20240713021911.1631517-5-ast@fiberby.net>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240713021911.1631517-1-ast@fiberby.net>
-References: <20240713021911.1631517-1-ast@fiberby.net>
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="ifBQmJ7h"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7a05c755477so165242185a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jul 2024 19:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1720837347; x=1721442147; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KcCJozulqARBvuu4ti/BgXI4cG4IJiyyKAoDsbuvkyI=;
+        b=ifBQmJ7hifOOeiJtURNJ5zcqjDfweQa8HxFZJOFQ7bphSMGl3KOyrVh2X15Jyh/dFo
+         YS0Xxs4ZWN2mzjvamMxvQrt4y1fYCI1Gnj1dGu6OZTTReAwxlYScvJ9SpUjIQXc278Sg
+         eo1XxmdSEi5w86KDVWUVwjJ2LXmyKPFc33eb0y2zi8CxLz4+aOghxvL9uH7Sk+nFBsGY
+         iO4xVLbepcR/8AZBc8PY7pgg2qcoPN85ECUu16Q56ZgSjd14cO465002OVru0w6VN0P8
+         /efj9tPdbZAEKje3Nigm508CxkcFGdRiiZnmb6mlJXgVdz8jPVy4a9dR9V/0gb+QmXfv
+         70tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720837347; x=1721442147;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KcCJozulqARBvuu4ti/BgXI4cG4IJiyyKAoDsbuvkyI=;
+        b=eRA2bfycxocLDq9aL08iI/7RfWbSmVYeh5QRdAs3ZgY6VSKHhxfAgL9RX5zqnNmnIo
+         MYa1SQ957Y1ZmWsPqwsYqEVY/NwU5tSbMDIFv3zWLZeo4T7K1TFyxFnABiPli+Xodke1
+         G69hr4DsWgHAWfpxY3BacscNJp7474iuc/AzxHLfIQXEhqlrh+nLad29yqAGj1qqYlQq
+         0TL1mwAIGAS72gXzxu4oFcycdzrZQBoIFZa2NYooL7poQ4aw3RRU5+UgLguWv8PyuVA4
+         eV+CNoSC2QoF/cGYbKA+Q5ojWcLgRdY1et4Vu+maTKwFu/le/jm0uuudDfCg5toyJZDD
+         llLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjyTNnfrBkbcXUZkeBNe4xyKzH04CF/qG1ZhIU4+L7Xm56+GgkAV5T9u4+t2k+v5sXgEjnrArMcXLTXldOLFGMsm9FBFajcy03i3xl
+X-Gm-Message-State: AOJu0YzzF4pwDp9lHkQIX88jA9XxTAZCAjsG4fZnRIyTCeEdTx0jDldm
+	b9GjFPmp7TuDJKbIUDEsvNTu8wSq6S7gIGQfeYi8HVbrgI6H4J8u3beQXWpMqw==
+X-Google-Smtp-Source: AGHT+IHI0rkfaG2cSk9khBWAyN7byMc87Kw8sb7ZOHvEZC2TVKLMXwflVSRFs9KJYlTz3UJkFFzIZA==
+X-Received: by 2002:ae9:f717:0:b0:79f:f1:2a with SMTP id af79cd13be357-79f19a64fa4mr1324430585a.28.1720837347270;
+        Fri, 12 Jul 2024 19:22:27 -0700 (PDT)
+Received: from rowland.harvard.edu ([2601:19b:681:fd10::cad7])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a160c63880sm10444485a.72.2024.07.12.19.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jul 2024 19:22:26 -0700 (PDT)
+Date: Fri, 12 Jul 2024 22:22:24 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Hongyu Xie <xy521521@gmail.com>
+Cc: gregkh@linuxfoundation.org, oneukum@suse.com, brauner@kernel.org,
+	jlayton@kernel.org, xiehongyu1@kylinos.cn, jack@suse.cz,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next] usb: usbfs: Add reset_resume for usbfs
+Message-ID: <8a16e1c2-fd59-4279-8b36-806a214385b6@rowland.harvard.edu>
+References: <20240711084321.44916-1-xiehongyu1@kylinos.cn>
+ <527927b8-9475-47da-bf2b-7a5d9e81e470@suse.com>
+ <a782c5bc-fc8b-43ad-9c6e-1e6799243364@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a782c5bc-fc8b-43ad-9c6e-1e6799243364@kylinos.cn>
 
-Prepare fl_set_key_flags/fl_dump_key_flags() for use with
-TCA_FLOWER_KEY_ENC_FLAGS{,_MASK}.
+On Fri, Jul 12, 2024 at 11:10:57AM +0800, Hongyu Xie wrote:
+> From: Hongyu Xie <xiehongyu1@kylinos.cn>
+> 
+> 
+> 
+> On 2024/7/11 16:59, Oliver Neukum wrote:
+> > 
+> > 
+> > On 11.07.24 10:43, Hongyu Xie wrote:
+> > > During hibernation, usb_resume_interface will set needs_binding to 1 if
+> > > the usb_driver has no reset_resume implimentation. The USB interface
+> > > will be rebind after usb_resume_complete.
+> > > 
+> > > Normally, that's fine. But if a USB interface has a matched kernel
+> > > driver, and a userspace driver or application is using this USB
+> > > interface through usbfs during hibernation, usbfs will be
+> > > detatched with the USB interface after resume. And this USB interface
+> > > will be bind with a kernel driver instead of usbfs.
+> > > 
+> > > So add reset_resume to fix this.
+> > 
+> > The device has lost all settings, yet we continue like nothing
+> > changed. That strikes me as a very bad idea. If a device has undergone
+> > a reset user space has not requested, we need to return an error upon
+> > the next interaction.
+> Sorry I don't understand your concern.
+> When will "a reset user space has not requested" happen if there is a
+> reset_resume in usbfs?
 
-This patch adds an encap argument, similar to fl_set_key_ip/
-fl_dump_key_ip(), and determine the flower keys based on the
-encap argument, and use them in the rest of the two functions.
+That's what a reset-resume is: a reset that occurs when the device is 
+resumed, rather than when the driver has requested a reset.
 
-Since these functions are so far, only called with encap set false,
-then there is no functional change.
+Alan Stern
 
-Signed-off-by: Asbj√∏rn Sloth T√∏nnesen <ast@fiberby.net>
-Tested-by: Davide Caratti <dcaratti@redhat.com>
-Reviewed-by: Davide Caratti <dcaratti@redhat.com>
----
- net/sched/cls_flower.c | 40 ++++++++++++++++++++++++++++++----------
- 1 file changed, 30 insertions(+), 10 deletions(-)
-
-diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
-index eef570c577ac7..6a5cecfd95619 100644
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -1166,19 +1166,28 @@ static void fl_set_key_flag(u32 flower_key, u32 flower_mask,
- 	}
- }
- 
--static int fl_set_key_flags(struct nlattr **tb, u32 *flags_key,
-+static int fl_set_key_flags(struct nlattr **tb, bool encap, u32 *flags_key,
- 			    u32 *flags_mask, struct netlink_ext_ack *extack)
- {
-+	int fl_key, fl_mask;
- 	u32 key, mask;
- 
-+	if (encap) {
-+		fl_key = TCA_FLOWER_KEY_ENC_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_ENC_FLAGS_MASK;
-+	} else {
-+		fl_key = TCA_FLOWER_KEY_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_FLAGS_MASK;
-+	}
-+
- 	/* mask is mandatory for flags */
--	if (!tb[TCA_FLOWER_KEY_FLAGS_MASK]) {
-+	if (NL_REQ_ATTR_CHECK(extack, NULL, tb, fl_mask)) {
- 		NL_SET_ERR_MSG(extack, "Missing flags mask");
- 		return -EINVAL;
- 	}
- 
--	key = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS]));
--	mask = be32_to_cpu(nla_get_be32(tb[TCA_FLOWER_KEY_FLAGS_MASK]));
-+	key = be32_to_cpu(nla_get_be32(tb[fl_key]));
-+	mask = be32_to_cpu(nla_get_be32(tb[fl_mask]));
- 
- 	*flags_key  = 0;
- 	*flags_mask = 0;
-@@ -2086,7 +2095,7 @@ static int fl_set_key(struct net *net, struct nlattr **tb,
- 		return ret;
- 
- 	if (tb[TCA_FLOWER_KEY_FLAGS]) {
--		ret = fl_set_key_flags(tb, &key->control.flags,
-+		ret = fl_set_key_flags(tb, false, &key->control.flags,
- 				       &mask->control.flags, extack);
- 		if (ret)
- 			return ret;
-@@ -3084,12 +3093,22 @@ static void fl_get_key_flag(u32 dissector_key, u32 dissector_mask,
- 	}
- }
- 
--static int fl_dump_key_flags(struct sk_buff *skb, u32 flags_key, u32 flags_mask)
-+static int fl_dump_key_flags(struct sk_buff *skb, bool encap,
-+			     u32 flags_key, u32 flags_mask)
- {
--	u32 key, mask;
-+	int fl_key, fl_mask;
- 	__be32 _key, _mask;
-+	u32 key, mask;
- 	int err;
- 
-+	if (encap) {
-+		fl_key = TCA_FLOWER_KEY_ENC_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_ENC_FLAGS_MASK;
-+	} else {
-+		fl_key = TCA_FLOWER_KEY_FLAGS;
-+		fl_mask = TCA_FLOWER_KEY_FLAGS_MASK;
-+	}
-+
- 	if (!memchr_inv(&flags_mask, 0, sizeof(flags_mask)))
- 		return 0;
- 
-@@ -3105,11 +3124,11 @@ static int fl_dump_key_flags(struct sk_buff *skb, u32 flags_key, u32 flags_mask)
- 	_key = cpu_to_be32(key);
- 	_mask = cpu_to_be32(mask);
- 
--	err = nla_put(skb, TCA_FLOWER_KEY_FLAGS, 4, &_key);
-+	err = nla_put(skb, fl_key, 4, &_key);
- 	if (err)
- 		return err;
- 
--	return nla_put(skb, TCA_FLOWER_KEY_FLAGS_MASK, 4, &_mask);
-+	return nla_put(skb, fl_mask, 4, &_mask);
- }
- 
- static int fl_dump_key_geneve_opt(struct sk_buff *skb,
-@@ -3632,7 +3651,8 @@ static int fl_dump_key(struct sk_buff *skb, struct net *net,
- 	if (fl_dump_key_ct(skb, &key->ct, &mask->ct))
- 		goto nla_put_failure;
- 
--	if (fl_dump_key_flags(skb, key->control.flags, mask->control.flags))
-+	if (fl_dump_key_flags(skb, false, key->control.flags,
-+			      mask->control.flags))
- 		goto nla_put_failure;
- 
- 	if (fl_dump_key_val(skb, &key->hash.hash, TCA_FLOWER_KEY_HASH,
--- 
-2.45.2
-
+> > I am sorry, but this implementation has some fundamental issues.
+> > 
+> >  ††††Regards
+> >  ††††††† Oliver
+> > 
+> Regards
+> Hongyu Xie
