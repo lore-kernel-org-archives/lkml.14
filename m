@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB997345F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB6473457;
 	Sat, 13 Jul 2024 10:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720865825; cv=none; b=Vay9zOoJk6XAFQLfM7woMxdOEebWilGtLQQXu9sPOTbnhg9VKeY0fBpYSlgNfGy1MTpYeXjpkmyoj1a52+9B+cV5HPv3K1Lei7oZWUP41PfK7Eo/8bJhpWhJqI6TaAa1wHigLqgmQhedi5Sv1LBfOX950GYuvQ8/aBfoEQF5Eq8=
+	t=1720865825; cv=none; b=l2GVR0ixv0vSTuzn7EMPaOdNC2tfh+Fy1uCWuOZUpBu6JemDPTIBKiNytAUsgS50SHRT6LrXNQekeTXpeC6Dl5PSN2ZQRYNouWDFvGbFExtNLeLOn100ASHo3y9KzfuS0KVel/jiX+iMylj4NH+MU3DqT01ii0VmISAnOoDLWwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720865825; c=relaxed/simple;
-	bh=eZZgK/HK1Jv904vRiuqcTvJ2gq4CPbJ8eJtXz31Aw8Q=;
+	bh=OcIWn94kj8ep04A+PehFS/3AfXuchelWQ410Wr0BRJw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=sAXD55885m5Qw8pzf9ZEpxNKBczIwOqM6OIUGip1t0X2Y7qkjjNPGa4MrHznbsA68RTta3cVugo4NpzlKaQVpk+diGzKMjV+9RbJXd0sn9mU1SCZp7wkPNUR9/TFWxoukBOM1y+TU3J/8InGZp5w7BtEyErNkCCv9/dWaRvwg5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Svn93VGM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HhCHGTuK; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=LXWRAnQcLf8IUJSrMrrfWaIJjvFzOkIS86ZcHj+FP1E49aaB3CiLA6sZ3GPrHIWhRgT5tko/fqOxXXfxVQ+1pdIfxsvKxcOj9Sq2yTPDJm4N5YIlCpSE4lRgv2NRKPokrs2Xm1GEanHyI2ugVg48EbsZriJ/qMk/LsiLIsELgQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y8OgXO4d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Erv9UrNb; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Svn93VGM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HhCHGTuK"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y8OgXO4d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Erv9UrNb"
 Date: Sat, 13 Jul 2024 10:16:55 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1720865815;
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=esMeOGLU1cbZVBiVhR+VE5n/Zrncw8ByKE+2p+nhl8g=;
-	b=Svn93VGMf+YMSTSKWREteCb3gvx6q3wIHplxP5k/NbE213tvNO70GCqwdQaH7JlMfGgBfd
-	3rPpKQqurE/Fvw+kMBAerxmbMVAMqtv4EgcJbEmadjwD2Krb+zNODrSDmvrbjg+6PlnyRl
-	noVgJfrWOn4AeWsYJQgvYO1xveJV3dmLQZIr+pBqNhqICGNMVqCQo3ZAsLFRH6J2tUHmS8
-	q2z27jYgkHq49lt/nhQvQ+mNa1x7yRsLHOso/DjdYzWap9EimR5Z/1dqyOSxkJl/guRjyY
-	7mpbKf9lJmRCkwWMWAxKUWWA09sQQR2T3aiUNUGQ4vEfbxunArx/FUs70iPyNQ==
+	bh=6A3b3nqSqUbLLesjAo28UtYP5tAmOgHJbQQLyaxODBo=;
+	b=Y8OgXO4dpdaAEqbvo9MhL9AuwHNTFw2WoblrWASUaq69Jk2HBvqvJTNcFDfExfteY96z0t
+	JXRoat9vnr7t5toF18MF9ioEpNyCochtIAWQXuBeRk9yFWM/Er6nfvhgxpbtMOkXXCk4eP
+	JWuSM6KjyXxs++y0pm6ioZKN3aOiMIEEhvrKR11db03oTxx39lnQ4SBsJqKFZnKscbYCEK
+	40efgDWhfuoEHrVP0XAaL+SuZvNBuxiYj1cuOyuCsEFEBAIAge4WQ7jpnq8hutfA5paF1z
+	8+T3W9TidS2+pksLW7Y40nLwWCDTFTkymMI1UCmxiF5JH5MnWViIYZttmdkmMA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1720865815;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,32 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=esMeOGLU1cbZVBiVhR+VE5n/Zrncw8ByKE+2p+nhl8g=;
-	b=HhCHGTuKZG/8YttSAT0UkjM+aW/34rAgYgIkQqB9Fp3Cw/5e/+4INF7NAN4OErLF17THuU
-	hgptkaTJgruXN9CA==
-From: "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
+	bh=6A3b3nqSqUbLLesjAo28UtYP5tAmOgHJbQQLyaxODBo=;
+	b=Erv9UrNbhuEPMv1CPIsegmTBoVQt+nrl46NEfHgVTkcuSBqOy6js9xuLviWHOiopBWZpXP
+	o13gmn3k1lE0DwCw==
+From: "tip-bot2 for Jiaxun Yang" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/core] dt-bindings: timer: renesas,tmu: Add R-Mobile APE6 support
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- Conor Dooley <conor.dooley@microchip.com>,
- niklas.soderlund+renesas@ragnatech.se,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
+Subject: [tip: timers/core] clocksource/drivers/mips-gic-timer: Correct
+ sched_clock width
+Cc: philmd@linaro.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
  Daniel Lezcano <daniel.lezcano@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C17e3fd5f27ab540c8611545ad3dc5a697ca66c58=2E17169?=
- =?utf-8?q?85096=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
-References: =?utf-8?q?=3C17e3fd5f27ab540c8611545ad3dc5a697ca66c58=2E171698?=
- =?utf-8?q?5096=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
+In-Reply-To: <20240612-mips-clks-v2-7-a57e6f49f3db@flygoat.com>
+References: <20240612-mips-clks-v2-7-a57e6f49f3db@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172086581503.2215.59484725550794141.tip-bot2@tip-bot2>
+Message-ID: <172086581522.2215.4543941382409253440.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,48 +68,71 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     17c103b59c3b995eb9d2944067593f2c9cc13652
-Gitweb:        https://git.kernel.org/tip/17c103b59c3b995eb9d2944067593f2c9cc=
-13652
-Author:        Geert Uytterhoeven <geert+renesas@glider.be>
-AuthorDate:    Wed, 29 May 2024 14:22:04 +02:00
+Commit-ID:     5e4bfd66eccaaab65b3d565cfe28483afeacaf1d
+Gitweb:        https://git.kernel.org/tip/5e4bfd66eccaaab65b3d565cfe28483afea=
+caf1d
+Author:        Jiaxun Yang <jiaxun.yang@flygoat.com>
+AuthorDate:    Wed, 12 Jun 2024 09:54:34 +01:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Fri, 12 Jul 2024 16:07:05 +02:00
 
-dt-bindings: timer: renesas,tmu: Add R-Mobile APE6 support
+clocksource/drivers/mips-gic-timer: Correct sched_clock width
 
-Document support for the Timer Unit (TMU) on the R-Mobile APE6 (R8A73A4)
-Soc.
+Counter width of GIC is configurable and can be read from a
+register.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Link: https://lore.kernel.org/r/17e3fd5f27ab540c8611545ad3dc5a697ca66c58.1716=
-985096.git.geert+renesas@glider.be
+Use width value from the register for sched_clock.
+
+Reviewed-by: Philippe Mathieu-Daud=C3=A9 <philmd@linaro.org>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://lore.kernel.org/r/20240612-mips-clks-v2-7-a57e6f49f3db@flygoat.=
+com
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clocksource/mips-gic-timer.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Docum=
-entation/devicetree/bindings/timer/renesas,tmu.yaml
-index 360a5cf..33170da 100644
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -21,6 +21,7 @@ properties:
-   compatible:
-     items:
-       - enum:
-+          - renesas,tmu-r8a73a4  # R-Mobile APE6
-           - renesas,tmu-r8a7740  # R-Mobile A1
-           - renesas,tmu-r8a774a1 # RZ/G2M
-           - renesas,tmu-r8a774b1 # RZ/G2N
-@@ -94,6 +95,7 @@ if:
-       compatible:
-         contains:
-           enum:
-+            - renesas,tmu-r8a73a4
-             - renesas,tmu-r8a7740
-             - renesas,tmu-r8a7778
-             - renesas,tmu-r8a7779
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-=
+gic-timer.c
+index 7a03d94..1103477 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -19,6 +19,7 @@
+ static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
+ static int gic_timer_irq;
+ static unsigned int gic_frequency;
++static unsigned int gic_count_width;
+ static bool __read_mostly gic_clock_unstable;
+=20
+ static void gic_clocksource_unstable(char *reason);
+@@ -186,15 +187,14 @@ static void gic_clocksource_unstable(char *reason)
+=20
+ static int __init __gic_clocksource_init(void)
+ {
+-	unsigned int count_width;
+ 	int ret;
+=20
+ 	/* Set clocksource mask. */
+-	count_width =3D read_gic_config() & GIC_CONFIG_COUNTBITS;
+-	count_width >>=3D __ffs(GIC_CONFIG_COUNTBITS);
+-	count_width *=3D 4;
+-	count_width +=3D 32;
+-	gic_clocksource.mask =3D CLOCKSOURCE_MASK(count_width);
++	gic_count_width =3D read_gic_config() & GIC_CONFIG_COUNTBITS;
++	gic_count_width >>=3D __ffs(GIC_CONFIG_COUNTBITS);
++	gic_count_width *=3D 4;
++	gic_count_width +=3D 32;
++	gic_clocksource.mask =3D CLOCKSOURCE_MASK(gic_count_width);
+=20
+ 	/* Calculate a somewhat reasonable rating value. */
+ 	if (mips_cm_revision() >=3D CM_REV_CM3 || !IS_ENABLED(CONFIG_CPU_FREQ))
+@@ -264,7 +264,7 @@ static int __init gic_clocksource_of_init(struct device_n=
+ode *node)
+ 	if (mips_cm_revision() >=3D CM_REV_CM3 || !IS_ENABLED(CONFIG_CPU_FREQ)) {
+ 		sched_clock_register(mips_cm_is64 ?
+ 				     gic_read_count_64 : gic_read_count_2x32,
+-				     64, gic_frequency);
++				     gic_count_width, gic_frequency);
+ 	}
+=20
+ 	return 0;
