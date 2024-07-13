@@ -1,38 +1,40 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3551B960;
-	Sat, 13 Jul 2024 09:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35D641C77
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 09:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720861671; cv=none; b=mirZ4RISdAhNeo/S8zV6XiLdp0pVnmiA1q/9ZvSVcBVi/3ygDIkXr6mhCGC1PtRPbpWWJTkaT+v8YxQ4jsHwMTBcLmPu3urfG6RLn8S8yQ7qIX+NzaJ0MSqo3K9HJDZ0VwKbE9pwlaROlkSB+t5HmAmdJqb/ubaUQ+Gevu0VCkY=
+	t=1720861686; cv=none; b=OnFEKNzgONSjb/nqNaz0mLcJilxUfKr70W/Yg/ShOb9HvCiyjAV5elqAGJMA9gwOCA++imny0kngWWyyrbidkuLJTwHSfp+xygflZQzzuy62kKuXmW5oBxKvjAZc76uBnI9XxXGFiy+KwBAE43BosF29knPRwbj2Bl/6b0uHCEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720861671; c=relaxed/simple;
-	bh=DAc0LCoKc97LeuhxpZsAmFYJzmv0SdzD/etRfRJRSEE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=m+gEl32Y+f4pdcdrThfaCBwTMhGtVwuNTebvT6F56lHya9GBjvIvgxk3cVYtxnZO/6jRr7IT72wyZUYkhLyZIuklSOF9W5TNSndLR1aT5qfvsPgR9+OpP88qmMhbrWs6CEIuS7S4VIwN2kDu48oNVkjYHm0j0zkRLdYfQnnrATI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WLjDz4ZPYzQl1c;
-	Sat, 13 Jul 2024 17:03:47 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id AD560180088;
-	Sat, 13 Jul 2024 17:07:46 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 13 Jul 2024 17:07:46 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <longman@redhat.com>, <lizefan.x@bytedance.com>, <mingo@redhat.com>,
-	<peterz@infradead.org>, <juri.lelli@redhat.com>,
-	<vincent.guittot@linaro.org>, <tj@kernel.org>, <hannes@cmpxchg.org>,
-	<mkoutny@suse.com>
-CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] cgroup/cpuset: Remove cpuset_slab_spread_rotor
-Date: Sat, 13 Jul 2024 08:59:16 +0000
-Message-ID: <20240713085916.3373085-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720861686; c=relaxed/simple;
+	bh=F97KmSYr6BVNzF7rCK7Sa+kxRwzbEhhAf/TEjNrGfc4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=V4W0lGei9MLLiLjYqph1ou3GmwGvulylBAcLvC7QgT3/LPuQcet17mkY4rq3hCCp1UbQffa3F/yncOYUJOH6Rq7Ptg+FxtVbFxVLaBESzX3CXWOa82ht5bBURBsmLl/tncgHwuw8Md0YpDxC/Gz3frwxbwpvg91N2MrXjP4Tq3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.69.52])
+	by sina.com (10.185.250.22) with ESMTP
+	id 66924354000008D2; Sat, 13 Jul 2024 17:05:26 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 9744697602725
+X-SMAIL-UIID: 4677006D4DA542B1862B570227BE2FDA-20240713-170526-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+2403e3909382fbdeaf6c@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [mm?] BUG: unable to handle kernel paging request in list_lru_add
+Date: Sat, 13 Jul 2024 17:05:18 +0800
+Message-Id: <20240713090518.866-1-hdanton@sina.com>
+In-Reply-To: <0000000000002d320c061d0ff813@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,93 +42,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500023.china.huawei.com (7.185.36.114)
 
-Since the SLAB implementation was removed in v6.8, so the
-cpuset_slab_spread_rotor is no longer used and can be removed.
+On Fri, 12 Jul 2024 10:11:25 -0700
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    43db1e03c086 Merge tag 'for-6.10/dm-fixes-2' of git://git...
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b1da7e980000
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- include/linux/cpuset.h |  6 ------
- include/linux/sched.h  |  1 -
- kernel/cgroup/cpuset.c | 13 -------------
- kernel/fork.c          |  1 -
- 4 files changed, 21 deletions(-)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  43db1e03c086
 
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index de4cf0ee96f7..2a6981eeebf8 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -113,7 +113,6 @@ extern int proc_cpuset_show(struct seq_file *m, struct pid_namespace *ns,
- 			    struct pid *pid, struct task_struct *tsk);
+--- x/mm/list_lru.c
++++ y/mm/list_lru.c
+@@ -55,7 +55,8 @@ list_lru_from_memcg_idx(struct list_lru
+ 	if (list_lru_memcg_aware(lru) && idx >= 0) {
+ 		struct list_lru_memcg *mlru = xa_load(&lru->xa, idx);
  
- extern int cpuset_mem_spread_node(void);
--extern int cpuset_slab_spread_node(void);
- 
- static inline int cpuset_do_page_mem_spread(void)
- {
-@@ -246,11 +245,6 @@ static inline int cpuset_mem_spread_node(void)
- 	return 0;
+-		return mlru ? &mlru->node[nid] : NULL;
++		if (mlru)
++			return &mlru->node[nid];
+ 	}
+ 	return &lru->node[nid].lru;
  }
- 
--static inline int cpuset_slab_spread_node(void)
--{
--	return 0;
--}
--
- static inline int cpuset_do_page_mem_spread(void)
- {
- 	return 0;
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 75138bf70da3..e151da1675fe 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1248,7 +1248,6 @@ struct task_struct {
- 	/* Sequence number to catch updates: */
- 	seqcount_spinlock_t		mems_allowed_seq;
- 	int				cpuset_mem_spread_rotor;
--	int				cpuset_slab_spread_rotor;
- #endif
- #ifdef CONFIG_CGROUPS
- 	/* Control Group info protected by css_set_lock: */
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 40ec4abaf440..ba7f7f967565 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -5028,19 +5028,6 @@ int cpuset_mem_spread_node(void)
- 	return cpuset_spread_node(&current->cpuset_mem_spread_rotor);
- }
- 
--/**
-- * cpuset_slab_spread_node() - On which node to begin search for a slab page
-- */
--int cpuset_slab_spread_node(void)
--{
--	if (current->cpuset_slab_spread_rotor == NUMA_NO_NODE)
--		current->cpuset_slab_spread_rotor =
--			node_random(&current->mems_allowed);
--
--	return cpuset_spread_node(&current->cpuset_slab_spread_rotor);
--}
--EXPORT_SYMBOL_GPL(cpuset_mem_spread_node);
--
- /**
-  * cpuset_mems_allowed_intersects - Does @tsk1's mems_allowed intersect @tsk2's?
-  * @tsk1: pointer to task_struct of some task.
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 08e13b919d80..559e8df1672a 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2313,7 +2313,6 @@ __latent_entropy struct task_struct *copy_process(
- #endif
- #ifdef CONFIG_CPUSETS
- 	p->cpuset_mem_spread_rotor = NUMA_NO_NODE;
--	p->cpuset_slab_spread_rotor = NUMA_NO_NODE;
- 	seqcount_spinlock_init(&p->mems_allowed_seq, &p->alloc_lock);
- #endif
- #ifdef CONFIG_TRACE_IRQFLAGS
--- 
-2.34.1
-
+--
