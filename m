@@ -1,102 +1,116 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D8B125B9;
-	Sat, 13 Jul 2024 18:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E9F49628;
+	Sat, 13 Jul 2024 18:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720894129; cv=none; b=U8gVE79ztqSDEbBKaY8EMU6o2D8R+Ch97NYppbhrxdtamk6sosw8ZyBsngNhCu/Wrj1WevixbgiPbBwSVA/NmPZHd4Xl5e+Ssjy4ZIKhIARBiauC2YEizqaAlDWPWPRo1p647Tp0iBuTwjHfySUYXf/E77F0MNbYua4iXCQ11xU=
+	t=1720894572; cv=none; b=j9mqaAJ4IqmuO7sqoQh28N1FFCG8NIlnFcFByBCuTE2vF+V2UKukdD/ME5VEkccEJkcxLNjxIfT5FBe41APmA5xTdohMu9nEQMhgF5+hNydr61dN9YunxTa2DOaCc43NhpxL/W22iXPhyL35qBIN58aZ/KgyMELWryyUObIxB5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720894129; c=relaxed/simple;
-	bh=2V8gSKhMGv/Q87IrQhksGSaqYxOFKPmaYtWW122A/fE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oGzRrxdVhKbZPuqr5cePzkuWc8OSdeQCowsRueT4Qk+3m+IX77Si5woHf2VwHKXWnr8byMZ0ZVfvYPQmopM/z5M4WKFLTDC5+8Y6wJOMlEAtpRJSfidwJyX4uMrazrm0FRAYUpL9yad8w0QSotWefsYA4BBBuHt4cy4CcOvlx0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Twx7YSeN; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720894572; c=relaxed/simple;
+	bh=abtA1WlSWwOahxLlGsQr5aL7NXMTChi3xnNxf77tIbI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=AWjd/t1LFFDibQgAoH7+GiTAe6dYizClQ37R+wiFkFSqq5384lsbCQ6cwN64u6hcMUDUY9IT3xRNEQRa/Qeb5o4irSlTNus8GEK8abiWnrZoNSLostVGl1jXQaPCtYXFJOqxtKEho9br2bwVFQVTv1ct/hoPhH/soAImbbMAj0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iHm2hNhO; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Twx7YSeN"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52ea7bdde68so3261212e87.0;
-        Sat, 13 Jul 2024 11:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720894126; x=1721498926; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UFjXSyeGXyTpNHpjMY4i7H4qzTk6Okib980a8VGzRiA=;
-        b=Twx7YSeNw1tJCgtwgcEegiFiuKr8EiQj7vpNjps2SBjlPARWzCVPSyBq96+my5XS7P
-         f1UpkmCneYD8CANJY/Ssl+hafmO6e8lT4Ufwb4c7xEb64boOsJ5Uv4QdOYvHrVH4xdOt
-         e2GDpudd/G1dURTmewEgYBRuMiUBauJEBFRP7fs9TC1ijalKdDAsIxz1akU2ZbZOiBEU
-         DC5B5EMYGiydAayPbSo2zzodg/5d5p5bE8TgTmh5I7PUDwxskxrWw4wr9CbHplRGeXD/
-         OxiqjMpgbvTtWVklYQp1giYx4lB0bZyPFjdEpepzrcFE/mQg+FML734qK+bMDw+Uxj/6
-         09ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720894126; x=1721498926;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UFjXSyeGXyTpNHpjMY4i7H4qzTk6Okib980a8VGzRiA=;
-        b=vopvSLkg+naUYEPyOmVvwSPz5qsUJgPfFQXjTvAx2M4kzXgW9PN3MBKqFKOJE0PTs2
-         Puc4f/EXjo3BqufOpaP2NfBGlO9WPyTXaFoXlXqt9nJEjuuV652DqhYya66toMS0gz/l
-         czV1/c5UMcJGQsNmkbPrn0Hj885S8wGAuT4Uvwwhikt0cT/1IGxzyegY+1zrtXlx73KK
-         TERgGAVEj9dXzDF+IheCK5yGve7It+w6kGrlbN+C7hx2r9eIymcbsRzanOAViY3m+fiy
-         flfasr+aMEM0+3RZBJcigscyUAkT2rMnzK4EgTr6uXzHSNm5lmwp1fjiNIm5YmUgjenJ
-         67sA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDS09E7rPWBb7FcGxJlSfqvfMDkV7HWk4w0cAIR8VssJdxuAnh2ETHd0J9SUx0Ges6ArD5b0sDcwk2qKF7Q+pkj7oojz0xftPryqc1GYNUk7CACDJrSu0DqtP/tBBu3lRfc6ADI9vBKrjj/GVSW4vp+1zPTjLmk2RNiDr6uZ08vm3CFDXwjZxDtPdl
-X-Gm-Message-State: AOJu0YyA7vBrJFtVxWEr9Aqu2tjzNuPezj4oUKA5qdWCNy4lYZP33lHk
-	caSb8wEhOW+JXxdrR5A2NFtyyao9Uu5CalSAQvQ36e8t+WZzvxZ/j7u0ifc7HLs=
-X-Google-Smtp-Source: AGHT+IGtqFsPbcL8wxovGZ/CvXNiaBwjE8EXI/CkTr1ogDZuz8GEOo6KcfGrwSd1nQVjw71fGUGs6Q==
-X-Received: by 2002:ac2:5102:0:b0:52e:97e1:723b with SMTP id 2adb3069b0e04-52eb9996049mr7468158e87.28.1720894125274;
-        Sat, 13 Jul 2024 11:08:45 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:ab88:3711:c80:e7a7:e025:f1a5:ef78])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-59b255261c5sm1040572a12.43.2024.07.13.11.08.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jul 2024 11:08:44 -0700 (PDT)
-From: David Virag <virag.david003@gmail.com>
-To: 
-Cc: phone-devel@vger.kernel.org,
-	David Virag <virag.david003@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: exynos: exynos7885-jackpotlte: Correct RAM amount to 4GB
-Date: Sat, 13 Jul 2024 19:58:32 +0200
-Message-ID: <20240713180607.147942-3-virag.david003@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iHm2hNhO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720894556; x=1721499356; i=markus.elfring@web.de;
+	bh=XttxvoNiaxIVA1/LMbTGUcLFK9uZmow/zywISsYZatY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=iHm2hNhOUpVb+ZGoZ3mw/07/F3/GBi6tzDhiMX1qLbhAOeFimEjsJQzbIrC4BMQH
+	 FLnV15Lp+zALTlUwq789RhCjE9KDY4x3YNglSTj6csX+KMUujY9yYiFh5pQOwJSxR
+	 iHWRufM+4VUxPeovsrlYqqPBbXEtbg+sFuW8OxRYbpQ5UQqBEfsaGh0lWX1fOcE7a
+	 FwN0M4nnt5cm0VnskE52/5Ljnvu4H11LKMXjrxYxYENHT08Q2ktTW+0AGI6xycwaU
+	 7xxJ6b+w/RCcdiTIexFYqgpVZYOZeRVEJAy6UaKnXaEl5qDjsUfnSa332oSdrZEUM
+	 Zye5k2ZDmT19LzbOQA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M4sXt-1sTWMl0LFH-002aAU; Sat, 13
+ Jul 2024 20:15:56 +0200
+Message-ID: <076974ab-4da3-4176-89dc-0514e020c276@web.de>
+Date: Sat, 13 Jul 2024 20:15:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: linux-ext4@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Theodore Ts'o <tytso@mit.edu>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] ext4: Use seq_putc() in two functions
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mA/biMw9x2cevcu9rqUxz7QuOs6YUA30/RlTyHQ7u04jOV6gwQ0
+ Pi9ToAsTYLcmb5p6NJ0jZqSZ/2m68b5Zw8n6zhy6UWh64UGNP+QLDQRwRpD9umHqpTOOGAu
+ AgyzQDoPERafNEiYOLyeGnykIW4zFaA6IhDBe7YbNLdbPWXc0lHiiZbMGe7goOpK7+SFyJj
+ 9soFVFjUNyJrIs4OPu89g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zPKXLfg+ezo=;+G/iDIXEFugqd+cvAYOe9JHg/9t
+ ztwRtOJvuSptQ6kyGgoDbsbmge3hHGHAkgOjUP9HEmS2g9htC9mfiwXrGkWNVfZuLTAFtGAC6
+ 3BGJVzhpeNASgugBWo0TFhcpp3XqkhpfyN1AvfzLNwaD1XteaabrFcbgdrOm0f/Zo50lJFzOz
+ 6qv5N+7g+qwsvJ/j8yFhSRsS/ktcuhoMgNUnCB5f62B+HRFMa/RelrbDR1mIk64799xYb4/Nh
+ 4zLoOQAATYF8DK2klKpbyWVhLwd1ZZ9e06x1Sv0Kh39bv3ifAWCG2Rbp2cWSe2X+eqUP+E3O9
+ TdfgKX2rUvNAu9DpJT3xxrchS4zWK5wwMdTaPQic72ty4OLVnPRuMhDLOxKd5yb64rOrvd+ew
+ Zl1ebvgGlhrygXYQfEJ78x3xFxLdvK2e9awqMLb74k9mXYVX8CZIWp3OLWJbw8y068GeIgxQP
+ npNKw6WvleBmINEbtG14N7t26UEJYfaJt7HkEkxCFjFwq+d6a+OVtgQ3/5Znq5T3upTUSPADQ
+ B30O0f5N1Zsl1zB0FDDPV0BxctmcKIP2YVMQuQnRpWV0jXgr8oc/tiygWCCScBwjUeDeaS99r
+ SABSKx0/tstZdGaMORXolvKxSZz9T083CJzU/KNoNdM1v8ZSYMSCKFnZvDpBrznYmvrLkLiSJ
+ TW8aJiBqlpdLMcS5pnpx+5SvRdZ8R/AFWpBiJzI4cpfW6u+9CQF7UIltBzzJeG1NaD0Ml/g1Z
+ MThP3MUTRWvyURTPlIFe0WebculEXkNn9dTC9+bJnng1PKCPkeoxUGEsORfY2os4FhjxQMWiF
+ nRos11uvaemmWZmqKChBpEng==
 
-All known jackpotlte variants have 4GB of RAM, let's use it all.
-RAM was set to 3GB from a mistake in the vendor provided DTS file.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 13 Jul 2024 17:10:24 +0200
 
-Fixes: 06874015327b ("arm64: dts: exynos: Add initial device tree support for Exynos7885 SoC")
-Signed-off-by: David Virag <virag.david003@gmail.com>
----
- arch/arm64/boot/dts/exynos/exynos7885-jackpotlte.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Single characters (line breaks) should be put into a sequence.
+Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7885-jackpotlte.dts b/arch/arm64/boot/dts/exynos/exynos7885-jackpotlte.dts
-index ed2925b4715f..0d5c26a197d8 100644
---- a/arch/arm64/boot/dts/exynos/exynos7885-jackpotlte.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7885-jackpotlte.dts
-@@ -57,7 +57,7 @@ memory@80000000 {
- 		device_type = "memory";
- 		reg = <0x0 0x80000000 0x3da00000>,
- 		      <0x0 0xc0000000 0x40000000>,
--		      <0x8 0x80000000 0x40000000>;
-+		      <0x8 0x80000000 0x80000000>;
- 	};
- 
- 	gpio-keys {
--- 
+This issue was transformed by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/ext4/mballoc.c | 3 +--
+ fs/ext4/super.c   | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 9dda9cd68ab2..2008d2d524c9 100644
+=2D-- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -3075,8 +3075,7 @@ static int ext4_mb_seq_groups_show(struct seq_file *=
+seq, void *v)
+ 	seq_puts(seq, " ]");
+ 	if (EXT4_MB_GRP_BBITMAP_CORRUPT(&sg.info))
+ 		seq_puts(seq, " Block bitmap corrupted!");
+-	seq_puts(seq, "\n");
+-
++	seq_putc(seq, '\n');
+ 	return 0;
+ }
+
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index e72145c4ae5a..c8a80cec46a1 100644
+=2D-- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3045,7 +3045,7 @@ int ext4_seq_options_show(struct seq_file *seq, void=
+ *offset)
+
+ 	seq_puts(seq, sb_rdonly(sb) ? "ro" : "rw");
+ 	rc =3D _ext4_show_options(seq, sb, 1);
+-	seq_puts(seq, "\n");
++	seq_putc(seq, '\n');
+ 	return rc;
+ }
+
+=2D-
 2.45.2
 
