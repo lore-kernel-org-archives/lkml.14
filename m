@@ -1,63 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FB9DDA9;
-	Sat, 13 Jul 2024 01:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E85FC0B
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Jul 2024 01:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720834898; cv=none; b=tRl6prK3R1ORv2M65BhVegiUECIl2XUaJngZvpBJlSlzVQHb+ZgzAOeNU5EnEnUXIwZKppuSByhxS67o9psEPBC9cr++5xonRwh5KxKBLjNtTDeI20inr2cKQM9f7Ssj8v7ubJ5cR551Bnoz94+zyR7d7KsE2u8PkvlJi0OYPd4=
+	t=1720835034; cv=none; b=CFkl6HcL6ynPHAeR0avWSnzJ1harpM+Tl5SWlfGXzHu3hh5jTcBYaMiLTPDwvTXngoIjGJMl5OCAqhPyT/SGx/7iIM3KJr7duBYcBqDmugeId7YbiTfjeURzXefMf9hKxqbWsCG/B5vApMYSX1d9/iQjEzp7RtYRMFoEjzQbuKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720834898; c=relaxed/simple;
-	bh=PvE+SFwHH1lDvhrQfoloz/zZcnNJ6717ne2V2bvaArs=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZHQpidW4h3I2OKVdY28A7zsF6IrT8SiMkuR2j/pe7W5TI65JKjFD4KrFhlM+PyPi3XkGudNeVCPe1mw6e2LVS//NePV6wR/C/fXPqGYlsuzTMhv9nTYgETmk3vr1PHI92zdWSRcHiO+puRKosQ5qgEa+MxHEXHv5urUR/1kPqBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RgGMpIJ7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RgGMpIJ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F017BC32782;
-	Sat, 13 Jul 2024 01:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720834898;
-	bh=PvE+SFwHH1lDvhrQfoloz/zZcnNJ6717ne2V2bvaArs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=RgGMpIJ7nJkNstzT61UrRWmSI1yVVDvR+qUVL3epeCmfoNLLNASXfbhj7P10V8be1
-	 1Hqd9BnUP+gp5JPMHngZPCLPkLb+aOYdp8Z2wBLu2iV8K4GniOlGpdfomIdMGhiZN6
-	 lNiraJOhodhtpS7S6lZWs/vnaRi9ut7B+3x07nWvoeHGrysEUVRBG/17moWaDqte/G
-	 dSspBcS8Z2d7mb6ECZ7Rqtsc8ArrTwFhyK7dIPKPCsUMmpsneqSAcNzD55UflpoYEJ
-	 O3BiMH7c3lGppJuo/G9RDgetvaMoHdxIxBGPCDwMW9Bsn7btYz8/PNO6Ae6MVKtqdH
-	 ORM4nt5FTCBAA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E56BFC43153;
-	Sat, 13 Jul 2024 01:41:37 +0000 (UTC)
-Subject: Re: [GIT PULL] Networking for v6.10-rc8 (follow up)
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240713012205.4143828-1-kuba@kernel.org>
-References: <20240713012205.4143828-1-kuba@kernel.org>
-X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240713012205.4143828-1-kuba@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.10-rc8-2
-X-PR-Tracked-Commit-Id: f7ce5eb2cb7993e4417642ac28713a063123461f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 528dd46d0fc35c0176257a13a27d41e44fcc6cb3
-Message-Id: <172083489793.19838.14996739004174924773.pr-tracker-bot@kernel.org>
-Date: Sat, 13 Jul 2024 01:41:37 +0000
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com
+	s=arc-20240116; t=1720835034; c=relaxed/simple;
+	bh=ISwiJPVCxvbdYzs4oGfD2daRWqN7S7C3RXi/AzXw9OM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lbyt4R2WsjeZkGvEDp3DmP8TpiW+6hMp7N88HoVMpc2fShn8VWiXhd0oJURyIUqrqFmqErdzyN7ToNyZUyJ01cA22qkLGp3ZI45IzWFR4pbHGP21znnKgXeOGKR/+LFHilTB1BY3D4GQjVZFDH72Q+GBu21kDhMZ+PGFgS4GZws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WLWRF1vLyzdh41;
+	Sat, 13 Jul 2024 09:42:01 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id E7236180087;
+	Sat, 13 Jul 2024 09:43:42 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Sat, 13 Jul
+ 2024 09:43:42 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<austindh.kim@gmail.com>, <rmk+kernel@armlinux.org.uk>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v2] crash: Fix x86_32 and arm32 memory reserve bug
+Date: Sat, 13 Jul 2024 09:48:08 +0800
+Message-ID: <20240713014808.1689915-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-The pull request you sent on Fri, 12 Jul 2024 18:22:05 -0700:
+On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=4G" is ok
+as below:
+	crashkernel reserved: 0x0000000020000000 - 0x0000000120000000 (4096 MB)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.10-rc8-2
+And on Qemu vexpress-a9 with 1GB memory, the crash kernel "crashkernel=4G"
+is also ok as below:
+	Reserving 4096MB of memory at 2432MB for crashkernel (System RAM: 1024MB)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/528dd46d0fc35c0176257a13a27d41e44fcc6cb3
+The cause is that the crash_size is parsed and printed with "unsigned long
+long" data type which is 8 bytes but allocated used with "phys_addr_t"
+which is 4 bytes in memblock_phys_alloc_range().
 
-Thank you!
+Fix it by limiting the "crash_size" to phys_addr_t and bypass the invalid
+input size.
 
+After this patch, it fail as expected and no above confusing reserve
+success info.
+
+Fixes: 9d17f3372306 ("ARM: 9190/1: kdump: add invalid input check for 'crashkernel=0'")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+v2:
+- Also fix for x86_32.
+- Update the fix method.
+- Peel off the other two patches.
+- Update the commit message.
+---
+ kernel/crash_reserve.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 5073ae205f79..5c2148d89da6 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -314,7 +314,7 @@ int __init parse_crashkernel(char *cmdline,
+ 	if (high && ret == -ENOENT) {
+ 		ret = __parse_crashkernel(cmdline, 0, crash_size,
+ 				crash_base, suffix_tbl[SUFFIX_HIGH]);
+-		if (ret || !*crash_size)
++		if (ret || !(phys_addr_t)*crash_size)
+ 			return -EINVAL;
+ 
+ 		/*
+@@ -333,7 +333,7 @@ int __init parse_crashkernel(char *cmdline,
+ 		*high = true;
+ 	}
+ #endif
+-	if (!*crash_size)
++	if (!(phys_addr_t)*crash_size)
+ 		ret = -EINVAL;
+ 
+ 	return ret;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
