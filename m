@@ -1,36 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669FF38DE9;
-	Sat, 13 Jul 2024 02:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A22446A1;
+	Sat, 13 Jul 2024 02:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720837168; cv=none; b=UqPFECpuXONH8wLiTHfGT0BDEN2YVFKFc9ILyC4ufpMOSa2gAait7Y7LHgpEaCrA4L+RtD/DrI1WfTtxgvxIw1UnQa8qapoTNvJVYDtGFQnJ1ReBKu/dNYqCgYsBRNXp9MSXN1LdLkakK2ABgLmq9vQPoHk6QvK/AK+TaJ+uvo4=
+	t=1720837169; cv=none; b=fuzWELEq0p3AgOLJRugDyYtMmd+rhClMYb0iEl5R+2XUIRFP2U17dAjFbyFM5l2zlrdX6YiQZovv6zOFcIGoDzmzzOm+bqa1GRnbG0LFiqJb11VMntZEYXaA5eps7/ln4lmJesrLj59ylGqfcTPL5mwqYoNbpg7ieRg2X+pjJZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720837168; c=relaxed/simple;
-	bh=xZQAlEEIpOuSp2rDdrDIDuLKERG3Sl0/iR6EJAIExIk=;
+	s=arc-20240116; t=1720837169; c=relaxed/simple;
+	bh=97BaKpl+A98ebdWTkMEpQnN/VML4HX7Gwx29yVODybs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iiYzAZQDlrjV4nHhj2H22NIFr3qv3p27NnUlVKOiccR1O0asjyz2bmKKG1+G/d8xET92IcaSnis9DMUQ6OwR0iE5OULOvc2H40zCtMRWJUS1qwKCYkDiI7rRKhVNvnO/XFEVMMn8EUFFqYnHWOxk1+2zezkAvo/j9IR8G55UhTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=bmxg+kYY; arc=none smtp.client-ip=193.104.135.124
+	 MIME-Version:Content-Type; b=EbP5X6Y1Ked8OA9e3xyHfxb5l7ytVyObvT66uAg+GwX+cHlFqbmqSgWk4KgcryFvJMp61e6JMCEKAPmmyq/HLpSUQrl8aAkIcpHbUDSud16bI11ZPf0dNIIy2M/U/vBExLR9TgX8fdBumk+P6FM+TVFHUTXwIpHRu3lqD0l3zsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=bfBHOReK; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="bmxg+kYY"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="bfBHOReK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1720837159;
-	bh=xZQAlEEIpOuSp2rDdrDIDuLKERG3Sl0/iR6EJAIExIk=;
+	s=202008; t=1720837160;
+	bh=97BaKpl+A98ebdWTkMEpQnN/VML4HX7Gwx29yVODybs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bmxg+kYYxs6K7aL6D3skn8TbVFcg0YYdPxvTtIfSpCC5l/q0D7WZSfoqFUzMWbgqJ
-	 hj7lRpMhe1lNGnMG/n1wmoWCYyNTra20dO793Ijr1Ye3RKTW1HGl08vOHuTpzB5Wlr
-	 twcsaNYIC9o8DqI5vXGan3karBA3Wf6SDCkCe0lxWK2ISwhCst2kyhk1gCKewnr8hy
-	 0tc0VksTgd4RUJCA7a+Ens267AfRHW1Y3jdcYuHDt/yAH6geQpsXITFkJbKq8dpAT0
-	 CUyaTZ/aIyVEkZpi0QUxlnc85eTU/cZ1HWUW7Kmbc9Ou2iXpFADjQATtMM3KiWDXKU
-	 HMbk6ND3INFNg==
+	b=bfBHOReK4es2OSKZtSYHhEWmdhhS4gksrxslQ8RbfWMrqTqH6TcXUZwhC6arCp+Wf
+	 gREeAf28XyHKWCM+E6AwvaybBwqR8NI1udc4a2pX0AbOOO5JUaONwjLKwXY7aW05j4
+	 9cfNS8EW6p013HKvdlS3vStN32/zoijS8ybJ9QqOq/oCKDXKbVsEzcMvMb/RRk/41R
+	 1mpQpqLX+R/V6801UTDgvCPRicCeXISlXqkRn4RdwafHNQBeR+alVMaAnkfkUclSJf
+	 YBZfuUAJG7jEBPXmeX3JEtQWWEUJDfJcxQYbd/vVaFqgLrKnAvWaj4q/5m3JF5df7V
+	 aSbd93QdMk2rA==
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id C82A9600A9;
-	Sat, 13 Jul 2024 02:19:19 +0000 (UTC)
+	by mail1.fiberby.net (Postfix) with ESMTPSA id ABAD26007D;
+	Sat, 13 Jul 2024 02:19:17 +0000 (UTC)
 Received: by x201s (Postfix, from userid 1000)
-	id 61EB3204A98; Sat, 13 Jul 2024 02:19:12 +0000 (UTC)
+	id 4B6FD201ED5; Sat, 13 Jul 2024 02:19:11 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -50,9 +50,9 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Alexander Lobakin <aleksander.lobakin@intel.com>,
 	Donald Hunter <donald.hunter@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 09/13] net/sched: cls_flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
-Date: Sat, 13 Jul 2024 02:19:06 +0000
-Message-ID: <20240713021911.1631517-10-ast@fiberby.net>
+Subject: [PATCH net-next v4 01/13] net/sched: flower: refactor control flag definitions
+Date: Sat, 13 Jul 2024 02:18:58 +0000
+Message-ID: <20240713021911.1631517-2-ast@fiberby.net>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240713021911.1631517-1-ast@fiberby.net>
 References: <20240713021911.1631517-1-ast@fiberby.net>
@@ -65,144 +65,75 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch changes how TCA_FLOWER_KEY_ENC_FLAGS is used, so that
-it is used with TCA_FLOWER_KEY_FLAGS_* flags, in the same way as
-TCA_FLOWER_KEY_FLAGS is currently used.
+Redefine the flower control flags as an enum, so they are
+included in BTF info.
 
-Where TCA_FLOWER_KEY_FLAGS uses {key,mask}->control.flags, then
-TCA_FLOWER_KEY_ENC_FLAGS now uses {key,mask}->enc_control.flags,
-therefore {key,mask}->enc_flags is now unused.
+Make the kernel-side enum a more explicit superset of
+TCA_FLOWER_KEY_FLAGS_*, new flags still need to be added to
+both enums, but at least the bit position only has to be
+defined once.
 
-As the generic fl_set_key_flags/fl_dump_key_flags() is used with
-encap set to true, then fl_{set,dump}_key_enc_flags() is removed.
+FLOW_DIS_ENCAPSULATION is never set for mask, so it can't be
+exposed to userspace in an unsupported flags mask error message,
+so it will be placed one bit position above the last uAPI flag.
 
-This breaks unreleased userspace API (net-next since 2024-06-04).
-
+Suggested-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
-Tested-by: Davide Caratti <dcaratti@redhat.com>
 Reviewed-by: Davide Caratti <dcaratti@redhat.com>
 ---
- include/uapi/linux/pkt_cls.h |  4 +--
- net/sched/cls_flower.c       | 56 +++++++++---------------------------
- 2 files changed, 15 insertions(+), 45 deletions(-)
+ include/net/flow_dissector.h | 14 +++++++++++---
+ include/uapi/linux/pkt_cls.h |  3 +++
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
+diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
+index 3e47e123934d4..c3fce070b9129 100644
+--- a/include/net/flow_dissector.h
++++ b/include/net/flow_dissector.h
+@@ -7,6 +7,7 @@
+ #include <linux/siphash.h>
+ #include <linux/string.h>
+ #include <uapi/linux/if_ether.h>
++#include <uapi/linux/pkt_cls.h>
+ 
+ struct bpf_prog;
+ struct net;
+@@ -24,9 +25,16 @@ struct flow_dissector_key_control {
+ 	u32	flags;
+ };
+ 
+-#define FLOW_DIS_IS_FRAGMENT	BIT(0)
+-#define FLOW_DIS_FIRST_FRAG	BIT(1)
+-#define FLOW_DIS_ENCAPSULATION	BIT(2)
++/* The control flags are kept in sync with TCA_FLOWER_KEY_FLAGS_*, as those
++ * flags are exposed to userspace in some error paths, ie. unsupported flags.
++ */
++enum flow_dissector_ctrl_flags {
++	FLOW_DIS_IS_FRAGMENT		= TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT,
++	FLOW_DIS_FIRST_FRAG		= TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST,
++
++	/* These flags are internal to the kernel */
++	FLOW_DIS_ENCAPSULATION		= (TCA_FLOWER_KEY_FLAGS_MAX << 1),
++};
+ 
+ enum flow_dissect_ret {
+ 	FLOW_DISSECT_RET_OUT_GOOD,
 diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
-index 3dc4388e944cb..d36d9cdf0c008 100644
+index b6d38f5fd7c05..12db276f0c11e 100644
 --- a/include/uapi/linux/pkt_cls.h
 +++ b/include/uapi/linux/pkt_cls.h
-@@ -554,8 +554,8 @@ enum {
- 	TCA_FLOWER_KEY_SPI,		/* be32 */
- 	TCA_FLOWER_KEY_SPI_MASK,	/* be32 */
- 
--	TCA_FLOWER_KEY_ENC_FLAGS,	/* u32 */
--	TCA_FLOWER_KEY_ENC_FLAGS_MASK,	/* u32 */
-+	TCA_FLOWER_KEY_ENC_FLAGS,	/* be32 */
-+	TCA_FLOWER_KEY_ENC_FLAGS_MASK,	/* be32 */
- 
- 	__TCA_FLOWER_MAX,
- };
-diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
-index 2a440f11fe1fa..e2239ab013555 100644
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -45,11 +45,11 @@
- 		(TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT | \
- 		TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST)
- 
--#define TUNNEL_FLAGS_PRESENT (\
--	_BITUL(IP_TUNNEL_CSUM_BIT) |		\
--	_BITUL(IP_TUNNEL_DONT_FRAGMENT_BIT) |	\
--	_BITUL(IP_TUNNEL_OAM_BIT) |		\
--	_BITUL(IP_TUNNEL_CRIT_OPT_BIT))
-+#define TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK \
-+		(TCA_FLOWER_KEY_FLAGS_TUNNEL_CSUM | \
-+		TCA_FLOWER_KEY_FLAGS_TUNNEL_DONT_FRAGMENT | \
-+		TCA_FLOWER_KEY_FLAGS_TUNNEL_OAM | \
-+		TCA_FLOWER_KEY_FLAGS_TUNNEL_CRIT_OPT)
- 
- struct fl_flow_key {
- 	struct flow_dissector_key_meta meta;
-@@ -745,10 +745,10 @@ static const struct nla_policy fl_policy[TCA_FLOWER_MAX + 1] = {
- 	[TCA_FLOWER_KEY_SPI_MASK]	= { .type = NLA_U32 },
- 	[TCA_FLOWER_L2_MISS]		= NLA_POLICY_MAX(NLA_U8, 1),
- 	[TCA_FLOWER_KEY_CFM]		= { .type = NLA_NESTED },
--	[TCA_FLOWER_KEY_ENC_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
--							  TUNNEL_FLAGS_PRESENT),
--	[TCA_FLOWER_KEY_ENC_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_U32,
--							  TUNNEL_FLAGS_PRESENT),
-+	[TCA_FLOWER_KEY_ENC_FLAGS]	= NLA_POLICY_MASK(NLA_BE32,
-+							  TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK),
-+	[TCA_FLOWER_KEY_ENC_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_BE32,
-+							  TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK),
+@@ -677,8 +677,11 @@ enum {
+ enum {
+ 	TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT = (1 << 0),
+ 	TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST = (1 << 1),
++	__TCA_FLOWER_KEY_FLAGS_MAX,
  };
  
- static const struct nla_policy
-@@ -1866,21 +1866,6 @@ static int fl_set_key_cfm(struct nlattr **tb,
- 	return 0;
- }
- 
--static int fl_set_key_enc_flags(struct nlattr **tb, u32 *flags_key,
--				u32 *flags_mask, struct netlink_ext_ack *extack)
--{
--	/* mask is mandatory for flags */
--	if (NL_REQ_ATTR_CHECK(extack, NULL, tb, TCA_FLOWER_KEY_ENC_FLAGS_MASK)) {
--		NL_SET_ERR_MSG(extack, "missing enc_flags mask");
--		return -EINVAL;
--	}
--
--	*flags_key = nla_get_u32(tb[TCA_FLOWER_KEY_ENC_FLAGS]);
--	*flags_mask = nla_get_u32(tb[TCA_FLOWER_KEY_ENC_FLAGS_MASK]);
--
--	return 0;
--}
--
- static int fl_set_key(struct net *net, struct nlattr **tb,
- 		      struct fl_flow_key *key, struct fl_flow_key *mask,
- 		      struct netlink_ext_ack *extack)
-@@ -2123,8 +2108,8 @@ static int fl_set_key(struct net *net, struct nlattr **tb,
- 	}
- 
- 	if (tb[TCA_FLOWER_KEY_ENC_FLAGS])
--		ret = fl_set_key_enc_flags(tb, &key->enc_flags.flags,
--					   &mask->enc_flags.flags, extack);
-+		ret = fl_set_key_flags(tb, true, &key->enc_control.flags,
-+				       &mask->enc_control.flags, extack);
- 
- 	return ret;
- }
-@@ -3381,22 +3366,6 @@ static int fl_dump_key_cfm(struct sk_buff *skb,
- 	return err;
- }
- 
--static int fl_dump_key_enc_flags(struct sk_buff *skb,
--				 struct flow_dissector_key_enc_flags *key,
--				 struct flow_dissector_key_enc_flags *mask)
--{
--	if (!memchr_inv(mask, 0, sizeof(*mask)))
--		return 0;
--
--	if (nla_put_u32(skb, TCA_FLOWER_KEY_ENC_FLAGS, key->flags))
--		return -EMSGSIZE;
--
--	if (nla_put_u32(skb, TCA_FLOWER_KEY_ENC_FLAGS_MASK, mask->flags))
--		return -EMSGSIZE;
--
--	return 0;
--}
--
- static int fl_dump_key_options(struct sk_buff *skb, int enc_opt_type,
- 			       struct flow_dissector_key_enc_opts *enc_opts)
- {
-@@ -3699,7 +3668,8 @@ static int fl_dump_key(struct sk_buff *skb, struct net *net,
- 	if (fl_dump_key_cfm(skb, &key->cfm, &mask->cfm))
- 		goto nla_put_failure;
- 
--	if (fl_dump_key_enc_flags(skb, &key->enc_flags, &mask->enc_flags))
-+	if (fl_dump_key_flags(skb, true, key->enc_control.flags,
-+			      mask->enc_control.flags))
- 		goto nla_put_failure;
- 
- 	return 0;
++#define TCA_FLOWER_KEY_FLAGS_MAX (__TCA_FLOWER_KEY_FLAGS_MAX - 1)
++
+ enum {
+ 	TCA_FLOWER_KEY_CFM_OPT_UNSPEC,
+ 	TCA_FLOWER_KEY_CFM_MD_LEVEL,
 -- 
 2.45.2
 
