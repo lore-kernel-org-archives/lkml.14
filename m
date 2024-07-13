@@ -1,185 +1,110 @@
-Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0262347A53;
-	Sat, 13 Jul 2024 10:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CF747A53;
+	Sat, 13 Jul 2024 10:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720867540; cv=none; b=f8jGuUZ2oVFEu2mgroaV8H5L3t+GPFQUIT3mhCGH6K8nO5zZ7z6oiCo2ed49Ymc8q2LxwrRfEkD+Ul38OLmJylhkvkhSxSONZipDPFoxDZXruH0wtQ9EH4nROSsG0oXCNZOZQAcAMglAtz6I0dx1t64NzxIltc2f+vPeVkET0Wc=
+	t=1720867666; cv=none; b=cNQJEWG93O9ph2MVQBtthuNk4NFv7XIXoL2jZFXQ81MedbOLHL+nas3tQo8h8IQb+C/Sq/wtwX7FxsbJEl5z1d+8Li7LsUzsrdSfKhAO7/HjLn6ebX3KoBjb83W1lWwBq3e9TexdmyoysH7mC/Xe1Pk6mGmnXOLnFeLCu/a35NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720867540; c=relaxed/simple;
-	bh=0Sgv7iDpBQpLnt5xMwKPbYl7cBdSmNSaz+6GBBDmHeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K+8JX8d1+7CuVKF81YAbu8wF1gjxPUmAyA6rc2KJC2bz2kKvA8IccXVkPmVATACQAnEdeKDpePcHhr2865GeGNPvYnJBai3sTg9SLcslAnpiJ/7R0ZXenr3R64R2RucCn2R5CsG2NzJX1CAQjBMTqaRTE0Kdjqmg7Tz2CWkXmE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=XETdx1qF; arc=none smtp.client-ip=80.12.242.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720867666; c=relaxed/simple;
+	bh=6Rd/PEeMiqexHiwaSOQ1xuaoeBDAi/qd5v9AWNzziaQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=J2aJwoCrE+zo/QYQn+gzQGLlNCJffuiqGJQfCfV+7NnwXF+NOREAWXxSwDjE0xmEb93Daq2GbfR0KOWglFFSTjMRDBoIRaXZZ1aeJulRuFdAF1M+LDAlCMQ1wNJt/RR5a4uFmZwuuyrUw3ImQ2ePoHxt1erjFkHrvxAl4V/rFcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=K26DenVp; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="XETdx1qF"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id SaEtsYZnxYjQzSaEusagth; Sat, 13 Jul 2024 12:44:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720867468;
-	bh=sXFkaELaVcONq/wZ2YavLzkpI2a5TGDA0QnUmOOLdDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=XETdx1qFiWm2wv1qVsnrg5HRDRXJGt17UQMy9937mb67e9lecYyQBUskcGtQKPZG7
-	 Y/liAE57sG+KkX9LUANzSr7nqSJFcFFk6DoSsxG7dspsZq3L8nb3D+FBeDBCwY9YR8
-	 rn4R/t6I/4W26l/FANDYmX5TNIwQjG2w3vSgpdBndQ8//LGwZrsjMC0RQPS7frY1ET
-	 1TZTG5WcejO8ZEEEzR+8brhjNH8qf47U82ZSyHkSMl3w2flVmyCjFM0Pk9l3p+KRxN
-	 DJJAPeWUWBfQTJOByYnlKWHXehIyzx0q0tYzw9d+jNXRX9np993Lkz8YfUbLnd0lNB
-	 dTuLCip7+3ykQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 13 Jul 2024 12:44:28 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <2c0e9d3c-72be-499d-a52e-779d851b37a9@wanadoo.fr>
-Date: Sat, 13 Jul 2024 12:44:27 +0200
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="K26DenVp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1720867623; x=1721472423; i=frank-w@public-files.de;
+	bh=6Rd/PEeMiqexHiwaSOQ1xuaoeBDAi/qd5v9AWNzziaQ=;
+	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
+	 References:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=K26DenVpAOM12XFxLVW2HTOzeEb9UP9Wopq+Zd+I3K0jsuybfB9ZPx5BthXcR6+t
+	 0z8fu6N+k5+zKeHNxNuCh5WpD5trpFLbDRJeVTkhSC/f6nbHTneO4Rcyt3IieKo1z
+	 BJNw60T10sZ1lHtXQkiWUe80Y/4Lem97Sfpf35Ls1u/n8GjZBADVGajbqbFnp+ANm
+	 8dPbmv6WzVaxikP/sf3Bc7pfJQCEaLRN5DkMS/1+QmQ7WaC32cPcnKHNMOapB/HZ2
+	 hrgCjn/PBs/qAaWNAKMQNuF1eJYwJete8TCONf7QfCKx9hn3dv8wi31NJRyl3Q1Tj
+	 IegYx1yF9pvye2oiWA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([217.61.145.51]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MdNY2-1rtWZq38Ma-00iLMZ; Sat, 13
+ Jul 2024 12:47:02 +0200
+Date: Sat, 13 Jul 2024 12:47:00 +0200
+From: Frank Wunderlich <frank-w@public-files.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Frank Wunderlich <linux@fw-web.de>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>,
+ Guenter Roeck <linux@roeck-us.net>
+CC: Daniel Golle <daniel@makrotopia.org>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-watchdog@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_1/4=5D_dt-bindings=3A_watchdog=3A_me?=
+ =?US-ASCII?Q?diatek=2Cmtk-wdt=3A_add_MT7988_syscon_requirement?=
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <58cba30d-af53-47a6-9258-8b36eab6cbfb@kernel.org>
+References: <20240709101328.102969-1-linux@fw-web.de> <20240709101328.102969-2-linux@fw-web.de> <58cba30d-af53-47a6-9258-8b36eab6cbfb@kernel.org>
+Message-ID: <F5A59950-5D16-4780-A64C-806A6324D467@public-files.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] iio: humidity: Add support for ENS21x
-To: jfelmeden@thegoodpenguin.co.uk
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, jic23@kernel.org,
- krzk+dt@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, robh@kernel.org
-References: <20240710-ens21x-v3-0-4e3fbcf2a7fb@thegoodpenguin.co.uk>
- <20240710-ens21x-v3-2-4e3fbcf2a7fb@thegoodpenguin.co.uk>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240710-ens21x-v3-2-4e3fbcf2a7fb@thegoodpenguin.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dfQVnBpIteXjdR8ttejmmx8V5KDS9dWqIXsSefOdM2sLE/Obzco
+ NGDmA4NYZJB7TLC2wDsEaXEpgf6Xsx332EYdG0YfLBz0/8wsNk7+hpg4Itwu2I3DUCcOb0w
+ msuBv+/Xb0nDwy+ySkjfwRlAToGV+uz3y5kI4J44Pkay2s66a7DBZI7b1JXLpsZapc5cAW0
+ dxdy9GJLKI/j6SjG0lDkg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7d5/pH8sfOY=;kZxM77vMuE7lzEFRj2it8hMElOb
+ XfUwf6PpqfVT6w35/xDyxLXkd35plIy0+Ix3IXfqwLS8q67xbsOjI2UEmx4Q01LoOhF+1d25e
+ t1wbbK1QfPNMrMMwDYKayZcNi5nmZqHQjFktyMYC4KhTxI9hRT0DhO4bn5g/tGEqAMFGOcmgY
+ Sulc9zWvKtnkX4G5oL/FceF6nm4/joU9GzZo6XqBzClqoq3kkKtrLTtIofPvPBwhYipdn8HB6
+ ZtIs9TZwqyByvlSrk/kLn1HJRQyXfoSeYsPA5YsQ4It0wIIpY7MQOC7rsFp/103FEgayRYik2
+ h6GKbWQrRv2jaU00V45KtiVVvUXtY4sMQD66tF3C9VrSBVvQzSDSzSVZ0IBzJNfYETB6I1YFC
+ 8t60Wu+ms6rM+TF8L1AYT5GyFAwXhZkfjpK4Uqs9ZgEFY5MyQmKRn3DF3u++8mY+9zJ11/ylw
+ W9Z01g4C4STe2483/xiUV3FBps2s2cL3pKgH9XKBtMAXGHB+FUgSk2iDPmLHZ53ZbCNzsNcAY
+ MP77ljfHtbwC60yPXReUmOxZMHFhb3j1DP5T0ivfrtSKeJ2CMm+QcLG1B2xXk82ed0jb2OtAY
+ eqIqhU3gch1KgXPpwVl3ZTNRJF4EGDQrRt9/BGHhyDiVHFDLNdf1wzgqO49zVpdzV7bEo1O79
+ 9gqvnb3z8tph1gI2uCwLtPizYyl4gCyeRBzITWzgSkEXXsy18ytGV1uZBf1erunhQXdKePRHB
+ EIrompkqsMh3FSLQyfP8eUKENAH5Ju+yhDvbsKgZJiyiDd3yD/hhSK8mdebk+Ji5mz6qaXzWR
+ hNM+bQeiUUEaJILs+UEYi5/g==
 
-Le 10/07/2024 à 15:24, Joshua Felmeden a écrit :
-> Add support for ENS210/ENS210A/ENS211/ENS212/ENS213A/ENS215.
-> 
-> The ENS21x is a family of temperature and relative humidity sensors with
-> accuracies tailored to the needs of specific applications.
-> 
-> Signed-off-by: Joshua Felmeden <jfelmeden-tUaQ5FxYRYX4aQPF92CzsNBc4/FLrbF6@public.gmane.org>
-> ---
->   drivers/iio/humidity/Kconfig  |  11 ++
->   drivers/iio/humidity/Makefile |   1 +
->   drivers/iio/humidity/ens21x.c | 346 ++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 358 insertions(+)
+Am 13=2E Juli 2024 12:21:46 MESZ schrieb Krzysztof Kozlowski <krzk@kernel=
+=2Eorg>:
+>On 09/07/2024 12:13, Frank Wunderlich wrote:
+>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>=20
+>> This is needed by u-boot-driver when using OF_UPSTREAM=2E
+>
+>Thanks for providing context=2E What we miss here still, is the
+>description of the hardware and for what this syscon is used=2E Why this
+>become system controller and before was not? Or this is just for regmap
+>- then it does not work that way=2E=2E=2E You cannot have whatever driver
+>poking all around then claim - I have crappy driver poking to every
+>driver without implementing proper driver model, so I add syscon to
+>bindings=2E
+>
+>
+>
+>Best regards,
+>Krzysztof
+>
 
-Hi,
-
-as kernel test robot complained, there will be a v4.
-
-So here are a few nitpicks/questions, in case it helps.
-
-...
-
-> +#include <linux/types.h>
-> +#include <linux/i2c.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/crc7.h>
-
-Nitpick: usually, it is prefered to keep #include alphabetically ordered.
-
-...
-
-> +
-> +/* magic constants */
-> +#define ENS21X_CONST_TEMP_SCALE_INT 15 /* integer part of temperature scale (1/64) */
-> +#define ENS21X_CONST_TEMP_SCALE_DEC 625000 /* decimal part of temperature scale */
-> +#define ENS21X_CONST_HUM_SCALE_INT 1 /* integer part of humidity scale (1/512) */
-> +#define ENS21X_CONST_HUM_SCALE_DEC 953125 /* decimal part of humidity scale */
-> +#define ENS21X_CONST_TEMP_OFFSET_INT -17481 /* temperature offset (64 * -273.15) */
-> +#define ENS21X_CONST_TEMP_OFFSET_DEC 600000 /* decimal part of offset */
-> +#define ENS210_CONST_CONVERSION_TIME 130
-> +#define ENS212_CONST_CONVERSION_TIME 32
-> +#define ENS215_CONST_CONVERSION_TIME 132
-
-Datasheet says 130 for ENS213A and ENS215.
-Is it a typo?
-If 132 is intentional, maybe a samll comment explaining why would be 
-welcomed?
-
-...
-
-> +static int ens21x_get_measurement(struct iio_dev *indio_dev, bool temp, int *val)
-> +{
-> +	u32 regval, regval_le;
-> +	int ret, tries;
-> +	struct ens21x_dev *dev_data = iio_priv(indio_dev);
-> +
-> +	/* assert read */
-> +	i2c_smbus_write_byte_data(dev_data->client, ENS21X_REG_SENS_START,
-> +				  temp ? ENS21X_SENS_START_T_START :
-> +					 ENS21X_SENS_START_H_START);
-> +
-> +	/* wait for conversion to be ready */
-> +	switch (dev_data->part_id) {
-> +	case ENS210:
-> +	case ENS210A:
-> +		msleep(ENS210_CONST_CONVERSION_TIME);
-> +		break;
-> +	case ENS211:
-> +	case ENS212:
-> +		msleep(ENS212_CONST_CONVERSION_TIME);
-> +		break;
-> +	case ENS213A:
-> +	case ENS215:
-> +		msleep(ENS215_CONST_CONVERSION_TIME);
-> +		break;
-> +	default:
-> +		dev_err(&dev_data->client->dev, "unrecognised device");
-> +		return -ENODEV;
-> +	}
-> +
-> +	tries = 10;
-> +	while (tries-- > 0) {
-> +		usleep_range(4000, 5000);
-
-We just msleep()'ed the max expected time for the conversion. So, maybe 
-the code could be re-arranged so that this delay is done only if we retry?
-
-> +		ret = i2c_smbus_read_byte_data(dev_data->client,
-> +					       ENS21X_REG_SENS_STAT);
-> +		if (ret < 0)
-> +			continue;
-> +		if (!(ret & (temp ? ENS21X_SENS_STAT_T_ACTIVE :
-> +				    ENS21X_SENS_STAT_H_ACTIVE)))
-> +			break;
-> +	}
-> +	if (tries < 0) {
-> +		dev_err(&indio_dev->dev, "timeout waiting for sensor reading\n");
-> +		return -EIO;
-> +	}
-
-...
-
-> +	indio_dev->name = id->name;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = ens21x_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(ens21x_channels);
-> +	indio_dev->info = &ens21x_info;
-> +
-> +	return devm_iio_device_register(&client->dev, indio_dev);
-> +}
-> +
-> +
-
-Nitpick: unneeded 2nd new line.
-
-> +static const struct of_device_id ens21x_of_match[] = {
-> +	{ .compatible = "sciosense,ens210", .data = (void *)ENS210},
-> +	{ .compatible = "sciosense,ens210a", .data = (void *)ENS210A },
-> +	{ .compatible = "sciosense,ens211", .data = (void *)ENS211},
-
-...
-
-CJ
-
+The nodes here are linked to the ethernet-node and syscon is only needed t=
+o get the regmap=2E=2E=2Ethe access to it is done by ethernet driver=2E It =
+does work,but maybe not the right way=2E=2E=2E
+regards Frank
