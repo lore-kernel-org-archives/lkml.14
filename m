@@ -1,145 +1,160 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225F012B82;
-	Sat, 13 Jul 2024 02:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A61F14012;
+	Sat, 13 Jul 2024 02:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720837811; cv=none; b=H+LYXor3FBuys9jyhN8j8S8Vm5v9+7JFzi/vp1caA2SUySM4QN7MastjOfWiFlrNEH6mS8mORPq/PVeLD+o2x6Hi6gOsm2mPpObekXdvc+uCmU6beOuzOy4bnd3Aj2kC2ZJpfW7uuifetvKgmXB6u9jXy9VWwbZ6jnMYKSexhEk=
+	t=1720838586; cv=none; b=Iqljc9vxBVTr/8ES/6xJCSlPktjFVvRB7mkiZdu8gm136H+/KA3CJ7222OyQxe5TWe9aICGYukXdchOlXqVvMbjtpFT+gXlplF3+/QV+zQDT+wrZb1lljPYohcWbUIYU6f0YvZcigHHiSmIouxfK99oBtUYKdO/FjRfckBuu7Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720837811; c=relaxed/simple;
-	bh=4SEn5gOJYqHujwPybOnm3QwtxxQfOvIoDLWQOkqT3wA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=SpBf6KZQC97AIU/S5FL5pQpmZfUMmnLd8+C6yBgBwsmkhA+MW3T3UA8mjySOHS0FJSgoQI72Hk7C1PWNwHSqNJvhrgkDcELrJw/Vi8qtW39+QYbrYZNnV/27Ohz3vW9XZKfsBCqh1p+e5VrT8JrXuXsYhVNTFSVdbesmjgTfLoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WLXVL0fSvz4f3kvR;
-	Sat, 13 Jul 2024 10:29:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 15FEF1A0185;
-	Sat, 13 Jul 2024 10:29:59 +0800 (CST)
-Received: from [10.174.178.46] (unknown [10.174.178.46])
-	by APP2 (Coremail) with SMTP id Syh0CgBn0Yaj5pFmb6LPBw--.58645S3;
-	Sat, 13 Jul 2024 10:29:57 +0800 (CST)
-Subject: Re: [BUG REPORT] potential deadlock in inode evicting under the inode
- lru traversing context on ext4 and ubifs
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
- linux-mtd <linux-mtd@lists.infradead.org>,
- Richard Weinberger <richard@nod.at>, "zhangyi (F)" <yi.zhang@huawei.com>,
- yangerkun <yangerkun@huawei.com>, "wangzhaolong (A)"
- <wangzhaolong1@huawei.com>
-References: <37c29c42-7685-d1f0-067d-63582ffac405@huaweicloud.com>
- <20240712143708.GA151742@mit.edu>
-From: Zhihao Cheng <chengzhihao@huaweicloud.com>
-Message-ID: <346993f2-87f6-e20f-8f5a-d19f84c1604c@huaweicloud.com>
-Date: Sat, 13 Jul 2024 10:29:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1720838586; c=relaxed/simple;
+	bh=c0cx8eCSqK5HZVrMPn+doc9P2P0lifDncReHUUcAH3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FF4sVGMIbDuT5RihtXZc0QuK9S6/DESWmpi9kkfo65TqJ9W6tpAW5Yd4LaiC883c/eO5rPB8XA1ixu6fsbb27TQrYzZy3OqqY+DgA1OBx5H3MF59oUYEnVVuC9aVk+z4bi4ATHKbeAVklxZP/v3x5acjn/3V0GbYF15eIqwq56o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GMA9YB6w; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GMA9YB6w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720838584; x=1752374584;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=c0cx8eCSqK5HZVrMPn+doc9P2P0lifDncReHUUcAH3k=;
+  b=GMA9YB6wVHdJfVeBxcTr9cc3ROHk1beXrHl/XLfsv7PEJaRjRfwryICb
+   cYUoSnGH1M95qHkGqLh37U2MjVlOTatn1Xz6yl7QI6f9S2gjI20Y4P9at
+   YFXB+1+wgOLsMya+v47xcnis4nJJMRjD1z0ErmcdLa+EE8IjbKPHpU3EH
+   kHW9qxqSWNI3ypkFQEniXDQ6G9W+5hA1NbIkYVl7+Trps6pMb5aiaygiz
+   YwbHxmGprlm0wzxlrAy0L8KW2P1a7pIn3jWMq3s+8JN5guI/BkbNeEJYs
+   ia4mMF3oLgkLWOQY/FSYw+xh3YkYt07fQQU3/LJmoOFQBkVljpEnZA5FK
+   g==;
+X-CSE-ConnectionGUID: e+rVr8cMSEiMRpiPB5IXtA==
+X-CSE-MsgGUID: Sn28/8b8STagTDKTErIknA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="22165437"
+X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
+   d="scan'208";a="22165437"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 19:43:03 -0700
+X-CSE-ConnectionGUID: oLHqdyb5T2yapw+C1VEJmQ==
+X-CSE-MsgGUID: tWfou8M1SO2MrgcJfikAOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
+   d="scan'208";a="72300665"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 12 Jul 2024 19:43:00 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sSSiu-000bZy-2Q;
+	Sat, 13 Jul 2024 02:42:56 +0000
+Date: Sat, 13 Jul 2024 10:42:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+	Vikash Garodia <quic_vgarodia@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] PM: domains: add device managed version of
+ dev_pm_domain_attach|detach_list()
+Message-ID: <202407131034.zV21FEsV-lkp@intel.com>
+References: <1720763312-13018-2-git-send-email-quic_dikshita@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240712143708.GA151742@mit.edu>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBn0Yaj5pFmb6LPBw--.58645S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7urWxZF1ktr1UAw47KFyxuFg_yoW5JFy5pa
-	9rXa4Syrn5JFyYk34ktr4v9w10ka1rCr4UJrykWr1xA3WkXrySvF1xtr45JFWUur4kuw1v
-	qa1UCrn8urn0y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07UWE__UUUUU=
-X-CM-SenderInfo: xfkh0wx2klxt3r6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1720763312-13018-2-git-send-email-quic_dikshita@quicinc.com>
+
+Hi Dikshita,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on rafael-pm/linux-next]
+[also build test WARNING on rafael-pm/bleeding-edge linus/master v6.10-rc7 next-20240712]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dikshita-Agarwal/PM-domains-add-device-managed-version-of-dev_pm_domain_attach-detach_list/20240712-135151
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/1720763312-13018-2-git-send-email-quic_dikshita%40quicinc.com
+patch subject: [PATCH 1/2] PM: domains: add device managed version of dev_pm_domain_attach|detach_list()
+config: x86_64-buildonly-randconfig-001-20240713 (https://download.01.org/0day-ci/archive/20240713/202407131034.zV21FEsV-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240713/202407131034.zV21FEsV-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407131034.zV21FEsV-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/base/power/common.c:288: warning: Function parameter or struct member '_list' not described in 'devm_pm_domain_detach_list'
+>> drivers/base/power/common.c:288: warning: expecting prototype for dev_pm_domain_detach_list(). Prototype was for devm_pm_domain_detach_list() instead
+>> drivers/base/power/common.c:307: warning: Function parameter or struct member 'dev' not described in 'devm_pm_domain_attach_list'
+>> drivers/base/power/common.c:307: warning: Function parameter or struct member 'data' not described in 'devm_pm_domain_attach_list'
+>> drivers/base/power/common.c:307: warning: Function parameter or struct member 'list' not described in 'devm_pm_domain_attach_list'
 
 
+vim +288 drivers/base/power/common.c
 
-ÔÚ 2024/7/12 22:37, Theodore Ts'o Ð´µÀ:
->> Problem description
->> ===================
->>
->> The inode reclaiming process(See function prune_icache_sb) collects all
->> reclaimable inodes and mark them with I_FREEING flag at first, at that
->> time, other processes will be stuck if they try getting these inodes(See
->> function find_inode_fast), then the reclaiming process destroy the
->> inodes by function dispose_list().
->> Some filesystems(eg. ext4 with ea_inode feature, ubifs with xattr) may
->> do inode lookup in the inode evicting callback function, if the inode
->> lookup is operated under the inode lru traversing context, deadlock
->> problems may happen.
->>
->> Case 1: In function ext4_evict_inode(), the ea inode lookup could happen
->> if ea_inode feature is enabled, the lookup process will be stuck under
->> the evicting context like this:
->>
->>   1. File A has inode i_reg and an ea inode i_ea
->>   2. getfattr(A, xattr_buf) // i_ea is added into lru // lru->i_ea
->>   3. Then, following three processes running like this:
->>
->>      PA                              PB
->>   echo 2 > /proc/sys/vm/drop_caches
->>    shrink_slab
->>     prune_dcache_sb
->>     // i_reg is added into lru, lru->i_ea->i_reg
->>     prune_icache_sb
->>      list_lru_walk_one
->>       inode_lru_isolate
->>        i_ea->i_state |= I_FREEING // set inode state
->>        i_ea->i_state |= I_FREEING // set inode state
-> Um, I don't see how this can happen.  If the ea_inode is in use,
-> i_count will be greater than zero, and hence the inode will never be
-> go down the rest of the path in inode_lru_inode():
+   278	
+   279	/**
+   280	 * dev_pm_domain_detach_list - devres-enabled version of dev_pm_domain_detach_list.
+   281	 * @list: The list of PM domains to detach.
+   282	 *
+   283	 * This function reverse the actions from devm_pm_domain_attach_list().
+   284	 * it will be invoked during the remove phase from drivers implicitly if driver
+   285	 * uses devm_pm_domain_attach_list() to attach the PM domains.
+   286	 */
+   287	void devm_pm_domain_detach_list(void *_list)
+ > 288	{
+   289		struct dev_pm_domain_list *list = _list;
+   290	
+   291		dev_pm_domain_detach_list(list);
+   292	}
+   293	EXPORT_SYMBOL_GPL(devm_pm_domain_detach_list);
+   294	
+   295	/**
+   296	 * devm_pm_domain_attach_list - devres-enabled version of dev_pm_domain_attach_list
+   297	 *
+   298	 * NOTE: this will also handle calling devm_pm_domain_detach_list() for
+   299	 * you during remove phase.
+   300	 *
+   301	 * Returns the number of attached PM domains or a negative error code in case of
+   302	 * a failure.
+   303	 */
+   304	int devm_pm_domain_attach_list(struct device *dev,
+   305				       const struct dev_pm_domain_attach_data *data,
+   306				       struct dev_pm_domain_list **list)
+ > 307	{
+   308		int ret, num_pds = 0;
+   309	
+   310		num_pds = dev_pm_domain_attach_list(dev, data, list);
+   311	
+   312		ret = devm_add_action_or_reset(dev, devm_pm_domain_detach_list, (void *)list);
+   313		if (ret)
+   314			return ret;
+   315	
+   316		return num_pds;
+   317	}
+   318	EXPORT_SYMBOL_GPL(devm_pm_domain_attach_list);
+   319	
 
-The counter of ea_inode could become zero before the file inode, 
-according to the following process:
-path_getxattr
-  user_path_at(&path) // get file dentry and file inode
-  getxattr
-   ext4_xattr_get
-    ext4_xattr_ibody_get
-     ext4_xattr_inode_get
-      ext4_xattr_inode_iget(&ea_inode)  // ea_inode->i_count = 1
-      iput(ea_inode) // ea_inode->i_count = 0, put it into lru
-  path_put(&path); // put file dentry and file inode
-
-> 
-> 	if (atomic_read(&inode->i_count) ||
-> 	    ...) {
-> 		list_lru_isolate(lru, &inode->i_lru);
-> 		spin_unlock(&inode->i_lock);
-> 		this_cpu_dec(nr_unused);
-> 		return LRU_REMOVED;
-> 	}
-> 
-> Do you have an actual reproduer which triggers this?  Or would this
-> happen be any chance something that was dreamed up with DEPT?
-
-The reproducer is in the second half of the ariticle, along with some of 
-the solutions we tried.
-
-Reproducer:
-===========
-
-https://bugzilla.kernel.org/show_bug.cgi?id=219022
-
-About solutions
-===============
-
-[...]
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
