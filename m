@@ -1,82 +1,118 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88B0482EF;
-	Sun, 14 Jul 2024 21:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D7A17995;
+	Sun, 14 Jul 2024 21:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720992798; cv=none; b=ZNaizeR484I5KilFb/cxvBFCyhcZsXIgu/PnofVVkdhX5ar0J1U+1LpXFCvTipeQs64GX4C4idrj2JpGaskWE3R9O5ONPl8IL6+SKk7aCLWuSwIxgl/ZNNNGNARCjr5/DyafbWlgWqKvAgHgjsB5vbSYD1arV5Aj6TWtCzHx3rc=
+	t=1720993413; cv=none; b=I8cKlkf5oug5zvVaEsFakdqz+SpMHa2CE5DG8/G1ECHqQrFXk2BbXalk4Kq76Np6RoCy4UTnJ1mV1hWHbV91AbfUEXBeCS04X9KwMjWMpkns+TC+bvJvfDFXqQDv1/v+cRHCTPkF47kdQ4wfZvKwzIUHXjzHxqldTp30b1LWFoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720992798; c=relaxed/simple;
-	bh=TRYZJC+zLV2FpdSHXrI4VfRS/uzMZHdxqvM3pix82gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IpEHi4Goxo3lXEczomztc69VdadulAGGpwjpMLfdvXbG/OPLTBkaTTMcBsDsoss8vdGRCQMNujxEkzXVBlO9/1lzrKpcYqlYouZKfMX4915FaWhOrhZ81ys2sT+jeU8qX4fXn7XBsixEGud+gYiGkajw4nFXwskhQVz0z0wkxKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=lLoaWjFr; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1720993413; c=relaxed/simple;
+	bh=ct0qPOqX44pf411JPF6Z0tkH2qji7IzJANyguHIxcBY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=pX9iGx+xq/kfTLgzV0QLtDGb5QuZCLIEhIs+fFRltWueBV4qwtQD6++7Id6icERfxcKiHycY/6LK7ImIjtS/r3H3YYsFPeUSDv/QhQTPBUxglceIrUZbW114temsrXpXt4SlPabqFMirkhLA2m+IRhElR0uX4HFgEj48lG/Jm3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CoP74KCh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lLoaWjFr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1720992793;
-	bh=Zy9L3CRKI6BYqulVcEbUEZgZRGoJygb3WT3DVcpiPos=;
-	h=Date:From:To:Cc:Subject:From;
-	b=lLoaWjFrqMAKdJ6AIX5ryhNct2u2seRAD1bA2MmGERiWNbS49XVlalMxBpuY3F7b8
-	 S1kCD8UYI/d+AAf9IX+dvMovTDWs1horJE0HD2G7ja1Jwe45DgDKxB4X/F3ZU8a1xY
-	 I3NBIKwuoUNn2XKRfiYOqJfgr/cAXQskURW/3G+f6oK7kHLM/wgcZEq7ZKV4HH4P6X
-	 aVzhQOp6lcuiMoZcaFYdib1PhZcPqrYNnkDJ2WQmXfe9lparYl/JZ+ociwkcfRgUX9
-	 3og5FA3XyhbNVbBoU3+wGbEYMjLPJIlSZAQ0HNHelIgSqAn1qKRZnRXMsSzIMS1G4w
-	 TJEGELGmCLcFQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WMdqF1hpjz4wb2;
-	Mon, 15 Jul 2024 07:33:12 +1000 (AEST)
-Date: Mon, 15 Jul 2024 07:33:12 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the bcachefs tree
-Message-ID: <20240715073312.4bdf810c@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CoP74KCh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826B9C116B1;
+	Sun, 14 Jul 2024 21:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720993412;
+	bh=ct0qPOqX44pf411JPF6Z0tkH2qji7IzJANyguHIxcBY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=CoP74KChCxzdVDbeMwom84ufBP1oMU/0yYQGqG/TkB2m/jLH9SNsqYYdFSam1K3vq
+	 C5IaHq/FpDN6fCvx8vYdTUtvuZFhT/b54D1ZEBgIGSRhWSLkm0IE23JZr45hB7dyaw
+	 is3n2LJKtnuLXmXZqJs2Hav8TWS6p2IMOBIs1oSs6NqZzNt7g09doYlQ3zD2DjLgbu
+	 fYZjVrplzAP6H82xoCm+tDFZLPLcLRcw0un2Qgqs7eiy9GK7ue4NcYgdWIwPS4EaLx
+	 AibFklS9lLxAQgf8glyPy8C9wbaeg5i3o1I1P34YwFj538cJ9/coHKGwRv5nJLXI7t
+	 XFSZSFgK+BQWw==
+Date: Sun, 14 Jul 2024 14:43:27 -0700
+From: Kees Cook <kees@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+CC: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ Kees Cook <keescook@chromium.org>, Marco Elver <elver@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fortify: fix warnings in fortify tests with KASAN
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20240714170847.2029108-1-masahiroy@kernel.org>
+References: <20240714170847.2029108-1-masahiroy@kernel.org>
+Message-ID: <BCF87531-EBAE-4942-ADC7-BAF27EF7CC43@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7Q3Pxt7Vn3_JJeo215VJ1XT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/7Q3Pxt7Vn3_JJeo215VJ1XT
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-The following commits are also in Linus Torvalds' tree as different
-commits (but the same patches):
 
-  36c6901e4e93 ("bcachefs: Set PF_MEMALLOC_NOFS when trans->locked")
-  c5f835fe84d3 ("bcachefs: bch2_gc_btree() should not use btree_root_lock")
+On July 14, 2024 10:04:32 AM PDT, Masahiro Yamada <masahiroy@kernel=2Eorg>=
+ wrote:
+>When a software KASAN mode is enabled, the fortify tests emit warnings
+>on some architectures=2E
+>
+>For example, for ARCH=3Darm, the combination of CONFIG_FORTIFY_SOURCE=3Dy
+>and CONFIG_KASAN=3Dy produces the following warnings:
+>
+>    TEST    lib/test_fortify/read_overflow-memchr=2Elog
+>  warning: unsafe memchr() usage lacked '__read_overflow' warning in lib/=
+test_fortify/read_overflow-memchr=2Ec
+>    TEST    lib/test_fortify/read_overflow-memchr_inv=2Elog
+>  warning: unsafe memchr_inv() usage lacked '__read_overflow' symbol in l=
+ib/test_fortify/read_overflow-memchr_inv=2Ec
+>    TEST    lib/test_fortify/read_overflow-memcmp=2Elog
+>  warning: unsafe memcmp() usage lacked '__read_overflow' warning in lib/=
+test_fortify/read_overflow-memcmp=2Ec
+>    TEST    lib/test_fortify/read_overflow-memscan=2Elog
+>  warning: unsafe memscan() usage lacked '__read_overflow' symbol in lib/=
+test_fortify/read_overflow-memscan=2Ec
+>    TEST    lib/test_fortify/read_overflow2-memcmp=2Elog
+>  warning: unsafe memcmp() usage lacked '__read_overflow2' warning in lib=
+/test_fortify/read_overflow2-memcmp=2Ec
+>     [ more and more similar warnings=2E=2E=2E ]
+>
+>Commit 9c2d1328f88a ("kbuild: provide reasonable defaults for tool
+>coverage") removed KASAN flags from non-kernel objects by default=2E
+>It was an intended behavior because lib/test_fortify/*=2Ec are unit
+>tests that are not linked to the kernel=2E
+>
+>As it turns out, some architectures require -fsanitize=3Dkernel-(hw)addre=
+ss
+>to define __SANITIZE_ADDRESS__ for the fortify tests=2E
+>
+>Without __SANITIZE_ADDRESS__ defined, arch/arm/include/asm/string=2Eh
+>defines __NO_FORTIFY, thus excluding <linux/fortify-string=2Eh>=2E
+>
+>This issue does not occur on x86 thanks to commit 4ec4190be4cf
+>("kasan, x86: don't rename memintrinsics in uninstrumented files"),
+>but there are still some architectures that define __NO_FORTIFY
+>in such a situation=2E
+>
+>Set KASAN_SANITIZE=3Dy explicitly to the fortify tests=2E
+>
+>Fixes: 9c2d1328f88a ("kbuild: provide reasonable defaults for tool covera=
+ge")
+>Reported-by: Arnd Bergmann <arnd@arndb=2Ede>
+>Closes: https://lore=2Ekernel=2Eorg/all/0e8dee26-41cc-41ae-9493-10cd1a8e3=
+268@app=2Efastmail=2Ecom/
+>Signed-off-by: Masahiro Yamada <masahiroy@kernel=2Eorg>
+>---
+>
+>Kees Cook said "I'll try to figure this out", but I have not seen a patch=
+ so far,
+>so I decided to do this myself=2E
+>(https://lore=2Ekernel=2Eorg/all/202405310908=2EA5733DF@keescook/)
+>
+>I will send a pull req with this and some other fixes=2E
+>I need to fix this, as v6=2E10 will be released soon=2E
+
+Awesome! Thanks for figuring this out; I hadn't had time yet=2E=20
+
+Acked-by: Kees Cook<kees@kernel=2Eorg>
+
 
 --=20
-Cheers,
-Stephen Rothwell
-
---Sig_/7Q3Pxt7Vn3_JJeo215VJ1XT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaURBgACgkQAVBC80lX
-0Gx1cgf9ElXMxq7SsEMsga2AvMrfKFRgNxrdZlHSGNLdH5AmLuRKAVjd5ZX841Jk
-gwskjfw9EdQAu8QB8UDWb79K9FEU92cWH2rJLvCBdvA2XoVZV1VgxBGzxMazRXw3
-ZKh6nSy7IXv9SPSI4jCIoVGDCYdkDSEhboudEnGrcr6Tl7biqSfpNZoGt1Hj0soh
-a914tY4fITsNBhYiWgxaUJAEWrMd7qPikHgxTC1ejR1UYcXc/vq0fd8BimPAcXXJ
-bt7/L11+Rx9R9q74tSL0bAB/Mz8Osi9BDAMU1K0JCOD+k2fZwt+KZHb+GS8qsU2q
-nxMpLpT2H0e5KQQGz+J9NnkRIFKDaw==
-=lRzU
------END PGP SIGNATURE-----
-
---Sig_/7Q3Pxt7Vn3_JJeo215VJ1XT--
+Kees Cook
