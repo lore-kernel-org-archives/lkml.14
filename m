@@ -1,156 +1,120 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9F71D559;
-	Sun, 14 Jul 2024 13:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793E08F5C;
+	Sun, 14 Jul 2024 13:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720962933; cv=none; b=H5UVdEgCFmYpXM79GWyyDRWcSlO4p2Hb49j/h4L4Bso2D6XjTrrEvwdQQ704p5qBH5fsPzZ27sUqU9tcR1G38qnw39WMEVYmxNIYpyRiwPSE3bZs3UEl10FNtyhEZvi8+ffsLWpA/jGy+oadP2Atss8C5oUxOGqnjsKNNMy4cac=
+	t=1720963856; cv=none; b=nSVxrJLeWBMM6YZ+FXEhnYL1nc7xV82BFXwXsnQRF5jDOK2KtXnAklRgV/rwLPqPvJspGZxaE33N8zKAPQ388Wsk7VN92dmYfAkUjWj9A69WQT5GW5pwHdzHFAHIaC6LjAYhjmztQfeAPLTAxeza1LtH6iafXsBpihc31wyX1i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720962933; c=relaxed/simple;
-	bh=dcOo8C1pQ+lOmjwN8FP8eDvQ933tkNrSB9sHuhfLNDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XK7X3c2gLdeyeuqgNZNSX7cRnRgaMNm/6UsIqeSVRd8nbMNnU50BKYo4DkhA/PJjYsf52Z9kjj1C9Kc/+h6lW5bynWOEXZHtYQxxN+ZEpcIc7RRJ20EJbs5sYmlQD00QlHlqUhQqH6LdTqpcwNyxaOn9IGeyTOdo8p3q56IvN+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cLrspywZ; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720963856; c=relaxed/simple;
+	bh=rocfJ17GW3D5x83ogfqr5R7069P3habSyW6AMwJQtMI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s778/eL1A+tl6zmJi5Qvsu6ClppyePpu88y2CDNXRXp0IPmTRW7a1pvYejF5rVDL2t3M7Wf4+4dKzvNIlcGVKwN91X+J6wAZwSi6068aLOYoRRl+HLK+bJs71A03xX4WGwA4EY210sm2QhPrR9S4HLV9KZy30T25lEkdWv6FzCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=XsR+QCWB; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLrspywZ"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52e9b9fb3dcso4204865e87.1;
-        Sun, 14 Jul 2024 06:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720962930; x=1721567730; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KiCM4Oh0wwP2VREwcugnR/BGE8YEV2FgEAMfKAudQZU=;
-        b=cLrspywZoNFITXRfUNokVUiW0rpbVIbrYYpg7k+F0FWPZhe6icj+KFhFi+0+kb6iUP
-         BDRdO1CFhYT8wp2uttRDRvjUiTr4sMKpz5hwg/s1EBTjKWDBH+l6G5KecprKTUViBbnl
-         UNyREx89lksFV2mqhM5nrCwckQFaCd0Uuj4NMnuBZA/zboYb07diYmv0GIPJuvWzMx9S
-         RFGVBbtDsN4pRdI3RwC/eQmn5D0UATwIDgIfOXX0ljMvdb2poJC4bYWot+Yf95ic+UZ+
-         iNDF0doxthir7pnEJDXvTHwHGk5VsKGNh+fz80+feLKaFIKXwSfLzfTQvf9ARmDrJN6r
-         qizQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720962930; x=1721567730;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KiCM4Oh0wwP2VREwcugnR/BGE8YEV2FgEAMfKAudQZU=;
-        b=k60NNgYs+Z4P8/kE4isskXqMGQFuD8jJYd8GuOQqFRVBc/ODW34q5uPW/yUDUxf72l
-         MlU/wmnuJPzikRQtlf1N/pHBarthGDEkhye8yRJyVYNQYB5oZIXbX8Xonw90FvXhRcWE
-         jEaDP+xWr7WQtXQddnn6EBzEcvJbw8WVc4pKeO8Z5yj12DXZSH1ZGU055pPTb8wZmD26
-         jGQYYL2Eoaw9ZrKPr68T4AD+PC2/GiME4WVUxNkY9+fXXCt1D/6sKR5rotrxDhmTHQ46
-         XhhdWiJb9ZIZFZAN+wzje1w6ZGtAP9t3Pb47ZVO/fQJKyhEeJ86iHK7zNbDL+7lA58fE
-         74KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyMl3V0XswoxufQCKB40+GMw8z/JrRkzr+FmZfY51/JQbFwQq6XYhd+PIXqzaiBTmbYkUDf+tj+M9jPOrIXEv9IuY+tayKdZpDaZvHLcjRNJ2ow2fRw+Um0wXXZDgqCKQJqiNCmtUE3pPS0iCjTU/baTU/Qyg+AzVwFRbJCvNsfA==
-X-Gm-Message-State: AOJu0YzIMeDU2JXkF3bFInGq6//jC8psQ6j4q6ZgTof3Xlk6Np1b1Ebx
-	O49Iuno6VkYvPyHL7fEqTX7bF3GqUJhCwJre5wSawX+ZGhQ2UWH5
-X-Google-Smtp-Source: AGHT+IEwsZANI92FHt4sUnfLljzN4WZnd499R+at6I3cz5xxru5RwfBlwsIV4f5R+2ItBy99UrvDKg==
-X-Received: by 2002:ac2:42d8:0:b0:52b:b327:9c1c with SMTP id 2adb3069b0e04-52eb99d59e8mr9045576e87.62.1720962927807;
-        Sun, 14 Jul 2024 06:15:27 -0700 (PDT)
-Received: from mobilestation (pppoe77-82-205-78.kamchatka.ru. [77.82.205.78])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed24f38absm467456e87.79.2024.07.14.06.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jul 2024 06:15:27 -0700 (PDT)
-Date: Sun, 14 Jul 2024 16:15:09 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Drew Fustini <drew@pdp7.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
-	Jose Abreu <joabreu@synopsys.com>, Jisheng Zhang <jszhang@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Conor Dooley <conor@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH RFC net-next 0/4] Add the dwmac driver support for T-HEAD
- TH1520 SoC.
-Message-ID: <w3ex6eu3fhv4rmb67hm5ktwkehefw25gmemtqsjjfaa76z7v6t@vmfzungbincv>
-References: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="XsR+QCWB"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46E9YwtT028378;
+	Sun, 14 Jul 2024 09:30:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=ug/VS
+	VOVn06zFyebYkwUUM2p7hPf8JPIueT/B4GO5Mo=; b=XsR+QCWB+xDKn23QIdSJ0
+	DN04PIdXo1mQuV7/8189fL42AbEgw5v4DmvxxDVLB4tgIDaHIVsCESDkGWOZ6OV0
+	oK0UJNOpaVxYQDsCBR0BY94pnxRwm/dr0fqs0Lt/xD5uc7yhZfdqpzXMKLVxzmMF
+	D/duZkix7GiuZTrKYE+WxZobMIGgnTpl+v4xBt2Y+Hr63xHqsiGRnmu1Wusqcnx0
+	juOnLNK3bxZRiAmjJvlXGBhwHgcwMaT04zumJ2Qe+42UxfROti3ICGV+dUERB6Ir
+	9bu/aS3yexujR3/RsYYJ8HmSeqQ5XNGlAmjKPaR/jSK+myaqw4ZOUMWEWgG024nG
+	w==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 40bke3jywh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 14 Jul 2024 09:30:34 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 46EDUXox050886
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 14 Jul 2024 09:30:33 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Sun, 14 Jul 2024 09:30:32 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Sun, 14 Jul 2024 09:30:32 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Sun, 14 Jul 2024 09:30:31 -0400
+Received: from kim-VirtualBox.ad.analog.com (KPALLER2-L03.ad.analog.com [10.116.18.97])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 46EDU4QV028092;
+	Sun, 14 Jul 2024 09:30:22 -0400
+From: Kim Seer Paller <kimseer.paller@analog.com>
+To: <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC: Jonathan Cameron <jic23@kernel.org>,
+        David Lechner
+	<dlechner@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Dimitri Fedrau
+	<dima.fedrau@gmail.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+        "Michael
+ Hennerich" <michael.hennerich@analog.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?=
+	<noname.nuno@gmail.com>,
+        Kim Seer Paller <kimseer.paller@analog.com>
+Subject: [PATCH v7 2/6] iio: ABI: add DAC 42kohm_to_gnd powerdown mode
+Date: Sun, 14 Jul 2024 21:29:56 +0800
+Message-ID: <20240714133000.5866-3-kimseer.paller@analog.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240714133000.5866-1-kimseer.paller@analog.com>
+References: <20240714133000.5866-1-kimseer.paller@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: TEiHlzCwlcza-GgTuLB1jm3zXSorcycl
+X-Proofpoint-GUID: TEiHlzCwlcza-GgTuLB1jm3zXSorcycl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-14_11,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ clxscore=1015 phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 spamscore=0 mlxlogscore=953 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407140107
 
-Hi Drew
+Add a new powerdown mode for DACs with 42kohm resistor to GND.
 
-On Sat, Jul 13, 2024 at 03:35:09PM -0700, Drew Fustini wrote:
-> I am marking this as an RFC since it has been almost a year since the
-> previous series and Jisheng has handed it off to me. There was
-> discussion about the syscon for the APB registers in Jisheng's v2. I've
-> gone a different route and switched to adding a second memory region to
-> the gmac node:
-> 
->   dwmac: DesignWare GMAC IP core registers
->     apb: GMAC APB registers
-> 
-> This patch depends my clock controller series:
-> 
->  [PATCH v3 0/7] clk: thead: Add support for TH1520 AP_SUBSYS clock controller
->  https://lore.kernel.org/linux-riscv/20240711-th1520-clk-v3-0-6ff17bb318fb@tenstorrent.com/
-> 
-> and the pinctrl series from Emil:
-> 
->  [PATCH v2 0/8] Add T-Head TH1520 SoC pin control
->  https://lore.kernel.org/linux-riscv/20240103132852.298964-1-emil.renner.berthing@canonical.com
-> 
-> I have a branch with this series and the dependencies on top of 6.10-rc7:
->  https://github.com/pdp7/linux/tree/b4/thead-dwmac
-> 
-> Changes since Jisheng v2:
->  - remove thead,gmacapb that references syscon for APB registers
->  - add a second memory region to gmac nodes for the APB registers
->  - Link: https://lore.kernel.org/all/20230827091710.1483-1-jszhang@kernel.org/
+Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 1 +
+ 1 file changed, 1 insertion(+)
 
-I see the vast majority of the v2 comments left ignored:
-compatible-string, Tx/Rx common clock handle, clock delays, etc.
-Please take a closer look at v2 discussions and make sure the notes
-were implemented or send a reasonable response why it wasn't done.
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 7cee78ad4108..6ee58f59065b 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -708,6 +708,7 @@ Description:
+ 		2.5kohm_to_gnd: connected to ground via a 2.5kOhm resistor,
+ 		6kohm_to_gnd: connected to ground via a 6kOhm resistor,
+ 		20kohm_to_gnd: connected to ground via a 20kOhm resistor,
++		42kohm_to_gnd: connected to ground via a 42kOhm resistor,
+ 		90kohm_to_gnd: connected to ground via a 90kOhm resistor,
+ 		100kohm_to_gnd: connected to ground via an 100kOhm resistor,
+ 		125kohm_to_gnd: connected to ground via an 125kOhm resistor,
+-- 
+2.34.1
 
--Serge(y)
-
-> 
-> Changes since Jisheng v1:
->  - rebase on the lastest net-next
->  - collect Reviewed-by tag
->  - address Krzysztof's comment of the dt binding
->  - fix "div is not initialised" issue pointed out by Simon
->  - Link: https://lore.kernel.org/all/20230820120213.2054-1-jszhang@kernel.org/
-> 
-> ---
-> Emil Renner Berthing (1):
->       riscv: dts: thead: Add TH1520 ethernet nodes
-> 
-> Jisheng Zhang (3):
->       dt-bindings: net: snps,dwmac: allow dwmac-3.70a to set pbl properties
->       dt-bindings: net: add T-HEAD dwmac support
->       net: stmmac: add glue layer for T-HEAD TH1520 SoC
-> 
->  .../devicetree/bindings/net/snps,dwmac.yaml        |   2 +
->  .../devicetree/bindings/net/thead,dwmac.yaml       |  81 ++++++
->  MAINTAINERS                                        |   2 +
->  arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts |  89 ++++++
->  .../boot/dts/thead/th1520-lichee-module-4a.dtsi    | 131 +++++++++
->  arch/riscv/boot/dts/thead/th1520.dtsi              |  55 +++-
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 +
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c  | 300 +++++++++++++++++++++
->  9 files changed, 670 insertions(+), 2 deletions(-)
-> ---
-> base-commit: 568c4e4b646777f3373f383cc38864a3cd91bbb7
-> change-id: 20240712-thead-dwmac-1d44c472bbd5
-> 
-> Best regards,
-> -- 
-> Drew Fustini <dfustini@tenstorrent.com>
-> 
-> 
