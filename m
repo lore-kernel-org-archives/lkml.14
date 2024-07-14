@@ -1,159 +1,122 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14751FDD;
-	Sun, 14 Jul 2024 12:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0321DF58;
+	Sun, 14 Jul 2024 12:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720960614; cv=none; b=Ku/BwfQDmX9WdA5+U5dwq2LKrEY2jUV6bJ5xvx9T3oZQuhAapE6yHpXpblij1lvtOo7WmhO0/XqIzJe2hqpEEPFdodwHd8bbeaUOTuwDiry4y4QWgqgFQ04ljmobQ+sEr1aEojauKtt3jIc2gJm18r5hdQ3AhbE0jS+Ki4gbP88=
+	t=1720961253; cv=none; b=OlMlmYjeh4tYrXNkbVEzbfBU/2DIAlIP+3FAtaW2IKYqnN2fQQlN1JPmSDpd7JQKe81CZslAKRsdSRGEwCc0VkPiEkUrf0wS7nPAdEYB8wE61lDzux/fg7vq/+hlz8A1rSCHpqPMn9XH7rraguRH59sHoMyaWBzjpccRgW2oDBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720960614; c=relaxed/simple;
-	bh=MWt6vUSJVirl5baT6jQhbOU2aaQeojysvNYPBOIOdXg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=GDoUT7E0Th6Tkq1yowA27MV6MuNJUCNYOUlGffBz50V8a768IKUwX6dZ4qISWJNXG+7NYGp5Cke4d7zoNTx5bUfWwxDPU5zyRaqTEwHY+tmkreCFTrQC9au0GQw1z3wlfLO/kzPJ3ZyAxE461jo8XS4sczVAjj6fRTLKRE9WdGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=kJe2AGvZ; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1720961253; c=relaxed/simple;
+	bh=hZ7lWekYicc/GQPSBXsMSuOVB+DQDtPdnORXDQb9EL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cvoSnIUdZtogy5VhLJ5tsYmcsWJu5og1HjrZstGr2KrnTtGxb6+9xGjSbj43i+tESCP70q0A+IH5Z083M1McQr0ny6kgxB55lAL6Y2BOz34vhNAdSqvZEidj1v8sIQpBjiw+DD+e5GncAah9n9EFiMm/QZBfRAJnWOxBMkfzwU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3AREP2A; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="kJe2AGvZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720960574; x=1721565374; i=markus.elfring@web.de;
-	bh=g11cNSzqa/kFL592OZP6SLFSSzberrOpC0FsGs3iDiw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=kJe2AGvZNiLqBcS673cI0L6DmNN6enKM/0mpEDhW55yzo9aKwq+R6cMvbuo7SJCo
-	 QihBNJ1IVDHI71fznR8eYSY8HA1a3SQU8GfgQ5/EBrP9PrVRCOWBiqwBDHRYCyF11
-	 W+9enjnw+TCAOHeWRN/jhFJh94syg2/F5+n5qyYKwwn3hnijL07tGfTAHTmxdCmgs
-	 WRZgjXR3bFBBcTsElQ5yRyP70bJYbIlxU4i5pUbqV37yxkO+l+or6dKrEKaNkLzzG
-	 LAxDtL+oi2gfxQXZug4ZxdwyDygFL8yOYyrONNO/TLkHFu7f2qJppgVQbbxIMLkbc
-	 DYU9Xl9NX5tj96k75w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MrOdf-1ryMOH14dz-00jsv3; Sun, 14
- Jul 2024 14:36:14 +0200
-Message-ID: <4b78f586-4c87-433e-a57f-0d8ca151b89c@web.de>
-Date: Sun, 14 Jul 2024 14:36:13 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3AREP2A"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ea79e6979so3853729e87.2;
+        Sun, 14 Jul 2024 05:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720961250; x=1721566050; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bYeW1aUqkkqQu0pvxg2P+XASuy3RpuxEzFGY7FDRapU=;
+        b=W3AREP2AoLkWnxLFTt5y2uH6zoJ4A7gxESvMZ4Vjg3XFohwwn3pGVPRVwJc26Ovpru
+         WoBVOE2MOa2xYfFtfU4fPN5nhgUSOEFlUUN8GyUGi3xK5hrh1/IoVuHdm6eYoipG9srN
+         0Nofne0KkybdZ4Q1BCy7Hwxw55cR2QqMmkAND+2TDcTPqc5kSnDQyQq/kjk/sh/TGrlv
+         IDkeppcxn0pW3HDkNukj94kLox+tSz2VPDBLlsNg9ZCgyJlwba+MCVm2YjTFaG1lGo7i
+         5B4EdgY0lxtTEXA0nfD/vbcfTz6AV0QyrtzRPbPoP/1inbgLKHWGkmgROlGTkxoE3fEY
+         gO8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720961250; x=1721566050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bYeW1aUqkkqQu0pvxg2P+XASuy3RpuxEzFGY7FDRapU=;
+        b=r4cyouDZpCmMzfM8wKw5WRTEWcLxXhZuvlo2Ep0pG3Y1epsSbb3vD1EIjEAQTGnHym
+         yIKL/fqrBQn1Jz1JzkKHj2gN2xJkLzB+Yfke7leXShcu878aiOU+/9QW2VuDWuxkQeBm
+         qCXf2UO2i6bAxkvcGxZVRHUE9Hryozpx5f3G/tnoa+cjYnCri1YwRMKGoR1WiuEI0Gin
+         iD1w7tpdao72gVxZ17N+3c3fGnx4c6/AxAaY8G37OotwHPG89eT3l/lSjdsCsmAINFyg
+         hncxUxSq2xRyVcfq0SFacjllHe6Ku97lc1bNqvAxWoC3AKlPcwGSUXC16hpnjYHk2JU5
+         CTqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWD4CWzbdgxRcWjHuB/DyvBmdd60MNcIGgogJIArzRmnFvAdqE23exrk0VrnU+E+xWhgKVUrFGAlKrrODO6cS1+kN8PaM4GK1vuUxE95XBuXLXwZ0MRM041Kxf+73wawVxnrcZqy7UApgRaSwV+IA7xA4w5MN4QeBJjIcKqg0rBmA==
+X-Gm-Message-State: AOJu0YyvYPoZXbyy1GtY71t+wJFIP1bhJwB2svbrg2NsL1fqDBrVhJLN
+	roXej97lgKMHTF4yuXlEWwxvqVQVNt0A7OQOyt1vL6ejiz+XFhbi
+X-Google-Smtp-Source: AGHT+IExx4Gr8Umbg0gbYQ03/bv/pYqJqX/EK/+AOIRZKuLKmJm7iyM5zUZI7yWzpxPPD+pjOE17rw==
+X-Received: by 2002:a05:6512:3b82:b0:52c:e084:bb1e with SMTP id 2adb3069b0e04-52eb999126bmr11827758e87.13.1720961248544;
+        Sun, 14 Jul 2024 05:47:28 -0700 (PDT)
+Received: from mobilestation (pppoe77-82-205-78.kamchatka.ru. [77.82.205.78])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed24f3b90sm451958e87.113.2024.07.14.05.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jul 2024 05:47:28 -0700 (PDT)
+Date: Sun, 14 Jul 2024 15:46:31 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Drew Fustini <drew@pdp7.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Conor Dooley <conor@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH RFC net-next 1/4] dt-bindings: net: snps,dwmac: allow
+ dwmac-3.70a to set pbl properties
+Message-ID: <ywwl3eaamj3d7dhwkhcoglxwxqmpwd5dewkq6ldmrfqdfgnlu3@rawh4yhkuh6h>
+References: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
+ <20240713-thead-dwmac-v1-1-81f04480cd31@tenstorrent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: kernel-janitors@vger.kernel.org, Ben Segall <bsegall@google.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] sched: Use seq_putc() in four functions
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gMNiszC8c3AKpW4omBxYkemCqriXY2qBw76sqmW3rj7MjlkTvWV
- doJq59Z4rjCH6VV5XZmH/thT28Zh0q/vCElK/n4gG6VtVPVyBO79GCBwNesBNDIdUujPSuV
- 9OhKyC1DY7IwjJhmfXfkYiJIbh8tOWZnQb7WMcgrY4e/aFWIAiSUe7aRnt78gmlpvlXyBp0
- oUk8nPJMoiGnwlz6mMrMQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:oQQbhroLkC4=;E5ej6YQylfDYKLEikd2yAKCiQrA
- n/FJRMwV4W4WRPryjDIQi8ED/3LjWoAVLK4i3LloZdFOpSfHewYGkXvHLivoBEUZ5GP13E0qa
- Q3u7hsYGQGS8nCiZjAu/EhoIhvu19AO03dBcdO/sCEguLfHwiPZIUnGgF5A0MJtnVoFZn+zlp
- 0vdLOsQJxwI1m0Eat9xbuN1hoa10MSC4UVAufkHN2aJH94ADzV0POurgO4Kvzp0ZjsNOMrDrf
- OQltcpGhg891KcG38+UEB4t2D4YmZwFTZYAHXsO73x0NdanHAnI3rthCwtG+jA/nRkuseydwY
- emNFjnOcaaAZQOes84vxB8UCjnaCWHm3xdRh7pyBY5s++i5FBI7GdE1PBjeTr+RInONGYeawC
- 07tYWgzw61wUODpwfca9XgvbSexMBKhI+ICUEBGntQtknqggDfL6nN8PExp86nCYrysLpp63p
- /S+bf+sRvPZLoqoufqktWToQfHYKDigwgeJ8lK0Gq8G8VITACmfb/QY8aAn3WFig3E3rRJa3S
- Gd0MOuQb2cAg1GmsbKhEhGv3vKNVuCzJIxExnIXlOSZ2ntDPQfap2e3HCha8hjn7FEMMUw2N5
- UEPAduiZ8wlpYmIZQQd9Erllr6xSjs66Li52WQsOZfjkp6O2+UL/DCyx8wuVxHQJ05imthGSE
- 6cpTREXNdjmr6OO9kubZjX5PKp50p5GmiiPWooGAbtb84+JGFPWl+AqFT0cACpkcp86akvunF
- 4D40bB1eY8Eoq/OwnOfdeO1pl3grO2LBUsFaTQQTU5tWyE8zGB+eDOLNr3+18q9tII/RRf5nL
- Fb1vKZl/tAckX11hhJQyIRVQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240713-thead-dwmac-v1-1-81f04480cd31@tenstorrent.com>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sun, 14 Jul 2024 14:25:33 +0200
+On Sat, Jul 13, 2024 at 03:35:10PM -0700, Drew Fustini wrote:
+> From: Jisheng Zhang <jszhang@kernel.org>
+> 
+> snps dwmac 3.70a also supports setting pbl related properties, such as
+> "snps,pbl", "snps,txpbl", "snps,rxpbl" and "snps,no-pbl-x8".
 
-Single characters should be put into a sequence.
-Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
+No longer needed due to the recent commit:
+https://git.kernel.org/netdev/net-next/c/d01e0e98de31
 
-This issue was transformed by using the Coccinelle software.
+-Serge(y)
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- kernel/sched/cpuacct.c |  4 ++--
- kernel/sched/debug.c   | 14 +++++++-------
- 2 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
-index 0de9dda09949..0c1ce2e1c89b 100644
-=2D-- a/kernel/sched/cpuacct.c
-+++ b/kernel/sched/cpuacct.c
-@@ -245,14 +245,14 @@ static int cpuacct_all_seq_show(struct seq_file *m, =
-void *V)
- 	seq_puts(m, "cpu");
- 	for (index =3D 0; index < CPUACCT_STAT_NSTATS; index++)
- 		seq_printf(m, " %s", cpuacct_stat_desc[index]);
--	seq_puts(m, "\n");
-+	seq_putc(m, '\n');
-
- 	for_each_possible_cpu(cpu) {
- 		seq_printf(m, "%d", cpu);
- 		for (index =3D 0; index < CPUACCT_STAT_NSTATS; index++)
- 			seq_printf(m, " %llu",
- 				   cpuacct_cpuusage_read(ca, cpu, index));
--		seq_puts(m, "\n");
-+		seq_putc(m, '\n');
- 	}
- 	return 0;
- }
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index c057ef46c5f8..ac9d65c5d0b4 100644
-=2D-- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -62,7 +62,7 @@ static int sched_feat_show(struct seq_file *m, void *v)
- 			seq_puts(m, "NO_");
- 		seq_printf(m, "%s ", sched_feat_names[i]);
- 	}
--	seq_puts(m, "\n");
-+	seq_putc(m, '\n');
-
- 	return 0;
- }
-@@ -251,15 +251,15 @@ static int sched_dynamic_show(struct seq_file *m, vo=
-id *v)
-
- 	for (i =3D 0; i < ARRAY_SIZE(preempt_modes); i++) {
- 		if (preempt_dynamic_mode =3D=3D i)
--			seq_puts(m, "(");
-+			seq_putc(m, '(');
- 		seq_puts(m, preempt_modes[i]);
- 		if (preempt_dynamic_mode =3D=3D i)
--			seq_puts(m, ")");
-+			seq_putc(m, ')');
-
--		seq_puts(m, " ");
-+		seq_putc(m, ' ');
- 	}
-
--	seq_puts(m, "\n");
-+	seq_putc(m, '\n');
- 	return 0;
- }
-
-@@ -389,9 +389,9 @@ static int sd_flags_show(struct seq_file *m, void *v)
-
- 	for_each_set_bit(idx, &flags, __SD_FLAG_CNT) {
- 		seq_puts(m, sd_flag_debug[idx].name);
--		seq_puts(m, " ");
-+		seq_putc(m, ' ');
- 	}
--	seq_puts(m, "\n");
-+	seq_putc(m, '\n');
-
- 	return 0;
- }
-=2D-
-2.45.2
-
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Link: https://lore.kernel.org/r/20230827091710.1483-2-jszhang@kernel.org
+> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> Signed-off-by: Drew Fustini <drew@pdp7.com>
+> ---
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> index 21cc27e75f50..0ad3bf5dafa7 100644
+> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> @@ -584,6 +584,7 @@ allOf:
+>                - qcom,sa8775p-ethqos
+>                - qcom,sc8280xp-ethqos
+>                - snps,dwmac-3.50a
+> +              - snps,dwmac-3.70a
+>                - snps,dwmac-4.10a
+>                - snps,dwmac-4.20a
+>                - snps,dwmac-5.20
+> 
+> -- 
+> 2.34.1
+> 
+> 
