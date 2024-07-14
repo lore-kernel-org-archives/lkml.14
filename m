@@ -1,105 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8496B13B294;
-	Sun, 14 Jul 2024 16:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57BA1E52A
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 16:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720973205; cv=none; b=gJft1cHh5pTEvUs0YLh2S0gokXF9NplFd5yct+2F3VzNOvRCgkDcy51rw/t7UtZls4/wNu9AFU+heDQfnxpx9GVRwcgPzyNQ2E9uUy9h/W/hjcZUm6P+X62WXzkmhStPUQ0vqwNOTur2fuQdKjugV9awKpVecgK0EvD1zLnWfuU=
+	t=1720973655; cv=none; b=rln2zmrw0HMwWglIzOCHES8j+YqnJtdJ9LBiP98VoQ8ckiVKpDywW0pQoCZJsPR30AblcV8sJrY5AXkheEWgJmp5ovZnEgYohrq98fRyo3CypO44nRXhFwA6SZCo2HEHryLANIU21HvyFTEXGD53ylz/7P5AKwiWNq5iniQ1+Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720973205; c=relaxed/simple;
-	bh=+jjEnFqgIAm/nLJa3G3sR5yN8iMPt3IP080beHHv68s=;
+	s=arc-20240116; t=1720973655; c=relaxed/simple;
+	bh=6Yyn4bM42Ap4ZrCijPtVJNkueH9wiTy2GjVXWUySv8Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hJl0ZTkL36/iSkN3sOSDXbHlVjPbXfKUpUBJYCw2n7pfx7H8CKbr8Yd+oN8kY/Cf9+pW22wRJ15wc/vwkJ3m7ct+n+dgPxPVYx16nVztmFYxQF5u+Q+NKK7QReMaNrsgPTBinRqRLz5oNx46yrMVHggFs5sAH7cVnEsyfe1GGfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEheAirS; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Un1DI+w5FPXo1D4JR5ua57U+KRPDZAFetxuGHWhHdvmAedYLfrWZ99585GWMbP5qWW6SwyQQorInuq86PwlKa5p0LlZXnGDyW8TkI9gfnUvr3PsXtiueNZGCtwM48ObYf2qTXp0B8hlAHPvE368OgPMYdnOpAQOWbnlUtw0P/Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZTP9z7u; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEheAirS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0659EC4AF0E;
-	Sun, 14 Jul 2024 16:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720973205;
-	bh=+jjEnFqgIAm/nLJa3G3sR5yN8iMPt3IP080beHHv68s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pEheAirSZv59K1lHfw7HOmAtUTOvzsFcNyaGX3cbSrjvqTXSAcWltHtvuzkZk98+v
-	 sVctC48CLtHQuf3wMNY+9TnfrsqfOa/DPf+QKR+v9zosRsfWBViszxzAzKeeibX4H6
-	 vIkZsT2/IbGplHdkE+CLYZ3suhmJbbSjbWoqPO5tfsri0RnDuj0Z2Q8VBkx9jNcCWN
-	 jNyPGxJaetGzHptnovtCaKKQgxmnLM1/SGuVW9h8jZYV4sWi8ldPEz4839zy/2ZJlg
-	 diI0PACmAW4MGiHTJpJmuD4GFka9d+0qRvMS7LPrpQwi/5kyc8e3RP3ch59U3IyK9O
-	 HVbGlIxWCb7bQ==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52ea3e499b1so4047350e87.3;
-        Sun, 14 Jul 2024 09:06:44 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yxxv6TPIJOImz3VaQ7w03nB2amRuQ/HnrIyZbjHhH2tvbbj9gH3
-	29HO3fTqoA8Dfwki6uOOQb3BZJTmG3MkA7Pf1xJeVf2r1LR9VQGnXkp1xJVGe9nYrFu6ECtqWcD
-	1m04l2wmf+3b5GwBaQY6kiDblgYw=
-X-Google-Smtp-Source: AGHT+IHy2WRl4bGfvM5gXIwRE+I8rysac+ubdYHf13aS+QB5bwVbfaDtc+CiyBxeeDrTIzKzHfx3WzsQfh93F5A5PUs=
-X-Received: by 2002:a05:6512:3b1f:b0:520:36bb:a6e1 with SMTP id
- 2adb3069b0e04-52eb99a2c80mr12734885e87.29.1720973203716; Sun, 14 Jul 2024
- 09:06:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZTP9z7u"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-81021667125so1178033241.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 09:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720973653; x=1721578453; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Yyn4bM42Ap4ZrCijPtVJNkueH9wiTy2GjVXWUySv8Q=;
+        b=jZTP9z7uydXo/b004zfe1TgGLrcboiNgzCi2EHJ7JY8J3iRacH0n0j75upaOtDhNif
+         yaz6IOp7+i72NqnpN8gx7fONjeaYZYiinhCaLgRfPy/t/yUij8cxkGCDWm5fmRJfTNBY
+         e7N3ddxL5VkXs3AtlWkUi4MhIHrVJjdjwr0FBgeRLN3saUjGbkbzxE+YpS9dhVFuZfd3
+         NxNQpeNVylSuKkmG0i3LCRv4zuruAnivUCLlJmfN9YnxOufEA44F7tEbqbJcQv9RPtgv
+         ApJL4m2kycSoeiFrKCXiZ5rri8Pjkc0SJhsmZz1mW0YCMrLTubw1IqfGqpFzpiOPybSF
+         tLqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720973653; x=1721578453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Yyn4bM42Ap4ZrCijPtVJNkueH9wiTy2GjVXWUySv8Q=;
+        b=n5k1xZzY0/2015RWXOECeUAO/lf6JS2I64WRm1ZKFWiElqXFrm8gKC7/NHtyZIFIx4
+         uu1e3/Qb/wuhieVRy0XQ5YB4l050VdO+srZgjjcm157PaoS/Wo70RFBNjGHr3/6PnxYe
+         IVR/+a/FnaBowxStXQRc/49uteklu6qqxTQRdVfZOsxHNZMYC+xM1DPMLcpBUds9HzRS
+         j3DvnjrOMurLAuzFz9usI7rZOzfWTUcx42vC3x30vVlq6MV9HhlQeHNMHWYfy3jHWcWj
+         c0uX7Yqua1HZBQh3Qx9isrIoTqnyJbCHcrsfCdoPOZkqy65YdhNWcVGrVavr0gEfjhrI
+         oiLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyNq98nAoarwG6q63FQLy/Z+11OxoHjKEHHjIDbb8cCuOa95Z2nMBLTDVP5Xa02BBipQoM7R4FCY9fJ8T5H21zXUp38cyURQqQ28Fw
+X-Gm-Message-State: AOJu0YyjOXWHVf+s356Va5uwq8beDY9EX+tGxdN2xkWcTpMl8v9QVEDt
+	Y9LWWtWGirHboWY7IZh1L/e458LWHbqOC0BNRXIpGXMQUa8RnBv1zuhK60rCPDooB7SYvmuTYF5
+	JHe+WNt9cKGQnzWVwS8A2KXwJ6vA=
+X-Google-Smtp-Source: AGHT+IGJpHdSKRAkgcgSszPtuJsHHRbse+wAzDBjWHdhQlSC6mBAg6s9Wu/C6A9Crh6oLSWE6phJW+y6tuTOyGtTC6U=
+X-Received: by 2002:a05:6102:32c1:b0:48f:1bea:3c70 with SMTP id
+ ada2fe7eead31-49032147ae1mr19644741137.17.1720973652595; Sun, 14 Jul 2024
+ 09:14:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240714105848.1844400-1-masahiroy@kernel.org>
-In-Reply-To: <20240714105848.1844400-1-masahiroy@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 15 Jul 2024 01:06:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ_2fqeUN7e3GdsqmR1R4iqgwEZWLYRQexAs0DqdrKOtA@mail.gmail.com>
-Message-ID: <CAK7LNAQ_2fqeUN7e3GdsqmR1R4iqgwEZWLYRQexAs0DqdrKOtA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: remove redundant 'if HAVE_ARCH_KASAN' in Kconfig
-To: linux-kbuild@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+References: <20240702215804.2201271-1-jim.cromie@gmail.com>
+ <20240702215804.2201271-28-jim.cromie@gmail.com> <22bc825c-d726-4a4d-bd3a-508773c04071@collabora.com>
+In-Reply-To: <22bc825c-d726-4a4d-bd3a-508773c04071@collabora.com>
+From: jim.cromie@gmail.com
+Date: Sun, 14 Jul 2024 10:13:46 -0600
+Message-ID: <CAJfuBxzLiWn_t6VDxzYzfjm6GaZcjeASwBX7Nbma6yGBKEtB9A@mail.gmail.com>
+Subject: Re: [PATCH v9 27/52] selftests-dyndbg: check KCONFIG_CONFIG to avoid
+ silly fails
+To: Helen Koike <helen.koike@collabora.com>
+Cc: daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com, 
+	jani.nikula@intel.com, ville.syrjala@linux.intel.com, jbaron@akamai.com, 
+	gregkh@linuxfoundation.org, ukaszb@chromium.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
+	intel-gvt-dev@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	linux@rasmusvillemoes.dk, joe@perches.com, mcgrof@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 14, 2024 at 7:58=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
+On Wed, Jul 10, 2024 at 2:23=E2=80=AFPM Helen Koike <helen.koike@collabora.=
+com> wrote:
 >
-> The condition 'select HAVE_ARCH_KASAN' is always true because
-
-
-This is a typo.
-
-I meant,
-  The condition 'if HAVE_ARCH_KASAN' is always true because
-
-
-
-
-
-
-
-> there is 'select HAVE_ARCH_KASAN' statement above.
 >
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
 >
->  arch/arm64/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> On 02/07/2024 18:57, Jim Cromie wrote:
+> > Several tests are dependent upon config choices. Lets avoid failing
+> > where that is noise.
+> >
+...
+> >
+> > test_mod_submod() recaps the bug found in DRM-CI where drivers werent
 >
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index c87d16b12e9b..d37cbfc3031e 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -167,9 +167,9 @@ config ARM64
->         select HAVE_ARCH_JUMP_LABEL
->         select HAVE_ARCH_JUMP_LABEL_RELATIVE
->         select HAVE_ARCH_KASAN
-> -       select HAVE_ARCH_KASAN_VMALLOC if HAVE_ARCH_KASAN
-> -       select HAVE_ARCH_KASAN_SW_TAGS if HAVE_ARCH_KASAN
-> -       select HAVE_ARCH_KASAN_HW_TAGS if (HAVE_ARCH_KASAN && ARM64_MTE)
-> +       select HAVE_ARCH_KASAN_VMALLOC
-> +       select HAVE_ARCH_KASAN_SW_TAGS
-> +       select HAVE_ARCH_KASAN_HW_TAGS if ARM64_MTE
->         # Some instrumentation may be unsound, hence EXPERT
->         select HAVE_ARCH_KCSAN if EXPERT
->         select HAVE_ARCH_KFENCE
-> --
-> 2.43.0
+> If this fixes any but listed in drm/ci/xfails folder, please update it to=
+o.
 >
+> Regards,
+> Helen
 
---
-Best Regards
-Masahiro Yamada
+This looks like a good avenue to follow, thanks for the hint
