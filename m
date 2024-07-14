@@ -1,45 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD9818AED
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 20:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70E913D601
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 20:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720990209; cv=none; b=laQuJe9Ti84/bToynRJHfWafuCHxNvBc7wYBw8mnmUW3YX8puKaF41DcbtGs+rx69l5CDOMA/07A56sWsvR64VO4ZX/s0slJI9WDPJk0usQDDlwBzIKRaKeW/LcnMSV1VYEvh7oVTtxw5PA6ld5mkDc3TSTBx6H4+sA/AHomDbY=
+	t=1720990212; cv=none; b=BtxAJ2dpe87cyMPTthvwXonU0E3JkjXhrlz/Q1EOcE4g/U06/tggeUVO+8xbd8NNHLArh0nO5pYeCoKYNn5L2Sje3JNqzciojU4oreNwA3dGyrnBs8uwUI9qK/qa0yLE5nUMbFbpSRl9gazIG413HBx2Bln5rLlsHL7WE92CnIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720990209; c=relaxed/simple;
-	bh=hwiXlZWx6CN0SQMz8QkESNeIJHVGOjNdpTPujvaKC+I=;
-	h=From:To:Cc:Subject:Message-ID:Content-Type:MIME-Version:Date; b=I0tpXj/KCSA2AKL//eK7XRVE/o1W0gvO2hZgDRpSiY5D2N+85DVi/9eHHESLnmnvaJvxF8g081n+c5nW1SqUorqJohPvgkDo/mYghQ/MWioKbbtZAzGexeM3h+1+orBlfK1ZjwK2rtMolus1k+pLstVi/PXh7BH6Jf0/XDuspK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ajTjAryy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iA5BQrFX; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1720990212; c=relaxed/simple;
+	bh=tW0YPM1eYLzYbyUKaaq/Wt4ukCBacXs7oEzPzIXl8O8=;
+	h=From:To:Cc:Subject:References:Message-ID:Content-Type:
+	 MIME-Version:Date; b=iBAa6KpTFfE5dO+32MPBxhU+ljNHvMlCTGzaME/a3UhGvulogvEhLoSSTwY9nuVLcLT1aN1TWNdKHm8xa0ers+8ZPZZndNuk3etMe7yJRL3jfwwgJOKuV5VhmMwdcX5UkyhRv6+SJNgtKSo2r8k3nopxn5kSW0ZeKdcIQP/8p54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VXzyt86m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8RmzXdp4; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ajTjAryy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iA5BQrFX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VXzyt86m";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8RmzXdp4"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720990205;
+	s=2020; t=1720990209;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wjl9tIIspzOSi0BWLjAbBtNsY8Mon818Ft4dB0oSek0=;
-	b=ajTjAryyzdvHuiV6OGFtv/IZ25FN3UuOPxGHkoRYJJMdY7msFfQ10mEIVOvpIkrg2IH85r
-	w8vWzXn9dPALvXtT9FnUMxXtm4ilsFrnWK7EH7hMC5isva3We6fh+JWqA9qtUizMPU4DkL
-	omIqKNUdSVX9jLbBFk+TVW35wHChl1Hq38IXye2gGcD58YAX13AVSXxFuMg5BXG5JukK1C
-	vEPEM9BDOXRCw4zDvAImW+k8DwRykvNbFhwsniAPlgIkQIYT84olTgC1+3Dv2UOrTcPkNP
-	KB8i6QARw7aTxPi968hDghXfR5K4ZKI9KUpQzJceRoRszTufjIxcirroMMTmjg==
+	 content-transfer-encoding:content-transfer-encoding:  references:references;
+	bh=gEa0FWTL9RtU5AtpSTge7k5FKqImAG72dTxW6+843kg=;
+	b=VXzyt86mY7Jugf3O8A/KcP390vOuETzSfjQqu/Y6Vsozf7W7N+fYDsRkaR3zOPMzPNf0BP
+	gv5yWkp91MOFJ68+DkkG7K8zgw4geMN/q6NVGTGpw1Z3muoP6zY/qKYvXs2JeRVOQrpie+
+	3UvwAHF0A1VViW+CYmxE7HHukkKBKbjkTAfc3dkG1gMmXZriU+bgS20l1DHbUVKfzaKYZe
+	zQcO6LYEiHUUD0EtXcdGR5cmZIHhe3TPHCIIkbfUdWJeiQxl9z5dkcGlCFOK1a4mYsFqOV
+	GIcqlsKhcA8U/WG9tcC7AMVwfrCVri8ScX8RbsgQSaNPjcGJ7fG2RElxyhjnXQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720990205;
+	s=2020e; t=1720990209;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wjl9tIIspzOSi0BWLjAbBtNsY8Mon818Ft4dB0oSek0=;
-	b=iA5BQrFXlZ/23EYT8kFKixQ0eBPpxv73dt/6LxQ0mdVbnhx9H1G3JaXQig4Jjs1ENa4zzF
-	G9U9GPZRDcMb5PDg==
+	 content-transfer-encoding:content-transfer-encoding:  references:references;
+	bh=gEa0FWTL9RtU5AtpSTge7k5FKqImAG72dTxW6+843kg=;
+	b=8RmzXdp4fyp2cCbsYq+NGJmGuhejWHG2SqVznqjIdXFpftPsX2C9Q6Wl0dwSeqJpYcXtCR
+	/DIfdur84H+Dq2Bg==
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] core/debugobjects for v6.11-rc1
-Message-ID: <172099001487.1942258.17671805941963584080.tglx@xen13>
+Subject: [GIT pull] smp/core for v6.11-rc1
+References: <172099001487.1942258.17671805941963584080.tglx@xen13>
+Message-ID: <172099001823.1942258.3381470277418419084.tglx@xen13>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -48,63 +50,114 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 14 Jul 2024 22:50:05 +0200 (CEST)
+Date: Sun, 14 Jul 2024 22:50:08 +0200 (CEST)
 
 Linus,
 
-please pull the latest core/debugobjects branch from:
+please pull the latest smp/core branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-debugobject=
-s-2024-07-14
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp-core-2024-07=
+-14
 
-up to:  5b5baba62222: debugobjects: Annotate racy debug variables
+up to:  77aeb1b685f9: smp: Add missing destroy_work_on_stack() call in smp_ca=
+ll_on_cpu()
 
+A small set of SMP/CPU hotplug updates:
 
-A single update for debugobjects to annotate all intentionally racy global
-debug variables so that KCSAN ignores them.
+  - Reverse the order of iteration when freezing secondary CPUs for
+    hibernation.
+
+    This avoids that drivers like the Intel uncore performance counter have
+    to transfer the assignement of handling the per package uncore events
+    for every CPU in a package, which is a considerable speedup on larger
+    systems.
+
+  - Add a missing destroy_work_on_stack() invocation in smp_call_on_cpu()
+    to prevent debug objects to emit a false positive warning when the
+    stack is freed.
+
+  - Small cleanups in comments and a str_plural() conversion
 
 Thanks,
 
 	tglx
 
 ------------------>
-Breno Leitao (1):
-      debugobjects: Annotate racy debug variables
+Costa Shulyupin (1):
+      cpu/hotplug: Fix typo in comment
+
+Stanislav Spassov (1):
+      cpu/hotplug: Reverse order of iteration in freeze_secondary_cpus()
+
+Thorsten Blum (1):
+      smp: Use str_plural() to fix Coccinelle warnings
+
+Zqiang (1):
+      smp: Add missing destroy_work_on_stack() call in smp_call_on_cpu()
 
 
- lib/debugobjects.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ include/linux/cpuhotplug.h | 2 +-
+ kernel/cpu.c               | 4 ++--
+ kernel/smp.c               | 5 +++--
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index fb12a9bacd2f..7cea91e193a8 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -78,16 +78,17 @@ static bool			obj_freeing;
- /* The number of objs on the global free list */
- static int			obj_nr_tofree;
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 7a5785f405b6..7f6c820c12eb 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -27,7 +27,7 @@
+  * startup callbacks sequentially from CPUHP_OFFLINE + 1 to CPUHP_ONLINE
+  * during a CPU online operation. During a CPU offline operation the
+  * installed teardown callbacks are invoked in the reverse order from
+- * CPU_ONLINE - 1 down to CPUHP_OFFLINE.
++ * CPUHP_ONLINE - 1 down to CPUHP_OFFLINE.
+  *
+  * The state space has three sections: PREPARE, STARTING and ONLINE.
+  *
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 563877d6c28b..1979a9935719 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1891,8 +1891,8 @@ int freeze_secondary_cpus(int primary)
+ 	cpumask_clear(frozen_cpus);
 =20
--static int			debug_objects_maxchain __read_mostly;
--static int __maybe_unused	debug_objects_maxchecked __read_mostly;
--static int			debug_objects_fixups __read_mostly;
--static int			debug_objects_warnings __read_mostly;
--static int			debug_objects_enabled __read_mostly
--				=3D CONFIG_DEBUG_OBJECTS_ENABLE_DEFAULT;
--static int			debug_objects_pool_size __read_mostly
--				=3D ODEBUG_POOL_SIZE;
--static int			debug_objects_pool_min_level __read_mostly
--				=3D ODEBUG_POOL_MIN_LEVEL;
-+static int __data_racy			debug_objects_maxchain __read_mostly;
-+static int __data_racy __maybe_unused	debug_objects_maxchecked __read_mostly;
-+static int __data_racy			debug_objects_fixups __read_mostly;
-+static int __data_racy			debug_objects_warnings __read_mostly;
-+static int __data_racy			debug_objects_enabled __read_mostly
-+					=3D CONFIG_DEBUG_OBJECTS_ENABLE_DEFAULT;
-+static int __data_racy			debug_objects_pool_size __read_mostly
-+					=3D ODEBUG_POOL_SIZE;
-+static int __data_racy			debug_objects_pool_min_level __read_mostly
-+					=3D ODEBUG_POOL_MIN_LEVEL;
-+
- static const struct debug_obj_descr *descr_test  __read_mostly;
- static struct kmem_cache	*obj_cache __ro_after_init;
+ 	pr_info("Disabling non-boot CPUs ...\n");
+-	for_each_online_cpu(cpu) {
+-		if (cpu =3D=3D primary)
++	for (cpu =3D nr_cpu_ids - 1; cpu >=3D 0; cpu--) {
++		if (!cpu_online(cpu) || cpu =3D=3D primary)
+ 			continue;
 =20
+ 		if (pm_wakeup_pending()) {
+diff --git a/kernel/smp.c b/kernel/smp.c
+index f085ebcdf9e7..aaffecdad319 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -25,6 +25,7 @@
+ #include <linux/nmi.h>
+ #include <linux/sched/debug.h>
+ #include <linux/jump_label.h>
++#include <linux/string_choices.h>
+=20
+ #include <trace/events/ipi.h>
+ #define CREATE_TRACE_POINTS
+@@ -982,8 +983,7 @@ void __init smp_init(void)
+ 	num_nodes =3D num_online_nodes();
+ 	num_cpus  =3D num_online_cpus();
+ 	pr_info("Brought up %d node%s, %d CPU%s\n",
+-		num_nodes, (num_nodes > 1 ? "s" : ""),
+-		num_cpus,  (num_cpus  > 1 ? "s" : ""));
++		num_nodes, str_plural(num_nodes), num_cpus, str_plural(num_cpus));
+=20
+ 	/* Any cleanup work */
+ 	smp_cpus_done(setup_max_cpus);
+@@ -1119,6 +1119,7 @@ int smp_call_on_cpu(unsigned int cpu, int (*func)(void =
+*), void *par, bool phys)
+=20
+ 	queue_work_on(cpu, system_wq, &sscs.work);
+ 	wait_for_completion(&sscs.done);
++	destroy_work_on_stack(&sscs.work);
+=20
+ 	return sscs.ret;
+ }
 
