@@ -1,111 +1,194 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F5A13210A
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 13:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBBE139CEE;
+	Sun, 14 Jul 2024 13:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720964468; cv=none; b=JmuvIio6anepd/A8qMnvr+t1DEi+Nw6VcI9m9qS+ef4j5Egioa8xuvBiYCU6jQXpUxyB9GKyZ13m5ezVclOqFfgCFF6Sg9cKUuHjHfK+slsXtqDaeECt8nrrkpnSjlE2wGwHqPXesedVBSx+fud2psLLlg/qA69t4H+421i0H7Q=
+	t=1720964474; cv=none; b=WmnGQGgQV70CM+qFbNl5uzwe5qopqWi1QH0dsWDJEPGU5e4gbzXrtpHEIg0qQv5z4k4oqo6FnKLrK4CkkrP46Ue2l2Un8ZsJt3pHrMAfZaCLlTORIdZfYhVN5XALwgPY4aFUzu1h2qJ9mBlTYIlwitLM7aULT2Yf7o0UVilzHq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720964468; c=relaxed/simple;
-	bh=T4f3W6vNWXcJSkQ144def9JBi0ohKOi2uSxAAwNLzmY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NIuVbSqJP4EOWqf+ixqEcK+0ZyGrF/ukPQGpLhuz9U9Us9yd4DBQ05I62bL/e7Xhqv8Fso9wByYgTSokbzNmYsOXWmxfnsnCTrbi7wSlbBHFRfO2aXfacDq0JXL7f5sCAepOeMiTLuZQIj4AAWQrp18OZGbeE3OIp2PnzcrhLzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=NlLP0Fui; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1720964474; c=relaxed/simple;
+	bh=rB9HB93Rvshe7z6WUpChBtzmZ+pzwvzmTeb5SFGy0zQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MYhT5H3nhOSAHZ0WFkZ20lwsvkBjhPykWKUZoRM22h1YhznHi7l3EIcXOr+B/hTrNQB1WPMtzVQdZBpKhUeI8kcHaUu30lGm/BJUYJoVkhuujg4DFFwrKM02zpDg3KqmQYzNGxgChpwsybDb35/iPP+zTmLgyAdg6TDEYT5TUW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nvp+6l3D; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="NlLP0Fui"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so20165045e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 06:41:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nvp+6l3D"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58ba3e37feeso4183527a12.3;
+        Sun, 14 Jul 2024 06:41:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1720964465; x=1721569265; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wkQnz1fsc+wtBdxU8oz4D/ZMkVp9+IUswsryocxsv9w=;
-        b=NlLP0Fui4KkwYnX8UtCen7oAn/23wO2d010dSmfKi0EMkiBVlKseYT5aE4QhVEvdGW
-         fbsz8N9Ceyr2YCmg20DqGabHOUDA+mx7iQTPutbbYKpcTqmeLsC66+B4pRdD3JrEttKf
-         yJp7NfDVdjuTIRlYQMG4u8MHjOIDx2QmIQI3510y11I5cYokTjg4D8MZutG+F2ej+Uj4
-         vWcUozylXrvcxCvPwQ2Sizb4dQgdrzKqcHlo+rnp4OolCGs5o7zlU/+JIFo4jrVHRu8F
-         SxOTW5qqhwjuOlSN+uJCs0gIvz1iqAHdsZ96seQFeKIbRjZ+YAzjp+q9lhMhEpc54k2q
-         KS5g==
+        d=gmail.com; s=20230601; t=1720964471; x=1721569271; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0+j1wupx7YxD84513AU7BSAsqVvs64S6cEhC9kkPdJM=;
+        b=Nvp+6l3DWpAK42HEUqVgtx4vfA+/4mh8VOkcFTejsviuoLyDzaaHnny/7TD/TS7NCv
+         V+wKULfItrDbfkT3p2dTPvx1YADp+axWWJS9QzsdEhhNk/+kdxMXK6gid8ekLv/hCPTa
+         3qH7wGzzpDBA7/Jip6uUwB0QzazPQY2Qew8S1/Ic3BjXmazuzjtst6FHfrCpnBr6KCge
+         o9Ma+2us5D0dR5lmqo4UOPy6BQ6l4sTfj3ON4h/MLBOVaPtdBzKZ6c6vI7pU6WChdjTc
+         46p16XXy324T/ytLlU3RX68o0OgWExbpaJBWcAl7xdblSfR/aNxuwVYowab3/WvixB2c
+         oIhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720964465; x=1721569265;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wkQnz1fsc+wtBdxU8oz4D/ZMkVp9+IUswsryocxsv9w=;
-        b=bf0ioZLZ4On3MTt85uqW5tBuoEkf/ZcqhzSpdhr82k+ss731y02ETTRhPWY/6hUQv9
-         wmP3wzHaMP+PkfvSo9iD4ClAxw/Sc1S16nC7hQjGSPEoD05CgehQG+Euzqxi4O82tuLR
-         pSz36QeCTrpgxckyPOrYvgdJuDoPMb3XRz1KBwnFvIHlH3eUPyJ0EBjFVoBiAM+vsOxu
-         iulMRkr3uOcvzq0MKr5mwGaTl/p8oddrReNVgSoOqZs0A692qGIeOnA7Yh2nhJ7c4usn
-         06G9t/wuLNY+UPy4E5XEYT7KknY12prpy9qdLTj8vkIK2G2xZKYnFnCvku2qDG72Xd8E
-         O1sA==
-X-Forwarded-Encrypted: i=1; AJvYcCW31eU5Ic2vj9qQiArp6ssSn2giqJyqaBJ5ZndvfpmcVJe197HqbsZ9mMAAkDL1CwYUZakBmqEwWeJkTFVQlHDNctYSB4ZriUkzyMhC
-X-Gm-Message-State: AOJu0YwPRtBrm7l5dEH5dycpzNfkArl3vczttZhnE7g0QaUmwcUyLFdv
-	BC5Z47KnYQQrpK6M4pmgCotWss7EIzMRe7ZhmDWs5IxvEfW0MAnuRPbFBl8zmD4=
-X-Google-Smtp-Source: AGHT+IHMoK4ef4Te2vS85qtBTXCotELhrWhwgWbhUmLlQqR1CSAOogUJzzAuK7+Mp8E60lOvA+9zGg==
-X-Received: by 2002:a05:600c:524c:b0:426:65b0:3035 with SMTP id 5b1f17b1804b1-4279da3a671mr70583065e9.15.1720964465388;
-        Sun, 14 Jul 2024 06:41:05 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.171])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbea9sm3871306f8f.82.2024.07.14.06.41.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jul 2024 06:41:04 -0700 (PDT)
-Message-ID: <e402ad3e-8b3d-47c0-a2e5-997fe14f7445@tuxon.dev>
-Date: Sun, 14 Jul 2024 16:41:04 +0300
+        d=1e100.net; s=20230601; t=1720964471; x=1721569271;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0+j1wupx7YxD84513AU7BSAsqVvs64S6cEhC9kkPdJM=;
+        b=eyaw9qwth2gMLoLmci8xt/zLyg056JEJaSAIOcFg6EYV/9aDDldZKnpDs/KmrXFJfv
+         nd3te9U77wJuynnnitqXrnBDOSzLNpn5hcvsFzlTj8BTcS+o9eUkw6uyX4AegvYwfhZ7
+         Xwi2ZluDmqz9RXHC8dslrAMy4l3PN8i63uqfy+7Fn8L1gn99TD7rL2S8Z5fyX7C+VBwc
+         qCXpv735xyWD7L4gnFY69s1QeMS5GyAl2P1nPuxDvLEc6TehrnTC946upp738vbJI18b
+         +srDD25n5JRxYziHp/Qs7rDHfKaiNGbOw5PQ3XS9l5ne9vzhRjRQyUSorUbel+cdaENn
+         xS6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJpRicmKzUfSrZczokWE/Cy7KXTLYhrS68LCTHzZ/i7MrgdSOnCZq/m4ttbnD7PzwTq+4sDFxWQDKbuTfuIBe0mzQtv1QgQVgV78hZndo0C2Jmhi5TTkEHj7goyjBxEQIbmloOuAw6
+X-Gm-Message-State: AOJu0Yxo8DWtZ/72D9c/UyNsxqRIDZC71JHU2j74MUnSjORrjxbFFK58
+	4vwiXGirpxGLbYIEfO7UCSItkPpo019Q+646ymWQ98Z6EflIvjW/hIsf7ZkVESQzKjY+cBGneSX
+	DNDFlZeFSRyoJGizmQcaSWsiNUpdYRrPb
+X-Google-Smtp-Source: AGHT+IGFY5E1w8Bp7j+qOT55kraCMhBsxSoH2P3Rz+jWRhqVeFxU673zE4HJJ9B5eX44chT19InBQUGT6vnjjA0NHWs=
+X-Received: by 2002:a05:6402:2554:b0:58b:d7f2:eef3 with SMTP id
+ 4fb4d7f45d1cf-594baf87f63mr13943531a12.12.1720964470882; Sun, 14 Jul 2024
+ 06:41:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 26/27] dt-bindings: arm: add sam9x75 curiosity board
-Content-Language: en-US
-To: Varshini Rajendran <varshini.rajendran@microchip.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, mihai.sain@microchip.com,
- andrei.simion@microchip.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240703102011.193343-1-varshini.rajendran@microchip.com>
- <20240703102936.196606-1-varshini.rajendran@microchip.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20240703102936.196606-1-varshini.rajendran@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240713140455.4072847-1-carlos.bilbao.osdev@gmail.com> <20240713140455.4072847-2-carlos.bilbao.osdev@gmail.com>
+In-Reply-To: <20240713140455.4072847-2-carlos.bilbao.osdev@gmail.com>
+From: =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>
+Date: Sun, 14 Jul 2024 15:40:35 +0200
+Message-ID: <CAA76j93KgwWSkODWO_hpoiumh2VP_W_DWmdyLBCW3MiL52o2RA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] docs: scheduler: Start documenting the EEVDF scheduler
+To: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+Cc: corbet@lwn.net, peterz@infradead.org, rdunlap@infradead.org, bilbao@vt.edu, 
+	jembid@ucm.es, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 03.07.2024 13:29, Varshini Rajendran wrote:
-> Add documentation for SAM9X75 Curiosity board.
-> 
-> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-
+On Sat, 13 Jul 2024 at 16:05, Carlos Bilbao
+<carlos.bilbao.osdev@gmail.com> wrote:
+>
+> Add some documentation regarding the newly introduced scheduler EEVDF.
+>
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
 > ---
-> Changes in v5:
-> - Updated Acked-by tag.
-> ---
->  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> index 82f37328cc69..7160ec80ac1b 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> @@ -106,6 +106,12 @@ properties:
->            - const: microchip,sam9x60
->            - const: atmel,at91sam9
->  
-> +      - description: Microchip SAM9X7 Evaluation Boards
-> +        items:
-> +          - const: microchip,sam9x75-curiosity
-> +          - const: microchip,sam9x7
-> +          - const: atmel,at91sam9
+>  Documentation/scheduler/index.rst            |  1 +
+>  Documentation/scheduler/sched-design-CFS.rst | 10 +++--
+>  Documentation/scheduler/sched-eevdf.rst      | 44 ++++++++++++++++++++
+>  3 files changed, 51 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/scheduler/sched-eevdf.rst
+>
+> diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/=
+index.rst
+> index 43bd8a145b7a..1f2942c4d14b 100644
+> --- a/Documentation/scheduler/index.rst
+> +++ b/Documentation/scheduler/index.rst
+> @@ -12,6 +12,7 @@ Scheduler
+>      sched-bwc
+>      sched-deadline
+>      sched-design-CFS
+> +    sched-eevdf
+>      sched-domains
+>      sched-capacity
+>      sched-energy
+> diff --git a/Documentation/scheduler/sched-design-CFS.rst b/Documentation=
+/scheduler/sched-design-CFS.rst
+> index bc1e507269c6..b703c6dcb3cd 100644
+> --- a/Documentation/scheduler/sched-design-CFS.rst
+> +++ b/Documentation/scheduler/sched-design-CFS.rst
+> @@ -8,10 +8,12 @@ CFS Scheduler
+>  1.  OVERVIEW
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> -CFS stands for "Completely Fair Scheduler," and is the new "desktop" pro=
+cess
+> -scheduler implemented by Ingo Molnar and merged in Linux 2.6.23.  It is =
+the
+> -replacement for the previous vanilla scheduler's SCHED_OTHER interactivi=
+ty
+> -code.
+> +CFS stands for "Completely Fair Scheduler," and is the "desktop" process
+> +scheduler implemented by Ingo Molnar and merged in Linux 2.6.23. When
+> +originally merged, it was the replacement for the previous vanilla
+> +scheduler's SCHED_OTHER interactivity code. Nowadays, CFS is making room
+> +for EEVDF, for which documentation can be found in
+> +:ref:`sched_design_EEVDF`.
+>
+>  80% of CFS's design can be summed up in a single sentence: CFS basically=
+ models
+>  an "ideal, precise multi-tasking CPU" on real hardware.
+> diff --git a/Documentation/scheduler/sched-eevdf.rst b/Documentation/sche=
+duler/sched-eevdf.rst
+> new file mode 100644
+> index 000000000000..019327da333a
+> --- /dev/null
+> +++ b/Documentation/scheduler/sched-eevdf.rst
+> @@ -0,0 +1,44 @@
+> +.. _sched_design_EEVDF:
 > +
->        - description: Nattis v2 board with Natte v2 power board
->          items:
->            - const: axentia,nattis-2
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +EEVDF Scheduler
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +The "Earliest Eligible Virtual Deadline First" (EEVDF) was first introdu=
+ced
+> +in a scientific publication in 1995 [1]. The Linux kernel began
+> +transitioning to EEVDF in version 6.6 (as a new option in 2024), moving
+> +away from the earlier Completely Fair Scheduler (CFS) in favor of a vers=
+ion
+> +of EEVDF proposed by Peter Zijlstra in 2023 [2-4]. More information
+> +regarding CFS can be found in :ref:`sched_design_CFS`.
+> +
+> +Similarly to CFS, EEVDF aims to distribute CPU time equally among all
+> +runnable tasks with the same priority. To do so, it assigns a virtual ru=
+n
+> +time to each task, creating a "lag" value that can be used to determine
+> +whether a task has received its fair share of CPU time. In this way, a t=
+ask
+> +with a positive lag is owed CPU time, while a negative lag means the tas=
+k
+> +has exceeded its portion. EEVDF picks tasks with lag greater or equal to
+> +zero and calculates a virtual deadline (VD) for each, selecting the task
+> +with the earliest VD to execute next. It's important to note that this
+> +allows latency-sensitive tasks with shorter time slices to be prioritize=
+d,
+> +which helps with their responsiveness.
+> +
+> +There are ongoing discussions on how to manage lag, especially for sleep=
+ing
+> +tasks; but at the time of writing EEVDF uses a "decaying" mechanism base=
+d
+> +on virtual run time (VRT). This prevents tasks from exploiting the syste=
+m
+> +by sleeping briefly to reset their negative lag: when a task sleeps, it
+> +remains on the run queue but marked for "deferred dequeue," allowing its
+> +lag to decay over VRT. Hence, long-sleeping tasks eventually have their =
+lag
+> +reset. Finally, tasks can preempt others if their VD is earlier, and tas=
+ks
+> +can request specific time slices using the new sched_setattr() system ca=
+ll,
+> +which further facilitates the job of latency-sensitive applications.
+> +
+> +REFERENCES
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +[1] https://citeseerx.ist.psu.edu/document?repid=3Drep1&type=3Dpdf&doi=
+=3D805acf7726282721504c8f00575d91ebfd750564
+> +
+> +[2] https://lore.kernel.org/lkml/a79014e6-ea83-b316-1e12-2ae056bda6fa@li=
+nux.vnet.ibm.com/
+> +
+> +[3] https://lwn.net/Articles/969062/
+> +
+> +[4] https://lwn.net/Articles/925371/
+> --
+> 2.43.0
+>
+
+Reviewed-by: Sergio Gonz=C3=A1lez Collado <sergio.collado@gmail.com>
