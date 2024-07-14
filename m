@@ -1,133 +1,221 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B79A92F;
-	Sun, 14 Jul 2024 02:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4889479CE;
+	Sun, 14 Jul 2024 02:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720924179; cv=none; b=uyZnqb1CLTk6LmwONDW6XwpLXXkh/CJCIhV6SBN+iQCdchQ1PxE2eAvbRvPvlqERPS8bZTWAd2lIIgAqczqDS1Whg5yaGM5E5l4voUrJZs0/Eiji9L84V3KktQWm7sOLVbv54+lJuTpjgmGDre0j4MSfdDfAwNd/ez0lOxR4IAQ=
+	t=1720924875; cv=none; b=swQFW9Wz385qTHxLFkcVd4REUedgcnfRMZPQRXSo/Kfiys10ApPe9uSAia+NdXb5Xp/dNPnBdRXJwXF8U2lqQaVtMNZUYtrMv9WUAGDxy3V8LrahvmTmpCInpgG/C6xpJ5QVAiETawPYawB8TErjXVC/cuMgK3fF8CDGQU2Rrko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720924179; c=relaxed/simple;
-	bh=gvaCtxw0JmqX0qKNFkwrK622sEzBsNuUqWwdfi1veZI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HO0DL7ly8my0VL9mtNcxnw5Gq6iv8wtyWQ4cEY3yzZC6TvvQr0pgPQwgzwceG/lU73dbxRZt3rC+XcLzu8zPUBfIWYBFzKYjqKjJWYJc1OV5p9pIqjT5dygma+cAyjD7/m6ffu8Jx/NtW0EVHRdD+q38ya8yBoQ0k2dq3Fm27K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DibKUocx; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720924875; c=relaxed/simple;
+	bh=+BMX64LMqIy0Yju1SylS95nPoAjrSTts7QMuygG+Spc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bDG5+DmsR+b6nn/m6Ly7rn1YlSWF6a4No24/A4WWY8h85ZHWzeO/DFwGoObe2mLN7rRoxZYvmTTJUd4M1CJI97q9x2vDeM7yJOhNzUPN/gor2RmmiXB4R7D6kmQjr3C/E9HYtJE3ZbMpetr6qjhojfdVE4BH7PJzsznFWqRKVy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=Map/egI4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZnjeeUbS; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DibKUocx"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4266b1f1b21so21336705e9.1;
-        Sat, 13 Jul 2024 19:29:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720924176; x=1721528976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7uTtxkGrUED0qsLRRVKEM+k/1Ov/NZS6SczaERixb68=;
-        b=DibKUocxo7UdohX02RbknBx06eH0pyD/2/5mUNPnFtd0zNrl9CKFE6YfFBxD7bj5mK
-         V1wMH14gZEOU2J4CAN4Mu/A/y6UMxU+cX0whwp5vVnV9o+huppDUTZyOheFDpuFb8Mtj
-         R0jn23EGrTDFtXOPyBqAHSW8A1iceceot6oH9HPCNyzVGXVoSW1qR+t/xcrOEcAtAfWC
-         zOorDI8yZQyOgm5n2TrpxRZslMEKSyRXOOzs8Vyf14doH74Z+MjdMsbTaFgk51qWqf5c
-         5PYv8ndimPHTiUcWZ3Xhm+wHETcNsLotGBWUef0RmcuVZoBWRZzevrNBjHAcsEP3TFOc
-         mQ6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720924176; x=1721528976;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7uTtxkGrUED0qsLRRVKEM+k/1Ov/NZS6SczaERixb68=;
-        b=aktxBxzsx0X3ilArgbvsmeBed8jWfoDk9cF8GLEYuph0iBR1XF9OcLo8KFYsAO+qja
-         tus1FlfB85X1SBzp1x/AZv+mpnNpzfjUMfiQYe2+X910DzhYPDAOEpl136Nk9ISSdsgO
-         adYINAhCbtFEohcmdj+EN46zK/u9HagrUT8MYkwhZPbcxrTxDUzvQjVAqlELXJ5mvjvT
-         9bkWHfj1uAVV1qnjBKc9VZ7psh+K+hey0kPCP1us1Tg8Oz6J0nZUx5GbrLSvQ1dcrmdk
-         LwzTmKrb+AJ8pGAA+29s563TtTdmHMQ/20yrbCfR2H6sSouufTReZu6iCnz4PdmUMAFX
-         5HZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWGIDOggGE5caxXlJjN+IrdQ/JHqYYDsqZLgq+xRMcaNrI3FvIGKE5IIADbK/JRD/Ri1wX+v2qYIMxYujRt9Rog66HNLqYUfFJkkf8MMlA+m1zoLbPgGkrCp7u1b6TpTzi2Cg==
-X-Gm-Message-State: AOJu0Yynvt298E0hg3iGvfRI+jtpqvcgDo7/DW3vzw4T0n22Rfx69goV
-	lLuLRn/LzPGms+DYTsNFSHrUPTArwSq8fusmkAzvF4/C+xeAFdJnuJROxQVoFK4=
-X-Google-Smtp-Source: AGHT+IHl8Y8wLqDxJzkDVIy/A1pwLR4+D5zIzHFndDxbJqI0GiE3G+KkSNQb9LjffrW2mOyVJKvV1A==
-X-Received: by 2002:a05:600c:524f:b0:427:9dad:8063 with SMTP id 5b1f17b1804b1-4279dad8478mr44072335e9.12.1720924175722;
-        Sat, 13 Jul 2024 19:29:35 -0700 (PDT)
-Received: from localhost.localdomain ([156.197.1.65])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f2d7955sm72759145e9.47.2024.07.13.19.29.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jul 2024 19:29:35 -0700 (PDT)
-From: botta633 <bottaawesome633@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	linux-ext4@vger.kernel.org,
-	syzkaller@googlegroups.com,
-	Ahmed Ehab <bottaawesome633@gmail.com>,
-	syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] ext4: Testing lock class and subclass got the same name pointer
-Date: Sun, 14 Jul 2024 08:26:40 +0300
-Message-ID: <20240714052640.115476-1-bottaawesome633@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Map/egI4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZnjeeUbS"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 5007F11400DB;
+	Sat, 13 Jul 2024 22:41:13 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sat, 13 Jul 2024 22:41:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1720924873; x=1721011273; bh=xn
+	qUZ7ptKpNpUMU0XCyTUpnBsFgodd+EgetEiyr0qeo=; b=Map/egI4wUvRso32AA
+	LzcQB+NTDwlb0cc/Bpdt8z7gHyRg+bqyw+uuW5cKqlNlD1db0nRBSMmDkOjofLn3
+	PxkHV7ymYBscgCfL/qsfuWLO5oCTTC+pEfyjiqByVd4jIx4QivJkRG0eFWQWwk+v
+	QDDUz9D9+8KuMPsVqWPfPuNP/56UamVW6B5jJKfTen5ng5YSmbyPy/eMzsL5t8ru
+	lzb0BR8w2C5Shny8E5QznIgeXB68JvUkgfcmH+OiWGcjhY00xwB1tDwXpxt7dSWy
+	7DnFutegnjt7JJq4iay5bweTHnKTDBLf/ewPH81YfQLmunNF8pCqbEy9aQq6kjhR
+	5nsQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1720924873; x=1721011273; bh=xnqUZ7ptKpNpU
+	MU0XCyTUpnBsFgodd+EgetEiyr0qeo=; b=ZnjeeUbSie/WaVHq4YmIo+SlseDAH
+	MJMOhIeeAUxUUDDK0USDwerp3ORyFnR4+bb9zCHFWagBt/c0L6Ok8yZhjhXl8sEJ
+	w5RW+LyatraADw5TX0B+DTyG5g866O3MzdVh8h/tDHyTxlXUCdCqLXvVUuki4Cjr
+	9uADKk3O2f+5sqocAeK8MPAqEl/BawgCVPCiwtw4IsiiatE/9i/PHQmgzKU2ou4J
+	wDejKEla1iQXMM8xAsyk/4QRP3rK+rqmZF7kXNi/oOS7l9/KYwFJsrj04J16n/aT
+	4lkT+isjJ5NeF/ER8wufCpE2BafNZzTvYinFEeDrWa2lbY3N/CE4RUFiA==
+X-ME-Sender: <xms:yDqTZnKu2b6FFdvNxaOk7aMNmIMe_WFHB4eSolMdNIzfH1vcK9tnsA>
+    <xme:yDqTZrLOd8r7fGTRZlTXtfPmKqZo-ual81klNhh-Rfm-AcQWmdecAeL8lf3k2dlby
+    a8VSNMMmz7rBK_4fi4>
+X-ME-Received: <xmr:yDqTZvtFL7g8-QauEXiVKJmONTMDzRMQkPGUjon5zmaSp9lzpnvsDS_0mClgMw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeelgdeifecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomheplfhirgiguhhn
+    ucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenucggtf
+    frrghtthgvrhhnpeffteeugeektdfgjeevuedvgffhgedtvdfghedugefhgeehteeuudeh
+    udevjeethfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:yDqTZga6R1fn5LwwmHfe8Iynd9G7jBMwSNygpPsUG1D17_DuoD-PRg>
+    <xmx:yDqTZuZcd4gQdDBBST630SkfSVMsBFNNshdIkvCyDOJWVcIbXsCvlA>
+    <xmx:yDqTZkDON_E5o_nl0E-hQZZ9Gruh-bxl2QWnLOaFgHTPNFBw7Qc27w>
+    <xmx:yDqTZsbire2SfMnUiGvo6zqky8rgoQN6RXpH4AtXddutZf4odwFGCQ>
+    <xmx:yTqTZlzsxvZtQJS8VsbxLNpVhqqpuYt0Tj5byMy7WmlbFUcycAvygQQM>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 13 Jul 2024 22:41:09 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Sun, 14 Jul 2024 10:41:05 +0800
+Subject: [PATCH] MIPS: Loongson64: Switch to SYNC_R4K
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240714-loongson64-cevt-r4k-v1-1-98afed7260aa@flygoat.com>
+X-B4-Tracking: v=1; b=H4sIAMA6k2YC/x3MTQqAIBBA4avErBuwGPq7SrQwnWwoNDQiiO6et
+ PwW7z2QOAonGIoHIl+SJPiMqizArNo7RrHZUKuaVFsR7iF4l4JvCA1fJ0bakOeWLGnbd2Qgl0f
+ kRe7/Ok7v+wE9a/iSZQAAAA==
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3712;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=+BMX64LMqIy0Yju1SylS95nPoAjrSTts7QMuygG+Spc=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrTJVkd7zltMkbIqOLC29dCT2Z1/+F5WNfycEOlsr+ZRs
+ ijlRv/bjlIWBjEuBlkxRZYQAaW+DY0XF1x/kPUHZg4rE8gQBi5OAZhIsBQjwzX1Z+WslauZIxPU
+ PvRf5548zfnMQTOx6u6Zlyp8kre8EmH4n+cfbXFdwoGpuEmWPfjJc9mPSbl9Bqq7XIR5traL9Bp
+ zAwA=
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-From: Ahmed Ehab <bottaawesome633@gmail.com>
+Nowadays SYNC_R4K is performing better than Loongson64's
+custom sync mechanism.
 
-Checking if the lockdep_map->name will change when setting the subclass.
-It shouldn't change so that the lock class and subclass will have the same name
+Switch to SYNC_R4K to improve performance and reduce code
+duplication.
 
-
-Reported-by: <syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com>
-Fixes: fd5e3f5fe27
-Cc: <stable@vger.kernel.org>
-Signed-off-by: botta633 <bottaawesome633@gmail.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- lib/locking-selftest.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Last minute for 6.11 :-)
+---
+ arch/mips/Kconfig           |  1 +
+ arch/mips/include/asm/smp.h |  1 -
+ arch/mips/loongson64/smp.c  | 35 ++---------------------------------
+ 3 files changed, 3 insertions(+), 34 deletions(-)
 
-diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
-index 6f6a5fc85b42..1d7885205f36 100644
---- a/lib/locking-selftest.c
-+++ b/lib/locking-selftest.c
-@@ -2710,12 +2710,24 @@ static void local_lock_3B(void)
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 1236ea122061..e163059dd4d3 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -478,6 +478,7 @@ config MACH_LOONGSON64
+ 	select BOARD_SCACHE
+ 	select CSRC_R4K
+ 	select CEVT_R4K
++	select SYNC_R4K
+ 	select FORCE_PCI
+ 	select ISA
+ 	select I8259
+diff --git a/arch/mips/include/asm/smp.h b/arch/mips/include/asm/smp.h
+index bc2c240f414b..2427d76f953f 100644
+--- a/arch/mips/include/asm/smp.h
++++ b/arch/mips/include/asm/smp.h
+@@ -50,7 +50,6 @@ extern int __cpu_logical_map[NR_CPUS];
+ #define SMP_CALL_FUNCTION	0x2
+ /* Octeon - Tell another core to flush its icache */
+ #define SMP_ICACHE_FLUSH	0x4
+-#define SMP_ASK_C0COUNT		0x8
  
+ /* Mask of CPUs which are currently definitely operating coherently */
+ extern cpumask_t cpu_coherent_mask;
+diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
+index 66d049cdcf14..147acd972a07 100644
+--- a/arch/mips/loongson64/smp.c
++++ b/arch/mips/loongson64/smp.c
+@@ -33,7 +33,6 @@ static void __iomem *ipi_clear0_regs[16];
+ static void __iomem *ipi_status0_regs[16];
+ static void __iomem *ipi_en0_regs[16];
+ static void __iomem *ipi_mailbox_buf[16];
+-static uint32_t core0_c0count[NR_CPUS];
+ 
+ static u32 (*ipi_read_clear)(int cpu);
+ static void (*ipi_write_action)(int cpu, u32 action);
+@@ -382,11 +381,10 @@ loongson3_send_ipi_mask(const struct cpumask *mask, unsigned int action)
+ 		ipi_write_action(cpu_logical_map(i), (u32)action);
  }
  
-+static void class_subclass_X1_name(void)
-+{
-+	const char *name_before_subclass = rwsem_X1.dep_map.name;
-+	const char *name_after_subclass;
-+
-+	WARN_ON(!rwsem_X1.dep_map.name);
-+	lockdep_set_subclass(&rwsem_X1, 1);
-+	WARN_ON(name_before_subclass != name_after_subclass);
-+}
-+
- static void local_lock_tests(void)
+-
+ static irqreturn_t loongson3_ipi_interrupt(int irq, void *dev_id)
  {
- 	printk("  --------------------------------------------------------------------------\n");
- 	printk("  | local_lock tests |\n");
- 	printk("  ---------------------\n");
+-	int i, cpu = smp_processor_id();
+-	unsigned int action, c0count;
++	int cpu = smp_processor_id();
++	unsigned int action;
  
-+	init_class_X(&lock_X1, &rwlock_X1, &mutex_X1, &rwsem_X1);
-+
- 	print_testname("local_lock inversion  2");
- 	dotest(local_lock_2, SUCCESS, LOCKTYPE_LL);
- 	pr_cont("\n");
-@@ -2727,6 +2739,10 @@ static void local_lock_tests(void)
- 	print_testname("local_lock inversion 3B");
- 	dotest(local_lock_3B, FAILURE, LOCKTYPE_LL);
- 	pr_cont("\n");
-+
-+	print_testname("Class and subclass");
-+	dotest(class_subclass_X1_name, SUCCESS, LOCKTYPE_RWSEM);
-+	pr_cont("\n");
+ 	action = ipi_read_clear(cpu);
+ 
+@@ -399,26 +397,14 @@ static irqreturn_t loongson3_ipi_interrupt(int irq, void *dev_id)
+ 		irq_exit();
+ 	}
+ 
+-	if (action & SMP_ASK_C0COUNT) {
+-		BUG_ON(cpu != 0);
+-		c0count = read_c0_count();
+-		c0count = c0count ? c0count : 1;
+-		for (i = 1; i < nr_cpu_ids; i++)
+-			core0_c0count[i] = c0count;
+-		nudge_writes(); /* Let others see the result ASAP */
+-	}
+-
+ 	return IRQ_HANDLED;
  }
  
- static void hardirq_deadlock_softirq_not_deadlock(void)
+-#define MAX_LOOPS 800
+ /*
+  * SMP init and finish on secondary CPUs
+  */
+ static void loongson3_init_secondary(void)
+ {
+-	int i;
+-	uint32_t initcount;
+ 	unsigned int cpu = smp_processor_id();
+ 	unsigned int imask = STATUSF_IP7 | STATUSF_IP6 |
+ 			     STATUSF_IP3 | STATUSF_IP2;
+@@ -432,23 +418,6 @@ static void loongson3_init_secondary(void)
+ 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package);
+ 	cpu_data[cpu].package =
+ 		cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
+-
+-	i = 0;
+-	core0_c0count[cpu] = 0;
+-	loongson3_send_ipi_single(0, SMP_ASK_C0COUNT);
+-	while (!core0_c0count[cpu]) {
+-		i++;
+-		cpu_relax();
+-	}
+-
+-	if (i > MAX_LOOPS)
+-		i = MAX_LOOPS;
+-	if (cpu_data[cpu].package)
+-		initcount = core0_c0count[cpu] + i;
+-	else /* Local access is faster for loops */
+-		initcount = core0_c0count[cpu] + i/2;
+-
+-	write_c0_count(initcount);
+ }
+ 
+ static void loongson3_smp_finish(void)
+
+---
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+change-id: 20240714-loongson64-cevt-r4k-eb74d4ad984c
+
+Best regards,
 -- 
-2.45.2
+Jiaxun Yang <jiaxun.yang@flygoat.com>
 
