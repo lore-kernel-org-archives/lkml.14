@@ -1,257 +1,84 @@
-Received: from msa.smtpout.orange.fr (msa-213.smtpout.orange.fr [193.252.23.213])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C707F;
-	Sun, 14 Jul 2024 16:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.213
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EBA7346C;
+	Sun, 14 Jul 2024 16:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720974282; cv=none; b=fmXdPgYCZmhu2RSUtUYJjoHxUPCyvfo8eTaan5a7bWh234Zl4LKipj1MU17S1YYlb7pdyZMz/VsUoYFOGuW1JYgX/1pqhWeMGNENOTNbYsqz/7xrahUGS0+K2wnKfNl3oaTAtdPwESRAPB/ftyr/SStCiIIci2wJjAk0colXaAk=
+	t=1720974524; cv=none; b=bOdhNWPduTeBToNgoVJk2BUSrlZuFlNHuPBGZzgvYfRDmxBaaWJufwzA4dS2s5LtBzDSLJ1A8Q6YLFKKt9fJ6TYzfADKsX9cmdWvNLX59eFuakzrFhaCaKDfnshWsMcTotLYCAmx30X0t9Fd7xQq2CV/VuZb+K+fW6+FgpFUhPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720974282; c=relaxed/simple;
-	bh=FjJUbEgbT6njuYxFEiqNqLxRsMj/drbnkC+PvKhsWUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D0cBV7oYNiTVGnmOYqt16uf+MaBBVcifcceEsy0IviJoNanf8V3VAYiWTX8FXhVGMGWpx3UVyRam2kGn2WzXn/9rFAbNAh2j50Dt1dhiErU7/gnYCbWyOEheCt7IPt435/7jFjoTHMsA5qhPw35/fHKxRxOVomW8ChFUmSdGDcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=GWsjA/f5; arc=none smtp.client-ip=193.252.23.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720974524; c=relaxed/simple;
+	bh=YVh0TOFrc5B40PsDndvksJEx8IfAjErNBYJ/3kByK2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WlfEgsK7Gub5S4VklviTrFwjHJARhdn9j0tOgnNGbyppklGjlDj4mWd5zxZ5ALCYxroqPJyt4Dr0PaA5gl72+PVr+6mshdjTqjCTApCaMndm9im+ftKRFinEJZ1A+XQmz+r+oZUldwGFC0CAl7Yro9ZuyokpmQrt9xbQWILQ5fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLqGDGKJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="GWsjA/f5"
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id T1sisr9XfKcZaT1sisRKQy; Sun, 14 Jul 2024 18:15:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720973726;
-	bh=X3BjMkIlLlKNDRITAi0sF43nNx7bZHbsFoiwfhlAf7k=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=GWsjA/f5s8n6lHS+5b6ZngPEeC/AEXjE5/TISfvAuxgb1IA1/gluGT2mvBGToXe+k
-	 Sg607eCgxufF882GoU+gYrtE7vpgFenVff1SUY4W5Dbhfzlq3QtvbohpuglgUDZRlm
-	 vq/KIgYP+jXOyqiSWMM/HzAoAzDZ5qQOB6fpJ75KoGdbCSJFyrxJY8lKF47Tv2z/z5
-	 D2k4Vy1uiSKwkDiF0Hvx8YV2h9IpOf747+GCpQKIg3NVg+BeL9bO5U3je9ql70WLm1
-	 rUpwmS2qvRcLD37Fyf7lpPxvO0HN1LYI0tm5Qsv4ekqOcxnS/vZwswd4ZdNv9aZ55C
-	 HUQ8PYO8DAQGQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Jul 2024 18:15:26 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	netdev@vger.kernel.org
-Subject: [PATCH] llc: Constify struct llc_sap_state_trans
-Date: Sun, 14 Jul 2024 18:15:20 +0200
-Message-ID: <9d17587639195ee94b74ff06a11ef97d1833ee52.1720973710.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLqGDGKJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221FDC116B1;
+	Sun, 14 Jul 2024 16:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720974524;
+	bh=YVh0TOFrc5B40PsDndvksJEx8IfAjErNBYJ/3kByK2M=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=kLqGDGKJ2KKxccVrx8HBp5UGlEVSv6V5UvacMXAmZVrTZsvPJ01Pvm83Inqy8cTg2
+	 VEfCEcmssIy1gSJ8fQrNiomJgVesKbgXe+w37/5YdhzIsHOx/JWunZsXY2r0bLUmVa
+	 OzFKiWkZBiY/oHtKHiOegd99GQYw6nQlP4LS8AcyTBBjlN76Hc+G6w/X65bjjH8ONC
+	 CodpcwddxmMIdDwzyxTaBe1C9JNYPNyppoLMX7aQcbwt8M2HTlo4L5dnBtmUadEM4d
+	 EPAWUg0WuwfPJj8ko5vny9/25nGSFo2UhKs1t78DNgHyyqN2hEVLvNDts5SkKKP/3y
+	 FKglO/dwWPx1A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id B27B1CE0B34; Sun, 14 Jul 2024 09:28:43 -0700 (PDT)
+Date: Sun, 14 Jul 2024 09:28:43 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	lkmm@lists.linux.dev, stern@rowland.harvard.edu,
+	parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
+	boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+	j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
+	dlustig@nvidia.com, joel@joelfernandes.org
+Subject: [GIT PULL] LKMM changes for v6.11
+Message-ID: <583d22d2-a123-4131-b4ac-20980357592b@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-'struct llc_sap_state_trans' are not modified in this driver.
+Hello, Linux,
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+When the merge window opens, please pull this LKMM update from:
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-    339	    456	     24	    819	    333	net/llc/llc_s_st.o
+  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/lkmm.2024.07.12a
+  # HEAD: ea6ee1bac6034cb4e91bcc229ed1354ca1a024d5: tools/memory-model: Code reorganization in lock.cat (2024-06-06 11:24:58 -0700)
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-    683	    144	      0	    827	    33b	net/llc/llc_s_st.o
+----------------------------------------------------------------
+lkmm: Fix corner-case locking bug and improve documentation
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only.
----
- include/net/llc_s_st.h |  4 ++--
- net/llc/llc_s_st.c     | 26 +++++++++++++-------------
- net/llc/llc_sap.c      | 12 ++++++------
- 3 files changed, 21 insertions(+), 21 deletions(-)
+A simple but odd single-process litmus test acquires and immediately
+releases a lock, then calls spin_is_locked().  LKMM acts if it was
+a deadlock due to an assumption that spin_is_locked() will follow a
+spin_lock() or some other process's spin_unlock().  This litmus test
+manages to violate this assumption because the spin_is_locked() follows
+the same process's spin_unlock().
 
-diff --git a/include/net/llc_s_st.h b/include/net/llc_s_st.h
-index ed5b2fa40d32..fca49d483d20 100644
---- a/include/net/llc_s_st.h
-+++ b/include/net/llc_s_st.h
-@@ -29,8 +29,8 @@ struct llc_sap_state_trans {
- };
- 
- struct llc_sap_state {
--	u8			   curr_state;
--	struct llc_sap_state_trans **transitions;
-+	u8				 curr_state;
-+	const struct llc_sap_state_trans **transitions;
- };
- 
- /* only access to SAP state table */
-diff --git a/net/llc/llc_s_st.c b/net/llc/llc_s_st.c
-index 308c616883a4..acccc827c562 100644
---- a/net/llc/llc_s_st.c
-+++ b/net/llc/llc_s_st.c
-@@ -24,7 +24,7 @@
-  * last entry for this state
-  * all members are zeros, .bss zeroes it
-  */
--static struct llc_sap_state_trans llc_sap_state_trans_end;
-+static const struct llc_sap_state_trans llc_sap_state_trans_end;
- 
- /* state LLC_SAP_STATE_INACTIVE transition for
-  * LLC_SAP_EV_ACTIVATION_REQ event
-@@ -34,14 +34,14 @@ static const llc_sap_action_t llc_sap_inactive_state_actions_1[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_inactive_state_trans_1 = {
-+static const struct llc_sap_state_trans llc_sap_inactive_state_trans_1 = {
- 	.ev =		llc_sap_ev_activation_req,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_inactive_state_actions_1,
- };
- 
- /* array of pointers; one to each transition */
--static struct llc_sap_state_trans *llc_sap_inactive_state_transitions[] = {
-+static const struct llc_sap_state_trans *llc_sap_inactive_state_transitions[] = {
- 	[0] = &llc_sap_inactive_state_trans_1,
- 	[1] = &llc_sap_state_trans_end,
- };
-@@ -52,7 +52,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_1[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_1 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_1 = {
- 	.ev =		llc_sap_ev_rx_ui,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_1,
-@@ -64,7 +64,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_2[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_2 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_2 = {
- 	.ev =		llc_sap_ev_unitdata_req,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_2,
-@@ -76,7 +76,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_3[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_3 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_3 = {
- 	.ev =		llc_sap_ev_xid_req,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_3,
-@@ -88,7 +88,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_4[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_4 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_4 = {
- 	.ev =		llc_sap_ev_rx_xid_c,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_4,
-@@ -100,7 +100,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_5[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_5 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_5 = {
- 	.ev =		llc_sap_ev_rx_xid_r,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_5,
-@@ -112,7 +112,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_6[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_6 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_6 = {
- 	.ev =		llc_sap_ev_test_req,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_6,
-@@ -124,7 +124,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_7[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_7 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_7 = {
- 	.ev =		llc_sap_ev_rx_test_c,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_7
-@@ -136,7 +136,7 @@ static const llc_sap_action_t llc_sap_active_state_actions_8[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_8 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_8 = {
- 	.ev =		llc_sap_ev_rx_test_r,
- 	.next_state =	LLC_SAP_STATE_ACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_8,
-@@ -150,14 +150,14 @@ static const llc_sap_action_t llc_sap_active_state_actions_9[] = {
- 	[1] = NULL,
- };
- 
--static struct llc_sap_state_trans llc_sap_active_state_trans_9 = {
-+static const struct llc_sap_state_trans llc_sap_active_state_trans_9 = {
- 	.ev =		llc_sap_ev_deactivation_req,
- 	.next_state =	LLC_SAP_STATE_INACTIVE,
- 	.ev_actions =	llc_sap_active_state_actions_9
- };
- 
- /* array of pointers; one to each transition */
--static struct llc_sap_state_trans *llc_sap_active_state_transitions[] = {
-+static const struct llc_sap_state_trans *llc_sap_active_state_transitions[] = {
- 	[0] = &llc_sap_active_state_trans_2,
- 	[1] = &llc_sap_active_state_trans_1,
- 	[2] = &llc_sap_active_state_trans_3,
-diff --git a/net/llc/llc_sap.c b/net/llc/llc_sap.c
-index 116c0e479183..6cd03c2ae7d5 100644
---- a/net/llc/llc_sap.c
-+++ b/net/llc/llc_sap.c
-@@ -114,12 +114,12 @@ void llc_sap_rtn_pdu(struct llc_sap *sap, struct sk_buff *skb)
-  *	Returns the pointer to found transition on success or %NULL for
-  *	failure.
-  */
--static struct llc_sap_state_trans *llc_find_sap_trans(struct llc_sap *sap,
--						      struct sk_buff *skb)
-+static const struct llc_sap_state_trans *llc_find_sap_trans(struct llc_sap *sap,
-+							    struct sk_buff *skb)
- {
- 	int i = 0;
--	struct llc_sap_state_trans *rc = NULL;
--	struct llc_sap_state_trans **next_trans;
-+	const struct llc_sap_state_trans *rc = NULL;
-+	const struct llc_sap_state_trans **next_trans;
- 	struct llc_sap_state *curr_state = &llc_sap_state_table[sap->state - 1];
- 	/*
- 	 * Search thru events for this state until list exhausted or until
-@@ -143,7 +143,7 @@ static struct llc_sap_state_trans *llc_find_sap_trans(struct llc_sap *sap,
-  *	Returns 0 for success and 1 for failure of at least one action.
-  */
- static int llc_exec_sap_trans_actions(struct llc_sap *sap,
--				      struct llc_sap_state_trans *trans,
-+				      const struct llc_sap_state_trans *trans,
- 				      struct sk_buff *skb)
- {
- 	int rc = 0;
-@@ -166,8 +166,8 @@ static int llc_exec_sap_trans_actions(struct llc_sap *sap,
-  */
- static int llc_sap_next_state(struct llc_sap *sap, struct sk_buff *skb)
- {
-+	const struct llc_sap_state_trans *trans;
- 	int rc = 1;
--	struct llc_sap_state_trans *trans;
- 
- 	if (sap->state > LLC_NR_SAP_STATES)
- 		goto out;
--- 
-2.45.2
+This series fixes this bug, reorganizes and optimizes the lock.cat model,
+and updates documentation.
 
+----------------------------------------------------------------
+Alan Stern (2):
+      tools/memory-model: Fix bug in lock.cat
+      tools/memory-model: Code reorganization in lock.cat
+
+Paul E. McKenney (2):
+      tools/memory-model: Add KCSAN LF mentorship session citation
+      tools/memory-model: Add access-marking.txt to README
+
+ tools/memory-model/Documentation/README            |  4 ++
+ .../memory-model/Documentation/access-marking.txt  | 10 ++--
+ tools/memory-model/lock.cat                        | 62 +++++++++++++---------
+ 3 files changed, 49 insertions(+), 27 deletions(-)
