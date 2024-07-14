@@ -1,59 +1,59 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C67413210A
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 13:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8AE12BE9F
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 13:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720964396; cv=none; b=kSCXUNixdrOYFNAHA1mX9IRBzYEmwy/PCwGuHE0jglT6LcaKKWeb+PWRRNoB9adhT186BdHW9kVI6EjGVHOri4vQBPGzVFR3i6+2jg+WNEiXEZkeW9RfT7NPSneXp+h2ir0m64YU6MXUp+hhZ8ZpKRaX6JhZmJPS08KJEmWD0PE=
+	t=1720964439; cv=none; b=qOCLlWGK5MR1pxyDnZN8tLfAzPzwgirGgDCDLNj5splBAXkRiJp8leQBeqqwLpmsgxCiZx+3dTR5FQtrI6je3Lme7CskPvV3A7HZ0Od/0kEQcMU77bOs1/GLc3AvdNmbYNjkzkhqOFieB/AH3TFkkvjOkN3TxTF6Srf2RptwKeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720964396; c=relaxed/simple;
-	bh=ZRPQcaFMU/qRhT0WKNPSFjrNVmy7iseSYLfohdrjFNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Eh7teczPesLztCmy1RpuN2eoeUxUoWfew/ehGRzNSRQVoA0AZc+dfuW1EoFs53sSDQLSLWY/UYKXrMZR6U8f8Z/dPzAoFqeldlWvgWkn/6Mc////hDyuW36LlrH5Oah4hn3oo/WjNPIAGeL4QXvF0XYv7hVZFNiKsS2PR0lLFVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=CGp6LVzt; arc=none smtp.client-ip=209.85.128.45
+	s=arc-20240116; t=1720964439; c=relaxed/simple;
+	bh=/UVFJ+9Ng2A0/YrC97CHhsFKHBGp9+uoljFecunxOps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AvmlU2YX6ybm+2VuHHM/xvjKvl5JfjgbTwpj34QPdmr4+lavAMgI+p8bDU0qo/f6+mRBhZUCVtYvVWQfyVuHoy0wdVSx7oKSYR6GWnyOPUUE0YTkJdtrnvdItg8xGCEMUrsBX5N1s9RpXK1NfaegGRxE0QRX9r4zJshdlDLoj9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=US/MZIPD; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="CGp6LVzt"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-427aeebaecdso842775e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 06:39:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="US/MZIPD"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-367a9ab4d81so2109266f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 06:40:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1720964393; x=1721569193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=tuxon.dev; s=google; t=1720964436; x=1721569236; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hXhsgB5kcttJ8ekP07uZnqVAhfWI+txG6dIDu3n/Ejg=;
-        b=CGp6LVztg9tFNQmfau66cDC6H9WwjiMQBfjBnNJNDA7IDTT1XxVglxVvHTkvvPDbeP
-         2dLdnYuyhdeG31wzzeYSeNvjYdqkgV0kmZICnL182HPE+A/KbCLwd2y/7QeVXC3elVzp
-         GzYGZMH5wovMiscatJZQUg8AbDZsRdGKRGjAOnlOQzVwY3lcLEMIl2JZOecwl9eoQroa
-         cb0DfvuroAlA36Bn3t27purfCXgRI+Sp1StTVu0rfl4ohhTG88o7tVCeuxCWI8sv/Yxe
-         3ZqdIZ0xfTTDnp2hXc+bZZsLeLshA4/aeJdwhaCtvsm7iJ4pc9AJJV+22ZDO53VYolTt
-         MQeg==
+        bh=FHCkpVrGiuwJHDK5B9V2HOh2UvIkhWtlNv2XYBebC+I=;
+        b=US/MZIPDpr7QaqEC/h5XVKomlme/29pmTLAKECicpQ3bYt7iVv8SJiXkjfqUpy+Qa4
+         aDbw4qyB36LLtmZja8fxhauKlsDyDl3biaF9O3dUxQ0rypGF7BS1lAQPsjMFcXA5MRxf
+         c4Fzh4MTHPtL038zU5oz94ibvxi+tT4nrOQ4h6YxYI8ZxZf2Uj+45nkJ8livBU0tBrEr
+         CRYMx4DsxV+qzutJ+9Mmof+fZu9PXfNrGyQ4IbuP7MgZ/0roIXrFWdCXLF/jriFJaizV
+         pz6zJpL/np0ichwGb5r2eLl5ePiUF0dLYLqOL/HNVmg47fc8POli6ZYe1OOACCAHHiGh
+         VfrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720964393; x=1721569193;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=1e100.net; s=20230601; t=1720964436; x=1721569236;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hXhsgB5kcttJ8ekP07uZnqVAhfWI+txG6dIDu3n/Ejg=;
-        b=lPyvt3QdWJIYB4NNlaNRJwmEn422Xkplitkhj2AJsgtE8/hJbS6uwbzzyxieULGPdd
-         ASiSZT4wNhstJMA7VnCjuPsV/5ySn+QbRJJ6J6GVt1JvqIcSbk85AwMCRI/C+5vpzuRD
-         zy60UOHmOvcYAPiZehRc9YP8iSDa3XPKHnG9MbO9d2GWtslTjUP+xrYdfVRdq2ZkvGMr
-         /jVLsCc8zs7Mxodg21LMx1wC7ImAr1PXVc+tRZDEIBMXkf08tg7hsXx2l8XODC0CqnjC
-         oD6c1s1Nxq1S0SghklzTCABlDyqDzjC4btGmESbB/8lRjI1YyFjZB6BD+v+gR7N7meFb
-         +Wdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDAEcaNCu+xheGCe/0XiQDVgCOhA9JxdDjFZTAeb56517N8EvkEO30UECX+Kq1Sr/Loh1+hCQIM9sMuPJlSkKr1c3wgHYlvgRs0G8j
-X-Gm-Message-State: AOJu0Yz1o8vlAm2QhdbCBxzFJ6mC+y4tq1VTWXVlrWimqRbt8tbjAFVZ
-	SSI0qqKe/vjaGLdKCbjJQA9F9+rjSo7BTaqq3ZXQJrUVm1DGTPq/d4d6wBS9GH0=
-X-Google-Smtp-Source: AGHT+IHZ55PvKzpIXyAWZZwdSfOUuHbPyEFib4pjtaWAvo7Wf8TZY7mQZPs6KJ5I7pPxMEqbAjVjCw==
-X-Received: by 2002:a5d:47a9:0:b0:366:e7e2:13c8 with SMTP id ffacd0b85a97d-367cea46a0bmr13958112f8f.11.1720964392929;
-        Sun, 14 Jul 2024 06:39:52 -0700 (PDT)
+        bh=FHCkpVrGiuwJHDK5B9V2HOh2UvIkhWtlNv2XYBebC+I=;
+        b=O4eSxaRgSsExBcK99CaWuNBJ+C6aIlILM9d2nc+90kuK09ImDjj08b51LJ+cJndur8
+         9Z46QcU+IAXzuQTfQSqCzvQ7AYpbf8touEPit1RpcRIW3YQFPM8dfhjAgzXaQOiVBUlC
+         /bn/czVYad0wd1FbC4pAs1bRCH/ylpDP/bvQhC16cFmehTL1fMV3MSv3FHVgFG3H8rF5
+         gvuDp/dXMHhr5ogCIM2kZ57A/2VYEJroxuRepqbDV+N0Ok/xoVt2xdGSL8vaKAb9Isq/
+         jV73JWAX22TfSxNhgNcpGsgpkhL71wag1vKls9NWAcDBgpJyZMNyaVJ32J2/sAUuRsFf
+         DWxA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9Z1wzY+VcTuRnItG6SnYdpLe8+ajpviy1HlR45rcd51gWCFm3WD/65DJwK9TvY9aUhio5+JHYhrsUclRjoelry1+ByjlGUCXr4z2z
+X-Gm-Message-State: AOJu0YyaP6IkIENgvlvtEEFZjvlf0M61UjppYIGBegVxiXJevXud6t/a
+	jh/tqTE6ivc/FIXnq/RWAfU8oe5L/V8dg+bhuqGjjvZRsSdQuAVi47aB9la+4RA=
+X-Google-Smtp-Source: AGHT+IG2FWtxmNntzTRnuVjsQhB6lgvSzDm6GV6lUFGg/HNmord4I1j0Qfrfs1hitHR86DUGQap1Yw==
+X-Received: by 2002:a05:6000:1b01:b0:367:4e1a:240e with SMTP id ffacd0b85a97d-367ceaca8ebmr11048041f8f.50.1720964436495;
+        Sun, 14 Jul 2024 06:40:36 -0700 (PDT)
 Received: from [192.168.50.4] ([82.78.167.171])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbea9sm3871306f8f.82.2024.07.14.06.39.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbea9sm3871306f8f.82.2024.07.14.06.40.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jul 2024 06:39:52 -0700 (PDT)
-Message-ID: <50e216ba-6bb1-4794-806e-75a75d778d4b@tuxon.dev>
-Date: Sun, 14 Jul 2024 16:39:51 +0300
+        Sun, 14 Jul 2024 06:40:36 -0700 (PDT)
+Message-ID: <22700212-b3bf-4bee-ab5c-1c8b629260f7@tuxon.dev>
+Date: Sun, 14 Jul 2024 16:40:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,132 +61,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/27] clk: at91: sama7g5: move mux table macros to
- header file
+Subject: Re: [PATCH v5 07/27] dt-bindings: clocks: atmel,at91sam9x5-sckc
 Content-Language: en-US
 To: Varshini Rajendran <varshini.rajendran@microchip.com>,
- mturquette@baylibre.com, sboyd@kernel.org, nicolas.ferre@microchip.com,
+ mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
  alexandre.belloni@bootlin.com, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: Conor Dooley <conor.dooley@microchip.com>
 References: <20240703102011.193343-1-varshini.rajendran@microchip.com>
- <20240703102743.195858-1-varshini.rajendran@microchip.com>
+ <20240703102714.195661-1-varshini.rajendran@microchip.com>
 From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20240703102743.195858-1-varshini.rajendran@microchip.com>
+In-Reply-To: <20240703102714.195661-1-varshini.rajendran@microchip.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi, Varshini,
 
+In my comment from v4 I meant to say:
+
+dt-bindings: clk: at91: add sam9x7 -> dt-bindings: clocks: at91sam9x5-sckc:
+add sam9x7
+
+Suggestion was:
+s/dt-bindings: clk: at91/dt-bindings: clocks: at91sam9x5-sckc
+
+Anyway, I'll adjust it when applying. No need to resent just for this.
 
 On 03.07.2024 13:27, Varshini Rajendran wrote:
-> Move the mux table init and fill macro function definitions from the
-> sama7g5 pmc driver to the pmc.h header file since they will be used
-> by other SoC's pmc drivers as well like sam9x7.
+> Add bindings for SAM9X7's slow clock controller.
 > 
 > Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Other than the title:
 
 Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 
 > ---
->  drivers/clk/at91/pmc.h     | 16 ++++++++++++++++
->  drivers/clk/at91/sama7g5.c | 35 ++++++++++-------------------------
->  2 files changed, 26 insertions(+), 25 deletions(-)
+> Changes in v5:
+> - Changed subject according to suggestion.
+> - Alphanumerically sorted entries.
+> - Updated Acked-by tag.
+> ---
+>  .../devicetree/bindings/clock/atmel,at91sam9x5-sckc.yaml      | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-> index 91d1c6305d95..4fb29ca111f7 100644
-> --- a/drivers/clk/at91/pmc.h
-> +++ b/drivers/clk/at91/pmc.h
-> @@ -121,6 +121,22 @@ struct at91_clk_pms {
+> diff --git a/Documentation/devicetree/bindings/clock/atmel,at91sam9x5-sckc.yaml b/Documentation/devicetree/bindings/clock/atmel,at91sam9x5-sckc.yaml
+> index 7be29877e6d2..c2283cd07f05 100644
+> --- a/Documentation/devicetree/bindings/clock/atmel,at91sam9x5-sckc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/atmel,at91sam9x5-sckc.yaml
+> @@ -18,7 +18,9 @@ properties:
+>            - atmel,sama5d4-sckc
+>            - microchip,sam9x60-sckc
+>        - items:
+> -          - const: microchip,sama7g5-sckc
+> +          - enum:
+> +              - microchip,sam9x7-sckc
+> +              - microchip,sama7g5-sckc
+>            - const: microchip,sam9x60-sckc
 >  
->  #define ndck(a, s) (a[s - 1].id + 1)
->  #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
-> +
-> +#define PMC_INIT_TABLE(_table, _count)			\
-> +	do {						\
-> +		u8 _i;					\
-> +		for (_i = 0; _i < (_count); _i++)	\
-> +			(_table)[_i] = _i;		\
-> +	} while (0)
-> +
-> +#define PMC_FILL_TABLE(_to, _from, _count)		\
-> +	do {						\
-> +		u8 _i;					\
-> +		for (_i = 0; _i < (_count); _i++) {	\
-> +			(_to)[_i] = (_from)[_i];	\
-> +		}					\
-> +	} while (0)
-> +
->  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
->  				   unsigned int nperiph, unsigned int ngck,
->  				   unsigned int npck);
-> diff --git a/drivers/clk/at91/sama7g5.c b/drivers/clk/at91/sama7g5.c
-> index e6eb5afba93d..6706d1305baa 100644
-> --- a/drivers/clk/at91/sama7g5.c
-> +++ b/drivers/clk/at91/sama7g5.c
-> @@ -16,21 +16,6 @@
->  
->  #include "pmc.h"
->  
-> -#define SAMA7G5_INIT_TABLE(_table, _count)		\
-> -	do {						\
-> -		u8 _i;					\
-> -		for (_i = 0; _i < (_count); _i++)	\
-> -			(_table)[_i] = _i;		\
-> -	} while (0)
-> -
-> -#define SAMA7G5_FILL_TABLE(_to, _from, _count)		\
-> -	do {						\
-> -		u8 _i;					\
-> -		for (_i = 0; _i < (_count); _i++) {	\
-> -			(_to)[_i] = (_from)[_i];	\
-> -		}					\
-> -	} while (0)
-> -
->  static DEFINE_SPINLOCK(pmc_pll_lock);
->  static DEFINE_SPINLOCK(pmc_mck0_lock);
->  static DEFINE_SPINLOCK(pmc_mckX_lock);
-> @@ -1119,17 +1104,17 @@ static void __init sama7g5_pmc_setup(struct device_node *np)
->  		if (!mux_table)
->  			goto err_free;
->  
-> -		SAMA7G5_INIT_TABLE(mux_table, 3);
-> -		SAMA7G5_FILL_TABLE(&mux_table[3], sama7g5_mckx[i].ep_mux_table,
-> -				   sama7g5_mckx[i].ep_count);
-> +		PMC_INIT_TABLE(mux_table, 3);
-> +		PMC_FILL_TABLE(&mux_table[3], sama7g5_mckx[i].ep_mux_table,
-> +			       sama7g5_mckx[i].ep_count);
->  		for (j = 0; j < sama7g5_mckx[i].ep_count; j++) {
->  			u8 pll_id = sama7g5_mckx[i].ep[j].pll_id;
->  			u8 pll_compid = sama7g5_mckx[i].ep[j].pll_compid;
->  
->  			tmp_parent_hws[j] = sama7g5_plls[pll_id][pll_compid].hw;
->  		}
-> -		SAMA7G5_FILL_TABLE(&parent_hws[3], tmp_parent_hws,
-> -				   sama7g5_mckx[i].ep_count);
-> +		PMC_FILL_TABLE(&parent_hws[3], tmp_parent_hws,
-> +			       sama7g5_mckx[i].ep_count);
->  
->  		hw = at91_clk_sama7g5_register_master(regmap, sama7g5_mckx[i].n,
->  				   num_parents, NULL, parent_hws, mux_table,
-> @@ -1215,17 +1200,17 @@ static void __init sama7g5_pmc_setup(struct device_node *np)
->  		if (!mux_table)
->  			goto err_free;
->  
-> -		SAMA7G5_INIT_TABLE(mux_table, 3);
-> -		SAMA7G5_FILL_TABLE(&mux_table[3], sama7g5_gck[i].pp_mux_table,
-> -				   sama7g5_gck[i].pp_count);
-> +		PMC_INIT_TABLE(mux_table, 3);
-> +		PMC_FILL_TABLE(&mux_table[3], sama7g5_gck[i].pp_mux_table,
-> +			       sama7g5_gck[i].pp_count);
->  		for (j = 0; j < sama7g5_gck[i].pp_count; j++) {
->  			u8 pll_id = sama7g5_gck[i].pp[j].pll_id;
->  			u8 pll_compid = sama7g5_gck[i].pp[j].pll_compid;
->  
->  			tmp_parent_hws[j] = sama7g5_plls[pll_id][pll_compid].hw;
->  		}
-> -		SAMA7G5_FILL_TABLE(&parent_hws[3], tmp_parent_hws,
-> -				   sama7g5_gck[i].pp_count);
-> +		PMC_FILL_TABLE(&parent_hws[3], tmp_parent_hws,
-> +			       sama7g5_gck[i].pp_count);
->  
->  		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock,
->  						 &sama7g5_pcr_layout,
+>    reg:
