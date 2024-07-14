@@ -1,119 +1,119 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA64139CFF;
-	Sun, 14 Jul 2024 17:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A57139CFF
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 17:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720976568; cv=none; b=SALIBQ9tUgqeCgCYQGnlouL/ajgvQp4zGt0rPlrjFtYeD8bO97gU4lZeGlfB25vb71NSoWfeScf92DRI9PHJJaADmswGANoDnvTG/7Y/XYZLIQwSSNocXlWMPHIzY/1xAzBgNoe31bkzUwg7+KX4PkHnMd3ekfVIngEE9ip5tnk=
+	t=1720976874; cv=none; b=Elc80tBMa2Nyiib/J/PSnHISTF8DOh/urgPEJP7MyVn2VCZ9GGhpQ9L6J9W/45kMRr8CfyQN1F/npZaAvHvk/cIfyUNZBQQ1n/qaOdhVSHru1LGeGoKkGzOSBECbeyJBK8JiVXsEnNH6y+LD84JzHI/B5m6IUXYbH7+S+lFXyNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720976568; c=relaxed/simple;
-	bh=imFGudE0abTwx4msHdDYdZAoZLvRkFY2Ru5F4Y8JOZQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XRE/3ZesobcPDcTGaIxvGnMkrRUal7W0KJRAOuOP3I0eUqxAhal6chIgXZtNng3/tcdKWFuNTdI/TRVb6T5zURUPHCHs90Gm3osFI2KwC2i56b9Q4VTed0FH/TAZDGwBj8hcTBmb6112o0GUMDurvz0i+/xPXb6Y8zyuME8rz8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IahU0CBv; arc=none smtp.client-ip=209.85.215.176
+	s=arc-20240116; t=1720976874; c=relaxed/simple;
+	bh=AXwykxJmSeZPwLz8eKff2+kJYYr60n7I+z1kenwyqQA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=SHMvCwS6QWF1Vg8/hZZePjXxyzoxvXwsITqB26dtIsP68sYrLNVeHpjUXsnNYmEr1qOb9BmxQ+/9BCgDx/izL/Qx9vEEqlVJvbZ4MwXMqvY/3ghMvf0cxodo9QAly40FtAfBySPwQYFcfX3ugdBtgFdmjQisAWHnr4GNZtUN9H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0qUDM4Y; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IahU0CBv"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-765590154b4so2030055a12.0;
-        Sun, 14 Jul 2024 10:02:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0qUDM4Y"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-661369ff30aso1622137b3.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 10:07:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720976567; x=1721581367; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V2F80DyFNnpYsHP7zwJV9lSVbXe9QpASbGWUomP7AEo=;
-        b=IahU0CBvoV1sB6ufuN08G61kR7kVHas8tHrgVTC1oGsnBxgo6rDrwHh/sDp95znBhT
-         iIs3e9RA3S6bmyRQruqhfT4WJIZGASpc2utx70gV174HgFneUHcRBUQTOHAcdtDG1pzB
-         feVrJWcefRdYgrj4qcafDAjKQ2buIBbgH58JbOaL/+AJlwDnJLURvmX5uIT/G1gOUD3U
-         oOTphhEjEEUOH4vM16EyfSiRyftDadVv/4bHUdYwpvkIx8IEw3nKKYkRsxPWGKEmqFEB
-         leNCrPZ+adl94pSfakQZTOkr8RD/ayWXl51MoMG9HXarxdvqzo26UI/Ij5EdyrEwCWMW
-         Or8w==
+        d=gmail.com; s=20230601; t=1720976871; x=1721581671; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YjXmWYDlRcyjDKSQWc44GXI3jtKTGsTtfolqb8Dz5VU=;
+        b=Q0qUDM4Ym+qaA9ousjgPBGMRbVJ1hMp1557QuAaQHf6J2kHLmlmIAHpQfJ1iU4vRKN
+         6mru/3/6VvrPLKHzaNnHmF1FPuGVMylzupJcEs78gAfBrX5UtbXt3Cyn8eWJZj6I10Z5
+         TblBxe9MEDL5T9i2bykwPuplYsmKW9ibrEj8XD6mPnZsLw6K2VbTRUhe2G4k5vY7Wtd9
+         9prVJoDRp2noE0bZKcqkG3fg+BaSpXy4wl5ZQmHFNA8NfwifPs/PejAUwfPColjAO7UP
+         dFLgkNhrE3PKNk8/wusCqkK7VBF3o7nJTIzPIXjX11jqHjC6czjsaYofsSVNyteuotHs
+         Jrcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720976567; x=1721581367;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V2F80DyFNnpYsHP7zwJV9lSVbXe9QpASbGWUomP7AEo=;
-        b=G8vAd2iTh0IFbmHRjFHdt6JTymcLGg2KqW5qYpq19QnFOFmxJ3a8YE7cc8q/N/7Iyr
-         jBoMQmlA/uOLRPwwZf+zcJwcaGTOOyOrskfSz7ULfQ0iw1B6tYkqDsq2T4x43//y1GSd
-         6/bX9zMoNX08xHoVQC0MhljJvCYx2HOMu3OGAjX44qOn7szPa8MwoIDui4IoXn+rQIGn
-         aiJxZEZjaQOUddu4EZL7GuePvaUbB/lXbB0HxtqktqPcLPLj3YJ3Ggvf5qHgFRH/73hf
-         MACbHPZ7rWwDT/cXl1YtnYxwS6RSsZFUxGPMs+mSZP32NDPxNsK829xnOzxh7HwLD9EO
-         SIkg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7I4QJ0/qDqFwWkCmTzyFZ3Bjb7AprYz/K7MOCoPnLZhF3gZB6M82poyhMHAjZUn7Ggdw0CR1UdKl1gY40o/vMb2JC/M1bLqjdR5NARFxBtkNuYbCLRsUHIgjk3P6q40ldmaJJYBuW
-X-Gm-Message-State: AOJu0YyhbfJY2txDSpt39b/RZu1wg0NFAVri4RKD1MMugE0mYKPHsML1
-	cj8pB3J2lYdNxs7IDttzXK5B2ZDfPrxMM/Wl17E9J9Mq7m9j/iN7OT5QsOZe12w/2PaJVjpJFrm
-	C8lfbONDVQ3Mp0+S57aBo2WeisJY3jA==
-X-Google-Smtp-Source: AGHT+IGHPlz4JVnrclkH/s8T8rzAqvI6Kcvne8QSso/Zp8ZfFWs0gedBWYKbzhNBAFNfq6Nmba+ZrZyBPvatXfS++P0=
-X-Received: by 2002:a05:6a20:7f87:b0:1c3:b210:418b with SMTP id
- adf61e73a8af0-1c3b21041f3mr11115631637.52.1720976566543; Sun, 14 Jul 2024
- 10:02:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720976871; x=1721581671;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YjXmWYDlRcyjDKSQWc44GXI3jtKTGsTtfolqb8Dz5VU=;
+        b=gVayt30/GlG4eY1EJqqYObAJbsV4iKUHSj44qmi27GsIQ5964u/eTlTZ9tZEWlatQF
+         gNEhRGofampLvfmHnPyclhDqkYVyW9rtLjaYp1ssLE4yi0Qhgyb/hXQwFp4WjT6rynTy
+         u6MLWGLXoMO70eexHb6h7ZxoyzP+hb0/1b7imrSgR0UqR9sZKtywj2P50QEftE0BTEty
+         dN8gNnCtzIB0mk3A5RpMm+NkoxfZ2Mzz/9Ex9Tfwf8r3XQ7DlI7rnjosa4fZUFtnPjpI
+         9KgVUZqfbBYyDaNQaO4XkPnUa5DTiMiNP519E6Sxc3dDIbZeHGdl45R4FRU0cQxEqpes
+         01cA==
+X-Gm-Message-State: AOJu0Yzw+NVoQ3W3tO2/FcQttVu4dCpgtEkdafLS4l6f6NKPaXnhb2kq
+	0cen7v05QUBt52GHmaWbSBs4qbBhJM4rtMSJwPDUZJsUwevZGd0E4IbsBMiad6hCElulxgiqDZg
+	Z/Fg6j3iuHBc8U/8+JfHxAlnxyp5V0IlR
+X-Google-Smtp-Source: AGHT+IGv/1h5i2TkcHpfrCBIaN0jFaVpHvejrxHpMXDSMK3tuLIpbwm+eUYLaXdpSiTTu8JHh+4CJLAguMPq21QRj2Q=
+X-Received: by 2002:a0d:c006:0:b0:65f:8b0d:f113 with SMTP id
+ 00721157ae682-65f8b0df308mr48977957b3.47.1720976871380; Sun, 14 Jul 2024
+ 10:07:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240607133347.3291040-1-peng.fan@oss.nxp.com> <20240607133347.3291040-6-peng.fan@oss.nxp.com>
-In-Reply-To: <20240607133347.3291040-6-peng.fan@oss.nxp.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Sun, 14 Jul 2024 12:02:35 -0500
-Message-ID: <CAHCN7x+pzcdwSq19LefsyYAPUp8=kQYJeVbHm9sgSeaKXigMZg@mail.gmail.com>
-Subject: Re: [PATCH V3 05/15] clk: imx: imx8mp-audiomix: remove sdma root clock
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: abelvesa@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, imx@lists.linux.dev, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Peng Fan <peng.fan@nxp.com>, Shengjiu Wang <shengjiu.wang@nxp.com>
+From: =?UTF-8?B?U2hpLVd1LCBMb++8iEdtYWls77yJ?= <shiwulo@gmail.com>
+Date: Mon, 15 Jul 2024 01:07:40 +0800
+Message-ID: <CAOpXEOwh6r0Fo_5hgXET6gGHTUxTdE1aDkp_K0ga8BwGSDMX+A@mail.gmail.com>
+Subject: A new spinlock for multicore (>16) platform
+To: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 7, 2024 at 8:28=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
-> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> There is an issue:
-> SDMA3 can't work without setting AUDIOMIX_CLKEN0[SDMA2] (bit-26) to 1
->
-> The workaround is:
-> As the reset state of AUDIOMIX_CLKEN0[SDMA2] is enabled,
-> we just need to keep it on as reset state, don't touch it
-> in kernel, then every thing is same as before, if we register
-> the clock in clk-audiomix, then kernel will try to disable
-> it in idle.
->
-> Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
-> Reviewed-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
+Dear Linux Contributors,
+I am a Linux enthusiast from Taiwan, and I hope to contribute to the
+Linux kernel. We have developed a new spinlock method that has been
+validated on AMD 64-core and AMD 32-core processors. Compared to
+previous methods, this new method is optimized in the following areas:
 
-With this patch,I found it broke the imx8mp-beacon board when running
-audio through a codec connected to sai3.  Reverting this patch made
-the crash go away.  Is there a way to mark the clock as critical so it
-doesn't get idled?
+Motivation and Approaches:
+1. As the number of cores increases, there is a need for more refined
+optimization of the data transmission paths between cores.
+2. Data transmission usually involves lock-unlock wrapping.
+3. Performance improvement can be achieved using a shortest path
+approximation algorithm.
+   A detailed introduction to this method can be found in the following paper:
+https://www.usenix.org/conference/osdi23/presentation/lo
 
-adam
->  drivers/clk/imx/clk-imx8mp-audiomix.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-=
-imx8mp-audiomix.c
-> index b381d6f784c8..88d8ba975b5a 100644
-> --- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-> +++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-> @@ -172,7 +172,6 @@ static struct clk_imx8mp_audiomix_sel sels[] =3D {
->         CLK_GATE("ocrama", OCRAMA_IPG),
->         CLK_GATE("aud2htx", AUD2HTX_IPG),
->         CLK_GATE("earc_phy", EARC_PHY),
-> -       CLK_GATE("sdma2", SDMA2_ROOT),
->         CLK_GATE("sdma3", SDMA3_ROOT),
->         CLK_GATE("spba2", SPBA2_ROOT),
->         CLK_GATE("dsp", DSP_ROOT),
-> --
-> 2.37.1
->
->
+Our laboratory is currently developing a system that can apply the
+same optimization strategy to all multi-core processors. Below is our
+plan.
+
+The New Method and Its Compatibility with qspinlock:
+1. The default algorithm in the Linux kernel remains qspinlock.
+2. A new file is created in /proc/routing_path, where a shortest path
+can be input, for example:
+sudo echo 1,2,3,4,16,17,18,19,5,6,7,8,11,12,13,14 > /proc/routing_path
+3. After inputting the shortest path, the kernel switches to using the
+RON algorithm.
+
+Expected Outcomes:
+According to our measurements on AMD 32-core and AMD 64-core
+processors, Google LevelDB can achieve a 3-4% speed improvement.
+
+Comparison with Previous NUMA-aware algorithms:
+Compared to NUMA-aware results, since such systems may contain more
+than two processors, the communication cost between processors is much
+higher than the communication cost between cores (within the same
+processor). Our method focuses on multiple cores within a single
+processor, making it multicore-aware. If a NUMA-aware algorithm is
+used in a multicore environment, it is not as effective as a
+multicore-aware algorithm. (Please refer to the paper,
+https://www.usenix.org/conference/osdi23/presentation/lo)
+
+Assistance Needed:
+I would like to understand if the Linux kernel community is interested
+in this new spinlock method. As a teacher, I cannot complete all the
+work by myself. Is anyone willing to collaborate with me on this
+project?
+
+Sorry to bother you:
+I apologize for taking up so much of your time with this letter.
+Although I am quite old, this is the first time I feel that my
+research results are good enough to contribute to the Linux community.
+I have read the relevant documentation, and it made me realize that my
+time and abilities are insufficient to write the high-quality code
+required by the Linux community. Therefore, I ask for your guidance.
+
+All the best to you all
+
+shiwu
