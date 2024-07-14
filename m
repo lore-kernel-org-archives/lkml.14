@@ -1,299 +1,133 @@
-Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532EF14F62;
-	Sun, 14 Jul 2024 02:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B79A92F;
+	Sun, 14 Jul 2024 02:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720923685; cv=none; b=iCMdrX20qnh87dSU4CILF0u3AKob/z/pJ8hkpf/3Hc8rkMKIqcKsAtm/E10SLoiU9vhoWH/B/2pzTr4EveV5uWSTQd1AtpHj/sklqXzQxFcHLODQh6RKDrrKao/3c3CFnvTW6KUICf5bM/b146HDOBxcKcBXIoyHCLJ5Tns62yo=
+	t=1720924179; cv=none; b=uyZnqb1CLTk6LmwONDW6XwpLXXkh/CJCIhV6SBN+iQCdchQ1PxE2eAvbRvPvlqERPS8bZTWAd2lIIgAqczqDS1Whg5yaGM5E5l4voUrJZs0/Eiji9L84V3KktQWm7sOLVbv54+lJuTpjgmGDre0j4MSfdDfAwNd/ez0lOxR4IAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720923685; c=relaxed/simple;
-	bh=9w/gXhSH8cTFJ9WkyG+QUL+daKuNKx2bqEPIbSMtBhA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ac8i4uhSuTGPzxR9G9o+vI39ozaqQhP5oy0AfnVWvhHPtdfOF6p3QYHLbzFYHg/MTnKx2fciyx2wb3zFu0aePKMf19YdA8FSOM6QYvzbIfoiImR22zWu6IY3wYobW72nb3XH9v+zTj+U9NVo4vSop/RdQrfHeR2P8ggD+WnL6MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=JxTPxSMc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hPAuQOVm; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1720924179; c=relaxed/simple;
+	bh=gvaCtxw0JmqX0qKNFkwrK622sEzBsNuUqWwdfi1veZI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HO0DL7ly8my0VL9mtNcxnw5Gq6iv8wtyWQ4cEY3yzZC6TvvQr0pgPQwgzwceG/lU73dbxRZt3rC+XcLzu8zPUBfIWYBFzKYjqKjJWYJc1OV5p9pIqjT5dygma+cAyjD7/m6ffu8Jx/NtW0EVHRdD+q38ya8yBoQ0k2dq3Fm27K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DibKUocx; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="JxTPxSMc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hPAuQOVm"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 6EAFB1381118;
-	Sat, 13 Jul 2024 22:21:23 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sat, 13 Jul 2024 22:21:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1720923683;
-	 x=1721010083; bh=KNlSjJnk5kGhwjk8nWMjqJ0zIonLYzftkxU3Tv1pcg0=; b=
-	JxTPxSMcnzjFsyCG7OUEu1QilhjTHWkpjgGnPxVpNj/qL3zeYayxMyrHzeJyHTZk
-	wj9WDrbRWYxiATc7DH21XyE1PV7UAJceegRwU4b5XLaPRGOUM773UpkvPSCjjqV+
-	+1mvukyw0v7cE+ikNhwFZkhAeJj2iAR6VTQUPQv4wBm1e5XkNGYFPHcFFnIJ1UbG
-	RCE4cWP71djaTSp2yH8aQdANkVor+yuri2fQjUIl1Vk0N0yedGjlpVRkM3RokTw1
-	3SBpJPXARz8Z0B79ru37OSOgQWTjJyJR4l/q1pEBykdbTMHOYqqo7lKbkUgY05rL
-	F0V3yeBr+YoXwB4SJuksPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1720923683; x=
-	1721010083; bh=KNlSjJnk5kGhwjk8nWMjqJ0zIonLYzftkxU3Tv1pcg0=; b=h
-	PAuQOVm0O9GuJ+aB5NJhi6z6cC2e57Jek+jhg6vPzaqEguJTEIERcnKPQnxjhZZG
-	AFDHpwNyYk4vY8vn9vjriDENCHWnjmMGsItRuweBNSd6KrJv1zAvKUr9/AU+Pkmq
-	HaY/DAYsGQ1C7SL6K3yMlHBusy2DQ2HHRSOrnRJ9IOgBmNiQk3E0nANC6Okaa7j+
-	sk2bwlsBQLw/kISQXTm4oSBsSI5lJT61Ykc9IuPi++s6acHy1U/cYrTSTtwIQZj1
-	mJloflMqoYUyKyuTDpjpIKjzVcWDYRX0e1VdF01ojSvQOwaAhLtwhkXlSkzVANvs
-	eRwlskbWCQPYce1sXrF+w==
-X-ME-Sender: <xms:IjaTZjcziRo5aSgG3DgyeqyYbqBLQL3YtqZPsVekxH72c_9lMpoMBA>
-    <xme:IjaTZpNUGMG-s8mizZY8XS1788Qjy9r2pKqMrsTX8acdKyPHf9XNfI9IcuQq4rO49
-    CgNvIR_HAjDeVhSxHo>
-X-ME-Received: <xmr:IjaTZshsPHzhn3vztJNoHYCa8_cWr8zaUlkUpFcFwpW8XOTkHQmWeM_8PTQmsw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrfeelgdehlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpedvkeeihfefveekueevteefleffkeegudeghfdtuddugefhueev
-    geffgedukeejleenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:IjaTZk9tuSzc10EzQJLEXIiH4q8-cen6tej-Acr-GMJYVP1O-neQdA>
-    <xmx:IjaTZvtIQCbOrZmbVP5gDYopvEvBsV1bOytaOA-eB5xN1eGiG55aog>
-    <xmx:IjaTZjExO32rDYdOU7GV44tOOHD28P40izohds4XAlqgSZinOvghaQ>
-    <xmx:IjaTZmOJL8ocpNOsGe2W18U9rsLc7ynY2QrTKxQbcsS2eTaqoeOG-A>
-    <xmx:IzaTZpLBtUOpU4JrDqy210k8-qUgTCEMi4CZCUsd__1H-8Nj3Vpr6FeH>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 13 Jul 2024 22:21:20 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Sun, 14 Jul 2024 10:20:50 +0800
-Subject: [PATCH v2 4/4] MIPS: config: Add ip30_defconfig
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DibKUocx"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4266b1f1b21so21336705e9.1;
+        Sat, 13 Jul 2024 19:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720924176; x=1721528976; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7uTtxkGrUED0qsLRRVKEM+k/1Ov/NZS6SczaERixb68=;
+        b=DibKUocxo7UdohX02RbknBx06eH0pyD/2/5mUNPnFtd0zNrl9CKFE6YfFBxD7bj5mK
+         V1wMH14gZEOU2J4CAN4Mu/A/y6UMxU+cX0whwp5vVnV9o+huppDUTZyOheFDpuFb8Mtj
+         R0jn23EGrTDFtXOPyBqAHSW8A1iceceot6oH9HPCNyzVGXVoSW1qR+t/xcrOEcAtAfWC
+         zOorDI8yZQyOgm5n2TrpxRZslMEKSyRXOOzs8Vyf14doH74Z+MjdMsbTaFgk51qWqf5c
+         5PYv8ndimPHTiUcWZ3Xhm+wHETcNsLotGBWUef0RmcuVZoBWRZzevrNBjHAcsEP3TFOc
+         mQ6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720924176; x=1721528976;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7uTtxkGrUED0qsLRRVKEM+k/1Ov/NZS6SczaERixb68=;
+        b=aktxBxzsx0X3ilArgbvsmeBed8jWfoDk9cF8GLEYuph0iBR1XF9OcLo8KFYsAO+qja
+         tus1FlfB85X1SBzp1x/AZv+mpnNpzfjUMfiQYe2+X910DzhYPDAOEpl136Nk9ISSdsgO
+         adYINAhCbtFEohcmdj+EN46zK/u9HagrUT8MYkwhZPbcxrTxDUzvQjVAqlELXJ5mvjvT
+         9bkWHfj1uAVV1qnjBKc9VZ7psh+K+hey0kPCP1us1Tg8Oz6J0nZUx5GbrLSvQ1dcrmdk
+         LwzTmKrb+AJ8pGAA+29s563TtTdmHMQ/20yrbCfR2H6sSouufTReZu6iCnz4PdmUMAFX
+         5HZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGIDOggGE5caxXlJjN+IrdQ/JHqYYDsqZLgq+xRMcaNrI3FvIGKE5IIADbK/JRD/Ri1wX+v2qYIMxYujRt9Rog66HNLqYUfFJkkf8MMlA+m1zoLbPgGkrCp7u1b6TpTzi2Cg==
+X-Gm-Message-State: AOJu0Yynvt298E0hg3iGvfRI+jtpqvcgDo7/DW3vzw4T0n22Rfx69goV
+	lLuLRn/LzPGms+DYTsNFSHrUPTArwSq8fusmkAzvF4/C+xeAFdJnuJROxQVoFK4=
+X-Google-Smtp-Source: AGHT+IHl8Y8wLqDxJzkDVIy/A1pwLR4+D5zIzHFndDxbJqI0GiE3G+KkSNQb9LjffrW2mOyVJKvV1A==
+X-Received: by 2002:a05:600c:524f:b0:427:9dad:8063 with SMTP id 5b1f17b1804b1-4279dad8478mr44072335e9.12.1720924175722;
+        Sat, 13 Jul 2024 19:29:35 -0700 (PDT)
+Received: from localhost.localdomain ([156.197.1.65])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f2d7955sm72759145e9.47.2024.07.13.19.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jul 2024 19:29:35 -0700 (PDT)
+From: botta633 <bottaawesome633@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-ext4@vger.kernel.org,
+	syzkaller@googlegroups.com,
+	Ahmed Ehab <bottaawesome633@gmail.com>,
+	syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH v2 2/2] ext4: Testing lock class and subclass got the same name pointer
+Date: Sun, 14 Jul 2024 08:26:40 +0300
+Message-ID: <20240714052640.115476-1-bottaawesome633@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240714-config-refresh-v2-4-33f1649b2efc@flygoat.com>
-References: <20240714-config-refresh-v2-0-33f1649b2efc@flygoat.com>
-In-Reply-To: <20240714-config-refresh-v2-0-33f1649b2efc@flygoat.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4870;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=9w/gXhSH8cTFJ9WkyG+QUL+daKuNKx2bqEPIbSMtBhA=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrTJZoLK8Rn5DrMrn7CLvTCU/Mfb2yv/613Bw4PsD75N6
- 4+u/CTUUcrCIMbFICumyBIioNS3ofHigusPsv7AzGFlAhnCwMUpABPZpMbI8OefbK9Ul5Vi24Gj
- C7x19m9Iur7A+GZVqH96IBPbacdUMUaG8/OmdAX5fTwZFbR+6w/HLfG6IW5v1eeufRyf6a7ZlMn
- KAgA=
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+Content-Transfer-Encoding: 8bit
 
-Add ip30_defconfig derived from ip27_defconfig to ensure this
-target is build tested by various kernel testing projects.
+From: Ahmed Ehab <bottaawesome633@gmail.com>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Checking if the lockdep_map->name will change when setting the subclass.
+It shouldn't change so that the lock class and subclass will have the same name
+
+
+Reported-by: <syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com>
+Fixes: fd5e3f5fe27
+Cc: <stable@vger.kernel.org>
+Signed-off-by: botta633 <bottaawesome633@gmail.com>
 ---
-v2: Update remove WiFi stuff and include IOC3 stuff
----
- arch/mips/configs/ip30_defconfig | 183 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 183 insertions(+)
+ lib/locking-selftest.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/mips/configs/ip30_defconfig b/arch/mips/configs/ip30_defconfig
-new file mode 100644
-index 000000000000..178d61645cea
---- /dev/null
-+++ b/arch/mips/configs/ip30_defconfig
-@@ -0,0 +1,183 @@
-+CONFIG_SYSVIPC=y
-+CONFIG_POSIX_MQUEUE=y
-+CONFIG_NO_HZ=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_LOG_BUF_SHIFT=15
-+CONFIG_CGROUPS=y
-+CONFIG_CPUSETS=y
-+CONFIG_RELAY=y
-+CONFIG_EXPERT=y
-+CONFIG_SGI_IP30=y
-+CONFIG_SMP=y
-+CONFIG_NR_CPUS=2
-+CONFIG_HZ_1000=y
-+CONFIG_MIPS32_O32=y
-+CONFIG_MIPS32_N32=y
-+CONFIG_PM=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_MODULE_SRCVERSION_ALL=y
-+CONFIG_PARTITION_ADVANCED=y
-+CONFIG_SGI_PARTITION=y
-+CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_XFRM_USER=m
-+CONFIG_XFRM_STATISTICS=y
-+CONFIG_NET_KEY=y
-+CONFIG_NET_KEY_MIGRATE=y
-+CONFIG_INET=y
-+CONFIG_IP_MULTICAST=y
-+CONFIG_IP_PNP=y
-+CONFIG_TCP_MD5SIG=y
-+CONFIG_IPV6_ROUTER_PREF=y
-+CONFIG_IPV6_ROUTE_INFO=y
-+CONFIG_IPV6_OPTIMISTIC_DAD=y
-+CONFIG_INET6_AH=m
-+CONFIG_INET6_ESP=m
-+CONFIG_INET6_IPCOMP=m
-+CONFIG_IPV6_MIP6=m
-+CONFIG_IPV6_SIT=m
-+CONFIG_IPV6_SIT_6RD=y
-+CONFIG_IPV6_TUNNEL=m
-+CONFIG_IPV6_MULTIPLE_TABLES=y
-+CONFIG_IPV6_SUBTREES=y
-+CONFIG_IPV6_MROUTE=y
-+CONFIG_IPV6_PIMSM_V2=y
-+CONFIG_NETWORK_SECMARK=y
-+CONFIG_NET_SCHED=y
-+CONFIG_NET_SCH_HTB=m
-+CONFIG_NET_SCH_HFSC=m
-+CONFIG_NET_SCH_PRIO=m
-+CONFIG_NET_SCH_MULTIQ=y
-+CONFIG_NET_SCH_RED=m
-+CONFIG_NET_SCH_SFQ=m
-+CONFIG_NET_SCH_TEQL=m
-+CONFIG_NET_SCH_TBF=m
-+CONFIG_NET_SCH_GRED=m
-+CONFIG_NET_SCH_NETEM=m
-+CONFIG_NET_SCH_INGRESS=m
-+CONFIG_NET_CLS_BASIC=m
-+CONFIG_NET_CLS_ROUTE4=m
-+CONFIG_NET_CLS_FW=m
-+CONFIG_NET_CLS_U32=m
-+CONFIG_CLS_U32_MARK=y
-+CONFIG_NET_CLS_FLOW=m
-+CONFIG_NET_CLS_CGROUP=y
-+CONFIG_NET_CLS_ACT=y
-+CONFIG_NET_ACT_POLICE=y
-+CONFIG_NET_ACT_GACT=m
-+CONFIG_GACT_PROB=y
-+CONFIG_NET_ACT_MIRRED=m
-+CONFIG_NET_ACT_NAT=m
-+CONFIG_NET_ACT_PEDIT=m
-+CONFIG_NET_ACT_SKBEDIT=m
-+# CONFIG_VGA_ARB is not set
-+CONFIG_BLK_DEV_LOOP=y
-+CONFIG_CDROM_PKTCDVD=m
-+CONFIG_ATA_OVER_ETH=m
-+CONFIG_SCSI=y
-+CONFIG_BLK_DEV_SD=y
-+CONFIG_CHR_DEV_ST=y
-+CONFIG_BLK_DEV_SR=m
-+CONFIG_CHR_DEV_SG=m
-+CONFIG_CHR_DEV_SCH=m
-+CONFIG_SCSI_CONSTANTS=y
-+CONFIG_SCSI_LOGGING=y
-+CONFIG_SCSI_SCAN_ASYNC=y
-+CONFIG_SCSI_SPI_ATTRS=y
-+CONFIG_SCSI_FC_ATTRS=y
-+CONFIG_LIBFC=m
-+CONFIG_SCSI_QLOGIC_1280=y
-+CONFIG_SCSI_BFA_FC=m
-+CONFIG_SCSI_DH=y
-+CONFIG_SCSI_DH_RDAC=m
-+CONFIG_SCSI_DH_HP_SW=m
-+CONFIG_SCSI_DH_EMC=m
-+CONFIG_SCSI_DH_ALUA=m
-+CONFIG_MD=y
-+CONFIG_BLK_DEV_MD=y
-+CONFIG_MD_RAID0=y
-+CONFIG_MD_RAID1=y
-+CONFIG_MD_RAID10=m
-+CONFIG_MD_RAID456=y
-+CONFIG_BLK_DEV_DM=m
-+CONFIG_DM_CRYPT=m
-+CONFIG_DM_SNAPSHOT=m
-+CONFIG_DM_MIRROR=m
-+CONFIG_DM_LOG_USERSPACE=m
-+CONFIG_DM_ZERO=m
-+CONFIG_DM_MULTIPATH=m
-+CONFIG_DM_MULTIPATH_QL=m
-+CONFIG_DM_MULTIPATH_ST=m
-+CONFIG_DM_UEVENT=y
-+CONFIG_NETDEVICES=y
-+CONFIG_SGI_IOC3_ETH=y
-+CONFIG_INPUT_SPARSEKMAP=y
-+CONFIG_INPUT_MATRIXKMAP=y
-+CONFIG_INPUT_EVDEV=y
-+CONFIG_SERIO_SGI_IOC3=y
-+CONFIG_SERIO_RAW=m
-+CONFIG_SERIO_ALTERA_PS2=m
-+# CONFIG_VT is not set
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_MANY_PORTS=y
-+CONFIG_SERIAL_8250_IOC3=y
-+CONFIG_NOZOMI=m
-+CONFIG_HW_RANDOM_TIMERIOMEM=m
-+# CONFIG_PTP_1588_CLOCK is not set
-+# CONFIG_HWMON is not set
-+CONFIG_THERMAL=y
-+CONFIG_SGI_MFD_IOC3=y
-+CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_M48T35=y
-+CONFIG_UIO=y
-+CONFIG_UIO_AEC=m
-+CONFIG_UIO_SERCOS3=m
-+CONFIG_UIO_PCI_GENERIC=m
-+CONFIG_EXT2_FS=y
-+CONFIG_EXT2_FS_XATTR=y
-+CONFIG_EXT2_FS_POSIX_ACL=y
-+CONFIG_EXT2_FS_SECURITY=y
-+CONFIG_EXT3_FS=y
-+CONFIG_EXT3_FS_POSIX_ACL=y
-+CONFIG_EXT3_FS_SECURITY=y
-+CONFIG_XFS_FS=m
-+CONFIG_XFS_QUOTA=y
-+CONFIG_XFS_POSIX_ACL=y
-+CONFIG_BTRFS_FS=m
-+CONFIG_BTRFS_FS_POSIX_ACL=y
-+CONFIG_QUOTA_NETLINK_INTERFACE=y
-+CONFIG_FUSE_FS=m
-+CONFIG_CUSE=m
-+CONFIG_PROC_KCORE=y
-+CONFIG_TMPFS=y
-+CONFIG_TMPFS_POSIX_ACL=y
-+CONFIG_SQUASHFS=m
-+CONFIG_OMFS_FS=m
-+CONFIG_NFS_FS=y
-+CONFIG_SECURITYFS=y
-+CONFIG_CRYPTO_CRYPTD=m
-+CONFIG_CRYPTO_BLOWFISH=m
-+CONFIG_CRYPTO_CAMELLIA=m
-+CONFIG_CRYPTO_CAST5=m
-+CONFIG_CRYPTO_CAST6=m
-+CONFIG_CRYPTO_FCRYPT=m
-+CONFIG_CRYPTO_SERPENT=m
-+CONFIG_CRYPTO_TWOFISH=m
-+CONFIG_CRYPTO_CTS=m
-+CONFIG_CRYPTO_LRW=m
-+CONFIG_CRYPTO_PCBC=m
-+CONFIG_CRYPTO_XTS=m
-+CONFIG_CRYPTO_HMAC=y
-+CONFIG_CRYPTO_MD4=m
-+CONFIG_CRYPTO_RMD160=m
-+CONFIG_CRYPTO_VMAC=m
-+CONFIG_CRYPTO_WP512=m
-+CONFIG_CRYPTO_XCBC=m
-+CONFIG_CRYPTO_LZO=m
-+CONFIG_CRC_T10DIF=m
-
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index 6f6a5fc85b42..1d7885205f36 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -2710,12 +2710,24 @@ static void local_lock_3B(void)
+ 
+ }
+ 
++static void class_subclass_X1_name(void)
++{
++	const char *name_before_subclass = rwsem_X1.dep_map.name;
++	const char *name_after_subclass;
++
++	WARN_ON(!rwsem_X1.dep_map.name);
++	lockdep_set_subclass(&rwsem_X1, 1);
++	WARN_ON(name_before_subclass != name_after_subclass);
++}
++
+ static void local_lock_tests(void)
+ {
+ 	printk("  --------------------------------------------------------------------------\n");
+ 	printk("  | local_lock tests |\n");
+ 	printk("  ---------------------\n");
+ 
++	init_class_X(&lock_X1, &rwlock_X1, &mutex_X1, &rwsem_X1);
++
+ 	print_testname("local_lock inversion  2");
+ 	dotest(local_lock_2, SUCCESS, LOCKTYPE_LL);
+ 	pr_cont("\n");
+@@ -2727,6 +2739,10 @@ static void local_lock_tests(void)
+ 	print_testname("local_lock inversion 3B");
+ 	dotest(local_lock_3B, FAILURE, LOCKTYPE_LL);
+ 	pr_cont("\n");
++
++	print_testname("Class and subclass");
++	dotest(class_subclass_X1_name, SUCCESS, LOCKTYPE_RWSEM);
++	pr_cont("\n");
+ }
+ 
+ static void hardirq_deadlock_softirq_not_deadlock(void)
 -- 
 2.45.2
 
