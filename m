@@ -1,96 +1,77 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57BA1E52A
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 16:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97617F;
+	Sun, 14 Jul 2024 16:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720973655; cv=none; b=rln2zmrw0HMwWglIzOCHES8j+YqnJtdJ9LBiP98VoQ8ckiVKpDywW0pQoCZJsPR30AblcV8sJrY5AXkheEWgJmp5ovZnEgYohrq98fRyo3CypO44nRXhFwA6SZCo2HEHryLANIU21HvyFTEXGD53ylz/7P5AKwiWNq5iniQ1+Q8=
+	t=1720974106; cv=none; b=uBal+RbMcuTPxBIEpGwJ/nZIN/aRFYwASpteXsSkz7PMZ3xEHTa1LD13Oc4Iai+tYSM6yObYNo3ADq1J85V8BbcT2GGRpxLNff3KnP7/46V8Dksme2fEQwhafU2c7xIC9dYScTX55SmEbDNDKpMEpFrlXLmg2D2knpIApRt49hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720973655; c=relaxed/simple;
-	bh=6Yyn4bM42Ap4ZrCijPtVJNkueH9wiTy2GjVXWUySv8Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Un1DI+w5FPXo1D4JR5ua57U+KRPDZAFetxuGHWhHdvmAedYLfrWZ99585GWMbP5qWW6SwyQQorInuq86PwlKa5p0LlZXnGDyW8TkI9gfnUvr3PsXtiueNZGCtwM48ObYf2qTXp0B8hlAHPvE368OgPMYdnOpAQOWbnlUtw0P/Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZTP9z7u; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720974106; c=relaxed/simple;
+	bh=29KduC3p2qvfFgWlffHXfswu7lsTeUXhlp7NOXxCWEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ugZ8jidY7iUINlUrxXOy2mNqUcmUhC2Ywu85n+YnORt+HmcAbN7t3eWDDzsYNo6k4B5S7eelF21mCI29/cD5iMPDQX55GOzZG7fWztGNP+qIMjDdVf2C8Zdtc9TsEiOMRHmXWjVY2oOYGHAGeuGQlDeGjwtDIbkxy2gZM4fnNNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6Cn7zjU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZTP9z7u"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-81021667125so1178033241.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 09:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720973653; x=1721578453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6Yyn4bM42Ap4ZrCijPtVJNkueH9wiTy2GjVXWUySv8Q=;
-        b=jZTP9z7uydXo/b004zfe1TgGLrcboiNgzCi2EHJ7JY8J3iRacH0n0j75upaOtDhNif
-         yaz6IOp7+i72NqnpN8gx7fONjeaYZYiinhCaLgRfPy/t/yUij8cxkGCDWm5fmRJfTNBY
-         e7N3ddxL5VkXs3AtlWkUi4MhIHrVJjdjwr0FBgeRLN3saUjGbkbzxE+YpS9dhVFuZfd3
-         NxNQpeNVylSuKkmG0i3LCRv4zuruAnivUCLlJmfN9YnxOufEA44F7tEbqbJcQv9RPtgv
-         ApJL4m2kycSoeiFrKCXiZ5rri8Pjkc0SJhsmZz1mW0YCMrLTubw1IqfGqpFzpiOPybSF
-         tLqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720973653; x=1721578453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6Yyn4bM42Ap4ZrCijPtVJNkueH9wiTy2GjVXWUySv8Q=;
-        b=n5k1xZzY0/2015RWXOECeUAO/lf6JS2I64WRm1ZKFWiElqXFrm8gKC7/NHtyZIFIx4
-         uu1e3/Qb/wuhieVRy0XQ5YB4l050VdO+srZgjjcm157PaoS/Wo70RFBNjGHr3/6PnxYe
-         IVR/+a/FnaBowxStXQRc/49uteklu6qqxTQRdVfZOsxHNZMYC+xM1DPMLcpBUds9HzRS
-         j3DvnjrOMurLAuzFz9usI7rZOzfWTUcx42vC3x30vVlq6MV9HhlQeHNMHWYfy3jHWcWj
-         c0uX7Yqua1HZBQh3Qx9isrIoTqnyJbCHcrsfCdoPOZkqy65YdhNWcVGrVavr0gEfjhrI
-         oiLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyNq98nAoarwG6q63FQLy/Z+11OxoHjKEHHjIDbb8cCuOa95Z2nMBLTDVP5Xa02BBipQoM7R4FCY9fJ8T5H21zXUp38cyURQqQ28Fw
-X-Gm-Message-State: AOJu0YyjOXWHVf+s356Va5uwq8beDY9EX+tGxdN2xkWcTpMl8v9QVEDt
-	Y9LWWtWGirHboWY7IZh1L/e458LWHbqOC0BNRXIpGXMQUa8RnBv1zuhK60rCPDooB7SYvmuTYF5
-	JHe+WNt9cKGQnzWVwS8A2KXwJ6vA=
-X-Google-Smtp-Source: AGHT+IGJpHdSKRAkgcgSszPtuJsHHRbse+wAzDBjWHdhQlSC6mBAg6s9Wu/C6A9Crh6oLSWE6phJW+y6tuTOyGtTC6U=
-X-Received: by 2002:a05:6102:32c1:b0:48f:1bea:3c70 with SMTP id
- ada2fe7eead31-49032147ae1mr19644741137.17.1720973652595; Sun, 14 Jul 2024
- 09:14:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6Cn7zjU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A9BDC116B1;
+	Sun, 14 Jul 2024 16:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720974106;
+	bh=29KduC3p2qvfFgWlffHXfswu7lsTeUXhlp7NOXxCWEM=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=p6Cn7zjUGKbw5N2rKCLNxJt6FwTGvrl0iG8uSK5b6SSxAAWYml4SqD6asew949Csu
+	 iHrqNp9XHi4BPYpsy0oZ24IqVVCW/9Wu+AaKrsKvO2qXcIiLr7SC35h5Z5xHmfXIxW
+	 f9f8ej39n1SWYWovjW6fbU64Ii1kg7tYkxrQgZL9xzQQVGxx9iGWfwNU/4AdqQyMzA
+	 i54bgNM8ufl9WPC6jN95QQ0h8w8wzdw+AWTnjNwwwLB8rp+glKv5A2S6Yw7CKJQEvx
+	 FARa6sCUBZI33oSFBg754PWzzPVu0ya7pd8b9UzexV0wlUo/8hpO3b/IWqqIdZG8RE
+	 vf5tWK6G2JRZw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id E4AD7CE0B34; Sun, 14 Jul 2024 09:21:45 -0700 (PDT)
+Date: Sun, 14 Jul 2024 09:21:45 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com,
+	elver@google.com, akpm@linux-foundation.org, tglx@linutronix.de,
+	peterz@infradead.org, arnd@arndb.de, broonie@kernel.org,
+	naresh.kamboju@linaro.org, nathan@kernel.org,
+	linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, afd@ti.com,
+	eric.devolder@oracle.com, robh@kernel.org, mark.rutland@arm.com
+Subject: [GIT PULL] Emulated one-byte cmpxchg() for ARM
+Message-ID: <52c8725d-7fdd-4fd5-a773-9a347a8837b2@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702215804.2201271-1-jim.cromie@gmail.com>
- <20240702215804.2201271-28-jim.cromie@gmail.com> <22bc825c-d726-4a4d-bd3a-508773c04071@collabora.com>
-In-Reply-To: <22bc825c-d726-4a4d-bd3a-508773c04071@collabora.com>
-From: jim.cromie@gmail.com
-Date: Sun, 14 Jul 2024 10:13:46 -0600
-Message-ID: <CAJfuBxzLiWn_t6VDxzYzfjm6GaZcjeASwBX7Nbma6yGBKEtB9A@mail.gmail.com>
-Subject: Re: [PATCH v9 27/52] selftests-dyndbg: check KCONFIG_CONFIG to avoid
- silly fails
-To: Helen Koike <helen.koike@collabora.com>
-Cc: daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com, 
-	jani.nikula@intel.com, ville.syrjala@linux.intel.com, jbaron@akamai.com, 
-	gregkh@linuxfoundation.org, ukaszb@chromium.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
-	intel-gvt-dev@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	linux@rasmusvillemoes.dk, joe@perches.com, mcgrof@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Jul 10, 2024 at 2:23=E2=80=AFPM Helen Koike <helen.koike@collabora.=
-com> wrote:
->
->
->
-> On 02/07/2024 18:57, Jim Cromie wrote:
-> > Several tests are dependent upon config choices. Lets avoid failing
-> > where that is noise.
-> >
-...
-> >
-> > test_mod_submod() recaps the bug found in DRM-CI where drivers werent
->
-> If this fixes any but listed in drm/ci/xfails folder, please update it to=
-o.
->
-> Regards,
-> Helen
+Hello, Linux,
 
-This looks like a good avenue to follow, thanks for the hint
+Please pull the following cmpxchg()-related changes:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/cmpxchg.2024.07.12a
+  # HEAD: f1b5644862c5b594f48ad01d7880a96b95d83a2f: ARM: Emulate one-byte cmpxchg (2024-07-04 13:32:41 -0700)
+
+----------------------------------------------------------------
+ARM: Provide one-byte cmpxchg emulation
+
+This series provides emulated one-byte cmpxchg() support for ARM
+using the cmpxchg_emu_u8() function that uses a four-byte cmpxchg()
+to emulate the one-byte variant.
+
+Similar patches for emulation of one-byte cmpxchg() for arc, sh, and
+xtensa have not yet received maintainer acks, so they are slated for
+the v6.12 merge window.
+
+----------------------------------------------------------------
+Paul E. McKenney (1):
+      ARM: Emulate one-byte cmpxchg
+
+ arch/arm/Kconfig               | 1 +
+ arch/arm/include/asm/cmpxchg.h | 7 ++++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
