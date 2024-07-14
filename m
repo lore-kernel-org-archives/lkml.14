@@ -1,151 +1,106 @@
-Received: from pb-smtp2.pobox.com (pb-smtp2.pobox.com [64.147.108.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032D93D6A
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 01:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.108.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71627F;
+	Sun, 14 Jul 2024 02:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720921767; cv=none; b=jxxaFGYbxdtF7pd2UrLnR3TGZjW42PkLcoQw/yZbf/QqgdmwmAxWA5mZFKa6tcMEfFy++GkLvEPthVzlM6LRD/SQZq9q3pNEUUeq1tqmvOD4/VON9hZKlJ+Oz4Lbn9AEdl9eSI1xmtOcTFRiKaUxnHYQyQ9VZxffjvJSOK84hcM=
+	t=1720923470; cv=none; b=JJF8mOxDi+B1l8ignXu8zRuUjl2MJ6hIkmA36P0OuPzIS7hTEmPfh3+AQ4jVk1OW+Y96c0Jzwl1YcFSEAMS1Sw4Y4kcH56HYUS5G9x3cDIytLyGslP648Xq5TMF87QlGTmDJ1y8wrYBYuQMKdOaOv6mMf1UkGSMFyy4LTUsO0AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720921767; c=relaxed/simple;
-	bh=gtwc0REQRTq7DgPPkkfuU0Z8AhwUOksS1U2qh6yqfp8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ihw5eHpw7vIjsn0YDFn6ix5X1FLCt6zfnQkEZbh3bTY8di3EvnLYiElu5xBVg4FOLp4aQmbm+1eNqsltHJdQaX40N3lPoKMrmc04k6kMLUMv0lVpZUtxv52NtqC3tb9b5W/Aroqez/WhT2VVWuCcU7riz6HxBsr92Rlg9cciZVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=rC2q7hYF; dkim=fail (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=CH+rQnWv reason="signature verification failed"; arc=none smtp.client-ip=64.147.108.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1720923470; c=relaxed/simple;
+	bh=7saIKA8qMpKbEd9wBs8h8mybAWFy2v0tt43dMyJFu6Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DwMO6IMTkaEshnMVyADP7kAE1M9oKK3aP0iOM+Eh3bbPSiIYTN7cTjzptYFAp5/1+uLfrNwIlLk6Ka1N9Z+/DOshB3omdlf9OYQ0bF3q3F56U3G4MQcwjN8IzTprRxK4FZohPXbYLqqemwDX/8kK97YGD9731TxE+kwmOSVVVeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZrsFv5r; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="rC2q7hYF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="CH+rQnWv"
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-	by pb-smtp2.pobox.com (Postfix) with ESMTP id A4BFF2E9B3;
-	Sat, 13 Jul 2024 21:49:17 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=date:from
-	:to:cc:subject:in-reply-to:message-id:references:mime-version
-	:content-type; s=sasl; bh=gtwc0REQRTq7DgPPkkfuU0Z8AhwUOksS1U2qh6
-	yqfp8=; b=rC2q7hYFQyT6/jJv2y5ZPSLI9QKsyRZ+D3C/mNqcoXncOEbhjbORLE
-	nQ4p6CwqS6s1vdgB7MS9lP3EkNUQjSVFwZmWKuNZNsElSl+hHYzkgFFXc8KIRrBP
-	slNe0llxZwMRE/VsQBht5UwzyIW/8dIZhshNdZQIKgIVyWslVLycA=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-	by pb-smtp2.pobox.com (Postfix) with ESMTP id 9C88A2E9B2;
-	Sat, 13 Jul 2024 21:49:17 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=NvYzKOTHCvdjMLZBsYH6yZq4KFHRq/f72FeA5ZIqhXY=; b=CH+rQnWvJNB+lddPXXmxeO8er3kN3DwkQTkkEFZPSjT6UiI0ERHy9RphrUXCp5IoYo+YaUjrc8M5/DI8fiU+r5BrCGUW72tcgbrPF8ZUx4Fx+zAYu5cwY5B1FH47rgQadJxJ21rWgsqb+vn54ub2g1jfWbvadjcB1OvPYUXt3MI=
-Received: from yoda.fluxnic.net (unknown [184.162.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 1FDA42E9B1;
-	Sat, 13 Jul 2024 21:49:17 -0400 (EDT)
-	(envelope-from nico@fluxnic.net)
-Received: from xanadu (unknown [IPv6:fd17:d3d3:663b:0:9696:df8a:e3:af35])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 037ACD4FE0B;
-	Sat, 13 Jul 2024 21:49:15 -0400 (EDT)
-Date: Sat, 13 Jul 2024 21:49:15 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mul_u64_u64_div_u64: avoid undefined shift value
-In-Reply-To: <cel6yaebrspena42tv7mewvd7vvnnzycr2pgg4zkh737uwokro@kzxoxatbdodv>
-Message-ID: <950n497s-1933-5s8q-2138-52oq50npr4s4@syhkavp.arg>
-References: <7rrs9pn1-n266-3013-9q6n-1osp8r8s0rrn@syhkavp.arg> <cel6yaebrspena42tv7mewvd7vvnnzycr2pgg4zkh737uwokro@kzxoxatbdodv>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZrsFv5r"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3679f806223so2498869f8f.0;
+        Sat, 13 Jul 2024 19:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720923466; x=1721528266; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gCoKA5BrfWhFEib4kaVyxIYyuyejdXkK7Z8BehM2NAc=;
+        b=FZrsFv5r0WkQGig74vHthNc2Qo7q6mpNhbxoS+3898Ek1RgZuUHpdFif4/JvCAwPIn
+         SmyKB0bqMJcuNAT60YYQzlWTWGwmgfMJgo+f4P7WGVLV8AqwPvxCy32buBYkJW4qzR38
+         GunodH83WyT85mtVAO/1ClqJEQhqKERch3BzYz/E9QrI0rbsNFdm5ZUhiR04oK5bJVYN
+         luwQOZ9V9+QcYMax+TnXUTrTTjyZxMijfhNtWHei45rrJi3mDEXeVNDkiJFVJYxti3GS
+         utoJmndkxRLfDIUFc9B2g36Re0Tbn8rqGS5yRcyWj6YgZ5DtryGy11kgWB5f7ytb/9XA
+         iAQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720923466; x=1721528266;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gCoKA5BrfWhFEib4kaVyxIYyuyejdXkK7Z8BehM2NAc=;
+        b=w9Rp6WBCsFDH/1z7wJBRaKDgfK9OJZJZ4CFzw/stwJWONDZB2CW2jHwm0gIThT8koU
+         rbNOBZcXSofkNM4k57FzYOWwbfD6x+B4VscFC+RdapVpAj1sq4Knp8peXT9YwYFIkhHp
+         JSZPtdl/07+toDJVfwz2s6y7abqYBQH5ncWCOA3eDpvqybM7K2cGXT+dxgFdfGYWVzc0
+         Z4fiS1TyXzWcD0ERQZ6NBMqI/gLLRJKRw462PiEn9qbVTExMOW69gTK8UkqC+h4ZLRsS
+         +bVeM3FeFKmdiUCS4R8sDqU8oG+OWq95WGgLEcws0LAqlVTu749WToiAH13LZ0j/9tqz
+         EBIw==
+X-Forwarded-Encrypted: i=1; AJvYcCXE5mjp/uGH9Z0Nqz8/F8ZJgdL+Ox2DdfoaxgpbGHVx96fvxQWMQ1hJAcDY4DbCf5N/RHTa0Zpsro7YnjCNDmj1S3bHHSxJNVQx82A1L6iyehm2if3FF8lL2RqMeqOIL27B2g==
+X-Gm-Message-State: AOJu0YzSU7G9f5GjBibCM7Ck8/JoVtiCOeQXT9teiohyzWlQ34kbI3Bm
+	u26mj/d/L2cVJ5cQICAGxnCjtToUv5V+GS/h+Zi2e9sk7S9HyHHoNybNW9s4wW4=
+X-Google-Smtp-Source: AGHT+IGng0aKTTKKDJUqgv6okJdzbLOCEt9gvgMrG99Ho+nKg8+Q7fOUTL/vjd0GDDqaH/ulLAvH7g==
+X-Received: by 2002:a05:6000:e02:b0:367:938f:550 with SMTP id ffacd0b85a97d-367ff70537dmr5290238f8f.25.1720923466105;
+        Sat, 13 Jul 2024 19:17:46 -0700 (PDT)
+Received: from localhost.localdomain ([156.197.1.65])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e774besm38142655e9.5.2024.07.13.19.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jul 2024 19:17:45 -0700 (PDT)
+From: botta633 <bottaawesome633@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-ext4@vger.kernel.org,
+	syzkaller@googlegroups.com,
+	Ahmed Ehab <bottaawesome633@gmail.com>,
+	syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/2] ext4: Forcing subclasses to have same name pointer as their parent class
+Date: Sun, 14 Jul 2024 08:14:26 +0300
+Message-ID: <20240714051427.114044-1-bottaawesome633@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463781375-2099254216-1720921756=:2627780"
-X-Pobox-Relay-ID:
- 47B6F542-4183-11EF-9A60-965B910A682E-78420484!pb-smtp2.pobox.com
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Ahmed Ehab <bottaawesome633@gmail.com>
 
----1463781375-2099254216-1720921756=:2627780
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Preventing lockdep_set_subclass from creating a new instance of the 
+string literal. Hence, we will always have the same class->name among
+parent and subclasses. This prevents kernel panics when looking up a 
+lock class while comparing class locks and class names.
 
-On Sat, 13 Jul 2024, Uwe Kleine-K=F6nig wrote:
+Reported-by: <syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com>
+Fixes: fd5e3f5fe27
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ahmed Ehab <bottaawesome633@gmail.com>
+---
+ include/linux/lockdep.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Hello Nicolas,
->=20
-> On Fri, Jul 12, 2024 at 01:41:46PM -0400, Nicolas Pitre wrote:
-> > From: Nicolas Pitre <npitre@baylibre.com>
-> >=20
-> > Shifting a value to its type's size or beyond is undefined. This may=20
-> > happen if the product of a * b is not more than 64 bits despite
-> > ilog2(a) + ilog2(b) being 63 and c having no trailing 0 bits.
-> > We end up with shift=3D0 and n_lo >> shift | (n_hi << (64 - shift).
-> > Take care of that case and add such case to the test module.
-> >=20
-> > Using __builtin_ctzll() with 0 is also undefined so take care of that
-> > case too.
-> >=20
-> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> > Reported-by: kernel test robot <oliver.sang@intel.com>
-> > Closes: https://lore.kernel.org/oe-lkp/202407121652.69e657c5-oliver.s=
-ang@intel.com
-> > ---
-> >=20
-> > Andrew: up to you to fold this in the original or queue it as is.
-> >=20
-> > diff --git a/lib/math/div64.c b/lib/math/div64.c
-> > index b7fc752463..5faa29208b 100644
-> > --- a/lib/math/div64.c
-> > +++ b/lib/math/div64.c
-> > @@ -212,11 +212,18 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-> > =20
-> >  #endif
-> > =20
-> > +	/* make sure c is not zero, trigger exception otherwise */
-> > +#pragma GCC diagnostic push
-> > +#pragma GCC diagnostic ignored "-Wdiv-by-zero"
-> > +	if (unlikely(c =3D=3D 0))
-> > +		return 1/0;
-> > +#pragma GCC diagnostic pop
-> > +
->=20
-> I wonder if that does the right thing for clang, too.>=20
-
-Yes, I tested it, and inspected assembly output of both gcc and clang.
-
-> >  	int shift =3D __builtin_ctzll(c);
-> > =20
-> >  	/* try reducing the fraction in case the dividend becomes <=3D 64 b=
-its */
-> >  	if ((n_hi >> shift) =3D=3D 0) {
-> > -		u64 n =3D (n_lo >> shift) | (n_hi << (64 - shift));
-> > +		u64 n =3D shift ? (n_lo >> shift) | (n_hi << (64 - shift)) : n_lo;
->=20
-> Maybe it's just me, but I'd better understand the following equivalent
-> assignment:
->=20
-> 	u64 n =3D (n_lo >> shift) | (shift ? n_hi << (64 - shift) : 0)
->=20
-> or maybe even a bit more verbose:
->=20
-> 	u64 n =3D n_lo >> shift;
-> 	/* Shifting by 64 bit is undefined, so only do this operation for shif=
-t > 0 */
-> 	if (shift)
-> 		n |=3D n_hi << (64 - shift);
-
-Well... admitedly my version comes from how I think the compiler would=20
-generate the assembly. Given that a conditional is unavoidable, better=20
-skip the useless shift by 0 as well.
-
-Admitedly I try to be reasonable and not go on a whim rewriting it all=20
-in assembly like I did in the past:
-https://github.com/gcc-mirror/gcc/blob/master/libgcc/config/arm/ieee754-d=
-f.S
-
-> With or without these suggestions incorporated:
->=20
-> Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
->=20
-> Best regards
-> Uwe
->=20
----1463781375-2099254216-1720921756=:2627780--
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 08b0d1d9d78b..df8fa5929de7 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -173,7 +173,7 @@ static inline void lockdep_init_map(struct lockdep_map *lock, const char *name,
+ 			      (lock)->dep_map.lock_type)
+ 
+ #define lockdep_set_subclass(lock, sub)					\
+-	lockdep_init_map_type(&(lock)->dep_map, #lock, (lock)->dep_map.key, sub,\
++	lockdep_init_map_type(&(lock)->dep_map, (lock)->dep_map.name, (lock)->dep_map.key, sub,\
+ 			      (lock)->dep_map.wait_type_inner,		\
+ 			      (lock)->dep_map.wait_type_outer,		\
+ 			      (lock)->dep_map.lock_type)
+-- 
+2.45.2
