@@ -1,102 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A76E13A3F2;
-	Sun, 14 Jul 2024 16:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E6526AD3;
+	Sun, 14 Jul 2024 16:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720973073; cv=none; b=NHoSayXt2Gtx43G2AXC4l9WXlYPX6xgnjg1515IaKs0+4nbFQb9ef4eWFRUUgNuriWUbpmDJxW+ZJGlCygcYHylyHGiZTohZ0oT2x8eWcduasFynlKHWuFW2IzXRGvuyhig0s5YeakLtHATgF7w7UJTwavMlmq6ECPXWDe3ZJ+E=
+	t=1720973129; cv=none; b=Q3fUuhs2kzgatKtvBPBxTq5OROgG2z1bul2sGzROr/tzMt5Db7n80ZOkMwEbMi/+Ej4jCYaznV0NUh+C7mVNuvfenylGmW/6p256gQZyPlzQzA+Q2geUpofuDCcxkqeiwVkaXAnOXt9ZJL50xbEAR2kyUzxi4kkT/x15dCCEVzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720973073; c=relaxed/simple;
-	bh=RTRRO2vy8xanQCybUH+Edw/XKXY47rLbPwqieJG/dIQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZjYTiYc0+41icgUlXTYiNFWMG+tQ+qGExxxlOt7XdKpOsDzYMa8/iG7dlEvJeVDGU3omPRJxwOPdU0ccqzMMfnI1o8qaSSPxn9rGALZp3UL5UClz3kdkMzk/tIsE5dzX9K7R52KnOtE1a4GjJPLbcm8pKMwdGGoQktYvBL8mNdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcUfSXml; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720973129; c=relaxed/simple;
+	bh=BThKgLOyiZs0ED0qNul/PfREiwkcu0W/YUKGklz/5DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aW0G0EgwkBbhWJ77ns06Q02k20RTdWF8cWUdW9pmK6nMFohrwEiLwnNLXYwT5ROzdGj0r2MW+661onV0oJUMwbb62nPUKlXfzaU1HKC+NHqrx2NXIHKhJdn2uDRXx28nefQH8U7HU7shHMGajjnUIPwSoBS30B4cpR9Lpp+vsC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ASuTbS0Q; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcUfSXml"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288D3C4AF0F;
-	Sun, 14 Jul 2024 16:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720973073;
-	bh=RTRRO2vy8xanQCybUH+Edw/XKXY47rLbPwqieJG/dIQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LcUfSXmluqODgVtEGBEl4ZAkQX71IxhfECLyGW2eqQgb0UtrPoBu575B2nBrG2hse
-	 4HX0FV0vPitiH+wR2UrahzuVV7tDQd88I48iXX+v3SB9iZjQZ3E3G5wiIGkuLqz9Oe
-	 +dkb/zJbga1hopF0uAyz5EefmOQdR3Aa/bCHsACpKSJE8e1v6VOHAQgdLm54kwdXD/
-	 LRI/tz01sOMKeQkrX+jTB0SETVSmXukdDnBl9rFZTKlOpo9tGbgNnREwbqjiItgHcc
-	 i0jOInevgBJzGmEj6a5rcuJA86aWboBSs18Q5vlm431VJlAgOZaJVLrmfbDZX8Nawu
-	 O/hsfAvcZGIVA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52ea3e499b1so4045698e87.3;
-        Sun, 14 Jul 2024 09:04:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/ejKlQvGM6ypHl9AsFUa/yobJ/GJvl67n98NbOGW/SqDqB6spS8HvMZQ1c1thS+lKTqeDQt3CEVuXcsmHKY7HXqXIvJDUC53Emhek
-X-Gm-Message-State: AOJu0YwSrAsD7NEdgOcbSS9egq7m6zl9WaE9xniplPyv9tMDVDgc3aNu
-	iH0Y/eRHGT1hVz6P+YGThkPQ6k/+UNb6fJOr4wQZUuw6EKIQvWp0D19TxSvqJeoc3UmzJThL0fD
-	vmWAW76obmF3XgexfUPVmwhgYmyY=
-X-Google-Smtp-Source: AGHT+IFMbVpyQOUTQfz4C2QbL0ZoRp3rK1Fqy8y49fsUczHYiQZGDnleJYxsLxCm3b2ysq5czE8hYaucdC50Iv6i7R8=
-X-Received: by 2002:a05:6512:3f18:b0:52c:e312:2082 with SMTP id
- 2adb3069b0e04-52eb99d2087mr12166834e87.54.1720973071785; Sun, 14 Jul 2024
- 09:04:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASuTbS0Q"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5957040e32aso2265295a12.2;
+        Sun, 14 Jul 2024 09:05:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720973126; x=1721577926; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zzsOW3jPrt4WczAvScEktJZjwhVKZi7MkvjsHuWYwOI=;
+        b=ASuTbS0QwFNha+xcEsLW3f4sC6pHP2CR5cbICoVyw2eKXSg7/g0zix8QFDNcsDIEvv
+         g8aleYCUSlrjnLLJsD/kAMaCk/Ss8PYHURG+1O82z4Ac0jbatVpoU0R6Hdx5Y5/G1xMn
+         /neTIaOCVeUqG8HD9QXXgZbU/P0LHcpzgxal+MStC1KyrXvO8hM9ewVVRgrL3HbZA2ct
+         uUf2jbSelk3KG7dIEa7lWNB7dc12UxbLTaaqybfRoP26pryv38rRZobsd9o7gOBvBK0K
+         9TBlA+QW7TjekneoHHuNZpqzjZTiIe62n4FpLRRA+NAS0uSMPWgZXNwa1Xie0TnSunTo
+         aBlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720973126; x=1721577926;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zzsOW3jPrt4WczAvScEktJZjwhVKZi7MkvjsHuWYwOI=;
+        b=TYesjwld/WhalMzWDv/KQ6LYAKghuyHXEcpLc4bRaaj6T71gvWy0tVtpJNnufLreZF
+         KQ62Og2oNOuISZTJ6udqQRdfmh2ARf/HSD9EYCBBxIQTrKuQB58xg8aBDumJ7+wHeYkS
+         9SWnj/ELMPQQbSoy+InOFl0dd+91kn2cc9Q67rNP2PKbMF/+GHCCy8gcxFWb5b8RFnhP
+         aeiNXJ6mH9eaIW7Nce7vVR2O4n5f9cGNEJpVBwqxRqIA2N5dWhGC/UDf0rajNo3ql3vc
+         X+M5J0Yciqg8XL7MJ08pIrDlLTJ9Haudj2Eey3z8rc7pmLa7WpdQgXRnpspMtauyaf85
+         UBUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWEnF29ce3p0KdYEyq77uucQE9vPxau8wu1UO9K8cJGYr4owoQ2+cQ7CQglPMNV0u7xVYWsxoWfYOTE8JE3qWQxP14SnDGDfJ+neC/ewLEOV67qg5oThnAKWApKfP5Q29ODFU6kyag168va186oO6ePqXG+bnMbTZFUBvQC70t
+X-Gm-Message-State: AOJu0YxCN3mQD7+eFGM6lMqTfX7DU6j8zb4pD5eZvERiZw/Tx9RfDw0Y
+	kTT5s9pi4C8ZoGsKh1rBh/Ctnpo9yO2oqc5bRW8ih7Y2EnFhZ6Iq
+X-Google-Smtp-Source: AGHT+IE0HZvjsq7HBzHlKX6FbekQ5XaoHXqLiwC3jNlpB+voSFxqC7aMQAWXjZQzIO5j1pfzY67A1g==
+X-Received: by 2002:a05:6402:1eca:b0:57c:5d4a:4122 with SMTP id 4fb4d7f45d1cf-594bac74fbemr14077949a12.9.1720973126324;
+        Sun, 14 Jul 2024 09:05:26 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b255275bcsm2206984a12.48.2024.07.14.09.05.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jul 2024 09:05:25 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 0BF49BE2EE8; Sun, 14 Jul 2024 18:05:25 +0200 (CEST)
+Date: Sun, 14 Jul 2024 18:05:25 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>
+Cc: elatllat@gmail.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	mathias.nyman@linux.intel.com, niklas.neronin@linux.intel.com,
+	stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
+Message-ID: <ZpP3RU-MKb4pMmZH@eldamar.lan>
+References: <CA+3zgmsCgQs_LVV6fOwu3v2t_Vd=C3Wrv9QrbNpsmMq4RD=ZoQ@mail.gmail.com>
+ <20240714173043.668756e4@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240714105848.1844400-1-masahiroy@kernel.org>
-In-Reply-To: <20240714105848.1844400-1-masahiroy@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 15 Jul 2024 01:03:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATEdKf6PsOXnnNOyKkbRtOObV84pok8jsR64k_GNDkG4w@mail.gmail.com>
-Message-ID: <CAK7LNATEdKf6PsOXnnNOyKkbRtOObV84pok8jsR64k_GNDkG4w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: remove redundant 'if HAVE_ARCH_KASAN' in Kconfig
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240714173043.668756e4@foxbook>
 
-On Sun, Jul 14, 2024 at 7:58=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> The condition 'select HAVE_ARCH_KASAN' is always true because
-> there is 'select HAVE_ARCH_KASAN' statement above.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  arch/arm64/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index c87d16b12e9b..d37cbfc3031e 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -167,9 +167,9 @@ config ARM64
->         select HAVE_ARCH_JUMP_LABEL
->         select HAVE_ARCH_JUMP_LABEL_RELATIVE
->         select HAVE_ARCH_KASAN
-> -       select HAVE_ARCH_KASAN_VMALLOC if HAVE_ARCH_KASAN
-> -       select HAVE_ARCH_KASAN_SW_TAGS if HAVE_ARCH_KASAN
-> -       select HAVE_ARCH_KASAN_HW_TAGS if (HAVE_ARCH_KASAN && ARM64_MTE)
-> +       select HAVE_ARCH_KASAN_VMALLOC
-> +       select HAVE_ARCH_KASAN_SW_TAGS
-> +       select HAVE_ARCH_KASAN_HW_TAGS if ARM64_MTE
->         # Some instrumentation may be unsound, hence EXPERT
->         select HAVE_ARCH_KCSAN if EXPERT
->         select HAVE_ARCH_KFENCE
-> --
-> 2.43.0
->
+Hi,
 
+On Sun, Jul 14, 2024 at 05:32:39PM +0200, Michał Pecio wrote:
+> This looks like bug 219039, please see if my suggested solution works.
+> 
+> The upstream commit is correct, because the call to inc_deq() has been
+> moved outside handle_tx_event() so there is no longer this critical
+> difference between doing 'goto cleanup' and 'return 0'. The intended
+> change of this commit also makes sense to me.
+> 
+> This refactor is already present in v6.9 so I don't think the commit
+> will have any effect besides fixing the isochronous bug which it is
+> meant to fix.
+> 
+> But it is not present in v6.6 and v6.1, so they break/crash/hang/etc.
+> Symptoms may vary, but I believe the root cause is the same because the
+> code is visibly wrong.
+> 
+> 
+> I would like to use this opportunity to point out that the xhci driver
+> is currenty undergoing (much needed IMO) cleanups and refactors and
+> this is not the first time when a naive, verbatim backport is attempted
+> of a patch which works fine on upstream, but causes problems on earlier
+> kernels. These things need special scrutiny, beyond just "CC:stable".
 
-I expect this patch will go through the arm64 tree.
+For tracking I guess this should go as well to the regressions list?
 
-(I just sent it to the kbuild ML by mistake)
+#regzbot introduced: 948554f1bb16e15b90006c109c3a558c66d4c4ac
+#regzbot title: freezes on plugging USB connector due to 948554f1bb16 ("usb: xhci: prevent potential failure in handle_tx_event() for Transfer events without TRB")
+#regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=219039
 
+Thorsten I hope I got the most bits correctly, how would one inform
+regzbot about the regresssion for 6.1.98 and 6.6.39 but not happening
+in the upper versions?
 
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Regards,
+Salvatore
