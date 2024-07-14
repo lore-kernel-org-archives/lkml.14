@@ -1,86 +1,96 @@
-Received: from smtp-out.freemail.hu (fmfe34.freemail.hu [46.107.16.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AA7136E37;
-	Sun, 14 Jul 2024 20:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3EC13D89B;
+	Sun, 14 Jul 2024 20:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720989128; cv=none; b=i8/TSMIS9f4bkj7+dgndzwUnf86K5Cp+Ln0EtoezrU3EM73IEvARhlqDzZCMGI6NcjdjfkI2LajdGRP2Xm0xbeGMTGAVcj4YEJvs08blPQbyf0OoTYYcT7MrlMXyl2I2UQUeEOgkOcXJWEp+D7SnwYWsbP0AIDbTNhH+TF2spD4=
+	t=1720989707; cv=none; b=IDIdgI5be+dNkNCsWLl22S+hEQMctnfZaTHXooAQwP4kJt4LTV6JxtK0uf38vxN8Gkc7eim+rmRPDDbUmlea/Kaqbq0oezf6G0SFnHkv5VdwnYiEjRwEe02BrYk6BPTkn9Bp8uEgmF4EVkF3/lyCpYbXZW8gMd8lqB10ZtPCJOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720989128; c=relaxed/simple;
-	bh=H9kSf8DV4jnoAj+ohO3964PFKoZzX0/9puU9iPCd4Yg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UXKVgeGI22JDnjXhlCsNwKGrfvbSw+CMFJmEkXalHFWOK3xMEtORKM0i1NxBdsaOgU1M1giBuXPlQJXiMvHUiSvtyydA1kkrmXgTFpe5micLNm32hX3BJ78fNwYslc2mz3uh1yY2pPjfJjqu4D9voYzEI/CdWoVCaPFyWw/SJzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=Z98B2pjc reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
+	s=arc-20240116; t=1720989707; c=relaxed/simple;
+	bh=Rbhi9raS35yjLs44ICMqmzwlTLdlFu8DJr1zq7AF6AA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NJGmSSNnxhy2gp42LA3ULlZTNSVsdtQIifx+2CTvy9vkWNTcKgE09guGSA4ovzKZIGHeZVbirZHKJrPNEVMwZ6AXu/ViOF/LFlxrTuTIS1q1ubwbri8B5I+VNhf7vLdSyqhbcOyC5cRZK2nvTbFurLd4LAQVOCUQudJddKosXhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N45LsQ0l; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="Z98B2pjc"
-Received: from localhost.localdomain (catv-188-142-163-175.catv.fixed.vodafone.hu [188.142.163.175])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4WMcGW5qfxz18s;
-	Sun, 14 Jul 2024 22:23:15 +0200 (CEST)
-From: egyszeregy@freemail.hu
-To: broonie@kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
-Subject: [PATCH] spi: spidev: add "generic-spidev" for compatible string
-Date: Sun, 14 Jul 2024 22:23:03 +0200
-Message-ID: <20240714202303.164-1-egyszeregy@freemail.hu>
-X-Mailer: git-send-email 2.45.2.windows.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N45LsQ0l"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-595850e7e11so4460488a12.1;
+        Sun, 14 Jul 2024 13:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720989704; x=1721594504; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z/cK++aNJsVXbuZ4CO83IGAtI8ojo7ZZbJZliVitl0M=;
+        b=N45LsQ0l2Bvria4dNQMr2t+IdhoiOH2w2MeNq7VDJVGDRIb4RIyrWL3HXdcnVhQtBI
+         DIGTkw34p8Olf+QaOFppnfbzDurVZCmGBH8cd23rryD26bCT0SgXrzv8jF0q7nC/OmEm
+         eFiArPh85U93J0dAcYe3AdABTwsHPOEeCQa/eq7su6bmPdolxraDyMeun4gkMn4MdXML
+         +dJc+VWbpTESj1nRZFdmvzpWA4GaNoUQ1OoF93nEzjmL1yAKg7DMplp5yuLlMClcD/lZ
+         oPLJzJb07fzjRKnulLQ1Cpzh+fosStEDrXg9u3Um4ZeBnnxLE9TpWNRDxZ7E02OciMBV
+         w4Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720989704; x=1721594504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z/cK++aNJsVXbuZ4CO83IGAtI8ojo7ZZbJZliVitl0M=;
+        b=O8hpcd4DWIeXlGBMCjAkTQCOnXwMOCOy5/cWQqdcGhDY1P4CU07Np63/22TfmRBudd
+         xkCvnSU/q3aFhyp39+Uud9EPKInTd2S39EgMjiPXGZlTyUxEh8Am2qv10tpWwdMZkLHg
+         /LlpZldBAaEKf0wxyTsQu+f58LvjG4VbASE2VFhaDxVhHM7XnlHoU0R23B512lbY818x
+         YAdp93vvUtk+33oHbOGBotyeru5eYYbVuz/23N0N8V6MY/DZwB7ELg7gKupPta2+rURa
+         nmIAjqViSAzXEEAfGQqYf1P6TXvhWg0OeBrpQVDZs4Ro0owg2vrJmPJeout2xb/NyT6R
+         Z24A==
+X-Forwarded-Encrypted: i=1; AJvYcCUSoOWdX52FijYPIfDui55txZ4cAJHHeT3bygoBWk9ICmx0DONhmeVa2QLJ+gNfNTo0wJGo2myTQy/ODX2Coh60MbRyCGKcTfO7eMeyZ5Bxca9fwMDsKkthAnFqFAxAqHKISYlLcThaPikumbEHdtPSq4HPc5z2ZNJzzds3Me3g
+X-Gm-Message-State: AOJu0YxQb1yqwz4lawEe9IlPdMWWgnbHTbVB8oJPFGanNZq3YOLJ8A/M
+	db7ck//g8+QBIb/QogFmEPOsMK/aG2puAotdj6ooB50WorpQU0D1ePCEbOQa9eDkIWEbXNXuGqB
+	hnWmC3Fr2Mo98RKCfLQe8C5jkbnU=
+X-Google-Smtp-Source: AGHT+IFFU4LKVj2rB7Y2ql4XbS+Q0ZtDsClPyxLPu1EwMtucLEgaSQSDlc3rjRfkgzPGNZviraCFeIooj9FdKqL4z9M=
+X-Received: by 2002:a50:ee0b:0:b0:58d:836e:5d83 with SMTP id
+ 4fb4d7f45d1cf-594ba59f8eamr10226955a12.22.1720989703622; Sun, 14 Jul 2024
+ 13:41:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1720988596;
-	s=20181004; d=freemail.hu;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	l=1164; bh=2ZkUjinkdLWy9g1nDAJXSJ1zD/vsY2RQAJc6denFkHQ=;
-	b=Z98B2pjc90VXHdz1HwdqNP9OKMCVqvcPfZcW2AOmV1haiOgXh3qIJjg1ql9lOdm4
-	tQrq33KR31KCHpLoXSt0QbfNgR9IN+nZbDKxlHPx6l3Lv0WDMbitJOlIgZvX24/8Z2X
-	Sa1Qa7hNVic4fH8gJimnDTg5b/pEHpPPNpUNDaL0pVnmuPCJXIZrfAf5zbb7x9eAfya
-	MlQluASFEtGCu+riOBkFH0cbqQwVnRKEmdBuhkE3d2WQgVo7WPLYfaZ8OKL6YeD3BWu
-	cu0kuS3gbD7nwzAjhtDdELl79W0qSop1XNPaYpEpyht1Ma6NUXkPmkuxRiW0PYqrE5E
-	7U3UeGKk2A==
+References: <CA+3zgmsCgQs_LVV6fOwu3v2t_Vd=C3Wrv9QrbNpsmMq4RD=ZoQ@mail.gmail.com>
+ <20240714173043.668756e4@foxbook> <ZpP3RU-MKb4pMmZH@eldamar.lan>
+In-Reply-To: <ZpP3RU-MKb4pMmZH@eldamar.lan>
+From: Tim Lewis <elatllat@gmail.com>
+Date: Sun, 14 Jul 2024 16:41:31 -0400
+Message-ID: <CA+3zgmtwunPaLbKygi0y+XY7XUd2cBGVP8So8MXxK_1pOX3miQ@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
+To: gregkh@linuxfoundation.org
+Cc: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	mathias.nyman@linux.intel.com, niklas.neronin@linux.intel.com, 
+	stable@vger.kernel.org, regressions@lists.linux.dev, 
+	Salvatore Bonaccorso <carnil@debian.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Benjamin Szőke <egyszeregy@freemail.hu>
+On Sun, Jul 14, 2024 at 11:32=E2=80=AFAM Micha=C5=82 Pecio <michal.pecio@gm=
+ail.com> wrote:
+>  see if my suggested solution works.
 
-Spidev is a not an ASIC, IC or Sensor specific driver.
-It is better to use a simple and generic compatible
-string instead of many dummy vendor/product names
-which are all just fake.
+On Sun, Jul 14, 2024 at 12:05=E2=80=AFPM Salvatore Bonaccorso <carnil@debia=
+n.org> wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D219039
 
-Signed-off-by: Benjamin Szőke <egyszeregy@freemail.hu>
----
- drivers/spi/spidev.c | 2 ++
- 1 file changed, 2 insertions(+)
+Not on 6.1.y:
+    drivers/usb/host/xhci-ring.c:2644:31: error: ~@~Xir~@~Y undeclared
+(first use in this fuunction); did you mean ~@~Xidr~@~Y?
+    2644 |                 inc_deq(xhci, ir->event_ring);
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 95fb5f1c91c1..bbcc5b4e9c91 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -700,6 +700,7 @@ static const struct class spidev_class = {
- };
- 
- static const struct spi_device_id spidev_spi_ids[] = {
-+	{ .name = "generic-spidev" },
- 	{ .name = "dh2228fv" },
- 	{ .name = "ltc2488" },
- 	{ .name = "sx1301" },
-@@ -728,6 +729,7 @@ static int spidev_of_check(struct device *dev)
- }
- 
- static const struct of_device_id spidev_dt_ids[] = {
-+	{ .compatible = "generic-spidev", .data = &spidev_of_check },
- 	{ .compatible = "cisco,spi-petra", .data = &spidev_of_check },
- 	{ .compatible = "dh,dhcom-board", .data = &spidev_of_check },
- 	{ .compatible = "lineartechnology,ltc2488", .data = &spidev_of_check },
--- 
-2.43.5
+On Sun, Jul 14, 2024 at 2:30=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+> Ick
 
+We now have 3 USB HDD Vendors that are reported to crash the kernel
+because of this patch.  I think it best we take time to sort out the
+long standing minor issue this patch is for, after we quickly revert
+the major issues it is causing. Can we get it removed from 6.6.y and
+older branches for the hopefully soon next release?
