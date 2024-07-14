@@ -1,223 +1,156 @@
-Received: from msa.smtpout.orange.fr (msa-215.smtpout.orange.fr [193.252.23.215])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED1FB656;
-	Sun, 14 Jul 2024 13:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.215
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9F71D559;
+	Sun, 14 Jul 2024 13:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720962901; cv=none; b=TKnM8mPrV5tlOlv3whAmtPErKbqHZkSYjMxpLWvaaNgtgM2ZWXMjU3eaWDixCLxiFhJ084aeat8hS4YdJ3Eg1tRIq1U2PE6MjAooyZ24vZ1ME00FlVkiUBytVImmCELjtifzkNKZZYFEIhKAyT/vm+rXebnAS01/TyE2L+DaWeE=
+	t=1720962933; cv=none; b=H5UVdEgCFmYpXM79GWyyDRWcSlO4p2Hb49j/h4L4Bso2D6XjTrrEvwdQQ704p5qBH5fsPzZ27sUqU9tcR1G38qnw39WMEVYmxNIYpyRiwPSE3bZs3UEl10FNtyhEZvi8+ffsLWpA/jGy+oadP2Atss8C5oUxOGqnjsKNNMy4cac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720962901; c=relaxed/simple;
-	bh=W4H2df2R/MdY3nerVtqR2oDHRHIYH4SFPc28EtGqjDE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=az23Xp0f6vLHOEkR1uVHlWaplBTWabJtUGDgLzgjF/Ndw0oyP4QNY+Y/Gk5kpQs/+t6Qg4WkOOG6QCLf4+IpXLfqD0CXPH4FaE5zE82FLB8IRbtkWYP7QnqV7Jlj9dr3PNuBtPAWd1z6ANh5u2MDh2KTepzU11iObjEOUt3D3Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UtDcZzJ2; arc=none smtp.client-ip=193.252.23.215
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1720962933; c=relaxed/simple;
+	bh=dcOo8C1pQ+lOmjwN8FP8eDvQ933tkNrSB9sHuhfLNDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XK7X3c2gLdeyeuqgNZNSX7cRnRgaMNm/6UsIqeSVRd8nbMNnU50BKYo4DkhA/PJjYsf52Z9kjj1C9Kc/+h6lW5bynWOEXZHtYQxxN+ZEpcIc7RRJ20EJbs5sYmlQD00QlHlqUhQqH6LdTqpcwNyxaOn9IGeyTOdo8p3q56IvN+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cLrspywZ; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UtDcZzJ2"
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id SyWpstpWvBzr3SyWqsrCvk; Sun, 14 Jul 2024 14:40:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1720960841;
-	bh=jXEol/M69CDfWHWTuc98TPM6NHwESq7AdpoHFdBAkUw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=UtDcZzJ2FilDY0fQzyn23s4ytCUtInKbCYmydlkzBvhN2/NDQ3Lm8LKor9/BcJ+Gl
-	 0cRaxWl/4loYszrBqsoLpz08q+VNKu9GE5fYAmODovgCzZklt12JWjEpgqiZhe35fm
-	 be8oiMQdgZC+UREYuf6e9S19Pttg0K70TjynGdduop3xZbjiEGNx2JQUtR2RUHlR0H
-	 rnlUAknUj4Ic+i/Q5w0kpbx1kthcwSDmLJGAH82Exz1EVRXZ15GeDqdhRlZExhOPaU
-	 D8EHaifpsos+kTH0Q2cRVUSVa7w6sJgEAuzKYcZNyzvVt/F45bDhmeujJ4Oe7LCHo5
-	 QC4u212ytJYVg==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Jul 2024 14:40:41 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/uncore: Constify struct
-Date: Sun, 14 Jul 2024 14:40:28 +0200
-Message-ID: <9dc5e67d1b19e56c952e740371be9d42a5011c2c.1720960818.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLrspywZ"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52e9b9fb3dcso4204865e87.1;
+        Sun, 14 Jul 2024 06:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720962930; x=1721567730; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KiCM4Oh0wwP2VREwcugnR/BGE8YEV2FgEAMfKAudQZU=;
+        b=cLrspywZoNFITXRfUNokVUiW0rpbVIbrYYpg7k+F0FWPZhe6icj+KFhFi+0+kb6iUP
+         BDRdO1CFhYT8wp2uttRDRvjUiTr4sMKpz5hwg/s1EBTjKWDBH+l6G5KecprKTUViBbnl
+         UNyREx89lksFV2mqhM5nrCwckQFaCd0Uuj4NMnuBZA/zboYb07diYmv0GIPJuvWzMx9S
+         RFGVBbtDsN4pRdI3RwC/eQmn5D0UATwIDgIfOXX0ljMvdb2poJC4bYWot+Yf95ic+UZ+
+         iNDF0doxthir7pnEJDXvTHwHGk5VsKGNh+fz80+feLKaFIKXwSfLzfTQvf9ARmDrJN6r
+         qizQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720962930; x=1721567730;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KiCM4Oh0wwP2VREwcugnR/BGE8YEV2FgEAMfKAudQZU=;
+        b=k60NNgYs+Z4P8/kE4isskXqMGQFuD8jJYd8GuOQqFRVBc/ODW34q5uPW/yUDUxf72l
+         MlU/wmnuJPzikRQtlf1N/pHBarthGDEkhye8yRJyVYNQYB5oZIXbX8Xonw90FvXhRcWE
+         jEaDP+xWr7WQtXQddnn6EBzEcvJbw8WVc4pKeO8Z5yj12DXZSH1ZGU055pPTb8wZmD26
+         jGQYYL2Eoaw9ZrKPr68T4AD+PC2/GiME4WVUxNkY9+fXXCt1D/6sKR5rotrxDhmTHQ46
+         XhhdWiJb9ZIZFZAN+wzje1w6ZGtAP9t3Pb47ZVO/fQJKyhEeJ86iHK7zNbDL+7lA58fE
+         74KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyMl3V0XswoxufQCKB40+GMw8z/JrRkzr+FmZfY51/JQbFwQq6XYhd+PIXqzaiBTmbYkUDf+tj+M9jPOrIXEv9IuY+tayKdZpDaZvHLcjRNJ2ow2fRw+Um0wXXZDgqCKQJqiNCmtUE3pPS0iCjTU/baTU/Qyg+AzVwFRbJCvNsfA==
+X-Gm-Message-State: AOJu0YzIMeDU2JXkF3bFInGq6//jC8psQ6j4q6ZgTof3Xlk6Np1b1Ebx
+	O49Iuno6VkYvPyHL7fEqTX7bF3GqUJhCwJre5wSawX+ZGhQ2UWH5
+X-Google-Smtp-Source: AGHT+IEwsZANI92FHt4sUnfLljzN4WZnd499R+at6I3cz5xxru5RwfBlwsIV4f5R+2ItBy99UrvDKg==
+X-Received: by 2002:ac2:42d8:0:b0:52b:b327:9c1c with SMTP id 2adb3069b0e04-52eb99d59e8mr9045576e87.62.1720962927807;
+        Sun, 14 Jul 2024 06:15:27 -0700 (PDT)
+Received: from mobilestation (pppoe77-82-205-78.kamchatka.ru. [77.82.205.78])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed24f38absm467456e87.79.2024.07.14.06.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jul 2024 06:15:27 -0700 (PDT)
+Date: Sun, 14 Jul 2024 16:15:09 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Drew Fustini <drew@pdp7.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Conor Dooley <conor@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH RFC net-next 0/4] Add the dwmac driver support for T-HEAD
+ TH1520 SoC.
+Message-ID: <w3ex6eu3fhv4rmb67hm5ktwkehefw25gmemtqsjjfaa76z7v6t@vmfzungbincv>
+References: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240713-thead-dwmac-v1-0-81f04480cd31@tenstorrent.com>
 
-'struct freerunning_counters' are not modified in these drivers.
+Hi Drew
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
+On Sat, Jul 13, 2024 at 03:35:09PM -0700, Drew Fustini wrote:
+> I am marking this as an RFC since it has been almost a year since the
+> previous series and Jisheng has handed it off to me. There was
+> discussion about the syscon for the APB registers in Jisheng's v2. I've
+> gone a different route and switched to adding a second memory region to
+> the gmac node:
+> 
+>   dwmac: DesignWare GMAC IP core registers
+>     apb: GMAC APB registers
+> 
+> This patch depends my clock controller series:
+> 
+>  [PATCH v3 0/7] clk: thead: Add support for TH1520 AP_SUBSYS clock controller
+>  https://lore.kernel.org/linux-riscv/20240711-th1520-clk-v3-0-6ff17bb318fb@tenstorrent.com/
+> 
+> and the pinctrl series from Emil:
+> 
+>  [PATCH v2 0/8] Add T-Head TH1520 SoC pin control
+>  https://lore.kernel.org/linux-riscv/20240103132852.298964-1-emil.renner.berthing@canonical.com
+> 
+> I have a branch with this series and the dependencies on top of 6.10-rc7:
+>  https://github.com/pdp7/linux/tree/b4/thead-dwmac
+> 
+> Changes since Jisheng v2:
+>  - remove thead,gmacapb that references syscon for APB registers
+>  - add a second memory region to gmac nodes for the APB registers
+>  - Link: https://lore.kernel.org/all/20230827091710.1483-1-jszhang@kernel.org/
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  79637	  71836	     16	 151489	  24fc1	arch/x86/events/intel/uncore_snbep.o
-  24000	  13628	      0	  37628	   92fc	arch/x86/events/intel/uncore_snb.o
+I see the vast majority of the v2 comments left ignored:
+compatible-string, Tx/Rx common clock handle, clock delays, etc.
+Please take a closer look at v2 discussions and make sure the notes
+were implemented or send a reasonable response why it wasn't done.
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  80309	  71196	     16	 151521	  24fe1	arch/x86/events/intel/uncore_snbep.o
-  24448	  13180	      0	  37628	   92fc	arch/x86/events/intel/uncore_snb.o
+-Serge(y)
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only.
----
- arch/x86/events/intel/uncore.h       |  2 +-
- arch/x86/events/intel/uncore_snb.c   |  8 ++++----
- arch/x86/events/intel/uncore_snbep.c | 16 ++++++++--------
- 3 files changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 027ef292c602..b7cdf9b8e88a 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -80,7 +80,7 @@ struct intel_uncore_type {
- 	struct intel_uncore_pmu *pmus;
- 	struct intel_uncore_ops *ops;
- 	struct uncore_event_desc *event_descs;
--	struct freerunning_counters *freerunning;
-+	const struct freerunning_counters *freerunning;
- 	const struct attribute_group *attr_groups[4];
- 	const struct attribute_group **attr_update;
- 	struct pmu *pmu; /* for custom pmu ops */
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 9462fd9f3b7a..001ba9230722 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -804,7 +804,7 @@ enum perf_snb_uncore_imc_freerunning_types {
- 	SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
- };
- 
--static struct freerunning_counters snb_uncore_imc_freerunning[] = {
-+static const struct freerunning_counters snb_uncore_imc_freerunning[] = {
- 	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_READS_BASE,
- 							0x0, 0x0, 1, 32 },
- 	[SNB_PCI_UNCORE_IMC_DATA_WRITES]	= { SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE,
-@@ -1435,13 +1435,13 @@ enum perf_tgl_uncore_imc_freerunning_types {
- 	TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX
- };
- 
--static struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
-+static const struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
- 	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0x5040, 0x0, 0x0, 1, 64 },
- 	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0x5058, 0x0, 0x0, 1, 64 },
- 	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0x50A0, 0x0, 0x0, 1, 64 },
- };
- 
--static struct freerunning_counters tgl_uncore_imc_freerunning[] = {
-+static const struct freerunning_counters tgl_uncore_imc_freerunning[] = {
- 	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0xd840, 0x0, 0x0, 1, 64 },
- 	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0xd858, 0x0, 0x0, 1, 64 },
- 	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xd8A0, 0x0, 0x0, 1, 64 },
-@@ -1661,7 +1661,7 @@ enum perf_adl_uncore_imc_freerunning_types {
- 	ADL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX
- };
- 
--static struct freerunning_counters adl_uncore_imc_freerunning[] = {
-+static const struct freerunning_counters adl_uncore_imc_freerunning[] = {
- 	[ADL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0x40, 0x0, 0x0, 1, 64 },
- 	[ADL_MMIO_UNCORE_IMC_DATA_READ]		= { 0x58, 0x0, 0x0, 1, 64 },
- 	[ADL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xA0, 0x0, 0x0, 1, 64 },
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index ca98744343b8..a88343bbd6a6 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -4042,7 +4042,7 @@ enum perf_uncore_iio_freerunning_type_id {
- };
- 
- 
--static struct freerunning_counters skx_iio_freerunning[] = {
-+static const struct freerunning_counters skx_iio_freerunning[] = {
- 	[SKX_IIO_MSR_IOCLK]	= { 0xa45, 0x1, 0x20, 1, 36 },
- 	[SKX_IIO_MSR_BW]	= { 0xb00, 0x1, 0x10, 8, 36 },
- 	[SKX_IIO_MSR_UTIL]	= { 0xb08, 0x1, 0x10, 8, 36 },
-@@ -4881,7 +4881,7 @@ enum perf_uncore_snr_iio_freerunning_type_id {
- 	SNR_IIO_FREERUNNING_TYPE_MAX,
- };
- 
--static struct freerunning_counters snr_iio_freerunning[] = {
-+static const struct freerunning_counters snr_iio_freerunning[] = {
- 	[SNR_IIO_MSR_IOCLK]	= { 0x1eac, 0x1, 0x10, 1, 48 },
- 	[SNR_IIO_MSR_BW_IN]	= { 0x1f00, 0x1, 0x10, 8, 48 },
- };
-@@ -5238,7 +5238,7 @@ enum perf_uncore_snr_imc_freerunning_type_id {
- 	SNR_IMC_FREERUNNING_TYPE_MAX,
- };
- 
--static struct freerunning_counters snr_imc_freerunning[] = {
-+static const struct freerunning_counters snr_imc_freerunning[] = {
- 	[SNR_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
- 	[SNR_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
- };
-@@ -5480,7 +5480,7 @@ static unsigned icx_iio_bw_freerunning_box_offsets[] = {
- 	0x0, 0x10, 0x20, 0x90, 0xa0, 0xb0,
- };
- 
--static struct freerunning_counters icx_iio_freerunning[] = {
-+static const struct freerunning_counters icx_iio_freerunning[] = {
- 	[ICX_IIO_MSR_IOCLK]	= { 0xa55, 0x1, 0x20, 1, 48, icx_iio_clk_freerunning_box_offsets },
- 	[ICX_IIO_MSR_BW_IN]	= { 0xaa0, 0x1, 0x10, 8, 48, icx_iio_bw_freerunning_box_offsets },
- };
-@@ -5838,7 +5838,7 @@ enum perf_uncore_icx_imc_freerunning_type_id {
- 	ICX_IMC_FREERUNNING_TYPE_MAX,
- };
- 
--static struct freerunning_counters icx_imc_freerunning[] = {
-+static const struct freerunning_counters icx_imc_freerunning[] = {
- 	[ICX_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
- 	[ICX_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
- 	[ICX_IMC_DDRT]	= { 0x22a0, 0x8, 0, 2, 48 },
-@@ -6314,7 +6314,7 @@ enum perf_uncore_spr_iio_freerunning_type_id {
- 	SPR_IIO_FREERUNNING_TYPE_MAX,
- };
- 
--static struct freerunning_counters spr_iio_freerunning[] = {
-+static const struct freerunning_counters spr_iio_freerunning[] = {
- 	[SPR_IIO_MSR_IOCLK]	= { 0x340e, 0x1, 0x10, 1, 48 },
- 	[SPR_IIO_MSR_BW_IN]	= { 0x3800, 0x1, 0x10, 8, 48 },
- 	[SPR_IIO_MSR_BW_OUT]	= { 0x3808, 0x1, 0x10, 8, 48 },
-@@ -6393,7 +6393,7 @@ enum perf_uncore_spr_imc_freerunning_type_id {
- 	SPR_IMC_FREERUNNING_TYPE_MAX,
- };
- 
--static struct freerunning_counters spr_imc_freerunning[] = {
-+static const struct freerunning_counters spr_imc_freerunning[] = {
- 	[SPR_IMC_DCLK]		= { 0x22b0, 0x0, 0, 1, 48 },
- 	[SPR_IMC_PQ_CYCLES]	= { 0x2318, 0x8, 0, 2, 48 },
- };
-@@ -6744,7 +6744,7 @@ static struct intel_uncore_type *gnr_uncores[UNCORE_GNR_NUM_UNCORE_TYPES] = {
- 	NULL,
- };
- 
--static struct freerunning_counters gnr_iio_freerunning[] = {
-+static const struct freerunning_counters gnr_iio_freerunning[] = {
- 	[SPR_IIO_MSR_IOCLK]	= { 0x290e, 0x01, 0x10, 1, 48 },
- 	[SPR_IIO_MSR_BW_IN]	= { 0x360e, 0x10, 0x80, 8, 48 },
- 	[SPR_IIO_MSR_BW_OUT]	= { 0x2e0e, 0x10, 0x80, 8, 48 },
--- 
-2.45.2
-
+> 
+> Changes since Jisheng v1:
+>  - rebase on the lastest net-next
+>  - collect Reviewed-by tag
+>  - address Krzysztof's comment of the dt binding
+>  - fix "div is not initialised" issue pointed out by Simon
+>  - Link: https://lore.kernel.org/all/20230820120213.2054-1-jszhang@kernel.org/
+> 
+> ---
+> Emil Renner Berthing (1):
+>       riscv: dts: thead: Add TH1520 ethernet nodes
+> 
+> Jisheng Zhang (3):
+>       dt-bindings: net: snps,dwmac: allow dwmac-3.70a to set pbl properties
+>       dt-bindings: net: add T-HEAD dwmac support
+>       net: stmmac: add glue layer for T-HEAD TH1520 SoC
+> 
+>  .../devicetree/bindings/net/snps,dwmac.yaml        |   2 +
+>  .../devicetree/bindings/net/thead,dwmac.yaml       |  81 ++++++
+>  MAINTAINERS                                        |   2 +
+>  arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts |  89 ++++++
+>  .../boot/dts/thead/th1520-lichee-module-4a.dtsi    | 131 +++++++++
+>  arch/riscv/boot/dts/thead/th1520.dtsi              |  55 +++-
+>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 +
+>  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c  | 300 +++++++++++++++++++++
+>  9 files changed, 670 insertions(+), 2 deletions(-)
+> ---
+> base-commit: 568c4e4b646777f3373f383cc38864a3cd91bbb7
+> change-id: 20240712-thead-dwmac-1d44c472bbd5
+> 
+> Best regards,
+> -- 
+> Drew Fustini <dfustini@tenstorrent.com>
+> 
+> 
