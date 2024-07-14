@@ -1,159 +1,111 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9B313D282
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 17:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3773CB64E;
+	Sun, 14 Jul 2024 17:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720978546; cv=none; b=S/m0mm9QNb/TRhShjI38sx4sGE03KOxD3+gGdt+rMZd/q9uPUpUZAIz3RDfHo2sUmTyadIEuuJXwy03A/oPtVO5dve+umZmFs3kdAYL0h/u2doXzxrkYNe1DWv67sYeMqEJyTXNaZw0fVL9bj4FuUr7CJjBD4bi3K8ifwesDPps=
+	t=1720978775; cv=none; b=r6UcUJHfOfxZOQfQc8mXarc4Cdj64XRfPJqrHYyqICvdTZzHDfgoeQ8KbhGt0tWZsGkHMR+HujpKW2GflKxNLWy3BD62PCdUiMoV0Vm/LKkZ15Rhtd/pfF0Iij8obBdMps/uzICgZKmz3JSyemdXLw4AY3jHX5mg3CXtPlZhzUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720978546; c=relaxed/simple;
-	bh=VHWS+gj7xMlpAExhwSL6ooThV5hNxibaLYEH8aR1+Ew=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tH2YpxbKR3RN1yx/UgMCGuBbtAGPLXkBYepITiwBrIw9nT5oahEVMrx8omtaX7aQ+7MmaGCM1gfgH9Dbn5I2e9g/0YoURVpui8E4EfYTWjGhM/zVninHFH0rAZGXgbcKQ5KsqkLhodAZbrE5svBaGBoDuyp+qXBKClmj4I7zdPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ansari.sh; spf=pass smtp.mailfrom=ansari.sh; dkim=pass (1024-bit key) header.d=ansari.sh header.i=@ansari.sh header.b=ZodpNyFX; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ansari.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ansari.sh
+	s=arc-20240116; t=1720978775; c=relaxed/simple;
+	bh=wGSN7fvoHntNgMloKkNcMVe/RBb69hQKx3jw2zCodpE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=EK0SJkBZlchrblda+p/7BPtBFryeuY7cb3KTwOJna+j+OhJpxEv9F72LJy7cQzbJRuSd9cLe2p/HNzl7tohmbaOvkyTEMPfKDaIaS3L3qe7z27lip1GgYtzGnYdwYnY3kaShdgu3N8Ie8zCUrlNQYr1SGP+09AS39J1Z5St82Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=UzIcgdIv; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ansari.sh header.i=@ansari.sh header.b="ZodpNyFX"
-X-Envelope-To: linux-arm-msm@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ansari.sh; s=key1;
-	t=1720978543;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qdqvh6SMJ9Blh4+QG2t86TRm3VSmGkFDoB02sCBdXH8=;
-	b=ZodpNyFXij4EaNyLMZEtyVasB7qgZXDO+xd159NYxFpx/kBfaZ4o7ltxlHOQTCKIIUysT7
-	8xP+Y+UO6ThJ74M/+dF00pgXan6vx2FfX4cJChVXe4V6LN9M3wXwkmRxorNxZoCWgt9hni
-	Hqjf8w4jb+o25j4BvIxTtP+0c5QTkLA=
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-iio@vger.kernel.org
-X-Envelope-To: rayyan@ansari.sh
-X-Envelope-To: andy.shevchenko@gmail.com
-X-Envelope-To: andersson@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: hdegoede@redhat.com
-X-Envelope-To: jic23@kernel.org
-X-Envelope-To: konrad.dybcio@linaro.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: lars@metafoo.de
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: decatf@gmail.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: sean@starlabs.systems
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Rayyan Ansari <rayyan@ansari.sh>
-To: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Cc: Rayyan Ansari <rayyan@ansari.sh>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	linux-kernel@vger.kernel.org,
-	Robert Yang <decatf@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Sean Rhodes <sean@starlabs.systems>
-Subject: [PATCH 3/3] ARM: dts: qcom: msm8226-microsoft-common: Add inertial sensors
-Date: Sun, 14 Jul 2024 18:33:05 +0100
-Message-ID: <20240714173431.54332-4-rayyan@ansari.sh>
-In-Reply-To: <20240714173431.54332-1-rayyan@ansari.sh>
-References: <20240714173431.54332-1-rayyan@ansari.sh>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="UzIcgdIv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720978764; x=1721583564; i=markus.elfring@web.de;
+	bh=lfCZA98CrFP0xDtg0gNKGjTj/w1gvpokK4i+/2Wzbp0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=UzIcgdIv2M54GDd3TtYZKEnf3kbeswUo2qtIWVNbuLMnNduMm+1Mp+PAmhVqh4Vb
+	 a+zQQw7M1FZhsJRO2FeT1GsNO5Vy4O8Ici0YEfyQvqlM5gm01o+inOH0/rXRH244V
+	 P2lOUv2DlWPcAgRtmyOVxC+u6KuKhOsYTBWUwTz07lpMerhqfxGffgF74MfheREVN
+	 LZ3YObarIVsKCX2lllGhz4DM/yqV5d+uBYt24jdwcCvXjRsyrm0XWyV0UWFkR9nqO
+	 oCIUERZ6rZdsQs5QFUSfbRyv/1WQIjF1VgIPLV6PqTwZRCSAsdDa/V9tRMlY0xP/0
+	 GU0+3++uyXmd+tcwgA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MqqTV-1ryiSr2Qcb-00nZsE; Sun, 14
+ Jul 2024 19:39:24 +0200
+Message-ID: <375b5b4b-6295-419e-bae9-da724a7a682d@web.de>
+Date: Sun, 14 Jul 2024 19:39:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB
+To: kernel-janitors@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Jason Baron <jbaron@akamai.com>,
+ Jim Cromie <jim.cromie@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] dyndbg: Use seq_putc() in ddebug_proc_show()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:19JYC3+67N8xdorzyxVHVZrm9LS/7soouEUm4qPsgEg8biGHrXn
+ H/LApUzhNm9KLUJyDTIsOP3JgS0vcTj86mS81Gs5jaQ3Mkae+59620kpvhqF7u4ufd1ORkE
+ k6qHSHwhpZ0teQGTN3tjwVStmkMt/xMjycAab82Mz3oFx4wjB4cdMlOqG6xg70fKrgAFSbn
+ adk7VyGHs0XVpJBSz+ATw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dimaTLYA5S8=;c0DurgVX8itb0h5FksEwkvs315u
+ 7i9cLKGxWZIe+sWvzBRQaGBYrR9NqEMLRK4uu45ROLv58YcPzAasz+9AaAbcOIxqhrbacDXf8
+ pFDIMZOUFueyg0LTre2bcqGn386fIpkIvG67ObMU5O9gxWsXtZvzvYPH6RY/3/OeRDas+S0aV
+ HNpt8ZvreNEoX5KY0tIpwg3zJ4SFXUmL1DdO83Tc+ccuaK/lre8+Joh7ri7fSANSLN8SlCtYJ
+ 2j+OSuiiufbzk7xbVHCWXbmX2lyRj3/UvVKQoE7sV+MxprDFpbxwezBdCNTNvWByQtCAW1Ygv
+ NHoiFFTvYgZM0EbR/T+kz2CyRX+PLcrGLYPJE/EgXUmjlaZU/CmFwi6qITCFWiFpHM9O7kjyJ
+ n9AP8mSeUToT80mh9bPX/1++rANKkTrA923yrvipWXa7spnC4Ot7Xs2LfhPAiOUuDjr3vqAL5
+ Dn+MkG0SG/IcKFizZN46TkNVKnOuTnF5ftyMjrIm5Uso9yFxfNJ4PP6W/eM36O+e7G1w9WEUv
+ mhidEGOOebcj0uCZOUu/JutngXEimTmXBIb6w0xlmP1Jb+zeqlByhlGV+0hbaAL8uD5l3TjIU
+ Pjdsf+E1nHjvHFx1klkj5gWTLJdEuVzEK4yJS83rGAtTAMySyjMmdJ+GMN5sFeCC4np2XZkjg
+ N2bJh/WS5J4rH/Zu28+lceVAUKcRej8Ri2YRLduUpOk7YDRB8QXhj7ytydyRwSOBOpkjkVFfv
+ +Ghp+cf8YlMb8P0gE9KvX64OcyivsuFBs9UOeFko/+ij1FcbW3piUpd+E8fkf4vd7LaFg/MFE
+ t/o9EKNyWxXPtTCb2maXGSkw==
 
-Add nodes for the Asahi Kasei AK09911 magnetometer and the Kionix
-KX022-1020 accelerometer, both of which are connected over i2c2, in the
-common device tree for msm8x26 Lumias.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 14 Jul 2024 19:33:07 +0200
 
-Moneypenny (Lumia 630) does not have a magnetometer, and so the node is
-deleted.
-Tesla's (Lumia 830's) magnetometer is currently unknown.
+Single characters should be put into a sequence.
+Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
 
-Signed-off-by: Rayyan Ansari <rayyan@ansari.sh>
----
- .../qcom/qcom-msm8226-microsoft-common.dtsi   | 26 +++++++++++++++++++
- .../qcom-msm8226-microsoft-moneypenny.dts     |  3 +++
- .../dts/qcom/qcom-msm8926-microsoft-tesla.dts |  3 +++
- 3 files changed, 32 insertions(+)
+This issue was transformed by using the Coccinelle software.
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-common.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-common.dtsi
-index 8839b23fc693..ca76bf8af75e 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-common.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-common.dtsi
-@@ -84,6 +84,32 @@ smem_region: smem@fa00000 {
- 	};
- };
- 
-+&blsp1_i2c2 {
-+	status = "okay";
-+
-+	magnetometer: magnetometer@c {
-+		compatible = "asahi-kasei,ak09911";
-+		reg = <0x0c>;
-+
-+		vdd-supply = <&pm8226_l15>;
-+		vid-supply = <&pm8226_l6>;
-+	};
-+
-+	accelerometer: accelerometer@1e {
-+		compatible = "kionix,kx022-1020";
-+		reg = <0x1e>;
-+
-+		interrupts-extended = <&tlmm 63 IRQ_TYPE_EDGE_RISING>;
-+
-+		vdd-supply = <&pm8226_l15>;
-+		vddio-supply = <&pm8226_l6>;
-+
-+		mount-matrix = "1",  "0",  "0",
-+			       "0", "-1",  "0",
-+			       "0",  "0",  "1";
-+	};
-+};
-+
- &blsp1_i2c5 {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-moneypenny.dts b/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-moneypenny.dts
-index 992b7115b5f8..a28a83cb5340 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-moneypenny.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8226-microsoft-moneypenny.dts
-@@ -10,6 +10,9 @@
- 
- #include "qcom-msm8226-microsoft-common.dtsi"
- 
-+/* This device has no magnetometer */
-+/delete-node/ &magnetometer;
-+
- / {
- 	model = "Nokia Lumia 630";
- 	compatible = "microsoft,moneypenny", "qcom,msm8226";
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8926-microsoft-tesla.dts b/arch/arm/boot/dts/qcom/qcom-msm8926-microsoft-tesla.dts
-index 53a6d4e85959..55077a5f2e34 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8926-microsoft-tesla.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8926-microsoft-tesla.dts
-@@ -13,6 +13,9 @@
- /* This device has touchscreen on i2c1 instead */
- /delete-node/ &touchscreen;
- 
-+/* The magnetometer used on this device is currently unknown */
-+/delete-node/ &magnetometer;
-+
- / {
- 	model = "Nokia Lumia 830";
- 	compatible = "microsoft,tesla", "qcom,msm8926", "qcom,msm8226";
--- 
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ lib/dynamic_debug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index f2c5e7910bb1..5a007952f7f2 100644
+=2D-- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -1147,7 +1147,7 @@ static int ddebug_proc_show(struct seq_file *m, void=
+ *p)
+ 		   iter->table->mod_name, dp->function,
+ 		   ddebug_describe_flags(dp->flags, &flags));
+ 	seq_escape_str(m, dp->format, ESCAPE_SPACE, "\t\r\n\"");
+-	seq_puts(m, "\"");
++	seq_putc(m, '"');
+
+ 	if (dp->class_id !=3D _DPRINTK_CLASS_DFLT) {
+ 		class =3D ddebug_class_name(iter, dp);
+@@ -1156,7 +1156,7 @@ static int ddebug_proc_show(struct seq_file *m, void=
+ *p)
+ 		else
+ 			seq_printf(m, " class unknown, _id:%d", dp->class_id);
+ 	}
+-	seq_puts(m, "\n");
++	seq_putc(m, '\n');
+
+ 	return 0;
+ }
+=2D-
 2.45.2
 
