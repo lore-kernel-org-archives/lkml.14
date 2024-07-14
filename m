@@ -1,102 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-out.freemail.hu (fmfe34.freemail.hu [46.107.16.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60036136E37;
-	Sun, 14 Jul 2024 20:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AA7136E37;
+	Sun, 14 Jul 2024 20:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720989080; cv=none; b=R+tGereLDOHAi1BRwsPFdrrIAq+Y7UGqm4MgIQ8aH1wjRXA87f7l6nP2fXe9D0DPVtC/EmPPJ5UPXyiF0IzKbKaRylKW1ZMOV0selYLSZUkrWtoqbKEiIfPi7tdeuylBJPOWTFWn31T8sald92264uHqRR9YkydCRU3FZ4lFQms=
+	t=1720989128; cv=none; b=i8/TSMIS9f4bkj7+dgndzwUnf86K5Cp+Ln0EtoezrU3EM73IEvARhlqDzZCMGI6NcjdjfkI2LajdGRP2Xm0xbeGMTGAVcj4YEJvs08blPQbyf0OoTYYcT7MrlMXyl2I2UQUeEOgkOcXJWEp+D7SnwYWsbP0AIDbTNhH+TF2spD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720989080; c=relaxed/simple;
-	bh=2k4hf/sGLF1cHylKDpqGym+ntK/Xs/bZlBukQvol0C8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ouCPLyGWMQN/0BU3jH5oA8wfk7LvvUxO6+tExkoOpc919Utr08xiiiCh1aNs7sxm2RUFhvTTQIJLNDFIv+l8DKBBXT5fr2JVpJf/9XOC6vOwPDgOy1nkZOrXeSLkjMHCEm0t20TI2UcAGPbPI/6l7fESrEwH2whbu92DeSeVcMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvxxWaFP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720989128; c=relaxed/simple;
+	bh=H9kSf8DV4jnoAj+ohO3964PFKoZzX0/9puU9iPCd4Yg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UXKVgeGI22JDnjXhlCsNwKGrfvbSw+CMFJmEkXalHFWOK3xMEtORKM0i1NxBdsaOgU1M1giBuXPlQJXiMvHUiSvtyydA1kkrmXgTFpe5micLNm32hX3BJ78fNwYslc2mz3uh1yY2pPjfJjqu4D9voYzEI/CdWoVCaPFyWw/SJzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=Z98B2pjc reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvxxWaFP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0028FC116B1;
-	Sun, 14 Jul 2024 20:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720989080;
-	bh=2k4hf/sGLF1cHylKDpqGym+ntK/Xs/bZlBukQvol0C8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=UvxxWaFPi48mI5N/cOtuU38Pl4kLYkPQFy4GwP/1GChop+oS36x5jQnVq/rc2ul65
-	 qyVWVz+nliSZEfOjx0OZWAc0YyWffZ0ekjCzH2sId5RVL4iCuNwlSfMBzpiA41NHRa
-	 W9dmDOePrXytEzSUQ/66a1+TRKHKdSN5J7gi+Do/1NfKvkfNbnxIGk9U9EHcyZ2i/A
-	 1Wreq7F7ya2H5+HYriGQ38tkPuWU2LyPVfYpqunJgnDtLbzVsr+ernJLjpoAXEKp+G
-	 9lYgHe3u0k3XCtVAxFuTqbyuPRPeXq2feGnczWJf5IEOf2DeBvxhYGMJ2seT+S6pv/
-	 Y9N9a4z9POeTQ==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52e991fb456so3550024e87.0;
-        Sun, 14 Jul 2024 13:31:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXvOq1AES54TIcf9LTP5MFIN8hawo1oPRtG0als5Hbj6RyRfPBSzyV8XFrKVLOQZ/Hs2Yaejj+ouYFVNdWf8jS/A+AhEeBh6ruItZ6/
-X-Gm-Message-State: AOJu0YyC7kkPw5GmwuxMhYdzJg+qZu+PKF7Z3GSRRDobZTYMT7WJoAgc
-	LkMOar9fhdgZGO2jX2Jpmrg5Q+lGw/mfNar0DljAH3h2NI8csBo4fSC0UoH+RgFQadmqnuCpcgy
-	xX/mKcfEzqXEQPXpzIKCu/dCsnkc=
-X-Google-Smtp-Source: AGHT+IGgHSBSD22fpNuDFu3XmHHBn/3K8YrSEV4XgO3etQVmJpGi7z0o2OKD9BT087fRBEhNO0M6W7fVvuFLTrWWJ98=
-X-Received: by 2002:a05:6512:1304:b0:52c:d7d9:9ba4 with SMTP id
- 2adb3069b0e04-52ecb8311a1mr2578889e87.31.1720989078714; Sun, 14 Jul 2024
- 13:31:18 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="Z98B2pjc"
+Received: from localhost.localdomain (catv-188-142-163-175.catv.fixed.vodafone.hu [188.142.163.175])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.freemail.hu (Postfix) with ESMTPSA id 4WMcGW5qfxz18s;
+	Sun, 14 Jul 2024 22:23:15 +0200 (CEST)
+From: egyszeregy@freemail.hu
+To: broonie@kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
+Subject: [PATCH] spi: spidev: add "generic-spidev" for compatible string
+Date: Sun, 14 Jul 2024 22:23:03 +0200
+Message-ID: <20240714202303.164-1-egyszeregy@freemail.hu>
+X-Mailer: git-send-email 2.45.2.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 15 Jul 2024 05:30:42 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARuKOCDqv-V_Y6moUmNVqBmApVJy6yZKosFOp8zW6Vt9w@mail.gmail.com>
-Message-ID: <CAK7LNARuKOCDqv-V_Y6moUmNVqBmApVJy6yZKosFOp8zW6Vt9w@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v6.10(-rc8)
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1720988596;
+	s=20181004; d=freemail.hu;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	l=1164; bh=2ZkUjinkdLWy9g1nDAJXSJ1zD/vsY2RQAJc6denFkHQ=;
+	b=Z98B2pjc90VXHdz1HwdqNP9OKMCVqvcPfZcW2AOmV1haiOgXh3qIJjg1ql9lOdm4
+	tQrq33KR31KCHpLoXSt0QbfNgR9IN+nZbDKxlHPx6l3Lv0WDMbitJOlIgZvX24/8Z2X
+	Sa1Qa7hNVic4fH8gJimnDTg5b/pEHpPPNpUNDaL0pVnmuPCJXIZrfAf5zbb7x9eAfya
+	MlQluASFEtGCu+riOBkFH0cbqQwVnRKEmdBuhkE3d2WQgVo7WPLYfaZ8OKL6YeD3BWu
+	cu0kuS3gbD7nwzAjhtDdELl79W0qSop1XNPaYpEpyht1Ma6NUXkPmkuxRiW0PYqrE5E
+	7U3UeGKk2A==
 
-Hello Linus,
+From: Benjamin Szőke <egyszeregy@freemail.hu>
 
-Please pull Kbuild fixes for v6.10.
-Thanks.
+Spidev is a not an ASIC, IC or Sensor specific driver.
+It is better to use a simple and generic compatible
+string instead of many dummy vendor/product names
+which are all just fake.
 
+Signed-off-by: Benjamin Szőke <egyszeregy@freemail.hu>
+---
+ drivers/spi/spidev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-
-The following changes since commit 22a40d14b572deb80c0648557f4bd502d7e83826:
-
-  Linux 6.10-rc6 (2024-06-30 14:40:44 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v6.10-4
-
-for you to fetch changes up to 84679f04ceafd58d9b35f790203520b2930f1a03:
-
-  fortify: fix warnings in fortify tests with KASAN (2024-07-15 04:53:49 +0900)
-
-----------------------------------------------------------------
-Kbuild fixes for v6.10 (fourth)
-
- - Make scripts/ld-version.sh robust against the latest LLD
-
- - Fix warnings in rpm-pkg with device tree support
-
- - Fix warnings in fortify tests with KASAN
-
-----------------------------------------------------------------
-Jose Ignacio Tornos Martinez (1):
-      kbuild: rpm-pkg: avoid the warnings with dtb's listed twice
-
-Masahiro Yamada (1):
-      fortify: fix warnings in fortify tests with KASAN
-
-Nathan Chancellor (1):
-      kbuild: Make ld-version.sh more robust against version string changes
-
- lib/Makefile                | 4 ++++
- scripts/ld-version.sh       | 8 +++++---
- scripts/package/kernel.spec | 1 -
- 3 files changed, 9 insertions(+), 4 deletions(-)
-
-
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 95fb5f1c91c1..bbcc5b4e9c91 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -700,6 +700,7 @@ static const struct class spidev_class = {
+ };
+ 
+ static const struct spi_device_id spidev_spi_ids[] = {
++	{ .name = "generic-spidev" },
+ 	{ .name = "dh2228fv" },
+ 	{ .name = "ltc2488" },
+ 	{ .name = "sx1301" },
+@@ -728,6 +729,7 @@ static int spidev_of_check(struct device *dev)
+ }
+ 
+ static const struct of_device_id spidev_dt_ids[] = {
++	{ .compatible = "generic-spidev", .data = &spidev_of_check },
+ 	{ .compatible = "cisco,spi-petra", .data = &spidev_of_check },
+ 	{ .compatible = "dh,dhcom-board", .data = &spidev_of_check },
+ 	{ .compatible = "lineartechnology,ltc2488", .data = &spidev_of_check },
 -- 
-Best Regards
-Masahiro Yamada
+2.43.5
+
