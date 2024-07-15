@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C611850B9;
-	Mon, 15 Jul 2024 08:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771211850AE
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032803; cv=none; b=C4V7dNM9GBdmYkEkbKUIcY8J0fsV2CQ2a7eC9TLTBUsrCM5Ew2GnoS6C1IGEhI+aNyso4sxPvxIXmdbbmdTb0ZjCJpBZaFbXeQqRi/9mv6TAEgAw6uZfFYyIm4ABWdebvsMK3eCncAoWxJn/8F5IC/57tSXRibcq63Ifp83yz8I=
+	t=1721032803; cv=none; b=jlPs7c3yGzyvTNIiquFJLsv2Ae5tRQJipMhiuxjpqbbUPEPwA8lFiDhtXrsw4QdbpUNRtFqUw1yajAn7urZkESEtttOJwo0500ODu/4jG8Vq1KBNYEIZ43SFBBE43GA/tXlRJ1iBC1uSzuo4X0+UsUfQNzc7btPDC5qV/gSM7+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721032803; c=relaxed/simple;
-	bh=890W8DPr35N6/m48gE2Wn2MHyqWMitXLF0Yh04CJFj8=;
+	bh=Mv4KLJxvEHuP1AUdXu1gmOCg+2NoFnq/hrTp7YDxdQo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m3fk2UE60I5LuuIgPip8fFcW6dEfGq4amLDOakC4FFDFL792+js1aGzwf5raOFDbHSG6qW6sfyOtXn7W4AU/LL8bDPDkYCXJea2da3ayXOSEylkna9x1IwDIKRX/AV++aNQLGizY0ZacC8ce63nDFBXhZPUbCXgY0SyY57yW/PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uexf/esM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gYXyGyFPZLHmdN80AYNG/xlEVzvI9hWm4FktwhCOMfTSYbFZ9dGmEhCKA9k4vNsZ6Ofw4zUOWL6E+28RVQQ9oQarQvYgJa/plsQdiP2kBbGQN6+CFk9AsdJUrZQmEmLcE4DUN9nXB/KqUcHejc7vgMhyl4dG566StW1WPSHA8zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZQnDiEL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uexf/esM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4FF51C4AF63;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZQnDiEL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 18FAAC4AF51;
 	Mon, 15 Jul 2024 08:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721032803;
-	bh=890W8DPr35N6/m48gE2Wn2MHyqWMitXLF0Yh04CJFj8=;
+	bh=Mv4KLJxvEHuP1AUdXu1gmOCg+2NoFnq/hrTp7YDxdQo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Uexf/esMgGSJEpOeJe2vEetCx6x4eFh0R1xau0fPhaUckl+IFEOnNGy9q/i9rfCEk
-	 vOBqItNhCptwC6tXuPIHIyhq6Z0iBEClxVo+U74kRSsNTZsRJAHIaDLfSpmRHiRISq
-	 +vsIGXJbTc8koEZcP1g6X1fA5vUCIZLUU6X4lER8mjc49xjGJY7QYdM1CdRFtY1ZuQ
-	 UkCAPZFScHLlck7JFtJs7gCzkDvDAJ5ub1tkYu7I5eSTh54lZHb72r+UOBs/jHZfk8
-	 JQ2PQhndGlz8biOG0qyDH0ZqUbygSpIgmeB72bL/Ar23oTnbZPg8gWSrM3IEfUff03
-	 KlNTYbRsOwIlw==
+	b=HZQnDiELuzrfEpMmTubOt+ARc3HgbELx0VkA0jCLyKUpIsIbild9+tpE70JZePrGq
+	 F1PLipZ7jUnC5ARpiEdKxa4mFo+RYv0FMtaWY5hEyxhEs9SJMQ3++uQTSmr74BrWSh
+	 aTDA+ltoJXm3xR+lHuScCPPTHP3FK+y4Pqwd3Dw108Hx3Zo5lFyg0FLZsBf72bAP+q
+	 M45tyfQ9LARfvloaynwOAiCaO2YhjGDIrIn8vVmWTt8mfljsAAJ/TCs4z3cuTR9dl/
+	 /gCeWsw9g77KFWJk85t0Vi7swJD2VUdNg2zwiIiIAhm0D4wYMZcjJXjDYQavFTFrqz
+	 OWxEbsc4pTjnw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469FFC3DA4D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1046FC3DA4D;
 	Mon, 15 Jul 2024 08:40:03 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 15 Jul 2024 11:38:14 +0300
-Subject: [PATCH v11 10/38] dt-bindings: watchdog: Add Cirrus EP93x
+Date: Mon, 15 Jul 2024 11:38:11 +0300
+Subject: [PATCH v11 07/38] soc: Add SoC driver for Cirrus ep93xx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,25 +39,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-ep93xx-v11-10-4e924efda795@maquefel.me>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240715-ep93xx-v11-7-4e924efda795@maquefel.me>
 References: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
 In-Reply-To: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Nikita Shubin <nikita.shubin@maquefel.me>, 
+To: Conor Dooley <conor.dooley@microchip.com>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Huisong Li <lihuisong@huawei.com>, 
+ Nikita Shubin <nikita.shubin@maquefel.me>, Arnd Bergmann <arnd@arndb.de>, 
+ Yangyu Chen <cyy@cyyself.name>, 
  Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Samuel Holland <samuel.holland@sifive.com>, 
+ linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032799; l=1622;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032799; l=10094;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=ms3IjWYaELf8kHC/xQEvZjvjU7YonAObO6Tdf+8gNec=;
- b=rPf2GwjEnDK/qWoOo9zaMyW+ZhLhWJ1n4WTd4UaWksjHNhCeYmBwfVmXDbhn4tvIFGCrbEkY3HJh
- jKhUDq+0A2B4IBSS9YRRUDqK6VjxlJkSsgiFCsw9C+5I8me4or33
+ bh=h+nsr3/JzUq8M03+M6Q37Bv92w6lA4fD8MhEeOMM2lo=;
+ b=SqPLurSXLfpWEeND0E/pAU5SD+L9iffHZTKtkVBAwEI63h2J9bl3ZuvalcXsIrjX5hxGQ+hz5Mf/
+ IS/BeS1JDAiZLSPbUIrGeunlJItokmDvXCMSFUnrWKYyo74lZxKX
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
@@ -67,63 +66,336 @@ Reply-To: nikita.shubin@maquefel.me
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Add device tree bindings for the Cirrus Logic EP93xx watchdog block
-used in these SoCs.
+Add an SoC driver for the ep93xx. Currently there is only one thing
+not fitting into any other framework, and that is the swlock setting.
+
+Used for clock settings, pinctrl and restart.
 
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../bindings/watchdog/cirrus,ep9301-wdt.yaml       | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/soc/Kconfig             |   1 +
+ drivers/soc/Makefile            |   1 +
+ drivers/soc/cirrus/Kconfig      |  17 +++
+ drivers/soc/cirrus/Makefile     |   2 +
+ drivers/soc/cirrus/soc-ep93xx.c | 252 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 273 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/cirrus,ep9301-wdt.yaml b/Documentation/devicetree/bindings/watchdog/cirrus,ep9301-wdt.yaml
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index 5d924e946507..6a8daeb8c4b9 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -7,6 +7,7 @@ source "drivers/soc/aspeed/Kconfig"
+ source "drivers/soc/atmel/Kconfig"
+ source "drivers/soc/bcm/Kconfig"
+ source "drivers/soc/canaan/Kconfig"
++source "drivers/soc/cirrus/Kconfig"
+ source "drivers/soc/fsl/Kconfig"
+ source "drivers/soc/fujitsu/Kconfig"
+ source "drivers/soc/hisilicon/Kconfig"
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index fb2bd31387d0..b10a52a91fe4 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -8,6 +8,7 @@ obj-y				+= aspeed/
+ obj-$(CONFIG_ARCH_AT91)		+= atmel/
+ obj-y				+= bcm/
+ obj-$(CONFIG_ARCH_CANAAN)	+= canaan/
++obj-$(CONFIG_EP93XX_SOC)        += cirrus/
+ obj-$(CONFIG_ARCH_DOVE)		+= dove/
+ obj-$(CONFIG_MACH_DOVE)		+= dove/
+ obj-y				+= fsl/
+diff --git a/drivers/soc/cirrus/Kconfig b/drivers/soc/cirrus/Kconfig
 new file mode 100644
-index 000000000000..5dbe891c70c6
+index 000000000000..f2fd0e16a196
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/cirrus,ep9301-wdt.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/cirrus,ep9301-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/soc/cirrus/Kconfig
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0-only
 +
-+title: Cirrus Logic EP93xx Watchdog Timer
++if ARCH_EP93XX
 +
-+maintainers:
-+  - Nikita Shubin <nikita.shubin@maquefel.me>
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
++config EP93XX_SOC
++	bool "Cirrus EP93xx chips SoC"
++	select SOC_BUS
++	select AUXILIARY_BUS
++	default y if !EP93XX_SOC_COMMON
++	help
++	  Enable support SoC for Cirrus EP93xx chips.
 +
-+allOf:
-+  - $ref: watchdog.yaml#
++	  Cirrus EP93xx chips have several swlocked registers,
++	  this driver provides locked access for reset, pinctrl
++	  and clk devices implemented as auxiliary devices.
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: cirrus,ep9301-wdt
-+      - items:
-+          - enum:
-+              - cirrus,ep9302-wdt
-+              - cirrus,ep9307-wdt
-+              - cirrus,ep9312-wdt
-+              - cirrus,ep9315-wdt
-+          - const: cirrus,ep9301-wdt
++endif
+diff --git a/drivers/soc/cirrus/Makefile b/drivers/soc/cirrus/Makefile
+new file mode 100644
+index 000000000000..9e6608b67f76
+--- /dev/null
++++ b/drivers/soc/cirrus/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++obj-y	+= soc-ep93xx.o
+diff --git a/drivers/soc/cirrus/soc-ep93xx.c b/drivers/soc/cirrus/soc-ep93xx.c
+new file mode 100644
+index 000000000000..3e79b3b13aef
+--- /dev/null
++++ b/drivers/soc/cirrus/soc-ep93xx.c
+@@ -0,0 +1,252 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * SoC driver for Cirrus EP93xx chips.
++ * Copyright (C) 2022 Nikita Shubin <nikita.shubin@maquefel.me>
++ *
++ * Based on a rewrite of arch/arm/mach-ep93xx/core.c
++ * Copyright (C) 2006 Lennert Buytenhek <buytenh@wantstofly.org>
++ * Copyright (C) 2007 Herbert Valerio Riedel <hvr@gnu.org>
++ *
++ * Thanks go to Michael Burian and Ray Lehtiniemi for their key
++ * role in the ep93xx Linux community.
++ */
 +
-+  reg:
-+    maxItems: 1
++#include <linux/bits.h>
++#include <linux/cleanup.h>
++#include <linux/init.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/sys_soc.h>
 +
-+required:
-+  - compatible
-+  - reg
++#include <linux/soc/cirrus/ep93xx.h>
 +
-+unevaluatedProperties: false
++#define EP93XX_SYSCON_DEVCFG		0x80
 +
-+examples:
-+  - |
-+    watchdog@80940000 {
-+        compatible = "cirrus,ep9301-wdt";
-+        reg = <0x80940000 0x08>;
-+    };
++#define EP93XX_SWLOCK_MAGICK		0xaa
++#define EP93XX_SYSCON_SWLOCK		0xc0
++#define EP93XX_SYSCON_SYSCFG		0x9c
++#define EP93XX_SYSCON_SYSCFG_REV_MASK	GENMASK(31, 28)
++#define EP93XX_SYSCON_SYSCFG_REV_SHIFT	28
++
++struct ep93xx_map_info {
++	spinlock_t lock;
++	void __iomem *base;
++	struct regmap *map;
++};
++
++/*
++ * EP93xx System Controller software locked register write
++ *
++ * Logic safeguards are included to condition the control signals for
++ * power connection to the matrix to prevent part damage. In addition, a
++ * software lock register is included that must be written with 0xAA
++ * before each register write to change the values of the four switch
++ * matrix control registers.
++ */
++static void ep93xx_regmap_write(struct regmap *map, spinlock_t *lock,
++				 unsigned int reg, unsigned int val)
++{
++	guard(spinlock_irqsave)(lock);
++
++	regmap_write(map, EP93XX_SYSCON_SWLOCK, EP93XX_SWLOCK_MAGICK);
++	regmap_write(map, reg, val);
++}
++
++static void ep93xx_regmap_update_bits(struct regmap *map, spinlock_t *lock,
++				      unsigned int reg, unsigned int mask,
++				      unsigned int val)
++{
++	guard(spinlock_irqsave)(lock);
++
++	regmap_write(map, EP93XX_SYSCON_SWLOCK, EP93XX_SWLOCK_MAGICK);
++	/* force write is required to clear swlock if no changes are made */
++	regmap_update_bits_base(map, reg, mask, val, NULL, false, true);
++}
++
++static void ep93xx_unregister_adev(void *_adev)
++{
++	struct auxiliary_device *adev = _adev;
++
++	auxiliary_device_delete(adev);
++	auxiliary_device_uninit(adev);
++}
++
++static void ep93xx_adev_release(struct device *dev)
++{
++	struct auxiliary_device *adev = to_auxiliary_dev(dev);
++	struct ep93xx_regmap_adev *rdev = to_ep93xx_regmap_adev(adev);
++
++	kfree(rdev);
++}
++
++static struct auxiliary_device __init *ep93xx_adev_alloc(struct device *parent,
++							 const char *name,
++							 struct ep93xx_map_info *info)
++{
++	struct ep93xx_regmap_adev *rdev __free(kfree) = NULL;
++	struct auxiliary_device *adev;
++	int ret;
++
++	rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
++	if (!rdev)
++		return ERR_PTR(-ENOMEM);
++
++	rdev->map = info->map;
++	rdev->base = info->base;
++	rdev->lock = &info->lock;
++	rdev->write = ep93xx_regmap_write;
++	rdev->update_bits = ep93xx_regmap_update_bits;
++
++	adev = &rdev->adev;
++	adev->name = name;
++	adev->dev.parent = parent;
++	adev->dev.release = ep93xx_adev_release;
++
++	ret = auxiliary_device_init(adev);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return &no_free_ptr(rdev)->adev;
++}
++
++static int __init ep93xx_controller_register(struct device *parent, const char *name,
++					     struct ep93xx_map_info *info)
++{
++	struct auxiliary_device *adev;
++	int ret;
++
++	adev = ep93xx_adev_alloc(parent, name, info);
++	if (IS_ERR(adev))
++		return PTR_ERR(adev);
++
++	ret = auxiliary_device_add(adev);
++	if (ret) {
++		auxiliary_device_uninit(adev);
++		return ret;
++	}
++
++	return devm_add_action_or_reset(parent, ep93xx_unregister_adev, adev);
++}
++
++static unsigned int __init ep93xx_soc_revision(struct regmap *map)
++{
++	unsigned int val;
++
++	regmap_read(map, EP93XX_SYSCON_SYSCFG, &val);
++	val &= EP93XX_SYSCON_SYSCFG_REV_MASK;
++	val >>= EP93XX_SYSCON_SYSCFG_REV_SHIFT;
++	return val;
++}
++
++static const char __init *ep93xx_get_soc_rev(unsigned int rev)
++{
++	switch (rev) {
++	case EP93XX_CHIP_REV_D0:
++		return "D0";
++	case EP93XX_CHIP_REV_D1:
++		return "D1";
++	case EP93XX_CHIP_REV_E0:
++		return "E0";
++	case EP93XX_CHIP_REV_E1:
++		return "E1";
++	case EP93XX_CHIP_REV_E2:
++		return "E2";
++	default:
++		return "unknown";
++	}
++}
++
++static const char *pinctrl_names[] __initconst = {
++	"pinctrl-ep9301",	/* EP93XX_9301_SOC */
++	"pinctrl-ep9307",	/* EP93XX_9307_SOC */
++	"pinctrl-ep9312",	/* EP93XX_9312_SOC */
++};
++
++static int __init ep93xx_syscon_probe(struct platform_device *pdev)
++{
++	enum ep93xx_soc_model model;
++	struct ep93xx_map_info *map_info;
++	struct soc_device_attribute *attrs;
++	struct soc_device *soc_dev;
++	struct device *dev = &pdev->dev;
++	struct regmap *map;
++	void __iomem *base;
++	unsigned int rev;
++	int ret;
++
++	model = (enum ep93xx_soc_model)(uintptr_t)device_get_match_data(dev);
++
++	map = device_node_to_regmap(dev->of_node);
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	attrs = devm_kzalloc(dev, sizeof(*attrs), GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++
++	rev = ep93xx_soc_revision(map);
++
++	attrs->machine = of_flat_dt_get_machine_name();
++	attrs->family = "Cirrus Logic EP93xx";
++	attrs->revision = ep93xx_get_soc_rev(rev);
++
++	soc_dev = soc_device_register(attrs);
++	if (IS_ERR(soc_dev))
++		return PTR_ERR(soc_dev);
++
++	map_info = devm_kzalloc(dev, sizeof(*map_info), GFP_KERNEL);
++	if (!map_info)
++		return -ENOMEM;
++
++	spin_lock_init(&map_info->lock);
++	map_info->map = map;
++	map_info->base = base;
++
++	ret = ep93xx_controller_register(dev, pinctrl_names[model], map_info);
++	if (ret)
++		dev_err(dev, "registering pinctrl controller failed\n");
++
++	/*
++	 * EP93xx SSP clock rate was doubled in version E2. For more information
++	 * see section 6 "2x SSP (Synchronous Serial Port) Clock – Revision E2 only":
++	 *     http://www.cirrus.com/en/pubs/appNote/AN273REV4.pdf
++	 */
++	if (rev == EP93XX_CHIP_REV_E2)
++		ret = ep93xx_controller_register(dev, "clk-ep93xx.e2", map_info);
++	else
++		ret = ep93xx_controller_register(dev, "clk-ep93xx", map_info);
++	if (ret)
++		dev_err(dev, "registering clock controller failed\n");
++
++	ret = ep93xx_controller_register(dev, "reset-ep93xx", map_info);
++	if (ret)
++		dev_err(dev, "registering reset controller failed\n");
++
++	return 0;
++}
++
++static const struct of_device_id ep9301_syscon_of_device_ids[] = {
++	{ .compatible	= "cirrus,ep9301-syscon", .data = (void *)EP93XX_9301_SOC },
++	{ .compatible	= "cirrus,ep9302-syscon", .data = (void *)EP93XX_9301_SOC },
++	{ .compatible	= "cirrus,ep9307-syscon", .data = (void *)EP93XX_9307_SOC },
++	{ .compatible	= "cirrus,ep9312-syscon", .data = (void *)EP93XX_9312_SOC },
++	{ .compatible	= "cirrus,ep9315-syscon", .data = (void *)EP93XX_9312_SOC },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver ep9301_syscon_driver = {
++	.driver = {
++		.name = "ep9301-syscon",
++		.of_match_table = ep9301_syscon_of_device_ids,
++	},
++};
++builtin_platform_driver_probe(ep9301_syscon_driver, ep93xx_syscon_probe);
 
 -- 
 2.43.2
