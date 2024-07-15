@@ -1,216 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679027D401;
-	Mon, 15 Jul 2024 17:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED77B4D8B1;
+	Mon, 15 Jul 2024 17:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064830; cv=none; b=d9BI6sQ5okP2gNbPyTDpHWZgvkYdMIolBEoDHNHtb/QQHmAoliO0fz0unhpsLg1IwO2XUEBUNS80S4u01ngMCWgJa9TAlbfHqgEcTd0RmLxbNncENo/WI/+8z9mSJjFGrDj29I//9UssYXb/6bX57z/JcWC2EQ1Z0YiWkKNuBD0=
+	t=1721064876; cv=none; b=nUld/A73ROBJcvAkXMuHpOBvVu7LIwyMWSkNYwl8BEG73rt6/HrpNe18roqtiTudgAPuoQZRDNw0Q8QGrLf29D/gwSEUPgymPWzRtNhzo/xBuEe7REOSGR8uRqnQw13TRo2i6xjYTVLHOv699xt4WTBTyIi1ly6Q/TIN3fMsJyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064830; c=relaxed/simple;
-	bh=JLvqfGjSOE0VBigRu447+JxT0fMWPMy9nEkbcRCLmqk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JTd09WCromn/aEJqODoMPXT69Z8NCy+kYtaB3VfQsHdeIQv3uAt4+W34Nc8NPSFnOJH/j3BD8FZnPA2+WkdIxdOAF0nUmsj4WRD5whw60fhXyucboouczw4cFdxkMH6Rc1xAzrxAKkrgwM1lrJjx2oCkADuwCxcHz4D9bQyfz4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mf8IEHpF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721064876; c=relaxed/simple;
+	bh=ffeMUlmK/Fq3a35a+TUdvjumDs98NyO9DPbQao+X4dY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D2VGttuXYC2a9qNLYsspIgxi+sEUSE1XM0YlMnYTJqnfKdj6MhAFHST2i/Mo94VdTYZ4YksF47K+gicd5Dykay9z83lHcvxKafta8Yu+f8bRV+8U+uJRvXy749RWpMVau5smGTF3lFaruzM1CopMY5FqHxVO05P1ym/PXX6oJ9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hjSapmbT; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mf8IEHpF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 42A23C4AF1D;
-	Mon, 15 Jul 2024 17:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721064830;
-	bh=JLvqfGjSOE0VBigRu447+JxT0fMWPMy9nEkbcRCLmqk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mf8IEHpF4SOPjfhF3OdV0EgMBdAI7BqHw4PHQuFTWBEN8vqQ69NB/Cm4VYUAyhCKt
-	 cU8vuWEZXNnaan6CBPfrRo7xIIdZhe4ThTW1UWkl58ZuvbNp3nT/CD2//QeWl7JzNv
-	 Xj6Q5NNvItM0cBsgQmjl1MRFJOjb80Dr7BhIFnCjNtBsEDL7tLh2XAv1SOn0tOMmFc
-	 dOT5rMxAE/fOL7ilADL1wORPeBjArvNp0l2XaVzPrPmP0bTNd566O7cO5TSNy1FUYH
-	 K838f4o6BtQf+9IK6ONohzBbJjaDACIOjgqktmYFhca7jbUnrEtPuVGtJe00h9rXF+
-	 OluX4Tubr6+JQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A3AC3DA4A;
-	Mon, 15 Jul 2024 17:33:50 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Mon, 15 Jul 2024 23:03:55 +0530
-Subject: [PATCH 13/14] PCI: qcom: Simulate PCIe hotplug using 'global'
- interrupt
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjSapmbT"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-75e15a48d6aso2446690a12.0;
+        Mon, 15 Jul 2024 10:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721064874; x=1721669674; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gYdxhbbHIWWH2ixkk73ZJszIT+H79ZWarOUTpgHr6qo=;
+        b=hjSapmbTQzm+TJFcRVSTNPRUJ2o0my4c86m6lBjIeTHvOFRE2DBCVr4Qe1OM1P1zii
+         7mg2+aGogkE8VIFacZtExddI/oSizC+A5neNjFntErOx6vkxdf24y6QfMZO5Z1Ibz4wq
+         fsf2W+C6LoCK74hQCyrE2NIP+JZG5Gy0onKdOibG9wVbg2omkFWZf+W9yCRi+MSCJ940
+         3zQluIPIO2FTM8M65TVzRkmkfKLozSd0RtpZMLEh5SMJTYRpqrakLnKN5Kg89DdWntZw
+         Fi7rmiLPYQM9q8818bdfTZM6SrZ5z/oGlqyXsX5OSL0Cd+2uQ8L2X3g1M4k8kBeS9AOY
+         7OiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721064874; x=1721669674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gYdxhbbHIWWH2ixkk73ZJszIT+H79ZWarOUTpgHr6qo=;
+        b=KNvIetSjtxmhVfFSe71XTHLKwnKFKgFR4PQhxdIqGWbE9lwysw47H1mLGIwbZ0c8CV
+         vdFkYKFjMqj/gC/4SkpAVEdV9nbL2IF/Rtid/X93JY1N/6njToGyvKKhp9I8+7ZjLV1W
+         HTjdQ2jxMf/ueap0Gy4/VVLsx+fj0H636SWe8zBy6cTpXW7IP4uJe3MU/Sjt/wlwWO8r
+         8q3ztLJ1YflKkAM8tILcuekMpFmpbKihcBK7jP4IAC38AKMiz2i3zGf7h5JJ0AnGXcMv
+         i0kbq7NNjOYqOQYl4w0Oc1YlFo/uSbbj2efF6jz51zUJsUUH1TUxsuCW5H0qtzCM/TLi
+         Bzzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbEn7GxmQKeYYnJ5ULY3DvnQJgwA89IdZVSjmhVuV7gZIFZfALW8F8mn1RlkRwQNrw00QBmh3QOYV71uGmZdMRRiK/blYwGkpvY9jWlX1z4cO8OJNUnbI6L1KK6Wb2aoVxUAeXTDv7s8mUsOlSGg/iaYnmqEQaJI5PF2jiel85GITl/i7I
+X-Gm-Message-State: AOJu0YwFhNsxoAofQOWjvMNDWO5/PVGGE3biafut5N/C+teRQxgnzXbr
+	flPHs/mVhCYZzoFcCDaNOJU9s9gHH0UMIlN1b65RhtZ1LROLhob+1UYMulAp0gezKTiOCQSSuoJ
+	blCasZPKL77MfYxqA45PiO0lh37o=
+X-Google-Smtp-Source: AGHT+IEKyiNYE5yqKdi2me9tunULdPdiJOcvYzgKX6xqeTAbuCCI0LIR26V0zznbOPmF45Mfc/7J4vVEZuk0mzk+LL0=
+X-Received: by 2002:a05:6a20:7485:b0:1be:c9bd:7b8b with SMTP id
+ adf61e73a8af0-1c3ee5bfc10mr718383637.45.1721064874075; Mon, 15 Jul 2024
+ 10:34:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-pci-qcom-hotplug-v1-13-5f3765cc873a@linaro.org>
-References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
-In-Reply-To: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4567;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=o8WhRcxGYOawJmT3AHJAEZSe6RDzxJBnpZP5nJdS3jk=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmlV16KXUez/Y6REXxxZ2QVEtlgOIhrCL3DAARg
- AAimVpeafuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpVdegAKCRBVnxHm/pHO
- 9dbTB/9fd9OOqcFYE/hVgvwBMWSaKBe0/P0lNauKerArAmnlzBRonlDDGp9cWJQgN2xrJ0p7nQ7
- whJJMGVR567QcBR+T3KjrfhKrGwUPwyZULOnaDUlrk7CY1Wh8NfUq4aOqbMNbzw+3eoJNGXMAUb
- erDMQ+efln+bwngiuFnm0tskDCrZqUHAOytLHXtn3+cuGiQtCHNW61BmUhIb79YEkMwdaLCNkGN
- FhfVtDgHVel+vIFtDj1ajw8WN5h0S3W8adtU0IVxqWhwyv82ni6DGy3hMG4Ey1yLI2/RYmJ5+cm
- Wmnl2odbl5daqsjdAmwomYfNUSsYvuXcYKb9xcpeo7tILHvr
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@linaro.org/default with auth_id=185
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reply-To: manivannan.sadhasivam@linaro.org
+References: <20240711110235.098009979@infradead.org> <20240711110401.412779774@infradead.org>
+ <CAEf4BzZCzqOsk55E0b8i9y5zFuf8t=zwrjORnVaLGK0ZVgJTFg@mail.gmail.com> <20240715114107.GE14400@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240715114107.GE14400@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 15 Jul 2024 10:34:22 -0700
+Message-ID: <CAEf4BzaycyKxX7KFim0_C+FobPSDcfahUGA4mgfiz_d81noSGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com, 
+	paulmck@kernel.org, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Mon, Jul 15, 2024 at 4:41=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Fri, Jul 12, 2024 at 02:43:52PM -0700, Andrii Nakryiko wrote:
+> > + bpf
+> >
+> > On Thu, Jul 11, 2024 at 4:07=E2=80=AFAM Peter Zijlstra <peterz@infradea=
+d.org> wrote:
+> > >
+> > > In order to put a bound on the uretprobe_srcu critical section, add a
+> > > timer to uprobe_task. Upon every RI added or removed the timer is
+> > > pushed forward to now + 1s. If the timer were ever to fire, it would
+> > > convert the SRCU 'reference' to a refcount reference if possible.
+> > >
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  include/linux/uprobes.h |    8 +++++
+> > >  kernel/events/uprobes.c |   67 +++++++++++++++++++++++++++++++++++++=
++++++++----
+> > >  2 files changed, 69 insertions(+), 6 deletions(-)
+> > >
+> > > --- a/include/linux/uprobes.h
+> > > +++ b/include/linux/uprobes.h
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/rbtree.h>
+> > >  #include <linux/types.h>
+> > >  #include <linux/wait.h>
+> > > +#include <linux/timer.h>
+> > >
+> > >  struct vm_area_struct;
+> > >  struct mm_struct;
+> > > @@ -79,6 +80,10 @@ struct uprobe_task {
+> > >         struct return_instance          *return_instances;
+> > >         unsigned int                    depth;
+> > >         unsigned int                    active_srcu_idx;
+> > > +
+> > > +       struct timer_list               ri_timer;
+> > > +       struct callback_head            ri_task_work;
+> > > +       struct task_struct              *task;
+> > >  };
+> > >
+> > >  struct return_instance {
+> > > @@ -86,7 +91,8 @@ struct return_instance {
+> > >         unsigned long           func;
+> > >         unsigned long           stack;          /* stack pointer */
+> > >         unsigned long           orig_ret_vaddr; /* original return ad=
+dress */
+> > > -       bool                    chained;        /* true, if instance =
+is nested */
+> > > +       u8                      chained;        /* true, if instance =
+is nested */
+> > > +       u8                      has_ref;
+> >
+> > Why bool -> u8 switch? You don't touch chained, so why change its
+> > type? And for has_ref you interchangeably use 0 and true for the same
+> > field. Let's stick to bool as there is nothing wrong with it?
+>
+> sizeof(_Bool) is implementation defined. It is 1 for x86_64, but there
+> are platforms where it ends up begin 4 (some PowerPC ABIs among others.
+> I didn't want to grow this structure for no reason.
 
-Historically, Qcom PCIe RC controllers lack standard hotplug support. So
-when an endpoint is attached to the SoC, users have to rescan the bus
-manually to enumerate the device. But this can be avoided by simulating the
-PCIe hotplug using Qcom specific way.
+There are tons of bools in the kernel, surprised that we (kernel
+makefiles) don't do anything on PowerPC to keep it consistent with the
+rest of the world. Oh well, it just kind of looks off when there is a
+mix of 0 and true used for the same field.
 
-Qcom PCIe RC controllers are capable of generating the 'global' SPI
-interrupt to the host CPUs. The device driver can use this event to
-identify events such as PCIe link specific events, safety events etc...
+>
+> > >         int                     srcu_idx;
+> > >
+> > >         struct return_instance  *next;          /* keep as stack */
+> >
+> > [...]
+> >
+> > > @@ -1822,13 +1864,20 @@ static int dup_utask(struct task_struct
+> > >                         return -ENOMEM;
+> > >
+> > >                 *n =3D *o;
+> > > -               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx)=
+;
+> > > +               if (n->uprobe) {
+> > > +                       if (n->has_ref)
+> > > +                               get_uprobe(n->uprobe);
+> > > +                       else
+> > > +                               __srcu_clone_read_lock(&uretprobes_sr=
+cu, n->srcu_idx);
+> > > +               }
+> > >                 n->next =3D NULL;
+> > >
+> > >                 *p =3D n;
+> > >                 p =3D &n->next;
+> > >                 n_utask->depth++;
+> > >         }
+> > > +       if (n_utask->return_instances)
+> > > +               mod_timer(&n_utask->ri_timer, jiffies + HZ);
+> >
+> > let's add #define for HZ, so it's adjusted in just one place (instead
+> > of 3 as it is right now)
+>
+> Can do I suppose.
 
-One such event is the PCIe Link up event generated when an endpoint is
-detected on the bus and the Link is 'up'. This event can be used to
-simulate the PCIe hotplug in the Qcom SoCs.
+thanks!
 
-So add support for capturing the PCIe Link up event using the 'global'
-interrupt in the driver. Once the Link up event is received, the bus
-underneath the host bridge is scanned to enumerate PCIe endpoint devices,
-thus simulating hotplug.
+>
+> > Also, we can have up to 64 levels of uretprobe nesting, so,
+> > technically, the user can cause a delay of 64 seconds in total. Maybe
+> > let's use something smaller than a full second? After all, if the
+> > user-space function has high latency, then this refcount congestion is
+> > much less of a problem. I'd set it to something like 50-100 ms for
+> > starters.
+>
+> Before you know it we'll have a sysctl :/ But sure, we can do something
+> shorter.
 
-All of the Qcom SoCs have only one rootport per controller instance. So
-only a single 'Link up' event is generated for the PCIe controller.
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 55 ++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..38ed411d2052 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -50,6 +50,9 @@
- #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
- #define PARF_Q2A_FLUSH				0x1ac
- #define PARF_LTSSM				0x1b0
-+#define PARF_INT_ALL_STATUS			0x224
-+#define PARF_INT_ALL_CLEAR			0x228
-+#define PARF_INT_ALL_MASK			0x22c
- #define PARF_SID_OFFSET				0x234
- #define PARF_BDF_TRANSLATE_CFG			0x24c
- #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-@@ -121,6 +124,9 @@
- /* PARF_LTSSM register fields */
- #define LTSSM_EN				BIT(8)
- 
-+/* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-+#define PARF_INT_ALL_LINK_UP			BIT(13)
-+
- /* PARF_NO_SNOOP_OVERIDE register fields */
- #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
- #define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
-@@ -260,6 +266,7 @@ struct qcom_pcie {
- 	struct icc_path *icc_cpu;
- 	const struct qcom_pcie_cfg *cfg;
- 	struct dentry *debugfs;
-+	int global_irq;
- 	bool suspended;
- };
- 
-@@ -1488,6 +1495,29 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
- 				    qcom_pcie_link_transition_count);
- }
- 
-+static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-+{
-+	struct qcom_pcie *pcie = data;
-+	struct dw_pcie_rp *pp = &pcie->pci->pp;
-+	struct device *dev = pcie->pci->dev;
-+	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
-+
-+	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
-+
-+	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-+		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-+		/* Rescan the bus to enumerate endpoint devices */
-+		pci_lock_rescan_remove();
-+		pci_rescan_bus(pp->bridge->bus);
-+		pci_unlock_rescan_remove();
-+	} else {
-+		dev_err(dev, "Received unknown event. INT_STATUS: 0x%08x\n",
-+			status);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int qcom_pcie_probe(struct platform_device *pdev)
- {
- 	const struct qcom_pcie_cfg *pcie_cfg;
-@@ -1498,6 +1528,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	struct dw_pcie_rp *pp;
- 	struct resource *res;
- 	struct dw_pcie *pci;
-+	char *name;
- 	int ret;
- 
- 	pcie_cfg = of_device_get_match_data(dev);
-@@ -1617,6 +1648,28 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_phy_exit;
- 	}
- 
-+	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_global_irq%d",
-+			      pci_domain_nr(pp->bridge->bus));
-+	if (!name) {
-+		ret = -ENOMEM;
-+		goto err_host_deinit;
-+	}
-+
-+	pcie->global_irq = platform_get_irq_byname_optional(pdev, "global");
-+	if (pcie->global_irq > 0) {
-+		ret = devm_request_threaded_irq(&pdev->dev, pcie->global_irq,
-+						NULL,
-+						qcom_pcie_global_irq_thread,
-+						IRQF_ONESHOT, name, pcie);
-+		if (ret) {
-+			dev_err_probe(&pdev->dev, ret,
-+				      "Failed to request Global IRQ\n");
-+			goto err_host_deinit;
-+		}
-+
-+		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
-+	}
-+
- 	qcom_pcie_icc_opp_update(pcie);
- 
- 	if (pcie->mhi)
-@@ -1624,6 +1677,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+err_host_deinit:
-+	dw_pcie_host_deinit(pp);
- err_phy_exit:
- 	phy_exit(pcie->phy);
- err_pm_runtime_put:
-
--- 
-2.25.1
-
-
+:) let's hope we won't need sysctl (I don't think we will, FWIW)
