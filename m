@@ -1,133 +1,98 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B84A18EA75;
-	Mon, 15 Jul 2024 14:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A484218E76A
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 14:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721052189; cv=none; b=gCStBrlo1AOaljzo5fmo9CjzmEwVmIA63gXhnLxbDEtIwemLRCKOQvgXbPjd3+jeDpVNCQe+KJ6r5Fji7QzTHQDh3wkUO9LSCnx2qxsVGmNPZuECOsVq32KRImmoZKsraiqLEYfHwNiuAWGi4jgJ2ooogRZRQGq4aHDURd8rtUs=
+	t=1721052210; cv=none; b=SxG/4WDRg+ujirrbfCz6BlaAPpZfHFf831gPRQmngiDJnyzAdRBLKhxr1VxzoaHMvH/ner6Nkgg/abphYash4DsGF8zqAhtOnTa+mIOCUZma5sYrPryTdU4OihFU9m4Sm8tYDieMvxg50ngroNr9ZAMJxyr4TIKNNhIurWIteVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721052189; c=relaxed/simple;
-	bh=EM5soLNIU0GEGT7BLLfbdqZY6GjzHIh+YpJqH/9wcBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=l55yq5KyxOXJXyHi3LGGcPfrzgyqoC4Bi6oVHJnBPEM/DT2QyLQfmhAeBufbnBFfkS8LBUSU7RswIJvbrwmKMaBKZs/LWaPXOVPJAIrYD570hcs+XBel45uOFKYHTDk5wBaA9Rpwgkq035gYwuuHohngCydKsQ15z8YtKdWoG3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZskHtPJ6; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZskHtPJ6"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46FE2d9K053380;
-	Mon, 15 Jul 2024 09:02:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1721052159;
-	bh=DUKogu1jQnOGI+yRt7sMIp8u112mzxlrLc4tGaMpla8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=ZskHtPJ6PnRo0A1eD261cw2/H3NsAVCy1+mlnZ+Yl2KGdOaEZUixbFx5Q+gab+CUb
-	 DGU4YbRQ+LFzAwG+pZvvFWs/Odl6lScql6Mc3SeIj0lnpewXvx6pl5kLqDd032691a
-	 BM+tHcdp99dDqBLVZnAFYdITz3BmIi0Jt5HYNDsU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46FE2dx1018610
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 15 Jul 2024 09:02:39 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 15
- Jul 2024 09:02:39 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 15 Jul 2024 09:02:39 -0500
-Received: from [128.247.75.151] (ula0511493.dhcp.ti.com [128.247.75.151])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46FE2chG118703;
-	Mon, 15 Jul 2024 09:02:38 -0500
-Message-ID: <458e6141-abed-4301-ae76-c242c903ef61@ti.com>
-Date: Mon, 15 Jul 2024 09:02:38 -0500
+	s=arc-20240116; t=1721052210; c=relaxed/simple;
+	bh=Cw4ETPNI4qvPqgQe3rXtZkOz7E1LaHcI0fTwbaCV2Hw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=VAubCj2Zn/zaiNpPLF3QB64og3VtYBB7C8MNLP4lSqGJsVceLPEUDxiEeCSFrB84/dAbBaGwGnvIhwH+KTm/6Q34xAKt/Xt06OI7b+QT2Jp9jVrIznh/17NXteUNBr/76gZKM3Msb7PtVMGGjcAF4dO1e4xJ+o26yLoT+gcE/B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8152f0c4837so1295139f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 07:03:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721052208; x=1721657008;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o4A4/V5MB5lcsaPREJ4SGYel+xnp/oU21Atqi3j4Xnc=;
+        b=iqoiLZgKsx57JegKGU5iMu9hNg2i63GnNKRDVvzPoL8CBVqWZZAC1Uz5TyTKkbBqZm
+         M3AW3XxTyYxy6ZtFQa32t+0OoVnxwU70UwW5SfS35xXPC0LOHtrO5mtQcIZLFgC05eJD
+         8mZJuh2j1DTvEZmFeWCXN4iqGVNqafvaT3ldZs2s0/SvvPs2sbhdGDPVZJsTcSo2CNf/
+         nG6Ij4CC91GrfW9vpPGuTyxfRCX8Mr/Ryyabd9cNc1hIV3ZyZac8zQP0XMfnOqdJ6dwn
+         5Wpq9D6V9vfxJsIRHypZWAikAKxLg+1AY6/xCKtwUkUkuMIzW5dTfK47mz3SfH19Y0aH
+         8m7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXeFsNEXhDxb25OPG5T4+XyBs4Bk1zKnEW/+tatDAjXb9jiqSCuOnFFsgQ+oBhCQqTtAsoc3TvOX3IGlKf6nOdzqLCA7u8z/fMFYQLD
+X-Gm-Message-State: AOJu0YzuqjaJCoGI0u+MPVzpknhH9TrPFYf7fkLwn1KT2lC48zCIEvIT
+	5xEz859ABA8tYp0CYzVvitlKwu125NOUhr1vhwXZ29zAt6Yv7aM28eLtxOw3dfnKMa7puDLTLIp
+	QXsSUJ/j7kZ17ODl0goYbJRv+12DyIiQpqetb2xVc6axJ+EWS4velRLc=
+X-Google-Smtp-Source: AGHT+IF8r5Ghwyiozmy+LCRlyVYQr9oqR9psrek31gn+C7LOYjle40LU0OaiUeR1azvf/PNHxjG9sje0wJCYsKxoWNHHnnZmzOyW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] arm64: dts: ti: introduce a minimal am642 device tree
-To: Francesco Dolcini <francesco@dolcini.it>
-CC: Krzysztof Kozlowski <krzk@kernel.org>, Bryan Brattlof <bb@ti.com>,
-        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20220321155417.13267-1-bb@ti.com>
- <55e161d1-face-6958-1d86-8a85b82e8485@kernel.org>
- <766dceb1-222a-401b-95e3-69b7fb331411@ti.com>
- <20240710073811.GA4855@francesco-nb>
-Content-Language: en-US
-From: Logan Bristol <l-bristol@ti.com>
-In-Reply-To: <20240710073811.GA4855@francesco-nb>
+X-Received: by 2002:a05:6638:831e:b0:4c0:73d0:3d77 with SMTP id
+ 8926c6da1cb9f-4c0b2b6b9damr1732109173.5.1721052205512; Mon, 15 Jul 2024
+ 07:03:25 -0700 (PDT)
+Date: Mon, 15 Jul 2024 07:03:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000059890d061d49b1df@google.com>
+Subject: [syzbot] Monthly btrfs report (Jul 2024)
+From: syzbot <syzbot+list74f90a642d75db43bd8a@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Hello btrfs maintainers/developers,
 
-Hello Francesco,
+This is a 31-day syzbot report for the btrfs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/btrfs
 
-On 7/10/24 02:38, Francesco Dolcini wrote:
-> Hello Logan
-> 
-> On Tue, Jul 09, 2024 at 11:20:24AM -0500, Logan Bristol wrote:
->> On 3/22/22 13:14, Krzysztof Kozlowski wrote:
->>> On 21/03/2022 16:54, Bryan Brattlof wrote:
->>>> Texas Instrument's am642 is one of many k3 based, low cost, low power,
->>>> chips designed to work in a wide range of applications spanning an even
->>>> wider range of industries that TI is actively developing
->>>>
->>>> With its pin-mux and peripheral rich designs, these chips will likely
->>>> have a multitude of custom device trees that range wildly from one
->>>> another and (hopefully) guarantee an influx of variants into the kernel
->>>> in the coming years
->>>>
->>>> With overlays no longer a thing, I wanted to ask for opinions on how
->>>> we can best help integrate these dt files as they begin to be developed
->>>>
->>>> I also wanted to introduce a skeletonized (nothing but uart) device tree
->>>> to give others a good starting point while developing their projects.
->>>
->>> Real hardware as DTS please. There is no need to add some skeleton for
->>> specific SoC. What if every SoC goes that way?
->>>
->>> Feel free to create re-usable components in DTSI ways, still reflecting
->>> some hardware parts.
->>>
->>
->> I am working on a project for the AM62 and came across this email thread.
->>
->> Following Krzysztof's direction, I am wanting to submit a DTSI to serve
->> as a minimal configuration for the existing boards based on the AM62
->> SoC, which are currently defined by bloated DTS files.
->>
->> This DTSI file can be consumed by other board DTS files to reduce the
->> configuration. Krzysztof, could this be merged upstream?
-> 
-> Can you elaborate a little bit what you meant as bloated dts file? Why
-> would you need different DTSI files compared to the existing one?
-> Which problem are you trying to solve (make some example, be specific
-> please).
-> 
-> My experience with verdin am62 (k3-am62-verdin*dts*) was pretty smooth,
-> I was just able to use the SOC dtsi file and use it to define my own
-> board (and I had the same good experience with other SOC/Vendors).
-> 
-> Francesco
-> 
+During the period, 1 new issues were detected and 2 were fixed.
+In total, 37 issues are still open and 67 have been fixed so far.
 
-The resulting DTB after compiling AM62 SoC DTSI files initializes a
-large number of devices. A DTSI that initializes a minimal configuration
-that is immediately functional across SoC variations could be used on
-existing boards for test and debug purposes to isolate root cause of
-failure. It could also serve as a minimal configuration for board bringup.
+Some of the still happening issues:
 
-Thanks,
-Logan Bristol
+Ref  Crashes Repro Title
+<1>  6082    Yes   kernel BUG in close_ctree
+                   https://syzkaller.appspot.com/bug?extid=2665d678fffcc4608e18
+<2>  3027    Yes   WARNING in btrfs_space_info_update_bytes_may_use
+                   https://syzkaller.appspot.com/bug?extid=8edfa01e46fd9fe3fbfb
+<3>  256     Yes   WARNING in btrfs_chunk_alloc
+                   https://syzkaller.appspot.com/bug?extid=e8e56d5d31d38b5b47e7
+<4>  252     Yes   WARNING in btrfs_commit_transaction (2)
+                   https://syzkaller.appspot.com/bug?extid=dafbca0e20fbc5946925
+<5>  238     Yes   WARNING in btrfs_remove_chunk
+                   https://syzkaller.appspot.com/bug?extid=e8582cc16881ec70a430
+<6>  145     Yes   kernel BUG in insert_state_fast
+                   https://syzkaller.appspot.com/bug?extid=9ce4a36127ca92b59677
+<7>  114     Yes   WARNING in cleanup_transaction
+                   https://syzkaller.appspot.com/bug?extid=021d10c4d4edc87daa03
+<8>  97      Yes   kernel BUG in set_state_bits
+                   https://syzkaller.appspot.com/bug?extid=b9d2e54d2301324657ed
+<9>  83      Yes   WARNING in btrfs_put_block_group
+                   https://syzkaller.appspot.com/bug?extid=e38c6fff39c0d7d6f121
+<10> 77      Yes   kernel BUG in folio_unlock (2)
+                   https://syzkaller.appspot.com/bug?extid=9e39ac154d8781441e60
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
