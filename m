@@ -1,148 +1,142 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC51179BD
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 19:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326636E61B
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 19:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721071985; cv=none; b=GavJCqJJuJoK3oW5742nVZSwKXH26M2b2sdhyEbY8ESo/ULu9RPKmCHjKhW3HXaYslBGPXD4ejEOdzarZmGd8x9pfmpJImjb64XpmbNLAYSJeXfvu5LO5CmZRyerC8ThlVFylGrferDNRyHLyn/pjy6rYKvU9ZKvVsRayWNhcro=
+	t=1721072003; cv=none; b=DXsG5AOTIswW18KLnzoRVEezvU+X9V2bX04Qh4y9GXSoSsXKUeNDPLzif2LLyu3feFqeSz8dNSZl+6HUgYUampIRNDmfE25ItZgrWRDbNyXposqn6M59w2vOdZvDZSxPKQqbwN3cBaQWbJoOK+BhtrPOpQBXXhl8GLoUr1wo8Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721071985; c=relaxed/simple;
-	bh=GFaV9BV7YR+i2gxGnV/UWYI/2XgJoSuqpoWhzjmf8OE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=funA/UFlFBym3Im1KjMka2mS8qDZ9GLF+oOA4IMprmv8bCFGmt5hvxvs6PHp+wqBZRITY3TTIWPFMFmuk97kRaAYEGkWQMonJSxpPj0NePRHY0+AFCKZKKAxKvzmBFi2428le0CIAK8rM58KWof8CM+IjDIOsGeJstubIEiA55k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fUELPPQm; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1721072003; c=relaxed/simple;
+	bh=XvO/IQPBY3WxMzOIIj1lPrjiKqO7ITQ9tRLogvdaoz4=;
+	h=Message-ID:Date:MIME-Version:From:To:CC:Subject:Content-Type; b=ZD5ipDVALXZw941f02xvE/YSc5/SDQHEDTuhW3bJN880XSu8TaRKZy4qdMi1SPNyY4Z9JuI3LRuxt//9oIGSrYi3BodlwCWZeDoxwvmxUeVpl1oJXqO76iy++eZB9OQj+y6MOOl3Ai2ObhTajIeLz38lcyxWMQ+4KPkjnUmHu2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bjqeqgm1; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fUELPPQm"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-65fa21206b5so19720037b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 12:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1721071981; x=1721676781; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wX6VVF5zo6QpIl0GNcjuj6SmcU0Q6kPt3Zxz4lR//To=;
-        b=fUELPPQmWoaCBr4l5LmeRx5+spfc4WoKcdadsfDXcIW8S/QU/PUO+Ag1YH578PaEHl
-         /XQX8/GJr+sy3/Mk+MIgPpDGwDfQcFzXZiSIyhjq9otVgpx3UuRo+SZMNVNqz9bYa0HU
-         iGFPc81MNjF8DeTsDEABtUA933VQ1o8jP368g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721071981; x=1721676781;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wX6VVF5zo6QpIl0GNcjuj6SmcU0Q6kPt3Zxz4lR//To=;
-        b=TsiK4oIxd43QYfVXMwk+D650uRqRnlBRWk5sN3IEhgMiCpCT3WGxoXnGbhAkJOT2v3
-         cOm9gfeLV+psoIWOwUIVyB740Vg6pSCoy6Cv25JvAAUvqZ9oVG+ZD7wBuaVFvOd9FvfA
-         JO1JbikxbBgOGbdnUKG7zSRI7YV7np/LCNAoEKeSxSDzOYHZBJ4Qy3n7i342Ku6E8/6F
-         7zsDc4VUSlYceCq3kv+sPIz5XK+fCGe8TwR8tCHdR5CB7lgfRrnKNbzDkYnbZ5kMIrWr
-         wiUzXW92H/43Xlt+9m2n2Add+m7ZpczNEzPnhzWTO1hUj7XYQMbDevnQEZqgc7m9Qb8q
-         vZ/A==
-X-Forwarded-Encrypted: i=1; AJvYcCV6urSRqpr9FEuHJRA7rCbQ2E9G9e46XLA8aZyTfvB6USsaxQNdMMciDO56fT5W0ix2Bdcm6u8XFCkJsu0FqaWO2k9QBfK475FhNbLo
-X-Gm-Message-State: AOJu0Yx1K6e21BOZ9dwCIExdy9vMPUhfF8RYuFfFdag1K8JhbCpRhlpw
-	7zoAgkRBCdLNnWjZH7n807R1zdQgyux9aLl5q9Ms6et6ZgbrCnta/nXFFWLWzemBA9WHZaxPDMJ
-	JQ16dtVTyagWfiD8BYRevTCoBRkXWbjlWucFH
-X-Google-Smtp-Source: AGHT+IFGwqsnaPAj7mqNI8+vo6+/u0K0j2UFb+UYDBq3/3ucIPqVmkkyljDrQrw6oWynXU33+vEOIFDTYxIYzTAJHRs=
-X-Received: by 2002:a0d:c183:0:b0:65f:ca0b:5ad9 with SMTP id
- 00721157ae682-66354d75631mr5659897b3.25.1721071980901; Mon, 15 Jul 2024
- 12:33:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bjqeqgm1"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46FI7p3p126761;
+	Mon, 15 Jul 2024 13:07:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1721066871;
+	bh=hQ9KDt0pj5QqeR51RglSiqAIoTDr1j7wa4/OE1HUhrs=;
+	h=Date:From:To:CC:Subject;
+	b=bjqeqgm1ZFt00bEoDMcquuQZ/dBdYg15taX2LiPwv+e4EXaNsoPs8S/ENB3hdi/xb
+	 rL6VAxqW6pq9kNFfQOFl24qATWvTXDxHW7ro8QObD0Ht6xyMiWXO7XXscgxs2diTOJ
+	 zMFh4X3ez95uXKev8Cad3m3VC7VWwA/Y4T5YAO90=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46FI7kWW014962
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 15 Jul 2024 13:07:46 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 15
+ Jul 2024 13:07:45 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 15 Jul 2024 13:07:45 -0500
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46FI7g72004328;
+	Mon, 15 Jul 2024 13:07:43 -0500
+Message-ID: <aacd1e96-9ff4-4222-9f4d-29e63041f7fb@ti.com>
+Date: Mon, 15 Jul 2024 23:37:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <bd9cb3c7-90e8-435d-bc28-0e38fee58977@schmorgal.com>
-In-Reply-To: <bd9cb3c7-90e8-435d-bc28-0e38fee58977@schmorgal.com>
-From: Ian Forbes <ian.forbes@broadcom.com>
-Date: Mon, 15 Jul 2024 14:32:50 -0500
-Message-ID: <CAO6MGtjxnm3Hc=T8jv-upP46XBzAc0ZNmLVF3=KNN8buGBwg1w@mail.gmail.com>
-Subject: Re: [REGRESSION] drm/vmwgfx shows green Xv instead of actual video
- (bisected I think)
-To: Doug Brown <doug@schmorgal.com>
-Cc: Zack Rusin <zack.rusin@broadcom.com>, dri-devel@lists.freedesktop.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        arm-soc
+	<arm@kernel.org>, SoC <soc@kernel.org>
+CC: Tero Kristo <kristo@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>
+Subject: [GIT PULL] arm64: dts: ti: K3 devicetree updates for v6.11 - part2
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="------------RUwPAC00nLsJ4vnxysuoeY8i"
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+
+--------------RUwPAC00nLsJ4vnxysuoeY8i
+Content-Type: multipart/mixed; boundary="------------ueqxuF7AE95w104VQykrKzYI";
+ protected-headers="v1"
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+ arm-soc <arm@kernel.org>, SoC <soc@kernel.org>
+Cc: Tero Kristo <kristo@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Nishanth Menon <nm@ti.com>
+Message-ID: <aacd1e96-9ff4-4222-9f4d-29e63041f7fb@ti.com>
+Subject: [GIT PULL] arm64: dts: ti: K3 devicetree updates for v6.11 - part2
+
+--------------ueqxuF7AE95w104VQykrKzYI
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Doug,
+Hi ARM SoC Maintainers,
 
-Can you try this patch with 6.10.
+Please pull below PR which consists of a late fix to my earlier pull requ=
+est:
+https://lore.kernel.org/linux-arm-kernel/37f251a1-f3bd-402f-ab22-cf786c38=
+71d7@ti.com/
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_overlay.c
-b/drivers/gpu/drm/vmwgfx/vmwgfx_overlay.c
-index c45b4724e414..e20f64b67b26 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_overlay.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_overlay.c
-@@ -92,7 +92,7 @@ static int vmw_overlay_send_put(struct vmw_private *dev_p=
-riv,
- {
-        struct vmw_escape_video_flush *flush;
-        size_t fifo_size;
--       bool have_so =3D (dev_priv->active_display_unit =3D=3D vmw_du_scree=
-n_object);
-+       bool have_so =3D (dev_priv->active_display_unit !=3D vmw_du_legacy)=
-;
-        int i, num_items;
-        SVGAGuestPtr ptr;
+The following changes since commit 6406c5d5512c0814b8c155df7f833a98d9069a=
+72:
 
+  arm64: dts: ti: k3-am62a7-sk: Reserve 576MiB of global CMA (2024-07-03 =
+19:51:21 +0530)
 
-On Thu, Jul 11, 2024 at 3:37=E2=80=AFPM Doug Brown <doug@schmorgal.com> wro=
-te:
->
-> Hello,
->
-> I have discovered a problem in vmwgfx that caused Xv playback to break
-> between v6.3 and v6.4-rc1. In v6.3, inside of an Ubuntu 24.04 VMware VM
-> with 3D acceleration disabled, I can run the following GStreamer command
-> ("sudo apt install gstreamer1.0-tools" if you don't already have it):
->
-> gst-launch-1.0 videotestsrc !
-> video/x-raw,format=3DYV12,width=3D640,height=3D480 ! xvimagesink
->
-> And it works fine, showing a test pattern.
->
-> In v6.4-rc1 and all the way up to a build I just made today of Linus's
-> latest master branch and also including Zack's latest patchset [1]:
->
-> Linux doug-Ubuntu-MATE-2404 6.10.0-rc7+ #55 SMP PREEMPT_DYNAMIC Thu Jul
-> 11 12:46:06 PDT 2024 x86_64 x86_64 x86_64 GNU/Linux
->
-> ...if I run the same command, the GStreamer window shows up containing
-> solid green rather than the test pattern.
->
-> I believe I have bisected the problem to commit:
->
-> 39985eea5a6d ("drm/vmwgfx: Abstract placement selection")
->
-> However, the bisect process was complicated because two earlier commits
-> temporarily broke vmwgfx so I had to undo them during bisection, which
-> also required some conflict resolution:
->
-> 180253782038 ("drm/ttm: stop allocating dummy resources during BO
-> creation") and
-> f87c1f0b7b79 ("drm/ttm: prevent moving of pinned BOs")
->
-> Note that if you have gstreamer1.0-vaapi installed, you should
-> temporarily remove it first before testing because there is a separate
-> Xorg bug that causes Xorg to crash when you run the above command if
-> gstreamer1.0-vaapi is installed.
->
-> I'm happy to do any further testing as needed. I've reproduced this
-> problem across several different machines and distros. A fully-updated
-> Arch Linux is also affected.
->
-> As a side note, that same gst-launch-1.0 command is also currently
-> broken with 3D acceleration enabled, but that's a separate issue in mesa
-> that I've submitted a patch for [2].
->
-> Thanks,
-> Doug
->
-> [1]
-> https://lore.kernel.org/all/20240702021254.1610188-1-zack.rusin@broadcom.=
-com/#t
-> [2] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/30116
->
-> #regzbot introduced: v6.3..v6.4-rc1
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git tags/ti-k3=
+-dt-for-v6.11-part2
+
+for you to fetch changes up to cc5049007d722364bca4a4eeb619d5629733a004:
+
+  arm64: dts: ti: k3-j784s4-evm: Consolidate serdes0 references (2024-07-=
+12 17:08:40 +0530)
+
+----------------------------------------------------------------
+Late fixes towards v6.11-rc1
+
+First patch fixes warning splat seen on J784S4 due to overlapping
+serdes0 lane. Second patch cleans up the serdes0 references for readabili=
+ty
+
+----------------------------------------------------------------
+Andrew Halaney (2):
+      arm64: dts: ti: k3-j784s4-evm: Assign only lanes 0 and 1 to PCIe1
+      arm64: dts: ti: k3-j784s4-evm: Consolidate serdes0 references
+
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 25 +++-------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
+
+--=20
+Regards
+Vignesh
+
+--------------ueqxuF7AE95w104VQykrKzYI--
+
+--------------RUwPAC00nLsJ4vnxysuoeY8i
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEyRC2zAhGcGjrhiNExEYeRXyRFuMFAmaVZW4FAwAAAAAACgkQxEYeRXyRFuMp
+XAgAvyMc9Sy66U1Vk0pNe6ebRIFaA2Tt/Dwp4FuOsoCT/7I6jW9uonvRLqY4XjkQJhm9ER/vzPXS
+EYAKDHQlaZ9bGUo9pTY0+RF25tlse6cL7icOiEsoj65DNmeVm7xo18q8hfPw0XmbQVSjK5/l2UWY
+8VQueqtQ8T15ufRo6XuRSfjfPoeO+vpqMynqMpz2JKc+YP8vouRqrUWzVwQARqv8OrqWdl2KTmgs
+kX3oX55+UU+if0xoNCPM4j/tS/jtyqlwSYEU7LQpjrHMc0oM9n8om4Hw4dF2aMh6CoowYtq9MjNl
+HFMGZfeUPpA1z/xPQwmYopSEywXDYQIQ5BbZ9gaCuQ==
+=TME8
+-----END PGP SIGNATURE-----
+
+--------------RUwPAC00nLsJ4vnxysuoeY8i--
