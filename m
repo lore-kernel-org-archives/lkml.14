@@ -1,122 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AE118E75C;
-	Mon, 15 Jul 2024 13:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1949618E769;
+	Mon, 15 Jul 2024 13:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721051772; cv=none; b=HCFqR1RRgZl/dpCQ33iHuc0kZBu3RIauCHW9l/Ih6KIYitmOwiWrYtZDKTRLskXJgQJtbmS7tE7x+yp5V0a1A/FOSRkMSixDvUU8RTSdyMcZDXt1DfHC0w75RwEfcGb96RBg3vom2u0PFdx/LpcMdBLlbVGPatgttJ/9PVbHG28=
+	t=1721051776; cv=none; b=jRO80PQa6efJBingx1oWkmq4ACAO9GLXWWUrjE2q4bzx7QxtDUQlTrOMXiDNR1sX46qDV0UEYc5wD6nhm5c70oKSn97afKeVpKKCPNrQfaWFlgnYD0j3cgV/t8yGNP1xoryLxJTKHzQ4ObXKpcy6rnDO1XQkQs+C81fte7CqidE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721051772; c=relaxed/simple;
-	bh=M7dTi/l8wr+R+cCgvmMoNrDflWm1Z3z/TlQD3srnwvg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s5P5dQhXLFJhKDXUqySE2edCw3LLXk1A7EVQk2IpagvVOEIW3xwRmvA+973LddGiDzg2q2ljBpU2C50iZTHTmc/R40py0iRuVnjLDphRTxpBNuGpS8I6UY8gn9NNIUitnZ0HWUSfsGXAQ9WLJQrl+GXF5G/GtNvGpF8es1Odp80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1ist1Ng; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721051776; c=relaxed/simple;
+	bh=JmicNeKrNHRspeEe8Tj3/aopdoEQSKULODDnupH8/YI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fZ8I7K0yqVP/gGgbrTum8o71uBCJjbED1VNAihJV8jYNCDly0zkutez+ValO0rpj8n6maGwiWowNwKq7bpV/4UIl8ucDJBM8nJjCL8Kwh1sQ1uGCFzqDevRxN0XYmGvVowYQtkaVW/Sgs0mZ5zFqp1TWf6TafQFUUB6HZ6IJceQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X4m+6sF8; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1ist1Ng"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0DFAC4AF0D;
-	Mon, 15 Jul 2024 13:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721051772;
-	bh=M7dTi/l8wr+R+cCgvmMoNrDflWm1Z3z/TlQD3srnwvg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t1ist1NgIF6KIHRkbwiZkAIXV4h5a/3EvbAIUKGVPl/dM0Zd3R76ML1EEpKDJEbor
-	 y/FBCA5/OwRwtqtRgTsVfCGueKfqs4mnXeY75sHfPnQybCXATa0gaACoQoYXOGtOd+
-	 37OIMy1fujIilzj3PX74nt47wmSLCHCrAAtwPcWyp1/wIyGJKcNlFwtZf70/IxIO6P
-	 /NsSdeg+1izH11mEI8G/F0Sq9WS17sSnjFq0L0gRPE4AFDYIt2/6/idR/l5lhAvCb2
-	 qOhXGwafB4LCBwktl7P+o7f1CEboKTck5cavc5wEx8EzXML4IHj40TD4IWlVVrhSA2
-	 gWni+VI+vXI3Q==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2eedebccfa4so22920171fa.1;
-        Mon, 15 Jul 2024 06:56:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV4DqZnI+bvMPwgHGXivQE0YVyN9HqBfmaaBLwO8Hp8Gpwn4ON9UOKbjViylHkJmgc6UqL1w6xepOZ99JVu8pqbrdrDLeZsMkykqAXR
-X-Gm-Message-State: AOJu0YwH34oLgAyVO/Zj/7tAJtdsZ8yvZjL3dBGTE+IRMG2gS15vMp+J
-	mfPnlVPmb8DLr/yTyRND5mQE/O8Zdb5yiG5gjqH9feGcy/hbo85dxg5nRcGLTiKPHhf2q+4nAE2
-	nOH9y7VVnmVStawieEwHb6/vUT1Y=
-X-Google-Smtp-Source: AGHT+IFbHSMVCFKYrE2QR7ssYrdThQpWI/p5nmm7ZjAaZSznRhTIl+Skf5Fv9bivm37FdEAub1Lufde4DF4FMRIp8Qo=
-X-Received: by 2002:a05:6512:3b20:b0:52c:adc4:137c with SMTP id
- 2adb3069b0e04-52eb99949a2mr14011033e87.20.1721051770687; Mon, 15 Jul 2024
- 06:56:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4m+6sF8"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-58b966b41fbso5368097a12.1;
+        Mon, 15 Jul 2024 06:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721051773; x=1721656573; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zJEofbM7JJv/OPvTziaKTUDT40OBgVWW/o2FBZFQ/8c=;
+        b=X4m+6sF8+5ClnJXcv9voQoEmI2ldl7nd/IGMIARibcykmabfmJKe+vev1lA4pEvEsV
+         9/F8q9frkczCqlo5cemyQCyZ9+vUMctsY6feJ9O7zJwRub0jZBD/X+ewzHE5uKvILT2P
+         64R23yfbF8Os/WW10n/N5GWFvv3Uh4RZscal/pJcvHetSi03nRBpgrz1cO+aTL9sYBaf
+         wRbE4rThNYPhXa8OGPiRyXbRLD13zNkHk90bMK8V8uzER8DADIX/7zhD9dPM4uqExYQz
+         I+8DG76voqqk9lqRUqDlCRhFWwI/fMxwCfUDOWpRfoV4hqcsVVCkdA16jxbf2o2cR1h+
+         0Qqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721051773; x=1721656573;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zJEofbM7JJv/OPvTziaKTUDT40OBgVWW/o2FBZFQ/8c=;
+        b=rLsiNYv+pM7ofe+bFMnqnb912nGNCKNadxZWz/1MA61f3gfNvm27W3qP2QbvBSRfEO
+         4miWR4602V8bZVODjWkZyk9CttlhcbKrmsQ57uTfjxtG8XOuEFIsh/Rs9XcX+AWeEApn
+         LHlBmPTJz9LwOmYtEf+lU3eAydnjZ8BV7u9m18vLD6+q/xD7O61TdpHWcMtyvzzBTN61
+         OGcmYukpSIWRHlGRuEpU7NJHkwnfqtuT5g+lZL0CfnQ/cj7evGoFYrfJZhCpeFpj//NA
+         YSGIhOTNRUJxAQqck6YOLGUvc9Pq5Ou/MGiIq6ODc7Viof2A919qbhlPOVVb5cWltQc2
+         lIHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRXK0odXoivt4DTRjzf4zEG+3N2HCKRqWFgzYamG0U22QTn2QjCBmskdidinps5su9Ewwm81D1QtpyP59Vgfp63/d6nCfGeuchsDRHad8MiR0an/+QSwJNpAnRJQ6t41Au9lKZlVbN4w==
+X-Gm-Message-State: AOJu0Yz5AZyeywZhhWppaY+SAox5dKs6zOGxWOjnvwY1qn6DqVpKHuuU
+	b8yxJxz+8VuVQAOUFbjRTPEMP6CwlH/8dQ+bwkzAcLDd2o4GkKpGg+U/gQ==
+X-Google-Smtp-Source: AGHT+IGFwyv96gykRh2WQAFospTSXU2UQACz9q8YtryxBrJrikNX9BsuYSLrXYopy2ZsFmRYUjaEzg==
+X-Received: by 2002:a17:906:2797:b0:a77:c5e4:eebf with SMTP id a640c23a62f3a-a780b87ef50mr1185426566b.54.1721051773034;
+        Mon, 15 Jul 2024 06:56:13 -0700 (PDT)
+Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820fb5sm214152666b.212.2024.07.15.06.56.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 06:56:12 -0700 (PDT)
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Walle <michael@walle.cc>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	devicetree@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	u-boot@lists.denx.de,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH 1/2] dt-bindings: nvmem: convert U-Boot env to a layout
+Date: Mon, 15 Jul 2024 15:54:33 +0200
+Message-Id: <20240715135434.24992-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240714105848.1844400-1-masahiroy@kernel.org> <ZpUkTZYt5DSHP5aP@J2N7QTR9R3>
-In-Reply-To: <ZpUkTZYt5DSHP5aP@J2N7QTR9R3>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 15 Jul 2024 22:55:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ2Jwe2jJLbX=murdgmWu2Yy8a2vcPuMhQBffqZHo_=jw@mail.gmail.com>
-Message-ID: <CAK7LNAQ2Jwe2jJLbX=murdgmWu2Yy8a2vcPuMhQBffqZHo_=jw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: remove redundant 'if HAVE_ARCH_KASAN' in Kconfig
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kbuild@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 15, 2024 at 10:29=E2=80=AFPM Mark Rutland <mark.rutland@arm.com=
-> wrote:
->
-> On Sun, Jul 14, 2024 at 07:58:46PM +0900, Masahiro Yamada wrote:
-> > The condition 'select HAVE_ARCH_KASAN' is always true because
-> > there is 'select HAVE_ARCH_KASAN' statement above.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Looks like we forgot to simplify this in commit:
->
->   0383808e4d99ac31 ("arm64: kasan: Reduce minimum shadow alignment and en=
-able 5 level paging")
->
-> ... where we began selecting HAVE_ARCH_KASAN unconditionally.
+From: Rafał Miłecki <rafal@milecki.pl>
 
+U-Boot environment variables can be stored in various data sources. MTD
+is just one of available options. Refactor DT binding into a layout so
+it can be used with UBI volumes and other NVMEM devices.
 
-Good point. This may be worth recording in the description.
+Link: https://lore.kernel.org/all/20231221173421.13737-1-zajec5@gmail.com/
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+I'm resending this approved by Rob PATCH in a proper series
 
-I will send v2 with a typo fixed.
+ .../bindings/nvmem/layouts/nvmem-layout.yaml  |  1 +
+ .../nvmem/{ => layouts}/u-boot,env.yaml       | 39 ++++++++++++++++---
+ 2 files changed, 35 insertions(+), 5 deletions(-)
+ rename Documentation/devicetree/bindings/nvmem/{ => layouts}/u-boot,env.yaml (75%)
 
-Thanks.
+diff --git a/Documentation/devicetree/bindings/nvmem/layouts/nvmem-layout.yaml b/Documentation/devicetree/bindings/nvmem/layouts/nvmem-layout.yaml
+index 3b40f7880774..382507060651 100644
+--- a/Documentation/devicetree/bindings/nvmem/layouts/nvmem-layout.yaml
++++ b/Documentation/devicetree/bindings/nvmem/layouts/nvmem-layout.yaml
+@@ -21,6 +21,7 @@ oneOf:
+   - $ref: fixed-layout.yaml
+   - $ref: kontron,sl28-vpd.yaml
+   - $ref: onie,tlv-layout.yaml
++  - $ref: u-boot,env.yaml
+ 
+ properties:
+   compatible: true
+diff --git a/Documentation/devicetree/bindings/nvmem/u-boot,env.yaml b/Documentation/devicetree/bindings/nvmem/layouts/u-boot,env.yaml
+similarity index 75%
+rename from Documentation/devicetree/bindings/nvmem/u-boot,env.yaml
+rename to Documentation/devicetree/bindings/nvmem/layouts/u-boot,env.yaml
+index 9c36afc7084b..56a8f55d4a09 100644
+--- a/Documentation/devicetree/bindings/nvmem/u-boot,env.yaml
++++ b/Documentation/devicetree/bindings/nvmem/layouts/u-boot,env.yaml
+@@ -1,10 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/nvmem/u-boot,env.yaml#
++$id: http://devicetree.org/schemas/nvmem/layouts/u-boot,env.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: U-Boot environment variables
++title: U-Boot environment variables layout
+ 
+ description: |
+   U-Boot uses environment variables to store device parameters and
+@@ -21,9 +21,6 @@ description: |
+   This binding allows marking storage device (as containing env data) and
+   specifying used format.
+ 
+-  Right now only flash partition case is covered but it may be extended to e.g.
+-  UBI volumes in the future.
+-
+   Variables can be defined as NVMEM device subnodes.
+ 
+ maintainers:
+@@ -42,6 +39,7 @@ properties:
+         const: brcm,env
+ 
+   reg:
++    description: Partition offset and size for env on top of MTD
+     maxItems: 1
+ 
+   bootcmd:
+@@ -58,6 +56,17 @@ properties:
+         description: The first argument is a MAC address offset.
+         const: 1
+ 
++allOf:
++  - if:
++      properties:
++        $nodename:
++          not:
++            contains:
++              pattern: "^partition@[0-9a-f]+$"
++    then:
++      properties:
++        reg: false
++
+ additionalProperties: false
+ 
+ examples:
+@@ -101,3 +110,23 @@ examples:
+             };
+         };
+     };
++  - |
++    partition@0 {
++        reg = <0x0 0x100000>;
++        label = "ubi";
++        compatible = "linux,ubi";
++
++        volumes {
++            ubi-volume-u-boot-env {
++                volname = "env";
++
++                nvmem-layout {
++                    compatible = "u-boot,env";
++
++                    ethaddr {
++                        #nvmem-cell-cells = <1>;
++                    };
++                };
++            };
++        };
++    };
+-- 
+2.35.3
 
-
-
->
-> FWIW:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
-> Mark.
->
-> > ---
-> >
-> >  arch/arm64/Kconfig | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index c87d16b12e9b..d37cbfc3031e 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -167,9 +167,9 @@ config ARM64
-> >       select HAVE_ARCH_JUMP_LABEL
-> >       select HAVE_ARCH_JUMP_LABEL_RELATIVE
-> >       select HAVE_ARCH_KASAN
-> > -     select HAVE_ARCH_KASAN_VMALLOC if HAVE_ARCH_KASAN
-> > -     select HAVE_ARCH_KASAN_SW_TAGS if HAVE_ARCH_KASAN
-> > -     select HAVE_ARCH_KASAN_HW_TAGS if (HAVE_ARCH_KASAN && ARM64_MTE)
-> > +     select HAVE_ARCH_KASAN_VMALLOC
-> > +     select HAVE_ARCH_KASAN_SW_TAGS
-> > +     select HAVE_ARCH_KASAN_HW_TAGS if ARM64_MTE
-> >       # Some instrumentation may be unsound, hence EXPERT
-> >       select HAVE_ARCH_KCSAN if EXPERT
-> >       select HAVE_ARCH_KFENCE
-> > --
-> > 2.43.0
-> >
-> >
->
-
-
---=20
-Best Regards
-Masahiro Yamada
