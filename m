@@ -1,557 +1,183 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD65B522A;
-	Mon, 15 Jul 2024 02:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218464C8F
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721009553; cv=none; b=V9WlwatYAOzLOWdO5q5uAUEXdvJxDWqgHa6XSac3G7awITdbHbVdMtKqHsH2mXvlNX+FHJVjHZaiqArPY17WncSKxefmPNXyLPkJJcq3yrAfBeF8AlVIT1BuWwlnKjcnDl3FxvAeT2h5mmKf9bMWNdxZoXUp1zaWX+yctbbWQo0=
+	t=1721009690; cv=none; b=Qm81vVNO2iU91g2UPR4k+Vp3IVKe8uZ1wtPMLezfsZbrRp+r5ZJYddSb+qxCBsSfDlnwWKm0BmffBPNkvYr5a/HGkyQXo9KOtZb04Q30oH33vOc5rrKH1gfumdhjG7HT74R5qg4j3gaGVuMs4al4OzlhZcPH2NxRq07nxGOceAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721009553; c=relaxed/simple;
-	bh=cJFqs0J7+rNyqEqWz5TssTFtDyTk4mOS4RwIWCxezJk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=PGT9Tyk9sX93Y0afWYNlB3RRJt4OMLWePrkvJa7Zm1Is0ThjrEIyMiTg9SaEo8G0i8zvr4e/XgUw8KoRbTJ20mQN+zdA1wCCNWW9yUH4ZrxoyeupigHAWfm0BTS3V7ldekBYHXJRsGugkzwlgVDDktfYNA95xSbAcAQHhCrTVOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EB3D12003AD;
-	Mon, 15 Jul 2024 04:12:22 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 860512003AA;
-	Mon, 15 Jul 2024 04:12:22 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 8D4781802183;
-	Mon, 15 Jul 2024 10:12:20 +0800 (+08)
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: tj@kernel.org,
-	dlemoal@kernel.org,
-	cassel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-ide@vger.kernel.org,
-	stable@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	kernel@pengutronix.de,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v2 2/4] ata: ahci_imx: Clean up code by using i.MX8Q HSIO PHY driver
-Date: Mon, 15 Jul 2024 09:53:54 +0800
-Message-Id: <1721008436-24288-3-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1721008436-24288-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1721008436-24288-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1721009690; c=relaxed/simple;
+	bh=yowH7QalUapkYgHeZUVZ+f9BegeEJH4ngNknLAglrJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UBQwa3POogJEbViL/7SDONXQIZzsQraemgqZcdRKgD7EIxInpIfIH2y9UM+Ivz+xH9AI+TdWxcxYKPJxYVA0GPTu0Saysh13SVI/ezQ1+Nd3j3wdp6qs1aWEbRYWfFWsWoPAHvYp8JlkRtvK5ccs9XozjUIL57rzJWw9/cDL4ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ambvSNoi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ambvSNoi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721009687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T6J84PcjdhpOh6VF/DDBtLfXI9t3OT/wsOmHTj50YU8=;
+	b=ambvSNoiVY9DKo+7M7em95Kfvh0vdqxOBGNdxElzyU60a+7C9/dXdZaXcOa0ePd36z63nH
+	Zz4+sSjtEp5NP8LOBoiCitjTOKkW8Ea+Kunm9P+5PHnhvYJ0AU7wryDcr3yXjEimG5yMlV
+	7uWnEAJayLuDhVCc+kLvQZWbA2DnBhE=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-13-zxPMbipdNEOsDZWnr6N0xg-1; Sun, 14 Jul 2024 22:14:44 -0400
+X-MC-Unique: zxPMbipdNEOsDZWnr6N0xg-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2c96f6bed83so3200609a91.3
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 19:14:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721009683; x=1721614483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T6J84PcjdhpOh6VF/DDBtLfXI9t3OT/wsOmHTj50YU8=;
+        b=QuJQ5Wt6dsnF1xrIboAgi27sWJhP4j9iDhSvbbolI+SWYUqvro7lfVU//yFIVLy9jT
+         khggOAdGluv42tjALbWAMlM7Fx88EBHxQ5bBsRE3oJsBAKnfHFFxpuLTwS5w7wpaiIpX
+         HBsiuaERQE4czz9xWqxMqZQUFpSWfbaMO8lKKkRp5/rvpyoyZA/oqWFZYmou0WPd5K2a
+         JEZlx675gLxyff7HKzOwDU6sQnsi7gFPhFLAuU4weZa/1qBtJEDvO8Blib/2XXlSbCsx
+         YMa44fV5UmYbDHGr1jud2WYOYs1JSplFWKYx/ypbofrSTTImmIYK67Y0NtDIARCk0iAr
+         vORQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwQoJVprKCFJZBNpsPfamfiWhDcO+RWn80HBiStwrmOyn3DAiYuztimXHgqpx2SchM6uT45cDZl8xlc5SndWsUuZa7CXQVeeP97/3J
+X-Gm-Message-State: AOJu0YyftBeVkYclt5CNsxOThcgYdr/Moj3DO/owZA8ztP/9jrFp8y0K
+	ByitRBvE6/WUt6NG8PqyATUMgCUIF187+v0lKtd6lKTahYZfOZJeai1PxbEEKivCTFV/c7K8PI+
+	3+4PiGsPHcc8H1FmHG9q4hS7YlyDDNWhU1uPZ2A8WH1EytZPBpKsfNrcz6Nb8fMK+Zam7E0S91H
+	TwFblvt2V2Er7/dakQ/dBngtpZMdVRkAzv+giu
+X-Received: by 2002:a17:90b:384c:b0:2c9:752d:c007 with SMTP id 98e67ed59e1d1-2ca35c7d124mr12543378a91.29.1721009683260;
+        Sun, 14 Jul 2024 19:14:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGspocBKY5h4Ykba/X8TSphcHRCAowc5kdsJBrllBcK1uqTGlzIbjTzOagJ0s7w0Xxe6h7gxFBSEq/x37ViMVE=
+X-Received: by 2002:a17:90b:384c:b0:2c9:752d:c007 with SMTP id
+ 98e67ed59e1d1-2ca35c7d124mr12543369a91.29.1721009682769; Sun, 14 Jul 2024
+ 19:14:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <1720790333-456232-1-git-send-email-steven.sistare@oracle.com>
+In-Reply-To: <1720790333-456232-1-git-send-email-steven.sistare@oracle.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 15 Jul 2024 10:14:31 +0800
+Message-ID: <CACGkMEs9SvtW=Dkg1aU6HuFqTP5eekD1JdR2w377u3iGsOR-Aw@mail.gmail.com>
+Subject: Re: [PATCH V2 0/7] vdpa live update
+To: Steve Sistare <steven.sistare@oracle.com>
+Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
+	Eugenio Perez Martin <eperezma@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Dragos Tatulea <dtatulea@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Clean up code by using PHY interface.
+On Fri, Jul 12, 2024 at 9:19=E2=80=AFPM Steve Sistare <steven.sistare@oracl=
+e.com> wrote:
+>
+> Live update is a technique wherein an application saves its state, exec's
+> to an updated version of itself, and restores its state.  Clients of the
+> application experience a brief suspension of service, on the order of
+> 100's of milliseconds, but are otherwise unaffected.
+>
+> Define and implement interfaces that allow vdpa devices to be preserved
+> across fork or exec, to support live update for applications such as QEMU=
+.
+> The device must be suspended during the update, but its DMA mappings are
+> preserved, so the suspension is brief.
+>
+> The VHOST_NEW_OWNER ioctl transfers device ownership and pinned memory
+> accounting from one process to another.
+>
+> The VHOST_BACKEND_F_NEW_OWNER backend capability indicates that
+> VHOST_NEW_OWNER is supported.
+>
+> The VHOST_IOTLB_REMAP message type updates a DMA mapping with its userlan=
+d
+> address in the new process.
+>
+> The VHOST_BACKEND_F_IOTLB_REMAP backend capability indicates that
+> VHOST_IOTLB_REMAP is supported and required.  Some devices do not
+> require it, because the userland address of each DMA mapping is discarded
+> after being translated to a physical address.
+>
+> Here is a pseudo-code sequence for performing live update, based on
+> suspend + reset because resume is not yet widely available.  The vdpa dev=
+ice
+> descriptor, fd, remains open across the exec.
+>
+>   ioctl(fd, VHOST_VDPA_SUSPEND)
+>   ioctl(fd, VHOST_VDPA_SET_STATUS, 0)
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/ata/ahci_imx.c | 396 ++++++++++-------------------------------
- 1 file changed, 98 insertions(+), 298 deletions(-)
+I don't understand why we need a reset after suspend, it looks to me
+the previous suspend became meaningless.
 
-diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c
-index cb768f66f0a70..e94c0fdea2260 100644
---- a/drivers/ata/ahci_imx.c
-+++ b/drivers/ata/ahci_imx.c
-@@ -19,6 +19,7 @@
- #include <linux/libata.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
-+#include <linux/phy/phy.h>
- #include <linux/thermal.h>
- #include "ahci.h"
- 
-@@ -44,42 +45,6 @@ enum {
- 	/* Clock Reset Register */
- 	IMX_CLOCK_RESET				= 0x7f3f,
- 	IMX_CLOCK_RESET_RESET			= 1 << 0,
--	/* IMX8QM HSIO AHCI definitions */
--	IMX8QM_SATA_PHY_RX_IMPED_RATIO_OFFSET	= 0x03,
--	IMX8QM_SATA_PHY_TX_IMPED_RATIO_OFFSET	= 0x09,
--	IMX8QM_SATA_PHY_IMPED_RATIO_85OHM	= 0x6c,
--	IMX8QM_LPCG_PHYX2_OFFSET		= 0x00000,
--	IMX8QM_CSR_PHYX2_OFFSET			= 0x90000,
--	IMX8QM_CSR_PHYX1_OFFSET			= 0xa0000,
--	IMX8QM_CSR_PHYX_STTS0_OFFSET		= 0x4,
--	IMX8QM_CSR_PCIEA_OFFSET			= 0xb0000,
--	IMX8QM_CSR_PCIEB_OFFSET			= 0xc0000,
--	IMX8QM_CSR_SATA_OFFSET			= 0xd0000,
--	IMX8QM_CSR_PCIE_CTRL2_OFFSET		= 0x8,
--	IMX8QM_CSR_MISC_OFFSET			= 0xe0000,
--
--	IMX8QM_LPCG_PHYX2_PCLK0_MASK		= (0x3 << 16),
--	IMX8QM_LPCG_PHYX2_PCLK1_MASK		= (0x3 << 20),
--	IMX8QM_PHY_APB_RSTN_0			= BIT(0),
--	IMX8QM_PHY_MODE_SATA			= BIT(19),
--	IMX8QM_PHY_MODE_MASK			= (0xf << 17),
--	IMX8QM_PHY_PIPE_RSTN_0			= BIT(24),
--	IMX8QM_PHY_PIPE_RSTN_OVERRIDE_0		= BIT(25),
--	IMX8QM_PHY_PIPE_RSTN_1			= BIT(26),
--	IMX8QM_PHY_PIPE_RSTN_OVERRIDE_1		= BIT(27),
--	IMX8QM_STTS0_LANE0_TX_PLL_LOCK		= BIT(4),
--	IMX8QM_MISC_IOB_RXENA			= BIT(0),
--	IMX8QM_MISC_IOB_TXENA			= BIT(1),
--	IMX8QM_MISC_PHYX1_EPCS_SEL		= BIT(12),
--	IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_1	= BIT(24),
--	IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_0	= BIT(25),
--	IMX8QM_MISC_CLKREQN_IN_OVERRIDE_1	= BIT(28),
--	IMX8QM_MISC_CLKREQN_IN_OVERRIDE_0	= BIT(29),
--	IMX8QM_SATA_CTRL_RESET_N		= BIT(12),
--	IMX8QM_SATA_CTRL_EPCS_PHYRESET_N	= BIT(7),
--	IMX8QM_CTRL_BUTTON_RST_N		= BIT(21),
--	IMX8QM_CTRL_POWER_UP_RST_N		= BIT(23),
--	IMX8QM_CTRL_LTSSM_ENABLE		= BIT(4),
- };
- 
- enum ahci_imx_type {
-@@ -95,14 +60,10 @@ struct imx_ahci_priv {
- 	struct clk *sata_clk;
- 	struct clk *sata_ref_clk;
- 	struct clk *ahb_clk;
--	struct clk *epcs_tx_clk;
--	struct clk *epcs_rx_clk;
--	struct clk *phy_apbclk;
--	struct clk *phy_pclk0;
--	struct clk *phy_pclk1;
--	void __iomem *phy_base;
--	struct gpio_desc *clkreq_gpiod;
- 	struct regmap *gpr;
-+	struct phy *sata_phy;
-+	struct phy *cali_phy0;
-+	struct phy *cali_phy1;
- 	bool no_device;
- 	bool first_time;
- 	u32 phy_params;
-@@ -450,201 +411,73 @@ ATTRIBUTE_GROUPS(fsl_sata_ahci);
- 
- static int imx8_sata_enable(struct ahci_host_priv *hpriv)
- {
--	u32 val, reg;
--	int i, ret;
-+	u32 val;
-+	int ret;
- 	struct imx_ahci_priv *imxpriv = hpriv->plat_data;
- 	struct device *dev = &imxpriv->ahci_pdev->dev;
- 
--	/* configure the hsio for sata */
--	ret = clk_prepare_enable(imxpriv->phy_pclk0);
--	if (ret < 0) {
--		dev_err(dev, "can't enable phy_pclk0.\n");
-+	/*
-+	 * Since "REXT" pin is only present for first lane of i.MX8QM
-+	 * PHY, its calibration results will be stored, passed through
-+	 * to the second lane PHY, and shared with all three lane PHYs.
-+	 *
-+	 * Initialize the first two lane PHYs here, although only the
-+	 * third lane PHY is used by SATA.
-+	 */
-+	ret = phy_init(imxpriv->cali_phy0);
-+	if (ret) {
-+		dev_err(dev, "cali PHY init failed\n");
- 		return ret;
- 	}
--	ret = clk_prepare_enable(imxpriv->phy_pclk1);
--	if (ret < 0) {
--		dev_err(dev, "can't enable phy_pclk1.\n");
--		goto disable_phy_pclk0;
-+	ret = phy_power_on(imxpriv->cali_phy0);
-+	if (ret) {
-+		dev_err(dev, "cali PHY power on failed\n");
-+		goto err_cali_phy0_exit;
- 	}
--	ret = clk_prepare_enable(imxpriv->epcs_tx_clk);
--	if (ret < 0) {
--		dev_err(dev, "can't enable epcs_tx_clk.\n");
--		goto disable_phy_pclk1;
-+	ret = phy_init(imxpriv->cali_phy1);
-+	if (ret) {
-+		dev_err(dev, "cali PHY1 init failed\n");
-+		goto err_cali_phy0_off;
- 	}
--	ret = clk_prepare_enable(imxpriv->epcs_rx_clk);
--	if (ret < 0) {
--		dev_err(dev, "can't enable epcs_rx_clk.\n");
--		goto disable_epcs_tx_clk;
-+	ret = phy_power_on(imxpriv->cali_phy1);
-+	if (ret) {
-+		dev_err(dev, "cali PHY1 power on failed\n");
-+		goto err_cali_phy1_exit;
- 	}
--	ret = clk_prepare_enable(imxpriv->phy_apbclk);
--	if (ret < 0) {
--		dev_err(dev, "can't enable phy_apbclk.\n");
--		goto disable_epcs_rx_clk;
-+	ret = phy_init(imxpriv->sata_phy);
-+	if (ret) {
-+		dev_err(dev, "sata PHY init failed\n");
-+		goto err_cali_phy1_off;
- 	}
--	/* Configure PHYx2 PIPE_RSTN */
--	regmap_read(imxpriv->gpr, IMX8QM_CSR_PCIEA_OFFSET +
--			IMX8QM_CSR_PCIE_CTRL2_OFFSET, &val);
--	if ((val & IMX8QM_CTRL_LTSSM_ENABLE) == 0) {
--		/* The link of the PCIEA of HSIO is down */
--		regmap_update_bits(imxpriv->gpr,
--				IMX8QM_CSR_PHYX2_OFFSET,
--				IMX8QM_PHY_PIPE_RSTN_0 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_0,
--				IMX8QM_PHY_PIPE_RSTN_0 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_0);
-+	ret = phy_set_mode(imxpriv->sata_phy, PHY_MODE_SATA);
-+	if (ret) {
-+		dev_err(dev, "unable to set SATA PHY mode\n");
-+		goto err_sata_phy_exit;
- 	}
--	regmap_read(imxpriv->gpr, IMX8QM_CSR_PCIEB_OFFSET +
--			IMX8QM_CSR_PCIE_CTRL2_OFFSET, &reg);
--	if ((reg & IMX8QM_CTRL_LTSSM_ENABLE) == 0) {
--		/* The link of the PCIEB of HSIO is down */
--		regmap_update_bits(imxpriv->gpr,
--				IMX8QM_CSR_PHYX2_OFFSET,
--				IMX8QM_PHY_PIPE_RSTN_1 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_1,
--				IMX8QM_PHY_PIPE_RSTN_1 |
--				IMX8QM_PHY_PIPE_RSTN_OVERRIDE_1);
--	}
--	if (((reg | val) & IMX8QM_CTRL_LTSSM_ENABLE) == 0) {
--		/* The links of both PCIA and PCIEB of HSIO are down */
--		regmap_update_bits(imxpriv->gpr,
--				IMX8QM_LPCG_PHYX2_OFFSET,
--				IMX8QM_LPCG_PHYX2_PCLK0_MASK |
--				IMX8QM_LPCG_PHYX2_PCLK1_MASK,
--				0);
--	}
--
--	/* set PWR_RST and BT_RST of csr_pciea */
--	val = IMX8QM_CSR_PCIEA_OFFSET + IMX8QM_CSR_PCIE_CTRL2_OFFSET;
--	regmap_update_bits(imxpriv->gpr,
--			val,
--			IMX8QM_CTRL_BUTTON_RST_N,
--			IMX8QM_CTRL_BUTTON_RST_N);
--	regmap_update_bits(imxpriv->gpr,
--			val,
--			IMX8QM_CTRL_POWER_UP_RST_N,
--			IMX8QM_CTRL_POWER_UP_RST_N);
--
--	/* PHYX1_MODE to SATA */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_PHYX1_OFFSET,
--			IMX8QM_PHY_MODE_MASK,
--			IMX8QM_PHY_MODE_SATA);
--
--	/*
--	 * BIT0 RXENA 1, BIT1 TXENA 0
--	 * BIT12 PHY_X1_EPCS_SEL 1.
--	 */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_IOB_RXENA,
--			IMX8QM_MISC_IOB_RXENA);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_IOB_TXENA,
--			0);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_PHYX1_EPCS_SEL,
--			IMX8QM_MISC_PHYX1_EPCS_SEL);
--	/*
--	 * It is possible, for PCIe and SATA are sharing
--	 * the same clock source, HPLL or external oscillator.
--	 * When PCIe is in low power modes (L1.X or L2 etc),
--	 * the clock source can be turned off. In this case,
--	 * if this clock source is required to be toggling by
--	 * SATA, then SATA functions will be abnormal.
--	 * Set the override here to avoid it.
--	 */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_MISC_OFFSET,
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_0 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_0,
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_OUT_OVERRIDE_0 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_1 |
--			IMX8QM_MISC_CLKREQN_IN_OVERRIDE_0);
--
--	/* clear PHY RST, then set it */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_EPCS_PHYRESET_N,
--			0);
--
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_EPCS_PHYRESET_N,
--			IMX8QM_SATA_CTRL_EPCS_PHYRESET_N);
--
--	/* CTRL RST: SET -> delay 1 us -> CLEAR -> SET */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_RESET_N,
--			IMX8QM_SATA_CTRL_RESET_N);
--	udelay(1);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_RESET_N,
--			0);
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_SATA_OFFSET,
--			IMX8QM_SATA_CTRL_RESET_N,
--			IMX8QM_SATA_CTRL_RESET_N);
--
--	/* APB reset */
--	regmap_update_bits(imxpriv->gpr,
--			IMX8QM_CSR_PHYX1_OFFSET,
--			IMX8QM_PHY_APB_RSTN_0,
--			IMX8QM_PHY_APB_RSTN_0);
--
--	for (i = 0; i < 100; i++) {
--		reg = IMX8QM_CSR_PHYX1_OFFSET +
--			IMX8QM_CSR_PHYX_STTS0_OFFSET;
--		regmap_read(imxpriv->gpr, reg, &val);
--		val &= IMX8QM_STTS0_LANE0_TX_PLL_LOCK;
--		if (val == IMX8QM_STTS0_LANE0_TX_PLL_LOCK)
--			break;
--		udelay(1);
-+	ret = phy_power_on(imxpriv->sata_phy);
-+	if (ret) {
-+		dev_err(dev, "sata PHY power up failed\n");
-+		goto err_sata_phy_exit;
- 	}
- 
--	if (val != IMX8QM_STTS0_LANE0_TX_PLL_LOCK) {
--		dev_err(dev, "TX PLL of the PHY is not locked\n");
--		ret = -ENODEV;
--	} else {
--		writeb(imxpriv->imped_ratio, imxpriv->phy_base +
--				IMX8QM_SATA_PHY_RX_IMPED_RATIO_OFFSET);
--		writeb(imxpriv->imped_ratio, imxpriv->phy_base +
--				IMX8QM_SATA_PHY_TX_IMPED_RATIO_OFFSET);
--		reg = readb(imxpriv->phy_base +
--				IMX8QM_SATA_PHY_RX_IMPED_RATIO_OFFSET);
--		if (unlikely(reg != imxpriv->imped_ratio))
--			dev_info(dev, "Can't set PHY RX impedance ratio.\n");
--		reg = readb(imxpriv->phy_base +
--				IMX8QM_SATA_PHY_TX_IMPED_RATIO_OFFSET);
--		if (unlikely(reg != imxpriv->imped_ratio))
--			dev_info(dev, "Can't set PHY TX impedance ratio.\n");
--		usleep_range(50, 100);
-+	/* The cali_phy# can be turned off after SATA PHY is initialized. */
-+	phy_power_off(imxpriv->cali_phy1);
-+	phy_exit(imxpriv->cali_phy1);
-+	phy_power_off(imxpriv->cali_phy0);
-+	phy_exit(imxpriv->cali_phy0);
- 
--		/*
--		 * To reduce the power consumption, gate off
--		 * the PHY clks
--		 */
--		clk_disable_unprepare(imxpriv->phy_apbclk);
--		clk_disable_unprepare(imxpriv->phy_pclk1);
--		clk_disable_unprepare(imxpriv->phy_pclk0);
--		return ret;
--	}
-+	return 0;
- 
--	clk_disable_unprepare(imxpriv->phy_apbclk);
--disable_epcs_rx_clk:
--	clk_disable_unprepare(imxpriv->epcs_rx_clk);
--disable_epcs_tx_clk:
--	clk_disable_unprepare(imxpriv->epcs_tx_clk);
--disable_phy_pclk1:
--	clk_disable_unprepare(imxpriv->phy_pclk1);
--disable_phy_pclk0:
--	clk_disable_unprepare(imxpriv->phy_pclk0);
-+err_sata_phy_exit:
-+	phy_exit(imxpriv->sata_phy);
-+err_cali_phy1_off:
-+	phy_power_off(imxpriv->cali_phy1);
-+err_cali_phy1_exit:
-+	phy_exit(imxpriv->cali_phy1);
-+err_cali_phy0_off:
-+	phy_power_off(imxpriv->cali_phy0);
-+err_cali_phy0_exit:
-+	phy_exit(imxpriv->cali_phy0);
- 
- 	return ret;
- }
-@@ -698,6 +531,9 @@ static int imx_sata_enable(struct ahci_host_priv *hpriv)
- 		}
- 	} else if (imxpriv->type == AHCI_IMX8QM) {
- 		ret = imx8_sata_enable(hpriv);
-+		if (ret)
-+			goto disable_clk;
-+
- 	}
- 
- 	usleep_range(1000, 2000);
-@@ -736,8 +572,10 @@ static void imx_sata_disable(struct ahci_host_priv *hpriv)
- 		break;
- 
- 	case AHCI_IMX8QM:
--		clk_disable_unprepare(imxpriv->epcs_rx_clk);
--		clk_disable_unprepare(imxpriv->epcs_tx_clk);
-+		if (imxpriv->sata_phy) {
-+			phy_power_off(imxpriv->sata_phy);
-+			phy_exit(imxpriv->sata_phy);
-+		}
- 		break;
- 
- 	default:
-@@ -760,6 +598,9 @@ static void ahci_imx_error_handler(struct ata_port *ap)
- 
- 	ahci_error_handler(ap);
- 
-+	if (imxpriv->type == AHCI_IMX8QM)
-+		return;
-+
- 	if (!(imxpriv->first_time) || ahci_imx_hotplug)
- 		return;
- 
-@@ -986,65 +827,22 @@ static const struct scsi_host_template ahci_platform_sht = {
- 
- static int imx8_sata_probe(struct device *dev, struct imx_ahci_priv *imxpriv)
- {
--	struct resource *phy_res;
--	struct platform_device *pdev = imxpriv->ahci_pdev;
--	struct device_node *np = dev->of_node;
--
--	if (of_property_read_u32(np, "fsl,phy-imp", &imxpriv->imped_ratio))
--		imxpriv->imped_ratio = IMX8QM_SATA_PHY_IMPED_RATIO_85OHM;
--	phy_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
--	if (phy_res) {
--		imxpriv->phy_base = devm_ioremap(dev, phy_res->start,
--					resource_size(phy_res));
--		if (!imxpriv->phy_base) {
--			dev_err(dev, "error with ioremap\n");
--			return -ENOMEM;
--		}
--	} else {
--		dev_err(dev, "missing *phy* reg region.\n");
--		return -ENOMEM;
--	}
--	imxpriv->gpr =
--		 syscon_regmap_lookup_by_phandle(np, "hsio");
--	if (IS_ERR(imxpriv->gpr)) {
--		dev_err(dev, "unable to find gpr registers\n");
--		return PTR_ERR(imxpriv->gpr);
--	}
--
--	imxpriv->epcs_tx_clk = devm_clk_get(dev, "epcs_tx");
--	if (IS_ERR(imxpriv->epcs_tx_clk)) {
--		dev_err(dev, "can't get epcs_tx_clk clock.\n");
--		return PTR_ERR(imxpriv->epcs_tx_clk);
--	}
--	imxpriv->epcs_rx_clk = devm_clk_get(dev, "epcs_rx");
--	if (IS_ERR(imxpriv->epcs_rx_clk)) {
--		dev_err(dev, "can't get epcs_rx_clk clock.\n");
--		return PTR_ERR(imxpriv->epcs_rx_clk);
--	}
--	imxpriv->phy_pclk0 = devm_clk_get(dev, "phy_pclk0");
--	if (IS_ERR(imxpriv->phy_pclk0)) {
--		dev_err(dev, "can't get phy_pclk0 clock.\n");
--		return PTR_ERR(imxpriv->phy_pclk0);
--	}
--	imxpriv->phy_pclk1 = devm_clk_get(dev, "phy_pclk1");
--	if (IS_ERR(imxpriv->phy_pclk1)) {
--		dev_err(dev, "can't get phy_pclk1 clock.\n");
--		return PTR_ERR(imxpriv->phy_pclk1);
--	}
--	imxpriv->phy_apbclk = devm_clk_get(dev, "phy_apbclk");
--	if (IS_ERR(imxpriv->phy_apbclk)) {
--		dev_err(dev, "can't get phy_apbclk clock.\n");
--		return PTR_ERR(imxpriv->phy_apbclk);
--	}
--
--	/* Fetch GPIO, then enable the external OSC */
--	imxpriv->clkreq_gpiod = devm_gpiod_get_optional(dev, "clkreq",
--				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
--	if (IS_ERR(imxpriv->clkreq_gpiod))
--		return PTR_ERR(imxpriv->clkreq_gpiod);
--	if (imxpriv->clkreq_gpiod)
--		gpiod_set_consumer_name(imxpriv->clkreq_gpiod, "SATA CLKREQ");
--
-+	if (!(dev->bus_dma_limit))
-+		dev->bus_dma_limit = DMA_BIT_MASK(32);
-+
-+	imxpriv->sata_phy = devm_phy_get(dev, "sata-phy");
-+	if (IS_ERR(imxpriv->sata_phy))
-+		return dev_err_probe(dev, PTR_ERR(imxpriv->sata_phy),
-+				     "Failed to get sata_phy\n");
-+
-+	imxpriv->cali_phy0 = devm_phy_get(dev, "cali-phy0");
-+	if (IS_ERR(imxpriv->cali_phy0))
-+		return dev_err_probe(dev, PTR_ERR(imxpriv->cali_phy0),
-+				     "Failed to get cali_phy0\n");
-+	imxpriv->cali_phy1 = devm_phy_get(dev, "cali-phy1");
-+	if (IS_ERR(imxpriv->cali_phy1))
-+		return dev_err_probe(dev, PTR_ERR(imxpriv->cali_phy1),
-+				     "Failed to get cali_phy1\n");
- 	return 0;
- }
- 
-@@ -1077,12 +875,6 @@ static int imx_ahci_probe(struct platform_device *pdev)
- 		return PTR_ERR(imxpriv->sata_ref_clk);
- 	}
- 
--	imxpriv->ahb_clk = devm_clk_get(dev, "ahb");
--	if (IS_ERR(imxpriv->ahb_clk)) {
--		dev_err(dev, "can't get ahb clock.\n");
--		return PTR_ERR(imxpriv->ahb_clk);
--	}
--
- 	if (imxpriv->type == AHCI_IMX6Q || imxpriv->type == AHCI_IMX6QP) {
- 		u32 reg_value;
- 
-@@ -1142,11 +934,8 @@ static int imx_ahci_probe(struct platform_device *pdev)
- 		goto disable_clk;
- 
- 	/*
--	 * Configure the HWINIT bits of the HOST_CAP and HOST_PORTS_IMPL,
--	 * and IP vendor specific register IMX_TIMER1MS.
--	 * Configure CAP_SSS (support stagered spin up).
--	 * Implement the port0.
--	 * Get the ahb clock rate, and configure the TIMER1MS register.
-+	 * Configure the HWINIT bits of the HOST_CAP and HOST_PORTS_IMPL.
-+	 * Set CAP_SSS (support stagered spin up) and Implement the port0.
- 	 */
- 	reg_val = readl(hpriv->mmio + HOST_CAP);
- 	if (!(reg_val & HOST_CAP_SSS)) {
-@@ -1159,8 +948,19 @@ static int imx_ahci_probe(struct platform_device *pdev)
- 		writel(reg_val, hpriv->mmio + HOST_PORTS_IMPL);
- 	}
- 
--	reg_val = clk_get_rate(imxpriv->ahb_clk) / 1000;
--	writel(reg_val, hpriv->mmio + IMX_TIMER1MS);
-+	if (imxpriv->type != AHCI_IMX8QM) {
-+		/*
-+		 * Get AHB clock rate and configure the vendor specified
-+		 * TIMER1MS register on i.MX53, i.MX6Q and i.MX6QP only.
-+		 */
-+		imxpriv->ahb_clk = devm_clk_get(dev, "ahb");
-+		if (IS_ERR(imxpriv->ahb_clk)) {
-+			dev_err(dev, "Failed to get ahb clock\n");
-+			goto disable_sata;
-+		}
-+		reg_val = clk_get_rate(imxpriv->ahb_clk) / 1000;
-+		writel(reg_val, hpriv->mmio + IMX_TIMER1MS);
-+	}
- 
- 	ret = ahci_platform_init_host(pdev, hpriv, &ahci_imx_port_info,
- 				      &ahci_platform_sht);
--- 
-2.37.1
+>   exec
+>
+>   ioctl(fd, VHOST_NEW_OWNER)
+>
+>   issue ioctls to re-create vrings
+>
+>   if VHOST_BACKEND_F_IOTLB_REMAP
+
+So the idea is for a device that is using a virtual address, it
+doesn't need VHOST_BACKEND_F_IOTLB_REMAP at all?
+
+>       foreach dma mapping
+>           write(fd, {VHOST_IOTLB_REMAP, new_addr})
+>
+>   ioctl(fd, VHOST_VDPA_SET_STATUS,
+>             ACKNOWLEDGE | DRIVER | FEATURES_OK | DRIVER_OK)
+
+From API level, this seems to be asymmetric as we have suspending but
+not resuming?
+
+>
+> This is faster than VHOST_RESET_OWNER + VHOST_SET_OWNER + VHOST_IOTLB_UPD=
+ATE,
+> as that would would unpin and repin physical pages, which would cost mult=
+iple
+> seconds for large memories.
+>
+> This is implemented in QEMU by the patch series "Live update: vdpa"
+>   https://lore.kernel.org/qemu-devel/TBD  (reference to be posted shortly=
+)
+>
+> The QEMU implementation leverages the live migration code path, but after
+> CPR exec's new QEMU:
+>   - vhost_vdpa_set_owner() calls VHOST_NEW_OWNER instead of VHOST_SET_OWN=
+ER
+>   - vhost_vdpa_dma_map() sets type VHOST_IOTLB_REMAP instead of
+>     VHOST_IOTLB_UPDATE
+>
+> Changes in V2:
+>   - clean up handling of set_map vs dma_map vs platform iommu in remap
+>   - augment and clarify commit messages and comments
+>
+> Steve Sistare (7):
+>   vhost-vdpa: count pinned memory
+>   vhost-vdpa: pass mm to bind
+>   vhost-vdpa: VHOST_NEW_OWNER
+>   vhost-vdpa: VHOST_BACKEND_F_NEW_OWNER
+>   vhost-vdpa: VHOST_IOTLB_REMAP
+>   vhost-vdpa: VHOST_BACKEND_F_IOTLB_REMAP
+>   vdpa/mlx5: new owner capability
+>
+>  drivers/vdpa/mlx5/net/mlx5_vnet.c |   3 +-
+>  drivers/vhost/vdpa.c              | 125 ++++++++++++++++++++++++++++--
+>  drivers/vhost/vhost.c             |  15 ++++
+>  drivers/vhost/vhost.h             |   1 +
+>  include/uapi/linux/vhost.h        |  10 +++
+>  include/uapi/linux/vhost_types.h  |  15 +++-
+>  6 files changed, 161 insertions(+), 8 deletions(-)
+>
+> --
+> 2.39.3
+>
+
+Thanks
 
