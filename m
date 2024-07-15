@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EB9174EC6;
-	Mon, 15 Jul 2024 07:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91D8174EC6;
+	Mon, 15 Jul 2024 07:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721030127; cv=none; b=HDTX6ublEQqTQM7PeZW2e+v6WhWlnQrLzwSYkFWaeZqDyER7v4dpYnGcNRdSnTKMkaNJ1Jvv7uYWJyM2FwNt/VYGhLWzQZnfD0PjjueHl9cCPd4lD4X1STGwdEOmkf18c03Tuefx5tsgZlOwDCYcObaR8NRt69Hbi2m34WMLSm8=
+	t=1721030132; cv=none; b=RQc5YLFltrhbhw6/3mluEhkCXfFtypLhP2gc0VfCJ989rICN0/fJH3RW7qvbzIv4x/avKHHjuZ1habsodgvqMAn3fhDWg/gFcEnLeKyM7jCyjv+M8xA2FgvU5hUYEJGUgzRu85t/baSYKmmd8DJ0E5cgzUlQ0d8surlGVsbp0Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721030127; c=relaxed/simple;
-	bh=S6mDdLmJlLk5asMkLgXSGVFFk20+sEC0L15zUPsPUvU=;
+	s=arc-20240116; t=1721030132; c=relaxed/simple;
+	bh=V+4E5jckJnwldRUAaWyovlKBTnN/NVhxZiSvn5X4Xog=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PJTFE8OsC+2ZwMIIt8YMS5+/t3r3Y5nvcwaAIz33UgUG5aJ2tDTalNjgrI4oU7RB5fbWhWtUPk0gkKXzpR4JVNG16eAwWsF/UwVPmzVLuo0LlUy9mUfGRoAZF8b3R72V53aaI1/0VFiTCrMHwm93W/tY4SSZMvA5FG4wVruiizk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WsvYNswD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hfEgEFD/1mWO98dNDUKf48pnTHS/35EZ6bcKsZt+xLiVhS+8nmJeo09265GwbZrKUfffOMID2Ln7ZaD6vrcAyX2HXYfW5bpII8QyUUGGjcB94WKJDK2zNPCPLZwWVKkj4e8anVwdX8MfIJQLlJfPM+JuVi1LLhImfUlGdFo01/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=z/df9LwH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WsvYNswD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F03C32782;
-	Mon, 15 Jul 2024 07:55:26 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="z/df9LwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26F0C32782;
+	Mon, 15 Jul 2024 07:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721030127;
-	bh=S6mDdLmJlLk5asMkLgXSGVFFk20+sEC0L15zUPsPUvU=;
+	s=korg; t=1721030131;
+	bh=V+4E5jckJnwldRUAaWyovlKBTnN/NVhxZiSvn5X4Xog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WsvYNswDZ2z2mGFW000TK8SL43Xb9LnXUwmjDZxcRNrJRBwMGnSdAKIKLzCgu8N+X
-	 LwLGfOsUC0FmJUuhk+Rb/gpaOPnVLw8ciVDRBrieujG8neNDdqnOr8nZBiBKJdWAwt
-	 3gp5ntlCeJ+WkIHg5fvP0Gs8vX7zgeYNUoGEEXw8=
+	b=z/df9LwHDrZ4Ry0d1c6Ykcgg7cdJisCxqZ1AHki189IIeGErEUG8ImfBYunTOiQOh
+	 uQAmtjaRJTnLegFnVK0v55/cRYfB7cNcb7juAzIOVe3NIvu1B+FzuYZHM2AY3NroG9
+	 TNf5Cddy8fxY3w8f9eDGYOnlxJDvQ9mc/5uzcpwI=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.1.99
-Date: Mon, 15 Jul 2024 09:55:14 +0200
-Message-ID: <2024071548-pranker-neon-0e97@gregkh>
+Subject: Re: Linux 6.6.40
+Date: Mon, 15 Jul 2024 09:55:23 +0200
+Message-ID: <2024071547-paramount-capably-48b3@gregkh>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <2024071546-mortify-sphere-6c7a@gregkh>
-References: <2024071546-mortify-sphere-6c7a@gregkh>
+In-Reply-To: <2024071546-savanna-giggly-15b8@gregkh>
+References: <2024071546-savanna-giggly-15b8@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,25 +46,25 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 diff --git a/Makefile b/Makefile
-index c9a630cdb2ec..c12da8fcb089 100644
+index 5ba70f0649f3..c84413077456 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 1
--SUBLEVEL = 98
-+SUBLEVEL = 99
+ PATCHLEVEL = 6
+-SUBLEVEL = 39
++SUBLEVEL = 40
  EXTRAVERSION =
- NAME = Curry Ramen
+ NAME = Hurr durr I'ma ninja sloth
  
 diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index be5b0ff2966f..7549c430c4f0 100644
+index 592dabc78515..8dd85221cd92 100644
 --- a/drivers/usb/host/xhci-ring.c
 +++ b/drivers/usb/host/xhci-ring.c
-@@ -2631,17 +2631,16 @@ static int handle_tx_event(struct xhci_hcd *xhci,
+@@ -2649,17 +2649,16 @@ static int handle_tx_event(struct xhci_hcd *xhci,
  			else
- 				xhci_handle_halted_endpoint(xhci, ep, 0, NULL,
+ 				xhci_handle_halted_endpoint(xhci, ep, NULL,
  							    EP_SOFT_RESET);
 -			break;
 +			goto cleanup;
