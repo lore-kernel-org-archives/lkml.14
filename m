@@ -1,98 +1,73 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-sh.amlogic.com (unknown [58.32.228.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410D928FA;
-	Mon, 15 Jul 2024 05:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9D128FA;
+	Mon, 15 Jul 2024 05:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721021193; cv=none; b=tdlXpUSkVfliYJvDQ9ZC9oZQ7DBdur2n3TDNsejwsK35AL4ALiDGsAuGRwmhAFCqfaz37rCBfPx8RLIdhpY27aD7bg4OnbcyQKJMM+qX+OmjRv1Sq6uFqN/JETj+6dmarODh6/W2SykdqLHhSO7z4lgEB2REAbDJ0IsO1BxksGU=
+	t=1721021257; cv=none; b=Jo5ISPYwo5WVbq4pWp3Ek/29hXDbYM8aaPKKyWuekQm0EVB7VFNT++q52NF1yaeuMlW0/tvSoSEig6m5dlSiLhF9Qnom+2RaPTsoHpwwSEn7SiOtz1VrqYnR17pofkNZyMnWuGLrcrfZxtQkyLK+i/A0GHImVl4Ywt1MdshdmKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721021193; c=relaxed/simple;
-	bh=mj8oN9bEAapDXaDwcOfFZv5+N0Y7B4TxqrVXFF/wcvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNbNSyOEH/A5wW/UgUbAITj+0Q4v3ujnEkObIaSZgdHF/IMFo5p2tZHl5Y7izlsEAKRSaocCnJ7sJzcNyLIi3GYP1XIPk2QgF9L6vTe9p7uX24hCtPf1skbofBE7FBYjuq31QorhE8WBe9H7Yf1IryjcaVYIjg1M8+CiarMKq30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oo72ttqV; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oo72ttqV"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46F4TWkt020350;
-	Mon, 15 Jul 2024 05:26:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=mj8oN9bEAapDXaDwcOfFZv5+N0Y
-	7B4TxqrVXFF/wcvQ=; b=oo72ttqVKquBq3ezSW5maqnfuhxBEJwUEyrTpisYaOg
-	Cx/v+BBNbGkkNwfeZSNqPicGECK+IhL67KY0+bs2V15CeT1/8FyRTw8JDgmgbC0W
-	VKwatFnXjLN39PlHVgwIIiWXd9pGYRYqtFZgANCmi7RweW1fZrSSIgPj3of5FPJ1
-	EN/7DrB8xy4Mh2kNOM4zuYGi6+4xcwNgF4UH1apV2qzJgOj1lEdxHk03bOOpE+2V
-	rT2DaUq+mmXTJ+UD0N6+hLmh27BsemddJ6Xp/2W1yz+SOxqCKhELsyza7b7jRDit
-	Kvu1iseEBBqwg7Fq3K7ksBd6LCp5pZHohqEAmLozZng==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40cvsc03ty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jul 2024 05:26:16 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46F5QF0K005585;
-	Mon, 15 Jul 2024 05:26:15 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40cvsc03tw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jul 2024 05:26:15 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46F2c2Ha028708;
-	Mon, 15 Jul 2024 05:26:15 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 40c6m2vwvg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jul 2024 05:26:14 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46F5QBkl55050518
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jul 2024 05:26:13 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 56A742004D;
-	Mon, 15 Jul 2024 05:26:11 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6367820043;
-	Mon, 15 Jul 2024 05:26:09 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.43.54.149])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 15 Jul 2024 05:26:09 +0000 (GMT)
-Date: Mon, 15 Jul 2024 10:56:03 +0530
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        naveen.n.rao@linux.ibm.com
-Cc: linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arch/powerpc/kvm: Avoid extra checks when emulating
- HFSCR bits
-Message-ID: <fru2vfv3mcfm7c5zn2xwqvqf6b2s2up2k6vam2nm7jc7rhqjay@mkwwkzw4eh7x>
-References: <20240626123447.66104-1-gautam@linux.ibm.com>
+	s=arc-20240116; t=1721021257; c=relaxed/simple;
+	bh=T4C/44EQKVp+bay80tRzwU5QDiRga3PYelPz1dHOG24=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ga5xBjl/5Yp/T0Knm5Oqyq8igsYksVoKlbjehvo2CYGxLz2uiwQJbdPqRU28mVZgJjlZLoT9nloCj0qBt4+aZ91HbUdyiL2c+LF+uRi3qp/xtSzCZ4fwU64m/K/6vuEgQ2SCeiuFMsIu6A+XCNjAUjCr8xHPDBvE8+y9CTli900=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+Received: from droid10-sz.amlogic.com (10.28.11.69) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.39; Mon, 15 Jul 2024
+ 13:12:19 +0800
+From: zelong dong <zelong.dong@amlogic.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Rob Herring
+	<robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Jerome Brunet <jbrunet@baylibre.com>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kelvin.zhang@amlogic.com>, Zelong Dong <zelong.dong@amlogic.com>
+Subject: [PATCH v2 0/3] reset: amlogic-a4/a5: add reset driver
+Date: Mon, 15 Jul 2024 13:12:14 +0800
+Message-ID: <20240715051217.5286-1-zelong.dong@amlogic.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626123447.66104-1-gautam@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ThvTW9Yx5AzWjC-WTPjQkInG8i6S1Nu2
-X-Proofpoint-GUID: o6eZtnXkcO7IRE37LNQu_raRf6eTsCqD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_01,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=402
- malwarescore=0 spamscore=0 bulkscore=0 adultscore=0 impostorscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2407150036
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hello,
+From: Zelong Dong <zelong.dong@amlogic.com>
 
-Please review this patch and let me know if any changes are needed.
+This patchset adds Reset controller driver support for
+Amlogic A4/A5 SoC. The RESET registers count and offset
+for A4/A5 Soc are same as S4 Soc.
 
-Thanks,
-Gautam
+Changes since v1:
+- remove 'amlogic,t7-reset'
+- move 'amlogic,c3-reset' to the other enum list
+- move reset node from amlogic-a4-common.dtsi to
+  amlogic-a4.dtsi/amlogic-a5.dtsi
+
+---
+v1:https://lore.kernel.org/all/20240703061610.37217-1-zelong.dong@amlogic.com/
+
+Zelong Dong (3):
+  dt-bindings: reset: Add compatible and DT bindings for Amlogic A4/A5
+    Reset Controller
+  arm64: dts: amlogic: Add Amlogic A4 reset controller
+  arm64: dts: amlogic: Add Amlogic A5 reset controller
+
+ .../bindings/reset/amlogic,meson-reset.yaml   | 21 ++--
+ .../arm64/boot/dts/amlogic/amlogic-a4-reset.h | 93 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi   | 10 ++
+ .../arm64/boot/dts/amlogic/amlogic-a5-reset.h | 95 +++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi   | 10 ++
+ 5 files changed, 222 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/amlogic-a4-reset.h
+ create mode 100644 arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
+
+-- 
+2.35.1
+
