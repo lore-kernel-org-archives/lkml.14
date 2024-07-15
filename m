@@ -1,114 +1,111 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from sonic310-31.consmr.mail.ne1.yahoo.com (sonic310-31.consmr.mail.ne1.yahoo.com [66.163.186.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C56413D24C
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 23:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCC814375D
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 23:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.186.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721086827; cv=none; b=pAagQGtwdoIpqSRVsQzbEUkkvT4LeP6Tag5I5huVg2zL8Ci8fEQngHXCLyLSZx7LW7cT3u/MvA5BKrmoWO4JScjH41UGd0G1BX4/ueAfZTcqAKlYFzAUQIz/QaLy2/brsVuIz2vc+TvTy/B2oqIs+X9a7164mzgRn/MX38eMzqs=
+	t=1721086850; cv=none; b=FFR7UYahYVK2LY9igEDUmMxfcW2nZ8GcHkuHy+sfE9AO1TBk15zV0kGpm25qTb+PeO+LUfTM1ddzvAMjwVLMeFvejrTvcSbnHrHRna7JWSoiaavm1WvdATVrIx2weE4OJkG9vQ/bDB0dSTcMRL57+iGhMIXsrdDD+QssfAuDrU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721086827; c=relaxed/simple;
-	bh=usA5n6k0gXuWVP/H/41bPTBbmW3zA+YjMaWkJ3nuXFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ha5z+i/W1hkXB8m6U2iCZc2w425YqkAMpbZa4LAyx9OtS4t4qqZmDnSHErz1OHr4rzd9RIpRwilfENocBGVVtCjMN4WFrDyddgMUmIUoiC1/kHyMWWdrsh5Aqxv0nAPhC+66S+5grIeTj8JvktWBFu/+CNNC1BX8HKBHh94jfOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GW+WpzKs; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721086850; c=relaxed/simple;
+	bh=ZJqlczQnyFnkjnOMPY6EOJrRY+9hZErhisnAph9h7mk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type:
+	 References; b=V4d8Rq1494E4tK+cNyCcoJ1prf8wyMOqzlRHpfupFyHZsvdpyoD3V/fP9pN7DWd58mu8cvkzhIyn8YsD7So4Zc4TJtXeENxazYBgslMKsW3Ggw8e4nBNC/KE7M6EtDv8IuoRKZyUYdqUYsz/+tmxd97BM1kjBR+Cw+l3vsIO4WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=d6e/VSi/; arc=none smtp.client-ip=66.163.186.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW+WpzKs"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eede876fccso34851121fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 16:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721086824; x=1721691624; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRqiB3UNmNV8WA2WAD9TerTgLlRDB8kabRCeweHkYNA=;
-        b=GW+WpzKsM6JUQaxFqR1Lr7dUJodyI/W42pKEORY9d0ERTYd5bZ0wYV75wsOwN5uBER
-         M+nFVzhGYBt7XC+aTSLaS5cKLnPT2Q/J6WqECRrb0qqphvYkxh06lgfWW515Sc6IHVx3
-         l6kZcKG0KRv+nE8vBYHo3T0ckSBn7UjOazjkZLzvwBRZg1YRP5T8HcEJ9Q/VnEjM4yyR
-         aWxjn9JW5ZIk+cQLqsABdkjVifQSiQbbT6MJAwZd3TUO4mljafyRx8kWGGQs3rlu7CjS
-         /xbjVNl9Wp0tJGTAmkj7GORsuqSq9PTdpShqiiSHNRkRbM1n9C76NeW2RGD+3hfDI/ct
-         S/hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721086824; x=1721691624;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YRqiB3UNmNV8WA2WAD9TerTgLlRDB8kabRCeweHkYNA=;
-        b=KIhZIrtyF8ek3+Kt04WpU7zgc3UnKFk3qWpmMTh3aqH9Q4yKkTCCOuDvEs+3nxtIaG
-         /XvSCGYQjqLVRM0/4SKQJOF7dXFg1qIZEjr5H26VNgEj6qHc/opsn8yHkfGOdDBfJjUm
-         6wemfqVWBRqV+9Ta91Bu0oP7JvxyHxjxPtRaucbQ6rxYbeueaPvk6jQZK4iEXmCymYpN
-         WrdGloku3HkTfvfsJxn3g5a+knTqw5sMsKZRNMlagSOxzUWNhh/ul8r0KRPX24GXNbIl
-         smUkjbFjulSzbpMmC/HnAVrEuLHPmG/+qp/ChdWdGaOiLa5xTkYvZe7qhUuLjkv+IZ2C
-         hAuA==
-X-Gm-Message-State: AOJu0YwzTzt0X+9bhPsrVf994efEQ9sUDTWZ8onqONpkvt3R6sEfYdad
-	qEK/Km6RZGu/0QFH2M8cTW1/1kz3TrXbEeYjwvMQoL6kpsMIiuZi
-X-Google-Smtp-Source: AGHT+IGBt4caPAcj42KqS/M8obQbmK+asdtjOdnzn3t4EvBE7Rdv1G9obJHcgi4pfnFOUgcSp5/Org==
-X-Received: by 2002:a2e:be8f:0:b0:2eb:e365:f191 with SMTP id 38308e7fff4ca-2eef4173f49mr4335591fa.15.1721086823629;
-        Mon, 15 Jul 2024 16:40:23 -0700 (PDT)
-Received: from gmail.com (195-38-112-86.pool.digikabel.hu. [195.38.112.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f276b14sm138372885e9.23.2024.07.15.16.40.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 16:40:22 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Tue, 16 Jul 2024 01:40:20 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] objtool changes for v6.11
-Message-ID: <ZpWzZC-UyVjMYjlY@gmail.com>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="d6e/VSi/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1721086847; bh=m6fvGEXDejgdvUwq0XGyGydA5OkCYBpq6UuMurIHjTw=; h=Date:To:Cc:From:Subject:References:From:Subject:Reply-To; b=d6e/VSi/0e+6ajidiaCmRwYQ5xOpzB7TcUJ+tEjQmx79RMGK8VZkVjn8oVuRZZUzawlhgj3q2RAsyK0+ER94VIbRBANBGezdVEZC8gAy8nQn76YoTkkgofLk3PrXuCYdguGF6wdOi5a9yZVXIvxORf026juRiOWV8X0iSiR6Pd5eNXI+4f0UWj9nWTHDV8q/ZYiRlb4bF0/DSlMduJ1L1tYMm5BvpX5vJOuTfdv9+Fl6uaZRZEtaLVcFWU+5VmY5mFl7LmS06YRGvNxbsbD8ngiF7d3KM1VEdLn6TZPrTT7lXhINrlrsTdn+CP0vWKiBMUK1H/ncmRvkUPZZ8eqMOA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1721086847; bh=5euts7Cf5NmJvrh2a2pEQdZVUAVuxcuwCyJ7ZW0vWJI=; h=X-Sonic-MF:Date:To:From:Subject:From:Subject; b=ow2d6h4R8P7T16UCagQ2+BN4THofTcJbW2WSUChWRBCsfBFStKvs8rtBsPZpTp7EXKrt2JBOBr/pv1ZzvMEOrAY8e8ucuqGRTdrxs6ioxdzs5vzSNQ/6nhuEsdOT88leF+LHULwequwGs93iwZVCHyYmhnRzDLO+4Mx3qBSnBry9lExM9tYYBMLvwOyjVSWGgPcRYde7Nz93UAfKeNI4pE1i38oaBRZBGXwszRsBWLTBxfldSUo7BoYa+f0bgIwxw1SteLCiKapfNg07GOBa2HIegGFVutDo3amKn2kznE6ruE2AdGbjmddl/WHmMZfV4mtY9pwZcn5T6NH3DBSoiA==
+X-YMail-OSG: mxyPJDYVM1nJVmTbGtE3C_daPg8SlpQky2xlF_dHlMBN734UkW3BhN0EO04dETu
+ LcuIdQeyNBq71.RcFvQ7XHwrozkQJfqxgEhrznvn4tf2gaofaE269dSoqWHWov3pA0GINaRAQGYb
+ 22aN0BY8j.9u_Wa06v8I_KA0FMvMv94Ta1RBOQ5JF1qLI3R3u5X1hA8z9Oyimzbkv99rDGTFdbaZ
+ Xo1AQCu9BvD5OF7LkTEVCNQBng_5vNMm_nmuxPB3MPP6rr5cyOfsZHDfgHyNvJc_vJ2k5ix1.gr4
+ .uJvPSzpTPCh5cjwrKVgcaqn_m.VzZVDhXrJpEettds6lZ4KQukHcP7qM1ihwGOdSVfGmUFutFYC
+ c8etb5uxRDwUgmPn4u4gh9W3rry4Fqw.4nGFVliFtLy82Uyt.B9dIfSiUDzu7YEBzqyEsCz3YuEp
+ t9hB.UaXhOMvtGsURb0X5Q4CQ872waWFNiP5fRcsXAhNhdgsq01a6vr1l6feD8iemfvR04l4b6vZ
+ qnuW4wrjSobrNZFhry5bsd9ileg040dJmcS_oYwRGCTY69oGGJw6Wh9gPMwOwfqtYWF4P1YqmNT.
+ FY4Mvbj23Nf0g.9xspplPYUB0YGn08bzQaMqyHaRQS.owM4K0mTJj0q1sUdFe4RCwq1Nwc2TwoZN
+ CGKiCdfWCHVWO9EriXrk1fgGLf9sPyLKJaea8MyCcR_uyS_64VdrzYBcxNG3zumQXz_oyhl66m9C
+ VbOz4TulrHGfVdS9p3qA__y.wvFiZuNzjeSPWJhtpH1fMYjse5E1nJE16NhnDBJ7Pz0ZQmxgV2GY
+ tk9TY.K3UtBagOnU4owwp8Cvw7TuwD1GPlywBjK1iItml9FMYLCfTiJbe0ZuI04tntDuf2ovtsKc
+ SZEbu5sxEZPRzL9nR3dcVkWFLrtdXWylSnV5fRdVN14cb7D4wdEl7zTY90alUKLS0rSfTbEUXmG0
+ 8uynlFYqavs5xJBIMrO4Z6_jF.kfjF3JjBYHY98zovDFdWpBU.bTqUbIqT1qi9RpiSXv.k2UdmJy
+ XBjyyOc8xOmKf9q7axqdwFyn.9BSpbtRGjpsu99M4oVVypHbGrkG74VmrW61CPWu06E.krdsDz1h
+ rXcm3Eyz3vFIcycrYqVzO7R1q4BKIKvq_co6RBTJgZ71iXfEeD.Orpgl7D9rX0yVgi3YLRgQP.Wr
+ NlxHlGTfUgFlH6AkHycesSduqBSAVbErXLR1QuMCbl.zk7S8Ijr8RnMhmaUTnzooEJcXmEtBBo2r
+ kltZmXl1kq2O46zCY9uzhf6Z_vKTg0f5sm7EYkrBaYZLfpUskvXB1FH6HdPpDerfSHpQEisdd_6D
+ GQYw.dGyVoW82cIszRhCegLF1PAM5rvbSq8ZAEQMVpvtvJpd.XEKDEg5fMBYQWMq4ODGWC4ZReTK
+ U5E2_ZUKgtMRE75oM8..x_ZiZqr5CJ7CfSH2_rTc5dcpaYr69xKjcIyebuw0WZytN7hjr1IdDFst
+ P1bDjZRwJDPbpQXjKip3Zpe3QWu2bDlkLkdf_gOJxngftr3q9vicftogggT9Xa5iGFYsf_isdL_z
+ VDi49f7g7ZLP_vrN_bJ6zsPJ0fZ.2P7B_iyUoQzJUf9axZ3QgvQw_TDnAHIhy7RhefNRNAqTOQT6
+ hu0FUbMUzzk69UXy45RARzGu86.ygmD.JCn7StygoSgi9udRTCbzsBRCJxD6FWAmEYnKHPFy0YOD
+ EP6R9Q5fPgfroNh_u5hR2WV1HiVOrvh0ngM7kc5vXr6s8DbK1h_NLHE5ftC8KgMPkFJQBkEpRN.N
+ OMFb1pi8OmMIeMGi_GlayNMaWjEDOn0GPAr_yq3RPmWmyqY8_rnig_MlpXc._U3j42HTASde_MKR
+ 5wiXDCKMVWwAv5QitoQ05T2Xmms7Ik48oJH5QT0VQGMLwWVgM4kQ6SVLMxuLV_UxbfaKk5WIQ2gV
+ YJXrJwXD_u1THSXIgeaBesnAsUcmOr.AnT_yLpxAfhR_1r11qCD9yq5nLPup0z9LQaMSXST_p8ZG
+ JNYjbxE5xQd2SYdW.arUP3x49TZnIrTX58TaKVIclsADDrFl_WqCIV38buLe91VKwx2z2TbHx78n
+ uLl7QFzDRu_KVIlbjcxaByCbDVC53oMWbhaJcosg9v.ibuBOTjBBgp3Q9XmzH019ZZ2HzFw81wuN
+ S56BkFPL9lak1PqZ12Xj4sqXQODOMnXNyTNIG2RbMTQ7zwW32rkKGvDmc_joG6KI3c4WIbL6Qc63
+ i6K1hQhJB99xQQe7F9HEXLdc_gKynecsjfe5c0UmjNXgdzrQ8U4qbALi9PwufBfo1hEMcksdsSqV
+ 9UOw3
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: cdb50ec1-fcdc-4a0e-93c3-ee133e69eda6
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Mon, 15 Jul 2024 23:40:47 +0000
+Received: by hermes--production-gq1-799bb7c8cf-zh7nt (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID d1bc5c0a4d958b9d32104fb379cfcb74;
+          Mon, 15 Jul 2024 23:30:35 +0000 (UTC)
+Message-ID: <c9842562-3564-4977-880f-9042ebe43e62@schaufler-ca.com>
+Date: Mon, 15 Jul 2024 16:30:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LSM List <linux-security-module@vger.kernel.org>,
+ Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+ Casey Schaufler <casey@schaufler-ca.com>,
+ Konstantin Andreev <andreev@swemel.ru>
+From: Casey Schaufler <casey@schaufler-ca.com>
+Subject: [GIT PULL] Smack patches for 6.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <c9842562-3564-4977-880f-9042ebe43e62.ref@schaufler-ca.com>
+X-Mailer: WebService/1.1.22501 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Linus,
+Hello Linus,
 
-Please pull the latest objtool/core Git tree from:
+Here is the Smack pull request for v6.11.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-core-2024-07-16
+There are 2 patches. Both address network labeling issues.
+Both have been in the next branch and pass all tests.
 
-   # HEAD: 8e366d83edce3065ff3372bedc281c5e217c0550 objtool/x86: objtool can confuse memory and stack access
+The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
 
-Objtool changes for v6.11:
+  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
 
- - Fix bug that caused objtool to confuse certain memory ops
-   added by KASAN instrumentation as stack accesses
+are available in the Git repository at:
 
- - Various faddr2line optimizations
+  https://github.com/cschaufler/smack-next tags/Smack-for-6.10
 
- - Improve error messages
+for you to fetch changes up to e86cac0acdb1a74f608bacefe702f2034133a047:
 
- Thanks,
+  smack: unix sockets: fix accept()ed socket label (2024-06-19 09:25:00 -0700)
 
-	Ingo
+----------------------------------------------------------------
+Two fixes for Smack networking by Konstantin Andreev.
 
------------------->
-Alexandre Chartre (1):
-      objtool/x86: objtool can confuse memory and stack access
+----------------------------------------------------------------
+Casey Schaufler (1):
+      smack: tcp: ipv4, fix incorrect labeling
 
-Brian Johannesmeyer (7):
-      scripts/faddr2line: Reduce number of readelf calls to three
-      scripts/faddr2line: Combine three readelf calls into one
-      scripts/faddr2line: Check vmlinux only once
-      scripts/faddr2line: Pass --addresses argument to addr2line
-      scripts/faddr2line: Invoke addr2line as a single long-running process
-      scripts/faddr2line: Remove call to addr2line from find_dir_prefix()
-      scripts/faddr2line: Check only two symbols when calculating symbol size
+Konstantin Andreev (1):
+      smack: unix sockets: fix accept()ed socket label
 
-Siddh Raman Pant (1):
-      objtool: Use "action" in error message to be consistent with help
+ security/smack/smack_lsm.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-
- scripts/faddr2line              | 110 ++++++++++++++++++++++++++++++----------
- tools/objtool/arch/x86/decode.c |   8 ++-
- tools/objtool/builtin-check.c   |   4 +-
- 3 files changed, 93 insertions(+), 29 deletions(-)
