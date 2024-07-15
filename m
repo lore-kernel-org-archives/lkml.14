@@ -1,88 +1,73 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A997B481CD
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 16:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9121CAA1;
+	Mon, 15 Jul 2024 16:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721061636; cv=none; b=PiuemGmRJEPBEfCNHYvnnxHrwJmYFOjEtOwTactUzLDAxWtXpcJiHiPwP07ly/5QbX0Y2rmt4PG052vLRLRpCx0B+srh2O0aO5meR52zBJ2t9mwzEUGtixO37ouqLasa7a2l3+A2ZAqxZB0C/433AUkQSeioYMsaPJ50Ggi5Q28=
+	t=1721061867; cv=none; b=gWAIO9FFwKaX8d0dYEvoEsxDRwBhZ27t9aG7SslYaOQzv759TqUzdqZQpIBI1Fyh05U64McbHOfn587J1trTeqaLUJq6qGkG/HQmHtm0Riz4amrK9oEcCHrLKJbySgGe+NNRA+HitiB9B94Pbes3zKCIqinIeNyI9JpnGz0M8lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721061636; c=relaxed/simple;
-	bh=9f8Qe6ie90wo/DDF464tuizO4E1SnfvAfFUf1QUmyUw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BGoRURyI4pAeIJe1AKKmvS7o8BS3UmHQaWFppwso2VBFq28gfJq5ZI68WgCxutndCwMry8MPszMy9faDGx3QUW7TU4nvmsRsW1OBA3Um0sEV0t5lIYcU1/rqnAiIp/1fhGXIJXRIebzVf8Jd+pPPot6/O5f9g6tl+kr3rKqhKdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sHqCNBNa; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721061867; c=relaxed/simple;
+	bh=N2yjfoVVb62B5YRNRRgSE+eSyRPzWjGNcXyKTqao2k8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dXVoflXF6SHX/pzYewlr8tqB/M3MDTHAR9WvZ6P6X9zZcXJP6GoxaDSnrk96ucNPXtLxc9RBrza/gTQ5NA2b0hy1xxJo+TUGGQ0gLGrSMoLCTBKLElYDfuQjXCeqz3nXe7y11B3WpAHWUuMe98i/8/+nTAFNHdPLKgQeoxcvvsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rh5GkW1B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sHqCNBNa"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-65f880c56b1so21148557b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721061634; x=1721666434; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=en6+puohAfynQkBKEllMr8eQHTxPNgc5bkI+PFZYQQg=;
-        b=sHqCNBNa8O1RqbaNGyAVX4Q28wVhrwLbZRT8aSaCHz7aQuXll2sN5miMFWCC8kCW73
-         GIIUBweicQpbB8OX+2h2I8ZRzGHumUs+Bre0aQg7PKil+PjsdowX0vG7zHy6yw/JlRKJ
-         BZDm3UPvY6TIKfBP58ksnaHI3S78qSUQMRGGQ3yn5EqkZN2YM50UhzDtMB1NeWBSGf7t
-         CwhCKfta5dWORwXgwGR/3UkX86fm+Gbu3kMuN+l6vpzzKW9UZTyLeP2CyJ5i12xxg5Jd
-         JVOHHf6DYlvfpw7U8obdQri4H46LGPKPKWQ0rgUwaUAUbdgnh52se+rgykvTZIsxPCpP
-         hArw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721061634; x=1721666434;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=en6+puohAfynQkBKEllMr8eQHTxPNgc5bkI+PFZYQQg=;
-        b=Xyb6RnohCTbI8yrRclGsY1ni2CAe2a8qcI6mYZXGmzSGgzP+yvIfcK21UN4jgeDOvD
-         SsQgvqoVUK+AP/Wq5xcS/ucof/8h7uDcud6gzr4IcgfKuaMX6AT3vroAMo5QK/vyDHFw
-         2SeYlN8uxR7dHB4Hikjj1ekmBLD/67oU9D4H10McVjv3kVzpilSLkOPTkzl/dZh5jLu5
-         WOKcoo0qkXJae+uPHQVYSsrX4cKSN4d86wRBrefBJL+E/DHmNUuF7GScM/YxSqQOhjk9
-         Pcs+Vg3Gyctjzxl425S9/IeTTNwEPC35iE76y9uaL79c3RIE5yMlHzvd/pdjAJOTo2Ho
-         RqVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlhTCRE60kKjl5nSkq3woOOsAOtLQUzEdWBgVEsieJwiwIbpjz8LrEClBhFIBhySh77UlsGfOgUcLyMgUEKFyKnBBRilkX4R4rQmrH
-X-Gm-Message-State: AOJu0Yz/n1Fq8fUNZMJcKKgIyvJW/7LIe1dehzI6iRc3dcTfovH/jcH+
-	xLa8wFLK6S9QA66DfjX5nrObhOG5YdvBJ+IuZATxZ1jR76qLkdwzy7Qhhi3SNoGGbDdVqOKgOi0
-	sOOaNQYJPqbh/E9p0gXLuu9I9tb1jLBekFyARqQ==
-X-Google-Smtp-Source: AGHT+IFv3aNlqZTAbfEk3+SJkAU1VQZMZYGpG/ZTnboW7SE4kuCdio6mZh3pytXItsiGKqcKgm2mh9g14iNQpuvfWas=
-X-Received: by 2002:a05:690c:97:b0:63b:f919:2e89 with SMTP id
- 00721157ae682-66353dcf097mr646877b3.2.1721061633716; Mon, 15 Jul 2024
- 09:40:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rh5GkW1B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0D7C32782;
+	Mon, 15 Jul 2024 16:44:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721061867;
+	bh=N2yjfoVVb62B5YRNRRgSE+eSyRPzWjGNcXyKTqao2k8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Rh5GkW1BZoh2ss+IFJ49QjqjRtf+ebEO5f23Veo6G1DfLHD3/6HyYMAM4Bt7Ffxt1
+	 SSGgJt8hDW2Gn0sIFnfSUv8ue+uKNgHx1ZD1MiXL2chwDyI5Wq00v67f5YqJ/xObS2
+	 YbY82b7f4ETwGfGaeNBy2bwOSRWz73jI+tEvsNP3fPHUjOQFJQkTzCwF2RUSxSzCm7
+	 fbemzLiUzicOWj3qCPmnRPkhgJzqHbiBLN+/6jvxPyyH6SH7B3AkxtAaKN9h99rZbX
+	 nyRABrToW6OVrc6XZvHZUPZ8v1Q/kDAtA4sric+NyBxV9AynO/zAOJymdVO1Bhj7Gr
+	 xGdftpOLJ1/XQ==
+Date: Mon, 15 Jul 2024 09:44:25 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] selftests: mptcp: lib: fix shellcheck errors
+Message-ID: <20240715094425.73738ca0@kernel.org>
+In-Reply-To: <7a1fea0c-1389-4867-aaec-0c0db01cb6c0@kernel.org>
+References: <20240712-upstream-net-next-20240712-selftests-mptcp-fix-shellcheck-v1-1-1cb7180db40a@kernel.org>
+	<20240713154614.653f30ce@kernel.org>
+	<7a1fea0c-1389-4867-aaec-0c0db01cb6c0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715-x1e8-zap-name-v1-1-b66df09d0b65@linaro.org> <ZpU1vxsYUdVg9VGv@hovoldconsulting.com>
-In-Reply-To: <ZpU1vxsYUdVg9VGv@hovoldconsulting.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 15 Jul 2024 19:40:22 +0300
-Message-ID: <CAA8EJprKTm-FzDjUFwi9jKaHJ121W2m655-GN3DjzB9rSOpJ=Q@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: disable GPU on x1e80100 by default
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Akhil P Oommen <quic_akhilpo@quicinc.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 15 Jul 2024 at 17:44, Johan Hovold <johan@kernel.org> wrote:
->
-> On Mon, Jul 15, 2024 at 05:23:58PM +0300, Dmitry Baryshkov wrote:
-> > The GPU on X1E80100 requires ZAP 'shader' file to be useful. Since the
-> > file is signed by the OEM keys and might be not available by default,
-> > disable the GPU node and drop the firmware name from the x1e80100.dtsi
-> > file. Devices not being fused to use OEM keys can specify generic
-> > location at `qcom/x1e80100/gen70500_zap.mbn` while enabling the GPU.
->
-> Please enable the GPU for the CRD as part of this patch (e.g. move the
-> fw name property there).
+On Mon, 15 Jul 2024 11:07:26 +0200 Matthieu Baerts wrote:
+> > Speaking of MPTCP tests - I added the connect test to ignored today.
+> > Too many failures :(  
+> 
+> Sorry for that, and thank you for having ignore it for the 'dbg' runner.
+> 
+> This sudden regression looks strange. Our CI didn't catch this issue so
+> far. It is only happening with the debug kernel config.
+> 
+> Do you know if anything has changed recently -- around the 11th of July
+> -- on NIPA's config side that is not documented? e.g. more jobs in
+> parallel, new kernel config? I didn't see anything that could cause the
+> new issues when looking at NIPA's git log and the CI change log sheet.
 
-I can not just move the property, as it is going to have a different
-value. I think GPU enablement for CRD should come as a separate patch.
+The usual suspect on Thursdays is that we pull in changes from Linus,
+it'd be surprising if there were major changes there the week of the
+release but maybe..
 
--- 
-With best wishes
-Dmitry
+> I will try to reproduce the issue locally, maybe it is caused by a patch
+> that is in patchwork, but not in net or net-next yet.
+
+I was going to mention Kuniyuki's patch but you discovered it already :)
