@@ -1,90 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9135218755A;
-	Mon, 15 Jul 2024 10:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43FC16CD36
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039044; cv=none; b=Jlvun8z51xzESgdVqM8UUu3m2baZ4VElKK8RzfY1QRe3EHPSiD3rgxSuzgV3c9EZQLtHNPGnZ9lvgIUTtLXPUHBm9yP0QtJ7fDoajFe6vpqbU4lnGVwFTpvwa6XvxqvWk/vVYlLFWWA/o75XKp4p6+LSutLUrlBm1Cvu16Rb9Iw=
+	t=1721039064; cv=none; b=Bp3u0xu+YN6wY07x+yklM1rXaavm3NngUrNBgy2oV7e3+kduUyQ6k53fvemji+bL7nlYfHB+K/erNLzJikCJ47U8QWSkfodXN++4tuQJghcDfzs/x3ROqhhVDPqZ+jhNtMMgaF2yy4V9iRQU7sTC57krOn04Yn4igywoySJyBXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039044; c=relaxed/simple;
-	bh=HerndJT2b8s2lHxz2nyoxlrdmPVVAxFo+yFWNc6OpT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XHd2FO9QZNPPQSMlHCyMn64oVWlBTM5Qf4gX5HnqbrWqYTqd14l24R5/YRzhf1yW6jz14VgXE6/lLG47qXgwo7P8/NLrslhYStPj3ONBzsF/shktA2078RSNuqSiHo2nMuPaCZUv5SO1oG4bnPE94UXPR5e6j7VOJlNRT7BfD4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhskEEsn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhskEEsn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B95C32782;
-	Mon, 15 Jul 2024 10:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721039044;
-	bh=HerndJT2b8s2lHxz2nyoxlrdmPVVAxFo+yFWNc6OpT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GhskEEsnLLChSu02GT31SKuAMEEcCs26D9PVYcOjGy7SX8jTSBbO4WBvcA3Ot3yqY
-	 /JoCP+Jhsm/IXk2J1Jjan0Otb44KeeHmiQZHeUaA9iGBIjqg49BWHCt2FK1n+fhDlK
-	 WqSPWv2QkdtsDKxPl1DoXsLaquqiqmg2ZsR6JkZ8cswwnOUkGwpHMKub1zmepaBlXD
-	 XAdo/IHmZygJ8Uep9PTCdSrD/G/Gsqr6jpEC7+scLfQ06QGf1BYTkbH9bX9gnaei9w
-	 zOEk9OvaXl6nKRNMWnlSbklJ0WE8gJiAgApVhlspA+a7K4Mp2whxEmdZTX+jtgEWqw
-	 tPrUTvllh6Wsg==
-Date: Mon, 15 Jul 2024 13:23:59 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: David Laight <David.Laight@aculab.com>
-Cc: Anand Khoje <anand.a.khoje@oracle.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"saeedm@mellanox.com" <saeedm@mellanox.com>,
-	"tariqt@nvidia.com" <tariqt@nvidia.com>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"davem@davemloft.net" <davem@davemloft.net>
-Subject: Re: [PATCH v4] net/mlx5: Reclaim max 50K pages at once
-Message-ID: <20240715102359.GA55002@unreal>
-References: <20240619132827.51306-1-anand.a.khoje@oracle.com>
- <20240624095757.GD29266@unreal>
- <3d5b16d332914d4f810bc0ce48fd8772@AcuMS.aculab.com>
- <20240701114949.GB13195@unreal>
- <c702670609914da89e934879b5c89de7@AcuMS.aculab.com>
+	s=arc-20240116; t=1721039064; c=relaxed/simple;
+	bh=1COjcnseOvJi+7+VS8eypiD4hYhv/caSJY8K5KQLDwM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IkhT3r/QpjucTE+PxRelrV6je5/lrpvGdAr3aFLUlT3PrNv4ud5urBi7MBUDjPMcdZmjAqlsbI2CPruzIK8OXbmmUbSfBSlAHcIOBylcosDv+E9XX1V48W0g5FQdDSjZ5pp06kv2nysWJ4nwk8nw81Mq6pX7VcjBVe6sZaA3AXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 46FAK3YJ063713;
+	Mon, 15 Jul 2024 18:20:03 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4WMyjv2lsgz2KfjQx;
+	Mon, 15 Jul 2024 18:14:43 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Mon, 15 Jul 2024 18:20:01 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Yu Zhao <yuzhao@google.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Zhaoyang Huang
+	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
+Subject: [RFC PATCH] mm: introduce reclaim throttle in MGLRU
+Date: Mon, 15 Jul 2024 18:19:54 +0800
+Message-ID: <20240715101954.2433102-1-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c702670609914da89e934879b5c89de7@AcuMS.aculab.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 46FAK3YJ063713
 
-On Mon, Jul 15, 2024 at 08:22:19AM +0000, David Laight wrote:
-> From: Leon Romanovsky
-> > Sent: 01 July 2024 12:50
-> > To: David Laight <David.Laight@ACULAB.COM>
-> ...
-> > > > BTW, this can be written as:
-> > > > 	req->npages = max_t(s32, npages, MAX_RECLAIM_NPAGES);
-> > >
-> > > That shouldn't need all the (s32) casts.
-> > 
-> > #define doesn't have a type, so it is better to be explicit here.
-> 
-> The constant has a type, the cast just hides any checking that might be done.
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-According to the C standard, type can be int, long int or long long int:
- "The type of an integer constant is the first of the corresponding list
- in which its value can be represented.".
+Being like legacy LRU management, direct reclaim threads could isolate
+over-sized folios and then be rescheduled, which could lead to
+unwanted generation update as well as the thrashing things like before.
+This commit would like to have direct_reclaim be throttled by judging
+the numbers of isolated and inactive folios.
 
-> Would you really write:
-> 	if ((s32)npages > (s32)-50000)
-> 		...
-> Because that is what you are generating.
->
+This patch is proved to be helpful by launching 8 costmem(an exe in Android)
+concurrently and got no system hang like before.
 
-So instead of comparing s32 with int, which can be misleading. I prefer to compare s32 with s32.
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+ mm/vmscan.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 2e34de9cd0d4..a7fdad1b2a78 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -4481,6 +4481,7 @@ static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int sw
+ 	int scanned;
+ 	int tier = -1;
+ 	DEFINE_MIN_SEQ(lruvec);
++	bool stalled = false;
  
-> Here it probably doesn't matter, but it is really bad practise.
-> If, for example, 'npages' is 64 bit than the cast can change the value.
+ 	/*
+ 	 * Try to make the obvious choice first, and if anon and file are both
+@@ -4503,6 +4504,14 @@ static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int sw
+ 	else
+ 		type = get_type_to_scan(lruvec, swappiness, &tier);
+ 
++	spin_unlock_irq(&lruvec->lru_lock);
++	while (unlikely(too_many_isolated(lruvec_pgdat(lruvec), type, sc))) {
++		if (stalled)
++			return 0;
++		reclaim_throttle(lruvec_pgdat(lruvec), VMSCAN_THROTTLE_ISOLATED);
++	}
++	spin_lock_irq(&lruvec->lru_lock);
++
+ 	for (i = !swappiness; i < ANON_AND_FILE; i++) {
+ 		if (tier < 0)
+ 			tier = get_tier_idx(lruvec, type);
+@@ -4550,8 +4559,10 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
+ 	if (list_empty(&list))
+ 		return scanned;
+ retry:
++	__mod_node_page_state(lruvec_pgdat(lruvec), NR_ISOLATED_ANON + type, scanned);
+ 	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
+ 	sc->nr_reclaimed += reclaimed;
++	__mod_node_page_state(lruvec_pgdat(lruvec), NR_ISOLATED_ANON + type, -scanned);
+ 	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
+ 			scanned, reclaimed, &stat, sc->priority,
+ 			type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
+-- 
+2.25.1
 
-In our case npages is s32.
-
-Thanks
