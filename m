@@ -1,200 +1,142 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D17B189F4F;
-	Mon, 15 Jul 2024 09:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FE01862AB
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721036763; cv=none; b=HTckmHpjFpQsRO6oWVUs05zEP3qFSsRjcGm+7JxJ9zPCsU3pLWakvRGmSjtnEupoAekFFEu/VX+VixhlgixZtecfkAvE1/sOuo7PL9OlMy25eQegcpEkYWYuULhxSI/Fb4jb/HFZNW6vhnnICpH+iRvRYNUqxf/LDCWNGCkwE1w=
+	t=1721036898; cv=none; b=rrvqkRbcYeVnr6jVzND36E9EpF7aZrMlwh8Y17beilxzqzF11VbVK87e8SiLFFWGSAfknNQb/lR978SQb90LPW4ck/3esytlBwkhuRnwmAqHuDPWZ8jT/WhRuuAjzH1UcxEchWyJEuLLt/7JH7XXKKIjR4I6URLZjzduv3wlMsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721036763; c=relaxed/simple;
-	bh=CC2Eef9nMA8UH8t/TvX52lTN18nJJisIAw8Us/eeEF4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cjbVbpKGFTABtLuSGJgv1lkVSKIsnazgB1kNW9iqTnG3dFCzWaaxLrEjqvJbsOtpCUdw+crJM7HMCy0j2cUa6iKhWDkOFp+B3Sb4mITbn6IiAZksKTQ5U6M9Ht57YWq2S+EVAVLAqv3WYTA7mVikQMEmZsrCatM7jYB9afGYuIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=pEoF3Vcs; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1721036898; c=relaxed/simple;
+	bh=u7jyj5MsChkaLDUlBKY78YItMCLqtBC4NrHf1i3jZK0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=aRPzUnFnpyj6izy6WF31jqFoPWElN//jLT2ziyucxNVUmGUqHj2N8T9NvtXy1hBAHG+VR5BVIojYUrEE76sOjUP0ZC0bQYbFyXdP24evqn0TMr9Gei9fC+DPWhhFpXd5yyWgs0bCWHNNDDge4YjVWtzIA47vEwCrL+Cg5yO9lAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KLT+cNid; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="pEoF3Vcs"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4WMy4c2QVsz9sVv;
-	Mon, 15 Jul 2024 11:45:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1721036752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SSKSy4tqVH5b+XJ+esQOWgPyYLwKFVSkaMyHSBptbYg=;
-	b=pEoF3VcskAxTuU6XHDhgHjwJ9erMiPjrqp5XIw1iZC3NNGusMPc8tUJOyAY0su5r/+fi6f
-	7IehDXNP9w5IRjHE7w2n5wWsibSBIbUPOd1ZmaOTOtvGbmIzx9D6OcQiIBO61pANyMxZZY
-	Gffes6zz4RN5/Y/KoDF0h6mhldCZ8oGJIgFhgGuT4vYM4FNFqD/N5HfrNrB8z96ZXkgCeQ
-	COP/sZp2v1AwK+zIdinzquJyEDZ9ug0CMLoU2tP3epENmowKDWWdVbkFyVqFUT+gxWzjCG
-	fsJSRy1S4YeYWGyPpOpWtOUT7KHV79N78GvHuC+7DwfCZM4W66WLWuJoouezhA==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: david@fromorbit.com,
-	willy@infradead.org,
-	chandan.babu@oracle.com,
-	djwong@kernel.org,
-	brauner@kernel.org,
-	akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	yang@os.amperecomputing.com,
-	linux-mm@kvack.org,
-	john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org,
-	hare@suse.de,
-	p.raghav@samsung.com,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org,
-	kernel@pankajraghav.com,
-	ryan.roberts@arm.com,
-	hch@lst.de,
-	Zi Yan <ziy@nvidia.com>
-Subject: [PATCH v10 10/10] xfs: enable block size larger than page size support
-Date: Mon, 15 Jul 2024 11:44:57 +0200
-Message-ID: <20240715094457.452836-11-kernel@pankajraghav.com>
-In-Reply-To: <20240715094457.452836-1-kernel@pankajraghav.com>
-References: <20240715094457.452836-1-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KLT+cNid"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52ea7d2a039so4274293e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721036893; x=1721641693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PkqupnN5QS9vbAPZ3s53ee8SAPBpZYOOqApz2BVwlvI=;
+        b=KLT+cNidftjAkHwkEiX+VEI+PWtKD1IrrWvpUV0LFirhtHUmO5zAFW5J8YdHCdG4kh
+         HI9l9O+DR9Ruu/nVhm7HbLtcl8uJcIM3jMNT7byDBPlLtkGYDY0YvubD3w9auNt16a4T
+         1Hi/Bzt+t3k2tFaBTyLklx14EVvXCIhDGrqLotNAxL1+n3WK+G66XeeJFMY9ile5Nkhj
+         IUaLNkfGO8cU4ILdC5DjLIBhpKtvn2O2BqGyiu6KVncgR60xgnwMcRXU6ZT+6BaA2vSn
+         oacFLRtkxFn6a4KZthdjYN/HUgBW8fr5rNgNmnk+Gr1fTNOSex3M6/eooqi//Gt5qdjN
+         zNiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721036893; x=1721641693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PkqupnN5QS9vbAPZ3s53ee8SAPBpZYOOqApz2BVwlvI=;
+        b=ZG4mG76w7abfXRlQSIRar69GSFWRPvGwtTPIXKGUiNhVESwJuUsOcAI19IidZ5SaAi
+         GDsPQW7gKZOvLlNYrastT2ArR0jP/ElOANsORWAONgadvMuw5t2pXue3A4ntQkRJ3FNb
+         0iFEf+h+TsDgEOHfE+MVljyC2lb1g9JIXDo1ifrix7wdCp1mCHkWWsRcm6O4u/u2VbWi
+         lG3INPL7Yb+OFUk4x4rjwvdwESwtoNB1xdC0O6UKsKCYroUlhzJkt+tbcLVB+qdlsIP4
+         H31KriJaP0G7eTAjabuN5wrBIBecjhdOpKYYanAlyA3k+k27DibzxnpSxxNNBHf204wx
+         vtJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWN8p6hOj0MzJZouXmIeUPNMnheWSSNYNVSb2fNFYF4BNaOxGGLrn8PlfZSFJgL9yFoa9ODzhWhoaQP84VS23I+wcH3L/BzCewehOKx
+X-Gm-Message-State: AOJu0Ywdejk/ErFvW5se6XrTt8ygjlYf9EAjmn39LFFRY9Jthj1+55kp
+	GGhmhfUXvisKTdb6DXbBufSXKnFx/xRWni5XENxc5jhLn3QSQVOWv/Ommtp/V9c=
+X-Google-Smtp-Source: AGHT+IHd7j+mfNmvOz/ltgRfupxx+Wvx748wXOxU1MYGwbcekjafHCtkA4P40moncFJUHNgwIe4wYQ==
+X-Received: by 2002:ac2:5e9c:0:b0:52c:dd7d:3fd4 with SMTP id 2adb3069b0e04-52eb9997357mr10764123e87.25.1721036893196;
+        Mon, 15 Jul 2024 02:48:13 -0700 (PDT)
+Received: from localhost.localdomain ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f23cc5bsm113282245e9.2.2024.07.15.02.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 02:48:12 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	Yunseong Kim <yskelg@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf dso: Fix build when libunwind is enabled
+Date: Mon, 15 Jul 2024 10:47:13 +0100
+Message-Id: <20240715094715.3914813-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4WMy4c2QVsz9sVv
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+Now that symsrc_filename is always accessed through an accessor, we also
+need a free() function for it to avoid the following compilation error:
 
-Page cache now has the ability to have a minimum order when allocating
-a folio which is a prerequisite to add support for block size > page
-size.
+  util/unwind-libunwind-local.c:416:12: error: lvalue required as unary
+    ‘&’ operand
+  416 |      zfree(&dso__symsrc_filename(dso));
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Fixes: 1553419c3c10 ("perf dso: Fix address sanitizer build")
+Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- fs/xfs/libxfs/xfs_ialloc.c |  5 +++++
- fs/xfs/libxfs/xfs_shared.h |  3 +++
- fs/xfs/xfs_icache.c        |  6 ++++--
- fs/xfs/xfs_mount.c         |  1 -
- fs/xfs/xfs_super.c         | 30 ++++++++++++++++++++++--------
- 5 files changed, 34 insertions(+), 11 deletions(-)
+ tools/perf/util/dso.c                    | 2 +-
+ tools/perf/util/dso.h                    | 5 +++++
+ tools/perf/util/unwind-libunwind-local.c | 2 +-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 14c81f227c5bb..1e76431d75a4b 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -3019,6 +3019,11 @@ xfs_ialloc_setup_geometry(
- 		igeo->ialloc_align = mp->m_dalign;
- 	else
- 		igeo->ialloc_align = 0;
-+
-+	if (mp->m_sb.sb_blocksize > PAGE_SIZE)
-+		igeo->min_folio_order = mp->m_sb.sb_blocklog - PAGE_SHIFT;
-+	else
-+		igeo->min_folio_order = 0;
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 2340c4f6d0c2..67414944f245 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1501,7 +1501,7 @@ void dso__delete(struct dso *dso)
+ 	auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
+ 	dso_cache__free(dso);
+ 	dso__free_a2l(dso);
+-	zfree(&RC_CHK_ACCESS(dso)->symsrc_filename);
++	dso__free_symsrc_filename(dso);
+ 	nsinfo__zput(RC_CHK_ACCESS(dso)->nsinfo);
+ 	mutex_destroy(dso__lock(dso));
+ 	RC_CHK_FREE(dso);
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 878c1f441868..ed0068251c65 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -602,6 +602,11 @@ static inline void dso__set_symsrc_filename(struct dso *dso, char *val)
+ 	RC_CHK_ACCESS(dso)->symsrc_filename = val;
  }
  
- /* Compute the location of the root directory inode that is laid out by mkfs. */
-diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-index 34f104ed372c0..e67a1c7cc0b02 100644
---- a/fs/xfs/libxfs/xfs_shared.h
-+++ b/fs/xfs/libxfs/xfs_shared.h
-@@ -231,6 +231,9 @@ struct xfs_ino_geometry {
- 	/* precomputed value for di_flags2 */
- 	uint64_t	new_diflags2;
- 
-+	/* minimum folio order of a page cache allocation */
-+	unsigned int	min_folio_order;
++static inline void dso__free_symsrc_filename(struct dso *dso)
++{
++	zfree(&RC_CHK_ACCESS(dso)->symsrc_filename);
++}
 +
- };
- 
- #endif /* __XFS_SHARED_H__ */
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index cf629302d48e7..0fcf235e50235 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -88,7 +88,8 @@ xfs_inode_alloc(
- 
- 	/* VFS doesn't initialise i_mode! */
- 	VFS_I(ip)->i_mode = 0;
--	mapping_set_large_folios(VFS_I(ip)->i_mapping);
-+	mapping_set_folio_min_order(VFS_I(ip)->i_mapping,
-+				    M_IGEO(mp)->min_folio_order);
- 
- 	XFS_STATS_INC(mp, vn_active);
- 	ASSERT(atomic_read(&ip->i_pincount) == 0);
-@@ -325,7 +326,8 @@ xfs_reinit_inode(
- 	inode->i_uid = uid;
- 	inode->i_gid = gid;
- 	inode->i_state = state;
--	mapping_set_large_folios(inode->i_mapping);
-+	mapping_set_folio_min_order(inode->i_mapping,
-+				    M_IGEO(mp)->min_folio_order);
- 	return error;
- }
- 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 3949f720b5354..c6933440f8066 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -134,7 +134,6 @@ xfs_sb_validate_fsb_count(
+ static inline enum dso_binary_type dso__symtab_type(const struct dso *dso)
  {
- 	uint64_t		max_bytes;
- 
--	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
- 	ASSERT(sbp->sb_blocklog >= BBSHIFT);
- 
- 	if (check_shl_overflow(nblocks, sbp->sb_blocklog, &max_bytes))
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 27e9f749c4c7f..3c455ef588d48 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1638,16 +1638,30 @@ xfs_fs_fill_super(
- 		goto out_free_sb;
- 	}
- 
--	/*
--	 * Until this is fixed only page-sized or smaller data blocks work.
--	 */
- 	if (mp->m_sb.sb_blocksize > PAGE_SIZE) {
--		xfs_warn(mp,
--		"File system with blocksize %d bytes. "
--		"Only pagesize (%ld) or less will currently work.",
-+		size_t max_folio_size = mapping_max_folio_size_supported();
-+
-+		if (!xfs_has_crc(mp)) {
-+			xfs_warn(mp,
-+"V4 Filesystem with blocksize %d bytes. Only pagesize (%ld) or less is supported.",
- 				mp->m_sb.sb_blocksize, PAGE_SIZE);
--		error = -ENOSYS;
--		goto out_free_sb;
-+			error = -ENOSYS;
-+			goto out_free_sb;
-+		}
-+
-+		if (mp->m_sb.sb_blocksize > max_folio_size) {
-+			xfs_warn(mp,
-+"block size (%u bytes) not supported; maximum folio size supported in "\
-+"the page cache is (%ld bytes). Check MAX_PAGECACHE_ORDER (%d)",
-+			mp->m_sb.sb_blocksize, max_folio_size,
-+			MAX_PAGECACHE_ORDER);
-+			error = -ENOSYS;
-+			goto out_free_sb;
-+		}
-+
-+		xfs_warn(mp,
-+"EXPERIMENTAL: V5 Filesystem with Large Block Size (%d bytes) enabled.",
-+			mp->m_sb.sb_blocksize);
- 	}
- 
- 	/* Ensure this filesystem fits in the page cache limits */
+ 	return RC_CHK_ACCESS(dso)->symtab_type;
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index f6a6f6a91030..16c2b03831f3 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -413,7 +413,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 							__func__,
+ 							dso__symsrc_filename(dso),
+ 							debuglink);
+-					zfree(&dso__symsrc_filename(dso));
++					dso__free_symsrc_filename(dso);
+ 				}
+ 				dso__set_symsrc_filename(dso, debuglink);
+ 			} else {
 -- 
-2.44.1
+2.34.1
 
