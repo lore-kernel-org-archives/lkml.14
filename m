@@ -1,109 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA85185E65;
-	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEBC187546;
+	Mon, 15 Jul 2024 08:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721033961; cv=none; b=bcwoA79WqLoaPHwsn3h8VP6EgazVNaY8jf122wUZbpxYCR4hcU+WN/86u4oRAbTFcPJ4iBt/xf3AU3p0sIpqJ1nlPEPL9slyfNxHc2nmsJ8EsC6YarN8j5mX6LibzesTDAC6VprlFAGlN4NuNd6UkGABZwIWJ8CU0YkfdsJBso0=
+	t=1721033965; cv=none; b=pDZH9xpoF6LLlm5xeBAqbbPhca2xM9XjI3M65YwHrhAIluH9v8Sb5M4Jir9PiNopqy8hqIKeFY21BSuavMaWFFKsED2xhB7zD5tvszAlvfSupyvL7H6ApZKCmsx8pon/yROIHca7fGL7omCjm9/iipcP2zQ+SILc1QNQUEx3II4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721033961; c=relaxed/simple;
-	bh=/O2nGpJcr16vRLvgrd+SZjmwJdnjJPrOC4NvECf8nUM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bbcv8oCJGgMOszZEmGCNUPGWC91QhJNgymJln/tSe0DHGDNq+GNqZd+IZg+1NH/uTl5zTQyRmJ/9F02ozEcanitNfGHCgkNg5D0rEd/3JsM1eEs3ApeAj5eHzyd61rAGPJqOSe5el0uc1FD+A1QzEfPrqqoidwTy1yS/wh+Q2sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7K882P0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721033965; c=relaxed/simple;
+	bh=y+kTudWLmMVZqjkmKb1Iq2iwCRwyu/ABbyO06TY0Lqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HzwpKKoI2K9JbeHkavP9DKA9AWU4GOjvKcVZj2keVqJHxDH9p3oui8ViUGcjcfnyrbtpEpWDxSEJvpdvHCBTwAG7MtiYLiHlVI38kYcvWw5MeiawSOn0ffw6xesShZ0b1uNkXa1lai4I4GhaPHGQ1BIquVdz8PImYDv4DAk/qXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYOh8/v/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7K882P0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 69E20C4AF11;
-	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYOh8/v/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5FD7C4AF0A;
+	Mon, 15 Jul 2024 08:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721033961;
-	bh=/O2nGpJcr16vRLvgrd+SZjmwJdnjJPrOC4NvECf8nUM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=M7K882P06PDKXe+45ygDPWh29IXz4bfMKePRHgQV96VoAKoURRRL5g7FFDqRsK0RT
-	 srLZotmoUl87ghOID2fgY2+QRlEOvcBbVZ0Ztu/KCowolQvZGvdD+9SKimthH70BwU
-	 RYXwdeOFtTKUliJ7uS9V3qpktrd+FcbQM4PmZ2Iyz4JkTc4wUKLw46GACUpRBqCh6+
-	 yX10QLeFpP4YINPa2+ztk7pP5oM7NRRdBH7Lna1uv9wR6wN1EgYaMyeE7HgKcaEXUF
-	 nhoFiBtHnJjI0RkMq9DYTwyHKSyQ8ZBFWbc2C6dk6Z2HcFHb15d1Q6I6Ojjuhf4MpY
-	 ynQRBo9KXD44g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D4DC3DA59;
-	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Mon, 15 Jul 2024 16:59:20 +0800
-Subject: [PATCH v2 2/6] soc: amlogic: meson-gx-socinfo: add new SoCs id
+	s=k20201202; t=1721033964;
+	bh=y+kTudWLmMVZqjkmKb1Iq2iwCRwyu/ABbyO06TY0Lqk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZYOh8/v/YWIs+Ao47qs+d+9EKaxbK0cC0b7Y31tEdLfGSuNpwBYwfPBiD5mHQROPr
+	 W6hwnrWtfpBx+bih/+p3WbvYkxTzgWWTnlDsZckTHHeHk6zqUihvYYYnSm9u89gy5j
+	 G3L/Go11ltDmadciyl16m7/6O89VuMa9T8+ZvB5zRnQOlkrvnoixwA2XJvu1I6Dj9q
+	 3VorcuEWf4aRsIa+zivmdmQA8UzXX9bz0UGOzu8LP9+ijRVKDtAW8ITfp+sIP0u7wa
+	 Who+rhecgtLlW7Zmuwe2qsNygRazAzgQIQKOMX+pYAHpdSvAEWxNrfJW0YOAsnfGAn
+	 WU6Y+sp+TWCtg==
+Message-ID: <a9eed7f2-86d6-471e-883e-acbd89755fec@kernel.org>
+Date: Mon, 15 Jul 2024 10:59:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: iio: kionix,kxcjk1013: Document
+ KX022-1020
+To: Rayyan Ansari <rayyan@ansari.sh>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>, Jonathan Cameron <jic23@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Robert Yang <decatf@gmail.com>,
+ Rob Herring <robh@kernel.org>, Sean Rhodes <sean@starlabs.systems>
+References: <20240714173431.54332-1-rayyan@ansari.sh>
+ <20240714173431.54332-2-rayyan@ansari.sh>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240714173431.54332-2-rayyan@ansari.sh>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-soc_info-v2-2-3836c8cc27a5@amlogic.com>
-References: <20240715-soc_info-v2-0-3836c8cc27a5@amlogic.com>
-In-Reply-To: <20240715-soc_info-v2-0-3836c8cc27a5@amlogic.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721033959; l=1182;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=zRWWsMnyYjBcl83+I2nHF9NZDOoGs2C4FOAOFivyI1k=;
- b=smDNFXgxoSeiIF54/TDERqvLgFVop9bAHAJkTpYw3WsTuikbc3zfL7BHtc/ebZfXE/Yej69VT
- 1fK7rlvbx2XAqApVBpLw7a1nHoxW812k77RvHQ7MjowYUVxKU/4tmCF
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On 14/07/2024 19:33, Rayyan Ansari wrote:
+> Document the KX022-1020 accelerometer, which has the same register
+> layout as the KX023-1025 and so can use the same driver.
+> 
+> Signed-off-by: Rayyan Ansari <rayyan@ansari.sh>
 
-Add new definition for Amlogi SoCs, include S4, C3, T7, A4, A5.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- drivers/soc/amlogic/meson-gx-socinfo.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 8809a948201a..7549f1644e5e 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -41,6 +41,11 @@ static const struct meson_gx_soc_id {
- 	{ "G12B", 0x29 },
- 	{ "SM1", 0x2b },
- 	{ "A1", 0x2c },
-+	{ "T7", 0x36 },
-+	{ "S4", 0x37 },
-+	{ "A5", 0x3c },
-+	{ "C3", 0x3d },
-+	{ "A4", 0x40 },
- };
- 
- static const struct meson_gx_package_id {
-@@ -76,6 +81,11 @@ static const struct meson_gx_package_id {
- 	{ "S905X3", 0x2b, 0x10, 0x3f },
- 	{ "S905D3", 0x2b, 0x30, 0x3f },
- 	{ "A113L", 0x2c, 0x0, 0xf8 },
-+	{ "S805X2", 0x37, 0x2, 0xf },
-+	{ "C308L", 0x3d, 0x1, 0xf },
-+	{ "A311D2", 0x36, 0x1, 0xf },
-+	{ "A113X2", 0x3c, 0x1, 0xf },
-+	{ "A113L2", 0x40, 0x1, 0xf },
- };
- 
- static inline unsigned int socinfo_to_major(u32 socinfo)
-
--- 
-2.37.1
-
+Best regards,
+Krzysztof
 
