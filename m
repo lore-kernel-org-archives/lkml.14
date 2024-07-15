@@ -1,78 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5231D699;
-	Mon, 15 Jul 2024 15:31:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BB9F9EC;
+	Mon, 15 Jul 2024 15:31:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721057469; cv=none; b=OVZJ4xT58ZTcDvGKk9fkvv6IBrpvjjqnc6ft/fspeUitpgoIymloM1/InwJQJb93exQsrH+2H2HPdnD8OKBPoEq2g5dfs+2/ow7SyTaYodUbuJD+0Zq0Eug7qtYtyEVQSOMWAJr54L5aRRBws7TQ/Q7AgY07w6mb9zxTPqk419A=
+	t=1721057516; cv=none; b=bOUL3hNX0SZlxY9F2GzZXoO4P7JONSvVFR4sgAgE3ZAWMwGRB5wz6mPbAP8wzXLMi6ix3QI15bmFwjmZOV6Sxq5OTN6fMj+hnJmGGv3ijfyyP4QUJW5jNEb3PorCjSwxQCRResrgCkHfa5bLrpN3tY5Y87+KudcFXAzRXqNQgzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721057469; c=relaxed/simple;
-	bh=qUbeTKUNfUxNwcUkEeWkqBBPsaKfmFCHj8LukVfb6AI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qj5Az4rxO73FUMCFoIRl5nMKm3Pbx/5lg0U2YEL/SEpK4DYCJOALvcoUU3LEjcTt3Dp8DeVWNnvmDVlxfoDzeEwuKH1tUtmxbimjHUoDsMdnEX0Lf8K40YWAmH7gXPJJbX7/r4SzcGcCv9lAJFDxh8TImM6x8RKtisiX71kJeHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlNsUWJe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721057516; c=relaxed/simple;
+	bh=siv179GxtAnDGBBlaJJzeBtfyYpYJ/nI4Rg+Brcy6wM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ToA9/7UElSsrRQQgBo0I8yHHcFs6YclbOWr5d75+OoXxtwk/s3DvIKKJfKXXq0mgyqtMZX0BKBPPm2V+ZDPuHYLc25+XmtFDcRPb1TbiyuBVls7DynW3rzDocOth4kNsoWlY4JJhp1dywUvzQtQYcVKwj3M/YSOnlskeJPkghMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6T85qz4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlNsUWJe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB1AAC32782;
-	Mon, 15 Jul 2024 15:31:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6T85qz4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70C4CC32782;
+	Mon, 15 Jul 2024 15:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721057469;
-	bh=qUbeTKUNfUxNwcUkEeWkqBBPsaKfmFCHj8LukVfb6AI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HlNsUWJerWJ77g1T/M1mXQN1JTb9XfsZpVd13GmCSglpnrHp9Xo70lQLM1zihR8Tc
-	 iGbbOg76G5TV9yrMh+kYsfPVj72+4fLbOFBgyEiTyz+nA7QzbJS8LMPl0S2a66EzOz
-	 TTvIM2eMQ3t7RM1Dc7XSNTQKiMU4ZV3yUAUX3UkH79AE6Y4pIpoHUAFt7fJ2j4m2oD
-	 TAw4R9J8wf64eJDZvrfPhmHV6GLLTE+E+35bRWTau0ZjuEkUqqQG0hqsxBfFhvLHp8
-	 PZD6WcOhUikHd8VMNj3P+1+0aIwmQAzPgEavkFuVFO56o15RjKDIbvBWNF9DUazplG
-	 mKLhOAD4LS58w==
-Date: Mon, 15 Jul 2024 08:31:06 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
- <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Marek =?UTF-8?B?QmVow7pu?=
- <kabel@kernel.org>, Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
- <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
- mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>, Antoine Tenart
- <atenart@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Dan Carpenter
- <dan.carpenter@linaro.org>, Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v17 00/14] Introduce PHY listing and
- link_topology tracking
-Message-ID: <20240715083106.479093a6@kernel.org>
-In-Reply-To: <20240709063039.2909536-1-maxime.chevallier@bootlin.com>
-References: <20240709063039.2909536-1-maxime.chevallier@bootlin.com>
+	s=k20201202; t=1721057516;
+	bh=siv179GxtAnDGBBlaJJzeBtfyYpYJ/nI4Rg+Brcy6wM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V6T85qz4XFtXHUN4p1FTpcjzvJu+RdeIVt89kxB+SQbX9w9TGCmjSsI+RK/RJa5N/
+	 ZRVvElOVnzk4co2EGVmbetO6JbU7T0lEM15kKhHJMTaHalOiYFo5vBbxOaDPOXtqiH
+	 GNWeJTGHST++3Y2qTVVnuzhn3eLV17Dcmfyw3zmFileVaCg+bV0O6MCqeiCsF/P+Cp
+	 UEzuVUWlRg1e6ok6UB86Ec7xyl+qm5f7Q0HGRgMaYu1zEEeYZWEwUEC0rzXY2Ob5vF
+	 8tk5ch6NNVeuKwxXphTrs6ZT93FWlTMUdCdO3BphfXfhuQKEZaumetON/Mdt184Vvp
+	 ZgCPc6YA7nTeg==
+Date: Mon, 15 Jul 2024 16:31:51 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: display: panel: samsung,atna33xc20:
+ Document ATNA45AF01
+Message-ID: <20240715-scorn-canning-a7f23b9e2039@spud>
+References: <20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3@linaro.org>
+ <20240715-x1e80100-crd-backlight-v2-1-31b7f2f658a3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PGPY0L/uV9VV1R85"
+Content-Disposition: inline
+In-Reply-To: <20240715-x1e80100-crd-backlight-v2-1-31b7f2f658a3@linaro.org>
 
-On Tue,  9 Jul 2024 08:30:23 +0200 Maxime Chevallier wrote:
-> This is V17 of the phy_link_topology series, aiming at improving support
-> for multiple PHYs being attached to the same MAC.
-> 
-> V17 is mostly a rebase of V16 on net-next, as the addition of new
-> features in the PSE-PD command raised a conflict on the ethtool netlink
-> spec, and patch 10 was updated :
-> 
-> 	("net: ethtool: pse-pd: Target the command to the requested PHY")
-> 
-> The new code was updated to make use of the new helpers to retrieve the
-> PHY from the ethnl request, and an error message was also updated to
-> better reflect the fact that we don't only rely on the attached PHY for
-> configuration.
 
-I lack the confidence to take this during the merge window, without
-Russell's acks. So Deferred, sorry :(
+--PGPY0L/uV9VV1R85
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 15, 2024 at 02:15:37PM +0200, Stephan Gerhold wrote:
+> The Samsung ATNA45AF01 panel is an AMOLED eDP panel that has backlight
+> control over the DP AUX channel. While it works almost correctly with the
+> generic "edp-panel" compatible, the backlight needs special handling to
+> work correctly. It is similar to the existing ATNA33XC20 panel, just with
+> a larger resolution and size.
+>=20
+> Add a new "samsung,atna45af01" compatible to describe this panel in the D=
+T.
+> Use the existing "samsung,atna33xc20" as fallback compatible since existi=
+ng
+> drivers should work as-is, given that resolution and size are discoverable
+> through the eDP link.
+>=20
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--PGPY0L/uV9VV1R85
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpVA5wAKCRB4tDGHoIJi
+0g1+AQC1TYeQhL78aVmae/bbIeS87fROp/400N/NvEFiEGltuwD+LfPcF+qGTN+D
+tZeky3VyyMG7F0Xqx5tCLLcl7Dm2tgQ=
+=dlyh
+-----END PGP SIGNATURE-----
+
+--PGPY0L/uV9VV1R85--
