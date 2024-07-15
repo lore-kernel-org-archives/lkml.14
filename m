@@ -1,185 +1,178 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2050.outbound.protection.outlook.com [40.107.95.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664654D8CF;
-	Mon, 15 Jul 2024 17:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064382; cv=fail; b=uBxoQcNgjyX4NJwreh61zorQuRaJVqrdPHFXqjBFLdedjUNdofgF2AwixfyF5jX56LWeZFwF4N7PGFGf7P9fjs4Va0jB4c91BjvigvqHDWqyexDrZseUoUxUqCcowm8hPPjT/8/9J7WvloPfZT4JA3FxkcMqtAlweouFEr7N4gc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064382; c=relaxed/simple;
-	bh=hKGJRSLgv/YzlD8/CjWDOrjZWXGh9ziGX9poKy2vFCw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g5jRX3Q//1cR5BTEZK/4ZRXIUjB8p44Kf2KDxATqdpC7URkmy9AzfKU13hDxmUoNT+Xp5Xkv46DY4sbFyCK2jLTGj7lDZlpSs8uMsOhF8hdD7+hR01KWwKmebeGMnnHOW+yDztxmnEthZYb0yzQEzSlm+EFdeRiZYuzLAne1jEU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o6QlVWkT; arc=fail smtp.client-ip=40.107.95.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040974D8A7
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 17:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721064407; cv=none; b=TI/PaHkxRCsqL14KakS/VfoXlCR61QBd2mpjFMTGyGpx6c5f4c0iI3UF+2pXIHIakHy2TuDaU/A37UFAb41NZX54jq9AEcU2lsSKV6fsGHduE1peZPKfo3TuHboOQqA13PKv46w12ljZ5dJalViatSY01LvbnegH7XtGro4Tg9c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721064407; c=relaxed/simple;
+	bh=NKxhwcfKDV25J44ZjKN7Tw5TRTnUWcgDczWR7UFp7x0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TgAxMcsBU3HJGpHNgVglF/2NuZFgtIXUkaHQq9HLtJycIiAzn5yaxQuWNlihZdQvqMJemVGSBBbMCEd4VIigDvt4M+6Jq3vGcUZGWrwJPz+VENCIFDjvI4RrcZ1OfUfQI4Xt1X4tXoROljjNxyKcalTzG4xBliUqGX79LaItEdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TqF2HgsW; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o6QlVWkT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xBL3MxQK3gMLrRfpR9CAMaEXsG22wKiR/klic5o4eeRBs9AJdiP4j4q33ShJ+8SUZRFysOBZA9xLhefWNiwtvdNj9sIlORx7xAhXLiYlDrsF1IfhtqG+aDy7sxHKT1uxzzLwMBX7C9SzcoYtOAGzIzwDD25UYZURzYR+oepE5xkmCW7ddESVA1PtH7c4nOZTJE7f5rwlVyNoKZ6ekem14GrTcRVa4TifowG+93+JjsB11LX/vVUJ/I8Pu7fRlNAHTdmeRov94DAKC2FSWwps8XGbz0FAF5F6g3lc6hpC+OdfHUlYekjnycLyO+GoPSSBIeTSkBEtR5MSI9whTugmpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jNmuXPA0kTz3UPN1WAVVNXtDykwxfUUoFqjQxus8Fiw=;
- b=SIJKYhhjSW2ApYDAKiTPRnbhvKcNMkAuwesmyC/d6Ks23hv+8D5lzry6a65Cm1KXG/uHHDLKrGTpj4RV8DxqIv5ueo8nWI0E5/PKB0MUS1AbAfuipne1UOHhyeu0IpSCR8O7QWH3Y644Z62cXqxWiOxkLnVUdd0F+DW3fqHhOA7uTQXz+EI+VRWPTQSzSLJegboAPX+DB7PiNkJccpRNXhnIovPf5JKmZyCv1IsET9v/t0vAJyY/BzLdhfpGXmXAbGugJ6ZLACoA0YF8/8yJkH7b0+jnF+nA00KFZlvXPQV+e8rzPWw6ILKMcghGuAgwZMnexxGh2D+B471gjs6l6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jNmuXPA0kTz3UPN1WAVVNXtDykwxfUUoFqjQxus8Fiw=;
- b=o6QlVWkTmYpoNW7Qi87QDfXaHGz82jv0ui8bYi3Eo3ihEMFLqjhGg8o5wa9qtgfx0vQpb0fuC94h5N8ZWnHXntAAOIxO8t5gepr9Oy/b5B7Etuoac3YM5b6t7mdcBcBk5Fx1zzKEX0DckaiyojWMzaEGekmHxHFaglFCqJhPDHE=
-Received: from BYAPR04CA0030.namprd04.prod.outlook.com (2603:10b6:a03:40::43)
- by SA3PR12MB8438.namprd12.prod.outlook.com (2603:10b6:806:2f6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.27; Mon, 15 Jul
- 2024 17:26:17 +0000
-Received: from SJ1PEPF000023D6.namprd21.prod.outlook.com
- (2603:10b6:a03:40:cafe::12) by BYAPR04CA0030.outlook.office365.com
- (2603:10b6:a03:40::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28 via Frontend
- Transport; Mon, 15 Jul 2024 17:26:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SJ1PEPF000023D6.mail.protection.outlook.com (10.167.244.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7784.5 via Frontend Transport; Mon, 15 Jul 2024 17:26:16 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 15 Jul
- 2024 12:26:15 -0500
-Received: from [172.25.198.154] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 15 Jul 2024 12:26:14 -0500
-Message-ID: <534ef932-a9f7-4d90-88b9-8d9a751cb2f2@amd.com>
-Date: Mon, 15 Jul 2024 13:26:14 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqF2HgsW"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-70b04cb28acso3608683b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721064405; x=1721669205; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=V1EnqQQEEDfCVcyM5SF8HmtSrMGhEDyTnp8EsRJkHyA=;
+        b=TqF2HgsW9Q9fFUe39KpxsHX0yUagqR4AGqELrmMftkl1uNuRc5nSTsKJ4LR7xoccJX
+         UUnFUDW2Ue92QUavvaNw7OwQ16cYjhBdhp1eZLb2E94BSUIhp7uiBmviY1XqqnEYrGqn
+         U7Tw/mO/bsvzCom2fE4ncE2hzAzfcYMS/uyNMJpuD+woGmvsMJTP52yvWV2QGcsJyRXi
+         aQv8EBYdIOxAhCiuhX5Ocgou4BIW+qwglsHS8UfvqnSqMDrBHWZyX4/wiLgw7GcAWgg4
+         dtX3IhV2qdkFprcBTt62ZoaOC3vVnBkAxh9Y9y+FoO/Fy2xjXB5u5oKdA5wjg+hf8Yu+
+         nxvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721064405; x=1721669205;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V1EnqQQEEDfCVcyM5SF8HmtSrMGhEDyTnp8EsRJkHyA=;
+        b=slNQF1e87gMs8F71mK9KAMfB/cMNHr1tKMnm/SXrG2BMX846DXMycDd2vsUJMQctvw
+         uTp7Jhi653Sm9xzl1QbF5GZXsqyyd4nw656xM+N0SSrhLkfLVQsSC49ioQDKazLejISA
+         iYl8iHKzsuvCZrA+hrEuOUaH9r158GJRDfP15Cr7F0AZsgr2y1EMMsf2eSIz8Hs4KRIN
+         2/4Pga3TwJLWxvuwfqlapYr5mAKde1z0vx5J9SWtJgZi7A+dsDCcSXr5xyXSIFXfCYt5
+         0Wy2/VxivnIlqLen/6QyI/AJt1gdOEDfSMRbOGCR7ox8SodgGvJM75it6YwioVrTHtam
+         csmQ==
+X-Gm-Message-State: AOJu0YwuA1zBmWbCuGJBZe8G8lfmtcfRfcCmiUX1+FwJ5HiWjjf3l4+V
+	k/rDT23giYBKLHeh1GprvSsDmuwrQyjcg23VXJ1ivzYk3DgGNTYm+83pWg==
+X-Google-Smtp-Source: AGHT+IHCB9TJ+QUMrd1iZYojPPMgLhcDXl4AohOnA6YUFX4i9YhE7XQzXA17MREZ/k1DPYE3ODpmVw==
+X-Received: by 2002:a05:6a00:6904:b0:70a:fa24:65ed with SMTP id d2e1a72fcca58-70b6c883445mr12973477b3a.4.1721064404707;
+        Mon, 15 Jul 2024 10:26:44 -0700 (PDT)
+Received: from localhost ([198.11.178.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ebb6ad3sm4627002b3a.63.2024.07.15.10.26.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2024 10:26:44 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	kernel test robot <oliver.sang@intel.com>,
+	Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH] workqueue: Remove unneeded lockdep_assert_cpus_held()
+Date: Tue, 16 Jul 2024 01:29:31 +0800
+Message-Id: <20240715172931.2260-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/6] x86: PCI: preserve IORESOURCE_STARTALIGN
- alignment
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	<x86@kernel.org>, <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240710212406.GA257375@bhelgaas>
-Content-Language: en-US
-From: Stewart Hildebrand <stewart.hildebrand@amd.com>
-In-Reply-To: <20240710212406.GA257375@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB03.amd.com: stewart.hildebrand@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D6:EE_|SA3PR12MB8438:EE_
-X-MS-Office365-Filtering-Correlation-Id: 515e030f-16cf-41d2-c411-08dca4f33c0b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eWd4NkFuMGw2bnJKN25vNUVPUVpPNkxNaGxsZ09OelBXTXZrbGdRb01oMXJD?=
- =?utf-8?B?Z3F4c255dG9kdWNPdkNwNmVXS3lrdEI2MzRmODZPb05GRDJxSUUzczZZei9M?=
- =?utf-8?B?S2xkK0FrcE5aZEkrVTMra01hOVhHcHpFTWxobWs3V3pBSllJL2JaeS9Ed2Mw?=
- =?utf-8?B?RlBVSCttdGFoY0RzZ1VtM1cvVUFhWXZlVXR3dWJHYXRmVzFlZUNXRE5wb2dz?=
- =?utf-8?B?YVEwUy9wcEZ2dmVYR3hla1pTbFFCUUhYWG5yWWlpZGdrWHZ3dkZCWG1TYXlS?=
- =?utf-8?B?TmdyQVBsczdMZ3k0Q1JRdE1sVTVqcGJEMGlLeEpwTmdzQjFhVktTQWhXYjNU?=
- =?utf-8?B?MnRKM1N3aTgra2J0NjFqaWJ5UnpTQmZ3aTNldVFiWFptK3RPRWRjZ1RtUmVy?=
- =?utf-8?B?TmhPdXVPcGs4TWloaHFaQTZSNGtmTnh0TTkyTUYzSk5XQ0FQNGVZTWlMQW02?=
- =?utf-8?B?ay94bFJaTENYNlVyRURLcTRaVzhOOFZMbjRJMVc1cHJCQ3czdVh1ZmxMWVBR?=
- =?utf-8?B?RXp0QkNZZUFjVEpHQzZtcGdLUUdDZTBjRU44WWxrZjgrNU5mZ0tHdEo4Mm1h?=
- =?utf-8?B?M1k1YTdvaFFvTmovTUNFK2xHQ01GS0RKM0p6bjFZcUVCMWY5S0tvd1o0TldS?=
- =?utf-8?B?eE5iUEFWT3F3RWN1UVRVL0RHZUJvUlVoSkJSdWZsQWRoS1hjejJDakY1Q2ow?=
- =?utf-8?B?cUlhOHBEQ0hmMGcybndOcTh3ZFJJN1c4UHA2Q2d6VWRlK0V5Z01FS3dvTzJO?=
- =?utf-8?B?YUZCU0NGTGw2QVA0R1VOZ2s5UWxDUFJKaWNXbFJOSGRtcjNzbWY4NkprRFBt?=
- =?utf-8?B?ODB1TTlSSFlKTm8veU9PSjlyaUNtdGU1ZVdtaTJLUk1wZXBoUUlhVzVGblpm?=
- =?utf-8?B?aFF5VGNSOHNlbUt6Nld0TlV5YUxlYXAxOG1qUWdmcjY3K2QzN1JTWEQ2M0Vl?=
- =?utf-8?B?NUJrS1ZLYjZTTUVMQTk2VmU2Rm9FaVptUERIRHpjaHJMbXdPTHNLbEdsWHZa?=
- =?utf-8?B?WUJXektqTlhRSzl4R1E2aHY5NTNxRGxTTHJXVlduY2piaUljMm5TS2lwS2Js?=
- =?utf-8?B?bm50TGlNTWgzbU9vTVlrMnJmV3VEVldySTcrU3drU3I1WHNPOTcvc2lzS0lD?=
- =?utf-8?B?YUxCNUlQQkt0WlRzM3lVcUpDd2FVblRKNGI1bmk3WlU0QmF0Wm1JQjJzM21B?=
- =?utf-8?B?aVlzdzZiMjNSSkw3SzdEZEFHSFlkMnQ0ZGJwU0dFM1AxakNPbC9iS2dWdmNH?=
- =?utf-8?B?a0tGM2VOK3hrSUZHdUJ6WjFxQ2JHY0thWm1KR1crdzNUYTFNeDhkblVFVlp2?=
- =?utf-8?B?eWI2ZjJldHFpMnIwS2VpR0tNWTI3NlYvM1ZvYks5THJJUkN6K0NOcXVUR0M3?=
- =?utf-8?B?RFQ5dkpaeTM3ME9SS3NmbmNocnRlQmpkem1yRVhTM0RhcUVEaEtQWmMvc3R0?=
- =?utf-8?B?WDlSU3JRUkhXQkk2NHByZktlRjVTZWhQWmo0RlQvRmpQelpjUEJrd0p0TklW?=
- =?utf-8?B?Y0FxS0d5Z1orQmNTZjVWbTBjTDVKSHdQNEg2RTlZWEhuZ0NtcWRXeDBLQWti?=
- =?utf-8?B?WTdodEZ1SnpHUmdTb01xcm0rUG9LMURVRE5yYVNxTG9XT0N5cEdFMzdqQzRk?=
- =?utf-8?B?WnZGV2RNaFByYUZiVm9DWDBTZG0rNnB4NW11NG8zS1Izb2RTT2duQ0MrN1Zw?=
- =?utf-8?B?TkRIMjNLdWZjMEFNcmJBWWdmeXhnWmhUaSt0YUNFWlpHSnFseGx4QUZzaHA0?=
- =?utf-8?B?dnlRVElEOTkrOFVwK1dRL1paUEJHMGRFVVBadlhBV1F1dkNORlVONU93RGM2?=
- =?utf-8?B?ckZaYWVCbmdueXRZdUdScFkzR3RJSmFWNm03azYxN00xU2Ira3lZVkJlRlB0?=
- =?utf-8?B?WEJWc1VRZ3V1UHIyZ3dka0djZVhRSnorMnBwbFFFdVh0NW5Mbk1sZ2lobHdM?=
- =?utf-8?Q?bxued89hk1IqqUps//9n4fraisoU345j?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 17:26:16.9305
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 515e030f-16cf-41d2-c411-08dca4f33c0b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D6.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8438
+Content-Transfer-Encoding: 8bit
 
-On 7/10/24 17:24, Bjorn Helgaas wrote:
-> On Wed, Jul 10, 2024 at 12:16:24PM -0400, Stewart Hildebrand wrote:
->> On 7/9/24 12:19, Bjorn Helgaas wrote:
->>> On Tue, Jul 09, 2024 at 09:36:01AM -0400, Stewart Hildebrand wrote:
->>>> diff --git a/arch/x86/pci/i386.c b/arch/x86/pci/i386.c
->>>> index f2f4a5d50b27..ff6e61389ec7 100644
->>>> --- a/arch/x86/pci/i386.c
->>>> +++ b/arch/x86/pci/i386.c
->>>> @@ -283,8 +283,11 @@ static void pcibios_allocate_dev_resources(struct pci_dev *dev, int pass)
->>>>  						/* We'll assign a new address later */
->>>>  						pcibios_save_fw_addr(dev,
->>>>  								idx, r->start);
->>>> -						r->end -= r->start;
->>>> -						r->start = 0;
->>>> +						if (!(r->flags &
->>>> +						      IORESOURCE_STARTALIGN)) {
->>>> +							r->end -= r->start;
->>>> +							r->start = 0;
->>>> +						}
-> 
-> I wondered why this only touched x86 and whether other arches need a
-> similar change.  This is used in two paths:
-> 
->   1) pcibios_resource_survey_bus(), which is only implemented by x86
-> 
->   2) pcibios_resource_survey(), which is implemented by x86 and
->   powerpc.  The powerpc pcibios_allocate_resources() is similar to the
->   x86 pcibios_allocate_dev_resources(), but powerpc doesn't have the
->   r->end and r->start updates you're making conditional.
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-Actually it does. It's in a separate function, alloc_resource(). I'll
-make the change over there too.
+The commit 19af45757383 ("workqueue: Remove cpus_read_lock() from
+apply_wqattrs_lock()") removes the unneed cpus_read_lock() after the pwq
+creations and installations have been reworked based on wq_online_cpumask
+rather than cpu_online_mask making cpus_read_lock() is unneeded during
+wqattrs changes.
 
-> So it looks like x86 is indeed the only place that needs this change.
-> None of this stuff is arch-specific, so it's a shame that we don't
-> have generic code for it all.  Sigh, oh well.
-> 
->>>>  					}
->>>>  				}
->>>>  			}
->>>> -- 
->>>> 2.45.2
->>>>
->>
+But it desn't remove the lockdep_assert_cpus_held() checks during wqattrs
+changes, which leads to complaints from lockdep reported by kernel test
+robot:
+
+[   15.726567][  T131] ------------[ cut here ]------------
+[ 15.728117][ T131] WARNING: CPU: 1 PID: 131 at kernel/cpu.c:525 lockdep_assert_cpus_held (kernel/cpu.c:525)
+[   15.731191][  T131] Modules linked in: floppy(+) parport_pc(+) parport qemu_fw_cfg rtc_cmos
+[   15.733423][  T131] CPU: 1 PID: 131 Comm: systemd-udevd Tainted: G                T  6.10.0-rc2-00254-g19af45757383 #1 df6f039f42e8818bf9a534449362ebad1aad32e2
+[   15.737011][  T131] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+[ 15.739760][ T131] EIP: lockdep_assert_cpus_held (kernel/cpu.c:525)
+[ 15.741326][ T131] Code: 97 c2 03 72 20 83 3d f4 73 97 c2 00 74 17 55 89 e5 b8 fc bd 4d c2 ba ff ff ff ff e8 e4 57 d1 00 85 c0 74 06 5d 31 c0 31 d2 c3 <0f> 0b eb f6 90 90 90 90 90 90 90 90 90 90 90 90 90 90 55 89 e5 b8
+
+Fix it by removing the unneeded lockdep_assert_cpus_held().
+Also remove the unneed cpus_read_lock() from wq_affn_dfl_set().
+
+Cc: kernel test robot <oliver.sang@intel.com>
+Fixes: 19af45757383("workqueue: Remove cpus_read_lock() from apply_wqattrs_lock()")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202407141846.665c0446-lkp@intel.com
+Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+---
+ kernel/workqueue.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index cd6f2950ef6c..177b09ba61e2 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -5332,8 +5332,6 @@ static int apply_workqueue_attrs_locked(struct workqueue_struct *wq,
+  *
+  * Performs GFP_KERNEL allocations.
+  *
+- * Assumes caller has CPU hotplug read exclusion, i.e. cpus_read_lock().
+- *
+  * Return: 0 on success and -errno on failure.
+  */
+ int apply_workqueue_attrs(struct workqueue_struct *wq,
+@@ -5341,8 +5339,6 @@ int apply_workqueue_attrs(struct workqueue_struct *wq,
+ {
+ 	int ret;
+ 
+-	lockdep_assert_cpus_held();
+-
+ 	mutex_lock(&wq_pool_mutex);
+ 	ret = apply_workqueue_attrs_locked(wq, attrs);
+ 	mutex_unlock(&wq_pool_mutex);
+@@ -5424,7 +5420,6 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+ 	bool highpri = wq->flags & WQ_HIGHPRI;
+ 	int cpu, ret;
+ 
+-	lockdep_assert_cpus_held();
+ 	lockdep_assert_held(&wq_pool_mutex);
+ 
+ 	wq->cpu_pwq = alloc_percpu(struct pool_workqueue *);
+@@ -5681,8 +5676,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+ 
+ 	/*
+ 	 * wq_pool_mutex protects the workqueues list, allocations of PWQs,
+-	 * and the global freeze state.  alloc_and_link_pwqs() also requires
+-	 * cpus_read_lock() for PWQs' affinities.
++	 * and the global freeze state.
+ 	 */
+ 	apply_wqattrs_lock();
+ 
+@@ -6850,8 +6844,7 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
+  * @exclude_cpumask: the cpumask to be excluded from wq_unbound_cpumask
+  *
+  * This function can be called from cpuset code to provide a set of isolated
+- * CPUs that should be excluded from wq_unbound_cpumask. The caller must hold
+- * either cpus_read_lock or cpus_write_lock.
++ * CPUs that should be excluded from wq_unbound_cpumask.
+  */
+ int workqueue_unbound_exclude_cpumask(cpumask_var_t exclude_cpumask)
+ {
+@@ -6861,7 +6854,6 @@ int workqueue_unbound_exclude_cpumask(cpumask_var_t exclude_cpumask)
+ 	if (!zalloc_cpumask_var(&cpumask, GFP_KERNEL))
+ 		return -ENOMEM;
+ 
+-	lockdep_assert_cpus_held();
+ 	mutex_lock(&wq_pool_mutex);
+ 
+ 	/*
+@@ -6906,7 +6898,6 @@ static int wq_affn_dfl_set(const char *val, const struct kernel_param *kp)
+ 	if (affn == WQ_AFFN_DFL)
+ 		return -EINVAL;
+ 
+-	cpus_read_lock();
+ 	mutex_lock(&wq_pool_mutex);
+ 
+ 	wq_affn_dfl = affn;
+@@ -6917,7 +6908,6 @@ static int wq_affn_dfl_set(const char *val, const struct kernel_param *kp)
+ 	}
+ 
+ 	mutex_unlock(&wq_pool_mutex);
+-	cpus_read_unlock();
+ 
+ 	return 0;
+ }
+-- 
+2.19.1.6.gb485710b
 
