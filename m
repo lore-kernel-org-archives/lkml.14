@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6991849D3;
-	Mon, 15 Jul 2024 08:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D2C1850A9;
+	Mon, 15 Jul 2024 08:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032803; cv=none; b=vDceZbYsEdFvokwaYuaJ5o+rbZ+ig9y+9fORuqfxDeRwXsqizOyMNnnpeX/Bu3el1HB1eP5Qkq5nuZ9hYmtySTsw2J9KPrAxzXDDMPOSUZ/f3+aqqb0tuEA5ltAM0H554bB2gIdQ5P250/ZsiVitL4qoxXyk1UCZNNhyAYki1/U=
+	t=1721032803; cv=none; b=hwt8/4zb/A+u3+t6LB9u/6illlSdmOD+n8skiDDkuyx0BkczrVC30Sh3bp9KTyse+ybru7VQs4CZ/Ahjohds3b+MJsqYbF0thATvoXP6TxfAZX7wVulpbtXOFoOe2Shch6f5QkYc5gEDOGtScjlcu4m0DVSRgbgTs6jcdRKPkSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721032803; c=relaxed/simple;
-	bh=8MDxQIKkYOKh/dlpEO1nx1n2r3kIf9OrDi6ZkMWfW/U=;
+	bh=ufkdbg48G2J2kAdE8B2uooLc+hG0lWtjP7zkP0XfVUY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hykU+DMIABuu2PDiIA/8Ecq/gYHuit15VQPVoIc9c/zvsTjNkvJRvws4VQmBEMij1LmrGTqryqDaVN1UTaaAvJBSCo+j4LL3qCB6ViJogmzJCP99Zfghb0gZsaMW6JGfj5sIoKpYAWyd6+gS0czW/Am1W+cwbVISxekm/Pz55Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ow6HpPX1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hdozIaHaWuFZoreE+rdPDyWLecMIQ2C7PUqO64ch82jtGMZidEV7S+8W9KHqXtHCdlrzqQYEWqkJJR35Z9DRumfmHckdvqSVJTtIJVIcliNZtosUkZwtQ4/Q9704A001lkInwk2i+G6nAIc33wExxyJhK3xZbcnA1iz76LhRGFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcKFvnc0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ow6HpPX1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C1EC1C4AF0E;
-	Mon, 15 Jul 2024 08:40:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcKFvnc0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 40D43C4AF11;
+	Mon, 15 Jul 2024 08:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721032802;
-	bh=8MDxQIKkYOKh/dlpEO1nx1n2r3kIf9OrDi6ZkMWfW/U=;
+	s=k20201202; t=1721032803;
+	bh=ufkdbg48G2J2kAdE8B2uooLc+hG0lWtjP7zkP0XfVUY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ow6HpPX1bK+d08j0DZrrGBMxgtOsjfA1fDpUjSyZb0ZVpefXK+f4f0bdNpFqaHrlW
-	 LFCAp+C+pNBLOynjKern/1/8kINC5JPpnempOZHpzv0eGRlMdmSZJxR3eqKd3zZn6V
-	 Dixzdhzryc3QGK1e/Jv4TTloG42QntwXCzPVVMPY+4GAcUIho/vR7W/edp/UiO89dk
-	 IOgim6iSGLvS5yKLct1tDhmFPrDnyhpf6nz27DJcqhGQazKfAeINaz8BfvqXUGzDtU
-	 0K3K9xc8vOLh3M86+ZwdleE/2fJ/iRLVJEarFstRsiYgrP6JFx+2MKAE0LnS9W6Fs8
-	 LrBwdTwMQuT7w==
+	b=jcKFvnc0zJwI6vh7twJMZkuZVw+QLJCKYHArMXrMJE8zKSiKp9tkq2Cdnik7891D7
+	 QsqCrDvYNGvWlTv9TilvNN6DA2pmA14nmbNs+XqPZiXXscqpPC4k97TA/DdHK0HapE
+	 nH9rxTNunAjqJ7sprIlmt+Yom8UZ1T8CIsqxGBihPZl/x5YkYNZWm9BDaDge9CZ5sT
+	 hNbirh+OD2HIlDc90+8KCjTt57BMp8Vxb6QtYkP39MgqEgTTKQnxBujkWpzxYv539N
+	 k+e7cI/uDpeW2ZQ3LnXweNX4ep0ZW5+twNOOBrbvCnBkVXFnclV6meIdg07MYxusJd
+	 xKoCpAZG9v9Og==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9879C3DA4D;
-	Mon, 15 Jul 2024 08:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37552C3DA50;
+	Mon, 15 Jul 2024 08:40:03 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 15 Jul 2024 11:38:07 +0300
-Subject: [PATCH v11 03/38] clk: ep93xx: add DT support for Cirrus EP93xx
+Date: Mon, 15 Jul 2024 11:38:13 +0300
+Subject: [PATCH v11 09/38] dmaengine: cirrus: Convert to DT for Cirrus
+ EP93xx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,18 +41,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-ep93xx-v11-3-4e924efda795@maquefel.me>
+Message-Id: <20240715-ep93xx-v11-9-4e924efda795@maquefel.me>
 References: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
 In-Reply-To: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>, 
+ Nikita Shubin <nikita.shubin@maquefel.me>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032799; l=27185;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032799; l=14576;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=U7fOx9Rodv4jx5K1uhFoktxaVXXtL2LyQJrXaMQwDm0=;
- b=Bxjn73rQg4AwAXGGGDh2AbOeDHVTYe8koDOhLwKQtYcCANKSKS1FPRZrtnURIjkILVJ8aJ3SYq0E
- IhSYbDKWDVUBxz7GLvBfX6vgFPmCe07sJlKGWjBz8P0T9E9oOGg7
+ bh=vTCngdvaBUuIlv18jJfXjLJPaykExSxeDLjOaqRu4nc=;
+ b=l38t3KLZpFdiwbrESvdwRxTBK0c6n0WQlwkNP6Fm1B/4/Bhp0evNxnaaZGvufmZPU9jQCdrdeXAi
+ NUunk+2gDHjGXli/+/eibj0WKmnvp4nNCZ0OTiDaj/6ubzqOgwPX
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
@@ -61,905 +63,475 @@ Reply-To: nikita.shubin@maquefel.me
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Rewrite EP93xx clock driver located in arch/arm/mach-ep93xx/clock.c
-trying to do everything the device tree way:
+Convert Cirrus EP93xx DMA to device tree usage:
 
-- provide clock acces via of
-- drop clk_hw_register_clkdev
-- drop init code and use module_auxiliary_driver
+- add OF ID match table with data
+- add of_probe for device tree
+- add xlate for m2m/m2p
+- drop subsys_initcall code
+- drop platform probe
+- drop platform structs usage
+
+From now on it only supports device tree probing.
 
 Co-developed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- drivers/clk/Kconfig      |   8 +
- drivers/clk/Makefile     |   1 +
- drivers/clk/clk-ep93xx.c | 846 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 855 insertions(+)
+ drivers/dma/ep93xx_dma.c                 | 239 ++++++++++++++++++++++++-------
+ include/linux/platform_data/dma-ep93xx.h |   6 +
+ 2 files changed, 191 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 3e9099504fad..234b0a8b7650 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -218,6 +218,14 @@ config COMMON_CLK_EN7523
- 	  This driver provides the fixed clocks and gates present on Airoha
- 	  ARM silicon.
+diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+index d6c60635e90d..17c8e2badee2 100644
+--- a/drivers/dma/ep93xx_dma.c
++++ b/drivers/dma/ep93xx_dma.c
+@@ -20,6 +20,8 @@
+ #include <linux/dmaengine.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/of_dma.h>
++#include <linux/overflow.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
  
-+config COMMON_CLK_EP93XX
-+	bool "Clock driver for Cirrus Logic ep93xx SoC"
-+	depends on ARCH_EP93XX || COMPILE_TEST
-+	select MFD_SYSCON
-+	select REGMAP
-+	help
-+	  This driver supports the SoC clocks on the Cirrus Logic ep93xx.
-+
- config COMMON_CLK_FSL_FLEXSPI
- 	tristate "Clock driver for FlexSPI on Layerscape SoCs"
- 	depends on ARCH_LAYERSCAPE || COMPILE_TEST
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 4abe16c8ccdf..19d599d706fe 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_COMMON_CLK_CDCE706)	+= clk-cdce706.o
- obj-$(CONFIG_COMMON_CLK_CDCE925)	+= clk-cdce925.o
- obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
- obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
-+obj-$(CONFIG_COMMON_CLK_EP93XX)		+= clk-ep93xx.o
- obj-$(CONFIG_ARCH_SPARX5)		+= clk-sparx5.o
- obj-$(CONFIG_COMMON_CLK_EN7523)		+= clk-en7523.o
- obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
-diff --git a/drivers/clk/clk-ep93xx.c b/drivers/clk/clk-ep93xx.c
-new file mode 100644
-index 000000000000..bb1cf59a3d47
---- /dev/null
-+++ b/drivers/clk/clk-ep93xx.c
-@@ -0,0 +1,846 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Clock control for Cirrus EP93xx chips.
-+ * Copyright (C) 2021 Nikita Shubin <nikita.shubin@maquefel.me>
-+ *
-+ * Based on a rewrite of arch/arm/mach-ep93xx/clock.c:
-+ * Copyright (C) 2006 Lennert Buytenhek <buytenh@wantstofly.org>
-+ */
-+#define pr_fmt(fmt) "ep93xx " KBUILD_MODNAME ": " fmt
-+
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/clk-provider.h>
-+#include <linux/math.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/spinlock.h>
-+
-+#include <linux/soc/cirrus/ep93xx.h>
-+#include <dt-bindings/clock/cirrus,ep9301-syscon.h>
-+
-+#include <asm/div64.h>
-+
-+#define EP93XX_EXT_CLK_RATE		14745600
-+#define EP93XX_EXT_RTC_RATE		32768
-+
-+#define EP93XX_SYSCON_POWER_STATE	0x00
-+#define EP93XX_SYSCON_PWRCNT		0x04
-+#define EP93XX_SYSCON_PWRCNT_UARTBAUD	BIT(29)
-+#define EP93XX_SYSCON_PWRCNT_USH_EN	28
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2M1	27
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2M0	26
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P8	25
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P9	24
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P6	23
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P7	22
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P4	21
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P5	20
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P2	19
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P3	18
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P0	17
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P1	16
-+#define EP93XX_SYSCON_CLKSET1		0x20
-+#define EP93XX_SYSCON_CLKSET1_NBYP1	BIT(23)
-+#define EP93XX_SYSCON_CLKSET2		0x24
-+#define EP93XX_SYSCON_CLKSET2_NBYP2	BIT(19)
-+#define EP93XX_SYSCON_CLKSET2_PLL2_EN	BIT(18)
-+#define EP93XX_SYSCON_DEVCFG		0x80
-+#define EP93XX_SYSCON_DEVCFG_U3EN	24
-+#define EP93XX_SYSCON_DEVCFG_U2EN	20
-+#define EP93XX_SYSCON_DEVCFG_U1EN	18
-+#define EP93XX_SYSCON_VIDCLKDIV		0x84
-+#define EP93XX_SYSCON_CLKDIV_ENABLE	15
-+#define EP93XX_SYSCON_CLKDIV_ESEL	BIT(14)
-+#define EP93XX_SYSCON_CLKDIV_PSEL	BIT(13)
-+#define EP93XX_SYSCON_CLKDIV_MASK	GENMASK(14, 13)
-+#define EP93XX_SYSCON_CLKDIV_PDIV_SHIFT	8
-+#define EP93XX_SYSCON_I2SCLKDIV		0x8c
-+#define EP93XX_SYSCON_I2SCLKDIV_SENA	31
-+#define EP93XX_SYSCON_I2SCLKDIV_ORIDE	BIT(29)
-+#define EP93XX_SYSCON_I2SCLKDIV_SPOL	BIT(19)
-+#define EP93XX_SYSCON_KEYTCHCLKDIV	0x90
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_TSEN	31
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_ADIV	16
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_KEN	15
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_KDIV	0
-+#define EP93XX_SYSCON_CHIPID		0x94
-+#define EP93XX_SYSCON_CHIPID_ID		0x9213
-+
-+static const char adc_divisors[] = { 16, 4 };
-+static const char sclk_divisors[] = { 2, 4 };
-+static const char lrclk_divisors[] = { 32, 64, 128 };
-+
-+struct ep93xx_clk {
-+	struct clk_hw hw;
-+	u16 idx;
-+	u16 reg;
-+	u32 mask;
-+	u8 bit_idx;
-+	u8 shift;
-+	u8 width;
-+	u8 num_div;
-+	const char *div;
+@@ -104,6 +106,11 @@
+ #define DMA_MAX_CHAN_BYTES		0xffff
+ #define DMA_MAX_CHAN_DESCRIPTORS	32
+ 
++enum ep93xx_dma_type {
++	M2P_DMA,
++	M2M_DMA,
 +};
 +
-+struct ep93xx_clk_priv {
-+	spinlock_t lock;
-+	struct ep93xx_regmap_adev *aux_dev;
-+	struct device *dev;
-+	void __iomem *base;
-+	struct regmap *map;
-+	struct clk_hw *fixed[21];
-+	struct ep93xx_clk reg[];
+ struct ep93xx_dma_engine;
+ static int ep93xx_dma_slave_config_write(struct dma_chan *chan,
+ 					 enum dma_transfer_direction dir,
+@@ -129,11 +136,17 @@ struct ep93xx_dma_desc {
+ 	struct list_head		node;
+ };
+ 
++struct ep93xx_dma_chan_cfg {
++	u8				port;
++	enum dma_transfer_direction	dir;
 +};
 +
-+static struct ep93xx_clk *ep93xx_clk_from(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct ep93xx_clk, hw);
-+}
-+
-+static struct ep93xx_clk_priv *ep93xx_priv_from(struct ep93xx_clk *clk)
-+{
-+	return container_of(clk, struct ep93xx_clk_priv, reg[clk->idx]);
-+}
-+
-+static void ep93xx_clk_write(struct ep93xx_clk_priv *priv, unsigned int reg, unsigned int val)
-+{
-+	struct ep93xx_regmap_adev *aux = priv->aux_dev;
-+
-+	aux->write(aux->map, aux->lock, reg, val);
-+}
-+
-+static int ep93xx_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+
-+	return !!(val & BIT(clk->bit_idx));
-+}
-+
-+static int ep93xx_clk_enable(struct clk_hw *hw)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	guard(spinlock_irqsave)(&priv->lock);
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val |= BIT(clk->bit_idx);
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
-+	return 0;
-+}
-+
-+static void ep93xx_clk_disable(struct clk_hw *hw)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	guard(spinlock_irqsave)(&priv->lock);
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val &= ~BIT(clk->bit_idx);
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+}
-+
-+static const struct clk_ops clk_ep93xx_gate_ops = {
-+	.enable = ep93xx_clk_enable,
-+	.disable = ep93xx_clk_disable,
-+	.is_enabled = ep93xx_clk_is_enabled,
+ /**
+  * struct ep93xx_dma_chan - an EP93xx DMA M2P/M2M channel
+  * @chan: dmaengine API channel
+  * @edma: pointer to the engine device
+  * @regs: memory mapped registers
++ * @dma_cfg: channel number, direction
+  * @irq: interrupt number of the channel
+  * @clk: clock used by this channel
+  * @tasklet: channel specific tasklet used for callbacks
+@@ -157,14 +170,12 @@ struct ep93xx_dma_desc {
+  * descriptor in the chain. When a descriptor is moved to the @active queue,
+  * the first and chained descriptors are flattened into a single list.
+  *
+- * @chan.private holds pointer to &struct ep93xx_dma_data which contains
+- * necessary channel configuration information. For memcpy channels this must
+- * be %NULL.
+  */
+ struct ep93xx_dma_chan {
+ 	struct dma_chan			chan;
+ 	const struct ep93xx_dma_engine	*edma;
+ 	void __iomem			*regs;
++	struct ep93xx_dma_chan_cfg	dma_cfg;
+ 	int				irq;
+ 	struct clk			*clk;
+ 	struct tasklet_struct		tasklet;
+@@ -216,6 +227,11 @@ struct ep93xx_dma_engine {
+ 	struct ep93xx_dma_chan	channels[] __counted_by(num_channels);
+ };
+ 
++struct ep93xx_edma_data {
++	u32	id;
++	size_t	num_channels;
 +};
 +
-+static int ep93xx_clk_register_gate(struct ep93xx_clk *clk,
-+				    const char *name,
-+				    struct clk_parent_data *parent_data,
-+				    unsigned long flags,
-+				    unsigned int reg,
-+				    u8 bit_idx)
-+{
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	struct clk_init_data init = { };
+ static inline struct device *chan2dev(struct ep93xx_dma_chan *edmac)
+ {
+ 	return &edmac->chan.dev->device;
+@@ -318,10 +334,9 @@ static void m2p_set_control(struct ep93xx_dma_chan *edmac, u32 control)
+ 
+ static int m2p_hw_setup(struct ep93xx_dma_chan *edmac)
+ {
+-	struct ep93xx_dma_data *data = edmac->chan.private;
+ 	u32 control;
+ 
+-	writel(data->port & 0xf, edmac->regs + M2P_PPALLOC);
++	writel(edmac->dma_cfg.port & 0xf, edmac->regs + M2P_PPALLOC);
+ 
+ 	control = M2P_CONTROL_CH_ERROR_INT | M2P_CONTROL_ICE
+ 		| M2P_CONTROL_ENABLE;
+@@ -458,16 +473,15 @@ static int m2p_hw_interrupt(struct ep93xx_dma_chan *edmac)
+ 
+ static int m2m_hw_setup(struct ep93xx_dma_chan *edmac)
+ {
+-	const struct ep93xx_dma_data *data = edmac->chan.private;
+ 	u32 control = 0;
+ 
+-	if (!data) {
++	if (edmac->dma_cfg.dir == DMA_MEM_TO_MEM) {
+ 		/* This is memcpy channel, nothing to configure */
+ 		writel(control, edmac->regs + M2M_CONTROL);
+ 		return 0;
+ 	}
+ 
+-	switch (data->port) {
++	switch (edmac->dma_cfg.port) {
+ 	case EP93XX_DMA_SSP:
+ 		/*
+ 		 * This was found via experimenting - anything less than 5
+@@ -477,7 +491,7 @@ static int m2m_hw_setup(struct ep93xx_dma_chan *edmac)
+ 		control = (5 << M2M_CONTROL_PWSC_SHIFT);
+ 		control |= M2M_CONTROL_NO_HDSK;
+ 
+-		if (data->direction == DMA_MEM_TO_DEV) {
++		if (edmac->dma_cfg.dir == DMA_MEM_TO_DEV) {
+ 			control |= M2M_CONTROL_DAH;
+ 			control |= M2M_CONTROL_TM_TX;
+ 			control |= M2M_CONTROL_RSS_SSPTX;
+@@ -493,7 +507,7 @@ static int m2m_hw_setup(struct ep93xx_dma_chan *edmac)
+ 		 * This IDE part is totally untested. Values below are taken
+ 		 * from the EP93xx Users's Guide and might not be correct.
+ 		 */
+-		if (data->direction == DMA_MEM_TO_DEV) {
++		if (edmac->dma_cfg.dir == DMA_MEM_TO_DEV) {
+ 			/* Worst case from the UG */
+ 			control = (3 << M2M_CONTROL_PWSC_SHIFT);
+ 			control |= M2M_CONTROL_DAH;
+@@ -548,7 +562,6 @@ static void m2m_fill_desc(struct ep93xx_dma_chan *edmac)
+ 
+ static void m2m_hw_submit(struct ep93xx_dma_chan *edmac)
+ {
+-	struct ep93xx_dma_data *data = edmac->chan.private;
+ 	u32 control = readl(edmac->regs + M2M_CONTROL);
+ 
+ 	/*
+@@ -574,7 +587,7 @@ static void m2m_hw_submit(struct ep93xx_dma_chan *edmac)
+ 	control |= M2M_CONTROL_ENABLE;
+ 	writel(control, edmac->regs + M2M_CONTROL);
+ 
+-	if (!data) {
++	if (edmac->dma_cfg.dir == DMA_MEM_TO_MEM) {
+ 		/*
+ 		 * For memcpy channels the software trigger must be asserted
+ 		 * in order to start the memcpy operation.
+@@ -636,7 +649,7 @@ static int m2m_hw_interrupt(struct ep93xx_dma_chan *edmac)
+ 		 */
+ 		if (ep93xx_dma_advance_active(edmac)) {
+ 			m2m_fill_desc(edmac);
+-			if (done && !edmac->chan.private) {
++			if (done && edmac->dma_cfg.dir == DMA_MEM_TO_MEM) {
+ 				/* Software trigger for memcpy channel */
+ 				control = readl(edmac->regs + M2M_CONTROL);
+ 				control |= M2M_CONTROL_START;
+@@ -867,25 +880,22 @@ static dma_cookie_t ep93xx_dma_tx_submit(struct dma_async_tx_descriptor *tx)
+ static int ep93xx_dma_alloc_chan_resources(struct dma_chan *chan)
+ {
+ 	struct ep93xx_dma_chan *edmac = to_ep93xx_dma_chan(chan);
+-	struct ep93xx_dma_data *data = chan->private;
+ 	const char *name = dma_chan_name(chan);
+ 	int ret, i;
+ 
+ 	/* Sanity check the channel parameters */
+ 	if (!edmac->edma->m2m) {
+-		if (!data)
++		if (edmac->dma_cfg.port < EP93XX_DMA_I2S1 ||
++		    edmac->dma_cfg.port > EP93XX_DMA_IRDA)
+ 			return -EINVAL;
+-		if (data->port < EP93XX_DMA_I2S1 ||
+-		    data->port > EP93XX_DMA_IRDA)
+-			return -EINVAL;
+-		if (data->direction != ep93xx_dma_chan_direction(chan))
++		if (edmac->dma_cfg.dir != ep93xx_dma_chan_direction(chan))
+ 			return -EINVAL;
+ 	} else {
+-		if (data) {
+-			switch (data->port) {
++		if (edmac->dma_cfg.dir != DMA_MEM_TO_MEM) {
++			switch (edmac->dma_cfg.port) {
+ 			case EP93XX_DMA_SSP:
+ 			case EP93XX_DMA_IDE:
+-				if (!is_slave_direction(data->direction))
++				if (!is_slave_direction(edmac->dma_cfg.dir))
+ 					return -EINVAL;
+ 				break;
+ 			default:
+@@ -894,9 +904,6 @@ static int ep93xx_dma_alloc_chan_resources(struct dma_chan *chan)
+ 		}
+ 	}
+ 
+-	if (data && data->name)
+-		name = data->name;
+-
+ 	ret = clk_prepare_enable(edmac->clk);
+ 	if (ret)
+ 		return ret;
+@@ -1315,36 +1322,53 @@ static void ep93xx_dma_issue_pending(struct dma_chan *chan)
+ 	ep93xx_dma_advance_work(to_ep93xx_dma_chan(chan));
+ }
+ 
+-static int __init ep93xx_dma_probe(struct platform_device *pdev)
++static struct ep93xx_dma_engine *ep93xx_dma_of_probe(struct platform_device *pdev)
+ {
+-	struct ep93xx_dma_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	const struct ep93xx_edma_data *data;
++	struct device *dev = &pdev->dev;
+ 	struct ep93xx_dma_engine *edma;
+ 	struct dma_device *dma_dev;
+-	int ret, i;
++	char dma_clk_name[5];
++	int i;
+ 
+-	edma = kzalloc(struct_size(edma, channels, pdata->num_channels), GFP_KERNEL);
++	data = device_get_match_data(dev);
++	if (!data)
++		return ERR_PTR(dev_err_probe(dev, -ENODEV, "No device match found\n"));
 +
-+	init.name = name;
-+	init.ops = &clk_ep93xx_gate_ops;
-+	init.flags = flags;
-+	init.parent_data = parent_data;
-+	init.num_parents = 1;
++	edma = devm_kzalloc(dev, struct_size(edma, channels, data->num_channels),
++			    GFP_KERNEL);
+ 	if (!edma)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 
++	edma->m2m = data->id;
++	edma->num_channels = data->num_channels;
+ 	dma_dev = &edma->dma_dev;
+-	edma->m2m = platform_get_device_id(pdev)->driver_data;
+-	edma->num_channels = pdata->num_channels;
+ 
+ 	INIT_LIST_HEAD(&dma_dev->channels);
+-	for (i = 0; i < pdata->num_channels; i++) {
+-		const struct ep93xx_dma_chan_data *cdata = &pdata->channels[i];
++	for (i = 0; i < edma->num_channels; i++) {
+ 		struct ep93xx_dma_chan *edmac = &edma->channels[i];
+ 
+ 		edmac->chan.device = dma_dev;
+-		edmac->regs = cdata->base;
+-		edmac->irq = cdata->irq;
++		edmac->regs = devm_platform_ioremap_resource(pdev, i);
++		if (IS_ERR(edmac->regs))
++			return edmac->regs;
 +
-+	clk->reg = reg;
-+	clk->bit_idx = bit_idx;
-+	clk->hw.init = &init;
++		edmac->irq = fwnode_irq_get(dev_fwnode(dev), i);
++		if (edmac->irq < 0)
++			return ERR_PTR(edmac->irq);
 +
-+	return devm_clk_hw_register(priv->dev, &clk->hw);
+ 		edmac->edma = edma;
+ 
+-		edmac->clk = clk_get(NULL, cdata->name);
++		if (edma->m2m)
++			sprintf(dma_clk_name, "m2m%u", i);
++		else
++			sprintf(dma_clk_name, "m2p%u", i);
++
++		edmac->clk = devm_clk_get(dev, dma_clk_name);
+ 		if (IS_ERR(edmac->clk)) {
+-			dev_warn(&pdev->dev, "failed to get clock for %s\n",
+-				 cdata->name);
+-			continue;
++			dev_err_probe(dev, PTR_ERR(edmac->clk),
++				      "no %s clock found\n", dma_clk_name);
++			return ERR_CAST(edmac->clk);
+ 		}
+ 
+ 		spin_lock_init(&edmac->lock);
+@@ -1357,6 +1381,90 @@ static int __init ep93xx_dma_probe(struct platform_device *pdev)
+ 			      &dma_dev->channels);
+ 	}
+ 
++	return edma;
 +}
 +
-+static u8 ep93xx_mux_get_parent(struct clk_hw *hw)
++static bool ep93xx_m2p_dma_filter(struct dma_chan *chan, void *filter_param)
 +{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
++	struct ep93xx_dma_chan *echan = to_ep93xx_dma_chan(chan);
++	struct ep93xx_dma_chan_cfg *cfg = filter_param;
 +
-+	regmap_read(priv->map, clk->reg, &val);
++	if (cfg->dir != ep93xx_dma_chan_direction(chan))
++		return false;
 +
-+	val &= EP93XX_SYSCON_CLKDIV_MASK;
++	echan->dma_cfg = *cfg;
++	return true;
++}
 +
-+	switch (val) {
-+	case EP93XX_SYSCON_CLKDIV_ESEL:
-+		return 1; /* PLL1 */
-+	case EP93XX_SYSCON_CLKDIV_MASK:
-+		return 2; /* PLL2 */
++static struct dma_chan *ep93xx_m2p_dma_of_xlate(struct of_phandle_args *dma_spec,
++					    struct of_dma *ofdma)
++{
++	struct ep93xx_dma_engine *edma = ofdma->of_dma_data;
++	dma_cap_mask_t mask = edma->dma_dev.cap_mask;
++	struct ep93xx_dma_chan_cfg dma_cfg;
++	u8 port = dma_spec->args[0];
++	u8 direction = dma_spec->args[1];
++
++	if (port > EP93XX_DMA_IRDA)
++		return NULL;
++
++	if (!is_slave_direction(direction))
++		return NULL;
++
++	dma_cfg.port = port;
++	dma_cfg.dir = direction;
++
++	return __dma_request_channel(&mask, ep93xx_m2p_dma_filter, &dma_cfg, ofdma->of_node);
++}
++
++static bool ep93xx_m2m_dma_filter(struct dma_chan *chan, void *filter_param)
++{
++	struct ep93xx_dma_chan *echan = to_ep93xx_dma_chan(chan);
++	struct ep93xx_dma_chan_cfg *cfg = filter_param;
++
++	echan->dma_cfg = *cfg;
++
++	return true;
++}
++
++static struct dma_chan *ep93xx_m2m_dma_of_xlate(struct of_phandle_args *dma_spec,
++					    struct of_dma *ofdma)
++{
++	struct ep93xx_dma_engine *edma = ofdma->of_dma_data;
++	dma_cap_mask_t mask = edma->dma_dev.cap_mask;
++	struct ep93xx_dma_chan_cfg dma_cfg;
++	u8 port = dma_spec->args[0];
++	u8 direction = dma_spec->args[1];
++
++	if (!is_slave_direction(direction))
++		return NULL;
++
++	switch (port) {
++	case EP93XX_DMA_SSP:
++	case EP93XX_DMA_IDE:
++		break;
 +	default:
-+		return 0; /* XTALI */
-+	};
-+}
-+
-+static int ep93xx_mux_set_parent_lock(struct clk_hw *hw, u8 index)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	if (index >= 3)
-+		return -EINVAL;
-+
-+	guard(spinlock_irqsave)(&priv->lock);
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val &= ~(EP93XX_SYSCON_CLKDIV_MASK);
-+	val |= index > 0 ? EP93XX_SYSCON_CLKDIV_ESEL : 0;
-+	val |= index > 1 ? EP93XX_SYSCON_CLKDIV_PSEL : 0;
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
-+	return 0;
-+}
-+
-+static bool is_best(unsigned long rate, unsigned long now,
-+		     unsigned long best)
-+{
-+	return abs_diff(rate, now) < abs_diff(rate, best);
-+}
-+
-+static int ep93xx_mux_determine_rate(struct clk_hw *hw,
-+				struct clk_rate_request *req)
-+{
-+	unsigned long best_rate = 0, actual_rate, mclk_rate;
-+	unsigned long rate = req->rate;
-+	struct clk_hw *parent_best = NULL;
-+	unsigned long parent_rate_best;
-+	unsigned long parent_rate;
-+	int div, pdiv;
-+	unsigned int i;
-+
-+	/*
-+	 * Try the two pll's and the external clock,
-+	 * because the valid predividers are 2, 2.5 and 3, we multiply
-+	 * all the clocks by 2 to avoid floating point math.
-+	 *
-+	 * This is based on the algorithm in the ep93xx raster guide:
-+	 * http://be-a-maverick.com/en/pubs/appNote/AN269REV1.pdf
-+	 *
-+	 */
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
-+
-+		parent_rate = clk_hw_get_rate(parent);
-+		mclk_rate = parent_rate * 2;
-+
-+		/* Try each predivider value */
-+		for (pdiv = 4; pdiv <= 6; pdiv++) {
-+			div = DIV_ROUND_CLOSEST(mclk_rate, rate * pdiv);
-+			if (!in_range(div, 1, 127))
-+				continue;
-+
-+			actual_rate = DIV_ROUND_CLOSEST(mclk_rate, pdiv * div);
-+			if (is_best(rate, actual_rate, best_rate)) {
-+				best_rate = actual_rate;
-+				parent_rate_best = parent_rate;
-+				parent_best = parent;
-+			}
-+		}
++		return NULL;
 +	}
 +
-+	if (!parent_best)
-+		return -EINVAL;
++	dma_cfg.port = port;
++	dma_cfg.dir = direction;
 +
-+	req->best_parent_rate = parent_rate_best;
-+	req->best_parent_hw = parent_best;
-+	req->rate = best_rate;
-+
-+	return 0;
++	return __dma_request_channel(&mask, ep93xx_m2m_dma_filter, &dma_cfg, ofdma->of_node);
 +}
 +
-+static unsigned long ep93xx_ddiv_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
++static int ep93xx_dma_probe(struct platform_device *pdev)
 +{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	unsigned int pdiv, div;
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	pdiv = (val >> EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) & GENMASK(1, 0);
-+	div = val & GENMASK(6, 0);
-+	if (!div)
-+		return 0;
-+
-+	return DIV_ROUND_CLOSEST(parent_rate * 2, (pdiv + 3) * div);
-+}
-+
-+static int ep93xx_ddiv_set_rate(struct clk_hw *hw, unsigned long rate,
-+				unsigned long parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	int pdiv, div, npdiv, ndiv;
-+	unsigned long actual_rate, mclk_rate, rate_err = ULONG_MAX;
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	mclk_rate = parent_rate * 2;
-+
-+	for (pdiv = 4; pdiv <= 6; pdiv++) {
-+		div = DIV_ROUND_CLOSEST(mclk_rate, rate * pdiv);
-+		if (!in_range(div, 1, 127))
-+			continue;
-+
-+		actual_rate = DIV_ROUND_CLOSEST(mclk_rate, pdiv * div);
-+		if (abs(actual_rate - rate) < rate_err) {
-+			npdiv = pdiv - 3;
-+			ndiv = div;
-+			rate_err = abs(actual_rate - rate);
-+		}
-+	}
-+
-+	if (rate_err == ULONG_MAX)
-+		return -EINVAL;
-+
-+	/*
-+	 * Clear old dividers.
-+	 * Bit 7 is reserved bit in all ClkDiv registers.
-+	 */
-+	val &= ~(GENMASK(9, 0) & ~BIT(7));
-+
-+	/* Set the new pdiv and div bits for the new clock rate */
-+	val |= (npdiv << EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | ndiv;
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops clk_ddiv_ops = {
-+	.enable = ep93xx_clk_enable,
-+	.disable = ep93xx_clk_disable,
-+	.is_enabled = ep93xx_clk_is_enabled,
-+	.get_parent = ep93xx_mux_get_parent,
-+	.set_parent = ep93xx_mux_set_parent_lock,
-+	.determine_rate = ep93xx_mux_determine_rate,
-+	.recalc_rate = ep93xx_ddiv_recalc_rate,
-+	.set_rate = ep93xx_ddiv_set_rate,
-+};
-+
-+static int clk_hw_register_ddiv(struct ep93xx_clk *clk,
-+				const char *name,
-+				struct clk_parent_data *parent_data,
-+				u8 num_parents,
-+				unsigned int reg,
-+				u8 bit_idx)
-+{
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	struct clk_init_data init = { };
-+
-+	init.name = name;
-+	init.ops = &clk_ddiv_ops;
-+	init.flags = 0;
-+	init.parent_data = parent_data;
-+	init.num_parents = num_parents;
-+
-+	clk->reg = reg;
-+	clk->bit_idx = bit_idx;
-+	clk->hw.init = &init;
-+
-+	return devm_clk_hw_register(priv->dev, &clk->hw);
-+}
-+
-+static unsigned long ep93xx_div_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+	u8 index;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	index = (val & clk->mask) >> clk->shift;
-+	if (index > clk->num_div)
-+		return 0;
-+
-+	return DIV_ROUND_CLOSEST(parent_rate, clk->div[index]);
-+}
-+
-+static long ep93xx_div_round_rate(struct clk_hw *hw, unsigned long rate,
-+				   unsigned long *parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	unsigned long best = 0, now;
-+	unsigned int i;
-+
-+	for (i = 0; i < clk->num_div; i++) {
-+		if ((rate * clk->div[i]) == *parent_rate)
-+			return rate;
-+
-+		now = DIV_ROUND_CLOSEST(*parent_rate, clk->div[i]);
-+		if (!best || is_best(rate, now, best))
-+			best = now;
-+	}
-+
-+	return best;
-+}
-+
-+static int ep93xx_div_set_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	unsigned int i;
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val &= ~clk->mask;
-+	for (i = 0; i < clk->num_div; i++)
-+		if (rate == DIV_ROUND_CLOSEST(parent_rate, clk->div[i]))
-+			break;
-+
-+	if (i == clk->num_div)
-+		return -EINVAL;
-+
-+	val |= i << clk->shift;
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops ep93xx_div_ops = {
-+	.enable = ep93xx_clk_enable,
-+	.disable = ep93xx_clk_disable,
-+	.is_enabled = ep93xx_clk_is_enabled,
-+	.recalc_rate = ep93xx_div_recalc_rate,
-+	.round_rate = ep93xx_div_round_rate,
-+	.set_rate = ep93xx_div_set_rate,
-+};
-+
-+static int clk_hw_register_div(struct ep93xx_clk *clk,
-+			       const char *name,
-+			       struct clk_parent_data *parent_data,
-+			       unsigned int reg,
-+			       u8 enable_bit,
-+			       u8 shift,
-+			       u8 width,
-+			       const char *clk_divisors,
-+			       u8 num_div)
-+{
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	struct clk_init_data init = { };
-+
-+	init.name = name;
-+	init.ops = &ep93xx_div_ops;
-+	init.flags = 0;
-+	init.parent_data = parent_data;
-+	init.num_parents = 1;
-+
-+	clk->reg = reg;
-+	clk->bit_idx = enable_bit;
-+	clk->mask = GENMASK(shift + width - 1, shift);
-+	clk->shift = shift;
-+	clk->div = clk_divisors;
-+	clk->num_div = num_div;
-+	clk->hw.init = &init;
-+
-+	return devm_clk_hw_register(priv->dev, &clk->hw);
-+}
-+
-+struct ep93xx_gate {
-+	unsigned int idx;
-+	unsigned int bit;
-+	const char *name;
-+};
-+
-+static const struct ep93xx_gate ep93xx_uarts[] = {
-+	{ EP93XX_CLK_UART1, EP93XX_SYSCON_DEVCFG_U1EN, "uart1" },
-+	{ EP93XX_CLK_UART2, EP93XX_SYSCON_DEVCFG_U2EN, "uart2" },
-+	{ EP93XX_CLK_UART3, EP93XX_SYSCON_DEVCFG_U3EN, "uart3" },
-+};
-+
-+static int ep93xx_uart_clock_init(struct ep93xx_clk_priv *priv)
-+{
-+	struct clk_parent_data parent_data = { };
-+	unsigned int i, idx, ret, clk_uart_div;
-+	struct ep93xx_clk *clk;
-+	u32 val;
-+
-+	regmap_read(priv->map, EP93XX_SYSCON_PWRCNT, &val);
-+	if (val & EP93XX_SYSCON_PWRCNT_UARTBAUD)
-+		clk_uart_div = 1;
-+	else
-+		clk_uart_div = 2;
-+
-+	priv->fixed[EP93XX_CLK_UART] =
-+		clk_hw_register_fixed_factor(NULL, "uart", "xtali", 0, 1, clk_uart_div);
-+	parent_data.hw = priv->fixed[EP93XX_CLK_UART];
-+
-+	/* parenting uart gate clocks to uart clock */
-+	for (i = 0; i < ARRAY_SIZE(ep93xx_uarts); i++) {
-+		idx = ep93xx_uarts[i].idx - EP93XX_CLK_UART1;
-+		clk = &priv->reg[idx];
-+		clk->idx = idx;
-+		ret = ep93xx_clk_register_gate(clk,
-+					ep93xx_uarts[i].name,
-+					&parent_data, CLK_SET_RATE_PARENT,
-+					EP93XX_SYSCON_DEVCFG,
-+					ep93xx_uarts[i].bit);
-+		if (ret)
-+			return dev_err_probe(priv->dev, ret,
-+					     "failed to register uart[%d] clock\n", i);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct ep93xx_gate ep93xx_dmas[] = {
-+	{ EP93XX_CLK_M2M0, EP93XX_SYSCON_PWRCNT_DMA_M2M0, "m2m0" },
-+	{ EP93XX_CLK_M2M1, EP93XX_SYSCON_PWRCNT_DMA_M2M1, "m2m1" },
-+	{ EP93XX_CLK_M2P0, EP93XX_SYSCON_PWRCNT_DMA_M2P0, "m2p0" },
-+	{ EP93XX_CLK_M2P1, EP93XX_SYSCON_PWRCNT_DMA_M2P1, "m2p1" },
-+	{ EP93XX_CLK_M2P2, EP93XX_SYSCON_PWRCNT_DMA_M2P2, "m2p2" },
-+	{ EP93XX_CLK_M2P3, EP93XX_SYSCON_PWRCNT_DMA_M2P3, "m2p3" },
-+	{ EP93XX_CLK_M2P4, EP93XX_SYSCON_PWRCNT_DMA_M2P4, "m2p4" },
-+	{ EP93XX_CLK_M2P5, EP93XX_SYSCON_PWRCNT_DMA_M2P5, "m2p5" },
-+	{ EP93XX_CLK_M2P6, EP93XX_SYSCON_PWRCNT_DMA_M2P6, "m2p6" },
-+	{ EP93XX_CLK_M2P7, EP93XX_SYSCON_PWRCNT_DMA_M2P7, "m2p7" },
-+	{ EP93XX_CLK_M2P8, EP93XX_SYSCON_PWRCNT_DMA_M2P8, "m2p8" },
-+	{ EP93XX_CLK_M2P9, EP93XX_SYSCON_PWRCNT_DMA_M2P9, "m2p9" },
-+};
-+
-+static int ep93xx_dma_clock_init(struct ep93xx_clk_priv *priv)
-+{
-+	struct clk_parent_data parent_data = { };
-+	unsigned int i, idx;
-+
-+	parent_data.hw = priv->fixed[EP93XX_CLK_HCLK];
-+	for (i = 0; i < ARRAY_SIZE(ep93xx_dmas); i++) {
-+		idx = ep93xx_dmas[i].idx;
-+		priv->fixed[idx] = devm_clk_hw_register_gate_parent_data(priv->dev,
-+					ep93xx_dmas[i].name,
-+					&parent_data, 0,
-+					priv->base + EP93XX_SYSCON_PWRCNT,
-+					ep93xx_dmas[i].bit,
-+					0,
-+					&priv->lock);
-+		if (IS_ERR(priv->fixed[idx]))
-+			return PTR_ERR(priv->fixed[idx]);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct clk_hw *of_clk_ep93xx_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct ep93xx_clk_priv *priv = data;
-+	unsigned int idx = clkspec->args[0];
-+
-+	if (idx < EP93XX_CLK_UART1)
-+		return priv->fixed[idx];
-+
-+	if (idx <= EP93XX_CLK_I2S_LRCLK)
-+		return &priv->reg[idx - EP93XX_CLK_UART1].hw;
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+/*
-+ * PLL rate = 14.7456 MHz * (X1FBD + 1) * (X2FBD + 1) / (X2IPD + 1) / 2^PS
-+ */
-+static unsigned long calc_pll_rate(u64 rate, u32 config_word)
-+{
-+	rate *= ((config_word >> 11) & GENMASK(4, 0)) + 1;	/* X1FBD */
-+	rate *= ((config_word >> 5) & GENMASK(5, 0)) + 1;	/* X2FBD */
-+	do_div(rate, (config_word & GENMASK(4, 0)) + 1);	/* X2IPD */
-+	rate >>= (config_word >> 16) & GENMASK(1, 0);		/* PS */
-+
-+	return rate;
-+}
-+
-+#define devm_ep93xx_clk_hw_register_fixed_rate_parent_data(dev, name, parent_data, flags, fixed_rate)  \
-+	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL, \
-+				     (parent_data), (flags), (fixed_rate), 0, 0, true)
-+
-+static int ep93xx_plls_init(struct ep93xx_clk_priv *priv)
-+{
-+	const char fclk_divisors[] = { 1, 2, 4, 8, 16, 1, 1, 1 };
-+	const char hclk_divisors[] = { 1, 2, 4, 5, 6, 8, 16, 32 };
-+	const char pclk_divisors[] = { 1, 2, 4, 8 };
-+	struct clk_parent_data xtali = { .index = 0 };
-+	unsigned int clk_f_div, clk_h_div, clk_p_div;
-+	unsigned long clk_pll1_rate, clk_pll2_rate;
-+	struct device *dev = priv->dev;
-+	struct clk_hw *hw, *pll1;
-+	u32 value;
-+
-+	/* Determine the bootloader configured pll1 rate */
-+	regmap_read(priv->map, EP93XX_SYSCON_CLKSET1, &value);
-+
-+	if (value & EP93XX_SYSCON_CLKSET1_NBYP1)
-+		clk_pll1_rate = calc_pll_rate(EP93XX_EXT_CLK_RATE, value);
-+	else
-+		clk_pll1_rate = EP93XX_EXT_CLK_RATE;
-+
-+	pll1 = devm_ep93xx_clk_hw_register_fixed_rate_parent_data(dev, "pll1", &xtali,
-+								  0, clk_pll1_rate);
-+	if (IS_ERR(pll1))
-+		return PTR_ERR(pll1);
-+
-+	priv->fixed[EP93XX_CLK_PLL1] = pll1;
-+
-+	/* Initialize the pll1 derived clocks */
-+	clk_f_div = fclk_divisors[(value >> 25) & GENMASK(2, 0)];
-+	clk_h_div = hclk_divisors[(value >> 20) & GENMASK(2, 0)];
-+	clk_p_div = pclk_divisors[(value >> 18) & GENMASK(1, 0)];
-+
-+	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "fclk", pll1, 0, 1, clk_f_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_FCLK] = hw;
-+
-+	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "hclk", pll1, 0, 1, clk_h_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_HCLK] = hw;
-+
-+	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "pclk", hw, 0, 1, clk_p_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_PCLK] = hw;
-+
-+	/* Determine the bootloader configured pll2 rate */
-+	regmap_read(priv->map, EP93XX_SYSCON_CLKSET2, &value);
-+	if (!(value & EP93XX_SYSCON_CLKSET2_NBYP2))
-+		clk_pll2_rate = EP93XX_EXT_CLK_RATE;
-+	else if (value & EP93XX_SYSCON_CLKSET2_PLL2_EN)
-+		clk_pll2_rate = calc_pll_rate(EP93XX_EXT_CLK_RATE, value);
-+	else
-+		clk_pll2_rate = 0;
-+
-+	hw = devm_ep93xx_clk_hw_register_fixed_rate_parent_data(dev, "pll2", &xtali,
-+								0, clk_pll2_rate);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_PLL2] = hw;
-+
-+	return 0;
-+}
-+
-+static int ep93xx_clk_probe(struct auxiliary_device *adev,
-+			       const struct auxiliary_device_id *id)
-+{
-+	struct ep93xx_regmap_adev *rdev = to_ep93xx_regmap_adev(adev);
-+	struct clk_parent_data xtali = { .index = 0 };
-+	struct clk_parent_data ddiv_pdata[3] = { };
-+	unsigned int clk_spi_div, clk_usb_div;
-+	struct clk_parent_data pdata = {};
-+	struct device *dev = &adev->dev;
-+	struct ep93xx_clk_priv *priv;
-+	struct ep93xx_clk *clk;
-+	struct clk_hw *hw;
-+	unsigned int idx;
++	struct ep93xx_dma_engine *edma;
++	struct dma_device *dma_dev;
 +	int ret;
-+	u32 value;
 +
-+	priv = devm_kzalloc(dev, struct_size(priv, reg, 10), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
++	edma = ep93xx_dma_of_probe(pdev);
++	if (!edma)
++		return PTR_ERR(edma);
 +
-+	spin_lock_init(&priv->lock);
-+	priv->dev = dev;
-+	priv->aux_dev = rdev;
-+	priv->map = rdev->map;
-+	priv->base = rdev->base;
++	dma_dev = &edma->dma_dev;
 +
-+	ret = ep93xx_plls_init(priv);
+ 	dma_cap_zero(dma_dev->cap_mask);
+ 	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
+ 	dma_cap_set(DMA_CYCLIC, dma_dev->cap_mask);
+@@ -1393,21 +1501,46 @@ static int __init ep93xx_dma_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ret = dma_async_device_register(dma_dev);
+-	if (unlikely(ret)) {
+-		for (i = 0; i < edma->num_channels; i++) {
+-			struct ep93xx_dma_chan *edmac = &edma->channels[i];
+-			if (!IS_ERR_OR_NULL(edmac->clk))
+-				clk_put(edmac->clk);
+-		}
+-		kfree(edma);
 +	if (ret)
 +		return ret;
 +
-+	regmap_read(priv->map, EP93XX_SYSCON_CLKSET2, &value);
-+	clk_usb_div = (value >> 28 & GENMASK(3, 0)) + 1;
-+	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "usb_clk",
-+							 priv->fixed[EP93XX_CLK_PLL2], 0, 1,
-+							 clk_usb_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_USB] = hw;
-+
-+	ret = ep93xx_uart_clock_init(priv);
++	if (edma->m2m) {
++		ret = of_dma_controller_register(pdev->dev.of_node, ep93xx_m2m_dma_of_xlate,
++						 edma);
+ 	} else {
+-		dev_info(dma_dev->dev, "EP93xx M2%s DMA ready\n",
+-			 edma->m2m ? "M" : "P");
++		ret = of_dma_controller_register(pdev->dev.of_node, ep93xx_m2p_dma_of_xlate,
++						 edma);
+ 	}
 +	if (ret)
-+		return ret;
++		goto err_dma_unregister;
 +
-+	ret = ep93xx_dma_clock_init(priv);
-+	if (ret)
-+		return ret;
++	dev_info(dma_dev->dev, "EP93xx M2%s DMA ready\n", edma->m2m ? "M" : "P");
 +
-+	clk_spi_div = id->driver_data;
-+	hw = devm_clk_hw_register_fixed_factor_index(dev, "ep93xx-spi.0",
-+						     0, /* XTALI external clock */
-+						     0, 1, clk_spi_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
++	return 0;
 +
-+	priv->fixed[EP93XX_CLK_SPI] = hw;
++err_dma_unregister:
++	dma_async_device_unregister(dma_dev);
+ 
+ 	return ret;
+ }
+ 
++static const struct ep93xx_edma_data edma_m2p = {
++	.id = M2P_DMA,
++	.num_channels = 10,
++};
 +
-+	/* PWM clock */
-+	hw = devm_clk_hw_register_fixed_factor_index(dev, "pwm_clk", 0, /* XTALI external clock */
-+						     0, 1, 1);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
++static const struct ep93xx_edma_data edma_m2m = {
++	.id = M2M_DMA,
++	.num_channels = 2,
++};
 +
-+	priv->fixed[EP93XX_CLK_PWM] = hw;
-+
-+	/* USB clock */
-+	pdata.hw = priv->fixed[EP93XX_CLK_USB];
-+	hw = devm_clk_hw_register_gate_parent_data(priv->dev, "ohci-platform", &pdata,
-+						   0, priv->base + EP93XX_SYSCON_PWRCNT,
-+						   EP93XX_SYSCON_PWRCNT_USH_EN, 0,
-+						   &priv->lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_USB] = hw;
-+
-+	ddiv_pdata[0].index = 0; /* XTALI external clock */
-+	ddiv_pdata[1].hw = priv->fixed[EP93XX_CLK_PLL1];
-+	ddiv_pdata[2].hw = priv->fixed[EP93XX_CLK_PLL2];
-+
-+	/* touchscreen/ADC clock */
-+	idx = EP93XX_CLK_ADC - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_div(clk, "ep93xx-adc", &xtali,
-+				EP93XX_SYSCON_KEYTCHCLKDIV,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_TSEN,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_ADIV,
-+				1,
-+				adc_divisors,
-+				ARRAY_SIZE(adc_divisors));
-+
-+
-+	/* keypad clock */
-+	idx = EP93XX_CLK_KEYPAD - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_div(clk, "ep93xx-keypad", &xtali,
-+				EP93XX_SYSCON_KEYTCHCLKDIV,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_KEN,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_KDIV,
-+				1,
-+				adc_divisors,
-+				ARRAY_SIZE(adc_divisors));
-+
-+	/*
-+	 * On reset PDIV and VDIV is set to zero, while PDIV zero
-+	 * means clock disable, VDIV shouldn't be zero.
-+	 * So we set both video and i2s dividers to minimum.
-+	 * ENA - Enable CLK divider.
-+	 * PDIV - 00 - Disable clock
-+	 * VDIV - at least 2
-+	 */
-+
-+	/* Check and enable video clk registers */
-+	regmap_read(priv->map, EP93XX_SYSCON_VIDCLKDIV, &value);
-+	value |= BIT(EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | 2;
-+	ep93xx_clk_write(priv, EP93XX_SYSCON_VIDCLKDIV, value);
-+
-+	/* Check and enable i2s clk registers */
-+	regmap_read(priv->map, EP93XX_SYSCON_I2SCLKDIV, &value);
-+	value |= BIT(EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | 2;
-+
-+	/*
-+	 * Override the SAI_MSTR_CLK_CFG from the I2S block and use the
-+	 * I2SClkDiv Register settings. LRCLK transitions on the falling SCLK
-+	 * edge.
-+	 */
-+	value |= EP93XX_SYSCON_I2SCLKDIV_ORIDE | EP93XX_SYSCON_I2SCLKDIV_SPOL;
-+	ep93xx_clk_write(priv, EP93XX_SYSCON_I2SCLKDIV, value);
-+
-+	/* video clk */
-+	idx = EP93XX_CLK_VIDEO - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_ddiv(clk, "ep93xx-fb",
-+				ddiv_pdata, ARRAY_SIZE(ddiv_pdata),
-+				EP93XX_SYSCON_VIDCLKDIV,
-+				EP93XX_SYSCON_CLKDIV_ENABLE);
-+
-+	/* i2s clk */
-+	idx = EP93XX_CLK_I2S_MCLK - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_ddiv(clk, "mclk",
-+				ddiv_pdata, ARRAY_SIZE(ddiv_pdata),
-+				EP93XX_SYSCON_I2SCLKDIV,
-+				EP93XX_SYSCON_CLKDIV_ENABLE);
-+
-+	/* i2s sclk */
-+	idx = EP93XX_CLK_I2S_SCLK - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	pdata.hw = &priv->reg[EP93XX_CLK_I2S_MCLK - EP93XX_CLK_UART1].hw;
-+	ret = clk_hw_register_div(clk, "sclk", &pdata,
-+				EP93XX_SYSCON_I2SCLKDIV,
-+				EP93XX_SYSCON_I2SCLKDIV_SENA,
-+				16, /* EP93XX_I2SCLKDIV_SDIV_SHIFT */
-+				1,  /* EP93XX_I2SCLKDIV_SDIV_WIDTH */
-+				sclk_divisors,
-+				ARRAY_SIZE(sclk_divisors));
-+
-+	/* i2s lrclk */
-+	idx = EP93XX_CLK_I2S_LRCLK - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	pdata.hw = &priv->reg[EP93XX_CLK_I2S_SCLK - EP93XX_CLK_UART1].hw;
-+	ret = clk_hw_register_div(clk, "lrclk", &pdata,
-+				EP93XX_SYSCON_I2SCLKDIV,
-+				EP93XX_SYSCON_I2SCLKDIV_SENA,
-+				17, /* EP93XX_I2SCLKDIV_LRDIV32_SHIFT */
-+				2,  /* EP93XX_I2SCLKDIV_LRDIV32_WIDTH */
-+				lrclk_divisors,
-+				ARRAY_SIZE(lrclk_divisors));
-+
-+	/* IrDa clk uses same pattern but no init code presents in original clock driver */
-+	return devm_of_clk_add_hw_provider(priv->dev, of_clk_ep93xx_get, priv);
-+}
-+
-+static const struct auxiliary_device_id ep93xx_clk_ids[] = {
-+	{ .name = "soc_ep93xx.clk-ep93xx", .driver_data = 2, },
-+	{ .name = "soc_ep93xx.clk-ep93xx.e2", .driver_data = 1, },
++static const struct of_device_id ep93xx_dma_of_ids[] = {
++	{ .compatible = "cirrus,ep9301-dma-m2p", .data = &edma_m2p },
++	{ .compatible = "cirrus,ep9301-dma-m2m", .data = &edma_m2m },
 +	{ /* sentinel */ }
 +};
-+MODULE_DEVICE_TABLE(auxiliary, ep93xx_clk_ids);
++MODULE_DEVICE_TABLE(of, ep93xx_dma_of_ids);
 +
-+static struct auxiliary_driver ep93xx_clk_driver = {
-+	.probe		= ep93xx_clk_probe,
-+	.id_table	= ep93xx_clk_ids,
-+};
-+module_auxiliary_driver(ep93xx_clk_driver);
+ static const struct platform_device_id ep93xx_dma_driver_ids[] = {
+ 	{ "ep93xx-dma-m2p", 0 },
+ 	{ "ep93xx-dma-m2m", 1 },
+@@ -1417,15 +1550,13 @@ static const struct platform_device_id ep93xx_dma_driver_ids[] = {
+ static struct platform_driver ep93xx_dma_driver = {
+ 	.driver		= {
+ 		.name	= "ep93xx-dma",
++		.of_match_table = ep93xx_dma_of_ids,
+ 	},
+ 	.id_table	= ep93xx_dma_driver_ids,
++	.probe		= ep93xx_dma_probe,
+ };
+ 
+-static int __init ep93xx_dma_module_init(void)
+-{
+-	return platform_driver_probe(&ep93xx_dma_driver, ep93xx_dma_probe);
+-}
+-subsys_initcall(ep93xx_dma_module_init);
++module_platform_driver(ep93xx_dma_driver);
+ 
+ MODULE_AUTHOR("Mika Westerberg <mika.westerberg@iki.fi>");
+ MODULE_DESCRIPTION("EP93xx DMA driver");
+diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
+index eb9805bb3fe8..9ec5cdd5a1eb 100644
+--- a/include/linux/platform_data/dma-ep93xx.h
++++ b/include/linux/platform_data/dma-ep93xx.h
+@@ -3,8 +3,11 @@
+ #define __ASM_ARCH_DMA_H
+ 
+ #include <linux/types.h>
++#include <linux/device.h>
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
++#include <linux/property.h>
++#include <linux/string.h>
+ 
+ /*
+  * M2P channels.
+@@ -70,6 +73,9 @@ struct ep93xx_dma_platform_data {
+ 
+ static inline bool ep93xx_dma_chan_is_m2p(struct dma_chan *chan)
+ {
++	if (device_is_compatible(chan->device->dev, "cirrus,ep9301-dma-m2p"))
++		return true;
++
+ 	return !strcmp(dev_name(chan->device->dev), "ep93xx-dma-m2p");
+ }
+ 
 
 -- 
 2.43.2
