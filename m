@@ -1,44 +1,56 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2E318C337
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABBB18C16D;
+	Mon, 15 Jul 2024 13:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721048879; cv=none; b=L6XxwX7WURto4ZbGSTOKvCzb0B28iE/SnsxrZu7rKC/luQcPkpZ5SbOljmr08KBAEctE8rhj3vl3mW3I7lCAWAWkNO70amKzgKO28j9cybCyFvny11pHtybs3rwH1Mu3yz3b2/23Wo1XbGJ1M9Cz536IB6qFfHSD6LK6nP8B05Q=
+	t=1721048916; cv=none; b=cx56DDVcdtC9TVRL3drOsBEvzJPwQsHJqbE6KWSOMFXqFSY9Uf3uiQTA1ZD3RClYPqIzYaRH2R0M1f2CgQCELyWDP0RfMFI5DzZwJpMUepa4bMcaMlYqMDZq1YNgcZPQHqmA79xNulRMVid0CwRM2mv0a2H92n187wjp069q/Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721048879; c=relaxed/simple;
-	bh=O/EUR4LuyoK3NKi3Bs380ukJ5pwbD+rvk2y103dnjK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ckBztMZRgCGEtRXj/dh/ORkxhTKNIS6c/zYEhsphyQ/keQ97tbB8pU4kfoQrrSldj7PL2PHnPTxK2a8ujQn89lh2E6KFjO3K4uo6XxRuplayKSCxnk4WuV0fGiCg03BaUCOgq41ivCrvnpYz3BoG/x4/23DVNlaRUHRZ9DxITOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WN2YP3Scqz4f3jXX
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 21:07:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 66DD51A0189
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 21:07:49 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP4 (Coremail) with SMTP id gCh0CgBHKzkhH5VmjCPSAA--.61776S6;
-	Mon, 15 Jul 2024 21:07:49 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: jack@suse.com
-Cc: mark@fasheh.com,
-	jlbec@evilplan.org,
-	joseph.qi@linux.alibaba.com,
-	hughd@google.com,
-	akpm@linux-foundation.org,
-	ocfs2-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 4/4] quota: remove unnecessary error code translation in dquot_quota_enable
-Date: Mon, 15 Jul 2024 21:05:34 +0800
-Message-Id: <20240715130534.2112678-5-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240715130534.2112678-1-shikemeng@huaweicloud.com>
-References: <20240715130534.2112678-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1721048916; c=relaxed/simple;
+	bh=EDZP059plenFt28uw0V0eC5w9BbEx78ROF3IDIofSYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e1j1iYubhbJTP31GVg+kKuYAJPoh7zzWgi6xNqhJxweYCmelvvKtLSdaoOUIt6VUSMmtADdnt6JjDcj033doxC0VospaafHM9cNs+vf6YRte0PosdZyue9RrT+fKrjkCgEJElDWdulyjOk6vLEiQ9wgVrNpZsbYDyphWwDfqgmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58c2e5e8649so7880915a12.1;
+        Mon, 15 Jul 2024 06:08:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721048913; x=1721653713;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mN9oE6P50Gu84NfU0zGEZkck2rnm4DusfnagcSf9agQ=;
+        b=xVGDpAubxuJ1uawqCWU43qVtUxsXyolIbzRKAHVOeVO2ihpcY01FUVvRkSiOwi6E9w
+         WjPA6TvB4ZrFC8SdslRn8Xk8JwRHgU+n/AGDDukA6FCNv6isLDNmRMzSCsfrdKPtnccJ
+         Ww4xvCXVExwtkz10/5PXLXAqJcowC13VENpeh5NYknmb2bfhVACjEjGlgl7vrZjLK5A6
+         ZMy9IoiRIHBtljnn+RQhFdoeRT637U8NTEVNM/W9LFk+Iq/apyZRkWHg9XkIBnm6ru6a
+         XTbQkE8uGN58O6wwWAe7EkWB5AYMUZyH5kuHFGvl6lM2vrLdVScP/WiSQkgMLD2QPpdp
+         efKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgivJ+5a/SbAWp0UjsHaxocsA0qMqyeb3+ubXOY5C87W5dB+YR/ZjZl7O4E6pbmg33JZLD0G2nvhe5uJlMv5huO9jlx55TOHWERPurSIdJ5dklcrhWhTV2wPRRdZwRNUAmUoCpCeahuas=
+X-Gm-Message-State: AOJu0Ywc/M8pG7mb5oR/8cIcE/Q68Xoablkw72bbvyYe/6CaXfDvO4v2
+	tv2WeIY0QiTs/CYTf2L+yDV9luSCS0Ok+bMKwE9ajNb4AGLeyH3l
+X-Google-Smtp-Source: AGHT+IGV55i1WARhIjOu9gWKsRuWftTHKuhl6H8KDHNbKUVqZsCJ02tr9Li02Zw3eyhBW48plv88Xw==
+X-Received: by 2002:a05:6402:50cc:b0:585:9e73:8ac6 with SMTP id 4fb4d7f45d1cf-59964ac31f1mr8756266a12.16.1721048912446;
+        Mon, 15 Jul 2024 06:08:32 -0700 (PDT)
+Received: from nuc.fritz.box (p200300f6f73ce200fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f73c:e200:fa63:3fff:fe02:74c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b24a76fefsm3349204a12.16.2024.07.15.06.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 06:08:31 -0700 (PDT)
+From: Johannes Thumshirn <jth@kernel.org>
+To: 
+Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Qu Wenruo <wqu@suse.com>,
+	Filipe Manana <fdmanana@suse.com>,
+	Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4] btrfs: don't hold dev_replace rwsem over whole of btrfs_map_block
+Date: Mon, 15 Jul 2024 15:08:19 +0200
+Message-ID: <20240715130820.19907-1-jth@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,57 +58,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHKzkhH5VmjCPSAA--.61776S6
-X-Coremail-Antispam: 1UD129KBjvdXoWruF1UGFW7CF4DGw4kWry8Zrb_yoWDAwb_Ca
-	1I93ykZF48ur4SkanrJF4UA3WYgan5Aw1DXFs2yF98Gr1UJrW5JrWqqrykArs5ZanIkFZ8
-	C3ykAw10kF4rWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r126s
-	0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
-	WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
-	bVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZTmfUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Simply set error code to -EEXIST when quota limit is already enabled in
-dquot_quota_enable to remove unnecessary error code translation.
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Don't hold the dev_replace rwsem for the entirety of btrfs_map_block().
+
+It is only needed to protect
+a) calls to find_live_mirror() and
+b) calling into handle_ops_on_dev_replace().
+
+But there is no need to hold the rwsem for any kind of set_io_stripe()
+calls.
+
+So relax taking the dev_replace rwsem to only protect both cases and check
+if the device replace status has changed in the meantime, for which we have
+to re-do the find_live_mirror() calls.
+
+This fixes a deadlock on raid-stripe-tree where device replace performs a
+scrub operation, which in turn calls into btrfs_map_block() to find the
+physical location of the block.
+
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+
 ---
- fs/quota/dquot.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Cc: Filipe Manana <fdmanana@suse.com>
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 2ca1f16689de..fdf19360ffc9 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -2598,7 +2598,8 @@ static int dquot_quota_enable(struct super_block *sb, unsigned int flags)
- 			goto out_err;
- 		}
- 		if (sb_has_quota_limits_enabled(sb, type)) {
--			ret = -EBUSY;
-+			/* compatible with XFS */
-+			ret = -EEXIST;
- 			goto out_err;
- 		}
- 		spin_lock(&dq_state_lock);
-@@ -2612,9 +2613,6 @@ static int dquot_quota_enable(struct super_block *sb, unsigned int flags)
- 		if (flags & qtype_enforce_flag(type))
- 			dquot_disable(sb, type, DQUOT_LIMITS_ENABLED);
+Changes in v4:
+- Free bioc in case we need to redo the mapping
+Link to v3:
+https://lore.kernel.org/linux-btrfs/20240712-b4-rst-updates-v3-1-5cf27dac98a7@kernel.org
+---
+ fs/btrfs/volumes.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index fcedc43ef291..9437e779d020 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6650,14 +6650,9 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
+ 	max_len = btrfs_max_io_len(map, map_offset, &io_geom);
+ 	*length = min_t(u64, map->chunk_len - map_offset, max_len);
+ 
++again:
+ 	down_read(&dev_replace->rwsem);
+ 	dev_replace_is_ongoing = btrfs_dev_replace_is_ongoing(dev_replace);
+-	/*
+-	 * Hold the semaphore for read during the whole operation, write is
+-	 * requested at commit time but must wait.
+-	 */
+-	if (!dev_replace_is_ongoing)
+-		up_read(&dev_replace->rwsem);
+ 
+ 	switch (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) {
+ 	case BTRFS_BLOCK_GROUP_RAID0:
+@@ -6695,6 +6690,7 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
+ 			   "stripe index math went horribly wrong, got stripe_index=%u, num_stripes=%u",
+ 			   io_geom.stripe_index, map->num_stripes);
+ 		ret = -EINVAL;
++		up_read(&dev_replace->rwsem);
+ 		goto out;
  	}
--	/* Error code translation for better compatibility with XFS */
--	if (ret == -EBUSY)
--		ret = -EEXIST;
+ 
+@@ -6710,6 +6706,8 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
+ 		 */
+ 		num_alloc_stripes += 2;
+ 
++	up_read(&dev_replace->rwsem);
++
+ 	/*
+ 	 * If this I/O maps to a single device, try to return the device and
+ 	 * physical block information on the stack instead of allocating an
+@@ -6782,6 +6780,19 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
+ 		goto out;
+ 	}
+ 
++	/*
++	 * Check if something changed the dev_replace state since
++	 * we've checked it for the last time and if redo the whole
++	 * mapping operation.
++	 */
++	down_read(&dev_replace->rwsem);
++	if (dev_replace_is_ongoing !=
++	    btrfs_dev_replace_is_ongoing(dev_replace)) {
++		btrfs_put_bioc(bioc);
++		up_read(&dev_replace->rwsem);
++		goto again;
++	}
++
+ 	if (op != BTRFS_MAP_READ)
+ 		io_geom.max_errors = btrfs_chunk_max_errors(map);
+ 
+@@ -6789,6 +6800,7 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
+ 	    op != BTRFS_MAP_READ) {
+ 		handle_ops_on_dev_replace(bioc, dev_replace, logical, &io_geom);
+ 	}
++	up_read(&dev_replace->rwsem);
+ 
+ 	*bioc_ret = bioc;
+ 	bioc->num_stripes = io_geom.num_stripes;
+@@ -6796,11 +6808,6 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
+ 	bioc->mirror_num = io_geom.mirror_num;
+ 
+ out:
+-	if (dev_replace_is_ongoing) {
+-		lockdep_assert_held(&dev_replace->rwsem);
+-		/* Unlock and let waiting writers proceed */
+-		up_read(&dev_replace->rwsem);
+-	}
+ 	btrfs_free_chunk_map(map);
  	return ret;
  }
- 
 -- 
-2.30.0
+2.43.0
 
