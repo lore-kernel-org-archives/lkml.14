@@ -1,273 +1,127 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5830318786F;
-	Mon, 15 Jul 2024 10:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530DC188CA4;
+	Mon, 15 Jul 2024 10:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039845; cv=none; b=g5fA8jgFBemlfKoT/hBiGJqN08ZbTiWXbnkHKSLI+WwiJOaeq4aMM9vg4V5tBEaRR3sdH96jLPgEOwi+Q3/l1iH0OASJd2sa6XkeJ4UujDdcL4MmKXe3vRcX/qqm96BB5QDufQ5OO/S8p78jSceWnlfQ2xfbWVBn/bhRjvwzbck=
+	t=1721039863; cv=none; b=gkQquvVM9JGCFgDMohxD3qeiJKV/xuHh+PkWfJQ3/nq9b9JzLS4cSP7fHeCi9WVnpXw8oXLUu6+OBNWeBkaKh94EmO9iNHzW5JObeYIvcOjRAHUDQsYB3wVB/cLPCBFg5YB0uBT1R1dSU6uet8DDKg+1URiZ+f6XgMrOGWZaccQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039845; c=relaxed/simple;
-	bh=ky+5tSQQzqFWCNpNAIeY3uIgkubnSnZSYviML9RnqnA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=endHxL5FNrOFjVMoNqUw2nzqvkU57ww5zCbZHPq/YcIpXPp+2f90sYwz6Gp5eUY6QLbs4DjD+mlUky68fQW+UGlqcqPdRG4dOBMeS5WgPTccZjunPRPehic5S1lVLQp6UFUvLfdG61b01TGX5AtRxsI7WzQd3dY4WZVWWYbLFxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eN3E3Fzs; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721039863; c=relaxed/simple;
+	bh=OLSQHqvZeV4R8tIhm0fu9Y+vzMgcFVohlkyzO1puMD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CQWmRsgmv+2qm/pG6V+xc9NioB5BhL5FExmQmGo32XXfgRrUPmt8c3EOPE9ifZsIxqZ3tkdwdCP+kXsyBNbUdPu4aHGUHHSQHDWVGnb0sGat8UJ3NpWapJKgmKVUKZo94trZT5XbZfHCTsV1A26v+IvmLI7fNo5HG6fjn3WDP7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=phkSwNQq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eN3E3Fzs"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4266ed6c691so25700935e9.3;
-        Mon, 15 Jul 2024 03:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721039842; x=1721644642; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0/u+ZmERenCTIp/LSR+hNqWpf4RdVSMdEHwyfQffZLs=;
-        b=eN3E3FzsKNCtZ77KR9fB2uFT0e2nmkhXGAhTJb2PbyGkVf+rYfOfSM3Cn1oTkXB6Rd
-         M0PpwFu435ilChSAGO4jTQZo8z+LTbTxAsY7O74/a900t+fZsc0+4OVcGYV16KOqAaMI
-         G80mwqax3BceUQdR4JRUf5XKNMxACXTvsuD6sPGJEn+7EQsxg8r3OM7Imdqc9Xw/rHIK
-         BEbbJpFwqih+eV9930De1y0sh0e0VNGobu31PmZKDdklPKaJME4dbZ4nSBIOTnXIW34v
-         riPOrzBZTFASeVFPgzU+fHRXpO+264RPkw+1pyG6Xd/DnQ9gB95B8Xo4WHybwti19kNb
-         H57A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721039842; x=1721644642;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0/u+ZmERenCTIp/LSR+hNqWpf4RdVSMdEHwyfQffZLs=;
-        b=br55lMwx9x87UvYF3c5PNMrH1cRsbDLf19wtRj+xUi2BWgXmUSzfU8Zf09R+hnQ1MW
-         VXGzQVZwgt5SIBOIuBdshymrGQ3NrqTFZPvx7RckJfZc3L74CAnEzdNkUpShtGLS/1wB
-         xhEyzyjZY2An/vT4tqe/Tc3QFnUq6BqG1DVWAviUrFwkwG9McVDqeKaIY2OWezljj/5v
-         Q/Qz+ujPNJtWMQiR7AIOeptjt85CBgF5JXcyHU7X0FIfi12nVBqvQoIMzrpMJhm557dV
-         CpqQKYHxyUbvPWxPEIzCZlow8IP5Fkf28nlHaYXhMcWhj5E73TaBTsN1qU5GYuIbeyLn
-         OxbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzt8diANiUqp9i8iG2AP1V17TycGU58G9jRk/Y9WPd2uBrFG5sNEcf2ohicecCwceVxBQyphz4C6vDBAPebmYkQJxpvL9lrpRlWEtLJjLyhwWlpRD1kqQ4ULYEWFKPLS2c9RMSZ5z2
-X-Gm-Message-State: AOJu0YwI/insVVWRcpDF8QrZjrju4+AVA3euJqpHQbDLwOnIbKJneKCK
-	DOFM4NkMjoMawHeKltIhH1ICLcx6Dy2RiZk77/PLWk8gqPncBxBQ
-X-Google-Smtp-Source: AGHT+IHTjXo/gpdtKts7jxUcKsguUViTpAMtfgYji8DIozC5fNO9hwB8H+nSSuzn8S4bc9WrqUDWYA==
-X-Received: by 2002:a05:600c:5112:b0:426:8884:3781 with SMTP id 5b1f17b1804b1-4268884382dmr111345725e9.24.1721039841601;
-        Mon, 15 Jul 2024 03:37:21 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5edb454sm81153855e9.32.2024.07.15.03.37.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 03:37:20 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 2/2] clk: renesas: rzg2l-cpg: Refactor to use priv for clks and base in clock register functions
-Date: Mon, 15 Jul 2024 11:35:55 +0100
-Message-Id: <20240715103555.507767-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240715103555.507767-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240715103555.507767-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="phkSwNQq"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FA6TcG004051;
+	Mon, 15 Jul 2024 10:37:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	eUI3A/c5DggFY7R2xMmygOfupjBAxIV01/Lk3i6oUPU=; b=phkSwNQqany2JeAW
+	aZ+RZy79YR9aniyRRqtue/z+xGnGRRo0ziOQPIl7c/44gTC2u8GzIg+CawOQi4Tl
+	HSypZp7f/JIG6S6kElPR/1cvt0Hb7COTdFt3vL67+agATYKBzK0C+SPsgwFfpFDO
+	dK32mu6mIvJcJcRDyBPDqQvngOxkUzvrqnnALbpzcmbvl9xfWsx2cqM8iQxrs/pE
+	c1xdu6acGusnh3roDffNh1ncRa0pAHrnml8PBXA4e6LMbDL10Ou9fJMVa4PnLnec
+	DOjseFSB4kKry8kmgBEINKfytnrdVUxyMMo2o6pTUxDJnNwdtshNgbWfykLfJcnY
+	wOAVbw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bghrkqkd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 10:37:10 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46FAb9pT031246
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 10:37:09 GMT
+Received: from [10.216.4.154] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 15 Jul
+ 2024 03:37:02 -0700
+Message-ID: <6124f9e9-3fdf-29b1-128f-c58f5ebe1424@quicinc.com>
+Date: Mon, 15 Jul 2024 16:06:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH v2 5/6] clk: qcom: Add camera clock controller driver for
+ SM8150
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Abhishek Sahu <absahu@codeaurora.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>,
+        "Imran
+ Shaik" <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>
+References: <20240702-camcc-support-sm8150-v2-0-4baf54ec7333@quicinc.com>
+ <20240702-camcc-support-sm8150-v2-5-4baf54ec7333@quicinc.com>
+ <xbe7kmaxhfwy26qzxrmwgiijaaiap4kdkruaxjs6ymihaw5taf@hvj57wyncfea>
+ <cc1957af-17bc-cd71-e6da-013e3a740014@quicinc.com>
+ <CAA8EJpqmJZJfd2famarx-FKFb1_+-nZM3N+FwK_hiOurG8n9=A@mail.gmail.com>
+ <f4072105-e0e2-46c8-82ed-92105b43a345@linaro.org>
+From: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>
+In-Reply-To: <f4072105-e0e2-46c8-82ed-92105b43a345@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: FfaGW4rugQZQSdXkagZQb-Uthemh45ry
+X-Proofpoint-ORIG-GUID: FfaGW4rugQZQSdXkagZQb-Uthemh45ry
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_06,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 spamscore=0 suspectscore=0 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407150083
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Simplify the `rzg2l-cpg` driver by removing explicit passing of `clks` and
-`base` parameters in various clock registration functions. These values
-are now accessed directly from the `priv` structure.
+On 7/11/2024 3:21 PM, Bryan O'Donoghue wrote:
+> On 10/07/2024 23:10, Dmitry Baryshkov wrote:
+>>>> - Why is cam_cc_gdsc_clk not modelled in the clock framework?
+>>>
+>>> This clock is kept enabled from probe, hence not required to be 
+>>> modelled
+>>> explicitly.
+>> Yes, I'm asking why it's kept up enabled from probe rather than via
+>> clock framework?
+>
+> FWIW my preference is to do it as Dmitry is suggesting here.
+>
+> I'm not a big fan of hitting the register and leaving it as-is, would 
+> much prefer to move to the model of having the CCF do it - so that for 
+> example the clock appears in the /sys clock summary.
+>
 
-While at it, drop masking of parent clocks with 0xffff as nothing is ever
-stored in the high bits.
+This clock is PoR ON clock and expected to be always enabled from HW 
+perspective, we are just re-ensuring it is ON from probe. Modelling this 
+clock is unnecessary, and we have been following this approach for  gdsc 
+clock in all the recent chipsets, like for example sm8550 camcc.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v1->v2
-- Squashed patches (2,3,4)/4 into single patch
-- Dropped masking of parent clock with 0xffff
-- Dropped creating local variable clks
----
- drivers/clk/renesas/rzg2l-cpg.c | 45 +++++++++++++--------------------
- 1 file changed, 17 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/clk/renesas/rzg2l-cpg.c b/drivers/clk/renesas/rzg2l-cpg.c
-index 1fe71a18cf86..d6351140f1ab 100644
---- a/drivers/clk/renesas/rzg2l-cpg.c
-+++ b/drivers/clk/renesas/rzg2l-cpg.c
-@@ -339,8 +339,7 @@ static const struct clk_ops rzg3s_div_clk_ops = {
- };
- 
- static struct clk * __init
--rzg3s_cpg_div_clk_register(const struct cpg_core_clk *core, struct clk **clks,
--			   void __iomem *base, struct rzg2l_cpg_priv *priv)
-+rzg3s_cpg_div_clk_register(const struct cpg_core_clk *core, struct rzg2l_cpg_priv *priv)
- {
- 	struct div_hw_data *div_hw_data;
- 	struct clk_init_data init = {};
-@@ -351,7 +350,7 @@ rzg3s_cpg_div_clk_register(const struct cpg_core_clk *core, struct clk **clks,
- 	u32 max = 0;
- 	int ret;
- 
--	parent = clks[core->parent & 0xffff];
-+	parent = priv->clks[core->parent];
- 	if (IS_ERR(parent))
- 		return ERR_CAST(parent);
- 
-@@ -400,16 +399,15 @@ rzg3s_cpg_div_clk_register(const struct cpg_core_clk *core, struct clk **clks,
- 
- static struct clk * __init
- rzg2l_cpg_div_clk_register(const struct cpg_core_clk *core,
--			   struct clk **clks,
--			   void __iomem *base,
- 			   struct rzg2l_cpg_priv *priv)
- {
-+	void __iomem *base = priv->base;
- 	struct device *dev = priv->dev;
- 	const struct clk *parent;
- 	const char *parent_name;
- 	struct clk_hw *clk_hw;
- 
--	parent = clks[core->parent & 0xffff];
-+	parent = priv->clks[core->parent];
- 	if (IS_ERR(parent))
- 		return ERR_CAST(parent);
- 
-@@ -440,7 +438,6 @@ rzg2l_cpg_div_clk_register(const struct cpg_core_clk *core,
- 
- static struct clk * __init
- rzg2l_cpg_mux_clk_register(const struct cpg_core_clk *core,
--			   void __iomem *base,
- 			   struct rzg2l_cpg_priv *priv)
- {
- 	const struct clk_hw *clk_hw;
-@@ -448,7 +445,7 @@ rzg2l_cpg_mux_clk_register(const struct cpg_core_clk *core,
- 	clk_hw = devm_clk_hw_register_mux(priv->dev, core->name,
- 					  core->parent_names, core->num_parents,
- 					  core->flag,
--					  base + GET_REG_OFFSET(core->conf),
-+					  priv->base + GET_REG_OFFSET(core->conf),
- 					  GET_SHIFT(core->conf),
- 					  GET_WIDTH(core->conf),
- 					  core->mux_flags, &priv->rmw_lock);
-@@ -508,7 +505,6 @@ static const struct clk_ops rzg2l_cpg_sd_clk_mux_ops = {
- 
- static struct clk * __init
- rzg2l_cpg_sd_mux_clk_register(const struct cpg_core_clk *core,
--			      void __iomem *base,
- 			      struct rzg2l_cpg_priv *priv)
- {
- 	struct sd_mux_hw_data *sd_mux_hw_data;
-@@ -652,7 +648,6 @@ static const struct clk_ops rzg2l_cpg_dsi_div_ops = {
- 
- static struct clk * __init
- rzg2l_cpg_dsi_div_clk_register(const struct cpg_core_clk *core,
--			       struct clk **clks,
- 			       struct rzg2l_cpg_priv *priv)
- {
- 	struct dsi_div_hw_data *clk_hw_data;
-@@ -662,7 +657,7 @@ rzg2l_cpg_dsi_div_clk_register(const struct cpg_core_clk *core,
- 	struct clk_hw *clk_hw;
- 	int ret;
- 
--	parent = clks[core->parent & 0xffff];
-+	parent = priv->clks[core->parent];
- 	if (IS_ERR(parent))
- 		return ERR_CAST(parent);
- 
-@@ -900,7 +895,6 @@ static const struct clk_ops rzg2l_cpg_sipll5_ops = {
- 
- static struct clk * __init
- rzg2l_cpg_sipll5_register(const struct cpg_core_clk *core,
--			  struct clk **clks,
- 			  struct rzg2l_cpg_priv *priv)
- {
- 	const struct clk *parent;
-@@ -910,7 +904,7 @@ rzg2l_cpg_sipll5_register(const struct cpg_core_clk *core,
- 	struct clk_hw *clk_hw;
- 	int ret;
- 
--	parent = clks[core->parent & 0xffff];
-+	parent = priv->clks[core->parent];
- 	if (IS_ERR(parent))
- 		return ERR_CAST(parent);
- 
-@@ -1013,8 +1007,6 @@ static const struct clk_ops rzg3s_cpg_pll_ops = {
- 
- static struct clk * __init
- rzg2l_cpg_pll_clk_register(const struct cpg_core_clk *core,
--			   struct clk **clks,
--			   void __iomem *base,
- 			   struct rzg2l_cpg_priv *priv,
- 			   const struct clk_ops *ops)
- {
-@@ -1025,7 +1017,7 @@ rzg2l_cpg_pll_clk_register(const struct cpg_core_clk *core,
- 	struct pll_clk *pll_clk;
- 	int ret;
- 
--	parent = clks[core->parent & 0xffff];
-+	parent = priv->clks[core->parent];
- 	if (IS_ERR(parent))
- 		return ERR_CAST(parent);
- 
-@@ -1042,7 +1034,7 @@ rzg2l_cpg_pll_clk_register(const struct cpg_core_clk *core,
- 
- 	pll_clk->hw.init = &init;
- 	pll_clk->conf = core->conf;
--	pll_clk->base = base;
-+	pll_clk->base = priv->base;
- 	pll_clk->priv = priv;
- 	pll_clk->type = core->type;
- 
-@@ -1140,34 +1132,31 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
- 			clk = clk_hw->clk;
- 		break;
- 	case CLK_TYPE_SAM_PLL:
--		clk = rzg2l_cpg_pll_clk_register(core, priv->clks, priv->base, priv,
--						 &rzg2l_cpg_pll_ops);
-+		clk = rzg2l_cpg_pll_clk_register(core, priv, &rzg2l_cpg_pll_ops);
- 		break;
- 	case CLK_TYPE_G3S_PLL:
--		clk = rzg2l_cpg_pll_clk_register(core, priv->clks, priv->base, priv,
--						 &rzg3s_cpg_pll_ops);
-+		clk = rzg2l_cpg_pll_clk_register(core, priv, &rzg3s_cpg_pll_ops);
- 		break;
- 	case CLK_TYPE_SIPLL5:
--		clk = rzg2l_cpg_sipll5_register(core, priv->clks, priv);
-+		clk = rzg2l_cpg_sipll5_register(core, priv);
- 		break;
- 	case CLK_TYPE_DIV:
--		clk = rzg2l_cpg_div_clk_register(core, priv->clks,
--						 priv->base, priv);
-+		clk = rzg2l_cpg_div_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_G3S_DIV:
--		clk = rzg3s_cpg_div_clk_register(core, priv->clks, priv->base, priv);
-+		clk = rzg3s_cpg_div_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_MUX:
--		clk = rzg2l_cpg_mux_clk_register(core, priv->base, priv);
-+		clk = rzg2l_cpg_mux_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_SD_MUX:
--		clk = rzg2l_cpg_sd_mux_clk_register(core, priv->base, priv);
-+		clk = rzg2l_cpg_sd_mux_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_PLL5_4_MUX:
- 		clk = rzg2l_cpg_pll5_4_mux_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_DSI_DIV:
--		clk = rzg2l_cpg_dsi_div_clk_register(core, priv->clks, priv);
-+		clk = rzg2l_cpg_dsi_div_clk_register(core, priv);
- 		break;
- 	default:
- 		goto fail;
--- 
-2.34.1
-
+> ---
+> bod
