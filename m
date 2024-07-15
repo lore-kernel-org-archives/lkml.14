@@ -1,61 +1,61 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30221836EA
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1B2184120
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721025200; cv=none; b=BIPjExj1jVShOAtzbguWp28rnITMo6LievFB1/45FSx2gHMV6V+daomXbOTfQI7SJbMd9cmuyiFFqDrnke7QvK4Vg6JQZaq+Kn9z+v97hAI+FITl1Lf8EsFd1ga72woZ3+jM1PgDE3kEZC0Ianxb2TrYBVThUKmPmhgBFH7wK78=
+	t=1721025204; cv=none; b=Pp+udosxUJUz9yVQ32jrhbeJqAD6+0GiM6DeErfspOD801Cy8pgFnCImaxakD+A3reYJmfVfHSNrlqhrYDnFVncKTmNq4QfJ6R+qGUGZvPflBpTiRnzUMDdTSDae0RldD1N0+Z9CcaRCdX1nz3eHDxt27CsgkyaSfja3aKHGEYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721025200; c=relaxed/simple;
-	bh=Ogj1qgSBFy5LiaMGrph8HSRVcootU6FeEO747BTFj9E=;
+	s=arc-20240116; t=1721025204; c=relaxed/simple;
+	bh=RSj/GL8gZoJdjbJyGkKZjzhqoxsZ6wLfYZiTk6CBwIc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u8WqO+Oj1S4FSeqJeIwhKj7F8WBz6mB6tWQ3lt0+CcA6I4pKPYk1dkVs9m8gv5cad9FroCId5+n4nHH+0nhwEVWHYs03WuYTMn7HGASqxmxJmVoHD6tplC3yD1hE+GBfKLpOWbqTV1hmq0OxxhGYqaV0TtSA7QC/SyqH9XnkXX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CYsu9ouG; arc=none smtp.client-ip=209.85.208.175
+	 In-Reply-To:To:Cc; b=gQuBtEQL0Ed/YFAQ1/yGuhc2qFovw/4hVEciPiMZzcaEzS4Ms7R7ksmWRisWEBSuDlkHjP9VXcoeG1Rj16+0Rtymroec+U0OArec2eGY+fKuP/7EI1b1/ZGjOYvlbIiUztTv7nnJIL8niMVpkIJiURJEofwt5b5YAGFs78J1iqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oOVXCOnv; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CYsu9ouG"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ec61eeed8eso51388011fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 23:33:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oOVXCOnv"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52e9944764fso4581464e87.3
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 23:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721025197; x=1721629997; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721025199; x=1721629999; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hbJUOmvW24quAtGM4HEWCKTnos6XbtfhPM+nK5+e2Tw=;
-        b=CYsu9ouGp/Ws+ikvSCe3Sl7IjS42dcIy1gcMJ27Ly/vcfvaZjSvli8f9N4kpYHpBPc
-         wKhh+sL7wJKlvpuku2liBJob2Z7lAQONG900n5h3fMxg+Wrt+6wUsEieYXBLU2Qdeeoc
-         hcLVdD+u4yGLopDRJk14gvqNDAj94Hqc3Og5qy8BrChSsW79yp62o4dYUq6hz9JX2MbN
-         POxgf18id/jbuMl9VD3zuM+CXVHKCvmRGi4dOdfFinIPNIb5VCqheIiYuor+CVlTw0Xd
-         H7c9oeiRFEuh5KFknfIGmNIgWAVVNPTaPNm56dWQ9gOsFXkrEgrpc2/Zoce36eCEC6lZ
-         np3w==
+        bh=cowQ2MZs44p/k7+ocTvDEJFCYMvt/Fw411UD/yRIuZk=;
+        b=oOVXCOnvly3CsPC/YUEjTxCI7dPrrRw9R4nfNIqpobXxlYG+nALW+LBuHP8dc6ZiGt
+         +xY1YVapTMZoQcFUQIn9f9JVEg4FKz23PU+/bAvj8n2U9d4rqHYHltYq7Bf/kxzDKxZh
+         GaZq3vxq8c5rv+npDtqcDfpW0dm2KYO27eaPYh7p7PSl/Wbs5EhGQlajuTWyudXmv9VZ
+         0wbaGgO7f0bbVmPo25FSCvTj7EOFr+7whQPT+omPKWtrxGKTkc9+JXVJqjjDCsizToV0
+         assGIbZF+Ju2NAQQGnM4JjFWfGK7trp2B09miGDjB5Twc1Dp9mVlCQGTWpuUFb3kVHLZ
+         pu6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721025197; x=1721629997;
+        d=1e100.net; s=20230601; t=1721025199; x=1721629999;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hbJUOmvW24quAtGM4HEWCKTnos6XbtfhPM+nK5+e2Tw=;
-        b=gOAStc7l9V3iu8KW0B9lmpBZX6LPzCf3fjDvN/S4Eb+ynBkjp43DdedeuECC1PC+b2
-         9+7UIT5t7kpJvw8yfuWYO2jkUgXRF0U477cgZ+rBWr25jzs6g4kTtwoRoJTW/6rdIwQH
-         CqQPe2vhLdSANIYMO5ppD549ZEZjeV/N8E1MlOnHVVxmKj+a7Tq7De0SxjanyOe04oNh
-         xOKTx4On6wucpJrwvlCpmwgGIfrFo99ARBqfVc3efiuGA/rdfTitmRh4rBWjF0JSdtGO
-         WNwrSa23L4A0cTWbZr2PzvcRqAQUJY+W7Oid4OkCSitg+Jlb/DiLj0M2lhSv4xemNYDb
-         BqYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUX4mJ1SWmb0b7A2gK2JvA5BuU0cP18cHBNI6ePTFow1yExZvFYrY2PrDphd/9eBjl2PS0CyhVFQaDkedekp4+kjyAn9xt5HbXItbQ+
-X-Gm-Message-State: AOJu0YwGPrwjZ97mLsW3OA5hUvq5UDTBBT83L5jPUTXlhhSvxQWYNngf
-	GOTSra84yqN0pHVs344x/SIdKAKY55cWHQ0liAs+BuIOYjy5cw8TBXO4KmwrJ8c=
-X-Google-Smtp-Source: AGHT+IF+V86J6/2ZIQK/CmixClQVdJF7hjnWLmCjjdRBB6FFYX5j0s7A+kP4jnSIFrfgBCt8vnJuQA==
-X-Received: by 2002:a19:f706:0:b0:52c:c9d3:a30c with SMTP id 2adb3069b0e04-52eb99a0639mr9397218e87.29.1721025197267;
-        Sun, 14 Jul 2024 23:33:17 -0700 (PDT)
+        bh=cowQ2MZs44p/k7+ocTvDEJFCYMvt/Fw411UD/yRIuZk=;
+        b=XsdQKwlYK9Eefo0BVFvdBXSXS1S1aoQirwbYifVFeL43sHaES+j4iJKcmh7jlUEqLn
+         eU8nklyJIUdu1qpIVPMDchpSya0LN7qnPY8/nMIr6WkU6qCWqMCuZfqYywZoUIz1NCcU
+         xToCUEs5kscGKKQ6iiSjIDREgy/xN1rlLD+GKaBFL+YBywJTIcmted8iAyA16zwtgFnY
+         GNk+8aCUDI3yqbDZbBO2tY7VWPlMhPEM0nZEm8ph6a66zS6RAamPBAXWLbSohOqhlJ22
+         /hsD1eO9cs3869tMLkSuaZuBuRn6lkCrHUE9k3rvdhwWE08DW2waWpU204i0tufv7xlu
+         rOzA==
+X-Forwarded-Encrypted: i=1; AJvYcCViLr8mOma9Njta8nWe432BsxRDtuAms9xsF6EdWi3qcVt/Aevu6rQQhOKzVczzN+0EpJR104yk8OHJk+Pzh3Vv9V8NLidU3AtAgecM
+X-Gm-Message-State: AOJu0YysJwTChFiJogdI/cJq+19g97AF7nPOV0ZkiEfk7X+FmYtWP0YQ
+	ype7KpTAP9RMpN7TEYP1Gb3EVAFx7yzVXIqAQYcvjsDoP8CVql1WfDCsjwqC3Ys=
+X-Google-Smtp-Source: AGHT+IHap4bfADCMMdp+9/m6hrqUOR1BGeplBSV1y4IBIjYw8gKprZmmugJo1TIVKbdLpOyzSTxWyQ==
+X-Received: by 2002:a05:6512:789:b0:52e:954d:3594 with SMTP id 2adb3069b0e04-52eb99cafa9mr9724397e87.52.1721025199105;
+        Sun, 14 Jul 2024 23:33:19 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed24e188esm743543e87.47.2024.07.14.23.33.16
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed24e188esm743543e87.47.2024.07.14.23.33.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jul 2024 23:33:16 -0700 (PDT)
+        Sun, 14 Jul 2024 23:33:18 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 15 Jul 2024 09:33:03 +0300
-Subject: [PATCH v4 3/5] drm/connector: automatically set immutable flag for
- max_bpc property
+Date: Mon, 15 Jul 2024 09:33:05 +0300
+Subject: [PATCH v4 5/5] drm/bridge-connector: reset the HDMI connector
+ state
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-drm-bridge-connector-fix-hdmi-reset-v4-3-61e6417cfd99@linaro.org>
+Message-Id: <20240715-drm-bridge-connector-fix-hdmi-reset-v4-5-61e6417cfd99@linaro.org>
 References: <20240715-drm-bridge-connector-fix-hdmi-reset-v4-0-61e6417cfd99@linaro.org>
 In-Reply-To: <20240715-drm-bridge-connector-fix-hdmi-reset-v4-0-61e6417cfd99@linaro.org>
 To: Andrzej Hajda <andrzej.hajda@intel.com>, 
@@ -110,48 +110,75 @@ Cc: Rob Clark <robdclark@gmail.com>,
  linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, 
  linux-tegra@vger.kernel.org
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1164;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2305;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=Ogj1qgSBFy5LiaMGrph8HSRVcootU6FeEO747BTFj9E=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ9qUQysu/J/Xl5n/9o/EfmHLmdY1x3fJXa8q/t5631Izp
- 6VP4f30TkZjFgZGLgZZMUUWn4KWqTGbksM+7JhaDzOIlQlkCgMXpwBMRPg8B8NKPS4j53+nGRhP
- VBcpNN70edCVY/lnJcPcZSbfTc/NZDjqy6J4IKKOJ5lRyqf+pLljwNWcn8dbq5ta/jC3fL5Surt
- 8VnHwiZ8ube0uSdOfHZtUofj4yj2FJZ909eR959nxx9g9rdtcmORwy69fzvGuf/mlJ9ITLxRdKU
- /VyNt9e8HWnyJSNaJvsvvjVOZ/8xJcrea+Le6pdpiL04no7ZG5l+apXb1wf90jpyWPt1z035Z38
- UmCspiUQ5HjJzXNXLbKp8oVKQ0yzQwbTWba5eanp9nPFBKUKtof79uV/nmO00QFK+krh9kFBW1Z
- lM+2PipLcPhrUlgXZKBucDBt5ZLW8y+WpX08IzaNs3cFAA==
+ bh=RSj/GL8gZoJdjbJyGkKZjzhqoxsZ6wLfYZiTk6CBwIc=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmlMKpemzG8GiCsYpbPT9S1Ojj9SgO+0jwg1X5y
+ 9EPZPxXbKOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZpTCqQAKCRCLPIo+Aiko
+ 1RfqCACEDU19Qkxz5DVPRYkK7fDdQdzCC7Ex3ixU9rJztEg0cYygQQ7/N1TTSfpbHd/6dnXTQqr
+ 1EgcPH6TE+tH9eXXMheeF1OS/bhTuKARxi2wWkdHQUGUtyMj8mcHkHdrusMxtne+ZhGO/FIJ2xq
+ Rbf1R+hLTh4esRtay58HxYpazr137omA9Gw8f5vvDWH+/fN0hvMicz3Eg/9i+0frpzphu+S7qVc
+ FVZeAPpLqP6gaJGOvTRZRx1keGxL2vn+faVwbgsOyaVmNQjvZ71zl4YXnlV8oqwC/teMLyW6umJ
+ AqBRzDQGS3iL3PzsMCTRPynE0PUtU41rhweY1t1X4Nq8Idxh
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-With the introduction of the HDMI Connector framework the driver might
-end up creating the max_bpc property with min = max = 8. IGT insists
-that such properties carry the 'immutable' flag. Automatically set the
-flag if the driver asks for the max_bpc property with min == max.
+On HDMI connectors which use drm_bridge_connector and DRM_BRIDGE_OP_HDMI
+IGT chokes on the max_bpc property in several kms_properties tests due
+to the drm_bridge_connector failing to reset HDMI-related
+properties.
 
-Fixes: aadb3e16b8f3 ("drm/connector: hdmi: Add output BPC to the connector state")
+Call __drm_atomic_helper_connector_hdmi_reset() if the
+drm_bridge_connector has bridge_hdmi.
+
+It is impossible to call this function from HDMI bridges, none of the
+bridge callbacks correspond to the drm_connector_funcs::reset().
+
+Fixes: 6b4468b0c6ba ("drm/bridge-connector: implement glue code for HDMI connector")
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/drm_connector.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/display/Kconfig                |  1 +
+ drivers/gpu/drm/display/drm_bridge_connector.c | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index ab6ab7ff7ea8..33847fd63628 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -2610,7 +2610,12 @@ int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
+diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/display/Kconfig
+index 8c174ceb0c4d..3763649ba251 100644
+--- a/drivers/gpu/drm/display/Kconfig
++++ b/drivers/gpu/drm/display/Kconfig
+@@ -15,6 +15,7 @@ if DRM_DISPLAY_HELPER
  
- 	prop = connector->max_bpc_property;
- 	if (!prop) {
--		prop = drm_property_create_range(dev, 0, "max bpc", min, max);
-+		u32 flags = 0;
-+
-+		if (min == max)
-+			flags |= DRM_MODE_PROP_IMMUTABLE;
-+
-+		prop = drm_property_create_range(dev, flags, "max bpc", min, max);
- 		if (!prop)
- 			return -ENOMEM;
+ config DRM_BRIDGE_CONNECTOR
+ 	bool
++	select DRM_DISPLAY_HDMI_STATE_HELPER
+ 	help
+ 	  DRM connector implementation terminating DRM bridge chains.
  
+diff --git a/drivers/gpu/drm/display/drm_bridge_connector.c b/drivers/gpu/drm/display/drm_bridge_connector.c
+index 0869b663f17e..7ebb35438459 100644
+--- a/drivers/gpu/drm/display/drm_bridge_connector.c
++++ b/drivers/gpu/drm/display/drm_bridge_connector.c
+@@ -216,8 +216,19 @@ static void drm_bridge_connector_debugfs_init(struct drm_connector *connector,
+ 	}
+ }
+ 
++static void drm_bridge_connector_reset(struct drm_connector *connector)
++{
++	struct drm_bridge_connector *bridge_connector =
++		to_drm_bridge_connector(connector);
++
++	drm_atomic_helper_connector_reset(connector);
++	if (bridge_connector->bridge_hdmi)
++		__drm_atomic_helper_connector_hdmi_reset(connector,
++							 connector->state);
++}
++
+ static const struct drm_connector_funcs drm_bridge_connector_funcs = {
+-	.reset = drm_atomic_helper_connector_reset,
++	.reset = drm_bridge_connector_reset,
+ 	.detect = drm_bridge_connector_detect,
+ 	.fill_modes = drm_helper_probe_single_connector_modes,
+ 	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
 
 -- 
 2.39.2
