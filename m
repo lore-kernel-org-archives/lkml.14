@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF6018508B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B37185E5D;
 	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721033961; cv=none; b=Ke11r1jjkOoX0irxu1h9qFNj+0zlb1K6l49FUBNIB6txqQjZPWd588PzlG+hlcLCvyBAv5nwN+F5s1B4hFk4OtG+VYGPPkq9UD9LhlfGVrtlnqHiQYaHxd8yChJPqwfSpqLiMuwfq/iSqhwiR60DZW4WhpznHSz3BiXXxNdvhwI=
+	t=1721033961; cv=none; b=JHOpq3nDbdNYceL/4QgtdbynHRUEzZTPrSTV830LBevb3hLj690P0ouO6Wdu7WqXv48WjG83jWFCjIG8FTq+3qqSl9wvgX9G1uM3mDNEG0da4IYfa8w1RHRY/IM41QM3f9wGf/eyYugp8m9aqZUK5wK2UYQF7DwzVFPwChgEA1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721033961; c=relaxed/simple;
-	bh=LDdV5iZmQZqylIgJ/osRTNrvBIzVQCfS1jrSLC+xklo=;
+	bh=wmZGgge85Q8CYqbZQFHFPVFmynDO5FkI+xVqMHo6QG4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jFLNM0xSEBsONPTGaM7oe5lJo4p/YEaj33sm0jV8Evs6g4b5EiUDCoa/XuOueDJtBfUCHzM5Hlm1JqfGcg0yI9157FJM58W8Hr0O0a78HtHjOxQOuk2XqRrNWGK8Driy4fZspPkVnv30re39whSsBskhqWJrzVX9OArVaeBQTVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0JOZpOS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=BiYn/AVttep91Cq2JEOIgoWnxL1pmAT8Ng54yCULaCntstKHBhZEWbgToLZmxmm8hvWBEbLBDzqvA8SDkhz/WhBwMDCZI1OUlKUlLfj+S2KGXB9HB19+/Jdo9I12MiGoQmSKpy98z4pTXTNDPitmgZfDnGmm7/AJoApFtZDh2S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0BxBChq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0JOZpOS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D9D6C4AF0F;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0BxBChq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8327BC4AF1A;
 	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721033961;
-	bh=LDdV5iZmQZqylIgJ/osRTNrvBIzVQCfS1jrSLC+xklo=;
+	bh=wmZGgge85Q8CYqbZQFHFPVFmynDO5FkI+xVqMHo6QG4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=T0JOZpOS26qka/RgQVUeN73Jeil6A6m+9QScjfmmzkwJR6fmw9xytb6lPYFaCnArm
-	 +G9gZwknY9YQzSDjCB/54aIeK6mMOOHLYe7pTeJyh6FusA9+9oVtYDFy7EdSKjA93e
-	 MTyFA+c+g3rR5He1z+ckW8gF+ejdR9Ecv/jWZ/GgsQqr6VLXu0Zvm5SeY4EHyhnQQ9
-	 erISPYITOGv+JiDdI0mSnKT2acso8OuWd8WMsMoIAydbYk1Cbwz/yxjbLuC+9bRn7C
-	 4XKKP8dxTXpZLkDDM5O6wwXEL+6gjam48CHd8ht4l0VB33B11/ViKuERaSVemF/c04
-	 OGigfY/5T4ryQ==
+	b=C0BxBChq6OdgSVELJx0/VsmZk5XhTBkhcGqw+ch1dN2vWA3sbi3fNk9Cvpa63oIac
+	 IFjzexFRH60a52CyibxiuLY1nza5+IQ39ihe3F1LjibQQ2Xb+74pbKJ///j6kjktH3
+	 KHfER/vOZLsY5mxkahTV6/BG4EyxZLyjuCj1oq88Ek93JBFhikQIrDTbKyKBdkKiJv
+	 D99nFD7q4uZqNrMgJ5qJXHzJXyJ5stRIqFH+5fgF0OAGVXWzY/bImHNyTtp+w6dJAm
+	 j/gjTETgRWD5Wjh5Drwevk4Zz485Pj/qrNacpmD/WhkwTqy+bOj7AQOcK/HJJFD4WV
+	 Ot/fCWFA6deqg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D347C3DA5E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76434C3DA5D;
 	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Mon, 15 Jul 2024 16:59:19 +0800
-Subject: [PATCH v2 1/6] dt-bindings: arm: amlogic: meson-gx-ao-secure:
- support more SoCs.
+Date: Mon, 15 Jul 2024 16:59:22 +0800
+Subject: [PATCH v2 4/6] arm64: dts: amlogic: c3: add ao secure node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-soc_info-v2-1-3836c8cc27a5@amlogic.com>
+Message-Id: <20240715-soc_info-v2-4-3836c8cc27a5@amlogic.com>
 References: <20240715-soc_info-v2-0-3836c8cc27a5@amlogic.com>
 In-Reply-To: <20240715-soc_info-v2-0-3836c8cc27a5@amlogic.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -53,11 +52,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721033959; l=1215;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721033959; l=1017;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=JnJJMZRxCaqyyKyFb5/FDU56hz+XcWAtbQbfxps+Two=;
- b=R7XvE+qSM+fzrD7PJUeJk4zhQ3FJjbtgdSphOmak7wX7g75WfqKiSV9MZNFg9EFKX5uCRppIm
- k6cKatYUS6PA1DkZHCfZ+EKvWAeQOxUI+MH34a3rvaPlTlfEOMzPjfo
+ bh=pjY4KC1fe2AmkCqstiXeLGWqLV1HNwoDAqmTzk6+a3Q=;
+ b=RII61pRiQ3eExWxOca40zgebKBhZyKovGqTyN7yz7Oqslr65rO7JHjZphrFnJvc3S1RUj7Sfy
+ s/b2ehfaew6AVBqMQ7oME0iNuGj9yYTyKs3zsFc7b7/s9LSx86kh3ot
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -67,40 +66,36 @@ Reply-To: xianwei.zhao@amlogic.com
 
 From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Add dt-binding document for ao-secure of Amlogic SoCs(S4,C3,T7,A4).
+Add node for board info registers, which allows getting SoC family and
+board revision.
+
+For example, with MESON_GX_SOCINFO config enabled we can get the
+following information for board with Amlogic C3 SoC:
+soc soc0: Amlogic C3 (C308L) Revision 3d:a (1:1) Detected
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- .../bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-index 7dff32f373cb..b4f6695a6015 100644
---- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-@@ -25,10 +25,18 @@ select:
+diff --git a/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi
+index f8fb060c49ae..c913dd409e64 100644
+--- a/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi
+@@ -129,6 +129,13 @@ uart_b: serial@7a000 {
+ 				clock-names = "xtal", "pclk", "baud";
+ 			};
  
- properties:
-   compatible:
--    items:
--      - const: amlogic,meson-gx-ao-secure
--      - const: syscon
--
-+    oneOf:
-+      - items:
-+          - const: amlogic,meson-gx-ao-secure
-+          - const: syscon
-+      - items:
-+          - enum:
-+              - amlogic,a4-ao-secure
-+              - amlogic,c3-ao-secure
-+              - amlogic,s4-ao-secure
-+              - amlogic,t7-ao-secure
-+          - const: amlogic,meson-gx-ao-secure
-+          - const: syscon
-   reg:
-     maxItems: 1
- 
++			sec_ao: ao-secure@10220 {
++				compatible = "amlogic,c3-ao-secure",
++					     "amlogic,meson-gx-ao-secure",
++					     "syscon";
++				reg = <0x0 0x10220 0x0 0x140>;
++				amlogic,has-chip-id;
++			};
+ 		};
+ 	};
+ };
 
 -- 
 2.37.1
