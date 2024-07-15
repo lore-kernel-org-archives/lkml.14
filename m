@@ -1,125 +1,119 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A14187351;
-	Mon, 15 Jul 2024 10:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE37D18734D
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721038479; cv=none; b=I4gJ0Ew6J1u244EnXjTbq1YxyYQJme5EiB9kawUYMD5wfmfEj4egvYddwS+LlcE85Oo7lo7CBJQIZzPHbRiSIM3VxyPIgkhfjdhZAzzNJ9KmLuSTXo00j3Che3Zz1ARMOkvrpc2r0KIRhsbBhLpZZsAH8z6l+rz6QUqHhgkvhU8=
+	t=1721038885; cv=none; b=sWw3uiqAILdSkHz1kBzIDJIODPxZKVxc6cDnJ4YH+KZtrIGAQuXKhealWQ9Y3zoPjKluo59DKsIPBW5mdAEtzrXZQUZDXSN36qPCl8TM2LLxY3JmHzcpcPf015hMXEyGB3fJb18w2u8GgH2AaMG8mAkbsYj/bxOhuULHF/23a+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721038479; c=relaxed/simple;
-	bh=cvtskF5eoAnrtbj2ZcVFAWrLxHptMH+5TmjsHrO9TmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pVPw2HKqSQO4DLJ1kfLxa1nxCOGGGJqOC8EvFX3ndlLtLIvK8wsZxSYLA2GKYZLKNw8HqdN/hs5U4YbLStWU8pbb9/77zRL/+N6jJNQUX77FDZARBj7oX57uvBYLYGmzHTrkpCkV5IHxtClBmC8USEKUwj80Db7PjTrYvd05Fxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HuYE3Ukg; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuYE3Ukg"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-48fe86bfde6so1360943137.2;
-        Mon, 15 Jul 2024 03:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721038476; x=1721643276; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KlSTp+gpajOC7P7qdRROMLoOJOppx3av3sxHUMORs44=;
-        b=HuYE3UkgegT1s9O3jz2HB4M5v6RwRvnpr6wp2xMv5fiSBiu2NdOE2srp/fRYE6mgrc
-         RQ/aZ+fMu3d5n8C6PrSAgH+l/1iiMA4fiYkY/GjAL+fnUGe71jVKj7eT8vecCrmkUzV/
-         /XKORNVVAxZjAdGWOmkwdnEiTvKG6g0Ptz5cnsRij+SVbqmmD0NLGthxCZuGXtjOxUAp
-         /6Za6WIyMmx/YafVP4QSjIU+SySaEXWy+zMex8RZUFsWlR+UiasF/JrjggvXZRAdXEOi
-         nYHRngg/vkgh8k+I7kAKoumd4gWTLW/l2R/+RlaOEb00zZAnyPjTfQIW+yJlrHuNIA5I
-         gznA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721038476; x=1721643276;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KlSTp+gpajOC7P7qdRROMLoOJOppx3av3sxHUMORs44=;
-        b=OKzmPtaL5TKyPEdZLcHeEjnBpiUq3oqcNDmMEWBmAKbPAmiHM909GVfHQKNJ1uEiM5
-         Tm9PQTfY/LLT+/Z+1JROeBgVDkecA7jeHh5ubLZiR2Vn7pR1Vp4gfQ5Y7/MErAI5CoLj
-         AiRa28PAodH9DnhGgNCR91sU6eJXnX4FetKNlnoCOgjuDgeMLzhNfLoEwjAq0nv8G1XI
-         ektTE4nv8zOY0RCvc/ycmpiYGE6lqA5f2hW7+Lq+IzBenEStBT4RAozIBw0X3b2kFtKe
-         8la0+zaS2wfEAq1f8jz0ZgsbgLpple7IQkrn6RNSP+3kowQyl3aLGmR7lLm6oL9mucGT
-         7ZDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0XE0oXgRIXDq75D/GIDjJXgK287kOCbbkS2EdRU34+o74Dg0iZ3hmI21Jg2a9lnJVIQ5S/tSGnzscvGHM3H1vsSE/aeOJLQ9pjgx1GEJxikgE4xW6tkb3KReKvrTCbhwsX6cNcmeLspTr+V9B6eNy0gAUJ6uuXJpVbIL2ZcY+NMNP9fSXVWZasFY=
-X-Gm-Message-State: AOJu0YyNVTyMO5G9/Ehwp4nzm+CyPE+fDM2IFD/4ExDf7V4u4rRgQLf6
-	i1drH4kJniRLkMUcPXeqdCJ6cmV4m5iEzuDOyYp8gJE5ssElbpz0g2vhtYOnKJyoh+RPVB/aSN3
-	g60SiyPKOdNRCLW1Unz/q8ENeia0=
-X-Google-Smtp-Source: AGHT+IG0U9QLP8qK1rfdDJ5nW9FNycPToMaosftpnLhD7NRXfuZKhlNwxlpZ43ZpbXXclARwQLeYaQSZt3tWOCX/4CY=
-X-Received: by 2002:a05:6102:3e84:b0:491:110e:cb03 with SMTP id
- ada2fe7eead31-491110ece05mr15481875137.32.1721038476497; Mon, 15 Jul 2024
- 03:14:36 -0700 (PDT)
+	s=arc-20240116; t=1721038885; c=relaxed/simple;
+	bh=C1QtMWGDWxteec68T6p2bieWFdYfthvIwzc3RFXK7a4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tDexJcXw81uKqTsswWZI9Osprc9FZHjrk7MZVI9SKngMmoI1XwoD1+I/sB+4VHnJAqbzjAM5igZ5wHjacPcTJ995fI7N8zbdZwr41IHdksuY1w3MHK/jp7Z0hh/ycNU46W2mn2/KeniJJ2Eh9HYqX+WqWRAi14UWTstzZzBH55I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:dd46:82df:8d7c:6f14])
+	by albert.telenet-ops.be with bizsmtp
+	id nmME2C00D2v92cJ06mMECR; Mon, 15 Jul 2024 12:21:15 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sTIpH-002C0h-W7;
+	Mon, 15 Jul 2024 12:21:14 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sTIpW-007P4E-JR;
+	Mon, 15 Jul 2024 12:21:14 +0200
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Greg Ungerer <gerg@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [GIT PULL] m68k updates for v6.11
+Date: Mon, 15 Jul 2024 12:21:10 +0200
+Message-Id: <20240715102110.1764643-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628131021.177866-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240628131021.177866-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdW-NUdK23h7_tLe5nfgXHzFmJySFNCNTciZmJeHcxNSKw@mail.gmail.com>
-In-Reply-To: <CAMuHMdW-NUdK23h7_tLe5nfgXHzFmJySFNCNTciZmJeHcxNSKw@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 15 Jul 2024 11:13:03 +0100
-Message-ID: <CA+V-a8tQcO-EK=eHgujaVQ2=ri00JK9d2rde5HZYxc5SSvpASg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] clk: renesas: rzg2l-cpg: Refactor to use priv for
- clks and base in clock register functions
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
+	Hi Linus,
 
-Thank you for the review.
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
 
-On Fri, Jul 12, 2024 at 3:08=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, Jun 28, 2024 at 3:11=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Simplify the `rzg2l-cpg` driver by removing explicit passing of `clks` =
-and
-> > `base` parameters in various clock registration functions. These values
-> > are now accessed directly from the `priv` structure.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/drivers/clk/renesas/rzg2l-cpg.c
-> > +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> > @@ -400,10 +400,10 @@ rzg3s_cpg_div_clk_register(const struct cpg_core_=
-clk *core, struct rzg2l_cpg_pri
-> >
-> >  static struct clk * __init
-> >  rzg2l_cpg_div_clk_register(const struct cpg_core_clk *core,
-> > -                          struct clk **clks,
-> > -                          void __iomem *base,
-> >                            struct rzg2l_cpg_priv *priv)
-> >  {
-> > +       void __iomem *base =3D priv->base;
-> > +       struct clk **clks =3D priv->clks;
->
-> If "clks" is used only once in a function, then please use priv->clks[...=
-]
-> directly instead of adding another local variable.
-> This applies to other functions in this patch.
->
-Ok, I'll update it.
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
 
-> BTW, why did you decide to have separate patch [2/4], [3/4],  and [4/4]?
-> They all follow the same pattern.
->
-I split them up for easier review. But I'll squash them now.
+are available in the Git repository at:
 
-Cheers,
-Prabhakar
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v6.11-tag1
+
+for you to fetch changes up to 21b9e722ad28c19c2bc83f18f540b3dbd89bf762:
+
+  m68k: cmpxchg: Fix return value for default case in __arch_xchg() (2024-07-09 09:19:31 +0200)
+
+----------------------------------------------------------------
+m68k updates for v6.11
+
+  - Fix bootup lock-ups on Warp1260, Atari TT, and MegaSTe,
+  - Miscellaneous fixes and improvements,
+  - Defconfig updates.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Eero Tamminen (1):
+      m68k: atari: Fix TT bootup freeze / unexpected (SCU) interrupt messages
+
+Geert Uytterhoeven (1):
+      m68k: defconfig: Update defconfigs for v6.10-rc1
+
+Jeff Johnson (1):
+      m68k: emu: Add missing MODULE_DESCRIPTION() macros
+
+Jiapeng Chong (1):
+      zorro: Use str_plural() in amiga_zorro_probe()
+
+Paolo Pisati (1):
+      m68k: amiga: Turn off Warp1260 interrupts during boot
+
+Thorsten Blum (1):
+      m68k: cmpxchg: Fix return value for default case in __arch_xchg()
+
+ arch/m68k/amiga/config.c             | 9 +++++++++
+ arch/m68k/atari/ataints.c            | 6 +-----
+ arch/m68k/configs/amiga_defconfig    | 1 +
+ arch/m68k/configs/apollo_defconfig   | 1 +
+ arch/m68k/configs/atari_defconfig    | 1 +
+ arch/m68k/configs/bvme6000_defconfig | 1 +
+ arch/m68k/configs/hp300_defconfig    | 1 +
+ arch/m68k/configs/mac_defconfig      | 1 +
+ arch/m68k/configs/multi_defconfig    | 1 +
+ arch/m68k/configs/mvme147_defconfig  | 1 +
+ arch/m68k/configs/mvme16x_defconfig  | 1 +
+ arch/m68k/configs/q40_defconfig      | 1 +
+ arch/m68k/configs/sun3_defconfig     | 1 +
+ arch/m68k/configs/sun3x_defconfig    | 1 +
+ arch/m68k/emu/nfblock.c              | 1 +
+ arch/m68k/emu/nfcon.c                | 1 +
+ arch/m68k/include/asm/cmpxchg.h      | 2 +-
+ drivers/zorro/zorro.c                | 3 ++-
+ include/uapi/linux/zorro_ids.h       | 3 +++
+ 19 files changed, 30 insertions(+), 7 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
