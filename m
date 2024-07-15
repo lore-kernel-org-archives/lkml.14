@@ -1,100 +1,129 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936B9184100
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106FE13AD16;
+	Mon, 15 Jul 2024 08:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032506; cv=none; b=iV/PU5+vSzreiQRGyNMvYGDLyUgK2Y99eRMLR5rPaLR8EtbT1soLSXrdRTyj3oybHmX4OSpXQeNfrVAS7MzyRBux5i1aGmuFjkCeYICXzeakxAE6HKYjxd041NgCOaKR8zidlb+pQiTZ6npBcah6y/zrmOyEyNT6m2TURDSc9y4=
+	t=1721032529; cv=none; b=KrKUj2T0EwbLs9WGNfRDxMiBjitpKfH8fJetAqk4yCVqzDIZxjLX6U8A67fIzv+s6RfoPJzP5qcaMto9gLnw8+FLvpjqmZ6iXv8LiT+c5le8/JupBZf8ioBJs6QCBzfSPU5k+K08sHfD1jBPlz5mQBtAOnujEtFsWrmTyksQJ/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032506; c=relaxed/simple;
-	bh=JW1v9I2QQq6tb8htzQlK+uUAsMhkhshbWkdi6NH34IU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iPyOrVYsJaQb+UmNtNv7C1haDxGvXaQZgVSwmJA4FYrSBcSI1EB+ZS+3nbCDUMp4bQAgeUlmwaqYhAHSmJITiiTRNfdmBygFGEgzuek+ZOBZu8p8eRyz2i403OTLRQvKSc4g1z3lMzy7BcRWkrfP6OlonWPYsudoEN7oocfxxPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=SagcaH2C; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1721032529; c=relaxed/simple;
+	bh=jAlufq6YBFy5pNLAiRTrVpUAjA/a0pbhT3MiEyZ9Cs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=py4ZJ9gxnLEPpncYdKrnJK9bJUPws0nrFG+B91L0s6+iPIAMf/2kyQK2xT/iEF/9FEwIlPP6ePsC1lPzetO4OH3AB7i460tUqJgnrevGEuSY5nMWyQupgaRgagMcC2rQIiMx+rMLrtMSZBRvlCAmicH8iHNMOZp1Ie1btXq2y48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaCwJOua; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="SagcaH2C"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46F7qhhC029356;
-	Mon, 15 Jul 2024 10:34:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	JW1v9I2QQq6tb8htzQlK+uUAsMhkhshbWkdi6NH34IU=; b=SagcaH2C4xzMgF4c
-	c+Ga/kBrOnnKUsu2zRE7GEw8U5aWpvcVCLf9wq356oesQ+SNw/88kxPaD2ApXpnp
-	TRfutITol0CmXQp+n63b4/IYUXT9vHrcfESb/TYdkBR4cp3rBrD/ZBZ1dms0OpdP
-	x7YoEi3JrrQnlf9TgPORH8JpT07O5PSZMZ74QOAc3UnSKN/ahTkFJk7U/biHSDBN
-	/Vn+XKXVr29RoKPsMdNJsdZkql3Up6hd/ciM0zSNI9Y91mSsF58y4sb2HxcPYdxa
-	cuQNy8JyBXoGkWVvTUfAIyN2n3VjUOdb6iuiwOeH880mS3AHOQngboI7Wu4+J//q
-	mbcvGA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 40bgwx5sj6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jul 2024 10:34:36 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B799940045;
-	Mon, 15 Jul 2024 10:34:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 447DE20E037;
-	Mon, 15 Jul 2024 10:33:57 +0200 (CEST)
-Received: from [10.129.178.17] (10.129.178.17) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Mon, 15 Jul
- 2024 10:33:54 +0200
-Message-ID: <ddc81a62-08d5-4f23-b86c-10754fb3e717@foss.st.com>
-Date: Mon, 15 Jul 2024 10:33:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaCwJOua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2B8C32782;
+	Mon, 15 Jul 2024 08:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721032528;
+	bh=jAlufq6YBFy5pNLAiRTrVpUAjA/a0pbhT3MiEyZ9Cs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MaCwJOuankTwhH0HxrC61CUi9I6lDhu8TCEAtSr/qk22KpFWVEXu1cPR/7/3f568J
+	 UBNhMLmVpWNRpDaEJJ6r48nWP/ItjyHd3AADPsvHstVL1lJS/2IdVD9mythJJriWnk
+	 q4GG3h7hgJfPRbFE+5eDjjH4/v8u62aEc4tUYSrYYxbasMlu7uyfTInmF5mwuBUw6h
+	 UacxO25eIYtR3ApDWkiPHsOVr43JGf9p5EminJTTQUqcYySqziUKCWjrGRx8Vu09f2
+	 YbxSCpTs1is1LCZyGXLUrQQSFfAeQEyTZ7NC1oQK54cAUnf/BhPB1TzTx+VBkltRoW
+	 vT6c2e99o7LPQ==
+Date: Mon, 15 Jul 2024 10:35:26 +0200
+From: Amit Shah <amit@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: David Kaplan <David.Kaplan@amd.com>, Jim Mattson <jmattson@google.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"hpa@zytor.com" <hpa@zytor.com>,
+	Kim Phillips <kim.phillips@amd.com>
+Subject: Re: [PATCH v2] KVM: SVM: let alternatives handle the cases when RSB
+ filling is required
+Message-ID: <ZpTeuJHgwz9u8d_k@t470s.drde.home.arpa>
+References: <20240626073719.5246-1-amit@kernel.org>
+ <Zn7gK9KZKxBwgVc_@google.com>
+ <CALMp9eSfZsGTngMSaWbFrdvMoWHyVK_SWf9W1Ps4BFdwAzae_g@mail.gmail.com>
+ <52d965101127167388565ed1520e1f06d8492d3b.camel@kernel.org>
+ <DS7PR12MB57665C3E8A7F0AF59E034B3C94D32@DS7PR12MB5766.namprd12.prod.outlook.com>
+ <Zow3IddrQoCTgzVS@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/stm: ltdc: check memory returned by devm_kzalloc()
-To: Claudiu Beznea <claudiu.beznea@microchip.com>,
-        <yannick.fertre@foss.st.com>, <philippe.cornu@foss.st.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@foss.st.com>
-CC: <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20230531072854.142629-1-claudiu.beznea@microchip.com>
-Content-Language: en-US
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-In-Reply-To: <20230531072854.142629-1-claudiu.beznea@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_03,2024-07-11_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zow3IddrQoCTgzVS@google.com>
+
+On (Mon) 08 Jul 2024 [11:59:45], Sean Christopherson wrote:
+> On Mon, Jul 01, 2024, David Kaplan wrote:
+> > > > >        /*
+> > > > >         * AMD's AutoIBRS is equivalent to Intel's eIBRS - use the
+> > > > > Intel feature
+> > > > >         * flag and protect from vendor-specific bugs via the
+> > > > > whitelist.
+> > > > >         *
+> > > > >         * Don't use AutoIBRS when SNP is enabled because it degrades
+> > > > > host
+> > > > >         * userspace indirect branch performance.
+> > > > >         */
+> > > > >        if ((x86_arch_cap_msr & ARCH_CAP_IBRS_ALL) ||
+> > > > >            (cpu_has(c, X86_FEATURE_AUTOIBRS) &&
+> > > > >             !cpu_feature_enabled(X86_FEATURE_SEV_SNP))) {
+> > > > >                setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
+> > > > >                if (!cpu_matches(cpu_vuln_whitelist, NO_EIBRS_PBRSB)
+> > > > > &&
+> > > > >                    !(x86_arch_cap_msr & ARCH_CAP_PBRSB_NO))
+> > > > >                        setup_force_cpu_bug(X86_BUG_EIBRS_PBRSB);
+> > > > >        }
+> > > >
+> > > > Families 0FH through 12H don't have EIBRS or AutoIBRS, so there's no
+> > > > cpu_vuln_whitelist[] lookup. Hence, no need to set the NO_EIBRS_PBRSB
+> > > > bit, even if it is accurate.
+> > >
+> > > The commit that adds the RSB_VMEXIT_LITE feature flag does describe the
+> > > bug in a good amount of detail:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?i
+> > > d=2b1299322016731d56807aa49254a5ea3080b6b3
+> > >
+> > > I've not seen any indication this is required for AMD CPUs.
+> > >
+> > > David, do you agree we don't need this?
+> > >
+> > 
+> > It's not required, as AMD CPUs don't have the PBRSB issue with AutoIBRS.
+> > Although I think Sean was talking about being extra paranoid
+> 
+> Ya.  I'm asking if there's a reason not to tack on X86_FEATURE_RSB_VMEXIT_LITE,
+> beyond it effectively being dead code.  There's no runtime cost, and so assuming
+> it doesn't get spuriously enabled, I don't see a downside.
+
+Ah - I get it now.  You want to add this code for parity with
+vmenter.S so that a future bug like this doesn't happen.
+
+I disagree, though.  It's not really dead code - it does get patched
+at runtime.  If a future AMD CPU has a bug that Intel doesn't, we'll
+have to introduce a new ALTERNATIVE just for that condition - leading
+to more complexity than is actually required.
+
+Also - reviewers of code will get confused, wondering why this code
+for AMD exists when the CPU vuln does not.
+
+I get that we want to write defensive code, but this was a very
+special condition that is unlikely to happen in this part of the code,
+and also this was missed by the devs and the reviewers.
+
+The good thing here is that missing this only leads to suboptimal
+code, not a security bug.  So given all this, I vote for the
+simplicity of code, rather than tacking on something.
+
+Sound OK?
 
 
-On 5/31/23 09:28, Claudiu Beznea wrote:
-> devm_kzalloc() can fail and return NULL pointer. Check its return status.
-> Identified with Coccinelle (kmerr.cocci script).
->
-> Fixes: 484e72d3146b ("drm/stm: ltdc: add support of ycbcr pixel formats")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->
-> Hi,
->
-> This has been addressed using kmerr.cocci script proposed for update
-> at [1].
->
-> Thank you,
-> Claudiu Beznea
->
-> [1] https://lore.kernel.org/all/20230530074044.1603426-1-claudiu.beznea@microchip.com/
->
-Hi Claudiu,
-
-After some delay: applied on drm-misc-next.
-
-Thank,
-Raphaël
-
+		Amit
+-- 
