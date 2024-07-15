@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F31013D24C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E0B13CFA5;
 	Mon, 15 Jul 2024 20:34:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721075684; cv=none; b=BAGV/cpd2eZyO+GGID/9o3hYgueuM0cyF/TrkxC9CD+YwGNvNO8j+U3XsoTr7FPlLL1u9Mf+gegl3ue/ERpX/MLZL0QPpY2Zshs7DhzG08giXJuXG9d4he5BI6UZxQB0eqzUUVwJcwnt/CyzdCI5XvN7AmzFpsCprBMH961sveU=
+	t=1721075684; cv=none; b=FqDA18Lvhse+uE/IGOAFJn2PzA4uJFhJ5OvVdCP4xme+m0pOZWGukda45tMSxdjZKb4rA/ashArgcd/Ge/wWU2NE4dyIine1RWx1xWhzpC+H/ngZWbQorp+0ejZ7qp4GwQTLNwmKlDBsTV2Q1v/meVdx/bRQFcnzS+mygWn6WGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721075684; c=relaxed/simple;
-	bh=XZ9Eq/FEIwF32mmw11/4ohjeLkHn97fcGylf/Nq2kOc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GzWFQYNBlP7yGUHZkce9amf1O5bs2Uc5PUeZm4b8mCYgd14ANEWHvLMoTdYYC5kGlaTyNntL7DQfEQFXYcFLNTj/xp+iWEf08hETOPvl/WBl7OgQIF8yH3t3kY7crwVNg0cig2j8vRO39r2okLWZHdNGkDjYAd1CfqnPxnLjkQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSwgKQy+; arc=none smtp.client-ip=10.30.226.201
+	bh=BaJFmf/0IromNC8vf1H9BKnUXGSTvwI7XMYwFzZ29x8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YJa0pNUb2KdWXb5n07va0Tp+rUzw7v0rBCJTE1sqomoA2AG+kCSjt4cQzcqqRBQe7gUBLtPafe54FtW3d7z/5+T1G2SNkR0MeLqlA78jPcDPLgoLSKBxZ2wTF1lBxlkMu2zdFi90VK6CfcPb5WL8dOX12uzTQjtpGKLt//hpMkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAk3PWD2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSwgKQy+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D16CC4AF18;
-	Mon, 15 Jul 2024 20:34:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iAk3PWD2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EFB53C4AF14;
+	Mon, 15 Jul 2024 20:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721075684;
-	bh=XZ9Eq/FEIwF32mmw11/4ohjeLkHn97fcGylf/Nq2kOc=;
+	bh=BaJFmf/0IromNC8vf1H9BKnUXGSTvwI7XMYwFzZ29x8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=hSwgKQy+4yz5lN0JXF2QwxPzQojDYZb0LthzD3KhRcB2sGzCn2y5NhNE/Kr04f3Sq
-	 JhHPw+1L53F7xICMIuv/JkM50IvQM88jtWs/OvZFdBxj8iJ3J6mVyZ5R1w7PYpj1Hs
-	 wr88zoXV3n+WLthZGi22PO464fjNswkzls+7xR+27uCpaiClKM4Manbot+g58EFVN3
-	 KPoUi4zxo2QlqRnZBIUWl5JVS4cBoqye2VPwG02o4Zh8F/gKLiwDhNn0ZBVqC7EW2H
-	 HeKsO40qPdZwDBeoxKtdArNcXNlk2fNIQK39nkXmJqptCiE90Eju1SFp0f31/rF9nm
-	 VS5GNNlSyr4Og==
+	b=iAk3PWD2EdmvOQWN/2xWrYagAQfAuLU6rgix9DdcS1OYgpxuGzzUtHtRYgDgQMSZE
+	 5ccnSh1f/EySAqtVyRzHEZDCGLOs5Gx2qmHrbqPG2Nb86YisDYGDnMPqxmVbSisqF8
+	 tOgc0A1bsMkld5ODPN7I4SbnJN4gcrLGxVmTBv7aXN5njf2ACpEf7wp7G5v9jcsqmn
+	 /J7d1X83CviVVzqUPkIXS4YWFmHgqRjSL+PretAvrxu+v7DSZiSqdput7t3CW1Bx6V
+	 zTiEOql9QRd7fL1nMq8vJEUXZLSl5yzlubmEtoc09XJPAIia4FaVPXro8ynpQFZfhL
+	 zmtUp9SaO6oyg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3AB63C433E9;
-	Mon, 15 Jul 2024 20:34:44 +0000 (UTC)
-Subject: Re: [GIT PULL for v6.11] vfs pidfs
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D5A8EC4332E;
+	Mon, 15 Jul 2024 20:34:43 +0000 (UTC)
+Subject: Re: [GIT PULL for v6.11] vfs inode
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240712-vfs-pidfs-18bf3ec8bde5@brauner>
-References: <20240712-vfs-pidfs-18bf3ec8bde5@brauner>
+In-Reply-To: <20240712-vfs-inode-224711153dd2@brauner>
+References: <20240712-vfs-inode-224711153dd2@brauner>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240712-vfs-pidfs-18bf3ec8bde5@brauner>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.11.pidfs
-X-PR-Tracked-Commit-Id: 5b08bd408534bfb3a7cf5778da5b27d4e4fffe12
+X-PR-Tracked-Message-Id: <20240712-vfs-inode-224711153dd2@brauner>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.11.inode
+X-PR-Tracked-Commit-Id: dc99c0ff53f588bb210b1e8b3314c7581cde68a2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 98f3a9a4fd449641010c77abca16aebb0b8d4419
-Message-Id: <172107568423.4128.3158959887165771303.pr-tracker-bot@kernel.org>
-Date: Mon, 15 Jul 2024 20:34:44 +0000
+X-PR-Merge-Commit-Id: 2aae1d67fd1d9070f8f23a6e7d9a7a093cf35fbb
+Message-Id: <172107568386.4128.9795547648247251339.pr-tracker-bot@kernel.org>
+Date: Mon, 15 Jul 2024 20:34:43 +0000
 To: Christian Brauner <brauner@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
@@ -49,12 +49,12 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 12 Jul 2024 16:01:45 +0200:
+The pull request you sent on Fri, 12 Jul 2024 15:58:04 +0200:
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.11.pidfs
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.11.inode
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/98f3a9a4fd449641010c77abca16aebb0b8d4419
+https://git.kernel.org/torvalds/c/2aae1d67fd1d9070f8f23a6e7d9a7a093cf35fbb
 
 Thank you!
 
