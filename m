@@ -1,267 +1,242 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AFD1757E
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 15:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9336E1171C;
+	Mon, 15 Jul 2024 15:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721059021; cv=none; b=HRMNcvtG8TBOpR4cUriJ651k6Yd+qntFNDA53UgchCNwgs5T+DKmtLqD8IzMHFzseFN0432L98aAY38CF/Borv1fvOxNGgkexDRnUm2EwKauXeLA5/e1euGz+RiE4a++1LKnfvS5wUBCXWXCAqRjs9DVsPrCv+H4AeA6AuzsSN8=
+	t=1721059042; cv=none; b=VqsR3k1SFAODrul+bhCjVaEtOIVYAglm8uL3SGDi4xtflBKxGxcBBaq/ktHdrGFnCx/ERsS0Ch282g+7fbf/E3rnH9JB+BBcQSHSH8mjhblA+WaH8lmcZwptbTyTiEj07rzBnsYZ2BI81lHwFCpz1a6z7E8E1+zmqwlAfpO0nr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721059021; c=relaxed/simple;
-	bh=ZBtcNEWCuxhE/P0iBIIXs/8CPUxtsXT1UYTc2Z9/CtU=;
-	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gC11mU11pa8sAA1YHsXZ8OGnHJ7QdA7YPrhhjVK5SLaAI/pjP1sFZbiTJw4ZRlDRmhs/jjRW9HdybnNHhxRsfJ8qA32yRlfOX6d+PT1jLF+1+lkRjhVcSs9gN5N8YQz2pIGguCln5OWw0AMIGZSnHZ9IMe0FxnZxPrDV3h7bmoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=malat.biz; spf=none smtp.mailfrom=malat.biz; dkim=pass (2048-bit key) header.d=malat-biz.20230601.gappssmtp.com header.i=@malat-biz.20230601.gappssmtp.com header.b=Dmx8UYpw; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=malat.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=malat.biz
+	s=arc-20240116; t=1721059042; c=relaxed/simple;
+	bh=ccuuPWS/kHndTJIROlan9HdA8UeYyOHGtUAvlJbG/iQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BkTdMs8a0l20nQbt7abltS5/TViXpyy733xxScy9bavp9tp6fEv2X8V5EBwxsiNHz8MRY3WjG4PTUFlp6h+LMzMiP+mAkY/0gsJpVwEaC0QjZq5e1eTsVZPdpNuUohOsRHl+E+MjfeDiDl0f1XA5ZNVNAnXk49Gcs3O3KZB3lxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iB4wS/sz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=malat-biz.20230601.gappssmtp.com header.i=@malat-biz.20230601.gappssmtp.com header.b="Dmx8UYpw"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-810197638fcso1643889241.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:56:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=malat-biz.20230601.gappssmtp.com; s=20230601; t=1721059017; x=1721663817; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:in-reply-to:mime-version:references
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NIlhy0lO57++coqHRC76uJUG9zQeSE560AUgvjRiuDo=;
-        b=Dmx8UYpwDkTjJ6GOwgwX9IUhKZpTKd5vNjM38Q1pR9YSeAloZS/Z0MTOXpNHoQXq6Q
-         TgL8dPL3izZAJHActixyBz5zCCDKnw9JsRX/dLoMbgSuP0YhPkb9/682Dc17UAaubhtA
-         9/BbIzR+EAf3LP3yc7U6CugJQ1WOJ/PK5gYy8GIoA7L5VgQpjQ6hQJZHoIToU/BOl7o8
-         53i5EPEvbqj42UD31scJlPob84vLJkGOxniItSC5I5RO+qY7WRdJ1NiBJ4Y9BFqhU/3i
-         ZGcUNw6HwP1vh6SZ1XGeAgcqIKYRRY+UmR7oDO58NWdqn7iWsmAHv+Yiyi87eKVCmDAT
-         7QjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721059017; x=1721663817;
-        h=cc:to:subject:message-id:date:in-reply-to:mime-version:references
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NIlhy0lO57++coqHRC76uJUG9zQeSE560AUgvjRiuDo=;
-        b=BJqJhOLzIoouAQ6FVQhoD6nYSAbp+H1AC+H5zQdTOWeGw15ukUOGDgD1mNU/NrS4jX
-         7HpHqls5tdCRjfVK6mMjKVmZbIgT/LPvAyJwLveDE+ujtNIRCLcv9R02BnsNhxv5iLQT
-         1Ym83ihI7Utm9+QY0mzAOKAvd8/togV/norYRr/aoFFBW5sN2UTg57M5+6cwz+cCfr42
-         X+tbVz7wc66v+YkZ356zHQ5g9V3TMj82jSQHiS29xft9ntlh1QIEqiOqrpZP8Fnhh/iO
-         hnS/DqwKYcGls2gV4ONzJyTiQAA/S4iL18SYPagHkv2bo+kUipb9wxWOX+do8z34YdK7
-         /3Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4inRLdpta+9XwKAUOosSg5/QZhA8jVJbKwy1Z0OOIT7vUm+I+ndIrqxi/n4Dp9NZ/Ez39unANW4HmCa9bgUqZqGQsaXo/0QbjyKf4
-X-Gm-Message-State: AOJu0YxY56QNqdLUVdS9pKpKhfGDS5syz5JdR5nhfmxHNQhpeuEnNXZr
-	nnXwTDE//OPimyqXOds/y3L92Fm1yqF2CMx7vP48rGYGL72dkS511U25PgxSQFVPrWGrxPurDBJ
-	n8qpkjPdr+ek6285aCrtGPLwijOhEJ5weJRhS
-X-Google-Smtp-Source: AGHT+IEmzZqImG52QCCrXwn9JJsfJfxkA/GrxQgE9tQ6QY334XrPRQCbcN4FcvO2F6j15dGqOU5nJSRvlsuk4rTZEuU=
-X-Received: by 2002:a05:6122:d8f:b0:4ef:5744:483 with SMTP id
- 71dfb90a1353d-4f4cd2b16aemr416439e0c.6.1721059015976; Mon, 15 Jul 2024
- 08:56:55 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 15 Jul 2024 08:56:55 -0700
-From: Petr Malat <oss@malat.biz>
-References: <20240617143945.454888-1-longman@redhat.com> <20240617143945.454888-5-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iB4wS/sz"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FAQlhN003863;
+	Mon, 15 Jul 2024 15:57:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=gCiFNnIZr3eKo25BFHugoK
+	CzKuqWtkarMsaqT4Ce42U=; b=iB4wS/szosA7HlubTRbQLC7ivjO1HK/aBiUd1n
+	ABDywGoWwA4IW3mXGy5IFj81fDmHFg+1M6XDgijhsh80WqwAeqnKyiu4yGg3E2Cf
+	3Memq506gAKiXR8C3+52r8HoqWcFywja1fjnY9i6afXBcadIH+boxQaMovVnQISp
+	zyaYQfwilaqlyb14oZ6AwI2gru84kzGv0y8+KFRs+b6Uzrcpf0EZUS/kRvsVU2uq
+	MzCwbQk/OqUVvqZl1GEEPAMBkk9Ve9KjJM58jyoMU7zewhn3/Ym0VqXLGiH/yfzK
+	E7K5Z+OoOJeItMbfXv1atcsm24oPhjrIra3sFsEMWq4T/RZQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bf9ecveg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 15:57:16 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46FFvFoV019912
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 15:57:16 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 15 Jul 2024 08:57:13 -0700
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Mukesh
+ Ojha" <quic_mojha@quicinc.com>
+Subject: [PATCH v8 1/2] Firmware: qcom_scm: Refactor code to support multiple dload mode
+Date: Mon, 15 Jul 2024 21:26:54 +0530
+Message-ID: <20240715155655.1811178-1-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240617143945.454888-5-longman@redhat.com>
-Date: Mon, 15 Jul 2024 08:56:55 -0700
-Message-ID: <CANMuvJkDjuPpcqMBM+zzNL3wA-1zVrshrMuy22kQKmLDxbsB7Q@mail.gmail.com>
-Subject: Re: [PATCH-cgroup v2 4/5] cgroup/cpuset: Make cpuset.cpus.exclusive
- independent of cpuset.cpus
-To: Waiman Long <longman@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Xavier <ghostxavier@sina.com>, Peter Hunt <pehunt@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: R3Myj2LezusXOa1AWCXS4XsT1hUeXVLa
+X-Proofpoint-GUID: R3Myj2LezusXOa1AWCXS4XsT1hUeXVLa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_10,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ impostorscore=0 spamscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2406140001 definitions=main-2407150126
 
-Hi,
-I finally got some time to test this and it works exactly as we needed it to.
-Thanks a lot,
-  Petr
+Currently on Qualcomm SoC, download_mode is enabled if
+CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT is selected or
+passed a boolean value from command line.
 
-On Mon, Jun 17, 2024 at 10:39:44AM -0400, Waiman Long wrote:
-> The "cpuset.cpus.exclusive.effective" value is currently limited to a
-> subset of its "cpuset.cpus". This makes the exclusive CPUs distribution
-> hierarchy subsumed within the larger "cpuset.cpus" hierarchy. We have to
-> decide on what CPUs are used locally and what CPUs can be passed down as
-> exclusive CPUs down the hierarchy and combine them into "cpuset.cpus".
->
-> The advantage of the current scheme is to have only one hierarchy to
-> worry about. However, it make it harder to use as all the "cpuset.cpus"
-> values have to be properly set along the way down to the designated remote
-> partition root. It also makes it more cumbersome to find out what CPUs
-> can be used locally.
->
-> Make creation of remote partition simpler by breaking the
-> dependency of "cpuset.cpus.exclusive" on "cpuset.cpus" and make
-> them independent entities. Now we have two separate hierarchies -
-> one for setting "cpuset.cpus.effective" and the other one for setting
-> "cpuset.cpus.exclusive.effective". We may not need to set "cpuset.cpus"
-> when we activate a partition root anymore.
->
-> Also update Documentation/admin-guide/cgroup-v2.rst and cpuset.c comment
-> to document this change.
->
-> Suggested-by: Petr Malat <oss@malat.biz>
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  Documentation/admin-guide/cgroup-v2.rst |  4 +-
->  kernel/cgroup/cpuset.c                  | 67 +++++++++++++++++--------
->  2 files changed, 49 insertions(+), 22 deletions(-)
->
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-> index 722e4762c4e0..2e4e74bea6ef 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -2380,8 +2380,8 @@ Cpuset Interface Files
->  	cpuset-enabled cgroups.
->
->  	This file shows the effective set of exclusive CPUs that
-> -	can be used to create a partition root.  The content of this
-> -	file will always be a subset of "cpuset.cpus" and its parent's
-> +	can be used to create a partition root.  The content
-> +	of this file will always be a subset of its parent's
->  	"cpuset.cpus.exclusive.effective" if its parent is not the root
->  	cgroup.  It will also be a subset of "cpuset.cpus.exclusive"
->  	if it is set.  If "cpuset.cpus.exclusive" is not set, it is
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index 144bfc319809..fe76045aa528 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -87,7 +87,7 @@ static const char * const perr_strings[] = {
->  	[PERR_NOTEXCL]   = "Cpu list in cpuset.cpus not exclusive",
->  	[PERR_NOCPUS]    = "Parent unable to distribute cpu downstream",
->  	[PERR_HOTPLUG]   = "No cpu available due to hotplug",
-> -	[PERR_CPUSEMPTY] = "cpuset.cpus is empty",
-> +	[PERR_CPUSEMPTY] = "cpuset.cpus and cpuset.cpus.exclusive are empty",
->  	[PERR_HKEEPING]  = "partition config conflicts with housekeeping setup",
->  };
->
-> @@ -127,19 +127,28 @@ struct cpuset {
->  	/*
->  	 * Exclusive CPUs dedicated to current cgroup (default hierarchy only)
->  	 *
-> -	 * This exclusive CPUs must be a subset of cpus_allowed. A parent
-> -	 * cgroup can only grant exclusive CPUs to one of its children.
-> +	 * The effective_cpus of a valid partition root comes solely from its
-> +	 * effective_xcpus and some of the effective_xcpus may be distributed
-> +	 * to sub-partitions below & hence excluded from its effective_cpus.
-> +	 * For a valid partition root, its effective_cpus have no relationship
-> +	 * with cpus_allowed unless its exclusive_cpus isn't set.
->  	 *
-> -	 * When the cgroup becomes a valid partition root, effective_xcpus
-> -	 * defaults to cpus_allowed if not set. The effective_cpus of a valid
-> -	 * partition root comes solely from its effective_xcpus and some of the
-> -	 * effective_xcpus may be distributed to sub-partitions below & hence
-> -	 * excluded from its effective_cpus.
-> +	 * This value will only be set if either exclusive_cpus is set or
-> +	 * when this cpuset becomes a local partition root.
->  	 */
->  	cpumask_var_t effective_xcpus;
->
->  	/*
->  	 * Exclusive CPUs as requested by the user (default hierarchy only)
-> +	 *
-> +	 * Its value is independent of cpus_allowed and designates the set of
-> +	 * CPUs that can be granted to the current cpuset or its children when
-> +	 * it becomes a valid partition root. The effective set of exclusive
-> +	 * CPUs granted (effective_xcpus) depends on whether those exclusive
-> +	 * CPUs are passed down by its ancestors and not yet taken up by
-> +	 * another sibling partition root along the way.
-> +	 *
-> +	 * If its value isn't set, it defaults to cpus_allowed.
->  	 */
->  	cpumask_var_t exclusive_cpus;
->
-> @@ -230,6 +239,17 @@ static struct list_head remote_children;
->   *   2 - partition root without load balancing (isolated)
->   *  -1 - invalid partition root
->   *  -2 - invalid isolated partition root
-> + *
-> + *  There are 2 types of partitions - local or remote. Local partitions are
-> + *  those whose parents are partition root themselves. Setting of
-> + *  cpuset.cpus.exclusive are optional in setting up local partitions.
-> + *  Remote partitions are those whose parents are not partition roots. Passing
-> + *  down exclusive CPUs by setting cpuset.cpus.exclusive along its ancestor
-> + *  nodes are mandatory in creating a remote partition.
-> + *
-> + *  For simplicity, a local partition can be created under a local or remote
-> + *  partition but a remote partition cannot have any partition root in its
-> + *  ancestor chain except the cgroup root.
->   */
->  #define PRS_MEMBER		0
->  #define PRS_ROOT		1
-> @@ -709,6 +729,19 @@ static inline void free_cpuset(struct cpuset *cs)
->  	kfree(cs);
->  }
->
-> +/* Return user specified exclusive CPUs */
-> +static inline struct cpumask *user_xcpus(struct cpuset *cs)
-> +{
-> +	return cpumask_empty(cs->exclusive_cpus) ? cs->cpus_allowed
-> +						 : cs->exclusive_cpus;
-> +}
-> +
-> +static inline bool xcpus_empty(struct cpuset *cs)
-> +{
-> +	return cpumask_empty(cs->cpus_allowed) &&
-> +	       cpumask_empty(cs->exclusive_cpus);
-> +}
-> +
->  static inline struct cpumask *fetch_xcpus(struct cpuset *cs)
->  {
->  	return !cpumask_empty(cs->exclusive_cpus) ? cs->exclusive_cpus :
-> @@ -1593,7 +1626,7 @@ EXPORT_SYMBOL_GPL(cpuset_cpu_is_isolated);
->   * Return: true if xcpus is not empty, false otherwise.
->   *
->   * Starting with exclusive_cpus (cpus_allowed if exclusive_cpus is not set),
-> - * it must be a subset of cpus_allowed and parent's effective_xcpus.
-> + * it must be a subset of parent's effective_xcpus.
->   */
->  static bool compute_effective_exclusive_cpumask(struct cpuset *cs,
->  						struct cpumask *xcpus)
-> @@ -1603,12 +1636,7 @@ static bool compute_effective_exclusive_cpumask(struct cpuset *cs,
->  	if (!xcpus)
->  		xcpus = cs->effective_xcpus;
->
-> -	if (!cpumask_empty(cs->exclusive_cpus))
-> -		cpumask_and(xcpus, cs->exclusive_cpus, cs->cpus_allowed);
-> -	else
-> -		cpumask_copy(xcpus, cs->cpus_allowed);
-> -
-> -	return cpumask_and(xcpus, xcpus, parent->effective_xcpus);
-> +	return cpumask_and(xcpus, user_xcpus(cs), parent->effective_xcpus);
->  }
->
->  static inline bool is_remote_partition(struct cpuset *cs)
-> @@ -1887,8 +1915,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
->  	 */
->  	adding = deleting = false;
->  	old_prs = new_prs = cs->partition_root_state;
-> -	xcpus = !cpumask_empty(cs->exclusive_cpus)
-> -		? cs->effective_xcpus : cs->cpus_allowed;
-> +	xcpus = user_xcpus(cs);
->
->  	if (cmd == partcmd_invalidate) {
->  		if (is_prs_invalid(old_prs))
-> @@ -1916,7 +1943,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
->  		return is_partition_invalid(parent)
->  		       ? PERR_INVPARENT : PERR_NOTPART;
->  	}
-> -	if (!newmask && cpumask_empty(cs->cpus_allowed))
-> +	if (!newmask && xcpus_empty(cs))
->  		return PERR_CPUSEMPTY;
->
->  	nocpu = tasks_nocpu_error(parent, cs, xcpus);
-> @@ -3130,9 +3157,9 @@ static int update_prstate(struct cpuset *cs, int new_prs)
->  				       ? partcmd_enable : partcmd_enablei;
->
->  		/*
-> -		 * cpus_allowed cannot be empty.
-> +		 * cpus_allowed and exclusive_cpus cannot be both empty.
->  		 */
-> -		if (cpumask_empty(cs->cpus_allowed)) {
-> +		if (xcpus_empty(cs)) {
->  			err = PERR_CPUSEMPTY;
->  			goto out;
->  		}
-> --
-> 2.39.3
->
+Refactor the code such that it supports multiple download
+modes and drop CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT config
+instead, give interface to set the download mode from
+module parameter while being backword compatible at the
+same time.
+
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+---
+Change in v8: https://lore.kernel.org/lkml/20240109153200.12848-12-quic_mojha@quicinc.com/
+ - Rebased it on top of https://lore.kernel.org/lkml/20240708155332.4056479-1-quic_mojha@quicinc.com/
+ - Sending them separately as they are not dependent on
+   kernel minidump driver as minidump as a download mode
+   exists even without kernel driver and it can be enabled
+   via SCM driver to collect firmware minidump.
+   
+
+ drivers/firmware/qcom/Kconfig    | 11 ------
+ drivers/firmware/qcom/qcom_scm.c | 60 +++++++++++++++++++++++++++-----
+ 2 files changed, 52 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/firmware/qcom/Kconfig b/drivers/firmware/qcom/Kconfig
+index 7f6eb4174734..33b282aaec01 100644
+--- a/drivers/firmware/qcom/Kconfig
++++ b/drivers/firmware/qcom/Kconfig
+@@ -40,17 +40,6 @@ config QCOM_TZMEM_MODE_SHMBRIDGE
+ 
+ endchoice
+ 
+-config QCOM_SCM_DOWNLOAD_MODE_DEFAULT
+-	bool "Qualcomm download mode enabled by default"
+-	depends on QCOM_SCM
+-	help
+-	  A device with "download mode" enabled will upon an unexpected
+-	  warm-restart enter a special debug mode that allows the user to
+-	  "download" memory content over USB for offline postmortem analysis.
+-	  The feature can be enabled/disabled on the kernel command line.
+-
+-	  Say Y here to enable "download mode" by default.
+-
+ config QCOM_QSEECOM
+ 	bool "Qualcomm QSEECOM interface driver"
+ 	depends on QCOM_SCM=y
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index 0f5ac346bda4..55955f675cd0 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -18,6 +18,7 @@
+ #include <linux/init.h>
+ #include <linux/interconnect.h>
+ #include <linux/interrupt.h>
++#include <linux/kstrtox.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -32,8 +33,7 @@
+ #include "qcom_scm.h"
+ #include "qcom_tzmem.h"
+ 
+-static bool download_mode = IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
+-module_param(download_mode, bool, 0);
++static u32 download_mode;
+ 
+ struct qcom_scm {
+ 	struct device *dev;
+@@ -134,6 +134,11 @@ static const char * const qcom_scm_convention_names[] = {
+ 	[SMC_CONVENTION_LEGACY] = "smc legacy",
+ };
+ 
++static const char * const download_mode_name[] = {
++	[QCOM_DLOAD_NODUMP]	= "off",
++	[QCOM_DLOAD_FULLDUMP]	= "full",
++};
++
+ static struct qcom_scm *__scm;
+ 
+ static int qcom_scm_clk_enable(void)
+@@ -526,17 +531,16 @@ static int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val
+ 	return qcom_scm_io_writel(addr, new);
+ }
+ 
+-static void qcom_scm_set_download_mode(bool enable)
++static void qcom_scm_set_download_mode(u32 dload_mode)
+ {
+-	u32 val = enable ? QCOM_DLOAD_FULLDUMP : QCOM_DLOAD_NODUMP;
+ 	int ret = 0;
+ 
+ 	if (__scm->dload_mode_addr) {
+ 		ret = qcom_scm_io_rmw(__scm->dload_mode_addr, QCOM_DLOAD_MASK,
+-				      FIELD_PREP(QCOM_DLOAD_MASK, val));
++				      FIELD_PREP(QCOM_DLOAD_MASK, dload_mode));
+ 	} else if (__qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_BOOT,
+ 						QCOM_SCM_BOOT_SET_DLOAD_MODE)) {
+-		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
++		ret = __qcom_scm_set_dload_mode(__scm->dev, !!dload_mode);
+ 	} else {
+ 		dev_err(__scm->dev,
+ 			"No available mechanism for setting download mode\n");
+@@ -1886,6 +1890,46 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static int get_download_mode(char *buffer, const struct kernel_param *kp)
++{
++	if (download_mode >= ARRAY_SIZE(download_mode_name))
++		return sysfs_emit(buffer, "unknown mode\n");
++
++	return sysfs_emit(buffer, "%s\n", download_mode_name[download_mode]);
++}
++
++static int set_download_mode(const char *val, const struct kernel_param *kp)
++{
++	bool tmp;
++	int ret;
++
++	ret = sysfs_match_string(download_mode_name, val);
++	if (ret < 0) {
++		ret = kstrtobool(val, &tmp);
++		if (ret < 0) {
++			pr_err("qcom_scm: err: %d\n", ret);
++			return ret;
++		}
++
++		ret = tmp ? 1 : 0;
++	}
++
++	download_mode = ret;
++	if (__scm)
++		qcom_scm_set_download_mode(download_mode);
++
++	return 0;
++}
++
++static const struct kernel_param_ops download_mode_param_ops = {
++	.get = get_download_mode,
++	.set = set_download_mode,
++};
++
++module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
++MODULE_PARM_DESC(download_mode,
++		"download mode: off/0/N for no dump mode, full/on/1/Y for full dump mode");
++
+ static int qcom_scm_probe(struct platform_device *pdev)
+ {
+ 	struct qcom_tzmem_pool_config pool_config;
+@@ -1950,7 +1994,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 	__get_convention();
+ 
+ 	/*
+-	 * If requested enable "download mode", from this point on warmboot
++	 * If "download mode" is requested, from this point on warmboot
+ 	 * will cause the boot stages to enter download mode, unless
+ 	 * disabled below by a clean shutdown/reboot.
+ 	 */
+@@ -2001,7 +2045,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ static void qcom_scm_shutdown(struct platform_device *pdev)
+ {
+ 	/* Clean shutdown, disable download mode to allow normal restart */
+-	qcom_scm_set_download_mode(false);
++	qcom_scm_set_download_mode(QCOM_DLOAD_NODUMP);
+ }
+ 
+ static const struct of_device_id qcom_scm_dt_match[] = {
+-- 
+2.34.1
+
