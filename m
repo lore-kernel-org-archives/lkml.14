@@ -1,67 +1,58 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD9C13A252;
-	Mon, 15 Jul 2024 07:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97D313A252;
+	Mon, 15 Jul 2024 07:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721027623; cv=none; b=CxhWv4MVdSbz1aNrvKLTI1wRqiyjrL1GRS4Trkqg2Uoqa9e4cLZ52sSl0X0CdZZil0Rl5N/WzFNY67FSnVdOhM/5nnvJKrXFz76W3SRnXloOYCdn/5brvlbMi8LPOVNS1u8JFLqV+A75SG9s7PTqjdld6fDjxMTrLl0yvmAerdo=
+	t=1721027634; cv=none; b=TBT3u1LMaEn4KuN0hVrgkr+XbJeNxfiM1O5Mxbmk+NrUbDMzzqmc2+5VojBZZsYBN1e0wWQmIGJiazO80QbhP1fXcXl3a0m0BmFpeK2d3/5PePRMZlflZEZcvMJLfKeZ0Hz8B/IxWXmD0oRActl5L8IXVgaI0+HG1JnmQAaDzMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721027623; c=relaxed/simple;
-	bh=ThT2zjKQ34nQcBrdLJSCBb9UnMNd0LBUSmafeqnmS9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aVqRnvE/9g93cf4oVv9gM4KQYub7aLqfGBC6wL/dXEAcCPFVQwAcvOgq6v0O+oEmtjf/V0lRTjGIaYtIyTGa/RTqW/7mHMgM0r21+D2JRf8vF74hALSWPdwCtIChjyNpqoA9qP5B6rM8iNZJKtUSnfmeBg31w+10Y6FNVC59WTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LkBnLTmO; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721027634; c=relaxed/simple;
+	bh=Kq1OSXZL2W9GtvycffDL8K2CZKAqZqzvjrYf+bQ2s3g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D/+WQN/z0kzFfaNdxSQAkwaK3TpYuZtPO0qofd1xHHWm15y/UjxCLV1Sn2dOxz+mxpYtqTNiDMgUTHCTdXSQqy2kpqkrhruURcvitIdxhc+skYKuHf7H4yjFY0hjLn+pl5uLwZFB95YdyQ2wW5Uurm0Jg/F22lkPidaVy9Ywft8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=rilAsJiJ; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkBnLTmO"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a77d85f7fa3so618489266b.0;
-        Mon, 15 Jul 2024 00:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721027620; x=1721632420; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ujN/ieyyUkcuW3zn2vZ+suXdWN83dY2OeESw1J6dHcs=;
-        b=LkBnLTmOcbrDpjgSsSy2IG0b6S/7SwuUjGLjqPXBiKkyfgAvVU+feIipmE2D/VImVU
-         5KeEWH+R4Pobt5F+7mhS3NCI2OwTt3NfjGxEQLdhcCdrGNJC/ZUxVKZHjnScvz12gtfq
-         pqExg43GKLOsLnLZMDKavG0cqwC9NWYu/iCdFt/ZT3oDi8EpUJ+HkQrI4OD6UOVS0GzX
-         89rRH5WPIh+uK7JnRosl0MNT2vvW3LI3prLoIvM42EnYniKIjTwpzC9djzgvz2w2DK+F
-         s+nwExQi29PSE7/3XZ39SLOLEwSXl7MAn+vu6SgpzHAC5amq814t1cmBDroMmcwIFjMM
-         k5Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721027620; x=1721632420;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ujN/ieyyUkcuW3zn2vZ+suXdWN83dY2OeESw1J6dHcs=;
-        b=iJW2YQ55VW3NsNuRSXrhQPufUbb5lqDj7+YTxRkpX8TcuGu/qheQ3FQtGjhiQE0xiy
-         gkvIrE1aClVFZn6e+V1o8Bc7EnF5PUsdIwUGtucX+2pgFIlEqDCYfQExCU8atZ+sQHYH
-         U9XHuHUMh48BuvmYntIjPfRci1AjV/mlclZmwdFysZIQu2Yh8ekZOv3Q2TkA6TT6gluM
-         Pozkmgkztkvhp3ABSqiGUNxhkl8/7s5ex0kmSqjzfZBNn+FnjsWbDwaTZu9kWFEPHJVG
-         7/vAxzOUyMVSvViiLwfXYU99VuCYQmOZRL8ft5hXAi6l7FAOiusI+sbO2m+36LIUOxpb
-         RawA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4tF5ZKspT2lVWqm1CXUGklQxX01Um2M+FILAZ3Q1Fs/P8WgYRQFGXEPWwf/1fcC2RrnESmeNnWJJFwt5uAcsmvAVNtNNYYDRsy14viJZruhNz1X22nI2Ka4e3VBXnN1ZgoifXk9bOZJbTdw==
-X-Gm-Message-State: AOJu0YxpShLx+pgKvkzStDU5NqkJeh2lO9EYeM1ysc6EQkhSntV0D6NU
-	MyK2OZHEOv1zReMTJpcWB/qnssFo6Q/p6c+0V3VVP/eB3NcM3eX+N8MkHkTB
-X-Google-Smtp-Source: AGHT+IFOqJPXaLqwWQTKgteZzt+DSzfAYB6rEEYbtvGcTRxXW4i67p3HNmocgeijIzh2kryzCBFveA==
-X-Received: by 2002:a17:907:3f08:b0:a6f:e699:a9f8 with SMTP id a640c23a62f3a-a799cc6ab1amr857770366b.18.1721027619641;
-        Mon, 15 Jul 2024 00:13:39 -0700 (PDT)
-Received: from f.. (cst-prg-84-191.cust.vodafone.cz. [46.135.84.191])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5b7eeasm187135466b.71.2024.07.15.00.13.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 00:13:39 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	bharata@amd.com,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH] vfs: use RCU in ilookup
-Date: Mon, 15 Jul 2024 09:13:24 +0200
-Message-ID: <20240715071324.265879-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="rilAsJiJ"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 46F7DR6r83485320, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1721027607; bh=Kq1OSXZL2W9GtvycffDL8K2CZKAqZqzvjrYf+bQ2s3g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type;
+	b=rilAsJiJ4XqCaRMcVMvM+M8QgGjd5/KWThLvx/Q2Y3DkXf3owy2OKzpLg05uq3Hdj
+	 w0EjSOXTMgtw9Fs++30vq8a4AQqPNDjJzVnKDNWLiYk7ugfyjxRdzI5n2leQomXMxE
+	 e0Iz/ZMhnvN965mfzTFQCi5sVUu59uOZsthyqe6XpgAQVdUPfRjA96kc0IN7O1QVmu
+	 sgW//AfAnQA9j7FJ+zq4bxxEmY1zTSZH0A1waTjRXesfrGCwiE9FQ3Cw6cI3WC3V07
+	 2v9e3kK9DYeD67tdeFIZhQglqlc8BRkxeD2w7iajME1FU6FlLnNc0NQqs6guc+k2Pu
+	 N2iAupR/XaYYg==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 46F7DR6r83485320
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Jul 2024 15:13:27 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 15 Jul 2024 15:13:27 +0800
+Received: from RTDOMAIN (172.21.210.74) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 15 Jul
+ 2024 15:13:26 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, "Justin
+ Lai" <justinlai0215@realtek.com>
+Subject: [PATCH net-next v24 03/13] rtase: Implement the rtase_down function
+Date: Mon, 15 Jul 2024 15:11:48 +0800
+Message-ID: <20240715071158.110384-4-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240715071158.110384-1-justinlai0215@realtek.com>
+References: <20240715071158.110384-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,46 +60,193 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-A soft lockup in ilookup was reported when stress-testing a 512-way
-system [1] (see [2] for full context) and it was verified that not
-taking the lock shifts issues back to mm.
+Implement the rtase_down function to disable hardware setting
+and interrupt and clear descriptor ring.
 
-[1] https://lore.kernel.org/linux-mm/56865e57-c250-44da-9713-cf1404595bcc@amd.com/
-[2] https://lore.kernel.org/linux-mm/d2841226-e27b-4d3d-a578-63587a3aa4f3@amd.com/
-
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
 ---
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 150 ++++++++++++++++++
+ 1 file changed, 150 insertions(+)
 
-fwiw the originally sent patch to the reporter performs a lockless
-lookup first and falls back to the locked variant, but that was me
-playing overfly safe.
-
-I would add tested-by but patches are not the same in the end.
-
-This is the only spot which can get this fixup, everything else taking
-the lock is also using custom callbacks, so filesystems invoking such
-code will need to get patched up on case-by-case basis (but
-realistically they probably already can do RCU-only operation).
-
- fs/inode.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/fs/inode.c b/fs/inode.c
-index f356fe2ec2b6..52ca063c552c 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1525,9 +1525,7 @@ struct inode *ilookup(struct super_block *sb, unsigned long ino)
- 	struct hlist_head *head = inode_hashtable + hash(sb, ino);
- 	struct inode *inode;
- again:
--	spin_lock(&inode_hash_lock);
--	inode = find_inode_fast(sb, head, ino, true);
--	spin_unlock(&inode_hash_lock);
-+	inode = find_inode_fast(sb, head, ino, false);
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index ed296d93331f..ef0b4ff5db7c 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -192,6 +192,56 @@ static int rtase_alloc_desc(struct rtase_private *tp)
+ 	return -ENOMEM;
+ }
  
- 	if (inode) {
- 		if (IS_ERR(inode))
++static void rtase_unmap_tx_skb(struct pci_dev *pdev, u32 len,
++			       struct rtase_tx_desc *desc)
++{
++	dma_unmap_single(&pdev->dev, le64_to_cpu(desc->addr), len,
++			 DMA_TO_DEVICE);
++	desc->opts1 = cpu_to_le32(RTK_OPTS1_DEBUG_VALUE);
++	desc->opts2 = 0x00;
++	desc->addr = cpu_to_le64(RTK_MAGIC_NUMBER);
++}
++
++static void rtase_tx_clear_range(struct rtase_ring *ring, u32 start, u32 n)
++{
++	struct rtase_tx_desc *desc_base = ring->desc;
++	struct rtase_private *tp = ring->ivec->tp;
++	u32 i;
++
++	for (i = 0; i < n; i++) {
++		u32 entry = (start + i) % RTASE_NUM_DESC;
++		struct rtase_tx_desc *desc = desc_base + entry;
++		u32 len = ring->mis.len[entry];
++		struct sk_buff *skb;
++
++		if (len == 0)
++			continue;
++
++		rtase_unmap_tx_skb(tp->pdev, len, desc);
++		ring->mis.len[entry] = 0;
++		skb = ring->skbuff[entry];
++		if (!skb)
++			continue;
++
++		tp->stats.tx_dropped++;
++		dev_kfree_skb_any(skb);
++		ring->skbuff[entry] = NULL;
++	}
++}
++
++static void rtase_tx_clear(struct rtase_private *tp)
++{
++	struct rtase_ring *ring;
++	u16 i;
++
++	for (i = 0; i < tp->func_tx_queue_num; i++) {
++		ring = &tp->tx_ring[i];
++		rtase_tx_clear_range(ring, ring->dirty_idx, RTASE_NUM_DESC);
++		ring->cur_idx = 0;
++		ring->dirty_idx = 0;
++	}
++}
++
+ static void rtase_mark_to_asic(union rtase_rx_desc *desc, u32 rx_buf_sz)
+ {
+ 	u32 eor = le32_to_cpu(desc->desc_cmd.opts1) & RTASE_RING_END;
+@@ -423,6 +473,80 @@ static void rtase_tally_counter_clear(const struct rtase_private *tp)
+ 	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_RESET);
+ }
+ 
++static void rtase_irq_dis_and_clear(const struct rtase_private *tp)
++{
++	const struct rtase_int_vector *ivec = &tp->int_vector[0];
++	u32 val1;
++	u16 val2;
++	u8 i;
++
++	rtase_w32(tp, ivec->imr_addr, 0);
++	val1 = rtase_r32(tp, ivec->isr_addr);
++	rtase_w32(tp, ivec->isr_addr, val1);
++
++	for (i = 1; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		rtase_w16(tp, ivec->imr_addr, 0);
++		val2 = rtase_r16(tp, ivec->isr_addr);
++		rtase_w16(tp, ivec->isr_addr, val2);
++	}
++}
++
++static void rtase_poll_timeout(const struct rtase_private *tp, u32 cond,
++			       u32 sleep_us, u64 timeout_us, u16 reg)
++{
++	int err;
++	u8 val;
++
++	err = read_poll_timeout(rtase_r8, val, val & cond, sleep_us,
++				timeout_us, false, tp, reg);
++
++	if (err == -ETIMEDOUT)
++		netdev_err(tp->dev, "poll reg 0x00%x timeout\n", reg);
++}
++
++static void rtase_nic_reset(const struct net_device *dev)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	u16 rx_config;
++	u8 val;
++
++	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_0);
++	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config & ~RTASE_ACCEPT_MASK);
++
++	val = rtase_r8(tp, RTASE_MISC);
++	rtase_w8(tp, RTASE_MISC, val | RTASE_RX_DV_GATE_EN);
++
++	val = rtase_r8(tp, RTASE_CHIP_CMD);
++	rtase_w8(tp, RTASE_CHIP_CMD, val | RTASE_STOP_REQ);
++	mdelay(2);
++
++	rtase_poll_timeout(tp, RTASE_STOP_REQ_DONE, 100, 150000,
++			   RTASE_CHIP_CMD);
++
++	rtase_poll_timeout(tp, RTASE_TX_FIFO_EMPTY, 100, 100000,
++			   RTASE_FIFOR);
++
++	rtase_poll_timeout(tp, RTASE_RX_FIFO_EMPTY, 100, 100000,
++			   RTASE_FIFOR);
++
++	val = rtase_r8(tp, RTASE_CHIP_CMD);
++	rtase_w8(tp, RTASE_CHIP_CMD, val & ~(RTASE_TE | RTASE_RE));
++	val = rtase_r8(tp, RTASE_CHIP_CMD);
++	rtase_w8(tp, RTASE_CHIP_CMD, val & ~RTASE_STOP_REQ);
++
++	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config);
++}
++
++static void rtase_hw_reset(const struct net_device *dev)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++
++	rtase_irq_dis_and_clear(tp);
++
++	rtase_nic_reset(dev);
++}
++
+ static void rtase_nic_enable(const struct net_device *dev)
+ {
+ 	const struct rtase_private *tp = netdev_priv(dev);
+@@ -526,6 +650,32 @@ static int rtase_open(struct net_device *dev)
+ 	return ret;
+ }
+ 
++static void rtase_down(struct net_device *dev)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	struct rtase_int_vector *ivec;
++	struct rtase_ring *ring, *tmp;
++	u32 i;
++
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		napi_disable(&ivec->napi);
++		list_for_each_entry_safe(ring, tmp, &ivec->ring_list,
++					 ring_entry)
++			list_del(&ring->ring_entry);
++	}
++
++	netif_tx_disable(dev);
++
++	netif_carrier_off(dev);
++
++	rtase_hw_reset(dev);
++
++	rtase_tx_clear(tp);
++
++	rtase_rx_clear(tp);
++}
++
+ static int rtase_close(struct net_device *dev)
+ {
+ 	struct rtase_private *tp = netdev_priv(dev);
 -- 
-2.43.0
+2.34.1
 
