@@ -1,99 +1,120 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C35E513B295;
-	Mon, 15 Jul 2024 12:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CF3188CDA
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 12:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721045724; cv=none; b=LLVNvk1BqHNLubNjdf/cCl/l0NpOXk9C6pAOcL/6CrDRklpqEki205g67Rvnag34M52+Q0jxKmw0UOXz1BWz0HJbDdHEy3o0w6Y9iS/x/D9kMfeN7uWyhmsOpxlIYiZmgREa562S9+SihYU9VzHwpXPpNiunBa8mFTOaF9RgCDk=
+	t=1721045769; cv=none; b=hDb0ko8Pf0QLhlN+AwcbqgC097zzbbTHg/nOQdpdRgeTinMpgOuKYVvw9Agf+ux1WCMhMp2sQDLOkWRH7tL73+BbBpnuXDW1ueiY+zIlyi3KYpPKFhI7FDDG+we3OzC1eCACEfhS1nQ8mfIMjNlQf9UgiEk9SoDOb9Jnqqs+y6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721045724; c=relaxed/simple;
-	bh=Yv1FXgC8K277VcLGgKR1E3bX/WLiJjyURUvSGP89N7o=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=en0Mty3m711fLQDfPqAJqLJ1GQseHFcpMYwl4hXjI76qhkHD8yzmnuEmYaq3hPv56ynDYWNHp40qRew0nHs5BG38DxrxJ1qKjOKlyKIQ5syFg8PbCP3Czwq/6QDN9Y8UrGGkFbzWaTcoV9L11y66tuk+S3Z5udH3wasgW2SyAcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 10DC592009E; Mon, 15 Jul 2024 14:15:13 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 02E3692009D;
-	Mon, 15 Jul 2024 13:15:12 +0100 (BST)
-Date: Mon, 15 Jul 2024 13:15:12 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, 
-    "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
-    =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
-In-Reply-To: <dad7b36f-2e37-44db-939e-cdb454875e2a@app.fastmail.com>
-Message-ID: <alpine.DEB.2.21.2407150225310.58077@angie.orcam.me.uk>
-References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com> <Zn1FuxNw2CUttzdg@alpha.franken.de> <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com> <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk> <fbd421a6-cf37-49ab-bdbe-6128a7cae8be@app.fastmail.com>
- <Zoz6+YmUk7CBsNFw@alpha.franken.de> <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com> <Zo457UgAkhbAgm2R@alpha.franken.de> <alpine.DEB.2.21.2407101015120.38148@angie.orcam.me.uk> <a8741e38-837b-4fbb-8656-1e6d50bdfcc0@app.fastmail.com>
- <alpine.DEB.2.21.2407110315170.38148@angie.orcam.me.uk> <de07ff44-41ee-4158-b629-90a1835bd9cb@app.fastmail.com> <alpine.DEB.2.21.2407121250350.38148@angie.orcam.me.uk> <dad7b36f-2e37-44db-939e-cdb454875e2a@app.fastmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1721045769; c=relaxed/simple;
+	bh=5xxCslBz39cd9KCBn386k+DYETh3rATBhqlskCXMh/4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Qq6HPQMQ0hWW3exScefiy24APlNcueffiZmkV9/IdtbaPAy0lrUEkSwfx1A2QqDfsOgCj/kCwDR+FSZx/h8ZZPrgDW0ZA3bksPf7OVr0SELzaQ0/mCLQ4z8Gp/SA4ke9IMyvMgfO4jRA6Fgnt9BzoPLbTe7UrwDjrSXjSnoSUMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=udJEA3t/; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="udJEA3t/"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-367ab50a07aso2632075f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 05:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721045766; x=1721650566; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CwYPDTPYAwmjKmZ1/Gf11accW/fLFhZgeFXsYW2+ut4=;
+        b=udJEA3t/couQkVT3Z443Rkb88vX0bp7H5bvfLt7NoCtVzWhv4+4GwoFn9+NkEz5JU7
+         JFtZdz5JtGNb0T6T+4FVYXMmyl1D4EORzAPlH/TxGVupStL/j+to8ngahPhaRI18nVp4
+         Bs5yeq5yUArHjT5vEErVj0TRW6n2cVOmOQ1DFRqmvuXzDICmxNbUdb9L3Dcy3EJLyJDx
+         LjFGmHQ7e+yb2pxzc4j0exUDvDT7w4g6/prxg8zYKPr9PrP9Ro9n3UKb2wGWVVLIPwjC
+         kaT5QNaSDapoK/TZWgnsWu8B9I7AmHLNbOPJCF95ymDofMx8KLjecoknNxIIWsGGWja+
+         J2Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721045766; x=1721650566;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CwYPDTPYAwmjKmZ1/Gf11accW/fLFhZgeFXsYW2+ut4=;
+        b=g8mmg9WHm+xsiG1b6z8J/XHDkt6JTH0SMHdzb6XT1UtmsAhgK+VQcOAhv2mb/KxTlw
+         q9R7giGd8IeuI7VpmDYBO8S56vbE9XQPuIgG6jcoNB92OnENJI6PRT5TaYIU0y84vEO4
+         1CExsIQF8CQWbsX+Z//CpceyQOOG4Yt9NxRk9c4H3B7U+686OnLzXIneCzpX7hv0nHMy
+         6asmSVB8nXiNemgW+5Tuo1kvsNGXfvdyJKixMdvrcJzU1u2RkmVp/9ETVAbk21P4zi2A
+         T6uhZDkP1/4CT/V7jt5yni/pquw4fFV3ZU9TUnqBelk/7cqZe2k0snV6EfrBLm5+fXZp
+         uJxw==
+X-Forwarded-Encrypted: i=1; AJvYcCV17T6L3IbDV9QVzwFRbHVX+u7SLs3mhT9qDSKmIR9qbwQShaj2zS6I5Kw0PPEmqsxOZUQMA/y6ZWOBmlxImSXlOqp5oCFFJ62BVR6S
+X-Gm-Message-State: AOJu0Yz1rPIge9brHEdMBqvGh0nUZGrTn2EOjjipEhd0fHr+iaikuTIx
+	0mODBQAL6jA9YQnucvz0jmzxbyCe9Mr4lC6JejrU8/8e4Hj4fMy4/mubCoAIdpg=
+X-Google-Smtp-Source: AGHT+IGqx28NbMNvmzLw5J0w/TQ3ZQHmxkK+h/DWdncxb76LIdC5qwbxWV7jVF8Ibsfqau3YeIjlGw==
+X-Received: by 2002:a5d:47c3:0:b0:367:8a3b:2098 with SMTP id ffacd0b85a97d-367cea46076mr15982239f8f.3.1721045765987;
+        Mon, 15 Jul 2024 05:16:05 -0700 (PDT)
+Received: from [127.0.0.2] ([2a02:2454:ff1f:b240:886b:1a3a:7569:3d95])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680d9771aasm6369201f8f.0.2024.07.15.05.16.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 05:16:05 -0700 (PDT)
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+Date: Mon, 15 Jul 2024 14:15:37 +0200
+Subject: [PATCH v2 1/4] dt-bindings: display: panel: samsung,atna33xc20:
+ Document ATNA45AF01
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240715-x1e80100-crd-backlight-v2-1-31b7f2f658a3@linaro.org>
+References: <20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3@linaro.org>
+In-Reply-To: <20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3@linaro.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+ Johan Hovold <johan@kernel.org>
+X-Mailer: b4 0.13.0
 
-On Sun, 14 Jul 2024, Jiaxun Yang wrote:
+The Samsung ATNA45AF01 panel is an AMOLED eDP panel that has backlight
+control over the DP AUX channel. While it works almost correctly with the
+generic "edp-panel" compatible, the backlight needs special handling to
+work correctly. It is similar to the existing ATNA33XC20 panel, just with
+a larger resolution and size.
 
-> >> >  Yes, sure for reads, but how about *writing* to the bit?
-> >> 
-> >> Tested flipping nan2008 bits with ieee754=emulated with ptrace, it works on some extent.
-> >> (flipping the bit to unsupported value immediately triggered emulation).
-> >
-> >  What about the other way round?
-> 
-> It works on both side (NaN2008 binary with ptrace flipped back to legacy and legacy flipped
-> back to NaN2008).
+Add a new "samsung,atna45af01" compatible to describe this panel in the DT.
+Use the existing "samsung,atna33xc20" as fallback compatible since existing
+drivers should work as-is, given that resolution and size are discoverable
+through the eDP link.
 
- So this is clearly wrong for this scenario.
+Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+---
+ .../devicetree/bindings/display/panel/samsung,atna33xc20.yaml     | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> >  Anyway I think we need to prevent it from happening, matching runtime 
-> > behaviour, i.e. if the program itself cannot flip FCSR.NAN2008 via CTC1, 
-> > then ptrace(2) must not either.  And the same for the emulator in the 
-> > "ieee754=emulated" mode (but not for the emulator modes where the flipping 
-> > is currently permitted), as it would be a one-way switch.
-> 
-> It is out of the scope of this patch I think. Maybe we need a prctl to 
-> set NaN2008 status.
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,atna33xc20.yaml b/Documentation/devicetree/bindings/display/panel/samsung,atna33xc20.yaml
+index 765ca155c83a..5192c93fbd67 100644
+--- a/Documentation/devicetree/bindings/display/panel/samsung,atna33xc20.yaml
++++ b/Documentation/devicetree/bindings/display/panel/samsung,atna33xc20.yaml
+@@ -14,7 +14,13 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: samsung,atna33xc20
++    oneOf:
++      # Samsung 13.3" FHD (1920x1080 pixels) eDP AMOLED panel
++      - const: samsung,atna33xc20
++      # Samsung 14.5" WQXGA+ (2880x1800 pixels) eDP AMOLED panel
++      - items:
++          - const: samsung,atna45af01
++          - const: samsung,atna33xc20
+ 
+   enable-gpios: true
+   port: true
 
- I don't know what prctl(2) has to do with this.  If you don't implement 
-this part, then your change will cause Linux to behave inconsistently and 
-therefore I'll have to NAK it.
+-- 
+2.44.1
 
- It's not much to do anyway, as I have prepared `ptrace_setfcr31' already 
-to handle masking correctly, so all you have to do is to set the mask as 
-required for the right thing to happen.  I shouldn't have needed to point 
-you at it though, as that code is easy to find.
-
-> We are unable to prevent user applications write NAN2008 bits for the "switchable
-> QEMU" as well. So I'd perfer leave it as is, and let this feature go into 6.11 so people
-> can start to use it.
-
- This doesn't matter either, as your change only addresses the case where 
-FCSR.NAN2008 isn't writable anyway, which is the sole reason you want to 
-switch between native hard float support and emulation, doesn't it?
-
- In fact where FCSR.NAN2008 is writable your new mode has to be equivalent
-to "ieee754=strict", because then there is no need to trigger emulation 
-for either NaN mode.  Please do verify that this is the case.
-
-> This is actually a request from Debian MIPS team so they can get glibc tests run on
-> mismatched NaN hardware.
-
- That doesn't matter for us here (and I have a bad suspicion anyway), but 
-the Debian team is of course free to do what they want here, the GNU GPL 
-applies.
-
- And also they can always use the "nofpu" kernel parameter to run their 
-verification.  I used it for mine back at ImgTec before 2008 NaN hardware 
-was available, also to verify emulation, which I wrote too.  Perhaps that 
-is also the right solution for Debian actually?
-
-  Maciej
