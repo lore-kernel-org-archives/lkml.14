@@ -1,119 +1,77 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAA91CFB9;
-	Mon, 15 Jul 2024 16:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A2817BB7;
+	Mon, 15 Jul 2024 16:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721059807; cv=none; b=AEezuYKnJ/Yx3pNT10V7sDc92aCUXfJ1zoqyBiIGiGQ66RuJx3njsdRKJ5cwxyKZqgTsTAch1vY9B7qNJUtphR2YPtQZoPdPEL7n4U+wGLylG9XXhk3bEcVPcfotHhBF25LLlBcf1bZs8qHQon1sWre+avMNpbFOflfcU/7PzlE=
+	t=1721059830; cv=none; b=U3S8Wq9USRBteU4d3hMlSnYUnj93qOsbJ0OCrDxnf/ERxxUM46AAVNyIKeU33TZm5eAO1pjQil5jn9GKb9cowy3Yc/aC+G+D8Y6GCFaLNaw9SZadllNWd/UXzXGs/Q3BHL1l/AmyH0emzs3HO3LfyALQwmsOJZz9AC6h7Bl87t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721059807; c=relaxed/simple;
-	bh=TSg1Qn36aw8Oi8+lnfedWfNIgT3VJ099nZPKoyn36eA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KxQNwZn3+qRgoCJHzBj3y3STHP3T+GEY/KinF65/P44yBix2SJXczdZENjmUELzsV8vxGyB+IB0rKvSMqJgB+6jgh41PG4/JD3QeoTJUsUe1AaWpYGCk/+u+JRp8jE6uZig4T72IbOOed2QOz1NpUiJKRSKYD2TxIUq4zGm3DdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qccw/SLA; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1721059830; c=relaxed/simple;
+	bh=64a8ORXuX1kJfQgq6DJvoO6pwPh4aU+hZ8LkAgCd5dI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=nzf/rG8vmyGugGtqqYpud57MabEIEl5J2k2CJV7/WmQ2eICUa3DfLL+1GBm1Yaaf6gAVm5NTWgr8cFojggp7zRq3DjtEbDwoAiJGW70n3Iud+EIeWatWGOac8ggGG+iBPKZP0KwL8vRyHQtg/7y1ZiFC9nPMEsVpoTOx2VmMl5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGTi4ajm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qccw/SLA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1721059803;
-	bh=TSg1Qn36aw8Oi8+lnfedWfNIgT3VJ099nZPKoyn36eA=;
-	h=From:Date:Subject:To:Cc:From;
-	b=qccw/SLAZwYlSe3zRD81SpyIe0tT0hHfZ+bkd1Q/ru0paghFBsCMcfR3Vo44HA6zC
-	 q8oDkJNtdWs/3vKhAAXLq0NSlFHy3Yz+2AyD67CjFQqF5ekMOb5e0v6DIePIP9mU6H
-	 O0z/XjFozyXI4k754D6SsfgnhKPfUPLmFejt02q+PvSytjIBSyUsh3F808RRh9wzvY
-	 xu5gPnkfOrXSZgCVBJk5i8pjP3n/M1XplZPsGhbvsCscf0QH4uRd1c8pxGRZlzLt7j
-	 rm7Bmyz3NHM6PKGYYW7pwGlNZY56oERfBybp0fqUxbKOK8N6ZlY6ykQ3UVksZi/6jD
-	 ATZ2Wtv0LC/tw==
-Received: from [192.168.1.62] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3F31A378020A;
-	Mon, 15 Jul 2024 16:10:01 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Mon, 15 Jul 2024 12:09:34 -0400
-Subject: [PATCH RFC] arm64: dts: mediatek: mt8195-cherry: Remove
- keyboard-backlight node
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGTi4ajm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E772EC4AF10;
+	Mon, 15 Jul 2024 16:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721059830;
+	bh=64a8ORXuX1kJfQgq6DJvoO6pwPh4aU+hZ8LkAgCd5dI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YGTi4ajmTobmKapMutzX2QPGO6gQbWyKDWWT8Wza8PsuUI0GeHCmsVnu1d+JJgliD
+	 gO0eEUHP5aAOZYtCa/M/W0XGrWYmEsNEhkje1mjS5mnkYQm3IP8k0Sq7HaZOZddRh1
+	 aIbSQT4PeUlxDPI9MREItpNxbyXVtZVhBkGE5VUs/urEfEe3DNHpqd5hENvF4OXnk1
+	 0uvKOGdq4QtozoYGkn3ajyWzCIUu4Myo8T7FYm23k0JIJryzDad9SQMqMumxIOc2H/
+	 psvPjRiJElZml8m3MTYeI2Uqr+kPE6et7Xbwq4gf7xrnyt/bSBVCHdl6flqEaxCJxf
+	 sp2ZoyiB/ItMg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CDD2FC4332E;
+	Mon, 15 Jul 2024 16:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240715-cros-backlight-dt-probe-v1-1-0b5afe64c94b@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAL5JlWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDc0NT3eSi/GLdpMTk7JzM9IwS3ZQS3YKi/KRUXXNzU5NEC2OjxBQzAyW
- g7oKi1LTMCrDJ0UpBbs5KsbW1AGKIYd5uAAAA
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Tzung-Bi Shih <tzungbi@kernel.org>, kernel@collabora.com, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.0
+Subject: Re: [PATCH net-next] dsa: lan9303: consistent naming for PHY address
+ parameter
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172105982983.6134.1611053719217544657.git-patchwork-notify@kernel.org>
+Date: Mon, 15 Jul 2024 16:10:29 +0000
+References: <20240715123050.21202-1-ceggers@arri.de>
+In-Reply-To: <20240715123050.21202-1-ceggers@arri.de>
+To: Christian Eggers <ceggers@arri.de>
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ jbe@pengutronix.de, sr@denx.de, kernel@pengutronix.de,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Commit 970c3a6b7aa3 ("mfd: cros_ec: Register keyboard backlight
-subdevice") introduced support for detecting keyboard backlight
-fuctionality through communication with the ChromeOS EC. This means that
-the DT node is no longer used. Remove the unneeded node.
+Hello:
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
-Different CrosEC FW versions could potentially not support discovering
-the keyboard backlight functionality, but I've tested both a recent
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-  tomato_v2.0.23149-099cd3e539 tomato_15699.72.0 2024-01-03
+On Mon, 15 Jul 2024 14:30:50 +0200 you wrote:
+> Name it 'addr' instead of 'port' or 'phy'.
+> 
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
+> ---
+>  drivers/net/dsa/lan9303_mdio.c | 8 ++++----
+>  include/linux/dsa/lan9303.h    | 4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 
-and an old
+Here is the summary with links:
+  - [net-next] dsa: lan9303: consistent naming for PHY address parameter
+    https://git.kernel.org/netdev/net-next/c/f96eb1172ed8
 
-  tomato_v2.0.10686-234e646fd8 tomato_14268.0.0 2021-10-07
-
-version on mt8195-cherry-tomato and on both relying only on the
-discoverability works. I've tested on both tomato-r2 and tomato-r3. I
-have not tested on dojo, however, as I don't have access to it.
-
-My motivation to remove the node is because the DT kselftest expects DT
-nodes that can match to a driver to be probed, and with the "breaking"
-commit, the DT node goes unprobed which results in a failure:
-
-  not ok 225 /soc/spi@1100a000/ec@0/keyboard-backlight
-
-I can also solve this in a different way, by adding this driver to the
-ignore list of the test. But this solution seemed better as the DT
-isn't meant to describe devices that can be discovered at run time
-anyway.
----
- arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-index fe5400e17b0f..20dfa18c9dda 100644
---- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-@@ -1228,10 +1228,6 @@ cros_ec: ec@0 {
- 		spi-max-frequency = <3000000>;
- 		wakeup-source;
- 
--		keyboard-backlight {
--			compatible = "google,cros-kbd-led-backlight";
--		};
--
- 		i2c_tunnel: i2c-tunnel {
- 			compatible = "google,cros-ec-i2c-tunnel";
- 			google,remote-bus = <0>;
-
----
-base-commit: 91e3b24eb7d297d9d99030800ed96944b8652eaf
-change-id: 20240715-cros-backlight-dt-probe-7754a832ad60
-
-Best regards,
+You are awesome, thank you!
 -- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
