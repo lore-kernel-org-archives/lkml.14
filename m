@@ -1,139 +1,88 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62D6186E3C;
-	Mon, 15 Jul 2024 10:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FC4E186E43
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039697; cv=none; b=UGFt5i4P60lgEHa5WdLy7BuhUZEEJf770sTjoiHdu8+aaPDJBjTJ4BT5A2eWR+DIR+I6ZibeZ1jFIP4TY6AJm+PMtF9lQ9EBvE2kVji009EuOCGkKbi3qL7Erj6apmb+upDSRVknq1RekuHO8W4iJbvWVDdCHsRDiHF4rx3zHeI=
+	t=1721039711; cv=none; b=nCu/Gqa6xsGYMzXY3SD9TBRkBI6zCj5lbrzVJbJ8AU6VVHIRGRV9OozQI/d+vK0p07pOxp6TfForkZz1ilrADTDX4GseIm4nZNcD9lQ3bZkSu1WaNMv6G3lYmtjMcMw4F+rhK6tdktHkPlt+KRdFdhbjvLGcx+C2I95XnBqE81c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039697; c=relaxed/simple;
-	bh=z67cwuXCyLiAJN3piPdcSSVvfm1vvJ6uWmtFWPvPkVY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CyWuObka890z4/B9kfCl7fRrl9gAVrksOe2L4ov8V3xd1zucJExz3J7yMki6T2KvYMGTePeycuNRnTarXbOf4wpKa+LWgXu2OWqMOugo8niHOzx5+4iR6iWOXmy9g7zrLS3YqmocRvPfLvfoJVZ1dGk/5PREGNLE//t5bRwAZzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOyjFO2j; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOyjFO2j"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42795086628so27862035e9.3;
-        Mon, 15 Jul 2024 03:34:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721039693; x=1721644493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dffq/wFS7ipPDTEeMPaMdYsEzjLjNSdN/3BeGkOPcP0=;
-        b=dOyjFO2jC7lHogNBLM8StPpGyN1uw8iMQDRDFKIW0UsDksnYrUmhu6v81GkaiKY6pR
-         g5UHvLpBO4K7jk9Y0dP4L9x/ep/UowvtccDhyOvcjPxPuHY52L+YhNW+vPHjj3De4QoM
-         2EapKJb7tB8W5+pQUnr/ZcvUtTTJ3EISKNx9milXM8hQlZu8iJdaa+a8GQpbUT6ZWVcp
-         5Mbo62U3wNrYxIIgIMJOHCZx5a3/wigp+zRimQQcjpsub4aFoNyTYFw883jzZ50i65NV
-         Gs98vZ9ZocswhixzQUcmFWIq9xc5isdONC++EweUnXCKU9mEjqo3WV+Nig76Arve7is0
-         XR1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721039693; x=1721644493;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dffq/wFS7ipPDTEeMPaMdYsEzjLjNSdN/3BeGkOPcP0=;
-        b=L9QvZ2hjjTVv4Re6+CDxUlCUQmF2ZE5fntTfB9baN08YKu0TLsFppx0NkYonvC3JjE
-         SEjgHxnkVZsLQfzmc/uBkgZE8CP2leCF1mnrxHUwA+NNMzVtF23d1dCVc7zzyp7ORxOF
-         KTz38ew2Xt1OK1hqMmzJ+8iIzLacJDcCMKPguRK9RT2+aYlDGLwvv7Qnqp9DySylMLr5
-         avfcAOF71dEmsBhAX2KRFjqV0Hnet60NJTTU4j0aCoAYpxpwkXUZWEN4xSTD/ynZ3MSD
-         77W/NfQDUHcmrJgAZIq7gDr0STDbskxD5uv5A1UnWvgWOxpJmoCNORGjKwknInN7ouU/
-         lygA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkpuPIhqmn2dBDTU85mOXWy9xFNaoAFr1Llo9rbxTUATNBESQH0kGl51ahJBnhEbOXiYdNRRZwe98sJGHVXQO8E/JEyU/dtvGeu9PrpyCEPhLKVQL/0Ul6AfwLdQjUuzDUpA==
-X-Gm-Message-State: AOJu0YyVAZpXj8VPbwxgBW7s1NcrWu3awQtWPLRLjJA4y8gEiy5MDilO
-	uxJMMeCacbPPxcddIymTczGWAfmmSq1wmkSm4H3c2Wuw3DOrvv6JXtJT95fAKn4=
-X-Google-Smtp-Source: AGHT+IFgbSwxsLnVD4xGnLJHLaWJpwMzFdvR7ziL66wXY2Nvt+hNP/YMHt2EaDX5P4VtWqKCjcfqYg==
-X-Received: by 2002:a05:600c:63c4:b0:426:5e8e:410a with SMTP id 5b1f17b1804b1-426707e31aemr119937755e9.24.1721039693133;
-        Mon, 15 Jul 2024 03:34:53 -0700 (PDT)
-Received: from localhost.localdomain ([156.197.57.143])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f239883sm116126895e9.10.2024.07.15.03.34.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 03:34:52 -0700 (PDT)
-From: botta633 <bottaawesome633@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	linux-ext4@vger.kernel.org,
-	syzkaller@googlegroups.com,
-	Ahmed Ehab <bottaawesome633@gmail.com>,
-	syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH v4 2/2] locking/lockdep: Testing lock class and subclass got the same name pointer
-Date: Mon, 15 Jul 2024 16:26:38 +0300
-Message-ID: <20240715132638.3141-2-bottaawesome633@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240715132638.3141-1-bottaawesome633@gmail.com>
-References: <20240715132638.3141-1-bottaawesome633@gmail.com>
+	s=arc-20240116; t=1721039711; c=relaxed/simple;
+	bh=qPQFGH0u6p+YaPW1ZggzIXA+gPjm7q0KjJ6rAGcHjJA=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Nk0bTLVkfJ2GvhVDSMzKxGJ5DDSw/fDBAmw02yx3hmGNCwITo/zlcH09K0DFohj7lcsGM3g1+FGnuhnK43K4ZpHCzm9stWctL5HhnFWIeMsyiZu4VX+sR4kQyYlAq/Jfuo4tVYJlI2SoU1DRPYRlfo2iRXyLcagpeeeZstQ2Dq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxDOta+5RmkpIEAA--.12070S3;
+	Mon, 15 Jul 2024 18:35:06 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhsVZ+5RmUK5JAA--.24677S3;
+	Mon, 15 Jul 2024 18:35:05 +0800 (CST)
+Subject: Re: [RFC PATCH 4/4] LoongArch: Remove -fno-jump-tables for objtool
+To: Xi Ruoyao <xry111@xry111.site>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
+References: <20240712091506.28140-1-yangtiezhu@loongson.cn>
+ <20240712091506.28140-5-yangtiezhu@loongson.cn>
+ <0adc4126e7fbb8fcf84bae67ebe39ff6da4721cd.camel@xry111.site>
+ <ae3ff9787e9d3f41b71e8e4168610a01d5304371.camel@xry111.site>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8506fd62-5c48-bbfa-d4ec-4ef237cbe5df@loongson.cn>
+Date: Mon, 15 Jul 2024 18:35:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ae3ff9787e9d3f41b71e8e4168610a01d5304371.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxhsVZ+5RmUK5JAA--.24677S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XrW8Wr17Gw4DGw4fGF17Jwc_yoWkJrbEka
+	s5Zr1vk3y5CwsrXFW7WF4DG3y7K3WUK34rJrWUGw13trn0yFZ7Kr4qkw1FvF4xJF1UGFsI
+	9F4DuryDKF4I9osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz2NtUUUUU=
 
-From: Ahmed Ehab <bottaawesome633@gmail.com>
+On 07/13/2024 05:10 PM, Xi Ruoyao wrote:
+> On Fri, 2024-07-12 at 17:49 +0800, Xi Ruoyao wrote:
+>> On Fri, 2024-07-12 at 17:15 +0800, Tiezhu Yang wrote:
+>>> -ifdef CONFIG_OBJTOOL
+>>> -KBUILD_CFLAGS			+= -fno-jump-tables
+>>> -endif
+>>> +KBUILD_AFLAGS			+= $(call cc-option,-mannotate-tablejump) $(call cc-option,-Wa$(comma)-mannotate-tablejump)
+>>> +KBUILD_CFLAGS			+= $(call cc-option,-mannotate-tablejump) $(call cc-option,-Wa$(comma)-mannotate-tablejump)
+>>
+>> KBUILD_AFLAGS isn't needed, and $(call cc-option,-Wa$(comma)-mannotate-
+>> tablejump) will always expand to nothing because the assembler does not
+>> have -mannotate-tablejump.
+>>
+>> The assembler never creates a jump table itself.
 
-Checking if the lockdep_map->name will change when setting the subclass.
-It shouldn't change so that the lock class and subclass will have the same
-name
+Thanks, you are right, I will modify it in the formal v1 series.
 
-Reported-by: <syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com>
-Fixes: de8f5e4f2dc1f ("lockdep: Introduce wait-type checks")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ahmed Ehab <bottaawesome633@gmail.com>
----
-v3->v4:
-    - Fixed subject line truncation.
+> BTW have you discussed with Lulu about the -mannotate-tablejump patch?
+> I guess maybe an intra-Loongson discussion would be helpful.
 
- lib/locking-selftest.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Yes, I have discussed with Loongson compiler team some days ago
+and will discuss more to reach an agreement in the next few days.
 
-diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
-index 6f6a5fc85b42..aeed613799ca 100644
---- a/lib/locking-selftest.c
-+++ b/lib/locking-selftest.c
-@@ -2710,6 +2710,25 @@ static void local_lock_3B(void)
- 
- }
- 
-+ /** 
-+  * after setting the subclass the lockdep_map.name changes
-+  * if we initialize a new string literal for the subclass
-+  * we will have a new name pointer
-+  */
-+static void class_subclass_X1_name_test(void)
-+{
-+	printk("  --------------------------------------------------------------------------\n");
-+	printk("  | class and subclass name test|\n");
-+	printk("  ---------------------\n");
-+	const char *name_before_setting_subclass = rwsem_X1.dep_map.name;
-+	const char *name_after_setting_subclass;
-+
-+	WARN_ON(!rwsem_X1.dep_map.name);
-+	lockdep_set_subclass(&rwsem_X1, 1);
-+	name_after_setting_subclass = rwsem_X1.dep_map.name;
-+	WARN_ON(name_before_setting_subclass != name_after_setting_subclass);
-+}
-+
- static void local_lock_tests(void)
- {
- 	printk("  --------------------------------------------------------------------------\n");
-@@ -2916,6 +2935,8 @@ void locking_selftest(void)
- 
- 	local_lock_tests();
- 
-+	class_subclass_X1_name_test();
-+
- 	print_testname("hardirq_unsafe_softirq_safe");
- 	dotest(hardirq_deadlock_softirq_not_deadlock, FAILURE, LOCKTYPE_SPECIAL);
- 	pr_cont("\n");
--- 
-2.45.2
+Thanks,
+Tiezhu
 
