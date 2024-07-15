@@ -1,56 +1,72 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABBB18C16D;
-	Mon, 15 Jul 2024 13:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E1718732C
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721048916; cv=none; b=cx56DDVcdtC9TVRL3drOsBEvzJPwQsHJqbE6KWSOMFXqFSY9Uf3uiQTA1ZD3RClYPqIzYaRH2R0M1f2CgQCELyWDP0RfMFI5DzZwJpMUepa4bMcaMlYqMDZq1YNgcZPQHqmA79xNulRMVid0CwRM2mv0a2H92n187wjp069q/Y8=
+	t=1721048952; cv=none; b=PPXIbeHe1SUrxX/r8ormJSUC6nLD2bF/Y4zWXHE9DLI2gttgU9szvGHLp84JMKuKm1jkIh0aKeSWaWR+bF0OZ8AV/UbG24v0Ipn9jOZ4njephPl4ZjpffzOJxuy1hivcly7mLHGKMpQCKZBpGJpsybcDDs4vLUg0JA4iqclPJt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721048916; c=relaxed/simple;
-	bh=EDZP059plenFt28uw0V0eC5w9BbEx78ROF3IDIofSYo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e1j1iYubhbJTP31GVg+kKuYAJPoh7zzWgi6xNqhJxweYCmelvvKtLSdaoOUIt6VUSMmtADdnt6JjDcj033doxC0VospaafHM9cNs+vf6YRte0PosdZyue9RrT+fKrjkCgEJElDWdulyjOk6vLEiQ9wgVrNpZsbYDyphWwDfqgmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58c2e5e8649so7880915a12.1;
-        Mon, 15 Jul 2024 06:08:34 -0700 (PDT)
+	s=arc-20240116; t=1721048952; c=relaxed/simple;
+	bh=IFLwMoxCunm3Ojw6v9lnBRc8Et8RQlpt+FsS2w6AuNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b1PdNQ3yXPinNfQFzDow0XaqnCjMWxCWsXQmRoxblo4nxG9kaV6PPHFd2BsyxjmSpQsJ+JmM+WoPePtpeed16Rr+G8VHlntw1aUn9QP+TYdBMPrgZX7AL5Ml+DBh3xFvnQQxwg87sa2dLT/zzySbxNhyv/Bur9eukIE2gFh2T30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B7vHuuOE; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B7vHuuOE"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-36786081ac8so2492663f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721048949; x=1721653749; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h4Cy762NHODqPEEZKK76RCvkyGJzJYGhxMZVjlQtC8w=;
+        b=B7vHuuOEAaBkWUEivD94erhLWY02M6jAc+FW0McgNMOPw4E+KLSU0zKnYfum7kJcfU
+         fqmkiWjGlyWIhsdxJCsq3y3kLbd3ktODg6EU+cD7Gsh/+sdIfq0DXCPoPbtC+CCLzS2K
+         EFefwnGVykVVGVIU3MFdQru8M64VO4p8QN2g2WNWMpwsmPS9JVN6srgZXtox2rWjU1v4
+         NTn9H9ebhiyY2UWwnY3Gb5Mphoh5gO4EijYCjOKHuJo8rT2wqP1yec69ZXWXDdvwEg3y
+         zG9YVFQP/e7HuyR5MaAL4Dp/JDOpvocv5AWoiDTF6t2clAmHVd5zE1Za0Xn6zNXaYd9T
+         rKPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721048913; x=1721653713;
+        d=1e100.net; s=20230601; t=1721048949; x=1721653749;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mN9oE6P50Gu84NfU0zGEZkck2rnm4DusfnagcSf9agQ=;
-        b=xVGDpAubxuJ1uawqCWU43qVtUxsXyolIbzRKAHVOeVO2ihpcY01FUVvRkSiOwi6E9w
-         WjPA6TvB4ZrFC8SdslRn8Xk8JwRHgU+n/AGDDukA6FCNv6isLDNmRMzSCsfrdKPtnccJ
-         Ww4xvCXVExwtkz10/5PXLXAqJcowC13VENpeh5NYknmb2bfhVACjEjGlgl7vrZjLK5A6
-         ZMy9IoiRIHBtljnn+RQhFdoeRT637U8NTEVNM/W9LFk+Iq/apyZRkWHg9XkIBnm6ru6a
-         XTbQkE8uGN58O6wwWAe7EkWB5AYMUZyH5kuHFGvl6lM2vrLdVScP/WiSQkgMLD2QPpdp
-         efKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgivJ+5a/SbAWp0UjsHaxocsA0qMqyeb3+ubXOY5C87W5dB+YR/ZjZl7O4E6pbmg33JZLD0G2nvhe5uJlMv5huO9jlx55TOHWERPurSIdJ5dklcrhWhTV2wPRRdZwRNUAmUoCpCeahuas=
-X-Gm-Message-State: AOJu0Ywc/M8pG7mb5oR/8cIcE/Q68Xoablkw72bbvyYe/6CaXfDvO4v2
-	tv2WeIY0QiTs/CYTf2L+yDV9luSCS0Ok+bMKwE9ajNb4AGLeyH3l
-X-Google-Smtp-Source: AGHT+IGV55i1WARhIjOu9gWKsRuWftTHKuhl6H8KDHNbKUVqZsCJ02tr9Li02Zw3eyhBW48plv88Xw==
-X-Received: by 2002:a05:6402:50cc:b0:585:9e73:8ac6 with SMTP id 4fb4d7f45d1cf-59964ac31f1mr8756266a12.16.1721048912446;
-        Mon, 15 Jul 2024 06:08:32 -0700 (PDT)
-Received: from nuc.fritz.box (p200300f6f73ce200fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f73c:e200:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b24a76fefsm3349204a12.16.2024.07.15.06.08.30
+        bh=h4Cy762NHODqPEEZKK76RCvkyGJzJYGhxMZVjlQtC8w=;
+        b=gYAM6NMQc2dyv2W9XhwW46OdEnaeVrNec/tBq46frDfWBpi8dguPqRld+NaKmwKfbB
+         8fN4Rvrc39lY5O/MXu6DCG2SyLsuOeWivJjhT3sNMNM1UfUcgEpbSq7SRZGKQFcN8Fuu
+         zg8gvZO+VABShyv1Gj4tJnnK4wfIoXvD1OH5O1aw63VAlcSBark8eD5qWa2mI8r1R8A5
+         w/F162Jr13lCNGGIcauA1tt/95wkyZBJuNqmzr7ZpE8jrTcq0XPQGxUrCIsSWHUapwLw
+         UnL7jqEgR91gki5S4laGQU8jZIFRmw+8IeJOWRJlc61SbkC8ze9O5DIvkSls9h5egQZa
+         8gbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6LlpF4LJS/91CD0kcX2Avs8sV8ugW35Nuj/C3y07o5lMjXoZ4g5a4QU16xY7oNCqsqEa5LmsobZB5g6LIadIB+3dxkYvRk6YpAys9
+X-Gm-Message-State: AOJu0YxQ1YpTL+bcGKoazFi4PXdWUiXUJrXZBLD9pUfW1l2nZltsrxPY
+	ut4OFXKqYbiVT4Sn3Gh3ADL2hfpnUShvcXAujEhVlykziJ44vCoXwwHUmLloQ6k=
+X-Google-Smtp-Source: AGHT+IGKr51kKIeIqmt034nRc7HfCYRczHzCwLYmIb7rCOJa9a+MeLW5PmGUvpro7kxdQiOOqlQJyA==
+X-Received: by 2002:adf:f348:0:b0:360:7887:31ae with SMTP id ffacd0b85a97d-367ceacb451mr12705003f8f.54.1721048949519;
+        Mon, 15 Jul 2024 06:09:09 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680daccdffsm6417766f8f.54.2024.07.15.06.09.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 06:08:31 -0700 (PDT)
-From: Johannes Thumshirn <jth@kernel.org>
-To: 
-Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Qu Wenruo <wqu@suse.com>,
-	Filipe Manana <fdmanana@suse.com>,
-	Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4] btrfs: don't hold dev_replace rwsem over whole of btrfs_map_block
-Date: Mon, 15 Jul 2024 15:08:19 +0200
-Message-ID: <20240715130820.19907-1-jth@kernel.org>
-X-Mailer: git-send-email 2.43.0
+        Mon, 15 Jul 2024 06:09:09 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	Rob Herring <robh@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 0/2] Convert Qualcomm SATA PHY bindings to dtschema
+Date: Mon, 15 Jul 2024 14:01:05 +0100
+Message-ID: <20240715130854.53501-1-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,117 +75,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Hi,
+The following patches:
+- Convert the old apq8064 and ipq806x text bindings, to a new unified
+  qcom,sata-phy binding in yaml.
+- Remove reg-names from the SATA PHY node in apq8064.dtsi to conform to
+  the bindings
 
-Don't hold the dev_replace rwsem for the entirety of btrfs_map_block().
+Thanks,
+Rayyan
 
-It is only needed to protect
-a) calls to find_live_mirror() and
-b) calling into handle_ops_on_dev_replace().
+Rayyan Ansari (2):
+  dt-bindings: phy: qcom,sata-phy: convert to dtschema
+  ARM: dts: qcom: apq8064: drop reg-names on sata-phy node
 
-But there is no need to hold the rwsem for any kind of set_io_stripe()
-calls.
+ .../bindings/phy/qcom,sata-phy.yaml           | 55 +++++++++++++++++++
+ .../bindings/phy/qcom-apq8064-sata-phy.txt    | 24 --------
+ .../bindings/phy/qcom-ipq806x-sata-phy.txt    | 23 --------
+ arch/arm/boot/dts/qcom/qcom-apq8064.dtsi      |  1 -
+ 4 files changed, 55 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,sata-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/qcom-apq8064-sata-phy.txt
+ delete mode 100644 Documentation/devicetree/bindings/phy/qcom-ipq806x-sata-phy.txt
 
-So relax taking the dev_replace rwsem to only protect both cases and check
-if the device replace status has changed in the meantime, for which we have
-to re-do the find_live_mirror() calls.
-
-This fixes a deadlock on raid-stripe-tree where device replace performs a
-scrub operation, which in turn calls into btrfs_map_block() to find the
-physical location of the block.
-
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-
----
-Cc: Filipe Manana <fdmanana@suse.com>
-
-Changes in v4:
-- Free bioc in case we need to redo the mapping
-Link to v3:
-https://lore.kernel.org/linux-btrfs/20240712-b4-rst-updates-v3-1-5cf27dac98a7@kernel.org
----
- fs/btrfs/volumes.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
-
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index fcedc43ef291..9437e779d020 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -6650,14 +6650,9 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
- 	max_len = btrfs_max_io_len(map, map_offset, &io_geom);
- 	*length = min_t(u64, map->chunk_len - map_offset, max_len);
- 
-+again:
- 	down_read(&dev_replace->rwsem);
- 	dev_replace_is_ongoing = btrfs_dev_replace_is_ongoing(dev_replace);
--	/*
--	 * Hold the semaphore for read during the whole operation, write is
--	 * requested at commit time but must wait.
--	 */
--	if (!dev_replace_is_ongoing)
--		up_read(&dev_replace->rwsem);
- 
- 	switch (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) {
- 	case BTRFS_BLOCK_GROUP_RAID0:
-@@ -6695,6 +6690,7 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
- 			   "stripe index math went horribly wrong, got stripe_index=%u, num_stripes=%u",
- 			   io_geom.stripe_index, map->num_stripes);
- 		ret = -EINVAL;
-+		up_read(&dev_replace->rwsem);
- 		goto out;
- 	}
- 
-@@ -6710,6 +6706,8 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
- 		 */
- 		num_alloc_stripes += 2;
- 
-+	up_read(&dev_replace->rwsem);
-+
- 	/*
- 	 * If this I/O maps to a single device, try to return the device and
- 	 * physical block information on the stack instead of allocating an
-@@ -6782,6 +6780,19 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
- 		goto out;
- 	}
- 
-+	/*
-+	 * Check if something changed the dev_replace state since
-+	 * we've checked it for the last time and if redo the whole
-+	 * mapping operation.
-+	 */
-+	down_read(&dev_replace->rwsem);
-+	if (dev_replace_is_ongoing !=
-+	    btrfs_dev_replace_is_ongoing(dev_replace)) {
-+		btrfs_put_bioc(bioc);
-+		up_read(&dev_replace->rwsem);
-+		goto again;
-+	}
-+
- 	if (op != BTRFS_MAP_READ)
- 		io_geom.max_errors = btrfs_chunk_max_errors(map);
- 
-@@ -6789,6 +6800,7 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
- 	    op != BTRFS_MAP_READ) {
- 		handle_ops_on_dev_replace(bioc, dev_replace, logical, &io_geom);
- 	}
-+	up_read(&dev_replace->rwsem);
- 
- 	*bioc_ret = bioc;
- 	bioc->num_stripes = io_geom.num_stripes;
-@@ -6796,11 +6808,6 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, enum btrfs_map_op op,
- 	bioc->mirror_num = io_geom.mirror_num;
- 
- out:
--	if (dev_replace_is_ongoing) {
--		lockdep_assert_held(&dev_replace->rwsem);
--		/* Unlock and let waiting writers proceed */
--		up_read(&dev_replace->rwsem);
--	}
- 	btrfs_free_chunk_map(map);
- 	return ret;
- }
 -- 
-2.43.0
+2.45.2
 
