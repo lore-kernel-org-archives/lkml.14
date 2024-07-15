@@ -1,221 +1,189 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2050.outbound.protection.outlook.com [40.107.92.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443A61F608;
-	Mon, 15 Jul 2024 17:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064515; cv=none; b=SJjRWR4dad6tW3gZBKIkDOH3P7pEQzhyPIaUkrjhy+MsagzyLEvxLKyHAaP4OJUS7bR6R4lHMKfqWp1C1QebnjcXNldqzHVtFJ6CrldYNozldz03CtFliMbkRJFufJBK1B+7B3IfbSZF5DNVmtCQQ1qrIcfXSRWahqKMyELco38=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064515; c=relaxed/simple;
-	bh=en56rL31hNrBz6sueLWaYdSu+EOnZCtZ4gVHtOV8ozk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=olJKfbqypDLwdT1xu3VIx+17MPQL3ZxoiWVC8nkHdE5qS5uf3w94Gkg05e7vKsXPsQOAZA4c4Cg7BUNu6PYXb4pM0LFRth8UO1FLeuhvl1SjBLhluQijRwzcKmlrjQAfQx8IqqSrVDr9j/J7sWZ7iPSnd5/R0AW8dtzqbR6bzKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wApx5kF9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2PrUPEFk; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wApx5kF9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2PrUPEFk; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457AF1C698;
+	Mon, 15 Jul 2024 17:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721064648; cv=fail; b=oZTOHDmhLpWjnlHA1rWS2XZR+D4L0btGzZRAOPV3gRHF+1/XH+Z/tPu4AFliA/uifY07jv1iYHkC+roKQGDkj74IMmBps2YJFw6uKd7umSaukL9r5u4+Af9/TQxhCW2PDLbTudKJ5ZV3V+1vuOliL5/K7v4hiTISSyTkzMvJcFY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721064648; c=relaxed/simple;
+	bh=uvOxxkZ9/7OpgzhSdkRX4A8zdIoOI7mEGx8UAAOi+xk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=c3jXOL4ZjWuxPenH3iNl30ng4qeNVUBuBafaXDnCVG82MajU/aKCGprmd/fhD/rQk6KGOVCKv7aa/PqslrURmLVjOhdkuCdcA/swe+1kwtgRt4cnT3odU2SVh33ok9e60n/CQNl+SFgoVBAQjDnVsRkjY+/tNFF9gbjj8NUX6NU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vI5Qr8WJ; arc=fail smtp.client-ip=40.107.92.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wApx5kF9";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2PrUPEFk";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wApx5kF9";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2PrUPEFk"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id ED1761F834;
-	Mon, 15 Jul 2024 17:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1721064507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uIgLWK/+ZweC1RPWOJUKrtuGtw4FuFYwUr9MpJlADus=;
-	b=wApx5kF9KFajFTZklo5MjBA45SaVS7s6o3fDnrqE+1cbS5lbUFCyh/GGDWLeZp4SEIeLqo
-	WweiZUkVhE2o23sdczErBk5tdRrxK0yBlBCnf2lcTY6m2/3pfrJEQVpAWvQm3HxBE1GBIl
-	hDcjqblcFdInajITFIfWwT2wBFyqads=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1721064507;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uIgLWK/+ZweC1RPWOJUKrtuGtw4FuFYwUr9MpJlADus=;
-	b=2PrUPEFkSMan/ZIAvdQRvWmWwkhUXb4stjLuQ7TBDyI1kQrZW9FaWmc95fVlYzgL0Hv16A
-	8x2Ll/jXu9g5wQAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=wApx5kF9;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=2PrUPEFk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1721064507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uIgLWK/+ZweC1RPWOJUKrtuGtw4FuFYwUr9MpJlADus=;
-	b=wApx5kF9KFajFTZklo5MjBA45SaVS7s6o3fDnrqE+1cbS5lbUFCyh/GGDWLeZp4SEIeLqo
-	WweiZUkVhE2o23sdczErBk5tdRrxK0yBlBCnf2lcTY6m2/3pfrJEQVpAWvQm3HxBE1GBIl
-	hDcjqblcFdInajITFIfWwT2wBFyqads=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1721064507;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uIgLWK/+ZweC1RPWOJUKrtuGtw4FuFYwUr9MpJlADus=;
-	b=2PrUPEFkSMan/ZIAvdQRvWmWwkhUXb4stjLuQ7TBDyI1kQrZW9FaWmc95fVlYzgL0Hv16A
-	8x2Ll/jXu9g5wQAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E13EF134AB;
-	Mon, 15 Jul 2024 17:28:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Zo/2NjpclWYQJAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 15 Jul 2024 17:28:26 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 85E11A0987; Mon, 15 Jul 2024 19:28:26 +0200 (CEST)
-Date: Mon, 15 Jul 2024 19:28:26 +0200
-From: Jan Kara <jack@suse.cz>
-To: Mirsad Todorovac <mtodorovac69@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <kees@kernel.org>, Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Jeff Layton <jlayton@kernel.org>,
-	reiserfs-devel@vger.kernel.org
-Subject: Re: [PROBLEM linux-next] =?utf-8?Q?fs=2Freiserfs=2Fdo=5Fbalan=2Ec?=
- =?utf-8?B?OjExNDc6MTM6IGVycm9yOiB2YXJpYWJsZSDigJhsZWFmX21p?=
- =?utf-8?B?4oCZ?= set but not used [-Werror=unused-but-set-variable]
-Message-ID: <20240715172826.wbmlg52ckdxze7sg@quack3>
-References: <39591663-9151-42f9-9906-4684acaa685c@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vI5Qr8WJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hyFsCM88U768xDnW+64nOrkKFEr7pWIm8UKUMdBbnbMcUyL6Ub/pYl9qb2sEZd5WrP6+Vn/02Pky6aV0zoJTJBrXFaxtoDs1rnBKCg1PbLfo0gQaYQC4+6nwFPPLIjAe3PI/+G4rzzugOF1QUEaEKN9uNqvsBsswtm3B5VCnOqUPS6318D1IcLbkVaWjUc8PB/7bV+HddvZnaZW2rrMJMi0M5gCyz2RKEbQMLZadt5CxVGO6CmOh7rSUQ8ycsYnVxd1eVNdki4MK0qupDqEKMc4vQ/ocXDMN0RhCSoMBfR3fdqpAvYvvkl26RZ5T58rUevsRCwZJGzFXx8Ls8F04fA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=c+zdZx6amfXkDbzMfawUM1FMoJe7Vq5mwPNO/M30W40=;
+ b=uAt10YDmmeKsYdoZ7c6xtLPAcyaYsLkbjLoYIsBYVm286vWtH2rGSKJaPmfHhiZ8oBpY6jmVMbCYFEd6ENWHXoKS2Og2ebnYK6GEdQJRE05brUppwrDPnh+d0GuANY7M7MRoapew0itdRgyiUzqU5+xhEdBZDiXKhzFsdSWGFWInZqlEvguh2KxDqF7cBsRoTuLHZ84zLyydsSRKMr9PC7fh/c1jZddZenCzEfyLDCk6o8be3+GPClNpb9kLYKUQMyyl3sS+UHPQ6LRkxkYaW9yW9ArklbGUnp6uOxYLi51VruebwS9E8ZY2BX9TOnwHJ0lYaHpJQ5HEN7wqz1XKXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c+zdZx6amfXkDbzMfawUM1FMoJe7Vq5mwPNO/M30W40=;
+ b=vI5Qr8WJ+Q6arPDY/d2xb0JjYBqdSXbqbk20XUc0CWgxRdRqysTC4Gc/wN2yXeNuIWljBIVsY4/NR9iVDUgAqVC1ooYXj2xF5v8vGNDQM4QXhxpxqOPxPSYSBK6x3RiKbsufCMFuzGV4KKEK6l1CJQkvpmMwC5rWcFwqvuBN7Pc=
+Received: from DM6PR05CA0048.namprd05.prod.outlook.com (2603:10b6:5:335::17)
+ by IA1PR12MB6211.namprd12.prod.outlook.com (2603:10b6:208:3e5::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.25; Mon, 15 Jul
+ 2024 17:30:44 +0000
+Received: from DS2PEPF0000343B.namprd02.prod.outlook.com
+ (2603:10b6:5:335:cafe::48) by DM6PR05CA0048.outlook.office365.com
+ (2603:10b6:5:335::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.13 via Frontend
+ Transport; Mon, 15 Jul 2024 17:30:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF0000343B.mail.protection.outlook.com (10.167.18.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Mon, 15 Jul 2024 17:30:42 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 15 Jul
+ 2024 12:30:38 -0500
+Received: from [172.25.198.154] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 15 Jul 2024 12:30:37 -0500
+Message-ID: <6adb0f7c-1b1b-4384-b9af-7c3c50e16147@amd.com>
+Date: Mon, 15 Jul 2024 13:30:36 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/6] x86: PCI: preserve IORESOURCE_STARTALIGN
+ alignment
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	<x86@kernel.org>, <linux-pci@vger.kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>
+References: <20240709133610.1089420-1-stewart.hildebrand@amd.com>
+ <20240709133610.1089420-5-stewart.hildebrand@amd.com>
+ <22e339c1-0ada-0824-cd34-d5779328b522@linux.intel.com>
+Content-Language: en-US
+From: Stewart Hildebrand <stewart.hildebrand@amd.com>
+In-Reply-To: <22e339c1-0ada-0824-cd34-d5779328b522@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <39591663-9151-42f9-9906-4684acaa685c@gmail.com>
-X-Rspamd-Queue-Id: ED1761F834
-X-Spam-Flag: NO
-X-Spam-Score: -0.01
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.01 / 50.00];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_THREE(0.00)[3];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Level: 
-X-Spamd-Bar: /
+Received-SPF: None (SATLEXMB04.amd.com: stewart.hildebrand@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF0000343B:EE_|IA1PR12MB6211:EE_
+X-MS-Office365-Filtering-Correlation-Id: 96c26fe3-f603-4a8c-2ab3-08dca4f3da8d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V1hEQmdxK2dCRE9jbFR3R25HaUNNMG5uNVQ3SGcxU1U5NjRyazlOS3BQOVRO?=
+ =?utf-8?B?OWhmcnFUclY3ZW9xTmpTMlNMTFdXRnFYenNJV1ozNHFwbGJ5ZUxKOXBOZnJM?=
+ =?utf-8?B?ZWp4NlZmOGxMbWpoWlV3RURuaXVOMVIrQS8yVmgwTXpvN2VOUElCeDJUaExa?=
+ =?utf-8?B?TU5rUkh6eEFEdFpJdmhWYVdQMnNobVo5bVpjMjBVVDZZQzlYTmp3Z1V3YkZX?=
+ =?utf-8?B?VUZZZVBna3pBeXhieUZoeFhyeXFISzkwMTF3elgvenl2S3BremM4VEJLTTJQ?=
+ =?utf-8?B?NFQ2alJVTHFIVnpOWUJmeUZFMG9VNGFiNnllaWljUlp3QlFtcDdUOEVmVlc2?=
+ =?utf-8?B?ZDA3L0VzbllzRTJYSlFCeE1vVmQvNXp1eEFnWkpxWUk1TThPODVBa0JEQmhJ?=
+ =?utf-8?B?YndaQldlM2hXYTBiMjV1OHU1N3kvTjd0TGJCY2dpdy9MVXN4ckwydDJ0eUdl?=
+ =?utf-8?B?dW94elRjTnV4dXRNUmJkUWFNYnMvSUZOQTFPbTBRYWw1T1FaaVJiMWxaWHFx?=
+ =?utf-8?B?dktDSUJNMlptNHZmMTZYZXdHSkd2b0xIVnk0aHJhVzBXdXV5aDF0ZitneHZr?=
+ =?utf-8?B?YXVsYWZ3akV4VFZ6VTVYcVN4UVA4K0QwcjVXODdLTlRmMlZNK0tqNnFuSm1Z?=
+ =?utf-8?B?OHpVQmdhVXFXZWRVbkFzak9SOGpvTVFKcElCcUl5T2YzMWhVMmdtcHB2cEdS?=
+ =?utf-8?B?eUUxY2ZTbGRraitVU2RSTkJ2N2NYQlpEOUxMei84QklSOTBFU0lZMGRQWnJx?=
+ =?utf-8?B?NVRiRlIzVndvWXlXMzM4Vnd0TWVwZnJZcU9WZmxtbmxwaXlhNkR3UkxLUXE1?=
+ =?utf-8?B?QkNneThYYTZKcEtiTDRURGNkVUNBTTBDYTR1bUZCR24wZ21oS1A1Vi9GcUsz?=
+ =?utf-8?B?OTYwL1hiaG5tajlVVVlpQUhoOWV2cURxOEsybzhUSjgzRVc0TC9NbTVmaXdm?=
+ =?utf-8?B?alB2dWdGTG1sMm81Ty81cnhnZlBKSnBaM2ZGUDc1anlkMFp5SDFFSUZWOWxB?=
+ =?utf-8?B?QytsMERUYm5xcm8vUVpoNmFQb3RWbW92c0tIcDJuemt6b25PZFNEWjBpakZn?=
+ =?utf-8?B?bnhGRzlNWDRqSmwrd0FHNEFnUDlMN2lLZkxjdmxGL2QwZlJYUFlRVE16dVU0?=
+ =?utf-8?B?MjNyRGdUT2pBdzBYbmR5cm9tMDh0YzJqRGNkRHVYQ1NEVXN2TjhYd0E5K3lH?=
+ =?utf-8?B?RDhmbDBMZzNyQkN4aDV0TXNqQVd0M1JFZGlwLytrWko3RWdpdmFBcllCdDUy?=
+ =?utf-8?B?cENuY3ZMRjkzUjZSZ3NqbngrRDJDRUwxc3htSmtTZVIxSWhOYTdPZU9zTFhr?=
+ =?utf-8?B?SURKdnFnUCtJa29tU3Z6TStUajcwZ0JTNTZYQXN1YjlRLzJBcWY5ejhmYitF?=
+ =?utf-8?B?YVdBcmNEQyt6cno3ek11N1d1VGtMS2RzbTJwdE9iYjhPSUJFVUUvNmtmR3hS?=
+ =?utf-8?B?Y0dNeXk2SFI0KzdGVnlRTlVNUXhPb2NPMmxLZGZXbVY3dlMrdmttRUl6MVUx?=
+ =?utf-8?B?elh0MnN3QUoyazEzRWpFNmdBa3VKdlhTLzBncDNnaWRnTktUekF1aWtwVlg5?=
+ =?utf-8?B?c3J1L1pnVUdVSXJxSk5ramh5VkFaMlBWMGRjSjR3ZVpwNUhXTVRWYWxFaUg0?=
+ =?utf-8?B?djhmcktTY3Y1OVIzNklKaURKWU03RkliaHllQjVqQ1F0MDJjMlZnRzhYYW1r?=
+ =?utf-8?B?ZlhUekl0V3BXNWJCcnNvTkRkSkxETDZUdGFBNGxOOXp1c0wxOFhnc2NUV0ls?=
+ =?utf-8?B?N0t2KzFzSUhTeFFPM2tqaEkydVg1eDNieDlOcEZmSVdEUU1adjRFTktwT3BC?=
+ =?utf-8?B?Mi9CcGRvcFhZZzMzc0ZWd2crdjFUWmlCSHZrV0owSWhmbUNURFY5ZHcxQTda?=
+ =?utf-8?B?aUltaWF5QmhNSElVQlV3Ky9OaGJNWmtvb3pCTG5ZRkNvT2hqSGNBOWgvSW5s?=
+ =?utf-8?Q?lvpzEcHeesWQP/v4clhn1iFw3BhoEnja?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 17:30:42.9523
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96c26fe3-f603-4a8c-2ab3-08dca4f3da8d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF0000343B.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6211
 
-Hello Mirsad!
+On 7/10/24 10:05, Ilpo Järvinen wrote:
+> On Tue, 9 Jul 2024, Stewart Hildebrand wrote:
+> 
+>> Currently, it's not possible to use the IORESOURCE_STARTALIGN flag on
+>> x86 due to the alignment being overwritten in
+>> pcibios_allocate_dev_resources(). Make one small change in arch/x86 to
+>> make it work on x86.
+>>
+>> Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
+>> ---
+>> RFC: We don't have enough info in this function to re-calculate the
+>>      alignment value in case of IORESOURCE_STARTALIGN. Luckily our
+>>      alignment value seems to be intact, so just don't touch it...
+>>      Alternatively, we could call pci_reassigndev_resource_alignment()
+>>      after the loop. Would that be preferable?
+>> ---
+>>  arch/x86/pci/i386.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/pci/i386.c b/arch/x86/pci/i386.c
+>> index f2f4a5d50b27..ff6e61389ec7 100644
+>> --- a/arch/x86/pci/i386.c
+>> +++ b/arch/x86/pci/i386.c
+>> @@ -283,8 +283,11 @@ static void pcibios_allocate_dev_resources(struct pci_dev *dev, int pass)
+>>  						/* We'll assign a new address later */
+>>  						pcibios_save_fw_addr(dev,
+>>  								idx, r->start);
+>> -						r->end -= r->start;
+>> -						r->start = 0;
+>> +						if (!(r->flags &
+>> +						      IORESOURCE_STARTALIGN)) {
+>> +							r->end -= r->start;
+>> +							r->start = 0;
+>> +						}
+>>  					}
+>>  				}
+>>  			}
+>>
+> 
+> As a general comment to that loop in pcibios_allocate_dev_resources() 
+> function, it would be nice to reverse some of the logic in the if 
+> conditions and use continue to limit the runaway indentation level.
 
-On Wed 10-07-24 20:09:27, Mirsad Todorovac wrote:
-> On the linux-next vanilla next-20240709 tree, I have attempted the seed KCONFIG_SEED=0xEE7AB52F
-> which was known from before to trigger various errors in compile and build process.
-> 
-> Though this might seem as contributing to channel noise, Linux refuses to build this config,
-> treating warnings as errors, using this build line:
-> 
-> $ time nice make W=1 -k -j 36 |& tee ../err-next-20230709-01a.log; date
-> 
-> As I know that the Chief Penguin doesn't like warnings, but I am also aware that there are plenty
-> left, there seems to be more tedious work ahead to make the compilers happy.
-> 
-> The compiler output is:
-> 
-> ---------------------------------------------------------------------------------------------------------
-> fs/reiserfs/do_balan.c: In function ‘balance_leaf_new_nodes_paste_whole’:
-> fs/reiserfs/do_balan.c:1147:13: error: variable ‘leaf_mi’ set but not used [-Werror=unused-but-set-variable]
->  1147 |         int leaf_mi;
->       |             ^~~~~~~
-
-Frankly, I wouldn't bother with reiserfs. The warning is there for ages,
-the code is going to get removed in two releases, so I guess we can live
-with these warnings for a few more months...
-
-								Honza
-
-
->   CC      fs/reiserfs/lbalance.o
-> fs/reiserfs/fix_node.c: In function ‘dc_check_balance_leaf’:
-> fs/reiserfs/fix_node.c:1938:13: error: variable ‘maxsize’ set but not used [-Werror=unused-but-set-variable]
->  1938 |         int maxsize, ret;
->       |             ^~~~~~~
-> fs/reiserfs/fix_node.c:1935:13: error: variable ‘levbytes’ set but not used [-Werror=unused-but-set-variable]
->  1935 |         int levbytes;
->       |             ^~~~~~~~
-> fs/reiserfs/prints.c: In function ‘prepare_error_buf’:
-> fs/reiserfs/prints.c:221:17: error: function ‘prepare_error_buf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
->   221 |                 p += vscnprintf(p, end - p, fmt1, args);
->       |                 ^
-> fs/reiserfs/prints.c:260:9: error: function ‘prepare_error_buf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
->   260 |         p += vscnprintf(p, end - p, fmt1, args);
->       |         ^
-> make[4]: Target 'arch/x86/kernel/' not remade because of errors.
-> make[3]: *** [scripts/Makefile.build:485: arch/x86/kernel] Error 2
-> make[3]: Target 'arch/x86/' not remade because of errors.
-> make[2]: *** [scripts/Makefile.build:485: arch/x86] Error 2
-> fs/reiserfs/lbalance.c: In function ‘leaf_copy_items’:
-> fs/reiserfs/lbalance.c:524:29: error: variable ‘dest’ set but not used [-Werror=unused-but-set-variable]
->   524 |         struct buffer_head *dest;
->       |                             ^~~~
-> cc1: all warnings being treated as errors
-> make[4]: *** [scripts/Makefile.build:244: fs/reiserfs/do_balan.o] Error 1
-> cc1: all warnings being treated as errors
-> make[4]: *** [scripts/Makefile.build:244: fs/reiserfs/prints.o] Error 1
-> cc1: all warnings being treated as errors
-> make[4]: *** [scripts/Makefile.build:244: fs/reiserfs/fix_node.o] Error 1
-> ---------------------------------------------------------------------------------------------------------
-> 
-> In fs/reiserfs/fix_node.c:1938:13, fs/reiserfs/fix_node.c:1935:13, and fs/reiserfs/lbalance.c:524:29,
-> the problem seem to lie within the construct RFALSE(), like
-> 
->  521 static int leaf_copy_items(struct buffer_info *dest_bi, struct buffer_head *src,
->  522                            int last_first, int cpy_num, int cpy_bytes)
->  523 {
->  524         struct buffer_head *dest;
->  525         int pos, i, src_nr_item, bytes;
->  526 
->  527         dest = dest_bi->bi_bh;
->  528         RFALSE(!dest || !src, "vs-10210: !dest || !src");
->  529         RFALSE(last_first != FIRST_TO_LAST && last_first != LAST_TO_FIRST,
->  530                "vs-10220:last_first != FIRST_TO_LAST && last_first != LAST_TO_FIRST");
->  531         RFALSE(B_NR_ITEMS(src) < cpy_num,
->  532                "vs-10230: No enough items: %d, req. %d", B_NR_ITEMS(src),
->  533                cpy_num);
->  534         RFALSE(cpy_num < 0, "vs-10240: cpy_num < 0 (%d)", cpy_num);
-> 
-> Hope this helps.
-> 
-> Best regards,
-> Mirsad Todorovac
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+The similar function pcibios_allocate_resources() in
+arch/powerpc/kernel/pci-common.c has moved some of the logic out into a
+separate function. I'll do the same here.
