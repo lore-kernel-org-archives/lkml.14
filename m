@@ -1,77 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBE027457
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 07:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F7F6A347;
+	Mon, 15 Jul 2024 07:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721027761; cv=none; b=P2CgHREIkcdvyzmjrXQ50hQWd2ey0Mnmo2uwtveY/6unFKenJ64IprieMUd4ADuAorGhxDxVWbAQn8ioP0vuVhSMKgq9LfYc3QXMa4ryz0tb9fL3krKuF2UmJ6wd8i5d3vatn4rDbJ5oVATxogHkM8kUadiCH8nGStnh9uL3lKE=
+	t=1721027762; cv=none; b=T0vbtYloKuhB8lZFDM692vgeqgQxPvQccaaMArVX6ktqK/UBkN2aPYH47+I1YHwvuES//tKAHGchtrRtx2+t6qT/WRR95mWy+6plQrFJFBpU2h4XEgoTW199MWsDd6dPmZIcYsNtXWw5ZB2T5FbP2CdN9xlsiccY2iEhc4bVFPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721027761; c=relaxed/simple;
-	bh=XcGpFqnDjKNKx8SfYe7aFOKVeti+RJENIxAU2UvUuTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g98/UfrmlWmHutFOyblI9ZXnZS2YnCc092lvRx7Z+kxqNCoweaEnf9CppTzDvHa9BXmowfAUh/yvJv0pMSXrPF8Xks5dgn6m1LmvIWMcRnMw7GtfyBEiLNF7RiKfH7F1zjpxG7o9dxhu27JELLSiOkr1Z1P9OJFlbXRfMleHkCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BUw7PG7Y; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721027762; c=relaxed/simple;
+	bh=BR+hSPhBJmyP6ftUYZRih4YjTmH0YK92vKAx0Air4qM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=upMzK0LUFViNvUNu0rhSuTbSy777umKO7WlbQq1Ncu7jpc1UaTnIjm4M3N4p/SqT9CBL0nPgNPR6Mw75sXVEKsWSI8mTK5hkPcapHPzSWd14Ea9d4n16zHLGc+1YaJ8+fTtpwzKBIlaZOqmyD30D1nnfO6Y2i+KTg9BG3ONNIds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=S7UnaNqD; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BUw7PG7Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721027758;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0Y2AbOnd9Mq1S+7NRXex8Vmbtv9LUYdHTykQN+yx0Do=;
-	b=BUw7PG7YjsQSqwcmdH+AG+sif630ow1LwhOV2jRETd2R46UrlMiqrgQfni4/IthW1K9KwF
-	kRmCW8A+9CiFnr0jzvF2sEpMD02OJpR8DHhEJKOGZQrUuBvJqMEHSPDZs9TAAg5evfSQbU
-	FqMOuJqyTvOeJlGNx+CSrJZy1D8VvjY=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-doPEtFVqMk2vQoSZqQtQxA-1; Mon, 15 Jul 2024 03:15:53 -0400
-X-MC-Unique: doPEtFVqMk2vQoSZqQtQxA-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52e9c23da78so486133e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 00:15:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721027751; x=1721632551;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Y2AbOnd9Mq1S+7NRXex8Vmbtv9LUYdHTykQN+yx0Do=;
-        b=j7VW4MhCD7FkaAPosDQADHIfGh4/+DoJk0u2IVep5s1BkyByXNVoW6zq+vkhpGc7YL
-         osM71iXqmvR6bia3GrNxm/0tMWYnoTSN3NRxW9OD+Wmua0YDfsSmcbnWiy4fVk8lWv9q
-         ybzWXQM9e/41nafJFlu1S8YYNwgq/vy0pM6mowicymHmrUpRQIZUbXuUyvzcddJIPM6F
-         W1IAGT16QkBr9mdZF9dCekXCKHjZIOjRKIublgm1UbtVwM4iql60XE9XEKWdqDbKIBXa
-         AohzeWLlfZuVkh5gJ2IB2OJMKBy2TiwqEivaY2A0RpfZWaGegppDHhCuZLjpaaNv0Pm6
-         MjJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgmcOwi0DuCkC1N4FUoEP47HzVb2Yg8S4Taw2UeJG7q9OlrRiAogdTU4zQu/YDuECQ1u4BLidAwj8aWeZ4KfV7zf4S8OJt9CwXS7AZ
-X-Gm-Message-State: AOJu0Yzt9KcQmHF7zjbEsh4ON6WQtQzGi9LJU2gcvO4vc0lAfDUEEzQE
-	n6cs8VElBHl9WJGSPf2/4LAIFZnCKX+icHdzl6FJoP3pCxSdcAoN/eNA0QebdqYkXdbGoQfOKD1
-	Oz0H8H/BTG/PyqcinT5tNeY1k85hbpUk+dfqbVR8l0IXJfW3G5qoTsDfeJd2xcw==
-X-Received: by 2002:a2e:9859:0:b0:2ec:4a95:5f05 with SMTP id 38308e7fff4ca-2eec98bbdfcmr57232711fa.3.1721027751667;
-        Mon, 15 Jul 2024 00:15:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEIxAd6BD5bhLdYSEanXaJBCdpDuS0Tp/uJ2ilToq7YjUr3fTfHTb5q7xuks66ttJZX4xDRWA==
-X-Received: by 2002:a2e:9859:0:b0:2ec:4a95:5f05 with SMTP id 38308e7fff4ca-2eec98bbdfcmr57232551fa.3.1721027751282;
-        Mon, 15 Jul 2024 00:15:51 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-426740daf6dsm95815705e9.1.2024.07.15.00.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 00:15:50 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Luben Tuikov <ltuikov89@gmail.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>,
-	Marco Pagani <marpagan@redhat.com>
-Subject: [PATCH] drm/scheduler: Use ternary operator in standardized manner
-Date: Mon, 15 Jul 2024 09:15:33 +0200
-Message-ID: <20240715071533.12936-1-pstanner@redhat.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="S7UnaNqD"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 46F7FZuK43487018, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1721027735; bh=BR+hSPhBJmyP6ftUYZRih4YjTmH0YK92vKAx0Air4qM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type;
+	b=S7UnaNqDqAcN79ca9lJJZdvolCketNbz4fJ3mjdjhkw1l7oWeFuiOkuyuF5mt9iIH
+	 lt46sgOEGpOGzmhdK5X1zrN9+mMHt3xHsTsnl5bp7QMT0yBlIOAxFc0iW3tI0ErGwy
+	 aDOSUFFHYmlAItp61ZNUiyZkCwxqeGGcAd+F1vI3xiNPKDw+SqWPI1ahefzxawAgCV
+	 eNBlr1l0jqy3guy8nOL3QK61qDquFCl+v6bD7zo/D5/17m7LCW129FJPOJdjgRuBif
+	 +bADQpebC6YR9x9bxwF43W6o6rzAhgjUKuQ1OrgGXnjgLTUAzzGW3MGfERsZ68GH9O
+	 ejtFKwCMl5NAA==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 46F7FZuK43487018
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Jul 2024 15:15:35 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 15 Jul 2024 15:15:35 +0800
+Received: from RTDOMAIN (172.21.210.74) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 15 Jul
+ 2024 15:15:34 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, "Justin
+ Lai" <justinlai0215@realtek.com>
+Subject: [PATCH net-next v24 05/13] rtase: Implement hardware configuration function
+Date: Mon, 15 Jul 2024 15:11:50 +0800
+Message-ID: <20240715071158.110384-6-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240715071158.110384-1-justinlai0215@realtek.com>
+References: <20240715071158.110384-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,39 +60,288 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-drm_sched_init() omits the middle operand when using the ternary
-operator to set the timeout_wq if one has been passed.
+Implement rtase_hw_config to set default hardware settings, including
+setting interrupt mitigation, tx/rx DMA burst, interframe gap time,
+rx packet filter, near fifo threshold and fill descriptor ring and
+tally counter address, and enable flow control. When filling the
+rx descriptor ring, the first group of queues needs to be processed
+separately because the positions of the first group of queues are not
+regular with other subsequent groups. The other queues are all newly
+added features, but we want to retain the original design. So they were
+not put together.
 
-This is a non-standardized GNU extension to the C language [1].
-
-It decreases code readability and might be read as a bug. Furthermore,
-it is not consistent with all other places in drm/scheduler where the
-ternary operator is used.
-
-Replace the expression with the standard one.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc-14.1.0/gcc/Conditionals.html
-
-Suggested-by: Marco Pagani <marpagan@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
 ---
- drivers/gpu/drm/scheduler/sched_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 238 ++++++++++++++++++
+ 1 file changed, 238 insertions(+)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 7e90c9f95611..02cf9c37a232 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -1257,7 +1257,7 @@ int drm_sched_init(struct drm_gpu_scheduler *sched,
- 	sched->credit_limit = credit_limit;
- 	sched->name = name;
- 	sched->timeout = timeout;
--	sched->timeout_wq = timeout_wq ? : system_wq;
-+	sched->timeout_wq = timeout_wq ? timeout_wq : system_wq;
- 	sched->hang_limit = hang_limit;
- 	sched->score = score ? score : &sched->_score;
- 	sched->dev = dev;
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 9cd45ae37590..b6304fd3f907 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -465,6 +465,23 @@ static int rtase_init_ring(const struct net_device *dev)
+ 	return -ENOMEM;
+ }
+ 
++static void rtase_interrupt_mitigation(const struct rtase_private *tp)
++{
++	u32 i;
++
++	for (i = 0; i < tp->func_tx_queue_num; i++)
++		rtase_w16(tp, RTASE_INT_MITI_TX + i * 2, tp->tx_int_mit);
++
++	for (i = 0; i < tp->func_rx_queue_num; i++)
++		rtase_w16(tp, RTASE_INT_MITI_RX + i * 2, tp->rx_int_mit);
++}
++
++static void rtase_tally_counter_addr_fill(const struct rtase_private *tp)
++{
++	rtase_w32(tp, RTASE_DTCCR4, upper_32_bits(tp->tally_paddr));
++	rtase_w32(tp, RTASE_DTCCR0, lower_32_bits(tp->tally_paddr));
++}
++
+ static void rtase_tally_counter_clear(const struct rtase_private *tp)
+ {
+ 	u32 cmd = lower_32_bits(tp->tally_paddr);
+@@ -473,6 +490,119 @@ static void rtase_tally_counter_clear(const struct rtase_private *tp)
+ 	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_RESET);
+ }
+ 
++static void rtase_desc_addr_fill(const struct rtase_private *tp)
++{
++	const struct rtase_ring *ring;
++	u16 i, cmd, val;
++	int err;
++
++	for (i = 0; i < tp->func_tx_queue_num; i++) {
++		ring = &tp->tx_ring[i];
++
++		rtase_w32(tp, RTASE_TX_DESC_ADDR0,
++			  lower_32_bits(ring->phy_addr));
++		rtase_w32(tp, RTASE_TX_DESC_ADDR4,
++			  upper_32_bits(ring->phy_addr));
++
++		cmd = i | RTASE_TX_DESC_CMD_WE | RTASE_TX_DESC_CMD_CS;
++		rtase_w16(tp, RTASE_TX_DESC_COMMAND, cmd);
++
++		err = read_poll_timeout(rtase_r16, val,
++					!(val & RTASE_TX_DESC_CMD_CS), 10,
++					1000, false, tp,
++					RTASE_TX_DESC_COMMAND);
++
++		if (err == -ETIMEDOUT)
++			netdev_err(tp->dev,
++				   "error occurred in fill tx descriptor\n");
++	}
++
++	for (i = 0; i < tp->func_rx_queue_num; i++) {
++		ring = &tp->rx_ring[i];
++
++		if (i == 0) {
++			rtase_w32(tp, RTASE_Q0_RX_DESC_ADDR0,
++				  lower_32_bits(ring->phy_addr));
++			rtase_w32(tp, RTASE_Q0_RX_DESC_ADDR4,
++				  upper_32_bits(ring->phy_addr));
++		} else {
++			rtase_w32(tp, (RTASE_Q1_RX_DESC_ADDR0 + ((i - 1) * 8)),
++				  lower_32_bits(ring->phy_addr));
++			rtase_w32(tp, (RTASE_Q1_RX_DESC_ADDR4 + ((i - 1) * 8)),
++				  upper_32_bits(ring->phy_addr));
++		}
++	}
++}
++
++static void rtase_hw_set_features(const struct net_device *dev,
++				  netdev_features_t features)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	u16 rx_config, val;
++
++	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_0);
++	if (features & NETIF_F_RXALL)
++		rx_config |= (RTASE_ACCEPT_ERR | RTASE_ACCEPT_RUNT);
++	else
++		rx_config &= ~(RTASE_ACCEPT_ERR | RTASE_ACCEPT_RUNT);
++
++	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config);
++
++	val = rtase_r16(tp, RTASE_CPLUS_CMD);
++	if (features & NETIF_F_RXCSUM)
++		rtase_w16(tp, RTASE_CPLUS_CMD, val | RTASE_RX_CHKSUM);
++	else
++		rtase_w16(tp, RTASE_CPLUS_CMD, val & ~RTASE_RX_CHKSUM);
++
++	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_1);
++	if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
++		rx_config |= (RTASE_INNER_VLAN_DETAG_EN |
++			      RTASE_OUTER_VLAN_DETAG_EN);
++	else
++		rx_config &= ~(RTASE_INNER_VLAN_DETAG_EN |
++			       RTASE_OUTER_VLAN_DETAG_EN);
++
++	rtase_w16(tp, RTASE_RX_CONFIG_1, rx_config);
++}
++
++static void rtase_hw_set_rx_packet_filter(struct net_device *dev)
++{
++	u32 mc_filter[2] = { 0xFFFFFFFF, 0xFFFFFFFF };
++	struct rtase_private *tp = netdev_priv(dev);
++	u16 rx_mode;
++
++	rx_mode = rtase_r16(tp, RTASE_RX_CONFIG_0) & ~RTASE_ACCEPT_MASK;
++	rx_mode |= RTASE_ACCEPT_BROADCAST | RTASE_ACCEPT_MYPHYS;
++
++	if (dev->flags & IFF_PROMISC) {
++		rx_mode |= RTASE_ACCEPT_MULTICAST | RTASE_ACCEPT_ALLPHYS;
++	} else if (dev->flags & IFF_ALLMULTI) {
++		rx_mode |= RTASE_ACCEPT_MULTICAST;
++	} else {
++		struct netdev_hw_addr *hw_addr;
++
++		mc_filter[0] = 0;
++		mc_filter[1] = 0;
++
++		netdev_for_each_mc_addr(hw_addr, dev) {
++			u32 bit_nr = eth_hw_addr_crc(hw_addr);
++			u32 idx = u32_get_bits(bit_nr, BIT(31));
++			u32 bit = u32_get_bits(bit_nr,
++					       RTASE_MULTICAST_FILTER_MASK);
++
++			mc_filter[idx] |= BIT(bit);
++			rx_mode |= RTASE_ACCEPT_MULTICAST;
++		}
++	}
++
++	if (dev->features & NETIF_F_RXALL)
++		rx_mode |= RTASE_ACCEPT_ERR | RTASE_ACCEPT_RUNT;
++
++	rtase_w32(tp, RTASE_MAR0, swab32(mc_filter[1]));
++	rtase_w32(tp, RTASE_MAR1, swab32(mc_filter[0]));
++	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_mode);
++}
++
+ static void rtase_irq_dis_and_clear(const struct rtase_private *tp)
+ {
+ 	const struct rtase_int_vector *ivec = &tp->int_vector[0];
+@@ -547,6 +677,114 @@ static void rtase_hw_reset(const struct net_device *dev)
+ 	rtase_nic_reset(dev);
+ }
+ 
++static void rtase_set_rx_queue(const struct rtase_private *tp)
++{
++	u16 reg_data;
++
++	reg_data = rtase_r16(tp, RTASE_FCR);
++	switch (tp->func_rx_queue_num) {
++	case 1:
++		u16p_replace_bits(&reg_data, 0x1, RTASE_FCR_RXQ_MASK);
++		break;
++	case 2:
++		u16p_replace_bits(&reg_data, 0x2, RTASE_FCR_RXQ_MASK);
++		break;
++	case 4:
++		u16p_replace_bits(&reg_data, 0x3, RTASE_FCR_RXQ_MASK);
++		break;
++	}
++	rtase_w16(tp, RTASE_FCR, reg_data);
++}
++
++static void rtase_set_tx_queue(const struct rtase_private *tp)
++{
++	u16 reg_data;
++
++	reg_data = rtase_r16(tp, RTASE_TX_CONFIG_1);
++	switch (tp->tx_queue_ctrl) {
++	case 1:
++		u16p_replace_bits(&reg_data, 0x0, RTASE_TC_MODE_MASK);
++		break;
++	case 2:
++		u16p_replace_bits(&reg_data, 0x1, RTASE_TC_MODE_MASK);
++		break;
++	case 3:
++	case 4:
++		u16p_replace_bits(&reg_data, 0x2, RTASE_TC_MODE_MASK);
++		break;
++	default:
++		u16p_replace_bits(&reg_data, 0x3, RTASE_TC_MODE_MASK);
++		break;
++	}
++	rtase_w16(tp, RTASE_TX_CONFIG_1, reg_data);
++}
++
++static void rtase_hw_config(struct net_device *dev)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	u32 reg_data32;
++	u16 reg_data16;
++
++	rtase_hw_reset(dev);
++
++	/* set rx dma burst */
++	reg_data16 = rtase_r16(tp, RTASE_RX_CONFIG_0);
++	reg_data16 &= ~(RTASE_RX_SINGLE_TAG | RTASE_RX_SINGLE_FETCH);
++	u16p_replace_bits(&reg_data16, RTASE_RX_DMA_BURST_256,
++			  RTASE_RX_MX_DMA_MASK);
++	rtase_w16(tp, RTASE_RX_CONFIG_0, reg_data16);
++
++	/* new rx descritpor */
++	reg_data16 = rtase_r16(tp, RTASE_RX_CONFIG_1);
++	reg_data16 |= RTASE_RX_NEW_DESC_FORMAT_EN | RTASE_PCIE_NEW_FLOW;
++	u16p_replace_bits(&reg_data16, 0xF, RTASE_RX_MAX_FETCH_DESC_MASK);
++	rtase_w16(tp, RTASE_RX_CONFIG_1, reg_data16);
++
++	rtase_set_rx_queue(tp);
++
++	rtase_interrupt_mitigation(tp);
++
++	/* set tx dma burst size and interframe gap time */
++	reg_data32 = rtase_r32(tp, RTASE_TX_CONFIG_0);
++	u32p_replace_bits(&reg_data32, RTASE_TX_DMA_BURST_UNLIMITED,
++			  RTASE_TX_DMA_MASK);
++	u32p_replace_bits(&reg_data32, RTASE_INTERFRAMEGAP,
++			  RTASE_TX_INTER_FRAME_GAP_MASK);
++	rtase_w32(tp, RTASE_TX_CONFIG_0, reg_data32);
++
++	/* new tx descriptor */
++	reg_data16 = rtase_r16(tp, RTASE_TFUN_CTRL);
++	rtase_w16(tp, RTASE_TFUN_CTRL, reg_data16 |
++		  RTASE_TX_NEW_DESC_FORMAT_EN);
++
++	/* tx fetch desc number */
++	rtase_w8(tp, RTASE_TDFNR, 0x10);
++
++	/* tag num select */
++	reg_data16 = rtase_r16(tp, RTASE_MTPS);
++	u16p_replace_bits(&reg_data16, 0x4, RTASE_TAG_NUM_SEL_MASK);
++	rtase_w16(tp, RTASE_MTPS, reg_data16);
++
++	rtase_set_tx_queue(tp);
++
++	rtase_w16(tp, RTASE_TOKSEL, 0x5555);
++
++	rtase_tally_counter_addr_fill(tp);
++	rtase_desc_addr_fill(tp);
++	rtase_hw_set_features(dev, dev->features);
++
++	/* enable flow control */
++	reg_data16 = rtase_r16(tp, RTASE_CPLUS_CMD);
++	reg_data16 |= (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN);
++	rtase_w16(tp, RTASE_CPLUS_CMD, reg_data16);
++	/* set near fifo threshold - rx missed issue. */
++	rtase_w16(tp, RTASE_RFIFONFULL, 0x190);
++
++	rtase_w16(tp, RTASE_RMS, tp->rx_buf_sz);
++
++	rtase_hw_set_rx_packet_filter(dev);
++}
++
+ static void rtase_nic_enable(const struct net_device *dev)
+ {
+ 	const struct rtase_private *tp = netdev_priv(dev);
 -- 
-2.45.0
+2.34.1
 
