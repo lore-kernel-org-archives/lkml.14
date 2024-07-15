@@ -1,350 +1,156 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2086.outbound.protection.outlook.com [40.107.255.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5571A185E6A;
-	Mon, 15 Jul 2024 09:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721034472; cv=fail; b=dl5S4nTHzsOHu/ANBSmQISeT6+DFLXkM9HRsNuR9dRIlLubKQlBWek900bOGCtjEULmZy+B7KRG3zFHrM9xoCh088bVHdH5o+YTS7xnV/7YRvMlxKlPsMtEK0zHH78Lk0CUq+8wT1UU3OVmbud7U5Ms9gkvxoieg5sYf16bbPuY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721034472; c=relaxed/simple;
-	bh=wizY8GmtJqaks2iQy1ndy1RhpaNMmJmrOB3Plo9/KTs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VQ5AwLW+8tP4n3+agEva99jEGjZ1rViWnAmf9fjmk8XoonigyELJy2soZpHr+r8tQwG2ADN6CMACLavEuHR7s/iInekwxFGFzzdvxqF76X1q24SG7zzzXvFok4PxqUBfT82VCzN1t9aIxZjogDxBb0I8F7qGlIu6YCn1jlpN2DM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=PwLbAxNA; arc=fail smtp.client-ip=40.107.255.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AE55223
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721034589; cv=none; b=hgb2W7QHaEHEugsLuJpOd+STEq+Mb0D801L9JWtsyW8rkPhYvTVQobYGcitJbXOL4Y1/Pd6EVYNwKWCymvc/LKj27QT1zBYUTsOK4ek1bg/CVH3YUco/Lvc43FCjZ2c6SdkUAUDZPUUrNasRj2vhNXICJybWVL4/8Gbppn21yh8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721034589; c=relaxed/simple;
+	bh=u+Gaa0hibGb8iA3gN6UB9Fck2zCztXz6k5FGOnbEuUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qkHXq1V16RKkfPA+VRCbQoWPK56Af0bTQOc401EZeK9/a7RK+fcUgXWkHUI0icBOs2bPxnBYCr93Li5O2FQ9jKYlbEw/Gc9Op+iPXpbeSZZPVd7NRHFaae8mAG4ZrmSiBLQ24JC++ib1fVXq5shRxr2hpZOlH35zpEeSQ1ws+0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xcnYtGy4; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="PwLbAxNA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=j5MKIFRfcmq7ZNJCxZh7zo1AKtpTqZMqikFhULUplBn3xB+4p2VJBDo470bLrZYmwI5ErMxMMKJR75MNKDmKHJnH4Oy2p1tDzvz69DZZK8punedWd5hg4E8bWgRJRcubwiN9cxFfaIAWZYft+ewvvXbNzbhB0oJ2ic8esYAYOnZMOE26jHkLBHgpoy2r3qdl21yB7lvjsr7EysewZk/cPNA30SnkAqhAeIVUrSs/OFlO4SiiRAfm5+xSwbdsGSSioXRGEpS1clMtHVor7Vwua/zneXXDB+2lW7zARDRofv81L2QDA/oz+t1Hw8zoOkji8JL+wtIDEgaIqRVgGxv/Dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DfZ7CtWbon92eP/IH3UzOkpZ0YKKWHuq/pl5Jxzz95Q=;
- b=WQN6iwTQH/Mo4IqLvqmLjMU1jMup8G2eqs3nndDswARWQYqhpRSH2teIna6VfhABtBFFBlNAEKE6WZPKMwl88HkbQd20NHnWr0uzoW5hKe3wlmvwdwkcphFdAAXCnfB1hZOdl1B617ATFQW63vkIjARFgj/oS7Pr1ZkBv7yZtrFMu2kgZZP4yUp8hElpuOBrKjIC3RtItW4G5AWqhPmka+v1RWP3huFOW7We/nLnXYsTRcJtH162QJt+OW3gP06gUvKAOEqISgSTNnC6/m8vGBYdK0KCgxWNlCEzjuGW3ZrOfPdGmrF9sXjoUDzQIHA5qTc1fYvNEgyQ7GUNgUfocg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DfZ7CtWbon92eP/IH3UzOkpZ0YKKWHuq/pl5Jxzz95Q=;
- b=PwLbAxNAKqIhJaglmXYO4+zBZV4MfyWqNki8kFMu5Hg/ocqPLtj2iphW7/7LWndbu2X1KhftOL0lTtCgsPsCpp++BLsp/czwj3GknQh3DmnxJYFNLvQ4J7KAP47kaDkjY1gai1rYiDaTAwdinL0iGj1kiFFAhFUsJpuFQtr1Up0rm/FLgcUJBhjfQakZu0j+ckfE0OaOrQ5bfYhFXtOMEyhFTatOZ9ErL8CqV+78j1wfbZ476NA5aNDlioyMLFGuqHWsGqL/oYPXtQRBHPzHTuPm2XYR47Mg+Hm7SH0ODzLC4gsuTdsyHIQl7gsYDigmhDyLWkPzcZdWWn1R38j64w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5624.apcprd06.prod.outlook.com (2603:1096:101:c8::14)
- by PUZPR06MB5650.apcprd06.prod.outlook.com (2603:1096:301:fd::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Mon, 15 Jul
- 2024 09:07:44 +0000
-Received: from SEZPR06MB5624.apcprd06.prod.outlook.com
- ([fe80::e837:10e3:818e:bdfd]) by SEZPR06MB5624.apcprd06.prod.outlook.com
- ([fe80::e837:10e3:818e:bdfd%5]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
- 09:07:44 +0000
-Message-ID: <c8478a67-b14f-485c-a239-8967f1e40600@vivo.com>
-Date: Mon, 15 Jul 2024 17:07:37 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Support direct I/O read and write for memory
- allocated by dmabuf
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "T.J. Mercier" <tjmercier@google.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Andrei Vagin <avagin@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, Daniel Vetter <daniel@ffwll.ch>,
- "Vetter, Daniel" <daniel.vetter@intel.com>, opensource.kernel@vivo.com,
- quic_sukadev@quicinc.com, quic_cgoldswo@quicinc.com,
- Akilesh Kailash <akailash@google.com>
-References: <20240710135757.25786-1-liulei.rjpt@vivo.com>
- <5e5ee5d3-8a57-478a-9ce7-b40cab60b67d@amd.com>
- <d70cf558-cf34-4909-a33e-58e3a10bbc0c@vivo.com>
- <0393cf47-3fa2-4e32-8b3d-d5d5bdece298@amd.com>
- <e8bfe5ed-130a-4f32-a95a-01477cdd98ca@vivo.com>
- <CABdmKX26f+6m9Gh34Lb+rb2yQB--wSKP3GXRRri6Nxp3Hwxavg@mail.gmail.com>
- <63237086-223f-44fb-90a0-076a5f56dfdc@amd.com>
-From: Lei Liu <liulei.rjpt@vivo.com>
-In-Reply-To: <63237086-223f-44fb-90a0-076a5f56dfdc@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYCP286CA0131.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b6::13) To SEZPR06MB5624.apcprd06.prod.outlook.com
- (2603:1096:101:c8::14)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcnYtGy4"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-427adb1cf75so5308755e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721034584; x=1721639384; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+3B6jB8UMroqJ2Yc/1gLAFE4gd/G0YdH5HhxS6qLOew=;
+        b=xcnYtGy472lUiPqLeQZaIqzpvnyS9w9FgeUvynpJcLdf7GPgzJjwFUfZAWbtGhJBbm
+         QOoGLCijVZkAzobxwoJ3kb0QBb0xxWloUaEbVYki2HFL5LD1Iy/0G2J8FstygyvpC29J
+         zHOcEHL8UFIkrYud8K2aqEAIS/wWLASfrvBYXOln7p6HeK0igSg+T+Uno0RJnoSHBIql
+         dilDAkE6N0BM510SWTO6XCIvmoORlzCFTXSm0L/zYY1vH9y1vlQWjT8mi1gXyjAryXxv
+         9q+BPGtuzP6A8XMOyO6CZimXQwEQM/D9F797ay86cspL3HKK07894mwmTJxwNAgBt/AN
+         NQ2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721034584; x=1721639384;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+3B6jB8UMroqJ2Yc/1gLAFE4gd/G0YdH5HhxS6qLOew=;
+        b=D7rap5wT15ccvDkBSOppws+i2miLKJmVvL0vQ8SF3k7M+SWwJZLB80oSjWpzHMWEcm
+         THaKWdaKqvLxi8J796d8fRtUAJ2Pn8KGxt0hKyZJQvw2XXxo3fQqQQQ/8TJtf3uqDEmk
+         zaBuMvSmTARXsumHr93yhlvW/Gx3zuT28lSPvr9CIBEUlDkVsfNeihzk4bMs8Q9BT1VC
+         LwIXRDgyCtJ8SurPvrj2ZUT50pMbYwnS3hPnmgK1n3kWC2h00dg0z8OB0iD3e/q0MOzo
+         tcYVG7E43JDx+mewyqkJQODKokBSKx3QF6nSUt0RXMExTnDR/NiB1Ruz/1v3wl5vO/lb
+         4YWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsBgwq5GCTLCSmkluMCNdAlISHrb3gS7UX7hMV/ujtGMxhPny4KPSDeBzYhVMBC40LxuB4Ayg5n5xetP4PM6oGM/IDNKWqlBHP+X60
+X-Gm-Message-State: AOJu0YzfyyvNYPB/+YkRZ/TI+PNrE0txe4CZxGffyud7ucgaTJL+81Mz
+	THAGdOmB7l/T5pQEc3n4RXIW7buvKkZ8aTXk0xjwSH1soxxu97znjPGl4AscHdu8PIHKKjToOhs
+	8
+X-Google-Smtp-Source: AGHT+IHoknIsEXpesRP/qX2XWO81Tb0GhanCjhRsodiU3YItQHNxx21jIEKs66uJTiHHN8J6aJ56mg==
+X-Received: by 2002:a7b:cd98:0:b0:426:593c:9361 with SMTP id 5b1f17b1804b1-426708f1d94mr128457725e9.26.1721034584503;
+        Mon, 15 Jul 2024 02:09:44 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:e709:abf9:48b3:5079? ([2a05:6e02:1041:c10:e709:abf9:48b3:5079])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-427a5edb489sm77959745e9.37.2024.07.15.02.09.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jul 2024 02:09:44 -0700 (PDT)
+Message-ID: <4d7e11a7-b352-4ced-acee-b5f64e3cd0b6@linaro.org>
+Date: Mon, 15 Jul 2024 11:09:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5624:EE_|PUZPR06MB5650:EE_
-X-MS-Office365-Filtering-Correlation-Id: a78f968a-d67d-49fa-c261-08dca4ad9678
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dDdDWS9pS2pGS3hEZ1pSdjZYaWpVeFByS1ViZTA2MzFUMHRBK0pTNWFPdU9X?=
- =?utf-8?B?dExZWWNHck1NRWJtTDNSM0tobWNEdVM5SEoybkxCWkpsVVM0MkE4b1FyQWUw?=
- =?utf-8?B?cGpMOUpJN0RFd0hGYmFNUS9oTVJxbmtrb1c1dm5HbTRPM0JUK0VSdEhGbkIw?=
- =?utf-8?B?Y0lHZlVTRzJOQWtENG9QSmdyeHFuUUdRWERJaGhzRG8wSmRqakRtMVhUL1Zw?=
- =?utf-8?B?VnRsQjhiNmJpRW1IVGZ6SUozcElRWS9URldvT2JZL1ZNcm5FbmRqZVNGSEhW?=
- =?utf-8?B?YWJ5cUQvZm52ZEJ4NEErcTlsZkhEQS9wZkU5R0M5dnhZaFgzUUswSStPUDZF?=
- =?utf-8?B?QmJHRmxESUwrT3FIakxTMVp3aHVER1JXMmdEZExoWDkzVDdKcFJnVjBZMGNW?=
- =?utf-8?B?cm5TZDZCOC9JaUZVLzJXZ0M2VzBnZ3U1emxOY2xmZExZNWF4cUFFMFZ3UUtL?=
- =?utf-8?B?VVVjamJwY3RCdFhVdTNrUVN3aFhabTJKQ0lkNGlQUmZHNXlmN0hjSmx5OU1M?=
- =?utf-8?B?a0VnMm8xQk8xUkk1UHJ5clJOVGo2Qkl0Qmt3Y3ppSnNxbEFpNVllem9zRk5y?=
- =?utf-8?B?ZnhjZlgwWFFOTm5Xa1diQlNwVDJPZEdGdkpTUGwwUjdQR1pweHY1U3FEUWZh?=
- =?utf-8?B?bUtSNkxEYnRTRVh5dUhQS3RvbkFsZzdZdkFLK3NpdituNCtUS25sb29oS2lL?=
- =?utf-8?B?QkROcUg5cFFHVGRrSDcyVTAvSEd4UjZjMnVUSW1GMkpWM2ZieHV6ODRMVnli?=
- =?utf-8?B?NFk2MVo3elF2OHErRVIxNGxzYm81eHV2RG1NbGsrMC9JSWhJTUt0eURzMGdh?=
- =?utf-8?B?NEpBTkdzWFJVWmFDY0N0Zm5TZDBjOHIzT2JGUHJLbVk5TkhRWlgwRTZSUWpq?=
- =?utf-8?B?VndlTGtZenp5SnlmMDNpWnZCSytaRUFLVW1Nek51Z1Q3eEJYNDY3L0pXZFRk?=
- =?utf-8?B?d2RnSUVQRzJqTytCNlRvWUVwcmd3c0dlQjVOK1liYnRoU3o0VnlpUUZlTm9B?=
- =?utf-8?B?eVB2cGlVRkRGQkJKR1hMeXpTdktHM09YdkpIOXFkNmNxSml2My9tamxPUGVF?=
- =?utf-8?B?bzVDNjd2R0ozNDRoUnlpTldWaExEdnB1dXc1WG9DemxtTlZlSmRuVEpOY29a?=
- =?utf-8?B?SW5ybG9kcldZWmMrbUJKbTFweUdjT241bmNOSjBRQXU0ajFDd2lJTUU3TERL?=
- =?utf-8?B?NkN6Z3A5OWNxa0NvZWUzVEN4SWNDOGQyemMzTis0emNkQndqVDZDNzFoUVZn?=
- =?utf-8?B?MEdjZ3dIbjNuMVc0MktwY21jdUttdmFvajBOUnFzT2I4R3FKZXYzK3ZvN2Jw?=
- =?utf-8?B?SnN3dXVMU3dSOE16cU9Od3FsQlZKYndqejU3N0VqSXRvNzFSL01jSTJITjVK?=
- =?utf-8?B?SXFGNW01RjZDS3dSdEJaRXQ5RHdVOTlLYVJGRlFWNm1MYVpKOUp0Zk5vaFNt?=
- =?utf-8?B?V3VkTGlXQUltcWZ3dGhiYjcrOVJpUE9LaGI4ZjNOYmpDaVJXUW8wZEhlUHcz?=
- =?utf-8?B?cGZLZE1udkY3d2Q5WVJicUNXbllnQVB3cW1BeUc0dlFrLzFjekhEeG5xUjJW?=
- =?utf-8?B?OUxOK3Z6OHBuV3NCTEUxVmFWdGRFbTM4TmRlMmdKRDhwRzJrZmh0MUovZkZs?=
- =?utf-8?B?K05nTTcvdk9iMzdacDBOVFVETzBmbUw3Yzc0Q09jOFZFTkZMajZZQThOdzlu?=
- =?utf-8?B?TVE3MlNIVlFwN2k3Q0pqQ0U5MHRKN3hOZFpTMzNZZ293TFV2UTIxOVBNdmZF?=
- =?utf-8?B?cDhNY001bExEbG9sQmhrSHVQYUNCa3ZyUE5aZTRFbS92ejRtTVJaUHhEYTg5?=
- =?utf-8?B?UThoNGphMEV3YTRSMVNPc2wxMWdPRXF0SUpYaHRReERVM3RzcUpKdTlHM1lu?=
- =?utf-8?B?ZU41VDgrd01nQytRRktzQUV3RVBtWmVyQmxxVW9SSmxXUlE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5624.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U2lzR21JTDVVR2llZXVHeDd6anpVSlpnVmd0SmV2VjZlcmdOU3R1bGdjTHRm?=
- =?utf-8?B?Q2RrbC8rc1lYOHZIb2FMQmx2ZVAxclRwclRHNzBTR3UvclUzV0ozNGhPWDVk?=
- =?utf-8?B?UkZRdk1VWlV6QmFudlMrSkRENS8vb1NsaHJwZjZCQlNPQWZxTFUyQ1Q4TTNX?=
- =?utf-8?B?TENrRDl6elBvVGI3NGxwbUIvMFYzZ3FlTS9zYjhESDNSN0hkSlM0VVJadktD?=
- =?utf-8?B?YzJpRmx6c3JPcHB2eEc4R0UzQWMzUWo5TUFxQ013eklSdDJ4MDBpQ2IvMGRl?=
- =?utf-8?B?TmMyeWxhb3lzaEw4bnF6SndxdWlMdG4yQ3ZURTNiOXEyTjYwdlorMXprMVhS?=
- =?utf-8?B?VUdaUThpRXhVTVVPdFBuQXFhc0UvTFRSSDRhVWkzdGpRNFNwa3IxWHZCL2JG?=
- =?utf-8?B?TDQ2TlNRVGlZRFc4Y0MzZ01nRk1ZcE9IRzM3WjNBSFBFS3dnQ2lRSnFPeFRy?=
- =?utf-8?B?dWVwZ0d4dHJhRnYreW0rcG1NRU4yM1dyREhDVXhPbjNWUXBjYTBBaFM3SGU1?=
- =?utf-8?B?RG5ydWpjTkp4VTBBNk9Bc3M3OVZlTnVjOFkvSzlUcTVhb3E3dCtLZkwxK2U0?=
- =?utf-8?B?eDNEL3BhQ1IwZnRyajNCRUZIcUR5SFhNaGFoY3hXQWFRQzlBYUtuOVZVWGtT?=
- =?utf-8?B?WkswbmhqSnhDdTArLzNNWjM3czRLU2FZMTFIQldFNXdtUCt1eWdEL2xXdlBn?=
- =?utf-8?B?TU5QT005U2JtbDkvTGVKcVozWUZiemhZQzVTNitvOC9VQmVSam9QVVV6RjEz?=
- =?utf-8?B?ZjdFek1iM3RTbEN4VC9oN0JjZUgwOXhsWnVYclNxWDBoM01hazJMWWt1QVp4?=
- =?utf-8?B?dHRWRlR6NTNOVW1LVzdneWh3bHRJYUZ3b05rdit5ekJpMTVPM3llcGhMMnFC?=
- =?utf-8?B?UzVmM3IvSFhUa2tFQnZ2MnpqYkdwWEYyNFY5bjBzRVdpa2toUXRYSmorYm1r?=
- =?utf-8?B?czRINmtwN2R2RE1KcVlHNHNXbFlwbXc5SDdZVHA5S0F1dFVKKzRMYmIydm9h?=
- =?utf-8?B?N0ZzQjdEL0pIVWVhVzY0MUNZMXN0eFhjY3ZvQmZ3SExuSUQrV0FVSEdZWGxE?=
- =?utf-8?B?V2NHazF4bWJSUDBzV2gwcFA1blV4ZDBXY0dtTnJkTm9GZ0Y2UEZIeVR1S0Y2?=
- =?utf-8?B?aVIvL0hMTDhGWFEyUCs2Z2M2c2VWczlWSFZVWFFDVkdTNzZ4c2FTSEZENDJN?=
- =?utf-8?B?Zkg5dGpvOTU2dm1WUGFPMmVzdWc4K0RmQklvbkN5K0pENS9UNUdlL1ZwWFZp?=
- =?utf-8?B?a0xoY0RmVXFFYnJtakd2Mjg2V2RPK090dEMydnhxR1NQT2pqVWx5WHZZQXZY?=
- =?utf-8?B?TC9WdFNBcHM5R2hpOUtKbVJJY01mbjM1Q1I0cHcvd1NNaEtmVXZRa042TWNE?=
- =?utf-8?B?TzlZRXF6ek9taUZuK1lsMlduOGJLRmo5amFsQjRJSnMrMko5NS9yaE1wTVZq?=
- =?utf-8?B?RWx4R1BucURDN1JPcmx1TXFCNS9qY3J6eTd3Q0ZiOXl0bFYySHRjbE9oUUs5?=
- =?utf-8?B?MkQ4N1pZdmN0M20vNS9XMHBNWW80SEhWOXZuWU1XcUNNblJMc1NvbW9MSVZz?=
- =?utf-8?B?SkxVZ3FsSWRoL0pjekQrWTlhK0ZJSVVYZXdhTWdNeXdmM1ljeTJ5ZkNqZWFo?=
- =?utf-8?B?clMxZkVXQnRYelFLSkFNVmRxcnlIRzcrMzNMejZqZzJBanE4RGhvR3ZDYTJ6?=
- =?utf-8?B?UXFTclVtUkc2M3pYemUrUDdMbHcyK3BYTWRKdXlWRGtpdGxTU09SL1NkV0s2?=
- =?utf-8?B?OXJoQ25EOUNWaWxLSWM2dkgvUjJtb1d0ZjNCUkk5b2o1WTgyc3NhVE43QjJT?=
- =?utf-8?B?a0RBSUE4L1N0ZzhZTjdhdUtucjJZL09xRHI5Z0xQWVFvWmErRzM0VlN5SENu?=
- =?utf-8?B?VzhFYytheHFnMk9nMHFPQkNhaEVKMEhTNEJZZlB6WUh5MDEwZ0pvemRlakFr?=
- =?utf-8?B?ZHBpZTJiS1ppQXNFNEtBRXNnUVh1ZHNGL3JpSis2UEhIcXJvYzlEVUozWGNt?=
- =?utf-8?B?TS9iQ0habkZ0eGs1RTlJcWpxVXV0aW45K1hHeGFGWDJKcjF4UUc4dFY3TEhL?=
- =?utf-8?B?MDN1cGVGaGlLZDRkN3JldzNWbHVucVByd1ljSUhZOWQzcUVvaWZHYjVBbEFM?=
- =?utf-8?Q?hExiq+TkwMjS83Cu2blVHiiBt?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a78f968a-d67d-49fa-c261-08dca4ad9678
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5624.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 09:07:44.2351
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pLV8bq80bY0l5qxLnCHk4EFDEaQslHHnXMwMWaUppjAV4BebgZvGv4+xjMj4/5Q21w7ZI/ITpXxkisPIPWlx+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5650
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] thermal: core: Call monitor_thermal_zone() if zone
+ temperature is invalid
+To: Eric Biggers <ebiggers@kernel.org>, "Rafael J. Wysocki"
+ <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Lukasz Luba <lukasz.luba@arm.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>
+References: <6064157.lOV4Wx5bFT@rjwysocki.net>
+ <20240715044527.GA1544@sol.localdomain>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240715044527.GA1544@sol.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 15/07/2024 06:45, Eric Biggers wrote:
+> Hello,
+> 
+> On Thu, Jul 04, 2024 at 01:46:26PM +0200, Rafael J. Wysocki wrote:
+>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>> Commit 202aa0d4bb53 ("thermal: core: Do not call handle_thermal_trip()
+>> if zone temperature is invalid") caused __thermal_zone_device_update()
+>> to return early if the current thermal zone temperature was invalid.
+>>
+>> This was done to avoid running handle_thermal_trip() and governor
+>> callbacks in that case which led to confusion.  However, it went too
+>> far because monitor_thermal_zone() still needs to be called even when
+>> the zone temperature is invalid to ensure that it will be updated
+>> eventually in case thermal polling is enabled and the driver has no
+>> other means to notify the core of zone temperature changes (for example,
+>> it does not register an interrupt handler or ACPI notifier).
+>>
+>> Also if the .set_trips() zone callback is expected to set up monitoring
+>> interrupts for a thermal zone, it needs to be provided with valid
+>> boundaries and that can only be done if the zone temperature is known.
+>>
+>> Accordingly, to ensure that __thermal_zone_device_update() will
+>> run again after a failing zone temperature check, make it call
+>> monitor_thermal_zone() regardless of whether or not the zone
+>> temperature is valid and make the latter schedule a thermal zone
+>> temperature update if the zone temperature is invalid even if
+>> polling is not enabled for the thermal zone (however, if this
+>> continues to fail, give up after some time).
+>>
+>> Fixes: 202aa0d4bb53 ("thermal: core: Do not call handle_thermal_trip() if zone temperature is invalid")
+>> Reported-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Link: https://lore.kernel.org/linux-pm/dc1e6cba-352b-4c78-93b5-94dd033fca16@linaro.org
+>> Link: https://lore.kernel.org/linux-pm/2764814.mvXUDI8C0e@rjwysocki.net
+>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> On v6.10 I'm seeing the following messages spammed to the kernel log endlessly,
+> and reverting this commit fixes it.
+> 
+>      [  156.410567] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  156.666583] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  156.922598] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  157.178613] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  157.434636] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  157.690774] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  157.946659] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  158.202717] thermal thermal_zone0: failed to read out thermal zone (-61)
+>      [  158.458697] thermal thermal_zone0: failed to read out thermal zone (-61)
+> 
+> /sys/class/thermal/thermal_zone0/type contains "iwlwifi_1".
+
+Does the following change fixes the messages  ?
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c 
+b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+index 61a4638d1be2..b519db76d402 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+@@ -622,7 +622,7 @@ static int iwl_mvm_tzone_get_temp(struct 
+thermal_zone_device *device,
+
+  	if (!iwl_mvm_firmware_running(mvm) ||
+  	    mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
+-		ret = -ENODATA;
++		ret = -EAGAIN;
+  		goto out;
+  	}
 
 
-On 2024/7/11 22:25, Christian König wrote:
-> Am 10.07.24 um 18:34 schrieb T.J. Mercier:
->> On Wed, Jul 10, 2024 at 8:08 AM Lei Liu <liulei.rjpt@vivo.com> wrote:
->>> on 2024/7/10 22:48, Christian König wrote:
->>>> Am 10.07.24 um 16:35 schrieb Lei Liu:
->>>>> on 2024/7/10 22:14, Christian König wrote:
->>>>>> Am 10.07.24 um 15:57 schrieb Lei Liu:
->>>>>>> Use vm_insert_page to establish a mapping for the memory allocated
->>>>>>> by dmabuf, thus supporting direct I/O read and write; and fix the
->>>>>>> issue of incorrect memory statistics after mapping dmabuf memory.
->>>>>> Well big NAK to that! Direct I/O is intentionally disabled on 
->>>>>> DMA-bufs.
->>>>> Hello! Could you explain why direct_io is disabled on DMABUF? Is
->>>>> there any historical reason for this?
->>>> It's basically one of the most fundamental design decision of DMA-Buf.
->>>> The attachment/map/fence model DMA-buf uses is not really compatible
->>>> with direct I/O on the underlying pages.
->>> Thank you! Is there any related documentation on this? I would like to
->>> understand and learn more about the fundamental reasons for the lack of
->>> support.
->> Hi Lei and Christian,
->>
->> This is now the third request I've seen from three different companies
->> who are interested in this,
->
-> Yeah, completely agree. This is a re-occurring pattern :)
->
-> Maybe we should document the preferred solution for that.
->
->> but the others are not for reasons of read
->> performance that you mention in the commit message on your first
->> patch. Someone else at Google ran a comparison between a normal read()
->> and a direct I/O read() into a preallocated user buffer and found that
->> with large readahead (16 MB) the throughput can actually be slightly
->> higher than direct I/O. If you have concerns about read performance,
->> have you tried increasing the readahead size?
->>
->> The other motivation is to load a gajillion byte file from disk into a
->> dmabuf without evicting the entire contents of pagecache while doing
->> so. Something like this (which does not currently work because read()
->> tries to GUP on the dmabuf memory as you mention):
->>
->> static int dmabuf_heap_alloc(int heap_fd, size_t len)
->> {
->>      struct dma_heap_allocation_data data = {
->>          .len = len,
->>          .fd = 0,
->>          .fd_flags = O_RDWR | O_CLOEXEC,
->>          .heap_flags = 0,
->>      };
->>      int ret = ioctl(heap_fd, DMA_HEAP_IOCTL_ALLOC, &data);
->>      if (ret < 0)
->>          return ret;
->>      return data.fd;
->> }
->>
->> int main(int, char **argv)
->> {
->>          const char *file_path = argv[1];
->>          printf("File: %s\n", file_path);
->>          int file_fd = open(file_path, O_RDONLY | O_DIRECT);
->>
->>          struct stat st;
->>          stat(file_path, &st);
->>          ssize_t file_size = st.st_size;
->>          ssize_t aligned_size = (file_size + 4095) & ~4095;
->>
->>          printf("File size: %zd Aligned size: %zd\n", file_size, 
->> aligned_size);
->>          int heap_fd = open("/dev/dma_heap/system", O_RDONLY);
->>          int dmabuf_fd = dmabuf_heap_alloc(heap_fd, aligned_size);
->>
->>          void *vm = mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE,
->> MAP_SHARED, dmabuf_fd, 0);
->>          printf("VM at 0x%lx\n", (unsigned long)vm);
->>
->>          dma_buf_sync sync_flags { DMA_BUF_SYNC_START |
->> DMA_BUF_SYNC_READ | DMA_BUF_SYNC_WRITE };
->>          ioctl(dmabuf_fd, DMA_BUF_IOCTL_SYNC, &sync_flags);
->>
->>          ssize_t rc = read(file_fd, vm, file_size);
->>          printf("Read: %zd %s\n", rc, rc < 0 ? strerror(errno) : "");
->>
->>          sync_flags.flags = DMA_BUF_SYNC_END | DMA_BUF_SYNC_READ |
->> DMA_BUF_SYNC_WRITE;
->>          ioctl(dmabuf_fd, DMA_BUF_IOCTL_SYNC, &sync_flags);
->> }
->>
->> Or replace the mmap() + read() with sendfile().
->
-> Or copy_file_range(). That's pretty much exactly what I suggested on 
-> the other mail thread around that topic as well.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Thank you for your suggestion. I will study the method you suggested 
-with Yang. Using copy_file_range() might be a good solution approach.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-Regards,
-Lei Liu.
-
->
->> So I would also like to see the above code (or something else similar)
->> be able to work and I understand some of the reasons why it currently
->> does not, but I don't understand why we should actively prevent this
->> type of behavior entirely.
->
-> +1
->
-> Regards,
-> Christian.
->
->>
->> Best,
->> T.J.
->>
->>
->>
->>
->>
->>
->>
->>
->>>>>> We already discussed enforcing that in the DMA-buf framework and
->>>>>> this patch probably means that we should really do that.
->>>>>>
->>>>>> Regards,
->>>>>> Christian.
->>>>> Thank you for your response. With the application of AI large model
->>>>> edgeification, we urgently need support for direct_io on DMABUF to
->>>>> read some very large files. Do you have any new solutions or plans
->>>>> for this?
->>>> We have seen similar projects over the years and all of those turned
->>>> out to be complete shipwrecks.
->>>>
->>>> There is currently a patch set under discussion to give the network
->>>> subsystem DMA-buf support. If you are interest in network direct I/O
->>>> that could help.
->>> Is there a related introduction link for this patch?
->>>
->>>> Additional to that a lot of GPU drivers support userptr usages, e.g.
->>>> to import malloced memory into the GPU driver. You can then also do
->>>> direct I/O on that malloced memory and the kernel will enforce correct
->>>> handling with the GPU driver through MMU notifiers.
->>>>
->>>> But as far as I know a general DMA-buf based solution isn't possible.
->>> 1.The reason we need to use DMABUF memory here is that we need to share
->>> memory between the CPU and APU. Currently, only DMABUF memory is
->>> suitable for this purpose. Additionally, we need to read very large 
->>> files.
->>>
->>> 2. Are there any other solutions for this? Also, do you have any plans
->>> to support direct_io for DMABUF memory in the future?
->>>
->>>> Regards,
->>>> Christian.
->>>>
->>>>> Regards,
->>>>> Lei Liu.
->>>>>
->>>>>>> Lei Liu (2):
->>>>>>>     mm: dmabuf_direct_io: Support direct_io for memory allocated by
->>>>>>> dmabuf
->>>>>>>     mm: dmabuf_direct_io: Fix memory statistics error for dmabuf
->>>>>>> allocated
->>>>>>>       memory with direct_io support
->>>>>>>
->>>>>>>    drivers/dma-buf/heaps/system_heap.c |  5 +++--
->>>>>>>    fs/proc/task_mmu.c                  |  8 +++++++-
->>>>>>>    include/linux/mm.h                  |  1 +
->>>>>>>    mm/memory.c                         | 15 ++++++++++-----
->>>>>>>    mm/rmap.c                           |  9 +++++----
->>>>>>>    5 files changed, 26 insertions(+), 12 deletions(-)
->>>>>>>
->
