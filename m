@@ -1,121 +1,130 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FABDDA6
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1730A847A;
+	Mon, 15 Jul 2024 02:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721011295; cv=none; b=IvJ6YhcKj2qdYz9/yWK2WimzwWWhKvS/FfkEXCDRPXtip0k9dEMZkdLrrBt4YwYJ7DStu1NjX4AyxxUQqiH+tgR80I1c2va5Q0HsYRApkwrMpDv0xC1hB93u+0toCAPuZj89KkS1qmZCshncCAt+1kfW26raCOKhpv0wSidYHcQ=
+	t=1721011541; cv=none; b=raeBY6qUEx8FlappKze1DoRb4yLHvl2pOzwBfqKllZgA6Se0z7ASwbbLU+SD4FnOog4/EgMXOCFZdz2c+1B8ahEJEKKcp5+JRvl+7mFTCUPPT8Xv/G89JqJHnWs4RJnWebpAkMN5VXGQ7uGK3HdIzIGoLE0zaV5naXk91pSQNOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721011295; c=relaxed/simple;
-	bh=snMf7HzH7J2dr+IDOBFDYmYluvIOXw6b/0NlGy93V+s=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=UPBAreDl68FzBum3Xjt51TU0hh9cT/U+hC5G6j3jGYnVaWXhnY6ONIFR2nEYvvhIJKQ14mvs4QzUIg00gAIf42U5ZSmk3FcKv7i9g+NpFTOQVNnvxp+/o6LqRva+aO7fZqqzMyum3AKOQWygI/hf8+2LadDzpCdobC1eMBSGWTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EhiVEr1s; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1721011541; c=relaxed/simple;
+	bh=ctGWsdO0ej5tPQjRZHOPvi6pJHzhlFIKiR3w9xWi2hM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3xNwIEcOX7A8UGqtac2tddU8bj6ZD7gYTggmk6Nerqlix0pCBVs+ZaocfKDB1ci8qkSl/ksL3eurT7uscF/ZvT1Ctm+vrnrI2rghHuNejU3BMDXZb2me/3oa9q6xm+7PmyA/Mm3X0No1JSo8MCo6ZFVlBIkiLd8DGd32CQpa+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=pbZAsAVi; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EhiVEr1s"
-X-Envelope-To: oliver.sang@intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721011289;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=snMf7HzH7J2dr+IDOBFDYmYluvIOXw6b/0NlGy93V+s=;
-	b=EhiVEr1s1uBJO3KUGzG42t0vzhixEhQL9Cc5s24YTX/YL0uw4hKXhPGRYHFs33PioDKT1M
-	LhTm+FjmNe4HiZTSSrBWyeJIqbkXN6DVAVK6zXVSl74dZwtXGhSOLt/Y1PhPlz96E1F0S5
-	SP2pEL/Wl0Z67rv7j6WOswnpMKJyOi8=
-X-Envelope-To: yuzhao@google.com
-X-Envelope-To: oe-lkp@lists.linux.dev
-X-Envelope-To: lkp@intel.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: david@redhat.com
-X-Envelope-To: fvdl@google.com
-X-Envelope-To: willy@infradead.org
-X-Envelope-To: peterx@redhat.com
-X-Envelope-To: yang@os.amperecomputing.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: ying.huang@intel.com
-X-Envelope-To: feng.tang@intel.com
-X-Envelope-To: fengwei.yin@intel.com
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="pbZAsAVi"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1721011528; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=aFJAiJacnHMlZNMvKXDirjWe+OPAnESCR9uHIfCE5gE=;
+	b=pbZAsAViEERhM5NVqoAQ8zgwkUQm0rB1wWYNplh50ruEo2jQ8bIylVA4yUg2kcutwZPqkJOHEuGsoJPitOKJyN1UJNxs/Un9gjLfHOqWtlxmy68eC0zAdeO1+cciiEPtz2hLYKRFsl7B8xf37xpw0QnXaoN8CkVFaVPIaRkxSiw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0WAUnIPg_1721011527;
+Received: from 30.221.148.126(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0WAUnIPg_1721011527)
+          by smtp.aliyun-inc.com;
+          Mon, 15 Jul 2024 10:45:27 +0800
+Message-ID: <dfd6b17e-ada5-41ce-8922-d97dd192ddb3@linux.alibaba.com>
+Date: Mon, 15 Jul 2024 10:45:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [linux-next:master] [mm/hugetlb_vmemmap] 875fa64577:
- vm-scalability.throughput -34.3% regression
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <ZpPD4Mz3t5xT87aN@xsang-OptiPlex-9020>
-Date: Mon, 15 Jul 2024 10:40:43 +0800
-Cc: Yu Zhao <yuzhao@google.com>,
- oe-lkp@lists.linux.dev,
- kernel test robot <lkp@intel.com>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- Frank van der Linden <fvdl@google.com>,
- Matthew Wilcox <willy@infradead.org>,
- Peter Xu <peterx@redhat.com>,
- Yang Shi <yang@os.amperecomputing.com>,
- LKML <linux-kernel@vger.kernel.org>,
- Huang Ying <ying.huang@intel.com>,
- Feng Tang <feng.tang@intel.com>,
- Yin Fengwei <fengwei.yin@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CB8E06DE-0DB7-4605-AB19-19CF4F0F17B9@linux.dev>
-References: <202407091001.1250ad4a-oliver.sang@intel.com>
- <CAOUHufYdGbgnqNprKVUH8woMR_R5Wcc=281vcmm3+NRO-=+-jw@mail.gmail.com>
- <ZpPD4Mz3t5xT87aN@xsang-OptiPlex-9020>
-To: Oliver Sang <oliver.sang@intel.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] virtio_net: Fix napi_skb_cache_put warning
+To: Breno Leitao <leitao@debian.org>
+Cc: rbc@meta.com, horms@kernel.org,
+ "open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
+ "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20240712115325.54175-1-leitao@debian.org>
+From: Heng Qi <hengqi@linux.alibaba.com>
+In-Reply-To: <20240712115325.54175-1-leitao@debian.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
+在 2024/7/12 下午7:53, Breno Leitao 写道:
+> After the commit bdacf3e34945 ("net: Use nested-BH locking for
+> napi_alloc_cache.") was merged, the following warning began to appear:
+>
+> 	 WARNING: CPU: 5 PID: 1 at net/core/skbuff.c:1451 napi_skb_cache_put+0x82/0x4b0
+>
+> 	  __warn+0x12f/0x340
+> 	  napi_skb_cache_put+0x82/0x4b0
+> 	  napi_skb_cache_put+0x82/0x4b0
+> 	  report_bug+0x165/0x370
+> 	  handle_bug+0x3d/0x80
+> 	  exc_invalid_op+0x1a/0x50
+> 	  asm_exc_invalid_op+0x1a/0x20
+> 	  __free_old_xmit+0x1c8/0x510
+> 	  napi_skb_cache_put+0x82/0x4b0
+> 	  __free_old_xmit+0x1c8/0x510
+> 	  __free_old_xmit+0x1c8/0x510
+> 	  __pfx___free_old_xmit+0x10/0x10
+>
+> The issue arises because virtio is assuming it's running in NAPI context
+> even when it's not, such as in the netpoll case.
+>
+> To resolve this, modify virtnet_poll_tx() to only set NAPI when budget
+> is available. Same for virtnet_poll_cleantx(), which always assumed that
+> it was in a NAPI context.
+>
+> Fixes: df133f3f9625 ("virtio_net: bulk free tx skbs")
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>   drivers/net/virtio_net.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 
-> On Jul 14, 2024, at 20:26, Oliver Sang <oliver.sang@intel.com> wrote:
->=20
-> hi, Yu Zhao,
->=20
-> On Wed, Jul 10, 2024 at 12:22:40AM -0600, Yu Zhao wrote:
->> On Mon, Jul 8, 2024 at 11:11=E2=80=AFPM kernel test robot =
-<oliver.sang@intel.com> wrote:
->>>=20
->>> Hello,
->>>=20
->>> kernel test robot noticed a -34.3% regression of =
-vm-scalability.throughput on:
->>>=20
->>>=20
->>> commit: 875fa64577da9bc8e9963ee14fef8433f20653e7 =
-("mm/hugetlb_vmemmap: fix race with speculative PFN walkers")
->>=20
->> This is likely caused by synchronize_rcu() wandering into the
->> allocation path. I'll patch that up soon.
->>=20
->=20
-> we noticed this commit has already been merged into mainline
->=20
-> [bd225530a4c717714722c3731442b78954c765b3] mm/hugetlb_vmemmap: fix =
-race with speculative PFN walkers
-> branch: linus/master
+Reviewed-by: Heng Qi <hengqi@linux.alibaba.com>
 
-Did you test with HVO enabled (there are two ways to enable HVO: 1) =
-adding cmdline with "hugetlb_free_vmemmap=3Don"
-or 2) write 1 to /proc/sys/vm/hugetlb_optimize_vmemmap)? I want to =
-confirm if the regression is related
-to HVO routine.
-
-Thanks.
-
->=20
-> and the regression still exists in our tests. do you want us to test =
-your
-> patch? Thanks!
-
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 0b4747e81464..fb1331827308 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -2341,7 +2341,7 @@ static int virtnet_receive(struct receive_queue *rq, int budget,
+>   	return packets;
+>   }
+>   
+> -static void virtnet_poll_cleantx(struct receive_queue *rq)
+> +static void virtnet_poll_cleantx(struct receive_queue *rq, int budget)
+>   {
+>   	struct virtnet_info *vi = rq->vq->vdev->priv;
+>   	unsigned int index = vq2rxq(rq->vq);
+> @@ -2359,7 +2359,7 @@ static void virtnet_poll_cleantx(struct receive_queue *rq)
+>   
+>   		do {
+>   			virtqueue_disable_cb(sq->vq);
+> -			free_old_xmit(sq, txq, true);
+> +			free_old_xmit(sq, txq, !!budget);
+>   		} while (unlikely(!virtqueue_enable_cb_delayed(sq->vq)));
+>   
+>   		if (sq->vq->num_free >= 2 + MAX_SKB_FRAGS) {
+> @@ -2404,7 +2404,7 @@ static int virtnet_poll(struct napi_struct *napi, int budget)
+>   	unsigned int xdp_xmit = 0;
+>   	bool napi_complete;
+>   
+> -	virtnet_poll_cleantx(rq);
+> +	virtnet_poll_cleantx(rq, budget);
+>   
+>   	received = virtnet_receive(rq, budget, &xdp_xmit);
+>   	rq->packets_in_napi += received;
+> @@ -2526,7 +2526,7 @@ static int virtnet_poll_tx(struct napi_struct *napi, int budget)
+>   	txq = netdev_get_tx_queue(vi->dev, index);
+>   	__netif_tx_lock(txq, raw_smp_processor_id());
+>   	virtqueue_disable_cb(sq->vq);
+> -	free_old_xmit(sq, txq, true);
+> +	free_old_xmit(sq, txq, !!budget);
+>   
+>   	if (sq->vq->num_free >= 2 + MAX_SKB_FRAGS) {
+>   		if (netif_tx_queue_stopped(txq)) {
