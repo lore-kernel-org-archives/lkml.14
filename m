@@ -1,96 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46A4225DA;
-	Mon, 15 Jul 2024 16:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2E31CD31;
+	Mon, 15 Jul 2024 16:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721061567; cv=none; b=m0Ny9lBclVGz933w9yQhOFaAjMz3/vBK7kpnCttID4FRmv7bJ1fIurE9W4lIDFiJJD7l8Tjh1Fk7SWCmP808B9zuKDalFi7B2LDR7QIxW1Wdy+OThwlsB0PCS9DejgXP2zzzxpTmWSHVVr++Cre6vqksDjwvB/55u6PmIQkFFZs=
+	t=1721061602; cv=none; b=V7BNTicwl00wzry9A4EE523O8lYwsE/q1DzRlrWtar65+rTGqArxgc2ezrfOpA6SJ7zYwchaKk50EVZhi9y763jTuOvOURP7ZWRP6VtEp1db+Ui/uHicT6a1A5VcJlTthG2pX8osTlCfHqiu8z5uWKjCTKJzbm5u3Xjkfm0sOYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721061567; c=relaxed/simple;
-	bh=82LA9oTdWdNNOcKpEekI3O0AXuZjf8m09y5LDdFj5j4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YKl54S50Z4ikENd7sIj2LYLpo1GIBQTxOmvQRNT6TxFXk2MJtLdbQcN5YiMGDDzaNabR4UkXPGtGwGs2CT93b1QrytOM5LxZ1UFSFtv8feMWNVfwZ6+ye3cvgRm2de1aLM13dZQAKATyQNixurrIjhkWZ47Ohm/MF8LH+kdxY9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJotXoGt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721061602; c=relaxed/simple;
+	bh=XOFvyTZ32FBHBAS6hPDwIo8P+tM1woaiYXgTdMt0StE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BHdPfHmWR5pwzk+pEYUthq7DtkRHemjqS6Zb1WBLiyb4xbS9GFA2wTmb2jBtTWCDdLpl3/VJP1c+91NkNWcwLtZ5NIc3le4pngEe+/TY9KZAnvqC4Fz4UNE04aXgRUmDGttD5/I5S0cyCi6EJBnInUWnQ/BxnQm+llEu0zHxhkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJCuFfSJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJotXoGt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658ACC4AF0D;
-	Mon, 15 Jul 2024 16:39:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJCuFfSJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A02AFC32782;
+	Mon, 15 Jul 2024 16:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721061566;
-	bh=82LA9oTdWdNNOcKpEekI3O0AXuZjf8m09y5LDdFj5j4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hJotXoGt9UNc4UbcRUmbcK2cbsbGlgWKk+FoXf/UXruGi0ZJVttVORnwk4pO06in2
-	 t7avHfhzet3DVEmXhvDMz94eDgqL4YT6HjxtO5a98rTpWbBc2PVrOuDFEIDIf6bl0H
-	 Q37WU8lXTMyjYl4XhWB9WW80tpv/cmuJhQYIlAgQehxUx9xRtSZ08FmRnjSoAHqnTP
-	 2R3UDqi368GZs+FY77rstf0/fD+OOvshLBTugWwXuh/m3vaazVXUk2XEFh9qq8xXqS
-	 55pSU6xTZDJdy4Z3HUI+oMyw0Q1MoQu920Y3trS3hFnROgh3qZdXBuQ9Aw1BA01g0Y
-	 nG8S/WaQFfD2w==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52ea79e689eso6381211e87.1;
-        Mon, 15 Jul 2024 09:39:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWo6qBVSRZETJoSSTHMNegasQKu4js5K/QGBRN1CrxFWYEe9KBrLcBYUIvnAWwsA/dwpwn0WpJc4qkT5yQChFd8yTuw4Q+qOGjHTESk1XER8kXV/1fW6N6QmOHYtCHV9sMNEeo0zdUU1xYk
-X-Gm-Message-State: AOJu0YxE8Yz35MaMx671qbiH12ff9LuHR4Q7CKyV3BMSAeZUkAB66DIm
-	VkwAKEJ07sK2vE26U9lDe1tdPcZIWLhHG88MATnbwCf2hotICD0Zk4MQ7XNbE/2dBiy2txVYll0
-	pwUQZmmtzgpS6/n88NoFbK2p2rEs=
-X-Google-Smtp-Source: AGHT+IGxPzXD3QSs/6Dv2oXoKA8CP5cnB7NfH523pRmTeHHXispFdRWPahC1XhxoiuH8fVM3p/RihNU3y2vnB3WrszY=
-X-Received: by 2002:a05:6512:4002:b0:52c:df83:a740 with SMTP id
- 2adb3069b0e04-52ede1b2d94mr69300e87.30.1721061565037; Mon, 15 Jul 2024
- 09:39:25 -0700 (PDT)
+	s=k20201202; t=1721061601;
+	bh=XOFvyTZ32FBHBAS6hPDwIo8P+tM1woaiYXgTdMt0StE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MJCuFfSJxbtTukvYB0Ve6bfVEEUT3UEk4SLzUWuRinWUcoRdQRz6JUgT0NbghuIsA
+	 rJTj43xLVEBJHmaY0SGQ+93kic7AlfVXJ79eifFvdqkFkYVzunAGpBnNrt3MbSKBrL
+	 V+dM4jiPIXnVsYQSBaFTRLp579YDxEVR9bBnlQo6S1p/BT9l8IIbu6/jhtOKV22dWP
+	 M8PXw+N+FqRWMrnMmj4/hJoUUlkdu97pILhE3EhJBGgx1dy+natVo+A3ZGPYJve6m2
+	 xa4iSIZ64MS+NYdlCIVllLRohXcQpxSTwRMzYe0kGG9rbCtQntgGXZGEtyfDLH+I7S
+	 dvQl+OnfpExzA==
+Date: Mon, 15 Jul 2024 09:40:01 -0700
+From: Kees Cook <kees@kernel.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Shuah Khan <shuah@kernel.org>, davidgow@google.com,
+	"open list : KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	kunit-dev@googlegroups.com,
+	"kernel@collabora.com" <kernel@collabora.com>
+Subject: Re: Converting kselftest test modules to kunit
+Message-ID: <202407150936.C32FE24CA@keescook>
+References: <327831fb-47ab-4555-8f0b-19a8dbcaacd7@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715144529.101634-1-masahiroy@kernel.org> <202407150905.56BBE11@keescook>
-In-Reply-To: <202407150905.56BBE11@keescook>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 16 Jul 2024 01:38:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATh-azmUyp_4uOAJ+e=0O25vvkb+yNrNJDU_5nZS3NqYA@mail.gmail.com>
-Message-ID: <CAK7LNATh-azmUyp_4uOAJ+e=0O25vvkb+yNrNJDU_5nZS3NqYA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] fortify: fix various issues in test_fortify Makefile
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <327831fb-47ab-4555-8f0b-19a8dbcaacd7@collabora.com>
 
-On Tue, Jul 16, 2024 at 1:07=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> On Mon, Jul 15, 2024 at 11:45:22PM +0900, Masahiro Yamada wrote:
-> > Applicable to v6.10 tag.
-> >
-> >
-> >
-> > Masahiro Yamada (3):
-> >   fortify: use if_changed_dep to record header dependency in *.cmd file=
-s
-> >   fortify: refactor test_fortify Makefile to fix some build problems
-> >   fortify: move test_fortify.sh to lib/test_fortify/
->
-> Thanks for this improvement! I will take this into the hardening tree
-> after -rc2, unless you would prefer to send this during the merge window
-> based on your tree? (The fix you sent for the v6.10 release means my
-> trees based on -rc2 can't apply this series...)
+On Mon, Jul 15, 2024 at 03:09:24PM +0500, Muhammad Usama Anjum wrote:
+> Hi Kees and All,
+> 
+> There are several tests in kselftest subsystem which load modules to tests
+> the internals of the kernel. Most of these test modules are just loaded by
+> the kselftest, their status isn't read and reported to the user logs. Hence
+> they don't provide benefit of executing those tests.
+> 
+> I've found patches from Kees where he has been converting such kselftests
+> to kunit tests [1]. The probable motivation is to move tests output of
+> kselftest subsystem which only triggers tests without correctly reporting
+> the results. On the other hand, kunit is there to test the kernel's
+> internal functions which can't be done by userspace.
+> 
+> Kselftest:	Test user facing APIs from userspace
+> Kunit:		Test kernel's internal functions from kernelspace
 
+I would say this is a reasonable guide to how these things should
+be separated, yes. That said, much of what was kind of ad-hoc kernel
+internals testing that was triggered via kselftests is better done via
+KUnit these days, but not everything.
 
+> This brings me to conclusion that kselftest which are loading modules to
+> test kernelspace should be converted to kunit tests. I've noted several
+> such kselftests.
 
-No problem.
+I would tend to agree, yes. Which stand out to you? I've mainly been
+doing the conversions when I find myself wanting to add new tests, etc.
 
-This patch set is not urgent.
-
-
-
-
->
-> -Kees
-
->
-> --
-> Kees Cook
-
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+Kees Cook
