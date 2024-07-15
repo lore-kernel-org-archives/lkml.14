@@ -1,142 +1,182 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68090184102
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CA0184102;
+	Mon, 15 Jul 2024 08:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721033113; cv=none; b=Rgx43kJdgTQSKDeO3mTguve61CH0skKdhIf0pn7Z2JHIRwEON2aK/ba9EV5HcZskg3zPOMva9Us8wGyZ2rJbQmiMTUCOL9EF6l731K+giOAQHN/g+6g52afO3rwHqF6Q5b+B3GpeAPIqw/ucSY2D9feF60aoA8mjmoSBW9/SXtA=
+	t=1721033194; cv=none; b=coZLakXbLKjwLaeaY/AZljC6EKiSm7+8sRWW4/UD5FG5FHIThrsXD8A4pXxnYdAtfeuiTsxh+qSW5G3AHxnG/x58oGSUSmeXjJkhzMVN1nUs+QD5xC5hBIXkKQXUa2odQOpAo4RnJIkTvnXkQrzpFakUWy7JTF+u8/VlyIP8t3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721033113; c=relaxed/simple;
-	bh=KbdlWQKJn0hza2m6K2BTUfffnTnvoHZmFO0gSi7vJwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oiX+4z0/5i0bY46wOP/WbwKDzLES1dzoyCTKI4TGsIKIy1WN3NJY1mx/dY47rOp3atRvmS4+U239t1TthlSZ8WNP54iH0lSFnTNiUgXDAHmZB5QKbiPI/iIVo2NJeNMAuXRFGMsANLEzd4dBvUNmUe9p4uDk7Uf3kdF72rgXLy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=RcF7yDKe; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1721033194; c=relaxed/simple;
+	bh=BtFCS8tNtWfpeeSGm4gkQ9iFjUJvVQmg+ou0X2jCKH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T18WuoA4Vi/pFtp5vpar0KUpBSQ3qjVzo9cjG0DpF+CwHhn74NpNnxaf6hqfge+waSf5NejcXRMd2fxcwEmKZpx9YBYF7Ie6cIHUg/fCBnIUbl0Hapa3bsxB8dE79cTZeT4H7QEQVNjTIJQ6M6J2ncUt4m7b9/rk+OXa/oHtQoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KugNydKF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=r8jfSIys; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KugNydKF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=r8jfSIys; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RcF7yDKe"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42666a5d33dso3207875e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 01:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1721033110; x=1721637910; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mPt43vWv7W7uWoCMBzaMsxBX+ZmRLoqnMa3kAMiQQGg=;
-        b=RcF7yDKer3QecybgNFRAoXitisxR93dnEqr03XAm9ERhXF+nkF+Dehg4hTmVXPqwLc
-         ZhLMjFyWfSlG1r+CSIhM+gZO6gcoyU31fsAg9lBWCUObW/E6IRxV7+JiMZjK7WGurxUg
-         xVeT5JMD6d/bylHVnPeS1X/jcHkVlgk0f1HU8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721033110; x=1721637910;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mPt43vWv7W7uWoCMBzaMsxBX+ZmRLoqnMa3kAMiQQGg=;
-        b=A94zC0yd5dL3L5wDS4TTMvqAcw6V8sSKeeOnupHQnN8eF4vN4r762lPRvJUlnoyZqa
-         iQiiiYHJHXM203F6RSjJfaKg08NpkNMdMbbv/BbM3Lr6RPNEQeN2cFWBUsDFtujcKH4d
-         MTZ/4QRAUlYw5M1oZ/yZAYneT7x6prXnnvP2XTTweTfjLxJDGzYwI9L47eAZr7+2Qu/r
-         zZhhgJQOWlixhwm/1O/U9TK8LiPc1MjLxzdNddVt6oQ7Xz6GXmPmg+hdTj5qV0z5g4hC
-         +OFRFnLdQYwFLenXCI/rNH/8bZHOXj0aePmx57dHgMBquVxLbFuTP6TpD7MiievL00M2
-         ar/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVT0+FNBt0mWwET52HzjQWHn/fEQhIEyR5uZNOnI/pyqL/RaafXOfZ4t/ViWhmJC9a62h6poX65dw8OQHb7q+O2tlOFR4O1xEbxJIoP
-X-Gm-Message-State: AOJu0Yxp6raVKTx8eVoe0HNELBJH16F2MfzZ/Zz5/hEQvfbjIslq8J9e
-	ZwykxLEglBg0nWF9IA917kjdL+0OUUzcheu+aNRshcuWS/XegE/xdkeBdQNKdXg=
-X-Google-Smtp-Source: AGHT+IHkDheiQWPRAvAOHQTkNQHOAUKicTVB0J2JBhxVC1tcwLKXg6dTru289RnVzPDELy4A5wdRbw==
-X-Received: by 2002:a05:6000:2a4:b0:360:872b:7e03 with SMTP id ffacd0b85a97d-367f05439c1mr7021710f8f.0.1721033110619;
-        Mon, 15 Jul 2024 01:45:10 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680daccbd2sm5664721f8f.49.2024.07.15.01.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 01:45:10 -0700 (PDT)
-Date: Mon, 15 Jul 2024 10:45:08 +0200
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
-	DRI Development <dri-devel@lists.freedesktop.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-	syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com,
-	Daniel Vetter <daniel.vetter@intel.com>, stable@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH] bcachefs: no console_lock in bch2_print_string_as_lines
-Message-ID: <ZpThlAGUsPXZArvk@phenom.ffwll.local>
-Mail-Followup-To: John Ogness <john.ogness@linutronix.de>,
-	DRI Development <dri-devel@lists.freedesktop.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-	syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com,
-	Daniel Vetter <daniel.vetter@intel.com>, stable@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-References: <20240710093120.732208-2-daniel.vetter@ffwll.ch>
- <20240710130335.765885-1-daniel.vetter@ffwll.ch>
- <87jzhtcp26.fsf@jogness.linutronix.de>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KugNydKF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="r8jfSIys";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KugNydKF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="r8jfSIys"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D879D210E9;
+	Mon, 15 Jul 2024 08:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721033189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Kmu/66IdJnjpnEH+mQpE6oqoTfFtXMULe9RlPhWJCWo=;
+	b=KugNydKFPDenHFTEfCFOJWzLkAye3mhCWKT+edkJRx8s6itSs1sjg+Kj6fAKtcQr5Wn9zH
+	wpuNIoc59UzAKmooMrYO0HtGU/lPJd0FKTnRiaTI3W26omEGA98w4NFA4S65JgXEAecj96
+	sNTIT3vELNb+DKfePBQFQwsN+auY8BU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721033189;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Kmu/66IdJnjpnEH+mQpE6oqoTfFtXMULe9RlPhWJCWo=;
+	b=r8jfSIysd+wKXHSzolna7arq1K5PF6ODbLVfSJZuxf9qwTxyeBEd0jNTSSE0jPWsPcuKMX
+	pA/+MNdSK9n6DFCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KugNydKF;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=r8jfSIys
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721033189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Kmu/66IdJnjpnEH+mQpE6oqoTfFtXMULe9RlPhWJCWo=;
+	b=KugNydKFPDenHFTEfCFOJWzLkAye3mhCWKT+edkJRx8s6itSs1sjg+Kj6fAKtcQr5Wn9zH
+	wpuNIoc59UzAKmooMrYO0HtGU/lPJd0FKTnRiaTI3W26omEGA98w4NFA4S65JgXEAecj96
+	sNTIT3vELNb+DKfePBQFQwsN+auY8BU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721033189;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Kmu/66IdJnjpnEH+mQpE6oqoTfFtXMULe9RlPhWJCWo=;
+	b=r8jfSIysd+wKXHSzolna7arq1K5PF6ODbLVfSJZuxf9qwTxyeBEd0jNTSSE0jPWsPcuKMX
+	pA/+MNdSK9n6DFCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CBD78134AB;
+	Mon, 15 Jul 2024 08:46:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id c+9qMeXhlGbKAgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 15 Jul 2024 08:46:29 +0000
+Message-ID: <98894186-e73a-485e-96e8-d0f8ac7650ed@suse.cz>
+Date: Mon, 15 Jul 2024 10:46:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87jzhtcp26.fsf@jogness.linutronix.de>
-X-Operating-System: Linux phenom 6.9.7-amd64 
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build warning after merge of the slab tree
+Content-Language: en-US
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: "Alex Shi (Tencent)" <alexs@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20240715170619.514913ca@canb.auug.org.au>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20240715170619.514913ca@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D879D210E9
+X-Spam-Flag: NO
+X-Spam-Score: -0.50
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.50 / 50.00];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	TO_DN_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spamd-Bar: /
 
-On Wed, Jul 10, 2024 at 04:19:53PM +0206, John Ogness wrote:
-> On 2024-07-10, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> > console_lock is the outermost subsystem lock for a lot of subsystems,
-> > which means get/put_user must nest within. Which means it cannot be
-> > acquired somewhere deeply nested in other locks, and most definitely
-> > not while holding fs locks potentially needed to resolve faults.
-> >
-> > console_trylock is the best we can do here. But John pointed out on a
-> > previous version that this is futile:
-> >
-> > "Using the console lock here at all is wrong. The console lock does not
-> > prevent other CPUs from calling printk() and inserting lines in between.
-> >
-> > "There is no way to guarantee a contiguous ringbuffer block using
-> > multiple printk() calls.
-> >
-> > "The console_lock usage should be removed."
-> >
-> > https://lore.kernel.org/lkml/87frsh33xp.fsf@jogness.linutronix.de/
-> >
-> > Do that.
+On 7/15/24 9:06 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Note that there is more of this incorrect usage of console lock in:
+> After merging the slab tree, today's linux-next build (htmldocs) produced
+> this warning:
 > 
-> fs/bcachefs/debug.c:bch2_btree_verify_replica()
+> include/linux/mm_types.h:399: warning: Function parameter or struct member '_unused_slab_obj_ext' not described in 'folio'
 > 
-> fs/bcachefs/bset.c:bch2_dump_btree_node()
+> Introduced by commit
 > 
-> from commit 1c6fdbd8f246("bcachefs: Initial commit")
-> 
-> ... and its parent bcache:
-> 
-> drivers/md/bcache/debug.c:bch_btree_verify()
-> 
-> drivers/md/bcache/bset.c:bch_dump_bucket()
-> 
-> from commit cafe56359144("bcache: A block layer cache")
-> 
-> These should also be removed. Although Kent should verify that the
-> console lock is not providing some sort of necessary side-effect
-> synchronization.
+>   05d5996d4b9b ("mm/memcg: alignment memcg_data define condition")
 
-I'll take a look, at least some of them seem doable to audit without deep
-bcachefs understanding. Thanks for pointing them out, I should have looked
-a bit more at git grep ...
--Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Added, the htmldocs description, thanks.
+
