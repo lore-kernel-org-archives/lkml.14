@@ -1,216 +1,129 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ADD4C7C
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AFC947E
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 03:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721012333; cv=none; b=XtcJlRET2qgwj1VKnxuLgUzhzgpf4MEm8nV6u2BXIg1ccnLiiyO47D6he8nZrBppGUhJLoSNWPUMYFtW6muOwXU1VIMgZHQOE9xvDqqPkX64CHJaS4t0fBgz5QEPfOwpq83iH2QOLjRTx8uac8JmoSV0dLTAQugJjZzzGz/qpEs=
+	t=1721012617; cv=none; b=pHLVASFMdjWiNWV2Nt8LHHNTX83EKaaqq5reaDxbZA2YAtQP5HTWxzTJkV5WZQbiywnlkQersMyRpwYB4y7k+iv4VTmZDq9WKZw6HIsWMAr6lZ6tV/o/PzMKdv0dDg5KXY7PBYSZbj8Q2QyekLukh+WaBJgWdOYRqPlx3pSBico=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721012333; c=relaxed/simple;
-	bh=KF8l2h/GrUQnQ0eHMCYrJFiN4LDzhTvBEiBndZsaNAo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ptt1x+ipOrvHWVDi6D3bLoTdaIqkqrrEDq6piyESMNL/3ASgGSu3VVxMWSaupVHHs+kcCX3pO+V1D4LvP7msedMvDR7SGDXcNaHFeAkctoKyGuSZ33neTjdEjHcLWz0zUT5jsNNnv7J3bc0+D4pjAaYLeRPNZEPaJt92G2Kk9f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kyletso.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mlSoUAFM; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kyletso.bounces.google.com
+	s=arc-20240116; t=1721012617; c=relaxed/simple;
+	bh=cNPLygRRwTIu66cd/nVFWcNAuVbNA5tBwUY2iWU9j7w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=gD1LSN/6vMgtoWP5en83eF+k7OZ+b6T1/dzIi2uSf86m8V0gnelVjnLNxHL7C5tFCcZlQkqCmJfvgdUDyl6XD8TU9tMSaPskofvjatxbH+3fwPw34Bgl4gsKTjUZIyQSN+em0Rbq4kg2viqWIxyN1EYNqCvVFQLWw1sOUH+Y4zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=t8Al8rEU; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mlSoUAFM"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e05b6cc9275so792251276.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2024 19:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721012331; x=1721617131; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=l9iRN9tyg2Ah/12TCH+6DWgzr6OQh5TsD/9/hu4zUUM=;
-        b=mlSoUAFM63IAqE5dXLdLcxwJyQnCS6unfFC6kQcorCot57f9mTA/bOcTuoQ1LhU5ci
-         eRmD7iVFdBlXS9DlzK4+meVFrj2EnPO5obPgrfuiubVHVp6upRBDtt3uDK3vF02XiuPl
-         xYyt6mG+ZVMdzeuPWwIOkXeE3vvPFV486OZbza/ByqOrVS0qCruAjhWGhiShTH/y0uTy
-         XhNJr8Is9jw+EvdTaXQedy9nLBEzYgE5o1kysfRht/Dh+3aZAxhzojJ/J9XXH0W1p+xW
-         +Lg2vnixGOwuJx7Vj+eT8DWJfP8SluJlWJULQxXBNGagGE61tABwo0zS55e1TXZkLX1C
-         bAWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721012331; x=1721617131;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l9iRN9tyg2Ah/12TCH+6DWgzr6OQh5TsD/9/hu4zUUM=;
-        b=D2ZANo0N8H39/zcZMKonuVjE40L78rTY+1fdcYZAuYzM8rFFBKsHhVPTVJFB8NGsEa
-         zcKbhbRUaGQQOPDhYWX5/Xd0Yhff8P1AyfPeloOwUpDrxodq6M58m3qLwV8Z7rcYAvfu
-         8xYjXmnPJtWPG/uiJ78QX4e6sQNsMjcn9laQJF8FBx6gVt0TUYIWm+6ji5ViJnZ320XK
-         9kwp+IjjiwQjbsEniXY7LlUXbYdo7F8+WiD7ql6lDOaZu/feL2ic439HpZ2BCUAf7XFZ
-         f/Y0BBqsqTQpy1tv1/7VaW/z07TpF1WLYYKl3WKXm6nmuuW3OspUg23mt8tZQB86711Z
-         bvcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvc5juzfuTk613n3/tPJ4jWGxVq9I6laI5DiO+reSWPVaF4SlDMPc5+/NWT2C9QNf+SBwAMfRt8kQYCodQOY2yv9D/94GeDfWFBVbO
-X-Gm-Message-State: AOJu0YxWTGznKJCOC7/o0KwCRcETc9SkP1uQxKsw/g8x6XPnqjlgsaBY
-	tcG5mappLSvbGTB+RCU/uvyu06Vc8mDoIM23r7saV6+fF0Dp9/KBLApDxOjtPJRWVTka1b0ZZDS
-	6OVjSIg==
-X-Google-Smtp-Source: AGHT+IG41R17PIhFanq46nM/cn4uF1bXHxLFiyZobEJOoUojYLHpl+dfgdfv4dT5UhCbD8OSz+wp2yF0QGiZ
-X-Received: from kyletso-p620lin01.ntc.corp.google.com ([2401:fa00:a7:c:d8dc:1c82:c8b9:bf19])
- (user=kyletso job=sendgmr) by 2002:a05:6902:100f:b0:e03:52c8:ad30 with SMTP
- id 3f1490d57ef6-e058a8c5ebcmr541144276.3.1721012331177; Sun, 14 Jul 2024
- 19:58:51 -0700 (PDT)
-Date: Mon, 15 Jul 2024 10:58:27 +0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t8Al8rEU"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240715030326epoutp03e8f9d2239192537f0a6d6cc0766a6d7e~iQ9jqs6oD3080830808epoutp03P
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 03:03:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240715030326epoutp03e8f9d2239192537f0a6d6cc0766a6d7e~iQ9jqs6oD3080830808epoutp03P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1721012606;
+	bh=cNPLygRRwTIu66cd/nVFWcNAuVbNA5tBwUY2iWU9j7w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t8Al8rEUOKzHb/DfRQA9di8sx0A7QOTqx+7eaMQbg5QcesHHhwXcmk3qzmtRNrXts
+	 gNEJCAKsXXqhlpoO8+RU3w9tyM7RumgMLT7hCpT0xHeI1UwFOQ7UHEeiMk2keRs8kF
+	 l5YEhiA5v1ZFQIXs0XAS/WByALrg12mNbqHcQ0K4=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240715030326epcas5p3b2cd769c2922a05bc94ecb95e97330cd~iQ9jaqWIa0512305123epcas5p3P;
+	Mon, 15 Jul 2024 03:03:26 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4WMn8D57qKz4x9Pt; Mon, 15 Jul
+	2024 03:03:24 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	05.E1.07307.67194966; Mon, 15 Jul 2024 12:03:18 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240715023908epcas5p1e16b2ac82c7f61edf44bfd874c920f04~iQoVnRHJ62003220032epcas5p1d;
+	Mon, 15 Jul 2024 02:39:08 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240715023908epsmtrp2e9a0f21ebec19b8850d1b801685c4bae~iQoVmYJj21973619736epsmtrp25;
+	Mon, 15 Jul 2024 02:39:08 +0000 (GMT)
+X-AuditID: b6c32a44-18dff70000011c8b-36-6694917692c7
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	77.7C.19057.CCB84966; Mon, 15 Jul 2024 11:39:08 +0900 (KST)
+Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240715023907epsmtip2f6218aa8eecc031fb29114da76ad582c~iQoUlIdhE0963209632epsmtip2h;
+	Mon, 15 Jul 2024 02:39:07 +0000 (GMT)
+From: hexue <xue01.he@samsung.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com, hch@infradead.org, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH v2] io_uring: Avoid polling configuration errors
+Date: Mon, 15 Jul 2024 10:39:02 +0800
+Message-Id: <20240715023902.1105124-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <db1816bc-c3f4-41c0-8946-f8d4a260216a@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Message-ID: <20240715025827.3092761-1-kyletso@google.com>
-Subject: [PATCH] usb: dwc3: Runtime get and put usb power_supply handle
-From: Kyle Tso <kyletso@google.com>
-To: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, raychi@google.com
-Cc: badhri@google.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	royluo@google.com, Kyle Tso <kyletso@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjk+LIzCtJLcpLzFFi42LZdlhTXbds4pQ0gwVPZC3mrNrGaLH6bj+b
+	xekJi5gs3rWeY7H41X2X0eLyrjlsFmcnfGB1YPfYOesuu8fmFVoel8+WevRtWcXo8XmTXABr
+	VLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtARSgpl
+	iTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwCkwK94sTc4tK8dL281BIrQwMDI1OgwoTs
+	jLfTPjIV3GKt+HjpLVMD416WLkZODgkBE4mJ008ydzFycQgJ7GaU2HnkLRuE84lRYsmJGUwQ
+	zjdGiYXvbrHCtPSdfgSV2MsocWbZVnYI5wejxKEXc9lAqtgElCT2b/nACGKLCAhL7O9oBVrI
+	wcEskC7R9sILJCws4CEx4d1qsDtYBFQltq9ZxAxi8wpYS5xresMEsUxe4mbXfrA4p4CtxPpD
+	TWwQNYISJ2c+AetlBqpp3job7AcJgXvsEu/bDjBCNLtIzGm7xwZhC0u8Or6FHcKWkvj8bi9U
+	PF9i8vf1UPU1Eus2v4MGjLXEvyt7oG7WlFi/Sx8iLCsx9dQ6Joi9fBK9v59A3ckrsWMejK0k
+	seTICqiREhK/JyyCBpyHxP3js1kgYTWBUWLOq40sExgVZiH5ZxaSf2YhrF7AyLyKUTK1oDg3
+	PTXZtMAwL7UcHsvJ+bmbGMEJU8tlB+ON+f/0DjEycTAeYpTgYFYS4V3JMjFNiDclsbIqtSg/
+	vqg0J7X4EKMpMMAnMkuJJucDU3ZeSbyhiaWBiZmZmYmlsZmhkjjv69a5KUIC6YklqdmpqQWp
+	RTB9TBycUg1MwbtWcU89+WFZ49XQX0aTrW5dNTjgGHGsmPnZllOfVmp1S71z+++x/tM/95Ob
+	wqcfEKoxEtMPjpDZVx60f7fpHRmu/gO/PztlH+4VDjp365PTLXmxd4UzHFSrflfwGudKF/Xk
+	fTYWse2/6PizQ+b+pcoEH/4W96u5qs+lld7tnbKx60tESlR45K2lz2cbafwJ8/5xrOZtpcX/
+	6vz6FaXdF41j4n708W7d0JUmL1xkVjNdWHzqEjHBY3V2FnseFr0zyc6etc++V0vZ8fjshZ8T
+	Yr7VXdfacv7MSYu5C33eG/l37RGvWPTlqfDyXVzWSc/PvRf8FVwlfG7T68/qyy5lmZvblmS3
+	8xjdd+Zy7rZQYinOSDTUYi4qTgQA3d6YtSEEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsWy7bCSvO6Z7ilpBi8W8VvMWbWN0WL13X42
+	i9MTFjFZvGs9x2Lxq/suo8XlXXPYLM5O+MDqwO6xc9Zddo/NK7Q8Lp8t9ejbsorR4/MmuQDW
+	KC6blNSczLLUIn27BK6Mt9M+MhXcYq34eOktUwPjXpYuRk4OCQETib7Tj5i6GLk4hAR2M0oc
+	mruGESIhIbHj0R9WCFtYYuW/5+wQRd8YJVb9vAqWYBNQkti/5QNYgwhQ0f6OVrCpzALZEntn
+	XQOrERbwkJjwbjVYnEVAVWL7mkXMIDavgLXEuaY3TBAL5CVudu0Hi3MK2EqsP9TE1sXIAbTM
+	RmLRAgGIckGJkzOfQI2Xl2jeOpt5AqPALCSpWUhSCxiZVjFKphYU56bnFhsWGOWllusVJ+YW
+	l+al6yXn525iBAe0ltYOxj2rPugdYmTiYDzEKMHBrCTCu5JlYpoQb0piZVVqUX58UWlOavEh
+	RmkOFiVx3m+ve1OEBNITS1KzU1MLUotgskwcnFINTJJbpDwCj+zcbn847fqVz6+en/jaLbew
+	pmVRubdXi47Uqc49Mk8Mivl+ivvL9Jy3OFvMu2Ky21nGVes8dnQlCxc5JSy/9OC5XuROMZHP
+	ExzLnV+W2BtX7/F4/jnCW6lFRaaoNKnr5ScjJ/X44nvXV+6webXTdltrnE/eKfak8AlmzEoX
+	F3rkC1Vz3FdZqyykVJR7zOvRlIerj7Q09wf/CyzZqcY18/a82L2KU1z3TCtiPZVv/V/OwtU2
+	yI+H/0gyT9tU/S/33d9J1//3E97zMPzq1n9fuZJX5edp7jqR9fOtmNDC7GnBq/33b2XvmLH4
+	w1PVvJfJWs/vFKZHVLz+kMl6vUfa1PabWH7TI113JZbijERDLeai4kQA1U54GdcCAAA=
+X-CMS-MailID: 20240715023908epcas5p1e16b2ac82c7f61edf44bfd874c920f04
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240715023908epcas5p1e16b2ac82c7f61edf44bfd874c920f04
+References: <db1816bc-c3f4-41c0-8946-f8d4a260216a@kernel.dk>
+	<CGME20240715023908epcas5p1e16b2ac82c7f61edf44bfd874c920f04@epcas5p1.samsung.com>
 
-It is possible that the usb power_supply is registered after the probe
-of dwc3. In this case, trying to get the usb power_supply during the
-probe will fail and there is no chance to try again. Also the usb
-power_supply might be unregistered at anytime so that the handle of it
-in dwc3 would become invalid. To fix this, get the handle right before
-calling to power_supply functions and put it afterward.
+>My stance is still the same - why add all of this junk just to detect a
+>misuse of polled IO? It doesn't make sense to me, it's the very
+>definition of "doctor it hurts when I do this" - don't do it.
 
-Fixes: 6f0764b5adea ("usb: dwc3: add a power supply for current control")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kyle Tso <kyletso@google.com>
----
- drivers/usb/dwc3/core.c   | 25 +++++--------------------
- drivers/usb/dwc3/core.h   |  4 ++--
- drivers/usb/dwc3/gadget.c | 19 ++++++++++++++-----
- 3 files changed, 21 insertions(+), 27 deletions(-)
+>So unless this has _zero_ overhead or extra code, which obviously isn't
+>possible, or extraordinary arguments exists for why this should be
+>added, I don't see this going anywhere.
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 734de2a8bd21..ab563edd9b4c 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1631,8 +1631,6 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 	u8			tx_thr_num_pkt_prd = 0;
- 	u8			tx_max_burst_prd = 0;
- 	u8			tx_fifo_resize_max_num;
--	const char		*usb_psy_name;
--	int			ret;
- 
- 	/* default to highest possible threshold */
- 	lpm_nyet_threshold = 0xf;
-@@ -1667,12 +1665,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 
- 	dwc->sys_wakeup = device_may_wakeup(dwc->sysdev);
- 
--	ret = device_property_read_string(dev, "usb-psy-name", &usb_psy_name);
--	if (ret >= 0) {
--		dwc->usb_psy = power_supply_get_by_name(usb_psy_name);
--		if (!dwc->usb_psy)
--			dev_err(dev, "couldn't get usb power supply\n");
--	}
-+	device_property_read_string(dev, "usb-psy-name", &dwc->usb_psy_name);
- 
- 	dwc->has_lpm_erratum = device_property_read_bool(dev,
- 				"snps,has-lpm-erratum");
-@@ -2133,18 +2126,16 @@ static int dwc3_probe(struct platform_device *pdev)
- 	dwc3_get_software_properties(dwc);
- 
- 	dwc->reset = devm_reset_control_array_get_optional_shared(dev);
--	if (IS_ERR(dwc->reset)) {
--		ret = PTR_ERR(dwc->reset);
--		goto err_put_psy;
--	}
-+	if (IS_ERR(dwc->reset))
-+		return PTR_ERR(dwc->reset);
- 
- 	ret = dwc3_get_clocks(dwc);
- 	if (ret)
--		goto err_put_psy;
-+		return ret;
- 
- 	ret = reset_control_deassert(dwc->reset);
- 	if (ret)
--		goto err_put_psy;
-+		return ret;
- 
- 	ret = dwc3_clk_enable(dwc);
- 	if (ret)
-@@ -2245,9 +2236,6 @@ static int dwc3_probe(struct platform_device *pdev)
- 	dwc3_clk_disable(dwc);
- err_assert_reset:
- 	reset_control_assert(dwc->reset);
--err_put_psy:
--	if (dwc->usb_psy)
--		power_supply_put(dwc->usb_psy);
- 
- 	return ret;
- }
-@@ -2276,9 +2264,6 @@ static void dwc3_remove(struct platform_device *pdev)
- 	pm_runtime_set_suspended(&pdev->dev);
- 
- 	dwc3_free_event_buffers(dwc);
--
--	if (dwc->usb_psy)
--		power_supply_put(dwc->usb_psy);
- }
- 
- #ifdef CONFIG_PM
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 1e561fd8b86e..ecfe2cc224f7 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1045,7 +1045,7 @@ struct dwc3_scratchpad_array {
-  * @role_sw: usb_role_switch handle
-  * @role_switch_default_mode: default operation mode of controller while
-  *			usb role is USB_ROLE_NONE.
-- * @usb_psy: pointer to power supply interface.
-+ * @usb_psy_name: name of the usb power supply interface.
-  * @usb2_phy: pointer to USB2 PHY
-  * @usb3_phy: pointer to USB3 PHY
-  * @usb2_generic_phy: pointer to array of USB2 PHYs
-@@ -1223,7 +1223,7 @@ struct dwc3 {
- 	struct usb_role_switch	*role_sw;
- 	enum usb_dr_mode	role_switch_default_mode;
- 
--	struct power_supply	*usb_psy;
-+	const char		*usb_psy_name;
- 
- 	u32			fladj;
- 	u32			ref_clk_per;
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 89fc690fdf34..c89b5b5a64cf 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -3049,20 +3049,29 @@ static void dwc3_gadget_set_ssp_rate(struct usb_gadget *g,
- 
- static int dwc3_gadget_vbus_draw(struct usb_gadget *g, unsigned int mA)
- {
--	struct dwc3		*dwc = gadget_to_dwc(g);
-+	struct dwc3			*dwc = gadget_to_dwc(g);
-+	struct power_supply		*usb_psy;
- 	union power_supply_propval	val = {0};
- 	int				ret;
- 
- 	if (dwc->usb2_phy)
- 		return usb_phy_set_power(dwc->usb2_phy, mA);
- 
--	if (!dwc->usb_psy)
-+	if (!dwc->usb_psy_name)
- 		return -EOPNOTSUPP;
- 
--	val.intval = 1000 * mA;
--	ret = power_supply_set_property(dwc->usb_psy, POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT, &val);
-+	usb_psy = power_supply_get_by_name(dwc->usb_psy_name);
-+	if (usb_psy) {
-+		val.intval = 1000 * mA;
-+		ret = power_supply_set_property(usb_psy, POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-+						&val);
-+		power_supply_put(usb_psy);
-+		return ret;
-+	}
- 
--	return ret;
-+	dev_err(dwc->dev, "couldn't get usb power supply\n");
-+
-+	return -EOPNOTSUPP;
- }
- 
- /**
--- 
-2.45.2.993.g49e7a77208-goog
+Actually, I just want users to know why they got wrong data, just a warning of an error,
+like doctor tell you why you do this will hurt. I think it's helpful for users to use tools
+accurately.
+and yes, this should be as simple as possible, I'll working on it. I'm not sure if I made
+myself clear and make sense to you?
 
+--
+hexue
