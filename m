@@ -1,102 +1,76 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C204E189F5E;
-	Mon, 15 Jul 2024 11:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51936A039;
+	Mon, 15 Jul 2024 11:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721044108; cv=none; b=IqKsFSkEKHsiMNP+rneqDD9Z5bMsoS+AIHo5mw1K2wUeI0cE4s1s+AfCxY47OClQsHVwDlScf7kw70tRc5/VNMAk5aglj00mCykJEkAb0KTy/zB98ldJPXrbnjLtGe60bYO9WbZm0JhA9Q6+YZFTa/s/ff+DdSJLHxvAhO62YdA=
+	t=1721044131; cv=none; b=phFCTSWXNOyqvw4PQNvZtU9ixKyFT8oT8o7fSBmRl3medACqcXw4kDHHREN7XyaIBZtQ8BBRIS8wgw+4Eihb/UgKckmRSjAhBtmb3w0A84o8fusPKPi2jsY3nF02w7wFewXz2u0d5pt5/ghleEUSG6aL+AoKRillbiE4BJxwz/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721044108; c=relaxed/simple;
-	bh=FLWtFfdvvrNFy/+e+9BC4sdPIHWNO5XdMDInFcTzoDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jc9KEi7w1dloY9a3ul0tFc0bR5G1+j4KxcMrQIjbrHOhhCn4I1MknRVNh48VRrakS0G63F/u+QUQEw8T3C1Ev5YouYC7K8EQI9TpBC38DNUDOGDnajDX3GGlGZIvdC4ogNI0lvyunDboXXtiew001Oo9SePBpK+vifQWhZAt1Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CpuyZT7n; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1721044131; c=relaxed/simple;
+	bh=//gQFsYwBWW1kMaHQ6xpz0jh8fgWViTigdtlaSbhC2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZCa7GPA9coVPnSp9BWBMTs8DVSoFFuJrA4fI9CalXIwA1sZox6BSHq2UKAujAwELE647hvEg9YDJAdixiuBrZa8QDph5i0FwMGyFCQaVR03pVscLlDLede+Tel2tQhGNhcH8RRo/V6JJDqXvIjv1e/oZhi9r22TBOwB14TKessA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKOakvPS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CpuyZT7n"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=GdN1/Drp1xef2wC63rTQRFwwYJdTm9BYYeLA8lGrLY4=; b=CpuyZT7nFh6H8fzJI25Mdrppq+
-	ABSmYmXMrfzENzYSdEVE7x44QDIZu5EsOq5UdE93SX3FjKaafcToa6w3gX72syp1TUh0O3sLF2W+X
-	lm9XgFktS3N7Z3AtlXNFT0WLaVq1OLipYS8Kv9hxQApr4nJn2Tg1ynjHgQ+LafL8197dG+pBYUZk4
-	Ak3dzxBwQlvYe/i+Q4JnuKvMnNaW5KTuaHqijXxA/74AK6b+gd8yND90aH+HqaQcvJnZqPw/XxU/z
-	2uGmdAAbiZCbnkfvAZGbZemSWm0oasFblpu9DCpk2qJ47nu4mJjxytnew9STbelI8/mZqVMD7758L
-	s+CqXXWw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTKBZ-00000001maL-2aKQ;
-	Mon, 15 Jul 2024 11:48:05 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3FD723003FF; Mon, 15 Jul 2024 13:48:05 +0200 (CEST)
-Date: Mon, 15 Jul 2024 13:48:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ajay Kaher <ajay.kaher@broadcom.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, rostedt@goodmis.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, yangjihong1@huawei.com,
-	zegao2021@gmail.com, leo.yan@linux.dev, asmadeus@codewreck.org,
-	siyanteng@loongson.cn, sunhaiyong@loongson.cn,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
-	Vamsi Krishna Brahmajosyula <vamsi-krishna.brahmajosyula@broadcom.com>,
-	nadav.amit@gmail.com
-Subject: Re: [PATCH RFC 1/3] perf/core: add logic to collect off-cpu sample
-Message-ID: <20240715114805.GF14400@noisy.programming.kicks-ass.net>
-References: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
- <1720700179-22839-2-git-send-email-ajay.kaher@broadcom.com>
- <20240711214936.GH27299@noisy.programming.kicks-ass.net>
- <CAD2QZ9YQ6n_6J+bq+wNxS5bGuAOsLkSiicigan84qaD+xrjS3Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKOakvPS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ECB8C32782;
+	Mon, 15 Jul 2024 11:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721044130;
+	bh=//gQFsYwBWW1kMaHQ6xpz0jh8fgWViTigdtlaSbhC2s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kKOakvPSY34XGVJ3Gxu6ySBrFxWJJS9/VC+dOiWaxnEu+8O2VcNjR0Sx7evI6NbVH
+	 Ydvng06hCb/hm4PzLH+1CKBNZl4YgbDeSRdtpk3rkqKO+nrj4/DKqQQkaclwGIVKg0
+	 VzSYkx86OOHuYaC6v8yAv5qCilP2re2GvmZnyOA74nxv81+mUnZJMsWn6a9/9xb7an
+	 UMwg0tKl13YoIE6VZhxBhnXSc+wk4hhepUgnXWXPCHTohyUkiJCN0vT/QIHH0phUg1
+	 Hswxemijq+lGhBKgGLAB1pU5qAjxElKvVfB7U4hjDNf3EkGzCuF3B/PGSMPHLLYdvy
+	 ht/O89wU/N2lQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] fs/adfs: add MODULE_DESCRIPTION
+Date: Mon, 15 Jul 2024 13:48:35 +0200
+Message-ID: <20240715-anhaben-ausmachen-2abf2d78742a@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240523-md-adfs-v1-1-364268e38370@quicinc.com>
+References: <20240523-md-adfs-v1-1-364268e38370@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=908; i=brauner@kernel.org; h=from:subject:message-id; bh=//gQFsYwBWW1kMaHQ6xpz0jh8fgWViTigdtlaSbhC2s=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRN5Zl9y2d19qayHbs4qhi2/a8q6z5ZpDTVuC/qwenTh r5yD++7d5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExklicjw56Dwi4rll2pvclX 2Nugt+Z7XmOs35a1hp+OTmjsO9aR18/whzsuet80rzAVxR9zs4TMTU6v7I/R6fkyNb9bt+pz5lp HXgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD2QZ9YQ6n_6J+bq+wNxS5bGuAOsLkSiicigan84qaD+xrjS3Q@mail.gmail.com>
 
-On Sun, Jul 14, 2024 at 09:53:10PM +0530, Ajay Kaher wrote:
-> On Fri, Jul 12, 2024 at 3:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Jul 11, 2024 at 05:46:17PM +0530, Ajay Kaher wrote:
-> > > following logics has been added to collect the off-cpu sample:
-> > >
-> > > - 'task_pt_regs(current)' has been used to capture registers
-> > >   status off-cpu sample.
-> > >
-> > > - off-cpu time represent the time period for which the target
-> > >   process not occupying the cpu cycles. And calculate as:
-> > >
-> > >   off-cpu time = swap-in time - swap-out time
-> > >
-> >
-> > I have absolutely no idea what you're trying to do :/ The above does not
-> > constitute a comprehensible Changelog.
+On Thu, 23 May 2024 06:58:01 -0700, Jeff Johnson wrote:
+> Fix the 'make W=1' issue:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/adfs/adfs.o
 > 
-> Sorry Peter, it’s sched-in/out (not swap-in/out).
 > 
-> 'Perf record' captures on-cpu samples at frequency which is specified by
-> the user ( i.e. time period to collect sample is NSEC_PER_SEC / freq).
-> 
-> This patch is to collect the off_cpu sample and time period of off_cpu
-> sample is calculated based upon the time when target task was sched_out
-> to sched_in, as:
-> 
->  off-cpu time period = sched_in time - sched-out time
 
-But but but... you don't need anything new for that. The sched_wakeup
-tracepoint should generate an event in both the task/cpu that does the
-wakeup *AND* the task being woken.
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-So sched_switch + sched_wakeup should get you all this already. What am
-I missing?
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-https://lore.kernel.org/all/1342016098-213063-1-git-send-email-avagin@openvz.org/T/#u
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] fs/adfs: add MODULE_DESCRIPTION
+      https://git.kernel.org/vfs/vfs/c/330367c0700d
