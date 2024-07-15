@@ -1,266 +1,206 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2450190698;
-	Mon, 15 Jul 2024 15:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9DE18FA33
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 15:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721057623; cv=none; b=CgnlaQD04IjVzOCUMSlg13JnTz+yjh4AAapJ3N7MZpSfh3QaK+6zL3ooiSQGHRD+7wBWUq2fh46zzrb57Gz69QPKf0W8okVS1WSNrot5VtcdqI4ra9rZUdjeCEKj9Vn0+B9Xd1gc0yn6p7mzL82hBcfpfHtpSFzMQL0So5r8ap8=
+	t=1721057631; cv=none; b=SlyentnruQBNm3erhHn3U8tuY5HoVUJ8d/MXNNcytxDo6nmgqxWuHZv+4JNB+TVTXdZCfa37rzyTG7nQadiyv9SDwqAbh9NQVx752l3T5cOIiV6x8LL+ZqGGRrSNL3f8OlBWb55sOYyJgwnM0I49gWgBnP5sm+qZ6I2Bde8FCMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721057623; c=relaxed/simple;
-	bh=wZEPi49ckDisN0y/9/bQlWJRFcnYmxT77NL/4Hr5jUQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UFxH0L0cW0VWf6cJPtdFw9KLmnUAQONFKtyIWX5XQsdlbh8HIftWTv6OSiK5hYqIodyFSmMBXMXF17ZpqMynTZKQYgMNF0xlbXA6aOzW+OrOWs+mxMmCl2klcJJMaFbP+oGSywHOrCp1WHfI9YNKsz/kZL3ibsyiU1oqDsYidxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c2A08qQR; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721057631; c=relaxed/simple;
+	bh=O17oVYZHosGaaJhlD2MlU5PTYcT36bEOgqEoMy9Lp+g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jlRa+dduZsrcvw/gUC+6tQ0l8KiNJfTcZtfxYdFnGf2hi/WnHS+QKZ7N//3fyW6S7ylv50eSr/xhvuB5Jy5oph9sgti1o1V4qWG5++kYXFskM7tikI18gdDl4ennrJmez4GXEL3tBAxW4jhFz+ntOF5ph2eTjGCSuU6JzSRt4s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=tBMksm9R; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2A08qQR"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-36799a67d9cso3631589f8f.0;
-        Mon, 15 Jul 2024 08:33:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="tBMksm9R"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb0c2c672dso2421515ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721057620; x=1721662420; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wixUMSPfbRUA5ff8Q7KbeB+Bn7dETuvtQK3RDPocxSU=;
-        b=c2A08qQR3CCYmtArnziiNHJQ0vsDHfFqmb3nYZSLoBRFKI++TYpJBMoK0hLFrizfnx
-         PocHctDrUD2ZWqBMUAczlCChE5cYBBxdkXNmXMn1P6XDtsVm0c+ZeoqAjzPVDsEYr+FN
-         JyqFh58chWFc4UY6lmftaCEmSq3mCvTk4bD06gflTVJ6nkpgi6n8n4b9avWWo33PWZjd
-         sWl5l0ALDlU/4SYGC/cKQd5TeFmy2ItwDbWjTvzJ7kY477q54rEslVaACivxmEPYKL2J
-         N2l5IoRUiXBCLCpI35yc+wwY2hoftBujskwiIOQxmMz2Z1zl/BdxczhQefzoEcAlNoUr
-         ND2g==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721057628; x=1721662428; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nNrBKwYTcdYHsoBHljeLphuQCOZ/YFIVZ+KLTOSWsAs=;
+        b=tBMksm9R3VMCr1eWe6f7oerChBH24oyqE9gpHbGX/GDHSPyFQePYwlAtESFSc6725L
+         6eXjTemeaVyZXWnBLOvxWBIbS5g5CvdnCAH9HXExZT/OP2Ti2q7bAtpDqvB869Ao6VOI
+         ArEc7DhfdpWpajlxLy5P5wxbTWc7h6K2FpQ110bJnAgHhBiFiEeJeusPu2b7dHbvSw+I
+         KPLeC58Ndrbozl5DpsSr4Ud1ppFywpjmiYBrLWkfPevgF4Z2IgTrFm+wgb91GzV/y2+6
+         TKGNCY5jUZqfDUgIs6iW7ZRz7DN0XPu6lLt48f1e7ofj641YxMR9N5v2Vgtz2Ga/u70p
+         wDtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721057620; x=1721662420;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wixUMSPfbRUA5ff8Q7KbeB+Bn7dETuvtQK3RDPocxSU=;
-        b=cqrwwHewF6xTG8XfIuq8LX6QwYjJk5iJ5AbMn1FATQ4wVVdkkjjLkbVsjntOm9VrXA
-         l60bzAVh7paYFRoa3dkcibhX+qbiBLHC4fcVO3N6fz4TVod+kzwyen7RsFq9hOyd6Mbx
-         +4n/xILVJJMHi7caSHOMqZSf7tGPq2Wd1lqfrr1ke+qQr2OCFoVC5cy7a3j+mfuqi0J6
-         x+2V4ZayUhlkPmmREH034yc5kCC5P9wyLFTpJpnaCSYNQjLK4UjtZiREWqcvnKf6Lv4P
-         bRIds+9gcd5RSs6e5HDTy22tQc96wwjj2N7uegR8ZvPU39sZwb9KA2+DRbt8FgigH85k
-         7IOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOK65REzpNRu7oLKwU5HJVkcHQAtNLu5QuyyoATdxfGJdg35sWFRn3C/Jy1MNorsBf8FS51Aq9/CkVhuGTmHlUl0JTongkEa0TznabnknAL832PNG/o71k5Vy2gaog/wPkK8Ytbtqqpw==
-X-Gm-Message-State: AOJu0YyKiUYyTRoyKQjgjCOm0pxMSlgbY1CVR3MdO4YVnMQWSoN2etsz
-	zNrWrJ1a0dbCoX2sQ/uEYB63vvXnOoMF+6YKGU0FT1kTl6U1DRGS
-X-Google-Smtp-Source: AGHT+IG+p7mUgs29QXGW6vDzpdT1cAhBKDRl4uDUB7qml+2dMbB5omhfCWb8x0y0AAzKovVgBoWVUQ==
-X-Received: by 2002:adf:e54e:0:b0:366:e986:22ef with SMTP id ffacd0b85a97d-36824078b02mr102969f8f.4.1721057620011;
-        Mon, 15 Jul 2024 08:33:40 -0700 (PDT)
-Received: from eichest-laptop.lan ([2a02:168:af72:0:564b:c18:f4fc:19ad])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbf4bsm6720866f8f.73.2024.07.15.08.33.39
+        d=1e100.net; s=20230601; t=1721057628; x=1721662428;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nNrBKwYTcdYHsoBHljeLphuQCOZ/YFIVZ+KLTOSWsAs=;
+        b=luciiA86qOM4yQj9x45OqSnkFVSNeXD4HdBVJFu8Y78SA0vjgt9WzJt571IDkH4xmt
+         DJ7ntLJ27eIvLDi3GiFIGQ69kFRfSZpcZs2DNlbDJPWB0ardF8HT5yQbTrzDEBSCd/3e
+         lGq5kvfYpQOOtnjuJYMJBmkrHlhgovFOSB4V55YEFqMjV3iBc+S0x4VDI/a8wMQzZW2I
+         TRDCfXn2LxWMHqg3XcVECezkGmrDQEuycTyfv5Ome2qGt9fxHsYpqbOimm9Q/HXBe/Ro
+         sn95zsm/aPFTaKBGdepGinUPJgJEE3HOKAF3m+aRZ6eVdzsACmEEiH5tmpRjX/hCooBV
+         wexw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/WS0mCq6qxc08H9ZO3eSu9aK4Sm4LMsRFQ01uP8XTXJqrljd0aLw2oZNIOsI68cC45tDrzRtYOujxmASHDNQW82rQx993pUGq3xyD
+X-Gm-Message-State: AOJu0YxysJkKbD0F8AonmTSpeJq/o2TTyu0aYoRTxwSixVWaCqa+2M7A
+	wAOPv3kMUTJ54FGKvdBrnRh0dIWjIYg6pn39DJQtxxTttgwkiEEg3JJunUGzIHg=
+X-Google-Smtp-Source: AGHT+IFBGQtaMboH87ZiITDVDC8NxVYCRbzN4TT71saPPYRoOL+WvGv7Cmx1qWcc0JUtTQaQgm2X2w==
+X-Received: by 2002:a17:903:2348:b0:1fb:3c1:cb26 with SMTP id d9443c01a7336-1fbdc45a9a0mr120691815ad.1.1721057628613;
+        Mon, 15 Jul 2024 08:33:48 -0700 (PDT)
+Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc2736dsm42303825ad.159.2024.07.15.08.33.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 08:33:39 -0700 (PDT)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: nick@shmanahar.org,
-	dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	linus.walleij@linaro.org,
-	francesco.dolcini@toradex.com,
-	joao.goncalves@toradex.com
-Cc: linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+        Mon, 15 Jul 2024 08:33:47 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: [PATCH v6 3/3] Input: atmel_mxt_ts - add support for poweroff-sleep
-Date: Mon, 15 Jul 2024 17:31:23 +0200
-Message-ID: <20240715153330.91979-4-eichest@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240715153330.91979-1-eichest@gmail.com>
-References: <20240715153330.91979-1-eichest@gmail.com>
+	acpica-devel@lists.linux.dev
+Subject: [PATCH] ACPI: CPPC: Fix MASK_VAL() usage
+Date: Mon, 15 Jul 2024 17:33:35 +0200
+Message-ID: <20240715153336.3720653-1-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+MASK_VAL() was added a way to handle bit_offset and bit_width for
+registers located in system memory address space. However, while suited
+for reading, it does not work for writing and result in corrupted
+registers when writing values with bit_offset > 0. Moreover, when a
+register is collocated with another one at the same address but with a
+different mask, the current code results in the other registers being
+overwritten with 0s. The write procedure for SYSTEM_MEMORY registers
+should actually read the value, mask it, update it and write it with the
+updated value. Moreover, since registers can be located in the same
+word, we must take care of locking the access before doing it. We should
+potentially use a global lock since we don't know in if register
+addresses aren't shared with another _CPC package but better not
+encourage vendors to do so. Assume that registers can use the same word
+inside a _CPC package and thus, use a per _CPC package lock.
 
-Add support for poweroff-sleep to the Atmel maXTouch driver. This allows
-us to power off the input device entirely and only power it on when it
-is opened. This will also automatically power it off when we suspend the
-system.
+Fixes: 2f4a4d63a193 ("ACPI: CPPC: Use access_width over bit_width for system memory accesses")
+Signed-off-by: Clément Léger <cleger@rivosinc.com>
 
-Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 82 ++++++++++++++++++++----
- 1 file changed, 70 insertions(+), 12 deletions(-)
+ drivers/acpi/cppc_acpi.c | 44 ++++++++++++++++++++++++++++++++++++----
+ include/acpi/cppc_acpi.h |  2 ++
+ 2 files changed, 42 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 9416de53bf9af..46ed3dbf0c5ed 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -265,6 +265,7 @@ enum v4l_dbg_inputs {
- enum mxt_suspend_mode {
- 	MXT_SUSPEND_DEEP_SLEEP	= 0,
- 	MXT_SUSPEND_T9_CTRL	= 1,
-+	MXT_SUSPEND_POWEROFF	= 2,
- };
+diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+index 1d857978f5f4..2e99cf1842ee 100644
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -170,8 +170,11 @@ show_cppc_data(cppc_get_perf_ctrs, cppc_perf_fb_ctrs, wraparound_time);
+ #define GET_BIT_WIDTH(reg) ((reg)->access_width ? (8 << ((reg)->access_width - 1)) : (reg)->bit_width)
  
- /* Config update context */
-@@ -1311,6 +1312,10 @@ static int mxt_power_on(struct mxt_data *data)
- {
- 	int error;
+ /* Shift and apply the mask for CPC reads/writes */
+-#define MASK_VAL(reg, val) (((val) >> (reg)->bit_offset) & 			\
++#define MASK_VAL_READ(reg, val) (((val) >> (reg)->bit_offset) &				\
+ 					GENMASK(((reg)->bit_width) - 1, 0))
++#define MASK_VAL_WRITE(reg, prev_val, val)						\
++	((((val) & GENMASK(((reg)->bit_width) - 1, 0)) << (reg)->bit_offset) |		\
++	((prev_val) & ~(GENMASK(((reg)->bit_width) - 1, 0) << (reg)->bit_offset)))	\
  
-+	/* Make sure the device is in reset before enabling power */
-+	if (data->reset_gpio)
-+		gpiod_set_value_cansleep(data->reset_gpio, 1);
-+
- 	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
- 				      data->regulators);
- 	if (error) {
-@@ -2270,8 +2275,38 @@ static int mxt_configure_objects(struct mxt_data *data,
+ static ssize_t show_feedback_ctrs(struct kobject *kobj,
+ 		struct kobj_attribute *attr, char *buf)
+@@ -857,6 +860,7 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
  
- static void mxt_config_cb(const struct firmware *cfg, void *ctx)
- {
-+	struct mxt_data *data = ctx;
-+
- 	mxt_configure_objects(ctx, cfg);
- 	release_firmware(cfg);
-+
-+	if ((data->suspend_mode == MXT_SUSPEND_POWEROFF) && !data->in_bootloader) {
-+		disable_irq(data->irq);
-+		mxt_power_off(data);
-+	}
-+}
-+
-+static void mxt_initialize_after_resume(struct mxt_data *data)
-+{
-+	int error;
-+
-+	error = mxt_power_on(data);
-+	if (error) {
-+		dev_err(&data->client->dev, "Failed to power on device\n");
-+		return;
-+	}
-+
-+	error = mxt_acquire_irq(data);
-+	if (error) {
-+		dev_err(&data->client->dev, "Failed to acquire IRQ\n");
-+		return;
-+	}
-+
-+	error = mxt_configure_objects(data, NULL);
-+	if (error) {
-+		dev_err(&data->client->dev, "Failed to configure objects\n");
-+		return;
-+	}
- }
+ 	/* Store CPU Logical ID */
+ 	cpc_ptr->cpu_id = pr->id;
++	spin_lock_init(&cpc_ptr->rmw_lock);
  
- static int mxt_initialize(struct mxt_data *data)
-@@ -2828,15 +2863,18 @@ static int mxt_configure_objects(struct mxt_data *data,
- 			dev_warn(dev, "Error %d updating config\n", error);
+ 	/* Parse PSD data for this CPU */
+ 	ret = acpi_get_psd(cpc_ptr, handle);
+@@ -1062,7 +1066,7 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
  	}
  
--	if (data->multitouch) {
--		error = mxt_initialize_input_device(data);
--		if (error)
--			return error;
--	} else {
--		dev_warn(dev, "No touch object detected\n");
--	}
-+	/* Do not initialize and register input device twice */
-+	if (!data->input_dev) {
-+		if (data->multitouch) {
-+			error = mxt_initialize_input_device(data);
-+			if (error)
-+				return error;
-+		} else {
-+			dev_warn(dev, "No touch object detected\n");
-+		}
- 
--	mxt_debug_init(data);
-+		mxt_debug_init(data);
-+	}
+ 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY)
+-		*val = MASK_VAL(reg, *val);
++		*val = MASK_VAL_READ(reg, *val);
  
  	return 0;
  }
-@@ -3070,6 +3108,12 @@ static ssize_t mxt_update_fw_store(struct device *dev,
- 	struct mxt_data *data = dev_get_drvdata(dev);
- 	int error;
- 
-+	if ((data->suspend_mode == MXT_SUSPEND_POWEROFF) && !data->in_bootloader) {
-+		error = mxt_power_on(data);
-+		if (error)
-+			return error;
-+	}
-+
- 	error = mxt_load_fw(dev, MXT_FW_NAME);
- 	if (error) {
- 		dev_err(dev, "The firmware update failed(%d)\n", error);
-@@ -3104,7 +3148,10 @@ static const struct attribute_group mxt_attr_group = {
- 
- static void mxt_start(struct mxt_data *data)
+@@ -1071,9 +1075,11 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
  {
--	mxt_wakeup_toggle(data->client, true, false);
-+	if (data->suspend_mode == MXT_SUSPEND_POWEROFF)
-+		mxt_initialize_after_resume(data);
-+	else
-+		mxt_wakeup_toggle(data->client, true, false);
+ 	int ret_val = 0;
+ 	int size;
++	u64 prev_val;
+ 	void __iomem *vaddr = NULL;
+ 	int pcc_ss_id = per_cpu(cpu_pcc_subspace_idx, cpu);
+ 	struct cpc_reg *reg = &reg_res->cpc_entry.reg;
++	struct cpc_desc *cpc_desc;
  
- 	switch (data->suspend_mode) {
- 	case MXT_SUSPEND_T9_CTRL:
-@@ -3116,6 +3163,7 @@ static void mxt_start(struct mxt_data *data)
- 				MXT_TOUCH_MULTI_T9, MXT_T9_CTRL, 0x83);
- 		break;
+ 	size = GET_BIT_WIDTH(reg);
  
-+	case MXT_SUSPEND_POWEROFF:
- 	case MXT_SUSPEND_DEEP_SLEEP:
- 	default:
- 		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
-@@ -3141,7 +3189,12 @@ static void mxt_stop(struct mxt_data *data)
+@@ -1106,8 +1112,34 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
+ 		return acpi_os_write_memory((acpi_physical_address)reg->address,
+ 				val, size);
+ 
+-	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY)
+-		val = MASK_VAL(reg, val);
++	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
++		cpc_desc = per_cpu(cpc_desc_ptr, cpu);
++		if (!cpc_desc) {
++			pr_debug("No CPC descriptor for CPU:%d\n", cpu);
++			return -ENODEV;
++		}
++
++		spin_lock(&cpc_desc->rmw_lock);
++		switch (size) {
++		case 8:
++			prev_val = readb_relaxed(vaddr);
++			break;
++		case 16:
++			prev_val = readw_relaxed(vaddr);
++			break;
++		case 32:
++			prev_val = readl_relaxed(vaddr);
++			break;
++		case 64:
++			prev_val = readq_relaxed(vaddr);
++			break;
++		default:
++			ret_val = -EFAULT;
++			goto out_unlock;
++		};
++		val = MASK_VAL_WRITE(reg, prev_val, val);
++		val |= prev_val;
++	}
+ 
+ 	switch (size) {
+ 	case 8:
+@@ -1134,6 +1166,10 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
  		break;
  	}
  
--	mxt_wakeup_toggle(data->client, false, false);
-+	if (data->suspend_mode == MXT_SUSPEND_POWEROFF) {
-+		disable_irq(data->irq);
-+		mxt_power_off(data);
-+	} else {
-+		mxt_wakeup_toggle(data->client, false, false);
-+	}
- }
- 
- static int mxt_input_open(struct input_dev *dev)
-@@ -3338,6 +3391,9 @@ static int mxt_probe(struct i2c_client *client)
- 	if (error)
- 		return error;
- 
-+	if (device_property_read_bool(&client->dev, "atmel,poweroff-sleep"))
-+		data->suspend_mode = MXT_SUSPEND_POWEROFF;
++out_unlock:
++	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY)
++		spin_unlock(&cpc_desc->rmw_lock);
 +
- 	/*
- 	 * Controllers like mXT1386 have a dedicated WAKE line that could be
- 	 * connected to a GPIO or to I2C SCL pin, or permanently asserted low.
-@@ -3387,7 +3443,8 @@ static void mxt_remove(struct i2c_client *client)
- 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
--	mxt_power_off(data);
-+	if (!(data->suspend_mode == MXT_SUSPEND_POWEROFF))
-+		mxt_power_off(data);
+ 	return ret_val;
  }
  
- static int mxt_suspend(struct device *dev)
-@@ -3420,7 +3477,8 @@ static int mxt_resume(struct device *dev)
- 	if (!input_dev)
- 		return 0;
- 
--	enable_irq(data->irq);
-+	if (!(data->suspend_mode == MXT_SUSPEND_POWEROFF))
-+		enable_irq(data->irq);
- 
- 	mutex_lock(&input_dev->mutex);
- 
+diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
+index 930b6afba6f4..e1720d930666 100644
+--- a/include/acpi/cppc_acpi.h
++++ b/include/acpi/cppc_acpi.h
+@@ -64,6 +64,8 @@ struct cpc_desc {
+ 	int cpu_id;
+ 	int write_cmd_status;
+ 	int write_cmd_id;
++	/* Lock used for RMW operations in cpc_write() */
++	spinlock_t rmw_lock;
+ 	struct cpc_register_resource cpc_regs[MAX_CPC_REG_ENT];
+ 	struct acpi_psd_package domain_info;
+ 	struct kobject kobj;
 -- 
-2.43.0
+2.45.2
 
