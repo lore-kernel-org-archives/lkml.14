@@ -1,106 +1,82 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F38188CAE
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DCB13B5BD
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039551; cv=none; b=IfiX4NRhAfycmAXCMm8ESolhJ3BQs7D5Q8CihEFdztZfP+qe8L1r341MOjysLYUmku2JGP1TK8LwwPS10is5XNXXJdWKvRRSeAg3kuTash6AVj3WdEmafIuIJMR5OAtG+YzcnIV9uYBroh9eJkKa0T3rZN/7I9VIEOkth0FvKOU=
+	t=1721039569; cv=none; b=XFkpI6up79k8eWw64EVYRrnL31L71fWYRPZ8oBziUjxPR1TK1DPpF/Yynma1SvZ8RMSMWnHFahGaXPhN+2QzxGGno/QVkkrKJXMl1skS+sDmED567Pb1wirYKF9H3+vRvWEZCyvfCSjvlLZ5AV6dQVjmr9KSofjXBazFVr6BpSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039551; c=relaxed/simple;
-	bh=1f1PUYMDSynzzQQV7ZnwruoYE5ot/fboiyGqOFjiY2c=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XnJ0hit0YkEH5K4VjJwIIrJEsGbrfuZVXvCAaaJW3iDIrguBKXlse/KNXeIr2fINdn21tljXlWpzCDCS7wTTaoKbsLIFcEruz06XeQBKzZ22xd6dBo50oO8liKjJIJ9uNnT+5ghE6hrKToRgQkE1FnB/yOU3mCYGDI61PIaGhdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dxduq2+pRmSJIEAA--.3053S3;
-	Mon, 15 Jul 2024 18:32:22 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJMW0+pRm_K1JAA--.24741S3;
-	Mon, 15 Jul 2024 18:32:21 +0800 (CST)
-Subject: Re: [RFC PATCH 4/4] LoongArch: Remove -fno-jump-tables for objtool
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <20240712091506.28140-1-yangtiezhu@loongson.cn>
- <20240712091506.28140-5-yangtiezhu@loongson.cn>
- <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Xi Ruoyao <xry111@xry111.site>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <497ec1a5-fdf9-037c-0781-4f25e9c4f27b@loongson.cn>
-Date: Mon, 15 Jul 2024 18:32:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1721039569; c=relaxed/simple;
+	bh=5mCBLfBnGQpZGaBAHNxZ63K14sw7U6cjzlge2sw5lgA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h/BRAzLX1VSf5R8uxeNa2rm/ddaxucp/eWSM2w4RZyGPudV+gqMymlXoRqNIFJqDXw0L3gjJHVJ/3nQTUi7JHlgG1q5FJGajeEFQ22EFEM5rESVFVASWnFsZCa9Knv3DfJKezZE65p6jIIAaJM+DzdPP4Ncg3lafG/pBYSnJudc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WMz102pwRzxSsd;
+	Mon, 15 Jul 2024 18:27:48 +0800 (CST)
+Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
+	by mail.maildlp.com (Postfix) with ESMTPS id A5D2318006C;
+	Mon, 15 Jul 2024 18:32:37 +0800 (CST)
+Received: from huawei.com (10.173.127.72) by kwepemd200019.china.huawei.com
+ (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 15 Jul
+ 2024 18:32:36 +0800
+From: Miaohe Lin <linmiaohe@huawei.com>
+To: <akpm@linux-foundation.org>
+CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/hwpoison: reset hwpoison filter parameters in pfn_inject_exit()
+Date: Mon, 15 Jul 2024 18:28:06 +0800
+Message-ID: <20240715102806.2638849-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxJMW0+pRm_K1JAA--.24741S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uF1UAw15ZFy7Xry3Gr1xWFX_yoW8WrWkpr
-	s7A3ZrGr48Xrs5ta9xt3yvg3y2vr97KF4xWr4xtFyrArZ093yqvr18Kr1qgFy8G395tw4S
-	qF1Sga4Y9F4UWFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1Ek
-	sDUUUUU==
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd200019.china.huawei.com (7.221.188.193)
 
-On 07/12/2024 05:40 PM, Huacai Chen wrote:
-> Hi, Tiezhu,
->
-> On Fri, Jul 12, 2024 at 5:15 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>  arch/loongarch/Kconfig  | 8 +++++++-
->>  arch/loongarch/Makefile | 6 ++----
->>  2 files changed, 9 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index ddc042895d01..57f28450a2ed 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -143,7 +143,7 @@ config LOONGARCH
->>         select HAVE_LIVEPATCH
->>         select HAVE_MOD_ARCH_SPECIFIC
->>         select HAVE_NMI
->> -       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB && !CC_IS_CLANG
->> +       select HAVE_OBJTOOL if TOOLCHAIN_SUPPORTS_OBJTOOL && !CC_IS_CLANG
->>         select HAVE_PCI
->>         select HAVE_PERF_EVENTS
->>         select HAVE_PERF_REGS
->> @@ -276,6 +276,12 @@ config AS_HAS_LBT_EXTENSION
->>  config AS_HAS_LVZ_EXTENSION
->>         def_bool $(as-instr,hvcl 0)
->>
->> +config CC_HAS_ANNOTATE_TABLEJUMP
->> +       def_bool $(cc-option,-mannotate-tablejump)
->> +
->> +config TOOLCHAIN_SUPPORTS_OBJTOOL
->> +       def_bool AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB && CC_HAS_ANNOTATE_TABLEJUMP
-> Can AS_HAS_THIN_ADD_SUB be removed now?
+When hwpoison_inject module is removed, hwpoison_filter_* parameters
+should be reset. Otherwise these parameters will have non-default values
+at next insmod time.
 
-If the following patch can be accepted, then objtool will not rely
-on AS_HAS_THIN_ADD_SUB, I will try to send this patch again.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ mm/hwpoison-inject.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-objtool: Add skipped member in struct reloc
-https://lore.kernel.org/loongarch/1690272910-11869-6-git-send-email-yangtiezhu@loongson.cn/
-
-Thanks,
-Tiezhu
+diff --git a/mm/hwpoison-inject.c b/mm/hwpoison-inject.c
+index 7ecaa1900137..b0bd11133a1d 100644
+--- a/mm/hwpoison-inject.c
++++ b/mm/hwpoison-inject.c
+@@ -64,9 +64,20 @@ static int hwpoison_unpoison(void *data, u64 val)
+ DEFINE_DEBUGFS_ATTRIBUTE(hwpoison_fops, NULL, hwpoison_inject, "%lli\n");
+ DEFINE_DEBUGFS_ATTRIBUTE(unpoison_fops, NULL, hwpoison_unpoison, "%lli\n");
+ 
+-static void __exit pfn_inject_exit(void)
++static inline void reset_hwpoison_filter(void)
+ {
+ 	hwpoison_filter_enable = 0;
++	hwpoison_filter_dev_major = ~0U;
++	hwpoison_filter_dev_minor = ~0U;
++	hwpoison_filter_flags_mask = 0;
++	hwpoison_filter_flags_value = 0;
++#ifdef CONFIG_MEMCG
++	hwpoison_filter_memcg = 0;
++#endif
++}
++
++static void __exit pfn_inject_exit(void)
++{
+ 	debugfs_remove_recursive(hwpoison_dir);
+ }
+ 
+-- 
+2.33.0
 
