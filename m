@@ -1,91 +1,292 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECE54C66;
-	Mon, 15 Jul 2024 12:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9E18A944;
+	Mon, 15 Jul 2024 12:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721046988; cv=none; b=I5+gTyrc/BXIiu3HN+NaBaMjDS/rD1vH6IevHM94Ty5zEZ4/HLnkQwG9Gg9V9lADU898Iqnps9urYjddx1BwyPh8zfS5O9tamqZvuB9g5xwvX9Uz8HV5r7MO6+hbJ2SQRXY8NdjmTqezz9RP0htV54uQI7ZGs1AjhPdZQv4KH4w=
+	t=1721047021; cv=none; b=E3ufxU/m9w23as1Z93B06omEuX7zb3UeuV+N55HsvWGHhKA2J/OrenvWbpq0Nf+u3H9bh0fHkeGLAb6/dL9xueYbwHh8PIcmUCsyq655xbp6eyDolHMERp37gkhNMkj5r5NenISXkLnRHJpddm+psHbAS8QqdDi/qWASGYmyy+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721046988; c=relaxed/simple;
-	bh=OCLY/jJSo4MO9ry1TAWphgYOa0L1YgPDk0Dml1xnlEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CLOCWGrNS6pqfyeUKPObt0qYzU41hZVT07PryyxIKazHh8Ma0+5z7MgA16E+RbyfZ/qH65BJEJq9qjPNMqSg+k/3i0baI/rOe4Bnk7YjpVkn31Z7T7EpJ7/gVvP7dNCMsel5Fd/ZvJXRB31QmoPc6opfp2+wtzrxhxxwHOlGx9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=diP0rJ8c; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721047021; c=relaxed/simple;
+	bh=lGTgDdw0D3LgnUyX4dXtePNOhp9in10pEAeYuGJ54gU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YAXIT0jDJ206YpV0/dX5DWf+Fv1sWEJF1qKE2cmRW9N7Q0wc7TDg9Mi0jEV6RQGg9tnqorZm6OCCDwnSwGc8ZFoV8hyqdtYKjcbfZSqI/KiNPXs2KqjOM0eodcdbbL2NoUypkNlSOtwZ26QK1i1JdLG/wtacU2yKz5Va9HSmxMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WriNx1Kw; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="diP0rJ8c"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-426636ef8c9so28351745e9.2;
-        Mon, 15 Jul 2024 05:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721046985; x=1721651785; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mt7ZxLBac9YIKiH2x8RSDRfj7SUv5FljeiparI/YinU=;
-        b=diP0rJ8cpEsxmnSNVTdKuQuK4xTV/z38iWlZBnLxaMdIJhY/EZgQ+ujoK7zYyM6BGy
-         TE2GSPbb9pFjFJ/OhVyF3bqo5EANm/CXwQ8f217wg8TDFUL/qjrFFwqZ6XzQT9hyxccd
-         yaz/oGDkiJcLmwDb1J5u1r/hk88ghRgtfgn3BZrFt0Rz/L+/Oxiigp11F+0YwhZz0YqZ
-         A7K1koZnRHzKbyvyrwQqyDwT6y4eOAsVbgCjwNXCm75Zk/jqMGkUOVEFnVWvsIoJYN2o
-         9bdbcVw9v7f4VkbOA+uH5zfbDjLbvqiDrV75kWQiMFLNVcx1tCa2TXLOB7/65qiigTtW
-         C1tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721046985; x=1721651785;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mt7ZxLBac9YIKiH2x8RSDRfj7SUv5FljeiparI/YinU=;
-        b=RI+40UvRSx8LZFVrhaCzSji9y1TFegWiQYO5oI/GXEH0PaGyb3PnfDbGCoMnlzKqai
-         cb4e59u8b0yjANu256FLg6cKaPDniM3uYue8lorqP2jJ7QDVpC4bFSGPjTmTZaB/H79Q
-         XEw0WTz/mwTCb3z2Z/l1iietETjwFkj5kfOGi0YbXNGj2etiVnljBu3m41ZGpuYHvdAW
-         Js9CkgrcwJdupqUvfrKaFk4CpKpyYWgrV/apKdeJ4hgHKPgDrZpnU42I1XrFBuiAs/6x
-         Yd+1BjoaVE32iB3492NMyeGaDMeT37mGNUuB1mNYTuo0xZar6mWI8wNcJs4dB1zx+WpV
-         FT/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWNfusO7wni35Op8WqqBeGIXd4sy8mC56UBc+RwKTkuqVc3R11K8trt4qRHJbKZhNe2tA6TYpKX9qQ4Kw9+vkHXWgkggjq0ywU1NoeheGz29neORS3HkIVdRjQj050YZIa4XCKX
-X-Gm-Message-State: AOJu0Yz6ezoNcaJTFQr6oay5ZtY/Vf3YghrqH7W5MjekA0IX3vnltxCb
-	nqstIKaAXxcMQXIvtTnVzjH1kLqFVXrsidI7nQX+lW4RmqHJ+ufu
-X-Google-Smtp-Source: AGHT+IFObgaoMCVQ/7Rh8cF8m1esPsmMeRw5gzaOD+nzocKyphjJOBG5NBKaJox5FN9hDrA3hRg65A==
-X-Received: by 2002:a5d:50ca:0:b0:367:926a:7413 with SMTP id ffacd0b85a97d-367ceadad63mr13076108f8f.63.1721046985221;
-        Mon, 15 Jul 2024 05:36:25 -0700 (PDT)
-Received: from skbuf ([188.25.49.162])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680daccac2sm6257558f8f.56.2024.07.15.05.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 05:36:24 -0700 (PDT)
-Date: Mon, 15 Jul 2024 15:36:21 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Christian Eggers <ceggers@arri.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Juergen Beisert <jbe@pengutronix.de>, Stefan Roese <sr@denx.de>,
-	Juergen Borleis <kernel@pengutronix.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] dsa: lan9303: consistent naming for PHY address
- parameter
-Message-ID: <20240715123621.hkb7ntjcigxdkehn@skbuf>
-References: <20240715123050.21202-1-ceggers@arri.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WriNx1Kw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721047019; x=1752583019;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=lGTgDdw0D3LgnUyX4dXtePNOhp9in10pEAeYuGJ54gU=;
+  b=WriNx1KwLAohhyialObweRLoxZu+zw4ldANGsmbmBqMte76ud3fA8b2s
+   lIfHk5I77lvvxFckk/N6qrX+L1P/L3rm1DJB9XpbkNz/+1AX9tDEqJpUJ
+   r1fqHPA6YNQGhEaOTeLW9mRlDYxuFFl69LtfKO7iBD6kdxupUJt8MYHiM
+   jWF6RITfxK9xqsYTMcXXZaAa4oha2Ol6XZ8oyIO+JeItEl1IuEBhVudfg
+   zaDP9LOGUAgqiEwUGfx52js24pnsFJ8Xznv1Em+rAWd2DQjAWGNb29G7y
+   G8xCwbT9HcwdSpve8N1dJmCTciIrKZHgd49XI5iDWmRbgWIPp9LPj2cfH
+   g==;
+X-CSE-ConnectionGUID: aCJYLc8KRCC6rIXrFJlQVw==
+X-CSE-MsgGUID: vmh8KRdWR/KOE1FSi4iMWg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="29012835"
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="29012835"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 05:36:59 -0700
+X-CSE-ConnectionGUID: p79mAvRxS6uC/AWugJ5V4Q==
+X-CSE-MsgGUID: 0bsbbmOVQXK+BgeNncbNrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="49497247"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.131])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 05:36:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 15 Jul 2024 15:36:50 +0300 (EEST)
+To: superm1@kernel.org
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Mathias Nyman <mathias.nyman@intel.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>, 
+    Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 1/5] PCI: Use an enum for reset type in
+ pci_dev_wait()
+In-Reply-To: <20240712181246.811044-2-superm1@kernel.org>
+Message-ID: <c67b005a-2378-2ce9-e55b-da807fd1811a@linux.intel.com>
+References: <20240712181246.811044-1-superm1@kernel.org> <20240712181246.811044-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715123050.21202-1-ceggers@arri.de>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1789045202-1721046575=:1424"
+Content-ID: <798844da-5d0a-555d-6478-d69161bbec3b@linux.intel.com>
 
-Hi Christian,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Mon, Jul 15, 2024 at 02:30:50PM +0200, Christian Eggers wrote:
-> Name it 'addr' instead of 'port' or 'phy'.
-> 
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
+--8323328-1789045202-1721046575=:1424
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <3b6b0dbd-8593-9c57-8b49-00a0de00e557@linux.intel.com>
+
+On Fri, 12 Jul 2024, superm1@kernel.org wrote:
+
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>=20
+> A string is passed to all callers of pci_dev_wait() which is utilized
+> to demonstrate what kind of reset happened when there was a problem.
+>=20
+> This doesn't allow making the behavior for different reset types
+> conditional though. Lay some plumbing to allow making comparisons of
+> reset types with integers instead. No functional changes.
+>=20
+> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
+>  drivers/pci/pci-driver.c |  2 +-
+>  drivers/pci/pci.c        | 29 +++++++++++++++++++----------
+>  drivers/pci/pci.h        | 11 ++++++++++-
+>  drivers/pci/pcie/dpc.c   |  2 +-
+>  4 files changed, 31 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index af2996d0d17ff..ff97d08741df7 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -572,7 +572,7 @@ static void pci_pm_bridge_power_up_actions(struct pci=
+_dev *pci_dev)
+>  {
+>  =09int ret;
+> =20
+> -=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, "resume");
+> +=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, PCI_DEV_WAIT_RESUM=
+E);
+>  =09if (ret) {
+>  =09=09/*
+>  =09=09 * The downstream link failed to come up, so mark the
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 35fb1f17a589c..115361a08d9e3 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -181,6 +181,15 @@ static int __init pcie_port_pm_setup(char *str)
+>  }
+>  __setup("pcie_port_pm=3D", pcie_port_pm_setup);
+> =20
+> +const char * const pci_reset_types[] =3D {
 
-There was a small time window in which you should have sent the patch,
-after the 'net' -> 'net-next' merge, but before the 'net-next' closure.
-https://lore.kernel.org/netdev/20240714204612.738afb58@kernel.org/
+Sparse is not happy about this and expects static as it is not defined=20
+by any header (LKP seems to also have caught this).
 
-You missed it, and so, you now need to wait, according to Jakub, until
-July 28 and resend then.
+> +=09"FLR",
+> +=09"AF_FLR",
+> +=09"PM D3HOT->D0",
+> +=09"bus reset",
+> +=09"resume",
+> +=09"DPC",
+
+Perhaps the index-based array initialization format would be beneficial=20
+here.
+
+--=20
+ i.
+
+> +};
+> +
+>  /**
+>   * pci_bus_max_busnr - returns maximum PCI bus number of given bus' chil=
+dren
+>   * @bus: pointer to PCI bus structure to search
+> @@ -1250,7 +1259,7 @@ void pci_resume_bus(struct pci_bus *bus)
+>  =09=09pci_walk_bus(bus, pci_resume_one, NULL);
+>  }
+> =20
+> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeo=
+ut)
+> +static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_t=
+ype, int timeout)
+>  {
+>  =09int delay =3D 1;
+>  =09bool retrain =3D false;
+> @@ -1288,7 +1297,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
+reset_type, int timeout)
+> =20
+>  =09=09if (delay > timeout) {
+>  =09=09=09pci_warn(dev, "not ready %dms after %s; giving up\n",
+> -=09=09=09=09 delay - 1, reset_type);
+> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
+>  =09=09=09return -ENOTTY;
+>  =09=09}
+> =20
+> @@ -1301,7 +1310,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
+reset_type, int timeout)
+>  =09=09=09=09}
+>  =09=09=09}
+>  =09=09=09pci_info(dev, "not ready %dms after %s; waiting\n",
+> -=09=09=09=09 delay - 1, reset_type);
+> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
+>  =09=09}
+> =20
+>  =09=09msleep(delay);
+> @@ -1310,10 +1319,10 @@ static int pci_dev_wait(struct pci_dev *dev, char=
+ *reset_type, int timeout)
+> =20
+>  =09if (delay > PCI_RESET_WAIT)
+>  =09=09pci_info(dev, "ready %dms after %s\n", delay - 1,
+> -=09=09=09 reset_type);
+> +=09=09=09 pci_reset_types[reset_type]);
+>  =09else
+>  =09=09pci_dbg(dev, "ready %dms after %s\n", delay - 1,
+> -=09=09=09reset_type);
+> +=09=09=09pci_reset_types[reset_type]);
+> =20
+>  =09return 0;
+>  }
+> @@ -4465,7 +4474,7 @@ int pcie_flr(struct pci_dev *dev)
+>  =09 */
+>  =09msleep(100);
+> =20
+> -=09return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
+> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_FLR, PCIE_RESET_READY_POLL_MS);
+>  }
+>  EXPORT_SYMBOL_GPL(pcie_flr);
+> =20
+> @@ -4532,7 +4541,7 @@ static int pci_af_flr(struct pci_dev *dev, bool pro=
+be)
+>  =09 */
+>  =09msleep(100);
+> =20
+> -=09return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
+> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_AF_FLR, PCIE_RESET_READY_POLL_M=
+S);
+>  }
+> =20
+>  /**
+> @@ -4577,7 +4586,7 @@ static int pci_pm_reset(struct pci_dev *dev, bool p=
+robe)
+>  =09pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, csr);
+>  =09pci_dev_d3_sleep(dev);
+> =20
+> -=09return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
+> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_D3HOT_D0, PCIE_RESET_READY_POLL=
+_MS);
+>  }
+> =20
+>  /**
+> @@ -4751,7 +4760,7 @@ static int pci_bus_max_d3cold_delay(const struct pc=
+i_bus *bus)
+>   * Return 0 on success or -ENOTTY if the first device on the secondary b=
+us
+>   * failed to become accessible.
+>   */
+> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
+ype)
+> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
+t_type reset_type)
+>  {
+>  =09struct pci_dev *child;
+>  =09int delay;
+> @@ -4885,7 +4894,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *=
+dev)
+>  {
+>  =09pcibios_reset_secondary_bus(dev);
+> =20
+> -=09return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
+> +=09return pci_bridge_wait_for_secondary_bus(dev, PCI_DEV_WAIT_BUS_RESET)=
+;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+> =20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index fd44565c47562..88f54d22118dc 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -4,6 +4,15 @@
+> =20
+>  #include <linux/pci.h>
+> =20
+> +enum pci_reset_type {
+> +=09PCI_DEV_WAIT_FLR,
+> +=09PCI_DEV_WAIT_AF_FLR,
+> +=09PCI_DEV_WAIT_D3HOT_D0,
+> +=09PCI_DEV_WAIT_BUS_RESET,
+> +=09PCI_DEV_WAIT_RESUME,
+> +=09PCI_DEV_WAIT_DPC,
+> +};
+> +
+>  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
+>  #define MAX_NR_DEVFNS 256
+> =20
+> @@ -94,7 +103,7 @@ void pci_msi_init(struct pci_dev *dev);
+>  void pci_msix_init(struct pci_dev *dev);
+>  bool pci_bridge_d3_possible(struct pci_dev *dev);
+>  void pci_bridge_d3_update(struct pci_dev *dev);
+> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
+ype);
+> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
+t_type reset_type);
+> =20
+>  static inline void pci_wakeup_event(struct pci_dev *dev)
+>  {
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index a668820696dc0..306efc399e503 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -174,7 +174,7 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+>  =09pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
+>  =09=09=09      PCI_EXP_DPC_STATUS_TRIGGER);
+> =20
+> -=09if (pci_bridge_wait_for_secondary_bus(pdev, "DPC")) {
+> +=09if (pci_bridge_wait_for_secondary_bus(pdev, PCI_DEV_WAIT_DPC)) {
+>  =09=09clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+>  =09=09ret =3D PCI_ERS_RESULT_DISCONNECT;
+>  =09} else {
+>=20
+--8323328-1789045202-1721046575=:1424--
