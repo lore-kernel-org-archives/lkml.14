@@ -1,30 +1,61 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBA918C199;
-	Mon, 15 Jul 2024 12:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946B318C324
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 12:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721047325; cv=none; b=B3uLfEVuaMBRmzQlB+5p43SGd2ovQ+p5JHYPkjlnwD02iXe1quRK3HX5sXOIDtwoF9Mo294mBNgwAPx4Y5Nbmy/PcW1Bi8z+y3TlGQImsih2d4VaIvYCY2QLuN+KIQEFBhyoWPIDhwEyUoY5Hqchzq7BMMigLqVGj/OIV2LukWw=
+	t=1721047337; cv=none; b=IPNgmzMzBxbf1cZUTd4asUT7m6r32SKeTSkSTZ8wykcPV3KHDLFqStNEchJTKad05g4vmyNDRAZ+6IJn7zFgg965mHEIhlhg4ybOyw4VTg/IAW2Q5oN4EU+pfw5lOLqKDZJNAAqdteZ7Yo9b7K0yCDunpsh7E3SXlCVTUhRUWAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721047325; c=relaxed/simple;
-	bh=RymC3KXofy0N4SRL7i6l50KYjj5iqOuKS3ZHuEBMQA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0naAVD2gMc/aY0E2YLMAcVgN4lg+3gz/X4mPrw5YxT28Hm3m409BEg87LI5iubqX1zOZrAJlLlfadpv8Oiy+rR6JCBlNr7TEqBM7O3li2X0UZZoD15RwKOR+f50VNHUwtIYFfOULDG2CFdlAqhcD9Ccp9iVoIR0ONJ1+rV6Ogo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WN1zY5Tp6z4f3m7B;
-	Mon, 15 Jul 2024 20:41:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D9E891A0181;
-	Mon, 15 Jul 2024 20:41:58 +0800 (CST)
-Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP4 (Coremail) with SMTP id gCh0CgC3mjgTGZVm3G7QAA--.42161S3;
-	Mon, 15 Jul 2024 20:41:58 +0800 (CST)
-Message-ID: <d33cfec3-4d72-41dc-b020-f17f726ba719@huaweicloud.com>
-Date: Mon, 15 Jul 2024 20:41:55 +0800
+	s=arc-20240116; t=1721047337; c=relaxed/simple;
+	bh=EDBgzw5DNpqz9ajLvn1qdqXNoW+eqNa5B0DJrP/Swqs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=d4Y2HZ8KmyldYhJKnQFZqDuMbyMYoM2Q1+EDt4Rmm4arb7XbHtldOU0qlJnPFFszmO/QQ9gn/OaQkbiSxXqejFf78BkHHi95kTa1Xb0Hq1hhK0k9phIsavylaIEiZgRYkW8iqOEq7pLpZwnSKZeUn52pB9Ohsvzqs+F/WEKPA64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VQIgH53D; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VQIgH53D"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eeb1ba0468so49026361fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 05:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721047334; x=1721652134; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k+EQHqWsk3KyTfpZcgFPziNWV1GVC9Hoip1sZmqcTgg=;
+        b=VQIgH53DZt9MLiSkKYHTo5UySRpBK6BRx4t+gc/zlk+SDt00WimQG0eQXeuI5EwDHF
+         Im+U8lHMHJeHFBYPHBR9DnS2jBNgrtoIjmhbWa7pYEQWUUVvCRWcWv7fgRZ/sBy6DGag
+         nESudaeJHoCqrbagCOBrDV5OMPxUBxPgVOVCz/PaoK9S2UlClOVw83kSRANCBHtoVvcl
+         TcIm7vQXEFe9lLM0FK3+Bvl5Z4RpjZ/DnDuUso7adQQSWyJ970n5tezGaaDLMPPIq/uY
+         92yE1GhY6qT9BgyttHVQ2hQ7oUVMB3htEA3mFtRmZ43LwllekoICBP/yXtTuwLisspbM
+         frnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721047334; x=1721652134;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=k+EQHqWsk3KyTfpZcgFPziNWV1GVC9Hoip1sZmqcTgg=;
+        b=QxHbF+hVtyrPZ11keZgoYTxhReYlWQRBgciene3Q70L53W4GOAs7o/9bMu5ChghEvF
+         AZ4qwBvzlLUqLPgZSJiCWuNq0WqEBC4Ehf7xGFUp34aekslruJtNVsAnmYf0F0MUMOLj
+         AECWy2oGJDixCMhpIVk/Q0P2ZG58lYRONU8xaLICPxMJ7wmHfY3crKkpmE/Bzf3syH//
+         C95wwE4mPbaH42Eh8P/ha7+37Qro/BGa15RXoVXEMAf3lr8M2KJ0pHg7RoupodeIJs21
+         FroubfFHr4D87DFj0doATeTXhmxOeM6gzO0ShIZ6HLPEOllbItgk/2A5EqoYqc0ue41N
+         bIew==
+X-Forwarded-Encrypted: i=1; AJvYcCUv6j/9Mkvj4QelbCB9hmijd688it9QTq2EsMIf8BInblwgENfW4CzrDM38VH3Pw6+SYPerFbL/8BExXG8xGBLR2Zo7KCBd8V6lATUO
+X-Gm-Message-State: AOJu0Yy/uav78U0jA/zSD1GWJv9TUjgbM8Xv84NZsOKIMOf8UsMkRVyp
+	9vWg+57/sv5xI1ItCE5pzkuoMttzUsdWh/lpB5kax/q4qIb7kWZ+3PVIpIUKrxI=
+X-Google-Smtp-Source: AGHT+IFiuC6l6e4W15chCpGMEHC8U71AzWjph63xnUIfCY9cb8EqCei/7BgC+gL95yvQZ5BUSuVCUw==
+X-Received: by 2002:a2e:8710:0:b0:2ee:6cda:6380 with SMTP id 38308e7fff4ca-2eeb30e3cbbmr121814191fa.18.1721047333411;
+        Mon, 15 Jul 2024 05:42:13 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:79bb:5f59:8e51:52d4? ([2a01:e0a:982:cbb0:79bb:5f59:8e51:52d4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafb877sm6342646f8f.69.2024.07.15.05.42.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jul 2024 05:42:13 -0700 (PDT)
+Message-ID: <7daa3c0d-cecf-4f50-be32-ae116b920db0@linaro.org>
+Date: Mon, 15 Jul 2024 14:42:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,220 +63,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/20] ext4: prevent partial update of the extents path
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- jack@suse.cz, ritesh.list@gmail.com, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, Baokun Li <libaokun1@huawei.com>,
- zhanchengbin <zhanchengbin1@huawei.com>, Baokun Li <libaokun@huaweicloud.com>
-References: <20240710040654.1714672-1-libaokun@huaweicloud.com>
- <20240710040654.1714672-3-libaokun@huaweicloud.com>
- <ZpPx3kuO36lp9/Um@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
- <9fd554c7-dc0c-4969-9f2a-1c99356fccce@huaweicloud.com>
-Content-Language: en-US
-From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <9fd554c7-dc0c-4969-9f2a-1c99356fccce@huaweicloud.com>
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 2/4] Revert "drm/panel-edp: Add SDC ATNA45AF01"
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>
+References: <20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3@linaro.org>
+ <20240715-x1e80100-crd-backlight-v2-2-31b7f2f658a3@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240715-x1e80100-crd-backlight-v2-2-31b7f2f658a3@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3mjgTGZVm3G7QAA--.42161S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3XrW8GF48JrW8WrykXry3XFb_yoW3XFyxpr
-	nayF1UGrWUWwn5Wry7GF1UJryUAw18Jw17JrWrGFy8JFWUAr1aqr10qF109F1DJrZ7Ja15
-	tryUXrnrur1UJrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-	evJa73UjIFyTuYvjfUFg4SDUUUU
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAFBWaU3XsUgAABsA
+Content-Transfer-Encoding: 7bit
 
-On 2024/7/15 20:33, Baokun Li wrote:
-> Hi Ojaswin!
->
-> On 2024/7/14 23:42, Ojaswin Mujoo wrote:
->> On Wed, Jul 10, 2024 at 12:06:36PM +0800, libaokun@huaweicloud.com 
->> wrote:
->>> From: Baokun Li <libaokun1@huawei.com>
->>>
->>> In ext4_ext_rm_idx() and ext4_ext_correct_indexes(), there is no proper
->>> rollback of already executed updates when updating a level of the 
->>> extents
->>> path fails, so we may get an inconsistent extents tree, which may 
->>> trigger
->>> some bad things in errors=continue mode.
->>>
->>> Hence clear the verified bit of modified extents buffers if the tree 
->>> fails
->>> to be updated in ext4_ext_rm_idx() or ext4_ext_correct_indexes(), which
->>> forces the extents buffers to be checked in 
->>> ext4_valid_extent_entries(),
->>> ensuring that the extents tree is consistent.
->>>
->>> Signed-off-by: zhanchengbin <zhanchengbin1@huawei.com>
->>> Link: 
->>> https://lore.kernel.org/r/20230213080514.535568-3-zhanchengbin1@huawei.com/
->>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>> ---
->>>   fs/ext4/extents.c | 31 +++++++++++++++++++++++++++----
->>>   1 file changed, 27 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
->>> index bff3666c891a..4d589d34b30e 100644
->>> --- a/fs/ext4/extents.c
->>> +++ b/fs/ext4/extents.c
->>> @@ -1749,12 +1749,23 @@ static int ext4_ext_correct_indexes(handle_t 
->>> *handle, struct inode *inode,
->>>        break;
->>>      err = ext4_ext_get_access(handle, inode, path + k);
->>>      if (err)
->>> -     break;
->>> +     goto clean;
->>>      path[k].p_idx->ei_block = border;
->>>      err = ext4_ext_dirty(handle, inode, path + k);
->>>      if (err)
->>> -     break;
->>> +     goto clean;
->>>    }
->>> + return 0;
->>> +
->>> +clean:
->>> + /*
->>> +  * The path[k].p_bh is either unmodified or with no verified bit
->>> +  * set (see ext4_ext_get_access()). So just clear the verified bit
->>> +  * of the successfully modified extents buffers, which will force
->>> +  * these extents to be checked to avoid using inconsistent data.
->>> +  */
->>> + while (++k < depth)
->>> +   clear_buffer_verified(path[k].p_bh);
->>>      return err;
->>>   }
->>> @@ -2312,12 +2323,24 @@ static int ext4_ext_rm_idx(handle_t *handle, 
->>> struct inode *inode,
->>>        break;
->>>      err = ext4_ext_get_access(handle, inode, path + k);
->>>      if (err)
->>> -     break;
->>> +     goto clean;
->>>      path[k].p_idx->ei_block = path[k + 1].p_idx->ei_block;
->>>      err = ext4_ext_dirty(handle, inode, path + k);
->>>      if (err)
->>> -     break;
->>> +     goto clean;
->>>    }
->>> + return 0;
->>> +
->>> +clean:
->>> + /*
->>> +  * The path[k].p_bh is either unmodified or with no verified bit
->>> +  * set (see ext4_ext_get_access()). So just clear the verified bit
->>> +  * of the successfully modified extents buffers, which will force
->>> +  * these extents to be checked to avoid using inconsistent data.
->>> +  */
->>> + while (++k < depth)
->>> +   clear_buffer_verified(path[k].p_bh);
->>> +
->>>    return err;
->>>   }
->> Hi Baokun,
->>
->> So I wanted to understand the extent handling paths for a whil and 
->> thought this
->> patchset was a good chance to finally take sometime and do that.
->>
->> I do have a question based on my understanding of this extent 
->> deletion code:
->>
->> So IIUC, ext4_find_extent() will return a path where buffer of each 
->> node is
->> verified (via bh = read_extent_tree_block()). So imagine we have the 
->> following
->> path (d=depth, blk=idx.ei_block, v=verified, nv=not-verified):
->>
->> +------+     +------+     +------+     +------+     +------+
->> |d=0   |     |d=1   |     |d=2   |     |d=3   |     |      |
->> |blk=1 | --> |blk=1 | --> |blk=1 | --> |blk=1 | --> |pblk=1|
->> |(v)   |     |(v)   |     |(v)   |     |(v)   |     |      |
->> +------+     +------+     +------+     +------+     +------+
->>                                         |d=3   |     +------+
->>                                         |blk=2 | --> |      |
->>                                         |(v)   |     |pblk=2|
->>                                         +------+     |      |
->>                                                      +------+
->>
->> Here, the the last column are the leaf nodes with only 1 extent in 
->> them.  Now,
->> say we want to punch the leaf having pblk=1. We'll eventually call
->> ext4_ext_rm_leaf() -> ext4_ext_rm_idx() to remove the index at depth 
->> = 3 and
->> try fixin up the indices in path with ei_block = 2
->>
->> Suppose we error out at depth == 1. After the cleanup (introduced in 
->> this
->> patch), we'll mark depth = 1 to 4 as non verified:
->>
->> +------+     +------+     +------+     +------+     +------+
->> |d=0   |     |d=1   |     |d=2   |     |d=3   |     |      |
->> |blk=1 | --> |blk=1 | --> |blk=2 | --> |blk=2 | --> |pblk=2|
->> |(v)   |     |(nv)  |     |(nv)  |     |(nv)  |     |(nv)  |
->> +------+     +------+     +------+     +------+     +------+
-> Exactly right!
->>
->> And we return and we won't actually mark the FS corrupt until we try 
->> to check
->> the bh at depth = 1 above. In this case, the first node is still 
->> pointing to
->> wrong ei_block but is marked valid. Aren't we silently leaving the 
->> tree in an
->> inconsistent state which might lead to corrupted lookups until we 
->> actually
->> touch the affected bh and realise that there's a corruption.
->>
->> Am I missing some codepath here? Should we maybe try to clear_valid 
->> for the
->> whole tree?
->>
->> (I hope the formatting of diagram comes out correct :) )
-Uh, I'm sorry, my diagram is disordered. 😅
->>
->> Regards,
->> ojaswin
-> But the journal will ensure the consistency of the extents path after
-> this patch.
->
-> When ext4_ext_get_access() or ext4_ext_dirty() returns an error in
-> ext4_ext_rm_idx() and ext4_ext_correct_indexes(), this may cause
-> the extents tree to be inconsistent. But the inconsistency just
-> exists in memory and doesn't land on disk.
->
-> For ext4_ext_get_access(), the handle must have been aborted
-> when it returned an error, as follows:
-ext4_ext_get_access
-  ext4_journal_get_write_access
-   __ext4_journal_get_write_access
-    err = jbd2_journal_get_write_access
-    if (err)
-      ext4_journal_abort_handle
-> For ext4_ext_dirty(), since path->p_bh must not be null and handle
-> must be valid, handle is aborted anyway when an error is returned:
-ext4_ext_dirty
-  __ext4_ext_dirty
-   if (path->p_bh)
-     __ext4_handle_dirty_metadata
-      if (ext4_handle_valid(handle))
-        err = jbd2_journal_dirty_metadata
-         if (!is_handle_aborted(handle) && WARN_ON_ONCE(err))
-           ext4_journal_abort_handle
-> Thus the extents tree will only be inconsistent in memory, so only
-> the verified bit of the modified buffer needs to be cleared to avoid
-> these inconsistent data being used in memory.
->
-Regards,
-Baokun
+Hi,
 
+On 15/07/2024 14:15, Stephan Gerhold wrote:
+> This reverts commit 8ebb1fc2e69ab8b89a425e402c7bd85e053b7b01.
+> 
+> The panel should be handled through the samsung-atna33xc20 driver for
+> correct power up timings. Otherwise the backlight does not work correctly.
+> 
+> We have existing users of this panel through the generic "edp-panel"
+> compatible (e.g. the Qualcomm X1E80100 CRD), but the screen works only
+> partially in that configuration: It works after boot but once the screen
+> gets disabled it does not turn on again until after reboot. It behaves the
+> same way with the default "conservative" timings, so we might as well drop
+> the configuration from the panel-edp driver. That way, users with old DTBs
+> will get a warning and can move to the new driver.
+> 
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
+>   drivers/gpu/drm/panel/panel-edp.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+> index 3a574a9b46e7..d2d682385e89 100644
+> --- a/drivers/gpu/drm/panel/panel-edp.c
+> +++ b/drivers/gpu/drm/panel/panel-edp.c
+> @@ -1960,8 +1960,6 @@ static const struct edp_panel_entry edp_panels[] = {
+>   	EDP_PANEL_ENTRY('L', 'G', 'D', 0x05af, &delay_200_500_e200_d200, "Unknown"),
+>   	EDP_PANEL_ENTRY('L', 'G', 'D', 0x05f1, &delay_200_500_e200_d200, "Unknown"),
+>   
+> -	EDP_PANEL_ENTRY('S', 'D', 'C', 0x416d, &delay_100_500_e200, "ATNA45AF01"),
+> -
+>   	EDP_PANEL_ENTRY('S', 'H', 'P', 0x1511, &delay_200_500_e50, "LQ140M1JW48"),
+>   	EDP_PANEL_ENTRY('S', 'H', 'P', 0x1523, &delay_80_500_e50, "LQ140M1JW46"),
+>   	EDP_PANEL_ENTRY('S', 'H', 'P', 0x153a, &delay_200_500_e50, "LQ140T1JH01"),
+> 
+
+How will we handle current/old crd DT with new kernels ?
+
+Same question for patch 3, thie serie introduces a bindings that won't be valid
+if we backport patch 3. I don't think patch should be backported, and this patch
+should be dropped.
+
+Neil
