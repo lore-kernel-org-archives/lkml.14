@@ -1,103 +1,97 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BBA20323;
-	Mon, 15 Jul 2024 17:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C62446AF
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 17:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064090; cv=none; b=fvdYf1L7mrujacCoHKBbPDl8X/5MhJmc4wkzZRnzKFlNKJT1HX6qZ/QzjHyyjKgRRIiiehAfkOE9+l4qlEC/G/Ya6PyojY/+T0fARyWvQRASNoTe/y9zVAWMABarPGeI+RxJVllNJaDSOfTm673pTpLKTFTaIXj9PyuYigwTJPQ=
+	t=1721064179; cv=none; b=r17+YZlZFSFUR2htmY8DiNMWaoHYAAGPsIxngXcwND6UyqgVfN/3TJV9hdKJ+r4miA5Kvxo+rWZi9xTftYNyD66O9Sq7Gv4wpJWTxVEaNdoB7EKKm877sT34UJu0wXac+m1lNpG+TvpglUVTH5zGf/nYwH2xFlttjaqHhrf+kFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064090; c=relaxed/simple;
-	bh=YuKyZRtkNIBHN5jbSweMr/laqNyoENl8JTxzcP5OZ9w=;
+	s=arc-20240116; t=1721064179; c=relaxed/simple;
+	bh=zZksEh1vYqLGn6g7NkPYHrk8Y02M9cK3JqB8R4g3zmo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uAlJYcZ9KIjokujm3Bk4LPR+0NwIDp1tBat139TAmX9M6d5WkkuFEmzdCzAJod9yH7OOOXtX/11GJ94W8C/Iqk/7ea9kop41wLJw0JFA6yxa0DOEROn3yteiP0p9c84zbSHSTxI+tZ5Unh8BEhT2X18s/DXVdRMrAYu16bs6x1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTaZ1blY; arc=none smtp.client-ip=209.85.215.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=G809kwv0LAr+H3T8I8gKGfTrRHGKGIywOef4oytI0J8p7pa5PHeV7LuC9KyFcD2UVnn9TuBBhVCFDjLAkTObjaftLnhvh90bJkE5TZ1X7DPEod6/cF4CgX5ka5RiL5W21G1JrP05pjM/aauGmx+JQ6KxTqnxKrj6no6o+IrdG/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePWEFTQx; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTaZ1blY"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-76cb5b6b3e4so2723502a12.1;
-        Mon, 15 Jul 2024 10:21:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePWEFTQx"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7662181d487so2306421a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721064088; x=1721668888; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i9k73sA4KaYZWSPUciUi3HDdqr3lc/EAyIdqeVOGRMM=;
-        b=YTaZ1blYWRt2Ea8jiJadxWiTrHvxZ8liJrSaFMFJIOG60c6NvziOkSZInwfwBNKI7o
-         idm2qUcg/OPphaWP49uMNAgrLvavwElkU+sKsbOtevAgjJql0AJmQhtKnYUM0aGVfpym
-         mGZm7gW1eyL+daErf/B2sQd4HKLIcpDO0hQavhcXAXm7WimsV6cKHhrCTfRBDWwkmKeY
-         hcr7VYDEuP9eNxSgRbj8o5LQRZ/IYARat+yWAlHwVBvJcBBOYYZrAUGFMpoF/gWWBb4t
-         WLd8q0XzdW+DDxz65fRTCVL4ohr5RiWK7+AHOREIh0LddwfjHLEYHFYkcxjPOw1H98B8
-         absA==
+        d=gmail.com; s=20230601; t=1721064177; x=1721668977; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WbbLw2U3GAWIN7gKkKYFKE0dl76aBMmJ1Hvw1SafxkE=;
+        b=ePWEFTQxTSe8RXgDVxy0CvgsHWX6er7Vg0jb7w+toODradn00jAIerNGAtoX2Kx1BP
+         E1/NbnPJowFGc3cR323ciJGNvDV9fxlHJVVTYQItcyWZSB4PtB+6KGJrQWN6a4rTv5R4
+         a7igQqvIoW5ZAdF4pgiW8UNurpQ+VC6xGKeEbfk7xeE8yHj8zKVDIRfWokxHR04XjuGB
+         OKzx6JdIOXiUYV6+PjYwBsbcm2bNJrtDkIij3LfNoZMGWrQui06SLKXHqWv5vxg5EBfK
+         UmwNtt11SGZxXEgZjHun7/PtfpwsqbeA43zClbMjxXFNrcjSDwIecAL6w0y0/uhmy8ge
+         hSFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721064088; x=1721668888;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i9k73sA4KaYZWSPUciUi3HDdqr3lc/EAyIdqeVOGRMM=;
-        b=hFx9gywq0RW8Icbv+JEv7nOMtDZ4Gquz1biXBO6WIe+L/u7GTdEcE1iaZOnfRGmirb
-         xC5vzo2CXoUGBesz0P6YUDQRG3RSOFdPGtya0X/9T5oUKISx/vBX6XzsRZMcWLV7ZYUZ
-         cx1SgaWFjzuuR5kpkQBzSB5n2h7ULUyP2nmQ9dWdzxZBQLhEVnIQGiw9GwKxni5nLElr
-         1gaDJXEsxKQFBnQlDiWVtuAoeqqVozIiU89zOC3TshT/vITHNbGm18Off0F2PRBomDkS
-         etxqh+c6luepkK1E0l0ice6eN6SqRwJYk3Uno/jDEWP+tsrJNHZgxoDTQVjbeTo6H5Ok
-         VdoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvOYUDZDtULEOdUFS5ClhidKIKPvVMXyw9Y5UNiG88FZRi7CONY7SEWdV2XQn4Zk6nV86lNGh7HlvLaO3qQkwS6/wZVScxmPZBbeVKqZUCgTB2GgkQQoZqqNsI3gSa+aAvoOY5
-X-Gm-Message-State: AOJu0YwgVfuMlbgdg3ni3sKEopkR4+YKFLPsL/QzU0hwI68PxBU2z1Oa
-	IvvowNIDBTwjpBc7QPEsawwxqBBWKMsDbpaAK47Fe1qjlOiX4bjD
-X-Google-Smtp-Source: AGHT+IGMeZvsUWpVQkC9G9DR/tknpdedHPhniJeUBf540YOjexOrwcOmXJRbjo2pfRCHhHE9MPBbzw==
-X-Received: by 2002:a05:6a21:10b:b0:1c2:94ad:1c5d with SMTP id adf61e73a8af0-1c3ee506766mr603367637.2.1721064087793;
-        Mon, 15 Jul 2024 10:21:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721064177; x=1721668977;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WbbLw2U3GAWIN7gKkKYFKE0dl76aBMmJ1Hvw1SafxkE=;
+        b=WX/ni99dnQviIAttX1ZY9C3NoM2EO+MZtRjMSyT38UqEl9/4z9NWQbMnp+VQV5Y2we
+         ylIh8GIM/8FTdsmX/+eUvWmEptomP4T2/HL2r0hzvrXQsHUkr3Q1xTXqPtXJxeiaCJE5
+         dD+Wo3y8/WVMWaXWvT2Uc5Umcca/MWS8fKdHg4TsJRBptlJS3Ka2HUfA3kWJzYy3UsJD
+         9RkjtYbRxk/Go1T6qeoEnShtsWYU8LcXiJ6MOL15HnGZXz3MdCkIh2J9ISd9mLOhFyAI
+         WYr27W0wbtu/EQ8s4/sArh1JhxS/cenSsG5zx+uBZFv37/k5QQ7Qt1Rc8jfoK9XXtsML
+         bCJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMlrog0T+DEzg02nGC4CAno4yzbpSTnnnKn183U1E89FSIlZxDbYXUsejNaAUmcaTeIF4vNuMBCoOr+a7F+JtVCWOvEmNqJKPkIfdr
+X-Gm-Message-State: AOJu0Yy6sWH3g2fHIjPLqC5v+Gzi1FIUnfgZy9oOuASt3+NfKCRBmpeK
+	K7NKQ29aJJsPcdK/dM8PqBy7EjLauG4RP0sCr0oARQ1e48R8p2V/
+X-Google-Smtp-Source: AGHT+IGcMlsjL7q6eYjhEapU2Lq6U4fK+vi0bFOeIIEEu/1my0A8UaIrf0o6+AcH7YJB/oOhrPbVsQ==
+X-Received: by 2002:a05:6a20:3945:b0:1c3:3436:a225 with SMTP id adf61e73a8af0-1c3ee9336eamr532541637.21.1721064176829;
+        Mon, 15 Jul 2024 10:22:56 -0700 (PDT)
 Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cacd6da7b4sm6688202a91.46.2024.07.15.10.21.27
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ebd1fefsm4769558b3a.95.2024.07.15.10.22.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 10:21:27 -0700 (PDT)
+        Mon, 15 Jul 2024 10:22:56 -0700 (PDT)
 Sender: Tejun Heo <htejun@gmail.com>
-Date: Mon, 15 Jul 2024 07:21:26 -1000
-From: "tj@kernel.org" <tj@kernel.org>
-To: Boy Wu =?utf-8?B?KOWQs+WLg+iqvCk=?= <Boy.Wu@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"boris@bur.io" <boris@bur.io>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-	"axboe@kernel.dk" <axboe@kernel.dk>,
-	Iverlin Wang =?utf-8?B?KOeOi+iLs+mclik=?= <Iverlin.Wang@mediatek.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v2] blk-cgroup: Replace u64_sync with blkg_stat_lock for
- stats update
-Message-ID: <ZpVals5maZs4L3e0@slm.duckdns.org>
-References: <20240710061334.1888-1-boy.wu@mediatek.com>
- <Zo8HTD2AD-b51q0C@slm.duckdns.org>
- <6114fbad7bce9b15806bb9fee25a1075ecb53dd1.camel@mediatek.com>
- <ZpBIfwThiVwstlXL@slm.duckdns.org>
- <70c37035f006de3a4fde895ceeee92826cd280e0.camel@mediatek.com>
- <ZpF4Pfu83W9Wp_R9@slm.duckdns.org>
- <5a1e1bd5168696a0857b62572336c5e598cb5493.camel@mediatek.com>
+Date: Mon, 15 Jul 2024 07:22:55 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org,
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>
+Subject: Re: [PATCH UPDATED 3/7] workqueue: Remove cpus_read_lock() from
+ apply_wqattrs_lock()
+Message-ID: <ZpVa7z7CFJHK_ybY@slm.duckdns.org>
+References: <20240711083547.3981-1-jiangshanlai@gmail.com>
+ <20240711083547.3981-4-jiangshanlai@gmail.com>
+ <ZpASNBN0hpTVcjE-@slm.duckdns.org>
+ <xesrnvzs4xahy4473mp5vzxemjdtrci457x76si6gqbte3xx7k@ubfomqay7tck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5a1e1bd5168696a0857b62572336c5e598cb5493.camel@mediatek.com>
+In-Reply-To: <xesrnvzs4xahy4473mp5vzxemjdtrci457x76si6gqbte3xx7k@ubfomqay7tck>
 
-Hello,
+Hello, Daniel.
 
-On Mon, Jul 15, 2024 at 07:15:24AM +0000, Boy Wu (吳勃誼) wrote:
-> I think I get your idea. You want to replace all the u64 sync for
-> iostat. However, I have one question: why use blkg_stat_lock instead of
-> adding a spin lock for each iostat like iostat.spinlock? We don't need
-> to lock between updating different iostats, but only lock when updating
-> the same iostat.
+On Mon, Jul 15, 2024 at 11:13:56AM -0400, Daniel Jordan wrote:
+...
+> pcrypt/padata doesn't need to hold cpus_read_lock during
+> alloc_workqueue.
+> 
+> I didn't look closely at the workqueue changes that avoid this issue,
+> but I can remove the restriction in padata if it helps to reduce
+> complexity in workqueue.
+> 
+> I saw the recent wq pull though, so if it's fine as is, that's ok too.
 
-Oh yeah, that'd be even better.
+I think it'd be better if workqueue can put as little restrictions as
+possible to its users. alloc_workqueue() is a bit of a boundary case, I
+think, but if workqueue can avoid it, I think it's better that way, so no
+need to change it from pcrypt/padata.
 
 Thanks.
 
