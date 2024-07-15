@@ -1,274 +1,104 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E149617C7D5;
-	Mon, 15 Jul 2024 09:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11606186289;
+	Mon, 15 Jul 2024 09:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721037239; cv=none; b=K55oPtHNygzyIyyj0iXYyWyjR2bIZsRmJZnCU1GjSXkcFZCIlbFbc1Yn1eSrXhffgGAy5BmQQRCYYQnRiSyLBjqJAAf0tNU1ExSdUveaYomTlUWaA5+t0tOOaC8dN6d6UJN6ifuvvkGvx+MDZ8BUmjtO6dUSKTy+3/P00vZW+sg=
+	t=1721037250; cv=none; b=YPxno8qtHleeanXnZNf1C8CV8ZocNjs1nOwyQTO4J3k1tu1qdZrqbYiUvXkCYuERdt/d9z9HVJgRfWsI8vAadtxeAEIqVUzteQb7vBM3BaxHKSoDN19j8b8+VeQWRTMxz5iwPEzKzZiVEHAp3jXvWyhy/VQc/FHUsNPraoAMkRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721037239; c=relaxed/simple;
-	bh=tH1qoA+v7Er8l4BtBWAJFrPy9YxStNo7y1QfBIifWJU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lnuBcUUoVWGSXwHEEL/yjduNkwsIuPghDHdRgOWgc/0eLFJyQbS/m/C+6fUXxP2mRz4FYvEVaeT97ZfHQQl/BdWy37RKNou82TA/PWxaUPXCGGDpCb/mgchVuiDq1vOk+JGnKFgUa+j8OlXc9h0uEKlzdnV8DTebe9JbqtStbHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=RVLnDS+N; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1721037250; c=relaxed/simple;
+	bh=KSZN46K5NHraZVRQeAStXPt3z3x/a9hGQyfcaywP150=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jJjvzSeeLklQvJWYLIcqs7K5PFU+ZiGtAQNW5ZC+Z+/8Fw1jdZSumB8PNn/344AE/WQDxSmAMdSbILTRIBWYnAgPRgoRh+yJ5NApGjHfIwrSPjXbEUsTvcCB4aDctqKfv8ZNOVWZaNV9HvX+sS8loiRkzk6YWRa7Bt8zMVYyl0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TphJjMly; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="RVLnDS+N"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4WMy3s3l5Jz9sS2;
-	Mon, 15 Jul 2024 11:45:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1721036713;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TphJjMly"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 230E51C0007;
+	Mon, 15 Jul 2024 09:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721037245;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVeOVLNn5PKvSoACNvjh+SwYtpf2/QUWqFh2OAeof8s=;
-	b=RVLnDS+N6kgzLaAN2r/msOIlhnogkVXm7MiGpKj1WBRUh+hwZrEMC2ZAiKPLVbQphJt7h6
-	zL7X5ZwbMIWvImMkXGhYPh5fxhHue1l29Mf8XoUinLxSxc5DBVxdcqt7zeg1jRbjx1si5+
-	xAMhuT5CzuqZ6gXHrXe8OvI/GpgvPduOnO8c7nGnMcuAgpYpSjjat3CSUQM3fRYJJWtNuI
-	f0u7PfopX3cC2MS+mxBzgxgdBt7uxtWcW89WKCLYDTi5af2e9LpP+CrXAfrIz2hk6VpTen
-	/vRBrCFrzXX15aO9Dpa6ESEq6fkpDD90CHUtvW9TLDRJrxeB4ivMKTGoa2qyqw==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: david@fromorbit.com,
-	willy@infradead.org,
-	chandan.babu@oracle.com,
-	djwong@kernel.org,
-	brauner@kernel.org,
-	akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	yang@os.amperecomputing.com,
-	linux-mm@kvack.org,
-	john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org,
-	hare@suse.de,
-	p.raghav@samsung.com,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org,
-	kernel@pankajraghav.com,
-	ryan.roberts@arm.com,
-	hch@lst.de,
-	Zi Yan <ziy@nvidia.com>
-Subject: [PATCH v10 01/10] fs: Allow fine-grained control of folio sizes
-Date: Mon, 15 Jul 2024 11:44:48 +0200
-Message-ID: <20240715094457.452836-2-kernel@pankajraghav.com>
-In-Reply-To: <20240715094457.452836-1-kernel@pankajraghav.com>
-References: <20240715094457.452836-1-kernel@pankajraghav.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YFAfwtBIgPY9mDDpDWTR3OVirdr3NZrvZYhoT99Crqc=;
+	b=TphJjMlyTK9i3StZVG6FWlp27kHyeuw/M9duGpeFWK6jzCbVA0ejIcccutjCvaznL3YLvB
+	i15OPg4Rp669lQkytCku4SVJ+Jr8B9heKqSUEgUuRZnyTXnROFYHK868y+jeYe3WDo27xt
+	mNlc2AYUbR8ofyMeAq0oFAGRT0bk87cpy+g/cYtQsyewkykusfGaPHzHEMYMig9R8kevnZ
+	zqa+nFuQ6A3HZE3W+PGgCFFUVfRcYHdmSADhlC92Rmor3RaAGdHR+j//i/i20gv3KPoOhX
+	HzfRWkl3tjl/5f6e1ziqFWv1SPwHQjkg+b3x9wJ9QzXZKEheTYt/+UbIrnU2oA==
+From: =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
+Subject: [PATCH v2 0/2] selftests/bpf: convert test_xdp_veth to test_progs
+ framework
+Date: Mon, 15 Jul 2024 11:53:43 +0200
+Message-Id: <20240715-convert_test_xdp_veth-v2-0-46290b82f6d2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4WMy3s3l5Jz9sS2
+X-B4-Tracking: v=1; b=H4sIAKjxlGYC/3WNQQqDMBBFryJZN2USTCNd9R5FRMexDrSJJCFYx
+ Ls3Fbrs8j34728iUmCK4lptIlDmyN4V0KdK4Ny7B0keCwsNugarQKJ3mULqEsXUrePSZUqzhBo
+ RzGSMsaMo2yXQxOvRvbeFZ47Jh/dxk9XX/orqTzErCbK5ND3iAL3V9jZ4n57szuhfot33/QOgo
+ 6FTvAAAAA==
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: ebpf@linuxfoundation.org, netdev@vger.kernel.org, bpf@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Hello everyone,
 
-We need filesystems to be able to communicate acceptable folio sizes
-to the pagecache for a variety of uses (e.g. large block sizes).
-Support a range of folio sizes between order-0 and order-31.
+this small series is a first step in a larger effort aiming to help improve
+eBPF selftests and the testing coverage in CI. It focuses for now on
+test_xdp_veth.sh, a small test which is not integrated yet in test_progs.
+The series is mostly about a rewrite of test_xdp_veth.sh to make it able to
+run under test_progs, relying on libbpf to manipulate bpf programs involved
+in the test.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Co-developed-by: Pankaj Raghav <p.raghav@samsung.com>
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
- include/linux/pagemap.h | 107 +++++++++++++++++++++++++++++++++++-----
- mm/filemap.c            |   6 +--
- mm/readahead.c          |   4 +-
- 3 files changed, 98 insertions(+), 19 deletions(-)
+Changes in v2:
+- fix many formatting issues raised by checkpatch
+- use static namespaces instead of random ones
+- use SYS_NOFAIL instead of snprintf() + system ()
+- squashed the new test addition patch and the old test removal patch
+- Link to v1: https://lore.kernel.org/r/20240711-convert_test_xdp_veth-v1-0-868accb0a727@bootlin.com
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 8026a8a433d36..8d2b5c51461b0 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -204,14 +204,21 @@ enum mapping_flags {
- 	AS_EXITING	= 4, 	/* final truncate in progress */
- 	/* writeback related tags are not used */
- 	AS_NO_WRITEBACK_TAGS = 5,
--	AS_LARGE_FOLIO_SUPPORT = 6,
--	AS_RELEASE_ALWAYS,	/* Call ->release_folio(), even if no private data */
--	AS_STABLE_WRITES,	/* must wait for writeback before modifying
-+	AS_RELEASE_ALWAYS = 6,	/* Call ->release_folio(), even if no private data */
-+	AS_STABLE_WRITES = 7,	/* must wait for writeback before modifying
- 				   folio contents */
--	AS_UNMOVABLE,		/* The mapping cannot be moved, ever */
--	AS_INACCESSIBLE,	/* Do not attempt direct R/W access to the mapping */
-+	AS_UNMOVABLE = 8,	/* The mapping cannot be moved, ever */
-+	AS_INACCESSIBLE = 9,	/* Do not attempt direct R/W access to the mapping */
-+	/* Bits 16-25 are used for FOLIO_ORDER */
-+	AS_FOLIO_ORDER_BITS = 5,
-+	AS_FOLIO_ORDER_MIN = 16,
-+	AS_FOLIO_ORDER_MAX = AS_FOLIO_ORDER_MIN + AS_FOLIO_ORDER_BITS,
- };
- 
-+#define AS_FOLIO_ORDER_MASK     ((1u << AS_FOLIO_ORDER_BITS) - 1)
-+#define AS_FOLIO_ORDER_MIN_MASK (AS_FOLIO_ORDER_MASK << AS_FOLIO_ORDER_MIN)
-+#define AS_FOLIO_ORDER_MAX_MASK (AS_FOLIO_ORDER_MASK << AS_FOLIO_ORDER_MAX)
-+
- /**
-  * mapping_set_error - record a writeback error in the address_space
-  * @mapping: the mapping in which an error should be set
-@@ -367,9 +374,70 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
- #define MAX_XAS_ORDER		(XA_CHUNK_SHIFT * 2 - 1)
- #define MAX_PAGECACHE_ORDER	min(MAX_XAS_ORDER, PREFERRED_MAX_PAGECACHE_ORDER)
- 
-+/*
-+ * mapping_max_folio_size_supported() - Check the max folio size supported
-+ *
-+ * The filesystem should call this function at mount time if there is a
-+ * requirement on the folio mapping size in the page cache.
-+ */
-+static inline size_t mapping_max_folio_size_supported(void)
-+{
-+	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-+		return 1U << (PAGE_SHIFT + MAX_PAGECACHE_ORDER);
-+	return PAGE_SIZE;
-+}
-+
-+/*
-+ * mapping_set_folio_order_range() - Set the orders supported by a file.
-+ * @mapping: The address space of the file.
-+ * @min: Minimum folio order (between 0-MAX_PAGECACHE_ORDER inclusive).
-+ * @max: Maximum folio order (between @min-MAX_PAGECACHE_ORDER inclusive).
-+ *
-+ * The filesystem should call this function in its inode constructor to
-+ * indicate which base size (min) and maximum size (max) of folio the VFS
-+ * can use to cache the contents of the file.  This should only be used
-+ * if the filesystem needs special handling of folio sizes (ie there is
-+ * something the core cannot know).
-+ * Do not tune it based on, eg, i_size.
-+ *
-+ * Context: This should not be called while the inode is active as it
-+ * is non-atomic.
-+ */
-+static inline void mapping_set_folio_order_range(struct address_space *mapping,
-+						 unsigned int min,
-+						 unsigned int max)
-+{
-+	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-+		return;
-+
-+	if (min > MAX_PAGECACHE_ORDER) {
-+		VM_WARN_ONCE(1,
-+	"min order > MAX_PAGECACHE_ORDER. Setting min_order to MAX_PAGECACHE_ORDER");
-+		min = MAX_PAGECACHE_ORDER;
-+	}
-+
-+	if (max > MAX_PAGECACHE_ORDER) {
-+		VM_WARN_ONCE(1,
-+	"max order > MAX_PAGECACHE_ORDER. Setting max_order to MAX_PAGECACHE_ORDER");
-+		max = MAX_PAGECACHE_ORDER;
-+	}
-+
-+	if (max < min)
-+		max = min;
-+
-+	mapping->flags = (mapping->flags & ~AS_FOLIO_ORDER_MASK) |
-+		(min << AS_FOLIO_ORDER_MIN) | (max << AS_FOLIO_ORDER_MAX);
-+}
-+
-+static inline void mapping_set_folio_min_order(struct address_space *mapping,
-+					       unsigned int min)
-+{
-+	mapping_set_folio_order_range(mapping, min, MAX_PAGECACHE_ORDER);
-+}
-+
- /**
-  * mapping_set_large_folios() - Indicate the file supports large folios.
-- * @mapping: The file.
-+ * @mapping: The address space of the file.
-  *
-  * The filesystem should call this function in its inode constructor to
-  * indicate that the VFS can use large folios to cache the contents of
-@@ -380,7 +448,23 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
-  */
- static inline void mapping_set_large_folios(struct address_space *mapping)
- {
--	__set_bit(AS_LARGE_FOLIO_SUPPORT, &mapping->flags);
-+	mapping_set_folio_order_range(mapping, 0, MAX_PAGECACHE_ORDER);
-+}
-+
-+static inline unsigned int
-+mapping_max_folio_order(const struct address_space *mapping)
-+{
-+	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-+		return 0;
-+	return (mapping->flags & AS_FOLIO_ORDER_MAX_MASK) >> AS_FOLIO_ORDER_MAX;
-+}
-+
-+static inline unsigned int
-+mapping_min_folio_order(const struct address_space *mapping)
-+{
-+	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-+		return 0;
-+	return (mapping->flags & AS_FOLIO_ORDER_MIN_MASK) >> AS_FOLIO_ORDER_MIN;
- }
- 
- /*
-@@ -393,16 +477,13 @@ static inline bool mapping_large_folio_support(struct address_space *mapping)
- 	VM_WARN_ONCE((unsigned long)mapping & PAGE_MAPPING_ANON,
- 			"Anonymous mapping always supports large folio");
- 
--	return IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
--		test_bit(AS_LARGE_FOLIO_SUPPORT, &mapping->flags);
-+	return mapping_max_folio_order(mapping) > 0;
- }
- 
- /* Return the maximum folio size for this pagecache mapping, in bytes. */
--static inline size_t mapping_max_folio_size(struct address_space *mapping)
-+static inline size_t mapping_max_folio_size(const struct address_space *mapping)
- {
--	if (mapping_large_folio_support(mapping))
--		return PAGE_SIZE << MAX_PAGECACHE_ORDER;
--	return PAGE_SIZE;
-+	return PAGE_SIZE << mapping_max_folio_order(mapping);
- }
- 
- static inline int filemap_nr_thps(struct address_space *mapping)
-diff --git a/mm/filemap.c b/mm/filemap.c
-index d62150418b910..ad5e4a848070e 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1933,10 +1933,8 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
- 		if (WARN_ON_ONCE(!(fgp_flags & (FGP_LOCK | FGP_FOR_MMAP))))
- 			fgp_flags |= FGP_LOCK;
- 
--		if (!mapping_large_folio_support(mapping))
--			order = 0;
--		if (order > MAX_PAGECACHE_ORDER)
--			order = MAX_PAGECACHE_ORDER;
-+		if (order > mapping_max_folio_order(mapping))
-+			order = mapping_max_folio_order(mapping);
- 		/* If we're not aligned, allocate a smaller folio */
- 		if (index & ((1UL << order) - 1))
- 			order = __ffs(index);
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 517c0be7ce665..3e5239e9e1777 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -449,10 +449,10 @@ void page_cache_ra_order(struct readahead_control *ractl,
- 
- 	limit = min(limit, index + ra->size - 1);
- 
--	if (new_order < MAX_PAGECACHE_ORDER)
-+	if (new_order < mapping_max_folio_order(mapping))
- 		new_order += 2;
- 
--	new_order = min_t(unsigned int, MAX_PAGECACHE_ORDER, new_order);
-+	new_order = min(mapping_max_folio_order(mapping), new_order);
- 	new_order = min_t(unsigned int, new_order, ilog2(ra->size));
- 
- 	/* See comment in page_cache_ra_unbounded() */
+---
+Alexis Lothoré (eBPF Foundation) (2):
+      selftests/bpf: update xdp_redirect_map prog sections for libbpf
+      selftests/bpf: integrate test_xdp_veth into test_progs
+
+ tools/testing/selftests/bpf/Makefile               |   1 -
+ .../selftests/bpf/prog_tests/test_xdp_veth.c       | 211 +++++++++++++++++++++
+ .../testing/selftests/bpf/progs/xdp_redirect_map.c |   6 +-
+ tools/testing/selftests/bpf/test_xdp_veth.sh       | 121 ------------
+ 4 files changed, 214 insertions(+), 125 deletions(-)
+---
+base-commit: 4837cbaa1365cdb213b58577197c5b10f6e2aa81
+change-id: 20240710-convert_test_xdp_veth-04cc05f5557d
+
+Best regards,
 -- 
-2.44.1
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
