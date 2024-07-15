@@ -1,130 +1,105 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7688249650
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 17:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BBA20323;
+	Mon, 15 Jul 2024 17:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064033; cv=none; b=u1fiNfcpP81pcbvRKozTSqlRW+jp+BFMd11y+ViUWwZvuHdSqiCGL5BOIJPUnemyZB4JywysLYjIIZBLThDjj4USEwLlAlh1enak2H+SSLiocdq3r5+YeUHm6NXUaG2gjcYeyZ1tSoXP9XgL50le6syrKQPBSPLQge1GypobLo0=
+	t=1721064090; cv=none; b=fvdYf1L7mrujacCoHKBbPDl8X/5MhJmc4wkzZRnzKFlNKJT1HX6qZ/QzjHyyjKgRRIiiehAfkOE9+l4qlEC/G/Ya6PyojY/+T0fARyWvQRASNoTe/y9zVAWMABarPGeI+RxJVllNJaDSOfTm673pTpLKTFTaIXj9PyuYigwTJPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064033; c=relaxed/simple;
-	bh=MgDHDMOncs3+0mBz1iIq1IBO98iWAOMcTZbZAA8Cf6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dIQcVz20EIgUlCbKnAmYW8WwsXzsJftDSzdabJ8An34bsEItzXyNArP4BuxouhF9fZNdmTE9qbPyvu4WrIejVsJCIWsXCM2MwhpDQnfOyCTLNYVY07hEXsreV3mG2higdnp+gtI/IRenaTEmCp+XZSMxNHiWihEm4b3GXf6lHmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4sfvgpgV; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721064090; c=relaxed/simple;
+	bh=YuKyZRtkNIBHN5jbSweMr/laqNyoENl8JTxzcP5OZ9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uAlJYcZ9KIjokujm3Bk4LPR+0NwIDp1tBat139TAmX9M6d5WkkuFEmzdCzAJod9yH7OOOXtX/11GJ94W8C/Iqk/7ea9kop41wLJw0JFA6yxa0DOEROn3yteiP0p9c84zbSHSTxI+tZ5Unh8BEhT2X18s/DXVdRMrAYu16bs6x1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTaZ1blY; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4sfvgpgV"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-447e57103d5so25593541cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:20:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTaZ1blY"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-76cb5b6b3e4so2723502a12.1;
+        Mon, 15 Jul 2024 10:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721064030; x=1721668830; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VqLbFBSLY2VQJjycHe2xsMNFC1xNLCGi7MCyaLlxLMo=;
-        b=4sfvgpgV5nuCNNCOPzNwFBt3jblSHDkAGMKZyRRzX+Gkr1ymq0hZygc0Dy87byWY+3
-         yLOashSfskBJbKTdxQcve/l7+CAMaBUo77FhS0RqZ6rJjdSw8OKzuQK0wnwbKtAQIuT1
-         WoN6vJJm1vZRX0qa4XV6ASVBdyIrx58PSCET/AL6fQ/1pAj4SxYirwCHyJsZyyNo5imJ
-         PwkyvxY864NYD+L8aYYhFyKOtRrbVwuPoVzk8dpS0ZJnIywbEedAFBwQbi7U9fpV8d2K
-         gWGoE3lFyXLeiTVhWyKijWnIgIWb7l3YT5/icszOs0P/QfjqT/I7CfWfBU6ZkDIa2vqd
-         meDw==
+        d=gmail.com; s=20230601; t=1721064088; x=1721668888; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i9k73sA4KaYZWSPUciUi3HDdqr3lc/EAyIdqeVOGRMM=;
+        b=YTaZ1blYWRt2Ea8jiJadxWiTrHvxZ8liJrSaFMFJIOG60c6NvziOkSZInwfwBNKI7o
+         idm2qUcg/OPphaWP49uMNAgrLvavwElkU+sKsbOtevAgjJql0AJmQhtKnYUM0aGVfpym
+         mGZm7gW1eyL+daErf/B2sQd4HKLIcpDO0hQavhcXAXm7WimsV6cKHhrCTfRBDWwkmKeY
+         hcr7VYDEuP9eNxSgRbj8o5LQRZ/IYARat+yWAlHwVBvJcBBOYYZrAUGFMpoF/gWWBb4t
+         WLd8q0XzdW+DDxz65fRTCVL4ohr5RiWK7+AHOREIh0LddwfjHLEYHFYkcxjPOw1H98B8
+         absA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721064030; x=1721668830;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VqLbFBSLY2VQJjycHe2xsMNFC1xNLCGi7MCyaLlxLMo=;
-        b=DaA+JUG/527lXtHfEu0FTUWmYFnzo68WKQ/KhWS4RoUEGh/b4T55Vwl3tRAn1CYK86
-         rsXKEO3yuAVjXReWd24AMIoNhqxHBMU9X75XsgKcdI0jZruOpxgKNuc/jG4Ka8WOAasS
-         LxvjqF0FPXPKZiGEQwXlalkflTlBSXsQYl7AP7eIaem4jjWFeJ4IP1W+ChWUWMAbOhDw
-         F9EBcE2xFMExKne2Dihu29MYSGf5TAbW8fYxTyQLwaGgyuujVHW8F9cqTfEOW7WDKG5K
-         ddiB1jlNBIMsyiKNhqhLaNIXrxvDPpaRWdyUtDgXhIwe6Lht0TTU34VbUf1neCTpC9nZ
-         xmJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVieNxo1KfuAThsTRg6o7Wk1U0fkbYEFpWU4rpczx2PVJzp1KKfmxTapyE1OH5hKOeC2HNKsyKcrdxzat2MGQDZh0L5BPhFJ5bCqs7I
-X-Gm-Message-State: AOJu0Ywfuxpv0DOqdgj2OQfddSDgWaJWTsWZL7O8BTeL3vVev2XJoMkW
-	p1wvjrQmp4B/153nvc/1G999dT6wYO3RuDz/LEvSA2xz+z7q/hsLdLIUQOJY9UPZE/2+aGx4Gqs
-	NmxzQPfWfCl5oWiv+IKl5INXmNHpbum6jaftN
-X-Google-Smtp-Source: AGHT+IHTL0CXYXz0R6B63tCFKInlhWG5kzr9gfPZtY0JfeIevUCVC2psZutIfFKbaLuOJK1+tAWwhk6VI17vNBiTaSA=
-X-Received: by 2002:ad4:5aaa:0:b0:6b0:77a8:f416 with SMTP id
- 6a1803df08f44-6b77df284b1mr3820816d6.47.1721064030333; Mon, 15 Jul 2024
- 10:20:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721064088; x=1721668888;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i9k73sA4KaYZWSPUciUi3HDdqr3lc/EAyIdqeVOGRMM=;
+        b=hFx9gywq0RW8Icbv+JEv7nOMtDZ4Gquz1biXBO6WIe+L/u7GTdEcE1iaZOnfRGmirb
+         xC5vzo2CXoUGBesz0P6YUDQRG3RSOFdPGtya0X/9T5oUKISx/vBX6XzsRZMcWLV7ZYUZ
+         cx1SgaWFjzuuR5kpkQBzSB5n2h7ULUyP2nmQ9dWdzxZBQLhEVnIQGiw9GwKxni5nLElr
+         1gaDJXEsxKQFBnQlDiWVtuAoeqqVozIiU89zOC3TshT/vITHNbGm18Off0F2PRBomDkS
+         etxqh+c6luepkK1E0l0ice6eN6SqRwJYk3Uno/jDEWP+tsrJNHZgxoDTQVjbeTo6H5Ok
+         VdoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvOYUDZDtULEOdUFS5ClhidKIKPvVMXyw9Y5UNiG88FZRi7CONY7SEWdV2XQn4Zk6nV86lNGh7HlvLaO3qQkwS6/wZVScxmPZBbeVKqZUCgTB2GgkQQoZqqNsI3gSa+aAvoOY5
+X-Gm-Message-State: AOJu0YwgVfuMlbgdg3ni3sKEopkR4+YKFLPsL/QzU0hwI68PxBU2z1Oa
+	IvvowNIDBTwjpBc7QPEsawwxqBBWKMsDbpaAK47Fe1qjlOiX4bjD
+X-Google-Smtp-Source: AGHT+IGMeZvsUWpVQkC9G9DR/tknpdedHPhniJeUBf540YOjexOrwcOmXJRbjo2pfRCHhHE9MPBbzw==
+X-Received: by 2002:a05:6a21:10b:b0:1c2:94ad:1c5d with SMTP id adf61e73a8af0-1c3ee506766mr603367637.2.1721064087793;
+        Mon, 15 Jul 2024 10:21:27 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cacd6da7b4sm6688202a91.46.2024.07.15.10.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 10:21:27 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 15 Jul 2024 07:21:26 -1000
+From: "tj@kernel.org" <tj@kernel.org>
+To: Boy Wu =?utf-8?B?KOWQs+WLg+iqvCk=?= <Boy.Wu@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"boris@bur.io" <boris@bur.io>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"axboe@kernel.dk" <axboe@kernel.dk>,
+	Iverlin Wang =?utf-8?B?KOeOi+iLs+mclik=?= <Iverlin.Wang@mediatek.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v2] blk-cgroup: Replace u64_sync with blkg_stat_lock for
+ stats update
+Message-ID: <ZpVals5maZs4L3e0@slm.duckdns.org>
+References: <20240710061334.1888-1-boy.wu@mediatek.com>
+ <Zo8HTD2AD-b51q0C@slm.duckdns.org>
+ <6114fbad7bce9b15806bb9fee25a1075ecb53dd1.camel@mediatek.com>
+ <ZpBIfwThiVwstlXL@slm.duckdns.org>
+ <70c37035f006de3a4fde895ceeee92826cd280e0.camel@mediatek.com>
+ <ZpF4Pfu83W9Wp_R9@slm.duckdns.org>
+ <5a1e1bd5168696a0857b62572336c5e598cb5493.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618064022.1990814-1-mawupeng1@huawei.com> <e66bb4c1-f1bc-4aeb-a413-fcdbb327e73f@huawei.com>
-In-Reply-To: <e66bb4c1-f1bc-4aeb-a413-fcdbb327e73f@huawei.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Mon, 15 Jul 2024 19:19:49 +0200
-Message-ID: <CAG_fn=VTKFDAx2JQAEur5cxkSwNze-SOqQRbqBGwDx96Xq-6nQ@mail.gmail.com>
-Subject: Re: [Question] race during kasan_populate_vmalloc_pte
-To: mawupeng <mawupeng1@huawei.com>
-Cc: akpm@linux-foundation.org, ryabinin.a.a@gmail.com, andreyknvl@gmail.com, 
-	dvyukov@google.com, vincenzo.frascino@arm.com, kasan-dev@googlegroups.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5a1e1bd5168696a0857b62572336c5e598cb5493.camel@mediatek.com>
 
-On Fri, Jul 12, 2024 at 4:08=E2=80=AFAM mawupeng <mawupeng1@huawei.com> wro=
-te:
->
-> Hi maintainers,
->
-> kingly ping.
->
-> On 2024/6/18 14:40, Wupeng Ma wrote:
-> > Hi maintainers,
-> >
-> > During our testing, we discovered that kasan vmalloc may trigger a fals=
-e
-> > vmalloc-out-of-bounds warning due to a race between kasan_populate_vmal=
-loc_pte
-> > and kasan_depopulate_vmalloc_pte.
-> >
-> > cpu0                          cpu1                            cpu2
-> >   kasan_populate_vmalloc_pte  kasan_populate_vmalloc_pte      kasan_dep=
-opulate_vmalloc_pte
-> >                                                               spin_unlo=
-ck(&init_mm.page_table_lock);
-> >   pte_none(ptep_get(ptep))
-> >   // pte is valid here, return here
-> >                                                               pte_clear=
-(&init_mm, addr, ptep);
-> >                               pte_none(ptep_get(ptep))
-> >                               // pte is none here try alloc new pages
-> >                                                               spin_lock=
-(&init_mm.page_table_lock);
-> > kasan_poison
-> > // memset kasan shadow region to 0
-> >                               page =3D __get_free_page(GFP_KERNEL);
-> >                               __memset((void *)page, KASAN_VMALLOC_INVA=
-LID, PAGE_SIZE);
-> >                               pte =3D pfn_pte(PFN_DOWN(__pa(page)), PAG=
-E_KERNEL);
-> >                               spin_lock(&init_mm.page_table_lock);
-> >                               set_pte_at(&init_mm, addr, ptep, pte);
-> >                               spin_unlock(&init_mm.page_table_lock);
-> >
-> >
-> > Since kasan shadow memory in cpu0 is set to 0xf0 which means it is not
-> > initialized after the race in cpu1. Consequently, a false vmalloc-out-o=
-f-bounds
-> > warning is triggered when a user attempts to access this memory region.
-> >
-> > The root cause of this problem is the pte valid check at the start of
-> > kasan_populate_vmalloc_pte should be removed since it is not protected =
-by
-> > page_table_lock. However, this may result in severe performance degrada=
-tion
-> > since pages will be frequently allocated and freed.
-> >
-> > Is there have any thoughts on how to solve this issue?
-> >
-> > Thank you.
+Hello,
 
-I am going to take a closer look at this issue. Any chance you have a
-reproducer for it?
+On Mon, Jul 15, 2024 at 07:15:24AM +0000, Boy Wu (吳勃誼) wrote:
+> I think I get your idea. You want to replace all the u64 sync for
+> iostat. However, I have one question: why use blkg_stat_lock instead of
+> adding a spin lock for each iostat like iostat.spinlock? We don't need
+> to lock between updating different iostats, but only lock when updating
+> the same iostat.
+
+Oh yeah, that'd be even better.
+
+Thanks.
+
+-- 
+tejun
