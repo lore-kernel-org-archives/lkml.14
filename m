@@ -1,98 +1,97 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E9B18C169
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C65618C180;
+	Mon, 15 Jul 2024 13:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721051002; cv=none; b=dLpzGzA1BhZJAF4LpVQcJCeZmVRCBHOl/MUqELxO5Ut98rHl6UNtB79kOu770urWWqEo1CHNUhANLWSKv23TIjATNmMOVrkJ1DjmNNq/s39t71RvBNvIo3/EWG39c+0eVlHjYL8xrdqqOC6S0jOC3kV2Hany1udKVL73H1xy2cM=
+	t=1721051042; cv=none; b=aMRhX+ZfeplQuvqTFrBoAazMtYNY08TFDxOdlXnF1pSeO6PJRoTOyS7mhit3noFh1fyEO+vhFe4s4oGBzfqG6L0Trq+JKSI6weS5WqzKyCRtVwYHxIzn6ljHRKUVkvPYHiX5HLwqlotVhu2cvtb7yDOZb++GKy5rA8cg8rdsKxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721051002; c=relaxed/simple;
-	bh=M8zigsqNJE+phkpqp1gyoQZJLxt+QNapc75xhNmetU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m292VMK04+0+B8qH8raQWlf4/geHBvJ6nQnYby9Y7OEyYraeJ86S7dKUPGpxNt4dz1FRaPy5/2xGbpRLrFZW+Ji0W/zRTBVtJdjC4xHQL51Z7aWlMhPnfsrsH9hN/RTxqdi0ZMkGL8GuQXZg2ZLLFoT6u9Am0CrY3FRXy/3owWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bmpFt9Bs; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bmpFt9Bs"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3cabac56b38so2891519b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1721051000; x=1721655800; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aeGvR/8lk6Nll/J3UVT9i6hjcln5jvzV7Bpthcn/O4s=;
-        b=bmpFt9BstdyV4kcpMMeKdFxVkI/eFpmI0e1bKI8XxPmOtzoUa/Y/+PFgt07aEyqviV
-         mlsTbDYj4uuye+0m5PuaGSjHuKuSrZRTEpC48/xhdxYOHePZLPQE/VmhmC9m5ialI5/q
-         uflaPJGV0R2Kz4Lst07abcv0C8Nmfazrd5QKI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721051000; x=1721655800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aeGvR/8lk6Nll/J3UVT9i6hjcln5jvzV7Bpthcn/O4s=;
-        b=BigFONFN042/Qmc8HmB8ot/1DRUYc4mYRo4ZVbd18JikF+8Q+j/KvFRpwSpliI4vuo
-         JANUWGP9uAq70PEeXm+3Wrervo6K3Q7fDVhDSa3OwfFa9AdPClj2Y4Wcf8HMMVOVXslP
-         sHKQEo3Z3uqoAcmohTzSTyaLaJ2VDsz/zoxS7TwWouqF3jQHpsDAxeKW1bw0M29KgGD9
-         P9TjeAb8Nfo/AVAGxXIGuz4Ruv51v1L9Xrz/i4YKWlc4EiEOhCYZYn2JctST6nIsOl1O
-         MtcafQtzYkvr6Ts5/acXPaH3MCOQ+vPpyIQ7ORQkZcIixEeVRjQxcOsOG4frmvFjS7A4
-         s2Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXuUvPPrsYpHK0rYaqhTdWv3pjBhlXbUHp6lHF4G1q5ccFUgGG610EAp7AIgQKPrPrtUkQ/QhLEHIFHqlx+uSDvCDqtBW/S+k+N3b4
-X-Gm-Message-State: AOJu0YykqvfVD59KW+LZ62pICVyA8oQjJ+yVC++DOHWY2E31SDhcbUFG
-	MPkjps4jbAi+9BB+3Hv7IDSjSTgOsEg33AbRpioc0EwPeC/Kc78tGxy3KA2svzXrP0xKwPrExeQ
-	=
-X-Google-Smtp-Source: AGHT+IENQDmSrTPkLdtpIhfrWC0qGbNJwLTI/NpHfzpM0XrIRYrU+lcgIxr2BlTeuj1gKhUaeArxaw==
-X-Received: by 2002:a05:6808:308c:b0:3d9:fab2:d767 with SMTP id 5614622812f47-3d9fab2d836mr16259824b6e.20.1721050996891;
-        Mon, 15 Jul 2024 06:43:16 -0700 (PDT)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com. [209.85.160.175])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a160b9087asm201727585a.16.2024.07.15.06.43.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 06:43:16 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-447df43324fso489501cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:43:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXKU4u/CDRnlkJOTaTCKYuK2qrLAIhDIi/0GVkfocaFqcB36gfPBBv4DV04DyQb6VDzwlvyqjAlo0qL01Vv+bpPxNMnaE1ggXMFofFM
-X-Received: by 2002:a05:622a:2446:b0:446:64ad:ee91 with SMTP id
- d75a77b69052e-44f5a31ec80mr5833341cf.20.1721050996122; Mon, 15 Jul 2024
- 06:43:16 -0700 (PDT)
+	s=arc-20240116; t=1721051042; c=relaxed/simple;
+	bh=RbNyzPfrBDMS6Wa60MAPH9Oe7T+hXrhb1KM4uwLs0H8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GZ+cQQiOmw9n2l7czVOz2eVwU5X/hOo88/Fvue3HQxa+z6Z6N+LSqDPHG4sHNo6liKKk4qEvmGejdsfyT35BtEBTFo9WLZrZA1buL+34xooE5l3tnY3tI8l3uvhvoPfPhgq4Ge6nRqw2XdqSCAWMlnZdwFEGttYnUtBqUiFPP3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E77E6DA7;
+	Mon, 15 Jul 2024 06:44:25 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77A0A3F73F;
+	Mon, 15 Jul 2024 06:43:59 -0700 (PDT)
+Date: Mon, 15 Jul 2024 14:43:57 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: remove redundant 'if HAVE_ARCH_KASAN' in Kconfig
+Message-ID: <ZpUnnYTRX-OkEPHh@J2N7QTR9R3>
+References: <20240714105848.1844400-1-masahiroy@kernel.org>
+ <87d70313-9c8c-4cdf-a040-7ea31804cad7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3@linaro.org> <20240715-x1e80100-crd-backlight-v2-4-31b7f2f658a3@linaro.org>
-In-Reply-To: <20240715-x1e80100-crd-backlight-v2-4-31b7f2f658a3@linaro.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 15 Jul 2024 06:43:04 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WLFohKUUFqsPrpRGCer_TPugoM8_Du6=7YcDywFfUkVg@mail.gmail.com>
-Message-ID: <CAD=FV=WLFohKUUFqsPrpRGCer_TPugoM8_Du6=7YcDywFfUkVg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] arm64: defconfig: Add CONFIG_DRM_PANEL_SAMSUNG_ATNA33XC20
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d70313-9c8c-4cdf-a040-7ea31804cad7@arm.com>
 
-Hi,
+On Mon, Jul 15, 2024 at 08:11:08AM +0530, Anshuman Khandual wrote:
+> On 7/14/24 16:28, Masahiro Yamada wrote:
+> > The condition 'select HAVE_ARCH_KASAN' is always true because
+> > there is 'select HAVE_ARCH_KASAN' statement above.
+> > 
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> > 
+> >  arch/arm64/Kconfig | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index c87d16b12e9b..d37cbfc3031e 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -167,9 +167,9 @@ config ARM64
+> >  	select HAVE_ARCH_JUMP_LABEL
+> >  	select HAVE_ARCH_JUMP_LABEL_RELATIVE
+> >  	select HAVE_ARCH_KASAN
+> > -	select HAVE_ARCH_KASAN_VMALLOC if HAVE_ARCH_KASAN
+> > -	select HAVE_ARCH_KASAN_SW_TAGS if HAVE_ARCH_KASAN
+> > -	select HAVE_ARCH_KASAN_HW_TAGS if (HAVE_ARCH_KASAN && ARM64_MTE)
+> > +	select HAVE_ARCH_KASAN_VMALLOC
+> > +	select HAVE_ARCH_KASAN_SW_TAGS
+> > +	select HAVE_ARCH_KASAN_HW_TAGS if ARM64_MTE
+> >  	# Some instrumentation may be unsound, hence EXPERT
+> >  	select HAVE_ARCH_KCSAN if EXPERT
+> >  	select HAVE_ARCH_KFENCE
+> 
+> There is another similar instance with HAVE_FUNCTION_GRAPH_TRACER as well.
+> Just wondering if the following change should be folded in here ?
+> 
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -210,8 +210,8 @@ config ARM64
+>         select HAVE_FTRACE_MCOUNT_RECORD
+>         select HAVE_FUNCTION_TRACER
+>         select HAVE_FUNCTION_ERROR_INJECTION
+> -       select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>         select HAVE_FUNCTION_GRAPH_TRACER
+> +       select HAVE_FUNCTION_GRAPH_RETVAL
+>         select HAVE_GCC_PLUGINS
+>         select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && \
+>                 HW_PERF_EVENTS && HAVE_PERF_EVENTS_NMI
 
-On Mon, Jul 15, 2024 at 5:16=E2=80=AFAM Stephan Gerhold
-<stephan.gerhold@linaro.org> wrote:
->
-> This is needed for the display panel to work on the Qualcomm
-> sc7180-trogdor-homestar and x1e80100-crd.
->
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+That looks like a sensible cleanup, but I think it'd be better as a
+separate patch.
 
-I'd assume that this will go through the Qualcomm tree.
+It looks like that has always been redundant since it was introduced in
+commit
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+  3646970322464c21 ("arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL")
+
+... would you mind spinning a patch?
+
+Mark.
