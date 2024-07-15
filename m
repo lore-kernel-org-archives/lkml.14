@@ -1,126 +1,163 @@
-Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AC0188CDE
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB46186E3C;
+	Mon, 15 Jul 2024 10:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039890; cv=none; b=iy3hrF7OSD1LTi7fCSDWCZcjIOgOx8Wf5Q584Ld9leUvqC0Q4eD/OAIrIaoYtQuvXRrlLJM6bPKvq/h2y2WBCg0YsmiOa9S3hFrpni5Z6Yg/u1GPQAEe8kQFHboPYBcDMgIGCv72bbJvauMkgSwLDdLA4A8bbnPIDPdoJepJ0ag=
+	t=1721039945; cv=none; b=pnhEk6Dlysr/lDQa1wZBBxk6SjPDHlFHJt3+X6s4sgkvOiMa+dXvHnFqVA7WjOPJ84uBUi5oPG00n3SMWSN2PU9BlV1eRFuuUGUvB8B8UNW3PlQMl2RqrbOI4KFQDD5qHYDmwnZl2vhHkYVB7iDf4MJrORcalRcSPbK5R0ofQJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039890; c=relaxed/simple;
-	bh=lE7FrfdkLBlUpifxmV9zzJ79DyhZz5RPYEjWLn8zz3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tgcP/1Z8kTYfcexKekk6xyAfwub/HasF4EQCzV8fFjmHrXMo6XC+70U40XOW290eGdjbtKOD5laZG6+Bv45ySKvPctLgUdg3SruqrBOpbMAWcaI+Xwrx3cRm7lDYRbO8jOdV7QMonVrAljnwRjKy/3d0qtNpq5KT+Sx5OB4wHT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=s2+zFhHA; arc=none smtp.client-ip=83.166.143.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1721039945; c=relaxed/simple;
+	bh=l++LJBD9K/4eZNMGZBHbp+qtFAiVccVccAah2cBZxwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JDuPKmFpywXSI6+ajEMaUKe59nHZ3PiZ1i10KNmOyobpZQmO78VpjVSYPAuCD/xu7qgn86BZLmxE2itkvPtKp/VaBgikvjiWeTTqvig3BMiMc5fobKu5FEfhUaXSdmWRK9ovI3EuV5XPSPbtadeAoA6aA3rxm2GtyreDRufS6gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j02A0+ku; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lAetZ+uB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j02A0+ku; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lAetZ+uB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="s2+zFhHA"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WMzDj193wzC4M;
-	Mon, 15 Jul 2024 12:37:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1721039877;
-	bh=KuHNObI2LzO0QtwTAS849qPCxUo8g2dKwL8aDC0U+Uk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s2+zFhHAbXAXy3xNyWk6oTsZl9y3ELVIB8o/ZVGkHnD21c6y73sdx52PZ6bVpZJSG
-	 rCFSW21qrninMnI29pajBICHfwBshsKnKaBDwGM2ngfVsfFcSMiwCN+pGp9/0LU0Nl
-	 m8glSxH2+/ty8C+x14dJ6j3+o9E1/Y18d9FAW6aU=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4WMzDh4zfPzKfn;
-	Mon, 15 Jul 2024 12:37:56 +0200 (CEST)
-Date: Mon, 15 Jul 2024 12:37:53 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: cve@kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-cve-announce@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	linux-security-module@vger.kernel.org
-Subject: Re: CVE-2024-40938: landlock: Fix d_parent walk
-Message-ID: <20240715.aeLiunipi8ia@digikod.net>
-References: <2024071218-CVE-2024-40938-1619@gregkh>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j02A0+ku";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lAetZ+uB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j02A0+ku";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lAetZ+uB"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 05FC21F80D;
+	Mon, 15 Jul 2024 10:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721039942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OQ2txoh+5dL8NFW7j8yrrRJSV9eSjUtpYZCvibuXtlg=;
+	b=j02A0+kuapVt26eAhnWphA5g5fdzOF29WHU9ykBhx6YOHt6HAyC10TmYvArQMa0FtvdxDa
+	WYt6QBgHg48/p5SHDz+21L21nxlFsDy1a25qTRAi/IVqyi4wZQnMM5FXabynmqmQm+q/ZT
+	oMAsP5w/qv8mcEMp2lJafZwstOgy9q8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721039942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OQ2txoh+5dL8NFW7j8yrrRJSV9eSjUtpYZCvibuXtlg=;
+	b=lAetZ+uBJTYprQKP4R1jTDaCVVT4rWE82DbNY7CAF8+sNUKC/d85dBHnyYTTu2H12pWWek
+	mx+deRWjR5nEqZDQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721039942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OQ2txoh+5dL8NFW7j8yrrRJSV9eSjUtpYZCvibuXtlg=;
+	b=j02A0+kuapVt26eAhnWphA5g5fdzOF29WHU9ykBhx6YOHt6HAyC10TmYvArQMa0FtvdxDa
+	WYt6QBgHg48/p5SHDz+21L21nxlFsDy1a25qTRAi/IVqyi4wZQnMM5FXabynmqmQm+q/ZT
+	oMAsP5w/qv8mcEMp2lJafZwstOgy9q8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721039942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OQ2txoh+5dL8NFW7j8yrrRJSV9eSjUtpYZCvibuXtlg=;
+	b=lAetZ+uBJTYprQKP4R1jTDaCVVT4rWE82DbNY7CAF8+sNUKC/d85dBHnyYTTu2H12pWWek
+	mx+deRWjR5nEqZDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0B5D7137EB;
+	Mon, 15 Jul 2024 10:39:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id n+I8AEX8lGbvIwAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Mon, 15 Jul 2024 10:39:01 +0000
+Message-ID: <326f51f7-bcb0-4214-ae0e-7dd1d96f5e97@suse.de>
+Date: Mon, 15 Jul 2024 13:38:56 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024071218-CVE-2024-40938-1619@gregkh>
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/12] PCI: brcmstb: Refactor for chips with many
+ regular inbound BARs
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240710221630.29561-1-james.quinlan@broadcom.com>
+ <20240710221630.29561-10-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <20240710221630.29561-10-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,broadcom.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -4.29
+X-Spam-Level: 
 
-Hello,
 
-AFAIK, commit 88da52ccd66e ("landlock: Fix d_parent walk") doesn't fix a
-security issue but an unexpected case.  The triggered WARN_ON_ONCE() is
-just a canary, and this case was correctly handled with defensive
-programming and didn't allow to bypass the security policy nor to harm
-the kernel.  However, this fix should indeed be backported.
 
-Could you please Cc me for future CVE related to my changes or to
-Landlock?  For kernel CVEs, I think it would be good to Cc at least
-maintainers, reviewers, authors, and committers for the related commits.
+On 7/11/24 01:16, Jim Quinlan wrote:
+> Previously, our chips provided three inbound "BARS" with fixed purposes:
+> the first was for mapping SoC internal registers, the second was for
+> memory, and the third was for memory but with the endian swapped.  We
+> typically only used one of these BARs.
+> 
+> Complicating that BARs usage was the fact that the PCIe HW would do a
+> baroque internal mapping of system memory, and concatenate the regions of
+> multiple memory controllers.
+> 
+> Newer chips such as the 7712 and Cable Modem SOCs have taken a step forward
+> and now provide multiple inbound BARs.  This works in concert with the
+> dma-ranges property, where each provided range becomes an inbound BAR.
+> 
+> This commit provides support for these new chips and their multiple
+> inbound BARs but also keeps the legacy support for the older system.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 216 ++++++++++++++++++++------
+>  1 file changed, 167 insertions(+), 49 deletions(-)
+> 
 
-Regards,
- Mickaël
+Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
 
-On Fri, Jul 12, 2024 at 02:27:36PM +0200, Greg Kroah-Hartman wrote:
-> Description
-> ===========
-> 
-> In the Linux kernel, the following vulnerability has been resolved:
-> 
-> landlock: Fix d_parent walk
-> 
-> The WARN_ON_ONCE() in collect_domain_accesses() can be triggered when
-> trying to link a root mount point.  This cannot work in practice because
-> this directory is mounted, but the VFS check is done after the call to
-> security_path_link().
-> 
-> Do not use source directory's d_parent when the source directory is the
-> mount point.
-> 
-> [mic: Fix commit message]
-> 
-> The Linux kernel CVE team has assigned CVE-2024-40938 to this issue.
-> 
-> 
-> Affected and fixed versions
-> ===========================
-> 
-> 	Issue introduced in 5.19 with commit b91c3e4ea756 and fixed in 6.1.95 with commit b6e5e6964358
-> 	Issue introduced in 5.19 with commit b91c3e4ea756 and fixed in 6.6.35 with commit cc30d05b34f9
-> 	Issue introduced in 5.19 with commit b91c3e4ea756 and fixed in 6.9.6 with commit c7618c7b0b8c
-> 	Issue introduced in 5.19 with commit b91c3e4ea756 and fixed in 6.10-rc2 with commit 88da52ccd66e
-> 
-> Please see https://www.kernel.org for a full list of currently supported
-> kernel versions by the kernel community.
-> 
-> Unaffected versions might change over time as fixes are backported to
-> older supported kernel versions.  The official CVE entry at
-> 	https://cve.org/CVERecord/?id=CVE-2024-40938
-> will be updated if fixes are backported, please check that for the most
-> up to date information about this issue.
-> 
-> 
-> Affected files
-> ==============
-> 
-> The file(s) affected by this issue are:
-> 	security/landlock/fs.c
-> 
-> 
-> Mitigation
-> ==========
-> 
-> The Linux kernel CVE team recommends that you update to the latest
-> stable kernel version for this, and many other bugfixes.  Individual
-> changes are never tested alone, but rather are part of a larger kernel
-> release.  Cherry-picking individual commits is not recommended or
-> supported by the Linux kernel community at all.  If however, updating to
-> the latest release is impossible, the individual changes to resolve this
-> issue can be found at these commits:
-> 	https://git.kernel.org/stable/c/b6e5e696435832b33e40775f060ef5c95f4fda1f
-> 	https://git.kernel.org/stable/c/cc30d05b34f9a087a6928d09b131f7b491e9ab11
-> 	https://git.kernel.org/stable/c/c7618c7b0b8c45bcef34410cc1d1e953eb17f8f6
-> 	https://git.kernel.org/stable/c/88da52ccd66e65f2e63a6c35c9dff55d448ef4dc
+~Stan
