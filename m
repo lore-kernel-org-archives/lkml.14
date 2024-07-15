@@ -1,131 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844D91B7E9;
-	Mon, 15 Jul 2024 17:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD8A55896;
+	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064823; cv=none; b=FTCLzim2Sx1ULkEnF01NpCk6DUcZqn5XoMsnU+p+aD3vzaLtLvvSKee6JveepkhJKnuuua/T1WdgQDsMMDwFcCISWPnRBVxOXC5NwxZS0pCyDMkGeQzVdcGtsk4fHquE+Jrc7YpRAYITlXTfIOzqeiFy6TPhFebAS6sK6Rp/Tr0=
+	t=1721064829; cv=none; b=ZoU2hK7XFhYaO4utqcngu0MkaJrJEf9YGoeto2Cb00iqjw8ZQfnR6Hta2PdeHEV0Mjyvg1t0GzSrQA0GIsY4bB5QQGHKxhiwK+IQQIKPjy9nuSeogZ4Xp2ynIxQWlnYvos4SRGbsVIDK6Ppl7HSMxnWu5mnD2Kk8409Pj9XXRDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064823; c=relaxed/simple;
-	bh=H1Z+U4NzD8V5y3jhPonZ2ny9+fMUdenCqzkw1TQoFiM=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=X9p2z/9cKbPJBKCiaIGWRe9Xpqv5hxv6VnLNzabBRXII9dtBNSn9EAoNezvgyNHW8CMbLk5ssiRx7sgYKKro+RAQqCq0hxRqc6qFmokz+UX6sU9HFTwpJjZc0MU9MfcBHLUu/Xa/rLvhfVMLiyx+PdZUBaBLJtrZqgItd01n9NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QakOI8zf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721064829; c=relaxed/simple;
+	bh=2AeLNtUBMvyq43scfhfH+ATGBfIyG/I8IhPiiu0Thtw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=URYZHYs7jn0n3B4JUssVzGz8qDTA2zXoJwSkMR/JCNraV8QuqJUnxcVAwh7HShYI+ldYP0UwFqTljHLrJlUySbDLW5ZvyNlVQK9z2vp1FY/Ij7zp6PVxIMC11mdXQDzdyQOPl3sBXPUgc6CF60LOTqu5d0N7lqhoQ/NwPzLV9a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCHwg1da; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QakOI8zf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D11B1C4AF0A;
-	Mon, 15 Jul 2024 17:33:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCHwg1da"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7037AC4AF0F;
+	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721064823;
-	bh=H1Z+U4NzD8V5y3jhPonZ2ny9+fMUdenCqzkw1TQoFiM=;
-	h=From:To:Subject:Date:From;
-	b=QakOI8zfWtMkVmM5isjuFMuunQ6IdquRQqlyYVj51uRZ3kjfn6unV0km1DpRi+0tE
-	 0qEQ6PcAS46FAo8leGiKnq9QBcGqBsBy/rYWlWJr9rVk9fAAZPcDtP5/au30VNK/Rz
-	 1mEf1sHD0cwn/JMd13VPlFJFsTDLd3ltXgfBIMw/GAYNEGnJnlEJCKCKqOQFXnq5i2
-	 oJg/owztkfJgLhojWPVEkkgCmCyzF7HKEnJhvOY0qbnkwaMb/0plxV0wcKiAPsic4m
-	 ExDyO4l3VO7XuS7E3xIEQnLRCwRdMvwgAUrleFQnZ4JEGZwoBx+KNBdjy6aqx3R3Xa
-	 h/kx0hpp4Ailg==
-From: Puranjay Mohan <puranjay@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next] selftests/bpf: fexit_sleep: fix stack allocation for arm64
-Date: Mon, 15 Jul 2024 17:33:27 +0000
-Message-Id: <20240715173327.8657-1-puranjay@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	s=k20201202; t=1721064829;
+	bh=2AeLNtUBMvyq43scfhfH+ATGBfIyG/I8IhPiiu0Thtw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=GCHwg1daE9Guc4NPX3aR3QvcyBY4o0T+rOXGeBkRdZ4V6jrbxh6FxE1rIKouoncii
+	 8RmyV+7Out+7488tC+s8i0q7IYbKh/JG6Z/Hs+OzlaKXZTN/Yx4vBWXZ4Mj1gkTisf
+	 CPawBz7TregVgH2c2yNT9V9X9lhVEj10uJ3rkr3d96V93PL9x+nKbU7xIPfWwJ/Klp
+	 nlj7kbrS9wD+KctcG0+4MFSIcFbFrpEx2m/8U05PgLPE4rAfihEAOz9LhK+ZPl/EBG
+	 rmx0HrV3VxZ2O7Qm1MIng4JMhqKBpYOEL3g5ug4oBtvp4S3QIZqkSnQWgbhFTVDulG
+	 scIYaNxBCJlsg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CB8C3DA60;
+	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Date: Mon, 15 Jul 2024 23:03:44 +0530
+Subject: [PATCH 02/14] PCI: qcom-ep: Reword the error message for receiving
+ unknown global IRQ event
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240715-pci-qcom-hotplug-v1-2-5f3765cc873a@linaro.org>
+References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
+In-Reply-To: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1070;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=JCsYTkuXXXhcuENPNzaZvR8u/dChlzvKuuKaF9P+7zw=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmlV14QVjURbmKvogp/beRq+rrFjLZw7fylgAgA
+ objhy0MyT2JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpVdeAAKCRBVnxHm/pHO
+ 9XK4B/4trxc4KZfujiglm6c9LAzE6vUPsdr2rj/6hxTB844v6joCV7FZ97V+u4oqXWExMK1iFFR
+ d4tWeUCRMfZfFEIEnyeEuSljW+e4elQZt7zpLT1gv7AFiukySJXrgyvbRwV/7rPxX1AAlhuwcUV
+ epUijoRNuGLtSECo4A6j2wu8scZUpZWLssd0krrix7SIqqhIVFunPEdnjhI18+dTlNtot6Kb6CP
+ I9k0VgZjGuFBEfWAa1BxKVTo1hNy/DIOBRNumFEhK6CiZGyHYuiGNbx2LIEbiyPR2lyXz933Le6
+ uPIP+1QAhPwBGrPtDqvYpkJE6WKzHwv23olwzn1KgAXJTTpi
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-On ARM64 the stack pointer should be aligned at a 16 byte boundary or
-the SPAlignmentFault can occur. The fexit_sleep selftest allocates the
-stack for the child process as a character array, this is not guaranteed
-to be aligned at 16 bytes.
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Because of the SPAlignmentFault, the child process is killed before it
-can do the nanosleep call and hence fentry_cnt remains as 0. This causes
-the main thread to hang on the following line:
+Current error message just prints the contents of PARF_INT_ALL_STATUS
+register as if like the IRQ event number. It could mislead the users.
+Reword it to make it clear that the error message is actually showing the
+interrupt status register to help debug spurious IRQ events.
 
-while (READ_ONCE(fexit_skel->bss->fentry_cnt) != 2);
-
-Fix this by allocating the stack using mmap() as described in the
-example in the man page of clone().
-
-Remove the fexit_sleep test from the DENYLIST of arm64.
-
-Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- tools/testing/selftests/bpf/DENYLIST.aarch64         | 1 -
- tools/testing/selftests/bpf/prog_tests/fexit_sleep.c | 8 +++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/DENYLIST.aarch64 b/tools/testing/selftests/bpf/DENYLIST.aarch64
-index 3c7c3e79aa931..901349da680fa 100644
---- a/tools/testing/selftests/bpf/DENYLIST.aarch64
-+++ b/tools/testing/selftests/bpf/DENYLIST.aarch64
-@@ -1,6 +1,5 @@
- bpf_cookie/multi_kprobe_attach_api               # kprobe_multi_link_api_subtest:FAIL:fentry_raw_skel_load unexpected error: -3
- bpf_cookie/multi_kprobe_link_api                 # kprobe_multi_link_api_subtest:FAIL:fentry_raw_skel_load unexpected error: -3
--fexit_sleep                                      # The test never returns. The remaining tests cannot start.
- kprobe_multi_bench_attach                        # needs CONFIG_FPROBE
- kprobe_multi_test                                # needs CONFIG_FPROBE
- module_attach                                    # prog 'kprobe_multi': failed to auto-attach: -95
-diff --git a/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c b/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c
-index f949647dbbc21..552a0875ca6db 100644
---- a/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c
-+++ b/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c
-@@ -21,13 +21,13 @@ static int do_sleep(void *skel)
- }
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 972a90eba494..cda5d8fdc03b 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -679,7 +679,8 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+ 		dw_pcie_ep_linkup(&pci->ep);
+ 		pcie_ep->link_status = QCOM_PCIE_EP_LINK_UP;
+ 	} else {
+-		dev_err(dev, "Received unknown event: %d\n", status);
++		dev_err(dev, "Received unknown event. INT_STATUS: 0x%08x\n",
++			status);
+ 	}
  
- #define STACK_SIZE (1024 * 1024)
--static char child_stack[STACK_SIZE];
- 
- void test_fexit_sleep(void)
- {
- 	struct fexit_sleep_lskel *fexit_skel = NULL;
- 	int wstatus, duration = 0;
- 	pid_t cpid;
-+	char *child_stack = NULL;
- 	int err, fexit_cnt;
- 
- 	fexit_skel = fexit_sleep_lskel__open_and_load();
-@@ -38,6 +38,11 @@ void test_fexit_sleep(void)
- 	if (CHECK(err, "fexit_attach", "fexit attach failed: %d\n", err))
- 		goto cleanup;
- 
-+	child_stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE |
-+			   MAP_ANONYMOUS | MAP_STACK, -1, 0);
-+	if (!ASSERT_NEQ(child_stack, MAP_FAILED, "mmap"))
-+		goto cleanup;
-+
- 	cpid = clone(do_sleep, child_stack + STACK_SIZE, CLONE_FILES | SIGCHLD, fexit_skel);
- 	if (CHECK(cpid == -1, "clone", "%s\n", strerror(errno)))
- 		goto cleanup;
-@@ -78,5 +83,6 @@ void test_fexit_sleep(void)
- 		goto cleanup;
- 
- cleanup:
-+	munmap(child_stack, STACK_SIZE);
- 	fexit_sleep_lskel__destroy(fexit_skel);
- }
+ 	return IRQ_HANDLED;
+
 -- 
-2.40.1
+2.25.1
+
 
