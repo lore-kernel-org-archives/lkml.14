@@ -1,151 +1,109 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B6C4643B
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 16:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D3342A9D;
+	Mon, 15 Jul 2024 16:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721061629; cv=none; b=CmChor1DQWgA6wtKNu018WkcBtbTvA81zN7U7yncrY7PUCv0KHWgm1firZogTzMYzOqX/ceckgB7vJ+dzRn6fe78nh4kP3MlTnDgEbBfcfXxkLaxuTaheXGfOaOBOf0XIvm6jd+Oan8USQaTOdhJNGeVg06qvwANl6hNG7cCpqM=
+	t=1721061635; cv=none; b=oxjj7F0YIpUmiNMv0dpZrlQbkWig5gbLfbxg52m+xvrfvIRY0SLOynV81Hscx1p25LoiTUIdoN5IQPVL4FpUXTkiIJR+gHjuNWp4QimUywQh8euKcvuHALDMNZnJkKWlKbAMcZX4LgQvM0CbpCJ3cVICf2dDtisv65IpjcfaSBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721061629; c=relaxed/simple;
-	bh=kBWBnjXh7VOgbtn1rxNBCQXca9txmQle+V4SDlhC8HI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XFDhEQCi+Qd2tESZf7BqumhobV/1yrMzYLctpmaxMKzrZTmSEyeBnA6LZfEgNwhQF197mxJsAX8hG+IdazRN/ZKvVHe9YEX42G+wuJkHVk3ffrWOaotHAS+lwc7a2O2iX0uNqEhUXwqSr9s9bWMJk5zWBMckegP/JU2/7txYKs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XU6zqNTr; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1721061635; c=relaxed/simple;
+	bh=F5YsMjAkLh27ZHf6rNRj5lSqspaU+jyfHUOdjACkHVY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Jdtn0YfqoRbkzkDO3/ZvU4Q3vGxCtmtKGwgeOA3o4AcPATQ/3GLoebcN4YwMLS8BRhLWNb4a0TEVuMWTKkZEClkr3g8wJT3d+nwtgnp1rLJnpTrVEDg2zPkd3IzGs8BsDIA7VrdY+Smq3xWF90AIB0SpPe2UdTX0iEhFRe1Rzck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AdVdemQ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XU6zqNTr"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-79f178e6225so316388285a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1721061623; x=1721666423; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q43fP/YwIscAu2HdaErO2TBIovUlIaQMWdgLOPVgO94=;
-        b=XU6zqNTryXv3s8FpkljJm3gLDCklCN+bU5KnWRob2tJPRx1V8AfNoH+9fSaeZnOQRa
-         nF+wGCC1PehulayCbhiCwIn/+9hrCBTjCmSW/TktrSojHIWaBulYlntSdZz009aGY4In
-         dLoCPE9Q4FIzYAW+kH69YRnrhP/a48uUpNks4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721061623; x=1721666423;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q43fP/YwIscAu2HdaErO2TBIovUlIaQMWdgLOPVgO94=;
-        b=l1X4uwvecx63s1cP44H76Y5HVlH86mBh1iIMnSP8r2QvJoBkzwo1PS66L4ayB68Y/M
-         gk9Zq52DD1Yr4Kk9vjz+39NRN7tSUwmgj/lVakXnGA5yskVDb0krH4OnfZFoSJQkfr79
-         cS/fhmMXuT5tr+zcnojpr57rDZ8/BAnpql8ZwmDE93yGBRg6TAmzx3fVcKMfm23yfmaf
-         1824U4lzFrkOnSUzabcDFsyDFQcAVXpEVxeGiNnG4gdxwRQ5ttgvy3wn1fPAEN/tu7Ws
-         aF5wOUmjRJ2AZjVJZKLvuEs2WHEX5AKMY5geY0x0K2sJjXYrAAp2+WHX3d0HA43J6e0p
-         +5tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAzJUn0o1DYam/3xh7I9CpTu1sdrljvYo7ykBXaO0o3CIdngL7kHamIPplKXzR07Lj+aD0TBdOD7GfgW77kSFa5l4zUpj3K3rhPJu/
-X-Gm-Message-State: AOJu0YypSaKriSHvoYG8KaApIDELHtan/e5m87tGeBN64bEDO8pC+X3l
-	orSYuQKziTLApM6uIzE99dSmzEwDINKGmkvD5sGY1IqCwU+u/NtIMDEuxjJFI9LWTiotQFB63sU
-	=
-X-Google-Smtp-Source: AGHT+IFq7Pd9iJES9nLvJQIYuozaGyiO/dJNNec+L0us5FTFqyDEOk+Qgc6wpdcfIlFlfbNyS/Le8w==
-X-Received: by 2002:a05:620a:288f:b0:79f:523:ac97 with SMTP id af79cd13be357-7a179f3dd62mr37936385a.27.1721061623162;
-        Mon, 15 Jul 2024 09:40:23 -0700 (PDT)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a160b9c31dsm213440885a.20.2024.07.15.09.40.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 09:40:22 -0700 (PDT)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-447f8aa87bfso7441cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:40:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWH6lWKvvpMt/60MMDSdDzJDUsKNXC19BFGXn+mQIueSuUnYx5+Xp0C7It+ySK01StadqCN3fiAfAxDtFl6JvlcC1gHroUxKk15Sgq5
-X-Received: by 2002:ac8:6908:0:b0:447:e497:95d0 with SMTP id
- d75a77b69052e-44f5ac90b7dmr6164531cf.17.1721061621306; Mon, 15 Jul 2024
- 09:40:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AdVdemQ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 49521C4AF11;
+	Mon, 15 Jul 2024 16:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721061635;
+	bh=F5YsMjAkLh27ZHf6rNRj5lSqspaU+jyfHUOdjACkHVY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=AdVdemQ8QFLMdRQ1Q2PzZp56oKyVnlQzzXvT4XcAAXkGdBqXCd3o49isfmTbx+dsq
+	 C0+1rlOTt2fvpKD3evic/BKSjBxtGKPyDukEY0TbWxg75+jF94KaIocL4B8fJlg9Al
+	 4Bl4/ktWDZAn+YgpKkNJijVC4PNVIPYBrdBig/Z4p38pm25bwRnMg3wRSmHeR0FPOr
+	 BrWwWzglN2SIg1XewWktLk14tKqHyws7k8VYh9A9Kgnl3Si8DmgkamehzdARa4S2FB
+	 OE5VOp+3lGv+DUaTU4G2we+sYJPQL1FIb+W6kzRnyEsJVV2xmrJfsTxkHfKH8ITOv5
+	 1s7ecWq+S92pQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3581CC43443;
+	Mon, 15 Jul 2024 16:40:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621134427.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
- <CAD=FV=VwebY8F3XjeVt6kvKwB7QZ8Khn5oJJoDThuemiGx9y+g@mail.gmail.com>
-In-Reply-To: <CAD=FV=VwebY8F3XjeVt6kvKwB7QZ8Khn5oJJoDThuemiGx9y+g@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 15 Jul 2024 09:40:05 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UdsuEiyPK2K3sYdQm50WNukA5pxD=wUaEAVQStNnNA_A@mail.gmail.com>
-Message-ID: <CAD=FV=UdsuEiyPK2K3sYdQm50WNukA5pxD=wUaEAVQStNnNA_A@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: Avoid warnings w/ panel-simple/panel-edp at shutdown
-To: dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Maxime Ripard <mripard@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yuran Pereira <yuran.pereira@hotmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	David Airlie <airlied@gmail.com>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v4 00/13] flower: rework TCA_FLOWER_KEY_ENC_FLAGS
+ usage
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172106163520.24349.6809733629118549125.git-patchwork-notify@kernel.org>
+Date: Mon, 15 Jul 2024 16:40:35 +0000
+References: <20240713021911.1631517-1-ast@fiberby.net>
+In-Reply-To: <20240713021911.1631517-1-ast@fiberby.net>
+To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@ci.codeaurora.org
+Cc: netdev@vger.kernel.org, dcaratti@redhat.com, i.maximets@ovn.org,
+ jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ dsahern@kernel.org, horms@kernel.org, rkannoth@marvell.com, fw@strlen.de,
+ aleksander.lobakin@intel.com, donald.hunter@gmail.com,
+ linux-kernel@vger.kernel.org
 
-Hi,
+Hello:
 
-On Fri, Jun 21, 2024 at 1:46=E2=80=AFPM Doug Anderson <dianders@chromium.or=
-g> wrote:
->
-> Hi,
->
-> On Fri, Jun 21, 2024 at 1:45=E2=80=AFPM Douglas Anderson <dianders@chromi=
-um.org> wrote:
-> >
-> > At shutdown if you've got a _properly_ coded DRM modeset driver then
-> > you'll get these two warnings at shutdown time:
-> >
-> >   Skipping disable of already disabled panel
-> >   Skipping unprepare of already unprepared panel
-> >
-> > These warnings are ugly and sound concerning, but they're actually a
-> > sign of a properly working system. That's not great.
-> >
-> > We're not ready to get rid of the calls to drm_panel_disable() and
-> > drm_panel_unprepare() because we're not 100% convinced that all DRM
-> > modeset drivers are properly calling drm_atomic_helper_shutdown() or
-> > drm_helper_force_disable_all() at the right times. However, having the
-> > warning show up for correctly working systems is bad.
-> >
-> > As a bit of a workaround, add some "if" tests to try to avoid the
-> > warning on correctly working systems. Also add some comments and
-> > update the TODO items in the hopes that future developers won't be too
-> > confused by what's going on here.
-> >
-> > Suggested-by: Daniel Vetter <daniel@ffwll.ch>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> > This patch came out of discussion on dri-devel on 2024-06-21
-> > [1]. NOTE: I have put all changes into one patch since it didn't seem
-> > to add anything to break up the updating of the TODO or the comments
-> > in the core into separate patches since the patch is all about one
-> > topic and all code is expected to land in the same tree.
-> >
-> > Previous versions:
-> > v0: https://lore.kernel.org/r/20240604172305.v3.24.Ieb287c2c3ee3f6d3b0d=
-5f49b29f746b93621749c@changeid/
-> > v1: https://lore.kernel.org/r/20240611074846.1.Ieb287c2c3ee3f6d3b0d5f49=
-b29f746b93621749c@changeid
-> >
-> > [1] https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel=
-&date=3D2024-06-21
-> >
-> >  Documentation/gpu/todo.rst           | 35 +++++++++++++---------------
-> >  drivers/gpu/drm/drm_panel.c          | 18 ++++++++++++++
-> >  drivers/gpu/drm/panel/panel-edp.c    | 26 ++++++++++++++-------
-> >  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++-------
-> >  4 files changed, 68 insertions(+), 37 deletions(-)
->
-> Ugh! I realized right after I hit "send" that I forgot to mark this as
-> V2 and give it version history. Sorry! :( Please consider this to be
-> v2. It's basically totally different than v1 based on today's IRC
-> discussion, which should be linked above.
->
-> If I need to send a new version I will send it as v3.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Is anyone willing to give me a Reviewed-by and/or Acked by for this
-patch? ...or does anything want me to make any changes? Given all the
-discussion we had, it would be nice to get this landed before we
-forget what we agreed upon. :-P
+On Sat, 13 Jul 2024 02:18:57 +0000 you wrote:
+> This series reworks the recently added TCA_FLOWER_KEY_ENC_FLAGS
+> attribute, to be more like TCA_FLOWER_KEY_FLAGS, and use the unused
+> u32 flags field in FLOW_DISSECTOR_KEY_ENC_CONTROL, instead of adding
+> a new flags field as FLOW_DISSECTOR_KEY_ENC_FLAGS.
+> 
+> I have defined the new FLOW_DIS_F_* and TCA_FLOWER_KEY_FLAGS_*
+> flags to co-exist with the existing flags, so the meaning
+> of the flags field in struct flow_dissector_key_control is not
+> depending on the context it is used in. If we run out of bits
+> then we can always split them up later, if we really want to.
+> Future flags might also be valid in both contexts.
+> 
+> [...]
 
--Doug
+Here is the summary with links:
+  - [net-next,v4,01/13] net/sched: flower: refactor control flag definitions
+    https://git.kernel.org/netdev/net-next/c/6e5c85c003e4
+  - [net-next,v4,02/13] doc: netlink: specs: tc: describe flower control flags
+    https://git.kernel.org/netdev/net-next/c/49ba9fc1c773
+  - [net-next,v4,03/13] net/sched: flower: define new tunnel flags
+    https://git.kernel.org/netdev/net-next/c/bfda5a63137b
+  - [net-next,v4,04/13] net/sched: cls_flower: prepare fl_{set,dump}_key_flags() for ENC_FLAGS
+    https://git.kernel.org/netdev/net-next/c/fcb4bb07a927
+  - [net-next,v4,05/13] net/sched: cls_flower: add policy for TCA_FLOWER_KEY_FLAGS
+    https://git.kernel.org/netdev/net-next/c/0e83a7875d69
+  - [net-next,v4,06/13] flow_dissector: prepare for encapsulated control flags
+    https://git.kernel.org/netdev/net-next/c/4d0aed380f9d
+  - [net-next,v4,07/13] flow_dissector: set encapsulated control flags from tun_flags
+    https://git.kernel.org/netdev/net-next/c/03afeb613bfe
+  - [net-next,v4,08/13] net/sched: cls_flower: add tunnel flags to fl_{set,dump}_key_flags()
+    https://git.kernel.org/netdev/net-next/c/988f8723d398
+  - [net-next,v4,09/13] net/sched: cls_flower: rework TCA_FLOWER_KEY_ENC_FLAGS usage
+    https://git.kernel.org/netdev/net-next/c/11036bd7a0b3
+  - [net-next,v4,10/13] doc: netlink: specs: tc: flower: add enc-flags
+    https://git.kernel.org/netdev/net-next/c/880a51a8ab8c
+  - [net-next,v4,11/13] flow_dissector: cleanup FLOW_DISSECTOR_KEY_ENC_FLAGS
+    https://git.kernel.org/netdev/net-next/c/db5271d50ec1
+  - [net-next,v4,12/13] flow_dissector: set encapsulation control flags for non-IP
+    https://git.kernel.org/netdev/net-next/c/706bf4f44c6d
+  - [net-next,v4,13/13] net/sched: cls_flower: propagate tca[TCA_OPTIONS] to NL_REQ_ATTR_CHECK
+    https://git.kernel.org/netdev/net-next/c/536b97acddd7
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
