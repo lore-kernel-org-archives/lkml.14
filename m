@@ -1,347 +1,104 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F7F6A347;
-	Mon, 15 Jul 2024 07:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0564427457;
+	Mon, 15 Jul 2024 07:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721027762; cv=none; b=T0vbtYloKuhB8lZFDM692vgeqgQxPvQccaaMArVX6ktqK/UBkN2aPYH47+I1YHwvuES//tKAHGchtrRtx2+t6qT/WRR95mWy+6plQrFJFBpU2h4XEgoTW199MWsDd6dPmZIcYsNtXWw5ZB2T5FbP2CdN9xlsiccY2iEhc4bVFPc=
+	t=1721027859; cv=none; b=JhDUyxaKeumQtYgg1NMMaoPFsVsnhJYvD6tfHtE6o0O0Se5VegUfw9ygL+d78vFsrsgL+XI/OM3yIij6CQhuOkZmLAhkqN45Nz/g/MzfavbgGrUBxHFUoebTmhwBsorOsIcNx8IZrjFd9/JPquzBQ/VxFOODwV2/nAtQDCFU1VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721027762; c=relaxed/simple;
-	bh=BR+hSPhBJmyP6ftUYZRih4YjTmH0YK92vKAx0Air4qM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=upMzK0LUFViNvUNu0rhSuTbSy777umKO7WlbQq1Ncu7jpc1UaTnIjm4M3N4p/SqT9CBL0nPgNPR6Mw75sXVEKsWSI8mTK5hkPcapHPzSWd14Ea9d4n16zHLGc+1YaJ8+fTtpwzKBIlaZOqmyD30D1nnfO6Y2i+KTg9BG3ONNIds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=S7UnaNqD; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1721027859; c=relaxed/simple;
+	bh=Bxp9IMyGYGDGdHKEfA+1Lk9Ybg6XYNQ8q3jGmPRkd/A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pRNJcVfDAnFZIBjcrHtS3rlabDjUrCxY1FHFR/9mZhBnOVKBxGJBwEaaX8ArX/X5gUnZIOyBNj8qMZk1RSvPi3FmSXmh2nKIJmXlfzDpOvADNrdBhR9FeUe2hInwsGCvRf5FZq8Ra8Y3/pwPoCkKWRyKIefYZescOh/K8mZlRuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E6M4ePK0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="S7UnaNqD"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 46F7FZuK43487018, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1721027735; bh=BR+hSPhBJmyP6ftUYZRih4YjTmH0YK92vKAx0Air4qM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=S7UnaNqDqAcN79ca9lJJZdvolCketNbz4fJ3mjdjhkw1l7oWeFuiOkuyuF5mt9iIH
-	 lt46sgOEGpOGzmhdK5X1zrN9+mMHt3xHsTsnl5bp7QMT0yBlIOAxFc0iW3tI0ErGwy
-	 aDOSUFFHYmlAItp61ZNUiyZkCwxqeGGcAd+F1vI3xiNPKDw+SqWPI1ahefzxawAgCV
-	 eNBlr1l0jqy3guy8nOL3QK61qDquFCl+v6bD7zo/D5/17m7LCW129FJPOJdjgRuBif
-	 +bADQpebC6YR9x9bxwF43W6o6rzAhgjUKuQ1OrgGXnjgLTUAzzGW3MGfERsZ68GH9O
-	 ejtFKwCMl5NAA==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 46F7FZuK43487018
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jul 2024 15:15:35 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E6M4ePK0"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46F2dlrl006971;
+	Mon, 15 Jul 2024 07:17:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=TGRUcTQFlSCFp7gXD1gdVP7a5Gg2uvMxLrmkPcmGLEY=; b=E6
+	M4ePK0YvBt6tBSq4hD54XHfJvpy2iB8mU9bwhq7XYPWCLsdhKG0u/lfaLu8SH/m8
+	xPP520QjxDdoFQpRL0lIrULMhWbGut1K8+SJgwoGdABXh+liH3kuZTxPEHtGgQgo
+	/HLql3TUSrovCpjeNu42y5FgcSyQ54Zy3cCGea6sb3teVf9g3LiaVrbOGUv+rHeM
+	65awc00JZywAWYAl7Hcfw732VxZUSCz/aOgclf9ChKzwkN+8jo3hWcEBloBTTsl7
+	UxIjFRJCxDooNn7j8uoZEyP2oQBqqi/l/JnnIXJ4jRjaO6xWymo3LWWzLgyglC8Y
+	gZdlYIn6yzeqQDgDNKfQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bjbh2yxb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 07:17:34 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46F7HXK4027713
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 07:17:33 GMT
+Received: from hu-qqzhou-sha.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 15 Jul 2024 15:15:35 +0800
-Received: from RTDOMAIN (172.21.210.74) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 15 Jul
- 2024 15:15:34 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, "Justin
- Lai" <justinlai0215@realtek.com>
-Subject: [PATCH net-next v24 05/13] rtase: Implement hardware configuration function
-Date: Mon, 15 Jul 2024 15:11:50 +0800
-Message-ID: <20240715071158.110384-6-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240715071158.110384-1-justinlai0215@realtek.com>
-References: <20240715071158.110384-1-justinlai0215@realtek.com>
+ 15.2.1544.9; Mon, 15 Jul 2024 00:17:31 -0700
+From: Qingqing Zhou <quic_qqzhou@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Qingqing Zhou <quic_qqzhou@quicinc.com>
+Subject: [PATCH] arm64: dts: qcom: sa8775p: Mark APPS and PCIE SMMUs as DMA coherent
+Date: Mon, 15 Jul 2024 12:46:49 +0530
+Message-ID: <20240715071649.25738-1-quic_qqzhou@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: t5W0pldcinqwz-LJAcOrBkcf9kyj14Kc
+X-Proofpoint-GUID: t5W0pldcinqwz-LJAcOrBkcf9kyj14Kc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_03,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
+ clxscore=1011 spamscore=0 mlxlogscore=636 mlxscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407150056
 
-Implement rtase_hw_config to set default hardware settings, including
-setting interrupt mitigation, tx/rx DMA burst, interframe gap time,
-rx packet filter, near fifo threshold and fill descriptor ring and
-tally counter address, and enable flow control. When filling the
-rx descriptor ring, the first group of queues needs to be processed
-separately because the positions of the first group of queues are not
-regular with other subsequent groups. The other queues are all newly
-added features, but we want to retain the original design. So they were
-not put together.
+The SMMUs on sa8775p are cache-coherent. GPU SMMU is marked as such,
+mark the APPS and PCIE ones as well.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+Signed-off-by: Qingqing Zhou <quic_qqzhou@quicinc.com>
 ---
- .../net/ethernet/realtek/rtase/rtase_main.c   | 238 ++++++++++++++++++
- 1 file changed, 238 insertions(+)
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 9cd45ae37590..b6304fd3f907 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -465,6 +465,23 @@ static int rtase_init_ring(const struct net_device *dev)
- 	return -ENOMEM;
- }
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+index 23f1b2e5e624..95691ab58a23 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+@@ -3070,6 +3070,7 @@
+ 			reg = <0x0 0x15000000 0x0 0x100000>;
+ 			#iommu-cells = <2>;
+ 			#global-interrupts = <2>;
++			dma-coherent;
  
-+static void rtase_interrupt_mitigation(const struct rtase_private *tp)
-+{
-+	u32 i;
-+
-+	for (i = 0; i < tp->func_tx_queue_num; i++)
-+		rtase_w16(tp, RTASE_INT_MITI_TX + i * 2, tp->tx_int_mit);
-+
-+	for (i = 0; i < tp->func_rx_queue_num; i++)
-+		rtase_w16(tp, RTASE_INT_MITI_RX + i * 2, tp->rx_int_mit);
-+}
-+
-+static void rtase_tally_counter_addr_fill(const struct rtase_private *tp)
-+{
-+	rtase_w32(tp, RTASE_DTCCR4, upper_32_bits(tp->tally_paddr));
-+	rtase_w32(tp, RTASE_DTCCR0, lower_32_bits(tp->tally_paddr));
-+}
-+
- static void rtase_tally_counter_clear(const struct rtase_private *tp)
- {
- 	u32 cmd = lower_32_bits(tp->tally_paddr);
-@@ -473,6 +490,119 @@ static void rtase_tally_counter_clear(const struct rtase_private *tp)
- 	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_RESET);
- }
+ 			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+@@ -3208,6 +3209,7 @@
+ 			reg = <0x0 0x15200000 0x0 0x80000>;
+ 			#iommu-cells = <2>;
+ 			#global-interrupts = <2>;
++			dma-coherent;
  
-+static void rtase_desc_addr_fill(const struct rtase_private *tp)
-+{
-+	const struct rtase_ring *ring;
-+	u16 i, cmd, val;
-+	int err;
-+
-+	for (i = 0; i < tp->func_tx_queue_num; i++) {
-+		ring = &tp->tx_ring[i];
-+
-+		rtase_w32(tp, RTASE_TX_DESC_ADDR0,
-+			  lower_32_bits(ring->phy_addr));
-+		rtase_w32(tp, RTASE_TX_DESC_ADDR4,
-+			  upper_32_bits(ring->phy_addr));
-+
-+		cmd = i | RTASE_TX_DESC_CMD_WE | RTASE_TX_DESC_CMD_CS;
-+		rtase_w16(tp, RTASE_TX_DESC_COMMAND, cmd);
-+
-+		err = read_poll_timeout(rtase_r16, val,
-+					!(val & RTASE_TX_DESC_CMD_CS), 10,
-+					1000, false, tp,
-+					RTASE_TX_DESC_COMMAND);
-+
-+		if (err == -ETIMEDOUT)
-+			netdev_err(tp->dev,
-+				   "error occurred in fill tx descriptor\n");
-+	}
-+
-+	for (i = 0; i < tp->func_rx_queue_num; i++) {
-+		ring = &tp->rx_ring[i];
-+
-+		if (i == 0) {
-+			rtase_w32(tp, RTASE_Q0_RX_DESC_ADDR0,
-+				  lower_32_bits(ring->phy_addr));
-+			rtase_w32(tp, RTASE_Q0_RX_DESC_ADDR4,
-+				  upper_32_bits(ring->phy_addr));
-+		} else {
-+			rtase_w32(tp, (RTASE_Q1_RX_DESC_ADDR0 + ((i - 1) * 8)),
-+				  lower_32_bits(ring->phy_addr));
-+			rtase_w32(tp, (RTASE_Q1_RX_DESC_ADDR4 + ((i - 1) * 8)),
-+				  upper_32_bits(ring->phy_addr));
-+		}
-+	}
-+}
-+
-+static void rtase_hw_set_features(const struct net_device *dev,
-+				  netdev_features_t features)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	u16 rx_config, val;
-+
-+	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_0);
-+	if (features & NETIF_F_RXALL)
-+		rx_config |= (RTASE_ACCEPT_ERR | RTASE_ACCEPT_RUNT);
-+	else
-+		rx_config &= ~(RTASE_ACCEPT_ERR | RTASE_ACCEPT_RUNT);
-+
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config);
-+
-+	val = rtase_r16(tp, RTASE_CPLUS_CMD);
-+	if (features & NETIF_F_RXCSUM)
-+		rtase_w16(tp, RTASE_CPLUS_CMD, val | RTASE_RX_CHKSUM);
-+	else
-+		rtase_w16(tp, RTASE_CPLUS_CMD, val & ~RTASE_RX_CHKSUM);
-+
-+	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_1);
-+	if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
-+		rx_config |= (RTASE_INNER_VLAN_DETAG_EN |
-+			      RTASE_OUTER_VLAN_DETAG_EN);
-+	else
-+		rx_config &= ~(RTASE_INNER_VLAN_DETAG_EN |
-+			       RTASE_OUTER_VLAN_DETAG_EN);
-+
-+	rtase_w16(tp, RTASE_RX_CONFIG_1, rx_config);
-+}
-+
-+static void rtase_hw_set_rx_packet_filter(struct net_device *dev)
-+{
-+	u32 mc_filter[2] = { 0xFFFFFFFF, 0xFFFFFFFF };
-+	struct rtase_private *tp = netdev_priv(dev);
-+	u16 rx_mode;
-+
-+	rx_mode = rtase_r16(tp, RTASE_RX_CONFIG_0) & ~RTASE_ACCEPT_MASK;
-+	rx_mode |= RTASE_ACCEPT_BROADCAST | RTASE_ACCEPT_MYPHYS;
-+
-+	if (dev->flags & IFF_PROMISC) {
-+		rx_mode |= RTASE_ACCEPT_MULTICAST | RTASE_ACCEPT_ALLPHYS;
-+	} else if (dev->flags & IFF_ALLMULTI) {
-+		rx_mode |= RTASE_ACCEPT_MULTICAST;
-+	} else {
-+		struct netdev_hw_addr *hw_addr;
-+
-+		mc_filter[0] = 0;
-+		mc_filter[1] = 0;
-+
-+		netdev_for_each_mc_addr(hw_addr, dev) {
-+			u32 bit_nr = eth_hw_addr_crc(hw_addr);
-+			u32 idx = u32_get_bits(bit_nr, BIT(31));
-+			u32 bit = u32_get_bits(bit_nr,
-+					       RTASE_MULTICAST_FILTER_MASK);
-+
-+			mc_filter[idx] |= BIT(bit);
-+			rx_mode |= RTASE_ACCEPT_MULTICAST;
-+		}
-+	}
-+
-+	if (dev->features & NETIF_F_RXALL)
-+		rx_mode |= RTASE_ACCEPT_ERR | RTASE_ACCEPT_RUNT;
-+
-+	rtase_w32(tp, RTASE_MAR0, swab32(mc_filter[1]));
-+	rtase_w32(tp, RTASE_MAR1, swab32(mc_filter[0]));
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_mode);
-+}
-+
- static void rtase_irq_dis_and_clear(const struct rtase_private *tp)
- {
- 	const struct rtase_int_vector *ivec = &tp->int_vector[0];
-@@ -547,6 +677,114 @@ static void rtase_hw_reset(const struct net_device *dev)
- 	rtase_nic_reset(dev);
- }
- 
-+static void rtase_set_rx_queue(const struct rtase_private *tp)
-+{
-+	u16 reg_data;
-+
-+	reg_data = rtase_r16(tp, RTASE_FCR);
-+	switch (tp->func_rx_queue_num) {
-+	case 1:
-+		u16p_replace_bits(&reg_data, 0x1, RTASE_FCR_RXQ_MASK);
-+		break;
-+	case 2:
-+		u16p_replace_bits(&reg_data, 0x2, RTASE_FCR_RXQ_MASK);
-+		break;
-+	case 4:
-+		u16p_replace_bits(&reg_data, 0x3, RTASE_FCR_RXQ_MASK);
-+		break;
-+	}
-+	rtase_w16(tp, RTASE_FCR, reg_data);
-+}
-+
-+static void rtase_set_tx_queue(const struct rtase_private *tp)
-+{
-+	u16 reg_data;
-+
-+	reg_data = rtase_r16(tp, RTASE_TX_CONFIG_1);
-+	switch (tp->tx_queue_ctrl) {
-+	case 1:
-+		u16p_replace_bits(&reg_data, 0x0, RTASE_TC_MODE_MASK);
-+		break;
-+	case 2:
-+		u16p_replace_bits(&reg_data, 0x1, RTASE_TC_MODE_MASK);
-+		break;
-+	case 3:
-+	case 4:
-+		u16p_replace_bits(&reg_data, 0x2, RTASE_TC_MODE_MASK);
-+		break;
-+	default:
-+		u16p_replace_bits(&reg_data, 0x3, RTASE_TC_MODE_MASK);
-+		break;
-+	}
-+	rtase_w16(tp, RTASE_TX_CONFIG_1, reg_data);
-+}
-+
-+static void rtase_hw_config(struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	u32 reg_data32;
-+	u16 reg_data16;
-+
-+	rtase_hw_reset(dev);
-+
-+	/* set rx dma burst */
-+	reg_data16 = rtase_r16(tp, RTASE_RX_CONFIG_0);
-+	reg_data16 &= ~(RTASE_RX_SINGLE_TAG | RTASE_RX_SINGLE_FETCH);
-+	u16p_replace_bits(&reg_data16, RTASE_RX_DMA_BURST_256,
-+			  RTASE_RX_MX_DMA_MASK);
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, reg_data16);
-+
-+	/* new rx descritpor */
-+	reg_data16 = rtase_r16(tp, RTASE_RX_CONFIG_1);
-+	reg_data16 |= RTASE_RX_NEW_DESC_FORMAT_EN | RTASE_PCIE_NEW_FLOW;
-+	u16p_replace_bits(&reg_data16, 0xF, RTASE_RX_MAX_FETCH_DESC_MASK);
-+	rtase_w16(tp, RTASE_RX_CONFIG_1, reg_data16);
-+
-+	rtase_set_rx_queue(tp);
-+
-+	rtase_interrupt_mitigation(tp);
-+
-+	/* set tx dma burst size and interframe gap time */
-+	reg_data32 = rtase_r32(tp, RTASE_TX_CONFIG_0);
-+	u32p_replace_bits(&reg_data32, RTASE_TX_DMA_BURST_UNLIMITED,
-+			  RTASE_TX_DMA_MASK);
-+	u32p_replace_bits(&reg_data32, RTASE_INTERFRAMEGAP,
-+			  RTASE_TX_INTER_FRAME_GAP_MASK);
-+	rtase_w32(tp, RTASE_TX_CONFIG_0, reg_data32);
-+
-+	/* new tx descriptor */
-+	reg_data16 = rtase_r16(tp, RTASE_TFUN_CTRL);
-+	rtase_w16(tp, RTASE_TFUN_CTRL, reg_data16 |
-+		  RTASE_TX_NEW_DESC_FORMAT_EN);
-+
-+	/* tx fetch desc number */
-+	rtase_w8(tp, RTASE_TDFNR, 0x10);
-+
-+	/* tag num select */
-+	reg_data16 = rtase_r16(tp, RTASE_MTPS);
-+	u16p_replace_bits(&reg_data16, 0x4, RTASE_TAG_NUM_SEL_MASK);
-+	rtase_w16(tp, RTASE_MTPS, reg_data16);
-+
-+	rtase_set_tx_queue(tp);
-+
-+	rtase_w16(tp, RTASE_TOKSEL, 0x5555);
-+
-+	rtase_tally_counter_addr_fill(tp);
-+	rtase_desc_addr_fill(tp);
-+	rtase_hw_set_features(dev, dev->features);
-+
-+	/* enable flow control */
-+	reg_data16 = rtase_r16(tp, RTASE_CPLUS_CMD);
-+	reg_data16 |= (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN);
-+	rtase_w16(tp, RTASE_CPLUS_CMD, reg_data16);
-+	/* set near fifo threshold - rx missed issue. */
-+	rtase_w16(tp, RTASE_RFIFONFULL, 0x190);
-+
-+	rtase_w16(tp, RTASE_RMS, tp->rx_buf_sz);
-+
-+	rtase_hw_set_rx_packet_filter(dev);
-+}
-+
- static void rtase_nic_enable(const struct net_device *dev)
- {
- 	const struct rtase_private *tp = netdev_priv(dev);
+ 			interrupts = <GIC_SPI 920 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 921 IRQ_TYPE_LEVEL_HIGH>,
 -- 
-2.34.1
+2.17.1
 
