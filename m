@@ -1,92 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A0B18FDBC;
-	Mon, 15 Jul 2024 15:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE46A18F2CA;
+	Mon, 15 Jul 2024 15:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721057616; cv=none; b=lE4TEfFZ5+oxqByMMyWkrY/kVkprYOfUj00YaCBoQNmZliUIA2OtwE0mXS3xFLRzptdy4sUr8Ev+wa5OLyGJ243g874XaWUGX7LD6vjilRQZyApPILTWuSiApBAt1YIistMbYDIkZEQtl9nDJqz47QeTokH0PTT8mLZzb1zx32Q=
+	t=1721057621; cv=none; b=q+EmRaLVvBq3LyGZnOqlxOWvQOOXlLxRT/B6l35/XiKDjD8/+QhWbj1OCyQpNtpo0/slHOqG0erjp3lll1zir9nDk9wSNc/epEy8PxQXpYqZovqnLI3+qtaSTPAGGXAgtSxRn5muHorvY0KAzQMq9KWDlsJK+H027V94rbm2YlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721057616; c=relaxed/simple;
-	bh=uoAgvV4TAFahqFM6MfhR7wnigG35xC2qzRa7VklXYFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cku0VDpaytntkMJRG+TQDq1fdZ24qHn8zxJDqyzCOfxRJ2cTMpzGKV28r2D3LvadFNa5fWxx/SJlbOoB+zYtYyilbvU93Pj0mgQpgl1J8p5AjWBWBqT3OEljJJOuH8gnRayx73uE6PAa37n5kSa91qHezdS1tWRLFyRE40glVJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TrOuQ8Y1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721057621; c=relaxed/simple;
+	bh=w5gxgyW7pDD5OiYuiD/yPeV2bq0/fDV04JlwWC9nnUg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SL8NJbhp4fiG1o1FrBT15++P46vL6cKtykDBHt2WOkZN6Mny82M9ADyNmJhielriVWLKFVYAyBLrB2ylILENZ9J0YKUnba51WZ/RT12jmLaYRgxIP42hfiNvK8mYrdq4WargR3X9ZbwWiAgQE8trQFQujJ51SyEHg5lMmR9rRss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRk9l93c; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TrOuQ8Y1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CAA8C32782;
-	Mon, 15 Jul 2024 15:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721057615;
-	bh=uoAgvV4TAFahqFM6MfhR7wnigG35xC2qzRa7VklXYFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TrOuQ8Y1I0VMAJvE98QPXVEwSWFlKK4Ld0wZhRimJgRPkQsD4vosoB7IrFE470sfU
-	 GlzUmV9X788ahqb2v9TliKZiUF4bHrnDmH7gK/kA26ACSAoyJDYzP7EU55LXsIfO9w
-	 syxpId3pITlJaqW9nOuNvRp9XaWk+VvxjV8WEOdU=
-Date: Mon, 15 Jul 2024 17:33:32 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexander Aring <aahringo@redhat.com>
-Cc: rafael@kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	gfs2 <gfs2@lists.linux.dev>, David Teigland <teigland@redhat.com>
-Subject: Re: udev kset_create_and_add() with own struct kobj_type?
-Message-ID: <2024071509-closable-drop-down-3a7f@gregkh>
-References: <CAK-6q+jSBjuFaFqGLQcfVLMUwRcJJMHk2oUnSgMObwz+OAih6g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRk9l93c"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-367975543a8so2738956f8f.3;
+        Mon, 15 Jul 2024 08:33:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721057618; x=1721662418; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XrCU6G9DnnMkxpZ0nGUhFrVcFHRKc9c76P/tMQAhH00=;
+        b=QRk9l93cTNWatUQIa+m5sUZ8RWwox3CB6U3XTabhWUVjp8RBPNPyf6LPYy/4H2sCGv
+         aOaPqiyEe4KyUTJooD+pAQ8J2UXrsR2TZRVgitis+ztiMq0xcUfTcjhHnnhnR7qxWUN7
+         5Mkwfvpid4r5qddTPivBshkS/NQckoUsj5pbV49brAJQf3tLi57vidJ8zDiAS1MH5enE
+         bhpeEkpAeUfEDfQV4JXTZr/mGMG3GLPo+TrRszg/lOccBGlhbDHSfk7D52byIZhFAX1v
+         S5aoEuSmKzMLFDzX0u9RSGVtrrdRAMJ8YUOL8WXT+gJHWxLgyVuteR+cJvRlHt+Pac2X
+         JTjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721057618; x=1721662418;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XrCU6G9DnnMkxpZ0nGUhFrVcFHRKc9c76P/tMQAhH00=;
+        b=Wb8UrAwBUHiDHRSP94EB8Ao/jpDPNXCe1hHBcYXs3Vp/Coybl4G7AdzbG48AFc/ypK
+         oAL/oBc1Nr7dZXTUZsQFkNceIwJXLKfXXqFJor8ovxGLiQ9HnIVSNFi6jLyW3oPQpI4c
+         Cf8CEYOSF0wq0A/SKsVP2ODA3iT7iNPThsPP6bBmvz0YovfG9Fcyctsw+sMF2DLiQzr/
+         Sxgm1spymfbmSq44sLx/8F2e4aZtO3BfSC4Vtut5Dpy4K7LohznFOlZ87j+Gd5RlW2Tg
+         F/jpmQb/eGIvZt1kBpe+DfOvajWorXp7AZ/wtieqCY1LrLtBW47OaNlZmCsp9megGUDK
+         eZHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEiuGxe6uwrwVqVCWLMq6Ya0KNXKK/8jkth5DMKn1GNk0v1DAz+DftU2fdVoPr9IINmIMgGLFg/aJO9wFoBQ2fM7wIfJwVPfU0s+tj0h/+czPDp5asVDSR2K6ZbBifV1LCuWk3BaDRig==
+X-Gm-Message-State: AOJu0YzkoWkD5VZy+9rQOJ7gnsWWvmS7W/4JVV+jxyfhdawjxC/uysVC
+	3G8dXXfa6op2hnB86zbQX0XMipmhAl/Uk4ft9jJ9Lwo/DJrX2uu0
+X-Google-Smtp-Source: AGHT+IHFu8Io6ztt+geSSFK6mvGbGpy+kC8jppmdsA/0W5RtN9ndSF6+krNBDMfvyv6CFAl9AoiYbg==
+X-Received: by 2002:a5d:6089:0:b0:367:96c5:ae70 with SMTP id ffacd0b85a97d-368240936c8mr67604f8f.31.1721057618058;
+        Mon, 15 Jul 2024 08:33:38 -0700 (PDT)
+Received: from eichest-laptop.lan ([2a02:168:af72:0:564b:c18:f4fc:19ad])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbf4bsm6720866f8f.73.2024.07.15.08.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 08:33:37 -0700 (PDT)
+From: Stefan Eichenberger <eichest@gmail.com>
+To: nick@shmanahar.org,
+	dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	linus.walleij@linaro.org,
+	francesco.dolcini@toradex.com,
+	joao.goncalves@toradex.com
+Cc: linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: [PATCH v6 1/3] Input: atmel_mxt_ts - add power off and power on functions
+Date: Mon, 15 Jul 2024 17:31:21 +0200
+Message-ID: <20240715153330.91979-2-eichest@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240715153330.91979-1-eichest@gmail.com>
+References: <20240715153330.91979-1-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK-6q+jSBjuFaFqGLQcfVLMUwRcJJMHk2oUnSgMObwz+OAih6g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 15, 2024 at 11:27:00AM -0400, Alexander Aring wrote:
-> Hi,
-> 
-> I am currently implementing namespace support into the fs/dlm
-> subsystem. The DLM subsystem uses kset_create_and_add("dlm",
-> &dlm_uevent_ops, kernel_kobj); to create the "dlm" sysfs directory.
-> Underneath it creates for each lockspace a subdirectory using
-> kobject_init_and_add() with a non-static name and being known during
-> runtime.
-> 
-> Now I want to add namespace support and need to change the "default"
-> kset->kobj.ktype = &kset_ktype; that is set by
-> kset_create_and_add()->kset_create() to my own kobj_type because I
-> need to implement a different ".child_ns_type" callback before
-> kset_register() is called.
-> 
-> So kset_create_and_add() does not allow me to add my own
-> ".child_ns_type" callback for the kset that is required for me to have
-> my sysfs "kernel/dlm" directory separated by each net-namespace
-> without breaking any backwards compatibility.
+From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-I don't understand, what "backwards compatibility" is happening here?
+Add a separate function for power off and power on instead of calling
+regulator_bulk_enable and regulator_bulk_disable directly.
 
-> My current solution is that I mostly copy&pasted the code of
-> kset_create_and_add()/kset_create() to have a way to tell my own
-> struct kobj_type that contains the implemented my own ".child_ns_type"
-> callback.
+Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Reviewed-by: Joao Paulo Goncalves <joao.goncalves@toradex.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 56 ++++++++++++++----------
+ 1 file changed, 34 insertions(+), 22 deletions(-)
 
-Ick.
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 8a606bd441ae6..9416de53bf9af 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -1307,6 +1307,35 @@ static int mxt_soft_reset(struct mxt_data *data)
+ 	return 0;
+ }
+ 
++static int mxt_power_on(struct mxt_data *data)
++{
++	int error;
++
++	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
++				      data->regulators);
++	if (error) {
++		dev_err(&data->client->dev, "failed to enable regulators: %d\n",
++			error);
++		return error;
++	}
++
++	msleep(MXT_BACKUP_TIME);
++
++	if (data->reset_gpio) {
++		/* Wait a while and then de-assert the RESET GPIO line */
++		msleep(MXT_RESET_GPIO_TIME);
++		gpiod_set_value(data->reset_gpio, 0);
++		msleep(MXT_RESET_INVALID_CHG);
++	}
++
++	return 0;
++}
++
++static void mxt_power_off(struct mxt_data *data)
++{
++	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
++}
++
+ static void mxt_update_crc(struct mxt_data *data, u8 cmd, u8 value)
+ {
+ 	/*
+@@ -3305,25 +3334,9 @@ static int mxt_probe(struct i2c_client *client)
+ 		return error;
+ 	}
+ 
+-	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
+-				      data->regulators);
+-	if (error) {
+-		dev_err(&client->dev, "failed to enable regulators: %d\n",
+-			error);
++	error = mxt_power_on(data);
++	if (error)
+ 		return error;
+-	}
+-	/*
+-	 * The device takes 40ms to come up after power-on according
+-	 * to the mXT224 datasheet, page 13.
+-	 */
+-	msleep(MXT_BACKUP_TIME);
+-
+-	if (data->reset_gpio) {
+-		/* Wait a while and then de-assert the RESET GPIO line */
+-		msleep(MXT_RESET_GPIO_TIME);
+-		gpiod_set_value(data->reset_gpio, 0);
+-		msleep(MXT_RESET_INVALID_CHG);
+-	}
+ 
+ 	/*
+ 	 * Controllers like mXT1386 have a dedicated WAKE line that could be
+@@ -3361,8 +3374,8 @@ static int mxt_probe(struct i2c_client *client)
+ 	mxt_free_input_device(data);
+ 	mxt_free_object_table(data);
+ err_disable_regulators:
+-	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
+-			       data->regulators);
++	mxt_power_off(data);
++
+ 	return error;
+ }
+ 
+@@ -3374,8 +3387,7 @@ static void mxt_remove(struct i2c_client *client)
+ 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+ 	mxt_free_input_device(data);
+ 	mxt_free_object_table(data);
+-	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
+-			       data->regulators);
++	mxt_power_off(data);
+ }
+ 
+ static int mxt_suspend(struct device *dev)
+-- 
+2.43.0
 
-> I am writing this mail to get some advice on what I can do here
-> without doing the copy&pasted code?
-> Add a parameter to kset_create_and_add() that allows me to set an
-> "struct kobj_type"?
-> Introducing a new function that does allow me to set the new parameter
-> (I probably like that because then I don't need to update all other
-> users)?
-
-A new function would be ok, but I hate it how filesystems have to use
-"raw" kobjects and the like all the time.  It's rough, sorry.
-
-Also, I didn't think sysfs namespaces worked for anything except
-networking stuff.  Are you sure you really need this?  Where is your
-"namespace" defined at?
-
-thanks,
-
-greg k-h
