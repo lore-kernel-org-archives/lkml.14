@@ -1,266 +1,275 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C4033C5;
-	Mon, 15 Jul 2024 20:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721073876; cv=fail; b=DYPg6pS0KFKspqJvWdMb5gobQscD2yYZNqJ7aRCEN3pWOyiaT8nfX4RxaJ6NbQ2my5Who6RYJlSXfLsxVyNZJef0K6GjJyFuoSFr2qKx0iezTiiymSPef0jkyRm1f/8EOrBmh4y8I+GUDvzSwLoshr1ckpKbmTW8+b9+CZdUmFs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721073876; c=relaxed/simple;
-	bh=Y7+ZyAkhcoMdrqljiwACQmQZeKBa+4pOAVC481ATJSc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UmQtQbH68ujWfEiZuFkXhEeJsePGztQtsq0WK2IQWUDXojPOP0YWjezkpV49Ijt9p3StDv0xOZEdS66n5y7t/xyCwcyDJvxwUt8H0G6ckSwl+qSJpQusdWX4yiLxlr8jXjEh80Tezg//jpEeTZ2CCIDRUDClhmecoI5pI0NQVTE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=se1BUh/4; arc=fail smtp.client-ip=40.107.93.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C6013AD3D;
+	Mon, 15 Jul 2024 20:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721073883; cv=none; b=LwgP7J7oz4/xUzWb7oCSAy270rMG5ShhHpqwPTxCFJgwky3lMdcSjeQTBYIYIG3U6Tf7oIoOcf9P3PA39UlTySCjqmVcz89DS3crzy89T1eNoB+ZyHaIyWRHh9X+WRFuPxYG8mZII9W9OIG3Eipez2c4dL9zBzW4TjPWaroE2Vo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721073883; c=relaxed/simple;
+	bh=ZLlB2DB3vdtMN7zCCHuoJegLf5V2awwX0vQH/01u3V0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oo+rJcVzmg3tBc6PdCFJoOJ1wTG8y3lATttbttcQW6f392ExPVagGAiqStnMiJP0GDqDOqKuURNFkO9eG6Pvz/o9FwSEb5KKl7zzygFby57YBtudr2sddqTI/jaSKrKWjFGJSbmsQt6lf6C4G5Ddkoq8uQqhdkPppck6O8G27ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QBJ4LOgs; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="se1BUh/4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D8y1BKdNFV5T5bMS8KY7yf0ZnckaQz8l9efrXhscqfBv+f1GihqFmT7+Xo1H4s1p32+E3vRcJGFQHyP6rY2o6v6OxmPyguLeM7uKKn2FlE9W71JPEIlYvD7nss3prU1eML+Fhg1uC/n2S4GQ1aM54lbo3V5XtB/izS3yjkyMAoQQcNruaB9Rqw/yClJFV5xeOP2MEDV2Xey19cwbQ2JTS06/EAzavMDj7Ks9TdLqHztMFHtmqKQ+qAMPRe8TVHn+rhR0wY6x9vdI/8eIyR7x5UO6OU3IAlN1pSMPzONZGiWI8xQXzl5IsgUuuFqG6PawzDNuLtwwo9ER8tUZEXO6nQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=itu9WTkQNmw07+QUcfOcQjZP4CNuhfjBRftwcDgVdfU=;
- b=ypk7+kMMSPBl8oNfj5dZlasTZ7TURtQ7ee2OPzJ2GKcfmojQv5fDj6WpzRmVk36Rp8mf/2Rm1lcu1TGfIlL0pawaqA18yWppldpnIrbqfyyDuBwdyoty5E1BjPTDAzNhH/HfsAKySfXZincZcBibIpldergjlS3opEyCTUUzEdexXPfz8JfpuzeqsqkXiTXAZT644NpW8amjQsUY/Emwkqtp6Rr482PcEkum0v4SgCs9VbhctUh4atDDgRmgiIP2Piod5/YwmehGwNO5hrV826ikvzACgDcj6NtCIe88EDcGyHmvltV7iUNT1ZfrRH4XcxmX8G4Z4bBiPR+8Do6/Uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=itu9WTkQNmw07+QUcfOcQjZP4CNuhfjBRftwcDgVdfU=;
- b=se1BUh/4/arXfzvt6PxwsVqVh/WjgQXWN+kPI59xCs5S0uPMuh++jk+KQt+XXbOByICq2quUWqN7fir2GttPJRc6G3EJYBica8rjq25KcKt9LPn2OJPLRP/A2HKAeb+aAO22HYfNGiQnQFZSwpYFkbcZ4nIozDV/L432HRiFBts=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by DM3PR12MB9433.namprd12.prod.outlook.com (2603:10b6:0:47::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Mon, 15 Jul
- 2024 20:04:32 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
- 20:04:31 +0000
-Message-ID: <e8a50a62-9974-4f1c-8ffc-0a1efa477824@amd.com>
-Date: Mon, 15 Jul 2024 15:04:25 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v5 04/20] x86/resctrl: Detect Assignable Bandwidth
- Monitoring feature details
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- fenghua.yu@intel.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
- tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
- kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
- jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
- rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
- jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
- daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
- ilpo.jarvinen@linux.intel.com, peternewman@google.com,
- maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, eranian@google.com, james.morse@arm.com
-References: <cover.1720043311.git.babu.moger@amd.com>
- <ea967681e5ed7a9c27771d60ef993616e7e1292e.1720043311.git.babu.moger@amd.com>
- <1d0af059-4768-48ce-87ba-7a9a213a3fca@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <1d0af059-4768-48ce-87ba-7a9a213a3fca@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR01CA0037.prod.exchangelabs.com (2603:10b6:a03:94::14)
- To MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QBJ4LOgs"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FH8gc1002589;
+	Mon, 15 Jul 2024 20:04:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=w43u+d5ZRqcJtwr32+UuS6yJ
+	rT6RMoBwvxj8K+NlUkY=; b=QBJ4LOgs3NVryRbDzdsUTgXZ9SX5Ub0zK2eLcklq
+	h8Vj2mbT2PcazrFGTHGsPJQ9WmFOHwCvGB7e4qoSeZExHsHVsK5a+QmeBA/ROoYw
+	Oo04ny9G185HtmE8aTqyQEumQZ/22wibRTysOwgmy5a5sIePux5kZz4y1V4ZsR/l
+	xIfReuRXCIOhABfqQbS5ncSMwi4qRX8Rl/Lp2Js7meTsrLRM0s6g56ImXy2DaQ/i
+	OuQF9seChc4GmFo10/w9WtgHxANRc1aEMLNQ1BR8gCzp+uCtQFm4Xfb/iuWaYXIH
+	2PjMQXL5pRahYSrzcnBu6g2rahuid/0sDg5B8P6AgBxKbQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bhy6w7k1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 20:04:30 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46FK4TXh011653
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 20:04:29 GMT
+Received: from hu-akhilpo-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 15 Jul 2024 13:04:23 -0700
+Date: Tue, 16 Jul 2024 01:34:19 +0530
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        David Airlie <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>,
+        Bjorn Andersson <andersson@kernel.org>, Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v5 1/5] drm/msm/adreno: Implement SMEM-based speed bin
+Message-ID: <20240715200419.l47ng6efa25in6sg@hu-akhilpo-hyd.qualcomm.com>
+References: <20240709-topic-smem_speedbin-v5-0-e2146be0c96f@linaro.org>
+ <20240709-topic-smem_speedbin-v5-1-e2146be0c96f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DM3PR12MB9433:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0ce755b-68c4-48ba-0e60-08dca5095742
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkI1by9wVmxBR01kRlZYN2xMWVVpUVBJbnd6cC9XZFU3OU5pRG9oVTArV0hr?=
- =?utf-8?B?MGtvdzIySWFuTFhUaG81b2VDMkxMM1VscWgrN1hnNGllL3cxQzdZckdKVUVT?=
- =?utf-8?B?TllHRVZIODRJTjdQYmVXbWJUOHBLZWlqT2FSS1dNOXRzSHNSSWwyZHAvQk9F?=
- =?utf-8?B?RHBHZ2Q5dVhNYkZoUFZLWk11YSt2bENXQTNYeVFpdzhSeEdMREdHdDhjdHRJ?=
- =?utf-8?B?eTNVTFhVQStuOTJqS21GbTREOG1UK3FqRWdwUTBKQ0MzSUpXdnE1V25wc1NS?=
- =?utf-8?B?NTd0dXB2T05wV3R0UFNQNVg4Z3BmQXJrVUhCT0pneENkMC9Fd1Z2cXBXSkgy?=
- =?utf-8?B?NExSY3VyYmxtRVN1M2Z3U2xyUUptQ2FvR2VoZU5Hdk9nNFh6Q3RHdFlvZkxS?=
- =?utf-8?B?M25XcUROY3VsYmk2RE1SVkYxY0tuTERlcjNNWmNWQkhZQmQ3a3dWUWgzYVB1?=
- =?utf-8?B?VVE4aVpBQ1VTRzVwZERETFY2ZjV4cnpJL2ZBaVk4MHZuTXZYcDBYSy9VTW56?=
- =?utf-8?B?QUJEU3FCeGJKa1FYU3ZPRXpvU1JNSytkb2hHZ3FjL25mSWRYWENFdWZoSVdz?=
- =?utf-8?B?VVQzNzZsdHl4YVBkOUk0eGJIVGl6V0Q4QzNHM05ZUytHa09PZzhGaUYvZ2VL?=
- =?utf-8?B?SU4vVE4xK1VhK2Nwa2xqc1RhT0ZhT3hMcEFLOXliazd3RHozTTU0eFo1Wlc2?=
- =?utf-8?B?b3RXWkViaERKc3FTMGlja0h3U0lHbUlEbVpiVWZVQWZNYmJSdFY1cWM4d1JR?=
- =?utf-8?B?SmR6Zkg1dlFDbGZHL2lGZlI3d3VFNjlKcU9HZURlZXpxWHZGb2Z6UHVsbTk2?=
- =?utf-8?B?YjhnSXZ0b1hFOU1nemxPNzFPZ2tnbElNMXN0bTRmNStyZkhkTzRuU2F6elVt?=
- =?utf-8?B?STAzWis4QmJvSGVNRTd0eGoyMWdrWTlMc29xbFBqU0thZWZKUGVOUGo1RlVR?=
- =?utf-8?B?Wi9TRDZOT2NNVWtVOFRnbGgyODJvMURBTC9tRmEyZVVVaXowOWNWMVpGTUkz?=
- =?utf-8?B?b3g0Z2xVenpGUjh5VnhYM1Zsc1JuMGRPNVBWdVVGVXFlcElJNnBLRE9lMXJB?=
- =?utf-8?B?OU9icGcwMHdXQ1VQWmdqa0YySkdLNGZVU1pwakpFY2FuSmIrNEtVODVrZVAr?=
- =?utf-8?B?L0NHL0FIRzYyVmlwd2JmZXVyMTUvTElCV1FOTSsvUGdGeG5hMG02SGRUdFNu?=
- =?utf-8?B?V0hiaFhGaTJVdTJ4L2I5ZXVhT0pZSWRFOStVdVJXOTNOQ2ZBWW94VGcyK2gz?=
- =?utf-8?B?S05WZlVUaG5qbitzTWx2ZmpZK3NFbEJocGRZNjlENy9HWndjM2Q0OXg5dTdV?=
- =?utf-8?B?aVFtV0lPdjdteTV6VHhLemZiY3dBSWx5OVVnQXg3a0RsdlZ5R3VreHlrci9X?=
- =?utf-8?B?Si9GT1plOVBFdUE0RFFQNFFyVXlUcWxsTi9tWXR5QU5GdFVKbmd5WnBVTkoz?=
- =?utf-8?B?eGR4L1puNkpwTVpZK1hEWFY1Rm8vVm1RWlBWVkhIS1JaUWZtMyttQ0svYkZK?=
- =?utf-8?B?VVhkR1NObE5PT1phSmZ5SUF3dTAzU2I4MjVuRFh1dUtXTHcrS1dRa2hmTGRs?=
- =?utf-8?B?SmRsbE51Tk9neERNakRxN29yeVpVc2MwMzN1Y0t4ZXJHaWlWeER3aU9qVS9p?=
- =?utf-8?B?NG03YWxsVGl3OHlJK0xHS2FzOENvUjF1UTVRSkV4VzBsaUtqeXRqN1cxR0JV?=
- =?utf-8?B?cXRGQU9ZOThUK1dheWsrMFYrSk84UnhGUVo2VDhFT1k4MTZXMXlRL0N5Qy85?=
- =?utf-8?Q?z98zb7yVWgJoqM3Bks=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q0Q2MFZCaXZjR1BRNFFzYWNjTklObVo2SkUwajd5NnlOdk9XZ3g5a3Eyak1u?=
- =?utf-8?B?MUVoWGJHR2RMOEd3NHhreXBJQVpkWnlvTjFFMGtIOXVTcWNaYjhoSzB5RjNB?=
- =?utf-8?B?NStTQng2cWYwMC9wMXVqNTZMNm1HVnZkMnVJZ0VjUWZBTG5BNWszZzZNVnZR?=
- =?utf-8?B?ZUhWNlM5V2pEVmJwSmJtQm1PV1JiMlk5QjJCankyeW1SU21MLzJUb2IxbUg5?=
- =?utf-8?B?U2lUdEwwYjdsMjdkeU1XQVZ5SVZ2Z0xCbVMzcHhBZm1CSGpabG1JbVQ3R1FH?=
- =?utf-8?B?am14dDNjNXIyVGN6Q1JYemNVK0V4RjJMMi9oZmFsM3NxNmY2YVJHM01XbGZ3?=
- =?utf-8?B?K3lnT1F6ZjN3UFdkN3kycmdZMGUydElKN1NoM3hOazZaTFBZeTdXWlI2VHJL?=
- =?utf-8?B?R1dEMlVSbzBUNWZCUXlTenBuQVNEVlcxK0x6Q2k1azVTcERDRUpKNU5uM28w?=
- =?utf-8?B?T25IZUUwKy81aDNxSVdjdWZ2YStoSGxFeFdBSERKZTF3N1JnNzdIdGErRURS?=
- =?utf-8?B?RUlkRjFQRGVRbHZUMGtjMFdCczdVRnhDOWI3engvTmpMQk5DejZGWm8ySlJT?=
- =?utf-8?B?UkhjNXdTanUyNlV2ajNvcm9sOGZTVkNkbERtSS9LSnJvRjF6ZFM1QnhxNXNS?=
- =?utf-8?B?VFNDVU02Tzh1c2NZcENNb2pzUUVZVC9hMHlLbEJrb3hpK2M2MXgzSDFlWStk?=
- =?utf-8?B?QzByMFhvelZtR1pDYkErWFBnNXpUZ2ttUGFBbEpuYUR5V2hKUGpPbHRsbmov?=
- =?utf-8?B?MzNtbytnRFZEN0NDMVRyd3dmM0U5Yk9sWTF5eHQ2ZlM1WS9FRmkzSjBCYVVF?=
- =?utf-8?B?TXo1TkZGLy9GQTFqKzFtWGdsSk9JVnR3QmE3cXVicjl4ZW5LbDdDSlZScHdx?=
- =?utf-8?B?NWxIUm9NTnRCOFh3bjIvaTJCN1FqM2VDS1dUdVVqd1ozbFBrRUlDaHNXZ3g1?=
- =?utf-8?B?c1R0amJZUjRMTzQ3L2hBOXBDYlN5UE5mQTRuNmxtLzYrSTZEY2FRdHQ1VElS?=
- =?utf-8?B?ZVpTYkJUc042YWN0SGttTm50L2FZUVhpYU5mamg1TUJPbzlyOGtzSk0xL3Y5?=
- =?utf-8?B?SndWcmxjaGp1cnlGZXhJTFlVODZuandZb0E3Wmk0a3JNb3hEaCtlYUpMRUdG?=
- =?utf-8?B?dVduZTVLWlhEZVBYMFhxVmtvUHY5SWdCckRqbjNWVUQ2UkN5dUpFWGpNQitp?=
- =?utf-8?B?VTIyeDNlOE90VnVPRC9EV0FZbWZjWnR3bW9xcWI3NVg0V3FMendhMXVsQkh4?=
- =?utf-8?B?SzR5Z2dYK1l0Wkl1M08vT21VV3M1eElOdW55d2pPYWZheDl1KzdJeFVwTXkv?=
- =?utf-8?B?a2t5V1pQMVJsQjE5K3BKVVBNNlVJWFEzS0t6MExCMCtUbmhpU0ZWRG5hSzN6?=
- =?utf-8?B?ZDhyajRiSnpWWkhJM2Y2KzRRbWZOYzhPOHMyekJweVlKRGNqcGY3YUlYRUVR?=
- =?utf-8?B?bVhEVFE0K0xsa2FoVHBJSFRpTXpkTDF5cmY2bkhwVm95bno2WjlTZEs5VFRF?=
- =?utf-8?B?SHdtTGVYVjlFRlRLcWRVSnd3VFNmaE4wYnZHekRkMUpQL29SZWk5RXh5SlpS?=
- =?utf-8?B?T0plQWhLbDNnVVBrVEF0MUo3V1k3QXluVjIvblUyeTdYVWt4MTJ3SGNxMnpE?=
- =?utf-8?B?SVBxQ0wvMGxpaXgzRGNVK20wQjlJdlgrSzNpNU5mRnFQTU5RdU5uVUJJcjFD?=
- =?utf-8?B?WWhHNzZLUml5OVpFcllkRmIwSGt4SFAveG42N0taMzFGSFAxNXNlK1A2WCsx?=
- =?utf-8?B?TmNQRlcveDhWVUoyMGQ2T0JVNUVoN2xrK2JOcGVFeGhTbFd5cWhaN0tHSVF3?=
- =?utf-8?B?T1VJL2RQNkgxeWZoeDE4L2FLVjFjeFl0WHNGOUN3b0JyTXhFT3hBTEVzNENK?=
- =?utf-8?B?YUY0OHJ3QS85VjAweUx4L2xWOTNTT1FtNXpVeWUyUkNSL3FVck5nTHFCK2xT?=
- =?utf-8?B?ZUoxVFFEWG1lbzY2T2ZXK0VOVEI4NTUwKzVpUDRWWlFEVUNGUnBCVUl1azJa?=
- =?utf-8?B?UFFmSUt3T3g3d1l2T2IxaHdWYnZiQmd6eXltUmhZYlVGWnc5NGJaUkdSRVE0?=
- =?utf-8?B?VVkzWUhjODJhOU5mQi9SUitzZFNSTEN6RVF4ckJWTHQ3WWkyMkR3OEhtbGxC?=
- =?utf-8?Q?xG8Q=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0ce755b-68c4-48ba-0e60-08dca5095742
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 20:04:31.8211
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HomdD6DGJMLCJ564Gc5IpKgWuk7W2lVicZIeziwfQlzXfDpG0Vb8l/DXOSW4io/Q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9433
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240709-topic-smem_speedbin-v5-1-e2146be0c96f@linaro.org>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: -ruorJXBnZMlFD003J-lc9Lc7a_z2JHf
+X-Proofpoint-ORIG-GUID: -ruorJXBnZMlFD003J-lc9Lc7a_z2JHf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_14,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 spamscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407150156
 
-Hi Reinette,
-
-On 7/12/24 17:04, Reinette Chatre wrote:
-> Hi Babu,
+On Tue, Jul 09, 2024 at 12:45:29PM +0200, Konrad Dybcio wrote:
+> On recent (SM8550+) Snapdragon platforms, the GPU speed bin data is
+> abstracted through SMEM, instead of being directly available in a fuse.
 > 
-> On 7/3/24 2:48 PM, Babu Moger wrote:
->> ABMC feature details are reported via CPUID Fn8000_0020_EBX_x5.
->> Bits Description
->> 15:0 MAX_ABMC Maximum Supported Assignable Bandwidth
->>       Monitoring Counter ID + 1
->>
->> The feature details are documented in APM listed below [1].
->> [1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
->> Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
->> Monitoring (ABMC).
+> Add support for SMEM-based speed binning, which includes getting
+> "feature code" and "product code" from said source and parsing them
+> to form something that lets us match OPPs against.
 > 
-> <insert snippet about what the patch does>
-
-Ok Sure.
-
+> Due to the product code being ignored in the context of Adreno on
+> production parts (as of SM8650), hardcode it to SOCINFO_PC_UNKNOWN.
 > 
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> ---
->> v5: Name change num_cntrs to num_mbm_cntrs.
->>      Moved abmc_capable to resctrl_mon.
->>
->> v4: Removed resctrl_arch_has_abmc(). Added all the code inline. We dont
->>      need to separate this as arch code.
->>
->> v3: Removed changes related to mon_features.
->>      Moved rdt_cpu_has to core.c and added new function
->> resctrl_arch_has_abmc.
->>      Also moved the fields mbm_assign_capable and mbm_assign_cntrs to
->>      rdt_resource. (James)
->>
->> v2: Changed the field name to mbm_assign_capable from abmc_capable.
->> ---
->>   arch/x86/kernel/cpu/resctrl/monitor.c | 12 ++++++++++++
->>   include/linux/resctrl.h               |  4 ++++
->>   2 files changed, 16 insertions(+)
->>
->> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c
->> b/arch/x86/kernel/cpu/resctrl/monitor.c
->> index 795fe91a8feb..87d40f149ebc 100644
->> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
->> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
->> @@ -1229,6 +1229,18 @@ int __init rdt_get_mon_l3_config(struct
->> rdt_resource *r)
->>               mbm_local_event.configurable = true;
->>               mbm_config_rftype_init("mbm_local_bytes_config");
->>           }
->> +
->> +        if (rdt_cpu_has(X86_FEATURE_ABMC)) {
->> +            r->mon.abmc_capable = true;
->> +            /*
->> +             * Query CPUID_Fn80000020_EBX_x05 for number of
->> +             * ABMC counters
->> +             */
->> +            cpuid_count(0x80000020, 5, &eax, &ebx, &ecx, &edx);
->> +            r->mon.num_mbm_cntrs = (ebx & 0xFFFF) + 1;
->> +            if (WARN_ON(r->mon.num_mbm_cntrs > 64))
->> +                r->mon.num_mbm_cntrs = 64;
->> +        }
->>       }
->>         l3_mon_evt_init(r);
->> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
->> index e43fc5bb5a3a..62f0f002ef41 100644
->> --- a/include/linux/resctrl.h
->> +++ b/include/linux/resctrl.h
->> @@ -185,10 +185,14 @@ enum resctrl_scope {
->>   /**
->>    * struct resctrl_mon - Monitoring related data
->>    * @num_rmid:        Number of RMIDs available
->> + * @num_mbm_cntrs:    Number of monitoring counters
->> + * @abmc_capable:    Is system capable of supporting monitor assignment?
->>    * @evt_list:        List of monitoring events
->>    */
->>   struct resctrl_mon {
->>       int            num_rmid;
->> +    int            num_mbm_cntrs;
->> +    bool            abmc_capable;
->>       struct list_head    evt_list;
->>   };
->>   
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 14 +++++-----
+>  drivers/gpu/drm/msm/adreno/adreno_device.c |  2 ++
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c    | 42 +++++++++++++++++++++++++++---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  7 ++++-
+>  4 files changed, 54 insertions(+), 11 deletions(-)
 > 
-> How about renaming "abmc_capable" to "mbm_cntr_capable? That would,
-> (a) connect the capability to the "num_mbm_cntrs" property, and (b)
-> remove the AMD marketing name from the resctrl filesystem code that
-> will be shared by all architectures.
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index bcaec86ac67a..0d8682c28ba4 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -2117,18 +2117,20 @@ static u32 fuse_to_supp_hw(const struct adreno_info *info, u32 fuse)
+>  	return UINT_MAX;
+>  }
+>  
+> -static int a6xx_set_supported_hw(struct device *dev, const struct adreno_info *info)
+> +static int a6xx_set_supported_hw(struct adreno_gpu *adreno_gpu,
+> +				 struct device *dev,
+> +				 const struct adreno_info *info)
+>  {
+>  	u32 supp_hw;
+>  	u32 speedbin;
+>  	int ret;
+>  
+> -	ret = adreno_read_speedbin(dev, &speedbin);
+> +	ret = adreno_read_speedbin(adreno_gpu, dev, &speedbin);
+>  	/*
+> -	 * -ENOENT means that the platform doesn't support speedbin which is
+> -	 * fine
+> +	 * -ENOENT/EOPNOTSUPP means that the platform doesn't support speedbin
+> +	 * which is fine
+>  	 */
+> -	if (ret == -ENOENT) {
+> +	if (ret == -ENOENT || ret == -EOPNOTSUPP) {
+>  		return 0;
+>  	} else if (ret) {
+>  		dev_err_probe(dev, ret,
+> @@ -2283,7 +2285,7 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+>  
+>  	a6xx_llc_slices_init(pdev, a6xx_gpu, is_a7xx);
+>  
+> -	ret = a6xx_set_supported_hw(&pdev->dev, config->info);
+> +	ret = a6xx_set_supported_hw(adreno_gpu, &pdev->dev, config->info);
+>  	if (ret) {
+>  		a6xx_llc_slices_destroy(a6xx_gpu);
+>  		kfree(a6xx_gpu);
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> index cfc74a9e2646..0842ea76e616 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -6,6 +6,8 @@
+>   * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
+>   */
+>  
+> +#include <linux/soc/qcom/socinfo.h>
+> +
+>  #include "adreno_gpu.h"
+>  
+>  bool hang_debug = false;
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 1c6626747b98..cf6652c4439d 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -21,6 +21,9 @@
+>  #include "msm_gem.h"
+>  #include "msm_mmu.h"
+>  
+> +#include <linux/soc/qcom/smem.h>
+> +#include <linux/soc/qcom/socinfo.h>
+> +
+>  static u64 address_space_size = 0;
+>  MODULE_PARM_DESC(address_space_size, "Override for size of processes private GPU address space");
+>  module_param(address_space_size, ullong, 0600);
+> @@ -1061,9 +1064,40 @@ void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *adreno_ocmem)
+>  			   adreno_ocmem->hdl);
+>  }
+>  
+> -int adreno_read_speedbin(struct device *dev, u32 *speedbin)
+> +int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
+> +			 struct device *dev, u32 *fuse)
+>  {
+> -	return nvmem_cell_read_variable_le_u32(dev, "speed_bin", speedbin);
+> +	int ret;
+> +
+> +	/*
+> +	 * Try reading the speedbin via a nvmem cell first
+> +	 * -ENOENT means "no nvmem-cells" and essentially means "old DT" or
+> +	 * "nvmem fuse is irrelevant", simply assume it's fine.
+> +	 */
+> +	ret = nvmem_cell_read_variable_le_u32(dev, "speed_bin", fuse);
+> +	if (!ret)
+> +		return 0;
+> +	else if (ret != -ENOENT)
+> +		return dev_err_probe(dev, ret, "Couldn't read the speed bin fuse value\n");
+> +
+> +#ifdef CONFIG_QCOM_SMEM
+> +	u32 fcode;
+> +
+> +	/*
+> +	 * Only check the feature code - the product code only matters for
+> +	 * proto SoCs unavailable outside Qualcomm labs, as far as GPU bin
+> +	 * matching is concerned.
+> +	 *
+> +	 * Ignore EOPNOTSUPP, as not all SoCs expose this info through SMEM.
+> +	 */
+> +	ret = qcom_smem_get_feature_code(&fcode);
+> +	if (!ret)
+> +		*fuse = ADRENO_SKU_ID(fcode);
+> +	else if (ret != -EOPNOTSUPP)
+> +		return dev_err_probe(dev, ret, "Couldn't get feature code from SMEM\n");
+> +#endif
+> +
+> +	return ret;
+>  }
+>  
+>  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+> @@ -1102,9 +1136,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  			devm_pm_opp_set_clkname(dev, "core");
+>  	}
+>  
+> -	if (adreno_read_speedbin(dev, &speedbin) || !speedbin)
+> +	if (adreno_read_speedbin(adreno_gpu, dev, &speedbin) || !speedbin)
+>  		speedbin = 0xffff;
+> -	adreno_gpu->speedbin = (uint16_t) (0xffff & speedbin);
+> +	adreno_gpu->speedbin = speedbin;
 
-"mbm_cntr_capable" does not give full meaning of the feature.
+There are some chipsets which uses both Speedbin and Socinfo data for
+SKU detection [1]. We don't need to worry about that logic for now. But
+I am worried about mixing Speedbin and SKU_ID in the UABI with this patch.
+It will be difficult when we have to expose both to userspace.
 
-How about "mbm_cntr_assignable"?
+I think we can use a separate bitfield to expose FCODE/PCODE. Currently,
+the lower 32 bit is reserved for chipid and 33-48 is reserved for speedbin,
+so I think we can use the rest of the 16 bits for SKU_ID. And within that
+16bits, 12 bits should be sufficient for FCODE and the rest 8 bits
+reserved for future PCODE.
 
--- 
-Thanks
-Babu Moger
+[1] https://git.codelinaro.org/clo/la/platform/vendor/qcom/opensource/graphics-kernel/-/commit/ab8015dec341d85cd1c97aa7eb5a903527496102
+
+-Akhil
+
+
+>  
+>  	gpu_name = devm_kasprintf(dev, GFP_KERNEL, "%"ADRENO_CHIPID_FMT,
+>  			ADRENO_CHIPID_ARGS(config->chip_id));
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> index 1ab523a163a0..0d629343ebb4 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> @@ -79,6 +79,10 @@ struct adreno_reglist {
+>  
+>  struct adreno_speedbin {
+>  	uint16_t fuse;
+> +/* As of SM8650, PCODE on production SoCs is meaningless wrt the GPU bin */
+> +#define ADRENO_SKU_ID_FCODE		GENMASK(15, 0)
+> +#define ADRENO_SKU_ID(fcode)	(fcode)
+> +
+>  	uint16_t speedbin;
+>  };
+>  
+> @@ -555,7 +559,8 @@ int adreno_fault_handler(struct msm_gpu *gpu, unsigned long iova, int flags,
+>  			 struct adreno_smmu_fault_info *info, const char *block,
+>  			 u32 scratch[4]);
+>  
+> -int adreno_read_speedbin(struct device *dev, u32 *speedbin);
+> +int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
+> +			 struct device *dev, u32 *speedbin);
+>  
+>  /*
+>   * For a5xx and a6xx targets load the zap shader that is used to pull the GPU
+> 
+> -- 
+> 2.45.2
+> 
