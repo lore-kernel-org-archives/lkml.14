@@ -1,196 +1,123 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6884655F;
-	Mon, 15 Jul 2024 17:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6864436C;
+	Mon, 15 Jul 2024 17:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721063169; cv=none; b=XJU/svh+4/r8FxXGBrK/dWqX1brbkK7zoKAYg/YvPjniWyGMsTvizAE0fTJtDqEdeMsR+di4zzr4DWcfl0w8Y7p8OL2FQb3jg5cWDBvEJ7K6XcXBzGI/fsRuOyPap+UR7uktLU9pBANcB9yCjKe0SD2QJYyVmS5DKbmO5dCAqJg=
+	t=1721063255; cv=none; b=acz3C8jeAZrIEq0hdkj7S6XEzE6qrwfY/eoPJXVT16HcdL9Oi3qeCt4CJFno7DQpC4fC3qpP4KIl60h9XZnNlhralrzLqxsXNAv8+T5O0OfI3j0KugG+6MEaouO7wjdw7eGFBgwrUlZzx4FhK35qBPqq54pmJs6GYMOEsZO/p1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721063169; c=relaxed/simple;
-	bh=MTzvTzAoatx0Q48KY1FTPa7YgzLwWXSImXnZ/96XLmY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=oQwgxQw+aNylYascDKgN1tqu8hPHyNTbAtTsR7ERc2MLgoTC5n/vsa8OzlADSexZQNsAvUaQeUWViQ5hWPTubvFnusyhLMdFv6IKHU6HbDPbHVzYwWfD74S7vCbF/K+3AOdngBWkbY8a2nbG439svfnEUQevk+QL7qOpTYb4YqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IPabq0Aj; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1721063255; c=relaxed/simple;
+	bh=cV6nYCDPERcjQil4VY7qd3hII69biOdj97NBN1DyKBk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UCQ9ZxV8Pkgllye4WUMgXPYVUrOIdwXo7V3VxeNlOB6aKrY/O/JSEQW6oJ4rJviuTAc53Q8Y5PUf9Tj86mtWTIUp44RsI586+cBRGH0AYlfF/4QsLj2p1WMuIJFEH7QfEQOk8zf3pKTN6NV+bHO0FRgIDTtpSbEoxxV1cY2Mjqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUhr4Qup; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IPabq0Aj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1721063166;
-	bh=MTzvTzAoatx0Q48KY1FTPa7YgzLwWXSImXnZ/96XLmY=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
-	b=IPabq0AjwORpneio+GIUvHaQSCAGrJxwa4XH0288QESrg/JDPfdvTcw0TIUoWZ+zh
-	 V5N3dU3vYbTpiOWgFuvvW+xi+p5Vttwj3LZAonH6q34e0XPPf8JyeBMxc+UJZOLzVw
-	 Kkbto8N2n9zDuxcu4Ds59NUVCVGXADRu58SbzVTkC1A+fxjyDI5IN2BZwaQHbYU0KW
-	 vZkOwKM7pVie7w36ao5c/3TipklCyhDNrI2XOUi5WUBvWQpsxcvZKoKca3r7c/VQMx
-	 xgqyd9e0ZaTO95kUmMtXsz9uLcEhkAh44XdJIT/BgNSBMn2F45vwYrrHCBNNNb7+bn
-	 juoK9dOvmCyQA==
-Received: from smtpclient.apple (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: dwlsalmeida)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7E4A23782193;
-	Mon, 15 Jul 2024 17:06:02 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUhr4Qup"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-367940c57ddso2839666f8f.3;
+        Mon, 15 Jul 2024 10:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721063252; x=1721668052; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1Hndb84RjEoqp6niubDf9B3jnars0AtaO/eF2opWOHQ=;
+        b=FUhr4Qup2lHqSpENcr8wLUGLUV7Ii14ruyBJVx9Z1nKX3HmN9fKoOn9S9sfZBr5q8D
+         7qmglpA+8Y7wG5EK4pWV4In4JWQZMFJO8sXBWDGGgOZfKwu4fmu/Hesm3OfdMHpJ56dc
+         cAERRDNET/XI/o/DQPDNBcWNDg5/epRj4Ax7HwWmU7lVzHet8E1i6NTDNc6LFUAzf21b
+         NQHJltekCyYNwgX+RebDP4B+2gcut27W9NjLa5VGBYQG6LD5OW0sxv9Kzpy1l9D+n9N/
+         yZPxi6KtLVmH63SC9qpOk4CLZFEN2bOaGfvW/xtvARNGbaFzd3p4Efiwk/OLBFGRfAjz
+         1a3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721063252; x=1721668052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1Hndb84RjEoqp6niubDf9B3jnars0AtaO/eF2opWOHQ=;
+        b=ZOT6pff7HYTkgKdIqGsd71trUzKqt9Di0FenKnKqFzgwVTql7G9FvV50WBN+XlWXtw
+         gGdvg4i5q3mnPUlOhlfQ6zIwBg0Y3Zv4XcSQstOkoOJsvUaC0bW8YVO5hsz5ESllFh+e
+         SXRO1+291nkd4AuJ+7PUMJxoNct0uJcAo0Fol/8NrTXb1OlkdqPjgfdmjxIO03yZulNo
+         885LZ9qIbD0p8Od+rVKo0dUgMgMl3/N6lupnuy1imRoJDgwIpqCHknYWMnZzrBvFZrhu
+         Oj8aWAQRn1TxmZ1ZRhOVlP5GM9hhmxSAVa11if1+FZilt2wfopbx0wDSUwiK8Ru78i7m
+         f4uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUrnb2Z7KAps5szrBtB7iUWhMLgD/icd5mvbdTJVtBt6LKy+wLuoIMsh9WGHVsM3JRa5Wrm7GL8Iu4X2bqWfgyUaUMBtk9OhMl8Y6Bg/gqnQH2LlPPT85FyeE4H/fwWmYgQ4tRGkUXKmWuLhCL6+tNH0YZJtBRZyz9On/5j6peSnB/
+X-Gm-Message-State: AOJu0YwB38vMazjLD0Z3G3WJTQG8myvt/3bm226ZjHJxHm3DhMEF8zrI
+	E+i/YIXuDubd9/wkl6OaMBfKHaGLoVaSCLVKrJdMWSk6AOmwWg8naJJobA3RZtfbYCdRkR8opuQ
+	eArw6PqRXnndU9uXsA0DlHLyn0Ss=
+X-Google-Smtp-Source: AGHT+IHeHo5pgkGXfnzJH25rZ5dZHIvexG5hU7mo5vnh/IuZrgaN7onmdQHuAnMrQZYM7Bf+Q3p9KLRZq8hTBBZWVv0=
+X-Received: by 2002:adf:e401:0:b0:363:92e7:bb3 with SMTP id
+ ffacd0b85a97d-36824087332mr272768f8f.23.1721063251592; Mon, 15 Jul 2024
+ 10:07:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [RFC PATCH] drm: panthor: add dev_coredumpv support
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <ZpTl-uUbzmvHGMEH@phenom.ffwll.local>
-Date: Mon, 15 Jul 2024 14:05:49 -0300
-Cc: Danilo Krummrich <dakr@redhat.com>,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
- ojeda@kernel.org,
- lyude@redhat.com,
- robh@kernel.org,
- lina@asahilina.net,
- mcanal@igalia.com,
- airlied@gmail.com,
- "daniel@ffwll.ch" <daniel@ffwll.ch>,
- rust-for-linux@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20240705145009.32340-1-puranjay@kernel.org> <c0ef7ecf-595b-375a-7785-d7bf50040c6b@iogearbox.net>
+ <mb61pjzhwvshc.fsf@kernel.org> <CACYkzJ7d_u=aRzbubBypSVhnUSjBQnbZjPuGXhqnMzbp0tJm_g@mail.gmail.com>
+ <224eeadb-fc5f-baeb-0808-a4f9916afa3c@iogearbox.net> <mb61ped836gn7.fsf@kernel.org>
+ <d36b0c2e-fdf2-d3b0-46a8-7936e0eda5a8@iogearbox.net> <CACYkzJ5E+3xYkNsH7JoVkjabzSwnZZCzzTz5B50qDB7bLYkmMA@mail.gmail.com>
+ <890d23f2-636e-12d1-31cc-eb6469f2a9ac@iogearbox.net> <SJ0PR15MB461564D3F7E7A763498CA6A8CBDB2@SJ0PR15MB4615.namprd15.prod.outlook.com>
+ <mb61p5xtcyqo5.fsf@kernel.org> <978e127b-4967-950d-ccca-8575d1a885ae@iogearbox.net>
+ <mb61pjzhmpqff.fsf@kernel.org>
+In-Reply-To: <mb61pjzhmpqff.fsf@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 15 Jul 2024 10:07:20 -0700
+Message-ID: <CAADnVQKXEM5LaGktduyG=EH+2udkH-ZJpo4u57BUchregJy8NQ@mail.gmail.com>
+Subject: Re: [PATCH bpf] selftests/bpf: DENYLIST.aarch64: Remove fexit_sleep
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, Manu Bretelle <chantra@meta.com>, 
+	KP Singh <kpsingh@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@meta.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Florent Revest <revest@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <89FFB898-120A-431E-9B18-4D08AFAEFBFD@collabora.com>
-References: <20240710225011.275153-1-daniel.almeida@collabora.com>
- <d7719653-f270-493d-ac42-6a1291eb7dc0@redhat.com>
- <ZpTl-uUbzmvHGMEH@phenom.ffwll.local>
-To: Daniel Vetter <daniel.vetter@ffwll.ch>
-X-Mailer: Apple Mail (2.3774.600.62)
 
-Hi Sima!
+On Mon, Jul 15, 2024 at 9:32=E2=80=AFAM Puranjay Mohan <puranjay@kernel.org=
+> wrote:
+>
+>
+> Hi Daniel, Manu
+> I was able to reproduce this issue on KVM and found the root cause for
+> this hang! The other issue that we fixed is unrelated to this hang and
+> doesn't occur on self hosted github runners as they use 48-bit VAs.
+>
+> The userspace test code has:
+>
+>     #define STACK_SIZE (1024 * 1024)
+>     static char child_stack[STACK_SIZE];
+>
+>     cpid =3D clone(do_sleep, child_stack + STACK_SIZE, CLONE_FILES | SIGC=
+HLD, fexit_skel);
+>
+> arm64 requires the stack pointer to be 16 byte aligned otherwise
+> SPAlignmentFault occurs, this appears as Bus error in the userspace.
+>
+> The stack provided to the clone system call is not guaranteed to be
+> aligned properly in this selftest.
+>
+> The test hangs on the following line:
+>     while (READ_ONCE(fexit_skel->bss->fentry_cnt) !=3D 2);
+>
+> Because the child process is killed due to SPAlignmentFault, the
+> fentry_cnt remains at 0!
+>
+> Reading the man page of clone system call, the correct way to allocate
+> stack for this call is using mmap like this:
+>
+> stack =3D mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MA=
+P_ANONYMOUS | MAP_STACK, -1, 0);
+>
+> This fixes the issue, I will send a patch to use this and once again
+> remove this test from DENYLIST and I hope this time it fixes it for good.
 
-
->=20
-> Yeah I'm not sure a partially converted driver where the main driver =
-is
-> still C really works, that pretty much has to throw out all the type
-> safety in the interfaces.
->=20
-> What I think might work is if such partial drivers register as full =
-rust
-> drivers, and then largely delegate the implementation to their =
-existing C
-> code with a big "safety: trust me, the C side is bug free" comment =
-since
-> it's all going to be unsafe :-)
->=20
-> It would still be a big change, since all the driver's callbacks need =
-to
-> switch from container_of to upcast to their driver structure to some =
-small
-> rust shim (most likely, I didn't try this out) to get at the driver =
-parts
-> on the C side. And I think you also need a small function to downcast =
-to
-> the drm base class. But that should be all largely mechanical.
->=20
-> More freely allowing to mix&match is imo going to be endless pains. We
-> kinda tried that with the atomic conversion helpers for legacy kms
-> drivers, and the impendance mismatch was just endless amounts of very
-> subtle pain. Rust will exacerbate this, because it encodes semantics =
-into
-> the types and interfaces. And that was with just one set of helpers, =
-for
-> rust we'll likely need a custom one for each driver that's partially
-> written in rust.
-> -Sima
->=20
-
-I humbly disagree here.
-
-I know this is a bit tangential, but earlier this year I converted a =
-bunch of codec libraries to Rust in v4l2. That worked just fine with the =
-C codec drivers. There were no regressions as per our test tools.
-
-The main idea is that you isolate all unsafety to a single point: so =
-long as the C code upholds the safety guarantees when calling into Rust, =
-the Rust layer will be safe. This is just the same logic used in unsafe =
-blocks in Rust itself, nothing new really.
-
-This is not unlike what is going on here, for example:
-
-
-```
-+unsafe extern "C" fn open_callback<T: BaseDriverObject<U>, U: =
-BaseObject>(
-+ raw_obj: *mut bindings::drm_gem_object,
-+ raw_file: *mut bindings::drm_file,
-+) -> core::ffi::c_int {
-+ // SAFETY: The pointer we got has to be valid.
-+ let file =3D unsafe {
-+ file::File::<<<U as IntoGEMObject>::Driver as =
-drv::Driver>::File>::from_raw(raw_file)
-+ };
-+ let obj =3D
-+ <<<U as IntoGEMObject>::Driver as drv::Driver>::Object as =
-IntoGEMObject>::from_gem_obj(
-+ raw_obj,
-+ );
-+
-+ // SAFETY: from_gem_obj() returns a valid pointer as long as the type =
-is
-+ // correct and the raw_obj we got is valid.
-+ match T::open(unsafe { &*obj }, &file) {
-+ Err(e) =3D> e.to_errno(),
-+ Ok(()) =3D> 0,
-+ }
-+}
-```
-
-We have to trust that the kernel is passing in a valid pointer. By the =
-same token, we can choose to trust drivers if we so desire.
-
-> that pretty much has to throw out all the type
-> safety in the interfaces.
-
-Can you expand on that?
-
-In particular, I believe that we should ideally be able to convert from =
-a C "struct Foo * " to a Rust =E2=80=9CFooRef" for types whose lifetimes =
-are managed either by the kernel itself or by a C driver. In practical =
-terms, this has run into the issues we=E2=80=99ve been discussing in =
-this thread, but there may be solutions e.g.:
-
-> One thing that comes to my mindis , you could probably create some =
-driver specific
-> "dummy" types to satisfy the type generics of the types you want to =
-use. Not sure
-> how well this works out though.
-
-I haven=E2=80=99t thought of anything yet - which is why I haven=E2=80=99t=
- replied. OTOH, IIRC, Faith seems to have something in mind that can =
-work with the current abstractions, so I am waiting on her reply.
-
-
-> What I think might work is if such partial drivers register as full =
-rust
-> drivers, and then largely delegate the implementation to their =
-existing C
-> code with a big "safety: trust me, the C side is bug free" comment =
-since
-> it's all going to be unsafe :-)
-
-> with a big "safety: trust me, the C side is bug free" comment since =
-it's all going to be unsafe :-)
-
-This is what I want too :) but I can=E2=80=99t see how your proposed =
-approach is better, at least at a cursory glance. It is a much bigger =
-change, though, which is a clear drawback.
-
-> And that was with just one set of helpers, for
-> rust we'll likely need a custom one for each driver that's partially
-> written in rust.
-
-That=E2=80=99s exactly what I am trying to avoid. In other words, I want =
-to find a way to use the same abstractions and the same APIs so that we =
-do not run precisely into that problem.
-
-=E2=80=94 Daniel
-
+Wow. Great find. Good to know.
+prog_tests/ns_current_pid_tgid.c has the same issue probably.
