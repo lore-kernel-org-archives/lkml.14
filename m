@@ -1,68 +1,85 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0506A79F3;
-	Mon, 15 Jul 2024 02:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA15629CA;
+	Mon, 15 Jul 2024 02:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721009873; cv=none; b=lyC4lBignFRT67pI81ACu+X3Y5HU5asfK6UyzcJODY0hj0gZi61uGMxw4QNEAT9I/lhR3ZqBeiXWv4NvnZh4A+nciHcvzQ3NTfZtEZmJwkzeDH0Bec76bg8PFsNHHPIPCAqJSf+d1/DkV6z2jydF8ZAwZKyFhO1iGLMdUJn1VsQ=
+	t=1721010067; cv=none; b=dNpUKOn0dPSVneMOxvfbMnPbpMRQHS3b6EsvWF9A+8TbPtu3M8WoO6TZlIYkztAlNBJ44n21Z8UNvInAdRt4nQiM5YwkOezzCAofG5nB+4g03t2I0c1dA3O9CLXonFo5F4QvIcVRAONIidhGVIozlzhZaEFKx7jrKbJX0/wfmC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721009873; c=relaxed/simple;
-	bh=hYPspV38qTvoGjGj4HeITgm/lNpi9Xl7kdSX6Qx9HYA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=B0qbuU8V8o5vnmm+BIF4GG0u2gWcXNQHMF32GBR71lenF0JmxwSrz1ya58CqkcFtK/qSIN639Pj7BR6DcQsZyV+hXYS2AR3McgSLjh0rJDCdc1uSy8kE3e72lRR3DfnclFfTiNi2GRErf9HERk2qqGIya6ZazPZifrFzgHQR5rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BFBEB1A0391;
-	Mon, 15 Jul 2024 04:12:19 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 873EB1A0118;
-	Mon, 15 Jul 2024 04:12:19 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9BAA11802183;
-	Mon, 15 Jul 2024 10:12:17 +0800 (+08)
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: tj@kernel.org,
-	dlemoal@kernel.org,
-	cassel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-ide@vger.kernel.org,
-	stable@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	kernel@pengutronix.de
-Subject: [PATCH v2 0/4] Refine i.MX8QM SATA based on generic PHY callbacks
-Date: Mon, 15 Jul 2024 09:53:52 +0800
-Message-Id: <1721008436-24288-1-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1721010067; c=relaxed/simple;
+	bh=rcefzzYqvfPvMclZvpRsAmAmLokPfoE0S8KCmyX6qDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IHymupz166UvOUjn8YXiydZSYf+lvRaP5t6Api2B7UNxEHmOyMdDv1jH2yPtQQdl92MXt+dUGmF9P2tLUkoZ6z6k3xYJ+msV4VdIH7CvuGg79z4GwNA3n62tB9GdateXkr3JG1jVAjap4rG6ScfyoYrf//ewLTJxtG0io64Cdfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Bmnb+5TB; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Bmnb+5TB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1721010061;
+	bh=wvT0CJPB0yLw+hllkbYKOiDylZDMHD9c1R7qQnPpDdw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Bmnb+5TBm9bK4bihiRA8l8LCf3Sbz6qmGqsWCNMHY0U+ve1PQ5+4O5eo9FVed5ACU
+	 AicIpnnp5kUw4jdIy8VUh42fvvXbo0xIzSWvKyGpHcyaLbcALMe435I3oC77bMbOhr
+	 gog4DiGa0EfjDwby8Wp4ZaC/shkIdRl5CkzXshO2BlB8YMCzQK1EQCWz1e7LjL7Brx
+	 acgFQAiS+RBe/3Tf9RBLULPVWbs3SnOzhX2gHSi6BKlSIe+BkmFaD2fR4apKtIqnsv
+	 uoAEXF4JdFPd6tNIyIeEtTly1zTSxR2N1X3W7XeHgI4PmqprpkqHcQzD5RTfwxGRhi
+	 HIX1uOu/1pVBw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WMmCK37H7z4wbh;
+	Mon, 15 Jul 2024 12:21:01 +1000 (AEST)
+Date: Mon, 15 Jul 2024 12:21:00 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+ <johan.hedberg@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the bluetooth tree
+Message-ID: <20240715122100.1defde20@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/3usN7rIjpT2jFBmL7STcsJQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-V2 main changes:
-- Add Rob's reviewed-by in the binding patch.
-- Re-name the error out labels and new RXWM macro.
-- In #3 patch, add one fix tag, and CC stable kernel.
+--Sig_/3usN7rIjpT2jFBmL7STcsJQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Based on i.MX8QM HSIO PHY driver, refine i.MX8QM SATA driver by using PHY
-interface.
+Hi all,
 
-[PATCH v2 1/4] dt-bindings: ata: Add i.MX8QM AHCI compatible string
-[PATCH v2 2/4] ata: ahci_imx: Clean up code by using i.MX8Q HSIO PHY
-[PATCH v2 3/4] ata: ahci_imx: Enlarge RX water mark for i.MX8QM SATA
-[PATCH v2 4/4] ata: ahci_imx: Correct the email address
+Commits
 
-Documentation/devicetree/bindings/ata/imx-sata.yaml |  47 +++++++++++
-drivers/ata/ahci_imx.c                              | 406 ++++++++++++++++++++++++-----------------------------------------------------------------
-2 files changed, 155 insertions(+), 298 deletions(-)
+  ead30f3a1bae ("power: pwrseq: add a driver for the PMU module on the QCom=
+ WCN chipsets")
+  e6491bb4ba98 ("power: sequencing: implement the pwrseq core")
+
+are missing a Signed-off-by from their committers.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/3usN7rIjpT2jFBmL7STcsJQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaUh4wACgkQAVBC80lX
+0Gx42wf9Fd7ugz0rdBU8NwGx2fGS5cjDzpOtJuAigo5np1nS8JI7FXYV6w4lGAS+
+No5rPMfm5LK6wPMgnwsKWnQ9fNyRpiCLtSdOVUmFx1OhM/C4cYOXUmiwawQcMO8/
+T77BOGYCw74tG1qSPr8+iuj51h1pyibvbio9P1Q+FeBB3W2cCpflsdwAiepjiYaY
+qSyUX5MaMZISPQfLXwktazYI0nxEPOHWlb2QXNTjgxFHoTVq7/AslOU/PzqKgw15
+k+i6D+TdRMv2a/6FzD37cT18d3Hr+CHrPvSS5wQ6gZ9OPaNYxOvgyB95Rb8cJTW/
+3h3RXvownnEfftQNTylUWPgd2L+9BA==
+=rWEZ
+-----END PGP SIGNATURE-----
+
+--Sig_/3usN7rIjpT2jFBmL7STcsJQ--
