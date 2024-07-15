@@ -1,82 +1,133 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9461849E8
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0EC1849E8
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032169; cv=none; b=nqZ1KEOd0tn04diK5AJ82iDqn1e46meMGyaqlWtiJzsd9rQZJrP8LT9uMCkM/ldDAPPNc3uuZUYtLk5lxP9+xF3xTvMQL02jTsDnkGrH0oNASRqNFoOjHI/yP524crtTH1Bf0Nr5+AE8naTvyhzSMbm4HD9R/J/AxLlo4Hg5qVY=
+	t=1721032173; cv=none; b=Dia2uhGprW1Ci1tu7tXGzR5BG2gFu0P6DWFpIXIrboXHTUA3o3k2o4E07rgk9oej4uw6rt+9WK6kildUnvo3WDtrptmKv06ZK4knwQuFfPSKEgW/J5gy570q96E586dtjaerkZsscOzSsdWRtajVzeud+tg+WLb36xFmuZx0iuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032169; c=relaxed/simple;
-	bh=nECqzgQeJCUkIbhKy2dALBkVbJRmMcagzco/i7WPIuU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=Tnb4JjyjjR270nfaSJ/QV6CIdERGhR6nlNPXIZ8DyMldIppCkiP64ceDRZ9D415j7wHFSHaMOBtfI3M4FGelzZyB5IruQR0QaRTxsmzx7b1xCIkHqHnoitICvAEXEOEZvUehbcihtfO9zGXF58MEjtiVArdJO4GdyK5HCwkFo6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-401-__Fg5qv0Ne-51TWVsBpF6A-1; Mon, 15 Jul 2024 09:23:05 +0100
-X-MC-Unique: __Fg5qv0Ne-51TWVsBpF6A-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 15 Jul
- 2024 09:22:19 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 15 Jul 2024 09:22:19 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Leon Romanovsky' <leon@kernel.org>
-CC: Anand Khoje <anand.a.khoje@oracle.com>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "saeedm@mellanox.com" <saeedm@mellanox.com>,
-	"tariqt@nvidia.com" <tariqt@nvidia.com>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "davem@davemloft.net"
-	<davem@davemloft.net>
-Subject: RE: [PATCH v4] net/mlx5: Reclaim max 50K pages at once
-Thread-Topic: [PATCH v4] net/mlx5: Reclaim max 50K pages at once
-Thread-Index: AQHaxhzvGGuhtyfXHkeZpMTT2X9CjbHdTe4QgARuooCAFdXiMA==
-Date: Mon, 15 Jul 2024 08:22:19 +0000
-Message-ID: <c702670609914da89e934879b5c89de7@AcuMS.aculab.com>
-References: <20240619132827.51306-1-anand.a.khoje@oracle.com>
- <20240624095757.GD29266@unreal>
- <3d5b16d332914d4f810bc0ce48fd8772@AcuMS.aculab.com>
- <20240701114949.GB13195@unreal>
-In-Reply-To: <20240701114949.GB13195@unreal>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1721032173; c=relaxed/simple;
+	bh=+5lkUx8+mk/uDe8jRuEOjYyNBwIjwxrOZjU46E/SB/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dtjkxmem7sFVUR1twDinZsVUCqp8uugkOTZcwCNu1MQuUbvfO3ug1g9DY75hoHIAf5HOg4m+OQD7MmzxueV7VVO29YHjiJynkoxswQoh53/2rwHkuKPxBtIIAZmqK5PXUAc1iRuZ7/RawuknOcYBWxfekQ8uDp/7cGJqn/zQxE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wWO/uaC0; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wWO/uaC0"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-58c2e5e8649so7491652a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 01:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721032170; x=1721636970; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=mLwLwOZkzvKFgw0aI85tugrfuqDFIADceOO8TgNb4Ws=;
+        b=wWO/uaC0iYIDrxslZxsA2EnFnJVa1jXN091/42mrv9l2wuK0l2Ex4sdiqTaXPwien0
+         Qt5E3OjzYaGKEE7puVPrfwjRMO8Qb1bynvYmfO6E0KtixPScKZ7k9vYontTAyr/zbXuC
+         jlNXokUxHu3pbhCyoWuEYDijZH4s4Um2pTJ60x4TVNsU8GBa7RlIvvDXOuEjtkDad8eC
+         VOpz7Gos+71D/L1uhIbWlh80y6c6Fb3YI7avQDVg511lAFon/ql4aQV3ULGMMVNB5DaM
+         xYXKI5iyo/Rrs7x/ZucYZfztgJJMUDvHni8iDkJkQsF97ZnED5ywqFmfXWIAHAMGvCGD
+         gJSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721032170; x=1721636970;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mLwLwOZkzvKFgw0aI85tugrfuqDFIADceOO8TgNb4Ws=;
+        b=tf56pL+TwwcmrbOvwziAacPe5TkQF0yNqIBPpdRya89IXocFA52xSxQcEfxCY/3lhk
+         tcvxV+2f7RD9S4UnV2HRdQHX7fUf4t507/VJeM7ZYdOAUXeLCq+rUFlSren3HHWnh4TW
+         6EMphVtnZkU8I2Ewt1cUleGDEzFi9/NGWXWiWHvy3WczpSYxMObctBIps9K62a4jXwO9
+         FoVcPo+98m9INC35iEdtoF9lrOPCho5lwfCwAWX3nkR+LvwtYwbpZVGCHfJa7LFrvsJ0
+         sCIGeCm3bCsZljjZ5TwOZSGvv+NCLoARyyUkyVbwko57aQgqDKrIa1NtrY4Uw4Th1r81
+         XnBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFUaJTFKfXY7mn+M61zDlneNoFG0FmTR+Q5OXU5Go6qJdvb32pcRNlHu/bdfmbNYiBYkw3bVGrfxraQbpyPEjbq62O1pAbUOfCkcWW
+X-Gm-Message-State: AOJu0YyQsXmUTIZECm35t+/xK22agaOOfScoS4KVKwSBY3sIsLgImlb/
+	oworRYz6W83QM+E3Zx3pFcax93GOtbzE0kX74mgBt2/jqslkRTcbeJJDIaonjzY=
+X-Google-Smtp-Source: AGHT+IFCQ23rjoVs9aGME4gMn1H3EOor3OSdkK43tb2BphIs3M0bnKJ3hC1TalhfJV44PKeWreNDLw==
+X-Received: by 2002:a17:906:d9ca:b0:a6f:20e0:1d1a with SMTP id a640c23a62f3a-a799d3a3a0cmr510710866b.33.1721032169465;
+        Mon, 15 Jul 2024 01:29:29 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5a3560sm192390066b.4.2024.07.15.01.29.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jul 2024 01:29:29 -0700 (PDT)
+Message-ID: <27af0c83-21f8-411f-923e-d9adcd4c17a7@linaro.org>
+Date: Mon, 15 Jul 2024 10:29:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] ARM: dts: qcom: msm8226-microsoft-common: Add
+ inertial sensors
+To: Rayyan Ansari <rayyan@ansari.sh>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>, Jonathan Cameron <jic23@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-kernel@vger.kernel.org,
+ Robert Yang <decatf@gmail.com>, Rob Herring <robh@kernel.org>,
+ Sean Rhodes <sean@starlabs.systems>
+References: <20240714173431.54332-1-rayyan@ansari.sh>
+ <20240714173431.54332-4-rayyan@ansari.sh>
 Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240714173431.54332-4-rayyan@ansari.sh>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 
-RnJvbTogTGVvbiBSb21hbm92c2t5DQo+IFNlbnQ6IDAxIEp1bHkgMjAyNCAxMjo1MA0KPiBUbzog
-RGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAQUNVTEFCLkNPTT4NCi4uLg0KPiA+ID4gQlRXLCB0
-aGlzIGNhbiBiZSB3cml0dGVuIGFzOg0KPiA+ID4gCXJlcS0+bnBhZ2VzID0gbWF4X3QoczMyLCBu
-cGFnZXMsIE1BWF9SRUNMQUlNX05QQUdFUyk7DQo+ID4NCj4gPiBUaGF0IHNob3VsZG4ndCBuZWVk
-IGFsbCB0aGUgKHMzMikgY2FzdHMuDQo+IA0KPiAjZGVmaW5lIGRvZXNuJ3QgaGF2ZSBhIHR5cGUs
-IHNvIGl0IGlzIGJldHRlciB0byBiZSBleHBsaWNpdCBoZXJlLg0KDQpUaGUgY29uc3RhbnQgaGFz
-IGEgdHlwZSwgdGhlIGNhc3QganVzdCBoaWRlcyBhbnkgY2hlY2tpbmcgdGhhdCBtaWdodCBiZSBk
-b25lLg0KV291bGQgeW91IHJlYWxseSB3cml0ZToNCglpZiAoKHMzMilucGFnZXMgPiAoczMyKS01
-MDAwMCkNCgkJLi4uDQpCZWNhdXNlIHRoYXQgaXMgd2hhdCB5b3UgYXJlIGdlbmVyYXRpbmcuDQoN
-CkhlcmUgaXQgcHJvYmFibHkgZG9lc24ndCBtYXR0ZXIsIGJ1dCBpdCBpcyByZWFsbHkgYmFkIHBy
-YWN0aXNlLg0KSWYsIGZvciBleGFtcGxlLCAnbnBhZ2VzJyBpcyA2NCBiaXQgdGhhbiB0aGUgY2Fz
-dCBjYW4gY2hhbmdlIHRoZSB2YWx1ZS4NCg0KVGhlcmUgYXJlIHBsYWNlcyB3aGVyZSB0aGUgdHlw
-ZSBvZiB0aGUgcmVzdWx0IGhhcyBiZWVuIHVzZWQgYW5kIGNhdXNlZA0KYnVncyBiZWNhdXNlIGEg
-dmFsdWUgZ290IG1hc2tlZCB0byAxNiBiaXRzLg0KDQpJbiByZWFsaXR5IHRoZXJlIHNob3VsZCBi
-ZSBhIGJpZyB0cmF3bCB0aHJvdWdoIHRoZSBjb2RlIHRvIHRyeSB0bw0KcmVtb3ZlIGFsbCB0aGUg
-J3BvaW50bGVzcycgbWluX3QoKSBhbmQgbWF4X3QoKS4NCkFkZGluZyBuZXcgb25lcyBqdXN0IG1h
-a2VzIGl0IHdvcnNlLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRl
-LCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpS
-ZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On 14.07.2024 7:33 PM, Rayyan Ansari wrote:
+> Add nodes for the Asahi Kasei AK09911 magnetometer and the Kionix
+> KX022-1020 accelerometer, both of which are connected over i2c2, in the
+> common device tree for msm8x26 Lumias.
+> 
+> Moneypenny (Lumia 630) does not have a magnetometer, and so the node is
+> deleted.
+> Tesla's (Lumia 830's) magnetometer is currently unknown.
+> 
+> Signed-off-by: Rayyan Ansari <rayyan@ansari.sh>
+> ---
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
