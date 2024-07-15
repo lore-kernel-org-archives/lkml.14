@@ -1,101 +1,88 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423DF18EA8A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 14:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C40B18E776;
+	Mon, 15 Jul 2024 14:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721052636; cv=none; b=mv8X1mSPOe8E5b8zJmU0ffyGlRuDcjlCoBjfitclC0VtZgMCdoqGVPdf7tpbU4pO+4Jp8Q6I/QTzU3CpJwGKji6tJRd6Z2AYK77fPOagzTjAsFvrnffigSpZAQMWMO/XNnwZFCpLc1246VmKuYZfqRTgEiE+X+tU3NUjI3X1KIw=
+	t=1721052638; cv=none; b=AT7Y/4n2LTApeb1uIcAmcLAT4dlzMpT0Ee6p1Z9szaQ2POIIVzepmE5aX3VYeOGC/4mFbJ5y2/P231K4358UgJCCvpZHo6f7CFwgjyrjFQfxxKFD/KEj2hZaEp9x5n1UVgojC/j/2yDe5mRjKyhkVJNmICtAYDFD31aHOaq+DLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721052636; c=relaxed/simple;
-	bh=hEt2+tulFHQ5OfcTM/fsDAzdpEf70Wr1pz+q3O5Oxq0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bzuzNa/HJ2EEY6Grk+qhnDbpiDkU2FgRu4G6D6x4en5wZxW1eTLS3yhskhYDonNGDbMc4rjpcBtwjZYix5lf0c6oAyyA+aFQSN13hGf4nCk4wDKKKHlzAdoSGiF8U3+W/mhQlNQUd43sIxPR+32XrH68+zlrke75SEe6vZD5u8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 819A2DA7;
-	Mon, 15 Jul 2024 07:10:56 -0700 (PDT)
-Received: from [10.57.77.136] (unknown [10.57.77.136])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C76F43F766;
-	Mon, 15 Jul 2024 07:10:29 -0700 (PDT)
-Message-ID: <96965a23-49ea-41f5-a4b0-9b5296dafe00@arm.com>
-Date: Mon, 15 Jul 2024 15:10:28 +0100
+	s=arc-20240116; t=1721052638; c=relaxed/simple;
+	bh=olow0BFwsofgK5zMXcEkC02aSVJLuFhI+3UN5hLhZbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qVQ9oCq/0HgFIzak4LdU8DZJKiJYOqivbvX7pWt1CXnNC0CCDLBECLOpbMwye+/EMXjO6DXpBu8BPFpMCmHNdrPi09j8YWWx+9zT+OPLRsw+6bl+0gUezxxmPyqbxgD0s7Dn1Av/5jelnXq/O6HB64GVOgGHRWDoPyDfV+VfyX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6nkg9qQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6nkg9qQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5661C4AF0D;
+	Mon, 15 Jul 2024 14:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721052637;
+	bh=olow0BFwsofgK5zMXcEkC02aSVJLuFhI+3UN5hLhZbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t6nkg9qQ1qyzLO8UJ1TKgtzdGwLTnDPOF7mez/qUL1fMabHD0vWnP15XsTD0qDTFH
+	 /aZ11FReOCFBR1XB2wESgZS3lDTj+sgA0DS63yTAhHH/snJg3prJihHFcOFqMAqg50
+	 yXW9ioo+ejWCqEmWg/j+lGJ/jbTE32XFf+divVGJe7NlizMBPRSK5+1Sj1FdfKqzFH
+	 +ZdtSR3Ss6X7K7lGdVYim3LB5Jbm5j04aa1BkAl/rTasEWrMgZnhxhBFkym2El6E22
+	 xktxCee+9X3JeWYdqVNqjveHhRAnWk7bP9BKXKCvSYrYylHgSz1mExkMWtYKRKvbGX
+	 bhHu7BQ2uCijw==
+Date: Mon, 15 Jul 2024 15:10:33 +0100
+From: Mark Brown <broonie@kernel.org>
+To: egyszeregy@freemail.hu
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: spidev: add "generic-spidev" for compatible string
+Message-ID: <31758947-5570-4b20-94e5-52ea77f4f4e3@sirena.org.uk>
+References: <20240714202303.164-1-egyszeregy@freemail.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] mm: swap: mTHP swap allocator base on swap cluster
- order
-Content-Language: en-GB
-To: Chris Li <chrisl@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Kairui Song <kasong@tencent.com>, Hugh Dickins <hughd@google.com>,
- "Huang, Ying" <ying.huang@intel.com>, Kalesh Singh <kaleshsingh@google.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Barry Song <baohua@kernel.org>
-References: <20240711-swap-allocator-v4-0-0295a4d4c7aa@kernel.org>
- <ae6b4885-0590-4585-a1fd-39b64df2f902@arm.com>
- <CACePvbX99r8BNZTkax=KGBx-XYP6WLxZKez3qsi+FfreC2TwGg@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CACePvbX99r8BNZTkax=KGBx-XYP6WLxZKez3qsi+FfreC2TwGg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="70snDaXDuhKzGHBb"
+Content-Disposition: inline
+In-Reply-To: <20240714202303.164-1-egyszeregy@freemail.hu>
+X-Cookie: You'll be sorry...
 
-On 11/07/2024 15:08, Chris Li wrote:
-> On Thu, Jul 11, 2024 at 3:02 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->>> Kernel compile under tmpfs with cgroup memory.max = 2G.
->>> 12 core 24 hyperthreading, 32 jobs.
->>>
->>> HDD swap 3 runs average, 20G swap file:
->>>
->>> Without:
->>> user  4186.290
->>> system        421.743
->>> real  597.317
->>>
->>> With:
->>> user  4113.897
->>> system        413.123
->>> real  659.543
->>
->> If I've understood this correctly, this test is taking~10% longer in wall time?
-> 
-> Most likely due to the high variance in measurement and fewer
-> measuring samples 3 vs 10. Most of that wall time is waiting for IO.
-> It is likely just noise.
 
-OK, that certainly makes sense, as long as you're sure its noise. The other
-(unlikely) possibility is that somehow the HDD placement descisions are
-changing, which increases waiting due to increased seek times.
+--70snDaXDuhKzGHBb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->> But your changes shouldn't affect HDD swap path? So what's the reason for this?
-> 
-> The change did affect HDD swap path in the sense that it did not need
-> to check for si->cluster_info any more. A small gain there.
-> 
-> The wall clock time is more than double the SSD or zram. Which means
-> most of the time the system is waiting for HDD IO to complete (wait is
-> 98%) , there will be much higher variance for sure. At this point the
-> wall clock we are measuring the wait mostly,  not the actual work. The
-> system time is quicker, that is good.
-> 
-> I now have a dedicated machine to run the HDD swap now. The HDD is
-> very very slow to swap. The point of the HDD test is being able to
-> complete the run without OOM. Because of the high latency in HDD,
-> there will be more memory pressure. It did catch some other bugs in my
-> internal version of the patch.
-> 
->> I'm hoping to review this properly next week. It would be great to get this in
->> sooner rather than later IMHO.
-> 
-> Thank you. This new code path is much easier to work with than the
-> previous SSD and HDD mixed allocation path. I am able to implement the
-> cluster reservation experiment in the new allocator much quicker.
-> 
-> Chris
+On Sun, Jul 14, 2024 at 10:23:03PM +0200, egyszeregy@freemail.hu wrote:
+> From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
+>=20
+> Spidev is a not an ASIC, IC or Sensor specific driver.
+> It is better to use a simple and generic compatible
+> string instead of many dummy vendor/product names
+> which are all just fake.
 
+> Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
+> ---
+>  drivers/spi/spidev.c | 2 ++
+>  1 file changed, 2 insertions(+)
+
+No, as previously and repeatedly discussed the DT describes the
+hardware, not the software that happens to be used to control that
+hardware.
+
+You also need to document any new bindings.
+
+--70snDaXDuhKzGHBb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaVLdkACgkQJNaLcl1U
+h9BeSwf/fZp74bgyyqjAcmrHp6z6se+MwYDEsLmt/pfRv1f+Xg5jcOFV2PxK99AQ
+tssZfLPM91/VJboVG1/fpv27U9bafK4+VsN29tBhnTqsPGvwsLCWPLHbn9/IW/GL
+KnUnAuU+EkI3NdQcumWR4l8Hx1NB2miHEMRoN9uuAxofCoduhrF1pRo+EvVvrlqT
+dleAt5ettcOYjk2uey2UYKXcMfnTc4OyyUhXl/m9DJe96JUiISDT5exWAzNwEAYN
+6tHxtocrcAgQz1hTkuMKbXsiQMY78TLK009FEkdC3DJMoGy6HZ5h+oA6lpUxSwr1
+xGQ87Yw3CvgDUGRCygLmAF0BOgmUdw==
+=fBNy
+-----END PGP SIGNATURE-----
+
+--70snDaXDuhKzGHBb--
