@@ -1,70 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57613A94F;
-	Mon, 15 Jul 2024 02:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375E979C4;
+	Mon, 15 Jul 2024 02:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721011811; cv=none; b=mz0+4vcDW0hoVqzHEF2CzKh4mvADe2Ou+vH9fPeKehlqmf/AJueDLdHwmzqb6R+j/p+3MhyJU3kG2uP9uvgMABaGJErZtpX4+7BWCgANb9oVE252ktFjMRo/jsdN/Vi462H1O/tZN+KBlu1jwHErIL67ZaJZWdMgOe247QeBUu4=
+	t=1721011943; cv=none; b=RkeN/4uUxzjVKGq4L7KZQBeiiEDfkbFKWZIvfTwY93eyYz19e6RrGQJZ5db8CV3JQkDC96apra8Yfo1ZG4VfbtX0Nczz/au7Sw7eMCR/fkDIO0cGTmy9lNWkdAOQEXlV64hkYqg1d04HY3KWQDpu4YQLaOHIO5wBTyQhJ5jm4j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721011811; c=relaxed/simple;
-	bh=YNBNPKTKiDGdFNzPXR/m2MDjlIsS9ABD1GqgCq/Y6v4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KpOSggiHyQO6LfDo3dA4gJ7Bj14sBfAyXxhLOHV5DDtAyh8vo7gUfbM4THf+8HRSUHwzx6xMpn9ARzi1VwDSF/BuVEsKzxKdiINMxKnrXKRUYSTmQtD9BEpg1cOwqO5QVNd6mwYwJaA0QJfsco5AZjmHPjoGvaCjktqRlPjx19I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C590DFEC;
-	Sun, 14 Jul 2024 19:50:33 -0700 (PDT)
-Received: from [10.162.16.42] (unknown [10.162.16.42])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E9493F762;
-	Sun, 14 Jul 2024 19:50:05 -0700 (PDT)
-Message-ID: <321d4481-256c-41d9-9f64-f7e04e8d21be@arm.com>
-Date: Mon, 15 Jul 2024 08:20:02 +0530
+	s=arc-20240116; t=1721011943; c=relaxed/simple;
+	bh=X4Zat/Y0hsdoDe5Svj/icJkSVmFXQVcN6YIDamtiEFs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WUuddLUNsxrzlKt2nfbAgXfo2fDEcu85UHniCu2ZacIviBgjFfDRbQhUNBaHoCnoinY46ZsEIBvKidW3BeBEmGVR2+2kqTDLIj5yyyTjUCKAQprvc9muG0BN66DWTW2JJaJIt0q3QrMBVp5FexmSq9Odg/8LgF+OxEqkZzeTZ0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowAD3_1vRjpRm23TOFQ--.12132S2;
+	Mon, 15 Jul 2024 10:52:01 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: roopa@nvidia.com,
+	razor@blackwall.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: bridge@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] net: bridge: remove unnecessary cast from netdev_priv()
+Date: Mon, 15 Jul 2024 10:44:57 +0800
+Message-Id: <20240715024457.3743560-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kselftest: missing arg in ptrace.c
-To: Remington Brasga <rbrasga@uci.edu>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Shuah Khan <shuah@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
-References: <20240712231730.2794-1-rbrasga@uci.edu>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240712231730.2794-1-rbrasga@uci.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAD3_1vRjpRm23TOFQ--.12132S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr13ZryDWF1UXF4fCryxuFg_yoW8JFWfpa
+	4UGan3AF47Xw1Ygw48ZFWUAry3tFn5KrW3Gr12y34Fvrn3tFy0kFWktryUCr1rAF4Dur13
+	Jr12gF1Syw1DZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
+	xVA2Y2ka0xkIwI1lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7VU1UGYJUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
+Remove unnecessary cast of void * returned by netdev_priv().
 
+Fixes: 928990631327 ("net: bridge: add notifications for the bridge dev on vlan change")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ net/bridge/br_netlink.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 7/13/24 04:47, Remington Brasga wrote:
-> The string passed to ksft_test_result_skip is missing the `type_name`
-> 
-> Signed-off-by: Remington Brasga <rbrasga@uci.edu>
-> ---
-> clang-tidy reported clang-diagnostic-format-insufficient-args warning
-> on this line, so I am fixing it.
-> 
->  tools/testing/selftests/arm64/abi/ptrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/arm64/abi/ptrace.c b/tools/testing/selftests/arm64/abi/ptrace.c
-> index abe4d58d731d..6144f83f8ab4 100644
-> --- a/tools/testing/selftests/arm64/abi/ptrace.c
-> +++ b/tools/testing/selftests/arm64/abi/ptrace.c
-> @@ -156,7 +156,7 @@ static void test_hw_debug(pid_t child, int type, const char *type_name)
->  		/* Zero is not currently architecturally valid */
->  		ksft_test_result(arch, "%s_arch_set\n", type_name);
->  	} else {
-> -		ksft_test_result_skip("%s_arch_set\n");
-> +		ksft_test_result_skip("%s_arch_set\n", type_name);
->  	}
->  }
->  
+diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+index f17dbac7d828..d02cc1497281 100644
+--- a/net/bridge/br_netlink.c
++++ b/net/bridge/br_netlink.c
+@@ -1085,7 +1085,7 @@ static int br_setport(struct net_bridge_port *p, struct nlattr *tb[],
+ int br_setlink(struct net_device *dev, struct nlmsghdr *nlh, u16 flags,
+ 	       struct netlink_ext_ack *extack)
+ {
+-	struct net_bridge *br = (struct net_bridge *)netdev_priv(dev);
++	struct net_bridge *br = netdev_priv(dev);
+ 	struct nlattr *tb[IFLA_BRPORT_MAX + 1];
+ 	struct net_bridge_port *p;
+ 	struct nlattr *protinfo;
+@@ -1143,7 +1143,7 @@ int br_setlink(struct net_device *dev, struct nlmsghdr *nlh, u16 flags,
+ /* Delete port information */
+ int br_dellink(struct net_device *dev, struct nlmsghdr *nlh, u16 flags)
+ {
+-	struct net_bridge *br = (struct net_bridge *)netdev_priv(dev);
++	struct net_bridge *br = netdev_priv(dev);
+ 	struct net_bridge_port *p;
+ 	struct nlattr *afspec;
+ 	bool changed = false;
+-- 
+2.25.1
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
