@@ -1,204 +1,166 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE6723BF
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE37187323
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721037912; cv=none; b=b/03LqzfcH3igSsWtT5vIsZJFU1SrcocmspdcXzGwAPissa6xl+bC4yJ0AbXREYQ/edQtEs4ToK5QXF/CRITz++W9BbSW8a9xwmKsANqRwA3O343mMdPodGEl+x2H5/ceDRB9a67PgcmHn+VYV5ODLWk+GhD3NN7PO/TGwjYzJU=
+	t=1721038135; cv=none; b=fSip9nHsnKtXGSjVC9dhdI1L7LF2IYfq/oDoZ7uldNf8T8PngFYfDVJQNLd9jOxSRcG1QOUpMeIxcyGkn/0yIFrgzgMixtus19/P99MlBhBGG8a1zFZIRWYneBRggvVO4qA9iYmn1EqTN0kSHdX7uc1M8Tf8/s/svdXxdyVbuPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721037912; c=relaxed/simple;
-	bh=3JUHujWjiaHRS+vu9GT1XVAPz43NrXG5mNF+7DfNJL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dQw67EusIGFzKhPVYbHIempPoI0AWurh7p8a6TyVfMskr7CumBQ8mwBsWKiNLyLDcsU4oZWB4i49tkJfSU0CHYB8PP2BWdlw/c2oTMTuPTACG1VoP61q4/9MLZSteKeLhpc5GsZkWYuHudGLS3Lodk6MngrK72HR/BDgRbB8iqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BAx/jI7J; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1721038135; c=relaxed/simple;
+	bh=nzxGF/IVWypN5a9C8DAnRx04C5FDKt5UmDZII9AqUcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KL6pCWf7ciHvl6yUUCuE+om06YmcZlBsabJt10eKenfpNh9M8HGAcQhwie7Ha6tQOeCvHrT7FDYNjEuF/sxFqPMAzWKGHYo7SoVTjOoZWgy3Bck0nkkj0P+zAvxgKiKFJddAdfjSvQkC5Yb6jvY8UIkrozKlIna7WABO+jIysqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=OQVyA/H1; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BAx/jI7J"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52e9c6b5a62so4252060e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 03:05:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OQVyA/H1"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4210f0bb857so3505325e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 03:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1721037908; x=1721642708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fXrhdNRq6oludJZnjz76rz84qmMewPWdtA9STQ5A9L0=;
-        b=BAx/jI7JcGYNLmK6SQqhHuYMuL512IwAV80u1MMAlVVSIDrw+X3lUWjqgIk75bUDeQ
-         6gubdDTe/IQdzVsMHDd5yQd99LT97xtgQjYtMF5A7yC8EXpNr2ign8JCWM/ekp/5uo0C
-         iD0IGza3R8SqVzAxnJzmGULYmCPH+v3VIniHQ=
+        d=ffwll.ch; s=google; t=1721038132; x=1721642932; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CR2Ia0FiVFedpG588AkdnSWlCXZ9egJLBsCqhnpjuT8=;
+        b=OQVyA/H1EAAR6l7xnIePghX5mvtv36egXS9FhEb4+IPFi6aPlrBex5nR3sI1VErnB1
+         UPP71ZnmqP9xg4z5RT/IBTn8zyEXcIO7fM2enawvkWJRtxYqJhIUrGrOnWkOatZsLsLy
+         SPvnn6ehZt84TWch4+uFEAYQCmlG9jPtNKFXk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721037908; x=1721642708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fXrhdNRq6oludJZnjz76rz84qmMewPWdtA9STQ5A9L0=;
-        b=iNYkA2UE20GWPuur2Bf0mgmqlyVyptbWprBkR4N5LmFRJ65mbrwtTfrJd6UMpBAHiA
-         UlO6iG47JKbVyiUE58WulG0uPHBtBBFDOzMMQJUAA62rf8PzpqVf1zrKciuT4iHAZ9Tr
-         5tfeJv6V3iiL8O1DjMnkZQPTVLpWH0Ra889eHx1KcTEz5ksd2u0m3TJjpAvC4SlKLeiq
-         3FWzHB0/da0nZu79JvfCVQ9D28MXz+lMQL9rr9jUhWmnxXbsudtgK30APBcAqH4BCDFr
-         WR4wWIr8Wf8opkR+S1jWnLWYFrvZUnyIS03FlZjslNMvvQI1f++EKUXBmKaacGCpVKk7
-         ZXpA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0DnE5RxnrDpe/4SEkB047UNu6xS23ISgD9bsIRELIxEfHmnXMct4Kl44bO3N/TT0wSWHJ58Mxe/5nMdc3FI1irxBAyecowqTEnkS+
-X-Gm-Message-State: AOJu0YyT0zJU4oLJ7fpwhwv7iqVSo1b0UNGxkD3CIsT13yYUTSD7eHr/
-	WaemJMT+6ddURQfp1V/b1eFFLLx02knwC9GFjirfG65alJTho3euEaOSjK2X4k5cfw5AD3lhGp2
-	pIw4oVWwG6euks9mO9v8e/NY66WWcgu/Y4TY=
-X-Google-Smtp-Source: AGHT+IFR/iC1N3Tb8Jho/ZE42f1MzhOjhl0CAO4hiWmUByPiy1Zd0g36Ny/4VrjQlbpoVgWVwwAvv2WZBTBdvA7v3B4=
-X-Received: by 2002:a05:6512:3b20:b0:52c:c9ce:be8d with SMTP id
- 2adb3069b0e04-52eb99d6de0mr12891922e87.57.1721037907620; Mon, 15 Jul 2024
- 03:05:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721038132; x=1721642932;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CR2Ia0FiVFedpG588AkdnSWlCXZ9egJLBsCqhnpjuT8=;
+        b=MGd9RZ5Lvp84owqAQ088vzMz7h7girrUM5CW8QorPpW8+u9Z5CJssUtDXyaei3gFN1
+         f1JUZPJCJJKO8WuLJKFlbf7sMxvrE34Z97Qh2BxsLQMf8m9ygZmFyOKL1/ODDvenNZnr
+         hhaYbZU22wlWjB38q0km1ROdDxiXDgeggFqaD6XsSnT+klOPC7TmrkFo/8CiEXzwjQ3+
+         526B8uwp81jlMAWR/8eOHQd2S6QRNI8C3/KMJszIOW0s6SS9YwxtUSQfrMShR6LXQsHi
+         7ata1P/7bLC2nacKl3LgO0eKLIkQos0vjqoQjsdNBmvNiga4uJbUbiXzL0upi1rTL7JJ
+         HcPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUWeRcf7vbOpA24eSeEqyQMbNamnc5bfftK6J0RkVV/zrGS8nBynwgEvizsYnXak/syzrY7bO1zupb1kRoI7N4FiVEPWgkni9JMu10
+X-Gm-Message-State: AOJu0YxSDiWFaWD+g0V8XzaZCNrCn7Kn/Fw+h6W+a1pFCj7vLDBqkhtg
+	X1+8PGdSeOCoVI896Q5jr8LLJcu0PHT5V2RwsQAXgaYzRpdODbMBgwyA63r1ztI=
+X-Google-Smtp-Source: AGHT+IHyT41V56P2D7gRVnHbsl6ebnID4kMa+VsHDxqWmcAkAFdIoHpQ9xgw+h4TlxD7k+VH6h7+vQ==
+X-Received: by 2002:a05:600c:3b8c:b0:426:4920:2846 with SMTP id 5b1f17b1804b1-4279834f1e5mr64390645e9.3.1721038132199;
+        Mon, 15 Jul 2024 03:08:52 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f23981fsm115958335e9.4.2024.07.15.03.08.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 03:08:51 -0700 (PDT)
+Date: Mon, 15 Jul 2024 12:08:49 +0200
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+	DRI Development <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+	Daniel Vetter <daniel.vetter@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH 1/2] drm: Add might_fault to drm_modeset_lock priming
+Message-ID: <ZpT1MeLxz2yLtDxu@phenom.ffwll.local>
+Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	DRI Development <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+	Daniel Vetter <daniel.vetter@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org
+References: <20240710093120.732208-1-daniel.vetter@ffwll.ch>
+ <03f7e2ad-fd5c-4da7-a14c-34c2c158c513@amd.com>
+ <CAKMK7uFvCr2qcHun06LC-ON3GBqj8=mCpPGHuAOh9BEyr60fiQ@mail.gmail.com>
+ <cf3ff1b9-2934-47bd-93c7-5ea55d10c82f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702215804.2201271-1-jim.cromie@gmail.com>
- <ZoR40nWmpEV2Ly_6@bombadil.infradead.org> <CAJfuBxyxamRhOyz8WuL+7=eJkEKSw8jnAWjyAuqU2i7gvg-rsQ@mail.gmail.com>
- <CALwA+NbUCfEj_DzT5eMQ7_pSNpyp-zBe6PEL2XnMZrb303J4_Q@mail.gmail.com> <CAJfuBxzeYWWV1ikYagFpyFHdAQU4ReYPirksQFHbEzDxhXCfHA@mail.gmail.com>
-In-Reply-To: <CAJfuBxzeYWWV1ikYagFpyFHdAQU4ReYPirksQFHbEzDxhXCfHA@mail.gmail.com>
-From: =?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>
-Date: Mon, 15 Jul 2024 12:04:56 +0200
-Message-ID: <CALwA+Naec_YHxHoKu8Ba_Bnuq2L3VXw1cT3=Tx3qC3mE5_BG1g@mail.gmail.com>
-Subject: Re: [PATCH v9 00/53] fix CONFIG_DRM_USE_DYNAMIC_DEBUG=y
-To: jim.cromie@gmail.com
-Cc: Luis Chamberlain <mcgrof@kernel.org>, daniel.vetter@ffwll.ch, 
-	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com, 
-	ville.syrjala@linux.intel.com, jbaron@akamai.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org, 
-	intel-gfx@lists.freedesktop.org, linux@rasmusvillemoes.dk, joe@perches.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cf3ff1b9-2934-47bd-93c7-5ea55d10c82f@amd.com>
+X-Operating-System: Linux phenom 6.9.7-amd64 
 
-On Sat, Jul 13, 2024 at 11:45=E2=80=AFPM <jim.cromie@gmail.com> wrote:
->
-> On Fri, Jul 12, 2024 at 9:44=E2=80=AFAM =C5=81ukasz Bartosik <ukaszb@chro=
-mium.org> wrote:
-> >
-> > On Wed, Jul 3, 2024 at 12:14=E2=80=AFAM <jim.cromie@gmail.com> wrote:
-> > >
-> > > On Tue, Jul 2, 2024 at 4:01=E2=80=AFPM Luis Chamberlain <mcgrof@kerne=
-l.org> wrote:
-> > > >
-> > > > On Tue, Jul 02, 2024 at 03:56:50PM -0600, Jim Cromie wrote:
-> > > > > This fixes dynamic-debug support for DRM.debug, added via classma=
-ps.
-> > > > > commit bb2ff6c27bc9 (drm: Disable dynamic debug as broken)
-> > > > >
-> > > > > CONFIG_DRM_USE_DYNAMIC_DEBUG=3Dy was marked broken because drm.de=
-bug=3Dval
-> > > > > was applied when drm.ko was modprobed; too early for the yet-to-l=
-oad
-> > > > > drivers, which thus missed the enablement.  My testing with
-> > > > > /etc/modprobe.d/ entries and modprobes with dyndbg=3D$querycmd op=
-tions
-> > > > > obscured this omission.
-> > > > >
-> > > > > The fix is to replace invocations of DECLARE_DYNDBG_CLASSMAP with
-> > > > > DYNDBG_CLASSMAP_DEFINE for core, and DYNDBG_CLASSMAP_USE for driv=
-ers.
-> > > > > The distinction allows dyndbg to also handle the users properly.
-> > > > >
-> > > > > DRM is the only current classmaps user, and is not really using i=
-t,
-> > > > > so if you think DRM could benefit from zero-off-cost debugs based=
- on
-> > > > > static-keys, please test.
-> > > > >
-> > > > > HISTORY
-> > > > >
-> > > > > 9/4/22  - ee879be38bc8..ace7c4bbb240 commited - classmaps-v1 dynd=
-bg parts
-> > > > > 9/11/22 - 0406faf25fb1..16deeb8e18ca commited - classmaps-v1 drm =
-parts
-> > > > >
-> > > > > https://lore.kernel.org/lkml/Y3XUrOGAV4I7bB3M@kroah.com/
-> > > > > greg k-h says:
-> > > > > This should go through the drm tree now.  The rest probably shoul=
-d also
-> > > > > go that way and not through my tree as well.
-> > > >
-> > > > Can't this just be defined as a coccinelle smpl patch? Must easier
-> > > > to read than 53 patches?
-> > > >
-> > >
-> > > perhaps it could - Im not sure that would be easier to review
-> > > than a file-scoped struct declaration or reference per driver
-> > >
-> > > Also, I did it hoping to solicit more Tested-by:s with drm.debug=3D0x=
-1ff
-> > >
-> > > Jim
-> > >
-> >
-> > Jim,
-> >
-> > When testing different combinations of Y/M for TEST_DYNAMIC_DEBUG and
-> > TEST_DYNAMIC_DEBUG_SUBMOD in virtme-ng I spotted test failures:
-> >
-> > When the TEST_DYNAMIC_DEBUG=3DM and TEST_DYNAMIC_DEBUG_SUBMOD=3DM -
-> > BASIC_TESTS, COMMA_TERMINATOR_TESTS, TEST_PERCENT_SPLITTING,
-> > TEST_MOD_SUBMOD selftests passed
-> > When the TEST_DYNAMIC_DEBUG=3DY and TEST_DYNAMIC_DEBUG_SUBMOD=3DM -
-> > BASIC_TESTS, COMMA_TERMINATOR_TESTS selftests passed, however
-> > TEST_PERCENT_SPLITTING selftest fails with ": ./dyndbg_selftest.sh:270
-> > check failed expected 1 on =3Dpf, got 0"
-> > When the TEST_DYNAMIC_DEBUG=3DY and TEST_DYNAMIC_DEBUG_SUBMOD=3DY -
-> > BASIC_TESTS, COMMA_TERMINATOR_TESTS selftests passed, however
-> > TEST_PERCENT_SPLITTING selftest fails also with ":
-> > ./dyndbg_selftest.sh:270 check failed expected 1 on =3Dpf, got 0"
-> >
-> > Have I missed something ?
-> >
->
-> I am not seeing those 2 failures on those 2 configs.
->
-> most of my recent testing has been on x86-defconfig + minimals,
-> built and run using/inside virtme-ng
->
-> the last kernel I installed on this hw was june 16, I will repeat that,
-> and report soon if I see the failure outside the vm
->
-> I'll also send you my script, to maybe speed isolation of the differences=
-.
->
+On Wed, Jul 10, 2024 at 02:40:04PM +0200, Christian König wrote:
+> Am 10.07.24 um 13:58 schrieb Daniel Vetter:
+> > On Wed, 10 Jul 2024 at 13:39, Christian König <christian.koenig@amd.com> wrote:
+> > > Am 10.07.24 um 11:31 schrieb Daniel Vetter:
+> > > > We already teach lockdep that dma_resv nests within drm_modeset_lock,
+> > > > but there's a lot more: All drm kms ioctl rely on being able to
+> > > > put/get_user while holding modeset locks, so we really need a
+> > > > might_fault in there too to complete the picture. Add it.
+> > > Mhm, lockdep should be able to deduce that when there might be faults
+> > > under the dma_resv lock there might also be faults under the
+> > > drm_modeset_lock.
+> > You're not allowed to take a fault under dma_resv, because drivers
+> > might need to take that lock to handle faults. So unfortunately in our
+> > combined lockdep priming, there really seems to be no chain yet that
+> > teaches about faults possibly happening while holding
+> > drm_modeset_lock.
+> 
+> Ah, of course! You are right, it was just the other way around.
 
-Jim,
+Applied to drm-misc-next, thanks for your review.
+-Sima
 
-I know why I saw these failures.
-I ran dyndbg_selftest.sh directly in thw directory
-tools/testing/selftests/dynamic_debug/.
+> 
+> Thanks,
+> Christian.
+> 
+> > -Sima
+> > 
+> > > > Motivated by a syzbot report that blew up on bcachefs doing an
+> > > > unconditional console_lock way deep in the locking hierarchy, and
+> > > > lockdep only noticing the depency loop in a drm ioctl instead of much
+> > > > earlier. This annotation will make sure such issues have a much harder
+> > > > time escaping.
+> > > > 
+> > > > References: https://lore.kernel.org/dri-devel/00000000000073db8b061cd43496@google.com/
+> > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > > > Cc: Maxime Ripard <mripard@kernel.org>
+> > > > Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> > > > Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > > > Cc: "Christian König" <christian.koenig@amd.com>
+> > > > Cc: linux-media@vger.kernel.org
+> > > > Cc: linaro-mm-sig@lists.linaro.org
+> > > On the other hand pointing it out explicitly doesn't hurts us at all, so
+> > > Reviewed-by: Christian König <christian.koenig@amd.com>.
+> > > 
+> > > Regards,
+> > > Christian.
+> > > 
+> > > > ---
+> > > >    drivers/gpu/drm/drm_mode_config.c | 2 ++
+> > > >    1 file changed, 2 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/drm_mode_config.c b/drivers/gpu/drm/drm_mode_config.c
+> > > > index 568972258222..37d2e0a4ef4b 100644
+> > > > --- a/drivers/gpu/drm/drm_mode_config.c
+> > > > +++ b/drivers/gpu/drm/drm_mode_config.c
+> > > > @@ -456,6 +456,8 @@ int drmm_mode_config_init(struct drm_device *dev)
+> > > >                if (ret == -EDEADLK)
+> > > >                        ret = drm_modeset_backoff(&modeset_ctx);
+> > > > 
+> > > > +             might_fault();
+> > > > +
+> > > >                ww_acquire_init(&resv_ctx, &reservation_ww_class);
+> > > >                ret = dma_resv_lock(&resv, &resv_ctx);
+> > > >                if (ret == -EDEADLK)
+> > 
+> 
 
-All works as expected when I run it from the top kernel directory.
-Here are the results:
-
-When the TEST_DYNAMIC_DEBUG=3DM and TEST_DYNAMIC_DEBUG_SUBMOD=3DM -
-BASIC_TESTS, COMMA_TERMINATOR_TESTS, TEST_PERCENT_SPLITTING,
-TEST_MOD_SUBMOD selftests passed
-
-When the TEST_DYNAMIC_DEBUG=3DY and TEST_DYNAMIC_DEBUG_SUBMOD=3DM -
-BASIC_TESTS and COMMA_TERMINATOR_TESTS selftests passed,
-TEST_PERCENT_SPLITTING and TEST_PERCENT_SPLITTING selftests were
-skipped
-
-When the TEST_DYNAMIC_DEBUG=3DY and TEST_DYNAMIC_DEBUG_SUBMOD=3DY -
-BASIC_TESTS and COMMA_TERMINATOR_TESTS selftests passed,
-TEST_PERCENT_SPLITTING and TEST_PERCENT_SPLITTING selftests were
-skipped
-
-Based on that maybe it would be worth it for the script to fail when
-it doesn't find a .config with an error message something like this:
-"Kernel .config not found. Are you running the script from the
-kernel's top directory?"
-
-What do you think ?
-
-Thanks,
-Lukasz
-
-> > Thanks,
-> > Lukasz
-> >
-> > > >   Luis
-> > > >
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
