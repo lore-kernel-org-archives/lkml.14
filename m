@@ -1,144 +1,107 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2090.outbound.protection.outlook.com [40.92.19.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA92186E5A;
-	Mon, 15 Jul 2024 09:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721037341; cv=fail; b=BWeDgmJ9JlSbPC4CDR4xyGJWAy4Dfu7u3+icfRJNxnInke92Y9FjvGrvwgDEzcyAtQR2aWZSYxYl56aWPRym/jdrbcrwHFy0cyfC0a3NzBP96EjqMAJV8tZE5CppfWpg4i6Pq4OZTmpZYpqwT5MSawuHYbyCQ4fdw9IZfCS+QIA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721037341; c=relaxed/simple;
-	bh=vjoDJ+ABpY/fdhXG0AhwS67f7qhMAMmd+uuB85YLQmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eTP3SU+dUkBSkv1nUjMgAx75XC0jNwwC10fhpPvOhPt7b6KqSLwxovFQKGSMMob0Ky4xGvte5CsedYvf0NdCo4woTKTqb/qBfoPZKeiFuXWMVrD8RYy9Z7XIy7RUEY7ZAlk6ly02MghNgLczd3uNKy/Hvm1mhOb5T3oy0ErU4nM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=pMaXP8yh; arc=fail smtp.client-ip=40.92.19.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="pMaXP8yh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AytiRvxucew1j3Sd2WuYsb1pEoaQhTAlQ7fymR0hR5pEzGRDqisjpxaToKcdnizznfBMB0uN5fNltxV3yD8E604xNRgD74E+mWhYqsNCT0G/Y2rUWhrCXgktanprjHhLH//DzTmsE6BF+/bjlIccuxevsd8DeTRcq1bSJD6o+ZdB/7IdSL61qOlbWLujxO5VkWJA6PXZxMGVnb5CjBgvh66zP5MFWrqBjzVj7ioCdx/4/TSpIdSJ+RRfrf6GuUtfFzGQcqY3zsWJHMGi805aLqbwAVOx9auSUIVTXb1+QlgI0QfCGLcPBe6ri4rLVg1QvStK/xUA4VMJtOYfDHk9WQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZXbRPM4k910M6CJJrKdZtbupcoj3xxTHZZEkQWBCpS4=;
- b=V17my1SfEXWG9anP3+RleVG9mrD0AMSdJlfQRVnaPhT/mgftFByf320+QrIJN6V5DCYvo3Rdnn5+D2P6F1OdPiIjiGK8i48GWbyP5MBShY0DiskfCsXGrzh3QF/+0gP9V0tlBPwbRGXGFwoDR1WBcxgWFl8kw+c80KaunC5WRKuRluCzv0JFKwlyYzTqBrL/hOukGD7MQPht01C83OxUWC+aHGIXAlW01DhZ1huLePXPbZRnCzZfBqiw7kRt3VimBmyqRKpS/SclBGDSpvOia3Ie0jurWf0W8Kp0oc43ttQ0D0lAGiDzf4srMHy2dQEjd6++kV0XuTcpjbj9d3cN0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZXbRPM4k910M6CJJrKdZtbupcoj3xxTHZZEkQWBCpS4=;
- b=pMaXP8yheBGe7K6/xW+vlyAy9d593XUxadopwJ5VfnhxgNp2Gg/N8Vq6ytbdb1fxBNQ2fBY8wszXIw6i+6hykdL105gExqVhKXQF839mEO8cKzP9oQlMIci7snInG4uvs5jIGQA+M32eT9ShwSFmfmxsh5elv3YyYLwyM3XbJNFyDlK/cfk7HUOPWycpTbHk1CMuAQvVGRudPQFc6T3hN3WnMF1Wdcm/+dKthKOU6YRjUEK4pwunkDrs9J4YzmuFTfx0zS3MqJ+8kIUfbzG0VVVWMu39PZE3xKB0f6lyfCEgDmc1MFVEWw7R5zM7sWMufGc3Lfk1ZXY3VCPBPZ8hnQ==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by DM4PR20MB4872.namprd20.prod.outlook.com (2603:10b6:8:a5::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7762.25; Mon, 15 Jul 2024 09:55:38 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149%6]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
- 09:55:38 +0000
-Date: Mon, 15 Jul 2024 17:55:28 +0800
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
-	Inochi Amaoto <inochiama@outlook.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pincfg-node: Add "input-schmitt" property
-Message-ID:
- <IA1PR20MB495302FAFD2003B831342CF4BBA12@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <IA1PR20MB4953BB6E71CA3216E652E8B8BBA02@IA1PR20MB4953.namprd20.prod.outlook.com>
- <e74d1c2f-576d-4d97-89d2-5bdabe00fb58@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e74d1c2f-576d-4d97-89d2-5bdabe00fb58@kernel.org>
-X-TMN: [RqD3kWIYmwMfttqBZCn9wLbT/1Kh60jzmSlXLYSvqVo=]
-X-ClientProxiedBy: PS2PR03CA0001.apcprd03.prod.outlook.com
- (2603:1096:300:5b::13) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <tvtslwvaf4pe3lihta3xbnjan7jn6225ottv7l2sww3lzz6ujw@mmfab3g6nifs>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68ABE1862AB
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721037372; cv=none; b=od0bNvCaMyzgB3Th5si4vAVNhy+pkUH42O8dWgE+V5vlmCcRmrc2mtSpP2wN5SjXrmNUQwxiqXRv8oFEaUXQora0DZ9wfiE9gmMh8Bqb5bDKZC0h7/b4dMAulp4kXmJviJrWbvVqE1ATalfXq1401F5NdlyJVBGWVyhKXEfZ2EA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721037372; c=relaxed/simple;
+	bh=1LT6bGdap7nmLMQbwo1fJ5WrO61MDan0T38QyFzr18E=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=UWP0qz+wgqcTqZf/2fQ8nP2MdY3ocPzNalOpK8UW+NZ9WCDcxn1xp5E1exB+PAEgM3I4FmFvXYhaj/XHrNX7GZino+tKo0g58dtInu6bQ3JfEolbDrRPK7Q9yhZJVcSaQDqo3rM/p7ucFh8sRGxnUbgGyceGXxFLb2967u/gEeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxrfA38pRmMpAEAA--.12035S3;
+	Mon, 15 Jul 2024 17:56:07 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx08Q18pRmP6dJAA--.24803S3;
+	Mon, 15 Jul 2024 17:56:05 +0800 (CST)
+Subject: Re: [RFC PATCH 0/4] Add jump table support for objtool on LoongArch
+To: Jinyang He <hejinyang@loongson.cn>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
+References: <20240712091506.28140-1-yangtiezhu@loongson.cn>
+ <307bcd3e-f4fe-8cc0-c557-4069c97c6072@loongson.cn>
+Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <bad4a7fd-e487-498d-f6ab-b9a17e049dd7@loongson.cn>
+Date: Mon, 15 Jul 2024 17:56:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|DM4PR20MB4872:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c9a5490-d101-42b0-5851-08dca4b44767
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|19110799003|461199028|3412199025|440099028|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	MAp7/4FOgQcRbtd3wvj8MXbwWF3uAPd32xewQBp2pqptqZHnt0yxgfq2egbAkk3xRC0TNMMHi35TUzly+II2bUr2+etRx3cQIrY2Bq9MAbBytJHL+oIRovYjr8Am/4/Vrxn29cVn5+KC7y/VPMgDP6r1KWuR+WGJy5JL6PWHHo2SifdIGE/9m0MEDBRcDWhzS1fGnUh7vNuqhmtkXIrpENKg+xYJyOU04e410kg6aY6Auc6934GRQYtwYbjea+vrakEvDvyw8Sp2f3YK4PddkI2eTV5h1dCJ5L9vzzn7TVwqswf0/X6DPKAu3YrHpG4AfuppVHLc4wuqqGjMuouWLkx0vs2QSDT0nL1UThlUy/9X7hCHmNrHBqZMPkutwojR0V+N6MxGHaxYTi17xm8Cj0515XjidmgDnp0S1jjIar+SaIJTzSrW/NXYpSKFr/ilg5GIZxbF3OR+voc2SYYGMx55JVjfERhT2X65uDUPIf5u1tm8lJqt/s2UAxKrwUi8YN/xpx0s+4aTn9rCwPuoCuSCJA93ExiowC0lBzFoP+wzwzXkmWcyT13ovUIgkd987e3Y5Ip2rhyCmyKjmA8XfeLf+Wi7TJ1iB66jOnXQ8/L/4oecG6PCIUACYRjw1umcJIf5tWGlXi7en994q7SLsRsfeDen+Eahudsbjkcm3FzC4cPmBz9i29ABU0UiQfbI
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qSSOUu5KWYpbGrnTOtdWEmSuH1ZNKD1rnGSUuzanN8WeBd+G1PoIWObOvUvv?=
- =?us-ascii?Q?H7wom2oDsfbVeUCbDg5V2IAaPWj4KnWLi+ediOUeFeLhcpsdf6lrxk8hh7I9?=
- =?us-ascii?Q?xPhXGFJFb3td3FOla/5+JTCtDaxbPp+SafyJypHs+qlxysIHFRcSzs1ZenvL?=
- =?us-ascii?Q?bIAJ3Ng62uuaMmI3DSGeAxbnJAknAM7b28s3drVdzzXhCcjfx3xycMrh7Bvt?=
- =?us-ascii?Q?bIHuGYMn+qWRDnTuLy9HQJhtmHiyb1Y4EVf0NtZ5bk3hUqaA3eGIJY62spoB?=
- =?us-ascii?Q?VAjefrNl10TQ5pR8STB5H63PdbZ0tlL+AFVrgnQ2AEZ9kuBQv8znnj/RgdBy?=
- =?us-ascii?Q?/oVMYFhlxif6zNGTYF35L9NW8lYSVNx5CnCyBrGl9et2nF1MffJ7rRLw9vkf?=
- =?us-ascii?Q?HEyJQwM2KxmB4U8Ej+jscK7vHSpO0+Lk9jA7LMD3B6p8xmlroA7wqhSniMCw?=
- =?us-ascii?Q?cWt7Yt9J+skiyWEftNjSkeDaweLI+rW7fdSIuzJ9/kV9Oe/ZGt71NOnpeiEJ?=
- =?us-ascii?Q?V5gNnwK8OlCK5Nb86xfzwyqa2b8Rcr6pn8zqfBixuEiIf2kw2a/9Cu9V8nEb?=
- =?us-ascii?Q?Cwatj4w3AMSU3SmBoFvDOg6GqVuKL5INWtEqx+AZIHvIf1JDTODlwfVLKPh+?=
- =?us-ascii?Q?4cbDeZ0peVxpNwXh7T7/8RPy8L+IwFquf8zOiaLAhC11oFX7KghFqowdcf2G?=
- =?us-ascii?Q?XLBeYHZP8cCzbwmqUPPykKnBC1VgvrJTbFMCPES/XXQv/x00CF4Y8zox5Cc1?=
- =?us-ascii?Q?8svsrvEn3YNQMJO3dkXCd4yor24aToovHQ0n8lWasDRaWc0yFDTXo9UTIYl+?=
- =?us-ascii?Q?XUSJZ0ox4zYbNAVxnAv5yXS3HxqbR4SFaaORdb3BcwGKWV9P8+RgSNSe8207?=
- =?us-ascii?Q?WIC+AToMroVv6NFHo80kMu+0iqGaDS6SUishLkgjaaX45nT1ahdC6lcZJSod?=
- =?us-ascii?Q?fZiRxUUxbs6aZRYXpNtV7fMk1rMlyu4vtbw30ePl0qTHCoVEZ4Qt2rpG7z/7?=
- =?us-ascii?Q?at5VcvptEn30XFVQ/fuQhistcdmy0JMnnbyk5qolAg5feawsh86MQjrCrtKn?=
- =?us-ascii?Q?qvveo5PwVfRnlLMY3Ls77OysyBZVe0+cHQN3IQ9aSpG83cg/E3hz6zmy46vE?=
- =?us-ascii?Q?ZnaTmsSiuLPL4ktzuV/G6KcGH5nPkt51lk+BMVN8sMhVQbnU+BgWnMoMPQ/1?=
- =?us-ascii?Q?MOY/lL3c0F3LtQfbDdHFw0AJlh6M2Ov+f7URLscmOJk5e0+w7Z03U+5uDxaJ?=
- =?us-ascii?Q?hEAd2+Xu+PNwgT+UOtes?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c9a5490-d101-42b0-5851-08dca4b44767
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 09:55:38.1175
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR20MB4872
+In-Reply-To: <307bcd3e-f4fe-8cc0-c557-4069c97c6072@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Bx08Q18pRmP6dJAA--.24803S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFyDAw17Jr1kZr45WrWfZwc_yoW8Kry8pF
+	WUu34ftFs8JanagwnrXr129ay3CayDG3yDtr45G348uw4aqr1IvF4vkF9IvanrArs3ZrWa
+	vF17K3srKa1vyacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07je0PfUUUUU=
 
-On Mon, Jul 15, 2024 at 11:21:25AM GMT, Krzysztof Kozlowski wrote:
-> On 14/07/2024 13:28, Inochi Amaoto wrote:
-> > On Sophgo CV18XX platform, threshold strength of schmitt trigger can
-> > be configured. As this standard property is already supported by the
-> > common pinconf code. Add "input-schmitt" property in pincfg-node.yaml
-> > so that other platforms requiring such feature can make use of this
-> > property.
-> > 
-> > Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> > ---
-> >  Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> > index d0af21a564b4..e838fcac7f2a 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> > @@ -88,6 +88,10 @@ properties:
-> >      description: disable input on pin (no effect on output, such as
-> >        disabling an input buffer)
-> > 
-> > +  input-schmitt:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: threshold strength for schmitt-trigger
-> 
-> Strength in which units? This should have proper property name suffix.
-> 
-> Best regards,
-> Krzysztof
-> 
+On 07/12/2024 06:19 PM, Jinyang He wrote:
+> Are we always avoid our problems?
+>
+> 1, When text section not support "R_LARCH_32_PCREL", update compiler
+>    to add AS_HAS_THIN_ADD_SUB.
+> 2, When not support jump-table, use "-fno-jump-tables" to avoid it,
+>    (and now update compiler to add CC_HAS_ANNOTATE_TABLEJUMP).
+> 3, When not support relax, use "-mno-relax" to avoid it.
+> 4, When some where in asm can be backtraced but generate warning,
+>    use STACK_FRAME_NON_STANDARD to avoid it.
+> 5, When the goto-table cannot be handled (I guess the Ruoyao's
+>    patch cannot handle goto table), use CONFIG_BPF_JIT_ALWAYS_ON
+>    to avoid compile ___bpf_prog_run.
+> 6, And other $fp warnings not be solved in clang. Do we only care gcc?
+>
+> So how to do in the future if compilers have other changed? Do we
+> need update compilers (both gcc and clang) again and again? Why
+> not just update objtool codes to solves these problems? As many
+> RISC arch not support directly find jump table, can we support
+> more generic ways to find it?
 
-I think it should be mV. Using voltage may leads to decimal.
+This is a choose and balance. In principle, I want to make the kernel
+code clear and simple to enhance the readability and maintainability,
+I do not want to modify too much architecture independent code of the
+objtool framework, I just want to implement the architecture specific
+function.
+
+As the gcc patch "LoongArch: Add support to annotate tablejump" said,
+the objtool program needs to analysis the control flow of each .o file
+generated by compiler toolchain, if a jump table is used, objtool has
+to correlate the jump instruction with the table, on x86 it's simple:
+a relocation entry natrually correlates them because one instruction is
+used for table-based jump, but on an RISC machine objtool would have to
+reconstruct the data flow if it must find out the correlation on its own,
+so emit an additional section to store the correlation info as pairs of
+addresses, each pair contains the address of a jump instruction (jr) and
+the address of the jump table. This is very trivial to implement in GCC.
+
+For jump table support of objtool on LoongArch, it makes life much easier
+with the gcc changes. As far as I can see, the remain issues (goto table
+in ___bpf_prog_run() and jump table in assemble code) are only related
+with kernel and can be solved with kernel changes.
+
+Thanks,
+Tiezhu
+
