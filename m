@@ -1,288 +1,72 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A200813AA45;
-	Mon, 15 Jul 2024 20:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B61B139CF7;
+	Mon, 15 Jul 2024 20:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721074234; cv=none; b=oBio4m3zmwssiaIjLzSrJlnc46EhDilvNMC/LrhzP1FEOaCPvf0OxL4Bn3cB6U2vJwsWBRd6nlMiRKK1Za0HrQS8usiMmvknyZ2Gw1ZmYxFRnOOZP5t1lMquUC7G+wUCnv+bqc2oI+gzFfMXkwTDN5FVGe0JNXXpXU8te+Ih2nA=
+	t=1721074248; cv=none; b=cDY5rCrj7zCnJnaKUhvNF3F9xsmDfY+61mVIK7Re9jW6qc4LxcwIhmo0zYwVsSO4YxbTcWxSrJHpBy1s27f6Mf373Cs4tGMPinTIHF6XqG55wxija1UGR/JixKQ53ewKqATPHWedPOYqKg/7tsbooufnfpojcRI7rZKcHSrcAsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721074234; c=relaxed/simple;
-	bh=Pr4Z8E48NMmSArOxYwnWttH7Cxj0TH65kcUq3Ql6bhI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pqIn6gKtYvsRS4aiyJ6bGNs+43WVwsYv3umKY40K1AfhiAoOtmFrmhR2iNYe4CRuqRZ/QcOWK/nBOTpXetpzstoVtJf3M4iKDphOH+hJ1XpREdCI5kztbJ9xTjIi+cu/zMkcz3H71FnnWPzG46AITuezeo4Sb+3RL0Rmr5EtxH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fQS3Zbai; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fQS3Zbai"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46FK9w8S003467;
-	Mon, 15 Jul 2024 15:09:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1721074198;
-	bh=UHyi6cL01lSknqMmHGFAmca9oek9TO+uJfRuqdcTrhQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=fQS3Zbai/XwgYfFLZl9EI9DB/Jak3WogZl0t7E341HaRjOE7MxaHUdmPBLYeBiL2w
-	 1i5fKIVwnNtL2cs1klkBaa5tJLMuLqI2Mng37iFFibBPni7rVaZWsnLPugPEUF7M2m
-	 MEiINLvU22R5vGHGEUHOFORLm3vRErd4H4/dsKQo=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46FK9wpc073586
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 15 Jul 2024 15:09:58 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 15
- Jul 2024 15:09:57 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 15 Jul 2024 15:09:57 -0500
-Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46FK9uE1034960;
-	Mon, 15 Jul 2024 15:09:57 -0500
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Jyri Sarha
-	<jyri.sarha@iki.fi>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: DRI Development List <dri-devel@lists.freedesktop.org>,
-        Devicetree List
-	<devicetree@vger.kernel.org>,
-        Linux Kernel List
-	<linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>, Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar
-	<u-kumar1@ti.com>,
-        Francesco Dolcini <francesco@dolcini.it>,
-        Alexander
- Sverdlin <alexander.sverdlin@siemens.com>,
-        Randolph Sapp <rs@ti.com>, Devarsh
- Thakkar <devarsht@ti.com>,
-        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
-	<j-luthra@ti.com>,
-        Aradhya Bhatia <a-bhatia1@ti.com>
-Subject: [PATCH v2 2/4] dt-bindings: display: ti: Add schema for AM625 OLDI Transmitter
-Date: Tue, 16 Jul 2024 01:39:51 +0530
-Message-ID: <20240715200953.1213284-3-a-bhatia1@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240715200953.1213284-1-a-bhatia1@ti.com>
-References: <20240715200953.1213284-1-a-bhatia1@ti.com>
+	s=arc-20240116; t=1721074248; c=relaxed/simple;
+	bh=J2tGqQwGsrUqg37HTVQt+Pq4ADkfEKo5+MKC+tWIGTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hDO75knNH4WIoQy+9CQJMW2SUhu1FiVNTA/ygUN9T02iESU6kj0EBlj/TsivFn4lwHvtChW4PQnAbewmz1jgkweQOAFSIGuFoaNGRPQFRkIZZuTMq07BkSgPLcQFW73qxFhfRx08xCABbwOdP7IVHGK8SVV7DvR39KWaqFQXqOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E67A2FEC;
+	Mon, 15 Jul 2024 13:11:10 -0700 (PDT)
+Received: from [10.57.10.251] (unknown [10.57.10.251])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 764173F73F;
+	Mon, 15 Jul 2024 13:10:43 -0700 (PDT)
+Message-ID: <8aca17e0-23fe-4b5c-9209-ff8ef1463314@arm.com>
+Date: Mon, 15 Jul 2024 21:10:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf docs: Mark the Android document as obsolete
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240715143342.52236-1-leo.yan@arm.com>
+ <CAP-5=fVd9pO7kKvZX7PZ6sJ+GHOV7aF=Ry98a=vknimuSTp9Lg@mail.gmail.com>
+ <1487da55-24dc-40ef-a6e8-4bf4b153fdc3@arm.com>
+ <CAP-5=fUGJmOr9XcsVWWCREjr1A7rUFaMk0VPkQAKDAEjTLKJVQ@mail.gmail.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <CAP-5=fUGJmOr9XcsVWWCREjr1A7rUFaMk0VPkQAKDAEjTLKJVQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The OLDI (transmitters) TXes do not have registers of their own, and are
-dependent on the source video-ports from the DSS to provide
-configuration data. This hardware doesn't directly sit on the internal
-bus of the SoC, but does so via the DSS. Hence, the OLDI TXes are
-supposed to be child nodes under the DSS, and not independent devices.
+On 7/15/2024 8:44 PM, Ian Rogers wrote:
 
-Two of the OLDI TXes can function in tandem to output dual-link OLDI
-output, or cloned single-link outputs. In these cases, one OLDI will be
-the primary OLDI, and the other one, a companion.
+[...]
 
-The OLDI functionality is further supported by a system-control module,
-which contains a few registers to control OLDI IO power and
-characteristics.
+> So we're cross-compiling in bazel, so it is a different set up than
+> the makefiles - I'm happy to work to share the bazel set up if other
+> people care. I'm having a play to see if I can get the Makefile
+> working, my first attempts are clearly mixing x86 code into the
+> supposedly arm64 build, which would appear to be more of a build
+> system rather than code problem.
 
-Add devicetree binding schema for AM625 OLDI TXes.
+Thanks!
 
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
----
- .../bindings/display/ti/ti,am625-oldi.yaml    | 153 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 154 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+I don't have knowledge for Bazel build system, but it surprised me a bit that
+the build system doesn't use the makefiles in Perf.
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
-new file mode 100644
-index 000000000000..0a96e600bc0b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/ti/ti,am625-oldi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments AM625 OLDI Transmitter
-+
-+maintainers:
-+  - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-+  - Aradhya Bhatia <a-bhatia1@ti.com>
-+
-+description: |
-+  The AM625 TI Keystone OpenLDI transmitter (OLDI TX) supports serialized RGB
-+  pixel data transmission between host and flat panel display over LVDS (Low
-+  Voltage Differential Sampling) interface. The OLDI TX consists of 7-to-1 data
-+  serializers, and 4-data and 1-clock LVDS outputs. It supports the LVDS output
-+  formats "jeida-18", "jeida-24" and "vesa-18", and can accept 24-bit RGB or
-+  padded and un-padded 18-bit RGB bus formats as input.
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: serial clock input for the OLDI transmitters
-+
-+  clock-names:
-+    const: s_clk
-+
-+  ti,companion-oldi:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle to companion OLDI transmitter. This property is mandatory for the
-+      primarty OLDI TX if the OLDI TXes are expected to work either in dual-lvds
-+      mode or in clone mode. This property should point to the secondary OLDI
-+      TX.
-+
-+  ti,secondary-oldi:
-+    type: boolean
-+    description: Boolean property to mark an OLDI TX as secondary node.
-+
-+  ti,oldi-io-ctrl:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle to syscon device node mapping OLDI IO_CTRL registers found in the
-+      control MMR region. This property is needed for OLDI interface to work.
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Parallel RGB input port
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: LVDS output port
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+allOf:
-+  - if:
-+      properties:
-+        ti,secondary-oldi: true
-+    then:
-+      properties:
-+        ti,companion-oldi: false
-+        ti,oldi-io-ctrl: false
-+        clocks: false
-+        clock-names: false
-+
-+    else:
-+      required:
-+        - ti,oldi-io-ctrl
-+        - clocks
-+        - clock-names
-+
-+required:
-+  - reg
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+
-+    oldi_txes {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        oldi: oldi@0 {
-+            reg = <0>;
-+            clocks = <&k3_clks 186 0>;
-+            clock-names = "s_clk";
-+            ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                port@0 {
-+                    reg = <0>;
-+                    oldi_in: endpoint {
-+                        remote-endpoint = <&dpi0_out>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+  - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+
-+    oldi_txes {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        oldi0: oldi@0 {
-+            reg = <0>;
-+            clocks = <&k3_clks 186 0>;
-+            clock-names = "s_clk";
-+            ti,companion-oldi = <&oldi1>;
-+            ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                port@0 {
-+                    reg = <0>;
-+                    oldi0_in: endpoint {
-+                        remote-endpoint = <&dpi0_out0>;
-+                    };
-+                };
-+            };
-+        };
-+        oldi1: oldi@1 {
-+            reg = <1>;
-+            ti,secondary-oldi;
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                port@0 {
-+                    reg = <0>;
-+                    oldi1_in: endpoint {
-+                        remote-endpoint = <&dpi0_out1>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fb1df8c29f5a..26b1dd3367c5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7642,6 +7642,7 @@ M:	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
- L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
-+F:	Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
- F:	Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
- F:	Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
- F:	Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
--- 
-2.34.1
+I think it is the right way to fix makefiles in Perf for cross building with
+LLVM/Clang. I would like hold on the Android document updating - once the
+building is fixed, we will have better knowledge for building perf on Android.
 
+Thanks,
+Leo
