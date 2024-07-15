@@ -1,108 +1,75 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88215187868;
-	Mon, 15 Jul 2024 11:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C99446DB;
+	Mon, 15 Jul 2024 11:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721044526; cv=none; b=ZOQnFXNXovL3Y3ZARduuLWYlJ0gSy2Nd7S7yVOiyCSKQRfDsyH35RJBA/Aw1pqH21nLrXDhudOb/WzZgbe/Hu5IiQmJYRBWUyJcVGVqIZ/s4m2lEKwSkkVl2ZGgDQf5eSvp0VIVy+v8L2sMQW5bNqVrJ6pIFQulTmUhJzKsh1KQ=
+	t=1721044801; cv=none; b=XukYFi0vZePAPHOWP2u2LltuYJJ9l+w9VPDmekzuc8chnWDsQkZQlCn6nYAdU+Bk8gv+NfJLGcG4XSnLnV0f3Xv22/GWPPr96+P+t8rgyiJhpOJANfoHGQm85b4fDjON2oj4b+EyOEpjPLfF14YB0K/XP1IuYQ+NxM6YkUIIoao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721044526; c=relaxed/simple;
-	bh=RrHXwtJA8vk2WaO7Dao7PE8d5VKXw+HfVBwPX30khoo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=om7hWgfLq+6Cezci+dT0x6vtukEsDzw0Eyhsls1mg8QKHyKgDgUCcIL8ChIlBvux/0MwrDycegdYXgHUOlRKHUQUr8r3VYb5eYGarTNQqk5KotZ8x10mBJniCxbAKDYDQjRWdijM7VGhAWSGJ21j58P33c34KOPLFBAUIwKfuQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=LcPj6Qny; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1721044801; c=relaxed/simple;
+	bh=DpjUBrT659OvV7F4JubP2IsJgz38DBW2Ty8RgX0FSA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GTEfxJ5FNWqSYAARAw5P3KxrGmJNU4LHJC0xLTMd9U+7dqs1NKRKtU3eqoT8g9OcfRIbzwjJEesAi8yvr6bRVmqNJuENQrAPSm7uLrTTmtixRznWHCd3tmxfiALMQDgfAc6saVZibi+sWVqzFgjIG5Lcofu3u70HF1q056v7wn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B5MvMV75; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="LcPj6Qny"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1721044521; x=1721649321; i=markus.elfring@web.de;
-	bh=YrYnfXpy81C1jpVdx1iEDBRM93/KVFVJhrGxbIs42Zo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=LcPj6QnypY+VsekT+acYASqFKNLqImYS7DRHjBQp+n1/SfglgVldlH4/HOiOBTpA
-	 3qhRXeYA24kKuTfQXo8g55Mred03SGg0lOdu4JyF9I/S9CO8aBkqTO+xUR7jSHMhh
-	 f+A6WcUxbAhQdyKJnQcDYDS/NqxxgOTJuAie541juAvksSXQxVBaG6F+/TQ3I6OHP
-	 reK/ugu3iOABJIGyp/ANx4XoNEzXGoD3TlFH7G+PL/XmTquaXv2KIZbiNgvSNeVF3
-	 jxJ2MfJtFc/cxtp0Q/WNbQqve4l6x5T/NujHIPrvHna37dXwtcJfztbedqOGS9xf5
-	 /V9lcAAUsA7LCHUNLA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MzTLO-1s7Y7N2tOq-00r5Y2; Mon, 15
- Jul 2024 13:48:25 +0200
-Message-ID: <cb21950b-286b-4630-9052-cff9e7e56337@web.de>
-Date: Mon, 15 Jul 2024 13:48:22 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B5MvMV75"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FzVAGPWzIcjmOl5/kaUv3UbG8zfj+jsoUZvJXnkQAls=; b=B5MvMV75Ikl3htMoYx2wveDRi3
+	07ApNyCcJygDHt47avviNr53SEqHxL37PVn9K/N4bG7MYknwNgBNnTZyL0JaYoD6/sGozbtoQtIpB
+	9H0vrtFSlfRoOqMi3oz1uav9R5W3k7PGKP7rKhktr4756etLFG5J/N0vAD2ckY9wo0Sp2dSLXpJwP
+	CwBQqKnmZWswMg0MPQ0AFkWG125as0nGZbR8ABDlPUBeqvsCCWig68IZjyFQurIcdo4+bz8nKlzfx
+	87iE6BF4zMtk4UjULPH4qweJ7yRhowkFr08OoivqOVtGbwyJ8gUMtr/DZOfQ0mv78U6jD37M4uO0W
+	UgASZ2Hg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sTKN0-0000000FlDY-2MWh;
+	Mon, 15 Jul 2024 11:59:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 36BCB3003FF; Mon, 15 Jul 2024 13:59:54 +0200 (CEST)
+Date: Mon, 15 Jul 2024 13:59:54 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
+	clm@meta.com, paulmck@kernel.org, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
+ to SRCU
+Message-ID: <20240715115954.GH14400@noisy.programming.kicks-ass.net>
+References: <20240711110235.098009979@infradead.org>
+ <20240711110401.311168524@infradead.org>
+ <CAEf4BzZW56pgTqy4POud8P3t5gtdg53BX83VbieixtS1T-mg2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- kernel-janitors@vger.kernel.org,
- Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
- Daniel Vetter <daniel@ffwll.ch>, Danilo Krummrich <dakr@redhat.com>,
- David Airlie <airlied@gmail.com>, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] drm/nouveau/debugfs: Simplify character output in
- nouveau_debugfs_vbios_image()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:71gomZOBeHsXTuuGCpKsfKlHuOH458fHULk6qYyu8eYyRHEy6wg
- vxu79FguCXSArnOkasdaTOv+hNaMNrALYc4QlU5uT+/sl7qPLC4gHFGZkGt7LB9/4vc1+EQ
- OGojZV0bf1SSPdsA+bzDjf0TCKn7tY9FpoBuDypjHKZpzOwR6qWxHEdWZrisg06jk0Ywm4F
- kGsFCja0s75FSjAvjjJxQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4xIQXqzDzD4=;5jWXeTpY5ew0dytSbThixv/me/J
- yKB+df1EI/IVm6ITgJBgqofOAF2ZlkEMWQTZqxmIl7V6svWyXRi6fdrjjy952RV+31k8bRa0V
- w7byy1grRF+e1SUhjVZnRgoVkqt0kYuvq1ILbVs0LsG2emGq79Oy6ESKBtkyO3w3NY1UdSygD
- rqjeH1U2yHKkJ1+FsYtDbbL7Xujbf+NvwXuz0RYDZm57NZNKXu4SPMdQr0GomziCQ8XltMrwy
- S7UjShyqBK1ZcoDzWv898eG/CsgXmX6CkV3xXfyVV256yJqaCVYeb87w3b+MfNUaYal+ZbvtE
- cgyizjuie8Fs0faiZWrXrk0gMN+pCji3lTk7EhS+l3pagZmPHLHnAQhDpuCXbwgTF8vpMUVJx
- /MLaBJkKLLx5MqQjVx/oTJO3iSySZxAHzTKGrWcnOkgBHsZNcp4oKf1rC1NWzrbyQkGVKYPCw
- 2PVjvSoFLehPmWadsI0K3d3oMLLuV9UTLrlugN3jtN7mWSglpUv2t1aqaSKgqfKiqM1HUQF2M
- RG1VfWYpLrongS4tIJ5KoCblm2QL0Uw2N43uxCap8DUjo92DisP60xSU/vcU+QaRNGcvUkI4a
- pmShL/0DUn5IVE54o+3MkwhfA28sEbv/Db53O2MeMLOElx6zf0YLAy6vtuWrZvyccZFcu/hfZ
- GM4V0Vf2xdao2+0LvUbHNYcvaQhqIG1tWaJnIjS0Z+Qz+A9y/y3b7z8xXccniaUVRaV9j0xdT
- K2qFK2ic9xovAQimaGwLzSpTyd8KxtOYbdVtVRgOYWJpgQpnOQ41E2A/k0sgYxjFJmABVRc1d
- flSb5ReT85kPVBePb/QZOxjQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZW56pgTqy4POud8P3t5gtdg53BX83VbieixtS1T-mg2w@mail.gmail.com>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 15 Jul 2024 13:36:54 +0200
+On Fri, Jul 12, 2024 at 02:28:13PM -0700, Andrii Nakryiko wrote:
 
-Single characters should be put into a sequence.
-Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D for one sel=
-ected call.
+> > @@ -1814,7 +1822,7 @@ static int dup_utask(struct task_struct
+> >                         return -ENOMEM;
+> >
+> >                 *n = *o;
+> > -               get_uprobe(n->uprobe);
+> > +               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
+> 
+> do we need to add this __srcu_clone_read_lock hack just to avoid
+> taking a refcount in dup_utask (i.e., on process fork)? This is not
+> that frequent and performance-sensitive case, so it seems like it
+> should be fine to take refcount and avoid doing srcu_read_unlock() in
+> a new process. Just like the case with long-running uretprobes where
+> you convert SRCU lock into refcount.
 
-This issue was transformed by using the Coccinelle software.
-
-Suggested-by: Christophe Jaillet <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/gpu/drm/nouveau/nouveau_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/n=
-ouveau/nouveau_debugfs.c
-index e83db051e851..931b62097366 100644
-=2D-- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-@@ -42,7 +42,7 @@ nouveau_debugfs_vbios_image(struct seq_file *m, void *da=
-ta)
- 	int i;
-
- 	for (i =3D 0; i < drm->vbios.length; i++)
--		seq_printf(m, "%c", drm->vbios.data[i]);
-+		seq_putc(m, drm->vbios.data[i]);
- 	return 0;
- }
-
-=2D-
-2.45.2
-
+Yes, I suppose that is now possible too. But it makes the patches harder
+to split. Let me ponder that after I get it to pass your stress thing.
