@@ -1,135 +1,89 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC82185084
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0885B13B5B2;
+	Mon, 15 Jul 2024 08:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032196; cv=none; b=rOPxjl4OmPMUT+VGsduV0Ykd/Pf7myDvoQiEKJZtomh2NXd/qdpCKQyeBzTaMFNoenCstslL4gN1XX1yv3Q/JzuQ9swl+ClZ3QoxemfWaQcxV2YA9SyKrr9XZP+ee4Y3/yIHRz0FyJfP39yM4Q8TfYMq4bZ70kr8+hHPZTwUXXc=
+	t=1721032222; cv=none; b=e778FgmTBbTgECtImZHaNShGFwov46yDT3I9v75fMxn/Ge0iycTEaYT7ZC1lltK8l8Kw3dpl6rPtiXJy6yFctmvoXFs7WQlocbJMtUYgSfVJdY+KSxvXzpKele1eJp6CVIAbHbycv1JwzmOJtIz8KCH9ERbQ/1WnrBrKI5cYBU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032196; c=relaxed/simple;
-	bh=NOnnq+61CxDOWMILVOgzIwIKxbt7n9msZtGOaXKmv1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HX9Mj90xcztVFbsIq2urekGdsHggwn44FPAJGFx01VFl5vIlSumvRWVg7IE4Xh4MiEU+nHRCCx7eNXIwohYWzYYLBVII/r13QvRHqeYPXs2Jx61g1H1xFSEAjxqxbuSUejyt018DxmD8Qn7poEJKdfSiRTlyTTob9CIPw4WReKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kOsYXowy; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kOsYXowy"
-X-Envelope-To: jarkko@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721032192;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gI+AO5s/O2pz6h4ONw/V+YoYvCERCtp3v+pVErREphU=;
-	b=kOsYXowyPGspLPXF9SVdQZ0V5kNNsx8jS+NossoDwzgm+9GnG5rp4hnx2YF7ZJMUQsOgNC
-	DFYpI9vsuUaijnzyHEPdtU5ajiFxYXmUTNfAX1ISYjfx7HDHPU+Qx18emGGLzLaOA5pOTV
-	3t18lqbK7SQndlhCGfvzKdPz0DqNkIc=
-X-Envelope-To: peterhuewe@gmx.de
-X-Envelope-To: jgg@ziepe.ca
-X-Envelope-To: linux-integrity@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: gehao@kylinos.cn
-Message-ID: <b69b55e8-eba8-3f3f-e65f-cc5e6cf3eb84@linux.dev>
-Date: Mon, 15 Jul 2024 16:29:42 +0800
+	s=arc-20240116; t=1721032222; c=relaxed/simple;
+	bh=yZaQq/D2bCJ+DM8zZU8yJy2tUjQK1Aq3UcLelhcb/Wc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pJNb81dtY4TICKrpELAhR6G981Deq0ZnacBlNzLqKjZ9ttw+aZKA4Z6ct0nuUdw1LpHL6/6VPjyuoBpPHdOgU4Zv5tFrytfMSVjrrGyM2VUUgdgpzVRnKJ0I9Sh+QW0EQYDHV/fiP+r95zsUcZw5T6M8lU6r6D/K2IL31xhA268=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowACXneX83ZRmr3ZpAw--.39156S2;
+	Mon, 15 Jul 2024 16:29:48 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] perf/x86/amd/uncore: Remove unnecessary semicolon
+Date: Mon, 15 Jul 2024 16:28:38 +0800
+Message-Id: <20240715082838.115254-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] tpm: Move dereference after NULL check in
- tpm_buf_check_hmac_response
-To: Jarkko Sakkinen <jarkko@kernel.org>, peterhuewe@gmx.de, jgg@ziepe.ca
-Cc: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hao Ge <gehao@kylinos.cn>
-References: <20240709023337.102509-1-hao.ge@linux.dev>
- <D2PDLHX51C3K.16A4U6XFXRE29@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Hao Ge <hao.ge@linux.dev>
-In-Reply-To: <D2PDLHX51C3K.16A4U6XFXRE29@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACXneX83ZRmr3ZpAw--.39156S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYD7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z2
+	80aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
+	zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr1j6F4UJw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+	YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrw
+	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+	14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
+	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUDR6wUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Hi Jarkko
+Remove unnecessary semicolon.
+This is detected by coccinelle.
 
-On 7/14/24 23:43, Jarkko Sakkinen wrote:
-> On Tue Jul 9, 2024 at 5:33 AM EEST, Hao Ge wrote:
->> From: Hao Ge <gehao@kylinos.cn>
->>
->> We shouldn't dereference "auth" until after we have checked that it is
->> non-NULL.
-> Sorry for some latency in responses. I'm on holiday up until week 31 and
-> only look at emerging issues but not every day.
-Understand,I hope you enjoy your holiday.
-> I do agree with the code change but the description contains no information
-> of the bug and how the fix resolves it. Could you please rewrite the
-> description?
->
-> I can only think this realizing with tpm_ibmvtpm and TCG_TPM2_HMAC
-> enabled because it was according to recent learnings a platform which
-> does not end up calling tpm2_sessions_init().
->
-> Since you bug report contains no bug report, I need to ask that did you
-> realize a regression in some platform? Fix will get eventually accepted
-> even if the bug was found by "looking at code" but the gist here is that
-> your bug description contains no description how you found the bug,
-> which it should.
-Actually It's reported by smatch and Dan Carpenter also noticed this 
-warning.
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ arch/x86/events/amd/uncore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is the email he sent
-
-https://lore.kernel.org/all/3b1755a9-b12f-42fc-b26d-de2fe4e13ec2@stanley.mountain/ 
-
-> When TCG_TPM2_HMAC is disable it should be safe because we have:
->
-> static inline int tpm_buf_check_hmac_response(struct tpm_chip *chip,
-> 					      struct tpm_buf *buf,
-> 					      int rc)
-> {
-> 	return rc;
-> }
->
-> I also noticed that your fixes tag is incorrect as that null dereference
-> pre-existed on tpm_ibmvtpm before my fixes. It is not a new regression
-> introduced by my patches. So use git blame and check which commit
-> introduced that one.
-I'm a bit confused about fixes tag. Sometimes tool often fail to truly 
-understand the context.
-
-Form the logical perspective of the code,null deference indeed existed 
-before your fixes.
-
-But for smatch, It simply conducted a static code analysis and flagged a 
-line with a warnning.
-
-Its warning seems to be related to Commit 7ca110f2679b("tpm: Address 
-!chip->auth in tpm_buf_append_hmac_session*()")
-
-That's why I used the 'fixes' tag for Commit 7ca110f2679b.(Please 
-forgive me for not being clear earlier. I discovered it through smatch.)
-
-So, should I use the fix tag for Commit 7ca110f2679b ('tpm: Address 
-!chip->auth in tpm_buf_append_hmac_session*()') or for Commit 
-1085b8276bb4 ('tpm: Add the rest of the session HMAC API')?
-
-Even though I have already send V2 which fixes tag using Commit 
-1085b8276bb4 ('tpm: Add the rest of the session HMAC API'),
-
-I still want to gain knowledge in this area so that I can more 
-accurately use fxies tag and send patches in the future.
->
-> Address these issues and send v2. Thank you!
->
-> BR, Jarkko
-
-Thanks
-
-BR
-
-Hao
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 0bfde2ea5cb8..f34ee4b2ebf9 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -1045,7 +1045,7 @@ static int __init amd_uncore_init(void)
+ 			ret = -ENOMEM;
+ 			goto fail;
+ 		}
+-	};
++	}
+ 
+ 	/*
+ 	 * Install callbacks. Core will call them for each online cpu.
+-- 
+2.25.1
 
