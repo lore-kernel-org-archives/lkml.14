@@ -1,93 +1,154 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0735C1741CF
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7571741CF;
+	Mon, 15 Jul 2024 13:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721051864; cv=none; b=JQY1R63uvi8rzgaWUtSFWjnkaX1HmMYT/cW3RTvhFBV6if0JBIpvojJ9CNaK5uauslhKdNE2tTjXJeW3/WRwki/A4r3nFXiW29BuIglRmh/SaJBbXsC6mQ8R++xxgDq292sK8++Dmqb0rxEoZORBRTgf+S1wwpe8GA/JXy7mvUk=
+	t=1721051995; cv=none; b=kKNOjcRuXUqIi6omSsDK7zSJK8jqs3ewu3TVrP3zn3wwbS9ctzT08JndZGrFFQhazUS+8lH4vjpNBp2jfi71AKkVN+TJHfytPgYWQJAGVts4dLxbKGK0OmuYBtG6nHsll/lj+9SgIZZOM4eTxtJa7FG7r9O6wAzKbAv7lDKIF9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721051864; c=relaxed/simple;
-	bh=LeSbYsChuw2CItwmR6vaX8jj0UmWfZW+UKjzYxTCTew=;
+	s=arc-20240116; t=1721051995; c=relaxed/simple;
+	bh=lnUbh0906J979Z5Q7efi25eR78VP0Dl8hKI4KVfbbUs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rzlC1Y0ET/+QM7HIsjBAjyLHzcNW78Uudj8BGSw3o7QIlFOFFjTWnhB216sU08s/Aov9/GH4X460ZMgEkwiLrktNHCf6mv6apmaGdSu326xrQKRnBbAgTw630qH7VW7XMMkZkc8k683c7kAdVoHPjfsknjAlS5VC7VK/VLb0yDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BnhQUJyj; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=ssQ7F9xCDW+ZN/iASR9PFI/li+UgmDVcfEupLYp672YNFzPvlN4+Ou8CTdSaJkU01OR8YZ5rJV+KxKCDVWuDWVnmbtQkBeb6Qmls0xUOW9BzB4L1udzqxCZh1BXkqDyoSBJBxpUi3xmSVysPOP2SrpvC21DJlHRKbEUdlLKTVHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCumHgbk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnhQUJyj"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-447f8aa87bfso588721cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:57:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721051862; x=1721656662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S1IdPkkbzvH/BAaWYOMPmxaCglX4fyw6oCXKUAhpCY8=;
-        b=BnhQUJyjHg/mYl489BH9KNKNsbXAda1BG8p6E6XfM96Janb1aMHbKwgSMvR621fev1
-         NC2FN7NszGV2gzjGZndq5lId/77iVUBeucwb2srWMFml8biV6KpHFDfp1v933eM9JKQb
-         Z2I5Ile0iWnq2whEBrFrLbaDFwH5QPKTKYvU1L0mW8EJjMB0UxskFupnlezXi+22+K6G
-         Ho0SvL/j0XqnPVLgYp3JXq9aL3bD7JLB2/IGDZCKDw6/n9MwtJt5qf1+qHQXKJwEzetG
-         V0Akp5icvAnqFf4DYqlCImzTSFnbsqWfTIJccpblK1Tr038+q+roX1kB1XAd6g3MnutX
-         pTZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721051862; x=1721656662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S1IdPkkbzvH/BAaWYOMPmxaCglX4fyw6oCXKUAhpCY8=;
-        b=d//2+VQBGSHLgMVDSKa7z2sjUDLb5LmOnDXIrCD/Krp8y1TDn+R5mVjxghCSmKAuyI
-         V8NJqBwNbz+9Z5Ohh7qna5ruKInAcF4aPRrCKcBeGjOeC49zBBcwGHf8H0FpL4cDru77
-         AKjmBoXi1qVGd7QEOHbaA11QMbG+9VtAnsa4LQ01H9tJw4YdzRoTZJC2nxlo6XTkWTwt
-         o2zajLgK2/LrYFfWCW76tZKVb2LA3xzXvqu1BPIvu/w0suNHtDrC0do55KQlN53n5u6Q
-         YscB1q9zSGzbr4b2nSE7n4waVpkQRozdhpAF9On6Sl8EkY6eytZF55ieDVKrpXwTUwn9
-         fYyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWBrq1Frn0LK+0foVYayDanGfOj7IkSQ7doLnuDD1iR0iVAZzMfQOg6B1cIaBQYfjhwfehFUjlfBVgkT/aB+ufqHs6kxWLR7ofT8hv5
-X-Gm-Message-State: AOJu0YyTiqwhwQBuSHwFbEti0/Pp/q4qgxgxDSEZO51nFeijHfZ02JNx
-	KGBZqeMkPhMqnsfY2cTRmZ6IPBtv3PDU1sf0edeyVFfa2k0KMHcxZh5oXxaceYJQzLHeYmrJYGv
-	C34fn1fuevjL3h9Nnt63ZOZJP06H1LAeLsJs3
-X-Google-Smtp-Source: AGHT+IGLMm++Rq6uGcsEbcNXyU9MTIXd9G9Ph8BD4BbCN85VisAAtiYu9NsxCDZ5vogpBxxIaa7coN2dNIuSqgYEpqU=
-X-Received: by 2002:a05:622a:298e:b0:444:fd8a:f1a0 with SMTP id
- d75a77b69052e-44f5acc840amr5520031cf.25.1721051861734; Mon, 15 Jul 2024
- 06:57:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCumHgbk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5966C4AF0D;
+	Mon, 15 Jul 2024 13:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721051994;
+	bh=lnUbh0906J979Z5Q7efi25eR78VP0Dl8hKI4KVfbbUs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cCumHgbkoC5amDcVIZcR/XyQHgWNlhYdkjDZwyPr2R8wA4+tw8yzSMtuNHXzr6qhk
+	 iDW36FEyHKWRZ0tlx+AX+7s8lq6QgU9dxCc7feu29o9r8VU0FYFzxTboX7K1geMkWY
+	 7nfbYdtLIwi5P1Ue2cV1yFgWKYmKrlrC8aAy0vW2DSNOdRlQsTzjx0nu4zib70Qazg
+	 BVZC7y9mVVA7YXtwUmsZA8epkGJwqr93qBMO3GZUHaaNDCG0bFd28N9gTVfx9i51eD
+	 UfuaaXMCS98MjUC11J+CNjnbIni1ohVT10Nyq3/PvnzdDjhWpkIlKWBQWxY0Tt/JMu
+	 AaC/iqNA8ZF+A==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52eafa1717bso4557670e87.2;
+        Mon, 15 Jul 2024 06:59:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7lL0lCBLQikNFwXK8GjkMaZ/uZWKG5bHXErTvW1PZR9yrb+qwPmDcOiF1KYS/iybkea7YLrBN0QroOtg1b2xTiOlo5I/yxJXNBJwDGxjKyl+nnpZ4JNEVzep+0CcSZGPx3e3mDT+n10sU
+X-Gm-Message-State: AOJu0YyKS9Lu0bitzKt7n8hNJAoOgXRK7bXysgF2/cYh+c2KdCUEonSQ
+	ewGhUi869abVfn93nITqgyLdhnUag+OosPrq2BRbkyzeIhNZUJ2dOPDeV/dJMiGXnHUtX92HdEv
+	gg+8m9jLQhwG5bYHjvgIzd93GTb0=
+X-Google-Smtp-Source: AGHT+IGaFyh90uplXRgB/hY8U3HSUQG4Qe5ZCmxPfDj6eYceYcjixf7NM9x/SbwzSyC5SHMKUBqVPkfdOhTAd6GCCP0=
+X-Received: by 2002:a05:6512:3d01:b0:52b:88c3:b2bc with SMTP id
+ 2adb3069b0e04-52eb99d151bmr14820662e87.48.1721051993556; Mon, 15 Jul 2024
+ 06:59:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715031845.6687-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-In-Reply-To: <20240715031845.6687-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-From: Doug Anderson <dianders@google.com>
-Date: Mon, 15 Jul 2024 06:57:30 -0700
-Message-ID: <CAD=FV=XzWvvwsRrXDCdx_fLZkTLc=CCREDYt1gSmrOtN-EBBUQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/1] Fix the way to get porch parameters
-To: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Cc: neil.armstrong@linaro.org, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, airlied@gmail.com, 
-	mripard@kernel.org, hsinyi@google.com, awarnecke002@hotmail.com, 
-	quic_jesszhan@quicinc.com, dmitry.baryshkov@linaro.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240714105848.1844400-1-masahiroy@kernel.org>
+ <87d70313-9c8c-4cdf-a040-7ea31804cad7@arm.com> <ZpUnnYTRX-OkEPHh@J2N7QTR9R3>
+In-Reply-To: <ZpUnnYTRX-OkEPHh@J2N7QTR9R3>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 15 Jul 2024 22:59:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQyAYahxRakc6tivsxqVOVhXkyCweM8VDKZhP7vWPJpJw@mail.gmail.com>
+Message-ID: <CAK7LNAQyAYahxRakc6tivsxqVOVhXkyCweM8VDKZhP7vWPJpJw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: remove redundant 'if HAVE_ARCH_KASAN' in Kconfig
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, linux-kbuild@vger.kernel.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Sun, Jul 14, 2024 at 8:18=E2=80=AFPM Zhaoxiong Lv
-<lvzhaoxiong@huaqin.corp-partner.google.com> wrote:
+On Mon, Jul 15, 2024 at 10:44=E2=80=AFPM Mark Rutland <mark.rutland@arm.com=
+> wrote:
 >
-> The current driver can only obtain the porch parameters
-> of boe-th101mb31ig002. Modify it to obtain the porch
-> parameters of the panel currently being used.
+> On Mon, Jul 15, 2024 at 08:11:08AM +0530, Anshuman Khandual wrote:
+> > On 7/14/24 16:28, Masahiro Yamada wrote:
+> > > The condition 'select HAVE_ARCH_KASAN' is always true because
+> > > there is 'select HAVE_ARCH_KASAN' statement above.
+> > >
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > ---
+> > >
+> > >  arch/arm64/Kconfig | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > index c87d16b12e9b..d37cbfc3031e 100644
+> > > --- a/arch/arm64/Kconfig
+> > > +++ b/arch/arm64/Kconfig
+> > > @@ -167,9 +167,9 @@ config ARM64
+> > >     select HAVE_ARCH_JUMP_LABEL
+> > >     select HAVE_ARCH_JUMP_LABEL_RELATIVE
+> > >     select HAVE_ARCH_KASAN
+> > > -   select HAVE_ARCH_KASAN_VMALLOC if HAVE_ARCH_KASAN
+> > > -   select HAVE_ARCH_KASAN_SW_TAGS if HAVE_ARCH_KASAN
+> > > -   select HAVE_ARCH_KASAN_HW_TAGS if (HAVE_ARCH_KASAN && ARM64_MTE)
+> > > +   select HAVE_ARCH_KASAN_VMALLOC
+> > > +   select HAVE_ARCH_KASAN_SW_TAGS
+> > > +   select HAVE_ARCH_KASAN_HW_TAGS if ARM64_MTE
+> > >     # Some instrumentation may be unsound, hence EXPERT
+> > >     select HAVE_ARCH_KCSAN if EXPERT
+> > >     select HAVE_ARCH_KFENCE
+> >
+> > There is another similar instance with HAVE_FUNCTION_GRAPH_TRACER as we=
+ll.
+> > Just wondering if the following change should be folded in here ?
+> >
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -210,8 +210,8 @@ config ARM64
+> >         select HAVE_FTRACE_MCOUNT_RECORD
+> >         select HAVE_FUNCTION_TRACER
+> >         select HAVE_FUNCTION_ERROR_INJECTION
+> > -       select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+> >         select HAVE_FUNCTION_GRAPH_TRACER
+> > +       select HAVE_FUNCTION_GRAPH_RETVAL
+> >         select HAVE_GCC_PLUGINS
+> >         select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && \
+> >                 HW_PERF_EVENTS && HAVE_PERF_EVENTS_NMI
 >
-> Zhaoxiong Lv (1):
->   drm/panel: boe-th101mb31ig002 : Fix the way to get porch parameters
+> That looks like a sensible cleanup, but I think it'd be better as a
+> separate patch.
 >
->  drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+> It looks like that has always been redundant since it was introduced in
+> commit
+>
+>   3646970322464c21 ("arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL")
+>
+> ... would you mind spinning a patch?
+>
+> Mark.
 
-For future reference, if you're only posting one patch, there's no
-need to send a cover letter (AKA patch #0).
 
--Doug
+Agree.
+
+We can have a separate patch.
+
+
+I can see more redundant 'if' and 'depends on'.
+
+
+For example, KERNEL_MODE_NEON is always 'y'.
+
+config KERNEL_MODE_NEON
+     def_bool y
+
+
+
+So, I can see redundancy in
+
+
+     select ARCH_HAS_KERNEL_FPU_SUPPORT if KERNEL_MODE_NEON
+
+and
+
+     config EFI
+          bool "UEFI runtime support"
+          depends on OF && !CPU_BIG_ENDIAN
+          depends on KERNEL_MODE_NEON
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
