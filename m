@@ -1,79 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C55531758
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 20:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B5982486
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 20:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721075619; cv=none; b=dbTwZR8KC46BwlzT+92cpYJEVrRXb2gniBsVZitpvVX8H5ZOC8FtNZyB/OEs14slv22k/+XR5oDRYbv9R6qXFbOd0LPPGo5E/QUtrfx1BK30+yWRGMw4tfzn+5UjliYDVak718JfhHYa0h+MPRajNP/on4P1MQItTsA/sPhRhb0=
+	t=1721075628; cv=none; b=DTUIYCcrSMtzOgPtRSE7eGooKEIfenyoz1sQC/PRAcA/EoiqQEoLagbk00cL2ZfGvCHqHwPdwgg8l3OkJIPNj1lHL9ThaV+eptC7r/sg+RzsON7nIAiyHTqlg4gXax7GKUNWezaD+5Le9NF+U0Y9/kcTzi8UTOuFAPycn2pfWGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721075619; c=relaxed/simple;
-	bh=onQcMoz8GPXOo1jUzaLuZp8M4wP24ok7J1K5zp1cIP8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Bt3FzK3cEn/5roGg/fm6YO1A4lArApXKJqVEoq7bN58JZcHwn0PLzVb7jk1TJnUPyiu+QWqgKIizJV/KpQ3sDz2yBJIkwiwS9rieRdKfGGMsx989PwT7XoejQKLXRp7IGfK99EXAmLfVw5r+2ErXDZzNfsuz+xK5zr17IDrTSCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=0F5WUGP4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721075628; c=relaxed/simple;
+	bh=/P/116+9w2mLwcmHBm363843CFQCaXKMH8KT9sO7LCM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=giWs6tnVs4Wedefo+5ujLMWz1+vZANR2fjDuNZ/fTBGBAtLRRX6T+uzCFtN2dr0mQVpvq7QRliiaYeDVWC4rE2Zra8nX78T6rC2W3rZE27GD8QRVMwFCgLOi7nacWAeqk36EsJ16RxCm06UJbXI40VzAoswvggLVP4waIDLUqr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XqTeeruq; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="0F5WUGP4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBA1C32782;
-	Mon, 15 Jul 2024 20:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1721075618;
-	bh=onQcMoz8GPXOo1jUzaLuZp8M4wP24ok7J1K5zp1cIP8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=0F5WUGP4Ij7cGXKtN+/fBZEoJUt0Mjcnmfcj87/GICSMuLtKjHR5XMObazRy88V5K
-	 TxYl7eSqtIra9eoJsRs5NS3B2i5Enng44alrOkW3irSif7ZTx3V6kkgZSSzuKPjd7V
-	 Fs7wXboWdhOPLfTw8ZkCVFExfeZngHIhPYs40HIo=
-Date: Mon, 15 Jul 2024 13:33:38 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Miaohe Lin <linmiaohe@huawei.com>
-Cc: <nao.horiguchi@gmail.com>, <linux-mm@kvack.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/hwpoison: reset hwpoison filter parameters in
- pfn_inject_exit()
-Message-Id: <20240715133338.fb8b3b9a99f05b086fc54b82@linux-foundation.org>
-In-Reply-To: <20240715102806.2638849-1-linmiaohe@huawei.com>
-References: <20240715102806.2638849-1-linmiaohe@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XqTeeruq"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-70448cae1e0so2717794a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1721075626; x=1721680426; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vhoTCz3ni+xQlYfh7VRKBvmVoq1WWvZ0esQtm7KJcwE=;
+        b=XqTeeruq0NwBZEHbNW2sa6MHrkJaITLqBq4b/OfuQ1Iar2+P0RKKDsCooG4ZML2T/A
+         PtiQcWl579WHv31nPcM+lw+QW+/m9gxiz1IqpdCcuBqFzE9u4L52eOkITQSdBIGxMxFT
+         p5+5kVM42HWf1cb8SnUurgVmncFXWApZx/Uk8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721075626; x=1721680426;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vhoTCz3ni+xQlYfh7VRKBvmVoq1WWvZ0esQtm7KJcwE=;
+        b=moJOGDjFnPSFJZEHoo9bR0bhD2yqGLiA3k2Fb+Xp3ljfMItCfGzG2dbDABWF4tkfLK
+         9p6GNvDsIB3XEbtnnGhz0TvKgQuimjkNilLEmWlRAFB7fF9fABIWkobeycDNZk4mAtA7
+         60Cna7drYKuFwsTbKK0H7AEabF5g/oAYWWagBhnDnxvYKd3pdSf6vSvZboafAbHldjxS
+         Aqn1RXankJsnIQbIj4bOk4BfLEzCpfktOv467UH5pNUa3CFP1F4+R7nNIWcfnQJ6CTEN
+         om0dxzZFb12voj/qNS/zP7ObTgvI+AA4U3pkb9YR7iTKm+ln5cBTc7Kjvb81W0I0b0cQ
+         SIIg==
+X-Gm-Message-State: AOJu0Yw9RnAxWJK3tjM16rbIf4oJI5JDhT4ZagciZj9JsafAwtcITgQ/
+	rG8EVYUD0I9ZIhgfNcsBhlOb+BYbzTkHy5z+/kAjiIIosr9itp/UlY0lKTNwCw==
+X-Google-Smtp-Source: AGHT+IHcn5p8vEjNS+lWRQm20XAqutHOXOnvYwxx+SYs1VpO68BVua/mUl9IF1f4mgS/bxtzmg33QQ==
+X-Received: by 2002:a05:6830:3806:b0:703:6340:b5b2 with SMTP id 46e09a7af769-708d9948aedmr223075a34.14.1721075626272;
+        Mon, 15 Jul 2024 13:33:46 -0700 (PDT)
+Received: from localhost ([2620:15c:9d:2:9b77:1ea5:9de2:19a3])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-78e39fdcbc7sm3069914a12.92.2024.07.15.13.33.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jul 2024 13:33:45 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v4 0/3] tools build: Incorrect fixdep dependencies
+Date: Mon, 15 Jul 2024 13:32:41 -0700
+Message-ID: <20240715203325.3832977-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 15 Jul 2024 18:28:06 +0800 Miaohe Lin <linmiaohe@huawei.com> wrote:
+Hi all,
 
-> When hwpoison_inject module is removed, hwpoison_filter_* parameters
-> should be reset. Otherwise these parameters will have non-default values
-> at next insmod time.
-> 
-> ...
->
-> --- a/mm/hwpoison-inject.c
-> +++ b/mm/hwpoison-inject.c
-> @@ -64,9 +64,20 @@ static int hwpoison_unpoison(void *data, u64 val)
->  DEFINE_DEBUGFS_ATTRIBUTE(hwpoison_fops, NULL, hwpoison_inject, "%lli\n");
->  DEFINE_DEBUGFS_ATTRIBUTE(unpoison_fops, NULL, hwpoison_unpoison, "%lli\n");
->  
-> -static void __exit pfn_inject_exit(void)
-> +static inline void reset_hwpoison_filter(void)
->  {
->  	hwpoison_filter_enable = 0;
-> +	hwpoison_filter_dev_major = ~0U;
-> +	hwpoison_filter_dev_minor = ~0U;
-> +	hwpoison_filter_flags_mask = 0;
-> +	hwpoison_filter_flags_value = 0;
-> +#ifdef CONFIG_MEMCG
-> +	hwpoison_filter_memcg = 0;
-> +#endif
-> +}
-> +
-> +static void __exit pfn_inject_exit(void)
-> +{
->  	debugfs_remove_recursive(hwpoison_dir);
->  }
+The following series consists of a few bugfixes on the topic of "misuse
+of fixdep in the tools/ build tree." There is no listed maintainer for
+tools/build, but there are for tools/bpf and tools/objtool, which are
+the main pieces that affect most users, because they're built as part of
+the main kernel build. I've addressed this series to a selection of
+those maintainers, and those that have previously applied build changes
+in tools/. I hope one of you can apply this series, pending favorable
+review. Or feel free to point me to a different set of maintainers.
 
-The new reset_hwpoison_filter() has no callers?
+This patch series came out of poking around some build errors seen by me
+and my coworkers, and I found that there were rather similar reports a
+while back here:
+
+    Subject: possible dependency error?
+    https://lore.kernel.org/all/ZGVi9HbI43R5trN8@bhelgaas/
+
+I reported some findings to that thread; see also subsequent discussion:
+
+    https://lore.kernel.org/all/Zk-C5Eg84yt6_nml@google.com/
+
+One element of that discussion: these problems are already solved
+consistently in Kbuild. tools/build purposely borrows some from Kbuild,
+but also purposely does not actually use Kbuild. While it'd make my life
+easier if tools/ would just adopt Kbuild (at least for the tools which
+are built during kernel builds), I've chosen a path that I hope will
+yield less resistance -- simply hacking up the existing tools/ build
+without major changes to its design.
+
+NB: I've also CC'd Kbuild folks, since Masahiro has already been so
+helpful here, but note that this is not really a "kbuild" patch series.
+
+Regards,
+Brian
+
+Changes in v4:
+ - update tools/lib/bpf/.gitignore to exclude 'fixdep'
+ - update tools/lib/bpf `make clean` target for fixdep
+ - combine $(SHARED_OBJDIR) and $(STATIC_OBJDIR) rules
+
+Changes in v3:
+ - Drop unnecessary tools/build/Build
+
+Changes in v2:
+ - also fix libbpf shared library rules
+ - ensure OUTPUT is always set, and always an absolute path
+ - add backup $(Q) definition in tools/build/Makefile.include
+
+Brian Norris (3):
+  tools build: Correct libsubcmd fixdep dependencies
+  tools build: Avoid circular .fixdep-in.o.cmd issues
+  tools build: Correct bpf fixdep dependencies
+
+ tools/build/Build            |  3 ---
+ tools/build/Makefile         | 11 ++---------
+ tools/build/Makefile.include | 12 +++++++++++-
+ tools/lib/bpf/.gitignore     |  1 +
+ tools/lib/bpf/Makefile       | 13 ++++++++++---
+ tools/lib/subcmd/Makefile    |  2 +-
+ 6 files changed, 25 insertions(+), 17 deletions(-)
+ delete mode 100644 tools/build/Build
+
+-- 
+2.45.2.993.g49e7a77208-goog
 
