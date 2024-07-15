@@ -1,213 +1,194 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDB04EB37;
-	Mon, 15 Jul 2024 18:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0805025E;
+	Mon, 15 Jul 2024 18:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721069670; cv=none; b=SvFaOeDXEeQKZEMnhp780VjXfLiHqIQqfaxLkj1DjHWy3o5NU/nZpWAVJp2OxI6MLmCT9Lh6YpGewCVqtm9w7MG83nZ2eDeYn+9WvPhpJi+1nDnDfizPEDaaoVIrgO6SviDdcHkI+s9WTaKvi7B7PAjS8z/vRXSO95xEukjkzBo=
+	t=1721069748; cv=none; b=Y5WBwW3QRdtlUyPj1eLe5qw3hFDpDYSwJ8n4yJtU8fFZNqvU7U7z/dLl2QI30DkDgMOdXnQ6Bfo1u3D5+RkK5r81j4+k0WP2MLNKtdA/Hf+qfjYx7NGoUOdJNpoVCjCBB/qPxHzC+kqBjkgacgt4xqYIl5u8l8JiUt2wrFkSL2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721069670; c=relaxed/simple;
-	bh=406glRtonkqGEa7am3+UpFuEnHxkwOFnqUzjS1hNNmU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hQiQjtY4ZbAVp5BeKikDQ4y+1Pj+37xbAdvkmDDy9ygm6xRICb68k2K1OJbr0xxm8I5tiqfUmROjeYF+Wt39wE4FswtczZYsShE5aZui747oXsnUwNLlecJhPwPM7vQn/KfjjVbBqnHtvDuC4qI83pseiJrtunvVtuT4dYJVeIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=O+SvTFNR; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1721069748; c=relaxed/simple;
+	bh=fTaVUp5ixXjyj/IQvLPoiMP1xh8WB5ilzwlfi5SQ9Uo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N1SFmn5YwaduPOhBvv5lOhT724LOHwwrfnHaWQLKJW1UcrhMVOSCUAnAveO+yEC8kHTT4Ooar3cTghWAALBYBMyaOTk3RXy645Jf7Xv6leQUw07i7zBjZ/D1EP0go/naGlKFLy3WNw4TmTXZurbeeVTa8AwzAlBU+KkW7i05qcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzM56u57; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="O+SvTFNR"
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FIQa1N020560;
-	Mon, 15 Jul 2024 18:53:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pps0720; bh=b9w0XB6La
-	ytVB7Wdf1B/UO3yLAMzxQddtR5FFc0xAXI=; b=O+SvTFNRZkkemnyioMs1vrQ4l
-	jVXcMUACB5nrzwiDNaNGLK0k+O9ajXlVnjrVQN60+fXs7RAQT3Ja6X2OCm1iFRFJ
-	0a88OzVEqSSOY7RLA9a+Ke9c/z/mpPgnSN/MoKJUPsavMDsLxQm3m+laJ2gGnX6L
-	p6mnfnA6vTQfg+ROKKS5/TFEO0zZVn3c9fRlOi6tGjFSP6UK+1rJpL069I2gxA0W
-	C/WW1mmIj7JTJhIqC31/fVWHBgLsyLgZVejeXd7EMGvs2F2CS7Toq5JRcD6gM3Oi
-	7+QwaU5Eh0zo+ER6/kZamfEPvhgE7JRz60jPO3JGbdxMPfVj6CsSnqjOLMtqg==
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 40d920g5dc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jul 2024 18:53:14 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 62DFF147B7;
-	Mon, 15 Jul 2024 18:53:13 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 4597380A808;
-	Mon, 15 Jul 2024 18:53:11 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id D919B3003D738; Mon, 15 Jul 2024 13:53:09 -0500 (CDT)
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Pavin Joseph <me@pavinjoseph.com>, Eric Hagberg <ehagberg@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>,
-        Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH v2 1/2] x86/kexec: Add EFI config table identity mapping for kexec kernel
-Date: Mon, 15 Jul 2024 13:53:08 -0500
-Message-Id: <20240715185309.1637839-2-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20240715185309.1637839-1-steve.wahl@hpe.com>
-References: <20240715185309.1637839-1-steve.wahl@hpe.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzM56u57"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56281C4AF0E;
+	Mon, 15 Jul 2024 18:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721069748;
+	bh=fTaVUp5ixXjyj/IQvLPoiMP1xh8WB5ilzwlfi5SQ9Uo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mzM56u57vbSMU7UUmNVR4LLKrqMOvG0VNwKB6Losab0GAaAtgyoVZ5a5yCpA/S/D7
+	 sbovS4flkyFA7smIGcKPNkt9qbdkLfEW/ixpl5yuO288I7N8GcOQbgL7x+TQNGD+B9
+	 wN1PsljQzJSNiOq+B4zKMYjVqY8uAYYuoEtRQG0PFQBy1wmbjyYjtdwlQTnOF4I1A5
+	 33RglqbJ2gLElY1MIjHGK2yB212+Tp/hUw+OwoEpHGQxCpIe+iYzssVx43PRZ8laHU
+	 taaqx9n+A8pb4XwEBlxpYNZkkX5cYFHERPLLHHSNexnZAn/Yy6/RSr3VB5cyR8pl8d
+	 WMu1M4G2Wlrlg==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eeb2d60efbso55744871fa.1;
+        Mon, 15 Jul 2024 11:55:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXumxkft9uq3D7HTZ3tbblkpFb/SHx+MhywvHUaWqaAyXfqs2S3plvWQI05jGYEgBFHAkdj2aPhkFB4DUIjkdh3UX2S1Dg3rWi3HbHReipRa9x40IRGfWp6IPe8oV3zG4XCioVZzMjHVpzk+lMriGs1epP2FLXftXZeBnXYdhO0eNM=
+X-Gm-Message-State: AOJu0Yxsp0S3URk3bakVAfjAKkGaSF7LP2wajKRPRZIDdWR6og0Q8IlA
+	nrGMTcgxgW46ACuQiz8t4aW+OdllKiH44iMWA+2Ie/rLVWUX+wbYpxN7Bat59EVWYDplPkCk1Ze
+	/NUwUnLVqb7N2hbEEJGmr4Xgxdw==
+X-Google-Smtp-Source: AGHT+IG5hZtW/6OyRaCvviup+P1U2Ghou4YKlTCsHtRsWKDMqkEasf58VhGXraqlzg+5tGrRgvrOkOsdfd2CYJKf+h0=
+X-Received: by 2002:a05:651c:1254:b0:2ec:57c7:c740 with SMTP id
+ 38308e7fff4ca-2eef41d72bbmr63931fa.39.1721069746552; Mon, 15 Jul 2024
+ 11:55:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: erjPfCL_YkXRsiLsrvsUrX7KQgUKW0HO
-X-Proofpoint-ORIG-GUID: erjPfCL_YkXRsiLsrvsUrX7KQgUKW0HO
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_13,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- clxscore=1011 malwarescore=0 adultscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 bulkscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407150147
+References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+In-Reply-To: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 15 Jul 2024 12:55:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+Message-ID: <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+To: Amit Machhiwal <amachhiw@linux.ibm.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lizhi Hou <lizhi.hou@amd.com>, Saravana Kannan <saravanak@google.com>, 
+	Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, 
+	Kowshik Jois B S <kowsjois@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tao Liu <ltao@redhat.com>
+On Mon, Jul 15, 2024 at 2:08=E2=80=AFAM Amit Machhiwal <amachhiw@linux.ibm.=
+com> wrote:
+>
+> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
+> of a PCI device attached to a PCI-bridge causes following kernel Oops on
+> a pseries KVM guest:
+>
+>  RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
+>  Kernel attempted to read user page (10ec00000048) - exploit attempt? (ui=
+d: 0)
+>  BUG: Unable to handle kernel data access on read at 0x10ec00000048
+>  Faulting instruction address: 0xc0000000012d8728
+>  Oops: Kernel access of bad area, sig: 11 [#1]
+>  LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D2048 NUMA pSeries
+> <snip>
+>  NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
+>  LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
+>  Call Trace:
+>  [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
+>  [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
+>  [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
+>  [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_loc=
+ked+0x34/0x64
+>  [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
+>  [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
+>  [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
+>  [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
+>  [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
+>  [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
+>  [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
+>  [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/=
+0x2ec
+> <snip>
+>
+> A git bisect pointed this regression to be introduced via [1] that added
+> a mechanism to create device tree nodes for parent PCI bridges when a
+> PCI device is hot-plugged.
+>
+> The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
+> device-tree node associated with the pci_dev that was earlier
+> hot-plugged and was attached under a pci-bridge. The PCI dev header
+> `dev->hdr_type` being 0, results a conditional check done with
+> `pci_is_bridge()` into false. Consequently, a call to
+> `of_pci_make_dev_node()` to create a device node is never made. When at
+> a later point in time, in the device node removal path, a memcpy is
+> attempted in `__of_changeset_entry_invert()`; since the device node was
+> never created, results in an Oops due to kernel read access to a bad
+> address.
+>
+> To fix this issue, the patch updates `of_changeset_create_node()` to
+> allocate a new node only when the device node doesn't exist and init it
+> in case it does already. Also, introduce `of_pci_free_node()` to be
+> called to only revert and destroy the changeset device node that was
+> created via a call to `of_changeset_create_node()`.
+>
+> [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
+>
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+> ---
+> Changes since v1:
+>     * Included Lizhi's suggested changes on V1
+>     * Fixed below two warnings from Lizhi's changes and rearranged the cl=
+eanup
+>       part a bit in `of_pci_make_dev_node`
+>         drivers/pci/of.c:611:6: warning: no previous prototype for =E2=80=
+=98of_pci_free_node=E2=80=99 [-Wmissing-prototypes]
+>           611 | void of_pci_free_node(struct device_node *np)
+>               |      ^~~~~~~~~~~~~~~~
+>         drivers/pci/of.c: In function =E2=80=98of_pci_make_dev_node=E2=80=
+=99:
+>         drivers/pci/of.c:696:1: warning: label =E2=80=98out_destroy_cset=
+=E2=80=99 defined but not used [-Wunused-label]
+>           696 | out_destroy_cset:
+>               | ^~~~~~~~~~~~~~~~
+>     * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@l=
+inux.ibm.com/
+>
+>  drivers/of/dynamic.c  | 16 ++++++++++++----
+>  drivers/of/unittest.c |  2 +-
+>  drivers/pci/bus.c     |  3 +--
+>  drivers/pci/of.c      | 39 ++++++++++++++++++++++++++-------------
+>  drivers/pci/pci.h     |  2 ++
+>  include/linux/of.h    |  1 +
+>  6 files changed, 43 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index dda6092e6d3a..9bba5e82a384 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -492,21 +492,29 @@ struct device_node *__of_node_dup(const struct devi=
+ce_node *np,
+>   * a given changeset.
+>   *
+>   * @ocs: Pointer to changeset
+> + * @np: Pointer to device node. If null, allocate a new node. If not, in=
+it an
+> + *     existing one.
+>   * @parent: Pointer to parent device node
+>   * @full_name: Node full name
+>   *
+>   * Return: Pointer to the created device node or NULL in case of an erro=
+r.
+>   */
+>  struct device_node *of_changeset_create_node(struct of_changeset *ocs,
+> +                                            struct device_node *np,
+>                                              struct device_node *parent,
+>                                              const char *full_name)
+>  {
+> -       struct device_node *np;
+>         int ret;
+>
+> -       np =3D __of_node_dup(NULL, full_name);
+> -       if (!np)
+> -               return NULL;
+> +       if (!np) {
+> +               np =3D __of_node_dup(NULL, full_name);
+> +               if (!np)
+> +                       return NULL;
+> +       } else {
+> +               of_node_set_flag(np, OF_DYNAMIC);
+> +               of_node_set_flag(np, OF_DETACHED);
 
-A kexec kernel boot failure is sometimes observed on AMD CPUs due to
-an unmapped EFI config table array.  This can be seen when "nogbpages"
-is on the kernel command line, and has been observed as a full BIOS
-reboot rather than a successful kexec.
+Are we going to rename the function to
+of_changeset_create_or_maybe_modify_node()? No. The functions here are
+very clear in that they allocate new objects and don't reuse what's
+passed in.
 
-This was also the cause of reported regressions attributed to Commit
-7143c5f4cf20 ("x86/mm/ident_map: Use gbpages only where full GB page
-should be mapped.") which was subsequently reverted.
-
-To avoid this page fault, explicitly include the EFI config table
-array in the kexec identity map.
-
-Further explanation:
-
-The following 2 commits caused the EFI config table array to be
-accessed when enabling sev at kernel startup.
-
-    commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
-                          earlier during boot")
-    commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
-                          detection/setup")
-
-This is in the code that examines whether SEV should be enabled or
-not, so it can even affect systems that are not SEV capable.
-
-This may result in a page fault if the EFI config table array's
-address is unmapped. Since the page fault occurs before the new kernel
-establishes its own identity map and page fault routines, it is
-unrecoverable and kexec fails.
-
-Most often, this problem is not seen because the EFI config table
-array gets included in the map by the luck of being placed at a memory
-address close enough to other memory areas that *are* included in the
-map created by kexec.
-
-Both the "nogbpages" command line option and the "use gpbages only
-where full GB page should be mapped" patch greatly reduce the chance
-of being included in the map by luck, which is why the problem
-appears.
-
-Signed-off-by: Tao Liu <ltao@redhat.com>
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Tested-by: Pavin Joseph <me@pavinjoseph.com>
-Tested-by: Sarah Brofeldt <srhb@dbc.dk>
-Tested-by: Eric Hagberg <ehagberg@gmail.com>
----
- arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index cc0f7f70b17b..563d119f9f29 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -28,6 +28,7 @@
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
-+#include <asm/efi.h>
- 
- #ifdef CONFIG_ACPI
- /*
-@@ -83,10 +84,12 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
- #endif
- 
- static int
--map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-+map_efi_tables(struct x86_mapping_info *info, pgd_t *level4p)
- {
- #ifdef CONFIG_EFI
- 	unsigned long mstart, mend;
-+	void *kaddr;
-+	int ret;
- 
- 	if (!efi_enabled(EFI_BOOT))
- 		return 0;
-@@ -102,6 +105,30 @@ map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
- 	if (!mstart)
- 		return 0;
- 
-+	ret = kernel_ident_mapping_init(info, level4p, mstart, mend);
-+	if (ret)
-+		return ret;
-+
-+	kaddr = memremap(mstart, mend - mstart, MEMREMAP_WB);
-+	if (!kaddr) {
-+		pr_err("Could not map UEFI system table\n");
-+		return -ENOMEM;
-+	}
-+
-+	mstart = efi_config_table;
-+
-+	if (efi_enabled(EFI_64BIT)) {
-+		efi_system_table_64_t *stbl = (efi_system_table_64_t *)kaddr;
-+
-+		mend = mstart + sizeof(efi_config_table_64_t) * stbl->nr_tables;
-+	} else {
-+		efi_system_table_32_t *stbl = (efi_system_table_32_t *)kaddr;
-+
-+		mend = mstart + sizeof(efi_config_table_32_t) * stbl->nr_tables;
-+	}
-+
-+	memunmap(kaddr);
-+
- 	return kernel_ident_mapping_init(info, level4p, mstart, mend);
- #endif
- 	return 0;
-@@ -241,10 +268,10 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 	}
- 
- 	/*
--	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
--	 * not covered by pfn_mapped.
-+	 * Prepare EFI systab, config table and ACPI tables for kexec kernel
-+	 * since they are not covered by pfn_mapped.
- 	 */
--	result = map_efi_systab(&info, level4p);
-+	result = map_efi_tables(&info, level4p);
- 	if (result)
- 		return result;
- 
--- 
-2.26.2
-
+Rob
