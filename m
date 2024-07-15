@@ -1,160 +1,112 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA51186E3C;
-	Mon, 15 Jul 2024 10:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DB0186E3C;
+	Mon, 15 Jul 2024 10:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039789; cv=none; b=OBBvNzIeGT62kJFEWr3RwdWn6kpXvFENGiQ0sAjYnAy3k4dGKn+JD3lN/ErcRMEkmbH+D+y+75kCRsojCcsw8fWX63qeflJi9UUYiiyBu+DMZ+P0wdt3rkQiRJkay+XSLlq4MuqPWLtihB4n/huyrm8F9Gk02nZ/AntV4CwlDE8=
+	t=1721039843; cv=none; b=HzXmFxKYfwg7el6WuLrCDftGspGIYbPL3WPmrXxWo43LTB9mUZQw4PqbR5+mUNUNRh3KgtMN3qOyMk8Y0sEcGpZGE8Ck0n5t5hpeEtm+J1muXRrXcrRFQu9ntLksQtv3ijvDhcf1eckrgf+ir69trXPM29LjK0NNlB6RZCr2TGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039789; c=relaxed/simple;
-	bh=BwDkCKtXLJdt2v4l+zs23iivQWmBxUOlVqDfJcImsqc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iSJpXiayLwterrSXE/ImorBkp1t96GEbs9HYVBeTmFuPYv/ea2nazfKg9VFizBAjHRUMsjpizWAiYq35B7uyAsqUWOTHKtIFevaAyetcQzJWZc7bewi/wGhjZTHSdN5RnWvxTjfHeJDomHcFyK+G231N4SDSXy6UviQXiwl5eqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m5B/BlhD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wP8zXUOo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m5B/BlhD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wP8zXUOo; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1721039843; c=relaxed/simple;
+	bh=e/ChqerirklhAli6n3y8FOc7mcwCV4vyLGJsStN+zYw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NEBY4ISnmvnu2AOgpvwEZyWh61GAg3tw29x+9SmxWzBAbZron59UPowQwtnpjIKUb0HN9MyFtJm3l7h9N0Z7E3ZHZNldOLJ8NLerMDsP/twmlNeAXaI9yuMortk+5BSqquQacAzu4X46LTT5epHhZ26DIYZ0FGqoVUT2a5Av55M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=koMEz510; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m5B/BlhD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wP8zXUOo";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m5B/BlhD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wP8zXUOo"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 48D8A2123C;
-	Mon, 15 Jul 2024 10:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721039786; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XETBKh5Tf/saD68TCMoGImgWWSFg3tUvfsyoKMVxLD8=;
-	b=m5B/BlhDMfSFp9Zm8saaNRlHxM/Il1VEje74gSAY4iqqPiuznTlV9nwzk+kc84dcHx1UKH
-	O/KloFSKSnXe/Hr2zrsb9BphSxMcoeJr4kvJbEqP9WSOQmbNmSEArqsDj9gQy4cCsvuSPP
-	JRwE9g+c5xeWCCw+B7g/mwS45Mm5lSw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721039786;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XETBKh5Tf/saD68TCMoGImgWWSFg3tUvfsyoKMVxLD8=;
-	b=wP8zXUOoMUPc0J0x/7j++co/7SuXShGzDdr+WgpHXU+G+DK4ed34ugfWOvPIRCqPaGNqZ2
-	7+qKHTQMjX1Xb5CQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="m5B/BlhD";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=wP8zXUOo
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721039786; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XETBKh5Tf/saD68TCMoGImgWWSFg3tUvfsyoKMVxLD8=;
-	b=m5B/BlhDMfSFp9Zm8saaNRlHxM/Il1VEje74gSAY4iqqPiuznTlV9nwzk+kc84dcHx1UKH
-	O/KloFSKSnXe/Hr2zrsb9BphSxMcoeJr4kvJbEqP9WSOQmbNmSEArqsDj9gQy4cCsvuSPP
-	JRwE9g+c5xeWCCw+B7g/mwS45Mm5lSw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721039786;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XETBKh5Tf/saD68TCMoGImgWWSFg3tUvfsyoKMVxLD8=;
-	b=wP8zXUOoMUPc0J0x/7j++co/7SuXShGzDdr+WgpHXU+G+DK4ed34ugfWOvPIRCqPaGNqZ2
-	7+qKHTQMjX1Xb5CQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 77D2C137EB;
-	Mon, 15 Jul 2024 10:36:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lEfSGqn7lGZCIwAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 15 Jul 2024 10:36:25 +0000
-Message-ID: <6daeb8fc-1f83-487f-a7c7-8c6769c6fc69@suse.de>
-Date: Mon, 15 Jul 2024 13:36:24 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koMEz510"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52ea33671ffso4175818e87.3;
+        Mon, 15 Jul 2024 03:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721039840; x=1721644640; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QuOSh0mOiXYGRirjRUmIdDiiRk5HgV74pBqp70qNevY=;
+        b=koMEz510NUZ2UI9IPVm1SQeynFBncyYUuk/dm9WsjjOfLYBBScZc0L4bGjRLA12rX1
+         zt37f+g469ZPv/02AfsjYIV25t+XjxqJ99MKnlSyUTAseoS4RXQYnrx+A/l7Qg6NkM0r
+         IrUK9W9wGtOwgibXZ/UEfjLiAHqz5lb5Lxa8lInbl+7C222aPrL8kDlW+uNlHq5BdS8t
+         attKZFfPwIztEFKfPeVDRJX2JopXM1oYF5t4mLebKuLfctlnra0Uq7VQFJ+6BwI3yEQm
+         DQBw4AHdbV2DjNWbrlXNKIUozVJhigzjDHC58uPYaE5Gj9IPjqAMn3kxhj04+uMqZdqk
+         fnHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721039840; x=1721644640;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QuOSh0mOiXYGRirjRUmIdDiiRk5HgV74pBqp70qNevY=;
+        b=Cp6modC3RSlAfOeK7uNv3hOM+7hsmsqgCUDgumovbR5lx+r0YqJn+QMVTXRgI8MzWR
+         M4h+4FqP0ozxmyk04CTCBPANUwGVrWt/X1Lqd20D21qLzM8EVBIZlxgBHlvLQjtf2DzS
+         H7Vy6xjAopxK/VBOSb0qQhJ8YSwqfWOsdZeAOfJWwO+xn16O4p0O+vNMzsGU40vxbr5Z
+         A0x32BiueVBy5Nczb//MlGJ4i8X5AKuxshWhh3zz6VbzkdsfRa5dxIZaKkRqpowhbWZd
+         mdAPGGqIheHkilxZ857Bx6zIeFCU1HUVpePyv7EWq9gG/zjjKwpuTEU8/3plnJxYazNQ
+         l9VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGLWLXDEcgExp9pphOqODll8DEKf0XaHC2+XILwJiZuj/q4i+iCw7dFX7y9pjw/oqVpODQD91ibD74mT+muuOxGjPvbKYMq2YApfllXXvoz4ANPF4aQABGv3GE78zW2JJtF8fIIU23
+X-Gm-Message-State: AOJu0Yx76wfmNxOKIiK26jsIwBlSPwLdvQwSiFHXhlM8b+Y05/balYDd
+	XNDYVRV/FbFABJmPek/ZPIDe1gOWSmFC9XzupBlRCTVmk5GJMeug
+X-Google-Smtp-Source: AGHT+IHa9H04Zqw9E6XpYe9VmaujmHV+eI/zxqEPsQ3I8Q4uTKklyeoQAs+F/meEE9Et4Z+hLbECPQ==
+X-Received: by 2002:a05:6512:114c:b0:52c:e0bc:ca3a with SMTP id 2adb3069b0e04-52eb99d76a5mr12299055e87.64.1721039839688;
+        Mon, 15 Jul 2024 03:37:19 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5edb454sm81153855e9.32.2024.07.15.03.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 03:37:19 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/2] clk: renesas: rzg2l-cpg: Refactor and simplify clock registration
+Date: Mon, 15 Jul 2024 11:35:53 +0100
+Message-Id: <20240715103555.507767-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/12] PCI: brcmstb: PCI: brcmstb: Make HARD_DEBUG,
- INTR2_CPU_BASE offsets SoC-specific
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240710221630.29561-1-james.quinlan@broadcom.com>
- <20240710221630.29561-7-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20240710221630.29561-7-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 48D8A2123C
-X-Spam-Flag: NO
-X-Spam-Score: -0.50
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.50 / 50.00];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[broadcom.com:email,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spamd-Bar: /
+Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Hi,
 
-On 7/11/24 01:16, Jim Quinlan wrote:
-> Our HW design has again changed a register offset which used to be standard
-> for all Broadcom SOCs with PCIe cores.  This difference is now reconciled
-> for the registers HARD_DEBUG and INTR2_CPU_BASE.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 39 ++++++++++++++++-----------
->  1 file changed, 24 insertions(+), 15 deletions(-)
-> 
+This patch series aims to refactor and simplify the clock registration
+code in the Renesas RZ/G2L CPG (Clock Pulse Generator) driver. The
+changes enhance consistency, simplify function signatures, and remove
+redundant parameters, thereby improving maintainability and reducing
+potential for errors.
 
-Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+v1->v2
+- Propagate error code from rzg2l_cpg_pll_clk_register() if
+  devm_clk_hw_register() fails
+- Used devm_clk_hw_register_fixed_factor() for fixed factor clock
+- Set error pointer in rzg2l_cpg_register_mod_clk() if
+  devm_clk_hw_register() failed
+- Squashed patches (2,3,4)/4 into single patch
+- Dropped masking of parent clock with 0xffff
+- Dropped creating local variable clks
 
-~Stan
+v1: https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240628131021.177866-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (2):
+  clk: renesas: rzg2l-cpg: Use devres API to register clocks
+  clk: renesas: rzg2l-cpg: Refactor to use priv for clks and base in
+    clock register functions
+
+ drivers/clk/renesas/rzg2l-cpg.c | 72 +++++++++++++++++----------------
+ 1 file changed, 38 insertions(+), 34 deletions(-)
+
+-- 
+2.34.1
+
