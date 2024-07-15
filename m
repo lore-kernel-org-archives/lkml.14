@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449E8225DA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4703617C67;
 	Mon, 15 Jul 2024 16:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721059830; cv=none; b=WaVllX5zmtJC4kWQIJoFc89GkriuiG0eJg2Vam1Q/ucB9cmeWklf+GM+YeaXZJVi+moRZdVUrJy5S3cd+2OvRHh0PxKpZj7PCowEha+O/FWdUindBOrQ2UYChp/P1oFd69KbvyTVD8zDXSKe0kLVoDSP3jtvzQYxwjXUUChIHJs=
+	t=1721059830; cv=none; b=DEOFTqaL/rNV+rFuZq/aE7riQiGGAGiq47UK2GIF24rZ33bnbAqV2b/ClDsIL2wVweGuONuq+lwzUJUSL3jCeTOpE9TJ8hHv42hRdYmVRu8RSLlhvWF7E9VXROwMksWRyIx7lG/hXhM+tFnACumTvqFit8+ILYGEJCq3bhAC78s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721059830; c=relaxed/simple;
-	bh=LyNXYzNr6Q8Th5sTEyTcyTqmDktxjmjEskFBkjyywCo=;
+	bh=MHKbDjhMNiFYxJ/gGPAZhxDmz/n0Au+38x900Q4HPeY=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=m/mv3Yct2Q7GxKj8n8vvPG+swnfjt/VZom1K4ukkCYwszW/rBI6f753YgFu4ko/QzaEiTmLsq7CXovnyiD84lg/m4Vupa6MEr8hFzfoANeBqyTiYqjt0XiVjqpvZseWIu5qtjBp9TuSBSuD64pL0xGhrRZ4QJh4zG2MmeCU26QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVycYxkf; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=eu6GKh8flqt4SkzmnpbLsFov3C1/xkPy8jcSlsqRO2+ROv2HhDA899hG3mj35SEJtj3R9Pl/6v93I/9/wqS8naKFVvWgFAHqoi9/PVmkVylyKc8e7Ij2Lj+SXOTunrFUsU6faMsCpDI7gq1g0cXLVhy7cO5tCfKrDj1WVfUPmvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AimO3ZGs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVycYxkf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DE782C4AF0E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AimO3ZGs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D6BF7C4AF0A;
 	Mon, 15 Jul 2024 16:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721059829;
-	bh=LyNXYzNr6Q8Th5sTEyTcyTqmDktxjmjEskFBkjyywCo=;
+	bh=MHKbDjhMNiFYxJ/gGPAZhxDmz/n0Au+38x900Q4HPeY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HVycYxkfsr8UHToYentAq/TRX+vihZM/Be/pA3uj6K26lFACboq7VVERfSx5jVREW
-	 hADNXsOTUAPZO9FoHzo+r8A4AtftDl/yU7g5dsE1+6W8gqqK6RY6TX19aBauHnV3UN
-	 4sLk+fOMJXOKP+rHZfJeIhTUhrdrzvXOyl86iyyiYoBLc8iDmx4dMiKYg6ulgoGUr+
-	 i1SJB/dZ4c9d6F2mKNBQZW5qX2O8YevFXMks0pMyfc1MQ9QH5F2oz4DVb0Gi6Lm27F
-	 Xhya1fQ444qDpstdRJcaA3biKe5h+AvIOpblFXL7oOsbuKKDRY/BCCOheUllzrzCWq
-	 ce72ilwpyDlXg==
+	b=AimO3ZGso4BUI9mPA9iZuwDnlQdrfpSnBrHC07OV0Dm+XoPSWRJ2LU4RlB6j9OdNQ
+	 snztMG3/jcQjK2blhkX+WWxpATJH7/XQ8uQAIcLDNt57ZHIynZ4v35tg7wsq7D3esd
+	 UJlwCo0XorL37GiLZtK475umlavmc7hPd+aOVGEvwh06iFJf6pC66RGQ3MV0SkKlI+
+	 9ZoMz26Uw29eO34e/8Fa++xBdQ6ud7Q0IJeKaIB3acSLGOwGf/n6kn3xixnGZfFmPY
+	 fy/bU+LxjOTUNv42osg0VSTeZijR5isgH7fHWftLRAvzFu5fgNM8FA6VVF0By0tWev
+	 XrEjf7dVCtgoQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C3C25C433E9;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B7EE5C4332C;
 	Mon, 15 Jul 2024 16:10:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,13 +37,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] llc: Constify struct llc_sap_state_trans
+Subject: Re: [PATCH net-next] llc: Constify struct llc_conn_state_trans
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <172105982979.6134.15213982854904740211.git-patchwork-notify@kernel.org>
+ <172105982974.6134.3480413843064784008.git-patchwork-notify@kernel.org>
 Date: Mon, 15 Jul 2024 16:10:29 +0000
-References: <9d17587639195ee94b74ff06a11ef97d1833ee52.1720973710.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <9d17587639195ee94b74ff06a11ef97d1833ee52.1720973710.git.christophe.jaillet@wanadoo.fr>
+References: <87cda89e4c9414e71d1a54bb1eb491b0e7f70375.1720973029.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <87cda89e4c9414e71d1a54bb1eb491b0e7f70375.1720973029.git.christophe.jaillet@wanadoo.fr>
 To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
  pabeni@redhat.com, linux-kernel@vger.kernel.org,
@@ -54,8 +54,8 @@ Hello:
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sun, 14 Jul 2024 18:15:20 +0200 you wrote:
-> 'struct llc_sap_state_trans' are not modified in this driver.
+On Sun, 14 Jul 2024 18:05:56 +0200 you wrote:
+> 'struct llc_conn_state_trans' are not modified in this driver.
 > 
 > Constifying this structure moves some data to a read-only section, so
 > increase overall security.
@@ -64,13 +64,13 @@ On Sun, 14 Jul 2024 18:15:20 +0200 you wrote:
 > Before:
 > ======
 >    text	   data	    bss	    dec	    hex	filename
->     339	    456	     24	    819	    333	net/llc/llc_s_st.o
+>   13923	  10896	     32	  24851	   6113	net/llc/llc_c_st.o
 > 
 > [...]
 
 Here is the summary with links:
-  - llc: Constify struct llc_sap_state_trans
-    https://git.kernel.org/netdev/net-next/c/0970bf676f86
+  - [net-next] llc: Constify struct llc_conn_state_trans
+    https://git.kernel.org/netdev/net-next/c/70de41ef7857
 
 You are awesome, thank you!
 -- 
