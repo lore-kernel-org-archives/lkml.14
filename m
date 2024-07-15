@@ -1,100 +1,143 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A851C687
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 18:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D755025E;
+	Mon, 15 Jul 2024 18:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721069655; cv=none; b=QfzQcjc6WtCiWudJUiRKO1Lj0I5IMnKTAqejv+xweA/NLDPNb6KV14towh1ZOtVKUMMgrlRS1nLGIH+JXZ8fzVlhN23baOLXyDWmFqpVhDofpz+LgWdJ9v+vYVMm03EA2QNJ2ZHZmY7PvFUE9lQp1H7QBEnqMQOeYcBR3yNtI2w=
+	t=1721069669; cv=none; b=m2+KMowta6lAnq9Ayol9SJqZ1dqg4ogH3vLxUoMu27DSoTp8ghS5+EHn9HqIIigidPlz3Fsx6fsEQa810azHogWiFX7pTmltucUC6sEU1GYzUbnH4KNd2HksbTZqoUcFYDVrVWCyXc2Y4wWlUzkBYiVb9C3AmxRE2m3zxiBMFmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721069655; c=relaxed/simple;
-	bh=x7K9WmffnsoocnAYmMUcSmMdv//kjNrchqx15DlCGsw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MZ+wUEWU2wKdhOiJjrw+MF66pJlU/gaaWvEIk8yP2M1AziEUWlrGxlKMFPEQuoN5IYXM9bE0sp/0mhU7vzT69AWeqquz4QSyO3BOhhGMLHmIC2WO75d6U6uXzggwH26Vx2UBnQwnNxTNEc7ThM60cGa0Zakhp0TJSJby5JRy3Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nO91fFva; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721069669; c=relaxed/simple;
+	bh=HGSZKVTayl9anNVOn7uxdN8IS2btIxM0VpD+0pVQVVI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S0p77v0+nH96YmTGNhzPNLTSolris0YagOpbuNrPZMr+FuZnIrNKSBYqim5QhVWod5H6tUkv0MDi8Z2WHVFKRdQvBNuQVuA83M32TC/VaLPyD1VVELeYqN5/MmHebishYR7T7hPVkN3FigQm+Lf0E0/LWFI3D022hn3OLqyvZwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=dKnidXV1; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nO91fFva"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1fc312a36f9so34875ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 11:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721069653; x=1721674453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x7K9WmffnsoocnAYmMUcSmMdv//kjNrchqx15DlCGsw=;
-        b=nO91fFvakVwOoreYPYmshC6Loa6fGC3AZldqVAXec3OEobuZGVRtFOz4jzb0Zddsrk
-         wbctwsjoz6TrG65YMo+0ZYeEBrfVre+rdS93HJrDmy4euNNAYFZYH+MRBmL5sJe5Y8Rp
-         27mdhXdhK78VqQJxCNL7oMwVaNceFou3rrIdxV97TVjLPMkr7+XOvquBvh7/NOOay07k
-         ErTzgnqgC7lxIFj9eBkqgLP8TweB5P7BFDpHS0cglUfUkJV1npF8VgqYtailgmfJiYLv
-         gvdu5RMG7ToFxv6nxNKw3jHauxpLcVgXpEfFZDpNSLd/OmTNgAcqxUIxo83KvKHdb61k
-         TKzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721069653; x=1721674453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x7K9WmffnsoocnAYmMUcSmMdv//kjNrchqx15DlCGsw=;
-        b=vukBqCZx2+dIZrANKfeh4UxnNsHXs/MsAaodce9gV/XAdu2Co9Ha1yEt2AGajFXgQa
-         U+kecitEFNO6nKsauhSV7UX80yGKD7mnPTH5hSEAGygJ+URFg/q+Az8/n+8PBJDgptRy
-         /pRBIpKH6K3pQRC6Mk4a1lXHuUrQFZyRsT0BfTQ1OWly24t/8w2VKvwabOAFTpNEq2jO
-         Qjha0EXaRSrLB/lAaveckXA/eXmg6bfDFDWKTwUGOG1060ofEKPyT0g2rSrvIM691sHI
-         SvIlqnAeFcdKX37kUi8N5dx++JNGbZgBd7CF6aP3IHy8t+ihU5lDL3kSB4/22Vq91B+m
-         qVGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUH3COaKRj9jpxExE1/FjkThtpWpCr2opWokz55f7NrTlFCSqqfny0KWkADA58/gmKuDNgp/brkHP1bPgLipi+A7gaz04Sof+qTkMdd
-X-Gm-Message-State: AOJu0Yyxb/CASWzVxXHRdktcz+8tNzg9jRZt5a3aVEqw6LpwHKCCgVnZ
-	Qq7MMo64caU0DVT9nra/9+CIXIQ+aPe8NOqMjcJAW4/PefvaYfaac207T10TssxT3wcRKY5/PBE
-	iT9Lu3ahpmzpbd9xi8gSSxi1enZ0Omw2QEMA4
-X-Google-Smtp-Source: AGHT+IHdXl0gIzk+FfvAunF99BLrAefPFSM3Vv+rGhx1OBGRoBiPzTJ727s5npnkAi9T5hKY5R+bKCct6IInzP2GQmY=
-X-Received: by 2002:a17:903:24f:b0:1e4:3a10:5944 with SMTP id
- d9443c01a7336-1fc3c774ca5mr424545ad.14.1721069652789; Mon, 15 Jul 2024
- 11:54:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="dKnidXV1"
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FHX5r3012894;
+	Mon, 15 Jul 2024 18:53:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pps0720; bh=CEmvAFnikYXYXe4xHWa9PD
+	0T95AUEAKIxnZFw5nCu8w=; b=dKnidXV1YGCz3u2JscWM8pDNzg1VjPB0sR8Mns
+	X0G4zg6YWUyZtRUZ1ZSk6zudj809F9l2o8U21LBbAWA1fOhQrcq5rKKtATSGBIz0
+	P0j+mksKA9qQaXnOP2yg6PHSZ7Ozx76rJ5KcRPikVlGyOHhWg4q84u3hAJC/b7nB
+	2oVkOvYWO8Zds4zO6dSYkXU9eOXELoX5itBuiVMEtT1A7mMqCTuHxOkIVVOdvFXN
+	9h5mmYIZJR/RlNFkC8xTGRR35/CFVuoHerOxrt31HfC0b7eDwsmegMu/jWN7D5ly
+	kqL/TQf5TinzYCfz+pDj4wo3H19kYLxAy/mSZN9DT+yYwqKw==
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 40bfsd1333-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 18:53:14 +0000 (GMT)
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 63148147B9;
+	Mon, 15 Jul 2024 18:53:13 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 57EFF8032AE;
+	Mon, 15 Jul 2024 18:53:11 +0000 (UTC)
+Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
+	id D2EB530000731; Mon, 15 Jul 2024 13:53:09 -0500 (CDT)
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Pavin Joseph <me@pavinjoseph.com>, Eric Hagberg <ehagberg@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
+        Hou Wenlong <houwenlong.hwl@antgroup.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>,
+        Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH v2 0/2] Resolve problems with kexec identity mapping
+Date: Mon, 15 Jul 2024 13:53:07 -0500
+Message-Id: <20240715185309.1637839-1-steve.wahl@hpe.com>
+X-Mailer: git-send-email 2.26.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0000000000007b55ab061d494ced@google.com> <16aa56bd-b71f-417a-9a82-a2d0876571f2@redhat.com>
-In-Reply-To: <16aa56bd-b71f-417a-9a82-a2d0876571f2@redhat.com>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Mon, 15 Jul 2024 20:54:01 +0200
-Message-ID: <CANp29Y7vkA+GvS0c0EPk0=f_V0Ci25_4+ok+dRkqGqR3pBXt9g@mail.gmail.com>
-Subject: Re: [syzbot] WARNING in unmap_page_range (3)
-To: syzbot <syzbot+e145145f0c83d4deb8fa@syzkaller.appspotmail.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: S2k7F1NsCRgblYVuBiocWasUYqQH04_6
+X-Proofpoint-ORIG-GUID: S2k7F1NsCRgblYVuBiocWasUYqQH04_6
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_13,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 adultscore=0 mlxscore=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 mlxlogscore=826 impostorscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407150147
 
-#syz fix: mm/memory: fix missing pte marker for !page on pte zaps
+Creating kexec identity maps using only GB pages can include a lot of
+extra address space past that requested, including areas marked
+reserved by the BIOS, which on UV systems can cause system halts.
 
-On Mon, Jul 15, 2024 at 6:06=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 15.07.24 15:35, syzbot wrote:
-> > This bug is marked as fixed by commit:
-> > mm/memory: Fix missing pte marker for !page on pte zaps
-> >
-> > But I can't find it in the tested trees[1] for more than 90 days.
-> > Is it a correct commit? Please update it by replying:
-> >
-> > #syz fix: exact-commit-title
->
-> Should be long fixed
->
-> #syz fix: f8572367eaff6739e3bc238ba93b86cd7881c0ff
->
-> --
-> Cheers,
->
-> David / dhildenb
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/syzkaller-bugs/16aa56bd-b71f-417a-9a82-a2d0876571f2%40redhat.com.
+The previous attempt to fix this problem,
+
+       7143c5f4cf20 ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
+
+caused a regression on a small number of AMD systems, and was later reverted.
+
+The cause of this regression was that the EFI Config Table Array was
+not explicitly included in the kexec identity map. While this array was
+often included in the identity map by luck, when it was not, code that
+checks whether the AMD SEV feature should be enabled takes a page
+fault due to the array's address not being mapped.  This happens before
+the new kernel is able to set up a page fault handler, so it is fatal.
+
+The patch that was reverted greatly reduced the chance that the EFI
+Config Table Array got mapped by luck, which is why this problem
+appeared.  The kernel command line option "nogbpages" also causes the
+problem to show, and was used for debugging and illustrative purposes.
+
+The first patch in this series explicitly adds the EFI Config Table
+array to the kexec identity map so this problem will not occur.
+
+The second patch in the series re-instates the previously reverted
+patch that reduces usage of gbpages in creating the identity map.
+
+All three of the people who reported regression with my earlier patch
+have retested with this patch series and found it to work where my
+single patch previously did not.  With current kernels, all fail to
+kexec when "nogbpages" is on the command line, but all succeed with
+"nogbpages" after the series is applied.
+
+Series version 2:
+
+  * Removed a patch (formerly #2) that also added the CC blob to the
+    identity map, as this was proactive, but not proved necessary.
+
+  * Rewrote this cover letter and patch commit messages to include
+    discussion on previous version.
+
+V1: https://lore.kernel.org/all/20240520183633.1457687-1-steve.wahl@hpe.com/
+
+Steve Wahl (1):
+  x86/mm/ident_map: Use gbpages only where full GB page should be
+    mapped.
+
+Tao Liu (1):
+  x86/kexec: Add EFI config table identity mapping for kexec kernel
+
+ arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
+ arch/x86/mm/ident_map.c            | 23 +++++++++++++++-----
+ 2 files changed, 49 insertions(+), 9 deletions(-)
+
+-- 
+2.26.2
+
