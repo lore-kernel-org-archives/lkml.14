@@ -1,123 +1,91 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152A049647;
-	Mon, 15 Jul 2024 05:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5EA1F94C;
+	Mon, 15 Jul 2024 05:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721022052; cv=none; b=hbCzZrecBix9IRvIfEzuXTSYvaRAVGOuGtDCDAVhENkwwKgTiw/YqfPOjfCgTIiyGrPikKFCIetJ5ocHwJesCg/rUkBb0H3qcEQ5qDn/j+FK/g5NwhntP+u/1wq0cA1xUuo15dRGZAtxAdt71VrqgpQb+dwWXS4xd+TJtJ1VZbQ=
+	t=1721022311; cv=none; b=Ev9m11kRnfjT/Dmk8gsCAhf3XMUAmH3lg0AiyjzX7TGn9I59TrY4+GtmvtiMwfkxpPuBVxK3Fmo4IDbLM6v3uLahbODtKKe4jI9J/rIs4uJSSQi6MOBNEnEWxcs3uZFYgqmNd9SnIORZz3ouWWpLa3UanpQxDsuXlbeyKBT+TsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721022052; c=relaxed/simple;
-	bh=Z4BY5bdw1yPNxSvUxgu1QhUmZBflIXg9+tUmE+Lreyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eD2+L8g9veERpWCuZd7//txPaN3HYtr5eytCZ73oNpzSAAHGGLTk9n+9Wa6P7X/5fWuCCwo5C6lJksehyN1eXB2tziIDDDL/U0ya/u/jiXOll6LV3Kjuuu/Of4dV194qotAiRag7UIlDxFZ78VTyYNyUkNXlZMsMN8meVFl08lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=n3mKhjJu; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1721022311; c=relaxed/simple;
+	bh=NBoxsThlV5YMJKSVODJO9PEIu4bUXR+/jBPgTxeHo2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BvdnGFNB/ofmjgik4foCYk9erjrUgQLYuPbV2lqfQHRCtKdiktp1W/iGwKSgRG7eWqhhBNHUDh3waGJhj0hYDbHCBRia9dJVF8ArRaWQER21own9SaqKZy0GMynXmzElzVyItkKR1I3DKGBZnrV0AsfIQyBJS+UfESFZ/d8ycyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=S09H0GWD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n3mKhjJu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1721022046;
-	bh=DMitF8soCoWuK+OB/uxZXPf5xQLPYXiprhb2r5M6oww=;
-	h=Date:From:To:Cc:Subject:From;
-	b=n3mKhjJufXvXIp0hi4cVGNCBzM9dpmTAdxxPXOZzPc4rchvLQHM3hcRkPRTxGvNx4
-	 uGD15dSDB1xLj4veXPlJL2oBbypLr2NBy8ymvTiDdpSWGlT72YF4Z/YkMEtr70ppyg
-	 QPFZJCcMoTm2EdPUh4XzdP29xrNpZ8x/vMD55TLezUifwdMszrUta6xsTEQl8AwgLu
-	 dCTl5kLBXxnxZsn/dETV4SwYiwZU5020qm8ptDe8MneeLzAJjjw2XcbvE3hSONV1Ee
-	 cbjqIgLnYBwuPZinVlmOrq7mp/7OC1mObKKEXQekxtp6RlSy4zo2n5hoXC0lnTZMib
-	 lmnIg/ANKSvqA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WMrdp31gVz4wbh;
-	Mon, 15 Jul 2024 15:40:46 +1000 (AEST)
-Date: Mon, 15 Jul 2024 15:40:45 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Michael S. Tsirkin" <mst@redhat.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Nithin Dabilpuram
- <ndabilpuram@marvell.com>, Shijith Thotton <sthotton@marvell.com>, Srujana
- Challa <schalla@marvell.com>, Vamsi Attunuru <vattunuru@marvell.com>
-Subject: linux-next: manual merge of the vhost tree with the char-misc tree
-Message-ID: <20240715154045.0f319b32@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="S09H0GWD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BFDC4AF0A;
+	Mon, 15 Jul 2024 05:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1721022310;
+	bh=NBoxsThlV5YMJKSVODJO9PEIu4bUXR+/jBPgTxeHo2Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S09H0GWDhJjfmBpx+yEvnmibPChqCIv3Wy2DZWKcR+LC3m1lbTB3GQ1WMgy/Q0swj
+	 cN34ZtXoFEs4oCT//jhjw68LjZmfG4ixHXVc5t4iqCAHbgEh0r0wzV9IKU4banQnwS
+	 qyleiUgWxoS4jKQteTJ9yPhkyOK2i1e9+oKyZO5c=
+Date: Mon, 15 Jul 2024 07:45:07 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>,
+	elatllat@gmail.com, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com,
+	niklas.neronin@linux.intel.com, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
+Message-ID: <2024071540-commute-curler-26d3@gregkh>
+References: <CA+3zgmsCgQs_LVV6fOwu3v2t_Vd=C3Wrv9QrbNpsmMq4RD=ZoQ@mail.gmail.com>
+ <20240714173043.668756e4@foxbook>
+ <ZpP3RU-MKb4pMmZH@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cMdl2pQQbD1nLSFBcq8TbCB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZpP3RU-MKb4pMmZH@eldamar.lan>
 
---Sig_/cMdl2pQQbD1nLSFBcq8TbCB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jul 14, 2024 at 06:05:25PM +0200, Salvatore Bonaccorso wrote:
+> Hi,
+> 
+> On Sun, Jul 14, 2024 at 05:32:39PM +0200, Michał Pecio wrote:
+> > This looks like bug 219039, please see if my suggested solution works.
+> > 
+> > The upstream commit is correct, because the call to inc_deq() has been
+> > moved outside handle_tx_event() so there is no longer this critical
+> > difference between doing 'goto cleanup' and 'return 0'. The intended
+> > change of this commit also makes sense to me.
+> > 
+> > This refactor is already present in v6.9 so I don't think the commit
+> > will have any effect besides fixing the isochronous bug which it is
+> > meant to fix.
+> > 
+> > But it is not present in v6.6 and v6.1, so they break/crash/hang/etc.
+> > Symptoms may vary, but I believe the root cause is the same because the
+> > code is visibly wrong.
+> > 
+> > 
+> > I would like to use this opportunity to point out that the xhci driver
+> > is currenty undergoing (much needed IMO) cleanups and refactors and
+> > this is not the first time when a naive, verbatim backport is attempted
+> > of a patch which works fine on upstream, but causes problems on earlier
+> > kernels. These things need special scrutiny, beyond just "CC:stable".
+> 
+> For tracking I guess this should go as well to the regressions list?
+> 
+> #regzbot introduced: 948554f1bb16e15b90006c109c3a558c66d4c4ac
+> #regzbot title: freezes on plugging USB connector due to 948554f1bb16 ("usb: xhci: prevent potential failure in handle_tx_event() for Transfer events without TRB")
+> #regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=219039
+> 
+> Thorsten I hope I got the most bits correctly, how would one inform
+> regzbot about the regresssion for 6.1.98 and 6.6.39 but not happening
+> in the upper versions?
 
-Hi all,
+I'll handle this and go release new kernels with just this reverted in
+it.  Let my morning coffee kick in first...
 
-Today's linux-next merge of the vhost tree got a conflict in:
+thanks,
 
-  MAINTAINERS
-
-between commit:
-
-  5f67eef6dff3 ("misc: mrvl-cn10k-dpi: add Octeon CN10K DPI administrative =
-driver")
-
-from the char-misc tree and commit:
-
-  8b6c724cdab8 ("virtio: vdpa: vDPA driver for Marvell OCTEON DPU devices")
-
-from the vhost tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index eb7433a8ce3d,8eefd032c87e..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -13642,11 -13459,11 +13642,16 @@@ S:	Supporte
-  F:	Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
-  F:	drivers/mmc/host/sdhci-xenon*
- =20
- +MARVELL OCTEON CN10K DPI DRIVER
- +M:	Vamsi Attunuru <vattunuru@marvell.com>
- +S:	Supported
- +F:	drivers/misc/mrvl_cn10k_dpi.c
- +
-+ MARVELL OCTEON ENDPOINT VIRTIO DATA PATH ACCELERATOR
-+ R:	schalla@marvell.com
-+ R:	vattunuru@marvell.com
-+ F:	drivers/vdpa/octeon_ep/
-+=20
-  MATROX FRAMEBUFFER DRIVER
-  L:	linux-fbdev@vger.kernel.org
-  S:	Orphan
-
---Sig_/cMdl2pQQbD1nLSFBcq8TbCB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaUtl0ACgkQAVBC80lX
-0Gz4+gf+LBiS+qLB9DuLKlFbkkkzWjfow5Ya+e6c/2ZSTcdgkC2VQfK5/0nPpFUJ
-V346TDg65P6WzU0IOkxjXCPdNdEEmtOc+95v/ZaJcmuXQQVnZlYfx5HZ/uWvHUYX
-5xi8ZPYIVzgK1qZ3Af/dlz03RWL3yZyYNjMXRvtN5+ZCKs2m4asyX0r/BlZcUw8S
-fKz1nL3xQWHpoIA9KbqG7UT/MifrQ/dVxY/fQnOnT6sgY0gnXLMTJWfqaajKcStf
-8HIRQ7CP5zZMAaLdOCUVOpqqQiOIHXZwOL7xE+Urn0h2JsnOidFzgyf69R/nnHjd
-N5QQ60/nwduXJylL55GTEVa6wSleGg==
-=lMYp
------END PGP SIGNATURE-----
-
---Sig_/cMdl2pQQbD1nLSFBcq8TbCB--
+greg k-h
