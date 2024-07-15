@@ -1,202 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6951F17BB5;
-	Mon, 15 Jul 2024 16:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EC13BBD7;
+	Mon, 15 Jul 2024 16:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721061993; cv=none; b=tsTBFVuOstY3VbNQA0TY6V8HbS6Wtlkag7I5kE+SrghAyUfLrs9cpla7HEjFEDmmxjcYOXwCJW00988HAj3bqpt0xLnB1kw0QoCY38MIwBO2bNLOo0laayRkF59hxvo1UBABPsFP5Gnafjlb8+8zDkGsinvuc7OAAGcsPWu2p20=
+	t=1721062000; cv=none; b=BVEEkomZT7Y8z4VdnoY8gNbiyUmSCM4Doh7JjhHHE1aYTAQpYuGhzmIUb5s7hiaEZztahF87x8kEanEaKV9WxZgXkJ2/ED9K68BgUeK0bSaH9JFQQoPOdbtMaQxsgKbnWrcPaVSrmawz44wgaN3Rdx3UVsz2PEQGlN4ITxSzSSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721061993; c=relaxed/simple;
-	bh=CKsM6X/ILuteI/53RzhvTkmwmrJCL208UsIV57Va2XI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SNuuVTdbnrUp02jBOSdpNOhioNj9EPEi6NcZFsY0Moy0M7DKxiSCSlsxbFP3dDvUOE8LWVRVIqHoPo/JXF+xwV/K51LHlsVXhVUK1yco4ge5zdbOqdmHZOpS+L/X3eGTLf6QC67X9M9zdtIfnLoLbs4bi2w3IVCYmCkFv70HG68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdLW+j6Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721062000; c=relaxed/simple;
+	bh=HQDOhH7XAMOdNRYtmv99nO77pkyE+TiuqMXtUvMoQPw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PeiWyOo0D0nZE/KpZysoqrQ9bwwv0ICwJ/IWOl0+1U0Nz3hXjBud9vaKDEN3qf/KHIGFsJpw6Y9Zkx98DBbLPgVO7X9B8tLkqBBTmeAUiV2WlDUHdSJ49PP9sLJFSLJHhGGWwQ2+ZMEN7TRlwC+gT7YsO0ub5XGUlvzRt7sdmnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NB4bh/wr; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdLW+j6Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2C15C32782;
-	Mon, 15 Jul 2024 16:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721061993;
-	bh=CKsM6X/ILuteI/53RzhvTkmwmrJCL208UsIV57Va2XI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fdLW+j6Y+Ki7ty31Vru/uvWcM/bxoTE4hvdOxHnGU07Kdd2OSMBKVf9ECGreERRqs
-	 Zi9Ek+1I4cz2tW2Vx//6jjeOgwNXNwUQ0EFxlvKz0bTEKwZvHpdp9M6X1YhDg3XWOB
-	 RKiY4IJADKm3BBoqvlFqU0/xk9ZKv5e9/lAEeGf3Se5PZ7lbaGCPHZUdGi9fSABPG8
-	 BwBKcbHj0IE6e/xujl5RVkZj4wxa6lUjkgWRxDLityGAWyPpsY2d4gMBbILfX6arRW
-	 wx/iUL/JppWzfd7b8kmn2WjqbtFaWhc/X2nyXlhBBT7PqoyESqdN7GsUgqKkpHn3Xz
-	 USjUiKDmoaENg==
-Date: Mon, 15 Jul 2024 09:46:32 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: david@fromorbit.com, willy@infradead.org, chandan.babu@oracle.com,
-	brauner@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
-	linux-mm@kvack.org, john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
-	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org, ryan.roberts@arm.com, hch@lst.de,
-	Zi Yan <ziy@nvidia.com>
-Subject: Re: [PATCH v10 10/10] xfs: enable block size larger than page size
- support
-Message-ID: <20240715164632.GV612460@frogsfrogsfrogs>
-References: <20240715094457.452836-1-kernel@pankajraghav.com>
- <20240715094457.452836-11-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NB4bh/wr"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52e99060b41so4672322e87.2;
+        Mon, 15 Jul 2024 09:46:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721061996; x=1721666796; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eL/AZF0Nl9JOTvoaifBbGBBpS8fEo+MN57T3BTmyTWk=;
+        b=NB4bh/wr1Ap5L4NOlrYaDG5cY1WgBp1WTVviAZhjNe4S67RMzOm+zUaA5rUbS4gbQ5
+         pEUW/sPO7SbI+3k/h3nhlTFQiya+1MtYjRlBT4MivHhz6rO7FVRo11Wnwn2N/XI91kAm
+         odmvyaorjTiUW9w46C4sJOqC7OQeLU6UROmTHz/CHHk7KKJ1aDAkvS1lNHx9FzkFiFRi
+         Ss8PxMwlMPjRJ5DzsZQd4ty9HeDeCswAsG6k95LprtadRWxp++9dPKD5vxbtbqtF1054
+         116WMOMINbGkuTy0vgzWTRGSwSJTbTg/S6iDFQDnKaPKaI1aZgB3DHDM+YaMXj6Z4TVd
+         t14A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721061996; x=1721666796;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eL/AZF0Nl9JOTvoaifBbGBBpS8fEo+MN57T3BTmyTWk=;
+        b=u84ppSE7XKaakPtkD1UcSBF+0IYInVJTtAKaau+NtXzMF5CufkPB8n9GAROr34eb5B
+         Fehc1YSqfNFlNxWjD3N1SWfLPjXpHCkqJQvCgFlXb3iX/MoRktHNqtZX1YFmtg3niWMe
+         rjY2GuqgFRrnSqiuUN5vXXuhHaYPmiPsqxMe7iyNQYVAPq8e2S+OwViLcoJX63P5PH8M
+         Kphs63VTottJ2SErb2nqfNExpExe7A5DlOrPI3ousTwYayJ6bJt+8tPywQUjQlpklqst
+         Yd+r3qoh/Z+Z1kAch0o6TgIv+xQNchmaKVAm+r8ZwH8PJnDerVUqLUl71tbobhe4r+7o
+         p7Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6PkVEfOBu8j0P38jXAzim6zbmb5V9mEW4YcSFWvvxvMZT+oAK7DFft9+OFNsza/Vhzrklj8KSDo7LJAVHD2T47XErOn+CBZ8kBMLF
+X-Gm-Message-State: AOJu0YwGqTtZvMgjc74RnXGywEsLlPzpdwSBL8ohXKwqTN6/XjXIwZ/5
+	bWXyfT5uBxDe26CCWeE7Qk0/6mECpOtTxmiAv4qv7b3ie9kUb8Fo
+X-Google-Smtp-Source: AGHT+IG8rnVQYsXD0i3Gs8pZTZ5c3cJcdn0hTvsIVtcTaVANdf0u4nlLOVSzLYvdx+l7EpEEqs2fuA==
+X-Received: by 2002:a05:6512:304f:b0:52c:def3:44b with SMTP id 2adb3069b0e04-52ede1b6ed4mr57286e87.31.1721061996292;
+        Mon, 15 Jul 2024 09:46:36 -0700 (PDT)
+Received: from playground.localdomain ([188.25.209.252])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e7749esm94316975e9.2.2024.07.15.09.46.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 09:46:35 -0700 (PDT)
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liu Ying <victor.liu@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] Add support for imx8ulp's SIM
+Date: Mon, 15 Jul 2024 12:45:11 -0400
+Message-Id: <20240715164514.8718-1-laurentiumihalcea111@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715094457.452836-11-kernel@pankajraghav.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 15, 2024 at 11:44:57AM +0200, Pankaj Raghav (Samsung) wrote:
-> From: Pankaj Raghav <p.raghav@samsung.com>
-> 
-> Page cache now has the ability to have a minimum order when allocating
-> a folio which is a prerequisite to add support for block size > page
-> size.
-> 
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  fs/xfs/libxfs/xfs_ialloc.c |  5 +++++
->  fs/xfs/libxfs/xfs_shared.h |  3 +++
->  fs/xfs/xfs_icache.c        |  6 ++++--
->  fs/xfs/xfs_mount.c         |  1 -
->  fs/xfs/xfs_super.c         | 30 ++++++++++++++++++++++--------
->  5 files changed, 34 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-> index 14c81f227c5bb..1e76431d75a4b 100644
-> --- a/fs/xfs/libxfs/xfs_ialloc.c
-> +++ b/fs/xfs/libxfs/xfs_ialloc.c
-> @@ -3019,6 +3019,11 @@ xfs_ialloc_setup_geometry(
->  		igeo->ialloc_align = mp->m_dalign;
->  	else
->  		igeo->ialloc_align = 0;
-> +
-> +	if (mp->m_sb.sb_blocksize > PAGE_SIZE)
-> +		igeo->min_folio_order = mp->m_sb.sb_blocklog - PAGE_SHIFT;
-> +	else
-> +		igeo->min_folio_order = 0;
->  }
->  
->  /* Compute the location of the root directory inode that is laid out by mkfs. */
-> diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-> index 34f104ed372c0..e67a1c7cc0b02 100644
-> --- a/fs/xfs/libxfs/xfs_shared.h
-> +++ b/fs/xfs/libxfs/xfs_shared.h
-> @@ -231,6 +231,9 @@ struct xfs_ino_geometry {
->  	/* precomputed value for di_flags2 */
->  	uint64_t	new_diflags2;
->  
-> +	/* minimum folio order of a page cache allocation */
-> +	unsigned int	min_folio_order;
-> +
->  };
->  
->  #endif /* __XFS_SHARED_H__ */
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index cf629302d48e7..0fcf235e50235 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -88,7 +88,8 @@ xfs_inode_alloc(
->  
->  	/* VFS doesn't initialise i_mode! */
->  	VFS_I(ip)->i_mode = 0;
-> -	mapping_set_large_folios(VFS_I(ip)->i_mapping);
-> +	mapping_set_folio_min_order(VFS_I(ip)->i_mapping,
-> +				    M_IGEO(mp)->min_folio_order);
->  
->  	XFS_STATS_INC(mp, vn_active);
->  	ASSERT(atomic_read(&ip->i_pincount) == 0);
-> @@ -325,7 +326,8 @@ xfs_reinit_inode(
->  	inode->i_uid = uid;
->  	inode->i_gid = gid;
->  	inode->i_state = state;
-> -	mapping_set_large_folios(inode->i_mapping);
-> +	mapping_set_folio_min_order(inode->i_mapping,
-> +				    M_IGEO(mp)->min_folio_order);
->  	return error;
->  }
->  
-> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> index 3949f720b5354..c6933440f8066 100644
-> --- a/fs/xfs/xfs_mount.c
-> +++ b/fs/xfs/xfs_mount.c
-> @@ -134,7 +134,6 @@ xfs_sb_validate_fsb_count(
->  {
->  	uint64_t		max_bytes;
->  
-> -	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
->  	ASSERT(sbp->sb_blocklog >= BBSHIFT);
->  
->  	if (check_shl_overflow(nblocks, sbp->sb_blocklog, &max_bytes))
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 27e9f749c4c7f..3c455ef588d48 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -1638,16 +1638,30 @@ xfs_fs_fill_super(
->  		goto out_free_sb;
->  	}
->  
-> -	/*
-> -	 * Until this is fixed only page-sized or smaller data blocks work.
-> -	 */
->  	if (mp->m_sb.sb_blocksize > PAGE_SIZE) {
-> -		xfs_warn(mp,
-> -		"File system with blocksize %d bytes. "
-> -		"Only pagesize (%ld) or less will currently work.",
-> +		size_t max_folio_size = mapping_max_folio_size_supported();
-> +
-> +		if (!xfs_has_crc(mp)) {
-> +			xfs_warn(mp,
-> +"V4 Filesystem with blocksize %d bytes. Only pagesize (%ld) or less is supported.",
->  				mp->m_sb.sb_blocksize, PAGE_SIZE);
-> -		error = -ENOSYS;
-> -		goto out_free_sb;
-> +			error = -ENOSYS;
-> +			goto out_free_sb;
-> +		}
-> +
-> +		if (mp->m_sb.sb_blocksize > max_folio_size) {
-> +			xfs_warn(mp,
-> +"block size (%u bytes) not supported; maximum folio size supported in "\
-> +"the page cache is (%ld bytes). Check MAX_PAGECACHE_ORDER (%d)",
-> +			mp->m_sb.sb_blocksize, max_folio_size,
-> +			MAX_PAGECACHE_ORDER);
-> +			error = -ENOSYS;
-> +			goto out_free_sb;
+From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Nit: Continuation lines should be indented, not lined up with the next
-statement:
+i.MX8ULP's SIM (System Integration Module) allows
+control and configuration of certain components
+form the domain it's assigned to. Add DT node
+and schema for it. Its child shall also be
+included.
 
-			xfs_warn(mp,
-"block size (%u bytes) not supported; maximum folio size supported in "\
-"the page cache is (%ld bytes). Check MAX_PAGECACHE_ORDER (%d)",
-					mp->m_sb.sb_blocksize,
-					max_folio_size,
-					MAX_PAGECACHE_ORDER);
-			error = -ENOSYS;
-			goto out_free_sb;
+---
+Changes in v3:
+- Addressed Krzysztof's comments
+- The "reset: add driver for imx8ulp SIM reset controller" patch might generate conflict when
+applied to Rob and Shawn Guo's trees (for-next branch). Tested all patches with linux-next,
+next-20240715 tag and no conflicts.
+- Link to v2: https://lore.kernel.org/all/20240609125901.76274-1-laurentiumihalcea111@gmail.com/
 
-With that fixed,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Changes in v2:
+- Reset controller is now also a syscon provider.
+- Changed vendor prefix to nxp.
+- Link to v1: https://lore.kernel.org/all/20240516204031.171920-1-laurentiumihalcea111@gmail.com/
 
---D
+---
+Laurentiu Mihalcea (3):
+  dt-bindings: reset: add schema for imx8ulp SIM reset
+  reset: add driver for imx8ulp SIM reset controller
+  arm64: dts: imx8ulp: add AVD-SIM node
 
-> +		}
-> +
-> +		xfs_warn(mp,
-> +"EXPERIMENTAL: V5 Filesystem with Large Block Size (%d bytes) enabled.",
-> +			mp->m_sb.sb_blocksize);
->  	}
->  
->  	/* Ensure this filesystem fits in the page cache limits */
-> -- 
-> 2.44.1
-> 
-> 
+ .../reset/nxp,imx8ulp-avd-sim-reset.yaml      |  59 ++++++++++
+ arch/arm64/boot/dts/freescale/imx8ulp.dtsi    |  13 +++
+ drivers/reset/Kconfig                         |   7 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-imx8ulp-sim.c             | 106 ++++++++++++++++++
+ 5 files changed, 186 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/nxp,imx8ulp-avd-sim-reset.yaml
+ create mode 100644 drivers/reset/reset-imx8ulp-sim.c
+
+---
+base-commit: 91e3b24eb7d297d9d99030800ed96944b8652eaf
