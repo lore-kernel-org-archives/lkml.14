@@ -1,128 +1,92 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2E318FC82;
-	Mon, 15 Jul 2024 15:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A0B18FDBC;
+	Mon, 15 Jul 2024 15:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721057615; cv=none; b=YfV2jQWrueJCTaQMn7AW6GehzxPNMfkhpXriHlfMw6ym/RSiD046OFD3Pz3z1iQp6l615PBgcuV1F/a0zKQeNvQYn2IqcNPxowGxMWb1f1zxE2QLuUCSrT4LwJSI1v5FEDIAjfx2SLyGxlNX46wVB4txtQNdHejcFtiAjVNHUFE=
+	t=1721057616; cv=none; b=lE4TEfFZ5+oxqByMMyWkrY/kVkprYOfUj00YaCBoQNmZliUIA2OtwE0mXS3xFLRzptdy4sUr8Ev+wa5OLyGJ243g874XaWUGX7LD6vjilRQZyApPILTWuSiApBAt1YIistMbYDIkZEQtl9nDJqz47QeTokH0PTT8mLZzb1zx32Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721057615; c=relaxed/simple;
-	bh=42X1XcSiyhr9rYbdrgBDVEy9bPWF4PwzXgU6n/VhVGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mRKQk83/3A4eXaEKJT6s85/O9ihKyrp4633T2wUvRyWPrq1rKFR3kG7Z4ePMDubKw8eijN//KUUZ2Fsba1f7X0M3/K/BcC6fL6R8+7yu72p7oOXY2GXpKzY3O0DpsH6wffJDgpfuo7X8olt2V2jU+7TPCtcRjbTNjAjjNRGEBao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XoBJtES1; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721057616; c=relaxed/simple;
+	bh=uoAgvV4TAFahqFM6MfhR7wnigG35xC2qzRa7VklXYFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cku0VDpaytntkMJRG+TQDq1fdZ24qHn8zxJDqyzCOfxRJ2cTMpzGKV28r2D3LvadFNa5fWxx/SJlbOoB+zYtYyilbvU93Pj0mgQpgl1J8p5AjWBWBqT3OEljJJOuH8gnRayx73uE6PAa37n5kSa91qHezdS1tWRLFyRE40glVJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TrOuQ8Y1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoBJtES1"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3679f806223so3278384f8f.0;
-        Mon, 15 Jul 2024 08:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721057612; x=1721662412; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KjxCwRmZxD0NghIAdi0Gj+hYNdC308NqnsUVK+w6DfE=;
-        b=XoBJtES1G3ndQJsaU5pOFW5haOkNcMeZQv9iDZ6d/YQgvwmJ4NxzWWtyCpvdrBze+q
-         XS74D2V08Ogm1S/+MHUIoyk4wR9Ut12uJMHs5xdWv6IC75fHP+r72vIuol3IN8L2mdr1
-         +rfKeZ0OtCZSICrRwghtBEUv7hfOgvHT1cENjs+2CBFturlQr1S/9FGjT7bTg4BLTCpp
-         6Wcazvl7/uWzjRv2RauxwmXA4GzgVKiNoVdWUp7/Opehn1brIQnHUkvpaYWmMiah1csm
-         d7kcQVTqGOZJTw8GiZoae5ukpFrEu//Z3pGX4dDAskx/CXRO+bYihIfNyt7sQn+SKZAJ
-         oGJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721057612; x=1721662412;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KjxCwRmZxD0NghIAdi0Gj+hYNdC308NqnsUVK+w6DfE=;
-        b=pO/bNyGKjDExciNH+phoKxkjABTHkn3v8Sc92yZcmAdPHEwn9gwy1LVEOMN2Yytcny
-         RXQlPC/WqiqljwGGmUubSVNgF9OjmSpRb+9rQu7Yty0rAdj1CYnT2EVY9V45Wg6cYEYJ
-         KPHE/hv6kbsRcnB0jmFuVoHfmbOLq5VgZrbq2dT+TYI/jwhUTxQyGjgHP8DG/T9bnpVN
-         7EbeJ3MQh2xczAQb+CoNCW/NAZn8bQTRLkxuyH1NSFJQxksoCfqlb7906CIbRPheLLzW
-         nDso3cWSoCBENyem3wL9B2NRXBuFEp2X19lzFuejjrgZdYFil14OYtrTDZhe0Rj3JRh1
-         ZZyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZU1Fpqggq4CDbOicxv8j64DKftmBqKjMYdfxcp67EPdp63JXqpoKJMeFZ3NoCSpD6R5uEVllnnNUv2fakfQ7QLOOKwcfu7u59Z6+1vy/ImB86tpTerliOpDwomAed9rsdUSzho/j8mw==
-X-Gm-Message-State: AOJu0Yye2k7sbAlOtD1Hhnt2Zm6wMFn5OYuVl7vvUI9kS8bk+z3b9U6S
-	/i1mbdNPbHbys/JFXlo9K6FpaiIzzHDdQHikAQUzxmqa0ZVk8w+M
-X-Google-Smtp-Source: AGHT+IF8lHceTME+XT0pHLUI+dbiNjpEZB4/QdSQgJ4j5SKkXA1Gy/sqaXaS97dqmAsS4RVL2gwAUw==
-X-Received: by 2002:a5d:4f04:0:b0:367:89b0:f584 with SMTP id ffacd0b85a97d-36823c4ce4dmr227387f8f.11.1721057611736;
-        Mon, 15 Jul 2024 08:33:31 -0700 (PDT)
-Received: from eichest-laptop.lan ([2a02:168:af72:0:564b:c18:f4fc:19ad])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbf4bsm6720866f8f.73.2024.07.15.08.33.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 08:33:31 -0700 (PDT)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: nick@shmanahar.org,
-	dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	linus.walleij@linaro.org,
-	francesco.dolcini@toradex.com,
-	joao.goncalves@toradex.com
-Cc: linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/3] Add a property to turn off the max touch controller if not used
-Date: Mon, 15 Jul 2024 17:31:20 +0200
-Message-ID: <20240715153330.91979-1-eichest@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TrOuQ8Y1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CAA8C32782;
+	Mon, 15 Jul 2024 15:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1721057615;
+	bh=uoAgvV4TAFahqFM6MfhR7wnigG35xC2qzRa7VklXYFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TrOuQ8Y1I0VMAJvE98QPXVEwSWFlKK4Ld0wZhRimJgRPkQsD4vosoB7IrFE470sfU
+	 GlzUmV9X788ahqb2v9TliKZiUF4bHrnDmH7gK/kA26ACSAoyJDYzP7EU55LXsIfO9w
+	 syxpId3pITlJaqW9nOuNvRp9XaWk+VvxjV8WEOdU=
+Date: Mon, 15 Jul 2024 17:33:32 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alexander Aring <aahringo@redhat.com>
+Cc: rafael@kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	gfs2 <gfs2@lists.linux.dev>, David Teigland <teigland@redhat.com>
+Subject: Re: udev kset_create_and_add() with own struct kobj_type?
+Message-ID: <2024071509-closable-drop-down-3a7f@gregkh>
+References: <CAK-6q+jSBjuFaFqGLQcfVLMUwRcJJMHk2oUnSgMObwz+OAih6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK-6q+jSBjuFaFqGLQcfVLMUwRcJJMHk2oUnSgMObwz+OAih6g@mail.gmail.com>
 
-Our hardware has a shared regulator that powers various peripherals such
-as the display, touch, USB hub, etc. Since the Maxtouch controller
-doesn't currently allow it to be turned off, this regulator has to stay
-on when not used. This increases the overall power consumption. In order
-to turn off the controller when the system does not use it, this series
-adds a device tree property to the Maxtouch driver that allows the
-controller to be turned off completely and ensures that it can resume
-from the power off state.
+On Mon, Jul 15, 2024 at 11:27:00AM -0400, Alexander Aring wrote:
+> Hi,
+> 
+> I am currently implementing namespace support into the fs/dlm
+> subsystem. The DLM subsystem uses kset_create_and_add("dlm",
+> &dlm_uevent_ops, kernel_kobj); to create the "dlm" sysfs directory.
+> Underneath it creates for each lockspace a subdirectory using
+> kobject_init_and_add() with a non-static name and being known during
+> runtime.
+> 
+> Now I want to add namespace support and need to change the "default"
+> kset->kobj.ktype = &kset_ktype; that is set by
+> kset_create_and_add()->kset_create() to my own kobj_type because I
+> need to implement a different ".child_ns_type" callback before
+> kset_register() is called.
+> 
+> So kset_create_and_add() does not allow me to add my own
+> ".child_ns_type" callback for the kset that is required for me to have
+> my sysfs "kernel/dlm" directory separated by each net-namespace
+> without breaking any backwards compatibility.
 
-Changes since v5:
+I don't understand, what "backwards compatibility" is happening here?
 
-- Keep reset pin untouched in mxt_power_off (Dmitry)
-- Generate proper reset signal in mxt_power_on (Dmitry)
-- Drop introduction of mxt_device_register (not necessary)
+> My current solution is that I mostly copy&pasted the code of
+> kset_create_and_add()/kset_create() to have a way to tell my own
+> struct kobj_type that contains the implemented my own ".child_ns_type"
+> callback.
 
-Changes since v4:
+Ick.
 
-- Load configuration firmware during probe and not after resume (Dmitry)
-- Do some improvements on error handling (Dmitry)
-- Add Reviewed-by tag from Joao
+> I am writing this mail to get some advice on what I can do here
+> without doing the copy&pasted code?
+> Add a parameter to kset_create_and_add() that allows me to set an
+> "struct kobj_type"?
+> Introducing a new function that does allow me to set the new parameter
+> (I probably like that because then I don't need to update all other
+> users)?
 
-Changes since v3:
+A new function would be ok, but I hate it how filesystems have to use
+"raw" kobjects and the like all the time.  It's rough, sorry.
 
-- Move the power on part to mxt_start and the power off part to
-  mxt_stop. This allows to turn the touch controller off even when not
-  in use and not only when being suspended (Dmitry)
+Also, I didn't think sysfs namespaces worked for anything except
+networking stuff.  Are you sure you really need this?  Where is your
+"namespace" defined at?
 
-Changes since v2:
+thanks,
 
-- Add Reviewed-by tags from Linus and Krzysztof to the dt-bindings patch
-
-Changes since v1:
-
-- Rename the property and change the description (Krzysztof, Linus,
-  Dmitry, Conor)
-
-Stefan Eichenberger (3):
-  Input: atmel_mxt_ts - add power off and power on functions
-  dt-bindings: input: atmel,maxtouch: add poweroff-sleep property
-  Input: atmel_mxt_ts - add support for poweroff-sleep
-
- .../bindings/input/atmel,maxtouch.yaml        |   6 +
- drivers/input/touchscreen/atmel_mxt_ts.c      | 134 +++++++++++++-----
- 2 files changed, 108 insertions(+), 32 deletions(-)
-
--- 
-2.43.0
-
+greg k-h
