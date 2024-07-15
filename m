@@ -1,123 +1,244 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEAB49659;
-	Mon, 15 Jul 2024 08:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3D118307B
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032065; cv=none; b=Sf8LyEGRPLBPYueRdmC1Wtc3B5i2tSK4YBfgIvtram+t40ytfIGxoXZW++7Ul2t+PdftMsTJhYM605InoNU0Qu7A60j/rbEfA/dK65mwXzs+b1ggwJ0620AOvIiBwRDEse7phDiyQXmLbdzf2/pUs2Twp5G/uwP66Ttl4xhKOUU=
+	t=1721032100; cv=none; b=KH7HEjoG9Sjde+JK4BR/KPOPJ0V0HYmHu2B3hiE4ZPb1yGFHjx9ro2haTVQAFaLDmzafFiGFZ3UmZRh5ItKFDZGvcv0UR6EMRhQxg436Gdbuh+u+o1gC+Px0gi21xiyDBe6mcxLju0cKK65jToAPTjmKty09YMtb6SqES+n0n0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032065; c=relaxed/simple;
-	bh=oX3nbkgDPK6ubobNu6nSiR2qOQhSYSnYP2i+a6Mok1U=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ge5iD4gB+b4Vu/uzWkZH/WOkWZomR1FAxedcwF9P2vdiEqyLp+7cIQw6LEIBIUzO88ZUmwXavdXPsg6blZU+Gi0mdQy1DaawoB8HnIG0MeI/tJtbUe3L+OenO2zT33T4c99zHga9ZaLojWUP+e8Xz3rScBvVX0tz3kC68ximyZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UtsiajxF; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721032100; c=relaxed/simple;
+	bh=0JPb9Cjxtnj774USyTMOYpYucCBxVNOt5cF+Cej/Y3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M/cSJ3zUg5zZJ83POIfo/AxuvLmd7kjm45vP2P/6C9hm7zJOBK3lYnibAgf6gqLA7utk+14Kzrfi/awRWS6DYChJy2DBl4MliYZvVqgdvUoqB2GwiyR419LWdF0witbHIgKucl1baxrM8+YG9L0sb0k94E0T3p6krRA/uJKOfrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BE5yCAoI; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtsiajxF"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c98a97d1ccso3512184a91.0;
-        Mon, 15 Jul 2024 01:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721032063; x=1721636863; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9wkUY0TLiU0e6n58LpHN87VKdeUeX7NPc3fuLII6KMA=;
-        b=UtsiajxFgP5xKdGw5P5RGsDggmYVFzMSItGxJxv1Rksd4WAnFAnf0X1jrY5KNoQEe6
-         0FAMMSBXrdF7VVHHIBLPadbRdEXYXfNWh9we/e2P3oXHr/rFw0KW3h/1KSy7H72OcCMz
-         sSs9ncH+ySj0pGo00WatZeb6yTY8+KL7bo0ND3JEPMEA86KmVtnPx3GAg6SPycetD6jS
-         owZnLb8DxKxX4jpZiBuyzzPILAeg9RvSihIRInzBo9UNZJBPO8YpGYRm0Qq7ErJ1fhIH
-         d2+OwEZj6fHAu+EHqXX36lzoERt6JKBsFo3ihfp44AUyOPCwv3Y3+sWvWgCWOI9nA8Sg
-         IfFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721032063; x=1721636863;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9wkUY0TLiU0e6n58LpHN87VKdeUeX7NPc3fuLII6KMA=;
-        b=JK+gJ0ldf1VLkHta5Flb6Xh3YyNg6IFRzpfQFZPsKIL/1wvo1zVfb9KCTkg99+BPMG
-         kiLybpksxuFd7AavUNSXbrLobWGCXHc8FYVsHDA19z8ncbDXdXOZZ4TLQvo17oXGZyJ7
-         qtwhxK8NqC4t1k4kVudRLgUyFufXkE16/P/XyrBeCYNaONe8MmUL0X35YtoHs9rf7T4e
-         UKnIbm9CzvprfoF/hLYJO7UKG8fxk+HDqHAy/a11L9MONWnzMDA4vjuvB3cYskEq6fBd
-         sPsEoOuPuAkRjykrH2U1pCF0oxNoUa4YT0By1UBL57HdhU6ci+JmTq4qVRgVgUn/Sa5J
-         ofnw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7MIjn7z23Bpa4a1QHsI97i5DmrZ8huay5NxwTSCB+1WSS2tbciPSqMu7box148Sb7+hiROci2KMz0iL0zhKPGBk2qJEY8XvBFDAJkPlL8mF4JXcet5Z4pXVYwlgXZdBP9czujW/QNvouA3NU4l4rmabNUDZ6GWkhLIkt9eU3xZk8NX174uPpuNIjw9FsFGONFdppyjBrWcAfnDPhjGquKZyDG
-X-Gm-Message-State: AOJu0Yxy2DU4hJt4rdsZAo4Ph3DSsD8ZTOxKJWUTiB8m1Xbahaklk5bn
-	ehieWQe6f6y2nPS76vNbaLCY5fMwOLLves7/mT7IzLaT/2zhsaoJ
-X-Google-Smtp-Source: AGHT+IHwqr+RXaxTe3zvOZmmoOk7k5D4/ZZfHGZDbpE+MX+vxW1lQni5wQo11I/QfXXSlIqhThZ8MA==
-X-Received: by 2002:a17:90a:fe05:b0:2c9:648f:f0ef with SMTP id 98e67ed59e1d1-2cac4ce5611mr14582715a91.9.1721032063467;
-        Mon, 15 Jul 2024 01:27:43 -0700 (PDT)
-Received: from localhost ([1.146.120.6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2caedc1709esm3724475a91.34.2024.07.15.01.27.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 01:27:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BE5yCAoI"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 835131C0007;
+	Mon, 15 Jul 2024 08:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721032096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nzPhvUeAKAa6sy366mPvywtGjg+xp3MxMxDZgFXkmVA=;
+	b=BE5yCAoIcLY3vyj0tpJJfnbkib4/PCCGApFdp0IWxYTnA0Celqg07xqYJZtYH6ZBSjBxtA
+	rlyhQqyy2WzvlTP/owiFsbIdMTLYeSvFgCIhaqsaFNIY1SrQJ7bC98rY9mr27EEgKHp8j/
+	cWfdJruCVHGiGwAklX01Omjt0JFrAzzgiHG7AeE5JtgNc1bhEwWumPqPyzhNkovpoFLFcp
+	G5/bg1cnQYrrwAkLua9+8Nf2/XY2N3sdCH3qKU1xmYf+DRQAJOKd1Wrgc4jFTgtBDVOuhm
+	9rzKCFub7VfNQKiDuUjg/y6WcFeNfAkb07GkdWI4Lgj05EbfQ1nVIuceZd2nwQ==
+Date: Mon, 15 Jul 2024 10:28:10 +0200
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
+	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com,
+	Pekka Paalanen <pekka.paalanen@collabora.com>
+Subject: Re: [PATCH v8 03/17] drm/vkms: write/update the documentation for
+ pixel conversion and pixel write functions
+Message-ID: <ZpTdmjmJFil27DG1@louis-chauvet-laptop>
+Mail-Followup-To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
+	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com,
+	Pekka Paalanen <pekka.paalanen@collabora.com>
+References: <20240516-yuv-v8-0-cf8d6f86430e@bootlin.com>
+ <20240516-yuv-v8-3-cf8d6f86430e@bootlin.com>
+ <5ef8948e-6c90-4892-bcfa-1d78655025cd@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 15 Jul 2024 18:27:33 +1000
-Message-Id: <D2PYY2N7SOGR.1KKNYAQTUWL89@gmail.com>
-Cc: "Michael Ellerman" <mpe@ellerman.id.au>, "Christophe Leroy"
- <christophe.leroy@csgroup.eu>, "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland"
- <mark.rutland@arm.com>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
- Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>, "Hari Bathini"
- <hbathini@linux.ibm.com>, "Mahesh Salgaonkar" <mahesh@linux.ibm.com>,
- "Vishal Chourasia" <vishalc@linux.ibm.com>
-Subject: Re: [RFC PATCH v4 13/17] powerpc64/ftrace: Support .text larger
- than 32MB with out-of-line stubs
-From: "Nicholas Piggin" <npiggin@gmail.com>
-To: "Naveen N Rao" <naveen@kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <cover.1720942106.git.naveen@kernel.org>
- <f4faee243f85eec691f2d72133fcb8e4aa9912d0.1720942106.git.naveen@kernel.org>
-In-Reply-To: <f4faee243f85eec691f2d72133fcb8e4aa9912d0.1720942106.git.naveen@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5ef8948e-6c90-4892-bcfa-1d78655025cd@igalia.com>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Sun Jul 14, 2024 at 6:27 PM AEST, Naveen N Rao wrote:
-> We are restricted to a .text size of ~32MB when using out-of-line
-> function profile sequence. Allow this to be extended up to the previous
-> limit of ~64MB by reserving space in the middle of .text.
->
-> A new config option CONFIG_PPC_FTRACE_OUT_OF_LINE_NUM_RESERVE is
-> introduced to specify the number of function stubs that are reserved in
-> .text. On boot, ftrace utilizes stubs from this area first before using
-> the stub area at the end of .text.
+Le 13/07/24 - 11:35, Maíra Canal a écrit :
+> On 5/16/24 10:04, Louis Chauvet wrote:
+> > Add some documentation on pixel conversion functions.
+> > Update of outdated comments for pixel_write functions.
+> > 
+> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+> > ---
+> >   drivers/gpu/drm/vkms/vkms_composer.c |  7 ++++
+> >   drivers/gpu/drm/vkms/vkms_drv.h      | 15 ++++++++-
+> >   drivers/gpu/drm/vkms/vkms_formats.c  | 62 ++++++++++++++++++++++++++++++------
+> >   3 files changed, 74 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> > index c6d9b4a65809..da0651a94c9b 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> > @@ -189,6 +189,13 @@ static void blend(struct vkms_writeback_job *wb,
+> >   
+> >   	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
+> >   
+> > +	/*
+> > +	 * The planes are composed line-by-line to avoid heavy memory usage. It is a necessary
+> > +	 * complexity to avoid poor blending performance.
+> > +	 *
+> > +	 * The function vkms_compose_row is used to read a line, pixel-by-pixel, into the staging
+> 
+> Nit: I know it's not kerneldoc, but I'd be glad if you use
+> vkms_compose_row()
+> 
+> > +	 * buffer.
+> > +	 */
+> >   	for (size_t y = 0; y < crtc_y_limit; y++) {
+> >   		fill_background(&background_color, output_buffer);
+> >   
+> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+> > index b4b357447292..212f4ab6a71f 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> > +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> > @@ -25,6 +25,17 @@
+> >   
+> >   #define VKMS_LUT_SIZE 256
+> >   
+> > +/**
+> > + * struct vkms_frame_info - structure to store the state of a frame
+> 
+> s/structure/Structure
+> 
+> > + *
+> > + * @fb: backing drm framebuffer
+> > + * @src: source rectangle of this frame in the source framebuffer, stored in 16.16 fixed-point form
+> > + * @dst: destination rectangle in the crtc buffer, stored in whole pixel units
+> > + * @map: see drm_shadow_plane_state@data
+> > + * @rotation: rotation applied to the source.
+> > + *
+> > + * @src and @dst should have the same size modulo the rotation.
+> > + */
+> >   struct vkms_frame_info {
+> >   	struct drm_framebuffer *fb;
+> >   	struct drm_rect src, dst;
+> > @@ -49,9 +60,11 @@ struct vkms_writeback_job {
+> >   };
+> >   
+> >   /**
+> > - * vkms_plane_state - Driver specific plane state
+> > + * struct vkms_plane_state - Driver specific plane state
+> >    * @base: base plane state
+> >    * @frame_info: data required for composing computation
+> > + * @pixel_read: function to read a pixel in this plane. The creator of a vkms_plane_state must
+> 
+> s/vkms_plane_state/struct vkms_plane_state
+> 
+> > + * ensure that this pointer is valid
+> 
+> Note: "If the @argument description has multiple lines, the continuation
+> of the description should start at the same column as the previous
+> line:" [1]
+> 
+> [1] https://docs.kernel.org/doc-guide/kernel-doc.html#function-parameters
+> 
+> >    */
+> >   struct vkms_plane_state {
+> >   	struct drm_shadow_plane_state base;
+> > diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> > index d597c48452ac..f157c43da4d6 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> > @@ -9,6 +9,18 @@
+> >   
+> >   #include "vkms_formats.h"
+> >   
+> > +/**
+> > + * pixel_offset() - Get the offset of the pixel at coordinates x/y in the first plane
+> > + *
+> > + * @frame_info: Buffer metadata
+> > + * @x: The x coordinate of the wanted pixel in the buffer
+> > + * @y: The y coordinate of the wanted pixel in the buffer
+> > + *
+> > + * The caller must ensure that the framebuffer associated with this request uses a pixel format
+> > + * where block_h == block_w == 1.
+> > + * If this requirement is not fulfilled, the resulting offset can point to an other pixel or
+> > + * outside of the buffer.
+> > + */
+> >   static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
+> >   {
+> >   	struct drm_framebuffer *fb = frame_info->fb;
+> > @@ -16,18 +28,22 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
+> >   	return fb->offsets[0] + (y * fb->pitches[0]) + (x * fb->format->cpp[0]);
+> >   }
+> >   
+> > -/*
+> > - * packed_pixels_addr - Get the pointer to pixel of a given pair of coordinates
+> > +/**
+> > + * packed_pixels_addr() - Get the pointer to the block containing the pixel at the given
+> > + * coordinates
+> >    *
+> >    * @frame_info: Buffer metadata
+> > - * @x: The x(width) coordinate of the 2D buffer
+> > - * @y: The y(Heigth) coordinate of the 2D buffer
+> > + * @x: The x (width) coordinate inside the plane
+> > + * @y: The y (height) coordinate inside the plane
+> >    *
+> >    * Takes the information stored in the frame_info, a pair of coordinates, and
+> >    * returns the address of the first color channel.
+> >    * This function assumes the channels are packed together, i.e. a color channel
+> >    * comes immediately after another in the memory. And therefore, this function
+> >    * doesn't work for YUV with chroma subsampling (e.g. YUV420 and NV21).
+> > + *
+> > + * The caller must ensure that the framebuffer associated with this request uses a pixel format
+> > + * where block_h == block_w == 1, otherwise the returned pointer can be outside the buffer.
+> >    */
+> >   static void *packed_pixels_addr(const struct vkms_frame_info *frame_info,
+> >   				int x, int y)
+> > @@ -52,6 +68,13 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
+> >   	return x;
+> >   }
+> >   
+> > +/*
+> > + * The following functions take pixel data from the buffer and convert them to the format
+> > + * ARGB16161616 in out_pixel.
+> 
+> I believe it is @out_pixel.
 
-[snip]
+Thanks for the review!
 
-> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kern=
-el/trace/ftrace_entry.S
-> index 71f6a63cd861..86dbaa87532a 100644
-> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
-> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
-> @@ -374,6 +374,14 @@ _GLOBAL(return_to_handler)
->  	blr
->  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-> =20
-> +#ifdef CONFIG_PPC_FTRACE_OUT_OF_LINE
-> +SYM_DATA(ftrace_ool_stub_text_count, .long CONFIG_PPC_FTRACE_OUT_OF_LINE=
-_NUM_RESERVE)
-> +
-> +SYM_CODE_START(ftrace_ool_stub_text)
-> +	.space CONFIG_PPC_FTRACE_OUT_OF_LINE_NUM_RESERVE * FTRACE_OOL_STUB_SIZE
-> +SYM_CODE_END(ftrace_ool_stub_text)
-> +#endif
-> +
->  .pushsection ".tramp.ftrace.text","aw",@progbits;
->  .globl ftrace_tramp_text
->  ftrace_tramp_text:
-
-How are you ensuring these new stubs get to the middle of kernel text? I
-guess you just put it in regular .text and hope the linker puts it
-in a good place?
+Yes it @out_pixel, I will fix those nits for the next iteration.
 
 Thanks,
-Nick
+Louis Chauvet
+ 
+> The content seems great to me, only those minor nits.
+> 
+> Best Regards,
+> - Maíra
+> 
+
+[...]
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
