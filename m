@@ -1,137 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510A6187323;
-	Mon, 15 Jul 2024 10:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137E818629E;
+	Mon, 15 Jul 2024 10:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721038150; cv=none; b=lYmlGgeCpO28zqMTctkrGVglzTU3uklb4QS0xPrjAFIf3AY2qnQIWcpqVkki8WOArmuupxHD3tKORKoB17hv4gX1093uU1SExaaTJ4TUhTi2fC3fOo+BKUVMeukNVsdHXqQy1GIhVgj5bgCYxSMBuK29WyC5aF0Hd7qzfOdgbQI=
+	t=1721038175; cv=none; b=O/NCJoQc1xzhObVEHX9l1WpL4YSTAmAVnOiFmJs25kG7bmiLLtd863CcWtu9Y/htbuxyjNnSqfHdyENXwoVZ5XJ0ru56DNN07QE3lnxVdlIwJu7qmAs0vnrZLV6UY/Ve4w7mpKhWMIXCEYUs6l0QQU9LWa2X1Wxs62q7nhjDQcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721038150; c=relaxed/simple;
-	bh=BlPnXXaG0MPVBPZx1o0DOll7X8gCj7KLAbpU80OhlvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B5wXQW5HZCsfOyZA6uQMbZLHAlgZBMAp6tG8WqQk3xb1uODfu5vIrT/rrSbdJLCfdc4V1zER3Zw2oGZTJw0mEk9TDVz1LmwPH4HBc/D0Uckb0S4MNs9CpKcDQVKkrcPSLwp+4idgVnUj16spmvjPH3dy9jLHGHWW4R6VMkKe2zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iwE1qXGb; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721038175; c=relaxed/simple;
+	bh=3iWkkRhrPMHdpUC2YypIAwVDHV4ZA0Hh2R6TO1it6/E=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=bBglAmRURa1F3hfQRJdP0HxmX4vOtp/vdghsoemMo8W9BeDeCAHkd7sJCM2BJrzEC5xGBPabb1ASv0iC2+mTCgUpe/jeWcPQonTvj1ExMYdYDpHn5BnnK/wAlXqNxfag8mM/SfIMM9dyVEX9OqBnBfAjWzWABOaAgW9piw+JD7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dXs/5jRQ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iwE1qXGb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721038149; x=1752574149;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BlPnXXaG0MPVBPZx1o0DOll7X8gCj7KLAbpU80OhlvE=;
-  b=iwE1qXGbysYlU4j0j6JvOADJjyfpCxw2OPdoIwHQj0M/vC3bZ1rW7MPo
-   j/x3NhVM2TpEh93t4tTKEw6I3QchmQRCR8aVB5G4D7EF096JjUy3Fwoq9
-   0yXcskQqCeDZG/PQrJin3xjCy0g4ajmjnX87xjq1hdZu3E4tStA7sLGb+
-   +8LNd1OnQoAxPLldLP1yFeTiiABionumAL6jgP6Qa5vpXfjoZfPNDxMWe
-   USaSX/o4P4gjXKlqrjbyaB9PLrAfZ3tbORWAOQ6+IMC7KEx/smPRQNaFU
-   c7BCzZuEVBoSMZ6uQhOY9ermWGjcVDs0+/zb9L7GrmTDhL7VqvO6iKuQq
-   w==;
-X-CSE-ConnectionGUID: gEtHNMDfRvm7s0bkZDYFdA==
-X-CSE-MsgGUID: hMjJ3VrHThSehJUvbQoywQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="18524485"
-X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="18524485"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 03:09:08 -0700
-X-CSE-ConnectionGUID: JGyEEKk/R/qkbfvZ3mdaPQ==
-X-CSE-MsgGUID: zpGyAoR9R+euIeoX4wrDeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="49663398"
-Received: from unknown (HELO zhiquan-linux-dev.bj.intel.com) ([10.238.156.102])
-  by fmviesa010.fm.intel.com with ESMTP; 15 Jul 2024 03:09:04 -0700
-From: Zhiquan Li <zhiquan1.li@intel.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	kirill.shutemov@linux.intel.com,
-	x86@kernel.org
-Cc: rafael@kernel.org,
-	hpa@zytor.com,
-	kai.huang@intel.com,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhiquan1.li@intel.com
-Subject: [PATCH v4] x86/acpi: fix panic while AP online later with kernel parameter maxcpus=1
-Date: Mon, 15 Jul 2024 18:08:35 +0800
-Message-Id: <20240715100835.1817344-1-zhiquan1.li@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dXs/5jRQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721038172;
+	bh=3iWkkRhrPMHdpUC2YypIAwVDHV4ZA0Hh2R6TO1it6/E=;
+	h=Date:From:Subject:To:Cc:From;
+	b=dXs/5jRQwvIZBbphpR2BZhzamKMaqqjn55XTvBiuxb8//GcCmaIFXIKqPpA4D/gfR
+	 NmtAGfVvG7Hrt9Bf8B//96Q69DSEWdUO4uuzrEc5noshMqq3GKO+WUpEpxhPPinNej
+	 L03DDAoJn0y+CqvHwVjvmbp/Q9JnNkxlYUVWB88Ip4qYwGpAVBaHbBf1RevQHyqTsV
+	 yFkh6mcW9m+2tscuEJ3dGS0Qvyn5+ofpuUTb7IKKGRme40i5fovIR0dw2nkKKGRTI7
+	 +yYHIKc4Infvhpdg5DdExjWfBuV2NEc8ng3bkkc/uMUWRAgWwKfWuHHXscYanjyFwO
+	 Bobcb2kwOkVQw==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 42B3C3780B79;
+	Mon, 15 Jul 2024 10:09:28 +0000 (UTC)
+Message-ID: <327831fb-47ab-4555-8f0b-19a8dbcaacd7@collabora.com>
+Date: Mon, 15 Jul 2024 15:09:24 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Subject: Converting kselftest test modules to kunit
+To: Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
+ davidgow@google.com
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ "open list : KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, kunit-dev@googlegroups.com,
+ David Gow <davidgow@google.com>, "kernel@collabora.com"
+ <kernel@collabora.com>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The issue was found on the platform that using "Multiprocessor Wakeup
-Structure"[1] to startup secondary CPU, which is usually used by
-encrypted guest.  Before waking up the APs, BSP should memremap() the
-physical address of the MP Wakeup Structure mailbox to the variable
-acpi_mp_wake_mailbox, which holds the virtual address of mailbox.  When
-BSP needs to wake up the APs, it writes the APIC ID of APs, wakeup
-vector, and the ACPI_MP_WAKE_COMMAND_WAKEUP command into the mailbox.
+Hi Kees and All,
 
-Current implementation doesn't consider the case that restrict boot time
-CPU to 1 with the kernel parameter "maxcpus=1" and bring other CPUs
-online later, the variable acpi_mp_wake_mailbox will be set as read-only
-after init.  So when the first AP gets online after init, the attempt to
-update the variable results in panic.
+There are several tests in kselftest subsystem which load modules to tests
+the internals of the kernel. Most of these test modules are just loaded by
+the kselftest, their status isn't read and reported to the user logs. Hence
+they don't provide benefit of executing those tests.
 
-The memremap() call that initializes the variable cannot be moved into
-acpi_parse_mp_wake() because memremap() is not functional at that point
-in the boot process.  Moreover, the APs might never be brought up, keep
-the memremap() call in acpi_wakeup_cpu() so that the operation only
-takes place on demand.
+I've found patches from Kees where he has been converting such kselftests
+to kunit tests [1]. The probable motivation is to move tests output of
+kselftest subsystem which only triggers tests without correctly reporting
+the results. On the other hand, kunit is there to test the kernel's
+internal functions which can't be done by userspace.
 
-[1] Details about the MP Wakeup structure can be found in ACPI v6.4, in
-    the "Multiprocessor Wakeup Structure" section.
+Kselftest:	Test user facing APIs from userspace
+Kunit:		Test kernel's internal functions from kernelspace
 
-Fixes: 24dd05da8c79 ("x86/apic: Mark acpi_mp_wake_* variables as __ro_after_init")
-Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+This brings me to conclusion that kselftest which are loading modules to
+test kernelspace should be converted to kunit tests. I've noted several
+such kselftests.
 
----
+This is just my understanding. Please mention if I'm correct above or more
+reasons to support kselftest test modules transformation into kunit test.
 
-V3: https://lore.kernel.org/all/20240702005800.622910-1-zhiquan1.li@intel.com/
+[1] https://lore.kernel.org/all/20221018082824.never.845-kees@kernel.org/
 
-Changes since V3:
-- Add Fixes tag for the commit found by Kai.
-- Extend the commit message for the root cause and solution.
-
-V2: https://lore.kernel.org/all/20240628082119.357735-1-zhiquan1.li@intel.com/
-
-Changes since V2:
-- Modify the commit log as suggested by Kirill.
-- Add Kirill's Reviewed-by tag.
-
-V1: https://lore.kernel.org/all/20240626073920.176471-1-zhiquan1.li@intel.com/
-
-Changes since V1:
-- Amend the commit message as per Kirill's comments.
-- Remove the oops message.
----
- arch/x86/kernel/acpi/madt_wakeup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index 6cfe762be28b..d5ef6215583b 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -19,7 +19,7 @@
- static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
- 
- /* Virtual address of the Multiprocessor Wakeup Structure mailbox */
--static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_after_init;
-+static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
- 
- static u64 acpi_mp_pgd __ro_after_init;
- static u64 acpi_mp_reset_vector_paddr __ro_after_init;
-
-base-commit: c1ef42a985f0244201ca589f9e5b814b1dc63a07
 -- 
-2.25.1
-
+BR,
+Muhammad Usama Anjum
