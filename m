@@ -1,137 +1,101 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C60BA4D
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 15:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DD6134AB;
+	Mon, 15 Jul 2024 15:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721058616; cv=none; b=mnEvHe5gEtcv7sO/2n7K2XrzlBg0oRRD6bLCLHVGRWQIRJQdVMMBu8cGqPPeyauS2R2blAnQJfSPHgxXzX8cQoRhD1LVwig20RpK6x313ivcsIRqYED34/PJJhqbTSbqyoghx/iPw7Wt5XTgNI5pdg0RsX0n9uUi5P9MgQXRPe4=
+	t=1721058636; cv=none; b=fUR7GNA8T9xVoZ+anxBvveKzegarGXFSg7JxZSWmW142vsJccEJjsPCGq+CB40/gMBQTraIljAl5E/Yxke0ma74IfeAUP2O9xNJDTkmougHcFuvTu4qDp1RSQIf1ELlK0o0/xxBTLhtB7TJnMDLPoUv/bI8HWw11M35u/e9feg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721058616; c=relaxed/simple;
-	bh=D+WM+Q2pslyNhAZlHLHHJb3Kl8DybRlsl8NJ4ZQOPaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UyYIdKw9adiSxSpJy7ytJwkjWZ5lleWp//dY8EGXFzvVMmGnVJG2hxXZACbdQY7TyaxtffKtcN5dezVkk5KRc2lm5GVPkpAnmGPsZUyYLOoBZESf/mfENrREVrlDQn0aM5Q6nDH5BDoxy/q0to9sQK5dQelB99n+Mz1PJH17ALU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eiHrgqHk; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1721058636; c=relaxed/simple;
+	bh=DHu76Zualp60MP+W/T8d10cmV4dteM/1Lm1v9ubEMSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YU/f+iXmdDybEDEJqRAN0t3t4siUFW34FK4UT79a9J6IBrNN0/1BFLBpLDPOIRMU87PnQGpJylUB1TxQJLYEY6PJQ6vtEOgbFS8PmhkXVVy6EbKFNcrANvrvpD1e6fPFVlKklB7cxAChwbEpws9bV7WmHBNRjlDzqfAsZ5Dridg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=qalh41+G; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eiHrgqHk"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-375f6841f01so2104665ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1721058614; x=1721663414; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=E0nad82qrN1uDDEOfj5+pku7SPG9T4YbXiguvPskHZI=;
-        b=eiHrgqHk4SeJnMo4gIXeuekjgD9DnLDOQC6XiE0URrYfus8ieVusZYY3u6ZfraWKYU
-         4T9pAzI3o+Pn61xPC6ncMj2c5JvbIK6w3t/9/Emu6No2vgknnM1RpgIOvfs/WGEfIEBX
-         8Qof7gK3AvXKuSn+bNCDdWFvE0zyx28TheWFk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721058614; x=1721663414;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E0nad82qrN1uDDEOfj5+pku7SPG9T4YbXiguvPskHZI=;
-        b=ZV8lN0X4wnvrzsaQTFRuopDVyC9rIYho/k8JarYWL2M9bODC0YAfMrIVkYIXGNp0ie
-         30X0b04TlmrbXngNppEGsM6MKSSsD0SmSUs9NzhZxolmYfoHId7sh/fALvCdTkPAVzTm
-         WTKBnWQpsN8UJJS7aExr3lQyioFwcy+d3FxGgFnk0fsclW6BouY63w9HjmpAiS3HV+F1
-         P3GQuYALy1wr9I055Pgj1h1Kqx5dPZi6RtT1TV46ECAzSBsD1MgO5ANOmQQXj9y9e0Pz
-         A5N6L9mMo5hZJD3k6t7C10dxoaorvmOfv+fKSw22eWRHcGY0E+Y8R+POj4VgVuccsap+
-         P/UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV//59J7bWBDl5cXgSGw3HguLGhB3/8nOaAxzxIVYkE7t+yD+3k2qirUAEwi/ZOAbVchvv9oIIO8KxHzrSihSPanDlxEvT3zAW5kRuV
-X-Gm-Message-State: AOJu0YyHASRfZj9YNPUC9D2l25GFKilhz6m/y8mRjvqGAigG/yg/5m9+
-	z1RZZQTdxq88hxJIa6im95rifrUoUWxmKOotfTwSTa2dJrPuoH6/Rpnm9RUe/CiRCik2Bq6eU5U
-	t
-X-Google-Smtp-Source: AGHT+IE8y9fEAKQk4PXP47LGeWaQE3wKutcs9bw3I1NKfhhWAjDib0QSph6K7btIEPgaaDI+GoiNiA==
-X-Received: by 2002:a5d:9905:0:b0:7f9:3fd9:cbd with SMTP id ca18e2360f4ac-81541b0f8a9mr10482239f.0.1721058613916;
-        Mon, 15 Jul 2024 08:50:13 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c1e1c2fa36sm1247434173.150.2024.07.15.08.50.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 08:50:13 -0700 (PDT)
-Message-ID: <5cccbde4-b296-4759-9ae4-bf1b65f24c5b@linuxfoundation.org>
-Date: Mon, 15 Jul 2024 09:50:12 -0600
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qalh41+G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DCf5PUVGJarugMnXR95gCBJ03gopIvHTOKZp1WNO0aw=; b=qalh41+G5hwVr6sXawosVBqXL2
+	goIsEuLwCVz1tbxOWz+P7lLW4G3kRADXLOnDjyUJBIbLFwQrkaj3vD2mu2VmMDwSxRXeBT2Rg8Nhl
+	BGUZZwiCrLES2Ypk/H9V6Kl5R1zfMzM5cvxlJkFC2a2LznKYWmJktS7HNsW5M9wXRyB3WtcBnRk4H
+	hveNFS2byYSyWEmD2Kkg+e4up40C3n6KB9g/alm+4LPf5vaTb9FshKRPU4vUAZ/ept8cXPAGpz/jm
+	X1yUKYfL9bE4udmzzYIPElp2guFdz0DvtYH/x/BVrnRvdOwZZTro9sJ8nEYqnBzcgw/+XkV0bRHsh
+	f8vtnI3Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36608)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sTNrr-0006bt-0R;
+	Mon, 15 Jul 2024 16:43:59 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sTNrt-0006va-97; Mon, 15 Jul 2024 16:44:01 +0100
+Date: Mon, 15 Jul 2024 16:44:01 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: marcin.s.wojtas@gmail.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: mvpp2: Improve data types and use min()
+Message-ID: <ZpVDVHXh4FTZnmUv@shell.armlinux.org.uk>
+References: <20240711154741.174745-1-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] nolibc for 6.11-rc1
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <acffd5b1-36a8-4336-9b94-aec50b3d6e5b@t-8ch.de>
- <1678fb84-40f6-4656-ae4e-e31bf5b0ecd9@paulmck-laptop>
- <231d9568-37e1-4df2-bd06-ea35303450c6@paulmck-laptop>
- <ee43b1d5-3339-4a1c-9bac-c0d48f22167c@t-8ch.de>
- <138b249a-8402-4a79-8c08-45bb9d888dc5@paulmck-laptop>
- <fdf4c2b8-dab7-40f0-a595-fd4f2108964e@t-8ch.de>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <fdf4c2b8-dab7-40f0-a595-fd4f2108964e@t-8ch.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711154741.174745-1-thorsten.blum@toblux.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 7/15/24 01:00, Thomas Weißschuh wrote:
-> On 2024-07-14 09:44:55+0000, Paul E. McKenney wrote:
->> On Sun, Jul 14, 2024 at 10:09:13AM +0200, Thomas Weißschuh wrote:
->>> On 2024-07-12 20:16:13+0000, Paul E. McKenney wrote:
->>>> On Sun, Jun 30, 2024 at 09:06:39AM -0700, Paul E. McKenney wrote:
->>>>> On Sat, Jun 29, 2024 at 01:04:08PM +0200, Thomas Weißschuh wrote:
->>>>>> Hi Paul,
->>>>>>
->>>>>> The following changes since commit f2661062f16b2de5d7b6a5c42a9a5c96326b8454:
->>>>>>
->>>>>>    Linux 6.10-rc5 (2024-06-23 17:08:54 -0400)
->>>>>>
->>>>>> are available in the Git repository at:
->>>>>>
->>>>>>    https://git.kernel.org/pub/scm/linux/kernel/git/nolibc/linux-nolibc.git tags/nolibc-20240629-for-6.11-1
->>>>>>
->>>>>> for you to fetch changes up to 6ca8f2e20bd1ced8a7cd12b3ae4b1ceca85cfc2b:
->>>>>>
->>>>>>    selftests: kselftest: also use strerror() on nolibc (2024-06-29 09:44:58 +0200)
->>>>>
->>>>> Hearing no objections, I have pulled this in so that it will appear
->>>>> in the next -next.  Here are the test results:
->>>>>
->>>>> make run:
->>>>> 195 test(s): 195 passed,   0 skipped,   0 failed => status: success
->>>>>
->>>>> make run-user:
->>>>> 195 test(s): 193 passed,   2 skipped,   0 failed => status: warning
->>>>>
->>>>> So looks good to me!
->>>
->>> For testing you can use "./run-tests.sh -m [user | system]" to run the
->>> tests on all supported architectures via QEMU.
->>>
->>> (On the first run you can use "-p" to download the toolchains)
->>
->> Thank you for the info!
->>
->> My near-term plan is that I do a smoke test on x86 (or whatever I am
->> running), and let you guys cover the various architectures.  Longer
->> term, I might get more into cross-architecture work.
+On Thu, Jul 11, 2024 at 05:47:43PM +0200, Thorsten Blum wrote:
+> Change the data type of the variable freq in mvpp2_rx_time_coal_set()
+> and mvpp2_tx_time_coal_set() to u32 because port->priv->tclk also has
+> the data type u32.
 > 
-
-Thank for fielding this time. Next one in on me.
-
-> I'll try to remember to add the full testreport for future
-> pullrequests, too.
+> Change the data type of the function parameter clk_hz in
+> mvpp2_usec_to_cycles() and mvpp2_cycles_to_usec() to u32 accordingly
+> and remove the following Coccinelle/coccicheck warning reported by
+> do_div.cocci:
 > 
+>   WARNING: do_div() does a 64-by-32 division, please consider using div64_ul instead
+> 
+> Use min() to simplify the code and improve its readability.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-Thanks - that will be great.
+I'm still on holiday, but it's a wet day today. Don't expect replies
+from me to be regular.
 
-I run the nolibc tests before I send PR - I also compare to see if my
-results match with yours.
+I don't think this is a good idea.
 
-thanks,
--- Shuah
+priv->tclk comes from clk_get_rate() which returns an unsigned long.
+tclk should _also_ be an unsigned long, not a u32, so that the range
+of values clk_get_rate() returns can be represented without being
+truncted.
 
+Thus the use of unsigned long elsewhere where tclk is passed into is
+actually correct.
 
+If we need to limit tclk to values that u32 can represent, then that
+needs to be done here:
 
+                priv->tclk = clk_get_rate(priv->pp_clk);
+
+by assigning the return value to an unsigned long local variable,
+then checking its upper liit before assigning it to priv->tclk.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
