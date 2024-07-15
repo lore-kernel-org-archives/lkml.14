@@ -1,98 +1,118 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515C9C15B;
-	Mon, 15 Jul 2024 21:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CA0C15B;
+	Mon, 15 Jul 2024 21:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721077930; cv=none; b=oxd0wdgx6/6rMgyegHbRspGp6YfwrPlIwPiPfVlp1ZbwuAsMVGSi71RZjeODM02QWt3dUV1H8FqvCF7ZpsQK1BvwlY5zXfxdF5q++lTZeCbxzr3d4lnVaPmUXWJO9vmIbIphGujlar/EAJ5tohRkrAn7Uo+vDSWpX35cK2sIyeA=
+	t=1721077941; cv=none; b=GZ61was1Xvq/bP7dG7S7wtQLnuaA0BqQ/5NGRvMiboL8u8ZmSL0wG8GzGzrmZ6ouYCxfzcAR5q6rAGDDmKLIbtIjQTj66wbAVljlZKpW25NbB42S3bkEXsiLFhi+fBQ2Dzk9Xbk0VzvGhiHzEIH17HKquOOe1LsQIQz5FpQNLUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721077930; c=relaxed/simple;
-	bh=us8GqDaCkjGAU//vFSFamwrqORjpNoy7S81+kh7YrrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZeMk8OcMThVCYXFoYP+8qF/8SwkKYF0EtaDRldg9j7bLq8hu1BQljcbIMawBqc1qYJsbW9GarqrORpBseP0BMdqafVSnrog5WuiJyTnqpmCkOCqhikq5ey9tsCj1PHXieGmG3ZZig5o3e1PjRFok3NYGBNMNzLnVp/jWkF4vdGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRoISNkn; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721077941; c=relaxed/simple;
+	bh=f9NzP9tjzwXIEUD7yTK7pOIZzQWrs2+SH6OLDjbCgd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J93J+BVVtyLlKF6KLwleGym+T6dtDaYLS4wIOrODew5crefDAAntK4svFM0Uw+HPSy9ReIolg39X5UICAKD+mrNTo9kIETG3STPG7YjQ3RJ03SCWYV1bM2+v9mdcMY/D+bon1cX+ynYfkc8yN2ihYeT3aW7Wy3vwbjdIkSwgjHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4JSaAUm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRoISNkn"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6b6176e59e7so29639476d6.1;
-        Mon, 15 Jul 2024 14:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721077928; x=1721682728; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jq9mEPwo5wEjkwS5WRanwBnfVGH6o13HCMZMfsDDMaM=;
-        b=XRoISNkn2/jMlRWDjAHqcQVlif0etYMGOFkQfD8YVOXrgh23tTonZE+eoPIj6ruoKJ
-         NBclcpK9AztgYixeio8cl3qKYxc8cgEtiFPevDPsVVS1tYLgjn0A2mEtXCmN3EBIwZ7q
-         U1YYeSPxSX55KxnlkCsbAimbIH+Jag6rdnXMTcp9HoQzqEU8Q4ufHWrrQ/OAR+R4iNz7
-         ku2LZuChhMFHPFTZy6b8/3gq1gSCUelnQW5p+2I1f1+Zxq3L7vNbamYJSGJz8KEIVZKi
-         zbw4uQ1lVlQRJxwO58jdcG7rf+1dcWZaTu6UmLU9zaWsJG9uAt09i//TG6PCqNv5Wbqz
-         55/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721077928; x=1721682728;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jq9mEPwo5wEjkwS5WRanwBnfVGH6o13HCMZMfsDDMaM=;
-        b=XJVNcSXpYaSiDaAGtb7keXF+sXtr0H9qzenjCijZxRtz9jzjJE+OfGp1L7vaUVW89L
-         HmdJUbeWBJ+qgKGhrThu/Zz5dMpj8CMHeZadMfr3NBUG0V4g1/R0HdJmPS0TVZdVwc9s
-         r6wxI0dLAs2wcAkxAqHqBPiUY67rv8SWUGwN8DAvhd344GZ015PE5C60rKLLTx8GEJnn
-         6uREKQ16Ikgyi2GvKhx9EnSAvB0iGwscuO8zLGhXzWQ8P5WTpSUJst/2Hdm5d9I32pS5
-         HeBzAaDaObbXFeSYOdOyacwo8b3TC3TEGoxaxezq8FZOJ0mPugRiCe8pZ450Wy+SVKGW
-         f3eA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpIkRsDsyfzOXoSYHvHi9OKzYsWWpGMzxnQQpWMnHTbfbEpEr1bWjb/WMQwUY0EO3ln0M1bjIJ1Yu/7ksKFLLJleUPm++Gq7/JOPAjQH4iIqAkfCXgU8gr8wNBG8HaQKAc7GlfU4Db
-X-Gm-Message-State: AOJu0Yyg3ebLgJkAL8TcYo2ZNDvIR/Tf+/wenKkSHX1rcuiSazo8gWti
-	6CUtX2Lbxq1DgTW5fwlMupTO5o0i8wTWPBgvsufHVAXu8Y3O3X6t/Td4Kg==
-X-Google-Smtp-Source: AGHT+IEVKTcg9Po8YqXKxoxrHXrayRvjEg595EafYJ23X9++zcK7ruMTxyj6nWBycqirI6/ylxICgQ==
-X-Received: by 2002:a05:6214:19e8:b0:6b5:8e2c:e715 with SMTP id 6a1803df08f44-6b77f4ea0e3mr4921416d6.20.1721077928244;
-        Mon, 15 Jul 2024 14:12:08 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6b76198d795sm24978726d6.53.2024.07.15.14.12.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 14:12:06 -0700 (PDT)
-Message-ID: <d64b9123-14d1-405d-9509-872c0339929f@gmail.com>
-Date: Mon, 15 Jul 2024 14:12:03 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4JSaAUm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 046E9C4AF0B;
+	Mon, 15 Jul 2024 21:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721077941;
+	bh=f9NzP9tjzwXIEUD7yTK7pOIZzQWrs2+SH6OLDjbCgd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P4JSaAUmTsLTf25ljtv8Ais+sInxqugqQFf7D8hpvJgIvWBtFTxonXTSTR6JPUWqc
+	 Gkfvoc5nTWCZKFl9WCKUXmrZZlQJ3hCYs9W4OurMAGTTz66Xb7P0iV9tmMqA2H2etI
+	 on6C+haJKncbdWpZEshsOvMKg39IGVdvgCkLf3Qw5jy+cpw94GKPh+9ObAAvoc/rEz
+	 XF9qMoqwd6Kxx0FW8lhm6X+Fo7ASjEUeyUJIRzoM+Zwep+ZQAS7laP6Gn1wCg2M5Zv
+	 X20VT8viojGoUqTcXR9WF7EyOwJdQay3K2STevnaKijkZS76zR1kcYZJyU+BgB3tF8
+	 nQbrn3fnqW3Tg==
+Date: Mon, 15 Jul 2024 14:12:19 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v3] thermal: core: Call monitor_thermal_zone() if zone
+ temperature is invalid
+Message-ID: <20240715211219.GA1178@sol.localdomain>
+References: <6064157.lOV4Wx5bFT@rjwysocki.net>
+ <20240715044527.GA1544@sol.localdomain>
+ <4d7e11a7-b352-4ced-acee-b5f64e3cd0b6@linaro.org>
+ <CAJZ5v0gx6GyKBYt7YMFwmUQ4OCG49d9k2H=P-4Awr-mJ=eFHKw@mail.gmail.com>
+ <20240715145426.199c31d0@mir>
+ <CAJZ5v0gPiwkNczZhCf_rkxVoUX33tS9c6irMf_7=Rg48Nw9C4w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 12/12] PCI: brcmstb: Enable 7712 SOCs
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240710221630.29561-1-james.quinlan@broadcom.com>
- <20240710221630.29561-13-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240710221630.29561-13-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0gPiwkNczZhCf_rkxVoUX33tS9c6irMf_7=Rg48Nw9C4w@mail.gmail.com>
 
-On 7/10/24 15:16, Jim Quinlan wrote:
-> The Broadcom STB 7712 is the sibling chip of the RPi 5 (2712).
+On Mon, Jul 15, 2024 at 04:48:20PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Jul 15, 2024 at 2:54 PM Stefan Lippers-Hollmann <s.l-h@gmx.de> wrote:
+> >
+> > Hi
+> >
+> > On 2024-07-15, Rafael J. Wysocki wrote:
+> > > On Mon, Jul 15, 2024 at 11:09 AM Daniel Lezcano
+> > > <daniel.lezcano@linaro.org> wrote:
+> > > > On 15/07/2024 06:45, Eric Biggers wrote:
+> > > > > On Thu, Jul 04, 2024 at 01:46:26PM +0200, Rafael J. Wysocki wrote:
+> > > > >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >>
+> > > > >> Commit 202aa0d4bb53 ("thermal: core: Do not call handle_thermal_trip()
+> > [...]
+> > > > Does the following change fixes the messages  ?
+> > > >
+> > > > diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> > > > b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> > > > index 61a4638d1be2..b519db76d402 100644
+> > > > --- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> > > > +++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> > > > @@ -622,7 +622,7 @@ static int iwl_mvm_tzone_get_temp(struct
+> > > > thermal_zone_device *device,
+> > > >
+> > > >         if (!iwl_mvm_firmware_running(mvm) ||
+> > > >             mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
+> > > > -               ret = -ENODATA;
+> > > > +               ret = -EAGAIN;
+> > > >                 goto out;
+> > > >         }
+> > > >
+> > > >
+> > > > --
+> > >
+> > > It would make the message go away, but it wouldn't stop the useless
+> > > polling of the dead thermal zone.
+> >
+> > Silencing the warnings is already a big improvement - and that patch
+> > works to this extent for me with an ax200, thanks.
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+> So attached is a patch that should avoid enabling the thermal zone
+> when it is not ready for use in the first place, so it should address
+> both the message and the useless polling.
+> 
+> I would appreciate giving it a go (please note that it hasn't received
+> much testing so far, though).
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+> ---
+>  drivers/net/wireless/intel/iwlwifi/mvm/fw.c  |    1 
+>  drivers/net/wireless/intel/iwlwifi/mvm/mvm.h |    1 
+>  drivers/net/wireless/intel/iwlwifi/mvm/tt.c  |   55 ++++++++++++++++++++++-----
+>  drivers/thermal/thermal_core.c               |   46 ++++++++++++++++++++++
+>  include/linux/thermal.h                      |    1 
+>  5 files changed, 95 insertions(+), 9 deletions(-)
 
+I'm still getting the warning messages with this patch applied.
+
+- Eric
