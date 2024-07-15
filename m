@@ -1,548 +1,316 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A828418628C;
-	Mon, 15 Jul 2024 09:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721034745; cv=none; b=S8Njda7MtHBNRrwiOdk4BX+KUjV7ccT1gVoFYa3uw0lLaa6ZneneF82bUOO/QBnR5fQckOO9mcku9uNuyRlzMg6ywI+YQo06Ity37+zfuX9kZniQu3sJyJ6Jsf6QCEt6xv3A2OgsO0CXjZxEjMC82SUaDmlKFfVJZWtuCRrPc4Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721034745; c=relaxed/simple;
-	bh=h2bd7GJn/ktKUjylzdN+DpTx+n5RkfoSzSHV4SA2DM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QqmYieT7QVGQIiXeHT7vDp9vvA7CBY9PuCnwaegEMEGWvWXPh/Av11wD05EzWo0z9t8j2FR4EYiACHsBvJiQMfqxTmxpJelCOHZOYuDRbRcQtIyK+emQ+36RfD7ri+wF203fOkBjJEh/buVvxeS1ty3xGIUdHeirXGf+HSg9bTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16628DA7;
-	Mon, 15 Jul 2024 02:12:47 -0700 (PDT)
-Received: from [10.57.9.1] (unknown [10.57.9.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB86B3F73F;
-	Mon, 15 Jul 2024 02:12:18 -0700 (PDT)
-Message-ID: <edda856e-3102-495a-8cc6-b79f5f114833@arm.com>
-Date: Mon, 15 Jul 2024 10:12:16 +0100
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2063.outbound.protection.outlook.com [40.107.255.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B7C180A70;
+	Mon, 15 Jul 2024 09:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721034821; cv=fail; b=hmJax+6+2JSwBHDlximBfOm8lCV4YChn3WnhyU/rVjNqdRNcwz+2W7NR8UxLIa84Hkkai6BT0EtysDULaIVr4PF9gj0h+uQ8Jhp7CwcHWqvvkvWiaWQ7+wfnmS1/B7i2zLj6ma18Rqd9FThGNRS9hUqcQMbrf7676S9iX2n3sQU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721034821; c=relaxed/simple;
+	bh=X20Iim3DoWrP3cDqIGLf+Ui6u5PDAaSvFXMSarVCefs=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=GzKq4JDDdWnyKCU7Ik0Q7tskfYrYvww5N1VPMzgFC7xGBgSwSi5wRCkaQm+wNkm7BptuJECp5/6CQENwBV5OD+qlctI2kLr6qM9TsC4bePcvGX+t8tiL0RY26arP87EZfHsKJoBR4CPCg3PjH4X1XvFQ4LeHniVFk0PI+A5jcwA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=ot4OfItv; arc=fail smtp.client-ip=40.107.255.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="ot4OfItv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ENGK+SrAZ9VpwJCgV87g7GSfXKNfDiywatOvdrvhNVLtU6Hq8ZOTcf9KOFwPyq5HGiTy3m7ZPWlsthDqsCt3SRdqwhlTtxrBvsY8jsrlBwpplwyurpaSt1T6G60G81oduGglh3S+7+ew+UakGDGSt2NwYE61ysADX6BP5k0RsgeTNRRUfrINMP0i5wAlobMpg13IjR2qxhOCoHmI+4gCzGV/XMXcfF3k2uS8aqq6KsVS4hvVjHleZl25x9aCH5Xu2zlfUp+X4GlJgZAdk9Ozy2GBHc357JKOxmOfvcpEsHFqlFC8mN5hPhYIM59/6Lm+mJlHFu+1Jw+KISA6T++9Bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jSeIq2pmnetWwrdHI/CBi/D6A1mMbSt1RKn4/PG6a6w=;
+ b=g986W4E+7XosSOQops4n/cp+0IAtYpX4Pitp6KdYAuhYH24iO35r/JIZtW4syNcNoL9ZIGvertOSoKX0tEwo0uMnaJBtCEplbdd9b28PsC2ayOgMuyzR+pCBSG+FrhJKnnVd4yhdaI2W3IAEtdyuf4sEnGNW7tY6P1UZ4/hhJvFNFC59/2qO6k4JWb1TF7c0l7ASXMSfcdDoAQDvUPxupw876hFUB3rTFJWiGpg/WwnQPc9htUbira15VuBW8FpU6oqlVr4MzW0WDx7u6MxNoryIEfcX3eHKBXUi73B9KnicRO1xQsW/bd1Il8h5MCUmLELHi9PlvO8ecXYlh4R5/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jSeIq2pmnetWwrdHI/CBi/D6A1mMbSt1RKn4/PG6a6w=;
+ b=ot4OfItvmPl07/A44Eo2I+7+KIPCFM5bzo+/mDjIH+039nV/A3IRqojUgbfcoewrgTXwliBsVNq5IAQyZKs/YpzU0SCFyCceR6vzxDvwdr1ANAZLWn9PQCQ1W3DAd0uNTNP0ptOuqjyqb6WYhjzmX4JYg8zi8XurYSM4aqo1dIIob12Sn3XIIgoTEEOJMAgzBrnNJQQK6z6LzMI1ltesQ4QAx7oR4fyKqxhHAzOUsxu+Nq0difCyCN8daJF+gkbMaRCKnlZaSbM+STK7ux05Sxh0miHHqZk7pKV/avaDUUr4Y917ZHafJyjKKt3MGYFkexhVQWwBARHiBzhiT+lNIA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from KL1PR06MB7401.apcprd06.prod.outlook.com (2603:1096:820:146::12)
+ by SEYPR06MB5111.apcprd06.prod.outlook.com (2603:1096:101:57::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Mon, 15 Jul
+ 2024 09:13:36 +0000
+Received: from KL1PR06MB7401.apcprd06.prod.outlook.com
+ ([fe80::f4f:43c4:25e5:394e]) by KL1PR06MB7401.apcprd06.prod.outlook.com
+ ([fe80::f4f:43c4:25e5:394e%4]) with mapi id 15.20.7762.025; Mon, 15 Jul 2024
+ 09:13:33 +0000
+From: Yang Yang <yang.yang@vivo.com>
+To: Bart Van Assche <bvanassche@acm.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Ming Lei <ming.lei@redhat.com>,
+	Yang Yang <yang.yang@vivo.com>,
+	Omar Sandoval <osandov@fb.com>,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: [PATCH v7] sbitmap: fix io hung due to race on sbitmap_word::cleared
+Date: Mon, 15 Jul 2024 17:11:20 +0800
+Message-Id: <20240715091125.36381-1-yang.yang@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP301CA0033.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:400:380::17) To KL1PR06MB7401.apcprd06.prod.outlook.com
+ (2603:1096:820:146::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] drm: panthor: add dev_coredumpv support
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Wedson Almeida Filho <wedsonaf@gmail.com>, ojeda@kernel.org,
- Danilo Krummrich <dakr@redhat.com>, lyude@redhat.com, robh@kernel.org,
- lina@asahilina.net, mcanal@igalia.com, airlied@gmail.com,
- rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20240710225011.275153-1-daniel.almeida@collabora.com>
- <fe84a028-01a8-4987-b1b7-141fb76d263c@arm.com>
- <4344B22F-D859-4C64-A351-69FFB5208362@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <4344B22F-D859-4C64-A351-69FFB5208362@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB7401:EE_|SEYPR06MB5111:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8cd11558-12f7-4fec-c323-08dca4ae6680
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|366016|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?i4q8R4hadluVqPBr169uwjXaazuto5fSv0CWsdzLuVaqW93dTHiwTOtqmZQ1?=
+ =?us-ascii?Q?9ODCKXd35vINOPzlIwJJTg3c5zRiY+0XCfr3dbLI/uma0aJJx+tKNb54AVKx?=
+ =?us-ascii?Q?zKGdTWdf7SqyaNrGXwq54qsoN3YLfuhQSrm8PldXAO5GaRxQ0EwwVxlsHxRp?=
+ =?us-ascii?Q?1Aef4kv3qsIHNEJj19TlqEeuWa4oTisUWMnZcxNDI3z7q3F41P2LOQZZLExY?=
+ =?us-ascii?Q?p67Uwa1S1kzIGkJXmjUlqxM19rdfoGD6r5kY6nzt2uG7DX0giBGcPF70CB/8?=
+ =?us-ascii?Q?VpqdIzRKlekpxsKlCMTuBMbfSSTnEzbMUh9SjPQQo+kQnPKeKkioDApHW/Yr?=
+ =?us-ascii?Q?Ar4UBHrTioV6u6hkIGfc6YO0MNiVyUj/dK76vEYPT6LeZDExy8DtwAsDbBA3?=
+ =?us-ascii?Q?SqCO6V1dTNcSJ8R5Wf4zvfD7mmxvO4jaLt+e0Z0R9/F6NnxJ2t7MtuMb3erB?=
+ =?us-ascii?Q?edlW/wGaGlCEbE2BPXlxS4sW3IdvT7NksDTfxt0xdbHUp0oPq3Dw73Z4okfY?=
+ =?us-ascii?Q?QKQ9AA29pFivcPLbs8Htwr8dvzZVAuvWrfz/vfehtgsZ293qTLSwrnVoxyc7?=
+ =?us-ascii?Q?YlCOrh2UI1OlG0HiHzq2ofzDCZfSP+rC7JnQ6rKHeWXDw1OFhb7j2RkQHV9r?=
+ =?us-ascii?Q?d/nHSsQmaPHEnqXfVvfyFDyInwtPqrvIe1m7UcFG7i3LHKQAFLuYfMvZ75NT?=
+ =?us-ascii?Q?WrRGeStqls1P1SwnWGlkLq0E3fH35CY1J7lnF2UJRMY354i8x9wSZ3c//JHy?=
+ =?us-ascii?Q?6zxVmz3YBPksTKwDo8rA+ALeQekeZFtRDh9mBZB8SH2XVmGXuX+LiSkKKZK9?=
+ =?us-ascii?Q?iIkaABanoH9IBdacSUWYfAzEtwx7Loidn0i2fOvPJeOF1PP4f+K7PYmrskhn?=
+ =?us-ascii?Q?8SxNRKx7fHATDtYlEGQK/jk/ockL1PAKe8Ot39xdBPTWM8kUNFi0IPN1cMWS?=
+ =?us-ascii?Q?fete7ww3BVa8HE2tn1Knk+L7isFUNEPeMepBa7LLj4sMCFVEUpfrm/oI6Qcv?=
+ =?us-ascii?Q?qf2DhRMhXn6bfsRf7dID0zABpkmYxzZN6fXUQqN8sSzN7r/pz2RzCStStQpF?=
+ =?us-ascii?Q?vZ2HgxESZRmO23IxKxColtPyDynHGZ24MohGrZ//8l9kLMIiyGNoCxnTvZ4h?=
+ =?us-ascii?Q?1Qo6DXcy/kTcQqtY1xmekKiN4Db15cW3dlXBdr6xMOoJVbgOt2NDdd/G3Vor?=
+ =?us-ascii?Q?ZC8GTL068pAq6OnA73XtyVRg4ziogHq/cIzykfXOTYSYTZB+02bIxpebc8FA?=
+ =?us-ascii?Q?cG6UMidB9oaqmv1WtmdDbnsIYdijzSNjd9rGoGFuxEPxAw9zBMeBMqKme1zX?=
+ =?us-ascii?Q?uCS9a3ULrG6Q/Ua1Ehuo6NdVe8PZm4ARGgjkUtSRvgKd4ITG8ZGOjsXao48X?=
+ =?us-ascii?Q?E+C7UFAPv+COE431LDr0VXxgBNqTz0plGnekFezh1onnX3mo4Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB7401.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(366016)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ckLN2fKjiJAMooDbW8wXlZp6tvdOn+irDl20zzeZzmTlGZOyi7AkjgyZ6j2Z?=
+ =?us-ascii?Q?gA7dmMXAKz7YKKunscO79HsmGqnHZ4V4GeLzw+sL6jGaGiWHgEo3DH0t9v24?=
+ =?us-ascii?Q?oaO3OVkN9Rxy3+n12wuOuya1tOcHMQGSjkad2Aq7xq1RykpuLFS90UTMQ3My?=
+ =?us-ascii?Q?84wylsHCZYV3qtZa0t2jHtpluLrMnLBRPuqRIk7JYZJoSPU3ZR/7iRIGZljK?=
+ =?us-ascii?Q?cWzCaZ7oieFR3DFoW9TsgHrJODHEtLeI/kLHQTgJhiZbqTYBnsMMdftQWrrQ?=
+ =?us-ascii?Q?btYuKpiD8V5n5LI3KP3o//dh17bEs0nkqD2oCc69L/VL0ynhOHIWU9wQDCXX?=
+ =?us-ascii?Q?W+poSC44PxJBJ2pd39hhfAOSxgjLG0RI4iL0cT5Iyz2+b0ZINoTjJmRolV/G?=
+ =?us-ascii?Q?0STLK6Bu7T13/ocOZMjKcwhngmDqjuwwCUdlUaqMFN96PugJb7ouzb3Z2laR?=
+ =?us-ascii?Q?UOFhFlLfMsElgG1n7DX87uo+U4YkRHyst/dxoRoB+7/sQ7OB0tzNkfcizNpI?=
+ =?us-ascii?Q?3V4OHtOZgPkn8dDMNrkgmkiGbv4B9z7nvgNCOjMPf9LYjwfgODBZZt8TQUud?=
+ =?us-ascii?Q?09Ekd9xjtqxJr2IPdWDDN0bUri9r9fffL0T4i+y2R6peKK/kSL196pAH+C7e?=
+ =?us-ascii?Q?wPFP7i8MKCr27WryYfiV5ta9yiBnhIn7Yut7ovTmFWxD5mQQrcVT0Gb5SebY?=
+ =?us-ascii?Q?q71OY//97HwHoOGTk2IJ7cLSRbyj1KiMY5IUoANezf22SAzo6zaXrzTzMZyw?=
+ =?us-ascii?Q?EuYoVdRgMBvikdbs1v5TaQT7k1NzAb7m22hDFgKq9uwqiAXEeClfadp/c4G3?=
+ =?us-ascii?Q?q8kjlHy06TchpCH10fzWihwJU0xkX05CHPlGwK7L0av8Iyz/VL2mzZYIn1YH?=
+ =?us-ascii?Q?ULJAwYSZ84S482SYXWKUhaYOv6ekTylr2bQyntfSH30DD2P0fVhvmg13IJkG?=
+ =?us-ascii?Q?JHt7YJJacTW95geS2kluzH92AB3OFtbMbT9jshWyGSuHtg0nGmwSvPkmWbIZ?=
+ =?us-ascii?Q?kwUBZHOmrt5LXY66gaci696SwTuGXLk5NMFKsLB4JvaIC29qTlZP6ZWZYSe3?=
+ =?us-ascii?Q?rsw7GT33ujw5CnRUtJYlSCKLbfx/rprAyWOTWeRZjhuNifQ/IRVibaWfEd9N?=
+ =?us-ascii?Q?1oTgjAIO9PjD+fg9vqUgAtu9tkzfaZ3HgGPSk6FXxmIllpwMiN5seIEGYvaz?=
+ =?us-ascii?Q?2zRlcUBjh9vyItIk/EEyas7ikLIWVm9AQKjhpMg1VQCJ8ewlAGjqCAAq2R1L?=
+ =?us-ascii?Q?lBgviVQ+Tn1UeqlRjHkJSpNcjpM/vSdcoyGLbNPc7C2JSR4RFz61THdBoF5Q?=
+ =?us-ascii?Q?bNY/02pUCmKtaD8aRx5a8onCZi3jO89e6NFtfzD+CW964fiGAg2a4ZufpffD?=
+ =?us-ascii?Q?EKR9Q9frIBeLPyyVk22B3qpzzKAAI/niQ5tyJBhtJbRkSLsai0mG3xNRsUsD?=
+ =?us-ascii?Q?21rxxmlYYJIRVMHLFMYLwr8AVDXqFknPLJXu9+YyYfiVqorK9CycBDSxPC8b?=
+ =?us-ascii?Q?vYIEx+UrWvgKYcP5njVTpm/PQ8FqXlYuXht0Dymc730cuLnyVX9prTlhzi0S?=
+ =?us-ascii?Q?MBbLpWigFiwx9x/5VJf7WXUrwpo+Za5CrTjzOc5/?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cd11558-12f7-4fec-c323-08dca4ae6680
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB7401.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 09:13:33.3483
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rQKCYBzizaPSkdEfU+oW95BVuy2S3vbdH+DwQyrocudaO8bGqWxXaWpeCO+Dop6zS633GqFSP0jz9Tiy1pcNGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5111
 
-On 12/07/2024 15:35, Daniel Almeida wrote:
-> Hi Steven, thanks for the review!
-> 
->>
->> This is defining the ABI to userspace and as such we'd need a way of
->> exporting this for userspace tools to use. The C approach is a header in
->> include/uabi. I'd also suggest making it obvious this enum can't be
->> rearranged (e.g. a comment, or assigning specific numbers). There's also
->> some ABI below which needs exporting in some way, along with some
->> documentation (comments may be sufficient) explaining how e.g.
->> header_size works.
->>
-> 
-> I will defer this topic to others in the Rust for Linux community. I think this is the first time this scenario comes up in Rust code?
-> 
-> FYI I am working on a tool in Mesa to decode the dump [0]. Since the tool is also written in Rust, and given the RFC nature of this patch, I just copied and pasted things for now, including panthor_regs.rs.
-> 
-> IMHO, the solution here is to use cbindgen to automatically generate a C header to place in include/uapi. This will ensure that the header is in sync with the Rust code. I will do that in v2.
-> 
-> [0]: https://gitlab.freedesktop.org/dwlsalmeida/mesa/-/tree/panthor-devcoredump?ref_type=heads
+Configuration for sbq:
+  depth=64, wake_batch=6, shift=6, map_nr=1
 
-Nice to see there's a user space tool - it's always good to signpost
-such things because it shows how the interface is going to be used.
+1. There are 64 requests in progress:
+  map->word = 0xFFFFFFFFFFFFFFFF
+2. After all the 64 requests complete, and no more requests come:
+  map->word = 0xFFFFFFFFFFFFFFFF, map->cleared = 0xFFFFFFFFFFFFFFFF
+3. Now two tasks try to allocate requests:
+  T1:                                       T2:
+  __blk_mq_get_tag                          .
+  __sbitmap_queue_get                       .
+  sbitmap_get                               .
+  sbitmap_find_bit                          .
+  sbitmap_find_bit_in_word                  .
+  __sbitmap_get_word  -> nr=-1              __blk_mq_get_tag
+  sbitmap_deferred_clear                    __sbitmap_queue_get
+  /* map->cleared=0xFFFFFFFFFFFFFFFF */     sbitmap_find_bit
+    if (!READ_ONCE(map->cleared))           sbitmap_find_bit_in_word
+      return false;                         __sbitmap_get_word -> nr=-1
+    mask = xchg(&map->cleared, 0)           sbitmap_deferred_clear
+    atomic_long_andnot()                    /* map->cleared=0 */
+                                              if (!(map->cleared))
+                                                return false;
+                                     /*
+                                      * map->cleared is cleared by T1
+                                      * T2 fail to acquire the tag
+                                      */
 
-I note it also shows that the "panthor_regs.rs" would ideally be shared.
-For arm64 we have been moving to generating system register descriptions
-from a text source (see arch/arm64/tools/sysreg) - I'm wondering whether
-something similar is needed for Panthor to generate both C and Rust
-headers? Although perhaps that's overkill, sysregs are certainly
-somewhat more complex.
+4. T2 is the sole tag waiter. When T1 puts the tag, T2 cannot be woken
+up due to the wake_batch being set at 6. If no more requests come, T1
+will wait here indefinitely.
 
->>> +}
->>> +
->>> +#[repr(C)]
->>> +pub(crate) struct DumpArgs {
->>> +    dev: *mut bindings::device,
->>> +    /// The slot for the job
->>> +    slot: i32,
->>> +    /// The active buffer objects
->>> +    bos: *mut *mut bindings::drm_gem_object,
->>> +    /// The number of active buffer objects
->>> +    bo_count: usize,
->>> +    /// The base address of the registers to use when reading.
->>> +    reg_base_addr: *mut core::ffi::c_void,
->>> +}
->>> +
->>> +#[repr(C)]
->>> +pub(crate) struct Header {
->>> +    magic: u32,
->>> +    ty: HeaderType,
->>> +    header_size: u32,
->>> +    data_size: u32,
->>> +}
->>> +
->>> +#[repr(C)]
->>> +#[derive(Clone, Copy)]
->>> +pub(crate) struct RegisterDump {
->>> +    register: GpuRegister,
->>> +    value: u32,
->>> +}
->>> +
->>> +/// The registers to dump
->>> +const REGISTERS: [GpuRegister; 18] = [
->>> +    regs::SHADER_READY_LO,
->>> +    regs::SHADER_READY_HI,
->>> +    regs::TILER_READY_LO,
->>> +    regs::TILER_READY_HI,
->>> +    regs::L2_READY_LO,
->>> +    regs::L2_READY_HI,
->>> +    regs::JOB_INT_MASK,
->>> +    regs::JOB_INT_STAT,
->>> +    regs::MMU_INT_MASK,
->>> +    regs::MMU_INT_STAT,
->>
->> I'm not sure how much thought you've put into these registers. Most of
->> these are 'boring'. And for a "standalone" dump we'd want identification
->> registers.
-> 
-> Not much, to be honest. I based myself a bit on the registers dumped by the panfrost driver if they matched something in panthor_regs.h
-> 
-> What would you suggest here? Boris also suggested dumping a snapshot of the FW interface.
-> 
-> (Disclaimer: Most of my experience is in video codecs, so I must say I am a bit new to GPU code)
+This patch achieves two purposes:
+1. Check on ->cleared and update on both ->cleared and ->word need to
+be done atomically, and using spinlock could be the simplest solution.
+2. Add extra check in sbitmap_deferred_clear(), to identify whether
+->word has free bits.
 
-I would think it useful to have a copy of the identification registers
-so that it's immediately clear from a dump which GPU it was from, so:
+Fixes: ea86ea2cdced ("sbitmap: ammortize cost of clearing bits")
+Signed-off-by: Yang Yang <yang.yang@vivo.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-* GPU_ID
-* GPU_L2_FEATURES
-* GPU_CORE_FEATURES
-* GPU_TILER_FEATURES
-* GPU_MEM_FEATURES
-* GPU_MMU_FEATURES
-* GPU_CSF_ID
-* GPU_THREAD_MAX_THREAD
-* GPU_THREAD_MAX_WORKGROUP_SIZE
-* GPU_THREAD_MAX_BARRIER_SIZE
-* GPU_TEXTURE_FEATURES (multiple registers)
-* GPU_COHERENCY_FEATURES
+---
+Changes from v6:
+  - Use guard() for locking by suggestion
+  - Modify comments by suggestion
+Changes from v5:
+  - Modify commit message
+  - Change the fixes tag
+Changes from v4:
+  - Add some comments according to suggestion
+Changes from v3:
+  - Add more arguments to sbitmap_deferred_clear(), for those who
+    don't care about the return value, just pass 0
+  - Consider the situation when using sbitmap_get_shallow()
+  - Consider the situation when ->round_robin is true
+  - Modify commit message
+Changes from v2:
+  - Modify commit message by suggestion
+  - Add extra check in sbitmap_deferred_clear() by suggestion
+Changes from v1:
+  - simply revert commit 661d4f55a794 ("sbitmap: remove swap_lock")
+---
+ include/linux/sbitmap.h |  5 +++++
+ lib/sbitmap.c           | 41 ++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 39 insertions(+), 7 deletions(-)
 
-(Basically the information already presented to user space in struct
-drm_panthor_gpu_info)
-
-In terms of the registers you've got:
-* _READY_ registers seem like an odd choice, I'd go for the _PRESENT_
-registers which describe the hardware. I'll admit it would be
-interesting to know if the GPU didn't actually power up all cores, but
-because this is a snapshot after the job fails it wouldn't answer the
-question as to whether the cores were powered up while the job was
-running, so I'm not convinced it makes sense for this interface.
-
-* _INT_MASK/_INT_STAT - again because this is a snapshot after the job
-completes, I don't think this would actually be very useful.
-
-* Address space registers - I'm not sure these will actually contain
-anything useful by the time the job is dumped. Information on page
-faults caused by a job could be interesting, but it might require
-another mechanism. As mentioned below AS 0 is the MMU for the firmware,
-which should be boring unless firmware is the thing being debugged. But
-generally I'd expect a different mechanism for that because firmware
-debugging isn't tied to particular jobs.
-
-
-As Boris says a snapshot of the FW interface could also be interesting.
-That's not from registers, so it should be similar to dumping BOs.
-
-<snip>
-
->>> +};
->>> +
->>> +/**
->>> + * Dumps the current state of the GPU to a file
->>> + *
->>> + * # Safety
->>> + *
->>> + * All fields of `DumpArgs` must be valid.
->>> + */
->>> +#ifdef CONFIG_DRM_PANTHOR_RS
->>> +int panthor_core_dump(const struct PanthorDumpArgs *args);
->>> +#else
->>> +inline int panthor_core_dump(const struct PanthorDumpArgs *args)
->>> +{
->>> + return 0;
->>
->> This should return an error (-ENOTSUPP ? ). Not that the return value is
->> used...
->>
-> 
-> I think that returning 0 in stubs is a bit of a pattern throughout the kernel? But sure, I can
-> change that to ENOTSUPP. 
-
-It depends whether the stub is "successful" or not. The usual pattern is
-that the stubs do nothing because there is nothing to do (the feature is
-disabled) and so are successful at performing that nothing.
-
-Although really here the problem is that we shouldn't be preparing the
-dump arguments if dumping isn't built in. So the stub is at the wrong
-level - it would be better to stub dump_job() instead.
-
->>> +}
->>> +#endif
->>> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
->>> index 79ffcbc41d78..39e1654d930e 100644
->>> --- a/drivers/gpu/drm/panthor/panthor_sched.c
->>> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
->>> @@ -1,6 +1,9 @@
->>> // SPDX-License-Identifier: GPL-2.0 or MIT
->>> /* Copyright 2023 Collabora ltd. */
->>>
->>> +#include "drm/drm_gem.h"
->>> +#include "linux/gfp_types.h"
->>> +#include "linux/slab.h"
->>> #include <drm/drm_drv.h>
->>> #include <drm/drm_exec.h>
->>> #include <drm/drm_gem_shmem_helper.h>
->>> @@ -31,6 +34,7 @@
->>> #include "panthor_mmu.h"
->>> #include "panthor_regs.h"
->>> #include "panthor_sched.h"
->>> +#include "panthor_rs.h"
->>>
->>> /**
->>>  * DOC: Scheduler
->>> @@ -2805,6 +2809,27 @@ static void group_sync_upd_work(struct work_struct *work)
->>> group_put(group);
->>> }
->>>
->>> +static void dump_job(struct panthor_device *dev, struct panthor_job *job)
->>> +{
->>> + struct panthor_vm *vm = job->group->vm;
->>> + struct drm_gem_object **objs;
->>> + u32 count;
->>> +
->>> + objs = panthor_vm_dump(vm, &count);
->>> +
->>> + if (!IS_ERR(objs)) {
->>> + struct PanthorDumpArgs args = {
->>> + .dev = job->group->ptdev->base.dev,
->>> + .bos = objs,
->>> + .bo_count = count,
->>> + .reg_base_addr = dev->iomem,
->>> + };
->>> + panthor_core_dump(&args);
->>> + kfree(objs);
->>> + }
->>> +}
->>
->> It would be better to avoid generating the dump if panthor_core_dump()
->> is a no-op.
-> 
-> I will gate that behind #ifdefs in v2.
-> 
->>
->>> +
->>> +
->>> static struct dma_fence *
->>> queue_run_job(struct drm_sched_job *sched_job)
->>> {
->>> @@ -2929,7 +2954,7 @@ queue_run_job(struct drm_sched_job *sched_job)
->>> }
->>>
->>> done_fence = dma_fence_get(job->done_fence);
->>> -
->>> + dump_job(ptdev, job);
->>
->> This doesn't look right - is this left from debugging?
-> 
-> Yes, I wanted a way for people to test this patch if they wanted to, and dumping just the failed
-> jobs wouldn’t work for this purpose.
-> 
-> OTOH, I am thinking about adding a debugfs knob to control this, what do you think?
-> 
-> This would allow us to dump successful jobs in a tidy manner. Something along the lines of
-> "dump the next N successful jobs”. Failed jobs would always be dumped, though.
-
-Yes that could be very useful for debugging purposes - although I
-believe devcoredump will drop new dumps if there's already an unread one
-- so I'm not sure "N successful jobs" will work well, it might just have
-to be a (self-resetting) flag for "dump next job".
-
->>
->>> out_unlock:
->>> mutex_unlock(&sched->lock);
->>> pm_runtime_mark_last_busy(ptdev->base.dev);
->>> @@ -2950,6 +2975,7 @@ queue_timedout_job(struct drm_sched_job *sched_job)
->>> drm_warn(&ptdev->base, "job timeout\n");
->>>
->>> drm_WARN_ON(&ptdev->base, atomic_read(&sched->reset.in_progress));
->>> + dump_job(ptdev, job);
->>
->> This looks like the right place.
->>
->>>
->>> queue_stop(queue, job);
->>>
->>> diff --git a/drivers/gpu/drm/panthor/regs.rs b/drivers/gpu/drm/panthor/regs.rs
->>> new file mode 100644
->>> index 000000000000..514bc9ee2856
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/panthor/regs.rs
->>> @@ -0,0 +1,264 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +// SPDX-FileCopyrightText: Copyright Collabora 2024
->>> +// SPDX-FileCopyrightText: (C) COPYRIGHT 2010-2022 ARM Limited. All rights reserved.
->>> +
->>> +//! The registers for Panthor, extracted from panthor_regs.h
->>
->> Was this a manual extraction, or is this scripted? Ideally we wouldn't
->> have two locations to maintain the register list.
-> 
-> This was generated by a Python script. Should the script be included in the patch then?
-
-It's useful to know (it means there's no point reviewing every line). I
-think we need some way of avoiding multiple places to maintain the
-register list - a script to covert from C would be one way, but
-obviously the script then needs to be available too.
-
->>
->>> +
->>> +#![allow(unused_macros, unused_imports, dead_code)]
->>> +
->>> +use kernel::bindings;
->>> +
->>> +use core::ops::Add;
->>> +use core::ops::Shl;
->>> +use core::ops::Shr;
->>> +
->>> +#[repr(transparent)]
->>> +#[derive(Clone, Copy)]
->>> +pub(crate) struct GpuRegister(u64);
->>> +
->>> +impl GpuRegister {
->>> +    pub(crate) fn read(&self, iomem: *const core::ffi::c_void) -> u32 {
->>> +        // Safety: `reg` represents a valid address
->>> +        unsafe {
->>> +            let addr = iomem.offset(self.0 as isize);
->>> +            bindings::readl_relaxed(addr as *const _)
->>> +        }
->>> +    }
->>> +}
->>> +
->>> +pub(crate) const fn bit(index: u64) -> u64 {
->>> +    1 << index
->>> +}
->>> +pub(crate) const fn genmask(high: u64, low: u64) -> u64 {
->>> +    ((1 << (high - low + 1)) - 1) << low
->>> +}
->>
->> These look like they should be in a more generic header - but maybe I
->> don't understand Rust ;)
->>
-> 
-> Ideally these should be exposed by the kernel crate - i.e.: the code in the rust top-level directory.
-> 
-> I specifically did not want to touch that in this first submission. Maybe a separate patch would be in order here.
-
-A separate patch adding to the kernel crate is the right way to go. Keep
-it in the same series to demonstrate there is a user for the new functions.
-
->>> +
->>> +pub(crate) const GPU_ID: GpuRegister = GpuRegister(0x0);
->>> +pub(crate) const fn gpu_arch_major(x: u64) -> GpuRegister {
->>> +    GpuRegister((x) >> 28)
->>> +}
->>> +pub(crate) const fn gpu_arch_minor(x: u64) -> GpuRegister {
->>> +    GpuRegister((x) & genmask(27, 24) >> 24)
->>> +}
->>> +pub(crate) const fn gpu_arch_rev(x: u64) -> GpuRegister {
->>> +    GpuRegister((x) & genmask(23, 20) >> 20)
->>> +}
->>> +pub(crate) const fn gpu_prod_major(x: u64) -> GpuRegister {
->>> +    GpuRegister((x) & genmask(19, 16) >> 16)
->>> +}
->>> +pub(crate) const fn gpu_ver_major(x: u64) -> GpuRegister {
->>> +    GpuRegister((x) & genmask(15, 12) >> 12)
->>> +}
->>> +pub(crate) const fn gpu_ver_minor(x: u64) -> GpuRegister {
->>> +    GpuRegister((x) & genmask(11, 4) >> 4)
->>> +}
->>> +pub(crate) const fn gpu_ver_status(x: u64) -> GpuRegister {
->>> +    GpuRegister(x & genmask(3, 0))
->>> +}
->>> +pub(crate) const GPU_L2_FEATURES: GpuRegister = GpuRegister(0x4);
->>> +pub(crate) const fn gpu_l2_features_line_size(x: u64) -> GpuRegister {
->>> +    GpuRegister(1 << ((x) & genmask(7, 0)))
->>> +}
->>> +pub(crate) const GPU_CORE_FEATURES: GpuRegister = GpuRegister(0x8);
->>> +pub(crate) const GPU_TILER_FEATURES: GpuRegister = GpuRegister(0xc);
->>> +pub(crate) const GPU_MEM_FEATURES: GpuRegister = GpuRegister(0x10);
->>> +pub(crate) const GROUPS_L2_COHERENT: GpuRegister = GpuRegister(bit(0));
->>> +pub(crate) const GPU_MMU_FEATURES: GpuRegister = GpuRegister(0x14);
->>> +pub(crate) const fn gpu_mmu_features_va_bits(x: u64) -> GpuRegister {
->>> +    GpuRegister((x) & genmask(7, 0))
->>> +}
->>> +pub(crate) const fn gpu_mmu_features_pa_bits(x: u64) -> GpuRegister {
->>> +    GpuRegister(((x) >> 8) & genmask(7, 0))
->>> +}
->>> +pub(crate) const GPU_AS_PRESENT: GpuRegister = GpuRegister(0x18);
->>> +pub(crate) const GPU_CSF_ID: GpuRegister = GpuRegister(0x1c);
->>> +pub(crate) const GPU_INT_RAWSTAT: GpuRegister = GpuRegister(0x20);
->>> +pub(crate) const GPU_INT_CLEAR: GpuRegister = GpuRegister(0x24);
->>> +pub(crate) const GPU_INT_MASK: GpuRegister = GpuRegister(0x28);
->>> +pub(crate) const GPU_INT_STAT: GpuRegister = GpuRegister(0x2c);
->>> +pub(crate) const GPU_IRQ_FAULT: GpuRegister = GpuRegister(bit(0));
->>> +pub(crate) const GPU_IRQ_PROTM_FAULT: GpuRegister = GpuRegister(bit(1));
->>> +pub(crate) const GPU_IRQ_RESET_COMPLETED: GpuRegister = GpuRegister(bit(8));
->>> +pub(crate) const GPU_IRQ_POWER_CHANGED: GpuRegister = GpuRegister(bit(9));
->>> +pub(crate) const GPU_IRQ_POWER_CHANGED_ALL: GpuRegister = GpuRegister(bit(10));
->>> +pub(crate) const GPU_IRQ_CLEAN_CACHES_COMPLETED: GpuRegister = GpuRegister(bit(17));
->>> +pub(crate) const GPU_IRQ_DOORBELL_MIRROR: GpuRegister = GpuRegister(bit(18));
->>> +pub(crate) const GPU_IRQ_MCU_STATUS_CHANGED: GpuRegister = GpuRegister(bit(19));
->>> +pub(crate) const GPU_CMD: GpuRegister = GpuRegister(0x30);
->>> +const fn gpu_cmd_def(ty: u64, payload: u64) -> u64 {
->>> +    (ty) | ((payload) << 8)
->>> +}
->>> +pub(crate) const fn gpu_soft_reset() -> GpuRegister {
->>> +    GpuRegister(gpu_cmd_def(1, 1))
->>> +}
->>> +pub(crate) const fn gpu_hard_reset() -> GpuRegister {
->>> +    GpuRegister(gpu_cmd_def(1, 2))
->>> +}
->>> +pub(crate) const CACHE_CLEAN: GpuRegister = GpuRegister(bit(0));
->>> +pub(crate) const CACHE_INV: GpuRegister = GpuRegister(bit(1));
->>> +pub(crate) const GPU_STATUS: GpuRegister = GpuRegister(0x34);
->>> +pub(crate) const GPU_STATUS_ACTIVE: GpuRegister = GpuRegister(bit(0));
->>> +pub(crate) const GPU_STATUS_PWR_ACTIVE: GpuRegister = GpuRegister(bit(1));
->>> +pub(crate) const GPU_STATUS_PAGE_FAULT: GpuRegister = GpuRegister(bit(4));
->>> +pub(crate) const GPU_STATUS_PROTM_ACTIVE: GpuRegister = GpuRegister(bit(7));
->>> +pub(crate) const GPU_STATUS_DBG_ENABLED: GpuRegister = GpuRegister(bit(8));
->>> +pub(crate) const GPU_FAULT_STATUS: GpuRegister = GpuRegister(0x3c);
->>> +pub(crate) const GPU_FAULT_ADDR_LO: GpuRegister = GpuRegister(0x40);
->>> +pub(crate) const GPU_FAULT_ADDR_HI: GpuRegister = GpuRegister(0x44);
->>> +pub(crate) const GPU_PWR_KEY: GpuRegister = GpuRegister(0x50);
->>> +pub(crate) const GPU_PWR_KEY_UNLOCK: GpuRegister = GpuRegister(0x2968a819);
->>> +pub(crate) const GPU_PWR_OVERRIDE0: GpuRegister = GpuRegister(0x54);
->>> +pub(crate) const GPU_PWR_OVERRIDE1: GpuRegister = GpuRegister(0x58);
->>> +pub(crate) const GPU_TIMESTAMP_OFFSET_LO: GpuRegister = GpuRegister(0x88);
->>> +pub(crate) const GPU_TIMESTAMP_OFFSET_HI: GpuRegister = GpuRegister(0x8c);
->>> +pub(crate) const GPU_CYCLE_COUNT_LO: GpuRegister = GpuRegister(0x90);
->>> +pub(crate) const GPU_CYCLE_COUNT_HI: GpuRegister = GpuRegister(0x94);
->>> +pub(crate) const GPU_TIMESTAMP_LO: GpuRegister = GpuRegister(0x98);
->>> +pub(crate) const GPU_TIMESTAMP_HI: GpuRegister = GpuRegister(0x9c);
->>> +pub(crate) const GPU_THREAD_MAX_THREADS: GpuRegister = GpuRegister(0xa0);
->>> +pub(crate) const GPU_THREAD_MAX_WORKGROUP_SIZE: GpuRegister = GpuRegister(0xa4);
->>> +pub(crate) const GPU_THREAD_MAX_BARRIER_SIZE: GpuRegister = GpuRegister(0xa8);
->>> +pub(crate) const GPU_THREAD_FEATURES: GpuRegister = GpuRegister(0xac);
->>> +pub(crate) const fn gpu_texture_features(n: u64) -> GpuRegister {
->>> +    GpuRegister(0xB0 + ((n) * 4))
->>> +}
->>> +pub(crate) const GPU_SHADER_PRESENT_LO: GpuRegister = GpuRegister(0x100);
->>> +pub(crate) const GPU_SHADER_PRESENT_HI: GpuRegister = GpuRegister(0x104);
->>> +pub(crate) const GPU_TILER_PRESENT_LO: GpuRegister = GpuRegister(0x110);
->>> +pub(crate) const GPU_TILER_PRESENT_HI: GpuRegister = GpuRegister(0x114);
->>> +pub(crate) const GPU_L2_PRESENT_LO: GpuRegister = GpuRegister(0x120);
->>> +pub(crate) const GPU_L2_PRESENT_HI: GpuRegister = GpuRegister(0x124);
->>> +pub(crate) const SHADER_READY_LO: GpuRegister = GpuRegister(0x140);
->>> +pub(crate) const SHADER_READY_HI: GpuRegister = GpuRegister(0x144);
->>> +pub(crate) const TILER_READY_LO: GpuRegister = GpuRegister(0x150);
->>> +pub(crate) const TILER_READY_HI: GpuRegister = GpuRegister(0x154);
->>> +pub(crate) const L2_READY_LO: GpuRegister = GpuRegister(0x160);
->>> +pub(crate) const L2_READY_HI: GpuRegister = GpuRegister(0x164);
->>> +pub(crate) const SHADER_PWRON_LO: GpuRegister = GpuRegister(0x180);
->>> +pub(crate) const SHADER_PWRON_HI: GpuRegister = GpuRegister(0x184);
->>> +pub(crate) const TILER_PWRON_LO: GpuRegister = GpuRegister(0x190);
->>> +pub(crate) const TILER_PWRON_HI: GpuRegister = GpuRegister(0x194);
->>> +pub(crate) const L2_PWRON_LO: GpuRegister = GpuRegister(0x1a0);
->>> +pub(crate) const L2_PWRON_HI: GpuRegister = GpuRegister(0x1a4);
->>> +pub(crate) const SHADER_PWROFF_LO: GpuRegister = GpuRegister(0x1c0);
->>> +pub(crate) const SHADER_PWROFF_HI: GpuRegister = GpuRegister(0x1c4);
->>> +pub(crate) const TILER_PWROFF_LO: GpuRegister = GpuRegister(0x1d0);
->>> +pub(crate) const TILER_PWROFF_HI: GpuRegister = GpuRegister(0x1d4);
->>> +pub(crate) const L2_PWROFF_LO: GpuRegister = GpuRegister(0x1e0);
->>> +pub(crate) const L2_PWROFF_HI: GpuRegister = GpuRegister(0x1e4);
->>> +pub(crate) const SHADER_PWRTRANS_LO: GpuRegister = GpuRegister(0x200);
->>> +pub(crate) const SHADER_PWRTRANS_HI: GpuRegister = GpuRegister(0x204);
->>> +pub(crate) const TILER_PWRTRANS_LO: GpuRegister = GpuRegister(0x210);
->>> +pub(crate) const TILER_PWRTRANS_HI: GpuRegister = GpuRegister(0x214);
->>> +pub(crate) const L2_PWRTRANS_LO: GpuRegister = GpuRegister(0x220);
->>> +pub(crate) const L2_PWRTRANS_HI: GpuRegister = GpuRegister(0x224);
->>> +pub(crate) const SHADER_PWRACTIVE_LO: GpuRegister = GpuRegister(0x240);
->>> +pub(crate) const SHADER_PWRACTIVE_HI: GpuRegister = GpuRegister(0x244);
->>> +pub(crate) const TILER_PWRACTIVE_LO: GpuRegister = GpuRegister(0x250);
->>> +pub(crate) const TILER_PWRACTIVE_HI: GpuRegister = GpuRegister(0x254);
->>> +pub(crate) const L2_PWRACTIVE_LO: GpuRegister = GpuRegister(0x260);
->>> +pub(crate) const L2_PWRACTIVE_HI: GpuRegister = GpuRegister(0x264);
->>> +pub(crate) const GPU_REVID: GpuRegister = GpuRegister(0x280);
->>> +pub(crate) const GPU_COHERENCY_FEATURES: GpuRegister = GpuRegister(0x300);
->>> +pub(crate) const GPU_COHERENCY_PROTOCOL: GpuRegister = GpuRegister(0x304);
->>> +pub(crate) const GPU_COHERENCY_ACE: GpuRegister = GpuRegister(0);
->>> +pub(crate) const GPU_COHERENCY_ACE_LITE: GpuRegister = GpuRegister(1);
->>> +pub(crate) const GPU_COHERENCY_NONE: GpuRegister = GpuRegister(31);
->>> +pub(crate) const MCU_CONTROL: GpuRegister = GpuRegister(0x700);
->>> +pub(crate) const MCU_CONTROL_ENABLE: GpuRegister = GpuRegister(1);
->>> +pub(crate) const MCU_CONTROL_AUTO: GpuRegister = GpuRegister(2);
->>> +pub(crate) const MCU_CONTROL_DISABLE: GpuRegister = GpuRegister(0);
->>
->> From this I presume it was scripted. These MCU_CONTROL_xxx defines are
->> not GPU registers but values for the GPU registers. We might need to
->> make changes to the C header to make it easier to convert to Rust. Or
->> indeed generate both the C and Rust headers from a common source.
->>
->> Generally looks reasonable, although as it stands this would of course
->> be a much smaller patch in plain C ;) It would look better if you split
->> the Rust-enabling parts from the actual new code. I also think there
->> needs to be a little more thought into what registers are useful to dump
->> and some documentation on the dump format.
->>
->> Naïve Rust question: there are a bunch of unwrap() calls in the code
->> which to my C-trained brain look like BUG_ON()s - and in C I'd be
->> complaining about them. What is the Rust style here? AFAICT they are all
->> valid (they should never panic) but it makes me uneasy when I'm reading
->> the code.
->>
->> Steve
->>
-> 
-> Yeah, the unwraps() have to go. I didn’t give much thought to error handling here.
-> 
-> Although, as you pointed out, most of these should never panic, unless the size of the dump was miscomputed.
-> 
-> What do you suggest instead? I guess that printing a warning and then returning from panthor_core_dump() would be a good course of action. I don’t think there’s a Rust equivalent to WARN_ONCE, though.
-
-In C I'd be handling at least the allocation failures and returning
-errors up the stack - most likely with some sort of WARN_ON() or similar
-(because these are 'should never happen' programming bugs - but trivial
-to recover from).
-
-For the try_from(size).unwrap() type cases, I've no idea to be honest -
-Ideally they would be compile time checks. I've very little clue about
-Rust but on the surface it looks like you've got the wrong type because
-it's checking that things don't overflow when changing type. Of course
-the standard C approach is to just do the type conversion and pretend
-you're sure that an overflow can never happen ;)
-
-In particular for alloc<T>() - core::mem::size_of::<T>() is returning a
-value (of type usize) which is then being converted to isize. A C
-programmer wouldn't have any qualms about assigning a sizeof() into an
-int, even though theorectically that could overflow if the structure was
-massive. But this should really be a compile time check as it's clearly
-dead code at runtime.
-
-Steve
+diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
+index d662cf136021..c09cdcc99471 100644
+--- a/include/linux/sbitmap.h
++++ b/include/linux/sbitmap.h
+@@ -36,6 +36,11 @@ struct sbitmap_word {
+ 	 * @cleared: word holding cleared bits
+ 	 */
+ 	unsigned long cleared ____cacheline_aligned_in_smp;
++
++	/**
++	 * @swap_lock: serializes simultaneous updates of ->word and ->cleared
++	 */
++	spinlock_t swap_lock;
+ } ____cacheline_aligned_in_smp;
+ 
+ /**
+diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+index 1e453f825c05..3c00fe4b74fc 100644
+--- a/lib/sbitmap.c
++++ b/lib/sbitmap.c
+@@ -60,12 +60,35 @@ static inline void update_alloc_hint_after_get(struct sbitmap *sb,
+ /*
+  * See if we have deferred clears that we can batch move
+  */
+-static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
++static inline bool sbitmap_deferred_clear(struct sbitmap_word *map,
++		unsigned int depth, unsigned int alloc_hint, bool wrap)
+ {
+-	unsigned long mask;
++	unsigned long mask, word_mask;
++	bool ret = false;
+ 
+-	if (!READ_ONCE(map->cleared))
+-		return false;
++	guard(spinlock_irqsave)(&map->swap_lock);
++
++	if (!map->cleared) {
++		if (depth > 0) {
++			word_mask = (~0UL) >> (BITS_PER_LONG - depth);
++			/*
++			 * The current behavior is to always retry after moving
++			 * ->cleared to word, and we change it to retry in case
++			 * of any free bits. To avoid an infinite loop, we need
++			 * to take wrap & alloc_hint into account, otherwise a
++			 * soft lockup may occur.
++			 */
++			if (!wrap && alloc_hint)
++				word_mask &= ~((1UL << alloc_hint) - 1);
++
++			if ((READ_ONCE(map->word) & word_mask) == word_mask)
++				ret = false;
++			else
++				ret = true;
++		}
++
++		return ret;
++	}
+ 
+ 	/*
+ 	 * First get a stable cleared mask, setting the old mask to 0.
+@@ -85,6 +108,7 @@ int sbitmap_init_node(struct sbitmap *sb, unsigned int depth, int shift,
+ 		      bool alloc_hint)
+ {
+ 	unsigned int bits_per_word;
++	int i;
+ 
+ 	if (shift < 0)
+ 		shift = sbitmap_calculate_shift(depth);
+@@ -116,6 +140,9 @@ int sbitmap_init_node(struct sbitmap *sb, unsigned int depth, int shift,
+ 		return -ENOMEM;
+ 	}
+ 
++	for (i = 0; i < sb->map_nr; i++)
++		spin_lock_init(&sb->map[i].swap_lock);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(sbitmap_init_node);
+@@ -126,7 +153,7 @@ void sbitmap_resize(struct sbitmap *sb, unsigned int depth)
+ 	unsigned int i;
+ 
+ 	for (i = 0; i < sb->map_nr; i++)
+-		sbitmap_deferred_clear(&sb->map[i]);
++		sbitmap_deferred_clear(&sb->map[i], 0, 0, 0);
+ 
+ 	sb->depth = depth;
+ 	sb->map_nr = DIV_ROUND_UP(sb->depth, bits_per_word);
+@@ -179,7 +206,7 @@ static int sbitmap_find_bit_in_word(struct sbitmap_word *map,
+ 					alloc_hint, wrap);
+ 		if (nr != -1)
+ 			break;
+-		if (!sbitmap_deferred_clear(map))
++		if (!sbitmap_deferred_clear(map, depth, alloc_hint, wrap))
+ 			break;
+ 	} while (1);
+ 
+@@ -496,7 +523,7 @@ unsigned long __sbitmap_queue_get_batch(struct sbitmap_queue *sbq, int nr_tags,
+ 		unsigned int map_depth = __map_depth(sb, index);
+ 		unsigned long val;
+ 
+-		sbitmap_deferred_clear(map);
++		sbitmap_deferred_clear(map, 0, 0, 0);
+ 		val = READ_ONCE(map->word);
+ 		if (val == (1UL << (map_depth - 1)) - 1)
+ 			goto next;
+-- 
+2.34.1
 
