@@ -1,185 +1,109 @@
-Received: from mail-sh.amlogic.com (unknown [58.32.228.46])
+Received: from msa.smtpout.orange.fr (msa-210.smtpout.orange.fr [193.252.23.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA571836F7;
-	Mon, 15 Jul 2024 05:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.32.228.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054E213AA3C;
+	Mon, 15 Jul 2024 05:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721021263; cv=none; b=E7CIvVOUsSlihqjUMb55s+oYUzjORaArCfV+dZD+rGXQ+A7Z3/kS2mRujKkit4pRMu/vVFQ3LyDcr3TTpDAz9/I9xk+aWjX1/o16kkB7jJukfOUsoyfcNcciFcSPbxq45+9FXq88nUrbBoJwUh98fgIxkiMy/COJyRbxsDWmx6I=
+	t=1721021305; cv=none; b=NttMjRUL4FYwUzitW2AYTv1lY2KmU8jNQON/7Ksr2n0rzoGeb52hgtxm35oXCbjqu96f8u8FGGe/OkNDrKv36PCazZZc+BKm1CNhU93yzRRTinWn+2zi0m3JXskY+W1tEDzLi9I8NHgKv3r7QtdAbtbo1cA5KwWPtpmK5EPamhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721021263; c=relaxed/simple;
-	bh=CgdgrjImSEMreUF0Fb3iM3gecQOjj46AxAKBEmAKajE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AxTUFlo8xh8HPfO3Q+UOdqGi6i5AvAUCqwksNaYwEq8gs9WUlh7RJQsvoEFCy5YHl02qPEKIt6Ba7MrllQGV3jln/EA3jNVsLC99IL9wvGV+fc7cHNUMpL+ZUPV1zYmh+jOL7yjUni6HZygOy9EZSnNv4a/gpzmOy6sRWk4Ouzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; arc=none smtp.client-ip=58.32.228.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-Received: from droid10-sz.amlogic.com (10.28.11.69) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.39; Mon, 15 Jul 2024
- 13:12:23 +0800
-From: zelong dong <zelong.dong@amlogic.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Rob Herring
-	<robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kelvin.zhang@amlogic.com>, Zelong Dong <zelong.dong@amlogic.com>
-Subject: [PATCH v2 3/3] arm64: dts: amlogic: Add Amlogic A5 reset controller
-Date: Mon, 15 Jul 2024 13:12:17 +0800
-Message-ID: <20240715051217.5286-4-zelong.dong@amlogic.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240715051217.5286-1-zelong.dong@amlogic.com>
-References: <20240715051217.5286-1-zelong.dong@amlogic.com>
+	s=arc-20240116; t=1721021305; c=relaxed/simple;
+	bh=rWOqtJZDZPB7SwsAkct7kJU0BnvB2/PkdXaSKgpv3ZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=obLgpachIfOJXXxa0hTL9D7As9herAY6X7P3pVPbeHWW0QqoXy+zWt/HGC0edwEvoGC8n7sdQbOGHWDy0vtN8FQOhDsppCrB7Eeh/YPygyBxoot1ILSN4G5p80CheV1bHkWZRoCKAJNt3oxQcm3L1xt7b+RbBFOAE3vUO/T4nzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ttWVj4Mn; arc=none smtp.client-ip=193.252.23.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ttWVj4Mn"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id TE6zs6b1eJY7cTE6zsLvjj; Mon, 15 Jul 2024 07:18:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1721020739;
+	bh=ixooxXojxH6zu9TLhjVNWVQ/LL8FsaWEC/zDEHZ7c2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=ttWVj4Mnct5iuI1ZtuMIVIzHDFK+14SyqFveNKbkOFmDzTQvmlgJOiNnNG6rDz08c
+	 JavN7zbThUmllsa29Hlc4tCJcOSXw1T/c5cJ4w8/8S002rGqY/wc+c9Ykgd5QU6PlO
+	 pcEWDUm5gKbK9z0XWvASM7xrPv7rM3TyQU0Coy3ijPxxL+hHB/SFEdqyJ2kZN2IlHX
+	 YSixy3CiHhDiEO0HwLpv6TK/qf0RpF0Cy9HR4EA9kZjHBgq+jV/RFvpmdZ+619RENu
+	 hk9n25dfyCgykQzTuz28gr66w7veY0jOhIKLU2sCWYh7VE9fZOYntUH6JN420QdutN
+	 uiFe1UsVnYYtw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Mon, 15 Jul 2024 07:18:59 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <7560b341-27b4-45b9-8b73-202ec7f27200@wanadoo.fr>
+Date: Mon, 15 Jul 2024 07:18:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] locking/lockdep: Use seq_putc() in five functions
+To: Waiman Long <longman@redhat.com>, kernel-janitors@vger.kernel.org,
+ Boqun Feng <boqun.feng@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Markus Elfring <Markus.Elfring@web.de>
+References: <aa9e1986-8631-405e-96f5-86a0f5a1eab2@web.de>
+ <975d2b0f-f84c-4c84-adf2-098fef59d90b@redhat.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <975d2b0f-f84c-4c84-adf2-098fef59d90b@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Zelong Dong <zelong.dong@amlogic.com>
+Le 14/07/2024 à 23:31, Waiman Long a écrit :
+> On 7/14/24 06:25, Markus Elfring wrote:
+>> From: Markus Elfring <elfring@users.sourceforge.net>
+>> Date: Sun, 14 Jul 2024 12:18:16 +0200
+>>
+>> Single characters should be put into a sequence.
+>> Thus use the corresponding function “seq_putc”.
+>>
+>> This issue was transformed by using the Coccinelle software.
+>>
+>> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+>> ---
 
-Add the device node and related header file for Amlogic
-A5 reset controller. The count and offset for A5 Soc
-RESET registers are same as S4 Soc.
+...
 
-Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
----
- .../arm64/boot/dts/amlogic/amlogic-a5-reset.h | 95 +++++++++++++++++++
- arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi   | 10 ++
- 2 files changed, 105 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
+>> @@ -422,10 +422,10 @@ static void seq_line(struct seq_file *m, char c, 
+>> int offset, int length)
+>>       int i;
+>>
+>>       for (i = 0; i < offset; i++)
+>> -        seq_puts(m, " ");
+>> +        seq_putc(m, ' ');
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h b/arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
-new file mode 100644
-index 000000000000..cdf0f5159620
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h
-@@ -0,0 +1,95 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-+/*
-+ * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#ifndef __DTS_AMLOGIC_A5_RESET_H
-+#define __DTS_AMLOGIC_A5_RESET_H
-+
-+/* RESET0 */
-+/*						0-3 */
-+#define RESET_USB				4
-+/*						5-7 */
-+#define RESET_USBPHY20				8
-+/*						9 */
-+#define RESET_USB2DRD				10
-+/*						11-31 */
-+
-+/* RESET1 */
-+#define RESET_AUDIO				32
-+#define RESET_AUDIO_VAD				33
-+/*                                              34 */
-+#define RESET_DDR_APB				35
-+#define RESET_DDR				36
-+/*						37-40 */
-+#define RESET_DSPA_DEBUG			41
-+/*                                              42 */
-+#define RESET_DSPA				43
-+/*						44-46 */
-+#define RESET_NNA				47
-+#define RESET_ETHERNET				48
-+/*						49-63 */
-+
-+/* RESET2 */
-+#define RESET_ABUS_ARB				64
-+#define RESET_IRCTRL				65
-+/*						66 */
-+#define RESET_TS_PLL				67
-+/*						68-72 */
-+#define RESET_SPICC_0				73
-+#define RESET_SPICC_1				74
-+#define RESET_RSA				75
-+
-+/*						76-79 */
-+#define RESET_MSR_CLK				80
-+#define RESET_SPIFC				81
-+#define RESET_SAR_ADC				82
-+/*						83-90 */
-+#define RESET_WATCHDOG				91
-+/*						92-95 */
-+
-+/* RESET3 */
-+/*						96-127 */
-+
-+/* RESET4 */
-+#define RESET_RTC				128
-+/*						129-131 */
-+#define RESET_PWM_AB				132
-+#define RESET_PWM_CD				133
-+#define RESET_PWM_EF				134
-+#define RESET_PWM_GH				135
-+/*						104-105 */
-+#define RESET_UART_A				138
-+#define RESET_UART_B				139
-+#define RESET_UART_C				140
-+#define RESET_UART_D				141
-+#define RESET_UART_E				142
-+/*						143*/
-+#define RESET_I2C_S_A				144
-+#define RESET_I2C_M_A				145
-+#define RESET_I2C_M_B				146
-+#define RESET_I2C_M_C				147
-+#define RESET_I2C_M_D				148
-+/*						149-151 */
-+#define RESET_SDEMMC_A				152
-+/*						153 */
-+#define RESET_SDEMMC_C				154
-+/*						155-159*/
-+
-+/* RESET5 */
-+/*						160-175 */
-+#define RESET_BRG_AO_NIC_SYS			176
-+#define RESET_BRG_AO_NIC_DSPA			177
-+#define RESET_BRG_AO_NIC_MAIN			178
-+#define RESET_BRG_AO_NIC_AUDIO			179
-+/*						180-183 */
-+#define RESET_BRG_AO_NIC_ALL			184
-+#define RESET_BRG_NIC_NNA			185
-+#define RESET_BRG_NIC_SDIO			186
-+#define RESET_BRG_NIC_EMMC			187
-+#define RESET_BRG_NIC_DSU			188
-+#define RESET_BRG_NIC_SYSCLK			189
-+#define RESET_BRG_NIC_MAIN			190
-+#define RESET_BRG_NIC_ALL			191
-+
-+#endif
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-index 43f68a7da2f7..aa035c5c63af 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "amlogic-a4-common.dtsi"
-+#include "amlogic-a5-reset.h"
- / {
- 	cpus {
- 		#address-cells = <2>;
-@@ -38,3 +39,12 @@ cpu3: cpu@300 {
- 		};
- 	};
- };
-+
-+&apb {
-+	reset: reset-controller@2000 {
-+		compatible = "amlogic,a5-reset",
-+			     "amlogic,meson-s4-reset";
-+		reg = <0x0 0x2000 0x0 0x98>;
-+		#reset-cells = <1>;
-+	};
-+};
--- 
-2.35.1
+Hi,
+
+Most of the time, this kind of modification is useless because it is 
+already done by the compiler, see [1].
+
+>>       for (i = 0; i < length; i++)
+>>           seq_printf(m, "%c", c);
+
+But changing this seq_printf() into a seq_putc() would, IMHO, make sense 
+and save a few cycles, should it matter.
+
+CJ
+
+[1]: 
+https://elixir.bootlin.com/linux/v6.10-rc7/source/include/linux/seq_file.h#L123
+
+>> -    seq_puts(m, "\n");
+>> +    seq_putc(m, '\n');
+>>   }
+>>
+...
+
+>> -- 
+>> 2.45.2
+>>
+> Acked-by: Waiman Long <longman@redhat.com>
+> 
 
