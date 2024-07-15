@@ -1,179 +1,74 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804031849D7
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4929A24B5B;
+	Mon, 15 Jul 2024 08:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032104; cv=none; b=gcxSti97FCXwYz9LMh3stdA3h8L8oiU/GT6NgeGJKkiu2MQXyHJzhqcHcUIhnWpjgiy2LT2E0ZAWxOU/nPR+6aue5NkyN2Dh7G46pDZKvkkIlFtBt3dglDsqJ5eRtzI6PDcbHWg1xz5lKLCI9MEcqaJ36uZeVKhS1EJXquteyUw=
+	t=1721032165; cv=none; b=UGlPpZ1k8DIBcY5TpGlJR6rz67BCeBfAOMTM7Bo46SyNmOakTZuhgeOBdTLhZ8sSE2NfLBXi10r/mDOH5TQdc7YHwbGlHv/I1PwjrD+SY6mgbQs6R6HZhHjBkpikEQVt7aLUO4Xv2eCtw6WGdN5pD06FxLp9GDjnYFVRtay8bY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032104; c=relaxed/simple;
-	bh=cDxwHjTJXEJmuZZJ16wgqs1iHdtXeIOj//CfKmG7O8g=;
+	s=arc-20240116; t=1721032165; c=relaxed/simple;
+	bh=cby1TPiBt8ufALYg+O0f93ZA73SqJpUmRjwv/o6jqyw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ooUKyJVGydqHd+05NHALumbcDrLp7ncdWFiWXcKvR6mDTEkFW52cJAlB59asTjeVoU8OUAyleYY1XHK2ROcVxQhLQEPQWUZ0j5/xLq9WNXVnG2fZ1nu4tQnBAgljehP7misLZb/bQLUXBwdFYCrBAj88li6oSQfbjzx5xDhZscg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HqPXNyt4; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPYiW3wg8nS1Eql1IBnwYd1wKDgnbNkf1KfPhHO0TZIQCN1axKEgfRd6cGSPfP5nFgccR7+JfSTZO31QVswz7Xe8npZcTVePYcxNhGHT5hPnEtF02sCgVO6JUZKDPdwx8qQn0Y/Hdi8TD5KYfOd7bDZCugAj/xH/uquOl5yHKOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYK4H83V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HqPXNyt4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0A13DC000C;
-	Mon, 15 Jul 2024 08:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1721032095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yGc188UpjzG+33fxD7SNC2KQ7T06wKgav19Xcw+WTdQ=;
-	b=HqPXNyt4oq66oUA1KngW2Xq2vyQuxKCrK/Zfb1ZxH4igPTYNAqGIp+7njQ32fDs8jm0LXX
-	VYWFRHZcGOKRz+ur9qU+pRUppjsW+NmslUb3ss7lliN+j2gRqsqrGfivG0CY3dNGfVMj/j
-	nbJQUsyobNSJLoOrbHYcCG00he2O3wgqxOdvBoOEcjD9ItpESj2fzsVM1+feAvl/efSHbO
-	EQ3TrPS3CBg0h+5BIDI1tonFosjP/NYjoJfSdrqYslVld1ZS7x5mnKtwhr7qYxxnN2ucxE
-	W5+RqlpTxfWOC+iVvBIpgGB40jHEtURRWV1IRMIjs65YVRNMvC8JsvbQa4md9A==
-Date: Mon, 15 Jul 2024 10:28:11 +0200
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
-	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
-	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
-	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com,
-	Pekka Paalanen <pekka.paalanen@collabora.com>
-Subject: Re: [PATCH v8 04/17] drm/vkms: Add typedef and documentation for
- pixel_read and pixel_write functions
-Message-ID: <ZpTdmxfqx3ulALk8@louis-chauvet-laptop>
-Mail-Followup-To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
-	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
-	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
-	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com,
-	Pekka Paalanen <pekka.paalanen@collabora.com>
-References: <20240516-yuv-v8-0-cf8d6f86430e@bootlin.com>
- <20240516-yuv-v8-4-cf8d6f86430e@bootlin.com>
- <99be1782-0235-4418-adbf-cd80d8b28d7a@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYK4H83V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065ACC32782;
+	Mon, 15 Jul 2024 08:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721032164;
+	bh=cby1TPiBt8ufALYg+O0f93ZA73SqJpUmRjwv/o6jqyw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JYK4H83VCuYDSg0kNkH2rT5Ji2MiXnNMKOXvpub1fNnnw7Ox+hMm3vHAUxSj5Vjkm
+	 J4fiR0eoI8OIltz3rNmBiCE1Wq95RvLYJ1D+20kBj1SLsJClBKuTmfvdo7YvFqsqS9
+	 ThqL9u4yjJbpGdwYWeECbYM5RWjdaAaJFkC3LzxnNzCxQ5GgbtCKOSgkpKN0D//PDA
+	 ltt2C4Dm3NDrDc17SUhs/jf9Ib5gRI7PukP+LQApwDWADTo8eL7gdPVRTX+0nu3bKK
+	 4DCAlknw1yFVBgxSyimBUR1I+YN/a/jwSenb5CrG3Ji5AUNQBv/TSbRX2QRf2GugTR
+	 BuGeDOf2bclaw==
+Date: Mon, 15 Jul 2024 09:27:50 +0100
+From: Simon Horman <horms@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	netdev@vger.kernel.org, Kuniyuki Iwashima <kuniyu@amazon.com>
+Subject: Re: [PATCH] llc: Constify struct llc_sap_state_trans
+Message-ID: <20240715082750.GC8432@kernel.org>
+References: <9d17587639195ee94b74ff06a11ef97d1833ee52.1720973710.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <99be1782-0235-4418-adbf-cd80d8b28d7a@igalia.com>
-X-GND-Sasl: louis.chauvet@bootlin.com
+In-Reply-To: <9d17587639195ee94b74ff06a11ef97d1833ee52.1720973710.git.christophe.jaillet@wanadoo.fr>
 
-Le 13/07/24 - 11:38, Maíra Canal a écrit :
-> On 5/16/24 10:04, Louis Chauvet wrote:
-> > Introduce two typedefs: pixel_read_t and pixel_write_t. It allows the
-> > compiler to check if the passed functions take the correct arguments.
-> > Such typedefs will help ensuring consistency across the code base in
-> > case of update of these prototypes.
-> > 
-> > Rename input/output variable in a consistent way between read_line and
-> > write_line.
-> > 
-> > A warn has been added in get_pixel_*_function to alert when an unsupported
-> > pixel format is requested. As those formats are checked before
-> > atomic_update callbacks, it should never happen.
-> > 
-> > Document for those typedefs.
-> > 
-> > Reviewed-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
++ Iwashima-san
 
-[...]
-
-> >   /**
-> > @@ -265,7 +265,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
-> >    *
-> >    * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-> >    */
-> > -void *get_pixel_conversion_function(u32 format)
-> > +pixel_read_t get_pixel_read_function(u32 format)
-> >   {
-> >   	switch (format) {
-> >   	case DRM_FORMAT_ARGB8888:
-> > @@ -279,7 +279,16 @@ void *get_pixel_conversion_function(u32 format)
-> >   	case DRM_FORMAT_RGB565:
-> >   		return &RGB565_to_argb_u16;
-> >   	default:
-> > -		return NULL;
-> > +		/*
-> > +		 * This is a bug in vkms_plane_atomic_check(). All the supported
-> > +		 * format must:
-> > +		 * - Be listed in vkms_formats in vkms_plane.c
-> > +		 * - Have a pixel_read callback defined here
-> > +		 */
-> > +		WARN(true,
-> > +		     "Pixel format %p4cc is not supported by VKMS planes. This is a kernel bug, atomic check must forbid this configuration.\n",
-> > +		     &format);
+On Sun, Jul 14, 2024 at 06:15:20PM +0200, Christophe JAILLET wrote:
+> 'struct llc_sap_state_trans' are not modified in this driver.
 > 
-> Well, if this is a kernel bug, shouldn't we use a BUG_ON()/BUG() macro?
-
-I don't know what is the "rule" for this kind of bug. Yes it is a kernel 
-bug, but it is recoverable and I can avoid a full kernel crash by using a 
-"do nothing" callback. 
-
-If you prefer I can replace this by:
-
-	pr_err("Pixel format %p4cc is [...]", &format);
-	BUG();
-
-and drop the next commit. The kernel will crash if there is a mismatch 
-between advertised supported formats and formats listed here.
-
-> Best Regards,
-> - Maíra
+> Constifying this structure moves some data to a read-only section, so
+> increase overall security.
 > 
-> >    * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-> >    */
-> > -void *get_pixel_write_function(u32 format)
-> > +pixel_write_t get_pixel_write_function(u32 format)
-> >   {
-> >   	switch (format) {
-> >   	case DRM_FORMAT_ARGB8888:
-> > @@ -304,6 +313,15 @@ void *get_pixel_write_function(u32 format)
-> >   	case DRM_FORMAT_RGB565:
-> >   		return &argb_u16_to_RGB565;
-> >   	default:
-> > -		return NULL;
-> > +		/*
-> > +		 * This is a bug in vkms_writeback_atomic_check. All the supported
-> > +		 * format must:
-> > +		 * - Be listed in vkms_wb_formats in vkms_writeback.c
-> > +		 * - Have a pixel_write callback defined here
-> > +		 */
-> > +		WARN(true,
-> > +		     "Pixel format %p4cc is not supported by VKMS writeback. This is a kernel bug, atomic check must forbid this configuration.\n",
-> > +		     &format);
-> > +		return (pixel_write_t)NULL;
+> On a x86_64, with allmodconfig, as an example:
+> Before:
+> ======
+>    text	   data	    bss	    dec	    hex	filename
+>     339	    456	     24	    819	    333	net/llc/llc_s_st.o
+> 
+> After:
+> =====
+>    text	   data	    bss	    dec	    hex	filename
+>     683	    144	      0	    827	    33b	net/llc/llc_s_st.o
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Compile tested-only.
 
-I can do the same here.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Thanks,
-Louis Chauvet
-
-[...]
-
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
