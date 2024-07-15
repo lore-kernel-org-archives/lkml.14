@@ -1,115 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7C215491
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 19:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202A415491;
+	Mon, 15 Jul 2024 19:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721072073; cv=none; b=g14Jg0zL8Rf59381jVAPNay2NJVJJzJ7VR80srURgOBclp9gB7OXwgQBix1BERZReS3RdNGJrI4qn0hVLgLkU7v4vjXb6M9Kj2tlUJDfL4Dfz7wCv+O6s+W8sEtokubYUX0Nls05h/KLPWs4maThirvWBqY7Vd1YRRwIUoyJF2M=
+	t=1721072135; cv=none; b=rpppwk+tsumDYwTN05tITuPvOTIGZYzJbVVntHPA/d+ObIL1C6suBFKoLeLdJ1Bp3wTiXbNzvdabEDtKpeyvtNmD0i9FXEFVsr0mrU/cq70LLgJhU9WQL9/AvWXwwdnw/ent909bLC5lH2tNSa1Hl7LZ7CiLUs+voByAm21j2fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721072073; c=relaxed/simple;
-	bh=C8RUPX9LfEut7+xmVjhiOqGNaYtXmgw8P+dKtJhZm8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ho/5yG6E7TiD5BBMLOp2hIg+MpM/biPxtC+BY9YKD8VNAWkdW/4MvP6/vJsDmg+JtjoMS1tDjKPVsPDyFgMlNbGtta3aso8JnJXTz7swwcjOCCu9PTU4v+KHPoBThBydbaCIn6WeTP3ahiGBjJbU+xjC17Z8VJkM1TikRq7xBZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FIBOO7qd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721072135; c=relaxed/simple;
+	bh=FRn9L6xt/4pBPTKmgkgNlVfwV8prnDiH2WQXjDdDtOM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=h5RB6wYZnr23Nn3cuAMOEGnGTulYo9adDBYKW68EYB5+aMDYmxj/F9EKt7E0RpMoh0vrSCpQd/878jMaOy/ZtsmOkjA9TJcSmoUCt/crtwcgztS6b6rhFH5eBHKVWr4TZvCpFUDjouMaBVLp59+Z/jzM7YpygePFY+2/IZ/8tug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=U+c8yoRC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIBOO7qd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721072069;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1KX7IEr2zKnMtYo6NKNA4TARkllCcLg1jqXMkrl6O60=;
-	b=FIBOO7qdp/UjZ6RE7sec3/RAaKqOMkrC08yqoaGysp/dXk1RnY0T5hM+sz2WMSNPdzEY4Y
-	qMalH0H9NUZBJwhPOum5I0PDL02k3jGAMaEJpgDg72PVFgJ2sWklRX1W0O57FCrKqBIfEP
-	15O48wdBbnV8VOgk92ZgMJ78Jnosh60=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-497-seHeETyFOkWXnSB293hp-Q-1; Mon,
- 15 Jul 2024 15:34:28 -0400
-X-MC-Unique: seHeETyFOkWXnSB293hp-Q-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C62E11955D44;
-	Mon, 15 Jul 2024 19:34:24 +0000 (UTC)
-Received: from tpad.localdomain (unknown [10.96.133.7])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 184B73000190;
-	Mon, 15 Jul 2024 19:34:22 +0000 (UTC)
-Received: by tpad.localdomain (Postfix, from userid 1000)
-	id E7095400EC901; Mon, 15 Jul 2024 15:38:27 -0300 (-03)
-Date: Mon, 15 Jul 2024 15:38:27 -0300
-From: Marcelo Tosatti <mtosatti@redhat.com>
-To: Vlastimil Babka <vbabka@suse.cz>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Leonardo Bras <leobras@redhat.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 0/4] Introduce QPW for per-cpu operations
-Message-ID: <ZpVsow629seGUXRz@tpad>
-References: <20240622035815.569665-1-leobras@redhat.com>
- <261612b9-e975-4c02-a493-7b83fa17c607@suse.cz>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="U+c8yoRC"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FH8jKZ031938;
+	Mon, 15 Jul 2024 19:35:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KMUJ2TW4Kz92vZ1WNbj9fim2oaakNFSraWNVGeLCagg=; b=U+c8yoRCaunVsvgr
+	XG+15WKI+r84R5ti6CuwxYjgMxlP7Sm0SE1k2Tm1Mrg9d/O7GvrjlRw4kqEu9vhQ
+	6KixL6vuFBRM/EZ1+JHTU+yfNyaVwhEO6MKy+tju10wQdfVY0l32MCoQnlz/Z/KL
+	20ovJCG4Ugy7LJbNX0Ynt6qTatm/P7cKSCmk/sw8cl4Ycx7K/0s9drAYggl3UOpV
+	Ux3vpxaL2z34mt7SfO/h5g0P5CrXc5m0R1kutWp+xppsA5qpV6xxmFkP8prBHNQv
+	kNS61b1lkOMM9b5l5ByeKUmQdwrlnxZLqEts3vS0BxBsXowysOWdvltHBkUgEyYv
+	wTm9mw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bjbh50b2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 19:35:13 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46FJZC02001309
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 19:35:12 GMT
+Received: from [10.48.247.129] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 15 Jul
+ 2024 12:35:11 -0700
+Message-ID: <6c324421-f35a-450a-9a39-05aab3136c8d@quicinc.com>
+Date: Mon, 15 Jul 2024 12:35:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <261612b9-e975-4c02-a493-7b83fa17c607@suse.cz>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq: powerpc: add missing MODULE_DESCRIPTION() macros
+Content-Language: en-US
+To: Viresh Kumar <viresh.kumar@linaro.org>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michael Ellerman
+	<mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy
+	<christophe.leroy@csgroup.eu>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <kernel-janitors@vger.kernel.org>
+References: <20240614-md-powerpc-drivers-cpufreq-v1-1-de4034d87fd2@quicinc.com>
+ <20240701083320.c3r4aussa4qojewq@vireshk-i7>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240701083320.c3r4aussa4qojewq@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ctGWlwWjxygEGzUEfixMirX5izh2d6XZ
+X-Proofpoint-GUID: ctGWlwWjxygEGzUEfixMirX5izh2d6XZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_13,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
+ clxscore=1011 spamscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407150152
 
-On Mon, Jun 24, 2024 at 09:31:51AM +0200, Vlastimil Babka wrote:
-> Hi,
+On 7/1/2024 1:33 AM, Viresh Kumar wrote:
+> On 14-06-24, 23:08, Jeff Johnson wrote:
+>> With ARCH=powerpc, make allmodconfig && make W=1 C=1 reports:
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cpufreq/ppc-cbe-cpufreq.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cpufreq/powernv-cpufreq.o
+>>
+>> Add the missing invocation of the MODULE_DESCRIPTION() macro to all
+>> files which have a MODULE_LICENSE().
+>>
+>> This includes three additional files which, although they did not
+>> produce a warning with the powerpc allmodconfig configuration, may
+>> cause this warning with specific options enabled in the kernel
+>> configuration.
+>>
+>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 > 
-> you've included tglx, which is great, but there's also LOCKING PRIMITIVES
-> section in MAINTAINERS so I've added folks from there in my reply.
-> Link to full series:
-> https://lore.kernel.org/all/20240622035815.569665-1-leobras@redhat.com/
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > 
-> On 6/22/24 5:58 AM, Leonardo Bras wrote:
-> > The problem:
-> > Some places in the kernel implement a parallel programming strategy
-> > consisting on local_locks() for most of the work, and some rare remote
-> > operations are scheduled on target cpu. This keeps cache bouncing low since
-> > cacheline tends to be mostly local, and avoids the cost of locks in non-RT
-> > kernels, even though the very few remote operations will be expensive due
-> > to scheduling overhead.
-> > 
-> > On the other hand, for RT workloads this can represent a problem: getting
-> > an important workload scheduled out to deal with remote requests is
-> > sure to introduce unexpected deadline misses.
-> > 
-> > The idea:
-> > Currently with PREEMPT_RT=y, local_locks() become per-cpu spinlocks.
-> > In this case, instead of scheduling work on a remote cpu, it should
-> > be safe to grab that remote cpu's per-cpu spinlock and run the required
-> > work locally. Tha major cost, which is un/locking in every local function,
-> > already happens in PREEMPT_RT.
-> 
-> I've also noticed this a while ago (likely in the context of rewriting SLUB
-> to use local_lock) and asked about it on IRC, and IIRC tglx wasn't fond of
-> the idea. But I forgot the details about why, so I'll let the the locking
-> experts reply...
 
-Thomas?
+I still don't see this in linux-next. Is anything else needed from me?
 
-
+Of the almost 300 patches I've submitted to fix these issues tree-wide, this
+is one of the 13 remaining. Hopefully this can make it into the 6.11 merge
+window. If not, Greg KH has indicated he'll take this as an -rc instead of
+waiting for 6.12.
