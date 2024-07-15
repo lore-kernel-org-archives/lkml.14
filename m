@@ -1,104 +1,136 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCB018D4C8
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4F7B18C351
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721048957; cv=none; b=r4tbAL49isZeCWex9ni1ydDCESKiFE0w0Xf2lLg7hqOMpY9K/UjYVU08lZ6beXGxXNSBHXQ3rUhAo0Dvz6SHI4SgoXiET0VdRNV1o4QIKqpLKEQ7xsG8j7/PZnw6YmiDDeuRJqePzjVvd7dM4TaHAB3OO/rSdOzLTkklEKT99ro=
+	t=1721048960; cv=none; b=HC6Jo1AbGMkVFVAVrfE6AEaNM6pjlGMBEcObxrQ0piySOZ6L9Oqp64Zkx70DDUu85dj/nRTyr5oW5V3DFqFVW2y8TOkyCycUPSCIQSPhJg1gKM1qYyke5zMu2isVM0xz+FBqLMRymOognp4MUScRx+KDYZqIrpIW6HZALe+LY/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721048957; c=relaxed/simple;
-	bh=Sp4rJOAfwoDg+VFyI4LSIIgR2i72s54RLNQmNjA0en4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aY6o+NpsfFBO0t6jYp+puNrAs8ICj3uZ5+09AY5lkMcnFifJGEs/uiwi4KHRoR2Hq2m8t6dDR7IHFj3ivngwoxV7cHOxtN2qQB7EtjQff0Ujh0zjxIwyrIdkCSCuhS8W39IjhltWh2rrJ37Z8gDVLviQBrBQh+Rp/du7TO/P9ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sgoUCVnB; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sgoUCVnB"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-367990aaef3so2575529f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721048954; x=1721653754; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cg1g1741KIeUKYb9m11yGc/6n/X3TYaI+dSIEkjSgkY=;
-        b=sgoUCVnBouOoJdqARhSifSnyiTCbGcsuDn1LhIGSMJAES7XCXCg4Nm0qCFaZnLl+u6
-         CLG8kJAUJOewvy3pbKOzAuUXP8NMJnjJSBT0sSXaQS9pMYPrpE2Ih+AOXOvjAli4WTSe
-         HdslKgq/nsa507GgjqzS/8BKYU/RrfHGEMSnYqyrMFD+vu/6qtozQpZX9fcWuoWakrne
-         0ZxXqTwmoWND5A7gY3dPJf+2mJ6/nn1noqJiBJeNk/CKE0sV0bzvos/5+c5vqDc/Ee4y
-         k3xeJzxTfM0vkdewNxBaPghGu49QueGQv7hWVgX7fX9tU1Eu46L7vku7+7LWk9XXNyX5
-         T3eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721048954; x=1721653754;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cg1g1741KIeUKYb9m11yGc/6n/X3TYaI+dSIEkjSgkY=;
-        b=AdBhKPbi/ulnWEK5pTnpvpDQWBpk5PGFn9OHzv3Qh51dZWxW6nOsrSRdCrtrH7QNj9
-         2W4HlBNOoD8FftDe30viu/pNobWUGy2TTK4YvhuE9eRaUX1NC2y1IYPJ7GNQs7iDDOM8
-         dlcQoYOmSJ2wfHSoko05IVtvAKRn3m9NdOjlcFgKdll1/KnT4pCcYCicLDhhyG7BtN4y
-         RZ0F/D+YHiamRVOr0gR0FlUqMg6d8zhD9WdIDeH6RRVtR6RMUbxWS4scqglrTKO2Cb/K
-         RdMGIrl+7QMS3eSedNSRLiPRHT6eG1XecGQWTdmCeJDrfj8clUM0tfFQIWN9Mg0BPiOh
-         f2aw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Xwcbl9hYxIHjA8LeATk/TDAhtnWHfO24SOCkb9xkADOBzxHCJz2FzfjdHDFNSw5x3I+1zHBBVaxrctg/4vPAocNXXj6gpmtHybYg
-X-Gm-Message-State: AOJu0YyivtsQieFBg3TZ5aR+bLmKOEXh0VsPPhDtew4mNh3YMQtaoAY/
-	VsIxD4nIa48951sQC9SgJXyW7zkxpEXsFkJsGPptn71/tCNLAmFAPBACNpjpxjQ=
-X-Google-Smtp-Source: AGHT+IHTCA8ycbg+4n5AdBnrvp1TwQNdgC6l8a55ueOh87lc552vC36yNGKeIdFpKvE0CAMgsrh4ew==
-X-Received: by 2002:a5d:4dc8:0:b0:367:91d6:e12e with SMTP id ffacd0b85a97d-367ceaca9e9mr12859126f8f.44.1721048954235;
-        Mon, 15 Jul 2024 06:09:14 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680daccdffsm6417766f8f.54.2024.07.15.06.09.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 06:09:13 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	Rob Herring <robh@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: qcom: apq8064: drop reg-names on sata-phy node
-Date: Mon, 15 Jul 2024 14:01:07 +0100
-Message-ID: <20240715130854.53501-3-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240715130854.53501-1-rayyan.ansari@linaro.org>
-References: <20240715130854.53501-1-rayyan.ansari@linaro.org>
+	s=arc-20240116; t=1721048960; c=relaxed/simple;
+	bh=PR09bmX+N58F2+JMjHsofbdHfXq81neDGwKB82wteTk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ARW8s6yZXy3LFg3MeQfM5fsY1XrCyJLNciMCfWHdXO87QjSQhIe+tio6wRjZGYKHvqKwp5uGyUYT4JQmQzCAOE3DBtcflUhPlLeVVSCM+CLDPGlqZhlP932nt7ZsTjObnaL3Bve9FcTeuvFJYjp0P25D/fb6gCODasfClqaKlmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61DA8FEC;
+	Mon, 15 Jul 2024 06:09:43 -0700 (PDT)
+Received: from [10.57.77.136] (unknown [10.57.77.136])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADF9A3F73F;
+	Mon, 15 Jul 2024 06:09:16 -0700 (PDT)
+Message-ID: <4595f655-aaee-4b5c-8988-0804cedda14c@arm.com>
+Date: Mon, 15 Jul 2024 14:09:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v5 PATCH] arm64: mm: force write fault for atomic RMW
+ instructions
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+ Yang Shi <yang@os.amperecomputing.com>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, will@kernel.org,
+ anshuman.khandual@arm.com, david@redhat.com, scott@os.amperecomputing.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dev Jain <dev.jain@arm.com>
+References: <20240626191830.3819324-1-yang@os.amperecomputing.com>
+ <Zn7q3oL1AE8jdM-g@arm.com> <773c8be7-eb73-010c-acea-1c2fefd65b84@gentwo.org>
+ <Zn7xs6OYZz4dyA8a@arm.com>
+ <200c5d06-c551-4847-adaf-287750e6aac4@os.amperecomputing.com>
+ <ZoMG6n4hQp5XMhUN@arm.com> <3743d7e1-0b79-4eaf-82d5-d1ca29fe347d@arm.com>
+In-Reply-To: <3743d7e1-0b79-4eaf-82d5-d1ca29fe347d@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Remove the reg-names property in the sata-phy node as it is not present
-in the bindings and is not required by the driver.
+On 02/07/2024 11:26, Ryan Roberts wrote:
+> On 01/07/2024 20:43, Catalin Marinas wrote:
+>> On Fri, Jun 28, 2024 at 11:20:43AM -0700, Yang Shi wrote:
+>>> On 6/28/24 10:24 AM, Catalin Marinas wrote:
+>>>> This patch does feel a bit like working around a non-optimal user choice
+>>>> in kernel space. Who knows, madvise() may even be quicker if you do a
+>>>> single call for a larger VA vs touching each page.
+>>>
+>>> IMHO, I don't think so. I viewed this patch to solve or workaround some ISA
+>>> inefficiency in kernel. Two faults are not necessary if we know we are
+>>> definitely going to write the memory very soon, right?
+>>
+>> I agree the Arm architecture behaviour is not ideal here and any
+>> timelines for fixing it in hardware, if they do happen, are far into the
+>> future. Purely from a kernel perspective, what I want though is make
+>> sure that longer term (a) we don't create additional maintenance burden
+>> and (b) we don't keep dead code around.
+>>
+>> Point (a) could be mitigated if the architecture is changed so that any
+>> new atomic instructions added to this range would also come with
+>> additional syndrome information so that we don't have to update the
+>> decoding patterns.
+>>
+>> Point (b), however, depends on the OpenJDK and the kernel versions in
+>> distros. Nick Gasson kindly provided some information on the OpenJDK
+>> changes. The atomic_add(0) change happened in early 2022, about 5-6
+>> months after MADV_POPULATE_WRITE support was added to the kernel. What's
+>> interesting is Ampere already contributed MADV_POPULATE_WRITE support to
+>> OpenJDK a few months ago:
+>>
+>> https://github.com/openjdk/jdk/commit/a65a89522d2f24b1767e1c74f6689a22ea32ca6a
+>>
+>> The OpenJDK commit lacks explanation but what I gathered from the diff
+>> is that this option is the preferred one in the presence of THP (which
+>> most/all distros enable by default). If we merge your proposed kernel
+>> patch, it will take time before it makes its way into distros. I'm
+>> hoping that by that time, distros would have picked a new OpenJDK
+>> version already that doesn't need the atomic_add(0) pattern. If that's
+>> the case, we end up with some dead code in the kernel that's almost
+>> never exercised.
+>>
+>> I don't follow OpenJDK development but I heard that updates are dragging
+>> quite a lot. I can't tell whether people have picked up the
+>> atomic_add(0) feature and whether, by the time a kernel patch would make
+>> it into distros, they'd also move to the MADV_POPULATE_WRITE pattern.
+>>
+>> There's a point (c) as well on the overhead of reading the faulting
+>> instruction. I hope that's negligible but I haven't measured it.
+>>
+> 
+> Just to add to this, I note the existing kernel behaviour is that if a write
+> fault happens in a region that has a (RO) huge zero page mapped at PMD level,
+> then the PMD is shattered, the PTE of the fault address is populated with a
+> writable page and the remaining PTEs are populated with order-0 zero pages
+> (read-only).
+> 
+> This seems like odd behaviour to me. Surely it would be less effort and more
+> aligned with the app's expectations to notice the huge zero page in the PMD,
+> remove it, and install a THP, as would have been done if pmd_none() was true? I
+> don't think there is a memory bloat argument here because, IIUC, with the
+> current behaviour, khugepaged would eventually upgrade it to a THP anyway?
+> 
+> Changing to this new behaviour would only be a partial solution for your use
+> case, since you would still have 2 faults. But it would remove the cost of the
+> shattering and ensure you have a THP immediately after the write fault. But I
+> can't think of a reason why this wouldn't be a generally useful change
+> regardless? Any thoughts?
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
----
- arch/arm/boot/dts/qcom/qcom-apq8064.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+Hi All,
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
-index 769e151747c3..81cf387e1817 100644
---- a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
-@@ -871,7 +871,6 @@ sata_phy0: phy@1b400000 {
- 			compatible = "qcom,apq8064-sata-phy";
- 			status = "disabled";
- 			reg = <0x1b400000 0x200>;
--			reg-names = "phy_mem";
- 			clocks = <&gcc SATA_PHY_CFG_CLK>;
- 			clock-names = "cfg";
- 			#phy-cells = <0>;
--- 
-2.45.2
+FYI, I had some more conversation on this at [1] and the conclusion was that the
+current kernel behaviour is undesirable and we should change it so that if a
+write fault occurs in a ragion mapped by a huge zero page, then the huge zero
+page is uninstalled and a (private) THP is installed in its place. Shattering of
+the huge zero page to PTEs should *not* occur.
+
+So we will make this change in due course and submit to the list.
+
+[1] https://lore.kernel.org/linux-mm/1cfae0c0-96a2-4308-9c62-f7a640520242@arm.com/
+
+Thanks,
+Ryan
+
+> 
+> Thanks,
+> Ryan
+> 
 
