@@ -1,118 +1,99 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CF5219ED;
-	Mon, 15 Jul 2024 16:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9539208D7
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 16:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721062010; cv=none; b=Sng15hTj5z+OFWswOWCo3drc6x0xcBj/Me+MlGszDz/QuyA1aIvDbs8hpmz3KOvVxDyckQ7bYxdGST/9Q+Sbc8QAoitBId42IDLph9kr2JCiuHYdIGs2aOXuJOzZeZDo+U1JiFJvFTb1DQFiuIecb6WwPVjLi6aTi2T3n2/Q3OU=
+	t=1721062155; cv=none; b=X/Sxwci2I7jA5ygDy5eqRq7Sq9uqd8ImXGrG/43FVa88gFMtoD/wrFeqmZ91kc3xlhhIad6lZVLK7uRyx2DxSXGdaqYKVF9cg4QBlHJvk8B/q8SGwUIPq3Lo9pfe9xd0XxsEGPehgQXO/k6hvdmGcM9tr0FSzWSyAScj5iUU+ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721062010; c=relaxed/simple;
-	bh=yy9gl9pQz3F5fgfnipmdtFV0zJl13QipSJnEg+3xNDo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RapbzH/TZGD2VZ0mMpaotkbtABIM8On0ucSUb5G2aNe0K9pRvU5R2kow++ji/9Qb37cdDUX6L0JIB4zjUEpDLG6je8woz+fBOeGFgoUlaiYNZWgLbowVRDXaLVEK/pmVpHlx1Gpb9pII/WmEBb+r/yEiaCd/hsKKCHZFvp4fEis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nChWDdjQ; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721062155; c=relaxed/simple;
+	bh=BVNgqz+4odXWv/QdUrTS3ZJYLwOEmal7WpHwLv2mPPA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LPBWXcK6IC0N4WTM2PPnHdkr+O7+PtoqZOfSXHnxcIUH7WWvIKVmalUCPBIDBDW/GFu7w8s+0aJ9yAux9J6JKXmeUvubs0TLOY8zRRgkMZZGwPYXT/5AoHfjZ0ihYn05w65lXzE+7ZfPYht2++evl+SbYKlQRJeNWnetUSnQUXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=O0IATCKe; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nChWDdjQ"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52ea33671ffso4588976e87.3;
-        Mon, 15 Jul 2024 09:46:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="O0IATCKe"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2eeb1ba0468so52831321fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721062007; x=1721666807; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=kylehuey.com; s=google; t=1721062152; x=1721666952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wXLPtmmwbw0kH9maBt8kI0QUZhZ3U60BovT7L6yY3xs=;
-        b=nChWDdjQHkPTo0nhrHAyVU9Opg/2lM2TjwWUMFFcoM/ebvpt6gjlXX4ZBGctgxomA9
-         YRYCm+md1R3R9qFvlAJgDwasHyErgrzyPp9k60I9kbHX2D8l5PSBpb8pd1YoZ2yBYrHm
-         R1OmANjV8xOMyccYMuWE9APD6UTTRaI1WB5mkQauQczvljEVZcQ07zWVsmtIYqXgos/L
-         wGUsERH4PhwZXXgUisrmprteXcmIjO82pwHnKER9HVybkis7EFdZZrVuMSjBril+wOVV
-         hm+zhGmsJdh5vVlNXTNlRMFwxmV9aLDae6QGD/Hc+KROqwhb5EHFuQgd7SXghK9gf8BH
-         lacQ==
+        bh=BVNgqz+4odXWv/QdUrTS3ZJYLwOEmal7WpHwLv2mPPA=;
+        b=O0IATCKey6MKjFNC30HNhcqiXRYtr6jzdhzKD67767VsixBnf+t9b6z+OZwb0+uWAF
+         Sy4M1LqsS46kUGORmxMKEf/FpJ4MwKN4T/GPArbRZosgHqr2ZtbxrdbYUhEVH0RmYl4i
+         ttZkwjsCGfpRLBRgxNpTDen5ISr54ydL7arrtK21e61xNzK5YYiQoB2m06FXzcSeeXu4
+         am/FF5oWO898QmeLiIhD1Th8XESx3WUZ6LvkbvmFg5I9Ol6StYUyekO2xnbfnFTGi9Oj
+         1J20staOnGBMYu6Zvgn9fwbhRZJiq10YZDFS+pTy8YF3UCDjExj+HqksoLedH+MWR1DP
+         Y7bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721062007; x=1721666807;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1721062152; x=1721666952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wXLPtmmwbw0kH9maBt8kI0QUZhZ3U60BovT7L6yY3xs=;
-        b=tsoivWyZejPJd0vyAKimgJ/S48LUYF7Nol5cBQKqn8MiVr4PapdhMRxE5qEb/7g9d0
-         OUY1IZvb677WLidHoAh1/njom1/E/Q4o5gfgYHi4ZAaaa9Jwaqjd4JsJ1yovQruKMBVD
-         WH+ekRhUtxh5wOD4B4tV+A0uou5VeMCYBSCbWxJVjIMoG9KiALuBuRZKErMX2NgeG550
-         kCOgPAnVVdENefQtGbLbx5y8X4EjW05hwo/EmBaGbFrpFmvOXMLTSjomPsvL9GRL6Z5s
-         VK9/FzwclM+hie0Z1jJLPJUaO8J8h0IschecianC2JaohXQ7eBsZS5TrEDgz8bImnFOM
-         xEXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQClTvdbIcdHph9zUvcMPq+/7M54PTH9gZJTRdIHqVxCM7Xo6wRaHcm9UQenwmMOgNzE4KLfBc0aYuQz8y+ffWvF4RdHT65ncykn+B
-X-Gm-Message-State: AOJu0YzRJch9JJ7WLyum59hztxT0FcX0gFL74SNQFtqzwBwFqoIxhhVx
-	2Zj89hCD4Qm45nkb3lhtrmUC1KFO4N6h9Xkd+6udZ8CGZVWEOTuN
-X-Google-Smtp-Source: AGHT+IG72IQ0ziiaJH2CaciU0vlZKlLL8khi4i7uyxWcd0QoI/uPAG9YPE4h/aM4tCxzi/2HTELIUg==
-X-Received: by 2002:a05:6512:e9b:b0:52c:dfa0:dca0 with SMTP id 2adb3069b0e04-52ede1c782amr51714e87.43.1721062006412;
-        Mon, 15 Jul 2024 09:46:46 -0700 (PDT)
-Received: from playground.localdomain ([188.25.209.252])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e7749esm94316975e9.2.2024.07.15.09.46.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 09:46:45 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liu Ying <victor.liu@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] arm64: dts: imx8ulp: add AVD-SIM node
-Date: Mon, 15 Jul 2024 12:45:14 -0400
-Message-Id: <20240715164514.8718-4-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240715164514.8718-1-laurentiumihalcea111@gmail.com>
-References: <20240715164514.8718-1-laurentiumihalcea111@gmail.com>
+        bh=BVNgqz+4odXWv/QdUrTS3ZJYLwOEmal7WpHwLv2mPPA=;
+        b=xVL1wh/ojUGOCYJAdZEeu2Qa4S+O/oJRtFrjqiT1+3yPw5X4Q0vLfgxF3QCmo2fRlO
+         GOtylX5bgs8WsYempo8IF1Gm9IGK2MvNqG8iHHdIpi3ppx/VhQkEcnqIAxOsI+EQS0zL
+         Ex4cy1IiuGu/lD8QEgdFTEtGlh158cxifQ5+KAv7eUzy/oqdKj8XsfeXmLu55/+QjkiA
+         xjLIGkFiEDdJUIjTML/axZ/0ttr91/PlH3tGGRLZ++MUMPThQtQQhGDJbqphGzdDw6T8
+         7QI31dJKX/ahBNejmoeaMEnmqmRQShpmFM2G3faPTkW0nSBKu21XOYNObCRFqiB8s4vF
+         a4kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVt4d3xGadGNBA0XDaIRMB6pd7ybBqCsc6AVCH0QecxEgrcBVs5UCuMEk2x8S0aWeCPxNYo2rQeqEeC0ODcnvj0w6+8vPMybM2fTZLF
+X-Gm-Message-State: AOJu0YxyfgNdFgFyItScPIm3UlJc+UXpXhh4WB2xJZ7W9feMERmqJaH3
+	iEyEzWOHEZXJVxoOKyJq7TuHONSmb+QN0VBQcJFhJDSpQE2AMltUVyscyYn0sInXd8Pm/zJ9AnY
+	jtkGBF/rF/3gX1qesJhfvzxZ3uQKqdtip6hRV
+X-Google-Smtp-Source: AGHT+IFRSOgkzkjLnzFYhjtojv9zXtEfhnmrpuhjhF1QSAGhPIuoCZ6kU3nMDyjzf5kVyjnwwKCKcmfbXnyCQ/kBnoQ=
+X-Received: by 2002:a2e:beaa:0:b0:2ee:5b64:b471 with SMTP id
+ 38308e7fff4ca-2eef2da5dacmr4220141fa.30.1721062151922; Mon, 15 Jul 2024
+ 09:49:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240713044645.10840-1-khuey@kylehuey.com> <ZpLkR2qOo0wTyfqB@krava>
+ <20240715111208.GB14400@noisy.programming.kicks-ass.net> <CAP045ArBNZ559RFrvDTsHj42S4W+BuReHe+XV2tBPSeoHOMMpA@mail.gmail.com>
+ <20240715150410.GJ14400@noisy.programming.kicks-ass.net> <CAP045Aq3Mv2oDMCU8-Afe7Ne+RLH62120F3RWqc+p9STpcxyxg@mail.gmail.com>
+ <20240715163003.GK14400@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240715163003.GK14400@noisy.programming.kicks-ass.net>
+From: Kyle Huey <me@kylehuey.com>
+Date: Mon, 15 Jul 2024 09:48:58 -0700
+Message-ID: <CAP045Apu6Sb=eKLXkZ5TWitWbmGHMDArD1++81vdN2_NqeFTyw@mail.gmail.com>
+Subject: Re: [PATCH] perf/bpf: Don't call bpf_overflow_handler() for tracing events
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, khuey@kylehuey.com, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	robert@ocallahan.org, Joe Damato <jdamato@fastly.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+On Mon, Jul 15, 2024 at 9:30=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Mon, Jul 15, 2024 at 08:19:44AM -0700, Kyle Huey wrote:
+>
+> > I think this would probably work but stealing the bit seems far more
+> > complicated than just gating on perf_event_is_tracing().
+>
+> perf_event_is_tracing() is something like 3 branches. It is not a simple
+> conditional. Combined with that re-load and the wrong return value, this
+> all wants a cleanup.
+>
+> Using that LSB works, it's just that the code aint pretty.
 
-Add node for imx8ulp's AVD-SIM module. This also
-includes its children.
+Maybe we could gate on !event->tp_event instead. Somebody who is more
+familiar with this code than me should probably confirm that tp_event
+being non-null and perf_event_is_tracing() being true are equivalent
+though.
 
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8ulp.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-index e32d5afcf4a9..1ffa4da23042 100644
---- a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-@@ -614,6 +614,19 @@ per_bridge5: bus@2d800000 {
- 			#size-cells = <1>;
- 			ranges;
- 
-+			avd_sim: syscon@2da50000 {
-+				compatible = "nxp,imx8ulp-avd-sim-reset", "syscon";
-+				reg = <0x2da50000 0x38>;
-+				clocks = <&pcc5 IMX8ULP_CLK_AVD_SIM>;
-+				#reset-cells = <1>;
-+
-+				mux: mux-controller {
-+					compatible = "mmio-mux";
-+					#mux-control-cells = <1>;
-+					mux-reg-masks = <0x8 0x00000200>;
-+				};
-+			};
-+
- 			cgc2: clock-controller@2da60000 {
- 				compatible = "fsl,imx8ulp-cgc2";
- 				reg = <0x2da60000 0x10000>;
--- 
-2.34.1
-
+- Kyle
