@@ -1,240 +1,201 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011047.outbound.protection.outlook.com [52.101.70.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBD8481D5;
-	Mon, 15 Jul 2024 17:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721063259; cv=fail; b=Rves91uicl9dotOB2gYJ/g6STRxqoJm4kjp29+RcMkFo+Lv2YC4Nc4VtlaYFX142o9bE/9gLclG7nJKVkEgonLpj2D8M8lhIuOWJBK8j4tsUBCLPseZgijfJCaMacBgcbxmgd25QUL35Lyinn/vAlPGha9ZyEVBqrpBYWIVkacY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721063259; c=relaxed/simple;
-	bh=q93P879H3QqIZQaVGpdoSJXX7TzJukxIO3aSV/NfQv4=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Ybxhdmes3lmDzAqL9SEWgqDqnLyF7vD66NlVHzt80RgEqQkf51QObXEqbEvD5sOmNDkFKVntsnu1Ewyl+F95rkGoIiQswx1FevzNzIv0+UaOzOGyOjyVGKDFLL52IFT/2CcNUgohqeZXo32DXrKFP8chww3UKwiRucxBjNDtMpQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=UXu8Q+FN; arc=fail smtp.client-ip=52.101.70.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881A217BB4;
+	Mon, 15 Jul 2024 17:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721063472; cv=none; b=oXzUF/DWNIB8wVHB3KUi5zR2vOqUouHubFOqjZDs3kt+5+inV/Nou6ZngIigQshWG7+MC945y6DKB/veV+5zbiuCzDZtIk1vthree7JFaeWhs7j3odga/R6aIMB7hvHRmliTq/9420V4Z0U2MIywy6pCxqGLNXTJW1G/Qpq2VQI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721063472; c=relaxed/simple;
+	bh=sE2l+AJ+jOkXSJEM7XiFmIWXkjkGToqX6Q5unCwbdcw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XB9nX5X/9npEKtZXbyvgEOpQuyzhk9YBNoXacMnhf4R59qXCPoUe5lezO/bdjA6UkX68yzSSeDlRiSN6faMHlG/rc+fWIgeHzIQbOulBhDP8bh2lGuuf5qby9cjQEM3kJreN706GXmdqu4DCCOM8a3ba/8X6X4Ik0NqVDiWiu8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvEIRw3y; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UXu8Q+FN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ksd0XNNjujoen9IMzAzfxtRAOAEKnn30K/BwAU36+XUeaW74sfcPhizK0Mou3Tk8ADz//c8xm3aNsTeB0k3c0bjqPwk8RcJQXeOdmDEDcmfG4L+fM5F8zajYVR0dctsinkaONp559Yh3q+gbxuAe/i7TqTL6UU5BUm12hsnL4xnFrlAUZsP9sNxX8vqoLDCKTjW6zlWvHy09Kdqg0fmdXaq9S/qCjZ/QryKAX3eUsk/fmo9XiIec931Wsf3fSqX3WqQe+E/TXnRCVvkzFlhdXJuZN4rSPnZg3Aq1Fjn8abBGeDNt/GLLgpsrraACpo+HUyrCpQ8AVdFODM/Av+s7WQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IrEoMJJve6wI+fUv21eSJCWBRFRgYgWHvklS1wN4yUA=;
- b=jCzrSMeYGUXXSJ/S5olzr0ifqD2dDPccs7YH/JO3968NKsLDaPn9xjukFwX4b/7uPqK2MvMkie+b67qIc4oTRAk/A/OcisQKoUoTF0dvF7FsnWzuQNuSsHdCnxzSzeCD2agT5udlO7v6po9iT3Q/3aH2xihZFfjsGHUw64rgTjkE16XMKnsYWpzd7iBfgrqtqY7zrmScI4p/qQXklNjggDLEVBbluvA8t0CxfXaDzjE21snJaVilk1ffQTY6Trj92zUpMVKH8DnFYN0yf5medoyEDQ1e96Fu65KVVOptDMKc3TYQQ+4fnrRe2QdO2IUfY3tA8gav82BpiHsznq/F0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IrEoMJJve6wI+fUv21eSJCWBRFRgYgWHvklS1wN4yUA=;
- b=UXu8Q+FNoahSgV1BXZn4okg6LjEjGb20ce/JeKlYef5jKesnF9CUtgjck6tlgS59UiUnzuKgHA9QtMCKdaWHMvRmF/KBT6hKFcydw1oUzrux8mcPusWcEC4GgBh1ROS6JjjHXs4GqTjnNPLA3bbRrqih4bnqQ1ZYNNALkxy0bIA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM8PR04MB7956.eurprd04.prod.outlook.com (2603:10a6:20b:241::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Mon, 15 Jul
- 2024 17:07:34 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
- 17:07:34 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: linux@roeck-us.net
-Cc: Frank.Li@nxp.com,
-	alice.guo@nxp.com,
-	festevam@gmail.com,
-	imx@lists.linux.dev,
-	kernel@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	s.hauer@pengutronix.de,
-	shawnguo@kernel.org,
-	wim@linux-watchdog.org,
-	ye.li@nxp.com
-Subject: [PATCH v3 1/1] watchdog: imx7ulp_wdt: move post_rcs_wait into struct imx_wdt_hw_feature
-Date: Mon, 15 Jul 2024 13:07:17 -0400
-Message-Id: <20240715170717.2490688-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0002.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::7) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvEIRw3y"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70b12572bd8so3083058b3a.2;
+        Mon, 15 Jul 2024 10:11:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721063470; x=1721668270; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Juvk9Mh9FVF1mZV8matVXreUlpeXpyTK/r3nCThib2I=;
+        b=gvEIRw3yILbjp7pnstBSmJzXmFg0X3tGi3H9+HhgOCl96i1IpURSH4191wGZrdcSIr
+         luGAZufWULlwWh0N/TMW5X/ccRN41ktWnAYb92IEt//lHQud7UaFxyGCmZNIVr++FRUb
+         prp379ihnpGoPxPjLAs+LSmWOSqSJOXMmB8mqch9t+l1wzZZcWiBCkGZ4qfu9pOzjtgw
+         Gm0+6yJFun17KoahVqcJDGqd7+XW1REl3EsSyBb0IxqWvOdEIx/wvtq8ORIyMC0G2DZf
+         Jpv/9EX6TgFNYQeNAjmNTTHABLiSyEpK2n2ExsW/zdKCs1KFm18In9A2CWQCcq6adyX/
+         nyyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721063470; x=1721668270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Juvk9Mh9FVF1mZV8matVXreUlpeXpyTK/r3nCThib2I=;
+        b=l1ga8FjkWSilzKkY2USqoxFiJqVpjfwdtVpnDm5VuexSQie3KE6BGEH7Om8iD/BonC
+         G9+gweYmgKlmr2Xtoagoh4fuanfOOhHFYZ/JfrVlbBYqfM11WtLAOqDl4J/s/Y+1D2LU
+         GNDoxX/RnUHP92h910ZTh9Mpd1VvA/1mQQ3FnadW8qSx41eF4UyysT3DAzK94i6V4Cur
+         LuuLFJZwC5g6zOzHqzp5hAUsPQupYsCkW2EVHZm5TbgcZSMZtpKGx8CGZP34nOAS4qCM
+         7IsY0bTOE0GN0ePzP12GwZ294NpIoW2qIMzKhJWQbx9spd9dEaF7Efz9Djrq2zb/W0cC
+         19CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdYS7FrwDkxM6M5F19M6tXbOVrVj/HLYZZzIEMIeKFoFlnK6Gye1x5T2ys5tKGup8mLY+Db5tY8u5iJ1LLhHKtMxmjcGvbzacyfaBc6SLd+lUujqsVhe/e6OkCjGJ1sosrGEBFBy55tcKndDhxX8VH
+X-Gm-Message-State: AOJu0YzOT+IfrIKUUsyfWqSCxG2GsiYwaUxwC3rWfLqKDkn5VA8SdoL9
+	8cIrtfxl+16Qf+pftCTfOR5x7YEz4SMWFBl1gdBVYo5GsQJ0FY21/elKDpLDGmsOcmg+ebWx33I
+	Pfb/DGOrS7W/rIz3GrfrbQ37CzK4=
+X-Google-Smtp-Source: AGHT+IHDMbDPUkUH66xtlh2FLSelH0/gS7ZfUGbaXVnMbpZhuTsxonLkX6SB67lKTohe16DcY4BsPNHxZRQa336TGgM=
+X-Received: by 2002:a05:6a21:150d:b0:1c3:cfc2:2b1f with SMTP id
+ adf61e73a8af0-1c3ee6572e7mr568762637.37.1721063469690; Mon, 15 Jul 2024
+ 10:11:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7956:EE_
-X-MS-Office365-Filtering-Correlation-Id: 206ca358-0958-4e59-ef7e-08dca4f09f01
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IUq7e/4wwa/Fy/vYI8aGCpnkxrLCakmTTIZ7oNbUjf4JeZ9TrfH1/98Q+fAJ?=
- =?us-ascii?Q?x0ARnbBnmOTD555ecY1PQ+xpwI/N1wk/1cjRyfvqyf9fIH6CqDx/76tFHelq?=
- =?us-ascii?Q?BBwTAbILLidLuL9hgGZZjS7eHzeqy5ys3nVw9p160UF2hnBUE12K3KoIMEE1?=
- =?us-ascii?Q?vSTMeNDXiWl5pAXvG2xI5ET/EnNvro6gWk1lG6j5GsUSLnlS+XuXagB8KLmD?=
- =?us-ascii?Q?JCc3n2h6OI3oz0FGPuEs2OnxHgGiHdoFPMQvZh3A89Ejx9B1wgQxHC6hLCAA?=
- =?us-ascii?Q?jEJ47Cnx9mVeOPzCSb69t0YC/Mm9EZwD0NwknLPMRyVCtva5o5OUyDhf8gIf?=
- =?us-ascii?Q?Q+N0ryOjucEdfIb3rPO/h5DlIsu8UZ71Kfqo4a4M8ET+w17lvDU/cQeJgVjn?=
- =?us-ascii?Q?JVd16oEyQRm5KROVQx4ydlIR0c+CtayVfIiVChwJ9SS28HZM7xcuvtL1nvRH?=
- =?us-ascii?Q?nKISfiFJ0lbtbxFK/WbkqF3YBAt8oYRpaDb50hUBRwT1rLccUqc2N+gQzStQ?=
- =?us-ascii?Q?3Za1a7Tug7HveRJEP1m1GAFfY+OY+I/Cc/f1USQJFpx1PNV2YPC+vXx33yWF?=
- =?us-ascii?Q?ppkn0rMhOrWRURaQpcJb4gdAQ3q0QZbtnXXspxb28NcRZKQKSdktE786jPUf?=
- =?us-ascii?Q?mnHOyhe6iCIwsBW9S0iLQG251K5wUzWVtw3yZ72IE3qw8Ntqx7yzWRYP+mUV?=
- =?us-ascii?Q?9Qeu9nF+HZL3OtNpixrot/Zh+pHrI0SxLOXxCLsab3cqBgXJ0wBPxoKXZfPT?=
- =?us-ascii?Q?ABwkWWokkQS0CJXbs36ZWVOZN6WR/4YtwSV/4EG4rgLGBs1DoE9+ay4hNfzf?=
- =?us-ascii?Q?5l17feeerBo7M7rKn0CjjEwcbeauxrevN3EhKbCIN+amceR4WileJsxrFW2V?=
- =?us-ascii?Q?7+1b67ciqm2rbuITTBvTw2JBmog4X5U1xSYkOcN2hmWDx20sUZZzEvtojWKI?=
- =?us-ascii?Q?jwGEBI+GNxEP58PZ1X31E6cpw+Xiv6xePc8ah1bIdcv/R+LhdnAVTtRoNxqV?=
- =?us-ascii?Q?S9qa/DfubPuiG7Dyd2fVEQlotkr3cy+A6LTvHW2jarYEihsSDjeL52Y1mhpH?=
- =?us-ascii?Q?S1ksMjh0qY23OnIx4lQhUsahaQQU55Tymx+BOHCsmH7taCIOYeD4lwTNIq7d?=
- =?us-ascii?Q?erncXF5yBXMusA6nyHF8raQi8OXrWeIfWNYwQbmPpeMEeQ78m5iIfhjYNht1?=
- =?us-ascii?Q?1LTqoLGvC5eSkC5jA7QtTjbfLT2VtHIgHgxICMn8yStG6SR1Kle/DY6X1z40?=
- =?us-ascii?Q?tRENCQ0HaXw5zWTndIe0aB55WWkW2bxQPDWn48HrezP0F9Yjjpy2NxnQaIAU?=
- =?us-ascii?Q?28+Ez8t76oc+jaqVeyGYoxZY+ogVy58xZRr4PirbgBKzzyVR70kia+DohBHf?=
- =?us-ascii?Q?iCmhgW5J5ThlA2XZrGRkBYK8ZxqlIMuM6I9qvsnHzRMSmOJgtw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9tEAacI3nc13l017T22D+pAJc+FMp2iY5EbgQUka5NVYsFKmMwLlqbkhTgOm?=
- =?us-ascii?Q?y3dnxud0rb+mGGFxXTWndHAHcDBZg5wP9fKKo5svhM/5VmGpkrs0aMIVHIrS?=
- =?us-ascii?Q?A8mKKr8K35qQxcM7+asH7oUippOk2uvEz567J6nxm6G9QoyAnxAAf+PuRSFe?=
- =?us-ascii?Q?cNgQotZLEfclF6LY/PPOnyH/RX71s9EEBCxMsGuI5JWmm3/M+H4dtI39xiQX?=
- =?us-ascii?Q?sXvQ32KWKDmd44HFEDRW1qb4OZ/6ZFUn4AoM8Zwyy5yGNyTx2TZUxoCSOqnO?=
- =?us-ascii?Q?lgVuLnk0C/16WP1WqRp3o0rmYk7uU7AeTbkEhQ294Qzs2egD8+cS0s6aCb1V?=
- =?us-ascii?Q?jAVF7wwwD8zVyrFzoytPvMD+7nnc+RwcETQmhpqRIXfw4wr/YQyVtdjRCfeH?=
- =?us-ascii?Q?sTtiCWUlZljT239JOcdhbPz7v3NkSC1aXHw/bSOJ9LrpD7tZPyDMWAjfBL+U?=
- =?us-ascii?Q?5DsazrPZV5spQ6sEBJudMTPDp5DlWdS5qwDmqlHYme3CwCw2IjoD2/DwkXVL?=
- =?us-ascii?Q?vNy7pkcSvS+gBSoxnzF5nzFKL1k4HpT710ykqD4GB7W7JPHU9ysaKaBb7zUH?=
- =?us-ascii?Q?0+kRkWvrJCw3k2DRSqCBoSR1SsPcfavsAdQPWjUEvV4OM3QRo8G7UashoyEb?=
- =?us-ascii?Q?iKgYEGEtoniCHxqAAj+85HCEuIh6T1FeMgP+6YaJ5G+k5fpdjVFU135D9XI1?=
- =?us-ascii?Q?KLDJ9e8nRoZ7jBpE8AHKgabT9I/H/j6CQdF/7IDMfdBdtwbzVQOOwhXdwjX+?=
- =?us-ascii?Q?97p+zby082b2cJQbGQLtUbQqvBLZApRIZ7K0bJdfz5oV58Pci5qddVILzcob?=
- =?us-ascii?Q?3OH164XdG07k3uRDj4pmeMaQrGcEZMQ8TONK5AapFujB5doJ4QXsWtOf5wRp?=
- =?us-ascii?Q?8LOho8lwHFKPbHlRUoEodGpSpp8t7hw4wXAp/gZe1fxIGZYdkfsd44H1Z8rr?=
- =?us-ascii?Q?Y92Qks+Yhg1J2kjMiCQhkLN1h1RpMaG0vtCEMgSY/pTovmsya6Ijawpe4Yez?=
- =?us-ascii?Q?/zw/nSiGSsxVANjYuXTrXzzsEVBXzUHqPTwyCs18bHEk35yAnqxiJ3vvq+cM?=
- =?us-ascii?Q?x5dASA/L4jAWRVynlIrMAkc5ZAdgsYyvL0kDbOrjW9DD6/lv9g9er59T4HUJ?=
- =?us-ascii?Q?GUNVaYTxPwh1pqPNYWKQH5Wu8strg1vxDwdEIsoFIPc75t0eLBPXjId4r+AZ?=
- =?us-ascii?Q?tdfmQAZfkhCwOTdAoMn3YopjrihWTZvY6KblrZzy2W3eRRiXJfpbyIXME9tZ?=
- =?us-ascii?Q?7JehGw8kwgAwWdKN4x/P/SZhWT0gm82uho2mIkg3nIPgjIIGzL3y/ekik1ot?=
- =?us-ascii?Q?y5oo0UPjdiGLdd9hYKCpslLWPNOhw9wnquR2uHYX4IcEeAM2KU4/Z3m5EohB?=
- =?us-ascii?Q?4ao+Dphp8Kk7OJOXjrx/uQvzspNiMT4+++IGtyw2tpDJhaUwZ+Bw0IaoIvm8?=
- =?us-ascii?Q?lsgD8d6fP+TDdWrJcwBbfOkM337lhTIEjdr1ziTT6ywm+EaOblqUYZ4NU/bm?=
- =?us-ascii?Q?DCneb27sdR5E7Aj9+dPXpMW4Yq0giIogb5B0xcLOqDhES+6upLm/b18Y4mpA?=
- =?us-ascii?Q?s2Qy/KpGq3UWotyg+cdIJF720L/7G9ehpKKud3zp?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 206ca358-0958-4e59-ef7e-08dca4f09f01
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 17:07:34.7796
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8Zehx4j5XcceZDIrvcF14I298umdqQWSnjx+HwJvziMlCmpP1AafNHMkTM0MDpWpk2vIS2O+rjcY6nzMKksnEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7956
+References: <20240711110235.098009979@infradead.org> <CAEf4BzZ+ygwfk8FKn5AS_Ny=igvGcFzdDLE2FjcvwjCKazEWMA@mail.gmail.com>
+ <20240715144536.GI14400@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240715144536.GI14400@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 15 Jul 2024 10:10:57 -0700
+Message-ID: <CAEf4BzZuR883FEuKAXp3DY1iJcL+ST8eNq5ioq8oRpDyg0w8Kw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] perf/uprobe: Optimize uprobes
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: oleg@redhat.com, mingo@kernel.org, andrii@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com, 
+	paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Move post_rcs_wait into struct imx_wdt_hw_feature to simplify code logic
-for different compatible strings
+On Mon, Jul 15, 2024 at 7:45=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Thu, Jul 11, 2024 at 09:57:44PM -0700, Andrii Nakryiko wrote:
+>
+> > But then I also ran it on Linux built from perf/uprobes branch (these
+> > patches), and after a few seconds I see that there is no more
+> > attachment/detachment happening. Eventually I got splats, which you
+> > can see in [1]. I used `sudo ./uprobe-stress -a10 -t5 -m5 -f3` command
+> > to run it inside my QEMU image.
+>
+> So them git voodoo incantations did work and I got it built. I'm running
+> that exact same line above (minus the sudo, because test box only has a
+> root account I think) on real hardware.
+>
+> I'm now ~100 periods in and wondering what 'eventually' means...
 
-i.MX93 and i.MX8ULP watchdog do not need to wait 2.5 clocks after RCS is
-done. Set post_rcs_wait to false explicitly to maintain code consistency.
+So I was running in a qemu set up with 16 cores on top of bare metal's
+80 core CPU (Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz). I just tried
+it again, and I can reproduce it within first few periods:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Alice Guo <alice.guo@nxp.com>
-Reviewed-by: Ye Li <ye.li@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Change from v2 to v3
-- Set post_rcs_wait to false explicitly to maintain code consistency
-- Add Guenter review tag.
-Change from v1 to v2
-- Combine to one patch
----
- drivers/watchdog/imx7ulp_wdt.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+WORKING HARD!..
 
-diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-index 94914a22daff7..a4aa02f388b15 100644
---- a/drivers/watchdog/imx7ulp_wdt.c
-+++ b/drivers/watchdog/imx7ulp_wdt.c
-@@ -55,6 +55,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 
- struct imx_wdt_hw_feature {
- 	bool prescaler_enable;
-+	bool post_rcs_wait;
- 	u32 wdog_clock_rate;
- };
- 
-@@ -62,7 +63,6 @@ struct imx7ulp_wdt_device {
- 	struct watchdog_device wdd;
- 	void __iomem *base;
- 	struct clk *clk;
--	bool post_rcs_wait;
- 	bool ext_reset;
- 	const struct imx_wdt_hw_feature *hw;
- };
-@@ -95,7 +95,7 @@ static int imx7ulp_wdt_wait_rcs(struct imx7ulp_wdt_device *wdt)
- 		ret = -ETIMEDOUT;
- 
- 	/* Wait 2.5 clocks after RCS done */
--	if (wdt->post_rcs_wait)
-+	if (wdt->hw->post_rcs_wait)
- 		usleep_range(wait_min, wait_min + 2000);
- 
- 	return ret;
-@@ -334,15 +334,6 @@ static int imx7ulp_wdt_probe(struct platform_device *pdev)
- 	/* The WDOG may need to do external reset through dedicated pin */
- 	imx7ulp_wdt->ext_reset = of_property_read_bool(dev->of_node, "fsl,ext-reset-output");
- 
--	imx7ulp_wdt->post_rcs_wait = true;
--	if (of_device_is_compatible(dev->of_node,
--				    "fsl,imx8ulp-wdt")) {
--		dev_info(dev, "imx8ulp wdt probe\n");
--		imx7ulp_wdt->post_rcs_wait = false;
--	} else {
--		dev_info(dev, "imx7ulp wdt probe\n");
--	}
--
- 	wdog = &imx7ulp_wdt->wdd;
- 	wdog->info = &imx7ulp_wdt_info;
- 	wdog->ops = &imx7ulp_wdt_ops;
-@@ -402,16 +393,24 @@ static const struct dev_pm_ops imx7ulp_wdt_pm_ops = {
- 
- static const struct imx_wdt_hw_feature imx7ulp_wdt_hw = {
- 	.prescaler_enable = false,
-+	.post_rcs_wait = true,
-+	.wdog_clock_rate = 1000,
-+};
-+
-+static const struct imx_wdt_hw_feature imx8ulp_wdt_hw = {
-+	.prescaler_enable = false,
-+	.post_rcs_wait = false,
- 	.wdog_clock_rate = 1000,
- };
- 
- static const struct imx_wdt_hw_feature imx93_wdt_hw = {
- 	.prescaler_enable = true,
-+	.post_rcs_wait = false,
- 	.wdog_clock_rate = 125,
- };
- 
- static const struct of_device_id imx7ulp_wdt_dt_ids[] = {
--	{ .compatible = "fsl,imx8ulp-wdt", .data = &imx7ulp_wdt_hw, },
-+	{ .compatible = "fsl,imx8ulp-wdt", .data = &imx8ulp_wdt_hw, },
- 	{ .compatible = "fsl,imx7ulp-wdt", .data = &imx7ulp_wdt_hw, },
- 	{ .compatible = "fsl,imx93-wdt", .data = &imx93_wdt_hw, },
- 	{ /* sentinel */ }
--- 
-2.34.1
+PERIOD #1 STATS:
+FUNC CALLS               919632
+UPROBE HITS              706351
+URETPROBE HITS           641679
+ATTACHED LINKS              951
+ATTACHED UPROBES           2421
+ATTACHED URETPROBES        2343
+MMAP CALLS                33533
+FORKS CALLS                 241
 
+PERIOD #2 STATS:
+FUNC CALLS                11444
+UPROBE HITS               14320
+URETPROBE HITS             9896
+ATTACHED LINKS               26
+ATTACHED UPROBES             75
+ATTACHED URETPROBES          61
+MMAP CALLS                39093
+FORKS CALLS                  14
+
+PERIOD #3 STATS:
+FUNC CALLS                  230
+UPROBE HITS                 152
+URETPROBE HITS              145
+ATTACHED LINKS                2
+ATTACHED UPROBES              2
+ATTACHED URETPROBES           2
+MMAP CALLS                39121
+FORKS CALLS                   0
+
+PERIOD #4 STATS:
+FUNC CALLS                    0
+UPROBE HITS                   0
+URETPROBE HITS                0
+ATTACHED LINKS                0
+ATTACHED UPROBES              0
+ATTACHED URETPROBES           0
+MMAP CALLS                39010
+FORKS CALLS                   0
+
+You can see in the second period all the numbers drop and by period #4
+(which is about 20 seconds in) anything but mmap()ing stops. When I
+said "eventually" I meant about a minute tops, however long it takes
+to do soft lockup detection, 23 seconds this time.
+
+So it should be very fast.
+
+Note that I'm running with debug kernel configuration (see [0] for
+full kernel config), here are debug-related settings, in case that
+makes a difference:
+
+$ cat ~/linux-build/default/.config | rg -i debug | rg -v '^#'
+CONFIG_X86_DEBUGCTLMSR=3Dy
+CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC=3Dy
+CONFIG_BLK_DEBUG_FS=3Dy
+CONFIG_PNP_DEBUG_MESSAGES=3Dy
+CONFIG_AIC7XXX_DEBUG_MASK=3D0
+CONFIG_AIC79XX_DEBUG_MASK=3D0
+CONFIG_SCSI_MVSAS_DEBUG=3Dy
+CONFIG_DM_DEBUG=3Dy
+CONFIG_MLX4_DEBUG=3Dy
+CONFIG_USB_SERIAL_DEBUG=3Dm
+CONFIG_INFINIBAND_MTHCA_DEBUG=3Dy
+CONFIG_INFINIBAND_IPOIB_DEBUG=3Dy
+CONFIG_INFINIBAND_IPOIB_DEBUG_DATA=3Dy
+CONFIG_CIFS_DEBUG=3Dy
+CONFIG_DLM_DEBUG=3Dy
+CONFIG_DEBUG_BUGVERBOSE=3Dy
+CONFIG_DEBUG_KERNEL=3Dy
+CONFIG_DEBUG_INFO=3Dy
+CONFIG_DEBUG_INFO_DWARF4=3Dy
+CONFIG_DEBUG_INFO_COMPRESSED_NONE=3Dy
+CONFIG_DEBUG_INFO_BTF=3Dy
+CONFIG_DEBUG_INFO_BTF_MODULES=3Dy
+CONFIG_DEBUG_FS=3Dy
+CONFIG_DEBUG_FS_ALLOW_ALL=3Dy
+CONFIG_ARCH_HAS_DEBUG_WX=3Dy
+CONFIG_HAVE_DEBUG_KMEMLEAK=3Dy
+CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE=3Dy
+CONFIG_ARCH_HAS_DEBUG_VIRTUAL=3Dy
+CONFIG_SCHED_DEBUG=3Dy
+CONFIG_DEBUG_PREEMPT=3Dy
+CONFIG_LOCK_DEBUGGING_SUPPORT=3Dy
+CONFIG_DEBUG_RT_MUTEXES=3Dy
+CONFIG_DEBUG_SPINLOCK=3Dy
+CONFIG_DEBUG_MUTEXES=3Dy
+CONFIG_DEBUG_WW_MUTEX_SLOWPATH=3Dy
+CONFIG_DEBUG_RWSEMS=3Dy
+CONFIG_DEBUG_LOCK_ALLOC=3Dy
+CONFIG_DEBUG_LOCKDEP=3Dy
+CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
+CONFIG_DEBUG_IRQFLAGS=3Dy
+CONFIG_X86_DEBUG_FPU=3Dy
+CONFIG_FAULT_INJECTION_DEBUG_FS=3Dy
+
+  [0] https://gist.github.com/anakryiko/97a023a95b30fb0fe607ff743433e64b
+
+>
+> Also, this is a 2 socket, 10 core per socket, 2 threads per core
+> ivybridge thing, are those parameters sufficient?
+
+Should be, I guess? It might be VM vs bare metal differences, though.
+I'll try to run this on bare metal with more production-like kernel
+configuration to see if I can still trigger this. Will let you know
+the results when I get them.
