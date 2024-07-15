@@ -1,147 +1,139 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F54186E3C;
-	Mon, 15 Jul 2024 10:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62D6186E3C;
+	Mon, 15 Jul 2024 10:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039630; cv=none; b=g/dXHs4dNk6FMe7FpZg+sx9K5vK27c8PvQyyEwqYaPjLKWUfismxEJ03kyCxPM+8YL4Gw8UGiEnpsDe5KpLWN7qRH+F9H/EBlPOdrmucX8QyheV0uSTtKE7rAMxnQm9qxUKMbkqLnGwuRBVhkcq1ZC0xkCXmzy0DzJ2HPdiLD+A=
+	t=1721039697; cv=none; b=UGFt5i4P60lgEHa5WdLy7BuhUZEEJf770sTjoiHdu8+aaPDJBjTJ4BT5A2eWR+DIR+I6ZibeZ1jFIP4TY6AJm+PMtF9lQ9EBvE2kVji009EuOCGkKbi3qL7Erj6apmb+upDSRVknq1RekuHO8W4iJbvWVDdCHsRDiHF4rx3zHeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039630; c=relaxed/simple;
-	bh=POqeKX6tEwuOryP7D8pPSvyzfo0os9dxBRg/ltXOz2g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h77+fzyqiXToOHkAyxHemPd+HwhgOMPYb6jduAcTjQvjkP60HcozW4DTtle+/lB9yTiPuiFPFGdVvOl4Q6Ll6F4e6Q3xMVvaAImrhZsKfV8IGdoqW1CWmv2zbmKDF8GQldbdiSKajUeX3WO+E5NU7S65dgq20VpzLoDxU4fpa6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xB1oIhFj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+Wo6LQrf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G0wVZUg8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wniD5IHn; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1721039697; c=relaxed/simple;
+	bh=z67cwuXCyLiAJN3piPdcSSVvfm1vvJ6uWmtFWPvPkVY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CyWuObka890z4/B9kfCl7fRrl9gAVrksOe2L4ov8V3xd1zucJExz3J7yMki6T2KvYMGTePeycuNRnTarXbOf4wpKa+LWgXu2OWqMOugo8niHOzx5+4iR6iWOXmy9g7zrLS3YqmocRvPfLvfoJVZ1dGk/5PREGNLE//t5bRwAZzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOyjFO2j; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xB1oIhFj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+Wo6LQrf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G0wVZUg8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wniD5IHn"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5E9171F7FA;
-	Mon, 15 Jul 2024 10:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721039627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0wkpJ0yEL82EHMn/bNz7YBqqCMlkZSB87fuqhhgtD4=;
-	b=xB1oIhFj5LaHU6XkOIrewi1cAfmZGxYnlyv7Cq1HHl7kqjUDnKl10mx1fxrJxoqAmElV+j
-	JrS8QHJhTdlfrC7zG3gc45ttgYeQsjbEK/ib+7ZtmC9Qx4ArW0t3rsHeHoX0fRFcU3o/J/
-	hMGHI3xKNJUQwGkk+LjTRES1UYk/iPU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721039627;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0wkpJ0yEL82EHMn/bNz7YBqqCMlkZSB87fuqhhgtD4=;
-	b=+Wo6LQrf9leoiXz2iq/jR6P7tyBBk+qPhUm+Kw+JZLUC8qDCDsLSXE2dN9mxpYId1+8Mbz
-	Ed9cREnOuVApEZAA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721039626; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0wkpJ0yEL82EHMn/bNz7YBqqCMlkZSB87fuqhhgtD4=;
-	b=G0wVZUg89ATBGmrNIvjDhOWX8zbyCgLBNYc9wRsCrG1v56h2i0SI+VZHOKJYDK2AMrfLbw
-	NJzgQDBWom8YPmbNJM/mqnyTcZnGsFFB4tWK44iRcmulIJ/LeMmy+WSYr83b88vw8UXLNr
-	WU3LIArN/KfYhTmOGZBnuCNk9iEXQw8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721039626;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0wkpJ0yEL82EHMn/bNz7YBqqCMlkZSB87fuqhhgtD4=;
-	b=wniD5IHnikPCcW5+cm+p52TV/Hj6ckSmnTvQE5fkYtKjjIMt/CXv3W+IclopZE7WYs3wbI
-	9HM0ZZ0D+1elxlDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 88317137EB;
-	Mon, 15 Jul 2024 10:33:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id FJGaHgn7lGaFIgAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 15 Jul 2024 10:33:45 +0000
-Message-ID: <e060f00e-c36c-465b-b9ae-5d6126d9c643@suse.de>
-Date: Mon, 15 Jul 2024 13:33:45 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOyjFO2j"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42795086628so27862035e9.3;
+        Mon, 15 Jul 2024 03:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721039693; x=1721644493; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dffq/wFS7ipPDTEeMPaMdYsEzjLjNSdN/3BeGkOPcP0=;
+        b=dOyjFO2jC7lHogNBLM8StPpGyN1uw8iMQDRDFKIW0UsDksnYrUmhu6v81GkaiKY6pR
+         g5UHvLpBO4K7jk9Y0dP4L9x/ep/UowvtccDhyOvcjPxPuHY52L+YhNW+vPHjj3De4QoM
+         2EapKJb7tB8W5+pQUnr/ZcvUtTTJ3EISKNx9milXM8hQlZu8iJdaa+a8GQpbUT6ZWVcp
+         5Mbo62U3wNrYxIIgIMJOHCZx5a3/wigp+zRimQQcjpsub4aFoNyTYFw883jzZ50i65NV
+         Gs98vZ9ZocswhixzQUcmFWIq9xc5isdONC++EweUnXCKU9mEjqo3WV+Nig76Arve7is0
+         XR1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721039693; x=1721644493;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dffq/wFS7ipPDTEeMPaMdYsEzjLjNSdN/3BeGkOPcP0=;
+        b=L9QvZ2hjjTVv4Re6+CDxUlCUQmF2ZE5fntTfB9baN08YKu0TLsFppx0NkYonvC3JjE
+         SEjgHxnkVZsLQfzmc/uBkgZE8CP2leCF1mnrxHUwA+NNMzVtF23d1dCVc7zzyp7ORxOF
+         KTz38ew2Xt1OK1hqMmzJ+8iIzLacJDcCMKPguRK9RT2+aYlDGLwvv7Qnqp9DySylMLr5
+         avfcAOF71dEmsBhAX2KRFjqV0Hnet60NJTTU4j0aCoAYpxpwkXUZWEN4xSTD/ynZ3MSD
+         77W/NfQDUHcmrJgAZIq7gDr0STDbskxD5uv5A1UnWvgWOxpJmoCNORGjKwknInN7ouU/
+         lygA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkpuPIhqmn2dBDTU85mOXWy9xFNaoAFr1Llo9rbxTUATNBESQH0kGl51ahJBnhEbOXiYdNRRZwe98sJGHVXQO8E/JEyU/dtvGeu9PrpyCEPhLKVQL/0Ul6AfwLdQjUuzDUpA==
+X-Gm-Message-State: AOJu0YyVAZpXj8VPbwxgBW7s1NcrWu3awQtWPLRLjJA4y8gEiy5MDilO
+	uxJMMeCacbPPxcddIymTczGWAfmmSq1wmkSm4H3c2Wuw3DOrvv6JXtJT95fAKn4=
+X-Google-Smtp-Source: AGHT+IFgbSwxsLnVD4xGnLJHLaWJpwMzFdvR7ziL66wXY2Nvt+hNP/YMHt2EaDX5P4VtWqKCjcfqYg==
+X-Received: by 2002:a05:600c:63c4:b0:426:5e8e:410a with SMTP id 5b1f17b1804b1-426707e31aemr119937755e9.24.1721039693133;
+        Mon, 15 Jul 2024 03:34:53 -0700 (PDT)
+Received: from localhost.localdomain ([156.197.57.143])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f239883sm116126895e9.10.2024.07.15.03.34.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 03:34:52 -0700 (PDT)
+From: botta633 <bottaawesome633@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-ext4@vger.kernel.org,
+	syzkaller@googlegroups.com,
+	Ahmed Ehab <bottaawesome633@gmail.com>,
+	syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH v4 2/2] locking/lockdep: Testing lock class and subclass got the same name pointer
+Date: Mon, 15 Jul 2024 16:26:38 +0300
+Message-ID: <20240715132638.3141-2-bottaawesome633@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240715132638.3141-1-bottaawesome633@gmail.com>
+References: <20240715132638.3141-1-bottaawesome633@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/12] PCI: brcmstb: Use bridge reset if available
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240710221630.29561-1-james.quinlan@broadcom.com>
- <20240710221630.29561-5-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20240710221630.29561-5-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -0.29
-X-Spamd-Result: default: False [-0.29 / 50.00];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
+From: Ahmed Ehab <bottaawesome633@gmail.com>
 
+Checking if the lockdep_map->name will change when setting the subclass.
+It shouldn't change so that the lock class and subclass will have the same
+name
 
-On 7/11/24 01:16, Jim Quinlan wrote:
-> The 7712 SOC has a bridge reset which can be described in the device tree.
-> If it is present, use it. Otherwise, continue to use the legacy method to
-> reset the bridge.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 22 +++++++++++++++++-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
+Reported-by: <syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com>
+Fixes: de8f5e4f2dc1f ("lockdep: Introduce wait-type checks")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ahmed Ehab <bottaawesome633@gmail.com>
+---
+v3->v4:
+    - Fixed subject line truncation.
 
-Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+ lib/locking-selftest.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-~Stan
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index 6f6a5fc85b42..aeed613799ca 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -2710,6 +2710,25 @@ static void local_lock_3B(void)
+ 
+ }
+ 
++ /** 
++  * after setting the subclass the lockdep_map.name changes
++  * if we initialize a new string literal for the subclass
++  * we will have a new name pointer
++  */
++static void class_subclass_X1_name_test(void)
++{
++	printk("  --------------------------------------------------------------------------\n");
++	printk("  | class and subclass name test|\n");
++	printk("  ---------------------\n");
++	const char *name_before_setting_subclass = rwsem_X1.dep_map.name;
++	const char *name_after_setting_subclass;
++
++	WARN_ON(!rwsem_X1.dep_map.name);
++	lockdep_set_subclass(&rwsem_X1, 1);
++	name_after_setting_subclass = rwsem_X1.dep_map.name;
++	WARN_ON(name_before_setting_subclass != name_after_setting_subclass);
++}
++
+ static void local_lock_tests(void)
+ {
+ 	printk("  --------------------------------------------------------------------------\n");
+@@ -2916,6 +2935,8 @@ void locking_selftest(void)
+ 
+ 	local_lock_tests();
+ 
++	class_subclass_X1_name_test();
++
+ 	print_testname("hardirq_unsafe_softirq_safe");
+ 	dotest(hardirq_deadlock_softirq_not_deadlock, FAILURE, LOCKTYPE_SPECIAL);
+ 	pr_cont("\n");
+-- 
+2.45.2
+
