@@ -1,173 +1,197 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626E618D4D6;
-	Mon, 15 Jul 2024 13:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E1818E754;
+	Mon, 15 Jul 2024 13:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721049642; cv=none; b=ByGLGZaJgnvCT/YCmHZB2YD37V90Llgza69D6ztpK//mIZsAMh9O41pd947kkvzezBvZ95keYF+YHGGLvUPi6GEfKL7fMCzhrM22nnpV6J9F3CUjw5pR0gvkXNSzumYgJKnK+DxveZKrimYJ41Qx6NwlVUq3JKVvI3Iy5VhFYJ0=
+	t=1721049642; cv=none; b=g5wpNR7YOoxFBDx+vNvoOFCvqK+WCM7Idmf2J6LoINC9V05FDBs003yoNAOiwFWOTcFyL2MkrLsg2x/pyjExStvR22yNWYBup6wioj5P1sM3dMSvFtKeOrBSrj45HKjlIhH0Q6rakiSGxcKnEhsx1+S++MCJ/p2DSVAexnC8jvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721049642; c=relaxed/simple;
-	bh=wLGdLu0qQckiDICmhDi1Ji4Yn3PhMPDZS1VRG/8F1y8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=XYucYEsiXX7p65d/0tSyNksyD87usq3YW7fRi7K53jMhMcsc3ZIGOM/9eASSXWYyY3p3sQ1F38jRy+AQ1+LEpar+XOqYH9lFGEYCeZQTWHrOO+yIJIiUpjU3vwaeDJDMCbP3wmke+snwS8vq6LR9DwGMqfJUj+Tl8ezSjpgqDYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=005uXhEI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wmoErXPa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=6hyYPxFUhD7I6zyQtASLR4ctfHmneimEK/DsS+cEBs4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=khyBbkPPmeDIL79az5hcZzAIjurhZ95VHCNZeviSpPI92BntbFrZt65NAERNJJpaMd9A1/bIYlDyof+OtkH3oN6kwNL4d2+m8QFHWqSU72d16z5a3NXhTPaIDpkX2riYtIuJhu8CYsPcBqUnI/YYpbiMlum3BlPGf4BKzYrYVKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GALUEUW9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="005uXhEI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wmoErXPa"
-Date: Mon, 15 Jul 2024 13:20:37 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1721049638;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rYaCVeE0wi2yZEzqFtnuUE0nbRMql5G/XocG4zSx27k=;
-	b=005uXhEIzV+E/mke/Iw9c84d0CTXMcsKdgzN3VgeaCeIMixFbDXDZr8KZQVNVPDOSJecZk
-	phpz/HTtvSGM1m/PqP/KBdmb/LIL3GnkAWhR5VNCr0Cql9toEuRmKgq/ZrHzyRmUAAsz05
-	84nF9iTp9VtM63gKRb9HcY3Avf6cV3HGmln7dXziOnNQ5m1JDtRY/G38k0Js+3133HqfCe
-	knDc1a16Qt3jak1u+ys5aTeenIuq47rEi1Z0IG7W9UFu1emfYCR3V87bf7bKfxWhGhzZ78
-	EDUnplt/8w4ltEE7W50aPchCCB3hBfrnTkiv3Ltfsk2wxalH9NwMPz3IvNq3dA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1721049638;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rYaCVeE0wi2yZEzqFtnuUE0nbRMql5G/XocG4zSx27k=;
-	b=wmoErXPajs29JdzZHoz/yLdku2RCKNAmn/zkOv6pxMq/bbBW4uf6wTiDRbOWo8+aXuGvme
-	SvEPn2D3QA1GCBCA==
-From: "tip-bot2 for Shenwei Wang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/imx-irqsteer: Handle runtime power management
- correctly
-Cc: Shenwei Wang <shenwei.wang@nxp.com>, Thomas Gleixner <tglx@linutronix.de>,
- stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
- maz@kernel.org
-In-Reply-To: <20240703163250.47887-1-shenwei.wang@nxp.com>
-References: <20240703163250.47887-1-shenwei.wang@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GALUEUW9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C7BC4AF11;
+	Mon, 15 Jul 2024 13:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721049641;
+	bh=6hyYPxFUhD7I6zyQtASLR4ctfHmneimEK/DsS+cEBs4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GALUEUW9q9h+1ku9gbbMW+doZdhUY9GOL+DpYN4PwJ4TKXQf5LLhmEneF4bWyVOrt
+	 4FLBDslEtrroUTihxtg+J26UIU31sa2JHiU7psQFHJQFa5tfAybhQ16WLSWqJt7dlG
+	 Yu5PkMZRnEwAlnoBBHtRgkbvEpXMST6vL7REsBbKwXmqhYIx9dHiITzx/gcbHln0P8
+	 rRPwiz/dGC1MsUvMbs58OP9fUqHqdxTRj/NwP5PDWfcndlAPJcQ/k0h/e6q8znZm1d
+	 ZzYM2pqE7d+pjeiHc4iyTD7EWGdJ+7yScf1cYQfef1gdbHJQtKxXaz1rgz2wWj9Oe5
+	 Qdq/MxDICgWPQ==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77c349bb81so448332166b.3;
+        Mon, 15 Jul 2024 06:20:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCValzjXn7mTu4vanF4ZB9UctW7UkIhAP7lFPt2vaB++swSskMvoTwSNJ+eOAKdwz53/nww3yxgzGguguRY5u8FZvifwdoQMJDQWUSFpD8QAf8bjcqUBBISNrvoymUb7GQ3PH1MkVbTJ3qc=
+X-Gm-Message-State: AOJu0YzrtTLQZIWBUro3qaOayLswkzjpea7Qe3Jk/X5fbb6oAJBTlTyS
+	BACy/tGOLihddalz8JhxTA0DKuqE3+stHL3rwXhlOqcg/x21qcsomKxjmxwb5xVvJ0cTlP+Ig5W
+	HpLnz8rWaBw4gVll7rKc5Ze1xPwA=
+X-Google-Smtp-Source: AGHT+IH0RwYYQ+jpcfsnA7c4Vaum6zxOH6AHJKMaCHlFjwIJd3yCpDozCc5M9HIOZ/aL63Lwu2h/NaZVXFYOrnCiTqk=
+X-Received: by 2002:a17:907:7255:b0:a77:c080:1200 with SMTP id
+ a640c23a62f3a-a780b6b3a91mr1441622666b.31.1721049640276; Mon, 15 Jul 2024
+ 06:20:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172104963751.2215.3695875382290467494.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20240715130820.19907-1-jth@kernel.org>
+In-Reply-To: <20240715130820.19907-1-jth@kernel.org>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Mon, 15 Jul 2024 14:20:03 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H7Lhym2F82Fu=VDoD1uvvVFW2q9WVx_pM0jVf+VS=ji8A@mail.gmail.com>
+Message-ID: <CAL3q7H7Lhym2F82Fu=VDoD1uvvVFW2q9WVx_pM0jVf+VS=ji8A@mail.gmail.com>
+Subject: Re: [PATCH v4] btrfs: don't hold dev_replace rwsem over whole of btrfs_map_block
+To: Johannes Thumshirn <jth@kernel.org>
+Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>, Chris Mason <clm@fb.com>, 
+	David Sterba <dsterba@suse.com>, 
+	"open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the irq/core branch of tip:
+On Mon, Jul 15, 2024 at 2:13=E2=80=AFPM Johannes Thumshirn <jth@kernel.org>=
+ wrote:
+>
+> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+>
+> Don't hold the dev_replace rwsem for the entirety of btrfs_map_block().
+>
+> It is only needed to protect
+> a) calls to find_live_mirror() and
+> b) calling into handle_ops_on_dev_replace().
+>
+> But there is no need to hold the rwsem for any kind of set_io_stripe()
+> calls.
+>
+> So relax taking the dev_replace rwsem to only protect both cases and chec=
+k
+> if the device replace status has changed in the meantime, for which we ha=
+ve
+> to re-do the find_live_mirror() calls.
+>
+> This fixes a deadlock on raid-stripe-tree where device replace performs a
+> scrub operation, which in turn calls into btrfs_map_block() to find the
+> physical location of the block.
+>
+> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Qu Wenruo <wqu@suse.com>
+>
+> ---
+> Cc: Filipe Manana <fdmanana@suse.com>
+>
+> Changes in v4:
+> - Free bioc in case we need to redo the mapping
+> Link to v3:
+> https://lore.kernel.org/linux-btrfs/20240712-b4-rst-updates-v3-1-5cf27dac=
+98a7@kernel.org
 
-Commit-ID:     33b1c47d1fc0b5f06a393bb915db85baacba18ea
-Gitweb:        https://git.kernel.org/tip/33b1c47d1fc0b5f06a393bb915db85baacba18ea
-Author:        Shenwei Wang <shenwei.wang@nxp.com>
-AuthorDate:    Wed, 03 Jul 2024 11:32:50 -05:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 15 Jul 2024 15:13:56 +02:00
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
 
-irqchip/imx-irqsteer: Handle runtime power management correctly
+Looks good now, thanks.
 
-The power domain is automatically activated from clk_prepare(). However, on
-certain platforms like i.MX8QM and i.MX8QXP, the power-on handling invokes
-sleeping functions, which triggers the 'scheduling while atomic' bug in the
-context switch path during device probing:
-
- BUG: scheduling while atomic: kworker/u13:1/48/0x00000002
- Call trace:
-  __schedule_bug+0x54/0x6c
-  __schedule+0x7f0/0xa94
-  schedule+0x5c/0xc4
-  schedule_preempt_disabled+0x24/0x40
-  __mutex_lock.constprop.0+0x2c0/0x540
-  __mutex_lock_slowpath+0x14/0x20
-  mutex_lock+0x48/0x54
-  clk_prepare_lock+0x44/0xa0
-  clk_prepare+0x20/0x44
-  imx_irqsteer_resume+0x28/0xe0
-  pm_generic_runtime_resume+0x2c/0x44
-  __genpd_runtime_resume+0x30/0x80
-  genpd_runtime_resume+0xc8/0x2c0
-  __rpm_callback+0x48/0x1d8
-  rpm_callback+0x6c/0x78
-  rpm_resume+0x490/0x6b4
-  __pm_runtime_resume+0x50/0x94
-  irq_chip_pm_get+0x2c/0xa0
-  __irq_do_set_handler+0x178/0x24c
-  irq_set_chained_handler_and_data+0x60/0xa4
-  mxc_gpio_probe+0x160/0x4b0
-
-Cure this by implementing the irq_bus_lock/sync_unlock() interrupt chip
-callbacks and handle power management in them as they are invoked from
-non-atomic context.
-
-[ tglx: Rewrote change log, added Fixes tag ]
-
-Fixes: 0136afa08967 ("irqchip: Add driver for imx-irqsteer controller")
-Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20240703163250.47887-1-shenwei.wang@nxp.com
----
- drivers/irqchip/irq-imx-irqsteer.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-index 20cf7a9..75a0e98 100644
---- a/drivers/irqchip/irq-imx-irqsteer.c
-+++ b/drivers/irqchip/irq-imx-irqsteer.c
-@@ -36,6 +36,7 @@ struct irqsteer_data {
- 	int			channel;
- 	struct irq_domain	*domain;
- 	u32			*saved_reg;
-+	struct device		*dev;
- };
- 
- static int imx_irqsteer_get_reg_index(struct irqsteer_data *data,
-@@ -72,10 +73,26 @@ static void imx_irqsteer_irq_mask(struct irq_data *d)
- 	raw_spin_unlock_irqrestore(&data->lock, flags);
- }
- 
-+static void imx_irqsteer_irq_bus_lock(struct irq_data *d)
-+{
-+	struct irqsteer_data *data = d->chip_data;
-+
-+	pm_runtime_get_sync(data->dev);
-+}
-+
-+static void imx_irqsteer_irq_bus_sync_unlock(struct irq_data *d)
-+{
-+	struct irqsteer_data *data = d->chip_data;
-+
-+	pm_runtime_put_autosuspend(data->dev);
-+}
-+
- static const struct irq_chip imx_irqsteer_irq_chip = {
--	.name		= "irqsteer",
--	.irq_mask	= imx_irqsteer_irq_mask,
--	.irq_unmask	= imx_irqsteer_irq_unmask,
-+	.name			= "irqsteer",
-+	.irq_mask		= imx_irqsteer_irq_mask,
-+	.irq_unmask		= imx_irqsteer_irq_unmask,
-+	.irq_bus_lock		= imx_irqsteer_irq_bus_lock,
-+	.irq_bus_sync_unlock	= imx_irqsteer_irq_bus_sync_unlock,
- };
- 
- static int imx_irqsteer_irq_map(struct irq_domain *h, unsigned int irq,
-@@ -150,6 +167,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
-+	data->dev = &pdev->dev;
- 	data->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->regs)) {
- 		dev_err(&pdev->dev, "failed to initialize reg\n");
+> ---
+>  fs/btrfs/volumes.c | 29 ++++++++++++++++++-----------
+>  1 file changed, 18 insertions(+), 11 deletions(-)
+>
+> diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+> index fcedc43ef291..9437e779d020 100644
+> --- a/fs/btrfs/volumes.c
+> +++ b/fs/btrfs/volumes.c
+> @@ -6650,14 +6650,9 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info,=
+ enum btrfs_map_op op,
+>         max_len =3D btrfs_max_io_len(map, map_offset, &io_geom);
+>         *length =3D min_t(u64, map->chunk_len - map_offset, max_len);
+>
+> +again:
+>         down_read(&dev_replace->rwsem);
+>         dev_replace_is_ongoing =3D btrfs_dev_replace_is_ongoing(dev_repla=
+ce);
+> -       /*
+> -        * Hold the semaphore for read during the whole operation, write =
+is
+> -        * requested at commit time but must wait.
+> -        */
+> -       if (!dev_replace_is_ongoing)
+> -               up_read(&dev_replace->rwsem);
+>
+>         switch (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) {
+>         case BTRFS_BLOCK_GROUP_RAID0:
+> @@ -6695,6 +6690,7 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, =
+enum btrfs_map_op op,
+>                            "stripe index math went horribly wrong, got st=
+ripe_index=3D%u, num_stripes=3D%u",
+>                            io_geom.stripe_index, map->num_stripes);
+>                 ret =3D -EINVAL;
+> +               up_read(&dev_replace->rwsem);
+>                 goto out;
+>         }
+>
+> @@ -6710,6 +6706,8 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, =
+enum btrfs_map_op op,
+>                  */
+>                 num_alloc_stripes +=3D 2;
+>
+> +       up_read(&dev_replace->rwsem);
+> +
+>         /*
+>          * If this I/O maps to a single device, try to return the device =
+and
+>          * physical block information on the stack instead of allocating =
+an
+> @@ -6782,6 +6780,19 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info,=
+ enum btrfs_map_op op,
+>                 goto out;
+>         }
+>
+> +       /*
+> +        * Check if something changed the dev_replace state since
+> +        * we've checked it for the last time and if redo the whole
+> +        * mapping operation.
+> +        */
+> +       down_read(&dev_replace->rwsem);
+> +       if (dev_replace_is_ongoing !=3D
+> +           btrfs_dev_replace_is_ongoing(dev_replace)) {
+> +               btrfs_put_bioc(bioc);
+> +               up_read(&dev_replace->rwsem);
+> +               goto again;
+> +       }
+> +
+>         if (op !=3D BTRFS_MAP_READ)
+>                 io_geom.max_errors =3D btrfs_chunk_max_errors(map);
+>
+> @@ -6789,6 +6800,7 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info, =
+enum btrfs_map_op op,
+>             op !=3D BTRFS_MAP_READ) {
+>                 handle_ops_on_dev_replace(bioc, dev_replace, logical, &io=
+_geom);
+>         }
+> +       up_read(&dev_replace->rwsem);
+>
+>         *bioc_ret =3D bioc;
+>         bioc->num_stripes =3D io_geom.num_stripes;
+> @@ -6796,11 +6808,6 @@ int btrfs_map_block(struct btrfs_fs_info *fs_info,=
+ enum btrfs_map_op op,
+>         bioc->mirror_num =3D io_geom.mirror_num;
+>
+>  out:
+> -       if (dev_replace_is_ongoing) {
+> -               lockdep_assert_held(&dev_replace->rwsem);
+> -               /* Unlock and let waiting writers proceed */
+> -               up_read(&dev_replace->rwsem);
+> -       }
+>         btrfs_free_chunk_map(map);
+>         return ret;
+>  }
+> --
+> 2.43.0
+>
+>
