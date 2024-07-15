@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1063513C9BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6991849D3;
 	Mon, 15 Jul 2024 08:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032803; cv=none; b=XLLxU+K4sqoe9q24VMvKsc/EeHhwi99RD45AK3nIt5oJDa8axATUoJAFUbhPUXUky4vKUk+IImzs4nCelgKfhf/ARuKCUiyR7TcLcnVWCxoiu4bSyEB0FHoHjICetUuWyYJ59GsReu2en9kFsPwbtDsEm3WdvnZdD2W9cIZtyx0=
+	t=1721032803; cv=none; b=vDceZbYsEdFvokwaYuaJ5o+rbZ+ig9y+9fORuqfxDeRwXsqizOyMNnnpeX/Bu3el1HB1eP5Qkq5nuZ9hYmtySTsw2J9KPrAxzXDDMPOSUZ/f3+aqqb0tuEA5ltAM0H554bB2gIdQ5P250/ZsiVitL4qoxXyk1UCZNNhyAYki1/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721032803; c=relaxed/simple;
-	bh=L9snBqYT6zbxHHzo7JUD/U/ceuDfn72AE374Ib9P4ic=;
+	bh=8MDxQIKkYOKh/dlpEO1nx1n2r3kIf9OrDi6ZkMWfW/U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cctxX8o8Eci3E2LHDY22VtfmXUcULfQe08Jv17AfBIDJPSjGL4O9yvCrkHW00TjWvOUS/TvE9SaSBOy2dMjTA6R1Lqx5tB2uh83cIVVLghQ01qmSyRpX/0uO1Q3OLlESt+kdp5JOK7Xi3ajBly8Ai3dIOJS417EqManJtktaBi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=todGlMgG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hykU+DMIABuu2PDiIA/8Ecq/gYHuit15VQPVoIc9c/zvsTjNkvJRvws4VQmBEMij1LmrGTqryqDaVN1UTaaAvJBSCo+j4LL3qCB6ViJogmzJCP99Zfghb0gZsaMW6JGfj5sIoKpYAWyd6+gS0czW/Am1W+cwbVISxekm/Pz55Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ow6HpPX1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="todGlMgG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A7CD7C4AF0A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ow6HpPX1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C1EC1C4AF0E;
 	Mon, 15 Jul 2024 08:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721032802;
-	bh=L9snBqYT6zbxHHzo7JUD/U/ceuDfn72AE374Ib9P4ic=;
+	bh=8MDxQIKkYOKh/dlpEO1nx1n2r3kIf9OrDi6ZkMWfW/U=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=todGlMgGdLTZBq0/0lhZG2vrUkLSMHQOWLrCPJWOiHkCUM2wToR7o7PtSFkYxVrVk
-	 RVvL/MhqU0bpwTBBrtxsxnTm4SoU2ZtLKTten1dogbnOt76ghS1E4Zicrai8Gxe3bd
-	 QMx0NIcKQIDwHKda51pC4SYaHerQ8kMALM8TMwv81dXpt5GyIOnsdPQh2KcovQzeO0
-	 8g+WrXA5xjyQbGUEiiw34F8e4pQfTQcwwg8J8tx/7KYE4uzfWwaPKfaTbRv/jS/PtE
-	 RbiRmxD+Gsw5CHFxPYbxFDIgCUnZhL6qWL1r1UjqASe1aeGnc4/5XZS1MMTjq/7xJ9
-	 6ouWJs81tFF5Q==
+	b=ow6HpPX1bK+d08j0DZrrGBMxgtOsjfA1fDpUjSyZb0ZVpefXK+f4f0bdNpFqaHrlW
+	 LFCAp+C+pNBLOynjKern/1/8kINC5JPpnempOZHpzv0eGRlMdmSZJxR3eqKd3zZn6V
+	 Dixzdhzryc3QGK1e/Jv4TTloG42QntwXCzPVVMPY+4GAcUIho/vR7W/edp/UiO89dk
+	 IOgim6iSGLvS5yKLct1tDhmFPrDnyhpf6nz27DJcqhGQazKfAeINaz8BfvqXUGzDtU
+	 0K3K9xc8vOLh3M86+ZwdleE/2fJ/iRLVJEarFstRsiYgrP6JFx+2MKAE0LnS9W6Fs8
+	 LrBwdTwMQuT7w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DCDC3DA50;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9879C3DA4D;
 	Mon, 15 Jul 2024 08:40:02 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 15 Jul 2024 11:38:05 +0300
-Subject: [PATCH v11 01/38] gpio: ep93xx: split device in multiple
+Date: Mon, 15 Jul 2024 11:38:07 +0300
+Subject: [PATCH v11 03/38] clk: ep93xx: add DT support for Cirrus EP93xx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,23 +40,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-ep93xx-v11-1-4e924efda795@maquefel.me>
+Message-Id: <20240715-ep93xx-v11-3-4e924efda795@maquefel.me>
 References: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
 In-Reply-To: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
-To: Hartley Sweeten <hsweeten@visionengravers.com>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032799; l=25436;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032799; l=27185;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=H0zNf/mQwjdqPSa7ui7thngDyHREjpx9pAAsGwiVLr4=;
- b=371rXeMLCApNCnGiJiCoymwXfBY/4iPzJsK6d3Iv/ucRreyjvhEFoj4+7tbdKPPDuAOqsK2Tgtmo
- H6QJumngA9i22Wx0WwS9lTrNU1vncFwc2SMgrh+qaL/GDJ10uTZ7
+ bh=U7fOx9Rodv4jx5K1uhFoktxaVXXtL2LyQJrXaMQwDm0=;
+ b=Bxjn73rQg4AwAXGGGDh2AbOeDHVTYe8koDOhLwKQtYcCANKSKS1FPRZrtnURIjkILVJ8aJ3SYq0E
+ IhSYbDKWDVUBxz7GLvBfX6vgFPmCe07sJlKGWjBz8P0T9E9oOGg7
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
@@ -66,739 +61,905 @@ Reply-To: nikita.shubin@maquefel.me
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Prepare ep93xx SOC gpio to convert into device tree driver:
-- dropped banks and legacy defines
-- split AB IRQ and make it shared
+Rewrite EP93xx clock driver located in arch/arm/mach-ep93xx/clock.c
+trying to do everything the device tree way:
 
-We are relying on IRQ number information A, B ports have single shared
-IRQ, while F port have dedicated IRQ for each line.
+- provide clock acces via of
+- drop clk_hw_register_clkdev
+- drop init code and use module_auxiliary_driver
 
-Also we had to split single ep93xx platform_device into multiple, one
-for each port, without this we can't do a full working transition from
-legacy platform code into device tree capable. All GPIO_LOOKUP were
-change to match new chip namings.
-
+Co-developed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
 ---
- arch/arm/mach-ep93xx/core.c          | 121 ++++++++++++--
- arch/arm/mach-ep93xx/edb93xx.c       |   2 +-
- arch/arm/mach-ep93xx/ts72xx.c        |   4 +-
- arch/arm/mach-ep93xx/vision_ep9307.c |  10 +-
- drivers/gpio/gpio-ep93xx.c           | 311 +++++++++++++----------------------
- 5 files changed, 228 insertions(+), 220 deletions(-)
+ drivers/clk/Kconfig      |   8 +
+ drivers/clk/Makefile     |   1 +
+ drivers/clk/clk-ep93xx.c | 846 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 855 insertions(+)
 
-diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
-index 8b1ec60a9a46..03bce5e9d1f1 100644
---- a/arch/arm/mach-ep93xx/core.c
-+++ b/arch/arm/mach-ep93xx/core.c
-@@ -35,6 +35,7 @@
- #include <linux/reboot.h>
- #include <linux/usb/ohci_pdriver.h>
- #include <linux/random.h>
-+#include <linux/ioport.h>
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 3e9099504fad..234b0a8b7650 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -218,6 +218,14 @@ config COMMON_CLK_EN7523
+ 	  This driver provides the fixed clocks and gates present on Airoha
+ 	  ARM silicon.
  
- #include "hardware.h"
- #include <linux/platform_data/video-ep93xx.h>
-@@ -139,9 +140,80 @@ EXPORT_SYMBOL_GPL(ep93xx_chip_revision);
- /*************************************************************************
-  * EP93xx GPIO
-  *************************************************************************/
--static struct resource ep93xx_gpio_resource[] = {
--	DEFINE_RES_MEM(EP93XX_GPIO_PHYS_BASE, 0xcc),
-+/* port A */
-+static struct resource ep93xx_a_gpio_resources[] = {
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE,        0x04, "data"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x10, 0x04, "dir"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x90, 0x1c, "intr"),
- 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO_AB),
++config COMMON_CLK_EP93XX
++	bool "Clock driver for Cirrus Logic ep93xx SoC"
++	depends on ARCH_EP93XX || COMPILE_TEST
++	select MFD_SYSCON
++	select REGMAP
++	help
++	  This driver supports the SoC clocks on the Cirrus Logic ep93xx.
++
+ config COMMON_CLK_FSL_FLEXSPI
+ 	tristate "Clock driver for FlexSPI on Layerscape SoCs"
+ 	depends on ARCH_LAYERSCAPE || COMPILE_TEST
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 4abe16c8ccdf..19d599d706fe 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -30,6 +30,7 @@ obj-$(CONFIG_COMMON_CLK_CDCE706)	+= clk-cdce706.o
+ obj-$(CONFIG_COMMON_CLK_CDCE925)	+= clk-cdce925.o
+ obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
+ obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
++obj-$(CONFIG_COMMON_CLK_EP93XX)		+= clk-ep93xx.o
+ obj-$(CONFIG_ARCH_SPARX5)		+= clk-sparx5.o
+ obj-$(CONFIG_COMMON_CLK_EN7523)		+= clk-en7523.o
+ obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
+diff --git a/drivers/clk/clk-ep93xx.c b/drivers/clk/clk-ep93xx.c
+new file mode 100644
+index 000000000000..bb1cf59a3d47
+--- /dev/null
++++ b/drivers/clk/clk-ep93xx.c
+@@ -0,0 +1,846 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Clock control for Cirrus EP93xx chips.
++ * Copyright (C) 2021 Nikita Shubin <nikita.shubin@maquefel.me>
++ *
++ * Based on a rewrite of arch/arm/mach-ep93xx/clock.c:
++ * Copyright (C) 2006 Lennert Buytenhek <buytenh@wantstofly.org>
++ */
++#define pr_fmt(fmt) "ep93xx " KBUILD_MODNAME ": " fmt
++
++#include <linux/bits.h>
++#include <linux/cleanup.h>
++#include <linux/clk-provider.h>
++#include <linux/math.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/spinlock.h>
++
++#include <linux/soc/cirrus/ep93xx.h>
++#include <dt-bindings/clock/cirrus,ep9301-syscon.h>
++
++#include <asm/div64.h>
++
++#define EP93XX_EXT_CLK_RATE		14745600
++#define EP93XX_EXT_RTC_RATE		32768
++
++#define EP93XX_SYSCON_POWER_STATE	0x00
++#define EP93XX_SYSCON_PWRCNT		0x04
++#define EP93XX_SYSCON_PWRCNT_UARTBAUD	BIT(29)
++#define EP93XX_SYSCON_PWRCNT_USH_EN	28
++#define EP93XX_SYSCON_PWRCNT_DMA_M2M1	27
++#define EP93XX_SYSCON_PWRCNT_DMA_M2M0	26
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P8	25
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P9	24
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P6	23
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P7	22
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P4	21
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P5	20
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P2	19
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P3	18
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P0	17
++#define EP93XX_SYSCON_PWRCNT_DMA_M2P1	16
++#define EP93XX_SYSCON_CLKSET1		0x20
++#define EP93XX_SYSCON_CLKSET1_NBYP1	BIT(23)
++#define EP93XX_SYSCON_CLKSET2		0x24
++#define EP93XX_SYSCON_CLKSET2_NBYP2	BIT(19)
++#define EP93XX_SYSCON_CLKSET2_PLL2_EN	BIT(18)
++#define EP93XX_SYSCON_DEVCFG		0x80
++#define EP93XX_SYSCON_DEVCFG_U3EN	24
++#define EP93XX_SYSCON_DEVCFG_U2EN	20
++#define EP93XX_SYSCON_DEVCFG_U1EN	18
++#define EP93XX_SYSCON_VIDCLKDIV		0x84
++#define EP93XX_SYSCON_CLKDIV_ENABLE	15
++#define EP93XX_SYSCON_CLKDIV_ESEL	BIT(14)
++#define EP93XX_SYSCON_CLKDIV_PSEL	BIT(13)
++#define EP93XX_SYSCON_CLKDIV_MASK	GENMASK(14, 13)
++#define EP93XX_SYSCON_CLKDIV_PDIV_SHIFT	8
++#define EP93XX_SYSCON_I2SCLKDIV		0x8c
++#define EP93XX_SYSCON_I2SCLKDIV_SENA	31
++#define EP93XX_SYSCON_I2SCLKDIV_ORIDE	BIT(29)
++#define EP93XX_SYSCON_I2SCLKDIV_SPOL	BIT(19)
++#define EP93XX_SYSCON_KEYTCHCLKDIV	0x90
++#define EP93XX_SYSCON_KEYTCHCLKDIV_TSEN	31
++#define EP93XX_SYSCON_KEYTCHCLKDIV_ADIV	16
++#define EP93XX_SYSCON_KEYTCHCLKDIV_KEN	15
++#define EP93XX_SYSCON_KEYTCHCLKDIV_KDIV	0
++#define EP93XX_SYSCON_CHIPID		0x94
++#define EP93XX_SYSCON_CHIPID_ID		0x9213
++
++static const char adc_divisors[] = { 16, 4 };
++static const char sclk_divisors[] = { 2, 4 };
++static const char lrclk_divisors[] = { 32, 64, 128 };
++
++struct ep93xx_clk {
++	struct clk_hw hw;
++	u16 idx;
++	u16 reg;
++	u32 mask;
++	u8 bit_idx;
++	u8 shift;
++	u8 width;
++	u8 num_div;
++	const char *div;
 +};
 +
-+static struct platform_device ep93xx_a_gpio = {
-+	.name           = "gpio-ep93xx",
-+	.id             = 0,
-+	.num_resources = ARRAY_SIZE(ep93xx_a_gpio_resources),
-+	.resource = ep93xx_a_gpio_resources,
-+};
-+
-+/* port B */
-+static struct resource ep93xx_b_gpio_resources[] = {
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x04, 0x04, "data"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x14, 0x04, "dir"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0xac, 0x1c, "intr"),
-+	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO_AB),
-+};
-+
-+static struct platform_device ep93xx_b_gpio = {
-+	.name           = "gpio-ep93xx",
-+	.id             = 1,
-+	.num_resources = ARRAY_SIZE(ep93xx_b_gpio_resources),
-+	.resource = ep93xx_b_gpio_resources,
-+};
-+
-+/* port C */
-+static struct resource ep93xx_c_gpio_resources[] = {
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x08, 0x04, "data"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x18, 0x04, "dir"),
-+};
-+
-+static struct platform_device ep93xx_c_gpio = {
-+	.name           = "gpio-ep93xx",
-+	.id             = 2,
-+	.num_resources = ARRAY_SIZE(ep93xx_c_gpio_resources),
-+	.resource = ep93xx_c_gpio_resources,
-+};
-+
-+/* port D */
-+static struct resource ep93xx_d_gpio_resources[] = {
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x0c, 0x04, "data"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x1c, 0x04, "dir"),
-+};
-+
-+static struct platform_device ep93xx_d_gpio = {
-+	.name           = "gpio-ep93xx",
-+	.id             = 3,
-+	.num_resources = ARRAY_SIZE(ep93xx_d_gpio_resources),
-+	.resource = ep93xx_d_gpio_resources,
-+};
-+
-+/* port E */
-+static struct resource ep93xx_e_gpio_resources[] = {
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x20, 0x04, "data"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x24, 0x04, "dir"),
-+};
-+
-+static struct platform_device ep93xx_e_gpio = {
-+	.name           = "gpio-ep93xx",
-+	.id             = 4,
-+	.num_resources = ARRAY_SIZE(ep93xx_e_gpio_resources),
-+	.resource = ep93xx_e_gpio_resources,
-+};
-+
-+/* port F */
-+static struct resource ep93xx_f_gpio_resources[] = {
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x30, 0x04, "data"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x34, 0x04, "dir"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x4c, 0x1c, "intr"),
- 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO0MUX),
- 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO1MUX),
- 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO2MUX),
-@@ -152,11 +224,34 @@ static struct resource ep93xx_gpio_resource[] = {
- 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO7MUX),
- };
- 
--static struct platform_device ep93xx_gpio_device = {
--	.name		= "gpio-ep93xx",
--	.id		= -1,
--	.num_resources	= ARRAY_SIZE(ep93xx_gpio_resource),
--	.resource	= ep93xx_gpio_resource,
-+static struct platform_device ep93xx_f_gpio = {
-+	.name           = "gpio-ep93xx",
-+	.id             = 5,
-+	.num_resources = ARRAY_SIZE(ep93xx_f_gpio_resources),
-+	.resource = ep93xx_f_gpio_resources,
-+};
-+
-+/* port G */
-+static struct resource ep93xx_g_gpio_resources[] = {
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x38, 0x04, "data"),
-+	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x3c, 0x04, "dir"),
-+};
-+
-+static struct platform_device ep93xx_g_gpio = {
-+	.name           = "gpio-ep93xx",
-+	.id             = 6,
-+	.num_resources = ARRAY_SIZE(ep93xx_g_gpio_resources),
-+	.resource = ep93xx_g_gpio_resources,
-+};
-+
-+static struct platform_device *ep93xx_gpio_device[] __initdata = {
-+	&ep93xx_a_gpio,
-+	&ep93xx_b_gpio,
-+	&ep93xx_c_gpio,
-+	&ep93xx_d_gpio,
-+	&ep93xx_e_gpio,
-+	&ep93xx_f_gpio,
-+	&ep93xx_g_gpio,
- };
- 
- /*************************************************************************
-@@ -335,9 +430,9 @@ static struct gpiod_lookup_table ep93xx_i2c_gpiod_table = {
- 	.dev_id		= "i2c-gpio.0",
- 	.table		= {
- 		/* Use local offsets on gpiochip/port "G" */
--		GPIO_LOOKUP_IDX("G", 1, NULL, 0,
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 1, NULL, 0,
- 				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
--		GPIO_LOOKUP_IDX("G", 0, NULL, 1,
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 0, NULL, 1,
- 				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
- 		{ }
- 	},
-@@ -441,8 +536,8 @@ static struct gpiod_lookup_table ep93xx_leds_gpio_table = {
- 	.dev_id = "leds-gpio",
- 	.table = {
- 		/* Use local offsets on gpiochip/port "E" */
--		GPIO_LOOKUP_IDX("E", 0, NULL, 0, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX("E", 1,	NULL, 1, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.4", 0, NULL, 0, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.4", 1, NULL, 1, GPIO_ACTIVE_HIGH),
- 		{ }
- 	},
- };
-@@ -975,6 +1070,7 @@ static struct device __init *ep93xx_init_soc(void)
- struct device __init *ep93xx_init_devices(void)
- {
- 	struct device *parent;
-+	unsigned int i;
- 
- 	/* Disallow access to MaverickCrunch initially */
- 	ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_CPENA);
-@@ -989,7 +1085,8 @@ struct device __init *ep93xx_init_devices(void)
- 	parent = ep93xx_init_soc();
- 
- 	/* Get the GPIO working early, other devices need it */
--	platform_device_register(&ep93xx_gpio_device);
-+	for (i = 0; i < ARRAY_SIZE(ep93xx_gpio_device); i++)
-+		platform_device_register(ep93xx_gpio_device[i]);
- 
- 	amba_device_register(&uart1_device, &iomem_resource);
- 	amba_device_register(&uart2_device, &iomem_resource);
-diff --git a/arch/arm/mach-ep93xx/edb93xx.c b/arch/arm/mach-ep93xx/edb93xx.c
-index dbdb822a0100..356b0460c7ed 100644
---- a/arch/arm/mach-ep93xx/edb93xx.c
-+++ b/arch/arm/mach-ep93xx/edb93xx.c
-@@ -105,7 +105,7 @@ static struct spi_board_info edb93xx_spi_board_info[] __initdata = {
- static struct gpiod_lookup_table edb93xx_spi_cs_gpio_table = {
- 	.dev_id = "spi0",
- 	.table = {
--		GPIO_LOOKUP("A", 6, "cs", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("gpio-ep93xx.0", 6, "cs", GPIO_ACTIVE_LOW),
- 		{ },
- 	},
- };
-diff --git a/arch/arm/mach-ep93xx/ts72xx.c b/arch/arm/mach-ep93xx/ts72xx.c
-index d3de7283ecb3..0bbdf587c685 100644
---- a/arch/arm/mach-ep93xx/ts72xx.c
-+++ b/arch/arm/mach-ep93xx/ts72xx.c
-@@ -268,7 +268,7 @@ static struct spi_board_info bk3_spi_board_info[] __initdata = {
- static struct gpiod_lookup_table bk3_spi_cs_gpio_table = {
- 	.dev_id = "spi0",
- 	.table = {
--		GPIO_LOOKUP("F", 3, "cs", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("gpio-ep93xx.5", 3, "cs", GPIO_ACTIVE_LOW),
- 		{ },
- 	},
- };
-@@ -318,7 +318,7 @@ static struct gpiod_lookup_table ts72xx_spi_cs_gpio_table = {
- 	.dev_id = "spi0",
- 	.table = {
- 		/* DIO_17 */
--		GPIO_LOOKUP("F", 2, "cs", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("gpio-ep93xx.5", 2, "cs", GPIO_ACTIVE_LOW),
- 		{ },
- 	},
- };
-diff --git a/arch/arm/mach-ep93xx/vision_ep9307.c b/arch/arm/mach-ep93xx/vision_ep9307.c
-index 9471938df64c..b3087b8eed3f 100644
---- a/arch/arm/mach-ep93xx/vision_ep9307.c
-+++ b/arch/arm/mach-ep93xx/vision_ep9307.c
-@@ -206,9 +206,9 @@ static struct gpiod_lookup_table vision_spi_mmc_gpio_table = {
- 	.dev_id = "mmc_spi.2", /* "mmc_spi @ CS2 */
- 	.table = {
- 		/* Card detect */
--		GPIO_LOOKUP_IDX("B", 7, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.1", 7, NULL, 0, GPIO_ACTIVE_LOW),
- 		/* Write protect */
--		GPIO_LOOKUP_IDX("F", 0, NULL, 1, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.5", 0, NULL, 1, GPIO_ACTIVE_HIGH),
- 		{ },
- 	},
- };
-@@ -253,9 +253,9 @@ static struct gpiod_lookup_table vision_spi_cs4271_gpio_table = {
- static struct gpiod_lookup_table vision_spi_cs_gpio_table = {
- 	.dev_id = "spi0",
- 	.table = {
--		GPIO_LOOKUP_IDX("A", 6, "cs", 0, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX("A", 7, "cs", 1, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX("G", 2, "cs", 2, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.0", 6, "cs", 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.0", 7, "cs", 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 2, "cs", 2, GPIO_ACTIVE_LOW),
- 		{ },
- 	},
- };
-diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
-index 6cedf46efec6..a55f635585f4 100644
---- a/drivers/gpio/gpio-ep93xx.c
-+++ b/drivers/gpio/gpio-ep93xx.c
-@@ -18,30 +18,10 @@
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
- #include <linux/seq_file.h>
--
--#define EP93XX_GPIO_F_INT_STATUS 0x5c
--#define EP93XX_GPIO_A_INT_STATUS 0xa0
--#define EP93XX_GPIO_B_INT_STATUS 0xbc
--
--/* Maximum value for gpio line identifiers */
--#define EP93XX_GPIO_LINE_MAX 63
--
--/* Number of GPIO chips in EP93XX */
--#define EP93XX_GPIO_CHIP_NUM 8
--
--/* Maximum value for irq capable line identifiers */
--#define EP93XX_GPIO_LINE_MAX_IRQ 23
--
--#define EP93XX_GPIO_A_IRQ_BASE 64
--#define EP93XX_GPIO_B_IRQ_BASE 72
--/*
-- * Static mapping of GPIO bank F IRQS:
-- * F0..F7 (16..24) to irq 80..87.
-- */
--#define EP93XX_GPIO_F_IRQ_BASE 80
-+#include <linux/interrupt.h>
- 
- struct ep93xx_gpio_irq_chip {
--	u8 irq_offset;
++struct ep93xx_clk_priv {
++	spinlock_t lock;
++	struct ep93xx_regmap_adev *aux_dev;
++	struct device *dev;
 +	void __iomem *base;
- 	u8 int_unmasked;
- 	u8 int_enabled;
- 	u8 int_type1;
-@@ -50,15 +30,11 @@ struct ep93xx_gpio_irq_chip {
- };
- 
- struct ep93xx_gpio_chip {
-+	void __iomem			*base;
- 	struct gpio_chip		gc;
- 	struct ep93xx_gpio_irq_chip	*eic;
- };
- 
--struct ep93xx_gpio {
--	void __iomem		*base;
--	struct ep93xx_gpio_chip	gc[EP93XX_GPIO_CHIP_NUM];
--};
--
- #define to_ep93xx_gpio_chip(x) container_of(x, struct ep93xx_gpio_chip, gc)
- 
- static struct ep93xx_gpio_irq_chip *to_ep93xx_gpio_irq_chip(struct gpio_chip *gc)
-@@ -79,25 +55,23 @@ static struct ep93xx_gpio_irq_chip *to_ep93xx_gpio_irq_chip(struct gpio_chip *gc
- #define EP93XX_INT_RAW_STATUS_OFFSET	0x14
- #define EP93XX_INT_DEBOUNCE_OFFSET	0x18
- 
--static void ep93xx_gpio_update_int_params(struct ep93xx_gpio *epg,
--					  struct ep93xx_gpio_irq_chip *eic)
-+static void ep93xx_gpio_update_int_params(struct ep93xx_gpio_irq_chip *eic)
- {
--	writeb_relaxed(0, epg->base + eic->irq_offset + EP93XX_INT_EN_OFFSET);
-+	writeb_relaxed(0, eic->base + EP93XX_INT_EN_OFFSET);
- 
- 	writeb_relaxed(eic->int_type2,
--		       epg->base + eic->irq_offset + EP93XX_INT_TYPE2_OFFSET);
-+		       eic->base + EP93XX_INT_TYPE2_OFFSET);
- 
- 	writeb_relaxed(eic->int_type1,
--		       epg->base + eic->irq_offset + EP93XX_INT_TYPE1_OFFSET);
-+		       eic->base + EP93XX_INT_TYPE1_OFFSET);
- 
- 	writeb_relaxed(eic->int_unmasked & eic->int_enabled,
--		       epg->base + eic->irq_offset + EP93XX_INT_EN_OFFSET);
-+		       eic->base + EP93XX_INT_EN_OFFSET);
- }
- 
- static void ep93xx_gpio_int_debounce(struct gpio_chip *gc,
- 				     unsigned int offset, bool enable)
- {
--	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
- 	int port_mask = BIT(offset);
- 
-@@ -106,53 +80,43 @@ static void ep93xx_gpio_int_debounce(struct gpio_chip *gc,
- 	else
- 		eic->int_debounce &= ~port_mask;
- 
--	writeb(eic->int_debounce,
--	       epg->base + eic->irq_offset + EP93XX_INT_DEBOUNCE_OFFSET);
-+	writeb(eic->int_debounce, eic->base + EP93XX_INT_DEBOUNCE_OFFSET);
- }
- 
--static void ep93xx_gpio_ab_irq_handler(struct irq_desc *desc)
-+static u32 ep93xx_gpio_ab_irq_handler(struct gpio_chip *gc)
- {
--	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
--	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
--	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-+	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
- 	unsigned long stat;
- 	int offset;
- 
--	chained_irq_enter(irqchip, desc);
--
--	/*
--	 * Dispatch the IRQs to the irqdomain of each A and B
--	 * gpiochip irqdomains depending on what has fired.
--	 * The tricky part is that the IRQ line is shared
--	 * between bank A and B and each has their own gpiochip.
--	 */
--	stat = readb(epg->base + EP93XX_GPIO_A_INT_STATUS);
-+	stat = readb(eic->base + EP93XX_INT_STATUS_OFFSET);
- 	for_each_set_bit(offset, &stat, 8)
--		generic_handle_domain_irq(epg->gc[0].gc.irq.domain,
--					  offset);
-+		generic_handle_domain_irq(gc->irq.domain, offset);
- 
--	stat = readb(epg->base + EP93XX_GPIO_B_INT_STATUS);
--	for_each_set_bit(offset, &stat, 8)
--		generic_handle_domain_irq(epg->gc[1].gc.irq.domain,
--					  offset);
-+	return stat;
-+}
- 
--	chained_irq_exit(irqchip, desc);
-+static irqreturn_t ep93xx_ab_irq_handler(int irq, void *dev_id)
++	struct regmap *map;
++	struct clk_hw *fixed[21];
++	struct ep93xx_clk reg[];
++};
++
++static struct ep93xx_clk *ep93xx_clk_from(struct clk_hw *hw)
 +{
-+	return IRQ_RETVAL(ep93xx_gpio_ab_irq_handler(dev_id));
- }
- 
- static void ep93xx_gpio_f_irq_handler(struct irq_desc *desc)
- {
--	/*
--	 * map discontiguous hw irq range to continuous sw irq range:
--	 *
--	 *  IRQ_EP93XX_GPIO{0..7}MUX -> EP93XX_GPIO_LINE_F{0..7}
--	 */
- 	struct irq_chip *irqchip = irq_desc_get_chip(desc);
--	unsigned int irq = irq_desc_get_irq(desc);
--	int port_f_idx = (irq & 7) ^ 4; /* {20..23,48..51} -> {0..7} */
--	int gpio_irq = EP93XX_GPIO_F_IRQ_BASE + port_f_idx;
-+	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-+	struct gpio_irq_chip *gic = &gc->irq;
-+	unsigned int parent = irq_desc_get_irq(desc);
-+	unsigned int i;
- 
- 	chained_irq_enter(irqchip, desc);
--	generic_handle_irq(gpio_irq);
-+	for (i = 0; i < gic->num_parents; i++)
-+		if (gic->parents[i] == parent)
-+			break;
++	return container_of(hw, struct ep93xx_clk, hw);
++}
 +
-+	if (i < gic->num_parents)
-+		generic_handle_domain_irq(gc->irq.domain, i);
++static struct ep93xx_clk_priv *ep93xx_priv_from(struct ep93xx_clk *clk)
++{
++	return container_of(clk, struct ep93xx_clk_priv, reg[clk->idx]);
++}
 +
- 	chained_irq_exit(irqchip, desc);
- }
- 
-@@ -160,31 +124,29 @@ static void ep93xx_gpio_irq_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
--	int port_mask = BIT(d->irq & 7);
-+	int port_mask = BIT(irqd_to_hwirq(d));
- 
- 	if (irqd_get_trigger_type(d) == IRQ_TYPE_EDGE_BOTH) {
- 		eic->int_type2 ^= port_mask; /* switch edge direction */
--		ep93xx_gpio_update_int_params(epg, eic);
-+		ep93xx_gpio_update_int_params(eic);
- 	}
- 
--	writeb(port_mask, epg->base + eic->irq_offset + EP93XX_INT_EOI_OFFSET);
-+	writeb(port_mask, eic->base + EP93XX_INT_EOI_OFFSET);
- }
- 
- static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
--	int port_mask = BIT(d->irq & 7);
-+	int port_mask = BIT(irqd_to_hwirq(d));
- 
- 	if (irqd_get_trigger_type(d) == IRQ_TYPE_EDGE_BOTH)
- 		eic->int_type2 ^= port_mask; /* switch edge direction */
- 
- 	eic->int_unmasked &= ~port_mask;
--	ep93xx_gpio_update_int_params(epg, eic);
-+	ep93xx_gpio_update_int_params(eic);
- 
--	writeb(port_mask, epg->base + eic->irq_offset + EP93XX_INT_EOI_OFFSET);
-+	writeb(port_mask, eic->base + EP93XX_INT_EOI_OFFSET);
- 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
- }
- 
-@@ -192,10 +154,9 @@ static void ep93xx_gpio_irq_mask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
- 
--	eic->int_unmasked &= ~BIT(d->irq & 7);
--	ep93xx_gpio_update_int_params(epg, eic);
-+	eic->int_unmasked &= ~BIT(irqd_to_hwirq(d));
-+	ep93xx_gpio_update_int_params(eic);
- 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
- }
- 
-@@ -203,11 +164,10 @@ static void ep93xx_gpio_irq_unmask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
- 
- 	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
--	eic->int_unmasked |= BIT(d->irq & 7);
--	ep93xx_gpio_update_int_params(epg, eic);
-+	eic->int_unmasked |= BIT(irqd_to_hwirq(d));
-+	ep93xx_gpio_update_int_params(eic);
- }
- 
- /*
-@@ -219,8 +179,7 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
--	int offset = d->irq & 7;
-+	irq_hw_number_t offset = irqd_to_hwirq(d);
- 	int port_mask = BIT(offset);
- 	irq_flow_handler_t handler;
- 
-@@ -264,51 +223,11 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
- 
- 	eic->int_enabled |= port_mask;
- 
--	ep93xx_gpio_update_int_params(epg, eic);
-+	ep93xx_gpio_update_int_params(eic);
- 
- 	return 0;
- }
- 
--/*************************************************************************
-- * gpiolib interface for EP93xx on-chip GPIOs
-- *************************************************************************/
--struct ep93xx_gpio_bank {
--	const char	*label;
--	int		data;
--	int		dir;
--	int		irq;
--	int		base;
--	bool		has_irq;
--	bool		has_hierarchical_irq;
--	unsigned int	irq_base;
--};
--
--#define EP93XX_GPIO_BANK(_label, _data, _dir, _irq, _base, _has_irq, _has_hier, _irq_base) \
--	{							\
--		.label		= _label,			\
--		.data		= _data,			\
--		.dir		= _dir,				\
--		.irq		= _irq,				\
--		.base		= _base,			\
--		.has_irq	= _has_irq,			\
--		.has_hierarchical_irq = _has_hier,		\
--		.irq_base	= _irq_base,			\
--	}
--
--static struct ep93xx_gpio_bank ep93xx_gpio_banks[] = {
--	/* Bank A has 8 IRQs */
--	EP93XX_GPIO_BANK("A", 0x00, 0x10, 0x90, 0, true, false, EP93XX_GPIO_A_IRQ_BASE),
--	/* Bank B has 8 IRQs */
--	EP93XX_GPIO_BANK("B", 0x04, 0x14, 0xac, 8, true, false, EP93XX_GPIO_B_IRQ_BASE),
--	EP93XX_GPIO_BANK("C", 0x08, 0x18, 0x00, 40, false, false, 0),
--	EP93XX_GPIO_BANK("D", 0x0c, 0x1c, 0x00, 24, false, false, 0),
--	EP93XX_GPIO_BANK("E", 0x20, 0x24, 0x00, 32, false, false, 0),
--	/* Bank F has 8 IRQs */
--	EP93XX_GPIO_BANK("F", 0x30, 0x34, 0x4c, 16, false, true, EP93XX_GPIO_F_IRQ_BASE),
--	EP93XX_GPIO_BANK("G", 0x38, 0x3c, 0x00, 48, false, false, 0),
--	EP93XX_GPIO_BANK("H", 0x40, 0x44, 0x00, 56, false, false, 0),
--};
--
- static int ep93xx_gpio_set_config(struct gpio_chip *gc, unsigned offset,
- 				  unsigned long config)
- {
-@@ -342,110 +261,102 @@ static const struct irq_chip gpio_eic_irq_chip = {
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
--static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
--				struct platform_device *pdev,
--				struct ep93xx_gpio *epg,
--				struct ep93xx_gpio_bank *bank)
-+static int ep93xx_setup_irqs(struct platform_device *pdev,
-+			     struct ep93xx_gpio_chip *egc)
- {
--	void __iomem *data = epg->base + bank->data;
--	void __iomem *dir = epg->base + bank->dir;
- 	struct gpio_chip *gc = &egc->gc;
- 	struct device *dev = &pdev->dev;
--	struct gpio_irq_chip *girq;
--	int err;
-+	struct gpio_irq_chip *girq = &gc->irq;
-+	int ret, irq, i;
-+	void __iomem *intr;
- 
--	err = bgpio_init(gc, dev, 1, data, NULL, NULL, dir, NULL, 0);
--	if (err)
--		return err;
-+	intr = devm_platform_ioremap_resource_byname(pdev, "intr");
-+	if (IS_ERR(intr))
-+		return PTR_ERR(intr);
- 
--	gc->label = bank->label;
--	gc->base = bank->base;
-+	gc->set_config = ep93xx_gpio_set_config;
-+	egc->eic = devm_kzalloc(dev, sizeof(*egc->eic), GFP_KERNEL);
-+	if (!egc->eic)
-+		return -ENOMEM;
- 
--	girq = &gc->irq;
--	if (bank->has_irq || bank->has_hierarchical_irq) {
--		gc->set_config = ep93xx_gpio_set_config;
--		egc->eic = devm_kcalloc(dev, 1,
--					sizeof(*egc->eic),
--					GFP_KERNEL);
--		if (!egc->eic)
--			return -ENOMEM;
--		egc->eic->irq_offset = bank->irq;
--		gpio_irq_chip_set_chip(girq, &gpio_eic_irq_chip);
--	}
-+	egc->eic->base = intr;
-+	gpio_irq_chip_set_chip(girq, &gpio_eic_irq_chip);
-+	girq->num_parents = platform_irq_count(pdev);
-+	if (girq->num_parents == 0)
-+		return -EINVAL;
- 
--	if (bank->has_irq) {
--		int ab_parent_irq = platform_get_irq(pdev, 0);
-+	girq->parents = devm_kcalloc(dev, girq->num_parents,
-+				   sizeof(*girq->parents),
-+				   GFP_KERNEL);
-+	if (!girq->parents)
-+		return -ENOMEM;
- 
--		girq->parent_handler = ep93xx_gpio_ab_irq_handler;
--		girq->num_parents = 1;
--		girq->parents = devm_kcalloc(dev, girq->num_parents,
--					     sizeof(*girq->parents),
--					     GFP_KERNEL);
--		if (!girq->parents)
--			return -ENOMEM;
--		girq->default_type = IRQ_TYPE_NONE;
--		girq->handler = handle_level_irq;
--		girq->parents[0] = ab_parent_irq;
--		girq->first = bank->irq_base;
--	}
-+	if (girq->num_parents == 1) { /* A/B irqchips */
-+		irq = platform_get_irq(pdev, 0);
-+		if (irq < 0)
-+			return irq;
- 
--	/* Only bank F has especially funky IRQ handling */
--	if (bank->has_hierarchical_irq) {
--		int gpio_irq;
--		int i;
-+		ret = devm_request_irq(dev, irq, ep93xx_ab_irq_handler,
-+				       IRQF_SHARED, gc->label, gc);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "requesting IRQ: %d\n", irq);
- 
--		/*
--		 * FIXME: convert this to use hierarchical IRQ support!
--		 * this requires fixing the root irqchip to be hierarchical.
--		 */
-+		girq->parents[0] = irq;
-+	} else { /* F irqchip */
- 		girq->parent_handler = ep93xx_gpio_f_irq_handler;
--		girq->num_parents = 8;
--		girq->parents = devm_kcalloc(dev, girq->num_parents,
--					     sizeof(*girq->parents),
--					     GFP_KERNEL);
--		if (!girq->parents)
--			return -ENOMEM;
--		/* Pick resources 1..8 for these IRQs */
++static void ep93xx_clk_write(struct ep93xx_clk_priv *priv, unsigned int reg, unsigned int val)
++{
++	struct ep93xx_regmap_adev *aux = priv->aux_dev;
 +
- 		for (i = 0; i < girq->num_parents; i++) {
--			girq->parents[i] = platform_get_irq(pdev, i + 1);
--			gpio_irq = bank->irq_base + i;
--			irq_set_chip_data(gpio_irq, &epg->gc[5]);
--			irq_set_chip_and_handler(gpio_irq,
--						 girq->chip,
--						 handle_level_irq);
--			irq_clear_status_flags(gpio_irq, IRQ_NOREQUEST);
-+			irq = platform_get_irq(pdev, i);
-+			if (irq < 0)
-+				continue;
++	aux->write(aux->map, aux->lock, reg, val);
++}
 +
-+			girq->parents[i] = irq;
- 		}
--		girq->default_type = IRQ_TYPE_NONE;
--		girq->handler = handle_level_irq;
--		girq->first = bank->irq_base;
++static int ep93xx_clk_is_enabled(struct clk_hw *hw)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	u32 val;
 +
-+		girq->map = girq->parents;
- 	}
- 
--	return devm_gpiochip_add_data(dev, gc, epg);
-+	girq->default_type = IRQ_TYPE_NONE;
-+	/* TODO: replace with handle_bad_irq() once we are fully hierarchical */
-+	girq->handler = handle_simple_irq;
++	regmap_read(priv->map, clk->reg, &val);
++
++	return !!(val & BIT(clk->bit_idx));
++}
++
++static int ep93xx_clk_enable(struct clk_hw *hw)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	u32 val;
++
++	guard(spinlock_irqsave)(&priv->lock);
++
++	regmap_read(priv->map, clk->reg, &val);
++	val |= BIT(clk->bit_idx);
++
++	ep93xx_clk_write(priv, clk->reg, val);
 +
 +	return 0;
- }
- 
- static int ep93xx_gpio_probe(struct platform_device *pdev)
- {
--	struct ep93xx_gpio *epg;
--	int i;
-+	struct ep93xx_gpio_chip *egc;
-+	struct gpio_chip *gc;
-+	void __iomem *data;
-+	void __iomem *dir;
-+	int ret;
- 
--	epg = devm_kzalloc(&pdev->dev, sizeof(*epg), GFP_KERNEL);
--	if (!epg)
-+	egc = devm_kzalloc(&pdev->dev, sizeof(*egc), GFP_KERNEL);
-+	if (!egc)
- 		return -ENOMEM;
- 
--	epg->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(epg->base))
--		return PTR_ERR(epg->base);
-+	data = devm_platform_ioremap_resource_byname(pdev, "data");
-+	if (IS_ERR(data))
-+		return PTR_ERR(data);
- 
--	for (i = 0; i < ARRAY_SIZE(ep93xx_gpio_banks); i++) {
--		struct ep93xx_gpio_chip *gc = &epg->gc[i];
--		struct ep93xx_gpio_bank *bank = &ep93xx_gpio_banks[i];
-+	dir = devm_platform_ioremap_resource_byname(pdev, "dir");
-+	if (IS_ERR(dir))
-+		return PTR_ERR(dir);
- 
--		if (ep93xx_gpio_add_bank(gc, pdev, epg, bank))
--			dev_warn(&pdev->dev, "Unable to add gpio bank %s\n",
--				 bank->label);
-+	gc = &egc->gc;
-+	ret = bgpio_init(gc, &pdev->dev, 1, data, NULL, NULL, dir, NULL, 0);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "unable to init generic GPIO\n");
++}
 +
-+	gc->label = dev_name(&pdev->dev);
-+	if (platform_irq_count(pdev) > 0) {
-+		dev_dbg(&pdev->dev, "setting up irqs for %s\n", dev_name(&pdev->dev));
-+		ret = ep93xx_setup_irqs(pdev, egc);
++static void ep93xx_clk_disable(struct clk_hw *hw)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	u32 val;
++
++	guard(spinlock_irqsave)(&priv->lock);
++
++	regmap_read(priv->map, clk->reg, &val);
++	val &= ~BIT(clk->bit_idx);
++
++	ep93xx_clk_write(priv, clk->reg, val);
++}
++
++static const struct clk_ops clk_ep93xx_gate_ops = {
++	.enable = ep93xx_clk_enable,
++	.disable = ep93xx_clk_disable,
++	.is_enabled = ep93xx_clk_is_enabled,
++};
++
++static int ep93xx_clk_register_gate(struct ep93xx_clk *clk,
++				    const char *name,
++				    struct clk_parent_data *parent_data,
++				    unsigned long flags,
++				    unsigned int reg,
++				    u8 bit_idx)
++{
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	struct clk_init_data init = { };
++
++	init.name = name;
++	init.ops = &clk_ep93xx_gate_ops;
++	init.flags = flags;
++	init.parent_data = parent_data;
++	init.num_parents = 1;
++
++	clk->reg = reg;
++	clk->bit_idx = bit_idx;
++	clk->hw.init = &init;
++
++	return devm_clk_hw_register(priv->dev, &clk->hw);
++}
++
++static u8 ep93xx_mux_get_parent(struct clk_hw *hw)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	u32 val;
++
++	regmap_read(priv->map, clk->reg, &val);
++
++	val &= EP93XX_SYSCON_CLKDIV_MASK;
++
++	switch (val) {
++	case EP93XX_SYSCON_CLKDIV_ESEL:
++		return 1; /* PLL1 */
++	case EP93XX_SYSCON_CLKDIV_MASK:
++		return 2; /* PLL2 */
++	default:
++		return 0; /* XTALI */
++	};
++}
++
++static int ep93xx_mux_set_parent_lock(struct clk_hw *hw, u8 index)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	u32 val;
++
++	if (index >= 3)
++		return -EINVAL;
++
++	guard(spinlock_irqsave)(&priv->lock);
++
++	regmap_read(priv->map, clk->reg, &val);
++	val &= ~(EP93XX_SYSCON_CLKDIV_MASK);
++	val |= index > 0 ? EP93XX_SYSCON_CLKDIV_ESEL : 0;
++	val |= index > 1 ? EP93XX_SYSCON_CLKDIV_PSEL : 0;
++
++	ep93xx_clk_write(priv, clk->reg, val);
++
++	return 0;
++}
++
++static bool is_best(unsigned long rate, unsigned long now,
++		     unsigned long best)
++{
++	return abs_diff(rate, now) < abs_diff(rate, best);
++}
++
++static int ep93xx_mux_determine_rate(struct clk_hw *hw,
++				struct clk_rate_request *req)
++{
++	unsigned long best_rate = 0, actual_rate, mclk_rate;
++	unsigned long rate = req->rate;
++	struct clk_hw *parent_best = NULL;
++	unsigned long parent_rate_best;
++	unsigned long parent_rate;
++	int div, pdiv;
++	unsigned int i;
++
++	/*
++	 * Try the two pll's and the external clock,
++	 * because the valid predividers are 2, 2.5 and 3, we multiply
++	 * all the clocks by 2 to avoid floating point math.
++	 *
++	 * This is based on the algorithm in the ep93xx raster guide:
++	 * http://be-a-maverick.com/en/pubs/appNote/AN269REV1.pdf
++	 *
++	 */
++	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
++		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
++
++		parent_rate = clk_hw_get_rate(parent);
++		mclk_rate = parent_rate * 2;
++
++		/* Try each predivider value */
++		for (pdiv = 4; pdiv <= 6; pdiv++) {
++			div = DIV_ROUND_CLOSEST(mclk_rate, rate * pdiv);
++			if (!in_range(div, 1, 127))
++				continue;
++
++			actual_rate = DIV_ROUND_CLOSEST(mclk_rate, pdiv * div);
++			if (is_best(rate, actual_rate, best_rate)) {
++				best_rate = actual_rate;
++				parent_rate_best = parent_rate;
++				parent_best = parent;
++			}
++		}
++	}
++
++	if (!parent_best)
++		return -EINVAL;
++
++	req->best_parent_rate = parent_rate_best;
++	req->best_parent_hw = parent_best;
++	req->rate = best_rate;
++
++	return 0;
++}
++
++static unsigned long ep93xx_ddiv_recalc_rate(struct clk_hw *hw,
++						unsigned long parent_rate)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	unsigned int pdiv, div;
++	u32 val;
++
++	regmap_read(priv->map, clk->reg, &val);
++	pdiv = (val >> EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) & GENMASK(1, 0);
++	div = val & GENMASK(6, 0);
++	if (!div)
++		return 0;
++
++	return DIV_ROUND_CLOSEST(parent_rate * 2, (pdiv + 3) * div);
++}
++
++static int ep93xx_ddiv_set_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long parent_rate)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	int pdiv, div, npdiv, ndiv;
++	unsigned long actual_rate, mclk_rate, rate_err = ULONG_MAX;
++	u32 val;
++
++	regmap_read(priv->map, clk->reg, &val);
++	mclk_rate = parent_rate * 2;
++
++	for (pdiv = 4; pdiv <= 6; pdiv++) {
++		div = DIV_ROUND_CLOSEST(mclk_rate, rate * pdiv);
++		if (!in_range(div, 1, 127))
++			continue;
++
++		actual_rate = DIV_ROUND_CLOSEST(mclk_rate, pdiv * div);
++		if (abs(actual_rate - rate) < rate_err) {
++			npdiv = pdiv - 3;
++			ndiv = div;
++			rate_err = abs(actual_rate - rate);
++		}
++	}
++
++	if (rate_err == ULONG_MAX)
++		return -EINVAL;
++
++	/*
++	 * Clear old dividers.
++	 * Bit 7 is reserved bit in all ClkDiv registers.
++	 */
++	val &= ~(GENMASK(9, 0) & ~BIT(7));
++
++	/* Set the new pdiv and div bits for the new clock rate */
++	val |= (npdiv << EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | ndiv;
++
++	ep93xx_clk_write(priv, clk->reg, val);
++
++	return 0;
++}
++
++static const struct clk_ops clk_ddiv_ops = {
++	.enable = ep93xx_clk_enable,
++	.disable = ep93xx_clk_disable,
++	.is_enabled = ep93xx_clk_is_enabled,
++	.get_parent = ep93xx_mux_get_parent,
++	.set_parent = ep93xx_mux_set_parent_lock,
++	.determine_rate = ep93xx_mux_determine_rate,
++	.recalc_rate = ep93xx_ddiv_recalc_rate,
++	.set_rate = ep93xx_ddiv_set_rate,
++};
++
++static int clk_hw_register_ddiv(struct ep93xx_clk *clk,
++				const char *name,
++				struct clk_parent_data *parent_data,
++				u8 num_parents,
++				unsigned int reg,
++				u8 bit_idx)
++{
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	struct clk_init_data init = { };
++
++	init.name = name;
++	init.ops = &clk_ddiv_ops;
++	init.flags = 0;
++	init.parent_data = parent_data;
++	init.num_parents = num_parents;
++
++	clk->reg = reg;
++	clk->bit_idx = bit_idx;
++	clk->hw.init = &init;
++
++	return devm_clk_hw_register(priv->dev, &clk->hw);
++}
++
++static unsigned long ep93xx_div_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	u32 val;
++	u8 index;
++
++	regmap_read(priv->map, clk->reg, &val);
++	index = (val & clk->mask) >> clk->shift;
++	if (index > clk->num_div)
++		return 0;
++
++	return DIV_ROUND_CLOSEST(parent_rate, clk->div[index]);
++}
++
++static long ep93xx_div_round_rate(struct clk_hw *hw, unsigned long rate,
++				   unsigned long *parent_rate)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	unsigned long best = 0, now;
++	unsigned int i;
++
++	for (i = 0; i < clk->num_div; i++) {
++		if ((rate * clk->div[i]) == *parent_rate)
++			return rate;
++
++		now = DIV_ROUND_CLOSEST(*parent_rate, clk->div[i]);
++		if (!best || is_best(rate, now, best))
++			best = now;
++	}
++
++	return best;
++}
++
++static int ep93xx_div_set_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long parent_rate)
++{
++	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	unsigned int i;
++	u32 val;
++
++	regmap_read(priv->map, clk->reg, &val);
++	val &= ~clk->mask;
++	for (i = 0; i < clk->num_div; i++)
++		if (rate == DIV_ROUND_CLOSEST(parent_rate, clk->div[i]))
++			break;
++
++	if (i == clk->num_div)
++		return -EINVAL;
++
++	val |= i << clk->shift;
++
++	ep93xx_clk_write(priv, clk->reg, val);
++
++	return 0;
++}
++
++static const struct clk_ops ep93xx_div_ops = {
++	.enable = ep93xx_clk_enable,
++	.disable = ep93xx_clk_disable,
++	.is_enabled = ep93xx_clk_is_enabled,
++	.recalc_rate = ep93xx_div_recalc_rate,
++	.round_rate = ep93xx_div_round_rate,
++	.set_rate = ep93xx_div_set_rate,
++};
++
++static int clk_hw_register_div(struct ep93xx_clk *clk,
++			       const char *name,
++			       struct clk_parent_data *parent_data,
++			       unsigned int reg,
++			       u8 enable_bit,
++			       u8 shift,
++			       u8 width,
++			       const char *clk_divisors,
++			       u8 num_div)
++{
++	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
++	struct clk_init_data init = { };
++
++	init.name = name;
++	init.ops = &ep93xx_div_ops;
++	init.flags = 0;
++	init.parent_data = parent_data;
++	init.num_parents = 1;
++
++	clk->reg = reg;
++	clk->bit_idx = enable_bit;
++	clk->mask = GENMASK(shift + width - 1, shift);
++	clk->shift = shift;
++	clk->div = clk_divisors;
++	clk->num_div = num_div;
++	clk->hw.init = &init;
++
++	return devm_clk_hw_register(priv->dev, &clk->hw);
++}
++
++struct ep93xx_gate {
++	unsigned int idx;
++	unsigned int bit;
++	const char *name;
++};
++
++static const struct ep93xx_gate ep93xx_uarts[] = {
++	{ EP93XX_CLK_UART1, EP93XX_SYSCON_DEVCFG_U1EN, "uart1" },
++	{ EP93XX_CLK_UART2, EP93XX_SYSCON_DEVCFG_U2EN, "uart2" },
++	{ EP93XX_CLK_UART3, EP93XX_SYSCON_DEVCFG_U3EN, "uart3" },
++};
++
++static int ep93xx_uart_clock_init(struct ep93xx_clk_priv *priv)
++{
++	struct clk_parent_data parent_data = { };
++	unsigned int i, idx, ret, clk_uart_div;
++	struct ep93xx_clk *clk;
++	u32 val;
++
++	regmap_read(priv->map, EP93XX_SYSCON_PWRCNT, &val);
++	if (val & EP93XX_SYSCON_PWRCNT_UARTBAUD)
++		clk_uart_div = 1;
++	else
++		clk_uart_div = 2;
++
++	priv->fixed[EP93XX_CLK_UART] =
++		clk_hw_register_fixed_factor(NULL, "uart", "xtali", 0, 1, clk_uart_div);
++	parent_data.hw = priv->fixed[EP93XX_CLK_UART];
++
++	/* parenting uart gate clocks to uart clock */
++	for (i = 0; i < ARRAY_SIZE(ep93xx_uarts); i++) {
++		idx = ep93xx_uarts[i].idx - EP93XX_CLK_UART1;
++		clk = &priv->reg[idx];
++		clk->idx = idx;
++		ret = ep93xx_clk_register_gate(clk,
++					ep93xx_uarts[i].name,
++					&parent_data, CLK_SET_RATE_PARENT,
++					EP93XX_SYSCON_DEVCFG,
++					ep93xx_uarts[i].bit);
 +		if (ret)
-+			dev_err_probe(&pdev->dev, ret, "setup irqs failed");
- 	}
- 
--	return 0;
-+	return devm_gpiochip_add_data(&pdev->dev, gc, egc);
- }
- 
- static struct platform_driver ep93xx_gpio_driver = {
++			return dev_err_probe(priv->dev, ret,
++					     "failed to register uart[%d] clock\n", i);
++	}
++
++	return 0;
++}
++
++static const struct ep93xx_gate ep93xx_dmas[] = {
++	{ EP93XX_CLK_M2M0, EP93XX_SYSCON_PWRCNT_DMA_M2M0, "m2m0" },
++	{ EP93XX_CLK_M2M1, EP93XX_SYSCON_PWRCNT_DMA_M2M1, "m2m1" },
++	{ EP93XX_CLK_M2P0, EP93XX_SYSCON_PWRCNT_DMA_M2P0, "m2p0" },
++	{ EP93XX_CLK_M2P1, EP93XX_SYSCON_PWRCNT_DMA_M2P1, "m2p1" },
++	{ EP93XX_CLK_M2P2, EP93XX_SYSCON_PWRCNT_DMA_M2P2, "m2p2" },
++	{ EP93XX_CLK_M2P3, EP93XX_SYSCON_PWRCNT_DMA_M2P3, "m2p3" },
++	{ EP93XX_CLK_M2P4, EP93XX_SYSCON_PWRCNT_DMA_M2P4, "m2p4" },
++	{ EP93XX_CLK_M2P5, EP93XX_SYSCON_PWRCNT_DMA_M2P5, "m2p5" },
++	{ EP93XX_CLK_M2P6, EP93XX_SYSCON_PWRCNT_DMA_M2P6, "m2p6" },
++	{ EP93XX_CLK_M2P7, EP93XX_SYSCON_PWRCNT_DMA_M2P7, "m2p7" },
++	{ EP93XX_CLK_M2P8, EP93XX_SYSCON_PWRCNT_DMA_M2P8, "m2p8" },
++	{ EP93XX_CLK_M2P9, EP93XX_SYSCON_PWRCNT_DMA_M2P9, "m2p9" },
++};
++
++static int ep93xx_dma_clock_init(struct ep93xx_clk_priv *priv)
++{
++	struct clk_parent_data parent_data = { };
++	unsigned int i, idx;
++
++	parent_data.hw = priv->fixed[EP93XX_CLK_HCLK];
++	for (i = 0; i < ARRAY_SIZE(ep93xx_dmas); i++) {
++		idx = ep93xx_dmas[i].idx;
++		priv->fixed[idx] = devm_clk_hw_register_gate_parent_data(priv->dev,
++					ep93xx_dmas[i].name,
++					&parent_data, 0,
++					priv->base + EP93XX_SYSCON_PWRCNT,
++					ep93xx_dmas[i].bit,
++					0,
++					&priv->lock);
++		if (IS_ERR(priv->fixed[idx]))
++			return PTR_ERR(priv->fixed[idx]);
++	}
++
++	return 0;
++}
++
++static struct clk_hw *of_clk_ep93xx_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct ep93xx_clk_priv *priv = data;
++	unsigned int idx = clkspec->args[0];
++
++	if (idx < EP93XX_CLK_UART1)
++		return priv->fixed[idx];
++
++	if (idx <= EP93XX_CLK_I2S_LRCLK)
++		return &priv->reg[idx - EP93XX_CLK_UART1].hw;
++
++	return ERR_PTR(-EINVAL);
++}
++
++/*
++ * PLL rate = 14.7456 MHz * (X1FBD + 1) * (X2FBD + 1) / (X2IPD + 1) / 2^PS
++ */
++static unsigned long calc_pll_rate(u64 rate, u32 config_word)
++{
++	rate *= ((config_word >> 11) & GENMASK(4, 0)) + 1;	/* X1FBD */
++	rate *= ((config_word >> 5) & GENMASK(5, 0)) + 1;	/* X2FBD */
++	do_div(rate, (config_word & GENMASK(4, 0)) + 1);	/* X2IPD */
++	rate >>= (config_word >> 16) & GENMASK(1, 0);		/* PS */
++
++	return rate;
++}
++
++#define devm_ep93xx_clk_hw_register_fixed_rate_parent_data(dev, name, parent_data, flags, fixed_rate)  \
++	__clk_hw_register_fixed_rate((dev), NULL, (name), NULL, NULL, \
++				     (parent_data), (flags), (fixed_rate), 0, 0, true)
++
++static int ep93xx_plls_init(struct ep93xx_clk_priv *priv)
++{
++	const char fclk_divisors[] = { 1, 2, 4, 8, 16, 1, 1, 1 };
++	const char hclk_divisors[] = { 1, 2, 4, 5, 6, 8, 16, 32 };
++	const char pclk_divisors[] = { 1, 2, 4, 8 };
++	struct clk_parent_data xtali = { .index = 0 };
++	unsigned int clk_f_div, clk_h_div, clk_p_div;
++	unsigned long clk_pll1_rate, clk_pll2_rate;
++	struct device *dev = priv->dev;
++	struct clk_hw *hw, *pll1;
++	u32 value;
++
++	/* Determine the bootloader configured pll1 rate */
++	regmap_read(priv->map, EP93XX_SYSCON_CLKSET1, &value);
++
++	if (value & EP93XX_SYSCON_CLKSET1_NBYP1)
++		clk_pll1_rate = calc_pll_rate(EP93XX_EXT_CLK_RATE, value);
++	else
++		clk_pll1_rate = EP93XX_EXT_CLK_RATE;
++
++	pll1 = devm_ep93xx_clk_hw_register_fixed_rate_parent_data(dev, "pll1", &xtali,
++								  0, clk_pll1_rate);
++	if (IS_ERR(pll1))
++		return PTR_ERR(pll1);
++
++	priv->fixed[EP93XX_CLK_PLL1] = pll1;
++
++	/* Initialize the pll1 derived clocks */
++	clk_f_div = fclk_divisors[(value >> 25) & GENMASK(2, 0)];
++	clk_h_div = hclk_divisors[(value >> 20) & GENMASK(2, 0)];
++	clk_p_div = pclk_divisors[(value >> 18) & GENMASK(1, 0)];
++
++	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "fclk", pll1, 0, 1, clk_f_div);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_FCLK] = hw;
++
++	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "hclk", pll1, 0, 1, clk_h_div);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_HCLK] = hw;
++
++	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "pclk", hw, 0, 1, clk_p_div);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_PCLK] = hw;
++
++	/* Determine the bootloader configured pll2 rate */
++	regmap_read(priv->map, EP93XX_SYSCON_CLKSET2, &value);
++	if (!(value & EP93XX_SYSCON_CLKSET2_NBYP2))
++		clk_pll2_rate = EP93XX_EXT_CLK_RATE;
++	else if (value & EP93XX_SYSCON_CLKSET2_PLL2_EN)
++		clk_pll2_rate = calc_pll_rate(EP93XX_EXT_CLK_RATE, value);
++	else
++		clk_pll2_rate = 0;
++
++	hw = devm_ep93xx_clk_hw_register_fixed_rate_parent_data(dev, "pll2", &xtali,
++								0, clk_pll2_rate);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_PLL2] = hw;
++
++	return 0;
++}
++
++static int ep93xx_clk_probe(struct auxiliary_device *adev,
++			       const struct auxiliary_device_id *id)
++{
++	struct ep93xx_regmap_adev *rdev = to_ep93xx_regmap_adev(adev);
++	struct clk_parent_data xtali = { .index = 0 };
++	struct clk_parent_data ddiv_pdata[3] = { };
++	unsigned int clk_spi_div, clk_usb_div;
++	struct clk_parent_data pdata = {};
++	struct device *dev = &adev->dev;
++	struct ep93xx_clk_priv *priv;
++	struct ep93xx_clk *clk;
++	struct clk_hw *hw;
++	unsigned int idx;
++	int ret;
++	u32 value;
++
++	priv = devm_kzalloc(dev, struct_size(priv, reg, 10), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	spin_lock_init(&priv->lock);
++	priv->dev = dev;
++	priv->aux_dev = rdev;
++	priv->map = rdev->map;
++	priv->base = rdev->base;
++
++	ret = ep93xx_plls_init(priv);
++	if (ret)
++		return ret;
++
++	regmap_read(priv->map, EP93XX_SYSCON_CLKSET2, &value);
++	clk_usb_div = (value >> 28 & GENMASK(3, 0)) + 1;
++	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "usb_clk",
++							 priv->fixed[EP93XX_CLK_PLL2], 0, 1,
++							 clk_usb_div);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_USB] = hw;
++
++	ret = ep93xx_uart_clock_init(priv);
++	if (ret)
++		return ret;
++
++	ret = ep93xx_dma_clock_init(priv);
++	if (ret)
++		return ret;
++
++	clk_spi_div = id->driver_data;
++	hw = devm_clk_hw_register_fixed_factor_index(dev, "ep93xx-spi.0",
++						     0, /* XTALI external clock */
++						     0, 1, clk_spi_div);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_SPI] = hw;
++
++	/* PWM clock */
++	hw = devm_clk_hw_register_fixed_factor_index(dev, "pwm_clk", 0, /* XTALI external clock */
++						     0, 1, 1);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_PWM] = hw;
++
++	/* USB clock */
++	pdata.hw = priv->fixed[EP93XX_CLK_USB];
++	hw = devm_clk_hw_register_gate_parent_data(priv->dev, "ohci-platform", &pdata,
++						   0, priv->base + EP93XX_SYSCON_PWRCNT,
++						   EP93XX_SYSCON_PWRCNT_USH_EN, 0,
++						   &priv->lock);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	priv->fixed[EP93XX_CLK_USB] = hw;
++
++	ddiv_pdata[0].index = 0; /* XTALI external clock */
++	ddiv_pdata[1].hw = priv->fixed[EP93XX_CLK_PLL1];
++	ddiv_pdata[2].hw = priv->fixed[EP93XX_CLK_PLL2];
++
++	/* touchscreen/ADC clock */
++	idx = EP93XX_CLK_ADC - EP93XX_CLK_UART1;
++	clk = &priv->reg[idx];
++	clk->idx = idx;
++	ret = clk_hw_register_div(clk, "ep93xx-adc", &xtali,
++				EP93XX_SYSCON_KEYTCHCLKDIV,
++				EP93XX_SYSCON_KEYTCHCLKDIV_TSEN,
++				EP93XX_SYSCON_KEYTCHCLKDIV_ADIV,
++				1,
++				adc_divisors,
++				ARRAY_SIZE(adc_divisors));
++
++
++	/* keypad clock */
++	idx = EP93XX_CLK_KEYPAD - EP93XX_CLK_UART1;
++	clk = &priv->reg[idx];
++	clk->idx = idx;
++	ret = clk_hw_register_div(clk, "ep93xx-keypad", &xtali,
++				EP93XX_SYSCON_KEYTCHCLKDIV,
++				EP93XX_SYSCON_KEYTCHCLKDIV_KEN,
++				EP93XX_SYSCON_KEYTCHCLKDIV_KDIV,
++				1,
++				adc_divisors,
++				ARRAY_SIZE(adc_divisors));
++
++	/*
++	 * On reset PDIV and VDIV is set to zero, while PDIV zero
++	 * means clock disable, VDIV shouldn't be zero.
++	 * So we set both video and i2s dividers to minimum.
++	 * ENA - Enable CLK divider.
++	 * PDIV - 00 - Disable clock
++	 * VDIV - at least 2
++	 */
++
++	/* Check and enable video clk registers */
++	regmap_read(priv->map, EP93XX_SYSCON_VIDCLKDIV, &value);
++	value |= BIT(EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | 2;
++	ep93xx_clk_write(priv, EP93XX_SYSCON_VIDCLKDIV, value);
++
++	/* Check and enable i2s clk registers */
++	regmap_read(priv->map, EP93XX_SYSCON_I2SCLKDIV, &value);
++	value |= BIT(EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | 2;
++
++	/*
++	 * Override the SAI_MSTR_CLK_CFG from the I2S block and use the
++	 * I2SClkDiv Register settings. LRCLK transitions on the falling SCLK
++	 * edge.
++	 */
++	value |= EP93XX_SYSCON_I2SCLKDIV_ORIDE | EP93XX_SYSCON_I2SCLKDIV_SPOL;
++	ep93xx_clk_write(priv, EP93XX_SYSCON_I2SCLKDIV, value);
++
++	/* video clk */
++	idx = EP93XX_CLK_VIDEO - EP93XX_CLK_UART1;
++	clk = &priv->reg[idx];
++	clk->idx = idx;
++	ret = clk_hw_register_ddiv(clk, "ep93xx-fb",
++				ddiv_pdata, ARRAY_SIZE(ddiv_pdata),
++				EP93XX_SYSCON_VIDCLKDIV,
++				EP93XX_SYSCON_CLKDIV_ENABLE);
++
++	/* i2s clk */
++	idx = EP93XX_CLK_I2S_MCLK - EP93XX_CLK_UART1;
++	clk = &priv->reg[idx];
++	clk->idx = idx;
++	ret = clk_hw_register_ddiv(clk, "mclk",
++				ddiv_pdata, ARRAY_SIZE(ddiv_pdata),
++				EP93XX_SYSCON_I2SCLKDIV,
++				EP93XX_SYSCON_CLKDIV_ENABLE);
++
++	/* i2s sclk */
++	idx = EP93XX_CLK_I2S_SCLK - EP93XX_CLK_UART1;
++	clk = &priv->reg[idx];
++	clk->idx = idx;
++	pdata.hw = &priv->reg[EP93XX_CLK_I2S_MCLK - EP93XX_CLK_UART1].hw;
++	ret = clk_hw_register_div(clk, "sclk", &pdata,
++				EP93XX_SYSCON_I2SCLKDIV,
++				EP93XX_SYSCON_I2SCLKDIV_SENA,
++				16, /* EP93XX_I2SCLKDIV_SDIV_SHIFT */
++				1,  /* EP93XX_I2SCLKDIV_SDIV_WIDTH */
++				sclk_divisors,
++				ARRAY_SIZE(sclk_divisors));
++
++	/* i2s lrclk */
++	idx = EP93XX_CLK_I2S_LRCLK - EP93XX_CLK_UART1;
++	clk = &priv->reg[idx];
++	clk->idx = idx;
++	pdata.hw = &priv->reg[EP93XX_CLK_I2S_SCLK - EP93XX_CLK_UART1].hw;
++	ret = clk_hw_register_div(clk, "lrclk", &pdata,
++				EP93XX_SYSCON_I2SCLKDIV,
++				EP93XX_SYSCON_I2SCLKDIV_SENA,
++				17, /* EP93XX_I2SCLKDIV_LRDIV32_SHIFT */
++				2,  /* EP93XX_I2SCLKDIV_LRDIV32_WIDTH */
++				lrclk_divisors,
++				ARRAY_SIZE(lrclk_divisors));
++
++	/* IrDa clk uses same pattern but no init code presents in original clock driver */
++	return devm_of_clk_add_hw_provider(priv->dev, of_clk_ep93xx_get, priv);
++}
++
++static const struct auxiliary_device_id ep93xx_clk_ids[] = {
++	{ .name = "soc_ep93xx.clk-ep93xx", .driver_data = 2, },
++	{ .name = "soc_ep93xx.clk-ep93xx.e2", .driver_data = 1, },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(auxiliary, ep93xx_clk_ids);
++
++static struct auxiliary_driver ep93xx_clk_driver = {
++	.probe		= ep93xx_clk_probe,
++	.id_table	= ep93xx_clk_ids,
++};
++module_auxiliary_driver(ep93xx_clk_driver);
 
 -- 
 2.43.2
