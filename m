@@ -1,247 +1,142 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E98A187344;
-	Mon, 15 Jul 2024 08:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68090184102
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721033086; cv=none; b=jyQHVaTjTUw352bT3lGSjI2iGmKblo6ZDZRaC1sGO59NRB8vUaMEqhpY/JbhJsyWgWBSyRkUIBDyS7PaQ6h1COnMOfSOODlYwR4EB28UJC6I52knej1gqqr7PnhVIFLRbqGBXINkiuj+qzijw6bFT7fOgkazLLaCfrYyoMHKv4A=
+	t=1721033113; cv=none; b=Rgx43kJdgTQSKDeO3mTguve61CH0skKdhIf0pn7Z2JHIRwEON2aK/ba9EV5HcZskg3zPOMva9Us8wGyZ2rJbQmiMTUCOL9EF6l731K+giOAQHN/g+6g52afO3rwHqF6Q5b+B3GpeAPIqw/ucSY2D9feF60aoA8mjmoSBW9/SXtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721033086; c=relaxed/simple;
-	bh=i4yD1gZFJr7CqfdBUlA+o7O+9Bb5ZpvRLIn3wKoeVsw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b/JizV8eaH7JRdNROQWM/8cPAiykDM85kv48bDEcqMrEQp7qzRdAiTUiqdv3xI+vLT/TS0eThCf9FFZOHb83VmZNMNWRp+WBzW4WSN0UAuwowXPjAUXV9m8paL8YbgHdBntJpwSiqtMHVUuBe57cF9GtIE2l+s2MNroPBq/Svbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nK96ecL6; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721033113; c=relaxed/simple;
+	bh=KbdlWQKJn0hza2m6K2BTUfffnTnvoHZmFO0gSi7vJwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oiX+4z0/5i0bY46wOP/WbwKDzLES1dzoyCTKI4TGsIKIy1WN3NJY1mx/dY47rOp3atRvmS4+U239t1TthlSZ8WNP54iH0lSFnTNiUgXDAHmZB5QKbiPI/iIVo2NJeNMAuXRFGMsANLEzd4dBvUNmUe9p4uDk7Uf3kdF72rgXLy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=RcF7yDKe; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nK96ecL6"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4f2f39829a9so1399805e0c.2;
-        Mon, 15 Jul 2024 01:44:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RcF7yDKe"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42666a5d33dso3207875e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 01:45:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721033084; x=1721637884; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hgTjx1S0gPDJQLRjGbMZdaL2/PHzlmKPyNwLkSk+q54=;
-        b=nK96ecL6x9n3wUgV3k3KWiOm73Fib3Z/616idJ+JiollUUDB23WFMr0lJqN1QRfrjK
-         vsTs3CANkSyQ12yiXgQlqxtQW3IN7HEIAzwwzTWCFGl99gt6xd3qwDWJMzIBFcdBULtv
-         8vjmKjw+AmgQLQtS0cjDZIARHRsIIHhyPmiZ18HyevMnU4o1z9/cdAjBtrFPVio4DhZ/
-         qokNQuz/1192Uyz7ISM/hLBGSBBXXsDzmfrWZ7+GfCBOMiewDpjvsYZlDmwWXJBUOjKm
-         0cXBXEKaEeCDUjfu1ZPQ7Tx+GZ6NKJQxk8XWkCXQH+VVs0gZ7ffIFwa4/PqyTgHp9jJZ
-         K0sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721033084; x=1721637884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=ffwll.ch; s=google; t=1721033110; x=1721637910; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hgTjx1S0gPDJQLRjGbMZdaL2/PHzlmKPyNwLkSk+q54=;
-        b=vzwb52cN/ZhDn5c6jpMJFLImzWP631OK7NWJl8NCD6Rd7X3ETgvI4my6JxS6tXZ/Iq
-         AZRNhotnHj/4iQJ0pZuaAPP5zPS1/BUl8PLG2v+dNQpb4s08Vo7csKoDOBIW8q4jjSUf
-         TbCX8Pb9yrAe2CWUQoyg/swUkj+glknC87dmG6b/sq9EzeK88rNwlxVDcESgR7wHLeLV
-         dm5IHWwHx8RyPRPp3ulvFUx/Ss77iEAB9Y6H3wICUBh/6bKTsGOKYDBMvp/2Z3lyAQTT
-         yjDaVzPqtNiIKas6xXjYou7uDyJzQKXYAutQAQru07jx4lx7SXhUieBFfyF8CEj3nDYC
-         hXkA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Wj69GOa+nYx0LSR2bN64XDP/v+yXZib9q6+4/wGigKHhQJxA8XWHSCK3fhzd/QJt0RwZ9WpI8IlmCzNypWu/n3f76QFr1KYB9qRpPef11WlRIeTJaIlj/DQu+lKj9H+pqJ+xMWiJnmYuX3i2pVmt/sxGHN9009XCL12JS5eUKY3c1FW2Tm6TfXJOw15QkzTn5Xgr2rpb/nkVH8hk2LU7BH1ctp/+
-X-Gm-Message-State: AOJu0YyW7g2I5QjCZeZkK/qzqWNYl0jRuI5Fnto3jxd6gg0q8jKPhQk1
-	xAZ5IwifdJzhbK5MeZvWxwYfatvQduDNPjNL4EGZERbLBDftqH0AtonmOoEkRjlCW96kSASZ/pR
-	zKnzCqKtHtut5QApA6B92xZgBcFmTPJnnDOU=
-X-Google-Smtp-Source: AGHT+IFmi0cLv6M0EbxWLmzPMdPpe7qghgEQdEXkjBOnZqxsiaAxR4k53lGNPsCvNE4L3o6Yad4axhopYwcFpOjPmv0=
-X-Received: by 2002:a05:6122:2981:b0:4f2:ea44:fd14 with SMTP id
- 71dfb90a1353d-4f33f18e2e5mr22374157e0c.2.1721033083797; Mon, 15 Jul 2024
- 01:44:43 -0700 (PDT)
+        bh=mPt43vWv7W7uWoCMBzaMsxBX+ZmRLoqnMa3kAMiQQGg=;
+        b=RcF7yDKer3QecybgNFRAoXitisxR93dnEqr03XAm9ERhXF+nkF+Dehg4hTmVXPqwLc
+         ZhLMjFyWfSlG1r+CSIhM+gZO6gcoyU31fsAg9lBWCUObW/E6IRxV7+JiMZjK7WGurxUg
+         xVeT5JMD6d/bylHVnPeS1X/jcHkVlgk0f1HU8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721033110; x=1721637910;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mPt43vWv7W7uWoCMBzaMsxBX+ZmRLoqnMa3kAMiQQGg=;
+        b=A94zC0yd5dL3L5wDS4TTMvqAcw6V8sSKeeOnupHQnN8eF4vN4r762lPRvJUlnoyZqa
+         iQiiiYHJHXM203F6RSjJfaKg08NpkNMdMbbv/BbM3Lr6RPNEQeN2cFWBUsDFtujcKH4d
+         MTZ/4QRAUlYw5M1oZ/yZAYneT7x6prXnnvP2XTTweTfjLxJDGzYwI9L47eAZr7+2Qu/r
+         zZhhgJQOWlixhwm/1O/U9TK8LiPc1MjLxzdNddVt6oQ7Xz6GXmPmg+hdTj5qV0z5g4hC
+         +OFRFnLdQYwFLenXCI/rNH/8bZHOXj0aePmx57dHgMBquVxLbFuTP6TpD7MiievL00M2
+         ar/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVT0+FNBt0mWwET52HzjQWHn/fEQhIEyR5uZNOnI/pyqL/RaafXOfZ4t/ViWhmJC9a62h6poX65dw8OQHb7q+O2tlOFR4O1xEbxJIoP
+X-Gm-Message-State: AOJu0Yxp6raVKTx8eVoe0HNELBJH16F2MfzZ/Zz5/hEQvfbjIslq8J9e
+	ZwykxLEglBg0nWF9IA917kjdL+0OUUzcheu+aNRshcuWS/XegE/xdkeBdQNKdXg=
+X-Google-Smtp-Source: AGHT+IHkDheiQWPRAvAOHQTkNQHOAUKicTVB0J2JBhxVC1tcwLKXg6dTru289RnVzPDELy4A5wdRbw==
+X-Received: by 2002:a05:6000:2a4:b0:360:872b:7e03 with SMTP id ffacd0b85a97d-367f05439c1mr7021710f8f.0.1721033110619;
+        Mon, 15 Jul 2024 01:45:10 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680daccbd2sm5664721f8f.49.2024.07.15.01.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 01:45:10 -0700 (PDT)
+Date: Mon, 15 Jul 2024 10:45:08 +0200
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+	DRI Development <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+	syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com,
+	Daniel Vetter <daniel.vetter@intel.com>, stable@vger.kernel.org,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH] bcachefs: no console_lock in bch2_print_string_as_lines
+Message-ID: <ZpThlAGUsPXZArvk@phenom.ffwll.local>
+Mail-Followup-To: John Ogness <john.ogness@linutronix.de>,
+	DRI Development <dri-devel@lists.freedesktop.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+	syzbot+6cebc1af246fe020a2f0@syzkaller.appspotmail.com,
+	Daniel Vetter <daniel.vetter@intel.com>, stable@vger.kernel.org,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <20240710093120.732208-2-daniel.vetter@ffwll.ch>
+ <20240710130335.765885-1-daniel.vetter@ffwll.ch>
+ <87jzhtcp26.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627161315.98143-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240627161315.98143-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVLSpaUtdXFv3VXFc5G61dmRX2C1iW9C+km23g6EgZJOg@mail.gmail.com>
- <CA+V-a8vABF6vg+J7DAGzgnw8612oe6VfJkc5y-krySvnpAnPkQ@mail.gmail.com>
- <CAMuHMdXuyQZ=SFfQa5kvZTwYa0uRXc7khJ-vOYBRE5SCd11rPw@mail.gmail.com>
- <CA+V-a8ui9AKDOZzg_dgPXeGhGE-+rBHU8O1tpdb8w8myo-1p5Q@mail.gmail.com> <CAMuHMdVyqBmipMLeYd0nw3kEHwc=RvWJvrD8EYKVt+36E7oS+A@mail.gmail.com>
-In-Reply-To: <CAMuHMdVyqBmipMLeYd0nw3kEHwc=RvWJvrD8EYKVt+36E7oS+A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 15 Jul 2024 09:43:10 +0100
-Message-ID: <CA+V-a8u_oMxG8QmmK=_y8z6O_H-22SyCkje-VrQVqHn4H=5oow@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] clk: renesas: Add family-specific clock driver for RZ/V2H(P)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87jzhtcp26.fsf@jogness.linutronix.de>
+X-Operating-System: Linux phenom 6.9.7-amd64 
 
-Hi Geert,
-
-On Fri, Jul 12, 2024 at 6:11=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, Jul 12, 2024 at 5:29=E2=80=AFPM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Fri, Jul 12, 2024 at 4:23=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Fri, Jul 12, 2024 at 5:14=E2=80=AFPM Lad, Prabhakar
-> > > <prabhakar.csengg@gmail.com> wrote:
-> > > > On Fri, Jul 12, 2024 at 12:59=E2=80=AFPM Geert Uytterhoeven
-> > > > > On Thu, Jun 27, 2024 at 6:14=E2=80=AFPM Prabhakar <prabhakar.csen=
-gg@gmail.com> wrote:
-> > > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > >
-> > > > > > Add family-specific clock driver for RZ/V2H(P) SoCs.
-> > > > > >
-> > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renes=
-as.com>
-> > > > > > ---
-> > > > > > v2->v3
-> > > > > > - Dropped num_hw_resets from struct rzv2h_cpg_priv
-> > > > > > - Dropped range_check for module clocks
-> > > > > > - Made mon_index to s8 instead of u8 in struct rzv2h_mod_clk
-> > > > > > - Added support for critical module clocks with DEF_MOD_CRITICA=
-L
-> > > > > > - Added check for mon_index in rzv2h_mod_clock_endisable and
-> > > > > >   rzv2h_mod_clock_is_enabled()
-> > >
-> > > > > > --- /dev/null
-> > > > > > +++ b/drivers/clk/renesas/rzv2h-cpg.h
-> > >
-> > > > > > +/**
-> > > > > > + * struct rzv2h_reset - Reset definitions
-> > > > > > + *
-> > > > > > + * @reset_index: reset register index
-> > > > > > + * @reset_bit: reset bit
-> > > > > > + * @mon_index: monitor register index
-> > > > > > + * @mon_bit: monitor bit
-> > > > > > + */
-> > > > > > +struct rzv2h_reset {
-> > > > > > +       u8 reset_index;
-> > > > > > +       u8 reset_bit;
-> > > > > > +       u8 mon_index;
-> > > > > > +       u8 mon_bit;
-> > > > > > +};
-> > > > > > +
-> > > > > > +#define RST_ID(x, y)   ((((x) * 16)) + (y))
-> > > > > > +
-> > > > > > +#define DEF_RST_BASE(_id, _resindex, _resbit, _monindex, _monb=
-it)      \
-> > > > > > +       [_id] =3D { \
-> > > > >
-> > > > > Indexing by _id means the reset array will be very sparse.  E.g. =
-the
-> > > > > innocent-looking r9a09g057_resets[] with only a single entry take=
-s
-> > > > > 600 bytes.
-> > > > >
-> > > > > If you do need the full array for indexing, please allocate and
-> > > > > populate it at runtime.
-> > > > >
-> > > > OK, I will use the radix tree for resets (is that OK)?
-> > >
-> > > You mean XArray? include/linux/radix-tree.h has:
-> > >
-> > >     /* Keep unconverted code working */
-> > >     #define radix_tree_root         xarray
-> > >     #define radix_tree_node         xa_node
-> > >
-> > Yes, I meant the above.
+On Wed, Jul 10, 2024 at 04:19:53PM +0206, John Ogness wrote:
+> On 2024-07-10, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> > console_lock is the outermost subsystem lock for a lot of subsystems,
+> > which means get/put_user must nest within. Which means it cannot be
+> > acquired somewhere deeply nested in other locks, and most definitely
+> > not while holding fs locks potentially needed to resolve faults.
 > >
-> > > Given a single xa_node is already 576 bytes, just allocating the full
-> > > linear reset array at runtime is probably better.
-> > >
-> > Agreed, I will create a linear reset array and loop through the array
-> > based on reset index and reset bit to match with id whenever required.
->
-> With a full allocated linear reset array you do not need to loop,
-> but you can just index it by the reset ID??
->
-Instead of having a sparse array, to save memory I was thinking
-something like below:
+> > console_trylock is the best we can do here. But John pointed out on a
+> > previous version that this is futile:
+> >
+> > "Using the console lock here at all is wrong. The console lock does not
+> > prevent other CPUs from calling printk() and inserting lines in between.
+> >
+> > "There is no way to guarantee a contiguous ringbuffer block using
+> > multiple printk() calls.
+> >
+> > "The console_lock usage should be removed."
+> >
+> > https://lore.kernel.org/lkml/87frsh33xp.fsf@jogness.linutronix.de/
+> >
+> > Do that.
+> 
+> Note that there is more of this incorrect usage of console lock in:
+> 
+> fs/bcachefs/debug.c:bch2_btree_verify_replica()
+> 
+> fs/bcachefs/bset.c:bch2_dump_btree_node()
+> 
+> from commit 1c6fdbd8f246("bcachefs: Initial commit")
+> 
+> ... and its parent bcache:
+> 
+> drivers/md/bcache/debug.c:bch_btree_verify()
+> 
+> drivers/md/bcache/bset.c:bch_dump_bucket()
+> 
+> from commit cafe56359144("bcache: A block layer cache")
+> 
+> These should also be removed. Although Kent should verify that the
+> console lock is not providing some sort of necessary side-effect
+> synchronization.
 
-/**
- * struct rzv2h_reset - Reset definitions
- *
- * @reset_index: reset register index
- * @reset_bit: reset bit
- * @mon_index: monitor register index
- * @mon_bit: monitor bit
- */
-struct rzv2h_reset {
-    u8 reset_index;
-    u8 reset_bit;
-    u8 mon_index;
-    u8 mon_bit;
-};
-
-#define DEF_RST_BASE(_resindex, _resbit, _monindex, _monbit)    \
-    { \
-        .reset_index =3D (_resindex), \
-        .reset_bit =3D (_resbit), \
-        .mon_index =3D (_monindex), \
-        .mon_bit =3D (_monbit), \
-    }
-
-#define DEF_RST(_resindex, _resbit, _monindex, _monbit)    \
-    DEF_RST_BASE(_resindex, _resbit, _monindex, _monbit)
-
-
-in rzv2h_cpg_probe() (.num_resets =3D ARRAY_SIZE(r9a09g057_resets))
-
-    resets =3D devm_kmalloc_array(dev, info->num_resets, sizeof(struct
-rzv2h_reset), GFP_KERNEL);
-    if (!resets)
-        return -ENOMEM;
-
-    for (i =3D 0; i < priv->num_resets; i++)
-        memcpy(&resets[i], &info->resets[i], sizeof(struct rzv2h_reset));
-
-And have the below xlate function that will convert id into index ie
-index into rests array.
-
-static int rzv2h_get_reset_index(struct rzv2h_cpg_priv *priv,
-                 unsigned long id)
-{
-    u8 reset_index =3D id / 16;
-    u8 reset_bit =3D id % 16;
-    unsigned int i;
-
-    for (i =3D 0; i < priv->num_resets; i++) {
-        if (priv->resets[i].reset_index =3D=3D reset_index &&
-            priv->resets[i].reset_bit =3D=3D reset_bit)
-            return i;
-    }
-
-    return -EINVAL;
-}
-
-static int rzv2h_cpg_reset_xlate(struct reset_controller_dev *rcdev,
-                 const struct of_phandle_args *reset_spec)
-{
-    struct rzv2h_cpg_priv *priv =3D rcdev_to_priv(rcdev);
-    unsigned int id =3D reset_spec->args[0];
-    int index =3D rzv2h_get_reset_index(priv, id);
-
-    if (index < 0) {
-        dev_err(rcdev->dev, "Invalid reset index %u\n", id);
-        return -EINVAL;
-    }
-
-    return index;
-}
-
-
-rzv2h_cpg_assert() and rzv2h_cpg_deassert() which will use an id that
-can directly index into resets[] array.
-
-Please let me know if this is OK.
-
-Cheers,
-Prabhakar
+I'll take a look, at least some of them seem doable to audit without deep
+bcachefs understanding. Thanks for pointing them out, I should have looked
+a bit more at git grep ...
+-Sima
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
