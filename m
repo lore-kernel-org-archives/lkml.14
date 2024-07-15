@@ -1,106 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D20D18A93D;
-	Mon, 15 Jul 2024 12:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3968189F5E;
+	Mon, 15 Jul 2024 12:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721045129; cv=none; b=TbQqYA20Y7wSQ9+A0qvGS3jpJYtT6kcHMhC2dvxZd7NVKQYY5Oe81Rb/KDyJxI3wcVKkAYNCYOd1P09zpu7w5jExrTo848Vhc3LqIUylUUp82MOQludqRT7q2kf4eSZX309ZtjpeNUJMr3TpQ66Gf7B06+ysWZVG4UxeIp7Jbw0=
+	t=1721045158; cv=none; b=WI1+TGp0gsXFOt5qg411M9tS3hr19dIcW3bdHViXiQK+j24OFINYegMKbuovIGx0hlGT4npxabwoz3vj8KMcZviKDgMXU4Mnw3v9kzcftzAi/1RXvZNPlja8qAIvrvvtwiF4nPEdW961EWpRKSTqaUJiOhd0rbGudyrN27wXFts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721045129; c=relaxed/simple;
-	bh=s2mkn2uq9E6TGiHmQ4YLsBdAif1DnupN+Ag/ISQjFiQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ekDA9ZDQXqeD6wkm2hrZ70YCZmOZkRP21p/JlzupBCvy9UfkBeJ8n44J7gCf/+QDXemjWk44LBBBM/fq2hTpnzEqRwpu7VrJENSJe4rvS6BOGz0JR/QCvrv2+C5sWJ88ufo0xLtDT8fAq/6hRKIUTNXk8CSlSz8JP6rakVOmUq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiS5oq+7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721045158; c=relaxed/simple;
+	bh=ajfiIwgDbyeUkjhHbM8uaKnyLPFSikOKpQ9Fr/QLc9g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GKI3JstuStlmvsb/WbDvoQsjJn886Zx2YhvpJ/PySX825t6HMI16mU1FfgYTwhNwBNFlJX4Jsxu3iOTQuzJRLwekYJnTxTY9+aMhmi3kSGmA7cjHdoEeXztchybnqR2RGOSlntxBoXAQB4O8PrFHZ1xT4OF52tjxIcwvd2EOs6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Lhy4SEBL; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiS5oq+7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388D8C4AF0F;
-	Mon, 15 Jul 2024 12:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721045129;
-	bh=s2mkn2uq9E6TGiHmQ4YLsBdAif1DnupN+Ag/ISQjFiQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PiS5oq+7x5YGZdwbWAvUGaRUlGe+JF1MTPZ912Vifr2JPbGPQyDc6Wlo7Xby65OBw
-	 1gqszfDZ41RJq7DwFYn5c+evWDoj/cToIfk5ltJ+hnj1NrPPQxMqUV3st1tRQIbDKc
-	 vxmltRY/+MmRK1qnpAnufDze210RSIIrVTA760RmasX/lnd77pAVYQ5BGJnR0uJe1q
-	 EWMV58KtblwGGr6QYb3IhVD57RY0jOHpH+dQglqqpYJgnhPgUFE3TYbH1Zb+Rh0Oq9
-	 yPERXgob81zBgHph/sP60RgPiNLtwHOKoygKJFM/FhL6FcN6CmDwzel6AvlLMaK0FG
-	 UIphjQ8dCZ/Jg==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eedeca1c79so23713241fa.3;
-        Mon, 15 Jul 2024 05:05:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXl400IYJYC8LZsHfczxNdhdNMneYZ9xGgrYZQaBSQEDmsuhfAxFrijuzDFjmZtnfG7sCLRhxEA2hG+WM662cpd0XvXk74Y+o+UzrkL3NRsrdVAHThsd6DEtT83Hi5FcfL3vVnrpmhx0g==
-X-Gm-Message-State: AOJu0YxaquLBhRJgQzu6WHvkgpsYZpDd/QXD31WD83gal1Ngdl8UVDkN
-	KfmQALVlEDWrZwK0D5na3qufXcDjeq8BVQ1NkAvB5Q0ewfjXyax35Kolf08GzPDnHMWAL0KMAKa
-	ZEmOe6LYMQgiiUIyfoPhqMphT1g==
-X-Google-Smtp-Source: AGHT+IFSIgWPbdlA3APqdfpWCleBYmvVZrI5bkmI1uJ4ouonfKyDbSmMH20HREkhDlvRpAe66MlHC/k+4BSNX4xBBu0=
-X-Received: by 2002:a2e:960f:0:b0:2ee:52d5:c4a3 with SMTP id
- 38308e7fff4ca-2eeb318241amr139840861fa.39.1721045127555; Mon, 15 Jul 2024
- 05:05:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Lhy4SEBL"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46F7KiGN018841;
+	Mon, 15 Jul 2024 14:05:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	NUrMaVQn6CtWJA/+Bg8Ut5g/xwCeF9VDjIao3Eq05ss=; b=Lhy4SEBL5/E6CsI+
+	MrQvVgdMl+2xsKfsTLsby1FxY+LFEEb6piKHcdC994A/pHnyaB5QbL1S6LEwvfwQ
+	wNNDFnI9cdd1/7FEouV0X9G3WeiW2U8OS7IuE4c2k7MDBSu2qaI4a2dzum2t4xHc
+	aGGxXwlGsrwpGj12LjZ53oc5Ll5eZEVCJIm12qoz5QlfTnpv8oLJnvJf7lCs5J29
+	Kw8Nheua67/UdIUdcFCFl0OV2DTuRgPiGbNiCgqvh/csfznZM1TXOIxENtaAUBv0
+	f9PA2W+S2kyD1jyWccUIIo25Q75IuvyDfUG1F68Rk86ek1VNjgAQokg/CsESMdKx
+	zF1d5A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 40bgfdef4v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jul 2024 14:05:29 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id F349A40044;
+	Mon, 15 Jul 2024 14:05:24 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8132E223F2F;
+	Mon, 15 Jul 2024 14:04:46 +0200 (CEST)
+Received: from [10.48.86.111] (10.48.86.111) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Mon, 15 Jul
+ 2024 14:04:45 +0200
+Message-ID: <f6485370-b5cc-4774-aac0-6141fcca4c00@foss.st.com>
+Date: Mon, 15 Jul 2024 14:04:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711085930.26252-1-krzysztof.kozlowski@linaro.org>
- <CAL_Jsq+WdctoTMNoakiY5kh4nDoNx5h522s76LoHyD_yKYvvSg@mail.gmail.com>
- <73038a80-ce58-4967-a258-d6befe23c777@linaro.org> <CAMuHMdWkGD1gcwrLhd_fSdJLV2SzCVJ=yo+ekhOAfjUp=5Hh3A@mail.gmail.com>
-In-Reply-To: <CAMuHMdWkGD1gcwrLhd_fSdJLV2SzCVJ=yo+ekhOAfjUp=5Hh3A@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 15 Jul 2024 06:05:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLTeO7LyjsKAiSMZcffAj1J1=Yc+BtOzmaWZUDfukMoNw@mail.gmail.com>
-Message-ID: <CAL_JsqLTeO7LyjsKAiSMZcffAj1J1=Yc+BtOzmaWZUDfukMoNw@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: incomplete-devices: document devices
- without bindings
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>, 
-	Jonathan Cameron <jic23@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: rtc: stm32: describe pinmux nodes
+To: Rob Herring <robh@kernel.org>
+CC: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>,
+        Valentin Caron
+	<valentin.caron@foss.st.com>
+References: <20240711140843.3201530-1-valentin.caron@foss.st.com>
+ <20240711140843.3201530-2-valentin.caron@foss.st.com>
+ <20240711225646.GA3270567-robh@kernel.org>
+Content-Language: en-US
+From: Valentin CARON <valentin.caron@foss.st.com>
+In-Reply-To: <20240711225646.GA3270567-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_06,2024-07-11_01,2024-05-17_01
 
-On Mon, Jul 15, 2024 at 3:57=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Krzysztof,
->
-> Sorry for being late to the party, as v2 was sent, and applied ;-)
->
-> On Fri, Jul 12, 2024 at 11:41=E2=80=AFAM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
-> > On 11/07/2024 15:01, Rob Herring wrote:
-> > >> +      - description: Incorrect compatibles used on other PowerPC de=
-vices
-> > >> +        enum:
-> > >> +          - 1682m-rng
-> > >> +          - IBM,lhca
-> > >> +          - IBM,lhea
-> > >> +          - IBM,lhea-ethernet
-> > >
-> > >> +          - mpc5200b-fec-phy
-> > >> +          - mpc5200-serial
-> > >> +          - mpc5200-sram
-> > >
-> > > Tell Grant he needs to document these. ;) JK
-> > >
-> > >> +          - ohci-bigendian
-> > >> +          - ohci-le
-> > >> +          - ohci-littledian
-> > >
-> > > Given the typo, I think we can just drop this one from the driver.
-> >
-> > Sure, I'll send a patch. It could affect some ancient user, though...
-> > Although I really wonder if any of these PowerPC boxes are still alive.
->
-> Looks like you forgot various "chrp,*" and "pnpPNP,*" ;-)
 
-There aren't any cases of 'pnpPNP' flagged by 'make
-dt_compatible_check'. Most of the cases in the kernel are with
-of_find_compatible_node() which doesn't get parsed. Maybe it could be.
 
-The intent wasn't really to be complete. Doesn't really matter until
-we get 'make dt_compatible_check' to zero. Still 1300 bindings to
-convert.
+On 7/12/24 00:56, Rob Herring wrote:
+> On Thu, Jul 11, 2024 at 04:08:40PM +0200, Valentin Caron wrote:
+>> STM32 RTC is capable to handle 3 specific pins of the soc (out1, out2,
+>> out2_rmp) and to outputs 2 signals (LSCO, alarm-a).
+>>
+>> This feature is configured thanks to pinmux nodes and pinctrl framework.
+>> This feature is available with compatible st,stm32mp1-rtc and
+>> st,stm32mp25-rtc only.
+>>
+>> Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
+>> ---
+>>   .../devicetree/bindings/rtc/st,stm32-rtc.yaml | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+>> index 7a0fab721cf1..09221c2f8a0c 100644
+>> --- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+>> +++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+>> @@ -53,6 +53,28 @@ properties:
+>>         override default rtc_ck parent clock phandle of the new parent clock of rtc_ck
+>>       maxItems: 1
+>>   
+>> +patternProperties:
+>> +  "^rtc-[a-z]*-[0-9]+$":
+> 
+> rtc--123 is valid? "*" should be "+"
+> 
+> Otherwise,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Rob
+Yes, it should be. I will add this in the next version.
+
+Thanks,
+Valentin
