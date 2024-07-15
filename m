@@ -1,142 +1,157 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A973291E;
-	Mon, 15 Jul 2024 02:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372754C79
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721009207; cv=none; b=CXlXSdoH0PtgX0nUKVVMUaH6VynlxW14ezPCpb0Ty99qC6+hbjwNZSaELOnQiIsavbdVeQGGICzPsuab8QpY93Q2WMSfiZBPCRyeMIYhxjDsCXu6VctkPRm8UpQMRbKpCQ4h3n+tw1pBUZgmKnxcxt+Lsh36LCDQErpdssq08FI=
+	t=1721009351; cv=none; b=H4ODg1ECtJoSslzNWDfXAZ4mad+Hhd5bHdA+CTf+eBMibmFLoQKlhoIB5HE3Tjill50mIA0nijdkieCG72Xb7SK1EWxv9pnPioL02BlhFapADd27hTyjhs8hwA7W1nqYqDUBFw242O9SbRyiKF05HCGxLIBPJpB4SEMdngp7WKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721009207; c=relaxed/simple;
-	bh=x7vpIAZnmMp42pJsHPWboy7B+F2KkwRLCmm+h+qDv60=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U6Ash7Q+q4gf8ed/coBJ3oH3G9Qpy2JX/xQXD4yzqhVVnK3ziSrYN1efhaQWpdwEKw0GbDGyBCtknKacIEpq25NToYSXyEyPVcOVgUZqpyZ8Oj1UA06m3asAcGipkpsU9INf4jzlxopoKVp6OWBRzz1sC1pM5DH+eK8n7YPWCRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3ilj0h5; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721009351; c=relaxed/simple;
+	bh=PSGB1XjsYSc8NTuRyyMVhTEZaT4OidUH2jBry1Hnohg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AWHhLKf6vFmuR41IQ9/zTyVs2793WntykNPTr8rino/8/reD5CsGNX5J6YoGqO8q68tKGO+z9qWMLfc2O7q89qDoDosMOKUk8WQfnG4jyoJzw1UhZZ6PJspmIYmDKTqxiWAkuzF2XMSrIoNtHDkKYtHtOZssrCxKnDDI2lmtADY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IxcPmR6Z; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3ilj0h5"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-78aeee1068aso1306239a12.2;
-        Sun, 14 Jul 2024 19:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721009205; x=1721614005; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FT3xT6TOmSY7sFiQnSnrJGX8mNO+K8BiXdhqST/uuWs=;
-        b=e3ilj0h5bQko2kEzfobuU7b0C331rG5kF72XX/3caLpCZ/beaBDU8NRx9nnOL1ZszL
-         Z2Bv+48Kd6/1QLoy6uQ2fgcffayNgy1XgLB1fbCO7SNVevTm9KRul3W2aU1ZahrJS2xM
-         J9LgISXUXvLXTnGNC9MsFemz8ZBtVaOq6cncRjTWac/j7hUwKwDoJ4xbW5cdOT0qH7WC
-         eiA6SeEy9KavXjlx6thRPLm1pl6Myuc2iCTcHbMbP7USdg4jB8fywohYlvwQwbkSbocR
-         aoCLcU3qb8dcjc5kk18KXXvoJwpEEFeZoCPzCtStoWlecn7ggOfCaEYyXkmdqntUWwH3
-         cHMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721009205; x=1721614005;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FT3xT6TOmSY7sFiQnSnrJGX8mNO+K8BiXdhqST/uuWs=;
-        b=JBXJQHwRFo+AkjguO8TVfUq47oDdFK9HViucEbAUDtQd5pgl56o6d/qS3Ey8UuMiSi
-         +k/jmqhHzmn6Cg1mc6W80M0RTjTFdeAOWGdiUD9Io2QHJsEt8yprzQiXLoiA25qHx22E
-         3247Tz4+37C7DSuV+6WCVajyU7BZGdu1ZxDg9uUN5ke20TwyAKXpclyFFztd02Rsepka
-         SdQCh0koPmiREPIsT7bjKFkOLSmrTD5ZD8D5XSrm1gAWQjFqAg+OYV25l0XpicNsGwGz
-         hNhzXte9AtuxH79fNn4WxoRxFIrJRMUN/K5JVrMebzm/SrsqpMTn5rbMQ6o6ANA97yPd
-         jR6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVG8aKTSFzNHwCXe3wHZt0HXAgD95pvdpf79Vmy0RV0OWx3dxv9jPYxYUlQCg1SV0at48X/uK0jA9izDcqkBghXxWUPgHtZQ4DresejMetLgBA840z6kgcd0h7jCm4XBlLbv/TxA+QL
-X-Gm-Message-State: AOJu0YxZJ2IkxNTNvMTHYrXx1e1DKYXv1zEXIizGHsDfpDvJHd1/zSTR
-	LXnyLDI/0x0af4CBOMgc6YD51rQsGv5t2Bx1EBZNdPhy/MrEHpxA
-X-Google-Smtp-Source: AGHT+IG2ztbx61XE3BW9qucN0c7VQTXpTloWyv04BLVHESTxauojVdBkZLqongwr3D4sNTKcCiEx+Q==
-X-Received: by 2002:a05:6a21:3393:b0:1c2:8d22:c6a6 with SMTP id adf61e73a8af0-1c2982158c3mr18450799637.8.1721009204746;
-        Sun, 14 Jul 2024 19:06:44 -0700 (PDT)
-Received: from embed-PC.. ([122.183.46.111])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc270f0sm29267445ad.131.2024.07.14.19.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jul 2024 19:06:44 -0700 (PDT)
-From: Abhishek Tamboli <abhishektamboli9@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: skhan@linuxfoundation.org,
-	dan.carpenter@linaro.org,
-	rbmarliere@gmail.com,
-	christophe.jaillet@wanadoo.fr,
-	Chris.Wulff@biamp.com,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: u_audio: Use C99 syntax for array initializers
-Date: Mon, 15 Jul 2024 07:36:34 +0530
-Message-Id: <20240715020634.876011-1-abhishektamboli9@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IxcPmR6Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721009348;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=48LHOzY52BEKUvW29PKFsf6owCO62EQFfzDoBcBwjZg=;
+	b=IxcPmR6ZyuZF/yphl3ZIDo0+BkoEMuh5CVOqD4O9gwmPSLZSMtsZ4dhlKDswnAXjeWH5Zw
+	FW6pkXoclKXj/UQr3FV3jw0I8AS0GNyrYEK+q/HIjjW1Ou4XDHfiJFr8Q/OVUb5jBwyELQ
+	WPtLXoPzgMCZOmaZJ9lv8hVFYYztEDg=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-596-1zoR6OZ2PE6r3Tywc5mXag-1; Sun,
+ 14 Jul 2024 22:09:02 -0400
+X-MC-Unique: 1zoR6OZ2PE6r3Tywc5mXag-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E3ED19560AA;
+	Mon, 15 Jul 2024 02:08:59 +0000 (UTC)
+Received: from [10.22.64.27] (unknown [10.22.64.27])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 41E8C1956066;
+	Mon, 15 Jul 2024 02:08:55 +0000 (UTC)
+Message-ID: <061e0f4f-2dc0-45c9-b407-020120047d24@redhat.com>
+Date: Sun, 14 Jul 2024 22:08:54 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: A new spinlock for multicore (>16) platform
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ =?UTF-8?B?U2hpLVd1LCBMb++8iEdtYWls77yJ?= <shiwulo@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Mel Gorman <mgorman@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>
+References: <CAOpXEOwh6r0Fo_5hgXET6gGHTUxTdE1aDkp_K0ga8BwGSDMX+A@mail.gmail.com>
+ <ZpRjDDKGq1F4cSBr@archie.me>
+Content-Language: en-US
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <ZpRjDDKGq1F4cSBr@archie.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Convert array initializers to C99 syntax by adding the '=' after each
-designated initializer. This change resolves warnings from smatch
-about obsolete array initializers.
+On 7/14/24 19:45, Bagas Sanjaya wrote:
+> On Mon, Jul 15, 2024 at 01:07:40AM +0800, Shi-Wu, Lo（Gmail） wrote:
+>> Dear Linux Contributors,
+>> I am a Linux enthusiast from Taiwan, and I hope to contribute to the
+>> Linux kernel. We have developed a new spinlock method that has been
+>> validated on AMD 64-core and AMD 32-core processors. Compared to
+>> previous methods, this new method is optimized in the following areas:
+>>
+>> Motivation and Approaches:
+>> 1. As the number of cores increases, there is a need for more refined
+>> optimization of the data transmission paths between cores.
+>> 2. Data transmission usually involves lock-unlock wrapping.
+>> 3. Performance improvement can be achieved using a shortest path
+>> approximation algorithm.
+>>     A detailed introduction to this method can be found in the following paper:
+>> https://www.usenix.org/conference/osdi23/presentation/lo
+>>
+>> Our laboratory is currently developing a system that can apply the
+>> same optimization strategy to all multi-core processors. Below is our
+>> plan.
+>>
+>> The New Method and Its Compatibility with qspinlock:
+>> 1. The default algorithm in the Linux kernel remains qspinlock.
+>> 2. A new file is created in /proc/routing_path, where a shortest path
+>> can be input, for example:
+>> sudo echo 1,2,3,4,16,17,18,19,5,6,7,8,11,12,13,14 > /proc/routing_path
+>> 3. After inputting the shortest path, the kernel switches to using the
+>> RON algorithm.
+>>
+>> Expected Outcomes:
+>> According to our measurements on AMD 32-core and AMD 64-core
+>> processors, Google LevelDB can achieve a 3-4% speed improvement.
+>>
+>> Comparison with Previous NUMA-aware algorithms:
+>> Compared to NUMA-aware results, since such systems may contain more
+>> than two processors, the communication cost between processors is much
+>> higher than the communication cost between cores (within the same
+>> processor). Our method focuses on multiple cores within a single
+>> processor, making it multicore-aware. If a NUMA-aware algorithm is
+>> used in a multicore environment, it is not as effective as a
+>> multicore-aware algorithm. (Please refer to the paper,
+>> https://www.usenix.org/conference/osdi23/presentation/lo)
+>>
+>> Assistance Needed:
+>> I would like to understand if the Linux kernel community is interested
+>> in this new spinlock method. As a teacher, I cannot complete all the
+>> work by myself. Is anyone willing to collaborate with me on this
+>> project?
+>>
+>> Sorry to bother you:
+>> I apologize for taking up so much of your time with this letter.
+>> Although I am quite old, this is the first time I feel that my
+>> research results are good enough to contribute to the Linux community.
+>> I have read the relevant documentation, and it made me realize that my
+>> time and abilities are insufficient to write the high-quality code
+>> required by the Linux community. Therefore, I ask for your guidance.
+> I can't really say about this topic (as I'm not subject-matter expert here),
+> so Cc: relevant maintainers.
 
-drivers/usb/gadget/function/u_audio.c:1117:20:
-warning: obsolete array initializer, use C99 syntax
-drivers/usb/gadget/function/u_audio.c:1124:28:
-warning: obsolete array initializer, use C99 syntax
-drivers/usb/gadget/function/u_audio.c:1131:19:
-warning: obsolete array initializer, use C99 syntax
-drivers/usb/gadget/function/u_audio.c:1138:27:
-warning: obsolete array initializer, use C99 syntax
-drivers/usb/gadget/function/u_audio.c:1145:25:
-warning: obsolete array initializer, use C99 syntax
+After a quick look at the algorithm of the paper, I believe there are 2 
+major issues with this algorithm.
 
-Signed-off-by: Abhishek Tamboli <abhishektamboli9@gmail.com>
----
- drivers/usb/gadget/function/u_audio.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+1) Each lock requires a routing table of size num_possible_cpus() for 
+the routing table. There can be thousands of spinlocks in the kernel and 
+it may be problematic to manage this extra memory.
 
-diff --git a/drivers/usb/gadget/function/u_audio.c b/drivers/usb/gadget/function/u_audio.c
-index 89af0feb7512..47a1990743d8 100644
---- a/drivers/usb/gadget/function/u_audio.c
-+++ b/drivers/usb/gadget/function/u_audio.c
-@@ -1114,35 +1114,35 @@ static int u_audio_rate_get(struct snd_kcontrol *kcontrol,
- }
- 
- static struct snd_kcontrol_new u_audio_controls[]  = {
--  [UAC_FBACK_CTRL] {
-+[UAC_FBACK_CTRL] = {
-     .iface =        SNDRV_CTL_ELEM_IFACE_PCM,
-     .name =         "Capture Pitch 1000000",
-     .info =         u_audio_pitch_info,
-     .get =          u_audio_pitch_get,
-     .put =          u_audio_pitch_put,
-   },
--	[UAC_P_PITCH_CTRL] {
-+	[UAC_P_PITCH_CTRL] = {
- 		.iface =        SNDRV_CTL_ELEM_IFACE_PCM,
- 		.name =         "Playback Pitch 1000000",
- 		.info =         u_audio_pitch_info,
- 		.get =          u_audio_pitch_get,
- 		.put =          u_audio_pitch_put,
- 	},
--  [UAC_MUTE_CTRL] {
-+[UAC_MUTE_CTRL] = {
- 		.iface =	SNDRV_CTL_ELEM_IFACE_MIXER,
- 		.name =		"", /* will be filled later */
- 		.info =		u_audio_mute_info,
- 		.get =		u_audio_mute_get,
- 		.put =		u_audio_mute_put,
- 	},
--	[UAC_VOLUME_CTRL] {
-+	[UAC_VOLUME_CTRL] = {
- 		.iface =	SNDRV_CTL_ELEM_IFACE_MIXER,
- 		.name =		"", /* will be filled later */
- 		.info =		u_audio_volume_info,
- 		.get =		u_audio_volume_get,
- 		.put =		u_audio_volume_put,
- 	},
--	[UAC_RATE_CTRL] {
-+	[UAC_RATE_CTRL] = {
- 		.iface =	SNDRV_CTL_ELEM_IFACE_PCM,
- 		.name =		"", /* will be filled later */
- 		.access =	SNDRV_CTL_ELEM_ACCESS_READ | SNDRV_CTL_ELEM_ACCESS_VOLATILE,
--- 
-2.34.1
+2) Beside lock contention performance, the Linux kernel also has to 
+provide good uncontended spinlock performance. The unlock code currently 
+scan the routing table to find the next one to allocate the lock to 
+which may slow down the uncontended spinlock performance.
+
+I believe this new lock can certain improve performance in a highly 
+contended case, but I am not sure if it is a gain or loss in the 
+uncontended or some less contended cases. Anyway, the 3-4% performance 
+improvement in a contended lock may not be good enough for the 
+performance loss in an uncontended lock.
+
+There were attempts to introduce numa-awareness to qspinlock in the past.
+
+https://lore.kernel.org/lkml/20210514200743.3026725-1-alex.kogan@oracle.com/
+
+It was not accepted at the time because the of the increase in code 
+complexity and the unfairness aspect of the implementation.
+
+Thanks,
+Longman
 
