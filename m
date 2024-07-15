@@ -1,111 +1,135 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88DA1191F6F;
-	Mon, 15 Jul 2024 14:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C622D18EFD6;
+	Mon, 15 Jul 2024 14:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721053789; cv=none; b=M3OmI+x0yi1RIgX1bPy2nBGS6AA4Vv8RmOaaPPoYeZGcb/6uaCIaSF/UoafoeskNtS4Cv6klrMuzRPRVwgL8FxsDTteDHVE/jgA0QiLxrb5BEHoVHIqFV1uRp+XVBzdkZk5lWYavmLobPMdzxZqGEOjlWOfyFvw2wtR1JqregMM=
+	t=1721053795; cv=none; b=HTB71mVLDLyk72WiD+uxcl+SoX1VBpoiKm6FmpHs17CDTI8vnWf4o6C/vjGDIXCv91V4EDufoXBj+Ao2j5zX5590V0XX0/R+CpXPgNa//AvL7ljLzULC9f8/k1+LEpYKdSNpTEDZWadcHH3L47AlCoaj1P63Id16CAShJH/QU60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721053789; c=relaxed/simple;
-	bh=THN5rLNVvIjNeAoyxyQQ+pJ8hTn9svBd8fM+nE5JKas=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iRgzgmfpnDpVI6+wXW+IEHcorgWx6S2hAinnRICUJgwUbKZLXJikHrg4lX2CM8sQlVBqNLnBgQuARqEmY+eXb5cT8WDvB+lMR09KMwPVxC/kSY6U3dbqmzTK+zdzvoTAnFxsOVPum3q2sI8lyIbHMaN/COiEVsqcb32ncfoBd94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D683DA7;
-	Mon, 15 Jul 2024 07:30:12 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 53E143F766;
-	Mon, 15 Jul 2024 07:29:45 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	amadio@gentoo.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>,
-	James Clark <james.clark@arm.com>
-Subject: [PATCH v4 6/6] perf docs: Document cross compilation
-Date: Mon, 15 Jul 2024 15:29:21 +0100
-Message-Id: <20240715142921.51881-7-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240715142921.51881-1-leo.yan@arm.com>
-References: <20240715142921.51881-1-leo.yan@arm.com>
+	s=arc-20240116; t=1721053795; c=relaxed/simple;
+	bh=nxq0+TBcPx//9WPCN3IZTTvsyzqcjAq5NWop8L7I0wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JknbjSl1ekFBv/6ogPIRsgzDv6xNX4lTPce0MAnZYwwXAEUspGW4RSWkghXZf2sOozLXweGDu7kVAOTphiY0n+9XNkePFpvrkyaMaKwt6D5/mFEkwb8JabjgJyOfnwQzNpA5g6jxCyMyn6mhQHG/cKi38g/Ayxi9Bpct6sFSItU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BlYtjQfa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BlYtjQfa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D75F5C32782;
+	Mon, 15 Jul 2024 14:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721053795;
+	bh=nxq0+TBcPx//9WPCN3IZTTvsyzqcjAq5NWop8L7I0wk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BlYtjQfabuJ16UBKJUdA8PBluyZ66h0gMgx79ICqTbn57T0szbKi+gfw2TLQjOlCq
+	 dvM2UZhQJX5u3qBJsvpFXFQQtd/JYPo5pPy3cg/aEgIax5yJKbgMVaGoL2p/pQrllz
+	 lIraA1AXKivn4VC4mvfDTm/klLDw+VrOn/a2h+4zpzjqdF6T7zYtNHCBlN6H+EyyAj
+	 hKqeZomt8Q0zHwMsImLFeHbNGADNObDT4SzXqxiQSkX+ILAG5FStKoygg/QbmlU5xu
+	 qDoWBwBkFQWN31aByS9aGF+ONJULUNzYTXCaRi3yevPtZBGuUK2JAWPfbGd+d4GeSI
+	 LlI1XtEpUGDQw==
+Date: Mon, 15 Jul 2024 16:29:52 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Matteo Martelli <matteomartelli3@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Marcus Cooper <codekipper@gmail.com>, =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, 
+	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] ASoC: sunxi: sun4i-i2s: fix LRCLK polarity in i2s
+ mode
+Message-ID: <20240715-rigorous-bipedal-sloth-c8df1b@houat>
+References: <20240529140658.180966-2-matteomartelli3@gmail.com>
+ <20240529140658.180966-3-matteomartelli3@gmail.com>
+ <20240606-savvy-wallaby-of-champagne-d4a50e@houat>
+ <6662bf1b61bbc_2f51737023@njaxe.notmuch>
+ <20240702-copperhead-of-unusual-intensity-7f43a8@houat>
+ <668419fb8ef9f_2a76d370f1@njaxe.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="ggci2m6r2jctn4b5"
+Content-Disposition: inline
+In-Reply-To: <668419fb8ef9f_2a76d370f1@njaxe.notmuch>
 
-Records the commands for cross compilation with two methods.
 
-The first method relies on Multiarch. The second approach is to explicitly
-specify the PKG_CONFIG variables, which is widely used in build system
-(like Buildroot, Yocto, etc).
+--ggci2m6r2jctn4b5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Co-developed-by: James Clark <james.clark@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/Documentation/Build.txt | 37 ++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+On Tue, Jul 02, 2024 at 05:17:15PM GMT, Matteo Martelli wrote:
+> Maxime Ripard wrote:
+> > On Fri, Jun 07, 2024 at 10:04:43AM GMT, Matteo Martelli wrote:
+> > > Maxime Ripard wrote:
+> > > > > -	/*
+> > > > > -	 * DAI clock polarity
+> > > > > -	 *
+> > > > > -	 * The setup for LRCK contradicts the datasheet, but under a
+> > > > > -	 * scope it's clear that the LRCK polarity is reversed
+> > > > > -	 * compared to the expected polarity on the bus.
+> > > > > -	 */
+> > > >=20
+> > > > I think we should keep that comment somewhere.
+> > >=20
+> > > I think that keeping that comment would be very misleading since the =
+LRCLK
+> > > setup would not contradict the datasheet anymore [1][2].
+> > >
+> > > Also, do you recall any details about the mentioned scope test setup?=
+ Was i2s
+> > > mode tested in that occasion? It would help clarify the situation.
+> >=20
+> > I can't remember if I tested i2s, I think I did though. But most of the
+> > work was done on either TDM or DSP modes, and I remember very clearly
+> > that the LRCK polarity was inverted compared to what Allwinner document=
+s.
+> >=20
+> > So the doc was, at best, misleading for these formats and we should keep
+> > the comments.
+>=20
+> Thanks for the reply Maxime, would you be able to point out the Allwinner
+> document part that is (or was) misleading? The current datasheets (see li=
+nks
+> [1][2]) look correct, the current driver setup for TDM and DSP modes resp=
+ects
+> those datasheets and it's not "reversed compared to the expected polarity=
+ on
+> the bus" as the comment states.=20
 
-diff --git a/tools/perf/Documentation/Build.txt b/tools/perf/Documentation/Build.txt
-index 3766886c4bca..2237ceee74ba 100644
---- a/tools/perf/Documentation/Build.txt
-+++ b/tools/perf/Documentation/Build.txt
-@@ -71,3 +71,40 @@ supported by GCC. UBSan detects undefined behaviors of programs at runtime.
-   $ UBSAN_OPTIONS=print_stacktrace=1 ./perf record -a
- 
- If UBSan detects any problem at runtime, it outputs a “runtime error:” message.
-+
-+4) Cross compilation
-+====================
-+The perf tool can be cross compiled in below methods.
-+
-+As Multiarch is commonly supported in Linux distributions, we can install
-+libraries for multiple architectures on the same system and then cross-compile
-+Linux perf. For example, Aarch64 libraries and toolchains can be installed on
-+an x86_64 machine, allowing us to compile perf for an Aarch64 target.
-+
-+Below is the command for building perf with dynamic linking:
-+As Multiarch is commonly supported in Linux distros, therefore, we can
-+install multiple architectures libs in the same system and then cross compile
-+the Linux perf. For example, the Aarch64 libraries and toolchain can be
-+installed on the x86_64 machine, based on it we can compile the perf for
-+Aarch64 target.
-+
-+Below is the command for building the perf with dynamic linking.
-+
-+  $ cd /path/to/Linux
-+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
-+
-+For static linking, the option `LDFLAGS="-static"` is required.
-+
-+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
-+    LDFLAGS="-static" -C tools/perf
-+
-+In the embedded system world, a use case is to explicitly specify the package
-+configuration paths for cross building:
-+
-+  $ PKG_CONFIG_SYSROOT_DIR="/path/to/cross/build/sysroot" \
-+    PKG_CONFIG_LIBDIR="/usr/lib/:/usr/local/lib" \
-+    make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
-+
-+In this case, the variable PKG_CONFIG_SYSROOT_DIR can be used alongside the
-+variable PKG_CONFIG_LIBDIR or PKG_CONFIG_PATH to prepend the sysroot path to
-+the library paths for cross compilation.
--- 
-2.34.1
+I clearly remember having to debug something there, but I don't remember
+much more, sorry.
 
+I guess if you have tested on the H3 I2S, TDM and DSP and it all works
+as expected with your changes, go ahead and ignore my comment then.
+
+> Also I didn't find any related errata in their changelog.=20
+
+Yeah... Allwinner doesn't do errata.
+
+> Could it be possible that during those mentioned tests you
+> were still referring to the datasheets of other SoCs like A10 for
+> instance? Or maybe that the misleading information was in another
+> document rather than the main datasheets? If that's the case, would
+> you still think that the comment should be kept as it is?
+
+Possibly, or an older version of the datasheet, I really can't remember.
+
+Maxime
+
+--ggci2m6r2jctn4b5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZpUyVwAKCRAnX84Zoj2+
+dpRhAX9rVoOPV7K1v5rwd1iUrmkhEORAmr0cfgUZNxyR8/cSEim1hcX57CmTWGSm
+e0tAKXABfjp2ifpTGlhcNzUrMX3C4k1OAzdhLXmS0m3xq1NAhBIUXvnDrtB5j+78
+1ezliQOBSg==
+=t7qy
+-----END PGP SIGNATURE-----
+
+--ggci2m6r2jctn4b5--
