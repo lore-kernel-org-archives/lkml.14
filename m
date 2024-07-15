@@ -1,91 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5EA1F94C;
-	Mon, 15 Jul 2024 05:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D52D2EE;
+	Mon, 15 Jul 2024 05:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721022311; cv=none; b=Ev9m11kRnfjT/Dmk8gsCAhf3XMUAmH3lg0AiyjzX7TGn9I59TrY4+GtmvtiMwfkxpPuBVxK3Fmo4IDbLM6v3uLahbODtKKe4jI9J/rIs4uJSSQi6MOBNEnEWxcs3uZFYgqmNd9SnIORZz3ouWWpLa3UanpQxDsuXlbeyKBT+TsI=
+	t=1721022419; cv=none; b=KmyXOAnLhBHCp5wGL7KTl4SZz2uBLB1NexCv+LTri5l/4hfg8GmsznUVWT0lmZTqMybtwWFCnbONzD4yvgGADEKKZbYAzwgQoCIFfwmvzIn7A7x7YlgAnx7hrLOyFGgXeuuL7QEtV9OV0L07pOGmx9GuzmVUgspHDC3+ONzXoXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721022311; c=relaxed/simple;
-	bh=NBoxsThlV5YMJKSVODJO9PEIu4bUXR+/jBPgTxeHo2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BvdnGFNB/ofmjgik4foCYk9erjrUgQLYuPbV2lqfQHRCtKdiktp1W/iGwKSgRG7eWqhhBNHUDh3waGJhj0hYDbHCBRia9dJVF8ArRaWQER21own9SaqKZy0GMynXmzElzVyItkKR1I3DKGBZnrV0AsfIQyBJS+UfESFZ/d8ycyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=S09H0GWD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721022419; c=relaxed/simple;
+	bh=v2vMWYHn7MG7zOqKves+1/98n0hJ9KsdGPe/87XOnKg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Ujtksl0KHPR/b8QkdbqQSj4J337oGMZDdxFqFoSDFTXH+C8Jq6hNffsRhLqr2Y+DIU+Z7uEZRf6HTS8qqWnJpojTi5CMtvlKapHThkqko4QWwPLkKaZyzyzjE/6HTiUupEC0aoV+tn44vEOhCj+r5mznJFGZjitu/Q8MfJQyBIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i48NpiMO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="S09H0GWD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BFDC4AF0A;
-	Mon, 15 Jul 2024 05:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721022310;
-	bh=NBoxsThlV5YMJKSVODJO9PEIu4bUXR+/jBPgTxeHo2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S09H0GWDhJjfmBpx+yEvnmibPChqCIv3Wy2DZWKcR+LC3m1lbTB3GQ1WMgy/Q0swj
-	 cN34ZtXoFEs4oCT//jhjw68LjZmfG4ixHXVc5t4iqCAHbgEh0r0wzV9IKU4banQnwS
-	 qyleiUgWxoS4jKQteTJ9yPhkyOK2i1e9+oKyZO5c=
-Date: Mon, 15 Jul 2024 07:45:07 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>,
-	elatllat@gmail.com, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, mathias.nyman@linux.intel.com,
-	niklas.neronin@linux.intel.com, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH 6.1 000/102] 6.1.98-rc1 review
-Message-ID: <2024071540-commute-curler-26d3@gregkh>
-References: <CA+3zgmsCgQs_LVV6fOwu3v2t_Vd=C3Wrv9QrbNpsmMq4RD=ZoQ@mail.gmail.com>
- <20240714173043.668756e4@foxbook>
- <ZpP3RU-MKb4pMmZH@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i48NpiMO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A120C4AF0A;
+	Mon, 15 Jul 2024 05:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721022418;
+	bh=v2vMWYHn7MG7zOqKves+1/98n0hJ9KsdGPe/87XOnKg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=i48NpiMOjZ559FSxGxl2x6GcUiuHGIcQSbvRu+ZQLYrFHcH0qAnTmu3AMP3K83V+n
+	 257PEY2PUqkkFzCgc9qIcsvF7KpmmE2FpIoOvqpr6FUKFthe6E2rFXDssDBTuN4pJD
+	 G0xf0eZyT3c08c3p+eGMMrZ5aN5ocZYWjO3Iqsb8OXBwuBCNj7eCS449LwhxO/H5ra
+	 zcFqdxR8pSizeWez4F3LXs82jrRIcsriyCxLdPek9juRLnh69SOYV8aTuCRRFIZRoI
+	 HZ6Xw8fUlJlizkw9znO8NDJh9RBaIraIO3bx3DNr8uLbtZIVNQM5H2PdzyNbPhbmX5
+	 8QSrX2DaHM9fg==
+Date: Mon, 15 Jul 2024 14:46:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+ x86@kernel.org, bpf@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>, Deepak Gupta <debug@rivosinc.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH 2/2] selftests/bpf: Change uretprobe syscall number in
+ uprobe_syscall test
+Message-Id: <20240715144651.98ef93f04a96a7aa9109d55e@kernel.org>
+In-Reply-To: <CAEf4BzY3Xo-g02r9TY9tHq49JLrrYoUNoXN=WXhJ02q4xUbGbA@mail.gmail.com>
+References: <20240712135228.1619332-1-jolsa@kernel.org>
+	<20240712135228.1619332-3-jolsa@kernel.org>
+	<CAEf4BzY3Xo-g02r9TY9tHq49JLrrYoUNoXN=WXhJ02q4xUbGbA@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZpP3RU-MKb4pMmZH@eldamar.lan>
 
-On Sun, Jul 14, 2024 at 06:05:25PM +0200, Salvatore Bonaccorso wrote:
-> Hi,
-> 
-> On Sun, Jul 14, 2024 at 05:32:39PM +0200, Michał Pecio wrote:
-> > This looks like bug 219039, please see if my suggested solution works.
-> > 
-> > The upstream commit is correct, because the call to inc_deq() has been
-> > moved outside handle_tx_event() so there is no longer this critical
-> > difference between doing 'goto cleanup' and 'return 0'. The intended
-> > change of this commit also makes sense to me.
-> > 
-> > This refactor is already present in v6.9 so I don't think the commit
-> > will have any effect besides fixing the isochronous bug which it is
-> > meant to fix.
-> > 
-> > But it is not present in v6.6 and v6.1, so they break/crash/hang/etc.
-> > Symptoms may vary, but I believe the root cause is the same because the
-> > code is visibly wrong.
-> > 
-> > 
-> > I would like to use this opportunity to point out that the xhci driver
-> > is currenty undergoing (much needed IMO) cleanups and refactors and
-> > this is not the first time when a naive, verbatim backport is attempted
-> > of a patch which works fine on upstream, but causes problems on earlier
-> > kernels. These things need special scrutiny, beyond just "CC:stable".
-> 
-> For tracking I guess this should go as well to the regressions list?
-> 
-> #regzbot introduced: 948554f1bb16e15b90006c109c3a558c66d4c4ac
-> #regzbot title: freezes on plugging USB connector due to 948554f1bb16 ("usb: xhci: prevent potential failure in handle_tx_event() for Transfer events without TRB")
-> #regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=219039
-> 
-> Thorsten I hope I got the most bits correctly, how would one inform
-> regzbot about the regresssion for 6.1.98 and 6.6.39 but not happening
-> in the upper versions?
+On Fri, 12 Jul 2024 11:27:30 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-I'll handle this and go release new kernels with just this reverted in
-it.  Let my morning coffee kick in first...
+> On Fri, Jul 12, 2024 at 6:53 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Fixing the syscall number value.
+> >
+> > Fixes: 9e7f74e64ae5 ("selftests/bpf: Add uretprobe syscall call from user space test")
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> 
+> is this selftest in probes/for-next already? If yes, I'd combine these
+> two patches to avoid any bisection problems
+> 
+> but either way
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-thanks,
+Thanks, let me pick it to for-next branch.
 
-greg k-h
+Thank you,
+
+> 
+> 
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > index c8517c8f5313..bd8c75b620c2 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > @@ -216,7 +216,7 @@ static void test_uretprobe_regs_change(void)
+> >  }
+> >
+> >  #ifndef __NR_uretprobe
+> > -#define __NR_uretprobe 463
+> > +#define __NR_uretprobe 467
+> >  #endif
+> >
+> >  __naked unsigned long uretprobe_syscall_call_1(void)
+> > --
+> > 2.45.2
+> >
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
