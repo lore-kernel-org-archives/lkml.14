@@ -1,81 +1,156 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA7033FD
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252194C8F;
+	Mon, 15 Jul 2024 02:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721009448; cv=none; b=bVBVypL5TG/19FwN7IOMJSEb2hj7Rl/W/IUx5uv6bB0/qOex+ek2rY1UkLQF4eLW0U6vXkoV/meqxhp8yG5Ajo+epcYALt2kt+soUmxgV4mbsRlQu+f1uksbOrXJwq2i586LUl+nW4pl6HRTuKB+WdF3CyOnjgR3/3P1VsNGkgs=
+	t=1721009551; cv=none; b=WIBTgr7++Y3Gt3vWbbQYW7e4O3ExW5LsgLClB9LMQaHzup3EgJ+0bjPLwN7lbkQyAa56rFpSeuwOT9eGoykqYxOtmkxLoBw0CghznbzTiSQcSOUZ6+wMprrr5hd73nCSNTn7h71Dh0qjfvX4KbcVMkzU43nIp4s+Qr6/n59eUog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721009448; c=relaxed/simple;
-	bh=G4mzLKgzP0chr+4VbEtyCBLf/eVfEdJRPTczMQAfuf4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ar3loJDCBB7/chtTgx/pY9W9vQIxWK779eQvTzGp6fnRHi9YEEFRvmBNF27uz8zViXQI1Kg+qZ6PH2D27q53kTcpRBqrFza2frAeBg4FCDnn0bCTd7OjU0XZT8i3rk6B/HB+NW1xs350zvH4P0mGBnovcULYEsTnCAwg40BU664=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=G+VxxD3X; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="G+VxxD3X"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1721009438; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=mOeyWGSqltDKYSREtaKmHh7sxtGzpkXxUNzRN8qtkQ4=;
-	b=G+VxxD3XX7qycmlEvJKrjtp5mI+elbUELHIsLMgpLo2J6MYxHEmCZ01y7chWaNiQFYaBgU5NyFk3/fSiYfH+6d54/606Kfj5il4aVXXhqBr3by6QK4vY5FuQWdDYMfEbNG+SuYXW2WX1eWXS/OF6sKo2GplsfKwx+Gr6cWnhCj8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0WAUs-h8_1721009428;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WAUs-h8_1721009428)
-          by smtp.aliyun-inc.com;
-          Mon, 15 Jul 2024 10:10:37 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: tj@kernel.org
-Cc: void@manifault.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
+	s=arc-20240116; t=1721009551; c=relaxed/simple;
+	bh=Tt99vW0yPGRlG70EaM0HA3UHhbwRYeYBF2lX+BqlYa8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=NddMPawxmUvt5NARUbpVd5Dfmc9/+LRththwRK03GvG19B1HwlI+g686BX3auegwKOjMOucsaE0k9ktriVVBIflTSWqE3art7IYpvlMIeOnvS9UuvjFVBhqDWVXe+NqlZ5ftRWDi8YBaxDONjIlZz+s5nbdXVCm0DlwssTJEP2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C5A32003A9;
+	Mon, 15 Jul 2024 04:12:21 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 10C87200121;
+	Mon, 15 Jul 2024 04:12:21 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 15BD4180222B;
+	Mon, 15 Jul 2024 10:12:19 +0800 (+08)
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: tj@kernel.org,
+	dlemoal@kernel.org,
+	cassel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-ide@vger.kernel.org,
+	stable@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] sched_ext: Fixes incorrect type in bpf_scx_init()
-Date: Mon, 15 Jul 2024 10:10:26 +0800
-Message-Id: <20240715021027.77700-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	kernel@pengutronix.de,
+	Richard Zhu <hongxing.zhu@nxp.com>
+Subject: [PATCH v2 1/4] dt-bindings: ata: Add i.MX8QM AHCI compatible string
+Date: Mon, 15 Jul 2024 09:53:53 +0800
+Message-Id: <1721008436-24288-2-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1721008436-24288-1-git-send-email-hongxing.zhu@nxp.com>
+References: <1721008436-24288-1-git-send-email-hongxing.zhu@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The type_id is defined as u32type, if(type_id<0) is invalid, hence
-modified its type to s32.
+Add i.MX8QM AHCI "fsl,imx8qm-ahci" compatible strings.
 
-./kernel/sched/ext.c:4958:5-12: WARNING: Unsigned expression compared with zero: type_id < 0.
+i.MX8QM AHCI SATA doesn't require AHB clock rate to set the vendor
+specified TIMER1MS register. ahb clock is not required by i.MX8QM AHCI.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9523
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Update the description of clocks in the dt-binding accordingly.
+
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- kernel/sched/ext.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/ata/imx-sata.yaml     | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index f4a7abcec793..7ddeaa43b63d 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -4952,7 +4952,7 @@ static void bpf_scx_unreg(void *kdata, struct bpf_link *link)
+diff --git a/Documentation/devicetree/bindings/ata/imx-sata.yaml b/Documentation/devicetree/bindings/ata/imx-sata.yaml
+index 68ffb97ddc9b2..f4eb3550a0960 100644
+--- a/Documentation/devicetree/bindings/ata/imx-sata.yaml
++++ b/Documentation/devicetree/bindings/ata/imx-sata.yaml
+@@ -19,6 +19,7 @@ properties:
+       - fsl,imx53-ahci
+       - fsl,imx6q-ahci
+       - fsl,imx6qp-ahci
++      - fsl,imx8qm-ahci
  
- static int bpf_scx_init(struct btf *btf)
- {
--	u32 type_id;
-+	s32 type_id;
+   reg:
+     maxItems: 1
+@@ -27,12 +28,14 @@ properties:
+     maxItems: 1
  
- 	type_id = btf_find_by_name_kind(btf, "task_struct", BTF_KIND_STRUCT);
- 	if (type_id < 0)
+   clocks:
++    minItems: 2
+     items:
+       - description: sata clock
+       - description: sata reference clock
+       - description: ahb clock
+ 
+   clock-names:
++    minItems: 2
+     items:
+       - const: sata
+       - const: sata_ref
+@@ -58,6 +61,25 @@ properties:
+     $ref: /schemas/types.yaml#/definitions/flag
+     description: if present, disable spread-spectrum clocking on the SATA link.
+ 
++  phys:
++    items:
++      - description: phandle to SATA PHY.
++          Since "REXT" pin is only present for first lane of i.MX8QM PHY, it's
++          calibration result will be stored, passed through second lane, and
++          shared with all three lanes PHY. The first two lanes PHY are used as
++          calibration PHYs, although only the third lane PHY is used by SATA.
++      - description: phandle to the first lane PHY of i.MX8QM.
++      - description: phandle to the second lane PHY of i.MX8QM.
++
++  phy-names:
++    items:
++      - const: sata-phy
++      - const: cali-phy0
++      - const: cali-phy1
++
++  power-domains:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
+@@ -65,6 +87,31 @@ required:
+   - clocks
+   - clock-names
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - fsl,imx53-ahci
++              - fsl,imx6q-ahci
++              - fsl,imx6qp-ahci
++    then:
++      properties:
++        clock-names:
++          minItems: 3
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - fsl,imx8qm-ahci
++    then:
++      properties:
++        clock-names:
++          minItems: 2
++
+ additionalProperties: false
+ 
+ examples:
 -- 
-2.20.1.7.g153144c
+2.37.1
 
