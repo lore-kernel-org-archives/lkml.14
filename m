@@ -1,308 +1,152 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E470B185E64
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C116AC0
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721035340; cv=none; b=LpWH/OaiH/YsBNxlO1PZu0XSuA0f4AaYOfHz5cseyWjEFHJ3KqWazsJiAhHsB2HQLM9TZq/vupxQ+6EcDFmooQAP/hXzsrb/wJKZz+5iY10IZZk9vxEaPr9nU1qUL7NB4e2dU8Ka2he6Q2pFmd91dooBMV6dDeLCdQs6bemYWyA=
+	t=1721035384; cv=none; b=Fu3CWV4JS9+Ibf07DMdDjdnqI7NcVhWa2DcqznPG9l//h3DahfVgX2/uHaFkIiurjiO2qMg5ck0SG5MVH6DJDlpnWeAAYugsRP15PUMGA37W/Q6I8HZ5vBUCwi1ucZPvN/OYJUsLF3PEe6manAZTAiV35ovDmvhvOZL6xuo748o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721035340; c=relaxed/simple;
-	bh=m4NxpBSLO7VFARhGPTaOQeG3iuAHyifPPyhJs9gGJ6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BkTXdYp+vgAWzztHDNg+07/MAoHZ6+ws70L9nJPY1W8b70vGeMCEuxPXNB7Z+DqHtvZbQ6PYnxebvX9MpXFSxVeqK5PO9S+6gcPJkBQGzkDaKWYSF1VsokoCV53kFb0tclzgjWAYkd3OtEvo/bUJHnKTWaJ+IafFcrnx5MdITes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AQ3wxYEI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kt+DOhZW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yHNQSgDq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=E/s76shL; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AQ3wxYEI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kt+DOhZW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yHNQSgDq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="E/s76shL"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CD8E21F80F;
-	Mon, 15 Jul 2024 09:22:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721035336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yfcU/qW6FYgT/ihp3L9ZZPatKjTgjzdIJKfoKGNBM5s=;
-	b=AQ3wxYEI2FxgzDM38LEpiVS5VulMk2rybUAYvLnUFxEG4gjF372IOQygFxvrg6m7rlJgkW
-	Wt94p60LC+QnOcVEy59R7x/pEs9b6OKFZ0mMQchpMlZlIACh2wVgaxW/zmq+PsQT5qmqLS
-	00gKepm54nenJg+PvdrHM/QY+K2Gf/0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721035336;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yfcU/qW6FYgT/ihp3L9ZZPatKjTgjzdIJKfoKGNBM5s=;
-	b=kt+DOhZW0mzeJ0sa/21h1C1OgShnlI0LjKMEJNjZKQ05GBDqRvMn5WZy670jtj+7EP2qpP
-	sx69yJ/6US63dwAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yHNQSgDq;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="E/s76shL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721035335; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yfcU/qW6FYgT/ihp3L9ZZPatKjTgjzdIJKfoKGNBM5s=;
-	b=yHNQSgDqOMDcKCMMtTT2Xin4jOmeP42/XgdkofDXYjzNq+nS7VNLeHeLYzn3+hrs9/HPcp
-	7LonPCKq8rTWcH3ojdss9L51AVE7lqGV8qxl69gXmEmmhSyV79Xn5CcR+iIr34WxOys1aY
-	yxURMAp2pwWD+62t7kTwst2VZ98bF3g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721035335;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yfcU/qW6FYgT/ihp3L9ZZPatKjTgjzdIJKfoKGNBM5s=;
-	b=E/s76shLih1Wi5SxN0/ZsVtQExYM0TUrc+wyeIkLtIRMEQb7tx7Wm2DibmFXF13COHZLQj
-	67QSVEzynuehs1Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A8EEE134AB;
-	Mon, 15 Jul 2024 09:22:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gbACKEfqlGb1DQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 15 Jul 2024 09:22:15 +0000
-Message-ID: <a01f6a7e-c56e-4a78-8605-ab5b253d9c9e@suse.de>
-Date: Mon, 15 Jul 2024 11:22:15 +0200
+	s=arc-20240116; t=1721035384; c=relaxed/simple;
+	bh=TD0TIy4QY9exIdCwE+bxKz3effnGVaZz+yTQpflIScU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Q8XieErndsJTYo07LMzEtft2vhwXq2fgSmoW1eR9czyrxbzM4SLca491uJHRduojt6agbGDctspxpff7hfqaFaglf2lh5xcCpl7RGrbJr44/XI+xnz5983IJTuetBLDtvWQSetN8GwKgZEN8Tb3RMd6zqiAJrtFe21vwisSvG9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-81257dec573so120040339f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:23:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721035382; x=1721640182;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0zvI+ZqpnbL8L2ENSBv/O2b+JVKlsLr1hT/P9T8Bw0U=;
+        b=QXBvsKxZN+TvjaYncHflQJo2HAc+LFI4Z21B24qBG0cC8uPCB2gw4wcK3EMCjXRDPD
+         MlydQ7Hcv3CdwL+1qJbaDFKihn+3gVmMzDa6VldrmkWr4MJp/1tItOGyBmYdWjA3jh/A
+         KQ6cH1gtNC+cIsi7QcawhT1sHB8ZRCL1yH4BcFSP32ttq58ITHrzcD2NAu8zrMAM9phm
+         a+ZkcF9UxQnEn/lMV4u/Ch30W6O81LiV087efA1AZ7I6o5Kk5hTGvcmNKh5Rtj7fHDPB
+         mrRx4B03+bZAGuUgvFXGnKme0wSerAkGKPARyfTf81Uma/cp+3VS3kD8cw7W1mE102DA
+         LQjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRxzucys2WNfj4Sypf6YqgNwKJqau2PokA6BG/ySiz/T36B4Gq0YrbXsznAjjlKpf9fn5Uly44V12hcIlK3CXzv7k3nWPWx46n/K//
+X-Gm-Message-State: AOJu0YyKcDPOhmi8t0NV74ZdF/NEhpMA11aKTpHAQCFLWUf/L5OwCdBo
+	dnzho70RNjpgnuWsWjYorKzrkD9rFgjz6cdCBqt4VWinbV1ZetGT984+7dI1birU1wOhAoJIxT6
+	+NZ/WuJcA8dXr5UV5GT3vYCygw6BlSKWl1fj6YbCVt6A/fJrbZNKbxI8=
+X-Google-Smtp-Source: AGHT+IE7AR+RvofXMZckCZNXkolJmNl3Zp1YzfzbpZBM65MG3nCxAiCjR/8X+y56c99R12XYQQ+yBox98oTVl60gceW39sz+rzpZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression: firmware/sysfb.c device path
-To: Tj <tj.iam.tj@proton.me>
-Cc: Marek Olsak <Marek.Olsak@amd.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "1075713@bugs.debian.org" <1075713@bugs.debian.org>
-References: <lLyvPFC_APGHNfyGNHRpQy5izBikkaTPOpHooZIT3fFAoJPquSI31ZMueA99XTdr8ysir3X7O7IMdc6za-0m79vr_claeparHhoRouVgHOI=@proton.me>
- <1eb659d8-536e-401b-a427-19709a98953a@suse.de>
- <-sJINpD9sbYc288gXp2-Tf5w6diSusXAP8mM8l0mnLWfIXgjuNe1LBgkqQ2indMJOehVrPUPO3UMQ-AvObgCWUW9h_TepvcNy9gnqfvoyvM=@proton.me>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <-sJINpD9sbYc288gXp2-Tf5w6diSusXAP8mM8l0mnLWfIXgjuNe1LBgkqQ2indMJOehVrPUPO3UMQ-AvObgCWUW9h_TepvcNy9gnqfvoyvM=@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.50
-X-Spam-Level: 
-X-Rspamd-Queue-Id: CD8E21F80F
+X-Received: by 2002:a05:6638:8621:b0:4c0:9a3e:c260 with SMTP id
+ 8926c6da1cb9f-4c0b24a8ac7mr1416371173.0.1721035382301; Mon, 15 Jul 2024
+ 02:23:02 -0700 (PDT)
+Date: Mon, 15 Jul 2024 02:23:02 -0700
+In-Reply-To: <6da7776f-51a3-4d3c-83e9-e3b710eef541@paragon-software.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009bb16d061d45c693@google.com>
+Subject: Re: [syzbot] [ntfs3?] general protection fault in run_is_mapped_full
+From: syzbot <syzbot+9af29acd8f27fbce94bc@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
+Hello,
 
-Am 15.07.24 um 11:03 schrieb Tj:
-> On Monday, 15 July 2024 at 07:44, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->
->>> See hw/xfree86/fbdevhw/fbdevhw.c::fbdev_open()
->>>
->>> https://gitlab.freedesktop.org/xorg/xserver/-/blob/master/hw/xfree86/fbdevhw/fbdevhw.c?ref_type=heads#L381
->>
->> Amazing debugging skills!
->>
->> The patch that causes the regression in X sets the PCI device as parent
->> for the VESA framebuffer. That means that the PCI device won't be
->> unplugged or suspended while the VESA framebuffer is still in use.
->> Without, results are undefined.
->>
->> Therefore, could this be fixed in X' fbdev driver?
-> I was in two minds about this one. On the 'perfection' side I agree Xorg should not rely on a symbolic link at all - though that is easy to say; I wasn't the one that had to find a way to do what fbdevhw has to do at the time!
->
-> But the other me argues that kernel ought not to break userspace and as it is a pretty common scenario across distros that userspace stays relatively stable (sans security bugs) but kernels can and do move on quite rapidly and frequently the kernel ought to play nice here :)
->
-> With this in mind I can foresee many systems that work perfectly fine will break when only the kernel is upgraded and thus it'll have the finger of blame pointed at it.
->
-> Since this is more likely to strike in automated test harness scenarios (due to it being relatively obscure) as well there may well be circumstances where changing a userspace library immediately is extremely problematical.
->
-> I wonder if there's some half-way deprecation measure here that would allow a period of transition?
->
-> I can imagine one way would be a custom udev rule (for systemd-udevd hosts - not sure about non-udevd) that replaces the new symlink with the old - but if a distro does that it's almost as easy to patch and rebuild fbdevhw - and far more brittle.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in run_is_mapped_full
 
-I agree with the assessment. Luckily not too many systems use fbdevhw 
-these days and updating X isn't much more effort than updating the kernel.
-
-And OTOH the kernel patch fixes a real problem. If the PCI device 
-suspends or does a hotunplug, the state of the VESA/EFI framebuffers 
-becomes undefined (with undefined results). So reverting it is not a 
-good option either.
-
->
->> A fix could look like this:
->>
->> 1) readlink /sys/class/graphics/fb0/device/subsystem
->>   2) strcmp to "bus/pci"
-> This works and doesn't cause a regression in v6.8.12:
-
-These device/subsystem paths have been stable since forever. That should 
-most likely not change.
-
->
-> ~ # uname -r; grep fbdev /var/log/Xorg.0.log
-> 6.9.7-amd64
-> [    31.376] (==) Matched fbdev as autoconfigured driver 2
-> [    31.377] (II) LoadModule: "fbdev"
-> [    31.377] (II) Loading /usr/lib/xorg/modules/drivers/fbdev_drv.so
-> [    31.377] (II) Module fbdev: vendor="X.Org Foundation"
-> [    31.377] (II) FBDEV: driver for framebuffer: fbdev
-> [    31.410] fbdev trace: FBDevPciProbe()
-> [    31.410] (II) Loading sub module "fbdevhw"
-> [    31.410] (II) LoadModule: "fbdevhw"
-> [    31.410] (II) Loading /usr/lib/xorg/modules/libfbdevhw.so
-> [    31.410] (II) Module fbdevhw: vendor="X.Org Foundation"
-> [    31.410] fbdev trace: FBDevPciProbe() return
-> [    31.410] (WW) Falling back to old probe method for fbdev
-> [    31.410] fbdev trace: FBDevProbe()
-> [    31.410] (II) Loading sub module "fbdevhw"
-> [    31.410] (II) LoadModule: "fbdevhw"
-> [    31.410] (II) Loading /usr/lib/xorg/modules/libfbdevhw.so
-> [    31.410] (II) Module fbdevhw: vendor="X.Org Foundation"
-> [    31.410] fbdev: FBDevProbe() for() numDevSection=0
-> [    31.410] fbdev: FBDevProbe() isPci0 isISA=0
-> [    31.410] fbdev: FBDevProbe() calling fbdevHWProbe(NULL, '(null)', NULL)
-> [    31.410] (II) fbdev_open(scrnIndex=-1, dev=(null), namep=(nil))
-> [    31.410] (II) fbdev_open() using dev from env FRAMEBUFFER=(null)
-> [    31.410] (II) fbdev_open() using default dev=/dev/fb0
-> [    31.410] (II) fbdev_open() sysfs_path=/sys/class/graphics/fb0/device/subsystem
-> [    31.410] (II) fbdev_open() buf=../../../../bus/platform
-> [    31.410] (II) fbdev_open() returning file descriptor 11
-> [    31.410] fbdev trace: FBDevProbe() fbdevHWProbe()
-> [    31.410] fbdev trace: FBDevProbe() else xf86ClaimFbSlot()
-> [    31.410] fbdev trace: FBDevProbe() return
-> [    31.410] (II) UnloadModule: "fbdev"
-> [    31.410] (II) UnloadSubModule: "fbdevhw"
-> [    31.410] fbdev: PreInit 0
-> [    31.410] (II) FBDEV(0): fbdev_open(scrnIndex=0, dev=(null), namep=(nil))
-> [    31.410] (II) FBDEV(0): fbdev_open() using dev from env FRAMEBUFFER=(null)
-> [    31.410] (II) FBDEV(0): fbdev_open() using default dev=/dev/fb0
-> [    31.410] (II) FBDEV(0): fbdev_open() sysfs_path=/sys/class/graphics/fb0/device/subsystem
-> [    31.410] (II) FBDEV(0): fbdev_open() buf=../../../../bus/platform
-> [    31.410] (II) FBDEV(0): fbdev_open() returning file descriptor 12
->
-> ~ # uname -r; grep fbdev /var/log/Xorg.0.log
-> 6.8.12-amd64
-> [    14.225] (==) Matched fbdev as autoconfigured driver 2
-> [    14.225] (II) LoadModule: "fbdev"
-> [    14.225] (II) Loading /usr/lib/xorg/modules/drivers/fbdev_drv.so
-> [    14.225] (II) Module fbdev: vendor="X.Org Foundation"
-> [    14.225] (II) FBDEV: driver for framebuffer: fbdev
-> [    14.252] fbdev trace: FBDevPciProbe()
-> [    14.252] (II) Loading sub module "fbdevhw"
-> [    14.252] (II) LoadModule: "fbdevhw"
-> [    14.252] (II) Loading /usr/lib/xorg/modules/libfbdevhw.so
-> [    14.252] (II) Module fbdevhw: vendor="X.Org Foundation"
-> [    14.253] fbdev trace: FBDevPciProbe() return
-> [    14.253] (WW) Falling back to old probe method for fbdev
-> [    14.253] fbdev trace: FBDevProbe()
-> [    14.253] (II) Loading sub module "fbdevhw"
-> [    14.253] (II) LoadModule: "fbdevhw"
-> [    14.253] (II) Loading /usr/lib/xorg/modules/libfbdevhw.so
-> [    14.253] (II) Module fbdevhw: vendor="X.Org Foundation"
-> [    14.253] fbdev: FBDevProbe() for() numDevSection=0
-> [    14.253] fbdev: FBDevProbe() isPci0 isISA=0
-> [    14.253] fbdev: FBDevProbe() calling fbdevHWProbe(NULL, '(null)', NULL)
-> [    14.253] (II) fbdev_open(scrnIndex=-1, dev=(null), namep=(nil))
-> [    14.253] (II) fbdev_open() using dev from env FRAMEBUFFER=(null)
-> [    14.253] (II) fbdev_open() using default dev=/dev/fb0
-> [    14.253] (II) fbdev_open() sysfs_path=/sys/class/graphics/fb0/device/subsystem
-> [    14.253] (II) fbdev_open() buf=../../../bus/platform
-> [    14.253] (II) fbdev_open() returning file descriptor 11
-> [    14.253] fbdev trace: FBDevProbe() fbdevHWProbe()
-> [    14.253] fbdev trace: FBDevProbe() else xf86ClaimFbSlot()
-> [    14.253] fbdev trace: FBDevProbe() return
-> [    14.253] (II) UnloadModule: "fbdev"
-> [    14.253] (II) UnloadSubModule: "fbdevhw"
-> [    14.253] fbdev: PreInit 0
-> [    14.253] (II) FBDEV(0): fbdev_open(scrnIndex=0, dev=(null), namep=(nil))
-> [    14.253] (II) FBDEV(0): fbdev_open() using dev from env FRAMEBUFFER=(null)
-> [    14.253] (II) FBDEV(0): fbdev_open() using default dev=/dev/fb0
-> [    14.253] (II) FBDEV(0): fbdev_open() sysfs_path=/sys/class/graphics/fb0/device/subsystem
-> [    14.253] (II) FBDEV(0): fbdev_open() buf=../../../bus/platform
-> [    14.253] (II) FBDEV(0): fbdev_open() returning file descriptor 12
->
-> I'll propose this patch in Debian Xorg for Unstable/Testing but not sure if it'll be accepted for Stable.
-
-It should not be a problem, as only 6.9 is affected. Debian stable does 
-update to such newer kernels, right?
-
-We should definitely get your patch into the Xorg upstream.
-
-Best regards
-Thomas
+loop0: detected capacity change from 0 to 4096
+ntfs3: loop0: Different NTFS sector size (1024) and media sector size (512).
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+CPU: 0 PID: 5940 Comm: syz.0.15 Not tainted 6.10.0-rc1-syzkaller-00033-g2cbbd9682025 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+RIP: 0010:run_lookup fs/ntfs3/run.c:39 [inline]
+RIP: 0010:run_is_mapped_full+0x35/0x480 fs/ntfs3/run.c:173
+Code: 41 54 53 48 83 ec 30 41 89 d4 41 89 f6 49 89 fd 49 bf 00 00 00 00 00 fc ff df e8 a6 e5 a7 fe 49 8d 5d 08 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 dc 9c 0d ff 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc90003717758 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: 0000000000000008 RCX: ffff88802d59da00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90003717b18 R08: ffffffff82e4ba01 R09: ffffffff82ee0929
+R10: 0000000000000002 R11: ffff88802d59da00 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007f2c635ab6c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2c629000a0 CR3: 00000000295ba000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ attr_load_runs fs/ntfs3/attrib.c:69 [inline]
+ attr_set_size+0xfd6/0x4290 fs/ntfs3/attrib.c:502
+ ntfs_create_inode+0x252d/0x37f0 fs/ntfs3/inode.c:1719
+ ntfs_symlink+0xde/0x110 fs/ntfs3/namei.c:199
+ vfs_symlink+0x137/0x2e0 fs/namei.c:4489
+ do_symlinkat+0x222/0x3a0 fs/namei.c:4515
+ __do_sys_symlinkat fs/namei.c:4531 [inline]
+ __se_sys_symlinkat fs/namei.c:4528 [inline]
+ __x64_sys_symlinkat+0x99/0xb0 fs/namei.c:4528
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f2c62775bd9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f2c635ab048 EFLAGS: 00000246 ORIG_RAX: 000000000000010a
+RAX: ffffffffffffffda RBX: 00007f2c62903f60 RCX: 00007f2c62775bd9
+RDX: 0000000020000440 RSI: 0000000000000006 RDI: 0000000020000340
+RBP: 00007f2c627e4e60 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f2c62903f60 R15: 00007fffd6281a78
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:run_lookup fs/ntfs3/run.c:39 [inline]
+RIP: 0010:run_is_mapped_full+0x35/0x480 fs/ntfs3/run.c:173
+Code: 41 54 53 48 83 ec 30 41 89 d4 41 89 f6 49 89 fd 49 bf 00 00 00 00 00 fc ff df e8 a6 e5 a7 fe 49 8d 5d 08 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 dc 9c 0d ff 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc90003717758 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: 0000000000000008 RCX: ffff88802d59da00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90003717b18 R08: ffffffff82e4ba01 R09: ffffffff82ee0929
+R10: 0000000000000002 R11: ffff88802d59da00 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007f2c635ab6c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc3e51faff8 CR3: 00000000295ba000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	41 54                	push   %r12
+   2:	53                   	push   %rbx
+   3:	48 83 ec 30          	sub    $0x30,%rsp
+   7:	41 89 d4             	mov    %edx,%r12d
+   a:	41 89 f6             	mov    %esi,%r14d
+   d:	49 89 fd             	mov    %rdi,%r13
+  10:	49 bf 00 00 00 00 00 	movabs $0xdffffc0000000000,%r15
+  17:	fc ff df
+  1a:	e8 a6 e5 a7 fe       	call   0xfea7e5c5
+  1f:	49 8d 5d 08          	lea    0x8(%r13),%rbx
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 df             	mov    %rbx,%rdi
+  34:	e8 dc 9c 0d ff       	call   0xff0d9d15
+  39:	48 8b 1b             	mov    (%rbx),%rbx
+  3c:	31 ff                	xor    %edi,%edi
+  3e:	48                   	rex.W
+  3f:	89                   	.byte 0x89
 
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+Tested on:
 
+commit:         2cbbd968 fs/ntfs3: Missed error return
+git tree:       https://github.com/Paragon-Software-Group/linux-ntfs3.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=146eab85980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2f1c94a15f7c9744
+dashboard link: https://syzkaller.appspot.com/bug?extid=9af29acd8f27fbce94bc
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
