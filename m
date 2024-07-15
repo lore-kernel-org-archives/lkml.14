@@ -1,61 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13211741CF;
-	Mon, 15 Jul 2024 13:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C231741CF
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721051668; cv=none; b=jh049CGPckjJIOSLYik5+hF38ECFBSIi7q32mCegit7T5ie9u2/Sy920vfxcK6HsOMDJNHPfPRzG6uigleMaeysEPRVz8M5o6Rzl2e2loGJQIB1YWJ+wn8u78LoKjyX2SBxyIbrfQIBQ8sbL4B+hq9CTogo1XyTYLqGHf4p4Gs4=
+	t=1721051755; cv=none; b=bViqSrhg+kXKaxc2TBGZWm0UrQ8pkhExGatk4m4bIg2GMe7xQLsINDVTngyX2a68cxMpaFPvFukiudaAldF3G/QQix1YByTDSoKp/EgmtbPZwtXD8aWhTtDjIPKFE2rbFQ6nJsZb5lDswhdWf1KDpG3QGyT17u8fiUV0oQb0p7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721051668; c=relaxed/simple;
-	bh=415wrRTitLWxP9fLYBiNFhpeTuL+LCKkhB/1YonXHQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BCbUuqMdv/vXVfR8SxRtchhvFEBXPMUldYgMwKN+pcYPkRV5U6xwJmms/lKEmGePslRP2nZ0Qe7EUWwaC458NAkWIKl4Idgxn92YvQlVitbdg5GsdrHRXZe7D/Hpq4cpcFNps1BPBvmT+cFHXAW/rLtcMCOFqD5YIyhjI7QjOWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r9RH77PG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r9RH77PG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED29C32782;
-	Mon, 15 Jul 2024 13:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721051667;
-	bh=415wrRTitLWxP9fLYBiNFhpeTuL+LCKkhB/1YonXHQg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=r9RH77PG2p1/wSJaMTEWJhlDxwKmBYSbuDXgbQsLvua3sdDZwD1yHCKFQUaAd7TSh
-	 I2ynLR1MFi4+8FgSMFnygtSyfGhGJOSD3r0NV8R5oS8LqTLkDvzkav1ofu7nlDxFhA
-	 3h/WFWMQmt0GCKdHOWyPSP+GNt0jByu98u2dhI4Vb5CPjUYMmwUBLoRI3wc5eNUsCJ
-	 9iONTOZMsZJJOq1TO2q50xvYPEZdyWmi5qkZWIpSebqjKTLS28NlVxrDe9Yh5b3G43
-	 7uCyiF+XNo/eU+ZgVp5i8SuOVxUrZ+zGZEybo2jBd82aY1/74e9X+SLFW3E/IAPs/y
-	 KXmNX9Js5v9GA==
-Date: Mon, 15 Jul 2024 06:54:26 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: kvalo@kernel.org, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, guanwentao@uniontech.com,
- sergio.it.consultant@gmail.com, nbd@nbd.name, lorenzo@kernel.org,
- shayne.chen@mediatek.com, deren.wu@mediatek.com,
- mingyen.hsieh@mediatek.com, chui-hao.chiu@mediatek.com,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [RESEND. PATCH] drivers/mediatek: Fix some mt7601u vendor could
- not connect
-Message-ID: <20240715065426.73ba0869@kernel.org>
-In-Reply-To: <A9442D62405552CE+20240715094714.1553336-1-wangyuli@uniontech.com>
-References: <A9442D62405552CE+20240715094714.1553336-1-wangyuli@uniontech.com>
+	s=arc-20240116; t=1721051755; c=relaxed/simple;
+	bh=o7SPAJO8iOMaSTIdeOb07rqXUTWi+XHsVu4Xl9ncQP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PFxp+lJYX5q8xYhmF4l/YduvzHifhrKUvDHyS6yMXHn1af+qw5ckExICQMAugxRZXxp0zL7hI5WY5fbnu/HdPbi+ycuB30CSTy67rJJYz9nQ5ivhq9Hnd+zex529lRFA34zhMI61HkxXK0KRN1ynTAOPzN+i2La38UB2hhDdXS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DEC2DA7;
+	Mon, 15 Jul 2024 06:56:18 -0700 (PDT)
+Received: from [10.57.77.136] (unknown [10.57.77.136])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 116DD3F766;
+	Mon, 15 Jul 2024 06:55:50 -0700 (PDT)
+Message-ID: <aab4c18a-a30e-482d-9c4b-9ae04840881a@arm.com>
+Date: Mon, 15 Jul 2024 14:55:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] mm: mTHP stats for pagecache folio allocations
+Content-Language: en-GB
+To: kernel test robot <lkp@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ David Hildenbrand <david@redhat.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <ioworker0@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: oe-kbuild-all@lists.linux.dev,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ linux-kernel@vger.kernel.org
+References: <20240711072929.3590000-3-ryan.roberts@arm.com>
+ <202407130620.DbyYULnj-lkp@intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <202407130620.DbyYULnj-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 15 Jul 2024 17:47:14 +0800 WangYuli wrote:
-> Some mt7601 devices cannot establish a connection properly.
-> This patch fixes the issue.
-> We do not know why, but it just works.
+On 12/07/2024 23:44, kernel test robot wrote:
+> Hi Ryan,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on akpm-mm/mm-everything]
+> [also build test ERROR on next-20240712]
+> [cannot apply to linus/master v6.10-rc7]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/mm-Cleanup-count_mthp_stat-definition/20240711-154455
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+> patch link:    https://lore.kernel.org/r/20240711072929.3590000-3-ryan.roberts%40arm.com
+> patch subject: [PATCH v1 2/2] mm: mTHP stats for pagecache folio allocations
+> config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240713/202407130620.DbyYULnj-lkp@intel.com/config)
+> compiler: aarch64-linux-gcc (GCC) 14.1.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240713/202407130620.DbyYULnj-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202407130620.DbyYULnj-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-Any chance we can gate this on the version of EEPROM or chip or
-something else? It'd be good to avoid regressions on older devices.
-Or possibly - could we issue the MCU command as a test and disable
-the calibration if it fails?
+[...]
+
+>>> ERROR: modpost: "mthp_stats" [fs/btrfs/btrfs.ko] undefined!
+
+I'm assuming this last line is the problem one? I can't reproduce this following
+your instructions and I can't see any issue based on inspection. Is it possible
+this is a false positive?
+
+Thanks,
+Ryan
+
