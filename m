@@ -1,307 +1,375 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011011.outbound.protection.outlook.com [52.101.70.11])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62CC143C6C;
-	Mon, 15 Jul 2024 20:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721075430; cv=fail; b=aZb3A107YjxfQj+XsJdvoE4DF3DFQ1Ei1cKEX7VT8+xX+ud4dUh/euRz6Bv3oCNfyfj01eAyr8lWObF9fcwjLXU3UdjoMQgWT8guQyeUpVZ79pzRBMvFdC81cuXzvs4N0sI/rYcryCngTe/7Ko+kb+GIxgxOdxtFpvkjaoY1P44=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721075430; c=relaxed/simple;
-	bh=Io9k/6Chqe/RxeT+6sunyKqWzcFgWqXaDQgBQg3+vMM=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=GVb/4QP1PHl9Dza6W/vwLQKxoMoXDmpHrLKnN5WpdQMho1zo+sevOXEA3QmNCYgoB9OnvdbvamGyFxc1mlGGYnJzQgbSJRKLcuWfmPhS/3W++LrEBWyV3XvkwaI9FDbYkD4I/Vf61W8MrFoJP/SsCJTofPH40nO/54m1xGUGYlo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=f7oHbCkR; arc=fail smtp.client-ip=52.101.70.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="f7oHbCkR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=swz8MBfOq6o1lSmvHfl1orzhaOWLweivMWKZc9mn2/CjQzpbpwgAGngV/Mm0ZjE5qAJ+rLkzt5YJkH3QHu/HriTL0drC/Kmc9sA57MOXl1eJj/vxblgL+ORk0sMpy6i02NasPJfnZFLz++DwtK3BaKn+ca1MA61OWd4dp3+jZoZG03ETzPinzchC85LQBkoTLGUjPFGI7fPawBcRMnx0P1mUSSlwR5DvOZ5PS5lKSouFmZ7VDeh+8mvAqLLnpNb1DMS4w6x8zNgP4c5zcR2L72dCYgzixWJI/SD3fdfvmPLMVdyWib6UZFO3+e0IcfrVBFCm13eNFG0zt79QL6EIDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jjq23hHJmyANEWygqMGhoMyEohbY3TN4P17gWnY6onw=;
- b=T5+E0UC73IGv2w+Hs4ClRrnXf4vwgkpRSIgV5cUdud8Y+Q1lBMTitfdw+RDO5X9nRg3do0yKp4IxcIeVi4nRmHqvt6J2ZSDv9luG2Q3ird2cnTgOwTdg78bKHGSYu8S3TGVD0UTmNeEJoPGIHv5RyEHs2ARHBrF2jPv95g4y8vRdMBedeVboUNx5IR2imTv/ydC4jb2qnf5DG9F/X03Ctw4MfpZLrdDecgQVQizzhaw/ma8CL0Z/KDJS483FCRz4YfevrAThU5iy9MElcq+YfsQ0Snrmp0dlsneWoKjMBCbPv4g995G7cjz2Ok0AzVmNjOd/uHeuaS5V3t9igUqKNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jjq23hHJmyANEWygqMGhoMyEohbY3TN4P17gWnY6onw=;
- b=f7oHbCkR4SIjbcBiTw42ln5vBr5BePME3nkJT0ptpAp1iOwcCbx0Tg4A3wSeBz703W2mGfDChmmuBHH9181FdFL81kgnyvW/6x4W3t+eqwaIITa9+ppTuiZGSFT6hwSrwFaoU3Z9b8LtBVbW3SPEYQYKbtUhK9WJTIZDime5MVw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB9253.eurprd04.prod.outlook.com (2603:10a6:102:2bd::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Mon, 15 Jul
- 2024 20:30:24 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
- 20:30:24 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Mon, 15 Jul 2024 16:29:52 -0400
-Subject: [PATCH v2 3/3] pwm: imx27: workaround of the pwm output bug when
- decrease the duty cycle
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-pwm-v2-3-ff3eece83cbb@nxp.com>
-References: <20240715-pwm-v2-0-ff3eece83cbb@nxp.com>
-In-Reply-To: <20240715-pwm-v2-0-ff3eece83cbb@nxp.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, pratikmanvar09@gmail.com, 
- francesco@dolcini.it, Frank Li <Frank.Li@nxp.com>, 
- Clark Wang <xiaoning.wang@nxp.com>, Jun Li <jun.li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721075406; l=5471;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=2Fx4wXwCrUhiTONLxXSADi3uaxoZ+vACq4nDfpp5ot0=;
- b=DkA4Cq/DwLbRv7Lq8zNAJMA/ORNaYhHBbvql7FyI/3BKsWbbeYyq1iGI8D7aHfcDDhUHuTpX0
- Ywb7pJ1+n3VCXJb7qScGhF+KBbbZUi/VLwNrHOR+du2qZSTXgbUXTOJ
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0PR03CA0166.namprd03.prod.outlook.com
- (2603:10b6:a03:338::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD7D1442E8;
+	Mon, 15 Jul 2024 20:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721075437; cv=none; b=afLJcUUv7B8o8J4gpETmOrajw8/6U1aa+GEgThKKnEf5DFbvlj5gFnyR6c1q4ImN02OJfVnzgnPmSbfqMdGJxLCeMwfCtyQToRA9wPmeePnn5epb94wX6lq4N/6K8WTqvOWsc15f6AunjlL+K0f+kkZ2mptguT59IOChOzgfB20=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721075437; c=relaxed/simple;
+	bh=SYXTL2ZPOP+qHncxqQvm9el6lTaId8PyESkQbR0BWBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qTUd45hxE047KS5QE2mU40X3uN5+dGux1I5OEwuz1e+w12utyrQLnCV3BTCHNispcVeGgcyh/P7cyKCgygy5MCFl7ygTu8AD+SLcs8FCXCN2+UuFL+phKW0W8VmIUYg8xfkmTy3zQo1ulwhExig8rkTyPgDT6to+pzdBu9WnEw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from martin by akranes.kaiser.cx with local (Exim 4.96)
+	(envelope-from <martin@akranes.kaiser.cx>)
+	id 1sTRfx-000ga8-0f;
+	Mon, 15 Jul 2024 21:47:57 +0200
+Date: Mon, 15 Jul 2024 21:47:57 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Chen-Yu Tsai <wens@kernel.org>, Aurelien Jarno <aurelien@aurel32.net>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@debian.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/3] hwrng: add hwrng driver for Rockchip RK3568 SoC
+Message-ID: <ZpV87YMXJaPnHM8H@akranes.kaiser.cx>
+References: <cover.1720969799.git.daniel@makrotopia.org>
+ <f606403145588d28dda14a55ba3afef85720a4dc.1720969799.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB9253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e38e6e6-af66-4821-0051-08dca50cf4df
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TUUvWU4vbGpkelZwS284eGg2VnU2VXNDSlJVOUQ5TGFKOGtWNzRlRVY0U1BO?=
- =?utf-8?B?ekVCa0t3OWRwZXQ2R254SUtuRjBFaFJBczl4TkZMdGtxL214QWJaaG82cjM5?=
- =?utf-8?B?L3Z6ZGtWR1V6blZ1N0VFaTVCQUpVZ0lCaUxyM3p4bndTc012SXh4cWxyM0tK?=
- =?utf-8?B?c2NuK0lQQzFDZS80Q3RtdXZHaXF1RkFiUDZRRU11MVQ0M1Zxa2RJaTRDZERY?=
- =?utf-8?B?SVl5UkdQb0FLQndBT1JCZzVXZE9jN3ZmTHl3bldXd0ZIRXVYclptaGVQaXpU?=
- =?utf-8?B?NnEvZGYzblVYUWpHN0J0eWRlYndQM09lWUpOYnBJUkdwVXQ4dlBKVFRubXpY?=
- =?utf-8?B?RDlBbDhaQitrdHBtRWhHQTE0WVlDUEpVMlJNME8rVjRQOEcwK2RVMG9BWDIy?=
- =?utf-8?B?cEZOOEZ5b1JJSFloY0ZjcFJzMjlDbDNjVXJIeGgzVVg3TGhNd1BNSDYyc0JR?=
- =?utf-8?B?b3M5dkZ4dVN5azBHa1ZFK0tBQkJaTThqZGF2VTJDaFBUa0g2TFI5a2lXMFNH?=
- =?utf-8?B?T3AwZmFFQUo1Vk9KUEM1NUZpZzltczdzdytabGNYNk5YNFVtbWsrMytKSTd2?=
- =?utf-8?B?T0UyK0lPOHRWWURkaXFuaHQxemF3YWJGQzRCMDJyUUVRNEhuekcxb01rSE4w?=
- =?utf-8?B?Rkw1QjlsOUFmdnNBTGJmdDB0MXVoUXp0Sys2UzRjR1J1S2dvb1JXR3RuNHZr?=
- =?utf-8?B?ZU5uWnNlREY5aHNla2ZYR00rdkU4QWJQbVZ3WFp4T09BMDl1SDYrUE90SUFy?=
- =?utf-8?B?bTYvMnA5UFp3dlhaZGM1aHphNXVqNmo3ajhrVEwzUGY1cUl1eGoveUxYR1Zl?=
- =?utf-8?B?UkcyQzNyOXlIZGdXU2c5TEhWcUJCemdFYklyMFlycTQ4Qy9pTlVtc0g4VTA3?=
- =?utf-8?B?L3VteDVoODVPc0NETE1iY29xUVBlMTZMMWJRZ3RGdU9hdFVuUnZhL3ZQMUk3?=
- =?utf-8?B?MmNXYVZ2aC9GQU1oK2VJbDRiek9NT3c1aW91Z1V6MVduMGdOeDZMQTdhTkNs?=
- =?utf-8?B?UHU3T1B3cHJRUGpxb25YMmVzaUxCMUxTNnJHakppZno5UFFkb1NoUFdsdGdw?=
- =?utf-8?B?U0IrSFZOWmJzdmZXSCtYNXJsVkhqRW1OU003Y3NYYXZPbFdJTytDMnlPY1Vp?=
- =?utf-8?B?aXFiYmgvTDB2bkZWT3hKam13SlNOVmRqdmNGdmNzK00zeXFsb1RXZjRBR2ow?=
- =?utf-8?B?enBQalNidzlGQWF3aFZPWjAzaGxkbDg1b3FZRktiemMvK2JrZm5FRlM5Nzhq?=
- =?utf-8?B?dUdRQlJYdnR0eEtZSWNFcklVSDZ2YVpUSXNrOEd1ZFYrNldCMFRwOEE3MGhh?=
- =?utf-8?B?ZEZuZitTVSt2THBialM4Nk1ud1pUK0lSOVVKZk16ZHk3aHhYbnJ2bGs4K3d5?=
- =?utf-8?B?OVdESjhIbjh3MGhyWEZXbnRrdVhaMmtyVjNnY3ZDK04yR3J3dkQrcVhxbjg2?=
- =?utf-8?B?MFBpdkNjM0E3MklNWWtJeG94aytKaXcvZ2NlNkZUbHc3Mm1PM05VVWZ5YUpr?=
- =?utf-8?B?WjViVnhXekZVOTVIMVF3TmFteW03K05PK3RsUHNtekY1OFRnRkFRWFRQUXRx?=
- =?utf-8?B?TmtGRjU2OE5wMVZIQ2JiaWZObDJseDB6OHUzRWR5dVZ2ZVVHQ0tzdWFYY012?=
- =?utf-8?B?TE1uWllua0dHNHhwbDB0Z3oyY2ZkUXh0WXptMWhqVnoyWmRDMEMwVnFiYXVm?=
- =?utf-8?B?czFJbUtuU0ZTbFh3dlpPVUl2clJ0cm1aOTdrOXQyNkJGRW9MZXB4S204Zy8v?=
- =?utf-8?B?cUlwZ2hteTBLeUU0eldyNlhTUENZM2x0Mm1iSU5VUmdVUE1KenpLdTJ6QkZq?=
- =?utf-8?Q?3PreaUZ/jxdt3cjeHIolAVVG9fymcC22eg8vw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z0owOXh1ZHB6bkw4VUFaRjBWNTZsZ09hbjBCVkw2SVJkT2hDYTIxOUkwZkwx?=
- =?utf-8?B?a0YrZlpCL0FLUDczUzBDVVpMN2tGNmFqRzdDQU1IQ2JiOXJKNDg5WWo0UElT?=
- =?utf-8?B?TWlCNFRUYU9raGFEK1A3aHdTb3dOdlVVcms3Q2VxM3pCV1gyTGJ4eUpkK0JS?=
- =?utf-8?B?cUkrU3c0YzQwaWsxSEVzMUp3cTRFZjVFRjIzL2ZVak9UNVVreWtWZzJYUWZh?=
- =?utf-8?B?SndrWjVrMEJxTFpGMWVYanROVzI4RDNlTUVOZlpTL2U5UFlzN3hZN2l6dUoy?=
- =?utf-8?B?TUgvWUgyQ09Gb2RveFo2UCsrMXk3a1JSaXdma0syNHV2aGFSK2ZEdEFoV2Jz?=
- =?utf-8?B?aUJRNjBOWUV5QzJKYnJsUFhSSEtaUVFTTG5pU3BpejlWWnAxVDRkbFFXOVlu?=
- =?utf-8?B?VWtSQTJPYjMwNVJ5TU8rVWFtUnNvdVowUHlmK3FQeWx5SWsxZUxjVWZzRUpx?=
- =?utf-8?B?OUZRcGV1VFQvZklzT2w4bGpMTXo4MjN3VlhQaW5uZC9NMkFkM3Jjd0NUa3hh?=
- =?utf-8?B?NDFpNnhFN3NSb1B5U2JuK1RQc1hnS1drNWN3MVFsMWhhMTUyTDg3eEZydXd2?=
- =?utf-8?B?KzdoZHg1eHVuUXAwckZkV0ZuWVRSL2ZMN0M0YmtXaGJFblZzMFhoc0d3QjlZ?=
- =?utf-8?B?WXRZUWY2dHg5dnEzYldxUkkwUVdURHNuU2RTajNCVC9ReENKRCtMM2dsR1BQ?=
- =?utf-8?B?cURBL3RvSTRHQVEyOEZjM1V4clAxTDlzcFFsN0pQU1NMbmk3NDBsNVpMb1cz?=
- =?utf-8?B?M2EvMWcrSUM4eDd2SkE3YkIvRTE5TEt2ZTVrVml1MGNJYW1ZWVQ0elMyejg1?=
- =?utf-8?B?Qm9UUDN6T0dVK2dFa2JKMVVwU3krd1ZrTlBtTWJCNVJ1Z2NGMGZTMWJ0dGht?=
- =?utf-8?B?a0pjdEFqalE2N3pkRld1MDZsblN2Rk1ISGV1cTBnRmJkS29hWUVpaFdxbjZz?=
- =?utf-8?B?elpBYmNWUXFJdWZWdXYzRmt5QkpjMlZBWDR1enUwUDhRMTN2Z3FmbzlDT0ds?=
- =?utf-8?B?MGRNNUxXMHF3V3YwOU5URjAxZEx4dlFBMlhRbFVUYW9jakI0RUZHbzB6Zmhq?=
- =?utf-8?B?QXM2YVkvSUFUWW1NbnVicXNFWTUwSkxyb0Q3VDdDUUZ5b2t1K2krK3V6ck5K?=
- =?utf-8?B?TXhwbU5pbUxrT0FUY2hQSytoS1M2aFpESitoV0RvVldUSUdmdGRqemdmdnpP?=
- =?utf-8?B?N1ZVNVJ0cUlUY0FwVU1tbWNseTNXTGpNa2JIWHpPRDdPZ0ZBNWszTW9aRWc1?=
- =?utf-8?B?Y1pwMVh1WDVqQ2lDZ3YvS0M5UWt2aDNrbnh5bDA4dmozeHkrWXRadk5VdUhZ?=
- =?utf-8?B?cysrenUvRnNySWVLM3RYZTFnVWZka05oK1FudjQxNjJTckcrZXE3SExSMHdY?=
- =?utf-8?B?L3pIU0JzSUZZSE5KVlRJWCtnNEc2dHhwYlNBS2xWbE1iTnRwZXdIUk5VYU8r?=
- =?utf-8?B?NXpDODdTck9aaFozZ0VSemd2OElNMFJSRXN0a1JsZ2Z2RHNLSkZ3Z0lYQ2d2?=
- =?utf-8?B?WFlyVzBXaDA4QWpFWEIzMnNwOGk3ZmhwTGdDQmZ6R1NodE9ZaXZHQmFOTzFJ?=
- =?utf-8?B?dCt4TlplK0VFMWZ2K1VkeU1LUy9iU015NlRjU0F2YUNIN1ZxOXlXOWpzSWJP?=
- =?utf-8?B?ZElWYzM5bFY3TmdkUVN6QkJLdW1YUWRLb3dHbXNXdEVEbVlFZEpqNXZPVC9X?=
- =?utf-8?B?aDQzUGdEbTVpanl6a1hRdEpTSkJSVWxibFF4YlRqd2wvSXRhblZxYU5MU1po?=
- =?utf-8?B?RW15Vi9jTzF2aWhvSSs2NDJDektNZG5od3U5NnVrZnl3R1N3ZzJPZnl6OE9O?=
- =?utf-8?B?Y0R2bjk5clFuN24vdTZZTGtCRXRUc1lzdzNPeHROUkE0VzRMcW1PSlQrbnh3?=
- =?utf-8?B?R1lHY2YybWtmSGxMTk1rMTZQc2o5eFRmZHlmSDZMUUpNd1lWZUJxdGhJTnZ0?=
- =?utf-8?B?emxLM2o5WjdaZGNBSXpYQW1ncDR4aVM2dTcyM0t1alZHZmI1VlN1ZnBBcmha?=
- =?utf-8?B?UDhHMDIzTHUyZzg2WFJhdGhnZndOdDZjUmdtRGV0dUR2NzVaZHBJRFhabFhp?=
- =?utf-8?B?N2xTUEJlT09EQmZuNWc3K2Q2MlE0Lyt0THVYeXo5SEpjQUxuRnFtbEJCVEZi?=
- =?utf-8?Q?MjnE=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e38e6e6-af66-4821-0051-08dca50cf4df
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 20:30:24.7227
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ph5i0N4E7n7ByiALahESR+KlS6Otes+TLC5jyUrszfPjbKb7liT1ckUe2nYjunndnWkUvIc6kkkY2m/0B9gnCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9253
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f606403145588d28dda14a55ba3afef85720a4dc.1720969799.git.daniel@makrotopia.org>
+Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
-From: Clark Wang <xiaoning.wang@nxp.com>
+Hi,
 
-Implement workaround for ERR051198
-(https://www.nxp.com/docs/en/errata/IMX8MN_0N14Y.pdf)
+Thus wrote Daniel Golle (daniel@makrotopia.org):
 
-PWM output may not function correctly if the FIFO is empty when a new SAR
-value is programmed
+> From: Aurelien Jarno <aurelien@aurel32.net>
 
-Description:
-  When the PWM FIFO is empty, a new value programmed to the PWM Sample
-  register (PWM_PWMSAR) will be directly applied even if the current timer
-  period has not expired. If the new SAMPLE value programmed in the
-  PWM_PWMSAR register is less than the previous value, and the PWM counter
-  register (PWM_PWMCNR) that contains the current COUNT value is greater
-  than the new programmed SAMPLE value, the current period will not flip
-  the level. This may result in an output pulse with a duty cycle of 100%.
+> Rockchip SoCs used to have a random number generator as part of their
+> crypto device, and support for it has to be added to the corresponding
+> driver. However newer Rockchip SoCs like the RK3568 have an independent
+> True Random Number Generator device. This patch adds a driver for it,
+> greatly inspired from the downstream driver.
 
-Workaround:
-  Program the current SAMPLE value in the PWM_PWMSAR register before
-  updating the new duty cycle to the SAMPLE value in the PWM_PWMSAR
-  register. This will ensure that the new SAMPLE value is modified during
-  a non-empty FIFO, and can be successfully updated after the period
-  expires.
+> The TRNG device does not seem to have a signal conditionner and the FIPS
+> 140-2 test returns a lot of failures. They can be reduced by increasing
+> RK_RNG_SAMPLE_CNT, in a tradeoff between quality and speed. This value
+> has been adjusted to get ~90% of successes and the quality value has
+> been set accordingly.
 
-Write the old SAR value before updating the new duty cycle to SAR. This
-avoids writing the new value into an empty FIFO.
+> Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+> [daniel@makrotpia.org: code style fixes]
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  MAINTAINERS                           |   1 +
+>  drivers/char/hw_random/Kconfig        |  14 ++
+>  drivers/char/hw_random/Makefile       |   1 +
+>  drivers/char/hw_random/rockchip-rng.c | 227 ++++++++++++++++++++++++++
+>  4 files changed, 243 insertions(+)
+>  create mode 100644 drivers/char/hw_random/rockchip-rng.c
 
-This only resolves the issue when the PWM period is longer than 2us
-(or <500KHz) because write register is not quick enough when PWM period is
-very short.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7b2b8b1f526c..2745cfe56774 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19698,6 +19698,7 @@ M:	Daniel Golle <daniel@makrotopia.org>
+>  M:	Aurelien Jarno <aurelien@aurel32.net>
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/rng/rockchip,rk3568-rng.yaml
+> +F:	drivers/char/hw_random/rockchip-rng.c
 
-Fixes: 166091b1894d ("[ARM] MXC: add pwm driver for i.MX SoCs")
-Reviewed-by: Jun Li <jun.li@nxp.com>
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Change from v1 to v2
-- address comments in https://lore.kernel.org/linux-pwm/20211221095053.uz4qbnhdqziftymw@pengutronix.de/
-  About disable/enable pwm instead of disable/enable irq:
-  Some pmw periphal may sensitive to period. Disable/enable pwm will
-increase period, althouhg it is okay for most case, such as LED backlight
-or FAN speed. But some device such servo may require strict period.
+>  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+>  M:	Jacob Chen <jacob-chen@iotwrt.com>
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 442c40efb200..2b62cd08f91a 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -573,6 +573,20 @@ config HW_RANDOM_JH7110
+>  	  To compile this driver as a module, choose M here.
+>  	  The module will be called jh7110-trng.
 
-- address comments in https://lore.kernel.org/linux-pwm/d72d1ae5-0378-4bac-8b77-0bb69f55accd@gmx.net/
-  Using official errata number
-  fix typo 'filp'
-  add {} for else
+> +config HW_RANDOM_ROCKCHIP
+> +	tristate "Rockchip True Random Number Generator"
+> +	depends on HW_RANDOM && (ARCH_ROCKCHIP || COMPILE_TEST)
+> +	depends on HAS_IOMEM
+> +	default HW_RANDOM
+> +	help
+> +	  This driver provides kernel-side support for the True Random Number
+> +	  Generator hardware found on some Rockchip SoC like RK3566 or RK3568.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called rockchip-rng.
+> +
+> +	  If unsure, say Y.
+> +
+>  endif # HW_RANDOM
 
-I supposed fixed all previous issues, let me know if I missed one.
----
- drivers/pwm/pwm-imx27.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
+>  config UML_RANDOM
+> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+> index 32549a1186dc..01f012eab440 100644
+> --- a/drivers/char/hw_random/Makefile
+> +++ b/drivers/char/hw_random/Makefile
+> @@ -48,4 +48,5 @@ obj-$(CONFIG_HW_RANDOM_XIPHERA) += xiphera-trng.o
+>  obj-$(CONFIG_HW_RANDOM_ARM_SMCCC_TRNG) += arm_smccc_trng.o
+>  obj-$(CONFIG_HW_RANDOM_CN10K) += cn10k-rng.o
+>  obj-$(CONFIG_HW_RANDOM_POLARFIRE_SOC) += mpfs-rng.o
+> +obj-$(CONFIG_HW_RANDOM_ROCKCHIP) += rockchip-rng.o
+>  obj-$(CONFIG_HW_RANDOM_JH7110) += jh7110-trng.o
+> diff --git a/drivers/char/hw_random/rockchip-rng.c b/drivers/char/hw_random/rockchip-rng.c
+> new file mode 100644
+> index 000000000000..a8ccaf14c2c2
+> --- /dev/null
+> +++ b/drivers/char/hw_random/rockchip-rng.c
+> @@ -0,0 +1,227 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * rockchip-rng.c True Random Number Generator driver for Rockchip RK3568 SoC
+> + *
+> + * Copyright (c) 2018, Fuzhou Rockchip Electronics Co., Ltd.
+> + * Copyright (c) 2022, Aurelien Jarno
+> + * Authors:
+> + *  Lin Jinhan <troy.lin@rock-chips.com>
+> + *  Aurelien Jarno <aurelien@aurel32.net>
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +
+> +#define RK_RNG_AUTOSUSPEND_DELAY	100
+> +#define RK_RNG_MAX_BYTE			32
+> +#define RK_RNG_POLL_PERIOD_US		100
+> +#define RK_RNG_POLL_TIMEOUT_US		10000
+> +
+> +/*
+> + * TRNG collects osc ring output bit every RK_RNG_SAMPLE_CNT time. The value is
+> + * a tradeoff between speed and quality and has been adjusted to get a quality
+> + * of ~900 (~90% of FIPS 140-2 successes).
+> + */
+> +#define RK_RNG_SAMPLE_CNT		1000
+> +
+> +/* TRNG registers from RK3568 TRM-Part2, section 5.4.1 */
+> +#define TRNG_RST_CTL			0x0004
+> +#define TRNG_RNG_CTL			0x0400
+> +#define TRNG_RNG_CTL_LEN_64_BIT		(0x00 << 4)
+> +#define TRNG_RNG_CTL_LEN_128_BIT	(0x01 << 4)
+> +#define TRNG_RNG_CTL_LEN_192_BIT	(0x02 << 4)
+> +#define TRNG_RNG_CTL_LEN_256_BIT	(0x03 << 4)
+> +#define TRNG_RNG_CTL_OSC_RING_SPEED_0	(0x00 << 2)
+> +#define TRNG_RNG_CTL_OSC_RING_SPEED_1	(0x01 << 2)
+> +#define TRNG_RNG_CTL_OSC_RING_SPEED_2	(0x02 << 2)
+> +#define TRNG_RNG_CTL_OSC_RING_SPEED_3	(0x03 << 2)
+> +#define TRNG_RNG_CTL_MASK		GENMASK(15, 0)
+> +#define TRNG_RNG_CTL_ENABLE		BIT(1)
+> +#define TRNG_RNG_CTL_START		BIT(0)
+> +#define TRNG_RNG_SAMPLE_CNT		0x0404
+> +#define TRNG_RNG_DOUT			0x0410
+> +
+> +struct rk_rng {
+> +	struct hwrng rng;
+> +	void __iomem *base;
+> +	struct reset_control *rst;
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 253afe94c4776..e12eaaebe3499 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -27,6 +27,7 @@
- #define MX3_PWMSR			0x04    /* PWM Status Register */
- #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
- #define MX3_PWMPR			0x10    /* PWM Period Register */
-+#define MX3_PWMCNR			0x14    /* PWM Counter Register */
- 
- #define MX3_PWMCR_FWM			GENMASK(27, 26)
- #define MX3_PWMCR_STOPEN		BIT(25)
-@@ -232,8 +233,11 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- {
- 	unsigned long period_cycles, duty_cycles, prescale;
- 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
-+	void __iomem *reg_sar = imx->mmio_base + MX3_PWMSAR;
- 	unsigned long long c;
- 	unsigned long long clkrate;
-+	unsigned long flags;
-+	int val;
- 	int ret;
- 	u32 cr;
- 
-@@ -274,7 +278,53 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		pwm_imx27_sw_reset(chip);
- 	}
- 
--	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+	/*
-+	 * This is a limited workaround. When the SAR FIFO is empty, the new
-+	 * write value will be directly applied to SAR even the current period
-+	 * is not over.
-+	 *
-+	 * If the new SAR value is less than the old one, and the counter is
-+	 * greater than the new SAR value, the current period will not filp
-+	 * the level. This will result in a pulse with a duty cycle of 100%.
-+	 * So, writing the current value of the SAR to SAR here before updating
-+	 * the new SAR value can avoid this issue.
-+	 *
-+	 * Add a spin lock and turn off the interrupt to ensure that the
-+	 * real-time performance can be guaranteed as much as possible when
-+	 * operating the following operations.
-+	 *
-+	 * 1. Add a threshold of 1.5us. If the time T between the read current
-+	 * count value CNR and the end of the cycle is less than 1.5us, wait
-+	 * for T to be longer than 1.5us before updating the SAR register.
-+	 * This is to avoid the situation that when the first SAR is written,
-+	 * the current cycle just ends and the SAR FIFO that just be written
-+	 * is emptied again.
-+	 *
-+	 * 2. Use __raw_writel() to minimize the interval between two writes to
-+	 * the SAR register to increase the fastest pwm frequency supported.
-+	 *
-+	 * When the PWM period is longer than 2us(or <500KHz), this workaround
-+	 * can solve this problem.
-+	 */
-+	val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
-+	if (duty_cycles < imx->duty_cycle && val < MX3_PWMSR_FIFOAV_2WORDS) {
-+		c = clkrate * 1500;
-+		do_div(c, NSEC_PER_SEC);
-+
-+		local_irq_save(flags);
-+		if (state->period >= 2000)
-+			readl_poll_timeout_atomic(imx->mmio_base + MX3_PWMCNR, val,
-+						  period_cycles - val >= c, 0, 10);
-+
-+		val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
-+		if (!val)
-+			writel_relaxed(imx->duty_cycle, reg_sar);
-+		writel_relaxed(duty_cycles, reg_sar);
-+		local_irq_restore(flags);
-+	} else {
-+		writel_relaxed(duty_cycles, reg_sar);
-+	}
-+
- 	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
- 
- 	/*
+does it make sense to store rst here? it's used only in the probe function.
 
--- 
-2.34.1
+> +	int clk_num;
+> +	struct clk_bulk_data *clk_bulks;
+> +};
+> +
+> +/* The mask in the upper 16 bits determines the bits that are updated */
+> +static void rk_rng_write_ctl(struct rk_rng *rng, u32 val, u32 mask)
+> +{
+> +	writel((mask << 16) | val, rng->base + TRNG_RNG_CTL);
+> +}
+> +
+> +static int rk_rng_init(struct hwrng *rng)
+> +{
+> +	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
+> +	int ret;
+> +
+> +	/* start clocks */
+> +	ret = clk_bulk_prepare_enable(rk_rng->clk_num, rk_rng->clk_bulks);
+> +	if (ret < 0) {
+> +		dev_err((struct device *) rk_rng->rng.priv,
+> +			"Failed to enable clks %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* set the sample period */
+> +	writel(RK_RNG_SAMPLE_CNT, rk_rng->base + TRNG_RNG_SAMPLE_CNT);
+> +
+> +	/* set osc ring speed and enable it */
+> +	rk_rng_write_ctl(rk_rng, TRNG_RNG_CTL_LEN_256_BIT |
+> +				 TRNG_RNG_CTL_OSC_RING_SPEED_0 |
+> +				 TRNG_RNG_CTL_ENABLE,
+> +			 TRNG_RNG_CTL_MASK);
+> +
+> +	return 0;
+> +}
+> +
+> +static void rk_rng_cleanup(struct hwrng *rng)
+> +{
+> +	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
+> +
+> +	/* stop TRNG */
+> +	rk_rng_write_ctl(rk_rng, 0, TRNG_RNG_CTL_MASK);
+> +
+> +	/* stop clocks */
+> +	clk_bulk_disable_unprepare(rk_rng->clk_num, rk_rng->clk_bulks);
+> +}
+> +
+> +static int rk_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+> +{
+> +	struct rk_rng *rk_rng = container_of(rng, struct rk_rng, rng);
+> +	size_t to_read = min_t(size_t, max, RK_RNG_MAX_BYTE);
+> +	u32 reg;
+> +	int ret = 0;
 
+no need to initialise ret, it's overwritten immediately
+
+> +
+> +	ret = pm_runtime_resume_and_get((struct device *) rk_rng->rng.priv);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Start collecting random data */
+> +	rk_rng_write_ctl(rk_rng, TRNG_RNG_CTL_START, TRNG_RNG_CTL_START);
+> +
+> +	ret = readl_poll_timeout(rk_rng->base + TRNG_RNG_CTL, reg,
+> +				 !(reg & TRNG_RNG_CTL_START),
+> +				 RK_RNG_POLL_PERIOD_US,
+> +				 RK_RNG_POLL_TIMEOUT_US);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	/* Read random data stored in the registers */
+> +	memcpy_fromio(buf, rk_rng->base + TRNG_RNG_DOUT, to_read);
+> +out:
+> +	pm_runtime_mark_last_busy((struct device *) rk_rng->rng.priv);
+> +	pm_runtime_put_sync_autosuspend((struct device *) rk_rng->rng.priv);
+> +
+> +	return (ret < 0) ? ret : to_read;
+> +}
+> +
+> +static int rk_rng_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rk_rng *rk_rng;
+> +	int ret;
+> +
+> +	rk_rng = devm_kzalloc(dev, sizeof(*rk_rng), GFP_KERNEL);
+> +	if (!rk_rng)
+> +		return -ENOMEM;
+> +
+> +	rk_rng->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(rk_rng->base))
+> +		return PTR_ERR(rk_rng->base);
+> +
+> +	rk_rng->clk_num = devm_clk_bulk_get_all(dev, &rk_rng->clk_bulks);
+> +	if (rk_rng->clk_num < 0)
+> +		return dev_err_probe(dev, rk_rng->clk_num,
+> +				     "Failed to get clks property\n");
+> +
+> +	rk_rng->rst = devm_reset_control_array_get_exclusive(&pdev->dev);
+> +	if (IS_ERR(rk_rng->rst))
+> +		return dev_err_probe(dev, PTR_ERR(rk_rng->rst),
+> +				     "Failed to get reset property\n");
+> +
+> +	reset_control_assert(rk_rng->rst);
+> +	udelay(2);
+> +	reset_control_deassert(rk_rng->rst);
+> +
+> +	platform_set_drvdata(pdev, rk_rng);
+> +
+> +	rk_rng->rng.name = dev_driver_string(dev);
+> +	if (!IS_ENABLED(CONFIG_PM)) {
+> +		rk_rng->rng.init = rk_rng_init;
+> +		rk_rng->rng.cleanup = rk_rng_cleanup;
+> +	}
+> +	rk_rng->rng.read = rk_rng_read;
+> +	rk_rng->rng.priv = (unsigned long) dev;
+> +	rk_rng->rng.quality = 900;
+> +
+> +	pm_runtime_set_autosuspend_delay(dev, RK_RNG_AUTOSUSPEND_DELAY);
+> +	pm_runtime_use_autosuspend(dev);
+> +	devm_pm_runtime_enable(dev);
+
+could this fail? is it worth checking the return value?
+
+> +
+> +	ret = devm_hwrng_register(dev, &rk_rng->rng);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to register Rockchip hwrng\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused rk_rng_runtime_suspend(struct device *dev)
+> +{
+> +	struct rk_rng *rk_rng = dev_get_drvdata(dev);
+> +
+> +	rk_rng_cleanup(&rk_rng->rng);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused rk_rng_runtime_resume(struct device *dev)
+> +{
+> +	struct rk_rng *rk_rng = dev_get_drvdata(dev);
+> +
+> +	return rk_rng_init(&rk_rng->rng);
+> +}
+> +
+> +static const struct dev_pm_ops rk_rng_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(rk_rng_runtime_suspend,
+> +				rk_rng_runtime_resume, NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+> +};
+> +
+> +static const struct of_device_id rk_rng_dt_match[] = {
+> +	{ .compatible = "rockchip,rk3568-rng", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, rk_rng_dt_match);
+> +
+> +static struct platform_driver rk_rng_driver = {
+> +	.driver	= {
+> +		.name	= "rockchip-rng",
+> +		.pm	= &rk_rng_pm_ops,
+> +		.of_match_table = rk_rng_dt_match,
+> +	},
+> +	.probe	= rk_rng_probe,
+> +};
+> +
+> +module_platform_driver(rk_rng_driver);
+> +
+> +MODULE_DESCRIPTION("Rockchip RK3568 True Random Number Generator driver");
+> +MODULE_AUTHOR("Lin Jinhan <troy.lin@rock-chips.com>");
+> +MODULE_AUTHOR("Aurelien Jarno <aurelien@aurel32.net>");
+> +MODULE_AUTHOR("Daniel Golle <daniel@makrotopia.org>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.45.2
