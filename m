@@ -1,161 +1,149 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFD82AF1E;
-	Mon, 15 Jul 2024 07:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD315221;
+	Mon, 15 Jul 2024 07:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721027680; cv=none; b=Xz569W6wt5WdiFTCcuo0bWLXbHMkG5srL4jgHiiZVzBiUfyQRkAR9f5RCLkiNYYI2DCOfddEPRRXEgrlFnwsUjtvdC8d4MpDBvAsR0a2mLI5Iln0J5CZehGgbJ9D4xXabcjDV59gQJjoyxWfOtKgVfBOvVxhz16D2Mtf5EqYofc=
+	t=1721027732; cv=none; b=HIXnGqZIgshXn/sHoltutUC/8tbvllEp9ZlmqblDpvA9G32AAWytFY54nBXvN7OYaXakYfiVTKNnLPfS5U5nphhQ8OotKoPewZdUO6FIOIXjkOpvTO6WAOo3FtrMP97T9YZtJS5YECWVRnMhJiLAc5bTWJcDn2RWbQlnq9KRNdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721027680; c=relaxed/simple;
-	bh=EnZCtQAqbQNVoUA5NSY7pkTTx1TaGjXVbrdyiKG3Pq8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W2/r3XZ0PIoGL5yKrR83xawe/As7+JrxGDHuD2qDLluQ4JLxaypYWlKCPWO5FZFzZoIq22s2Ye/zNuE+fzorl0UFtremmMBDFs1xHKdxDo7HH7tF8gsfC8ZLCLM+mycL2M46T5Qj6k1rMOyperlBMQhGwfrQTchqfdDFyvMfj14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=OIRqD5wF; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1721027732; c=relaxed/simple;
+	bh=2EMRRHgATOG+8UaGVLwFN/+qZQ6DQZh0fU5FKzhSYOw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sqqDV+6AlQOCa75NMuQk0rn3g3vJSN94f6GtGkbmxpxHBKDkxMFeEC/4/jcq+tN27wTT4Q9RFxMjg4jhltqSm3IMAc9DgM8PP/9WUzyZBOINGcuVeRtudctNGi6wf5b7yeRIvRLzwA6jo7/DVfIgbVC55pGW1VZRRqgjMXpDUxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj6A7otA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="OIRqD5wF"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 46F7EDtyC3485605, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1721027653; bh=EnZCtQAqbQNVoUA5NSY7pkTTx1TaGjXVbrdyiKG3Pq8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=OIRqD5wFjXwe70RJR+5rG6eDNHNUQPjOS83M1zqTJUGjy7DBqoUjofo7tt+Q3FGwR
-	 i3rpMwkTb5I2oToTnssr971bywbKedPUV4m3GCS/kJabj9cfIZaQvyQV9BW+aXuiPo
-	 GVJ8480Z5OVAWSO1DTD/2HmKk5cim60oZ83WRQt8hBL5zBffznPsfvf8SiQChZJ3lf
-	 c1E3pVC2lT1AKmdMUztsQHzFaTD3WN3Dgo+NB7gGLf71kwx7zQI1fXvGQa04EaRQuB
-	 Nvt98uRnx53SgSI8327hsLw88nzVMst/KpK/FXc0TK90Ss59D+el3MxDZ+QIoZo0sA
-	 +AD8/GX8c/6AA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 46F7EDtyC3485605
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jul 2024 15:14:13 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 15 Jul 2024 15:14:13 +0800
-Received: from RTDOMAIN (172.21.210.74) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 15 Jul
- 2024 15:14:12 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, "Justin
- Lai" <justinlai0215@realtek.com>
-Subject: [PATCH net-next v24 04/13] rtase: Implement the interrupt routine and rtase_poll
-Date: Mon, 15 Jul 2024 15:11:49 +0800
-Message-ID: <20240715071158.110384-5-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240715071158.110384-1-justinlai0215@realtek.com>
-References: <20240715071158.110384-1-justinlai0215@realtek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj6A7otA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B11B5C4AF0A;
+	Mon, 15 Jul 2024 07:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721027731;
+	bh=2EMRRHgATOG+8UaGVLwFN/+qZQ6DQZh0fU5FKzhSYOw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nj6A7otAounG9xDZpTH+k2/KCMdbQ/270EWR2F2CLRlJME91G1PMUmXZiBtOZpy/d
+	 bRZbIOyzQVoFIS+hGOxSyFgzH+IQj0aAYZSJCmKUI/ep2CwXnowsFZxmHT1oeZlOea
+	 3GGwBfV2oev+vxAiydVqOBWUQS1MSSWmwkuE6MDTH47WngyrA8KDM7wO/bjOsJpRTE
+	 6TRdBEKkJyjdqnoPUjKCUdf4JRRT+HIwEI3gJUxjJUY5JMZn8p9UwX3W/7rMqQALiG
+	 gpdKVvWVXZGMNwR3z64Rl5v8Cs56u8gZ6sa9uSQGuC9MTRRCqEHF30dPzjFqYgU0dr
+	 WMn982BDX2lEw==
+Message-ID: <fca65d4a-7e2a-47c8-809d-eac758433eb4@kernel.org>
+Date: Mon, 15 Jul 2024 09:15:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: nvmem: sprd-efuse: convert to YAML
+To: Stanislav Jakubek <stano.jakubek@gmail.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Baolin Wang <baolin.wang7@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <ZpJvRePtbaiG94Te@standask-GA-A55M-S2HP>
+ <7a419156-d2eb-4810-9281-dc3414320ad1@kernel.org>
+ <ZpOyEWwj/HwQv7n3@standask-GA-A55M-S2HP>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ZpOyEWwj/HwQv7n3@standask-GA-A55M-S2HP>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-1. Implement rtase_interrupt to handle txQ0/rxQ0, txQ4~txQ7 interrupts,
-and implement rtase_q_interrupt to handle txQ1/rxQ1, txQ2/rxQ2 and
-txQ3/rxQ3 interrupts.
-2. Implement rtase_poll to call ring_handler to process the tx or
-rx packet of each ring. If the returned value is budget,it means that
-there is still work of a certain ring that has not yet been completed.
+On 14/07/2024 13:10, Stanislav Jakubek wrote:
+> On Sat, Jul 13, 2024 at 08:31:31PM +0200, Krzysztof Kozlowski wrote:
+>> On 13/07/2024 14:12, Stanislav Jakubek wrote:
+> 
+> [snip]
+> 
+>>> +allOf:
+>>> +  - $ref: nvmem.yaml#
+>>> +  - $ref: nvmem-deprecated-cells.yaml#
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: sprd,ums312-efuse
+>>> +    then:
+>>> +      required:
+>>> +        - clocks
+>>> +        - clock-names
+>>> +    else:
+>>> +      properties:
+>>> +        clocks: false
+>>> +        clock-names: false
+>>
+>> Half of the binding is this "if:", so I would say they are not that
+>> similar. I think it would be easier to read them if these were split
+>> into two bindings.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> Hi Krzysztof,
+> 
+> pretty much this exact if-then-else is described in the "Writing Devicetree
+> Bindings in json-schema" documentation as a "typical case" for its usage, so
+> I went with that. I think that it's simple enough that it only minimally
+> hampers readability.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 69 +++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Example schema has a lot of stuff shown, because it is example...
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index ef0b4ff5db7c..9cd45ae37590 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -584,6 +584,75 @@ static void rtase_hw_start(const struct net_device *dev)
- 	rtase_enable_hw_interrupt(tp);
- }
- 
-+/*  the interrupt handler does RXQ0 and TXQ0, TXQ4~7 interrutp status
-+ */
-+static irqreturn_t rtase_interrupt(int irq, void *dev_instance)
-+{
-+	const struct rtase_private *tp;
-+	struct rtase_int_vector *ivec;
-+	u32 status;
-+
-+	ivec = dev_instance;
-+	tp = ivec->tp;
-+	status = rtase_r32(tp, ivec->isr_addr);
-+
-+	rtase_w32(tp, ivec->imr_addr, 0x0);
-+	rtase_w32(tp, ivec->isr_addr, status & ~RTASE_FOVW);
-+
-+	if (napi_schedule_prep(&ivec->napi))
-+		__napi_schedule(&ivec->napi);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*  the interrupt handler does RXQ1&TXQ1 or RXQ2&TXQ2 or RXQ3&TXQ3 interrupt
-+ *  status according to interrupt vector
-+ */
-+static irqreturn_t rtase_q_interrupt(int irq, void *dev_instance)
-+{
-+	const struct rtase_private *tp;
-+	struct rtase_int_vector *ivec;
-+	u16 status;
-+
-+	ivec = dev_instance;
-+	tp = ivec->tp;
-+	status = rtase_r16(tp, ivec->isr_addr);
-+
-+	rtase_w16(tp, ivec->imr_addr, 0x0);
-+	rtase_w16(tp, ivec->isr_addr, status);
-+
-+	if (napi_schedule_prep(&ivec->napi))
-+		__napi_schedule(&ivec->napi);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rtase_poll(struct napi_struct *napi, int budget)
-+{
-+	const struct rtase_int_vector *ivec;
-+	const struct rtase_private *tp;
-+	struct rtase_ring *ring;
-+	int total_workdone = 0;
-+
-+	ivec = container_of(napi, struct rtase_int_vector, napi);
-+	tp = ivec->tp;
-+
-+	list_for_each_entry(ring, &ivec->ring_list, ring_entry)
-+		total_workdone += ring->ring_handler(ring, budget);
-+
-+	if (total_workdone >= budget)
-+		return budget;
-+
-+	if (napi_complete_done(napi, total_workdone)) {
-+		if (!ivec->index)
-+			rtase_w32(tp, ivec->imr_addr, ivec->imr);
-+		else
-+			rtase_w16(tp, ivec->imr_addr, ivec->imr);
-+	}
-+
-+	return total_workdone;
-+}
-+
- static int rtase_open(struct net_device *dev)
- {
- 	struct rtase_private *tp = netdev_priv(dev);
--- 
-2.34.1
+> 
+> I admit that there might be some confusion, since I forgot to include an
+> example for the sprd,ums312-efuse (i.e. with clocks and clock-names).
+> Could I just add this example in V2 and keep it as-is otherwise?
+
+Usually one example per binding is enough, if devices differ by one
+property.
+
+
+Best regards,
+Krzysztof
 
