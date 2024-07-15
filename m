@@ -1,199 +1,103 @@
-Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6510E18C338;
-	Mon, 15 Jul 2024 12:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252961891A4;
+	Mon, 15 Jul 2024 12:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721047024; cv=none; b=Hbmf6+z9waM2r5+OkvL3Po+6BLefhEsuRP9P3vQX7SAFoUP6N2U7Hp2cg3L08kYKJ6L9eO3OL0HKCvPYaM7ZFgdvx0U7V4tudVdyRNezmP1Iv+SiDi5aQriX590BWLFqIlPFwEgM7QpkT7bf0YRCUl60KPXtll2Jc9LVCPnyl60=
+	t=1721047181; cv=none; b=a63nnqjcQML/G17lnECw7em3K3yaczc88H9BULOIZ3GD+lh1yZP7f+TmlSqFwemNCf+Hq8KmId2KCMSR0Pfj+BC1+/MfFzsOgO361tq9Pg72+L0VIGrN2sMJ7cInmy4H8E6HaFgvvKRX5bXXVUwNHubKEAZnrniewoVvYhqGURA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721047024; c=relaxed/simple;
-	bh=N3PTOC6sWEpSEYoAWJezS70/M83GsLYtwX/g0boo1Rs=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=uV0M02EuU1U/ZDbGeMkolyyD6IBJsO/L9A5S+OYqJF1t+ibtw0eYsKlMMuPD4Uk5ExiPiafi9O2M+m+w7WtjLCpEQD16gceA7+TsqRLEkhmL1YsUhWhnSSRA0oAi5TyToEzdTFEU+L8ogVBtj7Ggl/53P7v+SO2fGIqgcvs0ZzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=Xz9fG1bV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oKUh37pE; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1721047181; c=relaxed/simple;
+	bh=urFsKcjAp6UTHzAfM659oLy3mk1/RPrjyvRtDxyWXyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nllTLPjV290LPv6NWF6f2TCDmQv1EGrDQXM59HXrycQyQIU1J//M2DnnGW1UywkTKx8tgYOeTVtxbFaEFAVgijau76cdV+8pJlJhT4ZMyIKlutt1ZP/KRl4TAsTOhprl/du80S4f8pMZf/LjmrFTn1jaxj/EE4qmZGKqQmk8VwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kjCkiobM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Xz9fG1bV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oKUh37pE"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 819B41388C65;
-	Mon, 15 Jul 2024 08:37:01 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Mon, 15 Jul 2024 08:37:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1721047021;
-	 x=1721133421; bh=HlZuP9r9uYA4qH3ebyoGUrlDKd8G/Hmiliqj2CCJC58=; b=
-	Xz9fG1bVRVN43aT4AhxhFpEMazClSDNF7Eg2mqLdC5s6NT/xPx6KGSEuwf3yx7+O
-	maQQ2LC/r5LbsE4GnQxb7r1yTwuOyvhVwxFAlR/z6phCR9QzLRbJIP0GQR79aLHc
-	5Sf1xQ/WvCepSN7tabfAbODA0zP0Q2EKP0Azdo97Hk+/vUQiLCMZqzUt9mSLeIpk
-	937HwPxwlISrhNgjl6xiA9LVySU+iTUosJMpjg+G7APhksyGciloIugDYppIwBLj
-	U2VKdeY9gkskWCfYsBRohonzEkM0JfirAVMmqiOIdK68dgdRLzVaYfusOSd5rU/f
-	AWvePFNQDrgT63GUyEeHWQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721047021; x=
-	1721133421; bh=HlZuP9r9uYA4qH3ebyoGUrlDKd8G/Hmiliqj2CCJC58=; b=o
-	KUh37pEGj46IICxdEHFxb2Vi1hvn6iRj+NAwSnU7X9RO4x9xZ5C0UMp9ZYUGlw+0
-	+noF80C9JagRVfcgEjZWZlgo+Qdv3gwFYFARFan/M4Gt+PWQorvmuPqkbFkFHMki
-	9gpl+rwSG2UkStLoh118nIlLKio+AABh6/9T//xLV24wxALjAFn2zkonvMUFCB5C
-	PO7xgmqexSZ35gDHNgYHiYatDzg+tJtBul4AxvKTFJeTBUrxmi7KKIF3HIblTqcD
-	CofruPOOr/7UZTNAwvhOR0uvkP4GgyhhKfg4iLga0pcfOrLOiSKsh2GdqaljC13L
-	hotDYNnaDy/oergy/KzPQ==
-X-ME-Sender: <xms:6xeVZuoVzlmsmk3PgpB2ntcL77tFGXdSHwUAZxCagTionCIwhLvsSw>
-    <xme:6xeVZsqsHcwRGF4y7zrwywCIlM5zZk3X_oyePYCoI3SznMdWf4jO3A1_taNg87int
-    cQ1bzJS9KS96_4J9Jc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgedvgdehgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
-    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
-    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:6xeVZjNmeP-Qft_UbzQurJRx5PSp0FubXQM0vys6I45YN5UICEDG_g>
-    <xmx:6xeVZt7B_KceenXlmU6Ykxjh7i2rhGH9wKg2Kkmv4o0nDiAf0yExjA>
-    <xmx:6xeVZt7DtxX-0Mm4WXRKNZyeV197AoLACvoJ1NxX5-Kgt5Xef9ktnQ>
-    <xmx:6xeVZth1xu4A2nWri4iB1zY3ScYH6rVge9Ohbn_vebUmGprLZmd2Qg>
-    <xmx:7ReVZqvJ9MKpOEYA9FFwYA8bYTl9nArgoKWvU76gddVGYYFr_IwZTzKf>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id C7DBC36A0074; Mon, 15 Jul 2024 08:36:59 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kjCkiobM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39DBFC32782;
+	Mon, 15 Jul 2024 12:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1721047180;
+	bh=urFsKcjAp6UTHzAfM659oLy3mk1/RPrjyvRtDxyWXyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kjCkiobMrrmzutk0XWXmPF7ovtLU/HHJrgpvpUKqFctINM57tngfPipyqinp8m/Ig
+	 7jgaGq/w2YHTx32S01/MJVNrM6qiOc03nnM95/fen55w7SiD5TBBu5KQOS4KztaB29
+	 lGjW+F1n8nXHxqQi4m20iXb7VnZnXadIegHb+RZc=
+Date: Mon, 15 Jul 2024 14:39:37 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	linux-security-module@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: CVE-2024-40938: landlock: Fix d_parent walk
+Message-ID: <2024071508-prison-liftoff-7987@gregkh>
+References: <2024071218-CVE-2024-40938-1619@gregkh>
+ <20240715.aeLiunipi8ia@digikod.net>
+ <2024071553-yippee-broadways-8035@gregkh>
+ <20240715.Eishohd0ehoo@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ac94941f-3ac3-4820-b94d-aeb72a7a7a5c@app.fastmail.com>
-In-Reply-To: <alpine.DEB.2.21.2407150225310.58077@angie.orcam.me.uk>
-References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com>
- <Zn1FuxNw2CUttzdg@alpha.franken.de>
- <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com>
- <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk>
- <fbd421a6-cf37-49ab-bdbe-6128a7cae8be@app.fastmail.com>
- <Zoz6+YmUk7CBsNFw@alpha.franken.de>
- <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com>
- <Zo457UgAkhbAgm2R@alpha.franken.de>
- <alpine.DEB.2.21.2407101015120.38148@angie.orcam.me.uk>
- <a8741e38-837b-4fbb-8656-1e6d50bdfcc0@app.fastmail.com>
- <alpine.DEB.2.21.2407110315170.38148@angie.orcam.me.uk>
- <de07ff44-41ee-4158-b629-90a1835bd9cb@app.fastmail.com>
- <alpine.DEB.2.21.2407121250350.38148@angie.orcam.me.uk>
- <dad7b36f-2e37-44db-939e-cdb454875e2a@app.fastmail.com>
- <alpine.DEB.2.21.2407150225310.58077@angie.orcam.me.uk>
-Date: Mon, 15 Jul 2024 20:35:21 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Jonathan Corbet" <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240715.Eishohd0ehoo@digikod.net>
 
+On Mon, Jul 15, 2024 at 02:20:59PM +0200, Mickaël Salaün wrote:
+> On Mon, Jul 15, 2024 at 01:16:38PM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Jul 15, 2024 at 12:37:53PM +0200, Mickaël Salaün wrote:
+> > > Hello,
+> > > 
+> > > AFAIK, commit 88da52ccd66e ("landlock: Fix d_parent walk") doesn't fix a
+> > > security issue but an unexpected case.  The triggered WARN_ON_ONCE() is
+> > > just a canary, and this case was correctly handled with defensive
+> > > programming and didn't allow to bypass the security policy nor to harm
+> > > the kernel.  However, this fix should indeed be backported.
+> > 
+> > If a WARN_ON() is hit, a machine with panic_on_warn enabled will reboot,
+> > hence if there is any way that userspace can hit this, it needs to be
+> > issued a CVE, sorry.
+> 
+> OK, I didn't know about this panic_on_warn rule for CVE.  Out of
+> curiosity, panic_on_warn is definitely useful for fuzzing and testing,
+> but what is the rational to enable panic_on_warn on production systems?
 
+People like to have their devices/servers rebooted if _anything_ is seen
+to go wrong.  A few billion phones have this enabled, as do most all
+cloud servers it seems :(
 
-=E5=9C=A82024=E5=B9=B47=E6=9C=8815=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
-=8D=888:15=EF=BC=8CMaciej W. Rozycki=E5=86=99=E9=81=93=EF=BC=9A
-[..]
->  I don't know what prctl(2) has to do with this.  If you don't impleme=
-nt=20
-> this part, then your change will cause Linux to behave inconsistently =
-and=20
-> therefore I'll have to NAK it.
+> It literally transforms a warning message into a system DoS (i.e.
+> WARN_ON into BUG_ON).
 
-I think your concern was regarding user space application needs to set N=
-aN2008 bits
-at runtime?
+Yes :(
 
-In this case, the best interface to inform kernel about NaN2008 changes =
-is prctl.
+> We should explicitly use BUG_ON() if this is a critical unhandled
+> case, right?
 
-I may misinterpret your comments.
+Personally I would use neither, handle the error properly and clean up
+correctly.  Only if the continuing to run would cause unrecoverable harm
+(i.e. data loss or corruption or compromise) would I ever call BUG_ON().
 
->
->  It's not much to do anyway, as I have prepared `ptrace_setfcr31' alre=
-ady=20
-> to handle masking correctly, so all you have to do is to set the mask =
-as=20
-> required for the right thing to happen.  I shouldn't have needed to po=
-int=20
-> you at it though, as that code is easy to find.
+> > > Could you please Cc me for future CVE related to my changes or to
+> > > Landlock?  For kernel CVEs, I think it would be good to Cc at least
+> > > maintainers, reviewers, authors, and committers for the related commits.
+> > 
+> > I suggest setting up lei to watch the linux-cve-announce mailing list if
+> > you wish to do this (just filter for landlock stuff).  Automatically
+> > mailing cve stuff to maintainers has been deemed too "noisy" which is
+> > why we do not do this by default.
+> 
+> Well, it might be too noisy for some but I guess/hope not for most.
+> Email filtering should be easy for the few receiving too many of these
+> emails though.
 
-I think I got your point, will try to implement it.
+For now we have decided to not cc: maintainers as these are all sent to
+a public list that can be subscribed to if they wish to.
 
->
->> We are unable to prevent user applications write NAN2008 bits for the=
- "switchable
->> QEMU" as well. So I'd perfer leave it as is, and let this feature go =
-into 6.11 so people
->> can start to use it.
->
->  This doesn't matter either, as your change only addresses the case wh=
-ere=20
-> FCSR.NAN2008 isn't writable anyway, which is the sole reason you want =
-to=20
-> switch between native hard float support and emulation, doesn't it?
->
->  In fact where FCSR.NAN2008 is writable your new mode has to be equiva=
-lent
-> to "ieee754=3Dstrict", because then there is no need to trigger emulat=
-ion=20
-> for either NaN mode.  Please do verify that this is the case.
+thanks,
 
-This had been verified with perf math-emu counters to ensure no unnecess=
-ary emulation
-is triggered.
-
->
->> This is actually a request from Debian MIPS team so they can get glib=
-c tests run on
->> mismatched NaN hardware.
->
->  That doesn't matter for us here (and I have a bad suspicion anyway), =
-but=20
-> the Debian team is of course free to do what they want here, the GNU G=
-PL=20
-> applies.
-
-We care about our downstream users, don't we?
-
-There are some lags on Debian buildd queue for mips64el due to lack of h=
-igh performance
-hardware with huge memory.
-They were about to source some Loongson 3A4000, which is NaN2008 only. B=
-ut many packages
-test cases are failing on it due to NaN2008.
-They asked me to help and that was my solution. I sincerely want to get =
-this change upstreamed
-to cover some downstream use cases.
-
-I don't know what theory do you have here, but that's all stories behind.
-
->
->  And also they can always use the "nofpu" kernel parameter to run thei=
-r=20
-> verification.  I used it for mine back at ImgTec before 2008 NaN hardw=
-are=20
-> was available, also to verify emulation, which I wrote too.  Perhaps t=
-hat=20
-> is also the right solution for Debian actually?
-
-I'll suggest to them, thanks.
-
->
->   Maciej
-
---=20
-- Jiaxun
+greg k-h
