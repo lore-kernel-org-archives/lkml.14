@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1DE1442E8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AA7144306
 	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 23:56:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721087784; cv=none; b=P8cFVl9LtlDf2JgPDsjQveLQGDg0rCG4Y6/k1wsO4t/TbyH64azxy9KHy69j4cQis/tQ8VRYyUupYYjSuefW6bYAZorza7Oad3t3O7LqncSpa6V9V4ALsjRcW2KuvK2imlxBzCpz4pthRw7h1+1a9JrS98uzh3X6YOs/g4cqBrA=
+	t=1721087784; cv=none; b=Aky0djbtFirEmlVOD2/IvQXJN8ZyoGNDKomkcTaPsXcd8p/EOMpYjrVHYLoicbkqdFkQyIMttmT97zmrqFvctwLEkGvKo0fvcy2nRf89Lkov8nsqhILDWR6EuxPTb8lgJsaw97vnrIlrGvDNXzOfMaoSSlTQgpjRfuYm4SLabLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721087784; c=relaxed/simple;
-	bh=dGQuqRH3j/kggUaIG5lQQD+V8tQkG+ssZHhHn8Shy50=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KCoaXmJ7SPknwNYZrQzvJh7RbmUFjBJX5U+/NClGwOSMQRoAHDnIQRV2SciN+stV+zSO31pzXRFM5HOEyzXn9lko4oa7iqdskKJTQpUQoMen/YLxEmOnk12czoC8NB/Zw5e7SUBXHLCIE++tscdiFNfJsgnmmEVktT1WO7zI+Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpHst9ce; arc=none smtp.client-ip=10.30.226.201
+	bh=7X3BqHl5UdARPlqgMtfN06neQs6oPnIV8thm04QUa7M=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=b0NWyrHwUyh9azQUtBv7JP8PHOvS8TPEAirtNvh/FN3A31qpID8ZPa2m3g4gzuA4gyYjSLZM9sMPtvqSDEn9y85gi/0Y7i1LB9877EAIr/HgYHDDiiRW6DauZBG8yHYovq2rqwaELJyqggBL6LAIcHI1u5LwhKC7ztd3jlTfBt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kg/1xmjN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EpHst9ce"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1DD06C4AF1B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kg/1xmjN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 54D5BC4AF12;
 	Mon, 15 Jul 2024 23:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721087784;
-	bh=dGQuqRH3j/kggUaIG5lQQD+V8tQkG+ssZHhHn8Shy50=;
+	bh=7X3BqHl5UdARPlqgMtfN06neQs6oPnIV8thm04QUa7M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=EpHst9ceJ+Mtziz1Ym0+nREJjgdjxY5vwun2Q3pxlfJfy1Dmb3K4PzkRuDH0rqcuU
-	 OIL+P5j4t1bKK5WbPhU+OSazqpFChVjt/t/fvVCgsnet0iSm8yMyV2ZA7lKyfOgfHC
-	 mvxSZnHR/DaRMxk8lzUgI2nNHEvIQBcAgRVAWn/h9rVolz+03WzTgSWjsqybXa5LGW
-	 HVH291oTHJhAFnLkXEazyJyaeJ9A/Y7RzwVcFKhQE6jMbT6ZubOWez6f3N72C7GW5h
-	 bXamjkgQPKYiDUVTC/6VL48LBftQJetpct7BMVdbuWDt6lfELhKPxtkuFnVtR3b4TM
-	 50UB9Ql27Li6g==
+	b=kg/1xmjNj2MuI3MiA8M1pHW8PUSByEABo+JsPhujDWDHeqfe06IxqPI0jhYsZwLLl
+	 fjvbj54emfPXhvoYEj7HgkMEF55oV1KAXSS6ETxt3U1ia52iyrno/bjcMFQotCbH0y
+	 HfNzso0ALYSAVO7FGKN+bmgL+dRE50++rj+mqXR1HqNEnCVNk1NKoB2bza0lex8xKD
+	 nPi662fSySNECNfEu0pv6ASBtyy0+jWzi/x+tkxAA7mBnaSz+K6Vfknl8FpvUGjtzW
+	 LjIVsDycrowDdbM9NrXG2KTK68645z5VZ9odQsstNJhwPqVA+opVQRUH8Ng3Wbzdl6
+	 S7pEq7Cg+phhw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 15588C433E9;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4AF89C43443;
 	Mon, 15 Jul 2024 23:56:24 +0000 (UTC)
-Subject: Re: [GIT pull] timers/core for v6.11-rc1
+Subject: Re: [GIT PULL] workqueue: Changes for v6.11
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <172099001980.1942258.17387914707489716419.tglx@xen13>
-References: <172099001487.1942258.17671805941963584080.tglx@xen13> <172099001980.1942258.17387914707489716419.tglx@xen13>
+In-Reply-To: <ZpSo08Nd3QXNFK30@slm.duckdns.org>
+References: <ZpSo08Nd3QXNFK30@slm.duckdns.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <172099001980.1942258.17387914707489716419.tglx@xen13>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-core-2024-07-14
-X-PR-Tracked-Commit-Id: b7625d67eb1a63d33b0a2a4518ce4897d27f7465
+X-PR-Tracked-Message-Id: <ZpSo08Nd3QXNFK30@slm.duckdns.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/ tags/wq-for-6.11
+X-PR-Tracked-Commit-Id: 58629d4871e8eb2c385b16a73a8451669db59f39
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4fd9435641bb80c04863c9a35afafe4c3f953bbf
-Message-Id: <172108778408.25181.5644831086543539312.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: b02c520fee6327eb4b25696c5e2d6732f362213c
+Message-Id: <172108778430.25181.9069671230372598038.pr-tracker-bot@kernel.org>
 Date: Mon, 15 Jul 2024 23:56:24 +0000
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 14 Jul 2024 22:50:10 +0200 (CEST):
+The pull request you sent on Sun, 14 Jul 2024 18:42:59 -1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-core-2024-07-14
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/ tags/wq-for-6.11
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4fd9435641bb80c04863c9a35afafe4c3f953bbf
+https://git.kernel.org/torvalds/c/b02c520fee6327eb4b25696c5e2d6732f362213c
 
 Thank you!
 
