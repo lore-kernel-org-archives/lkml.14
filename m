@@ -1,75 +1,88 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FDD46522
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 17:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3146920323
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 17:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721063961; cv=none; b=k4i2km3fqRdb3bZFtWVLIBaJUDmedc6n1uNYu1PlYriflNGBSz4fmRl3G0zQYQjloE0ijy6S4FRHY+pN55ZJ+LmPRSOw0qmBnaKDGhRlY60bLQFJE360cxzOQbfAQz5nQulLIFwgatAyBE8avc5haewQV5kWBvfcSfic9H8xXRU=
+	t=1721064022; cv=none; b=WZPTXgR+I1J21jVObjLZNuMOgEyd/YJW85VgLDZyGxUczNzIfrUIN7b2bZCWrmSHh6x9U5wBA6xnNEKw9Ia5LLaIoYUVpAmHanZziW/pKPst5sZqbahSdO1Ocz4QdW4MYYQYIsPy0ye0U40nDQwQzuKJlRbWphZG9g66jTILeV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721063961; c=relaxed/simple;
-	bh=md+7J16UGb6TuombcMGoH0SvjIWScME3Kk8wOFtdJ6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CkHBADQXlBNIB/aHzjnaF8PatQjWKj2rK0OfNG5S8ctVlxp7sCtaCAbRHWsSY/gZ1mDNrW4ETqqrNAPYy//uxQAD9GfkwOxpjKE9nx9XT/HukNNfTNl1nmIGJK9AxtZcv44FH5FfAk4p91urOvndUVWdA8msMxRGtaUUIZy+1EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from [2601:18c:9101:a8b6:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1sTPLl-0000000039C-2PCm;
-	Mon, 15 Jul 2024 13:18:57 -0400
-Date: Mon, 15 Jul 2024 13:18:53 -0400
-From: Rik van Riel <riel@surriel.com>
-To: Juergen Gross <jgross@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
- linux-kernel@vger.kernel.org, x86@kernel.org, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, kernel-team@meta.com
-Subject: [PATCH] x86,spinlock: make disabling virt_spin_lock_key contingent
- on CONFIG_PARAVIRT
-Message-ID: <20240715131853.313c3bae@imladris.surriel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1721064022; c=relaxed/simple;
+	bh=Sf/n4QnUBT7UFeJXh5ABZXWyXDeEu62SSkzHw7vFxWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dceq/3lroszwzGqMLPI+0hZz1iRMrfUpwgYUoWjF1clY9TKTqX5/S2eiBijH/GvqsEMzin5+GvVuK7c1Lf5T9qhNGZixcGzqWMh95jxuw473+cmk/nhsMKeO0PV0ZeyV4QHRU9ZycQ/CRaYRVyt/j8FnwwgNAMRpUSVOK5Kz93s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZkW3vl5G; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkW3vl5G"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-250ca14422aso2565703fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721064018; x=1721668818; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DoAukMm2zMn5UhOwGy0LspCYay1XjMGwMK5Pu1UoA64=;
+        b=ZkW3vl5GFRdOopZELRgcfYH1Ou5Lxy4QMowV7UzENXcsszJx1bRNyBLDBa+E80w4CO
+         wSVc/jOU2vJbQtiO3bEIVJ1Lx24hg3bzJh+kQzpFCLwItG7ETp2MkTlfRq9xK+Qn2u6v
+         5TH2jesptH0vE0DLDzs5WbMUAou6SAjZhI7w+4R7SYjbarppsQXqIYwTArGiBpcjqvzL
+         dDmC+475cvtFHoF1EK7WeZz7hTeKSAb/8EekrjIstEJJUIPXCPznYOFCGTf0Nccp7zwh
+         CRUh4MQuF2ybyDFgnX6k8Afam6JFdDEiY9GzvofNrDO5BnClQm2TyXg6cBv/3w5TlPMx
+         Ijig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721064018; x=1721668818;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DoAukMm2zMn5UhOwGy0LspCYay1XjMGwMK5Pu1UoA64=;
+        b=YguyE5Z+FTNgUCjdU7fH/6jS2vXNRSON5mFDCxXkOem4NabU2VKCIFLmZ6kWanzOEO
+         8lcoNh/l6JPl98muqIPQkE94385ojL9uiNYdL5DtbxdYUyIYnLVKjeic/SmXkdnKF8OO
+         AkIQSip62uB9oFdNaOivSt82QNitwCiHcDsmBTkAKHg5ch3el2lTum6dGSCnxS4iYAlD
+         mHfIEPhdmo+iwsPquG8zdZtXkPO8+76U5v5T9jFuN6p5QzKgG+GOnQaRh3XNspOza3MF
+         dQNP3PvJvQs9e+ZTfwOhDyYVxJpUfQHb7Zt1GUirxkODGUPrkcLGd4Th2bceYX5Ivgfl
+         4dTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsa0astJ/GxcdA/j8sOzxz/DxLfhhJPcRMOrt3wxC2MA78miUk14nQFdj/4+5c1OlDoEISeVFjq6Oj0NhMvAU1pImvIKM9As4GR2c7
+X-Gm-Message-State: AOJu0YwXpi2+wDL/Agkgq/eyDVqUk1/NlUKUcpZTIsVMDOqIQAjaMGq5
+	UgMQWkUWRj1Qi/p9SZ2i3XMyD641wisLeK4kRE2vpN7ENgod1hJivqRnOQ==
+X-Google-Smtp-Source: AGHT+IEYigfaVcft+pSjLcRTMH6OdObPyoMchhIn51xfiAq9kwqNzoh+7XbUlPQzXSAFR7/ZkxN7Ag==
+X-Received: by 2002:a05:6870:fb94:b0:254:a917:cb3a with SMTP id 586e51a60fabf-25eae872980mr16147368fac.28.1721064016757;
+        Mon, 15 Jul 2024 10:20:16 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7eba037esm4770629b3a.17.2024.07.15.10.20.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 10:20:16 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 15 Jul 2024 07:20:15 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] workqueue: Changes for v6.11
+Message-ID: <ZpVaT67QamgjFY0t@slm.duckdns.org>
+References: <ZpSo08Nd3QXNFK30@slm.duckdns.org>
+ <CAJhGHyBMeUXoV9UaNJp8zgFiPaAVVnU-zBOFH_-BD8zre4=QUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJhGHyBMeUXoV9UaNJp8zgFiPaAVVnU-zBOFH_-BD8zre4=QUA@mail.gmail.com>
 
-The existence of virt_spin_lock_key is contingent only on CONFIG_PARAVIRT, not 
-on CONFIG_PARAVIRT_SPINLOCKS.
+Hello,
 
-As a result, a kernel with CONFIG_PARAVIRT enabled, but CONFIG_PARAVIRT_SPINLOCKS
-disabled will end up disabling queued spinlocks when running on bare metal.
+On Tue, Jul 16, 2024 at 12:03:09AM +0800, Lai Jiangshan wrote:
+> I'm writing a fix to fix this change reported by
+> https://lore.kernel.org/lkml/202407141846.665c0446-lkp@intel.com/
+> to remove the unneeded lockdep_assert_cpus_held().
 
-Making the disabling of virt_spin_lock_key contingent on CONFIG_PARAVIRT, which 
-controls whether the key exists, results in queued spinlocks being enabled on
-bare metal again.
+No worries. Depending on the timing, I can just refresh the pull request or
+do a -fixes pull.
 
-Signed-off-by: Rik van Riel <riel@surriel.com>
-Cc: stable@vger.kernel.org
-Fixes: ce0a1b608bfc ("x86/paravirt: Silence unused native_pv_lock_init() function warning")
----
- arch/x86/kernel/paravirt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks.
 
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 5358d43886ad..dd542a9c6667 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -55,7 +55,7 @@ DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
- 
- void __init native_pv_lock_init(void)
- {
--	if (IS_ENABLED(CONFIG_PARAVIRT_SPINLOCKS) &&
-+	if (IS_ENABLED(CONFIG_PARAVIRT) &&
- 	    !boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		static_branch_disable(&virt_spin_lock_key);
- }
 -- 
-2.45.2
-
+tejun
