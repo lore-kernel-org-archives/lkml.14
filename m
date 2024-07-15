@@ -1,292 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9E18A944;
-	Mon, 15 Jul 2024 12:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6510E18C338;
+	Mon, 15 Jul 2024 12:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721047021; cv=none; b=E3ufxU/m9w23as1Z93B06omEuX7zb3UeuV+N55HsvWGHhKA2J/OrenvWbpq0Nf+u3H9bh0fHkeGLAb6/dL9xueYbwHh8PIcmUCsyq655xbp6eyDolHMERp37gkhNMkj5r5NenISXkLnRHJpddm+psHbAS8QqdDi/qWASGYmyy+I=
+	t=1721047024; cv=none; b=Hbmf6+z9waM2r5+OkvL3Po+6BLefhEsuRP9P3vQX7SAFoUP6N2U7Hp2cg3L08kYKJ6L9eO3OL0HKCvPYaM7ZFgdvx0U7V4tudVdyRNezmP1Iv+SiDi5aQriX590BWLFqIlPFwEgM7QpkT7bf0YRCUl60KPXtll2Jc9LVCPnyl60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721047021; c=relaxed/simple;
-	bh=lGTgDdw0D3LgnUyX4dXtePNOhp9in10pEAeYuGJ54gU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YAXIT0jDJ206YpV0/dX5DWf+Fv1sWEJF1qKE2cmRW9N7Q0wc7TDg9Mi0jEV6RQGg9tnqorZm6OCCDwnSwGc8ZFoV8hyqdtYKjcbfZSqI/KiNPXs2KqjOM0eodcdbbL2NoUypkNlSOtwZ26QK1i1JdLG/wtacU2yKz5Va9HSmxMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WriNx1Kw; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721047024; c=relaxed/simple;
+	bh=N3PTOC6sWEpSEYoAWJezS70/M83GsLYtwX/g0boo1Rs=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=uV0M02EuU1U/ZDbGeMkolyyD6IBJsO/L9A5S+OYqJF1t+ibtw0eYsKlMMuPD4Uk5ExiPiafi9O2M+m+w7WtjLCpEQD16gceA7+TsqRLEkhmL1YsUhWhnSSRA0oAi5TyToEzdTFEU+L8ogVBtj7Ggl/53P7v+SO2fGIqgcvs0ZzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=Xz9fG1bV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oKUh37pE; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WriNx1Kw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721047019; x=1752583019;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=lGTgDdw0D3LgnUyX4dXtePNOhp9in10pEAeYuGJ54gU=;
-  b=WriNx1KwLAohhyialObweRLoxZu+zw4ldANGsmbmBqMte76ud3fA8b2s
-   lIfHk5I77lvvxFckk/N6qrX+L1P/L3rm1DJB9XpbkNz/+1AX9tDEqJpUJ
-   r1fqHPA6YNQGhEaOTeLW9mRlDYxuFFl69LtfKO7iBD6kdxupUJt8MYHiM
-   jWF6RITfxK9xqsYTMcXXZaAa4oha2Ol6XZ8oyIO+JeItEl1IuEBhVudfg
-   zaDP9LOGUAgqiEwUGfx52js24pnsFJ8Xznv1Em+rAWd2DQjAWGNb29G7y
-   G8xCwbT9HcwdSpve8N1dJmCTciIrKZHgd49XI5iDWmRbgWIPp9LPj2cfH
-   g==;
-X-CSE-ConnectionGUID: aCJYLc8KRCC6rIXrFJlQVw==
-X-CSE-MsgGUID: vmh8KRdWR/KOE1FSi4iMWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="29012835"
-X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="29012835"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 05:36:59 -0700
-X-CSE-ConnectionGUID: p79mAvRxS6uC/AWugJ5V4Q==
-X-CSE-MsgGUID: 0bsbbmOVQXK+BgeNncbNrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="49497247"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.131])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 05:36:55 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 15 Jul 2024 15:36:50 +0300 (EEST)
-To: superm1@kernel.org
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Mathias Nyman <mathias.nyman@intel.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>, 
-    Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 1/5] PCI: Use an enum for reset type in
- pci_dev_wait()
-In-Reply-To: <20240712181246.811044-2-superm1@kernel.org>
-Message-ID: <c67b005a-2378-2ce9-e55b-da807fd1811a@linux.intel.com>
-References: <20240712181246.811044-1-superm1@kernel.org> <20240712181246.811044-2-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Xz9fG1bV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oKUh37pE"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 819B41388C65;
+	Mon, 15 Jul 2024 08:37:01 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Mon, 15 Jul 2024 08:37:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1721047021;
+	 x=1721133421; bh=HlZuP9r9uYA4qH3ebyoGUrlDKd8G/Hmiliqj2CCJC58=; b=
+	Xz9fG1bVRVN43aT4AhxhFpEMazClSDNF7Eg2mqLdC5s6NT/xPx6KGSEuwf3yx7+O
+	maQQ2LC/r5LbsE4GnQxb7r1yTwuOyvhVwxFAlR/z6phCR9QzLRbJIP0GQR79aLHc
+	5Sf1xQ/WvCepSN7tabfAbODA0zP0Q2EKP0Azdo97Hk+/vUQiLCMZqzUt9mSLeIpk
+	937HwPxwlISrhNgjl6xiA9LVySU+iTUosJMpjg+G7APhksyGciloIugDYppIwBLj
+	U2VKdeY9gkskWCfYsBRohonzEkM0JfirAVMmqiOIdK68dgdRLzVaYfusOSd5rU/f
+	AWvePFNQDrgT63GUyEeHWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721047021; x=
+	1721133421; bh=HlZuP9r9uYA4qH3ebyoGUrlDKd8G/Hmiliqj2CCJC58=; b=o
+	KUh37pEGj46IICxdEHFxb2Vi1hvn6iRj+NAwSnU7X9RO4x9xZ5C0UMp9ZYUGlw+0
+	+noF80C9JagRVfcgEjZWZlgo+Qdv3gwFYFARFan/M4Gt+PWQorvmuPqkbFkFHMki
+	9gpl+rwSG2UkStLoh118nIlLKio+AABh6/9T//xLV24wxALjAFn2zkonvMUFCB5C
+	PO7xgmqexSZ35gDHNgYHiYatDzg+tJtBul4AxvKTFJeTBUrxmi7KKIF3HIblTqcD
+	CofruPOOr/7UZTNAwvhOR0uvkP4GgyhhKfg4iLga0pcfOrLOiSKsh2GdqaljC13L
+	hotDYNnaDy/oergy/KzPQ==
+X-ME-Sender: <xms:6xeVZuoVzlmsmk3PgpB2ntcL77tFGXdSHwUAZxCagTionCIwhLvsSw>
+    <xme:6xeVZsqsHcwRGF4y7zrwywCIlM5zZk3X_oyePYCoI3SznMdWf4jO3A1_taNg87int
+    cQ1bzJS9KS96_4J9Jc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgedvgdehgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:6xeVZjNmeP-Qft_UbzQurJRx5PSp0FubXQM0vys6I45YN5UICEDG_g>
+    <xmx:6xeVZt7B_KceenXlmU6Ykxjh7i2rhGH9wKg2Kkmv4o0nDiAf0yExjA>
+    <xmx:6xeVZt7DtxX-0Mm4WXRKNZyeV197AoLACvoJ1NxX5-Kgt5Xef9ktnQ>
+    <xmx:6xeVZth1xu4A2nWri4iB1zY3ScYH6rVge9Ohbn_vebUmGprLZmd2Qg>
+    <xmx:7ReVZqvJ9MKpOEYA9FFwYA8bYTl9nArgoKWvU76gddVGYYFr_IwZTzKf>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C7DBC36A0074; Mon, 15 Jul 2024 08:36:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1789045202-1721046575=:1424"
-Content-ID: <798844da-5d0a-555d-6478-d69161bbec3b@linux.intel.com>
+Message-Id: <ac94941f-3ac3-4820-b94d-aeb72a7a7a5c@app.fastmail.com>
+In-Reply-To: <alpine.DEB.2.21.2407150225310.58077@angie.orcam.me.uk>
+References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com>
+ <Zn1FuxNw2CUttzdg@alpha.franken.de>
+ <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com>
+ <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk>
+ <fbd421a6-cf37-49ab-bdbe-6128a7cae8be@app.fastmail.com>
+ <Zoz6+YmUk7CBsNFw@alpha.franken.de>
+ <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com>
+ <Zo457UgAkhbAgm2R@alpha.franken.de>
+ <alpine.DEB.2.21.2407101015120.38148@angie.orcam.me.uk>
+ <a8741e38-837b-4fbb-8656-1e6d50bdfcc0@app.fastmail.com>
+ <alpine.DEB.2.21.2407110315170.38148@angie.orcam.me.uk>
+ <de07ff44-41ee-4158-b629-90a1835bd9cb@app.fastmail.com>
+ <alpine.DEB.2.21.2407121250350.38148@angie.orcam.me.uk>
+ <dad7b36f-2e37-44db-939e-cdb454875e2a@app.fastmail.com>
+ <alpine.DEB.2.21.2407150225310.58077@angie.orcam.me.uk>
+Date: Mon, 15 Jul 2024 20:35:21 +0800
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Jonathan Corbet" <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1789045202-1721046575=:1424
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <3b6b0dbd-8593-9c57-8b49-00a0de00e557@linux.intel.com>
 
-On Fri, 12 Jul 2024, superm1@kernel.org wrote:
+=E5=9C=A82024=E5=B9=B47=E6=9C=8815=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
+=8D=888:15=EF=BC=8CMaciej W. Rozycki=E5=86=99=E9=81=93=EF=BC=9A
+[..]
+>  I don't know what prctl(2) has to do with this.  If you don't impleme=
+nt=20
+> this part, then your change will cause Linux to behave inconsistently =
+and=20
+> therefore I'll have to NAK it.
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
->=20
-> A string is passed to all callers of pci_dev_wait() which is utilized
-> to demonstrate what kind of reset happened when there was a problem.
->=20
-> This doesn't allow making the behavior for different reset types
-> conditional though. Lay some plumbing to allow making comparisons of
-> reset types with integers instead. No functional changes.
->=20
-> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/pci-driver.c |  2 +-
->  drivers/pci/pci.c        | 29 +++++++++++++++++++----------
->  drivers/pci/pci.h        | 11 ++++++++++-
->  drivers/pci/pcie/dpc.c   |  2 +-
->  4 files changed, 31 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index af2996d0d17ff..ff97d08741df7 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -572,7 +572,7 @@ static void pci_pm_bridge_power_up_actions(struct pci=
-_dev *pci_dev)
->  {
->  =09int ret;
-> =20
-> -=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, "resume");
-> +=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, PCI_DEV_WAIT_RESUM=
-E);
->  =09if (ret) {
->  =09=09/*
->  =09=09 * The downstream link failed to come up, so mark the
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 35fb1f17a589c..115361a08d9e3 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -181,6 +181,15 @@ static int __init pcie_port_pm_setup(char *str)
->  }
->  __setup("pcie_port_pm=3D", pcie_port_pm_setup);
-> =20
-> +const char * const pci_reset_types[] =3D {
+I think your concern was regarding user space application needs to set N=
+aN2008 bits
+at runtime?
 
-Sparse is not happy about this and expects static as it is not defined=20
-by any header (LKP seems to also have caught this).
+In this case, the best interface to inform kernel about NaN2008 changes =
+is prctl.
 
-> +=09"FLR",
-> +=09"AF_FLR",
-> +=09"PM D3HOT->D0",
-> +=09"bus reset",
-> +=09"resume",
-> +=09"DPC",
+I may misinterpret your comments.
 
-Perhaps the index-based array initialization format would be beneficial=20
-here.
+>
+>  It's not much to do anyway, as I have prepared `ptrace_setfcr31' alre=
+ady=20
+> to handle masking correctly, so all you have to do is to set the mask =
+as=20
+> required for the right thing to happen.  I shouldn't have needed to po=
+int=20
+> you at it though, as that code is easy to find.
+
+I think I got your point, will try to implement it.
+
+>
+>> We are unable to prevent user applications write NAN2008 bits for the=
+ "switchable
+>> QEMU" as well. So I'd perfer leave it as is, and let this feature go =
+into 6.11 so people
+>> can start to use it.
+>
+>  This doesn't matter either, as your change only addresses the case wh=
+ere=20
+> FCSR.NAN2008 isn't writable anyway, which is the sole reason you want =
+to=20
+> switch between native hard float support and emulation, doesn't it?
+>
+>  In fact where FCSR.NAN2008 is writable your new mode has to be equiva=
+lent
+> to "ieee754=3Dstrict", because then there is no need to trigger emulat=
+ion=20
+> for either NaN mode.  Please do verify that this is the case.
+
+This had been verified with perf math-emu counters to ensure no unnecess=
+ary emulation
+is triggered.
+
+>
+>> This is actually a request from Debian MIPS team so they can get glib=
+c tests run on
+>> mismatched NaN hardware.
+>
+>  That doesn't matter for us here (and I have a bad suspicion anyway), =
+but=20
+> the Debian team is of course free to do what they want here, the GNU G=
+PL=20
+> applies.
+
+We care about our downstream users, don't we?
+
+There are some lags on Debian buildd queue for mips64el due to lack of h=
+igh performance
+hardware with huge memory.
+They were about to source some Loongson 3A4000, which is NaN2008 only. B=
+ut many packages
+test cases are failing on it due to NaN2008.
+They asked me to help and that was my solution. I sincerely want to get =
+this change upstreamed
+to cover some downstream use cases.
+
+I don't know what theory do you have here, but that's all stories behind.
+
+>
+>  And also they can always use the "nofpu" kernel parameter to run thei=
+r=20
+> verification.  I used it for mine back at ImgTec before 2008 NaN hardw=
+are=20
+> was available, also to verify emulation, which I wrote too.  Perhaps t=
+hat=20
+> is also the right solution for Debian actually?
+
+I'll suggest to them, thanks.
+
+>
+>   Maciej
 
 --=20
- i.
-
-> +};
-> +
->  /**
->   * pci_bus_max_busnr - returns maximum PCI bus number of given bus' chil=
-dren
->   * @bus: pointer to PCI bus structure to search
-> @@ -1250,7 +1259,7 @@ void pci_resume_bus(struct pci_bus *bus)
->  =09=09pci_walk_bus(bus, pci_resume_one, NULL);
->  }
-> =20
-> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeo=
-ut)
-> +static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_t=
-ype, int timeout)
->  {
->  =09int delay =3D 1;
->  =09bool retrain =3D false;
-> @@ -1288,7 +1297,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
-reset_type, int timeout)
-> =20
->  =09=09if (delay > timeout) {
->  =09=09=09pci_warn(dev, "not ready %dms after %s; giving up\n",
-> -=09=09=09=09 delay - 1, reset_type);
-> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
->  =09=09=09return -ENOTTY;
->  =09=09}
-> =20
-> @@ -1301,7 +1310,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
-reset_type, int timeout)
->  =09=09=09=09}
->  =09=09=09}
->  =09=09=09pci_info(dev, "not ready %dms after %s; waiting\n",
-> -=09=09=09=09 delay - 1, reset_type);
-> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
->  =09=09}
-> =20
->  =09=09msleep(delay);
-> @@ -1310,10 +1319,10 @@ static int pci_dev_wait(struct pci_dev *dev, char=
- *reset_type, int timeout)
-> =20
->  =09if (delay > PCI_RESET_WAIT)
->  =09=09pci_info(dev, "ready %dms after %s\n", delay - 1,
-> -=09=09=09 reset_type);
-> +=09=09=09 pci_reset_types[reset_type]);
->  =09else
->  =09=09pci_dbg(dev, "ready %dms after %s\n", delay - 1,
-> -=09=09=09reset_type);
-> +=09=09=09pci_reset_types[reset_type]);
-> =20
->  =09return 0;
->  }
-> @@ -4465,7 +4474,7 @@ int pcie_flr(struct pci_dev *dev)
->  =09 */
->  =09msleep(100);
-> =20
-> -=09return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
-> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_FLR, PCIE_RESET_READY_POLL_MS);
->  }
->  EXPORT_SYMBOL_GPL(pcie_flr);
-> =20
-> @@ -4532,7 +4541,7 @@ static int pci_af_flr(struct pci_dev *dev, bool pro=
-be)
->  =09 */
->  =09msleep(100);
-> =20
-> -=09return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
-> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_AF_FLR, PCIE_RESET_READY_POLL_M=
-S);
->  }
-> =20
->  /**
-> @@ -4577,7 +4586,7 @@ static int pci_pm_reset(struct pci_dev *dev, bool p=
-robe)
->  =09pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, csr);
->  =09pci_dev_d3_sleep(dev);
-> =20
-> -=09return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
-> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_D3HOT_D0, PCIE_RESET_READY_POLL=
-_MS);
->  }
-> =20
->  /**
-> @@ -4751,7 +4760,7 @@ static int pci_bus_max_d3cold_delay(const struct pc=
-i_bus *bus)
->   * Return 0 on success or -ENOTTY if the first device on the secondary b=
-us
->   * failed to become accessible.
->   */
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
-ype)
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
-t_type reset_type)
->  {
->  =09struct pci_dev *child;
->  =09int delay;
-> @@ -4885,7 +4894,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *=
-dev)
->  {
->  =09pcibios_reset_secondary_bus(dev);
-> =20
-> -=09return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
-> +=09return pci_bridge_wait_for_secondary_bus(dev, PCI_DEV_WAIT_BUS_RESET)=
-;
->  }
->  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
-> =20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index fd44565c47562..88f54d22118dc 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -4,6 +4,15 @@
-> =20
->  #include <linux/pci.h>
-> =20
-> +enum pci_reset_type {
-> +=09PCI_DEV_WAIT_FLR,
-> +=09PCI_DEV_WAIT_AF_FLR,
-> +=09PCI_DEV_WAIT_D3HOT_D0,
-> +=09PCI_DEV_WAIT_BUS_RESET,
-> +=09PCI_DEV_WAIT_RESUME,
-> +=09PCI_DEV_WAIT_DPC,
-> +};
-> +
->  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
->  #define MAX_NR_DEVFNS 256
-> =20
-> @@ -94,7 +103,7 @@ void pci_msi_init(struct pci_dev *dev);
->  void pci_msix_init(struct pci_dev *dev);
->  bool pci_bridge_d3_possible(struct pci_dev *dev);
->  void pci_bridge_d3_update(struct pci_dev *dev);
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
-ype);
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
-t_type reset_type);
-> =20
->  static inline void pci_wakeup_event(struct pci_dev *dev)
->  {
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index a668820696dc0..306efc399e503 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -174,7 +174,7 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
->  =09pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
->  =09=09=09      PCI_EXP_DPC_STATUS_TRIGGER);
-> =20
-> -=09if (pci_bridge_wait_for_secondary_bus(pdev, "DPC")) {
-> +=09if (pci_bridge_wait_for_secondary_bus(pdev, PCI_DEV_WAIT_DPC)) {
->  =09=09clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
->  =09=09ret =3D PCI_ERS_RESULT_DISCONNECT;
->  =09} else {
->=20
---8323328-1789045202-1721046575=:1424--
+- Jiaxun
