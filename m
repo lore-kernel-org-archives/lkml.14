@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2209B186E28;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC801862B3;
 	Mon, 15 Jul 2024 08:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032805; cv=none; b=pyDkidqKktoEfGNyIj2zJn3C38kbbz+PjrLEuMYhELqK9uXafHv2BsMG2YzXgz0xWhCYDYAh2Msvs2RcMG0jV2BhpTTJnPTXY9W6DJq6ogZ76Vltzt3Fx1LjN3wPrkVAhemamXVHiTwatdSOHg4Rd/tEHG3AFcwd53UBCuYcp70=
+	t=1721032805; cv=none; b=QI+dcK1FfQTJKFQzS996mf/JNGOFD+MMFQP18vM/fBOmjPsVn1v/9vAva2oD8EHyMYDWPt2lI2hFZvi4T3KQErJlN2obiOv2wTN+dxVICYgddlS0CWVxsZ7KQjvG831Sr/j1ttKXl4PSs9OSkeZl1VSVhpWHT3rfeUjH6qzL1bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721032805; c=relaxed/simple;
-	bh=TLn4iY9WirIpra11C90u3n8gyc+H+7TAKuLu1AUc2WY=;
+	bh=kegMs5uhODxJGpWVpDmFdsZZDFuYrLYfPGjM2n5jZSQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AoqbpcUqqRBZNs813EwXrO1Ama7hEJK+EtxmFnSOe00h+iwEzREaLBHkeXOxzetQ47BPhsvcYJnr+XbRIZ4+j4GmFpw46ux2Ve4epJktjflIIa9uy0pdKhCw4s/XT5ffhGhVHiL3l8K+SJdY7L4FwAPndWceanxue/EUxEN1OSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhdyzPcL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=nAL+YlMmsnLzH799wSYHsdVn4j1Wx+Mngru2rsdaUiqopjIUX6hKs6H/i3PsauZ9lEdXc2UkHoBZYpi/3OhH+sMVBoyeIgRBU5f4w/75F1czLInkC66L8x3834qj3Pbw6eHytz8R2Qwt6jcRWMPHg4BwKKoRx3w/hZ8LFPlibPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYuIIFtB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhdyzPcL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F1842C4AF65;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYuIIFtB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B92E8C4AF0B;
 	Mon, 15 Jul 2024 08:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721032805;
-	bh=TLn4iY9WirIpra11C90u3n8gyc+H+7TAKuLu1AUc2WY=;
+	s=k20201202; t=1721032804;
+	bh=kegMs5uhODxJGpWVpDmFdsZZDFuYrLYfPGjM2n5jZSQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JhdyzPcLTjs0J1c7jhPsFqiTZXF6+x4FrFnt/fQT+QoKvdR/ZQ2kk1hU1i90W689N
-	 mlA0M04vEkedWTs4CQiDGVbtt0V4nBWaFyNBbBrXTk6FSwQzu4XGm2hEAAIKtEzrzf
-	 Xs+Hc91PsLwaxF3LiU6aqvrUgiTF+V756k8RlC17+/s6LTLfvTsmMSZXeZoA6sjfMf
-	 0iGDL80JRiKgmfcDv0szg0WbKE6mNxMzHLsNeh61smiZ5GSLE0QVAZWhwdUDFmRRCQ
-	 +icJR6fYXWEuYOiAOfu6ZftpFFeE0DFtTaKHpgjvZqn3l/oyElfg0SijDVw8QnrWRz
-	 3AKwJUZy4OOMQ==
+	b=hYuIIFtBPjHbnvi9C6h7fvD5qGd9kB/cEsD3QbqOMH7sDYQ25jY+aRfjB6sUz2RF1
+	 0Oh4VQbQ7oKWu15BEcrZO+QAxWu6kr2wrNeZ3x7NyNvqubkeUCFj+zIb/pLmGRZiRX
+	 QPxi46zVai74DsFqmRdQi5gTNv1hXN7/5bAGrFgL/7KpyGRbH7W4cgHp48ehJZ3k+I
+	 ksTH/wjhPH+we2U1MMM1iBdkkUG2pemkNos2aWdf1uf2QK7ektnBAzr7xLh77o9W8F
+	 l7XXh0mKNjhrkyS31Pa6YLL6CNZhWT1tmpmG9szJn0t11UOOP72ghCBDfh6lQ0w5+Y
+	 HpYE0eRuVMH8w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8702C3DA59;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14F9C3DA5A;
 	Mon, 15 Jul 2024 08:40:04 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 15 Jul 2024 11:38:37 +0300
-Subject: [PATCH v11 33/38] pwm: ep93xx: drop legacy pinctrl
+Date: Mon, 15 Jul 2024 11:38:34 +0300
+Subject: [PATCH v11 30/38] ARM: dts: ep93xx: add ts7250 board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,27 +39,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240715-ep93xx-v11-33-4e924efda795@maquefel.me>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240715-ep93xx-v11-30-4e924efda795@maquefel.me>
 References: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
 In-Reply-To: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
-To: Hartley Sweeten <hsweeten@visionengravers.com>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
  Nikita Shubin <nikita.shubin@maquefel.me>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
- Sergey Shtylyov <s.shtylyov@omp.ru>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032800; l=4449;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721032799; l=6186;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=9tWs5wPLeKECQlcQ9rkIh26LRGvwgfxOpMK+JfxreaE=;
- b=qRTr7TBUoWCa+2fq+nDOeJXUxuaasbBBBlRoqSicurr/ryj0YAZVf8iLuc+fe0aJkoPgAf9qYf+l
- X3bZoYBlBT57fTBtb/PA/GT1lb1jmFadTlOE2i7t6k2/eXFBgL2x
+ bh=F8g8fhLrok2XoBODc7kkFWBfV9QlTn8N1KFztkjBqBQ=;
+ b=qEXOlNy1uSKGgvb9iKrlw2KX/tknjbDaK3ARQ5movRK5byZnD09O4uWLSFvoHhdCF0mafqHup559
+ Usr4Rc2BA+YMBgIRb5z+tdQpt/ZwHL6UX/vRg+YAuSdscHL7M3R5
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
@@ -69,137 +63,310 @@ Reply-To: nikita.shubin@maquefel.me
 
 From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Drop legacy gpio request/free since we are using
-pinctrl for this now.
+Add device tree file for Technologic Systems ts7250 board and
+Liebherr bk3 board which have many in common, both are based on
+ep9302 SoC variant.
 
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/mach-ep93xx/core.c       | 42 ---------------------------------------
- drivers/pwm/pwm-ep93xx.c          | 18 -----------------
- include/linux/soc/cirrus/ep93xx.h |  4 ----
- 3 files changed, 64 deletions(-)
+ arch/arm/boot/dts/cirrus/Makefile          |   3 +
+ arch/arm/boot/dts/cirrus/ep93xx-bk3.dts    | 125 +++++++++++++++++++++++++
+ arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts | 145 +++++++++++++++++++++++++++++
+ 3 files changed, 273 insertions(+)
 
-diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
-index b99c46d22c4d..4ddf1a4cba33 100644
---- a/arch/arm/mach-ep93xx/core.c
-+++ b/arch/arm/mach-ep93xx/core.c
-@@ -577,48 +577,6 @@ void __init ep93xx_register_pwm(int pwm0, int pwm1)
- 		platform_device_register(&ep93xx_pwm1_device);
- }
- 
--int ep93xx_pwm_acquire_gpio(struct platform_device *pdev)
--{
--	int err;
--
--	if (pdev->id == 0) {
--		err = 0;
--	} else if (pdev->id == 1) {
--		err = gpio_request(EP93XX_GPIO_LINE_EGPIO14,
--				   dev_name(&pdev->dev));
--		if (err)
--			return err;
--		err = gpio_direction_output(EP93XX_GPIO_LINE_EGPIO14, 0);
--		if (err)
--			goto fail;
--
--		/* PWM 1 output on EGPIO[14] */
--		ep93xx_devcfg_set_bits(EP93XX_SYSCON_DEVCFG_PONG);
--	} else {
--		err = -ENODEV;
--	}
--
--	return err;
--
--fail:
--	gpio_free(EP93XX_GPIO_LINE_EGPIO14);
--	return err;
--}
--EXPORT_SYMBOL(ep93xx_pwm_acquire_gpio);
--
--void ep93xx_pwm_release_gpio(struct platform_device *pdev)
--{
--	if (pdev->id == 1) {
--		gpio_direction_input(EP93XX_GPIO_LINE_EGPIO14);
--		gpio_free(EP93XX_GPIO_LINE_EGPIO14);
--
--		/* EGPIO[14] used for GPIO */
--		ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_PONG);
--	}
--}
--EXPORT_SYMBOL(ep93xx_pwm_release_gpio);
--
--
- /*************************************************************************
-  * EP93xx video peripheral handling
-  *************************************************************************/
-diff --git a/drivers/pwm/pwm-ep93xx.c b/drivers/pwm/pwm-ep93xx.c
-index 67c3fdbf7ae3..994f89ac43b4 100644
---- a/drivers/pwm/pwm-ep93xx.c
-+++ b/drivers/pwm/pwm-ep93xx.c
-@@ -27,8 +27,6 @@
- 
- #include <asm/div64.h>
- 
--#include <linux/soc/cirrus/ep93xx.h>	/* for ep93xx_pwm_{acquire,release}_gpio() */
--
- #define EP93XX_PWMx_TERM_COUNT	0x00
- #define EP93XX_PWMx_DUTY_CYCLE	0x04
- #define EP93XX_PWMx_ENABLE	0x08
-@@ -44,20 +42,6 @@ static inline struct ep93xx_pwm *to_ep93xx_pwm(struct pwm_chip *chip)
- 	return pwmchip_get_drvdata(chip);
- }
- 
--static int ep93xx_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct platform_device *pdev = to_platform_device(pwmchip_parent(chip));
--
--	return ep93xx_pwm_acquire_gpio(pdev);
--}
--
--static void ep93xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct platform_device *pdev = to_platform_device(pwmchip_parent(chip));
--
--	ep93xx_pwm_release_gpio(pdev);
--}
--
- static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    const struct pwm_state *state)
- {
-@@ -156,8 +140,6 @@ static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- }
- 
- static const struct pwm_ops ep93xx_pwm_ops = {
--	.request = ep93xx_pwm_request,
--	.free = ep93xx_pwm_free,
- 	.apply = ep93xx_pwm_apply,
- };
- 
-diff --git a/include/linux/soc/cirrus/ep93xx.h b/include/linux/soc/cirrus/ep93xx.h
-index 8942bfaf1545..f6376edc1b33 100644
---- a/include/linux/soc/cirrus/ep93xx.h
-+++ b/include/linux/soc/cirrus/ep93xx.h
-@@ -37,8 +37,6 @@ struct ep93xx_regmap_adev {
- 	container_of((_adev), struct ep93xx_regmap_adev, adev)
- 
- #ifdef CONFIG_ARCH_EP93XX
--int ep93xx_pwm_acquire_gpio(struct platform_device *pdev);
--void ep93xx_pwm_release_gpio(struct platform_device *pdev);
- int ep93xx_ide_acquire_gpio(struct platform_device *pdev);
- void ep93xx_ide_release_gpio(struct platform_device *pdev);
- int ep93xx_i2s_acquire(void);
-@@ -46,8 +44,6 @@ void ep93xx_i2s_release(void);
- unsigned int ep93xx_chip_revision(void);
- 
- #else
--static inline int ep93xx_pwm_acquire_gpio(struct platform_device *pdev) { return 0; }
--static inline void ep93xx_pwm_release_gpio(struct platform_device *pdev) {}
- static inline int ep93xx_ide_acquire_gpio(struct platform_device *pdev) { return 0; }
- static inline void ep93xx_ide_release_gpio(struct platform_device *pdev) {}
- static inline int ep93xx_i2s_acquire(void) { return 0; }
+diff --git a/arch/arm/boot/dts/cirrus/Makefile b/arch/arm/boot/dts/cirrus/Makefile
+index e944d3e2129d..211a7e2f2115 100644
+--- a/arch/arm/boot/dts/cirrus/Makefile
++++ b/arch/arm/boot/dts/cirrus/Makefile
+@@ -3,3 +3,6 @@ dtb-$(CONFIG_ARCH_CLPS711X) += \
+ 	ep7211-edb7211.dtb
+ dtb-$(CONFIG_ARCH_CLPS711X) += \
+ 	ep7211-edb7211.dtb
++dtb-$(CONFIG_ARCH_EP93XX) += \
++	ep93xx-bk3.dtb \
++	ep93xx-ts7250.dtb
+diff --git a/arch/arm/boot/dts/cirrus/ep93xx-bk3.dts b/arch/arm/boot/dts/cirrus/ep93xx-bk3.dts
+new file mode 100644
+index 000000000000..40bc9b2a6ba8
+--- /dev/null
++++ b/arch/arm/boot/dts/cirrus/ep93xx-bk3.dts
+@@ -0,0 +1,125 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree file for Liebherr controller BK3.1 based on Cirrus EP9302 SoC
++ */
++/dts-v1/;
++#include "ep93xx.dtsi"
++
++/ {
++	model = "Liebherr controller BK3.1";
++	compatible = "liebherr,bk3", "cirrus,ep9301";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	chosen {
++	};
++
++	memory@0 {
++		device_type = "memory";
++		/* should be set from ATAGS */
++		reg = <0x00000000 0x02000000>,
++		      <0x000530c0 0x01fdd000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		led-0 {
++			label = "grled";
++			gpios = <&gpio4 0 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			function = LED_FUNCTION_HEARTBEAT;
++		};
++
++		led-1 {
++			label = "rdled";
++			gpios = <&gpio4 1 GPIO_ACTIVE_HIGH>;
++			function = LED_FUNCTION_FAULT;
++		};
++	};
++};
++
++&ebi {
++	nand-controller@60000000 {
++		compatible = "technologic,ts7200-nand";
++		reg = <0x60000000 0x8000000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		nand@0 {
++			reg = <0>;
++			partitions {
++				compatible = "fixed-partitions";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				partition@0 {
++					label = "System";
++					reg = <0x00000000 0x01e00000>;
++					read-only;
++				};
++
++				partition@1e00000 {
++					label = "Data";
++					reg = <0x01e00000 0x05f20000>;
++				};
++
++				partition@7d20000 {
++					label = "RedBoot";
++					reg = <0x07d20000 0x002e0000>;
++					read-only;
++				};
++			};
++		};
++	};
++};
++
++&eth0 {
++	phy-handle = <&phy0>;
++};
++
++&i2s {
++	dmas = <&dma0 0 1>, <&dma0 0 2>;
++	dma-names = "tx", "rx";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2s_on_ac97_pins>;
++	status = "okay";
++};
++
++&gpio1 {
++	/* PWM */
++	gpio-ranges = <&syscon 6 163 1>;
++};
++
++&gpio4 {
++	gpio-ranges = <&syscon 0 97 2>;
++	status = "okay";
++};
++
++&gpio6 {
++	gpio-ranges = <&syscon 0 87 2>;
++	status = "okay";
++};
++
++&gpio7 {
++	gpio-ranges = <&syscon 2 199 4>;
++	status = "okay";
++};
++
++&mdio0 {
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++		device_type = "ethernet-phy";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts b/arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts
+new file mode 100644
+index 000000000000..9e03f93d9fc8
+--- /dev/null
++++ b/arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts
+@@ -0,0 +1,145 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree file for Technologic Systems ts7250 board based on Cirrus EP9302 SoC
++ */
++/dts-v1/;
++#include "ep93xx.dtsi"
++
++/ {
++	compatible = "technologic,ts7250", "cirrus,ep9301";
++	model = "TS-7250 SBC";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	chosen {
++	};
++
++	memory@0 {
++		device_type = "memory";
++		/* should be set from ATAGS */
++		reg = <0x00000000 0x02000000>,
++		      <0x000530c0 0x01fdd000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		led-0 {
++			label = "grled";
++			gpios = <&gpio4 0 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			function = LED_FUNCTION_HEARTBEAT;
++		};
++
++		led-1 {
++			label = "rdled";
++			gpios = <&gpio4 1 GPIO_ACTIVE_HIGH>;
++			function = LED_FUNCTION_FAULT;
++		};
++	};
++};
++
++&ebi {
++	nand-controller@60000000 {
++		compatible = "technologic,ts7200-nand";
++		reg = <0x60000000 0x8000000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		nand@0 {
++			reg = <0>;
++			partitions {
++				compatible = "fixed-partitions";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				partition@0 {
++					label = "TS-BOOTROM";
++					reg = <0x00000000 0x00020000>;
++					read-only;
++				};
++
++				partition@20000 {
++					label = "Linux";
++					reg = <0x00020000 0x07d00000>;
++				};
++
++				partition@7d20000 {
++					label = "RedBoot";
++					reg = <0x07d20000 0x002e0000>;
++					read-only;
++				};
++			};
++		};
++	};
++
++	rtc@10800000 {
++		compatible = "st,m48t86";
++		reg = <0x10800000 0x1>,
++			<0x11700000 0x1>;
++	};
++
++	watchdog@23800000 {
++		compatible = "technologic,ts7200-wdt";
++		reg = <0x23800000 0x01>,
++			<0x23c00000 0x01>;
++		timeout-sec = <30>;
++	};
++};
++
++&eth0 {
++	phy-handle = <&phy0>;
++};
++
++&gpio1 {
++	/* PWM */
++	gpio-ranges = <&syscon 6 163 1>;
++};
++
++/* ts7250 doesn't have GPIO Port D present */
++&gpio3 {
++	status = "disabled";
++};
++
++&gpio4 {
++	gpio-ranges = <&syscon 0 97 2>;
++};
++
++&gpio6 {
++	gpio-ranges = <&syscon 0 87 2>;
++};
++
++&gpio7 {
++	gpio-ranges = <&syscon 2 199 4>;
++};
++
++&spi0 {
++	cs-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
++	dmas = <&dma1 10 2>, <&dma1 10 1>;
++	dma-names = "rx", "tx";
++	status = "okay";
++
++	tmp122: temperature-sensor@0 {
++		compatible = "ti,tmp122";
++		reg = <0>;
++		spi-max-frequency = <2000000>;
++	};
++};
++
++&mdio0 {
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++		device_type = "ethernet-phy";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
 
 -- 
 2.43.2
