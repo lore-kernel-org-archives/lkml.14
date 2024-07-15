@@ -1,336 +1,199 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011000.outbound.protection.outlook.com [52.101.70.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4056B13AD05;
-	Mon, 15 Jul 2024 20:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721075383; cv=none; b=jljFzPJJnqdHcAyakdfoVJ6V5oRqCJH+EGgMBJip5yNyqFJsunwjkJNNh1TNVzK1/zxRwZTrzRAHIyCIVPiVXphz/3WgLdw0E55WaVec9Tu9Fvmw65nb9gbobBGch2QCZvGoPOxFHsq9tup6KC2WRtFvmk11927AT6cCzJiNmYA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721075383; c=relaxed/simple;
-	bh=P4cRW+V8KEu1xtPeEzW27Bl2ZFgYCGfSZwxSULCAcRo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n/oenoJoMipaFBU1qFiNTyiWQfNJHeQooKVZ2zb0qjNw1FLzAK8UMYfLcUGsi6EJd3pTlcK9yrHsvdIeLaOCWQrNN0xp1CIXWYyUQ6AVh0QpbudFFuq609jnsBwaQQXoNpJv0CC0HYvrfIYdnPU5sU0ogGDClAc0S5zzVD44LnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pbG0llnr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=97BjocNX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pbG0llnr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=97BjocNX; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926C614006;
+	Mon, 15 Jul 2024 20:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721075418; cv=fail; b=u4DZ8fwwsr/kYPHkQFYAt2srb6gwxbpsSSQEJYAM12bYGdI71xX75U4QgNpU4jzsFhC7CxPrw0I+B3Y9FGiZ2c4UIfSQrVG3/O8Sne2QMRECSmFfEiS3YQ5JL9k6DS/26TYt6ZVPXydrfkL5G9vjPV6fZwPZiyQiAB+70Wh/7L4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721075418; c=relaxed/simple;
+	bh=EYq4UmROgcf2kp996A2qObnm2JDQgEcIztlzSGwqmwU=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=phSN+ZT0vZarobjIQUxheJ2B1qyYbr3/H9bPPhjqCI2yenk4ldf7WnOxuzSk0DOEMA4yPUrYfJiDnb71SMfqvgkEJYy1Pqnqz28gRRT/U2j/DmNwq5B5b6v0TcEg8O7hYgJw3ObhouFohdzyXV3qhQJkU6uvKC91ds9tatB5pQg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=rM3CqCwm; arc=fail smtp.client-ip=52.101.70.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pbG0llnr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="97BjocNX";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pbG0llnr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="97BjocNX"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 350E221BCF;
-	Mon, 15 Jul 2024 20:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1721075379; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c5NdmWuv3Hvepg9STEhFTiZ7iZ+qzw7pFNvQWY9q/Os=;
-	b=pbG0llnr/a+hFS/aFYyY7iQhUo9J3Wd8lOWvT1qWA9/XkF+qfpvwM//mHrWFKSTPxhXVEe
-	zbwxz4zS8s/7SSuWKiw2wR23oMVa/QOGGzCmFoCeaXeLcrBVQrCw9TeP3gyEjSiP6Xax+a
-	oBM6hahMKNsMzEDYtO0hstWCtbwQ084=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1721075379;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c5NdmWuv3Hvepg9STEhFTiZ7iZ+qzw7pFNvQWY9q/Os=;
-	b=97BjocNXuZryya7AfWUdPflgXoUPJtywDuTsx6AhZ3hrUWAHocxKNhe1/FtxgkiAol+Mmj
-	mG/gcI85urtW8DBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1721075379; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c5NdmWuv3Hvepg9STEhFTiZ7iZ+qzw7pFNvQWY9q/Os=;
-	b=pbG0llnr/a+hFS/aFYyY7iQhUo9J3Wd8lOWvT1qWA9/XkF+qfpvwM//mHrWFKSTPxhXVEe
-	zbwxz4zS8s/7SSuWKiw2wR23oMVa/QOGGzCmFoCeaXeLcrBVQrCw9TeP3gyEjSiP6Xax+a
-	oBM6hahMKNsMzEDYtO0hstWCtbwQ084=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1721075379;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c5NdmWuv3Hvepg9STEhFTiZ7iZ+qzw7pFNvQWY9q/Os=;
-	b=97BjocNXuZryya7AfWUdPflgXoUPJtywDuTsx6AhZ3hrUWAHocxKNhe1/FtxgkiAol+Mmj
-	mG/gcI85urtW8DBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 13E72137EB;
-	Mon, 15 Jul 2024 20:29:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YBKJBLOGlWbvUwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 15 Jul 2024 20:29:39 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 15 Jul 2024 22:29:31 +0200
-Subject: [PATCH RFC 5/6] mm, slab: asynchronously destroy caches with
- outstanding objects
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rM3CqCwm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uLu8dEJ3+ib2fEV8humRhUTC8LtAeP+L6HOC/Pb5EI7ONsVQAcKQXYUdkAVpang7/JsB+Pdei+wmNdBQPQRlfzs2IoVwwFkd2PlTYvBB3Qor00SpQEqTe8+d0lKLbFoBdJUd9jr51sbuD+q1JuY5lD/Kb+fzfPuws/ABuKHVUT+SU3D/czIuDYGqxXJLkGb3LS/M1Z/ongyQUqB+/dr0kWvgk2X2HJgoIY7C5Y4N1NUQLnD4xad5Q2Mwduy343Jjt/KNku1fPh1vipbvwHIj2RR8YcYLhsH4zBgLZhoB/fF7Z/dQhRpw7G6mZj92im89P6VcPzJUK0dOsXMpah+/Fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y3LXMhAxy1uaCy/H3lKnkrVBBgWQ5UWrtuj07D+pooI=;
+ b=bKVvNFoM6vKIVAnI3M8/Eq/xwSOHx9H4JM4GwNzn3t0ZA8ylOb5mbTCVXibS6GDjJ2deCnDTqHUj0TBIWfItNsb+0ojl7ngu6i6R5sVwX6uePKLvNS7FVALOD6OmiqV8O/fCf94MkA/gRqYyatpzP4qoivsIip6EFModaB+zZqDY445UREOg4w1NnRmZ0BZC2GebyMG7nlEEFx1N44+lk7JWEOGTrr+XO1sBMaYcgIrx1hG8EwsmCjXsJSxHmh3c03cp539UdC5yEHov/orXImcwBbTibN+OGBEFQsMgarVd9Foftybml89hkQynh07VmnFel1ZP+Dh9ygpP4vvW7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y3LXMhAxy1uaCy/H3lKnkrVBBgWQ5UWrtuj07D+pooI=;
+ b=rM3CqCwm7qOwhbm9XEEZWUQDkePF9pyGfkMvKzVAXpttXTFKphr18iJp8XHPsexwebNiyreRHyt9KTIuC5Cxm+qYb7nzvCid+xXLCO1e/5Kk1X1nM3mt9f2LwkJhepQsJMOCiYpfrkMXIxtE5xozpc5ArruoZjjiblvPFKolTaA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA4PR04MB8031.eurprd04.prod.outlook.com (2603:10a6:102:bb::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Mon, 15 Jul
+ 2024 20:30:11 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
+ 20:30:11 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v2 0/3] pwm: imx: add 32k clock for 8qm/qxp and workaround
+ a chip issue
+Date: Mon, 15 Jul 2024 16:29:49 -0400
+Message-Id: <20240715-pwm-v2-0-ff3eece83cbb@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL2GlWYC/y2MwQ7CIBAFf6XZsxjAlhZP/ofpQejW7qGUgMGah
+ n8Xicd5eTMHRAyEEa7NAQETRdpcAXlqwC4P90RGU2GQXLa85wPz75V1Wl9QcWm1kVCePuBMe63
+ cx8ILxdcWPjWaxG/9+0JUPwnGWTt1vVKz1mYwN7f7s91WGHPOX0dbRSGUAAAA
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, pratikmanvar09@gmail.com, 
+ francesco@dolcini.it, Frank Li <Frank.Li@nxp.com>, 
+ Liu Ying <victor.liu@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, 
+ Jun Li <jun.li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721075406; l=770;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=EYq4UmROgcf2kp996A2qObnm2JDQgEcIztlzSGwqmwU=;
+ b=OMj1GRCuwOY6n/cmk+3899zZAd2caZQJxy5AUwO84sQHAIxqXqdFNtacv3n21kzE8le0lk2k1
+ OQFLhypPsukDYtaLW5h4kwvxlMHQ01+0S3SW/B/MuGWttC3ilMUlORK
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR03CA0166.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-b4-slab-kfree_rcu-destroy-v1-5-46b2984c2205@suse.cz>
-References: <20240715-b4-slab-kfree_rcu-destroy-v1-0-46b2984c2205@suse.cz>
-In-Reply-To: <20240715-b4-slab-kfree_rcu-destroy-v1-0-46b2984c2205@suse.cz>
-To: "Paul E. McKenney" <paulmck@kernel.org>, 
- Joel Fernandes <joel@joelfernandes.org>, 
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, 
- Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
- Julia Lawall <Julia.Lawall@inria.fr>, Jakub Kicinski <kuba@kernel.org>, 
- "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- "Uladzislau Rezki (Sony)" <urezki@gmail.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Roman Gushchin <roman.gushchin@linux.dev>, 
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
- Vlastimil Babka <vbabka@suse.cz>
-X-Mailer: b4 0.14.0
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FREEMAIL_TO(0.00)[kernel.org,joelfernandes.org,joshtriplett.org,gmail.com,linux.com,google.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[goodmis.org,efficios.com,gmail.com,inria.fr,kernel.org,zx2c4.com,linux-foundation.org,linux.dev,kvack.org,vger.kernel.org,suse.cz];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB8031:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f2df061-9d4b-4c93-0059-08dca50ced1e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aHRmYWhMY3o2cTV2T1VTY0tjK1U4dUY2clNnMlhmT1piVzZIYVNvM2JpbllW?=
+ =?utf-8?B?NHlFb0JFY1N1cm9OVDUvSjFhR0pJLzRKc0Fjb2tWczVXM3J2Y1JpRERySzhn?=
+ =?utf-8?B?NitxN2RXdGpvakJHSEViNHV4ZWxaVXV1QVQ3ek9vb1FRbEpLd25tdW53TW9Z?=
+ =?utf-8?B?dlc2THdHRVFudTlCVkxvQUMvTElZREd1VWdMT25KdVhpZWphMkNaL3gvQ3Rw?=
+ =?utf-8?B?cVR2d0ZZUlpHY2hONVBBNCtvaTlPTEthVkR5QXBYWnZDSTB0NGd3UGExOThV?=
+ =?utf-8?B?NnRzSzgzTTB5S29vUDJzSDJsMG4vcjY3MkJ5bTZvRE9HdERGd2x6alhnMEw4?=
+ =?utf-8?B?SEtBZGtFaDhnMnNRcVdEYmh5aFQxN0gxeXo2WXNMcHZwc2plYk9NU2k2N0Qr?=
+ =?utf-8?B?Njg2ZXhXaDM4a1VUajNoYTByUWc0bGkyWVU2RDVRcnZvWlZYaWlsYThLUVl4?=
+ =?utf-8?B?NlpKYllNT3lIVWlxa2RiKy9McTNFTmgwMXVHZ3JDL2ZkQTU0VzRqZDdybVpV?=
+ =?utf-8?B?YWdOUG9mWGtsZElsVTNZU2JzK3ZTaGVFUVhFM0ViOUpkM1NMRVlHSFNkQjRM?=
+ =?utf-8?B?cG1kWmVqclJWUHVFTFFKWnlGYVVIT1BqYzFWRHp3WjI0ck80UVVQZnFHMURH?=
+ =?utf-8?B?SWg4TERDdEZmTC80QktLeTRVVkpxZHNQTmpHQVNhdEtCdnBGTWZmaDRwN2NJ?=
+ =?utf-8?B?RWFrc1VxNi9wVlRXTE1GUWVmcldhTTl4UUZLWUZQNjlaWlZwc3k0QzIzOEw0?=
+ =?utf-8?B?NGlua2RQdGxOSENySnJKM25YV2R1MVUvZC9OYXgzLzM1VnRndzBSbm1Ldklz?=
+ =?utf-8?B?OUx2TXp1TXVVNUJkMExRc0owUEgxMWVCSGo3VUlHVnZ5TnhzK1VxTDcvTU1G?=
+ =?utf-8?B?MFNlSXRwWGhUNnhQWkNkR2RuWTFRODZwcFFYMUpTL3hTU0xITDhHVFMzby9h?=
+ =?utf-8?B?QVNERWw2cGg1WW1lOEF4aXpwWmQvVWVjVHdWVlBtRTMyNHlaK1JLOFM2WmQw?=
+ =?utf-8?B?c2V0RFRLZmpNOGpybS9VMFVSaGl2d2x6dEQ4ZkRaZmZpZURWblFBRXlJQTBs?=
+ =?utf-8?B?dzFNTzBKbUpVVWxXb3ZzN1A1MnhOamphek44Vml6Yi8yZGY2VTA2MnR0SXRL?=
+ =?utf-8?B?dEFkR1hqOVZINXFQS014dmFDVURMRnRvdjBFb2ViTENjaEJtUTkxMDdKSllO?=
+ =?utf-8?B?cUNpbFd6VE56RElhQlRpc1UyeTVWM1c4Zm03QWVwVDBtVHhBR3pUeTdEbmRH?=
+ =?utf-8?B?TDlSR3k1MmlQMWJZZWsvVGJkVFRrdnF1Smh6UGt0OUNNUVdOVlBuRXZ2ci9T?=
+ =?utf-8?B?UVlIM2JZazJ3dndldjhwZ21jKzBjMytQaldoTldVb1lGU0pIWk42K2ZjVmxV?=
+ =?utf-8?B?YUZSaUUwSVVvbFFIRTdJRHRUZjVUREpTRXVqS3FDeVN0VE1zNlpqcEtaUVFv?=
+ =?utf-8?B?SGowcUVqOHVHblZWRngwMFREVXhZeHltRG0xbGpMcmYxTUdvODZuNG9NYTdX?=
+ =?utf-8?B?T2pvUlZwT3pqVkkwcjNSMGhOT09xenBGejRGQkN6UGV5ZExicWU2cE1YVmZI?=
+ =?utf-8?B?LzhqU3pTM0VQSnVIc0tMeGMvZ3NGZmdkalNRNmg3Y1JXNTdleU4reWJoYmpO?=
+ =?utf-8?B?dUdzMGZqNGJsbmovT3NuVjNGWlNXdnVDOC9KejJ4SVB1T3ZSQXlnUmVGV09j?=
+ =?utf-8?B?V2lJcDBpN0ltVm03Y28xTHVVMTZRRHQ1eEpualVYUzFTWXdKVHRLSWIwWVF6?=
+ =?utf-8?B?VmNXSEJpM2M5Yk5FdExOTGJmOHF1R3N0anp0VWZJbkRVdEgxSWZBRDhEWWlk?=
+ =?utf-8?Q?2g6uCz2A8Hrj/UGOnxMR7rk3jUj5yT3oTjqNo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WjFZL2Z6UU84RHA0anBTT3I4b3pYR01qL0gxckg1RFRyNkxOcGFoNUlISU1S?=
+ =?utf-8?B?SjNQV3pBSG5rMVFRU1hnK0NMeC94Z1k0TkJoYm0xRTJIK1piL3h3MlcxcFVu?=
+ =?utf-8?B?dE1wT2N1UG0weThkbnVMbmlHNFRJYjYyeDJBVTBFYlpxa0RUR0FYQUpiZTEv?=
+ =?utf-8?B?bm1LV203aks0QVVydXppYk1CRHFYUUtFaFdVYXRlMk8xek9PZENVczcySzYy?=
+ =?utf-8?B?MGUyajJYdkhTYjhSRjExNFA5eWg2Z25wQlBESWt5eXJtSFh5eFRTU0VuYVBM?=
+ =?utf-8?B?TlI2aHFNMTZEVVJxMGtKNThqNHRkNnNTZHdYNjV4Z2pSR3VnaUFSZUw0M0JW?=
+ =?utf-8?B?ak1YYzlINk95MVJ1REprMnNRaFovUjdJVDdVKzF5d1FyWG1lZjJZOVVsM05U?=
+ =?utf-8?B?dldMaCszMnJ6ZjhEWmc1OFVlZXYvaEZzTlZsNnpGM1JDUGM1MzNBNzgrNmxo?=
+ =?utf-8?B?LzJma3JwT2hqbFpWNStGcUx5L2VrTTBTSnRRbTc0MUh3bHRMTmtYblNDNFVD?=
+ =?utf-8?B?MDQvOG0xb0p0R0p0T3ZmdHZabGJpWkgvRzBsbXpQd2ZqdFJIMC9SSUkrODVU?=
+ =?utf-8?B?Sno1RUZpbURIZHVQdEV1TXVSY1F4QXk2QmF5em1HSjEyN3dlOFg2UVV2MWhI?=
+ =?utf-8?B?MDI2S1ljdGxidXIxUG1XeCtXM3dFM2RkbXZLZ05ycUFPcVE5Y3FjUHlCYUxI?=
+ =?utf-8?B?MkU0WW5vZExxS3NZSzZCSWU0SWE0Y2lTSzhIdmF6MzdVMVBFQWd5czdkRnRD?=
+ =?utf-8?B?UENiMVExVWVHMkk5NnM1NTNERjh2VXdqeXJHd1UwNytnYzIyRnZFSHU3SG1q?=
+ =?utf-8?B?UmZKTnVPWmlGUDhVMnpiL3FmSElMRHg0aVorZ09RVFk1cXRhSGxEcnlMQnNC?=
+ =?utf-8?B?RVd5djBsS1lMa3hYRTVweGFrR1Nac1VSQ2NUcTFxRkd2S1Q1SUxvbmg1blIv?=
+ =?utf-8?B?RmJSeURmMDlQT01LaVZGNy9kQUsyU3U3SmV1N2JaNUV1SjZ3VlM0Z3p5a2hw?=
+ =?utf-8?B?SndiN3U5d2tBVHFoUzhzS3pHSjRVVWl0K0ZvRXRmMDRxaUFONHZpNVNKaEVo?=
+ =?utf-8?B?aC9mUTVpMUlwY2dyUUlqM0s2RWZJQXhTOUlSaXNqTURYUWVIdTVtS1VJdEhw?=
+ =?utf-8?B?MFFLWHBhQkRjWHZrMTEzMG5qODNYWkJNSEMzSWpWTG05K0ZLTmFvUjRlME9M?=
+ =?utf-8?B?Um9ZMzg2NmNRR2VRMldGOUFtUWtGRTdNVTZkVVdnSkFpVWxaaHZMWFVlTG02?=
+ =?utf-8?B?QnlmaUtxSVZBclhWZzhuaVVXWFJyc3BuOThJaVpqVlN4VWJlb1RVS0NOZUVr?=
+ =?utf-8?B?NnVqMEY1N3k1ckNVd2Y2MzVjcTZwSzhiblhBVWp0bVFzZXNlWTJ3bTY0ZEw0?=
+ =?utf-8?B?NHYvUDNIS3JRTHMrSkw3R0xMSHRBd2pibFBoOVc3ZVRjdk45TGkrT3JGOEE5?=
+ =?utf-8?B?TSt2empIakQ4S0Q3UWN6QjBJSHJva0NhZC9uSU9rRkdsbVVvMlpCL0FVN2lH?=
+ =?utf-8?B?Q2psKytTSWxQaTdMV3ZQWENNVU84OXFWajI5cTZKRmxIOEEvc1RiTUxVU0Y0?=
+ =?utf-8?B?Y1hlQ2dSVFkwWVlqdVdtQWtGMmszYkpaeVpGaTlkWkp5d0NpdythSnVlemJD?=
+ =?utf-8?B?VTlHYTIvUVZJcFdzbWpoajdWY1hWMDlndEFJR1h6dGVSMWxQb0h1UVU4N1F4?=
+ =?utf-8?B?YkJxbnZPYXdDMHMyVy9ncFJ1SGtiSHJ4SlhwVVFiTHZNYmdiOHlQZGt1cHpW?=
+ =?utf-8?B?TCtiQU03WC84eXFsYm4rRVRVMW4rcVRTUnRsZkJGYXBtQkF2M2FEenpPQjMz?=
+ =?utf-8?B?bkd3ZTJjZmhCWk9GNDBKOHRmNDFLeXpvWFRwMGUzcmtycUFTMkZsTU9uWFFW?=
+ =?utf-8?B?ZTVFRlhTdndxYXpRZDk5Vi91WnkxbFRjcEdhM2xpNFBnY0RqTGFnVEtFdjNw?=
+ =?utf-8?B?cXQrcm01UWd3U2hVNXdDV1FzcnlkLzU4c1Z0enVWTlNmbzF1b251cU84TWNn?=
+ =?utf-8?B?d3B6aVc0b1dHVlVyM253aVhiL0V1YXFtQUZnRC9hakZyMlhGcjg1U3FHVVEz?=
+ =?utf-8?B?WTRSRiszTGRsWGRXYk0ydE0xZXVIaCs1SkE5VTljSk44YzdvSzRoSDZwcXh6?=
+ =?utf-8?Q?CUYA=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f2df061-9d4b-4c93-0059-08dca50ced1e
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 20:30:11.7176
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jz0HFpvSIlJRrr1Z6XUTwLHUN5yRMcXnyBAhYMMrFCunDvFeKpVDaa4bhzH7gmdhmPF140+Hbsl+3WsDdrjC/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB8031
 
-We would like to replace call_rcu() users with kfree_rcu() where the
-existing callback is just a kmem_cache_free(). However this causes
-issues when the cache can be destroyed (such as due to module unload).
-
-Currently such modules should be issuing rcu_barrier() before
-kmem_cache_destroy() to have their call_rcu() callbacks processed first.
-This barrier is however not sufficient for kfree_rcu() in flight due
-to the batching introduced by a35d16905efc ("rcu: Add basic support for
-kfree_rcu() batching").
-
-This is not a problem for kmalloc caches which are never destroyed, but
-since removing SLOB, kfree_rcu() is allowed also for any other cache,
-that might be destroyed.
-
-In order not to complicate the API, put the responsibility for handling
-outstanding kfree_rcu() in kmem_cache_destroy() itself. Use the result
-of __kmem_cache_shutdown() to determine if there are still allocated
-objects in the cache, and if there are, assume it's due to kfree_rcu().
-In that case schedule a work item that will use the appropriate barrier
-and then attempt __kmem_cache_shutdown() again. Only if that fails as
-well, produce the usual warning about non-freed objects.
-
-Sysfs and debugs directories are removed immediately, so the cache can
-be recreated with the same name without issues, while the previous
-instance is still pending removal.
-
-Users of call_rcu() with arbitrary callbacks should still perform their
-own synchronous barrier before destroying the cache and unloading the
-module, as the callbacks may be invoking module code or perform other
-actions that are necessary for a successful unload.
-
-Note that another non-bug reason why there might be objects outstanding
-is the kasan quarantine. In that case the cleanup also becomes
-asynchronous, and flushing the quarantine by kasan_cache_shutdown(s) is
-only done in the workfn.
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- mm/slab.h        |  4 +++-
- mm/slab_common.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++----
- mm/slub.c        |  9 +++++----
- 3 files changed, 56 insertions(+), 9 deletions(-)
+Changes in v2:
+- See each patch
+- Link to v1: https://lore.kernel.org/r/20240711-pwm-v1-0-4d5766f99b8b@nxp.com
 
-diff --git a/mm/slab.h b/mm/slab.h
-index ece18ef5dd04..390a4e265f03 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -279,6 +279,8 @@ struct kmem_cache {
- 	unsigned int red_left_pad;	/* Left redzone padding size */
- 	const char *name;		/* Name (only for display!) */
- 	struct list_head list;		/* List of slab caches */
-+	struct work_struct async_destroy_work;
-+
- #ifdef CONFIG_SYSFS
- 	struct kobject kobj;		/* For sysfs */
- #endif
-@@ -478,7 +480,7 @@ static inline bool is_kmalloc_cache(struct kmem_cache *s)
- 			      SLAB_NO_USER_FLAGS)
- 
- bool __kmem_cache_empty(struct kmem_cache *);
--int __kmem_cache_shutdown(struct kmem_cache *);
-+int __kmem_cache_shutdown(struct kmem_cache *, bool);
- void __kmem_cache_release(struct kmem_cache *);
- int __kmem_cache_shrink(struct kmem_cache *);
- void slab_kmem_cache_release(struct kmem_cache *);
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 57962e1a5a86..3e15525819b6 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -44,6 +44,8 @@ static LIST_HEAD(slab_caches_to_rcu_destroy);
- static void slab_caches_to_rcu_destroy_workfn(struct work_struct *work);
- static DECLARE_WORK(slab_caches_to_rcu_destroy_work,
- 		    slab_caches_to_rcu_destroy_workfn);
-+static void kmem_cache_kfree_rcu_destroy_workfn(struct work_struct *work);
-+
- 
- /*
-  * Set of flags that will prevent slab merging
-@@ -235,6 +237,7 @@ static struct kmem_cache *create_cache(const char *name,
- 
- 	s->refcount = 1;
- 	list_add(&s->list, &slab_caches);
-+	INIT_WORK(&s->async_destroy_work, kmem_cache_kfree_rcu_destroy_workfn);
- 	return s;
- 
- out_free_cache:
-@@ -535,6 +538,47 @@ void slab_kmem_cache_release(struct kmem_cache *s)
- 	kmem_cache_free(kmem_cache, s);
- }
- 
-+static void kmem_cache_kfree_rcu_destroy_workfn(struct work_struct *work)
-+{
-+	struct kmem_cache *s;
-+	bool rcu_set;
-+	int err;
-+
-+	s = container_of(work, struct kmem_cache, async_destroy_work);
-+
-+	// XXX use the real kmem_cache_free_barrier() or similar thing here
-+	rcu_barrier();
-+
-+	cpus_read_lock();
-+	mutex_lock(&slab_mutex);
-+
-+	rcu_set = s->flags & SLAB_TYPESAFE_BY_RCU;
-+
-+	/* free asan quarantined objects */
-+	kasan_cache_shutdown(s);
-+
-+	err = __kmem_cache_shutdown(s, true);
-+	WARN(err, "kmem_cache_destroy %s: Slab cache still has objects",
-+	     s->name);
-+
-+	if (err)
-+		goto out_unlock;
-+
-+	list_del(&s->list);
-+
-+	if (rcu_set) {
-+		list_add_tail(&s->list, &slab_caches_to_rcu_destroy);
-+		schedule_work(&slab_caches_to_rcu_destroy_work);
-+	}
-+
-+out_unlock:
-+	mutex_unlock(&slab_mutex);
-+	cpus_read_unlock();
-+
-+	if (!err && !rcu_set)
-+		kmem_cache_release(s);
-+}
-+
- void kmem_cache_destroy(struct kmem_cache *s)
- {
- 	bool rcu_set;
-@@ -558,9 +602,7 @@ void kmem_cache_destroy(struct kmem_cache *s)
- 	/* free asan quarantined objects */
- 	kasan_cache_shutdown(s);
- 
--	err = __kmem_cache_shutdown(s);
--	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
--	     __func__, s->name, (void *)_RET_IP_);
-+	err = __kmem_cache_shutdown(s, false);
- 
- 	if (!err)
- 		list_del(&s->list);
-@@ -573,8 +615,10 @@ void kmem_cache_destroy(struct kmem_cache *s)
- 	}
- 	debugfs_slab_release(s);
- 
--	if (err)
-+	if (err) {
-+		schedule_work(&s->async_destroy_work);
- 		return;
-+	}
- 
- 	if (rcu_set) {
- 		mutex_lock(&slab_mutex);
-diff --git a/mm/slub.c b/mm/slub.c
-index aa4d80109c49..c1222467c346 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5352,7 +5352,8 @@ static void list_slab_objects(struct kmem_cache *s, struct slab *slab,
-  * This is called from __kmem_cache_shutdown(). We must take list_lock
-  * because sysfs file might still access partial list after the shutdowning.
-  */
--static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
-+static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n,
-+			 bool warn_inuse)
- {
- 	LIST_HEAD(discard);
- 	struct slab *slab, *h;
-@@ -5363,7 +5364,7 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
- 		if (!slab->inuse) {
- 			remove_partial(n, slab);
- 			list_add(&slab->slab_list, &discard);
--		} else {
-+		} else if (warn_inuse) {
- 			list_slab_objects(s, slab,
- 			  "Objects remaining in %s on __kmem_cache_shutdown()");
- 		}
-@@ -5388,7 +5389,7 @@ bool __kmem_cache_empty(struct kmem_cache *s)
- /*
-  * Release all resources used by a slab cache.
-  */
--int __kmem_cache_shutdown(struct kmem_cache *s)
-+int __kmem_cache_shutdown(struct kmem_cache *s, bool warn_inuse)
- {
- 	int node;
- 	struct kmem_cache_node *n;
-@@ -5396,7 +5397,7 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
- 	flush_all_cpus_locked(s);
- 	/* Attempt to free all objects */
- 	for_each_kmem_cache_node(s, node, n) {
--		free_partial(s, n);
-+		free_partial(s, n, warn_inuse);
- 		if (n->nr_partial || node_nr_slabs(n))
- 			return 1;
- 	}
+---
+Clark Wang (1):
+      pwm: imx27: workaround of the pwm output bug when decrease the duty cycle
 
--- 
-2.45.2
+Frank Li (1):
+      dt-bindings: pwm: imx: Add optional clock '32k'
+
+Liu Ying (1):
+      pwm: imx27: Add 32k clock for pwm in i.MX8QXP MIPI subsystem
+
+ Documentation/devicetree/bindings/pwm/imx-pwm.yaml |  4 ++
+ drivers/pwm/pwm-imx27.c                            | 78 ++++++++++++++++++++--
+ 2 files changed, 76 insertions(+), 6 deletions(-)
+---
+base-commit: 472fa0e0d7d03574177fc83dc15ad9da15db4ce0
+change-id: 20240708-pwm-5993e602c9b2
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
 
