@@ -1,109 +1,106 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE88F185E75;
-	Mon, 15 Jul 2024 10:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F38188CAE
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 10:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721039373; cv=none; b=PAmt83+CgPwQqdEHPiuZRaoZHeyosLPd69H+7nSZb2vncSySh4mg5nfivth6uxzhUmyhvZbIMLfH7j7SBbbqKw9IfmRHGNSWoMT5yTDF/8Zyz1AtcusenAqD+8yyHoAcC8kl2hrFnR2UUDX7Oco7XbWJdy9epD/TchvGr3Styrk=
+	t=1721039551; cv=none; b=IfiX4NRhAfycmAXCMm8ESolhJ3BQs7D5Q8CihEFdztZfP+qe8L1r341MOjysLYUmku2JGP1TK8LwwPS10is5XNXXJdWKvRRSeAg3kuTash6AVj3WdEmafIuIJMR5OAtG+YzcnIV9uYBroh9eJkKa0T3rZN/7I9VIEOkth0FvKOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721039373; c=relaxed/simple;
-	bh=Tpo3i9nWRkFmdG+yqEX5SbUrsISpvqNzF38iONE2sdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PFAah9R2/ePkgopSxzHykP8sjuUwpRI4H9nsRbSv+CwpwlWwc7GvD6b+8IvktjF3+aRyKMZTMhHly+sS2j7UnxekFXCa6jW7SSOKCCL+aQNieMZuQU8IHU6wTbI1MYPTqc3b6yvZJqvFUIFaP6gmVd7ILn9t3ZdRfed3R8h4gHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Moj+jtQE; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Moj+jtQE"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2eeef45d865so4816461fa.0;
-        Mon, 15 Jul 2024 03:29:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721039369; x=1721644169; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WfhfSZb9tdtzR3gnLjz0/3kFMfQiwyXaN/FkolkC9Zc=;
-        b=Moj+jtQETZQ+kTYhisZ91TnhULbZT81huQOcAFtZevu0m6EIgfVbjIOf1VIltGrF+P
-         2a8qYqtv4TM0WU7Uqpbe293wJtD+2k717FehuRqMDRer/UoHllWS8IKyAQyYWoksTmc3
-         kbHNadFS/WaMY6E+IHUt+gefbaMIQwUBAbZxm9/ZI9AgHumrUZ2yLtQkG+wIFiayIPKp
-         C4XDqDaSlN/xzUNoCYcnbjeXgFg/1XizDPgm8tdtJKSFolpQyPbTIPUyekSiZbkiGYsb
-         zNgp0Neg6nfkWh01MtrQb3LRwSi6/t7+pZ9LqPXFFsBhvyDIJxOtPsqAJP7/pjD1OxHR
-         yzGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721039369; x=1721644169;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WfhfSZb9tdtzR3gnLjz0/3kFMfQiwyXaN/FkolkC9Zc=;
-        b=FeujDfqs/+jA7QgBCPOR889G+2XF+chH1IVBlKLqhodHlsahMLpDkjhj+Vu2IQzAtA
-         eigrC33S9mpEAO3FxXPCdveNPbGzo8qtnKrQ8CSz++XaxnLxPYeYCiCdBMpMPTxNA40C
-         Tq//2veSQ4jryxX6fKK8LC8XanKDv8a/k2GMMlUe8rQOF29I0etLXgD/ToQ7BZjgemrr
-         cDd1Xe+vA4VqaZNYuPwkI2ONveQi/vn/72CCqQbOSEY5Hs0vCh2HvUyLVGXDK+W+h2sH
-         8PcdY9w0a+LDAx3uff2t3XzYkYCKy4JRckJy7wLVFgEXPwyeXow4FAvUxZOiYvuaW+1k
-         VvFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaWPvG1uARGXdm/14VU+9uO0YtgCaaHox4ZgiKcHdc1Q2urovW+BDTqHYevSfn7E37blxmS7B34oDUT9z3+o/quseqEFrmf4BbB+cWz8h2Hre/i4c5oIqwl6mH+/XEyB71WQ==
-X-Gm-Message-State: AOJu0YwFq/WcFs2401DSvm7yBVbEAbe1LQ9y1jCIdmCFmqbiP9jnag2q
-	mbs2in3OrrBpCli+DAY+RbPzILBizTVCTYmEqowlrfKekP2lTZoY4nAx7t6FDA8=
-X-Google-Smtp-Source: AGHT+IGZT6pmo1C5EBVThTxwee153HHgHACC3+aB15ujmjHqmWt0s6JB1knURw4GD0o6fM6jOh/mrA==
-X-Received: by 2002:a2e:8ed3:0:b0:2ee:4d37:91df with SMTP id 38308e7fff4ca-2eeb30fef50mr145012981fa.27.1721039367938;
-        Mon, 15 Jul 2024 03:29:27 -0700 (PDT)
-Received: from localhost.localdomain ([156.197.57.143])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f239883sm116126895e9.10.2024.07.15.03.29.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 03:29:27 -0700 (PDT)
-From: botta633 <bottaawesome633@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	linux-ext4@vger.kernel.org,
-	syzkaller@googlegroups.com,
-	Ahmed Ehab <bottaawesome633@gmail.com>,
-	syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH v4 1/2] locking/lockdep: Forcing subclasses to have same name pointer as their parent class
-Date: Mon, 15 Jul 2024 16:26:37 +0300
-Message-ID: <20240715132638.3141-1-bottaawesome633@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1721039551; c=relaxed/simple;
+	bh=1f1PUYMDSynzzQQV7ZnwruoYE5ot/fboiyGqOFjiY2c=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XnJ0hit0YkEH5K4VjJwIIrJEsGbrfuZVXvCAaaJW3iDIrguBKXlse/KNXeIr2fINdn21tljXlWpzCDCS7wTTaoKbsLIFcEruz06XeQBKzZ22xd6dBo50oO8liKjJIJ9uNnT+5ghE6hrKToRgQkE1FnB/yOU3mCYGDI61PIaGhdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dxduq2+pRmSJIEAA--.3053S3;
+	Mon, 15 Jul 2024 18:32:22 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJMW0+pRm_K1JAA--.24741S3;
+	Mon, 15 Jul 2024 18:32:21 +0800 (CST)
+Subject: Re: [RFC PATCH 4/4] LoongArch: Remove -fno-jump-tables for objtool
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <20240712091506.28140-1-yangtiezhu@loongson.cn>
+ <20240712091506.28140-5-yangtiezhu@loongson.cn>
+ <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Xi Ruoyao <xry111@xry111.site>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <497ec1a5-fdf9-037c-0781-4f25e9c4f27b@loongson.cn>
+Date: Mon, 15 Jul 2024 18:32:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H4oi1mpP8JSG1D+8CQVojGtPOpzVybCn8y8mWuMPT=zxQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxJMW0+pRm_K1JAA--.24741S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF1UAw15ZFy7Xry3Gr1xWFX_yoW8WrWkpr
+	s7A3ZrGr48Xrs5ta9xt3yvg3y2vr97KF4xWr4xtFyrArZ093yqvr18Kr1qgFy8G395tw4S
+	qF1Sga4Y9F4UWFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1Ek
+	sDUUUUU==
 
-From: Ahmed Ehab <bottaawesome633@gmail.com>
+On 07/12/2024 05:40 PM, Huacai Chen wrote:
+> Hi, Tiezhu,
+>
+> On Fri, Jul 12, 2024 at 5:15 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>  arch/loongarch/Kconfig  | 8 +++++++-
+>>  arch/loongarch/Makefile | 6 ++----
+>>  2 files changed, 9 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index ddc042895d01..57f28450a2ed 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -143,7 +143,7 @@ config LOONGARCH
+>>         select HAVE_LIVEPATCH
+>>         select HAVE_MOD_ARCH_SPECIFIC
+>>         select HAVE_NMI
+>> -       select HAVE_OBJTOOL if AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB && !CC_IS_CLANG
+>> +       select HAVE_OBJTOOL if TOOLCHAIN_SUPPORTS_OBJTOOL && !CC_IS_CLANG
+>>         select HAVE_PCI
+>>         select HAVE_PERF_EVENTS
+>>         select HAVE_PERF_REGS
+>> @@ -276,6 +276,12 @@ config AS_HAS_LBT_EXTENSION
+>>  config AS_HAS_LVZ_EXTENSION
+>>         def_bool $(as-instr,hvcl 0)
+>>
+>> +config CC_HAS_ANNOTATE_TABLEJUMP
+>> +       def_bool $(cc-option,-mannotate-tablejump)
+>> +
+>> +config TOOLCHAIN_SUPPORTS_OBJTOOL
+>> +       def_bool AS_HAS_EXPLICIT_RELOCS && AS_HAS_THIN_ADD_SUB && CC_HAS_ANNOTATE_TABLEJUMP
+> Can AS_HAS_THIN_ADD_SUB be removed now?
 
-Preventing lockdep_set_subclass from creating a new instance of the
-string literal. Hence, we will always have the same class->name among
-parent and subclasses. This prevents kernel panics when looking up a
-lock class while comparing class locks and class names.
+If the following patch can be accepted, then objtool will not rely
+on AS_HAS_THIN_ADD_SUB, I will try to send this patch again.
 
-Reported-by: <syzbot+7f4a6f7f7051474e40ad@syzkaller.appspotmail.com>
-Fixes: de8f5e4f2dc1f ("lockdep: Introduce wait-type checks")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ahmed Ehab <bottaawesome633@gmail.com>
----
-v3->v4:
-    - Fixed subject line truncation.
+objtool: Add skipped member in struct reloc
+https://lore.kernel.org/loongarch/1690272910-11869-6-git-send-email-yangtiezhu@loongson.cn/
 
- include/linux/lockdep.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Tiezhu
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 08b0d1d9d78b..df8fa5929de7 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -173,7 +173,7 @@ static inline void lockdep_init_map(struct lockdep_map *lock, const char *name,
- 			      (lock)->dep_map.lock_type)
- 
- #define lockdep_set_subclass(lock, sub)					\
--	lockdep_init_map_type(&(lock)->dep_map, #lock, (lock)->dep_map.key, sub,\
-+	lockdep_init_map_type(&(lock)->dep_map, (lock)->dep_map.name, (lock)->dep_map.key, sub,\
- 			      (lock)->dep_map.wait_type_inner,		\
- 			      (lock)->dep_map.wait_type_outer,		\
- 			      (lock)->dep_map.lock_type)
--- 
-2.45.2
