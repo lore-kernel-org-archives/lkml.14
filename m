@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6269C18D4D3;
-	Mon, 15 Jul 2024 13:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6375418EA81;
+	Mon, 15 Jul 2024 13:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721049643; cv=none; b=O831N046WgpzXvdaPR2YNsdSrVxcsEwVXG235b2ALIKk5a+9hbeYPyDgXIsKeXBHsQIvnwMjGgp87+7s8kN+Xnu7Rh4QcPXWUIXZ7Bec5Rwm3sKMf7c/EzNq6+5iVyzEb4Vz9x4G5zLxDT2lQw/+KUNoZ9y78d5uREHHFWsFsWI=
+	t=1721049645; cv=none; b=YXryOL27Z8Jc03sUhOW9qqPpJFrUYuNNGXhINfupPH3YwFvvfQGFhyb8ViF8g8SOmeeVnl95beTG/0MsV5dVZKDeANhH8dkgc/l5tAtcGKGXPSTcxUkFbvYHk2k1PPzcc+KGfR8dI2OegEdK5xzET9aamHMwMk+YUpg+gE6uHto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721049643; c=relaxed/simple;
-	bh=jFx/jvDTyoJvwJ5Qc+UjnShHzIQg2+DxP2CaphLW/Mw=;
+	s=arc-20240116; t=1721049645; c=relaxed/simple;
+	bh=mSuzfIIVELuWQOxT5HmM4VijFTDVNozokt2scLmY0sM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Tj5WCaZB+JaZCy5M3fGJiTFbekq23lp383DuFVBd4cb/F/Qeb0/le1GUwFVRshaPFvEDttfjMI7OgIYfA8Uz2l9iMf3Aquz7yp7jUjKIwCZGkZHcYQMppLyjjjpTNnpzm4vnkyJaQaqAHnq3opZRbZ7i7O0QvpV9w7sQuXioi5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ByNtUpxy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h1dWV3rc; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=BbeTSzqQ8fgWSb47pIN46bpg4Ms9dRGyVs+uxUFgR4tvNHk+TYsHd/S2GYOCvUbBdZ3cW764drolDAsiS1Wp3pLUZdiIuT36egzVluQU7C8x9ewsGhIA1Ox73NX3P1W5skkUsBABFZWm6s1V1fDjkIipJt6RwhR06SIVARMnKAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xWWI9kjh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RyNH27L8; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ByNtUpxy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h1dWV3rc"
-Date: Mon, 15 Jul 2024 13:20:36 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xWWI9kjh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RyNH27L8"
+Date: Mon, 15 Jul 2024 13:20:38 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1721049637;
+	s=2020; t=1721049639;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Enng/pmwpFJhlBipYRnYrsRX+YbOXxbKc4C5kZPj80k=;
-	b=ByNtUpxyYotqd7ArRdmQl08OqEpPiE7WuBV3WDx9QxIvcP/GG8FV58G0xrgGyZmSflrWZ6
-	E7xQ5wWQDmpbK5uYi44WFuMeUKgmhflR2/zbn+vqLNveRIESpCSMV15lhKfabgOQUSW8l1
-	d6TOpOyBZ+stY8JIH9jT9JdZv34kTF03gIVxat+ZVtNa0Rd9isTdzwgFxZvbiwP+uMGzoS
-	qpNVvDUuGSOVGfPEHWI0z+aTcfrQhAOkP4mLHEmBxgVkgPakzDPS79zZJixEJW/aXScX5u
-	kRbbbdxlF9OCiijLuze/q+5psAQ6L5spsy8EA485ft0vBQxODpBI1cZygY2XDA==
+	bh=myl2TH41alCre5NE09vEruv/3VGqC7WlTNo5kaPmIss=;
+	b=xWWI9kjh0YwXBUHOemlmU7OSV7tb00OmD78EOHX8VCR70W50sX584OO9eH9lZ6+lhmSwCH
+	LxCBrovj9EOaJ2PcUSzuTX64aLbmTsbhSaQRT7jXKp4ZvPdTl/WpDdNX0AEvKL4dSQTjpB
+	k8tCfTvNT6kTyW9Q3//rBAmeI/9fG58aTaOQS5lnGST8pWZgMfSyp4WSdsO7fQ7fVu/Rsb
+	+1m13ar5u9Z6bdrgq5CoBA4XH6ZIztqnMG5w96syoXErlFOITdOECJ589fCPCTQ5woSl6m
+	irxmROQRRBcwBUS4XklThWu07EVCmxbCgrwZVWja0vf4EMzSX+h6ilgqd12D9A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1721049637;
+	s=2020e; t=1721049639;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Enng/pmwpFJhlBipYRnYrsRX+YbOXxbKc4C5kZPj80k=;
-	b=h1dWV3rcfIAthZ6Zo44ia0JopKNck7kD1DyUA2bOm3sz0RIYxEZ8vmGw9lo4yMc3tTBkVl
-	x3ssAzYuvw+nyTBg==
-From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
+	bh=myl2TH41alCre5NE09vEruv/3VGqC7WlTNo5kaPmIss=;
+	b=RyNH27L8tR+fjfkD3yM2uxa29jh9t6CYXhl4h8LcZ+LlPK1dCVysQA8e9W4Z0na+WSuZxL
+	YLvHazTPRlfmwlDQ==
+From: "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/core] irqdomain: Fix the kernel-doc and plug it into Documentation
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Randy Dunlap <rdunlap@infradead.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240712064148.157040-1-jirislaby@kernel.org>
-References: <20240712064148.157040-1-jirislaby@kernel.org>
+Subject: [tip: irq/core] irqchip/gic-v4: Make sure a VPE is locked when VMAPP
+ is issued
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Nianyao Tang <tangnianyao@huawei.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240705093155.871070-4-maz@kernel.org>
+References: <20240705093155.871070-4-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172104963630.2215.3926446462144476498.tip-bot2@tip-bot2>
+Message-ID: <172104963892.2215.4356155837871772907.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,94 +68,53 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     b7b377332b96a38bc98928d7ec2674c77a95fcb3
-Gitweb:        https://git.kernel.org/tip/b7b377332b96a38bc98928d7ec2674c77a95fcb3
-Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Fri, 12 Jul 2024 08:41:48 +02:00
+Commit-ID:     a84a07fa3100d7ad46a3d6882af25a3df9c9e7e3
+Gitweb:        https://git.kernel.org/tip/a84a07fa3100d7ad46a3d6882af25a3df9c9e7e3
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Fri, 05 Jul 2024 10:31:55 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 15 Jul 2024 15:13:56 +02:00
+CommitterDate: Mon, 15 Jul 2024 15:13:55 +02:00
 
-irqdomain: Fix the kernel-doc and plug it into Documentation
+irqchip/gic-v4: Make sure a VPE is locked when VMAPP is issued
 
-There were several undocumented fields in structs irq_domain_ops and
-irq_domain_info. Document them.
+In order to make sure that vpe->col_idx is correctly sampled when a VMAPP
+command is issued, the vpe_lock must be held for the VPE. This is now
+possible since the introduction of the per-VM vmapp_lock, which can be
+taken before vpe_lock in the correct locking order.
 
-irq_domain_ops::revmap_size contained "[]" in the description, which is not
-allowed in sphinx. Remove that.
-
-Finally, plug the whole header (irqdomain.h) into genericirq.rst, so that
-the docs is autogenerated and hyperlinks to these structure are created.
-
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20240712064148.157040-1-jirislaby@kernel.org
----
- Documentation/core-api/genericirq.rst |  2 ++
- include/linux/irqdomain.h             | 20 +++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+Tested-by: Nianyao Tang <tangnianyao@huawei.com>
+Link: https://lore.kernel.org/r/20240705093155.871070-4-maz@kernel.org
 
-diff --git a/Documentation/core-api/genericirq.rst b/Documentation/core-api/genericirq.rst
-index 4a46063..7a27663 100644
---- a/Documentation/core-api/genericirq.rst
-+++ b/Documentation/core-api/genericirq.rst
-@@ -410,6 +410,8 @@ which are used in the generic IRQ layer.
- .. kernel-doc:: include/linux/interrupt.h
-    :internal:
+---
+ drivers/irqchip/irq-gic-v3-its.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 215c7ab..c23a64f 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1810,7 +1810,9 @@ static void its_map_vm(struct its_node *its, struct its_vm *vm)
+ 		for (i = 0; i < vm->nr_vpes; i++) {
+ 			struct its_vpe *vpe = vm->vpes[i];
  
-+.. kernel-doc:: include/linux/irqdomain.h
+-			its_send_vmapp(its, vpe, true);
++			scoped_guard(raw_spinlock, &vpe->vpe_lock)
++				its_send_vmapp(its, vpe, true);
 +
- Public Functions Provided
- =========================
+ 			its_send_vinvall(its, vpe);
+ 		}
+ 	}
+@@ -1827,8 +1829,10 @@ static void its_unmap_vm(struct its_node *its, struct its_vm *vm)
+ 	if (!--vm->vlpi_count[its->list_nr]) {
+ 		int i;
  
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 02cd486..de6105f 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -74,11 +74,24 @@ void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
-  * struct irq_domain_ops - Methods for irq_domain objects
-  * @match: Match an interrupt controller device node to a host, returns
-  *         1 on a match
-+ * @select: Match an interrupt controller fw specification. It is more generic
-+ *	    than @match as it receives a complete struct irq_fwspec. Therefore,
-+ *	    @select is preferred if provided. Returns 1 on a match.
-  * @map: Create or update a mapping between a virtual irq number and a hw
-  *       irq number. This is called only once for a given mapping.
-  * @unmap: Dispose of such a mapping
-  * @xlate: Given a device tree node and interrupt specifier, decode
-  *         the hardware irq number and linux irq type value.
-+ * @alloc: Allocate @nr_irqs interrupts starting from @virq.
-+ * @free: Free @nr_irqs interrupts starting from @virq.
-+ * @activate: Activate one interrupt in HW (@irqd). If @reserve is set, only
-+ *	      reserve the vector. If unset, assign the vector (called from
-+ *	      request_irq()).
-+ * @deactivate: Disarm one interrupt (@irqd).
-+ * @translate: Given @fwspec, decode the hardware irq number (@out_hwirq) and
-+ *	       linux irq type value (@out_type). This is a generalised @xlate
-+ *	       (over struct irq_fwspec) and is preferred if provided.
-+ * @debug_show: For domains to show specific data for an interrupt in debugfs.
-  *
-  * Functions below are provided by the driver and called whenever a new mapping
-  * is created or an old mapping is disposed. The driver can then proceed to
-@@ -131,6 +144,9 @@ struct irq_domain_chip_generic;
-  * Optional elements:
-  * @fwnode:	Pointer to firmware node associated with the irq_domain. Pretty easy
-  *		to swap it for the of_node via the irq_domain_get_of_node accessor
-+ * @bus_token:	@fwnode's device_node might be used for several irq domains. But
-+ *		in connection with @bus_token, the pair shall be unique in a
-+ *		system.
-  * @gc:		Pointer to a list of generic chips. There is a helper function for
-  *		setting up one or more generic chips for interrupt controllers
-  *		drivers using the generic chip library which uses this pointer.
-@@ -144,7 +160,9 @@ struct irq_domain_chip_generic;
-  * @exit:	Function called when the domain is destroyed
-  *
-  * Revmap data, used internally by the irq domain code:
-- * @revmap_size:	Size of the linear map table @revmap[]
-+ * @hwirq_max:		Top limit for the HW irq number. Especially to avoid
-+ *			conflicts/failures with reserved HW irqs. Can be ~0.
-+ * @revmap_size:	Size of the linear map table @revmap
-  * @revmap_tree:	Radix map tree for hwirqs that don't fit in the linear map
-  * @revmap:		Linear table of irq_data pointers
-  */
+-		for (i = 0; i < vm->nr_vpes; i++)
++		for (i = 0; i < vm->nr_vpes; i++) {
++			guard(raw_spinlock)(&vm->vpes[i]->vpe_lock);
+ 			its_send_vmapp(its, vm->vpes[i], false);
++		}
+ 	}
+ }
+ 
