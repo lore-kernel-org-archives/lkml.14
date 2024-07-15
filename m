@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AE6185E5B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9EDA185E64;
 	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721033961; cv=none; b=BX5I6Y3GDIB7p87pTf3E1AwFJ+N8yoLHtzYEfAKZhj6slFIl1ZdhOdqs4+G1hAWpvn5z9tKquj6nDp8hEkXcyCTIcDFdG5c+smsbgXT77CTFlGtcSLduqB30KV9KR/uzmgnU4V1pY19Su00CB76XP4NS8ja41bwVHnX9LC0l+4M=
+	t=1721033961; cv=none; b=bDaRmCbJ/Ph9XNzwXsp3WTsMSNc2sqvtJ6382swzQMd0k/FgEeoiFAsl3PzImgyPWMdd9CgkTY5oCFBQmPnifaeyGJVBw2YF9a04GOO1S8a2KQP5YmhkDpsNLPBWGcCVy+wB4ulk3UgkYY8szYgBaYHqrERg+VdC5yrQY0dXZx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721033961; c=relaxed/simple;
-	bh=4MDbIzbgcDxHoNJ3qQdw4vdK4aOodPlMv8exrJKFJK0=;
+	bh=MFLhWRcBfYxauByXZrf0VrJqa/KVcPGuygAHknweNJ0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=o3PyQ5ySuKWeJdbpiyLx7UXvtuvkFhdE3aNSGq/LiF1EUMg7lGqK01jhyj2GSxIAaYElcHwwo7IWXJ7ZvXi7ldH2VGYrvFbGrYUupjjcP/SU+idcbrlC/DF+I4I4U3rFDwBs76tpxp4WwSB8UUEc/AvWitCah2OytyAyxG3b7gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9Hddjc7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=unxjpZnZ9WHPLIU4p+Hup/gRfeRy+9rL22krc3EMYgJBaf+kBNCv5LYStdRge55lYSX0uEgcWggv7m1YYLdIBklKoBzCWKjG/K+ijGnfKOwifOzK3/1yzR63MJqUH/ccEEYPjeY2GZiGC+7gJZAohBWoc/YjUoyjOez5QAb7vXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MCAWdA+P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9Hddjc7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 90E5DC4AF50;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MCAWdA+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 73A6EC4AF15;
 	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721033961;
-	bh=4MDbIzbgcDxHoNJ3qQdw4vdK4aOodPlMv8exrJKFJK0=;
+	bh=MFLhWRcBfYxauByXZrf0VrJqa/KVcPGuygAHknweNJ0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=H9Hddjc7DyWZP8sf2JP06XA4UK3OtGz6pHzwTxQwaNqIWFogGYiw+waVB+xJjyp0w
-	 4ZZ2OBitXyc1AqXyN1QuHHkBCgrAlztLURJHaq9Ec4i5ggiPHXz/iEc+udzXHQ4jWm
-	 cutkjBI3U/39hPPQCPzjMflZPb/XbV/rOt2s2zSvPQ37QyBTdWZ0k6YE+yAt5CuXqs
-	 NwO3d0n7GSEeLQIz5Ov4pNFATrPIPvEMCYezQI24kMaa3lWYi8ZP0/4hCddn7Z1KI6
-	 2Hlqzx0SPd8Lv+jLFWSWDJRA5MWlp6Mbdng50EJ2+bZ3VEDQ0ekFfZQVI24iA7Z04E
-	 A6gJQB3apzpIA==
+	b=MCAWdA+Pw2khDsY8cpZH/+SCZ+Vga/vlxfBKHLymF8IyF285w3kpWuP34G/7iLvj6
+	 GUuWPDz4TdrhoTgzwP9K4RwgEybrI5IQv5OuyQcslOu/ZaqVgfSFQmlCuBPBQNWYb3
+	 jyKft2Tt98H13kfUKd7xcSW2TD8P98ct++KOQ9F/T08gdP53JKjwuY0sXJDLpdAf/d
+	 uHyeCGZpThzA9I6fhaWN2Gm3FQIiTM+UptZea5Tu5a3J1BOlZ7X/h6HORFRQESBMlV
+	 uaacAnnL/kOnqqnGEz+5SGbIf5ifYIKcWPxYZnBXC0tk280WefZOwfyEiI/0PhXeWX
+	 EVLwSd2IDmEVg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E6DC3DA59;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697E8C3DA60;
 	Mon, 15 Jul 2024 08:59:21 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Mon, 15 Jul 2024 16:59:23 +0800
-Subject: [PATCH v2 5/6] arm64: dts: amlogic: t7: add ao secure node
+Date: Mon, 15 Jul 2024 16:59:21 +0800
+Subject: [PATCH v2 3/6] arm64: dts: amlogic: s4: add ao secure node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-soc_info-v2-5-3836c8cc27a5@amlogic.com>
+Message-Id: <20240715-soc_info-v2-3-3836c8cc27a5@amlogic.com>
 References: <20240715-soc_info-v2-0-3836c8cc27a5@amlogic.com>
 In-Reply-To: <20240715-soc_info-v2-0-3836c8cc27a5@amlogic.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -52,11 +52,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721033959; l=1056;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721033959; l=1081;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=X8apXJPtSL4pC+EPOExwu5CekUwHZ9o11FW6DgwjmrM=;
- b=79C2+yoRvFX/D99nnIDVl1pyGJqIOfzDdPRRMglXTnf1vlGE6q5YN9FGlgwHIv0glOi8CPJPu
- GIf8wLvaezUCCRiTRUUZ0rKPcPPYWxCBjIPjzbqGJFqtqmGkulCUrHK
+ bh=2wGt7OXk2HOANrWvEqv6pT1XbsycF6rOAmNwlp+ubQ8=;
+ b=h+GpU/QdW7GMAG9UdNeZuCxebI1djgkzpnF/ceKZ3RnFm/hcE64XUa5MVuSGq22kpbpUU+CcJ
+ odtHcn6SF/GDy3uWRCmaLM2thLVIaHdYQ4j6bzhFmOrEp477attMPCw
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -70,33 +70,33 @@ Add node for board info registers, which allows getting SoC family and
 board revision.
 
 For example, with MESON_GX_SOCINFO config enabled we can get the
-following information for board with Amlogic T7 SoC:
-soc soc0: Amlogic T7 (A311D2) Revision 36:c (1:1) Detected.
+following information for board with Amlogic S4 SoC:
+soc soc0: Amlogic S4 (S805X2) Revision 37:a (2:1) Detecte
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/amlogic/meson-s4.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-index c23efc6c7ac0..ec743cad57db 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-@@ -194,6 +194,14 @@ uart_a: serial@78000 {
- 				interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
+index c11c947fa18c..957577d986c0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
+@@ -763,6 +763,14 @@ reset: reset-controller@2000 {
+ 				#reset-cells = <1>;
  			};
-+
+ 
 +			sec_ao: ao-secure@10220 {
-+				compatible = "amlogic,t7-ao-secure",
++				compatible = "amlogic,s4-ao-secure",
 +					     "amlogic,meson-gx-ao-secure",
 +					     "syscon";
 +				reg = <0x0 0x10220 0x0 0x140>;
 +				amlogic,has-chip-id;
 +			};
- 		};
- 
- 	};
++
+ 			ir: ir@84040 {
+ 				compatible = "amlogic,meson-s4-ir";
+ 				reg = <0x0 0x84040 0x0 0x30>;
 
 -- 
 2.37.1
