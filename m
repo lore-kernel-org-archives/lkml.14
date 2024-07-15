@@ -1,132 +1,175 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10BC613A889;
-	Mon, 15 Jul 2024 05:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A66913A863
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 05:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721022435; cv=none; b=ED8f0o20XELgzABKssuq0QLvwi4gC1JN+l4MV+ANJN92R6ZbEGVZkuyd0dLI3FM8G8Ife+5tim+0X7Y53fhOxIOnLavkJ37ZL8ieCI44rXQFg0eaA6GWMFTlMqjtPrGQnGpufgchk2YZGYawtrlF4iq88KdCbTru9H6ld1mzmlY=
+	t=1721022457; cv=none; b=Fzd5SUP2tycoFnvQGMMKGR+q78WYIg+lbu6+0Emqyg5b3cw9POo/ROtZXz2kRXtT9PI4D8icDG703xeNlnTrnjFLl4/HW2OL73FIX7HOA0ONapuTfpQVncYFV3IJAan4mWImYNXyaaqAXeCjsJkDDod10nHQUKSyauqxzooEy0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721022435; c=relaxed/simple;
-	bh=7h+IIN4RhMATRucL6/sc8yErNOmIbJl0gG66C4964zg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=enfbU08ras+opi7iADhoV17XoVGz2xgB5wdIwXoboVynr98dkfF2uIPujvlHjYlJ0KwbAQC//RnLXN1D5AyS8TkYtAcpdsFr7PnkBXTRIo5o5yh0K8ihrVtqwk/ZwGJi9xtQUttKcNJ5olqsD03JoM61Kj+vaQIiovLrzZp2skI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=bcUXfvox reason="signature verification failed"; arc=none smtp.client-ip=45.254.50.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1721022457; c=relaxed/simple;
+	bh=gSgG4iBt9z3pSKQCFEZ6j2bBGR9XIutDPS0Y6GctS4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=paCQ7kbUK6oQXVfaATHGhuE7ivy2/WaXO/IFxpk/krqJOzl6ZHiuksWjVWJ0WDfE+Xy58YQ7DhPzavutmloJzVR8aoUxKKcgRQfPbUO7OVNd7y6r714U74SVrvEM0s2a6mPVikViSbdm/RsOEt6iHKiw/sH6pJYkTIlhmDyni9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Gyd6ytwo; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Gyd6ytwo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="bcUXfvox"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=xC9hds4K/XnuBjMOc+sj6rV5El2d94HBHRJ+teZwXzk=; b=b
-	cUXfvox8ExB64FKWcRIaqU5AVhXsFxT40I+xvrF6yfGke59T4Crp9MZ9Q+V7WrBN
-	2Wz0Cf5cGOnuKu01/o8CHoxMRURDTqCpQ24nNnyhmLhFpHB0PW/Z6+RlkmiILnar
-	tksVwHga2ITzPAu+r/zilFPmqhP36yEj2+kurNoC6g=
-Received: from slark_xiao$163.com ( [223.104.68.157] ) by
- ajax-webmail-wmsvr-40-149 (Coremail) ; Mon, 15 Jul 2024 13:46:33 +0800
- (CST)
-Date: Mon, 15 Jul 2024 13:46:33 +0800 (CST)
-From: "Slark Xiao" <slark_xiao@163.com>
-To: "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>
-Cc: manivannan.sadhasivam@linaro.org, mhi@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH] bus: mhi: host: Add firehose support for Foxconn
- SDX24/SDX55/SDX65
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <dduv77mdqe633m7amyljhqas7nomrtjrrimvmyqidymy3qjvfa@biepierrz5p3>
-References: <20240709015818.110384-1-slark_xiao@163.com>
- <dduv77mdqe633m7amyljhqas7nomrtjrrimvmyqidymy3qjvfa@biepierrz5p3>
-X-NTES-SC: AL_Qu2ZA/yZvUsi5SCcYOkfmk8Sg+84W8K3v/0v1YVQOpF8jCLr2QImXmJeNFbf3s6gBSypgAWKdgpM2ORoVIdhYqENqOmfsEs9BGL+OezJPvHT6w==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Gyd6ytwo";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Gyd6ytwo"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 52C2C21B34;
+	Mon, 15 Jul 2024 05:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1721022453; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=J+GqE3zqQG29fe01QvbOYJpv81BAnAV5DjIOqhm9FCg=;
+	b=Gyd6ytwoPxlYStNOG4uxRoKG4Ae9aUO2b4WvlDdQ3kUafMozj8kLjj3FmpbEwah0pNLc6V
+	F8UwY/FtRwuxsDz2eGxqcDKyfyzurkCJirfrYTM0sJPhRj0BeA4AMBUumoQ/rkJiUX0v+H
+	0TKe1+JNSyA7Q9N4JDhnFVlEdZbpRaw=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=Gyd6ytwo
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1721022453; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=J+GqE3zqQG29fe01QvbOYJpv81BAnAV5DjIOqhm9FCg=;
+	b=Gyd6ytwoPxlYStNOG4uxRoKG4Ae9aUO2b4WvlDdQ3kUafMozj8kLjj3FmpbEwah0pNLc6V
+	F8UwY/FtRwuxsDz2eGxqcDKyfyzurkCJirfrYTM0sJPhRj0BeA4AMBUumoQ/rkJiUX0v+H
+	0TKe1+JNSyA7Q9N4JDhnFVlEdZbpRaw=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D74013686;
+	Mon, 15 Jul 2024 05:47:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jhETBfW3lGZjSwAAD6G6ig
+	(envelope-from <jgross@suse.com>); Mon, 15 Jul 2024 05:47:33 +0000
+From: Juergen Gross <jgross@suse.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	sstabellini@kernel.org
+Subject: [GIT PULL] xen: branch for v6.11-rc1
+Date: Mon, 15 Jul 2024 07:47:32 +0200
+Message-ID: <20240715054732.7508-1-jgross@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <17f0f426.4faf.190b4edaadd.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD337i5t5RmWd8+AA--.4308W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiNQYbZGV4IlXbrAALsa
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 52C2C21B34
+X-Spam-Flag: NO
+X-Spam-Score: 0.99
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [0.99 / 50.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Spam-Level: 
+X-Spamd-Bar: /
 
-CkF0IDIwMjQtMDctMTMgMjM6MDk6NDcsICJEbWl0cnkgQmFyeXNoa292IiA8ZG1pdHJ5LmJhcnlz
-aGtvdkBsaW5hcm8ub3JnPiB3cm90ZToKPk9uIFR1ZSwgSnVsIDA5LCAyMDI0IGF0IDA5OjU4OjE4
-QU0gR01ULCBTbGFyayBYaWFvIHdyb3RlOgo+PiBTaW5jZSB3ZSBpbXBsZW1lbnQgdGhlIEZJUkVI
-T1NFIGNoYW5uZWwgc3VwcG9ydCBpbiBmb3hjb25uIG1oaQo+PiBjaGFubmVscywgdGhhdCBtZWFu
-cyBlYWNoIHByb2R1Y3Qgd2hpY2ggdXNlIHRoaXMgY2hhbm5lbCBjb25maWcKPj4gd291bGQgc3Vw
-cG9ydCBGSVJFSE9TRS4gQnV0IGFjY29yZGluZyB0byB0aGUgdHJpZ2dlcl9lZGwgZmVhdHVyZSwK
-Pj4gd2UgbmVlZCB0byBlbmFibGUgaXQgYnkgYWRkaW5nICcuZWRsX3RyaWdnZXIgPSB0cnVlJyBp
-biBkZXZpY2UKPj4gaW5mbyBzdHJ1Y3QuCj4+IEFsc28sIHdlIHVwZGF0ZSBhbGwgZWRsIGltYWdl
-IHBhdGggZnJvbSAncWNvbScgdG8gJ2ZveCcgaW4gY2FzZSBvZgo+PiBjb25mbGljdGluZyB3aXRo
-IG90aGVyIHZlbmRvcnMuCj4KPlNlcGFyYXRlIHBhdGNoZXMgcGxlYXNlLiBBbHNvIGRvbid0IHVz
-ZSAid2UiLCBqdXN0IGFuIGltZXJhdGl2ZSBzdHlsZToKPmRvIHRoaXMgYW5kIHRoYXQuCj4KCkRv
-IHlvdSBtZWFuIHVzZSAyIHBhdGNoZXMgKDEgZm9yIGVuYWJsaW5nIHRyaWdnZXIgZWRsIGFuZCAx
-IGZvciAKbW9kaWZ5aW5nIHBhdGgpPyBUaG91Z2ggdGhlc2UgY2hhbmdlcyBhcmUgYWltZWQgdG8g
-bWFrZQpmaXJlaG9zZSBkb3dubG9hZCBzdWNjZXNzZnVsbHkuCgo+PiAKPj4gU2lnbmVkLW9mZi1i
-eTogU2xhcmsgWGlhbyA8c2xhcmtfeGlhb0AxNjMuY29tPgo+PiAtLS0KPj4gIGRyaXZlcnMvYnVz
-L21oaS9ob3N0L3BjaV9nZW5lcmljLmMgfCAyMCArKysrKysrKysrKysrKy0tLS0tLQo+PiAgMSBm
-aWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4+IAo+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9idXMvbWhpL2hvc3QvcGNpX2dlbmVyaWMuYyBiL2RyaXZlcnMvYnVz
-L21oaS9ob3N0L3BjaV9nZW5lcmljLmMKPj4gaW5kZXggMTRhMTE4ODBiY2VhLi40NDA2MDliODFl
-NTcgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvYnVzL21oaS9ob3N0L3BjaV9nZW5lcmljLmMKPj4g
-KysrIGIvZHJpdmVycy9idXMvbWhpL2hvc3QvcGNpX2dlbmVyaWMuYwo+PiBAQCAtNDMzLDggKzQz
-Myw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX2NvbnRyb2xsZXJfY29uZmlnIG1vZGVtX2Zv
-eGNvbm5fc2R4NzJfY29uZmlnID0gewo+PiAgCj4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9w
-Y2lfZGV2X2luZm8gbWhpX2ZveGNvbm5fc2R4NTVfaW5mbyA9IHsKPj4gIAkubmFtZSA9ICJmb3hj
-b25uLXNkeDU1IiwKPj4gLQkuZncgPSAicWNvbS9zZHg1NW0vc2JsMS5tYm4iLAo+PiAtCS5lZGwg
-PSAicWNvbS9zZHg1NW0vZWRsLm1ibiIsCj4+ICsJLmVkbCA9ICJmb3gvc2R4NTVtL3Byb2dfZmly
-ZWhvc2Vfc2R4NTUubWJuIiwKPgo+cWNvbS9zZHg1NW0vZm94Y29ubi9wcm9nX2ZpcmVob3NlX3Nk
-eDU1Lm1ibgoKd2hhdCdzIHlvdXIgb3Bpbmlvbj9NYW5pCgo+Cj4+ICsJLmVkbF90cmlnZ2VyID0g
-dHJ1ZSwKPj4gIAkuY29uZmlnID0gJm1vZGVtX2ZveGNvbm5fc2R4NTVfY29uZmlnLAo+PiAgCS5i
-YXJfbnVtID0gTUhJX1BDSV9ERUZBVUxUX0JBUl9OVU0sCj4+ICAJLmRtYV9kYXRhX3dpZHRoID0g
-MzIsCj4+IEBAIC00NDQsOCArNDQ0LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfcGNpX2Rl
-dl9pbmZvIG1oaV9mb3hjb25uX3NkeDU1X2luZm8gPSB7Cj4+ICAKPj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgbWhpX3BjaV9kZXZfaW5mbyBtaGlfZm94Y29ubl90OTl3MTc1X2luZm8gPSB7Cj4+ICAJ
-Lm5hbWUgPSAiZm94Y29ubi10OTl3MTc1IiwKPj4gLQkuZncgPSAicWNvbS9zZHg1NW0vc2JsMS5t
-Ym4iLAo+PiAtCS5lZGwgPSAicWNvbS9zZHg1NW0vZWRsLm1ibiIsCj4+ICsJLmVkbCA9ICJmb3gv
-c2R4NTVtL3Byb2dfZmlyZWhvc2Vfc2R4NTUubWJuIiwKPgo+SXMgaXQgdGhlIHNhbWUgZmlsZSBh
-cyB0aGUgb25lIG1lbnRpb25lZCBpbiB0aGUgcHJldmlvdXMgY2h1bmsgb3IgaXMgaXQKPmRpZmZl
-cmVudD8KPgoKVGhleSBhcmUgc2FtZSBmb3Igc2FtZSBjaGlwLCB0aG91Z2ggd2UgaGF2ZSBzb21l
-IHZhcmlhbnRzLgoKPklmIHRoZXkgYXJlIGRpZmZlcmVudCwgdGhlbiwgcGxlYXNlLAo+Cj5xY29t
-L3NkeDU1bS9mb3hjb25uL3Q5OXcxNzUvcHJvZ19maXJlaG9zZV9zZHg1NS5tYm4KPgo+Cj4+ICsJ
-LmVkbF90cmlnZ2VyID0gdHJ1ZSwKPj4gIAkuY29uZmlnID0gJm1vZGVtX2ZveGNvbm5fc2R4NTVf
-Y29uZmlnLAo+PiAgCS5iYXJfbnVtID0gTUhJX1BDSV9ERUZBVUxUX0JBUl9OVU0sCj4+ICAJLmRt
-YV9kYXRhX3dpZHRoID0gMzIsCj4+IEBAIC00NTUsOCArNDU1LDggQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBtaGlfcGNpX2Rldl9pbmZvIG1oaV9mb3hjb25uX3Q5OXcxNzVfaW5mbyA9IHsKPj4gIAo+
-PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfcGNpX2Rldl9pbmZvIG1oaV9mb3hjb25uX2R3NTkz
-MGVfaW5mbyA9IHsKPj4gIAkubmFtZSA9ICJmb3hjb25uLWR3NTkzMGUiLAo+PiAtCS5mdyA9ICJx
-Y29tL3NkeDU1bS9zYmwxLm1ibiIsCj4+IC0JLmVkbCA9ICJxY29tL3NkeDU1bS9lZGwubWJuIiwK
-Pj4gKwkuZWRsID0gImZveC9zZHg1NW0vcHJvZ19maXJlaG9zZV9zZHg1NS5tYm4iLAo+PiArCS5l
-ZGxfdHJpZ2dlciA9IHRydWUsCj4+ICAJLmNvbmZpZyA9ICZtb2RlbV9mb3hjb25uX3NkeDU1X2Nv
-bmZpZywKPj4gIAkuYmFyX251bSA9IE1ISV9QQ0lfREVGQVVMVF9CQVJfTlVNLAo+PiAgCS5kbWFf
-ZGF0YV93aWR0aCA9IDMyLAo+PiBAQCAtNDY2LDYgKzQ2Niw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgbWhpX3BjaV9kZXZfaW5mbyBtaGlfZm94Y29ubl9kdzU5MzBlX2luZm8gPSB7Cj4+ICAKPj4g
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX3BjaV9kZXZfaW5mbyBtaGlfZm94Y29ubl90OTl3MzY4
-X2luZm8gPSB7Cj4+ICAJLm5hbWUgPSAiZm94Y29ubi10OTl3MzY4IiwKPj4gKwkuZWRsID0gImZv
-eC9zZHg2NW0vcHJvZ19maXJlaG9zZV9saXRlLmVsZiIsCj4+ICsJLmVkbF90cmlnZ2VyID0gdHJ1
-ZSwKPj4gIAkuY29uZmlnID0gJm1vZGVtX2ZveGNvbm5fc2R4NTVfY29uZmlnLAo+PiAgCS5iYXJf
-bnVtID0gTUhJX1BDSV9ERUZBVUxUX0JBUl9OVU0sCj4+ICAJLmRtYV9kYXRhX3dpZHRoID0gMzIs
-Cj4+IEBAIC00NzUsNiArNDc3LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfcGNpX2Rldl9p
-bmZvIG1oaV9mb3hjb25uX3Q5OXczNjhfaW5mbyA9IHsKPj4gIAo+PiAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBtaGlfcGNpX2Rldl9pbmZvIG1oaV9mb3hjb25uX3Q5OXczNzNfaW5mbyA9IHsKPj4gIAku
-bmFtZSA9ICJmb3hjb25uLXQ5OXczNzMiLAo+PiArCS5lZGwgPSAiZm94L3NkeDY1bS9wcm9nX2Zp
-cmVob3NlX2xpdGUuZWxmIiwKPj4gKwkuZWRsX3RyaWdnZXIgPSB0cnVlLAo+PiAgCS5jb25maWcg
-PSAmbW9kZW1fZm94Y29ubl9zZHg1NV9jb25maWcsCj4+ICAJLmJhcl9udW0gPSBNSElfUENJX0RF
-RkFVTFRfQkFSX05VTSwKPj4gIAkuZG1hX2RhdGFfd2lkdGggPSAzMiwKPj4gQEAgLTQ4NCw2ICs0
-ODgsOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9wY2lfZGV2X2luZm8gbWhpX2ZveGNvbm5f
-dDk5dzM3M19pbmZvID0gewo+PiAgCj4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9wY2lfZGV2
-X2luZm8gbWhpX2ZveGNvbm5fdDk5dzUxMF9pbmZvID0gewo+PiAgCS5uYW1lID0gImZveGNvbm4t
-dDk5dzUxMCIsCj4+ICsJLmVkbCA9ICJmb3gvc2R4MjRtL3Byb2dfZmlyZWhvc2Vfc2R4MjQubWJu
-IiwKPj4gKwkuZWRsX3RyaWdnZXIgPSB0cnVlLAo+PiAgCS5jb25maWcgPSAmbW9kZW1fZm94Y29u
-bl9zZHg1NV9jb25maWcsCj4+ICAJLmJhcl9udW0gPSBNSElfUENJX0RFRkFVTFRfQkFSX05VTSwK
-Pj4gIAkuZG1hX2RhdGFfd2lkdGggPSAzMiwKPj4gQEAgLTQ5Myw2ICs0OTksOCBAQCBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG1oaV9wY2lfZGV2X2luZm8gbWhpX2ZveGNvbm5fdDk5dzUxMF9pbmZvID0g
-ewo+PiAgCj4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9wY2lfZGV2X2luZm8gbWhpX2ZveGNv
-bm5fZHc1OTMyZV9pbmZvID0gewo+PiAgCS5uYW1lID0gImZveGNvbm4tZHc1OTMyZSIsCj4+ICsJ
-LmVkbCA9ICJmb3gvc2R4NjVtL3Byb2dfZmlyZWhvc2VfbGl0ZS5lbGYiLAo+PiArCS5lZGxfdHJp
-Z2dlciA9IHRydWUsCj4+ICAJLmNvbmZpZyA9ICZtb2RlbV9mb3hjb25uX3NkeDU1X2NvbmZpZywK
-Pj4gIAkuYmFyX251bSA9IE1ISV9QQ0lfREVGQVVMVF9CQVJfTlVNLAo+PiAgCS5kbWFfZGF0YV93
-aWR0aCA9IDMyLAo+PiAtLSAKPj4gMi4yNS4xCj4+IAo+Cj4tLSAKPldpdGggYmVzdCB3aXNoZXMK
-PkRtaXRyeQo=
+Linus,
+
+Please git pull the following tag:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.11-rc1-tag
+
+xen: branch for v6.11-rc1
+
+It contains the following patches:
+
+- some trivial cleanups
+- a fix for the Xen timer
+- a patch for adding boot time selectable debug capability to the Xen multicall
+  handling
+- two fixes for the recently added  Xen irqfd handling
+
+Thanks.
+
+Juergen
+
+ Documentation/admin-guide/kernel-parameters.txt |  11 +-
+ arch/arm/xen/p2m.c                              |   2 +-
+ arch/x86/xen/apic.c                             |   2 -
+ arch/x86/xen/debugfs.c                          |   2 +-
+ arch/x86/xen/debugfs.h                          |   7 --
+ arch/x86/xen/enlighten.c                        |   2 -
+ arch/x86/xen/enlighten_hvm.c                    |   2 -
+ arch/x86/xen/enlighten_pv.c                     |   4 -
+ arch/x86/xen/mmu.c                              |   3 +-
+ arch/x86/xen/mmu.h                              |  28 -----
+ arch/x86/xen/mmu_hvm.c                          |   2 +-
+ arch/x86/xen/mmu_pv.c                           |  15 ++-
+ arch/x86/xen/multicalls.c                       | 128 ++++++++++++++++----
+ arch/x86/xen/multicalls.h                       |  69 -----------
+ arch/x86/xen/p2m.c                              |   6 +-
+ arch/x86/xen/pmu.c                              |   1 -
+ arch/x86/xen/pmu.h                              |  22 ----
+ arch/x86/xen/setup.c                            |   1 -
+ arch/x86/xen/smp.c                              |   1 -
+ arch/x86/xen/smp.h                              |  51 --------
+ arch/x86/xen/smp_hvm.c                          |   2 -
+ arch/x86/xen/smp_pv.c                           |   3 -
+ arch/x86/xen/spinlock.c                         |  20 +---
+ arch/x86/xen/suspend.c                          |   2 -
+ arch/x86/xen/time.c                             |   2 +-
+ arch/x86/xen/xen-ops.h                          | 148 +++++++++++++++++++++++-
+ drivers/xen/evtchn.c                            |   1 +
+ drivers/xen/manage.c                            |   2 +-
+ drivers/xen/privcmd-buf.c                       |   1 +
+ drivers/xen/privcmd.c                           |  36 ++++--
+ drivers/xen/xen-pciback/pci_stub.c              |   1 +
+ include/xen/events.h                            |   2 +
+ kernel/locking/qspinlock.c                      |   2 +-
+ 33 files changed, 305 insertions(+), 276 deletions(-)
+
+Chen Ni (2):
+      x86/xen: Convert comma to semicolon
+      xen/arm: Convert comma to semicolon
+
+Christophe JAILLET (1):
+      xen/manage: Constify struct shutdown_handler
+
+Frediano Ziglio (1):
+      x86/xen/time: Reduce Xen timer tick
+
+Jeff Johnson (1):
+      xen: add missing MODULE_DESCRIPTION() macros
+
+Juergen Gross (4):
+      xen: make multicall debug boot time selectable
+      x86/xen: make some functions static
+      x86/xen: eliminate some private header files
+      x86/xen: remove deprecated xen_nopvspin boot parameter
+
+Viresh Kumar (2):
+      xen: privcmd: Switch from mutex to spinlock for irqfds
+      xen: privcmd: Fix possible access to a freed kirqfd instance
