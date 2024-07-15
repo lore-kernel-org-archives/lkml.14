@@ -1,38 +1,44 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B19180A70;
-	Mon, 15 Jul 2024 14:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A73E180A70;
+	Mon, 15 Jul 2024 14:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721052126; cv=none; b=LsukFUycVUBYatlKtlPZuSnAHDY+r8uIvOvYfRIdyuJCZqYtEoYhn8cbBqme3/LNrp7Kj1+xgSH1G7qIO5Pxv54h8bDg1vK46TtkKnIiKbSt9rKF/LqEjZALGqtzop4dkZurJ4++tt45N8iAScXEfJfTLws8FOWuozwEtIa9BRM=
+	t=1721052184; cv=none; b=mJPd1oGevJDjz/n2IX0Ain0qM8/bjXNne6I7aGWlFFVhlSNO2vPAEWY7PPtcEaR9K9EMlaiJF1+okrUt3K4TnF8PThZXYVbjDCWvDtt8PNwDJRCqD1SSUbdpf3ZCGlZTK7k0ehxR/OR3Sm8I6rmfehmHnN0cnzVk2l86dYjZxdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721052126; c=relaxed/simple;
-	bh=B4E4p8BrMrhrC5orvlrwTPX8j2UKBdQTzuEZehStOlw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Z4gWdg2OnIxvUbGaCvDiPZ/n+2bjmvUdUb/5VtE61xgOed7TR+4fMc4TCbH8ykk5PSZ5rLcHiiYeHOmhMaZ1I8xuq7EGsGkBpRxN1cxljZG8h52SX2ScMkcCGsiW5CfzFXYm9Q7tncypzGeSqDcaiIvQc42Kgq2OY2Crwvy78GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 045B892009D; Mon, 15 Jul 2024 16:01:58 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id F103C92009C;
-	Mon, 15 Jul 2024 15:01:58 +0100 (BST)
-Date: Mon, 15 Jul 2024 15:01:58 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, 
-    "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
-    =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
-In-Reply-To: <ac94941f-3ac3-4820-b94d-aeb72a7a7a5c@app.fastmail.com>
-Message-ID: <alpine.DEB.2.21.2407151422040.51207@angie.orcam.me.uk>
-References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com> <Zn1FuxNw2CUttzdg@alpha.franken.de> <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com> <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk> <fbd421a6-cf37-49ab-bdbe-6128a7cae8be@app.fastmail.com>
- <Zoz6+YmUk7CBsNFw@alpha.franken.de> <7797a7b2-1bb2-4c45-b65d-678f685dfa3d@app.fastmail.com> <Zo457UgAkhbAgm2R@alpha.franken.de> <alpine.DEB.2.21.2407101015120.38148@angie.orcam.me.uk> <a8741e38-837b-4fbb-8656-1e6d50bdfcc0@app.fastmail.com>
- <alpine.DEB.2.21.2407110315170.38148@angie.orcam.me.uk> <de07ff44-41ee-4158-b629-90a1835bd9cb@app.fastmail.com> <alpine.DEB.2.21.2407121250350.38148@angie.orcam.me.uk> <dad7b36f-2e37-44db-939e-cdb454875e2a@app.fastmail.com> <alpine.DEB.2.21.2407150225310.58077@angie.orcam.me.uk>
- <ac94941f-3ac3-4820-b94d-aeb72a7a7a5c@app.fastmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1721052184; c=relaxed/simple;
+	bh=q2kmb7iqudj32/vqxdTmeBnwBdx1BZ5aJv5iK6I82Ss=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nrc+2KdPzUivaLKEziPViPwitRpumDkdvcu6tR920SKv3zJlbB0Qcs3pJdudGZYS9Wy2H88ARldJfGag1DJKy3M5PzJ7IXQo0fSWz2IbsbXCm0hIYz9AUEa/WKYXwEIkaqnV5zWAFKodh5DtthdvJ5k6bkRFLfyQSj1fupkO7y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4ZOCMPO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4ZOCMPO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ECD7C32782;
+	Mon, 15 Jul 2024 14:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721052184;
+	bh=q2kmb7iqudj32/vqxdTmeBnwBdx1BZ5aJv5iK6I82Ss=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Q4ZOCMPOd6i4r/c9ZF/veM1FVN1lqhIUlU2ntJR4MLmcrCb5RNp54vmI7voUV5yuH
+	 Itu9AyLW9YBGh9ZFNrMwN/IzaOj78lw6ZCoUunhRbhf1PrzfdJkt/EtigUJ9Tbwtma
+	 ietKpD+3AmHxR9DTcYqGho9P3YN8XFuMvgNZ9qqy0KIT/tvsxjxdvrU9F2TkmkFTLw
+	 6ait0+WT4e8FVDsn/swF4IrigALr+1/4ZH+H5J0H00hVO5y5KKfNu8ghJRZyTkxQ1z
+	 wA/Zxa8ujlaxbJYjOuGTbODi892s959oimaB9Oky+Dkhp7ODzMTzUltbQ2X4Y1yaJ7
+	 51S33YpK0HV/Q==
+Date: Mon, 15 Jul 2024 07:03:02 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Aleksander Jan Bajkowski <olek2@wp.pl>
+Cc: Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, jacob.e.keller@intel.com, horms@kernel.org,
+ u.kleine-koenig@pengutronix.de, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: ethernet: lantiq_etop: remove
+ redundant device name setup
+Message-ID: <20240715070302.3d4d1cf0@kernel.org>
+In-Reply-To: <92570003-ddcd-482b-80e1-1da1fa0cc91f@lunn.ch>
+References: <20240713170920.863171-1-olek2@wp.pl>
+	<92570003-ddcd-482b-80e1-1da1fa0cc91f@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,94 +46,9 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 15 Jul 2024, Jiaxun Yang wrote:
+On Sat, 13 Jul 2024 20:02:49 +0200 Andrew Lunn wrote:
+> maybe you can remove all these as well?
 
-> >  I don't know what prctl(2) has to do with this.  If you don't implement 
-> > this part, then your change will cause Linux to behave inconsistently and 
-> > therefore I'll have to NAK it.
-> 
-> I think your concern was regarding user space application needs to set NaN2008 bits
-> at runtime?
-
- Nope, following the objective of your change: the EF_MIPS_NAN2008 ELF 
-file header flag instructs the kernel to choose between hardware and 
-emulated hard float and that's not supposed to change later on throughout 
-the life of the program, because it's not something the program can do 
-itself, because writes to FCSR.NAN2008 are ignored by hardware.  And it's 
-not a functional regression, because flipping FCSR.NAN2008 isn't allowed 
-by hardware concerned anyway, we just want to have it consistent including 
-the debugger interface.
-
-> >  It's not much to do anyway, as I have prepared `ptrace_setfcr31' already 
-> > to handle masking correctly, so all you have to do is to set the mask as 
-> > required for the right thing to happen.  I shouldn't have needed to point 
-> > you at it though, as that code is easy to find.
-> 
-> I think I got your point, will try to implement it.
-
- Thank you.
-
-> >  This doesn't matter either, as your change only addresses the case where 
-> > FCSR.NAN2008 isn't writable anyway, which is the sole reason you want to 
-> > switch between native hard float support and emulation, doesn't it?
-> >
-> >  In fact where FCSR.NAN2008 is writable your new mode has to be equivalent
-> > to "ieee754=strict", because then there is no need to trigger emulation 
-> > for either NaN mode.  Please do verify that this is the case.
-> 
-> This had been verified with perf math-emu counters to ensure no unnecessary emulation
-> is triggered.
-
- Thanks.
-
-> >  That doesn't matter for us here (and I have a bad suspicion anyway), but 
-> > the Debian team is of course free to do what they want here, the GNU GPL 
-> > applies.
-> 
-> We care about our downstream users, don't we?
-
- There is a balance for us to keep.  Requests made have to be reasonable
-and code contributed has to be architected well and meet quality criteria.  
-Every change carries its associated cost and especially with the limited 
-manpower available we can't afford having a technical debt created.  Any 
-unclean piece of code accepted will strike us back sooner or later.
-
-> They asked me to help and that was my solution. I sincerely want to get this change upstreamed
-> to cover some downstream use cases.
-
- If it's your own genuine from-scratch implementation, then I have more 
-faith in it.
-
-> I don't know what theory do you have here, but that's all stories behind.
-
- I have seen odd requests and code changes stemming from embarassing lack 
-of understanding how things work with the MIPS architecture.
-
-> >  And also they can always use the "nofpu" kernel parameter to run their 
-> > verification.  I used it for mine back at ImgTec before 2008 NaN hardware 
-> > was available, also to verify emulation, which I wrote too.  Perhaps that 
-> > is also the right solution for Debian actually?
-> 
-> I'll suggest to them, thanks.
-
- I note that it's been like this since 2015 and it has been documented:
-
-	ieee754=	[MIPS] Select IEEE Std 754 conformance mode
-			Format: { strict | legacy | 2008 | relaxed }
-			Default: strict
-[...]
-			The FPU emulator is always able to support both NaN
-			encodings, so if no FPU hardware is present or it has
-			been disabled with 'nofpu', then the settings of
-			'legacy' and '2008' strap the emulator accordingly,
-			'relaxed' straps the emulator for both legacy-NaN and
-			2008-NaN, whereas 'strict' enables legacy-NaN only on
-			legacy processors and both NaN encodings on MIPS32 or
-			MIPS64 CPUs.
-
-(see the part following the last comma in particular).  It usually makes 
-sense to read documentation and I'd expect MIPS Debian port experts to do 
-it from time to time.
-
-  Maciej
++1 seems like a good cleanup (after the merge window is over)
