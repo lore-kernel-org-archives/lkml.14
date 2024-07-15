@@ -1,73 +1,63 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DED21E890
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 23:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C441E890;
+	Mon, 15 Jul 2024 23:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721087524; cv=none; b=ohSol0ix31U9cJYLmOc6CmYCNLWxv1tsHNAtEAmT4vW9wyR4KaXPEj7XdZIDbMImBs2+kZt2eL4SK5f0ccSBZ8aGxbbmE1M6OkGv8nD8owHTwdhDCbCsPZJj9/aQN85KdT7cGOi+rbS2zQB28m/T8NtVQzdXppHk4QDS5TnJwXA=
+	t=1721087783; cv=none; b=VB/xP5MUEcmytOF5tbLzLAfRh1GKzDdmFR505q6TtXjSKoIEIrpfbJSXYP74+mdjc4JXjwl8R6CLWg/YkG0260V942DSFbpj1ytgpdI22l064vjUYAu8bFP/gsN5BLLnQw3cBAhfsJvzLiQfvYgUO+DiPS+h2cSJVSIn0efskr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721087524; c=relaxed/simple;
-	bh=AuRv+ixFzr3WJFdjYojC9WuJxeFJDgPIie5WLMhbDPg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=PCIFldVZ1X1Yh5gQgflZkz7gFd2rJTMPkiPFwp24LIRT5OZPeRGttmgwIwjZFl3PDsAmVtxeCXFoy30k18WN7RhlOFTbpUn3IKs1pv5Y0KugDlt9qeXdNRr3klOdFfOrkp2xv5PhaWxH84LFhWItv5/e74w4q8AgoscPzfEg9ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-37714b7f378so58789815ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 16:52:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721087522; x=1721692322;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZxjBgjbqm235y8LYzxWAk6dpFwDHzr+tigxB2IBFD4s=;
-        b=oRwZ8JhrHvIhqq/zE7LgX4VTNNRD6xyV6/zPLaShHt/m4ksRfquaIK6ZCG1N63BEvf
-         lzfXNUFMy5UAVu5qYAstFt+aEh0Y0gRBe9pmHKUH/4ti3k5Jz3T5CWRAV09wDv4ropzs
-         jL4Jyfp/1GqaXVC97VOvWvU+Ua9EBdEPNqIuLvVHQVxcd74+goSLNuQo2FzAx1g9J53E
-         RFj0SJn53OfDHjG3YMjGCmA8+D2Cp/cMNLN6atCK5hAqBF2yy0iMwFsiD/k0etdx/R1n
-         vKOhPSsOv7jdR+vkIlZd85Es8iy69DoDyjl5tNDUKza+zkzny8OThyP0G2LQZRHeRGZM
-         MPhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIOMvT5F+o7uMrQXl6g32tDp8pj+SC7NTrdIKOKUkKp65UCFNpO9mY7sGPnidQWOvbq3J4BrlXFBq/V9Psd5CPE6atmmUgaExHR44t
-X-Gm-Message-State: AOJu0YxTOo/5oLI43RJz5l4ezaemIi+HFKoTt5XrDwC0IRO03xxEnmwa
-	LoABGC6elfHc/sPhtsl4h5/ob//gkFP69HRE+GQEQinStxOGrgPDGPkNlWd8tbi7f8E8WXH+7XE
-	32RPhq02bRorISseZuOHYZShCLAW3/5xBvrKhsW8NWlRIQLdveYZA/Ck=
-X-Google-Smtp-Source: AGHT+IFIGkjjLJ5uFLEXeRgq9CYGKiCDCoD8C32h4tUZuyjTn0qj2ewI1P8u6/cMgV9UNiSAV3uisownXIg3ntCTXRBsZ+2MRiwk
+	s=arc-20240116; t=1721087783; c=relaxed/simple;
+	bh=7HeMkAj9hTEAk8gLx9fNHc5xHi7JveRIkn6Hdyt4iv4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=mJHsVdQHwyPkdhT1ODZiLH7QWyIGcVGQlb83TaAHLClhI9eQkhF5zKdejLgmoRWy2cOx9jrEwhepwdZJ6idWC8d9UiKTK9uuh1v2ML8ORe9HSe9xP6oR7OWkCc6jZLjL4nEH4Sy7ArhkFVECyIyHxNoptealCuQe4dtjythbRsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frWB/PPj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frWB/PPj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F971C32782;
+	Mon, 15 Jul 2024 23:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721087783;
+	bh=7HeMkAj9hTEAk8gLx9fNHc5xHi7JveRIkn6Hdyt4iv4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=frWB/PPjpx5ubJO15A3WlazEODKW02udngCjTRxWIffEOUCRYGy48WZMl/PxL+CXY
+	 a1eyo17X32bngHRj1DiDEaJDXFxA2FufZGw7CjS48Yuug2ZcszMBHjsXBtA1yKaJg5
+	 CT0GEfvASKu+oIoDS+1IKBmSxvsHTXeqzQRDorY7ccEpNkHccB/GlTFEVU1CcL0gMU
+	 R/3pXCgZupbo/4GQyNVVMtZmYmUeMSgV5skGx780g6/jsTLx4XLSZqwUbnxOOALdZa
+	 gVY2hLBs2JW2/5nnUtDCBrSBGiRy3mH+bxMtKVY4fnXpBHgbIL25OzeVW2Yq11qooO
+	 cIn0WXK5GKgWg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 65A75C433E9;
+	Mon, 15 Jul 2024 23:56:23 +0000 (UTC)
+Subject: Re: [GIT PULL] Emulated one-byte cmpxchg() for ARM
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <52c8725d-7fdd-4fd5-a773-9a347a8837b2@paulmck-laptop>
+References: <52c8725d-7fdd-4fd5-a773-9a347a8837b2@paulmck-laptop>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <52c8725d-7fdd-4fd5-a773-9a347a8837b2@paulmck-laptop>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/cmpxchg.2024.07.12a
+X-PR-Tracked-Commit-Id: f1b5644862c5b594f48ad01d7880a96b95d83a2f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c4b729b0fac2d1b336df6d3e8c3fdb67ee9fff82
+Message-Id: <172108778340.25181.12181251202970108692.pr-tracker-bot@kernel.org>
+Date: Mon, 15 Jul 2024 23:56:23 +0000
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel-team@meta.com, elver@google.com, akpm@linux-foundation.org, tglx@linutronix.de, peterz@infradead.org, arnd@arndb.de, broonie@kernel.org, naresh.kamboju@linaro.org, nathan@kernel.org, linus.walleij@linaro.org, rmk+kernel@armlinux.org.uk, afd@ti.com, eric.devolder@oracle.com, robh@kernel.org, mark.rutland@arm.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc6:b0:36c:5c1b:2051 with SMTP id
- e9e14a558f8ab-393d402aec4mr571925ab.6.1721087521980; Mon, 15 Jul 2024
- 16:52:01 -0700 (PDT)
-Date: Mon, 15 Jul 2024 16:52:01 -0700
-In-Reply-To: <ZpWFMgpbZipqyGfN@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000601513061d51ea72@google.com>
-Subject: Re: [syzbot] [kernel?] kernel BUG in binder_inc_ref_for_node
-From: syzbot <syzbot+3dae065ca76952a67257@syzkaller.appspotmail.com>
-To: arve@android.com, brauner@kernel.org, cmllamas@google.com, 
-	gregkh@linuxfoundation.org, joel@joelfernandes.org, 
-	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com, 
-	syzkaller-bugs@googlegroups.com, tkjos@android.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+The pull request you sent on Sun, 14 Jul 2024 09:21:45 -0700:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/cmpxchg.2024.07.12a
 
-Reported-and-tested-by: syzbot+3dae065ca76952a67257@syzkaller.appspotmail.com
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c4b729b0fac2d1b336df6d3e8c3fdb67ee9fff82
 
-Tested on:
+Thank you!
 
-commit:         82d01fe6 Add linux-next specific files for 20240709
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1339eb6e980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=95a20e7acf357998
-dashboard link: https://syzkaller.appspot.com/bug?extid=3dae065ca76952a67257
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1198f85e980000
-
-Note: testing is done by a robot and is best-effort only.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
