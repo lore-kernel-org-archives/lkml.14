@@ -1,254 +1,152 @@
 Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A0018629D
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B0B199A2
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 09:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721036189; cv=none; b=oK8p41xm4Z/QuQ5wBUvJZ4V2KljpAN/6jZ7cNAzM5cL/0mB3PYZr8rHGVxl/CUEuqT8kCZCELapFDd4CnUGII0XD9a8hNtTPxI6F/k/Lrmzb2eTHD07WyRuzwSv2tcJGyc6bBZkP2kO8YyzTXfplkK/JZUdbMoUHcrDxZQwd3OI=
+	t=1721036344; cv=none; b=ZyHzDmAD2iPEPA8l6woSEoy/mTqZydROu8P5SnrjOgwFyO7N7xd+RHNjLKzrIESA9lmGkgpJMRWMF7VwarLQ87ykeojIpX378ZOhh6qBtFo8P26gd4OU+pyBKvArVywWKsN/yYmW13LztmuGIwGZ7XMFTeY663Rd327jQXHUteM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721036189; c=relaxed/simple;
-	bh=8QtGi/i0ImRwuJh3+fS59aC+201MYYNYZD2SSncqJfw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Zy1aUX2BgF3T2oJ6M7J4QKZa+sGthMdwida2XP77X3ndVlR4x+PEt2cHMMqE4c54rpmP0g/45o3t3m1qWADM6bvuvmtKf+HV+kk/wbAKnn2Z6aHOzuAPD8bDrsTrk72OJ8G4hqzOjqfdu1JscxoHguuDy0pEpvV0QzhbnCRaMeQ=
+	s=arc-20240116; t=1721036344; c=relaxed/simple;
+	bh=6AEFsEKsUpb3ypyZKuMf5kxPW8bAHxcQFHyJjL6wH2A=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=DvtePUDAcYNKxQxc0aH9mD3y7NnoXzQ0coD4Rm6I/dOpQxWEeIyEwY+J1eFrkIebqx9JSxBUNKcnvAD06OBTo/GqMVCNZRt/56u9dyir7v6IZYU39T+OMGrCiDt+TFM44MCL33cfvfEO91cEF0YmkiQtFxrhrDI8orho5CDEzDU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-800e520a01dso474080139f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:36:27 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-804888d4610so401987639f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 02:39:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721036187; x=1721640987;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jeoZB6fPJWIGRauIwEdDQjWLLVZ3C8qGzJlbE6eScS0=;
-        b=w1f+49NuV8CxsoKt52vWDZvyBHIN5J/UTz35b2kQ1f+Wx5tU9vN0qDxkLIoO+pOUBN
-         j5lXQn6wue336V4Ij/buT1FrsL0XUdiQp400MtD6K7Q8TrDMav5AzJHqOkAlj64OtfuV
-         FRstMuX8lNHlTJ3aqxsh5J6n9ihRtmelEwYkygbkZnGv6siRCmhy9TCA9WxE5J+cLoaC
-         bXpU6cwooTM35pIfMfGUUZZRqqNOa3qkjIXvPAhwHu7lxvUyOE1nFKZNMJVcnGqLOA/S
-         +xVeIjAHDA3MO4U51RVuJqVYPE919R983YaD6n3thV1RoYhX9Q3WBybnAGsDIEmr+STo
-         SniA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVepouLnkKRUKdZbItIsZYy0i5fi/ees8RZDGFc20TxYWZD7kxZV8DaQwjt7qohO8Fh6OqRwXtd3dSmmdgItyu7as1pTYHQ2FuQ/PH
-X-Gm-Message-State: AOJu0YzS3phRb+yzSgf71KNCrPwGnmFD3evwWn64LGoItZSwY5kLGptm
-	KLlLP+9pfhZGvdIvM2eI9BKsctjdyZjR6zDmDH3yRZrLpoaSM/UI1mLcFsMd1GEUPlrxhmqAYIh
-	lv3hPnbyEG4YULLtqtDiDYkonX3YAXpHK1kKH1V36S0yd0wHHzG1sz5w=
-X-Google-Smtp-Source: AGHT+IENUBACwBFvhB6Vq3Ip6eD1+kXna9FJxcf0W9UEf1Dh4MUcRkOEED8UvWrZL6HyWbdXmdB0Wa8R4L6tac+L4JkVWhkV75FX
+        d=1e100.net; s=20230601; t=1721036342; x=1721641142;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tcOH2YNv6hTES5H04pSUoFFYdg1HVD4+kUaPv0gv/gg=;
+        b=pKDZKBOfCF2884WrO+VG+7qOsHZc+/4SGWRBl30z7/SDk+AEzciceBfDd4ezgW2ZT0
+         vN6qKKmZROEZ7OpirqrTQ4x5bNxM2b76wBbelxryf9MBPyLJfVpZsXWNrDSSElQQPNvb
+         HzV3rhjLGgMGrnEyvyyi5frOM5X22o751GnIujyAkOH49kgyug5GT+uV6S4Sxc/Q9qJk
+         dHE4E/0pf7QxSOph2rL1CphOHRKlk/G6D1V07p8gFmTshRcV9HyN5qaUw5ttDZMVbgKS
+         UEWKMT2GTE5xOfkkODEahx7lmd0U4sWfLkYTNOUtS8zt49SK1ECWOJSBN/NHmXjtu7V8
+         VmuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKmUaFcQP2xnrzHzodjjkbcw6i9rDZd+Yhf9WXKClvLOX0NSwnlI130i+kfMVv+kNICPQbo7hyD5ph86I3CBVWffddEk4YYlDAU+UL
+X-Gm-Message-State: AOJu0YzEM7OxCpMAnEomIQ3Mw5lz7l8CTJqka53Yu+2Jz7ua2n8aXrga
+	uDtlwfz4tMr2VlF2k7qJwLHqwWr/4J7bLsSv1gvo9DhUqDRRpVRwpVBiEE+VSbo1YsiBezwRwR9
+	OUYUw2CJtj0zXpg9KVbK7oRN4n+3ZMcuXJ6zfT7nAs7cr7z/htYOBweE=
+X-Google-Smtp-Source: AGHT+IFrlSJY1FG0Owvf6CuER66QjwPTccB1f2ttggO/MPp1ib+Gotd1cg74fnU3aWRlbhsUxLjPd1CkR1ZRVPgTGhFVwhcR66MV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6b88:b0:80f:81f5:b47d with SMTP id
- ca18e2360f4ac-80f81f5b95amr26415839f.2.1721036187048; Mon, 15 Jul 2024
- 02:36:27 -0700 (PDT)
-Date: Mon, 15 Jul 2024 02:36:27 -0700
+X-Received: by 2002:a92:cda4:0:b0:382:2f47:a82e with SMTP id
+ e9e14a558f8ab-38e60f2ad3bmr10009865ab.1.1721036342629; Mon, 15 Jul 2024
+ 02:39:02 -0700 (PDT)
+Date: Mon, 15 Jul 2024 02:39:02 -0700
+In-Reply-To: <8f3f2481-c970-4019-b39d-6f0d280ba147@paragon-software.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000932e45061d45f6e8@google.com>
-Subject: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in set_powered_sync
-From: syzbot <syzbot+03d6270b6425df1605bf@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+Message-ID: <000000000000d92e6a061d45ffa3@google.com>
+Subject: Re: [syzbot] [ntfs3?] general protection fault in run_is_mapped_full
+From: syzbot <syzbot+9af29acd8f27fbce94bc@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
-syzbot found the following issue on:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in run_is_mapped_full
 
-HEAD commit:    0c3836482481 Linux 6.10
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16e50766980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a18058d86df5936b
-dashboard link: https://syzkaller.appspot.com/bug?extid=03d6270b6425df1605bf
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-0c383648.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/871d2f2915c4/vmlinux-0c383648.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/5582453293c4/bzImage-0c383648.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+03d6270b6425df1605bf@syzkaller.appspotmail.com
-
-Bluetooth: hci0: Opcode 0x206a failed: -110
-==================================================================
-BUG: KASAN: slab-use-after-free in set_powered_sync+0xc1/0xd0 net/bluetooth/mgmt.c:1354
-Read of size 8 at addr ffff88804642e318 by task kworker/u33:2/5212
-
-CPU: 3 PID: 5212 Comm: kworker/u33:2 Not tainted 6.10.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: hci0 hci_cmd_sync_work
+loop0: detected capacity change from 0 to 4096
+ntfs3: loop0: Different NTFS sector size (1024) and media sector size (512).
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+CPU: 1 PID: 6004 Comm: syz.0.15 Not tainted 6.10.0-rc1-syzkaller-00034-geb95678ee930 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+RIP: 0010:run_lookup fs/ntfs3/run.c:39 [inline]
+RIP: 0010:run_is_mapped_full+0x35/0x480 fs/ntfs3/run.c:173
+Code: 41 54 53 48 83 ec 30 41 89 d4 41 89 f6 49 89 fd 49 bf 00 00 00 00 00 fc ff df e8 36 e5 a7 fe 49 8d 5d 08 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 6c 9c 0d ff 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc9000329f758 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: 0000000000000008 RCX: ffff88807b0c5a00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc9000329fb18 R08: ffffffff82e4ba0a R09: ffffffff82ee0999
+R10: 0000000000000002 R11: ffff88807b0c5a00 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007f826d7ef6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb79d6ff095 CR3: 000000007ccc0000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
  <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0xc3/0x620 mm/kasan/report.c:488
- kasan_report+0xd9/0x110 mm/kasan/report.c:601
- set_powered_sync+0xc1/0xd0 net/bluetooth/mgmt.c:1354
- hci_cmd_sync_work+0x1a4/0x410 net/bluetooth/hci_sync.c:323
- process_one_work+0x958/0x1ad0 kernel/workqueue.c:3248
- process_scheduled_works kernel/workqueue.c:3329 [inline]
- worker_thread+0x6c8/0xf30 kernel/workqueue.c:3409
- kthread+0x2c1/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ attr_load_runs fs/ntfs3/attrib.c:69 [inline]
+ attr_set_size+0xfdf/0x4300 fs/ntfs3/attrib.c:502
+ ntfs_create_inode+0x252d/0x37f0 fs/ntfs3/inode.c:1719
+ ntfs_symlink+0xde/0x110 fs/ntfs3/namei.c:199
+ vfs_symlink+0x137/0x2e0 fs/namei.c:4489
+ do_symlinkat+0x222/0x3a0 fs/namei.c:4515
+ __do_sys_symlinkat fs/namei.c:4531 [inline]
+ __se_sys_symlinkat fs/namei.c:4528 [inline]
+ __x64_sys_symlinkat+0x99/0xb0 fs/namei.c:4528
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f826c975bd9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f826d7ef048 EFLAGS: 00000246 ORIG_RAX: 000000000000010a
+RAX: ffffffffffffffda RBX: 00007f826cb03f60 RCX: 00007f826c975bd9
+RDX: 0000000020000440 RSI: 0000000000000006 RDI: 0000000020000340
+RBP: 00007f826c9e4e60 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f826cb03f60 R15: 00007ffc50a8ce78
  </TASK>
-
-Allocated by task 673:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
- __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:387
- kmalloc_noprof include/linux/slab.h:660 [inline]
- kzalloc_noprof include/linux/slab.h:778 [inline]
- mgmt_pending_new+0x5b/0x290 net/bluetooth/mgmt_util.c:269
- mgmt_pending_add+0x36/0x160 net/bluetooth/mgmt_util.c:296
- set_powered+0x28c/0x5c0 net/bluetooth/mgmt.c:1395
- hci_mgmt_cmd net/bluetooth/hci_sock.c:1712 [inline]
- hci_sock_sendmsg+0x1526/0x25e0 net/bluetooth/hci_sock.c:1832
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- sock_write_iter+0x50a/0x5c0 net/socket.c:1160
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0x6b6/0x1140 fs/read_write.c:590
- ksys_write+0x1f8/0x260 fs/read_write.c:643
- do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
- __do_fast_syscall_32+0x73/0x120 arch/x86/entry/common.c:386
- do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
-Freed by task 674:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
- poison_slab_object+0xf7/0x160 mm/kasan/common.c:240
- __kasan_slab_free+0x32/0x50 mm/kasan/common.c:256
- kasan_slab_free include/linux/kasan.h:184 [inline]
- slab_free_hook mm/slub.c:2196 [inline]
- slab_free mm/slub.c:4438 [inline]
- kfree+0x12a/0x3b0 mm/slub.c:4559
- cmd_status_rsp net/bluetooth/mgmt.c:1452 [inline]
- cmd_complete_rsp+0x119/0x160 net/bluetooth/mgmt.c:1466
- mgmt_pending_foreach+0xdf/0x140 net/bluetooth/mgmt_util.c:259
- mgmt_index_removed+0x11f/0x2e0 net/bluetooth/mgmt.c:9346
- hci_sock_bind+0xc6d/0x1810 net/bluetooth/hci_sock.c:1307
- __sys_bind+0x1f3/0x220 net/socket.c:1847
- __do_sys_bind net/socket.c:1858 [inline]
- __se_sys_bind net/socket.c:1856 [inline]
- __ia32_sys_bind+0x71/0xb0 net/socket.c:1856
- do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
- __do_fast_syscall_32+0x73/0x120 arch/x86/entry/common.c:386
- do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
-The buggy address belongs to the object at ffff88804642e300
- which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 24 bytes inside of
- freed 96-byte region [ffff88804642e300, ffff88804642e360)
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88804642e280 pfn:0x4642e
-flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
-page_type: 0xffffefff(slab)
-raw: 04fff00000000000 ffff888015442280 ffffea000073c300 dead000000000002
-raw: ffff88804642e280 0000000080200017 00000001ffffefff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5205, tgid 5205 (syz-executor), ts 60618600133, free_ts 58387633005
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1473
- prep_new_page mm/page_alloc.c:1481 [inline]
- get_page_from_freelist+0x1353/0x2e50 mm/page_alloc.c:3425
- __alloc_pages_noprof+0x22b/0x2460 mm/page_alloc.c:4683
- __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
- alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
- alloc_slab_page+0x56/0x110 mm/slub.c:2265
- allocate_slab mm/slub.c:2428 [inline]
- new_slab+0x84/0x260 mm/slub.c:2481
- ___slab_alloc+0xdac/0x1870 mm/slub.c:3667
- __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3757
- __slab_alloc_node mm/slub.c:3810 [inline]
- slab_alloc_node mm/slub.c:3990 [inline]
- __do_kmalloc_node mm/slub.c:4122 [inline]
- __kmalloc_noprof+0x37f/0x420 mm/slub.c:4136
- kmalloc_noprof include/linux/slab.h:664 [inline]
- kzalloc_noprof include/linux/slab.h:778 [inline]
- tnode_alloc net/ipv4/fib_trie.c:333 [inline]
- tnode_new+0x25a/0x340 net/ipv4/fib_trie.c:386
- inflate net/ipv4/fib_trie.c:546 [inline]
- resize+0xa2b/0x2250 net/ipv4/fib_trie.c:870
- trie_rebalance net/ipv4/fib_trie.c:1107 [inline]
- fib_insert_node net/ipv4/fib_trie.c:1151 [inline]
- fib_insert_alias+0x9c0/0xe30 net/ipv4/fib_trie.c:1165
- fib_table_insert+0xaab/0x1d70 net/ipv4/fib_trie.c:1379
- fib_magic+0x4d6/0x5c0 net/ipv4/fib_frontend.c:1104
- fib_add_ifaddr+0x174/0x560 net/ipv4/fib_frontend.c:1126
- fib_inetaddr_event+0x174/0x2c0 net/ipv4/fib_frontend.c:1440
- notifier_call_chain+0xb9/0x410 kernel/notifier.c:93
-page last free pid 5207 tgid 5207 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1093 [inline]
- free_unref_page+0x64a/0xe40 mm/page_alloc.c:2588
- __put_partials+0x14c/0x170 mm/slub.c:2995
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x4e/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x192/0x1e0 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x69/0x90 mm/kasan/common.c:322
- kasan_slab_alloc include/linux/kasan.h:201 [inline]
- slab_post_alloc_hook mm/slub.c:3940 [inline]
- slab_alloc_node mm/slub.c:4002 [inline]
- kmalloc_trace_noprof+0x11e/0x310 mm/slub.c:4149
- kmalloc_noprof include/linux/slab.h:660 [inline]
- kzalloc_noprof include/linux/slab.h:778 [inline]
- ref_tracker_alloc+0x17c/0x5b0 lib/ref_tracker.c:203
- __netdev_tracker_alloc include/linux/netdevice.h:4038 [inline]
- netdev_hold include/linux/netdevice.h:4067 [inline]
- netdev_hold include/linux/netdevice.h:4062 [inline]
- netdev_queue_add_kobject net/core/net-sysfs.c:1783 [inline]
- netdev_queue_update_kobjects+0x281/0x640 net/core/net-sysfs.c:1838
- register_queue_kobjects net/core/net-sysfs.c:1900 [inline]
- netdev_register_kobject+0x290/0x3f0 net/core/net-sysfs.c:2140
- register_netdevice+0x12ce/0x1c40 net/core/dev.c:10375
- veth_newlink+0x4f6/0xa10 drivers/net/veth.c:1860
- rtnl_newlink_create net/core/rtnetlink.c:3510 [inline]
- __rtnl_newlink+0x119c/0x1960 net/core/rtnetlink.c:3730
- rtnl_newlink+0x67/0xa0 net/core/rtnetlink.c:3743
- rtnetlink_rcv_msg+0x3c7/0xea0 net/core/rtnetlink.c:6635
- netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2564
- netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
- netlink_unicast+0x542/0x820 net/netlink/af_netlink.c:1361
-
-Memory state around the buggy address:
- ffff88804642e200: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
- ffff88804642e280: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
->ffff88804642e300: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                            ^
- ffff88804642e380: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
- ffff88804642e400: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
-==================================================================
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:run_lookup fs/ntfs3/run.c:39 [inline]
+RIP: 0010:run_is_mapped_full+0x35/0x480 fs/ntfs3/run.c:173
+Code: 41 54 53 48 83 ec 30 41 89 d4 41 89 f6 49 89 fd 49 bf 00 00 00 00 00 fc ff df e8 36 e5 a7 fe 49 8d 5d 08 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 6c 9c 0d ff 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc9000329f758 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: 0000000000000008 RCX: ffff88807b0c5a00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc9000329fb18 R08: ffffffff82e4ba0a R09: ffffffff82ee0999
+R10: 0000000000000002 R11: ffff88807b0c5a00 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007f826d7ef6c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f826cb000a0 CR3: 000000007ccc0000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	41 54                	push   %r12
+   2:	53                   	push   %rbx
+   3:	48 83 ec 30          	sub    $0x30,%rsp
+   7:	41 89 d4             	mov    %edx,%r12d
+   a:	41 89 f6             	mov    %esi,%r14d
+   d:	49 89 fd             	mov    %rdi,%r13
+  10:	49 bf 00 00 00 00 00 	movabs $0xdffffc0000000000,%r15
+  17:	fc ff df
+  1a:	e8 36 e5 a7 fe       	call   0xfea7e555
+  1f:	49 8d 5d 08          	lea    0x8(%r13),%rbx
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 df             	mov    %rbx,%rdi
+  34:	e8 6c 9c 0d ff       	call   0xff0d9ca5
+  39:	48 8b 1b             	mov    (%rbx),%rbx
+  3c:	31 ff                	xor    %edi,%edi
+  3e:	48                   	rex.W
+  3f:	89                   	.byte 0x89
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Tested on:
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+commit:         eb95678e fs/ntfs3: Keep runs for $MFT::$ATTR_DATA and ..
+git tree:       https://github.com/Paragon-Software-Group/linux-ntfs3.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=16543f85980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2f1c94a15f7c9744
+dashboard link: https://syzkaller.appspot.com/bug?extid=9af29acd8f27fbce94bc
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Note: no patches were applied.
