@@ -1,612 +1,225 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C1018EA7B;
-	Mon, 15 Jul 2024 13:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18AC18E75C
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721051779; cv=none; b=cYJpf7/5rn8cjvTLd14or/CBLDKDtCxeRuhwA/XgMlqCukS8Mc8IBcrBXu+MxUNO//9UN4vLaKjitUXAJLku3TPxcHmGpgLY/Rql6yVBcKDpY9etk134glCFS0d0mCudzrf52jH4CGs2rbYhSSN7V2b50bPR5jsr1Egy7H58YtE=
+	t=1721051855; cv=none; b=koCiPReU3F6uKpIRykMsvsBfvWGtiTP6uXo1Hl+nDGtUNsStnTWJ1SccFvccUT3cqVpdBuvSKOD+/lXwoETZ/y+qBs6SPqYLNiw8cAygznqc7qUTBW0FTKoKWc0RPDf3AdBU4RcVhrGXs6k7jwe769+5xxg9s1W3BJBYPNWnrek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721051779; c=relaxed/simple;
-	bh=dnsUqIBWPdbuOTYoCVNVhd2v7Ej2Jvyt+hebEI+klqk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JbagRYlf6ckNf25H+rsDUwcOHPsrkYXqyxgbFrfEK89QrXYhS6DKx97JPjGuuTTFmGvszA4Nz1+idL1yjX9s/ieqo5q4q2vy+mmLzwf2PV5yKaJJ6ZICPmhvByuhq+Y9FGualLWEx/PwUZNX81ATg2EOg1xOufjXm9IvSkGnm5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=min8Y9xR; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721051855; c=relaxed/simple;
+	bh=G69dhMihKqI1y+QAIGiAVO8xqyX8K+W8TI3IssZ/CJw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nYamIjgGOuvxOKGNg0Ob1NXh2x5nhPjDGgAVqW0sb7ByghL1mWICvsE37aJVdWbD5+PthQ2zWAc7baHgHIiM9OZy3UIW6F7hAMwdp9pqP81FJMW+Kf2mpkePnB3jIfXFNem4GDOgaTC2S+rxtyL1eHgglHih/fybRp7zbPsCn5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EFVoXb5v; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="min8Y9xR"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-595712c49ebso5213529a12.0;
-        Mon, 15 Jul 2024 06:56:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFVoXb5v"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-367993463b8so2456990f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 06:57:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721051776; x=1721656576; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/x83uhAgtPmXyFX07eC/O7WLqpmAACzSVrglNL9NB4Q=;
-        b=min8Y9xRPKAUNx05DDi0HhHUCYwvd0oKm8jDry0kxmCYQyJYn3D20pxQfRUYEXnLmS
-         vuwnMmTZPfXrQrjrFTcrilhEFE6nmxR0KN0C7xWp0RogYLAP6b7r2w3haRZaoVpbPdHO
-         XSA174usVHoBcBSqNPASC/sVmlkVy0400whaTXtcgY4bhO1czZl6qNXwnnDVsb+uFeSn
-         5mK22/+Ci2TY+jkAt33ZAhLKDV3jIWVzd6Lm5TfSKcibe5JZSyGRHWTZ3wFQPmJa71vf
-         KLI12mKlGhsKUrWOyaIQPkqDICsKcqWoDHAuoTCdX/O+g7PEooGPbHWg8T+MR3k3zVV1
-         LutA==
+        d=linaro.org; s=google; t=1721051852; x=1721656652; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jqmSoh9JB/3hZYySxLznUyX+qQFd5aQoYQGKXDyQDDs=;
+        b=EFVoXb5v5qIVoHkTQJ+kM7zaFC5dx/Jl5CNlTq9OgdrWLq3ClBRxlXVrRdhSM+cz4m
+         7qf7HIPvuX81IUFSJyVni5YCkJs+YkCzqLvDTzP9I/6YhOt+lhklxOGizraxAnirLN75
+         sCxyOBgw4FQK1bEhu7f2+9KwUYz2TqNyr2qjethR+HWqLDcRMu6I0L27Oc+yg/E8M70S
+         v8a4iMGgp/tM70XK8eWi78Nosf8ioQSU3UCCvabWtDluu9nrzTwf+/8AHCdTet2z3UG1
+         ejk3+7rkjfaGERNEG9GFQOJFGCSQWzkPfvabc1GXtKRQFjZftm7T8YOWLpDW7gDYFWKA
+         heEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721051776; x=1721656576;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/x83uhAgtPmXyFX07eC/O7WLqpmAACzSVrglNL9NB4Q=;
-        b=OErsFPCXW+burH31gV7B9YVLkXdWMKievAzPnB2JS4DjWsK8ow4EVnhuOeL/a4RkIF
-         FMOouAFns2WmseB6Ai/ivxhhQ5/Am8GbrJLKnkHDSqPytwsPqLPVs1L9uHbjVsBZoHjD
-         vW8BCirQdLWqkVAnrOOwkG641MaD0GQj1RaVHI+q+q57MR0HLx6ZcDypwMQHdwQbLAuN
-         FX82PTAT3/4GdjnEonwQmJNIO2i4/fl64dVYW23OyfgBa9/Y/rF12ChV/8ho3QWjFm0H
-         SYmt7qM5ldEoTFf6nHV52JN/OHwcfE9ImrNWaGU2CvYtKtijqF2LyT6+ippYJj53Whmm
-         y6uw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqcjJNYG3DbW0lyofephDgYSWYBMmxG86SKN990+RIIguRBxSufdUlo/q8J2Hn1J4hMnGwipjvN3V2+Vj1lVPnXUfOZrRIqH8xH7ldzvbrSLh7bqUQYK7RQwDLlFtNckisUtoIauE5GA==
-X-Gm-Message-State: AOJu0Yx0Cf1R+1N77sV7MzuEYyY/+dryEf27sPMtXNDZwJKOEl4V0fSs
-	Dbl+K7/Kb08p5c5IdJ+pukix48DFPN26Z3w9g/jQS+DrY9xDHdUr
-X-Google-Smtp-Source: AGHT+IHPpD+P62FtzVEMDnMZgeFr1JSMF4gFq5zl6R2/HnDqhZRyMPOo8WRtL5f7veqS69z5F1pdXg==
-X-Received: by 2002:a17:907:7d8a:b0:a6f:59dc:4ece with SMTP id a640c23a62f3a-a780b68a9ecmr1482293066b.2.1721051775581;
-        Mon, 15 Jul 2024 06:56:15 -0700 (PDT)
-Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820fb5sm214152666b.212.2024.07.15.06.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 06:56:15 -0700 (PDT)
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Walle <michael@walle.cc>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	devicetree@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	u-boot@lists.denx.de,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH 2/2] nvmem: layouts: add U-Boot env layout
-Date: Mon, 15 Jul 2024 15:54:34 +0200
-Message-Id: <20240715135434.24992-2-zajec5@gmail.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240715135434.24992-1-zajec5@gmail.com>
-References: <20240715135434.24992-1-zajec5@gmail.com>
+        d=1e100.net; s=20230601; t=1721051852; x=1721656652;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jqmSoh9JB/3hZYySxLznUyX+qQFd5aQoYQGKXDyQDDs=;
+        b=CqDmAiV1uv+t9ochNSwhNPbcidlSi/s8wWr+EiiSsCdVLnnvEz1e1x+v1UAqSRIDC4
+         dVJiwgUl9jV9JHF48eSJ8Pdhpgpyljt9el5P6wLyZB6qD6XEpHc4rMy+HviP+GABLXOT
+         4O9rH+hDkIHW5lpUrfGXJwPQdjZrqnQAlT3KzZypzwBYW9TgcU7QHun+yKejnr97GVuA
+         YFahPkhoHEsEaQvULPq1eiKvsuPbZoU3IATzJO5weTKrzKTIdgepkzo9xyVaXg74Qx+d
+         NyEwAgl0cRlgXx0zaKyv6SLtJ64lgtR7WmqM5mPsOMn/EG1shrdn3TuHqh1GDKtYskzc
+         c9Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEw/8uU2NIEDdjAk2VVnWkFUod+kSab2wv167T83cpv1EdJM0d7C/jGWI156u7fi/Z7lFir4owHiZJXxA2aijUr++2aV48XyKS4uQb
+X-Gm-Message-State: AOJu0Yw2WZx6CIfeRQsGYy5fbmYjXn4XzfZdXh0BKzkLTXRHxx7AOXE4
+	IdNUxHJJTSioqxjA1IKApCXO0vW3MrgeZpDjKonVAxJnpF/bcb+rjHbbHyU5tHQ=
+X-Google-Smtp-Source: AGHT+IE2nTXTaioYsA/A41U6llM/pzKPMBmM0saB2C1f2cgdXkuwmS9mdBqiFzKuIMT0ybz0qZzRhA==
+X-Received: by 2002:adf:ed91:0:b0:367:340e:d6e6 with SMTP id ffacd0b85a97d-367cea96629mr13090106f8f.41.1721051851633;
+        Mon, 15 Jul 2024 06:57:31 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:79bb:5f59:8e51:52d4? ([2a01:e0a:982:cbb0:79bb:5f59:8e51:52d4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db038dbsm6413873f8f.95.2024.07.15.06.57.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jul 2024 06:57:31 -0700 (PDT)
+Message-ID: <6f8f902b-8192-492a-8354-18590c6c2c06@linaro.org>
+Date: Mon, 15 Jul 2024 15:57:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 2/4] Revert "drm/panel-edp: Add SDC ATNA45AF01"
+To: Doug Anderson <dianders@chromium.org>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>,
+ Johan Hovold <johan@kernel.org>
+References: <20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3@linaro.org>
+ <20240715-x1e80100-crd-backlight-v2-2-31b7f2f658a3@linaro.org>
+ <7daa3c0d-cecf-4f50-be32-ae116b920db0@linaro.org>
+ <ZpUcI3KkIa58zC55@linaro.org>
+ <d1603248-afe8-4594-9e2e-81ba208dff00@linaro.org>
+ <CAD=FV=WimxYmDrkfn0+E3MbXp8kS9TicN2kT3AM4eM+SAwYsOg@mail.gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <CAD=FV=WimxYmDrkfn0+E3MbXp8kS9TicN2kT3AM4eM+SAwYsOg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On 15/07/2024 15:51, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Jul 15, 2024 at 6:02 AM Neil Armstrong
+> <neil.armstrong@linaro.org> wrote:
+>>
+>> On 15/07/2024 14:54, Stephan Gerhold wrote:
+>>> On Mon, Jul 15, 2024 at 02:42:12PM +0200, Neil Armstrong wrote:
+>>>> On 15/07/2024 14:15, Stephan Gerhold wrote:
+>>>>> This reverts commit 8ebb1fc2e69ab8b89a425e402c7bd85e053b7b01.
+>>>>>
+>>>>> The panel should be handled through the samsung-atna33xc20 driver for
+>>>>> correct power up timings. Otherwise the backlight does not work correctly.
+>>>>>
+>>>>> We have existing users of this panel through the generic "edp-panel"
+>>>>> compatible (e.g. the Qualcomm X1E80100 CRD), but the screen works only
+>>>>> partially in that configuration: It works after boot but once the screen
+>>>>> gets disabled it does not turn on again until after reboot. It behaves the
+>>>>> same way with the default "conservative" timings, so we might as well drop
+>>>>> the configuration from the panel-edp driver. That way, users with old DTBs
+>>>>> will get a warning and can move to the new driver.
+>>>>>
+>>>>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>>>>> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+>>>>> ---
+>>>>>     drivers/gpu/drm/panel/panel-edp.c | 2 --
+>>>>>     1 file changed, 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+>>>>> index 3a574a9b46e7..d2d682385e89 100644
+>>>>> --- a/drivers/gpu/drm/panel/panel-edp.c
+>>>>> +++ b/drivers/gpu/drm/panel/panel-edp.c
+>>>>> @@ -1960,8 +1960,6 @@ static const struct edp_panel_entry edp_panels[] = {
+>>>>>      EDP_PANEL_ENTRY('L', 'G', 'D', 0x05af, &delay_200_500_e200_d200, "Unknown"),
+>>>>>      EDP_PANEL_ENTRY('L', 'G', 'D', 0x05f1, &delay_200_500_e200_d200, "Unknown"),
+>>>>> -   EDP_PANEL_ENTRY('S', 'D', 'C', 0x416d, &delay_100_500_e200, "ATNA45AF01"),
+>>>>> -
+>>>>>      EDP_PANEL_ENTRY('S', 'H', 'P', 0x1511, &delay_200_500_e50, "LQ140M1JW48"),
+>>>>>      EDP_PANEL_ENTRY('S', 'H', 'P', 0x1523, &delay_80_500_e50, "LQ140M1JW46"),
+>>>>>      EDP_PANEL_ENTRY('S', 'H', 'P', 0x153a, &delay_200_500_e50, "LQ140T1JH01"),
+>>>>>
+>>>>
+>>>> How will we handle current/old crd DT with new kernels ?
+>>>>
+>>>
+>>> I think this is answered in the commit message:
+>>>
+>>>>> We have existing users of this panel through the generic "edp-panel"
+>>>>> compatible (e.g. the Qualcomm X1E80100 CRD), but the screen works only
+>>>>> partially in that configuration: It works after boot but once the screen
+>>>>> gets disabled it does not turn on again until after reboot. It behaves the
+>>>>> same way with the default "conservative" timings, so we might as well drop
+>>>>> the configuration from the panel-edp driver. That way, users with old DTBs
+>>>>> will get a warning and can move to the new driver.
+>>>
+>>> Basically with the entry removed, the panel-edp driver will fallback to
+>>> default "conservative" timings when using old DTBs. There will be a
+>>> warning in dmesg, but otherwise the panel will somewhat work just as
+>>> before. I think this is a good way to remind users to upgrade.
+>>
+>> I consider this as a regression
+>>
+>>>
+>>>> Same question for patch 3, thie serie introduces a bindings that won't be valid
+>>>> if we backport patch 3. I don't think patch should be backported, and this patch
+>>>> should be dropped.
+>>>
+>>> There would be a dtbs_check warning, yeah. Functionally, it would work
+>>> just fine. Is that reason enough to keep display partially broken for
+>>> 6.11? We could also apply the minor binding change for 6.11 if needed.
+>>
+>> I don't know how to answer this, I'll let the DT maintainer comment this.
+>>
+>> The problem is I do not think we can pass the whole patchset as fixes
+>> for v6.11, patches 2 & 3 could, patches 1 & 4 definitely can't.
+>>
+>> Neil
+> 
+> IMO: patch #3 (dts) and #4 (CONFIG) go through the Qualcomm tree
+> whenever those folks agree to it. If we're worried about the
+> dtbs_check breakage I personally wouldn't mind "Ack"ing patch #1 to go
+> through the Qualcomm tree as long as it made it into 6.11-rc1. I have
+> a hunch that there are going to be more Samsung OLED panels in the
+> future that will need to touch the same file, but if the change is in
+> -rc1 it should make it back into drm-misc quickly, right?
 
-U-Boot environment variables are stored in a specific format. Actual
-data can be placed in various storage sources (MTD, UBI volume, EEPROM,
-NVRAM, etc.).
+Not sure the Soc maintainer would accept any patches for -rc1 at this
+point, but Bjorn can try to push both #3 and #4 as fixes for -rc2.
 
-Move all generic (NVMEM device independent) code from NVMEM device
-driver to an NVMEM layout driver. Then add a simple NVMEM layout code on
-top of it.
+Not sure #1 would be accepted as fix via any tree, but having a bindings
+error for a kernel release is not a big deal if in-fine the bindings change
+has been reviewed and queued for next version.
 
-This allows using NVMEM layout for parsing U-Boot env data stored in any
-kind of NVMEM device.
+Basically when the -rc is tagged it gets backmerged into drm-misc-next,
+so we can backmerge any -rc we want.
 
-The old NVMEM glue driver stays in place for handling bindings in the
-MTD context. To avoid code duplication it uses exported layout parsing
-function. Please note that handling MTD & NVMEM layout bindings may be
-refactored in the future.
+> 
+> Personally I think patch #2 could go in anytime since, as people have
+> said, things are pretty broken today and the worst that happens is
+> that someone gets an extra warning. That would be my preference. That
+> being said, we could also snooze that patch for a month or two and
+> land it later. There's no real hurry.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
-This change was originally sent (and approved by Miquel) as a
-[PATCH V3 6/6] nvmem: layouts: add U-Boot env layout
+We can push it now to drm-misc-next so it gets naturally delayed until v6.12
 
-I just adjusted it to the approved binding and updated commit message.
-I kept Miquel's Reviewed-by tag due to minimal changes.
+Neil
 
-I've successfully tested this code using it in both ways: as NVMEM
-device driver & NVMEM layout.
-
- MAINTAINERS                        |   1 +
- drivers/nvmem/Kconfig              |   3 +-
- drivers/nvmem/layouts/Kconfig      |  11 ++
- drivers/nvmem/layouts/Makefile     |   1 +
- drivers/nvmem/layouts/u-boot-env.c | 203 +++++++++++++++++++++++++++++
- drivers/nvmem/layouts/u-boot-env.h |  15 +++
- drivers/nvmem/u-boot-env.c         | 158 +---------------------
- 7 files changed, 234 insertions(+), 158 deletions(-)
- create mode 100644 drivers/nvmem/layouts/u-boot-env.c
- create mode 100644 drivers/nvmem/layouts/u-boot-env.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 31fb0031a5e8..630d16c480dd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23331,6 +23331,7 @@ U-BOOT ENVIRONMENT VARIABLES
- M:	Rafał Miłecki <rafal@milecki.pl>
- S:	Maintained
- F:	Documentation/devicetree/bindings/nvmem/u-boot,env.yaml
-+F:	drivers/nvmem/layouts/u-boot-env.c
- F:	drivers/nvmem/u-boot-env.c
- 
- UACCE ACCELERATOR FRAMEWORK
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 283134498fbc..d2c384f58028 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -363,8 +363,7 @@ config NVMEM_SUNXI_SID
- config NVMEM_U_BOOT_ENV
- 	tristate "U-Boot environment variables support"
- 	depends on OF && MTD
--	select CRC32
--	select GENERIC_NET_UTILS
-+	select NVMEM_LAYOUT_U_BOOT_ENV
- 	help
- 	  U-Boot stores its setup as environment variables. This driver adds
- 	  support for verifying & exporting such data. It also exposes variables
-diff --git a/drivers/nvmem/layouts/Kconfig b/drivers/nvmem/layouts/Kconfig
-index 9c6e672fc350..5e586dfebe47 100644
---- a/drivers/nvmem/layouts/Kconfig
-+++ b/drivers/nvmem/layouts/Kconfig
-@@ -26,6 +26,17 @@ config NVMEM_LAYOUT_ONIE_TLV
- 
- 	  If unsure, say N.
- 
-+config NVMEM_LAYOUT_U_BOOT_ENV
-+	tristate "U-Boot environment variables layout"
-+	select CRC32
-+	select GENERIC_NET_UTILS
-+	help
-+	  U-Boot stores its setup as environment variables. This driver adds
-+	  support for verifying & exporting such data. It also exposes variables
-+	  as NVMEM cells so they can be referenced by other drivers.
-+
-+	  If unsure, say N.
-+
- endmenu
- 
- endif
-diff --git a/drivers/nvmem/layouts/Makefile b/drivers/nvmem/layouts/Makefile
-index 2974bd7d33ed..4940c9db0665 100644
---- a/drivers/nvmem/layouts/Makefile
-+++ b/drivers/nvmem/layouts/Makefile
-@@ -5,3 +5,4 @@
- 
- obj-$(CONFIG_NVMEM_LAYOUT_SL28_VPD) += sl28vpd.o
- obj-$(CONFIG_NVMEM_LAYOUT_ONIE_TLV) += onie-tlv.o
-+obj-$(CONFIG_NVMEM_LAYOUT_U_BOOT_ENV) += u-boot-env.o
-diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-boot-env.c
-new file mode 100644
-index 000000000000..5217dc4a52f8
---- /dev/null
-+++ b/drivers/nvmem/layouts/u-boot-env.c
-@@ -0,0 +1,203 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2022 - 2023 Rafał Miłecki <rafal@milecki.pl>
-+ */
-+
-+#include <linux/crc32.h>
-+#include <linux/etherdevice.h>
-+#include <linux/export.h>
-+#include <linux/if_ether.h>
-+#include <linux/nvmem-consumer.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+
-+#include "u-boot-env.h"
-+
-+struct u_boot_env_image_single {
-+	__le32 crc32;
-+	uint8_t data[];
-+} __packed;
-+
-+struct u_boot_env_image_redundant {
-+	__le32 crc32;
-+	u8 mark;
-+	uint8_t data[];
-+} __packed;
-+
-+struct u_boot_env_image_broadcom {
-+	__le32 magic;
-+	__le32 len;
-+	__le32 crc32;
-+	DECLARE_FLEX_ARRAY(uint8_t, data);
-+} __packed;
-+
-+static int u_boot_env_read_post_process_ethaddr(void *context, const char *id, int index,
-+						unsigned int offset, void *buf, size_t bytes)
-+{
-+	u8 mac[ETH_ALEN];
-+
-+	if (bytes != 3 * ETH_ALEN - 1)
-+		return -EINVAL;
-+
-+	if (!mac_pton(buf, mac))
-+		return -EINVAL;
-+
-+	if (index)
-+		eth_addr_add(mac, index);
-+
-+	ether_addr_copy(buf, mac);
-+
-+	return 0;
-+}
-+
-+static int u_boot_env_parse_cells(struct device *dev, struct nvmem_device *nvmem, uint8_t *buf,
-+				  size_t data_offset, size_t data_len)
-+{
-+	char *data = buf + data_offset;
-+	char *var, *value, *eq;
-+
-+	for (var = data;
-+	     var < data + data_len && *var;
-+	     var = value + strlen(value) + 1) {
-+		struct nvmem_cell_info info = {};
-+
-+		eq = strchr(var, '=');
-+		if (!eq)
-+			break;
-+		*eq = '\0';
-+		value = eq + 1;
-+
-+		info.name = devm_kstrdup(dev, var, GFP_KERNEL);
-+		if (!info.name)
-+			return -ENOMEM;
-+		info.offset = data_offset + value - data;
-+		info.bytes = strlen(value);
-+		info.np = of_get_child_by_name(dev->of_node, info.name);
-+		if (!strcmp(var, "ethaddr")) {
-+			info.raw_len = strlen(value);
-+			info.bytes = ETH_ALEN;
-+			info.read_post_process = u_boot_env_read_post_process_ethaddr;
-+		}
-+
-+		nvmem_add_one_cell(nvmem, &info);
-+	}
-+
-+	return 0;
-+}
-+
-+int u_boot_env_parse(struct device *dev, struct nvmem_device *nvmem,
-+		     enum u_boot_env_format format)
-+{
-+	size_t crc32_data_offset;
-+	size_t crc32_data_len;
-+	size_t crc32_offset;
-+	__le32 *crc32_addr;
-+	size_t data_offset;
-+	size_t data_len;
-+	size_t dev_size;
-+	uint32_t crc32;
-+	uint32_t calc;
-+	uint8_t *buf;
-+	int bytes;
-+	int err;
-+
-+	dev_size = nvmem_dev_size(nvmem);
-+
-+	buf = kzalloc(dev_size, GFP_KERNEL);
-+	if (!buf) {
-+		err = -ENOMEM;
-+		goto err_out;
-+	}
-+
-+	bytes = nvmem_device_read(nvmem, 0, dev_size, buf);
-+	if (bytes < 0) {
-+		err = bytes;
-+		goto err_kfree;
-+	} else if (bytes != dev_size) {
-+		err = -EIO;
-+		goto err_kfree;
-+	}
-+
-+	switch (format) {
-+	case U_BOOT_FORMAT_SINGLE:
-+		crc32_offset = offsetof(struct u_boot_env_image_single, crc32);
-+		crc32_data_offset = offsetof(struct u_boot_env_image_single, data);
-+		data_offset = offsetof(struct u_boot_env_image_single, data);
-+		break;
-+	case U_BOOT_FORMAT_REDUNDANT:
-+		crc32_offset = offsetof(struct u_boot_env_image_redundant, crc32);
-+		crc32_data_offset = offsetof(struct u_boot_env_image_redundant, data);
-+		data_offset = offsetof(struct u_boot_env_image_redundant, data);
-+		break;
-+	case U_BOOT_FORMAT_BROADCOM:
-+		crc32_offset = offsetof(struct u_boot_env_image_broadcom, crc32);
-+		crc32_data_offset = offsetof(struct u_boot_env_image_broadcom, data);
-+		data_offset = offsetof(struct u_boot_env_image_broadcom, data);
-+		break;
-+	}
-+	crc32_addr = (__le32 *)(buf + crc32_offset);
-+	crc32 = le32_to_cpu(*crc32_addr);
-+	crc32_data_len = dev_size - crc32_data_offset;
-+	data_len = dev_size - data_offset;
-+
-+	calc = crc32(~0, buf + crc32_data_offset, crc32_data_len) ^ ~0L;
-+	if (calc != crc32) {
-+		dev_err(dev, "Invalid calculated CRC32: 0x%08x (expected: 0x%08x)\n", calc, crc32);
-+		err = -EINVAL;
-+		goto err_kfree;
-+	}
-+
-+	buf[dev_size - 1] = '\0';
-+	err = u_boot_env_parse_cells(dev, nvmem, buf, data_offset, data_len);
-+
-+err_kfree:
-+	kfree(buf);
-+err_out:
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(u_boot_env_parse);
-+
-+static int u_boot_env_add_cells(struct nvmem_layout *layout)
-+{
-+	struct device *dev = &layout->dev;
-+	enum u_boot_env_format format;
-+
-+	format = (uintptr_t)device_get_match_data(dev);
-+
-+	return u_boot_env_parse(dev, layout->nvmem, format);
-+}
-+
-+static int u_boot_env_probe(struct nvmem_layout *layout)
-+{
-+	layout->add_cells = u_boot_env_add_cells;
-+
-+	return nvmem_layout_register(layout);
-+}
-+
-+static void u_boot_env_remove(struct nvmem_layout *layout)
-+{
-+	nvmem_layout_unregister(layout);
-+}
-+
-+static const struct of_device_id u_boot_env_of_match_table[] = {
-+	{ .compatible = "u-boot,env", .data = (void *)U_BOOT_FORMAT_SINGLE, },
-+	{ .compatible = "u-boot,env-redundant-bool", .data = (void *)U_BOOT_FORMAT_REDUNDANT, },
-+	{ .compatible = "u-boot,env-redundant-count", .data = (void *)U_BOOT_FORMAT_REDUNDANT, },
-+	{ .compatible = "brcm,env", .data = (void *)U_BOOT_FORMAT_BROADCOM, },
-+	{},
-+};
-+
-+static struct nvmem_layout_driver u_boot_env_layout = {
-+	.driver = {
-+		.name = "u-boot-env-layout",
-+		.of_match_table = u_boot_env_of_match_table,
-+	},
-+	.probe = u_boot_env_probe,
-+	.remove = u_boot_env_remove,
-+};
-+module_nvmem_layout_driver(u_boot_env_layout);
-+
-+MODULE_AUTHOR("Rafał Miłecki");
-+MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, u_boot_env_of_match_table);
-diff --git a/drivers/nvmem/layouts/u-boot-env.h b/drivers/nvmem/layouts/u-boot-env.h
-new file mode 100644
-index 000000000000..dd5f280ac047
---- /dev/null
-+++ b/drivers/nvmem/layouts/u-boot-env.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef _LINUX_NVMEM_LAYOUTS_U_BOOT_ENV_H
-+#define _LINUX_NVMEM_LAYOUTS_U_BOOT_ENV_H
-+
-+enum u_boot_env_format {
-+	U_BOOT_FORMAT_SINGLE,
-+	U_BOOT_FORMAT_REDUNDANT,
-+	U_BOOT_FORMAT_BROADCOM,
-+};
-+
-+int u_boot_env_parse(struct device *dev, struct nvmem_device *nvmem,
-+		     enum u_boot_env_format format);
-+
-+#endif  /* ifndef _LINUX_NVMEM_LAYOUTS_U_BOOT_ENV_H */
-diff --git a/drivers/nvmem/u-boot-env.c b/drivers/nvmem/u-boot-env.c
-index 936e39b20b38..ced414fc9e60 100644
---- a/drivers/nvmem/u-boot-env.c
-+++ b/drivers/nvmem/u-boot-env.c
-@@ -3,23 +3,15 @@
-  * Copyright (C) 2022 Rafał Miłecki <rafal@milecki.pl>
-  */
- 
--#include <linux/crc32.h>
--#include <linux/etherdevice.h>
--#include <linux/if_ether.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/mtd/mtd.h>
--#include <linux/nvmem-consumer.h>
- #include <linux/nvmem-provider.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- 
--enum u_boot_env_format {
--	U_BOOT_FORMAT_SINGLE,
--	U_BOOT_FORMAT_REDUNDANT,
--	U_BOOT_FORMAT_BROADCOM,
--};
-+#include "layouts/u-boot-env.h"
- 
- struct u_boot_env {
- 	struct device *dev;
-@@ -29,24 +21,6 @@ struct u_boot_env {
- 	struct mtd_info *mtd;
- };
- 
--struct u_boot_env_image_single {
--	__le32 crc32;
--	uint8_t data[];
--} __packed;
--
--struct u_boot_env_image_redundant {
--	__le32 crc32;
--	u8 mark;
--	uint8_t data[];
--} __packed;
--
--struct u_boot_env_image_broadcom {
--	__le32 magic;
--	__le32 len;
--	__le32 crc32;
--	DECLARE_FLEX_ARRAY(uint8_t, data);
--} __packed;
--
- static int u_boot_env_read(void *context, unsigned int offset, void *val,
- 			   size_t bytes)
- {
-@@ -69,134 +43,6 @@ static int u_boot_env_read(void *context, unsigned int offset, void *val,
- 	return 0;
- }
- 
--static int u_boot_env_read_post_process_ethaddr(void *context, const char *id, int index,
--						unsigned int offset, void *buf, size_t bytes)
--{
--	u8 mac[ETH_ALEN];
--
--	if (bytes != 3 * ETH_ALEN - 1)
--		return -EINVAL;
--
--	if (!mac_pton(buf, mac))
--		return -EINVAL;
--
--	if (index)
--		eth_addr_add(mac, index);
--
--	ether_addr_copy(buf, mac);
--
--	return 0;
--}
--
--static int u_boot_env_add_cells(struct u_boot_env *priv, uint8_t *buf,
--				size_t data_offset, size_t data_len)
--{
--	struct nvmem_device *nvmem = priv->nvmem;
--	struct device *dev = priv->dev;
--	char *data = buf + data_offset;
--	char *var, *value, *eq;
--
--	for (var = data;
--	     var < data + data_len && *var;
--	     var = value + strlen(value) + 1) {
--		struct nvmem_cell_info info = {};
--
--		eq = strchr(var, '=');
--		if (!eq)
--			break;
--		*eq = '\0';
--		value = eq + 1;
--
--		info.name = devm_kstrdup(dev, var, GFP_KERNEL);
--		if (!info.name)
--			return -ENOMEM;
--		info.offset = data_offset + value - data;
--		info.bytes = strlen(value);
--		info.np = of_get_child_by_name(dev->of_node, info.name);
--		if (!strcmp(var, "ethaddr")) {
--			info.raw_len = strlen(value);
--			info.bytes = ETH_ALEN;
--			info.read_post_process = u_boot_env_read_post_process_ethaddr;
--		}
--
--		nvmem_add_one_cell(nvmem, &info);
--	}
--
--	return 0;
--}
--
--static int u_boot_env_parse(struct u_boot_env *priv)
--{
--	struct nvmem_device *nvmem = priv->nvmem;
--	struct device *dev = priv->dev;
--	size_t crc32_data_offset;
--	size_t crc32_data_len;
--	size_t crc32_offset;
--	__le32 *crc32_addr;
--	size_t data_offset;
--	size_t data_len;
--	size_t dev_size;
--	uint32_t crc32;
--	uint32_t calc;
--	uint8_t *buf;
--	int bytes;
--	int err;
--
--	dev_size = nvmem_dev_size(nvmem);
--
--	buf = kzalloc(dev_size, GFP_KERNEL);
--	if (!buf) {
--		err = -ENOMEM;
--		goto err_out;
--	}
--
--	bytes = nvmem_device_read(nvmem, 0, dev_size, buf);
--	if (bytes < 0) {
--		err = bytes;
--		goto err_kfree;
--	} else if (bytes != dev_size) {
--		err = -EIO;
--		goto err_kfree;
--	}
--
--	switch (priv->format) {
--	case U_BOOT_FORMAT_SINGLE:
--		crc32_offset = offsetof(struct u_boot_env_image_single, crc32);
--		crc32_data_offset = offsetof(struct u_boot_env_image_single, data);
--		data_offset = offsetof(struct u_boot_env_image_single, data);
--		break;
--	case U_BOOT_FORMAT_REDUNDANT:
--		crc32_offset = offsetof(struct u_boot_env_image_redundant, crc32);
--		crc32_data_offset = offsetof(struct u_boot_env_image_redundant, data);
--		data_offset = offsetof(struct u_boot_env_image_redundant, data);
--		break;
--	case U_BOOT_FORMAT_BROADCOM:
--		crc32_offset = offsetof(struct u_boot_env_image_broadcom, crc32);
--		crc32_data_offset = offsetof(struct u_boot_env_image_broadcom, data);
--		data_offset = offsetof(struct u_boot_env_image_broadcom, data);
--		break;
--	}
--	crc32_addr = (__le32 *)(buf + crc32_offset);
--	crc32 = le32_to_cpu(*crc32_addr);
--	crc32_data_len = dev_size - crc32_data_offset;
--	data_len = dev_size - data_offset;
--
--	calc = crc32(~0, buf + crc32_data_offset, crc32_data_len) ^ ~0L;
--	if (calc != crc32) {
--		dev_err(dev, "Invalid calculated CRC32: 0x%08x (expected: 0x%08x)\n", calc, crc32);
--		err = -EINVAL;
--		goto err_kfree;
--	}
--
--	buf[dev_size - 1] = '\0';
--	err = u_boot_env_add_cells(priv, buf, data_offset, data_len);
--
--err_kfree:
--	kfree(buf);
--err_out:
--	return err;
--}
--
- static int u_boot_env_probe(struct platform_device *pdev)
- {
- 	struct nvmem_config config = {
-@@ -228,7 +74,7 @@ static int u_boot_env_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->nvmem))
- 		return PTR_ERR(priv->nvmem);
- 
--	return u_boot_env_parse(priv);
-+	return u_boot_env_parse(dev, priv->nvmem, priv->format);
- }
- 
- static const struct of_device_id u_boot_env_of_match_table[] = {
--- 
-2.35.3
+> 
+> -Doug
+> 
 
