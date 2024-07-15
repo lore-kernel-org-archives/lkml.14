@@ -1,89 +1,89 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F2B18D4CE
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 13:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9490A1741CF;
+	Mon, 15 Jul 2024 13:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721051043; cv=none; b=L4cJY1wqoZw75cdzOaXJeQsc5QDPUJJFj6JaaDrEcpDsPVkta2jPJJjgI1N5WDnG7v91E1RTspguWwbXVKl+PgGm1e7a06bpYezgpcloYCorsxYAEGHYS7kVf/jzC+NwHBHMbke7NexVyvRFlCt4xPzO6zJGIC3AMqBaT/0q95A=
+	t=1721051153; cv=none; b=mzkWvpnd6GddjTe4b6QeAdyd+YEmPOjdw/0pJeG0Uo/dyxYOhL8pF5wUu+46X6FvV3iquouekbdMkWn2MyxcBQBsOHjLPd7Hy+3EALJmKdB8i+oMyO1B826JmFQwScJtFKleWSIWqHDpm/zGyAzf0epJKkbAYY6Y5EO1B5AZGHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721051043; c=relaxed/simple;
-	bh=kI8z31pvmkACsoY4R6xD2r4WjAcXm/QhY0zJzKqHpRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vn8P+q65x6fYpnJPsORkPtu6sWZ7+4KYbb59W6kiJwkklOCJBQiWWbyVZj6qqkaHKcj7ERcriexqcZafiUYAazX0BtqcUvHqxWEx9C16PtCoGK8HV5KGi1YURnVv5az6B/WA/LqWcaYEamifAZwOPDWmh2ZcUGUvWDRIDuL7ZhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=emzY4IRu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1721051153; c=relaxed/simple;
+	bh=HVGY/h4cNN4DFAIeEiRfe9sGWKWRmKyBHgJJ93LF0CQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qpnpdvOTxVA11QFAHrIvuzQziUrCVxoxmCX3AV8z2Gu071mPdcJEPh7KhrOuOdTJhWUadssBJUHJ6CQIo02CRYA0bMWckbhMFLwwBqRER1uRogRQiYTMLxNZ79/IGutxTSPctIptHjfB5G35c6JwLX4pc8IyTYLUEdjHUxotSJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEOs2APd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="emzY4IRu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8671040E0192;
-	Mon, 15 Jul 2024 13:43:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id vn5LfA3idBTd; Mon, 15 Jul 2024 13:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1721051035; bh=E+7GeEIa7s6ZzFSriewwh96Qj6j59sXyizWzr/1bfmk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=emzY4IRu49NieNZq8jabnJ/O2KblA6d0LcncapU3uS7udK1x1zu9MdEh5hU4ZUFGF
-	 WVlkAceEEeD7tOLVG/uhOubtnvRHalRQDFwpuYDqol2Du5c6WfnDabLPYDCRqMaU+H
-	 hWKXjf+KXOFlyZ3yTH6hDonHrmz+RQDRnunRrismGyLrbvGcUohoyRnV7iodEGeg/c
-	 0g5f/oj1OwTJRNsBWSsJFPTt7F/mlYu+rv0l0JBtMAeUkKYk7feMHgH6v1G5sSZ15g
-	 sn8RaCZZp3vJtqT1dxiMoVW187/6ugnf11bEfF5qHbH3QFSA2hyQZP7ScRS7FIecit
-	 KQJ4rvNlVPUZ7HSyyYW41clZwVJeHaDmvTQqmn3VfdaT/o3hyOc3MbFa3Z+r84z1lV
-	 I3X6hUKlCuXFehl4OoUe4cFrMRLSD0OLalk+DXPOSz2oR0N+zapubSjHi72lPEYoMP
-	 qootPe88ICt8kWQBFFgX1gPxpvnkOWL63oqgGGccm0z3tdeM4g5kYg9l8mKoYMqJk1
-	 uhx2AqujOLSon+zXERG/madyHeqrwozq1o7TEwiDLFNfJHfK/+alkQLD1rkehXmovz
-	 TZp278L3DO2aWG/AzoR8YjsHVN0w+d1XCzpDfUu51FLEMXRjMncK4naUC/shT6cFOV
-	 QIDQ+t03VAPuesbyNUmkWRls=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6B7640E021B;
-	Mon, 15 Jul 2024 13:43:43 +0000 (UTC)
-Date: Mon, 15 Jul 2024 15:43:37 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Breno Leitao <leitao@debian.org>
-Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, mingo@redhat.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/10] x86/bugs: Add a separate config for GDS
-Message-ID: <20240715134337.GBZpUnibQhORw-MpSR@fat_crate.local>
-References: <20240422165830.2142904-1-leitao@debian.org>
- <20240422165830.2142904-2-leitao@debian.org>
- <20240712172132.GFZpFmHBJHte2xS1fr@fat_crate.local>
- <ZpUSvl5eKgkLeJrg@gmail.com>
- <20240715121703.GAZpUTP-8TJpZBCWne@fat_crate.local>
- <ZpUlmf/iVgo78h4J@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEOs2APd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45AFCC32782;
+	Mon, 15 Jul 2024 13:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721051153;
+	bh=HVGY/h4cNN4DFAIeEiRfe9sGWKWRmKyBHgJJ93LF0CQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TEOs2APdlr9nB8KQSYdCEhpSlXEM4ZB5hxlg8ww8JUyr0kjCBy8yuxROJ9FKcafZ1
+	 On71BBQpyuQWTSBpHEv7Z8htHbDgQHLpBMRY0+cAHF+JYXju2zHfWrc8NkoqyxII+4
+	 PhI6VI6thzptWqBtvYiDcXtkOHB6MzpBayA0xZaDnae8jjJVmyk9R9NUs2AtjlKnwN
+	 BMgX6bo1JvguXIl6iLrrso+37JAfSsLFbYI8STexq6fl+syFm/3CsbPar4MfYpsABf
+	 bPKBNbZiZGgBH5L8pZzY5mW2PO7Je56FisqkWzDoSdy/4K8MA9E0nzNv1LfTHwAdGl
+	 /+W1hFtcaTN6A==
+Date: Mon, 15 Jul 2024 06:45:51 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Long Li <longli@microsoft.com>, Ajay Sharma
+ <sharmaajay@microsoft.com>, Simon Horman <horms@kernel.org>, Konstantin
+ Taranov <kotaranov@microsoft.com>, Souradeep Chakrabarti
+ <schakrabarti@linux.microsoft.com>, Erick Archer
+ <erick.archer@outlook.com>, Pavan Chebbi <pavan.chebbi@broadcom.com>, Ahmed
+ Zaki <ahmed.zaki@intel.com>, Colin Ian King <colin.i.king@gmail.com>
+Subject: Re: [PATCH net-next] net: mana: Implement
+ get_ringparam/set_ringparam for mana
+Message-ID: <20240715064551.6036d46b@kernel.org>
+In-Reply-To: <1721014820-2507-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1721014820-2507-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZpUlmf/iVgo78h4J@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 15, 2024 at 06:35:21AM -0700, Breno Leitao wrote:
-> Regarding this patchset itself, what is the patch forward?
+On Sun, 14 Jul 2024 20:40:20 -0700 Shradha Gupta wrote:
+> +	if (ring->rx_jumbo_pending) {
+> +		netdev_err(ndev, "%s: rx_jumbo_pending not supported\n", __func__);
+> +		return -EINVAL;
+> +	}
+> +	if (ring->rx_mini_pending) {
+> +		netdev_err(ndev, "%s: rx_mini_pending not supported\n", __func__);
+> +		return -EINVAL;
+> +	}
 
-The path forward is for you to wait until I've gone through them all. We have
-merge window now so not in the next two weeks.
+I think that core already checks this
 
-Thx.
+> +	if (!apc)
+> +		return -EINVAL;
 
+Provably impossible, apc is netdev + sizeof(netdev) so it'd have to
+wrap a 64b integer to be NULL :|
+
+> +	old_tx = apc->tx_queue_size;
+> +	old_rx = apc->rx_queue_size;
+> +	new_tx = clamp_t(u32, ring->tx_pending, MIN_TX_BUFFERS_PER_QUEUE, MAX_TX_BUFFERS_PER_QUEUE);
+> +	new_rx = clamp_t(u32, ring->rx_pending, MIN_RX_BUFFERS_PER_QUEUE, MAX_RX_BUFFERS_PER_QUEUE);
+> +
+> +	if (new_tx == old_tx && new_rx == old_rx)
+> +		return 0;
+
+Pretty sure core will also not call you if there's no change.
+If it does please update core instead of catching this in the driver.
+
+Please keep in mind that net-next will be closed for the duration
+of the merge window.
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+pw-bot: cr
