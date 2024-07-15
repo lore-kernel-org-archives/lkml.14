@@ -1,101 +1,149 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DD6134AB;
-	Mon, 15 Jul 2024 15:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756E4D53C;
+	Mon, 15 Jul 2024 15:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721058636; cv=none; b=fUR7GNA8T9xVoZ+anxBvveKzegarGXFSg7JxZSWmW142vsJccEJjsPCGq+CB40/gMBQTraIljAl5E/Yxke0ma74IfeAUP2O9xNJDTkmougHcFuvTu4qDp1RSQIf1ELlK0o0/xxBTLhtB7TJnMDLPoUv/bI8HWw11M35u/e9feg4=
+	t=1721059015; cv=none; b=ufds+YyEikJxOZ88IIaUBmrh3E/Zxc06M6HSW+18e89lCSun4LLT1WqENbSAC5YLTlaKnluO9T4dcfyv53Wxp51ckXcv6kT1zyVilpPPgDN5wmGtCX4N54hNQW0PscD77GPoEO9moo3K33aSVNnxd3T21C1G4EZj4QSaZblBVpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721058636; c=relaxed/simple;
-	bh=DHu76Zualp60MP+W/T8d10cmV4dteM/1Lm1v9ubEMSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YU/f+iXmdDybEDEJqRAN0t3t4siUFW34FK4UT79a9J6IBrNN0/1BFLBpLDPOIRMU87PnQGpJylUB1TxQJLYEY6PJQ6vtEOgbFS8PmhkXVVy6EbKFNcrANvrvpD1e6fPFVlKklB7cxAChwbEpws9bV7WmHBNRjlDzqfAsZ5Dridg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=qalh41+G; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1721059015; c=relaxed/simple;
+	bh=n2yLQUwt6s0OAtUfcYSQI9h6EpwTHBoPl8UvFbLKLxU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oiREFRicBihvOkOK31lHf3kmQz2Ri1bVbW19qg1mvGwQBy/VXsFKhZmoLTUEroRhHqWtytlCveS/h4FD3vXbEGmaCiXRngpgjQ3oKbIDFAf63IAAEj1yMivTcODhKxoitBK0sB0O0JGX/+i06qYbSV+4vhUuA4MaXUJLLlPFvs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=MP3Pulc3; arc=none smtp.client-ip=185.70.43.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qalh41+G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DCf5PUVGJarugMnXR95gCBJ03gopIvHTOKZp1WNO0aw=; b=qalh41+G5hwVr6sXawosVBqXL2
-	goIsEuLwCVz1tbxOWz+P7lLW4G3kRADXLOnDjyUJBIbLFwQrkaj3vD2mu2VmMDwSxRXeBT2Rg8Nhl
-	BGUZZwiCrLES2Ypk/H9V6Kl5R1zfMzM5cvxlJkFC2a2LznKYWmJktS7HNsW5M9wXRyB3WtcBnRk4H
-	hveNFS2byYSyWEmD2Kkg+e4up40C3n6KB9g/alm+4LPf5vaTb9FshKRPU4vUAZ/ept8cXPAGpz/jm
-	X1yUKYfL9bE4udmzzYIPElp2guFdz0DvtYH/x/BVrnRvdOwZZTro9sJ8nEYqnBzcgw/+XkV0bRHsh
-	f8vtnI3Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36608)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sTNrr-0006bt-0R;
-	Mon, 15 Jul 2024 16:43:59 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sTNrt-0006va-97; Mon, 15 Jul 2024 16:44:01 +0100
-Date: Mon, 15 Jul 2024 16:44:01 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: marcin.s.wojtas@gmail.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mvpp2: Improve data types and use min()
-Message-ID: <ZpVDVHXh4FTZnmUv@shell.armlinux.org.uk>
-References: <20240711154741.174745-1-thorsten.blum@toblux.com>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="MP3Pulc3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1721059006; x=1721318206;
+	bh=0X2OwfENCQ/M/pnkr0i+ZvgaNKd3AS7YhCHGsueDZJI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=MP3Pulc3tWE2RK/Y87KVMcpoTd9k7A88xsAzdxuFvwuLeDiwocQczv0thIwsZM9wM
+	 8zSNMEQhHqkLT40Vd60mnEKaOc8sMme8VhVij/mFXsPDC6hP8JcA/HGM2MLasZxCsB
+	 4QjAOb00/s6eh/F2VAKhO0NtmRfavb1gOuW7wsAffebM65/otAVnP6jcTnSgLEFPGD
+	 9CaBur2unZZerj3XJYcCSocz/m1qIodCuIECaqgB+9k7iEQYRL3OXbfhORj/jFKcUN
+	 cfD7DvRd/9vioU+aMXTwT8Nhro6WcehXBLhe6UPuLkUqCy2TMlxlICKah6954wX/6S
+	 5KdXrbY3O0zaA==
+Date: Mon, 15 Jul 2024 15:56:39 +0000
+To: Michal Rostecki <vadorovsky@gmail.com>
+From: =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, FUJITA Tomonori <fujita.tomonori@gmail.com>, Trevor Gross <tmgross@umich.edu>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Finn Behrens <me@kloenk.dev>, Manmohan Shukla <manmshuk@gmail.com>, Valentin Obst <kernel@valentinobst.de>, Laine Taffin Altman <alexanderaltman@me.com>, Danilo Krummrich <dakr@redhat.com>, Yutaro Ohno <yutaro.ono.418@gmail.com>, Tiago Lam <tiagolam@gmail.com>, Charalampos Mitrodimas <charmitro@posteo.net>,
+	Ben Gooding <ben.gooding.dev@gmail.com>, Roland Xu <mu001999@outlook.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, netdev@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] rust: str: Use `core::CStr`, remove the custom `CStr` implementation
+Message-ID: <T4cW5BFYytkMlTR5e2C2FfFJ5Z8P5XPw5dEsTQ2V-hoAo5yZkeYLSU3GvVCTH1Ga3f-mbPvEKZxOEWT7E1-xWu4EDE6-jCoQj3If-qCKCHA=@protonmail.com>
+In-Reply-To: <df092baf-03a5-4b4a-ab8b-ee7a5677c172@gmail.com>
+References: <20240714160238.238708-1-vadorovsky@gmail.com> <S-L4QE4MFYzY1ba0fdkJYuAVIkZHxxYB6Jk9XPFuo3ZdbvNxtfN_mCFc5oNPfTu2X17vvyPUStAviAUAzeKlCGxwRM-VbC4aPUGBGtDQCcU=@protonmail.com> <df092baf-03a5-4b4a-ab8b-ee7a5677c172@gmail.com>
+Feedback-ID: 27884398:user:proton
+X-Pm-Message-ID: 95e82dd63daf75c00a972e8d3703e1d61f419209
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711154741.174745-1-thorsten.blum@toblux.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 11, 2024 at 05:47:43PM +0200, Thorsten Blum wrote:
-> Change the data type of the variable freq in mvpp2_rx_time_coal_set()
-> and mvpp2_tx_time_coal_set() to u32 because port->priv->tclk also has
-> the data type u32.
-> 
-> Change the data type of the function parameter clk_hz in
-> mvpp2_usec_to_cycles() and mvpp2_cycles_to_usec() to u32 accordingly
-> and remove the following Coccinelle/coccicheck warning reported by
-> do_div.cocci:
-> 
->   WARNING: do_div() does a 64-by-32 division, please consider using div64_ul instead
-> 
-> Use min() to simplify the code and improve its readability.
-> 
-> Compile-tested only.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+On Monday, July 15th, 2024 at 17:46, Michal Rostecki <vadorovsky@gmail.com>=
+ wrote:
 
-I'm still on holiday, but it's a wet day today. Don't expect replies
-from me to be regular.
+> On 14.07.24 19:01, Bj=C3=B6rn Roy Baron wrote:
+> > On Sunday, July 14th, 2024 at 18:02, Michal Rostecki <vadorovsky@gmail.=
+com> wrote:
+> >
+> >> `CStr` became a part of `core` library in Rust 1.75, therefore there i=
+s
+> >> no need to keep the custom implementation.
+> >>
+> >> `core::CStr` behaves generally the same as the removed implementation,
+> >> with the following differences:
+> >>
+> >> - It does not implement `Display` (but implements `Debug`).
+> >> - It does not provide `from_bytes_with_nul_unchecked_mut` method.
+> >>    - It was used only in `DerefMut` implementation for `CString`. This
+> >>      change replaces it with a manual cast to `&mut CStr`.
+> >>    - Otherwise, having such a method is not really desirable. `CStr` i=
+s
+> >>      a reference type
+> >>      or `str` are usually not supposed to be modified.
+> >> - It has `as_ptr()` method instead of `as_char_ptr()`, which also retu=
+rns
+> >>    `*const c_char`.
+> >>
+> >> Rust also introduces C literals (`c""`), so the `c_str` macro is remov=
+ed
+> >> here as well.
+> >>
+> >> Signed-off-by: Michal Rostecki <vadorovsky@gmail.com>
+> >> ---
+> >>   rust/kernel/error.rs        |   7 +-
+> >>   rust/kernel/init.rs         |   8 +-
+> >>   rust/kernel/kunit.rs        |  16 +-
+> >>   rust/kernel/net/phy.rs      |   2 +-
+> >>   rust/kernel/prelude.rs      |   4 +-
+> >>   rust/kernel/str.rs          | 490 +---------------------------------=
+--
+> >>   rust/kernel/sync.rs         |  13 +-
+> >>   rust/kernel/sync/condvar.rs |   5 +-
+> >>   rust/kernel/sync/lock.rs    |   6 +-
+> >>   rust/kernel/workqueue.rs    |  10 +-
+> >>   scripts/rustdoc_test_gen.rs |   4 +-
+> >>   11 files changed, 57 insertions(+), 508 deletions(-)
+> >>
+> >
+> > [snip]
+> >
+> >> diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+> >> index 68605b633e73..af0017e56c0e 100644
+> >> --- a/rust/kernel/init.rs
+> >> +++ b/rust/kernel/init.rs
+> >> @@ -46,7 +46,7 @@
+> >>   //! }
+> >>   //!
+> >>   //! let foo =3D pin_init!(Foo {
+> >> -//!     a <- new_mutex!(42, "Foo::a"),
+> >> +//!     a <- new_mutex!(42, c"Foo::a"),
+> >
+> > That we need a CStr here seems a bit of an internal implementation deta=
+il. Maybe
+> > keep accepting a regular string literal and converting it to a CStr int=
+ernally?
+> > If others think what you have here is fine, I don't it mind all that mu=
+ch though.
+> >
+>=20
+> The names passed to `new_mutex`, `new_condvar`, `new_spinlock` etc. are
+> immediately passed in the FFI calls (`__mutex_init`,
+> `__init_waitqueue_head`, `__spin_lock_init`) [0][1][2]. In fact, I don't
+> see any internal usage, where using Rust &str would be beneficial. Am I
+> missing something?
+>=20
+> Converting a &str to &CStr inside `Mutex::new` or `CondVar::new` would
+> require allocating a new buffer, larger by 1, to include the nul byte.
+> Doing that for every new mutex or condvar seems a bit wasteful to me.
 
-I don't think this is a good idea.
+The names passed to `new_mutex!` and such are literals known at
+compile time. This means we can keep adding the nul terminator at
+compile time without allocating any extra buffer. Basically just
+adapting the current implementation of `optional_name!` to produce an
+`core::ffi::&CStr` rather than a `kernel::str::CStr` from a regular
+string literal is enough to avoid having to explicitly use C string
+literals in those macro invocations. This way users don't need to
+know that internally an `&CStr` is used.
 
-priv->tclk comes from clk_get_rate() which returns an unsigned long.
-tclk should _also_ be an unsigned long, not a u32, so that the range
-of values clk_get_rate() returns can be represented without being
-truncted.
+>=20
+> [0]
+> https://github.com/Rust-for-Linux/linux/blob/b1263411112305acf2af72872859=
+1465becb45b0/rust/kernel/sync/lock/mutex.rs#L104
+> [1]
+> https://github.com/Rust-for-Linux/linux/blob/b1263411112305acf2af72872859=
+1465becb45b0/rust/kernel/sync/condvar.rs#L111
+> [2]
+> https://github.com/Rust-for-Linux/linux/blob/b1263411112305acf2af72872859=
+1465becb45b0/rust/kernel/sync/lock/spinlock.rs#L103
 
-Thus the use of unsigned long elsewhere where tclk is passed into is
-actually correct.
-
-If we need to limit tclk to values that u32 can represent, then that
-needs to be done here:
-
-                priv->tclk = clk_get_rate(priv->pp_clk);
-
-by assigning the return value to an unsigned long local variable,
-then checking its upper liit before assigning it to priv->tclk.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+[snip]
