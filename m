@@ -1,144 +1,166 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A7B18FA2C;
-	Mon, 15 Jul 2024 12:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B30518D4B9;
+	Mon, 15 Jul 2024 12:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721048132; cv=none; b=APqAk14QXkd6vlGblqZZDKFTcbeH5FZa63YxrBpHJd9uAXtIw7fp1lMbmYpP1qbBQN2Hq3d0n38opiMpWme9dzTTkxgZxnzV/xM/nMi4QYg2tNkd4f7nHpEmuQA7ucsv2PmZVb45tReK/FzeQa2OGhHi4BWsvAo/oy+9XP1U9Ws=
+	t=1721048162; cv=none; b=q+YHF+x8t7oEuW6zR6JIox9UTPH1uqL2cWUxhbcJOL4gKi9JQmxXcjpWC7kv8SH6dm/gFQGc5IiP9Pb1aO/RVh4tzqbOP9EK1vp8fU2seC60+K55mcJfR8lSpQ9iMZjxBVjHTFaUGEyeyF66S4Ix+DEPUgCDB8vdwOeutciHp/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721048132; c=relaxed/simple;
-	bh=JPvmuWMb9Cv6qRz3cEGIn/kWuF1SOLW1hi0UXwnEzKQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LZ6Z8B3i8nLuU/tkgTIxZiqFfcRWu/EcPyXV1m1STwcSfjKiTYQoo0PbVytUEjNRbuxD18gQ8pB/vqg9I5levc4BFe0Y2dWSTrbvpAXJIcBr6SYI9k2PG9ISfgvukVlgbJ1xPm30fGwUNT/pq0Pwec3rVOv7o6l6oQM6Hz2r21c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hIXtwzIO; arc=none smtp.client-ip=209.85.208.177
+	s=arc-20240116; t=1721048162; c=relaxed/simple;
+	bh=PT2giZVeyMwG7Ia77KJkmK48CNCreprqxcNF/DRxLzo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hW6oOsfjXK5yrvqnGjhHCHIckQgKHscGer99gBMrlxGUOKo0GEn6ejCMN30iKFTyBoI9luJO0radhAi6ud7JdBo0UH3k8OS3MjHyfbuMJNzY0DB10gE6IDxpxV7s8thOE28mHLW7CP1RGVT6o/0wNsAz9JDmgvf31UcCvSWVNoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eVr2nrDj; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIXtwzIO"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eee1384e0aso21675831fa.1;
-        Mon, 15 Jul 2024 05:55:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVr2nrDj"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eea8ea8c06so61696951fa.2;
+        Mon, 15 Jul 2024 05:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721048129; x=1721652929; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g142l+1Rp8I4V1ReaaLX7dN3MJPiIMAN9KWL++3gC6o=;
-        b=hIXtwzIOWrDvYitkLe5qMQs1KWxw9g96vgApmLCL3xxcORS3uby5rHn5jzcyCdytO+
-         fVwrXzc7lMOBwJqOIcB3ovPNa+ed3LV0v2pqq6ifamgAit+8tMKLPM4Ggq8lRk3u9xbq
-         8TpjW3AMm2kYsL2KvSLw6OurkvVN9AjyxdZ+/4YZi3LJMrHLtub9yfS6Rw8mFIzO08DJ
-         18cnACU2Ko0kVUbPv9bG1zYuWAdXfSVHjEnZ63EoDPQTL7A82McB86HloUY1MBu5LCoZ
-         3zTainZ7fSkPC42UjY73j/HjTlf4jfAMeYeJIul626roCQ+8R6Y8zt8mZkFSOFcPwmCo
-         0QsA==
+        d=gmail.com; s=20230601; t=1721048159; x=1721652959; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bq5WlkKjBpLTTy056SbzimB2Bvvk4nkUO1ENR4jivK4=;
+        b=eVr2nrDjrL4ekR75m8Cz9eqb74Q35JjEuNx5dFrlw4tg+nqc3CVpBBab55FBXGY12C
+         d9WAb69NhFNOC1cv6SxussR8S4F5kAMNBXeD8HqeUaxyXoqondvW0K7BkmY6JRoz8WlG
+         CvQTc3ilZnVJaelr2+0cuSU5aJpoocWh+WlQrFlDfg/30GzWGtYXBKCWEsNIcMXAhJQB
+         IOn66CIAVlwkHhYCHBNLqoFpkIyLpeUW42Qd3R6/ZVPjB4uEhrb8A/hO58YfBFTz6Uke
+         7QHsbLV+yFtXw24XUUSfJjuYsC5VGH1/HQf1+9z027ZXdB0WfNohMdWPMMeaFQyBivhv
+         Sd8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721048129; x=1721652929;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g142l+1Rp8I4V1ReaaLX7dN3MJPiIMAN9KWL++3gC6o=;
-        b=rWo3BeZRi/W+6885Qo9oyKftjGDe+zKRq47MiEsoYHdY75V7AOfVdnuUdOorVC9Gf+
-         nvtq0tfw5EhL/3eB5pD8g/3uy2G9R41WNa1IBmnQ+sCs1KBW7EF4qYXW3nyNuBcYts0z
-         sqH+UEDo1ansl4yeIJRxpvdmPumawdmKsGqCr/JLXcSjHlQOHa/fLYK1IxLZacPOJ6jd
-         HNqXjV3pjbqlzy/FshxDUVzudJrjWcEuUMXK4aVtPOkLqcstHTrn5/EjtUW0Ki2A9SB8
-         4dytpO41CCF7f//u2pki5eMes3r2Ah+2sE4JiEKkL+Txk0aoqD3P1bkBDQZXrnqJ8XDe
-         NOSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPhcM5ymzLFxxzw7FheR20KQGMSb4p+1OF74O8VmsXaiaL40caHHQxlFN7nvrWUA/Iy5yGoxMPniP6HWNIZFDl3tZRtPuwPQr/7rkXhNXC61/6dmVLCLQAWpJJHCerSa0i/X/FaEMX3O4ju2aFlEvCpwoKPf4YWqLCgsE10cPlfpnTwVGFzPyXcL2/ycrUgi6a0EZwzTwGlTvASnIC8PAckMUQosc=
-X-Gm-Message-State: AOJu0YxchuPRxiasQv+1wt9JwEYGzHiznAa7XadVb2aNRF27rW0FUxlq
-	92B3lreW/gbXCIMoijqq725R4+gcaF4IpOXWDwPbDsgjTg/buPBTeizcrYFp
-X-Google-Smtp-Source: AGHT+IFx8MQcTRzx3JN+U8ZxghUQcdnvTgYnKydFLvaBZKUXf4eaprXj8MMYOE+oITfaurUMxJRBMQ==
-X-Received: by 2002:a05:6512:2247:b0:52c:dec1:4578 with SMTP id 2adb3069b0e04-52eb99d3d82mr11609664e87.60.1721048129043;
-        Mon, 15 Jul 2024 05:55:29 -0700 (PDT)
-Received: from tablet.my.domain (ip-37-248-157-210.multi.internet.cyfrowypolsat.pl. [37.248.157.210])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b26f62165sm3333307a12.87.2024.07.15.05.55.27
+        d=1e100.net; s=20230601; t=1721048159; x=1721652959;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bq5WlkKjBpLTTy056SbzimB2Bvvk4nkUO1ENR4jivK4=;
+        b=cLt6xuxAQDVZfJVhcRnUBRhq5jcz2Xo5tCCp0ArDK0TZhZ9hOMpSlNVcC0HogXMfZ/
+         7RorFHrJa3MNxCwK4Zv1CtrGcBDtXWTX5vSu7UpzpBtuBfzOnOC/Qu+Szh+snyc6h5KH
+         A6IwpR0/SHPMqyYssJ/Fnp+19BxEh9cmUDlzAG7eAZjPvWOHxeveMc3v56d2hzOKCbNR
+         9UYYyANWKbZLDxmLnEBBqsRZclvYQcOcITarW7P+9VFUyKzi3wOeObMKQgzhWvdx3wpH
+         uSiEhhKP7HHx8T/0U+tR+MEnsFWPoQSNW//9EWe3pTSD7RZ+7enzYxBbQXEF97r8wlO7
+         el+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVRy+Co+Yi+WDliFRYqe0f1olNAsQcLalwvK2RM/fZucizLTCmZJjt/J4VX+DSeH2YkhyguRacYil7Qi0wG4B58b6gtS1uW/c4Y+olaxdNjN++7iPN5j38vzLu6iG5LkQ470HcRl6Gx1gdbE9OGCOHdaojn3IoZQg80e4u/oUjtZvGdEzkyFBM++vM=
+X-Gm-Message-State: AOJu0YwmVh6GzlG9W7Jm7O/gjNkEXyvjTqmmUwYjiS8SzSdOtpWqmoBM
+	7eOobVMRPxVZN+4ps/LXLApFd+7D72McJmC4QNekrHqH27kQpMp1
+X-Google-Smtp-Source: AGHT+IFYYNFw/3hdL1b9TERxylHLD8pPw7jmsMNBsvv1dhqw1hdTfDWlSpVD3+/nF/2mtIa/qo/ymg==
+X-Received: by 2002:a2e:9892:0:b0:2ec:1810:e50a with SMTP id 38308e7fff4ca-2eeb3188dcdmr125720911fa.32.1721048156335;
+        Mon, 15 Jul 2024 05:55:56 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e81f0dsm86091355e9.12.2024.07.15.05.55.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 05:55:28 -0700 (PDT)
-From: Artur Weber <aweber.kernel@gmail.com>
-Date: Mon, 15 Jul 2024 14:55:11 +0200
-Subject: [PATCH v2 9/9] ARM: dts: samsung: exynos4212-tab3: Add USB
- connector node
+        Mon, 15 Jul 2024 05:55:55 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 0/3] Add CPG support for RZ/V2H(P) SoC
+Date: Mon, 15 Jul 2024 13:54:35 +0100
+Message-Id: <20240715125438.553688-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-max77693-charger-extcon-v2-9-0838ffbb18c3@gmail.com>
-References: <20240715-max77693-charger-extcon-v2-0-0838ffbb18c3@gmail.com>
-In-Reply-To: <20240715-max77693-charger-extcon-v2-0-0838ffbb18c3@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht, Henrik Grimler <henrik@grimler.se>, 
- Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>, 
- Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>, 
- Artur Weber <aweber.kernel@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1245;
- i=aweber.kernel@gmail.com; h=from:subject:message-id;
- bh=JPvmuWMb9Cv6qRz3cEGIn/kWuF1SOLW1hi0UXwnEzKQ=;
- b=owEBbQKS/ZANAwAKAbO7+KEToFFoAcsmYgBmlRwqnFSOEjC8QWSCPslauoOTiO933O3gvdDEc
- e3gOsFdVleJAjMEAAEKAB0WIQTmYwAOrB3szWrSiQ2zu/ihE6BRaAUCZpUcKgAKCRCzu/ihE6BR
- aFmxEACYfKH/GNZtUBx1ayE51+WDZH8Lsh7YCHzX0J0u0GIF7sy4e52YDmnH48GfzystWyPPaXX
- 4tChxghI0ZSVFts1vH67Iqd3zBRaDCJkHERejtV5sMP6QIX5hSlqD8pj4OAFPecpgcJG3dT+pLj
- IK330kJ2pKG36NHMRti2HiX1GtLzdG4YL7EakFGVo79x2s0V1dLXYrUz8BGFpeEDT9sHnYVA/0x
- wKkvzRnSWK+aGj0Hj8AQHaC6z3+0J0sJin+VltFKpxLIIFuQtVZJzz9YXH+bpaHPg2oBBf6ixhE
- jReLMZEDFWSyt+bStQBUW6pp3ZB7vTx89JFQh1l9eIzLwufABxHIWWcKBcK1pBPGaWE5T42vLcr
- tfLeyEG9XJiypKn6b9SPCVsEvulMQ4y/zjhOZhiLht7qe3EtHkEEex0SAOKD1IGsR01bVhnOtfJ
- f4ojHCmJMu58yv0PLcKYW9JzCEW4zVp3rePVQngPLpYhCbM+iskfDyhP3z/d0aiBU05GojgWItf
- j6YyJEC0wpDsLiLDZF48LEMBb6sT3LjQtHXcME4t6fJeox3Nw9KPh6Dh9s40VGQxSzETgSd+i17
- dB8Pf1NRrzuZ0lGjYPXjfPTh8Vo2SMTqsGlijr2xWVcWYxXZN0cKKoIix6fRrngVy79JzpYP1FL
- tULnfR+O6VXKZxw==
-X-Developer-Key: i=aweber.kernel@gmail.com; a=openpgp;
- fpr=E663000EAC1DECCD6AD2890DB3BBF8A113A05168
+Content-Transfer-Encoding: 8bit
 
-Add a subnode to the MAX77693 MFD for the MUIC and connect the USB
-connector node to the charger to allow for charger type/OTG cable
-detection.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
----
- arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Hi All,
 
-diff --git a/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi b/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
-index 7905e33234f2..f5ee3640a940 100644
---- a/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
-+++ b/arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi
-@@ -151,6 +151,17 @@ charger_reg: CHARGER {
- 				};
- 			};
- 
-+			muic {
-+				compatible = "maxim,max77693-muic";
-+
-+				usb_conn: connector {
-+					compatible = "samsung,usb-connector-11pin",
-+						     "usb-b-connector";
-+					label = "micro-USB";
-+					type = "micro";
-+				};
-+			};
-+
- 			charger {
- 				compatible = "maxim,max77693-charger";
- 				monitored-battery = <&battery>;
-@@ -160,6 +171,8 @@ charger {
- 				maxim,thermal-regulation-celsius = <100>;
- 				maxim,battery-overcurrent-microamp = <3500000>;
- 				maxim,charge-input-threshold-microvolt = <4300000>;
-+
-+				maxim,usb-connector = <&usb_conn>;
- 			};
- 		};
- 	};
+This patch series aims to add the CPG support for the Renesas
+RZ/V2H(P) SoC.
+
+v3 -> v4
+- Included RB tag form Krzysztof for patch 1/3
+- Changed reset and clock values to hex
+- Renamed __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__ to
+  __DT_BINDINGS_CLOCK_RENESAS_R9A09G057_CPG_H__
+- Dropped masking of parent clks with 0xffff
+- Dropped storing mod clk id and now calculating it
+  based on index and bit.
+- Made parent to u16 in struct rzv2h_mod_clk
+- Made a copy of resets array in struct rzv2h_cpg_priv
+- Added a comment for core clocks in patch 3/3
+- Made r9a09g057_mod_clks as __initconst
+- Made r9a09g057_resets as __initconst
+- Made r9a09g057_cpg_info as __initconst
+
+v2 -> v3
+- Dropped '|' for CPG description
+- Dropped description for '#power-domain-cells' property
+- Added 3 clock inputs for CPG
+- Dropped label in example node
+- Used 4 spaces for example node
+- Renamed r9a09g057-cpg.h -> renesas,r9a09g057-cpg.h
+- Merged adding renesas,r9a09g057-cpg.h in DT binding patch
+- Updated commit message for patch 1/3
+- Dropped num_hw_resets from struct rzv2h_cpg_priv
+- Dropped range_check for module clocks
+- Made mon_index to s8 instead of u8 in struct rzv2h_mod_clk
+- Added support for critical module clocks with DEF_MOD_CRITICAL
+- Added check for mon_index in rzv2h_mod_clock_endisable and
+  rzv2h_mod_clock_is_enabled()
+- Added CLK_PLLDTY
+- Added core clocks sys_0_pclk and iotop_0_shclk
+- Dropped r9a09g057_crit_mod_clks
+
+v1 -> v2
+- Updated commit message
+- Updated description for binding as suggested by Geert
+- Updated descriptions for clocks and resets property
+- Renamed extal->qextal
+- Updated '#power-domain-cells' value
+- Dropped the module clocks and just added the core clocks
+- Introduced family specific config option
+- Now using register indexes for CLKON/CLKMON/RST/RSTMON
+- Introduced PLL_CONF macro
+- Dropped function pointer to get PLL_CLK1/2 offsets
+- Added range check for core clks
+- Dropped NULLified clocks check
+- Dropped pll_clk1/clk2_offset
+- Made r9a09g057_mod_clks/r9a09g057_resets as static const
+
+v1: https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (3):
+  dt-bindings: clock: renesas: Document RZ/V2H(P) SoC CPG
+  clk: renesas: Add family-specific clock driver for RZ/V2H(P)
+  clk: renesas: Add RZ/V2H(P) CPG driver
+
+ .../bindings/clock/renesas,rzv2h-cpg.yaml     |  80 ++
+ drivers/clk/renesas/Kconfig                   |   9 +
+ drivers/clk/renesas/Makefile                  |   2 +
+ drivers/clk/renesas/r9a09g057-cpg.c           |  80 ++
+ drivers/clk/renesas/rzv2h-cpg.c               | 685 ++++++++++++++++++
+ drivers/clk/renesas/rzv2h-cpg.h               | 153 ++++
+ .../dt-bindings/clock/renesas,r9a09g057-cpg.h |  21 +
+ 7 files changed, 1030 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+ create mode 100644 drivers/clk/renesas/r9a09g057-cpg.c
+ create mode 100644 drivers/clk/renesas/rzv2h-cpg.c
+ create mode 100644 drivers/clk/renesas/rzv2h-cpg.h
+ create mode 100644 include/dt-bindings/clock/renesas,r9a09g057-cpg.h
 
 -- 
-2.45.2
+2.34.1
 
