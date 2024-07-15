@@ -1,148 +1,168 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF0C185E52
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402E81849ED
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032866; cv=none; b=NzU255kBbDzlsXfKiKMuCqVEDHfFWs89tR4Fo5z8E+uZhAwfv+T6HOp5AefqvJir4cvXFCnfweLyyiz6vns6zTW0aEqonEjBFGE8JorOAD9RFFySoTSmB1s3w6DIMwvSCJSOfYrN+IOlE43RewYSeBGWBc0bsboJiJOwNrvkk/g=
+	t=1721033030; cv=none; b=ex7gBUjBOfizQgZB+P2LGjzUxqlsdcndvQtmTT0JRmwjIXWV8QmlNraW+sEnVIDhhEl1KPqLIXWP8hq3lJfiZybbqKBtuVYkzaf3hd3qs+e0isqaUnLeysFkungd7fXRCgA6xM7pd/Zst50td7N53PmlchSQ0kRvQ4SPajg6rnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032866; c=relaxed/simple;
-	bh=RUbOu802FObA7IIjMs25LzRHhyMkjLGv4VUMVW8rvAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JP4pwEGmiKNQr8/y5HWiNpA7xS8SyC6xwIawST7hk9LSmwE1qsBhYrWTm7c6K1bJzzO78RVpDyF8Y2gF/h5LsKmRJ+rWSgfwwoujP+jVjbEB74tssEMwdhoTJRA6oQOib1zafbhc3j7i8hvIw75TljiNrgcLIYcYNOUTrwbYfd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=gEkwye/B; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1721033030; c=relaxed/simple;
+	bh=S6vkVSNbhG89L370XvJhZTmegxYe3oPBTnuAUQ0eJrI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mH8iU7IGLM+UKuJ8lF7QQJF1OhtqIlDxIHeweznHH0K6MqWAxE7vUx5JcMZDP8wJ2Bmzv0a3aMc7lXhs+LEcdvTtNJUmS2BY/60JQrxkQWUfG+BYHLk5iu0OJkRysxvRqRdfk34KG256xbwBiXKM6XN66Wv1O8TXjcnFTJUTehU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B/SerU87; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gEkwye/B"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-367ad05c7c7so303423f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 01:41:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B/SerU87"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52e9c6b5a62so4178240e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 01:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1721032863; x=1721637663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0wE9o0AoaxkCNt6yWEqEM1FfzrCaKVi8ZoRBGSgkms4=;
-        b=gEkwye/BvrHnFakG4gXUwazfOgSPGzRS65eoVNdDD0ubZ+elGfzyH5rGip8pGGUKdc
-         4S9Y2K7jdUjP+AZ3qslm2ePmguyDwHvwMc4JapDRKBlG105YUE5uisig6oQSiBziZKvZ
-         gSDy5c/qQsGTPLn1cenyOvrcpRcNM5M1g+j7I=
+        d=linaro.org; s=google; t=1721033027; x=1721637827; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EsdzpTRLXnS6olUqpcfoyueExAl5OEraVlLDAUpRwyY=;
+        b=B/SerU870wcbZokm85hUBUHwM+9z6ZL7qOIDyFTS43Wc3xw5Id9ydGmQ99eJkCkep5
+         iO9NtuD9iTSNFJENzvyIwv+69hz8JjbPLH35lqpPuyHKlRZxInOTM9gsCAbocD9rKvvl
+         2gikCfDvdnWfwfBWC/PumTOelhnXcxkos0rZuS5xehTl8477ogd3CGJ6nQHy6iUCbg05
+         WAsDRspgyn8oKdhrLgaN7XI3bwohymNQ5udHvNQWjqeXUd9GQQAUw5padNCk6kCZk+iS
+         eszqwMJu35bf/qM0XsimphjUKzHQBEeB6tJU8mal9YyCZm7hZf2J/SL5eSsGjaI5wGrn
+         Oshg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721032863; x=1721637663;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0wE9o0AoaxkCNt6yWEqEM1FfzrCaKVi8ZoRBGSgkms4=;
-        b=ecVgmj55LQ4YrnQ+d7rvAQ4eb/cMzVquowibCDfXu5iYSGb6SEv+6YJjP28XiPWGQl
-         5P0MbmoA6mryAAgdh9tdSz5fS7DDTJ/KcAzxRQLl07ceYqhvXvjsEvgWzAjMJJp+LD09
-         bxcU5138gUZ11rn6gPWCtrSvizoYn8/BYtVWOd8PBhwfyvQ35pRemSHgcjpZWvBl9kdt
-         gdJw8NNHEeFw7UxMWZpKQjDILj7E57DvSxC2mdHW5XmPnNsOHXBFr6hqGjOJc2Xab73/
-         AYluEJc9vtNPLxjlHQGattSinrkIy/VR++I1bt52R4OaruvdYXWnf1X0MxDc04nBi/OG
-         KfIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWh8P89X1KKrtC5uHlN5zC2CTrX+rQflgvWEbhdBPmWlKG1Xnm/WiCfoaFhhPi09PkOvTdCzifw7f/hISET2aBYe4YQWjV+xjXQFTII
-X-Gm-Message-State: AOJu0YzLSLpvOKIBGsjvUz8pLOQzWXAndYDaCcxnqUb9MoMD6mazbSCA
-	Vgi5xAKGAbR8NMqtj6V0FT9iMtGCDo0QfbfHS0C6BkS+f5LJBnuTRCDZ+nsXHPY=
-X-Google-Smtp-Source: AGHT+IEnN6FOav9A3AKqXktLUvs+7f+spQpY4HMaSuJJNHw/kLWQn/dIV7dG+F9Zkj8/H4T8tKXNZA==
-X-Received: by 2002:a05:600c:3b86:b0:426:5dd5:f245 with SMTP id 5b1f17b1804b1-426708f1979mr107374755e9.2.1721032862752;
-        Mon, 15 Jul 2024 01:41:02 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f2cc229sm112008435e9.38.2024.07.15.01.41.01
+        d=1e100.net; s=20230601; t=1721033027; x=1721637827;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EsdzpTRLXnS6olUqpcfoyueExAl5OEraVlLDAUpRwyY=;
+        b=USAYA2i8/GNYjwNMmZoioL484QKUmOyOM5t58FY7DCpzerEINLvqwsRmpcMDmWMnXx
+         TRo+byrostww01NFZxWtxqNkAXZHFfPqY5TDBcqSDJRjNQ0k05bIlnkPNqGky7S7p3qV
+         1YifvrKo1hLTXlQkC9VYfvXRz73WvLsNko+oLoPpuZLE8mXTXWTZtYqiKytXOQK2zKgE
+         BVnO1Vtk1mBF8CvKo2ojZH/nLbsDLIlQ0a+sboHFPIFAiNpalrup7fjjVmR5MK2OD6ph
+         eLKXgnEANS3CMwJ+RfdV6lXsrQ/XDD+4D3VtbjJaK5MLUiRhtL+Kvx5/rdbXig+9aFiK
+         fAEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwBAhD8Fjt+h3drtOXEhlaq7mSBiAu5b0p/a3eOabnoajHb+MJuDC+0S4KCc0rKNE1OIKAhqhy/3Kkschf7rLwExAFiSFEVTefcYKv
+X-Gm-Message-State: AOJu0YzeysDLaM0/rW7Rcwwx2jWVKHfDvoZbRNFGZfK8PlBRTP5PJArl
+	aSZ4N0p9xvVaKRRotUiqDITbyoZQQHINyQfwEZL4s+edWhm1B9veMhA9iLrF3Es=
+X-Google-Smtp-Source: AGHT+IFZ06GISOlCShv8E0xL7DUeyBRRoifs+3mdHj6HmVdE1N6FRa5TrRxeP5KnzTakGhRCH+kIzw==
+X-Received: by 2002:a05:6512:3f0c:b0:52c:de00:9c04 with SMTP id 2adb3069b0e04-52eb99d338amr14103866e87.48.1721033027358;
+        Mon, 15 Jul 2024 01:43:47 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5edb489sm77226925e9.37.2024.07.15.01.43.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 01:41:02 -0700 (PDT)
-Date: Mon, 15 Jul 2024 10:41:00 +0200
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
-Cc: "Alexander F. Lent" <lx@xanderlent.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Andrzej Kacprowski <andrzej.kacprowski@linux.intel.com>,
-	Krystian Pradzynski <krystian.pradzynski@linux.intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] accel/ivpu: Add missing MODULE_FIRMWARE metadata
-Message-ID: <ZpTgnNxSNbbeEWQ8@phenom.ffwll.local>
-Mail-Followup-To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-	"Alexander F. Lent" <lx@xanderlent.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Andrzej Kacprowski <andrzej.kacprowski@linux.intel.com>,
-	Krystian Pradzynski <krystian.pradzynski@linux.intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240709-fix-ivpu-firmware-metadata-v3-1-55f70bba055b@xanderlent.com>
- <35a7963e-e92b-4c73-b03d-a846e93adf5a@linux.intel.com>
+        Mon, 15 Jul 2024 01:43:46 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: devicetree@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: clock: qcom,turingcc: convert to dtschema
+Date: Mon, 15 Jul 2024 09:43:10 +0100
+Message-ID: <20240715084313.14098-1-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35a7963e-e92b-4c73-b03d-a846e93adf5a@linux.intel.com>
-X-Operating-System: Linux phenom 6.9.7-amd64 
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 10, 2024 at 12:23:06PM +0200, Jacek Lawrynowicz wrote:
-> Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Convert the bindings for the Turing Clock Controller, currently only
+used for QCS404, from the old text format to yaml.
 
-I'm assuming you'll also apply this one?
--Sima
+Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+---
+ .../bindings/clock/qcom,turingcc.txt          | 19 --------
+ .../bindings/clock/qcom,turingcc.yaml         | 47 +++++++++++++++++++
+ 2 files changed, 47 insertions(+), 19 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,turingcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,turingcc.yaml
 
-> 
-> On 09.07.2024 13:54, Alexander F. Lent wrote:
-> > Modules that load firmware from various paths at runtime must declare
-> > those paths at compile time, via the MODULE_FIRMWARE macro, so that the
-> > firmware paths are included in the module's metadata.
-> > 
-> > The accel/ivpu driver loads firmware but lacks this metadata,
-> > preventing dracut from correctly locating firmware files. Fix it.
-> > 
-> > Fixes: 9ab43e95f922 ("accel/ivpu: Switch to generation based FW names")
-> > Fixes: 02d5b0aacd05 ("accel/ivpu: Implement firmware parsing and booting")
-> > Signed-off-by: Alexander F. Lent <lx@xanderlent.com>
-> > ---
-> > Hi Jacek,
-> > 
-> > Thanks for catching the error, and for the more succinct comment.
-> > Please find v3 attached.
-> > ---
-> > Changes in v3:
-> > - Simplify comment, per review.
-> > - Fix typo in 40xx firmware path, per review.
-> > - Link to v2: https://lore.kernel.org/r/20240708-fix-ivpu-firmware-metadata-v2-1-78b953172026@xanderlent.com
-> > 
-> > Changes in v2:
-> > - Only annotate the module with the production firmware paths, per review.
-> > - Drop macros for de-duping firmware fileames, just use string literals, per review.
-> > - Link to v1: https://lore.kernel.org/r/20240705-fix-ivpu-firmware-metadata-v1-1-704b73852d92@xanderlent.com
-> > ---
-> >  drivers/accel/ivpu/ivpu_fw.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/accel/ivpu/ivpu_fw.c b/drivers/accel/ivpu/ivpu_fw.c
-> > index 1457300828bf..ef717802a3c8 100644
-> > --- a/drivers/accel/ivpu/ivpu_fw.c
-> > +++ b/drivers/accel/ivpu/ivpu_fw.c
-> > @@ -58,6 +58,10 @@ static struct {
-> >  	{ IVPU_HW_40XX, "intel/vpu/vpu_40xx_v0.0.bin" },
-> >  };
-> >  
-> > +/* Production fw_names from the table above */
-> > +MODULE_FIRMWARE("intel/vpu/vpu_37xx_v0.0.bin");
-> > +MODULE_FIRMWARE("intel/vpu/vpu_40xx_v0.0.bin");
-> > +
-> >  static int ivpu_fw_request(struct ivpu_device *vdev)
-> >  {
-> >  	int ret = -ENOENT;
-> > 
-> > ---
-> > base-commit: 22a40d14b572deb80c0648557f4bd502d7e83826
-> > change-id: 20240704-fix-ivpu-firmware-metadata-3d02bd60768d
-> > 
-> > Best regards,
-
+diff --git a/Documentation/devicetree/bindings/clock/qcom,turingcc.txt b/Documentation/devicetree/bindings/clock/qcom,turingcc.txt
+deleted file mode 100644
+index 126517de5f9a..000000000000
+--- a/Documentation/devicetree/bindings/clock/qcom,turingcc.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-Qualcomm Turing Clock & Reset Controller Binding
+-------------------------------------------------
+-
+-Required properties :
+-- compatible: shall contain "qcom,qcs404-turingcc".
+-- reg: shall contain base register location and length.
+-- clocks: ahb clock for the TuringCC
+-- #clock-cells: from common clock binding, shall contain 1.
+-- #reset-cells: from common reset binding, shall contain 1.
+-
+-Example:
+-	turingcc: clock-controller@800000 {
+-		compatible = "qcom,qcs404-turingcc";
+-		reg = <0x00800000 0x30000>;
+-		clocks = <&gcc GCC_CDSP_CFG_AHB_CLK>;
+-
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/qcom,turingcc.yaml b/Documentation/devicetree/bindings/clock/qcom,turingcc.yaml
+new file mode 100644
+index 000000000000..0a57e42fb4d9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,turingcc.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/qcom,turingcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Turing Clock & Reset Controller
++
++maintainers:
++  - Bjorn Andersson <andersson@kernel.org>
++
++properties:
++  compatible:
++    const: qcom,qcs404-turingcc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++    turingcc: clock-controller@800000 {
++        compatible = "qcom,qcs404-turingcc";
++        reg = <0x00800000 0x30000>;
++        clocks = <&gcc GCC_CDSP_CFG_AHB_CLK>;
++
++        #clock-cells = <1>;
++        #reset-cells = <1>;
++    };
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.45.2
+
