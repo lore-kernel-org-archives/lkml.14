@@ -1,132 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BC01849DD;
-	Mon, 15 Jul 2024 15:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DA11849DD
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 15:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721058201; cv=none; b=omE4xdxHs0/UOVHjSSN0V7yITA4Rii7GgFmZ0BYZHKX0wj0J6IzKUHFrX5ZVMUcxbUnE2SHv4+E7uVYlqKz9hrmgOf+74s8Z0HkPMnXjx+1tnjkQ7a+FkVhkUGfwETR0EiGfrvDGSHJsXlBAL9yVeDC3Yzjubr+etMUmqsSflUE=
+	t=1721058298; cv=none; b=CMSrtVextM5DQ0Wv/TJurCYIMD17HbDUv9y/8OnTUVDBQp7g9T4fz2YTZ+ovKl23282FLhVhcA+o08SyThKSMKj00SMLaE1FCFqmVnPD8gXaA7ap2xK1fu9IoxD1SGTf74Uw1WPr5v5xYRzqOECQdGkCIYhX+lZgjxX/L7jJM0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721058201; c=relaxed/simple;
-	bh=mE2xxwtTjMUyrjUohekIkGGG3Hq3+me6hazFaOgSVrA=;
+	s=arc-20240116; t=1721058298; c=relaxed/simple;
+	bh=V4i9Y72ygbi3jOnQ26pocIAnFEUoTLTrmCCoMTUYFoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ptj0ObCXWMv/q0ahkafAp586YrllTy0G9Ryel/1nuUDzCe9OAI2nJGeXvcb4AUl/xJ7U9jImqnxjOzSecGqFOBxJUcfyhtDAMYc4lsBaTl7uU6XXaUQkfS0CDQQKGjTEJMs6Xs6SquhJ8MPvqCC0j79aqku39LZN5Hh0OVFXQCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jwIUsPse; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TmzrOByP5bIbyGQfIqwjB5r3DPCAlI2l8v0UMYCk7cW/vNqIUcccfLfntNpmpzoNgJ+NcALTrWo3bhOGhS6kHJxbrIruNFRNCXwpoVuDSRWaJfUEF/0iyiTrKZD9VY0ygUBO4v6zyi5a3mTvIytRNA7IHvl6YO0TmRQFp8ZBjFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dEI5idEK; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jwIUsPse"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63716C32782;
-	Mon, 15 Jul 2024 15:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721058200;
-	bh=mE2xxwtTjMUyrjUohekIkGGG3Hq3+me6hazFaOgSVrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jwIUsPse2yBvTbsC1TRGwdD9v8LCNOTX1Wu442U0Ni4tFXySw+0vWPhU5OMMXvny7
-	 cVATWs8dMtadx0kO3s8x06E5B754Ao16i4p/tpiUBxSPda194Ce6FZwUYJYSrqB/zD
-	 vn8J1BYr2XOm5Ai4NdAneBx+adZzdtNlRTQd59yg=
-Date: Mon, 15 Jul 2024 17:43:18 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: ryan zhou <ryanzhou54@gmail.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, jikos@kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hid: usbhid: Enable remote wake-up based on device
- configuration
-Message-ID: <2024071518-progeny-unsecured-2926@gregkh>
-References: <20240710231606.3029-1-ryanzhou54@gmail.com>
- <f0c789d8-8ae0-4a46-a5b3-aa9a5a758915@rowland.harvard.edu>
- <2024071104-rental-bleak-b273@gregkh>
- <CAPwe5ROTfQVQ2fF3ab05E51X+_5zFpSNK-qrEh-ev-WWBzY+DA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEI5idEK"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-70362cb061aso2495035a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:44:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721058295; x=1721663095; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pAuoAPVtDn5NEi6WB4DvRUg0IfWdqRt5barySy1Fzh0=;
+        b=dEI5idEKVQSrXxSqT3IIadVd4yeZKCjkmZ8ZvXI1ap+Hjs7dr9jRnKVxvkXJcV5G2m
+         duLplIlGGEqrRX2QrjRdfy++D+/0QIjE9+YCEOUukW3nan22VlFTxhEp5iJKXl0kWAXR
+         6U2wDzrHX4uY2/Ie4f7qvk1AXGN1y96SuofHSSkN4C1QcyCWCeFYK0PkhAKEHeSokKMd
+         aNaTMrfa2UJ7ulPqJS2cyXlyrj+5tXCFc92AtWEG7d5cgA6nhRwO7l1k5rBfaVFI3soj
+         Y/TVEdXVQ4QTbDJBNVSIquQNlJhIHVVe92inZ+yvZWOs3FIXxj2VaSs9nWRqrqIM0AFq
+         ac+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721058295; x=1721663095;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pAuoAPVtDn5NEi6WB4DvRUg0IfWdqRt5barySy1Fzh0=;
+        b=s4fSYrE7hioUxjy3uMJqYlN4H+fLQLbE+Kjw6LENP6h+h0Z3AR+j/hTOSSEz+gdNSF
+         h5Jnkbeh8bvZuEekmahdFZr+tYL3dm2C767pOCRDtLQNle5YgCV7Gl2NB/Yt/uenQK7A
+         5ju5unKHyV8T5UkcyUkvkWVMMIUmLucVylGbPgvL90Mfn4td9GwjT5qFFNf3D0b6vWDJ
+         54B1m+xuiWGS3d2kSqv3XBVod25+fJV79lMgtYI0JvRSS9Dr1iZviwnfpSs3kLU24YaE
+         jE3R0FDQ/4/Io2kHitZ76hNo9kehUYieqI4tmJJd/KHKy79Lx6pocsQjb/z1vWeMdDHg
+         nTCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzkDOQC8Z0AJiizewb1So/nI1E6RofNusAhxnUg48nW4GB6H7Uw668ZD3jFaKkZXtqxfIz5gsOhjqSTBpJVOSbnQCTHdZh6HTD9Ry4
+X-Gm-Message-State: AOJu0YwBODfJNtM7ROeBm1EP3NLK0E6BWenRwU5tc/MzbjAqUFu2zk3N
+	3gFtojxtE+ZZrrmmsfDntg22EhMaaMAN/63o4AbFyWscwgiuWh8KrKFwfv5yWQE=
+X-Google-Smtp-Source: AGHT+IHv5RoP8rbG/BgCJi5p+sb+fDQFciWX94XX4Trb6B1Dt48Wwt2QAbCP9vRkfv0v5DCxmtw61w==
+X-Received: by 2002:a05:6830:280c:b0:703:6076:a47 with SMTP id 46e09a7af769-708d83927e7mr27584a34.23.1721058293674;
+        Mon, 15 Jul 2024 08:44:53 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:358f:3413:c118:4021])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-708c0c53e58sm956120a34.16.2024.07.15.08.44.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 08:44:53 -0700 (PDT)
+Date: Mon, 15 Jul 2024 10:44:51 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Tero Kristo <tero.kristo@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel/tpmi/plr: Uninitialized variable in
+ plr_print_bits()
+Message-ID: <428d4e27-6970-45d8-a7b9-7bf6af95c91a@suswa.mountain>
+References: <8ccfab0c-3c11-4168-a383-19895ae60022@stanley.mountain>
+ <1467f140-c035-cb2a-20d9-b5910971cb56@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPwe5ROTfQVQ2fF3ab05E51X+_5zFpSNK-qrEh-ev-WWBzY+DA@mail.gmail.com>
+In-Reply-To: <1467f140-c035-cb2a-20d9-b5910971cb56@linux.intel.com>
 
-On Mon, Jul 15, 2024 at 11:36:57PM +0800, ryan zhou wrote:
-> On Thu, Jul 11, 2024 at 3:41â€¯PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Jul 10, 2024 at 09:47:39PM -0400, Alan Stern wrote:
-> > > On Thu, Jul 11, 2024 at 07:16:06AM +0800, ryan wrote:
-> > > > According to the USB protocol, the host should automatically
-> > > > adapt the remote wake-up function based on the configuration
-> > > > descriptor reported by the device, rather than only the default
-> > > > keyboard support. Therefore, it's necessary to support other hid
-> > > > devices, such as digital headsets,mice,etc.
-> > >
-> > > It's true that the host shouldn't try to enable remote wakeup if the
-> > > configuration descriptor shows that the device doesn't support it.
-> > >
-> > > However, it's not true that the host should try to enable remote wakeup
-> > > for devices other than keyboards with boot-protocol support.  History
-> > > has shown that quite a few HID devices don't handle remote wakeup
-> > > properly; the decision about whether to enable it should be left to the
-> > > user.
-> >
-> > I agree, this patch isn't acceptable.  Ryan, why do you want this
-> > applied?  What userspace control is missing to allow you to do this
-> > today on your systems with no kernel changes for devices that you know
-> > will work properly?
-> >
-> > thanks,
-> >
-> > greg k-h
+On Mon, Jul 15, 2024 at 12:25:21PM +0300, Ilpo Järvinen wrote:
+> On Fri, 12 Jul 2024, Dan Carpenter wrote:
 > 
+> > Initialize the "str" pointer to NULL.  There is a test later for if "str"
+> > is NULL but in the original code it was either valid or uninitialized.
+> > 
+> > Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for the plr mailbox")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> > Almost everyone automatically initializes stack variables to zero these days so
+> > bugs like this don't show up in testing and we disabled GCC's uninitialized
+> > variable warning so it's easy to miss.
+> > 
+> >  drivers/platform/x86/intel/intel_plr_tpmi.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/intel_plr_tpmi.c
+> > index c1aa52c23d25..2725a1ddba92 100644
+> > --- a/drivers/platform/x86/intel/intel_plr_tpmi.c
+> > +++ b/drivers/platform/x86/intel/intel_plr_tpmi.c
+> > @@ -162,7 +162,7 @@ static int plr_clear_cpu_status(struct tpmi_plr_die *plr_die, int cpu)
+> >  static void plr_print_bits(struct seq_file *s, u64 val, int bits)
+> >  {
+> >  	const unsigned long mask[] = { BITMAP_FROM_U64(val) };
+> > -	const char *str;
+> > +	const char *str = NULL;
+> >  	int bit, index;
+> >  
+> >  	for_each_set_bit(bit, mask, bits) {
 > 
-> Many thanks to Greg KH and Alan Stern for reviewing the patch and
-> replying to me.
-> I'd like to start by asking Greg KH's question.
-> 
-> A1:This patch is expected to be applied to the USB digital headset,
-> mouse, and keyboard,
-> and we expect to wake up the system by operating them when the system
-> has suspended.
-> 
-> A2:I've verified that user-space control does the trick, but
-> Personally speaking, it's not a good solution.
-> For each device plugged into the host, the user space needs to check whether
-> it is one of the three and to enable wakeup.It may be better to enable
-> wakeup when loading
-> a HID class drivers, from my perspective. Could you please give me
-> some advice if possible.
+> This fix looks slightly incorrect.
 
-You can run anything you want at device-plugin-time in userspace by
-writing a udev rule, that's exactly what that was designed for.  The
-policy you decide is under your control in userspace, no need to do
-anything special in the kernel at all.
+s/slightly/totally/.
 
-> I have spent some time studying your responses, and learned a lot. I
-> absolutely agree with many
-> of your points, but still have some doubts.
-> 
-> Q1 for Alan Stern: Boot device includes a boot mouse and boot keyboard,
-> why the patch(3d61510f4ecac) only enables boot keyboard by default,
-> and in addation boot
-> protocol is used in BIOS,why is it used as a wakeup judgment condition
-> in the OS?
-> 
-> Q2: for Alan Stern:  As you comment 'History has shown that quite a
-> few HID devices don't
-> handle remote wakeup properly'  I consulted the USB20 Spec in Chapter
-> 9.2.5.2 and it has
-> this description:'If a device supports remote wakeup, it must also
-> allow the capability to be
-> enabled and disabled using the standard USB request'  So these devices
-> that you're talking about
-> are not compliant with the USB20 protocol specification to my mind. If
-> so, shouldn't we
-> support these non-standard devices.
+I'll resend.
 
-If you do not support "non-standard" devices, your operating system will
-not be used by anyone in the real-world as there are TONS of
-"non-standard" devices out there, sorry.
+regards,
+dan carpenter
 
-try it and see, go to the local store and buy a shopping cart of cheap
-mice and keyboards and see what happens...
-
-thanks,
-
-greg k-h
