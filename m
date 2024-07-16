@@ -1,126 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0186B44369;
-	Tue, 16 Jul 2024 10:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E29844369;
+	Tue, 16 Jul 2024 10:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721124392; cv=none; b=Apwu5BHoxA7dvY7qs2Li6J9BGXvfkOh3LG7xgWdHRMMZ1ZD+KxqzLExKm3IF1AJqOBN93cfcuEDQ99hpUlCMz3ysoZF1criATd6MX43yZLi691EQ29wuHinXkGcEv6MlKXXQ27IlqxAZLI6xFXOX7t3NAObRSy/XaGvOKjXXkio=
+	t=1721124441; cv=none; b=tewJVO1dM6KuPZBfqMs5iIfrmJBYRbnmgcwYAV8fBVfsr+2i4dFiq5LjYh7JmsCyP9duqNU4jTLRSaKKLy0mzrQGLFy47UiWA4lz8s4DUVVCE0c+P8dD6hrYPK4YYiGsZ8qIhttUEPaEa+DFBQYpNhJbwSVDCL4Y3R/AysZz+10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721124392; c=relaxed/simple;
-	bh=15GE7Kublid/r/h32zPnzD+qmdotNJ/HsZeI1Dk8tSo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BY/EJr+tL1S7fIURsnDEElzjHObajxKMf9gcuVzuwgV4qCuT/bY2n2yFaBuvIlOzNwetMP+n7e5kAeBwuKZ6Dw+5Aij+Bu1TMOToTFu4LOeNbJM1xEN/y3lTZdk8XBGvn3DRFBCK7g/v/dY0tCpv38Ke5dyFmXN2n0Kog1aWZWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 971421063;
-	Tue, 16 Jul 2024 03:06:54 -0700 (PDT)
-Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7195F3F762;
-	Tue, 16 Jul 2024 03:06:27 -0700 (PDT)
-Message-ID: <a17e6701-4195-4132-8518-fe4b10403f7e@arm.com>
-Date: Tue, 16 Jul 2024 11:06:25 +0100
+	s=arc-20240116; t=1721124441; c=relaxed/simple;
+	bh=3zE6ikIX0FQeoKFbzrnOX+xEwyLxQMGxtSsYhRQcMWQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GRd/Sg+uPGoVaOY/60pe8Hx1WBWiIvT2G0g0bFfO7kD9mnINHyaoSopSpF4cGHavQqS2106jkQpEq/7GgP6AESGxU8DGgLUQL2S1t0jM9ukDuP6yAcs0EOXy67eYetlA7wy72DxnKhRIV3nn8y38CDYIwmPeVJyDzAIz0vFVF5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LVnzFSMO; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LVnzFSMO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721124440; x=1752660440;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3zE6ikIX0FQeoKFbzrnOX+xEwyLxQMGxtSsYhRQcMWQ=;
+  b=LVnzFSMOaTuBWq2d7yNwVOPAFk/VLt2TFju0hSIqnr9kP52+f2dq6ncc
+   hkKHb6crMYF5r1ok45ekfRIiOh/5kwnVVEXSaIbc7/Ht2DFjoClBafG7S
+   Gz3r4KHs3BIv5WWqUK189jQBkg6jIiGkVqv4a6I28DvnNGkG+6YDg5moo
+   QFFT/ZYfBTS4AMBaNmldxjKnheqYQJKN9FcENsZS1gMTZAqnq1x6CFSQv
+   wIoIqwsyg8g7H5M+YPlobe36zt71nH9qh7n2nH20paDtZ+cfYr7Bau0/P
+   mTtJap7VQpTudDw32A/2XztWW+74XYgcN93A7CH8+VXyGS4jj1gLhnJNm
+   w==;
+X-CSE-ConnectionGUID: gVwXFWYTR1Wv0/TRV7NMaA==
+X-CSE-MsgGUID: N4CdFr3aSrGIzdxrMKSs5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="29699277"
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="29699277"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:07:20 -0700
+X-CSE-ConnectionGUID: 5STF6bgJTbCV+jA3Ye4Y1w==
+X-CSE-MsgGUID: l6mdr8y7S8S9IKv2RKPk5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="49704832"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.133])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:07:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 16 Jul 2024 13:07:13 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, 
+    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH v1 1/1] platform/x86: asus-wmi: fix TUF laptop RGB
+ variant
+In-Reply-To: <20240716011130.17464-2-luke@ljones.dev>
+Message-ID: <529238c2-ec4f-1807-8cf3-1e74ca6a172c@linux.intel.com>
+References: <20240716011130.17464-1-luke@ljones.dev> <20240716011130.17464-2-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf docs: Mark the Android document as obsolete
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240715143342.52236-1-leo.yan@arm.com>
- <CAP-5=fVd9pO7kKvZX7PZ6sJ+GHOV7aF=Ry98a=vknimuSTp9Lg@mail.gmail.com>
- <1487da55-24dc-40ef-a6e8-4bf4b153fdc3@arm.com>
- <CAP-5=fUGJmOr9XcsVWWCREjr1A7rUFaMk0VPkQAKDAEjTLKJVQ@mail.gmail.com>
- <CAP-5=fWY4AeMxfNGh_jB4gss_qtGSgfX4pvv-D-fpCWuqamVfA@mail.gmail.com>
- <f316e3ce-e1e3-45f0-ac78-9af590b58706@arm.com>
- <CAP-5=fU=LguHNi861L4gmgZWXrrgZtG1w5cdw7hXDxnfWyJyMQ@mail.gmail.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <CAP-5=fU=LguHNi861L4gmgZWXrrgZtG1w5cdw7hXDxnfWyJyMQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 16 Jul 2024, Luke D. Jones wrote:
 
-
-On 7/15/24 22:21, Ian Rogers wrote:
-
-[...]
-
-> Hmm.. I can repro but I don't see where the string comes from and my
-> build is definitely using clang:
-> ```
-> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
-> O=/tmp/perf NO_LIBELF=1 NO_LIBTRACEEVENT=1 NO_LIBPYTHON=1 CC=clang
-> CXX=clang++ V=1
-> ...
-> clang --target=aarch64-linux-gnu -fintegrated-as  -Wbad-function-cast
-> -Wdeclaration-after-statement -Wformat-security -Wformat-y2k
-> -Winit-self -Wmissing-declarations -Wmissing-prototypes
-> -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls
-> -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef
-> -Wwrite-strings -Wformat -Wno-type-limits -Wshadow -Wthread-safety
-> -DHAVE_SYSCALL_TABLE_SUPPORT -I/tmp/perf/arch/arm64/include/generated
-> -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror -DNDEBUG=1 -O3
-> -fno-omit-frame-pointer -Wall -Wextra -std=gnu11 -fstack-protector-all
-> -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -D_LARGEFILE64_SOURCE
-> -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I~/src/tools/perf/util/include
-> -I~/src/tools/perf/arch/arm64/include -I~/src/tools/include/
-> -I~/src/tools/arch/arm64/include/uapi -I~/src/tools/include/uapi
-> -I~/src/tools/arch/arm64/include/ -I~/src/tools/arch/arm64/
-> -I/tmp/perf//util -I/tmp/perf/ -I~/src/tools/perf/util
-> -I~/src/tools/perf -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
-> -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT
-> -DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE
-> -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT
-> -DHAVE_SCHED_GETCPU_SUPPORT -DHAVE_SETNS_SUPPORT -DNO_LIBPERL
-> -DHAVE_TIMERFD_SUPPORT -DNO_LIBPYTHON -DHAVE_BACKTRACE_SUPPORT
-> -DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT
-> -I/tmp/perf/libapi/include -I/tmp/perf/libsubcmd/include
-> -I/tmp/perf/libsymbol/include -I/tmp/perf/libperf/include -I/tmp/perf/
-> -Wl,-z,noexecstack \
->          /tmp/perf/perf-in.o -Wl,--whole-archive
-> /tmp/perf/libapi/libapi.a /tmp/perf/libperf/libperf.a
-> /tmp/perf/libsubcmd/libsubcmd.a /tmp/perf/libsymbol/libsymbol.a
-> /tmp/perf/libperf-bench.a /tmp/perf/libperf-test.a
-> /tmp/perf/libperf-ui.a /tmp/perf/libperf-util.a
-> /tmp/perf/libpmu-events.a  -Wl,--no-whole-archive -Wl,--start-group
-> -lpthread -lrt -lm -ldl -Wl,--end-group -o /tmp/perf/perf
-> $ strings /tmp/perf/perf|grep GCC
-> GCC: (Debian 13.2.0-13) 13.2.0
-> $ find /tmp/perf -name '*.[oa]' -exec sh -c "strings {} | grep GCC" \; -print
-> GCC: (Debian 13.2.0-13) 13.2.0
-> /tmp/perf/fixdep.o
-> GCC: (Debian 13.2.0-13) 13.2.0
-> /tmp/perf/fixdep-in.o
-> ```
-> fixdep is being compiled with HOSTCC which isn't clang. Some more digging:
-> ```
-> $ aarch64-linux-gnu-readelf -p .comment /tmp/perf/perf
+> In kbd_rgb_mode_store the dev_get_drvdata() call was assuming the device
+> data was asus_wmi when it was actually led_classdev.
 > 
-> String dump of section '.comment':
->   [     0]  GCC: (Debian 13.2.0-13) 13.2.0
->   [    1f]  Debian clang version 16.0.6 (20+build1)
-> ```
-> So I suspect that the GCC is coming from crt0.o and that the binary
-> was built with clang.
+> This patch corrects this by making the correct chain of calls to get the
+> asus_wmi driver data.
+> 
+> Fixes: ae834a549ec1 ("platform/x86: asus-wmi: add support variant of TUF RGB")
+> Tested-by: Denis Benato <benato.denis96@gmail.com>
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 7d87ff68f418..2b968003cb9b 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -906,10 +906,14 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+>  				 struct device_attribute *attr,
+>  				 const char *buf, size_t count)
+>  {
+> -	struct asus_wmi *asus = dev_get_drvdata(dev);
+>  	u32 cmd, mode, r, g, b, speed;
+> +	struct led_classdev *led;
+> +	struct asus_wmi *asus;
+>  	int err;
+>  
+> +	led = dev_get_drvdata(dev);
+> +	asus = container_of(led, struct asus_wmi, kbd_led);
+> +
+>  	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
+>  		return -EINVAL;
 
-Thanks for correcting. Now I even can build successfully with the Clang
-from Android NDK with an additional flag 'NO_DEMANGLE=1'. Though we still
-need to disable several modules for passing the building, but we are on the 
-right way.
+Thanks. Applied to review-ilpo / for-next and will go into Linus in the 
+main PR for 6.11.
 
-Would you like to continue a formal fixing or you want me to follow up?
+-- 
+ i.
 
-Thanks,
-Leo
