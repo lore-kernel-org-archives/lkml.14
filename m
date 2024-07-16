@@ -1,40 +1,65 @@
-Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932AB7CF16
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526487CF16;
+	Tue, 16 Jul 2024 11:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721129175; cv=none; b=jN/c5JuTsA9anEf+P5x/2nTEVk2G9a1Dw3nnoCVYUy1tz7tvRn95N081MLyioxwUR7moGm20snDdU2ob/jQHgB7qtnRT1hnypPDiQROjl7zmqwSWGYZf6376HUfmdcJagSBZMmh7K3ZoijmcR23Hln0ftfr2tc4ROWKf9FMgbss=
+	t=1721129231; cv=none; b=QzZ4fH85zheFfwkW2XlwD99xIxPKZl0UOkhUoEQ/18tQMDTLFXLwEAJvhQHRyno99u31ZP/8KY1kwelGbXuzqk6cKW+ZTrRXXoOC14E803f/0l2YtbKCTXr1y1Z5xavIxWM4rQfk7L10mOqDJR55K4wM1tBhDBFqkguzo7Jnlks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721129175; c=relaxed/simple;
-	bh=Mniu9gA6b2EhKO+fpC6eoSHwsVpdY6vrZZ8IXcjtu64=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tbfnGaJGgWNO5Wp6fXuKJXkokbWJjdhfQPAIDWjY/zWNjfIRLhrZkYQgJwyYpRcId9KOuKYWlBI8re6tpLFCLdeO4s/sSodAqxE/y5CzCfw68RcTT99xUhRAZJpnYbXp50uKh4bWfUv3jM6h1/HYx97UnJip64Qafi3Kv5+npV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.71.121])
-	by sina.com (10.185.250.23) with ESMTP
-	id 6696578700007F0B; Tue, 16 Jul 2024 19:20:41 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 6427918913742
-X-SMAIL-UIID: C1D7265DBBD647969A15E1A7E2015AF9-20240716-192041-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+d5dc2801166df6d34774@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] KASAN: slab-use-after-free Read in lockref_get
-Date: Tue, 16 Jul 2024 19:20:34 +0800
-Message-Id: <20240716112034.1076-1-hdanton@sina.com>
-In-Reply-To: <0000000000005c6453061d53bc0f@google.com>
-References: 
+	s=arc-20240116; t=1721129231; c=relaxed/simple;
+	bh=06pZoshpVaDCWpVbnS4alVx8Yojx+yVOtahfoeJQMr4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c9X5FAmNtdF/6Cx9EolxA3WtSgMPhRwhyMwV/0eF60b5ynpQOJ0Qm2KUEJt1An73KZiZqvgxT5a+dbfI7mbQiVn/feRtMUCNEgqbiXm42BcmsifxyC9k10448MQFfwXgeshUbPbzQbTRw28Lt94XmZP8mVVJ6pGhToUnv4LT03s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GKT+GRYS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GKT+GRYS"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46GBQWu3001659;
+	Tue, 16 Jul 2024 11:27:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=P96N3vH383vN0+zZAMqMKRSt12
+	Td5N5n/7XfR+12Oc0=; b=GKT+GRYSTL9UjJvOyBJb6TV4Vc9wZ9zhvv8evFfECN
+	HDGsJ6ZRNsm4kN4j2hJ38iAJ//+6iI7cz0Nbr/fupTF3sxbR3N4KGyH8QPdJk7mk
+	gtvZD9yL4t0d5grfKZAKFrzA13oh6MPfp6GbtvqNXi8Ky97W967hoQ82eHSSb6Se
+	vJ/gq4bf+vwIVobQfSkRxPYpOe4crfBpudOr4rCGYMti9DZDZ2lNrVjK/J1I+CGD
+	rpaqNAGc8mnjFHf9VLqStwcOzrQptWe7Ls+aEUm0kHJlqpm+fWzAkCmpDVzHPU2b
+	7sDkBzr1WF52gkD96hc1zKopQJz7NsHJWWmgXq6ifsrA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40dntyg9fj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jul 2024 11:27:01 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46GBCETm023033;
+	Tue, 16 Jul 2024 11:27:00 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40c64m3fyx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jul 2024 11:27:00 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46GBQvcf21627340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Jul 2024 11:26:59 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 22A2320043;
+	Tue, 16 Jul 2024 11:26:57 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B1DB20040;
+	Tue, 16 Jul 2024 11:26:55 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.220.34])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 16 Jul 2024 11:26:55 +0000 (GMT)
+From: Akanksha J N <akanksha@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc: shuah@kernel.org, mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+        rostedt@goodmis.org, naveen@kernel.org, akanksha@linux.ibm.com
+Subject: [PATCH v1] selftests/ftrace: Skip test for optimized probes on PowerPC if Secure Boot is enabled
+Date: Tue, 16 Jul 2024 16:56:51 +0530
+Message-Id: <20240716112651.11345-1-akanksha@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,29 +67,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: gHejGokwyHvEE4by6Njdh-KTPNs2AfzR
+X-Proofpoint-ORIG-GUID: gHejGokwyHvEE4by6Njdh-KTPNs2AfzR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_19,2024-07-16_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407160083
 
-On Mon, 15 Jul 2024 19:02:19 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    58f9416d413a Merge branch 'ice-support-to-dump-phy-config-..
-> git tree:       net-next
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ed24b5980000
+Currently while accessing debugfs with Secure Boot enabled on PowerPC,
+it is causing the kprobe_opt_types.tc test to fail. Below is the snippet
+of the error:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git  58f9416d413a
++++ grep kernel_clone /sys/kernel/debug/kprobes/list
+grep: /sys/kernel/debug/kprobes/list: Operation not permitted
+++ PROBE=
++ '[' 2 -ne 0 ']'
++ kill -s 37 7595
+++ SIG_RESULT=1
++ eval_result 1
++ case $1 in
++ prlog '	[\033[31mFAIL\033[0m]'
++ newline='\n'
++ '[' '	[\033[31mFAIL\033[0m]' = -n ']'
++ printf '	[\033[31mFAIL\033[0m]\n'
+	[FAIL]
 
---- x/net/mac80211/debugfs_sta.c
-+++ y/net/mac80211/debugfs_sta.c
-@@ -1284,6 +1284,12 @@ void ieee80211_sta_debugfs_add(struct st
- 
- void ieee80211_sta_debugfs_remove(struct sta_info *sta)
- {
-+	struct ieee80211_sub_if_data *sdata = sta->sdata;
-+
-+	if (!sdata->debugfs.subdir_stations)
-+		return;
-+	if (!sdata->vif.debugfs_dir)
-+		return;
- 	debugfs_remove_recursive(sta->debugfs_dir);
- 	sta->debugfs_dir = NULL;
- }
---
+This is happening when secure boot is enabled, as it enables lockdown
+by default. With lockdown, access to certain debug features and
+filesystems like debugfs may be restricted or completely disabled.
+
+To fix this, modify the test to check for Secure Boot status using
+lsprop /proc/device-tree/ibm,secure-boot. And, skip execution of the
+test on PowerPC if Secure Boot is enabled (00000002).
+
+With this patch, test skips as unsupported:
+=== Ftrace unit tests ===
+[1] Register/unregister optimized probe	[UNSUPPORTED]
+
+Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
+---
+ .../selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc       | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+index 9f5d99328086..87e2f81e46b8 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+@@ -10,6 +10,11 @@ x86_64)
+ arm*)
+ ;;
+ ppc*)
++lsprop_output=$(lsprop /proc/device-tree/ibm,secure-boot)
++if echo "$lsprop_output" | grep -q "00000002"; then
++	echo "Secure Boot is enabled on PowerPC."
++	exit_unsupported
++fi
+ ;;
+ *)
+   echo "Please implement other architecture here"
+-- 
+2.39.3 (Apple Git-146)
+
