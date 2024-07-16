@@ -1,233 +1,140 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2075419884C;
-	Tue, 16 Jul 2024 09:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99ED196450;
+	Tue, 16 Jul 2024 09:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121886; cv=none; b=qv/CO0a4rJU0VAhdi+I39M7M3RA8MUASfAmlJ3tte3XYfIeVdFiYdCFcyDgNdaaIyN7Fn0dcDOj7VS/s8EgYKjSv6zX/iwAg/E0NyD6BkDQyvj9J4Njc5lHW0F39I6+su+lJQNU6ZQo/PwjhgxTLccF0fnRSeGrskHAj6XUvDqE=
+	t=1721121889; cv=none; b=DB+X1rw0lbt+V7U3tBGTqPZlftBjnUp/a+SKlw6poh7mLvlkBONdD5ocF8XBeONuFNvvT6TFXqTNA/zO09crjOVOucOUy4DuA1HQkMy4v57WzrvTNdik9Iv0t8cEWcbA6Vr5UzLMn7r7WqZnB0Be15HnNBYxl8oAzGSDP3B4iHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121886; c=relaxed/simple;
-	bh=UEsf8S/FCVsJOmFY8f9AO/Wyc6rpyhrib6RxlOLoKXI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lnMI0BhwlDCmjocxYxBWQrJf+B5J4UH3e+r5gFsmCT2fSeZsAXBpjVlr5Q1tiWWVZo1EsVvpnIpuKXzfpmC/roWLMW3+ep2Ov8LJjYw8udMp2/0z1IJrYS/krxlk4nfwMGe6PXWVHAPHii8Z0w5Ul0/kUUAuz7LSTOhi2BoedAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fwq3v1v4; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721121889; c=relaxed/simple;
+	bh=lU7qlL1uamfPHcDf1WFGzX289bQX/TvkrTQF2JrqPsI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BVXUayx/S0dO6/QsUrLTeTlFFaYP8cVfI34AQN1RLFgkYk9aQKDZL+v5bnLoVqfgDy4Weqwls2jMS4GLRhfVFA0OnWjp/pLTf4rEtGxVBk6+LalTxZ2mFpPj8b2SOyK6VQz04ZmSJPmTy4SAK58u0Zb4517gRkvkzekcwNoj1zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=sH4IwQLV; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fwq3v1v4"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46G4WQMF007005;
-	Tue, 16 Jul 2024 09:24:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hrEpboNihonHzvEF64slkaeuvisBe/SYq868EiTlONk=; b=Fwq3v1v4jUUgeLZF
-	URfgvxNvFZ9hubXSyulvL6lCgcaPlzGpSuaRqIa8Aufj/joZjz93efPTxkt86w9D
-	SeIb23qksykeama6H4SBKlFKy06hIHh+sENoEhpuoUJEZOkX1dLxt2vriTlkz3ch
-	tFf7FCaoMxU42uRtbanzLMfSSXZ43yFe2iEnEvkUfrSHk9UxSeAxz2dUiuOZ6Kqh
-	DBO4pgP223yfyCTvjrOJiKqBpNZRxBAauQfoin4VDhAktKuD5KqPHiuQ2fVAXQ7C
-	WFuMXScxwWLWWD99JLOrmt3IEWJVSnLNCAtHdTneX/XLrorFOa1Mk5ZrTdmO2Qov
-	UchfbA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bjv8pfxr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 09:24:39 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46G9OcNT027439
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 09:24:38 GMT
-Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 16 Jul 2024 02:24:33 -0700
-From: Sricharan R <quic_srichara@quicinc.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_srichara@quicinc.com>
-CC: devi priya <quic_devipriy@quicinc.com>
-Subject: [PATCH V6 3/4] arm64: dts: qcom: ipq9574: Enable PCIe PHYs and controllers
-Date: Tue, 16 Jul 2024 14:53:46 +0530
-Message-ID: <20240716092347.2177153-4-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240716092347.2177153-1-quic_srichara@quicinc.com>
-References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="sH4IwQLV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721121885;
+	bh=lU7qlL1uamfPHcDf1WFGzX289bQX/TvkrTQF2JrqPsI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sH4IwQLVeBbX1amWG+qExoVEP7aknwjCFa/EcaMT8nRzmosJQvV/qf2GQnqK2zeMb
+	 usxrsErHV6CzphYQJNPnkvyma8+NFgjkoLIVJwzFEs903ebzYcm0uySVNrPLx4MBUs
+	 cWGb53yMrW6pZp+THuXGzxhFyMD4QdKGlmSYyXcPaG7JD5vMbModCXlN39YvRgHBb6
+	 6RfHjYbBhlo/NUYuNSfJ2CNgdvceXq5+iHm2ARNWlkMm0x5QPeq8JfV4VtdfvlPfbU
+	 XnTVqhX95hF/DPq10m6bVzs39bpyDKIdXq4zKt9g5Pgd9uPq73vHrnXWecl+KCXz66
+	 lBvvElPtUvRdg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3C6A83780C13;
+	Tue, 16 Jul 2024 09:24:45 +0000 (UTC)
+Message-ID: <3dd2dcc9-5fbb-4384-985f-a61e26cc8a5f@collabora.com>
+Date: Tue, 16 Jul 2024 11:24:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] arm64: dts: mediatek: mt8195-cherry: Remove
+ keyboard-backlight node
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Tzung-Bi Shih <tzungbi@kernel.org>,
+ kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240715-cros-backlight-dt-probe-v1-1-0b5afe64c94b@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240715-cros-backlight-dt-probe-v1-1-0b5afe64c94b@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Yd9TTQvs_0RqdjDXFQduoO9TMb88lEWW
-X-Proofpoint-GUID: Yd9TTQvs_0RqdjDXFQduoO9TMb88lEWW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-16_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 spamscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
- phishscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 bulkscore=0
- mlxlogscore=963 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407160067
 
-From: devi priya <quic_devipriy@quicinc.com>
+Il 15/07/24 18:09, Nícolas F. R. A. Prado ha scritto:
+> Commit 970c3a6b7aa3 ("mfd: cros_ec: Register keyboard backlight
+> subdevice") introduced support for detecting keyboard backlight
+> fuctionality through communication with the ChromeOS EC. This means that
+> the DT node is no longer used. Remove the unneeded node.
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+> Different CrosEC FW versions could potentially not support discovering
+> the keyboard backlight functionality, but I've tested both a recent
+> 
+>    tomato_v2.0.23149-099cd3e539 tomato_15699.72.0 2024-01-03
+> 
+> and an old
+> 
+>    tomato_v2.0.10686-234e646fd8 tomato_14268.0.0 2021-10-07
+> 
+> version on mt8195-cherry-tomato and on both relying only on the
+> discoverability works. I've tested on both tomato-r2 and tomato-r3. I
+> have not tested on dojo, however, as I don't have access to it.
+> 
 
-Enable the PCIe controller and PHY nodes corresponding to RDP 433.
+Dojo will work anyway because those machines do share the same base FW... but
+anyway, I'm not sure that this is the right thing to do.
 
-Signed-off-by: devi priya <quic_devipriy@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- [V6] No change.
+The commit that you mentioned says that it is meant to make that "work on machines
+without specific ACPI or OF support for the keyboard backlight", but not that the
+intention is to stop using either ACPI nor DT nodes for that.
 
- arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts | 113 ++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+The DT kselftest is relatively young, and I suspect that anyway this is not the
+only affected device, so the justification is only barely valid.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-index 1bb8d96c9a82..f4b6d540612c 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-@@ -8,6 +8,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include "ipq9574-rdp-common.dtsi"
- 
- / {
-@@ -15,6 +16,45 @@ / {
- 	compatible = "qcom,ipq9574-ap-al02-c7", "qcom,ipq9574";
- };
- 
-+&pcie1_phy {
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_default>;
-+
-+	perst-gpios = <&tlmm 26 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 27 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pcie2_phy {
-+	status = "okay";
-+};
-+
-+&pcie2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie2_default>;
-+
-+	perst-gpios = <&tlmm 29 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 30 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pcie3_phy {
-+	status = "okay";
-+};
-+
-+&pcie3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie3_default>;
-+
-+	perst-gpios = <&tlmm 32 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 33 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
- &sdhc_1 {
- 	pinctrl-0 = <&sdc_default_state>;
- 	pinctrl-names = "default";
-@@ -28,6 +68,79 @@ &sdhc_1 {
- };
- 
- &tlmm {
-+
-+	pcie1_default: pcie1-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio25";
-+			function = "pcie1_clk";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio26";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio27";
-+			function = "pcie1_wake";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie2_default: pcie2-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio28";
-+			function = "pcie2_clk";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio29";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio30";
-+			function = "pcie2_wake";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie3_default: pcie3-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio31";
-+			function = "pcie3_clk";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio32";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio33";
-+			function = "pcie3_wake";
-+			drive-strength = <6>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	sdc_default_state: sdc-default-state {
- 		clk-pins {
- 			pins = "gpio5";
--- 
-2.34.1
+Don't misunderstand me, I'm not saying that I'm not okay with this, but I'd like to
+have more opinions about this.
 
+If we choose to go this way, ideally we should remove this from all of the upstream
+Chromebook devicetrees (not only MediaTek, clearly!) so that would require a bit
+more effort to test here and there.
+
+Any opinion from anyone?
+
+Cheers,
+Angelo
+
+> My motivation to remove the node is because the DT kselftest expects DT
+> nodes that can match to a driver to be probed, and with the "breaking"
+> commit, the DT node goes unprobed which results in a failure:
+> 
+>    not ok 225 /soc/spi@1100a000/ec@0/keyboard-backlight
+> 
+> I can also solve this in a different way, by adding this driver to the
+> ignore list of the test. But this solution seemed better as the DT
+> isn't meant to describe devices that can be discovered at run time
+> anyway.
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi | 4 ----
+>   1 file changed, 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
+> index fe5400e17b0f..20dfa18c9dda 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
+> @@ -1228,10 +1228,6 @@ cros_ec: ec@0 {
+>   		spi-max-frequency = <3000000>;
+>   		wakeup-source;
+>   
+> -		keyboard-backlight {
+> -			compatible = "google,cros-kbd-led-backlight";
+> -		};
+> -
+>   		i2c_tunnel: i2c-tunnel {
+>   			compatible = "google,cros-ec-i2c-tunnel";
+>   			google,remote-bus = <0>;
+> 
+> ---
+> base-commit: 91e3b24eb7d297d9d99030800ed96944b8652eaf
+> change-id: 20240715-cros-backlight-dt-probe-7754a832ad60
+> 
+> Best regards,
