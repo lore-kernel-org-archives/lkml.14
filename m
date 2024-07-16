@@ -1,121 +1,177 @@
-Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B1218EA61
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEDA18EA61;
+	Tue, 16 Jul 2024 13:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721137894; cv=none; b=WdTnEe+YkQzAmeFyiLqXEQLa9EBFInXUFq5X0DpCqavX79NdzDyWIrn4F6dA4ka6U9L9m+YP2eYQ9Gk0mDax9fvb2sQA2KQwoCLC8UUPB5ow/+hjcAtU3fVJQR0mtumawdANEmzhyfc+XGDvCsmcisCptTWFGZwGuKpzqiqrRd8=
+	t=1721138159; cv=none; b=ENeXcggbGqPhgHMssVpRsf14GqoBKE072TzKm13JE+szrQ7+QPDADVHRjfb035Wf9Rz8TP9aXlh8yc/xx5d80fZkwO/aDVKScZT2rl0ZRxORw6TM0ezc8vH5mC3lPQdQQZ/yrjPrldFn8yveY8/397Igk0R2HDvvf+cq8TU4BGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721137894; c=relaxed/simple;
-	bh=wMHgw+W/JEbRZwGEkAbHUj1cJ4B2FOJKGkkGpmh+rzg=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ZIcMBEea7dA7XxINPzXsx22MsEMqZp74DLUcOMTDsskNoeFcWiL1GfrKi06ZSI9B7w8wmyApUxTbJKGnK4r/pQGlaXQClQSj8L6a9y2BPZYv6wnasO7WCP9kAVgA3FIWetEYxxNiV2amF84Gr18hOgvPtiECwf6XdbC+KwjnQLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=S9ch75Bo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TlwrLyaW; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1721138159; c=relaxed/simple;
+	bh=xNNjr4lm8MAmZlGktOKl7L+x7Gl35XoAczsi/B1pkfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OEyIuW0LhqU0FGYcw5Z8a3Ua3vRRdlkpIwjJf9xmpwY1f9jpb86C3Snh8Gz3kLsr6Eb2uj4/dYUVGkoJLmxK3zJwlq3TnsXcOpcOvruLnWCPuLftOEfsoltsw2z8/pEgH/aTRH/p2AI5YgPAJ9MIWlOvuYxo7i79+D25YYrFHEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=J/jcdynX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ESPYQUYi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=o5szPFj/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=n91yOSJf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="S9ch75Bo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TlwrLyaW"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 4FD771388D74;
-	Tue, 16 Jul 2024 09:51:31 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 16 Jul 2024 09:51:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1721137891; x=1721224291; bh=WGMGM96iT1
-	TLgR8LrcifU4YWPKUxd4MGL6xRGDGKqFY=; b=S9ch75Bo7AUUX75zfk3r+4LhLx
-	NY38zgRSPuLIyYGAuJMvA5rez5xgR3uPpiqYnD9G/B6E29sAYMLyvRcos14nZgkf
-	bn+Dc4H5BEC3AqKGbXE/937QCyfYF8rniEaI1fzdmBNWPKIKWKLYu8mPyGiUjFuT
-	mVN6STWySOyR15OMaL0D5gVYofa80I9uaLGnDrnFSLAFZtLHHuxNLrj75y4nw2P8
-	JfRi4VRjZYHGbZBI/Ivk8k52t8opHrVKqhkBKGeQgwRtBkSv5M4ntSFiahngAbG3
-	B3KPL2f6agfyAcipUKwO6iuE8zI5lL+fySq7zMPRUrkP2sxNov+a3PFHvT3g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1721137891; x=1721224291; bh=WGMGM96iT1TLgR8LrcifU4YWPKUx
-	d4MGL6xRGDGKqFY=; b=TlwrLyaWlX0scUhMG5ZWlJdLrerQhnqsDbogTDGGobRD
-	AHWO3MK3jl4bWV2+QEhdaHWQbLQl6OHaTQb/HLofuAr6qSyZDPMj3lWo1I2ZaFHd
-	SzZ/jOzfdmDPWDQrvvSuEAYvZmfjU3Y/sx3bYMkLhOYbbgTYPJlxlmOHy0HgQMl6
-	fK9agxjxPpUp/Fz95TDVv4GHcGuWugcV9IuN3HD1Lp8YMCAHvzd8gY7ZXwVwwALk
-	T3TrEy8kqQqkcsUvhDD8ATQIYmhyGVz2p42xEKxRjX96bDfsja/jiU+N164U3zrA
-	CTAI3gEYbFN4bt4myuioZG9y+mhFAoc0iiq70ubw1A==
-X-ME-Sender: <xms:4nqWZmLXd8LUCvkZZhMWM7E6DBsem5wAShpL97xCRSTfZs29IwAtzQ>
-    <xme:4nqWZuLc1kp6XKB8bBZ1nbSyCoR2cSb7s5SX9h4M7y1Zraodd9qGTw2KNEwn27jYj
-    Taumy2gucLm4C4j4Kc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdeikecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:4nqWZmtwp3uUhdkkOckQVm6G-VasvjTbkdtvHNfyY_rKbd5Xa6YTkQ>
-    <xmx:4nqWZrZr0sbniIDqDqdUrwD_JyUJToqj3iiTidnYUv3DE8li3KJOcQ>
-    <xmx:4nqWZtYkaRAtIQkz9Gg1Xn5qDX8BQ6vVRpeJH6nO3rGk04bKwGy7OQ>
-    <xmx:4nqWZnCPC36rM6qx4hf-6qN1GOPKjlwE2a9Xt7td8tpUdOsxNPXdJw>
-    <xmx:43qWZhFzbJ5CRfUV4zbrtgx7-Tsa7xktmx3xm7vHj3vyssHJx7fl2hkd>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 0F1D9B6008F; Tue, 16 Jul 2024 09:51:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="J/jcdynX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ESPYQUYi";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="o5szPFj/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="n91yOSJf"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E366F21BF3;
+	Tue, 16 Jul 2024 13:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721138156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/2rua72oWvlvPXyLKA5gEZ6ut0O6TNsdIr+5vhBSck=;
+	b=J/jcdynX7Fvusxe7vA5WwpyxaWef0ytoETFeNyK9+PlxytXGUp67qJzKQtfydbJ/gfOXz/
+	PNHrtIONKglLNDoQ+O9IoXdi3KsQnJ0TFPOPMJrwUPYFx5BNRMthKurBTi1yUvGD82UWNl
+	G0KmP5gq2r/MDbJ7ZOW4dXleMDBGCns=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721138156;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/2rua72oWvlvPXyLKA5gEZ6ut0O6TNsdIr+5vhBSck=;
+	b=ESPYQUYigxa6qhF87KBaETSRLfnx0lqiPt0H+Qz7y02720DrFlyZGV8nqd1t73rstAaO01
+	HsBJ6hic+SWfmbCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="o5szPFj/";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=n91yOSJf
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721138155; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/2rua72oWvlvPXyLKA5gEZ6ut0O6TNsdIr+5vhBSck=;
+	b=o5szPFj/Y1Wp98sda/XQfTMmKEJihFPJuduGpkrUGXyT3tHBfoDCdGrN3cqAhBkOVo/570
+	/1zMO/2ConFJDb72V2+QUyYfzIJ4oEnjxV+mW9NfN1gD3UGXAurMDh3u9BdAoid8FrSE+N
+	vWwUGVzxjDAF/yyq8WRl6MaNVK6sB0M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721138155;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/2rua72oWvlvPXyLKA5gEZ6ut0O6TNsdIr+5vhBSck=;
+	b=n91yOSJfaoUhEC+yVekRAIqXPgBptTM5wYr8sxkZ1lFej4Km9J4n0VpEez9D01k2b/Njvx
+	F/ApXG6tc9ANHjDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C60C613795;
+	Tue, 16 Jul 2024 13:55:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /wkEMOt7lmbycwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 16 Jul 2024 13:55:55 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 4E9E2A0987; Tue, 16 Jul 2024 15:55:55 +0200 (CEST)
+Date: Tue, 16 Jul 2024 15:55:55 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	bharata@amd.com
+Subject: Re: [PATCH] vfs: use RCU in ilookup
+Message-ID: <20240716135555.fywhj75tkw5ogujl@quack3>
+References: <20240715071324.265879-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <83ac6b91-c7f1-4b18-a522-8188d6d1298b@app.fastmail.com>
-In-Reply-To: <20240716132603.GA3136577@thelio-3990X>
-References: <20240711120115.4069401-1-vattunuru@marvell.com>
- <20240716132603.GA3136577@thelio-3990X>
-Date: Tue, 16 Jul 2024 15:51:08 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Nathan Chancellor" <nathan@kernel.org>,
- "Vamsi Attunuru" <vattunuru@marvell.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] misc: Kconfig: add a new dependency for MARVELL_CN10K_DPI
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240715071324.265879-1-mjguzik@gmail.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.01
+X-Spam-Level: 
+X-Rspamd-Queue-Id: E366F21BF3
 
-On Tue, Jul 16, 2024, at 15:26, Nathan Chancellor wrote:
-> On Thu, Jul 11, 2024 at 05:01:15AM -0700, Vamsi Attunuru wrote:
->> 
->
-> After this change, ARCH=arm allmodconfig fails with:
->
->   drivers/misc/mrvl_cn10k_dpi.c: In function 'dpi_reg_write':
->   drivers/misc/mrvl_cn10k_dpi.c:190:9: error: implicit declaration of 
-> function 'writeq'; did you mean 'writeb'? 
-> [-Wimplicit-function-declaration]
->     190 |         writeq(val, dpi->reg_base + offset);
->         |         ^~~~~~
->         |         writeb
->   drivers/misc/mrvl_cn10k_dpi.c: In function 'dpi_reg_read':
->   drivers/misc/mrvl_cn10k_dpi.c:195:16: error: implicit declaration of 
-> function 'readq'; did you mean 'readb'? 
-> [-Wimplicit-function-declaration]
->     195 |         return readq(dpi->reg_base + offset);
->         |                ^~~~~
->         |                readb
->
-> Including one of the io-64-nonatomic headers would resolve this but I am
-> not sure which one would be appropriate (or perhaps the dependency
-> should be tightened to requiring 64BIT, as some other drivers have
-> done).
+On Mon 15-07-24 09:13:24, Mateusz Guzik wrote:
+> A soft lockup in ilookup was reported when stress-testing a 512-way
+> system [1] (see [2] for full context) and it was verified that not
+> taking the lock shifts issues back to mm.
+> 
+> [1] https://lore.kernel.org/linux-mm/56865e57-c250-44da-9713-cf1404595bcc@amd.com/
+> [2] https://lore.kernel.org/linux-mm/d2841226-e27b-4d3d-a578-63587a3aa4f3@amd.com/
+> 
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-Right, a dependency on 64BIT makes sense here. The alternative is
-to include linux/io-64-nonatomic-hi-lo.h or linux/io-64-nonatomic-lo-hi.h
-in order to have a replacement readq/writeq implementation that
-works on 32-bit architectures. However, doing this requires
-understanding whether what the side-effects of accessing the
-64-bit registers are and whether they require writing the upper
-or lower half of the register last.
+Looks good to me. Feel free to add:
 
-     Arnd
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+> 
+> fwiw the originally sent patch to the reporter performs a lockless
+> lookup first and falls back to the locked variant, but that was me
+> playing overfly safe.
+> 
+> I would add tested-by but patches are not the same in the end.
+> 
+> This is the only spot which can get this fixup, everything else taking
+> the lock is also using custom callbacks, so filesystems invoking such
+> code will need to get patched up on case-by-case basis (but
+> realistically they probably already can do RCU-only operation).
+> 
+>  fs/inode.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index f356fe2ec2b6..52ca063c552c 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1525,9 +1525,7 @@ struct inode *ilookup(struct super_block *sb, unsigned long ino)
+>  	struct hlist_head *head = inode_hashtable + hash(sb, ino);
+>  	struct inode *inode;
+>  again:
+> -	spin_lock(&inode_hash_lock);
+> -	inode = find_inode_fast(sb, head, ino, true);
+> -	spin_unlock(&inode_hash_lock);
+> +	inode = find_inode_fast(sb, head, ino, false);
+>  
+>  	if (inode) {
+>  		if (IS_ERR(inode))
+> -- 
+> 2.43.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
