@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B141A072B;
-	Tue, 16 Jul 2024 15:04:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAC91A08D3;
+	Tue, 16 Jul 2024 15:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721142286; cv=none; b=YGWfQ9pE2HzDX6uJSXeXprrzEYkwpZFJC0WpKH5m8BmfYa265DI9GHe9XjT7wZvleDS+UWlaD/3B/dfwWMz/YjPaKTNGznHkXLPiUYKwADkp9bOUmS1zTL31+0SNL7kbavIfI/htQC+Pu5k3F2W9cxfCRAnOQmAjLf+42sTmX+4=
+	t=1721142290; cv=none; b=A79PolGmWzu/nS2qt6ZMzGEpiTs+0OOT9SdX6sMj6neDajLQ7iZW312eMVskm7ldaPLv5o4pYhGmp+WjGF9JrSf7dN7pEorinbOYsovKRQwuy0+b326iT9i7mAqaB+nzI/goxLI0mhEb5CjgVxF7OyR1pcbu43Ap/7ZoWuSeJ3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721142286; c=relaxed/simple;
-	bh=dhxKlIXY54qD4hnk7htXFQ0NKi5xYzav8A29e17sV34=;
+	s=arc-20240116; t=1721142290; c=relaxed/simple;
+	bh=w0gbKJ4MhXcrlAAUeGcrecmQy44G+ZTIWkCM3sRdiBA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H5EAmJLVOimbop8+5fW4Iw5youvAWBTfiOuZAC1kVQPUGMB9lboJvqqFjOvHlyNt0wF2lNEWOw5SgLnpbrVtRUNsqtn6mJhGzjNyOM9UBDqIRPxRckon0GgaHrCDh7t3nU1JlmAV2BL6tln7vJCund9W6y0HUajOC6+mF2a+Htc=
+	 MIME-Version:Content-Type; b=UaWWxOIgphaMMYRYOUxWcuHvPSsuNiPHvdEB7cMsZIQtICEw4ZMTRLNRo8XV+4eXkXzRZBBBgWJ4Bv/fayYs1SmZXCBwKT+3tkvPFoj2h5zO3+at2SCc9fTLx/b+IGlkJr7mQVPN/OKs/nQ6Ijrx6jXC2mht7KgKfpP122dp8w0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WNj4Y5T9Nz6JB2K;
-	Tue, 16 Jul 2024 23:03:25 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WNj4f0mv9z6JB50;
+	Tue, 16 Jul 2024 23:03:30 +0800 (CST)
 Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id 901A41400DB;
-	Tue, 16 Jul 2024 23:04:41 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E5A2A1400CF;
+	Tue, 16 Jul 2024 23:04:45 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.159.153) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 16 Jul 2024 16:04:39 +0100
+ 15.1.2507.39; Tue, 16 Jul 2024 16:04:44 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -43,9 +43,9 @@ CC: <bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
 	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [RFC PATCH v9 08/11] cxl/memscrub: Add CXL memory device ECS control feature
-Date: Tue, 16 Jul 2024 16:03:32 +0100
-Message-ID: <20240716150336.2042-9-shiju.jose@huawei.com>
+Subject: [RFC PATCH v9 10/11] ACPI:RAS2: Add ACPI RAS2 driver
+Date: Tue, 16 Jul 2024 16:03:34 +0100
+Message-ID: <20240716150336.2042-11-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20240716150336.2042-1-shiju.jose@huawei.com>
 References: <20240716150336.2042-1-shiju.jose@huawei.com>
@@ -62,485 +62,524 @@ X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-CXL spec 3.1 section 8.2.9.9.11.2 describes the DDR5 Error Check
-Scrub (ECS) control feature.
-The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-Specification (JESD79-5) and allows the DRAM to internally read, correct
-single-bit errors, and write back corrected data bits to the DRAM array
-while providing transparency to error counts.
+Add support for ACPI RAS2 feature table (RAS2) defined in the
+ACPI 6.5 Specification, section 5.2.21.
+Driver contains RAS2 Init, which extracts the RAS2 table and driver
+adds platform device for each memory features which binds to the
+RAS2 memory driver.
 
-The ECS control allows the requester to change the log entry type, the ECS
-threshold count provided that the request is within the definition
-specified in DDR5 mode registers, change mode between codeword mode and
-row count mode, and reset the ECS counter.
+Driver uses PCC mailbox to communicate with the ACPI HW and the
+driver adds OSPM interfaces to send RAS2 commands.
 
-Register with EDAC RAS control feature driver, which gets the ECS attr
-descriptors from the EDAC ECS and expose sysfs ECS control attributes
-to the userspace.
-For example ECS control for the memory media FRU 0 in CXL mem0 device is
-in /sys/bus/edac/devices/cxl_mem0/ecs_fru0/
-
-Note: The documentation can be added if necessary.
-
+Co-developed-by: A Somasundaram <somasundaram.a@hpe.com>
+Signed-off-by: A Somasundaram <somasundaram.a@hpe.com>
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/core/memscrub.c | 429 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 429 insertions(+)
+ drivers/acpi/Kconfig     |  10 +
+ drivers/acpi/Makefile    |   1 +
+ drivers/acpi/ras2.c      | 391 +++++++++++++++++++++++++++++++++++++++
+ include/acpi/ras2_acpi.h |  59 ++++++
+ 4 files changed, 461 insertions(+)
+ create mode 100755 drivers/acpi/ras2.c
+ create mode 100644 include/acpi/ras2_acpi.h
 
-diff --git a/drivers/cxl/core/memscrub.c b/drivers/cxl/core/memscrub.c
-index 430f85b01f6c..9be230ea989a 100644
---- a/drivers/cxl/core/memscrub.c
-+++ b/drivers/cxl/core/memscrub.c
-@@ -351,13 +351,411 @@ static const struct edac_scrub_ops cxl_ps_scrub_ops = {
- 	.cycle_in_hours_range = cxl_patrol_scrub_read_scrub_cycle_hrs_range,
- };
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index e3a7c2aedd5f..482080f1f0c5 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -284,6 +284,16 @@ config ACPI_CPPC_LIB
+ 	  If your platform does not support CPPC in firmware,
+ 	  leave this option disabled.
  
-+/* CXL DDR5 ECS control definitions */
-+#define CXL_MEMDEV_ECS_GET_FEAT_VERSION	0x01
-+#define CXL_MEMDEV_ECS_SET_FEAT_VERSION	0x01
++config ACPI_RAS2
++	bool "ACPI RAS2 driver"
++	select MAILBOX
++	select PCC
++	help
++	  The driver adds support for ACPI RAS2 feature table(extracts RAS2
++	  table from OS system table) and OSPM interfaces to send RAS2
++	  commands via PCC mailbox subspace. Driver adds platform device for
++	  the RAS2 memory features which binds to the RAS2 memory driver.
 +
-+static const uuid_t cxl_ecs_uuid =
-+	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,     \
-+		  0x89, 0x33, 0x86);
+ config ACPI_PROCESSOR
+ 	tristate "Processor"
+ 	depends on X86 || ARM64 || LOONGARCH || RISCV
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 39ea5cfa8326..4d62633ee4c2 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -99,6 +99,7 @@ obj-$(CONFIG_ACPI_EC_DEBUGFS)	+= ec_sys.o
+ obj-$(CONFIG_ACPI_BGRT)		+= bgrt.o
+ obj-$(CONFIG_ACPI_CPPC_LIB)	+= cppc_acpi.o
+ obj-$(CONFIG_ACPI_SPCR_TABLE)	+= spcr.o
++obj-$(CONFIG_ACPI_RAS2)		+= ras2.o
+ obj-$(CONFIG_ACPI_DEBUGGER_USER) += acpi_dbg.o
+ obj-$(CONFIG_ACPI_PPTT) 	+= pptt.o
+ obj-$(CONFIG_ACPI_PFRUT)	+= pfr_update.o pfr_telemetry.o
+diff --git a/drivers/acpi/ras2.c b/drivers/acpi/ras2.c
+new file mode 100755
+index 000000000000..07fe8ac02d25
+--- /dev/null
++++ b/drivers/acpi/ras2.c
+@@ -0,0 +1,391 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Implementation of ACPI RAS2 driver.
++ *
++ * Copyright (c) 2024 HiSilicon Limited.
++ *
++ * Support for RAS2 - ACPI 6.5 Specification, section 5.2.21
++ *
++ * Driver contains ACPI RAS2 init, which extracts the ACPI RAS2 table and
++ * get the PCC channel subspace for communicating with the ACPI compliant
++ * HW platform which supports ACPI RAS2. Driver adds platform devices
++ * for each RAS2 memory feature which binds to the memory ACPI RAS2 driver.
++ */
 +
-+struct cxl_ecs_context {
-+	u16 num_media_frus;
-+	u16 get_feat_size;
-+	u16 set_feat_size;
-+	struct cxl_memdev *cxlmd;
-+};
++#define pr_fmt(fmt)    "ACPI RAS2: " fmt
++
++#include <linux/delay.h>
++#include <linux/export.h>
++#include <linux/ktime.h>
++#include <linux/platform_device.h>
++#include <acpi/pcc.h>
++#include <acpi/ras2_acpi.h>
++
++/*
++ * Arbitrary Retries for PCC commands because the
++ * remote processor could be much slower to reply.
++ */
++#define RAS2_NUM_RETRIES 600
++
++#define RAS2_FEATURE_TYPE_MEMORY        0x00
++
++/* global variables for the RAS2 PCC subspaces */
++static DEFINE_MUTEX(ras2_pcc_subspace_lock);
++static LIST_HEAD(ras2_pcc_subspaces);
++
++static int ras2_report_cap_error(u32 cap_status)
++{
++	switch (cap_status) {
++	case ACPI_RAS2_NOT_VALID:
++	case ACPI_RAS2_NOT_SUPPORTED:
++		return -EPERM;
++	case ACPI_RAS2_BUSY:
++		return -EBUSY;
++	case ACPI_RAS2_FAILED:
++	case ACPI_RAS2_ABORTED:
++	case ACPI_RAS2_INVALID_DATA:
++		return -EINVAL;
++	default: /* 0 or other, Success */
++		return 0;
++	}
++}
++
++static int ras2_check_pcc_chan(struct ras2_pcc_subspace *pcc_subspace)
++{
++	struct acpi_ras2_shared_memory __iomem *generic_comm_base = pcc_subspace->pcc_comm_addr;
++	ktime_t next_deadline = ktime_add(ktime_get(), pcc_subspace->deadline);
++	u32 cap_status;
++	u16 status;
++	u32 ret;
++
++	while (!ktime_after(ktime_get(), next_deadline)) {
++		/*
++		 * As per ACPI spec, the PCC space will be initialized by
++		 * platform and should have set the command completion bit when
++		 * PCC can be used by OSPM
++		 */
++		status = readw_relaxed(&generic_comm_base->status);
++		if (status & RAS2_PCC_CMD_ERROR) {
++			cap_status = readw_relaxed(&generic_comm_base->set_capabilities_status);
++			ret = ras2_report_cap_error(cap_status);
++
++			status &= ~RAS2_PCC_CMD_ERROR;
++			writew_relaxed(status, &generic_comm_base->status);
++			return ret;
++		}
++		if (status & RAS2_PCC_CMD_COMPLETE)
++			return 0;
++		/*
++		 * Reducing the bus traffic in case this loop takes longer than
++		 * a few retries.
++		 */
++		msleep(10);
++	}
++
++	return -EIO;
++}
 +
 +/**
-+ * struct cxl_ecs_params - CXL memory DDR5 ECS parameter data structure.
-+ * @log_entry_type: ECS log entry type, per DRAM or per memory media FRU.
-+ * @threshold: ECS threshold count per GB of memory cells.
-+ * @mode:	codeword/row count mode
-+ *		0 : ECS counts rows with errors
-+ *		1 : ECS counts codeword with errors
-+ * @reset_counter: [IN] reset ECC counter to default value.
++ * ras2_send_pcc_cmd() - Send RAS2 command via PCC channel
++ * @ras2_ctx:	pointer to the ras2 context structure
++ * @cmd:	command to send
++ *
++ * Returns: 0 on success, an error otherwise
 + */
-+struct cxl_ecs_params {
-+	u8 log_entry_type;
-+	u16 threshold;
-+	u8 mode;
-+	bool reset_counter;
-+};
-+
-+enum {
-+	CXL_ECS_PARAM_LOG_ENTRY_TYPE,
-+	CXL_ECS_PARAM_THRESHOLD,
-+	CXL_ECS_PARAM_MODE,
-+	CXL_ECS_PARAM_RESET_COUNTER,
-+};
-+
-+#define	CXL_ECS_LOG_ENTRY_TYPE_MASK	GENMASK(1, 0)
-+#define	CXL_ECS_REALTIME_REPORT_CAP_MASK	BIT(0)
-+#define	CXL_ECS_THRESHOLD_COUNT_MASK	GENMASK(2, 0)
-+#define	CXL_ECS_MODE_MASK	BIT(3)
-+#define	CXL_ECS_RESET_COUNTER_MASK	BIT(4)
-+
-+static const u16 ecs_supp_threshold[] = { 0, 0, 0, 256, 1024, 4096 };
-+
-+enum {
-+	ECS_LOG_ENTRY_TYPE_DRAM = 0x0,
-+	ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU = 0x1,
-+};
-+
-+enum {
-+	ECS_THRESHOLD_256 = 3,
-+	ECS_THRESHOLD_1024 = 4,
-+	ECS_THRESHOLD_4096 = 5,
-+};
-+
-+enum {
-+	ECS_MODE_COUNTS_ROWS = 0,
-+	ECS_MODE_COUNTS_CODEWORDS = 1,
-+};
-+
-+struct cxl_ecs_rd_attrs {
-+	u8 ecs_log_cap;
-+	u8 ecs_cap;
-+	__le16 ecs_config;
-+	u8 ecs_flags;
-+}  __packed;
-+
-+struct cxl_ecs_wr_attrs {
-+	u8 ecs_log_cap;
-+	__le16 ecs_config;
-+}  __packed;
-+
-+/* CXL DDR5 ECS control functions */
-+static int cxl_mem_ecs_get_attrs(struct device *dev, void *drv_data, int fru_id,
-+				 struct cxl_ecs_params *params)
++int ras2_send_pcc_cmd(struct ras2_scrub_ctx *ras2_ctx, u16 cmd)
 +{
-+	struct cxl_ecs_context *cxl_ecs_ctx = drv_data;
-+	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	size_t rd_data_size;
-+	u8 threshold_index;
-+	size_t data_size;
++	struct ras2_pcc_subspace *pcc_subspace = ras2_ctx->pcc_subspace;
++	struct acpi_ras2_shared_memory *generic_comm_base = pcc_subspace->pcc_comm_addr;
++	static ktime_t last_cmd_cmpl_time, last_mpar_reset;
++	struct mbox_chan *pcc_channel;
++	unsigned int time_delta;
++	static int mpar_count;
++	int ret;
 +
-+	rd_data_size = cxl_ecs_ctx->get_feat_size;
++	guard(mutex)(&ras2_pcc_subspace_lock);
++	ret = ras2_check_pcc_chan(pcc_subspace);
++	if (ret < 0)
++		return ret;
++	pcc_channel = pcc_subspace->pcc_chan->mchan;
 +
-+	struct cxl_ecs_rd_attrs *rd_attrs __free(kfree) =
-+					kmalloc(rd_data_size, GFP_KERNEL);
-+	if (!rd_attrs)
++	/*
++	 * Handle the Minimum Request Turnaround Time(MRTT)
++	 * "The minimum amount of time that OSPM must wait after the completion
++	 * of a command before issuing the next command, in microseconds"
++	 */
++	if (pcc_subspace->pcc_mrtt) {
++		time_delta = ktime_us_delta(ktime_get(), last_cmd_cmpl_time);
++		if (pcc_subspace->pcc_mrtt > time_delta)
++			udelay(pcc_subspace->pcc_mrtt - time_delta);
++	}
++
++	/*
++	 * Handle the non-zero Maximum Periodic Access Rate(MPAR)
++	 * "The maximum number of periodic requests that the subspace channel can
++	 * support, reported in commands per minute. 0 indicates no limitation."
++	 *
++	 * This parameter should be ideally zero or large enough so that it can
++	 * handle maximum number of requests that all the cores in the system can
++	 * collectively generate. If it is not, we will follow the spec and just
++	 * not send the request to the platform after hitting the MPAR limit in
++	 * any 60s window
++	 */
++	if (pcc_subspace->pcc_mpar) {
++		if (mpar_count == 0) {
++			time_delta = ktime_ms_delta(ktime_get(), last_mpar_reset);
++			if (time_delta < 60 * MSEC_PER_SEC) {
++				dev_dbg(ras2_ctx->dev,
++					"PCC cmd not sent due to MPAR limit");
++				return -EIO;
++			}
++			last_mpar_reset = ktime_get();
++			mpar_count = pcc_subspace->pcc_mpar;
++		}
++		mpar_count--;
++	}
++
++	/* Write to the shared comm region. */
++	writew_relaxed(cmd, &generic_comm_base->command);
++
++	/* Flip CMD COMPLETE bit */
++	writew_relaxed(0, &generic_comm_base->status);
++
++	/* Ring doorbell */
++	ret = mbox_send_message(pcc_channel, &cmd);
++	if (ret < 0) {
++		dev_err(ras2_ctx->dev,
++			"Err sending PCC mbox message. cmd:%d, ret:%d\n",
++			cmd, ret);
++		return ret;
++	}
++
++	/*
++	 * If Minimum Request Turnaround Time is non-zero, we need
++	 * to record the completion time of both READ and WRITE
++	 * command for proper handling of MRTT, so we need to check
++	 * for pcc_mrtt in addition to CMD_READ
++	 */
++	if (cmd == RAS2_PCC_CMD_EXEC || pcc_subspace->pcc_mrtt) {
++		ret = ras2_check_pcc_chan(pcc_subspace);
++		if (pcc_subspace->pcc_mrtt)
++			last_cmd_cmpl_time = ktime_get();
++	}
++
++	if (pcc_channel->mbox->txdone_irq)
++		mbox_chan_txdone(pcc_channel, ret);
++	else
++		mbox_client_txdone(pcc_channel, ret);
++
++	return ret >= 0 ? 0 : ret;
++}
++EXPORT_SYMBOL_GPL(ras2_send_pcc_cmd);
++
++static int ras2_register_pcc_channel(struct device *dev, struct ras2_scrub_ctx *ras2_ctx,
++				     int pcc_subspace_id)
++{
++	struct acpi_pcct_hw_reduced *ras2_ss;
++	struct mbox_client *ras2_mbox_cl;
++	struct pcc_mbox_chan *pcc_chan;
++	struct ras2_pcc_subspace *pcc_subspace;
++
++	if (pcc_subspace_id < 0)
++		return -EINVAL;
++
++	mutex_lock(&ras2_pcc_subspace_lock);
++	list_for_each_entry(pcc_subspace, &ras2_pcc_subspaces, elem) {
++		if (pcc_subspace->pcc_subspace_id == pcc_subspace_id) {
++			ras2_ctx->pcc_subspace = pcc_subspace;
++			pcc_subspace->ref_count++;
++			mutex_unlock(&ras2_pcc_subspace_lock);
++			return 0;
++		}
++	}
++	mutex_unlock(&ras2_pcc_subspace_lock);
++
++	pcc_subspace = kcalloc(1, sizeof(*pcc_subspace), GFP_KERNEL);
++	if (!pcc_subspace)
 +		return -ENOMEM;
++	pcc_subspace->pcc_subspace_id = pcc_subspace_id;
++	ras2_mbox_cl = &pcc_subspace->mbox_client;
++	ras2_mbox_cl->dev = dev;
++	ras2_mbox_cl->knows_txdone = true;
 +
-+	params->log_entry_type = 0;
-+	params->threshold = 0;
-+	params->mode = 0;
-+	data_size = cxl_get_feature(mds, cxl_ecs_uuid, rd_attrs,
-+				    rd_data_size, CXL_GET_FEAT_SEL_CURRENT_VALUE);
-+	if (!data_size)
-+		return -EIO;
++	pcc_chan = pcc_mbox_request_channel(ras2_mbox_cl, pcc_subspace_id);
++	if (IS_ERR(pcc_chan)) {
++		kfree(pcc_subspace);
++		return PTR_ERR(pcc_chan);
++	}
++	pcc_subspace->pcc_chan = pcc_chan;
++	ras2_ss = pcc_chan->mchan->con_priv;
++	pcc_subspace->comm_base_addr = ras2_ss->base_address;
 +
-+	params->log_entry_type = FIELD_GET(CXL_ECS_LOG_ENTRY_TYPE_MASK,
-+					   rd_attrs[fru_id].ecs_log_cap);
-+	threshold_index = FIELD_GET(CXL_ECS_THRESHOLD_COUNT_MASK,
-+				    rd_attrs[fru_id].ecs_config);
-+	params->threshold = ecs_supp_threshold[threshold_index];
-+	params->mode = FIELD_GET(CXL_ECS_MODE_MASK,
-+				 rd_attrs[fru_id].ecs_config);
++	/*
++	 * ras2_ss->latency is just a Nominal value. In reality
++	 * the remote processor could be much slower to reply.
++	 * So add an arbitrary amount of wait on top of Nominal.
++	 */
++	pcc_subspace->deadline = ns_to_ktime(RAS2_NUM_RETRIES * ras2_ss->latency *
++					     NSEC_PER_USEC);
++	pcc_subspace->pcc_mrtt = ras2_ss->min_turnaround_time;
++	pcc_subspace->pcc_mpar = ras2_ss->max_access_rate;
++	pcc_subspace->pcc_comm_addr = acpi_os_ioremap(pcc_subspace->comm_base_addr,
++						      ras2_ss->length);
++	/* Set flag so that we dont come here for each CPU. */
++	pcc_subspace->pcc_channel_acquired = true;
++
++	mutex_lock(&ras2_pcc_subspace_lock);
++	list_add(&pcc_subspace->elem, &ras2_pcc_subspaces);
++	pcc_subspace->ref_count++;
++	mutex_unlock(&ras2_pcc_subspace_lock);
++	ras2_ctx->pcc_subspace = pcc_subspace;
++
 +	return 0;
 +}
 +
-+static int cxl_mem_ecs_set_attrs(struct device *dev, void *drv_data, int fru_id,
-+				 struct cxl_ecs_params *params, u8 param_type)
++static void ras2_unregister_pcc_channel(void *ctx)
 +{
-+	struct cxl_ecs_context *cxl_ecs_ctx = drv_data;
-+	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	size_t rd_data_size, wr_data_size;
-+	u16 num_media_frus, count;
-+	size_t data_size;
++	struct ras2_scrub_ctx *ras2_ctx = ctx;
++	struct ras2_pcc_subspace *pcc_subspace = ras2_ctx->pcc_subspace;
++
++	if (!pcc_subspace  || !pcc_subspace->pcc_chan)
++		return;
++
++	guard(mutex)(&ras2_pcc_subspace_lock);
++	if (pcc_subspace->ref_count > 0)
++		pcc_subspace->ref_count--;
++	if (!pcc_subspace->ref_count) {
++		list_del(&pcc_subspace->elem);
++		pcc_mbox_free_channel(pcc_subspace->pcc_chan);
++		kfree(pcc_subspace);
++	}
++}
++
++/**
++ * devm_ras2_register_pcc_channel() - Register RAS2 PCC channel
++ * @dev:		pointer to the ras2 device
++ * @ras2_ctx:		pointer to the ras2 context structure
++ * @pcc_subspace_id:	identifier of the RAS2 PCC channel.
++ *
++ * Returns: 0 on success, an error otherwise
++ */
++int devm_ras2_register_pcc_channel(struct device *dev, struct ras2_scrub_ctx *ras2_ctx,
++				   int pcc_subspace_id)
++{
 +	int ret;
 +
-+	num_media_frus = cxl_ecs_ctx->num_media_frus;
-+	rd_data_size = cxl_ecs_ctx->get_feat_size;
-+	wr_data_size = cxl_ecs_ctx->set_feat_size;
-+	struct cxl_ecs_rd_attrs *rd_attrs __free(kfree) =
-+				kmalloc(rd_data_size, GFP_KERNEL);
-+	if (!rd_attrs)
-+		return -ENOMEM;
++	ret = ras2_register_pcc_channel(dev, ras2_ctx, pcc_subspace_id);
++	if (ret)
++		return ret;
 +
-+	data_size = cxl_get_feature(mds, cxl_ecs_uuid, rd_attrs,
-+				    rd_data_size, CXL_GET_FEAT_SEL_CURRENT_VALUE);
-+	if (!data_size)
-+		return -EIO;
-+	struct cxl_ecs_wr_attrs *wr_attrs __free(kfree) =
-+					kmalloc(wr_data_size, GFP_KERNEL);
-+	if (!wr_attrs)
-+		return -ENOMEM;
++	return devm_add_action_or_reset(dev, ras2_unregister_pcc_channel, ras2_ctx);
++}
++EXPORT_SYMBOL_NS_GPL(devm_ras2_register_pcc_channel, ACPI_RAS2);
 +
-+	/* Fill writable attributes from the current attributes read for all the media FRUs */
-+	for (count = 0; count < num_media_frus; count++) {
-+		wr_attrs[count].ecs_log_cap = rd_attrs[count].ecs_log_cap;
-+		wr_attrs[count].ecs_config = rd_attrs[count].ecs_config;
-+	}
++static struct platform_device *ras2_add_platform_device(char *name, int channel)
++{
++	int ret;
++	struct platform_device *pdev __free(platform_device_put) =
++		platform_device_alloc(name, PLATFORM_DEVID_AUTO);
++	if (!pdev)
++		return ERR_PTR(-ENOMEM);
 +
-+	/* Fill attribute to be set for the media FRU */
-+	switch (param_type) {
-+	case CXL_ECS_PARAM_LOG_ENTRY_TYPE:
-+		if (params->log_entry_type != ECS_LOG_ENTRY_TYPE_DRAM &&
-+		    params->log_entry_type != ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU) {
-+			dev_err(dev,
-+				"Invalid CXL ECS scrub log entry type(%d) to set\n",
-+			       params->log_entry_type);
-+			dev_err(dev,
-+				"Log Entry Type 0: per DRAM  1: per Memory Media FRU\n");
-+			return -EINVAL;
-+		}
-+		wr_attrs[fru_id].ecs_log_cap = FIELD_PREP(CXL_ECS_LOG_ENTRY_TYPE_MASK,
-+							  params->log_entry_type);
-+		break;
-+	case CXL_ECS_PARAM_THRESHOLD:
-+		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_THRESHOLD_COUNT_MASK;
-+		switch (params->threshold) {
-+		case 256:
-+			wr_attrs[fru_id].ecs_config |= FIELD_PREP(
-+					CXL_ECS_THRESHOLD_COUNT_MASK,
-+						ECS_THRESHOLD_256);
-+			break;
-+		case 1024:
-+			wr_attrs[fru_id].ecs_config |= FIELD_PREP(
-+						CXL_ECS_THRESHOLD_COUNT_MASK,
-+						ECS_THRESHOLD_1024);
-+			break;
-+		case 4096:
-+			wr_attrs[fru_id].ecs_config |= FIELD_PREP(
-+						CXL_ECS_THRESHOLD_COUNT_MASK,
-+						ECS_THRESHOLD_4096);
-+			break;
-+		default:
-+			dev_err(dev,
-+				"Invalid CXL ECS scrub threshold count(%d) to set\n",
-+				params->threshold);
-+			dev_err(dev,
-+				"Supported scrub threshold count: 256,1024,4096\n");
-+			return -EINVAL;
-+		}
-+		break;
-+	case CXL_ECS_PARAM_MODE:
-+		if (params->mode != ECS_MODE_COUNTS_ROWS &&
-+		    params->mode != ECS_MODE_COUNTS_CODEWORDS) {
-+			dev_err(dev,
-+				"Invalid CXL ECS scrub mode(%d) to set\n",
-+				params->mode);
-+			dev_err(dev,
-+				"Mode 0: ECS counts rows with errors"
-+				" 1: ECS counts codewords with errors\n");
-+			return -EINVAL;
-+		}
-+		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_MODE_MASK;
-+		wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_MODE_MASK,
-+							  params->mode);
-+		break;
-+	case CXL_ECS_PARAM_RESET_COUNTER:
-+		wr_attrs[fru_id].ecs_config &= ~CXL_ECS_RESET_COUNTER_MASK;
-+		wr_attrs[fru_id].ecs_config |= FIELD_PREP(CXL_ECS_RESET_COUNTER_MASK,
-+							  params->reset_counter);
-+		break;
-+	default:
-+		dev_err(dev, "Invalid CXL ECS parameter to set\n");
++	ret = platform_device_add_data(pdev, &channel, sizeof(channel));
++	if (ret)
++		return ERR_PTR(ret);
++
++	ret = platform_device_add(pdev);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return_ptr(pdev);
++}
++
++static int __init ras2_acpi_init(void)
++{
++	struct acpi_table_header *pAcpiTable = NULL;
++	struct acpi_ras2_pcc_desc *pcc_desc_list;
++	struct acpi_table_ras2 *pRas2Table;
++	struct platform_device *pdev;
++	int pcc_subspace_id;
++	acpi_size ras2_size;
++	acpi_status status;
++	u8 count = 0, i;
++	int ret;
++
++	status = acpi_get_table("RAS2", 0, &pAcpiTable);
++	if (ACPI_FAILURE(status) || !pAcpiTable) {
++		pr_err("ACPI RAS2 driver failed to initialize, get table failed\n");
 +		return -EINVAL;
 +	}
 +
-+	ret = cxl_set_feature(mds, cxl_ecs_uuid, CXL_MEMDEV_ECS_SET_FEAT_VERSION,
-+			      wr_attrs, wr_data_size,
-+			      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET);
-+	if (ret) {
-+		dev_err(dev, "CXL ECS set feature failed ret=%d\n", ret);
-+		return ret;
++	ras2_size = pAcpiTable->length;
++	if (ras2_size < sizeof(struct acpi_table_ras2)) {
++		pr_err("ACPI RAS2 table present but broken (too short #1)\n");
++		ret = -EINVAL;
++		goto free_ras2_table;
 +	}
 +
++	pRas2Table = (struct acpi_table_ras2 *)pAcpiTable;
++	if (pRas2Table->num_pcc_descs <= 0) {
++		pr_err("ACPI RAS2 table does not contain PCC descriptors\n");
++		ret = -EINVAL;
++		goto free_ras2_table;
++	}
++
++	struct platform_device **pdev_list __free(kfree) =
++			kcalloc(pRas2Table->num_pcc_descs, sizeof(*pdev_list),
++				GFP_KERNEL);
++	if (!pdev_list) {
++		ret = -ENOMEM;
++		goto free_ras2_table;
++	}
++
++	pcc_desc_list = (struct acpi_ras2_pcc_desc *)(pRas2Table + 1);
++	/* Double scan for the case of only one actual controller */
++	pcc_subspace_id = -1;
++	count = 0;
++	for (i = 0; i < pRas2Table->num_pcc_descs; i++, pcc_desc_list++) {
++		if (pcc_desc_list->feature_type != RAS2_FEATURE_TYPE_MEMORY)
++			continue;
++		if (pcc_subspace_id == -1) {
++			pcc_subspace_id = pcc_desc_list->channel_id;
++			count++;
++		}
++		if (pcc_desc_list->channel_id != pcc_subspace_id)
++			count++;
++	}
++	if (count == 1) {
++		pdev = ras2_add_platform_device("acpi_ras2", pcc_subspace_id);
++		if (!pdev) {
++			ret = -ENODEV;
++			goto free_ras2_pdev;
++		}
++		pdev_list[0] = pdev;
++		return 0;
++	}
++
++	count = 0;
++	for (i = 0; i < pRas2Table->num_pcc_descs; i++, pcc_desc_list++) {
++		if (pcc_desc_list->feature_type != RAS2_FEATURE_TYPE_MEMORY)
++			continue;
++		pcc_subspace_id = pcc_desc_list->channel_id;
++		/* Add the platform device and bind ACPI RAS2 memory driver */
++		pdev = ras2_add_platform_device("acpi_ras2", pcc_subspace_id);
++		if (!pdev)
++			goto free_ras2_pdev;
++		pdev_list[count++] = pdev;
++	}
++
++	acpi_put_table(pAcpiTable);
 +	return 0;
++
++free_ras2_pdev:
++	for (i = count; i >= 0; i++)
++		platform_device_put(pdev_list[i]);
++
++free_ras2_table:
++	acpi_put_table(pAcpiTable);
++
++	return ret;
 +}
++late_initcall(ras2_acpi_init)
+diff --git a/include/acpi/ras2_acpi.h b/include/acpi/ras2_acpi.h
+new file mode 100644
+index 000000000000..cb99201f12d2
+--- /dev/null
++++ b/include/acpi/ras2_acpi.h
+@@ -0,0 +1,59 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * RAS2 ACPI driver header file
++ *
++ * (C) Copyright 2014, 2015 Hewlett-Packard Enterprises
++ *
++ * Copyright (c) 2024 HiSilicon Limited
++ */
 +
-+static int cxl_ecs_get_log_entry_type(struct device *dev, void *drv_data, int fru_id, u64 *val)
-+{
-+	struct cxl_ecs_params params;
-+	int ret;
++#ifndef _RAS2_ACPI_H
++#define _RAS2_ACPI_H
 +
-+	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-+	if (ret)
-+		return ret;
++#include <linux/acpi.h>
++#include <linux/mailbox_client.h>
++#include <linux/mutex.h>
++#include <linux/types.h>
 +
-+	*val = params.log_entry_type;
++#define RAS2_PCC_CMD_COMPLETE	BIT(0)
++#define RAS2_PCC_CMD_ERROR	BIT(2)
 +
-+	return 0;
-+}
++/* RAS2 specific PCC commands */
++#define RAS2_PCC_CMD_EXEC 0x01
 +
-+static int cxl_ecs_set_log_entry_type(struct device *dev, void *drv_data, int fru_id, u64 val)
-+{
-+	struct cxl_ecs_params params = {
-+		.log_entry_type = val,
-+	};
++struct device;
 +
-+	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_LOG_ENTRY_TYPE);
-+}
++/* Data structures for PCC communication and RAS2 table */
++struct pcc_mbox_chan;
 +
-+static int cxl_ecs_get_log_entry_type_per_dram(struct device *dev, void *drv_data,
-+					       int fru_id, u64 *val)
-+{
-+	struct cxl_ecs_params params;
-+	int ret;
-+
-+	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-+	if (ret)
-+		return ret;
-+
-+	if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_DRAM)
-+		*val = 1;
-+	else
-+		*val = 0;
-+
-+	return 0;
-+}
-+
-+static int cxl_ecs_get_log_entry_type_per_memory_media(struct device *dev, void *drv_data,
-+						       int fru_id, u64 *val)
-+{
-+	struct cxl_ecs_params params;
-+	int ret;
-+
-+	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-+	if (ret)
-+		return ret;
-+
-+	if (params.log_entry_type == ECS_LOG_ENTRY_TYPE_MEM_MEDIA_FRU)
-+		*val = 1;
-+	else
-+		*val = 0;
-+
-+	return 0;
-+}
-+
-+static int cxl_ecs_get_mode(struct device *dev, void *drv_data, int fru_id, u64 *val)
-+{
-+	struct cxl_ecs_params params;
-+	int ret;
-+
-+	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-+	if (ret)
-+		return ret;
-+
-+	*val = params.mode;
-+
-+	return 0;
-+}
-+
-+static int cxl_ecs_set_mode(struct device *dev, void *drv_data, int fru_id, u64 val)
-+{
-+	struct cxl_ecs_params params = {
-+		.mode = val,
-+	};
-+
-+	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_MODE);
-+}
-+
-+static int cxl_ecs_get_mode_counts_rows(struct device *dev, void *drv_data, int fru_id, u64 *val)
-+{
-+	struct cxl_ecs_params params;
-+	int ret;
-+
-+	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-+	if (ret)
-+		return ret;
-+
-+	if (params.mode == ECS_MODE_COUNTS_ROWS)
-+		*val = 1;
-+	else
-+		*val = 0;
-+
-+	return 0;
-+}
-+
-+static int cxl_ecs_get_mode_counts_codewords(struct device *dev, void *drv_data,
-+					     int fru_id, u64 *val)
-+{
-+	struct cxl_ecs_params params;
-+	int ret;
-+
-+	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-+	if (ret)
-+		return ret;
-+
-+	if (params.mode == ECS_MODE_COUNTS_CODEWORDS)
-+		*val = 1;
-+	else
-+		*val = 0;
-+
-+	return 0;
-+}
-+
-+static int cxl_ecs_reset(struct device *dev, void *drv_data, int fru_id, u64 val)
-+{
-+	struct cxl_ecs_params params = {
-+		.reset_counter = val,
-+	};
-+
-+	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_RESET_COUNTER);
-+}
-+
-+static int cxl_ecs_get_threshold(struct device *dev, void *drv_data, int fru_id, u64 *val)
-+{
-+	struct cxl_ecs_params params;
-+	int ret;
-+
-+	ret = cxl_mem_ecs_get_attrs(dev, drv_data, fru_id, &params);
-+	if (ret)
-+		return ret;
-+
-+	*val = params.threshold;
-+
-+	return 0;
-+}
-+
-+static int cxl_ecs_set_threshold(struct device *dev, void *drv_data, int fru_id, u64 val)
-+{
-+	struct cxl_ecs_params params = {
-+		.threshold = val,
-+	};
-+
-+	return cxl_mem_ecs_set_attrs(dev, drv_data, fru_id, &params, CXL_ECS_PARAM_THRESHOLD);
-+}
-+
-+static int cxl_ecs_get_name(struct device *dev, void *drv_data, int fru_id, char *name)
-+{
-+	struct cxl_ecs_context *cxl_ecs_ctx = drv_data;
-+	struct cxl_memdev *cxlmd = cxl_ecs_ctx->cxlmd;
-+
-+	return sysfs_emit(name, "cxl_%s_ecs_fru%d\n", dev_name(&cxlmd->dev), fru_id);
-+}
-+
-+static const struct edac_ecs_ops cxl_ecs_ops = {
-+	.get_log_entry_type = cxl_ecs_get_log_entry_type,
-+	.set_log_entry_type = cxl_ecs_set_log_entry_type,
-+	.get_log_entry_type_per_dram = cxl_ecs_get_log_entry_type_per_dram,
-+	.get_log_entry_type_per_memory_media = cxl_ecs_get_log_entry_type_per_memory_media,
-+	.get_mode = cxl_ecs_get_mode,
-+	.set_mode = cxl_ecs_set_mode,
-+	.get_mode_counts_codewords = cxl_ecs_get_mode_counts_codewords,
-+	.get_mode_counts_rows = cxl_ecs_get_mode_counts_rows,
-+	.reset = cxl_ecs_reset,
-+	.get_threshold = cxl_ecs_get_threshold,
-+	.set_threshold = cxl_ecs_set_threshold,
-+	.get_name = cxl_ecs_get_name,
++struct ras2_pcc_subspace {
++	int pcc_subspace_id;
++	struct mbox_client mbox_client;
++	struct pcc_mbox_chan *pcc_chan;
++	struct acpi_ras2_shared_memory __iomem *pcc_comm_addr;
++	u64 comm_base_addr;
++	bool pcc_channel_acquired;
++	ktime_t deadline;
++	unsigned int pcc_mpar;
++	unsigned int pcc_mrtt;
++	struct list_head elem;
++	u16 ref_count;
 +};
 +
- int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
- {
- 	struct edac_ras_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
- 	struct cxl_patrol_scrub_context *cxl_ps_ctx;
- 	struct cxl_mbox_supp_feat_entry feat_entry;
- 	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
-+	struct cxl_ecs_context *cxl_ecs_ctx;
- 	int rc, i, num_ras_features = 0;
-+	int num_media_frus;
- 
- 	if (cxlr) {
- 		struct cxl_region_params *p = &cxlr->params;
-@@ -407,6 +805,37 @@ int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
- 	ras_features[num_ras_features].scrub_ctx = cxl_ps_ctx;
- 	num_ras_features++;
- 
-+	if (!cxlr) {
-+		rc = cxl_mem_get_supported_feature_entry(cxlmd, &cxl_ecs_uuid, &feat_entry);
-+		if (rc < 0)
-+			goto feat_register;
++struct ras2_scrub_ctx {
++	struct device *dev;
++	struct ras2_pcc_subspace *pcc_subspace;
++	int id;
++	struct device *scrub_dev;
++	bool bg;
++	u64 base, size;
++	u8 schrs, schrs_min, schrs_max; /* schrs - scrub cycle in hours */
++	/* Lock to provide mutually exclusive access to PCC channel */
++	struct mutex lock;
++};
 +
-+		if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
-+			goto feat_register;
-+		num_media_frus = feat_entry.get_size/
-+					sizeof(struct cxl_ecs_rd_attrs);
-+		if (!num_media_frus)
-+			goto feat_register;
++int ras2_send_pcc_cmd(struct ras2_scrub_ctx *ras2_ctx, u16 cmd);
++int devm_ras2_register_pcc_channel(struct device *dev, struct ras2_scrub_ctx *ras2_ctx,
++				   int pcc_subspace_id);
 +
-+		cxl_ecs_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ecs_ctx), GFP_KERNEL);
-+		if (!cxl_ecs_ctx)
-+			goto feat_register;
-+		*cxl_ecs_ctx = (struct cxl_ecs_context) {
-+			.get_feat_size = feat_entry.get_size,
-+			.set_feat_size = feat_entry.set_size,
-+			.num_media_frus = num_media_frus,
-+			.cxlmd = cxlmd,
-+		};
-+
-+		ras_features[num_ras_features].feat = ras_feat_ecs;
-+		ras_features[num_ras_features].ecs_ops = &cxl_ecs_ops;
-+		ras_features[num_ras_features].ecs_ctx = cxl_ecs_ctx;
-+		ras_features[num_ras_features].ecs_info.num_media_frus = num_media_frus;
-+		num_ras_features++;
-+	}
-+
-+feat_register:
-+
- 	return edac_ras_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
- 				     num_ras_features, ras_features);
- }
++#endif /* _RAS2_ACPI_H */
 -- 
 2.34.1
 
