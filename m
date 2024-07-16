@@ -1,112 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F887441A;
-	Tue, 16 Jul 2024 21:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095C77441A;
+	Tue, 16 Jul 2024 21:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721167028; cv=none; b=rznghtYC/8RohUg0mTo1v6ZhNAepkWuxFGPbKFb6vvOs9dpxss7I+pICp1TmDO7NwenIx2O2N0LThj9cWNV+RMHYuQwNd44Lr9mLvrYKtpV/ecn2aaIGImpw4cWpAuu6/TqqEFfjgkb0L2Xlj2sWraPT9keR/G4KYzFHyqzgbEY=
+	t=1721167162; cv=none; b=oajHaEYNfRC9RDCOAhgfCJyYoKmGCq0mEri6Ct6+Bql/ii84clRJG/BzfZCuY+r51hiRzVQrYy5qAr/tG6y/bQXE+wZNZB8/kVe/XN1bCHAqlSdFFRIa+7NEZNxiI8q85m3OJSiLWugq+CyxJml4c8d/+bNrOedEkd5rM4MWXWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721167028; c=relaxed/simple;
-	bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bDjLPaFfMizgR+v6f9xeqpXB1UlHGVnFkuNzaiuHCMjD99b0om4tuc0TKn+wQ93ZVlKrezRNns8WChryGHdDMj6vY/kV/1eslqoJ2mfqI53PrJlcj3DgQiKZwwCMeQJE7NbX+iRutDdSMOQA+d9CAxR6xJS87gVEtJMekGaRpb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcPuY3Di; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721167162; c=relaxed/simple;
+	bh=YMEHl4zngq8HmFPthhLb+fZa8ONs+/B1N0NY8iN4MIc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=I54jNtV2AtZM3tP0MTHArwM7czaOfRFQSkYwMntSuJGkVFqkAy0JslzQ4nc3oamU6hoVmuX/MR3w3yUmbrkA+Bj5NchphRp1WbCoJXYQrWg/Hmc2Q8jaD7xknWVsCCrOxNgMfVhRDwIm64QmhM4vVBWKjQuiRqENCxaU6ZjGO/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fbw6zYE0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcPuY3Di"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9CCFC116B1;
-	Tue, 16 Jul 2024 21:57:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fbw6zYE0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D250AC4AF09;
+	Tue, 16 Jul 2024 21:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721167027;
-	bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fcPuY3DiidPB6DduwthSWiUJytd1GM4AxM8MxXagjXGKXVhGK2TLvHIjtHvW9UYKN
-	 6Tea2LQsLZRvCjaSTJ5/R8QExz02QCnsCOjY0yOchzDhh1foLSc9ktUcknR6q9/m3U
-	 AdpMMyACw2+NzS8ZsE3cJ6z4GtKzYC5XnSkNouQlJc8Zl8wOhznFxNYeJUbkGUG8ZC
-	 /wXU8XPTdRUyPv3UydVfhTSRSxVN3ig1M4thUCAikgNycfir/Ww3ZrMeoApSmq58d3
-	 Za6mGytrW9s2x786pI7RN6zlzp5u2LlVB4bhYr9W79CNI22dzT1+LLSpIb4st2IEvb
-	 Z5Yb3NmPtOyPA==
-From: Kees Cook <kees@kernel.org>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] dmaengine: ti: omap-dma: Initialize sglen after allocation
-Date: Tue, 16 Jul 2024 14:57:06 -0700
-Message-Id: <20240716215702.work.802-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=k20201202; t=1721167161;
+	bh=YMEHl4zngq8HmFPthhLb+fZa8ONs+/B1N0NY8iN4MIc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Fbw6zYE0LIXwIiXNVdK5FT3pq3LpMdfTh0MNYBquY4M0KyqMAbLU0HFKgHZIWz82r
+	 vxIzZHTaXekmlwwbuqL5KnwuZIe7joD16tAQ3tbD/qWY0IHP8c64B9vp5gdPabHBVi
+	 VVj2mczGRUxFehjkhfovsWzl8cs3/UwjP2A6GN4Tf/+Mb2cCCel1l9eEp+BdkDB2Q5
+	 vzplYiUW9VwO5hl+NyVezLtybfGhOFsuTgIYzXosb1/oVxtYPCEb0pWZWhlf3cXzYs
+	 J5NyTfMyA1noW2t29PF1AKdTaaerQ+CCHMKpjyoaQdbDiAcWSEMppCXX97KAHY95Z2
+	 qjmP5hVLRdGsQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C6084C43443;
+	Tue, 16 Jul 2024 21:59:21 +0000 (UTC)
+Subject: Re: [GIT PULL] lsm/lsm-pr-20240715
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <549ba0887cc2b0d606940b7d788f0367@paul-moore.com>
+References: <549ba0887cc2b0d606940b7d788f0367@paul-moore.com>
+X-PR-Tracked-List-Id: <linux-security-module.vger.kernel.org>
+X-PR-Tracked-Message-Id: <549ba0887cc2b0d606940b7d788f0367@paul-moore.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git tags/lsm-pr-20240715
+X-PR-Tracked-Commit-Id: dd44477e7fa15ba3b100dfc67bf7cf083f3dccf6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 11ab4cd5ec3f5f531ca0cb3014b7c6869c4aea5d
+Message-Id: <172116716180.1258.7806330766790305441.pr-tracker-bot@kernel.org>
+Date: Tue, 16 Jul 2024 21:59:21 +0000
+To: Paul Moore <paul@paul-moore.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2048; i=kees@kernel.org; h=from:subject:message-id; bh=bwiVrWgypWBECie/s1mDOD7hIJm+DB9R8xzMdeISMkY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmluyxGjp2z9PYeRXfXMWfLcFWNql3Qog4Ansrd XhNvP1P0ZyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZpbssQAKCRCJcvTf3G3A JpZ/D/99eTgdWlRO81FMBexrHCAhl4eK0zepp75IT0PSIKdvQiBBSLRKuzQkxXc0ZYdPdw2qnaF nZMfKbt2UwHEYxT6iX+EM38iuGImr2SOPzYff+/de6c9mh6uUu+cVmZQCQQf7uZIqFOjNsQ+smj fP0jdnA11FKyyhaMUCrjLeTFQo+hyNh6Kx6x8iY0x6vpBj2rKGVaRUelkxZqa3hF6U3VcAusFB6 89seG3e2LbPEYonJkciL3eqmDRuzsGs1k23OffwQv0pydgYv4wYC40wp4JJW56cP67De7VWSh+D anToQFKSgAg8zOv1qSAhFCJrIKswyl8aNn0aRM8HHfC3inwqb3mmTw1mV9xUZBGrQH+zBbqkL9f cZhWad8S5ujjjRZeIYcINGdc6KaN8RCJg6mhiOvKrovgxqdi/g6cqslOsc6iOp7Xpi4gz2Zry0p Hb0OLKgFOkava/SGQsFBccpWp4gSDZHD33Z86OrJxBBsvscVDSUVesC795dT3QQ+Q6GbEJLQe33 oVHixvHMMHLXuNWub+DSi6dxPENFky7dNPD++phmD4D2pSk0Hdsztk08z/D52YmAuE5dZ/8fhws OwYCanTQv/ppulJ6U83W5o1qjSHRbwwbuA/Hv9aEy5XzgUXLd84wxCbamI+14+vgiI6ksHEorxG 0jF9n0tlUSouA
- HA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
 
-With the new __counted_by annocation, the "sglen" struct member must
-be set before accessing the "sg" array. This initialization was done in
-other places where a new struct omap_desc is allocated, but these cases
-were missed. Set "sglen" after allocation.
+The pull request you sent on Mon, 15 Jul 2024 15:17:38 -0400:
 
-Fixes: b85178611c11 ("dmaengine: ti: omap-dma: Annotate struct omap_desc with __counted_by")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
----
- drivers/dma/ti/omap-dma.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git tags/lsm-pr-20240715
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 7e6c04afbe89..6ab9bfbdc480 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1186,10 +1186,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_cyclic(
- 	d->dev_addr = dev_addr;
- 	d->fi = burst;
- 	d->es = es;
-+	d->sglen = 1;
- 	d->sg[0].addr = buf_addr;
- 	d->sg[0].en = period_len / es_bytes[es];
- 	d->sg[0].fn = buf_len / period_len;
--	d->sglen = 1;
- 
- 	d->ccr = c->ccr;
- 	if (dir == DMA_DEV_TO_MEM)
-@@ -1258,10 +1258,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
- 	d->dev_addr = src;
- 	d->fi = 0;
- 	d->es = data_type;
-+	d->sglen = 1;
- 	d->sg[0].en = len / BIT(data_type);
- 	d->sg[0].fn = 1;
- 	d->sg[0].addr = dest;
--	d->sglen = 1;
- 	d->ccr = c->ccr;
- 	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
- 
-@@ -1309,6 +1309,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	if (data_type > CSDP_DATA_TYPE_32)
- 		data_type = CSDP_DATA_TYPE_32;
- 
-+	d->sglen = 1;
- 	sg = &d->sg[0];
- 	d->dir = DMA_MEM_TO_MEM;
- 	d->dev_addr = xt->src_start;
-@@ -1316,7 +1317,6 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	sg->en = xt->sgl[0].size / BIT(data_type);
- 	sg->fn = xt->numf;
- 	sg->addr = xt->dst_start;
--	d->sglen = 1;
- 	d->ccr = c->ccr;
- 
- 	src_icg = dmaengine_get_src_icg(xt, &xt->sgl[0]);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/11ab4cd5ec3f5f531ca0cb3014b7c6869c4aea5d
+
+Thank you!
+
 -- 
-2.34.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
