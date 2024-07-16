@@ -1,71 +1,102 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C23815491
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C89015491
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721129560; cv=none; b=rN0v5jIv4QEXBDmdSTtU6SXbIjhHnvSRrCyPEsl3L7k/+tGQ3Z5pOIHs0PKxUrDmhXoq/vKJb0lciaSIPyF8h1KhbZc4G+Kq1OYJ260GNuOccq+L04iARhtiais7BAyH6YiGbGrU+PpzKbLswFAu8e8MJQQfpYhfu0wJFPMO48E=
+	t=1721129616; cv=none; b=nCfAWFcGyMuc/JLLuIV6eu845v96/o6fVTPGi21B0wIFCXv6/aRzOtPqH03EvOy5FySKQ2UgdD37eYxtEBDBN/opZKxN7Axj3d05E+eS57LjVUdYfh2IFScYt5h1IvZQbuqUpL7GZ9sNQ+1+Qq3xDvqtqARAcg+OgYX/glrC1UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721129560; c=relaxed/simple;
-	bh=/CMspuTbviwsvCwrgOi5LH7wTNtSRcVuk0D6ZgaiRJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=u6XrWmFndWRCQvAlCddtBMs/VlEMukDF0kSjLQ+/bxRpQMuamulm3l0AkBL00VqWV69cAnbpxSiYVZ6SRuRxP+LJpvpv7Bw0r+fxI0bamm62DHbVY+FRlleScbtS09IzG7AGMJmU08ljIuLAsU6EVDfSoo2kMVU+zZZu859ImWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WNcNb4QJFznbGr;
-	Tue, 16 Jul 2024 19:31:59 +0800 (CST)
-Received: from kwepemg200007.china.huawei.com (unknown [7.202.181.34])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4B9BE180064;
-	Tue, 16 Jul 2024 19:32:36 +0800 (CST)
-Received: from [10.45.179.188] (10.45.179.188) by
- kwepemg200007.china.huawei.com (7.202.181.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 16 Jul 2024 19:32:35 +0800
-Message-ID: <ba2702f9-f66e-498b-853c-d23f1f9191bc@huawei.com>
-Date: Tue, 16 Jul 2024 19:32:09 +0800
+	s=arc-20240116; t=1721129616; c=relaxed/simple;
+	bh=C0WwSkyU3QLjg0yOS+o7rIT7F22bvDaCzSStjCmIWTI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=iQEwh/o0MYsZBvF5PHtvFLRCry6iPCzp25yonyJgfyu065XjcxYFDEZFCoVc8unZ+mquO9g8prjB5sgG2f4tKjEjeXBwQ8rIt8LNzYqH7bAx/fgrd2VWkVQHrZ4giQJm14JSWTSZjdK7wCdF1YN0iG/EtyDrYe2eOhLEApQmnFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sTgQz-0007kR-8v; Tue, 16 Jul 2024 13:33:29 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sTgQy-0007L1-OG; Tue, 16 Jul 2024 13:33:28 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sTgQy-009ho5-29;
+	Tue, 16 Jul 2024 13:33:28 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Tue, 16 Jul 2024 13:33:28 +0200
+Subject: [PATCH 2/2] wifi: mwifiex: add support for WPA-PSK-SHA256
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH sched_ext/for-6.11] sched_ext: Reverting @p->sched_class
- if @p->disallow is set
-To: Tejun Heo <tj@kernel.org>
-CC: <void@manifault.com>, <linux-kernel@vger.kernel.org>
-References: <20240711110720.1285-1-zhangqiao22@huawei.com>
- <ZpArK0qxZZI-0ykt@slm.duckdns.org>
-From: "Zhangqiao (2012 lab)" <zhangqiao22@huawei.com>
-In-Reply-To: <ZpArK0qxZZI-0ykt@slm.duckdns.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg200007.china.huawei.com (7.202.181.34)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240716-mwifiex-wpa-psk-sha256-v1-2-05ae70f37bb3@pengutronix.de>
+References: <20240716-mwifiex-wpa-psk-sha256-v1-0-05ae70f37bb3@pengutronix.de>
+In-Reply-To: <20240716-mwifiex-wpa-psk-sha256-v1-0-05ae70f37bb3@pengutronix.de>
+To: Brian Norris <briannorris@chromium.org>, 
+ Francesco Dolcini <francesco@dolcini.it>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721129608; l=1544;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=C0WwSkyU3QLjg0yOS+o7rIT7F22bvDaCzSStjCmIWTI=;
+ b=o+eHnx52f+SIRT7a0zcQxWtmFnlwt4ZUzrtlEjBfaaloXLaVJTeAHuAt09IghvR+jZcr4HQ9+
+ sjqn0XHh4WUB7nJYhCqDHMBi1l9ZL9YhybYTFuVcSuiPSqPI5A7xHgN
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-hi,
+This adds support for the WPA-PSK AKM suite with SHA256 as hashing
+method (WPA-PSK-SHA256). Tested with a wpa_supplicant provided AP
+using key_mgmt=WPA-PSK-SHA256.
 
-在 2024/7/12 2:57, Tejun Heo 写道:
-> Hello,
->
-> On Thu, Jul 11, 2024 at 07:07:20PM +0800, Zhangqiao (2012 lab) wrote:
-> ...
->>   		if (p->policy == SCHED_EXT) {
->>   			p->policy = SCHED_NORMAL;
->> +			p->sched_class = &fair_sched_class;
->>   			atomic_long_inc(&scx_nr_rejected);
-> Did you see any issues with the existing implementation? The policy is set
-> before the task is attached, so it should work fine. Also, you can't change
-> sched_class by just assigning to it.
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/net/wireless/marvell/mwifiex/fw.h      | 1 +
+ drivers/net/wireless/marvell/mwifiex/uap_cmd.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-What does "attach" mean? I'm not sure. p->sched_class is assigned in 
-__sched_fork()
-which is performed before scx_ops_init_task().
+diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+index 3adc447b715f6..1c76754b616ff 100644
+--- a/drivers/net/wireless/marvell/mwifiex/fw.h
++++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+@@ -415,6 +415,7 @@ enum MWIFIEX_802_11_PRIVACY_FILTER {
+ #define KEY_MGMT_NONE               0x04
+ #define KEY_MGMT_PSK                0x02
+ #define KEY_MGMT_EAP                0x01
++#define KEY_MGMT_PSK_SHA256         0x100
+ #define CIPHER_TKIP                 0x04
+ #define CIPHER_AES_CCMP             0x08
+ #define VALID_CIPHER_BITMAP         0x0c
+diff --git a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+index 8d0cd84d27698..c07aec67aa0fe 100644
+--- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+@@ -59,6 +59,9 @@ int mwifiex_set_secure_params(struct mwifiex_private *priv,
+ 		case WLAN_AKM_SUITE_PSK:
+ 			bss_config->key_mgmt = KEY_MGMT_PSK;
+ 			break;
++		case WLAN_AKM_SUITE_PSK_SHA256:
++			bss_config->key_mgmt = KEY_MGMT_PSK_SHA256;
++			break;
+ 		default:
+ 			break;
+ 		}
 
->
-> Thanks.
->
+-- 
+2.39.2
 
