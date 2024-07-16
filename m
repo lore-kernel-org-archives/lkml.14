@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D2913A896;
-	Tue, 16 Jul 2024 21:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF563143C60
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 21:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721166221; cv=none; b=AgpnaIc5A4aN5S8xqIuMjQwTAr17NE1W+DiQT+BlrEIbB/hzl2OzNUhvDlm8CWDTQT4j5/kSIbKoSUzUUVe0Yl8FIHHlj3kW0ttyrzvxT8JXivqSEXrX6TBr4+Gbu7E9G0LQ2S0RM6niVss+c6v51+2JIVyod227Idj2TNO3PyQ=
+	t=1721166222; cv=none; b=qVV/5JHDInNtLgJ08fjfgehs7sMzV/oLOOUwWzUGL+v0PkHcQ9UZeXaQUKnKxGhypv+S2+7YoMhyPsZAGLvjp+J9oZZy29ek6N9mtIJg21Jj9tzpI+DYHTbZeJ6YNPQ33CyWQbv4RQaTLwOFz0eh40ktXDdtKNKy1fvlb9RHyio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721166221; c=relaxed/simple;
-	bh=IPANWXWAqRkDkf0UBvOpkG83WTbWEPXWjH+h2t43ZkU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=c27lsZNbkcmDsamTWC5mKI8trQi6cjOJ8v8RA/5By/CXM2UU40IFIDrC2M6PeHLxtO7aLIh3G2duwbeK+Mq15EYN9DUwkKkzH9TtUCAUWLW9gX16Y/HXatdsvCoHybHCqeqdcOEl90VyaJ86ef3mbOsnykqqeHaI+QErpQvNqTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fmEQRTa6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721166222; c=relaxed/simple;
+	bh=+aVkpmNt166hu8rVhvAKaK871T8Z8E1ZzvBw/asPyUk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=j/EGh9k0tCU2ffr+GRKhDf0VUFQjr+Z5P6unk/hOqyqRbYFafPnXOR/3KDuehlt3YeISQPvd9FNAjYnnOrx1dLchNENu3BYUsO4t3Tj8TPIuUHlwIf/UVUG40/kqMDU6V+vHtTDoIBbm0CY0XVaT/BrDOKeF/SJ1D47q8H7CEbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m45Zp8H3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fmEQRTa6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6BB11C4AF0D;
-	Tue, 16 Jul 2024 21:43:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m45Zp8H3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C5CE0C4AF0F;
+	Tue, 16 Jul 2024 21:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721166221;
-	bh=IPANWXWAqRkDkf0UBvOpkG83WTbWEPXWjH+h2t43ZkU=;
+	bh=+aVkpmNt166hu8rVhvAKaK871T8Z8E1ZzvBw/asPyUk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=fmEQRTa6N7Va259JGZHfyDqNOiYZ/9Gv6JhDBD3B93NoVBuZ1ixKN1HQR71NjuR2U
-	 WSU+veUGZDWl6RacxfvrP939kmi/JUxKip0PlZJIIXJFNhBd4kV0yg9OTTxquu+kIF
-	 AGYaA6ya4UvbvUjuAJaC8uWBgq0ImShjOSIljYNVWw8GV37GmBQGoz0OD07npqrRbx
-	 P3EbU/N8I6TRx9lqt95HEyPv5ghi4hbQmBfhaq7+ZnRpFtgbpnz9DVU5HjbjTiYDg+
-	 JifCNM6H7SZvwknCmjGIhLOYTuqo/rzlyIf1zt3FaJRTeKYVDu/UARcpLeCkCds9iJ
-	 BRDgMTEDzrV3g==
+	b=m45Zp8H3n3k9O+ilviPpkmX9nfHGCTuqtP4qRag/1ii9znNwz3fRmkVBPMt3ou0Dy
+	 wYd4e07YMNFxbJb7cxzx+SG2ecunpBzxe6R8uyetLCL/5t0TzJTYkSIXX36AHY9/fn
+	 M3eevsP9qVT8Vl39DRydshYLOZJBhFzJuJxMHwgr1Yx5LhQOvECp2R0Q9h2UywSCmf
+	 /ULNijIlA0LuqO6VJOMHgoiBkHQCQUCQa3XUbK9rpYl0HEZ87gMvLsjIW05KcrqT9e
+	 kK9cTIg7kpFvPbMSvGeQrd6HupkD7G/eL9cr7uz4kT+qsR+Scagu2Vm2KjgXJxoGE8
+	 JEZkZ7YszRMbw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5D516C43445;
-	Tue, 16 Jul 2024 21:43:41 +0000 (UTC)
-Subject: Re: [GIT PULL] sysctl changes for v6.11-rc1
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BB553C43443;
+	Tue, 16 Jul 2024 21:43:40 +0000 (UTC)
+Subject: Re: [GIT PULL] hardening updates for v6.11-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240716141656.pvlrrnxziok2jwxt@joelS2.panther.com>
-References: <CGME20240716141703eucas1p2f6ddaf91b7363dd893d37b9aa8987dc6@eucas1p2.samsung.com> <20240716141656.pvlrrnxziok2jwxt@joelS2.panther.com>
+In-Reply-To: <202407150933.E1871BE@keescook>
+References: <202407150933.E1871BE@keescook>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240716141656.pvlrrnxziok2jwxt@joelS2.panther.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/sysctl-6.11-rc1
-X-PR-Tracked-Commit-Id: acc154691fc75e1a178fc36624bdeee1420585a4
+X-PR-Tracked-Message-Id: <202407150933.E1871BE@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.11-rc1
+X-PR-Tracked-Commit-Id: 872bb37f6829d4f7f3ed5afe2786add3d4384b4b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f8a8b94d0698ccc56c44478169c91ca774540d9f
-Message-Id: <172116622137.23491.17450537644562275897.pr-tracker-bot@kernel.org>
-Date: Tue, 16 Jul 2024 21:43:41 +0000
-To: Joel Granados <j.granados@samsung.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>, Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Wen Yang <wen.yang@linux.dev>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+X-PR-Merge-Commit-Id: ce5a51bfacf7a2953f8fa309a8fc8540c2e288da
+Message-Id: <172116622076.23491.17032334020767775625.pr-tracker-bot@kernel.org>
+Date: Tue, 16 Jul 2024 21:43:40 +0000
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Heiko Carstens <hca@linux.ibm.com>, Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nathan Chancellor <nathan@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Thorsten Blum <thorsten.blum@toblux.com>, Yanjun Yang <yangyj.ee@gmail.com>, Yuntao Liu <liuyuntao12@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Tue, 16 Jul 2024 16:16:56 +0200:
+The pull request you sent on Mon, 15 Jul 2024 09:34:47 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/sysctl-6.11-rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.11-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f8a8b94d0698ccc56c44478169c91ca774540d9f
+https://git.kernel.org/torvalds/c/ce5a51bfacf7a2953f8fa309a8fc8540c2e288da
 
 Thank you!
 
