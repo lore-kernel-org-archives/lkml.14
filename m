@@ -1,69 +1,56 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0872B19AD6B
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF56519B3CB
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721138232; cv=none; b=fjeoZy2D4fParvGdm+1Zd0dM9GFHC2rrr7OfEVRcXoHLVF4qDimM0P3ZTMT+T/MN4liSLaO8VOKNCE6OM727Ma0/X6U23c9BJTtn491gz8FXMQ4Oyv3DfMq/bITdrbRHu0BJIYYMwgaxTS91pEMsjAc0xGydNi/HkcRe4bU4lBM=
+	t=1721138239; cv=none; b=Kog67CZrMBKL2QEq2mOdLCew6J0jWEDwvq3KCqyj6jCpll4fm9siRs2iVoS8YgyzMFq18CZDSmuEkNFMyCNXdbt1HBko92OT/cWmbZ7Mwa0KCxJChqUr9dls8a59aclUaA0DncU8lchQC/PqYAuvpuCN+B0Me9oGs8mBAvavYtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721138232; c=relaxed/simple;
-	bh=6ielWizRopPkxt9Xz5NhoZmUGUPDJRFuNHGi/CU8TFs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=irpezlvcVpOZ2ahUVm3F75sen7bIhUyzxZZQAZKQEEk7Ii8AAimonBVNcY7PAlJFelveSPV+Mq9easeJ+Jp+0kHO7e/LesKRdRfLXBMYYuzD1oa5jaxa55EJTLmuGImiCSc7TMNO8uC4qev+8d0bLEesQp5uxe9GQiMuR5HH0Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kKrRriEF; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721138239; c=relaxed/simple;
+	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fxel0cW4x/S03HcYuEADGf53DSxwuNY4Sh2IG+p6IO7ILvij0tvShl2Bp0FiDsEg3NfwBQHrWeakgT/i/GFAwkO/y/jOA7GkC0EaHE1ABWZ58Hjsmu6FxQ1GAeWovSNQcj//UBZUmB72t8KWzyA9DsPNZtOeShtF9w1vsPjn5+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e0uDgno6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kKrRriEF"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4266eda81c5so44036505e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721138229; x=1721743029; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AD5pyTTXIBOHwrPdHnxMSU03OrIeYJeJpP0/KwZpIGo=;
-        b=kKrRriEFOCiDCMHH+GikMXjV3iMpeVUMjJzt8VvVCfnU9EAj+Lwxjx0hjBurjQ50t2
-         +5Z6wvK58cAMc9So5WEvRwbYUcOyfEQJ1TsTvlmX9FbXOIA5N9Dzjk+3K3sSpa7LnCwE
-         tEwWI5DWMuCdrBDBglUOSZkF0hFVBLk/Qn+8oRv07ZnDTgT7d5eIiQS0Iy05CQ9FOuNU
-         EEutZgibVBPbAWsFE8WCsqv8rQL7wOMdWM9KWdbNGqCgaLj4hHA939okGkzwY2sHqsnx
-         7NF24ltNiAR4pUzsR40vOPkWjEjXMR/6BabC/hc7ucv5d7n7vnl2ZL6i/KlYONuY6qDz
-         gE6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721138229; x=1721743029;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AD5pyTTXIBOHwrPdHnxMSU03OrIeYJeJpP0/KwZpIGo=;
-        b=qRs3JBtNZaTOyiyDa5e3qQlF5NqHranXYs09BMKsUwDtPKoG2rEdauMlVazUJvFtag
-         d9nsUlpiMhKokb2oS6IHx79fjH6wRU3Uy/OiNnhomMdJUeaeq9m2OvILI9buWjpwHrN0
-         sjCn+zUcXRvkIDEAx8uS6xtd79jq/wcE5c3ka/QKyiN731UkCnoT2zrWT8Ro72hjtRDb
-         arrsqcOA0CvQyzsWCaeJyowIGpcpUs3sG7zIE4ObuJvw5jiWROkzpa/AM86g7fX78M5G
-         Z2T5KTvFsFPZFOAPtd0ttjbsutwHM6OSmApOR+aJWr5epexWVB8Nw5kcMoAzxHEfGD8P
-         rQuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXn3D5CJoyJd/+Afn08hoHG6WMQ2TbCAqmkGpvbnn8QoN/vE1taznDchYzoxrTKKP5fGFYTZkaCMRITF4thJo3aarSBOE2PiMzZ7/70
-X-Gm-Message-State: AOJu0YzuMHJgryOsxb10171qQlgjcwSYSEquS/JCkG6GjGsKNAJ6jahO
-	cmhNiBh3oanvj5Yrtoo0Ss+B35djrE5BSkFIUjNhJR5tZDtvreAfpQNHNbuaGpU=
-X-Google-Smtp-Source: AGHT+IHfXvfzcFPFhmELdhCG/Exp1aFv5Ieq9lSZsPGvNiqjb3fzPq3o6IHorLqxOsRM8yer9Q8BXg==
-X-Received: by 2002:a05:600c:1908:b0:426:5e1c:1ac2 with SMTP id 5b1f17b1804b1-427ba650391mr21090175e9.8.1721138229388;
-        Tue, 16 Jul 2024 06:57:09 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427bb99a23dsm19118905e9.1.2024.07.16.06.57.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 06:57:09 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: linux-arm-msm@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: msm8939-samsung-a7: rename pwm node to conform to dtschema
-Date: Tue, 16 Jul 2024 14:53:38 +0100
-Message-ID: <20240716135339.87192-1-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e0uDgno6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721138236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
+	b=e0uDgno6N0v4A9+MnmhJgjegboo3eGNLiWD1UkaE72CCDLooQypJ/DuE/tqyalJajUg1g4
+	cbh2WyODMWfNwvmj66g00AYGNtSzCQWF0CEuBFPyVXX/Z7HjFHeUSInB3XM+YmCn9G9lou
+	qgudtU7cgeY2mCe4DMtX8LQnzKAP/B0=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-573-gkiBvf-EPnyEqJ3yUaXpCg-1; Tue,
+ 16 Jul 2024 09:57:13 -0400
+X-MC-Unique: gkiBvf-EPnyEqJ3yUaXpCg-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8CE4B1944DD9;
+	Tue, 16 Jul 2024 13:57:12 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BA0C11955D42;
+	Tue, 16 Jul 2024 13:57:11 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH 0/2] KVM: x86/mmu: Clean up hugepage split error handling
+Date: Tue, 16 Jul 2024 09:57:10 -0400
+Message-ID: <20240716135710.70048-1-pbonzini@redhat.com>
+In-Reply-To: <20240712151335.1242633-1-seanjc@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,27 +58,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Rename the pwm node from "pwm-vibrator" to "pwm" to conform to the dt schema.
+Queued, thanks.
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Paolo
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts b/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
-index 91acdb160227..ceba6e73b211 100644
---- a/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
-@@ -198,7 +198,7 @@ touchkey@20 {
- 		};
- 	};
- 
--	pwm_vibrator: pwm-vibrator {
-+	pwm_vibrator: pwm {
- 		compatible = "clk-pwm";
- 		#pwm-cells = <2>;
- 
--- 
-2.45.2
 
