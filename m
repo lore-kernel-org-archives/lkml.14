@@ -1,114 +1,106 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0881B57323
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 20:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2BE57323
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 20:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721160656; cv=none; b=UfnG5HfGU1farUH7ueA8c9ex/XQjoZCkoaWo/m+bvUBLiUYje/dia+5S8efB5gKSJ6KHOted6rUfVmT2cUQFoVZJooIa0RHfEv5kOALyOKxi47BYs62kQ6otLo2WAm/VlDqGdCiP/emrt3/F5rPJToxEcKhVsG1oHb8xZ25strA=
+	t=1721160662; cv=none; b=JM3CRRT5d8Hn5VV6byBpW2oM6K7lXFg7+rPoLg95TQbmNp/yIqzr/lUyMMnIGbrIJry7lBe+8mN57Rdul0HX47IwBUndaEArlptzi66HbvrHNngkiX0jh10ipiThyfSY0hIALc2m+auk9a9CXV1ECOheEsyP1fd0JKscnZHW/qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721160656; c=relaxed/simple;
-	bh=6e4uF3PDb6zCI/M1+hUeYkltQ9Exj2kKi2I18RA898Q=;
+	s=arc-20240116; t=1721160662; c=relaxed/simple;
+	bh=iHoY9SdgXa2H902UXN8QSIofdiqecIAMFIbY2rjeVm0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rwtg1Oksm2H0IBxKdJgEFAQNkM+UWONs7pMk6i/BbRmN3gb7sOyQ9CKx6cWX4LR9W9/ILnBdAC6jsR62MaJd5v1Vd82N69Lo9MTcR9BD6TAydt4Q3H/EwtxJpq9S816AUm+LuN1ZIGV4KfyDv+mlSSTalFl8qIEKAQAfoHa2xLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oDGmCwWn; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=vFdBYJU4s7pskyOOLYl/tny0NUVq4fZtXNdeHTCNcnhCDxhRiUXQ8lofZDV4p9acr75p1okBe6SF+tvbYLj1PkmHzZGjcLlcLyJHJ2QRCNo/EVGvf5xjNitfK8hnN02KDzKaDaZ3Ns5y9w1fR/lQ6AyYuofjUBnx0GN8/YcUFn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=blbU6zTD; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDGmCwWn"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e04196b7603so5974853276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:10:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="blbU6zTD"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a77c349bb81so614960666b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721160654; x=1721765454; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1721160658; x=1721765458; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=k6o0C+IKAqmJeb1QfPBhGO124UhbiVtdAxc9Xgn0aeM=;
-        b=oDGmCwWn90HZFDned1OEPULKTS6RdHg4aLAsL8NSbuZQo2gRJVGEoZg3z1pSFFY96c
-         gZ55uAflIamFCRftlzVhG4Ii15r2GIY43H3LmU+FFrYAXn3rewy1PvXeZ9U3PWWQG/6z
-         CIyviRjddmto9SGiFAyDVCwxr/MJOTZH9LPSGoW2MA+IBowjn1i5nwE5WqP8iOKMaViU
-         L7eCAQSb/ru2efPANWHUV14bCfifv0dzUdSX8Z8+QEbbIrJiGAzHi0cMj2oH7MkpaRT9
-         1OMZeV+B4NnT4TIVTOjX0lm6sXep/xYvll1hDSEvvIWIq8WU8kl/e+tY782lfZCiIOw1
-         mNQw==
+        bh=fNp2iJWQXKj3S868U9jP4aHZyjqPZWxX3+VhcHPXu1I=;
+        b=blbU6zTDHT50sU1ctlGKYZIg26dCyyULy5SsnLBSMnNJ37zhS4kgHKmi/wbM71n4RK
+         TuOqx0LEV54Q8Q6UuYCn2U3XHj1ofldDJ3go8uISymSNA7p19w0qc7rBy+9rBIvjXFg4
+         5Ex9T5GQltMFclrz6mcL5he65xwSd4a2jK0Qo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721160654; x=1721765454;
+        d=1e100.net; s=20230601; t=1721160658; x=1721765458;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k6o0C+IKAqmJeb1QfPBhGO124UhbiVtdAxc9Xgn0aeM=;
-        b=GO1nNjKEDkeBZDPMq8amUas1+aNQ4N6fOk+hYlS9nA3cCzqDjRNacSck8fh/omNLLt
-         rtVqkOENBybeDbFsdsufXv00PfhkhrDBRBemMUdi4oEJMSPJSaAxOee4HZTIBgUCzhQ4
-         aDrUh6DL8yJdUzyDA1lNt4Jepr0Dhq403YNGhNffeICNKOMTWG5IfnZiAtlaThAJjNG9
-         u4l2cuYXQ5jwllRPIuntk7SDNukjcHTEvKVwzR1pPiu5KnHTZQ9VcQKfgkDF/TI3MI59
-         EycN3ylP4oiLz5FZ4hQInbHD8lEnqoHVx5PXsYsNbsyqOsBycDN7KeXSAZinZ6coL+TQ
-         jbWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+N4HRGMXo5MPc6U5udxniF4MollfiaGI1SxerPPjrsjFs45BUPRS1LZG2RpF8BGyCYLmsUQikGZOZZrA89OP7VOqF0/wXNQ7xRlxd
-X-Gm-Message-State: AOJu0YxmJa5+B6KHk+GraGrP40/ciVKXXJJ+/lzsngMj13Ym4Bdwg+zH
-	VCiPG6t4wS8HatsbHtxryLsUGmewmfKfYsud3l91yUjqv1+QMxRk93mkUHuzRHfmZeMibVBhpaO
-	EsjntuGvTAg0td6DUaOVpURJJgHqMHSqjXLvC6w==
-X-Google-Smtp-Source: AGHT+IEyWqLHoPQ96lQsYyho252NePtS7Mu7PAoguxVebnklP1PTUgbyzdxEN+r88MBwR5XfMwMKyspOnXw1eHJyDto=
-X-Received: by 2002:a05:6902:2489:b0:df7:8f1b:3ea2 with SMTP id
- 3f1490d57ef6-e05d56581efmr4135689276.5.1721160654089; Tue, 16 Jul 2024
- 13:10:54 -0700 (PDT)
+        bh=fNp2iJWQXKj3S868U9jP4aHZyjqPZWxX3+VhcHPXu1I=;
+        b=RylzkHxxgScoBGFeuS7DwE9shHu4wdtg8zuIeO+Q8rOFZZ7kQIiEb/RMi3b45Z55Bx
+         AFK6Z1CNJoy7Mm422z6u3M2hrHfE1c+MXVipLwZI/iy+uEoZrMgJ8ypDJekvLH2lJC3Y
+         Ziaa7r5lZB47M5TqKpwrs0ULpDE9VF1wxlJ9lEcBG4MEHrXKw+1G+zbV5gWG6qM+1mD5
+         6kgDYpDNRb1OUU5W4Z9exKu6fVICYGyHyfQXYf+GMiB6ECfcEpAtLwTDZzemCDO5Lfe4
+         iPbcbv5RDpXXrveXmTdH1bPNq7YeCoM+HLAkvBdu+iVFbXWGYsOU1ldLUOe6qmgj38Nn
+         E/BQ==
+X-Gm-Message-State: AOJu0YwYykGm8jm8UZe5jGCqbnilKUukPaPUTtTubIbpHNEAD16K3Z85
+	0dSO16nbQlY6behBtyOThiWwCHCt0i8boK9f49e+4NMnINzMsXzjtD3r0r8ziNnbKnUVx7YZ19H
+	xElk8HQ==
+X-Google-Smtp-Source: AGHT+IEjdhliyUTUtB/DhwxyeG5hrfmqjVIBExJnfIUEUQN031FPHUlnAiVb9JqstF99NHLBpmh7gg==
+X-Received: by 2002:a17:906:585a:b0:a75:3d6f:e4ea with SMTP id a640c23a62f3a-a79ea43b19cmr210785966b.27.1721160658238;
+        Tue, 16 Jul 2024 13:10:58 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc7f1d9dsm355756766b.111.2024.07.16.13.10.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 13:10:57 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a77ec5d3b0dso725649866b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:10:57 -0700 (PDT)
+X-Received: by 2002:a17:906:2cc7:b0:a77:e0ed:8c4 with SMTP id
+ a640c23a62f3a-a79ea3ebe2amr196311866b.7.1721160657187; Tue, 16 Jul 2024
+ 13:10:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716152318.207178-1-brgl@bgdev.pl> <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
- <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com> <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Tue, 16 Jul 2024 22:10:43 +0200
-Message-ID: <CACMJSeuSS1GBeMP66xt8CP3=6X9xNUZvj9cZHm_Lav6iaw9Gdw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <202407150921.BD2B798C6A@keescook>
+In-Reply-To: <202407150921.BD2B798C6A@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 16 Jul 2024 13:10:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com>
+Message-ID: <CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com>
+Subject: Re: [GIT PULL] execve updates for v6.11-rc1
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>, 
+	"H.J. Lu" <hjl.tools@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 16 Jul 2024 at 21:02, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Mon, 15 Jul 2024 at 09:21, Kees Cook <kees@kernel.org> wrote:
 >
-> On Tue, 16 Jul 2024 at 11:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > But this patch does it. PCI_PWRCTL_PWRSEQ becomes a hidden symbol and
-> > the entire submenu for PCI_PWRCTL disappears. There's no question in
-> > Kconfig anymore.
->
-> Yes, but look here:
->
->         default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
->
-> That has at least two issues:
->
->  - what if ATH11K_PCI or ATH12K is built-in and needs this driver?
-> "default m" is *NOT* valid.
->
->  - what happens when you add new drivers? You keep making this line
-> longer and more complicated?
->
-> See why I say "use select" instead? It means that the drivers that
-> need it can select it, and you avoid complicated "list X drivers"
-> things, but you can also get the *right* selection criteria, so that a
-> built-in driver will select a built-in PCI_PWRCTL_PWRSEQ option.
->
->            Linus
+>  fs/exec.c                                   |  49 ++++++++--
+>  fs/exec_test.c                              | 141 ++++++++++++++++++++++++++++
 
-Should we do:
+I've pulled this, but *PLEASE* don't do this.
 
-    select PCI_PWRCTL_PWRSEQ if ARCH_QCOM
+This screws up my workflow of just using tab-completion for filenames.
+As a result, I absolutely abhor anybody who uses the same base-name
+for different things.
 
-in the ATH11K_PCI and ATH12K Kconfig entries? Am I getting this right?
+No, this is not the first time it happens, and it won't be the last.
+And we had that same horrific pattern for fs/binfmt_elf_test.c from
+before, and I didn't notice because it's not a core file to me, and I
+seldom actually edit it.
 
-Because unconditional select here makes no sense - 99,9% users of ATH
-drivers don't need PCI_PWRCTL_PWRSEQ.
+I would suggest that people use the patterns from lib/, which is
+admittedly a bit schizophrenic in that you can either use
+"lib/kunit/*.c" (probably preferred) or "lib/test_xyz.c".
 
-Or add a new symbol like ARCH_NEED_PWRCTL_PWRSEQ and select it from
-ARCH_QCOM (and later from any other arch that will use it) and do:
+(Other subsystems use a "tests" subdirectory, so we do have a lot of
+different ways to deal with this).
 
-    select PCI_PWRCTL_PWRSEQ if ARCH_NEED_PWRCTL_PWRSEQ
+Any of those models will keep the unit testing parts clearly separate,
+and not mess up basic command line workflows.
 
-in ATH entries?
+But do *not* use this "*_test.c" naming model. It's the worst of all
+possible worlds.
 
-Bartosz
+Please?
+
+               Linus
