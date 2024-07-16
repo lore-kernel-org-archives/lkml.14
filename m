@@ -1,112 +1,76 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F01C19E7EC
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 14:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0FD25761
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 14:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721140763; cv=none; b=LARPzrQLVXp3z/fUI6iR6Xc3erhcfICYFr0zhfcLsKzNmvn0fRmPBH/bRpkoJKIpBVCPKKKBIEUWEn0VjIcHq8gbwTHFNej3oV0/w36d1LahRpNgUFm3uBuEUzg+3g0aB0a9I/61gRe5Sc0o82ISHl2mLRfa9MGp+y/pkM429NA=
+	t=1721140831; cv=none; b=rAopo1RlROfeeVGuJT5J2MSjmiO9X0ghdjgC+NtUdhkmU4XEaJruAmhQTqdvCyalgyHFHf8n09kiImIMXEo2cLx7f61enwYsxxSAJXJijM1+XCXJl569iUp9iig0oXMqIYNJGIAlDgaBB/GjLAMHeZi5Ko4CALEwvWiL9VWUK7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721140763; c=relaxed/simple;
-	bh=MzRRUxdfl+9rUlnOGhrWT+i9Ba4CWdrZlHh7nGDZNM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R7sHYtnOYItQkW32twAT3Xr3yZ4nzCfN4Lwa9zqXmKv7D7hjRH81VfDF9fsaRyEwwro/Y/vgqYNp9ka2o6xa1CmPTmPF1Y1nf+OkUMcAPXsIwL2pdRHvsvtBk8Ov455Gj0nFnYQPhdD5RE8rvYEB4cU2PgCPy1X4MR+k5GYsZpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D/0OYFnv; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721140831; c=relaxed/simple;
+	bh=PBO2ewmeUiu1P2OlbjXR95+ysrCUmj5kcHJz80vh+z0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=SDaLE6wqPQjWWGfidoS+CvUC22phQtYPgFOAu6RbhHJXDQ/XUApQG4s6H7L8QaQZtzfA4aFdv50IrdANkTjm8Nq/k0DRQ0vjcA0WLVRT230aZy9fZOU7dkOpVWKKMRfRiAkUIqQzseRQuRVBj+EnmcC9xYhmL8t2E4ryWl7A5SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXFKDoNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D/0OYFnv"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-58ce966a1d3so15927a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 07:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721140758; x=1721745558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dT5FLWbWUPfMqjFRBjpee8/HikhM3a2iAoNdQQA++MI=;
-        b=D/0OYFnv7Z9RyQAEiH18j9jR2WOVYkZs3jLCRwMcCznGWHjkIZWrl4Ww84motaFZv+
-         JYC/ehGqe4gEP0PzjGzJap1X5Wd3iOlyaEFqe5eLa0/SDYJj6hAMHgW+FmrU0o+WMaoj
-         nR87V4yDV4L1LBnqLynsuwwUwfxotKvqrZXkwJDYHB61iQkpn7/dFTYNbhvWuj26YDd4
-         vQHd6OTIvBQjdKrDdHXh9nmslEY/kbdvkPDwvP9YJyCIjk16Mqyd2DWQe/6kbsTJpaxr
-         AM5D+h/ASI3R8Cy8bBB/yQeBWZT+VMcVHT43UAG+cF/+AgcL0QpzyTVukqbAuuUIiGDK
-         cpwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721140758; x=1721745558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dT5FLWbWUPfMqjFRBjpee8/HikhM3a2iAoNdQQA++MI=;
-        b=F6QGhsAAId9PXVWcAbS6s2BPzTj7z+vJUkXYbTbJ39Kw4jAFH/vci/9BarmHA4K8mv
-         IllUzgAvTDuNhCNBph6XleYQt/1x4hUi3+h+fl94jvaDDhZl21/RcG3bjcbsiz/C+H3u
-         V5p35uWL0xMG3yllYjOhhMptDZNDfJN07erIt5AuE9VtTM16bHpFt1mjWBD0C0qfpfna
-         Vn3uPzSDb3j/MGSJdQ7mSNRTjZiJQgldq7f8x/uVefy0xi5x7S16OrLrnnaTgnwcHijV
-         ejQngAIfWsJfHRRTN+U4YtfDc5AEJvNVIkvaRinSUdE/O/Lw+UeVC7GzntJBMRGtl2RT
-         B74w==
-X-Forwarded-Encrypted: i=1; AJvYcCUG3QVhiQhkeIqIIi0i/b6Rqk+KVfOuR+US469Of0ri07fbw6G2IAX9PW+F7edLOpI95dIpSSzzUBHSuSCOorJi3FTycwIvk8+zhCN7
-X-Gm-Message-State: AOJu0Yxyr8V5Hs1qy0WlOysVKBEABR32uyI08M2I9QbBgFQhggRn3Bm9
-	Rf8XCTjUjU6cTM2OsL2DXyoUEZdMOlwa91s6GPDoDjQTdYnoSPvHq4KOZ51yZbn5dez5dL1TCvC
-	qPM3r6OQ62eGmmj1Xr6eYLyX1sJFQ9x0yBTCy
-X-Google-Smtp-Source: AGHT+IGmSsybD0lwtju0owF8AM0wm2lcQbvYRwn3K5A2uMn2kfbPepm0PCfZm5tU5+Hu3yXbRdLVB8GSziRa18AlELU=
-X-Received: by 2002:a05:6402:5106:b0:58b:90c6:c59e with SMTP id
- 4fb4d7f45d1cf-59eed87975dmr285403a12.7.1721140758063; Tue, 16 Jul 2024
- 07:39:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXFKDoNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1678BC4AF09;
+	Tue, 16 Jul 2024 14:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721140831;
+	bh=PBO2ewmeUiu1P2OlbjXR95+ysrCUmj5kcHJz80vh+z0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=iXFKDoNnFuP665VsBRXxF8xlf376tP8d2FC5GrxB23OTheD3tfNcfcLHUDfzY0FH6
+	 ++59NLPgiZsm3sXbj3UGZ4TsXvFRM8PzlDP1PSdqt84zwt7kBu3sZkzekAzoweXfEB
+	 CNyuJh7QPGgT4xeCevJ2Hff1BUXLbWdLz5GyXG/tQCZ6z5TuMLcxlbutA5vKgMEd2D
+	 VadDONiLvVkHpAzi1MalVTEXAecJ/cw+4G7bjubytFy7FkVNQOzwakTiGGrlihQ78Z
+	 aFy+e/qY7tbYWHZZqCqdzVUqBYmut9Om5+6KUKrFZIY8ezVa47sFUOr8T5t4CfP/kW
+	 gsNm4Y+bSe3Tw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 02CB0C4332E;
+	Tue, 16 Jul 2024 14:40:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240714041111.it.918-kees@kernel.org> <20240715094107.GM8432@kernel.org>
- <6d1a441d-31f9-4bc3-8856-be18620e4401@redhat.com>
-In-Reply-To: <6d1a441d-31f9-4bc3-8856-be18620e4401@redhat.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 16 Jul 2024 07:39:05 -0700
-Message-ID: <CANn89i+iRU_GcRg9XUsAzahtGr5vKshJqyw02J63U_rChaCQjQ@mail.gmail.com>
-Subject: Re: [PATCH v2] net/ipv4/tcp_cong: Replace strncpy() with strscpy()
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] riscv: lib: relax assembly constraints in hweight
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <172114083100.24303.3143384859191995319.git-patchwork-notify@kernel.org>
+Date: Tue, 16 Jul 2024 14:40:31 +0000
+References: <20240527092405.134967-1-dqfext@gmail.com>
+In-Reply-To: <20240527092405.134967-1-dqfext@gmail.com>
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+ xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn
 
-On Tue, Jul 16, 2024 at 4:32=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
-te:
->
-> On 7/15/24 11:41, Simon Horman wrote:
-> > On Sat, Jul 13, 2024 at 09:11:15PM -0700, Kees Cook wrote:
-> >> Replace the deprecated[1] uses of strncpy() in tcp_ca_get_name_by_key(=
-)
-> >> and tcp_get_default_congestion_control(). The callers use the results =
-as
-> >> standard C strings (via nla_put_string() and proc handlers respectivel=
-y),
-> >> so trailing padding is not needed.
-> >>
-> >> Since passing the destination buffer arguments decays it to a pointer,
-> >> the size can't be trivially determined by the compiler. ca->name is
-> >> the same length in both cases, so strscpy() won't fail (when ca->name
-> >> is NUL-terminated). Include the length explicitly instead of using the
-> >> 2-argument strscpy().
-> >>
-> >> Link: https://github.com/KSPP/linux/issues/90 [1]
-> >> Signed-off-by: Kees Cook <kees@kernel.org>
-> >
-> > nit: Looking at git history, the subject prefix should probably be 'tcp=
-'.
-> >       And it would be best to explicitly target the patch against net-n=
-ext.
-> >
-> >       Subject: [PATCH net-next v2] tcp: ...
-> >
-> > That notwithstanding, this looks good to me.
-> >
-> > Reviewed-by: Simon Horman <horms@kernel.org>
->
-> @Eric: I can fix the prefix when applying the patch. Please LMK if you
-> prefer otherwise.
+Hello:
 
-Sure thing, thanks for taking care of this Paolo, Simon, and Kees.
+This patch was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+On Mon, 27 May 2024 17:24:04 +0800 you wrote:
+> From: Qingfang Deng <qingfang.deng@siflower.com.cn>
+> 
+> rd and rs don't have to be the same. In some cases where rs needs to be
+> saved for later usage, this will save us some mv instructions.
+> 
+> Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2] riscv: lib: relax assembly constraints in hweight
+    https://git.kernel.org/riscv/c/93b63f68d00a
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
