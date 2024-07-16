@@ -1,111 +1,127 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4A5199EAD
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 18:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916E119A86F;
+	Tue, 16 Jul 2024 18:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721156167; cv=none; b=NdG9INfz17Bg8J+LKm+747RDekzzPNqM+3QzBKhrr79EcTx+pPmtQUaY0vvUwZn/DL/kLSh3CZoyBSxKxVmKzlKwV4wv4rV+OB7hoSiDyyfVxLaXDaPMaj9B202bH0wkEra2F+rDsxODBEEV0URRZYW6ASriixqAbg6gZXSs6M0=
+	t=1721156303; cv=none; b=R0J7AuMkuPjIYj+sG2kmyOJMI0V44VRP7UqHsRspFy5hd+6yUE+B5HiZqvgZQNQaQf/JDqJ72JzfjuLRqqDJWrqbNmSElvfZkCtiFjWA5TOSoXA055FBeq7TdIqXyLFkfRYEBhPreXnknSkghP5kUkQMSlgGXE9DMIqJqqqeBTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721156167; c=relaxed/simple;
-	bh=PaGJafHFQaae4kpA7eX3BjTakDTozfmln4dp/gjmRE8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kYIs+lwq79GRTVFZtZZLpQLNYdRlLZvJdFYAu/ZoOuGDjMk1dLQzYPoOjJ80h41P8epx5JOoY4g8LlOdYzpQx5Z/hNoXqdnxuz6na+ZRttPkOWU9nnThZ2GVGPS2jk739UTQDheIQ9TSnHI2aH579Ld+6g029I7SVOF9EBZXYNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=R1AL5dgs; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1721156303; c=relaxed/simple;
+	bh=wKsffOuXjQz6csIEgiqYbyUo9lvjHQdEP0b/s+bAJ7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Rs0fGiKJz4/F88bcIKu4/ztym8ye1cE0KN1Ub2FRAwU6SRFFz+N5goRSjj7drCmb8DIkLxpev9hPPwfu61jDQXzAWCWIrH2ach5Ka9Wd+KJVOcbHTg+WT2J8qvWEFBzIdWqxGIx+EI4UutP9QPVmSIAbtkUDEW+GFaueWNjUpHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ji2sORLM; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="R1AL5dgs"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a79f9a72a99so11380766b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:56:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ji2sORLM"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8046f65536dso6038739f.1;
+        Tue, 16 Jul 2024 11:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1721156162; x=1721760962; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7AkWFffnhNj8OhWOczo1nmTY8DhOykx9MPZ068Ia41E=;
-        b=R1AL5dgsdSFGyZwemraoo+Weyti4htv2AJ7T8urUD1hmzU/7JXQIc5DmL/w7glUBtO
-         QCckEOnj0hQN67AH4QyGVTZn3tZ8oCCLCozAQtWBgcpcQF+p9nkthEqNILGY4Ru0f4Lf
-         9OUusTTviWYUsC0qnl56+UAmHvuvT0QG+sUjg=
+        d=gmail.com; s=20230601; t=1721156300; x=1721761100; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5R1ZNEsygnLGTQO2NIWkjU0SF7pc6VSZuM8NRzidmQA=;
+        b=ji2sORLMXfvOdCkS+9O1i31N5FCRzZNXGZyTA/PSBT+oBzdsGb1JlgkPUnKF1E7igf
+         ifsB+xjdSoqTsEZ1jP1b3Jg2big90Q4jnjOdO2DUd96P2MJgZJxENLh+DejUwrjObNz0
+         u1ZbKtVGA/24Jhld/ywaT9SAfhRcrn5BLPlfTbGbFBET7nxinWo1X/m+AXYsxZqUN1VF
+         ThjH0GUrVBsUqLzaCrCHkLSvIS89BpYi6m3C2yw3OD/JSVOYsANlqj1N2tTIcdZNZl2z
+         3VkbAPYbOF7lKam4LlCotDiQQiAMXx0ShpZesHWxY3mstNR0tL/ZGtHF+HN5yoR3LEJW
+         PgMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721156162; x=1721760962;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7AkWFffnhNj8OhWOczo1nmTY8DhOykx9MPZ068Ia41E=;
-        b=Smw+EGNdaLey1rGQDq0cO/FnGbmop05IHQKlqlw7Z/t2xN5lwigrvT8Ss3DLnLeYWt
-         CYFILJAujGIIDlomCI2bguftkparg2Vu6NYBtmzOv9RMvE71xr4Y3bVqUkYS7sZvCiBe
-         o9W69omaKYtiYfOeTUAg3UZyZIdYZXpQ1bQT57IB2iQ/Aj4fAzyILbZ0DYwH8t+BbbxA
-         9GDMyri6MqT7WHggNcvM2miaEOyPRq7I01g03g1u9vAFnqk/kuV8UaYmGZQyIKtW+ERb
-         Svg4y6BblWVOq3kNZwW2+rtJskRgx1lxWAGY2x2SW7U3B9kvhZ4euvULbqHXUgqyIpaU
-         eTaQ==
-X-Gm-Message-State: AOJu0YxStvH8xgAjNzAM+0qufc2YwqKmQZFOnReMhpwUezG1aVMJBDw/
-	gcQ6D3+5dJ+L3Cv4urYc75lceLhRxNwWvo6yfSrwAp86B1f6iE1p413ARSC8KwlxOhXXuXSXAQf
-	BVQRNig==
-X-Google-Smtp-Source: AGHT+IHX9H4nEulEeLiW0KVbVXl6q4DFz8gnX+MH1Mkfa5/2CemGeZMQ34md55AfNWYyfvvFc1lWeA==
-X-Received: by 2002:a17:907:1ca0:b0:a77:e420:9e5d with SMTP id a640c23a62f3a-a79edc7b3e8mr269238466b.34.1721156162332;
-        Tue, 16 Jul 2024 11:56:02 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5ea482sm350027366b.92.2024.07.16.11.56.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 11:56:01 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-58c2e5e8649so87883a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:56:01 -0700 (PDT)
-X-Received: by 2002:a50:999e:0:b0:594:4d7e:1b6b with SMTP id
- 4fb4d7f45d1cf-59f0ae05d51mr2757719a12.5.1721156161538; Tue, 16 Jul 2024
- 11:56:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721156300; x=1721761100;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5R1ZNEsygnLGTQO2NIWkjU0SF7pc6VSZuM8NRzidmQA=;
+        b=GSPSfEBxPV4S7OI+AW+YAAX1xvRLb1z7/i6iHkXiQgmmIrg8FK+sijmpKKE6Y4vYgd
+         2S5AfbxEP/7oZGM3AW0prFV/1+blvWYS4yDVLfcaXwxusxoTmf8tuijtFvklY6m6a6gD
+         RO0t1xM18YS+JO0KKkd4Uz9AtWu4E0y224r9uQ6Vfz9YsMPF+awYXCgJzximovcR8Kek
+         MSPJXDEkvrTVK3VooBCAmurgF3oSjrLKQ00HoogdbkYIGtkSLj55K7LDidwpSoI+/7EM
+         ZJD+5GKJwOvAqb4GVKjz1u8nQea4KvrR3LUfvJdmVTepqL/yUwewor4Fp7Z8sO2V9SKT
+         nGLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeB2HgYdIeJNySEgKBLeKioJwio+QPlCKAUuSVxkcvLP4OWMOYbsBKAZl7zrfpM7WvZEdd7vfPvnSFcfTloLHykM8ONbRtIoPV
+X-Gm-Message-State: AOJu0YzZ284oKWawULX/01/rkV9FL2GPUfQFcoa//uUmrdz3AiHLVKLp
+	rmVN3hJncyE6SKDBoDGn5B/fUfMP8/tvsaK6Nxw1sYwbP/U9zAPlkYnUVldh
+X-Google-Smtp-Source: AGHT+IG/GWDlKRu5+OOMDNAMNMhtDFiwfQtpn8aBJzDUfIXJDuLqEafEhFwZW4oo9t/YHsJs9EPD5Q==
+X-Received: by 2002:a05:6602:1502:b0:803:980e:5b38 with SMTP id ca18e2360f4ac-816c2d03801mr41542239f.1.1721156300341;
+        Tue, 16 Jul 2024 11:58:20 -0700 (PDT)
+Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
+        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4c210f23f1csm75301173.102.2024.07.16.11.58.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 11:58:19 -0700 (PDT)
+From: Jim Cromie <jim.cromie@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	jbaron@akamai.com,
+	gregkh@linuxfoundation.org,
+	daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com,
+	jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com
+Cc: ukaszb@chromium.org,
+	linux@rasmusvillemoes.dk,
+	joe@perches.com,
+	mcgrof@kernel.org,
+	seanpaul@chromium.org,
+	robdclark@gmail.com,
+	groeck@google.com,
+	yanivt@google.com,
+	bleung@google.com,
+	linux-doc@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	kernelnewbies@kernelnewbies.org,
+	Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH v9-resend 01/54] docs/dyndbg: update examples \012 to \n
+Date: Tue, 16 Jul 2024 12:57:13 -0600
+Message-ID: <20240716185806.1572048-2-jim.cromie@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240716185806.1572048-1-jim.cromie@gmail.com>
+References: <20240716185806.1572048-1-jim.cromie@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <fe3126a0-7c32-426a-9997-77d76ade5179@app.fastmail.com> <b55b7bb8-97b6-4d25-9592-8213ecfe7b6c@app.fastmail.com>
-In-Reply-To: <b55b7bb8-97b6-4d25-9592-8213ecfe7b6c@app.fastmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 16 Jul 2024 11:55:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whp2O+NjOXf77hfATgEe-LHTefbFb0eR=ytQUJTOUnfdQ@mail.gmail.com>
-Message-ID: <CAHk-=whp2O+NjOXf77hfATgEe-LHTefbFb0eR=ytQUJTOUnfdQ@mail.gmail.com>
-Subject: Re: [GIT PULL 2/4] soc: dt updates for 6.11
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	soc@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 15 Jul 2024 at 14:03, Arnd Bergmann <arnd@arndb.de> wrote:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-dt-6.11
+commit 47ea6f99d06e ("dyndbg: use ESCAPE_SPACE for cat control")
 
-WTF, Arnd?
+changed the control-file to display format strings with "\n" rather
+than "\012".  Update the docs to match the new reality.
 
-This doesn't even *build*:
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+---
+ Documentation/admin-guide/dynamic-debug-howto.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> Jagadeesh Kona (8):
->       clk: qcom: camcc-sm8650: Add SM8650 camera clock controller driver
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 0e9b48daf690..6a8ce5a34382 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -52,12 +52,12 @@ query/commands to the control file.  Example::
+   # grease the interface
+   :#> alias ddcmd='echo $* > /proc/dynamic_debug/control'
+ 
+-  :#> ddcmd '-p; module main func run* +p'
++  :#> ddcmd '-p; module main func run* +p'	# disable all, then enable main
+   :#> grep =p /proc/dynamic_debug/control
+-  init/main.c:1424 [main]run_init_process =p "  with arguments:\012"
+-  init/main.c:1426 [main]run_init_process =p "    %s\012"
+-  init/main.c:1427 [main]run_init_process =p "  with environment:\012"
+-  init/main.c:1429 [main]run_init_process =p "    %s\012"
++  init/main.c:1424 [main]run_init_process =p "  with arguments:\n"
++  init/main.c:1426 [main]run_init_process =p "    %s\n"
++  init/main.c:1427 [main]run_init_process =p "  with environment:\n"
++  init/main.c:1429 [main]run_init_process =p "    %s\n"
+ 
+ Error messages go to console/syslog::
+ 
+-- 
+2.45.2
 
-because it has
-
-        ret = qcom_cc_really_probe(&pdev->dev, &cam_cc_sm8650_desc, regmap);
-
-which is entirely wrong.
-
-And no, this is not some kind of merge mistake of mine. It was wrong
-in your tree.
-
-qcom_cc_really_probe() has always taken a
-
-    struct platform_device *pdev
-
-as the first argument, not a "struct device *". So the "&pdev->dev"
-thing is completely wrong, and always has been.
-
-Looking around, this was also reported by the kernel test robot at
-
-    https://lore.kernel.org/all/202407072331.baglL4Sd-lkp@intel.com/
-    https://lore.kernel.org/all/202407072212.WptVaUDt-lkp@intel.com/
-
-and still I had to just notice it in my local build test.
-
-I did fix it up, but this is *not* ok.
-
-               Linus
