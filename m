@@ -1,123 +1,441 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23331991C8;
-	Tue, 16 Jul 2024 10:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885E21991BE;
+	Tue, 16 Jul 2024 10:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125191; cv=none; b=lbw41F0kZm/O1Wqdm0mzbft6gbyA5Pgl4/NlUGb7H3LdydXATSlsSiPMexb2MTQ2j7NrTdN/6Y56J/n6EU2S4OvLFPn+oLMXz3xh40ieMiTEMprv0sWV+r7tIWxWdHFKd02Oh2FbVumjp4b2/nB6s6IRF4IUwUr4NteU61HL7MA=
+	t=1721125189; cv=none; b=TDmeOrBvlfN570SQrAYkGmbOctqwo62qvgetrc8UPIG3kK/t3JZevXUHxQYhxMbj5BV2rwirUbwy0sj8FyZBvKIvNfNbpzQU+d7VcgaRBhGzaYbtRNhaBe5qVmgb+geRP0Eh/2HkUVeg8bPKgG8Q4MqPxfX1vlIovR++beA1a3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125191; c=relaxed/simple;
-	bh=XtLY/2W01ozoke3wI7FyIVzf6xXxghVArIakSkiiAYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TfgrG0m/m63k4qwwrVO42K3F4k3dlQNIH6lvbqzCI/hTuw/aX6OgzOyetl/jvbaSfrVXtsweYQL5MSrr/sELqg6C75UbjaFK/4YLklBZJKhkjgOR1cbm8aDxJYTiUf2abl68EL/Tv5nbD64b79I2PMUBotLvlxAX5ZAm3D8YFt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vwa1mchl; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1721125189; c=relaxed/simple;
+	bh=2eQkafaCbvnXFaeRjQV/lH+u7D9zellmWU75uCnWzOo=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=qDTsEBfxxxM1Y1Bodd3mX+2g2OTd8msLMNuxblRmiMnaaGpUpxzNtGb2cf2+BGwZgep5nisFJinHQ9ijrO1t1KPv11xSiNJ9PDKJ0U0mbqsvCtyBjLNiMUDJYjRy4ItlyW29XjVww+3YsHjQtW2OjMMk0Vu2/oLZcIQvPdKg3G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fQKqmLI3; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vwa1mchl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=uXDtNkzCx0nO2BmtzEf3KafT9C+s6Og5FjNJ31sYD3c=; t=1721125189;
-	x=1721557189; b=vwa1mchltNUTHk/VDE8wiUnO/PH5SUX3r9wdBGuemuB+GOnU/0Js0wFherUHv
-	piSEG/3yBmAHNEqdDsNASLaTIZ49t1mLsa7DMfEULCr6b+qemsKRWrzQUnHsBSxfXk+rNA6Bze8SB
-	JThJlYdhRs9m9lxnVL5BgWiRpaQ8maF5+ZaPb7XrURI/DlxYFSKwU2X1y0dFD/VCuVIYACUHZlkRB
-	dhgosz3Hvv/Wv29OB2K0iHqI/4LMVJeNmhZQdscJdpt9Xfr2O/98TWGy5bLuSViSPB3MN5qjkH9kj
-	SfSSgDmVXzEUkh0cga34IPNk+p7Efv/p5wAp8kgXc8Vav/JsOw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sTfHX-0000Il-27; Tue, 16 Jul 2024 12:19:39 +0200
-Message-ID: <569626ee-4aca-418b-9cfc-10cf5e2747a9@leemhuis.info>
-Date: Tue, 16 Jul 2024 12:19:38 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fQKqmLI3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721125188; x=1752661188;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2eQkafaCbvnXFaeRjQV/lH+u7D9zellmWU75uCnWzOo=;
+  b=fQKqmLI3swR/s2vaEpWgSu1xMRMjxPLidFwlYfCiIwU2k82aOsB9HoAt
+   FsGh4ujaaZSQ19+WL5ClUWRGe/GkYYz0bkiqWtzzOhzwlvq3XGU4ZugLr
+   jyqUva+w0sV7DAZ/nHl8yb3f64ciwK5OFITbmFtPMeEnYjOWfBnTnXsLl
+   WkhNq7QF52oRU4LsjjTcqO3+OAljj4/dsArLgRs9pPcffD+VkneNjeJOS
+   yuj/EjNuTHiAmqWkh4jcqrgWtq6RczARqR2IaBgb/XOSGyEhyeB30Yyqe
+   nWysLdZTuSJL/WJjcYC2q+k7buuaBsFf2CpOVoXRLZNnTyRepUCB9N79W
+   A==;
+X-CSE-ConnectionGUID: 5IVB24SUT8KHhy0F1jT5Aw==
+X-CSE-MsgGUID: 9eWzJva2Rh+lC9G5GNjt/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="41078565"
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="41078565"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:19:47 -0700
+X-CSE-ConnectionGUID: L7pvEwS7TD6uD6lgzgIYIQ==
+X-CSE-MsgGUID: ngaqdashTX6jZEB5lG5mPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="49886652"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.133])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:19:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Tue, 16 Jul 2024 13:14:10 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.11-1
+Message-ID: <pdx86-pr-20240716131410-2360330733@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] perf build: Conditionally add feature check flags
- for libtrace{event,fs}
-To: Guilherme Amadio <amadio@gentoo.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@arm.com>,
- linux-perf-users@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20240628202608.3273329-1-amadio@gentoo.org>
- <20240628203432.3273625-1-amadio@gentoo.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: en-US, de-DE
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <20240628203432.3273625-1-amadio@gentoo.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1721125189;80dc3f8b;
-X-HE-SMSGID: 1sTfHX-0000Il-27
+Content-Transfer-Encoding: 8bit
 
-On 28.06.24 22:34, Guilherme Amadio wrote:
-> This avoids reported warnings when the packages are not installed.
-> 
-> Fixes: 0f0e1f44569061e3dc590cd0b8cb74d8fd53706b
-> Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
-> ---
->  tools/perf/Makefile.config | 28 +++++++++++++++-------------
->  1 file changed, 15 insertions(+), 13 deletions(-)
-> [...]
+Hi Linus,
 
-So, Namhyung applied this. But TWIMC: by -next vanilla builds based on
-the Fedora rawhide srpm still fails because libtracefs is not found,
-when it fact it is installed. That afaics was what triggered this series
-in the first place.
+Here is the main PDx86 PR for v6.11.
 
-Here is the report:
-https://lore.kernel.org/all/072d3965-7140-4f0b-bf9a-9d7edabbfde9@leemhuis.info/
+Highlights:
+ - amd/pmf:		Report system state changes using existing input
+			events
+ - asus-wmi:		Zenbook 2023 camera LED disable support and fix
+			TUF laptop keyboard RGB LED sysfs interface
+ - dell-pc:		Fan modes / platform profile support
+ - hp-wmi:		Fix platform profile switching on Omen/Victus
+			laptops
+ - intel/ISST:		Use only TPMI interface when TPMI and legacy
+			interfaces are available
+ - intel/pmc:		LTR restore support to pair with LTR ignore
+ - intel/tpmi:		Performance Limit Reasons (PLR) and APIC <-> Punit
+			CPU numbering mapping support
+ - WMI:			driver override support and docs improvements
+ - lenovo-yoga-c630:	Support for EC (platform/arm64)
+ - platform/arm64:	Fix build with COMPILE_TEST (broke after addition
+			of C630)
+ - tools:		Intel Speed Select Turbo Ratio Limit fix
+ - Miscellaneous cleanups / refactoring / improvements
 
-Here is a failed build log from yesterday's -next:
-https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/07732721-next-next-all/builder-live.log.gz
+Regards, i.
 
-Ciao, Thorsten
+
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-1
+
+for you to fetch changes up to d8b17a364ec48239fccb65efe74bb485e79e6743:
+
+  platform/x86: asus-wmi: fix TUF laptop RGB variant (2024-07-16 12:49:09 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.11-1
+
+Highlights:
+ - amd/pmf:		Report system state changes using existing input
+			events
+ - asus-wmi:		Zenbook 2023 camera LED disable support and fix
+			TUF laptop keyboard RGB LED sysfs interface
+ - dell-pc:		Fan modes / platform profile support
+ - hp-wmi:		Fix platform profile switching on Omen/Victus
+			laptops
+ - intel/ISST:		Use only TPMI interface when TPMI and legacy
+			interfaces are available
+ - intel/pmc:		LTR restore support to pair with LTR ignore
+ - intel/tpmi:		Performance Limit Reasons (PLR) and APIC <-> Punit
+			CPU numbering mapping support
+ - WMI:			driver override support and docs improvements
+ - lenovo-yoga-c630:	Support for EC (platform/arm64)
+ - platform/arm64:	Fix build with COMPILE_TEST (broke after addition
+			of C630)
+ - tools:		Intel Speed Select Turbo Ratio Limit fix
+ - Miscellaneous cleanups / refactoring / improvements
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmf:
+ -  Remove update system state document
+ -  Use existing input event codes to update system states
+ -  Use memdup_user()
+
+arm64:
+ -  add Lenovo Yoga C630 WOS EC driver
+ -  build drivers even on non-ARM64 platforms
+ -  EC_ACER_ASPIRE1 should depend on ARCH_QCOM
+ -  EC_LENOVO_YOGA_C630 should depend on ARCH_QCOM
+
+arm64: lenovo-yoga-c630:
+ -  select AUXILIARY_BUS
+
+asus-tf103c-dock:
+ -  Use 2-argument strscpy()
+
+asus-wmi:
+ -  fix TUF laptop RGB variant
+ -  support the disable camera LED on F10 of Zenbook 2023
+
+dell-pc:
+ -  avoid double free and invalid unregistration
+ -  Implement platform_profile
+
+dell-smbios:
+ -  Add helper for checking supported class
+ -  Move request functions for reuse
+
+Docs/admin-guide:
+ -  Remove pmf leftover reference from the index
+
+doc: TPMI:
+ -  Add entry for Performance Limit Reasons
+
+dt-bindings: platform:
+ -  Add Lenovo Yoga C630 EC
+
+hp: hp-bioscfg:
+ -  Use 2-argument strscpy()
+
+hp-wmi:
+ -  Fix implementation of the platform_profile_omen_get function
+ -  Fix platform profile option switch bug on Omen and Victus laptops
+
+ideapad-laptop:
+ -  use cleanup.h
+
+intel: chtwc_int33fe:
+ -  Use 2-argument strscpy()
+
+intel/ifs:
+ -  Switch to new Intel CPU model defines
+
+intel_ips:
+ -  Switch to new Intel CPU model defines
+
+intel/pmc:
+ -  Add support to show ltr_ignore value
+ -  Add support to undo ltr_ignore
+ -  Convert index variables to be unsigned
+ -  Move pmc assignment closer to first usage
+ -  Remove unneeded min_t check
+ -  Simplify mutex usage with cleanup helpers
+ -  Switch to new Intel CPU model defines
+ -  Use DEFINE_SHOW_STORE_ATTRIBUTE macro
+ -  Use the Elvis operator
+ -  Use the return value of pmc_core_send_msg
+
+intel_scu_wdt:
+ -  Switch to new Intel CPU model defines
+
+intel_speed_select_if:
+ -  Switch to new Intel CPU model defines
+
+intel_telemetry:
+ -  Switch to new Intel CPU model defines
+
+intel/tpmi:
+ -  Add API to get debugfs root
+ -  Add new auxiliary driver for performance limits
+ -  Add support for performance limit reasons
+
+intel:
+ -  TPMI domain id and CPU mapping
+
+intel/tpmi/plr:
+ -  Add support for the plr mailbox
+ -  Fix output in plr_print_bits()
+
+intel_turbo_max_3:
+ -  Switch to new Intel CPU model defines
+
+intel-uncore-freq:
+ -  Get rid of magic min_max argument
+ -  Get rid of magic values
+ -  Get rid of uncore_read_freq driver API
+ -  Re-arrange bit masks
+ -  Rename the sysfs helper macro names
+ -  Switch to new Intel CPU model defines
+ -  Use generic helpers for current frequency
+ -  Use uncore_index with read_control_freq
+
+ISST:
+ -  Add model specific loading for common module
+ -  Avoid some SkyLake server models
+ -  Use only TPMI interface when present
+
+p2sb:
+ -  Switch to new Intel CPU model defines
+
+serial-multi-instantiate:
+ -  Use 2-argument strscpy()
+
+think-lmi:
+ -  Use 2-argument strscpy()
+
+thinkpad_acpi:
+ -  Use 2-argument strscpy()
+
+tools/power/x86/intel-speed-select:
+ -  Set TRL MSR in 100 MHz units
+ -  v1.20 release
+
+wmi:
+ -  Add bus ABI documentation
+ -  Add driver_override support
+
+x86/platform/atom:
+ -  Switch to new Intel CPU model defines
+
+Merges:
+ -  Merge branch 'pdx86/platform-drivers-x86-lenovo-c630' into review-ilpo
+ -  Merge branch 'pdx86/platform-drivers-x86-lenovo-c630' into review-ilpo
+ -  Merge branch 'pdx86/platform-drivers-x86-lenovo-c630' into review-ilpo
+ -  Merge remote-tracking branch 'intel-speed-select/intel-sst' into review-ilpo
+
+----------------------------------------------------------------
+Alexis Belmonte (2):
+      platform/x86: hp-wmi: Fix platform profile option switch bug on Omen and Victus laptops
+      platform/x86: hp-wmi: Fix implementation of the platform_profile_omen_get function
+
+Andy Shevchenko (6):
+      platform/x86: asus-tf103c-dock: Use 2-argument strscpy()
+      platform/x86: hp: hp-bioscfg: Use 2-argument strscpy()
+      platform/x86: intel: chtwc_int33fe: Use 2-argument strscpy()
+      platform/x86: serial-multi-instantiate: Use 2-argument strscpy()
+      platform/x86: think-lmi: Use 2-argument strscpy()
+      platform/x86: thinkpad_acpi: Use 2-argument strscpy()
+
+Armin Wolf (2):
+      platform/x86: wmi: Add driver_override support
+      platform/x86: wmi: Add bus ABI documentation
+
+Bjorn Andersson (1):
+      dt-bindings: platform: Add Lenovo Yoga C630 EC
+
+Dan Carpenter (1):
+      platform/x86/intel/tpmi/plr: Fix output in plr_print_bits()
+
+Devin Bayer (1):
+      platform/x86: asus-wmi: support the disable camera LED on F10 of Zenbook 2023
+
+Dmitry Baryshkov (3):
+      platform: arm64: add Lenovo Yoga C630 WOS EC driver
+      platform/arm64: build drivers even on non-ARM64 platforms
+      platform: arm64: lenovo-yoga-c630: select AUXILIARY_BUS
+
+Geert Uytterhoeven (2):
+      platform: arm64: EC_ACER_ASPIRE1 should depend on ARCH_QCOM
+      platform: arm64: EC_LENOVO_YOGA_C630 should depend on ARCH_QCOM
+
+Gergo Koteles (1):
+      platform/x86: ideapad-laptop: use cleanup.h
+
+Ilpo Järvinen (5):
+      Merge branch 'pdx86/platform-drivers-x86-lenovo-c630' into review-ilpo
+      Merge branch 'pdx86/platform-drivers-x86-lenovo-c630' into review-ilpo
+      Merge branch 'pdx86/platform-drivers-x86-lenovo-c630' into review-ilpo
+      Merge remote-tracking branch 'intel-speed-select/intel-sst' into review-ilpo
+      Docs/admin-guide: Remove pmf leftover reference from the index
+
+Luke D. Jones (1):
+      platform/x86: asus-wmi: fix TUF laptop RGB variant
+
+Lyndon Sanche (3):
+      platform/x86: dell-smbios: Add helper for checking supported class
+      platform/x86: dell-smbios: Move request functions for reuse
+      platform/x86: dell-pc: Implement platform_profile
+
+Shyam Sundar S K (2):
+      platform/x86/amd/pmf: Use existing input event codes to update system states
+      platform/x86/amd/pmf: Remove update system state document
+
+Srinivas Pandruvada (6):
+      platform/x86: ISST: Add model specific loading for common module
+      platform/x86: ISST: Avoid some SkyLake server models
+      platform/x86: ISST: Use only TPMI interface when present
+      platform/x86/intel: TPMI domain id and CPU mapping
+      tools/power/x86/intel-speed-select: Set TRL MSR in 100 MHz units
+      tools/power/x86/intel-speed-select: v1.20 release
+
+Tero Kristo (12):
+      platform/x86/intel/tpmi: Add support for performance limit reasons
+      platform/x86/intel/tpmi: Add API to get debugfs root
+      platform/x86/intel/tpmi: Add new auxiliary driver for performance limits
+      platform/x86/intel/tpmi/plr: Add support for the plr mailbox
+      doc: TPMI: Add entry for Performance Limit Reasons
+      platform/x86/intel-uncore-freq: Re-arrange bit masks
+      platform/x86/intel-uncore-freq: Get rid of magic values
+      platform/x86/intel-uncore-freq: Get rid of magic min_max argument
+      platform/x86/intel-uncore-freq: Use uncore_index with read_control_freq
+      platform/x86/intel-uncore-freq: Get rid of uncore_read_freq driver API
+      platform/x86/intel-uncore-freq: Rename the sysfs helper macro names
+      platform/x86/intel-uncore-freq: Use generic helpers for current frequency
+
+Thomas Weißschuh (1):
+      platform/x86: dell-pc: avoid double free and invalid unregistration
+
+Thorsten Blum (1):
+      platform/x86/amd/pmf: Use memdup_user()
+
+Tony Luck (10):
+      platform/x86/intel/pmc: Switch to new Intel CPU model defines
+      platform/x86: intel_telemetry: Switch to new Intel CPU model defines
+      x86/platform/atom: Switch to new Intel CPU model defines
+      platform/x86: p2sb: Switch to new Intel CPU model defines
+      platform/x86: intel_turbo_max_3: Switch to new Intel CPU model defines
+      platform/x86: intel_ips: Switch to new Intel CPU model defines
+      platform/x86: intel-uncore-freq: Switch to new Intel CPU model defines
+      platform/x86: intel_speed_select_if: Switch to new Intel CPU model defines
+      platform/x86: intel_scu_wdt: Switch to new Intel CPU model defines
+      platform/x86/intel/ifs: Switch to new Intel CPU model defines
+
+Xi Pardee (9):
+      platform/x86:intel/pmc: Use the return value of pmc_core_send_msg
+      platform/x86:intel/pmc: Simplify mutex usage with cleanup helpers
+      platform/x86:intel/pmc: Convert index variables to be unsigned
+      platform/x86:intel/pmc: Move pmc assignment closer to first usage
+      platform/x86:intel/pmc: Add support to show ltr_ignore value
+      platform/x86:intel/pmc: Remove unneeded min_t check
+      platform/x86:intel/pmc: Use DEFINE_SHOW_STORE_ATTRIBUTE macro
+      platform/x86:intel/pmc: Use the Elvis operator
+      platform/x86:intel/pmc: Add support to undo ltr_ignore
+
+ Documentation/ABI/testing/debugfs-tpmi             |   9 +
+ Documentation/ABI/testing/sysfs-bus-wmi            |  81 +++++
+ Documentation/admin-guide/index.rst                |   1 -
+ Documentation/admin-guide/pmf.rst                  |  24 --
+ .../bindings/platform/lenovo,yoga-c630-ec.yaml     |  83 +++++
+ MAINTAINERS                                        |   7 +
+ arch/x86/platform/atom/punit_atom_debug.c          |  11 +-
+ drivers/platform/Makefile                          |   2 +-
+ drivers/platform/arm64/Kconfig                     |  17 +
+ drivers/platform/arm64/Makefile                    |   1 +
+ drivers/platform/arm64/lenovo-yoga-c630.c          | 291 +++++++++++++++++
+ drivers/platform/x86/amd/pmf/pmf.h                 |   2 +
+ drivers/platform/x86/amd/pmf/tee-if.c              |  73 +++--
+ drivers/platform/x86/asus-tf103c-dock.c            |  10 +-
+ drivers/platform/x86/asus-wmi.c                    |  41 ++-
+ drivers/platform/x86/dell/Kconfig                  |  13 +
+ drivers/platform/x86/dell/Makefile                 |   1 +
+ drivers/platform/x86/dell/dell-laptop.c            |  23 --
+ drivers/platform/x86/dell/dell-pc.c                | 309 ++++++++++++++++++
+ drivers/platform/x86/dell/dell-smbios-base.c       |  35 ++
+ drivers/platform/x86/dell/dell-smbios.h            |   7 +
+ drivers/platform/x86/hp/Kconfig                    |   1 +
+ .../platform/x86/hp/hp-bioscfg/enum-attributes.c   |  18 +-
+ .../platform/x86/hp/hp-bioscfg/int-attributes.c    |   7 +-
+ .../x86/hp/hp-bioscfg/order-list-attributes.c      |  18 +-
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c       |  19 +-
+ .../platform/x86/hp/hp-bioscfg/spmobj-attributes.c |   3 +-
+ .../platform/x86/hp/hp-bioscfg/string-attributes.c |  12 +-
+ drivers/platform/x86/hp/hp-wmi.c                   | 188 ++++++++++-
+ drivers/platform/x86/ideapad-laptop.c              |  71 ++---
+ drivers/platform/x86/intel/Kconfig                 |  11 +
+ drivers/platform/x86/intel/Makefile                |   4 +
+ drivers/platform/x86/intel/chtwc_int33fe.c         |   6 +-
+ drivers/platform/x86/intel/ifs/core.c              |  15 +-
+ drivers/platform/x86/intel/intel_plr_tpmi.c        | 354 +++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.c              | 262 +++++++--------
+ drivers/platform/x86/intel/pmc/pltdrv.c            |  16 +-
+ .../x86/intel/speed_select_if/isst_if_common.c     |  75 +++--
+ .../x86/intel/speed_select_if/isst_if_common.h     |   3 +
+ .../x86/intel/speed_select_if/isst_if_mbox_msr.c   |   4 +-
+ drivers/platform/x86/intel/telemetry/debugfs.c     |   4 +-
+ drivers/platform/x86/intel/telemetry/pltdrv.c      |   4 +-
+ drivers/platform/x86/intel/tpmi.c                  |  11 +
+ drivers/platform/x86/intel/tpmi_power_domains.c    | 235 ++++++++++++++
+ drivers/platform/x86/intel/tpmi_power_domains.h    |  18 ++
+ drivers/platform/x86/intel/turbo_max_3.c           |   4 +-
+ .../uncore-frequency/uncore-frequency-common.c     |  83 ++---
+ .../uncore-frequency/uncore-frequency-common.h     |  13 +-
+ .../intel/uncore-frequency/uncore-frequency-tpmi.c | 101 ++++--
+ .../x86/intel/uncore-frequency/uncore-frequency.c  | 108 ++++---
+ drivers/platform/x86/intel_ips.c                   |   3 +-
+ drivers/platform/x86/intel_scu_wdt.c               |   2 +-
+ drivers/platform/x86/p2sb.c                        |   2 +-
+ drivers/platform/x86/serial-multi-instantiate.c    |   4 +-
+ drivers/platform/x86/think-lmi.c                   |   4 +-
+ drivers/platform/x86/thinkpad_acpi.c               |   6 +-
+ drivers/platform/x86/wmi.c                         |  33 ++
+ include/linux/intel_tpmi.h                         |   2 +
+ include/linux/platform_data/lenovo-yoga-c630.h     |  44 +++
+ include/linux/platform_data/x86/asus-wmi.h         |   4 +
+ include/linux/wmi.h                                |   4 +
+ tools/power/x86/intel-speed-select/isst-config.c   |   2 +-
+ tools/power/x86/intel-speed-select/isst-core.c     |   6 +
+ 63 files changed, 2301 insertions(+), 524 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-wmi
+ delete mode 100644 Documentation/admin-guide/pmf.rst
+ create mode 100644 Documentation/devicetree/bindings/platform/lenovo,yoga-c630-ec.yaml
+ create mode 100644 drivers/platform/arm64/lenovo-yoga-c630.c
+ create mode 100644 drivers/platform/x86/dell/dell-pc.c
+ create mode 100644 drivers/platform/x86/intel/intel_plr_tpmi.c
+ create mode 100644 drivers/platform/x86/intel/tpmi_power_domains.c
+ create mode 100644 drivers/platform/x86/intel/tpmi_power_domains.h
+ create mode 100644 include/linux/platform_data/lenovo-yoga-c630.h
