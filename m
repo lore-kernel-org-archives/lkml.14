@@ -1,57 +1,83 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F78199E83
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20255199EA9
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125852; cv=none; b=WMEQiZ4AgipxjNuf0birLgIxPQdTvUgPToES3uV/R7oeG0oEAkhwZLgVOweCOqGQTHVvvQyoI18xKa83EjmQ/mdj2fEMwgTZZIyGEK+kquRgMYR3M8bxLc/NYyTUJQH9Ef/sS1nvK3ThKC9pekrKYTdpnLYGEXLEPNFyAM0CMWE=
+	t=1721125853; cv=none; b=fr9SkvrvuWNyW1qetuiZHnwt+9Gl4YhClsk0cES82vmRNXlvGSrvS6cn2DOdcfiOEai2keDr31hKy2fXZ+qXKMM2qXCGQHac14GXyIWJ+0ucA59ywmm3EX1LN3fXGfJK1BAgqLxKAti+tq8/AZAgmUVOB2tk2C9kLeHjFQ+mRX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125852; c=relaxed/simple;
-	bh=g9/gVNxpx+7t2o8PmFGwzhgSGmNVeRe29Vhrb1wQwcw=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=mw8zQ6So5lyn97UORuCoPmKT0DjFa9wT+ZFUoOKcmNKBEMz+6VVXGqMiBoNC3TmhJ2gWbIwIkf43D41blugd1kaHM5xSTGMVyryKxUFH/YBDAqLG7U5ukagIqb13AiaEppKZmZS2DdMQEIuvkhM/qPZ4z8qxOP7CvYwe0EXEP+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=GWyqT/vW; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1721125853; c=relaxed/simple;
+	bh=Yma0qTMMXu0a2MbLRmuXJu/JnB7PKFVYrRohVbWmkNg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TxnX7LOnUsPIAR7R+NT+nqwikFQZMtVNfxTw/SnoL9+H1lvB8x5ZSqE/u4EJcnjH0aM8UpfOrFU8cTVeuE6pul4hm58bDm6DKIJJZ3bq2VJgS6eGJAc1KlsZon7I/3v0woz2q83eBasnqSbA7bgTQLuZ/RvVR2G2L+UseuIBh3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=KCU0FCGG; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GWyqT/vW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1721125840; bh=o+BNYnMQrUCLxfU5llips2j6mfC0NAa8rtMrfluuLg4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GWyqT/vWaoEp2zuHVd3o9p1dyLEksvL6MoUYHDrTPMFSjlUCcjTJDzv/QYiMbdDpP
-	 fr0gRcqF0ViIFN3Jvwi/sLOvCq+gYWriW8QIDArJSvCexdJjvjznMb9FtW3Q5w+mPB
-	 nAv3n1XrVuMg82hJQOSTSyMZhl8iUw2YJyX0uoHE=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
-	id 62530A82; Tue, 16 Jul 2024 18:24:37 +0800
-X-QQ-mid: xmsmtpt1721125477tdjzbkjo0
-Message-ID: <tencent_5FFE6CF02F716D549514EB16EC6ACC3C780A@qq.com>
-X-QQ-XMAILINFO: NhUkPfKlCtQwr6nIzfYme0iGaJnDN/14xU2kEyPpgPnCOZR/hdjivbPfBphZbD
-	 BVwRzZTCldhOgF7/bhREq3r0nlao4h+lpJUmHdsF0spXH9D8/CknU7anUIoXGPH6/nXmv2PSUOk2
-	 8oRFtoIjfoENyukVIbr/6QXMVbFt0MB7LaJjzdS7frECrxOdya5E+U19M5omXmmtJYMGvygiWWm4
-	 JKrgkxWWSDWN1r7I5Wvz2Yq/ycOjr4wLVccwN6jOfiVtxaYn9uSZZ16JjaIB6Ef9+GqaJLW38wRM
-	 GzVfA2pTjFFbSelgT/HrmZV9Wp7iWx5OiOiL+vNN4IR7j79hPAxDBHoNp/sN6K8LxutC2yX8T2Rr
-	 R8iQ8y/KpP/BwlgcJZnGRTnJ9RQQ043aq6d8CVVb3kBjhZ48DTDSxdK5sLxWkDj8AwXl4yLxVINa
-	 Uf32HI32qw0nqPS91czBdgEmwScPe2IEucLebMGpx59xbScMactXWQAQEy9EkWZb5l/IigFEm9BA
-	 B4CADbtBUzmdsU7XfhN1CrVkF2bryiTNInYk9CcRbi51eHwVNN5051oR1Quev9VX0psjVzehGtcv
-	 avt4OnmysBKG3TncRngK6UADqQvPqnSMUQCA/hm6eN+/9fF8qvDhFQBgAU86lAiH12GNl600NAet
-	 vmhfQEUKBz562xkt/fPrtu5Lre1gZauv6nioWLB6o4tSv3XAgOKYv5dx2DN8LSMNhvxTyoBT3owW
-	 L9cXHCo3JR5bXTES61DRnY5aQZXt7abOpYkiowpKtO69fqll5hclycEDEF/spZW9yP6ZYAzNesjO
-	 cXTMP1+Zk1h4496ov/C/I2EnNjfUMI1anpat5TX/WotwFslWlA0N299sFI5iSC/mjiXmMKo1KeC+
-	 E5eSZMIoN0bMSBVY8p4xntTqd0slRm4rX22NBF6kZg0f938awy6iJkE8zgEyXeFxVPI/ogE9+bNz
-	 w7SJ8rk5kjwe6nAncR8maLsjsumpnR
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+78d5b129a762182225aa@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [sound?] [usb?] UBSAN: shift-out-of-bounds in parse_audio_unit
-Date: Tue, 16 Jul 2024 18:24:37 +0800
-X-OQ-MSGID: <20240716102436.1438568-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000000adac5061d3c7355@google.com>
-References: <0000000000000adac5061d3c7355@google.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="KCU0FCGG"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42793fc0a6dso35911555e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1721125850; x=1721730650; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/G5+44h167VOsiaOPrdd9U616TrltprIHsWsocA1F5A=;
+        b=KCU0FCGGhREK7zVJjftkrnJWEpFCeocN6hdC1uV1OQd5HXNtrKkfvSl4dBD3Gs4OF3
+         o0Kx3sk/hxVFIPL9Tb9vviDxLMCig8wB9yx/7CtTMYDvJnrg2MZeP0K3pCHaJbL17Fig
+         DINjVdIkZ3BFv+OfsUywi0Q4DP97bZyzk/F1Ke/hTTygyDP3KhGkfpiU6mIZz0qOTrvR
+         Kv1m67I9zVotqgLPfRG/TzJqdVKCwrn7enQxUNCnRClnp+rVosJPcn65tsXkfM/yLdiZ
+         ZVtWUBjUJ+819+hLDPCvjJWpHXnxPh/+bqM0727M66tdlSDCNtRRUJSB0G4YG8NScB0U
+         ugSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721125850; x=1721730650;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/G5+44h167VOsiaOPrdd9U616TrltprIHsWsocA1F5A=;
+        b=hBdWUxTh+PYwxzqCeya6nObnJUAhyD47UzR+2pPp3rHwP2wRpdyTfrCKkk6rycOqfB
+         OekiqrOZYeeRnZbd0uVBjfEYoJz0yS98V4ByjtfwrBuRcqgbnNBJqDSGdkInRwfM2c2E
+         MTmBnUMgl0GO4KIRj3BzgB14Q9qnOYEORvkJpAK9vGLJNrSIsoTKhJfWMOmhMa1+fhXi
+         9/tCiWQLv2hl/ejyQz3RHHEPREYhiXf29WorLgcvSc6ewukVKamS8o3tyhaW582Su8Mb
+         FDfGpsRpWiLGGXKmSG4AJoRnrNfvI8UWdhDClsWFg5mTW+7Mq7qw6+6b6q1S4lmQBX9v
+         ycZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoEBm9+f4Q1PwgqCOF76NOJ74j41oUjBN56+UhYrRKykDemZ1uaXfGTD5IF0pP5i8suiYbvPaXYW7TyMYH14TAHQ7Nd4Q0Igtqnyh7
+X-Gm-Message-State: AOJu0Yz1FB2R6aEpgatHISOV599Z8mXnVVuVNn3k369uY5BjF6Ql86Ri
+	Hn31Qz6B8MamSgA4I4jJoWv0uhbqr11lWK5Cquu+idxzpYILpLaX3O716tB5TbA=
+X-Google-Smtp-Source: AGHT+IF+j4vpd59rXfwJJpale0+2M2xjNcq85fj7Hc313ckK0UPmDoi685v/0yv7e97UdhOY9yZPEA==
+X-Received: by 2002:a05:600c:1547:b0:426:6f5f:9da6 with SMTP id 5b1f17b1804b1-427ba697bd1mr9207585e9.27.1721125850521;
+        Tue, 16 Jul 2024 03:30:50 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.171])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77488sm121546145e9.9.2024.07.16.03.30.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 03:30:50 -0700 (PDT)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: lee@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	alexandre.belloni@bootlin.com,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 09/11] arm64: dts: renesas: rzg3s-smarc-som: Enable RTC
+Date: Tue, 16 Jul 2024 13:30:23 +0300
+Message-Id: <20240716103025.1198495-10-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,21 +86,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-invalid bControlSize and bLength make channels too large
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-#syz test: upstream a19ea421490d
+Enable RTC.
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 409fc1164694..17081ada6802 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2000,6 +2000,8 @@ static int parse_audio_feature_unit(struct mixer_build *state, int unitid,
- 	if (state->mixer->protocol == UAC_VERSION_1) {
- 		csize = hdr->bControlSize;
- 		channels = (hdr->bLength - 7) / csize - 1;
-+		if (channels > 32)
-+			return -EINVAL;
- 		bmaControls = hdr->bmaControls;
- 	} else if (state->mixer->protocol == UAC_VERSION_2) {
- 		struct uac2_feature_unit_descriptor *ftr = _ftr;
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
+
+Changes in v2:
+- none
+
+ arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+index 517ce275916a..82a80fd8e7ec 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+@@ -341,6 +341,10 @@ mux {
+ 	};
+ };
+ 
++&rtc {
++	status = "okay";
++};
++
+ &vbattb_xtal {
+ 	clock-frequency = <32768>;
+ };
+-- 
+2.39.2
 
