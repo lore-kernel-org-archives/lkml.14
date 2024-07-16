@@ -1,57 +1,57 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835991990B5
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6A71993A7
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125845; cv=none; b=GRjM8Zm/FHhlnhPFw+SGaW3rs/8ZmdFAVccvYIh3EyhXEhUHkFvzHprdX73zSjuSRCCYngOzW3JRZhg60B9PLoTJgZK5JV4qlK4Hf2qHR7OynepWlj96f1kZ7HGqb3NCIyiCn+4ayZkvDnixbnGE7LYrCpVPf5PBu0vMbsBYLaE=
+	t=1721125850; cv=none; b=RxFfvHUY1v/h4YcDksOBD8YFw9CmD6+Pr+tfK3wMAuJw47CCpeIqtee2E8VQ00DFNLP+jxqDzDIxzgXJMqMeGFeMo99AZtww4DMoQ0kR7sdoau3RTF/u0/s5YJudMzFGBrCbqaKC2Zq9MxVTD5rS0JAfOEz1QkWh9HtJN2y2Ixc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125845; c=relaxed/simple;
-	bh=U+ch8xmFaHgp294pQbeu+qwAnCUqKlJq3BTYconXUnY=;
+	s=arc-20240116; t=1721125850; c=relaxed/simple;
+	bh=+Mc+13b2z80oCG9v0Z12Pko9uuqMsx9D9wsAYYdr2Iw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cp50W3OrsNjMQFaVkt+m/fndRFsNXD+3HKDsBzpRqOvvrKIH9GV9FYPutP6snKge+oHpiwW5VnT6vffg3hVH9RXGvm5Duq2uytDzSI+u63CCY4YgiFyGvAj67stmK6L2poY2iFMCoYFxjlj5AKB1Rrcm+nelQdMoOhPpLBMyOC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ZsU2aQVb; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=AMvSjJkeCwuREllXyyuMOeBPGrTHr3TuTrgDb+I9Oa/C7J2vrYeczHqsbLRhml5m0hcVdYWO4u7voT2wlBjnkSQmmxmTi/hJao/W18BE/B57bdL52BLjZO/Mo1olnam2C+XG66FHalBS57Su5YCfN+LuKXOAUBN+Z4gKb1GlhRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=McCHhfkb; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ZsU2aQVb"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-427b4c621b9so10301475e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:30:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="McCHhfkb"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4265b7514fcso36528035e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:30:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1721125841; x=1721730641; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1721125847; x=1721730647; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UsiHF9UHWXiqB8tTS54Gqt7gUxmJuXlqvb9fFcrRGd4=;
-        b=ZsU2aQVbpBCL9/4EG1FcVW5dsNzB20MJYUo+xExQ4rtiDmZbLVxvl2UXsBJhD0+QEJ
-         VumYzLOBbGt796utg4pJi6w6eScGSsRRyQVloLqxjP1iqDI6vyOWFk4YV4Z/9CKpKyhh
-         rO8Tz2mIwVF3PYFaNFsWcLYrY6SmTMQlcDiHUAIkA2wIz+C0mDTsqbbvr02xNl+dO8L5
-         Fh37LsYLpcMHA5ztZB7LClbI5oE4luQuj8MNld5zTMaTxqQz9d6VYDRdE22lRqye3rBn
-         CMKpDYn0y/oENZk0OFYzOQYFPwq7AMa8YWww7NHs/qKqcg/LhAfuxtGZYhk7rHcDmFgl
-         3YDA==
+        bh=havjViSFqkpX2ZEw/deHEcNpYtCxaTiY0eUvmPFnuY4=;
+        b=McCHhfkbz6e4ZnwGv0BIMeRF7vJSGQ768vJCGG2+FWKdVbQzTjbfU/V5egZYAtbHE7
+         /nyA5AbPC/r4EsicYZubvKuUepjpU4/Uwoxetq8Y/TvCEJxZLyDNChvBpPLXO0COLrE4
+         a5ybVmxe2LamqOssrVTEsVQW1DNytqoonwc4h2I4MaROap1rIuX+N2YzFyebwHrxPGFi
+         +YwhKi2quhIdKOA1AIUFEY/wH3d+aHszhQlOSrOn2z2GvpMMWYxpdBG/ttppdSCx3MDl
+         afgYA72SlahfQNwNlwoP4zvzpbxG1z4XBtx1zkE6jUWjthJNb6iPx4wyr7agKhMfiPL/
+         Q8zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721125841; x=1721730641;
+        d=1e100.net; s=20230601; t=1721125847; x=1721730647;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UsiHF9UHWXiqB8tTS54Gqt7gUxmJuXlqvb9fFcrRGd4=;
-        b=Fto381uSjxENqkMH6HW7qlBLmv+odrm+UOdZgNvNPBp9JrTlR8hXIfUgu6IT4a9TKj
-         HZl1PcqlBe5JEaSyhjqRpkJj8y+vEwSWqC4gv1G00SkyRPWRamHBfva5rS+oQ43AOksH
-         1EOerah7g+AVxvaJJ5TGtzLwnbvl5eFE7/zFx1kR7ZfmES8mPfbb4NoHz2mfsuzC6/ls
-         IxGGJiUbyPDYJU8uTDAl2ydpz+lRRSERwxuV8V/hk8WLfGSMqLgXSk6b7zkKSXKLtv+s
-         KBuYqiQmOLgiiD1DIeO1v6kVjOyrUcxn2qXs+/0R8Ix/OT7AZYB8cKSzE7W6VjpFlKc6
-         Zrkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYYBPvDenKbIIaW3aNhspcofZu1G9MeO+y+ImcqYGgnNE8iWEFQwWoEkd/AZ9FAdRKkm3wmrRSVnXnohP6s7iFZSLvTyZtZQgHuKnY
-X-Gm-Message-State: AOJu0YyUSwsMo5DnYa6MWP62XLOC2r3NW8LPSE7aD+VlH4iIDYL7YWY/
-	+fO+hDaaAqwYpzXw4qIXV7txhwj8uisfJgRoFgYK4CSyDJiC5YgnXN6Q1m/5szA=
-X-Google-Smtp-Source: AGHT+IFeE6ju3CaHVf1REaatVqyeVrgOXii30q0HVq5lQbTES2loCmA1tuKk+ODjr1JSy91v2RZI8A==
-X-Received: by 2002:a05:600c:470f:b0:426:6353:4b88 with SMTP id 5b1f17b1804b1-427ba70097amr10672395e9.37.1721125840937;
-        Tue, 16 Jul 2024 03:30:40 -0700 (PDT)
+        bh=havjViSFqkpX2ZEw/deHEcNpYtCxaTiY0eUvmPFnuY4=;
+        b=CCWK3VFvx18Jh3HmmeiQ2lkLrCgu2sb67j0nLhV+2FaKQzWcOKlQxyeiBown1edgUV
+         ivc/jO3/GXxsG6S0SzTJxT8RfR3Y6Qc7GSO9P8Pezkl9ab+Z+hdzgeygmv93gukAu5EJ
+         WYiWhw17yYstlv/cSKvtccWPmgMz+8ei44S8962HVMJxQdJheTItPylsXKamaWEZyXpq
+         MUmeHRsT2uTqf+jVzZbolhFL8EN/rQ8kkr518fAl/lCQWVDlp/ENU2srDk99ZbstaUiJ
+         LuPGDBPlAPr3NUPjZ+84y8qTEuf8ktbLKziaegW8EXEFfbgCKGhGJ2sKPwI1rmdTdntN
+         rucA==
+X-Forwarded-Encrypted: i=1; AJvYcCX57Ywp4gP85rgGGM4G3oM5SEboUiP32P4SUxNx7SuiZul28K7DK5l5+4R+yNFBZqbpImTdBs/jLvD8wk9NyGIaUyIWfuK+iTCE7AYH
+X-Gm-Message-State: AOJu0YyVOvMSHHCda3/QmZsM54CeOLWEgLzn1v0Ft4b11baqFZlQgr9p
+	lyfWZ6VV4qiRbfcm+YB+SitguDGXJryUMfXpBMYpPbGGwGYGKiecFJmUUbEb+fw=
+X-Google-Smtp-Source: AGHT+IG5nj05P3SaIbAeAjYYqU7ltlxGNASeUqz3/IbArKcpEVPxuAGunWSshG97PaegXbchwypLPA==
+X-Received: by 2002:a5d:6d0f:0:b0:362:ff95:5697 with SMTP id ffacd0b85a97d-36827591cafmr1044592f8f.28.1721125847401;
+        Tue, 16 Jul 2024 03:30:47 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77488sm121546145e9.9.2024.07.16.03.30.39
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77488sm121546145e9.9.2024.07.16.03.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 03:30:40 -0700 (PDT)
+        Tue, 16 Jul 2024 03:30:47 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: lee@kernel.org,
@@ -72,9 +72,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	claudiu.beznea@tuxon.dev,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 03/11] clk: renesas: clk-vbattb: Add VBATTB clock driver
-Date: Tue, 16 Jul 2024 13:30:17 +0300
-Message-Id: <20240716103025.1198495-4-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 07/11] arm64: dts: renesas: r9a08g045: Add RTC node
+Date: Tue, 16 Jul 2024 13:30:21 +0300
+Message-Id: <20240716103025.1198495-8-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
@@ -88,277 +88,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The VBATTB IP of the Renesas RZ/G3S SoC controls the clock that is used
-by the RTC. The input to the VBATTB could be a 32KHz crystal oscillator
-or an external clock device. The driver detects the type of the input clock
-based on the device tree clock name (xin for crystal, clkin for external
-clock device).
-
-The load capacitance of the on-board oscillator need to be configured with
-renesas,vbattb-load-nanofarads DT property.
+Add the DT node for the RTC IP available on the Renesas RZ/G3S SoC.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v2:
-- updated patch description
-- added vendor name in Kconfig flag
-- used cleanup.h lock helpers
-- dropped the MFD code
-- updated registers offsets
-- added vbattb_clk_update_bits() and used it where possible
-- added vbattb_clk_need_bypass() to detect the bypass setup necessity
-- changed the compatible and driver names
+- updated compatibles
 
- drivers/clk/renesas/Kconfig      |   5 +
- drivers/clk/renesas/Makefile     |   1 +
- drivers/clk/renesas/clk-vbattb.c | 212 +++++++++++++++++++++++++++++++
- 3 files changed, 218 insertions(+)
- create mode 100644 drivers/clk/renesas/clk-vbattb.c
+ arch/arm64/boot/dts/renesas/r9a08g045.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
-index 4410d16de4e2..1f5f38136eb2 100644
---- a/drivers/clk/renesas/Kconfig
-+++ b/drivers/clk/renesas/Kconfig
-@@ -228,6 +228,11 @@ config CLK_RZG2L
- 	bool "RZ/{G2L,G2UL,G3S,V2L} family clock support" if COMPILE_TEST
- 	select RESET_CONTROLLER
+diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+index 78b4e088a3a5..22008407848c 100644
+--- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
++++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+@@ -72,6 +72,18 @@ scif0: serial@1004b800 {
+ 			status = "disabled";
+ 		};
  
-+config CLK_RENESAS_VBATTB
-+	bool "Renesas VBATTB clock controller"
-+	depends on MFD_RENESAS_VBATTB
-+	select RESET_CONTROLLER
++		rtc: rtc@1004ec00 {
++			compatible = "renesas,r9a08g045-rtca3", "renesas,rz-rtca3";
++			reg = <0 0x1004ec00 0 0x400>;
++			interrupts = <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "alarm", "period", "carry";
++			clocks = <&vbattclk>;
++			clock-names = "counter";
++			status = "disabled";
++		};
 +
- # Generic
- config CLK_RENESAS_CPG_MSSR
- 	bool "CPG/MSSR clock support" if COMPILE_TEST
-diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
-index f7e18679c3b8..84a2783a7b46 100644
---- a/drivers/clk/renesas/Makefile
-+++ b/drivers/clk/renesas/Makefile
-@@ -51,3 +51,4 @@ obj-$(CONFIG_CLK_RZG2L)			+= rzg2l-cpg.o
- obj-$(CONFIG_CLK_RENESAS_CPG_MSSR)	+= renesas-cpg-mssr.o
- obj-$(CONFIG_CLK_RENESAS_CPG_MSTP)	+= clk-mstp.o
- obj-$(CONFIG_CLK_RENESAS_DIV6)		+= clk-div6.o
-+obj-$(CONFIG_CLK_RENESAS_VBATTB)	+= clk-vbattb.o
-diff --git a/drivers/clk/renesas/clk-vbattb.c b/drivers/clk/renesas/clk-vbattb.c
-new file mode 100644
-index 000000000000..8effe141fc0b
---- /dev/null
-+++ b/drivers/clk/renesas/clk-vbattb.c
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * VBATTB clock driver
-+ *
-+ * Copyright (C) 2024 Renesas Electronics Corp.
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+
-+#define VBATTB_BKSCCR			0x0
-+#define VBATTB_BKSCCR_SOSEL		BIT(6)
-+#define VBATTB_SOSCCR2			0x8
-+#define VBATTB_SOSCCR2_SOSTP2		BIT(0)
-+#define VBATTB_XOSCCR			0x14
-+#define VBATTB_XOSCCR_OUTEN		BIT(16)
-+#define VBATTB_XOSCCR_XSEL		GENMASK(1, 0)
-+#define VBATTB_XOSCCR_XSEL_4_PF		0x0
-+#define VBATTB_XOSCCR_XSEL_7_PF		0x1
-+#define VBATTB_XOSCCR_XSEL_9_PF		0x2
-+#define VBATTB_XOSCCR_XSEL_12_5_PF	0x3
-+
-+/**
-+ * struct vbattb_clk - VBATTB clock data structure
-+ * @base: base address
-+ * @hw: clk hw
-+ * @lock: lock
-+ * @load_capacitance: load capacitance
-+ */
-+struct vbattb_clk {
-+	void __iomem *base;
-+	struct clk_hw hw;
-+	spinlock_t lock;
-+	u8 load_capacitance;
-+};
-+
-+#define to_vbattb_clk(_hw) container_of(_hw, struct vbattb_clk, hw)
-+
-+static void vbattb_clk_update_bits(void __iomem *base, u32 offset, u32 mask, u32 val)
-+{
-+	u32 tmp;
-+
-+	tmp = readl_relaxed(base + offset);
-+	tmp &= ~mask;
-+	tmp |= (val & mask);
-+	writel_relaxed(tmp, base + offset);
-+}
-+
-+static int vbattb_clk_enable(struct clk_hw *hw)
-+{
-+	struct vbattb_clk *vbclk = to_vbattb_clk(hw);
-+	void __iomem *base = vbclk->base;
-+
-+	guard(spinlock)(&vbclk->lock);
-+
-+	vbattb_clk_update_bits(base, VBATTB_SOSCCR2, VBATTB_SOSCCR2_SOSTP2, 0);
-+	vbattb_clk_update_bits(base, VBATTB_XOSCCR, VBATTB_XOSCCR_OUTEN | VBATTB_XOSCCR_XSEL,
-+			       VBATTB_XOSCCR_OUTEN | vbclk->load_capacitance);
-+
-+	return 0;
-+}
-+
-+static void vbattb_clk_disable(struct clk_hw *hw)
-+{
-+	struct vbattb_clk *vbclk = to_vbattb_clk(hw);
-+	void __iomem *base = vbclk->base;
-+
-+	guard(spinlock)(&vbclk->lock);
-+
-+	vbattb_clk_update_bits(base, VBATTB_XOSCCR, VBATTB_XOSCCR_OUTEN, 0);
-+	vbattb_clk_update_bits(base, VBATTB_SOSCCR2, VBATTB_SOSCCR2_SOSTP2, VBATTB_SOSCCR2_SOSTP2);
-+}
-+
-+static int vbattb_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct vbattb_clk *vbclk = to_vbattb_clk(hw);
-+	void __iomem *base = vbclk->base;
-+	unsigned int xosccr, sosccr2;
-+
-+	guard(spinlock)(&vbclk->lock);
-+
-+	xosccr = readl_relaxed(base + VBATTB_XOSCCR);
-+	sosccr2 = readl_relaxed(base + VBATTB_SOSCCR2);
-+
-+	return ((xosccr & VBATTB_XOSCCR_OUTEN) && !(sosccr2 & VBATTB_SOSCCR2_SOSTP2));
-+}
-+
-+static const struct clk_ops vbattb_clk_ops = {
-+	.enable = vbattb_clk_enable,
-+	.disable = vbattb_clk_disable,
-+	.is_enabled = vbattb_clk_is_enabled,
-+};
-+
-+static int vbattb_clk_validate_load_capacitance(struct vbattb_clk *vbclk, u32 load_capacitance)
-+{
-+	switch (load_capacitance) {
-+	case 4000:
-+		vbclk->load_capacitance = VBATTB_XOSCCR_XSEL_4_PF;
-+		break;
-+	case 7000:
-+		vbclk->load_capacitance = VBATTB_XOSCCR_XSEL_7_PF;
-+		break;
-+	case 9000:
-+		vbclk->load_capacitance = VBATTB_XOSCCR_XSEL_9_PF;
-+		break;
-+	case 12500:
-+		vbclk->load_capacitance = VBATTB_XOSCCR_XSEL_12_5_PF;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int vbattb_clk_need_bypass(struct device *dev)
-+{
-+	struct clk *clkin, *xin;
-+
-+	clkin = devm_clk_get_optional(dev, "clkin");
-+	xin = devm_clk_get_optional(dev, "xin");
-+
-+	if (!IS_ERR_OR_NULL(clkin) && !IS_ERR_OR_NULL(xin))
-+		return -EINVAL;
-+	else if (!clkin && !IS_ERR_OR_NULL(xin))
-+		return 0;
-+	else if (!IS_ERR_OR_NULL(clkin) && !xin)
-+		return 1;
-+
-+	return -EINVAL;
-+}
-+
-+static int vbattb_clk_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct clk_parent_data parent_data = {};
-+	struct device *dev = &pdev->dev;
-+	struct clk_init_data init = {};
-+	struct vbattb_clk *vbclk;
-+	u32 load_capacitance;
-+	struct clk_hw *hw;
-+	int ret, bypass;
-+
-+	vbclk = devm_kzalloc(dev, sizeof(*vbclk), GFP_KERNEL);
-+	if (!vbclk)
-+		return -ENOMEM;
-+
-+	vbclk->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(vbclk->base))
-+		return PTR_ERR(vbclk->base);
-+
-+	bypass = vbattb_clk_need_bypass(dev);
-+	if (bypass < 0) {
-+		return bypass;
-+	} else if (bypass) {
-+		parent_data.fw_name = "clkin";
-+		bypass = VBATTB_BKSCCR_SOSEL;
-+	} else {
-+		parent_data.fw_name = "xin";
-+	}
-+
-+	ret = of_property_read_u32(np, "renesas,vbattb-load-nanofarads", &load_capacitance);
-+	if (ret)
-+		return ret;
-+
-+	ret = vbattb_clk_validate_load_capacitance(vbclk, load_capacitance);
-+	if (ret)
-+		return ret;
-+
-+	vbattb_clk_update_bits(vbclk->base, VBATTB_BKSCCR, VBATTB_BKSCCR_SOSEL, bypass);
-+
-+	spin_lock_init(&vbclk->lock);
-+
-+	init.name = "vbattclk";
-+	init.ops = &vbattb_clk_ops;
-+	init.parent_data = &parent_data;
-+	init.num_parents = 1;
-+	init.flags = 0;
-+
-+	vbclk->hw.init = &init;
-+	hw = &vbclk->hw;
-+
-+	ret = devm_clk_hw_register(dev, hw);
-+	if (ret)
-+		return ret;
-+
-+	return of_clk_add_hw_provider(np, of_clk_hw_simple_get, hw);
-+}
-+
-+static const struct of_device_id vbattb_clk_match[] = {
-+	{ .compatible = "renesas,r9a08g045-vbattb-clk" },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver vbattb_clk_driver = {
-+	.driver		= {
-+		.name	= "renesas-vbattb-clk",
-+		.of_match_table = vbattb_clk_match,
-+	},
-+	.probe = vbattb_clk_probe,
-+};
-+module_platform_driver(vbattb_clk_driver);
-+
-+MODULE_DESCRIPTION("Renesas VBATTB Clock Driver");
-+MODULE_AUTHOR("Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>");
-+MODULE_LICENSE("GPL");
+ 		vbattb: vbattb@1005c000 {
+ 			compatible = "renesas,r9a08g045-vbattb";
+ 			reg = <0 0x1005c000 0 0x1000>;
 -- 
 2.39.2
 
