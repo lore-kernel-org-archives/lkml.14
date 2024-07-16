@@ -1,146 +1,141 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB4D19ADB1;
-	Tue, 16 Jul 2024 13:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D4819AA46
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721137183; cv=none; b=VpA4WI7bDcL6K0UVSAp/4xVTFYhPxAW/M2nBlL6s0zZbleKDVz0Pi1D8nx6ZKXGy0p+QT1Cjoek4ob1f8/vejFvxQbJfBrXJbnrn0x1U8cp7OSvDKfaXI1fz3Ispp3LQZe3T7sezEg8C18e0PFDGvGCFxjSe4eB1jwQLxu9bVZc=
+	t=1721137218; cv=none; b=I8tedbQAhvQtcjYior45harQ5kR5RgqFFgGXCOnZ/SENqRVdASP8KRNPIuP329X58MsA910IVXr/VuGzsyylx9vjJByJFNpXp69GTo2c/tC8J1taZCLnCR/G/ppYvg8rVfgmXZwWqPQM/Ry2fuuEsYDX4UcSI1YHknxyfv/TEZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721137183; c=relaxed/simple;
-	bh=/B1Uwq/PitS5XFJ0CIRuXcyGgq5rm49B8F+kxIhIZzs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DJ0yDkPOdG64xxUcmg1Gf0TE32xmBQrPPP0gINsGKJg5x0DPkdGUo3M6UDIyjpvLhpZw/fl3DhckRojs9YqUaGFdiQ+QZ985Dn+zddcuzyxAZ86XBTqp0ZwYPNNz0kuqrjovwmxMHvJXK7DteOEw95Yx3SuJmzD0XLhdGrn6Ji0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WNg9s6t35zdhyn;
-	Tue, 16 Jul 2024 21:37:53 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4CE99180064;
-	Tue, 16 Jul 2024 21:39:37 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 16 Jul 2024 21:39:37 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <tj@kernel.org>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
-	<lizefan.x@bytedance.com>, <hannes@cmpxchg.org>, <mkoutny@suse.com>
-CC: <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 -next] blk-cgroup: move congestion_count to struct blkcg
-Date: Tue, 16 Jul 2024 13:30:58 +0000
-Message-ID: <20240716133058.3491350-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1721137218; c=relaxed/simple;
+	bh=b3A4E23cok5k7mnxSEw6irXzoXzTbKnV0WgS92byiYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mGtCGJBdauEHoAyuEV6Wze3uPdM1t5OTasq85v0NVGd2hduUNFM/rqMO0YWEJW33W5yKpQPnTNoZ9d/U3as6LXq0Ky79kWD0n936p0HsG7dWF+zkE1SolXjtUpfzpEvuVwnHoMmSa4303ikBUGzQ4BclbMa3AYab5tWr4ZSDEdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Ti5z71mi; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ti5z71mi"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6b5f128b18bso30550996d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1721137215; x=1721742015; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZzddLqE5sbJXB4ZLkKSMkOisLHuczB5WDxgyMvz+RuM=;
+        b=Ti5z71mibd1c29itRflK6DzZxmi3yLHwRCtkR8/1eKLBhApuktY6O8fwAk+1faf1Yf
+         SBlE6qzLs4KW0Dm4TFOrGUQA9XMsV3cjHIXFjPkoUNlDvLaPFd5U2+pl+aMXAHffZBgf
+         nlwV4rvzMjSm4JNj1EduQHRfan2h9w2wQKnwD5c0kEXYxqDMfXlrbtvtZpGHqJ1iRnDo
+         /CCL7PHuJmnvgPXJDvWuwWP7rBZh3w+Wt6Mq7g+rwZBpJO7ttASpOnBsRRiLweIh/W75
+         EjhQnYzSon15njD+4OH8MOUQvrFLIEfCaJ/l+EsI8v2nrLUIb5B2qAU04kJOS8Gk1UpG
+         1UOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721137215; x=1721742015;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZzddLqE5sbJXB4ZLkKSMkOisLHuczB5WDxgyMvz+RuM=;
+        b=u6zxKpSShEQZKE3jNLosjDdjbjrM+YdJfWG+KKBRrl7yM1Zpa4AIM9iWYX8D8pJ0U2
+         Cnydjx6CLiBwq+UtzqnPMTsEQu4Lv2pqiNcJw5Q+K2tMhdUgqLeGGUJB0T6nP5/aLh70
+         2tM/LJYP1oPZWkLHcy9KkeHqN5FKDjNnVV2Yo3WhrJ5fsYzdFKu5qh3JtdW/TJGZpkHf
+         22LqQwTMaWeruspZtBc8OQQgG8QQRlPBAspBgpOBtBM5lJLCoLwOVFcAwvRCO3YW+ahl
+         LQjRIG4sYGfFLSlUQGIvrasGQXD7UfRJUgtnMR+chVur4X6nzlKiqo8AjLJqQKS9JD9z
+         f10Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVyWbiCtWrKtO59+cxn6wkcp1TUMNpCfdq71sLq+zTNmk8sis+cTDOw6oB+fig4VohQWI0REfUDkKy0XlNPkevRo5TYLAloMfSp4B3g
+X-Gm-Message-State: AOJu0YwCXD447PxPN/heFdH5W+S2SI86sgVpYBw/Tz+9b0PFvEixnHkm
+	3M7YrxpRfjCURFyzJrgn52FjUvXDfedIzPoddKw7tJDQ3nF0einLJSHZIHJ7lmf5AhU8hN6KEsV
+	K
+X-Google-Smtp-Source: AGHT+IFrKlyzzJnVHLLxNmw34TVxVG87O64wpA44pESjU6PrkfeOnqAxIZcSzyXzUUspO+reEwe3BQ==
+X-Received: by 2002:a05:6214:5290:b0:6b0:7f36:8ae3 with SMTP id 6a1803df08f44-6b77f54230emr22415396d6.32.1721137215461;
+        Tue, 16 Jul 2024 06:40:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b7733ee169sm19763146d6.26.2024.07.16.06.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 06:40:14 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sTiPd-009Qyg-QU;
+	Tue, 16 Jul 2024 10:40:13 -0300
+Date: Tue, 16 Jul 2024 10:40:13 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Omer Shpigelman <oshpigelman@habana.ai>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"ogabbay@kernel.org" <ogabbay@kernel.org>,
+	Zvika Yehudai <zyehudai@habana.ai>
+Subject: Re: [PATCH 11/15] RDMA/hbl: add habanalabs RDMA driver
+Message-ID: <20240716134013.GF14050@ziepe.ca>
+References: <20240613191828.GJ4966@unreal>
+ <fbb34afa-8a38-4124-9384-9b858ce2c4e5@habana.ai>
+ <20240617190429.GB4025@unreal>
+ <461bf44e-fd2f-4c8b-bc41-48d48e5a7fcb@habana.ai>
+ <20240618125842.GG4025@unreal>
+ <b4bda963-7026-4037-83e6-de74728569bd@habana.ai>
+ <20240619105219.GO4025@unreal>
+ <a5554266-55b7-4e96-b226-b686b8a6af89@habana.ai>
+ <20240712130856.GB14050@ziepe.ca>
+ <2c767517-e24c-416b-9083-d3a220ffc14c@habana.ai>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2c767517-e24c-416b-9083-d3a220ffc14c@habana.ai>
 
-The congestion_count was introduced into the struct cgroup by
-commit d09d8df3a294 ("blkcg: add generic throttling mechanism"),
-but since it is closely related to the blkio subsys, it is not
-appropriate to put it in the struct cgroup, so let's move it to
-struct blkcg. There should be no functional changes because blkcg
-is per cgroup.
+On Sun, Jul 14, 2024 at 10:18:12AM +0000, Omer Shpigelman wrote:
+> On 7/12/24 16:08, Jason Gunthorpe wrote:
+> > [You don't often get email from jgg@ziepe.ca. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> > 
+> > On Fri, Jun 28, 2024 at 10:24:32AM +0000, Omer Shpigelman wrote:
+> > 
+> >> We need the core driver to access the IB driver (and to the ETH driver as
+> >> well). As you wrote, we can't use exported symbols from our IB driver nor
+> >> rely on function pointers, but what about providing the core driver an ops
+> >> structure? meaning exporting a register function from the core driver that
+> >> should be called by the IB driver during auxiliary device probe.
+> >> Something like:
+> >>
+> >> int hbl_cn_register_ib_aux_dev(struct auxiliary_device *adev,
+> >>                              struct hbl_ib_ops *ops)
+> >> {
+> >> ...
+> >> }
+> >> EXPORT_SYMBOL(hbl_cn_register_ib_aux_dev);
+> > 
+> > Definately do not do some kind of double-register like this.
+> > 
+> > The auxiliary_device scheme can already be extended to provide ops for
+> > each sub device.
+> > 
+> > Like
+> > 
+> > struct habana_driver {
+> >    struct auxiliary_driver base;
+> >    const struct habana_ops *ops;
+> > };
+> > 
+> > If the ops are justified or not is a different question.
+> > 
+> 
+> Well, I suggested this double-register option because I got a comment that
+> the design pattern of embedded ops structure shouldn't be used.
+> So I'm confused now...
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- block/blk-cgroup.c          |  7 ++++---
- block/blk-cgroup.h          | 10 ++++++----
- include/linux/cgroup-defs.h |  3 ---
- 3 files changed, 10 insertions(+), 10 deletions(-)
+Yeah, don't stick ops in random places, but the device_driver is the
+right place.
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 37e6cc91d576..69e70964398c 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -2182,12 +2182,13 @@ void blk_cgroup_bio_start(struct bio *bio)
- 
- bool blk_cgroup_congested(void)
- {
--	struct cgroup_subsys_state *css;
-+	struct blkcg *blkcg;
- 	bool ret = false;
- 
- 	rcu_read_lock();
--	for (css = blkcg_css(); css; css = css->parent) {
--		if (atomic_read(&css->cgroup->congestion_count)) {
-+	for (blkcg = css_to_blkcg(blkcg_css()); blkcg;
-+	     blkcg = blkcg_parent(blkcg)) {
-+		if (atomic_read(&blkcg->congestion_count)) {
- 			ret = true;
- 			break;
- 		}
-diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
-index bd472a30bc61..864fad4a850b 100644
---- a/block/blk-cgroup.h
-+++ b/block/blk-cgroup.h
-@@ -95,6 +95,8 @@ struct blkcg {
- 	struct cgroup_subsys_state	css;
- 	spinlock_t			lock;
- 	refcount_t			online_pin;
-+	/* If there is block congestion on this cgroup. */
-+	atomic_t			congestion_count;
- 
- 	struct radix_tree_root		blkg_tree;
- 	struct blkcg_gq	__rcu		*blkg_hint;
-@@ -374,7 +376,7 @@ static inline void blkcg_use_delay(struct blkcg_gq *blkg)
- 	if (WARN_ON_ONCE(atomic_read(&blkg->use_delay) < 0))
- 		return;
- 	if (atomic_add_return(1, &blkg->use_delay) == 1)
--		atomic_inc(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_inc(&blkg->blkcg->congestion_count);
- }
- 
- static inline int blkcg_unuse_delay(struct blkcg_gq *blkg)
-@@ -399,7 +401,7 @@ static inline int blkcg_unuse_delay(struct blkcg_gq *blkg)
- 	if (old == 0)
- 		return 0;
- 	if (old == 1)
--		atomic_dec(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_dec(&blkg->blkcg->congestion_count);
- 	return 1;
- }
- 
-@@ -418,7 +420,7 @@ static inline void blkcg_set_delay(struct blkcg_gq *blkg, u64 delay)
- 
- 	/* We only want 1 person setting the congestion count for this blkg. */
- 	if (!old && atomic_try_cmpxchg(&blkg->use_delay, &old, -1))
--		atomic_inc(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_inc(&blkg->blkcg->congestion_count);
- 
- 	atomic64_set(&blkg->delay_nsec, delay);
- }
-@@ -435,7 +437,7 @@ static inline void blkcg_clear_delay(struct blkcg_gq *blkg)
- 
- 	/* We only want 1 person clearing the congestion count for this blkg. */
- 	if (old && atomic_try_cmpxchg(&blkg->use_delay, &old, 0))
--		atomic_dec(&blkg->blkcg->css.cgroup->congestion_count);
-+		atomic_dec(&blkg->blkcg->congestion_count);
- }
- 
- /**
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 293af7f8a694..ae04035b6cbe 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -539,9 +539,6 @@ struct cgroup {
- 	/* used to store eBPF programs */
- 	struct cgroup_bpf bpf;
- 
--	/* If there is block congestion on this cgroup. */
--	atomic_t congestion_count;
--
- 	/* Used to store internal freezer state */
- 	struct cgroup_freezer_state freezer;
- 
--- 
-2.34.1
+> I'll look into the option of using notifier chains in this case, although
+> as I saw it, the notifier chains are more suitable for broadcast updates
+> where the updater is not necessarily aware of the identity nor the number
+> of the subscribers. 
 
+Yes, that is right.
+
+Jason
