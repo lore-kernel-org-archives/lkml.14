@@ -1,59 +1,60 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0041C68C
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A761C68C
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721126759; cv=none; b=i0SxS94jegRHtGaFbwPxsIWuobHNzllCY3j9fTtzZTk07PvKVkOCZ+13r+p/0w709oPGwQUan7fFsgSjR+zjPo2LZKo0UOr/rVlTdugR82nD8DzazKHK9NqGRJaY0tpZJTDxKIZ/7rbDTBp0FV0jV/xDJbhKopHgWPrewt9wcGA=
+	t=1721126894; cv=none; b=nH6fxQfEUmDia1H0OeduyWCT7Xe7IGY6xA9l5PrYZNvTdLvz3Yd9mziLw8Y0ySzM6Fp862mm50mbTroo9smdfd0G+JPK6IvT6tb+BnLjFQ9+XkKE4quai17Rul70830gHMK8hr9wW5eTkThvYQj+x2eeGVLFgFugM7uxFOFAFBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721126759; c=relaxed/simple;
-	bh=CqqWOTYGSICF/9Ty7Y0z7fySVIc8NgEtF9kUlEJDeLI=;
+	s=arc-20240116; t=1721126894; c=relaxed/simple;
+	bh=k2TvcEmB/ryg67XMa4uZcyZDgHRRsoDA8kgAOqbSvUQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jdJT8tvPQzdXW7XGGi65KW3JrSU5HUElr1k+NeYZcZ0ZvWzKYDWh/ExV7yHYbIIBJ2UK9QdbfAUGNzloO+1eh7qjwwLk0YPxnovdyLNy9PXN+hMKmcTp2eLNw6dqBvoYywNrVAcrIGvASw/ct2vEH0oYmkdUiphkl0/+Y2E8vL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IBl/yiu4; arc=none smtp.client-ip=209.85.167.48
+	 In-Reply-To:Content-Type; b=CK6n/bJ/D/qQi/+18pIpZre/6dvyOmC2Ddsdda4k2Srkw4N6ErCNH5WZKKutXk6gzdeOcILZnmLjg9Gu2IhUtYJyn0YydPb3oUq0ZndrL1vHb/jM1JSiNYZ0mq7OwKzezV4T5/a53L/0cANVxdCAn3WNt8MOBNsdMHafgaPBj8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PJ/R3dx0; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBl/yiu4"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ea7d2a039so5544854e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:45:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJ/R3dx0"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-58bac81f3f9so6182709a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721126755; x=1721731555; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721126891; x=1721731691; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ukELGrBCNAzk7mJWOqRXfVvmx1it0iPC3eVeirNIJVo=;
-        b=IBl/yiu41kXRNEhmjydP46yjAphzK7P408TGZCUZfxOspYrWQaOvNuJjtibygPwX77
-         4Wt3ipFdO1Oa7rY3JWn4FoezoOgqeFMS2DcIvwvg1IuWElXi2ARbL/zBe8XEBvk3cAd9
-         Ke8nNhDw1jd6Caezbq1QVcCoY3+MyZGcwKGuvUE2Xorn4AHNI31y3unVVCv/OXSMC4Xn
-         5AGoc90nnR4cZSmfe5v1UtG503sFja6v8ukvjjyqsoIz2+dS7pIRGtWzo5DsjqZrI7IT
-         1qeP4OeYeKFcJ3M3QF+Ide/S1OPjRKqY+kbmaNAITCEVZbwCdWvCFLwpBhon+ezjEFoU
-         DWLQ==
+        bh=b9+AqXcsl/weoU0tXvtP0PfAHHj6VzC16r+Lg+jKwkc=;
+        b=PJ/R3dx0ljeYKeLAAIfGYVgAGtXlPY+sDOCdOpyGYma8BH7trNMTkYSgkVbqyTeL8N
+         hMYeodYUs3gxWXxHHcok1HaAUtia3j+tNbUsdY/zgKyPS5CzcprWhry7xvVHjngkjwn7
+         UMwGxv6QWbc6JLAfK2mTG8GJnWMg1z292P53yZBpyX/j4SB0VSEi1M2eE8QasXPHquy8
+         iMCpxAZYRreIHyprp0MohifOeNYc6b1lsXV/gTW9kI5XltCIlIEUQYgb8yW9hrcr6aIg
+         1eD8a+X5ZAIVTb2I7zIEZRxPD0/oXZH8iiNRVi3QNdRt7lP9LvVtYmjEhUEsNH0lljuk
+         yLXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721126755; x=1721731555;
+        d=1e100.net; s=20230601; t=1721126891; x=1721731691;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ukELGrBCNAzk7mJWOqRXfVvmx1it0iPC3eVeirNIJVo=;
-        b=DjZeRHApqMh9+Lpd49VW6TQ7QwJKdCJVX4t20lQqO98Xu2im7axWX99Ls0oy9LBIC9
-         rvSXgrymeCudDWua1cDYxrSRioBP2O6VlIUFPqJGnjXbUeAOhx3ve9VJgwDTP0xwFxjo
-         fzGmt1Io2HumQmjZqtKslH0T9hR9s6ivL4eVmFtCXy+0/6mBvKiDx7cojkCv7XXKuaj/
-         lcxITNxQvmwuRexqHewxjXoglCuL3df3qyaVdOGgtSgyMCxl2otFsOlDMgNoD1rppE7+
-         F/PtVuHi37QZyx/JY1wsGFu4Dqt8xMix00nI4VUozgi4UEbjakFwXfCgAQCt7Y9W4wu1
-         Basg==
-X-Gm-Message-State: AOJu0Yyge64mDx2wqpeH/JrvMvfs4mQ9oqTGW0DJD7cOZcqhJ5CR6SL5
-	0qJMT24pp5WP+4MU+xrBnhvYFOiVh/2qJLtUcuInXgtMRAXmwV/NPLRRZfOmOnc=
-X-Google-Smtp-Source: AGHT+IGOgiREm8ELGy2+mmoIwWs2pds3P5VYdtK25QKhXhuiHGK3SyeLdyPNZ+zUYZAtJ30N9ljNDQ==
-X-Received: by 2002:a05:6512:2308:b0:52e:9e70:d06e with SMTP id 2adb3069b0e04-52edf032b6dmr1030082e87.53.1721126754585;
-        Tue, 16 Jul 2024 03:45:54 -0700 (PDT)
+        bh=b9+AqXcsl/weoU0tXvtP0PfAHHj6VzC16r+Lg+jKwkc=;
+        b=drR00kuC8h/Avvq4Z4acHLWEFuMIxT0S+dllbBW0s0DWQTBwXcl6pN7l6RgwsG2dAg
+         LZ8BtKmxG3KhKulb0ST7SP3WfL2sZy4iLy0hiiuH65JDRG/b36RiSXaWKlija01eZFWM
+         zrZ9KlYHnt8bIDrUg9RXBdFGsK36fJz+v+JXDIGx6zq9R1YJTshBuRKj6Xz969ZvooOn
+         QXLUaT8srvgbkRK1WLF6KzrNQl0T8jQHMwk25S/HDvKp3Mb1H/8AdXN0manra+hyQ2H3
+         czsYftMWuzfHt+xpifFrPmcdE3PlpMvglSK4VS1nvQSK8obWIZlMDsGjojoyO5kXuxet
+         tw4w==
+X-Forwarded-Encrypted: i=1; AJvYcCU2mN3OJlrqIRmpkUhb/Cid+P9vwV1luN9XBoVlLe/WzEEgHdI/jrEQL4qc4SXVtZx5Y4A7dq+S3JdlCvYmxusMeLDg+L22jdtBGEzq
+X-Gm-Message-State: AOJu0YxmFf2Hf4CR45PBbyU6m6p3CjB/DN9u1Ax/nujQ3aAF318mxUeO
+	85hkSm/zkxmF93ZK3rsQqAazr+tWl2UY1tqnuNcD44lMbSDn5WRx6Q9NiR2uA8g=
+X-Google-Smtp-Source: AGHT+IFAVo8y981VQPV3hpAJCUplw06/VqfD6UbO92mSt28qGEgJ4Ny7ShTjrKxPUIV+N/iISlTYYA==
+X-Received: by 2002:a17:906:b891:b0:a77:cb7d:f359 with SMTP id a640c23a62f3a-a79eaa40bdbmr112391266b.58.1721126890557;
+        Tue, 16 Jul 2024 03:48:10 -0700 (PDT)
 Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5b48dbsm295189266b.57.2024.07.16.03.45.52
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5b8387sm293656466b.66.2024.07.16.03.48.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 03:45:54 -0700 (PDT)
-Message-ID: <3335d95d-d5eb-41cf-b18f-90894967d713@linaro.org>
-Date: Tue, 16 Jul 2024 12:45:51 +0200
+        Tue, 16 Jul 2024 03:48:10 -0700 (PDT)
+Message-ID: <00fb0782-0afc-4744-ad93-437712a9fcd9@linaro.org>
+Date: Tue, 16 Jul 2024 12:48:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,17 +62,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 5/5] arm64: dts: qcom: x1e80100: Enable cpufreq
-To: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
- cristian.marussi@arm.com, andersson@kernel.org, jassisinghbrar@gmail.com,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- dmitry.baryshkov@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, quic_rgottimu@quicinc.com,
- quic_kshivnan@quicinc.com, conor+dt@kernel.org, quic_nkela@quicinc.com,
- quic_psodagud@quicinc.com, abel.vesa@linaro.org
-References: <20240612124056.39230-1-quic_sibis@quicinc.com>
- <20240612124056.39230-6-quic_sibis@quicinc.com>
+Subject: Re: [PATCH v3] clocksource: qcom: Add missing iounmap() on errors in
+ msm_dt_timer_init()
+To: Ankit Agrawal <agrawal.ag.ankit@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240713095713.GA430091@bnew-VirtualBox>
+ <20240713102820.GA430622@bnew-VirtualBox>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
@@ -109,16 +108,74 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20240612124056.39230-6-quic_sibis@quicinc.com>
+In-Reply-To: <20240713102820.GA430622@bnew-VirtualBox>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12.06.2024 2:40 PM, Sibi Sankar wrote:
-> Enable cpufreq on X1E80100 SoCs through the SCMI perf protocol node.
+On 13.07.2024 12:28 PM, Ankit Agrawal wrote:
+> On Sat, Jul 13, 2024 at 03:27:13PM +0530, Ankit Agrawal wrote:
+>> Add the missing iounmap() when clock frequency fails to get read by the
+>> of_property_read_u32() call, or if the call to msm_timer_init() fails.
+>>
+>> Fixes: 6e3321631ac2 ("ARM: msm: Add DT support to msm_timer")
+>> Signed-off-by: Ankit Agrawal <agrawal.ag.ankit@gmail.com>
+>> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>> ---
+>> Changes in v3:
+>> - Update patch commit message
+>> - Link to v2: https://lore.kernel.org/linux-arm-msm/20240712082747.GA182658@bnew-VirtualBox/
+>>
+>> Changes in v2:
+>> - Add iounmap() if msm_timer_init() fails
+>> - Update patch commit message
+>> - Link to v1: https://lore.kernel.org/linux-arm-msm/20240710110813.GA15351@bnew-VirtualBox/
+>> ---
+>>  drivers/clocksource/timer-qcom.c | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clocksource/timer-qcom.c b/drivers/clocksource/timer-qcom.c
+>> index b4afe3a67..eac4c95c6 100644
+>> --- a/drivers/clocksource/timer-qcom.c
+>> +++ b/drivers/clocksource/timer-qcom.c
+>> @@ -233,6 +233,7 @@ static int __init msm_dt_timer_init(struct device_node *np)
+>>  	}
+>>  
+>>  	if (of_property_read_u32(np, "clock-frequency", &freq)) {
+>> +		iounmap(cpu0_base);
+>>  		pr_err("Unknown frequency\n");
+>>  		return -EINVAL;
+>>  	}
+>> @@ -243,7 +244,11 @@ static int __init msm_dt_timer_init(struct device_node *np)
+>>  	freq /= 4;
+>>  	writel_relaxed(DGT_CLK_CTL_DIV_4, source_base + DGT_CLK_CTL);
+>>  
+>> -	return msm_timer_init(freq, 32, irq, !!percpu_offset);
+>> +	ret = msm_timer_init(freq, 32, irq, !!percpu_offset);
+>> +	if (ret)
+>> +		iounmap(cpu0_base);
+>> +
+>> +	return ret;
+>>  }
+>>  TIMER_OF_DECLARE(kpss_timer, "qcom,kpss-timer", msm_dt_timer_init);
+>>  TIMER_OF_DECLARE(scss_timer, "qcom,scss-timer", msm_dt_timer_init);
+>> -- 
+>> 2.25.1
 > 
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> ---
+> Hello maintainers, 
+> 
+> Could you please suggest the next steps that should be taken to move
+> this patch further. From what I understand, the merge-window for the
+> next stable kernel release (v6.11) is open, and I would be very much
+> grateful if I could get help on moving this patch further.
+> 
+> Also, please let me know if I need to make any changes to the patch in
+> order to finalize it :)
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+The merge window is named very confusingly.. it's when your patches are
+NOT merged, but rather the patches accumulated in the maintainer trees
+are sent to Linus Torvalds, where he merges each one of them and runs
+some tests to make sure nothing broke. Your patches will be picked up
+after 6.11-rc1 drops, and (unless they're fixes) will be scheduled for
+6.12
 
 Konrad
