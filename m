@@ -1,93 +1,148 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7EE1991D0
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028271990C2;
+	Tue, 16 Jul 2024 11:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721128467; cv=none; b=juJPj1OSFUxIe/CZveR9jMbcOXd0r3AhwS1escY/iKhT0nJXhcgw23WysKYUc0AfqWMYCX9M7Mczgo9o849hRm1yIL4uCywkFlWBU9WCyMmpVvz1e6IuU9mwH7tZ7fwwQwAc1ZuwjUaFw1r91OelYsD1oye4kESrjT8qArs3reY=
+	t=1721128477; cv=none; b=mRhq0vEe1EIHiFLteRR8qNYArs6/qYykmJ3t6ULHm4TR1sM8q/3VgAGHqCHKD5mmQJT296k1sXUPxtQvj9g7jtZAKBGza6ru5a9BpbUPm5VFAAmQxrFbJlwrIxgNd/thBYES0mTj++pvWNwOPTSryC+XqePM7fOjJHVwVz1h2dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721128467; c=relaxed/simple;
-	bh=uSU/7FRcOsd+KxgKnvrUWf7fdIpaa2zZXRFytICH0Xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UGCs/atlzaybomWRG156KmnK6fJAS2ohF7fMqrh7nn2980dhgA2B+TsuIPC76bg6TBqoU4ztoXa7bi0I+VoJnZM/S1kO22X4ijmvjWa+WkoQlkcFH1Mi+6QU0wassqDwLTZZvGu52c0/0p4BU2yWWAEzwUZrYRqcPzZQYSdvYyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hd8nUhB/; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721128477; c=relaxed/simple;
+	bh=RMpAE2CkAm0ph0owc8UMf/CApdEgCHWG5AjQKQzc8zQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rGxXvwVLSx3/iWoqCOU1foyDscdS9oTCCJVAx8KshdvzZnEqCwx5CLbqVPoF5oknOggwku8JmUpBV3mTYkq+lH8teWevLgvpo6MQ9N1qxy7VezDEVOU5BGgql0I240BjwCkFKyuXfwLTYE+STCqB9OKLYrO2CxKKlreqqn6C4t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUSkGz6f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hd8nUhB/"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52e9944764fso6201720e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 04:14:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721128463; x=1721733263; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=85f26GaihuywFHrHhUzvUmoac6GcFjyo3+D5MhFAkAc=;
-        b=hd8nUhB/0HGZer+abo8vixfwv9BmdT3srf1gn+cnizp13kZ54Du4KqZ9OIsr14URnr
-         IP8rMYhFxf/1kJN055OUn+y3Ogw4K2Xo2H4Q400+rRW/hpPCW9+6YKqjls6WrTzTnARH
-         4/mlsyAiPvhV5RvWaZNS2hLfc93AkNPsLrVLtIJ5Pu/Fw8R0QumLEltQLzUWPHh9PvCR
-         FxXKX4H+QZi89EHJE75yk/IyYtNATqPyT/sDnsWtyrUPA3JCxt+DuOJxmi6bL90vdEPR
-         v5RQYlLyEv41c/fKizVy9Yorb7v9RAmd+D7RKKfJx0TsgR9Xci7oSbeibC4hCGaVCByR
-         ruLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721128463; x=1721733263;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=85f26GaihuywFHrHhUzvUmoac6GcFjyo3+D5MhFAkAc=;
-        b=C5M3P33it5LYurL4hoO+GKm45DZ11Im1r2uRG3S3FTHvD/dLB70fYKc2HerWNEEqoN
-         iuOHnHgpRzy1n+QkYDkpza+fQgMhv+gmd/f53nnZaVjlGpHGWIroSHrECBvd8Z3rlN5M
-         nROWXIV1TEcatL1tP+arCQxWehDP2gGK+IrTuXqvGz0iiodqtvDfhGzXTQCLOt11g6X4
-         vh6nGBFwnP5oyktHej5CNH57z2kK50JJU9GjJYHKUroVjtFs2DIri+FidTZW28WYht61
-         zisUZY7dAbUlTzzuNCm1uW2CwD00RLtWZKDjkx84RA0CUiDFw/124ox2q0DpWWY+GFR5
-         kVHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsqn4/unLkMoxbAu8ZU6H+cdAbBl0N27TDPqhtSpfwSFH5K7G0kD9xDwswObqACOAuP2MiBNAnPtZ583uePQioWcPRZ3efLQK22sDb
-X-Gm-Message-State: AOJu0Yz/v/nwgrcj6n22MghOvz90xLkaFz7xlGWEm5mm6vBZ3Q+GoQTs
-	9vyowi8Db9os9oDf3cESwwBy4M+AX8i0IiFPJ12Mi5htvi9OM8v38zAmG78AXPA=
-X-Google-Smtp-Source: AGHT+IFQIqSG9+GMvlee2xBU5TyMBzdPzC8eUN9VYPN9K9+xtbawhMMv+6NZ61ZiZWul45/PpPGmEw==
-X-Received: by 2002:a05:6512:39d4:b0:52c:d8c7:49ce with SMTP id 2adb3069b0e04-52edef1df2cmr1238456e87.22.1721128463615;
-        Tue, 16 Jul 2024 04:14:23 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed24f32a6sm1132866e87.67.2024.07.16.04.14.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 04:14:23 -0700 (PDT)
-Date: Tue, 16 Jul 2024 14:14:21 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sm8650-hdk: use the PMU to power
- up bluetooth
-Message-ID: <vpwioxy6aw4xp6d45stftprsqo7rwqe3c66qs3h6ecrzi5sutv@kacd47ux2ozk>
-References: <20240716-topic-sm8x50-upstream-use-pmu-to-power-up-bt-v1-0-67b3755edf6a@linaro.org>
- <20240716-topic-sm8x50-upstream-use-pmu-to-power-up-bt-v1-1-67b3755edf6a@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUSkGz6f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A385C4AF0E;
+	Tue, 16 Jul 2024 11:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721128476;
+	bh=RMpAE2CkAm0ph0owc8UMf/CApdEgCHWG5AjQKQzc8zQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JUSkGz6fNvh45k/VgAFPAJJWZLxB2KUqDgyy4TrA6XgfVUJTiLh4zKv9kO+uyFdE+
+	 epJdWSRmxQe4hkiezTNX5k6uXrVfClzI0Qj6pg1Zsi/vY/FUW/9ahbwq8FO8i30WR/
+	 CCWxbWfMmf8bq3BcU0S5xB8sbnBV9kJKryOe5db/whn81qZotEcVDB74TLoxZxANPp
+	 nLDupHb7yaSRj+yNoIU2ENv2MMfYojdUGirJDhNik7vr2QAtpZHOXRh2MD8O35cCUi
+	 Bl0Ov1SKBTkhGaRT8XDyOLq4GxQiS6O4sHzo3TCd1dzchYh6Ys7XcWv/FwwRGQX2co
+	 f+d3OUZCqU7MQ==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [PATCH 03/17] MIPS: loongson64: rename __node_data to node_data
+Date: Tue, 16 Jul 2024 14:13:32 +0300
+Message-ID: <20240716111346.3676969-4-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240716111346.3676969-1-rppt@kernel.org>
+References: <20240716111346.3676969-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240716-topic-sm8x50-upstream-use-pmu-to-power-up-bt-v1-1-67b3755edf6a@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 16, 2024 at 11:45:10AM GMT, Neil Armstrong wrote:
-> Change the HW model in sm8650-hdk.dts to a one closer to reality - where
-> the WLAN and Bluetooth modules of the WCN7850 are powered by the PMU
-> inside the package.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8650-hdk.dts | 26 +++++++++-----------------
->  1 file changed, 9 insertions(+), 17 deletions(-)
-> 
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Make definition of node_data match other architectures.
+This will allow pulling declaration of node_data to the generic mm code in
+the following commit.
 
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ arch/mips/include/asm/mach-loongson64/mmzone.h | 4 ++--
+ arch/mips/loongson64/numa.c                    | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/arch/mips/include/asm/mach-loongson64/mmzone.h b/arch/mips/include/asm/mach-loongson64/mmzone.h
+index a3d65d37b8b5..2effd5f8ed62 100644
+--- a/arch/mips/include/asm/mach-loongson64/mmzone.h
++++ b/arch/mips/include/asm/mach-loongson64/mmzone.h
+@@ -14,9 +14,9 @@
+ #define pa_to_nid(addr)  (((addr) & 0xf00000000000) >> NODE_ADDRSPACE_SHIFT)
+ #define nid_to_addrbase(nid) ((unsigned long)(nid) << NODE_ADDRSPACE_SHIFT)
+ 
+-extern struct pglist_data *__node_data[];
++extern struct pglist_data *node_data[];
+ 
+-#define NODE_DATA(n)		(__node_data[n])
++#define NODE_DATA(n)		(node_data[n])
+ 
+ extern void __init prom_init_numa_memory(void);
+ 
+diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
+index 68dafd6d3e25..b50ce28d2741 100644
+--- a/arch/mips/loongson64/numa.c
++++ b/arch/mips/loongson64/numa.c
+@@ -29,8 +29,8 @@
+ 
+ unsigned char __node_distances[MAX_NUMNODES][MAX_NUMNODES];
+ EXPORT_SYMBOL(__node_distances);
+-struct pglist_data *__node_data[MAX_NUMNODES];
+-EXPORT_SYMBOL(__node_data);
++struct pglist_data *node_data[MAX_NUMNODES];
++EXPORT_SYMBOL(node_data);
+ 
+ cpumask_t __node_cpumask[MAX_NUMNODES];
+ EXPORT_SYMBOL(__node_cpumask);
+@@ -107,7 +107,7 @@ static void __init node_mem_init(unsigned int node)
+ 	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
+ 	if (tnid != node)
+ 		pr_info("NODE_DATA(%d) on node %d\n", node, tnid);
+-	__node_data[node] = nd;
++	node_data[node] = nd;
+ 	NODE_DATA(node)->node_start_pfn = start_pfn;
+ 	NODE_DATA(node)->node_spanned_pages = end_pfn - start_pfn;
+ 
+@@ -206,5 +206,5 @@ pg_data_t * __init arch_alloc_nodedata(int nid)
+ 
+ void arch_refresh_nodedata(int nid, pg_data_t *pgdat)
+ {
+-	__node_data[nid] = pgdat;
++	node_data[nid] = pgdat;
+ }
 -- 
-With best wishes
-Dmitry
+2.43.0
+
