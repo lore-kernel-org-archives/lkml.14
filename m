@@ -1,82 +1,92 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3FB3FF1;
-	Tue, 16 Jul 2024 02:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799B312E55;
+	Tue, 16 Jul 2024 02:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721097012; cv=none; b=T3iWoqsr/3jTy4EuratlQ2QeYn56d+hdhos/AzSS+x4fbT5lxNU57qFI9fhBM4601C7gpv+c9stoI2eF3D3aCnMKe3Qi7OwAHkxS2cjcDucglGMao712YhpBpGxMSJZ7PZ3pmuDU9WM/W7km60UJBjWJDMVsr3V9QritHYXecNU=
+	t=1721097018; cv=none; b=qROaEas2VVXynCbzfdyLycB2xLmZMQeQAV+BEQ3XngMWgWJ5uLQ9iS7KIrQROV4rj2Y60dGySj+rDg4aC8woWzWgk1cjaX3KiQFP9fawlzRkHQp62r5ZE50YdVdi2Xs3i61nmbmO9wk+/NqIW6Dgf4DJ3dBjnQp//EAEXofTftM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721097012; c=relaxed/simple;
-	bh=zWPoxjIUescuLRN6EN/TYCrlS38Yi8wt1NDsC+Jgxgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IFMcWlujNdAIJWncfXVKMosASoSBCf5NYS5vYpMRqY6ycVLchHDmR16T4DQPXIp1Y542I7A2EMWJDTvzUJ+y/Jd2MmfMUpLo8mYK14NJ2b96y2o/Y9LdNViTE3Wd3MvYpx9twFN9K3uOIr3H6PRgnmZpLJl5ruQh972za5xrCYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sFYzLipJ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1721097018; c=relaxed/simple;
+	bh=Anh3g5XsKU2JcZm26ganVqXl0vvT1bS/Ftyrv8mu18o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GB7ii4cyQal/LphsMZCTlE571V5H5dpJtpDlCM8iaFFKgM6nliwWakJ08NtXQ+QlONl0vYyS3WJwvUGrZ7fiewehF5+V0tmgLa/D849mi+YP6dJ5JNQbIVSSViqaFaPLZmyfnwL0QIt2H9GM0HlPs+KAVJcnR46fcNNPKhgDfdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aZiCnake; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sFYzLipJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Aw654SugnjJczSIIfOrslrpuf0osXoeKMVCrP53YdIY=; b=sFYzLipJsVRqF0elx7Ztu/ihFk
-	wdhigaVoIO79xWApfxdOM948hevDWpVVYTVzB4Yg1x0cOtdiAQx7vuOH7xGFUYKB/8SLlXROBO3t4
-	bO3aMCaKaxrkEjQ5C1X4kfyggUaealmhU1eave2sSCpcNUIuoU5ZGxIAcM/s5+OVadvRTX9g9Cimo
-	lm3qURXoN6Jegof3aLZFVb5p807AxxbmuGBUFwihTi0VRhdK97BxjmHuihUUOfjmNnCB4zH9+VQJ1
-	qM5/9LdCyW10EV1V4pFHmD9YCPX/yf6cVuIhBZQU96XWhqsP/xQS/B1MXBmQjiahpGUO5zay/qIFE
-	zDNPlS5Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTXx8-0000000Gcnb-2KEP;
-	Tue, 16 Jul 2024 02:30:06 +0000
-Date: Tue, 16 Jul 2024 03:30:06 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Ma Ke <make24@iscas.ac.cn>
-Cc: akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] filemap: fix error pointer dereference in filemap_fault()
-Message-ID: <ZpXbLr0JeybnV6af@casper.infradead.org>
-References: <20240716022518.430237-1-make24@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aZiCnake"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FLIgSQ002958;
+	Tue, 16 Jul 2024 02:30:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type:content-transfer-encoding; s=
+	corp-2023-11-20; bh=a16ojMF+yw/Bk1HXiH8nNAJpbm692nxXRPjcZ4SBWlQ=; b=
+	aZiCnakelbzUCHxCu5B4X5ZsadxQt4ImqDznW2raLxLEAgPs9Ly5heJsF8V+kXnj
+	9QDNtZ/lbbcvgFX25Hgr+tb8sFvWYWXyV7/H6OO3NAyRVe0pjwVq/lNWoARNGYlC
+	PDFCxf49prblj6r5OZV6d+vKMlaYkcr2hHDWDT9s78D1FKiN644yY5FYY5vIr1YI
+	y8n/ngZU2CCwDI8Vb6owQsg+NyYaEWYfr7fWmYa8VHyb8kF4e+wIqC4xigMGabP4
+	pCAojk7ru+07QxekE9ICYT9sjsRvyWxOhnSYfF9lbJ5VRTgxzEz/DpC1jzxIYWOk
+	yDg61HkntvwItC4sRR+A0w==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40bh6svnf0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Jul 2024 02:30:05 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46G1jG4g002696;
+	Tue, 16 Jul 2024 02:30:05 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 40bg1exxdb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Jul 2024 02:30:05 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46G2U3A9027682;
+	Tue, 16 Jul 2024 02:30:04 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 40bg1exxah-3;
+	Tue, 16 Jul 2024 02:30:04 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: njavali@marvell.com, GR-QLogic-Storage-Upstream@marvell.com,
+        James.Bottomley@HansenPartnership.com, skashyap@marvell.com,
+        himanshu.madhani@oracle.com, dwagner@suse.de,
+        Chen Ni <nichen@iscas.ac.cn>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: qla2xxx: Convert comma to semicolon
+Date: Mon, 15 Jul 2024 22:29:22 -0400
+Message-ID: <172109323563.941202.2035783546516054964.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240711005724.2358446-1-nichen@iscas.ac.cn>
+References: <20240711005724.2358446-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240716022518.430237-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_19,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=756 malwarescore=0 phishscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2407160018
+X-Proofpoint-GUID: Cnmj3KRaeiUrSmC2_iWUN2t5_CUVN3G4
+X-Proofpoint-ORIG-GUID: Cnmj3KRaeiUrSmC2_iWUN2t5_CUVN3G4
 
-On Tue, Jul 16, 2024 at 10:25:18AM +0800, Ma Ke wrote:
-> This code calls folio_put() on an error pointer which will lead to a
-> crash.  Check for both error pointers and NULL pointers before calling
-> folio_put().
+On Thu, 11 Jul 2024 08:57:24 +0800, Chen Ni wrote:
 
-Have you observed this, or do you just think this can happen?
-
-If the former, please share the crash.
-If the latter, please document the path which can lead to this
-happening.
-
-> Fixes: 38a55db9877c ("filemap: Handle error return from __filemap_get_folio()")
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
->  mm/filemap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Replace a comma between expression statements by a semicolon.
 > 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 657bcd887fdb..cd26617d8987 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3420,7 +3420,7 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
->  	 * re-find the vma and come back and find our hopefully still populated
->  	 * page.
->  	 */
-> -	if (!IS_ERR(folio))
-> +	if (!IS_ERR_OR_NULL(folio))
->  		folio_put(folio);
->  	if (mapping_locked)
->  		filemap_invalidate_unlock_shared(mapping);
-> -- 
-> 2.25.1
 > 
+
+Applied to 6.11/scsi-queue, thanks!
+
+[1/1] scsi: qla2xxx: Convert comma to semicolon
+      https://git.kernel.org/mkp/scsi/c/6ca9fede7c73
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
