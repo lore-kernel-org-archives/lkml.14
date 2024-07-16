@@ -1,87 +1,120 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6DB19FA94;
-	Tue, 16 Jul 2024 17:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E1D19FA6B
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 17:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721152036; cv=none; b=RJ89FVuUGPnpYdOL55/t0tUBnJUQyTWzBT7lQOoqbCUiVi9oPxOQug+g6w+6cP587Knu1APGJ+hcafdSJzAKJ7Tq+lrWyfZAFwwNF1yFMV+MJyjAt5VRbxGG7hJINiYU8/l5Jkp9NsjTZsrzO+9qYlbNOWRaysbEybcAyzYs9Iw=
+	t=1721152099; cv=none; b=XQdvYSNTNqVRN76HGQA6gUxCQDJsIo0a7YqwHsxOZgwI22IHeGXE9gTKNr/wCmElDHOj/8xnKtIyTOnq+rQoHNosOXhM0FOVOVFa6+CDe3WpQD2u9hG+7n97dS2AzO7YoFAZy2ZUVVKhp0ko5Y0TzqJWiHoVb6XKN2osbxZTlu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721152036; c=relaxed/simple;
-	bh=zP6VZGFvNqh6vr2WndNyDJWCO94Nxi1jI+zWTjI1NW8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e+mX2dhG9zA41LELiesnVDjxvRuMsXnNdiKApK457CwvlVZ1dfz63HTzn1VNg+hlQyJIN1XoXmxq3oBXZRkqDP4jYOBgqsVHIkOpVu4TqCZS52YfSXOsJTJMFddmkqmjKkgx74fk5eOaERHdySz5InJVjZtfG9HTbbAcC94VKSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QY4ZkLpZ; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721152099; c=relaxed/simple;
+	bh=NiVYgJ9EX5zgNqw3xIpFnIScG6qQ7oONoRUqdjLrXPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fTmjC5UpmM61/49fnp1R6zdJoSu/Tg/FWNdkNgKZ+JSQH6T1/jk8GQVwm0Wz3Q0WEsGERnEfdRmQiW7YGHwLQvmhFFeOw+oNSnhe/Uqwgz9sRbk5y/Wgn/QT2J5nr8w6CtTMHuDinIRJq+ICxu6/47siu31nVzKRLx94XRIT0f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=QQQ+S7I2; arc=none smtp.client-ip=45.157.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QY4ZkLpZ"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e03a17a50a9so6048368276.1;
-        Tue, 16 Jul 2024 10:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721152034; x=1721756834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zP6VZGFvNqh6vr2WndNyDJWCO94Nxi1jI+zWTjI1NW8=;
-        b=QY4ZkLpZ3XP0NgdGZJLkHI/xbkjxpGFyq1I63K5AHemjcWK2E8QhoVm8HnGlTOmP/w
-         oMzVB0Gn3RJ0nFYaUO6o5rg/mnH7dGfTsSNh/WkyV3ZaZx2eNuTMN7Ps9XNB9myofGKV
-         uS9gRPxNNVDeLBWdo24NBVt5YN3PnOwNoF/dDlZ6lA+x719A/ZyEQKZ2hprrrw6AUdif
-         ef0H/FSE9Y8s4hx7k7MFNWFY+1FuuLHBleBrM/kTBLT8/NW7hcdahwh2y+9fNzOKJita
-         yenLedSklj/Dhpv6Cr0Cubd3uOITynGipiEANzf+iItN+Q5Dhelz6NcqDPEz5ehiMnPd
-         ccYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721152034; x=1721756834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zP6VZGFvNqh6vr2WndNyDJWCO94Nxi1jI+zWTjI1NW8=;
-        b=sQ9fJcLIsdCsZTBYY6rgu+kxIFgFaVarFhiV4KsOiErvZATorDe6NfoY34DVxQampl
-         LpNKSNqnw4/gWC9Cs9NO+cQlA2ygOxCLuVi7mQQ8xWMyIdEaZOelahjXY+QdK2qYtIGO
-         ATP86VqPVvUW9RMt8Ar7KiASRwNSSyQEN3JDSqGHH/CYamDw0KKErQF+zh5APa1oWu/Z
-         vE+ekLDlR0RvSD86Iqo9WiC5Kch3TlRot7vczyjQNqnMWa8/RzlytlJEHgFULLlwNJiH
-         3FiSHmZr78VDdBR44Eldnh8TAc8qUyIPfn+lBZbEUT8n49uJ+lCA0cyQ4NVZlt6XUwVm
-         fC5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXiaYQ/t330zuMYimJAdylRblDkrWlE+XRBswuVeAjSfOeGpzx0Z7s/cC18qTgtYiWxMUHSvrz7pZZIAumsMpb1rt/IX3a86BIcRDWQ
-X-Gm-Message-State: AOJu0Yy8Xc8xxc9Gk4O/c7pvoennr/7Ui3GE5vnBSiLY/Wl8syMhqgdI
-	OortYWHf6zovsxuSYo400D8v8t1vETQw2aVzeZ46fAiwJtVruvNP38rw6hLWD/BtwbrK3wfxOaN
-	mUaaxtJFMtEG2swk1ijCrEdJS6ZaqqnWdD/8=
-X-Google-Smtp-Source: AGHT+IHVOI0HSJi0zRPxvELEb2w+OnjZ3yJTvbCTUdAC9u98fwxF7zADV1Q4j7u0zTquMsEiV5uh2BP6gWBZ4FpYsoc=
-X-Received: by 2002:a25:83c4:0:b0:e03:6533:136d with SMTP id
- 3f1490d57ef6-e05d58044c4mr3376413276.40.1721152034314; Tue, 16 Jul 2024
- 10:47:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="QQQ+S7I2"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WNmkc3K3RzncK;
+	Tue, 16 Jul 2024 19:48:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1721152088;
+	bh=LWblpPfF9wNYIYfX15oQl6tTRp3rZAKkmPWjrsQep60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QQQ+S7I2Ua4od8sW/6D1JC9ivlgTH1sZMkaw8jYNQtPma8Ip6DbG40h1NpdimI7Xc
+	 F/k0WwtFrl7pTIGzv0AQntKmgMTJmCu5m09toaI5LhDwng++5GebvyVFtv5GfZB3yN
+	 VtdK+y0E4iqnH4BuYwNCr38mLDQw/yAs+Enhz0wE=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4WNmkS378YzxCQ;
+	Tue, 16 Jul 2024 19:48:00 +0200 (CEST)
+Date: Tue, 16 Jul 2024 19:47:59 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Boris Lukashev <blukashev@sempervictus.com>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Roberto Sassu <roberto.sassu@huaweicloud.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Paul Moore <paul@paul-moore.com>, Theodore Ts'o <tytso@mit.edu>, 
+	Alejandro Colomar <alx@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Christian Heimes <christian@python.org>, 
+	Dmitry Vyukov <dvyukov@google.com>, Eric Biggers <ebiggers@kernel.org>, 
+	Eric Chiang <ericchiang@google.com>, Fan Wu <wufan@linux.microsoft.com>, 
+	Florian Weimer <fweimer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>, Jann Horn <jannh@google.com>, 
+	Jeff Xu <jeffxu@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Jordan R Abrahams <ajordanr@google.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
+	Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>, 
+	Miklos Szeredi <mszeredi@redhat.com>, Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, 
+	Scott Shell <scottsh@microsoft.com>, Shuah Khan <shuah@kernel.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Steve Dower <steve.dower@python.org>, 
+	Steve Grubb <sgrubb@redhat.com>, Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, 
+	Vincent Strubel <vincent.strubel@ssi.gouv.fr>, Xiaoming Ni <nixiaoming@huawei.com>, 
+	Yin Fengwei <fengwei.yin@intel.com>, kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Subject: Re: [RFC PATCH v19 0/5] Script execution control (was O_MAYEXEC)
+Message-ID: <20240716.shaliZ2chohj@digikod.net>
+References: <20240704190137.696169-1-mic@digikod.net>
+ <55b4f6291e8d83d420c7d08f4233b3d304ce683d.camel@linux.ibm.com>
+ <20240709.AhJ7oTh1biej@digikod.net>
+ <9e3df65c2bf060b5833558e9f8d82dcd2fe9325a.camel@huaweicloud.com>
+ <ee1ae815b6e75021709612181a6a4415fda543a4.camel@HansenPartnership.com>
+ <E608EDB8-72E8-4791-AC9B-8FF9AC753FBE@sempervictus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240713211620.1125910-1-paweldembicki@gmail.com> <20240713223629.ncgkw4cg6blakv2e@skbuf>
-In-Reply-To: <20240713223629.ncgkw4cg6blakv2e@skbuf>
-From: =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
-Date: Tue, 16 Jul 2024 19:47:03 +0200
-Message-ID: <CAJN1KkwWx3rHj5+VeLCJu74U2HWhsKBhn05pp2SjF=1JhKAKbg@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 00/12] net: dsa: vsc73xx: Implement VLAN operations
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <E608EDB8-72E8-4791-AC9B-8FF9AC753FBE@sempervictus.com>
+X-Infomaniak-Routing: alpha
 
-niedz., 14 lip 2024 o 00:36 Vladimir Oltean <olteanv@gmail.com> napisa=C5=
-=82(a):
->
-> On Sat, Jul 13, 2024 at 11:16:06PM +0200, Pawel Dembicki wrote:
-> > This patch series is a result of splitting a larger patch series [0],
-> > where some parts was merged before.
->
-> It is a good day for this driver. Thanks for your perseverence with this.
+(adding back other people in Cc)
 
-It's a small step for the kernel but a big one for me. I'm glad that
-we managed to finalize this series of patches. I want to thank
-everyone for their help and the many valuable lessons. Especially you,
-Vladimir, for your immense patience and willingness to help.
+On Tue, Jul 16, 2024 at 01:29:43PM -0400, Boris Lukashev wrote:
+> Wouldn't count those shell chickens - awk alone is enough and we can
+> use ssh and openssl clients (all in metasploit public code). As one of
+> the people who makes novel shell types, I can assure you that this
+> effort is only going to slow skiddies and only until the rest of us
+> publish mitigations for this mitigation :)
+
+Security is not binary. :)
+
+Not all Linux systems are equals. Some hardened systems need this kind
+of feature and they can get guarantees because they fully control and
+trust their executable binaries (e.g. CLIP OS, chromeOS) or they
+properly sandbox them.  See context in the cover letter.
+
+awk is a script interpreter that should be patched too, like other Linux
+tools.
+
+> 
+> -Boris (RageLtMan)
+> 
+> On July 16, 2024 12:12:49 PM EDT, James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
+> >On Tue, 2024-07-16 at 17:57 +0200, Roberto Sassu wrote:
+> >> But the Clip OS 4 patch does not cover the redirection case:
+> >> 
+> >> # ./bash < /root/test.sh
+> >> Hello World
+> >> 
+> >> Do you have a more recent patch for that?
+> >
+> >How far down the rabbit hole do you want to go?  You can't forbid a
+> >shell from executing commands from stdin because logging in then won't
+> >work.  It may be possible to allow from a tty backed file and not from
+> >a file backed one, but you still have the problem of the attacker
+> >manually typing in the script.
+> >
+> >The saving grace for this for shells is that they pretty much do
+> >nothing on their own (unlike python) so you can still measure all the
+> >executables they call out to, which provides reasonable safety.
+> >
+> >James
+> >
