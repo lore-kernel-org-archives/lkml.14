@@ -1,108 +1,95 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A2217CA05;
-	Tue, 16 Jul 2024 13:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264B5199EB0
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721136240; cv=none; b=lUqUjOYx3spcUIfA3RW5hrI1alshMVbhM/Coi2EzWYXWzRNf8Dfo64UMuWtYDjRb4C/ZpzcoJvKXq/4XJWsLccT68912CxrhqzFMbQROTGyG/iIdtfe4rCFuurE7v6coUBKnveYNyHhlArjPGY/Uz+5On2sMPLp1ta7VBkYlc3Q=
+	t=1721136366; cv=none; b=jYe2H5WE2W3bHUgpRBbjD5ormwMN945E88oJAHeXbS4mMhJjDlKNLwhOfY+rFzrDSqttwO3iKY9ielbP0iZyFgKxgq2rCLTa6cSb8q+P9waTrPVeMRsDsfOkyXyZoe6HDepmW+w0tJmVidtMNoUpNU8bgsiywDkUUCV8fo3G1NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721136240; c=relaxed/simple;
-	bh=CaJASSV1ka7Bj5NyM8UKeKZUos0RTwMlBmpSxl6lGyo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Q4a/i5VjbdYsbgDZx15rOga8iHvInxixm+iw2w2puvS5j9wj2IMrxfo7vhlFgheGbOPcWOFtoGwMRKYSe8S+jbNnDc1Aa9LvymPDVFdH4jEGRW6QELYmQR9Wp9IN1NgOFwU/XkQOKlVed1Udd81a7832Ma8yn7zOH+z2V1RFISM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=U13Kb87g; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1721136366; c=relaxed/simple;
+	bh=bPVZJLWZWfdDq5CJz2bIWaWUTb6wxDi+EpVlIhFnHyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7ZyLmbfCI9UaOCfPuq9too1SCHShIxVLYV0622Vel5FQxD9dvC5PXEp01KtbG/cJaxcJtzGvFoIT45sVaIUUU7q4457ulgs+K62yiOcY6YDh+8BHOZxIUwyjmSgIkmImEZApp8o5GKWnDn1szdAwoQIJBvNiHNus0JIrLJR0rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BM3Oev54; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="U13Kb87g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1721136185; x=1721740985; i=markus.elfring@web.de;
-	bh=7bRGzv8Y9/jye8elVbQZuYfnhOqWdiGOQotYz8+ZuWA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=U13Kb87gd53Tp5IrR7ajhybnxH3UyWXxGEve4Eq3Wt+H/4q/Ci8CmWpiFjK4hySa
-	 aFM67qk7yqijpoTNo2gTxmjtvsonwutvMEUH9th8IgN/mUxmCJNrXnORc314XdHq9
-	 WSudyEVE784Um1CAxSR2aJcFe0cNkeQN8afAo8FYvkJRTuQ3W8LMJtZ27Rof9Zkfa
-	 WFeVQTJD/K8GhXf95u70rwO+bNbsRLx+litOnqKMxg9AktVSf42dVdKIp4V7WhZst
-	 UbYBxZX7PbITq5ZUUgIzER2pAkJFxjrkXX9/EIkSFaTCE1z0F++mkRyVVJqhqSONl
-	 6u9d0koan7UpMnHGMQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M8TBM-1sPIID2qga-000P3c; Tue, 16
- Jul 2024 15:23:05 +0200
-Message-ID: <17ac3b59-b189-41d9-b88d-268d7202dde2@web.de>
-Date: Tue, 16 Jul 2024 15:22:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BM3Oev54"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85527C116B1;
+	Tue, 16 Jul 2024 13:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721136365;
+	bh=bPVZJLWZWfdDq5CJz2bIWaWUTb6wxDi+EpVlIhFnHyM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BM3Oev54FfxAGYzqvc09ziZwnBKtpDF3ktlwlC1oCX9+oALFPXa7Gzno70S31/Iyp
+	 IPb/VlsxHHHxc0IMX6zupj1/72CGTy0rtNcqNDD8FSVxHJPAjDYWe49ovPkZW1s9kF
+	 hD5kIWU5YvHYmtcGK+OzG9s0BfWqJTBOQ5U/TA0+9rLO62P6f5ISU1MW7UmpEAHipO
+	 YN+s/JGTho4vsYdht7gYvfJmrW1+ai5ofm8cHGPW0UjboCPhO9cQ/U2DVjbupAesJh
+	 nkxBKa7Or/dwScln4xDdW7tZLRWd5I2mFfll8IZlGBHTDjum2sHEPk7e0rtWgtrxJy
+	 sEjCmeO0TQx+A==
+Date: Tue, 16 Jul 2024 06:26:03 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Vamsi Attunuru <vattunuru@marvell.com>
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: Kconfig: add a new dependency for MARVELL_CN10K_DPI
+Message-ID: <20240716132603.GA3136577@thelio-3990X>
+References: <20240711120115.4069401-1-vattunuru@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Yang Yingliang <yangyingliang@huawei.com>, kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Ben Segall <bsegall@google.com>,
- Chen Yu <yu.c.chen@intel.com>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Tim Chen <tim.c.chen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Wei Li <liwei391@huawei.com>
-References: <20240703031610.587047-4-yangyingliang@huaweicloud.com>
-Subject: Re: [PATCH 3/4] sched/core: Introduce sched_set_rq_on/offline()
- helper
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240703031610.587047-4-yangyingliang@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Lb3PFhy4QoVrF9aQMRQMyTD51u46Uv/eEbs99RnY3+8og40DpS6
- hWv6RepkX5JgaTk+yeClWNyyu7QVwNPYrI0zhjfAu5FXbGqyfK+IPpXEKrCzwKiDqsdvoFg
- rNbkG2iKK3fXbKDk8Mm2qkCFJuVO6vig+RndJojVaqGXbfABnjlwpAOXO6Ra6Qedl4Rx49X
- Fg+DctmnlVchu+Eru/c2A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MrfjKyHyf7M=;hpyO1/IVf2lLY3T45v3wAUmX/oR
- Y15LTHxtmzJnFa8m8v6EVLURLSkem6juPXkgT31aGZZH4z6nM7HQpcQpNeuBZDDWp9MSTDpCT
- CUyVg2ysp1LWOBAfOUxEuKNYudMYLzHZWQFWljcHJtSo80FuJ7inxyHRK6vCBlaRFlxvwBOA3
- XD7ei3Q9n8HcYzcpIcetubBQD6GJaTiD/SDVRFeBACbAOc3dugZMDjWx8Npif0rjrFN9kPizM
- 4NdXi+NOdaem0Y7dhSNAIxlCJt2YWfVOA1UIBAJR7NNNNj8oghJr/5hKP4QWY3iuVaGQu7TEB
- tDLPJdEOCCqiPTMEqeRpH/BpqH0zq5JUlx0JFacKC3PBsbztKn/5NX0c8wRlsd+AtWnfdVgim
- VSWxcvsjTtLbDF4vKtA5WoZTrG9X3yX/wjK5qHANBMFiUywXMeeDwSalmNtJTHXla/KC+AuWw
- VFzddEXBWg5CnuO1JJ9vlb728JYoETS75LNbrAxZNH7ReA20BUgfr7pXxpcFw/whiXvwH5HAO
- /EdErjnKfTMJFk4QeYdjSxoLNeyRE0nsh9cvrEw6It4mtpH0Obgob2bcTwerEBBIFI+XGq1WD
- +11TiuXrV5cwa/YNU9AQZdyCDzYuFGwYtMXQQfFTgAtY91Cxzzg7Q55y2TQsQ5n53vqqmg4Nb
- +MDKmtpER3yEaaxg8RrlgKLk0nU9K5Q+c99kBaPZu6u2heI8w4Go8Ah8MrClsznsykZqg1Mm7
- jMh7jFaGM07lGWEd9HeWcYYOdbHoa4V58d1PAugCCemJwg77Z1a5d51RSM5zTKhKcHNqdlLoY
- DIGG8oYdtd8YhJBVFVL6W8UQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711120115.4069401-1-vattunuru@marvell.com>
 
-> Introduce sched_set_rq_on/offline() helper, so it can be called
-> in normal or error path simply. No functional changed.
+Hi Vamsi,
 
-Would you like to improve such a change description another bit?
+On Thu, Jul 11, 2024 at 05:01:15AM -0700, Vamsi Attunuru wrote:
+> DPI hardware is an on-chip PCIe device on Marvell's arm64 SoC
+> platforms. As Arnd suggested, CN10K belongs to ARCH_THUNDER
+> lineage.
+> 
+> Patch makes mrvl_cn10k_dpi driver dependent on CONFIG_ARCH_THUNDER.
+> 
+> Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
+> ---
+>  drivers/misc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 64fcca9e44d7..f3bb75384627 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -588,6 +588,7 @@ config NSM
+>  config MARVELL_CN10K_DPI
+>  	tristate "Octeon CN10K DPI driver"
+>  	depends on PCI
+> +	depends on ARCH_THUNDER || COMPILE_TEST
+>  	help
+>  	  Enables Octeon CN10K DMA packet interface (DPI) driver which
+>  	  intializes DPI hardware's physical function (PF) device's
+> -- 
+> 2.25.1
+> 
 
+After this change, ARCH=arm allmodconfig fails with:
 
-=E2=80=A6
-> +++ b/kernel/sched/core.c
-> @@ -9604,6 +9604,30 @@ void set_rq_offline(struct rq *rq)
-=E2=80=A6
-> +static inline void sched_set_rq_online(struct rq *rq, int cpu)
-> +{
-=E2=80=A6
-> +	rq_lock_irqsave(rq, &rf);
-> +	if (rq->rd) {
-=E2=80=A6
-> +	}
-> +	rq_unlock_irqrestore(rq, &rf);
-> +}
-=E2=80=A6
+  drivers/misc/mrvl_cn10k_dpi.c: In function 'dpi_reg_write':
+  drivers/misc/mrvl_cn10k_dpi.c:190:9: error: implicit declaration of function 'writeq'; did you mean 'writeb'? [-Wimplicit-function-declaration]
+    190 |         writeq(val, dpi->reg_base + offset);
+        |         ^~~~~~
+        |         writeb
+  drivers/misc/mrvl_cn10k_dpi.c: In function 'dpi_reg_read':
+  drivers/misc/mrvl_cn10k_dpi.c:195:16: error: implicit declaration of function 'readq'; did you mean 'readb'? [-Wimplicit-function-declaration]
+    195 |         return readq(dpi->reg_base + offset);
+        |                ^~~~~
+        |                readb
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(rq_lock_irqsave)(rq);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.10/source/kernel/sched/sched.h#L1741
+Including one of the io-64-nonatomic headers would resolve this but I am
+not sure which one would be appropriate (or perhaps the dependency
+should be tightened to requiring 64BIT, as some other drivers have
+done).
 
-Regards,
-Markusbsegall@google.com
+Cheers,
+Nathan
