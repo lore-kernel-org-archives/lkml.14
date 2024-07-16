@@ -1,90 +1,98 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E2B17B419
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E42178378;
+	Tue, 16 Jul 2024 08:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721119007; cv=none; b=YwHnxl94kiBLW32jHQ7t4FuN0swjLzoR2njiU17EiqNbrAUHD3UtsWJTv21NmNTiKazE2/9i00EceEt6/n5sANtzb22OX9f9krgaD4XzV6szHNMSskc45Sx9QHNwZFiy27TLmM87lW0/o9+ghKAvP4AA6symsO1VXbBN1ysEqAg=
+	t=1721119057; cv=none; b=QpLs7aYYL7dN0Lw46XiPFqlT2WTRukmY2Gj0jEQaOwb/OKIc8UgFh3h0TimJk9fqqN94GVROjkuAA6Bc+efDVw1oDa8D4O+/xXao3Q96UeXyu4Bm7icUwtnI551StlNI5P74PLJGHsPHibA5yZORozVtGVa3KbeLgezswIRd/oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721119007; c=relaxed/simple;
-	bh=B8E6UP6diPfn/BrnoeLQBTCu55NxBPnre+m7Sjdhq00=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KfmCDJ8TDA9rxcYxXve344rnvCQ801i3hcUur1mm9K7AenTGgGm6LODSUwOnL7nt4vCdpDrsLyE+/OOYsJnf4WUaDvxfvLWC+MVzzHBUIf6uZou9ZBA8CqEIzIVEAyOFKk51slga7CWjjiwzfDYO1FXGTKtPFUzcskoF/QbJVq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=XyVrXN6J; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1721119057; c=relaxed/simple;
+	bh=Mr/uMakLcuC7WzGCfsWpNQgKRVkSgGcbw8oXnlBJngw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=obeG6y5Z/7gcMJ5hlNEwm6POcKgYkj1DcvSaZP9yAXx8dkkKaeQf2TYY1FkSvKRiE/zNT8brpGFUah4Ap0IX6GhFN3Vcc8Iz/Eb+Skxg6X3vA/N/Yjv9HKsObn6Vv/oqNXjK6JCdA+xxaPZ7OBRKemG/adC1vbgPew9/qdHbkB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=quiISYgu; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="XyVrXN6J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=EIdAZlvdMfK8TFKGY0fBUKMfj/zD3Ooy0VraEJcDpuE=; b=XyVrXN
-	6J4HhyfFF105vYHwFMx4eeEIov/sQqkuqXbhgd6PWOwezs2FpNTJ2DUzDHNM7kaY
-	Z5EuZP5CvoxTbESlkNjOvpZR4ePKoslctzJ2JIXQh23bfSf7MzXNQMfvdY9qNMZO
-	8iaZ7DEVtDz36Yta7Wg3cvLd+ers3eiWjjs6YQaXySxkQBl6a+iylJNmDCxsNj6w
-	QAM3MryeigvxdNExCjsY2FMPV+qJxHZ1NBPmlHNXixLxBrcEjFSrtckVPgv+zuwe
-	9XCqrsZ2r1QbmyMidar1yX+TPRTjO285RjGPLijnSpElTbhOhzM8tV96UvkMx9xC
-	LdeNPJlk9TOVIufQ==
-Received: (qmail 153636 invoked from network); 16 Jul 2024 10:36:35 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 16 Jul 2024 10:36:35 +0200
-X-UD-Smtp-Session: l3s3148p1@1U9SPlkdonhtKPND
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] i2c: header: improve kdoc for i2c_algorithm
-Date: Tue, 16 Jul 2024 10:36:25 +0200
-Message-ID: <20240716083623.7737-6-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240716083623.7737-4-wsa+renesas@sang-engineering.com>
-References: <20240716083623.7737-4-wsa+renesas@sang-engineering.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="quiISYgu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1721119031; x=1721723831; i=markus.elfring@web.de;
+	bh=kGIG2lk9JnUGS5D/DzGGpsIb8TqI9jSGdEPMw6I2qBg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=quiISYgunLxFVUByQIsXh1AXUlf1KHqxPHF7NcGDw5BSzCkxx6bmUerj7ZdVF3kk
+	 uH63GsM7SWgvKRCT2oNt1hUh8LWOPWGlhDbRwDQlmziZ8iEN4qGFSOYhJIovq6Txd
+	 9gGHLEJS82mmEr7dmE9Xh554FnP+6lBDtXNg2qt/GgPTkq+5aNlovpNzB+JVBIWYE
+	 0eaBwl8VND196r5Mgn+4+VF4dXhb0d+WEQKdyy7ycNOLMpTtXdXqW1+jKpDr9HazK
+	 7tiWuLUF1DLlECkBbgc8PlmtySp1sAncWUKrv0KCkJeK+X+6tLBXZJH48FPnUsFqb
+	 Z3UWwvy7ydUi/Bwhug==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MVJRb-1sshbU1VGJ-00R6y0; Tue, 16
+ Jul 2024 10:37:11 +0200
+Message-ID: <2c153a0f-87aa-4f4a-83cc-c17798f0795b@web.de>
+Date: Tue, 16 Jul 2024 10:36:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: netdev@vger.kernel.org, David Ahern <dsahern@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] net/ipv6/ndisc: Fix typo in a comment line
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nQEHSPejrsVq+DGhGqvitACK7uhP97GuZ/FP+NcjWUwEb4FmnHO
+ 1GS+SyYMtauJon7zF2HtN41bteyORBlf+Xgl2hAeqjOsyJRbkuhxoMoe3PaCNeoAuX0IGPc
+ Yto5bYstxgTiZ+eBRxtaXE/8Rn9uhlEYu26BCNLLBO+Z6yk935FefF+SGllZBXmGv9DusCx
+ FxXFYUL1Mh0Q0deIpvIvw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:OTwN86JcMQ4=;N5iQnSN7aZOY/e8DQ0g839CdEPb
+ KIHs06WlhycmawLMyM+7ShXB7O6r1NZdq0RtaEf0x9ME9baIAmHKfCAwa/fATJRHC7SAR/MaQ
+ PB0d+j0FMQoPi/kcTCT93XATFZi/gzA648etRfXc/5s7B2HpwGUWEpVGx2p/sF0hVQOGcf/tg
+ jXtN7TN2ebP8nX04/ZvdL/bvysxzGn7NH2UInssPYCduwKMgEno018jiLZm7MX6951VvNNgmL
+ car0/p8C9ouBYZeU2I2S3WTGhYsP317el46Q7Jj70A28yKAFjHvtDKhkq3nLsKWpvhoPYTuFx
+ fzK5jEET5WeW1HtyZtMGnt4ZKzz6J7GZVOyYhW8bDYuha5gCvQM7F+bEEBPa2vO9/fNlOmhR7
+ Ev9/GCAjayDqbgiP3Dv2igbv4TsjoB0tlUjYl2/R2Lc7zZ7sHjPvpNb+ItD6f06Ksldb1Rbpj
+ FYRoXp1On1S6TM8HOakiNS2VhXnr0JWIX0Z5Yx7GQOZIl0kI5nwEyzykIUoq8EWQkED2MlevS
+ B9Cuc1w5IJKJbVIQYjHCB0PUaYEh/b+BIs5wvRG53OpIkukF0Uxmofino/xui9ZTEzWNBEnfU
+ CGB/wmb/VkuCAFryC3T19VSzU9rIxEh4flaOsL0sIz1bBLeIa748ZDMNQnrbYv63QFfI3jL6m
+ H+B7ppfDI5ROSy+cxaX/YkDDIzYPJ/4NgTWnC1hozwALzQA8ouu0nZix4YW4Bv2OhGN+YTYnY
+ 7Vs0nWMXfKRLjg+B+WN1OemuXkw2iUh41sLSh2AmUntu0GdBsVKxTMfLtBm4dpD6kuwS1Ujw7
+ 9H++H5DM+HgbHBXt6Mkma4rg==
 
-Reword the explanation of @xfer, the old one was confusing and mixing up
-terminology. Other than that, capitalize some words correctly and use
-full line length.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 16 Jul 2024 10:28:37 +0200
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- include/linux/i2c.h | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Adjust this description for a condition check.
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 1e34b486f604..8caaa13834bf 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -511,16 +511,15 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
- #endif /* I2C_BOARDINFO */
- 
- /**
-- * struct i2c_algorithm - represent I2C transfer method
-- * @xfer: Issue a set of i2c transactions to the given I2C adapter
-- *   defined by the msgs array, with num messages available to transfer via
-- *   the adapter specified by adap.
-- * @xfer_atomic: same as @xfer. Yet, only using atomic context
-- *   so e.g. PMICs can be accessed very late before shutdown. Optional.
-- * @smbus_xfer: Issue smbus transactions to the given I2C adapter. If this
-+ * struct i2c_algorithm - represent I2C transfer methods
-+ * @xfer: Transfer a given number of messages defined by the msgs array via
-+ *   the specified adapter.
-+ * @xfer_atomic: Same as @xfer. Yet, only using atomic context so e.g. PMICs
-+ *   can be accessed very late before shutdown. Optional.
-+ * @smbus_xfer: Issue SMBus transactions to the given I2C adapter. If this
-  *   is not present, then the bus layer will try and convert the SMBus calls
-  *   into I2C transfers instead.
-- * @smbus_xfer_atomic: same as @smbus_xfer. Yet, only using atomic context
-+ * @smbus_xfer_atomic: Same as @smbus_xfer. Yet, only using atomic context
-  *   so e.g. PMICs can be accessed very late before shutdown. Optional.
-  * @functionality: Return the flags that this algorithm/adapter pair supports
-  *   from the ``I2C_FUNC_*`` flags.
--- 
-2.43.0
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ net/ipv6/ndisc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/ipv6/ndisc.c b/net/ipv6/ndisc.c
+index 254b192c5705..4d0785bf6937 100644
+=2D-- a/net/ipv6/ndisc.c
++++ b/net/ipv6/ndisc.c
+@@ -1020,7 +1020,7 @@ static enum skb_drop_reason ndisc_recv_na(struct sk_=
+buff *skb)
+ 	}
+
+ 	/* For some 802.11 wireless deployments (and possibly other networks),
+-	 * there will be a NA proxy and unsolicitd packets are attacks
++	 * there will be a NA proxy and unsolicited packets are attacks
+ 	 * and thus should not be accepted.
+ 	 * drop_unsolicited_na takes precedence over accept_untracked_na
+ 	 */
+=2D-
+2.45.2
 
