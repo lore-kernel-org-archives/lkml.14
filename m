@@ -1,193 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20DC15491;
-	Tue, 16 Jul 2024 11:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F03B15491;
+	Tue, 16 Jul 2024 11:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721129805; cv=none; b=G+8r6U+zH75VZ8pg4A0v69aolO41HYm86W5ut3v4bMyH93n0zVYYu2jE2XZSq1oOVZyU2fz/fhQuLqLpCsEm4a0hrm8ygXj13eK0USieglPQDTdrNkek9OXVNU1q1ZHoe/1BQmkW2cxm8gPrM30wAMAvrLmiQBgXe+kDG7/rePY=
+	t=1721129850; cv=none; b=hsKIls+v9AJoZPWOr6/81jP4BOE5iRGGIzIPmWsbnbsUo0/0iDu7DVO8dKoLMmwAeQ2ZTLEKMlqHYFZ8AGy0hsV+4kim0bZ4ksNzXke98GmrIokTMkHyy0UcdVynskl93C7ClgX7u42QWbOOku7mkrF2At721t6q4xtd7IjdMkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721129805; c=relaxed/simple;
-	bh=YoogwUfXxUBk+1CS11WqVO/G9/wXXAA1h/+2yjXFWe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fXyhSyntJjXkcMUCPan99N0xyvegq++WbwO+Pvmuj3DIiTrOc/cGDfVcsEfc30lb7suS3cfORJdpmsLF3xFvRUE+KwTfAiRf/RXaYmXV/rdQlRMAxozVnbQiGg+QskaWrPWwNPC5P3H6c2DcZMDfJFgNFMwuf0dmXvlEdMkLqxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjL081Wu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721129850; c=relaxed/simple;
+	bh=TGWgCjG/5BoPGM3gimHC4b/HxuCchSOPMuLNRzJfd+A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e47xdz9gPgnHMRxn2X1FgXZoP0LBkgw5WcEtmMcjVbnLyEazoWIRM69Tdpx474fB8JJK0HwAHDHmrVJlyqeg3Ht70qoYKN541aiYPapeKo/OL0d0ZOli5WPe3ZhTk3EyK98CtQYvIVfrkOfwieedb0D8MHm8gCCkJ+pz/VFH0+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=VeHkyn7f; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjL081Wu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F04C116B1;
-	Tue, 16 Jul 2024 11:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721129805;
-	bh=YoogwUfXxUBk+1CS11WqVO/G9/wXXAA1h/+2yjXFWe8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RjL081WuhqSNhE9RW7Y4we/6E6s9MDpT+roQpySr4yk/WtOFzSkshF/MFD4FKK0K4
-	 mnEkykRQY1tsfNGbLbQ6bvXAfFSVKXNEsc86HpOzeGClONFQcsAwgZ5OeeiXZe3vNa
-	 pt6GkRupzxU9x/yXYCBMwQO1GgRTnKPFHGlVkEJTOFRtFmAx4nqDVPFyJSgtNihxCN
-	 EiKwW6WRqgEGVAoSOpdIt4AZhtRuDr//sUkCsHJn4fXjH+62Dg6URZrElwYECUI7Yi
-	 j9XVrpK19Jltt+l3Z+3iX7645vvMDz/6wliC9i4Ta4yw0TiGw/Fb1PSco4PwAoEorv
-	 1IAh8mcvcEpEw==
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3d9dd8bc70dso482464b6e.2;
-        Tue, 16 Jul 2024 04:36:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX2vPoHQbuSlr7SbWBhF+5rgTX+b/Ul4Q4oXsefhaFpF3a1MxNESsZ0z5FIOgSWlwzx7NGM+iApYNxjJAoZcEAcMd/eJ0+q/QCSg8eKRNVVf2Xvhx0LzRjxEQXVCwP2uLUX8qp7T/o=
-X-Gm-Message-State: AOJu0YzZ6KZ39zaYkP6vSvuHwVMfVzkbj9BS5xOiDgADc2aTwL0R1o5D
-	NZZDM+74XUYDBxEmF2TRCOq3gMxBZnZ/dG7Kfv4lsagn1f91ULD0mftnWlmy8IYMyjuQIFzyuNd
-	vbjKmDpK+tcNOf0mMxlsIcBZUr7E=
-X-Google-Smtp-Source: AGHT+IGFySywAJ/ePXHY1qUDpP+S++4rDb9b+dHjDso32weFwIaQLytsfo1Y/ZtvrRcRWH2DKRkG5GeqUveRgN2b02M=
-X-Received: by 2002:a05:687c:2ba1:b0:25e:24d5:4d69 with SMTP id
- 586e51a60fabf-260b89c4041mr1836938fac.2.1721129804640; Tue, 16 Jul 2024
- 04:36:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VeHkyn7f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1721129848; x=1752665848;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TGWgCjG/5BoPGM3gimHC4b/HxuCchSOPMuLNRzJfd+A=;
+  b=VeHkyn7fP/dsOf4pszbz0xRkIz1YyY1wpxqpgxfeuv8Be8zZoD9oVhSN
+   +GJFREaEX/7xGVkb5kiBdoLJA5ROxGGreKdDNb7oTHl/UVofVTJ37ZOyj
+   8CWsA0/nP5Ln+39jWa3reXDxiTHsGT8vVWuMCbkIDKCIeajM1ZWjZIsWb
+   D7Mi206R97G2R4SL1BE8Of/kB12VIluOrXVYNdnULMB3z78KW7Kxz30jV
+   yf96UAo6ujYFHuQm4QxocDOe8yN2+XvqoSmFcDpl67fqBWGxdtcMShvn7
+   czWpzydBrm4ZXv2NQojv42zQQs4+gholVgI6HZ7zF6Daj5FIKYaYlWBXF
+   A==;
+X-CSE-ConnectionGUID: wiqq30pxTLCqYtWfMI+eUQ==
+X-CSE-MsgGUID: GOwTssgcSxCfQ1NZAT7NdA==
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="196701708"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jul 2024 04:37:26 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Jul 2024 04:37:15 -0700
+Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 16 Jul 2024 04:37:11 -0700
+From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+To: <netdev@vger.kernel.org>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>,
+	<horms@kernel.org>, <hkallweit1@gmail.com>, <richardcochran@gmail.com>,
+	<rdunlap@infradead.org>, <linux@armlinux.org.uk>,
+	<bryan.whitehead@microchip.com>, <edumazet@google.com>, <pabeni@redhat.com>,
+	<linux-kernel@vger.kernel.org>, <UNGLinuxDriver@microchip.com>
+Subject: [PATCH net-next V2 0/4] Add support to PHYLINK for LAN743x/PCI11x1x chips
+Date: Tue, 16 Jul 2024 17:03:45 +0530
+Message-ID: <20240716113349.25527-1-Raju.Lakkaraju@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6064157.lOV4Wx5bFT@rjwysocki.net> <20240715044527.GA1544@sol.localdomain>
- <4d7e11a7-b352-4ced-acee-b5f64e3cd0b6@linaro.org> <CAJZ5v0gx6GyKBYt7YMFwmUQ4OCG49d9k2H=P-4Awr-mJ=eFHKw@mail.gmail.com>
- <20240715145426.199c31d0@mir> <CAJZ5v0gPiwkNczZhCf_rkxVoUX33tS9c6irMf_7=Rg48Nw9C4w@mail.gmail.com>
- <20240716014830.243bb0cf@mir> <CAJZ5v0jkA72=avuthGkrS5iu_UGEQeaEp7LjedXCpzamcnRKsA@mail.gmail.com>
- <20240716125538.09f716d1@mir> <20240716131500.35cf4f00@mir>
-In-Reply-To: <20240716131500.35cf4f00@mir>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 16 Jul 2024 13:36:32 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j2w-8c83Lw6OdJGg53pOKQMdeWiwaNkEEThwE6fXLiHQ@mail.gmail.com>
-Message-ID: <CAJZ5v0j2w-8c83Lw6OdJGg53pOKQMdeWiwaNkEEThwE6fXLiHQ@mail.gmail.com>
-Subject: Re: [PATCH v3] thermal: core: Call monitor_thermal_zone() if zone
- temperature is invalid
-To: Stefan Lippers-Hollmann <s.l-h@gmx.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Eric Biggers <ebiggers@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Lukasz Luba <lukasz.luba@arm.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, Jul 16, 2024 at 1:15=E2=80=AFPM Stefan Lippers-Hollmann <s.l-h@gmx.=
-de> wrote:
->
-> Hi
->
-> On 2024-07-16, Stefan Lippers-Hollmann wrote:
-> > On 2024-07-16, Rafael J. Wysocki wrote:
-> > > On Tue, Jul 16, 2024 at 1:48=E2=80=AFAM Stefan Lippers-Hollmann <s.l-=
-h@gmx.de> wrote:
-> > > > On 2024-07-15, Rafael J. Wysocki wrote:
-> > > > > On Mon, Jul 15, 2024 at 2:54=E2=80=AFPM Stefan Lippers-Hollmann <=
-s.l-h@gmx.de> wrote:
-> > > > > > On 2024-07-15, Rafael J. Wysocki wrote:
-> > > > > > > On Mon, Jul 15, 2024 at 11:09=E2=80=AFAM Daniel Lezcano
-> > > > > > > <daniel.lezcano@linaro.org> wrote:
-> > > > > > > > On 15/07/2024 06:45, Eric Biggers wrote:
-> > > > > > > > > On Thu, Jul 04, 2024 at 01:46:26PM +0200, Rafael J. Wysoc=
-ki wrote:
-> > > > > > > > >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > [...]
-> > > > > > Silencing the warnings is already a big improvement - and that =
-patch
-> > > > > > works to this extent for me with an ax200, thanks.
-> > > > >
-> > > > > So attached is a patch that should avoid enabling the thermal zon=
-e
-> > > > > when it is not ready for use in the first place, so it should add=
-ress
-> > > > > both the message and the useless polling.
-> > > > >
-> > > > > I would appreciate giving it a go (please note that it hasn't rec=
-eived
-> > > > > much testing so far, though).
-> > > >
-> > > > Sadly this patch doesn't seem to help:
-> > >
-> > > This is likely because it is missing checks for firmware image type.
-> > > I've added them to the attached new version.  Please try it.
-> > >
-> > > I've also added two pr_info() messages to get a better idea of what's
-> > > going on, so please grep dmesg for "Thermal zone not ready" and
-> > > "Enabling thermal zone".
-> >
-> > This is the output with the patch applied:
->
-> The ax200 wlan interface is currently not up/ configured (system
-> using its wired ethernet cards instead), the thermal_zone1 stops
-> if I manually enable the interface (ip link set dev wlp4s0 up)
-> after booting up:
+This is the follow-up patch series of
+https://lkml.iu.edu/hypermail/linux/kernel/2310.2/02078.html
 
-This explains it, thanks!
+Divide the PHYLINK adaptation and SFP modifications into two separate patch
+series.
 
-The enabling of the thermal zone in iwl_mvm_load_ucode_wait_alive() is
-premature or it should get disabled in the other two places that clear
-the IWL_MVM_STATUS_FIRMWARE_RUNNING bit.
+The current patch series focuses on transitioning the LAN743x driver's PHY
+support from phylib to phylink.
 
-I'm not sure why the thermal zone depends on whether or not this bit
-is set, though. Is it really a good idea to return errors from it if
-the interface is not up?
+Tested on chip PCI11010 Rev-B with Bridgeport Evaluation board Rev-1
 
-> $ dmesg | grep -i -e iwlwifi -e thermal
-> [    0.080899] CPU0: Thermal monitoring enabled (TM1)
-> [    0.113768] thermal_sys: Registered thermal governor 'fair_share'
-> [    0.113770] thermal_sys: Registered thermal governor 'bang_bang'
-> [    0.113771] thermal_sys: Registered thermal governor 'step_wise'
-> [    0.113772] thermal_sys: Registered thermal governor 'user_space'
-> [    0.113773] thermal_sys: Registered thermal governor 'power_allocator'
-> [    3.759673] iwlwifi 0000:04:00.0: enabling device (0140 -> 0142)
-> [    3.764918] iwlwifi 0000:04:00.0: Detected crf-id 0x3617, cnv-id 0x100=
-530 wfpm id 0x80000000
-> [    3.764974] iwlwifi 0000:04:00.0: PCI dev 2723/0084, rev=3D0x340, rfid=
-=3D0x10a100
-> [    3.769432] iwlwifi 0000:04:00.0: TLV_FW_FSEQ_VERSION: FSEQ Version: 8=
-9.3.35.37
-> [    3.873466] iwlwifi 0000:04:00.0: loaded firmware version 77.a20fb07d.=
-0 cc-a0-77.ucode op_mode iwlmvm
-> [    3.907122] iwlwifi 0000:04:00.0: Detected Intel(R) Wi-Fi 6 AX200 160M=
-Hz, REV=3D0x340
-> [    3.907886] iwl_mvm_thermal_zone_register: Thermal zone not ready
-> [    4.032380] iwlwifi 0000:04:00.0: Detected RF HR B3, rfid=3D0x10a100
-> [    4.032392] thermal thermal_zone1: Enabling thermal zone
-> [    4.098308] iwlwifi 0000:04:00.0: base HW address: 94:e6:f7:XX:XX:XX
-> [    4.112535] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    4.128306] iwlwifi 0000:04:00.0 wlp4s0: renamed from wlan0
-> [    4.369396] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    4.625385] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    4.881416] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    5.137377] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    5.394377] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    5.649412] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    5.905379] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    6.161380] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    6.418381] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    6.673381] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [    6.929377] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
->                [...]
-> [   21.009413] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [   21.265496] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [   21.521462] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [   21.777481] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [   22.033468] thermal thermal_zone1: failed to read out thermal zone (-6=
-1)
-> [   22.213120] thermal thermal_zone1: Enabling thermal zone
-> [   22.283954] iwlwifi 0000:04:00.0: Registered PHC clock: iwlwifi-PTP, w=
-ith index: 0
+Change List:
+============
+V1 ->V2:
+  - Fix the Russell King's comments i.e. remove the speed, duplex update in 
+    lan743x_phylink_mac_config( )
+  - pre-March 2020 legacy support has been removed
 
-Thanks for this data point!
+V0 -> V1:
+  - Integrate with Synopsys DesignWare XPCS drivers
+  - Based on external review comments,
+  - Changes made to SGMII interface support only 1G/100M/10M bps speed
+  - Changes made to 2500Base-X interface support only 2.5Gbps speed
+  - Add check for not is_sgmii_en with is_sfp_support_en support
+  - Change the "pci11x1x_strap_get_status" function return type from void to
+    int
+  - Add ethtool phylink wol, eee, pause get/set functions
 
-AFAICS the thermal zone in iwlwifi is always enabled, but only valid
-if the interface is up.  It looks to me like the thermal core needs a
-special "don't poll me" error code to be returned in such cases.
+
+Raju Lakkaraju (4):
+  net: lan743x: Create separate PCS power reset function
+  net: lan743x: Create separate Link Speed Duplex state function
+  net: lan743x: Migrate phylib to phylink
+  net: lan743x: Add support to ethtool phylink get and set settings
+
+ drivers/net/ethernet/microchip/Kconfig        |   5 +-
+ .../net/ethernet/microchip/lan743x_ethtool.c  | 118 +---
+ drivers/net/ethernet/microchip/lan743x_main.c | 657 +++++++++++-------
+ drivers/net/ethernet/microchip/lan743x_main.h |   7 +
+ 4 files changed, 460 insertions(+), 327 deletions(-)
+
+-- 
+2.34.1
+
