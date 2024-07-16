@@ -1,226 +1,132 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C389E1991BA
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125210; cv=none; b=U2cKQR8wvgBHu7/XmpKRqF9kO0yOTrJceGXt5+3iYI9AKwBe3Ap0OWNLpwgatxlUkq8rRDMNfvNCL7s7pXdIRGBIbclYhrPFX3Y0GIjKdPEGV2tP+vqMKdmYuHBLAE6CJleu66GqzfdMThK5dkZbvdTJwFPdW2DrDe7Ec6tzflM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125210; c=relaxed/simple;
-	bh=fpBGbCyhd772qcFb498tGT8nDnPB0drFxt8PUU3Fn/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7pc8Bg49LkZ7lRyS081/+QCgVZQTfT440ws313D22FQluBdop/NJllr3U9NEFhuft+1ARkF0wP0FgZN+7WVDhuUiRCv+tbmlW1lTfCysLXJxXAPjJyLT5IXmY99zVmcygJArqwrMwHAgHxjI3r/hIRae5a3XdxJjTYlQegZtbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j8j9wOGo; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A766AC0;
+	Tue, 16 Jul 2024 10:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721125252; cv=pass; b=RmtX1fN9Wynx3I7/Vw8P8O4UiN1Ii1e0tpDxaKVLpGSPWvVw5ywzMRyv1Bonw0Cq/utD/v5COLt3tjLBkTI2Q/iCqm9hQ7FAdnxfXcxeM2ZJ3i4l5xZ7Tjk3WT/ZPigWLARGoRIPHwojuaZuyOEE9eVgZqiVJ0qyQ41AFQ/4MKA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721125252; c=relaxed/simple;
+	bh=xkkChdmkRLKiZKGSsspElQIgwTeWZhu6tOmt+rhM/P4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ZmP70kp/kVfmnKMBL/gxSVzHURXbFiRAhjip5Zx1NfUN2OCDM8aU/QqrQTsOYR2ADOc4aPlbD7wffZ3JguSgctKqfpdLMT6aq9rhr+Exypsb0X8IpIfe9lkZo9LXRnSYLCm6rdwJp+tvmMtG/q82TFTPremDgYcGJMSrnby1e9I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=L9cELZwG; arc=pass smtp.client-ip=195.140.195.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8j9wOGo"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2c98b22638bso3707398a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:20:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721125208; x=1721730008; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=D+ol9qghEAKP5PzeXFlIx+5EzD/KmRIHav75fqb24zE=;
-        b=j8j9wOGodFTXIbUL2kSwiayGcRIXUgD4tzOHilnZgKFJG5jNXsOjJvKqeiSskshRs5
-         sn6apw3dVwPMLS4zHzXcac5vKmxradqV3H67xWP/4m8fmLdil08FZkHT/CpcvrqMLPxm
-         GKHW0ACPbsyVVFU1jIF+HXC0rYixS/o9VTw28sTDatDv/adl59hvThzoOTphPZtaOuwA
-         wxQTvTkx5HmxQZGkpcCnAqE6qs0MexLfER264/gXhcupb0RIn7Rj79tOtFRVa1nqk4jP
-         mtr0ieAQjM7h09u3NfzDjwQefD+8UVNU0xINtwj7fOKwyA0v5T5JMPtyIoLyWuilpYO6
-         d7BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721125208; x=1721730008;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+ol9qghEAKP5PzeXFlIx+5EzD/KmRIHav75fqb24zE=;
-        b=IhMB7bmdLX1U4NTH22OTZXX8PKq92M10QvGNR8F+zw+hcvkZWRDyfP363gFIDXGeV/
-         lGj+2SJRGvmTaSErUhHbmrtlRIhWUPE0PnFbaE+TA6FO8wLX44zh6brFki0XbsV4vIwN
-         6yuQb7Q2ahMG0W5TYOSwLZeKJjQDLSj8V3xCbVz+cCkeQgb3EIlWVd9srlHZELXXtJpQ
-         F9ONTu+2s/82yK1b1NS5J4rxwNTbi/hvsPABVNS7uk/R3h14t4BNgjOQJTycr6PBQ+kJ
-         QPuHk70EwkHPX5nbUnmp3fzNmbGLPlZ1Qg/sTyBEbKm5S1FLkbb8jLpGzSgdCaUkhcT5
-         kasw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOFTFL0Ey+xw6b4bn2a32RBBRZRXSK551C7HkAxFV3RLT24kX+L7gsWAVOJ/k7PVjGfiaY81We6zdbrgGw+YB9y0FgcTG8FDUrJWo0
-X-Gm-Message-State: AOJu0YwWg8IBBcojpAUzfIfkZRqV4UtngA5i8iynzMK/P8Ic+VB08EwO
-	skgzklBtGIzk6h9oIfNfQcEggFJG3N07BSKtw6B2Ehk6VrBr8q6Pn3kcDkyrUg==
-X-Google-Smtp-Source: AGHT+IGupWa3ROtnkyEzp23i/w3DYfSyvrtmr9ayct2cPDFjJpWs4HnKGVa0ZLEWtcIFzwRkSYamKg==
-X-Received: by 2002:a17:90b:516:b0:2c9:36bf:ba6f with SMTP id 98e67ed59e1d1-2cb37dcaf25mr2162210a91.3.1721125208072;
-        Tue, 16 Jul 2024 03:20:08 -0700 (PDT)
-Received: from thinkpad ([220.158.156.207])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cacd704f8csm7902347a91.56.2024.07.16.03.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 03:20:07 -0700 (PDT)
-Date: Tue, 16 Jul 2024 15:50:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: neil.armstrong@linaro.org
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 13/14] PCI: qcom: Simulate PCIe hotplug using 'global'
- interrupt
-Message-ID: <20240716102002.GL3446@thinkpad>
-References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
- <20240715-pci-qcom-hotplug-v1-13-5f3765cc873a@linaro.org>
- <5f0a751a-f1b9-4cb5-af31-624c08833b10@linaro.org>
+	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="L9cELZwG"
+Received: from localhost (83-245-197-232.elisa-laajakaista.fi [83.245.197.232])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sakkinen)
+	by meesny.iki.fi (Postfix) with ESMTPSA id 4WNZpR06BbzyS4;
+	Tue, 16 Jul 2024 13:20:46 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
+	t=1721125247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xkkChdmkRLKiZKGSsspElQIgwTeWZhu6tOmt+rhM/P4=;
+	b=L9cELZwGq6Sfuy4gjPffNFMDYxvrcIqdB62UJuXnWnauvdBwbebDPTAE9AastBfQ3a3Qr0
+	5EyaNYssBANt84GOIucl43Oh+yWDLkx4o57MX3UfqbQmEShG7Zw6+kmy9i7/lYRxnxh6tP
+	RI5SpSYPrv6QXf3J9LvLFzz1pDmZ4hs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=meesny; t=1721125247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xkkChdmkRLKiZKGSsspElQIgwTeWZhu6tOmt+rhM/P4=;
+	b=SC4gnkgZXIJPahSjb7Y0NX5osY+m9pOYWsJFUL7hixkwR5SaH3cKP65BIsfxhDskvwFP8f
+	EGukVZOLlppr98b1VXkWWe8FwtePf5legdGeAB4cZVTVxIH52ILnBQx3MSS5P5QgmfSVJW
+	BjeQ56Il5JlHtWuQbBxFFK7SknP736Q=
+ARC-Seal: i=1; s=meesny; d=iki.fi; t=1721125247; a=rsa-sha256; cv=none;
+	b=CLSLkaC/O+/eroBuPJGwOwmn2TxwfklI1ZgjXGbSDUaH4F6sGzcEVmmiUqXgIA2Y6zxC3F
+	KLOj0un+4HgaEV1lAGqh57l9RjpwinZUyIvuju1oVn6c9ICVxhp7quQ/6Msp5cIVcJb5wx
+	xRjOjpydn/oXEBLSdK25NrJ3ZZWLyZg=
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sakkinen smtp.mailfrom=jarkko.sakkinen@iki.fi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f0a751a-f1b9-4cb5-af31-624c08833b10@linaro.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 16 Jul 2024 13:20:46 +0300
+Message-Id: <D2QVZB1Y4DHT.2WFLXMCFYSISM@iki.fi>
+Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Hao
+ Ge" <gehao@kylinos.cn>
+Subject: Re: [PATCH] tpm: Move dereference after NULL check in
+ tpm_buf_check_hmac_response
+From: "Jarkko Sakkinen" <jarkko.sakkinen@iki.fi>
+To: "Hao Ge" <hao.ge@linux.dev>, "Jarkko Sakkinen" <jarkko@kernel.org>,
+ <peterhuewe@gmx.de>, <jgg@ziepe.ca>
+X-Mailer: aerc 0.17.0
+References: <20240709023337.102509-1-hao.ge@linux.dev>
+ <D2Q2Q4R8BZ4Q.2QZF7NM3RE9B8@kernel.org>
+ <593e3ae7-1f8c-218a-a5ce-3d90e3008999@linux.dev>
+In-Reply-To: <593e3ae7-1f8c-218a-a5ce-3d90e3008999@linux.dev>
 
-On Tue, Jul 16, 2024 at 10:40:55AM +0200, neil.armstrong@linaro.org wrote:
-> On 15/07/2024 19:33, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Historically, Qcom PCIe RC controllers lack standard hotplug support. So
-> > when an endpoint is attached to the SoC, users have to rescan the bus
-> > manually to enumerate the device. But this can be avoided by simulating the
-> > PCIe hotplug using Qcom specific way.
-> > 
-> > Qcom PCIe RC controllers are capable of generating the 'global' SPI
-> > interrupt to the host CPUs. The device driver can use this event to
-> > identify events such as PCIe link specific events, safety events etc...
-> > 
-> > One such event is the PCIe Link up event generated when an endpoint is
-> > detected on the bus and the Link is 'up'. This event can be used to
-> > simulate the PCIe hotplug in the Qcom SoCs.
-> > 
-> > So add support for capturing the PCIe Link up event using the 'global'
-> > interrupt in the driver. Once the Link up event is received, the bus
-> > underneath the host bridge is scanned to enumerate PCIe endpoint devices,
-> > thus simulating hotplug.
-> > 
-> > All of the Qcom SoCs have only one rootport per controller instance. So
-> > only a single 'Link up' event is generated for the PCIe controller.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/pci/controller/dwc/pcie-qcom.c | 55 ++++++++++++++++++++++++++++++++++
-> >   1 file changed, 55 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0180edf3310e..38ed411d2052 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -50,6 +50,9 @@
-> >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> >   #define PARF_Q2A_FLUSH				0x1ac
-> >   #define PARF_LTSSM				0x1b0
-> > +#define PARF_INT_ALL_STATUS			0x224
-> > +#define PARF_INT_ALL_CLEAR			0x228
-> > +#define PARF_INT_ALL_MASK			0x22c
-> >   #define PARF_SID_OFFSET				0x234
-> >   #define PARF_BDF_TRANSLATE_CFG			0x24c
-> >   #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-> > @@ -121,6 +124,9 @@
-> >   /* PARF_LTSSM register fields */
-> >   #define LTSSM_EN				BIT(8)
-> > +/* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> > +#define PARF_INT_ALL_LINK_UP			BIT(13)
-> > +
-> >   /* PARF_NO_SNOOP_OVERIDE register fields */
-> >   #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
-> >   #define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
-> > @@ -260,6 +266,7 @@ struct qcom_pcie {
-> >   	struct icc_path *icc_cpu;
-> >   	const struct qcom_pcie_cfg *cfg;
-> >   	struct dentry *debugfs;
-> > +	int global_irq;
-> 
-> I think you can drop this, the irq number is no more needed after probe
-> 
-> >   	bool suspended;
-> >   };
-> > @@ -1488,6 +1495,29 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
-> >   				    qcom_pcie_link_transition_count);
-> >   }
-> > +static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-> > +{
-> > +	struct qcom_pcie *pcie = data;
-> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> > +	struct device *dev = pcie->pci->dev;
-> > +	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
-> > +
-> > +	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
-> > +
-> > +	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-> > +		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-> > +		/* Rescan the bus to enumerate endpoint devices */
-> > +		pci_lock_rescan_remove();
-> > +		pci_rescan_bus(pp->bridge->bus);
-> > +		pci_unlock_rescan_remove();
-> > +	} else {
-> > +		dev_err(dev, "Received unknown event. INT_STATUS: 0x%08x\n",
-> > +			status);
-> 
-> Can this happen ? perhaps dev_warn_once instead ?
-> 
+On Tue Jul 16, 2024 at 4:04 AM EEST, Hao Ge wrote:
+> Hi Jarkko
+>
+> Have a nice day.
+>
+> On 7/15/24 19:25, Jarkko Sakkinen wrote:
+> > On Tue Jul 9, 2024 at 5:33 AM EEST, Hao Ge wrote:
+> >> From: Hao Ge <gehao@kylinos.cn>
+> >>
+> >> We shouldn't dereference "auth" until after we have checked that it is
+> >> non-NULL.
+> >>
+> >> Fixes: 7ca110f2679b ("tpm: Address !chip->auth in tpm_buf_append_hmac_=
+session*()")
+> >> Signed-off-by: Hao Ge <gehao@kylinos.cn>
+> > Also lacking:
+> >
+> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > Closes: https://lore.kernel.org/linux-integrity/3b1755a9-b12f-42fc-b26d=
+-de2fe4e13ec2@stanley.mountain/T/#u
+>
+> Regarding this version, I don't think I should add these.
+>
+> I send this patch on July 9th, 2024.
+>
+> The following email was sent on July 13th, 2024.
+>
+> https://lore.kernel.org/linux-integrity/3b1755a9-b12f-42fc-b26d-de2fe4e13=
+ec2@stanley.mountain/T/#u
+>
+> I think these should be included in the subsequent versions (if any).
 
-I did see one such issue that went unreported and ended by taking some debug
-cycles. But dev_warn_once() makes sense.
+OK sorry, then you are right.
 
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> >   static int qcom_pcie_probe(struct platform_device *pdev)
-> >   {
-> >   	const struct qcom_pcie_cfg *pcie_cfg;
-> > @@ -1498,6 +1528,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >   	struct dw_pcie_rp *pp;
-> >   	struct resource *res;
-> >   	struct dw_pcie *pci;
-> > +	char *name;
-> >   	int ret;
-> >   	pcie_cfg = of_device_get_match_data(dev);
-> > @@ -1617,6 +1648,28 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >   		goto err_phy_exit;
-> >   	}
-> > +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_global_irq%d",
-> > +			      pci_domain_nr(pp->bridge->bus));
-> > +	if (!name) {
-> > +		ret = -ENOMEM;
-> > +		goto err_host_deinit;
-> > +	}
-> > +
-> > +	pcie->global_irq = platform_get_irq_byname_optional(pdev, "global");
-> > +	if (pcie->global_irq > 0) {
-> > +		ret = devm_request_threaded_irq(&pdev->dev, pcie->global_irq,
-> > +						NULL,
-> > +						qcom_pcie_global_irq_thread,
-> > +						IRQF_ONESHOT, name, pcie);
-> > +		if (ret) {
-> > +			dev_err_probe(&pdev->dev, ret,
-> > +				      "Failed to request Global IRQ\n");
-> > +			goto err_host_deinit;
-> > +		}
-> > +
-> > +		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
-> 
-> Is this available on all PCIe RC core versions ?
-> perhaps this should be moved into a callback of ops_1_9_0 for now ?
-> 
+>
+> >
+> > What is happening here is that my commit exposed pre-existing bug to
+> > static analysis but it did not introduce a new regression. I missed
+> > from your patch how did you ended up to your conclusions.
+> >
+> > Please *do not* ignore the sources next time. Either explain how the bu=
+g
+> > was found or provide the reporting source. You are essentially taking
+> > credit and also blame from the work that you did not accomplish
+> > yourself, which is both wrong and dishonest.
+> >
+> > BR, Jarkko
+>
+> OK,got it,I'll pay more attention to such details in the future.
+>
+> I would like to clarify that I did not taking credit and dishonest.
 
-This register should be available on all version afaik. Even if it is not on
-some legacy ones, it can be moved later if required (once the dts for those
-platforms start defining 'global' interrupt).
+OK, cool, and I do agree, and I'm sorry what I said.
 
-- Mani
+Please just add the necessary details and send v2 then.
 
--- 
-மணிவண்ணன் சதாசிவம்
+BRR, Jarkko
