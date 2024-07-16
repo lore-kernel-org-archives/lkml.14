@@ -1,73 +1,146 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543BD19DF8D;
-	Tue, 16 Jul 2024 17:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E14B19FA94
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 17:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721152215; cv=none; b=JpbDSFAYiSpAS3ob2dajpJbw3dOEMGC7riuFIwchjRKH+uxKy8/WZDI7UezaEC8LA5JDQq3TUb53+QPqe44bdRnoJIyLhgiRUXE0cYD1rO0zB7hvyyyxoPJg15znvu4I/l+XOAlarpnVv7sog9lHbV0bTxrv64swnituSENoEb0=
+	t=1721152263; cv=none; b=YdGuYYGA4FKTJEL5fGIOt1UXjFqjmfmsA9vMkieATzrHzJDXkZeWau5WJKWKjil5vUy4yKvfEQ3heSeyKC86zjKUqQDFWT+rLaSk7HV20gy0Frd3YmOd4I07L+ozxj/S/2U3dc0FV/4fq2c8B9Qj4SsSm+6Xe4stAUe3eMDf6xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721152215; c=relaxed/simple;
-	bh=KHqEoHnePTV9FSinsm5s6XR0VJklu3YfJd0AaEm5aZA=;
+	s=arc-20240116; t=1721152263; c=relaxed/simple;
+	bh=ic2sbABp4tHp3UGGNyn+mzu/e840S3TaNk0qjVFGVfk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qctjYP4SOR5/rVQPPil6RzrBGYkPlvEXtD6hC6s69/t3pCuZUNs4fZXzGP5Qwk+pvcy9UY2fa9yepQSssST6nr9h4RqyTAKE0x4DEeT731B2UlGpgjT6BxNq5MwTafsag2TdPTHr2siFr8dourPWX35NOI4e0xzNdQI7cZH2CEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=HZxZgCsC; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="HZxZgCsC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1721152205;
-	bh=KHqEoHnePTV9FSinsm5s6XR0VJklu3YfJd0AaEm5aZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HZxZgCsCCvntXehct8qIa5ChM6E2I2/VTN7GB8NVk6kj5/P7p47nyGHGzJzYOtHfl
-	 6otkC9MVDyaWqI9tmm9R942HHxGqaRVwm+tC6xEcpwMCYdBgGDQV0R9IprDUqVj4R1
-	 jnYYaHTCt/RWi/jywVRiVjqMbZJp44m66FR0oF4U=
-Date: Tue, 16 Jul 2024 19:50:04 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guenter Roeck <linux@roeck-us.net>, Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 2/2] i2c: piix4: Register SPDs
-Message-ID: <1c03bc1c-b1ad-40ee-8219-718455717966@t-8ch.de>
-References: <20240709-piix4-spd-v3-0-9d1daa204983@weissschuh.net>
- <20240709-piix4-spd-v3-2-9d1daa204983@weissschuh.net>
- <ZpEnXaRYnPIr1vG3@shikoro>
- <i633av3v2a4chdh5a7yk6nv6y77ohvpajeozypjdroufikes6k@cmvpywjwj4df>
+	 Content-Type:Content-Disposition:In-Reply-To; b=a3wKqwjx+H4N+QqgXHZvtlWwv3w9daxwalYwEH5XAq86JfbZVT4MKfmpN5xaGyykGzK1ur5Gu0mB1JfBRH7Weqg5TyZgObhTTDBUQ2vVwViEAdLy93L9gu7OZ1l4X1D/8JOFnc8T1YA+2IcGaaU1BCz57kRoB1JoMhEeTFhqXkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1sTmJy-0000eT-4W; Tue, 16 Jul 2024 19:50:38 +0200
+Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1sTmJv-0001tg-EK; Tue, 16 Jul 2024 19:50:35 +0200
+Received: from pengutronix.de (p5de45302.dip0.t-ipconnect.de [93.228.83.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 26D7D305380;
+	Tue, 16 Jul 2024 14:45:36 +0000 (UTC)
+Date: Tue, 16 Jul 2024 16:45:33 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	haibo.chen@nxp.com, imx@lists.linux.dev, han.xu@nxp.com
+Subject: Re: [PATCH v2 4/4] can: flexcan: add wakeup support for imx95
+Message-ID: <20240716-chowchow-of-massive-joviality-77e833-mkl@pengutronix.de>
+References: <20240715-flexcan-v2-0-2873014c595a@nxp.com>
+ <20240715-flexcan-v2-4-2873014c595a@nxp.com>
+ <20240716-curious-scorpion-of-glory-8265aa-mkl@pengutronix.de>
+ <ZpaF4Wc70VuV4Cti@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l2syr324jbfki6hb"
 Content-Disposition: inline
-In-Reply-To: <i633av3v2a4chdh5a7yk6nv6y77ohvpajeozypjdroufikes6k@cmvpywjwj4df>
-
-Hi Andi,
-
-On 2024-07-16 19:46:43+0000, Andi Shyti wrote:
-> On Fri, Jul 12, 2024 at 02:53:49PM GMT, Wolfram Sang wrote:
-> > > Only the first 8 slots are supported. If the system has more,
-> > > then these will not be visible.
-> > > 
-> > > The AUX bus can not be probed as on some platforms it reports all
-> > > devices present and all reads return "0".
-> > > This would allow the ee1004 to be probed incorrectly.
-> > 
-> > I think this information would also be helpful as a comment above the
-> > code. But to allow this series to be applied now, I think an incremental
-> > patch will do. With Heiner's ack, I think this can go in now.
-> 
-> I agree with Wolfram here. Are you up for a v4 or do you want me
-> to add the comment while pushing?
-
-I also agree. My first interpretation of that message was that I would
-send the incremental patch during the 6.12 cycle.
-But if it's still fine for 6.11, even better.
-If you could add the comment, that would be great,
-but I'm also fine with resending.
+In-Reply-To: <ZpaF4Wc70VuV4Cti@lizhi-Precision-Tower-5810>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 
-Thomas
+--l2syr324jbfki6hb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 16.07.2024 10:40:31, Frank Li wrote:
+> > > @@ -2330,9 +2366,12 @@ static int __maybe_unused flexcan_noirq_resume=
+(struct device *device)
+> > >  	if (netif_running(dev)) {
+> > >  		int err;
+> > > =20
+> > > -		err =3D pm_runtime_force_resume(device);
+> > > -		if (err)
+> > > -			return err;
+> > > +		if (!(device_may_wakeup(device) &&
+> >                       ^^^^^^^^^^^^^^^^^^^^^^^^
+> >=20
+> > Where does this come from?
+>=20
+> include/linux/pm_wakeup.h
+>=20
+> static inline bool device_may_wakeup(struct device *dev)                 =
+                          =20
+> {                                                                        =
+                          =20
+>         return dev->power.can_wakeup && !!dev->power.wakeup;             =
+                          =20
+> }
+
+Sorry for the confusion. I wanted to point out, that the original driver
+doesn't have the check to device_may_wakeup(). Why was this added?
+
+> >=20
+> > > +		      priv->devtype_data.quirks & FLEXCAN_QUIRK_SETUP_STOP_MODE_SC=
+MI)) {
+> > > +			err =3D pm_runtime_force_resume(device);
+> > > +			if (err)
+> > > +				return err;
+> > > +		}
+> > > =20
+> > >  		if (device_may_wakeup(device))
+> > >  			flexcan_enable_wakeup_irq(priv, false);
+> > > diff --git a/drivers/net/can/flexcan/flexcan.h b/drivers/net/can/flex=
+can/flexcan.h
+> > > index 025c3417031f4..4933d8c7439e6 100644
+> > > --- a/drivers/net/can/flexcan/flexcan.h
+> > > +++ b/drivers/net/can/flexcan/flexcan.h
+> > > @@ -68,6 +68,8 @@
+> > >  #define FLEXCAN_QUIRK_SUPPORT_RX_MAILBOX_RTR BIT(15)
+> > >  /* Device supports RX via FIFO */
+> > >  #define FLEXCAN_QUIRK_SUPPORT_RX_FIFO BIT(16)
+> > > +/* Setup stop mode with ATF SCMI protocol to support wakeup */
+> > > +#define FLEXCAN_QUIRK_SETUP_STOP_MODE_SCMI BIT(17)
+> > > =20
+> > >  struct flexcan_devtype_data {
+> > >  	u32 quirks;		/* quirks needed for different IP cores */
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--l2syr324jbfki6hb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmaWh4sACgkQKDiiPnot
+vG9pnwf+JoS4BGqt9+eauMHhwkSi1Z1OupbzhlhGwMBtIeQWPmhjM0f0/N0XDNyA
+vFmZZs6HIj9lcXNADBVtKvB92MJFV4UbvGyPSqs4cU8r/cZdPr+I5j0gVHHCmtiq
+RZcPzP+Jm6U6NV4C8Oj6RZxhPVCKKlNfckBW9pcjjhKg4XmEFksYC5J9G4ldofBz
+DHivW/RXq2mcals9q7N2JTkgH6Zmw7wxnOWIUdFItj7Jt1XFDWQSO7ha4UC1ntmK
+FgdCfR0anEHNOucDeLCyXw63FOBro/pD3iQ6xdIBCR/IVnhSIgkAjkIjFV6K5d+G
+nvSKa9wCyX8iqQJuRZNp6HBTEvex/Q==
+=Vri0
+-----END PGP SIGNATURE-----
+
+--l2syr324jbfki6hb--
