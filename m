@@ -1,198 +1,204 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7891953A3
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F26441A8E;
+	Tue, 16 Jul 2024 09:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721122819; cv=none; b=Sz+qIApjC4X7/AdUXVXMOCTJ/2/0XruLowc2CnSmfR6FsjR450NjEkXwryXdQVwYweHJ/hGqlm0BxAGtiFBDYt3QHn5HEK8bZdsPzBWuCfo7NAH0M84JlIIhmq9juuYMHpiEbo8Wo1nT9f0O5BBfrDPQhsG81qHmrmX1wcrzR4Q=
+	t=1721122864; cv=none; b=HKgNiGD85isM8f3L5joOwITCVJUcAZYT0dd4CLBLDIsdmp4YseQvy0YdkwqiW0lN427jPsG2sU7N52yRElT/43EC57KNLJmtNw3fInYBFlTSC2V9wH4wUcekomz2rxw7p8J7xa6cTODMQuC5IIHvOwXN/9iYkeTA7c6NHfT69OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721122819; c=relaxed/simple;
-	bh=Yz6weDiPardgtsfKrAhEEw32tolr/Zmr4mxIYT2xDfo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ik8m8AkqObwSsO1rO2X4E5mzbytyYzWdsM39bVV3BaV3xNbUdGKB7dWdNL2/WnofULYFz61ca44oY1udNmaEK/C3tsGcR0iTb7JWcRORsDZMxGTIIQFse9mbDQblCs2KeVYofXDQ0flnAdHdSVIacOEPEw9Sz0A/x0sT9FzgCak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FPqw5Stc; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721122864; c=relaxed/simple;
+	bh=5Lhv2MWbc/qpZDBmQeIkbJ4Fh5cwZsrgGq6obwgN+Bg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CEwQ2arvYc+ZuQYdUp+I/9Ut04kGH5iNm0PjCdJeYh1ndPtw/GLhrHfRvPv7QJnLb1NfGmZLVH2juNc5uWj4qJfJGOET3TvkexOFySeonPuB0x/0jLLsvGYn/JfSKXsHz2X6JvsEdpOaqWsyyMwVdgKiQa9klZKDg2vF7sXlKYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzgW2kLs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FPqw5Stc"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-367ab50a07aso3327023f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 02:40:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721122816; x=1721727616; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2uC4G2iZkZ7rivx5AWjBLPvuJHPT6w3aeN8UNztFpm8=;
-        b=FPqw5StcIt+qEfNJIGlfu9UZqRx4sgi9p/d9Cd7pv7AiSlOnrgLCPEshHv+R7QguJs
-         im5cPVAYMwv1mGnygqLepT9iwP9ZrgqpcT2kn1JhJeCX8OVezgeA+r60+yBGN9eA2bE2
-         XUE5hxa9c3mY/6I7XbgFBS8FANyv1mMwYmXVTXKHv2lrBgVHPCht3stUDTdx5Q51+ApN
-         hiJF/vgcQFWfzIIX1s4/m6tLd81y/ya7jBRyOdN/i8GeJ9bAe35ph/9zvX6XOgW7xCYR
-         PTJMu3kskU2HIwXBoPEQpYxvUejAnWElCTP1qbNuzuc8CeGTKDPu7yEmqzxuPgkwiDAD
-         iUVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721122816; x=1721727616;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2uC4G2iZkZ7rivx5AWjBLPvuJHPT6w3aeN8UNztFpm8=;
-        b=BruKlWJagDrcTgxsjCTdUy7vjhet7fLmoeUJMbmlZ8J0u+vdyVxULR7sffh5zhMTD2
-         nCznDj+XvHwAj0dHnptEjYnk1dkgpz4wIF0HemOysSD40qV7AdKDPBA/TTpO9nR60uz3
-         /3wqZrRdOx8/badj1YJUzVq5rHIVXboTHG8CASDLCOx/MCOI7ImApYDQPQGGPAzHN7eE
-         iC6xVGQfiweG0EIBXjUTCAcwXW0/D5J/t+/9vjBVPzrWwV3ztmynv2gWCwFWMInC102f
-         XoviVPkqcTrV6QI4D/bWNbPW0yPozgUj9exzt4a7Aw378tWVh1klSQXPhA9OCIbVeU2J
-         EjOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWimZnBwM6jrU8rOdWWqgFnimvV5STuVTCLBu0VGg1qEInpunUXHu3WOdtxfIUpM8DIGDSYPOYwwcWILwIUfZVXNujbE33pk45+pfJJ
-X-Gm-Message-State: AOJu0YwO8788fR4LfV13cCHqhYBWacLgJRgcKS8wuY/wvjlZRUl1NpDs
-	8jiR+TXwuESYRIGaZLErXBqJeucE3AJeuEmDYAlBZaKGUllr01ez2jQOJIlhZgI=
-X-Google-Smtp-Source: AGHT+IEbHrZnwhrgVVk1jY59doNN/afF7lpjn01IM3RFuLKF8ytPrfrhh5b9YgNfl6w/M/oLDeR1DQ==
-X-Received: by 2002:adf:f6c2:0:b0:367:9978:7ff with SMTP id ffacd0b85a97d-368260a2001mr1029548f8f.18.1721122816177;
-        Tue, 16 Jul 2024 02:40:16 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:f5ba:a94c:e43a:d197? ([2a01:e0a:982:cbb0:f5ba:a94c:e43a:d197])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db048a8sm8467124f8f.111.2024.07.16.02.40.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 02:40:15 -0700 (PDT)
-Message-ID: <d3416be5-b97f-4db6-a779-9c436e41dd72@linaro.org>
-Date: Tue, 16 Jul 2024 11:40:14 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzgW2kLs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EA2C4AF09;
+	Tue, 16 Jul 2024 09:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721122863;
+	bh=5Lhv2MWbc/qpZDBmQeIkbJ4Fh5cwZsrgGq6obwgN+Bg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bzgW2kLszJ6AqUktHnkjKxg0uufIxlfzP7LlFhRjCPj4XYbg5Y7t5EIY+G/sydn7m
+	 GNmSqAjCfxw9HeCqRWeOejxyi8MpXiWa76Wtrlz/HMqZKlU9Lmd0Lyw3zeq5SPc/cK
+	 X9v2MepKf9ewnEXB4Sb4BJ4rdKdWVsf//WDcPIswbzbFZ/Q4X9XKxiiiYwYKLkvd4f
+	 1k2+aI8QcR0xOGkggk3I2Ce4QPHvpf6SmYasL+1aW5V6g1GyB3/G4SpkkL2hEBaN68
+	 YwmQNX3aAcIkzD37LVr62RYmtDmwB1UVEU9GedD8pIQzSJgFqTzNou78rFSv0TVTtG
+	 gc7yFOV90rqgQ==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2eedec7fbc4so34598731fa.0;
+        Tue, 16 Jul 2024 02:41:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVsat3+raNo1Ac5DcHehzi8cVRrCggFpvfIqw+zMY3gWDb+7J3qKuzhqBqNDQUfl8mnHLlyUQObovpnAEqtnVVwoAlsAFBtdLGQG/33U5rcf29a8RJp4fe878zdCm+qT4Z1iFuJEzyKO7KtJh/Ere6PpRWE0hL3mUMOSInG7ihz5Vi2x7n3eGRavcdeqswCfJztqYWDk741IgfkSHAKPRU=
+X-Gm-Message-State: AOJu0Yw/jv9rfbCKStDm8/Atc/TEgrB8p+Ac1Kwbnf+KnlH/Ft6MqTEQ
+	Lz8ef9KfwxtHTORrZUneFoxrJMMLwvAEZHb+MknI9oMtR0WEEwFHgpQmGIMW+JWzjyZugwTxVmr
+	3ogSwfTa5cUfqypsqlPev33cqf9Q=
+X-Google-Smtp-Source: AGHT+IFNuSA6H3vBYEA02jikcpDWsWbHnSz+F7UeviPWcwDTM3KKs3IU1L/Occf2nay7b5LoDEclAsMtP+ErAVWY4qs=
+X-Received: by 2002:a2e:b17a:0:b0:2ee:e0a1:c496 with SMTP id
+ 38308e7fff4ca-2eef415ff6amr11889151fa.9.1721122861833; Tue, 16 Jul 2024
+ 02:41:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm8550-hdk: add the Wifi node
-To: Amit Pundir <amit.pundir@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>,
- dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
-References: <20240702091655.278974-1-amit.pundir@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240702091655.278974-1-amit.pundir@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240711-loongson1-dma-v9-0-5ce8b5e85a56@gmail.com>
+ <CAAhV-H5OOXguNTvywykyJk3_ydyDiSnpc-kvERRiYggBt441tw@mail.gmail.com>
+ <CAJhJPsXC-z+TS=qrXUT=iF_6-b5x-cr9EvcJNrmSL--RV6xVsQ@mail.gmail.com>
+ <CAAhV-H5Um5HhbmcB1Se=Qeh2OOAeP34BAx+sNtLKge_pePiuiQ@mail.gmail.com> <b1a53515-068a-4f70-87a9-44b77d02d1d5@app.fastmail.com>
+In-Reply-To: <b1a53515-068a-4f70-87a9-44b77d02d1d5@app.fastmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 16 Jul 2024 17:40:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5cDiwAWBgXx8fBohZMocfup3rbe-XjDjEzsLAUB+1BUQ@mail.gmail.com>
+Message-ID: <CAAhV-H5cDiwAWBgXx8fBohZMocfup3rbe-XjDjEzsLAUB+1BUQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v9 0/2] Add support for Loongson1 APB DMA
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Kelvin Cheung <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Jul 15, 2024 at 3:00=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
+>
+>
+>
+> =E5=9C=A82024=E5=B9=B47=E6=9C=8815=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=
+=E5=8D=882:39=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
+> [...]
+> >
+> >> You said that you've accepted my suggestion, which means you recognize
+> >> 'loongson' as the better name for the drivers.
+> > No, I don't think so, this is just a compromise to keep consistency.
+>
+> Folks, can we settle on this topic?
+>
+> Is this naming really important? As long as people can read actual chip n=
+ame from
+> kernel code & documents, I think both are acceptable.
+>
+> I suggest let this patch go as is. And if anyone want to unify the naming=
+, they can
+> propose a treewide patch.
+Renaming still breaks config files.
 
-On 02/07/2024 11:16, Amit Pundir wrote:
-> Describe the ath12k WLAN on-board the WCN7850 module present on the
-> board.
-> 
-> Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
-> ---
-> Kanged verbatim from 490812872449 ("arm64: dts: qcom: sm8550-qrd: add the Wifi node").
-> 
->   arch/arm64/boot/dts/qcom/sm8550-hdk.dts | 97 +++++++++++++++++++++++++
->   1 file changed, 97 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> index 12d60a0ee095..c453d081a2df 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-> @@ -279,6 +279,68 @@ platform {
->   			};
->   		};
->   	};
-> +
-> +	wcn7850-pmu {
-> +		compatible = "qcom,wcn7850-pmu";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&wlan_en>, <&pmk8550_sleep_clk>;
-> +
-> +		wlan-enable-gpios = <&tlmm 80 GPIO_ACTIVE_HIGH>;
-> +		/*
-> +		 * TODO Add bt-enable-gpios once the Bluetooth driver is
-> +		 * converted to using the power sequencer.
-> +		 */
+Huacai
 
-<snip>
-
-Now [1] driver & bindings changes were merged, could you resend with the following squashed:
-
-[1] https://lore.kernel.org/all/20240709-hci_qca_refactor-v3-0-5f48ca001fed@linaro.org/
-
-====><=====================================
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-index 0fa0b79de741..01c921602605 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-@@ -284,13 +284,10 @@ wcn7850-pmu {
-  		compatible = "qcom,wcn7850-pmu";
-
-  		pinctrl-names = "default";
--		pinctrl-0 = <&wlan_en>, <&pmk8550_sleep_clk>;
-+		pinctrl-0 = <&wlan_en>, <&bt_default>, <&pmk8550_sleep_clk>;
-
-  		wlan-enable-gpios = <&tlmm 80 GPIO_ACTIVE_HIGH>;
--		/*
--		 * TODO Add bt-enable-gpios once the Bluetooth driver is
--		 * converted to using the power sequencer.
--		 */
-+		bt-enable-gpios = <&tlmm 81 GPIO_ACTIVE_HIGH>;
-
-  		vdd-supply = <&vreg_s5g_0p85>;
-  		vddio-supply = <&vreg_l15b_1p8>;
-@@ -1312,20 +1309,15 @@ &uart14 {
-  	bluetooth {
-  		compatible = "qcom,wcn7850-bt";
-
--		vddio-supply = <&vreg_l15b_1p8>;
--		vddaon-supply = <&vreg_s4e_0p95>;
--		vdddig-supply = <&vreg_s4e_0p95>;
--		vddrfa0p8-supply = <&vreg_s4e_0p95>;
--		vddrfa1p2-supply = <&vreg_s4g_1p25>;
--		vddrfa1p9-supply = <&vreg_s6g_1p86>;
-+		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+		vddaon-supply = <&vreg_pmu_aon_0p59>;
-+		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
-
-  		max-speed = <3200000>;
--
--		enable-gpios = <&tlmm 81 GPIO_ACTIVE_HIGH>;
--		swctrl-gpios = <&tlmm 82 GPIO_ACTIVE_HIGH>;
--
--		pinctrl-0 = <&bt_default>;
--		pinctrl-names = "default";
-  	};
-  };
-====><=====================================
-
-Thanks,
-Neil
+>
+> Otherwise, we are going nowhere.
+>
+> Thanks
+> -  Jiaxun
+>
+> >
+> >
+> >
+> > Huacai
+> >
+> >> Moreover, Loongson1 and Loongson2 belong to different SoC series.
+> >> To be honest, I can't see why Loongson1 APB DMA should give up this
+> >> intuitive and comprehensible naming.
+> >> Thanks for your review!
+> >> >
+> >> > Huacai
+> >> >
+> >> > On Thu, Jul 11, 2024 at 6:57=E2=80=AFPM Keguang Zhang via B4 Relay
+> >> > <devnull+keguang.zhang.gmail.com@kernel.org> wrote:
+> >> > >
+> >> > > Add the driver and dt-binding document for Loongson1 APB DMA.
+> >> > >
+> >> > > ---
+> >> > > Changes in v9:
+> >> > > - Fix all the errors and warnings when building with W=3D1 and C=
+=3D1
+> >> > > - Link to v8: https://lore.kernel.org/r/20240607-loongson1-dma-v8-=
+0-f9992d257250@gmail.com
+> >> > >
+> >> > > Changes in v8:
+> >> > > - Change 'interrupts' property to an items list
+> >> > > - Link to v7: https://lore.kernel.org/r/20240329-loongson1-dma-v7-=
+0-37db58608de5@gmail.com
+> >> > >
+> >> > > Changes in v7:
+> >> > > - Change the comptible to 'loongson,ls1*-apbdma' (suggested by Hua=
+cai Chen)
+> >> > > - Update the title and description part accordingly
+> >> > > - Rename the file to loongson,ls1b-apbdma.yaml
+> >> > > - Add a compatible string for LS1A
+> >> > > - Delete minItems of 'interrupts'
+> >> > > - Change patterns of 'interrupt-names' to const
+> >> > > - Rename the file to loongson1-apb-dma.c to keep the consistency
+> >> > > - Update Kconfig and Makefile accordingly
+> >> > > - Link to v6: https://lore.kernel.org/r/20240316-loongson1-dma-v6-=
+0-90de2c3cc928@gmail.com
+> >> > >
+> >> > > Changes in v6:
+> >> > > - Change the compatible to the fallback
+> >> > > - Implement .device_prep_dma_cyclic for Loongson1 sound driver,
+> >> > > - as well as .device_pause and .device_resume.
+> >> > > - Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
+> >> > > - into one page to save memory
+> >> > > - Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
+> >> > > - Drop dma_slave_config structure
+> >> > > - Use .remove_new instead of .remove
+> >> > > - Use KBUILD_MODNAME for the driver name
+> >> > > - Improve the debug information
+> >> > > - Some minor fixes
+> >> > >
+> >> > > Changes in v5:
+> >> > > - Add the dt-binding document
+> >> > > - Add DT support
+> >> > > - Use DT information instead of platform data
+> >> > > - Use chan_id of struct dma_chan instead of own id
+> >> > > - Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
+> >> > > - Update the author information to my official name
+> >> > >
+> >> > > Changes in v4:
+> >> > > - Use dma_slave_map to find the proper channel.
+> >> > > - Explicitly call devm_request_irq() and tasklet_kill().
+> >> > > - Fix namespace issue.
+> >> > > - Some minor fixes and cleanups.
+> >> > >
+> >> > > Changes in v3:
+> >> > > - Rename ls1x_dma_filter_fn to ls1x_dma_filter.
+> >> > >
+> >> > > Changes in v2:
+> >> > > - Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
+> >> > > - and rearrange it in alphabetical order in Kconfig and Makefile.
+> >> > > - Fix comment style.
+> >> > >
+> >> > > ---
+> >> > > Keguang Zhang (2):
+> >> > >       dt-bindings: dma: Add Loongson-1 APB DMA
+> >> > >       dmaengine: Loongson1: Add Loongson-1 APB DMA driver
+> >> > >
+> >> > >  .../bindings/dma/loongson,ls1b-apbdma.yaml         |  67 +++
+> >> > >  drivers/dma/Kconfig                                |   9 +
+> >> > >  drivers/dma/Makefile                               |   1 +
+> >> > >  drivers/dma/loongson1-apb-dma.c                    | 665 ++++++++=
++++++++++++++
+> >> > >  4 files changed, 742 insertions(+)
+> >> > > ---
+> >> > > base-commit: d35b2284e966c0bef3e2182a5c5ea02177dd32e4
+> >> > > change-id: 20231120-loongson1-dma-163afe5708b9
+> >> > >
+> >> > > Best regards,
+> >> > > --
+> >> > > Keguang Zhang <keguang.zhang@gmail.com>
+> >> > >
+> >> > >
+> >> > >
+> >>
+> >>
+> >>
+> >> --
+> >> Best regards,
+> >>
+> >> Keguang Zhang
+>
+> --
+> - Jiaxun
