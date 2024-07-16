@@ -1,175 +1,114 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7554C74;
-	Tue, 16 Jul 2024 09:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09CE4C74
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721120991; cv=none; b=bl4pybGzy3ZT8rf8ypqoHY/bmJj+TIXUwY0iUbZfhB5PEBjQDrXUDA3F6QEP/Ow8NRfwf03n/nUvwRk9Ju5wAM9xYlKlgrkL2PZsB1F/fT+OxU1WQF7qxJIpJOSB07V5mLZngG0HHgUyIK836mb1nClSoHFQ42FYD4EGOZYcwfA=
+	t=1721121024; cv=none; b=pELdTqdFSW99mjccIne0pw4P9dfMp89RGfLBb+YGJbqlVwb5H5KZpqDnzfp4R8kQ3ytkdrRedGoJj/M1IC5XquNNM+Zt/TvOP/Z/pN9kN/fGjxCJtUa32ikRxvqHB3Vx4/pwtfDUnw+O6TmDNGYzRA5z0566XLcSHZQA1gdF0Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721120991; c=relaxed/simple;
-	bh=3ieAoPKRveRs7kahBOXvbKadm9r7qWcBZNkkhIbV4kQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uk+8ltPafRg/soQgX7YRjz9aOyUDnjEkefb3f6D8OWOquiJrnYRC7m28mqSvCatdnJCezwvBfHrt1UFkOKhVAtTeLC8TS+cB/zpLceKRMWfEe7ee5B19n1yZz3cxxpCr3sBfopFc/mpyGRikRVD/F25tFgFumQQ6kfnS8NhHvU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=iGLG3FIj; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1721121024; c=relaxed/simple;
+	bh=YQTpwHzj19jUeZSWEKD+B6nfNJ6GFvEW+HxBiISSB8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZmElQumFLGY9Cqeyw0nzto7xO8MeFCRXmiIoxlPbTJMldxhL3GJrqdKV8J5Tbmxg0NDSm0Pq7Zmwwbxki+05qW86+TjFy92sKCrVv6G7M2CW3JOOXjZgT9ytsY7uEbBP6DPCO4nI2IFcHB7H6d3JWLhU9SpFQFiYmlLr+72Ulro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xSr7Jrpg; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="iGLG3FIj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1721120989; x=1752656989;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3ieAoPKRveRs7kahBOXvbKadm9r7qWcBZNkkhIbV4kQ=;
-  b=iGLG3FIjrMtghi3X6D5UqgIXskmZpNQwZ0QYU/NsziVp8qnclPjCIpE/
-   zfY2wKVaXsWxfM4xcDJyr0C2+O1DUd7QAxbi3fJySaeXHgiijU2GUGSfy
-   eg0nS0UmOy8vd9MMPyTnrAEMNB+33ZNaaJwu7o4PCNuUqNdG5445WgRBq
-   Pvsas2xOSXNF8DA40gjj+lxY5ztql8nw8kNbxyt0bcFma5NSuZgssgPiE
-   drCDBiCuvsvynUZxnWT1aRhur/Krd0kGJiAv91F4jjSgrbn0lpxcUEmBs
-   lDpx5fFwrLWvb0MvfgJs1nv9DEHb93q3knHBmXleH5XZLOT7wUMBxaqKb
-   g==;
-X-CSE-ConnectionGUID: eBnu20vsR2SmZnSyEPMB2Q==
-X-CSE-MsgGUID: yzzyoGJoSqiiuAmDZ8pomA==
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="asc'?scan'208";a="29263502"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jul 2024 02:09:41 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Jul 2024 02:09:33 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 16 Jul 2024 02:09:32 -0700
-Date: Tue, 16 Jul 2024 10:09:09 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: =?utf-8?B?U3rFkWtl?= Benjamin <egyszeregy@freemail.hu>
-CC: Mark Brown <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH] spi: spidev: add "generic-spidev" for compatible string
-Message-ID: <20240716-stuck-saggy-0638f8f0af4e@wendy>
-References: <20240714202303.164-1-egyszeregy@freemail.hu>
- <31758947-5570-4b20-94e5-52ea77f4f4e3@sirena.org.uk>
- <8d18306c-8d36-4e59-bc1f-0fc83dd40ca4@freemail.hu>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xSr7Jrpg"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42795086628so35224855e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 02:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721121021; x=1721725821; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xmDu6LpHxXI1mpawm8JNyqvXpkeHQourXad6ibcL1gQ=;
+        b=xSr7JrpgdI/xvt1+r31pszxIYDkMqWlr+asQd138vuINEh2y70Mq2dRWyqbUjBZTRv
+         cjd5Of++aQDByLmgnorE4tdyIxqZF3oGNzPVYT5JAf8mm+Ldap4ld/X35qVDIydpRAuD
+         PHcnxwAxkRJQtnjvfudMMRepVHDM0W0qIqns9eYTqefOIbiDWl7fI/NSImAzxb268b/E
+         43ygKFoFgOnvV0YLjq3tzdTKfiRePnU/eswOmJQxy2YbhSoPFmDqm8sHV2+zcJP906F8
+         /yg8WAhWm6wmRmXfhwmtr6DknODqm54jqWK+AlmsB5oG2hCtAU1pmKBlEssXP++hSmHJ
+         Mv3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721121021; x=1721725821;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xmDu6LpHxXI1mpawm8JNyqvXpkeHQourXad6ibcL1gQ=;
+        b=vInFabwG9ldboykGD8WcOCPkiLpt9RROFcwebfxRA0mxiGkx4hO3/WOwU7VToFHDMB
+         0aQYtyAtfaIr4mvT2Ez1gL1Zga0977f4LbbDBCTRrQAdQzLblrOJN6MnInZH0WqiQ0mD
+         4XegOhGXxfCz3UJummRB9T0jqrzqqkEWODzajGAAzsJW5veWRN/4UWaNRaSx2OOClkuy
+         K4INICFybdd2PFDvkTAMFVxYHZJ9GDy+fwsCCwNXZ13A3OXnqO14RT5Y8fTZ5N2BulZV
+         MhJgskYBFng86xN93EmIMr5euuPRUsTKoNBTdZb8CPLEdsZbdwVkPoArStXQ9BeqkH1D
+         /X0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUoSTBRYm6fg5PXowsWGk7H0LuD0FVAQrvG8YQtrkKqNRrC8OXzprZrjQ/rMJ3wbJqmNqZx0eMjL4PcAxqeeGFacZzi1qKVphd38IBn
+X-Gm-Message-State: AOJu0Yw0fTSS9E3RfzQZOVGWAs+tOq7n9naw8e4038Rm1D92z6QzxcK/
+	Xwp/bTs5+29k6nHlQtyZO3pk1vWP8uWL6EvphtvLEn8jeQS3Z20YUrSly3Hhleo=
+X-Google-Smtp-Source: AGHT+IFjvmlm1Pa2B5lJ+/r3HN/TpnBw7eNCgE3IgOOP1k1lCoLOaVZdKhlUdILsSRDrICcc2rV1oA==
+X-Received: by 2002:a05:6000:1fa8:b0:366:e89c:342e with SMTP id ffacd0b85a97d-368261dddcbmr1035125f8f.53.1721121021283;
+        Tue, 16 Jul 2024 02:10:21 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafb979sm8456418f8f.75.2024.07.16.02.10.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 02:10:20 -0700 (PDT)
+Message-ID: <1e5aa1e1-e5c4-49bb-a43b-a119710a000c@linaro.org>
+Date: Tue, 16 Jul 2024 10:10:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Was0fRQbt8tb8PIi"
-Content-Disposition: inline
-In-Reply-To: <8d18306c-8d36-4e59-bc1f-0fc83dd40ca4@freemail.hu>
-
---Was0fRQbt8tb8PIi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 16, 2024 at 09:41:08AM +0200, Sz=C5=91ke Benjamin wrote:
-> 2024. 07. 15. 16:10 keltez=C3=A9ssel, Mark Brown =C3=ADrta:
-> > On Sun, Jul 14, 2024 at 10:23:03PM +0200, egyszeregy@freemail.hu wrote:
-> > > From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
-> > >=20
-> > > Spidev is a not an ASIC, IC or Sensor specific driver.
-> > > It is better to use a simple and generic compatible
-> > > string instead of many dummy vendor/product names
-> > > which are all just fake.
-> >=20
-> > > Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
-> > > ---
-> > >   drivers/spi/spidev.c | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> >=20
-> > No, as previously and repeatedly discussed the DT describes the
-> > hardware, not the software that happens to be used to control that
-> > hardware.
-> >=20
-> > You also need to document any new bindings.
->=20
-> If DT describes the hardware, yes this is why need a generic compatible
-> string for SPIdev driver. SPIdev driver is a typical driver for boards wh=
-ich
-> have just header pin for SPI connection and it is not defined what IC/Sen=
-sor
-> will be connected on it later.
-
-What is preventing you using, for example, overlays to describe what
-devices are being connected to your board?
-
-> In normally if a developer start to use an IC/Sensor which has not yet any
-> driver in Linux he/she should start to make it in a regular way and not
-> hardcoding these fake compatible strings inside spidev.c and use it for
-> longterm.
-
-As I understand it the process would be:
-- document the actual device you have
-- add that compatible to spidev.c
-- work on a driver in userspace
-- drop the compatible from spidev.c and create a specific driver
-
-The hardware at all points in time remains identical, and so the
-description of it does not change depending on what driver the OS
-happens to use.
-
-Of course a developer could just develop a specific driver for the
-hardware from the beginning, and not ever add its compatible to the
-spidev driver.
-
-> By the way, please send some reference link about the rules what you say =
-for
-> DT
-
-For instance checkpatch will complain about your change:
-WARNING: DT compatible string "generic-spidev" appears un-documented -- che=
-ck ./Documentation/devicetree/bindings/
-#35: FILE: drivers/spi/spidev.c:732:
-+	{ .compatible =3D "generic-spidev", .data =3D &spidev_of_check },
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf docs: Mark the Android document as obsolete
+To: Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240715143342.52236-1-leo.yan@arm.com>
+ <CAP-5=fVd9pO7kKvZX7PZ6sJ+GHOV7aF=Ry98a=vknimuSTp9Lg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fVd9pO7kKvZX7PZ6sJ+GHOV7aF=Ry98a=vknimuSTp9Lg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-> and please send the link for SPIdev binding documents, i can not find it,
-> but you point on it all the time.
 
-There is no binding for "spidev" because it is not a real device. The
-devices currently bound to by the driver should be documented in various
-locations.
+On 15/07/2024 6:17 pm, Ian Rogers wrote:
+> On Mon, Jul 15, 2024 at 7:34 AM Leo Yan <leo.yan@arm.com> wrote:
+> [snip]
+>> +Android NDK compilation is deprecated and no longer supported.
+> 
+> I think this is objectively worse than just removing the file. It is
 
-> devicetree@vger.kernel.org
-> Please start a normal discussion about it with devicetree maintainers who
-> can decided it real what need in this driver code for compatible strings.
+Objectively worse is a bit strong. There was some discussion on the 
+previous version about the reasoning, but the point is to leave keywords 
+so that someone re-writing the NDK docs in the future can find it and 
+then the history will be preserved rather than putting it in a new file 
+with a new name. Or even someone wondering why their build command 
+doesn't work has at least something documented about it, even as a negative.
 
-I do not understand what you are saying here. Are you telling Mark to
-have a conversation with the devicetree maintainers?
+Of course this all depends on whether we decide the Android build 
+_should_ be working or not which looks like is also being discussed here.
 
-> I
-> do not think it is a good idea to append these list for +100 fake devices=
- in
-> the future because you say this is the rules for it.
-
-What do you mean "+100 fake devices"? Surely the things being appended
-to this list would be real devices that do not have a driver right now?
-
-You keep talking about lots of fake compatibles, but actually
-"generic-spidev" is the fake, and the specific compatibles for
-different sensors etc are the real ones!
-
-A wee bit confused,
-Conor.
-
---Was0fRQbt8tb8PIi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpY4qQAKCRB4tDGHoIJi
-0qWEAQD3OKqlCIYRAL+FaoY49aqySH0f9I6G22TAsrA7BhaOhAEA6n+52hfA9lik
-hZY2T0ZcPvsXihmoepNWRI5xrtPcEg0=
-=SpFJ
------END PGP SIGNATURE-----
-
---Was0fRQbt8tb8PIi--
+> likely the perf tool can build with clang/LLVM, I do it every day, and
+> the special case for Android is likely more about the libc (aka
+> bionic) which gradually over time has been becoming more full fat -
+> perhaps we need to carry somethings in tools/include for missing
+> definitions, but we build with musl and that's a PITA in this regard,
+> we've also been reducing the tools/include dependencies for perf trace
+> beauty support. We don't use ifuncs in the perf tool (Android's
+> linker/loader historically hasn't supported these) and the weak symbol
+> games should be okay and something I aspire to make less in the perf
+> tool over time. As Android uses Linux then it should work and should
+> be supported.
+> 
+> Thanks,
+> Ian
