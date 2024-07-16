@@ -1,86 +1,93 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC0F41A8E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FE941A8E
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721119902; cv=none; b=oxmwcexHMyzLb3Ifi+DZuC43hA96Mmz+Kf9aCnqIsM1/hyM3epxASL564JXLm5KFCx00f1vWIZcsnkJHMt6HOEai/Vj1iS/8Bku/pYa+cgaBD57aqFe2Rte7/3dxj2MYGJ7zIaCHevPqbRY09xjY1jKL2pismaAk+AAjrYgCFqQ=
+	t=1721119906; cv=none; b=qVJS0TkhiZckOhD2gl2CmcLdzBlAO8QKOLFVv12k8xGzaA/5+D8W2/LZHbbVfGb9RqDJv9osjqIhjM9Y0vyshNPYvBT1ZfIFSvKIpPGFt0RVdb/2IUNp+1NN+pPApCrh92FG9ac564oi2dSPCrAUOj8YmOJV5Oy9bnX0lsXCcMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721119902; c=relaxed/simple;
-	bh=PEeKnhZRmYTwfo31uEaLdK0VL6vEwPRaS/At/G4vrbg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MV0mI6tnNbjKaUzDZxM8vEdWEmmywYcEOqSEEC1t6tJKmndlIAhfwRa35o8gT5DZTFDQoPNl/oVjo6q1mllPzuCTwC6owe4hXsuLKOc3Q6bCghQnsqu6OS2BNvo1i270rH7iYSIIYeW9dL2vaNN34W1/2H5++kMLUJCEoFtlVmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowADX3eWVNJZmf8SYAw--.51764S2;
-	Tue, 16 Jul 2024 16:51:33 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	axel.lin@ingics.com,
-	ckeepax@opensource.cirrus.com
-Cc: patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] regulator: wm831x-isink: Convert comma to semicolon
-Date: Tue, 16 Jul 2024 16:51:15 +0800
-Message-Id: <20240716085115.1252817-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1721119906; c=relaxed/simple;
+	bh=gklqEpVrs+TZShP9WfTzy8DW0cD3vHWXH1OsfT2l4YI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OY+uliz3kv+rrzsbrnZmx/1JxIaL3Gq2B2cbO/8q+aJEYxtZDK5ApC9/Y/v2slGZvHCrI1180i3UEf/rHj2bfhOf0NQyLniKixJP8oBJyrX9ua/66RO//tHSuI0wPvD7QGDKgEVAFiiQzzA4mVEmN2tp7jP4JPA9rsQPFonedM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BuXW/mJ2; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BuXW/mJ2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 12C1A240002;
+	Tue, 16 Jul 2024 08:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721119897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oXaYVi8PKUd4UGTeifDJUjRKE3ggu6+D+9ulPq2RYdo=;
+	b=BuXW/mJ2pxR+kPWm7hqkpNl0J6Db6BcmNn+armiDlYn6BdJC37o5V1yA/BpXNtRtfg4eKS
+	VZi8yOesX38v5w7Rfi485niCLIWp9oKdCh3VVxxzRo9yzybEqXQp7zPhdFdtT2RzpmDIqJ
+	LFMq8ln+yMqOb1TR/x/P1n0oBoWJmXHSg6SnG5ZWQ+j3OE9XYEhSF99V0CFxgT18tuw07u
+	v/fMiJ3H5y4mJvy/XtjP7UlCq43gg4UuiL0U7GMRLlIDkfoGWIw855EDmZoL7M9CTy1gq6
+	oKujF58lFyu5vXCKJjbLmSAYWQ2Mj1KSMKylCrv1M+ucWVoQfcP//NDFlcsQxw==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Ben Schneider <ben@bens.haus>, Andrew Lunn <andrew@lunn.ch>, Sebastian
+ Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, Linux Arm Kernel
+ <linux-arm-kernel@lists.infradead.org>, Linux Kernel
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: enable 1200Mhz clock speed for armada-37xx
+In-Reply-To: <O1XjBTq--3-9@bens.haus>
+References: <20240603012804.122215-1-ben@bens.haus>
+ <20240603012804.122215-2-ben@bens.haus>
+ <20240605194422.klxtxgyljrrllkzy@pali>
+ <dce98e50-6b50-4d4e-abe2-8419a675d25e@lunn.ch> <O1XjBTq--3-9@bens.haus>
+Date: Tue, 16 Jul 2024 10:51:36 +0200
+Message-ID: <87ed7tlnxj.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADX3eWVNJZmf8SYAw--.51764S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr1kXF1UKrWUJw1kKw47XFb_yoW8JFW7pr
-	4fJrsrKay8tFyDXrs7Gr4DKwn5AFZrJa1v9ryqkw4xXr4fZFy7Jry0gryUtF48Grn7Ar4a
-	vw4qywnaqFsrXrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-	GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrcTPUUUU
-	U==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: gregory.clement@bootlin.com
 
-Replace a comma between expression statements by a semicolon.
+Hello Ben,
 
-Fixes: d48acfd0377f ("regulator: wm831x-isink: Convert to use regulator_set/get_current_limit_regmap")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/regulator/wm831x-isink.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Jun 5, 2024, 16:44 by andrew@lunn.ch:
+>
+>> On Wed, Jun 05, 2024 at 09:44:22PM +0200, Pali Roh=C3=A1r wrote:
+>>
+>>> So, go ahead with this change with my
+>>>
+>>> Reviewed-by: Pali Roh=C3=A1r <pali@kernel.org>
+>>>
+>>
+>> I defer to your knowledge in this matter.
+>>
+>> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>>
+>>  Andrew
+>>
+>
+> Hi all, just checking in to see if there are any outstanding
+> concerns/issues outstanding with this patch? I am happy to report
+> several more weeks of stability on two A3720 devices. Thanks!
+>
 
-diff --git a/drivers/regulator/wm831x-isink.c b/drivers/regulator/wm831x-isink.c
-index ed5e191e8896..43f220cea21c 100644
---- a/drivers/regulator/wm831x-isink.c
-+++ b/drivers/regulator/wm831x-isink.c
-@@ -146,10 +146,10 @@ static int wm831x_isink_probe(struct platform_device *pdev)
- 	isink->desc.ops = &wm831x_isink_ops;
- 	isink->desc.type = REGULATOR_CURRENT;
- 	isink->desc.owner = THIS_MODULE;
--	isink->desc.curr_table = wm831x_isinkv_values,
--	isink->desc.n_current_limits = ARRAY_SIZE(wm831x_isinkv_values),
--	isink->desc.csel_reg = isink->reg,
--	isink->desc.csel_mask = WM831X_CS1_ISEL_MASK,
-+	isink->desc.curr_table = wm831x_isinkv_values;
-+	isink->desc.n_current_limits = ARRAY_SIZE(wm831x_isinkv_values);
-+	isink->desc.csel_reg = isink->reg;
-+	isink->desc.csel_mask = WM831X_CS1_ISEL_MASK;
- 
- 	config.dev = pdev->dev.parent;
- 	config.init_data = pdata->isink[id];
--- 
-2.25.1
+You received two "reviewed-by" approvals, and Marek Beh=C3=BAn, who wrote t=
+he
+patch removing the 1.2GHz limitation, did not object. Therefore, from my
+point of view, there is no problem merging your change.
 
+As the original author of this driver, you can add my "Acked-by" to your
+patch if it can help:
+
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+Gregory
+
+
+> Ben
