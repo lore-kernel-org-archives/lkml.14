@@ -1,209 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580D22AE6A;
-	Tue, 16 Jul 2024 13:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318DE17B431
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721134823; cv=none; b=QnZEzwqjxtLxpQgtgSfGu9ySP5q7jCsbsfyUSm0mEQus8ZDrvriYeZo1o44ZfjcnffCmZYvdiNWShd0OqL8FAUyTsyH6l/apOAb20P8wk7kKxULK4f+3YYrOgVW48JgdfP0/9WKvfZ59qPpFS5iViLl9c5QVwnQG/6/yshKC6+k=
+	t=1721134851; cv=none; b=YVPxpHjVHsGmdJmbNBVMC7rS/Oz+ALoVLyruwZtJHYK1XqBTIZ8r7z2NUheptQIg2Anasr3JEYFJw7TPd88miVcfsEw4K+B8O1Noe0COEzEOgIuxGW/5h1Ebi/yt9iNaUc+wOe1lYRIddbZ5PzsEUq7dDA5auEA7f7+mbFpiR3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721134823; c=relaxed/simple;
-	bh=vkXu+n2x+kK4Knb2Er0q+C2Cf7zQzcoq0Ifv0jXYYTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C7dVihdLLW3dylCY6pPkJ8LrJ+G10/8nY5RPpPKryS0DyfJ4oXxnHe+yej0fnFvcQNr5VqHEyenF9Idb2QxoW1Y6F3Hdyyuw1gvuujvezdnYTJ2u1/ex2TysahqCBzy0XKUcIjwG2tWzbFGYoGT/0n1vy/jKBny5FnxkYsvuVWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aqut2V7+; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1721134851; c=relaxed/simple;
+	bh=yrh2pxiGcrLZ27RBICAgY83KDVP5y5kxAQoiB8uQgTA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Kr0KR+pyoxmkD+CeZkmKHB5vSkjzuu6HZp1s3IsEyVRGYTAPLLNMpG9XbolzjnmleYXdTKg317Vfnc/y9Ve/OwmRBorDyx6WKN2nCYSargk4uP0+OLOUW9M6GcSPX2hQUqGx7J4VzFYMRFPMNU5CDVZJ1sy7T9d1jE5if/MklUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EGVENlJt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aqut2V7+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721134822; x=1752670822;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vkXu+n2x+kK4Knb2Er0q+C2Cf7zQzcoq0Ifv0jXYYTc=;
-  b=aqut2V7+vUfYLusKPiI0NF8hboLMhPJ6UX7HviI/F25BJJgrUKE7zDRP
-   edv8V02OhmXlCfyXsZ/EZ0rp4Yn/jfGtsxqWEZAXBCLUgVGWpjDvh5hNQ
-   KzGlW+JmKdS621qawbaOcY3koqxKtOCHjfgiDxdFAtPCZb7zTg91qEXG9
-   qp9/OS85P3uWuXDfE2zFhLHldOBIIhAq/N+4/KbAh795Lc/0607jd3ivG
-   jRbyfr1gvb114J333bVvEP7jIW8wg0CTdkNVZr3XP7vY0PsdMyHuc7K5b
-   LKX0mEMSKbdqLqAY05HROhD3RwiPaxmpeF1L82UEPsmr9FJ3QNK8g4eJo
-   w==;
-X-CSE-ConnectionGUID: g1tFF/T/R0SB99DTBTMLtw==
-X-CSE-MsgGUID: 73ia1qbKQTOWe7ITzoXSCQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="43996805"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="43996805"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 06:00:21 -0700
-X-CSE-ConnectionGUID: n4gQ5CMgS02+x3zdGaW6Gw==
-X-CSE-MsgGUID: CEfPQWtlT3qjfhagLIcJPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="54541430"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 16 Jul 2024 06:00:19 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id E4400341; Tue, 16 Jul 2024 16:00:17 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Mel Gorman <mgorman@suse.de>,
-	Vlastimil Babka <vbabka@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jianxiong Gao <jxgao@google.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] mm: Fix endless reclaim on machines with unaccepted memory.
-Date: Tue, 16 Jul 2024 16:00:13 +0300
-Message-ID: <20240716130013.1997325-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGVENlJt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721134849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yrh2pxiGcrLZ27RBICAgY83KDVP5y5kxAQoiB8uQgTA=;
+	b=EGVENlJtTzPV1Nebd+TeKgPiLTAd3/OUNtC4DgWYjJ20vVifoP55CUFfBi0uyTM3dbkUXG
+	L+0E9b/c7ZZGidBDuAFW9N9EH13ylKuHn/VzXoro8PpBv7N7Et3SctpW3BvzWSamw2nhDg
+	yrTkKtmk/ux9M72A6gAx1O8fd3nrPLI=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-495-q4z6e5aDO6OlPRVBzWpHDQ-1; Tue, 16 Jul 2024 09:00:46 -0400
+X-MC-Unique: q4z6e5aDO6OlPRVBzWpHDQ-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-79ef9c44d3eso773257585a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:00:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721134846; x=1721739646;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yrh2pxiGcrLZ27RBICAgY83KDVP5y5kxAQoiB8uQgTA=;
+        b=V/LyOuv7j+xCrbJMBsls3mhKjWdSLTDc5YM7B9WZ2fiM55s3LA2R4fGtv+3wQA0GK5
+         EaADfCJiGf67tBh+vZ618wVRfUJUj0aXhNVKAQe1WhVnA887TKYDnV1/UyMN5+JW9y55
+         HJLzmhCV826eod7Bm3+GI+hj4ozY7fq8LgMkKil5A7Vk9YCYWki89SeaSb2/bus84aEP
+         EH0Yv6HcVhVJvcPdn4qsRB9waahlmrjwpAeAbIHLGmrGN1nE2VNmp+iagI+CeZDOTDI9
+         L6JzvLN9NvLBRXD1dSmXKCZ1v610iIFvjhJeurVlUF/hXYYqTnU0IP7GGrhHm9pNhznf
+         Oo2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVSuLFYzMAnfFGaYDSa/KG6oz83jvuXFnUvwWs2tn78KXwE4JccPb4CipVbQJAwhE4pD4BBwOhbTIuFT8NDNc60EJ2JKZHMgqg0YEaw
+X-Gm-Message-State: AOJu0Yz9IAeWYMx4JWnyPz3LuwdbHGD6vjpLEnKT54K93HJJLUXD7eOv
+	vpQoeYkgqHNE4O+d+2LNiQJ75J7YYmlSSpPP9xtQ2djo8wFsn56L0J4Ng/7Bfx0sWKoXNxbLZtp
+	eR92s+yCGWQs9ufTCmsmwUD2dtXZr2oN++OKGud2RoOR4hn9uA7I6QATiKxL0Xg==
+X-Received: by 2002:a05:620a:4610:b0:79f:11a5:149b with SMTP id af79cd13be357-7a17b714ba4mr233924885a.47.1721134845627;
+        Tue, 16 Jul 2024 06:00:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEmgM4ga0fqlYQgZJ+p4X7A7OpknlPmZ50MCk02vk0eCWeiFL5Mlqxidx6f/zOAq7v/lgAUOA==
+X-Received: by 2002:a05:620a:4610:b0:79f:11a5:149b with SMTP id af79cd13be357-7a17b714ba4mr233920285a.47.1721134845001;
+        Tue, 16 Jul 2024 06:00:45 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a160be5cb7sm288560285a.66.2024.07.16.06.00.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 06:00:44 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Hocko <mhocko@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [RFC PATCH 1/6] task_work: Provide means to check if a work is
+ queued
+In-Reply-To: <20240625135244.20227-2-frederic@kernel.org>
+References: <20240625135244.20227-1-frederic@kernel.org>
+ <20240625135244.20227-2-frederic@kernel.org>
+Date: Tue, 16 Jul 2024 15:00:41 +0200
+Message-ID: <xhsmhbk2x1og6.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Unaccepted memory is considered unusable free memory, which is not
-counted as free on the zone watermark check. This causes
-get_page_from_freelist() to accept more memory to hit the high
-watermark, but it creates problems in the reclaim path.
+On 25/06/24 15:52, Frederic Weisbecker wrote:
+> Some task work users implement their own ways to know if a callback is
+> already queued on the current task while fiddling with the callback
+> head internals.
+>
+> Provide instead a consolidated API to serve this very purpose.
+>
 
-The reclaim path encounters a failed zone watermark check and attempts
-to reclaim memory. This is usually successful, but if there is little or
-no reclaimable memory, it can result in endless reclaim with little to
-no progress. This can occur early in the boot process, just after start
-of the init process when the only reclaimable memory is the page cache
-of the init executable and its libraries.
-
-To address this issue, teach shrink_node() and shrink_zones() to accept
-memory before attempting to reclaim.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reported-by: Jianxiong Gao <jxgao@google.com>
-Fixes: dcdfdd40fa82 ("mm: Add support for unaccepted memory")
-Cc: stable@vger.kernel.org # v6.5+
----
- mm/internal.h   |  9 +++++++++
- mm/page_alloc.c |  8 +-------
- mm/vmscan.c     | 36 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 46 insertions(+), 7 deletions(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index cc2c5e07fad3..ea55cbad061f 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1515,4 +1515,13 @@ static inline void shrinker_debugfs_remove(struct dentry *debugfs_entry,
- void workingset_update_node(struct xa_node *node);
- extern struct list_lru shadow_nodes;
- 
-+#ifdef CONFIG_UNACCEPTED_MEMORY
-+bool try_to_accept_memory(struct zone *zone, unsigned int order);
-+#else
-+static inline bool try_to_accept_memory(struct zone *zone, unsigned int order)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_UNACCEPTED_MEMORY */
-+
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 9ecf99190ea2..9a108c92245f 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -287,7 +287,6 @@ EXPORT_SYMBOL(nr_online_nodes);
- 
- static bool page_contains_unaccepted(struct page *page, unsigned int order);
- static void accept_page(struct page *page, unsigned int order);
--static bool try_to_accept_memory(struct zone *zone, unsigned int order);
- static inline bool has_unaccepted_memory(void);
- static bool __free_unaccepted(struct page *page);
- 
-@@ -6940,7 +6939,7 @@ static bool try_to_accept_memory_one(struct zone *zone)
- 	return true;
- }
- 
--static bool try_to_accept_memory(struct zone *zone, unsigned int order)
-+bool try_to_accept_memory(struct zone *zone, unsigned int order)
- {
- 	long to_accept;
- 	int ret = false;
-@@ -6999,11 +6998,6 @@ static void accept_page(struct page *page, unsigned int order)
- {
- }
- 
--static bool try_to_accept_memory(struct zone *zone, unsigned int order)
--{
--	return false;
--}
--
- static inline bool has_unaccepted_memory(void)
- {
- 	return false;
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 2e34de9cd0d4..b2af1263b1bc 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -5900,12 +5900,44 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
- 	} while ((memcg = mem_cgroup_iter(target_memcg, memcg, NULL)));
- }
- 
-+#ifdef CONFIG_UNACCEPTED_MEMORY
-+static bool node_try_to_accept_memory(pg_data_t *pgdat, struct scan_control *sc)
-+{
-+	bool progress = false;
-+	struct zone *zone;
-+	int z;
-+
-+	for (z = 0; z <= sc->reclaim_idx; z++) {
-+		zone = pgdat->node_zones + z;
-+		if (!managed_zone(zone))
-+			continue;
-+
-+		if (try_to_accept_memory(zone, sc->order))
-+			progress = true;
-+	}
-+
-+	return progress;
-+}
-+#else
-+static inline bool node_try_to_accept_memory(pg_data_t *pgdat,
-+					     struct scan_control *sc)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_UNACCEPTED_MEMORY */
-+
- static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- {
- 	unsigned long nr_reclaimed, nr_scanned, nr_node_reclaimed;
- 	struct lruvec *target_lruvec;
- 	bool reclaimable = false;
- 
-+	/* Try to accept memory before going for reclaim */
-+	if (node_try_to_accept_memory(pgdat, sc)) {
-+		if (!should_continue_reclaim(pgdat, 0, sc))
-+			return;
-+	}
-+
- 	if (lru_gen_enabled() && root_reclaim(sc)) {
- 		lru_gen_shrink_node(pgdat, sc);
- 		return;
-@@ -6118,6 +6150,10 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
- 						 GFP_KERNEL | __GFP_HARDWALL))
- 				continue;
- 
-+			/* Try to accept memory before going for reclaim */
-+			if (try_to_accept_memory(zone, sc->order))
-+				continue;
-+
- 			/*
- 			 * If we already have plenty of memory free for
- 			 * compaction in this zone, don't free any more.
--- 
-2.43.0
+I'm potentially going to add yet another one of these to sched/fair.c, so
+yes please!
 
