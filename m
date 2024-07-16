@@ -1,93 +1,172 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6576119AD4F
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27035199EA5
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721136592; cv=none; b=JC8Pdg5y6HSW5DOk39K5X2w6g6xJqSMMlejSZWKdriPPGoSiuMBcXKNPfJaKW6zye/StqXtf244rmtc4HnbJhPuBauet8SZFd3E7XUuv6DExc326aIeUh6XYsRv6IxdPcKqTdaP8lxYwq1TA8cpyNZLjkbuJXa5UCes4b5sLl58=
+	t=1721136648; cv=none; b=ili+gvb6EBSqDYJst2mFqpl8mmpH09H2s547tD7c5SmtwSzRNICsys1VJ8OV9P+0bLBc1B9Za9EqguILDfWzePrYMJwQM6Jta5a6E+tUJmC1bbkZzkvHQPoHcXanWtaUc56Ns14uc/BeuyXFyYsEftgDboneJDJ4RGSMd+EQWhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721136592; c=relaxed/simple;
-	bh=/ft0t505pKh6jWEQYbOIW4grW201GD1N6QXAe49ok8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hmVXIGNvPs6xvbHDQ8tmFf+gnZ2W3NyFfhcjuelBXgoIgd+izdeAbg6GMOItfUp8U3kkTcm0eKoV40GT+o+ThpJEkD/5JoL6jk+QzCZUNXZHBVGrCZdUUoHJLpFJnd0mptNIDS7A1GiCFIq2gikBn6fJqnJ/AZtOudjbukouNVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=F8LdvZFX; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1721136648; c=relaxed/simple;
+	bh=77c/I/O9ypPcVoUiTPxlcXfWBWvCeOg6jo/pvVdkiHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AsKu9Dm13z7eit8OZfVD2c7caCVoNVV4c6vE3lDK5tG8dOD2wVaXYhpEBq571nJ7s84tC7Y17sOkoRySlQxFQ9kUfY4q+z0UJacKSz4usEFLXfhy8gY0dlK6qZtIvcB0zGbp6ezASrf79PJA0vvMxVkTOdbO/ST+7xOHIawZh1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y/ZV4KC4; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="F8LdvZFX"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4279c924ca7so34243505e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:29:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y/ZV4KC4"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3815ad8adc9so166045ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:30:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1721136588; x=1721741388; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/ft0t505pKh6jWEQYbOIW4grW201GD1N6QXAe49ok8M=;
-        b=F8LdvZFXVb5rH1fq8zcOXEASi2mq5wUiGVw0rIAQujeWdtwyC3IZSnNM7sVsSwnWbz
-         sA4QZztmP9DEZSBRqY9V1lu0UpBDP6gBt5+kt9tzGaSo2EVpL8O+31WHdDBoYX/flRN/
-         vu308suxdFj/gRRvu2GT9VkECnVLiXn3YUb1LqZTGJC2ZeOXiizPQXDQgWz9fraQSoqY
-         LlrFUAEoGXwjrhoGacddcyzDUup1tV1F/aad90YyIkzlvYSoUF2kl3xWyvo0c7sv9yYE
-         DEP3hz9YFH8jtSQ3UVPQgtLZWFwGJ1kPk8vp/wL/UY+ilzkZdIpwJPYBCJ9sq56HhYG6
-         RQ9w==
+        d=google.com; s=20230601; t=1721136646; x=1721741446; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fUFB2OkpxowXE7d1mjPyXdQnAb7sHtoIxKD0VjG4/Zk=;
+        b=Y/ZV4KC4pPGGYM8EARkDwf9gt1uw6Iw1v/F+KxsQ7i3DqLrrFGtZHGN5eI4xqOKbSW
+         8/SMyW2bPVzoVnmkSG+HwGsRDW1C1rPpGg40HZAQOneZDp9VTs4ZTre6TogBRqNW05UU
+         OUsOIJm6MQGsOwBUwKCvUwVHSD6XRnJ23vanBhH31jUDrYs3QrEkcODK9whYhhzGeTCM
+         yDOWljj7UrhIjk79JLMGrdatpktO85sWAs/yLaCvH0XlG9UW2uj/nAIudz5RjU2g3noj
+         C7heGKHdGlmPRDOTHa2qS/boTY2E/FzWWxtAwgGLnESghztPzTWGpgrhDgQBALKnBgL5
+         gy1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721136588; x=1721741388;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ft0t505pKh6jWEQYbOIW4grW201GD1N6QXAe49ok8M=;
-        b=fYgywwCBTbFQ3Reculh7mKKEy+2YljQ1YbcI6wec6iWCrJ3WON+iCaVy3P30WYOn+3
-         h9JfSfBTacULtd5kW76eoSp7ZfK4YOzgo1PLZjMqtpBU1dPY7dc7c2bHvbl6+uw3/Bv0
-         QINaR0OmzHLkYd0OFDuVydDZr1ddBcZjWJFaWQ96lniu4ddTM5V/yws72Aa2kM2o44aP
-         eRvy36K4Gtawb2B1FFM8oI8wIeqejHmR6K5P/XGQyjPYw7KP8oUGIXQ95DhQNFU7G5Qn
-         e0RWQqxmOJwgqm4ABhdHomyun7xzJljFieF9F0/OBcb6oMyl4Hnht+5gu3zGPagjCPuS
-         KWTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrdpHX5ckR08qHHmPZVmT5q1HAwWvLRbGPjBzooIxfZmSNLAcdujagLPWSV1rC6azxLwW89r1Kuy7/gcT7dPfPBlTvGfrz0uaeAmsE
-X-Gm-Message-State: AOJu0Yx2bfQThFr/hGUZ6hUlUc2haqjDNtNYuITxmhknmV//f9Q6TD0D
-	5oUJl2wN2T520F+wfiZBTloG7wOMSNdiqatKrrpOKuOnHI9+h7zQnmNgfsT9rvM=
-X-Google-Smtp-Source: AGHT+IGjAdQSxeEVdVw57jLUmBg/hDy2vsxlmLGLre5Ls8iiK8GxsJXzSOiFfxaji1YIcSK/8TzunQ==
-X-Received: by 2002:a05:600c:314a:b0:425:80d5:b8b2 with SMTP id 5b1f17b1804b1-427ba642ff1mr14447565e9.16.1721136588514;
-        Tue, 16 Jul 2024 06:29:48 -0700 (PDT)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef57aesm124210045e9.45.2024.07.16.06.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 06:29:48 -0700 (PDT)
-Date: Tue, 16 Jul 2024 15:29:44 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	Benjamin Poirier <bpoirier@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>,
-	Jakub Kicinski <kuba@kernel.org>, Kevin Hao <haokexin@gmail.com>,
-	Liang Chen <liangchen.linux@gmail.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pktgen: Use seq_putc() in pktgen_if_show()
-Message-ID: <ZpZ1yOkas39bIsWa@nanopsycho.orion>
-References: <cc21bbb8-e6d3-4670-9d39-f5db0f27f8ce@web.de>
+        d=1e100.net; s=20230601; t=1721136646; x=1721741446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fUFB2OkpxowXE7d1mjPyXdQnAb7sHtoIxKD0VjG4/Zk=;
+        b=OU3GHnhGWwhYW+OybhycA+9Eg+fA2Ayw+LUdGMY9zNR4S3rNK/UHohwspaioenIwg8
+         h+wJ3L8yrDtaaWfG5dKVohUGu0O0atImUNad3bZpwSLAoGf3y2a+Wupnf6CXFjkkJiNE
+         U9g3BgowRirWvBcdZqOK0IXJT8xmjZI2M9OjNBpH2wBfajL9BbAq1kyWN8nwi7cYCXJD
+         pdDdqhwJDTuKJqyJLpDX+xi3tJ6xuMM7LGpsjstZ7ZLMAH7OX+TuH08sxG9Q4OPwOi8Z
+         IAzdBVdXDipbU4IDOTgItk6obg3RXWYeuIWR1bY8wSe9345mLlwRz5XOuROub2DJCi6E
+         gN/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUC5IRMFirVV2mcZawKvRqaAMnmzNsOWAhIYLepm8PGrOTicvdKGqdY2sM3J/RsLea9fnSiAZ2puCKGFeqxo4QvEs3o+17SlHEm53RF
+X-Gm-Message-State: AOJu0YwRE1SzvnKosRrdgJETM9wYYFCGcakJbc2AaMt5k4+xL8Bvjluw
+	AvaF4fLI8bKJ6NHYJH9atpgxn0KoK4EerlB2LgroMum3sQ9PLAUz1yitlP09nZRYUnNCS6mJf1S
+	MF04F33zmTlI3tUIB8v3zdF0A0JbKmQFpa0Zd
+X-Google-Smtp-Source: AGHT+IH+7PFoZHCpF0Hnak0mBX4nEsVu7wcSexmapZjJE7r70AVdcoJORgk6ypafcqH/vaYNfDgZjfs5Ph4nOk61umM=
+X-Received: by 2002:a05:6e02:1b08:b0:375:cd76:1602 with SMTP id
+ e9e14a558f8ab-393c1e1f3a7mr2935705ab.28.1721136645373; Tue, 16 Jul 2024
+ 06:30:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cc21bbb8-e6d3-4670-9d39-f5db0f27f8ce@web.de>
+References: <20240715143342.52236-1-leo.yan@arm.com> <CAP-5=fVd9pO7kKvZX7PZ6sJ+GHOV7aF=Ry98a=vknimuSTp9Lg@mail.gmail.com>
+ <1487da55-24dc-40ef-a6e8-4bf4b153fdc3@arm.com> <CAP-5=fUGJmOr9XcsVWWCREjr1A7rUFaMk0VPkQAKDAEjTLKJVQ@mail.gmail.com>
+ <CAP-5=fWY4AeMxfNGh_jB4gss_qtGSgfX4pvv-D-fpCWuqamVfA@mail.gmail.com>
+ <f316e3ce-e1e3-45f0-ac78-9af590b58706@arm.com> <CAP-5=fU=LguHNi861L4gmgZWXrrgZtG1w5cdw7hXDxnfWyJyMQ@mail.gmail.com>
+ <a17e6701-4195-4132-8518-fe4b10403f7e@arm.com>
+In-Reply-To: <a17e6701-4195-4132-8518-fe4b10403f7e@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 16 Jul 2024 06:30:31 -0700
+Message-ID: <CAP-5=fVi8RJVokVBQtin8xSAq7uxN=GB7zcC4OiT=SzqWB+V0w@mail.gmail.com>
+Subject: Re: [PATCH v2] perf docs: Mark the Android document as obsolete
+To: Leo Yan <leo.yan@arm.com>, clang-built-linux <clang-built-linux@googlegroups.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sun, Jul 14, 2024 at 08:34:14PM CEST, Markus.Elfring@web.de wrote:
->From: Markus Elfring <elfring@users.sourceforge.net>
->Date: Sun, 14 Jul 2024 20:23:49 +0200
+On Tue, Jul 16, 2024 at 3:06=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
->Single line breaks should be put into a sequence.
->Thus use the corresponding function “seq_putc”.
 >
->This issue was transformed by using the Coccinelle software.
 >
->Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> On 7/15/24 22:21, Ian Rogers wrote:
+>
+> [...]
+>
+> > Hmm.. I can repro but I don't see where the string comes from and my
+> > build is definitely using clang:
+> > ```
+> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -C tools/perf
+> > O=3D/tmp/perf NO_LIBELF=3D1 NO_LIBTRACEEVENT=3D1 NO_LIBPYTHON=3D1 CC=3D=
+clang
+> > CXX=3Dclang++ V=3D1
+> > ...
+> > clang --target=3Daarch64-linux-gnu -fintegrated-as  -Wbad-function-cast
+> > -Wdeclaration-after-statement -Wformat-security -Wformat-y2k
+> > -Winit-self -Wmissing-declarations -Wmissing-prototypes
+> > -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls
+> > -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef
+> > -Wwrite-strings -Wformat -Wno-type-limits -Wshadow -Wthread-safety
+> > -DHAVE_SYSCALL_TABLE_SUPPORT -I/tmp/perf/arch/arm64/include/generated
+> > -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror -DNDEBUG=3D1 -O3
+> > -fno-omit-frame-pointer -Wall -Wextra -std=3Dgnu11 -fstack-protector-al=
+l
+> > -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3D2 -D_LARGEFILE64_SOURCE
+> > -D_FILE_OFFSET_BITS=3D64 -D_GNU_SOURCE -I~/src/tools/perf/util/include
+> > -I~/src/tools/perf/arch/arm64/include -I~/src/tools/include/
+> > -I~/src/tools/arch/arm64/include/uapi -I~/src/tools/include/uapi
+> > -I~/src/tools/arch/arm64/include/ -I~/src/tools/arch/arm64/
+> > -I/tmp/perf//util -I/tmp/perf/ -I~/src/tools/perf/util
+> > -I~/src/tools/perf -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
+> > -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT
+> > -DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE
+> > -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT
+> > -DHAVE_SCHED_GETCPU_SUPPORT -DHAVE_SETNS_SUPPORT -DNO_LIBPERL
+> > -DHAVE_TIMERFD_SUPPORT -DNO_LIBPYTHON -DHAVE_BACKTRACE_SUPPORT
+> > -DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT
+> > -I/tmp/perf/libapi/include -I/tmp/perf/libsubcmd/include
+> > -I/tmp/perf/libsymbol/include -I/tmp/perf/libperf/include -I/tmp/perf/
+> > -Wl,-z,noexecstack \
+> >          /tmp/perf/perf-in.o -Wl,--whole-archive
+> > /tmp/perf/libapi/libapi.a /tmp/perf/libperf/libperf.a
+> > /tmp/perf/libsubcmd/libsubcmd.a /tmp/perf/libsymbol/libsymbol.a
+> > /tmp/perf/libperf-bench.a /tmp/perf/libperf-test.a
+> > /tmp/perf/libperf-ui.a /tmp/perf/libperf-util.a
+> > /tmp/perf/libpmu-events.a  -Wl,--no-whole-archive -Wl,--start-group
+> > -lpthread -lrt -lm -ldl -Wl,--end-group -o /tmp/perf/perf
+> > $ strings /tmp/perf/perf|grep GCC
+> > GCC: (Debian 13.2.0-13) 13.2.0
+> > $ find /tmp/perf -name '*.[oa]' -exec sh -c "strings {} | grep GCC" \; =
+-print
+> > GCC: (Debian 13.2.0-13) 13.2.0
+> > /tmp/perf/fixdep.o
+> > GCC: (Debian 13.2.0-13) 13.2.0
+> > /tmp/perf/fixdep-in.o
+> > ```
+> > fixdep is being compiled with HOSTCC which isn't clang. Some more diggi=
+ng:
+> > ```
+> > $ aarch64-linux-gnu-readelf -p .comment /tmp/perf/perf
+> >
+> > String dump of section '.comment':
+> >   [     0]  GCC: (Debian 13.2.0-13) 13.2.0
+> >   [    1f]  Debian clang version 16.0.6 (20+build1)
+> > ```
+> > So I suspect that the GCC is coming from crt0.o and that the binary
+> > was built with clang.
+>
+> Thanks for correcting. Now I even can build successfully with the Clang
+> from Android NDK with an additional flag 'NO_DEMANGLE=3D1'. Though we sti=
+ll
+> need to disable several modules for passing the building, but we are on t=
+he
+> right way.
+>
+> Would you like to continue a formal fixing or you want me to follow up?
 
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
++clang-built-linux
+
+If you could follow up it would be great! I'm not sure how we detect
+in the build that we're using clang, I suspect there is an approach in
+a different kernel Makefile/Build that already tackles this but my
+quick searching didn't yield anything - perhaps the change would be
+better suited to the location the CROSS_COMPILE prefix is added to
+gcc. The only thing the change to Makefile.config is doing is
+injecting the --target option. I'm not sure anything more is not
+working for me on my laptop with this approach compared to cross
+compiling with gcc, but as you say going in the right direction is
+worth it anyway.
+
+Thanks,
+Ian
