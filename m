@@ -1,155 +1,118 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D29F13D8A0
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6179F19AD6F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721135429; cv=none; b=sTengVbqQOIcr6nhuDf/B2SdovceKc+yzU1NNB02/5VUWNyMHsWr5ib3RgFKGpGktmcNDHGe0bO5kFKUgAnJO/bGrNETJDvWStyiHAjrnwXNYx11wrjUptDeXHtl8ZLsWE5wqVHx5jG7oX3qK5MnuObqm06T2/0vzwNG/RuwHpI=
+	t=1721135431; cv=none; b=GiUY+erX8Q6mkaoq12mds5UBTnofhJhPmi5K1SqisG7+h61+k+vxGChwdFuoIKqRFaatrwKdmBTRMbX5zlSTAtzlwM/a2Xowluy+O6fKg+TFnLBn1UOgkt/MW17SDOKDz5qHPbDvfM2pvJTiVSfRlao/2IuH9WTDlAlOlfQzqy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721135429; c=relaxed/simple;
-	bh=OluVpnZFdHz1fo1jJWCHZCa2/HNvaWiuKoODXv7wYbU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C5irKus29ss88ziObOzULXqew4h3jT+vadHzfhaR1P0lQ/09Ptr4NJnaHNwpQFoJKsAH0exNnNOrtAYTtAJqfaFqU1jif2o2dn+r5dqj/hkY3ASqg/+B87L7kKSeu1Cukrt3Hv0RZJ9aUOUfndsk1mYrd0vrUEeQtvlRsbGmANM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from [2601:18c:9101:a8b6:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1sThwX-000000005Ph-08yi;
-	Tue, 16 Jul 2024 09:10:09 -0400
-Message-ID: <f1fe524a8892acf032d8ddabda036c89a3cffce5.camel@surriel.com>
-Subject: Re: [PATCH] smp: print only local CPU info when sched_clock goes
- backward
-From: Rik van Riel <riel@surriel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, neeraj.upadhyay@kernel.org, mingo@kernel.org, 
-	rostedt@goodmis.org, Leonardo Bras <leobras@redhat.com>
-Date: Tue, 16 Jul 2024 09:10:08 -0400
-In-Reply-To: <20240716090443.GQ14400@noisy.programming.kicks-ass.net>
-References: <20240715134941.7ac59eb9@imladris.surriel.com>
-	 <20240716090443.GQ14400@noisy.programming.kicks-ass.net>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33Aeo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdYdIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gUmllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986ogEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHVWjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE+BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTeg4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/j
-	ddPxKRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/NefO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0MmG1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tPokBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznnekoTE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44NcQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhIomYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0IpQrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkEc4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1721135431; c=relaxed/simple;
+	bh=k+1RV5GCOT+tXPua6FJHUXMrykjI0VBKOpOtbCgIoYQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d9SHVRxiRDxxfIneDaXQ8kxA6RqNXl94pdLzDPdQADeDdRSL5scKgnyGcaZ4ahw/8JPjZg1EbJpcIeKVNtO8tOlaG08UT5nxuudRawpMLBEg+xq8LTsEskRMIg8eK8GK4j9YZxdgH5Y2b5sIzaajpa73eIgd2nV05Ri7NQvJAj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YyFCx8Hq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YyFCx8Hq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721135428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v1gOfjCAx0JVhYPMj4vGIbpwiWQL5RJ8uO9QhWtc93A=;
+	b=YyFCx8Hqmti+EVjkVJ3tu5O1kShFs3y/RehqlK7x5sY+YU1Icq9C/Og4yxrurhMIy2bb7A
+	TFQn/pSxUpf5J+zjNrOrQfn/HxBAcS5GCu8iZx1dM6ThgKjeE9HbuD1TtCP1oVLgIxsMyS
+	WY7E98aQ2x8v69qtGt2UgMBwt8Uptuw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-48-fuWFhv2xMriD0Hrj7ZaDag-1; Tue, 16 Jul 2024 09:10:26 -0400
+X-MC-Unique: fuWFhv2xMriD0Hrj7ZaDag-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42660e2e147so10246785e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:10:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721135425; x=1721740225;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v1gOfjCAx0JVhYPMj4vGIbpwiWQL5RJ8uO9QhWtc93A=;
+        b=mKFutesl3WO+uVp+guNhNy3MJY4MoEhdIGQCwj/35sVRYeULIjhqIpgHyWUOiOknTU
+         Y6HkW/221k1GVbEJjQvrNFc12KtZzOh1NZacm9sX0Ysz4b48Ha2nRNiaDf85gWXUktjd
+         VnMs2uCLJuZHBY54IRa3rhyYfq6lTDj+YQPdnFlyyvvRFjVujjwlfTtO/NT1ThuUGL4Y
+         mo2tBg8qskjMELjAXg73ub41G3sLPbJTzLR0zcsSelW01FvIzcaizMqVMUxzq2xvQCox
+         BlOr5+V4zNrC8NOFPTf1knlKcZEKeUXcU0QUDqJUL5ot18W8qxdGNX/x0v9UqMbkCSFb
+         x4Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCVM5WzB9nKtBX1Q7tXFRv4DWiqHQHK1ZaL2VCCr+4C8SgagNT+s29wWQwgvkrpG49RxrWWBemzBUUxxqjX9euJQ2fO0r58FZJp2cRX7
+X-Gm-Message-State: AOJu0YyR/+qWMYpBDv7XDS25+x/R8DIQJossti/EXSVPYLKQcQD2r0QD
+	rWxLnqen6HZtwSkygq6uPR7cCyfQv9UIAuK0YGMJr+vxEQTTdtepF0cltVMjXXvYr09BfZbqoOg
+	EwBR2yaM29ayqiI3WZIIJo7fACRiO2C+gJMuQkhs1hMbBwrIQcH9kyNSXw5QjHg==
+X-Received: by 2002:a05:600c:3b93:b0:427:9f6c:e4bd with SMTP id 5b1f17b1804b1-427b8a559f1mr12081385e9.6.1721135425395;
+        Tue, 16 Jul 2024 06:10:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+ZbyRm/fg6TpbsA1hJlGXyGgkBQ+2szmJWprS7Kts5UhI3RP5xWMTxQEtgatsEgKvIffHsw==
+X-Received: by 2002:a05:600c:3b93:b0:427:9f6c:e4bd with SMTP id 5b1f17b1804b1-427b8a559f1mr12081225e9.6.1721135425043;
+        Tue, 16 Jul 2024 06:10:25 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:1738:5210::f71? ([2a0d:3344:1738:5210::f71])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef44b4sm127311255e9.42.2024.07.16.06.10.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 06:10:24 -0700 (PDT)
+Message-ID: <c87f411c-ad0e-4c14-b437-8191db438531@redhat.com>
+Date: Tue, 16 Jul 2024 15:10:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] tipc: Return non-zero value from tipc_udp_addr2str()
+ on error
+To: Tung Nguyen <tung.q.nguyen@endava.com>,
+ Shigeru Yoshida <syoshida@redhat.com>
+Cc: "jmaloy@redhat.com" <jmaloy@redhat.com>,
+ "ying.xue@windriver.com" <ying.xue@windriver.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "tipc-discussion@lists.sourceforge.net"
+ <tipc-discussion@lists.sourceforge.net>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240716020905.291388-1-syoshida@redhat.com>
+ <AS5PR06MB8752BF82AFB1C174C074547DDBA22@AS5PR06MB8752.eurprd06.prod.outlook.com>
+ <20240716.164535.1952205982608398288.syoshida@redhat.com>
+ <596fd758-11ad-46c0-b6f1-2c04aeba5e06@redhat.com>
+ <AS5PR06MB875264DC53F4C10ACA87D227DBA22@AS5PR06MB8752.eurprd06.prod.outlook.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <AS5PR06MB875264DC53F4C10ACA87D227DBA22@AS5PR06MB8752.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-07-16 at 11:04 +0200, Peter Zijlstra wrote:
-> On Mon, Jul 15, 2024 at 01:49:41PM -0400, Rik van Riel wrote:
-> > About 40% of all csd_lock warnings observed in our fleet appear to
-> > be due to sched_clock() going backward in time (usually only a
-> > little
-> > bit), resulting in ts0 being larger than ts2.
-> >=20
-> > When the local CPU is at fault, we should print out a message
-> > reflecting
-> > that, rather than trying to get the remote CPU's stack trace.
-> >=20
-> > Signed-off-by: Rik van Riel <riel@surriel.com>
-> > ---
-> > =C2=A0kernel/smp.c | 8 ++++++++
-> > =C2=A01 file changed, 8 insertions(+)
-> >=20
-> > diff --git a/kernel/smp.c b/kernel/smp.c
-> > index f085ebcdf9e7..5656ef63ea82 100644
-> > --- a/kernel/smp.c
-> > +++ b/kernel/smp.c
-> > @@ -237,6 +237,14 @@ static bool
-> > csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64 *ts1,
-> > in
-> > =C2=A0	if (likely(ts_delta <=3D csd_lock_timeout_ns ||
-> > csd_lock_timeout_ns =3D=3D 0))
-> > =C2=A0		return false;
-> > =C2=A0
-> > +	if (ts0 > ts2) {
-> > +		/* Our own sched_clock went backward; don't blame
-> > another CPU. */
-> > +		ts_delta =3D ts0 - ts2;
-> > +		pr_alert("sched_clock on CPU %d went backward by
-> > %llu ns\n", raw_smp_processor_id(), ts_delta);
-> > +		*ts1 =3D ts2;
-> > +		return false;
-> > +	}
->=20
-> So I've seen some chatter about this on IRC and was WTF, seeing this
-> patch I'm still WTF. What is going on with those machines?!?!
->=20
+On 7/16/24 13:43, Tung Nguyen wrote:
+> 
+>> I think that consistency with other tipc helpers here would be more
+>> appropriate: IMHO no need to send a v2.
+>>
+> I do not think so. If you look at other helper functions for udp media, they use predefined error codes, for example:
+> tipc_udp_msg2addr()
+> {
+>   ...
+> return -EINVAL;
+>   ...
+> }
 
-Unfortunately this particular behavior does not appear to be limited
-to a few bad systems. The distribution over time looks as follows:
+It's not a big deal really, but, as noted by Shigeru, all the other 
+tipc_*_addr2str() callbacks return 1 on error and such callback is 
+invoked via function pointer.
 
-- 1 day:     N affected systems
-- 3 days:   3N affected systems
-- 1 week:   6N affected systems
-- 2 weeks: 14N affected systems
-- 30 days: 29N affected systems
-- 90 days: 72N affected systems
+If only this one returns a negative error, modification to the function 
+pointer callsite will become prone to errors (and stable backports more 
+fragiles)
 
-In other words, we are not looking at a few "repeat customers",
-but at a large number of systems that show the backward TSC
-behavior a few times, and then not again for months.
+Cheers,
 
-N is a triple digit number, so I'm fairly confident in these
-numbers.
+Paolo
 
-If it's any consolation this seems to happen on both Intel
-and AMD systems.=20
-
-The only detection code we have currently is in csd_lock_wait_toolong,
-so there could be a lot of cases of the TSC moving backward that
-are falling through the cracks.
-
-Most of the time the TSC only moves backward a few dozen, or a few
-hundred nanoseconds, and backward time past a few microseconds is
-a very long tail. I have not sliced this data by CPU model, and
-don't know if the distribution is different for different CPUs.
-
-The code in question simply loads one sched_clock value into ts0,
-and another into ts2:
-
-static void __csd_lock_wait(call_single_data_t *csd)
-{
-        int bug_id =3D 0;
-        u64 ts0, ts1;
-
-        ts1 =3D ts0 =3D sched_clock();
-        for (;;) {
-                if (csd_lock_wait_toolong(csd, ts0, &ts1, &bug_id))
-                        break;
-                cpu_relax();
-        }
-
-...
-
-static bool csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64
-*ts1, int *bug_id)
-{
-...
-        ts2 =3D sched_clock();
-
-
-I don't know if it matters for the CPU that csd_lock_wait_toolong
-gets inlined into __csd_lock_wait.
-
-On one particular system replacing the rdtsc() in native_sched_clock()
-with rdtsc_ordered() did not help, but that system sees frequent
-negative time jumps of 2.5ms, and might just be broken.
-
-The MTBF is high enough that I'm not sure whether always using
-rdtsc_ordered() would be warranted, and I don't know whether it
-would even help...
-
---=20
-All Rights Reversed.
