@@ -1,448 +1,159 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2055.outbound.protection.outlook.com [40.107.102.55])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2066.outbound.protection.outlook.com [40.107.93.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4F71A0721;
-	Tue, 16 Jul 2024 19:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C5B1A2C2C;
+	Tue, 16 Jul 2024 19:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721158488; cv=fail; b=JmMYauL+5PhCYle5Z2Ezj5/aUlXpYqzu21zAcnCZF979NHTYz35rXK113OxHSSdNbwj8CdA9yq/sXj1AL/5Ioe6isVVQXz2GGcZMQpKa/2WcZwcD0y9xMmEQlQRlHUVI/3D/z79kCNKKzbAKz4VGeRtVuHB+pVeAyDs9yS2tv+8=
+	t=1721158493; cv=fail; b=lzZpltTMTGjeyPCWwBX8Rh0iaRcMvRA2EhQi2phMT0VDEfhEGINzoJqlajFTnE8f4TsSBKEq5AZlywFcSUaU0M0Jwx/uc544PFUEvVhzq+2QiJ2xrVOcXJZUpX6/ZSt/5jYAI98fuJafS9L7dc9+6PIe9RQLwpUX7gacmwdiW6I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721158488; c=relaxed/simple;
-	bh=xWI7h9/dAObsgIqdGZKxfLGMR1DnmLw9WeJ2PvJ5PPw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IFNizPfPZnJ6ao0RRIkaVW+ZcBsXiOSDbO99g2uy1YP72DeMpnTjK+GMyEY/Y1qVF5lJPLr43HO9nTJi2wNu8s5kFlIg9e05kyKO7AvIPySAj2OgNxOy5ftiLf+BPhh2Iq17Nf14SP4rfKcIBOT6WtNNk0hBFXk50etvtvt7zro=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kortUOuN; arc=fail smtp.client-ip=40.107.102.55
+	s=arc-20240116; t=1721158493; c=relaxed/simple;
+	bh=tTtOEb8cXv9POL+062+kiVBoIdwXF4JeZ1LRKf7o7PM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NbEBZNEHlTccrnSzdmXc1Wj+TTgM4Ubee2FZ4Va3d2rKVyW+h8dHctNzmxJ8VZGbHQKpVzqZtKw5y/Yehc2Y1A/yD0dP14+p74pYK5HEaaqC7fo86Gh6NuWRSdPj4xY+0PNlIDgbBXO8O5IzY9mzYrLaG1KN97RtyEmFFaRBUck=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qhy2dxKB; arc=fail smtp.client-ip=40.107.93.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kortUOuN"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qhy2dxKB"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xsy3Q+ZtjjzA/eUmZbRs2dY39SJWM4rF3oO1lL2gh+kSU/kmOlsnWSVewzkBpMZxuwaK/Gi3qJsKwFyT8ftMJdYHQLrAj62YlIntczX44MqiWZ+1TP0KX2bY/cmxOpVtQpTyPiYYN3r+ScEuFnD3BQv6YS4yUkiNe5/BxZj7JRo3RRWJk7kfl+4Rk40v3WABoEel0Ikiv10kDov5tcfLu+iI0RC4V6LzAzq72kjKVrf7IxcAHJXr6GXuc8nFDt0yfWaGAayoDl9BHtUt5W8LYmf69GWvPQjeyEEtOIoDBHoxoz3kefjW3x74+kmfkgRLyzGMFRPY0g3FVQCZwf9Y9g==
+ b=Qr31ECiPaDTq/eHvzHhbsDyho/jImPDGHzxVOY4OCMDEdvvPmpT17ilF/wLIKWee7APsrSNZVT8j6+8k832sW+JU7vs4rtV3njKTepOlMG04zX7iFayQBlx06TJkSzswaNphHiMAlOfQeL++0C4DotkKY278rCAhUEv76W3EA7wpLE0jEw6wUuCmCFTaRXmypBfWtfO8+KxotOmdEeHb4dugMMubOW++hTEt09VPhNK2o22+jqBURn66SQTHi4uai81D3l4x26oCx3el2vfkHbiYf88c3H05G/dWIvBaKKmSMuwmUUcp2hgtLVORAw7swS/e3wx7ACZ3mZFYrGdpgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uBpYVLfY+mV90IClpY0LWjyFsgaWGTkGct0681DpC6I=;
- b=AaF12ey3FP6JZzpyHvIQ3M11ZnmmDy+79/YBOANAKolMtvMbUqY+aCaVQ9wohWTbTa2mxAXNmyhjYxW4E2DFGUC9AL+eR/6ORoMpk+CzaTKCPRm7MDdn+/PDeULQVkLK8xQdzQP1IgSzwlCeXlrfYu7m9uUDml8c/eTa32TUCN98CkHnauI6DEsc8kNWJEp8ueGDVKXOZTF/0vnB3ax/7Htv6haze49rrbXZqTGBsKsHLPJuNLC80VccolOVTdITPtu8y0EMkc75HUIlunzy3S8Vhn05YSMJ3YtX8viJMXt6T81uMVxyjN7iHAE9MG6QRpaTfBeuEfITri61mTmizg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=L4M+oA76gwrPzpOjUd6t7GrStaXH0nL5c3EVl0d7DPU=;
+ b=Hh37NYTXWuAdU96i2/+NX9EMYD9OpBhOpeO1ZTsmz3wWa2nAl9XsH6gkkjpxOB8TJy+HqhGvHB9LVVdP9YE7qcW8xekh0yGUUo6Lw+B6MAJ8J1goydYiuuHXTj+x3kROwp4lKG0T9wMYMbozVO+/5DcDbK4r6fQNIF5hRixQN+7X76XCxI6RqJDZYdB5Mf7WmESLhR0aDDADNr32xrd+eNAZ/ZnSj6VCiiNJFGZ5YKgjXFcM7U0yGC9lMCeazW7LfeUwCK02ZX/xFe/yndyg6kfwwINW90YCAyZrB+t4tkA4+Px2vbUWvxQsTMbyeD9qcx5/Hb4XgqV0YzB1Tmb9ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uBpYVLfY+mV90IClpY0LWjyFsgaWGTkGct0681DpC6I=;
- b=kortUOuNdShEp8ir6mtUK3tRsYi+sIFPDfsntBj+W4vm2SWwglr9QOae4Gd0ypxvaSjtoqDl5ijiOGDFXG8pcQBCC952oL+HocUAlGZtf0MRKDWejFpp2KfrgwNi3nv+EZ3qdUG8ZuSnFWYUj3tff+PqwXoJviNP0JsRDj8q0Vk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by CH3PR12MB8234.namprd12.prod.outlook.com (2603:10b6:610:125::16) with
+ bh=L4M+oA76gwrPzpOjUd6t7GrStaXH0nL5c3EVl0d7DPU=;
+ b=qhy2dxKBQNb/OMaD/mnfq/cghE0nHKnO/mLsD0Bp4e9YW9AL3r7P43AS00Hh4Io7igZqoXBJ/ajM1f72lbMj+bfGwlfLywemPaH6mddxpd9laj3Yy+UQReACwMtIQ8DvMfaBY2THJUhi9EM6yCI+6cg3R44w1OMEvWCjMkV+PdI=
+Received: from MN0P220CA0029.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:52e::9)
+ by IA1PR12MB8360.namprd12.prod.outlook.com (2603:10b6:208:3d8::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.24; Tue, 16 Jul
- 2024 19:34:44 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.7762.027; Tue, 16 Jul 2024
- 19:34:44 +0000
-Message-ID: <779eaea8-ab16-47b0-b1bd-4dda439ae3d7@amd.com>
-Date: Tue, 16 Jul 2024 14:34:39 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v5 11/20] x86/resctrl: Remove MSR reading of event
- configuration value
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- fenghua.yu@intel.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
- tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
- kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
- jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
- rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
- jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
- daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
- ilpo.jarvinen@linux.intel.com, peternewman@google.com,
- maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, eranian@google.com, james.morse@arm.com
-References: <cover.1720043311.git.babu.moger@amd.com>
- <82e8c5c888220b7659d7cd57fb291412ba62b120.1720043311.git.babu.moger@amd.com>
- <0ffec8d1-a27f-48b4-997a-8cc057de701e@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <0ffec8d1-a27f-48b4-997a-8cc057de701e@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BY5PR17CA0024.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::37) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Tue, 16 Jul
+ 2024 19:34:48 +0000
+Received: from BL6PEPF0001AB52.namprd02.prod.outlook.com
+ (2603:10b6:208:52e:cafe::5a) by MN0P220CA0029.outlook.office365.com
+ (2603:10b6:208:52e::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29 via Frontend
+ Transport; Tue, 16 Jul 2024 19:34:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB52.mail.protection.outlook.com (10.167.241.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Tue, 16 Jul 2024 19:34:48 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 16 Jul
+ 2024 14:34:48 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 16 Jul
+ 2024 14:34:47 -0500
+Received: from ubuntu.mshome.net (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 16 Jul 2024 14:34:47 -0500
+From: Stewart Hildebrand <stewart.hildebrand@amd.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+CC: Stewart Hildebrand <stewart.hildebrand@amd.com>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 7/8] PCI: Don't reassign resources that are already aligned
+Date: Tue, 16 Jul 2024 15:32:37 -0400
+Message-ID: <20240716193246.1909697-8-stewart.hildebrand@amd.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
+References: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|CH3PR12MB8234:EE_
-X-MS-Office365-Filtering-Correlation-Id: 40031af4-3f9f-4bb2-0655-08dca5ce584c
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB52:EE_|IA1PR12MB8360:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7437f49b-0eb5-4187-2c32-08dca5ce5b10
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TUJFUXV0cWhrUTNBdG5JdWpmRXN1N1k5K3hXbC9ZVmR4Q1h1YklqYmJsWVU5?=
- =?utf-8?B?eUxlUUtCTXZiYWY4MnpTRVRzT1ljYlVUY01GdDZVeTh3NTFBUXczMFhndlU1?=
- =?utf-8?B?RlFJWjRvZXF6TExTZ0ErN0dNWjVLV2ZwSzBEUnA1a215UlVPM0lmWEJqZ2lV?=
- =?utf-8?B?cWlzckdERGZKRW1TMXgrRFpHNGZVWmp1WDEvRHlmZmlhTHlYbHhIYU02Q3Bx?=
- =?utf-8?B?ajRnWG5nODdQV1JqYmlyT2RoeVBIQWdBRytKMC94Wnc0Y2NQT3A2TmlaVVVz?=
- =?utf-8?B?dnUzOW9tdXordHJDQlpsZXY3S2x6K2RWN0JJK3B6RjhUQlJ6cHJzMTBnUEVJ?=
- =?utf-8?B?VjZSMzNkbjdkYWlJMi9WRXRFT1ZvaUtWZUJkTWtxcE8vbDZvekdrRVVicDFQ?=
- =?utf-8?B?eTM0QUFuamVBaFhBd0h0M3RYNFZLdUREMkdiMjJVZmdDeDkvYnlPQjR4OHpu?=
- =?utf-8?B?RSthdUJ3a1VUVmhzZUV1bEhabVhLaXZ3RW52bENJMU1WMHhPUkxyR3ZYZk5y?=
- =?utf-8?B?bEhuazNMZy9oRzVEdFprTkxUUnVQZStaQU56MHNVaEZJcDF2c05xMmt2SEo3?=
- =?utf-8?B?R1o3RUt3aGNRTHdYU1o3Y21zSTZjK0FJQ2w5WVAyQS9LdUFqa3FpcFJSajdD?=
- =?utf-8?B?aUVnQXVBakw3YmZtRTJJV0t3S1l1MmN4UVVDakNtbVFlVkJGaFFUYkhrZGoz?=
- =?utf-8?B?UWg5b0h3dzR4T1I0MXg1b0ZEUHZhcDFWYUtTcmlIV2dZRWtJQVFFM2xJZmE3?=
- =?utf-8?B?MGl5YU9qbHcxRUo4QUg3Q0lXNUs2S0xWZkliOVFSRjhsdnFhdHdTSlk5b0Vv?=
- =?utf-8?B?QXlpcyt2cTg5K0JIcVIxZ3h5U2QybjRtVVZKSHk5eDVUTTJmNUFPejdHZ28z?=
- =?utf-8?B?WlNQcys4Q2tMWEJtTVk5WnBUN3AvVThkUUZJd3RRZzhPRVU5b1o4Y1ZROXNJ?=
- =?utf-8?B?WDBlOVN1WGtZVi9nUGJLSDV5Y0VRdkI0R3RtbGpIVGNORHdXYTBRTDhZK0Jq?=
- =?utf-8?B?K1J4YnJ2bG9OcHc3djNRTm54eWI3SEN2UkZrZlJDRXVWUjhsWlVhTUxldTdW?=
- =?utf-8?B?Z1hMZ3pnUXAvS0o5TjdLaEVPSTl6bXJvVmptSHBqZS9rQWF5d0dUaVNxd21M?=
- =?utf-8?B?UmhoU1g4RlBOK2VXTHE3aTljZHkxL0hjaTlrbFo4UEZmUEZ2THI0dmZRVHhW?=
- =?utf-8?B?ZlBmU0VwWnJDNzhGdTFMM3NaOUtRbkNMSWdZM2drZTcvTVRwd0E0a25nTWsv?=
- =?utf-8?B?VU53T2dWWmdJemJ3elp0RHFHU09ZeldKdzNzVVp4djBXdkJlWnVqc1Npb2oy?=
- =?utf-8?B?b2xSQjNTanpaN0FiQXJCcWUrTEt3WGJsRmJwL3ZJd1lMdmxBWWlVOXlHQUpZ?=
- =?utf-8?B?cWxqRWJFU2duNE5NMmhuYjkyREFrVlpsMnRhd2twSEVZTFY5TmdxbEc3OUVu?=
- =?utf-8?B?ZWp6M1hlYXlJdTZ5TGdZN1ZzUFJYWGE5Tnd2UHYrV1RHdXFVeGVOU3Y0N0Y4?=
- =?utf-8?B?cGM5MkVFZEQvRm50MVRaUkR3Y29Ba1g2TllJbmkwZzJnNFFPLzg5VC85MWpT?=
- =?utf-8?B?dlJmblV5dWFHQmlTWUJjOHVrcWM4ZlZhOU5nSjMzYUJiUThSSzMvd3AzcUJu?=
- =?utf-8?B?YUZXQXdKUG00eTVUL1NUTGxYNWk4eDIzNjNZaWRoaWx6dzROcWk3ZVJaM3dC?=
- =?utf-8?B?ZkN3SkhoNDFIRk9salQzeXYvbjgvcFdycWMyWnZxWGgwaEwvakVzenJkQllt?=
- =?utf-8?Q?n2eoA2GRJcV42ngJGE=3D?=
+	=?us-ascii?Q?Fi7csOYH3y9OFigB6vciegum6LRWcq6GvMNL4nkUk7uv+AGXmxWmWzy9gGv2?=
+ =?us-ascii?Q?On8IrFJMtVfn8BEK2aBy/42T/r1CRzaV38jjBxbz58cpx1JdxY06NqiqxRXY?=
+ =?us-ascii?Q?0iLnWt8uI7Ra7q7esNGCQNi5yh+5YPsLlIPOibdc/sXGCo6q11Mw7qXpEd+f?=
+ =?us-ascii?Q?IpOrxsfP20BEjD9gr9mRFWPFUi6suLWzt2qBsDu3TmZ5/KyjVYa8kh79IIp9?=
+ =?us-ascii?Q?5wMHdKJKkER2+IIwIS9VEbpoI7J+DB4URfMyJGIusUKINUuXX8PYSCa/p3Ob?=
+ =?us-ascii?Q?+huTM6KtXXJ/r8NsgjysPHcLt3CkF25ddDVCKzEkt/J0t9pwthoA1ld6Ze0t?=
+ =?us-ascii?Q?jl6pnwBe6a1LRROQj2E0KURjk/cdu6YG9ZvzMnmv9I5Gqeo6jx4HH0t8zUQb?=
+ =?us-ascii?Q?tu1Sskb9gmw2DeFn4Dj8vFDoRc/N90/gJvIH4LY/pVJLB+on9s6xSjxrQcTO?=
+ =?us-ascii?Q?QqDiTY/oKRYS+cDirmZeRPbT4gumUTFfceOg/GV3QZTJ0GQdwGfSS3xKMQrm?=
+ =?us-ascii?Q?rX9a6JmYR4X9TGLowP91NK8nuEL+bgdYG9GgoQFoeQiErWczHjpboSpzE8Qn?=
+ =?us-ascii?Q?jwlEfYEC+OIUCYPZsZWGsPKeadaEVyifRv5TSgxeMzreansPkWwfqbBgkkER?=
+ =?us-ascii?Q?qe3uXAwPM9uaNW3Wunl0W+etwkg8P1Lci8N+zKWNw+IxKUkqyLVvl+Z2DzCu?=
+ =?us-ascii?Q?aOjVexAYN+Rng3J+iEzNyTXuu7Ei25Ifu5R5kUvOxlgF/Pfb+txA5bKYjW5b?=
+ =?us-ascii?Q?3VnQTtBI/h62GEG+51cQKync1Criw9DS8ez+VdeBO9Lk7Ku6OHt76kKesY6H?=
+ =?us-ascii?Q?31Tiw/nUqisvvzhOzxowBLhkR9p/A5hAK/k+fg1F8+9KLQOmEcJumIbp2ihA?=
+ =?us-ascii?Q?FR5xMEYZIgvm/GiyIFTj60h7qlI5NdAcu1SQ6DAh8uQUW3c/RIAoKKL9pkRo?=
+ =?us-ascii?Q?47aCW9tS6WihkFLtVv2WQd8KObhv9sFxHsoYj+kU1E09vHPixmqaL1rCCRgm?=
+ =?us-ascii?Q?ODCuoSxB8Bl9i9150/K1RzxV9jFbDT2aPykHrzNZLjDZAKjP5nHhOXvJGLK3?=
+ =?us-ascii?Q?T9HJUNQJXRAHdnAb4mmV5Z5rC6A1wa4f7beXVRolq6JfCralzKIC5TzspucY?=
+ =?us-ascii?Q?M9gGU8Bv5JLf/9bOcwr1ARxCR3+7AyxP252SAOb41E6bTC6DKD3BIb1ZmY7f?=
+ =?us-ascii?Q?9XN5W/xZFnZeCORg8N9E8ULD5PDxcK2HVuufkIwqTxmOkR6thQkCKywYShY1?=
+ =?us-ascii?Q?daC7i0HrlAD5hX7em8J1q2f3mDy/bpf45bHofGNaG4TI/2E5P+ss5oAD1Hz9?=
+ =?us-ascii?Q?RqbkAHwfkFjLYSEdnKeCpYETXyB8+tzcQaDlVgA8RBsxG9u/d/EkPeI1vcPf?=
+ =?us-ascii?Q?sQIfUnx6HzWXNZhStcjpRSEH97dGJDo8yS2aRXO+PyRLS5kLdte848iVvlQo?=
+ =?us-ascii?Q?a25ArPPq+hrgqRbbqoajRwdlozoV0Tf+?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OU9WL05JeGhuNHdnY0JHWGk5Wkk3QVozdUNnRGJBR0EzN1AwZTJqSnc2UDJV?=
- =?utf-8?B?Q2FsUUlEbGg5aHBONmdZNlliZDlHY202ZzFjUkxZckxjb1JYcURwenRTZmFv?=
- =?utf-8?B?QjNsR3NNVEo3cm5iNkJ1bzQ4bWdxRHlIUWhvenZndnp0YmFQWERwRlRPd0RV?=
- =?utf-8?B?c1FCQjJ2VWRLay8vK2tXcHRiWGFFZFFOanp4Qm5reStqbmhCUi82blpPUFEv?=
- =?utf-8?B?RVpBSk1YMTN3R3pTUDcvRWttMkRlT01lNm1zSWJpWVJQd3NXaWFrNXd3L0Fm?=
- =?utf-8?B?cUxWZ1JYVVdBMUxFbTMvWkora1U5NnRiMDIzWHcxUGtoTTNHdkhweWZuQXJs?=
- =?utf-8?B?UmZCbGc3Zlk5VTJ2eExQZWhlZjAwRFU1NVJkNFlSZ3NMS3MyYUIrWWZEV2hK?=
- =?utf-8?B?M2szZHZCNmtTaWhOQnNPN2lOUjdkQUVhUWhhTkNxMmo4YU1CUC9GQWNSYVYw?=
- =?utf-8?B?Q0hSbmNUQzNEU2tUWEgrS0ZZTkh5bm9SUDRsQ3NtTkhsMFB6L0dXb1hPWUZD?=
- =?utf-8?B?YzRpM3hxOHFpdnlRcCtsaSs4TmJEMlk2QlN1VjZBYVkvVUpTSlN2aDJreVpJ?=
- =?utf-8?B?UXBvWEY1WTRydi9IcGZGblBOOWZhQmc0MFZOTndFMWNOUjRMRWl5MjFJbkxq?=
- =?utf-8?B?YUxzRkhGaFNkTG83LzV2MXJzNGVMZVQrR21MZ2VJaXkwTHZaZzlUcWUzUVh6?=
- =?utf-8?B?cnlvaGpZR1BieDdkQ1ZUN084bGM3WXBrNE56a25ETjg2QUdkMXVMeDFtK0Ni?=
- =?utf-8?B?b1dodCtrdTA3SkNOS0NpRFpEQUdDLy96M2dOQWE5QjlxbjVXVkdrYXZwaGE1?=
- =?utf-8?B?dXV6UkJ6UEFFdUdlZ0VXejNHOGp4Z3BBeGtBTThXZXV3d0dkS2xqeTZYTVlE?=
- =?utf-8?B?ckVWUTdkQ3Zvc0xiVzEwUDQxYmRvalpPVlpCYm1vUG9sdUdHL08xc0daNHhH?=
- =?utf-8?B?akl5aGNiVHdUYjJ2cXBoNXB3bFprUEIxakw5R25lRFdtQUxBcDFtUUUxdUpW?=
- =?utf-8?B?NHljWUxBWlNVRndTMWtHd2JRdkNET2FRMzFlOWRNZTdFaU1IK2dnTmNzQWZx?=
- =?utf-8?B?blQ1Zi80RlR0MUJhZFBSdWpCMFp6Zlo1VnY0bDhBYW1aQ25sRnl1RnhsN2lX?=
- =?utf-8?B?bFZZY2k2UEhXcDI4ZU5tVEVzaE4xRDJWQVdmRStqYVdqSCtKWGF1OXBmdERK?=
- =?utf-8?B?MWRvSXdLOWp1U3JCWUZnRXZiZXFyRHlLUk1YUzZaWm51cStERnlZeGo3MGNP?=
- =?utf-8?B?TWEvWTJiSStsMVE3NzF3NEdjVlNVeW9YYUU1N1BzNVVnOEdpeEV4S2NLYm5V?=
- =?utf-8?B?S1RTWVF4T3JsOHBTYjhEaVNMbVZkZTdIbm9uWWJQMnk0MUkyUXY3bjBQOUZO?=
- =?utf-8?B?d3duQjlZN0Z2aGU5T05BNk1vWU93eEx0bkp3UVJ2QWl1UXFuWW1LS2xlTkJo?=
- =?utf-8?B?TnVOa3R6ajJSU1luS0ltMjBUZ3hBVlhmcTkwZWZRelFvdlNHM1Y5cDRyYm93?=
- =?utf-8?B?UlFnM2VGSzFZYWFCU0NRaVk2ZEx3eGVTVUtYWjBNU2xsNGRXaWNDaVdFSHlN?=
- =?utf-8?B?UjBkR1VSUHlyVVdnWi9tTFdWTHdXODBVWlh5TDRYaGljQ3BDSEowa2JQTlVr?=
- =?utf-8?B?d0M5TnRpQWhmLzBoam5hYTNrMDBKUzB2SzhhQk1WeDByTGd1bUF0WERKaHla?=
- =?utf-8?B?Y1hZWXJ0bGRkSHNrVFBXRlJIUjYycE9nMlRwZDhZYVNYSk8yL3RpS01FczR4?=
- =?utf-8?B?eU9kYzNzVGlveHhZdHVJMERWWVJhYzBKNFJxTHEzNjBrUy9UTXB4TktudHBN?=
- =?utf-8?B?OHBjQlYrbmJlbU5lUUZCUEJhT0ExTHJ2TFJpNTl1UitrdW5EcU9samFmNU5o?=
- =?utf-8?B?MG81VC9oUURkdWMvVWFjclFmc2xHNFJrNDhLcHA0YnFkaldDa3hsRE1hZDBT?=
- =?utf-8?B?MXJXTDcxNWEvVm94UXZSd044VUpycDVTV1JDTDBQeGJ3TWNhcXFSaytCRTNp?=
- =?utf-8?B?akFpRWtUNHpPS3NlZzBBNDV5ZVMrdjFEeHBJL1c3ZzZTS0NQcVdPZFpwT2po?=
- =?utf-8?B?SjZjUUQ2djNJS1JDdUVyaFQwWnZoYmdDTHk5YVI3cndOOFhBcTJOOEpuM21E?=
- =?utf-8?Q?oeko=3D?=
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40031af4-3f9f-4bb2-0655-08dca5ce584c
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 19:34:44.4278
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 19:34:48.8619
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7437f49b-0eb5-4187-2c32-08dca5ce5b10
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J2LJWGuV8IIvK5IWPM14NfzgtQuRM02pcixq7sKuZ19dPISY5/EHvNBg2R/YPjEq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8234
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB52.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8360
 
-Hi Reinette,
+As a follow-up to commit 0dde1c08d1b9 ("PCI: Don't reassign resources
+that are already aligned"), don't reassign already aligned resources
+that have requested alignment without resizing.
 
-On 7/12/24 17:10, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 7/3/24 2:48 PM, Babu Moger wrote:
->> The event configuration is domain specific and initialized during domain
->> initialization. It is not required to read the configuration register
->> every time user asks for it. Use the value stored in rdt_mon_hw_domain
-> 
-> rdt_mon_hw_domain -> rdt_hw_mon_domain
-> 
->> instead. Also update the configuration value when user writes it.
-> 
-> Please separate the context/problem/solution clearly.
+Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
+---
+v1->v2:
+* capitalize subject text
+---
+ drivers/pci/pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Sure.
-
-> 
->>
->> Introduce resctrl_arch_event_config_get() and
->> resctrl_arch_event_config_set() to get/set architecture domain specific
->> mbm_total_cfg/mbm_local_cfg values.
->>
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> ---
->> v5: Introduced resctrl_arch_event_config_get and
->>      resctrl_arch_event_config_get() based on our discussion.
->>     
->> https://lore.kernel.org/lkml/68e861f9-245d-4496-a72e-46fc57d19c62@amd.com/
->>
->> v4: New patch.
->> ---
->>   arch/x86/kernel/cpu/resctrl/rdtgroup.c | 112 +++++++++++++++----------
->>   include/linux/resctrl.h                |   4 +
->>   2 files changed, 72 insertions(+), 44 deletions(-)
->>
->> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> index b2b751741dd8..91c5d45ac367 100644
->> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> @@ -1591,10 +1591,59 @@ static int rdtgroup_size_show(struct
->> kernfs_open_file *of,
->>   }
->>     struct mon_config_info {
->> +    struct rdt_mon_domain *d;
->>       u32 evtid;
->>       u32 mon_config;
->>   };
-> 
-> as seen above, mon_config is a u32
-> 
->>   +#define INVALID_CONFIG_VALUE   UINT_MAX
-> 
-> So an invalid config value can be U32_MAX?
-
-Sure.
-
-> 
->> +
->> +unsigned int resctrl_arch_event_config_get(struct rdt_mon_domain *d,
->> +                       enum resctrl_event_id eventid)
->> +{
->> +    struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
->> +
->> +    switch (eventid) {
->> +    case QOS_L3_OCCUP_EVENT_ID:
->> +        break;
->> +    case QOS_L3_MBM_TOTAL_EVENT_ID:
->> +        return hw_dom->mbm_total_cfg;
->> +    case QOS_L3_MBM_LOCAL_EVENT_ID:
->> +        return hw_dom->mbm_local_cfg;
->> +    }
->> +
->> +    /* Never expect to get here */
->> +    WARN_ON_ONCE(1);
->> +
->> +    return INVALID_CONFIG_VALUE;
->> +}
->> +
->> +void resctrl_arch_event_config_set(void *info)
->> +{
->> +    struct mon_config_info *mon_info = info;
->> +    struct rdt_hw_mon_domain *hw_dom;
->> +    unsigned int index;
->> +
->> +    index = mon_event_config_index_get(mon_info->evtid);
->> +    if (index == INVALID_CONFIG_VALUE) {
-> 
-> INVALID_CONFIG_INDEX?
-
-Yes.
-
-> 
->> +        pr_warn_once("Invalid event id %d\n", mon_info->evtid);
->> +        return;
->> +    }
->> +    wrmsr(MSR_IA32_EVT_CFG_BASE + index, mon_info->mon_config, 0);
->> +
->> +    hw_dom = resctrl_to_arch_mon_dom(mon_info->d);
->> +
->> +    switch (mon_info->evtid) {
->> +    case QOS_L3_OCCUP_EVENT_ID:
->> +        break;
->> +    case QOS_L3_MBM_TOTAL_EVENT_ID:
->> +        hw_dom->mbm_total_cfg = mon_info->mon_config;
->> +        break;
->> +    case QOS_L3_MBM_LOCAL_EVENT_ID:
->> +        hw_dom->mbm_local_cfg =  mon_info->mon_config;
-> 
-> Please add a break here.
-
-Sure.
-> 
->> +    }
->> +}
->> +
->>   #define INVALID_CONFIG_INDEX   UINT_MAX
->>     /**
->> @@ -1619,33 +1668,11 @@ unsigned int mon_event_config_index_get(u32 evtid)
->>       }
->>   }
->>   -static void mon_event_config_read(void *info)
->> -{
->> -    struct mon_config_info *mon_info = info;
->> -    unsigned int index;
->> -    u64 msrval;
->> -
->> -    index = mon_event_config_index_get(mon_info->evtid);
->> -    if (index == INVALID_CONFIG_INDEX) {
->> -        pr_warn_once("Invalid event id %d\n", mon_info->evtid);
->> -        return;
->> -    }
->> -    rdmsrl(MSR_IA32_EVT_CFG_BASE + index, msrval);
->> -
->> -    /* Report only the valid event configuration bits */
->> -    mon_info->mon_config = msrval & MAX_EVT_CONFIG_BITS;
->> -}
->> -
->> -static void mondata_config_read(struct rdt_mon_domain *d, struct
->> mon_config_info *mon_info)
->> -{
->> -    smp_call_function_any(&d->hdr.cpu_mask, mon_event_config_read,
->> mon_info, 1);
->> -}
->> -
->>   static int mbm_config_show(struct seq_file *s, struct rdt_resource *r,
->> u32 evtid)
->>   {
->> -    struct mon_config_info mon_info = {0};
->>       struct rdt_mon_domain *dom;
->>       bool sep = false;
->> +    int val;
->>         cpus_read_lock();
->>       mutex_lock(&rdtgroup_mutex);
->> @@ -1654,11 +1681,13 @@ static int mbm_config_show(struct seq_file *s,
->> struct rdt_resource *r, u32 evtid
->>           if (sep)
->>               seq_puts(s, ";");
->>   -        memset(&mon_info, 0, sizeof(struct mon_config_info));
->> -        mon_info.evtid = evtid;
->> -        mondata_config_read(dom, &mon_info);
->> +        val = resctrl_arch_event_config_get(dom, evtid);
-> 
-> There are too many types used interchangeably. The mon_config is a "u32",
-> but the new function
-> returns "unsigned int", which is then assigned to an "int". Please just
-> use one type
-> consistently, it is a u32 so resctrl_arch_event_config_get() can return
-> u32 and "val" should
-> be u32.
-> 
-
-Sure. Will do.
-
->> +        if (val == INVALID_CONFIG_VALUE) {
->> +            rdt_last_cmd_puts("Invalid event configuration\n");
-> 
-> I do not see a reason to print message to user space here. If this error
-> is encountered
-> then it is a kernel bug and resctrl_arch_event_config_get() would already
-> have triggered
-> a WARN.
-> 
-> Since this is a "never should happen" scenario I wonder if we can not just
-> print
-> the INVALID_CONFIG_VALUE to user space?
-
-Ok. Will remove the check and the message.
-
-> 
-> 
->> +            break;
->> +        }
->>   -        seq_printf(s, "%d=0x%02x", dom->hdr.id, mon_info.mon_config);
->> +        seq_printf(s, "%d=0x%02x", dom->hdr.id, val);
->>           sep = true;
->>       }
->>       seq_puts(s, "\n");
->> @@ -1689,33 +1718,27 @@ static int mbm_local_bytes_config_show(struct
->> kernfs_open_file *of,
->>       return 0;
->>   }
->>   -static void mon_event_config_write(void *info)
->> -{
->> -    struct mon_config_info *mon_info = info;
->> -    unsigned int index;
->> -
->> -    index = mon_event_config_index_get(mon_info->evtid);
->> -    if (index == INVALID_CONFIG_INDEX) {
->> -        pr_warn_once("Invalid event id %d\n", mon_info->evtid);
->> -        return;
->> -    }
->> -    wrmsr(MSR_IA32_EVT_CFG_BASE + index, mon_info->mon_config, 0);
->> -}
->>     static void mbm_config_write_domain(struct rdt_resource *r,
->>                       struct rdt_mon_domain *d, u32 evtid, u32 val)
->>   {
->>       struct mon_config_info mon_info = {0};
->> +    int config_val;
->>         /*
->> -     * Read the current config value first. If both are the same then
->> +     * Check the current config value first. If both are the same then
->>        * no need to write it again.
->>        */
->> -    mon_info.evtid = evtid;
->> -    mondata_config_read(d, &mon_info);
->> -    if (mon_info.mon_config == val)
->> +    config_val = resctrl_arch_event_config_get(d, evtid);
->> +    if (config_val == INVALID_CONFIG_VALUE) {
->> +        rdt_last_cmd_puts("Invalid event configuration\n");
-> 
-> same here about unneeded print to user space. When this is encountered it is
-> a kernel bug.
-
-Ok. Will remove the check and the message.
-
-> 
->> +        return;
->> +    }
->> +    if (config_val == val)
->>           return;
->>   +    mon_info.d = d;
->> +    mon_info.evtid = evtid;
->>       mon_info.mon_config = val;
->>         /*
->> @@ -1724,7 +1747,8 @@ static void mbm_config_write_domain(struct
->> rdt_resource *r,
->>        * are scoped at the domain level. Writing any of these MSRs
->>        * on one CPU is observed by all the CPUs in the domain.
->>        */
->> -    smp_call_function_any(&d->hdr.cpu_mask, mon_event_config_write,
->> +    smp_call_function_any(&d->hdr.cpu_mask,
->> +                  resctrl_arch_event_config_set,
->>                     &mon_info, 1);
->>         /*
->> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
->> index 62f0f002ef41..f017258ebf85 100644
->> --- a/include/linux/resctrl.h
->> +++ b/include/linux/resctrl.h
->> @@ -352,6 +352,10 @@ void resctrl_arch_reset_rmid(struct rdt_resource
->> *r, struct rdt_mon_domain *d,
->>    */
->>   void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct
->> rdt_mon_domain *d);
->>   +void resctrl_arch_event_config_set(void *info);
->> +unsigned int resctrl_arch_event_config_get(struct rdt_mon_domain *d,
->> +                       enum resctrl_event_id eventid);
->> +
->>   extern unsigned int resctrl_rmid_realloc_threshold;
->>   extern unsigned int resctrl_rmid_realloc_limit;
->>   
-> 
-> Reinette
-> 
-
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 1ac1435ad91e..6df318beff37 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6585,6 +6585,9 @@ static bool pci_request_resource_alignment(struct pci_dev *dev, int bar,
+ 	if (size >= align)
+ 		return false;
+ 
++	if (!resize && (r->start > align) && !(r->start & (align - 1)))
++		return false;
++
+ 	/*
+ 	 * Increase the alignment of the resource.  There are two ways we
+ 	 * can do this:
 -- 
-Thanks
-Babu Moger
+2.45.2
+
