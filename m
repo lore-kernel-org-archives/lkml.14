@@ -1,203 +1,116 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F11D197A6C;
-	Tue, 16 Jul 2024 09:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E839C198833
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721123091; cv=none; b=eq4lKIbnWUE7v0YlWhV6GEKQv/IVnmuksWyz2bmdi5vpINy2iwuhzgobyIdoXc9KJyTMjH70ziIWtbCY80r4C5+61ZSN8Kbhla2Hw9Y6Pvwf7eMS6wUfvrOHvz9o9uWoKFmQ4GG1UtHeef+uu3tklMKRzCA1SOCO6TcE/0HG2uE=
+	t=1721123121; cv=none; b=cEJFKw8AOnhaMpJbuDeVpfxMKcou73koEvust0g/Qe3OIqzaGboYLKD0qhngT/dqreHlYvI6gGue7FOE3xjIM//wdRnFCQBgmEeiPHTkqXP1WJgW4SKAj5CDw5DKWfaz6uaqwZ2drp+sQpVJMnwokF7cAev/fYYelBK4jPdFjmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721123091; c=relaxed/simple;
-	bh=MtGlrZPxgs3fghxn7ifSEXSWjlnQg1V5rFVgMxytc1E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=p0m3RMk7/aebCAZV8tY1eODakgeckEofAi5gsGTZF8ya/r9BKLP4tyRlY9L0f+Xdjh9rQ2luOfgozfjT4cPQN0i+2+tQMK7/kE7mLVl18ccI0V7JhrqqdhzlyixvSttybDUqyZowkYB2GnavfwHAPliDKceRv5FdvQyU5Om9H8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OL8Tthax; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1721123121; c=relaxed/simple;
+	bh=IbF+oVlsASrCxDCtgSMiLlRtmsmtWhBwoHzzIyNr2Z4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TQeeme4NsvA2O/9KdQTgyTolItJaTp5dqqSp4GW+ZDSAREajRhyVtw7BCUnMr3UwkCkt3qD8dW6ERAhBh3bjuUX8ZSjFNFEtmc2kjNOv2rqs6H8duPxY3Z39QiZS+6dIse51Ed7FqoiU9RZOC0CONbyOdft7oklCqlyKLon/gcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jhxome/a; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OL8Tthax"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1BFF61BF211;
-	Tue, 16 Jul 2024 09:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1721123081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9yl6nMiA8YdoBSPgX1+Zx077ilmmU2Drf2VLw5jFcKY=;
-	b=OL8TthaxwgE0pXxZQM2UpgeP0Rbg1N5qjaJLWdsAH2I1Jc5taoQ0mID7ODzSo8NAbBriq2
-	GoRo0XuspIUGET9d2oRKyD8aNM6gaGLAvb9TH2cFGyUUDfYyIk8muNDbk7iMwVXCYrEggn
-	DqZXqcpw7QT/JVStX24jh4/aeNX1xRCKUDKF43dQ99h5rUeExg60YqHZvVbuzJuLYdQU7Y
-	mVNp4a1gwjboEVXzimEnlCbchUK2zYWf8TUnn+gPrhkY+8xofvr7T4VBRfuYJpyaU4uouw
-	MT2X1BIv90wkGVW1FlGrVqHoh14A9c2KAZDlM85+mD5xFmltjvuMg4m2tzrR8w==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Thomas Richard <thomas.richard@bootlin.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>, Rob Herring
- <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vignesh
- Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas
- Richard <thomas.richard@bootlin.com>, Francesco Dolcini
- <francesco.dolcini@toradex.com>, Richard Genoud
- <richard.genoud@bootlin.com>
-Subject: Re: [PATCH v7 0/7] Add suspend to ram support for PCIe on J7200
-In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
-Date: Tue, 16 Jul 2024 11:44:39 +0200
-Message-ID: <875xt5llh4.fsf@BLaptop.bootlin.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jhxome/a"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-426717a2d12so31090915e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 02:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721123116; x=1721727916; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2k6a4tmpt4FwSS1Q5VjwCKqeHMpr9HeTZeCfn6YizvU=;
+        b=Jhxome/aIUm6MdFuRGAXGvJMD4DQeYIbOL42ldLKfb0Ei8j2pbLDo7sIojHUzaZEuP
+         rrJJafOfA6cONlq0QVfgXBEY0pN2Kxyl83oaepRzi30wHeF614AVik8GVPpFyY2eIpDq
+         1ecO6RaU1xro46Uuf6RfzQC5t4ufk+ohasmIZZOj9W/qjQ8WQFyH8NokhhdCUcL1vXZi
+         E5wBoR9vyrOoCfY5W/eOT5KLMSDgT9rY/G0fumvNrbwxM4LuhS/1PlI31AHb8BSx4fHM
+         +MFE9/PM/ECuXUYT5Hjtd9HNh8J12Dx+Gn4zVdZivbbyPReNnk8/vPvPkt7IYq8/MjCr
+         JODg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721123116; x=1721727916;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2k6a4tmpt4FwSS1Q5VjwCKqeHMpr9HeTZeCfn6YizvU=;
+        b=VPeapaktdlqZaFK34fv1Efqu94yNYzfpOAcmjozNtz6G/EDcU/DDjlbeo2sh4Ro1i7
+         R9TwZMkijvGfqi+KibeVqPIaP2CFabia6wqZ/3UtO9n/5M7k0h21O+S8ySgjsdsQ8DC/
+         U9vWJDeC0LQo9cYdFuRUvzKisTd2PrcNgo2DKdcaY2fQsXDAD31nVGiqXMNioTKGJS2v
+         3OrgHty0foBv7tuUbfqMtI1h5WoSeEuUGU46AaumiYH1xhJY+yQRvd58dSxhIhgxs216
+         xZMzjinYC74UoChtJO8G/CKlQVnx7dg9YMmdUvW5OQNwbAiPQCnBv5vmGZgsxo/3rR8J
+         +Lww==
+X-Forwarded-Encrypted: i=1; AJvYcCU0rwUm9oaYW/I4AwqyX7q8NZWpPNvETN+j5gwQl/116SfxJRm8vLfKSm9r0uUAty9bML0Y6SWnbtSpeiPnByRDAHI56W/TZkJUQ+RD
+X-Gm-Message-State: AOJu0YxN+lyfgMoGBBLYLIN/2A2q438imN826bxI4dpaezJEt74bKLWp
+	xOJzIRKlRHiCOiSQeN7Ndaexo+IO9pNUFZw/Z3TtkgavdSTRwHj81JY4gCBF5gI=
+X-Google-Smtp-Source: AGHT+IGH09+J5MKzEaIfOp2Cw3apVixdIIGoHnc0cSbNzkcbgCAs8q/Irdj+//xDLZB+oxI5c+HA7A==
+X-Received: by 2002:a05:600c:4f06:b0:426:63bc:f031 with SMTP id 5b1f17b1804b1-427bb686d69mr11855835e9.1.1721123116010;
+        Tue, 16 Jul 2024 02:45:16 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f2cc2efsm154408185e9.36.2024.07.16.02.45.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 02:45:15 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH 0/2] arm64: dts: qcom: sm8[56]50: use the PMU to power up
+ bluetooth
+Date: Tue, 16 Jul 2024 11:45:09 +0200
+Message-Id: <20240716-topic-sm8x50-upstream-use-pmu-to-power-up-bt-v1-0-67b3755edf6a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: gregory.clement@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACVBlmYC/x2NQQrCMBAAv1L27EISq1a/Ujw07Ub3kCbsJloo/
+ bvB4zAws4OSMCk8uh2EPqyc1gb21MH8ntYXIS+NwRnXm5u9YkmZZ9Q4bBeDNWsRmiJWJcyxNos
+ 5fUmaQV/Qh94vwzn4u3XQklko8Pbfjc/j+AFh+qcwfgAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=846;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=IbF+oVlsASrCxDCtgSMiLlRtmsmtWhBwoHzzIyNr2Z4=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmlkEq/tSs1Nb2dFF7Fs0FQyUXnTXibdgXCkrTWlTq
+ P79n+naJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZpZBKgAKCRB33NvayMhJ0YprD/
+ 43QxVIqj//7SEKCPKDUKP2mtFXeEPOQv8/QyTTbDJrOw5cBHaDhBlV3K/L3aeiZQk00fkRjhSewOEv
+ qIJ10TY9PBUO8OKJ+RMK02yBsIEZ0bCoGzJo7mp+siy596cF3Gd1xsq4uM/2z64TRoe/hdAYMQkmRn
+ dp+opcNHMqQyygpfbr//qovDn5Sk14gclNXIQOK6GH+YpsgxamSoYQ3UjcskLnCmNonb2eR/P05ZTe
+ EmVehFvF7sQUj/WbTcmj7dbJ+9fgxaSz09sIsYEeBnnGoSs48ufjNGQ8vHDKvO2Cim5vM8npMux0gE
+ vO1a94qETQLiZ6hzSJ5plt2NW3WK9XEjXED0PnpzlelpaD8x5rtPbnrTpDxrBoacYZE6c1hhfQNZGr
+ e5IIyJibtRAJMmZhA/REJi4a9IhA8cwkSsMH0JlWlgnLRsYBa06JJrDemsB+CTIHH29xVJQ3mv3qJy
+ 52/4hdYcVlbJAGH3DFwIpF17y9FDkQ2QvvcObd8GOFvWBabk8Hz2FBApINSTIWRv31a9O/uczlfNZz
+ YnInrAas0AxaIrm5NkUEXod5Qb4IrtcnIYVW/HSskQyvDKuivNAa4GJrRZ9UWYLDvpK+rx7smxlRIL
+ DWGB9r/PMsNB14K/D9keWXw9Elhjxbr2m77T0aHeyiSVXuOPRm56bu1XlrdA==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Hello PCIe maintainers!
+Update DT of SM8550-QRD and SM865-HDK to use the PMU to power up bluetooth.
 
-> This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
->
-> In this 7th iteration, the i2c and mux patches were moved to dedicated
-> series ([1] and [2]).
-> The patch for the gpio-pca953x driver was removed. It will be sent
-> separately for further testing and discussion.
->
-> No merge conflict with 6.10-rc4.
->
-> [1]: https://lore.kernel.org/all/20240613-i2c-omap-wakeup-controller-duri=
-ng-suspend-v1-0-aab001eb1ad1@bootlin.com/
-> [2]:
-> https://lore.kernel.org/all/20240613-mux-mmio-resume-support-v1-0-4525bf5=
-6024a@bootlin.com/
+Based on the SM8650-QRD change at [1]
 
-I noticed that this series has not been merged yet, even though it
-seemed that there were no remaining comments to address.
+[1] https://lore.kernel.org/all/20240709-hci_qca_refactor-v3-6-5f48ca001fed@linaro.org/
 
-Is there any reason why it has not been applied yet?
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Neil Armstrong (2):
+      arm64: dts: qcom: sm8650-hdk: use the PMU to power up bluetooth
+      arm64: dts: qcom: sm8550-qrd: use the PMU to power up bluetooth
 
-Thanks,
+ arch/arm64/boot/dts/qcom/sm8550-qrd.dts | 26 +++++++++-----------------
+ arch/arm64/boot/dts/qcom/sm8650-hdk.dts | 26 +++++++++-----------------
+ 2 files changed, 18 insertions(+), 34 deletions(-)
+---
+base-commit: 4f40be61af99a67d5580c1448acd9b74c0376389
+change-id: 20240716-topic-sm8x50-upstream-use-pmu-to-power-up-bt-bf4bd83fb912
 
-Gregory
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
->
-> Regards,
->
-> Thomas
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
-> Changes in v7:
-> - all: series rebased on Linux 6.10-rc4.
-> - i2c: patches moved to a dedicated series.
-> - mux: patches moved to a dedicated series.
-> - gpio-pca953x: patch removed, will be sent separately.
-> - Link to v6: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v6-0-4656=
-ef6e6d66@bootlin.com
->
-> Changes in v6:
-> - i2c-omap: add a patch to remove __maybe_unused attribute of
->   omap_i2c_runtime_suspend() and omap_i2c_runtime_resume()
-> - i2c-omap: fix compile issue if CONFIG_PM_SLEEP is not set
-> - Link to v5: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v5-0-4b8c=
-46711ded@bootlin.com
->
-> Changes in v5:
-> - all: series rebased on Linux 6.9-rc1
-> - pinctrl-single: patch removed (already applied to the pinctrl tree)
-> - phy: patches moved to a dedicated series.
-> - pci: add T_PERST_CLK_US macro.
-> - pci-j721e: update the comments about T_PERST_CLK_US.
-> - Link to v4: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v4-0-6f1f=
-53390c85@bootlin.com
->
-> Changes in v4:
-> - all: use SoB/Co-developed-by for patches initially developed by Th=C3=
-=A9o
->   Lebrun.
-> - pinctrl-single: squash the two commits.
-> - i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
-> - mux: mux_chip_resume() return 0 or at the first error.
-> - phy-j721e-wiz: clean code around dev_err_probe().
-> - phy-j721e-wiz: use REF_CLK_100MHZ macros.
-> - pci: fix subject line for all PCI patches.
-> - pci-cadence: use fsleep() instead of usleep_range().
-> - pci-cadence: remove cdns_torrent_clk_cleanup() call in
->   cdns_torrent_phy_resume_noirq().
-> - pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in t=
-he probe().
-> - pci-j721e: fix unordered header files.
-> - pci-j721e: remove some log spammers.
-> - pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
-> - pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
-> - Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e=
-4a3fac1f@bootlin.com
->
-> Changes in v3:
-> - pinctrl-single: split patch in two parts, a first patch to remove the
->   dead code, a second to move suspend()/resume() callbacks to noirq.
-> - i2c-omap: add a comments above the suspend_noirq() callback.
-> - mux: now mux_chip_resume() try to restores all muxes, then return 0 if
->   all is ok or the first failure.
-> - mmio: fix commit message.
-> - phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() =
-in
->   the wiz_clock_init() function.
-> - phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
->   function to wiz_clock_probe(), extract hardware configuration part in a
->   new function wiz_clock_init().
-> - phy-cadence-torrent: use dev_err_probe() and fix commit messages
-> - pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
->   function and extract the link setup part in a new function
->   cdns_pcie_host_link_setup().
-> - pcie-cadence-host: make cdns_pcie_host_init() global.
-> - pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
->   functions in the resume_noirq() callback.
-> - Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f=
-7d228ec2@bootlin.com
->
-> Changes in v2:
-> - all: fix commits messages.
-> - all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
-> - all: remove useless #ifdef CONFIG_PM.
-> - pinctrl-single: drop dead code
-> - mux: add mux_chip_resume() function in mux core.
-> - mmio: resume sequence is now a call to mux_chip_resume().
-> - phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
->   instead of reset_control_put()).
-> - phy-cadence-torrent: use PHY instead of phy.
-> - pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
->   sequence.
-> - pci-j721e: drop dead code.
-> - Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e5=
-5da52400@bootlin.com
->
-> ---
-> Thomas Richard (5):
->       PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup=
-()
->       PCI: cadence: Set cdns_pcie_host_init() global
->       PCI: j721e: Use dev_err_probe() in the probe() function
->       PCI: Add T_PERST_CLK_US macro
->       PCI: j721e: Use T_PERST_CLK_US macro
->
-> Th=C3=A9o Lebrun (2):
->       PCI: j721e: Add reset GPIO to struct j721e_pcie
->       PCI: j721e: Add suspend and resume support
->
->  drivers/pci/controller/cadence/pci-j721e.c         | 121 +++++++++++++++=
-+++---
->  drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
->  drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
->  drivers/pci/pci.h                                  |   3 +
->  4 files changed, 146 insertions(+), 34 deletions(-)
-> ---
-> base-commit: 7510725e693fb5e4b4cd17086cc5a49a7a065b9c
-> change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
->
-> Best regards,
-> --=20
-> Thomas Richard <thomas.richard@bootlin.com>
