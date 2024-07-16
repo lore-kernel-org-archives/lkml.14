@@ -1,79 +1,66 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B061A08B0;
-	Tue, 16 Jul 2024 20:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BDF1A0AE8
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 20:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721160666; cv=none; b=nV2w5U5saz8LYJzgXDuNeuTWK1FrVXcvrlRJuHJ8KtArELJbzQbhVh9AJVq1pP2TX0xnTHPXONoKhJYIJFvaseWjerpd4j7i82QCRanyBRBlVhpIrkNTnIFHYE45p2CQu9FNMh/q9n9QLT9BoTfSWTfohnQg3X/6g2tuRrHrS2s=
+	t=1721160668; cv=none; b=qjiEcDCOr+y1OPm1lAHyhIZZlT3QShovmDf+dV9Z8IFsq4qhEcFWhr5CJJEWsyS4ZWFzCIF/UoQVTCyqZtIU4rMjsBD6O63q944gqmBqEhhCQCQU/QzjD1uf8VlQlyzfptm7pcPM51P/jYLYKnZqAaSUBlL1/znQffVoIPBuhTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721160666; c=relaxed/simple;
-	bh=9AJN4PgJDFD6rXPl8hdNI4KFCO6auql45+lt7HZHXiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tgN83Brg7NMNPGTBM6udfP3VQG6eWbrtEgDQITvQmspGRFfFVXPv/XR6Y1eN5kVS9aJQC2AbvJNQOmLyKMwheOMQJV7EQMVndCdE+d1sAa2ALRzirbF5AHIXogoJ40XxOkDMz81qKjgOo6iimG5upox/Mt0g0KyNgiJd5+0snpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 6D0511C009C; Tue, 16 Jul 2024 22:11:01 +0200 (CEST)
-Date: Tue, 16 Jul 2024 22:11:00 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 5.10 000/108] 5.10.222-rc1 review
-Message-ID: <ZpbT1OjS+E0G89b3@duo.ucw.cz>
-References: <20240716152745.988603303@linuxfoundation.org>
+	s=arc-20240116; t=1721160668; c=relaxed/simple;
+	bh=u0ghT8dU1S07tbbl3Ihco2OikKAPp33hAhpPhYhVY0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qEv0lyecMz4NX/93j/Tts1gvE7J7JeSOU0nMPj/No2lEXtvvhVzPSWPWkIBef8tjQSK09lo0fcdMk6zIKV8Vpdf7xTngu0Lrj6nn0FQlOxp+MbnsHfQk027jYKEOUzBGnPPYBYuMRED2W7oFYsvrwWG0A31SGwurD2kO/dw8/Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B22C116B1;
+	Tue, 16 Jul 2024 20:11:06 +0000 (UTC)
+Date: Tue, 16 Jul 2024 16:11:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML
+ <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Thorsten Blum
+ <thorsten.blum@toblux.com>
+Subject: Re: [GIT PULL] ring-buffer: Updates for 6.11
+Message-ID: <20240716161105.0aa6bfe1@rorschach.local.home>
+In-Reply-To: <a71100aa-ffe4-477e-814a-1564e00cb067@efficios.com>
+References: <20240716155118.152dea35@rorschach.local.home>
+	<a71100aa-ffe4-477e-814a-1564e00cb067@efficios.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QV+03voLkCmUNdnV"
-Content-Disposition: inline
-In-Reply-To: <20240716152745.988603303@linuxfoundation.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 16 Jul 2024 16:05:26 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
---QV+03voLkCmUNdnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 2024-07-16 15:51, Steven Rostedt wrote:
+> > 
+> > 
+> > Linus,
+> > 
+> > tracing/ring-buffer: Have persistent buffer across reboots  
+> 
+> Hi Steven,
+> 
+> Perhaps I'm missing something here, but we discussed previously that
+> you would document the fact that users of this feature are expected
+> to run the same kernel before/after reboot.
+> 
+> Looking at this PR, I fail to find that documentation, or in fact
+> any documentation at all. Is this something that was overlooked ?
 
-Hi!
+Hmm, was that for this code, or the one that used the reserved_mem
+change, which isn't in this pull request, as it depends on the code
+that is going through the mm tree.
 
-> This is the start of the stable review cycle for the 5.10.222 release.
-> There are 108 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Technically it can work with different kernels (I have even done that).
+But yeah, it isn't guaranteed to work in such cases. But that is just a
+documentation update.
 
-CIP testing did not find any problems here:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-5.10.y
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---QV+03voLkCmUNdnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iFwEABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZpbT1AAKCRAw5/Bqldv6
-8qJMAJUZ1HCs7M9ltxBPM6NVBdudqa1yAKCoqQZlKZER5SA6h+c1cuY/DnRvwQ==
-=tfuF
------END PGP SIGNATURE-----
-
---QV+03voLkCmUNdnV--
+-- Steve
