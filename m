@@ -1,74 +1,37 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AC281732
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB4D19ADB1;
+	Tue, 16 Jul 2024 13:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721137147; cv=none; b=nZx2uOL7PqL+6tHZ/IijJoFgRzVbH/f3E7sTRe9sbyRdGqjtkUfBRjYbveutJsfXWcFrKCA30i4aEcuoBtfA2I6VkNSjekNOV8dminQekJor3LsP8KURK7/tsiJGKk4CyNT2jdqVI1SHwRhWss3TnRctpbAKs3/9QsLs2WbDIyo=
+	t=1721137183; cv=none; b=VpA4WI7bDcL6K0UVSAp/4xVTFYhPxAW/M2nBlL6s0zZbleKDVz0Pi1D8nx6ZKXGy0p+QT1Cjoek4ob1f8/vejFvxQbJfBrXJbnrn0x1U8cp7OSvDKfaXI1fz3Ispp3LQZe3T7sezEg8C18e0PFDGvGCFxjSe4eB1jwQLxu9bVZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721137147; c=relaxed/simple;
-	bh=X7bklE2GsqthkplIQvZDv5rg3XCkY1GEHEuOa1Ws1NY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yn0hgJ3eyC9RBM6jnPRRitJLvufpd82Y7mariKq5LUsyXMH2u2+3xFw1QKp3QeCXMnVtYSS9eX3bz55JIv9ZFEDKQ/CFsGHJ6TKyQtkLsrjhCi1aOS45N+h+NtITNMFbgRQarB/GPFjxuGxDyJY/RccbKwTRHjaRQ2zG9oruCb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PZQU9Rc1; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZQU9Rc1"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42793fc0a6dso37494525e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721137144; x=1721741944; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hoRw9TcQOEMBdmZxq6Nd1FUggtL3OxOdKdUjU7Ar674=;
-        b=PZQU9Rc1uamUErcSkYo19qR9o9/Qg+Fl+7O1SBqoh+4cT234bFkHAWfW9/3P9NCfG6
-         CyKIFlw6jJ8JgtrXoNeYdgNzUeu0wclCpvkTi4BpyFy2nk6zJ7pQClwJmah1juz8g2Xf
-         vCVYNQr1tuhi4/5Q+eBwJUAMUoQ3p780kMURErG7+VciGybWg2hfmhi3f02TlbNtL9d2
-         zBUr0hqiWHnNfOpZ6jaoioBy2KBvm8vuCz3bVOk/gx4Mui7mnb6ykjAFK5cvR8+FiusK
-         rUli2JRfz+CfagRELvymZ1cP6MiSRrT5zrTFLNuI32eSduncjaPYK20c1UvKh8C8NACm
-         fJqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721137144; x=1721741944;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hoRw9TcQOEMBdmZxq6Nd1FUggtL3OxOdKdUjU7Ar674=;
-        b=FEfw+eXJUHW4qjutJpScuDqJF4FZlnPECbhQvNvh01yMWlYyRdufb9F8eygBxGXO9z
-         iRlo4ZfGiDt0zqZJgV2hPQn2dB9farl0vJ99VQ/QF2wl9gmW+JTKQ+uWSyP8HlRoKPeF
-         ea8KlfFcSH6ngOj9B4r5sf9nHj24s+6n7yx9zHaJKuap1BE5iYLWNmf+i2HbnneB2KyU
-         9gyZ9rD5GlKj/FqoKIM/NOcJllQAhCS0pfxgzJHvGZK00+GrLNft3yyuDEUwNB7EMGyM
-         aIj/7lgDR+tx19HUWrd7hbJ/kqZOqPajmttQ9eFRGBV87iyRt1m3AhhF5PqkQYWVSQ9Z
-         +OKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPYPIwN2VwFCKexZnVbVyGaCNQTseHsP426UxLRJuoxzDeNYG4Ql9dey22y12KHKLy7I98ULY3wRtmFe1ww+GMkFo1xDW7TW26aURK
-X-Gm-Message-State: AOJu0YxT8v7EQYCdI9RZNkty49tVOiL0JcIox1sfBVRyh2eUVvjZ92bV
-	JSVQsX6/FNAVj2AygFXbQAFBxiyKaYABMpLpHtNpToS0/NQg2nmaMOdtZTng/bA=
-X-Google-Smtp-Source: AGHT+IGXs0HjAx3DBf4LWEbRloC7TAHjz/hinusld4TqeGA/WwEle1cNhCho1exyWsBz602KmeEFJA==
-X-Received: by 2002:a5d:6143:0:b0:367:9877:750e with SMTP id ffacd0b85a97d-3682609b526mr1426499f8f.25.1721137144212;
-        Tue, 16 Jul 2024 06:39:04 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dabf0e4sm9106564f8f.33.2024.07.16.06.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 06:39:03 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: devicetree@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: thermal: qcom-tsens: Document ipq6018 temperature sensor
-Date: Tue, 16 Jul 2024 14:38:02 +0100
-Message-ID: <20240716133803.82907-1-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1721137183; c=relaxed/simple;
+	bh=/B1Uwq/PitS5XFJ0CIRuXcyGgq5rm49B8F+kxIhIZzs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DJ0yDkPOdG64xxUcmg1Gf0TE32xmBQrPPP0gINsGKJg5x0DPkdGUo3M6UDIyjpvLhpZw/fl3DhckRojs9YqUaGFdiQ+QZ985Dn+zddcuzyxAZ86XBTqp0ZwYPNNz0kuqrjovwmxMHvJXK7DteOEw95Yx3SuJmzD0XLhdGrn6Ji0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WNg9s6t35zdhyn;
+	Tue, 16 Jul 2024 21:37:53 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4CE99180064;
+	Tue, 16 Jul 2024 21:39:37 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 16 Jul 2024 21:39:37 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
+	<lizefan.x@bytedance.com>, <hannes@cmpxchg.org>, <mkoutny@suse.com>
+CC: <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 -next] blk-cgroup: move congestion_count to struct blkcg
+Date: Tue, 16 Jul 2024 13:30:58 +0000
+Message-ID: <20240716133058.3491350-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,27 +39,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-Document the ipq6018 temperature sensor, which is used in ipq6018.dtsi
-and is compatible with the ipq8074 temperature sensor.
+The congestion_count was introduced into the struct cgroup by
+commit d09d8df3a294 ("blkcg: add generic throttling mechanism"),
+but since it is closely related to the blkio subsys, it is not
+appropriate to put it in the struct cgroup, so let's move it to
+struct blkcg. There should be no functional changes because blkcg
+is per cgroup.
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
- Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-cgroup.c          |  7 ++++---
+ block/blk-cgroup.h          | 10 ++++++----
+ include/linux/cgroup-defs.h |  3 ---
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-index 99d9c526c0b6..d6f333a7bcd1 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-@@ -76,6 +76,7 @@ properties:
-       - description: v2 of TSENS with combined interrupt
-         items:
-           - enum:
-+              - qcom,ipq6018-tsens
-               - qcom,ipq9574-tsens
-           - const: qcom,ipq8074-tsens
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 37e6cc91d576..69e70964398c 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -2182,12 +2182,13 @@ void blk_cgroup_bio_start(struct bio *bio)
+ 
+ bool blk_cgroup_congested(void)
+ {
+-	struct cgroup_subsys_state *css;
++	struct blkcg *blkcg;
+ 	bool ret = false;
+ 
+ 	rcu_read_lock();
+-	for (css = blkcg_css(); css; css = css->parent) {
+-		if (atomic_read(&css->cgroup->congestion_count)) {
++	for (blkcg = css_to_blkcg(blkcg_css()); blkcg;
++	     blkcg = blkcg_parent(blkcg)) {
++		if (atomic_read(&blkcg->congestion_count)) {
+ 			ret = true;
+ 			break;
+ 		}
+diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
+index bd472a30bc61..864fad4a850b 100644
+--- a/block/blk-cgroup.h
++++ b/block/blk-cgroup.h
+@@ -95,6 +95,8 @@ struct blkcg {
+ 	struct cgroup_subsys_state	css;
+ 	spinlock_t			lock;
+ 	refcount_t			online_pin;
++	/* If there is block congestion on this cgroup. */
++	atomic_t			congestion_count;
+ 
+ 	struct radix_tree_root		blkg_tree;
+ 	struct blkcg_gq	__rcu		*blkg_hint;
+@@ -374,7 +376,7 @@ static inline void blkcg_use_delay(struct blkcg_gq *blkg)
+ 	if (WARN_ON_ONCE(atomic_read(&blkg->use_delay) < 0))
+ 		return;
+ 	if (atomic_add_return(1, &blkg->use_delay) == 1)
+-		atomic_inc(&blkg->blkcg->css.cgroup->congestion_count);
++		atomic_inc(&blkg->blkcg->congestion_count);
+ }
+ 
+ static inline int blkcg_unuse_delay(struct blkcg_gq *blkg)
+@@ -399,7 +401,7 @@ static inline int blkcg_unuse_delay(struct blkcg_gq *blkg)
+ 	if (old == 0)
+ 		return 0;
+ 	if (old == 1)
+-		atomic_dec(&blkg->blkcg->css.cgroup->congestion_count);
++		atomic_dec(&blkg->blkcg->congestion_count);
+ 	return 1;
+ }
+ 
+@@ -418,7 +420,7 @@ static inline void blkcg_set_delay(struct blkcg_gq *blkg, u64 delay)
+ 
+ 	/* We only want 1 person setting the congestion count for this blkg. */
+ 	if (!old && atomic_try_cmpxchg(&blkg->use_delay, &old, -1))
+-		atomic_inc(&blkg->blkcg->css.cgroup->congestion_count);
++		atomic_inc(&blkg->blkcg->congestion_count);
+ 
+ 	atomic64_set(&blkg->delay_nsec, delay);
+ }
+@@ -435,7 +437,7 @@ static inline void blkcg_clear_delay(struct blkcg_gq *blkg)
+ 
+ 	/* We only want 1 person clearing the congestion count for this blkg. */
+ 	if (old && atomic_try_cmpxchg(&blkg->use_delay, &old, 0))
+-		atomic_dec(&blkg->blkcg->css.cgroup->congestion_count);
++		atomic_dec(&blkg->blkcg->congestion_count);
+ }
+ 
+ /**
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 293af7f8a694..ae04035b6cbe 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -539,9 +539,6 @@ struct cgroup {
+ 	/* used to store eBPF programs */
+ 	struct cgroup_bpf bpf;
+ 
+-	/* If there is block congestion on this cgroup. */
+-	atomic_t congestion_count;
+-
+ 	/* Used to store internal freezer state */
+ 	struct cgroup_freezer_state freezer;
  
 -- 
-2.45.2
+2.34.1
 
