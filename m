@@ -1,111 +1,203 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E140B19884B
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F11D197A6C;
+	Tue, 16 Jul 2024 09:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721123073; cv=none; b=RxvVfGEJTy1hgGuC757D83JZi7RSHAmXAxm+a+ARky/ItVSeJb2igIfGLIwz8sQxD7ZnB8vieVfDvlQOdgvtmpjblpaZAcuOFAJxeSmco3Vp8Y9Mob31vBmECGEfpZ6xvd+lHgP6XqoOo7nLmKHad7JyCE/AUVpLM3B2sXxYj0k=
+	t=1721123091; cv=none; b=eq4lKIbnWUE7v0YlWhV6GEKQv/IVnmuksWyz2bmdi5vpINy2iwuhzgobyIdoXc9KJyTMjH70ziIWtbCY80r4C5+61ZSN8Kbhla2Hw9Y6Pvwf7eMS6wUfvrOHvz9o9uWoKFmQ4GG1UtHeef+uu3tklMKRzCA1SOCO6TcE/0HG2uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721123073; c=relaxed/simple;
-	bh=AaRySYf9zsmpura29YKROYSICIYrW+9IDE5VSrjWshI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BognoYmOvwyoUNL0xNyMj7ADlQ4KSv8/GA2VFomCzV04sNQVx08baB7WdXqH4PeAamnqgJD23HUYlY5KHe+tj/rPlfkQma0DizTa5pOMEqgN4XoOD+seH+JAkkYot9eioDOnVNhMWdtB0H9woN8OuWPWMSyX06Wzyzx4XPNqeJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 46G9huGX055900;
-	Tue, 16 Jul 2024 17:43:56 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4WNYsk3wkTz2KmSNc;
-	Tue, 16 Jul 2024 17:38:34 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Tue, 16 Jul 2024 17:43:54 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Yu Zhao <yuzhao@google.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Zhaoyang Huang
-	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
-Subject: [RFC PATCHv2] mm: introduce reclaim throttle in MGLRU
-Date: Tue, 16 Jul 2024 17:43:48 +0800
-Message-ID: <20240716094348.2451312-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1721123091; c=relaxed/simple;
+	bh=MtGlrZPxgs3fghxn7ifSEXSWjlnQg1V5rFVgMxytc1E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=p0m3RMk7/aebCAZV8tY1eODakgeckEofAi5gsGTZF8ya/r9BKLP4tyRlY9L0f+Xdjh9rQ2luOfgozfjT4cPQN0i+2+tQMK7/kE7mLVl18ccI0V7JhrqqdhzlyixvSttybDUqyZowkYB2GnavfwHAPliDKceRv5FdvQyU5Om9H8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OL8Tthax; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OL8Tthax"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1BFF61BF211;
+	Tue, 16 Jul 2024 09:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721123081;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9yl6nMiA8YdoBSPgX1+Zx077ilmmU2Drf2VLw5jFcKY=;
+	b=OL8TthaxwgE0pXxZQM2UpgeP0Rbg1N5qjaJLWdsAH2I1Jc5taoQ0mID7ODzSo8NAbBriq2
+	GoRo0XuspIUGET9d2oRKyD8aNM6gaGLAvb9TH2cFGyUUDfYyIk8muNDbk7iMwVXCYrEggn
+	DqZXqcpw7QT/JVStX24jh4/aeNX1xRCKUDKF43dQ99h5rUeExg60YqHZvVbuzJuLYdQU7Y
+	mVNp4a1gwjboEVXzimEnlCbchUK2zYWf8TUnn+gPrhkY+8xofvr7T4VBRfuYJpyaU4uouw
+	MT2X1BIv90wkGVW1FlGrVqHoh14A9c2KAZDlM85+mD5xFmltjvuMg4m2tzrR8w==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Thomas Richard <thomas.richard@bootlin.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>, Rob Herring
+ <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas
+ Richard <thomas.richard@bootlin.com>, Francesco Dolcini
+ <francesco.dolcini@toradex.com>, Richard Genoud
+ <richard.genoud@bootlin.com>
+Subject: Re: [PATCH v7 0/7] Add suspend to ram support for PCIe on J7200
+In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+Date: Tue, 16 Jul 2024 11:44:39 +0200
+Message-ID: <875xt5llh4.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 46G9huGX055900
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: gregory.clement@bootlin.com
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Hello PCIe maintainers!
 
-Being like legacy LRU management, direct reclaim threads could isolate
-over-sized folios and then be rescheduled, which could lead to
-unwanted generation update as well as the thrashing things like before.
-This commit would like to have direct_reclaim be throttled by judging
-the numbers of isolated and inactive folios.
+> This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
+>
+> In this 7th iteration, the i2c and mux patches were moved to dedicated
+> series ([1] and [2]).
+> The patch for the gpio-pca953x driver was removed. It will be sent
+> separately for further testing and discussion.
+>
+> No merge conflict with 6.10-rc4.
+>
+> [1]: https://lore.kernel.org/all/20240613-i2c-omap-wakeup-controller-duri=
+ng-suspend-v1-0-aab001eb1ad1@bootlin.com/
+> [2]:
+> https://lore.kernel.org/all/20240613-mux-mmio-resume-support-v1-0-4525bf5=
+6024a@bootlin.com/
 
-This patch is verified by launching 8 costmem(malloc and access 1GB VM
-in an 5.5GB v6.6 Android system) concurrently and got no system hang
-any more(adb shell recovered in 10s which hanged 100% in mainline).
+I noticed that this series has not been merged yet, even though it
+seemed that there were no remaining comments to address.
 
-test script under Android14
+Is there any reason why it has not been applied yet?
 
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
-v2: fix a possible unpaired spin_lock/unlock and commit message
----
----
- mm/vmscan.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Thanks,
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 2e34de9cd0d4..13e5ed9060ad 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -4481,6 +4481,7 @@ static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int sw
- 	int scanned;
- 	int tier = -1;
- 	DEFINE_MIN_SEQ(lruvec);
-+	bool stalled = false;
- 
- 	/*
- 	 * Try to make the obvious choice first, and if anon and file are both
-@@ -4503,6 +4504,16 @@ static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int sw
- 	else
- 		type = get_type_to_scan(lruvec, swappiness, &tier);
- 
-+	spin_unlock_irq(&lruvec->lru_lock);
-+	while (unlikely(too_many_isolated(lruvec_pgdat(lruvec), type, sc))) {
-+		if (stalled) {
-+			spin_lock_irq(&lruvec->lru_lock);
-+			return 0;
-+		}
-+		reclaim_throttle(lruvec_pgdat(lruvec), VMSCAN_THROTTLE_ISOLATED);
-+	}
-+	spin_lock_irq(&lruvec->lru_lock);
-+
- 	for (i = !swappiness; i < ANON_AND_FILE; i++) {
- 		if (tier < 0)
- 			tier = get_tier_idx(lruvec, type);
-@@ -4550,8 +4561,10 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
- 	if (list_empty(&list))
- 		return scanned;
- retry:
-+	__mod_node_page_state(lruvec_pgdat(lruvec), NR_ISOLATED_ANON + type, scanned);
- 	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
- 	sc->nr_reclaimed += reclaimed;
-+	__mod_node_page_state(lruvec_pgdat(lruvec), NR_ISOLATED_ANON + type, -scanned);
- 	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
- 			scanned, reclaimed, &stat, sc->priority,
- 			type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
--- 
-2.25.1
+Gregory
 
+>
+> Regards,
+>
+> Thomas
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+> Changes in v7:
+> - all: series rebased on Linux 6.10-rc4.
+> - i2c: patches moved to a dedicated series.
+> - mux: patches moved to a dedicated series.
+> - gpio-pca953x: patch removed, will be sent separately.
+> - Link to v6: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v6-0-4656=
+ef6e6d66@bootlin.com
+>
+> Changes in v6:
+> - i2c-omap: add a patch to remove __maybe_unused attribute of
+>   omap_i2c_runtime_suspend() and omap_i2c_runtime_resume()
+> - i2c-omap: fix compile issue if CONFIG_PM_SLEEP is not set
+> - Link to v5: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v5-0-4b8c=
+46711ded@bootlin.com
+>
+> Changes in v5:
+> - all: series rebased on Linux 6.9-rc1
+> - pinctrl-single: patch removed (already applied to the pinctrl tree)
+> - phy: patches moved to a dedicated series.
+> - pci: add T_PERST_CLK_US macro.
+> - pci-j721e: update the comments about T_PERST_CLK_US.
+> - Link to v4: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v4-0-6f1f=
+53390c85@bootlin.com
+>
+> Changes in v4:
+> - all: use SoB/Co-developed-by for patches initially developed by Th=C3=
+=A9o
+>   Lebrun.
+> - pinctrl-single: squash the two commits.
+> - i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
+> - mux: mux_chip_resume() return 0 or at the first error.
+> - phy-j721e-wiz: clean code around dev_err_probe().
+> - phy-j721e-wiz: use REF_CLK_100MHZ macros.
+> - pci: fix subject line for all PCI patches.
+> - pci-cadence: use fsleep() instead of usleep_range().
+> - pci-cadence: remove cdns_torrent_clk_cleanup() call in
+>   cdns_torrent_phy_resume_noirq().
+> - pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in t=
+he probe().
+> - pci-j721e: fix unordered header files.
+> - pci-j721e: remove some log spammers.
+> - pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
+> - pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
+> - Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e=
+4a3fac1f@bootlin.com
+>
+> Changes in v3:
+> - pinctrl-single: split patch in two parts, a first patch to remove the
+>   dead code, a second to move suspend()/resume() callbacks to noirq.
+> - i2c-omap: add a comments above the suspend_noirq() callback.
+> - mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+>   all is ok or the first failure.
+> - mmio: fix commit message.
+> - phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() =
+in
+>   the wiz_clock_init() function.
+> - phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+>   function to wiz_clock_probe(), extract hardware configuration part in a
+>   new function wiz_clock_init().
+> - phy-cadence-torrent: use dev_err_probe() and fix commit messages
+> - pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+>   function and extract the link setup part in a new function
+>   cdns_pcie_host_link_setup().
+> - pcie-cadence-host: make cdns_pcie_host_init() global.
+> - pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+>   functions in the resume_noirq() callback.
+> - Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f=
+7d228ec2@bootlin.com
+>
+> Changes in v2:
+> - all: fix commits messages.
+> - all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+> - all: remove useless #ifdef CONFIG_PM.
+> - pinctrl-single: drop dead code
+> - mux: add mux_chip_resume() function in mux core.
+> - mmio: resume sequence is now a call to mux_chip_resume().
+> - phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+>   instead of reset_control_put()).
+> - phy-cadence-torrent: use PHY instead of phy.
+> - pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+>   sequence.
+> - pci-j721e: drop dead code.
+> - Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e5=
+5da52400@bootlin.com
+>
+> ---
+> Thomas Richard (5):
+>       PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup=
+()
+>       PCI: cadence: Set cdns_pcie_host_init() global
+>       PCI: j721e: Use dev_err_probe() in the probe() function
+>       PCI: Add T_PERST_CLK_US macro
+>       PCI: j721e: Use T_PERST_CLK_US macro
+>
+> Th=C3=A9o Lebrun (2):
+>       PCI: j721e: Add reset GPIO to struct j721e_pcie
+>       PCI: j721e: Add suspend and resume support
+>
+>  drivers/pci/controller/cadence/pci-j721e.c         | 121 +++++++++++++++=
++++---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
+>  drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+>  drivers/pci/pci.h                                  |   3 +
+>  4 files changed, 146 insertions(+), 34 deletions(-)
+> ---
+> base-commit: 7510725e693fb5e4b4cd17086cc5a49a7a065b9c
+> change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+>
+> Best regards,
+> --=20
+> Thomas Richard <thomas.richard@bootlin.com>
