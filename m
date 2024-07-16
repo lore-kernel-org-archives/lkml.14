@@ -1,81 +1,191 @@
-Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3476DED8
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E43B143875;
+	Tue, 16 Jul 2024 10:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125557; cv=none; b=MRTxwql5+SjF4hHzYzV5CLRHvPjctoxU2AVe7S3Srfv8mgdZjoX5y9bJBlP40z+fK5KEWl+6lRkdNiHy+3WfbLZfxiTFmi/LnFoq+JZv0XPu0K9/2K8BS5SBm1er6xRAq9jUJuxYMCuMuHB+oqiMfnGe6QWBj+amlS39fkeKnEs=
+	t=1721125809; cv=none; b=RCjk4jERu26Qc7/UfmV+pHcfeh36BCfmyrLjaeRWAQEM/F0cX0NDif9UPJqv8rXNRcA/jBA2rsDo29HnkE2wdYUl/AVVOtQ18sUmQnQCc3HIbmaCA2Y532VDoxfs0QA0Li+RQ57emsZGkW9rGa8xevzd0xmIc9KRCavx7qpgmk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125557; c=relaxed/simple;
-	bh=IMMynmaMZD5UoVOHpFjtuEI+M7W+IqhZ5HU7zB8vXf4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=eAjIEopbBzaNq5Zbqh1B1st7NqqxcfKsfvmgmku5xJaKLpLehiTawjtVWi1A/cjtdHuDI7UIB0CbeKVsfFEUtNsBGIvA3t8ncbcf0lTxQn0DXkDthHPaj18HLNnPFhywO9pWRmRoycAchgaYXshVpygUdHBU8cH1lVq8ryD5oaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=K8XGer6s; arc=none smtp.client-ip=203.205.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1721125809; c=relaxed/simple;
+	bh=QysKPyiFau2fw2f0p+pSgBtnoBOL8OjYbm8noFYeFeY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EFTS3DC5wxGLP/owk20ka8CW5GT8eKTgpe5Dq1nKQRWNqL0BOBCRJsLDm16D0RphJE5U1vJZ4jF8R2zk8MvRjM3Ys+lnCiamzt0J6SM1EGYYCv1TGBJXVv8J4yf/K82vdr8byKRQANJdCzZ0/RZKZ5640bHn0Qc9dG1NnYEyNvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqyuFhOD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="K8XGer6s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1721125246; bh=v7Uk2iaHLkkzFkor0GP0IJH0WvpC+ouYp8z5mwVIBPw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=K8XGer6suxZPORJyUFo5Ty0v8yeggRJ0N9hGQnTU4yqAaCFCyO3AWsq4oUqCGnciI
-	 uy9xlu3A9FdKZPSiIypHBrhmFxK+3W84PSbmB9ctoPQHeM1t+66OlbNPj7KlVQBCUF
-	 VSpxyk3htVsvm9FQENUTFR25y7VYyPaH9PTOXvIs=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 52CA8004; Tue, 16 Jul 2024 18:20:44 +0800
-X-QQ-mid: xmsmtpt1721125244tnqmbunug
-Message-ID: <tencent_432CC56D1097C8EA26EC0ECDCC787E6CEC0A@qq.com>
-X-QQ-XMAILINFO: M1kpU1YLBkcQf6nu3PODoiru+ClEVLn7+itmDirQSXF0eOARw1NxFZL2DfCFTu
-	 U+CAk8MvlCR3uebPfhwF0Yzrx+6DyRk3sDH26JHQ60PsR7k2Kl4Pibl/D0HB3SlE3iHbHPDrj5Hf
-	 oP/mxCvB0QTY8KBsTFbgv/qCmgw7lwCEboVQL0zRemJ+OhhJp7JH+HGPPPYOj29POa46rnXN/iSR
-	 Ow4Y+Vp4aB0OChhP935BQGhk5ffpccO1LbChTo3JyM4TK+ulWffjTbGzROr4d5STi06VhbEOGbpB
-	 s+Cl21ax9oe/PC+0T1Te9YUV9ojeBsAqkThAS5qqT7w9NnKJrlQP8KTg3SZY15yivj0ewDTEVde6
-	 5OLLkGkRlDGiYA1Nigw3e8gTSfMbormnWbEQU2VE6CaiEoQ+U3CLeIcot0Fo89MUCx2VMaXnzX59
-	 OVgICxAKMaVvcOjrbgmx7hQiwH/xRtyY2uKoumYilQ9Bp7Qj4EJyD0ySSHPildrlzsFWbe7JE+Kj
-	 gZma6eofKVoQKkZgok5ArT6EcpFCHG99pDpDJo3UL6zcs2/sACyZhDppVB0ul3OnRtJ7n33hhXbu
-	 8Xd/h4CQ7BBI9kEYiA2UrlVOZkLmo8f7OIzuwMePa6O3PlsmuLe3J+8M71JTruTmWHxoLel8RDtD
-	 GwOuIZDC0GZgq9PnSVRaRFeO1X6NjFQeASpDeTeH5SWwUfDzxrfBO53+HRRGXf9kP5UeJnvJj6BC
-	 1afsrT3NyUOC5Y1R58xcmlMI8uu/gPDyL4mBoJ9uh22hlFs/qtxhkcE7NJ2bWPiBxRsbV0i5XCiz
-	 nCpxN+DkmBHpB2vtcWXr5vmn8aTbxUKaoFxqYYIVwKh95nX/+Qt4Qz5BBxX23+w0Yq90UHd7qilb
-	 PzwK+N76poqcyqlqDiBbtuunyicqzpsXaDkPDMXV0r22zgVaSSjw6yRSIaEeGpfan1LolpQd4PVQ
-	 sG+K5Wo74qFCIDrq0/317aJaglxzab
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+78d5b129a762182225aa@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [sound?] [usb?] UBSAN: shift-out-of-bounds in parse_audio_unit
-Date: Tue, 16 Jul 2024 18:20:45 +0800
-X-OQ-MSGID: <20240716102044.1434498-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000000adac5061d3c7355@google.com>
-References: <0000000000000adac5061d3c7355@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqyuFhOD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E84AC116B1;
+	Tue, 16 Jul 2024 10:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721125808;
+	bh=QysKPyiFau2fw2f0p+pSgBtnoBOL8OjYbm8noFYeFeY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rqyuFhODQa3Qr5Fjyld3vuMaw73GnEGfh7LiSlIU39EKJ6H6OuvH7DpkPRCVmIO2D
+	 fnSFR9X3Zd3yFE7NAMVIM+2zmmZsGd1KsjQp6yCBL3xqSVCTEDihI/N5+A7RUF6s3+
+	 uEnXbXRkSpNlv8ngsrYtTQ1gXPRYCPKIAc+DnsxuVrWdRPgV4xz+ArhaF4bXvuOjLY
+	 bv5phdTOyK3wSd0wgm8N3BrCTJappg15Km3/XMLexZn8BOqN3HVoD5UUo/CpPrjCwT
+	 6ZBAL7iRhgoDMIjI1yqvEGsLJELRBHmbW7ay/1NLHoCAK/tyaYw4EyEV26WZuuZRhk
+	 Lrq9p3Bow9nCw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sTfRd-00ClkI-MZ;
+	Tue, 16 Jul 2024 11:30:05 +0100
+Date: Tue, 16 Jul 2024 11:30:05 +0100
+Message-ID: <86r0bt39zm.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	anna-maria@linutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	festevam@gmail.com,
+	bhelgaas@google.com,
+	rdunlap@infradead.org,
+	vidyas@nvidia.com,
+	ilpo.jarvinen@linux.intel.com,
+	apatel@ventanamicro.com,
+	kevin.tian@intel.com,
+	nipun.gupta@amd.com,
+	den@valinux.co.jp,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	alex.williamson@redhat.com,
+	will@kernel.org,
+	lorenzo.pieralisi@arm.com,
+	jgg@mellanox.com,
+	ammarfaizi2@gnuweeb.org,
+	robin.murphy@arm.com,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	kristo@kernel.org,
+	vkoul@kernel.org,
+	okaya@kernel.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	mark.rutland@arm.com,
+	shameerali.kolothum.thodi@huawei.com,
+	yuzenghui@huawei.com,
+	shivamurthy.shastri@linutronix.de
+Subject: Re: [patch V4 00/21] genirq, irqchip: Convert ARM MSI handling to per device MSI domains
+In-Reply-To: <ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
+References: <20240623142137.448898081@linutronix.de>
+	<ZpUFl4uMCT8YwkUE@hovoldconsulting.com>
+	<878qy26cd6.wl-maz@kernel.org>
+	<ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com, shivamurthy.shastri@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-csize is 0 ?
+On Mon, 15 Jul 2024 15:10:01 +0100,
+Johan Hovold <johan@kernel.org> wrote:
+> 
+> On Mon, Jul 15, 2024 at 01:58:13PM +0100, Marc Zyngier wrote:
+> > On Mon, 15 Jul 2024 12:18:47 +0100,
+> > Johan Hovold <johan@kernel.org> wrote:
+> > > On Sun, Jun 23, 2024 at 05:18:31PM +0200, Thomas Gleixner wrote:
+> > > > This is version 4 of the series to convert ARM MSI handling over to
+> > > > per device MSI domains.
+> 
+> > > This series only showed up in linux-next last Friday and broke interrupt
+> > > handling on Qualcomm platforms like sc8280xp (e.g. Lenovo ThinkPad X13s)
+> > > and x1e80100 that use the GIC ITS for PCIe MSIs.
+> > > 
+> > > I've applied the series (21 commits from linux-next) on top of 6.10 and
+> > > can confirm that the breakage is caused by commits:
+> > > 
+> > > 	3d1c927c08fc ("irqchip/gic-v3-its: Switch platform MSI to MSI parent")
+> > > 	233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
+> > > 
+> > > Applying the series up until the change before 3d1c927c08fc unbreaks the
+> > > wifi on one machine:
+> > > 
+> > > 	ath11k_pci 0006:01:00.0: failed to enable msi: -22
+> > > 	ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -22
+> > >
+> > > and backing up until the commit before 233db05bc37f makes the NVMe come
+> > > up again during boot on another.
+> > > 
+> > > I have not tried to debug this further.
+> > 
+> > I need a few things from you though, because you're not giving much to
+> > help you (and I'm travelling, which doesn't help).
+> 
+> Yeah, this was just an early heads up.
+> 
+> > Can you at least investigate what in ath11k_pci_alloc_msi() causes the
+> > wifi driver to be upset? Does it normally use a single MSI vector or
+> > MSI-X? How about your nVME device?
+> 
+> It uses multiple vectors, but now it falls back to trying to allocate a
+> single one and even that fails with -ENOSPC:
+> 
+> 	ath11k_pci 0006:01:00.0: ath11k_pci_alloc_msi - requesting one vector failed: -28
+> 
+> Similar for the NVMe, it uses multiple vectors normally, but now only
+> the AER interrupts appears to be allocated for each controller and there
+> is a GICv3 interrupt for the NVMe:
+> 
+> 208:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
+> 212:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
+> 214:        161          0          0          0          0          0          0          0     GICv3 562 Level     nvme0q0, nvme0q1
+> 215:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
+>
 
-#syz test: upstream a19ea421490d
+That's an indication of the driver having failed its MSI allocation
+and gone back to INTx signalling.
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 409fc1164694..8e596af23bee 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1999,6 +1999,9 @@ static int parse_audio_feature_unit(struct mixer_build *state, int unitid,
- 
- 	if (state->mixer->protocol == UAC_VERSION_1) {
- 		csize = hdr->bControlSize;
-+		printk("c: %d, bLen: %d, %d, \n", channels, hdr->bLength, csize, __func__);
-+		if (hdr->bLength < 7 || csize < 1)
-+			return -EINVAL;
- 		channels = (hdr->bLength - 7) / csize - 1;
- 		bmaControls = hdr->bmaControls;
- 	} else if (state->mixer->protocol == UAC_VERSION_2) {
+> Next boot, after disabling PCIe controller async probing, it's an MSI-X?!:
+> 
+> 201:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
+> 203:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
+> 205:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
+> 206:          0          0          0          0          0          0          0          0  ITS-PCI-MSIX-0002:01:00.0   0 Edge      nvme0q0
+>
 
+So is this issue actually tied to the async probing? Does it always
+work if you disable it?
+
+> This time ath11k vector allocation succeeded, but the driver times out
+> eventually:
+> 
+> [    8.984619] ath11k_pci 0006:01:00.0: MSI vectors: 32
+> [   29.690841] ath11k_pci 0006:01:00.0: failed to power up mhi: -110
+> [   29.697136] ath11k_pci 0006:01:00.0: failed to start mhi: -110
+> [   29.703153] ath11k_pci 0006:01:00.0: failed to power up :-110
+> [   29.732144] ath11k_pci 0006:01:00.0: failed to create soc core: -110
+> [   29.738694] ath11k_pci 0006:01:00.0: failed to init core: -110
+> [   32.841758] ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -110
+> 
+> > It would also help if you could define the DEBUG symbol at the very
+> > top of irq-gic-v3-its.c and report the debug information that the ITS
+> > driver dumps.
+> 
+> See below (with synchronous probing of the pcie controllers).
+
+I don't see much going wrong there, and the ITS driver correctly
+dishes out interrupts. I'll take the current -next for a ride on my
+own HW and see what happens.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
