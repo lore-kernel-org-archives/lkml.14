@@ -1,108 +1,171 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19761DDCE;
-	Tue, 16 Jul 2024 16:14:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EFD47A5D;
+	Tue, 16 Jul 2024 16:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721146453; cv=none; b=rnCRzcou0vW+DYkrSlHvlObCmtYUUD90TYgh0JMXJHTIKhhfx76kJDVLcsxI7LqO1EeH0Bkzhw6jP3D0tU9veJZJSMxJNou+5CTQgV/vZ0LJXY6RgMpB+/NMyUA51h4DDK5SLBj4x/xB/y9sn/5ULTIdGeYqlAihG637ynGYBo8=
+	t=1721146512; cv=none; b=YKjAHjql38DDXWzFzctSuqyX4nzKG9mgt9HAodF1fm2S8JvGkLQxIbPfZfz6SX9jVqUNweP2bgE12ElTWoYDgu/b+BDy2QgNCNs/b4VJOh0jjnYu5DXU9arBHKKxp86xM8qcOQj/MDOEjgkIBY7PzcB4kKvUy/3Rh0LbeN5aCI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721146453; c=relaxed/simple;
-	bh=pT5RpY9lauBmkOcsYuu4tTe9R4Aa3/4UfpKQYu5QfdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kv76DvoZlEvm5EIxflvo+BMFYN0RoS6oP/anCXzmvFI3x4iVdXsUlFlNKFa2GFYJWNzJWKToSOcCveByU6/R5ku3QIKYaFYqzJdfqAKHIsfjukAOy5q/XpQ9I7NFyucj3ZFdHy4DbZ7nnW8/OCiqO+jnIzm6Bg/MXLF4TTMmAPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjGeDT12; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721146512; c=relaxed/simple;
+	bh=xVoIA/hZZjTnIxgzUKxyW47Uq6kbP2T9RxSH+7zEYBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlO0pnUPKoW6T/BIdkwYbvLWCciRyBhXuqDcH0PNmxSBkuc5DP7Tg1+9DCs9atn7ubg1E2AQimrh6WLdy+ZMrKOOT5Tfcx7Cw7GrZDOQN3PTA4aUh3iIm+GqQ57PQaPahCWrMKcyhWkYgeMMkA5YF55gKGXCUn0VT7IRB35aLO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ckFqTloY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjGeDT12"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FDDC116B1;
-	Tue, 16 Jul 2024 16:14:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ckFqTloY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34458C4AF0B;
+	Tue, 16 Jul 2024 16:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721146452;
-	bh=pT5RpY9lauBmkOcsYuu4tTe9R4Aa3/4UfpKQYu5QfdM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EjGeDT12OdyyFi9IlXe3uM2QetKY/wnkWrKXyDdvQ0W1c/WywruYIHYpE3QruBBjC
-	 Po61Bv5Vd2bGGyRFMnFsmHR4KlI+a2mEGALKBTf2sM+E0qfG5i/zAZFmBnZXfC+XyY
-	 xqoFJYb7srotfzcX2cgOvA2evNzhNUbmLLDK9R8qbV3s6FcTK0+b3mseKLQJmh1RKi
-	 NfLOWjGmafDEeF16IfFeZ6u6Z5Qlqw/uHyrzjv0QJAX93ZqTnSuIVZ3CsjuXlyHT2X
-	 asvcC122tKDWMuAup3XE+o5sNywc80GmOg2VTT1QNcerVtxbdFL1CInWQ7HW/Lv7Pb
-	 E1D77SEMf4ENg==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-integrity@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	stable@vger.kernel.org,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tpm: Fix alignment of buf->handles
-Date: Tue, 16 Jul 2024 19:13:46 +0300
-Message-ID: <20240716161348.99858-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	s=k20201202; t=1721146512;
+	bh=xVoIA/hZZjTnIxgzUKxyW47Uq6kbP2T9RxSH+7zEYBE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ckFqTloYfGO1uNi6YwoI7DX5QDWICLBrJxwQvmADy57TS35mJLdghheKG9ePvkEUJ
+	 d5x1TEykHudu9Y7zDowaJ8dWLcfVwbpnWwhv5PlKIYi6ySY83Pr53p1lnzV/xhi9Ip
+	 ubnkrUFQ52M5P87HxS04vOXS6utjCV/QefOrL0YErsNP64PfT7QEkT+CkEp0Y8BpXQ
+	 vNY+aVsSJTGktS0EFweKb4F2yU/ecQb2nsgjNcSEX++4ddLTdiNK4LFysvXj0oN/r3
+	 Kh+CwiAdez88VcdmFNLib8xow+6z2bjVHwIVFf5YLdyFC7TGLVn4PW9LRV3fZP5Ubx
+	 yxI5KLbAyje6g==
+Date: Tue, 16 Jul 2024 17:15:08 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: clocks: add binding for
+ voltage-controlled-oscillators
+Message-ID: <20240716-deceiving-saucy-851fb2303c1f@spud>
+References: <20240715110251.261844-1-heiko@sntech.de>
+ <20240715110251.261844-2-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="G8ATB5gbIqKT+Pmv"
+Content-Disposition: inline
+In-Reply-To: <20240715110251.261844-2-heiko@sntech.de>
 
-tpm_buf_append_name() has the following snippet in the beginning:
 
-	if (!tpm2_chip_auth(chip)) {
-		tpm_buf_append_u32(buf, handle);
-		/* count the number of handles in the upper bits of flags */
-		buf->handles++;
-		return;
-	}
+--G8ATB5gbIqKT+Pmv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The claim in the comment is wrong, and the comment is in the wrong place
-as it should not be anyway a concern of the "call site". So in essence
-it is lying about the code.
+On Mon, Jul 15, 2024 at 01:02:49PM +0200, Heiko Stuebner wrote:
+> In contrast to fixed clocks that are described as ungateable, boards
+> sometimes use additional oscillators for things like PCIe reference
+> clocks, that need actual supplies to get enabled and enable-gpios to be
+> toggled for them to work.
+>=20
+> This adds a binding for such oscillators that are not configurable
+> themself, but need to handle supplies for them to work.
+>=20
+> In schematics they often can be seen as
+>=20
+>          ----------------
+> Enable - | 100MHz,3.3V, | - VDD
+>          |    3225      |
+>    GND - |              | - OUT
+>          ----------------
+>=20
+> or similar. The enable pin might be separate but can also just be tied
+> to the vdd supply, hence it is optional in the binding.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  .../bindings/clock/voltage-oscillator.yaml    | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/voltage-oscil=
+lator.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/voltage-oscillator.y=
+aml b/Documentation/devicetree/bindings/clock/voltage-oscillator.yaml
+> new file mode 100644
+> index 0000000000000..8bff6b0fd582e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/voltage-oscillator.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/voltage-oscillator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Voltage controlled oscillator
 
-Fix the alignment to be aligned with the claim in the comment and remove
-the comment.
+Voltage controlled oscillator? Really? That sounds far too similar to a
+VCO to me, and the input voltage here (according to the description at
+least) does not affect the frequency of oscillation.
 
-Cc: stable@vger.kernel.org # v6.10+
-Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
- drivers/char/tpm/tpm2-sessions.c | 1 -
- include/linux/tpm.h              | 4 ++--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+Why the dedicated binding, rather than adding a supply and enable-gpio
+to the existing "fixed-clock" binding? I suspect that a large portion of
+"fixed-clock"s actually require a supply that is (effectively)
+always-on.
 
-diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
-index d3521aadd43e..02fc5d4ff535 100644
---- a/drivers/char/tpm/tpm2-sessions.c
-+++ b/drivers/char/tpm/tpm2-sessions.c
-@@ -238,7 +238,6 @@ void tpm_buf_append_name(struct tpm_chip *chip, struct tpm_buf *buf,
- 
- 	if (!tpm2_chip_auth(chip)) {
- 		tpm_buf_append_u32(buf, handle);
--		/* count the number of handles in the upper bits of flags */
- 		buf->handles++;
- 		return;
- 	}
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index e93ee8d936a9..4b55298520b5 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -374,10 +374,10 @@ enum tpm_buf_flags {
-  * A string buffer type for constructing TPM commands.
-  */
- struct tpm_buf {
--	u32 flags;
-+	u16 flags;
-+	u16 handles;
- 	u32 length;
- 	u8 *data;
--	u8 handles;
- };
- 
- enum tpm2_object_attributes {
--- 
-2.45.2
+Cheers,
+Conor.
 
+> +
+> +maintainers:
+> +  - Heiko Stuebner <heiko@sntech.de>
+> +
+> +properties:
+> +  compatible:
+> +    const: voltage-oscillator
+> +
+> +  "#clock-cells":
+> +    const: 0
+> +
+> +  clock-frequency: true
+> +
+> +  clock-output-names:
+> +    maxItems: 1
+> +
+> +  enable-gpios:
+> +    description:
+> +      Contains a single GPIO specifier for the GPIO that enables and dis=
+ables
+> +      the oscillator.
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: handle of the regulator that provides the supply voltage
+> +
+> +required:
+> +  - compatible
+> +  - "#clock-cells"
+> +  - clock-frequency
+> +  - vdd-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    voltage-oscillator {
+> +      compatible =3D "voltage-oscillator";
+> +      #clock-cells =3D <0>;
+> +      clock-frequency =3D <1000000000>;
+> +      vdd-supply =3D <&reg_vdd>;
+> +    };
+> +...
+> --=20
+> 2.39.2
+>=20
+
+--G8ATB5gbIqKT+Pmv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpacjAAKCRB4tDGHoIJi
+0qETAQDGaH3SBfzHPXQYUAVTiBQ/XIU3y1OlFEVoD2vuaqVeKAD/e904hzaE9/Z3
+xKoAg5ft4w3HfNOSbYMic53og10LmAI=
+=h/cC
+-----END PGP SIGNATURE-----
+
+--G8ATB5gbIqKT+Pmv--
