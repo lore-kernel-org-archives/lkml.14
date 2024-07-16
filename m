@@ -1,220 +1,197 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABC219E7D3
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 15:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1742C19DF94;
+	Tue, 16 Jul 2024 15:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721143133; cv=none; b=cJeMjKwchhPvk2O+AI+2ntlxHLZKZySR/jvB+6YA9Ar73FM1Hu/U9yqzRQPSeUyCoSgpI25Unh584AukrpgTrEBkkPeZQ5FTSzVTXWUq+H6uY8ZnHF1QKZOha9fVN2iJOsfzpcZL0lm6HVdSY5G0/qverXf59v0ii6vUmFPMr1g=
+	t=1721143143; cv=none; b=BcECQXWyvGZlOJ/ExR7sMR84clTrqiF1ZKBCyNzmhVWahu+fTsbWa+WBDSvEM9XjC2CzXMmN2zdkZCbyFE2srykBJEYraTHqjNGa4v5WXVsLFZro+yAEw9R/uWN7528qvRc/+mU4vpKA5r33bxgkKqQu0WSS0kl1e+QcZkr0SEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721143133; c=relaxed/simple;
-	bh=9Cy/3Y8kPlwgnsA87ATuYpWF26sXvnlcGY/yqfqbXSU=;
+	s=arc-20240116; t=1721143143; c=relaxed/simple;
+	bh=ew0DUC6MaE6u+UzFSNobyhXBsg3O1+ceZPDokVRCnHg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IWnR1khEbRuXcW5bhhlJ3qEo1OyiFORDI0T3JrcX8zSzQ7o89OhVcN8uCdXRL3Zu9iERdYjkIIxyieiKvqnGb3nnu/7b7IMSPdYOI+jdtKnF7A2PY6g0Y4UipcZJnacUl5X04bgjgLPC34fZnDGZPDeR56IUK94Cnr/YIEw1zJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KuM2abcJ; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=L4pGKpiLGbx4b7meD9D0pSB9bspUUc6sdiaA4e63VqijLpffwvwMCldGzVCrhmvDd4f5FDNgSczxQAY0vXrv+l7s/ElI3vyHIQONA2JnAC76DKg798KF9omqeCp/EHUKTyRL/Qj5Dy83OA6u6HOxiPap4VHmyMc4ME2DcDVzli4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZctcsBOp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KuM2abcJ"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-44e534a1fbeso317841cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721143131; x=1721747931; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WWVNrxbBHDXZu/jCvfJLl2ens68sOvgHXhZ1riQlav8=;
-        b=KuM2abcJKNu6Wu/Zo6y3Dila7DecYrbJ3Jt4gioQHFe2bftbtrqLfYEDx7ZvWclHS2
-         HY8POeFIzuln87aKfgkH39mcSevAbp2lvfj6gWOn0n+xO+RlHMjSfV1C6jF4w89pNtQr
-         6QttE9ehDZWnTJppIhMidRDOjxHwb7Hf3+IUzEn0E3AWoBclFHDTZ6BFMkoFe8yH8JhK
-         2sAVJWYu0HFyYerDwucdOrwouVmkCQCCj9q4M1LdV7oe/pvY1KsFZO0YomFMX9B/uUlS
-         kaNqwnZkhkKf7mBYUcm44e0sorNHWXg8mgDi5vaPxrsS45DcpgBlHTrUTBhdUYjQXn6A
-         c99A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721143131; x=1721747931;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WWVNrxbBHDXZu/jCvfJLl2ens68sOvgHXhZ1riQlav8=;
-        b=IjnCEcGpIiyhM6qOQitEyUUQl4khn8u8yS9nPqi64bjF+5SOOH1LgjBrDjmecq5Y/H
-         /3lp45hJKWc0TkCdFnmQKStrKRmwNx/JayVm0L6x8zvkDkWjClZZHoMBfJ0tHLe7/7Tm
-         WSVtFbFEBj00Ny/SsvT3jYZ848rxHVx9EyzPNf2NtFZpsAK34J8hLcpUm5yjoRxNGeTB
-         2aZtFpEmt2jMbBd/UgtoWrYykur+xKI3Cc1V943mXy9R70tXUAMnFbsUtSDJIv8QZeiH
-         jcRVoR48DVV0lGcVzLsfNr32IQkApRQrJwIxyab5W8+TkZeYrd6TcpqfH9g/bThTAZWb
-         ouLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/U3hU8xO4R1KxILdPiwG2NfcEoqs4sSbUpxqxc4KHzMDCQ7S/BVsrqBvwktVPV0CdwdVNQ/LoSAdbYRCkZ4dp56zWhORdn8MWkP73
-X-Gm-Message-State: AOJu0YzTzGpSsqyBDy2h896Td1kkj/cg4uI9lhS6TRO2yulwsbZkSzil
-	zGtZPoWMeshyOsJTsoBcpzKeBnC1TgOuv25kddxKmEqMr9hLYs+2a3xJ+mcq9eOMEgB/iavX0cA
-	Sh+URrx5PLbVLHUM5whbaDg8k/uKeSKDtb+vZ
-X-Google-Smtp-Source: AGHT+IHWbKj34zsRyLKiBWqdmFyKlDq6Wr5+2Wdecg/ZG3HyZU7BuDsfvRbU1vyabej6wFPdLE9jOxxXXzqK9dZsCJU=
-X-Received: by 2002:a05:622a:997:b0:444:dc22:fb1d with SMTP id
- d75a77b69052e-44f7a64c7e0mr3638781cf.12.1721143130336; Tue, 16 Jul 2024
- 08:18:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZctcsBOp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A650CC4AF0E;
+	Tue, 16 Jul 2024 15:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721143142;
+	bh=ew0DUC6MaE6u+UzFSNobyhXBsg3O1+ceZPDokVRCnHg=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZctcsBOpv9ofocppDrZbIZjm9QjwtfppEiQeQjnUxPVOxxlPdbAAxQUKbrgu1FegS
+	 sF7+igEC7p2D+fg3+EVOSY6SiTGYlDN/44CazelzbxFsm2iULk74LTivVqKUDTjepX
+	 87ulq96XX+LiBGaXb0pC1UE6RX9YuCtaH7Yd/Y9/YkkCiAUq9wME3O8GyvrQ9W2vMr
+	 7DPoPxMQaIyKZL5Y8/j5ozndJfDJGSnV0N/AoA5sPmFoqf6BpNPniyIEx9M/ShFbKH
+	 fOoMusfuDz2aRUiJF5VfhAIMQxcbNYjDxXLfGZaDE+d4AmS1ZYftuRFlQtYx3BMAOv
+	 WMv9Xe5npAZZg==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2eecd2c6432so79900371fa.3;
+        Tue, 16 Jul 2024 08:19:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdC/xWu81zf4mVLnPVHAb1FvfVZjx9YFFwGrHspFrXTrwmOEajR12SOX78e0AHtz13QVe6mFFhKGSlRE/NSYEPMy+hY/DvqMUIXCXhpcGrpG9UYxfl/lGrgnahsyf30RbpZY73HShawpNroQq0yw6Xq5asOTUJtMN/O9iovOvpzmq66/GAFA==
+X-Gm-Message-State: AOJu0YzBJyPJMVQzYcMqoVXiwVK1t9ZS4onnooNkfSD0M/prD8DyXotm
+	eyaJi5Vq/9b98dgFpGkEljXJ3rwsOOqOBpW3Xeeq7bq+xqYLre0RzkQ7yHuSiK6v4N+KRgYhp5z
+	WrLPuFnPpNIv+C+jZXRRJwTD1qNQ=
+X-Google-Smtp-Source: AGHT+IGgTQNktVxwYAstssWzXF6vbd4odzQf/DxzVb3yYZx/iVdhb5gYCoqcMNPEIUfZAHP/M7KxAYXUu95sg+jO0hM=
+X-Received: by 2002:a2e:b615:0:b0:2ec:6756:e3e7 with SMTP id
+ 38308e7fff4ca-2eef41e9ce5mr21397391fa.40.1721143140917; Tue, 16 Jul 2024
+ 08:19:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708.quoe8aeSaeRi@digikod.net> <CALmYWFuVJiRZgB0ye9eR95dvBOigoOVShgS9i_ESjEre-H5pLA@mail.gmail.com>
- <ef3281ad-48a5-4316-b433-af285806540d@python.org> <CALmYWFuFE=V7sGp0_K+2Vuk6F0chzhJY88CP1CAE9jtd=rqcoQ@mail.gmail.com>
- <20240709.aech3geeMoh0@digikod.net> <CALmYWFuOXAiT05Pi2rZ1nUAKDGe9JyTH7fro2EYS1fh3zeGV5Q@mail.gmail.com>
- <20240710.eiKohpa4Phai@digikod.net> <202407100921.687BE1A6@keescook>
- <20240711.sequuGhee0th@digikod.net> <CALmYWFt7X0v8k1N9=aX6BuT2gCiC9SeWwPEBckvBk8GQtb0rqQ@mail.gmail.com>
- <20240716.Zah8Phaiphae@digikod.net>
-In-Reply-To: <20240716.Zah8Phaiphae@digikod.net>
-From: Jeff Xu <jeffxu@google.com>
-Date: Tue, 16 Jul 2024 08:18:09 -0700
-Message-ID: <CALmYWFu=kdsxZwj-U5yqCUXrhvzxWCt1YjuJv0eAAaAyGFbxFQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v19 2/5] security: Add new SHOULD_EXEC_CHECK and
- SHOULD_EXEC_RESTRICT securebits
-To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: Kees Cook <kees@kernel.org>, Steve Dower <steve.dower@python.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Paul Moore <paul@paul-moore.com>, 
-	"Theodore Ts'o" <tytso@mit.edu>, Alejandro Colomar <alx@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Christian Heimes <christian@python.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	Eric Biggers <ebiggers@kernel.org>, Eric Chiang <ericchiang@google.com>, 
-	Fan Wu <wufan@linux.microsoft.com>, Florian Weimer <fweimer@redhat.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, James Morris <jamorris@linux.microsoft.com>, 
-	Jan Kara <jack@suse.cz>, Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jordan R Abrahams <ajordanr@google.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
-	Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Scott Shell <scottsh@microsoft.com>, 
-	Shuah Khan <shuah@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Steve Grubb <sgrubb@redhat.com>, 
-	Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, 
-	Vincent Strubel <vincent.strubel@ssi.gouv.fr>, Xiaoming Ni <nixiaoming@huawei.com>, 
-	Yin Fengwei <fengwei.yin@intel.com>, kernel-hardening@lists.openwall.com, 
-	linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
+References: <cover.1720969799.git.daniel@makrotopia.org> <ZpZ1RSSYaLo45kUI@makrotopia.org>
+ <1874451.yxlQQexqVa@bagend> <6779787.ZJYUc1KeCW@bagend>
+In-Reply-To: <6779787.ZJYUc1KeCW@bagend>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Tue, 16 Jul 2024 23:18:48 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67zxs03xScN8OfWXR1gf8tddJciXrjw3FQZcL7pR3ocxA@mail.gmail.com>
+Message-ID: <CAGb2v67zxs03xScN8OfWXR1gf8tddJciXrjw3FQZcL7pR3ocxA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] hwrng: add hwrng support for Rockchip RK3568
+To: Diederik de Haas <didi.debian@cknow.org>
+Cc: Daniel Golle <daniel@makrotopia.org>, linux-rockchip@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Martin Kaiser <martin@kaiser.cx>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@debian.org>, 
+	devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Olivia Mackall <olivia@selenic.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
+	Aurelien Jarno <aurelien@aurel32.net>, Heiko Stuebner <heiko@sntech.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 16, 2024 at 8:15=E2=80=AFAM Micka=C3=ABl Sala=C3=BCn <mic@digik=
-od.net> wrote:
+On Tue, Jul 16, 2024 at 10:13=E2=80=AFPM Diederik de Haas <didi.debian@ckno=
+w.org> wrote:
 >
-> On Tue, Jul 16, 2024 at 08:02:37AM -0700, Jeff Xu wrote:
-> > On Thu, Jul 11, 2024 at 1:57=E2=80=AFAM Micka=C3=ABl Sala=C3=BCn <mic@d=
-igikod.net> wrote:
-> > >
-> > > On Wed, Jul 10, 2024 at 09:26:14AM -0700, Kees Cook wrote:
-> > > > On Wed, Jul 10, 2024 at 11:58:25AM +0200, Micka=C3=ABl Sala=C3=BCn =
-wrote:
-> > > > > Here is another proposal:
-> > > > >
-> > > > > We can change a bit the semantic by making it the norm to always =
-check
-> > > > > file executability with AT_CHECK, and using the securebits to res=
-trict
-> > > > > file interpretation and/or command injection (e.g. user supplied =
-shell
-> > > > > commands).  Non-executable checked files can be reported/logged a=
-t the
-> > > > > kernel level, with audit, configured by sysadmins.
-> > > > >
-> > > > > New securebits (feel free to propose better names):
-> > > > >
-> > > > > - SECBIT_EXEC_RESTRICT_FILE: requires AT_CHECK to pass.
-> > > >
-> > > > Would you want the enforcement of this bit done by userspace or the
-> > > > kernel?
-> > > >
-> > > > IIUC, userspace would always perform AT_CHECK regardless of
-> > > > SECBIT_EXEC_RESTRICT_FILE, and then which would happen?
-> > > >
-> > > > 1) userspace would ignore errors from AT_CHECK when
-> > > >    SECBIT_EXEC_RESTRICT_FILE is unset
-> > >
-> > > Yes, that's the idea.
-> > >
-> > > >
-> > > > or
-> > > >
-> > > > 2) kernel would allow all AT_CHECK when SECBIT_EXEC_RESTRICT_FILE i=
-s
-> > > >    unset
-> > > >
-> > > > I suspect 1 is best and what you intend, given that
-> > > > SECBIT_EXEC_DENY_INTERACTIVE can only be enforced by userspace.
-> > >
-> > > Indeed. We don't want AT_CHECK's behavior to change according to
-> > > securebits.
-> > >
-> > One bit is good.
+> On Tuesday, 16 July 2024 15:59:40 CEST Diederik de Haas wrote:
+> > For shits and giggles, I tried it on my PineTab2 too (also rk3566):
 > >
-> > > >
-> > > > > - SECBIT_EXEC_DENY_INTERACTIVE: deny any command injection via
-> > > > >   command line arguments, environment variables, or configuration=
- files.
-> > > > >   This should be ignored by dynamic linkers.  We could also have =
-an
-> > > > >   allow-list of shells for which this bit is not set, managed by =
-an
-> > > > >   LSM's policy, if the native securebits scoping approach is not =
-enough.
-> > > > >
-> > > > > Different modes for script interpreters:
-> > > > >
-> > > > > 1. RESTRICT_FILE=3D0 DENY_INTERACTIVE=3D0 (default)
-> > > > >    Always interpret scripts, and allow arbitrary user commands.
-> > > > >    =3D> No threat, everyone and everything is trusted, but we can=
- get
-> > > > >    ahead of potential issues with logs to prepare for a migration=
- to a
-> > > > >    restrictive mode.
-> > > > >
-> > > > > 2. RESTRICT_FILE=3D1 DENY_INTERACTIVE=3D0
-> > > > >    Deny script interpretation if they are not executable, and all=
-ow
-> > > > >    arbitrary user commands.
-> > > > >    =3D> Threat: (potential) malicious scripts run by trusted (and=
- not
-> > > > >       fooled) users.  That could protect against unintended scrip=
-t
-> > > > >       executions (e.g. sh /tmp/*.sh).
-> > > > >    =3D=3D> Makes sense for (semi-restricted) user sessions.
-> > > > >
-> > > > > 3. RESTRICT_FILE=3D1 DENY_INTERACTIVE=3D1
-> > > > >    Deny script interpretation if they are not executable, and als=
-o deny
-> > > > >    any arbitrary user commands.
-> > > > >    =3D> Threat: malicious scripts run by untrusted users.
-> > > > >    =3D=3D> Makes sense for system services executing scripts.
-> > > > >
-> > > > > 4. RESTRICT_FILE=3D0 DENY_INTERACTIVE=3D1
-> > > > >    Always interpret scripts, but deny arbitrary user commands.
-> > > > >    =3D> Goal: monitor/measure/assess script content (e.g. with IM=
-A/EVM) in
-> > > > >       a system where the access rights are not (yet) ready.  Arbi=
-trary
-> > > > >       user commands would be much more difficult to monitor.
-> > > > >    =3D=3D> First step of restricting system services that should =
-not
-> > > > >        directly pass arbitrary commands to shells.
-> > > >
-> > > > I like these bits!
-> > >
-> > > Good! Jeff, Steve, Florian, Matt, others, what do you think?
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > root@pinetab2:~# uname -a
+> > Linux pinetab2 6.10+unreleased-arm64 #1 SMP Debian 6.10-1~cknow (2024-0=
+4-24)
+> > aarch64 GNU/Linux
 > >
-> > For below two cases: will they be restricted by one (or some) mode abov=
-e ?
+> > root@pinetab2:~# dd if=3D/dev/hwrng bs=3D100000 count=3D1 > /dev/null
+> > 1+0 records in
+> > 1+0 records out
+> > 100000 bytes (100 kB, 98 KiB) copied, 5,69533 s, 17,6 kB/s
 > >
-> > 1> cat /tmp/a.sh | sh
+> > root@plebian-pinetab2:~# cat /dev/hwrng | rngtest -c 1000
+> > rngtest 5
+> > Copyright (c) 2004 by Henrique de Moraes Holschuh
+> > This is free software; see the source for copying conditions.
+> > There is NO warranty; not even for MERCHANTABILITY or
+> > FITNESS FOR A PARTICULAR PURPOSE.
 > >
-> > 2> sh -c "$(cat /tmp/a.sh)"
+> > rngtest: starting FIPS tests...
+> > rngtest: bits received from input: 20000032
+> > rngtest: FIPS 140-2 successes: 730
+> > rngtest: FIPS 140-2 failures: 270
+> > rngtest: FIPS 140-2(2001-10-10) Monobit: 266
+> > rngtest: FIPS 140-2(2001-10-10) Poker: 23
+> > rngtest: FIPS 140-2(2001-10-10) Runs: 9
+> > rngtest: FIPS 140-2(2001-10-10) Long run: 0
+> > rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+> > rngtest: input channel speed: (min=3D2.615; avg=3D137.889;
+> > max=3D9765625.000)Kibits/s rngtest: FIPS tests speed: (min=3D24.643;
+> > avg=3D34.518; max=3D68.364)Mibits/s rngtest: Program run time: 14967433=
+6
+> > microseconds
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > That's looking quite a lot better ... and I have no idea why.
+> >
+> > The Q64-A is used as headless server and the PineTab2 is not,
+> > but I connected to both over SSH and they were freshly booted
+> > into, thus I haven't actually/normally used the PT2 since boot.
 >
-> Yes, DENY_INTERACTIVE=3D1 is to deny both of these cases (i.e. arbitrary
-> user command).
+> I did freshly install rng-tools5 package before running the test, so
+> I rebooted again to make sure that wasn't a factor:
 >
-> These other examples should be allowed with AT_CHECK and RESTRICT_FILE=3D=
-1
-> if a.sh is executable though:
-> * sh /tmp/a.sh
-> * sh < /tmp/a.sh
-That looks good. Thanks for clarifying.
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> root@pinetab2:~# cat /dev/hwrng | rngtest -c 1000
+> rngtest 5
+> ...
+>
+> rngtest: starting FIPS tests...
+> rngtest: bits received from input: 20000032
+> rngtest: FIPS 140-2 successes: 704
+> rngtest: FIPS 140-2 failures: 296
+> rngtest: FIPS 140-2(2001-10-10) Monobit: 293
+> rngtest: FIPS 140-2(2001-10-10) Poker: 32
+> rngtest: FIPS 140-2(2001-10-10) Runs: 10
+> rngtest: FIPS 140-2(2001-10-10) Long run: 0
+> rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+> rngtest: input channel speed: (min=3D2.612; avg=3D137.833; max=3D9765625.=
+000)Kibits/s
+> rngtest: FIPS tests speed: (min=3D24.391; avg=3D34.416; max=3D68.364)Mibi=
+ts/s
+> rngtest: Program run time: 149736205 microseconds
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> So that 704/296 vs 730/270 in the previous run on the PT2.
+>
+> In case it helps:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> root@quartz64a:~# grep . /sys/devices/virtual/misc/hw_random/rng_*
+> /sys/devices/virtual/misc/hw_random/rng_available:rockchip-rng
+> /sys/devices/virtual/misc/hw_random/rng_current:rockchip-rng
+> /sys/devices/virtual/misc/hw_random/rng_quality:900
+> /sys/devices/virtual/misc/hw_random/rng_selected:0
+>
+> root@pinetab2:~# grep . /sys/devices/virtual/misc/hw_random/rng_*
+> /sys/devices/virtual/misc/hw_random/rng_available:rockchip-rng
+> /sys/devices/virtual/misc/hw_random/rng_current:rockchip-rng
+> /sys/devices/virtual/misc/hw_random/rng_quality:900
+> /sys/devices/virtual/misc/hw_random/rng_selected:0
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+On my Rock 3A:
+
+wens@rock-3a:~$ sudo cat /dev/hwrng | rngtest -c 1000
+rngtest 5
+Copyright (c) 2004 by Henrique de Moraes Holschuh
+This is free software; see the source for copying conditions.  There
+is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
+
+rngtest: starting FIPS tests...
+rngtest: bits received from input: 20000032
+rngtest: FIPS 140-2 successes: 992
+rngtest: FIPS 140-2 failures: 8
+rngtest: FIPS 140-2(2001-10-10) Monobit: 7
+rngtest: FIPS 140-2(2001-10-10) Poker: 0
+rngtest: FIPS 140-2(2001-10-10) Runs: 0
+rngtest: FIPS 140-2(2001-10-10) Long run: 1
+rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+rngtest: input channel speed: (min=3D2.658; avg=3D140.067; max=3D9765625.00=
+0)Kibits/s
+rngtest: FIPS tests speed: (min=3D26.751; avg=3D34.901; max=3D65.320)Mibits=
+/s
+rngtest: Program run time: 147367594 microseconds
+
+wens@rock-3a:~$ uname -a
+Linux rock-3a 6.10.0-rc7-next-20240712-12899-g7df602fe7c8b #9 SMP Mon
+Jul 15 00:39:32 CST 2024 aarch64 GNU/Linux
+
+
+ChenYu
