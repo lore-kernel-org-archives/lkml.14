@@ -1,105 +1,113 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mail.flokli.de (mail.flokli.de [116.203.226.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CF138F86;
-	Tue, 16 Jul 2024 17:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA071EA73;
+	Tue, 16 Jul 2024 17:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.226.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721149588; cv=none; b=Aay+4INVRY3TqLdfGCejP+qnKdlZin65rBGG35/szB6lc5ZVYgBjr3ABKhUt7v53JUf1ztly0XRJF3ClAw7fVjhkYDaQFr4kkAxikmI+1M24vwKgnfjqnFkoKpc40Gpvyms9kUUcDVyZDmsoESJOJIm/4zpZHuchlWHcdSHdhBg=
+	t=1721149730; cv=none; b=gR7OhrnHiLPt9OLZwX4JmMoKEkiC60ZPtmcfhqVbfp4gSb/05CcG0e5n3KU9zkiY/xPoLCImI2Prl8SD3j6p6hapBrjJkHUrtIFxvPrF7+HRpgvZx8cc3dE0BQKoBMSyS+Kfzd48+K45bJXxOFUUCoNf5XoXiYpXD0JCkL427Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721149588; c=relaxed/simple;
-	bh=CTFLJ1tFOpCdo6Z+uUOeq2NaqEQdFeHdHEFbaGqKoXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=riPAzWr7KY9SFbt8rkARG3sugRUtX8GIKlJgmy+/I1vjLJOMi75t4qYz9GMk1dT+raux/EdkV2swAiH9oFQCUMawOD3UQ7XdSCFt2j0mgiiBPzZhEXs27rKCnEqhqEYXzcqf797D9BRQh9IXsAQFDgKHcj30q+QqfbTrFNjFhZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=u02CQzIM; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1721149730; c=relaxed/simple;
+	bh=h7kKCNdk43w+QMG4h6pNVZd+omA7jhs93zn09x9ChDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FkMqbVspS4uFKg7dHZQ+X2zAQSwJkbErY8RCGRp8NNkBG9Jv3E6zyWzQrD3TSIhMsr1HaNxD46tZ1uUCvoubhyL233pLBx7Uo9koC8HmyX0PvxMCeeD0WwJScAqlm2dzB/z9rkRTuRl3q7V16P8RfQb/XKbEcu15v5t7AyPxvAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=flokli.de; spf=pass smtp.mailfrom=flokli.de; dkim=pass (1024-bit key) header.d=flokli.de header.i=@flokli.de header.b=PT7Kf8VC; arc=none smtp.client-ip=116.203.226.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=flokli.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flokli.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="u02CQzIM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1721149571; x=1721754371; i=markus.elfring@web.de;
-	bh=WI2HQO09kTzqMlteA5rHfvcpuDHcyI2lVAEZTKhhHMY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=u02CQzIMH45HPETAUci9UtBD1e2BTOdfqnrSnn+RcvfWZdSVfrfy/U4m8LiYlXQs
-	 I7CWZxtrr4LeCbITqEvLE2t2OJAa21QOKWs92Y8GTTkIc++Ik2GDyVrejEE8E2BW/
-	 wTJgIf9RCF5hLHfGBZCfuVOotvxp3M5g4Fo/v8vbsHzKxfb8sQQwF55d1+VhJrsE9
-	 UjovZ0GGDmrhyy7Cbb6tdlixQWMySv5Kbx5BNCowq04QUC44svBVEdXqFuyW3XF4M
-	 eeMBEe8teit4hYWP4n+6hh4S/CLvEpD6Nv2zbcYAN24z1MRDIYAUyP/T02VdoHAtQ
-	 JAWk44L+cvydP6Z8Gw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MCogm-1scX4N0qsy-005vFu; Tue, 16
- Jul 2024 19:06:11 +0200
-Message-ID: <a1b7f067-efa9-4550-8351-8923a71826fa@web.de>
-Date: Tue, 16 Jul 2024 19:06:06 +0200
+	dkim=pass (1024-bit key) header.d=flokli.de header.i=@flokli.de header.b="PT7Kf8VC"
+Date: Tue, 16 Jul 2024 20:08:37 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flokli.de; s=mail;
+	t=1721149722; bh=ClT5J3qEB3l5vqp4gFIvpy3dUCKPnJBTvHNkjzG2X3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=PT7Kf8VC0+EgdBdvkaoIDp1Hinl4vijD3H8AFIMKKaEeEpPRPlOsKThWLxAxlkRfg
+	 SWNO1OhKf0VJ4zMZ1cxDkzR3fB1riuJFuEIoNR7lSFn58P7VEzi0gQbPcMRAGPciex
+	 3OeGuOVT1CtaCmZYgzz/CR3oGUYBZWQMLxwD1E6c=
+From: Florian Klink <flokli@flokli.de>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: bcm283x: Fix hdmi hpd-gpio pin
+Message-ID: <5pgipwi7ckrjxec7yzqxnvnoggjsnvhb2mtcq5hcwanhp6t5tt@z4s6ouppd2vz>
+References: <20240715230311.685641-1-flokli@flokli.de>
+ <f178aa92-d91c-406d-9fea-1021bfb99f55@gmail.com>
+ <e3872f3a-9736-4507-bbd3-2ad7698562b4@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: latencytop: Use seq_putc() in lstats_show()
-To: Joel Granados <j.granados@samsung.com>, kernel-janitors@vger.kernel.org,
- cocci@inria.fr
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Arjan van de Ven <arjan@linux.intel.com>
-References: <CGME20240714100031eucas1p16b701d3e5852ccb40305a73bdb2a2759@eucas1p1.samsung.com>
- <19c77c4d-7f81-4980-a124-d6a8e14675d9@web.de>
- <20240716154520.vtlqv4jxlihy2h7r@joelS2.panther.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240716154520.vtlqv4jxlihy2h7r@joelS2.panther.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WyOQD+X28tCW/Qvf/kz9Vcqc4NhLzMy2C6g9lKCntQYd/eB80w1
- Xn8r1xtVsBUAbkejg3ujC0EMUq+5695j3IXVujwrVsncQfFrw9eqMIpKM46Q3Gy1rwH17KQ
- aBbbOc9pQA9QeGK1X1Ct8uf5TF3pSFDSN+udZeuVtfhmu1cZPA16P+RxOacwDn1jRlqTygP
- vh/mIOrGJEoMUkkmGgHaQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:W6zPfW2N2Xs=;5msfO3uVbffYFwXCu2wubJVgo/4
- ohjGFfS3vsqUfN2/Icw6YZLcVlMumvDAtwaCQALWzFoqPCQoqrLlzoDJJeZL0qdbl2osHBILZ
- G4+uuBw6gVNBEvS223mcNAjMjgCv5/Wcxlf6k0fkJ+/41lv6AmALk/I7D3IjCQShuctYlLw7o
- InYZ+z7nSm2TphoTBHDFnAievoE8piDVChC9p0nzfAbDcMtvrDr87danEs1cyBs3+jY9TvISa
- NQbLRJpW3NxsIsssGAdAKRRZAzqAAVE+lNh+facbo2+vYy4DAikyHVSUeDforurd5vivN9CUK
- Md1edlpwZLJEIQbb6YQwkVjpMldOgi31/yGB8mW9RY3i6G6nULP0HGKOwICegu20gOPoHdv4f
- A9M69nv1n7fQOeeKlCV0lZzHZhRaipgpQqelEjYe63xMtLnJF+2kKy1uT8cG6DgB0zzgxuKF2
- k03rNeuu2GkyTbx9XkiqgkICz+X5U3Ad8YrK6pVtryLYqDnI0ohP0ckmk5xGbMrqDcHQDlNAC
- UZsh+/zj2EwogMtkoW6PyAyqiOPo5HCyFY+inzpq8jUTEBboM7rhW5evtbrWKQ1lE+SSIKUao
- 7SPk6JjzgIwv/G3fv4TBLfPlQfXSz0QEghOklxx/5A/1tCZAwlI+yHy8y+OvrkDBdLWLALEd9
- WvBUe8dWcD9NgGhYajXga9wVDsc3K1N/JwLI9U4K1hG0DpN6S/xHWjss3ipyB4tDy6/YrUt6D
- 3QOwvnC6kw8CStUqTNT7Z+rJoKDYnOI9G4N37zEaJlRKBkrqnCPytk4xmo/gDduV+/eZLpLhd
- KoxT0a8sCqgViMEJC1xdqi4w==
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e3872f3a-9736-4507-bbd3-2ad7698562b4@gmx.net>
 
-> Not sure why this got forwarded to me.
+Hey,
 
-The script =E2=80=9Cget_maintainer.pl=E2=80=9D pointed your recent contrib=
-ution out.
+fine with the subject change too :-)
 
+@Florian: Let me know if you want me to roll all in a v2 or are happy to
+apply that subject change too.
 
->> A single line break should be put into a sequence.
->> Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
->>
->> This issue was transformed by using the Coccinelle software.
+Cheers,
+flokli
+
+On Tue, Jul 16, 2024 at 07:30:32AM GMT, Stefan Wahren wrote:
+>Hi,
 >
-> A couple of comments while I'm here:
-> * The "why" is not clear; please clarify why a single line break should
->   be put into a sequence.
+>Am 16.07.24 um 01:19 schrieb Florian Fainelli:
+>>+Stefan,
+>>
+>>On 7/15/24 16:03, Florian Klink wrote:
+>>>HDMI_HPD_N_1V8 is connected to GPIO pin 0, not 1.
+>>>
+>>>This fixes HDMI hotplug/output detection.
+>>>
+>>>See https://datasheets.raspberrypi.com/cm/cm3-schematics.pdf
+>>>
+>>>Signed-off-by: Florian Klink <flokli@flokli.de>
+>>
+>>Assuming Stefan is OK wit the change, I will apply this along with a:
+>>
+>>Fixes: a54fe8a6cf66 ("ARM: dts: add Raspberry Pi Compute Module 3 and
+>>IO board")
+>thanks for fixing and i'm fine with this change. The GPIO line names are
+>already correct.
+>
+>Maybe the subject should be more specific:
+>
+>ARM: dts: bcm2837-rpi-cm3-io3: Fix HDMI hpd-gpio pin
+>
+>Except of this:
+>
+>Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+>
+>Regards
+>>
+>>>---
+>>>  arch/arm/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>>diff --git a/arch/arm/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+>>>b/arch/arm/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+>>>index 72d26d130efa..85f54fa595aa 100644
+>>>--- a/arch/arm/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+>>>+++ b/arch/arm/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+>>>@@ -77,7 +77,7 @@ &gpio {
+>>>  };
+>>>    &hdmi {
+>>>-    hpd-gpios = <&expgpio 1 GPIO_ACTIVE_LOW>;
+>>>+    hpd-gpios = <&expgpio 0 GPIO_ACTIVE_LOW>;
+>>>      power-domains = <&power RPI_POWER_DOMAIN_HDMI>;
+>>>      status = "okay";
+>>>  };
+>>
+>
 
-This is a desired data processing effect here.
-https://elixir.bootlin.com/linux/v6.10/source/kernel/latencytop.c#L263
-
-
-> * I don't think that a one liner merits the "coccinelle" comment.
->   However, if you *really* think it should be there, please add more
->   information, like the conccinell script.
-
-I would appreciate if another SmPL script can eventually be integrated
-for the coccicheck tool.
-
-Regards,
-Markus
+-- 
+Florian Klink
