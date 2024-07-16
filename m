@@ -1,212 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37F719E7D0
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 20:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD53B249F5;
+	Tue, 16 Jul 2024 20:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721161521; cv=none; b=jIMcfE7BFp2zKcNp1yBVEaNH4bRH9npY506z5+IYrK2aa4CX+Mt/qbV6n9ZWPvh32TBJcBi69xn+YcEvCUSr30rwEKi7NBID2g7Ysg7x0fSQvhv0Tg4el5jd1F/t9Wn4wOPjK+tooiOFLKB6TpzWmIUgdnbM3d5lv5svrpy60Rw=
+	t=1721161573; cv=none; b=Vf9nAhHfRFrLrfVrQqCK+9UFvVbuFVc02DVTV4D5tzyTn+naA8ETWchR+frSrTyt2k+zyvSD86GBCucD3UpFdQwop2T6SuvxFWLEG3BBrSCdIRskIf1XLUqmkEpyYeHGCD4lckF0KAgjkllu9VV5EUlHgySWvIEX+yapbMWFuHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721161521; c=relaxed/simple;
-	bh=QpaZz6ytjX6EJQg4Em95+XJTsWe3wnfYygOTIZxYC4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tNatB0kdP78/lIIvCyNCAC7O4af2pB9Y9BVXc0k0VWlfF9jz4C0AFFRIBnBA3Bra+qJ6AZ6HsOA666cDq7MGo6BwuhWL6pscSfYLQcL3pUncEhVBlq7Dkru7BsmfZV25tUtk2ekD+uFXsuhCn3ui9Gf+FXGmOFiCBUNLrTo1rcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwNj2cmY; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721161573; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=j7wfzc50CE8BYOFfc3oaMt7xLhzB4x528sQIW4nLkKxu5BDyvPxi2kTYa9X8g5iQ5ulZj4sWpB6rO43v9NAQsvXrwkXoU3Rn05O26dPfZZ5Xtm0VIqd/xZ81Y20STfTrdh5dK/oBKqiZy9uJsg5DmhQW24QfS9xP8PbwmMGlxvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=lFC89okL; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwNj2cmY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721161519; x=1752697519;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QpaZz6ytjX6EJQg4Em95+XJTsWe3wnfYygOTIZxYC4E=;
-  b=SwNj2cmYsYycPA9RD9u61ta83qGePpZ6IqjoLtzMYUcYutuLI9l6emjP
-   B1m1D6FqSzZU7ki1hQ8KI2Lqefes3P0eh0+nkZ8VofbDTOXRCBMyyXkdB
-   C+IavF9qXGQJ4nVGNcF2nZEBezk6OKrEVVingwTcg2ZSbaNhx1A+VCGzs
-   HcO6mghVG9phy+56mewi+RjSVg6YVBC7sWR/Vl9lWB/bh9rD6lFDxDgXH
-   dKM34CdS65iXtG/u6ra68JZmSdbuvrfD7n51WlJY2JNoZVQlSwMZY0A5/
-   8VDwU7lXFrvwa+VDiRGnURP+FXzZeH/zU1yOMp9st5VINXAJ2lzg+sWv0
-   Q==;
-X-CSE-ConnectionGUID: R8MlY2eBSCm29HmKxgHBpw==
-X-CSE-MsgGUID: bU0lkYDGTvqp7KBRVhY1gA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18497097"
-X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
-   d="scan'208";a="18497097"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 13:25:18 -0700
-X-CSE-ConnectionGUID: QZuiX99WQlmZj1oBFGcykQ==
-X-CSE-MsgGUID: H9whyyPCQ+aeZmGf/ARFtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
-   d="scan'208";a="50209182"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 16 Jul 2024 13:25:15 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sTojZ-000fdw-17;
-	Tue, 16 Jul 2024 20:25:13 +0000
-Date: Wed, 17 Jul 2024 04:24:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xavier <xavier_qy@163.com>, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com,
-	linux-kernel@vger.kernel.org, oliver.sang@intel.com,
-	Xavier <xavier_qy@163.com>
-Subject: Re: [PATCH-RT sched v3 1/2] RT SCHED: Optimize the enqueue and
- dequeue operations for rt_se
-Message-ID: <202407170411.vRtOCOzx-lkp@intel.com>
-References: <20240716060514.304324-2-xavier_qy@163.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="lFC89okL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1721161567; x=1721766367; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=lFC89okLcfkdzY0PvAESc8o20+l7HgVLZEKxFBAcUZadxiHHwIl0c9D5X7elIQi+
+	 fQUveIeMbiBoDIPp6HybcZWtue6XZWmI0Z4tt13yFp2XfioU581UA6kiMrs++jn3O
+	 R9ZGi4TnpkZhaY7p2pSgsH1xAalfFI0AKgSNbiCiApcp+J8SahNIl/bgMW4iSzPU3
+	 nBs58pePGtSEhGLDnDWoC4FfHwC8nRyj9/2U1ERq/IPEc2uQxa+Dy4Z2rfbnPFAV2
+	 Xy8RhcZVatw55Nu7DA+Lb3gOhbj9wXh+eTok1aB4GBJU8zc5SQ+VfibYv8Z/xmxEN
+	 Js9bu6IZEQ0tENKwYQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.100.20] ([46.142.33.108]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mz9Z5-1s7JkK2kLL-00zzvC; Tue, 16
+ Jul 2024 22:26:07 +0200
+Message-ID: <47ab290c-b3b3-4107-b8a2-2346f43ea42d@gmx.de>
+Date: Tue, 16 Jul 2024 22:26:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240716060514.304324-2-xavier_qy@163.com>
+User-Agent: Mozilla Thunderbird
+From: Ronald Warsow <rwarsow@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: de-DE, en-US
+Subject: Re: [PATCH 6.9 000/143] 6.9.10-rc1 review
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:QL0mXEiR7FiYIaXhpbdgavibzZ+ThLByVjVAziov6TKaPNJvGdf
+ Z3YVAroMfcgERSze5prglrj/hVVvfA1J4aAMO4+tjB+FnWnPdftDU1RR3bGnZQhGj7JPIer
+ WJH0oel9EJ2ykcinRI5G2Sl1nvxi+8EjghXklthgEpvZFF1UhJACMvJzNyEx96Emhbd4vow
+ BcRd9+ZrpH++kltpUnFNg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dOWy85jbSlI=;UbRVmIpVcy0gpA+C2geST4Pt3qp
+ PQDVjooYTlf/X7pZfcWHFJznJDK7YBNXiY2xiUWCJ+1NQ4Gbu7QKLnQ3zE2fUN54o1U7VrqhX
+ jhUZbQB4Yf/N2Tz6UbNncrVNcJPBIrHFZnbMp1feTM10uvnv8WcecsonTCJm6wCz5RjLWEwTC
+ Qt0jtTuHT2aCoqu8RKYeDShAtjZJ5/O91t9H7ghf3i3cxFxxlT9qzlerWgMp8FjJuesBeixFd
+ ONZQZc+cGbCfdRLf38mOsc4Pfo3KdpwpX6p4P7I14hRJFFN1ulgtj8gc1kzAHYiZVSA8IMiOU
+ 6jsz2vCMQ2FElYMnTITiBjenB4fftrAH6eFY48nwD6Dk/U6ZTU6miUq1vVisqIPhf0KBAA7mu
+ iStBXyOhOPDBJo+xdpRiKEBmfDrZs0qoTGr3mwxkPUM7esALBaauLj9JFb1ZRxA/7ldJEOyfP
+ V9HAPKDH+K5yKMPCe/XmWZ8AO32D6bJ4F7bPGW4rDOJQnRooF+xAiQLx2T/9nIkG0R15Up2Pg
+ RCx9UuqPi5ag2xNeVfnB7aI85d0fN4WQfEnvn0jKvwhSj0FJEKN2hjfmSNb8LHSSye0ru8RZb
+ 9If0XTn+HupEewojReQkEX6My/+FP2CTVziTy9kkrdDdtAElxe4na8ymzCHY4bK/FFtzdyFRQ
+ o9/BfBF91famC4x0vDRi5hCaL4HNGNMkplxkmp1Wjfck1bjHXnQf+BOla70XBxqo6mzgBd4ih
+ xOK7KgtP3ObqjZtp/Vd1OjL0i8LvjVE9yuIth0jJXTn829GTEhqyObpRKEQ+3UjyMEF+cdLW3
+ O5gzyNK0hZfhD7S07U3u88yA==
 
-Hi Xavier,
+Hi Greg
 
-kernel test robot noticed the following build warnings:
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-[auto build test WARNING on tip/sched/core]
-[also build test WARNING on shuah-kselftest/next shuah-kselftest/fixes peterz-queue/sched/core linus/master v6.10]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xavier/RT-SCHED-Optimize-the-enqueue-and-dequeue-operations-for-rt_se/20240716-140932
-base:   tip/sched/core
-patch link:    https://lore.kernel.org/r/20240716060514.304324-2-xavier_qy%40163.com
-patch subject: [PATCH-RT sched v3 1/2] RT SCHED: Optimize the enqueue and dequeue operations for rt_se
-config: x86_64-randconfig-121-20240716 (https://download.01.org/0day-ci/archive/20240717/202407170411.vRtOCOzx-lkp@intel.com/config)
-compiler: gcc-8 (Ubuntu 8.4.0-3ubuntu2) 8.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240717/202407170411.vRtOCOzx-lkp@intel.com/reproduce)
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407170411.vRtOCOzx-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   kernel/sched/build_utility.c: note: in included file:
-   kernel/sched/debug.c:469:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *[assigned] sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/debug.c:469:17: sparse:     expected struct sched_domain *[assigned] sd
-   kernel/sched/debug.c:469:17: sparse:     got struct sched_domain [noderef] __rcu *parent
->> kernel/sched/debug.c:715:6: sparse: sparse: symbol 'print_rt_se' was not declared. Should it be static?
-   kernel/sched/debug.c:842:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct task_struct *tsk @@     got struct task_struct [noderef] __rcu *curr @@
-   kernel/sched/debug.c:842:9: sparse:     expected struct task_struct *tsk
-   kernel/sched/debug.c:842:9: sparse:     got struct task_struct [noderef] __rcu *curr
-   kernel/sched/debug.c:842:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct task_struct *tsk @@     got struct task_struct [noderef] __rcu *curr @@
-   kernel/sched/debug.c:842:9: sparse:     expected struct task_struct *tsk
-   kernel/sched/debug.c:842:9: sparse:     got struct task_struct [noderef] __rcu *curr
-   kernel/sched/build_utility.c: note: in included file:
-   kernel/sched/stats.c:148:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *[assigned] sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/stats.c:148:17: sparse:     expected struct sched_domain *[assigned] sd
-   kernel/sched/stats.c:148:17: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/build_utility.c: note: in included file:
-   kernel/sched/topology.c:107:56: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:107:56: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:107:56: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:126:60: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:126:60: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:126:60: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:149:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:149:20: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:149:20: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:454:13: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct perf_domain *[assigned] tmp @@     got struct perf_domain [noderef] __rcu *pd @@
-   kernel/sched/topology.c:454:13: sparse:     expected struct perf_domain *[assigned] tmp
-   kernel/sched/topology.c:454:13: sparse:     got struct perf_domain [noderef] __rcu *pd
-   kernel/sched/topology.c:463:13: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct perf_domain *[assigned] tmp @@     got struct perf_domain [noderef] __rcu *pd @@
-   kernel/sched/topology.c:463:13: sparse:     expected struct perf_domain *[assigned] tmp
-   kernel/sched/topology.c:463:13: sparse:     got struct perf_domain [noderef] __rcu *pd
-   kernel/sched/topology.c:484:19: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct perf_domain *[assigned] pd @@     got struct perf_domain [noderef] __rcu *pd @@
-   kernel/sched/topology.c:484:19: sparse:     expected struct perf_domain *[assigned] pd
-   kernel/sched/topology.c:484:19: sparse:     got struct perf_domain [noderef] __rcu *pd
-   kernel/sched/topology.c:646:49: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sched_domain *parent @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:646:49: sparse:     expected struct sched_domain *parent
-   kernel/sched/topology.c:646:49: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:731:50: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sched_domain *parent @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:731:50: sparse:     expected struct sched_domain *parent
-   kernel/sched/topology.c:731:50: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:739:55: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain [noderef] __rcu *[noderef] __rcu child @@     got struct sched_domain *[assigned] tmp @@
-   kernel/sched/topology.c:739:55: sparse:     expected struct sched_domain [noderef] __rcu *[noderef] __rcu child
-   kernel/sched/topology.c:739:55: sparse:     got struct sched_domain *[assigned] tmp
-   kernel/sched/topology.c:752:29: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *[assigned] tmp @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:752:29: sparse:     expected struct sched_domain *[assigned] tmp
-   kernel/sched/topology.c:752:29: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:757:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:757:20: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:757:20: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:778:13: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *[assigned] tmp @@     got struct sched_domain [noderef] __rcu *sd @@
-   kernel/sched/topology.c:778:13: sparse:     expected struct sched_domain *[assigned] tmp
-   kernel/sched/topology.c:778:13: sparse:     got struct sched_domain [noderef] __rcu *sd
-   kernel/sched/topology.c:940:70: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:940:70: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:940:70: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:969:59: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:969:59: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:969:59: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1015:57: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:1015:57: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:1015:57: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1017:25: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *sibling @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:1017:25: sparse:     expected struct sched_domain *sibling
-   kernel/sched/topology.c:1017:25: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1025:55: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:1025:55: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:1025:55: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1027:25: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *sibling @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:1027:25: sparse:     expected struct sched_domain *sibling
-   kernel/sched/topology.c:1027:25: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1097:62: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sched_domain *sd @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:1097:62: sparse:     expected struct sched_domain *sd
-   kernel/sched/topology.c:1097:62: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1201:40: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sched_domain *child @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:1201:40: sparse:     expected struct sched_domain *child
-   kernel/sched/topology.c:1201:40: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1629:43: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sched_domain [noderef] __rcu *child @@     got struct sched_domain *child @@
-   kernel/sched/topology.c:1629:43: sparse:     expected struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:1629:43: sparse:     got struct sched_domain *child
-   kernel/sched/topology.c:2328:31: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain [noderef] __rcu *parent @@     got struct sched_domain *sd @@
-   kernel/sched/topology.c:2328:31: sparse:     expected struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:2328:31: sparse:     got struct sched_domain *sd
-   kernel/sched/topology.c:2430:57: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *[assigned] sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:2430:57: sparse:     expected struct sched_domain *[assigned] sd
-   kernel/sched/topology.c:2430:57: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:2451:56: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sched_domain *child @@     got struct sched_domain [noderef] __rcu *child @@
-   kernel/sched/topology.c:2451:56: sparse:     expected struct sched_domain *child
-   kernel/sched/topology.c:2451:56: sparse:     got struct sched_domain [noderef] __rcu *child
-   kernel/sched/topology.c:2450:57: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *[assigned] sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:2450:57: sparse:     expected struct sched_domain *[assigned] sd
-   kernel/sched/topology.c:2450:57: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/topology.c:2505:57: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sched_domain *[assigned] sd @@     got struct sched_domain [noderef] __rcu *parent @@
-   kernel/sched/topology.c:2505:57: sparse:     expected struct sched_domain *[assigned] sd
-   kernel/sched/topology.c:2505:57: sparse:     got struct sched_domain [noderef] __rcu *parent
-   kernel/sched/build_utility.c: note: in included file:
-   kernel/sched/core_sched.c:276:37: sparse: sparse: incompatible types in conditional expression (different address spaces):
-   kernel/sched/core_sched.c:276:37: sparse:    struct task_struct *
-   kernel/sched/core_sched.c:276:37: sparse:    struct task_struct [noderef] __rcu *
-   kernel/sched/build_utility.c: note: in included file:
-   kernel/sched/build_utility.c: note: in included file (through include/linux/mmzone.h, include/linux/topology.h, include/linux/sched/topology.h, ...):
-   include/linux/page-flags.h:240:46: sparse: sparse: self-comparison always evaluates to false
-   include/linux/page-flags.h:240:46: sparse: sparse: self-comparison always evaluates to false
-   kernel/sched/build_utility.c: note: in included file:
-   kernel/sched/sched.h:2175:25: sparse: sparse: incompatible types in comparison expression (different address spaces):
-
-vim +/print_rt_se +715 kernel/sched/debug.c
-
-   714	
- > 715	void print_rt_se(struct seq_file *m, struct sched_rt_entity *rt_se)
-   716	{
-   717		struct task_struct *task;
-   718	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
