@@ -1,125 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844211A6522;
-	Tue, 16 Jul 2024 18:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF9B1A707C;
+	Tue, 16 Jul 2024 18:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721154826; cv=none; b=Rn9+N+oCUnH2prOAKm6LNSzs7pUUPsCM4tXXhwRtup3wRTujs1NT1Ro8Y7wkFHcF6tKqJSyi6Ad87o2RP2SQiAiYiPomh1MyLJzMq6yzrFCx/zFPgdgzo7SZERVpaPvpOmKwz0VnigF527Y5xBx2x4Oa+Ebdv5WZhyG/Ww5ktKc=
+	t=1721154828; cv=none; b=u8qZdeHLirfW9QglNYdUy4eBq+WlSIPkJLdorpQN9W29DMUnJPZKr7mvmRPltEyBc1PN0/Ykbhcv3ZgpW9OtHES988L2WbAfcMuXNjFhXjgML4YbZc9qptPJRY0lVvZRoApYtoy4kFq9OLglFfjacAnAJPvtW2VU0JrardMj6Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721154826; c=relaxed/simple;
-	bh=B154PBKiYl5EWcFNNPsQO6OKsGY+pG6XCthbORAZL/o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cwqEjc/L6sm47S1WE14iEv439diWqiLqsYkNwpME+uLpyvJEjbEn0IyS8yZyhGNuaCyKJ+d6lZz7vK3E5OeSf2fexwoK35r4ZvIfr/51dJhsaBM5OIMCFeAJSvf3gF/KX3cgy2B3dziyQ8ph5r3xcslHKzeuSmEtqnF+M2lR+pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjw3rELS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721154828; c=relaxed/simple;
+	bh=ys9V1bEc7YcrtgnNHhHbA050mldDo30tqWLi5f3C77M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BE84aeFdYt2Cwgcos/skHhhW+TdDSvz0nKICmTy9pttVxf8USHAt4dUBhor3QYFDSrcrWKCwYTqiUJki9Ql36DE3sa4I6eO+qouOvlzjQiN92RPQ4GXdfjKXd34bkMpQcVUTOOiiru82VZOAPl47Vkf2cGrW0lZpsSn14JZSUVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHGrsASy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjw3rELS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E32FFC4AF0F;
-	Tue, 16 Jul 2024 18:33:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHGrsASy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B8DC4AF0E;
+	Tue, 16 Jul 2024 18:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721154826;
-	bh=B154PBKiYl5EWcFNNPsQO6OKsGY+pG6XCthbORAZL/o=;
+	s=k20201202; t=1721154827;
+	bh=ys9V1bEc7YcrtgnNHhHbA050mldDo30tqWLi5f3C77M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gjw3rELSz2/fCMGSuNWZ10azZwg3mYDgyAqtfvlP832tU+6N3FLJn+IuvProFtFYT
-	 IweLKEc4JMCkzpyvgFIM4lRGbSxCr/8M9xpnnTKG6bqihzxFrWThfu1sWZ8rA7RMie
-	 p+0bphGvjbJaKeKZ1K4C8H50AAmXXG1yhe6jn7E3M3HTbhvPJedzf+LUxDykAf+wB8
-	 M6zJhR7S58Eu7CLgS3HlmcQXYRjw8FVOP5HttxscCQTAOfJiekydgXZlquULnWgylv
-	 1hnSyuhuXjz1TKXE6gdW4tu/Jzm9mzWPmhYoTja8YCC0rXb+MZfOG8aLlr3av03LuF
-	 R5tdHbMUyfYvg==
-From: SeongJae Park <sj@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5.15.y 8/8] mm/damon/core: merge regions aggressively when max_nr_regions is unmet
-Date: Tue, 16 Jul 2024 11:33:33 -0700
-Message-Id: <20240716183333.138498-9-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240716183333.138498-1-sj@kernel.org>
-References: <20240716183333.138498-1-sj@kernel.org>
+	b=GHGrsASyXglUh8p00NJBD1ERwdMI+9q/A+AnxnDdajd8sFBgyA/1zatGF0Lr9waQa
+	 HzHCdxf89mjyrp7z8mSr2QVr8+LNOjle3m9lVDtveGjuT6F3/OeG4ybKmyyjMMuu8Y
+	 WXA922iODJQt/DKSyFB0BBST/Rx9v2r0368WrDWV+01E0Y6kvMjL8/m6f4uu2W3Hvb
+	 kwqY/2LMFTfRi7ZGb9M/ILK0EV6w+zgMkwIYHx8JkYz/b7hYd1HqaGc9jQAgOiSo/C
+	 Ou7qjGLcLaPFfOp1L7qKDgWAePUgi6ib9MnTJjyxhKQgAxtNXBap/7zu7MeQra9gCb
+	 ByHa/y1Q38t8g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Edward Adam Davis <eadavis@qq.com>,
+	syzbot+efde959319469ff8d4d7@syzkaller.appspotmail.com,
+	syzbot+01ade747b16e9c8030e0@syzkaller.appspotmail.com,
+	Christian Brauner <brauner@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	walmeida@microsoft.com,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 6/8] hfsplus: fix uninit-value in copy_name
+Date: Tue, 16 Jul 2024 14:33:03 -0400
+Message-ID: <20240716183324.2814275-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240716183324.2814275-1-sashal@kernel.org>
+References: <20240716183324.2814275-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.40
 Content-Transfer-Encoding: 8bit
 
-commit 310d6c15e9104c99d5d9d0ff8e5383a79da7d5e6 upstream.
+From: Edward Adam Davis <eadavis@qq.com>
 
-DAMON keeps the number of regions under max_nr_regions by skipping regions
-split operations when doing so can make the number higher than the limit.
-It works well for preventing violation of the limit.  But, if somehow the
-violation happens, it cannot recovery well depending on the situation.  In
-detail, if the real number of regions having different access pattern is
-higher than the limit, the mechanism cannot reduce the number below the
-limit.  In such a case, the system could suffer from high monitoring
-overhead of DAMON.
+[ Upstream commit 0570730c16307a72f8241df12363f76600baf57d ]
 
-The violation can actually happen.  For an example, the user could reduce
-max_nr_regions while DAMON is running, to be lower than the current number
-of regions.  Fix the problem by repeating the merge operations with
-increasing aggressiveness in kdamond_merge_regions() for the case, until
-the limit is met.
+[syzbot reported]
+BUG: KMSAN: uninit-value in sized_strscpy+0xc4/0x160
+ sized_strscpy+0xc4/0x160
+ copy_name+0x2af/0x320 fs/hfsplus/xattr.c:411
+ hfsplus_listxattr+0x11e9/0x1a50 fs/hfsplus/xattr.c:750
+ vfs_listxattr fs/xattr.c:493 [inline]
+ listxattr+0x1f3/0x6b0 fs/xattr.c:840
+ path_listxattr fs/xattr.c:864 [inline]
+ __do_sys_listxattr fs/xattr.c:876 [inline]
+ __se_sys_listxattr fs/xattr.c:873 [inline]
+ __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
+ x64_sys_call+0x2ba0/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:195
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-[sj@kernel.org: increase regions merge aggressiveness while respecting min_nr_regions]
-  Link: https://lkml.kernel.org/r/20240626164753.46270-1-sj@kernel.org
-[sj@kernel.org: ensure max threshold attempt for max_nr_regions violation]
-  Link: https://lkml.kernel.org/r/20240627163153.75969-1-sj@kernel.org
-Link: https://lkml.kernel.org/r/20240624175814.89611-1-sj@kernel.org
-Fixes: b9a6ac4e4ede ("mm/damon: adaptively adjust regions")
-Signed-off-by: SeongJae Park <sj@kernel.org>
-Cc: <stable@vger.kernel.org>	[5.15+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-(cherry picked from commit 310d6c15e9104c99d5d9d0ff8e5383a79da7d5e6)
-Signed-off-by: SeongJae Park <sj@kernel.org>
-[Remove use of unexisting damon_ctx->attrs field]
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:3877 [inline]
+ slab_alloc_node mm/slub.c:3918 [inline]
+ kmalloc_trace+0x57b/0xbe0 mm/slub.c:4065
+ kmalloc include/linux/slab.h:628 [inline]
+ hfsplus_listxattr+0x4cc/0x1a50 fs/hfsplus/xattr.c:699
+ vfs_listxattr fs/xattr.c:493 [inline]
+ listxattr+0x1f3/0x6b0 fs/xattr.c:840
+ path_listxattr fs/xattr.c:864 [inline]
+ __do_sys_listxattr fs/xattr.c:876 [inline]
+ __se_sys_listxattr fs/xattr.c:873 [inline]
+ __x64_sys_listxattr+0x16b/0x2f0 fs/xattr.c:873
+ x64_sys_call+0x2ba0/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:195
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[Fix]
+When allocating memory to strbuf, initialize memory to 0.
+
+Reported-and-tested-by: syzbot+efde959319469ff8d4d7@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Link: https://lore.kernel.org/r/tencent_8BBB6433BC9E1C1B7B4BDF1BF52574BA8808@qq.com
+Reported-and-tested-by: syzbot+01ade747b16e9c8030e0@syzkaller.appspotmail.com
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/damon/core.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ fs/hfsplus/xattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index 7a4912d6e65f..4f031412f65c 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -507,14 +507,31 @@ static void damon_merge_regions_of(struct damon_target *t, unsigned int thres,
-  * access frequencies are similar.  This is for minimizing the monitoring
-  * overhead under the dynamically changeable access pattern.  If a merge was
-  * unnecessarily made, later 'kdamond_split_regions()' will revert it.
-+ *
-+ * The total number of regions could be higher than the user-defined limit,
-+ * max_nr_regions for some cases.  For example, the user can update
-+ * max_nr_regions to a number that lower than the current number of regions
-+ * while DAMON is running.  For such a case, repeat merging until the limit is
-+ * met while increasing @threshold up to possible maximum level.
-  */
- static void kdamond_merge_regions(struct damon_ctx *c, unsigned int threshold,
- 				  unsigned long sz_limit)
- {
- 	struct damon_target *t;
--
--	damon_for_each_target(t, c)
--		damon_merge_regions_of(t, threshold, sz_limit);
-+	unsigned int nr_regions;
-+	unsigned int max_thres;
-+
-+	max_thres = c->aggr_interval /
-+		(c->sample_interval ?  c->sample_interval : 1);
-+	do {
-+		nr_regions = 0;
-+		damon_for_each_target(t, c) {
-+			damon_merge_regions_of(t, threshold, sz_limit);
-+			nr_regions += damon_nr_regions(t);
-+		}
-+		threshold = max(1, threshold * 2);
-+	} while (nr_regions > c->max_nr_regions &&
-+			threshold / 2 < max_thres);
- }
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index 58021e73c00bf..f7f9d0889df34 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -698,7 +698,7 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
+ 		return err;
+ 	}
  
- /*
+-	strbuf = kmalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
++	strbuf = kzalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
+ 			XATTR_MAC_OSX_PREFIX_LEN + 1, GFP_KERNEL);
+ 	if (!strbuf) {
+ 		res = -ENOMEM;
 -- 
-2.39.2
+2.43.0
 
