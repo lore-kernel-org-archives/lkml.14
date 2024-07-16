@@ -1,110 +1,149 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2F2196438;
-	Tue, 16 Jul 2024 10:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBE4198A2E
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721124829; cv=none; b=JRp2kWz8f+XOscMvOGkJpkYGFzSWz2bk7RF4S1azbujuO1cXT8Nr9fG6aTL4OV7fwWnhPONVzt22dyWLHmTjErxZTZGtxVNtY+oPW6i0eE4/RQm8WHDvGaXeED4pu5CrcMbbq28otaYmrjoIJReUssQ+8OYe8k0YCLfPNsWLIc4=
+	t=1721124829; cv=none; b=ebTTQSVHjcfjiY5zfeaZg99bCERpVRVH0euR6ELEzYwpcA7icI2DR04mKQtPG3hnhBoi7BSNQ8p6gFgt/3T9ZhYCpEIPWPUu/khFa8E61P4OdDr/ShRheOxYL7/LyAQOCtReziOqX1Lrc4VgPfdy28FWBdXZrWiYOZF5yUlziYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721124829; c=relaxed/simple;
-	bh=iAo487ia/wp3XezejlFMYb+izrM0mct6oShgF6NffGU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I/id48YzFaf3RdwMGBM9ds79ooib/MrVYAXaSQn19EBOEfF9YrLI0O2dnsDPkzFH7tiWuUV+Yae5OW1tkb6w1utOReFRWMjNY8fPk3chpg/R2z6w/N4MvzEsiuGSIc03IaFtqyPEFnEO8S7l/x4tcXU06H4zTea5Z80TNExjQr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=htayENVm; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=f8Gky9YqWDCmNh8MKNY9H8sRB+mkfPsGLsY2vGiP7+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tI3c7OTnTj+UnvYV3IqEqfH7yRtWFYFC+8Wdm/IIj39lxUICxsUiqQsgbz3LrE59xNIZ+KGzggykE4yr6Xy98la8UZYYShdsJ4jVBSAyo5CCmLDeeccLCuizobXtcl1rY4AdAohVVhbR9gv/uMNWKs8SV3fFovq+3if1JdKkK28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NTEDsi9k; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="htayENVm"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CBCBDFF805;
-	Tue, 16 Jul 2024 10:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1721124824;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DsUX943pSWyx64jeqbX92/+5qMtvxBsUvtsU2xaH1MQ=;
-	b=htayENVmDIqSp9t+ikRRQ7L+I73RR85vsggc4bkr5bakU8hE/BSIf05y/6wp8Eo6gV3hH3
-	tURe6CklAkyqBeePFMsKRaBCZraQBk4VTYry9O74Eu3IRroX1oBTgJsSORa9zprF8/yUAS
-	y+ET+guFbGniI3Nd/8QaON1PQVTEyCpRQxkRNP3qjlW5n15qKwSDHyYDcwgMaZnPDTOxdD
-	IikcrmRZ+ilYNPNvdYrzSO59KAg/KjyUflEsppUduWwqaLpn8GONIlytZ8GfUkJ8RdxGtF
-	Y/4bSIxDoql6GSy/PpTfj53Io3Uu3156a15VIrtZLgUgGdLuPWxcvWoQULFofQ==
-From: =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
-Date: Tue, 16 Jul 2024 12:13:28 +0200
-Subject: [PATCH v3 1/2] selftests/bpf: update xdp_redirect_map prog
- sections for libbpf
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NTEDsi9k"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70af3d9169bso3640723b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721124827; x=1721729627; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g6gMwbuavCbnycNTjRaKx9Abv3DoqBPYUEzkdAtOD14=;
+        b=NTEDsi9kYF9duQPxqkOq3Bkr6Vol49BNRWzhV2wsTBiR7MJtBd+1IRNl4jzjrxoUAv
+         Ykd5vKc7d+ndCODB7vfiibVcjhTZ6DkOt98lfgDBgb0QTKO1LfpaUmfF/TuD8x7oS9XD
+         C+sd80RtqFIrVMON04BADFTBcEywMkjURVrCO4sQf4Sd56oPOTrjirsk+VgyNUI0JvkR
+         IjzBRi0FEk4DLGimAtE/KdozIezmWTU0VYTR6nGHDPgafu6qtCrWU8PFPoLIEB6KUqyP
+         kLYXTr3nvppS6V/MQ1Simq77QoMT5FvSVNHjjH9E33TIgzc4bmPdoTayW/ZGytsTvTDb
+         ddjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721124827; x=1721729627;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g6gMwbuavCbnycNTjRaKx9Abv3DoqBPYUEzkdAtOD14=;
+        b=CMNp33B5yS2dhsoTUG50aQNxH6TGqSQXLMRjit7oc+Bu8Dl+8nMUCEMymlqT+vpHYP
+         OGYMV0AibWwPOi+CxJXpXPrPUC3r52ju30dZ42L1TPQsgYZjTkzD5f5Z41ngEv88EP4l
+         XoBPMzJvR0Yxps9TI9mKY61jXvY17qa8/CzxXKOWPcewPSZyBRk+zh/i49GMMUMmkwYy
+         4cydhSj/w8+5BQChUEN4hXWwQPPSuq2XJpqrgNCTkOSFl+XPYrI4VMm3bfGT1MNDimIO
+         wSP3ZFppk8TULP4TgChw3EWPpVehL2zVk9MEO2sZqW//NT962V1BAprAkyshr6s7T2Bd
+         ERng==
+X-Forwarded-Encrypted: i=1; AJvYcCV4n5sWmpPbsPuOyWzs3FJwdDM/KRWfulTz8mguQ0jW5jK+ExNfKkB3oueqUO5Na4YrE5QcNr8uBnOOJ52XlJJGsaw/2X/fD/Lte4lR
+X-Gm-Message-State: AOJu0Yw5f/Ee9zlRU/lSc9uWWHWJOGszQqMAR3CSZdnrIm4utRJWF09H
+	Dx1ib82xh8BkS9LLuIEhDVw1XnhmPOxoERma2G+g4omP/5L9e8DiLqzm0Ft3mQ==
+X-Google-Smtp-Source: AGHT+IEDJskFirz6paZGF1HW14iR2GuRPxyEKCS91A1U9kJEn0J3pLh5f3w2w9WhXlu21KxqWnu3BQ==
+X-Received: by 2002:a05:6a00:170d:b0:706:6272:417 with SMTP id d2e1a72fcca58-70c1fbd50acmr2120187b3a.10.1721124827058;
+        Tue, 16 Jul 2024 03:13:47 -0700 (PDT)
+Received: from thinkpad ([220.158.156.207])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7eb9e285sm5915488b3a.8.2024.07.16.03.13.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 03:13:46 -0700 (PDT)
+Date: Tue, 16 Jul 2024 15:43:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Patrick Wildt <patrick@blueri.se>
+Cc: Kalle Valo <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Steev Klimaszewski <steev@kali.org>, linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100-yoga: add wifi
+ calibration variant
+Message-ID: <20240716101335.GK3446@thinkpad>
+References: <ZpV6o8JUJWg9lZFE@windev.fritz.box>
+ <ZpV7OeGNIGGpqNC0@windev.fritz.box>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240716-convert_test_xdp_veth-v3-1-7b01389e3cb3@bootlin.com>
-References: <20240716-convert_test_xdp_veth-v3-0-7b01389e3cb3@bootlin.com>
-In-Reply-To: <20240716-convert_test_xdp_veth-v3-0-7b01389e3cb3@bootlin.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Jesper Dangaard Brouer <hawk@kernel.org>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>
-Cc: ebpf@linuxfoundation.org, netdev@vger.kernel.org, bpf@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: alexis.lothore@bootlin.com
+In-Reply-To: <ZpV7OeGNIGGpqNC0@windev.fritz.box>
 
-xdp_redirect_map.c is a bpf program used by test_xdp_veth.sh, which is not
-handled by the generic test runner (test_progs). To allow converting this
-test to test_progs, the corresponding program must be updated to allow
-handling it through skeletons generated by bpftool and libbpf.
+On Mon, Jul 15, 2024 at 09:40:41PM +0200, Patrick Wildt wrote:
+> Describe the bus topology for PCIe domain 4 and add the ath12k
+> calibration variant so that the board file (calibration data) can be
+> loaded.
+> 
+> Signed-off-by: Patrick Wildt <patrick@blueri.se>
 
-Update programs section names to allow to manipulate those with libbpf.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
----
- tools/testing/selftests/bpf/progs/xdp_redirect_map.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+- Mani
 
-diff --git a/tools/testing/selftests/bpf/progs/xdp_redirect_map.c b/tools/testing/selftests/bpf/progs/xdp_redirect_map.c
-index d037262c8937..682dda8dabbc 100644
---- a/tools/testing/selftests/bpf/progs/xdp_redirect_map.c
-+++ b/tools/testing/selftests/bpf/progs/xdp_redirect_map.c
-@@ -10,19 +10,19 @@ struct {
- 	__uint(value_size, sizeof(int));
- } tx_port SEC(".maps");
- 
--SEC("redirect_map_0")
-+SEC("xdp")
- int xdp_redirect_map_0(struct xdp_md *xdp)
- {
- 	return bpf_redirect_map(&tx_port, 0, 0);
- }
- 
--SEC("redirect_map_1")
-+SEC("xdp")
- int xdp_redirect_map_1(struct xdp_md *xdp)
- {
- 	return bpf_redirect_map(&tx_port, 1, 0);
- }
- 
--SEC("redirect_map_2")
-+SEC("xdp")
- int xdp_redirect_map_2(struct xdp_md *xdp)
- {
- 	return bpf_redirect_map(&tx_port, 2, 0);
+> ---
+>  .../boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts      |  9 +++++++++
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi                 | 10 ++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+> index fbff558f5b07..f569f0fbd1fc 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+> @@ -635,6 +635,15 @@ &pcie4_phy {
+>  	status = "okay";
+>  };
+>  
+> +&pcie4_port0 {
+> +	wifi@0 {
+> +		compatible = "pci17cb,1107";
+> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
+> +
+> +		qcom,ath12k-calibration-variant = "LES790";
+> +	};
+> +};
+> +
+>  &pcie6a {
+>  	perst-gpios = <&tlmm 152 GPIO_ACTIVE_LOW>;
+>  	wake-gpios = <&tlmm 154 GPIO_ACTIVE_LOW>;
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> index 7bca5fcd7d52..70eeacd4f9ad 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> @@ -3085,6 +3085,16 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>  			phy-names = "pciephy";
+>  
+>  			status = "disabled";
+> +
+> +			pcie4_port0: pcie@0 {
+> +				device_type = "pci";
+> +				reg = <0x0 0x0 0x0 0x0 0x0>;
+> +				bus-range = <0x01 0xff>;
+> +
+> +				#address-cells = <3>;
+> +				#size-cells = <2>;
+> +				ranges;
+> +			};
+>  		};
+>  
+>  		pcie4_phy: phy@1c0e000 {
+> -- 
+> 2.45.2
+> 
+> 
 
 -- 
-2.45.2
-
+மணிவண்ணன் சதாசிவம்
