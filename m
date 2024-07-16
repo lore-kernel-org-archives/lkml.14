@@ -1,92 +1,104 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88C51C694;
-	Tue, 16 Jul 2024 02:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB568208A5
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 02:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721097030; cv=none; b=LMgZTMDOEN0A2WFkyv8a/ztBKtGl/SmGtxDMtPsCh0tNOfpiL5K4kWhlb2ecSDV0miMrljaxnpXoB91zjTpuMhgBNJfneWDuPwkJMqb03hE0BhbYq0dQeNXJCH16u+w7Eq49piZNlsROoPx2XIhilfSAZp/d50/bbJlMaJNJjQc=
+	t=1721097041; cv=none; b=U4WicNCmCk9EvVpKsIj/HAN49tN/tex+D9dqzEqZuHPw812P/dop7NNH2XWlEVvv1lPHTH72Pr0+1w2SX/68tTXDm4AkeGmnFbJOnMjuv+7aAzpe/4FsjyDXdaSt5ZepHfMLXpIt5rvpD7K8SpBfrRasGf5OpH2zgZ1uZnQdpUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721097030; c=relaxed/simple;
-	bh=8Cpsm0ZhBHuf444Yk8e+Az5VO1dkZdncwNCBhXbtbUI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=phO8mXPorVz9nVyYP5ipLeu6WHCMjZIiuSj5lyWvmKU9lm1pZXN5MYuVIjaL7Kou7Hrm1RqNXkJ/IQs5DP/tPqUojoMpszu8FyUtWXD87kS8Xd9tD4S2Iwu5Y/LV+W3L7MXB7aJYVzFyZpbQsJInVqkYevA66OWUxRToyH22mRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Hou1IwWb; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1721097041; c=relaxed/simple;
+	bh=3iqw1t/CyrkP/qQUgCQYv/zzWd4pYBWDepSahEba1wM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJm73Ey8T5fB9LEJbQO+Qk33StXuqBFZiTezlSNTyicznyyRbKKBZPpS9byFanyEoKpn/N+DPNlXLl4xrBoj8lPVQK972lCMyXsRea/37xSPNJQfaNIvGawcdMWbzDpp/m+n055wIbO8e/0mugbmTjOyurOkURlwRCfr+xcSAFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=20y6mUqq; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hou1IwWb"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FL90HB002980;
-	Tue, 16 Jul 2024 02:30:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding; s=
-	corp-2023-11-20; bh=ohhSNM0LsvUICVcsJwpHtQH6rwZE/78TtulzmT1jz+0=; b=
-	Hou1IwWbGsd36whFPWUwyQDU4xZZbF/jrqT6M4JOqGpJVK/Sl8/WhjMKwdWFwOAk
-	9nY/S8dRuOSTeM/VS3AGcp+9PVBwOV/6pnLYgDQAyaOG6+TRI0iAj+RYNKpHoGy9
-	tNLlcLhfTMLruXNB/apzuPTy1e7+8MaKuF2YFac0qO068wHfWCAW36oY5pG6Q+Oq
-	oiL1/9r4j4AQDW6tC0Eun4UernYJzLGp3WRNdBAA18Cwn+tDgOrxaHN9ZaZPVanN
-	ywnWqjFinluIcqY+0OpK+DAvtmD85CtV53MNVahJKykqO92ABWPtnpUQisRsvenZ
-	pd4Y77F5DR2WL9KZOK2sPg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40bh6svnf1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jul 2024 02:30:06 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46G23phI002651;
-	Tue, 16 Jul 2024 02:30:05 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 40bg1exxds-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jul 2024 02:30:05 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 46G2U3AD027682;
-	Tue, 16 Jul 2024 02:30:05 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 40bg1exxah-5;
-	Tue, 16 Jul 2024 02:30:05 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: fischer@norbit.de, James.Bottomley@HansenPartnership.com,
-        Zhongqiu Han <quic_zhonhan@quicinc.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: aha152x: use DECLARE_COMPLETION_ONSTACK for non-constant completion
-Date: Mon, 15 Jul 2024 22:29:24 -0400
-Message-ID: <172109323565.941202.9875743621405105678.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240705103614.3650637-1-quic_zhonhan@quicinc.com>
-References: <20240705103614.3650637-1-quic_zhonhan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="20y6mUqq"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a16f4b8bfso8489a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 19:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721097037; x=1721701837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C1pYeevvK77sMTv04yGyie+GvLz7zwfPlA255cFn8ls=;
+        b=20y6mUqqZ4Hlapopze6MwurCtiQxWesiGSVefW0xb0QimWX+9QkK4ML/ClNpfxBowE
+         O98QfJ5YRKhJxj2GeQbzBLSPKVsT/i8GbU89uhnKq5lvW0HnyPlzXlbmZZ5GA+r1OaGa
+         HNOvaNrtbw0tb+3N/kl6QIPtyfnhrku7BA3MQIxnfM6FW16aag9jb0hdIxWiIkAgM5yZ
+         68JJBSxJhgp01xjd2I0blEc4xSPGJbfiLH/NOEDcDNyd5NVXVYsdeiQ3M0SWZL+sVzdF
+         OGkxs4/6Qi9Mshb2OZlweMA+WWKp3EEALVlo2/sWEc5Z5BaVLcXi3PO42XiirsEgz7A8
+         4HWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721097037; x=1721701837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C1pYeevvK77sMTv04yGyie+GvLz7zwfPlA255cFn8ls=;
+        b=fmSGwXHNwQNwBzISebiWwTsLffVI8Zi0NTPu/7tsLAw1HTv6KUdoF7fzIH76Pge4eL
+         UjTPuWRvLdERltd/nS6vzWjNL86kydw+AoLeuWoFE2YHA31RJs7H7ODxJqITKiP8aGLv
+         SVn9blKzFttZ9zlRP5dkd/eVFVB4q8NxJB4nKfnwScUeuR60Da/IxCtfQmruGiYL/hgE
+         hoPQ3SsqQ1Xm1yelwKWCZJgrb2LlcY5x/2Yxi55Yfef/wUr/Z6RghQRxmGAe56WoNxuL
+         HC+oxrJwAPA99Mk5LcaW30DlPlZl93wK9w2N0+WC0SIEsUxNEIcdsjBcD07zONuJm6al
+         lHhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNfHQmzU26tPhN7tP59E3Eet7FaB3ehmkx7Im4uZA+tazUucQW+/xDtQeFcrxDVxW7ugrNZNzqaGFTnY6H6/TXjxoa+b5HUhohRqT3
+X-Gm-Message-State: AOJu0YwodD4FoFVSisrHJU1MarUgd4K+nxURX82fZgbRQini7oxIYVhw
+	Cv220zjKU29dPdJc1eoa75whp0/GFC6K5l4mQkFHR4J/8lVsxVe9hGHSQCN0f6JJkA5vTwELmeX
+	k2eqfi2JfAo3hMapcrwI2A8AC+Scc4B6K/KNi
+X-Google-Smtp-Source: AGHT+IHchWRK+QagrkmTdo8Drjk6/O7gp0y4ZtZeA4qUKecjhmMM8xytG2fGoy6xfybpClQwkF1ivmZiDztRHX4l/es=
+X-Received: by 2002:a05:6402:5106:b0:58b:90c6:c59e with SMTP id
+ 4fb4d7f45d1cf-59eed87975dmr81644a12.7.1721097036784; Mon, 15 Jul 2024
+ 19:30:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
- bulkscore=0 mlxlogscore=904 malwarescore=0 phishscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
- definitions=main-2407160018
-X-Proofpoint-GUID: RgNm-uhvztY9jBc9zAirnPGsF4qEI9M-
-X-Proofpoint-ORIG-GUID: RgNm-uhvztY9jBc9zAirnPGsF4qEI9M-
+References: <20240716021548.339364-1-make24@iscas.ac.cn>
+In-Reply-To: <20240716021548.339364-1-make24@iscas.ac.cn>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 15 Jul 2024 19:30:24 -0700
+Message-ID: <CANn89iKzNXMNjYmf+2uA1kutKcfW_XbYVQ==00meJvC3XpM2nw@mail.gmail.com>
+Subject: Re: [PATCH] ipv6: prevent possible NULL dereference in ndisc_recv_na()
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
+	pabeni@redhat.com, johannes.berg@intel.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 05 Jul 2024 18:36:14 +0800, Zhongqiu Han wrote:
+On Mon, Jul 15, 2024 at 7:16=E2=80=AFPM Ma Ke <make24@iscas.ac.cn> wrote:
+>
+> In ndisc_recv_na(), __in6_dev_get() could return NULL, which is a NULL
+> pointer dereference. Add a check to prevent bailing out.
+>
+> Fixes: 7a02bf892d8f ("ipv6: add option to drop unsolicited neighbor adver=
+tisements")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>  net/ipv6/ndisc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/net/ipv6/ndisc.c b/net/ipv6/ndisc.c
+> index d914b23256ce..f7cafff3f6a9 100644
+> --- a/net/ipv6/ndisc.c
+> +++ b/net/ipv6/ndisc.c
+> @@ -1000,6 +1000,8 @@ static enum skb_drop_reason ndisc_recv_na(struct sk=
+_buff *skb)
+>         struct ndisc_options ndopts;
+>         struct net_device *dev =3D skb->dev;
+>         struct inet6_dev *idev =3D __in6_dev_get(dev);
+> +       if (!idev)
+> +               return SKP_DROP_REASON_NOT_SPECIFIED;
+>         struct inet6_ifaddr *ifp;
+>         struct neighbour *neigh;
+>         SKB_DR(reason);
 
-> The _ONSTACK variant should be used for on-stack completion, otherwise it
-> will break lockdep. See also commit 6e9a4738c9fa ("[PATCH] completions:
-> lockdep annotate on stack completions").
-> 
-> 
+Please do not mix code and variables.
 
-Applied to 6.11/scsi-queue, thanks!
+Also, idev is correctly tested in the current code, therefore your
+patch is not needed.
 
-[1/1] scsi: aha152x: use DECLARE_COMPLETION_ONSTACK for non-constant completion
-      https://git.kernel.org/mkp/scsi/c/23cef42d1741
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thank you.
