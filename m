@@ -1,195 +1,113 @@
-Received: from flow5-smtp.messagingengine.com (flow5-smtp.messagingengine.com [103.168.172.140])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6481A13D8A0;
-	Tue, 16 Jul 2024 13:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0701448ED
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721135307; cv=none; b=KPc72ed2HzBkKS5JfPd932ZaolXzIzlBJlQlsg7/bX3I5LKyp5hTdlwbmETFxBvlo4ZX4AMmebh4AgfPRGioGLMimevE5KzwoGrVpACnRPxEkjLnAr0HPmjiCKpcr94+83dGy8wbR5oYo3pF5UyBtI6J9it2dcwWcAgZ0lhC3NI=
+	t=1721135426; cv=none; b=e0xRSwRDG0roW6P1F6yefVmtCT8cLgxDSNYG+B9YrqAG+L9KBumQ+zHzS3bIz3O7icdpghLw/S5jUfGr6epgQI0rVpRY3yyYStPfyoAbbMctCJYqqG2zG164raolS9xsGjByZIRNxj4MIuMFO5Ppa61COfZQA7fSGkodAhfpgAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721135307; c=relaxed/simple;
-	bh=HDznOx5hbb1IvT1ZrtlGW6ohzdUf5QDocyHD5/dDtnU=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=lHk+dm3WoyYYFjMWEFH4kRsh6Avzlfw2VuP/bdEO3YDto2E/CZyXDu2Bq6UJLeiyRLiNBD+Z/gwFkDKuY3lyo2S59klexEVOuXCOSiCNejVK8mV/5ZFdRoydNC/ovRlvSbSKRNAa6y9G9Q3jutzc6EHBCwT6sH/ExbWkLRqdWPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=LLolVvbG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bG2YZz3j; arc=none smtp.client-ip=103.168.172.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1721135426; c=relaxed/simple;
+	bh=GpzScpedIteht8jhFd7VYb19IPxE1c/uuH6Qu+Gk9Fc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e5Qr9hoaB27nWGDb12IdeX46zh5lQpbdFY3ll1J2BAh+owNTXzJAlV0riAra/Whxteb/Knp7s4+beTXWwiR/B/99OdMzcZYbfJwBbdmQBBZx/qmJsdxSGjbw1uPj7ipgA5l1jNDELCAnUYu0utXGpB9dTjNhxibwlcRUHyGl290=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MdzDU6Ym; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="LLolVvbG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bG2YZz3j"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 64DA4201196;
-	Tue, 16 Jul 2024 09:08:24 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Tue, 16 Jul 2024 09:08:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1721135304;
-	 x=1721142504; bh=zt6qUa/rBAPGttY012K2IM8tuPIkZZ+7qikKmJ20XiQ=; b=
-	LLolVvbGAnfV4iXPMW7seBnQ9ucngH1f2xp7EVD2uugxg3VEjVHJlV3vHpdUCRlV
-	2Crod5dg4xilCIfTvsTZ3G0tnDSqxiqhIDMAeN6+HEFwoCEsiOOPq8SsQLa0sr/G
-	xoG+i1vuZTOZ/7p3S2bp7uGbvMcxmbyusFaykv0mTCQZsmkThpkr9v2U6Zr+crZZ
-	kmtszuZc2FnPtn2KugCODrgWHPthZIH5B7IwAoGfLtZRAwh7tq+DE3K11XSzxYk8
-	5cprDH9mBZKnOwemRYCHcIIWN9/QaaLvzr+ZwZv/QxnXkafuN22zU1FFkVBylKx6
-	A+QxZ0MIkK2YbgL8XuvmWw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721135304; x=
-	1721142504; bh=zt6qUa/rBAPGttY012K2IM8tuPIkZZ+7qikKmJ20XiQ=; b=b
-	G2YZz3jWm7iHL3gXNLVUTtNcfzTahLzLjR4iyuU0CNuyM89NLOf9oZyD2C3hYAIK
-	AfDf20U8qC7CTOkBsWjWvYOHnqiWY3TigtPu5Yde99vlDGBfkJrkykgrj6MZxNRd
-	OF0b0J9NpdNZ0L4sxgIiiEOEJlRsdc3+T+nlOeUW0yb0Z8JhW7I8RkOQgEq1DoaG
-	WOeM5WdMLmGD4/DXwHMeXVIh/TuGiCjq62Cmau3SRwhwxyMut9KqZw8PI0t559X3
-	drs3XIktjiBwP0mYVx52WH2pcoTQ4U95QNutDBRpZXbx67KkVSdfOjgua4ISKpVl
-	lzZmmp3ndbV1KXYw8/6vw==
-X-ME-Sender: <xms:xXCWZt3tlPtvPdXdpaZocqjicoskk-NG9y-bvebOxJ2yaqSo-ntZSQ>
-    <xme:xXCWZkHxzyEYBpjsPnzBU2BkygS49Fm5KQ2wiZODEv68093OCfiRbDkFvgNs4ylIq
-    zNg7JKbvF4HsO-agKk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdehlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
-    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
-    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:xXCWZt52lvXg2r0FUCr8Pldg21ygP9uQs9__NpHOUsUBsrMqglT6BQ>
-    <xmx:xXCWZq18Zx1G13DUCBEKRxrSOCgkx2fk92PAR2EWDjXzJDjnn56Rcg>
-    <xmx:xXCWZgFI07CYIk3hv4CGlbyEsesGfT_8oHM0IC0w4mt3-qFdd2Rvsg>
-    <xmx:xXCWZr8qedzeakvaan4WKKj-eqO-aC5_umvCGYpV4BkCe0Dn1-_H4A>
-    <xmx:yHCWZiNMi5WAbUPy1KvZo5AqIJpXj9vGnZQG9x0mWda-jv_tKouiwZyc>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7559536A0075; Tue, 16 Jul 2024 09:08:21 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MdzDU6Ym"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721135424;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GpzScpedIteht8jhFd7VYb19IPxE1c/uuH6Qu+Gk9Fc=;
+	b=MdzDU6YmnjxA/BPqN4A2tzroMnRW/HfclIMamTDJePpi0CLfSAY0ktuam55nXCexxXUeDq
+	5gMxqk3N+UESaSe0AfSrws2iw/Aq/ZjZ20JPicSvUPPxjGLKEhQfwkr9FjtLEZodDipz7b
+	eD8AkDprwf2fVKKxBbjea08cvy7TT2c=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-387-oqeZXyfQNIWa6AiLYqsFyA-1; Tue, 16 Jul 2024 09:10:22 -0400
+X-MC-Unique: oqeZXyfQNIWa6AiLYqsFyA-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2ee8e0dab26so49897581fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:10:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721135421; x=1721740221;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GpzScpedIteht8jhFd7VYb19IPxE1c/uuH6Qu+Gk9Fc=;
+        b=Tn7dnQIbvuAKys03m300/PdXSi04mEt2Do1vWD5sysf4+JaMYPvvOBZas+VGHsuP3T
+         3CL5InhbX+mfFwLq4Aq80xk2O+rARA22DayBu+qo5pbpIMXrKzDs8+zH5g0lKayyyMEl
+         j7DIw3edN38zwM//HxVzBQWo43uDvfzq3KOVUvvISYQAhwR9RHDtPbBHFzu4kwyhKtua
+         tOkhNuClbvFgtfhhtvuEdI0V/Q1AFqYmt87bN4qvbjbPM31U+j/JQDQWI7Hy8gzryVa4
+         MWw2LSgQu33X1Nhr4EYHHhROHLNpxfAHL6TVy9lRUxqZMKfZpnFQf8E+XBzD3jknzHcb
+         nA+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXT8BvKeeibliKIzsUPRCXSlhRJ35nNj2J+LBa1K/EnosckNYrH/wcRdxZEjiganBrAeqt2rTSBPoUvXIRfGVBMx0S7dyVGjs76TYVQ
+X-Gm-Message-State: AOJu0Yy/T1mEuu3zjsPVFSFtGyfmx+MmyxRDdV0CCiIN1ROQZnU/pzRy
+	GwVd+C3R2e8n8T3JAXRaXFQ17ov8lWnLWBra6z8K5BiWIRvo5zrEzLixvPOVETi5eQrV7e25U53
+	S4UfDPuC6VQp5rVxASoA2vW/OLwMOTTUyAVcaNzqbGjJPDQkJ+r/QJARAZ3Sr64+EDe3pUhe/Q8
+	QZN31FsW0aSznzW2txtDa8GJSHf0Ysm+qWmvy7
+X-Received: by 2002:a2e:be05:0:b0:2ee:8b92:952f with SMTP id 38308e7fff4ca-2eef40b2fcemr15945921fa.0.1721135420990;
+        Tue, 16 Jul 2024 06:10:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG0+2ysOJp9MP5ZxmZgy3Wn0oI5vGQOyK2l9FcQNTEYAB8b/kz09NzAswEUe82pE7C4WMswef/74L9f5BSYjlo=
+X-Received: by 2002:a2e:be05:0:b0:2ee:8b92:952f with SMTP id
+ 38308e7fff4ca-2eef40b2fcemr15945781fa.0.1721135420605; Tue, 16 Jul 2024
+ 06:10:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <2a2bb8b6-09ca-40c3-b6a9-d8fac7dd5208@app.fastmail.com>
-In-Reply-To: <20240716111346.3676969-4-rppt@kernel.org>
-References: <20240716111346.3676969-1-rppt@kernel.org>
- <20240716111346.3676969-4-rppt@kernel.org>
-Date: Tue, 16 Jul 2024 21:07:59 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Mike Rapoport" <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Andreas Larsson" <andreas@gaisler.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Arnd Bergmann" <arnd@arndb.de>, "Borislav Petkov" <bp@alien8.de>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "David Hildenbrand" <david@redhat.com>,
- "David S . Miller" <davem@davemloft.net>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "Huacai Chen" <chenhuacai@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Jonathan Cameron" <jonathan.cameron@huawei.com>,
- "Michael Ellerman" <mpe@ellerman.id.au>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Vasily Gorbik" <gor@linux.ibm.com>, "Will Deacon" <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 03/17] MIPS: loongson64: rename __node_data to node_data
-Content-Type: text/plain;charset=utf-8
+References: <CAK-6q+jSBjuFaFqGLQcfVLMUwRcJJMHk2oUnSgMObwz+OAih6g@mail.gmail.com>
+ <3353d6c1-54ce-46c0-8b65-a0383c8da324@163.com>
+In-Reply-To: <3353d6c1-54ce-46c0-8b65-a0383c8da324@163.com>
+From: Alexander Aring <aahringo@redhat.com>
+Date: Tue, 16 Jul 2024 09:10:09 -0400
+Message-ID: <CAK-6q+gvhDSrzUyHB=KAw=hMco5BAHxbXuhVYLdzHm12JEJG1g@mail.gmail.com>
+Subject: Re: udev kset_create_and_add() with own struct kobj_type?
+To: Lk Sii <lk_sii@163.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, gfs2 <gfs2@lists.linux.dev>, 
+	David Teigland <teigland@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-
-=E5=9C=A82024=E5=B9=B47=E6=9C=8816=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
-=8D=887:13=EF=BC=8CMike Rapoport=E5=86=99=E9=81=93=EF=BC=9A
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Tue, Jul 16, 2024 at 8:15=E2=80=AFAM Lk Sii <lk_sii@163.com> wrote:
 >
-> Make definition of node_data match other architectures.
-> This will allow pulling declaration of node_data to the generic mm cod=
-e in
-> the following commit.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> On 2024/7/15 23:27, Alexander Aring wrote:
+> > Hi,
+> >
+> > I am currently implementing namespace support into the fs/dlm
+> > subsystem. The DLM subsystem uses kset_create_and_add("dlm",
+> > &dlm_uevent_ops, kernel_kobj); to create the "dlm" sysfs directory.
+> > Underneath it creates for each lockspace a subdirectory using
+> > kobject_init_and_add() with a non-static name and being known during
+> > runtime.
+> >
+> > Now I want to add namespace support and need to change the "default"
+> > kset->kobj.ktype =3D &kset_ktype; that is set by
+> > kset_create_and_add()->kset_create() to my own kobj_type because I
+> > need to implement a different ".child_ns_type" callback before
+> > kset_register() is called.
+> >
+> you maybe use kset_register() instead of kset_create_and_add().
+> you maybe find example codes from below kernel files:
+> fs/nfs/sysfs.c
+> fs/f2fs/sysfs.c
+> fs/ubifs/sysfs.c
 
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+looked into the first one, it looks like potential new users for such
+a new helper. This is what I am currently doing and it works, but I
+mostly copy&paste the code of kset_create_and_add() just to set a
+different "kobj.ktype" in the kset and feeling bad about it.
 
-MIPS should go arch_numa at some point as well.
+Thanks.
 
-Thanks
-- Jiaxun
+- Alex
 
-> ---
->  arch/mips/include/asm/mach-loongson64/mmzone.h | 4 ++--
->  arch/mips/loongson64/numa.c                    | 8 ++++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/mips/include/asm/mach-loongson64/mmzone.h=20
-> b/arch/mips/include/asm/mach-loongson64/mmzone.h
-> index a3d65d37b8b5..2effd5f8ed62 100644
-> --- a/arch/mips/include/asm/mach-loongson64/mmzone.h
-> +++ b/arch/mips/include/asm/mach-loongson64/mmzone.h
-> @@ -14,9 +14,9 @@
->  #define pa_to_nid(addr)  (((addr) & 0xf00000000000) >>=20
-> NODE_ADDRSPACE_SHIFT)
->  #define nid_to_addrbase(nid) ((unsigned long)(nid) <<=20
-> NODE_ADDRSPACE_SHIFT)
->=20
-> -extern struct pglist_data *__node_data[];
-> +extern struct pglist_data *node_data[];
->=20
-> -#define NODE_DATA(n)		(__node_data[n])
-> +#define NODE_DATA(n)		(node_data[n])
->=20
->  extern void __init prom_init_numa_memory(void);
->=20
-> diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
-> index 68dafd6d3e25..b50ce28d2741 100644
-> --- a/arch/mips/loongson64/numa.c
-> +++ b/arch/mips/loongson64/numa.c
-> @@ -29,8 +29,8 @@
->=20
->  unsigned char __node_distances[MAX_NUMNODES][MAX_NUMNODES];
->  EXPORT_SYMBOL(__node_distances);
-> -struct pglist_data *__node_data[MAX_NUMNODES];
-> -EXPORT_SYMBOL(__node_data);
-> +struct pglist_data *node_data[MAX_NUMNODES];
-> +EXPORT_SYMBOL(node_data);
->=20
->  cpumask_t __node_cpumask[MAX_NUMNODES];
->  EXPORT_SYMBOL(__node_cpumask);
-> @@ -107,7 +107,7 @@ static void __init node_mem_init(unsigned int node)
->  	tnid =3D early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
->  	if (tnid !=3D node)
->  		pr_info("NODE_DATA(%d) on node %d\n", node, tnid);
-> -	__node_data[node] =3D nd;
-> +	node_data[node] =3D nd;
->  	NODE_DATA(node)->node_start_pfn =3D start_pfn;
->  	NODE_DATA(node)->node_spanned_pages =3D end_pfn - start_pfn;
->=20
-> @@ -206,5 +206,5 @@ pg_data_t * __init arch_alloc_nodedata(int nid)
->=20
->  void arch_refresh_nodedata(int nid, pg_data_t *pgdat)
->  {
-> -	__node_data[nid] =3D pgdat;
-> +	node_data[nid] =3D pgdat;
->  }
-> --=20
-> 2.43.0
-
---=20
-- Jiaxun
