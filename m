@@ -1,285 +1,130 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30210195B27;
-	Tue, 16 Jul 2024 15:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844E119DF71
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 15:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721145505; cv=none; b=kTM3tk4N+nfjD6G8rD6QXUrzzjBsB58Xu+OrHgCrceAMqBMx5paf9+6ne8+6a3L4amdOo4R23ZlrfFeqM0q7dsYKNfW1opSb7IccKmJ6PXaZ83gyrttHhVKhiRCZlsVGQvXv6kg6/fGVLRmrKbFan9VPSgzjzBinNklz9Knw8N4=
+	t=1721145590; cv=none; b=gnCslG9nMFDBB7+nEyDftT0CGV/H5i4Y8ocIj8NsNWOQjUnmPuyWP6yLk+uLmuZtPivHwfsKQ0obU+sT7RJmc271XdVrqlSzY9NAz6Rwkkp1NLz+/imve2R3ukIWkC8es78b7KA7BsxzXSRBbRYGy+luQNlPOp4tdpd6VRxmOk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721145505; c=relaxed/simple;
-	bh=x01xUcW0fNo3bqc70fBVuuGS0X2cQFPaRzseNMmOH9U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uRXmNyHRI+ZUTrEhgLdOUy2Sg2mR0fwWv8VqQt+arM/EpdEx2TMT15FwawEBg1ukWeTQ44twfIthjYGDTaU1JRy4Udc0Uwmz97/x43BCwP8f3y2QEc0jW+Gs9FqFixMnBQXONd26vzqezkyH2FzIvoOKlq4KuullKEPbc2h6jis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4WNjmc1xyNz9v7Jq;
-	Tue, 16 Jul 2024 23:34:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id EB28F14051C;
-	Tue, 16 Jul 2024 23:58:12 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwA35i93mJZmA3M7AA--.19133S2;
-	Tue, 16 Jul 2024 16:58:11 +0100 (CET)
-Message-ID: <9e3df65c2bf060b5833558e9f8d82dcd2fe9325a.camel@huaweicloud.com>
-Subject: Re: [RFC PATCH v19 0/5] Script execution control (was O_MAYEXEC)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>, Mimi Zohar
-	 <zohar@linux.ibm.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>,  Kees Cook <keescook@chromium.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Paul Moore <paul@paul-moore.com>, Theodore
- Ts'o <tytso@mit.edu>, Alejandro Colomar <alx@kernel.org>, Aleksa Sarai
- <cyphar@cyphar.com>, Andrew Morton <akpm@linux-foundation.org>, Andy
- Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Casey
- Schaufler <casey@schaufler-ca.com>, Christian Heimes
- <christian@python.org>, Dmitry Vyukov <dvyukov@google.com>, Eric Biggers
- <ebiggers@kernel.org>, Eric Chiang <ericchiang@google.com>, Fan Wu
- <wufan@linux.microsoft.com>, Florian Weimer <fweimer@redhat.com>, Geert
- Uytterhoeven <geert@linux-m68k.org>, James Morris
- <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>,  Jann Horn
- <jannh@google.com>, Jeff Xu <jeffxu@google.com>, Jonathan Corbet
- <corbet@lwn.net>, Jordan R Abrahams <ajordanr@google.com>, Lakshmi
- Ramasubramanian <nramas@linux.microsoft.com>, Luca Boccassi
- <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, "Madhavan T .
- Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski
- <mattbobrowski@google.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Matthew
- Wilcox <willy@infradead.org>, Miklos Szeredi <mszeredi@redhat.com>, Nicolas
- Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,  Scott Shell
- <scottsh@microsoft.com>, Shuah Khan <shuah@kernel.org>, Stephen Rothwell
- <sfr@canb.auug.org.au>,  Steve Dower <steve.dower@python.org>, Steve Grubb
- <sgrubb@redhat.com>, Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
- Vincent Strubel <vincent.strubel@ssi.gouv.fr>,  Xiaoming Ni
- <nixiaoming@huawei.com>, Yin Fengwei <fengwei.yin@intel.com>, 
- kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Date: Tue, 16 Jul 2024 17:57:39 +0200
-In-Reply-To: <20240709.AhJ7oTh1biej@digikod.net>
-References: <20240704190137.696169-1-mic@digikod.net>
-	 <55b4f6291e8d83d420c7d08f4233b3d304ce683d.camel@linux.ibm.com>
-	 <20240709.AhJ7oTh1biej@digikod.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1721145590; c=relaxed/simple;
+	bh=/f9cEEl/8MayIBFDh5qE7G73v8hj1iS5ECJxNgSsu4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GC0OLM4Bxx4FXDyaVhzTn31MMFcst8/BRP9IbLVyvFvWdxKvifRS9zmxKdAxaBMJ4LNWPFTmG6ilib9BMoPZq4Leh6EnExjzemgp1A3mUydT+s4YMFkBd0HozT8IoAtlsKYoGKnHylyQW5n9D54XKcLMPa6RRrouGaJ31ykLDt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WY0JRKAh; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WY0JRKAh"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2c964f5a037so3740339a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721145588; x=1721750388; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kl3Jx4H/WoP0kRmoJKehZi92SYKLfR+SxVfx7nbEybM=;
+        b=WY0JRKAhQJVDB1jbkAmT9dTD1ZuzxGieKRzJMbonixWI6s2iQwjMKDeI3J+PqPs13i
+         WENE5IPFrJviymrNeJJ9LOjZ89TGAdWi0uNoox+M/HVutjVTmJlRuOTPGrvd5LxctLzr
+         rwnkUQwOEEeV8IWEMHEbtfbNgCgTL+BXfGJ7//40qDadj29Sj+v1oju/McmpomAITMBx
+         sC5ea/kxhSBdKpeL1779ei8dObvoAQSoZEF9ltCrU2GI+PUcw380bDUXzmF8BfMIZNpz
+         8RAFUN5KcCzTwLEjdF7008WSgdgHkZ+px/j329CNb4vkWjPMGxYlbWqw8ZCPr7DjU0bC
+         p3iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721145588; x=1721750388;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kl3Jx4H/WoP0kRmoJKehZi92SYKLfR+SxVfx7nbEybM=;
+        b=TPn/wYcvgwUE2nhtZP8Cy1mnmhL63o5mmDrsHm5miksdhm6BUsoWhFfuLI8mkk4goe
+         x76L95qns1aIzDQ6tDxC53gf5XrMPdokHj/SlAokDyo2EQMj3JYS9la+QdU8LPyBuA8S
+         OOMoiWyaI+IMsEYP1VT6iPMPxA1gOqYI9+62eUBEMFQ++mjJlcfGxvydoBBLTGTrkLcT
+         hbBoNf/ZvOvf0LgMVRMl7nbJxrZp7x0RB1pRD52e4cQ9qRnRAlvuSLva1jxXjB8t2rLZ
+         bT6WBj+kEmnKMtHRfZtgmQPsGMXg/IBBH3RdBLQysC4jygrXHZLNkbxy3K0p1jIO9Cpb
+         O7IA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0AMGkkRDsWnXiIflVxqt4FFljMgKOhhZvdKVoHKoZlO27zdgRUCfgQrPyazvq64Wr6SNG0MVShTbtAy+lt0G3yrxtWsWP0bDFjcLk
+X-Gm-Message-State: AOJu0Yy3ahvM6mHuiNz/RH/C5UQeL9tRygaJjOyYDwtimh+NtsXpxMZs
+	4NY2GMlEjYaGWXyWTx+Q8adJAoka9EnQRyMNDWgW8DqrDopZgqGxG1OuG6IEZXK67HbjuYq7Fto
+	=
+X-Google-Smtp-Source: AGHT+IHHz98ceVJ8T5HzQt1BnBw5Awqzt0u6lGO5YK4BDL0d0/bxDwtAIk26dAssJfi7VGkM8sJGdw==
+X-Received: by 2002:a17:90b:4c8a:b0:2c9:63ef:95b9 with SMTP id 98e67ed59e1d1-2cb37402065mr1970857a91.14.1721145587606;
+        Tue, 16 Jul 2024 08:59:47 -0700 (PDT)
+Received: from thinkpad ([220.158.156.207])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cacd419b6bsm8487009a91.27.2024.07.16.08.59.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 08:59:47 -0700 (PDT)
+Date: Tue, 16 Jul 2024 21:29:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
+Message-ID: <20240716155943.GM3446@thinkpad>
+References: <20240716152318.207178-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwA35i93mJZmA3M7AA--.19133S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3AFy7ZFWrJryfuF4xCr1kuFg_yoWxXFWfpa
-	naga12kF4kGF18Arn7K3WfuF1Sgws5JFW5Wrn8WryrZas0yr10qr4Svr15uFyDJFWFya42
-	vr4avr9xZw1qyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvCb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
-	Jr1lIxkvb40E47kJMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7IUYt5r7UUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAGBGaV1uwLqwAAsq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240716152318.207178-1-brgl@bgdev.pl>
 
-On Tue, 2024-07-09 at 22:43 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> On Mon, Jul 08, 2024 at 04:35:38PM -0400, Mimi Zohar wrote:
-> > Hi Micka=C3=ABl,
-> >=20
-> > On Thu, 2024-07-04 at 21:01 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> > > Hi,
-> > >=20
-> > > The ultimate goal of this patch series is to be able to ensure that
-> > > direct file execution (e.g. ./script.sh) and indirect file execution
-> > > (e.g. sh script.sh) lead to the same result, especially from a securi=
-ty
-> > > point of view.
-> > >=20
-> > > Overview
-> > > --------
-> > >=20
-> > > This patch series is a new approach of the initial O_MAYEXEC feature,
-> > > and a revamp of the previous patch series.  Taking into account the l=
-ast
-> > > reviews [1], we now stick to the kernel semantic for file executabili=
-ty.
-> > > One major change is the clear split between access check and policy
-> > > management.
-> > >=20
-> > > The first patch brings the AT_CHECK flag to execveat(2).  The goal is=
- to
-> > > enable user space to check if a file could be executed (by the kernel=
-).
-> > > Unlike stat(2) that only checks file permissions, execveat2(2) +
-> > > AT_CHECK take into account the full context, including mount points
-> > > (noexec), caller's limits, and all potential LSM extra checks (e.g.
-> > > argv, envp, credentials).
-> > >=20
-> > > The second patch brings two new securebits used to set or get a secur=
-ity
-> > > policy for a set of processes.  For this to be meaningful, all
-> > > executable code needs to be trusted.  In practice, this means that
-> > > (malicious) users can be restricted to only run scripts provided (and
-> > > trusted) by the system.
-> > >=20
-> > > [1] https://lore.kernel.org/r/CAHk-=3DwjPGNLyzeBMWdQu+kUdQLHQugznwY7C=
-vWjmvNW47D5sog@mail.gmail.com
-> > >=20
-> > > Script execution
-> > > ----------------
-> > >=20
-> > > One important thing to keep in mind is that the goal of this patch
-> > > series is to get the same security restrictions with these commands:
-> > > * ./script.py
-> > > * python script.py
-> > > * python < script.py
-> > > * python -m script.pyT
-> >=20
-> > This is really needed, but is it the "only" purpose of this patch set o=
-r can it
-> > be used to also monitor files the script opens (for read) with the inte=
-ntion of
-> > executing.
->=20
-> This feature can indeed also be used to monitor files requested by
-> scripts to be executed e.g. using
-> https://docs.python.org/3/library/io.html#io.open_code
->=20
-> IMA/EVM can include this check in its logs.
->=20
-> >=20
-> > >=20
-> > > However, on secure systems, we should be able to forbid these command=
-s
-> > > because there is no way to reliably identify the origin of the script=
-:
-> > > * xargs -a script.py -d '\r' -- python -c
-> > > * cat script.py | python
-> > > * python
-> > >=20
-> > > Background
-> > > ----------
-> > >=20
-> > > Compared to the previous patch series, there is no more dedicated
-> > > syscall nor sysctl configuration.  This new patch series only add new
-> > > flags: one for execveat(2) and four for prctl(2).
-> > >=20
-> > > This kind of script interpreter restriction may already be used in
-> > > hardened systems, which may need to fork interpreters and install
-> > > different versions of the binaries.  This mechanism should enable to
-> > > avoid the use of duplicate binaries (and potential forked source code=
-)
-> > > for secure interpreters (e.g. secure Python [2]) by making it possibl=
-e
-> > > to dynamically enforce restrictions or not.
-> > >=20
-> > > The ability to control script execution is also required to close a
-> > > major IMA measurement/appraisal interpreter integrity [3].
-> >=20
-> > Definitely.  But it isn't limited to controlling script execution, but =
-also
-> > measuring the script.  Will it be possible to measure and appraise the =
-indirect
-> > script calls with this patch set?
->=20
-> Yes. You should only need to implement security_bprm_creds_for_exec()
-> for IMA/EVM.
->=20
-> BTW, I noticed that IMA only uses the security_bprm_check() hook (which
-> can be called several times for one execve), but
-> security_bprm_creds_for_exec() might be more appropriate.
+On Tue, Jul 16, 2024 at 05:23:18PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Kconfig will ask the user twice about power sequencing: once for the QCom
+> WCN power sequencing driver and then again for the PCI power control
+> driver using it.
+> 
+> Let's remove the public menuconfig entry for PCI pwrctl and instead
+> default the relevant symbol to 'm' only for the architectures that
+> actually need it.
+> 
 
-Ok, I tried a trivial modification to have this working:
+Why can't you put it in defconfig instead?
 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima=
-_main.c
-index f04f43af651c..2a6b04c91601 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -554,6 +554,14 @@ static int ima_bprm_check(struct linux_binprm *bprm)
-                                   MAY_EXEC, CREDS_CHECK);
- }
-=20
-+static int ima_bprm_creds_for_exec(struct linux_binprm *bprm)
-+{
-+       if (!bprm->is_check)
-+               return 0;
-+
-+       return ima_bprm_check(bprm);
-+}
-+
- /**
-  * ima_file_check - based on policy, collect/store measurement.
-  * @file: pointer to the file to be measured
-@@ -1177,6 +1185,7 @@ static int __init init_ima(void)
-=20
- static struct security_hook_list ima_hooks[] __ro_after_init =3D {
-        LSM_HOOK_INIT(bprm_check_security, ima_bprm_check),
-+       LSM_HOOK_INIT(bprm_creds_for_exec, ima_bprm_creds_for_exec),
-        LSM_HOOK_INIT(file_post_open, ima_file_check),
-        LSM_HOOK_INIT(inode_post_create_tmpfile, ima_post_create_tmpfile),
-        LSM_HOOK_INIT(file_release, ima_file_free),
+- Mani
 
+> Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Closes: https://lore.kernel.org/lkml/CAHk-=wjWc5dzcj2O1tEgNHY1rnQW63JwtuZi_vAZPqy6wqpoUQ@mail.gmail.com/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/pci/pwrctl/Kconfig | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pwrctl/Kconfig b/drivers/pci/pwrctl/Kconfig
+> index f1b824955d4b..b8f289e6a185 100644
+> --- a/drivers/pci/pwrctl/Kconfig
+> +++ b/drivers/pci/pwrctl/Kconfig
+> @@ -1,17 +1,10 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  
+> -menu "PCI Power control drivers"
+> -
+>  config PCI_PWRCTL
+>  	tristate
+>  
+>  config PCI_PWRCTL_PWRSEQ
+> -	tristate "PCI Power Control driver using the Power Sequencing subsystem"
+> +	tristate
+>  	select POWER_SEQUENCING
+>  	select PCI_PWRCTL
+>  	default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
+> -	help
+> -	  Enable support for the PCI power control driver for device
+> -	  drivers using the Power Sequencing subsystem.
+> -
+> -endmenu
+> -- 
+> 2.43.0
+> 
+> 
 
-I also adapted the Clip OS 4 patch for bash.
-
-The result seems good so far:
-
-# echo "measure fowner=3D2000 func=3DBPRM_CHECK" > /sys/kernel/security/ima=
-/policy
-
-# ./bash /root/test.sh
-Hello World
-
-# cat /sys/kernel/security/ima/ascii_runtime_measurements
-10 35435d0858d895b90097306171a2e5fcc7f5da9e ima-ng sha256:0e4acf326a82c6bde=
-d9d86f48d272d7a036b6490081bb6466ecc2a0e416b244a boot_aggregate
-10 4cd9df168a2cf8d18be46543e66c76a53ca6a03d ima-ng sha256:e7f3c2dab66f56fef=
-963fbab55fc6d64bc22a5f900c29042e6ecd87e08f2b535 /root/test.sh
-
-So, it is there.
-
-It works only with +x permission. If not, I get:
-
-# ./bash /root/test.sh
-./bash: /root/test.sh: Permission denied
-
-But the Clip OS 4 patch does not cover the redirection case:
-
-# ./bash < /root/test.sh
-Hello World
-
-Do you have a more recent patch for that?
-
-Thanks
-
-Roberto
-
-> >=20
-> > Mimi
-> >=20
-> > > This new execveat + AT_CHECK should not be confused with the O_EXEC f=
-lag
-> > > (for open) which is intended for execute-only, which obviously doesn'=
-t
-> > > work for scripts.
-> > >=20
-> > > I gave a talk about controlling script execution where I explain the
-> > > previous approaches [4].  The design of the WIP RFC I talked about
-> > > changed quite a bit since then.
-> > >=20
-> > > [2] https://github.com/zooba/spython
-> > > [3] https://lore.kernel.org/lkml/20211014130125.6991-1-zohar@linux.ib=
-m.com/
-> > > [4] https://lssna2023.sched.com/event/1K7bO
-> > >=20
-> >=20
-> >=20
-
+-- 
+மணிவண்ணன் சதாசிவம்
