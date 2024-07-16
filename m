@@ -1,102 +1,109 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3671A19E83D
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 19:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B181A08BA;
+	Tue, 16 Jul 2024 19:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721156545; cv=none; b=M7zHYX8Okt2ordViLfhJP/HC7r2iqj0YIuv6HYoONmvF6ZUnCM/1/zE6Z5Y4vq8SmcqeelTIT3ofQiv9X24uX/y6qfOSf4ZAXJfSWDwA0Sv5bMUCcUSUFhgNxVjrPI/NfAoNhzQk4lvpql5Mz1KVp6pbouDvp7rEmMZtBltoGfs=
+	t=1721156769; cv=none; b=Q/50B5k8wPM9dZrPw9uI/DmAGbAwWieVZ470Hzo67ih8k3qGightpBGJob9uvxlAhR+OWmpv/ZHD2PJmn8YMV08f/sGjYzaHPP915DjnM6q/UC9buWs9MRDWzVxSRg+JU3nYeZPMGNgr2eftWJMrhwddCM/2CjgiHu5sT7d+lDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721156545; c=relaxed/simple;
-	bh=IcvoyPAiBWsnUIXDnUolardaawkNmtHP8hBYcpNxiyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MGId/eMpzNzIypvuGfYSGXHNQZiJ8a8mvwZcNePkY0LfYT3Wmvy2OEgWn+3lp6rUC+eIJ5bKU1OT290AdokQzrqpBZ4YlcXyYsvCUafKAhxI8O9jWlAWy0ETuhnrwsAyIK95BTthqV5ZFAzT85FIrUvfiCdHNLb1EsSKdiFSgHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DjC3DG1s; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1721156769; c=relaxed/simple;
+	bh=yFU1DoqmYUZ73N+0xQPvNCdgLYYR5HJxDDypYhIzXaY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YkDDvLFBP4TlH96N1VWwbZS3wFrdBUARXLMSxRt154Pjx7H1xp3r+2Fev/kIGoPVfHQQPZMnTbIjOi3wqCPZ3PMCdR5AmRh7aYLIuGGlDC1uP/cEF2lluLWgJfmUVCXNMy3z77tPJN9O6BoYPdQOmrv2quVPnD0WveLljBSJu8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJUjhV6u; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DjC3DG1s"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-59fa3ba8395so486674a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 12:02:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJUjhV6u"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77d85f7fa3so11515866b.0;
+        Tue, 16 Jul 2024 12:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1721156541; x=1721761341; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jlb1twGtDgpkIuFqjFEwx2dSO55N1dWs34CngBK1sSM=;
-        b=DjC3DG1syj+8WSO1pxFbqFTP+TOp+lIH0IWW+wDZL5r8mvx0s3kLYLacdRyQfVHrfM
-         fSpfvbcJDRlqjRFXakdba/0DLKI/m9W3MLpsvOsRZa15cEUl26zZ2zbGNvwhUzyKvIQy
-         GcX4Dz7UdalhsxLEfukx90CkMyF6zeqXqbMAI=
+        d=gmail.com; s=20230601; t=1721156766; x=1721761566; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dbVRbVtNHjSZAwsTYlzVgrVndpQHet4gZ38C2iUs1ck=;
+        b=mJUjhV6u9TGDMXXC8AwpOchTXHqXsBAhkb7AGo6/zdhjz5iySe3fi2YbtxfzmH3C3r
+         VbvrLWMtV0e9LC1xX12ZIdlCA/Vh4vkq8vRYzV2ZlOoywT6egTX9YozRCyYQ7rUDskO5
+         10+1XwbYQDQiL74z9ZToqQRAAZvLhEakRqklfkCBqkyC22rNGD7cu6QkEkaWWXwKFa1n
+         6OrS8T/K0dKGG+ULq7UHe6Qthrv6fedXLa1txo2bh06lZiwQSzw7cMs71XAZtPAKYsM0
+         +PTLvSV1ociBtsc+/ss1kaXA0wlm1li+SI9dAEFfV81+8ZZ2Brba/9psnDVxBdD3Ct89
+         71Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721156541; x=1721761341;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jlb1twGtDgpkIuFqjFEwx2dSO55N1dWs34CngBK1sSM=;
-        b=jrQWHofHdX9GMCdbet8upTp43g3s7GgZlU6QCno8mx3r1R/PIIlDHsMu2i915jPEED
-         JySfwkr36RO9QJxIYjUFlca3QVCaGep9U+blV5k5VLy6Ux1biWPXoAId35maz0LeFOz7
-         TM/jlwOGHkLmHtBaKo8rlKUsOUWmlNnjggLAw0Ewwawl123pjCW4jXBjanYm7+x70BOP
-         YHvOSuywkUa6EY23dV1sAOU/GyPGu4X4EdeNQ45bwRu1UVis2eoHjcyoWzfNPu3eE/4Y
-         bUsi+hdMkgI15mUSxlsvjS6Eqo3HaT1Vat2BnsDIIGrT/gwWzHBbaViOtHci3rftxHee
-         rNpw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0Iy2xRXnfIOkPWy400QZbmW0QNltQDR0PmZaWNmniFBkiU22RDk71xZ8nq9Lol4nh+cKlYSFtd+3xcOJeaB1wezQcfqE2MGVwI86m
-X-Gm-Message-State: AOJu0YyXW8BS9ObOi96F6cbmiL9RsBBlWxvaZ+G3h/ZwzgkFpsQmsnco
-	49D4qP7Z3rLsaq4d1pmczXJcY9udsMcAsWyoEVbb+gPV7mz7bQAycEIlEFH8ZvUHtZXCQo3qPY9
-	2Sf+EAQ==
-X-Google-Smtp-Source: AGHT+IE7kzxzpB5rBaYWsqIhCkoMvWfgBdLUuqksglKjsY/aXxhe2lbsZxG8ysB6Wjf0HMQJP9GROQ==
-X-Received: by 2002:a50:aadb:0:b0:58a:fa6e:9dae with SMTP id 4fb4d7f45d1cf-59eee53f70cmr2081778a12.15.1721156541269;
-        Tue, 16 Jul 2024 12:02:21 -0700 (PDT)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b26f62b8bsm5363904a12.95.2024.07.16.12.02.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 12:02:20 -0700 (PDT)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-367a3d1a378so5221846f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 12:02:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV2JeAWInumwvkzxqurEAXd61yXXVksa/A/t8uUPEnpHPXF4JWzZ6B6pT4us+chK15NUYq+Chn0OH7Ix0z6uurKE2VVrcLTi7xLmiXB
-X-Received: by 2002:a05:6000:1848:b0:367:434f:cab8 with SMTP id
- ffacd0b85a97d-368261eda5cmr3359220f8f.43.1721156540333; Tue, 16 Jul 2024
- 12:02:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721156766; x=1721761566;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dbVRbVtNHjSZAwsTYlzVgrVndpQHet4gZ38C2iUs1ck=;
+        b=LTf6BK+N2r3E9Fl2K9Mr6o+dabU4owzWgd4rZwFS5glsItsivOwdt0AxA+sV9JGHOL
+         oeVNCGi60mGojeznlSGv4EnqSBEZ5XvwpbHKjW+pHMZx+0P5hY/Xw0Gq6Ak+uAT453gK
+         +AW+rrfRX3o5GOaY3liMTOSYtld2lhJRcqErXDlXbH1fERJgpr/hMmiS7O3UwYY6HwBa
+         ZDP0k6QT6L7H1H0Hm2G3raQo/lgOPWNVNs/DBsjY4nmsf2ZqpyeDFfaDcnYlEwazvSc3
+         UNzAy5/+L/O/S8M8LhN7ChOZpEYOTuoqY2w97cyRVZKTreBY4pB7gJuJVwARPRxwNIwV
+         0vXw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8ENHpyOgBlkaOtXuY2S2ONOQQ3j/2Bc0YfGPYrAg8/Z3VUs5J4rnC38RRGhpQktunh06vSRMjNfbnc5AKzRpjkufLG+HpZB+8RnWBRLylFxRHcSWN+NXHhtX8swHyX376nZ/Gh1Au
+X-Gm-Message-State: AOJu0YzM5kCN5q0SgakYGdwMF6rqCg/EitHBCLV4pB0kkTqUSfskZZJd
+	rOXsl6DNvwJ8W4avabO8ae8XvTmHFejKxVcLVHqtt5A+tx95aD95
+X-Google-Smtp-Source: AGHT+IGwyyZHAsGGgQ5LUdKfGrLf99iEaNORyAqwbpR/LysIFXP4HwONOBRiXWr/rWTj+7tn92MwYg==
+X-Received: by 2002:a17:906:1411:b0:a77:d9b5:ad4b with SMTP id a640c23a62f3a-a79eda94957mr261489066b.9.1721156766045;
+        Tue, 16 Jul 2024 12:06:06 -0700 (PDT)
+Received: from vamoiridPC ([2a04:ee41:82:7577:a8e1:c73d:f3db:4b4c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820e27sm345766666b.216.2024.07.16.12.06.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 12:06:05 -0700 (PDT)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoiridPC>
+Date: Tue, 16 Jul 2024 21:06:02 +0200
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Adam Rizkalla <ajarizzo@gmail.com>,
+	Vasileios Amoiridis <vassilisamir@gmail.com>, lars@metafoo.de,
+	petre.rodan@subdimension.ro, mazziesaccount@gmail.com,
+	ak@it-klinger.de, ang.iglesiasg@gmail.com, linus.walleij@linaro.org,
+	tgamblin@baylibre.com, phil@raspberrypi.com, 579lpy@gmail.com,
+	andriy.shevchenko@linux.intel.com, semen.protsenko@linaro.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 1/3] iio: pressure: bmp280: Generalize read_*()
+ functions
+Message-ID: <20240716190602.GA577521@vamoiridPC>
+References: <20240628171726.124852-1-vassilisamir@gmail.com>
+ <20240628171726.124852-2-vassilisamir@gmail.com>
+ <ZpROUow6p78VJsrO-ajarizzo@gmail.com>
+ <20240716180850.7c6089f2@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716152318.207178-1-brgl@bgdev.pl> <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
- <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com>
-In-Reply-To: <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 16 Jul 2024 12:02:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
-Message-ID: <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240716180850.7c6089f2@jic23-huawei>
 
-On Tue, 16 Jul 2024 at 11:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> But this patch does it. PCI_PWRCTL_PWRSEQ becomes a hidden symbol and
-> the entire submenu for PCI_PWRCTL disappears. There's no question in
-> Kconfig anymore.
+On Tue, Jul 16, 2024 at 06:08:50PM +0100, Jonathan Cameron wrote:
+> 
+> > >  
+> > >  static const int bmp580_odr_table[][2] = {
+> > > @@ -1830,6 +1848,9 @@ static int bmp580_chip_config(struct bmp280_data *data)
+> > >  
+> > >  static const int bmp580_oversampling_avail[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+> > >  static const u8 bmp580_chip_ids[] = { BMP580_CHIP_ID, BMP580_CHIP_ID_ALT };
+> > > +/* Instead of { 1000, 16 } we do this, to avoid overflow issues */
+> > > +static const int bmp580_temp_coeffs[] = { 125, 13 };  
+> > 
+> > I'm not really sure what we gain here from using 125/13 instead of
+> > 250/14...but I don't think it hurts either.
+> > 
+> > I don't have a way to test this with the latest kernel release
+> > currently, but lgtm.
+> > 
+> > Acked-by: Adam Rizkalla <ajarizzo@gmail.com>
+> Series applied.  Thanks
+> 
+> Jonathan
 
-Yes, but look here:
+Hi Jonathan,
 
-        default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
+Thank you very much!
 
-That has at least two issues:
-
- - what if ATH11K_PCI or ATH12K is built-in and needs this driver?
-"default m" is *NOT* valid.
-
- - what happens when you add new drivers? You keep making this line
-longer and more complicated?
-
-See why I say "use select" instead? It means that the drivers that
-need it can select it, and you avoid complicated "list X drivers"
-things, but you can also get the *right* selection criteria, so that a
-built-in driver will select a built-in PCI_PWRCTL_PWRSEQ option.
-
-           Linus
+Cheers,
+Vasilis
