@@ -1,133 +1,136 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDF919752C;
-	Tue, 16 Jul 2024 09:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396C9196C6C;
+	Tue, 16 Jul 2024 09:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721122004; cv=none; b=kZ/WM65NxZ4tzqnIOKbFvAO3MROnutbRky4kTH98g4FcHntr7GHNjrFNi42CblgCr26VK22q9hOVWpFOLUNmmSBHBm4cluJMJmJB6gAm15lztqqfPBpxb+CXf/iA7Uf4tv+TR7akZvDFIiO8DylMtrljsbul3BboD6UfRw9Wqew=
+	t=1721122057; cv=none; b=Ni8KrnTcy9+KnZXvF76ebp/Fpg5b+mZDB21tEZDbjgz/XTEqDfi5BctmXlcBvkS9Y+bmgJryzk88WfgXqc51eFxfeIEAtS6SzsW0t+pjOqrB7zY92qyVo2AfFh28VgG66NCZzOnFgJb7Bf3KGOZc65RR1A+6b3Q6E2IReeqaDgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721122004; c=relaxed/simple;
-	bh=mPyAgdnCG6X0qIxb245UTKv9eD2XhiUuSqcL48hhmNA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZemKxP1VXWV4xAmG0fwaEQgTxYDMfDRog4Duw3tjO2AJVByIfAYYeZ392QpSo76rIaVB043eJGncIasyagE6bI8cL4kNAWh3f24UCg3LXYA9ZsAlWRr99BC4FEkBmB/X9RubtWfkwfuIxbqH58/TXDa1ax3Gk1uOLfwVHsl6m+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowADn7+fIPJZmC_qZAw--.55159S2;
-	Tue, 16 Jul 2024 17:26:32 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: broonie@kernel.org,
-	neil.armstrong@linaro.org,
-	khilman@baylibre.com,
-	jbrunet@baylibre.com,
-	martin.blumenstingl@googlemail.com,
-	yixun.lan@amlogic.com,
-	sunny.luo@amlogic.com
-Cc: linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] spi: meson-spicc: convert comma to semicolon
-Date: Tue, 16 Jul 2024 17:11:51 +0800
-Message-Id: <20240716091151.1434450-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1721122057; c=relaxed/simple;
+	bh=0AvImW20JI33GnYfDuA9xlRzQVQN5eOuU1t4kmhQGTI=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=hYgpxhZ8HdYeBfnNHvp2g+Xi+h5X97OrytYii6ZhRc533Wgm0yTYg4J8EWTtxhMPJQ+WQGHq3EB+zTYtufDFgXG61qNShf0KscxBkyJJqf+G3AOXVLdGM8MOI7RNNd9vjWT8HMTwYnajWkPKHUWqhzRxOpbHS0AE7Irm2K1Ktag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f3oAlN5V; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3oAlN5V"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4266b1f1b21so35725405e9.1;
+        Tue, 16 Jul 2024 02:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721122054; x=1721726854; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2PEU4qwN7WxP6VJDTGvYtCPzC+v0lV1/cj8lPv93ylU=;
+        b=f3oAlN5V66SN+S4/9s7HkVZiyBc7MYesEfRVBaWbQdgu40FVbCFQSs5WzcACvdxG0t
+         o2oUJ2mr5k/6Uzc8UBSijyRDisLps5AJeKzTwE4k2QaP6z2JKvgQ3ub+n7n7OPNZ43eB
+         u9wQXqQzXfD4DqNEfxJXugiu5ixyW1jSGSlAx+SUwmvfEuOtHEGLYtdpvWGYXy+YwHgt
+         vio19/9ws8FBJp3Ujtk/Q2P1YKJ8nRy0Oo/qAY771vWMRjK3H+QNexD4UnYFMwMAaAWu
+         M+KwPWlMIqqx++wQzgrZVSw/hQK3gCOcl8VPnN1I6cXK3+wUlbQgalDOcVgTH+Vua3HC
+         aX1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721122054; x=1721726854;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2PEU4qwN7WxP6VJDTGvYtCPzC+v0lV1/cj8lPv93ylU=;
+        b=Hz/6Diah459pkprvEdA23+4mZ7rQQkdTuPZBVbIsbaJ/4lInnCg0rc7EMBjl9HKc3r
+         vBfvToEBUBDs4Uo9korg2M5bRwwEeoM4xwG2KFVgJTzGXwrV/VX0Jc+KgeFpknfGA84X
+         LFjpfii4hhPR4qYzfof8ENRBV7KfGPqD86nje3NNZH5q0l7XGhmWVZbIdTtUb1DBxCq8
+         7NN3JfEnryn67ReqZjE6DH8IATp70Gz7dm7GDFf/+9wQxJDTM5ecBY9qnYNNtzDtvtm6
+         9ZG5hMBIupcTusN2VAuu7tFJDyyyCMCBVGJwhjRYT4QqVdnQ/aX/Js0FqPTcykjcFEAy
+         VPWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWJTquTqdF9QREHUF4azdDx1PUfO/sZXxaBMciHNtY6miIiCZhyiY3yTpwuYXhW420KuEN8tywufu0PqGNqrfsM7/tiaaFXEWN03oEiXWdD9/mAy/b8jRNdG+tN0zAJ/xc/+nntklT8EQ=
+X-Gm-Message-State: AOJu0YwAgtLqZhBu7kTu7E73AOU97UckGu14iwLnM9pNuc0rfdZXj8LV
+	q18VzskG5qD4Nx0Ye9oSdLuX3BlJKAgpp5yW2U35tZJEV9Ehbwbr
+X-Google-Smtp-Source: AGHT+IEGHl0l97n2oZGPosdV8rJBmnt5GWQ20KKOkfy2e9pjEUSSh+vmDhtfqRS+c9+nFRYnAae6Rw==
+X-Received: by 2002:a05:600c:3152:b0:426:6eb9:db07 with SMTP id 5b1f17b1804b1-427ba684a4fmr10488545e9.13.1721122054395;
+        Tue, 16 Jul 2024 02:27:34 -0700 (PDT)
+Received: from localhost (host-79-55-57-217.retail.telecomitalia.it. [79.55.57.217])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427bb9976casm9090835e9.1.2024.07.16.02.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 02:27:33 -0700 (PDT)
+Date: Tue, 16 Jul 2024 11:27:33 +0200
+From: Matteo Martelli <matteomartelli3@gmail.com>
+To: Maxime Ripard <mripard@kernel.org>, 
+ Matteo Martelli <matteomartelli3@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ Marcus Cooper <codekipper@gmail.com>, 
+ =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, 
+ linux-sound@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org
+Message-ID: <66963d0531f17_7063708a@njaxe.notmuch>
+In-Reply-To: <20240715-rigorous-bipedal-sloth-c8df1b@houat>
+References: <20240529140658.180966-2-matteomartelli3@gmail.com>
+ <20240529140658.180966-3-matteomartelli3@gmail.com>
+ <20240606-savvy-wallaby-of-champagne-d4a50e@houat>
+ <6662bf1b61bbc_2f51737023@njaxe.notmuch>
+ <20240702-copperhead-of-unusual-intensity-7f43a8@houat>
+ <668419fb8ef9f_2a76d370f1@njaxe.notmuch>
+ <20240715-rigorous-bipedal-sloth-c8df1b@houat>
+Subject: Re: [PATCH 1/1] ASoC: sunxi: sun4i-i2s: fix LRCLK polarity in i2s
+ mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADn7+fIPJZmC_qZAw--.55159S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw4fuF48ZryDCF45WryxGrg_yoW8Kr4xpa
-	nrG3yUWry7Gan7urn3K34DZr45Gry0gaykZryFyrW8KwsrWF1qqFy5JF4rAFWYqFZ7uF40
-	9ryrWrs8Wr17GaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbFoGPUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Replace a comma between expression statements by a semicolon.
+Maxime Ripard wrote:
+> On Tue, Jul 02, 2024 at 05:17:15PM GMT, Matteo Martelli wrote:
+> > Maxime Ripard wrote:
+> > > On Fri, Jun 07, 2024 at 10:04:43AM GMT, Matteo Martelli wrote:
+> > > > Maxime Ripard wrote:
+> > > > > > -	/*
+> > > > > > -	 * DAI clock polarity
+> > > > > > -	 *
+> > > > > > -	 * The setup for LRCK contradicts the datasheet, but under a
+> > > > > > -	 * scope it's clear that the LRCK polarity is reversed
+> > > > > > -	 * compared to the expected polarity on the bus.
+> > > > > > -	 */
+> > > > > 
+> > > > > I think we should keep that comment somewhere.
+> > > > 
+> > > > I think that keeping that comment would be very misleading since the LRCLK
+> > > > setup would not contradict the datasheet anymore [1][2].
+> > > >
+> > > > Also, do you recall any details about the mentioned scope test setup? Was i2s
+> > > > mode tested in that occasion? It would help clarify the situation.
+> > > 
+> > > I can't remember if I tested i2s, I think I did though. But most of the
+> > > work was done on either TDM or DSP modes, and I remember very clearly
+> > > that the LRCK polarity was inverted compared to what Allwinner documents.
+> > > 
+> > > So the doc was, at best, misleading for these formats and we should keep
+> > > the comments.
+> > 
+> > Thanks for the reply Maxime, would you be able to point out the Allwinner
+> > document part that is (or was) misleading? The current datasheets (see links
+> > [1][2]) look correct, the current driver setup for TDM and DSP modes respects
+> > those datasheets and it's not "reversed compared to the expected polarity on
+> > the bus" as the comment states. 
+> 
+> I clearly remember having to debug something there, but I don't remember
+> much more, sorry.
+> 
+> I guess if you have tested on the H3 I2S, TDM and DSP and it all works
+> as expected with your changes, go ahead and ignore my comment then.
 
-Fixes: 3e0cf4d3fc29 ("spi: meson-spicc: add a linear clock divider support")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/spi/spi-meson-spicc.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+I did test it on the A64 SoC only (all modes I2S, TDM and DSP working).
 
-diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
-index 8838a98b04c2..1d05590a7434 100644
---- a/drivers/spi/spi-meson-spicc.c
-+++ b/drivers/spi/spi-meson-spicc.c
-@@ -655,8 +655,8 @@ static int meson_spicc_pow2_clk_init(struct meson_spicc_device *spicc)
- 	}
- 	init.num_parents = 1;
- 
--	pow2_fixed_div->mult = 1,
--	pow2_fixed_div->div = 4,
-+	pow2_fixed_div->mult = 1;
-+	pow2_fixed_div->div = 4;
- 	pow2_fixed_div->hw.init = &init;
- 
- 	clk = devm_clk_register(dev, &pow2_fixed_div->hw);
-@@ -674,9 +674,9 @@ static int meson_spicc_pow2_clk_init(struct meson_spicc_device *spicc)
- 	parent_data[0].hw = &pow2_fixed_div->hw;
- 	init.num_parents = 1;
- 
--	spicc->pow2_div.shift = 16,
--	spicc->pow2_div.width = 3,
--	spicc->pow2_div.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	spicc->pow2_div.shift = 16;
-+	spicc->pow2_div.width = 3;
-+	spicc->pow2_div.flags = CLK_DIVIDER_POWER_OF_TWO;
- 	spicc->pow2_div.reg = spicc->base + SPICC_CONREG;
- 	spicc->pow2_div.hw.init = &init;
- 
-@@ -721,8 +721,8 @@ static int meson_spicc_enh_clk_init(struct meson_spicc_device *spicc)
- 	}
- 	init.num_parents = 1;
- 
--	enh_fixed_div->mult = 1,
--	enh_fixed_div->div = 2,
-+	enh_fixed_div->mult = 1;
-+	enh_fixed_div->div = 2;
- 	enh_fixed_div->hw.init = &init;
- 
- 	clk = devm_clk_register(dev, &enh_fixed_div->hw);
-@@ -740,8 +740,8 @@ static int meson_spicc_enh_clk_init(struct meson_spicc_device *spicc)
- 	parent_data[0].hw = &enh_fixed_div->hw;
- 	init.num_parents = 1;
- 
--	enh_div->shift	= 16,
--	enh_div->width	= 8,
-+	enh_div->shift	= 16;
-+	enh_div->width	= 8;
- 	enh_div->reg = spicc->base + SPICC_ENH_CTL0;
- 	enh_div->hw.init = &init;
- 
-@@ -761,8 +761,8 @@ static int meson_spicc_enh_clk_init(struct meson_spicc_device *spicc)
- 	init.num_parents = 2;
- 	init.flags = CLK_SET_RATE_PARENT;
- 
--	mux->mask = 0x1,
--	mux->shift = 24,
-+	mux->mask = 0x1;
-+	mux->shift = 24;
- 	mux->reg = spicc->base + SPICC_ENH_CTL0;
- 	mux->hw.init = &init;
- 
--- 
-2.25.1
-
+Best reguards,
+Matteo
