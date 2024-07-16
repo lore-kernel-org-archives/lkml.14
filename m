@@ -1,57 +1,57 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF94F198E76
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239E01991CA
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125842; cv=none; b=nXCmV+ylulmek32VwK4G/dFfyJ95DSgalT5fxJZfUOqVEL+MtRELoMay4jrFsuyZ9NOEsAcM5PJ6cnqSISwjh1hUCLBTwA+zF9Ye2SdL/raOds9xEVq50Mux0lJV1Qce6H+ksvzqnI99uuU2wfKpu2beIwJNGkChtEfpZQ0mvv8=
+	t=1721125845; cv=none; b=O0GxtHo8F75NkBM18IWNUr577HxT6mrRXkiqoN55L4Oc/asHnxd2pDx23VgUoFsAU6BTZiyxke0zjlK/j/9YbYixZuXrF9i5x+jgxfDS9lM/jJpBrUKTIfGWLPz4rKxweF4sd7HRwPb+xHXwXyQDpaDcU+g7vwT6uguB5Os0jts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125842; c=relaxed/simple;
-	bh=ETbaEy+22ovLXxvQSezV0AojhPWcArdMl1tGqum6kSo=;
+	s=arc-20240116; t=1721125845; c=relaxed/simple;
+	bh=ww/FT9sA68yQ9DNRM5qKKzoLjZnR43IIWUO39B1Sfuc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZMgWYny42tH4ulUFevBkQGphtjahlb9LrPW9GbFBiuuGBJFY/6wqPnJ8UioHfP6Fh9U1ZqttJe4PQ8LXuxwGBexFNGYzcLukR6iOyJpwfWGyxIzf0QYT7Q8OdccJlz0Whr7B+q3z1cf/iF0kVSkAjGqrhETE0wZ4C1oNheOvc6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=DPcIsWxu; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=g2EWAWfDhlNXBPV2MMxeUymuGlcDHTHJ9FyeoZ805O+nVYgvVXJdnD4+XRCz+EJlJlBQLGfXU/MiW/jqh66eD+oZgWSwaCN0/onJGIKK2TlmB5B0Za7pWATuYZ+1bHVLCtf1ERJ4CdzzimB3DOR54sNlz2d7rwQQ0JD/8Z6u/eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=POtFXHP2; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="DPcIsWxu"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4266edee10cso33868945e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:30:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="POtFXHP2"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-367a464e200so3269128f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1721125839; x=1721730639; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1721125842; x=1721730642; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wPLuLQoZENDdi//jkP+m+sJa9j1xpR49CY9yYB9V7TA=;
-        b=DPcIsWxuwG8P75V5sKvvArZAw9qjJDM/yoQh1DyTPjJnX5b4XuZEsYAiwg0pa4jC1Q
-         nc+xx+FE6CObIP7d6IYnFjxPeiyBsLbZnb6VwVAJe/AJ1uljZinzRFOPinr5pDYLDAoR
-         2UM0o6yeM5C7a7T/IIarTi10RFc9Sg6q9arRm68wqUsY4KuUJXEkPCeRIKnhtHwfA0Lw
-         GchrqtoR2YRwSyBC1grcSQ2U1CSjtYv5uDUk2vyds9CUTTHQvMtU8wlX2Q/BtNamfChJ
-         ZXxQ4PZWjZ+NHVlYYUlyLLg09jD1wMRs2zjXrOhCFj/BhOTy00GK9EmZ0Q18Y2ElERGk
-         DzoA==
+        bh=DutJfFYyPW6LbOov2zw2hBuFnpsIDvuTXHPgZwrrhHw=;
+        b=POtFXHP2POgN9KWUwPpVQydvrafjGIx36SpTG3EFyPdorVfoC3s+HJ3CKGRttD7Oik
+         FnCcKn7kvtwTMx9thO0kyllljIi+eg4kLUmRIu6CDtf+6UA1TzmLKw1pUzQB+u3nzJ9G
+         1z6YO6iBLQtfSwMy0CkaJCcXCpRJ3dFuH0jXizNF2r4+CvcjBSSQnkggUZ5plJ52zzxF
+         S0QDsVOGrpc1spv0d8yGttmGw4pLoA7iN6fzIJ4kAIwJgWnHxqGCyqeZ5hQBnNUjRoIM
+         wY8QM/o1KtIz+MKolOW6GCfJ7s1UpQGWcRn/PVwum2UwqWi2zf2XtY4q/RuVdBk48Uw3
+         3tGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721125839; x=1721730639;
+        d=1e100.net; s=20230601; t=1721125842; x=1721730642;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wPLuLQoZENDdi//jkP+m+sJa9j1xpR49CY9yYB9V7TA=;
-        b=EyOCC6kfTJ0mvk46R4VduedbW1gGEmBX8JyPQShphDcQ8ONOzPArLtz/mgNc0ptzjq
-         ugUl66owb0x07BAzQdiCx8rIfFIaqCCsWFqdvQdzlTRL0yLbuhdrCJpOcy9CfZYNki7w
-         jloG/X0U5QFsgEkIMei4EU+a3mPFBanwvWptmGBwGv+GgqdOIfdc7rEqOyH/jatb+Ypu
-         S19KKzAPnhMZosNOLBWYiZiL0dtwuI9fgiRqnFlzWK9fCO4ddQRyWR+qw2Vsi9yxKBCS
-         57mbh5yh4G2vyeW1a+xd1qB3WxgPRv1lADy37eW6TlJdlKrxU+760QsqfQDu6NxUqnix
-         fjdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgQ0D+TqGVzZvL9oIa0C/NNliig04CrtS/pIEob54PIdambt3shIFCpCB3xiwjBaBKIYHWTf7SKgsiDnqtuTsayA7Lk7bGjKMsIFeD
-X-Gm-Message-State: AOJu0Yz2zfwufltjgLgbTqo/J+KUS9mpyUU0w7UN1A2ORVdmkuJIFOwd
-	NaLOhv/gkQqixYHkmgwM2UhqijQJKl5eICeOBonShUDO5vDE5DS/gdfxGsNeoZM=
-X-Google-Smtp-Source: AGHT+IHVW6yRfdgEc3IWW0j9GtIckJ7vtGhNTVh5Ka58Ken968QRPKCQQvNko4nwFp7mgOiOKSesPg==
-X-Received: by 2002:a05:600c:4e92:b0:426:5cee:4abc with SMTP id 5b1f17b1804b1-427ba691136mr12483235e9.20.1721125839410;
-        Tue, 16 Jul 2024 03:30:39 -0700 (PDT)
+        bh=DutJfFYyPW6LbOov2zw2hBuFnpsIDvuTXHPgZwrrhHw=;
+        b=Z3oALWI1nfBukQOYFDHj7WPd95Pqd12e2iy6jXPOWzotGz4jKJPNop31DakPBkdCgi
+         4IqBBlTUVjK0iCpZIQpxT7Cr9RxiDu1zikTiGyDyMzOpNEyaPwJQJ9qhFA1eXiZ9Ysbd
+         CzPnWIb1sLhI5OKQ0P5yqCnSnZ0RuQyfrsNEZMXj+jYfkybVtgpvi9txk6I4Q8A63SK8
+         /FqFIVItkeo2vivsZ2hipgs2+HjJQpDRVIutufu2askwWzwz6zvOewiyeSA9aYrx1lBy
+         0OFhzaJHA0vF9FPWHsFZMNe0kWW4pAQOabv4jLKBkTWk8fr13qDFJJmL9rwWW9swkvn1
+         6gCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNadqZUD4xmfLQsycJaC/UU0vo5IOifxYzBeNKKTGtZcEaZ7eZkh4oTjmDqiT/w4vqBk/KO1w8omi6T6ka1DV642675/SrRfgW0ulH
+X-Gm-Message-State: AOJu0YwGqt00UmAMFrqJkY8HCA2sk+CdzQRxmPpErSUs7f64NnH0aRBk
+	WB2ZyoupZTPdwDL9UY57PUOzB+IIm0f60+6zCINRnCqiDZavkSdpUxHvv1Zm//k=
+X-Google-Smtp-Source: AGHT+IFU3cDQXFUWCvhj2jbJm95VoDDyWAcY2PCPxU3FwC7xwW2+LqlxWB/VeBVZJ81bc0MyLsa17w==
+X-Received: by 2002:a5d:6487:0:b0:367:91d8:a1d2 with SMTP id ffacd0b85a97d-3682614a8a8mr1354950f8f.30.1721125842490;
+        Tue, 16 Jul 2024 03:30:42 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77488sm121546145e9.9.2024.07.16.03.30.37
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77488sm121546145e9.9.2024.07.16.03.30.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 03:30:38 -0700 (PDT)
+        Tue, 16 Jul 2024 03:30:42 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: lee@kernel.org,
@@ -72,9 +72,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	claudiu.beznea@tuxon.dev,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 02/11] mfd: renesas-vbattb: Add a MFD driver for the Renesas VBATTB IP
-Date: Tue, 16 Jul 2024 13:30:16 +0300
-Message-Id: <20240716103025.1198495-3-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 04/11] dt-bindings: rtc: renesas,rzg3s-rtc: Document the Renesas RTCA-3 IP
+Date: Tue, 16 Jul 2024 13:30:18 +0300
+Message-Id: <20240716103025.1198495-5-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
@@ -88,137 +88,104 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Renesas VBATTB IP has logic to control the RTC clock, tamper detection
-and a small 128B memory. Add a MFD driver to do the basic initialization
-of the VBATTB IP for the inner components to work.
+Document the RTC IP (RTCA-3) available on the Renesas RZ/G3S SoC.
+The RTC IP available on Renesas RZ/V2H is almost identical with the
+one found on Renesas RZ/G3S (it misses the time capture functionality
+which is not yet implemented on proposed driver). For this, added also a
+generic compatible that will be used at the moment as fallback for both
+RZ/G3S and RZ/V2H.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v2:
-- none; this driver is new
+- updated patch description and title
+- included reference to rtc.yaml
+- updated compatible list with a generic compatible as explained in
+  patch description; with this the node in examples section has also been
+  updated
+- used items to describe interrupts, interrupt-names, clock, clock-names
+- updated title section
 
- drivers/mfd/Kconfig          |  8 ++++
- drivers/mfd/Makefile         |  1 +
- drivers/mfd/renesas-vbattb.c | 78 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 87 insertions(+)
- create mode 100644 drivers/mfd/renesas-vbattb.c
+ .../bindings/rtc/renesas,rz-rtca3.yaml        | 69 +++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/renesas,rz-rtca3.yaml
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index bc8be2e593b6..df93e8b05065 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1383,6 +1383,14 @@ config MFD_SC27XX_PMIC
- 	  This driver provides common support for accessing the SC27xx PMICs,
- 	  and it also adds the irq_chip parts for handling the PMIC chip events.
- 
-+config MFD_RENESAS_VBATTB
-+	tristate "Renesas VBATTB driver"
-+	depends on (ARCH_RZG2L && OF) || COMPILE_TEST
-+	select MFD_CORE
-+	help
-+	  Select this option to enable Renesas RZ/G3S VBATTB driver which
-+	  provides support for the RTC clock, tamper detector and 128B SRAM.
-+
- config RZ_MTU3
- 	tristate "Renesas RZ/G2L MTU3a core driver"
- 	depends on (ARCH_RZG2L && OF) || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 02b651cd7535..cd2f27492df2 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -186,6 +186,7 @@ pcf50633-objs			:= pcf50633-core.o pcf50633-irq.o
- obj-$(CONFIG_MFD_PCF50633)	+= pcf50633.o
- obj-$(CONFIG_PCF50633_ADC)	+= pcf50633-adc.o
- obj-$(CONFIG_PCF50633_GPIO)	+= pcf50633-gpio.o
-+obj-$(CONFIG_MFD_RENESAS_VBATTB)	+= renesas-vbattb.o
- obj-$(CONFIG_RZ_MTU3)		+= rz-mtu3.o
- obj-$(CONFIG_ABX500_CORE)	+= abx500-core.o
- obj-$(CONFIG_MFD_DB8500_PRCMU)	+= db8500-prcmu.o
-diff --git a/drivers/mfd/renesas-vbattb.c b/drivers/mfd/renesas-vbattb.c
+diff --git a/Documentation/devicetree/bindings/rtc/renesas,rz-rtca3.yaml b/Documentation/devicetree/bindings/rtc/renesas,rz-rtca3.yaml
 new file mode 100644
-index 000000000000..5d71565b8cbf
+index 000000000000..21f104b1e86b
 --- /dev/null
-+++ b/drivers/mfd/renesas-vbattb.c
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * VBATTB driver
-+ *
-+ * Copyright (C) 2024 Renesas Electronics Corp.
-+ */
++++ b/Documentation/devicetree/bindings/rtc/renesas,rz-rtca3.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/renesas,rz-rtca3.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/mod_devicetable.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/reset.h>
++title: Renesas RTCA-3 Real Time Clock
 +
-+static int vbattb_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct reset_control *rstc;
-+	int ret;
++maintainers:
++  - Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 +
-+	rstc = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR(rstc))
-+		return PTR_ERR(rstc);
++allOf:
++  - $ref: rtc.yaml#
 +
-+	ret = devm_pm_runtime_enable(dev);
-+	if (ret)
-+		return ret;
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a08g045-rtca3 # RZ/G3S
++      - const: renesas,rz-rtca3
 +
-+	ret = pm_runtime_resume_and_get(dev);
-+	if (ret)
-+		return ret;
++  reg:
++    maxItems: 1
 +
-+	ret = reset_control_deassert(rstc);
-+	if (ret)
-+		goto rpm_put;
++  interrupts:
++    items:
++      - description: Alarm interrupt
++      - description: Periodic interrupt
++      - description: Carry interrupt
 +
-+	platform_set_drvdata(pdev, rstc);
++  interrupt-names:
++    items:
++      - const: alarm
++      - const: period
++      - const: carry
 +
-+	ret = devm_of_platform_populate(dev);
-+	if (ret)
-+		goto reset_assert;
++  clocks:
++    items:
++      - description: RTC counter clock
 +
-+	return 0;
++  clock-names:
++    items:
++      - const: counter
 +
-+reset_assert:
-+	reset_control_assert(rstc);
-+rpm_put:
-+	pm_runtime_put(dev);
-+	return ret;
-+}
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - clock-names
 +
-+static void vbattb_remove(struct platform_device *pdev)
-+{
-+	struct reset_control *rstc = platform_get_drvdata(pdev);
++additionalProperties: false
 +
-+	reset_control_assert(rstc);
-+	pm_runtime_put(&pdev->dev);
-+}
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
 +
-+static const struct of_device_id vbattb_match[] = {
-+	{ .compatible = "renesas,r9a08g045-vbattb" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, vbattb_match);
-+
-+static struct platform_driver vbattb_driver = {
-+	.probe = vbattb_probe,
-+	.remove_new = vbattb_remove,
-+	.driver = {
-+		.name = "renesas-vbattb",
-+		.of_match_table = vbattb_match,
-+	},
-+};
-+module_platform_driver(vbattb_driver);
-+
-+MODULE_ALIAS("platform:renesas-vbattb");
-+MODULE_AUTHOR("Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>");
-+MODULE_DESCRIPTION("Renesas VBATTB driver");
-+MODULE_LICENSE("GPL");
++    rtc@1004ec00 {
++        compatible = "renesas,r9a08g045-rtca3", "renesas,rz-rtca3";
++        reg = <0x1004ec00 0x400>;
++        interrupts = <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "alarm", "period", "carry";
++        clocks = <&vbattclk>;
++        clock-names = "counter";
++    };
 -- 
 2.39.2
 
