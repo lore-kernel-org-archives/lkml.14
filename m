@@ -1,71 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECB5F9E8;
-	Tue, 16 Jul 2024 15:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B3A19E7E5
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 15:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721144529; cv=none; b=cO/YZLXQZShHtd+9DM6RrayQOpQVqhuRN17Uyir5hSApScKQ58zmzJgjjwJXEDGHxjkDeXdJ61bLIFaohHb835tDNDglvtuJWrxvhaA8C4AKa2MqLULDHbLxfzSuOs7MCGC4Xa4YzQX4LlT0gwrxsCa5E1Wh0ln66M4ebJKgwbI=
+	t=1721144563; cv=none; b=jJA96WtrVOrlcvbB/mf+ra0NZZulVXx4qYD9TLNvHqfSPjetR1kfuGDrc3VMzAMWmexkCTiNIXx4aadP7wBGEWSG5JJhVyUdV1bXNV7jfvbGRn8wJukwGExbzT7q3jGWU8CkapZn9WMU/Fmx4WPXLC6urU5ghDqCEQ17KyQaKLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721144529; c=relaxed/simple;
-	bh=3K3HETqJm/ZpKc+V9IVxrUF1fl+PRjx9X/4MZOmKgiI=;
+	s=arc-20240116; t=1721144563; c=relaxed/simple;
+	bh=rQQ1Qg6JSBfjSH2QZ8VvmzPD790Oe1XjwPlwbolB7ho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xqghypbe1VZteRfUsOX1wjJfc4ZBnTKqucZG7yRzEVBSA5qa3syWofBQEYW8gssEMZQlqD9bs+kIE2awLqMyGR4k6JSvU3/6+sXYlzFp5secNU0+WxvJb7oR+xCVnHqbXGrjVRRBqStT2rIuL4lBJXJunZ+yyD21kEhJOOC+MhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YnSaJsGD; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qTv0QIqtQJmwkmqW45liyxDsLDLm18VhLLH/UZUDX9H/BGLSD5s5DM0WJ8k3YDwjwSmk6eY23MuT/ax2J6x4pxZCJJ458lTQWalHhftoEucp1u2RC17kUkphbI3O2HeU+Fa4AIY3uPyXSTF/AdNc7ucNDOEUpVs8Jg3nSZQvpU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qVv8GuY0; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YnSaJsGD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721144528; x=1752680528;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3K3HETqJm/ZpKc+V9IVxrUF1fl+PRjx9X/4MZOmKgiI=;
-  b=YnSaJsGDct8n9k5I33VKgPskUIx89iftfDhcZPu141UhNcofXMYq5PJv
-   8FSBPDRrxMzLNFgJc7GUC3ZFf1wPRkixe30boTvLZM92oXJQakG+Wozzc
-   gcbcZcpByRv/X2zqjKOEokBatc9ltuWuBdY0rtjArL4w9pAsLPNPxi8QX
-   SWFHsCYU7Z4dhB/PK2cWLj63HtwYtwkJPeTRHOtmuhXIid9Z6zXkwlAVi
-   RCRZRShE7u6KLMshUobwzN9C4h0enNLnawrBEa/dQYxsI1RR5cwvCtm0k
-   Y9S6KqytgLsaBiHwvC23GsJeiqxekOAUV3aMBE7iuZxoSwi31mouTF/eK
-   Q==;
-X-CSE-ConnectionGUID: MuFkh7rLQcmJ2QxGZz2APg==
-X-CSE-MsgGUID: jpalR6obQwC1MgNyPCcOjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="29200476"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="29200476"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 08:42:07 -0700
-X-CSE-ConnectionGUID: RIs+OzhpQTufLz9ioQbl6A==
-X-CSE-MsgGUID: 6ifkXvsmSRiAbDvZ718bpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="50136221"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 16 Jul 2024 08:42:04 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sTkJV-000fOs-1x;
-	Tue, 16 Jul 2024 15:42:01 +0000
-Date: Tue, 16 Jul 2024 23:41:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 06/14] PCI: endpoint: Assign PCI domain number for
- endpoint controllers
-Message-ID: <202407162357.A9pxRKuo-lkp@intel.com>
-References: <20240715-pci-qcom-hotplug-v1-6-5f3765cc873a@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qVv8GuY0"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-71871d5e087so4179990a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:42:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721144561; x=1721749361; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wDLjTilJpT2HBZBHwtZnBdq05Hhmc0NUomleiXquZZU=;
+        b=qVv8GuY0L5xHT6QHE7zxcwbD5lZdOrBdP1RwBfSImP9HBCiA6gCezY4SaVhVUvoYRt
+         IG6sSo37hXoHXEeMe7TeY3I7bYjvVS0r/a7mIDLWTD6r/VcU2EJQgGSE8ruQdirNw8Zs
+         Y4wxMpTT1SkO24JdA8JfRJx3EA5bt1457wjOIDRhdhLFzZL7j5jeah/2wSHFMNAYjNMk
+         UDwcg/fSKq6e16He7PnVjb4qVnq2jCpyyCTxtnBykruF+XVvXQMU73W4+1S76h09cBsg
+         UWh0mJFDD5pPAXDvAyqU/HxJphuyYig8DTWncOIEjJkZhRxS4UgJt2p3jvUI5KHYvqFP
+         2+1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721144561; x=1721749361;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wDLjTilJpT2HBZBHwtZnBdq05Hhmc0NUomleiXquZZU=;
+        b=fvgKOvZbbo8FjyBtO15RqX9TFlW2M5KeH+snj12Rg0vbfQipH6ltNs42+R2bcFe/JZ
+         zZoLlirkNnBNxG/yI8RJDySonDjYHnym1bZ2yRC3aj5xVEvnd0NNeAxnzmJkzrtCeXx4
+         c7XTvCT5Cm087VAPO/OMshYcw7l2cwgFLvj6FKd5wzB3Yyrt4gBiVZF6ha5s/URBIDEW
+         eKrH32Ywv9NU97lq1yVefhzbDDLpqt3LMSdFaqHnq33HErZkhsm9mTQ6a0DGLItH458W
+         V/TMcJzFfKsgCAPWCdoCjjgOHuSw9TtIrRzHd3U6AwPh2rJZwcmq7f9/eZOVu7aXtPqz
+         Pkog==
+X-Forwarded-Encrypted: i=1; AJvYcCUKj49O1H3k3SevHv4I6beu2Z7Mx18H5ey6qJpwo25La0aRXba4Mcr7NypWwkRfXtvX7AUCPAbHCRIY370wUQqg4g2YlHHzTt8usd58
+X-Gm-Message-State: AOJu0Yx873fVMBY7BiXf8PMemgsYyoZiQZpmiqbfko2jEpN3B0gEWy92
+	kcfx5xLCe+armgrImke+vkDew0bnarrcgn0QZghRjTNjWRxnnR3aPI4CaVjM470=
+X-Google-Smtp-Source: AGHT+IFOsaKUXJaZMWGbZAXbmDixqd3fsB0nKaPU0B/B4/vmsuI8S5FQiPXCYpXlIkiFt2B8Xo+YkQ==
+X-Received: by 2002:a05:6a21:3284:b0:1c1:31d0:c7a7 with SMTP id adf61e73a8af0-1c3f1210888mr2801180637.16.1721144561320;
+        Tue, 16 Jul 2024 08:42:41 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:5d01:167d:9cf4:148e])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-78e33bbb564sm5051782a12.29.2024.07.16.08.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 08:42:40 -0700 (PDT)
+Date: Tue, 16 Jul 2024 09:42:37 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, marex@denx.de,
+	iuliana.prodan@nxp.com, daniel.baluta@nxp.com
+Cc: Bjorn Andersson <andersson@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 4/6] remoteproc: imx_rproc: merge TCML/U
+Message-ID: <ZpaU7TBfCQ7Tha1L@p14s>
+References: <20240712-imx_rproc-v1-0-7bcf6732d328@nxp.com>
+ <20240712-imx_rproc-v1-4-7bcf6732d328@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,96 +75,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240715-pci-qcom-hotplug-v1-6-5f3765cc873a@linaro.org>
+In-Reply-To: <20240712-imx_rproc-v1-4-7bcf6732d328@nxp.com>
 
-Hi Manivannan,
+On Fri, Jul 12, 2024 at 04:34:57PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Merge contiguous TCML/U regions into one to avoid load elf files which
+> has large sections failure.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/imx_rproc.c | 18 ++++++------------
+>  1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 9e99bb27c033..552fccebf7e2 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -119,20 +119,16 @@ struct imx_rproc {
+>  static const struct imx_rproc_att imx_rproc_att_imx93[] = {
+>  	/* dev addr , sys addr  , size	    , flags */
+>  	/* TCM CODE NON-SECURE */
+> -	{ 0x0FFC0000, 0x201C0000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> -	{ 0x0FFE0000, 0x201E0000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> +	{ 0x0FFC0000, 0x201C0000, 0x00040000, ATT_OWN | ATT_IOMEM },
+>  
+>  	/* TCM CODE SECURE */
+> -	{ 0x1FFC0000, 0x201C0000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> -	{ 0x1FFE0000, 0x201E0000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> +	{ 0x1FFC0000, 0x201C0000, 0x00040000, ATT_OWN | ATT_IOMEM },
+>  
+>  	/* TCM SYS NON-SECURE*/
+> -	{ 0x20000000, 0x20200000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> -	{ 0x20020000, 0x20220000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> +	{ 0x20000000, 0x20200000, 0x00040000, ATT_OWN | ATT_IOMEM },
+>  
+>  	/* TCM SYS SECURE*/
+> -	{ 0x30000000, 0x20200000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> -	{ 0x30020000, 0x20220000, 0x00020000, ATT_OWN | ATT_IOMEM },
+> +	{ 0x30000000, 0x20200000, 0x00040000, ATT_OWN | ATT_IOMEM },
+>  
+>  	/* DDR */
+>  	{ 0x80000000, 0x80000000, 0x10000000, 0 },
+> @@ -211,10 +207,8 @@ static const struct imx_rproc_att imx_rproc_att_imx8mq[] = {
+>  	{ 0x08000000, 0x08000000, 0x08000000, 0 },
+>  	/* DDR (Code) - alias */
+>  	{ 0x10000000, 0x40000000, 0x0FFE0000, 0 },
+> -	/* TCML */
+> -	{ 0x1FFE0000, 0x007E0000, 0x00020000, ATT_OWN  | ATT_IOMEM},
+> -	/* TCMU */
+> -	{ 0x20000000, 0x00800000, 0x00020000, ATT_OWN  | ATT_IOMEM},
+> +	/* TCML/U */
+> +	{ 0x1FFE0000, 0x007E0000, 0x00040000, ATT_OWN  | ATT_IOMEM},
 
-kernel test robot noticed the following build errors:
+Here too I will need an RB tag by Marek, Iuliana or Daniel.
 
-[auto build test ERROR on 91e3b24eb7d297d9d99030800ed96944b8652eaf]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-qcom-ep-Drop-the-redundant-masking-of-global-IRQ-events/20240716-014703
-base:   91e3b24eb7d297d9d99030800ed96944b8652eaf
-patch link:    https://lore.kernel.org/r/20240715-pci-qcom-hotplug-v1-6-5f3765cc873a%40linaro.org
-patch subject: [PATCH 06/14] PCI: endpoint: Assign PCI domain number for endpoint controllers
-config: i386-randconfig-001-20240716 (https://download.01.org/0day-ci/archive/20240716/202407162357.A9pxRKuo-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240716/202407162357.A9pxRKuo-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407162357.A9pxRKuo-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/pci/endpoint/pci-epc-core.c:902:19: error: call to undeclared function 'pci_bus_find_domain_nr'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     902 |         epc->domain_nr = pci_bus_find_domain_nr(NULL, dev);
-         |                          ^
-   1 error generated.
-
-
-vim +/pci_bus_find_domain_nr +902 drivers/pci/endpoint/pci-epc-core.c
-
-   866	
-   867	/**
-   868	 * __pci_epc_create() - create a new endpoint controller (EPC) device
-   869	 * @dev: device that is creating the new EPC
-   870	 * @ops: function pointers for performing EPC operations
-   871	 * @owner: the owner of the module that creates the EPC device
-   872	 *
-   873	 * Invoke to create a new EPC device and add it to pci_epc class.
-   874	 */
-   875	struct pci_epc *
-   876	__pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
-   877			 struct module *owner)
-   878	{
-   879		int ret;
-   880		struct pci_epc *epc;
-   881	
-   882		if (WARN_ON(!dev)) {
-   883			ret = -EINVAL;
-   884			goto err_ret;
-   885		}
-   886	
-   887		epc = kzalloc(sizeof(*epc), GFP_KERNEL);
-   888		if (!epc) {
-   889			ret = -ENOMEM;
-   890			goto err_ret;
-   891		}
-   892	
-   893		mutex_init(&epc->lock);
-   894		mutex_init(&epc->list_lock);
-   895		INIT_LIST_HEAD(&epc->pci_epf);
-   896	
-   897		device_initialize(&epc->dev);
-   898		epc->dev.class = &pci_epc_class;
-   899		epc->dev.parent = dev;
-   900		epc->dev.release = pci_epc_release;
-   901		epc->ops = ops;
- > 902		epc->domain_nr = pci_bus_find_domain_nr(NULL, dev);
-   903	
-   904		ret = dev_set_name(&epc->dev, "%s", dev_name(dev));
-   905		if (ret)
-   906			goto put_dev;
-   907	
-   908		ret = device_add(&epc->dev);
-   909		if (ret)
-   910			goto put_dev;
-   911	
-   912		epc->group = pci_ep_cfs_add_epc_group(dev_name(dev));
-   913	
-   914		return epc;
-   915	
-   916	put_dev:
-   917		put_device(&epc->dev);
-   918	
-   919	err_ret:
-   920		return ERR_PTR(ret);
-   921	}
-   922	EXPORT_SYMBOL_GPL(__pci_epc_create);
-   923	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  	/* OCRAM_S */
+>  	{ 0x20180000, 0x00180000, 0x00008000, ATT_OWN },
+>  	/* OCRAM */
+> 
+> -- 
+> 2.37.1
+> 
