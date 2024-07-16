@@ -1,163 +1,136 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58D5198832;
-	Tue, 16 Jul 2024 10:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721124914; cv=pass; b=NdU358SKhisv0N0voY5p1ep6VnzAil6YmTz/3TKa6VA1dN/jkAwUjcl+Cc5WeZSJRL6OX8MAugqQ2t7ruF+YylYBi3S+LW4XRmh4NekpsrggRxYYD1RrE3lncaCHv4Fbh+0p+QocFNLl4U/uvX1YSQKUlhche8pEEHtGHtGduUM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721124914; c=relaxed/simple;
-	bh=qjgFpWpR5+BHvJKoHx4VOD2XEZQxafJHmKAcxjKa2h4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=XlCThdG+Na1e3e3o90A+JMZxjA17Mzlj1Zil49JzUguLfBfw1ngo+XOtAZQquvtBUMG4dex5aEjwwT0jQr36CYFa58qVw3U02TzOpSTFModSfOov5FN9XA0r6wF+AUlTru3IpZTTvDkQV//R4AN3B0MgqEf1ab1mqoM9b7NviPo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=lMgeDqUs; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=b4ReaF9y; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401CD3C3C
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721124957; cv=none; b=pW5sKDaHxarnifcnFn/eWcMN9wWZp9+4f006I/Clr/4oCsYs15uJ10F8+jhWuwLExNU64ma8HxxBtCD3Fv5tbGzxGpVMxoi/rlMcUxmMnTWPeDPCu2dLtR6lYBnnyqjs+ukDQeWYnXFOMeLSdaAhqTlnEZRw5RzxYQfyPdJ9LAE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721124957; c=relaxed/simple;
+	bh=zx/kmfbSdkW60LRZzv8UQf1UvQghFy9v1bu72O53pYE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YvBrnhwA07cRRPV+0a5Pdyj9OOVcVpOSJV3yck8Pe7sc93sg6YJj8vlgVw3uO3eo3j/kOuvqgK4M6kQl6AzVxum221BXMwr9LwVZvCt+CMF3Xn4UdiOgpvb2Kl8SQxArsuS0yM25z1z/KhYoa6EJXlEW5MfkYFlAU7KhtZAwW7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPks1EQ7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="lMgeDqUs";
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="b4ReaF9y"
-Received: from meesny.iki.fi (meesny.iki.fi [IPv6:2001:67c:2b0:1c1::201])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPS id 4WNZVZ0tBTz49PyZ;
-	Tue, 16 Jul 2024 13:07:02 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1721124422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EdoOS1Vx+qVFB1EZYjKbADIDpN3WKdD3NXCzP1l8TEc=;
-	b=lMgeDqUsqGBQfbQ5ls0Fd7+95WDR0Nv57O8qhkGrg2Dp8JbxzSs0glBo4OfK0XgH0RJcN4
-	ZEneYeu1DfoZ/eu2OKCRehzXsytLB1ocjZHH3EhLQ2LLE7lRKXXa6BKxyYYpY29ZACHNmp
-	lnEHlPk08CTZSjzPr7l1/D/zXCiUgVdCzEPY7YDIwK4RoaviMpD9cCnFjMmaLCVcF+4r9T
-	0LjR2CoQljGEI41ffDOdhz0uesJde2jYObujIvdHEXHw1eOMMYIKiVVqo9Nuydcqr6UBP/
-	ZHWosDXOB7DDTOXzWbneNvyRM0mG2KS+963Chet+mY+apR9iYrvsFkZ+c1TA+g==
-Received: from localhost (83-245-197-232.elisa-laajakaista.fi [83.245.197.232])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sakkinen)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4WNZVL6DdKzyT2;
-	Tue, 16 Jul 2024 13:06:49 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1721124413;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EdoOS1Vx+qVFB1EZYjKbADIDpN3WKdD3NXCzP1l8TEc=;
-	b=b4ReaF9y8dRqV59aja1fjnq0qUGK8jKtKo4rGLbkq6SYT7dUdSNJ5xHMkTNP8By/g4aOW5
-	QgaLyxrm4t8gP/m50pLB4kVuzjK+cOaovfagPrgmnXVnX7Q8EoQq6F6c7L4vPcq0hPPRms
-	LfA+OgdkNoiD4z1woGIgSr1MvXS6rNE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1721124413;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EdoOS1Vx+qVFB1EZYjKbADIDpN3WKdD3NXCzP1l8TEc=;
-	b=qqVfNR58AMWIU9S1I8LbK7x47ttvNaOp2BVSr03w76oRvu537Lq5/pj+2kOQeaME/N4DGm
-	sHGWaAuAImJKxnoluQxu9A9ZpK4+Y2kP+SvxywdO039lWZ5CK/oKLMkexk0oR+P04f8C9t
-	LwQNiHCkbxWHdyY73B39B88Atu7xNqE=
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1721124413; a=rsa-sha256; cv=none;
-	b=bcrJbs+z2VvEPuakv3T2Q07ItztVLO/4lg4IHlWAeDPVB1Xfq3BccIFufL7W1sO7kzQhQN
-	4084IFC+Y3tIXoZVxngQ7co34FCeSGsZcTsUltWG4R8BT/Ztun77AUTbrZ1pWpOW99goVr
-	M66E9SqG6394+HaMJjkdg/epoCx/Bo8=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sakkinen smtp.mailfrom=jarkko.sakkinen@iki.fi
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPks1EQ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B31C116B1;
+	Tue, 16 Jul 2024 10:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721124957;
+	bh=zx/kmfbSdkW60LRZzv8UQf1UvQghFy9v1bu72O53pYE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QPks1EQ7nVUveJ7IbrGLBhHZk5ovTbNef9y2HoZBwX+jiR9SyeSy6t2rhbStVNBq4
+	 4npCVe5HVqb+yLSZopJjFTKZTCBKkxC2O9xmurWI1PfXMfu+jevDXLe11B5ClgNOWF
+	 1aTwbBSnd1dDMLJq/b3J8uA0mr0gHHCbhSKL2mQ3SjJ6fKt8fyBZEh7Zllthk25KBX
+	 MTsS+x5ZkkUWOrK9rMrT+guo8ZSrDRnZEiBkz/POkxvX492Q3UM7XPYVtYdzQ2ngmT
+	 ZSs0BknlQ+2P16bd7poOXpTcMD7s59pFhke6CL7KgcjIX3S84XF52TxdTRu6ZsOaLm
+	 VAoYW2mwXocTA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sTfDu-00ClWB-ST;
+	Tue, 16 Jul 2024 11:15:55 +0100
+Date: Tue, 16 Jul 2024 11:15:54 +0100
+Message-ID: <86sew93an9.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Nicolas Schier <nicolas@fjasle.eu>
+Subject: Re: [PATCH] kbuild: deb-pkg: Fix build error caused by lack of positionnal argument
+In-Reply-To: <CAK7LNAREexLc6O_wakzz9+3uYP6d5c7Ch2aVAn9FCbKNgCSu7A@mail.gmail.com>
+References: <20240710172717.1346194-1-maz@kernel.org>
+	<CAK7LNAREexLc6O_wakzz9+3uYP6d5c7Ch2aVAn9FCbKNgCSu7A@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 16 Jul 2024 13:06:49 +0300
-Message-Id: <D2QVOMDX6BJW.3GCX7CFZL4KSF@iki.fi>
-Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Hao
- Ge" <gehao@kylinos.cn>
-Subject: Re: [PATCH] tpm: Move dereference after NULL check in
- tpm_buf_check_hmac_response
-From: "Jarkko Sakkinen" <jarkko.sakkinen@iki.fi>
-To: "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Jarkko
- Sakkinen" <jarkko@kernel.org>, "Hao Ge" <hao.ge@linux.dev>,
- <peterhuewe@gmx.de>, <jgg@ziepe.ca>
-X-Mailer: aerc 0.17.0
-References: <20240709023337.102509-1-hao.ge@linux.dev>
- <D2Q2Q4R8BZ4Q.2QZF7NM3RE9B8@kernel.org>
- <f6ab30f39a14550b6fc111feb83b2657006b8b8c.camel@HansenPartnership.com>
-In-Reply-To: <f6ab30f39a14550b6fc111feb83b2657006b8b8c.camel@HansenPartnership.com>
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: masahiroy@kernel.org, linux-kernel@vger.kernel.org, nicolas@fjasle.eu
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon Jul 15, 2024 at 2:52 PM EEST, James Bottomley wrote:
-> On Mon, 2024-07-15 at 14:25 +0300, Jarkko Sakkinen wrote:
-> > On Tue Jul 9, 2024 at 5:33 AM EEST, Hao Ge wrote:
-> > > From: Hao Ge <gehao@kylinos.cn>
-> > >=20
-> > > We shouldn't dereference "auth" until after we have checked that it
-> > > is
-> > > non-NULL.
-> > >=20
-> > > Fixes: 7ca110f2679b ("tpm: Address !chip->auth in
-> > > tpm_buf_append_hmac_session*()")
-> > > Signed-off-by: Hao Ge <gehao@kylinos.cn>
-> >=20
-> > Also lacking:
-> >=20
-> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Closes:
-> > https://lore.kernel.org/linux-integrity/3b1755a9-b12f-42fc-b26d-de2fe4e=
-13ec2@stanley.mountain/T/#u
-> >=20
-> > What is happening here is that my commit exposed pre-existing bug to
-> > static analysis but it did not introduce a new regression.
->
-> Actually, it didn't.  The previous design was sessions were config
-> determined and either auth would be non-NULL or attach would fail.  You
-> chose with this series to make auth the indicator of whether sessions
-> should be used, and before this auth could not be NULL so no bug
-> existed.
+On Tue, 16 Jul 2024 08:06:06 +0100,
+Masahiro Yamada <masahiroy@kernel.org> wrote:
+>=20
+> On Thu, Jul 11, 2024 at 2:27=E2=80=AFAM Marc Zyngier <maz@kernel.org> wro=
+te:
+> >
+> > Since 8ef052389f7f ("kbuild: package: add -e and -u options to some
+> > shell scripts"), building a debian package on my arm64 box fails:
+> >
+> > $ make -j20 bindeb-pkg
+> >   UPD     include/config/kernel.release
+> >   GEN     debian
+> > ./scripts/package/mkdebian: 138: 1: parameter not set
+> > make[2]: *** [scripts/Makefile.package:98: debian] Error 2
+> > make[1]: *** [/home/maz/hot-poop/arm-platforms/Makefile:1538: bindeb-pk=
+g] Error 2
+> > make: *** [Makefile:224: __sub-make] Error 2
+> >
+> > Applying the same pattern for substitution of undefined variables
+> > seems to paper over the issue and brings the script back to life.
+> >
+> > Fixes: 8ef052389f7f ("kbuild: package: add -e and -u options to some sh=
+ell scripts")
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Cc: Nicolas Schier <nicolas@fjasle.eu>
+> > ---
+> >  scripts/package/mkdebian | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+> > index 196b14e8ad47..de8b460a46b4 100755
+> > --- a/scripts/package/mkdebian
+> > +++ b/scripts/package/mkdebian
+> > @@ -135,7 +135,7 @@ else
+> >  fi
+> >  maintainer=3D"${name} <${email}>"
+> >
+> > -if [ "$1" =3D --need-source ]; then
+> > +if [ "${1:+set}" =3D --need-source ]; then
+> >         gen_source
+> >  fi
+> >
+>=20
+>=20
+> This is wrong.
+>=20
+> It will break 'make srcdeb-pkg' because
+> "set" =3D "--need-source" is always false.
+>=20
+>=20
+>=20
+> I will squash the following.
+>=20
+>=20
+> while [ $# -gt 0 ]; do
+>     case "$1" in
+>     --need-source)
+>         gen_source
+>         shift
+>         ;;
+>     *)
+>         break
+>         ;;
+>     esac
+> done
+>=20
+>=20
+> Thanks for the report.
 
-Not on at least one driver, which does not call tpm2_sessions_init().
+This seems to work for me.
 
-What do you exactly mean by design? It is first time I hear anyone to
-claim that validating pointer is an alternative design.
+	M.
 
-Before my fixes:
-
-int tpm_buf_check_hmac_response(struct tpm_chip *chip, struct tpm_buf *buf,
-				int rc)
-{
-	struct tpm_header *head =3D (struct tpm_header *)buf->data;
-	struct tpm2_auth *auth =3D chip->auth;
-I.e.
-
-Fixes: 1085b8276bb4 ("tpm: Add the rest of the session HMAC API")
-
-Even in the current master there is still inline function that when HMAC
-is disable:
-
-static inline int tpm_buf_check_hmac_response(struct tpm_chip *chip,
-					      struct tpm_buf *buf,
-					      int rc)
-{
-	return rc;
-}
-
->
-> Consider also the fidelity of the Fixes tag for stable: this commit
-> needs backporting with 7ca110f2679b and Fixes should identify that
->
-> James
-
-I'd suggest for you to focus fixing issue and not complaining about
-irrelevant stuff.
-
-And I'd suggest IBM to do better job next time as a company, and test
-at least with your own hardware before sending anything.
-
-BR, Jarkko
+--=20
+Without deviation from the norm, progress is not possible.
