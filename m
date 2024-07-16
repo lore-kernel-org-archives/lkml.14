@@ -1,168 +1,135 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B5519A870
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 12:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D997317C233;
+	Tue, 16 Jul 2024 12:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721133298; cv=none; b=LJkqVgaMagY49Rdf4B3oz0zTfS6R8QQ4D9El89Kjx0kmvSaUqnfe+scwtRLH9F/gKIgLSAmv1OxlLFu4007cUoCbXvDiqq3cZH52NOmktsp12u0P3B9Fuy25yZi6NfJXSyQsWan4HHvJ9rlmA5dqO9xj0Od/2Yxr6ySpGVyxG7g=
+	t=1721133432; cv=none; b=oEgz0oOFJcRkXQtsMW4v275QSaQRlVlxvTof8nD2PRY3TmKiX2GsCx6BqFOFZ08JC/GrOVuRLZAo6lH9zPDWmHhR+8xR7F71hpIiNTOpsQkoWfbGscBzLzPvkBE3ckkFC+Hz2KGBi2L/1qid2lcoUT3EXsq/698B4FF+rsaIs90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721133298; c=relaxed/simple;
-	bh=V/F4UTvvEy3NCSvKyNNAWr4zGMGneWAsO6rPvWKaGvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MOrKrl0KjumM8YGAxZj1lKnUMKhByN+cMoDZ+MmL2PFeQ7JBd6Wjae4UEg6R/VsuSowGfXc67RlTV2iPFpTP1CWNGod9p89ru0r7hv77OCW36TzZmMLDlewoUbO1kKYLNQ2Fg2kC6hM9m0p6J3smNQ4ol7RcIsqbQdzYVE+P00s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=PGWN6knR; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1721133432; c=relaxed/simple;
+	bh=a3qAbusKgntIluHRD33W5ItQ8YsM9fy8EGzR2BhtmUs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VZsm6Pu+ehEzbqzYBVh/T1kuyVEwZXAIoKm+oLfIEhDDidHht/Lw28yRWaUeSH4LS7zY6C/22uXFF74e4JSRs8NYj/nxW/3dkQCiy5Yx2RBqLzUli/GVXAEVjejdBtTVmrUqrIwM0ymp6ojxZO+A9YE4h9noDi9eLZCLDZN3aWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F3PDmArl; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="PGWN6knR"
-X-Envelope-To: wens@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1721133292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUFna8KX4ihrtDkjdAKNgLT+tJDIS3c9nXtfNbeflQI=;
-	b=PGWN6knRfOiyzyBmePMrs5eNI9XnN46/sa44jaUfrDReHR8E3BZIou5l4AikCZxA07uLKi
-	AODkX8ezbh6Pb09qom3tdW5X9394/BSWmdfmtcopPuSqwhP9nYVY6HoB/LRv0brek/TFd4
-	EyM8HD2LwKk1TOuAzvVY4TzEWfDV8cBlm6UBWAmehEwuAv+NCOk0HOeL6ptO6uMjRxy6OK
-	vHFPHadXuHJM+hoOHerbWBFM+nvU8F9D6Pil5tETn67vCBGlckMI9khfEm3OMxRErGF2Ar
-	bfB/A2dndy2llg0q9w2k80vW1CZeI53j3FFYERh4kEjMSJtNMjtwtV9DFi0ZZA==
-X-Envelope-To: aurelien@aurel32.net
-X-Envelope-To: herbert@gondor.apana.org.au
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: daniel@makrotopia.org
-X-Envelope-To: olivia@selenic.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: p.zabel@pengutronix.de
-X-Envelope-To: dsimic@manjaro.org
-X-Envelope-To: ukleinek@debian.org
-X-Envelope-To: sebastian.reichel@collabora.com
-X-Envelope-To: cristian.ciocaltea@collabora.com
-X-Envelope-To: s.hauer@pengutronix.de
-X-Envelope-To: martin@kaiser.cx
-X-Envelope-To: ardb@kernel.org
-X-Envelope-To: linux-crypto@vger.kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Chen-Yu Tsai <wens@kernel.org>, Aurelien Jarno <aurelien@aurel32.net>,
- Herbert Xu <herbert@gondor.apana.org.au>, Heiko Stuebner <heiko@sntech.de>,
- linux-rockchip@lists.infradead.org, Daniel Golle <daniel@makrotopia.org>
-Cc: Olivia Mackall <olivia@selenic.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Dragan Simic <dsimic@manjaro.org>,
- Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <ukleinek@debian.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Martin Kaiser <martin@kaiser.cx>,
- Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/3] hwrng: add hwrng support for Rockchip RK3568
-Date: Tue, 16 Jul 2024 14:34:40 +0200
-Message-ID: <6425788.NZdkxuyfQg@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <cover.1720969799.git.daniel@makrotopia.org>
-References: <cover.1720969799.git.daniel@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F3PDmArl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721133431; x=1752669431;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=a3qAbusKgntIluHRD33W5ItQ8YsM9fy8EGzR2BhtmUs=;
+  b=F3PDmArlKpamiRBBxKsO4JqUCDHxwmLhXXgnYqxI7f5hx78KVFxOsCDg
+   rrO0cIabFdqn+oeD3fdly++4H40dEjQgYlhlyrIUomKYAbH2TlSHJHwxn
+   dm3zYfe4Oc5MPkaik1CuMvDKiwAB368gHz1cTD9MeO49WQVQwCHQkxhRi
+   VVmrciu7Ed5xTehvy3K6RVRzYbGGA8OAh1S6uu8hNu8hLdmSSCCQH0KG6
+   fc32Auow5CaVDijGQ8VMb9uF8pj2Bj6g15a/qwYrPTX7EZIai5pKVbtKz
+   4HH7I3exCCdVQoJVr3MFex++2lZX2eRzsPlm9zUoEMz95AMgnAp/m+8zv
+   w==;
+X-CSE-ConnectionGUID: qfJpnIbYQx+NvqAS7Iwkng==
+X-CSE-MsgGUID: dCefI/n4TdK5jQwdodt+UA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18682244"
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="18682244"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 05:37:10 -0700
+X-CSE-ConnectionGUID: ycBl0GIkTbiJtOLvCIgjPA==
+X-CSE-MsgGUID: P86ezPSVRwORv/wlLjufhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="54896455"
+Received: from yma27-mobl.ccr.corp.intel.com (HELO [10.124.248.81]) ([10.124.248.81])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 05:37:07 -0700
+Message-ID: <398cd906-c31a-465b-9400-d8d81a3cf049@intel.com>
+Date: Tue, 16 Jul 2024 20:37:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5537839.MQpQnaDgsY";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
-
---nextPart5537839.MQpQnaDgsY
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-Date: Tue, 16 Jul 2024 14:34:40 +0200
-Message-ID: <6425788.NZdkxuyfQg@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <cover.1720969799.git.daniel@makrotopia.org>
-References: <cover.1720969799.git.daniel@makrotopia.org>
-MIME-Version: 1.0
-
-On Sunday, 14 July 2024 17:15:35 CEST Daniel Golle wrote:
-> Rockchip SoCs used to have a random number generator as part of their
-> crypto device.
-> 
-> However newer Rockchip SoCs like the RK3568 have an independent True
-> Random Number Generator device. This patchset adds a driver for it and
-> enables it in the device tree.
-> 
-> Tested on FriendlyARM NanoPi R5C.
-> 
-> ...
-> 
-> Aurelien Jarno (3):
->   dt-bindings: rng: Add Rockchip RK3568 TRNG
->   hwrng: add hwrng driver for Rockchip RK3568 SoC
->   arm64: dts: rockchip: add DT entry for RNG to RK356x
-> 
->  .../bindings/rng/rockchip,rk3568-rng.yaml     |  61 +++++
->  MAINTAINERS                                   |   7 +
->  arch/arm64/boot/dts/rockchip/rk356x.dtsi      |   9 +
->  drivers/char/hw_random/Kconfig                |  14 ++
->  drivers/char/hw_random/Makefile               |   1 +
->  drivers/char/hw_random/rockchip-rng.c         | 227 ++++++++++++++++++
->  6 files changed, 319 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/rng/rockchip,rk3568-rng.yaml create mode
-> 100644 drivers/char/hw_random/rockchip-rng.c
-
-I just did the following test on my Quartz64 Model A running kernel 6.10
-+ a number of patches, including this one:
-
-===============================================================
-root@quartz64a:~# dd if=/dev/hwrng bs=100000 count=1 > /dev/null
-1+0 records in
-1+0 records out
-100000 bytes (100 kB, 98 KiB) copied, 5.64507 s, 17.7 kB/s
-root@quartz64a:~# cat /dev/hwrng | rngtest -c 1000
-rngtest 5
-Copyright (c) 2004 by Henrique de Moraes Holschuh
-This is free software; see the source for copying conditions. 
-There is NO warranty; not even for MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.
-
-rngtest: starting FIPS tests...
-rngtest: bits received from input: 20000032
-rngtest: FIPS 140-2 successes: 362
-rngtest: FIPS 140-2 failures: 638
-rngtest: FIPS 140-2(2001-10-10) Monobit: 634
-rngtest: FIPS 140-2(2001-10-10) Poker: 106
-rngtest: FIPS 140-2(2001-10-10) Runs: 43
-rngtest: FIPS 140-2(2001-10-10) Long run: 0
-rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
-rngtest: input channel speed: (min=2.638; avg=139.351; max=9765625.000)Kibits/s
-rngtest: FIPS tests speed: (min=21.169; avg=36.158; max=68.610)Mibits/s
-rngtest: Program run time: 148109761 microseconds
-===============================================================
-
-That's almost twice as many failures as successes ...
---nextPart5537839.MQpQnaDgsY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZpZo4AAKCRDXblvOeH7b
-boR5AQCgqaoiNWyzbxb+45ldj8zkL/JfpahT6y+T00sZkniBUQEAq8WpWtRZKF2U
-KCvP/JqsEptPp3b08vRkAwxriNImTgc=
-=mIG+
------END PGP SIGNATURE-----
-
---nextPart5537839.MQpQnaDgsY--
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] fs/file.c: add fast path in find_next_fd()
+To: Jan Kara <jack@suse.cz>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, mjguzik@gmail.com,
+ edumazet@google.com, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com,
+ tim.c.chen@intel.com, tim.c.chen@linux.intel.com, yu.ma@intel.com
+References: <20240614163416.728752-1-yu.ma@intel.com>
+ <20240713023917.3967269-1-yu.ma@intel.com>
+ <20240713023917.3967269-4-yu.ma@intel.com>
+ <20240716111908.tocqtq435d6bc3q3@quack3>
+From: "Ma, Yu" <yu.ma@intel.com>
+Content-Language: en-US
+In-Reply-To: <20240716111908.tocqtq435d6bc3q3@quack3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
+On 7/16/2024 7:19 PM, Jan Kara wrote:
+> On Fri 12-07-24 22:39:17, Yu Ma wrote:
+>> Skip 2-levels searching via find_next_zero_bit() when there is free slot in the
+>> word contains next_fd, as:
+>> (1) next_fd indicates the lower bound for the first free fd.
+>> (2) There is fast path inside of find_next_zero_bit() when size<=64 to speed up
+>> searching.
+>> (3) After fdt is expanded (the bitmap size doubled for each time of expansion),
+>> it would never be shrunk. The search size increases but there are few open fds
+>> available here.
+>>
+>> This fast path is proposed by Mateusz Guzik <mjguzik@gmail.com>, and agreed by
+>> Jan Kara <jack@suse.cz>, which is more generic and scalable than previous
+>> versions. And on top of patch 1 and 2, it improves pts/blogbench-1.1.0 read by
+>> 8% and write by 4% on Intel ICX 160 cores configuration with v6.10-rc7.
+>>
+>> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+>> Signed-off-by: Yu Ma <yu.ma@intel.com>
+> Looks good. Just some code style nits below.
+
+Copy that, thanks Honza, I'll revise and send out updated version soon.
+
+
+>
+>> diff --git a/fs/file.c b/fs/file.c
+>> index 1be2a5bcc7c4..a3ce6ba30c8c 100644
+>> --- a/fs/file.c
+>> +++ b/fs/file.c
+>> @@ -488,9 +488,20 @@ struct files_struct init_files = {
+>>   
+>>   static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
+>>   {
+>> +	unsigned int bitbit = start / BITS_PER_LONG;
+>> +	unsigned int bit;
+>> +
+>> +	/*
+>> +	 * Try to avoid looking at the second level bitmap
+>> +	 */
+>> +	bit = find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_LONG,
+>> +				 start & (BITS_PER_LONG -1));
+> 							^^ Either
+> (BITS_PER_LONG-1) or (BITS_PER_LONG - 1) please. Your combination looks
+> particularly weird :)
+>
+>> +	if (bit < BITS_PER_LONG) {
+>> +		return bit + bitbit * BITS_PER_LONG;
+>> +	}
+> No need for braces around the above block.
+>
+>>   	unsigned int maxfd = fdt->max_fds; /* always multiple of BITS_PER_LONG */
+>>   	unsigned int maxbit = maxfd / BITS_PER_LONG;
+> We keep declarations at the beginning of the block. Usually it keeps the
+> code more readable and the compiler should be clever enough to perform the
+> loads & arithmetics only when needed.
+>
+> After fixing these style nits feel free to add:
+>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+>
+> 								Honza
+
+Yes, I'll polish this part of code accordingly, thanks for all the 
+comments here :)
 
