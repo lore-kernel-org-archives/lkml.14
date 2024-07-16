@@ -1,436 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501A84C74;
-	Tue, 16 Jul 2024 08:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4590917D37E;
+	Tue, 16 Jul 2024 08:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721119398; cv=none; b=UKHRRYyXTZ/o0tCZybkPdrUUhSx/yj9fSgPxumsBo+joYaZTZo1TSrQ1Q4IXiNtgOC6ferotLInr2JZ1pb8aHYIoziS6pVOCwRROz1q5idJh/lG6WEroY3SEkhkRblGJl/gZPHYutwDIHKMzRqfa9yCtRVyh9QtfkL2B/KJt4OA=
+	t=1721119400; cv=none; b=bakB/zK6LJuf/l/RyhRWUhC+J/7MC4+oRfHjyBRVayCoaBpM29X8cl8qRVBwR7kbVkE+5VZxvWBoXtUHtRmRKZztfJdQY2lQ+6jPKFKueTP/BfUbRD9cDtoLDvCBY6JG3xM0VX3xUifwZiimziD7JG+XxYWqztzdyI22xfiaNiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721119398; c=relaxed/simple;
-	bh=iBXoCqwFkGgySmuHC58w9svw1PCoDap0W9pyADiFk1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FdvLZ4S8lja97aDKrLDcaCy7qC/eZ6ZVUz533g+qyo5sAM7NF+xU7v/5k/AFhHQ/d9dlzAAdoH2sxzSxmJnw8/yoZuYVGuiSIBv4lwLzIyNmB1OixErZ5XXgRWwJwJk8lkoKSYV+KJNga/a1jBRP1IsfqjIXoGOIIo8fJPFeu/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cxd4wFQ2; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721119400; c=relaxed/simple;
+	bh=bf9otpqJ0bWXTTOkH047HK2/PNmHifAVWoxgX6ZpuUA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BNcA+3cKFW8BtUtMeavVgR3Q/8DqyxA3v6bXmgAXH97jT+mM2ABpqpp3HYKmNf9buepF8S6iou/axPUj4lVc+P0ALjB9unG0u01TEdpK4jCgzma2ZP9UIfZr/H8tcthxpm503vlPR82mO43O2RpQgMLKpj7Qbe5J7+0YJBOkP00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mRyGYEO+; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cxd4wFQ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721119395; x=1752655395;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=iBXoCqwFkGgySmuHC58w9svw1PCoDap0W9pyADiFk1c=;
-  b=Cxd4wFQ2JaOrjqK/V23ADMVDE0tYgaMXtPn6cLMz+FHnDd3IXGQxL5aZ
-   aQuI/R+h/7azmFPdnIkAjmA8QLVXtCeg+x+6j1lTng8GD9OiitHTs5Rep
-   HocSktc76qzBdh0cqOWcvozux7hCXVBg9yG9cfv0phi3m+WLJxs8OdIkO
-   gviCN64bYHwQU2IjSt/kAeCDRVJxc9D/3P85qyT1oCwCa3lT5Jl5yFQxr
-   uNvhTWRLn2CsXXA732n7YIMJyI9vUm6UO8hrIt8vVAD6LO1l2h2BdMnkR
-   XafyZJBMJgOjDfpfOooZlUqPE6EgGkkObD9KTovOqEQA8NEmL+YMsvf90
-   w==;
-X-CSE-ConnectionGUID: rZzaU5aIR0mfDcQiag2bKQ==
-X-CSE-MsgGUID: 17rLp6tPTGKJpRuJ1eCGUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18352292"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="18352292"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 01:43:14 -0700
-X-CSE-ConnectionGUID: IEquMXupSjyImCvug95ixg==
-X-CSE-MsgGUID: WNP1IIJxQ/a8q6VqTvfD6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="80610085"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.49.253])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 01:43:06 -0700
-Message-ID: <bf43b04b-badd-44dc-97de-3e6f11cded4f@intel.com>
-Date: Tue, 16 Jul 2024 11:43:01 +0300
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mRyGYEO+"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46G8gnmZ088638;
+	Tue, 16 Jul 2024 03:42:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1721119369;
+	bh=7mHrSovD4odM3IycXR2SsbG55wzejiQ/0sRbpRUfHVY=;
+	h=From:To:CC:Subject:Date;
+	b=mRyGYEO+78h8YiBwfl6MAgQiasnvAoYWpDGZ3ysNfQKu3VR2rCiht2gVQFpi1bijE
+	 COjERcfB3MxUATlDp2mTN4dlWMp/xHnqIbWy1Yv17s/83SfdEqM6bNHqQEe5HNJseE
+	 1R3X4U7LzHxZ77n3RfIDWY9iX+XuRGgSa1gMOWkU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46G8gnHi008687
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 16 Jul 2024 03:42:49 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 16
+ Jul 2024 03:42:49 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 16 Jul 2024 03:42:49 -0500
+Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46G8gmhA118665;
+	Tue, 16 Jul 2024 03:42:49 -0500
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Jyri Sarha
+	<jyri.sarha@iki.fi>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: DRI Development List <dri-devel@lists.freedesktop.org>,
+        Devicetree List
+	<devicetree@vger.kernel.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar
+	<u-kumar1@ti.com>,
+        Francesco Dolcini <francesco@dolcini.it>,
+        Alexander
+ Sverdlin <alexander.sverdlin@siemens.com>,
+        Randolph Sapp <rs@ti.com>, Devarsh
+ Thakkar <devarsht@ti.com>,
+        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
+	<j-luthra@ti.com>,
+        Aradhya Bhatia <a-bhatia1@ti.com>
+Subject: [PATCH v3 0/4] drm/tidss: Add OLDI bridge support
+Date: Tue, 16 Jul 2024 14:12:44 +0530
+Message-ID: <20240716084248.1393666-1-a-bhatia1@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/27] perf auxtrace: Remove dummy tools
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Nick Terrell <terrelln@fb.com>, Nick Desaulniers <ndesaulniers@google.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
- Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240712181108.475336-1-irogers@google.com>
- <20240712181108.475336-2-irogers@google.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240712181108.475336-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 12/07/24 21:10, Ian Rogers wrote:
-> Add perf_session__deliver_synth_attr_event that synthesizes a
-> perf_record_header_attr event with one id. Remove use of
-> perf_event__synthesize_attr that necessitates the use of the dummy
-> tool in order to pass the session.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hello all,
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+This patch series add support for the dual OLDI TXes supported in Texas
+Instruments' AM62x and AM62Px family of SoCs. The OLDI TXes support
+single-lvds, lvds-clone, and dual-lvds modes. These have now been
+represented through DRM bridges within TI-DSS.
 
-For pt/bts:
+ - Some history and hardware description for this patch series.
 
-Tested-by: Adrian Hunter <adrian.hunter@intel.com>
+This patch series is a complete re-vamp from the previously posted
+series[1] and hence, the version index has been reset to v1. The OLDI
+support from that series was dropped and only the base support for AM62x
+DSS was kept (and eventually merged)[2].
 
-> ---
->  tools/perf/util/arm-spe.c   | 49 ++++++++-----------------------------
->  tools/perf/util/cs-etm.c    | 33 ++-----------------------
->  tools/perf/util/intel-bts.c | 31 +----------------------
->  tools/perf/util/intel-pt.c  | 24 +-----------------
->  tools/perf/util/session.c   | 24 ++++++++++++++++++
->  tools/perf/util/session.h   |  3 +++
->  6 files changed, 41 insertions(+), 123 deletions(-)
-> 
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index afbd5869f6bf..fa40f3cb6266 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -1073,35 +1073,6 @@ static void arm_spe_print_info(__u64 *arr)
->  	fprintf(stdout, arm_spe_info_fmts[ARM_SPE_PMU_TYPE], arr[ARM_SPE_PMU_TYPE]);
->  }
->  
-> -struct arm_spe_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int arm_spe_event_synth(struct perf_tool *tool,
-> -			       union perf_event *event,
-> -			       struct perf_sample *sample __maybe_unused,
-> -			       struct machine *machine __maybe_unused)
-> -{
-> -	struct arm_spe_synth *arm_spe_synth =
-> -		      container_of(tool, struct arm_spe_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(arm_spe_synth->session,
-> -						 event, NULL);
-> -}
-> -
-> -static int arm_spe_synth_event(struct perf_session *session,
-> -			       struct perf_event_attr *attr, u64 id)
-> -{
-> -	struct arm_spe_synth arm_spe_synth;
-> -
-> -	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
-> -	arm_spe_synth.session = session;
-> -
-> -	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
-> -					   &id, arm_spe_event_synth);
-> -}
-> -
->  static void arm_spe_set_event_name(struct evlist *evlist, u64 id,
->  				    const char *name)
->  {
-> @@ -1172,7 +1143,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_flc = true;
->  
->  		/* Level 1 data cache miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->l1d_miss_id = id;
-> @@ -1180,7 +1151,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		id += 1;
->  
->  		/* Level 1 data cache access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->l1d_access_id = id;
-> @@ -1192,7 +1163,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_llc = true;
->  
->  		/* Last level cache miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->llc_miss_id = id;
-> @@ -1200,7 +1171,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		id += 1;
->  
->  		/* Last level cache access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->llc_access_id = id;
-> @@ -1212,7 +1183,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_tlb = true;
->  
->  		/* TLB miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->tlb_miss_id = id;
-> @@ -1220,7 +1191,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		id += 1;
->  
->  		/* TLB access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->tlb_access_id = id;
-> @@ -1232,7 +1203,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_branch = true;
->  
->  		/* Branch miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->branch_miss_id = id;
-> @@ -1244,7 +1215,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_remote_access = true;
->  
->  		/* Remote access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->remote_access_id = id;
-> @@ -1255,7 +1226,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  	if (spe->synth_opts.mem) {
->  		spe->sample_memory = true;
->  
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->memory_id = id;
-> @@ -1276,7 +1247,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
->  		attr.sample_period = spe->synth_opts.period;
->  		spe->instructions_sample_period = attr.sample_period;
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->instructions_id = id;
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 5e9fbcfad7d4..7fd976ea954b 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1595,35 +1595,6 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
->  	return ret;
->  }
->  
-> -struct cs_etm_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int cs_etm__event_synth(struct perf_tool *tool,
-> -			       union perf_event *event,
-> -			       struct perf_sample *sample __maybe_unused,
-> -			       struct machine *machine __maybe_unused)
-> -{
-> -	struct cs_etm_synth *cs_etm_synth =
-> -		      container_of(tool, struct cs_etm_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(cs_etm_synth->session,
-> -						 event, NULL);
-> -}
-> -
-> -static int cs_etm__synth_event(struct perf_session *session,
-> -			       struct perf_event_attr *attr, u64 id)
-> -{
-> -	struct cs_etm_synth cs_etm_synth;
-> -
-> -	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
-> -	cs_etm_synth.session = session;
-> -
-> -	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
-> -					   &id, cs_etm__event_synth);
-> -}
-> -
->  static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->  				struct perf_session *session)
->  {
-> @@ -1675,7 +1646,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->  		attr.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
->  		attr.sample_period = 1;
->  		attr.sample_type |= PERF_SAMPLE_ADDR;
-> -		err = cs_etm__synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		etm->branches_sample_type = attr.sample_type;
-> @@ -1698,7 +1669,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
->  		attr.sample_period = etm->synth_opts.period;
->  		etm->instructions_sample_period = attr.sample_period;
-> -		err = cs_etm__synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		etm->instructions_sample_type = attr.sample_type;
-> diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-> index ec1b3bd9f530..160d346cb450 100644
-> --- a/tools/perf/util/intel-bts.c
-> +++ b/tools/perf/util/intel-bts.c
-> @@ -737,35 +737,6 @@ static bool intel_bts_evsel_is_auxtrace(struct perf_session *session,
->  	return evsel->core.attr.type == bts->pmu_type;
->  }
->  
-> -struct intel_bts_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int intel_bts_event_synth(struct perf_tool *tool,
-> -				 union perf_event *event,
-> -				 struct perf_sample *sample __maybe_unused,
-> -				 struct machine *machine __maybe_unused)
-> -{
-> -	struct intel_bts_synth *intel_bts_synth =
-> -			container_of(tool, struct intel_bts_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(intel_bts_synth->session,
-> -						 event, NULL);
-> -}
-> -
-> -static int intel_bts_synth_event(struct perf_session *session,
-> -				 struct perf_event_attr *attr, u64 id)
-> -{
-> -	struct intel_bts_synth intel_bts_synth;
-> -
-> -	memset(&intel_bts_synth, 0, sizeof(struct intel_bts_synth));
-> -	intel_bts_synth.session = session;
-> -
-> -	return perf_event__synthesize_attr(&intel_bts_synth.dummy_tool, attr, 1,
-> -					   &id, intel_bts_event_synth);
-> -}
-> -
->  static int intel_bts_synth_events(struct intel_bts *bts,
->  				  struct perf_session *session)
->  {
-> @@ -814,7 +785,7 @@ static int intel_bts_synth_events(struct intel_bts *bts,
->  		attr.sample_type |= PERF_SAMPLE_ADDR;
->  		pr_debug("Synthesizing 'branches' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
->  			 id, (u64)attr.sample_type);
-> -		err = intel_bts_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err) {
->  			pr_err("%s: failed to synthesize 'branches' event type\n",
->  			       __func__);
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index d6d7b7512505..1fc03bfd14c3 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -3659,37 +3659,15 @@ static int intel_pt_queue_data(struct perf_session *session,
->  					   data_offset, timestamp);
->  }
->  
-> -struct intel_pt_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int intel_pt_event_synth(struct perf_tool *tool,
-> -				union perf_event *event,
-> -				struct perf_sample *sample __maybe_unused,
-> -				struct machine *machine __maybe_unused)
-> -{
-> -	struct intel_pt_synth *intel_pt_synth =
-> -			container_of(tool, struct intel_pt_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(intel_pt_synth->session, event,
-> -						 NULL);
-> -}
-> -
->  static int intel_pt_synth_event(struct perf_session *session, const char *name,
->  				struct perf_event_attr *attr, u64 id)
->  {
-> -	struct intel_pt_synth intel_pt_synth;
->  	int err;
->  
->  	pr_debug("Synthesizing '%s' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
->  		 name, id, (u64)attr->sample_type);
->  
-> -	memset(&intel_pt_synth, 0, sizeof(struct intel_pt_synth));
-> -	intel_pt_synth.session = session;
-> -
-> -	err = perf_event__synthesize_attr(&intel_pt_synth.dummy_tool, attr, 1,
-> -					  &id, intel_pt_event_synth);
-> +	err = perf_session__deliver_synth_attr_event(session, attr, id);
->  	if (err)
->  		pr_err("%s: failed to synthesize '%s' event type\n",
->  		       __func__, name);
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 5596bed1b8c8..18a8f4a84045 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1764,6 +1764,30 @@ int perf_session__deliver_synth_event(struct perf_session *session,
->  	return machines__deliver_event(&session->machines, evlist, event, sample, tool, 0, NULL);
->  }
->  
-> +int perf_session__deliver_synth_attr_event(struct perf_session *session,
-> +					   const struct perf_event_attr *attr,
-> +					   u64 id)
-> +{
-> +	union {
-> +		struct {
-> +			struct perf_record_header_attr attr;
-> +			u64 ids[1];
-> +		} attr_id;
-> +		union perf_event ev;
-> +	} ev = {
-> +		.attr_id.attr.header.type = PERF_RECORD_HEADER_ATTR,
-> +		.attr_id.attr.header.size = sizeof(ev.attr_id),
-> +		.attr_id.ids[0] = id,
-> +	};
-> +
-> +	if (attr->size != sizeof(ev.attr_id.attr.attr)) {
-> +		pr_debug("Unexpected perf_event_attr size\n");
-> +		return -EINVAL;
-> +	}
-> +	ev.attr_id.attr.attr = *attr;
-> +	return perf_session__deliver_synth_event(session, &ev.ev, NULL);
-> +}
-> +
->  static void event_swap(union perf_event *event, bool sample_id_all)
->  {
->  	perf_event__swap_op swap;
-> diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-> index 4c29dc86956f..cc28976bb00e 100644
-> --- a/tools/perf/util/session.h
-> +++ b/tools/perf/util/session.h
-> @@ -154,6 +154,9 @@ extern volatile int session_done;
->  int perf_session__deliver_synth_event(struct perf_session *session,
->  				      union perf_event *event,
->  				      struct perf_sample *sample);
-> +int perf_session__deliver_synth_attr_event(struct perf_session *session,
-> +					   const struct perf_event_attr *attr,
-> +					   u64 id);
->  
->  int perf_session__dsos_hit_all(struct perf_session *session);
->  
+The OLDI display that the tidss driver today supports, could not be
+extended for the newer SoCs. The OLDI display in tidss is modelled after
+the DSS and OLDI hardware in the AM65x SoC. The DSS in AM65x SoC, has
+two video-ports. Both these video-ports (VP) output DPI video signals.
+One of the DPI output (from VP1) from the DSS connects to a singular
+OLDI TX present inside the SoC. There is no other way for the DPI from
+VP1 to be taken out of the SoC. The other DPI output however - the one
+from VP2 - is taken out of the SoC as is. Hence we have an OLDI bus
+output and a DPI bus output from the SoC. Since the VP1 and OLDI are
+tightly coupled, the tidss driver considers them as a single entity.
+That is why, any OLDI sink connects directly to the DSS ports in the
+OF graphs.
+
+The newer SoCs have varying DSS and OLDI integrations.
+
+The AM62x DSS also has 2 VPs. The 2nd VP, VP2, outputs DPI signals which
+are taken out of the SoC - similar to the AM65x above. For the VP1,
+there are 2 OLDI TXes. These OLDI TXes can only receive DPI signals from
+VP1, and don't connect to VP2 at all.
+
+The AM62Px SoC has 2 OLDI TXes like AM62x SoC. However, the AM62Px SoC
+also has 2 separate DSSes. The 2 OLDI TXes can now be shared between the
+2 VPs of the 2 DSSes.
+
+The addition of the 2nd OLDI TX (and a 2nd DSS in AM62Px) creates a need
+for some major changes for a full feature experience.
+
+1. The OF graph needs to be updated to accurately show the data flow.
+2. The tidss and OLDI drivers now need to support the dual-link and the
+   cloned single-link OLDI video signals.
+3. The drivers also need to support the case where 2 OLDI TXes are
+   connected to 2 different VPs - thereby creating 2 independent streams
+   of single-link OLDI outputs.
+
+Note that the OLDI does not have registers of its own. Its still
+dependent on the parent VP. The VP that provides the DPI video signals
+to the OLDI TXes, also gives the OLDI TXes all the config data. That is
+to say, the hardware doesn't sit on the data bus directly - but does so
+via DSS.
+
+In light of all of these hardware variations, it was decided to have
+a separate OLDI driver (unlike AM65x) but not entirely separate so as to
+be a platform device. The OLDI TXes are now being represented as DRM
+bridges under the tidss.
+
+Also, since the DRM framework only really supports a linear
+encoder-bridge chain, the OLDI driver creates a DRM bridge ONLY for the
+primary OLDI TX in cases of dual-link or cloned single-link OLDI modes.
+That bridge then attaches to the tidss's display core - which consists
+of a CRTC, an Encoder (dummy) and a bridge (dummy). On the other end,
+it attaches to OLDI sinks (panels or other bridges).
+
+Since the OLDI TX have a hardware dependency with the VP, the OLDI
+configuration needs to happen before that VP is enabled for streaming.
+VP stream enable takes place in tidss_crtc_atomic_enable hook. I have
+posted a patch allowing DRM bridges to get pre-enabled before the CRTC
+of that bridge is enabled[0]. Without that patch, some warnings or
+glitches can be seen.
+
+These patches have been tested on AM625 based SK-AM625 EVM with a
+Microptis dual-lvds panel (SK-LCD1). The patches with complete support
+including the expected devicetree configuration of the OLDI TXes can be
+found in the "next_oldi-v3-tests" branch of my github fork[3].
+
+Thanks,
+Aradhya
+
+
+Change Log:
+V3:
+  - Fix the dt_binding_check warning in patch 3/4[4] by adding
+    "additionalProperties" constraint.
+
+V2:
+  - Add all the R-b and A-b tags from Laurent Pinchart, Rob Herring, and
+    Tomi Valkeinen.
+  - Reword the subject for patch 1/4.
+  - Reword the commit descriptions to add proper hardware detail.
+  - Drop the change in schema reference for port@0 in patch 3/4.
+  - Lots of improvements for patch 4/4.
+    * Refactor OLDI selection logic in tidss_oldi_tx_power().
+    * Add "companion_instance" support to identify the OLDI index in
+      dual-link or cloned sinle-link modes.
+    * De-initialize tidss_oldi during tidss removal.
+    * Use dev_err_probe() instead of dev_err().
+    * Drop OLDI(n) macro.
+    * Move OLDI Config register bits to tidss_dispc_regs.h.
+    * Drop oldi bridge atomic_check().
+    * s/%d/%u for all print instances of "oldi_instance".
+    * Move OLDI init after DISPC init in tidss_probe.
+    * Use devm_drm_of_get_bridge() instead of
+      drm_of_find_panel_or_bridge() to find the next bridge and drop all
+      the drm_panel support from tidss_oldi.
+
+Previous revisions:
+V2: https://lore.kernel.org/all/20240715200953.1213284-1-a-bhatia1@ti.com/
+V1: https://lore.kernel.org/all/20240511193055.1686149-1-a-bhatia1@ti.com/
+
+[0]: Dependency Patch: 
+("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
+https://lore.kernel.org/all/20240622110929.3115714-11-a-bhatia1@ti.com/
+
+[1]: AM62 OLDI Series - v7
+https://lore.kernel.org/all/20230125113529.13952-1-a-bhatia1@ti.com/
+
+[2]: AM62 DSS Series - v9
+https://lore.kernel.org/all/20230616150900.6617-1-a-bhatia1@ti.com/
+
+[3]: GitHub Fork for OLDI tests
+https://github.com/aradhya07/linux-ab/tree/next_oldi-v3-tests/
+
+[4]: ("ti,am65x-dss.yaml: oldi-txes: Missing additionalProperties/
+      unevaluatedProperties constraint")
+https://lore.kernel.org/all/172107979988.1595945.9666141982402158422.robh@kernel.org/
+
+Aradhya Bhatia (4):
+  dt-bindings: display: ti,am65x-dss: Re-indent the example
+  dt-bindings: display: ti: Add schema for AM625 OLDI Transmitter
+  dt-bindings: display: ti,am65x-dss: Add OLDI properties for AM625 DSS
+  drm/tidss: Add OLDI bridge support
+
+ .../bindings/display/ti/ti,am625-oldi.yaml    | 153 +++++
+ .../bindings/display/ti/ti,am65x-dss.yaml     | 177 +++++-
+ MAINTAINERS                                   |   1 +
+ drivers/gpu/drm/tidss/Makefile                |   3 +-
+ drivers/gpu/drm/tidss/tidss_dispc.c           |  20 +-
+ drivers/gpu/drm/tidss/tidss_dispc.h           |   4 +
+ drivers/gpu/drm/tidss/tidss_dispc_regs.h      |  14 +
+ drivers/gpu/drm/tidss/tidss_drv.c             |   9 +
+ drivers/gpu/drm/tidss/tidss_drv.h             |   5 +
+ drivers/gpu/drm/tidss/tidss_oldi.c            | 537 ++++++++++++++++++
+ drivers/gpu/drm/tidss/tidss_oldi.h            |  51 ++
+ 11 files changed, 951 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+ create mode 100644 drivers/gpu/drm/tidss/tidss_oldi.c
+ create mode 100644 drivers/gpu/drm/tidss/tidss_oldi.h
+
+
+base-commit: 3fe121b622825ff8cc995a1e6b026181c48188db
+-- 
+2.34.1
 
