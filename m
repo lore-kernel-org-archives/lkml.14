@@ -1,98 +1,168 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from msa.smtpout.orange.fr (msa-213.smtpout.orange.fr [193.252.23.213])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783CE1643A
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 18:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9511BC43;
+	Tue, 16 Jul 2024 18:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721155755; cv=none; b=Kv7HOJFdHynm+Bv3/pcKOF01xRXVQeFwYtzZ5vMZN5XV4MW/XNLjtqH0ggLAp9Q/eWDjBVBLjNiwYMD/xlSC5oexMv3oYQoGS4Ubur+IS1lZjkM9GCyKw/B7cj93S9wtRQQ3K/gM2VH2NCFxyE5q3aLJghfOPvGAx/t1VFYsZzc=
+	t=1721155757; cv=none; b=PZWG0kGbSOhyq3POBayZ0djL0whx6H5liWw+LI2l63hK8Ta4eCMS35nMUfeKSRsH+mEQ9NVmcHFF7k74k/nGTQxDNn1Gs9Qn4PVWvXFwPP2JJt4hVWtdzrkBnH77ae5GriFhCNHnpfQgdtKz4eYywsR48clvpIfC7cevL2cf1Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721155755; c=relaxed/simple;
-	bh=cF3LVwQ6uUCjs8vvD7smezICijmUnzP/qRxxOPn0ueo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nouRz4LSndBCq69v2QnQMbDKfix1Kp2KvGUjEJ1tHEN3tUXFBAht5+5Oq6wYQ8b1F8mtC7Rxs04cszX0rYr/9hlR9iyTWq3L2aoQckBN45t+nC12lvPuZdwyNq26PmxIy97iKPmhGJpYEhh+2bmxqDz+7/dNmO+yj7XO1F3CxKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YZeiCBxt; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1721155757; c=relaxed/simple;
+	bh=JbHDzSk339pVt8FIkuVLH3SiTT1tiWmH6YYuqnIdXf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uatbMia3Hb9jNBzz9B+mM15VOLAQrilZj67V+AL3VNT2buWSqeGwoI5t0hnCu9AwgnzA/2RfRd2sbfqMp/1gLW88knyVrO/BarB65aCTO764UD9S86JOd2iObKiX7sld+aIWCnLcdH0JuIwt+8UadOnqQwkKnqtZTcKNIoI44Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=En/lnwRE; arc=none smtp.client-ip=193.252.23.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YZeiCBxt"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ee817dac89so417841fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721155752; x=1721760552; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/KhgLmJzF0SWWsLaDdoCGwx7sJaZZjiB4NDQ1hg4zPI=;
-        b=YZeiCBxtSR3k8QS8qBZEhIPv/LF7JY9wZPhZV+Ll5T+w+uWwySlJ8V6MeLiTM5vOhB
-         2BM2GSUL04dpiLGk9slYqbyG8rGfE+tP18j2SlIr8r+20uip4L2UNxZSFD6twSwuhHpq
-         ZpuYLtRAycQbKDQw4LVbudB9tIpd3QFifUZOEUq5cqloVpgexU7XkpTM5vpMugtUosi2
-         seXiOJO7RX/cbXTcuhxuUW1HP9vWaleBXjuQZsKUpL2swATJ2wOgEiVCmA/Iu+bOG6zY
-         u/oT8czDVIkj8blkjT+DiPDBmujabEzDj89M1h1f9H92pbXCFs0uiRClhWDJXJXfNezK
-         DhGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721155752; x=1721760552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/KhgLmJzF0SWWsLaDdoCGwx7sJaZZjiB4NDQ1hg4zPI=;
-        b=SuFY6zXoSt5QhdktNEPnmE72HpLfL6hrByDE3zeeQZA0hLHrbp3+qOqChItuqRvavS
-         enD5oPApnyOacpPUcssIUgnDpsOZewhyIKBZjw+V7RPPkZgZ17FdtSrWXK34IAySYVMl
-         v0HG7l+7nawL52NI5RlMd71iPnam5U2KCqJ1H0R6VVZO6yeuHvsWSqU7s++v+pjGE8oO
-         PgJCh0cpu/TdB+rG3xKRDsxAbiRfnVmIQAIeRpzQkCj20px873YNdh1RxH9O/vHbI6+w
-         lwyKLh8t87qSBSdP3zgdyHTj8weJx0pMpmqYi8VPp2Iy+QpGfkY2+Wag8bGSJZK6dqMy
-         Fb1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXtS+eoxuLv0RFC2jxcQpEHw6XikjGWIkw1V68z7+xQotEwAJXuOTrfLZauzI2tbzoo3Yonnb8ATfovwcrU/Gw0rNZSNqgY62v0xVlu
-X-Gm-Message-State: AOJu0YxMOaNmzLGMLpEQzZRLI731ubLM2zkzna35E+Om0/LBNaJ3VrEA
-	EeF/MB4eEwJaJHRlwp2ZJgdf+BQdB7TolipYCrXmPmERXiSs2Yd+XNwZKz3v6C9TQ9gPk6fk1xy
-	IEKwCXKE0bhiwXmlZVAs1tlRlcLOfC3DSorzxug==
-X-Google-Smtp-Source: AGHT+IEZMw76FXm6ot0bsZAM4mhixLO229IEyn6XfMcbFPHJP6T9l/LLjNPp2I7LLmbp65K6cGxGFYcaG+fuqjewhOY=
-X-Received: by 2002:a2e:a609:0:b0:2ec:5324:805c with SMTP id
- 38308e7fff4ca-2eef56c6298mr8166411fa.11.1721155751656; Tue, 16 Jul 2024
- 11:49:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="En/lnwRE"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id TnEWsVD3Ct4p9TnEWsmpjH; Tue, 16 Jul 2024 20:49:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1721155746;
+	bh=Y9EqEgYNw6i/aumvZC5AG9uD8+LrAD0SR2i8Uffr6Gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=En/lnwREl/G1EMb4RmSKJtvC4NiyhXrykXj1RwOoNswa7dbPoEsQgHQU0Sq4DSQ62
+	 +XAmm0b5MBjP9jBcNjj6U+y1lWbiIGMdoraox5vYhYOJb7KfgRFD08gLN/GiGuCnRU
+	 z4qCFv8XFq+4mCDEwDM872MrIn5dg11YmAUxwbSHxQPjXCUw0vcBEtu1KcvC6/iAOp
+	 8LvJ62Zb910kd8JnO2uQRn40gDfVhR4xwU1pbFp+X77SiXMruTvCbvB/E02mtFpSLn
+	 UJwldAPapM+L6c2XYpxcd7Tq/e9De1enJDSkwhQLplQNc1pavi+nXCxdjfSzsvoGLe
+	 UnnxYIQQeaShw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 16 Jul 2024 20:49:06 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <4cdcfde7-1b79-411d-9a1b-131105b113ab@wanadoo.fr>
+Date: Tue, 16 Jul 2024 20:49:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716080418.34426-1-manivannan.sadhasivam@linaro.org> <CAHk-=wjxiAvNJejbpMbn_CMYzU97uHFPiRmYQ5Gaxw56UyK8sA@mail.gmail.com>
-In-Reply-To: <CAHk-=wjxiAvNJejbpMbn_CMYzU97uHFPiRmYQ5Gaxw56UyK8sA@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 16 Jul 2024 20:49:00 +0200
-Message-ID: <CAMRc=MdvZQSwC93MuAse2cGuKpNCHO+0jGOjMRNyXYwvCrY_dw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Check for the existence of 'dev.of_node' before
- calling of_platform_populate()
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] pwm: imx27: Add 32k clock for pwm in i.MX8QXP MIPI
+ subsystem
+To: Frank Li <Frank.Li@nxp.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
+ francesco@dolcini.it, imx@lists.linux.dev, kernel@pengutronix.de,
+ krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ p.zabel@pengutronix.de, pratikmanvar09@gmail.com, robh@kernel.org,
+ s.hauer@pengutronix.de, shawnguo@kernel.org, ukleinek@kernel.org,
+ victor.liu@nxp.com
+References: <20240715-pwm-v2-0-ff3eece83cbb@nxp.com>
+ <20240715-pwm-v2-2-ff3eece83cbb@nxp.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240715-pwm-v2-2-ff3eece83cbb@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 16, 2024 at 8:02=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 16 Jul 2024 at 01:04, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > -       if (IS_ENABLED(CONFIG_OF) && pci_is_bridge(dev)) {
-> > +       if (IS_ENABLED(CONFIG_OF) && dev_of_node(&dev->dev) && pci_is_b=
-ridge(dev)) {
-> >                 retval =3D of_platform_populate(dev->dev.of_node, NULL,=
- NULL,
+Le 15/07/2024 à 22:29, Frank Li a écrit :
+> From: Liu Ying <victor.liu-3arQi8VN3Tc@public.gmane.org>
+> 
+> PWM in i.MX8QXP MIPI subsystem needs the clock '32k'. Use it if the DTS
+> provides that.
+> 
+> Signed-off-by: Liu Ying <victor.liu-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Frank Li <Frank.Li-3arQi8VN3Tc@public.gmane.org>
+> ---
+> Change from v1 to v2
+> - remove if check for clk
+> - use dev_err_probe
+> - remove int val
 
-While at it: you could replace the dev.of_node here with dev_of_node()
-too. I seem to have missed this helper.
+Hi,
 
-Bartosz
+maybe, switching to clk_bulk_get_all() and the clk_bulk API would 
+simplify the code?
 
-> >                                               &dev->dev);
->
-> I think you should just drop the IS_ENABLED(CONFIG_OF) check entirely.
->
-> afaik, dev_of_node() already returns NULL if CONFIG_OF isn't set.
->
-> So the bug was literally that you based the decision on something
-> pointless that shouldn't be there at all.
->
->                 Linus
+See [1] for a similar discussion related to devicetrees and binding if 
+such a change is done.
+I'm not familiar with it, so I just point it out.
+
+Just my 2c.
+
+CJ
+
+[1]: 
+https://lore.kernel.org/all/65b422fe-ecc1-4f57-bb72-f2fef3a5af28@collabora.com/
+
+> ---
+>   drivers/pwm/pwm-imx27.c | 26 +++++++++++++++++++++-----
+>   1 file changed, 21 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index 9e2bbf5b4a8ce..253afe94c4776 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -15,6 +15,7 @@
+>   #include <linux/delay.h>
+>   #include <linux/err.h>
+>   #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+> @@ -82,6 +83,7 @@
+>   struct pwm_imx27_chip {
+>   	struct clk	*clk_ipg;
+>   	struct clk	*clk_per;
+> +	struct clk	*clk_32k;
+>   	void __iomem	*mmio_base;
+>   
+>   	/*
+> @@ -101,23 +103,32 @@ static int pwm_imx27_clk_prepare_enable(struct pwm_imx27_chip *imx)
+>   {
+>   	int ret;
+>   
+> +	ret = clk_prepare_enable(imx->clk_32k);
+> +	if (ret)
+> +		goto err1;
+> +
+>   	ret = clk_prepare_enable(imx->clk_ipg);
+>   	if (ret)
+> -		return ret;
+> +		goto err2;
+>   
+>   	ret = clk_prepare_enable(imx->clk_per);
+> -	if (ret) {
+> -		clk_disable_unprepare(imx->clk_ipg);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		goto err3;
+>   
+>   	return 0;
+> +err3:
+> +	clk_disable_unprepare(imx->clk_ipg);
+> +err2:
+> +	clk_disable_unprepare(imx->clk_32k);
+> +err1:
+> +	return ret;
+>   }
+>   
+>   static void pwm_imx27_clk_disable_unprepare(struct pwm_imx27_chip *imx)
+>   {
+>   	clk_disable_unprepare(imx->clk_per);
+>   	clk_disable_unprepare(imx->clk_ipg);
+> +	clk_disable_unprepare(imx->clk_32k);
+>   }
+>   
+>   static int pwm_imx27_get_state(struct pwm_chip *chip,
+> @@ -325,6 +336,11 @@ static int pwm_imx27_probe(struct platform_device *pdev)
+>   		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
+>   				     "failed to get peripheral clock\n");
+>   
+> +	imx->clk_32k = devm_clk_get_optional(&pdev->dev, "32k");
+> +	if (IS_ERR(imx->clk_32k))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_32k),
+> +				     "failed to get 32k clock\n");
+> +
+>   	chip->ops = &pwm_imx27_ops;
+>   
+>   	imx->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+> 
+
