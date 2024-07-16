@@ -1,99 +1,110 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB2C19AD4F
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419B019AD4F;
+	Tue, 16 Jul 2024 13:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721136455; cv=none; b=qF/rYntoEkD68CBZCanrKo716KMUdIRs/FIExS1L0VSAE1mO9pBVkUVKmIhW0xVzTckF11RMg2zfmhm83+cC4CVZIGgHWxme9LSFp7YAfYgaJ/4HWpcJcD+Foy86B0w80kqqzKXEGC6BuF9+ikTI3d0YfG6Z3uAGk9BFLsgBWZw=
+	t=1721136502; cv=none; b=Berwlq94ARz/IlFu5hsKY856Qn9Y6j5sXqphvg8QlGDxYirkondMF/XXnjYXQTHZ6St0CvvbCZcaf+jgaTLyBN3VMoFtw2hslb8a5O194fmHoJ35wYhb0HcK3dkUODhMtefAwcm3k54n8QjnpWGM9I7HgHQrilG1RXdGTcmuUNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721136455; c=relaxed/simple;
-	bh=L4q/f/OtWa5M69YBoQW2fcIKupxqZNLZsMK3IgdJdtQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q734FtXzhkdn9eFPt22SUPMjQpFYUaKqUbvHkVQvxk4/cq1ML83R3FAlDbLs/z/6KZYWqSG48fS5tRKydi6ZZ5yXEGr16XE1xNnHhTYiNGGhXiozNQiWjt+m1vvZ2UtnEFe6gN0+9jCQqmYB6o3rjW7aSixpV+i3nQjBWGdBvH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y0kHqhkH; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y0kHqhkH"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4266ed6c691so35329005e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721136451; x=1721741251; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8nnUYNlwO0k6ZBjwD5Erccb4E+P924xRgxG4C0KqEnM=;
-        b=Y0kHqhkHJN2Ib3B04DpFvaK+tBDfaTUazQrgEW5O0Q338nbodwMT5MyObQeenFtca9
-         HdvTbXsbxCYzC+yVeTmJmFYBprsBFWEwrrI32wfehQe5iiEHz6KND7Hi7zhsr97koO/N
-         FH1Tx6fbdz/vnYQitxM2gGIOW1hefV9EYjJ5oEBVkElMNsPLeY2P1TKu9qyydzHBP7+y
-         T6cFjV6nJWdh8DnQ2mlHLp/cLvwZ2owyvmj5xOQCag9UcPglrUnXAC7jGGagTM6XvgTD
-         HE71gjWuO5tW9q12FHF8HR5zRM+Iovr8/lOoAn5+GrCIg8+5+noi3EgfVKFUB6Qk8FiV
-         a84g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721136451; x=1721741251;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8nnUYNlwO0k6ZBjwD5Erccb4E+P924xRgxG4C0KqEnM=;
-        b=A57uOrVh3ZCmfV2EhYRQvV56c2V//H3T79glKKQ2eWzWDBUVj7U59wm274CRN233dg
-         mY4fZM2zkJuIFeX3bcgo5lGMjd1+4ELYOW2fUKXbW+Vm73itz+H3lGdqmRdt4lRw8s94
-         xtZYKsGdPIeAPcbuQi1Fg6G1BY8Iy8BvQ/N+ABJmsHl2BM+Cf8RUamsdg2cG1405+jKg
-         ZMB249n7y2vUne9g+/4ypuf9eqgkyDygRfNJ5DQB+cJQE4fOL0UFR3KXABXBWU4ma3fs
-         7M5BCMYiptuA+w5r0V1LzVnxanznteky+E49rY9jPgP/uAvArx2s9DkcbIFS6cCPjH1V
-         uDLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgoeUVrJMo3kofkVo43AQYPd3vBRnWoO6GBzFQRaqkDyPa6HtVl8rYsWAesVsjusTZM5xus3hI3E9pvXpbQUjhHcPx8MMydNuQ20EY
-X-Gm-Message-State: AOJu0YxvqAWAD8oYtVTLNdAKp4dzdEHUOnnr/khUDz8ufnmYB91EW18Y
-	2qPuvtyJfc3dhnAatd/WITloOhVR1kUD7mhruD133kiaFJlJt/T+MyZj7+L3R8E=
-X-Google-Smtp-Source: AGHT+IGhqCHFIX7TkLPtIRTTvgB7kbFHYhFo3zMfT1v/DCloAtgq+4vAX8iGpdJXs9kK8D9hqV8L0Q==
-X-Received: by 2002:a05:600c:5127:b0:426:6099:6eaa with SMTP id 5b1f17b1804b1-427ba6dbd32mr13126415e9.26.1721136451525;
-        Tue, 16 Jul 2024 06:27:31 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f2cc2efsm163985725e9.36.2024.07.16.06.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 06:27:31 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: devicetree@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1721136502; c=relaxed/simple;
+	bh=TF815M0MHPBYp/3TtLytnCXOCoWe3Z5Pimkt2dlp1GI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=slmoB5Xqryj9TfVvY/P4D5/9SSFADGBKZW52FUkm/2Jz+KGz6h+r79O9rtHwM6FiZaLTv8sfmw7aYvAOcboqbk52mlg43LKmEDuARbFqbVb+06T9HDFW9qSRWDzI0WJROvQ7uYOtP7w0a+qwFNlvEXQv6sTTs7DzePyhbnS+esM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.97.1)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1sTiDR-000000003jW-40cV;
+	Tue, 16 Jul 2024 13:27:38 +0000
+Date: Tue, 16 Jul 2024 14:27:33 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Diederik de Haas <didi.debian@cknow.org>
+Cc: Chen-Yu Tsai <wens@kernel.org>, Aurelien Jarno <aurelien@aurel32.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org,
+	Olivia Mackall <olivia@selenic.com>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: iio: magnetometer: bmc150: Document mount-matrix
-Date: Tue, 16 Jul 2024 14:25:09 +0100
-Message-ID: <20240716132512.80337-1-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@debian.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Martin Kaiser <martin@kaiser.cx>, Ard Biesheuvel <ardb@kernel.org>,
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/3] hwrng: add hwrng support for Rockchip RK3568
+Message-ID: <ZpZ1RSSYaLo45kUI@makrotopia.org>
+References: <cover.1720969799.git.daniel@makrotopia.org>
+ <6425788.NZdkxuyfQg@bagend>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tknJYtWE5EdE/uFK"
+Content-Disposition: inline
+In-Reply-To: <6425788.NZdkxuyfQg@bagend>
 
-Document the mount-matrix property, which is used in device trees such
-as msm8916-samsung-fortuna-common.dtsi, and supported by the driver.
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
----
- .../bindings/iio/magnetometer/bosch,bmc150_magn.yaml           | 3 +++
- 1 file changed, 3 insertions(+)
+--tknJYtWE5EdE/uFK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bosch,bmc150_magn.yaml b/Documentation/devicetree/bindings/iio/magnetometer/bosch,bmc150_magn.yaml
-index 2867ab6bf9b0..a3838ab0c524 100644
---- a/Documentation/devicetree/bindings/iio/magnetometer/bosch,bmc150_magn.yaml
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/bosch,bmc150_magn.yaml
-@@ -36,6 +36,9 @@ properties:
-   interrupts:
-     maxItems: 1
- 
-+  mount-matrix:
-+    description: an optional 3x3 mounting rotation matrix.
-+
- additionalProperties: false
- 
- required:
--- 
-2.45.2
+Hi Diederik,
 
+On Tue, Jul 16, 2024 at 02:34:40PM +0200, Diederik de Haas wrote:
+> [...]
+> rngtest: starting FIPS tests...
+> rngtest: bits received from input: 20000032
+> rngtest: FIPS 140-2 successes: 362
+> rngtest: FIPS 140-2 failures: 638
+> rngtest: FIPS 140-2(2001-10-10) Monobit: 634
+> rngtest: FIPS 140-2(2001-10-10) Poker: 106
+> rngtest: FIPS 140-2(2001-10-10) Runs: 43
+> rngtest: FIPS 140-2(2001-10-10) Long run: 0
+> rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+> rngtest: input channel speed: (min=3D2.638; avg=3D139.351; max=3D9765625.=
+000)Kibits/s
+> rngtest: FIPS tests speed: (min=3D21.169; avg=3D36.158; max=3D68.610)Mibi=
+ts/s
+> rngtest: Program run time: 148109761 microseconds
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> That's almost twice as many failures as successes ...
+
+That's bad news, and apparently different from Aurelien's initial
+testing of the driver.
+
+Can you try if the result is also that bad when using his version of
+the driver:
+
+https://patchwork.kernel.org/project/linux-arm-kernel/patch/20221128184718.=
+1963353-3-aurelien@aurel32.net/
+
+If so, we can try to increase RK_RNG_SAMPLE_CNT, and we may need
+different values depending on the SoC...
+
+--tknJYtWE5EdE/uFK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABEIAB0WIQQ8WXOkSQLJP/KOu5qX7zeyq+FyywUCZpZ1PgAKCRCX7zeyq+Fy
+y7a0AQCE/4d3YLgHabbloqz9iyKoj0GdIFZwjHK3KL4968XEDQD/ajA3gjz4QmH0
+pQJAwVHNMGK6A9q8yQ6Rq+ZWpqvwmLM=
+=3OSJ
+-----END PGP SIGNATURE-----
+
+--tknJYtWE5EdE/uFK--
