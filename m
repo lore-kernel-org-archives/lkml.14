@@ -1,176 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324A61A4F2B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BDB1A2553;
 	Tue, 16 Jul 2024 18:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721154825; cv=none; b=ttf6TjWYFDvyiO14SBCaSU7L9Eu9Kae+5ELJq9G/eviFWKaPS6JV4h9taUC4vPRDx/JJhdyZ32edSHucAVuxqIOEsMFOoyu0AU79e166aHOOkLhv8bVfJ53BjRUA9934b25yOAXxygaRWYlQ43bWXppgcwWJk/fY9Funush7aE4=
+	t=1721154826; cv=none; b=Q8cLhgn+cbBYivTRSfqj8A0seC5UZKWMfNlyuDhhhdzuV4knZR4U1cL0CRs6fP+fWECai11Jv9V1UCi5/VLHURSfVaGkfIO3nV02IhU1kqupV7i4zXwikBkpSa0RvyHRh780+i3T+zRfjsUrCDKqYb9b8zaEUsXSdk+hT62txFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721154825; c=relaxed/simple;
-	bh=2K0g1t7SFFmyFpHBYCQZgT7kd2mByMFkUCTErHVQcs8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QLuj2lvsN6GpDjSlX1kGcFdhLb+8aNCH6MXToJIoxUYwzBsJnsJrACyf5Zdz6Z31o0nL3GpFG5Xv9o5FKXkSoxdbNSuArh1BAsFR60UfoRAxqhxEzsHLk70lZdO1n6LXcZjPnNL6IAtm1zAUj4msdAoZMUqZdjvE4Slg7dHNLbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDGuC15L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721154826; c=relaxed/simple;
+	bh=ndvNxnnobdXY1qRGFjwKkxZc5JAWm9Mq+lzm6iZ2oDw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=G6uaVHVqpsRfVZWxzPcJ9cWiv7YuDBXdclsm/QPZixvM/bXuXdwYPjFD4xkNrZQP1mYP3AXcq7fR8/p60tYM6dKt0jXziuOvuNj4wV1OLEw+vaCtYEM+MhtS4E47/y7I4P4FmH3g7yrH5SF2nXFJ7XXuHEcgwJ2uLaYGXs9aRkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsrniOlO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDGuC15L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E18C4AF0E;
-	Tue, 16 Jul 2024 18:33:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsrniOlO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9198C4AF0D;
+	Tue, 16 Jul 2024 18:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721154825;
-	bh=2K0g1t7SFFmyFpHBYCQZgT7kd2mByMFkUCTErHVQcs8=;
+	bh=ndvNxnnobdXY1qRGFjwKkxZc5JAWm9Mq+lzm6iZ2oDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TDGuC15L3GzFVerv/IS6gTCchH6qi3GYrFHf/Qbwjbx+8/VgcThgfZQxW84UL8/2q
-	 uQyd1LM9n5CpjKuIdCIDye1ALzlsE29rlXUd9Oz26yDQfAV0e4TqF0iAo1lCS5unwb
-	 ABA+3lLwizxpbkEaO0jraEUkQbsb+WqKNnFmZRoQBBrgRrkGaBErtSp4rUqmcfLBnr
-	 HWAlNHucMscSnPbrIkmPJboxpf7jAd6jbR6XhieuxFJrdHWq0wciRaBQ5saV/tLXAI
-	 Nb49uVVJMHgRqwYerj8zSmK927XWvY8ecDlvsd+u7PmwU3DwDSVHkHzIfLzcwyS22X
-	 oY7pjpPVae/Hg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: John Hubbard <jhubbard@nvidia.com>,
-	Carlos Llamas <cmllamas@google.com>,
-	Edward Liaw <edliaw@google.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	shuah@kernel.org,
-	nathan@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 5/8] selftests/vDSO: fix clang build errors and warnings
-Date: Tue, 16 Jul 2024 14:33:02 -0400
-Message-ID: <20240716183324.2814275-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240716183324.2814275-1-sashal@kernel.org>
-References: <20240716183324.2814275-1-sashal@kernel.org>
+	b=nsrniOlOCA9NbqSZROhsTDlJdmUSh/BIZPZSXpXBQ5Kz0mQHgIaawfAfa05qS7c7Z
+	 Nt517df9+ryBl4iNVvRHO0QYiHqNe+f2+PE1Y+cT06qDHrkbbJ6KHOMaZ8ZlcO7uBL
+	 Khgw3NMxO2iJoplVwD2WmD+mtCc/ZQp5lIQa17/0f8D4VcOdhAxbfiojHSPVSzgD79
+	 o8wwBgfor7wEvlp+fS96m/lE/l3Eo+M/W1el70kLQ/yex2Nae/moHQ2cKyM+Ef27km
+	 32YbxdsRMNi1/FQ8WHzMyUJxWaXDPW/6BmpEzEBygVxVyjWM9cy0WJFPxNgQt1hs8r
+	 d5LKPgNkl/6ww==
+From: SeongJae Park <sj@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: David Laight <David.Laight@ACULAB.COM>,
+	linux-kernel@vger.kernel.org,
+	David Laight <david.laight@aculab.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	SeongJae Park <sj@kernel.org>
+Subject: [PATCH 5.15.y 7/8] minmax: relax check to allow comparison between unsigned arguments and signed constants
+Date: Tue, 16 Jul 2024 11:33:32 -0700
+Message-Id: <20240716183333.138498-8-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240716183333.138498-1-sj@kernel.org>
+References: <20240716183333.138498-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.40
 Content-Transfer-Encoding: 8bit
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: David Laight <David.Laight@ACULAB.COM>
 
-[ Upstream commit 73810cd45b99c6c418e1c6a487b52c1e74edb20d ]
+commit 867046cc7027703f60a46339ffde91a1970f2901 upstream.
 
-When building with clang, via:
+Allow (for example) min(unsigned_var, 20).
 
-    make LLVM=1 -C tools/testing/selftests
+The opposite min(signed_var, 20u) is still errored.
 
-...there are several warnings, and an error. This fixes all of those and
-allows these tests to run and pass.
+Since a comparison between signed and unsigned never makes the unsigned
+value negative it is only necessary to adjust the __types_ok() test.
 
-1. Fix linker error (undefined reference to memcpy) by providing a local
-   version of memcpy.
-
-2. clang complains about using this form:
-
-    if (g = h & 0xf0000000)
-
-...so factor out the assignment into a separate step.
-
-3. The code is passing a signed const char* to elf_hash(), which expects
-   a const unsigned char *. There are several callers, so fix this at
-   the source by allowing the function to accept a signed argument, and
-   then converting to unsigned operations, once inside the function.
-
-4. clang doesn't have __attribute__((externally_visible)) and generates
-   a warning to that effect. Fortunately, gcc 12 and gcc 13 do not seem
-   to require that attribute in order to build, run and pass tests here,
-   so remove it.
-
-Reviewed-by: Carlos Llamas <cmllamas@google.com>
-Reviewed-by: Edward Liaw <edliaw@google.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Tested-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lkml.kernel.org/r/633b64e2f39e46bb8234809c5595b8c7@AcuMS.aculab.com
+Signed-off-by: David Laight <david.laight@aculab.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+(cherry picked from commit 867046cc7027703f60a46339ffde91a1970f2901)
+Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- tools/testing/selftests/vDSO/parse_vdso.c      | 16 +++++++++++-----
- .../selftests/vDSO/vdso_standalone_test_x86.c  | 18 ++++++++++++++++--
- 2 files changed, 27 insertions(+), 7 deletions(-)
+ include/linux/minmax.h | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/vDSO/parse_vdso.c b/tools/testing/selftests/vDSO/parse_vdso.c
-index 413f75620a35b..4ae417372e9eb 100644
---- a/tools/testing/selftests/vDSO/parse_vdso.c
-+++ b/tools/testing/selftests/vDSO/parse_vdso.c
-@@ -55,14 +55,20 @@ static struct vdso_info
- 	ELF(Verdef) *verdef;
- } vdso_info;
+diff --git a/include/linux/minmax.h b/include/linux/minmax.h
+index f76b7145fc11..dd52969698f7 100644
+--- a/include/linux/minmax.h
++++ b/include/linux/minmax.h
+@@ -9,13 +9,18 @@
+ /*
+  * min()/max()/clamp() macros must accomplish three things:
+  *
+- * - avoid multiple evaluations of the arguments (so side-effects like
++ * - Avoid multiple evaluations of the arguments (so side-effects like
+  *   "x++" happen only once) when non-constant.
+- * - perform signed v unsigned type-checking (to generate compile
+- *   errors instead of nasty runtime surprises).
+- * - retain result as a constant expressions when called with only
++ * - Retain result as a constant expressions when called with only
+  *   constant expressions (to avoid tripping VLA warnings in stack
+  *   allocation usage).
++ * - Perform signed v unsigned type-checking (to generate compile
++ *   errors instead of nasty runtime surprises).
++ * - Unsigned char/short are always promoted to signed int and can be
++ *   compared against signed or unsigned arguments.
++ * - Unsigned arguments can be compared against non-negative signed constants.
++ * - Comparison of a signed argument against an unsigned constant fails
++ *   even if the constant is below __INT_MAX__ and could be cast to int.
+  */
+ #define __typecheck(x, y) \
+ 	(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+@@ -25,9 +30,14 @@
+ 	__builtin_choose_expr(__is_constexpr(is_signed_type(typeof(x))),	\
+ 		is_signed_type(typeof(x)), 0)
  
--/* Straight from the ELF specification. */
--static unsigned long elf_hash(const unsigned char *name)
-+/*
-+ * Straight from the ELF specification...and then tweaked slightly, in order to
-+ * avoid a few clang warnings.
-+ */
-+static unsigned long elf_hash(const char *name)
- {
- 	unsigned long h = 0, g;
--	while (*name)
-+	const unsigned char *uch_name = (const unsigned char *)name;
+-#define __types_ok(x, y) 			\
+-	(__is_signed(x) == __is_signed(y) ||	\
+-		__is_signed((x) + 0) == __is_signed((y) + 0))
++/* True for a non-negative signed int constant */
++#define __is_noneg_int(x)	\
++	(__builtin_choose_expr(__is_constexpr(x) && __is_signed(x), x, -1) >= 0)
 +
-+	while (*uch_name)
- 	{
--		h = (h << 4) + *name++;
--		if (g = h & 0xf0000000)
-+		h = (h << 4) + *uch_name++;
-+		g = h & 0xf0000000;
-+		if (g)
- 			h ^= g >> 24;
- 		h &= ~g;
- 	}
-diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-index 8a44ff973ee17..27f6fdf119691 100644
---- a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-+++ b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-@@ -18,7 +18,7 @@
++#define __types_ok(x, y) 					\
++	(__is_signed(x) == __is_signed(y) ||			\
++		__is_signed((x) + 0) == __is_signed((y) + 0) ||	\
++		__is_noneg_int(x) || __is_noneg_int(y))
  
- #include "parse_vdso.h"
- 
--/* We need a libc functions... */
-+/* We need some libc functions... */
- int strcmp(const char *a, const char *b)
- {
- 	/* This implementation is buggy: it never returns -1. */
-@@ -34,6 +34,20 @@ int strcmp(const char *a, const char *b)
- 	return 0;
- }
- 
-+/*
-+ * The clang build needs this, although gcc does not.
-+ * Stolen from lib/string.c.
-+ */
-+void *memcpy(void *dest, const void *src, size_t count)
-+{
-+	char *tmp = dest;
-+	const char *s = src;
-+
-+	while (count--)
-+		*tmp++ = *s++;
-+	return dest;
-+}
-+
- /* ...and two syscalls.  This is x86-specific. */
- static inline long x86_syscall3(long nr, long a0, long a1, long a2)
- {
-@@ -70,7 +84,7 @@ void to_base10(char *lastdig, time_t n)
- 	}
- }
- 
--__attribute__((externally_visible)) void c_main(void **stack)
-+void c_main(void **stack)
- {
- 	/* Parse the stack */
- 	long argc = (long)*stack;
+ #define __cmp_op_min <
+ #define __cmp_op_max >
 -- 
-2.43.0
+2.39.2
 
