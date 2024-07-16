@@ -1,77 +1,111 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CDF17BAF;
-	Tue, 16 Jul 2024 06:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD1018046
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721109793; cv=none; b=jH7lhYq9d+CiC0uktr+yISXEY+fZk8vOiZ42r0YJ+6UsRV4E3wqYmJeyXCrZDQEdnVnFDhSXN9yfn+sfm64399bVsCN5b0DEKcPdgi39cZOTS8n+pLzuQX6i7rcZiclM/6p7idBj1A7/Fnd9+jDY5ljkp0ZinQkBzJ27WM0MMFI=
+	t=1721109945; cv=none; b=ji63T38MO7DGgXvqqXevLfS9CZCmc2GSangze4PjosdBbmE2k2gOFdUFnOWfmGOvlD2bxL5G/CdaLiGTseoCftsiuRjpePYJFlyVb47KcZRxqYO9FFrhq/73+hcJPfqMzSQOzfUVM5PjT0de/MtjTHx8JoE3r5j+/rhj4ByejjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721109793; c=relaxed/simple;
-	bh=uO+5Yp6NoxyT/hK1BZMXgDQWFdPsMeek9I4I6d/8FI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HWsaNYYWgBU9p2xsCYwxB+vM8k9qTeBknxJPLoz44AJZiFPAo78P9v0hmSHI1+M/d3r0T4UFkUoJKNbngmbvwP4JiunGIlMl0v4GpBzur6yMAi95jbeReaxFpNl+/b/uEITsaCRajyIkDIF+mKyLyV4x37Xq14Fl3zK0r39LFNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WNT3712Mpzdhwv;
-	Tue, 16 Jul 2024 14:01:23 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 564AC1800A1;
-	Tue, 16 Jul 2024 14:03:06 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 16 Jul 2024 14:03:06 +0800
-Message-ID: <2335e293-9ef4-46ad-b1bd-4416dfeda604@huawei.com>
-Date: Tue, 16 Jul 2024 14:03:04 +0800
+	s=arc-20240116; t=1721109945; c=relaxed/simple;
+	bh=gRFQNWu34dknQ+rvjmZpgC6AueEx0tvylKHT2NLukGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hX4Uh2q9+OGWPBNQJQDn/E9fTba6/vxm8/oy9D/gLbNkEiPxnuelrPcD/+ogA+ApaZttTNpxwpQHnnKg9wEEmnGsJEAiKLe3Z1ZlnaOD6uYG9O3qA+fiDSJ6ZyRCZsWNCO1dslK2LKxLxuBMXe483hIrka7Ebm7Ur1LyJTSTE1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KAsr8bZ1; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KAsr8bZ1"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70b702be5e4so2544538b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 23:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721109943; x=1721714743; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=O10iCKYxk+ue4943lGDmv3A7VtKpJBt5vhwqbYGmtnI=;
+        b=KAsr8bZ1msla5EcALbtaTXjneJyPPG9jUzWxcZaSTSui09EkNMW+wdDptMaySqNRVp
+         Ph+5hhQbNJ3ZgARox9BI+aSXnYD4/XYUPt0i5MBVJJGEXIqOgl1aXz+Y2EMzzUEwb3Tk
+         O6mdHhw36iCP/LfLMMQZxCnPPwH4U/oeDebr007yNfIL5WxObX5TuIcCLXQeWemOydfa
+         nyCSSSF3xVSIva8XYxwi+hFVoQfrB1aobE3LzUom7B4/PkgNZU49M1LPNrfltTTQdSP4
+         k9NCWuZ0YxcdkFPeW8p2CL78Sp3WTUpVSRPil00z3aNCdvHAoQ0qxG6NGQHwukzoalnv
+         NELw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721109943; x=1721714743;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O10iCKYxk+ue4943lGDmv3A7VtKpJBt5vhwqbYGmtnI=;
+        b=lxwK+RYpaVeHqDB/mZn9+O0GKZEatBuwQcS8OZpf6DOVr73NU30lNPJjtDUuGj+85C
+         Ov5oCXU1t4rs+x/OmYaXiyLAZfV4UV068v+rsDPnf1utMh/GtmVSxtJfVwaPjJVJNQdI
+         bBERwa5J/aT430ypbiK5ormIxZjkjSixl7pLGhqZ5sfDoes0JncD0z2hZ9ReGBFpPahn
+         RK9SHpi6jS1u+4M8QQLt2ASvmT+VL7nUbufITVDh7KjjN4oEjZNxx8vwsRuwy426aFf3
+         jIT6LsN8lK0MZxV5FUTfxEvmYLQSYHsMMTOQFFrIMdG7VoeJ6shpWX+G6qc6EZzpsZwA
+         NP8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWcFPEee7JNwWeSKjCertKfKiY+Fqo+m/hX38Qx0ypn7D8EtAV+MJnL8DLT+Kz86jLuoAVyD5JgkR+2eb0rmj8mcHtbEwrRW7V4B7Mt
+X-Gm-Message-State: AOJu0Yx+M7Hovg/ysPyZjIV9NRpDhgJh3ZVezuehHa9rXHNJ/LWiJZyn
+	nqZnPteFDgmg/jZWBO7HGDGjf9wkoiGZCOQbiVBDJ6fPyXQ40dEUrAjMQnhnfg==
+X-Google-Smtp-Source: AGHT+IEES3tuucRCnqSrLmYrhGb20AoucpX/SdgfB8LtRVnsYbNlhwslTyUrU/Hp4D9M0LXcDqZegA==
+X-Received: by 2002:a05:6a21:6d87:b0:1c1:d866:7db8 with SMTP id adf61e73a8af0-1c3f120315bmr1552920637.9.1721109942813;
+        Mon, 15 Jul 2024 23:05:42 -0700 (PDT)
+Received: from thinkpad ([220.158.156.207])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2caedc92d88sm5384035a91.37.2024.07.15.23.05.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jul 2024 23:05:42 -0700 (PDT)
+Date: Tue, 16 Jul 2024 11:35:36 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Qingqing Zhou <quic_qqzhou@quicinc.com>
+Cc: Andrew Halaney <ahalaney@redhat.com>, andersson@kernel.org,
+	konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sa8775p: Mark APPS and PCIE SMMUs as
+ DMA coherent
+Message-ID: <20240716060536.GH3446@thinkpad>
+References: <20240715071649.25738-1-quic_qqzhou@quicinc.com>
+ <nulprwjd52j2iq7cpx5nq733cbi6ccdpemq6a7ocglv4ep5jmh@jvs6zof5u535>
+ <c8b0c7ce-f02a-4d38-8473-4c20287ddbcc@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bcachefs: Convert comma to semicolon
-To: Chen Ni <nichen@iscas.ac.cn>, <kent.overstreet@linux.dev>,
-	<bfoster@redhat.com>
-CC: <linux-bcachefs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240716040302.684034-1-nichen@iscas.ac.cn>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20240716040302.684034-1-nichen@iscas.ac.cn>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c8b0c7ce-f02a-4d38-8473-4c20287ddbcc@quicinc.com>
 
-
-
-On 2024/7/16 12:03, Chen Ni wrote:
-> Replace a comma between expression statements by a semicolon.
+On Tue, Jul 16, 2024 at 02:00:15PM +0800, Qingqing Zhou wrote:
 > 
-> Fixes: 79032b078173 ("bcachefs: Improved topology repair checks")
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->   fs/bcachefs/btree_update_interior.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/fs/bcachefs/btree_update_interior.c b/fs/bcachefs/btree_update_interior.c
-> index 31ee50184be2..51b43d75ddb6 100644
-> --- a/fs/bcachefs/btree_update_interior.c
-> +++ b/fs/bcachefs/btree_update_interior.c
-> @@ -96,7 +96,7 @@ int bch2_btree_node_check_topology(struct btree_trans *trans, struct btree *b)
->   			bch2_topology_error(c);
->   
->   			printbuf_reset(&buf);
-> -			prt_str(&buf, "end of prev node doesn't match start of next node\n"),
-> +			prt_str(&buf, "end of prev node doesn't match start of next node\n");
+> 在 7/16/2024 2:14 AM, Andrew Halaney 写道:
+> > On Mon, Jul 15, 2024 at 12:46:49PM GMT, Qingqing Zhou wrote:
+> >> The SMMUs on sa8775p are cache-coherent. GPU SMMU is marked as such,
+> >> mark the APPS and PCIE ones as well.
+> >>
+> >> Signed-off-by: Qingqing Zhou <quic_qqzhou@quicinc.com>
+> > 
+> > I think this deserves a Fixes tag as well, not treating it as
+> > dma-coherent is a bug and can lead to difficult to debug errors based on
+> > a quick search through lkml.
+> > 
+> > Thanks,
+> > Andrew
+> > 
+> 
+> Andrew, thanks for your review comments, do you mean to add below two lines?
+> Fixes: 603f96d4c9d0 ("arm64: dts: qcom: add initial support for qcom sa8775p-ride")
+> Fixes: 2dba7a613a6e ("arm64: dts: qcom: sa8775p: add the pcie smmu node")
+> 
 
-Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
+Yes, looks to be it. With the tags added,
 
-Thanks,
-Hongbo
->   			prt_printf(&buf, "  in btree %s level %u node ",
->   				   bch2_btree_id_str(b->c.btree_id), b->c.level);
->   			bch2_bkey_val_to_text(&buf, c, bkey_i_to_s_c(&b->key));
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+And CC stable if the offending commits went into any stable kernels.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
