@@ -1,113 +1,108 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CB4F9E8
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 17:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BE9F9E8
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 17:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721151119; cv=none; b=nTQ7shBSuB0Rma9wKNjKyizFE7E3gsLzNSpeN/ozgnPuJGMkH9JDZw1l8F2zRDbFy8Hi+fBOPw67nTL9+xvRDGanmn/t60b3QVfQaTHQo8V9GrX4WjOjQs+V/tiOxvxS2tYc7Ea1hFztF8I2Kr3ro/nGY5RAQaWjAQJdz50cREM=
+	t=1721151299; cv=none; b=poMR/Jxx6qmDVYQfb8S8VnvauSE1lX7IL9FDPScIGq+Z9/DXqexQlT0o0n6gEc0loW60aANhDMnUklv4k1G28QdiFQWDX2H2Fgzhiu6Ew+YdrpQ4Njaib8j3msYz0+VQsGjZ7oJpFipA5Biw8QcBLigQVc0DxtWSRIX0AX5w9XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721151119; c=relaxed/simple;
-	bh=MW5MM0UiDoNQ5jIccGyeCS2wNwBx87O/gkIYwsEBj+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oleHjWSgMM+4oPizmy1eg1MxK+us6JtW3yGoupDdv+YfkSoPk9iMH4AmHD5DL7elnvWtk3y/oXZLDNT7mBSR3yL+g5TCUbwGcRCiXV3wvfiou5GqAeFwvnYMexXpVnPQ4atcL55lefWMNmGowPahtAIklwG9GSlrrq1xxESgt1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=BhoDx/d0; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1721151299; c=relaxed/simple;
+	bh=3M0QByp5nIuBwkxRifE56E0QWbZdgARiPYYVK/zs0M4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qHVCgpKI7tLjxEQ+SWG9vml2RxLFdJHm+eLhcaGiTDT3TshPqwXOsDURrGbM6cIgrEFd5v1j6aozSrpA/bfMv+uegaI/YNFXyNUkVsNnBmo052VVibjqzo6Ccs+BGcghu8nGTURAxn92FksCwTAfjOQ/4Yc4HD/V2CVFjkAOibs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Eb/zTCU5; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="BhoDx/d0"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4WNmMj60Qdz4K9;
-	Tue, 16 Jul 2024 19:31:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1721151105;
-	bh=Xu6GB1mmYQXJSoJZK4nvtCnpIij3wppCLjoOW51w6fM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BhoDx/d0FL+9WOZsjJfJW8taaEo6bVoFn6l1M02l3CmqODMqqKPv7R3eCAw4USrP/
-	 G+nhmkrZacHDd01il83mrHH+zULbipwD/RLRES9qWSMAIN23MFh2hYqoKE2W5cieGD
-	 HBnwBBUcQ3ZObdCcIHv/DM7C3kLPxfeMt0lO2WTY=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4WNmMc22bKz12m6;
-	Tue, 16 Jul 2024 19:31:39 +0200 (CEST)
-Date: Tue, 16 Jul 2024 19:31:38 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>, 
-	Mimi Zohar <zohar@linux.ibm.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Paul Moore <paul@paul-moore.com>, Theodore Ts'o <tytso@mit.edu>, 
-	Alejandro Colomar <alx@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Christian Heimes <christian@python.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Eric Chiang <ericchiang@google.com>, Fan Wu <wufan@linux.microsoft.com>, 
-	Florian Weimer <fweimer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>, Jann Horn <jannh@google.com>, 
-	Jeff Xu <jeffxu@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jordan R Abrahams <ajordanr@google.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
-	Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, 
-	Scott Shell <scottsh@microsoft.com>, Shuah Khan <shuah@kernel.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Steve Dower <steve.dower@python.org>, 
-	Steve Grubb <sgrubb@redhat.com>, Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, 
-	Vincent Strubel <vincent.strubel@ssi.gouv.fr>, Xiaoming Ni <nixiaoming@huawei.com>, 
-	Yin Fengwei <fengwei.yin@intel.com>, kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Subject: Re: [RFC PATCH v19 0/5] Script execution control (was O_MAYEXEC)
-Message-ID: <20240716.leeV4ooveinu@digikod.net>
-References: <20240704190137.696169-1-mic@digikod.net>
- <55b4f6291e8d83d420c7d08f4233b3d304ce683d.camel@linux.ibm.com>
- <20240709.AhJ7oTh1biej@digikod.net>
- <9e3df65c2bf060b5833558e9f8d82dcd2fe9325a.camel@huaweicloud.com>
- <ee1ae815b6e75021709612181a6a4415fda543a4.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Eb/zTCU5"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c95c80c6f7so5094025a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721151297; x=1721756097; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bzncl9L3e27llWjrAt0uSGnBBcBzotmsp09OvMIhHpc=;
+        b=Eb/zTCU5kPhzS0/bk11Payd+5kyJ5P2aPcU0yqX7V8Y4LtmgT0sDl/yHktUTM0Mb7e
+         z5CaMMry8WZjMr5ZtlxQ87ORckr2HKdH4DQNITPpw9aS71YoA9TgD07EukwUOenFSQpo
+         7sE/rSzawBqGFpZSZo33IEuluLPX35cCdKe/yMWDsQypYBEBvgsBkxJB62ksxnOWSts9
+         9mv2eGtomZymF8HSMD+UFj7wZifkS1l1Fc0HLYVkEQlqKTJsMosmVePzRZhL8EqitXyK
+         tTYiarBJJM/8pKKq28QrQMz57hDBMA2kBG28/SP+ikuUyjJw6ZV/0skeTvjYY9C/Unpv
+         u+ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721151297; x=1721756097;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bzncl9L3e27llWjrAt0uSGnBBcBzotmsp09OvMIhHpc=;
+        b=TFWIdYCYf43LSO2Oe8DJirck9yU2l6tAS+Y2fQK36gZyHsQIiDkZuPUdTqse2gL4l+
+         PLmhVK8fvdlgtMrCxXmW4Y9ps8TcJxgwQnUt4pcfqAH4L7xC2aW3YMuIFbS1kbEeELqW
+         4eA1EfNtQCamCvdtbPKOZorWNRRmK06OX/smYQZnFSfYEyJkmizw33jLYh03aGAk+gG4
+         lJlpz3TnOHKlCmAD9jPUqxPOXyCzLoOFH05miyvfowbktPUI4H6pTU6KLl7BLGYWyC14
+         O2h2XKj3cEZHUPL+M79Tp10ngvNhxgo6P9rE6rC4dxy4I9mYiDIswm7iHSkMXGtBKorA
+         EgQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgA4lA/reK7lyhfUyKLFbQKjKgzC1a0wzMzvXqSMmQDqQ3C8Zgq3gv/mlM+GnE6g2yhHPq1gsNXMqNqfHG1iEHc1EEpHE0ZLULHMZj
+X-Gm-Message-State: AOJu0YyhXgBAcHvH4ZzBpGIDmUjxQJcditXQ2+hBZCGVDJGfl51FiSXb
+	IbwEfxx8rzq9r+SneVIedOcFCWIRsaHTIA40QSAj5vYnedFvop2L0IxwUlaQBcpFT7fgA5YFyg+
+	k+A==
+X-Google-Smtp-Source: AGHT+IG32VHtdxdaUsDDPJunrvckiTWNO91gPhz+tHm9yc4gkYSQ85JHqlVjFo5Nvdj8OgpwD3v6pjKH7w4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90a:b96:b0:2c9:ba2b:42ac with SMTP id
+ 98e67ed59e1d1-2cb36d483c4mr6722a91.4.1721151297229; Tue, 16 Jul 2024 10:34:57
+ -0700 (PDT)
+Date: Tue, 16 Jul 2024 10:34:55 -0700
+In-Reply-To: <20240716160842.GD1482543@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ee1ae815b6e75021709612181a6a4415fda543a4.camel@HansenPartnership.com>
-X-Infomaniak-Routing: alpha
+Mime-Version: 1.0
+References: <20240618-exclusive-gup-v1-0-30472a19c5d1@quicinc.com>
+ <20240712232937.2861788-1-ackerleytng@google.com> <ZpaZtPKrXolEduZH@google.com>
+ <20240716160842.GD1482543@nvidia.com>
+Message-ID: <ZpavP3K_xAMiu4kE@google.com>
+Subject: Re: [PATCH RFC 0/5] mm/gup: Introduce exclusive GUP pinning
+From: Sean Christopherson <seanjc@google.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, quic_eberman@quicinc.com, 
+	akpm@linux-foundation.org, david@redhat.com, kvm@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, maz@kernel.org, 
+	pbonzini@redhat.com, shuah@kernel.org, tabba@google.com, willy@infradead.org, 
+	vannapurve@google.com, hch@infradead.org, rientjes@google.com, 
+	jhubbard@nvidia.com, qperret@google.com, smostafa@google.com, fvdl@google.com, 
+	hughd@google.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Jul 16, 2024 at 12:12:49PM -0400, James Bottomley wrote:
-> On Tue, 2024-07-16 at 17:57 +0200, Roberto Sassu wrote:
-> > But the Clip OS 4 patch does not cover the redirection case:
-> > 
-> > # ./bash < /root/test.sh
-> > Hello World
-> > 
-> > Do you have a more recent patch for that?
-
-Bash was only partially restricted for CLIP OS because it was used for
-administrative tasks (interactive shell).
-
-Python was also restricted for user commands though:
-https://github.com/clipos-archive/clipos4_portage-overlay/blob/master/dev-lang/python/files/python-2.7.9-clip-mayexec.patch
-
-Steve and Christian could help with a better Python implementation.
-
+On Tue, Jul 16, 2024, Jason Gunthorpe wrote:
+> On Tue, Jul 16, 2024 at 09:03:00AM -0700, Sean Christopherson wrote:
 > 
-> How far down the rabbit hole do you want to go?  You can't forbid a
-> shell from executing commands from stdin because logging in then won't
-> work.  It may be possible to allow from a tty backed file and not from
-> a file backed one, but you still have the problem of the attacker
-> manually typing in the script.
-
-Yes, that's why we'll have the (optional) SECBIT_EXEC_DENY_INTERACTIVE:
-https://lore.kernel.org/all/20240710.eiKohpa4Phai@digikod.net/
-
+> > > + To support huge pages, guest_memfd will take ownership of the hugepages, and
+> > >   provide interested parties (userspace, KVM, iommu) with pages to be used.
+> > >   + guest_memfd will track usage of (sub)pages, for both private and shared
+> > >     memory
+> > >   + Pages will be broken into smaller (probably 4K) chunks at creation time to
+> > >     simplify implementation (as opposed to splitting at runtime when private to
+> > >     shared conversion is requested by the guest)
+> > 
+> > FWIW, I doubt we'll ever release a version with mmap()+guest_memfd support that
+> > shatters pages at creation.  I can see it being an intermediate step, e.g. to
+> > prove correctness and provide a bisection point, but shattering hugepages at
+> > creation would effectively make hugepage support useless.
 > 
-> The saving grace for this for shells is that they pretty much do
-> nothing on their own (unlike python) so you can still measure all the
-> executables they call out to, which provides reasonable safety.
+> Why? If the private memory retains its contiguity seperately but the
+> struct pages are removed from the vmemmap, what is the downside?
 
-Exactly. Python is a much more interesting target for attacker because
-it opens the door for arbitrary syscalls (see the cover letter).
+Oooh, you're talking about shattering only the host userspace mappings.  Now I
+understand why there was a bit of a disconnect, I was thinking you (hand-wavy
+everyone) were saying that KVM would immediately shatter its own mappings too.
 
-If we want to have a more advanced access control (e.g. allow Bash but
-not Python), we should extend existing LSMs to manage the appropriate
-securebits according to programs/subjects.
+> As I understand it the point is to give a large contiguous range to
+> the private world and use only 4k pages to give the hypervisor world
+> access to limited amounts of the memory.
+> 
+> Is there a reason that not having the shared memory elevated to higher
+> contiguity a deal breaker?
+
+Nope.  I'm sure someone will ask for it sooner than later, but definitely not a
+must have.
