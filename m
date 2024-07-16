@@ -1,220 +1,263 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A9F4C7B
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 01:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B711A1BF40
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 01:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721093003; cv=none; b=IjjfrI0AgrpDrsgkslyEaeIUUC8jL7A0h5qRcNt0aigZocdnIhoYbZqXCbLu3EfWUgNPWSnQMf7I1toeEa5PVa/HQuZiAXq4IWSVE77hSmou+qob3AJZUTomTWmxUSqRLfSIaO4OYXHHlhfPvLouXPwNrSv9rHZS6RNizg+Pt5c=
+	t=1721093015; cv=none; b=rUOpmpzQJ1pz0sFITiZom9j3GADtQvNXw9DptP2vwQJ2anmIlSLoxjF75gQNncPdY5+QAQRc/kGIhVDhnhlai//XJYmv9M3pD3qWXQSN1a5RLLqjZuL3Q2B9BYvtteEXd6i70BxXT8cyTigFyrG7OMrmiOfQWcMLsgmQEa8UZr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721093003; c=relaxed/simple;
-	bh=ZZMrXW//datlgTk9/AxilYaBdsktv+cJT4ZHKJ7/2fo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=oXprXKSqLXeg3U1gXgWyo41sxDUzz1+8RunUjd4r16E+USCIAqKMGASzxN3SxRQKy+0fEakNhWqnjk4LHVwVBz5eUHaYfZjhAfL0TAoAQ3F8p/FvBLgIAuL4niFQ4SDhW2GmC6nMVb5NfAI4jJa4KTYuwma9ZQiu7+XxPy4yPRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f6218c0d68so601530239f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 18:23:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721093000; x=1721697800;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1721093015; c=relaxed/simple;
+	bh=NimheLaqqm77C7NRwA++au2HU3MagG+bRyh5Di35wYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sEjS0Rh+CtCGeWlojMiVVSkFOpj+Xwj4w++2d7B+Muy7/mZXy26bsolE4Cl6pP56UXDjiYNqH6K2Bmg1LrUztrZKKzsftcuQjNHJfDnfN6oalxMbWi2h61fVBJ9j2dd+kM6lEojBKk3A9isq/7arq2wPPirWc+s3JQA87UvZRww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GiL3d261; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiL3d261"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7035b2947a4so2865495a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2024 18:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721093013; x=1721697813; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NrTY4E9dwMaOsFfSFijC10L9Vx6+2nYaCItEw+V4XCE=;
-        b=M49xL4fOsAvk4eEBr2i4vgZdTMeT06KyDdhfmLApx2Rsp7DbmoZ27wzz0LuzRON5Ch
-         eJI1TfvRH8WGfB+F0R1wMeqGydMn75z2fvkfkp8o6cun1VJECOfyetVO+mya7twwIuwW
-         vdq5x3QX78yk325dbC4SHr4RD4nxt20Z1VHeQ2Roq8Ihp1yqu5z/HWncOKHR6zanZWir
-         cshcGdDxbh/IPvs7z2ydtC68cr4jfln+T9DNISxjlVRIXWi6U8Ru/YhZqCRCM21Jk9yc
-         xOtVw1Wd35B2YX38DxMOq2tP9UxzfEVC6DMRMTZOHTZNoa5KCayhIV0tonUnRVbeHKol
-         DzJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHyY6OqPmivhiOIHFy40oaN/6mu8tQNroxVZ8q0h4Su/QEYtxmrPAC+Uu8XQMQSiYaFhX4Dqr8OGFidw/IKMMAaxsEZDrd5TdZB6Xs
-X-Gm-Message-State: AOJu0Yx1nTWaX7TSjqJB1qVRs8bZrCHGSx5pAHNxBsRSF68suZX5+PyR
-	nyFdyseBrtAEB+V8CYaOnUZDJAF0kQdid+IBWtBrQzGTRaQWBSLppV/qQPVyst8K1gCTP2eGtHd
-	q5tVFK7z107//SgWFgKYTtCyCNkIyvUxzRVXdC05Ev4gkJueb9aVjJ8U=
-X-Google-Smtp-Source: AGHT+IFGxH153aE/8usxwyP9BT7oG/12wXoV7aedxCjgHSoq3sBUSvjz1NXDAaGaDQwujP8sBwSS+p/J8bLtx4T0vN+LyxUj1tGU
+        bh=vUb+h4iR+SfupLLuXHRz6dRkSTTMmLi3YHN8v82yLpI=;
+        b=GiL3d261hgSDQO4t7U3PTZP1t8DeA6S6T7EMrlDBpIwAzUX4COIPDEylPXrcAT2yWv
+         JIeBEk4QpWld/kzN3ZYnIGt/WYWWrAw3NtLdFxsq7Bklf4ZhRsMrPt5IG2dGGbieFGCk
+         liECeqgn/1FUnDkCtddPfUwc2SXaiugmVsxW2GMT60XwZciZfcr/TUyUyG0uvVP8stP1
+         E96o09I/n5jyUZz9+QgunIVTAiR7d4MdfZJTb+RsEUypzmGtdm89qO2wuKJvrnIq0khc
+         dAHySoJOUq+iPJkwvv/0qLRIMAF6cDDgfM0l/GNR9jwhZFm9+/oUCLNNVNOgGUacGHNn
+         XkCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721093013; x=1721697813;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vUb+h4iR+SfupLLuXHRz6dRkSTTMmLi3YHN8v82yLpI=;
+        b=b07dE95ocFNOILFhh/qCvbMv0S/ZjSu4urs02F+oz9/UtUH1/Q6W6ClYk0aMWy05Y7
+         vXFXqnuvyH1OnpWygs9wLeSaYJ6jlIhmGTCj/Dcn/KfEvHa3g5FyI4aUAcNfFMXkvsa2
+         jqYHq8Q1SSR23z2sib0YrgFjoviFiQ9a32RtzG0SsP1J981noZCkqa+bBf9n/Wn7myFC
+         BUjmrQ5pSN8Tf17BZJZW5+Bv2BpV7vq1HF+a5wrHIct/YwVt15DlhFHgl8QAcms2+JSJ
+         mVBZS0QXQ8zPu0vtD/LVR97S8etGh4K8gQCuk2aCZJkxMX0tIRVVz+BS6vrnUKC/rqog
+         Aqmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpVce7URur+7z3ltUBRoyIwZqfMgxzHAhGtD7lKen3VSPF8E7PpeDcvAqTJXNK+2LY2YDLwcgSHi1ksniZzYncHxmELtLLKhk7K/yv
+X-Gm-Message-State: AOJu0YyIzfStZyp8CgZsoLZ/UWGXZh+utzWXM91quAQHvS940q9pBptl
+	A4b+kdLbYYXoCnVv9plcSF4X/eo7kf3gU/n+3j3r8dQjR60ysKk+
+X-Google-Smtp-Source: AGHT+IH697lcHbRfq1jAnm9ryPLu+CgJ6tkqoTRWEM2EE1y+piw3W7TlglpeV/tGI4U4D5mO5A6xIw==
+X-Received: by 2002:a05:6830:6302:b0:703:62c8:b247 with SMTP id 46e09a7af769-708d9be4484mr950244a34.35.1721093012720;
+        Mon, 15 Jul 2024 18:23:32 -0700 (PDT)
+Received: from [192.168.1.224] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-708c0c7f4f1sm1171650a34.35.2024.07.15.18.23.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jul 2024 18:23:32 -0700 (PDT)
+Message-ID: <4c9ab413-2d05-4cec-9d37-a7ea3b5941c8@gmail.com>
+Date: Mon, 15 Jul 2024 20:23:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2721:b0:4b9:6637:4909 with SMTP id
- 8926c6da1cb9f-4c2048d9527mr43214173.6.1721093000326; Mon, 15 Jul 2024
- 18:23:20 -0700 (PDT)
-Date: Mon, 15 Jul 2024 18:23:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e8fcab061d53308f@google.com>
-Subject: [syzbot] [bpf?] [net?] general protection fault in __xsk_map_flush
-From: syzbot <syzbot+61a1cfc2b6632363d319@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bigeasy@linutronix.de, bjorn@kernel.org, 
-	bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net, 
-	eddyz87@gmail.com, edumazet@google.com, haoluo@google.com, hawk@kernel.org, 
-	jasowang@redhat.com, jiri@resnulli.us, john.fastabend@gmail.com, 
-	jolsa@kernel.org, jonathan.lemon@gmail.com, kpsingh@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, maciej.fijalkowski@intel.com, 
-	magnus.karlsson@intel.com, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	pabeni@redhat.com, sdf@fomichev.me, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, willemdebruijn.kernel@gmail.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    3fe121b62282 Add linux-next specific files for 20240712
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16085221980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=98dd8c4bab5cdce
-dashboard link: https://syzkaller.appspot.com/bug?extid=61a1cfc2b6632363d319
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a2a5e1980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12dd6479980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8c6fbf69718d/disk-3fe121b6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/39fc7e43dfc1/vmlinux-3fe121b6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0a78e70e4b4e/bzImage-3fe121b6.xz
-
-The issue was bisected to:
-
-commit fecef4cd42c689a200bdd39e6fffa71475904bc1
-Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Date:   Thu Jul 4 14:48:15 2024 +0000
-
-    tun: Assign missing bpf_net_context.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=119d4b6e980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=139d4b6e980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=159d4b6e980000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+61a1cfc2b6632363d319@syzkaller.appspotmail.com
-Fixes: fecef4cd42c6 ("tun: Assign missing bpf_net_context.")
-
-Oops: general protection fault, probably for non-canonical address 0xe000140493916901: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: maybe wild-memory-access in range [0x0000c0249c8b4808-0x0000c0249c8b480f]
-CPU: 1 UID: 0 PID: 5098 Comm: syz-executor400 Not tainted 6.10.0-rc7-next-20240712-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-RIP: 0010:xskq_prod_submit net/xdp/xsk_queue.h:436 [inline]
-RIP: 0010:xsk_flush net/xdp/xsk.c:331 [inline]
-RIP: 0010:__xsk_map_flush+0x95/0x2b0 net/xdp/xsk.c:393
-Code: 24 10 49 8d 5f e8 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 d9 ea 81 f6 48 8b 1b 48 8d 7b 08 48 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 72 01 00 00 8b 6b 08 48 83 c3 10 48 89
-RSP: 0018:ffffc90000a18ae8 EFLAGS: 00010202
-RAX: 0000180493916901 RBX: 0000c0249c8b4800 RCX: ffff888029608000
-RDX: 0000000080000101 RSI: 0000000000000010 RDI: 0000c0249c8b4808
-RBP: dffffc0000000000 R08: ffffffff896d0c9a R09: 1ffffffff1f5ffad
-R10: dffffc0000000000 R11: fffffbfff1f5ffae R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000010 R15: ffffffff8173aee3
-FS:  000055557b0fb380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055557b0fbca8 CR3: 000000007eb32000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- xdp_do_check_flushed+0x18e/0x240 net/core/filter.c:4308
- __napi_poll+0xe4/0x490 net/core/dev.c:6774
- napi_poll net/core/dev.c:6840 [inline]
- net_rx_action+0x89b/0x1240 net/core/dev.c:6962
- handle_softirqs+0x2c4/0x970 kernel/softirq.c:554
- __do_softirq kernel/softirq.c:588 [inline]
- invoke_softirq kernel/softirq.c:428 [inline]
- __irq_exit_rcu+0xf4/0x1c0 kernel/softirq.c:637
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:649
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:console_flush_all+0x9f7/0xf50 kernel/printk/printk.c:3103
-Code: 20 00 90 0f 0b 90 e9 f3 f9 ff ff e8 c3 1b 20 00 e8 7e 56 20 0a 4d 85 f6 74 c0 e8 b4 1b 20 00 fb 49 bd 00 00 00 00 00 fc ff df <43> 80 3c 2f 00 48 8b 5c 24 30 74 08 48 89 df e8 d5 a1 87 00 4c 8b
-RSP: 0018:ffffc90003527880 EFLAGS: 00000293
-RAX: ffffffff8173af3c RBX: 0000000000000000 RCX: ffff888029608000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc90003527a10 R08: ffffffff8173aee3 R09: 1ffffffff1f5ffad
-R10: dffffc0000000000 R11: fffffbfff1f5ffae R12: ffffffff8eb30c00
-R13: dffffc0000000000 R14: 0000000000000200 R15: 1ffffffff1d6618b
- console_unlock+0x13b/0x4d0 kernel/printk/printk.c:3173
- vprintk_emit+0x7a1/0x900 kernel/printk/printk.c:2423
- _printk+0xd5/0x120 kernel/printk/printk.c:2450
- show_opcodes+0x148/0x170 arch/x86/kernel/dumpstack.c:123
- show_signal_msg arch/x86/mm/fault.c:775 [inline]
- __bad_area_nosemaphore+0x5f2/0x770 arch/x86/mm/fault.c:818
- handle_page_fault arch/x86/mm/fault.c:1481 [inline]
- exc_page_fault+0x61d/0x8c0 arch/x86/mm/fault.c:1539
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0033:0x7f9fe69c315e
-Code: fd d7 c9 0f bc d1 c5 fe 7f 27 c5 fe 7f 6f 20 c5 fe 7f 77 40 c5 fe 7f 7f 60 49 83 c0 1f 49 29 d0 48 8d 7c 17 61 e9 d2 04 00 00 <c5> fe 6f 1e c5 fe 6f 56 20 c5 fd 74 cb c5 fd d7 d1 49 83 f8 21 0f
-RSP: 002b:00007ffce01d48e8 EFLAGS: 00010287
-RAX: 00007ffce01d4900 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 00000000000003ff RSI: 0000000000000000 RDI: 00007ffce01d4900
-RBP: 00007ffce01d4900 R08: 00000000000003ff R09: 00007ffce01d4e48
-R10: 00007ffce01d4e48 R11: 0000000000000246 R12: 6666666666666667
-R13: 0000000000000000 R14: 00007ffce01d4d50 R15: 00007ffce01d4d40
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:xskq_prod_submit net/xdp/xsk_queue.h:436 [inline]
-RIP: 0010:xsk_flush net/xdp/xsk.c:331 [inline]
-RIP: 0010:__xsk_map_flush+0x95/0x2b0 net/xdp/xsk.c:393
-Code: 24 10 49 8d 5f e8 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 d9 ea 81 f6 48 8b 1b 48 8d 7b 08 48 89 f8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 72 01 00 00 8b 6b 08 48 83 c3 10 48 89
-RSP: 0018:ffffc90000a18ae8 EFLAGS: 00010202
-RAX: 0000180493916901 RBX: 0000c0249c8b4800 RCX: ffff888029608000
-RDX: 0000000080000101 RSI: 0000000000000010 RDI: 0000c0249c8b4808
-RBP: dffffc0000000000 R08: ffffffff896d0c9a R09: 1ffffffff1f5ffad
-R10: dffffc0000000000 R11: fffffbfff1f5ffae R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000010 R15: ffffffff8173aee3
-FS:  000055557b0fb380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055557b0fbca8 CR3: 000000007eb32000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	24 10                	and    $0x10,%al
-   2:	49 8d 5f e8          	lea    -0x18(%r15),%rbx
-   6:	48 89 d8             	mov    %rbx,%rax
-   9:	48 c1 e8 03          	shr    $0x3,%rax
-   d:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1)
-  12:	74 08                	je     0x1c
-  14:	48 89 df             	mov    %rbx,%rdi
-  17:	e8 d9 ea 81 f6       	call   0xf681eaf5
-  1c:	48 8b 1b             	mov    (%rbx),%rbx
-  1f:	48 8d 7b 08          	lea    0x8(%rbx),%rdi
-  23:	48 89 f8             	mov    %rdi,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
-  2f:	84 c0                	test   %al,%al
-  31:	0f 85 72 01 00 00    	jne    0x1a9
-  37:	8b 6b 08             	mov    0x8(%rbx),%ebp
-  3a:	48 83 c3 10          	add    $0x10,%rbx
-  3e:	48                   	rex.W
-  3f:	89                   	.byte 0x89
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] nvme_core: scan namespaces asynchronously
+To: Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+ Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org
+Cc: Hannes Reinecke <hare@suse.de>, Martin Wilck <martin.wilck@suse.com>,
+ Ayush Siddarath <ayush.siddarath@dell.com>
+References: <20240715203434.20212-1-stuart.w.hayes@gmail.com>
+ <76fbe503-a8e7-47aa-9335-6e0a90cba4c2@grimberg.me>
+Content-Language: en-US
+From: stuart hayes <stuart.w.hayes@gmail.com>
+In-Reply-To: <76fbe503-a8e7-47aa-9335-6e0a90cba4c2@grimberg.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+On 7/15/2024 5:28 PM, Sagi Grimberg wrote:
+> 
+> 
+> On 15/07/2024 23:34, Stuart Hayes wrote:
+>> Use async function calls to make namespace scanning happen in parallel.
+>>
+>> Without the patch, NVME namespaces are scanned serially, so it can take
+>> a long time for all of a controller's namespaces to become available,
+>> especially with a slower (TCP) interface with large number of
+>> namespaces.
+>>
+>> It is not uncommon to have large numbers (hundreds or thousands) of
+>> namespaces on nvme-of with storage servers.
+>>
+>> The time it took for all namespaces to show up after connecting (via
+>> TCP) to a controller with 1002 namespaces was measured on one system:
+>>
+>> network latency   without patch   with patch
+>>       0                 6s            1s
+>>      50ms             210s           10s
+>>     100ms             417s           18s
+>>
+>> Measurements taken on another system show the effect of the patch on the
+>> time nvme_scan_work() took to complete, when connecting to a linux
+>> nvme-of target with varying numbers of namespaces, on a network of
+>> 400us.
+>>
+>> namespaces    without patch   with patch
+>>       1            16ms           14ms
+>>       2            24ms           16ms
+>>       4            49ms           22ms
+>>       8           101ms           33ms
+>>      16           207ms           56ms
+>>     100           1.4s           0.6s
+>>    1000          12.9s           2.0s
+> 
+> Not sure how common is the 1000 namespaces use-case, but the dozens of namespaces
+> seems compelling enough.
+> 
+>>
+>> On the same system, connecting to a local PCIe NVMe drive (a Samsung
+>> PM1733) instead of a network target:
+>>
+>> namespaces    without patch   with patch
+>>       1            13ms           12ms
+>>       2            41ms           13ms
+>>
+>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+>> ---
+>> changes from V2:
+>>    * make a separate function nvme_scan_ns_async() that calls
+>>      nvme_scan_ns(), instead of modifying nvme_scan_ns()
+>>    * only scan asynchronously from nvme_scan_ns_list(), not from
+>>      nvme_scan_ns_sequential()
+>>    * provide more timing data in the commit message
+>>
+>> changes from V1:
+>>    * remove module param to enable/disable async scanning
+>>    * add scan time measurements to commit message
+>>
+>>
+>>   drivers/nvme/host/core.c | 48 +++++++++++++++++++++++++++++++++-------
+>>   1 file changed, 40 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>> index 782090ce0bc1..dbf05cfea063 100644
+>> --- a/drivers/nvme/host/core.c
+>> +++ b/drivers/nvme/host/core.c
+>> @@ -4,6 +4,7 @@
+>>    * Copyright (c) 2011-2014, Intel Corporation.
+>>    */
+>> +#include <linux/async.h>
+>>   #include <linux/blkdev.h>
+>>   #include <linux/blk-mq.h>
+>>   #include <linux/blk-integrity.h>
+>> @@ -3952,6 +3953,30 @@ static void nvme_scan_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+>>       }
+>>   }
+>> +/*
+>> + * struct async_scan_info - keeps track of controller & NSIDs to scan
+>> + * @ctrl:    Controller on which namespaces are being scanned
+>> + * @next_idx:    Index of next NSID to scan in ns_list
+>> + * @ns_list:    Pointer to list of NSIDs to scan
+>> + */
+>> +struct async_scan_info {
+>> +    struct nvme_ctrl *ctrl;
+>> +    atomic_t next_idx;
+> 
+> next_nsid ?
+> 
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+OK!
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+>> +    __le32 *ns_list;
+>> +};
+>> +
+>> +static void nvme_scan_ns_async(void *data, async_cookie_t cookie)
+>> +{
+>> +    struct async_scan_info *scan_info = data;
+>> +    int idx;
+>> +    u32 nsid;
+>> +
+>> +    idx = (u32)atomic_fetch_add(1, &scan_info->next_idx);
+>> +    nsid = le32_to_cpu(scan_info->ns_list[idx]);
+>> +
+>> +    nvme_scan_ns(scan_info->ctrl, nsid);
+>> +}
+>> +
+>>   static void nvme_remove_invalid_namespaces(struct nvme_ctrl *ctrl,
+>>                       unsigned nsid)
+>>   {
+>> @@ -3975,12 +4000,14 @@ static void nvme_remove_invalid_namespaces(struct nvme_ctrl *ctrl,
+>>   static int nvme_scan_ns_list(struct nvme_ctrl *ctrl)
+>>   {
+>>       const int nr_entries = NVME_IDENTIFY_DATA_SIZE / sizeof(__le32);
+>> -    __le32 *ns_list;
+>> +    struct async_scan_info scan_info;
+> 
+> What initializes next_idx?
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+See below--there's an atomic_set().  It is inside of the outer "for" loop because there can
+be multiple lists that have to be scanned and it has to reset to 0 each time.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+> 
+>>       u32 prev = 0;
+>>       int ret = 0, i;
+>> +    ASYNC_DOMAIN(domain);
+>> -    ns_list = kzalloc(NVME_IDENTIFY_DATA_SIZE, GFP_KERNEL);
+>> -    if (!ns_list)
+>> +    scan_info.ctrl = ctrl;
+>> +    scan_info.ns_list = kzalloc(NVME_IDENTIFY_DATA_SIZE, GFP_KERNEL);
+>> +    if (!scan_info.ns_list)
+>>           return -ENOMEM;
+> 
+> I think you can leave the local variable ns_list as is, and just assign it to scan_info
+> after, its common practice to allocate to a local pointer and use it to init a struct member.
+> 
+> Plus it will make the patch diff simpler.
+> 
 
-If you want to undo deduplication, reply with:
-#syz undup
+No problem, I agree.  I think someone suggested the opposite last time I submitted this.  :)
+
+>>       for (;;) {
+>> @@ -3990,28 +4017,33 @@ static int nvme_scan_ns_list(struct nvme_ctrl *ctrl)
+>>               .identify.nsid        = cpu_to_le32(prev),
+>>           };
+>> -        ret = nvme_submit_sync_cmd(ctrl->admin_q, &cmd, ns_list,
+>> -                        NVME_IDENTIFY_DATA_SIZE);
+>> +        ret = nvme_submit_sync_cmd(ctrl->admin_q, &cmd,
+>> +                       scan_info.ns_list,
+>> +                       NVME_IDENTIFY_DATA_SIZE);
+>>           if (ret) {
+>>               dev_warn(ctrl->device,
+>>                   "Identify NS List failed (status=0x%x)\n", ret);
+>>               goto free;
+>>           }
+>> +        atomic_set(&scan_info.next_idx, 0);
+
+This atomic_set is what initializes next_idx.
+
+>>           for (i = 0; i < nr_entries; i++) {
+>> -            u32 nsid = le32_to_cpu(ns_list[i]);
+>> +            u32 nsid = le32_to_cpu(scan_info.ns_list[i]);
+>>               if (!nsid)    /* end of the list? */
+>>                   goto out;
+>> -            nvme_scan_ns(ctrl, nsid);
+>> +            async_schedule_domain(nvme_scan_ns_async, &scan_info,
+>> +                        &domain);
+>>               while (++prev < nsid)
+>>                   nvme_ns_remove_by_nsid(ctrl, prev);
+>>           }
+>> +        async_synchronize_full_domain(&domain);
+>>       }
+>>    out:
+>>       nvme_remove_invalid_namespaces(ctrl, prev);
+>>    free:
+>> -    kfree(ns_list);
+>> +    async_synchronize_full_domain(&domain);
+>> +    kfree(scan_info.ns_list);
+>>       return ret;
+>>   }
+> 
+
+Thank you for the feedback!
