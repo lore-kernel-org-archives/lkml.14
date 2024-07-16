@@ -1,85 +1,171 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563424C74
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D2C13F42A;
+	Tue, 16 Jul 2024 09:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121135; cv=none; b=GczJmItLqusBx/dzAQxqnlSsZU1sW0HaffRo03+AZ/zYT/S+cYNEUbuEGDEQFuUhAxLnPrY78T0OvHinFp6Se296FfualP6IlOzxZRGIa0ZfTuTO4oC/rmptEeQj3GBsxtq4wf0TPfxkUR9theHMcvp2IOiqtCaReIPG7SIFIr8=
+	t=1721121314; cv=none; b=dSFZvAoHq6drw3vYSSfXwCu/RUrKobtqUGYtBbNBK6AFHMO1W2rWmkNl0RE7P5lkTg0rDayEgW/+8yqJyQrkteV48KMzN5cq7JoK0FTqwDlSTh3b83SHWRE1u/HnmBfFVwLj33xX/PeelTF0aVgWAFse6tlG7W+z/YdEBWxDKQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121135; c=relaxed/simple;
-	bh=cn8laWEw/R0qZX8Uwjcw/OXji3PxPrYFv8/w0P3h1YM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wu5xVy/pWWWAilWvE0KU3khppcnhK8Qrjoc3eOYaSHJNr21yszgaq5eRVysVz3i1toEPnLolfBCtTr3nKFkTh/S9fsC3cuZRz17eTq1lxjbpuzapy0gn1csZpfXFFiCdvVjmsKkFmkZzfDZWKncMJx/Bthx8ZINvj/9j6jhwMPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=wpS3EleQ; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=QKhgT1+m; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="wpS3EleQ";
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="QKhgT1+m"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1721121130;
-	bh=oohzZY+Wm0D4VzzqujUnyVhaY5gL4QyC6/knv22SnCU=; l=360;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=wpS3EleQzlwiwFrYtUbN2ofMRAUNkSJ+hcnBGACI7Ng41iHzUhJ69cak1Tl4P1Lg8
-	 A2RjPb6b7q5ZhLesekjsbmw8AE1ZHG9CmlPBGvTR538ipWH/+6JC6xyeX5w1xTbAVn
-	 3ASRpRj821yAkKoncPor2jIzU7FkCwlxzFJy9u6PusBvbGBKmIse0SE8xYdlLI0UwF
-	 whJBzvcXIoUrnIcAB45sgaH0wfAI70Bjo5vYtPppGTGCwVIuY9DhfNQTJRa2pocsNs
-	 id3PbEiJu4GOR9FyW+REfXl6ZsoAVA2IqbAHQwkyrqfUWwWoZcr6xLovPAhAnywFvi
-	 IhQFb2LNhsx8A==
-Received: from 192.168.8.21
-	by mg.richtek.com with MailGates ESMTP Server V3.0(3190226:0:AUTH_RELAY)
-	(envelope-from <prvs=1925402C87=cy_huang@richtek.com>); Tue, 16 Jul 2024 17:12:09 +0800 (CST)
-X-MailGates: (compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1721121129;
-	bh=oohzZY+Wm0D4VzzqujUnyVhaY5gL4QyC6/knv22SnCU=; l=360;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=QKhgT1+mjqqB3oZXqLKh+rc5RL6UVsFMpojA1B/a5s1km2phaGuaMXXg6XFjXyNPU
-	 cjG1r1BeTZS9sp3GP7xD78IHLntrZ0Q0aRMz3OWY97ix6NNpyRhTBTwZMvql/wwBIu
-	 OHEn+WEetRgV5vhH+IqKB3XNwJ5e9LBzoDxkl8lkc5ZTqd/QLsqp7fA9d4RpBwLbTC
-	 gnkH1/Oyu9R5e6z9OiK9M2Rj/rDg+Qft9hFKafLMNkuIxuEI2n5fF7GpLM6XS54UIr
-	 kf4XC1TnLql7fgJY9jd1qaM7SRQGmExJ6efhHVM6Ucqo3Ax2LTFnlbi7LCWAgchXqi
-	 rUZVoO3BA2Q0Q==
-Received: from 192.168.10.46
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(2680356:1:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Tue, 16 Jul 2024 17:04:21 +0800 (CST)
-Received: from ex3.rt.l (192.168.10.46) by ex3.rt.l (192.168.10.46) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 16 Jul
- 2024 17:04:19 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex3.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
- Transport; Tue, 16 Jul 2024 17:04:19 +0800
-Date: Tue, 16 Jul 2024 17:04:19 +0800
-From: ChiYuan Huang <cy_huang@richtek.com>
-To: Chen Ni <nichen@iscas.ac.cn>
-CC: <lgirdwood@gmail.com>, <broonie@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] regulator: rt5120: Convert comma to semicolon
-Message-ID: <20240716090419.GA17422@linuxcarl2.richtek.com>
-References: <20240716084659.1252690-1-nichen@iscas.ac.cn>
+	s=arc-20240116; t=1721121314; c=relaxed/simple;
+	bh=wuVuGToQ2XzR6uRs8zyHPtfrlmaqGgdHN1bY7Yv94Jw=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=SNFOxnZaUbX7IyaYA8yezKgi1dJs+X/A3XldGhJHxJpDo2G598qrBLl97wPFeam14DzgTJTwwpoRy5aWjOg2sV1Mrzdo0Y7sefwZ1joyLtDntQpGJuD4s/yt45D+n7WHOdmXO75DkslNdTLgTNhghhiGwLS0VuzQaZ/7REGZQnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WNYLQ1qvLz4f3kvF;
+	Tue, 16 Jul 2024 17:14:54 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 68D221A0184;
+	Tue, 16 Jul 2024 17:15:07 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgDXuTcZOpZmd+shAQ--.9600S3;
+	Tue, 16 Jul 2024 17:15:07 +0800 (CST)
+Subject: Re: [PATCH] block: fix deadlock between sd_remove & sd_release
+To: Yang Yang <yang.yang@vivo.com>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240716083801.809763-1-yang.yang@vivo.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <1859a975-8c53-140c-f5b5-898ad5e7f653@huaweicloud.com>
+Date: Tue, 16 Jul 2024 17:15:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240716084659.1252690-1-nichen@iscas.ac.cn>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20240716083801.809763-1-yang.yang@vivo.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDXuTcZOpZmd+shAQ--.9600S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCF47Kr48AFW8Jr4xZr1UZFb_yoWrXr15pF
+	43JFZrJr4DZr1agrWaqw17Xr40k3W8W3WkGr97Ga42vFn7Ar1qqFyUGa48Ww15Z347Aa1q
+	kFyq9ayrZw1vvr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjVb
+	kUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Tue, Jul 16, 2024 at 04:46:59PM +0800, Chen Ni wrote:
-> Replace a comma between expression statements by a semicolon.
+Hi,
+
+ÔÚ 2024/07/16 16:38, Yang Yang Ð´µÀ:
+> Our test report the following hung task:
 > 
-> Fixes: c0216c0e68f7 ("regulator: rt5120: Add PMIC regulator support")
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> [ 2538.459400] INFO: task "kworker/0:0":7 blocked for more than 188 seconds.
+> [ 2538.459427] Call trace:
+> [ 2538.459430]  __switch_to+0x174/0x338
+> [ 2538.459436]  __schedule+0x628/0x9c4
+> [ 2538.459442]  schedule+0x7c/0xe8
+> [ 2538.459447]  schedule_preempt_disabled+0x24/0x40
+> [ 2538.459453]  __mutex_lock+0x3ec/0xf04
+> [ 2538.459456]  __mutex_lock_slowpath+0x14/0x24
+> [ 2538.459459]  mutex_lock+0x30/0xd8
+> [ 2538.459462]  del_gendisk+0xdc/0x350
+> [ 2538.459466]  sd_remove+0x30/0x60
+> [ 2538.459470]  device_release_driver_internal+0x1c4/0x2c4
+> [ 2538.459474]  device_release_driver+0x18/0x28
+> [ 2538.459478]  bus_remove_device+0x15c/0x174
+> [ 2538.459483]  device_del+0x1d0/0x358
+> [ 2538.459488]  __scsi_remove_device+0xa8/0x198
+> [ 2538.459493]  scsi_forget_host+0x50/0x70
+> [ 2538.459497]  scsi_remove_host+0x80/0x180
+> [ 2538.459502]  usb_stor_disconnect+0x68/0xf4
+> [ 2538.459506]  usb_unbind_interface+0xd4/0x280
+> [ 2538.459510]  device_release_driver_internal+0x1c4/0x2c4
+> [ 2538.459514]  device_release_driver+0x18/0x28
+> [ 2538.459518]  bus_remove_device+0x15c/0x174
+> [ 2538.459523]  device_del+0x1d0/0x358
+> [ 2538.459528]  usb_disable_device+0x84/0x194
+> [ 2538.459532]  usb_disconnect+0xec/0x300
+> [ 2538.459537]  hub_event+0xb80/0x1870
+> [ 2538.459541]  process_scheduled_works+0x248/0x4dc
+> [ 2538.459545]  worker_thread+0x244/0x334
+> [ 2538.459549]  kthread+0x114/0x1bc
+> 
+> [ 2538.461001] INFO: task "fsck.":15415 blocked for more than 188 seconds.
+> [ 2538.461014] Call trace:
+> [ 2538.461016]  __switch_to+0x174/0x338
+> [ 2538.461021]  __schedule+0x628/0x9c4
+> [ 2538.461025]  schedule+0x7c/0xe8
+> [ 2538.461030]  blk_queue_enter+0xc4/0x160
+> [ 2538.461034]  blk_mq_alloc_request+0x120/0x1d4
+> [ 2538.461037]  scsi_execute_cmd+0x7c/0x23c
+> [ 2538.461040]  ioctl_internal_command+0x5c/0x164
+> [ 2538.461046]  scsi_set_medium_removal+0x5c/0xb0
+> [ 2538.461051]  sd_release+0x50/0x94
+> [ 2538.461054]  blkdev_put+0x190/0x28c
+> [ 2538.461058]  blkdev_release+0x28/0x40
+> [ 2538.461063]  __fput+0xf8/0x2a8
+> [ 2538.461066]  __fput_sync+0x28/0x5c
+> [ 2538.461070]  __arm64_sys_close+0x84/0xe8
+> [ 2538.461073]  invoke_syscall+0x58/0x114
+> [ 2538.461078]  el0_svc_common+0xac/0xe0
+> [ 2538.461082]  do_el0_svc+0x1c/0x28
+> [ 2538.461087]  el0_svc+0x38/0x68
+> [ 2538.461090]  el0t_64_sync_handler+0x68/0xbc
+> [ 2538.461093]  el0t_64_sync+0x1a8/0x1ac
+> 
+>    T1:				T2:
+>    sd_remove
+>    del_gendisk
+>    __blk_mark_disk_dead
+>    blk_freeze_queue_start
+>    ++q->mq_freeze_depth
+>    				bdev_release
+>   				mutex_lock(&disk->open_mutex)
+>    				sd_release
+>   				scsi_execute_cmd
+>   				blk_queue_enter
+>   				wait_event(!q->mq_freeze_depth)
+
+This looks wrong, there is a condition blk_queue_dying() in
+blk_queue_enter().
+
+Thanks,
+Kuai
+
+>    mutex_lock(&disk->open_mutex)
+> 
+> This is a classic ABBA deadlock. To fix the deadlock, make sure we don't
+> try to acquire disk->open_mutex after freezing the queue.
+> 
+> Signed-off-by: Yang Yang <yang.yang@vivo.com>
 > ---
+>   block/genhd.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 8f1f3c6b4d67..c5fca3e893a0 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -663,12 +663,12 @@ void del_gendisk(struct gendisk *disk)
+>   	 */
+>   	if (!test_bit(GD_DEAD, &disk->state))
+>   		blk_report_disk_dead(disk, false);
+> -	__blk_mark_disk_dead(disk);
+>   
+>   	/*
+>   	 * Drop all partitions now that the disk is marked dead.
+>   	 */
+>   	mutex_lock(&disk->open_mutex);
+> +	__blk_mark_disk_dead(disk);
+>   	xa_for_each_start(&disk->part_tbl, idx, part, 1)
+>   		drop_partition(part);
+>   	mutex_unlock(&disk->open_mutex);
+> 
 
-Reviewed-by: ChiYuan Huang <cy_huang@richtek.com>
-
-Thanks, it's realy typo.
-
-Best Regards,
-ChiYuan
