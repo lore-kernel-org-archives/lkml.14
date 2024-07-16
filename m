@@ -1,187 +1,269 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF47619755B;
-	Tue, 16 Jul 2024 09:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2437C195FE3
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121895; cv=none; b=AwtQ7CEZ16aQSTr8e6+vvuEZThRCo9Ucnio9Vb1X8MS7V6QfVJ/XmTx1aQusZvhYu8P+PC7sF+ZJZkxYxOQSglb5p9XShFu2Wk6kmdE1vKa62xqNx2XaPRpVOdGcuvfsSsdqJvKI4G1iUZzNYflul30SGW4xLtzmUD4YMZvhw74=
+	t=1721121931; cv=none; b=bdB2WfSLAZrQFKXOvXJX2P8YHPK3oMrSfNsB8Hw08C1MwL1FJ9OASZdh/oTvgogPxSzDyUJLd3PUX/Fzx3dGupi4MCgabA6Z0xgs0j6O/yTACWhJzszsmmBrkPXJC6+en4C9KBIrUTKGEM/IvvLkEZ0tOqJkHry37MZaRlldE0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121895; c=relaxed/simple;
-	bh=rcokNA6tRK/q0PVbebMPqEhkSskhnHgviY5zxmP2MQg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hh2QPJNxL00uSvTRTqB6YharlPUz7pEYDQJYkEaWwhLmXLy47JAA9pzvV3N4V7Ci2J6Frnp/Epy/T1S5RqCs2rDzpCsNkfL3RRnB3pgNohfgrAeIkM/6sSp4wFyia/HrjGAqN4PJkdeShNQm/0KzVnSW2NAUwPgM0wVoL4SOuJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lofwExXw; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721121931; c=relaxed/simple;
+	bh=N5yTNttJ311Vt/2wANWpnoTPIiRTEBk6Ti979TJPBHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMdwXB3f2xO9viIhVvSlwFmhrfkRlqVDa3JO9r5KmPx5/lWSPtJBek2sisduN4gVTKEH7idyZQc/L+c6yc90g+fPBnR04kCdH2CxZhBRKqFP8mnlSX2a97ZSoY3JC0bIqUQF1zxv9kFhy8OU3Y89DRnHD/R8ciBygeMsN6zWoNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=fMWpcdC2; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lofwExXw"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46G4X2Vw001297;
-	Tue, 16 Jul 2024 09:24:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WpZ/z5HPss1VQyE/J7rNj/n8s8SnkeSPfry5IAh4DF0=; b=lofwExXwQGSUnAbq
-	/oIEfS4I0dxQXbaFHrdxex4743YrdrcwT4Cz0Sac0SKN7KzSFoXO9BmubXpj6hJV
-	NuIOv+gQYR0RahSdKc/rmTvBN7cXu2VtM2K1iZhETcDI9GfYBOtG/1nn+hfVgTCM
-	81b3XdHmL/Ly3pXwunegqeDXOGuV0c2ivoTqOAzWEL+Zykb/7Z/u6TEPMR3HnvXf
-	AR2DzKdHU4VBnatxSD2BHlztmsxGoGiwAHEiQAXE+9f2uE/tzp5wfLKAA3cFNpw6
-	GRjD73ui/cIycrQvXu0R58jfdzZne3dRWc1K8D/Y52FWXn/znTYcg7V7AwBVogB7
-	UxHGog==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bhnupjxa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 09:24:45 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46G9OiEt022137
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 09:24:44 GMT
-Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 16 Jul 2024 02:24:38 -0700
-From: Sricharan R <quic_srichara@quicinc.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_srichara@quicinc.com>
-CC: devi priya <quic_devipriy@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Anusha Rao <quic_anusha@quicinc.com>
-Subject: [PATCH V6 4/4] PCI: qcom: Add support for IPQ9574
-Date: Tue, 16 Jul 2024 14:53:47 +0530
-Message-ID: <20240716092347.2177153-5-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240716092347.2177153-1-quic_srichara@quicinc.com>
-References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fMWpcdC2"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42671c659e4so4587225e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 02:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1721121927; x=1721726727; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PAjijZ3Ouy+myoSPyM0kcvwYwcmbq9gcUJaNSuUkTuU=;
+        b=fMWpcdC2r7SNxIpQma0kVtUWL9vNTMeHj4aHi5hNBdpYCqJWw3w+/g9VZVCnGeEUUa
+         jOmDpEiG56D8VsrHHRY+CoNxfz6dsNduYVi5ntCyy80P6vyfnuqUsk7uibIyvIYoJvVm
+         XAbUVCohZZdaizQDyMmor6rrRYgJPt/4ZxuEg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721121927; x=1721726727;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PAjijZ3Ouy+myoSPyM0kcvwYwcmbq9gcUJaNSuUkTuU=;
+        b=QruUq0/sgC5n7CNCRIXwlwfuYstNC1hg9Rh4k5wkj2nz+v15NSdf4c0G18EYu7bFKa
+         bm8EI2LTjsGGdShSVvZa03VyhfaJ99YJ0aA4wI5mawub8gQBtWt9wkfd8C/A8Ds0/007
+         QzS8AZWbOYfVrb/Fqxl8+6D7/alV2EEEKWZje+eoolWs2LE5cH7Js6DXCv3NDVeDBeTc
+         kVI4r81vx4ihAbD9XGi8vbHVbOXHH2HyV+vDAE/r9ORuXcTBmqvX+40WqTPvX7PC17lD
+         6uRVCqRAjyDUSGLQJ/juYA7Ta72bB9wJfKPtc6dlAvrxTrS+JFvm/U/yjL3VTLZdi3l7
+         6zTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNSoNKtHAgcV25RlqYPbLPSPEuRenuDO/Df/POXojYQoQJLm7cUooM/pSuIE1EQx/5JI5ydrGSgp2Do7D5ZwXfDMQY9Cz4ZB57aT3q
+X-Gm-Message-State: AOJu0YyuT0hSNJczVb1FddGVRUA2ARlvrKjVhb+LbtkFa8KxAZ6PYhrF
+	p/jYHFIkKeMADUCuerGnrdLWuVttsbSlTPj8IiVrNsL9z4fPRD2Mgtu/QPpTFAE=
+X-Google-Smtp-Source: AGHT+IFGay76S/3XJ06wP8GTTOttfNCnYDciDC1gYt+NRZJcRu6rSafrrt9JDknFijALbCOHSZVL+A==
+X-Received: by 2002:a05:600c:46d5:b0:424:8b08:26aa with SMTP id 5b1f17b1804b1-427b8a40e58mr9435005e9.3.1721121927154;
+        Tue, 16 Jul 2024 02:25:27 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f27877dsm148597605e9.26.2024.07.16.02.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 02:25:26 -0700 (PDT)
+Date: Tue, 16 Jul 2024 11:25:24 +0200
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>, ojeda@kernel.org,
+	lyude@redhat.com, robh@kernel.org, lina@asahilina.net,
+	mcanal@igalia.com, airlied@gmail.com,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, rust-for-linux@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] drm: panthor: add dev_coredumpv support
+Message-ID: <ZpY8hI6nJyubiR3s@phenom.ffwll.local>
+Mail-Followup-To: Daniel Almeida <daniel.almeida@collabora.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>, ojeda@kernel.org,
+	lyude@redhat.com, robh@kernel.org, lina@asahilina.net,
+	mcanal@igalia.com, airlied@gmail.com,
+	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+References: <20240710225011.275153-1-daniel.almeida@collabora.com>
+ <d7719653-f270-493d-ac42-6a1291eb7dc0@redhat.com>
+ <ZpTl-uUbzmvHGMEH@phenom.ffwll.local>
+ <89FFB898-120A-431E-9B18-4D08AFAEFBFD@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: J0aC2uIDpAadMhmhUEtMXr7p2tSw6mWU
-X-Proofpoint-GUID: J0aC2uIDpAadMhmhUEtMXr7p2tSw6mWU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-16_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 clxscore=1011 spamscore=0 malwarescore=0
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407160067
+In-Reply-To: <89FFB898-120A-431E-9B18-4D08AFAEFBFD@collabora.com>
+X-Operating-System: Linux phenom 6.9.7-amd64 
 
-From: devi priya <quic_devipriy@quicinc.com>
+On Mon, Jul 15, 2024 at 02:05:49PM -0300, Daniel Almeida wrote:
+> Hi Sima!
+> 
+> 
+> > 
+> > Yeah I'm not sure a partially converted driver where the main driver is
+> > still C really works, that pretty much has to throw out all the type
+> > safety in the interfaces.
+> > 
+> > What I think might work is if such partial drivers register as full rust
+> > drivers, and then largely delegate the implementation to their existing C
+> > code with a big "safety: trust me, the C side is bug free" comment since
+> > it's all going to be unsafe :-)
+> > 
+> > It would still be a big change, since all the driver's callbacks need to
+> > switch from container_of to upcast to their driver structure to some small
+> > rust shim (most likely, I didn't try this out) to get at the driver parts
+> > on the C side. And I think you also need a small function to downcast to
+> > the drm base class. But that should be all largely mechanical.
+> > 
+> > More freely allowing to mix&match is imo going to be endless pains. We
+> > kinda tried that with the atomic conversion helpers for legacy kms
+> > drivers, and the impendance mismatch was just endless amounts of very
+> > subtle pain. Rust will exacerbate this, because it encodes semantics into
+> > the types and interfaces. And that was with just one set of helpers, for
+> > rust we'll likely need a custom one for each driver that's partially
+> > written in rust.
+> > -Sima
+> > 
+> 
+> I humbly disagree here.
+> 
+> I know this is a bit tangential, but earlier this year I converted a
+> bunch of codec libraries to Rust in v4l2. That worked just fine with the
+> C codec drivers. There were no regressions as per our test tools.
+> 
+> The main idea is that you isolate all unsafety to a single point: so
+> long as the C code upholds the safety guarantees when calling into Rust,
+> the Rust layer will be safe. This is just the same logic used in unsafe
+> blocks in Rust itself, nothing new really.
+> 
+> This is not unlike what is going on here, for example:
+> 
+> 
+> ```
+> +unsafe extern "C" fn open_callback<T: BaseDriverObject<U>, U: BaseObject>(
+> + raw_obj: *mut bindings::drm_gem_object,
+> + raw_file: *mut bindings::drm_file,
+> +) -> core::ffi::c_int {
+> + // SAFETY: The pointer we got has to be valid.
+> + let file = unsafe {
+> + file::File::<<<U as IntoGEMObject>::Driver as drv::Driver>::File>::from_raw(raw_file)
+> + };
+> + let obj =
+> + <<<U as IntoGEMObject>::Driver as drv::Driver>::Object as IntoGEMObject>::from_gem_obj(
+> + raw_obj,
+> + );
+> +
+> + // SAFETY: from_gem_obj() returns a valid pointer as long as the type is
+> + // correct and the raw_obj we got is valid.
+> + match T::open(unsafe { &*obj }, &file) {
+> + Err(e) => e.to_errno(),
+> + Ok(()) => 0,
+> + }
+> +}
+> ```
+> 
+> We have to trust that the kernel is passing in a valid pointer. By the same token, we can choose to trust drivers if we so desire.
+> 
+> > that pretty much has to throw out all the type
+> > safety in the interfaces.
+> 
+> Can you expand on that?
 
-The IPQ9574 platform has four Gen3 PCIe controllers:
-two single-lane and two dual-lane based on SNPS core 5.70a.
+Essentially what you've run into, in a pure rust driver we assume that
+everything is living in the rust world. In a partial conversion you might
+want to freely convert GEMObject back&forth, but everything else
+(drm_file, drm_device, ...) is still living in the pure C world. I think
+there's roughly three solutions to this:
 
-QCOM IP rev is 1.27.0 and Synopsys IP rev is 5.80a.
-Add a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
-which reuses all the members of 'ops_2_9_0' except for the
-post_init as the SLV_ADDR_SPACE_SIZE configuration differs
-between 2_9_0 and 1_27_0.
+- we allow this on the rust side, but that means the associated
+  types/generics go away. We drop a lot of enforced type safety for pure
+  rust drivers.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: devi priya <quic_devipriy@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- [V6] Fixed all Manivannan's and Bjorn Helgaas comments.
-      Removed the SLV_ADDR_SPACE_SZ_1_27_0 macro to have default value.
+- we don't allow this. Your mixed driver is screwed.
 
- drivers/pci/controller/dwc/pcie-qcom.c | 31 ++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..26acd9f5385e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1116,16 +1116,13 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
- 	return clk_bulk_prepare_enable(res->num_clks, res->clks);
- }
+- we allow this for specific functions, with a pinky finger promise that
+  those rust functions will not look at any of the associated types. From
+  my experience these kind of in-between worlds functions are really
+  brittle and a pain, e.g. rust-native driver people might accidentally
+  change the code to again assume a drv::Driver exists, or people don't
+  want to touch the code because it's too risky, or we're forced to
+  implement stuff in C instead of rust more than necessary.
  
--static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+static int qcom_pcie_post_init(struct qcom_pcie *pcie)
- {
- 	struct dw_pcie *pci = pcie->pci;
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 	int i;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
-@@ -1165,6 +1162,18 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-+{
-+	return qcom_pcie_post_init(pcie);
-+}
-+
-+static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+{
-+	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	return qcom_pcie_post_init(pcie);
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-@@ -1318,6 +1327,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 1.27.0  Synopsys IP rev.: 5.80a */
-+static const struct qcom_pcie_ops ops_1_27_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_9_0,
-+	.init = qcom_pcie_init_2_9_0,
-+	.post_init = qcom_pcie_post_init_1_27_0,
-+	.deinit = qcom_pcie_deinit_2_9_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+};
-+
- static const struct qcom_pcie_cfg cfg_1_0_0 = {
- 	.ops = &ops_1_0_0,
- };
-@@ -1360,6 +1378,10 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
- 	.no_l0s = true,
- };
- 
-+static const struct qcom_pcie_cfg cfg_1_27_0 = {
-+	.ops = &ops_1_27_0,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- 	.start_link = qcom_pcie_start_link,
-@@ -1724,6 +1746,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-+	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
- 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+> In particular, I believe that we should ideally be able to convert from
+> a C "struct Foo * " to a Rust “FooRef" for types whose lifetimes are
+> managed either by the kernel itself or by a C driver. In practical
+> terms, this has run into the issues we’ve been discussing in this
+> thread, but there may be solutions e.g.:
+> 
+> > One thing that comes to my mindis , you could probably create some driver specific
+> > "dummy" types to satisfy the type generics of the types you want to use. Not sure
+> > how well this works out though.
+> 
+> I haven’t thought of anything yet - which is why I haven’t replied.
+> OTOH, IIRC, Faith seems to have something in mind that can work with the
+> current abstractions, so I am waiting on her reply.
+
+This might work, but I see issue here anywhere where the rust abstraction
+adds a few things of its own to the rust side type, and not just a type
+abstraction that compiles completely away and you're only left with the C
+struct in the compiled code. And at least for kms some of the ideas we've
+tossed around will do this. And once we have that, any dummy types we
+invent to pretend-wrap the pure C types for rust will be just plain wrong.
+
+And then you have the brittleness of that mixed world approach, which I
+don't think will end well.
+
+> > What I think might work is if such partial drivers register as full rust
+> > drivers, and then largely delegate the implementation to their existing C
+> > code with a big "safety: trust me, the C side is bug free" comment since
+> > it's all going to be unsafe :-)
+> 
+> > with a big "safety: trust me, the C side is bug free" comment since it's all going to be unsafe :-)
+> 
+> This is what I want too :) but I can’t see how your proposed approach is
+> better, at least at a cursory glance. It is a much bigger change,
+> though, which is a clear drawback.
+>
+> > And that was with just one set of helpers, for
+> > rust we'll likely need a custom one for each driver that's partially
+> > written in rust.
+> 
+> That’s exactly what I am trying to avoid. In other words, I want to find
+> a way to use the same abstractions and the same APIs so that we do not
+> run precisely into that problem.
+
+So an idea that just crossed my mind how we can do the 3rd option at least
+somewhat cleanly:
+
+- we limit this to thin rust wrappers around C functions, where it's
+  really obvious there's no assumptions that any of the other rust
+  abstractions are used.
+
+- we add a new MixedGEMObject, which ditches all the type safety stuff and
+  associated types, and use that for these limited wrappers. Those are
+  obviously convertible between C and rust side in both directions,
+  allowing mixed driver code to use them.
+
+- these MixedGEMObject types also ensure that the rust wrappers cannot
+  make assumptions about what the other driver structures are, so we
+  enlist the compiler to help us catch issues.
+
+- to avoid having to duplicate all these functions, we can toss in a Deref
+  trait so that you can use an IntoGEMObject instead with these functions,
+  meaning you can seamlessly coerce from the pure rust driver to the mixed
+  driver types, but not the other way round.
+
+This still means that eventually you need to do the big jump and switch
+over the main driver/device to rust, but you can start out with little
+pieces here&there. And that existing driver rust code should not need any
+change when you do the big switch.
+
+And on the safety side we also don't make any compromises, pure rust
+drivers still can use all the type constraints that make sense to enforce
+api rules. And mixed drivers wont accidentally call into rust code that
+doesn't cope with the mixed world.
+
+Mixed drivers still rely on "trust me, these types match" internally, but
+there's really nothing we can do about that. Unless you do a full
+conversion, in which case the rust abstractions provide that guarantee.
+
+And with the Deref it also should not make the pure rust driver
+abstraction more verbose or have any other impact on them.
+
+Entirely untested, so might be complete nonsense :-)
+
+Cheers, Sima
 -- 
-2.34.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
