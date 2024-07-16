@@ -1,164 +1,107 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FCB196438;
-	Tue, 16 Jul 2024 10:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC4913A416;
+	Tue, 16 Jul 2024 10:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721126000; cv=none; b=ok7LnLwCivvi2J/JUgkiOiptdeVi5TS1MfsGJUlYcKHcaWGFZN+URKr5d2Yc9h0YkmwzDroRyiWXepFm+1GAMYov2D37R38JTHtnpWwKsVCT48Atkt8VBy7App9xjZrsX4jwof0FafCyoCLKs7/JlPHVrHALIyyaKJO2GDjyITY=
+	t=1721126104; cv=none; b=GJIS2jJbiReCt6QSuGcRVD8kR2XI20z78kWJaGHX/rUwNOLZyO/ZT3w/OkVDsOE0CCvmVClk0mp+fqELZbHhe3+QXG/KEyrDUZpDubM4WKkKzKfQfTeZT0vf7UP9q0BCqOOrDktYcIt6+1Dyxw6TsFyR8tNDhHEadw94wZ79Rcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721126000; c=relaxed/simple;
-	bh=vTflwazVaPGM5ZCdDCKRyUNgR5nEg0hgVF6yqKN58mc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BNrzFSsvN2NU4PeKvPtKpPUDIhZozaGzc1JC6+QlT/Eo4NIftkPF6ebB4XMgUDixGK7k6bDvgn/lCl5Wr1de1cnzmfCAEJae4x40rfJRvEdqTvV37x/KrPlal6aENu8VZyDgcn2Rkg0VApyRQdL8ARkWrkfuKTw5SMwc3cx+PR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NISWl0X5; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1721126104; c=relaxed/simple;
+	bh=eJiqRuQmKJQERR+6BcHrH8SKSeh06gC7Eg3zdfByhkE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=U7dtqac3MvOd69MG+5SnafrpS0pBIwWvzUUytDNhlYlJFdWwzQRE5I9ys5h3Y33kWvRITFwlMnaxFnngSjAc4MvgJuQ6s7uryz7DNzmZWSz2See4e10IXkF42e9soPLZQTEmH7pC/bizMEjepGAwMUlKf3nlNvJ/navZuE1zXaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=biZCTbj5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NISWl0X5"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46GASX0v007229;
-	Tue, 16 Jul 2024 10:33:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=+UQQJ/4g4npGy4OKFE1cPqYM0BR
-	ctKyIGBatWAVAOjY=; b=NISWl0X5jLa695N4joATffKR609BFQHOi30SBi+J5Fd
-	V+Yt8cU/KBDK9jaZpMr2dXCj3+qS/KW6Rd1YiO8qZOqWwnRTl93CXl6LpXrOY3+t
-	0p+gnX9dj39Zm1NXpbC6wxmJFPaxZevKkgigVWPwGcFy8bS5pAlNkogNWO1TE0rI
-	gqN6OXhnLK1KhCQXmqkbgwfYtnn05WqJpCeJ8/q/q1opUQqO5rELJ6ttJ5Tj3TyC
-	ck/zA9sy7HeZaR3+e/uLdeq/lq+eyXKAgJO3OANsujueSDf0NdPjYHIuCgdYCoaU
-	tqS420W8Il2Id8gDTKUsl2FrUl7EQ8um5ZZU0GYO0dA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40dppur27a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 10:33:04 +0000 (GMT)
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46GAX3M3014379;
-	Tue, 16 Jul 2024 10:33:03 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40dppur278-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 10:33:03 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46G8VSLa030795;
-	Tue, 16 Jul 2024 10:33:02 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40c4a0krx6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 10:33:02 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46GAWwEh50200924
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jul 2024 10:33:00 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 937EA20040;
-	Tue, 16 Jul 2024 10:32:58 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3D9FC20043;
-	Tue, 16 Jul 2024 10:32:57 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.204.206.66])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 16 Jul 2024 10:32:57 +0000 (GMT)
-Date: Tue, 16 Jul 2024 16:02:54 +0530
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen.n.rao@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arch/powerpc/kvm: Avoid extra checks when emulating
- HFSCR bits
-Message-ID: <jwujothqmnnno5el6ehucdw6xiasoa6dkyksa7zxev4goligmy@u3wpdu3ilnya>
-References: <20240626123447.66104-1-gautam@linux.ibm.com>
- <87v816w2xy.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="biZCTbj5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA283C4AF09;
+	Tue, 16 Jul 2024 10:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721126104;
+	bh=eJiqRuQmKJQERR+6BcHrH8SKSeh06gC7Eg3zdfByhkE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=biZCTbj53KTpBTYWVA3UfY97jOkdKmSD+6P697g36IOo7Xed3us/4WGo/x3ij17ie
+	 sl+/kn2NIv0qilmtYTt/bKB2LLxUe/I82JqGdPwNhI3Bwk/uPeRCJpv+2e7XD2l/Hv
+	 QPQo1D+Ssz3XdDZfV7Ssjtv5BAgt8slXm/RCzPVqTVYMbskufInsBbMsELN8hYdEUb
+	 MQHJtBKZv3akDPy1Kumy4r+FqwyHhVhh6S2rR8fo7nDLSrpf3xb+rbsTEI4m40yZYu
+	 VnfZ+D1olP1eJ2WVouQ6Vq0VOqTy9sBf8mg4nj7Fk1jDltzP3gQf1EIHrW1iowj+2/
+	 B/st0BF/aQ7SA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v816w2xy.fsf@mail.lhotse>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9FuTioXVKY14k7mK67ujftAWd0VT3nqH
-X-Proofpoint-ORIG-GUID: DycL2rxeg4CuuqSbBOpGbbfKzFj99hZP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-16_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 lowpriorityscore=0 spamscore=0 malwarescore=0
- mlxlogscore=677 impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407160075
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 16 Jul 2024 13:35:01 +0300
+Message-Id: <D2QWA7IQG4EB.3QT4BMDQ75I3U@kernel.org>
+Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Hao
+ Ge" <gehao@kylinos.cn>
+Subject: Re: [PATCH] tpm: Move dereference after NULL check in
+ tpm_buf_check_hmac_response
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Hao Ge" <hao.ge@linux.dev>,
+ <peterhuewe@gmx.de>, <jgg@ziepe.ca>
+X-Mailer: aerc 0.17.0
+References: <20240709023337.102509-1-hao.ge@linux.dev>
+ <D2QW8VSPX777.34R28W8GVXKMS@kernel.org>
+In-Reply-To: <D2QW8VSPX777.34R28W8GVXKMS@kernel.org>
 
-On Tue, Jul 16, 2024 at 11:17:13AM GMT, Michael Ellerman wrote:
-> Gautam Menghani <gautam@linux.ibm.com> writes:
-> > When a KVM guest tries to use a feature disabled by HFSCR, it exits to
-> > the host for emulation support, and the code checks for all bits which
-> > are emulated. Avoid checking all the bits by using a switch case.
-> 
-> The patch looks fine, but I don't know what you mean by "avoid checking
-> all the bits".
-> 
-> The existing code checks 4 cases, the case statement checks the same 4
-> cases (plus the default case).
-> 
-> There are other cause values (not bits), but the new and old code don't
-> check them all anyway. (Which is OK because the default return value is
-> EMULATE_FAIL)
-> 
-> AFAICS it generates almost identical code.
-> 
-> So I think the change log should just say something like "all the FSCR
-> cause values are exclusive so use a case statement which better
-> expresses that" ?
+On Tue Jul 16, 2024 at 1:33 PM EEST, Jarkko Sakkinen wrote:
+> On Tue Jul 9, 2024 at 5:33 AM EEST, Hao Ge wrote:
+> > From: Hao Ge <gehao@kylinos.cn>
+> >
+> > We shouldn't dereference "auth" until after we have checked that it is
+> > non-NULL.
+> >
+> > Fixes: 7ca110f2679b ("tpm: Address !chip->auth in tpm_buf_append_hmac_s=
+ession*()")
+> > Signed-off-by: Hao Ge <gehao@kylinos.cn>
+> > ---
+> >  drivers/char/tpm/tpm2-sessions.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-s=
+essions.c
+> > index 2281d55df545..d3521aadd43e 100644
+> > --- a/drivers/char/tpm/tpm2-sessions.c
+> > +++ b/drivers/char/tpm/tpm2-sessions.c
+> > @@ -746,15 +746,16 @@ int tpm_buf_check_hmac_response(struct tpm_chip *=
+chip, struct tpm_buf *buf,
+> >  	struct tpm2_auth *auth =3D chip->auth;
+> >  	off_t offset_s, offset_p;
+> >  	u8 rphash[SHA256_DIGEST_SIZE];
+> > -	u32 attrs;
+> > +	u32 attrs, cc;
+> >  	struct sha256_state sctx;
+> >  	u16 tag =3D be16_to_cpu(head->tag);
+> > -	u32 cc =3D be32_to_cpu(auth->ordinal);
+> >  	int parm_len, len, i, handles;
+> > =20
+> >  	if (!auth)
+> >  		return rc;
+> > =20
+> > +	cc =3D be32_to_cpu(auth->ordinal);
+> > +
+> >  	if (auth->session >=3D TPM_HEADER_SIZE) {
+> >  		WARN(1, "tpm session not filled correctly\n");
+> >  		goto out;
+>
+> Please check:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/co=
+mmit/?id=3D72d6e06ed101e31e943937e42053fc690dc75cfe
+>
+> It is exactly this except commit message is tuned. And please denote
+> that I'm on holiday ;-)
+>
+> If that works for you, I can put it to my -rc PR.
+>
+> Thank you.
 
-Yes agreed, will send a v2 with suggested changes.
+Again because of holiday I failed to notice that my 6.11 PR's were
+accepted and since it is only Tue, I'm sure I squeeze one commit PR
+still -rc1, if a quick response.
 
-> 
-> Also please try to copy the existing subject style for the KVM code, for
-> this file it would be "KVM: PPC: Book3S HV: ...". I agree it's verbose,
-> and wouldn't be my choice, but thats what's always been used so let's
-> stick to it.
-> 
-
-Ack. 
-
-Thanks,
-Gautam
-
-> cheers
-> 
-> > diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-> > index 99c7ce825..a72fd2543 100644
-> > --- a/arch/powerpc/kvm/book3s_hv.c
-> > +++ b/arch/powerpc/kvm/book3s_hv.c
-> > @@ -1922,14 +1922,22 @@ static int kvmppc_handle_exit_hv(struct kvm_vcpu *vcpu,
-> >  
-> >  		r = EMULATE_FAIL;
-> >  		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
-> > -			if (cause == FSCR_MSGP_LG)
-> > +			switch (cause) {
-> > +			case FSCR_MSGP_LG:
-> >  				r = kvmppc_emulate_doorbell_instr(vcpu);
-> > -			if (cause == FSCR_PM_LG)
-> > +				break;
-> > +			case FSCR_PM_LG:
-> >  				r = kvmppc_pmu_unavailable(vcpu);
-> > -			if (cause == FSCR_EBB_LG)
-> > +				break;
-> > +			case FSCR_EBB_LG:
-> >  				r = kvmppc_ebb_unavailable(vcpu);
-> > -			if (cause == FSCR_TM_LG)
-> > +				break;
-> > +			case FSCR_TM_LG:
-> >  				r = kvmppc_tm_unavailable(vcpu);
-> > +				break;
-> > +			default:
-> > +				break;
-> > +			}
-> >  		}
-> >  		if (r == EMULATE_FAIL) {
-> >  			kvmppc_core_queue_program(vcpu, SRR1_PROGILL |
-> > -- 
-> > 2.45.2
+BR, Jarkko
