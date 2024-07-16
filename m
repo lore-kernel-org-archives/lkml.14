@@ -1,408 +1,417 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2066.outbound.protection.outlook.com [40.92.52.66])
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CB21990A3;
-	Tue, 16 Jul 2024 09:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721122989; cv=fail; b=WaWZniFZcxrpqfW8ztOr66zOYqxfi1AeFvPjI94Ukt/hNbUuXEV+NURbN7s6Bwf39M6ATTcKHzWJSDztnlyggr7XiLKfkbSbFgKWJTwxV1KRbAbWiumY3NFy7oyBPQBaYng2YlTTwDW1u3GocynCXODjuqV+sWwJiWrCnxntCEA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721122989; c=relaxed/simple;
-	bh=AepRQ0MEmGa2fZPOKyXWsBGaHnX0zJq3H+I/1VHxgec=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sN8APinIadsuWlWg2H5zi2x/CTqYdXeI7zofuh08a+GJYaA95Z5TCzTjbIYIo6w2kdQZauPR891rD3KY5NNhDXLohcu7600DL7ErXyvso28mSzsl9S3e2hAu6LVudRSjX6Gf1rTwTv7YJSvlsRWagKnXXGJ92vchIt03FaDXvO0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=dM9XjJ+K; arc=fail smtp.client-ip=40.92.52.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05932195F3B;
+	Tue, 16 Jul 2024 09:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721123008; cv=none; b=qZev23YWsdFj42xcU7FZi8Do49JgBL5DuIyjFxOID1o2NloLqSm8tTB6SgxJE1jhD1OEBfo4fZO1R6ayNi9EeiB6qOsaF1RkTRwqrE74raGGAe2H4MPPZuBTopfDXDurc9F5aCaWWNOVtBkdVhj88+yfnhT6L6I8+V2QUidVC4c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721123008; c=relaxed/simple;
+	bh=skYLDFtBghJVC6KB62SqjUewVTSr7MQR70nizqJd5PM=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=c4m0bbFGjRY7KEY+DVbtj8BojbD+LJnWlfSlcUxF1D/N8hM0IOjr/JfCDgJlKrYpOUPynfPvfrmOGtQLREs+WDMtajW2ZNRH6ZjjHJQFuGDfmaviX4Js7Ob/RmVZJYnTdgHF3f7ojT7gBfaupw4KUCsel6D8xDISQpyaa1Wtt0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=qMWPVyJB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YS6NLckb; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="dM9XjJ+K"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GOswFl/IjCnmjH2pOa5hCl/p2TgKTJYp6PdXAKxAS4YOk8bEMfYZ2NavYM0wlpK9MZWdhbExMOroUxroqHbJce2vy5N9pc+AHihITy/YSZ6HpJznJ76AgOO01dTn69szqXUGy5wAYFYXBOZt5Qf3Y9kH5Bdd0bEEbbHYAP9zqcgP6xrGI/HZEXwXPd62niFwbh/UwXtA/ROBi8WlfjgI/61Z89aDt1dsDBnf9HiLcGX2T1TdysiwHNw0NSC6uqp5M4j9Lfn8vGLSkqxTj2+OGuOPfHXMuCMgkqjYoSUM+KjklZ3yCbTqim2LtWH8Z+NwL2GxTKepb9BoX8CezKOiWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9Ef6FeKpd+W0xLDHpsy/nlPMTEKbeiNL67hnB653Z6k=;
- b=cnhCqSbqi5BOlR/5kpgaaBh5kUxzU1cCJiE7tQaWgauPuvFVAuOp00dKlMXF8IjJ3C6UTeL7pJ2V1hAte3xq0X1tb1L5J/pGaQfOiCLKD5xV2fs2MjJzZK8LJkNIotdrrbzMiokZdPv80h5E5mgVg4XYx6pCd3OBwYKEGk8RKus+Z4EeJcM+aSDk1nvoTgSg90ENnFy+qKg25dFK2vNo0lqXlrX6KOwg2vnJUWdLyCH6azyhj+XolhgD9REC5TZBP3pvpT+IsSe3d9A+E+j1Dqzitc6ACY+KeLOxKyim5CZq3D6Vf2Y4vGQomCiRGW25NoYfMpddLa0xikEV5PnBgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Ef6FeKpd+W0xLDHpsy/nlPMTEKbeiNL67hnB653Z6k=;
- b=dM9XjJ+KPnO5K55j6YnK/ZXj0qf8jBTskoNw/er66S7oSvrPRwEViIwG9SjxO/dyMSwMmovVm5ZsSWblIswZEY7Dlv91eigBCjru5lcNIGUTy8cxXhDPBlVXZ3u+zgWqA7dgEQmWkgVM+zqMYU8paA4fw9GOefMq/huRQa/kNNaZkIukjqhZckWoDaCXKI/VDbnXc9MU2sL//qyAT803xLE/g2u+rvlHEDCnMP+kzrpnAx8YBDekr8HnYRjl60sAl/ewCGJO+Uu7NlkTq28vzywggGjkHdcx6uVq7K3sxTqpeA15w7PpXFWgYKoZK5+hfqGfnteUa9bHm5VIPFo2sg==
-Received: from SEYPR01MB4221.apcprd01.prod.exchangelabs.com
- (2603:1096:101:56::12) by TYZPR01MB4895.apcprd01.prod.exchangelabs.com
- (2603:1096:400:281::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Tue, 16 Jul
- 2024 09:43:03 +0000
-Received: from SEYPR01MB4221.apcprd01.prod.exchangelabs.com
- ([fe80::b674:8f70:6e29:3756]) by SEYPR01MB4221.apcprd01.prod.exchangelabs.com
- ([fe80::b674:8f70:6e29:3756%5]) with mapi id 15.20.7762.027; Tue, 16 Jul 2024
- 09:43:03 +0000
-From: Haylen Chu <heylenay@outlook.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Jisheng Zhang <jszhang@kernel.org>
-Cc: linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Haylen Chu <heylenay@outlook.com>
-Subject: [PATCH v4 3/3] thermal: cv180x: Add cv180x thermal driver support
-Date: Tue, 16 Jul 2024 09:42:35 +0000
-Message-ID:
- <SEYPR01MB42215C6F248AF99499F6A050D7A22@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <SEYPR01MB422158B2766DA03728AD90CBD7A22@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
-References: <SEYPR01MB422158B2766DA03728AD90CBD7A22@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [dpfur8txUxkJLfBUTN3M8cdWVTStQeJQ]
-X-ClientProxiedBy: SI2PR04CA0010.apcprd04.prod.outlook.com
- (2603:1096:4:197::11) To SEYPR01MB4221.apcprd01.prod.exchangelabs.com
- (2603:1096:101:56::12)
-X-Microsoft-Original-Message-ID: <20240716094235.51679-3-heylenay@outlook.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="qMWPVyJB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YS6NLckb"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 1A45F114831E;
+	Tue, 16 Jul 2024 05:43:25 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute2.internal (MEProxy); Tue, 16 Jul 2024 05:43:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1721123005; x=1721209405; bh=iLoWkcpaT/
+	UAyfiMoq8a2cS0fa2nlyJGia5lNxfcWJA=; b=qMWPVyJBcS3b1RI0/Or7y6o4Pr
+	togPSDKBCkYtyTY1h5urfLvYHMPvuScv99eoTlB7PtgMRrb/WU2PSi2f7VFtyIUS
+	L3mlY8O2I099P/h6EvbfPFJlX7DNsk2Gt6HON1PCZxzGhChr4/dqgV26Z9wJPYrR
+	A4rqRUX+ohonNc1KWHoJtLf81FQLY7pKDkjEXIyl9mjxASwvWrRel32mZVlAfbIv
+	XIU9+W/TcoObcKjBRCx7wBu7I8fGf1m9ZBirCpX6yeyc+OcDj8K4DOaa8HaDWfaW
+	NEZG6eFlrfbWVq05vf+LZJgjBTTObHseZD5aOYxtPsozjP70VIbpnZqNXh/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1721123005; x=1721209405; bh=iLoWkcpaT/UAyfiMoq8a2cS0fa2n
+	lyJGia5lNxfcWJA=; b=YS6NLckbEqiW/Puk6EmEkmYVQpkBLNemx62q91TnrgpQ
+	yfZZNEopJfGjyu8hW6WqFUntS92XCjI8WZo+H9j3ObTKW5EglNMmQr8Ejipfhtzf
+	MvmM1A0k3bZW/zuJypxyp69k1XcmWVt+Gs1gPCXLxUJYE/W0bSnxJ56Ydmzaaq/u
+	9wjFdnbxbV781QMFI/I7FBRWZ5SaRAp7/JLakJpj068SJ+fJF4nHlUfOqet0SEc+
+	YGVzkaNmxRL82Q5ElofvoO0KTU9LuxLObZ57o+/bY1eJ8iD6IrCBPtnTn+VhornW
+	Xargsl0C0ykcb5qeCG9VMVHt6d4u0dj/qNeza9mAcA==
+X-ME-Sender: <xms:u0CWZm8L8psmNr9xO5FWBcMQpc9MMib8Z_jyf-hFs9iwlOrv16kQxw>
+    <xme:u0CWZmu0nvBdy3Cw34m7Wm1WcwvNR4JTNCrpG1Tcb92q5qmfvpWC32xsGj2tvtgQs
+    9zSfix9z-knZvJ-X50>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggddukecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfnuhhk
+    vgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
+    hrnhepuddtlefgvdegkeeuueetveffleefudekieetudfgvddtuedtteejudduuedvgefg
+    necuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomheplhhukh
+    gvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:vECWZsBLrx3YZjWOQ247GxN8Xm4l1dlm5rYLTAf_8mW4J4BH2_JJ-w>
+    <xmx:vECWZucslbte6dJvP4IP3sK3Sje6zbLPCXkwFbEZ2JB9md_tbuUWyA>
+    <xmx:vECWZrNsE9g5HgopsKae5LIQKl86vkA2S8TPbElJ05dGydubPiVP8g>
+    <xmx:vECWZom22GNlqgnmGXGLPaLrXIGgrDFgxk7KyRhiP5_nkRcPfaRMgg>
+    <xmx:vUCWZgrvG4ZR6twznle5yTy4zLRZurG9mzKBvnoLB5jx4oEIQqXApyWi>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id E07B52340080; Tue, 16 Jul 2024 05:43:23 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEYPR01MB4221:EE_|TYZPR01MB4895:EE_
-X-MS-Office365-Filtering-Correlation-Id: 42def73b-3d69-4496-33a7-08dca57bb025
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|19110799003|461199028|3412199025|440099028|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	9itgIIYiy59aJbOVoXRnrXPv0V4mDlHbvptjNQcae4kbIKpth+Z3iwffbDGxxfaG0lnSmD9jmdNdDSvhIzTQuZcrD61+gfqahh7V1BFoIfp4ckc+CTRQ+Au/JA3CaywgwA9sfIpfqhzlKZizzb9BAd3DP0lyeKp435XcSP5aQa6E6HZxdUy2ZO9rmDO0TOXmykbH8Z0Zu5FZlAxaSKzv1TYBy78qkBwIOadeecqK/L+K1mAf/ALxC+k+5yAGjZC2lAgFZUb8qFVSVMVt1p6dZGM+gJpr82ZtrIlIIMJTslwP6mFOTUW1YG7uTNIiuXa+NZfM1x4GIbxV+xzjd2+plWyIv844W/ssjob+N0qcNQVXKBLYnTaIbs8aSb2eXT/y87mF5A8phQDaU5GYXbgFK5wqTX+U4hTJ/02NfyLjExth7eYjEwFUAluAdUL+0DoaV+rBaxcc2QSmO5S/61mSg32dQzkbzJAaNZpmuPQytV+gFSB9eXbYWLElVdMaUQeD5cN+6S/ROMuxfscSCycxm6Fe1jUZjLy30MzeCoRfzv5pnFYuh9WRlUV8KtL08iMq7jCeSzTvdOi001eL6BGZLtEXTahcKyGcLu2bx/v+DdcBBXcLcevsPCx9oF8jidYcEhqBtuhFwX2nMIjo+IRzjW+PWeYEkvTBVorARJNcMj7WG3YXc7tEpoGmit4vZHzW
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aPtougbd8cmesEED/93Q8a6H1MubHi6mDKkoixA9OJeoRYA5jwWuiZfIBQCY?=
- =?us-ascii?Q?6QNY/4Wj+rZPk0TYlCySYPy90xpCZWRXj5Q6eaxcqYNm/EO4C2qVYQdqQ6gP?=
- =?us-ascii?Q?p2QpGawj/adbwoY3RmE/jLuWsNfeokIcKgFfsdpfzdWNMvfczBp0hosAAGpD?=
- =?us-ascii?Q?78Af0R1uqTBYlxPsBlv71wAWtpNDULWn9ruPx+nZ0mcScno0RtiJDKSdd7ZY?=
- =?us-ascii?Q?CnUm2zONzwg20Pk9HxFN3k1gTxYs88bSOOajCJHqwOmqK5GrIMgnhNwPKWQj?=
- =?us-ascii?Q?eAyOxAl0WdqQUsSALQvVmvkzfCOciTQqZ/1/lLAdSa0FHpU7fpdQwDx2yjS1?=
- =?us-ascii?Q?4PSo/BbnOp2i2y3TU4+gLHwvs3iwu4XMmudOD5a4OYNoRbYSJ1fZ3LRGobKg?=
- =?us-ascii?Q?RqPzifzqwcWI3rkfssl4u8/DMkLSejjWmBbVIiQQ7gVjes6/Wz4DJHk9ZRsQ?=
- =?us-ascii?Q?QVgG8vQnDevwdhaSiGn/6n9pIugDD3Y6HoReNpKHFnv9r5C0mGSgPkOYSPlX?=
- =?us-ascii?Q?chgGF02GffsIcWciGdKOZGCOyE1Yq2GEkMZhlK78DvLhd74QI3GEZT7GtQQ7?=
- =?us-ascii?Q?Uhce2hk5bvJROoapds50HHZxri+Q9Lt0C193d3yB26cAVwnhFg8J6xtVFpYc?=
- =?us-ascii?Q?Wi1JycRkRdZt6aD0nofdfjlfgK+HLO6154x4SMib47lOmmVO5bDMK/31jpsu?=
- =?us-ascii?Q?iPlxM07gNdnzFcs/JSc7+Fz30qAZPzoqj8k8HeP3K4oxUj5GKv7K8PX1Qgbq?=
- =?us-ascii?Q?eSSnpFBBaVLv3WHr7HYeR+laqrH5hEwPJlnnxgSxZJ/d+xanYPIXJfDSiqSE?=
- =?us-ascii?Q?D+dcNNT45MAfl2BnQhUSiGFKv5mv7N1DK4rFGbeqo3Z2hkRk8tvkkgAZSRDo?=
- =?us-ascii?Q?WtyeJJ19dElDypDXX8XCKLqFnMdbWlO5EnP1egtBimHTViYCQP0NL0yXi6rC?=
- =?us-ascii?Q?YMcFZm6xlcvNCcK6fuH4JuHxLuXjWxR88RZVvBxtBm+ZYjkTvSmrnehkyZjv?=
- =?us-ascii?Q?CzS6rdJItg4TEj1iRkw96rsxZs7DB+wifjjkO/VP7yZIs2JckpWig15Ss7QL?=
- =?us-ascii?Q?AV3WKJomxf3WpQ/hLAlig9otm2rF3t06cQVuQO+VUPXvUNUNG3eI64Qo2CQd?=
- =?us-ascii?Q?9nmsA83BaZpboogAWADBJXXRcreAQH9I1EcZHFQp7A89lNSkrwkUyFvRlE8D?=
- =?us-ascii?Q?osXtWOkNbp6IfTFJMLTGRnsd/MjA9AgKyWqIbSFxsyjmNwbJ0dh1whZd/YE?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42def73b-3d69-4496-33a7-08dca57bb025
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR01MB4221.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 09:43:03.6885
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR01MB4895
+Message-Id: <c301ba1a-99f9-41b4-9742-1eb52288bf61@app.fastmail.com>
+In-Reply-To: <5052fc56-211b-455b-81fb-255b02da356c@app.fastmail.com>
+References: <20240716051612.64842-1-luke@ljones.dev>
+ <20240716051612.64842-5-luke@ljones.dev>
+ <078a4a2d-c8ff-4039-b84f-b014055a4368@redhat.com>
+ <5052fc56-211b-455b-81fb-255b02da356c@app.fastmail.com>
+Date: Tue, 16 Jul 2024 21:43:03 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Hans de Goede" <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Mario Limonciello" <mario.limonciello@amd.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] platform/x86: asus-bios: add core count control
+Content-Type: text/plain
 
-Add support for cv180x SoCs integrated thermal sensors.
 
-Signed-off-by: Haylen Chu <heylenay@outlook.com>
----
- drivers/thermal/Kconfig          |   6 +
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/cv180x_thermal.c | 241 +++++++++++++++++++++++++++++++
- 3 files changed, 248 insertions(+)
- create mode 100644 drivers/thermal/cv180x_thermal.c
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 204ed89a3ec9..f53c973a361d 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -514,4 +514,10 @@ config LOONGSON2_THERMAL
- 	  is higher than the high temperature threshold or lower than the low
- 	  temperature threshold, the interrupt will occur.
- 
-+config CV180X_THERMAL
-+	tristate "Temperature sensor driver for Sophgo CV180X"
-+	help
-+	  If you say yes here you get support for thermal sensor integrated in
-+	  Sophgo CV180X SoCs.
-+
- endif
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 5cdf7d68687f..5b59bde8a579 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -65,3 +65,4 @@ obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
- obj-$(CONFIG_SPRD_THERMAL)	+= sprd_thermal.o
- obj-$(CONFIG_KHADAS_MCU_FAN_THERMAL)	+= khadas_mcu_fan.o
- obj-$(CONFIG_LOONGSON2_THERMAL)	+= loongson2_thermal.o
-+obj-$(CONFIG_CV180X_THERMAL)	+= cv180x_thermal.o
-diff --git a/drivers/thermal/cv180x_thermal.c b/drivers/thermal/cv180x_thermal.c
-new file mode 100644
-index 000000000000..8b726c0ad848
---- /dev/null
-+++ b/drivers/thermal/cv180x_thermal.c
-@@ -0,0 +1,241 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2021 Sophgo Inc.
-+ * Copyright (C) 2024 Haylen Chu <heylenay@outlook.com>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+#define TEMPSEN_VERSION					0x0
-+#define TEMPSEN_CTRL					0x4
-+#define  TEMPSEN_CTRL_EN				BIT(0)
-+#define  TEMPSEN_CTRL_SEL_MASK				GENMASK(7, 4)
-+#define  TEMPSEN_CTRL_SEL_OFFSET			4
-+#define TEMPSEN_STATUS					0x8
-+#define TEMPSEN_SET					0xc
-+#define  TEMPSEN_SET_CHOPSEL_MASK			GENMASK(5, 4)
-+#define  TEMPSEN_SET_CHOPSEL_OFFSET			4
-+#define  TEMPSEN_SET_CHOPSEL_128T			0
-+#define  TEMPSEN_SET_CHOPSEL_256T			1
-+#define  TEMPSEN_SET_CHOPSEL_512T			2
-+#define  TEMPSEN_SET_CHOPSEL_1024T			3
-+#define  TEMPSEN_SET_ACCSEL_MASK			GENMASK(7, 6)
-+#define  TEMPSEN_SET_ACCSEL_OFFSET			6
-+#define  TEMPSEN_SET_ACCSEL_512T			0
-+#define  TEMPSEN_SET_ACCSEL_1024T			1
-+#define  TEMPSEN_SET_ACCSEL_2048T			2
-+#define  TEMPSEN_SET_ACCSEL_4096T			3
-+#define  TEMPSEN_SET_CYC_CLKDIV_MASK			GENMASK(15, 8)
-+#define  TEMPSEN_SET_CYC_CLKDIV_OFFSET			8
-+#define TEMPSEN_INTR_EN					0x10
-+#define TEMPSEN_INTR_CLR				0x14
-+#define TEMPSEN_INTR_STA				0x18
-+#define TEMPSEN_INTR_RAW				0x1c
-+#define TEMPSEN_RESULT(n)				(0x20 + (n) * 4)
-+#define  TEMPSEN_RESULT_RESULT_MASK			GENMASK(12, 0)
-+#define  TEMPSEN_RESULT_MAX_RESULT_MASK			GENMASK(28, 16)
-+#define  TEMPSEN_RESULT_CLR_MAX_RESULT			BIT(31)
-+#define TEMPSEN_AUTO_PERIOD				0x64
-+#define  TEMPSEN_AUTO_PERIOD_AUTO_CYCLE_MASK		GENMASK(23, 0)
-+#define  TEMPSEN_AUTO_PERIOD_AUTO_CYCLE_OFFSET		0
-+
-+struct cv180x_thermal_zone {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct clk *clk_tempsen;
-+	u32 sample_cycle;
-+};
-+
-+static void cv180x_thermal_init(struct cv180x_thermal_zone *ctz)
-+{
-+	void __iomem *base = ctz->base;
-+	u32 regval;
-+
-+	writel(readl(base + TEMPSEN_INTR_RAW), base + TEMPSEN_INTR_CLR);
-+	writel(TEMPSEN_RESULT_CLR_MAX_RESULT, base + TEMPSEN_RESULT(0));
-+
-+	regval = readl(base + TEMPSEN_SET);
-+	regval &= ~TEMPSEN_SET_CHOPSEL_MASK;
-+	regval &= ~TEMPSEN_SET_ACCSEL_MASK;
-+	regval &= ~TEMPSEN_SET_CYC_CLKDIV_MASK;
-+	regval |= TEMPSEN_SET_CHOPSEL_1024T << TEMPSEN_SET_CHOPSEL_OFFSET;
-+	regval |= TEMPSEN_SET_ACCSEL_2048T << TEMPSEN_SET_ACCSEL_OFFSET;
-+	regval |= 0x31 << TEMPSEN_SET_CYC_CLKDIV_OFFSET;
-+	writel(regval, base + TEMPSEN_SET);
-+
-+	regval = readl(base + TEMPSEN_AUTO_PERIOD);
-+	regval &= ~TEMPSEN_AUTO_PERIOD_AUTO_CYCLE_MASK;
-+	regval |= ctz->sample_cycle << TEMPSEN_AUTO_PERIOD_AUTO_CYCLE_OFFSET;
-+	writel(regval, base + TEMPSEN_AUTO_PERIOD);
-+
-+	regval = readl(base + TEMPSEN_CTRL);
-+	regval &= ~TEMPSEN_CTRL_SEL_MASK;
-+	regval |= 1 << TEMPSEN_CTRL_SEL_OFFSET;
-+	regval |= TEMPSEN_CTRL_EN;
-+	writel(regval, base + TEMPSEN_CTRL);
-+}
-+
-+static void cv180x_thermal_deinit(struct cv180x_thermal_zone *ct)
-+{
-+	void __iomem *base = ct->base;
-+	u32 regval;
-+
-+	regval = readl(base + TEMPSEN_CTRL);
-+	regval &= ~(TEMPSEN_CTRL_SEL_MASK | TEMPSEN_CTRL_EN);
-+	writel(regval, base + TEMPSEN_CTRL);
-+
-+	writel(readl(base + TEMPSEN_INTR_RAW), base + TEMPSEN_INTR_CLR);
-+}
-+
-+/*
-+ *	Raw register value to temperature (mC) formula:
-+ *
-+ *		       read_val * 1000 * 716
-+ *	Temperature = ----------------------- - 273000
-+ *				divider
-+ *
-+ *	where divider should be ticks number of accumulation period,
-+ *	e.g. 2048 for TEMPSEN_CTRL_ACCSEL_2048T
-+ */
-+static int cv180x_calc_temp(struct cv180x_thermal_zone *ctz, u32 result)
-+{
-+	return (result * 1000) * 716 / 2048 - 273000;
-+}
-+
-+static int cv180x_get_temp(struct thermal_zone_device *tdev, int *temperature)
-+{
-+	struct cv180x_thermal_zone *ctz = thermal_zone_device_priv(tdev);
-+	void __iomem *base = ctz->base;
-+	u32 result;
-+
-+	result = readl(base + TEMPSEN_RESULT(0)) & TEMPSEN_RESULT_RESULT_MASK;
-+	*temperature = cv180x_calc_temp(ctz, result);
-+
-+	return 0;
-+}
-+
-+static const struct thermal_zone_device_ops cv180x_thermal_ops = {
-+	.get_temp = cv180x_get_temp,
-+};
-+
-+static const struct of_device_id cv180x_thermal_of_match[] = {
-+	{ .compatible = "sophgo,cv1800-thermal" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cv180x_thermal_of_match);
-+
-+static int
-+cv180x_parse_dt(struct cv180x_thermal_zone *ctz)
-+{
-+	struct device_node *np = ctz->dev->of_node;
-+	u32 tmp;
-+
-+	if (of_property_read_u32(np, "sample-rate-hz", &tmp)) {
-+		ctz->sample_cycle = 1000000;
-+	} else {
-+		/* sample cycle should be at least 524us */
-+		if (tmp > 1000000 / 524) {
-+			dev_err(ctz->dev, "invalid sample rate %d\n", tmp);
-+			return -EINVAL;
-+		}
-+
-+		ctz->sample_cycle = 1000000 / tmp;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cv180x_thermal_probe(struct platform_device *pdev)
-+{
-+	struct cv180x_thermal_zone *ctz;
-+	struct thermal_zone_device *tz;
-+	struct resource *res;
-+	int ret;
-+
-+	ctz = devm_kzalloc(&pdev->dev, sizeof(*ctz), GFP_KERNEL);
-+	if (!ctz)
-+		return -ENOMEM;
-+
-+	ctz->dev = &pdev->dev;
-+
-+	ret = cv180x_parse_dt(ctz);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "failed to parse dt\n");
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ctz->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(ctz->base))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ctz->base),
-+				     "failed to map tempsen registers\n");
-+
-+	ctz->clk_tempsen = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(ctz->clk_tempsen))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ctz->clk_tempsen),
-+				     "failed to get clk_tempsen\n");
-+
-+	cv180x_thermal_init(ctz);
-+
-+	tz = devm_thermal_of_zone_register(&pdev->dev, 0, ctz,
-+					   &cv180x_thermal_ops);
-+	if (IS_ERR(tz))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(tz),
-+				     "failed to register thermal zone\n");
-+
-+	platform_set_drvdata(pdev, ctz);
-+
-+	return 0;
-+}
-+
-+static int cv180x_thermal_remove(struct platform_device *pdev)
-+{
-+	struct cv180x_thermal_zone *ctz = platform_get_drvdata(pdev);
-+
-+	cv180x_thermal_deinit(ctz);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused cv180x_thermal_suspend(struct device *dev)
-+{
-+	struct cv180x_thermal_zone *ctz = dev_get_drvdata(dev);
-+
-+	cv180x_thermal_deinit(ctz);
-+	clk_disable_unprepare(ctz->clk_tempsen);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused cv180x_thermal_resume(struct device *dev)
-+{
-+	struct cv180x_thermal_zone *ctz = dev_get_drvdata(dev);
-+
-+	clk_prepare_enable(ctz->clk_tempsen);
-+	cv180x_thermal_init(ctz);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(cv180x_thermal_pm_ops,
-+			 cv180x_thermal_suspend, cv180x_thermal_resume);
-+
-+static struct platform_driver cv180x_thermal_driver = {
-+	.probe = cv180x_thermal_probe,
-+	.remove = cv180x_thermal_remove,
-+	.driver = {
-+		.name = "cv180x-thermal",
-+		.pm = &cv180x_thermal_pm_ops,
-+		.of_match_table = cv180x_thermal_of_match,
-+	},
-+};
-+
-+module_platform_driver(cv180x_thermal_driver);
-+
-+MODULE_DESCRIPTION("Sophgo CV180x thermal driver");
-+MODULE_AUTHOR("Haylen Chu <heylenay@outlook.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.45.2
+On Tue, 16 Jul 2024, at 9:41 PM, Luke Jones wrote:
+> 
+> 
+> On Tue, 16 Jul 2024, at 9:25 PM, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 7/16/24 7:16 AM, Luke D. Jones wrote:
+> > > Implement Intel core enablement under the asus-bioscfg module using the
+> > > fw_attributes class.
+> > > 
+> > > This allows users to enable or disable preformance or efficiency cores
+> > > depending on their requirements. After change a reboot is required.
+> > 
+> > Not a full revieew, just a quick remark. You say this this
+> > requires a reboot, but this patch does not update asus_bios_requires_reboot()
+> > 
+> 
+> Thanks for catching that!
 
+Huh.. Okay looks like asus_bios_requires_reboot() got screwed up with the rebase editing I've done. The return statement is followed by a line that will never ge run too.
+
+> 
+> > 
+> > 
+> > > 
+> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > > ---
+> > >  drivers/platform/x86/asus-bioscfg.c        | 206 +++++++++++++++++++++
+> > >  drivers/platform/x86/asus-bioscfg.h        |  29 +++
+> > >  include/linux/platform_data/x86/asus-wmi.h |   4 +
+> > >  3 files changed, 239 insertions(+)
+> > > 
+> > > diff --git a/drivers/platform/x86/asus-bioscfg.c b/drivers/platform/x86/asus-bioscfg.c
+> > > index 57efe50e0d19..6d39e45591e8 100644
+> > > --- a/drivers/platform/x86/asus-bioscfg.c
+> > > +++ b/drivers/platform/x86/asus-bioscfg.c
+> > > @@ -41,6 +41,18 @@ MODULE_ALIAS("wmi:"ASUS_NB_WMI_EVENT_GUID);
+> > >  #define ASUS_MINI_LED_2024_STRONG 0x01
+> > >  #define ASUS_MINI_LED_2024_OFF 0x02
+> > >  
+> > > +enum cpu_core_type {
+> > > + CPU_CORE_PERF = 0,
+> > > + CPU_CORE_POWER,
+> > > +};
+> > > +
+> > > +enum cpu_core_value {
+> > > + CPU_CORE_DEFAULT = 0,
+> > > + CPU_CORE_MIN,
+> > > + CPU_CORE_MAX,
+> > > + CPU_CORE_CURRENT,
+> > > +};
+> > > +
+> > >  /* Default limits for tunables available on ASUS ROG laptops */
+> > >  #define PPT_CPU_LIMIT_MIN 5
+> > >  #define PPT_CPU_LIMIT_MAX 150
+> > > @@ -75,6 +87,10 @@ struct rog_tunables {
+> > >  u32 nv_temp_default;
+> > >  u32 nv_temp_max;
+> > >  u32 nv_temp_target;
+> > > +
+> > > + u32 min_perf_cores;
+> > > + u32 max_perf_cores;
+> > > + u32 max_power_cores;
+> > >  };
+> > >  
+> > >  static const struct class *fw_attr_class;
+> > > @@ -540,6 +556,191 @@ static ssize_t apu_mem_possible_values_show(struct kobject *kobj,
+> > >  }
+> > >  ATTR_GROUP_ENUM_CUSTOM(apu_mem, "apu_mem", "Set the available system memory for the APU to use");
+> > >  
+> > > +static int asus_bios_set_max_cores(void)
+> > > +{
+> > > + u32 cores;
+> > > + int err;
+> > > +
+> > > + asus_bios.rog_tunables->min_perf_cores = 4;
+> > > + asus_bios.rog_tunables->max_perf_cores = 4;
+> > > + asus_bios.rog_tunables->max_power_cores = 8;
+> > > +
+> > > + err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES_MAX, &cores);
+> > > + if (err)
+> > > + return err;
+> > > +
+> > > + cores &= ~ASUS_WMI_DSTS_PRESENCE_BIT;
+> > > + asus_bios.rog_tunables->max_power_cores = (cores & 0xff00) >> 8;
+> > > + asus_bios.rog_tunables->max_perf_cores = cores & 0xff;
+> > > +
+> > > + return 0;
+> > > +}
+> > > +
+> > > +static ssize_t cores_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf,
+> > > + enum cpu_core_type core_type,
+> > > + enum cpu_core_value core_value)
+> > > +{
+> > > + u32 cores;
+> > > + int err;
+> > > +
+> > > + switch (core_value) {
+> > > + case CPU_CORE_DEFAULT:
+> > > + case CPU_CORE_MAX:
+> > > + if (core_type == CPU_CORE_PERF)
+> > > + return sysfs_emit(buf, "%d\n", asus_bios.rog_tunables->max_perf_cores);
+> > > + else
+> > > + return sysfs_emit(buf, "%d\n", asus_bios.rog_tunables->max_power_cores);
+> > > + case CPU_CORE_MIN:
+> > > + if (core_type == CPU_CORE_PERF)
+> > > + return sysfs_emit(buf, "%d\n", asus_bios.rog_tunables->min_perf_cores);
+> > > + else
+> > > + return sysfs_emit(buf, "%d\n", 0);
+> > > + default:
+> > > + break;
+> > > + }
+> > > +
+> > > + err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES, &cores);
+> > > + if (err)
+> > > + return err;
+> > > +
+> > > + cores &= ~ASUS_WMI_DSTS_PRESENCE_BIT;
+> > > + if (core_type == CPU_CORE_PERF)
+> > > + cores &= 0xff;
+> > > + else
+> > > + cores = (cores & 0xff00) >> 8;
+> > > + return sysfs_emit(buf, "%d\n", cores);
+> > > +}
+> > > +
+> > > +static ssize_t cores_current_value_store(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, const char *buf,
+> > > + enum cpu_core_type core_type)
+> > > +{
+> > > + int result, err;
+> > > + u32 cores, currentv, min, max;
+> > > +
+> > > + result = kstrtou32(buf, 10, &cores);
+> > > + if (result)
+> > > + return result;
+> > > +
+> > > + if (core_type == CPU_CORE_PERF) {
+> > > + min = asus_bios.rog_tunables->min_perf_cores;
+> > > + max = asus_bios.rog_tunables->max_perf_cores;
+> > > + } else {
+> > > + min = 0;
+> > > + max = asus_bios.rog_tunables->max_power_cores;
+> > > + }
+> > > + if (cores < min || cores > max)
+> > > + return -EINVAL;
+> > > +
+> > > + err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES, &currentv);
+> > > + if (err)
+> > > + return err;
+> > > +
+> > > + if (core_type == CPU_CORE_PERF)
+> > > + cores |= (currentv & 0xff00);
+> > > + else
+> > > + cores |= currentv & 0xff;
+> > > +
+> > > + if (cores == currentv)
+> > > + return 0;
+> > > +
+> > > + err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CORES, cores, &result);
+> > > + if (err) {
+> > > + pr_warn("Failed to set perfromance core count: %d\n", err);
+> > > + return err;
+> > > + }
+> > > +
+> > > + if (result > 1) {
+> > > + pr_warn("Failed to set performance core count (result): 0x%x\n", result);
+> > > + return -EIO;
+> > > + }
+> > > +
+> > > + pr_info("CPU core count changed, reboot required\n");
+> > > + sysfs_notify(kobj, NULL, attr->attr.name);
+> > > + asus_set_reboot_and_signal_event();
+> > > +
+> > > + return 0;
+> > > +}
+> > > +
+> > > +static ssize_t cores_performance_min_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MIN);
+> > > +}
+> > > +
+> > > +static ssize_t cores_performance_max_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MAX);
+> > > +}
+> > > +
+> > > +static ssize_t cores_performance_default_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_DEFAULT);
+> > > +}
+> > > +
+> > > +static ssize_t cores_performance_current_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_CURRENT);
+> > > +}
+> > > +
+> > > +static ssize_t cores_performance_current_value_store(struct kobject *kobj,
+> > > + struct kobj_attribute *attr,
+> > > + const char *buf, size_t count)
+> > > +{
+> > > + int err;
+> > > +
+> > > + err = cores_current_value_store(kobj, attr, buf, CPU_CORE_PERF);
+> > > + if (err)
+> > > + return err;
+> > > +
+> > > + return count;
+> > > +}
+> > > +ATTR_GROUP_CORES_RW(cores_performance, "cores_performance", ASUS_WMI_DEVID_CORES,
+> > > + "Set the max available performance cores");
+> > > +
+> > > +static ssize_t cores_efficiency_min_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MIN);
+> > > +}
+> > > +
+> > > +static ssize_t cores_efficiency_max_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MAX);
+> > > +}
+> > > +
+> > > +static ssize_t cores_efficiency_default_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_DEFAULT);
+> > > +}
+> > > +
+> > > +static ssize_t cores_efficiency_current_value_show(struct kobject *kobj,
+> > > + struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > + return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_CURRENT);
+> > > +}
+> > > +
+> > > +static ssize_t cores_efficiency_current_value_store(struct kobject *kobj,
+> > > + struct kobj_attribute *attr,
+> > > + const char *buf, size_t count)
+> > > +{
+> > > + int err;
+> > > +
+> > > + err = cores_current_value_store(kobj, attr, buf, CPU_CORE_POWER);
+> > > + if (err)
+> > > + return err;
+> > > +
+> > > + return count;
+> > > +}
+> > > +ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency", ASUS_WMI_DEVID_CORES,
+> > > + "Set the max available efficiency cores");
+> > > +
+> > >  /* Simple attribute creation */
+> > >  ATTR_GROUP_ENUM_INT_RW(thermal_policy, "thermal_policy", ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
+> > >  0, 3, "0;1;2", "Set the thermal profile: 0=normal, 1=performance, 2=quiet");
+> > > @@ -636,6 +837,11 @@ static int asus_fw_attr_add(void)
+> > >  if (asus_wmi_is_present(ASUS_WMI_DEVID_EGPU_CONNECTED))
+> > >  sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &egpu_connected_attr_group);
+> > >  
+> > > + if (asus_wmi_is_present(ASUS_WMI_DEVID_CORES_MAX) && !asus_bios_set_max_cores()) {
+> > > + sysfs_create_group(&asus_bios.fw_attr_kset->kobj, &cores_performance_attr_group);
+> > > + sysfs_create_group(&asus_bios.fw_attr_kset->kobj, &cores_efficiency_attr_group);
+> > > + }
+> > > +
+> > >  if (asus_wmi_is_present(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
+> > >  sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &thermal_policy_attr_group);
+> > >  if (asus_wmi_is_present(ASUS_WMI_DEVID_PPT_PL1_SPL))
+> > > diff --git a/drivers/platform/x86/asus-bioscfg.h b/drivers/platform/x86/asus-bioscfg.h
+> > > index 2da55a91ff0b..bae1976eda3f 100644
+> > > --- a/drivers/platform/x86/asus-bioscfg.h
+> > > +++ b/drivers/platform/x86/asus-bioscfg.h
+> > > @@ -244,6 +244,35 @@ static const struct attribute_group _attrname##_attr_group = { \
+> > >  .attrs = _attrname##_attrs \
+> > >  }
+> > >  
+> > > +/* CPU core attributes need a little different in setup */
+> > > +#define ATTR_GROUP_CORES_RW(_attrname, _fsname, _dispname) \
+> > > +__ATTR_SHOW_FMT(scalar_increment, _attrname, "%d\n", 1); \
+> > > +__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname); \
+> > > +static struct kobj_attribute attr_##_attrname##_current_value = \
+> > > + __ASUS_ATTR_RW(_attrname, current_value); \
+> > > +static struct kobj_attribute attr_##_attrname##_default_value = \
+> > > + __ASUS_ATTR_RO(_attrname, default_value); \
+> > > +static struct kobj_attribute attr_##_attrname##_min_value = \
+> > > + __ASUS_ATTR_RO(_attrname, min_value); \
+> > > +static struct kobj_attribute attr_##_attrname##_max_value = \
+> > > + __ASUS_ATTR_RO(_attrname, max_value); \
+> > > +static struct kobj_attribute attr_##_attrname##_type = \
+> > > + __ASUS_ATTR_RO_AS(type, int_type_show); \
+> > > +static struct attribute *_attrname##_attrs[] = { \
+> > > + &attr_##_attrname##_current_value.attr, \
+> > > + &attr_##_attrname##_default_value.attr, \
+> > > + &attr_##_attrname##_min_value.attr, \
+> > > + &attr_##_attrname##_max_value.attr, \
+> > > + &attr_##_attrname##_scalar_increment.attr, \
+> > > + &attr_##_attrname##_display_name.attr, \
+> > > + &attr_##_attrname##_type.attr, \
+> > > + NULL \
+> > > +}; \
+> > > +static const struct attribute_group _attrname##_attr_group = { \
+> > > + .name = _fsname, \
+> > > + .attrs = _attrname##_attrs \
+> > > +}
+> > > +
+> > >  /* ROG PPT attributes need a little different in setup */
+> > >  #define ATTR_GROUP_PPT_RW(_attrname, _fsname, _wmi, _default, \
+> > >  _min, _max, _incstep, _dispname) \
+> > > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> > > index e3d511918416..d8f713ed3ea3 100644
+> > > --- a/include/linux/platform_data/x86/asus-wmi.h
+> > > +++ b/include/linux/platform_data/x86/asus-wmi.h
+> > > @@ -128,6 +128,10 @@
+> > >  /* dgpu on/off */
+> > >  #define ASUS_WMI_DEVID_DGPU 0x00090020
+> > >  
+> > > +/* Intel E-core and P-core configuration in a format 0x0[E]0[P] */
+> > > +#define ASUS_WMI_DEVID_CORES 0x001200D2
+> > > + /* Maximum Intel E-core and P-core availability */
+> > > +#define ASUS_WMI_DEVID_CORES_MAX 0x001200D3
+> > >  #define ASUS_WMI_DEVID_DGPU_BASE_TGP 0x00120099
+> > >  #define ASUS_WMI_DEVID_DGPU_SET_TGP 0x00120098
+> > >  #define ASUS_WMI_DEVID_APU_MEM 0x000600C1
+> > 
+> > 
