@@ -1,88 +1,102 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A1B335A7;
-	Tue, 16 Jul 2024 20:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DB0335A7
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 20:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721160792; cv=none; b=uwBE8nepGPXdFshBVVHjcToM9xECE12WK2/N+l25YooTvpiPwU+zOGN4mpuNa3MxcoFwDHkhrtch4370rqHAHy+A98b0rLyP0gIpECRTgnq4/SGiik0SkLoLPMb9iXEcwuORHC22D2EJwViLC8CoMVtN3jdckuJX/oso0dhZ+9A=
+	t=1721160796; cv=none; b=Ik5j487mJt34gCEML6Plpr5qgSdSYrSaysql6yz4yll3ZVXboksI9aMkg1VHDCvwf57P7zhI4xlSgEFD643/qDeBeOR6FSuJ3zyT6CUPuvcLSMoJ+PdEjY69YroWC2QA7sD43vks3swlhw8ubRC3UHRND0aFZRCAEmcdawhMawI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721160792; c=relaxed/simple;
-	bh=CGrm8RHo76L6boYTF0+0Rl0nppKvtCF9KQ5wF6EEpjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j45hfl/SRCPAK03Mh5htw+BkeMxfhstHh5GO77GDb4o/tUzZk6zhy7OT/vqa2gk6hcIFVYZe5K2kv5d78PTuMUvQiPmgbBpTUYSUIG4rC6kNADIlN9tyZeua1IQw0gbb1RklvWKuLuhLbl98U4mmB+B3QvCE+LsOVPVjrWvVXXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id D3E6E1C009C; Tue, 16 Jul 2024 22:13:09 +0200 (CEST)
-Date: Tue, 16 Jul 2024 22:13:09 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.9 000/143] 6.9.10-rc1 review
-Message-ID: <ZpbUVWCwCqeSezfS@duo.ucw.cz>
-References: <20240716152755.980289992@linuxfoundation.org>
+	s=arc-20240116; t=1721160796; c=relaxed/simple;
+	bh=6sp+DN6OIsTNJSurT4rQssO9dRU9wxOW/cy+PG12B20=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kEJsy1PSBmb7o32qXNuZNozdmV+2dZEWrPP11UMqfvZtFEPb1zTr71J3eb5RMoxfN6edj5grFdshLPkL/C3MZQ4UBy/ZNAXYtFp8Jbgh4dKCvDKy3ggCRNafSRCIJWnSLQdWCPrrMHCMdBkW25mqE8CfuNHfCQHd4uQ91nmwP0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ffUeQQE6; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ffUeQQE6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721160793;
+	bh=6sp+DN6OIsTNJSurT4rQssO9dRU9wxOW/cy+PG12B20=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ffUeQQE6mQ3O3hXk1iq2IzQrs6RpFI17LsMwo+rS61feLh60BiAd9xfovGojL9ckI
+	 HH4Q7zA/y8J3Cp1LgaZvbRDt9ynDa/dz8plShv74IU8+96g6At7UeJxXUXIBIKREnE
+	 UOA8AMViU/oZ+xLRmCehx4UiI/HbZ4YWa5lKslwm8hDHSgJqljXowOcOKDF7l1IhAE
+	 /THrq/C+7Cr/J6PtFCA2R8VB5Y9ScNQUs6B/fPej1apKyJiRpJuJGCfUDlHHduS1q5
+	 PByU0MeUEvIqpS63xbyO7J3RUzTIVFGzkWHLgcsmi/5HkxY9W6yKkOhgguiuLhFuYa
+	 X2Ah/KNQzZiLA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: alarumbe)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E1C463780480;
+	Tue, 16 Jul 2024 20:13:12 +0000 (UTC)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>
+Cc: kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Support fdinfo runtime and memory stats on Panthor
+Date: Tue, 16 Jul 2024 21:11:39 +0100
+Message-ID: <20240716201302.2939894-1-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="T4mFiTXWRoaVH1CL"
-Content-Disposition: inline
-In-Reply-To: <20240716152755.980289992@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+This patch series enables userspace utilities like gputop and nvtop to
+query a render context's fdinfo file and figure out rates of engine
+and memory utilisation.
 
---T4mFiTXWRoaVH1CL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Previous discussion can be found at
+https://lore.kernel.org/dri-devel/dqhnxhgho6spfh7xhw6yvs2iiqeqzeg63e6jqqpw2g7gkrfphn@dojsixyl4esv/
 
-Hi!
+Changelog:
+v4:
+ - Fixed wrong assignment location for frequency values in Panthor's devfreq
+ - Removed the last two commits about registering size of internal BO's
+ - Rearranged patch series so that sysfs knob is done last and all the previous
+ time sampling and fdinfo show dependencies are already in place
+v3:
+ - Fixed some nits and removed useless bounds check in panthor_sched.c
+ - Added support for sysfs profiling knob and optional job accounting
+ - Added new patches for calculating size of internal BO's
+v2:
+ - Split original first patch in two, one for FW CS cycle and timestamp
+ calculations and job accounting memory management, and a second one
+ that enables fdinfo.
+ - Moved NUM_INSTRS_PER_SLOT to the file prelude
+ - Removed nelem variable from the group's struct definition.
+ - Precompute size of group's syncobj BO to avoid code duplication.
+ - Some minor nits.
 
-> This is the start of the stable review cycle for the 6.9.10 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Adrián Larumbe (4):
+  drm/panthor: introduce job cycle and timestamp accounting
+  drm/panthor: add DRM fdinfo support
+  drm/panthor: enable fdinfo for memory stats
+  drm/panthor: add sysfs knob for enabling job profiling
 
-CIP testing did not find any problems here:
+ drivers/gpu/drm/panthor/panthor_devfreq.c |  18 +-
+ drivers/gpu/drm/panthor/panthor_device.h  |  12 +
+ drivers/gpu/drm/panthor/panthor_drv.c     |  69 +++++
+ drivers/gpu/drm/panthor/panthor_gem.c     |  12 +
+ drivers/gpu/drm/panthor/panthor_sched.c   | 291 +++++++++++++++++++---
+ 5 files changed, 371 insertions(+), 31 deletions(-)
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.9.y
+-- 
+2.45.1
 
-6.6, 5.15, 5.4 pass our testing, too:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.6.y
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-5.15.y
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-5.4.y
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---T4mFiTXWRoaVH1CL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZpbUVQAKCRAw5/Bqldv6
-8lzIAKCXwUfS1GCmsT4hwtlDTXOH72ZE5QCfQ9lkJgomA/DGluD5veNfoYhf1Xk=
-=eT5N
------END PGP SIGNATURE-----
-
---T4mFiTXWRoaVH1CL--
