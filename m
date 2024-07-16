@@ -1,555 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17CC19DF78;
-	Tue, 16 Jul 2024 15:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7781119ADAD
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 15:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721144572; cv=none; b=NY13L6jlrSX8GtxkaMlZq4bmpkaH3oohvn3CH0GaZId9WQm3/cxD5Nv/IR6o9V6b1SW8XsiRwpa7M6mRWPtBDPUtG1N8R4pEi4ilMnqavwsykEaQzVT5TNyFxX3Yk4ggC0LKuxqHxeOmlK9f7i2KqNzFj7ef7qXJThjGXJP6Fj8=
+	t=1721144730; cv=none; b=X5rGwSiRs63SXwkzPc3nbHTRPnQfHVL/i4I8ureUuyhc9weHpvlHvkrze8C+FMCCFnWqWYHHZ3Qh7H0F6eUE96UO3G8FupuK7qFyXuNN7horCXIOK9gSkXOihVTG15RWBr6ALOwuRUd84CQskNtq+Y6e4a/wm8GBj0LWnas9eKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721144572; c=relaxed/simple;
-	bh=mvbDgjuDnmSScPnwFo8QaKhaJUIDTDfQ8TcojXOQkD4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jkSfUTxJSc+uBoIt1tY2K630Q3J8BnoY/soPnrifbH5XVbKlnzzVaRhMq6ndN6wzuSk2MoAXtC/QbD8tGp8ebWV7gVIAxy64T65KsdLYATnb6ehHqkJFzW0gwV6jDJ5tLMBqaiJed9m8hTLb5PoLe571SROW2nBfPoXqBkos+VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zk+65eqX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721144730; c=relaxed/simple;
+	bh=ZhJN5IeKvGaQ1BOL9qJd/KV0W2QjA/TjtAkJvonfS80=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=KAZRDsuWMxk9eUTkdxLapo4jsRc7Q+rpH2v6PgAziaTvhlE+9zURn1xV7APMlhooB6HI90qFc2ScSL85zZJV306stcFWtFZRmcNeUSS6Yp6GOT+1G0CeYXNpUkccoCVoXbvx3niqjfrE72qAnYg13lbtE1UFQRPuOzp5Nx8JhW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QnpTqYRU; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zk+65eqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A78C116B1;
-	Tue, 16 Jul 2024 15:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721144572;
-	bh=mvbDgjuDnmSScPnwFo8QaKhaJUIDTDfQ8TcojXOQkD4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=zk+65eqXo0c3qU4+b5A2suXJJF2KyrIul/N7Ac3l9jzOR88UiUsTDoAwxhwqIQuUz
-	 dTteCBPt8YvN5+CHnvbP6vdhgKNmmOtPUW0yQamepDX433ug5yJKHjchjCDdXb9MVp
-	 +jU0fOr/XbGNXttLySzmnrx1w4x/mj9PptW0pBHU=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 5.10 000/108] 5.10.222-rc1 review
-Date: Tue, 16 Jul 2024 17:30:15 +0200
-Message-ID: <20240716152745.988603303@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QnpTqYRU"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240716154526euoutp01dcbd8684b403043074dc766d1e602a5e~ivAKGQU5o1978019780euoutp01L
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 15:45:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240716154526euoutp01dcbd8684b403043074dc766d1e602a5e~ivAKGQU5o1978019780euoutp01L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1721144726;
+	bh=DkcC53LxKYGCnJNcREJfLuVKf9XOrJMoUtHzbF47cA0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=QnpTqYRUKn623qYDcTpEj8CxCrpBK8MU07h3+7RaaaTDrTdgFarfLkaFW7Oof0Y7C
+	 5vMeTcT5t6zas9myGEfbwwnkRkhjI5VB9GZQWZF4Uww8mCsTdOR3mddWCcJ2tNP7bG
+	 9zKTMATG4wKm+b++S8JkCzv5y3GXcJaCzmqdfZJU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240716154526eucas1p23521b4311ed80c4a3f848b45258c650d~ivAJv-0WR0863808638eucas1p2H;
+	Tue, 16 Jul 2024 15:45:26 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 38.78.09875.69596966; Tue, 16
+	Jul 2024 16:45:26 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240716154525eucas1p1153a0288f3148c1870b58156c73c30e5~ivAI9JqKc2211322113eucas1p1M;
+	Tue, 16 Jul 2024 15:45:25 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240716154525eusmtrp223dff3add826eaca3672388d8606749a~ivAI8oRvK1133211332eusmtrp25;
+	Tue, 16 Jul 2024 15:45:25 +0000 (GMT)
+X-AuditID: cbfec7f4-11bff70000002693-d5-669695966a6c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 02.C2.08810.59596966; Tue, 16
+	Jul 2024 16:45:25 +0100 (BST)
+Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240716154525eusmtip14aef047cd1edf28ede655c2ec62098e7~ivAIuo3Rv2358923589eusmtip1i;
+	Tue, 16 Jul 2024 15:45:25 +0000 (GMT)
+Received: from localhost (106.210.248.174) by CAMSVWEXC01.scsc.local
+	(2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Tue, 16 Jul 2024 16:45:24 +0100
+Date: Tue, 16 Jul 2024 17:45:20 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+CC: <kernel-janitors@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	<arjan@linux.intel.com>
+Subject: Re: [PATCH] latencytop: Use seq_putc() in lstats_show()
+Message-ID: <20240716154520.vtlqv4jxlihy2h7r@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.222-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.10.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.10.222-rc1
-X-KernelTest-Deadline: 2024-07-18T15:27+00:00
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 5.10.222 release.
-There are 108 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 18 Jul 2024 15:27:21 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.222-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.10.222-rc1
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    i2c: rcar: fix error code in probe()
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: rcar: clear NO_RXDMA flag after resetting
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: rcar: ensure Gen3+ reset does not disturb local targets
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: rcar: introduce Gen4 devices
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: rcar: reset controller is mandatory for Gen3+
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    i2c: rcar: Add R-Car Gen4 support
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: mark HostNotify target address as used
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: rcar: bring hardware to known state when probing
-
-Russell King <russell.king@oracle.com>
-    arm64/bpf: Remove 128MB limit for BPF JIT programs
-
-Ryusuke Konishi <konishi.ryusuke@gmail.com>
-    nilfs2: fix kernel bug on rename operation of broken directory
-
-Eduard Zingerman <eddyz87@gmail.com>
-    bpf: Allow reads from uninit stack
-
-Eric Dumazet <edumazet@google.com>
-    ipv6: prevent NULL dereference in ip6_output()
-
-Eric Dumazet <edumazet@google.com>
-    ipv6: annotate data-races around cnf.disable_ipv6
-
-Ard Biesheuvel <ardb@kernel.org>
-    efi: ia64: move IA64-only declarations to new asm/efi.h header
-
-Jim Mattson <jmattson@google.com>
-    x86/retpoline: Move a NOENDBR annotation to the SRSO dummy return thunk
-
-Jason A. Donenfeld <Jason@zx2c4.com>
-    wireguard: send: annotate intentional data race in checking empty queue
-
-Jason A. Donenfeld <Jason@zx2c4.com>
-    wireguard: queueing: annotate intentional data race in cpu round robin
-
-Helge Deller <deller@kernel.org>
-    wireguard: allowedips: avoid unaligned 64-bit memory accesses
-
-Ilya Dryomov <idryomov@gmail.com>
-    libceph: fix race between delayed_work() and ceph_monc_stop()
-
-Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
-    ALSA: hda/realtek: Limit mic boost on VAIO PRO PX
-
-Nazar Bilinskyi <nbilinskyi@gmail.com>
-    ALSA: hda/realtek: Enable Mute LED on HP 250 G7
-
-Joy Chakraborty <joychakr@google.com>
-    nvmem: meson-efuse: Fix return value of nvmem callbacks
-
-He Zhe <zhe.he@windriver.com>
-    hpet: Support 32-bit userspace
-
-Alan Stern <stern@rowland.harvard.edu>
-    USB: core: Fix duplicate endpoint bug by clearing reserved bits in the descriptor
-
-Lee Jones <lee@kernel.org>
-    usb: gadget: configfs: Prevent OOB read/write in usb_string_copy()
-
-WangYuli <wangyuli@uniontech.com>
-    USB: Add USB_QUIRK_NO_SET_INTF quirk for START BP-850k
-
-Dmitry Smirnov <d.smirnov@inbox.lv>
-    USB: serial: mos7840: fix crash on resume
-
-Vanillan Wang <vanillanwang@163.com>
-    USB: serial: option: add Rolling RW350-GL variants
-
-Mank Wang <mank.wang@netprisma.us>
-    USB: serial: option: add Netprisma LCUK54 series modules
-
-Slark Xiao <slark_xiao@163.com>
-    USB: serial: option: add support for Foxconn T99W651
-
-Bjørn Mork <bjorn@mork.no>
-    USB: serial: option: add Fibocom FM350-GL
-
-Daniele Palmas <dnlplm@gmail.com>
-    USB: serial: option: add Telit FN912 rmnet compositions
-
-Daniele Palmas <dnlplm@gmail.com>
-    USB: serial: option: add Telit generic core-dump composition
-
-Ronald Wahl <ronald.wahl@raritan.com>
-    net: ks8851: Fix potential TX stall after interface reopen
-
-Eric Dumazet <edumazet@google.com>
-    tcp: avoid too many retransmit packets
-
-Eric Dumazet <edumazet@google.com>
-    tcp: use signed arithmetic in tcp_rtx_probe0_timed_out()
-
-Michal Mazur <mmazur2@marvell.com>
-    octeontx2-af: fix detection of IP layer
-
-Chen Ni <nichen@iscas.ac.cn>
-    ARM: davinci: Convert comma to semicolon
-
-Sven Schnelle <svens@linux.ibm.com>
-    s390: Mark psw in __load_psw_mask() as __unitialized
-
-Chengen Du <chengen.du@canonical.com>
-    net/sched: Fix UAF when resolving a clash
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    udp: Set SOCK_RCU_FREE earlier in udp_lib_get_port().
-
-Oleksij Rempel <linux@rempel-privat.de>
-    ethtool: netlink: do not return SQI value if link is down
-
-Dmitry Antipov <dmantipov@yandex.ru>
-    ppp: reject claimed-as-LCP but actually malformed packets
-
-Aleksander Jan Bajkowski <olek2@wp.pl>
-    net: ethernet: lantiq_etop: fix double free in detach
-
-Aleksander Jan Bajkowski <olek2@wp.pl>
-    net: lantiq_etop: add blank line after declaration
-
-Aleksandr Mishin <amishin@t-argos.ru>
-    octeontx2-af: Fix incorrect value output on error path in rvu_check_rsrc_availability()
-
-Neal Cardwell <ncardwell@google.com>
-    tcp: fix incorrect undo caused by DSACK of TLP retransmit
-
-Brian Foster <bfoster@redhat.com>
-    vfs: don't mod negative dentry count when on shrinker list
-
-linke li <lilinke99@qq.com>
-    fs/dcache: Re-use value stored to dentry->d_flags instead of re-reading
-
-Jeff Layton <jlayton@kernel.org>
-    filelock: fix potential use-after-free in posix_lock_inode
-
-Waiman Long <longman@redhat.com>
-    mm: prevent derefencing NULL ptr in pfn_section_valid()
-
-Ryusuke Konishi <konishi.ryusuke@gmail.com>
-    nilfs2: fix incorrect inode allocation from reserved inodes
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: fix short log for AS in link-vmlinux.sh
-
-Sagi Grimberg <sagi@grimberg.me>
-    nvmet: fix a possible leak when destroy a ctrl during qp establishment
-
-hmtheboy154 <buingoc67@gmail.com>
-    platform/x86: touchscreen_dmi: Add info for the EZpad 6s Pro
-
-hmtheboy154 <buingoc67@gmail.com>
-    platform/x86: touchscreen_dmi: Add info for GlobalSpace SolT IVW 11.6" tablet
-
-Kundan Kumar <kundan.kumar@samsung.com>
-    nvme: adjust multiples of NVME_CTRL_PAGE_SIZE in offset
-
-Nilay Shroff <nilay@linux.ibm.com>
-    nvme-multipath: find NUMA path only for online numa-node
-
-Jian-Hong Pan <jhp@endlessos.org>
-    ALSA: hda/realtek: Enable headset mic of JP-IK LEAP W502 with ALC897
-
-Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-    i2c: pnx: Fix potential deadlock warning from del_timer_sync() call in isr
-
-Mauro Carvalho Chehab <mchehab@kernel.org>
-    media: dw2102: fix a potential buffer overflow
-
-GUO Zihua <guozihua@huawei.com>
-    ima: Avoid blocking in RCU read-side critical section
-
-Wang Yufen <wangyufen@huawei.com>
-    bpf, sockmap: Fix sk->sk_forward_alloc warn_on in sk_stream_kill_queues
-
-Ghadi Elie Rahme <ghadi.rahme@canonical.com>
-    bnx2x: Fix multiple UBSAN array-index-out-of-bounds
-
-Miquel Raynal <miquel.raynal@bootlin.com>
-    mtd: rawnand: Bypass a couple of sanity checks during NAND identification
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu/atomfirmware: silence UBSAN warning
-
-Ma Ke <make24@iscas.ac.cn>
-    drm/nouveau: fix null pointer dereference in nouveau_connector_get_modes
-
-Jan Kara <jack@suse.cz>
-    Revert "mm/writeback: fix possible divide-by-zero in wb_dirty_limits(), again"
-
-Jan Kara <jack@suse.cz>
-    fsnotify: Do not generate events for O_PATH file descriptors
-
-Jimmy Assarsson <extja@kvaser.com>
-    can: kvaser_usb: Explicitly initialize family in leafimx driver_info struct
-
-Zijun Hu <quic_zijuhu@quicinc.com>
-    Bluetooth: qca: Fix BT enable failure again for QCA6390 after warm reboot
-
-Jan Kara <jack@suse.cz>
-    mm: avoid overflows in dirty throttling logic
-
-Jinliang Zheng <alexjlzheng@tencent.com>
-    mm: optimize the redundant loop of mm_update_owner_next()
-
-Ryusuke Konishi <konishi.ryusuke@gmail.com>
-    nilfs2: add missing check for inode numbers on directory entries
-
-Ryusuke Konishi <konishi.ryusuke@gmail.com>
-    nilfs2: fix inode number range checks
-
-Shigeru Yoshida <syoshida@redhat.com>
-    inet_diag: Initialize pad field in struct inet_diag_req_v2
-
-Zijian Zhang <zijianzhang@bytedance.com>
-    selftests: make order checking verbose in msg_zerocopy selftest
-
-Zijian Zhang <zijianzhang@bytedance.com>
-    selftests: fix OOM in msg_zerocopy selftest
-
-Sam Sun <samsun1006219@gmail.com>
-    bonding: Fix out-of-bounds read in bond_option_arp_ip_targets_set()
-
-Jozef Hopko <jozef.hopko@altana.com>
-    wifi: wilc1000: fix ies_len type in connect path
-
-Jakub Kicinski <kuba@kernel.org>
-    tcp_metrics: validate source addr length
-
-Neal Cardwell <ncardwell@google.com>
-    UPSTREAM: tcp: fix DSACK undo in fast recovery to call tcp_try_to_open()
-
-Holger Dengler <dengler@linux.ibm.com>
-    s390/pkey: Wipe sensitive data on failure
-
-Wang Yong <wang.yong12@zte.com.cn>
-    jffs2: Fix potential illegal address access in jffs2_free_inode
-
-Jose E. Marchesi <jose.marchesi@oracle.com>
-    bpf: Avoid uninitialized value in BPF_CORE_READ_BITFIELD
-
-Greg Kurz <groug@kaod.org>
-    powerpc/xmon: Check cpu id in commands "c#", "dp#" and "dx#"
-
-Mickaël Salaün <mic@digikod.net>
-    kunit: Fix timeout message
-
-Mike Marshall <hubcap@omnibond.com>
-    orangefs: fix out-of-bounds fsid access
-
-Michael Ellerman <mpe@ellerman.id.au>
-    powerpc/64: Set _IO_BASE to POISON_POINTER_DELTA not 0 for CONFIG_PCI=n
-
-Heiner Kallweit <hkallweit1@gmail.com>
-    i2c: i801: Annotate apanel_addr as __ro_after_init
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb-frontends: tda10048: Fix integer overflow
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: s2255: Use refcount_t instead of atomic_t for num_channels
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb-frontends: tda18271c2dd: Remove casting during div
-
-Simon Horman <horms@kernel.org>
-    net: dsa: mv88e6xxx: Correct check for empty list
-
-Erick Archer <erick.archer@outlook.com>
-    Input: ff-core - prefer struct_size over open coded arithmetic
-
-Jean Delvare <jdelvare@suse.de>
-    firmware: dmi: Stop decoding on broken entry
-
-Erick Archer <erick.archer@outlook.com>
-    sctp: prefer struct_size over open coded arithmetic
-
-Michael Bunk <micha@freedict.org>
-    media: dw2102: Don't translate i2c read into write
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Skip finding free audio for unknown engine_id
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Check pipe offset before setting vblank
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Check index msg_id before read or write
-
-Ma Jun <Jun.Ma2@amd.com>
-    drm/amdgpu: Initialize timestamp for some legacy SOCs
-
-Hailey Mothershead <hailmo@amazon.com>
-    crypto: aead,cipher - zeroize key buffer after use
-
-John Meneghini <jmeneghi@redhat.com>
-    scsi: qedf: Make qedf_execute_tmf() non-preemptible
-
-Michael Guralnik <michaelgur@nvidia.com>
-    IB/core: Implement a limit on UMAD receive List
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb-usb: dib0700_devices: Add missing release_firmware()
-
-Ricardo Ribalda <ribalda@chromium.org>
-    media: dvb: as102-fe: Fix as10x_register_addr packing
-
-Erico Nunes <nunes.erico@gmail.com>
-    drm/lima: fix shared irq handling on driver remove
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm/mach-davinci/pm.c                         |   2 +-
- arch/arm64/include/asm/extable.h                   |   9 -
- arch/arm64/include/asm/memory.h                    |   5 +-
- arch/arm64/kernel/traps.c                          |   2 +-
- arch/arm64/mm/extable.c                            |   3 +-
- arch/arm64/mm/ptdump.c                             |   2 -
- arch/arm64/net/bpf_jit_comp.c                      |   7 +-
- arch/ia64/include/asm/efi.h                        |  13 ++
- arch/ia64/kernel/efi.c                             |   1 +
- arch/ia64/kernel/machine_kexec.c                   |   1 +
- arch/ia64/kernel/mca.c                             |   1 +
- arch/ia64/kernel/smpboot.c                         |   1 +
- arch/ia64/kernel/time.c                            |   1 +
- arch/ia64/kernel/uncached.c                        |   4 +-
- arch/ia64/mm/contig.c                              |   1 +
- arch/ia64/mm/discontig.c                           |   1 +
- arch/ia64/mm/init.c                                |   1 +
- arch/powerpc/include/asm/io.h                      |   2 +-
- arch/powerpc/xmon/xmon.c                           |   6 +-
- arch/s390/include/asm/processor.h                  |   2 +-
- arch/x86/lib/retpoline.S                           |   2 +-
- crypto/aead.c                                      |   3 +-
- crypto/cipher.c                                    |   3 +-
- drivers/bluetooth/hci_qca.c                        |  18 +-
- drivers/char/hpet.c                                |  34 +++-
- drivers/firmware/dmi_scan.c                        |  11 ++
- drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c            |   8 +
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c  |   3 +
- .../amd/display/dc/irq/dce110/irq_service_dce110.c |   8 +-
- .../gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c    |   8 +
- drivers/gpu/drm/amd/include/atomfirmware.h         |   2 +-
- drivers/gpu/drm/lima/lima_gp.c                     |   2 +
- drivers/gpu/drm/lima/lima_mmu.c                    |   5 +
- drivers/gpu/drm/lima/lima_pp.c                     |   4 +
- drivers/gpu/drm/nouveau/nouveau_connector.c        |   3 +
- drivers/i2c/busses/i2c-i801.c                      |   2 +-
- drivers/i2c/busses/i2c-pnx.c                       |  48 +----
- drivers/i2c/busses/i2c-rcar.c                      |  66 ++++---
- drivers/i2c/i2c-core-base.c                        |   1 +
- drivers/infiniband/core/user_mad.c                 |  21 +-
- drivers/input/ff-core.c                            |   7 +-
- drivers/media/dvb-frontends/as102_fe_types.h       |   2 +-
- drivers/media/dvb-frontends/tda10048.c             |   9 +-
- drivers/media/dvb-frontends/tda18271c2dd.c         |   4 +-
- drivers/media/usb/dvb-usb/dib0700_devices.c        |  18 +-
- drivers/media/usb/dvb-usb/dw2102.c                 | 120 +++++++-----
- drivers/media/usb/s2255/s2255drv.c                 |  20 +-
- drivers/mtd/nand/raw/nand_base.c                   |  57 +++---
- drivers/net/bonding/bond_options.c                 |   6 +-
- drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c   |   1 +
- drivers/net/dsa/mv88e6xxx/chip.c                   |   4 +-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x.h        |   2 +-
- drivers/net/ethernet/lantiq_etop.c                 |   5 +-
- drivers/net/ethernet/marvell/octeontx2/af/npc.h    |   8 +-
- drivers/net/ethernet/marvell/octeontx2/af/rvu.c    |   2 +-
- drivers/net/ethernet/micrel/ks8851_common.c        |   2 +-
- drivers/net/ppp/ppp_generic.c                      |  15 ++
- drivers/net/wireguard/allowedips.c                 |   4 +-
- drivers/net/wireguard/queueing.h                   |   4 +-
- drivers/net/wireguard/send.c                       |   2 +-
- drivers/net/wireless/microchip/wilc1000/hif.c      |   3 +-
- drivers/nvme/host/multipath.c                      |   2 +-
- drivers/nvme/host/pci.c                            |   3 +-
- drivers/nvme/target/core.c                         |   9 +
- drivers/nvmem/meson-efuse.c                        |  14 +-
- drivers/platform/x86/touchscreen_dmi.c             |  36 ++++
- drivers/s390/crypto/pkey_api.c                     |   4 +-
- drivers/scsi/qedf/qedf_io.c                        |   6 +-
- drivers/usb/core/config.c                          |  18 +-
- drivers/usb/core/quirks.c                          |   3 +
- drivers/usb/gadget/configfs.c                      |   3 +
- drivers/usb/serial/mos7840.c                       |  45 +++++
- drivers/usb/serial/option.c                        |  38 ++++
- fs/dcache.c                                        |  12 +-
- fs/jffs2/super.c                                   |   1 +
- fs/locks.c                                         |   2 +-
- fs/nilfs2/alloc.c                                  |  18 +-
- fs/nilfs2/alloc.h                                  |   4 +-
- fs/nilfs2/dat.c                                    |   2 +-
- fs/nilfs2/dir.c                                    |  38 +++-
- fs/nilfs2/ifile.c                                  |   7 +-
- fs/nilfs2/nilfs.h                                  |  10 +-
- fs/nilfs2/the_nilfs.c                              |   6 +
- fs/nilfs2/the_nilfs.h                              |   2 +-
- fs/orangefs/super.c                                |   3 +-
- include/linux/bpf.h                                |   1 +
- include/linux/efi.h                                |   6 -
- include/linux/fsnotify.h                           |   8 +-
- include/linux/lsm_hook_defs.h                      |   2 +-
- include/linux/mmzone.h                             |   3 +-
- include/linux/security.h                           |   5 +-
- include/linux/skmsg.h                              |   1 +
- kernel/auditfilter.c                               |   5 +-
- kernel/bpf/verifier.c                              |  11 +-
- kernel/exit.c                                      |   2 +
- lib/kunit/try-catch.c                              |   3 +-
- mm/page-writeback.c                                |  32 +++-
- net/ceph/mon_client.c                              |  14 +-
- net/core/skmsg.c                                   |   1 +
- net/core/sock_map.c                                |  22 +++
- net/ethtool/linkstate.c                            |  41 ++--
- net/ipv4/inet_diag.c                               |   2 +
- net/ipv4/tcp_bpf.c                                 |   1 +
- net/ipv4/tcp_input.c                               |  13 +-
- net/ipv4/tcp_metrics.c                             |   1 +
- net/ipv4/tcp_timer.c                               |  31 ++-
- net/ipv4/udp.c                                     |   4 +-
- net/ipv6/addrconf.c                                |   9 +-
- net/ipv6/ip6_input.c                               |   2 +-
- net/ipv6/ip6_output.c                              |   2 +-
- net/sched/act_ct.c                                 |   8 +
- net/sctp/socket.c                                  |   7 +-
- scripts/link-vmlinux.sh                            |   2 +-
- security/apparmor/audit.c                          |   6 +-
- security/apparmor/include/audit.h                  |   2 +-
- security/integrity/ima/ima.h                       |   2 +-
- security/integrity/ima/ima_policy.c                |  15 +-
- security/security.c                                |   6 +-
- security/selinux/include/audit.h                   |   4 +-
- security/selinux/ss/services.c                     |   5 +-
- security/smack/smack_lsm.c                         |   4 +-
- sound/pci/hda/patch_realtek.c                      |  12 ++
- tools/lib/bpf/bpf_core_read.h                      |   1 +
- .../selftests/bpf/progs/test_global_func10.c       |  31 +++
- tools/testing/selftests/bpf/verifier/calls.c       |  13 +-
- .../selftests/bpf/verifier/helper_access_var_len.c | 104 ++++++----
- tools/testing/selftests/bpf/verifier/int_ptr.c     |   9 +-
- .../selftests/bpf/verifier/search_pruning.c        |  13 +-
- tools/testing/selftests/bpf/verifier/sock.c        |  27 ---
- tools/testing/selftests/bpf/verifier/spill_fill.c  | 211 +++++++++++++++++++++
- tools/testing/selftests/bpf/verifier/var_off.c     |  52 -----
- tools/testing/selftests/net/msg_zerocopy.c         |  14 +-
- 133 files changed, 1203 insertions(+), 469 deletions(-)
-
-
+In-Reply-To: <19c77c4d-7f81-4980-a124-d6a8e14675d9@web.de>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42LZduzned1pU6elGXS8Zrf4/mABu8XWW9IW
+	l3fNYbP4P+s5qwOLx7yTgR6fN8l53H62jSWAOYrLJiU1J7MstUjfLoErY/rVz+wFK9kqzr55
+	xNzA+I+li5GTQ0LARGLp31b2LkYuDiGBFYwSzZuXM0E4XxglVm3sgsp8ZpQ4t7qbCaZlYtth
+	NojEckaJxY+6EapeHf7BCuFsZZS49vg6WAuLgKrEw33zGEFsNgEdifNv7jB3MXJwiAhoSTx9
+	bAJiMgukSnQsdwSpEBZwkOhZ+h6smhfI3v/kOzOELShxcuYTFohyTYn1u/QhTGmJ5f84QCqY
+	BeQlmrfOBqvmFLCS6P56nx3iZGWJ9w/2QX1cK7H22BmwiyUEznBIbPrwlRUi4SKx4O01qCJh
+	iVfHt0A1y0j83zmfCaJhMqPE/n8foLpXM0osa/wKDRVriZYrT9hBLpIQcJSYuy8CwuSTuPFW
+	EOI4PolJ26YzQ4R5JTrahCYwqsxC8tgshMdmITw2C8ljCxhZVjGKp5YW56anFhvlpZbrFSfm
+	Fpfmpesl5+duYgQmktP/jn/Zwbj81Ue9Q4xMHIyHGCU4mJVEeCcwTksT4k1JrKxKLcqPLyrN
+	SS0+xCjNwaIkzquaIp8qJJCeWJKanZpakFoEk2Xi4JRqYNIrlP3mUD3pQ7h+2Z159wTux/Lw
+	tfHXMheHr7s7/bZMpGHN/P7zM9X4tsu2sasKeai++Ga+tvD9p92aGTtWu9zcV2rzonTVzctv
+	WCdN4GFeetpWi5lZUdHu1s7ON/OUxDiswncZWW9wCA66sqan9jBLsx1vU7mKX6b4pw/Vl7s+
+	fXqYN+3LN58LU8T0Fip+11wg6falZcJSUb2PxzIDD6su0881+hzFfXmzFOvhJGaxV6/Wruxs
+	W77a1WPdko6NFy7ePJRVa9qqpjqxqeFVyIqrb+L1j9/+uJSd+dKOl/tu3ipfqfgjsNVkZ8z8
+	NVzfnNw3FOZsmDk5Q77xkghz+qZdkjG6Pj7beGalZ9WXXVZiKc5INNRiLipOBACpPeuPkwMA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xu7pTp05LM9i5WcDi+4MF7BZbb0lb
+	XN41h83i/6znrA4sHvNOBnp83iTncfvZNpYA5ig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMT
+	Sz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jOlXP7MXrGSrOPvmEXMD4z+WLkZODgkBE4mJbYfZ
+	QGwhgaWMEm17UiHiMhIbv1xlhbCFJf5c6wKq4QKq+cgo8WDfGnYIZyujxM1ZW5hAqlgEVCUe
+	7pvHCGKzCehInH9zh7mLkYNDREBL4uljExCTWSBVomO5I0iFsICDRM/S92DVvED2/iffmSFG
+	9jJK7P/XxgKREJQ4OfMJC0SvpsT6XfoQprTE8n8cIBXMAvISzVtnM4PYnAJWEt1f77NDnKws
+	8f7BPqgXayVe3d/NOIFRZBaSobMQhs5CGDoLydAFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLz
+	czcxAqNs27Gfm3cwznv1Ue8QIxMH4yFGCQ5mJRHeCYzT0oR4UxIrq1KL8uOLSnNSiw8xmgKD
+	ZyKzlGhyPjDO80riDc0MTA1NzCwNTC3NjJXEeT0LOhKFBNITS1KzU1MLUotg+pg4OKUamIIu
+	tAj/mNh+xPOdRsLJwMuzCxzYD23NTTywOnCv+R///6ZpYlM0Ji7g6uJUcF/KufFc+guRBd+d
+	J094E/vI2lhFV/zLlre5YgXbPM+e9rp5JfN1063L5lNfGLhKT5o879++LdtUvt5Yrf1ba9dR
+	fv2y+b0CLUWmu09Hc/EY6+j28EZxCTK2K8hXsk9/fmej/LMj3DNc/U4JTvjQmHDquIOqpdGE
+	ZcKM2xuufHydnrMkaPalRc8O/e40/DR3967Hxx22TpOWeaHccbrm+6rQyuK1fqm5tj9sOP7p
+	sTmd2OZUeH7/jPw6xts1F4VqXLKZo02PhGlLy+vVa5Q/KtBV3H7294tug/SkM8lRZmdXGSmx
+	FGckGmoxFxUnAgDPIKjIOwMAAA==
+X-CMS-MailID: 20240716154525eucas1p1153a0288f3148c1870b58156c73c30e5
+X-Msg-Generator: CA
+X-RootMTR: 20240714100031eucas1p16b701d3e5852ccb40305a73bdb2a2759
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240714100031eucas1p16b701d3e5852ccb40305a73bdb2a2759
+References: <CGME20240714100031eucas1p16b701d3e5852ccb40305a73bdb2a2759@eucas1p1.samsung.com>
+	<19c77c4d-7f81-4980-a124-d6a8e14675d9@web.de>
+
+On Sun, Jul 14, 2024 at 12:00:23PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sun, 14 Jul 2024 11:52:13 +0200
+
+Not sure why this got forwarded to me. ccing arjan@linux.intel.com
+as he seems to be the author of the file.
+> 
+> A single line break should be put into a sequence.
+> Thus use the corresponding function “seq_putc”.
+> 
+> This issue was transformed by using the Coccinelle software.
+
+A couple of comments while I'm here:
+* The "why" is not clear; please clarify why a single line break should
+  be put into a sequence.
+* I don't think that a one liner merits the "coccinelle" comment.
+  However, if you *really* think it should be there, please add more
+  information, like the conccinell script.
+
+Best
+
+-- 
+
+Joel Granados
