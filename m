@@ -1,135 +1,109 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D4B1448ED;
-	Tue, 16 Jul 2024 13:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4E219AD4B
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721135572; cv=none; b=ow8YNo8rSP5Jmo/r3qpwEDW3sBt9DT87I8g6UQ3pee0JTz4ZM5I5RlTGTEnLPofPYn4u0bWtGY9iRa3sJEQBaDD7o+aZ0FdItfKyMKVYrl8aO9Ze2RL/UWEeazywg/NlKTagcZq32NpCxU8ansXKVOsX/0n4zW5MNWarrDz+Swc=
+	t=1721135685; cv=none; b=sssqUEBMu8cTbswlU6pq+vvoEtqVdRBFT3eornEOKCqRfZU1kSqgjcEs0ZF+YJOvlWKKUy/AKrtfFhpl9nMfxq2g/qltNj5BtVwKdlUBPFgFjUv3toiwqxWrNTDInT+KyCJmr099CDi34tKVRWsi+VtQYQs9aWTq7aVL57QDvVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721135572; c=relaxed/simple;
-	bh=0pbFXYblsR3UKbqkbGTRgs8/Y3F6rLYSgnaif3v3QMM=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=l8bxk1AUky3Ti0QeZB+2YuT4AGxjvj6lVDVJxxUVcdgMB+g4VyDULxF16kyUZBoFrVN7hVBR64S8YvYDya650WLwp/54Dnv/hm1bLm2DxYUa6HjRfdwnSTnC2zeZf9VykwRjGadIe82kKlara/D1Wl0NGkOUeXVr0k4DfOKk9lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=WBVwwIMD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FvlrSBVZ; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1721135685; c=relaxed/simple;
+	bh=6dRbIrshTheomuibRAqbFDbRKbFnbPCmtotF4+QiYF4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=W+Jc0754JGdVCr8vloxmBTZ18rV2XMiCbjxc9hKk1uT0eoDHu5f+WlLqxlVsg48XCG23ygjco4lvuAPmiQGJwXFrcaIHehgveKY0d13TxTI5JJaYEuTv09tayw/t+QptIoIyfHUan2j5+zakgEvSvf9Dd0LZmNPW23zo8v0+STs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S5FwofiY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WBVwwIMD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FvlrSBVZ"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id BF6001148052;
-	Tue, 16 Jul 2024 09:12:49 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Tue, 16 Jul 2024 09:12:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1721135569;
-	 x=1721221969; bh=0pbFXYblsR3UKbqkbGTRgs8/Y3F6rLYSgnaif3v3QMM=; b=
-	WBVwwIMD8tfmGCPF0098lIEiTE+lQYK4hC0bV/URb6+ohG5p+AQ1eI4nY6BMPLKr
-	ckk0uSHS+yLi44MBR1sCmmxGVqzhee59pJKePiHQ0wqo/3W1bjbFkqWulCPX4IfU
-	AacUYIvfVmcQ2e376BxGYhkPTQ0wJw8hFJk4YyEqh00pH3sCVKoZEW4u9TTpqMCx
-	gb4dgsUKDS9HAkHcvALJRjilyodm+P6WdcGSM+AsU4qGDc3aLcEvt8ubLOdRMQCr
-	I3gOJhc+uIdWE3pfPCFmo9RPR+e1K7evdgxf0gJJBqtultJid0nw8KnIyJVzaSvH
-	pdsLiR8sYWnm6/6IyTxGVw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721135569; x=
-	1721221969; bh=0pbFXYblsR3UKbqkbGTRgs8/Y3F6rLYSgnaif3v3QMM=; b=F
-	vlrSBVZIGhGDXGNDw5PI7qM4IJ15Ynh5BGogtppzPYkp6plzboubmx7niHEOQq6l
-	jBcvzxCjQIbLIyDqwqBhYJB1+Y1tnrh6WYfaFVhoba3XnbDui8IPD0puOmz5etNt
-	kF5BiMNmZ0EHrMIZziygj7fVaX71wlu39QrBZngFXhG9xvV5+mcO3+uuxb5kNi7r
-	fPV+l0D0djsjum52q2rk906yQxJawKw1DGUqPLNCx6fKSXli2ThF/3+PYmWvqxrM
-	QRvWEPVC/4I2Bqw/pa7EiXoJM9W1d3vukQiDTKD5RPVRI26qmzx4Qv7PkYxophvl
-	VkvH5rz2PLO/Y9tQrktlA==
-X-ME-Sender: <xms:0HGWZo4snpg3QYahBK24C7MCseiNHexn5Ke8SWQVcHfF3XErDenqng>
-    <xme:0HGWZp6oPpbtTJX2PjsCUJI_-DCSh7ZRbKIyTOJ54I9gijXEXjN6g-uMopQDGDjvw
-    HaxJKNpyVcgDg4LUG4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdeitdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
-    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
-    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:0HGWZncXNLHTnkXFVkCGAToKSPvwpH8A4nU_Ko6pdvGXwCFcq1hxCg>
-    <xmx:0HGWZtJT2lhgG2fAGM9c5cw4mJL8IzJSXi7vvao2H2jTO0LFIq0hfw>
-    <xmx:0HGWZsIgIJoPOkNzsM0-JHB2rXHRkT6dSibQIiXEoI32devFnUnpDg>
-    <xmx:0HGWZuza2mzzUmnbay7_yAwVsKHTwoGUq7f4vO3ytYI3TJLIodpFog>
-    <xmx:0XGWZqyAzUqnw-VT3wXadzDIeKiTs-UHlYFdLVZRBG9WMkW6eKOIOD5L>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7B5F736A0075; Tue, 16 Jul 2024 09:12:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S5FwofiY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721135683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0LEDQDLQ3briFZ7Dh19M97K7riFuoWHHeSMgTzHc0b0=;
+	b=S5FwofiYqKTbtJlnk3WZNjy7v1B1Gy5or6ga8f2GEr/b8iQHk+QCWY5+Fh2WYEmTOxoX78
+	84Ew5BuRyw7g7IfjmSqrSUxcMAkocZNpr6kygKd8kGUx0ksy40547Ry7vGyDA1YN7IodP7
+	tQZ7YzaR2JntZE8PyiYaJNc+e+oGZlo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-542-Rbj3c6HuMxubLRLB2laM_w-1; Tue, 16 Jul 2024 09:14:39 -0400
+X-MC-Unique: Rbj3c6HuMxubLRLB2laM_w-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-427ac40d4ecso902795e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 06:14:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721135678; x=1721740478;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0LEDQDLQ3briFZ7Dh19M97K7riFuoWHHeSMgTzHc0b0=;
+        b=Po5jokZ54tacVZhyICy4bS6DGGOWCVi/HZMWtIMRT1evChhbVbEiUgiXrYUS2H82SH
+         ahB7OQijE00lmiiaF+0b/0NLk3FUMaKRlonOCP0BIK8jaqBiRk9yluWg7GczdavL+bEM
+         S0ms5fOrBMftl8bLIkgApQiOYrokECjV00tflRQ2h0GIz8mf9nt8vQ+18Q0izJjkTS6E
+         OSWRdXgc9uRfxth2AoVxWw+jo2fGYNmsmwZQ9infHcl5pjHtvmfujxElpVtJRLQy+sKj
+         CMCob7kCxpjZVQruGzne3BhmD+sWfrkX+ddoj5PDOutKsw79q3TmdNmCJZBH4xvzAyri
+         Tl7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXN6aiRo329elRJDmJiX0c+2uFNeInQmRJCc/WpKJ89J5JqSdyHDlDTkA8bM1uFDj/vm2YjzEGlzNCutdg1IxbtdUFUTzGOV5tc5j1A
+X-Gm-Message-State: AOJu0YxnmVbKLip3304FIQqDaR0AhYCIPNEWpZzl33Ouh9KuZhT0O60Q
+	LqjN3Hsc1vozcwnSdJ4+JkDJYTnKIBeFFlgjArpOxoLfiNt3zTXzrPUNM4aWaDXxxail9c5c3N6
+	eRjt/Ryksv5VYb/G/5eSDaTCMkFzBG878ltrT2NWPoAGuwBnULWnr4einZjjA0g==
+X-Received: by 2002:a5d:47af:0:b0:368:4c5:b67 with SMTP id ffacd0b85a97d-368240c5cecmr1297770f8f.8.1721135678528;
+        Tue, 16 Jul 2024 06:14:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUbkZufXxQmRD68YJ0BeYGsi3kx+leKWXkuE2NaNvjicZkL5J0TGrRmp7vSDKiJutaHe6Utg==
+X-Received: by 2002:a5d:47af:0:b0:368:4c5:b67 with SMTP id ffacd0b85a97d-368240c5cecmr1297756f8f.8.1721135678126;
+        Tue, 16 Jul 2024 06:14:38 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:1738:5210::f71? ([2a0d:3344:1738:5210::f71])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e93c92sm129511955e9.22.2024.07.16.06.14.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 06:14:37 -0700 (PDT)
+Message-ID: <e5603fa0-0755-4b49-ad5f-9f999e8d4e3f@redhat.com>
+Date: Tue, 16 Jul 2024 15:14:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <54d9edd5-377e-4d9a-956f-8f2ba49d4295@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H5cDiwAWBgXx8fBohZMocfup3rbe-XjDjEzsLAUB+1BUQ@mail.gmail.com>
-References: <20240711-loongson1-dma-v9-0-5ce8b5e85a56@gmail.com>
- <CAAhV-H5OOXguNTvywykyJk3_ydyDiSnpc-kvERRiYggBt441tw@mail.gmail.com>
- <CAJhJPsXC-z+TS=qrXUT=iF_6-b5x-cr9EvcJNrmSL--RV6xVsQ@mail.gmail.com>
- <CAAhV-H5Um5HhbmcB1Se=Qeh2OOAeP34BAx+sNtLKge_pePiuiQ@mail.gmail.com>
- <b1a53515-068a-4f70-87a9-44b77d02d1d5@app.fastmail.com>
- <CAAhV-H5cDiwAWBgXx8fBohZMocfup3rbe-XjDjEzsLAUB+1BUQ@mail.gmail.com>
-Date: Tue, 16 Jul 2024 21:10:07 +0800
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Kelvin Cheung" <keguang.zhang@gmail.com>,
- "Vinod Koul" <vkoul@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Conor Dooley" <conor.dooley@microchip.com>
-Subject: Re: [PATCH RESEND v9 0/2] Add support for Loongson1 APB DMA
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 net-next] lan78xx: Refactor interrupt handling and
+ redundant messages
+To: Rengarajan S <rengarajan.s@microchip.com>, woojung.huh@microchip.com,
+ UNGLinuxDriver@microchip.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240716045818.1257906-1-rengarajan.s@microchip.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20240716045818.1257906-1-rengarajan.s@microchip.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 7/16/24 06:58, Rengarajan S wrote:
+> The MAC and PHY interrupt are not synchronized. When multiple phy
+> interrupt occur while the MAC interrupt is cleared, the phy handle
+> will not be called which causes the PHY interrupt to remain set
+> throughout. This is avoided by not clearing the MAC interrupt each
+> time. When the PHY interrupt is set, the MAC calls the PHY handle
+> and after processing the timestamp the PHY interrupt is cleared.
+> Also, avoided repetitive debug messages by replacing netdev_err
+> with netif_dbg.
+> 
+> Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
 
+## Form letter - net-next-closed
 
-=E5=9C=A82024=E5=B9=B47=E6=9C=8816=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=E5=
-=8D=885:40=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
-> On Mon, Jul 15, 2024 at 3:00=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygo=
-at.com> wrote:
->>
->>
->>
->> =E5=9C=A82024=E5=B9=B47=E6=9C=8815=E6=97=A5=E4=B8=83=E6=9C=88 =E4=B8=8B=
-=E5=8D=882:39=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
->> [...]
->> >
->> >> You said that you've accepted my suggestion, which means you recog=
-nize
->> >> 'loongson' as the better name for the drivers.
->> > No, I don't think so, this is just a compromise to keep consistency.
->>
->> Folks, can we settle on this topic?
->>
->> Is this naming really important? As long as people can read actual ch=
-ip name from
->> kernel code & documents, I think both are acceptable.
->>
->> I suggest let this patch go as is. And if anyone want to unify the na=
-ming, they can
->> propose a treewide patch.
-> Renaming still breaks config files.
+The merge window for v6.11 and therefore net-next is closed for new 
+drivers, features, code refactoring and optimizations. We are currently 
+accepting bug fixes only.
 
-This is trival with treewide sed :-)
+Please repost when net-next reopens after July 29th.
 
-Thanks
-- Jiaxun
+RFC patches sent for review only are obviously welcome at any time.
 
---=20
-- Jiaxun
+See: 
+https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+-- 
+pw-bot: defer
+
