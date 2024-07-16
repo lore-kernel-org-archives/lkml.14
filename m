@@ -1,168 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C33A1A38C2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B79F1A38D0;
 	Tue, 16 Jul 2024 18:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721154821; cv=none; b=fqYD3ghSQDAY2JNfJZ6f4p67DQTwZOYzPW/Yu/UYjnt1npuywho5YsV2p4wqfCSSRaRNr5O1KAN+sZHay3wUaQphpCynpCUDhqvNgyREM+I7DdVUMbF31Wc87zb3sP7lpFg0p27pU/jzr9M7A6owLoVpw74iZlM6sIRFE91egg0=
+	t=1721154821; cv=none; b=eUNu5jcjA8v1Bja67tibwtwvhODpHIjGkHDNHMH7l3UkCfSuUHSntiPYcI6iwh2npcs1zvFg+5rDIWl12biWQvxSIKdsCnqQNssvEGAdn+cymN+RcxdkTwHeMXco3Hc2sURUUcV2gyyYn+m8v4lKHygssq48dfK3Frh7unQuKgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721154821; c=relaxed/simple;
-	bh=mtGDAUdXJWHAEsDvZy5VJGLwCEj/vW4M9yrffQCipnc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QSvLoavYd4iSNiqJ4yXqYqTgjx40UgQFUandurUbUDwixu++/wUX941OLwQSpvZQB3DCPg4OFacvVr6cdu/rqHI1nt/n/ZOTMOQFzm6ADoEY6DqDCx/D1zT1ai2GwQ6HObJdxNtjiYseCNKLApyEbQsH23X9YIA5yInol3w5jek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNn1D8Nz; arc=none smtp.client-ip=10.30.226.201
+	bh=p3+cbQrtzD34rlMr4M+1CIjAqE6/GqsWTPXFKfSsxdw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fcUsKxVjBe3dfpfa4UN9nQGeHesZy0JQBy9scVVpPilIGfFBM1rb1Y6GRuuSAWImRkFux2aK7alX1u0K08/R6OBbU99xdwVr54lWyhIpBDNEceO87HXBAzul7M6jCeMqOK+WqXN0NTNsGFr2K8kEPNRlIFuytWl8XGl+RgvVR+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NH9hh+Dh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNn1D8Nz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56926C4AF0B;
-	Tue, 16 Jul 2024 18:33:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NH9hh+Dh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60F1AC4AF16;
+	Tue, 16 Jul 2024 18:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721154820;
-	bh=mtGDAUdXJWHAEsDvZy5VJGLwCEj/vW4M9yrffQCipnc=;
+	bh=p3+cbQrtzD34rlMr4M+1CIjAqE6/GqsWTPXFKfSsxdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kNn1D8NzDR6kZ4jhnp2Mw5VWOpWb3tS8Y0BpevT3rQg9bE4jwbBb3hMSEBTkQxfkR
-	 LR1sWR0zgzGPQxiql6fi1W42eb7Wwk0dxh9uSADAkPzJ6LLcMfnCC22Y+vmQWwlV+e
-	 yttBExHMCjfu9TQdC27YRurKJDhyz1CBgPHaUnjc/xCoWWg5n6nfJWuN9Ghi29+ZoZ
-	 K6o4tmlfYcg3dkZPcqVeINvv6UYJGffG0zEn6RlrX+HTXF4ycNCh43OCsjoO5U8P49
-	 UkDJ7wZDh8s/az/dzMRJ8QgEKjoGDM6KF/u5PU4Rfjz9QcjL1FeAfMO+AnHxBax3Bf
-	 Eqn7kvqtGFn5g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: John Hubbard <jhubbard@nvidia.com>,
-	Dmitry Safonov <dima@arista.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Andrei Vagin <avagin@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	shuah@kernel.org,
-	nathan@kernel.org,
-	0x7f454c46@gmail.com,
-	linux-kselftest@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 4/8] selftest/timerns: fix clang build failures for abs() calls
-Date: Tue, 16 Jul 2024 14:33:01 -0400
-Message-ID: <20240716183324.2814275-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240716183324.2814275-1-sashal@kernel.org>
-References: <20240716183324.2814275-1-sashal@kernel.org>
+	b=NH9hh+DhItnmgk775fsd6NbmWuiEbaBKpvEwb4dXxlZVeSj0GBRgJZlbYH9P7eb8A
+	 xO40NafFyNbr4aEBk6dxOSs3RR1cQl+IQ7xBq18iOceYhJTwog2wXUyD9fTB/VWU3Z
+	 N+Ul0eoljI4FJ9Kk9azWQhtuQNfHF+38VoIRKe6uQQT2eFcMD2IvNwPoFCkKv5u2Ph
+	 m7R+w1jXABvFjL2H+Y8jkeY4cJR4ag5NUYg+gqviveoCS76Ks0T/UQGjmeBx9nuy5D
+	 vW6HJujf3ru8ChCorbxi+D0KvcoeNH7VVORTaKzvd5e7MWTt0L+MP1C7QJkVYcUp2j
+	 j1gNQ1aX+Ktmg==
+From: SeongJae Park <sj@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	SeongJae Park <sj@kernel.org>
+Subject: [PATCH 5.15.y 2/8] minmax: sanity check constant bounds when clamping
+Date: Tue, 16 Jul 2024 11:33:27 -0700
+Message-Id: <20240716183333.138498-3-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240716183333.138498-1-sj@kernel.org>
+References: <20240716183333.138498-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.40
 Content-Transfer-Encoding: 8bit
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-[ Upstream commit f76f9bc616b7320df6789241ca7d26cedcf03cf3 ]
+commit 5efcecd9a3b18078d3398b359a84c83f549e22cf upstream.
 
-When building with clang, via:
+The clamp family of functions only makes sense if hi>=lo.  If hi and lo
+are compile-time constants, then raise a build error.  Doing so has
+already caught buggy code.  This also introduces the infrastructure to
+improve the clamping function in subsequent commits.
 
-    make LLVM=1 -C tools/testing/selftests
-
-...clang warns about mismatches between the expected and required
-integer length being supplied to abs(3).
-
-Fix this by using the correct variant of abs(3): labs(3) or llabs(3), in
-these cases.
-
-Reviewed-by: Dmitry Safonov <dima@arista.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Acked-by: Andrei Vagin <avagin@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[akpm@linux-foundation.org: coding-style cleanups]
+[akpm@linux-foundation.org: s@&&\@&& \@]
+Link: https://lkml.kernel.org/r/20220926133435.1333846-1-Jason@zx2c4.com
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+(cherry picked from commit 5efcecd9a3b18078d3398b359a84c83f549e22cf)
+Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- tools/testing/selftests/timens/exec.c       | 6 +++---
- tools/testing/selftests/timens/timer.c      | 2 +-
- tools/testing/selftests/timens/timerfd.c    | 2 +-
- tools/testing/selftests/timens/vfork_exec.c | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ include/linux/minmax.h | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/timens/exec.c b/tools/testing/selftests/timens/exec.c
-index e40dc5be2f668..d12ff955de0d8 100644
---- a/tools/testing/selftests/timens/exec.c
-+++ b/tools/testing/selftests/timens/exec.c
-@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
+diff --git a/include/linux/minmax.h b/include/linux/minmax.h
+index 1aea34b8f19b..8b092c66c5aa 100644
+--- a/include/linux/minmax.h
++++ b/include/linux/minmax.h
+@@ -37,6 +37,28 @@
+ 		__cmp(x, y, op), \
+ 		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
  
- 		for (i = 0; i < 2; i++) {
- 			_gettime(CLOCK_MONOTONIC, &tst, i);
--			if (abs(tst.tv_sec - now.tv_sec) > 5)
-+			if (labs(tst.tv_sec - now.tv_sec) > 5)
- 				return pr_fail("%ld %ld\n", now.tv_sec, tst.tv_sec);
- 		}
- 		return 0;
-@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
++#define __clamp(val, lo, hi)	\
++	__cmp(__cmp(val, lo, >), hi, <)
++
++#define __clamp_once(val, lo, hi, unique_val, unique_lo, unique_hi) ({	\
++		typeof(val) unique_val = (val);				\
++		typeof(lo) unique_lo = (lo);				\
++		typeof(hi) unique_hi = (hi);				\
++		__clamp(unique_val, unique_lo, unique_hi); })
++
++#define __clamp_input_check(lo, hi)					\
++        (BUILD_BUG_ON_ZERO(__builtin_choose_expr(			\
++                __is_constexpr((lo) > (hi)), (lo) > (hi), false)))
++
++#define __careful_clamp(val, lo, hi) ({					\
++	__clamp_input_check(lo, hi) +					\
++	__builtin_choose_expr(__typecheck(val, lo) && __typecheck(val, hi) && \
++			      __typecheck(hi, lo) && __is_constexpr(val) && \
++			      __is_constexpr(lo) && __is_constexpr(hi),	\
++		__clamp(val, lo, hi),					\
++		__clamp_once(val, lo, hi, __UNIQUE_ID(__val),		\
++			     __UNIQUE_ID(__lo), __UNIQUE_ID(__hi))); })
++
+ /**
+  * min - return minimum of two values of the same or compatible types
+  * @x: first value
+@@ -103,7 +125,7 @@
+  * This macro does strict typechecking of @lo/@hi to make sure they are of the
+  * same type as @val.  See the unnecessary pointer comparisons.
+  */
+-#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
++#define clamp(val, lo, hi) __careful_clamp(val, lo, hi)
  
- 	for (i = 0; i < 2; i++) {
- 		_gettime(CLOCK_MONOTONIC, &tst, i);
--		if (abs(tst.tv_sec - now.tv_sec) > 5)
-+		if (labs(tst.tv_sec - now.tv_sec) > 5)
- 			return pr_fail("%ld %ld\n",
- 					now.tv_sec, tst.tv_sec);
- 	}
-@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
- 		/* Check that a child process is in the new timens. */
- 		for (i = 0; i < 2; i++) {
- 			_gettime(CLOCK_MONOTONIC, &tst, i);
--			if (abs(tst.tv_sec - now.tv_sec - OFFSET) > 5)
-+			if (labs(tst.tv_sec - now.tv_sec - OFFSET) > 5)
- 				return pr_fail("%ld %ld\n",
- 						now.tv_sec + OFFSET, tst.tv_sec);
- 		}
-diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
-index 5e7f0051bd7be..5b939f59dfa4d 100644
---- a/tools/testing/selftests/timens/timer.c
-+++ b/tools/testing/selftests/timens/timer.c
-@@ -56,7 +56,7 @@ int run_test(int clockid, struct timespec now)
- 			return pr_perror("timerfd_gettime");
+ /*
+  * ..and if you can't take the strict
+@@ -138,7 +160,7 @@
+  * This macro does no typechecking and uses temporary variables of type
+  * @type to make all the comparisons.
+  */
+-#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
++#define clamp_t(type, val, lo, hi) __careful_clamp((type)(val), (type)(lo), (type)(hi))
  
- 		elapsed = new_value.it_value.tv_sec;
--		if (abs(elapsed - 3600) > 60) {
-+		if (llabs(elapsed - 3600) > 60) {
- 			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
- 					      clockid, elapsed);
- 			return 1;
-diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
-index 9edd43d6b2c13..a4196bbd6e33f 100644
---- a/tools/testing/selftests/timens/timerfd.c
-+++ b/tools/testing/selftests/timens/timerfd.c
-@@ -61,7 +61,7 @@ int run_test(int clockid, struct timespec now)
- 			return pr_perror("timerfd_gettime(%d)", clockid);
- 
- 		elapsed = new_value.it_value.tv_sec;
--		if (abs(elapsed - 3600) > 60) {
-+		if (llabs(elapsed - 3600) > 60) {
- 			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
- 					      clockid, elapsed);
- 			return 1;
-diff --git a/tools/testing/selftests/timens/vfork_exec.c b/tools/testing/selftests/timens/vfork_exec.c
-index beb7614941fb1..5b8907bf451dd 100644
---- a/tools/testing/selftests/timens/vfork_exec.c
-+++ b/tools/testing/selftests/timens/vfork_exec.c
-@@ -32,7 +32,7 @@ static void *tcheck(void *_args)
- 
- 	for (i = 0; i < 2; i++) {
- 		_gettime(CLOCK_MONOTONIC, &tst, i);
--		if (abs(tst.tv_sec - now->tv_sec) > 5) {
-+		if (labs(tst.tv_sec - now->tv_sec) > 5) {
- 			pr_fail("%s: in-thread: unexpected value: %ld (%ld)\n",
- 				args->tst_name, tst.tv_sec, now->tv_sec);
- 			return (void *)1UL;
-@@ -64,7 +64,7 @@ static int check(char *tst_name, struct timespec *now)
- 
- 	for (i = 0; i < 2; i++) {
- 		_gettime(CLOCK_MONOTONIC, &tst, i);
--		if (abs(tst.tv_sec - now->tv_sec) > 5)
-+		if (labs(tst.tv_sec - now->tv_sec) > 5)
- 			return pr_fail("%s: unexpected value: %ld (%ld)\n",
- 					tst_name, tst.tv_sec, now->tv_sec);
- 	}
+ /**
+  * clamp_val - return a value clamped to a given range using val's type
 -- 
-2.43.0
+2.39.2
 
