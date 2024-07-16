@@ -1,144 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2107.outbound.protection.outlook.com [40.107.20.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343D319AD6A
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 13:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721136547; cv=none; b=fNb88m7ITXTSqGh/jpZTUZEuV2m+DJNAkF2GoWzeNk0o+hUaJA0/63tFeeRv83TgkcmHaKLSrtj1mI73P45/O4ydPQ0bn+g+VnCtmNi7ajwbOaFM3C4TUcQDZ8kb6OExRFb40nX0w0pl7xxRdg7jHvskDVh6X/NAZQlRHwHqYaM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721136547; c=relaxed/simple;
-	bh=en2hpGCOSWHtJ/B1AM+dr+mAW08W/xS33ztxUMt1+Vo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M1gF8sDtnl1eN0I7Wpa+LTtUFBv2FUj3iMExRQdRWvpBe5aa/EVx3u/Z+SGXdG+sIGYKH1EZfzEBxz4karMJsUtlA7xh1p2PaCxnxb7OkPmcFa49/zsf6JHJVDvKhJy0R1ncpEGkeVztVBFj3Y2tbdtv8+NQs6W6cHnI7tNuOdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kv8ILBqv; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C1719AD6A;
+	Tue, 16 Jul 2024 13:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.107
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721136555; cv=fail; b=jMBdUDmqoG189jJnlcMNu2NwZ97ItwpAchjmhcp/mUcJ9iifi92SvhuwOfm04R+KuJIEXMD0f+RDqbSZOztPp9Y9cDIn6DUrLyv7kyRDtsEJ7FtDEt3XlGLscc1FEOCgVHaPi5VRRSqva80Rk9AyD0CjG7GarFyTwubqoTxV6xE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721136555; c=relaxed/simple;
+	bh=Bhw6DPgPgIQo7XhDxRZDIOyPETT9BsXDd6FjxRoIjd4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bTRVwO7Homgt8K2kTGBrK0dartUWtOcZJcSrfAQ0WLEA1xfWjNxYUyktg6PhiPH4+ISgQnSbo2tGSRaIkRaoEdEomCp7XN8jFRKSjZTdE2ty3eW2jBBISfkna67ldmirH3VSdCPxSM+iItYYqDy4cfVa9979cbDehNRLLYMqgrk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=endava.com; spf=pass smtp.mailfrom=endava.com; dkim=pass (2048-bit key) header.d=endava.com header.i=@endava.com header.b=V111EsEH; arc=fail smtp.client-ip=40.107.20.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=endava.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endava.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kv8ILBqv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721136546; x=1752672546;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=en2hpGCOSWHtJ/B1AM+dr+mAW08W/xS33ztxUMt1+Vo=;
-  b=Kv8ILBqvaYTcb73/82CsoeTV9utPAAOWacT37RROdH1VI2upLJNDBgEg
-   610D+4p9Cr+/ScGEIaoi5GmgSzlcdlz70SKD4i2Opefjp8RXLEnD0lxaw
-   tJG8Sj5WBHRgzMx3+Cp+jCz7L7KYtgNObmBJMJvsogJ+tBsHQ4EEcU50H
-   B1t1xj5fVpwugwCjeQ56gyWnMTYRkITRSfmO/dhSZQPIx33d+QBa5ETBN
-   vS/Gz4pinJKY1/XPd0ZSpeXz/zoLqoQLvZgsQqsBAblmBPij8g3GmPSTt
-   8sWbJQo4w0yZkX7CkF92ZPKr1e4vB07Qlk6kbz6douyTWHyi9ue8Noa52
-   w==;
-X-CSE-ConnectionGUID: nLFZLsS4R3umg4gqIY2Xhg==
-X-CSE-MsgGUID: bP6wzWsLQxWrySjvfsL55Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="29250652"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="29250652"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 06:29:05 -0700
-X-CSE-ConnectionGUID: dJPDN9VLRGKcpeMjn4vcYg==
-X-CSE-MsgGUID: HDexv/yeT3+D54G7UI/KCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="55158751"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa004.jf.intel.com with ESMTP; 16 Jul 2024 06:29:05 -0700
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	peterz@infradead.org,
-	mingo@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH] perf jevents: Don't stop at the first matched pmu when searching a events table
-Date: Tue, 16 Jul 2024 06:29:51 -0700
-Message-Id: <20240716132951.1748662-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+	dkim=pass (2048-bit key) header.d=endava.com header.i=@endava.com header.b="V111EsEH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tSIyXA0xs/5p4nb+dNQyZQlRftbL0ufax2eyiqUFzFwfN05LQFHXUZMBhJUxMYYz7wFh6K2P5reqB0S7O2zCXqGEplTbLTJYYxdpI+j+HopULoVAXFrGMvDwlrCzvxKy+ahi10SWYOovBJ0FGbeUDWOTSasuLM50kJ9xf6Kr8T7z94kqFpxqX5hjnbexdzvfC8SQy6uCs2Cxukw0x53mxRCE+rNi/FAkLBqBdrDiqEiF2h+iHj/OCsS6paMYUBQMFepjxcWfK4mjw6b+Rzmd/Rx2XGsf4IEezEL3YKJ2pdwRSX7q69RuKvKE2Er2oKipVw1gAigWNDkyDZ34WtWRKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bhw6DPgPgIQo7XhDxRZDIOyPETT9BsXDd6FjxRoIjd4=;
+ b=d8xkdaFhqpGPDBWSEda0jgLDFvQm+1E055bkVT4evBRiYVrnxs3s10JdBHYHHF2DFiOahJUmK/DR/hsP6a1sUzmyDCCXppdmwNfaUag4FjA/eRH0SmSIiZr7f/8korSi7NqrVwZK+/dPdH8FAAGwW/f4XgbyoN71cZGi3JsCqMbgvyliAuD+eDg7TYzDHSc8f6kKsYMOfnA50hqpPRAz8x5Oan84tpVeMLTeMNwwdXgtr2t4+jiKpE2SRbRoJycE967MHOuqsCUpIcPytzxXIWz7oaNq/Y1e1yUutNzaGNOjH6Oy5mgV5YkODp0vyBJ5I/gz+azs4o+nsa0p2D8WxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=endava.com; dmarc=pass action=none header.from=endava.com;
+ dkim=pass header.d=endava.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=endava.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bhw6DPgPgIQo7XhDxRZDIOyPETT9BsXDd6FjxRoIjd4=;
+ b=V111EsEH8kDtjWr7jw+6ot6y3O0Mf5xwLfhcVfNAm1dwVPXFDKB+QJlVhXm5h47PNixCmY3LirForm9NU8eL7bpEY63dQjjJVvBCbK4k+vsry2am8vdLFsgiapLJ2yBxfaObyhRZVj7dzaxDtEsdXeL4648gxl7H9JA+HnFhoqWjcnMQfBHAStxt4Pk0C1eXc9zr2NX7uEKGtQt47r3+gKlh0yOrlTYG9J68ji3NMOAdQOodUMEbzFM+8XyGM9dbhyxbGh8lTJy/wQR13UwJhDX3dtGNjFYu7la/FdHnukja4bFQ+OxdGYgwp0hcSqawsbcYE+OJm3EwhzkGesRHhg==
+Received: from AS5PR06MB8752.eurprd06.prod.outlook.com (2603:10a6:20b:67d::20)
+ by GV1PR06MB9140.eurprd06.prod.outlook.com (2603:10a6:150:1af::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Tue, 16 Jul
+ 2024 13:29:08 +0000
+Received: from AS5PR06MB8752.eurprd06.prod.outlook.com
+ ([fe80::72f2:c654:1827:9c41]) by AS5PR06MB8752.eurprd06.prod.outlook.com
+ ([fe80::72f2:c654:1827:9c41%3]) with mapi id 15.20.7784.013; Tue, 16 Jul 2024
+ 13:29:08 +0000
+From: Tung Nguyen <tung.q.nguyen@endava.com>
+To: Paolo Abeni <pabeni@redhat.com>, Shigeru Yoshida <syoshida@redhat.com>
+CC: "jmaloy@redhat.com" <jmaloy@redhat.com>, "ying.xue@windriver.com"
+	<ying.xue@windriver.com>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"tipc-discussion@lists.sourceforge.net"
+	<tipc-discussion@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net] tipc: Return non-zero value from tipc_udp_addr2str()
+ on error
+Thread-Topic: [PATCH net] tipc: Return non-zero value from tipc_udp_addr2str()
+ on error
+Thread-Index:
+ AQHa1yUvQPqLAGQ2A0GB9aoYG5W6f7H49WZwgAAEmICAAD0xAIAAA3+wgAAaDgCAAAO9YA==
+Date: Tue, 16 Jul 2024 13:29:08 +0000
+Message-ID:
+ <AS5PR06MB8752EA2E98654061F6A24073DBA22@AS5PR06MB8752.eurprd06.prod.outlook.com>
+References: <20240716020905.291388-1-syoshida@redhat.com>
+ <AS5PR06MB8752BF82AFB1C174C074547DDBA22@AS5PR06MB8752.eurprd06.prod.outlook.com>
+ <20240716.164535.1952205982608398288.syoshida@redhat.com>
+ <596fd758-11ad-46c0-b6f1-2c04aeba5e06@redhat.com>
+ <AS5PR06MB875264DC53F4C10ACA87D227DBA22@AS5PR06MB8752.eurprd06.prod.outlook.com>
+ <c87f411c-ad0e-4c14-b437-8191db438531@redhat.com>
+In-Reply-To: <c87f411c-ad0e-4c14-b437-8191db438531@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=endava.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS5PR06MB8752:EE_|GV1PR06MB9140:EE_
+x-ms-office365-filtering-correlation-id: d17d0f4e-cd9d-4949-15b0-08dca59b459f
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?cUFCNVk0T0xMcjFHaGt2dEk1Vm1rdmxYanp2Tkhya09weGVxTitZaWxVcmRX?=
+ =?utf-8?B?U21hVE84OWVOWGFEcHhqbHBJN2cvUnhuSU4zb1hkVWMrZkFrWVRTUGs3LzU5?=
+ =?utf-8?B?Mnp3ODlnUHNnQzYrL2xMMjZ3eXdENlJFUGx1TGZIZjE1NzhIL0MvOGZvZE16?=
+ =?utf-8?B?NHdBVFF3YkQvTjhZYWpNY25ML2N0TGRxaUR3Y1M0cVIrbnZmbE9aYWtZUUZH?=
+ =?utf-8?B?dnc4UkZCM01xM3ZueDRhM09JWmQ4ZFF1bjBHY04yZXVaNmorV3FTcGhFM3oz?=
+ =?utf-8?B?eUkybnBXekU4T2VUUURFb0xNQUUyak5DcFhmQ3dteCsxR3JaMUdOV2NZZFRN?=
+ =?utf-8?B?T1dTSWdmS3lqMW1FUXNDNXpKcWJ4QlpSK0ZzTmlGNnlGcEZ6QkQwZHRneURF?=
+ =?utf-8?B?NlhLMXJicDRkVUhRM1NuZm9tTytHcnNTQ0ljU0g5QStwVUY5V1BBb2JOdG5j?=
+ =?utf-8?B?S0QzbkxDQmtYSmhOZmc5N2JUSVJhdCtMOWQ3Z0ZlZVFLMlZ6WG9MNjVpMnU0?=
+ =?utf-8?B?MkVhSmF5QkNnaXdaM05tL1lidHlWSSswSTdsMEorMHFnLzcvakJPSDZnbjdH?=
+ =?utf-8?B?SlNyTVp6UjlIK3RIZE9nUzZiRnBtQWpPOTlYUUllSzFRZTl5Y3k4VEwwQlMw?=
+ =?utf-8?B?S0wzekpRb2NxS1pqeXN2V1dlS2lYU0FhSUFWaG9kNmE2RS9ZWmk4YlcrcDRY?=
+ =?utf-8?B?S3hqU2VaTmF5djBSV0NnTkFML3FsaXJrRWtiTWJaMU8wMnA0cnNCa1UwVkpK?=
+ =?utf-8?B?VzNHTGhTRUlVR2krUE5ia1F4SS94RlEvbFV4YUxqMXBkZGd3aUtCTEdCdVBt?=
+ =?utf-8?B?MTRWU0l4RmZaNVhMdEVFU2FNSUoweGdEenlsenVXaHcrdHYxRnA3TXQzZFpw?=
+ =?utf-8?B?U2Y1RWJITFBJTkl4SlpiVzJaZ3ZHR0poVDV5VUNPWkFvQ3VzR0Rodk5id0U1?=
+ =?utf-8?B?ZXF4RDhQTFN1Q2M1Ti85cUlTSnJlTzdoS3I2RWlmcE0wVXIxSUFheHhXZzlq?=
+ =?utf-8?B?NXZoUzMvUWZaVVlOWkVmTkhjeFk2ZzhVZ2RCUHRJd1Z3aW91a2NLNXlMZUVh?=
+ =?utf-8?B?L2RCYk52a3F3VWxZcGtqcXdkcE5wSzRzbnBxYWZISkZzaGM3b1lWTVlVdXRS?=
+ =?utf-8?B?dGhoQ09FR2dBU3JuOWRuR0lPb1FwSzYwTEtjcXFtR3I2YUNqbFNPVXl5Zjcx?=
+ =?utf-8?B?ZnlnTTdVTXdwR1djOW9pZXFYK2g5dCtndXIzcm1pTXN4SSsxRGg1c1UxelNT?=
+ =?utf-8?B?Zjc1QzY2aWsvOWo4ZUdFUUNZNlV4ZENxZ3B6ekx6Z3lsRTdSdWxGMjRhTHdP?=
+ =?utf-8?B?bzVKOFRTdlY2MVJxaitzOXBqYldXL1FUbzMxdkxObDZWb3BBaENsdHB4STI3?=
+ =?utf-8?B?K2pFQ1FKVVVLellocEZBdkNGY3RWWXdsdWZqNS9IbEIwL3dnSnh1UDl0VThG?=
+ =?utf-8?B?NnFsblE1ZWdKOG9ZU1FwU3RWUDNHV0cvZ2hmbUhWajdNR3NkRkYvWnMvd2l2?=
+ =?utf-8?B?cDh0UHZNSXAvUUVtV3hIdGVnN2JvM0V1U1FQMkVNQzc0SjRMamhTMXp6cC9T?=
+ =?utf-8?B?UndvdWd4WlF5ZWtITmt0WU5CVmpUTFJUY0hMYkZJUWZLVFB0eXI1eGJXNm5u?=
+ =?utf-8?B?bTdENktpZHl3SXc5anRwdlgrZVBkSDduRE8vdGYwVHNqSEdXK09FWHc0eHZ4?=
+ =?utf-8?B?Zzk4Y0VwamZkRnVPNlZJTEs5MTVZckZpWCt0MDNhSmI5OUtFWjR0dzFUblNZ?=
+ =?utf-8?B?WCs4QUxwbCtjcGxxaHZjdzE4bERjWTJSb3hvckVnQjZsOWoyRXJBZHBaWlhu?=
+ =?utf-8?B?MEMxM240T0V6MzRQczlraFoyTEhyN3pNYzJBNUVpSGFSYXdCVTZKZ09EYmZL?=
+ =?utf-8?B?OHJ1WlkrQWJFTUxDM2x0TmMzUEpjTGJNR0FUeEpTZVZEV3c9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS5PR06MB8752.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?TlpuUlMvVWtvcmlTSUhkUE1tQ0xUTDVUUmc5T1NSQVVjZVo2MjFkQTEwUzdr?=
+ =?utf-8?B?QkZMV2tWRGVIYzZwZFBhckRhaDAwVzhxc2MwZnAxTHMxemRGN0VWaDd5QjU4?=
+ =?utf-8?B?ZnVqSXVCMG8vc1RxNlIvZXkrTWdIbFByazhMNVUvKzlycExIYXF4bG12MCtO?=
+ =?utf-8?B?NDlQT01rSzIwTEtIM09FYy83NVZGSURCemxQVVdPQUMxUS8rUUtVWWs4anRh?=
+ =?utf-8?B?SGJ5SHQ2N1VSdjFOZnZpdjk1dDdBRzM4Mm1IclhsRkJYRmZXL2xxYTRIVW5Y?=
+ =?utf-8?B?TEt4Zjg1VGtkNzloQ0lxQ1dsQk9HSC9QQTJLMHR2OHMzTnVOUWhqa2Uwcngr?=
+ =?utf-8?B?QU02YndzSVNBNXJDUDZ0dElaTkdFTk5TRnJkeFgyMzd3ZlAwWUdsODBCVHRw?=
+ =?utf-8?B?aGVLaS9WQ2x4dWpFc0g5clN0RHUxcmYwenNpOWhocDkrSG5MazE2Qm12akY4?=
+ =?utf-8?B?OFhlMVBnb2NnVkFWRWtRY1plZ2hkajdLNGRNWUgvS0dWUTVrR2hEazJPYWhx?=
+ =?utf-8?B?OXMydFpJcGdJWFN0eE43Y3RXZHk5UUlpT1N1VU96YXV6cnVrTmVSeXVMR01Z?=
+ =?utf-8?B?SExUQmdtc1VrSWRITjNITFd0aGhMY2RMVzVSeW9zc2FCT0dGOWwzY2UxWlMy?=
+ =?utf-8?B?VE16Mm9MRngyVGFZekdyWGJ1a2tuRk9UU3ZxMjlTSyszNzlSM3BsMStRb0ZG?=
+ =?utf-8?B?MGRwSmZWeUh5M0RLL2ZRTnFpbzA0M0lnTkZrY084ZWo5dW5LdXJ6eXIzOFIz?=
+ =?utf-8?B?cS9CcXhWSXQwT0NMOXlzdDJOb0ZuRHdudkZjRUx0eTFZYjhYSGIyL25pbnNi?=
+ =?utf-8?B?ZlBhTllBYUFOaWp6YVhyNVM4Sm1MNCtKWGs5TGlsUTR1M3Npdm9LbllhQTgx?=
+ =?utf-8?B?dlhwdDRwMWVZY1JzcTI4M2paaDliMmhDbmRla1B0MUliN0tmWHRUYnNSb0FR?=
+ =?utf-8?B?KzBnVnB0UDJGa1RvMy9oSTR6Zmk5NWFPTzdKSTdrSnNMWXZwSmVlT3NnQVdO?=
+ =?utf-8?B?a1hBTy9IMGE1T3htUHoxUDhsWFFCQk9IOXYvYU4wQXo3d3Y0d08zUDdjQ2pU?=
+ =?utf-8?B?OHQrSzd4N2xySmJTLzU5d2w0YWNjSnpFaDY0NVd3bGxTYm5LbXI0WDNIMXBR?=
+ =?utf-8?B?VUpPb0hzLy9QbVBzVzZwVHhYSGlhOEhSTVBsSVJmclVCbXpKM2FtQ2dISFNB?=
+ =?utf-8?B?THpoOUNVK2tjenB5TExOaFIxa1EydEI3QkRlNVZpWWF5WExwdFdDYWYwYUFJ?=
+ =?utf-8?B?ajJHT3VDVk1DRE5rMnRGSnpITU1yRWFLU3h3UkpGSEVTZG4vd3o4eEhnQnNK?=
+ =?utf-8?B?NnJldG9KTkJCbmExVXdvcU5LZHN4czV1cWJvZXBaN0RyOC9zNVJkR1VKOGVj?=
+ =?utf-8?B?eExDcm5UN1hCaVBCK3drVmlTd1lGeGNVRTVqdEplZEpKaEhyc2lTNW9NQnYy?=
+ =?utf-8?B?U21ocXVYTFlFYmNEVUwzdDFRMVB1Y0owUFRhNE9XbzVJSzFHZTlqZ0loR0da?=
+ =?utf-8?B?VVhvbCsvK1VLdkd3RmxFT0pwZUdNaXAyTnB0cnFkZEwwbnphSlRIbGhlRWFZ?=
+ =?utf-8?B?NWZIcXNnd09YeUZZeDZZSHFZdXFVdDdLMDNsWXFHSm5CTnpiUHlSSERMV0RK?=
+ =?utf-8?B?OUdWMFhWOTBXWWMybEwvR3F4VVdyNkp0Tm45TlZBY1VaU3lPU0RBcjZCWWhU?=
+ =?utf-8?B?VkZObEZ2ZUN4bjlBaEQ1K0QyQ1YyMit0L2psNVVZeW9yUGxlNFdnM3BObit6?=
+ =?utf-8?B?ZGt1ZXR1bkdGMjFFTTMyMjhSNTQ0c0FCRG1QTVJSUXV5dTYwRlBNVys2M1hB?=
+ =?utf-8?B?UDdHSFpXOWhmRm40ZmtBRW5iR2VxNDVSTTR2cVBjZXhZMHN1bm5RVks5N0V3?=
+ =?utf-8?B?OFZDR0g3bHlUdTRad040ZWswOHZtOUZtK05iUC9oMkFJS1FnaCtYNDZ5ZEVn?=
+ =?utf-8?B?SnR3K2xMZGUxYWRPdEZSTlo1aXpNS2RnOUQzNE5pSTQvRytXSmFHNDNRTnRI?=
+ =?utf-8?B?ZVJnMkQza2hYdm1maUxXOHVtbi94aVdGS0xHdUsxblhkK0RJRy9yUGkybHo1?=
+ =?utf-8?B?QUtDQ3ArOXAvZVN6NFNzVWc3KzlzYVpuOG5EdzVWWjVuVUdjQUlqRXlnQ3R3?=
+ =?utf-8?Q?fU27WQoz+fp5YvtPuOFM12ctE?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: endava.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS5PR06MB8752.eurprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d17d0f4e-cd9d-4949-15b0-08dca59b459f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2024 13:29:08.6306
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0b3fc178-b730-4e8b-9843-e81259237b77
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A/afcV28DlhoZGLAStCBjKfrzw0/PnfoaH4x0gWzawSqsVNf3petmRrEb66IbqmuIfz70oPlHplIbid1jSTM4BZl9ZpNnQ9RU/q3IspUfkk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR06MB9140
 
-From: Kan Liang <kan.liang@linux.intel.com>
-
-The "perf all PMU test" fails on a Coffee Lake machine.
-
-The failure is caused by the below change in the commit e2641db83f18
-("perf vendor events: Add/update skylake events/metrics").
-
-+    {
-+        "BriefDescription": "This 48-bit fixed counter counts the UCLK cycles",
-+        "Counter": "FIXED",
-+        "EventCode": "0xff",
-+        "EventName": "UNC_CLOCK.SOCKET",
-+        "PerPkg": "1",
-+        "PublicDescription": "This 48-bit fixed counter counts the UCLK cycles.",
-+        "Unit": "cbox_0"
-     }
-
-The other cbox events have the unit name "CBOX", while the fixed counter
-has a unit name "cbox_0". So the events_table will maintain separate
-entries for cbox and cbox_0.
-
-The perf_pmus__print_pmu_events() calculates the total number of events,
-allocate an aliases buffer, store all the events into the buffer, sort,
-and print all the aliases one by one.
-
-The problem is that the calculated total number of events doesn't match
-the stored events in the aliases buffer.
-
-The perf_pmu__num_events() is used to calculate the number of events. It
-invokes the pmu_events_table__num_events() to go through the entire
-events_table to find all events. Because of the
-pmu_uncore_alias_match(), the suffix of uncore PMU will be ignored. So
-the events for cbox and cbox_0 are all counted.
-
-When storing events into the aliases buffer, the
-perf_pmu__for_each_event() only process the events for cbox.
-
-Since a bigger buffer was allocated, the last entry are all 0.
-When printing all the aliases, null will be outputted, and trigger the
-failure.
-
-The mismatch was introduced from the commit e3edd6cf6399 ("perf
-pmu-events: Reduce processed events by passing PMU"). The
-pmu_events_table__for_each_event() stops immediately once a pmu is set.
-But for uncore, especially this case, the method is wrong and mismatch
-what perf does in the perf_pmu__num_events().
-
-With the patch,
-$ perf list pmu | grep -A 1 clock.socket
-   unc_clock.socket
-        [This 48-bit fixed counter counts the UCLK cycles. Unit: uncore_cbox_0
-$ perf test "perf all PMU test"
-  107: perf all PMU test                                               : Ok
-
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/all/202407101021.2c8baddb-oliver.sang@intel.com/
-Fixes: e3edd6cf6399 ("perf pmu-events: Reduce processed events by passing PMU")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/pmu-events/jevents.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index ac9b7ca41856..97a3b018f865 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -923,7 +923,7 @@ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
-                         continue;
- 
-                 ret = pmu_events_table__for_each_event_pmu(table, table_pmu, fn, data);
--                if (pmu || ret)
-+                if (ret)
-                         return ret;
-         }
-         return 0;
--- 
-2.38.1
-
+PklmIG9ubHkgdGhpcyBvbmUgcmV0dXJucyBhIG5lZ2F0aXZlIGVycm9yLCBtb2RpZmljYXRpb24g
+dG8gdGhlIGZ1bmN0aW9uIHBvaW50ZXIgY2FsbHNpdGUgd2lsbCBiZWNvbWUgcHJvbmUgdG8gZXJy
+b3JzIChhbmQgc3RhYmxlIGJhY2twb3J0cw0KPm1vcmUNCj5mcmFnaWxlcykNCj4NCkkgcmVhbGx5
+IGRvIG5vdCBzZWUgYW55IGlzc3VlIHdpdGggcmV0dXJuaW5nIGEgbmVnYXRpdmUgZXJyb3Igd2hp
+Y2ggaXMgdGhlIGNvcnJlY3QgdGhpbmcgdG8gZG8uIFRoZSBmdW5jdGlvbiBwb2ludGVyIGNhbGwg
+cmV0dXJucyAwIG9uIHN1Y2Nlc3MsIG5vbi16ZXJvIG9uIGVycm9yIGFzIGV4cGVjdGVkLg0KSSBk
+byBub3Qgc2VlICJwcm9uZS10by1lcnJvciIgd2hlbiBpdCBjb21lcyB0byBiYWNrcG9ydC4NCkFz
+IHNhaWQsIHByb2JsZW0gaXMgcmV0dXJuaW5nIDEgaW4gaW5maW5pYmFuZCBhbmQgZXRoZXJuZXQg
+bWVkaWEgdGhhdCBzaG91bGQgYmUgY29ycmVjdGVkLg0KDQpUaGUgaW5mb3JtYXRpb24gaW4gdGhp
+cyBlbWFpbCBpcyBjb25maWRlbnRpYWwgYW5kIG1heSBiZSBsZWdhbGx5IHByaXZpbGVnZWQuIEl0
+IGlzIGludGVuZGVkIHNvbGVseSBmb3IgdGhlIGFkZHJlc3NlZS4gQW55IG9waW5pb25zIGV4cHJl
+c3NlZCBhcmUgbWluZSBhbmQgZG8gbm90IG5lY2Vzc2FyaWx5IHJlcHJlc2VudCB0aGUgb3Bpbmlv
+bnMgb2YgdGhlIENvbXBhbnkuIEVtYWlscyBhcmUgc3VzY2VwdGlibGUgdG8gaW50ZXJmZXJlbmNl
+LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBhbnkgZGlzY2xvc3VyZSwg
+Y29weWluZywgZGlzdHJpYnV0aW9uIG9yIGFueSBhY3Rpb24gdGFrZW4gb3Igb21pdHRlZCB0byBi
+ZSB0YWtlbiBpbiByZWxpYW5jZSBvbiBpdCwgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5
+IGJlIHVubGF3ZnVsLiBJZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgaW4gZXJyb3Is
+IGRvIG5vdCBvcGVuIGFueSBhdHRhY2htZW50cyBidXQgcGxlYXNlIG5vdGlmeSB0aGUgRW5kYXZh
+IFNlcnZpY2UgRGVzayBvbiAoKzQ0ICgwKTg3MCA0MjMgMDE4NyksIGFuZCBkZWxldGUgdGhpcyBt
+ZXNzYWdlIGZyb20geW91ciBzeXN0ZW0uIFRoZSBzZW5kZXIgYWNjZXB0cyBubyByZXNwb25zaWJp
+bGl0eSBmb3IgaW5mb3JtYXRpb24sIGVycm9ycyBvciBvbWlzc2lvbnMgaW4gdGhpcyBlbWFpbCwg
+b3IgZm9yIGl0cyB1c2Ugb3IgbWlzdXNlLCBvciBmb3IgYW55IGFjdCBjb21taXR0ZWQgb3Igb21p
+dHRlZCBpbiBjb25uZWN0aW9uIHdpdGggdGhpcyBjb21tdW5pY2F0aW9uLiBJZiBpbiBkb3VidCwg
+cGxlYXNlIHZlcmlmeSB0aGUgYXV0aGVudGljaXR5IG9mIHRoZSBjb250ZW50cyB3aXRoIHRoZSBz
+ZW5kZXIuIFBsZWFzZSByZWx5IG9uIHlvdXIgb3duIHZpcnVzIGNoZWNrZXJzIGFzIG5vIHJlc3Bv
+bnNpYmlsaXR5IGlzIHRha2VuIGJ5IHRoZSBzZW5kZXIgZm9yIGFueSBkYW1hZ2UgcmlzaW5nIG91
+dCBvZiBhbnkgYnVnIG9yIHZpcnVzIGluZmVjdGlvbi4NCg0KRW5kYXZhIHBsYyBpcyBhIGNvbXBh
+bnkgcmVnaXN0ZXJlZCBpbiBFbmdsYW5kIHVuZGVyIGNvbXBhbnkgbnVtYmVyIDU3MjI2Njkgd2hv
+c2UgcmVnaXN0ZXJlZCBvZmZpY2UgaXMgYXQgMTI1IE9sZCBCcm9hZCBTdHJlZXQsIExvbmRvbiwg
+RUMyTiAxQVIsIFVuaXRlZCBLaW5nZG9tLiBFbmRhdmEgcGxjIGlzIHRoZSBFbmRhdmEgZ3JvdXAg
+aG9sZGluZyBjb21wYW55IGFuZCBkb2VzIG5vdCBwcm92aWRlIGFueSBzZXJ2aWNlcyB0byBjbGll
+bnRzLiBFYWNoIG9mIEVuZGF2YSBwbGMgYW5kIGl0cyBzdWJzaWRpYXJpZXMgaXMgYSBzZXBhcmF0
+ZSBsZWdhbCBlbnRpdHkgYW5kIGhhcyBubyBsaWFiaWxpdHkgZm9yIGFub3RoZXIgc3VjaCBlbnRp
+dHkncyBhY3RzIG9yIG9taXNzaW9ucy4NCg==
