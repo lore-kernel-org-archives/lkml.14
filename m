@@ -1,100 +1,105 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27B91A01A1
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 18:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04C91B94F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 18:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721155696; cv=none; b=rueAQdqKE3hC+BXFRyjhsdFn85J0GWN1a4bAuLmYonhxp8GgCr1HdBi5aTpv/6lfTh+BwtWY3shIXoRVjSsOmHcf6lA/vqMskfUl3PSpU3Iutk0CmFFImMkecAFy/kYHB3uXYEWvEgVG0KVBoH7z83mELKRsST2PYFl0HYF14X4=
+	t=1721155741; cv=none; b=MLIEdCvIfxSe/fCO6tXqLvBY172Q8GWYPHq9auK9E3cfk/5Jjbyl2MKgQ1DMyPete2NM0BSkQMviwulCU78kyaokcZcZH4gHhHEVvOzMkOWtl42QVxOqL6GFsBKOAGp+KPzW6P7Zb+yvTLaUl19/0Bg2VufNPFUDJs/sPc29B2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721155696; c=relaxed/simple;
-	bh=X11kgaTdDhmi0C3IZxYTC5o1Z7yzGXY7w5xx+39RX4U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U+6pfEuuEPzvXDX2DwEPESlWv4+g8YQMbRTRa6aghoteoy9MP5nDqdtQDE9e9ocHKfOxKxBA3jEJXwjoyMLIC+dferuaiBVRqJF35iQh1M60MgDsn65TA1cV3j8+r8PKHbeUHDjOTuwoz82u4XVGc78oitAYThhk+/OZugHJaNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Qm7qPBQS; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1721155741; c=relaxed/simple;
+	bh=4a9oizCqoNQJ0k84IxD0VO3ymLl8h+xl8RQJLQgE1k4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NqxieNU0aOUKVZGlfggbDDF5CyqKWo7Ncnx8Hj/J60hoZjaeJRTaZwhbQJkQi0hyAKtABg+o73u7of9GeRqWbKHJuOjPvyP8wQWhR26xtkLt1u3Fktgt9HtpoSiWmsNawZtgYaxAPsN6CsXcIyiGbFh5sqJnBxNVW6T/RfkqI9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VtQ2jsFu; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Qm7qPBQS"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2eedeca1c79so42211101fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:48:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VtQ2jsFu"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fc424901dbso6399705ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 11:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721155693; x=1721760493; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QOIRFFMAy+ymDlCZCc5cJzSJew0SEJjSB81xICfFquk=;
-        b=Qm7qPBQSEL0rx77QBB9BB6GChZETOq/el9D3wCJTV9C6M2xFi8w1UkSkiNZTNR8PR6
-         pExm1PCWrU7/dfHIq63U4Bqv7al77QDTc/m/XXnL0e2S9jV/Y63S2lzJChC6hHuoqayY
-         8u16WcxuPYZsx3hJYcUCajlVNdhequKTShnom4V9nFB5ngNdeZJUVf54mvuqGqgYcPOl
-         r0vtuzBeamgvg00QNff4DGwP3AvBq2qCqYbAEIRvE+q+jUf4CzDh9S7KsA51BEuq6vsq
-         U+SDQeDXzno/8j04T/XMAyzA4Sg24CXmQwdAf5z8o3YMY11wCsQZGAfeq6d2GhjbfrFo
-         FlEg==
+        d=google.com; s=20230601; t=1721155739; x=1721760539; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KjC4n0At76vs87q3pB+e4WmyBPsYZBikspG4sQouzTE=;
+        b=VtQ2jsFu8yzIsgFNYjiO+59YcWfvQf2cNYZsuqBT5FaLYwwo1XdqDkUlQNqLjUsm2v
+         PxSZ/jG1TiwZIBnQalREVFIr3KRvrN9ky8WZ0mzGSB2+hxTiR/68Dk+4TqepXhke+Dlu
+         YYL7cTn4/mJ5/AaDTEDOi3/x4+/QFWOREar2iPm7lgPfWmFBGl4DVRorSQCaBA4JlnyX
+         VmqxRuDYKNuxmmiaUANK+Vj6+IYAnWBW/Bq70l7BEHH+BtkqBV3Kb7R3anh02UwAJ04B
+         gfu2FapXLqo+fnp30YX9Mge+F2sJp8tK9fVHOo7xgCnllX4BrQLxSZmE1MjfCUGlXLcL
+         PV/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721155693; x=1721760493;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QOIRFFMAy+ymDlCZCc5cJzSJew0SEJjSB81xICfFquk=;
-        b=VclSfoBVF2PqSKa8QodiMaclDGGw241pm5DMYSML6/Oaebs61c1YrQjbZfHj/PZU2Y
-         Yn8w6Z7GeeXC7+qBixHpL/lHfKdKBndPqtPjAGDccyHLKuNChTi0fcUO5TAAZgIeXlHG
-         k1T8Nmzl1rJXxCT0yJW1BenF02s4Ayf2CX5vIdErCFj4pGuseUyjoeg+flQBztfLZNYC
-         DomjTl4eIAauVy1uuh9UKJUzMJgI4kinnNuz0tTA7s2y2d1GIGxbA0Nw2Op5XOsNGKDF
-         ar21CrPzpdJxf4V2JO9NAIXrxTSzun+38W2BphSRCyVgF3ka6VQJfX2CHqBDkT3EZo5d
-         q+3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZAlfc2WkaQBcbjCfez/mRPjrNl/rnvpeeFR5GQIz9lkuLDbiuG9pxSM8qNMKqY6QgbQaARAhluPrTOlvj1UAAst3BG/iwlrqsri9k
-X-Gm-Message-State: AOJu0YyNGCM3dU1M2iTNe+S3sm3rr3fhiaTmWhIgIpWznZWuhY05hGjc
-	yGrHOgGPfRYTbZ0RJw5ZjL+qupbovvV0w7eM2+d926ucQzsBtcz0R+OqNdL5T+2+wfyN79zXrTF
-	Et6NODuePDdobMADVO70JJop7MUnGJt68nrWt3u7y1CN0mZ9Pcgc=
-X-Google-Smtp-Source: AGHT+IEXAQSYmHQAGA83zyqUP4xjyj7ChqZ7HFkW8OFzsMU7WEeq6kHwuFzNS/cTYjdZuODkqgutB6HO1xnuMMd2Y80=
-X-Received: by 2002:a2e:9094:0:b0:2ec:63f:fe91 with SMTP id
- 38308e7fff4ca-2eef41cc7admr23824741fa.38.1721155692809; Tue, 16 Jul 2024
- 11:48:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721155739; x=1721760539;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KjC4n0At76vs87q3pB+e4WmyBPsYZBikspG4sQouzTE=;
+        b=Lg/tCYU4E952D+4zIDV3vRMXrhf8LtYvdM/VQJl7tvO1V+N5RFl4xjGCaruhiNBAqH
+         c+LMvoOh06JYFH7VVRId6r0ltkEZplViXdqo3Xj2q8/MBLJSdHmX2A/HaOzzITeW541+
+         UltLcysoPf3ENJArIyGg6kbvyEDJmASdJ5eeALl9TM6WL/ibx6ZYJPih+GBd1cQg7qQ9
+         78aGw3c/OI4637+9r09tm4+ltUho4syNBVD0X6SVaWXNqudfnU0n1bQEwSNv8l+gGd7/
+         gQUjxAE5WMH24gW+iYU2EijzMWCe0ajiK3baFIF+Mm8QvjU4xK1K4dwcnEHCQoX600Pc
+         Q5yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaotc5IgC4yrzz4a8dOvqFF2iZB9J87Bo1/k+MnUYgmJuB84HX6YJSaULCGpy7hN05J1xZ70C2p7FqXq+j3tlPO3n64v6p5aVsrm3q
+X-Gm-Message-State: AOJu0Ywj03PbLwLfjljTf09bEJLPwXvIlRFQ5bvFDRtXYhhfK6OJviKS
+	YBL68yisoHMxppzaXsL/Fdk40XPtXMXZiWhZDj7DthVUhFkLO9MLwv7zViFTbA==
+X-Google-Smtp-Source: AGHT+IFmEp4bRpiiSSOiyiVjI/X1kRp2cSYdIsnb99+Xoyu44AkxRUTvlxWO2rhInC3LaXp2lP+U2A==
+X-Received: by 2002:a17:902:e945:b0:1fb:247b:aa2a with SMTP id d9443c01a7336-1fc3da1012amr26878315ad.59.1721155738703;
+        Tue, 16 Jul 2024 11:48:58 -0700 (PDT)
+Received: from google.com (33.5.83.34.bc.googleusercontent.com. [34.83.5.33])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc5050csm61519755ad.268.2024.07.16.11.48.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 11:48:58 -0700 (PDT)
+Date: Tue, 16 Jul 2024 18:48:54 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: Todd Kjos <tkjos@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org,
+	kernel-team@android.com, syzkaller-bugs@googlegroups.com,
+	stable@vger.kernel.org,
+	syzbot+3dae065ca76952a67257@syzkaller.appspotmail.com
+Subject: Re: [PATCH] binder: fix descriptor lookup for context manager
+Message-ID: <ZpbAlnAeCv-eiNzF@google.com>
+References: <000000000000601513061d51ea72@google.com>
+ <20240716042856.871184-1-cmllamas@google.com>
+ <CAHRSSEwkXhuGj0PKXEG1AjKFcJRKeE=QFHWzDUFBBVaS92ApSA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716152318.207178-1-brgl@bgdev.pl> <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
-In-Reply-To: <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 16 Jul 2024 20:48:01 +0200
-Message-ID: <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHRSSEwkXhuGj0PKXEG1AjKFcJRKeE=QFHWzDUFBBVaS92ApSA@mail.gmail.com>
 
-On Tue, Jul 16, 2024 at 8:08=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 16 Jul 2024 at 08:23, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > Let's remove the public menuconfig entry for PCI pwrctl and instead
-> > default the relevant symbol to 'm' only for the architectures that
-> > actually need it.
->
-> This feels like you should just use "select" instead.
->
-> IOW, don't make PCI_PWRCTL_PWRSEQ a question at all. Instead, have the
-> drivers that need it just select it automatically.
->
+On Tue, Jul 16, 2024 at 10:40:20AM -0700, Todd Kjos wrote:
+> If context manager doesn't need to be bit 0 anymore, then why do we
+> bother to prefer bit 0? Does it matter?
+> 
+> It would simplify the code below if the offset is always 0 since you
+> wouldn't need an offset at all.
 
-But this patch does it. PCI_PWRCTL_PWRSEQ becomes a hidden symbol and
-the entire submenu for PCI_PWRCTL disappears. There's no question in
-Kconfig anymore.
+Yes, it would make things simplier if references to the context manager
+could get any descriptor id. However, there seems to be an expectation
+from libbinder that this descriptor would be zero. At least according to
+some folks more familiar with userspace binder than myself.
 
-On the other hand there isn't really any driver that would require
-this. It's a specific platform that needs additional handling of
-resources before the PCI devices can be detected. This is why we do:
+I think we can revisit this expectation though and also look closer at
+the scenario of a context manager "swap". The procs can still reach the
+new context manager using descriptor 0. However, this may cause some
+issues with operations with refs such as BC_INCREFS/BC_DECREFS.
 
-    default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
+AFAICT, the context manager doesn't even need a reference. But while we
+dig furhter into this I think the best option is to keep the behavior
+the same for now: reserve descriptor zero for the context manager node
+unless it's already taken. Changing this is non-trivial IMO.
 
-If we selected it from the ATH1[12]K entry then we'd be building it
-for many platforms that don't need it.
-
-Bartosz
+--
+Carlos Llamas
