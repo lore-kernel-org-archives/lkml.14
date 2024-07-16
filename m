@@ -1,124 +1,109 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5414155894;
-	Tue, 16 Jul 2024 08:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF98A13B293
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721118552; cv=none; b=Qa8zscGwwa1JORZE1TlalXGN8xd20xU2MypPfrvyraEkcBnuwPcheCqxFTug852gLc5TiuX8hoh9zNdRQf3qONaRg26UllEIgFic3flWbWhXHVI3UiOIeX62URl1bXzLdEI6DqWZ/YHkvfvu8nXO6CPI2/6q2keI03EfwwgBOLA=
+	t=1721118551; cv=none; b=Qmn3ztE5UfOiFRaUivGZD2zMl/XdU670ZXW75QO5OxvON8zgZg8hTh52lj1yUBoA89bFYjIr+RE1/z8KvFEBaRhqlwUI9ixoUG/BtPPx1JS3T/FJVTdq5WNjh3fDmgqlqZrN5ZzVHC5YJ+IsZs/O9FKa2OBC4NDKT0xSwRIsumM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721118552; c=relaxed/simple;
-	bh=k5rauxJZxRMqIwamxiJQ/u3NdfbdkSgq9d419Vy+jBM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Hl4SowgcF28MBnFdj4i7gNFCWaXP2tFTGiAXG+bRsZfjSWEeYEePib+jtn2NkeBJVsHMhpv8RRY3v4OXdtkfYU/QqnKP814pJunjeVsywITDkRg+aEfCXu49sgJI/yO9xmEOtX4SsNlGzbB/TfEDehtv8KUOMdtF6fr6RzGGvRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from inp1wst083.omp.ru (81.22.207.138) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 16 Jul
- 2024 11:28:54 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
-	<davem@davemloft.net>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Mimi Zohar <zohar@linux.ibm.com>, Sergey
- Shtylyov <s.shtylyov@omp.ru>, <linux-crypto@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] crypto: mpi: add NULL checks to mpi_normalize().
-Date: Tue, 16 Jul 2024 11:28:25 +0300
-Message-ID: <20240716082825.65219-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1721118551; c=relaxed/simple;
+	bh=sMB82OguDZsIsb9IELWDCVXbHCAu/5+FMCSt1zJ5C3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=NdN+g0emggA6U2O5uLT8Vu32LPZdi8DeTKs9OgDyFjnqZEuh4JnNkYXr5IAA1qn/eYGzpLWzSO9smzwp5zkNlMxzE0uXm1UpNuNIJJ0noJK49SVizyJOjUt+bbvMNOB3RdlAOaL5azyvA8Pqq7DRAK67ugxz+IV9fhOfiYz0J9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=RWHUsHg0; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="RWHUsHg0"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70b31272a04so3935231b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 01:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1721118549; x=1721723349; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0cHEfw05PzIXTBho9roSLu3dox3EYU5nHarCYBHiFzg=;
+        b=RWHUsHg0lMXMRaYFzyjv+GOl1spBu0kApgGsmRneAVCz14jSZVUSTR1CJMWQqRzFOS
+         Spt1jLgEZouVJ4foez2VKY4isDqS0zwB3gez3BoM8ZuCBLgk7+396N9jc688s6oeGxEf
+         BZl27yEFbw8HueHNEP1qDWHQCOVVp1WSPsXQ5SGAJdtlV2x7u501gGklAWqDcLebcuce
+         ovtJoRS6Fshu6iX5gUtHVNU3NTQwP9wT1IZBq+49Nluj4czffUrTPH6WU/XYQRs5UFvs
+         Vm5lJf6YnLRI0WDMn079WE9cww/egclnMbjFvgDKKVAghDX8t2xpo4H86jNxGhhLMm6L
+         JN5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721118549; x=1721723349;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0cHEfw05PzIXTBho9roSLu3dox3EYU5nHarCYBHiFzg=;
+        b=PY3lDKKnhW39vyWOQIm7vtSa7pA/5ZG/OchzFWxAhS4hI97p1mNE9Vf+jIOsSUqzZB
+         z8DLoSQrvqde/+c4EUWbdH5/qOlnWA5qMv13Z6c6ZdSq4P91PIuRkZxKOE8kWwpM80Zj
+         6dWybrq6/WYYrVK8C41XvBcpVH88JjDWPi4FZuUWrBhmO8S9dGzRsxsJNgtROnv656Zp
+         jGw1i4kwGrnMfsDanQvc3g5GPNa0PaLIHyurg9lXytfREkmulz5XspzyJXXqePDE99xv
+         rbWMu4jPSPE2kqmDDoumIKvopuVvCDJPWEXbacd/czyBEY3Ung2FnFIYGAn622ZHP92e
+         MMzA==
+X-Forwarded-Encrypted: i=1; AJvYcCX05vBtoTwft9IHjVCoRSeq7buZllAYZ3mxgvkeI9s/y436+nMS0B8/jxWdT+CeoMHW6i3rMsBSNyumKrf6uA7hUxDIiq5b7fSfdLz9
+X-Gm-Message-State: AOJu0YxlOIjZmy8anu+f1JsmIjoEPKxi1vL6gAaYnO9E3YxLOsK8O5PW
+	kIy3leRKsueS9DRdzi3+w9RfbUF+K0Q/g61MLPrdnEOuwxiaBjpcb2Prmjdaato=
+X-Google-Smtp-Source: AGHT+IE3qUg41F90doDcsAXrAz8l7EtcoFuvjXP3rjxDD5uv2FyCzJPVH1EglS0lBSr/iPxY4WEPfg==
+X-Received: by 2002:a05:6a20:8427:b0:1c0:ebca:963d with SMTP id adf61e73a8af0-1c3f1e73544mr1985199637.4.1721118549100;
+        Tue, 16 Jul 2024 01:29:09 -0700 (PDT)
+Received: from lvzhaoxiong-KLVC-WXX9.huaqin.com ([116.66.212.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7e110sm5714347b3a.121.2024.07.16.01.29.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 01:29:08 -0700 (PDT)
+From: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+To: dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	linus.walleij@linaro.org,
+	dianders@chromium.org,
+	hsinyi@google.com
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Subject: [PATCH v3 1/2] dt-bindings: HID: i2c-hid: elan: Introduce Elan ekth6a12nay
+Date: Tue, 16 Jul 2024 16:28:50 +0800
+Message-Id: <20240716082851.18173-2-lvzhaoxiong@huaqin.corp-partner.google.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240716082851.18173-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+References: <20240716082851.18173-1-lvzhaoxiong@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 07/16/2024 07:59:51
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 186530 [Jul 16 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 24 0.3.24
- 186c4d603b899ccfd4883d230c53f273b80e467f
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;inp1wst083.omp.ru:7.1.1;81.22.207.138:7.1.2;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 07/16/2024 08:05:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 7/16/2024 7:02:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-If a->d is NULL, the NULL pointer will be dereferenced. It
-is necessary to prevent this case. There is at least one call
-stack that can lead to it:
+The Elan ekth6a12nay touch screen chip same as Elan eKTH6915 controller
+has a reset gpio. The difference is that they have different
+post_power_delay_ms.
 
-    mpi_ec_curve_point()
-      ec_pow2()
-        ec_mulm()
-          ec_mod()
-            mpi_mod()
-              mpi_fdiv_r()
-                mpi_tdiv_r()
-                  mpi_tdiv_qr()
-                    mpi_resize()
-                      kcalloc()
-
-mpi_resize can return -ENOMEM, but this case is not handled in any way.
-
-Next, dereferencing takes place:
-
-    mpi_ec_curve_point()
-      mpi_cmp()
-        do_mpi_cmp()
-          mpi_normalize()
-
-Found by Linux Verification Center (linuxtesting.org) with Svace.
-
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
 ---
- lib/crypto/mpi/mpi-bit.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes between V3 and V2:
+-  1.  "ekth6915" isn't a fallback, modify it.
+v2: https://lore.kernel.org/all/20240715073159.25064-2-lvzhaoxiong@huaqin.corp-partner.google.com/
 
-diff --git a/lib/crypto/mpi/mpi-bit.c b/lib/crypto/mpi/mpi-bit.c
-index 070ba784c9f1..d7420bdb4ff2 100644
---- a/lib/crypto/mpi/mpi-bit.c
-+++ b/lib/crypto/mpi/mpi-bit.c
-@@ -29,6 +29,9 @@
-  */
- void mpi_normalize(MPI a)
- {
-+	if (!a || !a->d)
-+		return;
-+
- 	for (; a->nlimbs && !a->d[a->nlimbs - 1]; a->nlimbs--)
- 		;
- }
+Changes between V2 and V1:
+-  1.  Respin the series on top of v6.10.
+v1: https://lore.kernel.org/all/20240704085555.11204-2-lvzhaoxiong@huaqin.corp-partner.google.com/
+---
+ Documentation/devicetree/bindings/input/elan,ekth6915.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+index a62916d07a08..f683048fd0c4 100644
+--- a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
++++ b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+@@ -24,6 +24,7 @@ properties:
+               - elan,ekth5015m
+           - const: elan,ekth6915
+       - const: elan,ekth6915
++      - const: elan,ekth6a12nay
+ 
+   reg:
+     const: 0x10
 -- 
-2.34.1
+2.17.1
 
