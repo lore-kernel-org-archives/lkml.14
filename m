@@ -1,109 +1,82 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09547AD24
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 02:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3FB3FF1;
+	Tue, 16 Jul 2024 02:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721096923; cv=none; b=bdBjNS6K/DfU/dQjjrFGX1yLZwvi8+7kvGpywl5SdsGHU3JN5AeljMgGZaDtqL0CqMJUF8sG926uO8G0Ap1PG5F1QrG667T2uZe5Hpu9eyGWkIGskNJVecagSxvrykeFyV0kfkRAXZV//n7/mPnrPhi+wxygfz2eZPBUO38vXnE=
+	t=1721097012; cv=none; b=T3iWoqsr/3jTy4EuratlQ2QeYn56d+hdhos/AzSS+x4fbT5lxNU57qFI9fhBM4601C7gpv+c9stoI2eF3D3aCnMKe3Qi7OwAHkxS2cjcDucglGMao712YhpBpGxMSJZ7PZ3pmuDU9WM/W7km60UJBjWJDMVsr3V9QritHYXecNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721096923; c=relaxed/simple;
-	bh=zGyyVLQsZBlUDTSxT3K8gfH3oa1CjyI1ZTiGP21b5sM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V5l5VWWAANtnnUv2jjLNfL3EbgxUH20L6D0YYDyrBm0ukhW97zY8zDMoMTQ7pFUqVxfZiK/pD2/to+1mfquS/NMef57hMWlzGgE/JzFQ3oVYZfMt4zL70jGjbS9HSJ6MSDOudqQkN9AZnLh/OXIYyIyEnru3/B7YoS42Z1f0K7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NTAusPSc; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1721097012; c=relaxed/simple;
+	bh=zWPoxjIUescuLRN6EN/TYCrlS38Yi8wt1NDsC+Jgxgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IFMcWlujNdAIJWncfXVKMosASoSBCf5NYS5vYpMRqY6ycVLchHDmR16T4DQPXIp1Y542I7A2EMWJDTvzUJ+y/Jd2MmfMUpLo8mYK14NJ2b96y2o/Y9LdNViTE3Wd3MvYpx9twFN9K3uOIr3H6PRgnmZpLJl5ruQh972za5xrCYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sFYzLipJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NTAusPSc"
-X-Envelope-To: kent.overstreet@linux.dev
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721096919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O1mujR3vP2Iz9uVp53noz/jO9KfAisyw45Xfjm48+HU=;
-	b=NTAusPScl9gsv4KjVF0LzveVhAUYesQc7ZaWNzuqzJnO7NLdBRCIcXIwRIMKwoqL2LVipO
-	OMrFXf3TnqgNBgEab1VPfPPtyUVzdWxgHEmm9TD4Og7rqtYjWq8ZbHT1rFAH3v1u0CN9jV
-	wgqw+dnphKMegVJew+Tb/aywoHQdKvQ=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: tangyouling@kylinos.cn
-X-Envelope-To: zhengqi.arch@bytedance.com
-Message-ID: <7db60e36-9c96-4938-a28d-a9745e287386@linux.dev>
-Date: Tue, 16 Jul 2024 10:28:33 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sFYzLipJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Aw654SugnjJczSIIfOrslrpuf0osXoeKMVCrP53YdIY=; b=sFYzLipJsVRqF0elx7Ztu/ihFk
+	wdhigaVoIO79xWApfxdOM948hevDWpVVYTVzB4Yg1x0cOtdiAQx7vuOH7xGFUYKB/8SLlXROBO3t4
+	bO3aMCaKaxrkEjQ5C1X4kfyggUaealmhU1eave2sSCpcNUIuoU5ZGxIAcM/s5+OVadvRTX9g9Cimo
+	lm3qURXoN6Jegof3aLZFVb5p807AxxbmuGBUFwihTi0VRhdK97BxjmHuihUUOfjmNnCB4zH9+VQJ1
+	qM5/9LdCyW10EV1V4pFHmD9YCPX/yf6cVuIhBZQU96XWhqsP/xQS/B1MXBmQjiahpGUO5zay/qIFE
+	zDNPlS5Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sTXx8-0000000Gcnb-2KEP;
+	Tue, 16 Jul 2024 02:30:06 +0000
+Date: Tue, 16 Jul 2024 03:30:06 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] filemap: fix error pointer dereference in filemap_fault()
+Message-ID: <ZpXbLr0JeybnV6af@casper.infradead.org>
+References: <20240716022518.430237-1-make24@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm: list_lru: Fix NULL pointer dereference in
- list_lru_add()
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>,
- Qi Zheng <zhengqi.arch@bytedance.com>
-References: <20240712032554.444823-1-youling.tang@linux.dev>
- <sd32qchit33aafht27utinrz5dizw62qbtwdmwbtugqrlglmtx@6aitsotgqnpi>
- <8ce42a2e-783f-4244-8e75-21dcd578adf5@linux.dev>
- <oxzh24oit3ulkl5at66c4g3bsyo7z6jd54757yrkgqbeftfgjz@qlzktn3nrkpl>
-Content-Language: en-US, en-AU
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-In-Reply-To: <oxzh24oit3ulkl5at66c4g3bsyo7z6jd54757yrkgqbeftfgjz@qlzktn3nrkpl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240716022518.430237-1-make24@iscas.ac.cn>
 
-Hi, Kent
+On Tue, Jul 16, 2024 at 10:25:18AM +0800, Ma Ke wrote:
+> This code calls folio_put() on an error pointer which will lead to a
+> crash.  Check for both error pointers and NULL pointers before calling
+> folio_put().
 
-On 12/07/2024 23:49, Kent Overstreet wrote:
-> On Fri, Jul 12, 2024 at 12:28:57PM GMT, Youling Tang wrote:
->> Hi, Kent
->>
->> On 12/07/2024 12:07, Kent Overstreet wrote:
->>> On Fri, Jul 12, 2024 at 11:25:54AM GMT, Youling Tang wrote:
->>>> From: Youling Tang <tangyouling@kylinos.cn>
->>>>
->>>> Note that list_lru_from_memcg_idx() may return NULL, so it is necessary
->>>> to error handle the return value to avoid triggering NULL pointer
->>>> dereference BUG.
->>>>
->>>> The issue was triggered for discussion [1],
->>>> Link [1]: https://lore.kernel.org/linux-bcachefs/84de6cb1-57bd-42f7-8029-4203820ef0b4@linux.dev/T/#m901bb26cdb1d9d4bacebf0d034f0a5a712cc93a6
->>> I see no explanation for why this is the correct fix, and I doubt it is.
->>> What's the real reason for the NULL lru_list_one, and why doesn't this
->>> come up on other filesystems?
->> We can break it down into two questions (independent of each other):
->> 1) Error handling is necessary when l (lru_list_one) is NULL here.
-> No, you're just hiding the actual bug - since I wasn't clear, I'm naking
-> this patch.
-We should use kmem_cache_alloc_lru() instead of kmem_cache_alloc(),
-similar to the [1] modification.
+Have you observed this, or do you just think this can happen?
 
-Apply the following patch to fix the problem:
+If the former, please share the crash.
+If the latter, please document the path which can lead to this
+happening.
 
-diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-index f9c9a95d7d4c..79a580dfb5e1 100644
---- a/fs/bcachefs/fs.c
-+++ b/fs/bcachefs/fs.c
-@@ -227,7 +227,8 @@ static struct inode *bch2_alloc_inode(struct 
-super_block *sb)
-
-  static struct bch_inode_info *__bch2_new_inode(struct bch_fs *c)
-  {
--       struct bch_inode_info *inode = 
-kmem_cache_alloc(bch2_inode_cache, GFP_NOFS);
-+       struct bch_inode_info *inode = alloc_inode_sb(c->vfs_sb, 
-bch2_inode_cache, GFP_NOFS);
-         if (!inode)
-                 return NULL;
-
-Link [1]: 
-https://lwn.net/ml/linux-kernel/20220228122126.37293-5-songmuchun@bytedance.com/
-
-Thanks,
-Youling.
+> Fixes: 38a55db9877c ("filemap: Handle error return from __filemap_get_folio()")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>  mm/filemap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 657bcd887fdb..cd26617d8987 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3420,7 +3420,7 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+>  	 * re-find the vma and come back and find our hopefully still populated
+>  	 * page.
+>  	 */
+> -	if (!IS_ERR(folio))
+> +	if (!IS_ERR_OR_NULL(folio))
+>  		folio_put(folio);
+>  	if (mapping_locked)
+>  		filemap_invalidate_unlock_shared(mapping);
+> -- 
+> 2.25.1
+> 
