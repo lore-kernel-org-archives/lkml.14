@@ -1,87 +1,63 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8926FBE
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE2618028
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721101196; cv=none; b=WVUNJ1vnDrbM7KZ38M1zlc/zcAlpgKzgYG7w0uRYU3tt9bx4UXZSLYbCzhFLTEuIGjwU8DHIgpYX2xKOOQdykdatS5tD30h6O0VxsiITLtEuhO0y35jpzf0mAclX3NUh/mNxZMW6uSzUO5Bkc/gmvzt519Ka2KJlPvIQNV4nIl4=
+	t=1721101299; cv=none; b=YDBkF3q325zPdmcIdHK1o820tEkBHQgGGd/AEKlrcuHZkqdd2Xxxl5gcvsxyHJdB8kxZeBMYbR4fvfIuAXh4VCxjxDJUzfjKfHBDNy/asiuV6auQxIvxf3jZDy2nu2vSec10Ptp0D/Uw9/t2eCMdFz6NEm8Pcr2iZOB2KCQB6Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721101196; c=relaxed/simple;
-	bh=AECL3245aH9LasPOKsBDeo/aDvM87K8dxPjag1rojiI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H6x1sNRW93zFaZgvWzGMSfV+FAjN5joVf3hClfiMWYF188FumyXqCNNq3trr0RK0iWnEm4TPCvtrlxah9lSX9Q3MhwlSt5GSgCbZM6PFOI6Tp+LbRQCORGdQkuxnoT8u2xYEmD6nhyYeJuZAzW/a1Mlv0fw7q/2fbfA7o6Mu7Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WNPrt2XRKz1HFJr;
-	Tue, 16 Jul 2024 11:37:18 +0800 (CST)
-Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
-	by mail.maildlp.com (Postfix) with ESMTPS id 63F7314011B;
-	Tue, 16 Jul 2024 11:39:50 +0800 (CST)
-Received: from huawei.com (10.173.127.72) by kwepemd200019.china.huawei.com
- (7.221.188.193) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 16 Jul
- 2024 11:39:49 +0800
-From: Miaohe Lin <linmiaohe@huawei.com>
-To: <akpm@linux-foundation.org>
-CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] mm/hwpoison: reset hwpoison filter parameters in pfn_inject_exit()
-Date: Tue, 16 Jul 2024 11:35:16 +0800
-Message-ID: <20240716033516.606582-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1721101299; c=relaxed/simple;
+	bh=es8gWhaM4gPuBXgBcmPIH+KUHr9WrLzw7oDfgEQNtXQ=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QBvy4HqEttCelHAto8F/s1tUd/kdVJAFNLN1epQYDEx6SOjzUVn4tYGT4I2A0oQzoDR6hZ2P87cP6TGHFmE9UaPn61lxYFMVJwPaJkC4K5a3YxfDeKWjh7i8WI+pCKyxwOW13QIm4emzY935lcgIrsT4Coh7m+YUH31u91l1uUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/zzXPfW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/zzXPfW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D6CDC116B1;
+	Tue, 16 Jul 2024 03:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721101299;
+	bh=es8gWhaM4gPuBXgBcmPIH+KUHr9WrLzw7oDfgEQNtXQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=o/zzXPfWoxB+ZaL72xzlmHpsDRefElM/m2Vbe7fVrklHDUB+cBo5VDcdIXD1skWM0
+	 8yEMgbMzo7UezHdyau2iQWySldqN4Gs3iYdyPcjG0Lr8+6IKyKDBKn1MAK8Ok7P/Ic
+	 LhT6uOWCL26/Xo2P+X1Omk/tdzWDzvazdQ/UtX4I20UjgDfebJzf6v9eAPhFd3MbfW
+	 A67WzvubMLoxJXv0shq3PQkJLqNcRLE9c/+rLIqC0oFHopJkzJ1bnOJFAjEnqc6v0f
+	 iKAZDzsweMQ128ePRio/ditpNq66cjawc0MCuaXuAL01hT4KxheXKzzpoihSCj8k//
+	 sRwPboXVpMmKw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 54C74C43443;
+	Tue, 16 Jul 2024 03:41:39 +0000 (UTC)
+Subject: Re: [GIT PULL] x86/alternatives for v6.11-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240715105528.GAZpUAIBt5b-zr4ot5@fat_crate.local>
+References: <20240715105528.GAZpUAIBt5b-zr4ot5@fat_crate.local>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240715105528.GAZpUAIBt5b-zr4ot5@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip x86_alternatives_for_v6.11_rc1
+X-PR-Tracked-Commit-Id: 0d3db1f14abb4eb28613fbeb1e2ad92bac76debf
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 208c6772d3839203fa34a8c77dd1fb7750c4f34a
+Message-Id: <172110129933.18508.7669870237341168237.pr-tracker-bot@kernel.org>
+Date: Tue, 16 Jul 2024 03:41:39 +0000
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd200019.china.huawei.com (7.221.188.193)
 
-When hwpoison_inject module is removed, hwpoison_filter_* parameters
-should be reset. Otherwise these parameters will have non-default values
-at next insmod time.
+The pull request you sent on Mon, 15 Jul 2024 12:55:28 +0200:
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
-v2:
- Add missing call to reset_hwpoison_filter() per Andrew. Thanks.
----
- mm/hwpoison-inject.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip x86_alternatives_for_v6.11_rc1
 
-diff --git a/mm/hwpoison-inject.c b/mm/hwpoison-inject.c
-index 7ecaa1900137..0b855cd3433a 100644
---- a/mm/hwpoison-inject.c
-+++ b/mm/hwpoison-inject.c
-@@ -64,10 +64,22 @@ static int hwpoison_unpoison(void *data, u64 val)
- DEFINE_DEBUGFS_ATTRIBUTE(hwpoison_fops, NULL, hwpoison_inject, "%lli\n");
- DEFINE_DEBUGFS_ATTRIBUTE(unpoison_fops, NULL, hwpoison_unpoison, "%lli\n");
- 
--static void __exit pfn_inject_exit(void)
-+static inline void reset_hwpoison_filter(void)
- {
- 	hwpoison_filter_enable = 0;
-+	hwpoison_filter_dev_major = ~0U;
-+	hwpoison_filter_dev_minor = ~0U;
-+	hwpoison_filter_flags_mask = 0;
-+	hwpoison_filter_flags_value = 0;
-+#ifdef CONFIG_MEMCG
-+	hwpoison_filter_memcg = 0;
-+#endif
-+}
-+
-+static void __exit pfn_inject_exit(void)
-+{
- 	debugfs_remove_recursive(hwpoison_dir);
-+	reset_hwpoison_filter();
- }
- 
- static int __init pfn_inject_init(void)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/208c6772d3839203fa34a8c77dd1fb7750c4f34a
+
+Thank you!
+
 -- 
-2.33.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
