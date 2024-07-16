@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606FE1A01D5;
-	Tue, 16 Jul 2024 17:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B23C1A08C2;
+	Tue, 16 Jul 2024 17:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721152337; cv=none; b=RP2Ifog/7TZlZCYG0czb4YxTSELEIT92ouiNO/xedHSnviCA792GIuwK2uYSMd0FMf1idPoF7rpnAtT90QlYlBmKYgN0nLd6xLKkHqhFX5d7g3mo5D4z5CJtnxZYe9oJJfwNERrBDo7kII3iPr9tuc9rWZb38r7lQ/C80s1Dcq0=
+	t=1721152339; cv=none; b=AMFBtjhNSCyzpb5DXFLjJvxbJXfrU+QzkHIXKKpQxzLEfcTiEn0EOPvsvSBYdkIhIFTjGmVDDCr/AO/C96aGvhz5YsQUJAm8xjQoZEWJFnuVQ3OQJoT/AD4+m7r5A/Zdm85NzvsCbXL5pYReXTc9xOvG613K0dd55Sjb+PDNQgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721152337; c=relaxed/simple;
-	bh=DfS+ZGQlpkyRoXAydI0Q0HXfxyiuVuX7x3ZtcbMPeEY=;
+	s=arc-20240116; t=1721152339; c=relaxed/simple;
+	bh=nUuPHoyJXLPZI9hsORkcW/G6LJ7x+O14qehpn3HYZSg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NDMSSX3yRlB2H/r7H6L+d/QuBHIB706Fk3gVOec4OZaY2DkDimPf05/VzAWnCFwYEzleXXZaNA3O80tx0JX+Gv7jHFj1Q5wD5HHGJD6qraqIDNHJawnxhgxYWBhX2hkAvhCIbv3l9BGcojikzRQVcKRsTQElxvc4kCi37PhcLSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/R2kCYZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AIO3/kM0mjvVwQNLiYKUkLfWhLBYaPfXkbqWpCpJNp6NVY/HW0m/7I1o4ujxgE1fBEixsYbcPaKwhQNW3ahTtXtXZ4q6kzZplSptIGUESybpuJWP7cJnboWDFyzh10RvswGSTV0wjf9mAe5TaMHoIK81QMFaJl5tN4SixIHv7Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCYoCP7V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/R2kCYZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2DFC4AF13;
-	Tue, 16 Jul 2024 17:52:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCYoCP7V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7074DC4AF0B;
+	Tue, 16 Jul 2024 17:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721152337;
-	bh=DfS+ZGQlpkyRoXAydI0Q0HXfxyiuVuX7x3ZtcbMPeEY=;
+	s=k20201202; t=1721152339;
+	bh=nUuPHoyJXLPZI9hsORkcW/G6LJ7x+O14qehpn3HYZSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A/R2kCYZUjl48aS27/ayNifpOMy28BVb23DLwHZGfNdfaq7AeZA8cyrnV4G8yYsw3
-	 TAGMYKmMZ7dmDy/plp2S3SGUnGgy4wHJl8SqIFm56el1SaFo4Wr467q9loG1UNQg/K
-	 19GlQAztgI+OTXys1Tdgr9JrMUgk6L7HgkPsE/EouYsew7phd15oUFgYJ3Fh4E2jhz
-	 Oufwfw0al99fPKmia5Lnk/q4cr40sR/vDzwHcUXxKOuVMVxVCZ0YIItJ5aqPK1LM7j
-	 rygcOfngoiA7zmrZa4z921Gsc1RIiUzmT1Fs+PQNyuyEP+CXM7AMKc/TUQm4hFcTNX
-	 MDJs/8Z/FPI4A==
+	b=iCYoCP7V8bNsuBerBjAWlaLEtu5E4OoKmWKvCP3oD1nzjDgPO5kqb5Um1L3FrdZvF
+	 h52Zl3GQiNRC7E2KzuyvsyUzxAPxwnOVAcKdioVQlvshlgwrcYLJgOclvqLAPWeiNJ
+	 P6xZGblQ0IBjgvXXiM+7gnu+65S0bAw7wEH27mJ+bJdA9pIXhl7K2X55CLGRCEXIoJ
+	 jyAFJM1siYHKhHEcmw3qE+iOi9OjtGJZnKuSH3LaVfFiEf74fuNpuaROhPbDFASzd6
+	 RKD71VC0WN6dCZ05+iT137DxXwAka9mDRKeDFpj0cFjk5Ytlg/0sWJCB0NDDWb9Iqu
+	 AxGPGoBS2kGnQ==
 From: SeongJae Park <sj@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc: David Laight <David.Laight@ACULAB.COM>,
 	linux-kernel@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	David Laight <david.laight@aculab.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	SeongJae Park <sj@kernel.org>
-Subject: [PATCH 6.1.y 3/7] minmax: fix header inclusions
-Date: Tue, 16 Jul 2024 10:52:01 -0700
-Message-Id: <20240716175205.51280-4-sj@kernel.org>
+Subject: [PATCH 6.1.y 5/7] minmax: allow comparisons of 'int' against 'unsigned char/short'
+Date: Tue, 16 Jul 2024 10:52:03 -0700
+Message-Id: <20240716175205.51280-6-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240716175205.51280-1-sj@kernel.org>
 References: <20240716175205.51280-1-sj@kernel.org>
@@ -49,40 +53,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: David Laight <David.Laight@ACULAB.COM>
 
-commit f6e9d38f8eb00ac8b52e6d15f6aa9bcecacb081b upstream.
+commit 4ead534fba42fc4fd41163297528d2aa731cd121 upstream.
 
-BUILD_BUG_ON*() macros are defined in build_bug.h.  Include it.  Replace
-compiler_types.h by compiler.h, which provides the former, to have a
-definition of the __UNIQUE_ID().
+Since 'unsigned char/short' get promoted to 'signed int' it is safe to
+compare them against an 'int' value.
 
-Link: https://lkml.kernel.org/r/20230912092355.79280-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Herve Codina <herve.codina@bootlin.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-
+Link: https://lkml.kernel.org/r/8732ef5f809c47c28a7be47c938b28d4@AcuMS.aculab.com
+Signed-off-by: David Laight <david.laight@aculab.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-(cherry picked from commit f6e9d38f8eb00ac8b52e6d15f6aa9bcecacb081b)
+(cherry picked from commit 4ead534fba42fc4fd41163297528d2aa731cd121)
 Signed-off-by: SeongJae Park <sj@kernel.org>
-[Fix a conflict due to absence of compiler_types.h include]
 ---
- include/linux/minmax.h | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/minmax.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/minmax.h b/include/linux/minmax.h
-index abdeae409dad..e8e9642809e0 100644
+index 501fab582d68..f76b7145fc11 100644
 --- a/include/linux/minmax.h
 +++ b/include/linux/minmax.h
-@@ -2,6 +2,8 @@
- #ifndef _LINUX_MINMAX_H
- #define _LINUX_MINMAX_H
+@@ -25,8 +25,9 @@
+ 	__builtin_choose_expr(__is_constexpr(is_signed_type(typeof(x))),	\
+ 		is_signed_type(typeof(x)), 0)
  
-+#include <linux/build_bug.h>
-+#include <linux/compiler.h>
- #include <linux/const.h>
+-#define __types_ok(x, y) \
+-	(__is_signed(x) == __is_signed(y))
++#define __types_ok(x, y) 			\
++	(__is_signed(x) == __is_signed(y) ||	\
++		__is_signed((x) + 0) == __is_signed((y) + 0))
  
- /*
+ #define __cmp_op_min <
+ #define __cmp_op_max >
 -- 
 2.39.2
 
