@@ -1,59 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8E61A070D;
-	Tue, 16 Jul 2024 18:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690D01A0720;
+	Tue, 16 Jul 2024 18:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721155091; cv=none; b=hPHKG4QdOlX6YRpJhGbvtzme8m09S4PldzcpEjQiZJ0r5FLx4rIZFSB8jm5xF/2YSsIdDd9zmXmX3vL6E2i5CS9zxccJ0uRrdMW4JomFEvC5sqXI3XlOsl0SGqhDdxNSaN++NU1lvuFDrZQ8fOBLwyRHDXuAkqT7Kk5aEWwIBN4=
+	t=1721155097; cv=none; b=mMt2xHxmLaGYYIfkTheJkh9JwPV2lVOZq1FiT6T8W/60iG150Q4by8g3jsuZQHd/nvOEDkCO3ZalbxiVayZKaZ4YdpZpoLND6K+KGI+/KZCo5JgsH5oSM1fhoOVNh3qpObJvBwYSitjS4Y/GZJgSD3GlOPB2mp5EfN4+wm989Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721155091; c=relaxed/simple;
-	bh=ks8giOZYGF988/KXeDcypvkOwki6xVu4b3JtS7gj410=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BmM3FohBd6K2fIgImXu8/uZyuVRpJRiPBuvb7fJfuDv7BXS/y04a/YFojDLEt/uC4mEYbxEsLvjZpvgthF9T6ohTIQfe98lXf+/hkXoO/xHBQNab6+MWrIwYx6soviWCjgc5ro4OgEaYyouDibkU3V47oqgLPIr+Tq8qVOhnTr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gF32R2d/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721155097; c=relaxed/simple;
+	bh=bhIWzgmFY3aeKFrE6cUAq/sjmY8KoRONFtyh21jnxEg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HmlKOS+kZT+n6Lg1arHcoSgVlLw4d5qBzib0ubkTo+kkIkiryld8g90pfFzWW95Q9cvX7zKqLbcu/vUwgIdJBiLY+KxLyCRz1Dr41EacyXd2gL+DMQu7bEHJ1OBtiUfxB5FeqcgbOvm+k0xO1CPT2aJ4xpvCEoOBXHaaispoao8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGXix5eR; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gF32R2d/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A96B4C116B1;
-	Tue, 16 Jul 2024 18:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721155091;
-	bh=ks8giOZYGF988/KXeDcypvkOwki6xVu4b3JtS7gj410=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gF32R2d/NFstsE7r/wkzlvU9l46t6VYElBUSGuz2fxg6gekgrN2fm5T4yRAA8ln+U
-	 sulm6it9ctjmeyPQ/fxTPXVKrTTJhBtq5T+9H2Hn5aRh5M5gKzcqKyvldpePMals7w
-	 HSqfPiblfm4TPF6wHu4FP/oYsp3oNYZCatCb82VCzpilC9FMAbERtZMYU8y6SSfBz1
-	 XM8VQVWem00DpvHATWBogsjEENOGFAEtCvnBA+C2KN6BYB3OfxCySLIpoZ/U2SgxFO
-	 nkOCmFzsfRYMP9jcWbaMSXIy0irDpuk8B/W8dC4GobHy073+hr6PpJc7CRJ79QAO75
-	 iz4IeXAJjRaEw==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org,
-	damon@lists.linux.dev
-Subject: Re: [PATCH 6.1 00/96] 6.1.100-rc1 review
-Date: Tue, 16 Jul 2024 11:38:07 -0700
-Message-Id: <20240716183807.138607-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240716152746.516194097@linuxfoundation.org>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGXix5eR"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58b966b41fbso7422424a12.1;
+        Tue, 16 Jul 2024 11:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721155093; x=1721759893; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y2QpPFCXFSzwXuk5Smpy2Q+ucAYxfBE33tkpjc80+O0=;
+        b=TGXix5eRY5rtFunR/5pZdaCkHLpvELzo4eAXiudW45ALvOXmHANlSTmuDG4b+LMP86
+         DwggqUvltmbqUxzraPnCnN4WSv5R70HR3tHr/c5bbuViA8SnAwozml49EUh/FNUbkCEH
+         wLSB4MeZqbs9hLcdmySqK05FdIVXtuM0glWnCoK27Xgk+KFan3V/kmtShxhkndFMJleL
+         XHC4r/TxQlc00bDjXHtzbSu66wLvTovvcvcGmBIciYdxa7TLJiEu60qlxOVeSENnYg8C
+         0i6ZChmZcWCp235DGU9+DZTaWTwGVfO34VX5qKd0Ms3uYdCu+6v7FDiPKbPDk8X45gbB
+         vUzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721155093; x=1721759893;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y2QpPFCXFSzwXuk5Smpy2Q+ucAYxfBE33tkpjc80+O0=;
+        b=VU44waH8BLCVYd3dXFMkc5mEqgD9ctOe5bvoOrX1538Qy7yEW3AwEkAgxyNb4wnK3G
+         6N4Waw+QVpeu092U4TwMbi2pf4HOQxBiDH1/7IN3kxniKMY/JFAkM1Qz6AkHEGcetZc2
+         MkgMMs7aU6PKl4ouhXppJ10QHR3vb7uMCWC/4g/hFFiaYnGgBgTtVB57kte2OoYnIHim
+         Vm5dn7WJz6T2KYMndPyKobQZ1Pf5cwqh5i2UeKlvs5st07wyibIOMH6N5pv/FTa5Oq1r
+         96nKTDylfdI/BP13l4Z8zNr5N2ProwwP+Jfs3Nvk6E3lHcPoIE+AoR1Rlv+/xqra0/6r
+         jMUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWg3UFKD+v0hMF2nH91K+/sOrpj5i9N1a+lsPlC4tKEe0Zdpb3QibSg6ojvxZhySu7xH1zpewuPG9FkXN+eQROusq/Fy2b452juAYVpxB1/IR78Vt2/YnuwtJtDJDyb0XfuwE+2AsdrWQ==
+X-Gm-Message-State: AOJu0YzxTTaQ+vGIvaoKtlv3qLU0kkkLLXDAcw2jn0ZTPjkq1ONvkZX4
+	TTu/yyosq17RTMGTHHjnLWRKt+JM3SO410hFwFNQG+Sc74fcJHyFl4w1hit0
+X-Google-Smtp-Source: AGHT+IG0+8sJk4vnch/lSp8v1ukZvC8dyq5Z0AzM0HJxIe8NnKCTXm5Ja4RKUb3uO0OQT4puwhQSeg==
+X-Received: by 2002:a17:906:e05:b0:a6f:27e6:8892 with SMTP id a640c23a62f3a-a79eaa5b6f1mr187899866b.60.1721155093080;
+        Tue, 16 Jul 2024 11:38:13 -0700 (PDT)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820eb3sm341852366b.207.2024.07.16.11.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 11:38:12 -0700 (PDT)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 1/2] net: dsa: vsc73xx: make RGMII delays configurable
+Date: Tue, 16 Jul 2024 20:37:34 +0200
+Message-Id: <20240716183735.1169323-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,61 +78,104 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+This patch switches hardcoded RGMII transmit/receive delay to
+a configurable value. Delay values are taken from the properties of
+the CPU port: 'tx-internal-delay-ps' and 'rx-internal-delay-ps'.
 
-On Tue, 16 Jul 2024 17:31:11 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+The default value is configured to 2.0 ns to maintain backward
+compatibility with existing code.
 
-> This is the start of the stable review cycle for the 6.1.100 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 18 Jul 2024 15:27:21 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.100-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
-
-Tested-by: SeongJae Park <sj@kernel.org>
-
-[1] https://github.com/awslabs/damon-tests/tree/next/corr
-[2] 928b1b7691e1 ("Linux 6.1.100-rc1")
-
-Thanks,
-SJ
-
-[...]
-
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 ---
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 68 ++++++++++++++++++++++++--
+ 1 file changed, 64 insertions(+), 4 deletions(-)
 
-ok 1 selftests: damon: debugfs_attrs.sh
-ok 2 selftests: damon: debugfs_schemes.sh
-ok 3 selftests: damon: debugfs_target_ids.sh
-ok 4 selftests: damon: debugfs_empty_targets.sh
-ok 5 selftests: damon: debugfs_huge_count_read_write.sh
-ok 6 selftests: damon: debugfs_duplicate_context_creation.sh
-ok 7 selftests: damon: sysfs.sh
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh
-ok 12 selftests: damon-tests: build_m68k.sh
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
+diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
+index d9d3e30fd47a..7d3c8176dff7 100644
+--- a/drivers/net/dsa/vitesse-vsc73xx-core.c
++++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
+@@ -684,6 +684,67 @@ vsc73xx_update_vlan_table(struct vsc73xx *vsc, int port, u16 vid, bool set)
+ 	return vsc73xx_write_vlan_table_entry(vsc, vid, portmap);
+ }
+ 
++static void vsc73xx_configure_rgmii_port_delay(struct dsa_switch *ds)
++{
++	/* Keep 2.0 ns delay for backward complatibility */
++	u32 tx_delay = VSC73XX_GMIIDELAY_GMII0_GTXDELAY_2_0_NS;
++	u32 rx_delay = VSC73XX_GMIIDELAY_GMII0_RXDELAY_2_0_NS;
++	struct dsa_port *dp = dsa_to_port(ds, CPU_PORT);
++	struct device_node *port_dn = dp->dn;
++	struct vsc73xx *vsc = ds->priv;
++	u32 delay;
++
++	if (!of_property_read_u32(port_dn, "tx-internal-delay-ps", &delay)) {
++		switch (delay) {
++		case 0:
++			tx_delay = VSC73XX_GMIIDELAY_GMII0_GTXDELAY_NONE;
++			break;
++		case 1400:
++			tx_delay = VSC73XX_GMIIDELAY_GMII0_GTXDELAY_1_4_NS;
++			break;
++		case 1700:
++			tx_delay = VSC73XX_GMIIDELAY_GMII0_GTXDELAY_1_7_NS;
++			break;
++		case 2000:
++			break;
++		default:
++			dev_warn(vsc->dev,
++				 "Unsupported RGMII Transmit Clock Delay, set to 2.0 ns\n");
++			break;
++		}
++	} else {
++		dev_info(vsc->dev,
++			 "RGMII Transmit Clock Delay isn't configured, set to 2.0 ns\n");
++	}
++
++	if (!of_property_read_u32(port_dn, "rx-internal-delay-ps", &delay)) {
++		switch (delay) {
++		case 0:
++			rx_delay = VSC73XX_GMIIDELAY_GMII0_RXDELAY_NONE;
++			break;
++		case 1400:
++			rx_delay = VSC73XX_GMIIDELAY_GMII0_RXDELAY_1_4_NS;
++			break;
++		case 1700:
++			rx_delay = VSC73XX_GMIIDELAY_GMII0_RXDELAY_1_7_NS;
++			break;
++		case 2000:
++			break;
++		default:
++			dev_warn(vsc->dev,
++				 "Unsupported RGMII Receive Clock Delay value, set to 2.0 ns\n");
++			break;
++		}
++	} else {
++		dev_info(vsc->dev,
++			 "RGMII Receive Clock Delay isn't configured, set to 2.0 ns\n");
++	}
++
++	/* MII delay, set both GTX and RX delay */
++	vsc73xx_write(vsc, VSC73XX_BLOCK_SYSTEM, 0, VSC73XX_GMIIDELAY,
++		      tx_delay | rx_delay);
++}
++
+ static int vsc73xx_setup(struct dsa_switch *ds)
+ {
+ 	struct vsc73xx *vsc = ds->priv;
+@@ -746,10 +807,9 @@ static int vsc73xx_setup(struct dsa_switch *ds)
+ 			      VSC73XX_MAC_CFG, VSC73XX_MAC_CFG_RESET);
+ 	}
+ 
+-	/* MII delay, set both GTX and RX delay to 2 ns */
+-	vsc73xx_write(vsc, VSC73XX_BLOCK_SYSTEM, 0, VSC73XX_GMIIDELAY,
+-		      VSC73XX_GMIIDELAY_GMII0_GTXDELAY_2_0_NS |
+-		      VSC73XX_GMIIDELAY_GMII0_RXDELAY_2_0_NS);
++	/* Configure RGMII delay */
++	vsc73xx_configure_rgmii_port_delay(ds);
++
+ 	/* Ingess VLAN reception mask (table 145) */
+ 	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_VLANMASK,
+ 		      0xff);
+-- 
+2.34.1
+
