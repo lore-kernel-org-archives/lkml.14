@@ -1,106 +1,104 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB2F4C74
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5BA4C74;
+	Tue, 16 Jul 2024 09:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121035; cv=none; b=BwWhwq5gkURUAUoIeb25t+4wOTAnXj/OUnA3LWnnwspXXXPqgszHidOU1U4JRNt8n69ryS+P+ut7W1YlO0hKgrgX4Zve1z8Lgr1qLQC9FWkE+QxUqijjbtULSfrM6aosZWzSfYXCFfEnC28Q81N/rEe3tMBHDCNN2T6Fpu/0Oqk=
+	t=1721121068; cv=none; b=sgZEUsKKDvD0ErEB1tsKRG9am8Oz28+xKgv4dJ3jXMV5GZZrlnljai+GrSDLYq7SQ9Ml6uA1681LRcGpw6jqtWwPw6TOMZgLUaYl1W1TbXWlV6ncnsGIV9TKpBWNwZA+sMFelNGNErBygBSjtnGX8buKDFVD9SV/ml8OE+Ly0Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121035; c=relaxed/simple;
-	bh=Q/J5HPjD3nULGe63cSK+WgRKArnBrtmlU+sZid0smjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N7SnlfqoclvKl70c7XwmxkOM5OdgVGB0z/IPRuZc9DOVJidzazjnqBI8ricWSsDOrIQ9cziKeO7uq7xm9mrpM6KrH38kWn4LZqN2Mo0NYigHyEUus8T/NQTdpBs5uLgwTt6+5PIPSm7HuaN1Wljuh6WdFxSjTQJOcpXOE2zX3GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sTeCP-00068u-US; Tue, 16 Jul 2024 11:10:17 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sTeCO-0005nC-PZ; Tue, 16 Jul 2024 11:10:16 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1sTeCO-002HWK-2C;
-	Tue, 16 Jul 2024 11:10:16 +0200
-Date: Tue, 16 Jul 2024 11:10:16 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	linux-wireless@vger.kernel.org, David Lin <yu-hao.lin@nxp.com>
-Subject: Re: [PATCH] wifi: mwifiex: increase max_num_akm_suites
-Message-ID: <ZpY4-PpxgMOH0wQB@pengutronix.de>
-References: <20240530130156.1651174-1-s.hauer@pengutronix.de>
+	s=arc-20240116; t=1721121068; c=relaxed/simple;
+	bh=2BF2CsXqFLTo7IKdC/7zs3m9os45UdbNfcSeRODgDzA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LZUSpqzelI6M4aP84rPtajAPKOFfuWiNzw45oUrYdsPwthZTPgirb2KolEGZzMJDvFh3wIZwxNtFaFqNjg7N66KrFLgRzcoXRd5hedmBVCoV46+2QO8lsyCL6HDajiAdFb0crbC6zW42KXszGSR2ghHe6B6KjDpISrogrjM8fvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from inp1wst083.omp.ru (81.22.207.138) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 16 Jul
+ 2024 12:11:01 +0300
+From: Roman Smirnov <r.smirnov@omp.ru>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: Roman Smirnov <r.smirnov@omp.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, Fedor Pchelkin <pchelkin@ispras.ru>
+Subject: [PATCH] Revert "media: tuners: fix error return code of hybrid_tuner_request_state()"
+Date: Tue, 16 Jul 2024 12:10:40 +0300
+Message-ID: <20240716091040.93681-1-r.smirnov@omp.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530130156.1651174-1-s.hauer@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 07/16/2024 08:42:27
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 186531 [Jul 16 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 24 0.3.24
+ 186c4d603b899ccfd4883d230c53f273b80e467f
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_all_Bitcoin, text}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;inp1wst083.omp.ru:7.1.1;lore.kernel.org:7.1.1;81.22.207.138:7.1.2;127.0.0.199:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 07/16/2024 08:45:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 7/16/2024 7:02:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Thu, May 30, 2024 at 03:01:56PM +0200, Sascha Hauer wrote:
-> The maximum number of AKM suites will be set to two if not specified by
-> the driver. Set it to CFG80211_MAX_NUM_AKM_SUITES to let userspace
-> specify up to ten AKM suites in the akm_suites array.
-> 
-> Without only the first two AKM suites will be used, further ones are
-> ignored.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
-> 
-> Current wpa_supplicant/hostapd only put a maximum of two into the
-> akm_suites array as well, a patch changing this can be found here:
-> http://lists.infradead.org/pipermail/hostap/2024-May/042720.html
+This reverts commit b9302fa7ed979e84b454e4ca92192cf485a4ed41.
 
-This was recently merged: http://lists.infradead.org/pipermail/hostap/2024-July/042802.html
+As Fedor Pchelkin pointed out, this commit violates the
+convention of using the macro return value, which causes errors.
+For example, in functions tda18271_attach(), xc5000_attach(),
+simple_tuner_attach().
 
-Kalle, given that userspace now would be able to make use of a bigger
-AKM suites array, can we merge this patch for the kernel as well?
+Link: https://lore.kernel.org/linux-media/20240424202031.syigrtrtipbq5f2l@fpc/
+Suggested-by: Fedor Pchelkin <pchelkin@ispras.ru>
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+---
+ drivers/media/tuners/tuner-i2c.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Sascha
-
-> ---
->  drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-> index b909a7665e9cc..908dfe01c30d7 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-> @@ -4358,6 +4358,8 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
->  				 BIT(NL80211_IFTYPE_P2P_GO) |
->  				 BIT(NL80211_IFTYPE_AP);
->  
-> +	wiphy->max_num_akm_suites = CFG80211_MAX_NUM_AKM_SUITES;
-> +
->  	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
->  		wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
->  
-> -- 
-> 2.39.2
-> 
-> 
-
+diff --git a/drivers/media/tuners/tuner-i2c.h b/drivers/media/tuners/tuner-i2c.h
+index 07aeead0644a..724952e001cd 100644
+--- a/drivers/media/tuners/tuner-i2c.h
++++ b/drivers/media/tuners/tuner-i2c.h
+@@ -133,10 +133,8 @@ static inline int tuner_i2c_xfer_send_recv(struct tuner_i2c_props *props,
+ 	}								\
+ 	if (0 == __ret) {						\
+ 		state = kzalloc(sizeof(type), GFP_KERNEL);		\
+-		if (!state) {						\
+-			__ret = -ENOMEM;				\
++		if (NULL == state)					\
+ 			goto __fail;					\
+-		}							\
+ 		state->i2c_props.addr = i2caddr;			\
+ 		state->i2c_props.adap = i2cadap;			\
+ 		state->i2c_props.name = devname;			\
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.34.1
+
