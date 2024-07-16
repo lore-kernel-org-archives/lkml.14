@@ -1,82 +1,67 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF99EB67F;
-	Tue, 16 Jul 2024 17:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51691FC19;
+	Tue, 16 Jul 2024 17:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721151959; cv=none; b=IMPEYb3shxtzKjSsWBsBZjKUOUwDCV/w6tZjo+ILLgUX+D58PFkhqvQwpL2AYCJ3Qush3OPXuyavc3PHCpAgWc2I3t4Z37xjWHVH0WuBYmkuMpiovQXA3rDjW5ybSqL1odw9ljoMgozLzfsQ6aimicYw/ZT0zq+zbBzvzoQS6O4=
+	t=1721152007; cv=none; b=ozSFvylR9MtgOko4jHqSgYbPVSqTfBt5UJaRoqFSj1p/WAw08+S7/rYkAT+70wmCqMc2pnZINs3SyglkpRKd9emUWiLeEoa+h6LJYJsj2/tXr2CjUtsu4AxSXGyuq/IGIpptMS25Oai/uBAUFItLtsiq20IG6Bhp93RucdhMfes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721151959; c=relaxed/simple;
-	bh=YuRAgq7T7DYZ+9bOH4Kh/59c9vBYqNhQMDcTMTwSy7I=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Y+xlvhS+uR7mtLuo+xKpDQuir938ysfxuH8Rcbv1GbXlYyJtlIgS8ks2dWgSOAQ1mJETWP/nF8M68uT98lnmKAXT4TBXeOSplFftrl+g74aIreiRPPnlo275MyaoSHLdE0ZawvlanP0MnfM6mBYhZKVn4OXSlARAdGfE6JPVkHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=frWSgU0Q; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1721152007; c=relaxed/simple;
+	bh=Hw8FkfIKqsQ0CwefUs5XRJ2i9+YYcFdCnn2awFcRrPM=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h1bLIzVZXZlYAR6zFgqQT3mRKy97p5Pf2+kr1VlUxF+b18N4c2/ilpdbh5iqeROsU4EIHWSdyMz1FNFX4VA6LpewNP5ajrE9up7kod49FI4ZuR8MojPXBqz0/YvLXvQKh6QWW/SZ1u5Key1DqMjljNQOLBo3C2a+YPiresmAxoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQJcWy0i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="frWSgU0Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQJcWy0i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C6FEC116B1;
+	Tue, 16 Jul 2024 17:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721152006;
+	bh=Hw8FkfIKqsQ0CwefUs5XRJ2i9+YYcFdCnn2awFcRrPM=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=FQJcWy0iZNK+SnczpSBDNWlOevdLGcbDQEVvfcid13Egol0KlnecmGmXuASuIuFua
+	 HdDbyQzZbz6vy/JHAy+VvFBebXS2D/85tgeMdYnCecutlsFv4Zku38E/xg29LVUArm
+	 UJCMgHKmoZghS7XeLpYmrLVlM7sPYUR2bw9EwDanH9F+OWzJchKURZs/Qtdna7F0uC
+	 Pn3KWMhc4ofaAhLRAZ4J3eBE8Y8sprNjVOvyqzcbB8KwrqqViBt79EChcD1pGgSv4T
+	 s5zbHrpVzm9kbmWnd4EoDBkPeJO0bCW8h01k0GCSAvBgo2vhC5FoQYaYYzy1N+FGpb
+	 uVq1drfRIBgfA==
+Date: Tue, 16 Jul 2024 19:46:43 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
+	Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v3 2/2] i2c: piix4: Register SPDs
+Message-ID: <i633av3v2a4chdh5a7yk6nv6y77ohvpajeozypjdroufikes6k@cmvpywjwj4df>
+References: <20240709-piix4-spd-v3-0-9d1daa204983@weissschuh.net>
+ <20240709-piix4-spd-v3-2-9d1daa204983@weissschuh.net>
+ <ZpEnXaRYnPIr1vG3@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1721151947;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JhR8ShgNZ4zr20pJvrZSBhHiN5aG2Rwxocrt8rVDf8Q=;
-	b=frWSgU0Qd95vdp7IVtKo2hahyPh0ax6zmYOnpAABSPSToBxVZlIm22kufuYPn4pI4U4Ax5
-	7AAvkancGLjf1Fg3LyYZdGPzrqX9rVBBnOxY5CqVStIarucIfekCUob5l1VKSfm9dQveDC
-	l0kIVoXz9nRWl0YK76gRFVBBfp/uZKgb3hNbihuotaxjgb9jTaQCR5/5XN7CMQc5mxYiVE
-	b6uMTC5SYczHW3K5Tuzq9o/lh7gqgGVl0KPgkvMmjybI5uE0Yqki888sEMEkPdnxLNQ6v2
-	IFdZ1h75d1k3KRMNjn4DnT9ABU3LCgS6qI7IH5+/7YGtBuTS1NzHLthqErY+gg==
-Date: Tue, 16 Jul 2024 19:45:44 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Christopher Obbard <chris.obbard@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Kever Yang
- <kever.yang@rock-chips.com>
-Subject: Re: [PATCH 0/2] Add support for Firefly CORE PX30 JD4
-In-Reply-To: <20240716-rockchip-px30-firefly-v1-0-60cdad3023a3@collabora.com>
-References: <20240716-rockchip-px30-firefly-v1-0-60cdad3023a3@collabora.com>
-Message-ID: <81015d015aae01f2d5fa70262304837e@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZpEnXaRYnPIr1vG3@shikoro>
 
-Hello Christopher,
+Hi Thomas,
 
-On 2024-07-16 17:51, Christopher Obbard wrote:
-> The Firefly CORE PX30 JD4 board is a SOM and motherboard bundle from
-> Firefly containing the Rockchip PX30 SOC. This series adds support for 
-> it.
+On Fri, Jul 12, 2024 at 02:53:49PM GMT, Wolfram Sang wrote:
+> > Only the first 8 slots are supported. If the system has more,
+> > then these will not be visible.
+> > 
+> > The AUX bus can not be probed as on some platforms it reports all
+> > devices present and all reads return "0".
+> > This would allow the ee1004 to be probed incorrectly.
 > 
-> ---
-> Christopher Obbard (2):
->       dt-bindings: arm: rockchip: add Firefly CORE PX30 JD4
->       arm64: dts: rockchip: add Firefly CORE PX30 JD4
-> 
->  .../devicetree/bindings/arm/rockchip.yaml          |   5 +
->  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
->  .../dts/rockchip/px30-firefly-core-px30-jd4.dts    | 562 
-> +++++++++++++++++++++
->  3 files changed, 568 insertions(+)
+> I think this information would also be helpful as a comment above the
+> code. But to allow this series to be applied now, I think an incremental
+> patch will do. With Heiner's ack, I think this can go in now.
 
-It would be better to split this into two separate files: a dtsi
-for the SoM, and a dts for the carrier board (which would include
-the new dtsi).  That would reflect the actual hardware better.
+I agree with Wolfram here. Are you up for a v4 or do you want me
+to add the comment while pushing?
 
-> ---
-> base-commit: d67978318827d06f1c0fa4c31343a279e9df6fde
-> change-id: 20240716-rockchip-px30-firefly-59efc93d6784
-> 
-> Best regards,
+Andi
