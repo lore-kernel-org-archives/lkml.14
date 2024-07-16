@@ -1,28 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF0219B3FF;
-	Tue, 16 Jul 2024 15:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27B61A0710;
+	Tue, 16 Jul 2024 15:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721142275; cv=none; b=D7bMLWalOHfaIWVHabcKHwGRhIUD8A2j3Y/ucRkS8bUSQMU7ENvCqsIJGo+SIVSI0my65Yu0Tpbl50o6aP35gX1E3AF3DO7ddntxPYpN+74XOlLx/26f7nRPcP4BvHpkI9hLPg9xOPdqIsTkP2D66R+2Rf5c99jUr8fTzK340OE=
+	t=1721142284; cv=none; b=CyLnasdvMOMqBy1W+6y5Heq9Oui9wC+xU5riSwOjm0HYdYsAyvCR0BCpN9YYMfhUl/7RAJHKm3x1wUJ9QsJ+47966vx82H4FbkFDTcgXPyk+ZrF9U8FyXvo0GkuF89BIyLO19n0AHVDTKXIF26RS7M6d4PySxijKPPouGSLYLW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721142275; c=relaxed/simple;
-	bh=A84BF7jiRF5nq4g7RoYFO41WrzgOgBgbYl2GndJey/I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c+2mEMxkCfSZ2ZTopYTuW/KDhK1kqFz9INJk1Q1NTVs6OSMIraKL8aN2/xMxN4h4TnjJpkqpf5NZf2U77yDZm9FVeADdP/tCtMTPE7lgRh6XigxB31grKjlGW6xXeprJE1DMcsufJfm20RlkoXeZ4of72t7JVKLluBWZ9l9TYIM=
+	s=arc-20240116; t=1721142284; c=relaxed/simple;
+	bh=33CYDBRjSDsb2iRE5xZkwW/WFpfHeWQhhLvI03J3t70=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AQJRAH+Mt/7KDCWl7vccNpViYVwKOnF6XGPl/GQ7IRlWcG6pqMJhMI8TSqBp5wC0S3pfhr5p00iYy6DD0MB2X1TR1nqIW9uhDZMSl82CFAOKReNn+UG5n6xVnVbadkboEwrVtOiTqKJiU3Nf6nAhX5bNbvEBarW2UFrz5bTqQS8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WNj3603sdz6K924;
-	Tue, 16 Jul 2024 23:02:10 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WNj4W37Xzz6JB5G;
+	Tue, 16 Jul 2024 23:03:23 +0800 (CST)
 Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id DF7CF1400CF;
-	Tue, 16 Jul 2024 23:04:22 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 35F2D1400DB;
+	Tue, 16 Jul 2024 23:04:39 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.159.153) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 16 Jul 2024 16:04:21 +0100
+ 15.1.2507.39; Tue, 16 Jul 2024 16:04:37 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -42,10 +43,12 @@ CC: <bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
 	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [RFC PATCH v9 00/11] EDAC: Scrub: Introduce generic EDAC RAS control feature driver + CXL/ACPI-RAS2 drivers
-Date: Tue, 16 Jul 2024 16:03:24 +0100
-Message-ID: <20240716150336.2042-1-shiju.jose@huawei.com>
+Subject: [RFC PATCH v9 07/11] cxl/memscrub: Add CXL memory device patrol scrub control feature
+Date: Tue, 16 Jul 2024 16:03:31 +0100
+Message-ID: <20240716150336.2042-8-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240716150336.2042-1-shiju.jose@huawei.com>
+References: <20240716150336.2042-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,583 +62,638 @@ X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Previously known as "ras: scrub: introduce subsystem + CXL/ACPI-RAS2 drivers".
+CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub control
+feature. The device patrol scrub proactively locates and makes corrections
+to errors in regular cycle.
 
-EDAC based Subsystem for controlling RAS Features
-=================================================
-The proposed EDAC based subsystem for controlling RAS features and
-expose the feature's control attributes to the userspace in sysfs.
-Some Examples:
- - Scrub control
- - Error Check Scrub (ECS) control
- - ACPI RAS2 features
- - ACPI Address Range Scrubbing (ARS)
- - Post Package Repair (PPR) etc.
+Allow specifying the number of hours within which the patrol scrub must be
+completed, subject to minimum and maximum limits reported by the device.
+Also allow disabling scrub allowing trade-off error rates against
+performance.
 
-High level design is illustrated in the following diagram.
- 
-         _______________________________________________
-        |   Userspace - Rasdaemon                       |
-        |  ____________                                 |
-        | | RAS CXL    |       _____________            | 
-        | | Err Handler|----->|             |           |
-        | |____________|      | RAS Dynamic |           |
-        |  ____________       | Scrub       |           |
-        | | RAS Memory |----->| Controller  |           |
-        | | Err Handler|      |_____________|           |
-        | |____________|           |                    |
-        |__________________________|____________________|                              
-                                   |
-                                   |
-    _______________________________|______________________________
-   |   Kernel EDAC based SubSystem | for RAS Features Control     |
-   | ______________________________|____________________________  |
-   || EDAC Core          Sysfs EDAC| Bus                        | |
-   ||    __________________________|_______     _____________   | |
-   ||   |/sys/bus/edac/devices/<dev>/scrub/|   | EDAC Device |  | |
-   ||   |/sys/bus/edac/devices/<dev>/ecs*/ |<->| EDAC MC     |  | |
-   ||   |/sys/bus/edac/devices/<dev>/ars/  |   | EDAC Sysfs  |  | |
-   ||   |/sys/bus/edac/devices/<dev>/ppr/  |   | EDAC Module |  | |
-   ||   |__________________________________|   |_____________|  | |
-   ||                               | EDAC Bus                  | |
-   ||               Get             |                           | |
-   ||    __________ Feature's       |             __________    | |
-   ||   |          |Descs  _________|______      |          |   | |
-   ||   |EDAC Scrub|<-----|    EDAC RAS    |---->| EDAC ARS |   | |
-   ||   |__________|      |Control Feature |     |__________|   | |
-   ||    __________       |    Driver      |      __________    | |
-   ||   |          |<-----|________________|---->|          |   | |
-   ||   |EDAC ECS  |   Register RAS | Features   | EDAC PPR |   | |
-   ||   |__________|                |            |__________|   | |
-   ||         ______________________|___________________        | |
-   ||_________|_____________|_____________|____________|________| |
-   |   _______|____    _____|______   ____|______   ___|_____     |
-   |  |            |  | CXL Mem   |  |           | |         |    |
-   |  | ACPI RAS2  |  | Driver    |  | ACPI ARS  | | PPR     |    |
-   |  | Driver     |  | Scrub,ECS |  | Driver    | | Driver  |    |
-   |  |____________|  |___________|  |___________| |_________|    |
-   |        |              |              |           |           |
-   |________|______________|______________|___________|___________|
-            |              |              |           |          
-     _______|______________|______________|___________|___________
-    |     __|______________|_ ____________|___________|_____      |
-    |    |                                                  |     |
-    |    |            Platform HW and Firmware              |     |
-    |    |__________________________________________________|     |
-    |_____________________________________________________________|                             
+Add support for CXL memory device based patrol scrub control.
+Register with EDAC RAS control feature driver, which gets the scrub attr
+descriptors from the EDAC scrub and expose sysfs scrub control attributes
+to the userspace.
+For example CXL device based scrub control for the CXL mem0 device is exposed
+in /sys/bus/edac/devices/cxl_mem0/scrub/
 
-1. EDAC Features components - Create feature specific descriptors.
-2. EDAC RAS Feature driver - Get feature's attr descriptors from the 
-   EDAC RAS feature component and registers device's RAS features with
-   EDAC bus and expose the feature's sysfs attributes under the sysfs
-   EDAC bus.
-3. RAS dynamic scrub controller - Userspace sample module added in the
-   rasdaemon to start scrubbing when excess number of related errors
-   are reported in a short span of time.
+Also add support for region based CXL memory patrol scrub control.
+CXL memory region may be interleaved across one or more CXL memory devices.
+For example region based scrub control for CXL region1 is exposed in
+/sys/bus/edac/devices/cxl_region1/scrub/
 
-The added EDAC feature specific components (e.g. EDAC scrub, EDAC ECS,
-EDAC PPR etc) do callbacks to  the parent driver (e.g. CXL driver,
-ACPI RAS driver etc) for the controls rather than just letting the
-caller deal with it because of the following reasons.
-1. Enforces a common API across multiple implementations can do that
-   via review, but that's not generally gone well in the long run for
-   subsystems that have done it (several have later moved to callback
-   and feature list based approaches).
-2. Gives a path for 'intercepting' in the EDAC feature driver.
-   An example for this is that we could intercept PPR repair calls
-   and sanity check that the memory in question is offline before
-   passing back to the underlying code.  Sure we could rely on doing
-   that via some additional calls from the parent driver, but the
-   ABI will get messier.
-3. (Speculative) we may get in kernel users of some features in the
-   long run.
+Open Questions:
+Q1: CXL 3.1 spec defined patrol scrub control feature at CXL memory devices with
+supporting set scrub cycle and enable/disable scrub. but not based on HPA range.
+Thus presently scrub control for a region is implemented based on all associated
+CXL memory devices.
+What is the exact use case for the CXL region based scrub control?
+How the HPA range, which Dan asked for region based scrubbing is used?
+Does spec change is required for patrol scrub control feature with support
+for setting the HPA range?
 
-More details of the common RAS features are described in the following
-sections.
+Q2: Both CXL device based and CXL region based scrub control would be enabled
+      at the same time in a system?
 
-Memory Scrubbing
-================
-Increasing DRAM size and cost has made memory subsystem reliability
-an important concern. These modules are used where potentially
-corrupted data could cause expensive or fatal issues. Memory errors are
-one of the top hardware failures that cause server and workload crashes.
-
-Memory scrub is a feature where an ECC engine reads data from
-each memory media location, corrects with an ECC if necessary and
-writes the corrected data back to the same memory media location.
-
-The memory DIMMs could be scrubbed at a configurable rate to detect
-uncorrected memory errors and attempts to recover from detected memory
-errors providing the following benefits.
-- Proactively scrubbing memory DIMMs reduces the chance of a correctable
-  error becoming uncorrectable.
-- Once detected, uncorrected errors caught in unallocated memory pages are
-  isolated and prevented from being allocated to an application or the OS.
-- The probability of software/hardware products encountering memory
-  errors is reduced.
-Some details of background can be found in Reference [5].
-
-There are 2 types of memory scrubbing,
-1. Background (patrol) scrubbing of the RAM whilest the RAM is otherwise
-   idle.
-2. On-demand scrubbing for a specific address range/region of memory.
-
-There are several types of interfaces to HW memory scrubbers
-identified such as ACPI NVDIMM ARS(Address Range Scrub), CXL memory
-device patrol scrub, CXL DDR5 ECS, ACPI RAS2 memory scrubbing.
-
-The scrub control varies between different memory scrubbers. To allow
-for standard userspace tooling there is a need to present these controls
-with a standard ABI.
-
-Introduce generic memory EDAC scrub control which allows user to
-control underlying scrubbers in the system via generic sysfs scrub
-control interface.
-
-Use case of common scrub control feature
-========================================
-1. There are several types of interfaces to HW memory scrubbers identified
-   such as ACPI NVDIMM ARS(Address Range Scrub), CXL memory device patrol
-   scrub, CXL DDR5 ECS, ACPI RAS2 memory scrubbing features and software
-   based memory scrubber(discussed in the community Reference [5]).
-   Also some scrubbers support controlling (background) patrol scrubbing
-   (ACPI RAS2, CXL) and/or on-demand scrubbing(ACPI RAS2, ACPI ARS).
-   However the scrub controls varies between memory scrubbers. Thus there
-   is a requirement for a standard generic sysfs scrub controls exposed
-   to the userspace for the seamless control of the HW/SW scrubbers in
-   the system by admin/scripts/tools etc.
-2. Scrub controls in user space allow the user to disable the scrubbing
-   in case disabling of the background patrol scrubbing or changing the
-   scrub rate are needed for other purposes such as performance-aware
-   operations which requires the background operations to be turned off
-   or reduced.
-3. Allows to perform on-demand scrubbing for specific address range if
-   supported by the scrubber.
-4. User space tools controls scrub the memory DIMMs regularly at a
-   configurable scrub rate using the sysfs scrub controls discussed help,
-   - to detect uncorrectable memory errors early before user accessing memory,
-     which helps to recover the detected memory errors.
-   - reduces the chance of a correctable error becoming uncorrectable.
-5. Policy control for hotplugged memory. There is not necessarily a system
-   wide bios or similar in the loop to control the scrub settings on a CXL
-   device that wasn't there at boot. What that setting should be is a policy
-   decision as we are trading of reliability vs performance - hence it should
-   be in control of userspace. As such, 'an' interface is needed. Seems more
-   sensible to try and unify it with other similar interfaces than spin
-   yet another one.
-
-The draft version of userspace code for dynamic scrub control, based
-on frequency of memory errors reported to the userspace, is added in
-rasdaemon and enabled, tested for CXL device based patrol scrubbing feature
-and ACPI RAS2 based scrubbing feature.
-
-https://github.com/shijujose4/rasdaemon/tree/scrub_control_6_june_2024
-
-Comparison of scrubbing features
-================================
- ................................................................
- .              .   ACPI    . CXL patrol.  CXL ECS  .  ARS      .
- .  Name        .   RAS2    . scrub     .           .           .
- ................................................................
- .              .           .           .           .           .
- . On-demand    . Supported . No        . No        . Supported .
- . Scrubbing    .           .           .           .           .
- .              .           .           .           .           .  
- ................................................................
- .              .           .           .           .           .
- . Background   . Supported . Supported . Supported . No        .
- . scrubbing    .           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           .
- . Mode of      . Scrub ctrl. per device. per memory.  Unknown  .
- . scrubbing    . per NUMA  .           . media     .           .
- .              . domain.   .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Query scrub  . Supported . Supported . Supported . Supported .       
- . capabilities .           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Setting      . Supported . No        . No        . Supported .       
- . address range.           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Setting      . Supported . Supported . No        . No        .       
- . scrub rate   .           .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              .           .           .           .           . 
- . Unit for     . Not       . in hours  . No        . No        .       
- . scrub rate   . Defined   .           .           .           .
- .              .           .           .           .           .
- ................................................................
- .              . Supported .           .           .           .
- . Scrub        . on-demand . No        . No        . Supported .
- . status/      . scrubbing .           .           .           .
- . Completion   . only      .           .           .           .
- ................................................................
- . UC error     .           .CXL general.CXL general. ACPI UCE  .
- . reporting    . Exception .media/DRAM .media/DRAM . notify and.
- .              .           .event/media.event/media. query     .
- .              .           .scan?      .scan?      . ARS status.
- ................................................................
- .              .           .           .           .           .      
- . Clear UC     .  No       . No        .  No       . Supported .
- . error        .           .           .           .           .
- .              .           .           .           .           .  
- ................................................................
- .              .           .           .           .           .
- . Translate    . No        . No        . No        . Supported .
- . *(1)SPA to   .           .           .           .           .
- . *(2)DPA      .           .           .           .           .  
- ................................................................
- .              .           .           .           .           .
- . Error inject . No        . Can inject. No        . Supported .
- .              .           . poison for.           .           .
- .              .           . CXL       .           .           .  
- ................................................................
-*(1) - SPA - System Physical Address. See section 9.19.7.8
-       Function Index 5 - Translate SPA of ACPI spec r6.5.  
-*(2) - DPA - Device Physical Address. See section 9.19.7.8
-       Function Index 5 - Translate SPA of ACPI spec r6.5.  
-
-CXL Scrubbing features
-======================
-Add support for control CXL patrol scrubber and ACPI RAS2 HW based memory
-patrol scrubber and register with the EDAC scrub to expose the scrub
-controls to the userspace tool.
-
-CXL spec r3.1 section 8.2.9.9.11.1 describes the memory device patrol scrub
-control feature. The device patrol scrub proactively locates and makes
-corrections to errors in regular cycle. The patrol scrub control allows the
-request to configure patrol scrubber's input configurations.
-
-The patrol scrub control allows the requester to specify the number of
-hours in which the patrol scrub cycles must be completed, provided that
-the requested number is not less than the minimum number of hours for the
-patrol scrub cycle that the device is capable of. In addition, the patrol
-scrub controls allow the host to disable and enable the feature in case
-disabling of the feature is needed for other purposes such as
-performance-aware operations which require the background operations to be
-turned off.
-
-The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-Specification (JESD79-5) and allows the DRAM to internally read, correct
-single-bit errors, and write back corrected data bits to the DRAM array
-while providing transparency to error counts.
-
-The DDR5 device contains number of memory media FRUs per device. The
-DDR5 ECS feature and thus the ECS control driver supports configuring
-the ECS parameters per FRU.
-
-ACPI RAS2 Hardware-based Memory Scrubbing
-=========================================
-ACPI spec 6.5 section 5.2.21 ACPI RAS2 describes ACPI RAS2 table
-provides interfaces for platform RAS features and supports independent
-RAS controls and capabilities for a given RAS feature for multiple
-instances of the same component in a given system.
-Memory RAS features apply to RAS capabilities, controls and operations
-that are specific to memory. RAS2 PCC sub-spaces for memory-specific RAS
-features have a Feature Type of 0x00 (Memory).
-
-The platform can use the hardware-based memory scrubbing feature to expose
-controls and capabilities associated with hardware-based memory scrub
-engines. The RAS2 memory scrubbing feature supports following as per spec,
- - Independent memory scrubbing controls for each NUMA domain, identified
-   using its proximity domain.
-   Note: However AmpereComputing has single entry repeated as they have
-         centralized controls.
- - Provision for background (patrol) scrubbing of the entire memory system,
-   as well as on-demand scrubbing for a specific region of memory.
-
-ACPI Address Range Scrubbing(ARS)
-================================
-ARS allows the platform to communicate memory errors to system software.
-This capability allows system software to prevent accesses to addresses
-with uncorrectable errors in memory. ARS functions manage all NVDIMMs
-present in the system. Only one scrub can be in progress system wide
-at any given time.
-Following functions are supported as per the specification.
-1. Query ARS Capabilities for a given address range, indicates platform
-   supports the ACPI NVDIMM Root Device Unconsumed Error Notification.
-2. Start ARS triggers an Address Range Scrub for the given memory range.
-   Address scrubbing can be done for volatile memory, persistent memory,
-   or both.
-3. Query ARS Status command allows software to get the status of ARS,  
-   including the progress of ARS and ARS error record.
-4. Clear Uncorrectable Error.
-5. Translate SPA
-6. ARS Error Inject etc.
-Note: Support for ARS is not added in this series because to reduce the
-line of code for review and could be added after initial code is merged. 
-We'd like feedback on whether this is of interest to ARS community?
-
-Series adds,
-1. Generic EDAC RAS feature driver, EDAC scrub driver, EDAC ECS driver
-   supports memory scrub control, ECS control and other RAS features
-   in the system.
-2. Support for CXL feature mailbox commands, which is used by
-   CXL device scrubbing features. 
-3. CXL scrub driver supporting patrol scrub control (device and
-   region based).
-4. CXL ECS driver supporting ECS control feature.
-5. ACPI RAS2 driver adds OS interface for RAS2 communication through
-   PCC mailbox and extracts ACPI RAS2 feature table (RAS2) and
-   create platform device for the RAS memory features, which binds
-   to the memory ACPI RAS2 driver.
-7. Memory ACPI RAS2 driver gets the PCC subspace for communicating
-   with the ACPI compliant platform supports ACPI RAS2. Add callback
-   functions and registers with EDAC scrub to support user to
-   control the HW patrol scrubbers exposed to the kernel via the
-   ACPI RAS2 table.
-
-The QEMU series to support the CXL specific scrub features is
-available here,
-https://lore.kernel.org/linux-cxl/20240705123039.963781-3-Jonathan.Cameron@huawei.com/T/#mae1e799306d2841eb7e1b637b82046114b926d56
-
-Open Questions based on feedbacks from the community:
-1. Leo: Standardize unit for scrub rate, for example ACPI RAS2 does not define
-   unit for the scrub rate. RAS2 clarification needed. 
-2. Jonathan: Any need for discoverability of capability to scan different regions,
-   such as global PA space to the userspace. Left as future extension.
-3. Jiaqi:
-   - STOP_PATROL_SCRUBBER from RAS2 must be blocked and, must not be exposed to
-     OS/userspace. Stopping patrol scrubber is unacceptable for platform where
-     OEM has enabled patrol scrubber, because the patrol scrubber is a key part
-     of logging and is repurposed for other RAS actions.
-   If the OEM does not want to expose this control, they should lock it down so the
-   interface is not exposed to the OS. These features are optional afterall.
-   - "Requested Address Range"/"Actual Address Range" (region to scrub) is a
-      similarly bad thing to expose in RAS2.
-   If the OEM does not want to expose this, they should lock it down so the
-   interface is not exposed to the OS. These features are optional afterall.
-4. Borislav: 
-   - How the scrub control exposed to the userspace will be used?
-     POC added in rasdaemon with dynamic scrub control for CXL memory media
-     errors and memory errors reported to the userspace.
-     https://github.com/shijujose4/rasdaemon/tree/scrub_control_6_june_2024
-   - Is the scrub interface is sufficient for the use cases?
-   - Who is going to use scrub controls tools/admin/scripts?
-     1) Rasdaemon for dynamic control
-     2) Udev script for more static 'defaults' on hotplug etc.
-
-References:
-1. ACPI spec r6.5 section 5.2.21 ACPI RAS2.
-2. ACPI spec r6.5 section 9.19.7.2 ARS.
-3. CXL spec  r3.1 8.2.9.9.11.1 Device patrol scrub control feature
-4. CXL spec  r3.1 8.2.9.9.11.2 DDR5 ECS feature
-5. Background information about kernel support for memory scan, memory
-   error detection and ACPI RASF.
-   https://lore.kernel.org/all/20221103155029.2451105-1-jiaqiyan@google.com/
-6. Discussions on RASF:
-   https://lore.kernel.org/lkml/20230915172818.761-1-shiju.jose@huawei.com/#r 
-
-Changes
-=======
-v8 -> v9:
-1. Feedback from Borislav:
-   - Add scrub control driver to the EDAC on feedback from Borislav.
-   - Changed DEVICE_ATTR_..() static.
-   - Changed the write permissions for scrub control sysfs files as
-     root-only.
-2. Feedback from Fan:
-   - Optimized cxl_get_feature() function by using min() and removed
-     feat_out_min_size.
-   - Removed unreached return from cxl_set_feature() function.
-   - Changed the term  "rate" to "cycle_in_hours" in all the
-     scrub control code.
-   - Allow cxl_mem_probe() continue if cxl_mem_patrol_scrub_init() fail,
-     with just a debug warning.
-      
-3. Feedback from Jonathan:
-   - Removed patch __free() based cleanup function for acpi_put_table.
-     and added fix in the acpi ras2 driver.
-
-4. Feedback from Dan Williams:
-   - Allow cxl_mem_probe() continue if cxl_mem_patrol_scrub_init() fail,
-     with just a debug warning.
-   - Add support for CXL region based scrub control.
-
-5. Feedback from Daniel Ferguson on RAS2 drivers:
-    In the ACPI RAS2 driver,
-  - Incorporated the changes given for clearing error reported.
-  - Incorporated the changes given for check the Set RAS Capability
-    status and return an appropriate error.
-    In the RAS2 memory driver,
-  - Added more checks for start/stop bg and on-demand scrubbing
-    so that addr range in cache do not get cleared and restrict
-    permitted operations during scrubbing.
-
-v7 -> v8:
-1. Add more detailed cover letter and add info for basic analysis
-   of ACPI ARS for comment from Dan Williams.
-2. Changed file name etc from ras2 to acpi_ras2 in memory ACPI RAS2
-   driver for comment from Boris.
-3. Add documents for usage for comment from Jonathan.
-4. Changed logic in memory/acpi_ras2.c for enable background
-   scrubbing to allow setting the scrub rate.
-5. Merged memory/acpi_ras2_common.c with memory/acpi_ras2.c and
-   obselete code, suggested by Jonathan.  
-6. Initial optimizations and cleanup especially in the memory/acpi_ras2.
-7. Removed CXL ECS support for time being. 
-8. Removed support for region based scrub control from the scrub
-   subsytem, which was needed for the CXL ECS, can be added later
-   if required.
-9. Fixed the format of few comments and a definition in CXL feature
-    code for the feedbacks from Fan.
-11. Jonathan done several optimizations, interface changes and
-    cleanups all over the code.
-12. Fixes for feedbacks from Daniel Ferguson(Amperecomputing)
-    for RAS2.
-13.  Workaround for a RAS2 case of only one actual controller as
-     reported by Daniel Ferguson(AmpereComputing) in their hardware.
-14. Feedback from Yazen, move the common scrub and ras2 changes
-    under /drivers/ras/.
-15. Drop patch ACPICA: ACPI 6.5: Add support for RAS2 table because 
-    Rafael queued the patch.
-    https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=bleeding-edge&id=9726d821f88e284ecd998b76ae5f2174721cd9dc
- 
-v6 -> v7:
-1. Main changes for comments from Jonathan, Thanks.
-1.1. CXL
- - Changes for deal with small mail box and supporting multipart
-   feature data transfers.
- - Provide more specific parameters to mbox supported/get/set features
-   interface functions.
- - kvmalloc -> kmalloc in CXL scrub mem allocation for feature commands.
- - Changed the way using __free(kfree)
- - Removed readback and verify for setting CXL scrub patrol and ECS
-   parameters. Could be added later if needed.
- - In is_visible() callback functions for scrub control sysfs attrs
-   changed to writeback the default attribute mode value instead of
-   setting per attrs.
- - Add documentation for sysfs interfaces for CXL ECS scrub control. 
-1.2. RAS2
- - In rasf common code, rename rasf to ras2 because RASF seems obselete.
- - Replace pr_* with dev_* log function calls from ACPI RAS2 and
-   memory RAS2 drivers.
- - In rasf common code, rename rasf to ras2.
- - Removed including unnecessary .h file from memory RAS2 driver.
- - In is_visible() callback functions for scrub control sysfs attrs
-   changed to writeback the default attribute mode value instead of
-   setting per attribute.
-
-2. Changes for comments from Fan, Thanks.
- - Add debug message if cxl patrol scrub and ecs init function
-   calls fail.
-3. Updated cover letter for feedback from Dan Williams. 
-   
-v5 -> v6:
-1. Changes for comments from Davidlohr, Thanks.
- - Update CXL feature code based on spec 3.1.
- - attrb -> attr
- - Use enums with default counting.  
-2. Rebased to the latest kernel.
-
-v4 -> v5:
-1. Following are the main changes made based on the feedback from Dan Williams on v4.
-1.1. In the scrub subsystem the common scrub control attributes are statically defined
-     instead of dynamically created.
-1.2. Add scrub subsystem support externally defined attribute group.
-     Add CXL ECS driver define ECS specific attribute group and pass to
-	 the scrub subsystem.
-1.3. Move cxl_mem_ecs_init() to cxl/core/region.c so that the CXL region_id
-     is used in the registration with the scrub subsystem. 	 
-1.4. Add previously posted RASF common and RAS2 patches to this scrub series.
-	 
-2. Add support for the 'enable_background_scrub' attribute
-   for RAS2, on request from Bill Schwartz(wschwartz@amperecomputing.com).
-
-v3 -> v4:
-1. Fixes for the warnings/errors reported by kernel test robot.
-2. Add support for reading the 'enable' attribute of CXL patrol scrub.
-
-Changes
-v2 -> v3:
-1. Changes for comments from Davidlohr, Thanks.
- - Updated cxl scrub kconfig
- - removed usage of the flag is_support_feature from
-   the function cxl_mem_get_supported_feature_entry().
- - corrected spelling error.
- - removed unnecessary debug message.
- - removed export feature commands to the userspace.
-2. Possible fix for the warnings/errors reported by kernel
-   test robot.
-3. Add documentation for the common scrub configure attributes.
-
-v1 -> v2:
-1. Changes for comments from Dave Jiang, Thanks.
- - Split patches.
- - reversed xmas tree declarations.
- - declared flags as enums.
- - removed few unnecessary variable initializations.
- - replaced PTR_ERR_OR_ZERO() with IS_ERR() and PTR_ERR().
- - add auto clean declarations.
- - replaced while loop with for loop.
- - Removed allocation from cxl_get_supported_features() and
-   cxl_get_feature() and make change to take allocated memory
-   pointer from the caller.
- - replaced if/else with switch case.
- - replaced sprintf() with sysfs_emit() in 2 places.
- - replaced goto label with return in few functions.
-2. removed unused code for supported attributes from ecs.
-3. Included following common patch for scrub configure driver
-   to this series.
-   "memory: scrub: Add scrub driver supports configuring memory scrubbers
-    in the system"
-
-Jonathan Cameron (1):
-  platform: Add __free() based cleanup function for platform_device_put
-
-Shiju Jose (10):
-  EDAC: Add generic EDAC RAS feature driver
-  EDAC: Add EDAC scrub control driver
-  EDAC: Add EDAC ECS control driver
-  cxl/mbox: Add GET_SUPPORTED_FEATURES mailbox command
-  cxl/mbox: Add GET_FEATURE mailbox command
-  cxl/mbox: Add SET_FEATURE mailbox command
-  cxl/memscrub: Add CXL memory device patrol scrub control feature
-  cxl/memscrub: Add CXL memory device ECS control feature
-  ACPI:RAS2: Add ACPI RAS2 driver
-  ras: scrub: ACPI RAS2: Add memory ACPI RAS2 driver
-
- Documentation/ABI/testing/sysfs-edac-scrub |  64 ++
- Documentation/scrub/edac-scrub.rst         | 107 +++
- drivers/acpi/Kconfig                       |  10 +
- drivers/acpi/Makefile                      |   1 +
- drivers/acpi/ras2.c                        | 391 ++++++++++
- drivers/cxl/Kconfig                        |  19 +
- drivers/cxl/core/Makefile                  |   1 +
- drivers/cxl/core/mbox.c                    | 135 ++++
- drivers/cxl/core/memscrub.c                | 842 +++++++++++++++++++++
- drivers/cxl/core/region.c                  |   6 +
- drivers/cxl/cxlmem.h                       | 129 ++++
- drivers/cxl/mem.c                          |   4 +
- drivers/edac/Makefile                      |   1 +
- drivers/edac/edac_ecs.c                    | 396 ++++++++++
- drivers/edac/edac_ras_feature.c            | 161 ++++
- drivers/edac/edac_scrub.c                  | 312 ++++++++
- drivers/ras/Kconfig                        |  10 +
- drivers/ras/Makefile                       |   1 +
- drivers/ras/acpi_ras2.c                    | 401 ++++++++++
- include/acpi/ras2_acpi.h                   |  59 ++
- include/linux/edac_ras_feature.h           | 130 ++++
- include/linux/platform_device.h            |   1 +
- 22 files changed, 3181 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-edac-scrub
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ Documentation/scrub/edac-scrub.rst |  70 +++++
+ drivers/cxl/Kconfig                |  19 ++
+ drivers/cxl/core/Makefile          |   1 +
+ drivers/cxl/core/memscrub.c        | 413 +++++++++++++++++++++++++++++
+ drivers/cxl/core/region.c          |   6 +
+ drivers/cxl/cxlmem.h               |   8 +
+ drivers/cxl/mem.c                  |   4 +
+ 7 files changed, 521 insertions(+)
  create mode 100644 Documentation/scrub/edac-scrub.rst
- create mode 100755 drivers/acpi/ras2.c
  create mode 100644 drivers/cxl/core/memscrub.c
- create mode 100755 drivers/edac/edac_ecs.c
- create mode 100755 drivers/edac/edac_ras_feature.c
- create mode 100755 drivers/edac/edac_scrub.c
- create mode 100644 drivers/ras/acpi_ras2.c
- create mode 100644 include/acpi/ras2_acpi.h
- create mode 100755 include/linux/edac_ras_feature.h
 
+diff --git a/Documentation/scrub/edac-scrub.rst b/Documentation/scrub/edac-scrub.rst
+new file mode 100644
+index 000000000000..cf7d8b130204
+--- /dev/null
++++ b/Documentation/scrub/edac-scrub.rst
+@@ -0,0 +1,70 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===================
++EDAC Scrub control
++===================
++
++Copyright (c) 2024 HiSilicon Limited.
++
++:Author:   Shiju Jose <shiju.jose@huawei.com>
++:License:  The GNU Free Documentation License, Version 1.2
++          (dual licensed under the GPL v2)
++:Original Reviewers:
++
++- Written for: 6.12
++- Updated for:
++
++Introduction
++------------
++The edac scrub driver provides interfaces for controlling the
++memory scrubbers in the system. The scrub device drivers in the
++system register with the edac scrub. The driver exposes the
++scrub controls to the user in the sysfs.
++
++The File System
++---------------
++
++The control attributes of the registered scrubbers could be
++accessed in the /sys/bus/edac/devices/<dev-name>/scrub/
++
++sysfs
++-----
++
++Sysfs files are documented in
++`Documentation/ABI/testing/sysfs-edac-scrub-control`.
++
++Example
++-------
++
++The usage takes the form shown in this example::
++
++1. CXL memory device patrol scrubber
++1.1 device based
++root@localhost:~# cat /sys/bus/edac/devices/cxl_mem0/scrub/cycle_in_hours_range
++0x1-0xff
++root@localhost:~# cat /sys/bus/edac/devices/cxl_mem0/scrub/cycle_in_hours
++0xc
++root@localhost:~# echo 30 > /sys/bus/edac/devices/cxl_mem0/scrub/cycle_in_hours
++root@localhost:~# cat /sys/bus/edac/devices/cxl_mem0/scrub/cycle_in_hours
++0x1e
++root@localhost:~# echo 1 > /sys/bus/edac/devices/cxl_mem0/scrub/enable_background
++root@localhost:~# cat /sys/bus/edac/devices/cxl_mem0/scrub/enable_background
++1
++root@localhost:~# echo 0 > /sys/bus/edac/devices/cxl_mem0/scrub/enable_background
++root@localhost:~# cat /sys/bus/edac/devices/cxl_mem0/scrub/enable_background
++0
++
++1.2. region based
++root@localhost:~# cat /sys/bus/edac/devices/cxl_region0/scrub/cycle_in_hours_range
++0x1-0xff
++root@localhost:~# cat /sys/bus/edac/devices/cxl_region0/scrub/cycle_in_hours
++0xc
++root@localhost:~# echo 30 > /sys/bus/edac/devices/cxl_region0/scrub/cycle_in_hours
++root@localhost:~# cat /sys/bus/edac/devices/cxl_region0/scrub/cycle_in_hours
++0x1e
++root@localhost:~# echo 1 > /sys/bus/edac/devices/cxl_region0/scrub/enable_background
++root@localhost:~# cat /sys/bus/edac/devices/cxl_region0/scrub/enable_background
++1
++root@localhost:~# echo 0 > /sys/bus/edac/devices/cxl_region0/scrub/enable_background
++root@localhost:~# cat /sys/bus/edac/devices/cxl_region0/scrub/enable_background
++0
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 99b5c25be079..7da70685a2db 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -145,4 +145,23 @@ config CXL_REGION_INVALIDATION_TEST
+ 	  If unsure, or if this kernel is meant for production environments,
+ 	  say N.
+ 
++config CXL_SCRUB
++	bool "CXL: Memory scrub feature"
++	depends on CXL_PCI
++	depends on CXL_MEM
++	depends on EDAC
++	help
++	  The CXL memory scrub control is an optional feature allows host to
++	  control the scrub configurations of CXL Type 3 devices, which
++	  supports patrol scrubbing.
++
++	  Registers with the scrub subsystem to provide control attributes
++	  of CXL memory device scrubber to the user.
++	  Provides interface functions to support configuring the CXL memory
++	  device patrol scrubber.
++
++	  Say 'y/n' to enable/disable control of memory scrub parameters for
++	  CXL.mem devices. See section 8.2.9.9.11.1 of CXL 3.1 specification
++	  for detailed description of CXL memory patrol scrub control feature.
++
+ endif
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 9259bcc6773c..e0fc814c3983 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -16,3 +16,4 @@ cxl_core-y += pmu.o
+ cxl_core-y += cdat.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
++cxl_core-$(CONFIG_CXL_SCRUB) += memscrub.o
+diff --git a/drivers/cxl/core/memscrub.c b/drivers/cxl/core/memscrub.c
+new file mode 100644
+index 000000000000..430f85b01f6c
+--- /dev/null
++++ b/drivers/cxl/core/memscrub.c
+@@ -0,0 +1,413 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * CXL memory scrub driver.
++ *
++ * Copyright (c) 2024 HiSilicon Limited.
++ *
++ *  - Provides functions to configure patrol scrub feature of the
++ *    CXL memory devices.
++ *  - Registers with the scrub subsystem driver to expose the sysfs attributes
++ *    to the user for configuring the CXL memory patrol scrub feature.
++ */
++
++#define pr_fmt(fmt)	"CXL_MEM_SCRUB: " fmt
++
++#include <cxlmem.h>
++#include <linux/cleanup.h>
++#include <linux/limits.h>
++#include <cxl.h>
++#include <linux/edac_ras_feature.h>
++
++#define CXL_DEV_NUM_RAS_FEATURES	2
++
++/*ToDo: This reusable function will be moved to a common file */
++static int cxl_mem_get_supported_feature_entry(struct cxl_memdev *cxlmd, const uuid_t *feat_uuid,
++					       struct cxl_mbox_supp_feat_entry *feat_entry_out)
++{
++	struct cxl_mbox_supp_feat_entry *feat_entry;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
++	int feat_index, feats_out_size;
++	int nentries, count;
++	int ret;
++
++	feat_index = 0;
++	feats_out_size = sizeof(struct cxl_mbox_get_supp_feats_out) +
++			  sizeof(struct cxl_mbox_supp_feat_entry);
++	struct cxl_mbox_get_supp_feats_out *feats_out __free(kfree) =
++					kmalloc(feats_out_size, GFP_KERNEL);
++	if (!feats_out)
++		return -ENOMEM;
++
++	while (true) {
++		memset(feats_out, 0, feats_out_size);
++		ret = cxl_get_supported_features(mds, feats_out_size,
++						 feat_index, feats_out);
++		if (ret)
++			return ret;
++
++		nentries = feats_out->nr_entries;
++		if (!nentries)
++			return -EOPNOTSUPP;
++
++		/* Check CXL memdev supports the feature */
++		feat_entry = feats_out->feat_entries;
++		for (count = 0; count < nentries; count++, feat_entry++) {
++			if (uuid_equal(&feat_entry->uuid, feat_uuid)) {
++				memcpy(feat_entry_out, feat_entry,
++				       sizeof(*feat_entry_out));
++				return 0;
++			}
++		}
++		feat_index += nentries;
++	}
++}
++
++#define CXL_SCRUB_NAME_LEN	128
++
++/* CXL memory patrol scrub control definitions */
++#define CXL_MEMDEV_PS_GET_FEAT_VERSION	0x01
++#define CXL_MEMDEV_PS_SET_FEAT_VERSION	0x01
++
++static const uuid_t cxl_patrol_scrub_uuid =
++	UUID_INIT(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33, 0x75, 0x77, 0x4e,     \
++		  0x06, 0xdb, 0x8a);
++
++/* CXL memory patrol scrub control functions */
++struct cxl_patrol_scrub_context {
++	u16 get_feat_size;
++	u16 set_feat_size;
++	struct cxl_memdev *cxlmd;
++	struct cxl_region *cxlr;
++};
++
++/**
++ * struct cxl_memdev_ps_params - CXL memory patrol scrub parameter data structure.
++ * @enable:     [IN & OUT] enable(1)/disable(0) patrol scrub.
++ * @scrub_cycle_changeable: [OUT] scrub cycle attribute of patrol scrub is changeable.
++ * @scrub_cycle_hrs:    [IN] Requested patrol scrub cycle in hours.
++ *                      [OUT] Current patrol scrub cycle in hours.
++ * @min_scrub_cycle_hrs:[OUT] minimum patrol scrub cycle in hours supported.
++ */
++struct cxl_memdev_ps_params {
++	bool enable;
++	bool scrub_cycle_changeable;
++	u16 scrub_cycle_hrs;
++	u16 min_scrub_cycle_hrs;
++};
++
++enum cxl_scrub_param {
++	cxl_ps_param_enable,
++	cxl_ps_param_scrub_cycle,
++};
++
++#define	CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK	BIT(0)
++#define	CXL_MEMDEV_PS_SCRUB_CYCLE_REALTIME_REPORT_CAP_MASK	BIT(1)
++#define	CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK	GENMASK(7, 0)
++#define	CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK	GENMASK(15, 8)
++#define	CXL_MEMDEV_PS_FLAG_ENABLED_MASK	BIT(0)
++
++struct cxl_memdev_ps_rd_attrs {
++	u8 scrub_cycle_cap;
++	__le16 scrub_cycle_hrs;
++	u8 scrub_flags;
++}  __packed;
++
++struct cxl_memdev_ps_wr_attrs {
++	u8 scrub_cycle_hrs;
++	u8 scrub_flags;
++}  __packed;
++
++static int cxl_mem_ps_get_attrs(struct cxl_memdev_state *mds,
++				struct cxl_memdev_ps_params *params)
++{
++	size_t rd_data_size = sizeof(struct cxl_memdev_ps_rd_attrs);
++	size_t data_size;
++	struct cxl_memdev_ps_rd_attrs *rd_attrs __free(kfree) =
++						kmalloc(rd_data_size, GFP_KERNEL);
++	if (!rd_attrs)
++		return -ENOMEM;
++
++	data_size = cxl_get_feature(mds, cxl_patrol_scrub_uuid, rd_attrs,
++				    rd_data_size, CXL_GET_FEAT_SEL_CURRENT_VALUE);
++	if (!data_size)
++		return -EIO;
++
++	params->scrub_cycle_changeable = FIELD_GET(CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK,
++						   rd_attrs->scrub_cycle_cap);
++	params->enable = FIELD_GET(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
++				   rd_attrs->scrub_flags);
++	params->scrub_cycle_hrs = FIELD_GET(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
++					    rd_attrs->scrub_cycle_hrs);
++	params->min_scrub_cycle_hrs = FIELD_GET(CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK,
++						rd_attrs->scrub_cycle_hrs);
++
++	return 0;
++}
++
++static int cxl_ps_get_attrs(struct device *dev, void *drv_data,
++			    struct cxl_memdev_ps_params *params)
++{
++	struct cxl_patrol_scrub_context *cxl_ps_ctx = drv_data;
++	struct cxl_memdev *cxlmd;
++	struct cxl_dev_state *cxlds;
++	struct cxl_memdev_state *mds;
++	u16 min_scrub_cycle = 0;
++	int i, ret;
++
++	if (cxl_ps_ctx->cxlr) {
++		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
++		struct cxl_region_params *p = &cxlr->params;
++
++		for (i = p->interleave_ways - 1; i >= 0; i--) {
++			struct cxl_endpoint_decoder *cxled = p->targets[i];
++
++			cxlmd = cxled_to_memdev(cxled);
++			cxlds = cxlmd->cxlds;
++			mds = to_cxl_memdev_state(cxlds);
++			ret = cxl_mem_ps_get_attrs(mds, params);
++			if (ret)
++				return ret;
++
++			if (params->min_scrub_cycle_hrs > min_scrub_cycle)
++				min_scrub_cycle = params->min_scrub_cycle_hrs;
++		}
++		params->min_scrub_cycle_hrs = min_scrub_cycle;
++		return 0;
++	}
++	cxlmd = cxl_ps_ctx->cxlmd;
++	cxlds = cxlmd->cxlds;
++	mds = to_cxl_memdev_state(cxlds);
++
++	return cxl_mem_ps_get_attrs(mds, params);
++}
++
++static int cxl_mem_ps_set_attrs(struct device *dev, struct cxl_memdev_state *mds,
++				struct cxl_memdev_ps_params *params,
++				enum cxl_scrub_param param_type)
++{
++	struct cxl_memdev_ps_wr_attrs wr_attrs;
++	struct cxl_memdev_ps_params rd_params;
++	int ret;
++
++	ret = cxl_mem_ps_get_attrs(mds, &rd_params);
++	if (ret) {
++		dev_err(dev, "Get cxlmemdev patrol scrub params failed ret=%d\n",
++			ret);
++		return ret;
++	}
++
++	switch (param_type) {
++	case cxl_ps_param_enable:
++		wr_attrs.scrub_flags = FIELD_PREP(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
++						   params->enable);
++		wr_attrs.scrub_cycle_hrs = FIELD_PREP(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
++						      rd_params.scrub_cycle_hrs);
++		break;
++	case cxl_ps_param_scrub_cycle:
++		if (params->scrub_cycle_hrs < rd_params.min_scrub_cycle_hrs) {
++			dev_err(dev, "Invalid CXL patrol scrub cycle(%d) to set\n",
++				params->scrub_cycle_hrs);
++			dev_err(dev, "Minimum supported CXL patrol scrub cycle in hour %d\n",
++			       params->min_scrub_cycle_hrs);
++			return -EINVAL;
++		}
++		wr_attrs.scrub_cycle_hrs = FIELD_PREP(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
++						      params->scrub_cycle_hrs);
++		wr_attrs.scrub_flags = FIELD_PREP(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
++						  rd_params.enable);
++		break;
++	}
++
++	ret = cxl_set_feature(mds, cxl_patrol_scrub_uuid, CXL_MEMDEV_PS_SET_FEAT_VERSION,
++			      &wr_attrs, sizeof(wr_attrs),
++			      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET);
++	if (ret) {
++		dev_err(dev, "CXL patrol scrub set feature failed ret=%d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cxl_ps_set_attrs(struct device *dev, void *drv_data,
++			    struct cxl_memdev_ps_params *params,
++			    enum cxl_scrub_param param_type)
++{
++	struct cxl_patrol_scrub_context *cxl_ps_ctx = drv_data;
++	struct cxl_memdev *cxlmd;
++	struct cxl_dev_state *cxlds;
++	struct cxl_memdev_state *mds;
++	int ret, i;
++
++	if (cxl_ps_ctx->cxlr) {
++		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
++		struct cxl_region_params *p = &cxlr->params;
++
++		for (i = p->interleave_ways - 1; i >= 0; i--) {
++			struct cxl_endpoint_decoder *cxled = p->targets[i];
++
++			cxlmd = cxled_to_memdev(cxled);
++			cxlds = cxlmd->cxlds;
++			mds = to_cxl_memdev_state(cxlds);
++			ret = cxl_mem_ps_set_attrs(dev, mds, params, param_type);
++			if (ret)
++				return ret;
++		}
++	} else {
++		cxlmd = cxl_ps_ctx->cxlmd;
++		cxlds = cxlmd->cxlds;
++		mds = to_cxl_memdev_state(cxlds);
++
++		return cxl_mem_ps_set_attrs(dev, mds, params, param_type);
++	}
++
++	return 0;
++}
++
++static int cxl_patrol_scrub_get_enabled_bg(struct device *dev, void *drv_data, bool *enabled)
++{
++	struct cxl_memdev_ps_params params;
++	int ret;
++
++	ret = cxl_ps_get_attrs(dev, drv_data, &params);
++	if (ret)
++		return ret;
++
++	*enabled = params.enable;
++
++	return 0;
++}
++
++static int cxl_patrol_scrub_set_enabled_bg(struct device *dev, void *drv_data, bool enable)
++{
++	struct cxl_memdev_ps_params params = {
++		.enable = enable,
++	};
++
++	return cxl_ps_set_attrs(dev, drv_data, &params, cxl_ps_param_enable);
++}
++
++static int cxl_patrol_scrub_get_name(struct device *dev, void *drv_data, char *name)
++{
++	struct cxl_patrol_scrub_context *cxl_ps_ctx = drv_data;
++	struct cxl_memdev *cxlmd = cxl_ps_ctx->cxlmd;
++
++	if (cxl_ps_ctx->cxlr) {
++		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
++
++		return sysfs_emit(name, "cxl_region%d_patrol_scrub\n", cxlr->id);
++	}
++
++	return sysfs_emit(name, "cxl_%s_patrol_scrub\n", dev_name(&cxlmd->dev));
++}
++
++static int cxl_patrol_scrub_write_scrub_cycle_hrs(struct device *dev, void *drv_data,
++						  u64 scrub_cycle_hrs)
++{
++	struct cxl_memdev_ps_params params = {
++		.scrub_cycle_hrs = scrub_cycle_hrs,
++	};
++
++	return cxl_ps_set_attrs(dev, drv_data, &params, cxl_ps_param_scrub_cycle);
++}
++
++static int cxl_patrol_scrub_read_scrub_cycle_hrs(struct device *dev, void *drv_data,
++						 u64 *scrub_cycle_hrs)
++{
++	struct cxl_memdev_ps_params params;
++	int ret;
++
++	ret = cxl_ps_get_attrs(dev, drv_data, &params);
++	if (ret)
++		return ret;
++
++	*scrub_cycle_hrs = params.scrub_cycle_hrs;
++
++	return 0;
++}
++
++static int cxl_patrol_scrub_read_scrub_cycle_hrs_range(struct device *dev, void *drv_data,
++						       u64 *min, u64 *max)
++{
++	struct cxl_memdev_ps_params params;
++	int ret;
++
++	ret = cxl_ps_get_attrs(dev, drv_data, &params);
++	if (ret)
++		return ret;
++	*min = params.min_scrub_cycle_hrs;
++	*max = U8_MAX; /* Max set by register size */
++
++	return 0;
++}
++
++static const struct edac_scrub_ops cxl_ps_scrub_ops = {
++	.get_enabled_bg = cxl_patrol_scrub_get_enabled_bg,
++	.set_enabled_bg = cxl_patrol_scrub_set_enabled_bg,
++	.get_name = cxl_patrol_scrub_get_name,
++	.cycle_in_hours_read = cxl_patrol_scrub_read_scrub_cycle_hrs,
++	.cycle_in_hours_write = cxl_patrol_scrub_write_scrub_cycle_hrs,
++	.cycle_in_hours_range = cxl_patrol_scrub_read_scrub_cycle_hrs_range,
++};
++
++int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
++{
++	struct edac_ras_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
++	struct cxl_patrol_scrub_context *cxl_ps_ctx;
++	struct cxl_mbox_supp_feat_entry feat_entry;
++	char cxl_dev_name[CXL_SCRUB_NAME_LEN];
++	int rc, i, num_ras_features = 0;
++
++	if (cxlr) {
++		struct cxl_region_params *p = &cxlr->params;
++
++		for (i = p->interleave_ways - 1; i >= 0; i--) {
++			struct cxl_endpoint_decoder *cxled = p->targets[i];
++
++			cxlmd = cxled_to_memdev(cxled);
++			memset(&feat_entry, 0, sizeof(feat_entry));
++			rc = cxl_mem_get_supported_feature_entry(cxlmd, &cxl_patrol_scrub_uuid,
++								 &feat_entry);
++			if (rc < 0)
++				return rc;
++			if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
++				return -EOPNOTSUPP;
++		}
++	} else {
++		rc = cxl_mem_get_supported_feature_entry(cxlmd, &cxl_patrol_scrub_uuid,
++						 &feat_entry);
++		if (rc < 0)
++			return rc;
++
++		if (!(feat_entry.attr_flags & CXL_FEAT_ENTRY_FLAG_CHANGABLE))
++			return -EOPNOTSUPP;
++	}
++
++	cxl_ps_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ps_ctx), GFP_KERNEL);
++	if (!cxl_ps_ctx)
++		return -ENOMEM;
++
++	*cxl_ps_ctx = (struct cxl_patrol_scrub_context) {
++		.get_feat_size = feat_entry.get_size,
++		.set_feat_size = feat_entry.set_size,
++	};
++	if (cxlr) {
++		snprintf(cxl_dev_name, sizeof(cxl_dev_name),
++			 "cxl_region%d", cxlr->id);
++		cxl_ps_ctx->cxlr = cxlr;
++	} else {
++		snprintf(cxl_dev_name, sizeof(cxl_dev_name),
++			 "%s_%s", "cxl", dev_name(&cxlmd->dev));
++		cxl_ps_ctx->cxlmd = cxlmd;
++	}
++
++	ras_features[num_ras_features].feat = ras_feat_scrub;
++	ras_features[num_ras_features].scrub_ops = &cxl_ps_scrub_ops;
++	ras_features[num_ras_features].scrub_ctx = cxl_ps_ctx;
++	num_ras_features++;
++
++	return edac_ras_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
++				     num_ras_features, ras_features);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_mem_ras_features_init, CXL);
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 3c2b6144be23..14db9d301747 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3304,6 +3304,12 @@ static int cxl_region_probe(struct device *dev)
+ 					p->res->start, p->res->end, cxlr,
+ 					is_system_ram) > 0)
+ 			return 0;
++
++		rc = cxl_mem_ras_features_init(NULL, cxlr);
++		if (rc)
++			dev_warn(&cxlr->dev, "CXL ras features init for region_id=%d failed\n",
++				 cxlr->id);
++
+ 		return devm_cxl_add_dax_region(cxlr);
+ 	default:
+ 		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index c3cb8e2736b5..9a0eb41e5997 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -958,6 +958,14 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
+ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
+ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
+ 
++/* cxl memory scrub functions */
++#ifdef CONFIG_CXL_SCRUB
++int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr);
++#else
++static inline int cxl_mem_ras_features_init(struct cxl_memdev *cxlmd, struct cxl_region *cxlr)
++{ return 0; }
++#endif
++
+ #ifdef CONFIG_CXL_SUSPEND
+ void cxl_mem_active_inc(void);
+ void cxl_mem_active_dec(void);
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 0c79d9ce877c..7c8360e2e09b 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -117,6 +117,10 @@ static int cxl_mem_probe(struct device *dev)
+ 	if (!cxlds->media_ready)
+ 		return -EBUSY;
+ 
++	rc = cxl_mem_ras_features_init(cxlmd, NULL);
++	if (rc)
++		dev_warn(&cxlmd->dev, "CXL ras features init failed\n");
++
+ 	/*
+ 	 * Someone is trying to reattach this device after it lost its port
+ 	 * connection (an endpoint port previously registered by this memdev was
 -- 
 2.34.1
 
