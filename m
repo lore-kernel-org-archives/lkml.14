@@ -1,146 +1,103 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D0913A416;
-	Tue, 16 Jul 2024 10:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FA313A416;
+	Tue, 16 Jul 2024 10:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721127457; cv=none; b=gIaamZXbhCbUPaaQLqc9/vwhBu1euNMcUGqL8apnqaD8wPgyRpfVd4BuRpswRiA+sErWeJNB/nfMj2fjoOiMEcJl+Ug2WxnYgKcpFD3Wo+fFfRQ3sZpbuiKZ6dyNG0y00Ax6lmr0KCnU+Y4HgLZVkw37JkOwDSGC2W+KTElnOgg=
+	t=1721127463; cv=none; b=AxxtRZxH5Z6csMIULfE3OCrzI3rYwqOs5lB/tSUOORoKOp32H+rmVs7dIM3hsWzpb1VjTOCxliufZ1H6VmCsvqeF6uBUiyI6SeTQLe7a+30wiwXS5u/4ab3g/12DwV2ohd8+oL2FdAvbCMszJ+qLUEeOtWr44AX3LYGjlh/nLZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721127457; c=relaxed/simple;
-	bh=u3tdViBmCFTWsqM5V2S0H18K58R1pakhIEDmxZF6AJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H5WI6relJD1sCEc2vHZ/ptOYWLn9BNiDgOxKxMbYmCRWV9kJ8ZmgMT4Quoup977rNV37KkHHpfWiQ7fipAx0A8+AmxfMizmkKFyiAlEJTuiAZZgU3IxcWUNMRmBPYn3tcr29Y1bGEzk8BJCE24vfXSgNfQ3qh9LhORWAFeT1TyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g1MqdYC1; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1721127463; c=relaxed/simple;
+	bh=aocP7RUGsmhvJkehNMWI/c4VBoqY60Gv7KuiloPxwhs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=SkusTTbHVf1GphY1cAmqSOLjTVFwj67+neJsS4/gFqkaTJPiNfUgdFeTJWBtfjRLPdPaSLwa9zVqFMngiVi7vCgdQwetAv/bA2Rpdvjl60VYxv7rcTshTDEkquKzIXnCM+s2riE8iJhzPJVl4H/0aZpSP4f9L2Jm1af/6VhjXCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hv8DaxJl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g1MqdYC1"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46GAlTkY013924;
-	Tue, 16 Jul 2024 10:57:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding; s=pp1; bh=
-	5YpLZBFHa4u/yz0h1zDRTMe6ArvUdZ8SFwam82a19uI=; b=g1MqdYC16MSvXnSC
-	RNEUUAV6nWW70hptfnT8bMAMjyQxdsV2SFbXGn8CI13yDWySB4Ja2XsLnHD9WD+w
-	F4dCLeD19qYDE+Hanm7ADpvxXUtJ+1xh5ydIb236y6HJVCuAM4FiZ0ezaYWbFPWo
-	U7LlV9dh+yAjYN6Gb5wAk9KzmylwwBSXGUU8sHtOPAyl6dLSWYDhnfYOoOfLw2LK
-	Jjps/xcGLznmIpWBejvZ+cjh5WYclyfHesVhYvVizdkJrLT2GFOHnaw6GCqLTnF0
-	zWJAk0TggqHOX5ZKbTf8tqrhLJRIFC2PNVQcUcIwBt/7tpZF7ckkIM9OMD6GC/Vo
-	XPo38A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40dq4wr1fr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 10:57:06 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46GAv5nb025254;
-	Tue, 16 Jul 2024 10:57:05 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40dq4wr1cv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 10:57:05 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46G8jlL1030523;
-	Tue, 16 Jul 2024 10:52:27 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40c4a0ktt3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 10:52:27 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46GAqMU322872322
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Jul 2024 10:52:24 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EA57920043;
-	Tue, 16 Jul 2024 10:52:21 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8C3D220040;
-	Tue, 16 Jul 2024 10:52:21 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Jul 2024 10:52:21 +0000 (GMT)
-Date: Tue, 16 Jul 2024 12:52:20 +0200
-From: Halil Pasic <pasic@linux.ibm.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-        Alexander Duyck
- <alexander.h.duyck@linux.intel.com>,
-        Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg
- <johannes@sipsolutions.net>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck
- <cohuck@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger
- <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Jason
- Wang <jasowang@redhat.com>,
-        Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>,
-        linux-um@lists.infradead.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-        kvm@vger.kernel.org, Halil Pasic
- <pasic@linux.ibm.com>
-Subject: Re: [PATCH v2 2/2] virtio: fix vq # for balloon
-Message-ID: <20240716125220.677dccf4.pasic@linux.ibm.com>
-In-Reply-To: <3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst@redhat.com>
-References: <cover.1720611677.git.mst@redhat.com>
-	<3d655be73ce220f176b2c163839d83699f8faf43.1720611677.git.mst@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hv8DaxJl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A675C116B1;
+	Tue, 16 Jul 2024 10:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721127462;
+	bh=aocP7RUGsmhvJkehNMWI/c4VBoqY60Gv7KuiloPxwhs=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=Hv8DaxJl/t7ZHe9XvQzrSs5N487r48E/fAWYqcv2MpLjwgz7hkTDbBhCSb9GWJE7f
+	 yGBiwUvOPb5bURl99TU8kA6a2mKynDAgofa0QiJp9FEw4dBg4RxGq8dofDPpA30FTu
+	 hlXlMh4daX8WqIszuweEMUCQsvqD/l/bunF42v8+mxqmC7LvdGDIv94CJ5QxJDnYcp
+	 7u64BU3Z0lSokZO4ffZWbGL4dI7nDkThGjRuzr/t0Nzn7iodGm+J73Zjox2ukIGCeu
+	 d12qky3rIxX6PZEaXCrhV1e1CTIPAw/sd81wBp1P2EnvYvP78BgdqSaMl4/dW4dC3X
+	 DntTnoKy9b22g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -ciPuNbu1ulB9x3MDH6mw0VxJdTjfl_5
-X-Proofpoint-ORIG-GUID: _zkRs-FyWlqEBV9NEtx1Xwx1HT6kmSDZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-16_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 clxscore=1011 priorityscore=1501 adultscore=0
- impostorscore=0 phishscore=0 mlxlogscore=866 spamscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407160079
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 16 Jul 2024 13:57:39 +0300
+Message-Id: <D2QWRJMX5UZY.3EO7G8DMPU1ZQ@kernel.org>
+Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Hao
+ Ge" <gehao@kylinos.cn>
+Subject: Re: [PATCH] tpm: Move dereference after NULL check in
+ tpm_buf_check_hmac_response
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Hao Ge" <hao.ge@linux.dev>,
+ <peterhuewe@gmx.de>, <jgg@ziepe.ca>
+X-Mailer: aerc 0.17.0
+References: <20240709023337.102509-1-hao.ge@linux.dev>
+ <D2QW8VSPX777.34R28W8GVXKMS@kernel.org>
+In-Reply-To: <D2QW8VSPX777.34R28W8GVXKMS@kernel.org>
 
-On Wed, 10 Jul 2024 07:42:46 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+On Tue Jul 16, 2024 at 1:33 PM EEST, Jarkko Sakkinen wrote:
+> On Tue Jul 9, 2024 at 5:33 AM EEST, Hao Ge wrote:
+> > From: Hao Ge <gehao@kylinos.cn>
+> >
+> > We shouldn't dereference "auth" until after we have checked that it is
+> > non-NULL.
+> >
+> > Fixes: 7ca110f2679b ("tpm: Address !chip->auth in tpm_buf_append_hmac_s=
+ession*()")
+> > Signed-off-by: Hao Ge <gehao@kylinos.cn>
+> > ---
+> >  drivers/char/tpm/tpm2-sessions.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-s=
+essions.c
+> > index 2281d55df545..d3521aadd43e 100644
+> > --- a/drivers/char/tpm/tpm2-sessions.c
+> > +++ b/drivers/char/tpm/tpm2-sessions.c
+> > @@ -746,15 +746,16 @@ int tpm_buf_check_hmac_response(struct tpm_chip *=
+chip, struct tpm_buf *buf,
+> >  	struct tpm2_auth *auth =3D chip->auth;
+> >  	off_t offset_s, offset_p;
+> >  	u8 rphash[SHA256_DIGEST_SIZE];
+> > -	u32 attrs;
+> > +	u32 attrs, cc;
+> >  	struct sha256_state sctx;
+> >  	u16 tag =3D be16_to_cpu(head->tag);
+> > -	u32 cc =3D be32_to_cpu(auth->ordinal);
+> >  	int parm_len, len, i, handles;
+> > =20
+> >  	if (!auth)
+> >  		return rc;
+> > =20
+> > +	cc =3D be32_to_cpu(auth->ordinal);
+> > +
+> >  	if (auth->session >=3D TPM_HEADER_SIZE) {
+> >  		WARN(1, "tpm session not filled correctly\n");
+> >  		goto out;
+>
+> Please check:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/co=
+mmit/?id=3D72d6e06ed101e31e943937e42053fc690dc75cfe
 
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -694,7 +694,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  {
->  	struct virtio_ccw_device *vcdev = to_vc_device(vdev);
->  	dma64_t *indicatorp = NULL;
-> -	int ret, i, queue_idx = 0;
-> +	int ret, i;
->  	struct ccw1 *ccw;
->  	dma32_t indicatorp_dma = 0;
->  
-> @@ -710,7 +710,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->  			continue;
->  		}
->  
-> -		vqs[i] = virtio_ccw_setup_vq(vdev, queue_idx++, vqi->callback,
-> +		vqs[i] = virtio_ccw_setup_vq(vdev, i, vqi->callback,
->  					     vqi->name, vqi->ctx, ccw);
->  		if (IS_ERR(vqs[i])) {
->  			ret = PTR_ERR(vqs[i]);
+Changed to:
 
-Acked-by: Halil Pasic <pasic@linux.ibm.com> #s390
+https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/comm=
+it/?id=3D7dc357d343f134bf59815ff6098b93503ec8a23b
+
+Just fixed some typos.
+
+BR, Jarkko
