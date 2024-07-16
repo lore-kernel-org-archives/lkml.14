@@ -1,36 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CC91A00EF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41B01A01B3
 	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 18:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721153194; cv=none; b=gzsrQoLXRP7tgHFagu2jKwD1f68fCFcC6dg7RqjTD1HGxhVOKErZd4Q1uKkehuUzJDheFxnIls/jUOBEWBTPoOYg0y3CoHGAdN7qO/278UTfDZ6HbD+hqihFIqereeZikyBjwm0UE7ctIbivUlGmDaSnljCrdGrhTcybaGQWY0c=
+	t=1721153194; cv=none; b=nIh6qYlLbYKdRb0kewFMjjLo7DfOZOGoYhejyzEXJTpE8ShkzpmIYISIBpYdscETQ0ELLRXcoKw2aKo+LRibcm2vB2TOYEBJPu18fkKoNPpdu8hPGqINA3GT+nejvTzVFr/Zx7X9S5YdeZ6a15ObjPuLIbGhBNOBgRuKf/wE+EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721153194; c=relaxed/simple;
-	bh=xKJALhPhotyjNHTT0xF0nHf9y2M49HI4RDm2QuB74qQ=;
+	bh=o55I4gHeeFGPA/rtS3Pc4UlxasX1vWtXbPM/0m2q6dc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=hh7FoNjKgT6m82+x0OJbpbpXfgvqLOYLqDtESES0npL/nK95iS/1VZkK4vazJ9hvXToi/h/2TA8a2dWRVTb3l7bKSJmUbHy6cDoIDuKcx0hpIe0I2HWciT9eNIELmdEl2U8hEL2Jn2EYhNs1Ew4VwkcILTFPbUBn0CC4plWTdh4=
+	 Content-Type; b=H1WuXmKrSZYCowThIg7r66Fc6qd/iPI/C5BrajmCgy/RZvIBXFv4tfChWpUu0z72cbhn+jYelE7D1yXxFx+qOsgxFFMmAq7XxiQOwXOMRoeLAMGFaFoSR07wEBZik3wUWcj53K0C7byRZVDBVnYtNLdiWnJNWJ4T5BUT9/2c1BM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D311C4AF12;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D56C4AF0F;
 	Tue, 16 Jul 2024 18:06:34 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sTmZP-0000000073V-0ked;
+	id 1sTmZP-00000000730-05cj;
 	Tue, 16 Jul 2024 14:06:35 -0400
-Message-ID: <20240716180635.041988522@goodmis.org>
+Message-ID: <20240716180634.882067002@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 16 Jul 2024 14:06:15 -0400
+Date: Tue, 16 Jul 2024 14:06:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Tio Zhang <tiozhang@didiglobal.com>,
- Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: [for-next][PATCH 2/3] tracing/sched: sched_switch: place prev_comm and next_comm in right
- order
+ Jonathan Corbet <corbet@lwn.net>,
+ Daniel Bristot de Oliveira <bristot@kernel.org>,
+ Clark Williams <williams@redhat.com>,
+ "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Subject: [for-next][PATCH 1/3] rtla/osnoise: set the default threshold to 1us
 References: <20240716180613.399475893@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,38 +41,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Tio Zhang <tiozhang@didiglobal.com>
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
 
-Switch the order of prev_comm and next_comm in sched_switch's code to
-align with its printing order.
+Change the default threshold for osnoise to 1us, so that any noise
+equal or above this value is recorded. Let the user set a higher
+threshold if necessary.
 
-Cc: <mhiramat@kernel.org>
-Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
-Link: https://lore.kernel.org/20240703033353.GA2833@didi-ThinkCentre-M930t-N000
-Reviewed-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Link: https://lore.kernel.org/linux-trace-kernel/Zmb-QhiiiI6jM9To@uudg.org
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Suggested-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+Reviewed-by: Clark Williams <williams@redhat.com>
+Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Acked-by: Daniel Bristot de Oliveira <bristot@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/trace/events/sched.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/trace/osnoise-tracer.rst | 2 +-
+ kernel/trace/trace_osnoise.c           | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 6df2b4685b08..9ea4c404bd4e 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -239,11 +239,11 @@ TRACE_EVENT(sched_switch,
- 	),
+diff --git a/Documentation/trace/osnoise-tracer.rst b/Documentation/trace/osnoise-tracer.rst
+index 140ef2533d26..a520adbd3476 100644
+--- a/Documentation/trace/osnoise-tracer.rst
++++ b/Documentation/trace/osnoise-tracer.rst
+@@ -108,7 +108,7 @@ The tracer has a set of options inside the osnoise directory, they are:
+    option.
+  - tracing_threshold: the minimum delta between two time() reads to be
+    considered as noise, in us. When set to 0, the default value will
+-   be used, which is currently 5 us.
++   be used, which is currently 1 us.
+  - osnoise/options: a set of on/off options that can be enabled by
+    writing the option name to the file or disabled by writing the option
+    name preceded with the 'NO\_' prefix. For example, writing
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index a8e28f9b9271..66a871553d4a 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -1444,9 +1444,9 @@ static int run_osnoise(void)
+ 	save_osn_sample_stats(osn_var, &s);
  
- 	TP_fast_assign(
--		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-+		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
- 		__entry->prev_pid	= prev->pid;
- 		__entry->prev_prio	= prev->prio;
- 		__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
--		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
-+		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
- 		__entry->next_pid	= next->pid;
- 		__entry->next_prio	= next->prio;
- 		/* XXX SCHED_DEADLINE */
+ 	/*
+-	 * if threshold is 0, use the default value of 5 us.
++	 * if threshold is 0, use the default value of 1 us.
+ 	 */
+-	threshold = tracing_thresh ? : 5000;
++	threshold = tracing_thresh ? : 1000;
+ 
+ 	/*
+ 	 * Apply PREEMPT and IRQ disabled options.
 -- 
 2.43.0
 
