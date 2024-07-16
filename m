@@ -1,260 +1,101 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A4C1A01C0;
-	Tue, 16 Jul 2024 17:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CE919E832;
+	Tue, 16 Jul 2024 17:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721151555; cv=none; b=rV8pyCqATP6AnJYIJYEMn1ttLHtjod8cPSZVGqIgYJA8ahlxi7eyC7JF4CDpcxIULrslB4frTVEO/Dy4jiXOBMDjLk0q5cy3P2Y61SAGPCYqz3V15n/W2lTBNPzuWIy2l5KzW8GK7TbP4K6dCGS49qVLnqMll38gT0xFqNlGLL0=
+	t=1721151617; cv=none; b=fe7HquQVXknb5KudzzuOLXCBatr/POPB5eWKAQfRoFG7oBpUebDdPIzW0LXilxu+q7EoeyEXwePJLeiyVNbmaso0cLMAvFMql3DEPWPP+E8H96MMxg1wk3woF0gsJS/K0tlzNPv/z8dU+RcHqiHl4vX3ENWAGCNZk5jo7UZm2jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721151555; c=relaxed/simple;
-	bh=fSsFJqFnGSFNmEueqlpzN3oQOW/4/+RuTayn9tgyTEc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b3OTR8QwN7lVRXopWoLONtvxbcVROCb/lP7XnjRbg3vzNLLrUA0RCnL1QA8wjHMCPZi/BHj69T2fn2Ti6GocN9sV59Up6ss3nIHUFf8NBb/0iSyyqz92ccUtNl8BIi+gTBJakZJWiYxP4Hck8XX2BKLsMIMsagonkdRQQx0ka8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OIQm1EbE; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721151617; c=relaxed/simple;
+	bh=/DWRRzlwPclikws22W4iLFI9F32izmSn+UFrDAbSZ5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MB1WhFTqdwJBgzfkjDJSJA2bUmdK+Y/+FNHm9ga0NhyK6ln667/giE1dmPHxdWCxz9dm4UdEEqdAF3VwLlzNiE3RvVJa9DqPtivMl/EILCH1luRBCcUl2Edv31f0C8KV7AHZ4zrE3wjqiIsHY92Ph6JPwrI7mHlNQh1Xl/oahWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnG4iEP4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OIQm1EbE"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46GDVb5C027359;
-	Tue, 16 Jul 2024 17:39:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ur0zweHse1Y6U6m3AM9sfhzUjKO4Fx6AhgfLLWB+EY8=; b=OIQm1EbEoGxfi2S2
-	awLAjsM1fl95P+v0C9zI4h1xTlKw2MssmLvHCxYyVJ845EBiJ1dGH5mbbsoFqVyZ
-	ncE8LSHW2xjS9bDLvRqH2ROmLdqNCns18ZNkZRnJ1HXRBGPnyHr8OBrAYNJN0ive
-	YusmPLHgj1gGUq6khbRQATG+HeHeeYV+8bONiu2GWreEjdxtt38RmNhh4Qxe3I1V
-	/IQ+wWqqbbyMiNzL83eD4y4tdAOndSiYcltaHFhYewu9POJ84X6D8ZzHP8zROItG
-	Os6B/S1zQJ0DM2QwDNwVMglC3NLHPxROpR2fSCNUD5r5SEKmOarY6RASuip/semG
-	xNPuVA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bghrqsj8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 17:39:10 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46GHd9OE028280
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 17:39:09 GMT
-Received: from hu-vishsant-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 16 Jul 2024 10:39:06 -0700
-From: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>
-To: <quic_bjorande@quicinc.com>, <andersson@kernel.org>,
-        <quic_clew@quicinc.com>, <mathieu.poirier@linaro.org>,
-        <quic_deesin@quicinc.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <quic_sudeepgo@quicinc.com>,
-        "Konrad
- Dybcio" <konrad.dybcio@linaro.org>
-Subject: [PATCH v4 2/2] soc: qcom: smp2p: Introduce tracepoint support
-Date: Tue, 16 Jul 2024 23:08:34 +0530
-Message-ID: <20240716173835.997259-3-quic_sudeepgo@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240716173835.997259-1-quic_sudeepgo@quicinc.com>
-References: <20240716173835.997259-1-quic_sudeepgo@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnG4iEP4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E687FC116B1;
+	Tue, 16 Jul 2024 17:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721151617;
+	bh=/DWRRzlwPclikws22W4iLFI9F32izmSn+UFrDAbSZ5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jnG4iEP4JUqetBoPTMZyAsGFAaYNtgCfXuqwuKe9v0neIVIxyJ2dkW8aaCQYFB+VL
+	 t3HPOBIiGhUHUdi9EQ9UfrU5dCgDUOyOPb3fpVpqHpczhhxFKsFsHU0m4FDKJg0ljb
+	 Vnp8jEPky8TJiCbnWtFVfF2Eafx17VmCr3LTR4UerjscPcONdbddRQqJ4tM4d2pinM
+	 H9CJUTcyz+3Z/mF7X++iFZtZzRlAaBcTa+2BYMbuJu0vgrEGGJxoorHzHqVF9F7S75
+	 cOdYE1z6WYYy1EYclanvs8RerANxPhlG02Dj0xuNIgIVL59OAg1A3I7eG+HxkWm/aY
+	 v04NdoJCtHwNA==
+Date: Tue, 16 Jul 2024 10:40:16 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	david@fromorbit.com, chandan.babu@oracle.com, brauner@kernel.org,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	yang@os.amperecomputing.com, linux-mm@kvack.org,
+	john.g.garry@oracle.com, linux-fsdevel@vger.kernel.org,
+	hare@suse.de, p.raghav@samsung.com, mcgrof@kernel.org,
+	gost.dev@samsung.com, cl@os.amperecomputing.com,
+	linux-xfs@vger.kernel.org, ryan.roberts@arm.com, hch@lst.de,
+	Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v10 10/10] xfs: enable block size larger than page size
+ support
+Message-ID: <20240716174016.GZ1998502@frogsfrogsfrogs>
+References: <20240715094457.452836-1-kernel@pankajraghav.com>
+ <20240715094457.452836-11-kernel@pankajraghav.com>
+ <ZpaRwdi3Vo3qutyk@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: XrjhJ4DBZVh6ZbJI5RTl0_NG7V--45mq
-X-Proofpoint-ORIG-GUID: XrjhJ4DBZVh6ZbJI5RTl0_NG7V--45mq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-16_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- clxscore=1015 malwarescore=0 spamscore=0 suspectscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407160129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZpaRwdi3Vo3qutyk@casper.infradead.org>
 
-Introduce tracepoint support for smp2p to enable
-communication logging between local and remote processors.
-Include tracepoints with information about the remote subsystem
-name, negotiation details, supported features, bit change
-notifications, and ssr activity. These logs are useful for
-debugging issues between subsystems.
+On Tue, Jul 16, 2024 at 04:29:05PM +0100, Matthew Wilcox wrote:
+> On Mon, Jul 15, 2024 at 11:44:57AM +0200, Pankaj Raghav (Samsung) wrote:
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -1638,16 +1638,30 @@ xfs_fs_fill_super(
+> >  		goto out_free_sb;
+> >  	}
+> >  
+> > -	/*
+> > -	 * Until this is fixed only page-sized or smaller data blocks work.
+> > -	 */
+> >  	if (mp->m_sb.sb_blocksize > PAGE_SIZE) {
+> > -		xfs_warn(mp,
+> > -		"File system with blocksize %d bytes. "
+> > -		"Only pagesize (%ld) or less will currently work.",
+> > +		size_t max_folio_size = mapping_max_folio_size_supported();
+> > +
+> > +		if (!xfs_has_crc(mp)) {
+> > +			xfs_warn(mp,
+> > +"V4 Filesystem with blocksize %d bytes. Only pagesize (%ld) or less is supported.",
+> >  				mp->m_sb.sb_blocksize, PAGE_SIZE);
+> > -		error = -ENOSYS;
+> > -		goto out_free_sb;
+> > +			error = -ENOSYS;
+> > +			goto out_free_sb;
+> > +		}
+> > +
+> > +		if (mp->m_sb.sb_blocksize > max_folio_size) {
+> > +			xfs_warn(mp,
+> > +"block size (%u bytes) not supported; maximum folio size supported in "\
+> > +"the page cache is (%ld bytes). Check MAX_PAGECACHE_ORDER (%d)",
+> > +			mp->m_sb.sb_blocksize, max_folio_size,
+> > +			MAX_PAGECACHE_ORDER);
+> 
+> Again, too much message.  Way too much.  We shouldn't even allow block
+> devices to be created if their block size is larger than the max supported
+> by the page cache.
 
-Signed-off-by: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>
----
- drivers/soc/qcom/Makefile      |  1 +
- drivers/soc/qcom/smp2p.c       |  9 ++++
- drivers/soc/qcom/trace-smp2p.h | 98 ++++++++++++++++++++++++++++++++++
- 3 files changed, 108 insertions(+)
- create mode 100644 drivers/soc/qcom/trace-smp2p.h
+Filesystem blocksize != block device blocksize.  xfs still needs this
+check because one can xfs_copy a 64k-fsblock xfs to a hdd with 512b
+sectors and try to mount that on x86.
 
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index ca0bece0dfff..30c1bf645501 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -23,6 +23,7 @@ qcom_rpmh-y			+= rpmh.o
- obj-$(CONFIG_QCOM_SMD_RPM)	+= rpm-proc.o smd-rpm.o
- obj-$(CONFIG_QCOM_SMEM) +=	smem.o
- obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
-+CFLAGS_smp2p.o := -I$(src)
- obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
- obj-$(CONFIG_QCOM_SOCINFO)	+= socinfo.o
-diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-index 696c2a8387d0..4aa61b0f11ad 100644
---- a/drivers/soc/qcom/smp2p.c
-+++ b/drivers/soc/qcom/smp2p.c
-@@ -161,6 +161,9 @@ struct qcom_smp2p {
- 	struct list_head outbound;
- };
- 
-+#define CREATE_TRACE_POINTS
-+#include "trace-smp2p.h"
-+
- static void qcom_smp2p_kick(struct qcom_smp2p *smp2p)
- {
- 	/* Make sure any updated data is written before the kick */
-@@ -192,6 +195,7 @@ static void qcom_smp2p_do_ssr_ack(struct qcom_smp2p *smp2p)
- 	struct smp2p_smem_item *out = smp2p->out;
- 	u32 val;
- 
-+	trace_smp2p_ssr_ack(smp2p->dev);
- 	smp2p->ssr_ack = !smp2p->ssr_ack;
- 
- 	val = out->flags & ~BIT(SMP2P_FLAGS_RESTART_ACK_BIT);
-@@ -214,6 +218,7 @@ static void qcom_smp2p_negotiate(struct qcom_smp2p *smp2p)
- 			smp2p->ssr_ack_enabled = true;
- 
- 		smp2p->negotiation_done = true;
-+		trace_smp2p_negotiate(smp2p->dev, out->features);
- 	}
- }
- 
-@@ -252,6 +257,8 @@ static void qcom_smp2p_notify_in(struct qcom_smp2p *smp2p)
- 		status = val ^ entry->last_value;
- 		entry->last_value = val;
- 
-+		trace_smp2p_notify_in(entry, status, val);
-+
- 		/* No changes of this entry? */
- 		if (!status)
- 			continue;
-@@ -415,6 +422,8 @@ static int smp2p_update_bits(void *data, u32 mask, u32 value)
- 	writel(val, entry->value);
- 	spin_unlock_irqrestore(&entry->lock, flags);
- 
-+	trace_smp2p_update_bits(entry, orig, val);
-+
- 	if (val != orig)
- 		qcom_smp2p_kick(entry->smp2p);
- 
-diff --git a/drivers/soc/qcom/trace-smp2p.h b/drivers/soc/qcom/trace-smp2p.h
-new file mode 100644
-index 000000000000..9a6392043f10
---- /dev/null
-+++ b/drivers/soc/qcom/trace-smp2p.h
-@@ -0,0 +1,98 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM qcom_smp2p
-+
-+#if !defined(__QCOM_SMP2P_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ)
-+#define __QCOM_SMP2P_TRACE_H__
-+
-+#include <linux/device.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(smp2p_ssr_ack,
-+	TP_PROTO(const struct device *dev),
-+	TP_ARGS(dev),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name);
-+	),
-+	TP_printk("%s: SSR detected", __get_str(dev_name))
-+);
-+
-+TRACE_EVENT(smp2p_negotiate,
-+	TP_PROTO(const struct device *dev, unsigned int features),
-+	TP_ARGS(dev, features),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+		__field(u32, out_features)
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name);
-+		__entry->out_features = features;
-+	),
-+	TP_printk("%s: state=open out_features=%s", __get_str(dev_name),
-+		__print_flags(__entry->out_features, "|",
-+			{SMP2P_FEATURE_SSR_ACK, "SMP2P_FEATURE_SSR_ACK"})
-+	)
-+);
-+
-+TRACE_EVENT(smp2p_notify_in,
-+	TP_PROTO(struct smp2p_entry *smp2p_entry, unsigned long status, u32 val),
-+	TP_ARGS(smp2p_entry, status, val),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(smp2p_entry->smp2p->dev))
-+		__string(client_name, smp2p_entry->name)
-+		__field(unsigned long, status)
-+		__field(u32, val)
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name);
-+		__assign_str(client_name);
-+		__entry->status = status;
-+		__entry->val = val;
-+	),
-+	TP_printk("%s: %s: status:0x%0lx val:0x%0x",
-+		__get_str(dev_name),
-+		__get_str(client_name),
-+		__entry->status,
-+		__entry->val
-+	)
-+);
-+
-+TRACE_EVENT(smp2p_update_bits,
-+	TP_PROTO(struct smp2p_entry *smp2p_entry, u32 orig, u32 val),
-+	TP_ARGS(smp2p_entry, orig, val),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(smp2p_entry->smp2p->dev))
-+		__string(client_name, smp2p_entry->name)
-+		__field(u32, orig)
-+		__field(u32, val)
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name);
-+		__assign_str(client_name);
-+		__entry->orig = orig;
-+		__entry->val = val;
-+	),
-+	TP_printk("%s: %s: orig:0x%0x new:0x%0x",
-+		__get_str(dev_name),
-+		__get_str(client_name),
-+		__entry->orig,
-+		__entry->val
-+	)
-+);
-+
-+#endif /* __QCOM_SMP2P_TRACE_H__ */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace-smp2p
-+
-+#include <trace/define_trace.h>
--- 
+Assuming there /is/ some fs that allows 1G blocksize, you'd then really
+want a mount check that would prevent you from mounting that.
+
+--D
