@@ -1,105 +1,97 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF9619CD01;
-	Tue, 16 Jul 2024 14:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5756319D8AD;
+	Tue, 16 Jul 2024 14:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721139921; cv=none; b=UuLrPriGH7nTo4cFcnu5XKeDwV7hjYbhqHQcGID8y5DbReDCn5W1UEUDASw+pm/CBUDxoYDKOFLMCetvpgm5/dzCIxe4WJKUy41DUeW4lklb844pyPdRXI3yG+zgmfZPN/GdyEg9v2AORj9y3fDIOJcKlBUCd/FvvyEccx3+lxY=
+	t=1721139923; cv=none; b=ss0C/4yl6RDyRtWyTLhhIoWDdV8zZo0JmePrW4K6+n0aD14pTg41yp9XlUrZrFKWwPni6jKtuSBEy1poZo3xRw4p7nvsIdW+J3sECBZmqmBQUBrpXpHxNJFlfPtJYo2M4bDYQ9iMxD4Zye3v7ss/WDsyGey7I2x2sdKScxPmeR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721139921; c=relaxed/simple;
-	bh=5Cs5/yuJS7C0LrLUUT7x3xOTTywKwe30zJ3Ar2z1pAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XOZSjPv/TxkdEOt2NH7fS2I9jo/jbeMm5g5Evnjclbl+XHl9GzE9y8rbNlauq8lFaHw3RnMS7bMq1rcBV7Z5h1UdcHgrsdCav+5hVH+or/LrBp8Zas7HBZon9IvKV75q3v/tKAnOvHLQYIDwF1RY2KL7wcTjcb5bT0o5hl5OpNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ITeDSib6; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1721139923; c=relaxed/simple;
+	bh=upDeAl9zvyu6Mv94XULirvgTdusvzyKbmhk2dQLRPVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pY8Sg6F3FSx23OflphOxfRzhIJTgWxNVTp0xrnWWXHbHQPID//VT7oXy3tw5wXUj2ENWgq6X1a//bX8EMtucf0ejUKpOZfVUfr/ZDA7MCzKnIS4LKuOGHGt68/Z7Jx6JWJxN1JsCRiUFWOuPSRUKn9aeFzOU34QxdPOwrRbe0Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIXjYa+B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ITeDSib6"
-Received: from ideasonboard.com (unknown [IPv6:2001:b07:5d2e:52c9:72c3:346:a663:c82d])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B6A561083;
-	Tue, 16 Jul 2024 16:24:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1721139878;
-	bh=5Cs5/yuJS7C0LrLUUT7x3xOTTywKwe30zJ3Ar2z1pAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ITeDSib61A2qyPWfdzpjJ95YKcGymC0431m931T25a959Xj9YNxsG/lxkx+A5E0PQ
-	 ec+o903d8HfEim32WY+cEczT3olZlGV3gQnm2O6LH+6+DNSD2DZdxpfFydv9OiVceL
-	 EMBQhUa6Aj6V6Zt7h+hQxeWvr1xkCDb7c49BB9wo=
-Date: Tue, 16 Jul 2024 16:25:12 +0200
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Mingjia Zhang <mingjia.zhang@mediatek.com>, Jack Zhu <jack.zhu@starfivetech.com>, 
-	Keith Zhao <keith.zhao@starfivetech.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjUgMDIvMTRdIG1lZGlhOiBEb2N1?=
- =?utf-8?Q?mentation=3A?= Add description for StarFive ISP metadata formats
-Message-ID: <v7eqp5opis3q327xgjvda37zrba32jyyfo2ny6u6i2ixq3ks2n@bp725fbn6gka>
-References: <20240709083824.430473-1-changhuang.liang@starfivetech.com>
- <20240709083824.430473-3-changhuang.liang@starfivetech.com>
- <dncfjg7e7a2i6xin7kuwnxifcjpdjxcwkfcudxnqczi4lhwac7@u7jjunr7zqc6>
- <ZQ0PR01MB1302CB1DB67D3A36022B94B5F2A22@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIXjYa+B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2875FC4AF09;
+	Tue, 16 Jul 2024 14:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721139923;
+	bh=upDeAl9zvyu6Mv94XULirvgTdusvzyKbmhk2dQLRPVc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CIXjYa+Bhhw96oB6RbLhWcGSDKn4zbGTFifIPcWJD83RZHWPwINPP0Rz0ik9Ura7H
+	 vNagwlOtw4OEs7CI9P6BAXMC+37rsgE1mGm0RRYQdEb6cMevILeUvMdc57UMTt+pFw
+	 ZoNZFc+mQ7BFFs/r2Y2cgAXk+afcFIlQBJ/ldGE4Y6OFU+S0M9cdFpCTNbUrhO3ITY
+	 989SiSrdN/65Fn8aTvSy27vGK49Gz07ujvGo/MWC03ynXLaaNBSiruwG03BxqFjynA
+	 zaadSzKA2gWoiC242b+2B65HhAZv61y47y6HbyasUWaCiFombBfokwQJ3jiNQqtFyK
+	 0a3YyhH/HJZOg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Gabor Juhos <j4g8y7@gmail.com>,
+	Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 01/22] clk: qcom: apss-ipq-pll: remove 'config_ctl_hi_val' from Stromer pll configs
+Date: Tue, 16 Jul 2024 10:24:08 -0400
+Message-ID: <20240716142519.2712487-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZQ0PR01MB1302CB1DB67D3A36022B94B5F2A22@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.9
+Content-Transfer-Encoding: 8bit
 
-Hi Changhuang
+From: Gabor Juhos <j4g8y7@gmail.com>
 
-On Tue, Jul 16, 2024 at 12:31:31PM GMT, Changhuang Liang wrote:
-> Hi, Jacopo
->
-> >
-> > Hi Changhuang
-> >
-> > On Tue, Jul 09, 2024 at 01:38:12AM GMT, Changhuang Liang wrote:
-> > > Add description for V4L2_META_FMT_STF_ISP_PARAMS and
-> > > V4L2_META_FMT_STF_ISP_STAT_3A meta data formats.
-> > >
-> > > Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
-> >
-> > I get this warnings when compiling documentation
-> >
->
-> Can you share the steps about compiling documentation?
->
+[ Upstream commit 2ba8425678af422da37b6c9b50e9ce66f0f55cae ]
 
-From `make help`
+Since the CONFIG_CTL register is only 32 bits wide in the Stromer
+and Stromer Plus PLLs , the 'config_ctl_hi_val' values from the
+IPQ5018 and IPQ5332 configurations are not used so remove those.
 
--------------------------------------------------------------------------------
-Documentation targets:
- Linux kernel internal documentation in different formats from ReST:
-  htmldocs        - HTML
-  texinfodocs     - Texinfo
-  infodocs        - Info
-  latexdocs       - LaTeX
-  pdfdocs         - PDF
-  epubdocs        - EPUB
-  xmldocs         - XML
-  linkcheckdocs   - check for broken external links
-                    (will connect to external hosts)
-  refcheckdocs    - check for references to non-existing files under
-                    Documentation
-  cleandocs       - clean all generated files
+No functional changes.
 
-  make SPHINXDIRS="s1 s2" [target] Generate only docs of folder s1, s2
-  valid values for SPHINXDIRS are: PCI RCU accel accounting admin-guide arch block bpf cdrom core-api cpu-freq crypto dev-tools devicetree doc-guide driver-api fault-injection fb filesystems firmware-guide fpga gpu hid hwmon i2c iio infiniband input isdn kbuild kernel-hacking leds livepatch locking maintainer mhi misc-devices mm netlabel networking pcmcia peci power powerpc process riscv rust scheduler scsi security sound spi staging target tee timers tools trace translations usb userspace-api virt w1 watchdog wmi
--------------------------------------------------------------------------------
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20240509-stromer-config-ctl-v1-1-6034e17b28d5@gmail.com
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/qcom/apss-ipq-pll.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-To compile, in example, the userspace documentation in html:
+diff --git a/drivers/clk/qcom/apss-ipq-pll.c b/drivers/clk/qcom/apss-ipq-pll.c
+index d7ab5bd5d4b41..e12bb9abf6b6a 100644
+--- a/drivers/clk/qcom/apss-ipq-pll.c
++++ b/drivers/clk/qcom/apss-ipq-pll.c
+@@ -100,7 +100,6 @@ static struct clk_alpha_pll ipq_pll_stromer_plus = {
+ static const struct alpha_pll_config ipq5018_pll_config = {
+ 	.l = 0x2a,
+ 	.config_ctl_val = 0x4001075b,
+-	.config_ctl_hi_val = 0x304,
+ 	.main_output_mask = BIT(0),
+ 	.aux_output_mask = BIT(1),
+ 	.early_output_mask = BIT(3),
+@@ -114,7 +113,6 @@ static const struct alpha_pll_config ipq5018_pll_config = {
+ static const struct alpha_pll_config ipq5332_pll_config = {
+ 	.l = 0x2d,
+ 	.config_ctl_val = 0x4001075b,
+-	.config_ctl_hi_val = 0x304,
+ 	.main_output_mask = BIT(0),
+ 	.aux_output_mask = BIT(1),
+ 	.early_output_mask = BIT(3),
+-- 
+2.43.0
 
-`make $your-usual-args-here SPHINXDIRS="userspace-api" htmldocs`
-
-
-> Regards,
-> Changhuang
