@@ -1,99 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698EA1A0AF8;
-	Tue, 16 Jul 2024 18:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA9A1A01D8;
+	Tue, 16 Jul 2024 18:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721154814; cv=none; b=Vr4OW80kkigQIRGotgZ7QHEsjMxdydgFLxZqDJh8fZvsBx1lOpVtE/0bP+N/C0AHG3tEVKFFd5TNYS9Matsds/5WS83VmfEOlkIoLEdmKay0LwqHiVBdBduLGOA5uHfjtnNB4HhVyxuOA4kSy6OiO6Brcy7wTsEp4ScHXJXvwF4=
+	t=1721154819; cv=none; b=lwMzVPn5AGX/32S2QFZyKqtCY2NlnvaXJ2ZCF8OvfOUNi9pnoAphKyDpnXlUPPHVMGlaqxcCEGz2XamAh6G3Tj1l0oGRhC1CzzfZ8AxxRBXqZSgNgqkaYFO5Aiyup+0TyFR6uXGligIVaqno0coVRlpvEtjS+hEvnPkEJH60goY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721154814; c=relaxed/simple;
-	bh=YG6oQwo0hhMp9liGJwhLCAZgieohceHYXGJea/xVCz4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UwXLUshz8GtpVTIKwV4NjTGESAorRhXd42pEA3HMK9Pt6PabcG9Tw+ImUFPpWx9hRYO6giXZTWJU5i7A6+59BaUN8bY5UCATMw5S63gt9Q3R1j9NQwlW8gbrjXFqJ3XlHHsGOYPX/GFnUvLUi8GJrG8/W7++KlXLnxWrcb7LRRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=On5IlMjv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721154819; c=relaxed/simple;
+	bh=RoTz8SCDctxTyPa/A3kJf11i3VVBdS3TP8fU1fccXPk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u8wrDG8LpUSlugxJQOOA5RVJmEqhqLZw/VwLZ3f4QSOOTUV9gvv+tXiCjpIHfVinlncyr2UI30Nj2xbETJA7zQk65C5ucUjLJNM1tePGQGLjzDUy0kOWEFdqdvhE5B/nF26cVgmWVAfiAJmcjenta0FvMbVQXVrWxXw7mCnvbp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ba5Tj+mx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="On5IlMjv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B22CC4AF0D;
-	Tue, 16 Jul 2024 18:33:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ba5Tj+mx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F0D9C4AF0E;
+	Tue, 16 Jul 2024 18:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721154814;
-	bh=YG6oQwo0hhMp9liGJwhLCAZgieohceHYXGJea/xVCz4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=On5IlMjvzdvuWHVLUAQN91ySzCdqMoaOSq84y9Vw9ivJvWq7Mxx5pLnlUAKDANLsM
-	 6toGhsD9w4ul+ZyWc/xGG5Zd5Eb1BeBksDR9HH7P2Ol83g9wrXKznlL8TyUA2ysTHK
-	 rNb2uFi8W1zYAcD6uEUNEZnTS4iWPZztG4y7uQf3cx4nHvNiscFo9sUJs7n4uHwJye
-	 NfeZvo/+zANOmyTRSpx5W1GVlN2n2b6XYonmZEf1wcihHbD25reOHCH8TIhM6d6pvb
-	 vGTxbr3xHU3SwI2n0kHWC1wDhiFrQcPURMQEcfT1ij5rEleIO1hnoiK7sH+UILJL//
-	 3Ey3Nu9zUnKfw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	yung-chuan.liao@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	daniel.baluta@nxp.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	kai.vehmanen@linux.intel.com,
-	kuninori.morimoto.gx@renesas.com,
-	sound-open-firmware@alsa-project.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 3/8] ASoC: SOF: Intel: hda-pcm: Limit the maximum number of periods by MAX_BDL_ENTRIES
-Date: Tue, 16 Jul 2024 14:33:00 -0400
-Message-ID: <20240716183324.2814275-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240716183324.2814275-1-sashal@kernel.org>
-References: <20240716183324.2814275-1-sashal@kernel.org>
+	s=k20201202; t=1721154819;
+	bh=RoTz8SCDctxTyPa/A3kJf11i3VVBdS3TP8fU1fccXPk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ba5Tj+mxToRnRvQFkDDUXX1LI3YQCVsfunTbHPZdgbMp3Fosf9I/uRFn+aTUNw3gr
+	 ncHffD5kX8NBDV4VHTTxnO1UadEYU4YWVoPz83NyFHLD2zOTiBpR9fEUduZVV+TeWg
+	 kvxFWaH+jsBng/DIHdwBWjcEpbo3XgJsgg8gmhPL7SXCPbveCDZropmyKJPvtQwRD5
+	 iIdQizTJevrzaYVjcoZJP9kM1hSbsU4IvY+sahjlblKkBK0EaTQoFhpMc3tsQt7TG0
+	 octmW0uD0GEEgMFNOTUxN+VisZb7SA2AKtadC4g4CMNKP8kdDwpYcDLEJCCm+kSYtd
+	 sZqZ3Wk0fjKQQ==
+From: SeongJae Park <sj@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-sparse@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5.15.y 0/8] Backport patches for DAMON merge regions fix
+Date: Tue, 16 Jul 2024 11:33:25 -0700
+Message-Id: <20240716183333.138498-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.40
 Content-Transfer-Encoding: 8bit
 
-From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Commit 310d6c15e910 ("mm/damon/core: merge regions aggressively when
+max_nr_regions") causes a build warning and a build failure [1] on
+5.15.y.  Those are due to
+1) unnecessarily strict type check from max(), and
+2) use of not-yet-introduced damon_ctx->attrs field, respectively.
 
-[ Upstream commit 82bb8db96610b558920b8c57cd250ec90567d79b ]
+Fix the warning by backporting a minmax.h upstream commit that made the
+type check less strict for unnecessary case, and upstream commits that
+it depends on.
 
-The HDaudio specification Section 3.6.2 limits the number of BDL entries to 256.
+Note that all patches except the fourth one ("minmax: fix header
+inclusions") are clean cherry-picks of upstream commit.  For the fourth
+one, minor conflict resolving was needed.
 
-Make sure we don't allow more periods than this normative value.
+Also, the last patch, which is the backport of the DAMON fix, was
+cleanly cherry-picked, but added manual fix for the build failure.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://patch.msgid.link/20240704090106.371497-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/sof/intel/hda-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+[1] https://lore.kernel.org/2024071532-pebble-jailhouse-48b2@gregkh
 
-diff --git a/sound/soc/sof/intel/hda-pcm.c b/sound/soc/sof/intel/hda-pcm.c
-index f23c72cdff489..7d17d586ed9db 100644
---- a/sound/soc/sof/intel/hda-pcm.c
-+++ b/sound/soc/sof/intel/hda-pcm.c
-@@ -254,6 +254,12 @@ int hda_dsp_pcm_open(struct snd_sof_dev *sdev,
- 	snd_pcm_hw_constraint_integer(substream->runtime,
- 				      SNDRV_PCM_HW_PARAM_PERIODS);
- 
-+	/* Limit the maximum number of periods to not exceed the BDL entries count */
-+	if (runtime->hw.periods_max > HDA_DSP_MAX_BDL_ENTRIES)
-+		snd_pcm_hw_constraint_minmax(runtime, SNDRV_PCM_HW_PARAM_PERIODS,
-+					     runtime->hw.periods_min,
-+					     HDA_DSP_MAX_BDL_ENTRIES);
-+
- 	/* Only S16 and S32 supported by HDA hardware when used without DSP */
- 	if (sdev->dspless_mode_selected)
- 		snd_pcm_hw_constraint_mask64(substream->runtime, SNDRV_PCM_HW_PARAM_FORMAT,
+Andy Shevchenko (1):
+  minmax: fix header inclusions
+
+Bart Van Assche (1):
+  tracing: Define the is_signed_type() macro once
+
+David Laight (3):
+  minmax: allow min()/max()/clamp() if the arguments have the same
+    signedness.
+  minmax: allow comparisons of 'int' against 'unsigned char/short'
+  minmax: relax check to allow comparison between unsigned arguments and
+    signed constants
+
+Jason A. Donenfeld (2):
+  minmax: sanity check constant bounds when clamping
+  minmax: clamp more efficiently by avoiding extra comparison
+
+SeongJae Park (1):
+  mm/damon/core: merge regions aggressively when max_nr_regions is unmet
+
+ include/linux/compiler.h     |  6 +++
+ include/linux/minmax.h       | 89 ++++++++++++++++++++++++++----------
+ include/linux/overflow.h     |  1 -
+ include/linux/trace_events.h |  2 -
+ mm/damon/core.c              | 23 ++++++++--
+ 5 files changed, 90 insertions(+), 31 deletions(-)
+
+
+base-commit: 4d1b7f1bf3858ed48a98c004bda5fdff2cdf13c8
 -- 
-2.43.0
+2.39.2
 
