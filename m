@@ -1,146 +1,122 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E14B19FA94
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 17:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230DA1A00E3;
+	Tue, 16 Jul 2024 17:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721152263; cv=none; b=YdGuYYGA4FKTJEL5fGIOt1UXjFqjmfmsA9vMkieATzrHzJDXkZeWau5WJKWKjil5vUy4yKvfEQ3heSeyKC86zjKUqQDFWT+rLaSk7HV20gy0Frd3YmOd4I07L+ozxj/S/2U3dc0FV/4fq2c8B9Qj4SsSm+6Xe4stAUe3eMDf6xk=
+	t=1721152274; cv=none; b=FTixgBuTrIrYikFv6SBWOBPxL/Xql5gUYC8tgA86czVoCyr3ZnK4zfBbw/OEMWCtW2vJM93H7gA1O+TY9GC0/esl0fD4pA5DHROfTqqc861WZcl30utEwimsgiWkXFBuKoTL1LPtnR/yLfCiJ1nZ3pFxMWDa35qO5JKUmu+Ghgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721152263; c=relaxed/simple;
-	bh=ic2sbABp4tHp3UGGNyn+mzu/e840S3TaNk0qjVFGVfk=;
+	s=arc-20240116; t=1721152274; c=relaxed/simple;
+	bh=vVztFECHj5A5lDM1edvCHwH4SGqeskbjWvte3GbWgm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a3wKqwjx+H4N+QqgXHZvtlWwv3w9daxwalYwEH5XAq86JfbZVT4MKfmpN5xaGyykGzK1ur5Gu0mB1JfBRH7Weqg5TyZgObhTTDBUQ2vVwViEAdLy93L9gu7OZ1l4X1D/8JOFnc8T1YA+2IcGaaU1BCz57kRoB1JoMhEeTFhqXkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sTmJy-0000eT-4W; Tue, 16 Jul 2024 19:50:38 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1sTmJv-0001tg-EK; Tue, 16 Jul 2024 19:50:35 +0200
-Received: from pengutronix.de (p5de45302.dip0.t-ipconnect.de [93.228.83.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 26D7D305380;
-	Tue, 16 Jul 2024 14:45:36 +0000 (UTC)
-Date: Tue, 16 Jul 2024 16:45:33 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	haibo.chen@nxp.com, imx@lists.linux.dev, han.xu@nxp.com
-Subject: Re: [PATCH v2 4/4] can: flexcan: add wakeup support for imx95
-Message-ID: <20240716-chowchow-of-massive-joviality-77e833-mkl@pengutronix.de>
-References: <20240715-flexcan-v2-0-2873014c595a@nxp.com>
- <20240715-flexcan-v2-4-2873014c595a@nxp.com>
- <20240716-curious-scorpion-of-glory-8265aa-mkl@pengutronix.de>
- <ZpaF4Wc70VuV4Cti@lizhi-Precision-Tower-5810>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYsOfR9lBfwZnDuvxeRi9iRhTdjEOjWV3ETEtUwnHXOG84H2trJNBQSdF3jXavY/A9N8i1dDejc1IcMze/U6sJAoNwyFn+LPjuOVJyfSEBnnfQGNBKJ0nCEaGUuLIX34izqKF0iQoQjtDNB4qYli9/32J15f1000IpHWU1pvpAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2WiZAo5; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2WiZAo5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721152273; x=1752688273;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vVztFECHj5A5lDM1edvCHwH4SGqeskbjWvte3GbWgm4=;
+  b=k2WiZAo5onKtWcS7rrs4IxYHYyjSRXb2S1QPBK5zkebr87Y20LX3Xowz
+   BJgzJmfclpDMIzAedrCXBetRtnD9J5aXghfCQkFDQ43ORkoAzM94KMYX7
+   9cYGogwx6ca1tWAbQa8AVDXY6G5PKT+tS7tpuldHUShCh5Jsuxh7Tje99
+   XExjOXztlU/gEJYXJutGn5cuHN6sHh2UH463IoGAxOtk2sqHIMAnyAlmU
+   +fyhAlc3ElVyjSd7cRjkZxOAwl+1L8x3YruE1LZGeTZE0kyhta6pBw8oh
+   y44lRdp4cVQj0hM2TU+qkPrGuZ9kuC8Af+14HrA4hXuCeZSjVrrU92cEB
+   Q==;
+X-CSE-ConnectionGUID: C/xMyRqgScmzLWO05DHDhg==
+X-CSE-MsgGUID: a5pu0/gPT3aoqWBLY82Ymw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="22475938"
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="22475938"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 10:51:12 -0700
+X-CSE-ConnectionGUID: TvOZy+QYTjKtTS+txJxKYw==
+X-CSE-MsgGUID: QnmizcwqSTa1q5PEJuOYfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="55250475"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 16 Jul 2024 10:51:11 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sTmKS-000fUy-20;
+	Tue, 16 Jul 2024 17:51:08 +0000
+Date: Wed, 17 Jul 2024 01:50:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH 1/3] fortify: use if_changed_dep to record header
+ dependency in *.cmd files
+Message-ID: <202407170104.dCe5MKsA-lkp@intel.com>
+References: <20240715144529.101634-2-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l2syr324jbfki6hb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZpaF4Wc70VuV4Cti@lizhi-Precision-Tower-5810>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240715144529.101634-2-masahiroy@kernel.org>
 
+Hi Masahiro,
 
---l2syr324jbfki6hb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kernel test robot noticed the following build errors:
 
-On 16.07.2024 10:40:31, Frank Li wrote:
-> > > @@ -2330,9 +2366,12 @@ static int __maybe_unused flexcan_noirq_resume=
-(struct device *device)
-> > >  	if (netif_running(dev)) {
-> > >  		int err;
-> > > =20
-> > > -		err =3D pm_runtime_force_resume(device);
-> > > -		if (err)
-> > > -			return err;
-> > > +		if (!(device_may_wakeup(device) &&
-> >                       ^^^^^^^^^^^^^^^^^^^^^^^^
-> >=20
-> > Where does this come from?
->=20
-> include/linux/pm_wakeup.h
->=20
-> static inline bool device_may_wakeup(struct device *dev)                 =
-                          =20
-> {                                                                        =
-                          =20
->         return dev->power.can_wakeup && !!dev->power.wakeup;             =
-                          =20
-> }
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.10 next-20240716]
+[cannot apply to akpm-mm/mm-nonmm-unstable kees/for-next/hardening kees/for-next/pstore kees/for-next/kspp]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Sorry for the confusion. I wanted to point out, that the original driver
-doesn't have the check to device_may_wakeup(). Why was this added?
+url:    https://github.com/intel-lab-lkp/linux/commits/Masahiro-Yamada/fortify-use-if_changed_dep-to-record-header-dependency-in-cmd-files/20240715-224820
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240715144529.101634-2-masahiroy%40kernel.org
+patch subject: [PATCH 1/3] fortify: use if_changed_dep to record header dependency in *.cmd files
+config: i386-randconfig-004-20240716 (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240717/202407170104.dCe5MKsA-lkp@intel.com/reproduce)
 
-> >=20
-> > > +		      priv->devtype_data.quirks & FLEXCAN_QUIRK_SETUP_STOP_MODE_SC=
-MI)) {
-> > > +			err =3D pm_runtime_force_resume(device);
-> > > +			if (err)
-> > > +				return err;
-> > > +		}
-> > > =20
-> > >  		if (device_may_wakeup(device))
-> > >  			flexcan_enable_wakeup_irq(priv, false);
-> > > diff --git a/drivers/net/can/flexcan/flexcan.h b/drivers/net/can/flex=
-can/flexcan.h
-> > > index 025c3417031f4..4933d8c7439e6 100644
-> > > --- a/drivers/net/can/flexcan/flexcan.h
-> > > +++ b/drivers/net/can/flexcan/flexcan.h
-> > > @@ -68,6 +68,8 @@
-> > >  #define FLEXCAN_QUIRK_SUPPORT_RX_MAILBOX_RTR BIT(15)
-> > >  /* Device supports RX via FIFO */
-> > >  #define FLEXCAN_QUIRK_SUPPORT_RX_FIFO BIT(16)
-> > > +/* Setup stop mode with ATF SCMI protocol to support wakeup */
-> > > +#define FLEXCAN_QUIRK_SETUP_STOP_MODE_SCMI BIT(17)
-> > > =20
-> > >  struct flexcan_devtype_data {
-> > >  	u32 quirks;		/* quirks needed for different IP cores */
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407170104.dCe5MKsA-lkp@intel.com/
 
-regards,
-Marc
+All errors (new ones prefixed by >>):
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-memcpy.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow2-memcmp.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow-memchr.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy-lit.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow2-memmove.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-strncpy-src.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow-memcmp.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.read_overflow-memscan.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-strcpy.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-memmove.log.d: No such file or directory
+--
+>> fixdep: error opening file: lib/test_fortify/.write_overflow-memset.log.d: No such file or directory
+..
 
---l2syr324jbfki6hb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmaWh4sACgkQKDiiPnot
-vG9pnwf+JoS4BGqt9+eauMHhwkSi1Z1OupbzhlhGwMBtIeQWPmhjM0f0/N0XDNyA
-vFmZZs6HIj9lcXNADBVtKvB92MJFV4UbvGyPSqs4cU8r/cZdPr+I5j0gVHHCmtiq
-RZcPzP+Jm6U6NV4C8Oj6RZxhPVCKKlNfckBW9pcjjhKg4XmEFksYC5J9G4ldofBz
-DHivW/RXq2mcals9q7N2JTkgH6Zmw7wxnOWIUdFItj7Jt1XFDWQSO7ha4UC1ntmK
-FgdCfR0anEHNOucDeLCyXw63FOBro/pD3iQ6xdIBCR/IVnhSIgkAjkIjFV6K5d+G
-nvSKa9wCyX8iqQJuRZNp6HBTEvex/Q==
-=Vri0
------END PGP SIGNATURE-----
-
---l2syr324jbfki6hb--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
