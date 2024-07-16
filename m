@@ -1,160 +1,160 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3922A3C3C;
-	Tue, 16 Jul 2024 10:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38681991A5
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721124967; cv=none; b=i8UFb6mt0SzvCE9q2xdBOwJ7jTlCqmO/fOEjR5iYMOU89A6xiphLEERWzG+oAZb0ZKBG7hYbSol2U4Uk9vQ5SJfqYfop/eGcp11bET/JCV2CeMEHws64HaV8de21N9MJdDN4an9exlFSVe9cUNNNovUw0qCa83LuPaZk4mIBk14=
+	t=1721125065; cv=none; b=XPXWUegrmjXCaO4egKUiI8AX4vZPV6rxsojAjuiJWsb054tBY44+3Q6nTHDBlYkbxCYq3IXUbEVppuSdYl4rMpPouMz1Nr8HRLzry62zqpLvqo94FyW+u1Hel+ED34EMKDyGkl+nfdCw9zQ+e0Rkwceac4jj51adgIMvuRWLKNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721124967; c=relaxed/simple;
-	bh=FS29QGysNhTWVFlH65R2gsjhPUCjUNA7LgGU03WagD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DhNNDVmZOkvGf8hyaIeGYbAWGXR2nckFBSa2QT5zOhHoorREjbzgGbaAIdb2ljxjF77NMeTgggN+Qyf3mcUoJx1KxFrK5MUKmy6fEDzFQmaNUqtB8a0l7K8MxXqPQ+veCosE0EsyTheYK+Unn8z02UjwH4JJYqX6X9hYJEah0is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6518f8bc182so46487377b3.0;
-        Tue, 16 Jul 2024 03:16:05 -0700 (PDT)
+	s=arc-20240116; t=1721125065; c=relaxed/simple;
+	bh=1SpVvLeQUy6M2nodyPepY4vIlLRLMn5jCT9Jkh3yqUU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aYj75Yb4YJ9RWkKgDhYD+LgSL9P/diYEC0EkTU5tARU/Cbn77dNZN3psm0QIiYi6FGNGSE2zBQTSSbL9fHf+JUW2NKCPfkjU7G12k9ByEhOUo8lfMms28ALV+SGLZb//DX1ja+LDURuFRWFpnqFI9al62dILfcg6vEMkQQwQdfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=QffpEaVA; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="QffpEaVA"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-595850e7e11so6590524a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1721125062; x=1721729862; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h3LxmxCoW3E8bDNIaxIpOdypnPGQGV/6ObFe/9muMyw=;
+        b=QffpEaVAxTdSjQBdK2/LpCl++EiuZPpBIwR1XPdDo0HaDmqPJop4oZPcHrXmV0VkP+
+         4lEObgRrI9BjFd3pkcnbMSz+1Ym/cKaRNbGM7N1RqEbo7OKrKyQbmWLFJj8MsILczWAR
+         5DbsZE+GTp7Jaf2nPMxnmxmefb0Um+EjpvLq66XQzGmmrsS2CZGy7cH+FN9wRLAUat99
+         GMiJA2n6G6JqDxM+OvXpxVYWq2fYcw7fw3HxxGZohTYFwBKLwmVYlg44nAA57kfjfnuf
+         136wZ6pPQcsVYGR8HsRB4ySqlcjafBJHheRq5rQjdzSWbS9+3UgtK4fsdqDRVR0OZXXU
+         J5SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721124963; x=1721729763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lg82mOlKcZMSt/wtYimCB/hqB+SLV9zQbRzPDFLfmeI=;
-        b=BWwDRi9EErMfAuOS9DCjVUB58d1C7INcJRkORPoSR4ixya2ULSXGLQSy7AKpq8/4fN
-         jdSO8o/IiaGTc+GN/LDM0jpes+cBjRQQS8+vIScd7X1zPFst2UePl5vicu5JZr6Awgok
-         XQ0eQ43Nf+vNeXg3oVy7mx0+CNGmJSQlMrKhFS/ZFuw/VmMb1QBDd3Dzy4fR6XTSia+R
-         vF0Fu0ZJu/vmSDfDyyrb5ZRL9Cin7HHelVp1hl5Yfv2nu9/DCh6F35rvFwjzEz0Bv0wz
-         y++qBmeUV2BF/lyeg5bgYs90as9VKOd37WtgFb2wnPe0lOu1FxH3Gu5Xr7K8SKiEezXi
-         LWWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBoSM06i2W+f6unIO5zjcOhlA09Jlorq9gKvX0SjK6By7jguxRcXCE0ZUCHIKphOD6GjokRtJChmQSCm2e4Ny4QY7aa6Ap22CliKhlgSxbs3xnICq9wEhQUDjYjMU15LS/QnRAgOgIfw==
-X-Gm-Message-State: AOJu0Yy/uOarfFnM4a6OmQG8rhv/1cFbD/+KvUoKts8deSBlvFXM6Kpr
-	bbBM/wHnuSNOXfpkuV8nA6zHWFx7Nzc9NO9Vbq4yP/xLfcj4s7oHiTe8s98Y
-X-Google-Smtp-Source: AGHT+IF6zK6agLyDoiTALixwtpj9YWIsrlMc8iv4Jr/jHtEQBMOeRx98bdYQSdE1p+OewO27DvAvSA==
-X-Received: by 2002:a81:8886:0:b0:62f:206e:c056 with SMTP id 00721157ae682-663a3647b74mr9565937b3.5.1721124962907;
-        Tue, 16 Jul 2024 03:16:02 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-65fc212b3d7sm11067637b3.14.2024.07.16.03.16.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 03:16:01 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e057ae1adbeso3995626276.0;
-        Tue, 16 Jul 2024 03:16:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWPIiGpF9nVey0Tqqv8BnY7mcXWRi6asjvNnvNzeb320B7m3I2JoqxABTfh0JFwYR4Y3Lz0SksHcMILB80uB9EO8YeaunZqsqgtRnaHpq1ZXYz0M31/pD2LUBlLOPPQvASNGiKfJEhE9g==
-X-Received: by 2002:a05:6902:1b82:b0:e03:359a:6a54 with SMTP id
- 3f1490d57ef6-e05d8057354mr1058940276.6.1721124961376; Tue, 16 Jul 2024
- 03:16:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721125062; x=1721729862;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h3LxmxCoW3E8bDNIaxIpOdypnPGQGV/6ObFe/9muMyw=;
+        b=FEZJtSovfsOJQVkiO/1wilrD+Wg3HIN0ANxZH0hZPB/9h0DsJ3Vl7oxZaRWAJt3cSP
+         qf0GyOpSgu2yk0D17X1LXqBh4BbiHQ2lwH12B90EqzuWhP3xdLm5sKK2H6E56ylZ7dqG
+         moW+wPO6zEgRiTO4pHgMzIVvxr8IA3lVMRP3XB4vKN3Rs314njabRvqR1vY3CbfmASe0
+         q+L6fTxgk/0hrwK8+FSy9xo5z21Rm5KrbgWOgHUJ8E5BYLpGJiMFK+251d2m6js5794x
+         FMZE4TMi6z4t5l8+tcqNv/5Ck7aWkKi3PurK7mfRpQAZnCj7Eerb/9yzV6droqdjyHIu
+         myfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTaRsKuZkS/Fw/fgPWnpR4X/52bqkxsQUEThG9oXEQLu8KWeqcvHxv4heoLGKuIOyFpqKDEJmrrKTlJPzifnZ2MALpYOL88dn/bsKu
+X-Gm-Message-State: AOJu0Ywn8Adl3Z1ZSr//wcyBXWFmSOd157HiqTvv9k15WOuZFrcvWSrl
+	wbo+I9iP5vGz/LIO+55bEU5XQklJl4pJp0itOad5MmJ6Iaw1ZWiUWRlVjy50yq8=
+X-Google-Smtp-Source: AGHT+IH8nILJXMilbhvyoNcXg2t3GY0Ge5UpJ/i0bhjtXPS9zxhmWBR4mLOmhf6ZFPFHsBLZye6CXg==
+X-Received: by 2002:a50:c317:0:b0:573:5c4f:27a8 with SMTP id 4fb4d7f45d1cf-59ef01bb430mr971210a12.35.1721125062250;
+        Tue, 16 Jul 2024 03:17:42 -0700 (PDT)
+Received: from cloudflare.com ([2a09:bac5:5063:2432::39b:77])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b268a276bsm4603777a12.62.2024.07.16.03.17.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 03:17:41 -0700 (PDT)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: syzbot <syzbot+e15b7e15b8a751a91d9a@syzkaller.appspotmail.com>,
+  davem@davemloft.net,  dsahern@kernel.org,  edumazet@google.com,
+  kuba@kernel.org,  linux-kernel@vger.kernel.org,  netdev@vger.kernel.org,
+  soheil@google.com,  syzkaller-bugs@googlegroups.com,  willemb@google.com
+Subject: Re: [syzbot] [net?] WARNING in skb_warn_bad_offload (5)
+In-Reply-To: <5e4905d7-32e1-4359-9720-a32330aec424@redhat.com> (Paolo Abeni's
+	message of "Tue, 16 Jul 2024 12:04:02 +0200")
+References: <000000000000e1609a061d5330ce@google.com>
+	<5e4905d7-32e1-4359-9720-a32330aec424@redhat.com>
+User-Agent: mu4e 1.12.4; emacs 29.1
+Date: Tue, 16 Jul 2024 12:17:40 +0200
+Message-ID: <87wmll7i9n.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Znm5qDrsqIY8VNTc@sirena.org.uk> <2024062524-numbing-winking-dde5@gregkh>
-In-Reply-To: <2024062524-numbing-winking-dde5@gregkh>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 16 Jul 2024 12:15:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWAs-Mm4YKgEJsr7XO4e2ezUD9PY7QE_F8gY6aQaWuyQQ@mail.gmail.com>
-Message-ID: <CAMuHMdWAs-Mm4YKgEJsr7XO4e2ezUD9PY7QE_F8gY6aQaWuyQQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the driver-core tree
-To: Greg KH <greg@kroah.com>
-Cc: Mark Brown <broonie@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
-	Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Jun 25, 2024 at 7:11=E2=80=AFAM Greg KH <greg@kroah.com> wrote:
-> On Mon, Jun 24, 2024 at 07:23:36PM +0100, Mark Brown wrote:
-> > After merging the driver-core tree, today's linux-next build
-> > (x86_64 allmodconfig) failed like this:
-> >
-> > /tmp/next/build/drivers/net/ethernet/renesas/rtsn.c:1381:27: error: ini=
-tialization of 'void (*)(struct platform_device *)' from incompatible point=
-er type 'int (*)(struct platform_device *)' [-Werror=3Dincompatible-pointer=
--types]
-> >  1381 |         .remove         =3D rtsn_remove,
-> >       |                           ^~~~~~~~~~~
-> > /tmp/next/build/drivers/net/ethernet/renesas/rtsn.c:1381:27: note: (nea=
-r initialization for 'rtsn_driver.<anonymous>.remove')
-> >
-> > Caused by commit
-> >
-> >   0edb555a65d1e ("platform: Make platform_driver::remove() return void"=
-)
-> >
-> > interacting with
-> >
-> >   b0d3969d2b4db ("net: ethernet: rtsn: Add support for Renesas Ethernet=
--TSN")
-> >
-> > I have applied the below patch.
-> >
-> > From 8f276c3b5b1be09214cbd5643dd4fe4b2e6c692f Mon Sep 17 00:00:00 2001
-> > From: Mark Brown <broonie@kernel.org>
-> > Date: Mon, 24 Jun 2024 19:02:24 +0100
-> > Subject: [PATCH] net: ethernet: rtsn: Fix up for remove() coversion to =
-return
-> >  void
-> >
-> > Fixes: 0edb555a65d1e ("platform: Make platform_driver::remove() return =
-void")
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Any chance we can get this fix into net-next?
-I've been cherry-picking it from next-20240624 for the last weeks...
-Thanks!
-
-> > ---
-> >  drivers/net/ethernet/renesas/rtsn.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/renesas/rtsn.c b/drivers/net/ethernet=
-/renesas/rtsn.c
-> > index ad69d47463cbd..5a6cc99e6b35a 100644
-> > --- a/drivers/net/ethernet/renesas/rtsn.c
-> > +++ b/drivers/net/ethernet/renesas/rtsn.c
-> > @@ -1358,7 +1358,7 @@ static int rtsn_probe(struct platform_device *pde=
-v)
-> >       return ret;
-> >  }
-> >
-> > -static int rtsn_remove(struct platform_device *pdev)
-> > +static void rtsn_remove(struct platform_device *pdev)
-> >  {
-> >       struct rtsn_private *priv =3D platform_get_drvdata(pdev);
-> >
-> > @@ -1372,8 +1372,6 @@ static int rtsn_remove(struct platform_device *pd=
-ev)
-> >       pm_runtime_disable(&pdev->dev);
-> >
-> >       free_netdev(priv->ndev);
-> > -
-> > -     return 0;
-> >  }
-> >
-> >  static struct platform_driver rtsn_driver =3D {
-> > --
-> > 2.39.2
-> >
+On Tue, Jul 16, 2024 at 12:04 PM +02, Paolo Abeni wrote:
+> On 7/16/24 03:23, syzbot wrote:
+>> syzbot found the following issue on:
+>> HEAD commit:    80ab5445da62 Merge tag 'wireless-next-2024-07-11' of git:/..
+>> git tree:       net-next
+>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=175fb821980000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=2dbcdd8641c4638f
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=e15b7e15b8a751a91d9a
+>> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=172bf566980000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12fff535980000
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/184da3869c30/disk-80ab5445.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/85bfe9b60f21/vmlinux-80ab5445.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/06064623a948/bzImage-80ab5445.xz
+>> The issue was bisected to:
+>> commit 10154dbded6d6a2fecaebdfda206609de0f121a9
+>> Author: Jakub Sitnicki <jakub@cloudflare.com>
+>> Date:   Wed Jun 26 17:51:26 2024 +0000
+>>      udp: Allow GSO transmit from devices with no checksum offload
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=142ccbed980000
+>> final oops:     https://syzkaller.appspot.com/x/report.txt?x=162ccbed980000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=122ccbed980000
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+e15b7e15b8a751a91d9a@syzkaller.appspotmail.com
+>> Fixes: 10154dbded6d ("udp: Allow GSO transmit from devices with no checksum offload")
+>> skb frag:     00000080: 62 3f 77 e4 0e 82 0d 2f 85 cc 44 ea 25 5a 99 76
+>> skb frag:     00000090: f2 53
+>> ------------[ cut here ]------------
+>> ip6tnl0: caps=(0x00000006401d7869, 0x00000006401d7869)
+>> WARNING: CPU: 0 PID: 5112 at net/core/dev.c:3293 skb_warn_bad_offload+0x166/0x1a0 net/core/dev.c:3291
+>> Modules linked in:
+>> CPU: 0 PID: 5112 Comm: syz-executor391 Not tainted 6.10.0-rc7-syzkaller-01603-g80ab5445da62 #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+>> RIP: 0010:skb_warn_bad_offload+0x166/0x1a0 net/core/dev.c:3291
+>> Code: e8 5f 94 a3 f8 49 8b 04 24 48 8d 88 a0 03 00 00 48 85 c0 48 0f 44 cd 48 c7 c7 00 cc c5 8c 4c 89 f6 48 89 da e8 fb 92 ff f7 90 <0f> 0b 90 90 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc 44 89 f9
+>> RSP: 0018:ffffc900034bedc8 EFLAGS: 00010246
+>> RAX: 7d287cad4185da00 RBX: ffff888040cdc0b8 RCX: ffff888023d1bc00
+>> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+>> RBP: ffffffff8cc5cbc0 R08: ffffffff815857b2 R09: fffffbfff1c39994
+>> R10: dffffc0000000000 R11: fffffbfff1c39994 R12: ffff888022880518
+>> R13: dffffc0000000000 R14: ffff888040cdc130 R15: ffff888040cdc130
+>> FS:  000055556e9e9380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 0000000020001180 CR3: 000000007c876000 CR4: 00000000003506f0
+>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> Call Trace:
+>>   <TASK>
+>>   __skb_gso_segment+0x3be/0x4c0 net/core/gso.c:127
+>>   skb_gso_segment include/net/gso.h:83 [inline]
+>>   validate_xmit_skb+0x585/0x1120 net/core/dev.c:3661
+>>   __dev_queue_xmit+0x17a4/0x3e90 net/core/dev.c:4415
+>>   neigh_output include/net/neighbour.h:542 [inline]
+>>   ip6_finish_output2+0xffa/0x1680 net/ipv6/ip6_output.c:137
+>>   ip6_finish_output+0x41e/0x810 net/ipv6/ip6_output.c:222
+>>   ip6_send_skb+0x112/0x230 net/ipv6/ip6_output.c:1958
+>>   udp_v6_send_skb+0xbf5/0x1870 net/ipv6/udp.c:1292
+>>   udpv6_sendmsg+0x23b3/0x3270 net/ipv6/udp.c:1588
+>>   sock_sendmsg_nosec net/socket.c:730 [inline]
+>>   __sock_sendmsg+0xef/0x270 net/socket.c:745
+>>   ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
+>>   ___sys_sendmsg net/socket.c:2639 [inline]
+>>   __sys_sendmmsg+0x3b2/0x740 net/socket.c:2725
+>>   __do_sys_sendmmsg net/socket.c:2754 [inline]
+>>   __se_sys_sendmmsg net/socket.c:2751 [inline]
+>>   __x64_sys_sendmmsg+0xa0/0xb0 net/socket.c:2751
+>>   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>>   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> RIP: 0033:0x7f04f688fe89
+>> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+>> RSP: 002b:00007ffeebc526e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+>> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f04f688fe89
+>> RDX: 0000000000000001 RSI: 0000000020003cc0 RDI: 0000000000000003
+>> RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000001
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffeebc52740
+>> R13: 00007f04f68dd406 R14: 0000000000000003 R15: 00007ffeebc52720
+>>   </TASK>
 >
-> Looks good, thanks!
+> Looking at the console log, the the relevant GSO packet is an UFO one with
+> CSUM_NONE. commit 10154dbded6d6a2fecaebdfda206609de0f121a9 only adjust the skb
+> csum for USO packets. @Jakub S. could you please have a look?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Will do. Thanks for the hint.
