@@ -1,83 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E71E1DDCE;
-	Tue, 16 Jul 2024 16:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6597919AD51;
+	Tue, 16 Jul 2024 16:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721145894; cv=none; b=UL/k4YjxA5D+l1KJ+04VXxMgEwShz1549y0uT3KZDZhUXD5F557MFmCZOB6r9r6+mKDiK1lA1b7HGXg2nIGS7rAvYHclko2tbKJNT+N01FZa22H1AMpymQHymmntuTddbYzQSJWGCL0HmDdawTtISoqpI7Ql6QYpUVOguJRIsRQ=
+	t=1721145995; cv=none; b=obCBbTzdNCZ5hjAVctCrWj6ZL0EatQ3FkjVHt+K4piDit3uLrs6Is+2TASJOZ0PBt2PCkrF8OBXvQrmQcs66+ELFa5sd/m5GNdiMj25RSY17/04zbzK9DkTfvTQLLe67QjuG+C/tlS19kjRDianYdrrH23aabX27Kk/8P5q4mxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721145894; c=relaxed/simple;
-	bh=7bdeBRk2eXQxVNqE62jOD4bNViPSgDbpp6IsB4XA/sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=caxn8FoyI34MXKa3cD6araizPkW34h3mIUnz3avOBrgEOf1XAKw7rmVqr5jQ5k0Wv6Styqdl76Y2Q/siAbSqtr5De8cYktfOEmaRrCPEhUOBs/MWAK8xgtZmxjYPi1yAwXLfDdiWwV81XD2USxC6xk8dhPbgA3jQjnv5tf5NUm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XC/09R/Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721145995; c=relaxed/simple;
+	bh=gI21/Txq0/V8Mood/7WNX4+a8nWK19FWuXo1RHgcBlQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=glRjUtpvOTL/dC6h9nHk9f+9AbpKpiloikvLgTxS4HEVefkt0BFjsINtRWuKAxGLsrkp7fFbaK9OTYuePyr0gQOjqALuW7Zz3cSqYMc5zAw8l15gCcF1V3IZJqJ89sU3OWTXnjrJN2748enQDn3Zwgtxa5JhoXK2xXTNtQl6vT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=N4CqeFe8; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XC/09R/Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9098C116B1;
-	Tue, 16 Jul 2024 16:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721145894;
-	bh=7bdeBRk2eXQxVNqE62jOD4bNViPSgDbpp6IsB4XA/sI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XC/09R/Y6r9goUkhLNzEdOCM7A8ckw1j4j5nvljL16ILcXSU+YgH3pumBdl671Vm+
-	 +D34YCZlvA3JpUcYEYR6lJlPUSiE96JoorlY3HDiVibwigPoIY94WkVfY8Kzz8Y0cf
-	 W1n2M7q+2qboPIQoc7klHgfhO62E/qM2d2JqYn/Vdy3jQGbRax/VMGiM1BZbx1vKUH
-	 8Nbo5xGjaWUT82PtSD6JtTXaRaz5HZzpy28LG1OmDGFNxh2XGCF5uoCUoRG8SsLpoc
-	 veP+7Drs5XCPbORsFjJO6Ah9PwH5MgUvh1qoTyzZIfFLZty+fzemMw1DB2gm7YXEDk
-	 3Osgxv8thO9jQ==
-Date: Tue, 16 Jul 2024 17:04:48 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	pratikmanvar09@gmail.com, francesco@dolcini.it
-Subject: Re: [PATCH v2 1/3] dt-bindings: pwm: imx: Add optional clock '32k'
-Message-ID: <20240716-corporal-worry-15183ca9ea68@spud>
-References: <20240715-pwm-v2-0-ff3eece83cbb@nxp.com>
- <20240715-pwm-v2-1-ff3eece83cbb@nxp.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="N4CqeFe8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721145991;
+	bh=gI21/Txq0/V8Mood/7WNX4+a8nWK19FWuXo1RHgcBlQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=N4CqeFe8PNc3O+xfgpqGJQFUDEW+QKrrwmE1npMejRElOw2F71TZo63D/Z4iJ7Caj
+	 qklrx7vdRHrdCwPtgmHeqiEYtDApNOGRZooDnolD1wrfNTnui/d68Q8am6HMse0SDb
+	 J1+TMDsGtPuvLq4LL5fkNV9sZRduAwbYKqjI7GEGecd1FDvOuAL5+p2hMNdzTi0eNb
+	 VxBpM1dipIovxmrsn8NK5nscLTmFHq7r+Ut8eiCN5wt9JbNKx+0IUO4A8xWgAvzvQ/
+	 S9RAQ7XQPJRu7K/GyhgJKhS8axETw3pI5vgDaJl68aEFDxQVUIn+h/om7qBbXKAglg
+	 obIuxqnflsjmA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 18C8237821CD;
+	Tue, 16 Jul 2024 16:06:31 +0000 (UTC)
+Message-ID: <a4fb5ab2-c11c-4761-82c0-76c01bcf65d6@collabora.com>
+Date: Tue, 16 Jul 2024 18:06:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fRibbrrJ4CaRBetE"
-Content-Disposition: inline
-In-Reply-To: <20240715-pwm-v2-1-ff3eece83cbb@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] arm64: dts: mediatek: mt8195-cherry: Remove
+ keyboard-backlight node
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Tzung-Bi Shih <tzungbi@kernel.org>,
+ kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240715-cros-backlight-dt-probe-v1-1-0b5afe64c94b@collabora.com>
+ <3dd2dcc9-5fbb-4384-985f-a61e26cc8a5f@collabora.com>
+ <96f91c0a-e693-45db-a664-1c396b14999e@notapiano>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <96f91c0a-e693-45db-a664-1c396b14999e@notapiano>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Il 16/07/24 14:16, Nícolas F. R. A. Prado ha scritto:
+> On Tue, Jul 16, 2024 at 11:24:44AM +0200, AngeloGioacchino Del Regno wrote:
+>> Il 15/07/24 18:09, Nícolas F. R. A. Prado ha scritto:
+>>> Commit 970c3a6b7aa3 ("mfd: cros_ec: Register keyboard backlight
+>>> subdevice") introduced support for detecting keyboard backlight
+>>> fuctionality through communication with the ChromeOS EC. This means that
+>>> the DT node is no longer used. Remove the unneeded node.
+>>>
+>>> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>>> ---
+>>> Different CrosEC FW versions could potentially not support discovering
+>>> the keyboard backlight functionality, but I've tested both a recent
+>>>
+>>>     tomato_v2.0.23149-099cd3e539 tomato_15699.72.0 2024-01-03
+>>>
+>>> and an old
+>>>
+>>>     tomato_v2.0.10686-234e646fd8 tomato_14268.0.0 2021-10-07
+>>>
+>>> version on mt8195-cherry-tomato and on both relying only on the
+>>> discoverability works. I've tested on both tomato-r2 and tomato-r3. I
+>>> have not tested on dojo, however, as I don't have access to it.
+>>>
+>>
+>> Dojo will work anyway because those machines do share the same base FW... but
+>> anyway, I'm not sure that this is the right thing to do.
+>>
+>> The commit that you mentioned says that it is meant to make that "work on machines
+>> without specific ACPI or OF support for the keyboard backlight", but not that the
+>> intention is to stop using either ACPI nor DT nodes for that.
+> 
+> Yes, because as I understand it not every EC might support this protocol. So
+> that commit just added an additional way to probe the keyboard backlight.
+> 
+> So we don't need to stop using the DT to probe it. But in practice we have
+> already stopped, as long as the EC supports the protocol (which from my testing
+> is always for these platforms), since that is tried first. Meaning the DT node
+> is now useless.
+> 
+> The only point in keeping the DT node would be to use it as a fallback in case
+> the discovery with the EC fails or breaks. But I have never seen a DT node be
+> there just as fallback, so it doesn't feel right to me either.
+> 
+>>
+>> The DT kselftest is relatively young, and I suspect that anyway this is not the
+>> only affected device, so the justification is only barely valid.
+> 
+> I didn't include the failing test as part of the commit message proper as I
+> don't think it should justify this change. I added it just to clarify my
+> motivation. The test showed me that something unexpected was happening. After
+> looking into it I thought that a DT node that is no longer used to probe has no
+> point in staying around, so that's the justification that I added to the commit
+> message.
+> 
+>>
+>> Don't misunderstand me, I'm not saying that I'm not okay with this, but I'd like to
+>> have more opinions about this.
+>>
+>> If we choose to go this way, ideally we should remove this from all of the upstream
+>> Chromebook devicetrees (not only MediaTek, clearly!) so that would require a bit
+>> more effort to test here and there.
+> 
+> Note that the cherry DT is the only DT upstream with the
+> google,cros-kbd-led-backlight compatible. So it's really only tomato and dojo
+> that need to be tested.
+> 
+Perfect. Let's remove it then, possibly with fire ;-)
+Can you please send the patch without the RFC tag?
+
+Also add my R-b, so that I'll remember that I've already checked that patch for
+when I'll be able to pick it.
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 
---fRibbrrJ4CaRBetE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 15, 2024 at 04:29:50PM -0400, Frank Li wrote:
-> The pwm in imx8qxp mipi subsystem require one extra '32k' clock. So
-> increase maxItems for clock and clock-names.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---fRibbrrJ4CaRBetE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpaaIAAKCRB4tDGHoIJi
-0ja3AQC57LpLdwDup3Cn5u7VwR4VXDEFrlgTSi5VVFGw+ctrgQEA1Yu0luAj3nJu
-Hbszo+7oLDmuM6hm8gKxB/zULvBtzAQ=
-=Oabq
------END PGP SIGNATURE-----
-
---fRibbrrJ4CaRBetE--
+Cheers!
