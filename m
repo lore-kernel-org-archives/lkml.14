@@ -1,104 +1,85 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5BA4C74;
-	Tue, 16 Jul 2024 09:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563424C74
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121068; cv=none; b=sgZEUsKKDvD0ErEB1tsKRG9am8Oz28+xKgv4dJ3jXMV5GZZrlnljai+GrSDLYq7SQ9Ml6uA1681LRcGpw6jqtWwPw6TOMZgLUaYl1W1TbXWlV6ncnsGIV9TKpBWNwZA+sMFelNGNErBygBSjtnGX8buKDFVD9SV/ml8OE+Ly0Ls=
+	t=1721121135; cv=none; b=GczJmItLqusBx/dzAQxqnlSsZU1sW0HaffRo03+AZ/zYT/S+cYNEUbuEGDEQFuUhAxLnPrY78T0OvHinFp6Se296FfualP6IlOzxZRGIa0ZfTuTO4oC/rmptEeQj3GBsxtq4wf0TPfxkUR9theHMcvp2IOiqtCaReIPG7SIFIr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121068; c=relaxed/simple;
-	bh=2BF2CsXqFLTo7IKdC/7zs3m9os45UdbNfcSeRODgDzA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LZUSpqzelI6M4aP84rPtajAPKOFfuWiNzw45oUrYdsPwthZTPgirb2KolEGZzMJDvFh3wIZwxNtFaFqNjg7N66KrFLgRzcoXRd5hedmBVCoV46+2QO8lsyCL6HDajiAdFb0crbC6zW42KXszGSR2ghHe6B6KjDpISrogrjM8fvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from inp1wst083.omp.ru (81.22.207.138) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 16 Jul
- 2024 12:11:01 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, Fedor Pchelkin <pchelkin@ispras.ru>
-Subject: [PATCH] Revert "media: tuners: fix error return code of hybrid_tuner_request_state()"
-Date: Tue, 16 Jul 2024 12:10:40 +0300
-Message-ID: <20240716091040.93681-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1721121135; c=relaxed/simple;
+	bh=cn8laWEw/R0qZX8Uwjcw/OXji3PxPrYFv8/w0P3h1YM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wu5xVy/pWWWAilWvE0KU3khppcnhK8Qrjoc3eOYaSHJNr21yszgaq5eRVysVz3i1toEPnLolfBCtTr3nKFkTh/S9fsC3cuZRz17eTq1lxjbpuzapy0gn1csZpfXFFiCdvVjmsKkFmkZzfDZWKncMJx/Bthx8ZINvj/9j6jhwMPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=wpS3EleQ; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=QKhgT1+m; arc=none smtp.client-ip=220.130.44.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="wpS3EleQ";
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="QKhgT1+m"
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1721121130;
+	bh=oohzZY+Wm0D4VzzqujUnyVhaY5gL4QyC6/knv22SnCU=; l=360;
+	h=Date:From:To:Subject:Message-ID:MIME-Version;
+	b=wpS3EleQzlwiwFrYtUbN2ofMRAUNkSJ+hcnBGACI7Ng41iHzUhJ69cak1Tl4P1Lg8
+	 A2RjPb6b7q5ZhLesekjsbmw8AE1ZHG9CmlPBGvTR538ipWH/+6JC6xyeX5w1xTbAVn
+	 3ASRpRj821yAkKoncPor2jIzU7FkCwlxzFJy9u6PusBvbGBKmIse0SE8xYdlLI0UwF
+	 whJBzvcXIoUrnIcAB45sgaH0wfAI70Bjo5vYtPppGTGCwVIuY9DhfNQTJRa2pocsNs
+	 id3PbEiJu4GOR9FyW+REfXl6ZsoAVA2IqbAHQwkyrqfUWwWoZcr6xLovPAhAnywFvi
+	 IhQFb2LNhsx8A==
+Received: from 192.168.8.21
+	by mg.richtek.com with MailGates ESMTP Server V3.0(3190226:0:AUTH_RELAY)
+	(envelope-from <prvs=1925402C87=cy_huang@richtek.com>); Tue, 16 Jul 2024 17:12:09 +0800 (CST)
+X-MailGates: (compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1721121129;
+	bh=oohzZY+Wm0D4VzzqujUnyVhaY5gL4QyC6/knv22SnCU=; l=360;
+	h=Date:From:To:Subject:Message-ID:MIME-Version;
+	b=QKhgT1+mjqqB3oZXqLKh+rc5RL6UVsFMpojA1B/a5s1km2phaGuaMXXg6XFjXyNPU
+	 cjG1r1BeTZS9sp3GP7xD78IHLntrZ0Q0aRMz3OWY97ix6NNpyRhTBTwZMvql/wwBIu
+	 OHEn+WEetRgV5vhH+IqKB3XNwJ5e9LBzoDxkl8lkc5ZTqd/QLsqp7fA9d4RpBwLbTC
+	 gnkH1/Oyu9R5e6z9OiK9M2Rj/rDg+Qft9hFKafLMNkuIxuEI2n5fF7GpLM6XS54UIr
+	 kf4XC1TnLql7fgJY9jd1qaM7SRQGmExJ6efhHVM6Ucqo3Ax2LTFnlbi7LCWAgchXqi
+	 rUZVoO3BA2Q0Q==
+Received: from 192.168.10.46
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(2680356:1:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Tue, 16 Jul 2024 17:04:21 +0800 (CST)
+Received: from ex3.rt.l (192.168.10.46) by ex3.rt.l (192.168.10.46) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 16 Jul
+ 2024 17:04:19 +0800
+Received: from linuxcarl2.richtek.com (192.168.10.154) by ex3.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
+ Transport; Tue, 16 Jul 2024 17:04:19 +0800
+Date: Tue, 16 Jul 2024 17:04:19 +0800
+From: ChiYuan Huang <cy_huang@richtek.com>
+To: Chen Ni <nichen@iscas.ac.cn>
+CC: <lgirdwood@gmail.com>, <broonie@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] regulator: rt5120: Convert comma to semicolon
+Message-ID: <20240716090419.GA17422@linuxcarl2.richtek.com>
+References: <20240716084659.1252690-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 07/16/2024 08:42:27
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 186531 [Jul 16 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 24 0.3.24
- 186c4d603b899ccfd4883d230c53f273b80e467f
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_all_Bitcoin, text}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;inp1wst083.omp.ru:7.1.1;lore.kernel.org:7.1.1;81.22.207.138:7.1.2;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 07/16/2024 08:45:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 7/16/2024 7:02:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240716084659.1252690-1-nichen@iscas.ac.cn>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-This reverts commit b9302fa7ed979e84b454e4ca92192cf485a4ed41.
+On Tue, Jul 16, 2024 at 04:46:59PM +0800, Chen Ni wrote:
+> Replace a comma between expression statements by a semicolon.
+> 
+> Fixes: c0216c0e68f7 ("regulator: rt5120: Add PMIC regulator support")
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
 
-As Fedor Pchelkin pointed out, this commit violates the
-convention of using the macro return value, which causes errors.
-For example, in functions tda18271_attach(), xc5000_attach(),
-simple_tuner_attach().
+Reviewed-by: ChiYuan Huang <cy_huang@richtek.com>
 
-Link: https://lore.kernel.org/linux-media/20240424202031.syigrtrtipbq5f2l@fpc/
-Suggested-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
----
- drivers/media/tuners/tuner-i2c.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Thanks, it's realy typo.
 
-diff --git a/drivers/media/tuners/tuner-i2c.h b/drivers/media/tuners/tuner-i2c.h
-index 07aeead0644a..724952e001cd 100644
---- a/drivers/media/tuners/tuner-i2c.h
-+++ b/drivers/media/tuners/tuner-i2c.h
-@@ -133,10 +133,8 @@ static inline int tuner_i2c_xfer_send_recv(struct tuner_i2c_props *props,
- 	}								\
- 	if (0 == __ret) {						\
- 		state = kzalloc(sizeof(type), GFP_KERNEL);		\
--		if (!state) {						\
--			__ret = -ENOMEM;				\
-+		if (NULL == state)					\
- 			goto __fail;					\
--		}							\
- 		state->i2c_props.addr = i2caddr;			\
- 		state->i2c_props.adap = i2cadap;			\
- 		state->i2c_props.name = devname;			\
--- 
-2.34.1
-
+Best Regards,
+ChiYuan
