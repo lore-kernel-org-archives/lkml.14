@@ -1,74 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE80619E809;
-	Tue, 16 Jul 2024 17:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8B319FA6F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 17:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721149740; cv=none; b=raR8qXK7cF/wdP8tMDfIpPBdqp9UrBT4gZPVJDpkyXRSOYXsJYiZ0DpvdmF5WcbXkqtWNjP/k//ovV7YLTfHwnqVV5XOM3LZUfQlLHlkyl3MMKBIHOvdgN52aOkBj690+sdpLRgj7ItzIHzviJQYwXkQPf4Lh/8zW0jXTQ3lpLI=
+	t=1721149851; cv=none; b=nTnrm80pxQp0sOlVYtnjMEUGbxxQEDeGsQ75iGfJOycqsr1/069Gn6z/CHMrWFaJELeUCoVhFvPpQ33rfN+EuAmyGYkMST+mwRahQ0USj7GJPLrEunw1c98FxEtg+Jk5KXfJbsIn8az3DyPiEcktCKMnX/IhHzMqNACq9ZSpc4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721149740; c=relaxed/simple;
-	bh=HdP4DmiZbGFy/iNyjViBsnCN4s5UN330LrizbZ9eO+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N3lKXiPMgtY+aQB1j1IFNacAGaxNAk2MPWPwXGrAx9px2+8V5di2D5Ub/QZqTuBWks/LKkrwnj32rScxZzCXPDVyjyrZM+krQ29q0XY1T/wM0Ec+qgPVB6M5vbhiM/ZWol50J8AvqF0TpRDsf2AYE3F5CySpbd5aQWd+m7+UZZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ktdtx1l9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721149851; c=relaxed/simple;
+	bh=hlqLKLbX0qyMhlRkXe2uoF/HIiNqFudsAelPue49iXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XFHgNpJK5XE6/iSid35yS1N4vUxIX3ItO7fd/e/rDiZSzl3mRlYsu2yGu7+9heU0X0wxGxWfIpOVAAL/gRpdM+s6Z6FY4uTLCTSDOC11kkCFz070InQ8ix/odraZdPDcjC6dS92f98C6zLJCt73iUFjR4qJGYqxEKYo++azU//k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HqF4sEic; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ktdtx1l9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D0BC116B1;
-	Tue, 16 Jul 2024 17:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721149739;
-	bh=HdP4DmiZbGFy/iNyjViBsnCN4s5UN330LrizbZ9eO+Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ktdtx1l9qV0UJxtGhey6tCY6gM5HS8tPZyjdV6fseTR6e316UpVs2vCuYgQ6zNk1o
-	 kWtT7wXCX6RK6anPFTl7Yg6tIn4yVdRcNZXTrXFfAmvYvr4WP7c3Mm7eQQl26UL1z+
-	 LEa6RbmHwiBD4Lsu86LMDrMc5KUHTazk2ee7SurDUWlULpjBNIM+0KcfwG6otpaAnI
-	 lGJS3iRyLgTGv5u3csoy765aeC1YKLolicSIFFBFLYl1pTaa3q6ioJoxg7APdvqYHG
-	 2/Xvy107PEiM3NW9pnA3HHZ9Y1iDYsUYq4rCEHiOWPWwtwKcMmEEY98M5mOuv0j9mO
-	 HmmG1ncjEqn4w==
-Date: Tue, 16 Jul 2024 18:08:50 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Adam Rizkalla <ajarizzo@gmail.com>
-Cc: Vasileios Amoiridis <vassilisamir@gmail.com>, lars@metafoo.de,
- petre.rodan@subdimension.ro, mazziesaccount@gmail.com, ak@it-klinger.de,
- ang.iglesiasg@gmail.com, linus.walleij@linaro.org, tgamblin@baylibre.com,
- phil@raspberrypi.com, 579lpy@gmail.com, andriy.shevchenko@linux.intel.com,
- semen.protsenko@linaro.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 1/3] iio: pressure: bmp280: Generalize read_*()
- functions
-Message-ID: <20240716180850.7c6089f2@jic23-huawei>
-In-Reply-To: <ZpROUow6p78VJsrO-ajarizzo@gmail.com>
-References: <20240628171726.124852-1-vassilisamir@gmail.com>
-	<20240628171726.124852-2-vassilisamir@gmail.com>
-	<ZpROUow6p78VJsrO-ajarizzo@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqF4sEic"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2c964f5a037so3805502a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721149849; x=1721754649; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HBCcifw/MxneSumY4Gn53fiNKzT4rFL1SoKdpcBm9fI=;
+        b=HqF4sEic1AgJF8zCqAPmBGghcMT4y94XvwRHUtpeTR1Cm1qPClE0ANqt/z2bK1W9Fb
+         CxHQg+MGZ11o+znhRP9w3I8WYV5Rc2LRxyrXW18kuk8tCFWazhewduYqUTPwKMY2/W+G
+         12iOFDsfNyqV8CoXaVwZOLiWmggYh7dgKv/D7hIBsDg0ezi5FANdXrfW2XPiGcnKEt/h
+         iXNzbIuJI2JEQ4boEdCVYiree+EsKs7aylfpEye3/QBneEZnE8ig1gQGDqU49znjRWBU
+         hpMwdtW0zvCuICPxjc5z8sptjYTPUWCmRa5mZJT+fU+29IXo/jn9pEYLewo10UUZ8Cdw
+         7SIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721149849; x=1721754649;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HBCcifw/MxneSumY4Gn53fiNKzT4rFL1SoKdpcBm9fI=;
+        b=WOtT6hB60ZjwyETPdtMe3mnloA4TGZVv7SYh/YkQs3teXEqR0bOHC1wU7XWH9DEAyd
+         TkrNIDj51vFIU4X6+wjZZB0vUnpJ1AIh+r/C0brfOHGv8hGcr/z2266b0UiSdlSy09Qm
+         7dxqniUpciD35WjnBRDaFA5QWN7jAKw4ZvEAVi4V4cIuS4zSeVm4HyrtqeltTEE3KlqM
+         Du/Xsb41hHQKz7gGzJwuxhxj8t3cElffkRxSeyajN+rn5Hrw9NwZNR/DHEPIUfCoVauy
+         lmkgMdLqQDl/0N5qkj9Ub3YLw08jg4ib73vye7sM99Yxu7Y1xFTcMe/qXHNsBwhyhg6H
+         pKjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0sl4GtApvJ5vp1KsswR8WGb1+9Y2N4Qh5a5Ka+Cq7h2h1vqyO+MNQdE3YAuvWArcgHuflSIomwSRTPNXL1Wk0yaS5KjXEpto4d6FN
+X-Gm-Message-State: AOJu0Yyn1bkKfT7TZ5AtQPAT9Qfpc6aFad79+GhT/xl4MTS4Vlh/sChA
+	yRojiQplONRulSl3dG5QwLANjfJdGZrnGo8QYyO0Me/i+a4ztRh4MhE1v9QneQ0k4WqoE1SxnnM
+	IiF3WAXw+tBk7JgdGilP0CewXSvo=
+X-Google-Smtp-Source: AGHT+IEDuw/AVQEdbV51NKAchZjEw/WYNsA6D5/dWMbPS5ZJqj3cU3E+5vndl4zzLETn8cK4hWqad44n6jDQRAxfsbw=
+X-Received: by 2002:a17:90a:7890:b0:2c8:6eea:7ad8 with SMTP id
+ 98e67ed59e1d1-2cb3741810dmr2263105a91.26.1721149849285; Tue, 16 Jul 2024
+ 10:10:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
+ <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
+ <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
+ <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info> <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
+ <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
+ <ea465a40-f673-42b1-8b1c-a2efb20cd562@amd.com> <CABXGCsPyrUEqDq2gbr4VLw5ncd9cKoCZ9nOr2SRfg8Lh=9H5Kg@mail.gmail.com>
+ <2915a8c4-ebac-4dae-8f09-32a5b4d9aeda@amd.com> <CABXGCsPuRViSd_WeOciLKcQ4hjYxJ7e3i7LomwsUMzd0a+zvBw@mail.gmail.com>
+ <CABXGCsOsfP2SToiDhRAS51nPJ+Qr2v7B3Kjr+yVeP4G7zFZpMA@mail.gmail.com>
+In-Reply-To: <CABXGCsOsfP2SToiDhRAS51nPJ+Qr2v7B3Kjr+yVeP4G7zFZpMA@mail.gmail.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 16 Jul 2024 13:10:37 -0400
+Message-ID: <CADnq5_Mjxna+aqhWT49YLmXGH+piittc4FUSyCDEJ8s7G-Rb3Q@mail.gmail.com>
+Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
+ cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Rodrigo Siqueira Jordao <Rodrigo.Siqueira@amd.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, 
+	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
+	dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000005f5140061d606d94"
 
+--0000000000005f5140061d606d94
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> >  
-> >  static const int bmp580_odr_table[][2] = {
-> > @@ -1830,6 +1848,9 @@ static int bmp580_chip_config(struct bmp280_data *data)
-> >  
-> >  static const int bmp580_oversampling_avail[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
-> >  static const u8 bmp580_chip_ids[] = { BMP580_CHIP_ID, BMP580_CHIP_ID_ALT };
-> > +/* Instead of { 1000, 16 } we do this, to avoid overflow issues */
-> > +static const int bmp580_temp_coeffs[] = { 125, 13 };  
-> 
-> I'm not really sure what we gain here from using 125/13 instead of
-> 250/14...but I don't think it hurts either.
-> 
-> I don't have a way to test this with the latest kernel release
-> currently, but lgtm.
-> 
-> Acked-by: Adam Rizkalla <ajarizzo@gmail.com>
-Series applied.  Thanks
+Does the attached partial revert fix it?
 
-Jonathan
+Alex
+
+On Wed, Jul 10, 2024 at 3:03=E2=80=AFAM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> On Wed, Jul 10, 2024 at 12:01=E2=80=AFPM Mikhail Gavrilov
+> <mikhail.v.gavrilov@gmail.com> wrote:
+> >
+> > On Tue, Jul 9, 2024 at 7:48=E2=80=AFPM Rodrigo Siqueira Jordao
+> > <Rodrigo.Siqueira@amd.com> wrote:
+> > > Hi,
+> > >
+> > > I also tried it with 6900XT. I got the same results on my side.
+> >
+> > This is weird.
+> >
+> > > Anyway, I could not reproduce the issue with the below components. I =
+may
+> > > be missing something that will trigger this bug; in this sense, could
+> > > you describe the following:
+> > > - The display resolution and refresh rate.
+> >
+> > 3840x2160 and 120Hz
+> > At 60Hz issue not reproduced.
+> >
+> > > - Are you able to reproduce this issue with DP and HDMI?
+> >
+> > My TV, an OLED LG C3, has only an HDMI 2.1 port.
+> >
+> > > - Could you provide the firmware information: sudo cat
+> > > /sys/kernel/debug/dri/0/amdgpu_firmware_info
+> >
+> > > sudo cat /sys/kernel/debug/dri/0/amdgpu_firmware_info
+> > [sudo] password for mikhail:
+> > VCE feature version: 0, firmware version: 0x00000000
+> > UVD feature version: 0, firmware version: 0x00000000
+> > MC feature version: 0, firmware version: 0x00000000
+> > ME feature version: 38, firmware version: 0x0000000e
+> > PFP feature version: 38, firmware version: 0x0000000e
+> > CE feature version: 38, firmware version: 0x00000003
+> > RLC feature version: 1, firmware version: 0x0000001f
+> > RLC SRLC feature version: 1, firmware version: 0x00000001
+> > RLC SRLG feature version: 1, firmware version: 0x00000001
+> > RLC SRLS feature version: 1, firmware version: 0x00000001
+> > RLCP feature version: 0, firmware version: 0x00000000
+> > RLCV feature version: 0, firmware version: 0x00000000
+> > MEC feature version: 38, firmware version: 0x00000015
+> > MEC2 feature version: 38, firmware version: 0x00000015
+> > IMU feature version: 0, firmware version: 0x00000000
+> > SOS feature version: 0, firmware version: 0x00000000
+> > ASD feature version: 553648344, firmware version: 0x210000d8
+> > TA XGMI feature version: 0x00000000, firmware version: 0x00000000
+> > TA RAS feature version: 0x00000000, firmware version: 0x00000000
+> > TA HDCP feature version: 0x00000000, firmware version: 0x1700003f
+> > TA DTM feature version: 0x00000000, firmware version: 0x12000016
+> > TA RAP feature version: 0x00000000, firmware version: 0x00000000
+> > TA SECUREDISPLAY feature version: 0x00000000, firmware version: 0x00000=
+000
+> > SMC feature version: 0, program: 0, firmware version: 0x00544fdf (84.79=
+.223)
+> > SDMA0 feature version: 52, firmware version: 0x00000009
+> > VCN feature version: 0, firmware version: 0x0311f002
+> > DMCU feature version: 0, firmware version: 0x00000000
+> > DMCUB feature version: 0, firmware version: 0x05000f00
+> > TOC feature version: 0, firmware version: 0x00000007
+> > MES_KIQ feature version: 0, firmware version: 0x00000000
+> > MES feature version: 0, firmware version: 0x00000000
+> > VPE feature version: 0, firmware version: 0x00000000
+> > VBIOS version: 102-RAPHAEL-008
+> >
+>
+> I forgot to add output for discrete GPU:
+>
+> > sudo cat /sys/kernel/debug/dri/1/amdgpu_firmware_info
+> [sudo] password for mikhail:
+> VCE feature version: 0, firmware version: 0x00000000
+> UVD feature version: 0, firmware version: 0x00000000
+> MC feature version: 0, firmware version: 0x00000000
+> ME feature version: 44, firmware version: 0x00000040
+> PFP feature version: 44, firmware version: 0x00000062
+> CE feature version: 44, firmware version: 0x00000025
+> RLC feature version: 1, firmware version: 0x00000060
+> RLC SRLC feature version: 0, firmware version: 0x00000000
+> RLC SRLG feature version: 0, firmware version: 0x00000000
+> RLC SRLS feature version: 0, firmware version: 0x00000000
+> RLCP feature version: 0, firmware version: 0x00000000
+> RLCV feature version: 0, firmware version: 0x00000000
+> MEC feature version: 44, firmware version: 0x00000076
+> MEC2 feature version: 44, firmware version: 0x00000076
+> IMU feature version: 0, firmware version: 0x00000000
+> SOS feature version: 0, firmware version: 0x00210e64
+> ASD feature version: 553648345, firmware version: 0x210000d9
+> TA XGMI feature version: 0x00000000, firmware version: 0x2000000f
+> TA RAS feature version: 0x00000000, firmware version: 0x1b00013e
+> TA HDCP feature version: 0x00000000, firmware version: 0x1700003f
+> TA DTM feature version: 0x00000000, firmware version: 0x12000016
+> TA RAP feature version: 0x00000000, firmware version: 0x07000016
+> TA SECUREDISPLAY feature version: 0x00000000, firmware version: 0x0000000=
+0
+> SMC feature version: 0, program: 0, firmware version: 0x003a5a00 (58.90.0=
+)
+> SDMA0 feature version: 52, firmware version: 0x00000053
+> SDMA1 feature version: 52, firmware version: 0x00000053
+> SDMA2 feature version: 52, firmware version: 0x00000053
+> SDMA3 feature version: 52, firmware version: 0x00000053
+> VCN feature version: 0, firmware version: 0x0311f002
+> DMCU feature version: 0, firmware version: 0x00000000
+> DMCUB feature version: 0, firmware version: 0x02020020
+> TOC feature version: 0, firmware version: 0x00000000
+> MES_KIQ feature version: 0, firmware version: 0x00000000
+> MES feature version: 0, firmware version: 0x00000000
+> VPE feature version: 0, firmware version: 0x00000000
+> VBIOS version: 113-D4120100-100
+>
+>
+> --
+> Best Regards,
+> Mike Gavrilov.
+
+--0000000000005f5140061d606d94
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-drm-amd-display-fix-corruption-with-high-refresh-rat.patch"
+Content-Disposition: attachment; 
+	filename="0001-drm-amd-display-fix-corruption-with-high-refresh-rat.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lyoo67610>
+X-Attachment-Id: f_lyoo67610
+
+RnJvbSA4YWFmOGRhMDdhOGI1NDJjMGEwZjRkYTI2MDFkYTA3YmVkZGZkZWIwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5j
+b20+CkRhdGU6IFR1ZSwgMTYgSnVsIDIwMjQgMTI6NDk6MjUgLTA0MDAKU3ViamVjdDogW1BBVENI
+XSBkcm0vYW1kL2Rpc3BsYXk6IGZpeCBjb3JydXB0aW9uIHdpdGggaGlnaCByZWZyZXNoIHJhdGVz
+IG9uCiBEQ04gMy4wCgpUaGlzIHJldmVydHMgY29tbWl0IGJjODdkNjY2YzA1YTEzZTZkNGFlMWRk
+Y2U0MWZjNDNkMjU2N2I5YTIgYW5kIHRoZQpyZWdpc3RlciBjaGFuZ2VzIGZyb20gY29tbWl0IDZk
+NDI3OWNiOTlhYzRmNTFkMTA0MDk1MDFkMjk5NjlmNjg3YWM4ZGMuCgpDbG9zZXM6IGh0dHBzOi8v
+Z2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9kcm0vYW1kLy0vaXNzdWVzLzM0NzgKQ2M6IG1pa2hhaWwu
+di5nYXZyaWxvdkBnbWFpbC5jb20KQ2M6IFJvZHJpZ28gU2lxdWVpcmEgPFJvZHJpZ28uU2lxdWVp
+cmFAYW1kLmNvbT4KU2lnbmVkLW9mZi1ieTogQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hl
+ckBhbWQuY29tPgotLS0KIC4uLi9kcm0vYW1kL2Rpc3BsYXkvZGMvb3B0Yy9kY24xMC9kY24xMF9v
+cHRjLmMgICAgfCAxNSArKystLS0tLS0tLS0tLS0KIC4uLi9kcm0vYW1kL2Rpc3BsYXkvZGMvb3B0
+Yy9kY24yMC9kY24yMF9vcHRjLmMgICAgfCAxMCArKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQs
+IDEzIGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9hbWQvZGlzcGxheS9kYy9vcHRjL2RjbjEwL2RjbjEwX29wdGMuYyBiL2RyaXZlcnMv
+Z3B1L2RybS9hbWQvZGlzcGxheS9kYy9vcHRjL2RjbjEwL2RjbjEwX29wdGMuYwppbmRleCA0Zjgy
+MTQ2ZDk0YjEuLmYwMGQyN2I3YzZmZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9k
+aXNwbGF5L2RjL29wdGMvZGNuMTAvZGNuMTBfb3B0Yy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9h
+bWQvZGlzcGxheS9kYy9vcHRjL2RjbjEwL2RjbjEwX29wdGMuYwpAQCAtOTUwLDE5ICs5NTAsMTAg
+QEAgdm9pZCBvcHRjMV9zZXRfZHJyKAogCQkJCU9UR19GT1JDRV9MT0NLX09OX0VWRU5ULCAwLAog
+CQkJCU9UR19TRVRfVl9UT1RBTF9NSU5fTUFTS19FTiwgMCwKIAkJCQlPVEdfU0VUX1ZfVE9UQUxf
+TUlOX01BU0ssIDApOwotCi0JCS8vIFNldHVwIG1hbnVhbCBmbG93IGNvbnRyb2wgZm9yIEVPRiB2
+aWEgVFJJR19BCi0JCW9wdGMtPmZ1bmNzLT5zZXR1cF9tYW51YWxfdHJpZ2dlcihvcHRjKTsKLQot
+CX0gZWxzZSB7Ci0JCVJFR19VUERBVEVfNChPVEdfVl9UT1RBTF9DT05UUk9MLAotCQkJCU9UR19T
+RVRfVl9UT1RBTF9NSU5fTUFTSywgMCwKLQkJCQlPVEdfVl9UT1RBTF9NSU5fU0VMLCAwLAotCQkJ
+CU9UR19WX1RPVEFMX01BWF9TRUwsIDAsCi0JCQkJT1RHX0ZPUkNFX0xPQ0tfT05fRVZFTlQsIDAp
+OwotCi0JCW9wdGMtPmZ1bmNzLT5zZXRfdnRvdGFsX21pbl9tYXgob3B0YywgMCwgMCk7CiAJfQor
+CisJLy8gU2V0dXAgbWFudWFsIGZsb3cgY29udHJvbCBmb3IgRU9GIHZpYSBUUklHX0EKKwlvcHRj
+LT5mdW5jcy0+c2V0dXBfbWFudWFsX3RyaWdnZXIob3B0Yyk7CiB9CiAKIHZvaWQgb3B0YzFfc2V0
+X3Z0b3RhbF9taW5fbWF4KHN0cnVjdCB0aW1pbmdfZ2VuZXJhdG9yICpvcHRjLCBpbnQgdnRvdGFs
+X21pbiwgaW50IHZ0b3RhbF9tYXgpCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rp
+c3BsYXkvZGMvb3B0Yy9kY24yMC9kY24yMF9vcHRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rp
+c3BsYXkvZGMvb3B0Yy9kY24yMC9kY24yMF9vcHRjLmMKaW5kZXggNDM0MTdjZmYyYzliLi5iNDY5
+NDk4NWE0MGEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9vcHRj
+L2RjbjIwL2RjbjIwX29wdGMuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMv
+b3B0Yy9kY24yMC9kY24yMF9vcHRjLmMKQEAgLTQ1Myw2ICs0NTMsMTYgQEAgdm9pZCBvcHRjMl9z
+ZXR1cF9tYW51YWxfdHJpZ2dlcihzdHJ1Y3QgdGltaW5nX2dlbmVyYXRvciAqb3B0YykKIHsKIAlz
+dHJ1Y3Qgb3B0YyAqb3B0YzEgPSBEQ04xMFRHX0ZST01fVEcob3B0Yyk7CiAKKwkvKiBTZXQgdGhl
+IG1pbi9tYXggc2VsZWN0b3JzIHVuY29uZGl0aW9uYWxseSBzbyB0aGF0CisJICogRE1DVUIgZncg
+bWF5IGNoYW5nZSBPVEcgdGltaW5ncyB3aGVuIG5lY2Vzc2FyeQorCSAqIFRPRE86IFJlbW92ZSB0
+aGUgdy9hIGFmdGVyIGZpeGluZyB0aGUgaXNzdWUgaW4gRE1DVUIgZmlybXdhcmUKKwkgKi8KKwlS
+RUdfVVBEQVRFXzQoT1RHX1ZfVE9UQUxfQ09OVFJPTCwKKwkJCQkgT1RHX1ZfVE9UQUxfTUlOX1NF
+TCwgMSwKKwkJCQkgT1RHX1ZfVE9UQUxfTUFYX1NFTCwgMSwKKwkJCQkgT1RHX0ZPUkNFX0xPQ0tf
+T05fRVZFTlQsIDAsCisJCQkJIE9UR19TRVRfVl9UT1RBTF9NSU5fTUFTSywgKDEgPDwgMSkpOyAv
+KiBUUklHQSAqLworCiAJUkVHX1NFVF84KE9UR19UUklHQV9DTlRMLCAwLAogCQkJT1RHX1RSSUdB
+X1NPVVJDRV9TRUxFQ1QsIDIxLAogCQkJT1RHX1RSSUdBX1NPVVJDRV9QSVBFX1NFTEVDVCwgb3B0
+Yy0+aW5zdCwKLS0gCjIuNDUuMgoK
+--0000000000005f5140061d606d94--
