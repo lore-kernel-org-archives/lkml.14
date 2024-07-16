@@ -1,277 +1,110 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517A64C74;
-	Tue, 16 Jul 2024 07:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB311224EF
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 07:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721116372; cv=none; b=ttnzVf+tt2bE8oaNBQeWGVc98vMVCQvBQrhyHDr8v6vIONhPhbb13B5CWS+d8ilqA2k2SjfOJrueame6G6YSo1v8b/1tTCXlCc4zEwuS3j8B5Y0pVIoH2TeCRWMxUNuBhN+wceWyH6woZQe1ndlNboyeQ27FtoZC9u+4t5lDpGE=
+	t=1721116475; cv=none; b=dcRhLljm6lIjYRA62h9dBSKp7Dij0cGiKsSxpP2vnbTqxSdQk+eOwxvGDw9/pV0/J+7EgHR+SVx2blRUz8Wszl86FDHiW8lNhzEIYQnlEvvNjnxBvyoEHLNr66rTLTl/YsGLy+7zxfeBrBevtnlIr9BOLkvmrE/rtEbNLEciCgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721116372; c=relaxed/simple;
-	bh=5uc7rrG9KrjMyPTpkNMDYR1ta11ZOmQf1e7qWomrJNg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LqbFcXaWi185y8g3NkgYWB01Vs3Ui8uR/h62cto8+cyH65oEbRtPtVuQwAd+51RmrCkeivOBu5IP7zbuul+EDMZ//92JTR3CuBtOqBYWBj7ob5ptC8pMCU6iKw5W38l1cSKvF4gwDNrsdl6heSJPd4t20NoNpY2rPpRjpKbJFiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=hnYVYX+7; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1721116475; c=relaxed/simple;
+	bh=MNn8gxXYqvsNcb1Yh/X9L/MXxeX3VNL1a9Hrw0q3y2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=th5rLi17J0ht2fNpFhtNVDHFSiJXNezrmQntnkCKlU8u8h5szz9yjRQnXG774KjyfYMNQGTp3xsjEE1eJTeLR5HPFZ0mib8A/n5PY1NT2FFuhX0Xy4VOjRxeeV+hngtMWpti5/KxHw1rjjgTyvdM5f95ILNx/o36eJAmN6EgHfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jZ9zq28U; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hnYVYX+7"
-X-UUID: 6067477e434811efb5b96b43b535fdb4-20240716
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=LKn59Eo61gPgXwLDdueCeuGeu9W7m6IyUvCxQVSnSK8=;
-	b=hnYVYX+7p9MVV3BhZXLLs4/LQEanl4cv9/V4/kLJdaOpXZuIgk/2VWNXiL2g2dy1T85TANUZ9rSP+Oajlof3BGcT0uoVJOhmSgF1xm2EtCVwhG7XpPTiFM9fWjwhrQa5PL4eebcOaaUg6X2M40QsCV72neROypEw+m3AaxJxXPc=;
-X-CID-CACHE: Type:Local,Time:202407161547+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:8bdfee71-8f8b-4de4-bb00-85dada6e92da,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:692c830d-46b0-425a-97d3-4623fe284021,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:5,IP:nil,UR
-	L:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 6067477e434811efb5b96b43b535fdb4-20240716
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
-	(envelope-from <boy.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1902591506; Tue, 16 Jul 2024 15:52:40 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- MTKMBS14N2.mediatek.inc (172.21.101.76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 16 Jul 2024 15:52:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 16 Jul 2024 15:52:39 +0800
-From: boy.wu <boy.wu@mediatek.com>
-To: Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>, Jens Axboe
-	<axboe@kernel.dk>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Boris Burkov <boris@bur.io>,
-	<cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <iverlin.wang@mediatek.com>, Boy Wu
-	<boy.wu@mediatek.com>
-Subject: [PATCH v3] blk-cgroup: Replace u64 sync with spinlock for iostat update
-Date: Tue, 16 Jul 2024 15:52:06 +0800
-Message-ID: <20240716075206.23121-1-boy.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jZ9zq28U"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ebed33cb65so69033881fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 00:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721116472; x=1721721272; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tsyjNs+epxjHFckk0dd03DwfQ8j6M5Wrc4itesRp3IU=;
+        b=jZ9zq28U/QegcdkYucUMhsZ0jz/UEk+ep9TqOdqrh04TvsoAMdaQccxfm5eZnYTuFt
+         OEXGX5DwXlut5H0URAzWjrVCZ53d8ox0dDlapjfXDm36piDq7bEC2WLj5RVWAME9VmDv
+         qUEKl4GAtcMU7cBdkLXa5GS26a4jn1cWeFkbGcrMYouv3BWp07uk7U7YJFUSUXtChr7U
+         RK4xW5UXY/Wx1GYJboIKM6H8rGt3QXS5afpnYfs8njrKr5FvzkQML36/Kg20qT1AGyXx
+         +1S2AszH7lhZTUxrqNpCwFsh+JCnJEK+BVvGyWgCmd+TsLxxrSER/mWSLszPtJUAG0P4
+         JkPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721116472; x=1721721272;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tsyjNs+epxjHFckk0dd03DwfQ8j6M5Wrc4itesRp3IU=;
+        b=Nc0v5X1hKxZ7SxP0Uixv/HbIRF8xqnyJ7w27REiHSzaMfU177HJ2arFzdqnCg+aPhy
+         xWQRHGz4ap5iEnCmGLb5SqU1O3V34afvCcvcheQXKp0/2h1ycQRtdbHlxYQcnYic59Xa
+         YEWsLVPjyJFW22kLM0OgV3FmU0Yi3hG463j0WFHxnPhkNgNYAfFmOdVwxFN21DdxHaMl
+         uPGOAogJXYQvkbXTrbOi7rcLWhmwVAJ+0meQCZVL8mBUv8A4Ar/tXjEczojI7n3grV00
+         NNLsgVTrfB2DHH2YVXgdw9HZVHk5RiIpBEiXbOF7wyShql15fbnm7x25Zx9aphMNOvlt
+         Vq1w==
+X-Forwarded-Encrypted: i=1; AJvYcCV6DjDKoACH3qJd5nxhO+KtYDMAdaK8gAu9Yo6ag3hcdnZF7F2CUxYCkYZn7UI733cMaxRBdMPdB67wA1zOTSUxjfbxVgyyuu3EBWCr
+X-Gm-Message-State: AOJu0Yy6pu1086NhJLGpPaTmTiRr0MH2wGNM2ThwDPYFCaF+cQJ+wR2l
+	8LQ/HXBRCxQXRLilfv35WXwCv2PFBiHZO31RWB8nrnMHz5tpj+YBEATLq0w7QV6Su9regKoF/KE
+	MwvCNryNwq30Thmmru0pxFdSc6yp1PSLEIGaBDw==
+X-Google-Smtp-Source: AGHT+IHxiGnjKEzJz5PukU3GQJwtAAOXLOqzHFNcG1Fx6SzxLyf+ALXiDO+KrLhwXbWwUy5jSuyneyfndt37ndL/n+8=
+X-Received: by 2002:a05:6512:690:b0:52e:9ab6:cb53 with SMTP id
+ 2adb3069b0e04-52edf032e94mr698476e87.64.1721116472011; Tue, 16 Jul 2024
+ 00:54:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--11.866300-8.000000
-X-TMASE-MatchedRID: aeJu7N9qZHyZtBi01n3C9xafLXbshfogcx5k3wffojOHwGEm+CpYGTEG
-	FjeZwyRUzbrWhbT2b8cTMOv2lZG8w2zFfXEzaNt8wCZxkTHxccn64i5lgawyBFSOymiJfTYXZmL
-	HoWzm2fSMZBHIGOaSwOKOmN63egZIkKjL2IOi2LBbuDP8ZuCmXgApx/9nOtgkVo+424uIBNJYTM
-	99NlfBm1EXNKIgpuQj+9p3HcFJM3mVhIWL9FEuNwwfhKwa9GwDgGa+oYp5i6qgWMz+iaWIIaPFj
-	JEFr+olwXCBO/GKkVqOhzOa6g8KrUiBZ6mmQX3xiIMgDE0zxa/IQ+RZPevUbELozoV1kXEbSPck
-	h7/tXqI=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--11.866300-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	9AF1EA2C7774CC56D1B87B197E4E94559A0CE677E0D6E0E611350B3A934B048A2000:8
-X-MTK: N
+References: <20240712091008.14815-1-brgl@bgdev.pl> <CAHk-=wjWc5dzcj2O1tEgNHY1rnQW63JwtuZi_vAZPqy6wqpoUQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wjWc5dzcj2O1tEgNHY1rnQW63JwtuZi_vAZPqy6wqpoUQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 16 Jul 2024 09:54:20 +0200
+Message-ID: <CAMRc=MfdREubJBjxy-WDZotYWY-uU_6C1N7L8STisoJwtpAgjg@mail.gmail.com>
+Subject: Re: [GIT PULL] power sequencing updates for v6.11-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Boy Wu <boy.wu@mediatek.com>
+On Tue, Jul 16, 2024 at 4:17=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, 12 Jul 2024 at 02:13, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > This PR contains the core power sequencing framework, the first driver,=
+ PCI
+> > changes using the pwrseq library (blessed by Bjorn Helgaas) and some fi=
+xes
+> > that came later.
+>
+> Hmm. Let's see how this all works out, but I already found an annoyance.
+>
+> It first asks me about the new PCI power sequencing driver.
+>
+> And then it asks me separately if I want the power sequencing support.
+>
+> Now, either this should
+>
+>  (a) not ask about the generic power sequencing support at all, and
+> just select if if a driver that is enabled needs it
+>
+> OR
+>
+>  (b) it should ask about power sequencing support and then if you say
+> "N", it should not ask about the drivers.
+>
+> But asking *twice* is definitely not kosher.
+>
+>             Linus
 
-In 32bit SMP systems, if multiple CPUs call blkcg_print_stat,
-it may cause blkcg_fill_root_iostats to have a concurrent problem
-on the seqlock in u64_stats_update, which will cause a deadlock
-on u64_stats_fetch_begin in blkcg_print_one_stat.
+I didn't notice it because I almost always use menuconfig. I'll look into i=
+t.
 
-Thus, replace u64 sync with spinlock to protect iostat update.
-
-Fixes: ef45fe470e1e ("blk-cgroup: show global disk stats in root cgroup io.stat")
-Signed-off-by: Boy Wu <boy.wu@mediatek.com>
----
-Change in v2:
- - update commit message
- - Remove u64_sync
- - Replace spin_lock_irq with guard statement
- - Replace blkg->q->queue_lock with blkg_stat_lock
-Change in v3:
- - update commit message
- - Add spinlock in blkg_iostat_set structure
- - Replace all u64_sync with spinlock for iostat
- - Replace blkg_stat_lock with iostat.spinlock
----
- block/blk-cgroup.c | 62 +++++++++++++++++++---------------------------
- block/blk-cgroup.h |  1 +
- 2 files changed, 26 insertions(+), 37 deletions(-)
-
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 37e6cc91d576..4b66f37c45a0 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -329,7 +329,7 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct gendisk *disk,
- 	INIT_WORK(&blkg->async_bio_work, blkg_async_bio_workfn);
- #endif
- 
--	u64_stats_init(&blkg->iostat.sync);
-+	spin_lock_init(&blkg->iostat.spinlock);
- 	for_each_possible_cpu(cpu) {
- 		u64_stats_init(&per_cpu_ptr(blkg->iostat_cpu, cpu)->sync);
- 		per_cpu_ptr(blkg->iostat_cpu, cpu)->blkg = blkg;
-@@ -995,15 +995,13 @@ static void blkcg_iostat_update(struct blkcg_gq *blkg, struct blkg_iostat *cur,
- 				struct blkg_iostat *last)
- {
- 	struct blkg_iostat delta;
--	unsigned long flags;
- 
- 	/* propagate percpu delta to global */
--	flags = u64_stats_update_begin_irqsave(&blkg->iostat.sync);
-+	guard(spinlock_irqsave)(&blkg->iostat.spinlock);
- 	blkg_iostat_set(&delta, cur);
- 	blkg_iostat_sub(&delta, last);
- 	blkg_iostat_add(&blkg->iostat.cur, &delta);
- 	blkg_iostat_add(last, &delta);
--	u64_stats_update_end_irqrestore(&blkg->iostat.sync, flags);
- }
- 
- static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
-@@ -1034,7 +1032,6 @@ static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
- 		struct blkcg_gq *blkg = bisc->blkg;
- 		struct blkcg_gq *parent = blkg->parent;
- 		struct blkg_iostat cur;
--		unsigned int seq;
- 
- 		/*
- 		 * Order assignment of `next_bisc` from `bisc->lnode.next` in
-@@ -1051,10 +1048,8 @@ static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
- 			goto propagate_up; /* propagate up to parent only */
- 
- 		/* fetch the current per-cpu values */
--		do {
--			seq = u64_stats_fetch_begin(&bisc->sync);
-+		scoped_guard(spinlock_irqsave, &bisc->spinlock)
- 			blkg_iostat_set(&cur, &bisc->cur);
--		} while (u64_stats_fetch_retry(&bisc->sync, seq));
- 
- 		blkcg_iostat_update(blkg, &cur, &bisc->last);
- 
-@@ -1112,7 +1107,6 @@ static void blkcg_fill_root_iostats(void)
- 		struct blkcg_gq *blkg = bdev->bd_disk->queue->root_blkg;
- 		struct blkg_iostat tmp;
- 		int cpu;
--		unsigned long flags;
- 
- 		memset(&tmp, 0, sizeof(tmp));
- 		for_each_possible_cpu(cpu) {
-@@ -1134,9 +1128,8 @@ static void blkcg_fill_root_iostats(void)
- 				cpu_dkstats->sectors[STAT_DISCARD] << 9;
- 		}
- 
--		flags = u64_stats_update_begin_irqsave(&blkg->iostat.sync);
-+		guard(spinlock_irqsave)(&blkg->iostat.spinlock);
- 		blkg_iostat_set(&blkg->iostat.cur, &tmp);
--		u64_stats_update_end_irqrestore(&blkg->iostat.sync, flags);
- 	}
- }
- 
-@@ -1145,7 +1138,6 @@ static void blkcg_print_one_stat(struct blkcg_gq *blkg, struct seq_file *s)
- 	struct blkg_iostat_set *bis = &blkg->iostat;
- 	u64 rbytes, wbytes, rios, wios, dbytes, dios;
- 	const char *dname;
--	unsigned seq;
- 	int i;
- 
- 	if (!blkg->online)
-@@ -1157,16 +1149,14 @@ static void blkcg_print_one_stat(struct blkcg_gq *blkg, struct seq_file *s)
- 
- 	seq_printf(s, "%s ", dname);
- 
--	do {
--		seq = u64_stats_fetch_begin(&bis->sync);
--
-+	scoped_guard(spinlock_irqsave, &bis->spinlock) {
- 		rbytes = bis->cur.bytes[BLKG_IOSTAT_READ];
- 		wbytes = bis->cur.bytes[BLKG_IOSTAT_WRITE];
- 		dbytes = bis->cur.bytes[BLKG_IOSTAT_DISCARD];
- 		rios = bis->cur.ios[BLKG_IOSTAT_READ];
- 		wios = bis->cur.ios[BLKG_IOSTAT_WRITE];
- 		dios = bis->cur.ios[BLKG_IOSTAT_DISCARD];
--	} while (u64_stats_fetch_retry(&bis->sync, seq));
-+	}
- 
- 	if (rbytes || wbytes || rios || wios) {
- 		seq_printf(s, "rbytes=%llu wbytes=%llu rios=%llu wios=%llu dbytes=%llu dios=%llu",
-@@ -2141,7 +2131,6 @@ void blk_cgroup_bio_start(struct bio *bio)
- 	struct blkcg *blkcg = bio->bi_blkg->blkcg;
- 	int rwd = blk_cgroup_io_type(bio), cpu;
- 	struct blkg_iostat_set *bis;
--	unsigned long flags;
- 
- 	if (!cgroup_subsys_on_dfl(io_cgrp_subsys))
- 		return;
-@@ -2152,30 +2141,29 @@ void blk_cgroup_bio_start(struct bio *bio)
- 
- 	cpu = get_cpu();
- 	bis = per_cpu_ptr(bio->bi_blkg->iostat_cpu, cpu);
--	flags = u64_stats_update_begin_irqsave(&bis->sync);
--
--	/*
--	 * If the bio is flagged with BIO_CGROUP_ACCT it means this is a split
--	 * bio and we would have already accounted for the size of the bio.
--	 */
--	if (!bio_flagged(bio, BIO_CGROUP_ACCT)) {
--		bio_set_flag(bio, BIO_CGROUP_ACCT);
--		bis->cur.bytes[rwd] += bio->bi_iter.bi_size;
--	}
--	bis->cur.ios[rwd]++;
-+	scoped_guard(spinlock_irqsave, &bis->spinlock) {
-+		/*
-+		 * If the bio is flagged with BIO_CGROUP_ACCT it means this is a split
-+		 * bio and we would have already accounted for the size of the bio.
-+		 */
-+		if (!bio_flagged(bio, BIO_CGROUP_ACCT)) {
-+			bio_set_flag(bio, BIO_CGROUP_ACCT);
-+			bis->cur.bytes[rwd] += bio->bi_iter.bi_size;
-+		}
-+		bis->cur.ios[rwd]++;
- 
--	/*
--	 * If the iostat_cpu isn't in a lockless list, put it into the
--	 * list to indicate that a stat update is pending.
--	 */
--	if (!READ_ONCE(bis->lqueued)) {
--		struct llist_head *lhead = this_cpu_ptr(blkcg->lhead);
-+		/*
-+		 * If the iostat_cpu isn't in a lockless list, put it into the
-+		 * list to indicate that a stat update is pending.
-+		 */
-+		if (!READ_ONCE(bis->lqueued)) {
-+			struct llist_head *lhead = this_cpu_ptr(blkcg->lhead);
- 
--		llist_add(&bis->lnode, lhead);
--		WRITE_ONCE(bis->lqueued, true);
-+			llist_add(&bis->lnode, lhead);
-+			WRITE_ONCE(bis->lqueued, true);
-+		}
- 	}
- 
--	u64_stats_update_end_irqrestore(&bis->sync, flags);
- 	cgroup_rstat_updated(blkcg->css.cgroup, cpu);
- 	put_cpu();
- }
-diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
-index bd472a30bc61..b9544969a131 100644
---- a/block/blk-cgroup.h
-+++ b/block/blk-cgroup.h
-@@ -44,6 +44,7 @@ struct blkg_iostat {
- };
- 
- struct blkg_iostat_set {
-+	spinlock_t			spinlock;
- 	struct u64_stats_sync		sync;
- 	struct blkcg_gq		       *blkg;
- 	struct llist_node		lnode;
--- 
-2.18.0
-
+Bartosz
