@@ -1,72 +1,32 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C4FD2FA
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 09:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F795FEE6;
+	Tue, 16 Jul 2024 09:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721120459; cv=none; b=rvm9/l2ZkIV9a4u/HS6MjQnpWCQvmtzU4kznit1eRo52C1Wi1cw68TFryo0TI81iHV+/p/pLqADSn1bC625L/BhJj/c9Flu9D0IknPupCh38XZi9U2IXoocWFlJodUWZjbYrwd/n4MPpWr7Q10e6jsgAq5L/yioDtbvsGYpi4n4=
+	t=1721120555; cv=none; b=DT33MGqlEztxM6gcnLXKrDzF1CTsF342vJkG9M36lWrCZ3qn25llv3VdoNN3qBm7vGE47SxC031lD/WDTdYwHKZKOVhUaI3SCRKENoDD5ySib3jGL09QGyRh51ksHf8mT1avMZ7wWmN3G6+9aWApIflarAVIrT9meUKXlUzpBV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721120459; c=relaxed/simple;
-	bh=kMvlsHzy31bD+tkxP6TK51Gz+HLsC2XGrwhsJjRb0Zk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P38zRw0a8sJLXtjDZS5VweEbufVH94SaBLZBErpKTkQEaOBp2tiLnfwGwEXJ680b5dygYNssMCWo2KQQmNdldPIKQpZwkyDjuVIAANqtL/NniQK2isvT23jgJwP8povz/iqi6Ex/wB7jr+xD5YSQEcKcskVRPEwHouunSfxAvpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uQTSgASk; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uQTSgASk"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-367b6e5ffbfso2938131f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 02:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721120455; x=1721725255; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xbEQC0Xl3QFDIRJBV+fNJ9ehNb0IYgGGn7Mg/g7ZnHg=;
-        b=uQTSgASkkanR6sGNCo64lKk+9MMcRpt3fmr+Xf5EpaLjbCW9+b4hx2Mn6mXqN2O5VA
-         cTiCNlEasOYOiuN6KE1QXrnGvYOmc7mCLh9b2A8ZJtrCU6Bw3UySFNx8Yfoo1lssDNnS
-         riitucLqv2/akSD3RBaPx18fYE64DvmLh+664Y8VZE0LZEaqyDrudiTHkkx4vsDkFvbA
-         rAilVdDmfOvvIBg5jJhvH7O/g3c4n3shpNS9p7WNCsREetE00D2GP89cSZwIj9I75YLC
-         B6CinR+whGWJB8INTbDPBzlqGeUsHO1PcBeDR0RSm792ypmcwpRLDeRe8/gVsmz0qgur
-         wV9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721120455; x=1721725255;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xbEQC0Xl3QFDIRJBV+fNJ9ehNb0IYgGGn7Mg/g7ZnHg=;
-        b=IloY/gyxQnpIpVCbA3HbY0WzeNZcD3COQKZ8ug/0bRBiMB26edoCd1a+mRSUcXaYtb
-         W0r4KqEuh5e8lu++kp6AVEdjnIAsiSuwS21nwfBmyU/hAytxA5wYMBmFQ/03TgNU/Qbb
-         tP0FYX8Fmx2ER8fttWD+02U4IsxUNnOvCKpLA3Md5DQYgI1ACSlvUbKQ5/VXDPN4wQpT
-         gVvjwo9ebiRcXL0kpOP/S5T9mXJKXRbPCdw/RP0cQFoS3n2UA5yDci4RSNUtY0GyuYDx
-         Sfg/algu9cmz0jppGIkR+mkcnCWNu61CzkKj76qQ9TdMnX5FU/K8e+Kq7WWj3+mfjj/r
-         /I9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXlw7QQ8oimsF6k3/lIp+u0w9+iXXBWNJCUyJtsvR0l5vMzmcZcKA1/AhRl0lpf5YZKBX47avTbxx+HDbXdhTcL/x0jnevIfZ49QXRT
-X-Gm-Message-State: AOJu0Ywline6DKt9g7D4dC1pqcwMtedbBUCsCVXzd3ryso4FLfM620wU
-	j9uBFdBt5m+YH/puTBxAh8YzoaJvbRHjYaY8oCz7DccC15ykRFAgYdHY5uTIC+I=
-X-Google-Smtp-Source: AGHT+IG27clWzSV6W8iZaTI9YjO6zoit2okTMA2etw6G3YpXIOmBPezlqo50dPpTno+mPQIphFBs9Q==
-X-Received: by 2002:adf:fe46:0:b0:361:bcc5:2e26 with SMTP id ffacd0b85a97d-368260d4ceemr946401f8f.19.1721120454694;
-        Tue, 16 Jul 2024 02:00:54 -0700 (PDT)
-Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680daccbe9sm8325078f8f.59.2024.07.16.02.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 02:00:54 -0700 (PDT)
-From: Rayyan Ansari <rayyan.ansari@linaro.org>
-To: devicetree@vger.kernel.org
-Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: clock: qcom,qcs404-turingcc: convert to dtschema
-Date: Tue, 16 Jul 2024 09:56:20 +0100
-Message-ID: <20240716085622.12182-2-rayyan.ansari@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1721120555; c=relaxed/simple;
+	bh=efPYcMbxvqv2EHFjE7NEeoWio7WLi1HA9h1XdzjOFZA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lu/ynBdE+84Y8Y0EzgzQYKlFknjYQtROWQaYgSY93QjnVw7wuRoTHOUyTAF222bXqWtp554Rj3hUuV33BVEFRldtIEc62gn2RvzC7TrJ4VZVH+tco8jfuWEkLZjnwn9Oy0nu4Dtn1fLwfqhpi2EDITp2o8786hqLe2zbxlImFK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from inp1wst083.omp.ru (81.22.207.138) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 16 Jul
+ 2024 12:02:16 +0300
+From: Roman Smirnov <r.smirnov@omp.ru>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+	<brauner@kernel.org>, Jan Kara <jack@suse.cz>
+CC: Roman Smirnov <r.smirnov@omp.ru>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] fs: buffer: set the expression type to unsigned long in folio_create_buffers()
+Date: Tue, 16 Jul 2024 12:01:05 +0300
+Message-ID: <20240716090105.72179-1-r.smirnov@omp.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,101 +34,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 07/16/2024 08:16:55
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 186531 [Jul 16 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 24 0.3.24
+ 186c4d603b899ccfd4883d230c53f273b80e467f
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;inp1wst083.omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;81.22.207.138:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 07/16/2024 08:23:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 7/16/2024 7:02:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Convert the bindings for the Turing Clock Controller on QCS404 from
-the old text format to yaml.
+Shift without specifying the type casts the expression to int,
+which is then passed as an unsigned long argument. It is necessary
+to use 1UL instead.
 
-Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Found by Linux Verification Center (linuxtesting.org) with Svace.
+
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
 ---
-v1 -> v2: rename file to compatible string, remove label in example dt,
-          add acked-by tag
-v1: https://lore.kernel.org/all/20240715084313.14098-1-rayyan.ansari@linaro.org/
+ fs/buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../bindings/clock/qcom,qcs404-turingcc.yaml  | 47 +++++++++++++++++++
- .../bindings/clock/qcom,turingcc.txt          | 19 --------
- 2 files changed, 47 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,qcs404-turingcc.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,turingcc.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,qcs404-turingcc.yaml b/Documentation/devicetree/bindings/clock/qcom,qcs404-turingcc.yaml
-new file mode 100644
-index 000000000000..033e010754a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,qcs404-turingcc.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,qcs404-turingcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Turing Clock & Reset Controller on QCS404
-+
-+maintainers:
-+  - Bjorn Andersson <andersson@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: qcom,qcs404-turingcc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#clock-cells'
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-+    clock-controller@800000 {
-+        compatible = "qcom,qcs404-turingcc";
-+        reg = <0x00800000 0x30000>;
-+        clocks = <&gcc GCC_CDSP_CFG_AHB_CLK>;
-+
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/clock/qcom,turingcc.txt b/Documentation/devicetree/bindings/clock/qcom,turingcc.txt
-deleted file mode 100644
-index 126517de5f9a..000000000000
---- a/Documentation/devicetree/bindings/clock/qcom,turingcc.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--Qualcomm Turing Clock & Reset Controller Binding
--------------------------------------------------
--
--Required properties :
--- compatible: shall contain "qcom,qcs404-turingcc".
--- reg: shall contain base register location and length.
--- clocks: ahb clock for the TuringCC
--- #clock-cells: from common clock binding, shall contain 1.
--- #reset-cells: from common reset binding, shall contain 1.
--
--Example:
--	turingcc: clock-controller@800000 {
--		compatible = "qcom,qcs404-turingcc";
--		reg = <0x00800000 0x30000>;
--		clocks = <&gcc GCC_CDSP_CFG_AHB_CLK>;
--
--		#clock-cells = <1>;
--		#reset-cells = <1>;
--	};
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 8c19e705b9c3..40dc18f1cba5 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1782,7 +1782,7 @@ static struct buffer_head *folio_create_buffers(struct folio *folio,
+ 	bh = folio_buffers(folio);
+ 	if (!bh)
+ 		bh = create_empty_buffers(folio,
+-				1 << READ_ONCE(inode->i_blkbits), b_state);
++				1UL << READ_ONCE(inode->i_blkbits), b_state);
+ 	return bh;
+ }
+ 
 -- 
-2.45.2
+2.34.1
 
