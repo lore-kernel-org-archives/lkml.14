@@ -1,157 +1,135 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D911DA4D
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 15:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED44B19DFBF
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 15:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721144812; cv=none; b=MJbzaUs3uvcjKQZ+UhD1vKX2LY33jnYq+V/PAf6Z1v8trPDHtRkZ8Pii0yv2OWhuZ9NdXqAokirMLp1MfyCy+8eWZTIft3GTN61WHVYjAyW3gC74KAHCNnNmZN7KmhivjbHkTpi5k17gauMAslhMZzrEx+tPnJabEEp1gS/0szo=
+	t=1721144824; cv=none; b=Sjx+WRrXvQZwiHmrpAQuzfhUvtJHbAM1rtUS2nysxvG+Q1sSiigllVVA/PRdbBCGPTGcqeVyIIOjc0/nnAMnNo0JP7oYWD2FLIH5YiE0+dLfnQma7jcb/O4rmiPNF3Uso/g/lc0rVbyeOWZ5kUoMsxpN/y96WwVThmSHeSTi24g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721144812; c=relaxed/simple;
-	bh=Ov0ZxuRqg19DOdyaVwSAZjy1CSU3sqSqbZdr+Bo8tNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6gaTeWLbORPhDF+bsCVW7LIYJqNrl54ZJ/4W9FvY/ZZpsiI55avZfNpfR6M5ytRC3i+nVm9qFINSafUAY76RpHjA1qduznIf4QZsT0Wk7LNt/EvKoPU5zWlxWrkjuF3cW9rf1IANlC5wN67WvL3g7o6O9dO2/oVMTaBA5uJ66Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AeJWbA1S; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721144824; c=relaxed/simple;
+	bh=YpEF0Q6yKkYxLuQtT2PJS/GZ92XHHf4x1MDsqSuwVCk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uJuztkWS1n+JEU1WCC7ScgdwUStOvRteZmufn9fieKlSfaiodthIJrh5sV9GkAZg42Tw/x06gmKUGoub9qJ24Do5F3vYS0skt2Vp5DPHJ683yvj1IAULtS7cIvrhCFa1dWeqv5eNZrzu/xDVIwE2YFcbncarDmMLxR3PT39CI+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4SGebI7i; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AeJWbA1S"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1fb72eb3143so40675025ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:46:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4SGebI7i"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70af58f79d1so4514861b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 08:47:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721144810; x=1721749610; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GOZ0mHcem+Vs3dr0bori38FCvWKVYDMdvIY4Rdc3Vvo=;
-        b=AeJWbA1SSdGEVdsc/Gd75fv/SMMsmEk8eT/e7boEoP/lAfNO55IWEgT7B0i2DpJA/k
-         /FMWwH9En3RMKtham9KhgQbz4ukXuEnn21baGigD3FomrJ3acNHQORiAWpjCyFhTkv+U
-         y1sdybpC0fn85j+UkuG+H/kh4F7XSqI+JsN7gaCkMOnUYatzqkbq76Q8jr4gQN/EMsfX
-         2TylCXOjJgq39L6HB8WePtJs+GU0af5uTiLNG+9fnz1SvYnEcpyTd0i6ZReYU82vft+k
-         ojvDkEXVtRrMQ65/pWOGRroNJJO6XdpVdSex0WBeHfnzT3n3cmv8m5CM+r908T0tw5pC
-         GhVQ==
+        d=google.com; s=20230601; t=1721144821; x=1721749621; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ETWgHgOd443GlHDheQNvvEwb46QHybHGr7wnanCFogo=;
+        b=4SGebI7iw6V6jR9glZcEtxBZ6Ur5cF7+TLS51iaw7rfy0sRRBuLLrWsDgFXrGS93Qw
+         jcep0fZPitNTZpnc+s7Qb4Y86j7W6aV2AYvOYVGpGKOBeHij7qJictFCKZt6EbbYMycs
+         nwHXnxE4GY8q9XZ5ygUBn1Z2fWCXdMnToK0V8AVETHeMufQQRDIafzPgykUvqXedZ9WG
+         VYNLCMreLZkHzHwWoJvEPw2mGILOHnmJMxeBCHLqByGsUd2AwR1OH88RWw9Ac82xm9X4
+         c5kKddXLW0H4iHPyHGQYV5Kd3AAXtUa0pZRaxkuctu2CSa+sz+Qc97W/5nuqklCFbfX+
+         oVWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721144810; x=1721749610;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GOZ0mHcem+Vs3dr0bori38FCvWKVYDMdvIY4Rdc3Vvo=;
-        b=Kur0mVHFeflvJiKwfrKz0PhOTLXHnWKCvUNxBLKBiJw3puv+4ABnDK1hqPiVpC5rhd
-         i+AKNbDAqvqojmv3QNBBg16sXaqU3BogwyOvkehD023jxc9z16bhFRDdWPBUVxCYjYF1
-         FS/wuONEw17imJaDeB60eA6TSDIeIPRg/FoZxMcvV5M8iccFZrsaMTRzHspBMzYctWxH
-         t48r6UCoS09PpEOh3n/soH1HLZqeFqjU24G8HrqeUx3zAKsrk26HUSri0vo1MOzDBQEZ
-         TWTw6A9sxFBkagq8p/3kOx/qhsinnevPecfWl/pXg6OTrwRRATmBKWudhJh03h7/SKQs
-         KqVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVG6dO48Qc0yG5dMDbrsAS+DZTQ7TQJrT6snsgLK0+P8O8ylGf25bFGV5Su7Q4VfpQ/c9wh+7h2tBqZJ5YXId9hwh6hqYZ1Kf006I12
-X-Gm-Message-State: AOJu0YwOb8343hc3M2Lsmcx/fIcxIuuk2gQfpccUA0nmDSKDnM6d64lS
-	rmpJ8e5LshMUnaxIIl3XYIOrXd3E4RDh29cIYLmRf5yg1sHer42/w/LOiB9//7E=
-X-Google-Smtp-Source: AGHT+IGuZHVU0ziAtoeqsGV04P2Tf0nyODoXzZ44+orFCy6lC6ncLmkiz+ZhBmIDQL7JpJUFd4iWGQ==
-X-Received: by 2002:a17:903:11cc:b0:1fb:6121:dfc0 with SMTP id d9443c01a7336-1fc3e6cae84mr37740675ad.19.1721144809911;
-        Tue, 16 Jul 2024 08:46:49 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:5d01:167d:9cf4:148e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bbc2782sm59434125ad.102.2024.07.16.08.46.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 08:46:49 -0700 (PDT)
-Date: Tue, 16 Jul 2024 09:46:45 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-Subject: Re: [PATCH 5/6] remoteproc: imx_rproc: allow tx_block to be set
-Message-ID: <ZpaV5W94NvuJpvle@p14s>
-References: <20240712-imx_rproc-v1-0-7bcf6732d328@nxp.com>
- <20240712-imx_rproc-v1-5-7bcf6732d328@nxp.com>
+        d=1e100.net; s=20230601; t=1721144821; x=1721749621;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ETWgHgOd443GlHDheQNvvEwb46QHybHGr7wnanCFogo=;
+        b=kiRzK9Ac4wTdzoJf1XibR3iW2G5OV6i7sz63EVV4WNV0PWoifl6O2rmON9NqTV0yM+
+         kYvdqWYBo6zUK6G3xV0y0KtVop6+Ags6VWkP1FzhXYvxY525qyVK3gJQ2YctL3z1SfZB
+         I0Ylf4vH3oKnzxJ2Mcv6fAPUc9dn9TpckQWI9v6zeouiXLJ89zd4IU+uInTRkho9DCZ4
+         FuE1CZFoi3jSmc0HhBS6nalvVjNIR7gdyEQ6PkJwwG0weh8FHL5ex1RpjHb0gcB003l2
+         2TmQYl2GWaI81I3fEfXjqMHCI7aIyTvUVidaNOX0hjeSai3fhOHASqyyfsqtIOr1/uUO
+         QxZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYOMonZkb4RjctLNWf5WaSAOdHWohpxrf6017UFyJMh3HNkgRrR4/IHUvpWw2bUgOdBQak+MtuSgFNRbXa97oiDeyO6t3XpMbScc/s
+X-Gm-Message-State: AOJu0Yxd0ECJApMsOkcpTCksg51aCjoLKg879jMO2+AbAoqKsruMquAb
+	FLnVrseTEXFgdKrW4euzcJAAaIDzZFA30tQ2TsOfO3GFnjvI0VcP3E4gdIAlTCp4iAwjGn5tyqH
+	b+w==
+X-Google-Smtp-Source: AGHT+IGc/BULnIieuwv9+FBRnu1M5AufL70Ng4HgUceQ2bAiT7WRdGZZQ21V3+tP1L1LEbg35yWRxfFG4Ss=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:1a93:b0:706:6b52:438c with SMTP id
+ d2e1a72fcca58-70c14000242mr208338b3a.0.1721144821054; Tue, 16 Jul 2024
+ 08:47:01 -0700 (PDT)
+Date: Tue, 16 Jul 2024 08:46:54 -0700
+In-Reply-To: <0f60918d-bc46-4332-ad28-c155a1990e3d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240712-imx_rproc-v1-5-7bcf6732d328@nxp.com>
+Mime-Version: 1.0
+References: <20240712235701.1458888-1-seanjc@google.com> <20240712235701.1458888-9-seanjc@google.com>
+ <0f60918d-bc46-4332-ad28-c155a1990e3d@redhat.com>
+Message-ID: <ZpaV7kaVL1rj7MXj@google.com>
+Subject: Re: [GIT PULL (sort of)] KVM: x86: Static call changes for 6.11
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Jul 12, 2024 at 04:34:58PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Tue, Jul 16, 2024, Paolo Bonzini wrote:
+> On 7/13/24 01:56, Sean Christopherson wrote:
+> > Here's a massage pull request for the static_call() changes, just in case you
+> > want to go this route instead of applying patches directly after merging
+> > everything else for 6.11 (it was easy to generate this).  If you want to go the
+> > patches route, I'll post 'em next week.
+> > 
+> > The following changes since commit c1c8a908a5f4c372f8a8dca0501b56ffc8d260fe:
+> > 
+> >    Merge branch 'vmx' (2024-06-28 22:22:53 +0000)
+> > 
+> > are available in the Git repository at:
+> > 
+> >    https://github.com/kvm-x86/linux.git  tags/kvm-x86-static_calls-6.11
+> > 
+> > for you to fetch changes up to b528de209c858f61953023b405a4abbf9a9933da:
+> > 
+> >    KVM: x86/pmu: Add kvm_pmu_call() to simplify static calls of kvm_pmu_ops (2024-06-28 15:23:49 -0700)
 > 
-> Current tx_block is set to true, but there is case that no need to wait
-> response. Linux just needs to send data to remote processor, so let's
-> allow tx_block could be set to false.
+> Thanks, indeed there was no straggler static_call() after applying
+> this.  However, there might be a problem: static_call_cond() is equal
+> to static_call() only if CONFIG_HAVE_STATIC_CALL_INLINE,
 
-Ok, maybe - but this patch doesn't use the new functionality, i.e nothing
-changes.  
+No, I think you misread the #if-#elif-#else.  It's only the !HAVE_STATIC_CALL
+case that requires use of static_call_cond().  From include/linux/static_call.h:
 
-> 
-> Reviewed-by: Jacky Bai <ping.bai@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 552fccebf7e2..01cf1dfb2e87 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -90,7 +90,7 @@ struct imx_rproc_mem {
->  #define ATT_CORE_MASK   0xffff
->  #define ATT_CORE(I)     BIT((I))
->  
-> -static int imx_rproc_xtr_mbox_init(struct rproc *rproc);
-> +static int imx_rproc_xtr_mbox_init(struct rproc *rproc, bool tx_block);
->  static void imx_rproc_free_mbox(struct rproc *rproc);
->  
->  struct imx_rproc {
-> @@ -369,7 +369,7 @@ static int imx_rproc_start(struct rproc *rproc)
->  	struct arm_smccc_res res;
->  	int ret;
->  
-> -	ret = imx_rproc_xtr_mbox_init(rproc);
-> +	ret = imx_rproc_xtr_mbox_init(rproc, true);
->  	if (ret)
->  		return ret;
->  
-> @@ -629,7 +629,7 @@ static void imx_rproc_kick(struct rproc *rproc, int vqid)
->  
->  static int imx_rproc_attach(struct rproc *rproc)
->  {
-> -	return imx_rproc_xtr_mbox_init(rproc);
-> +	return imx_rproc_xtr_mbox_init(rproc, true);
->  }
->  
->  static int imx_rproc_detach(struct rproc *rproc)
-> @@ -794,7 +794,7 @@ static void imx_rproc_rx_callback(struct mbox_client *cl, void *msg)
->  	queue_work(priv->workqueue, &priv->rproc_work);
->  }
->  
-> -static int imx_rproc_xtr_mbox_init(struct rproc *rproc)
-> +static int imx_rproc_xtr_mbox_init(struct rproc *rproc, bool tx_block)
->  {
->  	struct imx_rproc *priv = rproc->priv;
->  	struct device *dev = priv->dev;
-> @@ -817,7 +817,7 @@ static int imx_rproc_xtr_mbox_init(struct rproc *rproc)
->  
->  	cl = &priv->cl;
->  	cl->dev = dev;
-> -	cl->tx_block = true;
-> +	cl->tx_block = tx_block;
->  	cl->tx_tout = 100;
->  	cl->knows_txdone = false;
->  	cl->rx_callback = imx_rproc_rx_callback;
-> @@ -1083,7 +1083,7 @@ static int imx_rproc_probe(struct platform_device *pdev)
->  
->  	INIT_WORK(&priv->rproc_work, imx_rproc_vq_work);
->  
-> -	ret = imx_rproc_xtr_mbox_init(rproc);
-> +	ret = imx_rproc_xtr_mbox_init(rproc, true);
->  	if (ret)
->  		goto err_put_wkq;
->  
-> 
-> -- 
-> 2.37.1
-> 
+  #ifdef CONFIG_HAVE_STATIC_CALL_INLINE
+  #define static_call_cond(name)	(void)__static_call(name)
+
+  #elif defined(CONFIG_HAVE_STATIC_CALL)
+  #define static_call_cond(name)	(void)__static_call(name)
+
+  #else
+  #define static_call_cond(name)	(void)__static_call_cond(name)
+
+  #endif
+
+And per Josh, from an old RFC[*] to yank out static_call_cond():
+
+ : Static calling a NULL pointer is a NOP, unless you're one of those poor
+ : souls running on an arch (or backported x86 monstrosity) with
+ : CONFIG_HAVE_STATIC_CALL=n, then it's a panic.
+
+I double checked that 32-bit KVM works on Intel (which is guaranteed to have a
+NULL guest_memory_reclaimed()).  I also verified that the generated code is
+identical for both static_call() and static_call_cond(), i.e. the READ_ONCE() of
+the func at runtime that's present in __static_call_cond() isn't showing up.
+
+Dump of assembler code for function kvm_arch_guest_memory_reclaimed:
+   0xc1042094 <+0>:	call   0xc10ce650 <__fentry__>
+   0xc1042099 <+5>:	push   %ebp
+   0xc104209a <+6>:	mov    %esp,%ebp
+   0xc104209c <+8>:	call   0xc1932d8c <__SCT__kvm_x86_guest_memory_reclaimed>
+   0xc10420a1 <+13>:	pop    %ebp
+   0xc10420a2 <+14>:	ret    
+End of assembler dump.
+
+Dump of assembler code for function __SCT__kvm_x86_guest_memory_reclaimed:
+   0xc1932d8c <+0>:	ret    
+   0xc1932d8d <+1>:	int3   
+   0xc1932d8e <+2>:	nop
+   0xc1932d8f <+3>:	nop
+   0xc1932d90 <+4>:	nop
+   0xc1932d91 <+5>:	ud1    %esp,%ecx
+End of assembler dump.
+
+[*] https://lore.kernel.org/all/cover.1678474914.git.jpoimboe@kernel.org
