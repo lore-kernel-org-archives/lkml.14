@@ -1,116 +1,100 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FEB19A867
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 10:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB19A198A34;
+	Tue, 16 Jul 2024 10:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125858; cv=none; b=h+d0ntEGIiQuN0pwpJzECCA/4ZdaUwH3FkYO62zdwCtJtUean+HL89X+7fLqxod+z5FKjtJmBwNaV6iGPdmdAPkJzrs7Rx1GNIjk0B7IeZaguYtnF4GyfKQSBxCiMVKQs5JJsNN4YpJSGDRxZYbBfwpGv5TBq3O0e1nNoNMdOe0=
+	t=1721126000; cv=none; b=G3gIHmWL3MqMQGA+55IUt0jWjE+VrFEN5k6NKoxg3h7aLm3KkfO35FPAEFjduEncfxYn+l7j1sCx0SMQMxCwhP0CZl2uXMeRs+50ak8tpIXaLknNtdrD0AF8juFtJD/D7u5+1xCZGQdxzOBwMQ1YyIw5GFwtyHTVdS43btO2L6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125858; c=relaxed/simple;
-	bh=JipNE+kqEQPBn7Jx4UqjRRUM4WXbboTrnyw0mDx93KA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WYtTceoiyIvwrYU+Tvh5mcz76FeAQPZSUmrmjCQvrHjUaAZ71DZBpQuHpWquhhaX3hkt6BDiMSmx4DEWc+CnMz0JJSsfOJkT2ZG12uNXz6HYRdQI9hhkgIwzE4ibHF+6fQ0Xzh961f/lhzqT4P24tjB8xCINEI39egBrpYxBZJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=BlLLwGcN; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1721126000; c=relaxed/simple;
+	bh=dN5E33LT7GgPkxb12Y5QkfMGlP4vR+Mumccgj5BvfJ8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=j0WAoBZUWYt2uPTTyon0C22U8LuCuELSs3IFu7JcDISe2dFLwckPDSNK1Smh22KQHIWd1Gsuv4K9xUe2a0kke4Qzxv8lFvDHU2vTxFlN9iAEtHPGGZSKu7b2WDVtnTo1edjF5YjBXjdFjMkhW+RAD4QiBlR35L6zw29zI/PHqNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGWeTWkX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="BlLLwGcN"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52e9f863c46so5824506e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 03:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1721125854; x=1721730654; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DAXdKc5Z+02xSdGxMpcMXF7UJmX+WtkbTbyJ/hK50W0=;
-        b=BlLLwGcN5mUmW7Fw/0UW6QIyETSGj7d8hXPmhMifppK3O4TM/M+3EpH4Y77Z91LIdG
-         +QKUxlUrAU1YA41ly59IxsHMDk7eP90M+7f69/ecHBwsB6Aqz0N9jeGCcx139e7BY+vK
-         CFV6zL3sUklGCCH2yqsmLI03eMQnthm68cm0vKDc8n5/X8yiQ017VilaZ84Ahuh/whCk
-         lmuaCVmj3xW2dxeEBe4DZ1609eaQij4OkDnbuXC03PqtIfFpZunUDlG3AQaScWe0kAJp
-         8XRUxU5xSZMA9SLEfRnf2g6fhQ/SDo3En9Vsftai6OcnphvLeGwg9TmRF77lQIiCphEY
-         TtJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721125854; x=1721730654;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DAXdKc5Z+02xSdGxMpcMXF7UJmX+WtkbTbyJ/hK50W0=;
-        b=O6vp/JbVnRS3TI2JmQXpffd/B256+4WEULMl333yRSwcGIbx9mTXWewFe9zLULCuQs
-         LE/UbknyfyR5gHOhyPGRFyRS9Sm2D3wC0zQc5Jn2axL0W8XBMh2tLs1tUM0ZJ9mY3VrB
-         EDuTgWVzVMY+kIlJr0p5QuAJ0XEFyswhYtoG2O1ubGcbzc+yryBo7YV4VSvOTvDZ0P6X
-         Q/s3BzmJwhVE80ZSRzKNo0NGUaW7cupXlCo5tiiFT5fOolzDO2z9kzLrJ38its0pIg12
-         6i5X9uoMrc4XLX5dlAVurjvKr0KnWhEvwWKiIqxYrtgp1wSRgcFsAoWmkmkR7hyF20h4
-         WxfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0zZe8Th+0CHjpGpQswrg0AvzkM30hI8M7AWaZ/iCntytLIZIAuQmJKxJjvST5129l+5huw6eY8p6iE3vTcJSvaE6/zLYrfbB2LqKa
-X-Gm-Message-State: AOJu0YzRZEDjkdJ9Wh3e/HReikODiIlUjUneks0Pn/3wb5Bi4qT4MZy2
-	R1+Iq0zP7aNu2uyLoxdiabvg7xGdGGgcMT87G8RAVDYn/uItNtyicWy6RH5V3Tg=
-X-Google-Smtp-Source: AGHT+IFbkiHtNVlSjCVJf3cVxZfgoUXWPkU+uRJ0BzsW0f977HEVh4lCus0KUh+9d9jKXgqmMYtbgA==
-X-Received: by 2002:a05:6512:3c8c:b0:52b:c025:859a with SMTP id 2adb3069b0e04-52edef1cc52mr1084908e87.2.1721125853907;
-        Tue, 16 Jul 2024 03:30:53 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e77488sm121546145e9.9.2024.07.16.03.30.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 03:30:53 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: lee@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	alexandre.belloni@bootlin.com,
-	geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 11/11] arm64: defconfig: Enable Renesas RTCA-3 flag
-Date: Tue, 16 Jul 2024 13:30:25 +0300
-Message-Id: <20240716103025.1198495-12-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGWeTWkX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D5CC116B1;
+	Tue, 16 Jul 2024 10:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721126000;
+	bh=dN5E33LT7GgPkxb12Y5QkfMGlP4vR+Mumccgj5BvfJ8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=HGWeTWkXtRL6VXma7QDXpFmNzfcRfYea92DaBoa4f5SfAn7PZqZ6sR9QR/AKpaLun
+	 /pNc0sTWAYyGdb9M55bzVZalzvG3OIeYxK4+WuBhNZQr9LG81TI9XxGIDi7B4lp9kK
+	 IFiAEvxNQT3oK/6KzTCWDAcaewz8J+RD5EM21WzOTCEAU4M0J98k/So/G00RVoLNen
+	 fVdLVo9L8CG6AzYn37hxDNy8mAhiZW4HT4UuePM9AYUTyp1wFqINIVq6IQNZbpoFpA
+	 keMwBSLKfaG+a6HSFNX/TW1CXJErb9UHZ1f6+kPgOLWpDACSVfLnK5FOqU8xWBwSvk
+	 CqeaXPwUC2KVw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 16 Jul 2024 13:33:17 +0300
+Message-Id: <D2QW8VSPX777.34R28W8GVXKMS@kernel.org>
+Cc: <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Hao
+ Ge" <gehao@kylinos.cn>
+Subject: Re: [PATCH] tpm: Move dereference after NULL check in
+ tpm_buf_check_hmac_response
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Hao Ge" <hao.ge@linux.dev>, <peterhuewe@gmx.de>, <jgg@ziepe.ca>
+X-Mailer: aerc 0.17.0
+References: <20240709023337.102509-1-hao.ge@linux.dev>
+In-Reply-To: <20240709023337.102509-1-hao.ge@linux.dev>
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Tue Jul 9, 2024 at 5:33 AM EEST, Hao Ge wrote:
+> From: Hao Ge <gehao@kylinos.cn>
+>
+> We shouldn't dereference "auth" until after we have checked that it is
+> non-NULL.
+>
+> Fixes: 7ca110f2679b ("tpm: Address !chip->auth in tpm_buf_append_hmac_ses=
+sion*()")
+> Signed-off-by: Hao Ge <gehao@kylinos.cn>
+> ---
+>  drivers/char/tpm/tpm2-sessions.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-ses=
+sions.c
+> index 2281d55df545..d3521aadd43e 100644
+> --- a/drivers/char/tpm/tpm2-sessions.c
+> +++ b/drivers/char/tpm/tpm2-sessions.c
+> @@ -746,15 +746,16 @@ int tpm_buf_check_hmac_response(struct tpm_chip *ch=
+ip, struct tpm_buf *buf,
+>  	struct tpm2_auth *auth =3D chip->auth;
+>  	off_t offset_s, offset_p;
+>  	u8 rphash[SHA256_DIGEST_SIZE];
+> -	u32 attrs;
+> +	u32 attrs, cc;
+>  	struct sha256_state sctx;
+>  	u16 tag =3D be16_to_cpu(head->tag);
+> -	u32 cc =3D be32_to_cpu(auth->ordinal);
+>  	int parm_len, len, i, handles;
+> =20
+>  	if (!auth)
+>  		return rc;
+> =20
+> +	cc =3D be32_to_cpu(auth->ordinal);
+> +
+>  	if (auth->session >=3D TPM_HEADER_SIZE) {
+>  		WARN(1, "tpm session not filled correctly\n");
+>  		goto out;
 
-Enable Renesas RTCA-3 flag for the Renesas RZ/G3S SoC.
+Please check:
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
+https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/comm=
+it/?id=3D72d6e06ed101e31e943937e42053fc690dc75cfe
 
-Changes in v2:
-- none
+It is exactly this except commit message is tuned. And please denote
+that I'm on holiday ;-)
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+If that works for you, I can put it to my -rc PR.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index f35fd006bbbc..e90578659447 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1213,6 +1213,7 @@ CONFIG_RTC_DRV_IMX_SC=m
- CONFIG_RTC_DRV_MT6397=m
- CONFIG_RTC_DRV_XGENE=y
- CONFIG_RTC_DRV_TI_K3=m
-+CONFIG_RTC_DRV_RENESAS_RTCA3=y
- CONFIG_DMADEVICES=y
- CONFIG_DMA_BCM2835=y
- CONFIG_DMA_SUN6I=m
--- 
-2.39.2
+Thank you.
 
+BR, Jarkko
